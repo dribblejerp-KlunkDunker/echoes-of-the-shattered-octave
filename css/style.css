@@ -29,7 +29,7 @@ html, body { margin: 0; height: 100%; background: #050403; color: var(--parch); 
 #fx.green { background: rgba(60, 140, 40, 0.14); }
 #view.unwrite { filter: saturate(0.2) contrast(0.9); }
 
-#msgs { position: absolute; left: 1.2cqw; top: 1cqh; width: 60cqw; pointer-events: none; font-family: var(--font-body); font-size: 2.4cqw; line-height: 1.25; color: var(--parch); text-shadow: 0 0 2px #000, 1px 1px 0 #000, -1px 0 0 #000; }
+#msgs { position: absolute; left: 1.2cqw; top: 1cqh; width: 62cqw; pointer-events: none; font-family: var(--font-body); font-size: 2.1cqw; line-height: 1.25; color: var(--parch); text-shadow: 0 0 2px #000, 1px 1px 0 #000, -1px 0 0 #000; }
 #msgs .m { opacity: 1; transition: opacity 600ms; margin-bottom: .2em; }
 #msgs .m.fade { opacity: 0; }
 #msgs .m.warn { color: #f0b060; }

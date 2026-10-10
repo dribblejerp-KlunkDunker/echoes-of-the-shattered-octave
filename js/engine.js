@@ -60,35 +60,43 @@ const Engine = (() => {
     return (255 << 24) | (b << 16) | (g << 8) | r;
   }
   function tint(px, f, tr, tg, tb) {
-    // blend toward fog colour (tr,tg,tb) by (1-f)
-    const r = (px & 255) * f + tr * (1 - f), g = ((px >> 8) & 255) * f + tg * (1 - f), b = ((px >> 16) & 255) * f + tb * (1 - f);
+    // blend toward fog colour (tr,tg,tb) by (1-f), then darken by ambient light (module var `light_`)
+    const r = ((px & 255) * f + tr * (1 - f)) * light_, g = (((px >> 8) & 255) * f + tg * (1 - f)) * light_, b = (((px >> 16) & 255) * f + tb * (1 - f)) * light_;
     return (255 << 24) | (b << 16) | (g << 8) | r;
   }
+  let light_ = 1;
   function rgb(r, g, b) { return (255 << 24) | (b << 16) | (g << 8) | r; }
 
   // ---- renderer state -------------------------------------------------
   const cam = { x: 2, y: 2, dir: 0, pitch: 0, bob: 0 };
   let map = null;        // current map object (grid, w, h, cells)
-  let fogDist = 12, fogR = 0, fogG = 0, fogB = 0, lightFlicker = 1;
+  let fogDist = 12, fogR = 0, fogG = 0, fogB = 0, lightFlicker = 1, ambient = 0;
   let ambientDark = 1;   // night factor
   const FOV = 1.0;       // plane length (approx 90 deg)
 
-  function setMap(m) { map = m; fogDist = m.fogDist || 12; const fc = m.fogColor || [0, 0, 0]; fogR = fc[0]; fogG = fc[1]; fogB = fc[2]; }
+  function setMap(m) { map = m; fogDist = m.fogDist || 12; ambient = m.ambient || 0; const fc = m.fogColor || [0, 0, 0]; fogR = fc[0]; fogG = fc[1]; fogB = fc[2]; }
 
   // ---- sky -----------------------------------------------------------
-  const skyCol = new Uint32Array(VIEW_H);
+  const skyR = new Float32Array(VIEW_H), skyG = new Float32Array(VIEW_H), skyB = new Float32Array(VIEW_H);
+  let skyDay = 1;
+  // a band of slow cloud: smooth 1D noise, wrapped
+  const CLOUD_N = 1024, cloud = new Float32Array(CLOUD_N);
+  (function () { const seedv = [], K = 16; for (let i = 0; i < K; i++) seedv.push(Math.random() * 2 - 1); for (let i = 0; i < CLOUD_N; i++) { const u = i / CLOUD_N * K; const a = u | 0, f = u - a; const sm = f * f * (3 - 2 * f); cloud[i] = seedv[a % K] * (1 - sm) + seedv[(a + 1) % K] * sm; } })();
   function buildSky(timeOfDay) {
     // timeOfDay 0..1 ; 0=midnight 0.5=noon; the Light is fading: colours pale
-    const dayness = Math.max(0, Math.cos((timeOfDay - 0.5) * Math.PI * 2)); // 1 at noon
+    const dayness = Math.max(0, Math.min(1, (Math.cos((timeOfDay - 0.5) * Math.PI * 2) + 0.3) / 1.3));
+    const warm = Math.exp(-Math.pow(timeOfDay - 0.76, 2) / 0.004) + Math.exp(-Math.pow(timeOfDay - 0.26, 2) / 0.004);
     for (let y = 0; y < VIEW_H; y++) {
       const t = y / VIEW_H; // 0 top .. 1 horizon-ish
       // night: deep indigo -> grey ; day: pale washed sky -> dusty horizon
       const nr = 10 + 30 * t, ng = 10 + 28 * t, nb = 24 + 36 * t;
-      const dr = 150 + 60 * t, dg = 160 + 50 * t, db = 170 + 30 * t;
-      const r = nr + (dr - nr) * dayness, g = ng + (dg - ng) * dayness, b = nb + (db - nb) * dayness;
-      skyCol[y] = rgb(r | 0, g | 0, b | 0);
+      const dr = 140 + 70 * t, dg = 152 + 58 * t, db = 168 + 32 * t;
+      let r = nr + (dr - nr) * dayness, g = ng + (dg - ng) * dayness, b = nb + (db - nb) * dayness;
+      r += 70 * warm * t * t; g += 22 * warm * t * t; b -= 20 * warm * t * t;
+      skyR[y] = r; skyG[y] = g; skyB[y] = b;
     }
-    ambientDark = 0.35 + 0.65 * dayness;
+    skyDay = dayness;
+    ambientDark = 0.5 + 0.5 * dayness;
   }
   buildSky(0.3);
 
@@ -106,7 +114,8 @@ const Engine = (() => {
     const horizon = (h >> 1) + (cam.pitch | 0) + (cam.bob | 0);
     const posZ = 0.5 * h;
     const flick = lightFlicker;
-    const light = outdoor ? ambientDark : 1;
+    const light = outdoor ? 1 : 1;
+    light_ = outdoor ? ambientDark : 1;
     const fogMul = 1 / fogDist;
 
     // -- floor & ceiling ----------------------------------------------
@@ -121,9 +130,15 @@ const Engine = (() => {
       const isFloor = y > horizon;
       if (!isFloor) {
         if (outdoor) {
-          const c = skyCol[Math.max(0, Math.min(h - 1, y - cam.pitch - cam.bob + (h >> 2)))];
+          const sy = Math.max(0, Math.min(h - 1, y - cam.pitch - cam.bob + (h >> 2)));
+          const br = skyR[sy], bg = skyG[sy], bb = skyB[sy];
+          const amp = (6 + 14 * skyDay) * (1 - sy / h);
+          const base = ((cam.dir / (Math.PI * 2)) * CLOUD_N * 1.6 + sy * 2.1) | 0;
           let o = y * w;
-          for (let x = 0; x < w; x++) fb[o++] = c;
+          for (let x = 0; x < w; x++) {
+            const cv = cloud[(base + ((x * 1.7) | 0)) & (CLOUD_N - 1)] * amp;
+            fb[o++] = (255 << 24) | (((bb + cv) | 0) << 16) | (((bg + cv) | 0) << 8) | ((br + cv) | 0);
+          }
           continue;
         }
         if (!ceilTex) { let o = y * w; const c = rgb(fogR, fogG, fogB); for (let x = 0; x < w; x++) fb[o++] = c; continue; }
@@ -133,6 +148,7 @@ const Engine = (() => {
       const rowDist = posZ / p;
       let f = light * (1 - rowDist * fogMul);
       if (f < 0) f = 0;
+      f = ambient + (1 - ambient) * f;
       if (!outdoor) f *= flick;
       const stepX = rowDist * (rayDirX1 - rayDirX0) / w, stepY = rowDist * (rayDirY1 - rayDirY0) / w;
       let fx = cam.x + rowDist * rayDirX0, fy = cam.y + rowDist * rayDirY0;
@@ -203,8 +219,9 @@ const Engine = (() => {
       let tx = (wallX * TEX) | 0;
       if ((side === 0 && rdx > 0) || (side === 1 && rdy < 0)) tx = TEX - tx - 1;
       let f = light * (1 - dist * fogMul);
-      if (side === 1) f *= 0.78;
       if (f < 0) f = 0;
+      f = ambient + (1 - ambient) * f;
+      if (side === 1) f *= 0.8;
       if (!outdoor) f *= flick;
       const fi = Math.round(f * 255) / 255;
       const step = TEX / lineH;
@@ -249,6 +266,7 @@ const Engine = (() => {
       const d = Math.sqrt(e._d2);
       let f = light * (1 - d * fogMul);
       if (f < 0) f = 0;
+      f = ambient + (1 - ambient) * f;
       if (!outdoor) f *= flick;
       if (e.glow) f = Math.max(f, e.glow);
       if (e.flash) f = 1;

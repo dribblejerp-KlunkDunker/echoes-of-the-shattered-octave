@@ -88,7 +88,7 @@ function newPlayer() {
     inv: [], weapons: c.weapons.slice(), weapon: 0, songs: c.songs.slice(), glass: c.glass ? 42 : 0, glassed: c.glass, fragments: c.id === 'archivist' ? 3 : 0, xp: 0, level: 1, kills: 0 };
 }
 function startGame() {
-  hide('#create'); G.player = newPlayer(); G.flags = {}; G.journal = []; G.ledger = []; G.tod = 0.78; G.day = 0; G.escapeTimer = 0; G.dead = false; G.noise = 2;
+  hide('#create'); G.player = newPlayer(); G.flags = {}; G.journal = []; G.ledger = []; G.tod = 0.74; G.day = 0; G.escapeTimer = 0; G.dead = false; G.noise = 2;
   for (let i = 0; i < CREATE.bio.length; i++) G.flags[BIOGRAPHY[i].a[CREATE.bio[i]].flag] = true;
   G.maps = buildAllMaps();
   journal('main', 'I came up the Greenroot road to Oakhaven on Nullday, autumn, 419 SR. The gate-warden will know where the Cantor lives.');
@@ -155,10 +155,10 @@ function updateNarrow(dt, moving, running) {
   // decay toward floor
   if (G.noise > floor) G.noise = Math.max(floor, G.noise - dt * 1.4); else G.noise = Math.min(floor, G.noise + dt * 3);
   // the Hush
-  if (G.map.siphoned && G.noise < 1.5 && G.whistleT <= 0) { G.stillT += dt; } else { G.stillT = Math.max(0, G.stillT - dt * 2); }
-  const was = G.unwriting; G.unwriting = G.stillT > 4;
-  if (G.unwriting && !was) msg('You are too still. Something leans in. Your fingertips are going cold.', 'bad');
-  if (G.unwriting) { p.hp -= dt * 1.2; $('#view').classList.add('unwrite'); if (p.hp <= 0) die('unwrite'); }
+  if (G.map.siphoned && G.noise < 1.5 && G.whistleT <= 0 && !(G.boreHold > 0) && !G.escapeTimer) { G.stillT += dt; } else { G.stillT = Math.max(0, G.stillT - dt * 2); }
+  const was = G.unwriting; G.unwriting = G.stillT > 7;
+  if (G.unwriting && !was) msg('You are too still. Something leans in. Your fingertips are going cold. Move, or murmur (N).', 'bad');
+  if (G.unwriting) { p.hp -= dt * 0.8; $('#view').classList.add('unwrite'); if (p.hp <= 0) die('unwrite'); }
   else if (was) $('#view').classList.remove('unwrite');
   // the hounds
   if (G.map.danger > 0 && G.noise > 7 && Math.random() < dt * 0.35 * G.map.danger) spawnHound();
@@ -263,7 +263,7 @@ function attack(dirLabel) {
     if (w.type === 'shot' && !los(c.x, c.y, e.x, e.y)) continue;
     if (d < bd) { bd = d; best = e; }
   }
-  if (!best) { if (w.type !== 'shot') msg(`You ${dirLabel || 'swing'} at nothing.`, '', 1200); return; }
+  if (!best) { if (w.type !== 'shot') msg(`Your ${dirLabel || 'swing'} finds nothing but air.`, '', 1200); return; }
   const e = best, d = e.def;
   // hit chance
   const hitChance = 0.55 + p.attrs.Agility / 250 + p.attrs.Luck / 600 + (w.type === 'shot' ? 0.15 : 0);
@@ -277,7 +277,7 @@ function attack(dirLabel) {
   e.hp -= dmg; e.flash = true; setTimeout(() => e.flash = false, 90);
   if (w.type === 'glass') Audio_.sfx.glasshit(); else Audio_.sfx.hit();
   if (e.state === 'idle' || e.state === 'passive') e.state = 'chase';
-  if (dmg > 0) msg(`You ${w.type === 'shot' ? 'shoot' : (dirLabel || 'strike')} the ${d.name} for ${dmg}.`, '', 1800);
+  if (dmg > 0) msg(w.type === 'shot' ? `Your shot breaks on the ${d.name} for ${dmg}.` : `Your ${dirLabel || 'blow'} lands on the ${d.name} for ${dmg}.`, '', 1800);
   if (e.hp <= 0) killEnemy(e, w.type === 'glass');
 }
 
@@ -323,7 +323,7 @@ function interact() {
   let best = null, bd = 1e9;
   for (const o of G.ents) { if (o.hidden || o.dead || (o.kind !== 'item' && !(o.kind === 'deco' && o.use) && o.kind !== 'npc')) continue; const d = Math.sqrt(dist2(o.x, o.y, c.x, c.y)); if (d > 1.6 + (o.radius || 0)) continue; const ang = Math.abs(normAng(Math.atan2(o.y - c.y, o.x - c.x) - c.dir)); if (ang < 0.8 && d < bd) { bd = d; best = o; } }
   if (best) { if (best.kind === 'item') pickUp(best); else if (best.kind === 'npc') talk(best); else useDeco(best); return; }
-  const w = Engine.pickWall(1.6);
+  const w = Engine.pickWall(2.0);
   if (w && w.cell.door) {
     const cell = w.cell, key = w.y * G.map.w + w.x;
     if (cell.locked) {
@@ -497,7 +497,7 @@ function askTopic(t) {
   // quest-relevant tells
   if (t === 'Kaelen Vance' && !G.flags.need_gate && G.flags.lyra_met) { G.flags.need_gate = true; }
 }
-const PLACE_POS = { tavern: [29.5, 17.5], lyra_house: [21.5, 29.5], greenhall: [23.5, 10.5], surgery: [17.5, 15.5], gate: [23.5, 1.5], mast: [36.5, 22.5], orla_house: [29.5, 40.5], culvert: [23.5, 42.5] };
+const PLACE_POS = { tavern: [29.5, 17.5], lyra_house: [21.5, 29.5], greenhall: [30.5, 9.5], surgery: [17.5, 15.5], gate: [23.5, 1.5], mast: [36.5, 22.5], orla_house: [29.5, 40.5], culvert: [23.5, 42.5] };
 function askPlace(place) {
   const key = PLACES[place]; const [tx, ty] = PLACE_POS[key]; DLG.log.push({ who: 'you', t: `Where is ${place}?` });
   let from = [Engine.cam.x, Engine.cam.y], pre = '';
@@ -550,7 +550,7 @@ function renderLedger() {
 function renderSongs() {
   const p = G.player;
   openModal(`<h2>Song-book</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">Voice ${Math.round(p.voice)} / ${p.voiceMax}. Every song is sound, and sound is the predator's sense. Cast with F1–F${p.songs.length}.</p>
-  <table>${p.songs.map((s, i) => `<tr><td class="n">F${i + 1}</td><td><b style="color:var(--gold)">${SONGS[s].name}</b> <span class="muted">${SONGS[s].hz} Hz</span><br><span class="muted">${SONGS[s].desc}</span></td><td class="n">${SONGS[s].cost} voice<br>${'♪'.repeat(Math.ceil(SONGS[s].noise))}<br><button class="dfbtn small" data-s="${s}">Sing</button></td></tr>`).join('')}</table>`, 'songs');
+  <table>${p.songs.map((s, i) => `<tr><td class="n">F${i + 1}</td><td><b style="color:var(--gold)">${SONGS[s].name}</b> <span class="muted">${SONGS[s].hz ? SONGS[s].hz + ' Hz' : 'under the breath'}</span><br><span class="muted">${SONGS[s].desc}</span></td><td class="n">${SONGS[s].cost} voice<br>${'♪'.repeat(Math.ceil(SONGS[s].noise))}<br><button class="dfbtn small" data-s="${s}">Sing</button></td></tr>`).join('')}</table>`, 'songs');
   $('#x').onclick = closeModal;
   document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { closeModal(); G.state = 'play'; castSong(b.dataset.s); });
 }
@@ -723,7 +723,7 @@ function update(dt) {
   // hint under crosshair
   const h = Engine.pick(G.ents, 3.2); let hint = '';
   if (h && !h.dead) hint = h.kind === 'npc' ? (NPCS[h.id] ? NPCS[h.id].name : h.name) : h.kind === 'enemy' ? (h.def.name + (h.name && h.def.core ? '' : '')) : h.kind === 'item' ? ITEMS[h.item].name : (h.label || (h.sprite === 'oak' ? 'Iron-bark oak' : h.sprite === 'lamp' ? 'Hush-lamp' : ''));
-  else { const w = Engine.pickWall(1.6); if (w && w.cell.door) hint = w.cell.label || (w.cell.portal ? 'A door' : (G.map.doors[w.y * G.map.w + w.x].open > 0.5 ? 'An open door' : 'A closed door')); }
+  else { const w = Engine.pickWall(2.0); if (w && w.cell.door) hint = w.cell.label || (w.cell.portal ? 'A door' : (G.map.doors[w.y * G.map.w + w.x].open > 0.5 ? 'An open door' : 'A closed door')); }
   G.hintKind = (h && !h.dead && (h.kind === 'npc' || h.kind === 'item' || (h.kind === 'deco' && h.use))) ? h.kind : (!h && hint ? 'door' : '');
   if (hint !== G.hint) { G.hint = hint; $('#hint').textContent = hint; }
 }

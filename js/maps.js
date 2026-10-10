@@ -14,7 +14,7 @@ class GameMap {
     this.cells = new Array(w * h).fill(null);
     this.doors = {};
     this.floor = opts.floor || 't_flag'; this.ceil = opts.ceil || null; this.outdoor = !!opts.outdoor;
-    this.fogDist = opts.fogDist || 12; this.fogColor = opts.fogColor || [0, 0, 0];
+    this.fogDist = opts.fogDist || 12; this.fogColor = opts.fogColor || [0, 0, 0]; this.ambient = opts.ambient || 0;
     this.floorTextures = opts.floorTextures || null; this.floorCells = opts.floorTextures ? new Uint8Array(w * h) : null;
     this.entities = []; this.spawn = opts.spawn || { x: 2.5, y: 2.5, dir: 0 };
     this.siphoned = !!opts.siphoned; this.danger = opts.danger || 0; this.music = opts.music || 'town';
@@ -42,7 +42,7 @@ class GameMap {
 function buildOakhaven(greening) {
   const W = 46, H = 46;
   const m = new GameMap('oakhaven', greening ? 'Oakhaven — the Greening' : 'Oakhaven', W, H, {
-    outdoor: true, floor: 't_grass', floorTextures: ['t_grass', 't_cobble'], fogDist: greening ? 14 : 22, fogColor: greening ? [40, 70, 30] : [70, 72, 80], music: 'town', danger: greening ? 2 : 0,
+    outdoor: true, floor: 't_grass', floorTextures: ['t_grass', 't_cobble'], fogDist: greening ? 18 : 22, fogColor: greening ? [62, 84, 58] : [70, 72, 80], music: 'town', danger: greening ? 2 : 0,
     spawn: { x: 23.5, y: 3.5, dir: Math.PI / 2 },
   });
   // Hedge — thick
@@ -58,13 +58,13 @@ function buildOakhaven(greening) {
   const buildings = [
     { x: 26, y: 12, w: 8, h: 5, tex: 't_house', door: [29, 16], portal: { map: 'tavern', x: 8.5, y: 10.5, dir: -Math.PI / 2 }, label: 'The Boar & Dulcimer' },
     { x: 19, y: 30, w: 6, h: 4, tex: 't_house', door: [21, 30], portal: { map: 'lyra_house', x: 6.5, y: 7.5, dir: -Math.PI / 2 }, label: 'Lyra Ashgrove\'s house' },
-    { x: 18, y: 5, w: 10, h: 5, tex: 't_marble', door: [23, 9], portal: { map: 'greenhall', x: 8.5, y: 10.5, dir: -Math.PI / 2 }, label: 'The Greenhall' },
+    { x: 26, y: 4, w: 9, h: 5, tex: 't_marble', door: [30, 8], portal: { map: 'greenhall', x: 8.5, y: 10.5, dir: -Math.PI / 2 }, label: 'The Greenhall' },
     { x: 12, y: 13, w: 5, h: 4, tex: 't_wood', door: [16, 15], portal: { map: 'surgery', x: 1.5, y: 5.5, dir: 0 }, label: 'Rooke\'s surgery' },
     { x: 30, y: 38, w: 5, h: 4, tex: 't_wood', door: [30, 40], portal: { map: 'orla_house', x: 8.5, y: 5.5, dir: Math.PI }, label: 'Orla Hale\'s house' },
     // non-enterable houses
     { x: 4, y: 4, w: 5, h: 4, tex: 't_house', door: [6, 7], barred: true, label: 'A shuttered house' },
     { x: 12, y: 4, w: 5, h: 4, tex: 't_house', door: [14, 7], barred: true, label: 'The baker\'s' },
-    { x: 31, y: 4, w: 4, h: 4, tex: 't_house', door: [32, 7], barred: true, label: 'The Carders\' house' },
+    { x: 36, y: 4, w: 3, h: 4, tex: 't_house', door: [37, 7], barred: true, label: 'The Carders\' house' },
     { x: 40, y: 4, w: 4, h: 5, tex: 't_wood', door: [40, 6], barred: true, label: 'A granary' },
     { x: 4, y: 14, w: 3, h: 6, tex: 't_wood', door: [6, 16], barred: true, label: 'A cooper\'s shed' },
     { x: 4, y: 27, w: 3, h: 6, tex: 't_house', door: [6, 29], barred: true, label: 'The Madders\' house' },
@@ -118,7 +118,7 @@ function buildOakhaven(greening) {
 //  INTERIORS
 // -------------------------------------------------------------------------
 function interior(id, name, w, h, wallTex, exit, fill) {
-  const m = new GameMap(id, name, w, h, { floor: 't_wood', ceil: 't_wood', fogDist: 11, fogColor: [0, 0, 0], music: 'inside', spawn: { x: exit.sx, y: exit.sy, dir: exit.sdir } });
+  const m = new GameMap(id, name, w, h, { floor: 't_wood', ceil: 't_wood', fogDist: 18, ambient: 0.3, fogColor: [0, 0, 0], music: 'inside', spawn: { x: exit.sx, y: exit.sy, dir: exit.sdir } });
   m.border(wallTex);
   m.set(exit.x, exit.y, DOOR({ portal: { map: 'oakhaven', x: exit.ox, y: exit.oy, dir: exit.odir }, label: 'Out to the street' }));
   fill(m);
@@ -144,7 +144,7 @@ function buildInteriors() {
     m.deco('table', 6.5, 4.0, { radius: 0.5, scale: 0.7 }); m.deco('lamp', 3.5, 6.5, { radius: 0.12, scale: 0.7, glow: 0.6 });
     m.npc('lyra', 8.5, 5.5, { facing: Math.PI });
   });
-  maps.greenhall = interior('greenhall', 'The Greenhall', 17, 12, 't_marble', { x: 8, y: 11, sx: 8.5, sy: 9.5, sdir: -Math.PI / 2, ox: 23.5, oy: 10.5, odir: Math.PI / 2 }, (m) => {
+  maps.greenhall = interior('greenhall', 'The Greenhall', 17, 12, 't_marble', { x: 8, y: 11, sx: 8.5, sy: 9.5, sdir: -Math.PI / 2, ox: 30.5, oy: 9.5, odir: Math.PI / 2 }, (m) => {
     m.rect(6, 2, 10, 2, 't_wood');
     m.deco('shelf', 1.4, 3.5, { radius: 0.2, scale: 0.9 }); m.deco('shelf', 1.4, 6.5, { radius: 0.2, scale: 0.9 }); m.deco('shelf', 15.6, 3.5, { radius: 0.2, scale: 0.9 });
     m.deco('table', 8.5, 6.0, { radius: 0.5, scale: 0.7 }); m.deco('lamp', 4.5, 8.5, { radius: 0.12, scale: 0.7, glow: 0.6 }); m.deco('lamp', 12.5, 8.5, { radius: 0.12, scale: 0.7, glow: 0.6 });
@@ -202,7 +202,7 @@ function buildClearing() {
 function genDungeon(id, name, seed, opts) {
   const W = opts.w || 44, H = opts.h || 44;
   const rnd = mulberry32(seed);
-  const m = new GameMap(id, name, W, H, { floor: opts.floor, ceil: opts.ceil, fogDist: opts.fogDist || 9, fogColor: opts.fogColor || [0, 0, 0], music: opts.music || 'dungeon', siphoned: true, danger: opts.danger || 1 });
+  const m = new GameMap(id, name, W, H, { floor: opts.floor, ceil: opts.ceil, fogDist: opts.fogDist || 9, ambient: opts.ambient || 0.08, fogColor: opts.fogColor || [0, 0, 0], music: opts.music || 'dungeon', siphoned: true, danger: opts.danger || 1 });
   // fill solid
   for (let i = 0; i < W * H; i++) m.cells[i] = WALL(rnd() < (opts.altChance || 0.2) ? opts.altWall : opts.wall);
   const rooms = [];

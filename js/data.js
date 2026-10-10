@@ -99,7 +99,7 @@ const SONGS = {
 const ENEMIES = {
   hound: { name: 'Cacophony Hound', sprite: 'hound', hp: 18, dmg: [3, 7], speed: 2.3, reach: 1.0, cacophony: true, noiseLure: true, scale: 0.8, xp: 12,
     desc: 'Static with appetite. Up close you can hear screaming inside it.' },
-  legionnaire: { name: 'Carillon Legionnaire', sprite: 'legionnaire', hp: 34, dmg: [5, 11], speed: 1.2, reach: 1.2, core: true, scale: 1.0, xp: 25,
+  legionnaire: { name: 'Carillon Legionnaire', sprite: 'legionnaire', hp: 34, dmg: [4, 9], speed: 1.1, reach: 1.2, core: true, scale: 1.0, xp: 25,
     desc: 'A bell-shaped helm. Stand close and you can hear someone murmuring inside.' },
   golem: { name: 'Steam Golem', sprite: 'golem', hp: 52, dmg: [8, 16], speed: 0.9, reach: 1.4, scale: 1.15, xp: 60, armored: true,
     desc: 'A boiler on legs. It vents when it is about to swing.' },
@@ -184,6 +184,7 @@ const NPCS = {
     greet: { polite: 'Keep your voice down, friend, and welcome to what\'s left of Oakhaven.', normal: 'Gate\'s shut after dusk. Keep it low.', blunt: 'You shout like that again and I\'ll put you out through the thorn myself.' },
     topics: { 'The Hedge': 'I\'ve stood this gate eleven years. Last night it whistled a tune only the Cantor and the Carder boy know. Whistled it exactly right.' },
     quest: (g) => {
+      if (g.flags.need_gate && !g.flags.gate_open) { g.flags.gate_open = true; g.flags.met_harrow = true; return { text: 'Lyra\'s word, is it. Then it is on her head. Go on, through the gate, and go quick and quiet. His hut is north, past the hound-bed. You\'ll smell the charcoal before you see it. Do not sing out there.', journal: ['main', 'Harrow has unbarred the North Gate for me. Kaelen Vance\'s hut lies north of the Hedge, past the hound-bed.'] }; }
       if (!g.flags.met_harrow) { g.flags.met_harrow = true; return { text: 'You\'re the one the Cantor sent for? Then go and see her. Cooper\'s Row, the house with the green door, south side of the square. And friend, we keep the gate shut at night because of what is on the other side of it. Not to keep you in.', journal: ['main', 'Old Harrow at the North Gate says the Cantor, Lyra Ashgrove, is expecting me. Her house is on Cooper\'s Row, south of the square.'] }; }
       if (g.flags.need_gate && !g.flags.gate_open) { g.flags.gate_open = true; return { text: 'Lyra\'s word, is it. Then it is on her head. Go on, through the gate, and go quick and quiet. His hut is north, past the hound-bed. You\'ll smell the charcoal before you see it. Do not sing out there.', journal: ['main', 'Harrow has unbarred the North Gate for me. Kaelen Vance\'s hut lies north of the Hedge, past the hound-bed.'] }; }
       return null;
