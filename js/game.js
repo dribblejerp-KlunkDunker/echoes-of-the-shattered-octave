@@ -636,7 +636,6 @@ window.addEventListener('keydown', (ev) => {
     else if (k === 'h' || k === '?') { G.state = 'panel'; renderHelp(); }
     else if (k === 'n') castSong('murmur');
     else if (k === 'v') { const m = Audio_.toggleMute(); msg(m ? 'Sound off.' : 'Sound on.', '', 1200); }
-    else if (k === 'f') toggleFull();
     else if (k >= '1' && k <= '4') { const i = +k - 1; if (G.player.weapons[i]) { G.player.weapon = i; msg(`${WEAPONS[G.player.weapons[i]].name}.`, '', 1200); } }
     else if (k.startsWith('f') && k.length === 2 && +k[1] >= 1) { const s = G.player.songs[+k[1] - 1]; if (s) castSong(s); }
     else if (k === '`') { const d = $('#debug'); d.style.display = d.style.display === 'none' || !d.style.display ? 'block' : 'none'; }
@@ -646,7 +645,6 @@ window.addEventListener('keydown', (ev) => {
 });
 window.addEventListener('keyup', (ev) => { G.keys[ev.key.toLowerCase()] = false; });
 window.addEventListener('blur', () => { G.keys = {}; G.mouse.down = false; G.mouse.rdown = false; });
-function toggleFull() { const el = $('#stage'); if (document.fullscreenElement) document.exitFullscreen && document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen().catch(() => { }); }
 
 // HUD buttons (canvas coords)
 const HUD_BTNS = [
