@@ -105,8 +105,10 @@ html, body { margin: 0; height: 100%; background: #050403; color: var(--parch); 
 .tone button { border: 0; min-width: 0; }
 
 /* intro */
-#intro { background: #000; flex-direction: column; gap: 3cqh; }
-.scroll-text { width: 70cqw; font-size: 2.7cqw; line-height: 1.5; color: var(--parch); text-align: center; font-style: normal; }
+#intro { background: #000; flex-direction: column; gap: 3cqh; padding: 4cqh 0; box-sizing: border-box; cursor: pointer; }
+#intro .dfbtn { flex: none; }
+#intro .hint-key { flex: none; font-size: min(1.6cqw, 2.2cqh); color: var(--parch); opacity: .55; margin-top: -1.5cqh; }
+.scroll-text { width: 70cqw; max-height: calc(100% - 16cqh); overflow-y: auto; font-size: min(2.7cqw, 3.2cqh); line-height: 1.5; color: var(--parch); text-align: center; font-style: normal; }
 .scroll-text p { margin: 0 0 1.4cqh; opacity: 0; animation: fadein 1.2s forwards; }
 @keyframes fadein { to { opacity: 1; } }
 

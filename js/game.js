@@ -97,7 +97,10 @@ function startGame() {
   // intro
   show('#intro'); const it = $('#intro-text'); it.innerHTML = '';
   INTRO.forEach((line, i) => { const pEl = document.createElement('p'); pEl.textContent = line; pEl.style.animationDelay = (i * 1.1) + 's'; it.appendChild(pEl); });
-  $('#btn-intro-skip').onclick = () => { hide('#intro'); loadMap('oakhaven'); G.state = 'play'; Audio_.setScene('town'); msg('Nullday. Dusk. Oakhaven, inside the Hedge.', 'warn', 6000); msg('Press H for help at any time.', '', 7000); };
+  G.state = 'intro';
+  const go = () => { if (G.state !== 'intro') return; hide('#intro'); loadMap('oakhaven'); G.state = 'play'; Audio_.setScene('town'); msg('Nullday. Dusk. Oakhaven, inside the Hedge.', 'warn', 6000); msg('Press H for help at any time.', '', 7000); };
+  $('#btn-intro-skip').onclick = (ev) => { ev.stopPropagation(); go(); };
+  $('#intro').onclick = go;
 }
 
 // ---------------------------------------------------------------- maps
@@ -683,6 +686,8 @@ window.addEventListener('keydown', (ev) => {
     else if (k === '`') { const d = $('#debug'); d.style.display = d.style.display === 'none' || !d.style.display ? 'block' : 'none'; }
   } else if (G.state === 'panel' || G.state === 'dialogue') {
     if (k === 'escape' || (G.state === 'panel' && (k === 'i' && G.openPanel === 'inv' || k === 'c' && G.openPanel === 'char' || k === 'l' && G.openPanel === 'log' || k === 'm' && G.openPanel === 'map' || k === 'k' && G.openPanel === 'ledger' || k === 'tab' && G.openPanel === 'songs' || k === 'h' && G.openPanel === 'help' || k === 'r' && G.openPanel === 'rest'))) { if (G.openPanel === 'loadtitle') { closeModal(); G.state = 'title'; show('#title'); } else { closeModal(); G.state = 'play'; } }
+  } else if (G.state === 'intro') {
+    if (k === 'enter' || k === ' ' || k === 'escape') { ev.preventDefault(); $('#btn-intro-skip').click(); }
   } else if (G.state === 'title') {
     const open = !$('#modal').classList.contains('hidden');
     if (open && (k === 'escape' || k === 'h')) closeModal(); else if (!open && k === 'enter' && !$('#title').classList.contains('hidden')) $('#btn-new').click();
