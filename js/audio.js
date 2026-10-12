@@ -72,5 +72,5 @@ const Audio_ = (() => {
     voice: () => { tone(220, 0.35, 0.08, 'triangle', 180); setTimeout(() => tone(196, 0.5, 0.08, 'triangle', 160), 300); },
   };
   function toggleMute() { muted = !muted; if (master) master.gain.value = muted ? 0 : 0.55; return muted; }
-  return { init, resume, setScene, sfx, toggleMute, get ready() { return !!ctx; } };
+  return { init, resume, setScene, sfx, toggleMute, get ready() { return !!ctx; }, get muted() { return muted; } };
 })();

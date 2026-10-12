@@ -110,11 +110,13 @@ function hydrate(e) {
 }
 function loadMap(id, pos) {
   const m = G.maps[id]; G.map = m; G.mapId = id; G.ents = m.entities; m.entities.forEach(hydrate);
+  for (const e of m.entities) { if (e.requires) e.hidden = !G.flags[e.requires]; if (e.until && G.flags[e.until]) e.hidden = true; }
   Engine.setMap(m);
   const p = pos || m.spawn; Engine.cam.x = p.x; Engine.cam.y = p.y; Engine.cam.dir = p.dir || 0; Engine.cam.pitch = 0;
   G.stillT = 0; G.unwriting = false; $('#view').classList.remove('unwrite');
   Audio_.setScene(m.music);
   msg(m.name, 'warn', 3500);
+  if (id === 'lyra_house' && G.flags.rite_ready && !G.flags.lyra_taken_seen) { G.flags.lyra_taken_seen = true; msg('The hearth is cold. A proctor\'s seal is pasted over the shutter. They have taken her into the Church\'s protection.', 'bad', 8000); }
   G.fadeT = 0.5;
 }
 function transfer(portal) {
@@ -129,7 +131,7 @@ function transfer(portal) {
 // ---------------------------------------------------------------- collision
 function solidAt(x, y, self) {
   const m = G.map; const r = 0.24;
-  for (const [dx, dy] of [[-r, -r], [r, -r], [-r, r], [r, r]]) if (m.isSolidCell((x + dx) | 0, (y + dy) | 0)) return true;
+  for (const [dx, dy] of [[-r, -r], [r, -r], [-r, r], [r, r]]) if (m.isBlocked((x + dx) | 0, (y + dy) | 0)) return true;
   if (self && dist2(x, y, Engine.cam.x, Engine.cam.y) < 0.4) return true;
   for (const e of G.ents) { if (e === self || !e.solid || e.hidden || e.dead) continue; const rr = (e.radius || 0.3) + 0.22; if (dist2(x, y, e.x, e.y) < rr * rr) return true; }
   return false;
@@ -176,7 +178,7 @@ function spawnHound() {
 // ---------------------------------------------------------------- enemies
 function enemyUpdate(e, dt) {
   const p = G.player, c = Engine.cam, d = e.def;
-  if (e.dead) return;
+  if (e.dead || e.hidden) return;
   if (e.stun > 0) { e.stun -= dt; e.flash = (e.stun % 0.3) < 0.1; return; } else e.flash = false;
   if (e.state === 'passive') return;
   const dx = c.x - e.x, dy = c.y - e.y, dist = Math.sqrt(dx * dx + dy * dy);
@@ -359,6 +361,18 @@ function useDeco(e) {
     if (!G.flags.crates_heard) { G.flags.crates_heard = true; ['Annet Sowerby', 'Corwin Aye', 'Mirren Salk'].forEach(n => G.ledger.push({ name: n, where: 'Hetty\'s cellar', day: G.day })); }
     showEvent('The crates in the cellar', 'You put your ear to the wood. Thirty-six lilac spheres, you would guess by the weight, each in its straw. For a long moment nothing. Then, very small, through the side of the crate: <i>"Is somebody there? I\'m Annet. Annet Sowerby. I\'m six. What\'s your name?"</i><br><br>You do not answer. You have learned that much. From further in, two more voices, each saying only a name, over and over, the way a person says a thing they are afraid of losing: Corwin Aye. Mirren Salk.', [{ t: 'Step away from the crates', f: () => { journal('side', 'The corsair\'s crates in Hetty\'s cellar hold glass cores. One of them is a six-year-old called Annet Sowerby. I wrote the names in my ledger.'); } }]);
     Audio_.sfx.voice();
+  } else if (e.use === 'plinth') {
+    showEvent('The empty bell-frame', 'An oak frame built for four bells, and four hooks, and nothing on them. Somebody has chalked on the crossbeam, in a careful hand: <i>TAKEN FOR BORE-TEETH, 412 SR. THEY RANG IN E.</i> Under it, smaller and newer: <i>the Hedge can whistle. who taught it.</i>' + (G.flags.rite_ready ? '<br><br>The Flambeau\'s people have hung a glass-fire lamp where the tenor bell was. It is singing one note, very quietly, and your teeth ache with it.' : ''), [{ t: 'Step back', f: () => { if (!G.flags.plinth_read) { G.flags.plinth_read = true; journal('side', 'The chapel\'s bells were taken for bore-teeth in 412. They rang in E. Somebody has asked, in chalk, who taught the Hedge to whistle.'); } } }]);
+  } else if (e.use === 'tanner_key') {
+    if (G.flags.culvert_open) { msg('The nail is empty. You have the key.', '', 2500); return; }
+    G.flags.culvert_open = true; Audio_.sfx.pickup(); msg('You take the culvert key off its nail. It is cold, and there is a tag on it in a child\'s hand: JOSS + WYN DO NOT.', 'good', 7000);
+    journal('side', 'I took the culvert key from the tannery. The grate in the south hedge, by the Flume, can be opened now. The Tanner twins went down it after their dog and did not come up.');
+  } else if (e.use === 'twins') {
+    if (!G.flags.twins_found) G.flags.twins_found = true;
+    showEvent('Two small coats', 'Two coats, a child\'s and a child\'s, folded square on the crate the way you fold a coat when you mean to come back for it. Beside them, a dog\'s collar, and the leather of it has been chewed through from the inside.<br><br>There is nothing else of them here. Whatever came up the culvert for the dog did not leave bones. It left the coats, because coats do not sing.', [
+      { t: 'Write their names in your ledger: Joss and Wyn.', f: () => { if (!G.flags.twins_named) { G.flags.twins_named = true; G.ledger.push({ name: 'Joss Wendle', where: 'the Under-hedge', day: G.day }); G.ledger.push({ name: 'Wyn Wendle', where: 'the Under-hedge', day: G.day }); journal('side', 'I found the Tanner twins\' coats folded in the Under-hedge. I wrote Joss and Wyn in my ledger. Hob Wendle should be told.'); } } },
+      { t: 'Leave them folded.', f: () => { journal('side', 'I found the Tanner twins\' coats folded in the Under-hedge. There was nothing else. Hob Wendle should be told.'); } },
+    ]);
   } else if (e.use === 'bore') {
     if (G.flags.bore_broken) { msg('The bit is snapped. The Root is drinking the reservoir, and growing.', 'warn'); return; }
     if (G.flags.bore_seated) { msg('The coil is seated. Hold the room until the lock throws.', 'warn'); return; }
@@ -443,6 +457,10 @@ function ending() {
   lines.push(`On the last load the Governor is at the bottom, because he has been loading his town onto that rope for twenty minutes. The line snags in a crown. Vane counts to ten. Aldric Vance looks up and waves you on. "Do it," says Kaelen. Six feet of cut rope will hang from the drum for four days.`);
   if (f.hedge_answered) lines.push(`Behind you, where the thing that wore your voice burst, there is a patch of ground where no sound will carry for a day. You will hear your own name in the wrong mouth for the rest of your life, and you will know it is your fault, and you will be right.`);
   else if (f.hedge_silent) lines.push(`At the Hedge, as the ship lifts, something speaks to the town in the voices of its dead and offers a way through. You said nothing when it spoke to you. You wonder, every night after, who answered.`);
+  if (f.pim_safe) lines.push(`The Carders came up the rope first, because a boy whose hands have been hummed clean once already knows how to hold a line${f.pim_tended ? ', and because he asked for the stranger who did it different from Lyra, and would not go up until you nodded' : ''}. Nell Carder has his coat pockets full of mill-flour. It is the only Oakhaven anyone will carry away.`);
+  if (f.tam_told) lines.push(`When the oaks began to ring, Old Tam walked out into the water-meadow singing The Miller\'s Daughter, all the verses, at the top of a voice he had been saving. The hounds went to him and not to the rope. He knew the whole song. It had only ever known the second verse.`);
+  else if (f.tam_left) lines.push(`Old Tam was not at the rope. Afterward somebody said they had heard him at the Flume crossing, singing the second verse with somebody, in a voice that was not quite his.`);
+  if (f.twins_named) lines.push(`Joss and Wyn Wendle are in your ledger. Hob Wendle put out the lamp in their window before he climbed, which is the first thing he has been able to do for them in a month.`);
   if (f.boots_delivered) lines.push(`Lyra sang Orla Hale down proper, all the lines, even the fourth, while the tree closed over her. The boots were on the chair. You put them there.`);
   if (G.has('charts')) lines.push(`Tobiah Marsh's charts are in your shirt, with Revision Seven and the margin: on failure of the hold, slippage is to be absorbed by the source. Kaelen reads it twice and says nothing for an hour. Then he starts a list of names on a deck-beam.`);
   if (names > 0) lines.push(`You have ${names} name${names === 1 ? '' : 's'} in your ledger${names >= 6 ? ', which is more than most people carry out of the Reach alive' : ''}. ${names >= 3 ? 'Annet Sowerby, six years old, is in the hold, in a crate, in her straw, and she is not lost. She is filed. There is a scribe at Whisper-Grove who knows how to read a name back.' : 'Everyone who ever kept such a list before you was the Catalogue. You intend to be something else.'}`);
@@ -460,19 +478,19 @@ function talk(e) {
   if (e.id === 'hollow') { msg(`The Hollow repeats, to no one: "${e.lines[rndi(0, e.lines.length - 1)]}"`, 'voice', 5000); return; }
   const n = NPCS[e.id]; if (!n) return;
   DLG.npc = n; DLG.ent = e; DLG.log = []; G.state = 'dialogue'; Audio_.sfx.ui();
-  const q = n.quest ? n.quest(G) : null;
-  if (q) { DLG.log.push({ who: 'them', t: q.text }); if (q.journal) journal(q.journal[0], q.journal[1]); }
+  const q = n.quest ? n.quest(G) : null; DLG.choices = null;
+  if (q) { DLG.log.push({ who: 'them', t: q.text }); if (q.journal) journal(q.journal[0], q.journal[1]); if (q.choices) DLG.choices = q.choices; }
   else DLG.log.push({ who: 'them', t: n.greet[DLG.tone] });
-  renderDialogue();
+  renderDialogue(DLG.choices ? 'choice' : null);
 }
 function renderDialogue(mode) {
   const n = DLG.npc;
   const html = `<h2>${n.name.split(',')[0]}</h2><div class="dlg"><div class="port"><img src="img/p_${n.portrait}.jpg" alt=""><div class="name">${n.name}</div></div>
   <div class="col"><div class="log" id="dlg-log">${DLG.log.map(l => `<div class="${l.who}">${l.who === 'you' ? '— ' : ''}${l.t}</div>`).join('')}</div>
-  <div class="btns"><button class="dfbtn small ${mode === 'tell' ? 'sel' : ''}" id="d-tell">Tell me about…</button><button class="dfbtn small ${mode === 'where' ? 'sel' : ''}" id="d-where">Where is…</button>
+  <div class="btns"><button class="dfbtn small ${mode === 'tell' ? 'sel' : ''}" id="d-tell">Tell me about…</button><button class="dfbtn small ${mode === 'where' ? 'sel' : ''}" id="d-where">Where is…</button>${n.shop ? `<button class="dfbtn small ${mode === 'buy' ? 'sel' : ''}" id="d-buy">Buy…</button>` : ''}${DLG.choices ? `<button class="dfbtn small ${mode === 'choice' ? 'sel' : ''}" id="d-answer">Answer…</button>` : ''}
   <span class="tone">${['polite', 'normal', 'blunt'].map(t => `<button class="dfbtn small ${DLG.tone === t ? 'sel' : ''}" data-t="${t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}</span>
   <button class="dfbtn small" id="d-bye">Goodbye</button></div>
-  <div class="topics" id="d-topics">${mode === 'tell' ? TOPIC_KEYS.map(t => `<button class="dfbtn small" data-topic="${t}">${t}</button>`).join('') : mode === 'where' ? Object.keys(PLACES).map(t => `<button class="dfbtn small" data-place="${t}">${t}</button>`).join('') : ''}</div></div></div>`;
+  <div class="topics${mode === 'choice' || mode === 'buy' ? ' wide' : ''}" id="d-topics">${mode === 'tell' ? TOPIC_KEYS.map(t => `<button class="dfbtn small" data-topic="${t}">${t}</button>`).join('') : mode === 'where' ? Object.keys(PLACES).map(t => `<button class="dfbtn small" data-place="${t}">${t}</button>`).join('') : mode === 'buy' ? n.shop.map((it, i) => `<button class="dfbtn small" data-buy="${i}">${ITEMS[it.item].name} — ${it.price} sov.</button>`).join('') + `<span class="muted" style="align-self:center">You have ${G.player.gold} sovereigns.</span>` : mode === 'choice' && DLG.choices ? DLG.choices.map((c, i) => `<button class="dfbtn small" data-choice="${i}">${c.t}</button>`).join('') : ''}</div></div></div>`;
   openModal(html, 'dialogue');
   const log = $('#dlg-log'); log.scrollTop = log.scrollHeight;
   $('#d-tell').onclick = () => renderDialogue(mode === 'tell' ? null : 'tell');
@@ -481,6 +499,19 @@ function renderDialogue(mode) {
   document.querySelectorAll('.tone button').forEach(b => b.onclick = () => { DLG.tone = b.dataset.t; renderDialogue(mode); });
   document.querySelectorAll('[data-topic]').forEach(b => b.onclick = () => { askTopic(b.dataset.topic); renderDialogue('tell'); });
   document.querySelectorAll('[data-place]').forEach(b => b.onclick = () => { askPlace(b.dataset.place); renderDialogue('where'); });
+  const bb = $('#d-buy'); if (bb) bb.onclick = () => renderDialogue(mode === 'buy' ? null : 'buy');
+  const ab = $('#d-answer'); if (ab) ab.onclick = () => renderDialogue(mode === 'choice' ? null : 'choice');
+  document.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => {
+    const it = n.shop[+b.dataset.buy]; const p = G.player;
+    if (p.gold < it.price) { DLG.log.push({ who: 'them', t: 'Not for what you have in your purse, love.' }); renderDialogue('buy'); return; }
+    p.gold -= it.price; if (it.item === 'pellets') p.pellets += 3; else G.give(it.item); Audio_.sfx.pickup();
+    DLG.log.push({ who: 'you', t: `I\'ll take the ${ITEMS[it.item].name}.` }); DLG.log.push({ who: 'them', t: ['There. Keep it wrapped.', 'Softly with the coin; it rings.', 'Blessings of the Narrow.'][rndi(0, 2)] }); renderDialogue('buy');
+  });
+  document.querySelectorAll('[data-choice]').forEach(b => b.onclick = () => {
+    const ch = DLG.choices[+b.dataset.choice]; DLG.log.push({ who: 'you', t: ch.t }); DLG.choices = null; Audio_.sfx.ui();
+    const reply = ch.f ? ch.f(G) : null; if (reply) DLG.log.push({ who: 'them', t: reply });
+    renderDialogue();
+  });
 }
 function askTopic(t) {
   const n = DLG.npc, p = G.player; DLG.log.push({ who: 'you', t: `Tell me about ${t}.` });
@@ -497,7 +528,7 @@ function askTopic(t) {
   // quest-relevant tells
   if (t === 'Kaelen Vance' && !G.flags.need_gate && G.flags.lyra_met) { G.flags.need_gate = true; }
 }
-const PLACE_POS = { tavern: [29.5, 17.5], lyra_house: [21.5, 29.5], greenhall: [30.5, 9.5], surgery: [17.5, 15.5], gate: [23.5, 1.5], mast: [36.5, 22.5], orla_house: [29.5, 40.5], culvert: [23.5, 42.5] };
+const PLACE_POS = { tavern: [29.5, 17.5], lyra_house: [21.5, 29.5], greenhall: [30.5, 9.5], surgery: [17.5, 15.5], gate: [23.5, 1.5], mast: [36.5, 22.5], orla_house: [29.5, 40.5], culvert: [23.5, 60.5], market: [52.5, 17.5], mill: [57.5, 9.5], chapel: [48.5, 10.5], flume: [53.5, 47.5], tannery: [15.5, 56.5] };
 function askPlace(place) {
   const key = PLACES[place]; const [tx, ty] = PLACE_POS[key]; DLG.log.push({ who: 'you', t: `Where is ${place}?` });
   let from = [Engine.cam.x, Engine.cam.y], pre = '';
@@ -580,10 +611,12 @@ function renderMap() {
   for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) {
     if (!m.visited[y * m.w + x]) continue;
     const c = m.cells[y * m.w + x];
-    cx.fillStyle = c ? (c.door ? '#d9a441' : (c.tex === 't_hedge' ? '#2f4a22' : '#7a6a58')) : '#2a2219';
+    const fl = m.floorCells ? m.floorCells[y * m.w + x] : 0;
+    cx.fillStyle = c ? (c.door ? '#d9a441' : (c.tex === 't_hedge' ? '#2f4a22' : '#7a6a58')) : (fl === 2 ? '#2f7a64' : fl === 1 ? '#4a3e30' : '#2a2219');
     cx.fillRect(x * cw, y * cw, cw, cw);
   }
   for (const e of G.ents) { if (e.hidden || e.dead) continue; if (!m.visited[(e.y | 0) * m.w + (e.x | 0)]) continue; cx.fillStyle = e.kind === 'npc' ? '#6fa0e0' : e.kind === 'enemy' ? '#d04030' : e.kind === 'item' ? '#e0d060' : null; if (cx.fillStyle && e.kind !== 'deco') cx.fillRect(e.x * cw - 1, e.y * cw - 1, 3, 3); }
+  if (G.mapId === 'oakhaven') { cx.font = '7px "Alegreya SC", serif'; cx.textAlign = 'center'; cx.fillStyle = '#f0d890'; for (const [lbl, [px, py]] of Object.entries({ 'Gate': [23.5, 3], 'Boar': [29.5, 16.6], 'Greenhall': [30.5, 8.4], 'Lyra': [21.5, 31.6], 'Rooke': [17.5, 14.4], 'Mast': [36.5, 18.4], 'Market': [52.5, 15.2], 'Mill': [62, 8.6], 'Chapel': [49, 6.8], 'Tannery': [15.5, 59.4], 'Flume': [36, 50.4], 'Culvert': [23.5, 60.6], 'Orchard': [56, 31] })) { const i = ((py | 0) * m.w + (px | 0)); if (m.visited[i]) cx.fillText(lbl, px * cw, py * cw); } cx.textAlign = 'left'; }
   cx.fillStyle = '#fff'; cx.beginPath(); cx.arc(Engine.cam.x * cw, Engine.cam.y * cw, 2.5, 0, 7); cx.fill();
   cx.strokeStyle = '#fff'; cx.beginPath(); cx.moveTo(Engine.cam.x * cw, Engine.cam.y * cw); cx.lineTo(Engine.cam.x * cw + Math.cos(Engine.cam.dir) * 7, Engine.cam.y * cw + Math.sin(Engine.cam.dir) * 7); cx.stroke();
 }
@@ -620,7 +653,7 @@ window.addEventListener('mousemove', (ev) => {
   const p = canvasPos(ev); G.mouse.x = p.x; G.mouse.y = p.y;
 });
 window.addEventListener('keydown', (ev) => {
-  if (ev.target && ev.target.tagName === 'INPUT') return;
+  if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
   const k = ev.key.toLowerCase(); G.keys[k] = true;
   if (ev.repeat && !['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright','q','shift'].includes(k)) return;
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'tab', 'f1', 'f2', 'f3', 'f4', 'f5'].includes(k)) ev.preventDefault();
@@ -638,9 +671,10 @@ window.addEventListener('keydown', (ev) => {
     else if (k === 'v') { const m = Audio_.toggleMute(); msg(m ? 'Sound off.' : 'Sound on.', '', 1200); }
     else if (k >= '1' && k <= '4') { const i = +k - 1; if (G.player.weapons[i]) { G.player.weapon = i; msg(`${WEAPONS[G.player.weapons[i]].name}.`, '', 1200); } }
     else if (k.startsWith('f') && k.length === 2 && +k[1] >= 1) { const s = G.player.songs[+k[1] - 1]; if (s) castSong(s); }
+    else if (k === 'escape') { G.state = 'panel'; renderMenu(); }
     else if (k === '`') { const d = $('#debug'); d.style.display = d.style.display === 'none' || !d.style.display ? 'block' : 'none'; }
   } else if (G.state === 'panel' || G.state === 'dialogue') {
-    if (k === 'escape' || (G.state === 'panel' && (k === 'i' && G.openPanel === 'inv' || k === 'c' && G.openPanel === 'char' || k === 'l' && G.openPanel === 'log' || k === 'm' && G.openPanel === 'map' || k === 'k' && G.openPanel === 'ledger' || k === 'tab' && G.openPanel === 'songs' || k === 'h' && G.openPanel === 'help' || k === 'r' && G.openPanel === 'rest'))) { closeModal(); G.state = 'play'; }
+    if (k === 'escape' || (G.state === 'panel' && (k === 'i' && G.openPanel === 'inv' || k === 'c' && G.openPanel === 'char' || k === 'l' && G.openPanel === 'log' || k === 'm' && G.openPanel === 'map' || k === 'k' && G.openPanel === 'ledger' || k === 'tab' && G.openPanel === 'songs' || k === 'h' && G.openPanel === 'help' || k === 'r' && G.openPanel === 'rest'))) { if (G.openPanel === 'loadtitle') { closeModal(); G.state = 'title'; } else { closeModal(); G.state = 'play'; } }
   } else if (G.state === 'title' && k === 'enter') $('#btn-new').click();
 });
 window.addEventListener('keyup', (ev) => { G.keys[ev.key.toLowerCase()] = false; });
@@ -656,8 +690,9 @@ const HUD_BTNS = [
   { x: 74, y: 168, w: 24, h: 11, t: 'REST', f: () => { G.state = 'panel'; renderRest(); } },
   { x: 100, y: 168, w: 24, h: 11, t: 'NAMES', f: () => { G.state = 'panel'; renderLedger(); } },
   { x: 126, y: 168, w: 24, h: 11, t: 'HELP', f: () => { G.state = 'panel'; renderHelp(); } },
-  { x: 48, y: 181, w: 50, h: 11, t: 'MURMUR', f: () => castSong('murmur') },
-  { x: 100, y: 181, w: 50, h: 11, t: 'WEAPON', f: () => { const p = G.player; p.weapon = (p.weapon + 1) % p.weapons.length; msg(`${currentWeapon().name}.`, '', 1200); } },
+  { x: 48, y: 181, w: 36, h: 11, t: 'MURMUR', f: () => castSong('murmur') },
+  { x: 86, y: 181, w: 28, h: 11, t: 'SAVE', f: () => { G.state = 'panel'; renderMenu(); } },
+  { x: 116, y: 181, w: 34, h: 11, t: 'WEAPON', f: () => { const p = G.player; p.weapon = (p.weapon + 1) % p.weapons.length; msg(`${currentWeapon().name}.`, '', 1200); } },
 ];
 function hudClick(x, y) { for (const b of HUD_BTNS) if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) { Audio_.sfx.ui(); b.f(); return; } }
 
@@ -805,6 +840,126 @@ function render() {
   const d = $('#debug'); if (d.style.display === 'block') d.textContent = `FPS ${fps.toFixed(0)} | ${G.mapId} ${Engine.cam.x.toFixed(1)},${Engine.cam.y.toFixed(1)} dir ${Engine.cam.dir.toFixed(2)} | noise ${G.noise.toFixed(1)} still ${G.stillT.toFixed(1)} | ents ${G.ents.length}`;
 }
 window.advanceTime = (ms) => { const steps = Math.max(1, Math.round(ms / (1000 / 60))); for (let i = 0; i < steps; i++) update(1 / 60); render(); };
+// ---------------------------------------------------------------- saving & loading
+// The preview sandbox has no persistent storage, so saves are a portable code / file plus in-session slots.
+const SAVE_VERSION = 1;
+const SLOTS = [null, null, null];
+const ENT_FIELDS = ['x', 'y', 'hp', 'dead', 'hidden', 'state', 'name', 'solid', 'homeX', 'homeY', 'passive'];
+function b64(u8) { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); }
+function unb64(str) { const b = atob(str); const u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+function rleEncode(u8) { const out = []; let i = 0; while (i < u8.length) { const v = u8[i]; let n = 1; while (i + n < u8.length && u8[i + n] === v && n < 255) n++; out.push(v, n); i += n; } return b64(new Uint8Array(out)); }
+function rleDecode(str, len) { const src = unb64(str); const out = new Uint8Array(len); let o = 0; for (let i = 0; i + 1 < src.length; i += 2) { const v = src[i], n = src[i + 1]; for (let k = 0; k < n && o < len; k++) out[o++] = v; } return out; }
+function snapshotGame() {
+  const p = G.player, c = Engine.cam;
+  const maps = {};
+  for (const id in G.maps) {
+    const m = G.maps[id]; const base = m.baseCount != null ? m.baseCount : m.entities.length;
+    const ents = m.entities.slice(0, base).map(e => { const o = {}; for (const k of ENT_FIELDS) if (e[k] !== undefined) o[k] = e[k]; return o; });
+    const extra = m.entities.slice(base).map(e => { const o = { kind: e.kind, type: e.type, sprite: e.sprite, item: e.item, id: e.id }; for (const k of ENT_FIELDS) if (e[k] !== undefined) o[k] = e[k]; return o; });
+    const doors = {}; for (const k in m.doors) if (m.doors[k].open > 0 || m.doors[k].target > 0) doors[k] = [m.doors[k].open, m.doors[k].target];
+    maps[id] = { ents, extra, doors, visited: rleEncode(m.visited), triggers: m.triggers.map(t => ({ done: !!t.done, said: !!t.said })) };
+  }
+  return {
+    v: SAVE_VERSION, when: Date.now(),
+    player: Object.assign({}, p, { cls: p.cls.id }),
+    flags: G.flags, journal: G.journal, ledger: G.ledger, runs: G.runs,
+    tod: G.tod, day: G.day, mapId: G.mapId, cam: { x: c.x, y: c.y, dir: c.dir },
+    noise: G.noise, escapeTimer: G.escapeTimer, boreHold: G.boreHold || 0, boreGolems: G.boreGolems || 0, glassLock: G.glassLock, rootWard: G.rootWard,
+    maps,
+  };
+}
+function restoreGame(d) {
+  const cls = CLASSES.find(c => c.id === d.player.cls) || CLASSES[0];
+  G.player = Object.assign({}, d.player, { cls }); G.flags = d.flags || {}; G.journal = d.journal || []; G.ledger = d.ledger || []; G.runs = d.runs || 0;
+  G.tod = d.tod; G.day = d.day; G.noise = d.noise || 2; G.escapeTimer = d.escapeTimer || 0; G.boreHold = d.boreHold || 0; G.boreGolems = d.boreGolems || 0; G.glassLock = d.glassLock || 0; G.rootWard = d.rootWard || 0;
+  G.dead = false; G.stillT = 0; G.unwriting = false; G.murmurT = 0; G.whistleT = 0;
+  G.maps = buildAllMaps(); if (G.flags.greening) G.maps.oakhaven = buildOakhaven(true);
+  for (const id in G.maps) {
+    const m = G.maps[id], sm = d.maps[id]; if (!sm) continue;
+    m.entities.forEach(hydrate);
+    sm.ents.forEach((o, i) => { const e = m.entities[i]; if (e) Object.assign(e, o); });
+    for (const o of sm.extra) { const e = hydrate({ kind: o.kind, type: o.type, sprite: o.sprite, item: o.item, id: o.id, x: o.x, y: o.y }); if (o.item) { e.scale = 0.35; e.solid = false; } Object.assign(e, o); m.entities.push(e); }
+    for (const k in sm.doors) if (m.doors[k]) { m.doors[k].open = sm.doors[k][0]; m.doors[k].target = sm.doors[k][1]; }
+    if (sm.visited) m.visited = rleDecode(sm.visited, m.w * m.h);
+    (sm.triggers || []).forEach((t, i) => { if (m.triggers[i]) { m.triggers[i].done = t.done; m.triggers[i].said = t.said; } });
+  }
+  // re-attach the hooks that closures carried
+  const rv = G.maps.rootvault; if (G.boreHold > 0 && rv) for (const e of rv.entities) if (e.kind === 'enemy' && e.type === 'golem' && !e.dead && e.state === 'chase') e.onDeath = () => { G.boreGolems--; if (G.boreGolems <= 0) finishBore(); };
+  const oh = G.maps.oakhaven; if (oh) for (const e of oh.entities) if (e.kind === 'enemy' && e.type === 'wearer' && !e.dead) e.onDeath = () => { G.flags.wearer_dead = true; msg('It bursts, and everything it ever ate comes out at once.', 'voice', 9000); setTimeout(ending, 2500); };
+  ['#title', '#create', '#intro', '#death', '#ending', '#event'].forEach(hide); closeModal();
+  loadMap(d.mapId, d.cam); G.state = 'play';
+  msg('The thread is picked up where you left it.', 'warn', 5000);
+}
+async function encodeSave(d) {
+  const json = JSON.stringify(d); const bytes = new TextEncoder().encode(json);
+  if (typeof CompressionStream !== 'undefined') {
+    try { const cs = new CompressionStream('deflate-raw'); const w = cs.writable.getWriter(); w.write(bytes); w.close(); const buf = new Uint8Array(await new Response(cs.readable).arrayBuffer()); return 'OCTZ1.' + b64(buf); } catch (e) { /* fall through */ }
+  }
+  return 'OCTJ1.' + b64(bytes);
+}
+async function decodeSave(code) {
+  code = (code || '').trim().replace(/\s+/g, '');
+  if (code.startsWith('{')) return JSON.parse(code);
+  const dot = code.indexOf('.'); const tag = code.slice(0, dot), body = code.slice(dot + 1);
+  let bytes = unb64(body);
+  if (tag === 'OCTZ1') { const ds = new DecompressionStream('deflate-raw'); const w = ds.writable.getWriter(); w.write(bytes); w.close(); bytes = new Uint8Array(await new Response(ds.readable).arrayBuffer()); }
+  else if (tag !== 'OCTJ1') throw new Error('Not an Octave save.');
+  const d = JSON.parse(new TextDecoder().decode(bytes)); if (!d || d.v !== SAVE_VERSION || !d.player || !d.maps) throw new Error('Not an Octave save.'); return d;
+}
+function saveSummary(d) { const p = d.player; const m = (G.maps && G.maps[d.mapId]) ? G.maps[d.mapId].name : d.mapId; return `${p.name}, ${CLASSES.find(c => c.id === p.cls)?.name || ''} · Lv ${p.level} · ${DAYS[d.day % DAYS.length]} · ${m}`; }
+function slotSummary(d) { const p = d.player; return `${p.name}, ${CLASSES.find(c => c.id === p.cls)?.name || ''} · Lv ${p.level} · ${DAYS[d.day % DAYS.length]} · ${d.mapName || d.mapId}`; }
+function renderMenu() {
+  const html = `<h2>Options</h2><button class="dfbtn small close" id="x">Close</button>
+  <div class="menu-list" style="margin-top:1cqh">
+    <button class="dfbtn" id="mn-save">Save game</button>
+    <button class="dfbtn" id="mn-load">Load game</button>
+    <button class="dfbtn" id="mn-help">How to play</button>
+    <button class="dfbtn" id="mn-mute">${Audio_.muted ? 'Sound on' : 'Sound off'}</button>
+    <button class="dfbtn" id="mn-title">Return to title</button>
+    <button class="dfbtn" id="mn-back">Continue</button>
+  </div><p class="muted" style="margin-top:1cqh">${DAYS[G.day % DAYS.length]} · ${G.map.name} · ${G.player.name}, level ${G.player.level}</p>`;
+  openModal(html, 'menu');
+  $('#x').onclick = $('#mn-back').onclick = () => { closeModal(); G.state = 'play'; };
+  $('#mn-save').onclick = () => renderSave(); $('#mn-load').onclick = () => renderLoad(false); $('#mn-help').onclick = () => renderHelp();
+  $('#mn-mute').onclick = () => { Audio_.toggleMute(); renderMenu(); };
+  $('#mn-title').onclick = () => { closeModal(); G.state = 'title'; show('#title'); Audio_.setScene('title'); };
+}
+async function renderSave() {
+  const d = snapshotGame(); d.mapName = G.map.name; const code = await encodeSave(d);
+  const html = `<h2>Save game</h2><button class="dfbtn small close" id="x">Close</button>
+  <p class="muted">${slotSummary(d)}</p>
+  <p><b style="color:var(--gold)">Session slots</b> — quick saves that last until you leave the page.</p>
+  ${[0, 1, 2].map(i => `<div class="slot"><span class="meta">${SLOTS[i] ? slotSummary(SLOTS[i]) : `Slot ${i + 1} — empty`}</span><button class="dfbtn small" data-slot="${i}">Save here</button></div>`).join('')}
+  <p style="margin-top:1cqh"><b style="color:var(--gold)">Save code</b> — copy it somewhere safe (or download it). Paste it under <i>Load game</i>, now or on another day.</p>
+  <textarea id="savecode" readonly>${code}</textarea>
+  <div class="btns"><button class="dfbtn small" id="sv-copy">Copy code</button><button class="dfbtn small" id="sv-dl">Download file</button><button class="dfbtn small" id="sv-back">Back</button></div>`;
+  openModal(html, 'save');
+  $('#x').onclick = () => { closeModal(); G.state = 'play'; }; $('#sv-back').onclick = () => renderMenu();
+  document.querySelectorAll('[data-slot]').forEach(b => b.onclick = () => { SLOTS[+b.dataset.slot] = d; Audio_.sfx.ui(); msg(`Saved to slot ${+b.dataset.slot + 1}.`, 'good', 2500); renderSave(); });
+  const ta = $('#savecode');
+  $('#sv-copy').onclick = async () => { ta.select(); let ok = false; try { await navigator.clipboard.writeText(code); ok = true; } catch (e) { try { ok = document.execCommand('copy'); } catch (e2) { } } msg(ok ? 'Save code copied.' : 'Select the code and copy it by hand.', ok ? 'good' : 'warn', 3000); };
+  $('#sv-dl').onclick = () => { try { const blob = new Blob([code], { type: 'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `octave-${G.player.name.replace(/\W+/g, '_')}-${DAYS[G.day % DAYS.length]}.txt`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); msg('If the download was blocked, copy the code instead.', '', 4000); } catch (e) { msg('Download blocked here. Copy the code instead.', 'warn', 4000); } };
+}
+function renderLoad(fromTitle) {
+  const html = `<h2>Load game</h2><button class="dfbtn small close" id="x">Close</button>
+  <p><b style="color:var(--gold)">Session slots</b></p>
+  ${[0, 1, 2].map(i => `<div class="slot"><span class="meta">${SLOTS[i] ? slotSummary(SLOTS[i]) : `Slot ${i + 1} — empty`}</span><button class="dfbtn small" data-slot="${i}" ${SLOTS[i] ? '' : 'disabled'}>Load</button></div>`).join('')}
+  <p style="margin-top:1cqh"><b style="color:var(--gold)">Save code or file</b></p>
+  <textarea id="savecode" placeholder="Paste a save code here…"></textarea>
+  <div class="btns"><button class="dfbtn small" id="ld-code">Load code</button><label class="dfbtn small" for="ld-file" style="cursor:pointer">Load file…</label><input type="file" id="ld-file" accept=".txt,.json,text/plain" style="display:none"><button class="dfbtn small" id="ld-back">Back</button></div>
+  <p class="muted" id="ld-err"></p>`;
+  openModal(html, fromTitle ? 'loadtitle' : 'load');
+  const back = () => { if (fromTitle) { closeModal(); G.state = 'title'; } else renderMenu(); };
+  $('#x').onclick = () => { closeModal(); G.state = fromTitle ? 'title' : 'play'; }; $('#ld-back').onclick = back;
+  const fail = (e) => { $('#ld-err').textContent = 'That did not read as a save. ' + (e && e.message ? e.message : ''); };
+  document.querySelectorAll('[data-slot]').forEach(b => b.onclick = () => { try { restoreGame(JSON.parse(JSON.stringify(SLOTS[+b.dataset.slot]))); } catch (e) { fail(e); } });
+  $('#ld-code').onclick = async () => { try { restoreGame(await decodeSave($('#savecode').value)); } catch (e) { fail(e); } };
+  $('#ld-file').onchange = async (ev) => { const f = ev.target.files[0]; if (!f) return; try { restoreGame(await decodeSave(await f.text())); } catch (e) { fail(e); } };
+}
+$('#btn-load').onclick = () => { Audio_.init(); Audio_.resume(); hide('#title'); G.state = 'panel'; renderLoad(true); };
+window.saveCode = async () => encodeSave(snapshotGame());
+window.loadCode = async (c) => restoreGame(await decodeSave(c));
+
 window.render_game_to_text = () => {
   const c = Engine.cam, p = G.player;
   return JSON.stringify({ state: G.state, panel: G.openPanel, map: G.mapId, note: 'grid units, x east, y south, dir radians (0=east, +=clockwise)', player: p ? { x: +c.x.toFixed(2), y: +c.y.toFixed(2), dir: +c.dir.toFixed(2), hp: Math.round(p.hp), hpMax: p.hpMax, voice: Math.round(p.voice), noise: +G.noise.toFixed(1), weapon: currentWeapon().name, pellets: p.pellets, gold: p.gold, inv: p.inv.map(s => s.id), glass: p.glass } : null, flags: G.flags, escape: Math.round(G.escapeTimer), ledger: G.ledger.length, hint: G.hint,

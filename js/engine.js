@@ -300,7 +300,7 @@ const Engine = (() => {
     let best = null, bd = 1e9;
     const cx = VW / 2, cy = VIEW_H / 2 + cam.pitch;
     for (const e of entities) {
-      const s = e._screen; if (!s || e.hidden) continue;
+      const s = e._screen; if (!s || e.hidden || e.nopick) continue;
       if (s.dist > maxDist) continue;
       if (cx >= s.x0 - 4 && cx <= s.x1 + 4 && cy >= s.y0 && cy <= s.y1 + 6) {
         if (s.dist < bd) { bd = s.dist; best = e; }

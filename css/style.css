@@ -127,3 +127,11 @@ html, body { margin: 0; height: 100%; background: #050403; color: var(--parch); 
 
 pre.help { font-family: var(--font-body); white-space: pre-wrap; font-size: 2.1cqw; line-height: 1.5; margin: 0; }
 .kbd { font-family: var(--font-sc); color: var(--gold); }
+.dlg .topics.wide { grid-template-columns: 1fr; }
+.dlg .topics.wide button { text-align: left; }
+#savecode { width: 100%; height: 14cqh; background: #0a0806; color: #c9b07a; border: 2px solid #0b0806; font-family: monospace; font-size: 1.3cqw; padding: .6cqw; resize: none; }
+.menu-list button { width: 100%; text-align: left; margin-bottom: .6cqh; }
+.slot { display: flex; justify-content: space-between; align-items: center; gap: 1cqw; padding: .6cqh .8cqw; border: 1px solid #3a2c1e; margin-bottom: .6cqh; background: #1a130d; }
+.slot .meta { color: #c9b07a; font-size: 1.7cqw; }
+.dlg:has(.topics.wide) .log { height: 30cqh; }
+.dlg .topics.wide { max-height: 26cqh; }

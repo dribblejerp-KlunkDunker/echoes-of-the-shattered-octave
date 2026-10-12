@@ -141,6 +141,8 @@ const TOPICS = {
   'The Hush': { low: 'What\'s outside. The quiet. We don\'t talk about it, which I suppose is the point.', high: 'It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet.' },
   'The Root': { low: 'What\'s under the quarry. The Consortium drills it. Pays the town\'s bread, the Governor says.', high: 'The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune.' },
   'The Iron Synod': { low: 'One Note, One Law, One Hand. They took our bells for bore-teeth.', high: 'Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name.' },
+  'The Flume': { low: 'The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it.', high: 'The Chlorophyll Flume carries Growth-water down from the Anchor\'s country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in.' },
+  'The Church': { low: 'The Choir-Church. They took the bells in 412. They are coming back up the road to sing over us, and that is supposed to be a blessing.', high: 'The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning.' },
   'The Rite': { low: 'The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing.', high: 'A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go.' },
   'Kaelen Vance': { low: 'The Governor\'s son. Lives outside the Hedge in a charcoal-burner\'s hut. The hounds won\'t touch him. People say that tells you something.', high: 'Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin.' },
   'Lyra Ashgrove': { low: 'Our Cantor. Sings the births and the burials. Her father was taken in 417.', high: 'Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge.' },
@@ -157,7 +159,8 @@ const TOPICS = {
 const TOPIC_KEYS = Object.keys(TOPICS);
 
 const PLACES = {
-  'The Boar & Dulcimer': 'tavern', 'Lyra\'s house': 'lyra_house', 'The Greenhall': 'greenhall', 'Rooke\'s surgery': 'surgery', 'The North Gate': 'gate', 'The mooring mast': 'mast', 'Orla Hale\'s house': 'orla_house', 'The tannery culvert': 'culvert',
+  'The Boar & Dulcimer': 'tavern', 'Lyra\'s house': 'lyra_house', 'The Greenhall': 'greenhall', 'Rooke\'s surgery': 'surgery', 'The North Gate': 'gate', 'The mooring mast': 'mast', 'Orla Hale\'s house': 'orla_house',
+  'The market': 'market', 'The Carders\' mill': 'mill', 'The Chapel of the Carillon': 'chapel', 'The Flume crossing': 'flume', 'Tannery Row': 'tannery', 'The tannery culvert': 'culvert',
 };
 
 // ---- rumours -----------------------------------------------------------
@@ -172,6 +175,9 @@ const RUMOURS = [
   'The Governor took the Consortium\'s purse. Again. We eat, and the Root is bled, and the oaks ring like bronze when the wind moves.',
   'Keep your voice in your chest. Keep your lamp lit. Do not go to the Hedge at the dead hour, whatever it says, whoever it sounds like.',
   'Tam the night-hummer listens to his dead wife at the Flume crossing. We all know. None of us has the heart to tell him what she is.',
+  'Bettany at the market stall takes coin for tonic but she would rather take eggs. Nobody has eggs. The hens went quiet first.',
+  'The Tanner twins went down the culvert after their dog on Driftday last. Hob Wendle still sets a lamp in their window. He keeps the culvert key on a nail.',
+  'Nell Carder has not let the boy out of the mill since the Grafters posted the inspection. She says he has a cough. It is not a cough.',
   'Red was redder when I was a girl. Summers were warmer. Everyone over thirty says so. The young ones think we are mad.',
   'The dead are buried with bound jaws and a stone on the tongue so they cannot ring. We have not rung a bell in this town since the Synod took them.',
 ];
@@ -308,6 +314,60 @@ const NPCS = {
       return null;
     },
   },
+  bettany: {
+    name: 'Bettany, midwife and tonic-maker', sprite: 'bettany', portrait: 'bettany', tier: 'low',
+    greet: { polite: 'Softly, love. What ails? I have tonic, I have honey for the throat, and I have shot, which I do not approve of and sell anyway.', normal: 'Tonic\'s five. Honey\'s four. Shot\'s three the three. Keep your voice down while you count.', blunt: 'I hummed half this town into the world. I will not be barked at in my own stall.' },
+    topics: { 'Oakhaven': 'I have hummed forty-one births through a clay jar so the hounds would not hear the mother. Forty-one. I keep the count on the stall-post, under the cloth.', 'The Rite': 'They walked her past my stall this morning in white. I put a jar of honey in her hand. The proctor took it off her before the corner.' },
+    shop: [{ item: 'tonic', price: 5 }, { item: 'honey', price: 4 }, { item: 'pellets', price: 3 }],
+    quest: () => null,
+  },
+  tam: {
+    name: 'Old Tam, the night-hummer', sprite: 'tam', portrait: 'tam', tier: 'low',
+    greet: { polite: 'Sit if you like. She comes on the water about this time. You will hear her if you keep still.', normal: 'Hm. You are standing where I listen.', blunt: 'Lower your voice. She will not come if you shout.' },
+    topics: { 'The Flume': 'My Essa went in at the sluice in the Cascade year. The water took her the way it takes everything. Three nights ago it brought her voice back up the Flume, singing The Miller\'s Daughter, which is ours. Mine and hers.', 'The Hedge': 'Everyone says never answer it. I know what they say. I say she gets the second verse right, and the Hedge could not know the second verse.' },
+    quest: (g) => {
+      if (g.flags.tam_told || g.flags.tam_left) return null;
+      if (!g.flags.tam_met) { g.flags.tam_met = true; return { text: 'You have a listening face. Good. Then listen, and tell me honest: when she sings up the Flume of a night, is it her? Rooke says it is not. Lyra will not say. You are a stranger; you have no reason to be kind to me. Is it her?', journal: ['side', 'Old Tam listens to his dead wife\'s voice on the Flume at the crossing. He asked me, a stranger, to tell him honestly whether it is her.'],
+        choices: [
+          { t: 'It is not her. It is something wearing her voice.', f: (g) => { g.flags.tam_told = true; return 'He is quiet for a long time. "The second verse," he says at last. "It learned the second verse off me. I sang it to the water the first night, to see." He stands up, old knees, and does not look at the Flume. "Thank you. I will not come down here again. If something has to go singing into the meadow some night, to pull the hounds, it had better be a man who knows the whole song."'; } },
+          { t: 'If she gets the second verse right, who am I to say.', f: (g) => { g.flags.tam_left = true; return '"That is what I think," he says, and he settles back onto the stone, and turns his good ear to the water, and you leave him there. Behind you, very faintly, something on the Flume begins the second verse.'; } },
+          { t: 'Say nothing, and sit with him a while.', f: (g) => { g.flags.tam_sat = true; g.flags.tam_told = true; return 'You sit. The water comes green and quick under the bridge. After a while a woman\'s voice comes with it, sweet and exactly right, and you feel the old man beside you go still, and then you feel him understand, because you have not moved, and a stranger who had heard his wife would have moved. "Ah," he says. "Ah. Well." He gets up and goes home.'; } },
+        ] }; }
+      return null;
+    },
+  },
+  hob: {
+    name: 'Hob Wendle, tanner', sprite: 'hob', portrait: 'hob', tier: 'low',
+    greet: { polite: 'Evening. Mind the vats; the lime does not care who you are.', normal: 'Tannery\'s shut. Nobody wants leather off a town that is turning to wood.', blunt: 'I have buried two apprentices this year. Try me.' },
+    topics: { 'The Hedge': 'The twins went down the culvert after their dog. Driftday last. I set a lamp in their window of a night. The key to the grate is on the nail inside; I have not had the stomach to turn it.', 'Oakhaven': 'A tannery is the one trade that gets quieter the harder you work it. Should have been safe. Should have been.' },
+    quest: (g) => {
+      if (g.flags.twins_found && !g.flags.hob_told) { g.flags.hob_told = true; g.gold(10); return { text: 'You went down. You — their coats. Folded. They folded their coats.' + (g.flags.twins_named ? ' And you wrote them in your book, Joss and Wyn, so they are somewhere. Here. It is all I have on me. Take it, and do not argue with a tanner.' : ' Take this. Take it. I cannot go down there, and now I do not have to.'), journal: ['side', 'I told Hob Wendle what I found under the culvert. He paid me, which I did not ask for, and put out the lamp in the twins\' window.'] }; }
+      return null;
+    },
+  },
+  nell: {
+    name: 'Nell Carder', sprite: 'nell', portrait: 'nell', tier: 'low',
+    greet: { polite: 'He is not to be looked at. Whoever you are. He has a cough.', normal: 'The mill is shut. Say what you want through the door next time.', blunt: 'Get out of my mill.' },
+    topics: { 'Oakhaven': 'The Grafters posted the inspection on the Greenhall door. Every child under twelve, hands and feet, Rootday week. Rooke chalks the mark. After the mark they come for you with the saw, and they are kind about it.', 'The Rite': 'Lyra hummed him through the night it started. Spent her whole voice on his hands. She had nothing left for Orla Hale in the morning, and Orla put out roots in her chair while Lyra sat there with her mouth open and nothing coming out.' },
+    quest: (g) => {
+      if (g.flags.pim_safe) return null;
+      if (!g.flags.nell_met) { g.flags.nell_met = true; return { text: 'You have seen his hands, then. Yes. Roots. Rootday. The inspection is the day after tomorrow and Lyra has no voice left to hum him through it a second time, and Bettany is out of honey for the throat. Oiled honey, a jar of it, and Lyra could do it. Or a Cantor could. You are not a Cantor.', journal: ['side', 'Pim Carder has put out roots in his hands. Nell needs oiled honey so Lyra can hum him through the Grafters\' inspection. Bettany\'s stall in the market may have some.'] }; }
+      const choices = [];
+      if (g.has('honey')) choices.push({ t: 'Give her the oiled honey.', f: (g) => { g.take('honey'); g.flags.pim_safe = true; g.gold(8); return '"Oh," she says, and sits down on the meal-sack. "Oh." She holds the jar in both hands like a warm egg. "Lyra will come tonight. He will pass. He will pass and we will be on the corsair\'s ship before the Rite and nobody will ever chalk his hands." She presses coin on you and will not hear no.'; } });
+      if (g.player.songs.includes('tending') && g.player.voice >= 8) choices.push({ t: 'Hum the tending note over his hands yourself.', f: (g) => { g.player.voice -= 8; g.flags.pim_safe = true; g.flags.pim_tended = true; return 'You kneel and hum it low, inside the Narrow, the way the orchard-cantors did it, and the roots in the boy\'s palms draw back under the skin like worms from light. He watches your mouth the whole time. "You do it different from Lyra," he says. Nell does not say anything. She has her apron over her face.'; } });
+      if (!choices.length) return { text: 'Honey. Oiled honey, a jar. Bettany at the market. Please.' };
+      return { text: 'Well?', choices };
+    },
+  },
+  ignatius: {
+    name: 'Ignatius Crane, Flambeau of the Pure Note', sprite: 'flambeau', portrait: 'flambeau', tier: 'high',
+    greet: { polite: 'The Note is held. You may speak under it. Quietly, and in tune.', normal: 'This chapel had bells once. The Synod took them for bore-teeth, and it was right to. A bell is a voice with nobody inside it.', blunt: 'I have burned men for less than that tone. I am tired, and the Note is long, and you will not try me again.' },
+    topics: { 'The Church': 'Seven years I have held that it let go because one voice shouted. Vance\'s voice. The engineer says it let go because we held. I have thought about his answer every night since he gave it. I do not know yet which of us I would rather be right.', 'The Rite': 'The warrant is read. The Pure Note is held over Oakhaven day and night until the casing. The Hollow in the quarry is to be burned at the hour of the Rite. The Cantor is in the Church\'s protection, which is a phrase I chose myself, and I meant it, and it is a cell.', 'Kaelen Vance': 'He has a glass arm that sings with the Note whether he wills it or not. I envied him that, for a moment, before I remembered what it is doing to him.' },
+    quest: (g) => {
+      if (!g.flags.ignatius_met) { g.flags.ignatius_met = true; return { text: 'You are the one who goes in and out of the quarry with the engineer\'s charts in your shirt. Do not look at your shirt. I do not want the charts. I want you to know that I know, and that I have chosen, for reasons I will give to my god and not to you, to hold the Note and look at the ceiling.', journal: ['main', 'The Flambeau, Ignatius Crane, knows about the charts and has chosen not to act. The Church holds the Pure Note over the town until the Rite.'] }; }
+      return null;
+    },
+  },
   townsman: {
     name: 'Oakhaven orchardman', sprite: 'townsman', portrait: 'townsman', tier: 'low',
     greet: { polite: 'Evening. Keep it low.', normal: 'Hm?', blunt: 'Lower your voice before something hears you.' },
@@ -342,4 +402,5 @@ ATTACK  left-click, or click-and-drag to swing · 1-4 select weapon · Tab opens
 USE / TALK  E or Space · doors, people, levers, items
 SONGS  F1-F5 cast the song in that slot · N to murmur (keeps the Hush off)
 PANELS  I inventory · C character · L logbook · M map · R rest · K ledger · Esc closes
+SAVE  Esc (or the SAVE button) opens Options: save to a session slot, or copy a save code to keep
 THE NARROW  the amber bar — keep it between the two marks. Above: hounds. Below: the Hush.`;
