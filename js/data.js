@@ -327,13 +327,12 @@ const NPCS = {
     topics: { 'The Flume': 'My Essa went in at the sluice in the Cascade year. The water took her the way it takes everything. Three nights ago it brought her voice back up the Flume, singing The Miller\'s Daughter, which is ours. Mine and hers.', 'The Hedge': 'Everyone says never answer it. I know what they say. I say she gets the second verse right, and the Hedge could not know the second verse.' },
     quest: (g) => {
       if (g.flags.tam_told || g.flags.tam_left) return null;
-      if (!g.flags.tam_met) { g.flags.tam_met = true; return { text: 'You have a listening face. Good. Then listen, and tell me honest: when she sings up the Flume of a night, is it her? Rooke says it is not. Lyra will not say. You are a stranger; you have no reason to be kind to me. Is it her?', journal: ['side', 'Old Tam listens to his dead wife\'s voice on the Flume at the crossing. He asked me, a stranger, to tell him honestly whether it is her.'],
+      { const first = !g.flags.tam_met; g.flags.tam_met = true; return { text: first ? 'You have a listening face. Good. Then listen, and tell me honest: when she sings up the Flume of a night, is it her? Rooke says it is not. Lyra will not say. You are a stranger; you have no reason to be kind to me. Is it her?' : 'He has not moved from the stone. "Well? You heard her too. Is it her?"', journal: ['side', 'Old Tam listens to his dead wife\'s voice on the Flume at the crossing. He asked me, a stranger, to tell him honestly whether it is her.'],
         choices: [
           { t: 'It is not her. It is something wearing her voice.', f: (g) => { g.flags.tam_told = true; return 'He is quiet for a long time. "The second verse," he says at last. "It learned the second verse off me. I sang it to the water the first night, to see." He stands up, old knees, and does not look at the Flume. "Thank you. I will not come down here again. If something has to go singing into the meadow some night, to pull the hounds, it had better be a man who knows the whole song."'; } },
           { t: 'If she gets the second verse right, who am I to say.', f: (g) => { g.flags.tam_left = true; return '"That is what I think," he says, and he settles back onto the stone, and turns his good ear to the water, and you leave him there. Behind you, very faintly, something on the Flume begins the second verse.'; } },
           { t: 'Say nothing, and sit with him a while.', f: (g) => { g.flags.tam_sat = true; g.flags.tam_told = true; return 'You sit. The water comes green and quick under the bridge. After a while a woman\'s voice comes with it, sweet and exactly right, and you feel the old man beside you go still, and then you feel him understand, because you have not moved, and a stranger who had heard his wife would have moved. "Ah," he says. "Ah. Well." He gets up and goes home.'; } },
         ] }; }
-      return null;
     },
   },
   hob: {

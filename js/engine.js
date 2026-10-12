@@ -176,7 +176,7 @@ const Engine = (() => {
       let stepX, stepY, sdx, sdy;
       if (rdx < 0) { stepX = -1; sdx = (cam.x - mapX) * ddx; } else { stepX = 1; sdx = (mapX + 1 - cam.x) * ddx; }
       if (rdy < 0) { stepY = -1; sdy = (cam.y - mapY) * ddy; } else { stepY = 1; sdy = (mapY + 1 - cam.y) * ddy; }
-      let hit = 0, side = 0, texName = null, dist = 0, wallX = 0, iter = 0, isDoor = false;
+      let hit = 0, side = 0, texName = null, dist = 0, wallX = 0, iter = 0;
       while (!hit && iter++ < 96) {
         if (sdx < sdy) { sdx += ddx; mapX += stepX; side = 0; } else { sdy += ddy; mapY += stepY; side = 1; }
         if (mapX < 0 || mapY < 0 || mapX >= mw || mapY >= mh) { hit = 2; break; }
@@ -193,14 +193,14 @@ const Engine = (() => {
               if ((hy | 0) !== mapY) continue;
               const frac = hy - mapY;
               if (frac < openAmt) continue;
-              dist = pd; wallX = frac - openAmt; hit = 1; texName = c.tex; isDoor = true;
+              dist = pd; wallX = frac - openAmt; hit = 1; texName = c.tex;
             } else {
               const pd = sdy - ddy + ddy * 0.5;
               const hx = cam.x + pd * rdx;
               if ((hx | 0) !== mapX) continue;
               const frac = hx - mapX;
               if (frac < openAmt) continue;
-              dist = pd; wallX = frac - openAmt; hit = 1; texName = c.tex; isDoor = true;
+              dist = pd; wallX = frac - openAmt; hit = 1; texName = c.tex;
             }
           } else {
             hit = 1; texName = c.tex;

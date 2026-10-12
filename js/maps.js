@@ -136,10 +136,11 @@ function buildOakhaven(greening) {
   for (const [x, y] of [[33.5, 46.5], [60.5, 54.5], [64.5, 58.5], [48.5, 57.5], [30.5, 52.5], [8.5, 51.5]]) m.deco('oak', x, y, { scale: 1.5 + rnd() * 0.6, radius: 0.45, yOff: -0.02 });
   if (greening) {
     const extra = [[23.5, 14.5], [20.5, 22.5], [26.5, 22.5], [23.5, 33.5], [10.5, 22.5], [34.5, 23.5], [23.5, 6.5], [15.5, 11.5], [50.5, 17.5], [53.5, 24.5], [23.5, 47.5], [53.5, 47.5], [40.5, 23.5]];
-    for (const [x, y] of extra) m.deco('oak', x, y, { scale: 2.4 + rnd() * 0.8, radius: 0.5 });
-    for (let i = 0; i < 14; i++) { const x = 6 + rnd() * 58, y = 6 + rnd() * 52; if (!m.isBlocked(x | 0, y | 0)) m.enemy('hound', x, y); }
+    const free = (x, y, r) => [[-r, -r], [r, -r], [-r, r], [r, r], [0, 0]].every(([dx, dy]) => !m.isBlocked((x + dx) | 0, (y + dy) | 0));
+    for (const [x, y] of extra) if (free(x, y, 0.5)) m.deco('oak', x, y, { scale: 2.4 + rnd() * 0.8, radius: 0.5 });
+    for (let n = 0, i = 0; n < 14 && i < 200; i++) { const x = 4 + rnd() * 62, y = 4 + rnd() * 56; if (free(x, y, 0.4) && Math.hypot(x - 36.5, y - 22.5) > 5) { m.enemy('hound', x, y); n++; } }
     m.enemy('hound', 23.5, 12.5); m.enemy('hound', 30.5, 23.5); m.enemy('hound', 23.5, 27.5);
-    for (let i = 0; i < 8; i++) m.add({ kind: 'deco', sprite: 'burlsick', x: 8 + rnd() * 30, y: 8 + rnd() * 30, solid: true, radius: 0.3, wander: true, scale: 1 });
+    for (let n = 0, i = 0; n < 8 && i < 200; i++) { const x = 4 + rnd() * 62, y = 4 + rnd() * 56; if (free(x, y, 0.4)) { m.add({ kind: 'deco', sprite: 'burlsick', x, y, solid: true, radius: 0.3, wander: true, scale: 1 }); n++; } }
   } else {
     // Hush-lamps along the main road and square
     for (const [x, y] of [[21.5, 12.5], [25.5, 12.5], [21.5, 19.5], [25.5, 27.5], [21.5, 35.5], [25.5, 35.5], [16.5, 23.5], [30.5, 23.5], [9.5, 23.5], [37.5, 23.5], [23.5, 40.5],
@@ -189,7 +190,7 @@ function buildInteriors() {
   maps.lyra_house = interior('lyra_house', 'Lyra Ashgrove\'s house', 12, 9, 't_house', { x: 6, y: 8, sx: 6.5, sy: 6.5, sdir: -Math.PI / 2, ox: 21.5, oy: 29.5, odir: -Math.PI / 2 }, (m) => {
     m.deco('hearth', 1.2, 4.5, { radius: 0.3, scale: 0.9, glow: 0.7 }); m.deco('bed', 9.5, 2.0, { radius: 0.5, scale: 0.6 }); m.deco('shelf', 4.5, 1.3, { radius: 0.2, scale: 0.9 });
     m.deco('table', 6.5, 4.0, { radius: 0.5, scale: 0.7 }); m.deco('lamp', 3.5, 6.5, { radius: 0.12, scale: 0.7, glow: 0.6 });
-    m.npc('lyra', 8.5, 5.5, { facing: Math.PI });
+    m.npc('lyra', 8.5, 5.5, { facing: Math.PI, until: 'rite_started' });
   });
   maps.greenhall = interior('greenhall', 'The Greenhall', 17, 12, 't_marble', { x: 8, y: 11, sx: 8.5, sy: 9.5, sdir: -Math.PI / 2, ox: 30.5, oy: 9.5, odir: Math.PI / 2 }, (m) => {
     m.rect(6, 2, 10, 2, 't_wood');
@@ -332,6 +333,31 @@ function genDungeon(id, name, seed, opts) {
   }
   m.spawn = { x: entrance.cx + 0.5, y: entrance.cy + 0.5, dir: 0 };
   m.rooms = rooms; m.named = named; m.entrance = entrance; m.rnd = rnd;
+  // Place a portal in a dead-end niche of a room's wall, never in a corridor, so it can't cut the map in two.
+  // Returns { x, y, sx, sy, sdir } — the door cell and a standing spot just inside the room, facing away from it.
+  m.wallPortal = (r, props, prefer) => {
+    const sides = { n: [0, -1], s: [0, 1], w: [-1, 0], e: [1, 0] };
+    const order = [prefer || 'w', 'n', 'w', 's', 'e'].filter((v, i, a) => a.indexOf(v) === i);
+    const solid = (x, y) => { const c = m.get(x, y); return !!c && !c.door; };
+    for (const side of order) {
+      const [dx, dy] = sides[side]; const cands = [];
+      if (dx === 0) { const y = dy < 0 ? r.y - 1 : r.y + r.h; for (let x = r.x + 1; x < r.x + r.w - 1; x++) cands.push([x, y]); }
+      else { const x = dx < 0 ? r.x - 1 : r.x + r.w; for (let y = r.y + 1; y < r.y + r.h - 1; y++) cands.push([x, y]); }
+      cands.sort((a, b) => (Math.abs(a[0] - r.cx) + Math.abs(a[1] - r.cy)) - (Math.abs(b[0] - r.cx) + Math.abs(b[1] - r.cy)));
+      for (const [x, y] of cands) {
+        if (x < 1 || y < 1 || x > W - 2 || y > H - 2) continue;
+        if (!solid(x, y) || !solid(x + dx, y + dy)) continue;            // must be wall, with wall behind it
+        const px = dy !== 0 ? 1 : 0, py = dx !== 0 ? 1 : 0;              // along-the-wall neighbours must be wall too
+        if (!solid(x + px, y + py) || !solid(x - px, y - py)) continue;
+        if (m.get(x - dx, y - dy)) continue;                              // the room side must be open floor
+        m.set(x, y, DOOR(props));
+        return { x, y, sx: x - dx * 1.6 + 0.5, sy: y - dy * 1.6 + 0.5, sdir: Math.atan2(-dy, -dx) };
+      }
+    }
+    // fallback: carve a niche straight out of the room centre line on the west side
+    const x = r.x - 1, y = r.cy; m.set(x, y, DOOR(props));
+    return { x, y, sx: x + 1.6 + 0.5, sy: y + 0.5, sdir: 0 };
+  };
   return m;
 }
 
@@ -342,8 +368,8 @@ function buildQuarry() {
   });
   const e = m.entrance, rnd = m.rnd;
   // exit door back to the clearing: on the entrance room's wall
-  m.set(e.x - 1, e.cy, DOOR({ portal: { map: 'clearing', x: 20.5, y: 6.5, dir: Math.PI / 2 }, label: 'Up the headframe ladder' }));
-  m.spawn = { x: e.x + 0.6, y: e.cy + 0.5, dir: 0 };
+  const qx = m.wallPortal(e, { portal: { map: 'clearing', x: 20.5, y: 6.5, dir: Math.PI / 2 }, label: 'Up the headframe ladder' }, 'w');
+  m.spawn = { x: qx.sx, y: qx.sy, dir: qx.sdir };
   m.deco('lamp', e.cx + 0.5, e.y + 0.5, { radius: 0.12, scale: 0.7, glow: 0.6 }); m.deco('crates', e.x + e.w - 0.6, e.y + e.h - 0.6, { radius: 0.35 });
   const ph = m.named.pumphall;
   if (ph) {
@@ -362,7 +388,8 @@ function buildQuarry() {
   }
   const sh = m.named.shaft;
   if (sh) {
-    m.set(sh.cx, sh.y - 1, DOOR({ portal: { map: 'rootvault', useSpawn: true }, label: 'The shaft gate to the Root-vault', locked: 'pass', lockMsg: 'An iron gate over a green-lit shaft. A Consortium seal-lock. You have no pass.' }));
+    const sg = m.wallPortal(sh, { portal: { map: 'rootvault', useSpawn: true }, label: 'The shaft gate to the Root-vault', locked: 'pass', lockMsg: 'An iron gate over a green-lit shaft. A Consortium seal-lock. You have no pass.' }, 'n');
+    m.shaftReturn = { x: sg.sx, y: sg.sy, dir: sg.sdir };
     m.deco('lever', sh.x + 0.5, sh.cy + 0.5, { radius: 0.3, scale: 0.8 }); m.deco('lamp', sh.x + sh.w - 0.6, sh.cy + 0.5, { radius: 0.12, scale: 0.7, glow: 0.6 });
   }
   const st = m.named.store; if (st) { m.item('tonic', st.cx + 0.5, st.cy + 0.5); m.item('honey', st.x + 0.6, st.y + 0.6); m.deco('crates', st.x + st.w - 0.6, st.y + st.h - 0.6, { radius: 0.35 }); m.enemy('mites', st.cx + 1.5, st.cy + 0.5); }
@@ -388,8 +415,8 @@ function buildRootVault() {
     rooms: [{ name: 'casing', w: 11, h: 9 }, { name: 'boiler', w: 7, h: 6 }, { name: 'gallery', w: 8, h: 4 }, { name: 'cistern', w: 5, h: 5 }], fillerRooms: 6,
   });
   const e = m.entrance, rnd = m.rnd;
-  m.set(e.x - 1, e.cy, DOOR({ portal: { map: 'quarry', useSpawn: 'shaft' }, label: 'The shaft gate, up to the quarry' }));
-  m.spawn = { x: e.x + 0.6, y: e.cy + 0.5, dir: 0 };
+  const rx = m.wallPortal(e, { portal: { map: 'quarry', useSpawn: 'shaft' }, label: 'The shaft gate, up to the quarry' }, 'w');
+  m.spawn = { x: rx.sx, y: rx.sy, dir: rx.sdir };
   const cs = m.named.casing;
   if (cs) {
     m.add({ kind: 'deco', sprite: 'bore', x: cs.cx + 0.5, y: cs.cy + 0.5, solid: true, radius: 0.9, scale: 2.2, use: 'bore', label: 'The Siphon Casing — the bore\'s lock', glow: 0.5 });
@@ -419,9 +446,8 @@ function buildUnderhedge() {
     rooms: [{ name: 'sump', w: 7, h: 6 }, { name: 'bonehouse', w: 5, h: 5 }, { name: 'throat', w: 4, h: 7 }], fillerRooms: 4,
   });
   const e = m.entrance, rnd = m.rnd;
-  m.set(e.cx, e.y - 1, DOOR({ portal: { map: 'oakhaven', x: 23.5, y: 60.5, dir: -Math.PI / 2 }, label: 'Up the culvert, to Oakhaven' }));
-  m.spawn = { x: e.cx + 0.5, y: e.y + 0.6, dir: Math.PI / 2 };
-  m.deco('grate', e.cx + 0.5, e.y + 0.3, { radius: 0.2, scale: 0.7, solid: false, nopick: true });
+  const ux = m.wallPortal(e, { portal: { map: 'oakhaven', x: 23.5, y: 60.5, dir: -Math.PI / 2 }, label: 'Up the culvert, to Oakhaven' }, 'n');
+  m.spawn = { x: ux.sx, y: ux.sy, dir: ux.sdir };
   const su = m.named.sump; if (su) { m.enemy('quiet', su.cx + 0.5, su.cy + 0.5); m.item('whistle', su.x + 0.6, su.y + 0.6); m.item('sovereigns', su.x + su.w - 0.7, su.y + su.h - 0.7); m.deco('pump', su.cx - 1.5, su.y + 0.7, { radius: 0.4, label: 'A sluice-wheel, seized' }); }
   const bh = m.named.bonehouse; if (bh) {
     m.deco('bones', bh.cx + 0.5, bh.cy + 0.5, { solid: false, scale: 0.6 }); m.deco('bones', bh.x + 0.7, bh.y + 0.7, { solid: false, scale: 0.5 });

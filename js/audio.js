@@ -3,7 +3,7 @@
 // ============================================================
 'use strict';
 const Audio_ = (() => {
-  let ctx = null, master = null, drone = null, droneGain = null, wind = null, windGain = null, muted = false, lampOsc = null, lampGain = null;
+  let ctx = null, master = null, droneGain = null, wind = null, windGain = null, muted = false, lampOsc = null, lampGain = null;
   function init() {
     if (ctx) return;
     ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -14,7 +14,7 @@ const Audio_ = (() => {
     o1.type = 'sine'; o1.frequency.value = 174; o2.type = 'sine'; o2.frequency.value = 171.5; o3.type = 'triangle'; o3.frequency.value = 87;
     const g3 = ctx.createGain(); g3.gain.value = 0.25;
     o1.connect(droneGain); o2.connect(droneGain); o3.connect(g3).connect(droneGain);
-    o1.start(); o2.start(); o3.start(); drone = [o1, o2, o3];
+    o1.start(); o2.start(); o3.start();
     // wind: filtered noise
     const buf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate); const d = buf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
     wind = ctx.createBufferSource(); wind.buffer = buf; wind.loop = true;
