@@ -2,7 +2,28 @@
 
 A first-person dark-fantasy RPG for the browser, made in the style of *The Elder Scrolls II: Daggerfall*. It is built on the *Echoes of the Shattered Octave* series bible.
 
+![Title screen](screenshots/title.jpg)
+
 Explore Oakhaven and the land past the Hedge. Talk with townsfolk, take on quests and side quests, and trade with merchants. Fight Legionnaires, Proctors, golems, hounds and the Quiet. Keep the Narrow balanced, between the noise that brings the hounds and the silence that brings the Hush.
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Oakhaven market by day](screenshots/oakhaven-market.jpg) | ![Oakhaven at dusk](screenshots/oakhaven-dusk.jpg) |
+| Bettany in the Oakhaven market | Oakhaven at dusk, inside the Hedge |
+| ![The Boar & Dulcimer tavern](screenshots/tavern.jpg) | ![Talking with Old Harrow](screenshots/dialogue.jpg) |
+| Captain Vane at the Boar & Dulcimer | Daggerfall-style dialogue with Old Harrow, the gate-warden |
+| ![Outside the Hedge](screenshots/outside-the-hedge.jpg) | ![A Carillon Legionnaire in the quarry](screenshots/quarry-legionnaire.jpg) |
+| The clearing outside the Hedge | Facing a Carillon Legionnaire in the Oakhaven Quarry |
+| ![A Hollow in the quarry](screenshots/quarry-hollow.jpg) | ![A Cacophony Hound in the Under-hedge](screenshots/underhedge-hound.jpg) |
+| A Hollow at work in the quarry | A Cacophony Hound in the Under-hedge |
+| ![The Root-vault](screenshots/rootvault.jpg) | ![A strongbox, crossbow readied](screenshots/strongbox-crossbow.jpg) |
+| Steam machinery deep in the Root-vault | A strongbox, with the Rust Coast Crossbow readied |
+| ![Buying from Captain Vane](screenshots/merchant.jpg) | ![Inventory and worn armour](screenshots/inventory.jpg) |
+| Buying from Captain Vane | Inventory: worn armour, weapons and carried gear |
+| ![Choosing a calling](screenshots/character-creation.jpg) | |
+| Choosing your calling, one of six character templates | |
 
 ## Features
 
@@ -61,4 +82,5 @@ js/audio.js       sound effects and music director
 js/game.js        game logic, UI, combat, dialogue, trade, saving
 music/            soundtrack (MP3)
 img/              portraits, title, map and ending art
+screenshots/      images used in this README
 ```
