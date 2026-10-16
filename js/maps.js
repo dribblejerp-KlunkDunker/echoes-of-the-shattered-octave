@@ -495,6 +495,9 @@ function buildAllMaps() {
   // Part Three: Whisper-Grove (new maps, so they can be laid out freely)
   maps.whispergrove = buildWhisperGrove(); maps.cloister = buildCloister(); maps.malting = buildMalting();
   placeCaches(maps.whispergrove, 4201, [2, 2, 3]); placeCaches(maps.malting, 4203, [2, 3]);
+  // second pass (appended, never inserted)
+  extendWhisperGrove(maps.whispergrove); maps.catacombs = buildCatacombs(); maps.wickhouse = buildWickHouse();
+  placeCaches(maps.catacombs, 4205, [2, 3, 3]);
   for (const k in maps) maps[k].baseCount = maps[k].entities.length;
   return maps;
 }
@@ -651,5 +654,73 @@ function buildMalting() {
   // the alarm brings the hall's reserve
   m.enemy('proctor', 6.0, 10.5, { requires: 'malting_alarm' }); m.enemy('proctor', 11.2, 12.8, { requires: 'malting_alarm' });
   m.item('tonic', 2.0, 15.6); m.item('pellets', 28.2, 1.8);
+  return m;
+}
+
+// -------------------------------------------------------------------------
+//  Whisper-Grove, second pass. Appended after the first-pass entities so saves keep their indices.
+// -------------------------------------------------------------------------
+function extendWhisperGrove(m) {
+  // the Sunken Stair, down into the catacombs, and the Wick house
+  m.set(7, 20, DOOR({ portal: { map: 'catacombs', x: 2.6, y: 14.5, dir: 0 }, label: 'The Sunken Stair — down into the Whisper Catacombs' }));
+  m.set(38, 15, DOOR({ portal: { map: 'wickhouse', x: 1.6, y: 4.5, dir: 0 }, label: 'A drowned house. WICK, on a brass plate.' }));
+  const t = m.entities.find(e => e.sprite === 'table' && /table for four/.test(e.label || '')); if (t) t.use = 'wick_table';
+  m.deco('web', 9.0, 19.0, { radius: 0.2, scale: 0.9, glow: 0.35, label: 'Threads of lilac light, strung across the stair-house door' });
+  // the Pressman's round, west and south-west
+  m.enemy('pressman', 12.0, 37.8, { mallow: true });
+  m.enemy('proctor', 10.0, 38.6); m.enemy('proctor', 13.6, 38.9);
+  // things the mist has got into
+  m.enemy('drowned', 6.0, 16.5); m.enemy('drowned', 36.0, 27.2); m.enemy('drowned', 43.5, 33.0);
+  m.enemy('weaverling', 9.6, 18.0); m.enemy('weaverling', 9.2, 23.4);
+  m.item('pellets', 8.6, 17.0); m.item('honey', 37.0, 13.0);
+}
+
+function buildCatacombs() {
+  const W = 36, H = 30;
+  const m = new GameMap('catacombs', 'The Whisper Catacombs', W, H, { floor: 't_flag', floorTextures: ['t_flag', 't_shallows', 't_water'], ceil: 't_stone', fogDist: 10, ambient: 0.1, fogColor: [16, 10, 26], music: 'root', danger: 1, spawn: { x: 2.6, y: 14.5, dir: 0 } });
+  m.rect(0, 0, W - 1, H - 1, 't_catacomb');
+  const room = (x0, y0, x1, y1) => m.clear(x0, y0, x1, y1);
+  room(1, 12, 7, 17);            // the foot of the stair
+  room(8, 14, 15, 15);           // east passage
+  room(16, 10, 22, 19);          // the ossuary
+  room(19, 3, 20, 9); room(13, 1, 26, 5);       // north: the niche gallery
+  room(19, 20, 20, 23); room(13, 24, 24, 28);   // south: the flooded crypt
+  room(23, 14, 27, 15); room(28, 8, 34, 22);    // east: the loom chamber
+  room(4, 9, 5, 11); room(2, 3, 8, 8);          // west: the charnel store
+  room(4, 18, 5, 20); room(2, 21, 9, 28);       // south-west: the drowned chapel
+  for (let y = 24; y <= 28; y++) for (let x = 13; x <= 24; x++) m.setFloor(x, y, 1);
+  m.setFloor(17, 26, 2); m.setFloor(18, 26, 2); m.setFloor(17, 27, 2); m.setFloor(18, 27, 2);
+  for (let y = 22; y <= 28; y++) for (let x = 2; x <= 9; x++) m.setFloor(x, y, 1);
+  [[18, 12], [20, 12], [18, 17], [20, 17], [30, 11], [32, 11], [30, 19], [32, 19]].forEach(([x, y]) => m.set(x, y, WALL('t_greymarble')));
+  m.set(0, 14, DOOR({ portal: { map: 'whispergrove', x: 8.5, y: 20.5, dir: 0 }, label: 'Up the Sunken Stair' }));
+  // light
+  [[3.5, 12.6], [15.5, 14.5], [19.5, 14.5], [19.5, 2.0], [16.0, 24.6], [3.0, 6.0], [3.0, 22.0], [28.6, 9.0], [28.6, 21.0]].forEach(([x, y]) => m.deco('lamp', x, y, { radius: 0.12, scale: 0.6, glow: 0.45 }));
+  // threads, bones, the missing
+  [[8.6, 14.8], [16.6, 10.8], [22.0, 18.6], [14.0, 1.8], [25.2, 4.2], [23.6, 27.6], [33.8, 12.6]].forEach(([x, y]) => m.deco('web', x, y, { radius: 0.2, scale: 0.85, glow: 0.35, label: 'A web of lilac light. The threads hum, each in a different voice.' }));
+  [[16.6, 16.0], [24.6, 1.6], [14.0, 27.4], [33.6, 9.0], [33.6, 21.0]].forEach(([x, y], i) => m.deco('cocoon', x, y, { radius: 0.3, scale: 1.0, glow: 0.3, use: 'cocoon', cocoon: i, label: 'A Hollow, wound head to foot in lilac thread' }));
+  m.deco('bones', 6.0, 4.0, { radius: 0.3, scale: 0.6 }); m.deco('bones', 21.4, 11.0, { radius: 0.3, scale: 0.6 }); m.deco('bones', 8.0, 27.0, { radius: 0.3, scale: 0.6 });
+  m.deco('loom', 32.5, 15.0, { radius: 0.7, scale: 1.5, glow: 0.6, use: 'loom', label: 'The Weaver\'s loom, strung with the voices of Whisper-Grove' });
+  // the Cacophony
+  m.enemy('weaverling', 12.0, 14.6); m.enemy('weaverling', 17.5, 13.5); m.enemy('weaverling', 21.5, 16.5);
+  m.enemy('weaverling', 16.0, 3.0); m.enemy('weaverling', 24.0, 2.5); m.enemy('mites', 5.0, 5.5);
+  m.enemy('drowned', 15.5, 26.0); m.enemy('drowned', 22.0, 25.5); m.enemy('drowned', 5.5, 25.0);
+  m.enemy('weaver', 31.0, 15.0, { guard: true });
+  m.item('tonic', 7.4, 3.6); m.item('pellets', 2.6, 27.4); m.item('honey', 25.6, 1.6); m.item('tonic', 23.6, 25.0);
+  m.trigger(29.6, 15.0, 2.6, 'weaver_room');
+  return m;
+}
+
+function buildWickHouse() {
+  const m = new GameMap('wickhouse', 'The Wick House', 10, 8, { floor: 't_wood', floorTextures: ['t_wood', 't_shallows', 't_water'], ceil: 't_wood', fogDist: 9, ambient: 0.22, fogColor: [6, 6, 10], music: 'inside', spawn: { x: 1.6, y: 4.5, dir: 0 } });
+  m.border('t_greymarble');
+  for (let y = 1; y <= 6; y++) for (let x = 1; x <= 8; x++) m.setFloor(x, y, 1);
+  m.set(0, 4, DOOR({ portal: { map: 'whispergrove', x: 37.4, y: 15.5, dir: Math.PI }, label: 'Out to the Sunken Court' }));
+  m.deco('bed', 7.5, 1.6, { radius: 0.4, scale: 0.55, label: 'A small bed. Two pillows. The boys shared.' });
+  m.deco('bed', 7.5, 6.3, { radius: 0.4, scale: 0.6, label: 'A larger bed, made, the cover turned down on one side only.' });
+  m.deco('hearth', 4.5, 1.2, { radius: 0.3, scale: 0.8, glow: 0.3, label: 'A cold hearth. The kettle is on it, full of lit water.' });
+  m.deco('shelf', 1.4, 1.6, { radius: 0.2, scale: 0.9 });
+  m.deco('chair', 4.0, 5.6, { radius: 0.2, scale: 0.5, label: 'A child\'s chair with WAT carved into the back, crookedly' });
+  m.deco('sign', 3.0, 6.6, { radius: 0.2, scale: 0.6, use: 'wick_letter', label: 'A letter on the dresser, in a woman\'s hand' });
+  m.deco('lamp', 8.6, 4.0, { radius: 0.12, scale: 0.6, glow: 0.4 });
   return m;
 }

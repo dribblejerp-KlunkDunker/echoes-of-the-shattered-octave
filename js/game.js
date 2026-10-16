@@ -94,7 +94,7 @@ const CLASS_KIT = { blade: ['a_jerkin', 'a_gloves'], cantor: ['a_gambeson', 'a_s
 function giveKit(p) { for (const id of (CLASS_KIT[p.cls.id] || [])) { p.inv.push({ id, n: 1 }); p.armor[ARMOR[id].slot] = id; } }
 function startGame() {
   hide('#create'); G.player = newPlayer(); giveKit(G.player); G.flags = {}; G.journal = []; G.ledger = []; G.tod = 0.74; G.day = 0; G.escapeTimer = 0; G.dead = false; G.noise = 2;
-  G.boreHold = 0; G.boreGolems = 0; G.glassLock = 0; G.rootWard = 0; G.murmurT = 0; G.whistleT = 0; G.stillT = 0; G.unwriting = false; G.hurtT = 0; G.songFx = 0; G.attack.t = 0; G.song.t = 0; G.keys = {};
+  G.boreHold = 0; G.boreGolems = 0; G.glassLock = 0; G.webT = 0; G.rootWard = 0; G.murmurT = 0; G.whistleT = 0; G.stillT = 0; G.unwriting = false; G.hurtT = 0; G.songFx = 0; G.attack.t = 0; G.song.t = 0; G.keys = {};
   $('#msgs').innerHTML = ''; $('#view').classList.remove('unwrite'); ['#death', '#ending', '#event'].forEach(hide); closeModal();
   for (let i = 0; i < CREATE.bio.length; i++) G.flags[BIOGRAPHY[i].a[CREATE.bio[i]].flag] = true;
   G.maps = buildAllMaps();
@@ -120,7 +120,7 @@ function hydrate(e) {
 }
 function loadMap(id, pos) {
   const m = G.maps[id]; G.map = m; G.mapId = id; G.ents = m.entities; m.entities.forEach(hydrate);
-  for (const e of m.entities) { if (e.requires && !e.dead) e.hidden = !G.flags[e.requires]; if (e.until && G.flags[e.until]) e.hidden = true; if (e.drylamp) e.glow = G.flags.lamps_lit ? 0.65 : 0; }
+  for (const e of m.entities) { if (e.requires && !e.dead) e.hidden = !G.flags[e.requires]; if (e.until && G.flags[e.until]) e.hidden = true; if (e.drylamp) e.glow = G.flags.lamps_lit ? 0.65 : 0; if (e.id === 'halder' && G.flags.halder_rest) e.loop = false; }
   Engine.setMap(m);
   const p = pos || m.spawn; Engine.cam.x = p.x; Engine.cam.y = p.y; Engine.cam.dir = p.dir || 0; Engine.cam.pitch = 0;
   G.stillT = 0; G.unwriting = false; $('#view').classList.remove('unwrite');
@@ -218,9 +218,9 @@ function enemyUpdate(e, dt) {
   if (e.state === 'passive') return;
   const dx = c.x - e.x, dy = c.y - e.y, dist = Math.sqrt(dx * dx + dy * dy);
   const canSee = dist < 7 && los(e.x, e.y, c.x, c.y);
-  const hearRange = 1.5 + G.noise * (d.noiseLure ? 1.4 : 0.8);
+  const hearRange = 1.5 + G.noise * (d.noiseLure ? 1.4 : 0.8) + (G.flags.thread_kept && d.cacophony ? 0.8 : 0);
   if (e.state === 'idle') {
-    if ((canSee && dist < 5) || (dist < hearRange && !e.guard) || (e.guard && canSee && dist < 4)) { e.state = 'chase'; if (d.cacophony) Audio_.sfx.hound(); else if (d.core) Audio_.sfx.bell(); else if (e.type === 'golem') Audio_.sfx.golem(); }
+    if ((canSee && dist < 5) || (dist < hearRange && !e.guard) || (e.guard && canSee && dist < 4)) { e.state = 'chase'; if (d.shriek) drownedShriek(e); if (d.cacophony) Audio_.sfx.hound(); else if (d.core) Audio_.sfx.bell(); else if (e.type === 'golem') Audio_.sfx.golem(); }
     else if (!e.guard) { e.wanderT -= dt; if (e.wanderT <= 0) { e.wanderT = rnd(1, 4); e.wdir = rnd(0, 6.28); } if (dist2(e.x, e.y, e.homeX, e.homeY) < 9 && e.wanderT > 1.5) moveWithSlide(e, Math.cos(e.wdir) * d.speed * 0.3 * dt, Math.sin(e.wdir) * d.speed * 0.3 * dt, e); }
     return;
   }
@@ -229,7 +229,8 @@ function enemyUpdate(e, dt) {
     e.alertT = canSee ? 8 : e.alertT - dt;
     if (e.alertT <= 0 && dist > 9) { e.state = 'idle'; return; }
     // hounds will not touch the glassed; Root Note wards them
-    const glassFear = d.cacophony && ((p.glassed && G.glassLock <= 0) || G.rootWard > 0);
+    if (d.mimic || d.summon) enemyExtra(e, dt, dist, canSee);
+    const glassFear = d.cacophony && !d.fearless && ((p.glassed && G.glassLock <= 0) || G.rootWard > 0);
     if (glassFear) { if (dist < 3.5) { moveWithSlide(e, -dx / dist * d.speed * dt, -dy / dist * d.speed * dt, e); } return; }
     if (dist > d.reach) {
       // telegraph for golem
@@ -253,6 +254,7 @@ function enemyUpdate(e, dt) {
           if (d.press && p.glassed) { G.glassLock = 8; msg('The proctor strikes your glass with a hand-press tuned to 741. Your arm locks rigid, ringing flat.', 'bad'); Audio_.sfx.press(); }
           damagePlayer(dmg, d.name);
           if (d.chord && !G.dead && Math.random() < 0.45) chordBlast(e);
+          if (!G.dead && (d.web || d.forget)) enemyHitFx(e, d);
         } else msg(AR >= 6 && Math.random() < 0.5 ? `The ${d.name}'s blow skids off your armour.` : `You slip the ${d.name}'s blow.`, '', 1800);
         if (d.quiet) Audio_.sfx.quiet();
         if (d.cacophony) addNoise(0.8);
@@ -277,6 +279,7 @@ function killEnemy(e, byGlass) {
   if (byGlass && e.def.cacophony) { const p = G.player; p.hp = Math.min(p.hpMax, p.hp + 4); p.glass = Math.min(100, p.glass + 3); fx('glass', 400); msg('The glass drinks what it broke. The ring is fuller. The tideline climbs.', 'warn'); if (p.glass >= 100) die('heartglass'); }
   dropLoot(e);
   if (e.type === 'aegis') aegisDestroyed(e);
+  if (e.type === 'weaver' || e.type === 'pressman') wgBossDown(e);
   if (e.type === 'wearer') { G.flags.wearer_dead = true; if (G.mapId === 'whispergrove') G.flags.wearer_porch_dead = true; }
   if (e.onDeath) e.onDeath();
   checkLevel();
@@ -445,7 +448,7 @@ function interact() {
   if (w) msg(wallLabel(w.cell), '', 1800);
 }
 function decoLabel(e) { return e.label || ({ oak: 'An iron-bark oak. When the wind moves it, it rings like bronze.', lamp: 'A hush-lamp. Its reed-whistle never lets the street go silent.', crates: 'Crates, iron-banded.', bones: 'Bones, and a torn cloth. A hound\'s bed: no sound carries here.', pump: 'A steam pump. Hollows work these.', bed: 'A straw bed.', table: 'A table.', shelf: 'Shelves of ledgers and jars.', hearth: 'A hearth, kept low.', chair: 'A chair with a sap-mark chalked on it.', sign: 'A signpost. The boards have been scraped blank.', grate: 'The tannery culvert. Beyond it, the Hedge. At the dead hour, it speaks.', lever: 'A sluice lever. It is chained.', bore: 'The bore.', cores: 'Crates of glass cores.', burlsick: 'One of the burl-sick. Roots in the skin. They do not see you.' })[e.sprite] || 'Something.'; }
-function wallLabel(cell) { return ({ t_hedge: 'The Hedge. Three men deep of thorn and packed wool.', t_glassrock: 'Rock veined with green-gold glass. It is faintly warm, and it hums.', t_marble: 'Old marble.', t_greymarble: 'Drowned marble, grey-white, furred with lilac lichen to the waterline.', t_brass: 'Riveted brass. Verdigris.', t_house: 'Plaster and oak timber.', t_wood: 'Old planks.', t_stone: 'Cold stone.', t_door: 'A door.' })[cell.tex] || 'A wall.'; }
+function wallLabel(cell) { return ({ t_hedge: 'The Hedge. Three men deep of thorn and packed wool.', t_glassrock: 'Rock veined with green-gold glass. It is faintly warm, and it hums.', t_marble: 'Old marble.', t_greymarble: 'Drowned marble, grey-white, furred with lilac lichen to the waterline.', t_catacomb: 'Burial niches, five deep. Somebody has strung lilac thread across the skulls.', t_brass: 'Riveted brass. Verdigris.', t_house: 'Plaster and oak timber.', t_wood: 'Old planks.', t_stone: 'Cold stone.', t_door: 'A door.' })[cell.tex] || 'A wall.'; }
 function pickUp(e) {
   const it = ITEMS[e.item]; e.hidden = true; e.dead = true; Audio_.sfx.pickup();
   if (e.item === 'cache') { openCache(e); return; }
@@ -1007,7 +1010,7 @@ function update(dt) {
   // movement: a short ramp up and down so steps feel weighted rather than twitchy
   const runHeld = (G.opts.alwaysRun ? !k.shift : !!k.shift) || G.touch.run;
   const running = runHeld && p.fat > 0;
-  const spd = (2.6 + p.attrs.Speed / 60) * (running ? 1.7 : 1);
+  const spd = (2.6 + p.attrs.Speed / 60) * (running ? 1.7 : 1) * (G.webT > 0 ? 0.55 : 1);
   let fwd = G.touch.fy, str = G.touch.fx;
   if (k.w || k.arrowup) fwd += 1;
   if (k.s || k.arrowdown) fwd -= 1;
@@ -1041,6 +1044,7 @@ function update(dt) {
   if (G.song.t > 0) G.song.t -= dt;
   if (G.rootWard > 0) G.rootWard -= dt;
   if (G.glassLock > 0) G.glassLock -= dt;
+  if (G.webT > 0) G.webT -= dt;
   if (G.hurtT > 0) G.hurtT -= dt;
   if (G.songFx > 0) G.songFx -= dt;
   p.voice = Math.min(p.voiceMax, p.voice + dt * 0.08);

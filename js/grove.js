@@ -50,7 +50,7 @@ function wgTick(dt) {
 }
 
 // ---------------------------------------------------------------- triggers
-function wgTrigger(t) {
+function wgTrigger1(t) {
   const f = G.flags, c = Engine.cam;
   if (t.id === 'wg_ambush') {
     if (!t.done) {
@@ -128,7 +128,7 @@ const POOLS = [
 ];
 const POOL_SABLE = 'Cold stone, ink, beeswax and old vellum: the smell of the Veil\'s scriptorium at the hour before matins, and the scratch of forty nibs. It is not your memory. It is not anyone\'s any longer. It is floating here because a woman paid it out of herself to give a pump-man his name.';
 const POOL_QUIST = 'Rows of desks under a high window. A girl of fourteen in a Veil coat, ruling a page, and a tall clerk standing over her: "Again. Straighter. A crooked line is a lie about the next one." She does it again. It is very straight.';
-function wgUse(e) {
+function wgUse1(e) {
   const f = G.flags, p = G.player;
   if (e.use === 'fountain') { msg(f.sable_joined || f.sable_aboard ? 'The fountain of the Sunken Court, brimming with lit water. Sable read twenty names a night here, for nobody.' : 'The fountain of the Sunken Court, brimming with lit water. Somebody has worn a seat in its rim.', '', 5000); return true; }
   if (e.use === 'pool') {
@@ -245,7 +245,7 @@ function wgPickUp(e) {
 }
 
 // ---------------------------------------------------------------- the end of Book One
-function bookOneEnd() {
+function bookOneEnd1() {
   if (G.state === 'ending') return;
   G.state = 'ending'; G.runs = (G.runs || 0) + 1; G.flags.book_one_done = true; hide('#event'); hide('#death'); closeModal();
   const f = G.flags, p = G.player, names = G.ledger.length, fr = sableFragments(G);
@@ -277,4 +277,113 @@ function bookOneEnd() {
   $('#ending-text').innerHTML = L.map(l => `<p>${l}</p>`).join('');
   $('#btn-part3').classList.add('hidden');
   show('#ending'); Audio_.setScene('inside');
+}
+
+// ============================================================
+//  Second pass: the Whisper Catacombs, the Pressman's Round, A Table for Four
+// ============================================================
+function drownedShriek(e) {
+  addNoise(3); Audio_.sfx.hound();
+  if (!G.shriekMsgT || performance.now() - G.shriekMsgT > 8000) { G.shriekMsgT = performance.now(); msg('The Drowned Hollow sees you and screams in seventy voices at once. Everything in the mist hears it.', 'bad', 4500); }
+}
+function enemyHitFx(e, d) {
+  if (d.web && Math.random() < (e.type === 'weaver' ? 0.6 : 0.4)) { const fresh = !(G.webT > 0); G.webT = 2.6; if (fresh) msg('Threads of lilac light catch at your legs. Every step comes slow.', 'warn', 2500); }
+  if (d.forget && Math.random() < 0.35) {
+    const p = G.player; p.voice = Math.max(0, p.voice - 8); Audio_.sfx.press();
+    msg(`The felted die catches you across the temple. For a moment you cannot remember your own name. Then: ${p.name}. ${p.name}. You hold on to it.`, 'bad', 4500);
+  }
+}
+const WEAVER_VOICES = [
+  (p) => `"${p.name.split(' ')[0]}... ${p.name.split(' ')[0]}, come in now, the water's warm..." — in your own mother's voice.`,
+  () => '"...the blue one is Ada\'s... the boys will be in directly..." — in Halder Wick\'s voice.',
+  () => 'It sings the calling-song, beautifully, in Lyra Ashgrove\'s voice. The voice she does not have any more.',
+  () => '"I am a list, not a cure," it says, in Sable\'s voice, and laughs in eleven children\'s.',
+  () => '"Hymn nine, page forty... all rise... all rise..." — in two hundred voices, all slightly out of time.',
+  () => '"Seven forty-one," it says, in Kaelen\'s voice, very gently. "I wrote it down myself."',
+];
+function enemyExtra(e, dt, dist, canSee) {
+  const d = e.def;
+  if (d.mimic) { e.mimicT = (e.mimicT == null ? 2 : e.mimicT) - dt; if (e.mimicT <= 0 && dist < 10) { e.mimicT = rnd(7, 11); msg('The Weaver speaks. ' + WEAVER_VOICES[rndi(0, WEAVER_VOICES.length - 1)](G.player), 'voice', 6000); Audio_.sfx.voice(); } }
+  if (d.summon && canSee) {
+    e.summonT = (e.summonT == null ? 6 : e.summonT) - dt;
+    if (e.summonT <= 0) {
+      e.summonT = rnd(9, 13);
+      const alive = G.ents.filter(o => o.kind === 'enemy' && o.type === d.summon && !o.dead && !o.hidden).length; if (alive >= 4) return;
+      for (let i = 0; i < 8; i++) { const a = rnd(0, 6.28), x = e.x + Math.cos(a) * 1.4, y = e.y + Math.sin(a) * 1.4; if (solidAt(x, y)) continue; const s = hydrate({ kind: 'enemy', type: d.summon, x, y }); s.state = 'chase'; s.alertT = 8; G.ents.push(s); msg('The Weaver pulls a thread out of its shroud, and the thread runs at you on eight legs.', 'bad', 3500); Audio_.sfx.hound(); break; }
+    }
+  }
+}
+function wgBossDown(e) {
+  const f = G.flags;
+  if (e.type === 'weaver') {
+    f.weaver_dead = true; questXp(60);
+    msg('The Phantom Weaver comes apart thread by thread. Every voice it was wearing says one word as it goes, and none of them the same word. Then only the loom is humming.', 'good', 9000);
+    journal('side', 'I killed the Phantom Weaver in the loom chamber of the Whisper Catacombs. Its loom still holds the shroud it was weaving out of Whisper-Grove\'s forgotten voices.' + ((f.cocoons || 0) < 5 ? ' Some of the missing Hollows are still wound in thread down there.' : ''));
+  }
+  if (e.type === 'pressman') {
+    f.mallow_dead = true; G.give('roundbook'); questXp(40);
+    msg('Pressman Mallow goes down in the water with the press still strapped to his back. His round-book comes away on its broken chain. You take it.', 'good', 7000);
+    journal('side', 'The Pressman\'s Round: I killed Pressman Mallow and took his round-book: eight Hollows from the west quarter, marked for second pressing. Sable, or Quist, would know what to do with it.');
+  }
+}
+// interactions, chained ahead of the first-pass handler
+function wgUse(e) {
+  const f = G.flags;
+  if (e.use === 'cocoon') {
+    if (G.ents.some(o => o.kind === 'enemy' && !o.dead && !o.hidden && o.state === 'chase' && dist2(o.x, o.y, Engine.cam.x, Engine.cam.y) < 16)) { msg('Not with that at your back. Deal with it first.', 'warn', 3000); return true; }
+    e.hidden = true; f.cocoons = (f.cocoons || 0) + 1; f['cocoon_' + e.cocoon] = true; questXp(15); Audio_.sfx.pickup();
+    msg(`You cut the threads away. A Hollow slumps out, wet and blinking at nothing, and then stands, and turns, and starts walking — back toward the stair, back toward its loop. (${f.cocoons} of 5)`, 'good', 6000);
+    if (f.cocoons === 5) journal('side', 'The Missing Count: I cut all five missing Hollows out of the Weaver\'s threads in the catacombs. They walked back up the stair on their own.');
+    return true;
+  }
+  if (e.use === 'loom') {
+    if (!f.weaver_dead) { msg('The Weaver is at its loom. It is weaving your voice into the shroud as you stand there. You can hear it.', 'bad', 4000); return true; }
+    if (f.shroud_done) { msg(f.shroud_cut ? 'The loom stands empty and silent, its threads cut.' : 'The loom hums, very faintly, with one thread missing.', '', 4000); return true; }
+    showEvent('The shroud', 'A shroud half the size of a sail, woven from lilac thread, and in every thread a voice: a woman pricing eels, a boy practising scales, a man saying <i>I love you</i> to someone who forgot him first. Seventy-four thousand people forgot themselves in one night, and this is where the forgetting went.', [
+      { t: 'Cut the shroud. Let them all go.', f: () => { f.shroud_done = true; f.shroud_cut = true; questXp(120); Audio_.sfx.song(741, 1.2); msg('You cut it from the loom. For half a breath, under Whisper-Grove, seventy-four thousand voices speak at once, and then they go up the stair and out into the mist, and the mist is a little brighter for it.', 'good', 10000); journal('side', 'I cut the Weaver\'s shroud from its loom. The voices of Whisper-Grove went up the Sunken Stair into the mist.'); } },
+      { t: 'Take one thread. (+10 maximum voice; the Cacophony will hear you further)', f: () => { f.shroud_done = true; f.thread_kept = true; G.give('thread'); G.player.voiceMax += 10; G.player.voice += 10; questXp(60); msg('You wind one thread on a finger-bone. It hums against your ribs in a voice you nearly know. Behind you the shroud keeps the rest.', 'voice', 8000); journal('side', 'I took one thread from the Weaver\'s shroud and left the rest on the loom. It hums in my pack.'); } },
+      { t: 'Leave it.', f: null },
+    ]);
+    return true;
+  }
+  if (e.use === 'wick_letter') {
+    if (!G.has('adaletter') && !f.adaletter_read) {
+      f.adaletter_read = true; G.give('adaletter');
+      journal('side', 'A Table for Four: in the Wick house, a letter from Ada Wick to the Cloister: her sons Tom and Wat were to sing on the Thursday. Halder is setting their plates. Their cloaks may still be on the Cloister pegs.' + (f.cloak_names ? ' I already have their name-tapes.' : ''));
+      showEvent('Ada Wick\'s letter', '<i>To the Precentor, the Cloister of the Lost Choir. Tom and Wat are to sing Thursday; I have let out their cloaks, which they have grown out of again, the pair of them. Please mind Wat on the risers, he leans. Halder will fetch them after. Supper is at seven and he will set it at six, he always does. — Ada Wick.</i><br><br>It was never sent. It is dated the day the Anchor went quiet.', [{ t: 'Fold it into your pack.', f: null }]);
+    } else msg('An empty dresser. You have Ada\'s letter.', '', 3000);
+    return true;
+  }
+  if (e.use === 'wick_table') {
+    if (f.halder_dead && G.has('adaletter') && f.cloak_names && !f.halder_rest) {
+      f.halder_rest = true; questXp(50);
+      journal('side', 'A Table for Four: Halder Wick is dead, but I laid Tom and Wat\'s name-tapes beside their plates at his table anyway, and the blue plate in front of Ada\'s chair.');
+      msg('You lay the two red-thread tapes beside the two small plates, and set the blue one in front of Ada\'s chair, the way he would have. The table is set for four. Nobody comes. That was never the point.', 'voice', 8000);
+    } else msg(f.halder_rest ? 'A table for four, set, in a foot of lit water. Two name-tapes beside the small plates.' : 'A table for four, set in a foot of water. The blue plate is Ada\'s.', '', 4000);
+    return true;
+  }
+  return wgUse1(e);
+}
+function wgTrigger(t) {
+  if (t.id === 'weaver_room') {
+    if (!t.done && !G.flags.weaver_dead) {
+      t.done = true;
+      for (const e of G.ents) if (e.type === 'weaver' && !e.dead) { e.state = 'chase'; e.alertT = 12; e.guard = false; }
+      Audio_.sfx.voice(); msg('The thing at the loom turns round. It is wearing a shroud of voices, and all of them say your name.', 'bad', 7000);
+    }
+    return true;
+  }
+  return wgTrigger1(t);
+}
+function bookOneEnd() {
+  bookOneEnd1();
+  const f = G.flags, L = [];
+  if (f.weaver_dead) L.push(`Under Whisper-Grove the Phantom Weaver is dead at its loom${f.shroud_cut ? ', its shroud cut, and seventy-four thousand voices went up the Sunken Stair into the mist' : f.thread_kept ? '. One thread of its shroud hums in your pack, in a voice you nearly know' : ''}. ${f.count_done ? 'Sable\'s count in the west quarter came out right.' : ''}`);
+  if (f.round_sable) L.push('Pressman Mallow\'s round is in the Bound Ledger now, eight names, copied out in Sable\'s straight hand.');
+  else if (f.round_struck) L.push('Pressman Mallow\'s round was struck off the register in Quist\'s hand. Eight Hollows in the west quarter are on no list at all.');
+  else if (f.mallow_dead) L.push('Pressman Mallow is dead in the water of the west quarter. Three ticks in his round-book are still blank.');
+  if (f.halder_rest) L.push(f.halder_dead ? 'Halder Wick\'s table is set for four, with two name-tapes beside the small plates. Nobody sits at it.' : 'Halder Wick sits at his own table now. He is waiting for the boys to come home from choir, the way a man waits who knows they are coming.');
+  if (!L.length) return;
+  const box = $('#ending-text'), ps = box.querySelectorAll('p'), anchor = ps[ps.length - 3];
+  for (const l of L) { const pEl = document.createElement('p'); pEl.innerHTML = l; box.insertBefore(pEl, anchor || null); }
 }

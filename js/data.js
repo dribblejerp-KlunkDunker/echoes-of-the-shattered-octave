@@ -706,3 +706,88 @@ function joinSable(g, how) {
   if (how === 'annet') return 'She closes the Ledger. "Annet Sowerby," she says. "Six. Third crate from the bulkhead. She would not let go of a boy\'s hand at intake, so they put them in together." She stands, and wrings the lit water out of her hem. "Entry: the archivist joins the ship. For arithmetic, not hope. Remember that I said so." Then, quieter: "She is not lost. She is filed. I will tell her that myself."';
   return 'She is quiet for a moment. "OK-114. I initialled that registry eleven times." She stands, and the Ledger rises with her. "Entry: the archivist joins the ship. For arithmetic, not hope. The Kestrel can reach the harvest-house on the Cloister road, where the presses are. Cloister first. Something in it guards the risers, and I left it there."';
 }
+
+// ---------------------------------------------------------------- Whisper-Grove, second pass: the Catacombs, the Round, the Wick house
+Object.assign(ENEMIES, {
+  weaverling: { name: 'Weaverling', sprite: 'weaverling', hp: 14, dmg: [2, 5], speed: 2.1, reach: 0.9, cacophony: true, noiseLure: true, web: true, scale: 0.55, yOff: 0.18, xp: 12,
+    desc: 'A spider of static and lilac thread with a cluster of little mouths. Its threads stick, and slow you.' },
+  drowned: { name: 'Drowned Hollow', sprite: 'drowned', hp: 26, dmg: [3, 8], speed: 1.4, reach: 1.0, cacophony: true, shriek: true, scale: 1.0, yOff: 0.12, xp: 22,
+    desc: 'A Hollow with a Cacophony in it. When it sees you it screams in seventy voices, and everything in the mist hears.' },
+  pressman: { name: 'Pressman Mallow', sprite: 'pressman', hp: 80, dmg: [6, 12], speed: 1.2, reach: 1.25, press: true, forget: true, armored: true, scale: 1.2, xp: 90,
+    desc: 'Office of the Catalogue, Second Pressings. A hand-press on his back and a round-book on a chain. He does the ones who wander off the register.' },
+  weaver: { name: 'The Phantom Weaver', sprite: 'weaver', hp: 150, dmg: [7, 14], speed: 1.3, reach: 1.5, cacophony: true, fearless: true, mimic: true, summon: 'weaverling', web: true, scale: 1.45, xp: 220,
+    desc: 'A named horror of the Cacophony. It weaves the voices Whisper-Grove forgot into a shroud, and it speaks in all of them.' },
+});
+Object.assign(ITEMS, {
+  roundbook: { name: 'Mallow\'s Round-Book', sprite: 'loot', desc: 'An Office round-book on a broken chain. SECOND PRESSINGS — WEST QUARTER. Eight names, each with a date, a time, and a tick. Three ticks are still blank.', key: true },
+  thread: { name: 'The Weaver\'s Last Thread', sprite: 'loot', desc: 'One lilac thread from the shroud, wound on a finger-bone. It hums in a voice you nearly know. (+10 maximum voice. Hounds hear you a little further.)', key: true },
+  adaletter: { name: 'Ada Wick\'s Letter', sprite: 'loot', desc: 'To the Precentor of the Cloister, from Ada Wick: Tom and Wat are to sing on Thursday; she has let out their cloaks; please mind Wat on the risers, he leans.', key: true },
+});
+CLOISTER_NAMES[0] = 'Tom Wick'; CLOISTER_NAMES[7] = 'Wat Wick';
+const FREED_NAMES = ['Corra Bell', 'Simeon Rusk', 'Pip Lawler', 'Agnes Moy', 'Harl Teague'];
+const ROUND_NAMES = ['Edda Thorne', 'Baz Kettle', 'Lise Marrow', 'Old Peg Hollis', 'Tobias Venn', 'Mary Quarrie', 'Fen Abbot', 'Isolde Crake'];
+Object.assign(PLACES_WG, { 'The Sunken Stair (the Catacombs)': [8.5, 20.5], 'The Wick house': [37.5, 15.5] });
+
+// new hooks wrap the first-pass quest functions, so earlier saves keep working
+(() => {
+  const sq = NPCS.sable_wg.quest;
+  NPCS.sable_wg.quest = (g) => {
+    const f = g.flags;
+    if (f.sable_joined && f.weaver_dead && f.count_given && !f.count_done) {
+      f.count_done = true; FREED_NAMES.forEach(n => g.ledger.push({ name: n, where: 'the Whisper Catacombs', day: g.day })); questXp(80);
+      journal('side', 'The Missing Count: I told Sable what was at the bottom of the Sunken Stair. She read the five cut-free Hollows into the Ledger by name, and her count came out right for the first time in a month.');
+      return { text: `Entry: the count is right. ${f.cocoons || 0} of the missing walked back up the Sunken Stair this evening, wet to the waist and looking at nothing, and stood in the court where they used to stand. — ${f.shroud_cut ? 'You cut the shroud. I heard it from here; for half a breath the whole city spoke at once. I wrote down as much as I could.' : 'You kept a thread. I can hear it in your pack. It is somebody. I will not ask whom.'} I have put their names in the Ledger: ${FREED_NAMES.join(', ')}. Weight for weight. It was worth it.` };
+    }
+    if (f.sable_joined && !f.count_given) {
+      f.count_given = true;
+      journal('side', 'The Missing Count: Sable says her count in the west quarter is short — nineteen names a week read to empty water. Hollows who wander near the Sunken Stair are not coming back. Something below the city is taking them. The stair is in the west quarter, in the drowned house on the far side of the court.');
+      return { text: 'Before you go. My count is wrong. In the west quarter I read nineteen names this week to empty water. Hollows do not stop walking their loops; that is what a Hollow is. Unless something takes them. They go missing near the Sunken Stair, in the drowned house west of the court. There are catacombs under Whisper-Grove older than the marble, and something down there has started to sing in borrowed voices. I am a list, not a cure. You, apparently, are something else.' };
+    }
+    if (g.has('roundbook') && !f.round_done) {
+      return { text: 'You have an Office round-book. I can smell the binding glue from here; I helped choose it.', choices: [
+        { t: 'Give Sable the round-book.', f: (g) => { g.take('roundbook'); f.round_done = true; f.round_sable = true; ROUND_NAMES.forEach(n => g.ledger.push({ name: n, where: 'Mallow\'s round-book', day: g.day })); questXp(70); journal('side', 'The Pressman\'s Round: I gave Mallow\'s round-book to Sable. Eight names from the west quarter are in the Ledger now, not on the Office\'s second-pressing list.'); return `She reads it standing up, all eight lines, and her face does not change. "${ROUND_NAMES[3]}," she says. "She used to sell eels by the ferry stair. Three ticks still blank." She copies all eight into the Ledger and tears the round-book in half, along the spine, the way you are taught not to.`; } },
+        { t: 'Keep it for now.', f: () => '"Keep it dry," she says. "It is the only copy."' },
+      ] };
+    }
+    return sq(g);
+  };
+  const lq = NPCS.lyra_wg.quest;
+  NPCS.lyra_wg.quest = (g) => {
+    const f = g.flags;
+    if (f.lyra_wg_met && !f.round_hook) {
+      f.round_hook = true;
+      journal('side', 'The Pressman\'s Round: Lyra saw a huge proctor with a press on his back take a Hollow off the steps in the west quarter. "Second pressings," Sable would call it. He keeps a round-book.');
+      return { text: 'She writes fast, and turns the slate: <b>THE BIG ONE WITH THE PRESS ON HIS BACK TOOK A MAN OFF THE STEPS. WEST. THE MAN WAS STILL SAYING HIS NAME.</b> She rubs out NAME and writes it again, bigger.' };
+    }
+    if (f.mallow_dead && !f.lyra_mallow) { f.lyra_mallow = true; return { text: 'She writes: <b>GOOD.</b> Then she rubs it out, slowly, because she was raised a Cantor, and writes: <b>I AM NOT SORRY.</b>' }; }
+    return lq(g);
+  };
+  const kq = NPCS.kaelen_wg.quest;
+  NPCS.kaelen_wg.quest = (g) => {
+    const f = g.flags;
+    if (f.count_given && !f.weaver_dead && !f.kaelen_weaver) { f.kaelen_weaver = true; return { text: 'Under the west quarter there is something singing in a great many voices at once, very badly, the way a child sings a song it heard through a wall. The Cacophony does not compose. It collects. — Take glass shot, or bronze. And if it sings to you in a voice you know, it is lying. That is all they ever do.' }; }
+    return kq(g);
+  };
+  const qq = NPCS.quist.quest;
+  NPCS.quist.quest = (g) => {
+    const f = g.flags;
+    if (g.has('roundbook') && !f.round_done) {
+      return { text: 'That is Inspector Mallow\'s round-book. Mallow is not one of mine; he is on loan from the Arbiterium, and he does second pressings on the ones who wander off the register. I have filed four complaints. They were all relieved.', choices: [
+        { t: 'Strike his round off the register. Sign it.', f: (g) => { g.take('roundbook'); f.round_done = true; f.round_struck = true; questXp(70); journal('side', 'The Pressman\'s Round: Registrar-General Quist struck Mallow\'s second-pressing round off the register and signed it. Eight Hollows in the west quarter are on no list at all now.'); return 'He takes out a ruler, and a nib, and draws one straight line through each of the eight names, and signs at the foot in a hand like a fence. "Struck," he says. "They are on no list now, which is the only freedom the Office has ever offered anyone." He blots it. "It is not nothing. Tell her I said it was not nothing."'; } },
+        { t: 'Keep it.', f: () => '"As you like. It is evidence of something. Most things are."' },
+      ] };
+    }
+    return qq(g);
+  };
+  const hq = NPCS.halder.quest;
+  NPCS.halder.quest = (g) => {
+    const f = g.flags;
+    if (g.has('adaletter') && f.cloak_names && !f.halder_rest) {
+      return { text: '"...the boys will be in directly... sit, sit, there\'s four..." You have Ada\'s letter, and two name-tapes in red thread from the Cloister cloaks: TOM WICK. WAT WICK.', choices: [
+        { t: 'Lay the boys\' name-tapes beside their plates.', f: (g) => { f.halder_rest = true; f.halder_done = true; questXp(80); for (const e of G.ents) if (e.id === 'halder') e.loop = false; journal('side', 'A Table for Four: I laid Tom and Wat Wick\'s name-tapes from the Cloister cloaks beside their plates on Halder\'s table. He stopped setting it. He sat down.'); return 'You lay the two red-thread tapes beside the two small plates. Halder stops with the blue plate in his hands. He looks at the tapes for a long time. Then he sets the blue plate down, and does not lift it again, and for the first time in three years Halder Wick sits down at his own table. "They\'re at choir," he says, quite clearly. "Thursday. Ada\'s let out their cloaks." He folds his hands. He waits for them the way a man waits who knows they are coming.'; } },
+        { t: 'Not yet.', f: () => '...the blue one is Ada\'s...' },
+      ] };
+    }
+    return hq(g);
+  };
+})();

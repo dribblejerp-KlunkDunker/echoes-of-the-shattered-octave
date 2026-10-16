@@ -28,6 +28,8 @@ Explore Oakhaven and the land past the Hedge, then sail the Drift-Kestrel to Whi
 | Choosing your calling, one of six character templates | Sable, Archivist of the Veil, keeping the Bound Ledger in the mist |
 | ![Whisper-Grove at dusk](screenshots/whispergrove.jpg) | ![The Aegis Sentinel in the Cloister](screenshots/cloister.jpg) |
 | Halder Wick's table for four in the lit water of Whisper-Grove | The Aegis Sentinel rises over the empty risers of the Cloister of the Lost Choir |
+| ![The Phantom Weaver in the Whisper Catacombs](screenshots/catacombs.jpg) | |
+| The Phantom Weaver at its loom in the Whisper Catacombs, with a weaverling in front of it | |
 
 ## Features
 
@@ -35,6 +37,7 @@ Explore Oakhaven and the land past the Hedge, then sail the Drift-Kestrel to Whi
 - Six character templates, plus attributes, skills and level-ups.
 - Districts, interiors and dungeons: Oakhaven, the clearing, the quarry, the underhedge, the rootvault, the chapel and more.
 - Part Three, "The Forgetting": after you escape Oakhaven, sail on to Whisper-Grove. Wade through the Sunken Court among walking Hollows, survive a Proctor ambush, and calm (or destroy) the Aegis Sentinel with Hymn 9 in the Cloister of the Lost Choir. Then steal an Office hand-press from the Malting, the Catalogue's harvest-house. Side stories include Halder Wick's table for four, the lamplighter and his dry lamps, four reflecting pools of strangers' memories, Bettis Renn, and the grey Arbiterium folder. Each choice shapes the Book One ending.
+- Under Whisper-Grove: go down the Sunken Stair into the Whisper Catacombs, cut five missing Hollows out of their cocoons, and face the Phantom Weaver, which speaks in voices you know. Then decide what to do with the shroud it was weaving. New enemies: weaverlings, whose threads slow you; Drowned Hollows, whose screams draw the mist; and Pressman Mallow, whose blows make you forget. New side quests: The Missing Count, The Pressman's Round, and A Table for Four.
 - Dialogue in the Daggerfall manner, with tone choices (Polite / Normal / Blunt), topics and directions.
 - Songs: a magic system built on the Octave.
 - Quests: the main story, "The Rite", plus side quests. In one of them, Sable, the last Archivist of the Veil, asks you to gather names for the Bound Ledger. Reading a name back restores a Hollow, but it costs her a piece of herself, and your choice changes the ending.
