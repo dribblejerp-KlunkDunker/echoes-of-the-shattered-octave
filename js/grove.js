@@ -185,8 +185,8 @@ function wgLadder() {
   if (!f.bettis_awake && G.maps.malting) left.push('the Hollow on the bench in the Malting is still saying "name, please"');
   if (!f.lamps_lit) left.push('the lamps of the Sunken Court are still dry');
   if (!G.has('folder') && !f.folder_given) left.push('something in the Malting\'s Tuning Room has not been read');
-  showEvent('The mast-ladder', 'A hundred feet of rope up into the lilac mist, and the Kestrel\'s keel above it, lift-tanks murmuring. Vane is shouting something about weight.' + (left.length ? '<br><br>Behind you, ' + left.join('; ') + '.' : '') + '<br><br><span class="muted">Climbing ends Book One.</span>', [
-    { t: 'Climb. Tell Vane to cut the line.', f: () => bookOneEnd() },
+  showEvent('The mast-ladder', 'A hundred feet of rope up into the lilac mist, and the Kestrel\'s keel above it, lift-tanks murmuring. Vane is shouting something about weight.' + (left.length ? '<br><br>Behind you, ' + left.join('; ') + '.' : '') + '<br><br><span class="muted">Climbing leaves Whisper-Grove behind for good.</span>', [
+    { t: 'Climb.', f: () => startPart4() },
     { t: 'Not yet.', f: null },
   ]);
 }
@@ -288,6 +288,7 @@ function drownedShriek(e) {
 }
 function enemyHitFx(e, d) {
   if (d.web && Math.random() < (e.type === 'weaver' ? 0.6 : 0.4)) { const fresh = !(G.webT > 0); G.webT = 2.6; if (fresh) msg('Threads of lilac light catch at your legs. Every step comes slow.', 'warn', 2500); }
+  if (d.toll) codaHitFx(e, d);
   if (d.forget && Math.random() < 0.35) {
     const p = G.player; p.voice = Math.max(0, p.voice - 8); Audio_.sfx.press();
     msg(`The felted die catches you across the temple. For a moment you cannot remember your own name. Then: ${p.name}. ${p.name}. You hold on to it.`, 'bad', 4500);
@@ -303,7 +304,8 @@ const WEAVER_VOICES = [
 ];
 function enemyExtra(e, dt, dist, canSee) {
   const d = e.def;
-  if (d.mimic) { e.mimicT = (e.mimicT == null ? 2 : e.mimicT) - dt; if (e.mimicT <= 0 && dist < 10) { e.mimicT = rnd(7, 11); msg('The Weaver speaks. ' + WEAVER_VOICES[rndi(0, WEAVER_VOICES.length - 1)](G.player), 'voice', 6000); Audio_.sfx.voice(); } }
+  if (d.horn || d.grapnel || d.dirge) codaExtra(e, dt, dist, canSee);
+  if (d.mimic) { e.mimicT = (e.mimicT == null ? 2 : e.mimicT) - dt; if (e.mimicT <= 0 && dist < 10) { e.mimicT = rnd(7, 11); const V = d.coda ? codaVoices(e) : WEAVER_VOICES; msg((d.coda ? d.name + ' sings. ' : 'The Weaver speaks. ') + V[rndi(0, V.length - 1)](G.player), 'voice', 6000); Audio_.sfx.voice(); } }
   if (d.summon && canSee) {
     e.summonT = (e.summonT == null ? 6 : e.summonT) - dt;
     if (e.summonT <= 0) {
@@ -383,7 +385,8 @@ function bookOneEnd() {
   else if (f.round_struck) L.push('Pressman Mallow\'s round was struck off the register in Quist\'s hand. Eight Hollows in the west quarter are on no list at all.');
   else if (f.mallow_dead) L.push('Pressman Mallow is dead in the water of the west quarter. Three ticks in his round-book are still blank.');
   if (f.halder_rest) L.push(f.halder_dead ? 'Halder Wick\'s table is set for four, with two name-tapes beside the small plates. Nobody sits at it.' : 'Halder Wick sits at his own table now. He is waiting for the boys to come home from choir, the way a man waits who knows they are coming.');
-  if (!L.length) return;
   const box = $('#ending-text'), ps = box.querySelectorAll('p'), anchor = ps[ps.length - 3];
+  L.push(...codaEndingLines());
+  if (!L.length) return;
   for (const l of L) { const pEl = document.createElement('p'); pEl.innerHTML = l; box.insertBefore(pEl, anchor || null); }
 }

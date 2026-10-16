@@ -30,8 +30,8 @@ const Audio_ = (() => {
   function setScene(kind) {
     if (!ctx) return;
     const t = ctx.currentTime;
-    const dg = ({ town: 0.05, inside: 0.03, wild: 0.07, dungeon: 0.11, root: 0.16, grove: 0.06, cloister: 0.04 }[kind] || 0.05) * 0.45;
-    const wg = { town: 0.05, inside: 0.01, wild: 0.09, dungeon: 0.02, root: 0.03, grove: 0.06, cloister: 0.005 }[kind] || 0.03;
+    const dg = ({ town: 0.05, inside: 0.03, wild: 0.07, dungeon: 0.11, root: 0.16, grove: 0.06, cloister: 0.04, coda: 0.08, mausoleum: 0.13 }[kind] || 0.05) * 0.45;
+    const wg = { town: 0.05, inside: 0.01, wild: 0.09, dungeon: 0.02, root: 0.03, grove: 0.06, cloister: 0.005, coda: 0.08, mausoleum: 0.01 }[kind] || 0.03;
     const lg = { town: 0.012, inside: 0.02, wild: 0.0, dungeon: 0.0, root: 0.0 }[kind] || 0;
     droneGain.gain.linearRampToValueAtTime(dg, t + 1.5); windGain.gain.linearRampToValueAtTime(wg, t + 1.5); lampGain.gain.linearRampToValueAtTime(lg, t + 1.5);
   }
@@ -79,7 +79,7 @@ const Audio_ = (() => {
   // Exploration cues play through, fall silent for a while, and return; combat and the Greening loop seamlessly.
   const TRACKS = {
     title: { gap: [4, 6] }, town: { gap: [18, 40] }, wild: { gap: [20, 45] }, dungeon: { gap: [14, 30] },
-    tavern: { gap: [6, 12] }, ending: { gap: [5, 8] }, grove: { gap: [16, 34] },
+    tavern: { gap: [6, 12] }, ending: { gap: [5, 8] }, grove: { gap: [16, 34] }, coda: { gap: [16, 34] },
     combat: { loop: 128 * 60 / 128 }, greening: { loop: 128 * 60 / 140 },
   };
   const music = (() => {

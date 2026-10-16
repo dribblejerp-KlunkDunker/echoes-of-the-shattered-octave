@@ -498,6 +498,9 @@ function buildAllMaps() {
   // second pass (appended, never inserted)
   extendWhisperGrove(maps.whispergrove); maps.catacombs = buildCatacombs(); maps.wickhouse = buildWickHouse();
   placeCaches(maps.catacombs, 4205, [2, 3, 3]);
+  // Part Four
+  maps.deepwoods = buildDeepWoods(); maps.mausoleum = buildMausoleum();
+  placeCaches(maps.deepwoods, 4207, [2, 3, 3]); placeCaches(maps.mausoleum, 4209, [2, 3]);
   for (const k in maps) maps[k].baseCount = maps[k].entities.length;
   return maps;
 }
@@ -722,5 +725,112 @@ function buildWickHouse() {
   m.deco('chair', 4.0, 5.6, { radius: 0.2, scale: 0.5, label: 'A child\'s chair with WAT carved into the back, crookedly' });
   m.deco('sign', 3.0, 6.6, { radius: 0.2, scale: 0.6, use: 'wick_letter', label: 'A letter on the dresser, in a woman\'s hand' });
   m.deco('lamp', 8.6, 4.0, { radius: 0.12, scale: 0.6, glow: 0.4 });
+  return m;
+}
+
+// =========================================================================
+//  PART FOUR — CODA. The Deep Woods by the Mausoleum of Chords, where the Kestrel came down.
+// =========================================================================
+function buildDeepWoods() {
+  const W = 56, H = 56;
+  const m = new GameMap('deepwoods', 'The Deep Woods', W, H, {
+    outdoor: true, floor: 't_moss', floorTextures: ['t_moss', 't_shallows', 't_water'], fogDist: 18, fogColor: [84, 72, 110], ambient: 0.21,
+    music: 'coda', danger: 1, spawn: { x: 27.5, y: 38.2, dir: Math.PI / 2 },
+  });
+  m.border('t_deepwood');
+  // thickets that make the paths
+  [[14, 24, 16, 27], [36, 8, 39, 10], [8, 26, 11, 28], [40, 36, 42, 40], [17, 48, 20, 50], [34, 50, 37, 52], [38, 17, 40, 20], [50, 32, 53, 35], [2, 30, 5, 32], [20, 30, 22, 33], [32, 28, 34, 31]].forEach(([a, b, c, d]) => m.rect(a, b, c, d, 't_deepwood'));
+  // the Mausoleum of Chords
+  m.rect(21, 3, 34, 12, 't_mausoleum');
+  m.set(27, 12, DOOR({ portal: { map: 'mausoleum', x: 19.5, y: 31.2, dir: -Math.PI / 2 }, label: 'The Mausoleum of Chords' }));
+  // phosphorescent pools
+  const pool = (x0, y0, x1, y1) => { for (let y = y0 - 1; y <= y1 + 1; y++) for (let x = x0 - 1; x <= x1 + 1; x++) m.setFloor(x, y, 1); for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m.setFloor(x, y, 2); };
+  pool(16, 29, 18, 31); pool(36, 34, 37, 35); pool(8, 6, 10, 7);
+  // the crash
+  m.deco('kestrel', 23.6, 44.8, { radius: 1.7, scale: 2.6, glow: 0.25, use: 'kestrel', label: 'The Drift-Kestrel, on her side in the willows' });
+  m.deco('lifttank', 31.0, 45.2, { radius: 0.7, scale: 1.4, label: 'Number-two lift-tank, holed' });
+  m.deco('campfire', 27.5, 41.6, { radius: 0.35, scale: 0.7, glow: 0.8, use: 'campfire', label: 'The camp fire' });
+  m.deco('footprints', 21.6, 40.6, { radius: 0.2, scale: 0.6, glow: 0.3, use: 'footprints', solid: false, label: 'A deck-plank with two scorched footprints in it' });
+  m.deco('crates', 29.8, 47.0, { radius: 0.4, scale: 0.8, label: 'What came out of the hold' });
+  m.npc('vane_dw', 25.4, 40.4, { facing: Math.PI / 2 });
+  m.npc('tobiah_dw', 30.0, 44.0, { facing: 0 });
+  m.npc('mags_dw', 29.4, 39.8, { facing: Math.PI });
+  m.npc('lyra_dw', 25.8, 43.0, { facing: 0, until: 'coda_go' });
+  m.npc('kaelen_dw', 29.2, 42.6, { facing: Math.PI });
+  m.npc('sable_dw', 24.4, 41.8, { facing: 0, requires: 'sable_with' });
+  m.npc('aegis_dw', 32.2, 40.2, { facing: -Math.PI / 2, requires: 'aegis_follow', scale: 1.2 });
+  m.npc('herald', 27.5, 50.6, { facing: -Math.PI / 2, requires: 'herald_come' });
+  [[24.0, 38.6], [31.4, 42.0], [27.5, 47.4]].forEach(([x, y]) => m.deco('lamp', x, y, { radius: 0.12, scale: 0.6, glow: 0.45 }));
+  // the sexton's yard, west of the Mausoleum
+  for (let i = 0; i < 12; i++) m.deco('grave', 6.5 + (i % 4) * 2.4, 13.0 + Math.floor(i / 4) * 2.6, { radius: 0.25, scale: 0.7, label: ['A headstone with a bell on it. The name is worn away.', 'CANTOR\'S CLERK. The rest is lichen.', 'A small stone. A small grave.'][i % 3] });
+  m.deco('grave', 11.6, 21.2, { radius: 0.3, scale: 0.8, use: 'nan_grave', label: 'A new headstone with a bell carved on it, and no name. Under it, a grave dug open.' });
+  m.npc('sexton', 10.6, 21.4, { facing: 0 });
+  // the cutter, east, with the willow-crown through her bow
+  m.deco('cutter', 46.6, 23.6, { radius: 1.7, scale: 2.6, use: 'cutter', label: 'The Office cutter OC-742, split at the bow' });
+  m.enemy('horn', 44.2, 26.6); m.enemy('bosun', 47.6, 27.4, { name: 'Bosun Teller' });
+  m.enemy('marine', 43.0, 21.8); m.enemy('marine', 49.6, 21.6); m.enemy('marine', 45.0, 29.4);
+  m.enemy('proctor', 41.2, 24.6); m.enemy('proctor', 50.6, 26.2);
+  // the weaverling nests, south-west
+  [[6.5, 38.5], [11.6, 44.6], [5.4, 45.2]].forEach(([x, y], i) => m.deco('web', x, y, { radius: 0.25, scale: 1.1, glow: 0.4, use: 'silk', silk: i, label: 'A web of lilac silk, thick as sailcloth' }));
+  m.deco('cocoon', 9.0, 47.6, { radius: 0.3, scale: 1.0, glow: 0.3, label: 'A deer, wound in silk. It is still breathing.' });
+  [[8.0, 40.0], [10.0, 42.0], [6.4, 43.0], [12.4, 39.6], [7.6, 46.4]].forEach(([x, y]) => m.enemy('weaverling', x, y));
+  // the hush-lamp shrine, south-east: the Hush is drawn to light
+  m.deco('lamp', 45.5, 45.5, { radius: 0.2, scale: 1.0, glow: 0.8, use: 'shrine', label: 'A hush-lamp shrine, still burning' });
+  [[44.0, 44.2], [47.0, 44.2], [44.0, 46.8], [47.0, 46.8]].forEach(([x, y]) => m.deco('lamp', x, y, { radius: 0.12, scale: 0.55, glow: 0.4 }));
+  m.enemy('quiet', 43.0, 48.6); m.enemy('quiet', 48.6, 42.4);
+  // the Mausoleum's mourners, and what the mist has got into
+  [[21.0, 15.2], [34.6, 14.6], [27.5, 18.4]].forEach(([x, y]) => m.enemy('dirge', x, y));
+  m.enemy('drowned', 15.2, 30.0); m.enemy('drowned', 38.6, 35.0);
+  m.enemy('hound', 18.0, 20.0); m.enemy('hound', 38.0, 14.0); m.enemy('hound', 13.0, 33.6);
+  m.item('tonic', 47.4, 47.4); m.item('pellets', 43.8, 43.6); m.item('honey', 4.2, 41.0); m.item('tonic', 52.0, 28.0); m.item('w_spear', 12.8, 12.4);
+  // trees
+  const rnd = mulberry32(852);
+  const keep = (x, y) => ((x - 27.5) ** 2 + (y - 43) ** 2 < 70) || (x > 20 && x < 35 && y < 15) || (x > 40 && x < 53 && y > 19 && y < 31) || (x > 3 && x < 15 && y > 11 && y < 23) || (x > 42 && x < 49 && y > 42 && y < 49) || (Math.abs(x - 27.5) < 2 && y > 12);
+  for (let i = 0, n = 0; i < 900 && n < 70; i++) {
+    const x = 2 + rnd() * (W - 4), y = 2 + rnd() * (H - 4), ix = x | 0, iy = y | 0;
+    if (m.isBlocked(ix, iy) || m.floorCells[iy * W + ix] || keep(x, y)) continue;
+    if (m.entities.some(e => (e.x - x) ** 2 + (e.y - y) ** 2 < 4)) continue;
+    let near = false; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (m.isSolidCell(ix + dx, iy + dy)) near = true;
+    if (near) continue;
+    if (rnd() < 0.75) m.deco('willow', x, y, { scale: 1.7 + rnd() * 0.9, radius: 0.4, label: 'A silver willow older than the Synod. Its fronds touch the moss, and the moss lights where they touch.' });
+    else m.deco('oak', x, y, { scale: 1.6 + rnd() * 0.6, radius: 0.4, label: 'A black oak, dead standing, hung with lilac moss' });
+    n++;
+  }
+  return m;
+}
+
+function buildMausoleum() {
+  const W = 40, H = 34;
+  const m = new GameMap('mausoleum', 'The Mausoleum of Chords', W, H, { floor: 't_marble', floorTextures: ['t_marble', 't_flag', 't_water'], ceil: 't_greymarble', fogDist: 11, ambient: 0.12, fogColor: [22, 16, 34], music: 'mausoleum', danger: 1, spawn: { x: 19.5, y: 31.2, dir: -Math.PI / 2 } });
+  m.rect(0, 0, W - 1, H - 1, 't_mausoleum');
+  const room = (x0, y0, x1, y1) => m.clear(x0, y0, x1, y1);
+  room(17, 28, 22, 32);                       // the narthex
+  room(19, 27, 20, 27); room(12, 18, 27, 26); // the hall of tombs
+  room(10, 21, 11, 22); room(2, 18, 9, 24);   // west: the vestry
+  room(28, 21, 29, 22); room(30, 18, 37, 26); // east: under the bell-tower
+  room(19, 13, 19, 17); room(12, 2, 27, 12);  // north: the choir
+  for (let y = 18; y <= 26; y++) for (let x = 12; x <= 27; x++) if ((x + y) % 2) m.setFloor(x, y, 1);
+  [[16, 5], [23, 5], [16, 9], [23, 9], [15, 20], [24, 20], [15, 24], [24, 24]].forEach(([x, y]) => m.set(x, y, WALL('t_greymarble')));
+  m.set(19, 33, DOOR({ portal: { map: 'deepwoods', x: 27.5, y: 13.7, dir: Math.PI / 2 }, label: 'Out to the Deep Woods' }));
+  m.set(19, 15, DOOR({ label: 'The choir door, bronze, with four bells set in it', locked: 'tombs_rung', lockMsg: 'A bronze door with four small bells set into it, in a row, each stopped with felt. It does not open. Back in the hall the tombs are waiting to be rung.' }));
+  // light
+  [[17.6, 28.6], [21.4, 28.6], [12.6, 18.6], [27.4, 18.6], [12.6, 25.4], [27.4, 25.4], [2.6, 18.6], [37.4, 18.6], [12.6, 2.6], [27.4, 2.6], [12.6, 11.4], [27.4, 11.4]].forEach(([x, y]) => m.deco('lamp', x, y, { radius: 0.12, scale: 0.6, glow: 0.45 }));
+  m.deco('sign', 21.6, 30.0, { radius: 0.2, scale: 0.6, use: 'maus_inscription', label: 'An inscription over the inner door' });
+  // the four Cantors
+  [[13.6, 19.6], [13.6, 25.0], [26.4, 19.6], [26.4, 25.0]].forEach(([x, y], i) => m.deco('tomb', x, y, { radius: 0.5, scale: 0.9, glow: 0.2, use: 'tomb', tomb: i, label: `The tomb of ${TOMB_NOTES[i][0]} — ${TOMB_NOTES[i][1]}` }));
+  m.enemy('warden', 17.6, 22.4, { guard: true }); m.enemy('warden', 22.4, 22.4, { guard: true });
+  // the vestry: the register
+  m.deco('shelf', 2.6, 21.0, { radius: 0.2, scale: 0.9 });
+  m.deco('table', 5.5, 21.0, { radius: 0.4, scale: 0.7, use: 'maus_register', label: 'The sexton\'s desk. The register is open on it.' });
+  m.enemy('dirge', 4.0, 19.0); m.enemy('dirge', 7.6, 23.4);
+  // under the bell-tower
+  m.deco('bones', 33.0, 19.0, { radius: 0.3, scale: 0.6 }); m.deco('coil', 35.6, 24.4, { radius: 0.3, scale: 0.7, label: 'The bell-rope, cut, coiled on the floor' });
+  m.enemy('warden', 34.0, 22.0); m.enemy('mites', 36.4, 19.6); m.enemy('dirge', 31.0, 25.0);
+  // the choir
+  m.deco('tomb', 19.5, 3.4, { radius: 0.6, scale: 1.2, glow: 0.35, label: 'The tomb of the First Cantor of Memory. It is humming.' });
+  [[14.0, 7.0], [25.0, 7.0]].forEach(([x, y]) => m.deco('hymnboard', x, y, { radius: 0.3, scale: 0.8, label: 'A board of funeral offices, a hundred names long' }));
+  m.npc('lyra_dw', 14.6, 11.0, { facing: -Math.PI / 2, requires: 'coda_go' });
+  m.item('tonic', 2.6, 23.6); m.item('pellets', 37.2, 25.6); m.item('honey', 26.6, 2.6); m.item('w_mace', 12.8, 2.8);
+  m.trigger(19.5, 12.4, 1.6, 'coda_choir');
   return m;
 }

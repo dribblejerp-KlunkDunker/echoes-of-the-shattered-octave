@@ -791,3 +791,169 @@ Object.assign(PLACES_WG, { 'The Sunken Stair (the Catacombs)': [8.5, 20.5], 'The
     return hq(g);
   };
 })();
+
+// ================================================================ PART FOUR — CODA: the Deep Woods and the Mausoleum of Chords
+Object.assign(ENEMIES, {
+  horn: { name: 'Office Listening-Horn', sprite: 'horn', hp: 34, dmg: [0, 0], speed: 0, reach: 0.01, horn: true, noiseLure: true, armored: true, scale: 1.0, xp: 30,
+    desc: 'A brass ear-trumpet on an iron tripod, with a dial in Hertz. It hunts by sound, and when it hears you it tells everybody.' },
+  marine: { name: 'Cutter-Man', sprite: 'marine', hp: 30, dmg: [3, 7], speed: 1.5, reach: 1.1, core: true, grapnel: true, scale: 1.0, xp: 26,
+    desc: 'Office boarding crew, grey oilcloth and a grapnel line. They do not chase you. They reel you in.' },
+  bosun: { name: 'Bosun Teller', sprite: 'marine', hp: 64, dmg: [5, 10], speed: 1.4, reach: 1.2, core: true, grapnel: true, armored: true, scale: 1.18, xp: 70,
+    desc: 'The cutter\'s bosun. He has the hold key on a lanyard round his neck, and he keeps the count.' },
+  dirge: { name: 'Dirge', sprite: 'dirge', hp: 24, dmg: [2, 6], speed: 1.0, reach: 1.0, cacophony: true, dirge: true, scale: 0.95, yOff: -0.22, xp: 24,
+    desc: 'A Cacophony made of three hundred years of eaten funeral songs. Near it your own voice runs out of you, into the mourning.' },
+  warden: { name: 'Chord-Warden', sprite: 'warden', hp: 62, dmg: [6, 12], speed: 0.8, reach: 1.3, armored: true, toll: true, scale: 1.25, xp: 60,
+    desc: 'A marble choirmaster who has stood at the Mausoleum\'s graves so long it has started to keep them. Its mouth is open, and something in there sings.' },
+  requiem: { name: 'The Requiem', sprite: 'requiem', hp: 170, dmg: [7, 15], speed: 1.25, reach: 1.5, cacophony: true, fearless: true, coda: true, mimic: true, scale: 1.5, xp: 260,
+    desc: 'A named horror of the Cacophony that has eaten every funeral office ever sung in the Mausoleum of Chords, and sings them back.' },
+  wearer_coda: { name: 'The Wearer', sprite: 'wearer', hp: 140, dmg: [7, 15], speed: 1.5, reach: 1.4, cacophony: true, fearless: true, coda: true, mimic: true, scale: 1.2, xp: 260,
+    desc: 'It wears Tobin Ashgrove. It has followed you a hundred miles through the mist, and it has practised everyone.' },
+});
+WEAPONS.tollhammer = { name: 'Sexton\'s Toll-Hammer', img: 'fp_mace', dmg: [7, 15], reach: 1.35, noise: 3.0, speed: 0.6, type: 'bronze', blunt: true, value: 70,
+  desc: 'A bell-ringer\'s hammer of bell-bronze, from the Mausoleum\'s tower. It rings the Cacophony, and breaks marble.' };
+Object.assign(ITEMS, {
+  w_tollhammer: { name: WEAPONS.tollhammer.name, sprite: 'gear', weapon: 'tollhammer', value: 70, desc: WEAPONS.tollhammer.desc },
+  liftsilk: { name: 'Lift-Silk (bolt)', sprite: 'loot', desc: 'A bolt of weaverling silk, light as breath and close as skin. It holds lift-gas better than anything in a chandler\'s.', key: true },
+  valve: { name: 'Brass Relief Valve', sprite: 'gear', desc: 'An Office-pattern relief valve off the cutter\'s lift-tank, stamped OK-CATALOGUE. Tobiah will want it.', key: true },
+  holdkey: { name: 'The Cutter\'s Hold Key', sprite: 'loot', desc: 'An iron key on a bosun\'s lanyard. TELLER — HOLD — 432.', key: true },
+  register: { name: 'The Mausoleum Register', sprite: 'loot', desc: 'The sexton\'s register of interments, in a careful hand that gets less careful toward the end. The last entry is dated the night the Anchor went quiet.', key: true },
+});
+TOPICS['The Mausoleum of Chords'] = { low: 'Where the Cantors of Memory are buried, in tuned stone. They say the tombs still ring if you knock.', high: 'Every Cantor of the Memory Anchor is interred there, each in a tomb tuned to the note they kept. It is the only building in the Spectral Woods built to be listened to.' };
+TOPICS['The Office cutter'] = { low: 'The grey ship that hunted us by sound. It came down east of here with a tree through its bow.', high: 'An Office patrol cutter with a listening-horn on the bow and four hundred and thirty-two voices in its hold. Vane put the willow-crown through her. She came down in the woods to the east.' };
+TOPIC_KEYS.push('The Mausoleum of Chords', 'The Office cutter');
+const PLACES_DW = { 'The Kestrel (the crash)': [27.5, 42.5], 'The Mausoleum of Chords': [27.5, 10.5], 'The Office cutter': [45.5, 24.5], 'The weaver nests': [9.5, 40.5], 'The sexton\'s yard': [10.5, 16.5], 'The hush-lamp shrine': [45.5, 45.5] };
+const TOMB_NOTES = [['Cantor Aubrey Hale', 639], ['Cantor Isel Marrow', 852], ['Cantor Wenna Lisk', 528], ['Cantor Orrin Pell', 741]];
+const CODA_VOICES_WEARER = [
+  () => '"Lark," it says, in Tobin Ashgrove\'s voice. "Lark, come in now, the house is warm."',
+  () => '"Line ninety-four," it says, in Kaelen\'s voice, very tired. "I initialled it. I was sure for three seconds."',
+  () => 'It sings the funeral office of Tobin Ashgrove, in Tobin Ashgrove\'s voice, beautifully, a third above her.',
+  () => '"I can\'t read, lark," it says, gently. "I only know what was said out loud."',
+];
+const CODA_VOICES_REQUIEM = [
+  () => 'It sings a funeral office for a woman called Marta Hale, in a hundred voices, all of them mourners.',
+  () => '"Earth to earth, note to note," it sings, in the voice of a Cantor three hundred years dead.',
+  () => 'It sings the calling-song in Lyra\'s own voice, the one she had at twelve, and gets it right.',
+  () => '"...he was a good man, he was a good man, he was a good man..." in every voice that ever said it here.',
+];
+
+const CAMP = {
+  vane_dw: {
+    name: 'Captain Vane of the Drift-Kestrel', sprite: 'vane', portrait: 'vane', tier: 'high',
+    greet: { polite: 'Ten heartbeats. I counted. This time I didn\'t cut.', normal: 'She\'s on her side in the willows with a hole in her number-two tank you could post a sheep through. We are not leaving by air today.', blunt: 'Don\'t. I know. I put a tree through an Office cutter. It seemed like the thing to do.' },
+    topics: {
+      'The Drift-Kestrel': 'She\'ll fly. Forty-mile hops, if Tobiah can close the tank and stop the seam weeping. Further than that, she needs a whole new lift-tank, and there\'s only one coast that sells them without asking whose ship it is.',
+      'The Office cutter': 'She went down east of here with the willow-crown in her bow. Her listening-horn will still be working; those things outlive their crews. And her hold, four hundred and thirty-two voices. I heard them all the way down.',
+      'The Mausoleum of Chords': 'North. Big marble thing in a ring of graves. The Cantor wants to go there. I\'m not going to be the man who tells the Cantor no.',
+    },
+    quest: (g) => {
+      const f = g.flags;
+      if (!f.dw_vane_met) { f.dw_vane_met = true; journal('main', 'The Lift-Tank: the Kestrel is down in the Deep Woods with her number-two lift-tank holed. Tobiah can patch her for forty-mile hops with three bolts of lift-silk from the weaverling nests in the south-west, and a brass relief valve off the Office cutter that came down in the east.'); return { text: 'Here is the arithmetic. Number-two tank is holed. Tobiah can patch her for hops, if he has silk that holds gas, and the Spectral Woods are full of things that spin exactly that; there are nests in the south-west. He also needs a relief valve, and the nearest one is on the Office cutter I put a tree through, east of here. That will have a horn on it. Mind the horn.' }; }
+      if (f.tank_patched && !f.coda_done) return { text: 'Tank\'s closed. She\'ll lift. — The Cantor isn\'t back. I don\'t lift without the Cantor. I\'ve done that sum before.' };
+      if (f.tank_patched && f.coda_done) return { text: 'She\'ll lift when you say. Somebody\'s coming up the south road on foot, alone, in white. In my experience that is never good news and always paperwork.' };
+      return null;
+    },
+  },
+  tobiah_dw: {
+    name: 'Tobiah Marsh, second engineer', sprite: 'tobiah', portrait: 'tobiah', tier: 'high',
+    greet: { polite: 'Don\'t touch that. Or that. That one you can touch, it\'s already broken.', normal: 'Number-two tank. Look at it. I could weep. I nearly have.', blunt: 'I\'m an engine man in a forest. Say something useful or hold this.' },
+    topics: { 'The Drift-Kestrel': 'Three bolts of silk to close the hole and a relief valve to stop her bursting the patch the first time Vane gets clever. Then hops. Forty miles, down, cool the tank, forty miles. It\'ll be like crossing a river on stepping-stones, if the stones were on fire.' },
+    quest: (g) => {
+      const f = g.flags;
+      if (f.tank_patched) return { text: 'She\'s holding. I keep putting my ear to the seam and she keeps holding. I don\'t trust it. I love her.' };
+      const silk = g.count('liftsilk'), valve = g.has('valve');
+      if (silk >= 3 && valve) return { text: 'Three bolts and an Office valve. Give them here.', choices: [
+        { t: 'Hand him the silk and the valve.', f: (g) => { for (let i = 0; i < 3; i++) g.take('liftsilk'); g.take('valve'); f.tank_patched = true; questXp(120); journal('main', 'The Lift-Tank: Tobiah closed the Kestrel\'s number-two tank with weaverling silk and fitted the Office relief valve. She will lift, in forty-mile hops.' + (f.coda_done ? '' : ' Vane will not lift without Lyra. She went north, to the Mausoleum of Chords.')); codaCheckHerald(); return 'He works for an hour without speaking, the silk going on in long careful laps like a bandage, then the valve, then a long low hiss that makes him close his eyes. "There," he says. "There. She\'ll lift. Don\'t tell her I said so; she gets ideas."'; } },
+      ] };
+      return { text: `I need three bolts of lift-silk — I've got ${silk} — and a relief valve ${valve ? '(and you have the valve, bless you)' : 'off that Office cutter'}. The weaverling nests are south-west. Cut the silk off the webs. Don't let the weaverlings cut anything off you.` };
+    },
+  },
+  mags_dw: {
+    name: 'Mags Tennant, first mate', sprite: 'mags', portrait: 'mags', tier: 'high',
+    greet: { polite: 'She watches your mouth, not your eyes, and nods once.', normal: 'She watches your mouth. "Slower," she says. "I read lips, not minds."', blunt: 'She looks at you for a long moment and goes back to splicing one-handed.' },
+    topics: {
+      'The Office cutter': '"It hunts by sound. That horn on the bow hears a man breathe at a hundred yards. I don\'t make any." She grins. "Go quiet, or go fast, and kill the horn first. When it hears you, everybody hears you."',
+      'The Drift-Kestrel': '"My collarbone and her number-two tank. One of us will be flying in a week."',
+    },
+    quest: (g) => {
+      const f = g.flags;
+      if (!f.mags_met) { f.mags_met = true; return { text: 'One arm in a sling, splicing a line with the other and her teeth. "The machine that broke my collarbone carried me down the ladder after," she says. "So we\'re square." She jerks her head east. "The cutter\'s men grapnel. They don\'t run at you; they throw a hook and reel you in. Keep a tree between you and the line."' }; }
+      if (f.bosun_dead && !f.mags_bosun) { f.mags_bosun = true; return { text: '"Teller." She spits. "He counted the crates on and off at Oakhaven every month for two years. He was very polite about it."' }; }
+      return null;
+    },
+  },
+  lyra_dw: {
+    name: 'Lyra Ashgrove, Cantor of Oakhaven', sprite: 'lyra', portrait: 'lyra', tier: 'high',
+    greet: { polite: 'She is sitting on a crate with her slate on her knees, listening to the trees.', normal: 'She is listening north, toward the Mausoleum, with her whole body.', blunt: 'She does not look up.' },
+    topics: { 'The Mausoleum of Chords': 'She writes: MY FATHER\'S OFFICE IS IN THE BOOK THERE. THEY BURIED THE TUNE WITH THE CANTORS.' },
+    quest: (g) => {
+      const f = g.flags, voice = f.lyra_voice;
+      if (f.coda_done) return { text: voice ? '"I sang it," she says, in her own ruined voice. "All eight bars. I didn\'t think there was that much of it left."' : 'She writes: <b>YOU SANG IT. THANK YOU.</b> And underneath, smaller: <b>I WILL GET IT BACK.</b>' };
+      if (!f.lyra_dw_met) {
+        f.lyra_dw_met = true;
+        journal('main', 'Coda: ' + (f.wearer_dead ? 'Lyra says something in the Mausoleum of Chords, north of the crash, is singing her father\'s funeral office in a hundred voices.' : 'Lyra says the Wearer followed us out of Whisper-Grove. It is in the Mausoleum of Chords, north of the crash, singing her father\'s funeral office in his voice.') + ' She means to go in and finish it, with the two-voice coda. She cannot hold it off and sing at the same time. Someone has to hold the line.');
+        return { text: f.wearer_dead ? 'She writes fast: <b>SOMETHING IN THE MAUSOLEUM IS SINGING MY FATHER\'S FUNERAL OFFICE.</b> She rubs it out. <b>NOT THE WEARER. YOU KILLED THE WEARER. SOMETHING OLDER. IT HAS EVERY OFFICE EVER SUNG THERE.</b> Then: <b>THE CODA ENDS THEM. IT IS TWO VOICES. I WILL NEED YOU TO HOLD IT OFF ME.</b>' : 'She writes, and her hand is shaking: <b>IT FOLLOWED US.</b> She points north. <b>THE MAUSOLEUM. IT IS SINGING DAD\'S OFFICE IN DAD\'S VOICE.</b> She rubs it out. <b>THE CODA ENDS IT. TWO VOICES. HOLD IT OFF ME WHILE I SING.</b>' };
+      }
+      if (!voice) return { text: 'She writes: <b>I HAVE NO VOICE. I KNOW.</b> She looks at Kaelen across the fire, and then back at you. <b>SOMETHING IS SITTING ON IT.</b>' };
+      return { text: '"North," she says. Her voice is a ruin and it is hers. "When you\'re ready."' };
+    },
+  },
+  kaelen_dw: {
+    name: 'Kaelen Vance, the Dissonant Blade', sprite: 'kaelen', portrait: 'kaelen', tier: 'high',
+    greet: { polite: 'He is sitting with his back to the wreck, his glass arm across his knees, not looking at Lyra.', normal: 'Seven forty-one is gone. I can hear the woods instead. They are very loud.', blunt: 'Not now.' },
+    topics: { 'The Mausoleum of Chords': 'Tuned stone. Every Cantor of the Memory Anchor, each in a tomb that rings the note they kept. Ring them in the order you would sing them home, high to low, and the choir opens. I know because I read the specification. I read all the specifications.' },
+    quest: (g) => {
+      const f = g.flags;
+      if (f.lyra_voice || f.kaelen_dw_done) return { text: f.kaelen_told_now ? 'I told her everything. Out loud. She said she would have forgiven me on Rootday, and cannot now. It is the kindest thing anyone has said to me in two years, because it is true.' : 'She knows. She has known since the Cloister porch. I am the last person to find out what I am.' };
+      return { text: 'She needs her voice for the coda, and she has not got it, and I know why. It is sitting on something I have not said.' + (g.has('folder') ? ' And you have the grey folder.' : ''), choices: [
+        { t: '"Tell her. Everything. Out loud."', f: (g) => { f.kaelen_dw_done = true; f.kaelen_told_now = true; f.lyra_voice = true; questXp(80); journal('main', 'Coda: Kaelen told Lyra everything at the fire, out loud — the calibration, line ninety-four, the grey folder, and that his first feeling on reading it was relief. Her voice came back at the worst possible moment, and the first thing she did with it was tell him she would have forgiven him on Rootday, and cannot now.'); return 'He goes across the fire and sits down in front of her, and tells her: the calibration, line ninety-four, the girl bleeding into her collar on the ninth morning, the three seconds he spent being sure' + (g.has('folder') || f.folder_given ? ', the grey folder he was going to burn, and that his first feeling on reading it was relief' : '') + '. It takes a long time. When he stops, Lyra opens her mouth, and her voice comes back at the worst possible moment. "I would have forgiven you on Rootday," she says. It is a ruin of a voice, and it is hers. "I can\'t now. You let me pick you up without saying how heavy you were." Then she takes the glass hand, not the easy one.'; } },
+        { t: '"Not yet."', f: () => '"No," he says. "Not yet. That is what I always say."' },
+      ] };
+    },
+  },
+  sable_dw: {
+    name: 'Sable, Archivist of the Veil', sprite: 'sable', portrait: 'sable', tier: 'high',
+    greet: { polite: 'Entry: the Deep Woods. One wreck, eleven souls, a press, and me.', normal: 'Two things left in the inventory, and the third does not feel like a gap. It feels like a shelf.', blunt: 'I am counting. Wait.' },
+    topics: { 'The Office cutter': 'Four hundred and thirty-two. That is a bottling consignment, not a patrol. They were carrying voices, stoppered, to the Hall of Carriage. If you open that hold, do not unstopper them in the dark. Quiets come through an open bottle like water through a sluice.' },
+    quest: (g) => {
+      const f = g.flags;
+      if (f.bottles_done && !f.sable_bottles) { f.sable_bottles = true; return { text: f.bottles_kept ? 'Four hundred and thirty-two vox-bottles in the hold of a ship that cannot lift a cat. Tobiah has stopped speaking to you. I have started a list. I will need a larger book.' : 'You unstoppered them. I heard it from here: four hundred and thirty-two people saying one sentence each, and then the woods were very quiet, and then something else was. I have written down the ones I heard.' }; }
+      if (!f.sable_dw_met) { f.sable_dw_met = true; return { text: 'The Office cutter will have a bottling consignment aboard: four hundred and thirty-two, if I read the hull-chalk right as it went past. Voices. Stoppered. I filled in the forms for bottling consignments for six years. The bosun keeps the hold key round his neck; it is in the regulations, and I wrote the regulations.' }; }
+      return null;
+    },
+  },
+  aegis_dw: {
+    name: 'The Aegis Sentinel', sprite: 'aegis', portrait: 'aegis', tier: 'low', scale: 1.2,
+    greet: { polite: 'DEFEND THE SINGERS.', normal: 'DEFEND THE SINGERS.', blunt: 'Its torso-plates shiver. Then, very softly, it chimes the alto line.' },
+    topics: {},
+    quest: (g) => {
+      const f = g.flags;
+      if (f.cloak_given) return { text: 'It stands at the edge of the firelight between the camp and the dark, facing out. DEFEND THE SINGERS. It is.' };
+      if (!f.sable_with) return { text: 'It holds the red cloak against its chest and faces the dark, between the fire and the trees.' };
+      return { text: 'It stands by the wreck holding the red cloak, facing out. Sable is watching it from the other side of the fire. She has not spoken to it since the Cloister.', choices: [
+        { t: 'Ask Sable to tell it what she knows.', f: (g) => { f.cloak_given = true; questXp(60); journal('side', 'The Red Cloak: Sable told the Aegis what she knows and cannot read — that it was a boy of the Cloister choir, WG-41,005, and that her own hand made his surname illegible — and promised to find his name in the Organum. It gave her the red cloak.'); return 'Sable comes round the fire and stands in front of nine feet of bronze and tells it, in her form-reading voice, what she knows and cannot read: an intake number, WG-41,005; a boy of the Cloister choir; a surname her own shaking hand made illegible, eleven days in a doorway; a girl in a red cloak who would not let go of him. "I will find your name in the Organum," she says. "Third floor, the Hall of Carriage. I know where it is filed." The Aegis looks at her for a long time. Then it kneels, and holds out the red cloak, and she takes it.'; } },
+        { t: 'Leave them be.', f: () => 'It faces the dark. Sable faces the fire. Neither of them moves.' },
+      ] };
+    },
+  },
+  sexton: {
+    name: 'A Hollow sexton', sprite: 'sexton', portrait: 'townsman', tier: 'low',
+    greet: { polite: '"...one more before the light goes... one more..."', normal: '"...deep enough... not deep enough... one more..."', blunt: 'He does not stop digging.' },
+    topics: {},
+    quest: (g) => {
+      const f = g.flags;
+      if (f.sexton_rest) return { text: 'Amos Fell sits on the edge of the filled grave with his spade across his knees and his cap in his hands, beside the headstone that says NAN. He is not digging. Every so often he pats the earth, the way you would pat a hand.' };
+      if (!g.has('register')) { if (!f.sexton_met) { f.sexton_met = true; journal('side', 'The Sexton\'s Grave: an old Hollow in the graveyard west of the Mausoleum is digging a grave that has been dug and filled and dug again for three years. The headstone over it has no name yet. The Mausoleum keeps a register of interments.'); } return { text: 'A Hollow in a gravedigger\'s smock is digging a grave that has been dug and filled and dug again until the spoil-heap is taller than he is. "...one more before the light goes..." The headstone over it is new marble, with a bell carved on it, and no name.' }; }
+      return { text: 'You have the Mausoleum register. The last entry, in a hand that gets less careful toward the end, reads: <i>Nan Fell, wife of the sexton, interred the 3rd of Memoryday 416, by A. Fell. Headstone to follow.</i> Under it, in the same hand, smaller, nothing else at all.', choices: [
+        { t: 'Read him the last entry, out loud.', f: (g) => { f.sexton_rest = true; g.take('register'); questXp(70); if (!G.player.weapons.includes('tollhammer')) G.player.weapons.push('tollhammer'); G.ledger.push({ name: 'Amos Fell, sexton', where: 'the Mausoleum of Chords', day: G.day }); journal('side', 'The Sexton\'s Grave: I read the Hollow sexton the last entry in his own register: his wife, Nan Fell, interred the day the Anchor went quiet, by A. Fell. He had buried her that morning and forgotten by the evening, and he had been digging her grave ever since. He stopped. He gave me the toll-hammer from the bell-tower.'); return 'You read it to him, slowly. "Nan Fell, wife of the sexton, interred the third of Memoryday, by A. Fell." The spade stops. He looks at the headstone for a long time. "...I did that," he says. "...I did that in the morning." He climbs out of the grave, and fills it, carefully, the last time, and sits down on the edge with his cap in his hands. After a while he reaches into his smock and gives you a bell-ringer\'s hammer of old bronze, as if it is the next thing on a list. "...for the tower," he says. "...nobody rings it now." (You ready the Sexton\'s Toll-Hammer.)'; } },
+        { t: 'Leave him to his digging.', f: () => '"...one more before the light goes..."' },
+      ] };
+    },
+  },
+  herald: {
+    name: 'A Synod herald', sprite: 'herald', portrait: 'herald', tier: 'high',
+    greet: { polite: 'He has walked nine miles alone, and he is going to read it aloud, because the form requires it.', normal: 'He unrolls the writ. His hands are perfectly steady.', blunt: 'He waits for you to finish, and then he unrolls the writ.' },
+    topics: {},
+    quest: () => { codaHerald(); return { text: 'He clears his throat, and begins.' }; },
+  },
+};
+Object.assign(NPCS, CAMP);
