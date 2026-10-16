@@ -1,0 +1,64 @@
+# Echoes of the Shattered Octave — Book One
+
+A first-person dark-fantasy RPG for the browser, made in the style of *The Elder Scrolls II: Daggerfall*. It is built on the *Echoes of the Shattered Octave* series bible.
+
+Explore Oakhaven and the land past the Hedge. Talk with townsfolk, take on quests and side quests, and trade with merchants. Fight Legionnaires, Proctors, golems, hounds and the Quiet. Keep the Narrow balanced, between the noise that brings the hounds and the silence that brings the Hush.
+
+## Features
+
+- Raycast 3D world with chunky Daggerfall-style textures, sprites and a first-person weapon view.
+- Six character templates, plus attributes, skills and level-ups.
+- Districts, interiors and dungeons: Oakhaven, the clearing, the quarry, the underhedge, the rootvault, the chapel and more.
+- Dialogue in the Daggerfall manner, with tone choices (Polite / Normal / Blunt), topics and directions.
+- Songs: a magic system built on the Octave.
+- Armour across five slots. Armour Rating softens hits, and heavy armour makes noise.
+- Weapons including swords, axe, mace, spear, steam-maul, glass-shot pistol and crossbow. Bronze, bolts and blunt weapons each work best against certain enemies.
+- Merchants who buy and sell. Prices shift with your Personality.
+- Loot tables for enemies and 13 strongboxes hidden around the world.
+- An original orchestral score with a music director that changes the music as the situation changes.
+- Save slots for the session, save codes and save files.
+- Keyboard, mouse and touch controls.
+
+## Play locally
+
+The game is plain HTML, CSS and JavaScript, with no build step. Serve the folder with any static web server:
+
+```bash
+# from the repository root
+python3 -m http.server 8000
+# then open http://localhost:8000
+```
+
+Opening `index.html` straight from disk usually works too, but some browsers block audio or file loading on `file://`, so a local server is the safer choice.
+
+### Host it on GitHub Pages
+
+Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pick `main` and `/ (root)`. The game will be live at `https://<your-username>.github.io/echoes-of-the-shattered-octave/`.
+
+## Controls
+
+| Action | Input |
+|---|---|
+| Move | W A S D · Shift runs · Caps Lock toggles always-run |
+| Look | Move the mouse over the view (rest it at a side edge to keep turning) · right-drag · Q and arrow keys · Z levels your gaze |
+| Attack | Left-click to thrust · hold and move the mouse to slash or chop · wheel or 1–9 changes weapon |
+| Use / Talk | E or Space, or click a bright name under the crosshair |
+| Songs | Tab opens the song-book · F1–F5 cast · N murmurs |
+| Panels | I inventory · C character · L logbook · M map · R rest · K ledger · Esc options and save |
+| Sound | V sound on/off · B music on/off |
+| Touch | Left thumb stick, right thumb drags to look, tap to use or strike |
+
+## Project layout
+
+```
+index.html        entry point
+css/style.css     Daggerfall-style interface
+js/assets.js      embedded textures, sprites and weapon art
+js/data.js        canon: classes, NPCs, quests, items, weapons, armour, merchants, loot
+js/maps.js        districts, interiors and dungeons
+js/engine.js      raycaster renderer
+js/audio.js       sound effects and music director
+js/game.js        game logic, UI, combat, dialogue, trade, saving
+music/            soundtrack (MP3)
+img/              portraits, title, map and ending art
+```
