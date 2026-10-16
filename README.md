@@ -2,6 +2,8 @@
 
 A first-person dark-fantasy RPG for the browser, made in the style of *The Elder Scrolls II: Daggerfall*. It is built on the *Echoes of the Shattered Octave* series bible.
 
+**[Play it in your browser](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/)**
+
 ![Title screen](screenshots/title.jpg)
 
 Explore Oakhaven and the land past the Hedge. Talk with townsfolk, take on quests and side quests, and trade with merchants. Fight Legionnaires, Proctors, golems, hounds and the Quiet. Keep the Narrow balanced, between the noise that brings the hounds and the silence that brings the Hush.
@@ -54,7 +56,7 @@ Opening `index.html` straight from disk usually works too, but some browsers blo
 
 ### Host it on GitHub Pages
 
-Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pick `main` and `/ (root)`. The game will be live at `https://<your-username>.github.io/echoes-of-the-shattered-octave/`.
+Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pick `main` and `/ (root)`. This repository is already published at [dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/). On a fork, it will be live at `https://<your-username>.github.io/echoes-of-the-shattered-octave/`.
 
 ## Controls
 
