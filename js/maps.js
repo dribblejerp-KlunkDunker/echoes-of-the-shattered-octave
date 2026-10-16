@@ -468,6 +468,16 @@ function buildUnderhedge() {
   return m;
 }
 
+// strongboxes, placed last (and with their own dice) so older saves still line up
+function placeCaches(m, seed, tiers) {
+  const r = mulberry32(seed), spots = [];
+  const clear = (x, y) => !m.isBlocked(x | 0, y | 0) && !m.entities.some(e => (e.x - x) ** 2 + (e.y - y) ** 2 < 0.8);
+  if (m.rooms) for (const rm of m.rooms) { if (rm === m.entrance) continue; spots.push([rm.x + rm.w - 0.7, rm.y + 0.7], [rm.x + 0.7, rm.y + rm.h - 0.7]); }
+  else for (let i = 0; i < 400; i++) { const x = 2 + r() * (m.w - 4), y = 2 + r() * (m.h - 4); if (!m.spawn || (x - m.spawn.x) ** 2 + (y - m.spawn.y) ** 2 > 64) spots.push([(x | 0) + 0.5, (y | 0) + 0.5]); }
+  for (let i = spots.length - 1; i > 0; i--) { const j = (r() * (i + 1)) | 0; [spots[i], spots[j]] = [spots[j], spots[i]]; }
+  let k = 0;
+  for (const [x, y] of spots) { if (k >= tiers.length) break; if (!clear(x, y)) continue; m.add({ kind: 'item', item: 'cache', tier: tiers[k++], x, y, sprite: 'chest', scale: 0.5, yOff: 0, solid: false, label: 'A strongbox' }); }
+}
 function buildAllMaps() {
   const maps = buildInteriors();
   maps.underhedge = buildUnderhedge();
@@ -475,6 +485,11 @@ function buildAllMaps() {
   maps.clearing = buildClearing();
   maps.quarry = buildQuarry();
   maps.rootvault = buildRootVault();
+  placeCaches(maps.clearing, 4101, [1, 1]);
+  placeCaches(maps.quarry, 4102, [1, 2, 2, 1]);
+  placeCaches(maps.underhedge, 4103, [1, 2, 2]);
+  placeCaches(maps.rootvault, 4104, [2, 3, 3]);
+  if (maps.chapel) placeCaches(maps.chapel, 4105, [1]);
   for (const k in maps) maps[k].baseCount = maps[k].entities.length;
   return maps;
 }

@@ -86,10 +86,14 @@ function newPlayer() {
   const c = CLASSES[CREATE.cls]; const a = CREATE.attrs;
   const hpMax = c.hp + Math.floor(a.Endurance / 10), voiceMax = c.voice + Math.floor(a.Willpower / 10), fatMax = a.Strength + a.Endurance;
   return { name: CREATE.name, cls: c, face: CREATE.face, attrs: a, hp: hpMax, hpMax, voice: voiceMax, voiceMax, fat: fatMax, fatMax, gold: 12, pellets: c.pellets,
-    inv: [], weapons: c.weapons.slice(), weapon: 0, songs: c.songs.slice(), glass: c.glass ? 42 : 0, glassed: c.glass, fragments: c.id === 'archivist' ? 3 : 0, xp: 0, level: 1, kills: 0 };
+    inv: [], weapons: c.weapons.slice(), weapon: 0, songs: c.songs.slice(), glass: c.glass ? 42 : 0, glassed: c.glass, fragments: c.id === 'archivist' ? 3 : 0, xp: 0, level: 1, kills: 0,
+    armor: {}, bolts: 0 };
 }
+// what each calling walks out of the door wearing
+const CLASS_KIT = { blade: ['a_jerkin', 'a_gloves'], cantor: ['a_gambeson', 'a_softboots'], corsair: ['a_jerkin', 'a_buckler', 'a_hobnails'], archivist: ['a_hood', 'a_gambeson'], penitent: ['a_gambeson', 'a_kettle'], quarry: ['a_jerkin', 'a_hobnails', 'a_gloves'] };
+function giveKit(p) { for (const id of (CLASS_KIT[p.cls.id] || [])) { p.inv.push({ id, n: 1 }); p.armor[ARMOR[id].slot] = id; } }
 function startGame() {
-  hide('#create'); G.player = newPlayer(); G.flags = {}; G.journal = []; G.ledger = []; G.tod = 0.74; G.day = 0; G.escapeTimer = 0; G.dead = false; G.noise = 2;
+  hide('#create'); G.player = newPlayer(); giveKit(G.player); G.flags = {}; G.journal = []; G.ledger = []; G.tod = 0.74; G.day = 0; G.escapeTimer = 0; G.dead = false; G.noise = 2;
   G.boreHold = 0; G.boreGolems = 0; G.glassLock = 0; G.rootWard = 0; G.murmurT = 0; G.whistleT = 0; G.stillT = 0; G.unwriting = false; G.hurtT = 0; G.songFx = 0; G.attack.t = 0; G.song.t = 0; G.keys = {};
   $('#msgs').innerHTML = ''; $('#view').classList.remove('unwrite'); ['#death', '#ending', '#event'].forEach(hide); closeModal();
   for (let i = 0; i < CREATE.bio.length; i++) G.flags[BIOGRAPHY[i].a[CREATE.bio[i]].flag] = true;
@@ -180,7 +184,8 @@ function los(ax, ay, bx, by) {
 function addNoise(n) { G.noise = clamp(G.noise + n, 0, 10); }
 function updateNarrow(dt, moving, running) {
   const p = G.player;
-  let floor = moving ? (running ? 4.2 : 2.4) : 1.0;
+  const an = armorNoise();
+  let floor = moving ? (running ? 4.2 + an * 1.3 : 2.4 + an) : 1.0;
   if (G.murmurT > 0) { floor = Math.max(floor, 2.6); G.murmurT -= dt; }
   if (G.whistleT > 0) { floor = Math.max(floor, 2.2); G.whistleT -= dt; }
   // decay toward floor
@@ -239,12 +244,15 @@ function enemyUpdate(e, dt) {
       if (e.cool <= 0) {
         e.cool = e.type === 'golem' ? 2.2 : (d.cacophony ? 1.1 : 1.5);
         // hit roll vs agility
-        const dodge = p.attrs.Agility / 400 + (p.cls.id === 'corsair' ? 0.08 : 0);
+        const AR = armorRating();
+        const dodge = p.attrs.Agility / 400 + (p.cls.id === 'corsair' ? 0.08 : 0) + AR * (d.cacophony ? 0.003 : 0.008);
         if (Math.random() > dodge) {
           let dmg = rndi(d.dmg[0], d.dmg[1]);
+          const soak = Math.floor(AR / (d.cacophony ? 9 : 4) * (0.6 + Math.random() * 0.4)); // static goes through steel; steel stops steel
+          if (soak > 0) dmg = Math.max(1, dmg - soak);
           if (d.press && p.glassed) { G.glassLock = 8; msg('The proctor strikes your glass with a hand-press tuned to 741. Your arm locks rigid, ringing flat.', 'bad'); Audio_.sfx.press(); }
           damagePlayer(dmg, d.name);
-        } else msg(`You slip the ${d.name}'s blow.`, '', 1800);
+        } else msg(AR >= 6 && Math.random() < 0.5 ? `The ${d.name}'s blow skids off your armour.` : `You slip the ${d.name}'s blow.`, '', 1800);
         if (d.quiet) Audio_.sfx.quiet();
         if (d.cacophony) addNoise(0.8);
       }
@@ -266,6 +274,7 @@ function killEnemy(e, byGlass) {
   } else if (e.def.cacophony) { msg(`The ${e.def.name} bursts, and everything it ever ate comes out at once.`, 'good', 4000); }
   else msg(`The ${e.def.name} is destroyed.`, 'good', 3000);
   if (byGlass && e.def.cacophony) { const p = G.player; p.hp = Math.min(p.hpMax, p.hp + 4); p.glass = Math.min(100, p.glass + 3); fx('glass', 400); msg('The glass drinks what it broke. The ring is fuller. The tideline climbs.', 'warn'); if (p.glass >= 100) die('heartglass'); }
+  dropLoot(e);
   if (e.onDeath) e.onDeath();
   checkLevel();
 }
@@ -275,11 +284,52 @@ function checkLevel() {
 }
 
 // ---------------------------------------------------------------- combat
-function currentWeapon() { return WEAPONS[G.player.weapons[G.player.weapon]]; }
+function currentWeapon() { return WEAPONS[G.player.weapons[G.player.weapon]] || WEAPONS.hands; }
+// ---------------------------------------------------------------- armour & gear
+function worn(slot, p = G.player) { const id = p.armor && p.armor[slot]; return id && ARMOR[id] ? ARMOR[id] : null; }
+function shieldBlocked() { return !!currentWeapon().twoHanded; }
+function armorRating(p = G.player) { let ar = 0; for (const [slot] of ARMOR_SLOTS) { const a = worn(slot, p); if (a && !(slot === 'shield' && shieldBlocked())) ar += a.ar; } return ar; }
+function armorNoise(p = G.player) { let n = 0; for (const [slot] of ARMOR_SLOTS) { const a = worn(slot, p); if (a) n += a.noise; } return Math.max(-0.8, n); }
+function isWorn(id) { const a = ARMOR[id]; return !!(a && G.player.armor[a.slot] === id); }
+function spareCount(id) { const s = G.player.inv.find(x => x.id === id); return s ? s.n - (isWorn(id) ? 1 : 0) : 0; }
+function equipArmor(id) { const a = ARMOR[id]; if (!a || !G.has(id)) return; G.player.armor[a.slot] = id; Audio_.sfx.pickup(); msg(`You put on the ${a.name}.` + (a.slot === 'shield' && shieldBlocked() ? ' (Your two-handed weapon leaves no hand for it.)' : ''), '', 2200); }
+function removeArmor(slot) { const a = worn(slot); if (!a) return; delete G.player.armor[slot]; msg(`You take off the ${a.name}.`, '', 1600); }
+// take something into your keeping; returns a phrase for the message
+function gainItem(id) {
+  const it = ITEMS[id], p = G.player; if (!it) return '';
+  if (id === 'sovereigns') { const n = rndi(4, 14); G.gold(n); return `${n} sovereigns`; }
+  if (it.use === 'ammo') { const k = it.ammo || 'pellets'; p[k] = (p[k] || 0) + it.n; return it.name; }
+  if (it.weapon) {
+    if (!p.weapons.includes(it.weapon)) { p.weapons.push(it.weapon); return `the ${it.name} (readied — key ${Math.min(9, p.weapons.length)} or the wheel)`; }
+    G.give(id); return `a spare ${it.name}, worth selling`;
+  }
+  G.give(id);
+  if (it.armor && !p.armor[it.slot]) { p.armor[it.slot] = id; return `the ${it.name}, and put it on`; }
+  return `the ${it.name}`;
+}
+function pickWeighted(table) { let t = 0; for (const [, w] of table) t += w; let r = Math.random() * t; for (const [id, w] of table) { r -= w; if (r <= 0) return id; } return table[0][0]; }
+// leave something on the floor where a thing fell
+function dropLoot(e) {
+  const L = LOOT[e.type]; if (!L || Math.random() > L.chance + G.player.attrs.Luck / 1000) return;
+  const id = pickWeighted(L.table), it = ITEMS[id];
+  let x = e.x, y = e.y; for (let k = 0; k < 8; k++) { const a = Math.random() * 6.28, rr = 0.25 + Math.random() * 0.3; if (!G.map.isBlocked((e.x + Math.cos(a) * rr) | 0, (e.y + Math.sin(a) * rr) | 0)) { x = e.x + Math.cos(a) * rr; y = e.y + Math.sin(a) * rr; break; } }
+  G.ents.push(hydrate({ kind: 'item', item: id, sprite: it.sprite || 'gear', x, y, scale: 0.35, yOff: 0, solid: false }));
+  msg(`Something falls from the ${e.def.name}.`, '', 2200);
+}
+function openCache(e) {
+  const T = CACHE[e.tier || 1]; const n = rndi(T.gold[0], T.gold[1]); G.gold(n);
+  const got = [`${n} sovereigns`];
+  const rolls = 1 + (Math.random() < 0.35 + G.player.attrs.Luck / 400 ? 1 : 0);
+  for (let i = 0; i < rolls; i++) got.push(gainItem(pickWeighted(T.table)));
+  msg(`You force the strongbox. Inside: ${got.join('; ')}.`, 'good', 6000);
+}
 function attack(dirLabel) {
   const p = G.player; const w = currentWeapon(); if (G.attack.t > 0 || G.song.t > 0) return;
   if (w.type === 'glass' && G.glassLock > 0) { msg('Your glass arm is locked rigid, ringing flat.', 'bad', 1500); return; }
-  if (w.ammo) { if (p.pellets <= 0) { msg('No glass shot. A sovereign a pellet, and you have none loaded.', 'bad'); return; } p.pellets--; Audio_.sfx.shot(); }
+  if (w.ammo) {
+    const k = w.ammo; if (!((p[k] || 0) > 0)) { msg(k === 'bolts' ? 'No bolts. Captain Vane sells them at the Boar & Bell.' : 'No glass shot. A sovereign a pellet, and you have none loaded.', 'bad'); return; }
+    p[k]--; if (k === 'bolts') Audio_.sfx.bow(); else Audio_.sfx.shot();
+  }
   else Audio_.sfx.swing();
   G.attack.t = w.speed; G.attack.dur = w.speed; G.attack.dirLabel = dirLabel; addNoise(w.noise);
   p.fat = Math.max(0, p.fat - 1);
@@ -290,26 +340,30 @@ function attack(dirLabel) {
     const dx = e.x - c.x, dy = e.y - c.y, d = Math.sqrt(dx * dx + dy * dy);
     if (d > w.reach + (e.radius || 0.3)) continue;
     const ang = Math.abs(normAng(Math.atan2(dy, dx) - c.dir));
-    const cone = w.type === 'shot' ? 0.14 + 0.25 / Math.max(1, d) : 0.55;
+    const cone = w.ranged ? 0.14 + 0.25 / Math.max(1, d) : 0.55;
     if (ang > cone) continue;
-    if (w.type === 'shot' && !los(c.x, c.y, e.x, e.y)) continue;
+    if (w.ranged && !los(c.x, c.y, e.x, e.y)) continue;
     if (d < bd) { bd = d; best = e; }
   }
-  if (!best) { if (w.type !== 'shot') msg(`Your ${dirLabel || 'swing'} finds nothing but air.`, '', 1200); return; }
+  if (!best) { if (!w.ranged) msg(`Your ${dirLabel || 'swing'} finds nothing but air.`, '', 1200); return; }
   const e = best, d = e.def;
   // hit chance
-  const hitChance = 0.55 + p.attrs.Agility / 250 + p.attrs.Luck / 600 + (w.type === 'shot' ? 0.15 : 0);
+  const hitChance = 0.55 + p.attrs.Agility / 250 + p.attrs.Luck / 600 + (w.ranged ? 0.15 : 0);
   if (Math.random() > hitChance) { msg(`You miss the ${d.name}.`, '', 1500); return; }
   let dmg = rndi(w.dmg[0], w.dmg[1]) + Math.floor(p.attrs.Strength / 25);
   if (w.type === 'shot') { if (d.cacophony) dmg *= 2; if (d.quiet) { dmg = 0; msg('The pellet cannot ring inside the quiet. It drops like a dropped coat.', 'warn'); } }
   if (w.type === 'iron' && d.quiet) dmg = Math.floor(dmg * 1.5);
   if (w.type === 'glass') { if (d.cacophony) dmg = Math.floor(dmg * 1.6); p.glass = Math.min(100, p.glass + 0.4); }
   if (w.type === 'iron' && d.cacophony && w !== WEAPONS.hands) dmg = Math.floor(dmg * 0.6);
-  if (d.armored && w.type !== 'glass') dmg = Math.max(1, dmg - 3);
+  if (w.type === 'bronze') { if (d.cacophony) dmg = Math.floor(dmg * 1.35); if (d.quiet) dmg = Math.floor(dmg * 0.5); }
+  if (w.type === 'bolt') { if (d.quiet) dmg = Math.floor(dmg * 1.4); if (d.cacophony) dmg = Math.floor(dmg * 0.5); }
+  if (w.cleave && d.core) dmg = Math.floor(dmg * 1.2);
+  if (d.armored && w.blunt) dmg = Math.floor(dmg * 1.5);
+  else if (d.armored && w.type !== 'glass') dmg = Math.max(1, dmg - 3);
   e.hp -= dmg; e.flash = true; setTimeout(() => e.flash = false, 90);
-  if (w.type === 'glass') Audio_.sfx.glasshit(); else Audio_.sfx.hit();
+  if (w.type === 'glass') Audio_.sfx.glasshit(); else if (w.type === 'bronze') { Audio_.sfx.hit(); Audio_.sfx.bell(); } else Audio_.sfx.hit();
   if (e.state === 'idle' || e.state === 'passive') e.state = 'chase';
-  if (dmg > 0) msg(w.type === 'shot' ? `Your shot breaks on the ${d.name} for ${dmg}.` : `Your ${dirLabel || 'blow'} lands on the ${d.name} for ${dmg}.`, '', 1800);
+  if (dmg > 0) msg(w.type === 'bolt' ? `Your bolt takes the ${d.name} for ${dmg}.` : w.type === 'shot' ? `Your shot breaks on the ${d.name} for ${dmg}.` : `Your ${dirLabel || 'blow'} lands on the ${d.name} for ${dmg}.`, '', 1800);
   if (e.hp <= 0) killEnemy(e, w.type === 'glass');
 }
 
@@ -372,8 +426,10 @@ function decoLabel(e) { return e.label || ({ oak: 'An iron-bark oak. When the wi
 function wallLabel(cell) { return ({ t_hedge: 'The Hedge. Three men deep of thorn and packed wool.', t_glassrock: 'Rock veined with green-gold glass. It is faintly warm, and it hums.', t_marble: 'Old marble.', t_brass: 'Riveted brass. Verdigris.', t_house: 'Plaster and oak timber.', t_wood: 'Old planks.', t_stone: 'Cold stone.', t_door: 'A door.' })[cell.tex] || 'A wall.'; }
 function pickUp(e) {
   const it = ITEMS[e.item]; e.hidden = true; e.dead = true; Audio_.sfx.pickup();
+  if (e.item === 'cache') { openCache(e); return; }
   if (e.item === 'sovereigns') { const n = rndi(4, 14); G.gold(n); msg(`You find ${n} sovereigns.`, 'good'); return; }
   if (e.item === 'pellets') { G.player.pellets += 3; msg('You find three pellets of glass shot.', 'good'); return; }
+  if (it.armor || it.weapon || it.valuable || it.use === 'ammo') { msg(`You take ${gainItem(e.item)}.`, 'good', 3500); return; }
   G.give(e.item); msg(`You take the ${it.name}.`, 'good');
   if (e.item === 'coil') journal('main', 'I have the reverse-phase coil from Depot Three. Kaelen wants it brought to his hut outside the Hedge.');
 }
@@ -381,7 +437,9 @@ function useItem(slot) {
   const it = ITEMS[slot.id], p = G.player;
   if (it.use === 'heal') { p.hp = Math.min(p.hpMax, p.hp + it.n); G.take(slot.id); msg('Honey, raw egg and willow-bark. You feel a little less like dying.', 'good'); }
   else if (it.use === 'voice') { p.voice = Math.min(p.voiceMax, p.voice + it.n); G.take(slot.id); msg('The honey eases your throat.', 'good'); }
-  else if (it.use === 'ammo') { p.pellets += it.n; G.take(slot.id); msg('You load three pellets.', 'good'); }
+  else if (it.use === 'ammo') { const k = it.ammo || 'pellets'; p[k] = (p[k] || 0) + it.n; G.take(slot.id); msg(k === 'bolts' ? 'You fill your quiver.' : 'You load three pellets.', 'good'); }
+  else if (it.armor) { if (isWorn(slot.id)) removeArmor(it.slot); else equipArmor(slot.id); }
+  else if (it.weapon) { G.take(slot.id); if (!p.weapons.includes(it.weapon)) { p.weapons.push(it.weapon); msg(`You ready the ${it.name}.`, 'good'); } else { G.give(slot.id); msg('You already carry one of those. Sell the spare.', '', 2500); } }
   else if (it.use === 'whistle') { G.whistleT = 25; G.stillT = 0; msg('You blow the reed-whistle. A thin, steady note the hounds do not care for and the Hush cannot get past.', 'good'); Audio_.sfx.song(1760, 0.6); }
   else if (it.use === 'bottle') { G.take(slot.id); closeModal(); G.state = 'play'; msg('You unstop the bottle. A woman\'s voice says, very clearly, "Tell Merret the tide\'s wrong." Then the hounds come.', 'bad', 7000); Audio_.sfx.voice(); addNoise(6); setTimeout(spawnHound, 800); setTimeout(spawnHound, 1600); return; }
   else msg(it.desc, '', 6000);
@@ -516,14 +574,43 @@ function talk(e) {
   else DLG.log.push({ who: 'them', t: n.greet[DLG.tone] });
   renderDialogue(DLG.choices ? 'choice' : null);
 }
+// ---------------------------------------------------------------- trade
+const TYPE_NAME = { iron: 'iron', glass: 'glass', shot: 'glass shot', bronze: 'bell-bronze, rings', bolt: 'iron bolts' };
+function itemStats(id) {
+  const it = ITEMS[id]; if (!it) return '';
+  if (it.armor) { const cur = worn(it.slot); const diff = cur ? it.ar - cur.ar : it.ar;
+    return `${ARMOR_SLOTS.find(x => x[0] === it.slot)[1]} · AR ${it.ar}${cur && cur !== ARMOR[id] ? ` (${diff >= 0 ? '+' : ''}${diff})` : ''} · ${it.noise > 0 ? `noise +${it.noise}` : it.noise < 0 ? `hushes ${it.noise}` : 'silent'}`; }
+  if (it.weapon) { const w = WEAPONS[it.weapon]; return `${w.dmg[0]}–${w.dmg[1]} · reach ${w.reach} · ${TYPE_NAME[w.type]}${w.twoHanded ? ' · two hands' : ''}${w.ammo ? ` · uses ${w.ammo}` : ''}`; }
+  if (it.valuable) return 'valuable';
+  if (it.use === 'ammo') return `${it.n} ${it.ammo || 'pellets'}`;
+  return it.use === 'heal' ? `+${it.n} health` : it.use === 'voice' ? `+${it.n} voice` : '';
+}
+function buyPrice(n, e) { if (e.price) return e.price; const v = ITEMS[e.item].value || 1; return Math.max(1, Math.round(v * (n.markup || 1) * (1.12 - G.player.attrs.Personality / 400))); }
+function sellPrice(id) { const it = ITEMS[id], v = it.value || 0; return Math.max(1, Math.floor(v * ((it.valuable ? 0.7 : 0.33) + G.player.attrs.Personality / 600))); }
+function itemCat(id) { const it = ITEMS[id]; return it.armor ? 'armor' : it.weapon ? 'weapon' : it.valuable ? 'valuable' : (it.use && !it.key && it.value) ? 'consumable' : null; }
+function sellables(n) {
+  const buys = (n.shopTalk && n.shopTalk.buys) || ['valuable'], p = G.player, out = [];
+  for (const sl of p.inv) { const it = ITEMS[sl.id]; if (!it || it.key || !it.value || !buys.includes(itemCat(sl.id))) continue; const k = spareCount(sl.id); if (k > 0) out.push({ id: sl.id, n: k }); }
+  if (buys.includes('weapon')) for (const w of p.weapons) if (!WEAPONS[w].innate && WEAPONS[w].value && ITEMS['w_' + w]) out.push({ id: 'w_' + w, readied: w });
+  return out;
+}
+function shopRows(n) {
+  return n.shop.map((e, i) => { const it = ITEMS[e.item], owned = it.weapon && G.player.weapons.includes(it.weapon), price = buyPrice(n, e);
+    return `<button class="dfbtn small shoprow${owned ? ' owned' : ''}${price > G.player.gold ? ' dear' : ''}" data-buy="${i}" title="${it.desc.replace(/"/g, '&quot;')}"><b>${it.name}</b><span>${itemStats(e.item)}${owned ? ' · carried' : isWorn(e.item) ? ' · worn' : ''}</span><em>${price}</em></button>`; }).join('');
+}
+function sellRows(n) {
+  const L = sellables(n);
+  if (!L.length) return '<span class="muted" style="align-self:center">Nothing you carry interests them. (Worn armour and your last weapon stay with you.)</span>';
+  return L.map((e, i) => `<button class="dfbtn small shoprow" data-sell="${i}" title="${ITEMS[e.id].desc.replace(/"/g, '&quot;')}"><b>${ITEMS[e.id].name}${e.n > 1 ? ` ×${e.n}` : ''}</b><span>${itemStats(e.id)}${e.readied ? ' · readied' : ''}</span><em>${sellPrice(e.id)}</em></button>`).join('');
+}
 function renderDialogue(mode) {
   const n = DLG.npc;
   const html = `<h2>${n.name.split(',')[0]}</h2><div class="dlg"><div class="port"><img src="img/p_${n.portrait}.jpg" alt=""><div class="name">${n.name}</div></div>
   <div class="col"><div class="log" id="dlg-log">${DLG.log.map(l => `<div class="${l.who}">${l.who === 'you' ? '— ' : ''}${l.t}</div>`).join('')}</div>
-  <div class="btns"><button class="dfbtn small ${mode === 'tell' ? 'sel' : ''}" id="d-tell">Tell me about…</button><button class="dfbtn small ${mode === 'where' ? 'sel' : ''}" id="d-where">Where is…</button>${n.shop ? `<button class="dfbtn small ${mode === 'buy' ? 'sel' : ''}" id="d-buy">Buy…</button>` : ''}${DLG.choices ? `<button class="dfbtn small ${mode === 'choice' ? 'sel' : ''}" id="d-answer">Answer…</button>` : ''}
+  <div class="btns"><button class="dfbtn small ${mode === 'tell' ? 'sel' : ''}" id="d-tell">Tell me about…</button><button class="dfbtn small ${mode === 'where' ? 'sel' : ''}" id="d-where">Where is…</button>${n.shop ? `<button class="dfbtn small ${mode === 'buy' ? 'sel' : ''}" id="d-buy">Buy…</button><button class="dfbtn small ${mode === 'sell' ? 'sel' : ''}" id="d-sell">Sell…</button>` : ''}${DLG.choices ? `<button class="dfbtn small ${mode === 'choice' ? 'sel' : ''}" id="d-answer">Answer…</button>` : ''}
   <span class="tone">${['polite', 'normal', 'blunt'].map(t => `<button class="dfbtn small ${DLG.tone === t ? 'sel' : ''}" data-t="${t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}</span>
   <button class="dfbtn small" id="d-bye">Goodbye</button></div>
-  <div class="topics${mode === 'choice' || mode === 'buy' ? ' wide' : ''}" id="d-topics">${mode === 'tell' ? TOPIC_KEYS.map(t => `<button class="dfbtn small" data-topic="${t}">${t}</button>`).join('') : mode === 'where' ? Object.keys(PLACES).map(t => `<button class="dfbtn small" data-place="${t}">${t}</button>`).join('') : mode === 'buy' && n.shop ? n.shop.map((it, i) => `<button class="dfbtn small" data-buy="${i}">${ITEMS[it.item].name} — ${it.price} sov.</button>`).join('') + `<span class="muted" style="align-self:center">You have ${G.player.gold} sovereigns.</span>` : mode === 'choice' && DLG.choices ? DLG.choices.map((c, i) => `<button class="dfbtn small" data-choice="${i}">${c.t}</button>`).join('') : ''}</div></div></div>`;
+  <div class="topics${mode === 'choice' ? ' wide' : ''}${mode === 'buy' || mode === 'sell' ? ' shop' : ''}" id="d-topics">${mode === 'tell' ? TOPIC_KEYS.map(t => `<button class="dfbtn small" data-topic="${t}">${t}</button>`).join('') : mode === 'where' ? Object.keys(PLACES).map(t => `<button class="dfbtn small" data-place="${t}">${t}</button>`).join('') : (mode === 'buy' || mode === 'sell') && n.shop ? `<div class="purse">You have <b>${G.player.gold}</b> sovereigns · prices in sovereigns${mode === 'sell' ? ' · they pay' : ''}</div>` + (mode === 'buy' ? shopRows(n) : sellRows(n)) : mode === 'choice' && DLG.choices ? DLG.choices.map((c, i) => `<button class="dfbtn small" data-choice="${i}">${c.t}</button>`).join('') : ''}</div></div></div>`;
   openModal(html, 'dialogue');
   const log = $('#dlg-log'); log.scrollTop = log.scrollHeight;
   $('#d-tell').onclick = () => renderDialogue(mode === 'tell' ? null : 'tell');
@@ -532,13 +619,28 @@ function renderDialogue(mode) {
   document.querySelectorAll('.tone button').forEach(b => b.onclick = () => { DLG.tone = b.dataset.t; renderDialogue(mode); });
   document.querySelectorAll('[data-topic]').forEach(b => b.onclick = () => { askTopic(b.dataset.topic); renderDialogue('tell'); });
   document.querySelectorAll('[data-place]').forEach(b => b.onclick = () => { askPlace(b.dataset.place); renderDialogue('where'); });
-  const bb = $('#d-buy'); if (bb) bb.onclick = () => renderDialogue(mode === 'buy' ? null : 'buy');
+  const st = n.shopTalk || {};
+  const bb = $('#d-buy'); if (bb) bb.onclick = () => { if (mode !== 'buy' && st.hello && !DLG.helloSaid) { DLG.helloSaid = true; DLG.log.push({ who: 'them', t: st.hello }); } renderDialogue(mode === 'buy' ? null : 'buy'); };
+  const sb = $('#d-sell'); if (sb) sb.onclick = () => renderDialogue(mode === 'sell' ? null : 'sell');
+  document.querySelectorAll('[data-sell]').forEach(b => b.onclick = () => {
+    const e = sellables(n)[+b.dataset.sell]; if (!e) return; const p = G.player, price = sellPrice(e.id);
+    if (e.readied) {
+      const i = p.weapons.indexOf(e.readied); const cur = p.weapons[p.weapon];
+      p.weapons.splice(i, 1); if (!p.weapons.length) p.weapons.push('hands');
+      p.weapon = Math.max(0, p.weapons.indexOf(cur)); if (p.weapons[p.weapon] !== cur) p.weapon = 0;
+    } else G.take(e.id);
+    p.gold += price; Audio_.sfx.pickup();
+    DLG.log.push({ who: 'you', t: `The ${ITEMS[e.id].name}. ${price} sovereigns?` }); DLG.log.push({ who: 'them', t: ['Done.', 'Fair. Near enough.', 'I\'ll find a use for it.', 'Hm. Done.'][rndi(0, 3)] });
+    renderDialogue('sell');
+  });
   const ab = $('#d-answer'); if (ab) ab.onclick = () => renderDialogue(mode === 'choice' ? null : 'choice');
   document.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => {
-    const it = n.shop[+b.dataset.buy]; const p = G.player;
-    if (p.gold < it.price) { DLG.log.push({ who: 'them', t: 'Not for what you have in your purse, love.' }); renderDialogue('buy'); return; }
-    p.gold -= it.price; if (it.item === 'pellets') p.pellets += 3; else G.give(it.item); Audio_.sfx.pickup();
-    DLG.log.push({ who: 'you', t: `I\'ll take the ${ITEMS[it.item].name}.` }); DLG.log.push({ who: 'them', t: ['There. Keep it wrapped.', 'Softly with the coin; it rings.', 'Blessings of the Narrow.'][rndi(0, 2)] }); renderDialogue('buy');
+    const e = n.shop[+b.dataset.buy]; const p = G.player, I = ITEMS[e.item], price = buyPrice(n, e);
+    if (I.weapon && p.weapons.includes(I.weapon)) { DLG.log.push({ who: 'them', t: 'You\'ve one of those already. One will do.' }); renderDialogue('buy'); return; }
+    if (p.gold < price) { DLG.log.push({ who: 'them', t: st.broke || 'Not for what you have in your purse, love.' }); renderDialogue('buy'); return; }
+    p.gold -= price; const got = gainItem(e.item); Audio_.sfx.pickup();
+    const thanks = st.thanks || ['There. Keep it wrapped.', 'Softly with the coin; it rings.', 'Blessings of the Narrow.'];
+    DLG.log.push({ who: 'you', t: `I\'ll take the ${I.name}.` }); DLG.log.push({ who: 'them', t: thanks[rndi(0, thanks.length - 1)] + (/put it on/.test(got) ? ' (You put it on.)' : '') }); renderDialogue('buy');
   });
   document.querySelectorAll('[data-choice]').forEach(b => b.onclick = () => {
     const ch = DLG.choices[+b.dataset.choice]; DLG.log.push({ who: 'you', t: ch.t }); DLG.choices = null; Audio_.sfx.ui();
@@ -580,12 +682,24 @@ function askPlace(place) {
 
 // ---------------------------------------------------------------- panels
 function renderInventory() {
-  const p = G.player;
-  const rows = p.inv.map((s, i) => { const it = ITEMS[s.id]; return `<tr><td>${it.name}${s.n > 1 ? ` ×${s.n}` : ''}</td><td class="muted">${it.desc}</td><td class="n">${it.use ? `<button class="dfbtn small" data-use="${i}">Use</button>` : ''}</td></tr>`; }).join('');
-  const weps = p.weapons.map((w, i) => `<button class="dfbtn small ${i === p.weapon ? 'sel' : ''}" data-w="${i}">${i + 1}. ${WEAPONS[w].name}</button>`).join('');
-  openModal(`<h2>Inventory</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">${p.gold} sovereigns · ${p.pellets} glass pellets · Fatigue ${Math.round(p.fat)}/${p.fatMax}</p><h3>Weapons</h3><div class="btns">${weps}</div><h3>Carried</h3><table>${rows || '<tr><td class="muted">Nothing but the clothes you came in.</td></tr>'}</table>`, 'inv');
+  const p = G.player, AR = armorRating(), AN = armorNoise();
+  const slots = ARMOR_SLOTS.map(([slot, label]) => { const a = worn(slot), off = slot === 'shield' && a && shieldBlocked();
+    return `<div class="slot${a ? '' : ' empty'}${off ? ' off' : ''}"><span class="sl">${label}</span><span class="nm"><b>${a ? a.name : '—'}</b><small>${a ? `AR ${a.ar}${a.noise ? ` · ${a.noise > 0 ? '+' : ''}${a.noise} noise` : ''}${off ? ' · no free hand' : ''}` : ''}</small></span>${a ? `<button class="dfbtn small" data-off="${slot}">Off</button>` : '<span></span>'}</div>`; }).join('');
+  const weps = p.weapons.map((w, i) => { const W = WEAPONS[w];
+    return `<button class="dfbtn small weprow ${i === p.weapon ? 'sel' : ''}" data-w="${i}"><b>${i < 9 ? i + 1 + '. ' : ''}${W.name}</b><span>${W.dmg[0]}–${W.dmg[1]} · reach ${W.reach} · ${TYPE_NAME[W.type]}${W.twoHanded ? ' · two hands' : ''}${W.ammo ? ` · ${p[W.ammo] || 0} ${W.ammo}` : ''}</span></button>`; }).join('');
+  const rows = p.inv.map((sl, i) => { const it = ITEMS[sl.id]; const wornIt = isWorn(sl.id);
+    const act = it.armor ? `<button class="dfbtn small" data-use="${i}">${wornIt ? 'Remove' : 'Wear'}</button>` : it.weapon ? `<button class="dfbtn small" data-use="${i}">${p.weapons.includes(it.weapon) ? 'Spare' : 'Ready'}</button>` : it.use && it.use !== 'cache' ? `<button class="dfbtn small" data-use="${i}">Use</button>` : '';
+    const st = [itemStats(sl.id), it.value && !it.key ? `worth ~${sellPrice(sl.id)}` : ''].filter(Boolean).join(' · ');
+    return `<tr class="${wornIt ? 'worn' : ''}"><td><span class="nm">${it.name}${sl.n > 1 ? ` ×${sl.n}` : ''}</span>${wornIt ? '<span class="tag">worn</span>' : ''}${st ? `<span class="muted st">${st}</span>` : ''}<span class="muted ds">${it.desc}</span></td><td class="n">${act}</td></tr>`; }).join('');
+  openModal(`<h2>Inventory</h2><button class="dfbtn small close" id="x">Close</button>
+  <p class="muted invtop">${p.gold} sovereigns · ${p.pellets} glass pellets${p.bolts ? ` · ${p.bolts} bolts` : ''} · Fatigue ${Math.round(p.fat)}/${p.fatMax}</p>
+  <div class="invgrid"><div><h3>Worn — Armour Rating ${AR}</h3><div class="slots">${slots}</div>
+  <p class="muted small-note">${AN > 0.05 ? `Your armour adds ${AN.toFixed(1)} to the noise you make while you move (more when you run).` : AN < -0.05 ? `Your clothes hush you: ${AN.toFixed(1)} to the noise you make while you move.` : 'Your armour is quiet.'} Steel turns blades and fists well, and the Cacophony's static poorly.</p>
+  <h3>Weapons</h3><div class="weps">${weps}</div></div>
+  <div><h3>Carried</h3><div class="carry"><table>${rows || '<tr><td class="muted">Nothing but the clothes you came in.</td></tr>'}</table></div></div></div>`, 'inv');
   $('#x').onclick = closeModal;
   document.querySelectorAll('[data-use]').forEach(b => b.onclick = () => useItem(p.inv[+b.dataset.use]));
+  document.querySelectorAll('[data-off]').forEach(b => b.onclick = () => { removeArmor(b.dataset.off); renderInventory(); });
   document.querySelectorAll('[data-w]').forEach(b => b.onclick = () => { p.weapon = +b.dataset.w; renderInventory(); });
 }
 function renderCharacter() {
@@ -597,6 +711,7 @@ function renderCharacter() {
   <div>Voice ${Math.round(p.voice)} / ${p.voiceMax}</div><div class="bar-h"><i style="width:${100 * p.voice / p.voiceMax}%;background:var(--blue)"></i></div>
   ${p.glassed ? `<div>Glassing — ${stage} (${Math.round(p.glass)}%)</div><div class="bar-h"><i style="width:${p.glass}%;background:#6fd6e0"></i></div>` : ''}
   ${p.fragments ? `<div>Identity fragments left: ${p.fragments}</div>` : ''}
+  <div>Armour Rating ${armorRating()} · armour noise ${armorNoise() > 0 ? '+' : ''}${armorNoise().toFixed(1)} · ${currentWeapon().name}</div>
   <p class="muted">Kills ${p.kills} · Names kept ${G.ledger.length} · ${p.gold} sovereigns</p></div></div>`, 'char');
   $('#x').onclick = closeModal;
 }
@@ -811,7 +926,7 @@ window.addEventListener('keydown', (ev) => {
     else if (k === 'n') castSong('murmur');
     else if (k === 'v') { const m = Audio_.toggleMute(); msg(m ? 'Sound off.' : 'Sound on.', '', 1200); }
     else if (k === 'b') { Audio_.music.enabled = !Audio_.music.enabled; msg(Audio_.music.enabled ? 'Music on.' : 'Music off.', '', 1200); }
-    else if (k >= '1' && k <= '4' && k.length === 1) { const i = +k - 1; if (G.player.weapons[i]) { G.player.weapon = i; msg(`${WEAPONS[G.player.weapons[i]].name}.`, '', 1200); } }
+    else if (k >= '1' && k <= '9' && k.length === 1) { const i = +k - 1; if (G.player.weapons[i]) { G.player.weapon = i; msg(`${WEAPONS[G.player.weapons[i]].name}.`, '', 1200); } }
     else if (k === 'capslock') { G.opts.alwaysRun = !G.opts.alwaysRun; saveOpts(); msg(G.opts.alwaysRun ? 'Always run: on (hold Shift to walk).' : 'Always run: off.', '', 1600); }
     else if (k === 'home' || k === 'z') { Engine.cam.pitch = 0; }
     else if (k.startsWith('f') && k.length === 2 && +k[1] >= 1) { const s = G.player.songs[+k[1] - 1]; if (s) castSong(s); }
@@ -934,7 +1049,7 @@ function drawHUD() {
     if (G.attack.t > 0) { const f = 1 - G.attack.t / G.attack.dur; const s = Math.sin(f * Math.PI); ax = -s * 60 * (G.attack.dirLabel === 'slash left' ? 1.4 : 0.8); ay = -s * 40 + (G.attack.dirLabel === 'chop down' ? s * 25 : 0); }
     if (G.song.t > 0) { ay = -Math.sin((1 - G.song.t / 0.7) * Math.PI) * 30; }
     const bob = Engine.cam.bob || 0;
-    const bx = w.img === 'fp_hands' || G.song.t > 0 || G.songFx > 0 ? VW / 2 - iw / 2 : VW - iw - 10;
+    const bx = w.img === 'fp_hands' || G.song.t > 0 || G.songFx > 0 ? VW / 2 - iw / 2 : w.center ? VW / 2 - iw / 2 + 22 : VW - iw - 10;
     ctx.drawImage(img, bx + ax, VIEW_H - ih + 24 + ay + bob * 1.5, iw, ih);
     if (G.glassLock > 0 && w.type === 'glass') { ctx.fillStyle = 'rgba(80,200,220,0.25)'; ctx.fillRect(bx + ax, VIEW_H - ih + 24 + ay, iw, ih); }
   }
@@ -963,7 +1078,7 @@ function drawHUD() {
   ctx.font = '8px "Alegreya SC", serif'; ctx.fillStyle = '#d9a441'; ctx.textAlign = 'center';
   const narrow = G.unwriting ? 'UNWRITING' : G.noise > 7 ? 'TOO LOUD' : G.noise < 1.5 ? (G.map.siphoned ? 'TOO STILL' : 'STILL') : G.noise > 4.5 ? 'LOUD' : 'THE NARROW';
   ctx.fillStyle = G.unwriting ? '#c0c8e0' : G.noise > 7 ? '#ff6a40' : '#d9a441'; ctx.fillText(narrow, 188, y0 + 12);
-  ctx.fillStyle = '#b8a883'; ctx.font = '7px "Alegreya", serif'; ctx.fillText(w.name + (w.ammo ? ` · ${p.pellets}` : ''), 188, y0 + 23);
+  ctx.fillStyle = '#b8a883'; ctx.font = '7px "Alegreya", serif'; ctx.fillText(w.name + (w.ammo ? ` · ${p[w.ammo] || 0}` : ''), 188, y0 + 23);
   ctx.fillText(`${DAYS[G.day % 8]} · ${timeName()}`, 188, y0 + 33);
   if (G.escapeTimer > 0) { ctx.fillStyle = '#7fe060'; ctx.font = '8px "Alegreya SC", serif'; ctx.fillText(`GREENING ${Math.floor(G.escapeTimer / 60)}:${String(Math.floor(G.escapeTimer % 60)).padStart(2, '0')}`, 188, y0 + 42); }
   else if (G.boreHold > 0) { ctx.fillStyle = '#7fe060'; ctx.font = '8px "Alegreya SC", serif'; ctx.fillText(`HOLD ${Math.floor(G.boreHold / 60)}:${String(Math.floor(G.boreHold % 60)).padStart(2, '0')}`, 188, y0 + 42); }
@@ -1058,7 +1173,10 @@ function restoreGame(d) {
   const probe = buildAllMaps(); if (!probe[d.mapId] || !d.cam || !isFinite(d.cam.x) || !isFinite(d.cam.y)) throw new Error('That save points somewhere that does not exist.');
   if (!Array.isArray(d.player.inv) || !d.player.attrs) throw new Error('That save is damaged.');
   const cls = CLASSES.find(c => c.id === d.player.cls) || CLASSES[0];
-  G.player = Object.assign({}, d.player, { cls }); G.flags = d.flags || {}; G.journal = d.journal || []; G.ledger = d.ledger || []; G.runs = d.runs || 0;
+  G.player = Object.assign({ armor: {}, bolts: 0 }, d.player, { cls });
+  G.player.weapons = (G.player.weapons || []).filter(w => WEAPONS[w]); if (!G.player.weapons.length) G.player.weapons = ['hands']; G.player.weapon = clamp(G.player.weapon | 0, 0, G.player.weapons.length - 1);
+  G.player.inv = G.player.inv.filter(s => s && ITEMS[s.id]); for (const k in G.player.armor) if (!ARMOR[G.player.armor[k]] || !G.player.inv.some(s => s.id === G.player.armor[k])) delete G.player.armor[k];
+  G.flags = d.flags || {}; G.journal = d.journal || []; G.ledger = d.ledger || []; G.runs = d.runs || 0;
   G.tod = d.tod; G.day = d.day; G.noise = d.noise || 2; G.escapeTimer = d.escapeTimer || 0; G.boreHold = d.boreHold || 0; G.boreGolems = d.boreGolems || 0; G.glassLock = d.glassLock || 0; G.rootWard = d.rootWard || 0;
   G.dead = false; G.stillT = 0; G.unwriting = false; G.murmurT = 0; G.whistleT = 0; G.attack.t = 0; G.song.t = 0; G.keys = {}; $('#msgs').innerHTML = '';
   G.maps = probe; if (G.flags.greening) G.maps.oakhaven = buildOakhaven(true);

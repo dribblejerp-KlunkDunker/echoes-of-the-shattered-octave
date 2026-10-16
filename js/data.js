@@ -81,10 +81,58 @@ const BIOGRAPHY = [
 
 // ---- weapons & songs ---------------------------------------------------
 const WEAPONS = {
-  sword: { name: 'Short Sword', img: 'fp_sword', dmg: [4, 10], reach: 1.4, noise: 1.6, speed: 0.42, type: 'iron' },
-  glass: { name: 'Glass Arm', img: 'fp_glass', dmg: [7, 16], reach: 1.3, noise: 1.2, speed: 0.55, type: 'glass' },
-  pistol: { name: 'Glass-Shot Pistol', img: 'fp_pistol', dmg: [9, 18], reach: 9, noise: 4.5, speed: 0.9, type: 'shot', ammo: true },
-  hands: { name: 'Bare Hands', img: 'fp_hands', dmg: [1, 3], reach: 1.1, noise: 1.0, speed: 0.4, type: 'iron' },
+  sword: { name: 'Short Sword', img: 'fp_sword', dmg: [4, 10], reach: 1.4, noise: 1.6, speed: 0.42, type: 'iron', value: 20,
+    desc: 'Synod iron, plain and honest. Iron bites the Quiet; it only annoys a hound.' },
+  glass: { name: 'Glass Arm', img: 'fp_glass', dmg: [7, 16], reach: 1.3, noise: 1.2, speed: 0.55, type: 'glass', innate: true,
+    desc: 'Your own arm, glassed past the elbow. It breaks the Cacophony, and it climbs.' },
+  pistol: { name: 'Glass-Shot Pistol', img: 'fp_pistol', dmg: [9, 18], reach: 9, noise: 4.5, speed: 0.9, type: 'shot', ranged: true, ammo: 'pellets', value: 45,
+    desc: 'Fires Aether-Glass pellets. Breaks hounds at a distance. Loud as a door slammed in church.' },
+  hands: { name: 'Bare Hands', img: 'fp_hands', dmg: [1, 3], reach: 1.1, noise: 1.0, speed: 0.4, type: 'iron', innate: true, desc: 'Fists.' },
+  knife: { name: 'Carder\'s Knife', img: 'fp_knife', dmg: [2, 7], reach: 1.1, noise: 0.7, speed: 0.28, type: 'iron', value: 8,
+    desc: 'A wool-carder\'s blade. Quick and nearly silent. It will not trouble a golem.' },
+  longsword: { name: 'Synod Longsword', img: 'fp_longsword', dmg: [6, 13], reach: 1.65, noise: 1.9, speed: 0.55, type: 'iron', value: 48,
+    desc: 'Arsenal steel from the Fortis Synod. Long reach, good edge.' },
+  axe: { name: 'Boarding Axe', img: 'fp_axe', dmg: [7, 15], reach: 1.35, noise: 2.1, speed: 0.62, type: 'iron', value: 34,
+    desc: 'Rust Coast corsair work: a bearded head and a spike for hatches. Bites through bell-plate.', cleave: true },
+  mace: { name: 'Bell-Bronze Mace', img: 'fp_mace', dmg: [5, 12], reach: 1.3, noise: 2.8, speed: 0.55, type: 'bronze', blunt: true, value: 40,
+    desc: 'Cast by the Flambeaux from a cracked chapel bell. It rings when it lands, so it hurts the Cacophony like glass does, and calls them like a bell.' },
+  spear: { name: 'Tuning-Fork Spear', img: 'fp_spear', dmg: [5, 11], reach: 2.1, noise: 1.8, speed: 0.6, type: 'bronze', twoHanded: true, value: 42,
+    desc: 'A bronze fork on an ash shaft, tuned to the Pure Note. Long reach; it rings against the Cacophony. Two hands, so no shield.' },
+  maul: { name: 'Cinderhold Steam-Maul', img: 'fp_maul', dmg: [12, 24], reach: 1.5, noise: 3.4, speed: 1.0, type: 'iron', blunt: true, twoHanded: true, value: 100,
+    desc: 'A foundry hammer with a pressure gauge. Cracks golems open. Slow, heavy, loud. Two hands, so no shield.' },
+  crossbow: { name: 'Rust Coast Crossbow', img: 'fp_crossbow', dmg: [8, 16], reach: 10, noise: 1.4, speed: 1.1, type: 'bolt', ranged: true, ammo: 'bolts', twoHanded: true, value: 55, center: true,
+    desc: 'Iron bolts, quiet as a cough. Iron works inside a Quiet where glass shot can\'t; a hound barely feels it. Two hands, so no shield.' },
+};
+
+// ---- armour -----------------------------------------------------------------
+// ar: armour rating (each point turns aside some blows and blunts the rest); noise: added to your sound while you move.
+const ARMOR_SLOTS = [['head', 'Head'], ['body', 'Body'], ['hands', 'Hands'], ['feet', 'Feet'], ['shield', 'Shield']];
+const ARMOR = {
+  a_cap: { name: 'Leather Cap', slot: 'head', ar: 1, noise: 0, value: 5, desc: 'Boiled leather. Keeps the rain off and the worst of a cudgel.' },
+  a_hood: { name: 'Hush-Cloth Hood', slot: 'head', ar: 1, noise: -0.2, value: 16, desc: 'Packed-wool hood from the Hedge-weavers. Your own breathing goes soft inside it.' },
+  a_kettle: { name: 'Iron Kettle Helm', slot: 'head', ar: 3, noise: 0.3, value: 20, desc: 'A broad-brimmed infantry helm. It rings when struck. Everything does, lately.' },
+  a_bellhelm: { name: 'Carillon Bell-Helm', slot: 'head', ar: 5, noise: 0.6, value: 45, desc: 'A Legion helm, hollowed out. It still hums a name you don\'t know.' },
+  a_gambeson: { name: 'Quilted Gambeson', slot: 'body', ar: 3, noise: 0, value: 14, desc: 'Layers of linen and wool. Quiet, warm, and better than nothing.' },
+  a_jerkin: { name: 'Tanner\'s Leather Jerkin', slot: 'body', ar: 5, noise: 0.1, value: 24, desc: 'Hob Wendle\'s work. Oiled so it doesn\'t creak.' },
+  a_hushcoat: { name: 'Hush-Cloth Coat', slot: 'body', ar: 3, noise: -0.6, value: 42, desc: 'A long coat of the Hedge\'s own wool. You move inside it like a held breath. Too quiet in siphoned country.' },
+  a_brig: { name: 'Consortium Brigandine', slot: 'body', ar: 8, noise: 0.5, value: 58, desc: 'Riveted plates under company canvas, stamped with a Consortium serial.' },
+  a_chain: { name: 'Synod Chainmail', slot: 'body', ar: 10, noise: 1.0, value: 75, desc: 'Arsenal mail. It shushes and chinks with every step.' },
+  a_plate: { name: 'Carillon Bell-Plate', slot: 'body', ar: 13, noise: 1.5, value: 120, desc: 'A Legionnaire\'s cuirass, bell-cast. The best protection in the Reach, and the loudest.' },
+  a_gloves: { name: 'Leather Gloves', slot: 'hands', ar: 1, noise: 0, value: 5, desc: 'Work gloves. Thorn-proof, mostly.' },
+  a_gauntlets: { name: 'Mail Gauntlets', slot: 'hands', ar: 3, noise: 0.4, value: 24, desc: 'Mail backs on leather palms.' },
+  a_softboots: { name: 'Soft Boots', slot: 'feet', ar: 1, noise: -0.2, value: 9, desc: 'Felt-soled. The cobbles hardly hear you.' },
+  a_hobnails: { name: 'Hobnail Boots', slot: 'feet', ar: 2, noise: 0.3, value: 10, desc: 'Sturdy, studded, and they announce you.' },
+  a_greaves: { name: 'Iron Greaves', slot: 'feet', ar: 3, noise: 0.5, value: 26, desc: 'Shin-plates over riding boots.' },
+  a_buckler: { name: 'Corsair Buckler', slot: 'shield', ar: 2, noise: 0.2, value: 14, desc: 'A fist-sized shield for close work on a deck.' },
+  a_kite: { name: 'Synod Kite Shield', slot: 'shield', ar: 4, noise: 0.5, value: 32, desc: 'Long, heavy, painted with the Synod\'s dead queen.' },
+};
+// valuables: worth carrying to a merchant
+const VALUABLES = {
+  v_scrap: { name: 'Bell-Bronze Scrap', value: 6, desc: 'A shard of a Legion bell. The Flambeaux pay for it.' },
+  v_mesh: { name: 'Silver Proctor-Mesh', value: 14, desc: 'Fine silver mesh from a Catalogue Proctor\'s mask.' },
+  v_gear: { name: 'Brass Governor-Gear', value: 18, desc: 'From a Steam Golem\'s works. Still warm.' },
+  v_signet: { name: 'Synod Signet', value: 26, desc: 'An officer\'s ring. Whoever wore it isn\'t coming back for it.' },
+  v_fork: { name: 'Silver Tuning Fork', value: 32, desc: 'Tuned to 528. A Cantor would weep to hold it.' },
 };
 
 const SONGS = {
@@ -128,7 +176,27 @@ const ITEMS = {
   boots: { name: 'Davin\'s Boots', sprite: 'loot', desc: 'A dead boy\'s boots. Rooke asked that they go to his mother, Orla Hale.', key: true },
   core: { name: 'Cracked Lilac Core', sprite: 'coil', desc: 'A Legionnaire\'s glass core, cracked. It said a name three times before it stopped.', key: true },
   bottle: { name: 'Vox-Bottle', sprite: 'loot', desc: 'The last words of someone, stoppered. Opening it brings hounds. Do not.', key: false, use: 'bottle' },
-  whistle: { name: 'Hush-Whistle', sprite: 'loot', desc: 'A reed-whistle from a hush-lamp. Blown, it keeps the Hush off for a little while without calling the hounds.', use: 'whistle' },
+  whistle: { name: 'Hush-Whistle', sprite: 'loot', desc: 'A reed-whistle from a hush-lamp. Blown, it keeps the Hush off for a little while without calling the hounds.', use: 'whistle', value: 6 },
+  bolts: { name: 'Crossbow Bolts (×6)', sprite: 'loot', desc: 'Iron bolts for a crossbow.', use: 'ammo', ammo: 'bolts', n: 6, value: 5 },
+  cache: { name: 'A strongbox', sprite: 'chest', desc: 'Someone hid this.', use: 'cache' },
+};
+ITEMS.pellets.value = 3; ITEMS.tonic.value = 4; ITEMS.honey.value = 5; ITEMS.bottle.value = 6;
+for (const id in ARMOR) ITEMS[id] = Object.assign({ sprite: 'gear', armor: true }, ARMOR[id]);
+for (const id in VALUABLES) ITEMS[id] = Object.assign({ sprite: 'gear', valuable: true }, VALUABLES[id]);
+for (const id in WEAPONS) if (!WEAPONS[id].innate) ITEMS['w_' + id] = { name: WEAPONS[id].name, sprite: 'gear', weapon: id, value: WEAPONS[id].value, desc: WEAPONS[id].desc };
+// what falls out of things (weights)
+const LOOT = {
+  legionnaire: { chance: 0.6, table: [['sovereigns', 26], ['v_scrap', 24], ['a_kettle', 8], ['a_gauntlets', 7], ['a_greaves', 7], ['a_bellhelm', 4], ['a_chain', 4], ['a_plate', 2], ['w_longsword', 6], ['a_kite', 5], ['v_signet', 5], ['bolts', 4]] },
+  proctor: { chance: 0.55, table: [['v_mesh', 40], ['sovereigns', 25], ['tonic', 15], ['w_knife', 8], ['a_hood', 6], ['honey', 6]] },
+  golem: { chance: 0.75, table: [['v_gear', 50], ['pellets', 25], ['w_maul', 10], ['a_greaves', 8], ['bolts', 7]] },
+  hound: { chance: 0.12, table: [['sovereigns', 70], ['v_scrap', 30]] },
+  quiet: { chance: 0.5, table: [['v_fork', 40], ['v_signet', 30], ['a_hushcoat', 15], ['sovereigns', 15]] },
+};
+// strongbox tables by tier
+const CACHE = {
+  1: { gold: [6, 16], table: [['a_cap', 8], ['a_gloves', 8], ['a_softboots', 7], ['a_gambeson', 7], ['w_knife', 6], ['tonic', 14], ['pellets', 10], ['bolts', 8], ['v_scrap', 12], ['honey', 10], ['a_buckler', 6]] },
+  2: { gold: [12, 28], table: [['a_jerkin', 8], ['a_kettle', 8], ['a_gauntlets', 7], ['a_hobnails', 6], ['w_axe', 5], ['w_longsword', 5], ['w_mace', 4], ['w_crossbow', 4], ['a_brig', 4], ['a_kite', 5], ['v_mesh', 10], ['v_signet', 7], ['tonic', 10], ['bolts', 7]] },
+  3: { gold: [20, 45], table: [['a_chain', 7], ['a_plate', 4], ['a_bellhelm', 6], ['a_greaves', 6], ['w_maul', 5], ['w_spear', 5], ['w_crossbow', 5], ['a_hushcoat', 5], ['v_fork', 10], ['v_gear', 10], ['v_signet', 8], ['tonic', 10], ['honey', 8]] },
 };
 
 // ---- lore topics (Tell me about ...) -------------------------------------
@@ -165,6 +233,11 @@ const PLACES = {
 
 // ---- rumours -----------------------------------------------------------
 const RUMOURS = [
+  'Hob Wendle on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.',
+  'Captain Vane will sell you anything off the Kestrel that isn\'t nailed down. Crossbows. Axes. Opinions.',
+  'The Factor keeps Consortium brigandine and a steam-maul in Greenhall. At Consortium prices, naturally.',
+  'Brother Ignatius sells bell-bronze. The Flambeaux melt cracked bells into maces. It rings when it lands, they say.',
+  'Old Tam has a coat of the Hedge\'s own wool. You walk in it like a held breath. He doesn\'t sell it to just anyone.',
   'Pim Carder put out roots on Rootday. Bettany hummed him through it. The Grafters have not been told. Do not tell them.',
   'Old Harrow swears the Hedge whistled the falling fifth last night. Exactly right. Nobody taught it that.',
   'The baker says her bread rose until the oven split. Burl-sickness in the dough, she says, as if dough could sicken.',
@@ -401,7 +474,38 @@ ATTACK  left-click to thrust · hold the button and move the mouse to slash or c
 USE / TALK  E or Space · or click when the name under the crosshair is bright (dim means step closer)
 SONGS  F1-F5 cast the song in that slot · N to murmur (keeps the Hush off)
 PANELS  I inventory · C character · L logbook · M map · R rest · K ledger · Esc closes
+GEAR  I inventory: Wear / Off armour · AR blunts blows, but heavy armour is loud · 1–9 ready weapons · bronze rings the Cacophony, bolts bite the Quiet
+TRADE  talk to merchants (Hob, Vane, Vosk, Tam, Ignatius) and choose Buy… or Sell… · strongboxes and the fallen carry loot
 SAVE  Esc (or the SAVE button) opens Options: save to a session slot, copy a save code, or change Controls
 SOUND  V sound on/off · B music on/off
 TOUCH  left thumb is a stick, right thumb drags to look, tap to use or strike · swipe across STRIKE to slash
 THE NARROW  the amber bar — keep it between the two marks. Above: hounds. Below: the Hush.`;
+
+// ---- merchants ----------------------------------------------------------------
+// shop entries: { item, price? } — price defaults to the item's value with the merchant's markup, haggled by Personality.
+NPCS.bettany.shopTalk = { hello: 'Tonic, honey, and shot I don\'t approve of. I\'ll take your bits and bobs too, if they\'re clean.', broke: 'Not for what you have in your purse, love.', thanks: ['There. Keep it wrapped.', 'Softly with the coin; it rings.', 'Blessings of the Narrow.'], buys: ['valuable', 'consumable'] };
+Object.assign(NPCS.hob, {
+  shop: [{ item: 'a_jerkin' }, { item: 'a_gambeson' }, { item: 'a_cap' }, { item: 'a_gloves' }, { item: 'a_softboots' }, { item: 'a_hobnails' }, { item: 'w_knife' }],
+  markup: 1.0,
+  shopTalk: { hello: 'Leather, then. Oiled so it never creaks; a creak is a word, out there. I\'ll buy hides and gear if it\'s sound.', broke: 'Come back with the coin. The leather will wait. It is good at waiting.', thanks: ['Wear it in slowly.', 'Keep it oiled. Neatsfoot, not lard.', 'It fits. They always fit, in the end.'], buys: ['armor', 'weapon', 'valuable'] },
+});
+Object.assign(NPCS.vane, {
+  shop: [{ item: 'w_axe' }, { item: 'w_crossbow' }, { item: 'bolts', price: 5 }, { item: 'pellets', price: 3 }, { item: 'w_sword' }, { item: 'a_buckler' }, { item: 'a_hobnails' }, { item: 'bottle', price: 8 }],
+  markup: 1.1,
+  shopTalk: { hello: 'Everything off the Kestrel that isn\'t nailed down, and two things that were. Coin first, friend, I\'m superstitious.', broke: 'That\'s not enough coin for that much sea.', thanks: ['A fine choice. A worse one would have killed you.', 'Drink to it.', 'Mind the spike on that; it\'s for hatches.'], buys: ['armor', 'weapon', 'valuable', 'consumable'] },
+});
+Object.assign(NPCS.vosk, {
+  shop: [{ item: 'a_brig' }, { item: 'a_chain' }, { item: 'a_kettle' }, { item: 'a_gauntlets' }, { item: 'a_greaves' }, { item: 'a_kite' }, { item: 'w_longsword' }, { item: 'w_maul' }, { item: 'w_pistol' }, { item: 'pellets', price: 4 }],
+  markup: 1.3,
+  shopTalk: { hello: 'The company store. Consortium plate and Synod surplus, at Consortium prices. I will buy salvage at Consortium prices too.', broke: 'Your credit is not extended. It was never extended.', thanks: ['Signed for. Stage Nine thanks you.', 'Serial noted.', 'Do try to return it intact.'], buys: ['armor', 'weapon', 'valuable'] },
+});
+Object.assign(NPCS.tam, {
+  shop: [{ item: 'a_hushcoat' }, { item: 'a_hood' }, { item: 'a_softboots' }, { item: 'whistle', price: 6 }],
+  markup: 1.0,
+  shopTalk: { hello: 'Essa\'s mother wove for the Hedge. I kept her coats. You can have one if you can keep still in it.', broke: 'Not enough. It is all right. Sit and listen a while instead.', thanks: ['Walk soft in it.', 'She would have liked that you had it.', 'Hm.'], buys: ['valuable'] },
+});
+Object.assign(NPCS.ignatius, {
+  shop: [{ item: 'w_mace' }, { item: 'w_spear' }, { item: 'a_bellhelm' }, { item: 'tonic', price: 5 }],
+  markup: 1.15,
+  shopTalk: { hello: 'Bell-bronze, from bells the Synod did not take. It rings true when it lands. The Cacophony cannot bear a true note. Neither, some nights, can I.', broke: 'The Note is not for sale cheaply.', thanks: ['Hold it in tune.', 'Strike once, cleanly.', 'Go under the Note.'], buys: ['weapon', 'valuable'] },
+});

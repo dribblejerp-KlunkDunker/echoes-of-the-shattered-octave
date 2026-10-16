@@ -54,6 +54,7 @@ const Audio_ = (() => {
     swing: () => noiseBurst(0.18, 0.2, 900, 0.5, 'bandpass'),
     hit: () => { noiseBurst(0.12, 0.35, 250, 0.8, 'lowpass'); tone(90, 0.15, 0.2, 'triangle', 50); },
     glasshit: () => { tone(528, 0.5, 0.18, 'sine'); tone(1056, 0.4, 0.06, 'sine'); noiseBurst(0.1, 0.2, 2000, 1); },
+    bow: () => { noiseBurst(0.12, 0.3, 1400, 0.6, 'bandpass'); tone(180, 0.18, 0.12, 'triangle', 90); },
     shot: () => { noiseBurst(0.35, 0.6, 700, 0.4, 'lowpass'); tone(1200, 0.25, 0.1, 'sine', 300); },
     hound: () => { noiseBurst(0.5, 0.25, 1800, 0.9, 'bandpass'); noiseBurst(0.3, 0.15, 350, 2, 'bandpass'); },
     bell: () => { tone(440, 1.4, 0.18, 'sine'); tone(880 * 1.01, 1.0, 0.07, 'sine'); tone(1320, 0.5, 0.03, 'sine'); },
