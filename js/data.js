@@ -402,4 +402,5 @@ USE / TALK  E or Space · doors, people, levers, items
 SONGS  F1-F5 cast the song in that slot · N to murmur (keeps the Hush off)
 PANELS  I inventory · C character · L logbook · M map · R rest · K ledger · Esc closes
 SAVE  Esc (or the SAVE button) opens Options: save to a session slot, or copy a save code to keep
+SOUND  V sound on/off · B music on/off
 THE NARROW  the amber bar — keep it between the two marks. Above: hounds. Below: the Hush.`;

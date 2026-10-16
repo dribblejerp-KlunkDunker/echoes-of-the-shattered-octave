@@ -30,7 +30,7 @@ const Audio_ = (() => {
   function setScene(kind) {
     if (!ctx) return;
     const t = ctx.currentTime;
-    const dg = { town: 0.05, inside: 0.03, wild: 0.07, dungeon: 0.11, root: 0.16 }[kind] || 0.05;
+    const dg = ({ town: 0.05, inside: 0.03, wild: 0.07, dungeon: 0.11, root: 0.16 }[kind] || 0.05) * 0.45;
     const wg = { town: 0.05, inside: 0.01, wild: 0.09, dungeon: 0.02, root: 0.03 }[kind] || 0.03;
     const lg = { town: 0.012, inside: 0.02, wild: 0.0, dungeon: 0.0, root: 0.0 }[kind] || 0;
     droneGain.gain.linearRampToValueAtTime(dg, t + 1.5); windGain.gain.linearRampToValueAtTime(wg, t + 1.5); lampGain.gain.linearRampToValueAtTime(lg, t + 1.5);
@@ -72,5 +72,62 @@ const Audio_ = (() => {
     voice: () => { tone(220, 0.35, 0.08, 'triangle', 180); setTimeout(() => tone(196, 0.5, 0.08, 'triangle', 160), 300); },
   };
   function toggleMute() { muted = !muted; if (master) master.gain.value = muted ? 0 : 0.55; return muted; }
-  return { init, resume, setScene, sfx, toggleMute, get ready() { return !!ctx; }, get muted() { return muted; } };
+
+  // ------------------------------------------------------------ the score
+  // Eight original orchestral cues (General MIDI orchestra, like Daggerfall's own score), streamed as needed.
+  // Exploration cues play through, fall silent for a while, and return; combat and the Greening loop seamlessly.
+  const TRACKS = {
+    title: { gap: [4, 6] }, town: { gap: [18, 40] }, wild: { gap: [20, 45] }, dungeon: { gap: [14, 30] },
+    tavern: { gap: [6, 12] }, ending: { gap: [5, 8] },
+    combat: { loop: 128 * 60 / 128 }, greening: { loop: 128 * 60 / 140 },
+  };
+  const music = (() => {
+    const els = {}; let want = null, wantVol = 1, wantRate = 1, enabled = true, unlocked = false;
+    const VOL = 0.62, XF = 0.14;
+    function mk(id) {
+      const a = new Audio(); a.preload = 'auto'; a.src = `music/${id}.mp3?v=1`; a.volume = 0;
+      a.preservesPitch = false; a.mozPreservesPitch = false; a.webkitPreservesPitch = false; return a;
+    }
+    function get(id) {
+      if (!els[id]) els[id] = { a: mk(id), b: TRACKS[id].loop ? mk(id) : null, cur: 0, vol: 0, playing: false, gap: 0, xf: 0, pending: false };
+      return els[id];
+    }
+    function start(e, el, from) {
+      if (from != null) { try { el.currentTime = from; } catch (err) { /* not loaded yet */ } }
+      e.pending = true;
+      const pr = el.play(); if (pr && pr.then) pr.then(() => { e.pending = false; unlocked = true; }).catch(() => { e.pending = false; e.playing = false; e.gap = 0.8; });
+      e.playing = true;
+    }
+    function request(id, vol, rate) { want = id; wantVol = vol == null ? 1 : vol; wantRate = rate || 1; if (id) get(id); }
+    function preload(ids) { ids.forEach(get); }
+    function tick(dt) {
+      for (const id in els) {
+        const e = els[id], T = TRACKS[id];
+        const target = (id === want && enabled && !muted) ? wantVol : 0;
+        e.vol = target > e.vol ? Math.min(target, e.vol + dt / 2.2) : Math.max(target, e.vol - dt / 1.4);
+        const act = e.cur ? e.b : e.a, other = e.cur ? e.a : e.b;
+        if (target > 0 && !e.playing && !e.pending) {
+          if (e.gap > 0) e.gap -= dt;
+          else start(e, act, act.ended ? 0 : null);
+        }
+        if (e.playing && e.vol <= 0.001 && target === 0) { e.a.pause(); if (e.b) e.b.pause(); e.playing = false; if (T.loop) { e.cur = 0; try { e.a.currentTime = 0; } catch (err) { } } }
+        if (e.playing && T.loop && !act.paused && act.currentTime >= T.loop - XF) {
+          // seamless loop: the start of the file already holds the reverb tail of its own end
+          start(e, other, 0); e.cur ^= 1; e.xf = XF;
+        }
+        if (e.playing && !T.loop && act.ended) { e.playing = false; e.gap = T.gap[0] + Math.random() * (T.gap[1] - T.gap[0]); }
+        if (e.xf > 0) e.xf = Math.max(0, e.xf - dt);
+        const nowAct = e.cur ? e.b : e.a, nowOld = e.cur ? e.a : e.b;
+        const v = Math.max(0, Math.min(1, e.vol * VOL));
+        nowAct.volume = T.loop ? v * (1 - e.xf / XF) : v;
+        if (nowOld) { nowOld.volume = v * (e.xf / XF); if (e.xf <= 0 && !nowOld.paused) nowOld.pause(); }
+        if (nowAct.playbackRate !== (id === want ? wantRate : nowAct.playbackRate)) nowAct.playbackRate = wantRate;
+      }
+    }
+    const debug = () => Object.fromEntries(Object.entries(els).map(([id, e]) => [id, { playing: e.playing, vol: +e.vol.toFixed(2), t: +((e.cur ? e.b : e.a).currentTime).toFixed(1), cur: e.cur, paused: (e.cur ? e.b : e.a).paused, gap: +e.gap.toFixed(1), rate: (e.cur ? e.b : e.a).playbackRate }]));
+    const seek = (id, t) => { const e = els[id]; if (e) (e.cur ? e.b : e.a).currentTime = t; };
+    return { request, preload, tick, debug, seek, get enabled() { return enabled; }, set enabled(v) { enabled = !!v; }, get current() { return want; }, get unlocked() { return unlocked; } };
+  })();
+
+  return { init, resume, setScene, sfx, toggleMute, music, get ready() { return !!ctx; }, get muted() { return muted; } };
 })();

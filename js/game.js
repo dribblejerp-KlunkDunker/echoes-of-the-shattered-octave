@@ -98,7 +98,7 @@ function startGame() {
   show('#intro'); const it = $('#intro-text'); it.innerHTML = '';
   INTRO.forEach((line, i) => { const pEl = document.createElement('p'); pEl.textContent = line; pEl.style.animationDelay = (i * 1.1) + 's'; it.appendChild(pEl); });
   G.state = 'intro';
-  const go = () => { if (G.state !== 'intro') return; hide('#intro'); loadMap('oakhaven'); G.state = 'play'; Audio_.setScene('town'); msg('Nullday. Dusk. Oakhaven, inside the Hedge.', 'warn', 6000); msg('Press H for help at any time.', '', 7000); };
+  const go = () => { if (G.state !== 'intro') return; Audio_.music.preload(['combat', 'town']); hide('#intro'); loadMap('oakhaven'); G.state = 'play'; Audio_.setScene('town'); msg('Nullday. Dusk. Oakhaven, inside the Hedge.', 'warn', 6000); msg('Press H for help at any time.', '', 7000); };
   $('#btn-intro-skip').onclick = (ev) => { ev.stopPropagation(); go(); };
   $('#intro').onclick = go;
 }
@@ -680,6 +680,7 @@ window.addEventListener('keydown', (ev) => {
     else if (k === 'h' || k === '?') { G.state = 'panel'; renderHelp(); }
     else if (k === 'n') castSong('murmur');
     else if (k === 'v') { const m = Audio_.toggleMute(); msg(m ? 'Sound off.' : 'Sound on.', '', 1200); }
+    else if (k === 'b') { Audio_.music.enabled = !Audio_.music.enabled; msg(Audio_.music.enabled ? 'Music on.' : 'Music off.', '', 1200); }
     else if (k >= '1' && k <= '4') { const i = +k - 1; if (G.player.weapons[i]) { G.player.weapon = i; msg(`${WEAPONS[G.player.weapons[i]].name}.`, '', 1200); } }
     else if (k.startsWith('f') && k.length === 2 && +k[1] >= 1) { const s = G.player.songs[+k[1] - 1]; if (s) castSong(s); }
     else if (k === 'escape') { G.state = 'panel'; renderMenu(); }
@@ -841,9 +842,32 @@ function drawHUD() {
 
 // ---------------------------------------------------------------- loop
 let last = performance.now(), acc = 0, fpsN = 0, fpsT = 0, fps = 0;
+// what the score should be playing right now
+let combatT = 0;
+function musicDirector(dt) {
+  const M = Audio_.music; if (!M) return;
+  const st = G.state;
+  if (st === 'loading') return M.request(null);
+  if (st === 'title' || st === 'create' || st === 'intro' || (st === 'panel' && G.openPanel === 'loadtitle') || !G.map || !G.player) return M.request('title');
+  if (st === 'ending') return M.request('ending');
+  const duck = st === 'dead' ? 0.3 : 1;
+  if (G.escapeTimer > 0) return M.request('greening', duck);
+  const c = Engine.cam;
+  const fighting = G.boreHold > 0 || G.ents.some(e => e.kind === 'enemy' && !e.dead && !e.hidden && e.state === 'chase' && dist2(e.x, e.y, c.x, c.y) < 196);
+  combatT = fighting ? 5 : Math.max(0, combatT - dt);
+  if (combatT > 0) return M.request('combat', duck);
+  const mu = G.map.music;
+  if (G.mapId === 'tavern') return M.request('tavern', duck);
+  if (mu === 'inside') return M.request('town', 0.42 * duck);
+  if (mu === 'town') return M.request('town', duck);
+  if (mu === 'wild') return M.request('wild', duck);
+  if (mu === 'root') return M.request('dungeon', 0.9 * duck, 0.9);
+  return M.request('dungeon', duck);
+}
 function frame(now) {
   requestAnimationFrame(frame);
   let dt = Math.min(0.1, (now - last) / 1000); last = now; acc += dt;
+  musicDirector(dt); if (Audio_.music) Audio_.music.tick(dt);
   while (acc >= 1 / 60) { update(1 / 60); acc -= 1 / 60; }
   render();
   fpsN++; fpsT += dt; if (fpsT >= 1) { fps = fpsN / fpsT; fpsN = 0; fpsT = 0; }
@@ -933,6 +957,7 @@ function renderMenu() {
     <button class="dfbtn" id="mn-load">Load game</button>
     <button class="dfbtn" id="mn-help">How to play</button>
     <button class="dfbtn" id="mn-mute">${Audio_.muted ? 'Sound on' : 'Sound off'}</button>
+    <button class="dfbtn" id="mn-music">${Audio_.music.enabled ? 'Music off' : 'Music on'}</button>
     <button class="dfbtn" id="mn-title">Return to title</button>
     <button class="dfbtn" id="mn-back">Continue</button>
   </div><p class="muted" style="margin-top:1cqh">${DAYS[G.day % DAYS.length]} · ${G.map.name} · ${G.player.name}, level ${G.player.level}</p>`;
@@ -940,6 +965,7 @@ function renderMenu() {
   $('#x').onclick = $('#mn-back').onclick = () => { closeModal(); G.state = 'play'; };
   $('#mn-save').onclick = () => renderSave(); $('#mn-load').onclick = () => renderLoad(false); $('#mn-help').onclick = () => renderHelp();
   $('#mn-mute').onclick = () => { Audio_.toggleMute(); renderMenu(); };
+  $('#mn-music').onclick = () => { Audio_.music.enabled = !Audio_.music.enabled; renderMenu(); };
   $('#mn-title').onclick = () => { closeModal(); G.state = 'title'; G.keys = {}; $('#view').classList.remove('unwrite'); $('#msgs').innerHTML = ''; show('#title'); Audio_.setScene('title'); };
 }
 async function renderSave() {
