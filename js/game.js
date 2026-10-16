@@ -19,6 +19,7 @@ const G = {
   noise: 2, stillT: 0, unwriting: false, rootWard: 0, glassLock: 0, murmurT: 0, whistleT: 0,
   escapeTimer: 0, hurtT: 0, songFx: 0, msgQueue: [], dead: false,
   fadeT: 0, bobPhase: 0, lastStep: 0, hint: '', openPanel: null,
+  vel: { x: 0, y: 0 }, turnV: 0, touch: { fx: 0, fy: 0, run: false }, touchMode: false,
   give(id, n) { const it = ITEMS[id]; const slot = this.player.inv.find(s => s.id === id); if (slot && !it.key) slot.n += (n || 1); else this.player.inv.push({ id, n: n || 1 }); },
   has(id) { return this.player.inv.some(s => s.id === id); },
   take(id) { const i = this.player.inv.findIndex(s => s.id === id); if (i >= 0) { this.player.inv[i].n--; if (this.player.inv[i].n <= 0) this.player.inv.splice(i, 1); } },
@@ -141,6 +142,28 @@ function solidAt(x, y, self) {
   if (self && dist2(x, y, Engine.cam.x, Engine.cam.y) < 0.4) return true;
   for (const e of G.ents) { if (e === self || !e.solid || e.hidden || e.dead) continue; const rr = (e.radius || 0.3) + 0.22; if (dist2(x, y, e.x, e.y) < rr * rr) return true; }
   return false;
+}
+// the player's own mover: slides along walls, closes the gap to them, and eases around door-frame corners
+function approachWall(o, dx, dy) { let lo = 0, hi = 1; for (let i = 0; i < 5; i++) { const m = (lo + hi) / 2; if (solidAt(o.x + dx * m, o.y + dy * m, null)) hi = m; else lo = m; } return lo; }
+function cornerAssist(o, perp, sign, step) {
+  for (const off of [0.08, 0.16, 0.24, 0.32]) for (const sd of [-1, 1]) {
+    const px = perp === 'x' ? o.x + sd * off : o.x, py = perp === 'y' ? o.y + sd * off : o.y;
+    const fx = perp === 'y' ? px + sign * 0.12 : px, fy = perp === 'x' ? py + sign * 0.12 : py;
+    if (!solidAt(px, py, null) && !solidAt(fx, fy, null)) {
+      const n = Math.min(off, step * 0.9) * sd;
+      if (perp === 'x') { if (!solidAt(o.x + n, o.y, null)) o.x += n; } else if (!solidAt(o.x, o.y + n, null)) o.y += n;
+      return true;
+    }
+  }
+  return false;
+}
+function playerMove(o, dx, dy) {
+  let bx = false, by = false;
+  if (dx) { if (!solidAt(o.x + dx, o.y, null)) o.x += dx; else { bx = true; o.x += dx * approachWall(o, dx, 0); } }
+  if (dy) { if (!solidAt(o.x, o.y + dy, null)) o.y += dy; else { by = true; o.y += dy * approachWall(o, 0, dy); } }
+  if (bx && !by && Math.abs(dx) > Math.abs(dy) * 1.5 && cornerAssist(o, 'y', Math.sign(dx), Math.abs(dx))) bx = false;
+  else if (by && !bx && Math.abs(dy) > Math.abs(dx) * 1.5 && cornerAssist(o, 'x', Math.sign(dy), Math.abs(dy))) by = false;
+  return { bx, by };
 }
 function moveWithSlide(o, dx, dy, self) {
   let moved = false;
@@ -318,9 +341,10 @@ function castSong(id) {
 }
 
 // ---------------------------------------------------------------- interaction
+const USE_RANGE = 2.6;
 function interact() {
   const c = Engine.cam;
-  const e = Engine.pick(G.ents, 2.2);
+  const e = Engine.pick(G.ents, USE_RANGE);
   if (e && !e.dead) {
     if (e.kind === 'npc') { talk(e); return; }
     if (e.kind === 'item') { pickUp(e); return; }
@@ -638,35 +662,145 @@ function renderHelp() {
 
 // ---------------------------------------------------------------- input
 const canvas = $('#view');
+canvas.style.touchAction = 'none';
+// control options (kept in this browser when storage is allowed)
+const OPTS_KEY = 'octave_controls_v1';
+G.opts = Object.assign({ mouseLook: true, sens: 5, invertY: false, alwaysRun: false, touch: 'auto' }, (() => { try { return JSON.parse(localStorage.getItem(OPTS_KEY) || '{}'); } catch (e) { return {}; } })());
+function saveOpts() { try { localStorage.setItem(OPTS_KEY, JSON.stringify(G.opts)); } catch (e) { /* the preview may have no storage */ } }
+const sensK = () => 0.35 + clamp(G.opts.sens, 1, 10) * 0.13;
 function canvasPos(ev) { const r = canvas.getBoundingClientRect(); return { x: (ev.clientX - r.left) / r.width * VW, y: (ev.clientY - r.top) / r.height * VH }; }
+// physical keys, so WASD works on any keyboard layout and Shift doesn't change the number keys
+function keyOf(ev) {
+  const c = ev.code || '';
+  if (c.length === 4 && c.startsWith('Key')) return c[3].toLowerCase();
+  if (c.startsWith('Digit')) return c.slice(5);
+  if (/^Numpad\d$/.test(c)) return c.slice(6);
+  if (c === 'ShiftLeft' || c === 'ShiftRight') return 'shift';
+  if (c === 'Space') return ' ';
+  return (ev.key || '').toLowerCase();
+}
+function look(mx, my) { const k = sensK(); Engine.cam.dir += mx * 0.0032 * k; Engine.cam.pitch = clamp(Engine.cam.pitch - my * 0.16 * k * (G.opts.invertY ? -1 : 1), -40, 40); }
+function cycleWeapon(d) { const p = G.player; if (!p || !p.weapons.length) return; p.weapon = (p.weapon + d + p.weapons.length) % p.weapons.length; msg(`${currentWeapon().name}.`, '', 1200); }
+function swingLabel(dx, dy, th) { const len = Math.hypot(dx, dy); if (len <= th) return 'thrust'; if (Math.abs(dx) > Math.abs(dy)) return dx > 0 ? 'slash right' : 'slash left'; return dy > 0 ? 'chop down' : 'cut up'; }
+
+// mouse look: the first click on the view captures the mouse (Esc releases it)
+let plFailed = false, plOk = false;
+const locked = () => document.pointerLockElement === canvas;
+function plFail() { if (plFailed || plOk) return; plFailed = true; msg('The mouse can\'t be captured here. Hold the right mouse button and drag to look around.', 'warn', 6000); }
+function wantLock() {
+  if (!G.opts.mouseLook || plFailed || locked() || G.touchMode || !canvas.requestPointerLock) return false;
+  try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(plFail); } catch (e) { plFail(); return false; }
+  return true;
+}
+document.addEventListener('pointerlockerror', plFail);
+document.addEventListener('pointerlockchange', () => { if (locked()) plOk = true; G.mouse.down = false; G.mouse.rdown = false; $('#game').classList.toggle('locked', locked()); });
+
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 canvas.addEventListener('mousedown', (ev) => {
   Audio_.init(); Audio_.resume();
-  if (G.state !== 'play') return;
+  if (G.state !== 'play' || G.touchMode) return;
   const p = canvasPos(ev);
   if (ev.button === 2 || ev.button === 1) { G.mouse.rdown = true; ev.preventDefault(); return; }
-  if (p.y >= VIEW_H) { hudClick(p.x, p.y); return; }
-  G.mouse.down = true; G.mouse.sx = p.x; G.mouse.sy = p.y; G.mouse.t = performance.now();
+  if (!locked() && p.y >= VIEW_H) { hudClick(p.x, p.y); return; }
+  if (!locked() && wantLock()) return; // this click only takes hold of the mouse
+  G.mouse.down = true; G.mouse.sx = p.x; G.mouse.sy = p.y; G.mouse.ax = 0; G.mouse.ay = 0; G.mouse.t = performance.now();
 });
 window.addEventListener('mouseup', (ev) => {
   if (ev.button === 2 || ev.button === 1) { G.mouse.rdown = false; return; }
   if (!G.mouse.down) return; G.mouse.down = false;
   if (G.state !== 'play') return;
-  const p = canvasPos(ev); const dx = p.x - G.mouse.sx, dy = p.y - G.mouse.sy; const len = Math.sqrt(dx * dx + dy * dy);
-  if (G.hintKind) { interact(); return; }
-  let label = 'thrust';
-  if (len > 12) { if (Math.abs(dx) > Math.abs(dy)) label = dx > 0 ? 'slash right' : 'slash left'; else label = dy > 0 ? 'chop down' : 'cut up'; }
+  let dx, dy, th;
+  if (locked()) { dx = G.mouse.ax; dy = G.mouse.ay; th = 16; } else { const p = canvasPos(ev); dx = p.x - G.mouse.sx; dy = p.y - G.mouse.sy; th = 12; }
+  const label = swingLabel(dx, dy, th);
+  if (G.hintKind && label === 'thrust') { interact(); return; }
   attack(label);
 });
 window.addEventListener('mousemove', (ev) => {
-  if (G.state !== 'play') return;
-  if (G.mouse.rdown || (G.mouse.down && performance.now() - G.mouse.t > 220 && Math.abs(ev.movementX) > 0 && false)) { Engine.cam.dir += ev.movementX * 0.0045; Engine.cam.pitch = clamp(Engine.cam.pitch - ev.movementY * 0.25, -40, 40); }
   const p = canvasPos(ev); G.mouse.x = p.x; G.mouse.y = p.y;
+  if (G.state !== 'play') return;
+  const mx = ev.movementX || 0, my = ev.movementY || 0;
+  if (Math.abs(mx) > 300 || Math.abs(my) > 300) return; // drop the odd pointer-lock spike
+  if (locked()) { if (G.mouse.down) { G.mouse.ax += mx; G.mouse.ay += my; } else look(mx, my); } // hold and move to swing, as in 1996
+  else if (G.mouse.rdown) look(mx * 1.25, my * 1.25);
 });
+canvas.addEventListener('wheel', (ev) => {
+  if (G.state !== 'play') return; ev.preventDefault();
+  const now = performance.now(); if (now - (G.wheelT || 0) < 180) return; G.wheelT = now; cycleWeapon(ev.deltaY > 0 ? 1 : -1);
+}, { passive: false });
+
+// touch: left thumb is a floating stick, right thumb drags to look, tap to use or strike
+const TS = { stick: null, sx: 0, sy: 0, lookId: null, lx: 0, ly: 0, lt: 0, travel: 0 };
+const STICK_R = 20; // in 320x200 canvas pixels
+function setTouchMode(on) {
+  on = !!on; if (G.touchMode === on) return;
+  G.touchMode = on; $('#game').classList.toggle('touchmode', on);
+  if (on && locked()) document.exitPointerLock();
+}
+function stickShow(x, y) { const st = $('#t-stick'); st.style.left = (x / VW * 100) + '%'; st.style.top = (y / VH * 100) + '%'; st.classList.add('on'); $('#t-knob').style.left = '50%'; $('#t-knob').style.top = '50%'; }
+function stickHide() { $('#t-stick').classList.remove('on'); G.touch.fx = 0; G.touch.fy = 0; }
+canvas.addEventListener('pointerdown', (ev) => {
+  if (ev.pointerType !== 'touch') return;
+  ev.preventDefault(); Audio_.init(); Audio_.resume();
+  if (G.opts.touch !== 'off') setTouchMode(true);
+  if (G.state !== 'play' || !G.touchMode) return;
+  const p = canvasPos(ev);
+  if (p.y >= VIEW_H) { hudClick(p.x, p.y); return; }
+  try { canvas.setPointerCapture(ev.pointerId); } catch (e) { /* fine */ }
+  if (p.x < VW * 0.45 && TS.stick === null) { TS.stick = ev.pointerId; TS.sx = p.x; TS.sy = p.y; stickShow(p.x, p.y); }
+  else if (TS.lookId === null) { TS.lookId = ev.pointerId; TS.lx = ev.clientX; TS.ly = ev.clientY; TS.lt = performance.now(); TS.travel = 0; }
+});
+canvas.addEventListener('pointermove', (ev) => {
+  if (ev.pointerType !== 'touch' || !G.touchMode) return;
+  if (ev.pointerId === TS.stick) {
+    const p = canvasPos(ev); let dx = p.x - TS.sx, dy = p.y - TS.sy; const d = Math.hypot(dx, dy);
+    if (d > STICK_R) { dx *= STICK_R / d; dy *= STICK_R / d; }
+    const n = Math.min(1, d / STICK_R), dead = 0.18, k = n < dead ? 0 : (n - dead) / (1 - dead) / Math.max(n, 1e-6);
+    G.touch.fx = dx / STICK_R * k; G.touch.fy = -dy / STICK_R * k;
+    const kn = $('#t-knob').style; kn.left = (50 + dx / STICK_R * 50) + '%'; kn.top = (50 + dy / STICK_R * 50) + '%';
+  } else if (ev.pointerId === TS.lookId) {
+    const dx = ev.clientX - TS.lx, dy = ev.clientY - TS.ly; TS.lx = ev.clientX; TS.ly = ev.clientY; TS.travel += Math.abs(dx) + Math.abs(dy);
+    const r = canvas.getBoundingClientRect(), scale = 900 / Math.max(300, r.width); // same feel on phone and tablet
+    if (G.state === 'play') look(dx * 1.3 * scale, dy * 1.3 * scale);
+  }
+});
+function touchEnd(ev) {
+  if (ev.pointerType !== 'touch') return;
+  if (ev.pointerId === TS.stick) { TS.stick = null; stickHide(); }
+  else if (ev.pointerId === TS.lookId) {
+    TS.lookId = null;
+    if (ev.type === 'pointerup' && G.state === 'play' && TS.travel < 10 && performance.now() - TS.lt < 300) { if (G.hintKind) interact(); else attack('thrust'); }
+  }
+}
+canvas.addEventListener('pointerup', touchEnd);
+canvas.addEventListener('pointercancel', touchEnd);
+// on-screen buttons. Swipe across STRIKE to slash, tap to thrust.
+function tbtn(id, down, up) {
+  const el = $(id); let sx = 0, sy = 0;
+  el.addEventListener('pointerdown', (ev) => { ev.preventDefault(); ev.stopPropagation(); Audio_.init(); Audio_.resume(); sx = ev.clientX; sy = ev.clientY; el.classList.add('held'); try { el.setPointerCapture(ev.pointerId); } catch (e) { /* fine */ } if (down) down(); });
+  const end = (ev) => { if (!el.classList.contains('held')) return; el.classList.remove('held'); if (up && ev.type === 'pointerup' && G.state === 'play') up(ev.clientX - sx, ev.clientY - sy); };
+  el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+}
+tbtn('#t-atk', null, (dx, dy) => { const r = canvas.getBoundingClientRect(); attack(swingLabel(dx / r.width * VW, dy / r.height * VH, 6)); });
+tbtn('#t-use', null, () => interact());
+tbtn('#t-run', () => { G.touch.run = !G.touch.run; $('#t-run').classList.toggle('lit', G.touch.run); });
+tbtn('#t-song', () => { if (G.state === 'play') { G.state = 'panel'; renderSongs(); } });
+// per-frame housekeeping for the control layer
+function controlsTick() {
+  if (G.state !== 'play') { if (locked()) document.exitPointerLock(); if (TS.stick !== null) { TS.stick = null; stickHide(); } TS.lookId = null; }
+  if (G.opts.touch === 'on' && !G.touchMode) setTouchMode(true);
+  if (G.opts.touch === 'off' && G.touchMode) setTouchMode(false);
+  const showLock = G.state === 'play' && G.opts.mouseLook && !plFailed && !locked() && !G.touchMode;
+  if (showLock !== G._lockHint) { G._lockHint = showLock; $('#lockhint').classList.toggle('on', showLock); }
+  const showTouch = G.state === 'play' && G.touchMode;
+  if (showTouch !== G._touchUi) { G._touchUi = showTouch; $('#touchui').classList.toggle('on', showTouch); }
+}
+// a real mouse moving again hands control back from touch
+window.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse' && G.touchMode && G.opts.touch === 'auto' && (Math.abs(ev.movementX) + Math.abs(ev.movementY) > 6)) setTouchMode(false); });
+
 window.addEventListener('keydown', (ev) => {
   if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
-  const k = ev.key.toLowerCase(); G.keys[k] = true;
-  if (ev.repeat && !['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright','q','shift'].includes(k)) return;
+  const k = keyOf(ev); G.keys[k] = true;
+  if (ev.repeat && !['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'q', 'shift'].includes(k)) return;
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'tab', 'f1', 'f2', 'f3', 'f4', 'f5'].includes(k)) ev.preventDefault();
   if (G.state === 'play') {
     if (k === 'e' || k === ' ') interact();
@@ -681,7 +815,9 @@ window.addEventListener('keydown', (ev) => {
     else if (k === 'n') castSong('murmur');
     else if (k === 'v') { const m = Audio_.toggleMute(); msg(m ? 'Sound off.' : 'Sound on.', '', 1200); }
     else if (k === 'b') { Audio_.music.enabled = !Audio_.music.enabled; msg(Audio_.music.enabled ? 'Music on.' : 'Music off.', '', 1200); }
-    else if (k >= '1' && k <= '4') { const i = +k - 1; if (G.player.weapons[i]) { G.player.weapon = i; msg(`${WEAPONS[G.player.weapons[i]].name}.`, '', 1200); } }
+    else if (k >= '1' && k <= '4' && k.length === 1) { const i = +k - 1; if (G.player.weapons[i]) { G.player.weapon = i; msg(`${WEAPONS[G.player.weapons[i]].name}.`, '', 1200); } }
+    else if (k === 'capslock') { G.opts.alwaysRun = !G.opts.alwaysRun; saveOpts(); msg(G.opts.alwaysRun ? 'Always run: on (hold Shift to walk).' : 'Always run: off.', '', 1600); }
+    else if (k === 'home' || k === 'z') { Engine.cam.pitch = 0; }
     else if (k.startsWith('f') && k.length === 2 && +k[1] >= 1) { const s = G.player.songs[+k[1] - 1]; if (s) castSong(s); }
     else if (k === 'escape') { G.state = 'panel'; renderMenu(); }
     else if (k === '`') { const d = $('#debug'); d.style.display = d.style.display === 'none' || !d.style.display ? 'block' : 'none'; }
@@ -694,8 +830,8 @@ window.addEventListener('keydown', (ev) => {
     if (open && (k === 'escape' || k === 'h')) closeModal(); else if (!open && k === 'enter' && !$('#title').classList.contains('hidden')) $('#btn-new').click();
   }
 });
-window.addEventListener('keyup', (ev) => { G.keys[ev.key.toLowerCase()] = false; });
-window.addEventListener('blur', () => { G.keys = {}; G.mouse.down = false; G.mouse.rdown = false; });
+window.addEventListener('keyup', (ev) => { G.keys[keyOf(ev)] = false; });
+window.addEventListener('blur', () => { G.keys = {}; G.mouse.down = false; G.mouse.rdown = false; G.turnV = 0; });
 
 // HUD buttons (canvas coords)
 const HUD_BTNS = [
@@ -709,7 +845,7 @@ const HUD_BTNS = [
   { x: 126, y: 168, w: 24, h: 11, t: 'HELP', f: () => { G.state = 'panel'; renderHelp(); } },
   { x: 48, y: 181, w: 36, h: 11, t: 'MURMUR', f: () => castSong('murmur') },
   { x: 86, y: 181, w: 28, h: 11, t: 'SAVE', f: () => { G.state = 'panel'; renderMenu(); } },
-  { x: 116, y: 181, w: 34, h: 11, t: 'WEAPON', f: () => { const p = G.player; p.weapon = (p.weapon + 1) % p.weapons.length; msg(`${currentWeapon().name}.`, '', 1200); } },
+  { x: 116, y: 181, w: 34, h: 11, t: 'WEAPON', f: () => cycleWeapon(1) },
 ];
 function hudClick(x, y) { for (const b of HUD_BTNS) if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) { Audio_.sfx.ui(); b.f(); return; } }
 
@@ -721,24 +857,34 @@ function update(dt) {
   // time of day: one game hour per 90 real seconds
   G.tod += dt / (90 * 24); if (G.tod >= 1) { G.tod -= 1; G.day++; }
   if (G.fadeT > 0) G.fadeT -= dt;
-  // movement
-  const running = (k.shift) && p.fat > 0;
-  let spd = (2.6 + p.attrs.Speed / 60) * (running ? 1.7 : 1);
-  let mx = 0, my = 0;
-  if (k.w || k.arrowup) { mx += Math.cos(c.dir); my += Math.sin(c.dir); }
-  if (k.s || k.arrowdown) { mx -= Math.cos(c.dir); my -= Math.sin(c.dir); }
-  if (k.a) { mx += Math.sin(c.dir); my -= Math.cos(c.dir); }
-  if (k.d) { mx -= Math.sin(c.dir); my += Math.cos(c.dir); }
-  if (k.q || k.arrowleft) c.dir -= 1.9 * dt;
-  if (k.arrowright) c.dir += 1.9 * dt;
-  const moving = mx !== 0 || my !== 0;
+  // movement: a short ramp up and down so steps feel weighted rather than twitchy
+  const runHeld = (G.opts.alwaysRun ? !k.shift : !!k.shift) || G.touch.run;
+  const running = runHeld && p.fat > 0;
+  const spd = (2.6 + p.attrs.Speed / 60) * (running ? 1.7 : 1);
+  let fwd = G.touch.fy, str = G.touch.fx;
+  if (k.w || k.arrowup) fwd += 1;
+  if (k.s || k.arrowdown) fwd -= 1;
+  if (k.d) str += 1;
+  if (k.a) str -= 1;
+  let mag = Math.hypot(fwd, str); if (mag > 1) { fwd /= mag; str /= mag; mag = 1; }
+  const cs = Math.cos(c.dir), sn = Math.sin(c.dir);
+  const wx = (cs * fwd - sn * str) * spd, wy = (sn * fwd + cs * str) * spd;
+  const vel = G.vel, blend = 1 - Math.exp(-(mag > 0.05 ? 15 : 22) * dt);
+  vel.x += (wx - vel.x) * blend; vel.y += (wy - vel.y) * blend;
+  if (mag <= 0.05 && Math.hypot(vel.x, vel.y) < 0.03) { vel.x = 0; vel.y = 0; }
+  if (vel.x || vel.y) { const r = playerMove(c, vel.x * dt, vel.y * dt); if (r.bx) vel.x = 0; if (r.by) vel.y = 0; }
+  // keyboard turning eases in and out
+  let tin = 0; if (k.q || k.arrowleft) tin -= 1; if (k.arrowright) tin += 1;
+  G.turnV += (tin * 2.4 - G.turnV) * (1 - Math.exp(-(tin ? 11 : 18) * dt));
+  if (!tin && Math.abs(G.turnV) < 0.02) G.turnV = 0;
+  c.dir += G.turnV * dt;
+  const moving = mag > 0.05;
   if (moving) {
-    const l = Math.sqrt(mx * mx + my * my); mx /= l; my /= l;
-    moveWithSlide(c, mx * spd * dt, my * spd * dt, null);
-    G.bobPhase += dt * (running ? 13 : 9); c.bob = Math.sin(G.bobPhase) * 2;
+    const pace = Math.min(1, Math.hypot(vel.x, vel.y) / Math.max(0.1, spd * Math.max(mag, 0.3)));
+    G.bobPhase += dt * (running ? 13 : 9) * pace; c.bob = Math.sin(G.bobPhase) * 2 * pace;
     if (running) p.fat = Math.max(0, p.fat - dt * 3);
-    if (G.time - G.lastStep > (running ? 0.28 : 0.45)) { G.lastStep = G.time; Audio_.sfx.step(); }
-  } else { c.bob *= 0.8; p.fat = Math.min(p.fatMax, p.fat + dt * 2); }
+    if (G.time - G.lastStep > (running ? 0.28 : 0.45) / Math.max(0.5, mag)) { G.lastStep = G.time; Audio_.sfx.step(); }
+  } else { c.bob *= Math.exp(-13 * dt); p.fat = Math.min(p.fatMax, p.fat + dt * 2); }
   G.map.visited[(c.y | 0) * G.map.w + (c.x | 0)] = 1;
   for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const xx = (c.x | 0) + dx, yy = (c.y | 0) + dy; if (xx >= 0 && yy >= 0 && xx < G.map.w && yy < G.map.h) G.map.visited[yy * G.map.w + xx] = 1; }
   // doors animate
@@ -773,8 +919,11 @@ function update(dt) {
   const h = Engine.pick(G.ents, 3.2); let hint = '';
   if (h && !h.dead) hint = h.kind === 'npc' ? (NPCS[h.id] ? NPCS[h.id].name : h.name) : h.kind === 'enemy' ? (h.def.name + (h.name && h.def.core ? '' : '')) : h.kind === 'item' ? ITEMS[h.item].name : (h.label || (h.sprite === 'oak' ? 'Iron-bark oak' : h.sprite === 'lamp' ? 'Hush-lamp' : ''));
   else { const w = Engine.pickWall(2.0); if (w && w.cell.door) hint = w.cell.label || (w.cell.portal ? 'A door' : (G.map.doors[w.y * G.map.w + w.x].open > 0.5 ? 'An open door' : 'A closed door')); }
-  G.hintKind = (h && !h.dead && (h.kind === 'npc' || h.kind === 'item' || (h.kind === 'deco' && h.use))) ? h.kind : (!h && hint ? 'door' : '');
+  const usable = h && !h.dead && (h.kind === 'npc' || h.kind === 'item' || (h.kind === 'deco' && h.use));
+  const inReach = usable && h._screen && h._screen.dist <= USE_RANGE;
+  G.hintKind = inReach ? h.kind : (!h && hint ? 'door' : '');
   if (hint !== G.hint) { G.hint = hint; $('#hint').textContent = hint; }
+  const far = !!usable && !inReach; if (far !== G.hintFar) { G.hintFar = far; $('#hint').classList.toggle('far', far); }
 }
 
 // ---------------------------------------------------------------- HUD
@@ -841,7 +990,7 @@ function drawHUD() {
 }
 
 // ---------------------------------------------------------------- loop
-let last = performance.now(), acc = 0, fpsN = 0, fpsT = 0, fps = 0;
+let last = performance.now(), fpsN = 0, fpsT = 0, fps = 0;
 // what the score should be playing right now
 let combatT = 0;
 function musicDirector(dt) {
@@ -866,9 +1015,10 @@ function musicDirector(dt) {
 }
 function frame(now) {
   requestAnimationFrame(frame);
-  let dt = Math.min(0.1, (now - last) / 1000); last = now; acc += dt;
+  const dt = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
   musicDirector(dt); if (Audio_.music) Audio_.music.tick(dt);
-  while (acc >= 1 / 60) { update(1 / 60); acc -= 1 / 60; }
+  for (let rem = dt; rem > 1e-5;) { const st = Math.min(rem, 1 / 60); update(st); rem -= st; }
+  controlsTick();
   render();
   fpsN++; fpsT += dt; if (fpsT >= 1) { fps = fpsN / fpsT; fpsN = 0; fpsT = 0; }
 }
@@ -956,6 +1106,7 @@ function renderMenu() {
     <button class="dfbtn" id="mn-save">Save game</button>
     <button class="dfbtn" id="mn-load">Load game</button>
     <button class="dfbtn" id="mn-help">How to play</button>
+    <button class="dfbtn" id="mn-ctl">Controls</button>
     <button class="dfbtn" id="mn-mute">${Audio_.muted ? 'Sound on' : 'Sound off'}</button>
     <button class="dfbtn" id="mn-music">${Audio_.music.enabled ? 'Music off' : 'Music on'}</button>
     <button class="dfbtn" id="mn-title">Return to title</button>
@@ -963,10 +1114,33 @@ function renderMenu() {
   </div><p class="muted" style="margin-top:1cqh">${DAYS[G.day % DAYS.length]} · ${G.map.name} · ${G.player.name}, level ${G.player.level}</p>`;
   openModal(html, 'menu');
   $('#x').onclick = $('#mn-back').onclick = () => { closeModal(); G.state = 'play'; };
-  $('#mn-save').onclick = () => renderSave(); $('#mn-load').onclick = () => renderLoad(false); $('#mn-help').onclick = () => renderHelp();
+  $('#mn-save').onclick = () => renderSave(); $('#mn-load').onclick = () => renderLoad(false); $('#mn-help').onclick = () => renderHelp(); $('#mn-ctl').onclick = () => renderControls();
   $('#mn-mute').onclick = () => { Audio_.toggleMute(); renderMenu(); };
   $('#mn-music').onclick = () => { Audio_.music.enabled = !Audio_.music.enabled; renderMenu(); };
   $('#mn-title').onclick = () => { closeModal(); G.state = 'title'; G.keys = {}; $('#view').classList.remove('unwrite'); $('#msgs').innerHTML = ''; show('#title'); Audio_.setScene('title'); };
+}
+function renderControls() {
+  const o = G.opts, onoff = v => v ? 'On' : 'Off';
+  const html = `<h2>Controls</h2><button class="dfbtn small close" id="x">Close</button>
+  <div class="ctl-grid">
+    <span>Mouse look <small class="muted">click the view to capture the mouse, Esc releases it</small></span><button class="dfbtn small" id="c-ml">${onoff(o.mouseLook)}</button>
+    <span>Look sensitivity</span><span class="ctl-step"><button class="dfbtn small" id="c-sdn">−</button><b>${o.sens}</b><button class="dfbtn small" id="c-sup">+</button></span>
+    <span>Invert up and down look</span><button class="dfbtn small" id="c-inv">${onoff(o.invertY)}</button>
+    <span>Always run <small class="muted">Shift walks instead · Caps Lock toggles</small></span><button class="dfbtn small" id="c-run">${onoff(o.alwaysRun)}</button>
+    <span>Touch controls <small class="muted">auto turns on when you touch the screen</small></span><button class="dfbtn small" id="c-touch">${o.touch === 'auto' ? 'Auto' : o.touch === 'on' ? 'On' : 'Off'}</button>
+  </div>
+  ${plFailed ? '<p class="muted">This page isn\'t allowed to capture the mouse, so hold the right mouse button and drag to look.</p>' : ''}
+  <div class="btns"><button class="dfbtn small" id="c-back">Back</button></div>`;
+  openModal(html, 'controls');
+  const re = () => { saveOpts(); renderControls(); };
+  $('#x').onclick = () => { closeModal(); G.state = 'play'; };
+  $('#c-back').onclick = () => renderMenu();
+  $('#c-ml').onclick = () => { o.mouseLook = !o.mouseLook; re(); };
+  $('#c-sdn').onclick = () => { o.sens = Math.max(1, o.sens - 1); re(); };
+  $('#c-sup').onclick = () => { o.sens = Math.min(10, o.sens + 1); re(); };
+  $('#c-inv').onclick = () => { o.invertY = !o.invertY; re(); };
+  $('#c-run').onclick = () => { o.alwaysRun = !o.alwaysRun; re(); };
+  $('#c-touch').onclick = () => { o.touch = o.touch === 'auto' ? 'on' : o.touch === 'on' ? 'off' : 'auto'; if (o.touch === 'auto') setTouchMode(false); re(); };
 }
 async function renderSave() {
   const d = snapshotGame(); d.mapName = G.map.name; const code = await encodeSave(d);

@@ -137,3 +137,25 @@ pre.help { font-family: var(--font-body); white-space: pre-wrap; font-size: 2.1c
 .slot .meta { color: #c9b07a; font-size: 1.7cqw; }
 .dlg:has(.topics.wide) .log { height: 30cqh; }
 .dlg .topics.wide { max-height: 26cqh; }
+
+/* ---- controls */
+#hint.far { opacity: .55; }
+#game.locked #view { cursor: none; }
+#lockhint { position: absolute; left: 50%; top: 71.2cqh; transform: translateX(-50%); font-family: var(--font-sc); font-size: 1.7cqw; color: var(--parch); opacity: 0; transition: opacity .4s; text-shadow: 0 0 3px #000, 1px 1px 0 #000; pointer-events: none; white-space: nowrap; }
+#lockhint.on { opacity: .7; }
+#t-stick { position: absolute; width: 12.5cqw; height: 20cqh; transform: translate(-50%, -50%); border-radius: 50%; border: 2px solid rgba(217,164,65,.55); background: radial-gradient(circle, rgba(0,0,0,.15), rgba(0,0,0,.4)); pointer-events: none; display: none; z-index: 3; }
+#t-stick.on { display: block; }
+#t-knob { position: absolute; left: 50%; top: 50%; width: 5.5cqw; height: 8.8cqh; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle at 40% 35%, #f0d890, #9a6f2a); box-shadow: 0 0 6px rgba(0,0,0,.7); }
+#touchui { position: absolute; right: 1.5cqw; top: 40cqh; display: none; grid-template-columns: auto auto; gap: 1.2cqw; align-items: end; z-index: 3; }
+#touchui.on { display: grid; }
+#touchui .tb { font-family: var(--font-sc); color: var(--gold); background: radial-gradient(circle at 40% 35%, rgba(60,45,30,.82), rgba(20,14,9,.82)); border: 2px solid; border-color: var(--edge-l) var(--edge-d) var(--edge-d) var(--edge-l); border-radius: 50%; width: 9.5cqw; height: 15.2cqh; font-size: 1.8cqw; touch-action: none; user-select: none; -webkit-user-select: none; }
+#touchui .tb.small { width: 7.5cqw; height: 12cqh; font-size: 1.5cqw; }
+#touchui .tb.big { width: 11.5cqw; height: 18.4cqh; font-size: 2.1cqw; }
+#touchui .tb.held { filter: brightness(1.5); transform: scale(.95); }
+#touchui .tb.lit { color: #1a130d; background: radial-gradient(circle at 40% 35%, #f0d890, #b07d2e); }
+#game.touchmode #hint { top: 62cqh; }
+.ctl-grid { display: grid; grid-template-columns: 1fr auto; gap: 1.2cqh 2cqw; align-items: center; margin: 1.5cqh 0; font-size: 2.1cqw; }
+.ctl-grid small { display: block; font-size: 1.6cqw; }
+.ctl-step { display: inline-flex; align-items: center; gap: 1cqw; }
+.ctl-step b { color: var(--gold); min-width: 2.5cqw; text-align: center; }
+.ctl-grid .dfbtn.small { min-width: 9cqw; }

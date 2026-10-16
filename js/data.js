@@ -395,12 +395,13 @@ const INTRO = [
   'Keep your voice in your chest.',
 ];
 
-const HELP_TEXT = `MOVE  W A S D / arrows · turn with mouse-drag or ← →
-RUN   hold Shift (loud)
-ATTACK  left-click, or click-and-drag to swing · 1-4 select weapon · Tab opens song-book
-USE / TALK  E or Space · doors, people, levers, items
+const HELP_TEXT = `MOVE  W A S D (any keyboard layout) · Shift runs · Caps Lock toggles always-run
+LOOK  click the view to capture the mouse, then just move it · Esc releases it · or hold the right button and drag · Q and arrow keys turn · Z levels your gaze
+ATTACK  left-click to thrust · hold the button and move the mouse to slash or chop · wheel or 1-4 changes weapon · Tab opens song-book
+USE / TALK  E or Space · or click when the name under the crosshair is bright (dim means step closer)
 SONGS  F1-F5 cast the song in that slot · N to murmur (keeps the Hush off)
 PANELS  I inventory · C character · L logbook · M map · R rest · K ledger · Esc closes
-SAVE  Esc (or the SAVE button) opens Options: save to a session slot, or copy a save code to keep
+SAVE  Esc (or the SAVE button) opens Options: save to a session slot, copy a save code, or change Controls
 SOUND  V sound on/off · B music on/off
+TOUCH  left thumb is a stick, right thumb drags to look, tap to use or strike · swipe across STRIKE to slash
 THE NARROW  the amber bar — keep it between the two marks. Above: hounds. Below: the Hush.`;
