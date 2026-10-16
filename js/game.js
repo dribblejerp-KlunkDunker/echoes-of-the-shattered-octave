@@ -48,7 +48,7 @@ function renderCreate() {
     <p><input id="cname" type="text" maxlength="24" placeholder="Your name" value="${CREATE.name}"></p>
     <div class="btns"><button class="dfbtn" id="c-next">Continue</button><button class="dfbtn" id="c-back">Back to title</button></div>`;
     $('#cname').focus();
-    $('#c-next').onclick = () => { CREATE.name = $('#cname').value.trim() || 'Nameless'; CREATE.step = 1; renderCreate(); };
+    $('#c-next').onclick = () => { CREATE.name = cleanName($('#cname').value); CREATE.step = 1; renderCreate(); };
     $('#c-back').onclick = () => { hide('#create'); show('#title'); };
     $('#cname').onkeydown = (e) => { if (e.key === 'Enter') $('#c-next').click(); e.stopPropagation(); };
   } else if (s === 1) {
@@ -1217,17 +1217,20 @@ function restoreGame(d) {
   if (!Array.isArray(d.player.inv) || !d.player.attrs) throw new Error('That save is damaged.');
   const cls = CLASSES.find(c => c.id === d.player.cls) || CLASSES[0];
   G.player = Object.assign({ armor: {}, bolts: 0 }, d.player, { cls });
+  G.player.name = cleanName(G.player.name); G.player.level = Math.max(1, G.player.level | 0);
   G.player.weapons = (G.player.weapons || []).filter(w => WEAPONS[w]); if (!G.player.weapons.length) G.player.weapons = ['hands']; G.player.weapon = clamp(G.player.weapon | 0, 0, G.player.weapons.length - 1);
   G.player.inv = G.player.inv.filter(s => s && ITEMS[s.id]); for (const k in G.player.armor) if (!ARMOR[G.player.armor[k]] || !G.player.inv.some(s => s.id === G.player.armor[k])) delete G.player.armor[k];
-  G.flags = d.flags || {}; G.journal = d.journal || []; G.ledger = d.ledger || []; G.runs = d.runs || 0;
+  G.flags = d.flags || {}; G.runs = d.runs | 0;
+  G.journal = (Array.isArray(d.journal) ? d.journal : []).filter(j => j && typeof j === 'object').map(j => Object.assign({}, j, { text: cleanText(j.text), cat: cleanText(j.cat, 20), day: j.day | 0 }));
+  G.ledger = (Array.isArray(d.ledger) ? d.ledger : []).filter(l => l && typeof l === 'object').map(l => Object.assign({}, l, { name: cleanText(l.name, 60), where: cleanText(l.where, 80), day: l.day | 0 }));
   G.tod = d.tod; G.day = d.day; G.noise = d.noise || 2; G.escapeTimer = d.escapeTimer || 0; G.boreHold = d.boreHold || 0; G.boreGolems = d.boreGolems || 0; G.glassLock = d.glassLock || 0; G.rootWard = d.rootWard || 0;
   G.dead = false; G.stillT = 0; G.unwriting = false; G.murmurT = 0; G.whistleT = 0; G.attack.t = 0; G.song.t = 0; G.keys = {}; $('#msgs').innerHTML = '';
   G.maps = probe; if (G.flags.greening) G.maps.oakhaven = buildOakhaven(true);
   for (const id in G.maps) {
     const m = G.maps[id], sm = d.maps[id]; if (!sm || !Array.isArray(sm.ents)) continue;
     m.entities.forEach(hydrate);
-    sm.ents.forEach((o, i) => { const e = m.entities[i]; if (e) Object.assign(e, o); });
-    for (const o of (sm.extra || [])) { const e = hydrate({ kind: o.kind, type: o.type, sprite: o.sprite, item: o.item, id: o.id, x: o.x, y: o.y }); if (o.item) { e.scale = 0.35; e.solid = false; } Object.assign(e, o); m.entities.push(e); }
+    sm.ents.forEach((o, i) => { const e = m.entities[i]; if (e && o && typeof o === 'object') Object.assign(e, pickEnt(o)); });
+    for (const o of (sm.extra || [])) { if (!o || !((o.kind === 'enemy' && ENEMIES[o.type]) || (o.kind === 'item' && ITEMS[o.item]))) continue; const e = hydrate({ kind: o.kind, type: o.type, sprite: o.sprite, item: o.item, id: o.id, x: o.x, y: o.y }); if (o.item) { e.scale = 0.35; e.solid = false; } Object.assign(e, pickEnt(o)); m.entities.push(e); }
     for (const k in sm.doors) if (m.doors[k]) { m.doors[k].open = sm.doors[k][0]; m.doors[k].target = sm.doors[k][1]; }
     if (sm.visited) m.visited = rleDecode(sm.visited, m.w * m.h);
     (sm.triggers || []).forEach((t, i) => { if (m.triggers[i]) { m.triggers[i].done = t.done; m.triggers[i].said = t.said; } });
@@ -1256,7 +1259,11 @@ async function decodeSave(code) {
   else if (tag !== 'OCTJ1') throw new Error('Not an Octave save.');
   let d; try { d = JSON.parse(new TextDecoder().decode(bytes)); } catch (e) { throw new Error('The code is damaged or incomplete.'); } if (!d || d.v !== SAVE_VERSION || !d.player || !d.maps) throw new Error('Not an Octave save.'); return d;
 }
-function slotSummary(d) { const p = d.player; return `${p.name}, ${CLASSES.find(c => c.id === p.cls)?.name || ''} · Lv ${p.level} · ${DAYS[d.day % DAYS.length]} · ${d.mapName || d.mapId}`; }
+// player-typed or save-derived text is stripped of markup characters before it can reach innerHTML
+function cleanName(s) { return String(s == null ? '' : s).replace(/[<>&"`\\]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24) || 'Nameless'; }
+function pickEnt(o) { const r = {}; for (const k of ENT_FIELDS) if (o[k] !== undefined) r[k] = o[k]; if (r.name != null) r.name = cleanText(r.name, 60); for (const k of ['x', 'y', 'hp', 'homeX', 'homeY']) if (r[k] != null && !isFinite(r[k])) delete r[k]; return r; }
+function cleanText(s, n) { return String(s == null ? '' : s).replace(/[<>]/g, '').slice(0, n || 2000); }
+function slotSummary(d) { const p = d.player; return `${cleanName(p.name)}, ${CLASSES.find(c => c.id === p.cls)?.name || ''} · Lv ${p.level} · ${DAYS[(d.day | 0) % DAYS.length]} · ${cleanText(d.mapName || d.mapId, 60)}`; }
 function renderMenu() {
   const html = `<h2>Options</h2><button class="dfbtn small close" id="x">Close</button>
   <div class="menu-list" style="margin-top:1cqh">
