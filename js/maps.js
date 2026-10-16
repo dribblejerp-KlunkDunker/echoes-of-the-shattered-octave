@@ -374,7 +374,7 @@ function buildQuarry() {
   const ph = m.named.pumphall;
   if (ph) {
     m.deco('pump', ph.x + 1.0, ph.y + 1.0, { radius: 0.4 }); m.deco('pump', ph.x + ph.w - 1.0, ph.y + 1.0, { radius: 0.4 }); m.deco('pump', ph.x + 1.0, ph.y + ph.h - 1.0, { radius: 0.4 });
-    m.add({ kind: 'npc', id: 'hollow', name: 'A Hollow', sprite: 'hollow', x: ph.cx + 0.5, y: ph.cy + 0.5, solid: true, radius: 0.3, loop: true, lines: ['...pressure nominal... pressure nominal...', '...told Mags I\'d be home by Dawnday...'] });
+    m.add({ kind: 'npc', id: 'hollow', name: 'A Hollow', sprite: 'hollow', x: ph.cx + 0.5, y: ph.cy + 0.5, solid: true, radius: 0.3, loop: true, restore: 'hew', lines: ['...pressure nominal... pressure nominal...', '...told Mags I\'d be home by Dawnday...'] });
     m.add({ kind: 'npc', id: 'hollow', name: 'A Hollow', sprite: 'hollow', x: ph.cx - 1.5, y: ph.cy + 1.5, solid: true, radius: 0.3, loop: true, lines: ['...blue jug on the sill... blue jug...', '...number four... number four... number four...'] });
     m.npc('tobiah', ph.x + ph.w - 1.5, ph.cy + 0.5, { facing: Math.PI });
     m.deco('lamp', ph.cx + 0.5, ph.y + ph.h - 0.6, { radius: 0.12, scale: 0.7, glow: 0.6 });
@@ -490,6 +490,8 @@ function buildAllMaps() {
   placeCaches(maps.underhedge, 4103, [1, 2, 2]);
   placeCaches(maps.rootvault, 4104, [2, 3, 3]);
   if (maps.chapel) placeCaches(maps.chapel, 4105, [1]);
+  // Sable's camp in the mist, east of Kaelen's hut, with the Office's proctors on her trail (added last so older saves still line up)
+  { const c = maps.clearing; c.npc('sable', 34.5, 18.5, { facing: Math.PI }); c.deco('lamp', 35.3, 19.3, { radius: 0.15, scale: 0.8, glow: 0.45 }); c.enemy('proctor', 30.5, 16.5); c.enemy('proctor', 32.5, 24.5); }
   for (const k in maps) maps[k].baseCount = maps[k].entities.length;
   return maps;
 }

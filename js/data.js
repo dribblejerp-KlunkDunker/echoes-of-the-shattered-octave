@@ -222,6 +222,7 @@ const TOPICS = {
   'The Drift-Kestrel': { low: 'A skyship at the mooring mast. Smuggler, by the look of her captain.', high: 'Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names.' },
   'The Quarry': { low: 'North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps.', high: 'At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers\' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass.' },
   'Hush-lamps': { low: 'The reed on the lantern. It whistles so the house never goes quiet.', high: 'A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did.' },
+  'The scribe in the mist': { low: 'There\'s a woman out past Kaelen\'s hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate.', high: 'A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly.' },
   'Vox-bottles': { low: 'Last words of the dead, stoppered. The Free Captains sell them. Don\'t open one indoors.', high: 'The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered.' },
 };
 const TOPIC_KEYS = Object.keys(TOPICS);
@@ -233,6 +234,8 @@ const PLACES = {
 
 // ---- rumours -----------------------------------------------------------
 const RUMOURS = [
+  'The grey men at the gate are proctors from the Catalogue. They are looking for a woman with a book. She is outside the Hedge, east of Kaelen\'s hut. Do not tell them I said so.',
+  'There\'s a scribe in the mist reading names off the dead Legion. They say she can give a Hollow its name back. They say it costs her something.',
   'Hob Wendle on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.',
   'Captain Vane will sell you anything off the Kestrel that isn\'t nailed down. Crossbows. Axes. Opinions.',
   'The Factor keeps Consortium brigandine and a steam-maul in Greenhall. At Consortium prices, naturally.',
@@ -452,9 +455,33 @@ const NPCS = {
   },
   sable: {
     name: 'Sable, Archivist of the Veil', sprite: 'sable', portrait: 'sable', tier: 'high',
-    greet: { polite: 'Entry: a stranger, polite, at the wrong end of the continent. Sit.', normal: 'I am a list, not a cure. Say what you came to say.', blunt: 'Precision, please. I record everything.' },
-    topics: { 'The Catalogue': 'I did not merely sign the catalogue. I designed the harvest schedule. I made it efficient. That is what I was good at.' },
-    quest: () => null,
+    greet: { polite: "Entry: a stranger, polite, at the wrong end of the continent. Sit. Not there. That is where the proctors will come from.", normal: "I am a list, not a cure. Say what you came to say.", blunt: "Precision, please. I record everything, including the tone." },
+    topics: {
+      'The Catalogue': "I did not merely sign the catalogue. I designed the harvest schedule. I made it efficient. That is what I was good at.",
+      'The Hush': "Entry: the Hush does not take names. It takes the people and leaves the names lying about, like coats. The Catalogue only learned to pick them up.",
+      'Kaelen Vance': "I have read his calibration records. Two percent survival at Stage Nine. He wrote that number himself, in a very steady hand, and then he went and lived outside a hedge.",
+      'The Drift-Kestrel': "I hold the manifests for every core that captain has carried. Eleven consignments. I know the total. He does not want to. One day I will read it to him, one name at a time.",
+      'The Rite': "Stage Nine of the Vance Sequence. I filed it. The Cantor goes down in white because I wrote 'in white' on the form, so that she would not be mistaken for staff.",
+      'The scribe in the mist': "Entry: the subject asks the subject about the subject. Sable is a Veil designation. My own name is one of the three things I have left, and I do not spend it on strangers.",
+      'Aether-Glass': "Crystallized song. A voice, bled out and set. I can read the name off a core the way you would read a label off a jar. That is what the Veil trained me for.",
+    },
+    quest: (g) => {
+      const f = g.flags, n = g.ledger.length;
+      if (!f.sable_met) {
+        f.sable_met = true;
+        const tuned = g.player.cls.id === 'archivist' ? " Seven forty-one. You are Veil-tuned. Then you know what this book costs, and I will not have to explain it twice." : '';
+        return { text: "Entry: a stranger, standing in the mist outside the Hedge, at night, which is the one thing every child in Oakhaven is told not to do. I am Sable. The book is the Bound Ledger, and it is stolen, and the two grey men in the trees behind you are the Office of the Catalogue, come to take it back." + tuned + " Listen. Every Carillon Legionnaire dies saying a name. That name is a person, folded into a bell. If nobody writes it down, it is gone. Bring me names. Three, to begin with. Kill the Legion if you must; read the crates if you can. Then come back, and I will show you what the book can do, and what it charges.", journal: ['side', "Sable, the last Archivist of the Veil, is hiding in the mist outside the Hedge with the stolen Bound Ledger. Two Catalogue Proctors are hunting her. She asked me to bring her names — three to begin with. Legionnaires speak them when they fall."] };
+      }
+      if (f.sable_done) return null;
+      if (n < 3) return { text: n === 0 ? "Entry: the stranger returns with no names. That is all right. It is not a test you can fail by being slow, only by stopping. The Legion walk the quarry. The crates in Hetty's cellar talk, if you put your ear to them." : `Entry: the stranger returns with ${n} name${n === 1 ? '' : 's'}. ${g.ledger.map(l => l.name).join(', ')}. Written. Three, I said. Bring me ${3 - n} more.` };
+      const first = g.ledger.slice(0, 3).map(l => l.name).join(', ');
+      return { text: `Read them to me. ...${first}${n > 3 ? `, and ${n - 3} more` : ''}. Written, and witnessed. Now the other half. There is a Hollow at the pumps in the quarry, saying something about Mags and Dawnday. I took his name myself, in the spring of 416. It is on page nine thousand and six. I can read it back to him, and he will be a man again, for as long as he lasts. But the Ledger keeps names only at a price. For every name I give back, I give up an equal weight of myself. I have three things left: my mother's hands braiding my hair, the smell of the Veil's scriptorium, and my own name. Tell me what to do. I would rather it were not me who decided.`,
+        choices: [
+          { t: 'Give him his name back. Whatever it costs.', f: (g) => sableReturn(g, false) },
+          { t: 'You designed the harvest. You owe him more than a page.', f: (g) => sableReturn(g, true) },
+          { t: 'Keep what is left of you. The names will keep.', f: (g) => { g.flags.sable_done = true; g.flags.sable_kept = true; questXp(40); journal('side', "I told Sable to keep her three fragments. She closed the Bound Ledger on the names I brought her. The Hollow at the pumps is still counting."); return "\"Entry,\" she says. \"The stranger asked me to keep myself. I am recording that you asked.\" She closes the Ledger on your names, all of them, carefully, the way you would close a door on a sleeping room. \"I do not know if that was kindness. I will think about it for a long time. Thank you. Go softly.\""; } },
+        ] };
+    },
   },
 };
 

@@ -283,6 +283,25 @@ function checkLevel() {
   if (p.xp >= need) { p.level++; p.xp -= need; const h = 4 + Math.floor(p.attrs.Endurance / 20), v = 2 + Math.floor(p.attrs.Willpower / 20); p.hpMax += h; p.hp += h; p.voiceMax += v; p.voice += v; msg(`You have learned enough from your travels to reach level ${p.level}.`, 'good', 6000); Audio_.sfx.pickup(); }
 }
 
+function questXp(n) { G.player.xp += n; checkLevel(); }
+// Sable reads a Hollow's name back out of the Bound Ledger. It costs her a fragment.
+function sableReturn(g, accused) {
+  const f = g.flags; f.sable_done = true; f.sable_returned = true; if (accused) f.sable_accused = true;
+  const q = g.maps && g.maps.quarry; if (q) for (const e of q.entities) if (e.restore === 'hew') { e.name = 'Hew Callan, pump-man'; }
+  questXp(80);
+  journal('side', "Sable read a name back out of the Bound Ledger: Hew Callan, pump-man of Depot Two, the Hollow at the pumps in the quarry. It cost her the smell of the Veil's scriptorium. I should go and find him.");
+  return (accused ? "\"Yes,\" she says. Only that. She does not argue, which is worse. " : '') + "She opens the Ledger. The pages are thin as onion-skin and every line is a name. She finds the place without looking. \"Entry nine thousand and six. Hew Callan. Pump-man, Depot Two. Thirty-one. Married to nobody. Owes Mags Harker four sovereigns and a Dawnday supper.\" She reads it aloud, all of it, and somewhere under your feet, far down, a pump changes its rhythm. Then she sits very still. \"Ink,\" she says, after a while. \"Lampblack and oak-gall. I am told the scriptorium smelled of that. I no longer know what that means.\" She closes the book. \"Two left. Go and tell him. Somebody should be there when he finds out what year it is.\"";
+}
+function talkHew(e) {
+  const f = G.flags;
+  if (f.hew_thanked) { msg('Hew Callan sits by the pumps, saying his own name under his breath, to keep it.', 'voice', 5000); return; }
+  f.hew_thanked = true; G.state = 'event';
+  showEvent('Hew Callan', "The Hollow at the pumps has stopped counting. He is looking at his hands as if somebody has just handed them to him. \"Hew,\" he says. \"Hew Callan. Pump-man. Depot Two.\" His voice is rusty, as if it has not been his for a long time. \"I told Mags I'd be home by Dawnday. What day is it?\" You tell him the year as well. He takes that the way a man takes a blow he saw coming. Then he digs in his coat and presses something into your hand: his pump-shift purse, and a brass gear off the old engine. \"For the lamp-money. And for the scribe, if you see her. Tell her — no. I'll tell her. I owe her a name.\"", [
+    { t: 'Take it, and tell him where Mags will be.', f: () => { G.player.gold += 20; gainItem('v_gear'); questXp(40); Audio_.sfx.pickup(); msg('You take 20 sovereigns and a Brass Governor-Gear.', 'good', 4000); journal('side', "Hew Callan is himself again, at the pumps in the quarry. He gave me his shift purse and a brass gear, and asked after Mags."); } },
+    { t: 'Keep your purse. Go home to her.', f: () => { f.hew_home = true; questXp(60); msg('Hew Callan nods, once, and keeps his purse.', 'good', 4000); journal('side', "Hew Callan is himself again. I told him to keep his purse and go home to Mags. He says he will, once the shift is done. Old habits."); } },
+  ]);
+}
+
 // ---------------------------------------------------------------- combat
 function currentWeapon() { return WEAPONS[G.player.weapons[G.player.weapon]] || WEAPONS.hands; }
 // ---------------------------------------------------------------- armour & gear
@@ -554,6 +573,9 @@ function ending() {
   if (f.twins_named) lines.push(`Joss and Wyn Wendle are in your ledger. Hob Wendle put out the lamp in their window before he climbed, which is the first thing he has been able to do for them in a month.`);
   if (f.boots_delivered) lines.push(`Lyra sang Orla Hale down proper, all the lines, even the fourth, while the tree closed over her. The boots were on the chair. You put them there.`);
   if (G.has('charts')) lines.push(`Tobiah Marsh's charts are in your shirt, with Revision Seven and the margin: on failure of the hold, slippage is to be absorbed by the source. Kaelen reads it twice and says nothing for an hour. Then he starts a list of names on a deck-beam.`);
+  if (f.sable_returned) lines.push(`Sable comes up the rope with the Bound Ledger under her coat and two fragments left: her mother's hands, and a name she will not say${f.sable_accused ? '. You told her she owed it, and she paid, and she does not hold it against you, which is somehow harder' : ''}. Hew Callan comes up behind her, saying his own name${f.hew_home ? ', with Mags Harker\'s hand in his' : ''}. In the hold, she reads Vane the tags, one at a time, and for once he lets her.`);
+  else if (f.sable_kept) lines.push(`Sable comes up the rope with all three of her fragments and every name you gave her. She watches the Reach go and says, to nobody: "Entry. The stranger asked me to keep myself. I did. I am not yet certain it was right." Somewhere under the quarry, a Hollow at the pumps is still counting.`);
+  else if (f.sable_met) lines.push(`Somewhere in the mist outside the Hedge, a scribe who asked you for three names is still waiting by a hush-lamp, and writing down that you did not come.`);
   if (names > 0) lines.push(`You have ${names} name${names === 1 ? '' : 's'} in your ledger${names >= 6 ? ', which is more than most people carry out of the Reach alive' : ''}. ${names >= 3 ? 'Annet Sowerby, six years old, is in the hold, in a crate, in her straw, and she is not lost. She is filed. There is a scribe at Whisper-Grove who knows how to read a name back.' : 'Everyone who ever kept such a list before you was the Catalogue. You intend to be something else.'}`);
   if (p.glassed) lines.push(`Your tideline is ${p.glass >= 70 ? 'past the collarbone, three inches from the throat' : 'four and a half fingers from the shoulder'}. ${p.glass >= 70 ? 'Six weeks, at the current rate.' : 'Eight weeks of slack, perhaps.'} Somewhere in the glass a hundred-and-forty-year-old man is listening to everything you say, and tonight, for the first time, his argument sounds to you like mercy.`);
   lines.push(`Three hundred and eighty people stand in the mud and wave the ship away. The Kestrel leaps a hundred and fifty feet, and from four miles back a whole voice sings the calling-song after you. The course is set west-south-west, for the Rust Coast, which is the one place the captain swore never to go.`);
@@ -566,6 +588,7 @@ $('#btn-again').onclick = () => { hide('#ending'); show('#title'); G.state = 'ti
 // ---------------------------------------------------------------- dialogue
 const DLG = { npc: null, tone: 'normal', log: [] };
 function talk(e) {
+  if (e.id === 'hollow' && e.restore === 'hew' && G.flags.sable_returned) { talkHew(e); return; }
   if (e.id === 'hollow') { msg(`The Hollow repeats, to no one: "${e.lines[rndi(0, e.lines.length - 1)]}"`, 'voice', 5000); return; }
   const n = NPCS[e.id]; if (!n) return;
   DLG.npc = n; DLG.ent = e; DLG.log = []; G.state = 'dialogue'; Audio_.sfx.ui();
@@ -610,7 +633,7 @@ function renderDialogue(mode) {
   <div class="btns"><button class="dfbtn small ${mode === 'tell' ? 'sel' : ''}" id="d-tell">Tell me about…</button><button class="dfbtn small ${mode === 'where' ? 'sel' : ''}" id="d-where">Where is…</button>${n.shop ? `<button class="dfbtn small ${mode === 'buy' ? 'sel' : ''}" id="d-buy">Buy…</button><button class="dfbtn small ${mode === 'sell' ? 'sel' : ''}" id="d-sell">Sell…</button>` : ''}${DLG.choices ? `<button class="dfbtn small ${mode === 'choice' ? 'sel' : ''}" id="d-answer">Answer…</button>` : ''}
   <span class="tone">${['polite', 'normal', 'blunt'].map(t => `<button class="dfbtn small ${DLG.tone === t ? 'sel' : ''}" data-t="${t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}</span>
   <button class="dfbtn small" id="d-bye">Goodbye</button></div>
-  <div class="topics${mode === 'choice' ? ' wide' : ''}${mode === 'buy' || mode === 'sell' ? ' shop' : ''}" id="d-topics">${mode === 'tell' ? TOPIC_KEYS.map(t => `<button class="dfbtn small" data-topic="${t}">${t}</button>`).join('') : mode === 'where' ? Object.keys(PLACES).map(t => `<button class="dfbtn small" data-place="${t}">${t}</button>`).join('') : (mode === 'buy' || mode === 'sell') && n.shop ? `<div class="purse">You have <b>${G.player.gold}</b> sovereigns · prices in sovereigns${mode === 'sell' ? ' · they pay' : ''}</div>` + (mode === 'buy' ? shopRows(n) : sellRows(n)) : mode === 'choice' && DLG.choices ? DLG.choices.map((c, i) => `<button class="dfbtn small" data-choice="${i}">${c.t}</button>`).join('') : ''}</div></div></div>`;
+  <div class="topics${mode === 'choice' ? ' wide' : ''}${mode === 'buy' || mode === 'sell' ? ' shop' : ''}${mode === 'tell' || mode === 'where' ? ' pick' : ''}" id="d-topics">${mode === 'tell' ? TOPIC_KEYS.map(t => `<button class="dfbtn small" data-topic="${t}">${t}</button>`).join('') : mode === 'where' ? Object.keys(PLACES).map(t => `<button class="dfbtn small" data-place="${t}">${t}</button>`).join('') : (mode === 'buy' || mode === 'sell') && n.shop ? `<div class="purse">You have <b>${G.player.gold}</b> sovereigns · prices in sovereigns${mode === 'sell' ? ' · they pay' : ''}</div>` + (mode === 'buy' ? shopRows(n) : sellRows(n)) : mode === 'choice' && DLG.choices ? DLG.choices.map((c, i) => `<button class="dfbtn small" data-choice="${i}">${c.t}</button>`).join('') : ''}</div></div></div>`;
   openModal(html, 'dialogue');
   const log = $('#dlg-log'); log.scrollTop = log.scrollHeight;
   $('#d-tell').onclick = () => renderDialogue(mode === 'tell' ? null : 'tell');

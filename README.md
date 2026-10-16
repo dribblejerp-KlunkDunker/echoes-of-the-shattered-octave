@@ -24,8 +24,8 @@ Explore Oakhaven and the land past the Hedge. Talk with townsfolk, take on quest
 | Steam machinery deep in the Root-vault | A strongbox, with the Rust Coast Crossbow readied |
 | ![Buying from Captain Vane](screenshots/merchant.jpg) | ![Inventory and worn armour](screenshots/inventory.jpg) |
 | Buying from Captain Vane | Inventory: worn armour, weapons and carried gear |
-| ![Choosing a calling](screenshots/character-creation.jpg) | |
-| Choosing your calling, one of six character templates | |
+| ![Choosing a calling](screenshots/character-creation.jpg) | ![Sable in the mist outside the Hedge](screenshots/sable.jpg) |
+| Choosing your calling, one of six character templates | Sable, Archivist of the Veil, keeping the Bound Ledger in the mist |
 
 ## Features
 
@@ -34,6 +34,7 @@ Explore Oakhaven and the land past the Hedge. Talk with townsfolk, take on quest
 - Districts, interiors and dungeons: Oakhaven, the clearing, the quarry, the underhedge, the rootvault, the chapel and more.
 - Dialogue in the Daggerfall manner, with tone choices (Polite / Normal / Blunt), topics and directions.
 - Songs: a magic system built on the Octave.
+- Quests: the main story, "The Rite", plus side quests. In one of them, Sable, the last Archivist of the Veil, asks you to gather names for the Bound Ledger. Reading a name back restores a Hollow, but it costs her a piece of herself, and your choice changes the ending.
 - Armour across five slots. Armour Rating softens hits, and heavy armour makes noise.
 - Weapons including swords, axe, mace, spear, steam-maul, glass-shot pistol and crossbow. Bronze, bolts and blunt weapons each work best against certain enemies.
 - Merchants who buy and sell. Prices shift with your Personality.

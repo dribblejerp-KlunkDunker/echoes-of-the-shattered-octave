@@ -196,3 +196,8 @@ pre.help { font-family: var(--font-body); white-space: pre-wrap; font-size: 2.1c
 .tag { font-family: var(--font-sc); font-size: 1.1cqw; color: var(--gold); border: 1px solid var(--edge-l); padding: 0 .3cqw; margin-left: .3cqw; }
 .small-note { font-size: 1.3cqw; line-height: 1.25; }
 .invtop { font-size: 1.6cqw; }
+
+/* topic and place lists: shorter log so the whole panel stays on screen */
+.dlg:has(.topics.pick) .log { height: 27cqh; }
+.dlg .topics.pick { max-height: 33cqh; overflow-y: auto; }
+.dlg .topics.pick button { padding-top: .45cqh; padding-bottom: .45cqh; line-height: 1.15; }
