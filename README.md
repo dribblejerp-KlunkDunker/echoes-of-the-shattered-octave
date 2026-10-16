@@ -2,7 +2,7 @@
 
 A first-person dark-fantasy RPG for the browser, made in the style of *The Elder Scrolls II: Daggerfall*. It is built on the *Echoes of the Shattered Octave* series bible.
 
-**[Play it in your browser](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/)**
+**[Play it in your browser](https://shattered-octavebook1.pplx.app)** (also on [GitHub Pages](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/))
 
 ![Title screen](screenshots/title.jpg)
 
