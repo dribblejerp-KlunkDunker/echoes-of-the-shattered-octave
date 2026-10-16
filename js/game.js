@@ -663,10 +663,9 @@ function renderHelp() {
 // ---------------------------------------------------------------- input
 const canvas = $('#view');
 canvas.style.touchAction = 'none';
-// control options (kept in this browser when storage is allowed)
-const OPTS_KEY = 'octave_controls_v1';
-G.opts = Object.assign({ mouseLook: true, sens: 5, invertY: false, alwaysRun: false, touch: 'auto' }, (() => { try { return JSON.parse(localStorage.getItem(OPTS_KEY) || '{}'); } catch (e) { return {}; } })());
-function saveOpts() { try { localStorage.setItem(OPTS_KEY, JSON.stringify(G.opts)); } catch (e) { /* the preview may have no storage */ } }
+// control options (held for this session)
+G.opts = { mouseLook: true, sens: 5, invertY: false, alwaysRun: false, touch: 'auto' };
+function saveOpts() { /* options live in memory for the session */ }
 const sensK = () => 0.35 + clamp(G.opts.sens, 1, 10) * 0.13;
 function canvasPos(ev) { const r = canvas.getBoundingClientRect(); return { x: (ev.clientX - r.left) / r.width * VW, y: (ev.clientY - r.top) / r.height * VH }; }
 // physical keys, so WASD works on any keyboard layout and Shift doesn't change the number keys
@@ -683,26 +682,18 @@ function look(mx, my) { const k = sensK(); Engine.cam.dir += mx * 0.0032 * k; En
 function cycleWeapon(d) { const p = G.player; if (!p || !p.weapons.length) return; p.weapon = (p.weapon + d + p.weapons.length) % p.weapons.length; msg(`${currentWeapon().name}.`, '', 1200); }
 function swingLabel(dx, dy, th) { const len = Math.hypot(dx, dy); if (len <= th) return 'thrust'; if (Math.abs(dx) > Math.abs(dy)) return dx > 0 ? 'slash right' : 'slash left'; return dy > 0 ? 'chop down' : 'cut up'; }
 
-// mouse look: the first click on the view captures the mouse (Esc releases it)
-let plFailed = false, plOk = false;
-const locked = () => document.pointerLockElement === canvas;
-function plFail() { if (plFailed || plOk) return; plFailed = true; msg('The mouse can\'t be captured here. Hold the right mouse button and drag to look around.', 'warn', 6000); }
-function wantLock() {
-  if (!G.opts.mouseLook || plFailed || locked() || G.touchMode || !canvas.requestPointerLock) return false;
-  try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(plFail); } catch (e) { plFail(); return false; }
-  return true;
-}
-document.addEventListener('pointerlockerror', plFail);
-document.addEventListener('pointerlockchange', () => { if (locked()) plOk = true; G.mouse.down = false; G.mouse.rdown = false; $('#game').classList.toggle('locked', locked()); });
-
+// free look: moving the mouse over the view turns you; resting it near a side edge keeps turning.
+// The preview frame can't capture the mouse, so this works with the cursor free (and right-drag works too).
+const freeLook = () => G.opts.mouseLook && !G.touchMode;
+let edgeTurn = 0;
+canvas.addEventListener('mouseleave', () => { edgeTurn = 0; });
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 canvas.addEventListener('mousedown', (ev) => {
   Audio_.init(); Audio_.resume();
   if (G.state !== 'play' || G.touchMode) return;
   const p = canvasPos(ev);
   if (ev.button === 2 || ev.button === 1) { G.mouse.rdown = true; ev.preventDefault(); return; }
-  if (!locked() && p.y >= VIEW_H) { hudClick(p.x, p.y); return; }
-  if (!locked() && wantLock()) return; // this click only takes hold of the mouse
+  if (p.y >= VIEW_H) { hudClick(p.x, p.y); return; }
   G.mouse.down = true; G.mouse.sx = p.x; G.mouse.sy = p.y; G.mouse.ax = 0; G.mouse.ay = 0; G.mouse.t = performance.now();
 });
 window.addEventListener('mouseup', (ev) => {
@@ -710,7 +701,7 @@ window.addEventListener('mouseup', (ev) => {
   if (!G.mouse.down) return; G.mouse.down = false;
   if (G.state !== 'play') return;
   let dx, dy, th;
-  if (locked()) { dx = G.mouse.ax; dy = G.mouse.ay; th = 16; } else { const p = canvasPos(ev); dx = p.x - G.mouse.sx; dy = p.y - G.mouse.sy; th = 12; }
+  { const p = canvasPos(ev); dx = p.x - G.mouse.sx; dy = p.y - G.mouse.sy; th = 12; }
   const label = swingLabel(dx, dy, th);
   if (G.hintKind && label === 'thrust') { interact(); return; }
   attack(label);
@@ -719,9 +710,13 @@ window.addEventListener('mousemove', (ev) => {
   const p = canvasPos(ev); G.mouse.x = p.x; G.mouse.y = p.y;
   if (G.state !== 'play') return;
   const mx = ev.movementX || 0, my = ev.movementY || 0;
-  if (Math.abs(mx) > 300 || Math.abs(my) > 300) return; // drop the odd pointer-lock spike
-  if (locked()) { if (G.mouse.down) { G.mouse.ax += mx; G.mouse.ay += my; } else look(mx, my); } // hold and move to swing, as in 1996
-  else if (G.mouse.rdown) look(mx * 1.25, my * 1.25);
+  const inView = p.y < VIEW_H && p.x >= 0 && p.x <= VW && p.y >= 0;
+  const spike = Math.abs(mx) > 300 || Math.abs(my) > 300; // ignore the odd jump (window refocus, cursor warp)
+  if (G.mouse.rdown) { if (!spike) look(mx * 1.25, my * 1.25); edgeTurn = 0; return; }
+  if (!freeLook() || G.mouse.down || !inView) { edgeTurn = 0; return; } // holding the left button: the drag becomes the swing, as in 1996; over the HUD: leave the view alone
+  if (!spike) look(mx, my * 0.5);
+  const e = p.x < VW * 0.07 ? -(1 - p.x / (VW * 0.07)) : p.x > VW * 0.93 ? (p.x - VW * 0.93) / (VW * 0.07) : 0;
+  edgeTurn = clamp(e, -1, 1);
 });
 canvas.addEventListener('wheel', (ev) => {
   if (G.state !== 'play') return; ev.preventDefault();
@@ -734,7 +729,7 @@ const STICK_R = 20; // in 320x200 canvas pixels
 function setTouchMode(on) {
   on = !!on; if (G.touchMode === on) return;
   G.touchMode = on; $('#game').classList.toggle('touchmode', on);
-  if (on && locked()) document.exitPointerLock();
+  if (on) edgeTurn = 0;
 }
 function stickShow(x, y) { const st = $('#t-stick'); st.style.left = (x / VW * 100) + '%'; st.style.top = (y / VH * 100) + '%'; st.classList.add('on'); $('#t-knob').style.left = '50%'; $('#t-knob').style.top = '50%'; }
 function stickHide() { $('#t-stick').classList.remove('on'); G.touch.fx = 0; G.touch.fy = 0; }
@@ -786,10 +781,11 @@ tbtn('#t-run', () => { G.touch.run = !G.touch.run; $('#t-run').classList.toggle(
 tbtn('#t-song', () => { if (G.state === 'play') { G.state = 'panel'; renderSongs(); } });
 // per-frame housekeeping for the control layer
 function controlsTick() {
-  if (G.state !== 'play') { if (locked()) document.exitPointerLock(); if (TS.stick !== null) { TS.stick = null; stickHide(); } TS.lookId = null; }
+  if (G.state !== 'play') { edgeTurn = 0; if (TS.stick !== null) { TS.stick = null; stickHide(); } TS.lookId = null; }
   if (G.opts.touch === 'on' && !G.touchMode) setTouchMode(true);
   if (G.opts.touch === 'off' && G.touchMode) setTouchMode(false);
-  const showLock = G.state === 'play' && G.opts.mouseLook && !plFailed && !locked() && !G.touchMode;
+  if (G.state === 'play' && G.playStart == null) G.playStart = G.time;
+  const showLock = G.state === 'play' && !G.touchMode && G.time > (G.playStart || 0) + 1.5 && G.time - (G.playStart || 0) < 45;
   if (showLock !== G._lockHint) { G._lockHint = showLock; $('#lockhint').classList.toggle('on', showLock); }
   const showTouch = G.state === 'play' && G.touchMode;
   if (showTouch !== G._touchUi) { G._touchUi = showTouch; $('#touchui').classList.toggle('on', showTouch); }
@@ -874,7 +870,7 @@ function update(dt) {
   if (mag <= 0.05 && Math.hypot(vel.x, vel.y) < 0.03) { vel.x = 0; vel.y = 0; }
   if (vel.x || vel.y) { const r = playerMove(c, vel.x * dt, vel.y * dt); if (r.bx) vel.x = 0; if (r.by) vel.y = 0; }
   // keyboard turning eases in and out
-  let tin = 0; if (k.q || k.arrowleft) tin -= 1; if (k.arrowright) tin += 1;
+  let tin = clamp(edgeTurn * 0.9, -1, 1); if (k.q || k.arrowleft) tin -= 1; if (k.arrowright) tin += 1; tin = clamp(tin, -1, 1);
   G.turnV += (tin * 2.4 - G.turnV) * (1 - Math.exp(-(tin ? 11 : 18) * dt));
   if (!tin && Math.abs(G.turnV) < 0.02) G.turnV = 0;
   c.dir += G.turnV * dt;
@@ -1123,13 +1119,12 @@ function renderControls() {
   const o = G.opts, onoff = v => v ? 'On' : 'Off';
   const html = `<h2>Controls</h2><button class="dfbtn small close" id="x">Close</button>
   <div class="ctl-grid">
-    <span>Mouse look <small class="muted">click the view to capture the mouse, Esc releases it</small></span><button class="dfbtn small" id="c-ml">${onoff(o.mouseLook)}</button>
+    <span>Free look <small class="muted">move the mouse over the view to look · rest it at a side edge to keep turning · when off, hold the right button and drag</small></span><button class="dfbtn small" id="c-ml">${onoff(o.mouseLook)}</button>
     <span>Look sensitivity</span><span class="ctl-step"><button class="dfbtn small" id="c-sdn">−</button><b>${o.sens}</b><button class="dfbtn small" id="c-sup">+</button></span>
     <span>Invert up and down look</span><button class="dfbtn small" id="c-inv">${onoff(o.invertY)}</button>
     <span>Always run <small class="muted">Shift walks instead · Caps Lock toggles</small></span><button class="dfbtn small" id="c-run">${onoff(o.alwaysRun)}</button>
     <span>Touch controls <small class="muted">auto turns on when you touch the screen</small></span><button class="dfbtn small" id="c-touch">${o.touch === 'auto' ? 'Auto' : o.touch === 'on' ? 'On' : 'Off'}</button>
   </div>
-  ${plFailed ? '<p class="muted">This page isn\'t allowed to capture the mouse, so hold the right mouse button and drag to look.</p>' : ''}
   <div class="btns"><button class="dfbtn small" id="c-back">Back</button></div>`;
   openModal(html, 'controls');
   const re = () => { saveOpts(); renderControls(); };

@@ -396,7 +396,7 @@ const INTRO = [
 ];
 
 const HELP_TEXT = `MOVE  W A S D (any keyboard layout) · Shift runs · Caps Lock toggles always-run
-LOOK  click the view to capture the mouse, then just move it · Esc releases it · or hold the right button and drag · Q and arrow keys turn · Z levels your gaze
+LOOK  move the mouse over the view · rest it at a side edge to keep turning · or hold the right button and drag · Q and arrow keys turn · Z levels your gaze
 ATTACK  left-click to thrust · hold the button and move the mouse to slash or chop · wheel or 1-4 changes weapon · Tab opens song-book
 USE / TALK  E or Space · or click when the name under the crosshair is bright (dim means step closer)
 SONGS  F1-F5 cast the song in that slot · N to murmur (keeps the Hush off)
