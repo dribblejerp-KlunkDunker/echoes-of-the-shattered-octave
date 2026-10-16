@@ -120,7 +120,7 @@ function hydrate(e) {
 }
 function loadMap(id, pos) {
   const m = G.maps[id]; G.map = m; G.mapId = id; G.ents = m.entities; m.entities.forEach(hydrate);
-  for (const e of m.entities) { if (e.requires && !e.dead) e.hidden = !G.flags[e.requires]; if (e.until && G.flags[e.until]) e.hidden = true; }
+  for (const e of m.entities) { if (e.requires && !e.dead) e.hidden = !G.flags[e.requires]; if (e.until && G.flags[e.until]) e.hidden = true; if (e.drylamp) e.glow = G.flags.lamps_lit ? 0.65 : 0; }
   Engine.setMap(m);
   const p = pos || m.spawn; Engine.cam.x = p.x; Engine.cam.y = p.y; Engine.cam.dir = p.dir || 0; Engine.cam.pitch = 0;
   G.stillT = 0; G.unwriting = false; $('#view').classList.remove('unwrite');
@@ -252,6 +252,7 @@ function enemyUpdate(e, dt) {
           if (soak > 0) dmg = Math.max(1, dmg - soak);
           if (d.press && p.glassed) { G.glassLock = 8; msg('The proctor strikes your glass with a hand-press tuned to 741. Your arm locks rigid, ringing flat.', 'bad'); Audio_.sfx.press(); }
           damagePlayer(dmg, d.name);
+          if (d.chord && !G.dead && Math.random() < 0.45) chordBlast(e);
         } else msg(AR >= 6 && Math.random() < 0.5 ? `The ${d.name}'s blow skids off your armour.` : `You slip the ${d.name}'s blow.`, '', 1800);
         if (d.quiet) Audio_.sfx.quiet();
         if (d.cacophony) addNoise(0.8);
@@ -275,6 +276,8 @@ function killEnemy(e, byGlass) {
   else msg(`The ${e.def.name} is destroyed.`, 'good', 3000);
   if (byGlass && e.def.cacophony) { const p = G.player; p.hp = Math.min(p.hpMax, p.hp + 4); p.glass = Math.min(100, p.glass + 3); fx('glass', 400); msg('The glass drinks what it broke. The ring is fuller. The tideline climbs.', 'warn'); if (p.glass >= 100) die('heartglass'); }
   dropLoot(e);
+  if (e.type === 'aegis') aegisDestroyed(e);
+  if (e.type === 'wearer') { G.flags.wearer_dead = true; if (G.mapId === 'whispergrove') G.flags.wearer_porch_dead = true; }
   if (e.onDeath) e.onDeath();
   checkLevel();
 }
@@ -442,7 +445,7 @@ function interact() {
   if (w) msg(wallLabel(w.cell), '', 1800);
 }
 function decoLabel(e) { return e.label || ({ oak: 'An iron-bark oak. When the wind moves it, it rings like bronze.', lamp: 'A hush-lamp. Its reed-whistle never lets the street go silent.', crates: 'Crates, iron-banded.', bones: 'Bones, and a torn cloth. A hound\'s bed: no sound carries here.', pump: 'A steam pump. Hollows work these.', bed: 'A straw bed.', table: 'A table.', shelf: 'Shelves of ledgers and jars.', hearth: 'A hearth, kept low.', chair: 'A chair with a sap-mark chalked on it.', sign: 'A signpost. The boards have been scraped blank.', grate: 'The tannery culvert. Beyond it, the Hedge. At the dead hour, it speaks.', lever: 'A sluice lever. It is chained.', bore: 'The bore.', cores: 'Crates of glass cores.', burlsick: 'One of the burl-sick. Roots in the skin. They do not see you.' })[e.sprite] || 'Something.'; }
-function wallLabel(cell) { return ({ t_hedge: 'The Hedge. Three men deep of thorn and packed wool.', t_glassrock: 'Rock veined with green-gold glass. It is faintly warm, and it hums.', t_marble: 'Old marble.', t_brass: 'Riveted brass. Verdigris.', t_house: 'Plaster and oak timber.', t_wood: 'Old planks.', t_stone: 'Cold stone.', t_door: 'A door.' })[cell.tex] || 'A wall.'; }
+function wallLabel(cell) { return ({ t_hedge: 'The Hedge. Three men deep of thorn and packed wool.', t_glassrock: 'Rock veined with green-gold glass. It is faintly warm, and it hums.', t_marble: 'Old marble.', t_greymarble: 'Drowned marble, grey-white, furred with lilac lichen to the waterline.', t_brass: 'Riveted brass. Verdigris.', t_house: 'Plaster and oak timber.', t_wood: 'Old planks.', t_stone: 'Cold stone.', t_door: 'A door.' })[cell.tex] || 'A wall.'; }
 function pickUp(e) {
   const it = ITEMS[e.item]; e.hidden = true; e.dead = true; Audio_.sfx.pickup();
   if (e.item === 'cache') { openCache(e); return; }
@@ -450,6 +453,7 @@ function pickUp(e) {
   if (e.item === 'pellets') { G.player.pellets += 3; msg('You find three pellets of glass shot.', 'good'); return; }
   if (it.armor || it.weapon || it.valuable || it.use === 'ammo') { msg(`You take ${gainItem(e.item)}.`, 'good', 3500); return; }
   G.give(e.item); msg(`You take the ${it.name}.`, 'good');
+  wgPickUp(e);
   if (e.item === 'coil') journal('main', 'I have the reverse-phase coil from Depot Three. Kaelen wants it brought to his hut outside the Hedge.');
 }
 function useItem(slot) {
@@ -465,6 +469,7 @@ function useItem(slot) {
   renderInventory();
 }
 function useDeco(e) {
+  if (wgUse(e)) return;
   if (e.use === 'crates') {
     if (!G.flags.crates_heard) { G.flags.crates_heard = true; ['Annet Sowerby', 'Corwin Aye', 'Mirren Salk'].forEach(n => G.ledger.push({ name: n, where: 'Hetty\'s cellar', day: G.day })); }
     showEvent('The crates in the cellar', 'You put your ear to the wood. Thirty-six lilac spheres, you would guess by the weight, each in its straw. For a long moment nothing. Then, very small, through the side of the crate: <i>"Is somebody there? I\'m Annet. Annet Sowerby. I\'m six. What\'s your name?"</i><br><br>You do not answer. You have learned that much. From further in, two more voices, each saying only a name, over and over, the way a person says a thing they are afraid of losing: Corwin Aye. Mirren Salk.', [{ t: 'Step away from the crates', f: () => { if (G.flags.crates_logged) return; G.flags.crates_logged = true; journal('side', 'The corsair\'s crates in Hetty\'s cellar hold glass cores. One of them is a six-year-old called Annet Sowerby. I wrote the names in my ledger.'); } }]);
@@ -516,6 +521,7 @@ function checkTriggers() {
   for (const t of G.map.triggers) {
     if (dist2(c.x, c.y, t.x, t.y) > t.r * t.r) { t.inside = false; continue; }
     if (t.inside) continue; t.inside = true;
+    if (wgTrigger(t)) continue;
     if (t.id === 'hound_bed' && !t.done) { t.done = true; msg('A hound\'s bed. Twenty paces across, and no sound carries over it for a day. Your own footsteps arrive by bone.', 'warn', 6000); }
     if (t.id === 'hedge_voice' && !t.done) {
       t.done = true; Audio_.sfx.voice();
@@ -578,17 +584,23 @@ function ending() {
   else if (f.sable_met) lines.push(`Somewhere in the mist outside the Hedge, a scribe who asked you for three names is still waiting by a hush-lamp, and writing down that you did not come.`);
   if (names > 0) lines.push(`You have ${names} name${names === 1 ? '' : 's'} in your ledger${names >= 6 ? ', which is more than most people carry out of the Reach alive' : ''}. ${names >= 3 ? 'Annet Sowerby, six years old, is in the hold, in a crate, in her straw, and she is not lost. She is filed. There is a scribe at Whisper-Grove who knows how to read a name back.' : 'Everyone who ever kept such a list before you was the Catalogue. You intend to be something else.'}`);
   if (p.glassed) lines.push(`Your tideline is ${p.glass >= 70 ? 'past the collarbone, three inches from the throat' : 'four and a half fingers from the shoulder'}. ${p.glass >= 70 ? 'Six weeks, at the current rate.' : 'Eight weeks of slack, perhaps.'} Somewhere in the glass a hundred-and-forty-year-old man is listening to everything you say, and tonight, for the first time, his argument sounds to you like mercy.`);
-  lines.push(`Three hundred and eighty people stand in the mud and wave the ship away. The Kestrel leaps a hundred and fifty feet, and from four miles back a whole voice sings the calling-song after you. The course is set west-south-west, for the Rust Coast, which is the one place the captain swore never to go.`);
-  lines.push(`<span class="muted">Here ends The Silenced Province. ${G.runs > 1 ? `The Tide-Weaver notes that this is the ${['second', 'third', 'fourth', 'fifth'][Math.min(3, G.runs - 2)]} thread he has watched you walk. "It is still kind," he says.` : 'The Tide-Weaver has watched this thread before. He does not say so.'}</span>`);
+  lines.push(`Three hundred and eighty people stand in the mud and wave the ship away. The Kestrel leaps a hundred and fifty feet, and from four miles back a whole voice sings the calling-song after you. The course is set for Whisper-Grove${f.sable_returned || f.sable_kept ? ', because the scribe in the hold asked for it in the voice of someone reading a form aloud' : ', where a Veil scribe is said to read names to the forgotten'}.`);
+  lines.push(`<span class="muted">Here ends Part Two of The Silenced Province. ${G.runs > 1 ? `The Tide-Weaver notes that this is the ${['second', 'third', 'fourth', 'fifth'][Math.min(3, G.runs - 2)]} thread he has watched you walk. "It is still kind," he says.` : 'The Tide-Weaver has watched this thread before. He does not say so.'}</span>`);
+  $('#ending-title').textContent = 'Grab the Line';
   $('#ending-text').innerHTML = lines.map(l => `<p>${l}</p>`).join('');
+  $('#btn-part3').classList.toggle('hidden', !!f.part3);
   show('#ending'); Audio_.setScene('inside');
 }
+$('#btn-part3').onclick = () => startPart3();
 $('#btn-again').onclick = () => { hide('#ending'); show('#title'); G.state = 'title'; };
 
 // ---------------------------------------------------------------- dialogue
 const DLG = { npc: null, tone: 'normal', log: [] };
 function talk(e) {
   if (e.id === 'hollow' && e.restore === 'hew' && G.flags.sable_returned) { talkHew(e); return; }
+  if (e.id === 'cat') { talkCat(e); return; }
+  if (e.id === 'lamplighter') { talkLamplighter(e); return; }
+  if (e.id === 'bettis') { talkBettis(e); return; }
   if (e.id === 'hollow') { msg(`The Hollow repeats, to no one: "${e.lines[rndi(0, e.lines.length - 1)]}"`, 'voice', 5000); return; }
   const n = NPCS[e.id]; if (!n) return;
   DLG.npc = n; DLG.ent = e; DLG.log = []; G.state = 'dialogue'; Audio_.sfx.ui();
@@ -633,7 +645,7 @@ function renderDialogue(mode) {
   <div class="btns"><button class="dfbtn small ${mode === 'tell' ? 'sel' : ''}" id="d-tell">Tell me about…</button><button class="dfbtn small ${mode === 'where' ? 'sel' : ''}" id="d-where">Where is…</button>${n.shop ? `<button class="dfbtn small ${mode === 'buy' ? 'sel' : ''}" id="d-buy">Buy…</button><button class="dfbtn small ${mode === 'sell' ? 'sel' : ''}" id="d-sell">Sell…</button>` : ''}${DLG.choices ? `<button class="dfbtn small ${mode === 'choice' ? 'sel' : ''}" id="d-answer">Answer…</button>` : ''}
   <span class="tone">${['polite', 'normal', 'blunt'].map(t => `<button class="dfbtn small ${DLG.tone === t ? 'sel' : ''}" data-t="${t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}</span>
   <button class="dfbtn small" id="d-bye">Goodbye</button></div>
-  <div class="topics${mode === 'choice' ? ' wide' : ''}${mode === 'buy' || mode === 'sell' ? ' shop' : ''}${mode === 'tell' || mode === 'where' ? ' pick' : ''}" id="d-topics">${mode === 'tell' ? TOPIC_KEYS.map(t => `<button class="dfbtn small" data-topic="${t}">${t}</button>`).join('') : mode === 'where' ? Object.keys(PLACES).map(t => `<button class="dfbtn small" data-place="${t}">${t}</button>`).join('') : (mode === 'buy' || mode === 'sell') && n.shop ? `<div class="purse">You have <b>${G.player.gold}</b> sovereigns · prices in sovereigns${mode === 'sell' ? ' · they pay' : ''}</div>` + (mode === 'buy' ? shopRows(n) : sellRows(n)) : mode === 'choice' && DLG.choices ? DLG.choices.map((c, i) => `<button class="dfbtn small" data-choice="${i}">${c.t}</button>`).join('') : ''}</div></div></div>`;
+  <div class="topics${mode === 'choice' ? ' wide' : ''}${mode === 'buy' || mode === 'sell' ? ' shop' : ''}${mode === 'tell' || mode === 'where' ? ' pick' : ''}" id="d-topics">${mode === 'tell' ? TOPIC_KEYS.map(t => `<button class="dfbtn small" data-topic="${t}">${t}</button>`).join('') : mode === 'where' ? Object.keys(G.flags.part3 ? PLACES_WG : PLACES).map(t => `<button class="dfbtn small" data-place="${t}">${t}</button>`).join('') : (mode === 'buy' || mode === 'sell') && n.shop ? `<div class="purse">You have <b>${G.player.gold}</b> sovereigns · prices in sovereigns${mode === 'sell' ? ' · they pay' : ''}</div>` + (mode === 'buy' ? shopRows(n) : sellRows(n)) : mode === 'choice' && DLG.choices ? DLG.choices.map((c, i) => `<button class="dfbtn small" data-choice="${i}">${c.t}</button>`).join('') : ''}</div></div></div>`;
   openModal(html, 'dialogue');
   const log = $('#dlg-log'); log.scrollTop = log.scrollHeight;
   $('#d-tell').onclick = () => renderDialogue(mode === 'tell' ? null : 'tell');
@@ -688,18 +700,19 @@ function askTopic(t) {
 }
 const PLACE_POS = { tavern: [29.5, 17.5], lyra_house: [21.5, 29.5], greenhall: [30.5, 9.5], surgery: [17.5, 15.5], gate: [23.5, 1.5], mast: [36.5, 22.5], orla_house: [29.5, 40.5], culvert: [23.5, 60.5], market: [52.5, 17.5], mill: [57.5, 9.5], chapel: [48.5, 10.5], flume: [53.5, 47.5], tannery: [15.5, 56.5] };
 function askPlace(place) {
-  const key = PLACES[place]; const [tx, ty] = PLACE_POS[key]; DLG.log.push({ who: 'you', t: `Where is ${place}?` });
+  const wg = !!G.flags.part3, hub = wg ? 'whispergrove' : 'oakhaven';
+  const pos = wg ? PLACES_WG[place] : PLACE_POS[PLACES[place]]; if (!pos) return; const [tx, ty] = pos; DLG.log.push({ who: 'you', t: `Where is ${place}?` });
   let from = [Engine.cam.x, Engine.cam.y], pre = '';
-  if (G.mapId !== 'oakhaven') {
-    const oh = G.maps.oakhaven; const idx = G.mapId === 'underhedge' ? -1 : oh.cells.findIndex(c => c && c.portal && c.portal.map === G.mapId);
+  if (G.mapId !== hub) {
+    const oh = G.maps[hub]; const idx = G.mapId === 'underhedge' ? -1 : oh.cells.findIndex(c => c && c.portal && c.portal.map === G.mapId);
     if (idx >= 0) { from = [idx % oh.w + 0.5, (idx / oh.w | 0) + 0.5]; pre = 'Out the door, then '; }
-    else { DLG.log.push({ who: 'them', t: 'That is in Oakhaven. You are a long way from Oakhaven.' }); return; }
+    else { DLG.log.push({ who: 'them', t: wg ? 'That is in Whisper-Grove, back the way you came.' : 'That is in Oakhaven. You are a long way from Oakhaven.' }); return; }
   }
   const dx = tx - from[0], dy = ty - from[1]; const d = Math.sqrt(dx * dx + dy * dy);
   const ang = Math.atan2(dy, dx); const dirs = ['east', 'south-east', 'south', 'south-west', 'west', 'north-west', 'north', 'north-east'];
   const dname = dirs[((Math.round(ang / (Math.PI / 4)) % 8) + 8) % 8];
   const paces = Math.round(d * 6);
-  const t = d < 2 ? `You are standing at it.` : `${pre}${dname}${pre ? '' : ' of here'}, about ${paces} paces. ${d > 12 ? 'Follow the cobbles; keep your voice down past the oaks.' : 'You cannot miss it.'}`;
+  const t = d < 2 ? `You are standing at it.` : `${pre}${dname}${pre ? '' : ' of here'}, about ${paces} paces. ${d > 12 ? (G.flags.part3 ? 'Wade; keep to the dry marble where you can, and walk round the Hollows, not through them.' : 'Follow the cobbles; keep your voice down past the oaks.') : 'You cannot miss it.'}`;
   DLG.log.push({ who: 'them', t: t.charAt(0).toUpperCase() + t.slice(1) });
 }
 
@@ -1044,6 +1057,7 @@ function update(dt) {
     }
   }
   checkTriggers();
+  wgTick(dt);
   if (G.boreHold > 0) { G.boreHold -= dt; if (G.boreHold <= 0) { G.boreHold = 0; if (!G.flags.bore_broken) finishBore(); } }
   // greening clock
   if (G.escapeTimer > 0) { G.escapeTimer -= dt; if (G.escapeTimer <= 0) { G.escapeTimer = 0; die('greening'); } }
@@ -1144,6 +1158,8 @@ function musicDirector(dt) {
   if (mu === 'inside') return M.request('town', 0.42 * duck);
   if (mu === 'town') return M.request('town', duck);
   if (mu === 'wild') return M.request('wild', duck);
+  if (mu === 'grove') return M.request('grove', duck);
+  if (mu === 'cloister') return M.request('grove', 0.5 * duck, 0.94);
   if (mu === 'root') return M.request('dungeon', 0.9 * duck, 0.9);
   return M.request('dungeon', duck);
 }

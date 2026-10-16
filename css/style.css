@@ -113,7 +113,10 @@ html, body { margin: 0; height: 100%; background: #050403; color: var(--parch); 
 @keyframes fadein { to { opacity: 1; } }
 
 /* event */
-.panel.event { width: 64cqw; border-color: var(--gold-dim); }
+.panel.event { width: 64cqw; border-color: var(--gold-dim); display: flex; flex-direction: column; overflow: hidden; }
+.panel.event > h2 { flex: none; }
+.panel.event > p { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: .6cqw; }
+.panel.event > .list { flex: none; }
 .panel.event .list button { white-space: normal; }
 
 /* death / ending */
@@ -126,6 +129,8 @@ html, body { margin: 0; height: 100%; background: #050403; color: var(--parch); 
 #ending-text { font-size: 2.3cqw; line-height: 1.45; max-width: 60cqw; max-height: 70cqh; overflow: auto; }
 #ending-text p { margin: 0 0 1cqh; }
 #ending .dfbtn { align-self: flex-start; }
+.ending-btns { display: flex; gap: 1.2cqw; flex-wrap: wrap; }
+#ending .ending-btns .dfbtn.hidden { display: none; }
 
 pre.help { font-family: var(--font-body); white-space: pre-wrap; font-size: 2.1cqw; line-height: 1.5; margin: 0; }
 .kbd { font-family: var(--font-sc); color: var(--gold); }

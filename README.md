@@ -6,7 +6,7 @@ A first-person dark-fantasy RPG for the browser, made in the style of *The Elder
 
 ![Title screen](screenshots/title.jpg)
 
-Explore Oakhaven and the land past the Hedge. Talk with townsfolk, take on quests and side quests, and trade with merchants. Fight Legionnaires, Proctors, golems, hounds and the Quiet. Keep the Narrow balanced, between the noise that brings the hounds and the silence that brings the Hush.
+Explore Oakhaven and the land past the Hedge, then sail the Drift-Kestrel to Whisper-Grove, the drowned marble capital of the Spectral Woods. Talk with townsfolk, take on quests and side quests, and trade with merchants. Fight Legionnaires, Proctors, golems, hounds and the Quiet. Keep the Narrow balanced, between the noise that brings the hounds and the silence that brings the Hush.
 
 ## Screenshots
 
@@ -26,12 +26,15 @@ Explore Oakhaven and the land past the Hedge. Talk with townsfolk, take on quest
 | Buying from Captain Vane | Inventory: worn armour, weapons and carried gear |
 | ![Choosing a calling](screenshots/character-creation.jpg) | ![Sable in the mist outside the Hedge](screenshots/sable.jpg) |
 | Choosing your calling, one of six character templates | Sable, Archivist of the Veil, keeping the Bound Ledger in the mist |
+| ![Whisper-Grove at dusk](screenshots/whispergrove.jpg) | ![The Aegis Sentinel in the Cloister](screenshots/cloister.jpg) |
+| Halder Wick's table for four in the lit water of Whisper-Grove | The Aegis Sentinel rises over the empty risers of the Cloister of the Lost Choir |
 
 ## Features
 
 - Raycast 3D world with chunky Daggerfall-style textures, sprites and a first-person weapon view.
 - Six character templates, plus attributes, skills and level-ups.
 - Districts, interiors and dungeons: Oakhaven, the clearing, the quarry, the underhedge, the rootvault, the chapel and more.
+- Part Three, "The Forgetting": after you escape Oakhaven, sail on to Whisper-Grove. Wade through the Sunken Court among walking Hollows, survive a Proctor ambush, and calm (or destroy) the Aegis Sentinel with Hymn 9 in the Cloister of the Lost Choir. Then steal an Office hand-press from the Malting, the Catalogue's harvest-house. Side stories include Halder Wick's table for four, the lamplighter and his dry lamps, four reflecting pools of strangers' memories, Bettis Renn, and the grey Arbiterium folder. Each choice shapes the Book One ending.
 - Dialogue in the Daggerfall manner, with tone choices (Polite / Normal / Blunt), topics and directions.
 - Songs: a magic system built on the Octave.
 - Quests: the main story, "The Rite", plus side quests. In one of them, Sable, the last Archivist of the Veil, asks you to gather names for the Bound Ledger. Reading a name back restores a Hollow, but it costs her a piece of herself, and your choice changes the ending.
@@ -39,7 +42,7 @@ Explore Oakhaven and the land past the Hedge. Talk with townsfolk, take on quest
 - Weapons including swords, axe, mace, spear, steam-maul, glass-shot pistol and crossbow. Bronze, bolts and blunt weapons each work best against certain enemies.
 - Merchants who buy and sell. Prices shift with your Personality.
 - Loot tables for enemies and 13 strongboxes hidden around the world.
-- An original orchestral score with a music director that changes the music as the situation changes.
+- An original orchestral score, including a Whisper-Grove theme built on Hymn 9, with a music director that changes the music as the situation changes.
 - Save slots for the session, save codes and save files.
 - Keyboard, mouse and touch controls.
 
@@ -82,6 +85,7 @@ js/data.js        canon: classes, NPCs, quests, items, weapons, armour, merchant
 js/maps.js        districts, interiors and dungeons
 js/engine.js      raycaster renderer
 js/audio.js       sound effects and music director
+js/grove.js       Part Three: Whisper-Grove story logic
 js/game.js        game logic, UI, combat, dialogue, trade, saving
 music/            soundtrack (MP3)
 img/              portraits, title, map and ending art

@@ -492,6 +492,164 @@ function buildAllMaps() {
   if (maps.chapel) placeCaches(maps.chapel, 4105, [1]);
   // Sable's camp in the mist, east of Kaelen's hut, with the Office's proctors on her trail (added last so older saves still line up)
   { const c = maps.clearing; c.npc('sable', 34.5, 18.5, { facing: Math.PI }); c.deco('lamp', 35.3, 19.3, { radius: 0.15, scale: 0.8, glow: 0.45 }); c.enemy('proctor', 30.5, 16.5); c.enemy('proctor', 32.5, 24.5); }
+  // Part Three: Whisper-Grove (new maps, so they can be laid out freely)
+  maps.whispergrove = buildWhisperGrove(); maps.cloister = buildCloister(); maps.malting = buildMalting();
+  placeCaches(maps.whispergrove, 4201, [2, 2, 3]); placeCaches(maps.malting, 4203, [2, 3]);
   for (const k in maps) maps[k].baseCount = maps[k].entities.length;
   return maps;
+}
+
+// -------------------------------------------------------------------------
+//  PART THREE — WHISPER-GROVE, the sunken marble capital of the Spectral Woods
+// -------------------------------------------------------------------------
+const WG_HOLLOW_LINES = [
+  ['...the bread\'s for Thursday... the bread\'s for Thursday...', '...tell her I\'ll be back before the bell...'],
+  ['...one step, two step, mind the water...', '...where did I put my hat...'],
+  ['...the court is in session... the court is in session...', '...all rise... all rise...'],
+  ['...Wren? Wren, the cloak, you forgot your cloak...', '...hymn nine, page forty...'],
+  ['...sixpence for the ferry... sixpence...', '...it was here a moment ago...'],
+  ['...I was going to say something...', '...I was going to say something important...'],
+  ['...the lamps are late tonight...', '...somebody ought to see to the lamps...'],
+  ['...seven, eight, nine pigeons... nine...', '...no, eight...'],
+  ['...Mother says come in now... come in now...', '...the water\'s warm, though...'],
+  ['...I love you, I love you, I love you...', '...what was your name...'],
+  ['...ledger, page four... carry the two...', '...balance forward...'],
+  ['...singing, can you hear the singing...', '...it stopped...'],
+];
+function buildWhisperGrove() {
+  const W = 48, H = 48;
+  const m = new GameMap('whispergrove', 'Whisper-Grove — the Sunken Court', W, H, {
+    outdoor: true, floor: 't_shallows', floorTextures: ['t_shallows', 't_marble', 't_water'], fogDist: 21, fogColor: [104, 88, 128], ambient: 0.17,
+    music: 'grove', danger: 1, spawn: { x: 24.5, y: 43.5, dir: -Math.PI / 2 },
+  });
+  m.border('t_greymarble');
+  const dry = (x0, y0, x1, y1) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m.setFloor(x, y, 1); };
+  const deep = (x0, y0, x1, y1) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m.setFloor(x, y, 2); };
+  // the south landing under the Kestrel, the causeway, the dry steps of the Cloister road
+  dry(18, 40, 30, 46); dry(23, 31, 25, 40); dry(14, 9, 26, 10); dry(27, 2, 31, 13); dry(19, 9, 20, 14);
+  // drowned houses
+  m.rect(12, 1, 26, 8, 't_greymarble');                  // the Cloister of the Lost Choir
+  m.set(19, 8, DOOR({ portal: { map: 'cloister', x: 9.5, y: 13.4, dir: -Math.PI / 2 }, label: 'The Cloister of the Lost Choir' }));
+  m.rect(32, 1, 45, 9, 't_stone');                        // the Malting
+  m.set(32, 5, DOOR({ portal: { map: 'malting', x: 1.6, y: 11.5, dir: 0 }, label: 'The Malting — Relief Station Nineteen', locked: 'wg_plan', lockMsg: 'Grey shutters, an Office seal, a painted board: RELIEF STATION NINETEEN — REGISTRATION WITHIN. Boots in the wet outside. You do not know yet what you would be walking into. Find the scribe first.' }));
+  m.rect(2, 2, 9, 7, 't_greymarble'); m.rect(2, 10, 8, 15, 't_greymarble');
+  m.rect(2, 18, 7, 22, 't_greymarble'); m.rect(2, 25, 7, 28, 't_greymarble');
+  m.rect(2, 31, 9, 36, 't_greymarble'); m.rect(2, 40, 12, 45, 't_greymarble');
+  m.rect(38, 13, 45, 19, 't_greymarble'); m.rect(40, 24, 45, 31, 't_greymarble'); m.rect(36, 35, 45, 44, 't_greymarble');
+  m.rect(33, 41, 35, 45, 't_greymarble');
+  // phosphorescent deep pools
+  deep(10, 20, 12, 22); deep(14, 33, 16, 35); deep(34, 31, 36, 33); deep(37, 22, 38, 23);
+  // the Sunken Court: the fountain, four reflecting basins, dry lamps around the ring
+  const cx = 24.5, cy = 22.5;
+  m.deco('basin', cx, cy, { radius: 0.9, scale: 1.25, glow: 0.55, use: 'fountain', label: 'The fountain of the Sunken Court' });
+  [[18.5, 16.5], [30.5, 16.5], [18.5, 28.5], [30.5, 28.5]].forEach(([x, y], i) => m.deco('basin', x, y, { radius: 0.55, scale: 0.8, glow: 0.5, use: 'pool', pool: i, label: 'A reflecting pool' }));
+  for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2 + Math.PI / 8; m.deco('lamp', cx + Math.cos(a) * 9.2, cy + Math.sin(a) * 9.2, { radius: 0.15, scale: 0.95, glow: 0, drylamp: true, label: 'A dry lamp. The wick has been lit a thousand times, and there is no oil.' }); }
+  // Halder Wick's table for four
+  m.deco('table', 32.5, 22.5, { radius: 0.55, scale: 0.7, label: 'A table for four, set in a foot of water. The blue plate is Ada\'s.' });
+  m.deco('chair', 31.6, 21.7, { radius: 0.2, scale: 0.55 }); m.deco('chair', 33.4, 23.3, { radius: 0.2, scale: 0.55 }); m.deco('chair', 31.6, 23.3, { radius: 0.2, scale: 0.55 });
+  // the Hollows walking their loops
+  const spots = [[20.5, 19.0], [28.5, 19.5], [21.0, 26.0], [27.5, 26.0], [16.5, 22.5], [26.5, 15.5], [22.0, 29.5], [29.5, 13.5], [14.5, 27.5], [34.5, 27.5], [17.5, 12.5], [12.5, 17.0]];
+  spots.push([22.5, 17.0], [26.5, 28.5], [19.5, 24.5], [29.5, 22.0], [15.5, 18.5], [33.0, 15.0], [13.5, 24.5], [21.5, 33.5]);
+  spots.forEach(([x, y], i) => m.add({ kind: 'npc', id: 'hollow', name: 'A Hollow', sprite: 'hollow', x, y, solid: true, radius: 0.3, loop: true, lines: WG_HOLLOW_LINES[i % WG_HOLLOW_LINES.length] }));
+  // the south landing and the Kestrel's company
+  m.deco('ladder', 24.5, 45.3, { radius: 0.25, scale: 2.1, use: 'wg_ladder', label: 'The Drift-Kestrel\'s mast-ladder — a hundred feet of rope, up into the mist' });
+  m.deco('crates', 28.5, 45.0, { radius: 0.4, scale: 0.8 }); m.deco('lamp', 22.5, 45.2, { radius: 0.15, scale: 0.8, glow: 0.6 });
+  m.npc('vane_wg', 21.5, 44.0, { facing: -Math.PI / 2 });
+  m.npc('lyra_wg', 27.5, 43.8, { facing: -Math.PI / 2 });
+  m.npc('kaelen_wg', 19.5, 42.0, { facing: -Math.PI / 2 });
+  m.npc('sable_wg', 26.2, 42.0, { facing: Math.PI, requires: 'sable_aboard' });
+  m.npc('sable_wg', cx, cy + 1.7, { facing: Math.PI / 2, until: 'sable_aboard' });
+  m.deco('lamp', cx + 1.0, cy + 2.2, { radius: 0.12, scale: 0.7, glow: 0.5 });
+  m.npc('halder', 33.6, 21.6, { facing: Math.PI, loop: true, until: 'halder_dead', lines: ['...the blue one is Ada\'s...', '...four plates... four...'] });
+  m.npc('lamplighter', 20.5, 21.5, { loop: true, lines: ['...the lamps are late tonight...'] });
+  m.npc('cat', 27.5, 31.5, { wander: true, radius: 0.2, solid: false });
+  // willows, never on the paths
+  const rnd = mulberry32(741);
+  for (let i = 0, n = 0; i < 400 && n < 34; i++) {
+    const x = 2 + rnd() * (W - 4), y = 2 + rnd() * (H - 4), ix = x | 0, iy = y | 0;
+    if (m.isBlocked(ix, iy) || (m.floorCells[iy * W + ix] === 1)) continue;
+    if ((x - cx) ** 2 + (y - cy) ** 2 < 120) continue;           // the court
+    if (Math.abs(x - 24.5) < 2.5 && y > 28) continue;             // the causeway
+    if (x > 30 && x < 38 && y > 18 && y < 27) continue;          // Halder's corner
+    if (m.entities.some(e => (e.x - x) ** 2 + (e.y - y) ** 2 < 4)) continue;
+    let near = false; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (m.isSolidCell(ix + dx, iy + dy)) near = true;
+    if (near) continue;
+    m.deco('willow', x, y, { scale: 1.6 + rnd() * 0.8, radius: 0.4, label: 'A silver weeping willow. The fronds reach the water, and the water lights where they touch.' }); n++;
+  }
+  // the Office in the mist
+  m.enemy('proctor', 10.5, 30.5); m.enemy('proctor', 40.5, 33.0); m.enemy('quiet', 5.5, 38.5); m.enemy('mites', 43.5, 22.5);
+  [[17.5, 25.0], [31.5, 18.5], [24.5, 14.6]].forEach(([x, y]) => m.enemy('proctor', x, y, { requires: 'wg_ambush', ambush: true }));
+  m.item('tonic', 13.5, 30.5); m.item('honey', 36.5, 29.5); m.item('bolts', 5.5, 8.8); m.item('pellets', 44.5, 22.5); m.item('tonic', 30.5, 11.5);
+  m.trigger(cx, cy + 3.0, 4.8, 'wg_ambush');
+  m.trigger(19.5, 10.4, 2.0, 'wearer_porch');
+  return m;
+}
+
+function buildCloister() {
+  const W = 20, H = 16;
+  const m = new GameMap('cloister', 'The Cloister of the Lost Choir', W, H, { floor: 't_marble', ceil: 't_stone', fogDist: 14, ambient: 0.26, fogColor: [18, 14, 26], music: 'cloister', spawn: { x: 9.5, y: 13.4, dir: -Math.PI / 2 } });
+  m.border('t_greymarble');
+  m.set(9, 15, DOOR({ portal: { map: 'whispergrove', x: 19.5, y: 9.6, dir: Math.PI / 2 }, label: 'Out to the Sunken Court' }));
+  [[4, 5], [4, 9], [14, 5], [14, 9], [7, 11], [12, 11]].forEach(([x, y]) => m.set(x, y, WALL('t_greymarble')));
+  [[2.0, 7.0], [17.5, 7.5], [17.5, 12.5], [8.2, 13.6], [10.8, 13.6], [6.0, 9.0], [13.0, 9.0]].forEach(([x, y]) => m.deco('lamp', x, y, { radius: 0.12, scale: 0.7, glow: 0.55, label: 'A Cloister candle-lamp. Somebody keeps these lit.' }));
+  // the Aegis's alcove
+  m.set(15, 1, WALL('t_greymarble')); m.set(15, 4, WALL('t_greymarble')); m.rect(15, 5, 18, 5, 't_greymarble'); m.clear(15, 5, 15, 5);
+  // the vestry
+  for (let y = 10; y <= 14; y++) m.set(5, y, WALL('t_greymarble'));
+  m.rect(1, 10, 4, 10, 't_greymarble'); m.set(5, 12, DOOR({ label: 'The vestry' }));
+  // the risers, empty
+  for (let r = 0; r < 2; r++) for (let i = 0; i < 5; i++) m.deco('chair', 7.5 + i, 5.6 + r * 1.1, { radius: 0.18, scale: 0.45, label: 'An empty riser. Small. Eleven places.' });
+  m.deco('hymnboard', 9.5, 2.0, { radius: 0.25, scale: 1.15, use: 'hymn', label: 'The hymn board: HYMN 9, still chalked' });
+  m.deco('cloaks', 3.5, 2.0, { radius: 0.45, scale: 0.85, use: 'cloaks', label: 'Eleven small cloaks on iron pegs, and one shoe' });
+  m.deco('lamp', 7.5, 1.6, { radius: 0.12, scale: 0.7, glow: 0.55 }); m.deco('lamp', 11.5, 1.6, { radius: 0.12, scale: 0.7, glow: 0.55 });
+  m.deco('aegis', 16.8, 2.5, { radius: 0.5, scale: 1.35, until: 'aegis_awake', label: 'A nine-foot bronze automaton in an alcove. DEFEND THE SINGERS is stencilled across its chest. It is not moving. It is not quite still.' });
+  m.enemy('aegis', 16.8, 2.5, { requires: 'aegis_awake', until: 'aegis_done' });
+  m.npc('aegis_wg', 13.0, 3.6, { facing: Math.PI, requires: 'aegis_calmed' });
+  m.add({ kind: 'item', item: 'redcloak', x: 16.6, y: 3.4, sprite: 'loot', scale: 0.35, yOff: 0, solid: false, requires: 'aegis_destroyed' });
+  // vestry
+  m.item('oil', 2.5, 13.2); m.deco('shelf', 1.4, 11.5, { radius: 0.2, scale: 0.9 }); m.deco('lamp', 3.5, 11.2, { radius: 0.12, scale: 0.6, glow: 0.5 });
+  m.item('honey', 1.8, 13.6);
+  m.trigger(9.5, 6.4, 2.4, 'aegis_wake'); m.trigger(16.0, 3.0, 2.2, 'aegis_wake');
+  return m;
+}
+
+function buildMalting() {
+  const W = 30, H = 22;
+  const m = new GameMap('malting', 'The Malting — Relief Station Nineteen', W, H, { floor: 't_flag', ceil: 't_wood', fogDist: 12, ambient: 0.16, fogColor: [0, 0, 0], music: 'dungeon', danger: 0, spawn: { x: 1.6, y: 11.5, dir: 0 } });
+  m.border('t_stone');
+  m.set(0, 11, DOOR({ portal: { map: 'whispergrove', x: 31.0, y: 5.5, dir: Math.PI }, label: 'Out to the Cloister road' }));
+  // registration (x1-8, y6-16)
+  m.rect(1, 1, 8, 5, 't_stone'); m.rect(1, 17, 8, 20, 't_stone');
+  for (let y = 1; y <= 20; y++) m.set(9, y, WALL('t_house')); m.set(9, 11, DOOR({ label: 'CLERKS — PLEASE WAIT TO BE CALLED' }));
+  [[3.5, 7.6], [5.5, 7.6], [3.5, 15.2], [5.5, 15.2]].forEach(([x, y]) => m.deco('chair', x, y, { radius: 0.2, scale: 0.55, label: 'A bench. Clean. People hesitate less when the bench is clean.' }));
+  m.deco('crates', 7.6, 7.0, { radius: 0.35, scale: 0.7, label: 'A water butt, with a tin cup on a chain' });
+  m.deco('sign', 2.2, 6.6, { radius: 0.2, scale: 0.8, use: 'reg_sign', label: 'A printed pamphlet, pinned: WELCOME TO RELIEF' });
+  m.add({ kind: 'npc', id: 'hollow', name: 'The man who takes your coat', sprite: 'hollow', x: 7.5, y: 12.6, solid: true, radius: 0.3, loop: true, lines: ['...take your coat... take your coat...', '...you won\'t need it where you\'re going...'] });
+  m.deco('lamp', 4.5, 11.5, { radius: 0.12, scale: 0.7, glow: 0.5 });
+  // the clerks' hall (x10-19, y1-14) and the Tuning Room archive below it (y16-20)
+  for (let x = 10; x <= 19; x++) m.set(x, 15, WALL('t_house')); m.set(15, 15, DOOR({ label: 'ARCHIVE — THE TUNING ROOM' }));
+  [[12.5, 4.0], [16.5, 4.0], [12.5, 9.5], [16.5, 9.5]].forEach(([x, y]) => m.deco('table', x, y, { radius: 0.5, scale: 0.65, label: 'A clerk\'s desk. Ruler, nib, blotter. Ruled pages of names.' }));
+  m.deco('shelf', 10.4, 2.0, { radius: 0.2, scale: 0.9 }); m.deco('shelf', 18.6, 12.5, { radius: 0.2, scale: 0.9 }); m.deco('lamp', 14.5, 7.0, { radius: 0.12, scale: 0.7, glow: 0.5 });
+  m.enemy('proctor', 13.5, 6.8); m.enemy('proctor', 17.5, 7.2); m.enemy('proctor', 15.0, 12.5);
+  // Quist's office (x21-28, y1-8) and the press room (x21-28, y10-20)
+  for (let y = 1; y <= 20; y++) m.set(20, y, WALL('t_house'));
+  m.set(20, 5, DOOR({ label: 'REGISTRAR-GENERAL' })); m.set(20, 12, DOOR({ label: 'PRESSING' }));
+  for (let x = 21; x <= 28; x++) m.set(x, 9, WALL('t_house'));
+  m.deco('table', 25.5, 2.4, { radius: 0.5, scale: 0.65, label: 'The Registrar-General\'s desk. A second cup of hot water, at the empty place.' });
+  m.deco('hearth', 27.9, 6.5, { radius: 0.3, scale: 0.8, glow: 0.7, label: 'A small stove with a kettle on it. There is always hot water.' });
+  m.deco('shelf', 21.4, 2.0, { radius: 0.2, scale: 0.9 });
+  m.npc('quist', 25.5, 4.2, { facing: Math.PI });
+  m.deco('press', 25.0, 15.0, { radius: 0.5, scale: 0.95, use: 'press', label: 'An Office hand-press, tuned to 741' });
+  m.deco('chair', 23.0, 19.2, { radius: 0.2, scale: 0.55 });
+  m.npc('bettis', 23.0, 18.3, { facing: -Math.PI / 2 });
+  m.enemy('proctor', 26.8, 12.0, { room: 'press' }); m.enemy('proctor', 27.2, 18.6, { room: 'press' });
+  m.deco('lamp', 22.0, 11.0, { radius: 0.12, scale: 0.7, glow: 0.55 });
+  // the Tuning Room
+  m.deco('shelf', 10.4, 17.0, { radius: 0.2, scale: 0.9 }); m.deco('shelf', 10.4, 19.5, { radius: 0.2, scale: 0.9 }); m.deco('shelf', 18.6, 17.0, { radius: 0.2, scale: 0.9 }); m.deco('shelf', 18.6, 19.5, { radius: 0.2, scale: 0.9 });
+  m.item('returns', 12.8, 18.4); m.item('folder', 17.2, 19.2); m.deco('lamp', 15.0, 17.2, { radius: 0.12, scale: 0.6, glow: 0.5 });
+  m.trigger(15.0, 18.2, 2.6, 'chorister_floor');
+  // the alarm brings the hall's reserve
+  m.enemy('proctor', 6.0, 10.5, { requires: 'malting_alarm' }); m.enemy('proctor', 11.2, 12.8, { requires: 'malting_alarm' });
+  m.item('tonic', 2.0, 15.6); m.item('pellets', 28.2, 1.8);
+  return m;
 }

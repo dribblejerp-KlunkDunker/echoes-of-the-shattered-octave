@@ -161,7 +161,7 @@ const ENEMIES = {
     desc: 'A hole in the world. Glass shot cannot ring inside it. Iron can.' },
 };
 
-const NAMES_POOL = ['Tamsin Reed', 'Corwin Aye', 'Mirren Salk', 'Joss Carder', 'Emory Wain', 'Bettis Renn', 'Halder Wick', 'Wren Halloway', 'Annet Sowerby', 'Merret Salt',
+const NAMES_POOL = ['Tamsin Reed', 'Corwin Aye', 'Mirren Salk', 'Joss Carder', 'Emory Wain', 'Wren Halloway', 'Annet Sowerby', 'Merret Salt',
   'Dunstan Pell', 'Ivo Marrick', 'Sefa Lund', 'Ottilie Crane', 'Benet Owler', 'Maud Tanner', 'Ro Fenwick', 'Caddoc Vey', 'Elin Thorsby', 'Perrin Lusk'];
 
 // ---- items -------------------------------------------------------------
@@ -536,3 +536,173 @@ Object.assign(NPCS.ignatius, {
   markup: 1.15,
   shopTalk: { hello: 'Bell-bronze, from bells the Synod did not take. It rings true when it lands. The Cacophony cannot bear a true note. Neither, some nights, can I.', broke: 'The Note is not for sale cheaply.', thanks: ['Hold it in tune.', 'Strike once, cleanly.', 'Go under the Note.'], buys: ['weapon', 'valuable'] },
 });
+
+// =============================================================================
+//  PART THREE — THE FORGETTING: Whisper-Grove, the Cloister of the Lost Choir, the Malting
+// =============================================================================
+Object.assign(ITEMS, {
+  oil: { name: 'Flask of Lamp-Oil', sprite: 'loot', desc: 'Colza oil from the Cloister vestry, still good. Somebody in Whisper-Grove has been lighting dry lamps for three years.', key: true },
+  press741: { name: 'Office Hand-Press, 741', sprite: 'loot', desc: 'Forty pounds of iron and brass, a felted die, a dial that reads in Hertz. Ninety seconds, three questions, eight seconds of 741. Kaelen wants to know how it works so that he can learn how to stop one.', key: true },
+  returns: { name: 'Calibration Returns', sprite: 'loot', desc: 'Engineer K. Vance, Iron Synod, the Dawning. His own initials against line ninety-four. The Office keeps everything, including other people\'s files.', key: true },
+  folder: { name: 'The Grey Arbiterium Folder', sprite: 'loot', desc: 'Dated eight months before the Fracture. "The object of Stage 9 is not extraction. An Anchor will yield without limit if it believes it has been relieved." And: Engineer V. is not to be told.', key: true },
+  redcloak: { name: 'The Red Cloak', sprite: 'loot', desc: 'A child\'s choir cloak, red, from the eleventh peg. There is no name-tape in the collar.', key: true },
+});
+
+ENEMIES.aegis = { name: 'The Aegis Sentinel', sprite: 'aegis', hp: 120, dmg: [6, 12], speed: 1.0, reach: 1.45, armored: true, chord: true, scale: 1.35, xp: 120,
+  desc: 'Nine feet of Catalogue bronze, DEFEND THE SINGERS stencilled across the chest. It stands between you and the risers. The hymn board is behind it.' };
+
+TOPICS['Whisper-Grove'] = {
+  low: 'The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.',
+  high: 'The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground.',
+};
+TOPIC_KEYS.push('Whisper-Grove');
+
+const PLACES_WG = {
+  'The Kestrel\'s mast-ladder': [24.5, 45.0], 'The Sunken Court': [24.5, 22.5], 'The Cloister of the Lost Choir': [19.5, 8.5],
+  'The Malting (the Office\'s harvest-house)': [31.0, 5.5], 'Halder Wick\'s table': [32.5, 22.5],
+};
+
+const CLOISTER_NAMES = ['Tibb Marlowe', 'Elsie Fenn', 'Oswin Carrow', 'Pell Ashby', 'Hester Quill', 'Rowan Tillet', 'Mab Corrie', 'Ned Sallow', 'Ivy Penhallow', 'Jory Weld'];
+
+// how many of her three fragments Sable still holds
+function sableFragments(g) { const f = g.flags; return 3 - (f.sable_returned ? 1 : 0) - (f.bettis_awake ? 1 : 0); }
+
+const SLATES = ['ARE THE HOLLOWS HUNGRY?', 'DO THEY KNOW THEY ARE WALKING?', 'THE CAT IS NOT A HOLLOW. I ASKED IT.', 'THE WATER IS WARM. WHY IS THE WATER WARM.', 'I CAN HEAR THE HYMN. I CANNOT SING IT.'];
+
+Object.assign(NPCS, {
+  vane_wg: {
+    name: 'Captain Vane of the Drift-Kestrel', sprite: 'vane', portrait: 'vane', tier: 'high',
+    greet: { polite: 'Mind the ladder; the third rung is a liar. She\'ll hold at the mast-height as long as the tanks do, and the tanks are not what they were.', normal: 'OK-114, under two coats of paint. She\'s initialled it eleven times, your scribe. I can tell by the way she looks at my hull.', blunt: 'Say it quick. I don\'t like a city that doesn\'t fall down.' },
+    topics: {
+      'The Drift-Kestrel': 'Twenty-one souls, a hold that murmurs, and a lift-tank with a weep in the seam. She\'ll get us off this water. Further than that I won\'t promise anybody.',
+      'The Catalogue': 'One thousand three hundred and forty-two. I know the number now. I didn\'t want to; somebody made me hear it. The Office has me in a file under "reliable, does not ask questions." I am asking questions now. Loudly.',
+      'Whisper-Grove': 'I\'ve flown over it twice with cargo. Never put down. You don\'t, here. The Hollows walk out across the water toward the ladder like they\'ve been waiting for a ship, and then they walk back.',
+    },
+    quest: (g) => {
+      const f = g.flags;
+      if (f.press_taken) return { text: 'That is a press. That is an Office press, on my ladder, with my registry on the Office\'s books three days behind it. — Good. Get it aboard. When you\'re ready, so am I, and I\'ve been ready since Oakhaven.' };
+      if (!f.vane_wg_met) { f.vane_wg_met = true; return { text: 'Whisper-Grove, as ordered. I\'ve put her over the dry marble at the south landing. The scribe will be where the names are thickest: the Sunken Court, north up the causeway. Everyone in the Reach says she can give a Hollow its name back. Everyone in the Reach says a lot of things. Go and find out, and come back up the ladder before the Office does.' }; }
+      return null;
+    },
+  },
+  lyra_wg: {
+    name: 'Lyra Ashgrove, Cantor of Oakhaven', sprite: 'lyra', portrait: 'lyra', tier: 'high',
+    greet: { polite: 'She has no voice at all. She writes on a slate, and turns it to you.', normal: 'She has no voice at all. She writes on a slate, and turns it to you.', blunt: 'She looks at you for a long moment, and does not write anything.' },
+    topics: { 'Whisper-Grove': 'She writes: SEVENTY-FOUR THOUSAND. She underlines it. Then she rubs it out with her sleeve, because it is not a thing you can leave written down.', 'Kaelen Vance': 'She writes: HE KEEPS A LIST ON A DECK-BEAM NOW. Then, smaller: SO DID THEY.' },
+    quest: (g) => {
+      const f = g.flags; let s;
+      if (!f.lyra_wg_met) { f.lyra_wg_met = true; s = 'YOU SAID DO IT.'; }
+      else if (f.halder_dead && !f.lyra_halder) { f.lyra_halder = true; s = 'HE WAS SETTING A TABLE.'; }
+      else if (f.aegis_calmed && !f.lyra_aegis) { f.lyra_aegis = true; s = 'IT KNOWS THE ALTO LINE. WHO TAUGHT IT THE ALTO LINE.'; }
+      else s = SLATES[rndi(0, SLATES.length - 1)];
+      return { text: `She writes on her slate with a stub of chalk and turns it to you: <b>${s}</b>` };
+    },
+  },
+  kaelen_wg: {
+    name: 'Kaelen Vance, the Dissonant Blade', sprite: 'kaelen', portrait: 'kaelen', tier: 'high',
+    greet: { polite: 'Listen. Under the water. Seven forty-one, very faint. The presses.', normal: 'This is a dead city that never fell down. That is a statistical anomaly. I do not like anomalies.', blunt: 'My arm locks when that note is struck near it. Keep me away from the grey men, or keep them away from me.' },
+    topics: {
+      'Whisper-Grove': 'The Memory Anchor. I calibrated its sister in the Dawning. Two percent survival at Stage Nine; I wrote the number down myself. I did not write down Whisper-Grove. I did not have to. It was in the next column.',
+      'The Catalogue': 'Every press in the Office is tuned to a note I specified. I would like to see one. I would like to know how it works, so that I can learn how to stop one, and so that I stop dreaming about how it works.',
+    },
+    quest: (g) => {
+      const f = g.flags;
+      if (g.has('folder') && !f.folder_decided) {
+        return { text: 'You have something in your shirt. You are holding it the way I held Tobiah\'s charts. — Grey. Arbiterium. Show me.', choices: [
+          { t: 'Give him the grey folder.', f: (g) => { f.folder_decided = true; f.folder_given = true; g.take('folder'); questXp(40); journal('main', 'I gave Kaelen the grey Arbiterium folder. He read it standing up in a foot of water, twice, and then he folded it into his shirt and said nothing at all.'); return 'He reads it standing in the water. "Engineer V. is not to be told," he reads, aloud, in a perfectly even voice, "because his ear is more accurate when his conscience is not engaged." He reads it again. Then he folds it very small and puts it in his shirt, over the glass. "My first feeling," he says, "was relief. I am recording that I am not entitled to it."'; } },
+          { t: 'Keep it. Not yet.', f: (g) => { f.folder_decided = true; f.folder_kept = true; return '"Not yet," he says. "That is fair. That is more than fair. I kept something from Lyra for seven years." He does not ask again.'; } },
+        ] };
+      }
+      if (f.press_taken && !f.kaelen_press) { f.kaelen_press = true; questXp(20); return { text: 'Ninety seconds. Three questions. Eight seconds of seven forty-one. I designed the note; I never once saw the instrument. — It\'s simple. That is the worst thing about it. A child could stop one with a nail through the felt. Nobody ever put a nail through the felt.' }; }
+      return null;
+    },
+  },
+  sable_wg: {
+    name: 'Sable, Archivist of the Veil', sprite: 'sable', portrait: 'sable', tier: 'high',
+    greet: { polite: 'Entry: the stranger is polite in a drowned city. Noted.', normal: 'I am a list, not a cure.', blunt: 'Precision, please. I record everything, including the tone.' },
+    topics: Object.assign({}, NPCS.sable.topics, {
+      'Whisper-Grove': 'Two hundred and six Hollows in the Sunken Court. I read twenty names a night. Ten years and two hundred and twenty days to finish, and then you start again, because by then the first ones have stopped answering to them.',
+    }),
+    quest: (g) => {
+      const f = g.flags, fr = sableFragments(g);
+      if (f.sable_joined) {
+        if (!f.aegis_done) return { text: 'The Cloister first. North, past the willows, up the dry steps. I stood in that doorway and counted the children in while they sang Hymn 9. I never counted them out. Something in there still guards the risers. When it stands up, do not run. Look at the board.' };
+        if (!f.press_taken) return { text: `The Malting, on the Cloister road, north-east, past the Cloister. I wrote the intake pamphlet. Benches, a water butt, a man who takes your coat at the door so you will not hesitate at the threshold. The presses are at the back. I have ${fr} fragment${fr === 1 ? '' : 's'} left. I am telling you so that you will know what I can spend.` };
+        return { text: 'Up the ladder. Entry: the stranger took a press out of an Office harvest-house with an archivist and a choir automaton. I am recording that we were not quick enough to be proud of.' };
+      }
+      if (f.sable_aboard) {
+        f.sable_joined = true; f.wg_plan = true; questXp(40);
+        journal('main', 'Sable has a plan, and she says it is arithmetic and not hope: the Cloister of the Lost Choir first, north of the Sunken Court, where something guards the risers; then the Office\'s harvest-house, the Malting, on the Cloister road, to take a press.');
+        return { text: 'Entry: Whisper-Grove, at dusk, again. I did not think I would see it from the outside of a crate. — I came for arithmetic. One thousand three hundred and forty-two, against my fragments. The ship can reach the harvest-house on the Cloister road, where the presses are; your engineer wants one, and I want the Office to have one fewer. But the Cloister first. There is something in it I left there.' };
+      }
+      if (f.wg_ambush && !f.wg_ambush_over) return { text: 'Not now. Behind you. Grey oilcloth, silver mesh. Listen for the felt.' };
+      if (!f.wg_ambush_over) {
+        if (!f.sable_wg_met) { f.sable_wg_met = true; journal('main', 'A Veil scribe called Sable sits at the fountain in the Sunken Court, reading names out of a floating book to the Hollows. She says she is a list, not a cure.'); }
+        const tuned = g.player.cls.id === 'archivist' ? ' Seven forty-one. You are Veil-tuned. Then you know what the book costs.' : '';
+        return { text: 'Entry: a stranger, wading, at dusk, from a ship whose registry is painted over twice. I read twenty names a night. The Bound Ledger floats at my elbow and pays for what it keeps, weight for weight. I have three fragments left and I recite them nightly, so that I know which one goes.' + tuned + ' You want something. Everyone who wades out to this fountain wants something. I am a list, not a cure. — And the Office is three days behind me. Less, I think. Listen.' };
+      }
+      const ch = [];
+      if (f.crates_heard) ch.push({ t: 'Annet Sowerby. Six years old. She is in a crate in that ship\'s hold, and she asked the Carder boy his name.', f: (g) => joinSable(g, 'annet') });
+      ch.push({ t: 'That ship is OK-114. Its hold murmurs. One thousand three hundred and forty-two.', f: (g) => joinSable(g, 'hold') });
+      ch.push({ t: 'Then stay with your list.', f: () => '"I will," she says, and opens the Ledger to tonight\'s page.' });
+      return { text: 'Entry: three proctors, in the Sunken Court, at dusk. One of them stopped when I read him his own surrendered name. It cost me nothing; it was never mine. — A fourth got away north before you came, with your ship\'s registry. That changes nothing. I still refuse. I am a list, not a cure.', choices: ch };
+    },
+  },
+  halder: {
+    name: 'Halder Wick', sprite: 'halder', portrait: 'halder', tier: 'low',
+    greet: { polite: '...four plates. The blue one is Ada\'s...', normal: '...the boys will be in directly...', blunt: '...sit, sit, there\'s four...' },
+    topics: {},
+    quest: (g) => {
+      const f = g.flags;
+      if (f.halder_done) return { text: f.halder_sat ? 'He sets the blue plate in front of you, again, very carefully, and pats it once, as though you are someone he has been expecting.' : '...four plates... the blue one is Ada\'s... the boys will be in directly...' };
+      return { text: 'A thin old man in a waistcoat, wet to the knee, is setting a table that stands in a foot of lit water. Four plates. He sets them, and lifts them, and sets them again. "...the blue one is Ada\'s... the boys will be in directly... sit, sit, there\'s four..." He has been doing this for three years.', choices: [
+        { t: 'Sit down in the fourth chair.', f: (g) => { f.halder_done = true; f.halder_sat = true; questXp(25); journal('side', 'I sat at Halder Wick\'s table in the Sunken Court, in the fourth chair. He set the blue plate in front of me. I did not know what else to do.'); return 'You sit. The water is warm. He sets the blue plate in front of you, very carefully, and pats it once, and for the length of a breath his face is the face of a man whose family has come home. Then he lifts the plate and sets it again.'; } },
+        { t: '"They are not coming, Halder."', f: (g) => { f.halder_done = true; f.halder_told = true; questXp(10); return 'He stops with the blue plate in his hands. He looks at you, or at the place where your voice came from. "...the boys will be in directly," he says, kindly, as if you are the one who has forgotten, and sets it down.'; } },
+        { t: 'Leave him to his table.', f: () => 'You leave him setting it. Behind you, plate by plate, he begins again.' },
+      ] };
+    },
+  },
+  quist: {
+    name: 'Registrar-General Quist', sprite: 'quist', portrait: 'quist', tier: 'high',
+    greet: { polite: 'Hot water? There is always hot water. Sit; the chair is clean. People hesitate less when the chair is clean.', normal: 'You are not on my list, which means you are on someone else\'s. Sit down.', blunt: 'Lower your voice. There are people being registered in the next room, and it upsets them.' },
+    topics: {
+      'The Catalogue': 'We do not harvest, whatever the pamphlets in the Reach say. We relieve. A man walks out of the Greening with his whole life on his back and nowhere to put it down. We take it from him. Most of them look relieved at six seconds.',
+      'Whisper-Grove': 'Seventy-four thousand, and not one of them filed. The Hush did that, not us. We are the only people who ever came back to write them down.',
+      'The scribe in the mist': 'Sable. I taught her to rule a page. Ruler, nib, blotter; she had the straightest hand I ever saw. She designed the harvest schedule herself, you know. I only signed it.',
+    },
+    quest: (g) => {
+      const f = g.flags, ch = [];
+      if (f.press_taken && !f.quist_press) { f.quist_press = true; return { text: 'Take it, then. There are forty more in the store, and the form will say it was requisitioned, and it will be true, because I will sign it. — Tell her I asked after her. Tell her I kept her desk.' }; }
+      if (!f.quist_shown) ch.push({ t: 'Show me a pressing.', f: (g) => { f.quist_shown = true; return 'He takes off his spectacles to polish them. "Ninety seconds. Three questions: your name, the name of a person you love, and whether you would like to rest. Then eight seconds of seven forty-one, under the felt. Most of them look relieved at six. I have never once seen one look frightened afterward. That is not nothing, whatever she has told you."'; } });
+      if (!f.quist_alt) ch.push({ t: 'Did you ever once write down an alternative?', f: (g) => { f.quist_alt = true; questXp(15); return 'He considers the question, which is the worst thing he could do with it. "We wrote down everything," he says. "Every name, every coat, every shoe left on every floor. Nobody wrote down an alternative." He puts his spectacles back on. "Nobody was ever asked for one."'; } });
+      if (f.sable_joined && !f.quist_sable) ch.push({ t: 'Sable sends her regards.', f: (g) => { f.quist_sable = true; return '"Does she." For the first time he looks old. "She stood in the Cloister door and counted them in. Eleven. She did not count them out; that was not on the form." He pours hot water into a second cup, and sets it at the empty place across the desk, and leaves it there.'; } });
+      if (!ch.length) return null;
+      return { text: 'Hot water? Sit. You came in by the front door, past the benches and the water butt, and nobody stopped you, because nobody stops anyone at the front door. That was her idea, too.', choices: ch };
+    },
+  },
+  aegis_wg: {
+    name: 'The Aegis Sentinel', sprite: 'aegis', portrait: 'aegis', tier: 'low', scale: 1.2,
+    greet: { polite: 'DEFEND THE SINGERS.', normal: 'DEFEND THE SINGERS.', blunt: 'Its torso-plates shiver. Then, very softly, it chimes the alto line.' },
+    topics: {},
+    quest: (g) => {
+      const f = g.flags;
+      if (!f.aegis_spoke) { f.aegis_spoke = true; return { text: 'It kneels by the empty risers with its great bronze hand over the eleventh peg, where the red cloak hangs. When you come close its torso-plates part a finger\'s width and something inside chimes, very softly, the alto line of Hymn 9. Then: "DEFEND. THE. SINGERS." It looks at you. It is waiting for you to tell it where they are.' + (f.sable_joined ? ' Behind you Sable has gone very still. "WG-forty-one thousand and five," she says, reading its core. "I made his surname illegible. My hand shook." She says nothing else.' : '') }; }
+      if (!f.aegis_follow) return { text: 'It is still waiting to be told where the singers are.', choices: [
+        { t: '"The singers are on the ship. Come and defend them."', f: (g) => { f.aegis_follow = true; questXp(30); journal('side', 'The Aegis Sentinel of the Cloister will follow us to the Kestrel, carrying the red cloak. It thinks the singers are aboard. In a way, they are.'); return 'It stands. It takes the red cloak off the eleventh peg, gently, the way you would lift a sleeping child, and it chimes once, and it waits for you to lead.'; } },
+        { t: 'Leave it with its risers.', f: () => 'It kneels again, its hand over the empty peg. Behind you, as you go, it chimes the alto line to nobody.' },
+      ] };
+      return { text: 'It holds the red cloak against its chest-plate and chimes, softly, the alto line.' };
+    },
+  },
+  cat: { name: 'A cat', sprite: 'cat', portrait: 'townsman', tier: 'low', scale: 0.38, greet: { polite: 'The cat does not care.', normal: 'The cat does not care.', blunt: 'The cat does not care.' }, topics: {}, quest: () => null },
+  lamplighter: { name: 'The lamplighter', sprite: 'hollow', portrait: 'townsman', tier: 'low', greet: { polite: '...the lamps are late tonight...', normal: '...the lamps are late tonight...', blunt: '...the lamps are late tonight...' }, topics: {}, quest: () => null },
+  bettis: { get name() { return G.flags.bettis_awake ? 'Bettis Renn' : 'A Hollow on the bench'; }, sprite: 'hollow', portrait: 'townsman', tier: 'low', greet: { polite: '...name, please...', normal: '...name, please...', blunt: '...name, please...' }, topics: {}, quest: () => null },
+});
+Object.assign(NPCS.vane_wg, { shop: NPCS.vane.shop, markup: NPCS.vane.markup || 1.1, shopTalk: { hello: 'Same stock, higher prices. We are a long way from anywhere that sells bolts.', broke: 'Credit\'s the Office\'s game. Not mine.', thanks: ['Keep it dry. Everything here is wet.', 'Done. Don\'t tell the scribe what I charged.', 'There. Now get off my ladder.'], buys: ['armor', 'weapon', 'valuable'] } });
+
+function joinSable(g, how) {
+  const f = g.flags; f.sable_joined = true; f.wg_plan = true; questXp(60);
+  journal('main', 'Sable will come. She says she joins for arithmetic, not hope: the Kestrel can reach the Office\'s harvest-house, the Malting, on the Cloister road, where the presses are. The Cloister of the Lost Choir first, north of the Sunken Court; something in it guards the risers.');
+  if (how === 'annet') return 'She closes the Ledger. "Annet Sowerby," she says. "Six. Third crate from the bulkhead. She would not let go of a boy\'s hand at intake, so they put them in together." She stands, and wrings the lit water out of her hem. "Entry: the archivist joins the ship. For arithmetic, not hope. Remember that I said so." Then, quieter: "She is not lost. She is filed. I will tell her that myself."';
+  return 'She is quiet for a moment. "OK-114. I initialled that registry eleven times." She stands, and the Ledger rises with her. "Entry: the archivist joins the ship. For arithmetic, not hope. The Kestrel can reach the harvest-house on the Cloister road, where the presses are. Cloister first. Something in it guards the risers, and I left it there."';
+}
