@@ -99,7 +99,7 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Synod robe disguises, proximity inspection and detection.
 - [ ] Directional on-screen sound ripples, paired with positional sound.
 - [ ] Throwable stone/bottle distractions and guard investigation.
-- [ ] Spot/disarm tripwires, falling nets and alarm-bell traps.
+- [x] Three visible, inspectable Catacombs mechanisms: barbed tripwire (one-shot 5 damage), suspended net (eight-second movement slow) and alarm bell (nearby enemy alert). Disarm via existing skill-based three-pin controls; cancellation/three slips leave it armed. Spent/disarmed state persists. Dedicated trap artwork/trigger animations and wider dungeon placement remain later polish.
 - [ ] Note locks, pressure plates and turning-mirror puzzles in Cloister/Catacombs.
 - [~] Oakhaven crime foundation: explicitly owned market honey prompts before theft; visible nearby NPC witnesses report a bounty, and the constable pursues with line of sight. Character sheet shows bounty/time served. Broader owned goods, assault and additional guard behavior remain pending.
 - [ ] Player wanted posters after crime thresholds.
@@ -137,6 +137,13 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
 - [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Dungeon-trap pass verification
+- Three nonblocking mechanisms append after historical Catacombs entities, away from story triggers and the entrance. They reuse grate/web/bell artwork and advertise inspection in their labels.
+- Proximity activation consumes a trap before applying its effect; spent or disarmed traps cannot retrigger. Nets use the existing movement-slow timer; bells alert nearby active, nonpassive enemies.
+- Inspection describes consequences and opens the existing keyboard/touch/controller lockpicking panel for disarming. Leaving or failing three times does not silently disarm or activate a trap.
+- Existing map/target flags retain `triggered`/`disarmed` states without changing save version. Old saves lacking flags start with armed mechanisms.
+- Chromium verifies inspection/cancel, failed/successful disarm, placements, all three effects, one-shot damage and spent/disarmed reload behavior. Existing browser/security/smoke checks pass. Human visual review and physical-controller testing remain pending.
 
 ### Crime-foundation pass verification
 - Crime data (bounty, theft count, served hours) uses existing saved player data and normalizes imported values; old saves default to no crime. New town entities append after historical world extras to preserve entity-index ordering.

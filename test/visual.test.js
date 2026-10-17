@@ -328,6 +328,50 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       return { theft: true, pursuit: true, fine: true, jail: true };
     });
     console.log('PASS crime confirmation, witnesses, pursuit, fine, jail and save/load', law);
+    await page.evaluate(() => {
+      loadMap('catacombs', { x: 6.5, y: 5.1, dir: Math.PI / 2 }); G.state = 'panel';
+      const e = G.ents.find(e => e.trapType === 'tripwire'); useDeco(e);
+    });
+    await page.locator('#trap-disarm').click();
+    await page.keyboard.press('Escape');
+    assert.equal(await page.evaluate(() => G.flags[trapKey(G.ents.find(e => e.trapType === 'tripwire'))] || null), null);
+    const traps = await page.evaluate(() => {
+      function check(ok, label) { if (!ok) throw new Error(label); }
+      G.state = 'panel';
+      const mechanisms = G.ents.filter(e => e.trapType);
+      check(mechanisms.length === 3, 'three trap types placed');
+      for (const e of mechanisms) {
+        check(!G.map.isBlocked(e.x | 0, e.y | 0) && !e.solid, e.trapId + ' accessible and nonblocking');
+        check(!G.map.triggers.some(t => dist2(e.x, e.y, t.x, t.y) < (t.r + 1) ** 2), e.trapId + ' away from story triggers');
+      }
+      const wire = mechanisms.find(e => e.trapType === 'tripwire');
+      useDeco(wire); document.querySelector('#trap-disarm').click();
+      for (let i = 0; i < 3; i++) { LOCKPICK.position = LOCKPICK.centers[0] < 50 ? 100 : 0; lockpickInput('lift'); }
+      check(!G.flags[trapKey(wire)], 'failed disarm leaves trap armed');
+      G.player.hp = 50;
+      Engine.cam.x = wire.x; Engine.cam.y = wire.y; tickTraps();
+      check(G.player.hp === 45 && G.flags[trapKey(wire)] === 'triggered', 'walking into wire deals five damage');
+      tickTraps(); check(G.player.hp === 45, 'wire cannot fire twice');
+      const net = mechanisms.find(e => e.trapType === 'net');
+      useDeco(net); document.querySelector('#trap-disarm').click();
+      for (let i = 0; i < 3; i++) { LOCKPICK.position = LOCKPICK.centers[LOCKPICK.pin]; lockpickInput('lift'); }
+      check(G.flags[trapKey(net)] === 'disarmed', 'successful disarm persists named state');
+      G.webT = 0; triggerTrap(net); check(G.webT === 0, 'disarmed net cannot fire');
+      delete G.flags[trapKey(net)]; triggerTrap(net); check(G.webT === 8, 'armed net applies movement slow timer');
+      const bell = mechanisms.find(e => e.trapType === 'alarm');
+      const enemy = hydrate({ kind: 'enemy', type: 'proctor', x: bell.x + 2, y: bell.y }); G.ents.push(enemy);
+      triggerTrap(bell); check(enemy.state === 'chase' && enemy.alertT === 8, 'alarm alerts nearby active enemies');
+      G.flags[trapKey(net)] = 'disarmed';
+      const saved = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(saved); G.state = 'panel';
+      check(G.ents.filter(e => e.trapType).every(e => G.flags[trapKey(e)] === (e.trapType === 'net' ? 'disarmed' : 'triggered')), 'spent and disarmed traps survive reload');
+      const restoredWire = G.ents.find(e => e.trapType === 'tripwire'), hp = G.player.hp;
+      triggerTrap(restoredWire); check(G.player.hp === hp, 'reload does not rearm trap');
+      const old = JSON.parse(JSON.stringify(saved)); for (const e of G.ents.filter(e => e.trapType)) delete old.flags[trapKey(e)];
+      restoreGame(old); G.state = 'panel';
+      check(G.ents.filter(e => e.trapType).every(e => !G.flags[trapKey(e)]), 'old saves default to armed mechanisms');
+      return { types: 3, oneShot: true, savedState: true };
+    });
+    console.log('PASS trap inspection, disarm, trigger effects and save/load', traps);
     const motion = await page.evaluate(() => {
       function check(ok, label) { if (!ok) throw new Error(label); }
       const state = JSON.stringify({ attack: G.attack, hp: G.player.hp, fat: G.player.fat, noise: G.noise });
