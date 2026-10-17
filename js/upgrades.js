@@ -330,6 +330,31 @@ const FACTIONS = {
   captains: { name: 'The Free Captains', desc: 'Captain Vane, Mags, and the air-crews of the Rust Coast.' },
 };
 
+// Save codes and files are untrusted input: custom song definitions coming
+// from an imported player must be strictly validated before they reach SONGS
+// or any innerHTML sink (Song-book, spellmaker previews).
+function sanitizeCustomSong(id, s) {
+  if (typeof id !== 'string' || !/^[A-Za-z0-9_ -]{1,32}$/.test(id) || !s || typeof s !== 'object') return null;
+  const num = (v, lo, hi, dflt) => (isFinite(+v) ? clamp(+v, lo, hi) : dflt);
+  return {
+    name: cleanName(s.name),
+    hz: (typeof s.hz === 'string' && /^[0-9→\s]{1,12}$/.test(s.hz)) ? s.hz : num(s.hz, 0, 20000, 174),
+    freq: num(s.freq, 20, 20000, 174),
+    freq2: s.freq2 == null ? null : num(s.freq2, 20, 20000, 174),
+    cost: num(s.cost, 0, 40, 3),
+    power: num(s.power, 0, 20, 2),
+    noise: num(s.noise, 0, 12, 1),
+    effects: (Array.isArray(s.effects) ? s.effects : []).filter(e => SONG_NOTES.some(n => n.effect === e)).slice(0, 4),
+    cadence: SONG_CADENCES.some(c => c.id === s.cadence) ? s.cadence : SONG_CADENCES[0].id,
+    dyn: SONG_DYNAMICS.some(d => d.id === s.dyn) ? s.dyn : SONG_DYNAMICS[1].id,
+    stun: num(s.stun, 0, 10, 0),
+    bleed: num(s.bleed, 0, 10, 0),
+    mendFat: num(s.mendFat, 0, 20, 0),
+    custom: true,
+    desc: cleanText(typeof s.desc === 'string' ? s.desc : '', 160),
+  };
+}
+
 function ensurePlayerUpgrades(p) {
   if (!p) return;
   if (!p.skills) {
@@ -350,11 +375,19 @@ function ensurePlayerUpgrades(p) {
   if (!p.factions) p.factions = { hedge: 10, synod: 0, office: -5, captains: 5 };
   if (!p.weapCond) p.weapCond = {};
   if (!p.weapEnch) p.weapEnch = {};
-  if (!p.customSongs) p.customSongs = {};
+  if (!p.customSongs || typeof p.customSongs !== 'object') p.customSongs = {};
   if (p.tknives == null) p.tknives = 3;
-  if (!p.houseStorage) p.houseStorage = [];
+  if (!Array.isArray(p.houseStorage)) p.houseStorage = [];
   if (!p.houseDecor) p.houseDecor = {};
-  for (const id in p.customSongs) SONGS[id] = p.customSongs[id];
+  // imported saves are untrusted: validate songs and storage before use
+  for (const id in p.customSongs) {
+    const def = sanitizeCustomSong(id, p.customSongs[id]);
+    if (!def) { delete p.customSongs[id]; continue; }
+    p.customSongs[id] = def;
+    SONGS[id] = def;
+  }
+  p.houseStorage = p.houseStorage.filter(s => s && ITEMS[s.id] && isFinite(+s.n) && +s.n > 0).map(s => ({ id: s.id, n: clamp(Math.round(+s.n), 1, 999) }));
+  p.songs = (Array.isArray(p.songs) ? p.songs : []).filter(s => typeof s === 'string' && SONGS[s]);
 }
 
 function gainSkill(name, amt) {
@@ -773,7 +806,7 @@ function startArenaWave() {
 
 function renderHouseChest() {
   const p = G.player; ensurePlayerUpgrades(p);
-  const storeRows = p.houseStorage.map((sl, i) => `<tr><td><b>${ITEMS[sl.id] ? ITEMS[sl.id].name : sl.id}</b>${sl.n > 1 ? ` ×${sl.n}` : ''}</td><td class="n"><button class="dfbtn small" data-take="${i}">Take</button></td></tr>`).join('');
+  const storeRows = p.houseStorage.map((sl, i) => `<tr><td><b>${ITEMS[sl.id].name}</b>${sl.n > 1 ? ` ×${sl.n}` : ''}</td><td class="n"><button class="dfbtn small" data-take="${i}">Take</button></td></tr>`).join('');
   const carryRows = p.inv.filter(sl => ITEMS[sl.id] && !ITEMS[sl.id].key && !isWorn(sl.id)).map((sl, i) => `<tr><td><b>${ITEMS[sl.id].name}</b>${sl.n > 1 ? ` ×${sl.n}` : ''}</td><td class="n"><button class="dfbtn small" data-put="${sl.id}">Store</button></td></tr>`).join('');
   const html = `<h2>Cooper's Row Strongbox</h2><button class="dfbtn small close" id="x">Close</button>
   <p class="muted">Carry Weight: <b>${calcCarryWeight(p)} / ${maxCarryWeight(p)} st</b>. Items stored here weigh nothing on the road.</p>
@@ -1487,7 +1520,7 @@ function lesson(id, text) {
       const key = G.mapId + ':' + (e.type || d.name);
       if (UPG._bossSaved === key) break;
       UPG._bossSaved = key;
-      try { UPG.autosaveSlot = snapshotGame(); UPG.autosaveWhen = G.map.name + ' (day ' + G.day + ')'; } catch (err) { /* saving must never break the fight */ }
+      try { UPG.autosaveSlot = snapshotGame(); UPG.autosaveWhen = G.map.name + ' (day ' + (G.day | 0) + ')'; } catch (err) { /* saving must never break the fight */ }
       msg('You steel yourself. Autosaved before the fight - the slot is in Load game.', 'warn', 5000);
       break;
     }

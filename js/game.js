@@ -1237,6 +1237,7 @@ function restoreGame(d) {
   G.player.name = cleanName(G.player.name); G.player.level = Math.max(1, G.player.level | 0);
   G.player.weapons = (G.player.weapons || []).filter(w => WEAPONS[w]); if (!G.player.weapons.length) G.player.weapons = ['hands']; G.player.weapon = clamp(G.player.weapon | 0, 0, G.player.weapons.length - 1);
   G.player.inv = G.player.inv.filter(s => s && ITEMS[s.id]); for (const k in G.player.armor) if (!ARMOR[G.player.armor[k]] || !G.player.inv.some(s => s.id === G.player.armor[k])) delete G.player.armor[k];
+  ensurePlayerUpgrades(G.player); // imported saves are untrusted: validate custom songs, house storage and the song list before any render path
   G.flags = d.flags || {}; G.runs = d.runs | 0;
   G.journal = (Array.isArray(d.journal) ? d.journal : []).filter(j => j && typeof j === 'object').map(j => Object.assign({}, j, { text: cleanText(j.text), cat: cleanText(j.cat, 20), day: j.day | 0 }));
   G.ledger = (Array.isArray(d.ledger) ? d.ledger : []).filter(l => l && typeof l === 'object').map(l => Object.assign({}, l, { name: cleanText(l.name, 60), where: cleanText(l.where, 80), day: l.day | 0 }));
@@ -1342,7 +1343,7 @@ function renderLoad(fromTitle) {
   const html = `<h2>Load game</h2><button class="dfbtn small close" id="x">Close</button>
   <p><b style="color:var(--gold)">Session slots</b></p>
   ${[0, 1, 2].map(i => `<div class="slot"><span class="meta">${SLOTS[i] ? slotSummary(SLOTS[i]) : `Slot ${i + 1} — empty`}</span><button class="dfbtn small" data-slot="${i}" ${SLOTS[i] ? '' : 'disabled'}>Load</button></div>`).join('')}
-  ${UPG.autosaveSlot ? `<div class="slot"><span class="meta">Boss autosave (before the fight) - ${UPG.autosaveWhen || ''}</span><button class="dfbtn small" id="ld-auto">Load</button></div>` : ''}
+  ${UPG.autosaveSlot ? `<div class="slot"><span class="meta">Boss autosave (before the fight) - ${cleanText(UPG.autosaveWhen || '', 60)}</span><button class="dfbtn small" id="ld-auto">Load</button></div>` : ''}
   <p style="margin-top:1cqh"><b style="color:var(--gold)">Save code or file</b></p>
   <textarea id="savecode" placeholder="Paste a save code here…"></textarea>
   <div class="btns"><button class="dfbtn small" id="ld-code">Load code</button><label class="dfbtn small" for="ld-file" style="cursor:pointer">Load file…</label><input type="file" id="ld-file" accept=".txt,.json,text/plain" style="display:none"><button class="dfbtn small" id="ld-back">Back</button></div>
