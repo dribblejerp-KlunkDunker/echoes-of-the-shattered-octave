@@ -372,6 +372,54 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       return { types: 3, oneShot: true, savedState: true };
     });
     console.log('PASS trap inspection, disarm, trigger effects and save/load', traps);
+    await page.evaluate(() => {
+      loadMap('cloister', { x: 16.5, y: 11, dir: Math.PI / 2 }); G.state = 'panel';
+      const e = G.ents.find(e => e.use === 'note_reliquary');
+      if (!e || G.map.isBlocked(e.x | 0, e.y | 0)) throw new Error('reliquary placed on accessible floor');
+      window.noteBefore = { shards: G.count('shard'), voice: G.player.voice, story: G.flags.tombs_rung };
+      G.ents.forEach(o => { o._screen = null; });
+      interact();
+      if (G.openPanel !== 'notelock') throw new Error('in-world interaction opens reliquary');
+    });
+    await page.locator('#note-1').tap();
+    assert.equal(await page.evaluate(() => NOTELOCK.entered.length), 0);
+    await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes('reset'));
+    await page.keyboard.press('1');
+    await page.keyboard.press('Escape');
+    assert.equal(await page.evaluate(() => G.flags[RELIQUARY_FLAG] || false), false);
+    await page.evaluate(() => { G.state = 'panel'; useDeco(G.ents.find(e => e.use === 'note_reliquary')); });
+    await page.locator('#note-listen').click();
+    await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes('174 Hz'));
+    await page.keyboard.press('1'); await page.keyboard.press('3'); await page.keyboard.press('2');
+    assert.equal(await page.evaluate(() => G.count('shard') - noteBefore.shards), 1);
+    const notes = await page.evaluate(() => {
+      function check(ok, label) { if (!ok) throw new Error(label); }
+      check(G.flags[RELIQUARY_FLAG] && G.player.voice === noteBefore.voice, 'solve has no Voice cost');
+      check(G.flags.tombs_rung === noteBefore.story, 'note puzzle does not change story locks');
+      const count = G.count('shard');
+      noteLockInput(0); noteLockInput(2); noteLockInput(1);
+      check(G.count('shard') === count, 'repeat notes cannot duplicate reward');
+      noteLockInput('leave'); useDeco(G.ents.find(e => e.use === 'note_reliquary'));
+      check(document.querySelector('#note-0').disabled, 'solved reliquary reopens empty');
+      noteLockInput('leave');
+      const saved = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(saved); G.state = 'panel';
+      check(G.flags[RELIQUARY_FLAG] && G.count('shard') === count, 'completion and reward survive reload');
+      // Old-save default and real controller polling edges.
+      delete saved.flags[RELIQUARY_FLAG]; restoreGame(saved); G.state = 'panel';
+      useDeco(G.ents.find(e => e.use === 'note_reliquary'));
+      check(NOTELOCK.entered.length === 0 && !G.flags[RELIQUARY_FLAG], 'old saves default to unsolved');
+      const originalPads = navigator.getGamepads;
+      const gp = { connected: true, axes: [0, 0, 0, 0], buttons: Array.from({ length: 18 }, () => ({ pressed: false })) };
+      navigator.getGamepads = () => [gp]; controlsTick();
+      const press = index => { gp.buttons[index].pressed = true; controlsTick(); gp.buttons[index].pressed = false; controlsTick(); };
+      press(0); check(NOTELOCK.entered.length === 1, 'controller A plays selected note');
+      press(14); check(NOTELOCK.selected === 2, 'controller left wraps selection'); press(0);
+      press(14); press(0); check(G.flags[RELIQUARY_FLAG], 'controller completes phrase');
+      press(1); check(!NOTELOCK && !G.openPanel, 'controller B leaves');
+      navigator.getGamepads = originalPads; G.state = 'panel';
+      return { phrase: 3, rewardOnce: true, accessibleClue: true };
+    });
+    console.log('PASS note-lock retries, keyboard/touch/controller, reward and save/load', notes);
     const motion = await page.evaluate(() => {
       function check(ok, label) { if (!ok) throw new Error(label); }
       const state = JSON.stringify({ attack: G.attack, hp: G.player.hp, fat: G.player.fat, noise: G.noise });

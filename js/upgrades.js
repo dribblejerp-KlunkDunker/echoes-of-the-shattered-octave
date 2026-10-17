@@ -1597,6 +1597,15 @@ function lesson(id, text) {
     const btn = (i) => !!(gp.buttons[i] && gp.buttons[i].pressed);
     const edge = (i) => btn(i) && !prev[i];
     const play = G.state === 'play' && !G.dead;
+    if (G.openPanel === 'notelock') {
+      if (edge(GBTN.dleft)) noteLockInput('left');
+      if (edge(GBTN.dright)) noteLockInput('right');
+      if (edge(GBTN.a)) noteLockInput('play');
+      if (edge(GBTN.x)) noteLockInput('listen');
+      if (edge(GBTN.b) || edge(GBTN.start)) noteLockInput('leave');
+      for (let i = 0; i < 32; i++) prev[i] = btn(i);
+      G.touch.fx = G.touch.fy = 0; return;
+    }
     if (G.openPanel === 'lockpick') {
       if (edge(GBTN.dleft)) lockpickInput('left');
       if (edge(GBTN.dright)) lockpickInput('right');
@@ -1657,6 +1666,10 @@ function lesson(id, text) {
         cat.deco(TRAP_TYPES[type].sprite, x, y, { solid: false, scale: type === 'alarm' ? 0.35 : 0.45, use: 'trap', trapType: type, trapId: id, label: TRAP_TYPES[type].name + ' — inspect to disarm', glow: 0.35 });
       }
       cat.baseCount = cat.entities.length;
+    }
+    if (maps.cloister) {
+      maps.cloister.deco('chest', 16.5, 12.5, { solid: false, scale: 0.55, use: 'note_reliquary', label: 'Three-voice reliquary — Root, Fifth, Third' });
+      maps.cloister.baseCount = maps.cloister.entities.length;
     }
   }
 
