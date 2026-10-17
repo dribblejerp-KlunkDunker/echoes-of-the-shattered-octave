@@ -67,11 +67,17 @@ function animCreature(e, dt, T) {
     const shot = e.shotT;
     if (shot != null && e._shot != null && shot > e._shot + 0.5) e._strike = 0.4;
     e._shot = shot;
+    // the listening-horn: its alarm timer resetting is its "strike"
+    const horn = e.hornT;
+    if (horn != null && e._horn != null && horn > e._horn + 0.5) e._strike = 0.6;
+    e._horn = horn;
     if (e._atk > 0.3) e._strike = Math.max(e._strike || 0, 0.32);
     if (e._strike > 0) e._strike -= dt;
     let pick = null;
     if (e._strike > 0) pick = '_a2';
     else if (isEnemy && e.state === 'chase' && !e.stun && ((d.reach && dCam < d.reach + 0.35 && e.cool != null && e.cool < 0.38) || (shot != null && shot < 0.6 && shot > 0))) pick = '_a1';
+    else if (d.horn && horn != null && horn > 0 && horn < 1) pick = '_a1';
+    else if (d.horn) pick = [null, '_w1', null, '_w2'][Math.floor(((T * 0.45 + s) % 4 + 4) % 4)];
     else if (hover) pick = [null, '_w1', null, '_w2'][Math.floor(((T * 1.4 + s) % 4 + 4) % 4)];
     else if (moving) {
       const k = Math.floor((e._phase || 0) / (Math.PI / 2));
