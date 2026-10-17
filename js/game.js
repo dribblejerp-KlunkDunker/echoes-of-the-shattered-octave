@@ -734,6 +734,43 @@ function askPlace(place) {
 }
 
 // ---------------------------------------------------------------- panels
+// Catalog-only SVG layers: imported save text never becomes SVG markup.
+function inventoryDoll(p = G.player) {
+  const equipped = slot => worn(slot, p);
+  const body = equipped('body'), head = equipped('head'), hands = equipped('hands'), feet = equipped('feet');
+  const metal = a => a && /Mail|Iron|Bell-|Brigandine/.test(a.name);
+  const color = a => !a ? '#665343' : /Hush/.test(a.name) ? '#354f49' : metal(a) ? '#849094' : /Leather/.test(a.name) ? '#805437' : '#9b805b';
+  const weapon = WEAPONS[p.weapons[p.weapon]] || WEAPONS.sword;
+  const shield = equipped('shield'), blocked = !!weapon.twoHanded;
+  const weaponId = p.weapons[p.weapon];
+  let weaponArt;
+  if (weapon.ranged) weaponArt = '<path d="M44 94L62 59L69 62L53 99Z" fill="#71513a"/><path d="M39 62Q58 42 78 66L61 62Z" fill="#a7aaa2"/><path d="M39 62L78 66" stroke="#dfcca0"/>';
+  else if (weapon.blunt) weaponArt = '<path d="M48 99L36 43" stroke="#77573c" stroke-width="5"/><path d="M25 39L42 35L47 50L29 55Z" fill="#b29b69"/>';
+  else if (weaponId === 'axe') weaponArt = '<path d="M48 99L38 39" stroke="#77573c" stroke-width="5"/><path d="M36 41Q16 30 22 60L40 53Z" fill="#a7b1af"/>';
+  else weaponArt = `<path d="M47 96L${weaponId === 'dagger' ? '39 66L34 59L33 69' : '30 29L26 20L26 31'}Z" fill="#c4d1cc" stroke="#777f80"/><path d="M35 82L49 78M43 82L48 99" stroke="#c2a369" stroke-width="4"/>`;
+  const labels = ARMOR_SLOTS.map(([slot, label]) => { const a = equipped(slot); return `${label}: ${a ? a.name : 'none'}${slot === 'shield' && a && blocked ? ' (stowed; two-handed weapon)' : ''}`; });
+  return `<figure class="paper-doll"><div class="doll-heading">THE TRAVELLER <span>Equipment study · I</span></div>
+  <svg viewBox="0 0 180 200" role="img" aria-label="Equipment paper doll"><title>${labels.join('; ')}; Weapon: ${weapon.name}</title>
+  <defs><radialGradient id="doll-light"><stop stop-color="#6a5840"/><stop offset="1" stop-color="#211b17"/></radialGradient><pattern id="doll-mail" width="5" height="4" patternUnits="userSpaceOnUse"><path d="M0 1L2 3L5 1" fill="none" stroke="#c3c9c2" stroke-width=".7"/></pattern></defs>
+  <rect x="5" y="5" width="170" height="190" rx="70" fill="url(#doll-light)" stroke="#8d744a"/><path d="M90 12V186M15 100H165" stroke="#c0a36b" opacity=".12"/>
+  <ellipse cx="90" cy="180" rx="40" ry="7" fill="#110e0d"/>
+  <g stroke="#221c1a" stroke-width="2" stroke-linejoin="round">
+  <path d="M73 111L87 113L85 169L72 169ZM94 113L108 111L109 169L96 169Z" fill="#483e38"/>
+  <path d="M67 64L54 72L44 111L54 116L69 88M112 64L125 73L136 111L126 116L111 88" fill="${color(body)}"/>
+  <path d="M71 60L108 60L117 118L65 118Z" fill="${color(body)}"/>
+  ${body && metal(body) ? `<path d="M74 65L105 65L111 109L70 109Z" fill="${/Chain/.test(body.name) ? 'url(#doll-mail)' : '#9aa4a2'}"/><path d="M78 68V106M102 68V106" stroke="#c6c3a8"/>` : '<path d="M78 66L75 110M86 66V111M97 66L101 110" stroke="#af9469" opacity=".5"/>'}
+  <path d="M67 110H115V118H67Z" fill="#322923"/><rect x="85" y="110" width="10" height="8" fill="#c5a866"/>
+  <path d="M83 51V63L90 68L98 61V50" fill="#ae8063"/>
+  <ellipse cx="90" cy="39" rx="15" ry="20" fill="#b99070"/>
+  ${head ? `<path d="M73 40Q69 14 90 15Q112 15 107 41L101 47L101 30H79V47Z" fill="${color(head)}"/>${metal(head) ? '<path d="M67 32Q90 24 113 32L110 37H70Z" fill="#a9b1aa"/>' : ''}` : '<path d="M75 35Q69 14 90 17Q110 14 106 36L100 26L80 28Z" fill="#46352c"/>'}
+  <path d="M81 39H85M96 39H100M86 50Q91 53 96 49" fill="none" stroke="#594438"/>
+  <path d="M45 107L55 111L54 125L44 122ZM126 111L136 107L138 122L128 125Z" fill="${hands ? color(hands) : '#b99070'}"/>
+  <path d="M72 152H85V176L65 178L65 170L72 168ZM96 152H109V168L117 171V178L96 176Z" fill="${feet ? color(feet) : '#67503c'}"/>
+  ${feet && metal(feet) ? '<path d="M75 155V170M100 155V170" stroke="#d1d1bc"/>' : ''}
+  ${weaponArt}
+  ${shield && !blocked ? `<path d="M120 86L145 91L142 119L130 ${shield.name.includes('Kite') ? '145' : '128'}L117 118Z" fill="#6d5140" stroke="#b8a16b" stroke-width="3"/><path d="M130 95L130 123M122 106H139" stroke="#b8a16b"/>` : ''}
+  </g></svg><figcaption><img src="img/face_${[1, 2, 3, 4, 5, 6].includes(p.face) ? p.face : 1}.jpg" alt="Chosen character portrait" width="28" height="28"> ${weapon.name}${shield && blocked ? ' · shield stowed' : ''}</figcaption></figure>`;
+}
 function renderInventory() {
   const p = G.player, AR = armorRating(), AN = armorNoise();
   const slots = ARMOR_SLOTS.map(([slot, label]) => { const a = worn(slot), off = slot === 'shield' && a && shieldBlocked();
@@ -746,7 +783,7 @@ function renderInventory() {
     return `<tr class="${wornIt ? 'worn' : ''}"><td><span class="nm">${it.name}${sl.n > 1 ? ` ×${sl.n}` : ''}</span>${wornIt ? '<span class="tag">worn</span>' : ''}${st ? `<span class="muted st">${st}</span>` : ''}<span class="muted ds">${it.desc}</span></td><td class="n">${act}</td></tr>`; }).join('');
   openModal(`<h2>Inventory</h2><button class="dfbtn small close" id="x">Close</button>
   <p class="muted invtop">${p.gold} sovereigns · ${p.pellets} glass pellets${p.bolts ? ` · ${p.bolts} bolts` : ''} · Fatigue ${Math.round(p.fat)}/${p.fatMax}</p>
-  <div class="invgrid"><div><h3>Worn — Armour Rating ${AR}</h3><div class="slots">${slots}</div>
+  <div class="invgrid"><div>${inventoryDoll(p)}<h3>Worn — Armour Rating ${AR}</h3><div class="slots">${slots}</div>
   <p class="muted small-note">${AN > 0.05 ? `Your armour adds ${AN.toFixed(1)} to the noise you make while you move (more when you run).` : AN < -0.05 ? `Your clothes hush you: ${AN.toFixed(1)} to the noise you make while you move.` : 'Your armour is quiet.'} Steel turns blades and fists well, and the Cacophony's static poorly.</p>
   <h3>Weapons</h3><div class="weps">${weps}</div></div>
   <div><h3>Carried</h3><div class="carry"><table>${rows || '<tr><td class="muted">Nothing but the clothes you came in.</td></tr>'}</table></div></div></div>`, 'inv');
@@ -1215,7 +1252,7 @@ function snapshotGame() {
   for (const id in G.maps) {
     const m = G.maps[id]; const base = m.baseCount != null ? m.baseCount : m.entities.length;
     const ents = m.entities.slice(0, base).map(e => { const o = {}; for (const k of ENT_FIELDS) if (e[k] !== undefined) o[k] = e[k]; return o; });
-    const extra = m.entities.slice(base).map(e => { const o = { kind: e.kind, type: e.type, sprite: e.sprite, item: e.item, id: e.id }; for (const k of ENT_FIELDS) if (e[k] !== undefined) o[k] = e[k]; return o; });
+    const extra = m.entities.slice(base).filter(e => !e.transient).map(e => { const o = { kind: e.kind, type: e.type, sprite: e.sprite, item: e.item, id: e.id }; for (const k of ENT_FIELDS) if (e[k] !== undefined) o[k] = e[k]; return o; });
     const doors = {}; for (const k in m.doors) if (m.doors[k].open > 0 || m.doors[k].target > 0) doors[k] = [m.doors[k].open, m.doors[k].target];
     maps[id] = { ents, extra, doors, visited: rleEncode(m.visited), triggers: m.triggers.map(t => ({ done: !!t.done, said: !!t.said })) };
   }

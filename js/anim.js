@@ -21,6 +21,72 @@ function animHasFrames(name) { if (ANIM_FRAMES[name] == null) ANIM_FRAMES[name] 
 function animSeed(e) { if (e._seed == null) e._seed = ((e.x * 73.13 + e.y * 37.7) % 6.283 + 6.283) % 6.283; return e._seed; }
 function animReset(e) { e.animSY = 1; e.animSX = 1; e.animLift = 0; e.animSkew = 0; e.animHurt = 0; e.animGlow = 0; e.animAlpha = 1; }
 
+// Five canonical views / eight octants. Facing is world-space and remains
+// stable when the player circles an idle creature; camera yaw is irrelevant.
+function animViewAngle(e, cam = Engine.cam) {
+  const heading = Number.isFinite(e.facing) ? e.facing : 0;
+  const relative = Math.atan2(cam.y - e.y, cam.x - e.x) - heading;
+  const octant = ((Math.round(relative / (Math.PI / 4)) % 8) + 8) % 8;
+  return { view: Math.min(octant, 8 - octant), flip: octant > 4 };
+}
+
+const PROCTOR_VIEWS = new Map();
+// Original pixel illustrations for the pilot. These are intentionally separate
+// views, not a squeeze/darken of the front-facing artwork. Action poses retain
+// their walk/attack timing; final painted sheets for other species are pending.
+function animProctorView(view, pose) {
+  const key = view + ':' + pose;
+  if (PROCTOR_VIEWS.has(key)) return PROCTOR_VIEWS.get(key);
+  const canvas = document.createElement('canvas'); canvas.width = 64; canvas.height = 96;
+  const c = canvas.getContext('2d');
+  const walk = pose === '_w1' ? -3 : pose === '_w2' ? 3 : 0;
+  const attack = pose === '_a2' ? 8 : pose === '_a1' ? -4 : 0;
+  function poly(color, points) {
+    c.fillStyle = color; c.beginPath(); c.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) c.lineTo(points[i][0], points[i][1]);
+    c.closePath(); c.fill();
+  }
+  function rect(color, x, y, w, h) { c.fillStyle = color; c.fillRect(x, y, w, h); }
+  // Feet, heavy layered robe and a hood. Side views narrow naturally; back
+  // views have no face or hand-press painted over the back of the robe.
+  const side = view === 2, rear = view >= 3;
+  const left = side ? 24 : 16, right = side ? 43 : 49;
+  rect('#171314', left + 3 + walk, 85, 9, 8); rect('#1e1919', right - 12 - walk, 86, 10, 7);
+  poly('#29232c', [[left + 7, 29], [right - 7, 29], [right, 87], [left - 3, 87]]);
+  poly('#443b49', [[left + 9, 31], [right - 9, 31], [right - 4, 83], [left + 3, 85]]);
+  poly('#615468', [[left + 12, 34], [left + 16, 35], [left + 11, 80], [left + 5, 81]]);
+  poly('#302b37', [[right - 11, 37], [right - 6, 45], [right - 1, 85], [right - 10, 83]]);
+  rect('#a89b79', left + 1, 83, right - left - 1, 2);
+  poly('#29232e', [[26, 8], [37, 7], [44, 19], [41, 36], [23, 36], [20, 21]]);
+  poly('#524858', [[27, 10], [35, 10], [40, 20], [37, 31], [24, 30], [23, 21]]);
+  if (rear) {
+    // Folded hood, stitched spine and the Synod's brass seal.
+    poly('#37303e', [[24, 20], [39, 18], [37, 33], [31, 39]]);
+    rect('#827184', 31, 40, 1, 39); rect('#aa9362', 28, 44, 7, 2); rect('#aa9362', 31, 41, 2, 10);
+    if (view === 3) rect('#a1989b', 40, 20, 2, 8);
+  } else {
+    poly('#b9b5b0', side ? [[36, 17], [42, 20], [45, 25], [39, 29], [35, 26]] : [[30, 16], [39, 17], [42, 25], [35, 30], [28, 25]]);
+    rect('#27242b', side ? 40 : 34, 21, side ? 3 : 6, 2);
+    rect('#797a7b', 37, 26, 4, 2);
+  }
+  // The press is held on the forward side, never over the back.
+  const armX = rear ? left - 1 : right - 6 + attack;
+  poly('#4b4053', [[rear ? left + 6 : right - 8, 35], [armX + 5, 46], [armX + 2, 64], [armX - 6, 59]]);
+  rect('#a18b79', armX - 5, 59, 7, 6);
+  if (!rear) { rect('#766d58', armX - 5, 61, 10, 12); rect('#c1b38c', armX - 7, 62, 14, 3); rect('#29292b', armX - 3, 68, 6, 3); }
+  const data = c.getImageData(0, 0, 64, 96);
+  const sprite = { w: 64, h: 96, data: new Uint32Array(data.data.buffer), hs: 1, cx: 0.5, dy: 0 };
+  PROCTOR_VIEWS.set(key, sprite);
+  return sprite;
+}
+function animDirectionalSprite(e) {
+  const base = (e.animSprite && Engine.sprites[e.animSprite]) || Engine.sprites[e.sprite];
+  if (e.deathArt) return { sprite: animDeathSprite(e), flip: !!e.animFlip };
+  if (e.kind !== 'enemy' || e.sprite !== 'proctor') return { sprite: base, flip: !!e.animFlip };
+  const angle = animViewAngle(e), pose = e.animSprite ? e.animSprite.slice(e.sprite.length) : '';
+  return { sprite: angle.view === 0 ? base : animProctorView(angle.view, pose), flip: angle.flip };
+}
+
 // ---------------------------------------------------------------- creatures
 function animCreature(e, dt, T) {
   const s = animSeed(e), d = e.def || {}, isEnemy = e.kind === 'enemy';
@@ -30,6 +96,10 @@ function animCreature(e, dt, T) {
   const spd = Math.min(6, Math.hypot(vx, vy));
   e._spd = (e._spd || 0) * 0.8 + spd * 0.2; // smoothed, so a stop-start chase does not stutter
   const moving = e._spd > 0.25;
+  // Derive heading from actual movement (including retreat), or look toward
+  // the threat while stationary in combat. Idle guards keep their map heading.
+  if (spd > 0.08) e.facing = Math.atan2(vy, vx);
+  else if (isEnemy && e.state === 'chase' && !e.stun) e.facing = Math.atan2(Engine.cam.y - e.y, Engine.cam.x - e.x);
   const hover = (d.yOff || 0) < 0 || ANIM.flutter.has(e.sprite) || d.quiet;
   // idle breathing
   let sy = 1 + 0.018 * Math.sin(T * 2.1 + s), sx = 1 - 0.009 * Math.sin(T * 2.1 + s);
@@ -131,6 +201,7 @@ function animDeco(e, dt, T, outdoor) {
   const s = animSeed(e), sp = e.sprite;
   animReset(e);
   if (e.dying) return animDying(e, dt);
+  if (e.corpse) return;
   if (ANIM.trees.has(sp) && outdoor) {
     const gust = 0.7 + 0.3 * Math.sin(T * 0.23 + e.x * 0.05);
     e.animSkew = gust * (0.016 * Math.sin(T * 0.9 + e.x * 0.35 + e.y * 0.2) + 0.006 * Math.sin(T * 2.3 + s));
@@ -148,25 +219,66 @@ function animDeco(e, dt, T, outdoor) {
 }
 
 // ---------------------------------------------------------------- deaths
-function animDying(e, dt) {
-  e.dieT += dt; const k = Math.min(1, e.dieT / e.dieDur), ease = 1 - (1 - k) * (1 - k);
-  if (e.dieStyle === 'dissolve') {
-    // Cacophony and Quiets come apart: static, lift, gone
-    e.animLift = 0.25 * ease; e.animAlpha = 1 - k; e.animSX = 1 + 0.4 * ease; e.animSY = 1 - 0.2 * ease;
-    e.animSkew = 0.12 * Math.sin(e.dieT * 50) * (1 - k); e.animGlow = 0.9 * (1 - k);
-  } else {
-    // flesh, wood and marble fall
-    e.animSY = 1 - 0.82 * ease; e.animSX = 1 + 0.32 * ease; e.animSkew = (e._seed > 3.14 ? 1 : -1) * 0.25 * ease;
-    e.animAlpha = k < 0.7 ? 1 : 1 - (k - 0.7) / 0.3; e.animHurt = 0.5 * (1 - k);
+// Cache by source artwork, not by corpse: three collapse or eight special
+// poses shared by every death of that species/view. No per-frame canvas work.
+const DEATH_FRAMES = new WeakMap();
+function animDeathSprite(e) {
+  const source = e.deathArt;
+  let poses = DEATH_FRAMES.get(source);
+  if (!poses) { poses = new Map(); DEATH_FRAMES.set(source, poses); }
+  const stage = e.deathStage || 0, key = e.dieStyle + ':' + stage;
+  if (poses.has(key)) return poses.get(key);
+  const w = source.w, h = source.h, data = new Uint32Array(w * h);
+  // Repose the existing pixels into discrete silhouettes. Bespoke painted
+  // collapse sheets can replace this pilot without changing the lifecycle.
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const px = source.data[y * w + x]; if ((px >>> 24) < 100) continue;
+    let dx = x, dy = y;
+    if (e.dieStyle === 'fall') {
+      const k = [0.28, 0.64, 1][Math.min(stage, 2)];
+      dx = w * 0.5 + (x - w * 0.5) * (1 - k * 0.25) + (h - y) * k * 0.16;
+      dy = h - 1 - (h - 1 - y) * (1 - k * 0.78);
+    } else if (e.dieStyle === 'sink') dy = y + stage / 7 * h;
+    else if (e.dieStyle === 'scatter') {
+      // Each tile flies radially, leaving actual gaps rather than scaling
+      // the entire swarm. Hash-based directions keep the sequence stable.
+      const tileX = x >> 3, tileY = y >> 3;
+      const angle = Math.atan2(tileY * 8 + 4 - h / 2, tileX * 8 + 4 - w / 2);
+      const travel = stage * (2 + ((tileX * 7 + tileY * 13) % 4));
+      dx += Math.cos(angle) * travel; dy += Math.sin(angle) * travel;
+    }
+    dx = Math.round(dx); dy = Math.round(dy);
+    if (dx >= 0 && dy >= 0 && dx < w && dy < h) data[dy * w + dx] = px;
   }
-  if (k >= 1) e.dead = e.hidden = true;
+  const frame = { w, h, data, hs: source.hs, cx: source.cx, dy: source.dy };
+  poses.set(key, frame); return frame;
+}
+function animDying(e, dt) {
+  e.dieT += dt; const k = Math.min(1, e.dieT / e.dieDur);
+  animReset(e);
+  e.deathStage = Math.min(e.dieStyle === 'fall' ? 2 : 7, Math.floor(k * (e.dieStyle === 'fall' ? 3 : 8)));
+  if (e.dieStyle !== 'fall') {
+    e.animAlpha = 1 - k;
+    if (e.dieStyle === 'dissolve') { e.animLift = k * 0.25; e.animGlow = 0.6 * (1 - k); }
+  }
+  if (k >= 1) {
+    e.dying = false;
+    if (e.dieStyle === 'fall') { e.corpse = true; e.animAlpha = 1; }
+    else e.dead = e.hidden = true;
+  }
 }
 function animSpawnDeath(src) {
   if (!src || !src.sprite || !G.ents) return;
   const d = src.def || {}, big = !!d.boss;
+  const cell = G.map && G.map.floorCells && G.map.floorCells[(src.y | 0) * G.map.w + (src.x | 0)];
+  const floor = cell && G.map.floorTextures ? G.map.floorTextures[cell] : G.map && G.map.floor;
+  const water = floor === 't_water' || floor === 't_shallows';
+  const style = src.type === 'drowned' && water ? 'sink' : ANIM.flutter.has(src.sprite) ? 'scatter' : (d.cacophony && src.type !== 'drowned') || d.quiet || d.hushkin ? 'dissolve' : 'fall';
+  const art = animDirectionalSprite(src);
   const ghost = { kind: 'deco', sprite: src.sprite, x: src.x, y: src.y, scale: src.scale, yOff: src.yOff, dying: true, transient: true, nopick: true, solid: false,
-    dieT: 0, dieDur: big ? 1.4 : 0.65, dieStyle: (d.cacophony || d.quiet || d.hushkin) ? 'dissolve' : 'fall', animFlip: src.animFlip };
+    dieT: 0, dieDur: big ? 1.4 : style === 'sink' ? 1.5 : 0.8, dieStyle: style, deathArt: art.sprite, deathStage: 0, animFlip: art.flip };
   animSeed(ghost); G.ents.push(ghost);
+  return ghost;
 }
 
 // ---------------------------------------------------------------- particles (screen space, drawn over the view)
@@ -235,7 +347,17 @@ function animFrame() {
 // ---------------------------------------------------------------- hooks (load order: after game.js and party.js)
 (() => {
   const _kill = killEnemy;
-  killEnemy = function (e, byGlass) { const r = _kill(e, byGlass); try { animSpawnDeath(e); } catch (err) { /* animation must never break a kill */ } return r; };
+  killEnemy = function (e, byGlass) {
+    if (!e || e.dead) return;
+    const r = _kill(e, byGlass);
+    animSpawnDeath(e);
+    return r;
+  };
+  const _loadMap = loadMap;
+  loadMap = function (id, pos) {
+    if (G.ents) for (let i = G.ents.length - 1; i >= 0; i--) if (G.ents[i].transient) G.ents.splice(i, 1);
+    return _loadMap(id, pos);
+  };
   const _eRender = Engine.render;
   Engine.render = function (ents, tod, opts) { const r = _eRender(ents, tod, opts); try { animParticles(ANIM.dt || 0.016, ANIM.T); } catch (err) { /* never break a frame */ } return r; };
   const _render = render;
