@@ -53,19 +53,52 @@ const Engine = (() => {
 
   // ---- colour helpers -------------------------------------------------
   // pixels are ABGR little-endian in Uint32
-  function shade(px, f) {
+  function shade(px, f, cr, cg, cb) {
     // f in [0,1]
-    if (f >= 0.999) return px;
-    const r = (px & 255) * f, g = ((px >> 8) & 255) * f, b = ((px >> 16) & 255) * f;
-    return (255 << 24) | (b << 16) | (g << 8) | r;
+    const r = Math.min(255, (px & 255) * f + (cr || 0)), g = Math.min(255, ((px >> 8) & 255) * f + (cg || 0)), b = Math.min(255, ((px >> 16) & 255) * f + (cb || 0));
+    return (255 << 24) | ((b | 0) << 16) | ((g | 0) << 8) | (r | 0);
   }
-  function tint(px, f, tr, tg, tb) {
-    // blend toward fog colour (tr,tg,tb) by (1-f), then darken by ambient light (module var `light_`)
-    const r = ((px & 255) * f + tr * (1 - f)) * light_, g = (((px >> 8) & 255) * f + tg * (1 - f)) * light_, b = (((px >> 16) & 255) * f + tb * (1 - f)) * light_;
-    return (255 << 24) | (b << 16) | (g << 8) | r;
+  function tint(px, f, tr, tg, tb, cr, cg, cb) {
+    // blend toward fog colour (tr,tg,tb) by (1-f), then darken by ambient light (module var `light_`), plus point-light colour
+    const r = Math.min(255, ((px & 255) * f + tr * (1 - f)) * light_ + (cr || 0)), g = Math.min(255, (((px >> 8) & 255) * f + tg * (1 - f)) * light_ + (cg || 0)), b = Math.min(255, (((px >> 16) & 255) * f + tb * (1 - f)) * light_ + (cb || 0));
+    return (255 << 24) | ((b | 0) << 16) | ((g | 0) << 8) | (r | 0);
   }
   let light_ = 1;
   function rgb(r, g, b) { return (255 << 24) | (b << 16) | (g << 8) | r; }
+
+  // ---- dynamic coloured point-lights ----------------------------------
+  const ptLights = [];
+  function gatherLights(entities, opts) {
+    ptLights.length = 0;
+    if (opts && opts.playerLight) ptLights.push(opts.playerLight);
+    if (!entities) return;
+    for (let i = 0; i < entities.length; i++) {
+      const e = entities[i];
+      if (!e || e.hidden || e.dead) continue;
+      const sp = e.sprite;
+      if (sp === 'lamp' && (e.glow === undefined || e.glow > 0.05)) {
+        ptLights.push({ x: e.x, y: e.y, r: 4.5, cr: 58, cg: 38, cb: 12 });
+      } else if (sp === 'campfire' || sp === 'hearth') {
+        ptLights.push({ x: e.x, y: e.y, r: 5.8, cr: 78, cg: 40, cb: 10 });
+      } else if (sp === 'basin' || sp === 'loom' || sp === 'web' || sp === 'cocoon') {
+        ptLights.push({ x: e.x, y: e.y, r: 4.2, cr: 34, cg: 24, cb: 64 });
+      } else if (sp === 'cores' || sp === 'coil' || e.type === 'aegis' || e.lightCol) {
+        const lc = e.lightCol || [20, 58, 48];
+        ptLights.push({ x: e.x, y: e.y, r: 4.0, cr: lc[0], cg: lc[1], cb: lc[2] });
+      }
+    }
+  }
+  function sampleLight(wx, wy) {
+    let cr = 0, cg = 0, cb = 0;
+    for (let i = 0; i < ptLights.length; i++) {
+      const L = ptLights[i], dx = wx - L.x, dy = wy - L.y, d2 = dx * dx + dy * dy, r2 = L.r * L.r;
+      if (d2 < r2) {
+        const k = 1 - d2 / r2; const kk = k * k;
+        cr += L.cr * kk; cg += L.cg * kk; cb += L.cb * kk;
+      }
+    }
+    return [cr > 90 ? 90 : cr, cg > 90 ? 90 : cg, cb > 90 ? 90 : cb];
+  }
 
   // ---- renderer state -------------------------------------------------
   const cam = { x: 2, y: 2, dir: 0, pitch: 0, bob: 0 };
@@ -96,7 +129,7 @@ const Engine = (() => {
       skyR[y] = r; skyG[y] = g; skyB[y] = b;
     }
     skyDay = dayness;
-    ambientDark = 0.5 + 0.5 * dayness;
+    ambientDark = 0.28 + 0.72 * dayness;
   }
   buildSky(0.3);
 
@@ -111,6 +144,7 @@ const Engine = (() => {
     const w = VW, h = VIEW_H;
     const outdoor = !!map.outdoor;
     if (outdoor) buildSky(timeOfDay);
+    gatherLights(entities, opts);
     const grid = map.cells, mw = map.w, mh = map.h;
     const dirX = Math.cos(cam.dir), dirY = Math.sin(cam.dir);
     const planeX = -dirY * FOV * 0.66, planeY = dirX * FOV * 0.66;
@@ -161,7 +195,9 @@ const Engine = (() => {
       let o = y * w;
       const tex = isFloor ? floorTexDefault : ceilTex;
       const fi = Math.round(f * 255) / 255;
+      let fcr = 0, fcg = 0, fcb = 0;
       for (let x = 0; x < w; x++) {
+        if ((x & 3) === 0 && ptLights.length && rowDist < 10) [fcr, fcg, fcb] = sampleLight(fx, fy);
         const cx = fx | 0, cy = fy | 0;
         const tx = ((fx - cx) * TEX) & 63, ty = ((fy - cy) * TEX) & 63;
         let t = tex;
@@ -170,8 +206,34 @@ const Engine = (() => {
         if (t === texWater) px = t[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)];
         else if (t === texShal) px = t[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)];
         else px = t[ty * TEX + tx];
-        fb[o++] = outdoor ? tint(px, fi, fogR, fogG, fogB) : shade(px, fi);
+        fb[o++] = outdoor ? tint(px, fi, fogR, fogG, fogB, fcr, fcg, fcb) : shade(px, fi, fcr, fcg, fcb);
         fx += stepX; fy += stepY;
+      }
+    }
+
+    // -- distant landmarks (horizon silhouettes, outdoor only) --------
+    if (outdoor && typeof LANDMARKS !== 'undefined') {
+      const lms = LANDMARKS[map.id] || LANDMARKS._default;
+      const dayM = 0.32 + 0.68 * skyDay;
+      for (let li = 0; li < lms.length; li++) {
+        const lm = lms[li];
+        const sil = lm.c || [30, 26, 42];
+        for (let x = 0; x < w; x++) {
+          const camX = 2 * x / w - 1;
+          const ang = Math.atan2(dirY + planeY * camX, dirX + planeX * camX);
+          let da = ang - lm.a; while (da > Math.PI) da -= Math.PI * 2; while (da < -Math.PI) da += Math.PI * 2;
+          const t = Math.abs(da) / lm.aw; if (t >= 1) continue;
+          const top = Math.round(horizon - lm.h * h * Math.pow(1 - t, lm.p || 1.6));
+          const span = Math.max(1, horizon - top);
+          for (let y = Math.max(0, top); y <= horizon; y++) {
+            const v = (horizon - y) / span;
+            let mix = 0.30 + 0.5 * t * t + 0.25 * v; if (mix > 0.95) mix = 0.95;
+            const rr = (((sil[0] * (1 - mix) + fogR * mix) * dayM) | 0) & 255;
+            const gg = (((sil[1] * (1 - mix) + fogG * mix) * dayM) | 0) & 255;
+            const bb = (((sil[2] * (1 - mix) + fogB * mix) * dayM) | 0) & 255;
+            fb[y * w + x] = (255 << 24) | (bb << 16) | (gg << 8) | rr;
+          }
+        }
       }
     }
 
@@ -236,11 +298,16 @@ const Engine = (() => {
       const step = TEX / lineH;
       let tp = (dsC - ds) * step;
       let o = dsC * w + x;
+      const hitX = cam.x + dist * rdx, hitY = cam.y + dist * rdy;
+      const [lcr, lcg, lcb] = ptLights.length ? sampleLight(hitX, hitY) : [0, 0, 0];
+      const ditherOn = !!(opts && opts.dither);
       // adjacent-door shading: darken door frames slightly
       for (let y = dsC; y <= deC; y++) {
         const ty = (tp | 0) & 63; tp += step;
         const px = tex[ty * TEX + tx];
-        fb[o] = outdoor ? tint(px, fi, fogR, fogG, fogB) : shade(px, fi);
+        const df = ditherOn ? (BAYER[((y & 3) << 2) | (x & 3)] - 7.5) * 0.0045 : 0;
+        const fUse = df ? Math.max(0, Math.min(1, fi + df)) : fi;
+        fb[o] = outdoor ? tint(px, fUse, fogR, fogG, fogB, lcr, lcg, lcb) : shade(px, fUse, lcr, lcg, lcb);
         o += w;
       }
     }
@@ -292,6 +359,8 @@ const Engine = (() => {
       if (xe < xs || ye < ys) continue;
       e._screen = { x0: dsX, x1: deX, y0: dsY, y1: deY, dist: d };
       const tw = sp.w, th = sp.h, sdat = sp.data;
+      const [scr, scg, scb] = ptLights.length ? sampleLight(e.x, e.y) : [0, 0, 0];
+      const ecr = e.elite ? scr + 28 : scr, ecg = e.elite ? scg + 20 : scg, ecb = scb;
       const plain = !skew && !flip && alpha >= 1 && !hurt;
       const aT = alpha * 16;
       for (let x = xs; x <= xe; x++) {
@@ -303,7 +372,7 @@ const Engine = (() => {
           for (let y = ys; y <= ye; y++) {
             const ty = (((y - dsY) * th) / sprH) | 0;
             const px = sdat[ty * tw + tx];
-            if ((px >>> 24) > 100) fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB) : shade(px, fi));
+            if ((px >>> 24) > 100) fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fi, ecr, ecg, ecb));
             o += w;
           }
           continue;
@@ -317,7 +386,7 @@ const Engine = (() => {
           let px = sdat[ty * tw + tx];
           if ((px >>> 24) > 100) {
             if (hurt) { const r = px & 255, g = (px >>> 8) & 255, b = (px >>> 16) & 255, k = hurt * 0.45; px = ((px & 0xff000000) | ((b * (1 - k)) << 16) | ((g * (1 - k)) << 8) | (r + (255 - r) * k)) >>> 0; }
-            fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB) : shade(px, fi));
+            fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fi, ecr, ecg, ecb));
           }
           o += w;
         }
