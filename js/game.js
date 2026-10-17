@@ -492,6 +492,44 @@ function tickLaw(dt) {
   }
 }
 
+// ---------------------------------------------------------------- dungeon mechanisms
+const TRAP_TYPES = {
+  tripwire: { name: 'Barbed tripwire', effect: 'A spring lashes a barbed cord across your shins (5 damage).', sprite: 'grate' },
+  net: { name: 'Suspended snare net', effect: 'A weighted net falls: movement slows for eight seconds.', sprite: 'web' },
+  alarm: { name: 'Alarm-bell wire', effect: 'A bronze bell rings and nearby enemies investigate.', sprite: 'bigbell' },
+};
+function trapKey(e) { return 'trap:' + G.mapId + ':' + e.trapId; }
+function triggerTrap(e) {
+  if (!TRAP_TYPES[e.trapType] || G.flags[trapKey(e)] || e.hidden || e.dead) return;
+  G.flags[trapKey(e)] = 'triggered'; // consume before damage/death callbacks
+  const type = TRAP_TYPES[e.trapType];
+  msg(type.effect, 'bad', 4500);
+  if (e.trapType === 'tripwire') damagePlayer(5, 'The barbed tripwire');
+  else if (e.trapType === 'net') { G.webT = Math.max(G.webT || 0, 8); addNoise(1); }
+  else {
+    addNoise(5); Audio_.sfx.song(392, 0.7);
+    for (const enemy of G.ents) if (enemy.kind === 'enemy' && !enemy.dead && !enemy.hidden && !enemy.passive && dist2(enemy.x, enemy.y, e.x, e.y) < 100) { enemy.state = 'chase'; enemy.alertT = 8; }
+  }
+}
+function tickTraps() {
+  for (const e of G.ents) if (e.trapType && dist2(e.x, e.y, Engine.cam.x, Engine.cam.y) < 0.36) {
+    triggerTrap(e); if (G.dead) return;
+  }
+}
+function inspectTrap(e) {
+  const type = TRAP_TYPES[e.trapType]; if (!type) return;
+  const map = G.map, key = trapKey(e), state = G.flags[key];
+  G.state = 'panel';
+  openModal(`<h2>${type.name}</h2><p>${state ? (state === 'disarmed' ? 'The mechanism is safely disarmed.' : 'The spent mechanism cannot fire again.') : type.effect}</p>
+  <p class="muted">Keep clear of the marked mechanism. Disarming uses three tumblers and your Lockpicking skill; three slips leave the trap armed. Leaving does not trigger it.</p>
+  <div class="btns">${state ? '' : '<button class="dfbtn" id="trap-disarm">Disarm mechanism</button>'}<button class="dfbtn" id="trap-leave">Step back</button></div>`, 'trap');
+  $('#trap-leave').onclick = () => { closeModal(); G.state = 'play'; };
+  if (!state) $('#trap-disarm').onclick = () => {
+    if (G.map !== map || G.flags[key]) return;
+    beginLockpick(e, key, 2, () => { G.flags[key] = 'disarmed'; msg('You uncouple the trigger. The mechanism is safe.', 'good', 3500); });
+  };
+}
+
 // ---------------------------------------------------------------- optional mechanical locks
 // Only explicitly marked mechanical locks are pickable. Story seals always
 // use cell.locked and are never bypassed by these saved unlock flags.
@@ -604,6 +642,7 @@ function useItem(slot) {
   renderInventory();
 }
 function useDeco(e) {
+  if (e.trapType) { inspectTrap(e); return; }
   if (wildsUse(e) || codaUse(e) || wgUse(e)) return;
   if (e.use === 'crates') {
     if (!G.flags.crates_heard) { G.flags.crates_heard = true; ['Annet Sowerby', 'Corwin Aye', 'Mirren Salk'].forEach(n => G.ledger.push({ name: n, where: 'Hetty\'s cellar', day: G.day })); }
@@ -1228,6 +1267,7 @@ function update(dt) {
   if (G.songFx > 0) G.songFx -= dt;
   p.voice = Math.min(p.voiceMax, p.voice + dt * 0.08);
   updateNarrow(dt, moving, running);
+  tickTraps(); if (G.dead) return;
   // entities
   for (const e of G.ents) {
     if (e.kind === 'enemy') enemyUpdate(e, dt);

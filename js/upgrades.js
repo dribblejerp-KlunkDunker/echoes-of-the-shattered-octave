@@ -1650,6 +1650,14 @@ function lesson(id, text) {
       }
       maps.oakhaven.baseCount = maps.oakhaven.entities.length;
     }
+    // Append after historical entities; flags hold trap state, not entity indexes.
+    const cat = maps.catacombs;
+    if (cat) {
+      for (const [type, id, x, y] of [['tripwire', 'charnel-cord', 6.5, 6.5], ['net', 'chapel-net', 7.5, 24.5], ['alarm', 'gallery-bell', 24.5, 3.5]]) {
+        cat.deco(TRAP_TYPES[type].sprite, x, y, { solid: false, scale: type === 'alarm' ? 0.35 : 0.45, use: 'trap', trapType: type, trapId: id, label: TRAP_TYPES[type].name + ' — inspect to disarm', glow: 0.35 });
+      }
+      cat.baseCount = cat.entities.length;
+    }
   }
 
   // -- engine & game hooks -------------------------------------------
