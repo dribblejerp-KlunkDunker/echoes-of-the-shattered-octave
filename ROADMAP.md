@@ -70,8 +70,8 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Miller, tanner and barman working loops.
 
 ### Animation — first person
-- [ ] Multi-frame painted swing sheets for every weapon.
-- [ ] Mace overhead, dagger thrust and staff sweep timing/poses.
+- [~] Weapon-family wind-up/strike/recovery choreography across all 16 catalog weapons, using existing first-person images with grip-pivot rotation/translation/scale. Bespoke multi-frame painted swing sheets remain pending.
+- [~] Mace/maul/axe overhead arcs, knife/spear thrusts, mirrored blade sweeps and ranged recoil implemented and verified. No staff exists in the current weapon catalog; staff artwork/moves remain pending.
 - [ ] Draw, holster and weapon-switch transitions.
 - [ ] Raised hands and Song-coloured casting glow.
 - [ ] Optional gentle head bob and landing dip.
@@ -81,7 +81,7 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Full-screen held notes/books with accessible readable text.
 
 ### Animation — world
-- [ ] Drawn torch/brazier/campfire frame loops (baseline procedural flicker is not this).
+- [~] Campfire/hearth sprites now use four cached, distinct flame silhouettes generated from their existing painted warm-colour pixels; logs/stone remain anchored. Torch/brazier assets and bespoke drawn fire sheets remain pending.
 - [ ] Chimney, Golem-vent and campfire smoke.
 - [ ] Player/enemy water splashes.
 - [ ] Wind-driven signs and banners.
@@ -137,6 +137,12 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
 - [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Weapon-motion and fire pass verification
+- Chromium exercises all 16 weapon overlays at five progress points, four motion families, mirrored slashes and resting sequence endpoints.
+- Pure pose evaluation leaves combat state unchanged; the real `attack()` entrypoint retains its catalog cooldown, fatigue cost and duplicate-input lock. Damage/hit logic is unchanged.
+- Campfire and hearth each have four distinct cached frames; source pixels and fuel-bed pixels remain unchanged. The renderer resolver advances frames with the animation clock.
+- Existing direction, equipment, lighting, corpse and save/load browser regressions remain passing. These are transformed existing assets, not bespoke painted swing/fire sheets; art review remains outstanding.
 
 ### Combat-life pass verification
 - Generated death artwork is cached by source/view and pose (three collapse poses or eight special poses), not allocated every frame or for every body.

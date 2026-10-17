@@ -1138,12 +1138,21 @@ function drawHUD() {
   const w = currentWeapon(); const img = Engine.images[G.song.t > 0 || G.songFx > 0 ? 'fp_hands' : w.img];
   if (img) {
     const sc = 0.5; const iw = img.width * sc, ih = img.height * sc;
-    let ax = 0, ay = 0;
-    if (G.attack.t > 0) { const f = 1 - G.attack.t / G.attack.dur; const s = Math.sin(f * Math.PI); ax = -s * 60 * (G.attack.dirLabel === 'slash left' ? 1.4 : 0.8); ay = -s * 40 + (G.attack.dirLabel === 'chop down' ? s * 25 : 0); }
+    let ax = 0, ay = 0, rotation = 0, zoom = 1;
+    if (G.attack.t > 0 && G.song.t <= 0 && G.songFx <= 0) {
+      const pose = animWeaponPose(w, 1 - G.attack.t / G.attack.dur, G.attack.dirLabel);
+      ax = pose.x; ay = pose.y; rotation = pose.rotation; zoom = pose.scale;
+    }
     if (G.song.t > 0) { ay = -Math.sin((1 - G.song.t / 0.7) * Math.PI) * 30; }
     const bob = (Engine.cam.bob || 0) + (G.attack.t > 0 ? 0 : Math.sin(performance.now() / 900) * 1.4);
     const bx = w.img === 'fp_hands' || G.song.t > 0 || G.songFx > 0 ? VW / 2 - iw / 2 : w.center ? VW / 2 - iw / 2 + 22 : VW - iw - 10;
-    ctx.drawImage(img, bx + ax, VIEW_H - ih + 24 + ay + bob * 1.5, iw, ih);
+    // Clip to the world viewport so overhead swings cannot cover HUD/menu
+    // borders; rotate around the grip instead of the artwork's centre.
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VW, VIEW_H); ctx.clip();
+    ctx.translate(bx + ax + iw * 0.5, VIEW_H + 12 + ay + bob * 1.5);
+    ctx.rotate(rotation); ctx.scale(zoom, zoom);
+    ctx.drawImage(img, -iw * 0.5, -ih + 12, iw, ih);
+    ctx.restore();
     if (G.glassLock > 0 && w.type === 'glass') { ctx.fillStyle = 'rgba(80,200,220,0.25)'; ctx.fillRect(bx + ax, VIEW_H - ih + 24 + ay, iw, ih); }
   }
   // crosshair
