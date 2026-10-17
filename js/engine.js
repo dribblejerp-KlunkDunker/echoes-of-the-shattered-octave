@@ -102,6 +102,9 @@ const Engine = (() => {
 
   // ---- main render ---------------------------------------------------
   const sprList = [];
+  let animT = 0;
+  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  const wave = new Int8Array(64);
   function render(entities, timeOfDay, opts) {
     opts = opts || {};
     if (!map) return;
@@ -120,6 +123,9 @@ const Engine = (() => {
 
     // -- floor & ceiling ----------------------------------------------
     const floorTexDefault = textures[map.floor] || textures.t_flag;
+    const texWater = textures.t_water, texShal = textures.t_shallows;
+    for (let i = 0; i < 64; i++) wave[i] = Math.round(Math.sin(i / 64 * Math.PI * 4 + animT * 1.8) * 1.6);
+    const wScroll = (animT * 3) | 0, sScroll = (animT * 1.2) | 0;
     const ceilTex = map.ceil ? textures[map.ceil] : null;
     const rayDirX0 = dirX - planeX, rayDirY0 = dirY - planeY;
     const rayDirX1 = dirX + planeX, rayDirY1 = dirY + planeY;
@@ -160,7 +166,10 @@ const Engine = (() => {
         const tx = ((fx - cx) * TEX) & 63, ty = ((fy - cy) * TEX) & 63;
         let t = tex;
         if (isFloor && floorMap && cx >= 0 && cy >= 0 && cx < mw && cy < mh) { const idx = floorMap[cy * mw + cx]; if (idx) t = floorTexList[idx]; }
-        const px = t[ty * TEX + tx];
+        let px;
+        if (t === texWater) px = t[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)];
+        else if (t === texShal) px = t[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)];
+        else px = t[ty * TEX + tx];
         fb[o++] = outdoor ? tint(px, fi, fogR, fogG, fogB) : shade(px, fi);
         fx += stepX; fy += stepY;
       }
@@ -256,12 +265,13 @@ const Engine = (() => {
       if (trY <= 0.08) continue;
       const screenX = ((w / 2) * (1 + trX / trY)) | 0;
       const scale = e.scale || 1;
-      const sprH = Math.abs((h / trY) * scale) | 0;
-      const vMove = ((e.yOff || 0) * h / trY) | 0; // + = lower
+      const baseH = Math.abs((h / trY) * scale);
+      const sprH = (baseH * (e.animSY || 1)) | 0;
+      const vMove = (((e.yOff || 0) - (e.animLift || 0)) * h / trY) | 0; // + = lower
       // sprites sit on the floor: bottom at horizon + half unit height
       const baseline = horizon + ((0.5 * h / trY) | 0) + vMove;
       const dsY = baseline - sprH, deY = baseline;
-      const sprW = (sprH * sp.w / sp.h) | 0;
+      const sprW = Math.max(1, (baseH * sp.w / sp.h * (e.animSX || 1)) | 0);
       const dsX = screenX - (sprW >> 1), deX = dsX + sprW;
       const d = Math.sqrt(e._d2);
       let f = light * (1 - d * fogMul);
@@ -269,21 +279,42 @@ const Engine = (() => {
       f = ambient + (1 - ambient) * f;
       if (!outdoor) f *= flick;
       if (e.glow) f = Math.max(f, e.glow);
+      if (e.animGlow) f = Math.max(f, e.animGlow);
       if (e.flash) f = 1;
       const fi = Math.round(f * 255) / 255;
-      const xs = Math.max(0, dsX), xe = Math.min(w - 1, deX);
+      const skew = e.animSkew || 0, flip = !!e.animFlip, alpha = e.animAlpha == null ? 1 : e.animAlpha, hurt = e.animHurt || 0;
+      if (alpha <= 0.02) { e._screen = null; continue; }
+      const shTop = skew * sprH;
+      const xs = Math.max(0, (dsX + Math.min(0, shTop)) | 0), xe = Math.min(w - 1, (deX + Math.max(0, shTop)) | 0);
       const ys = Math.max(0, dsY), ye = Math.min(h - 1, deY);
       if (xe < xs || ye < ys) continue;
       e._screen = { x0: dsX, x1: deX, y0: dsY, y1: deY, dist: d };
       const tw = sp.w, th = sp.h, sdat = sp.data;
+      const plain = !skew && !flip && alpha >= 1 && !hurt;
+      const aT = alpha * 16;
       for (let x = xs; x <= xe; x++) {
         if (trY >= zbuf[x]) continue;
-        const tx = (((x - dsX) * tw) / sprW) | 0;
         let o = ys * w + x;
+        if (plain) {
+          const tx = (((x - dsX) * tw) / sprW) | 0;
+          if (tx < 0 || tx >= tw) continue;
+          for (let y = ys; y <= ye; y++) {
+            const ty = (((y - dsY) * th) / sprH) | 0;
+            const px = sdat[ty * tw + tx];
+            if ((px >>> 24) > 100) fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB) : shade(px, fi));
+            o += w;
+          }
+          continue;
+        }
         for (let y = ys; y <= ye; y++) {
+          const sx = skew ? x - skew * (deY - y) : x;
+          let tx = (((sx - dsX) * tw) / sprW) | 0;
+          if (tx < 0 || tx >= tw || (alpha < 1 && BAYER[((y & 3) << 2) | (x & 3)] >= aT)) { o += w; continue; }
+          if (flip) tx = tw - 1 - tx;
           const ty = (((y - dsY) * th) / sprH) | 0;
-          const px = sdat[ty * tw + tx];
+          let px = sdat[ty * tw + tx];
           if ((px >>> 24) > 100) {
+            if (hurt) { const r = px & 255, g = (px >>> 8) & 255, b = (px >>> 16) & 255, k = hurt * 0.45; px = ((px & 0xff000000) | ((b * (1 - k)) << 16) | ((g * (1 - k)) << 8) | (r + (255 - r) * k)) >>> 0; }
             fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB) : shade(px, fi));
           }
           o += w;
@@ -321,6 +352,7 @@ const Engine = (() => {
   }
 
   function setFlicker(v) { lightFlicker = v; }
+  function setTime(t) { animT = t; }
 
-  return { canvas, ctx, cam, textures, sprites, images, loadAll, render, setMap, pick, pickWall, setFlicker, rgb, VW, VH, VIEW_H };
+  return { canvas, ctx, cam, textures, sprites, images, loadAll, render, setMap, pick, pickWall, setFlicker, setTime, rgb, VW, VH, VIEW_H };
 })();
