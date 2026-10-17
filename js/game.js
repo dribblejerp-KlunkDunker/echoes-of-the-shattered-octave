@@ -432,6 +432,55 @@ function castSong(id) {
   }
 }
 
+// ---------------------------------------------------------------- optional mechanical locks
+// Only explicitly marked mechanical locks are pickable. Story seals always
+// use cell.locked and are never bypassed by these saved unlock flags.
+let LOCKPICK = null;
+function mechanicalLockKey(target, x, y) {
+  return 'picked:' + G.mapId + ':' + (target.kind === 'item' ? 'chest:' + target.x + ':' + target.y : 'door:' + x + ':' + y);
+}
+function beginLockpick(target, key, difficulty, onOpen) {
+  if (target.locked || G.flags[key] || G.dead) return false;
+  ensurePlayerUpgrades(G.player);
+  const rank = Number(G.player.skills.Lockpicking) || 15;
+  let seed = 0; for (const char of key) seed = (Math.imul(seed, 31) + char.charCodeAt(0)) >>> 0;
+  LOCKPICK = { target, key, map: G.map, onOpen, pin: 0, position: 50, misses: 0,
+    centers: [0, 1, 2].map(i => 20 + ((seed >>> (i * 6)) % 13) * 5),
+    tolerance: clamp(15 + rank * 0.12 - clamp(difficulty, 1, 3) * 3, 6, 22), status: 'Find the soft spot, then lift the pin.' };
+  G.state = 'panel'; renderLockpick(); return true;
+}
+function cancelLockpick() { LOCKPICK = null; closeModal(); G.keys = {}; G.touch.fx = G.touch.fy = 0; G.state = 'play'; }
+function lockpickInput(action) {
+  const l = LOCKPICK; if (!l || G.openPanel !== 'lockpick') return;
+  if (l.map !== G.map || G.dead) { cancelLockpick(); return; }
+  if (action === 'cancel') { cancelLockpick(); return; }
+  if (action === 'left' || action === 'right') l.position = clamp(l.position + (action === 'left' ? -5 : 5), 0, 100);
+  if (action === 'lift') {
+    if (Math.abs(l.position - l.centers[l.pin]) <= l.tolerance) {
+      l.pin++; l.status = 'The pin catches. Feel for the next tumbler.';
+      if (l.pin === 3) {
+        G.flags[l.key] = true; gainSkill('Lockpicking', 2);
+        const open = l.onOpen; cancelLockpick(); Audio_.sfx.door();
+        msg('The final tumbler turns. The lock opens.', 'good', 3000); open(); return;
+      }
+    } else {
+      l.misses++; l.pin = 0; G.player.fat = Math.max(0, G.player.fat - 1); addNoise(0.4);
+      l.status = 'The pick slips. The pins fall; you lose 1 Fatigue.';
+      if (l.misses >= 3) { cancelLockpick(); msg('The mechanism binds. You withdraw the pick; you may try again.', 'warn', 3500); return; }
+    }
+  }
+  renderLockpick();
+}
+function renderLockpick() {
+  const l = LOCKPICK; if (!l) return;
+  openModal(`<h2>The brass tumblers</h2><p class="muted">Lockpicking ${Math.round(Number(G.player.skills.Lockpicking) || 15)} · Pin ${l.pin + 1}/3 · Slips ${l.misses}/3</p>
+  <div class="lock-study" role="img" aria-label="Pin ${l.pin + 1}; soft spot at ${l.centers[l.pin]} percent; pick at ${l.position} percent">
+  <div class="lock-band" style="left:${l.centers[l.pin] - l.tolerance}%;width:${l.tolerance * 2}%"></div><div class="lock-pick" style="left:${l.position}%"></div></div>
+  <p role="status" aria-live="polite">${l.status}</p><p class="muted">Left/right arrows to feel along the lock; Space or Enter to lift. Escape to leave. Controller: D-pad, A, B.</p>
+  <div class="btns"><button class="dfbtn" id="lp-left" aria-label="Move pick left">← Left</button><button class="dfbtn" id="lp-lift">Lift pin</button><button class="dfbtn" id="lp-right" aria-label="Move pick right">Right →</button><button class="dfbtn" id="lp-cancel">Leave lock</button></div>`, 'lockpick');
+  for (const action of ['left', 'right', 'lift', 'cancel']) $('#lp-' + action).onclick = () => lockpickInput(action);
+}
+
 // ---------------------------------------------------------------- interaction
 const USE_RANGE = 2.6;
 function interact() {
@@ -455,6 +504,10 @@ function interact() {
       const ok = cell.locked === 'pass' ? G.has('pass') : (cell.locked === '__never' ? false : !!G.flags[cell.locked]);
       if (!ok) { msg(cell.lockMsg || 'It is locked.', 'warn', 4500); return; }
     }
+    if (cell.lockDifficulty && !cell.locked) {
+      const lockKey = mechanicalLockKey(cell, w.x, w.y);
+      if (!G.flags[lockKey] && beginLockpick(cell, lockKey, cell.lockDifficulty, () => { G.map.doors[key].target = 1; })) return;
+    }
     if (cell.portal) { Audio_.sfx.door(); transfer(cell.portal); return; }
     const d = G.map.doors[key]; d.target = d.target > 0.5 ? 0 : 1; Audio_.sfx.door(); addNoise(0.8); return;
   }
@@ -463,6 +516,11 @@ function interact() {
 function decoLabel(e) { return e.label || ({ oak: 'An iron-bark oak. When the wind moves it, it rings like bronze.', lamp: 'A hush-lamp. Its reed-whistle never lets the street go silent.', crates: 'Crates, iron-banded.', bones: 'Bones, and a torn cloth. A hound\'s bed: no sound carries here.', pump: 'A steam pump. Hollows work these.', bed: 'A straw bed.', table: 'A table.', shelf: 'Shelves of ledgers and jars.', hearth: 'A hearth, kept low.', chair: 'A chair with a sap-mark chalked on it.', sign: 'A signpost. The boards have been scraped blank.', grate: 'The tannery culvert. Beyond it, the Hedge. At the dead hour, it speaks.', lever: 'A sluice lever. It is chained.', bore: 'The bore.', cores: 'Crates of glass cores.', burlsick: 'One of the burl-sick. Roots in the skin. They do not see you.' })[e.sprite] || 'Something.'; }
 function wallLabel(cell) { return ({ t_hedge: 'The Hedge. Three men deep of thorn and packed wool.', t_glassrock: 'Rock veined with green-gold glass. It is faintly warm, and it hums.', t_marble: 'Old marble.', t_greymarble: 'Drowned marble, grey-white, furred with lilac lichen to the waterline.', t_catacomb: 'Burial niches, five deep. Somebody has strung lilac thread across the skulls.', t_mausoleum: 'Violet marble, carved with staves of music from floor to vault. Put your ear to it and it hums.', t_deepwood: 'Silver willow, trunk against trunk, too thick to pass. The fronds move when nothing else does.', t_brass: 'Riveted brass. Verdigris.', t_house: 'Plaster and oak timber.', t_wood: 'Old planks.', t_stone: 'Cold stone.', t_door: 'A door.' })[cell.tex] || 'A wall.'; }
 function pickUp(e) {
+  if (e.dead || e.hidden) return;
+  if (e.item === 'cache' && e.tier >= 2) {
+    const key = mechanicalLockKey(e);
+    if (!G.flags[key] && beginLockpick(e, key, Math.min(3, e.tier), () => pickUp(e))) return;
+  }
   const it = ITEMS[e.item]; e.hidden = true; e.dead = true; Audio_.sfx.pickup();
   if (e.item === 'cache') { openCache(e); return; }
   if (e.item === 'sovereigns') { const n = rndi(4, 14); G.gold(n); msg(`You find ${n} sovereigns.`, 'good'); return; }
@@ -1000,7 +1058,13 @@ window.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse' 
 
 window.addEventListener('keydown', (ev) => {
   if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
-  const k = keyOf(ev); G.keys[k] = true;
+  const k = keyOf(ev);
+  if (G.openPanel === 'lockpick') {
+    const action = { arrowleft: 'left', arrowright: 'right', ' ': 'lift', enter: 'lift', escape: 'cancel' }[k];
+    if (action) { ev.preventDefault(); if (!ev.repeat || action === 'left' || action === 'right') lockpickInput(action); }
+    return;
+  }
+  G.keys[k] = true;
   if (ev.repeat && !['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'q', 'shift'].includes(k)) return;
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'tab', 'f1', 'f2', 'f3', 'f4', 'f5'].includes(k)) ev.preventDefault();
   if (G.state === 'play') {

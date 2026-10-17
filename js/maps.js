@@ -606,7 +606,7 @@ function buildCloister() {
   m.set(15, 1, WALL('t_greymarble')); m.set(15, 4, WALL('t_greymarble')); m.rect(15, 5, 18, 5, 't_greymarble'); m.clear(15, 5, 15, 5);
   // the vestry
   for (let y = 10; y <= 14; y++) m.set(5, y, WALL('t_greymarble'));
-  m.rect(1, 10, 4, 10, 't_greymarble'); m.set(5, 12, DOOR({ label: 'The vestry' }));
+  m.rect(1, 10, 4, 10, 't_greymarble'); m.set(5, 12, DOOR({ label: 'The vestry — a brass tumbler lock', lockDifficulty: 1 }));
   // the risers, empty
   for (let r = 0; r < 2; r++) for (let i = 0; i < 5; i++) m.deco('chair', 7.5 + i, 5.6 + r * 1.1, { radius: 0.18, scale: 0.45, label: 'An empty riser. Small. Eleven places.' });
   m.deco('hymnboard', 9.5, 2.0, { radius: 0.25, scale: 1.15, use: 'hymn', label: 'The hymn board: HYMN 9, still chalked' });

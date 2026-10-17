@@ -93,7 +93,7 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Story-driven wall collapses/quarry cave-in, with safe player recovery.
 
 ### Gameplay
-- [ ] Skill-based lockpicking minigame for locked doors/chests; keyboard/touch/controller inputs.
+- [x] Skill-based three-pin lockpicking for tier-2/3 strongboxes and the Cloister vestry mechanical lock. Keyboard arrows/Space/Enter/Escape, touch buttons and controller D-pad/A/B supported. Story seals remain gated. Successful unlocks advance Lockpicking; higher ranks widen the safe band, slips cost Fatigue/noise and three slips end the attempt. No consumable pick/breakage system in this milestone.
 - [ ] Pickpocketing based on NPC attention and player position.
 - [ ] Drag/hide bodies; patrol discovery and alarm behavior.
 - [ ] Synod robe disguises, proximity inspection and detection.
@@ -137,6 +137,13 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
 - [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Lockpicking pass verification
+- Unlocks use existing `G.flags` keys per map/target; no save-version change. Missing Lockpicking skill in old saves defaults to 15.
+- Chromium verifies real vestry interaction and a complete keyboard solve, touch button input, controller press/release edges, cancellation, three-slip failure and skill-dependent tolerance.
+- Locked strongboxes pay nothing before success or on cancellation; dead/hidden chest guards prevent duplicate loot. Story `cell.locked` gates are never pickable.
+- Save/load retains door unlock flags. Success advances progress or increases rank at the existing skill threshold. Existing browser, hostile-save and gameplay smoke regressions pass.
+- Visual art review and physical-controller hardware testing remain outstanding; controller polling is tested with a browser Gamepad API fixture.
 
 ### Weapon-motion and fire pass verification
 - Chromium exercises all 16 weapon overlays at five progress points, four motion families, mirrored slashes and resting sequence endpoints.

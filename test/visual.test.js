@@ -6,7 +6,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 (async () => {
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
   try {
-    const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+    const page = await browser.newPage({ viewport: { width: 1280, height: 800 }, hasTouch: true });
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     await page.goto(process.env.PREVIEW_URL || 'http://127.0.0.1:3000');
@@ -177,6 +177,81 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       return { species: count, collapsePoses: frames.size };
     });
     console.log('PASS deaths, rewards, corpses, save/load and departure cleanup', deaths);
+    await page.evaluate(() => {
+      loadMap('cloister', { x: 6.5, y: 12.5, dir: Math.PI });
+      G.state = 'play'; G.ents.forEach(e => { e._screen = null; });
+      interact();
+      if (G.openPanel !== 'lockpick') throw new Error('vestry interaction must open lockpicking');
+    });
+    await page.keyboard.press('Escape');
+    assert.equal(await page.evaluate(() => G.openPanel), null);
+    await page.evaluate(() => { G.state = 'play'; interact(); });
+    await page.keyboard.press('ArrowRight');
+    assert.equal(await page.evaluate(() => LOCKPICK.position), 55);
+    await page.locator('#lp-left').tap();
+    assert.equal(await page.evaluate(() => LOCKPICK.position), 50);
+    await page.locator('#lp-cancel').click();
+    await page.evaluate(() => { G.state = 'play'; interact(); });
+    for (let pin = 0; pin < 3; pin++) {
+      const steps = await page.evaluate(() => (LOCKPICK.centers[LOCKPICK.pin] - LOCKPICK.position) / 5);
+      for (let step = 0; step < Math.abs(steps); step++) await page.keyboard.press(steps < 0 ? 'ArrowLeft' : 'ArrowRight');
+      await page.keyboard.press('Space');
+    }
+    assert.equal(await page.evaluate(() => G.openPanel), null);
+    await page.evaluate(() => { delete G.flags[mechanicalLockKey(G.map.get(5, 12), 5, 12)]; });
+    const locks = await page.evaluate(() => {
+      function check(ok, label) { if (!ok) throw new Error(label); }
+      const door = G.map.get(5, 12), key = mechanicalLockKey(door, 5, 12);
+      const story = G.maps.oakhaven.get(23, 0);
+      check(!beginLockpick(story, 'story-test', 1, () => {}), 'story seals cannot be picked');
+      beginLockpick(door, key, 1, () => { G.map.doors[12 * G.map.w + 5].target = 1; });
+      const tolerance = LOCKPICK.tolerance;
+      lockpickInput('cancel');
+      const rank = G.player.skills.Lockpicking; G.player.skills.Lockpicking = 90;
+      beginLockpick(door, key, 1, () => {});
+      check(LOCKPICK.tolerance > tolerance, 'higher skill widens safe range');
+      lockpickInput('cancel'); G.player.skills.Lockpicking = rank;
+      beginLockpick(door, key, 1, () => { G.map.doors[12 * G.map.w + 5].target = 1; });
+      const fat = G.player.fat;
+      LOCKPICK.position = LOCKPICK.centers[0] < 50 ? 100 : 0;
+      lockpickInput('lift');
+      check(LOCKPICK.misses === 1 && LOCKPICK.pin === 0 && G.player.fat === Math.max(0, fat - 1), 'failed lift costs fatigue and resets pins');
+      lockpickInput('lift'); lockpickInput('lift');
+      check(!LOCKPICK && !G.flags[key], 'three slips end attempt without unlocking');
+      beginLockpick(door, key, 1, () => { G.map.doors[12 * G.map.w + 5].target = 1; });
+      for (let i = 0; i < 3; i++) { LOCKPICK.position = LOCKPICK.centers[LOCKPICK.pin]; lockpickInput('lift'); }
+      check(G.flags[key] && G.map.doors[12 * G.map.w + 5].target === 1, 'three pins unlock and open door');
+      check(G.player.skills.Lockpicking > rank || G.player.skillProg.Lockpicking > 0, 'success advances skill');
+      const chest = G.map.item('cache', 7.5, 12.5); chest.tier = 2;
+      const gold = G.player.gold; pickUp(chest);
+      check(G.openPanel === 'lockpick' && !chest.dead && G.player.gold === gold, 'chest cannot pay loot before unlocking');
+      lockpickInput('cancel'); check(!chest.dead && G.player.gold === gold, 'cancel grants no loot');
+      pickUp(chest);
+      for (let i = 0; i < 3; i++) { LOCKPICK.position = LOCKPICK.centers[LOCKPICK.pin]; lockpickInput('lift'); }
+      const after = G.player.gold;
+      check(chest.dead && after > gold, 'unlocked chest pays loot');
+      pickUp(chest); check(G.player.gold === after, 'opened chest cannot duplicate loot');
+      const save = JSON.parse(JSON.stringify(snapshotGame()));
+      delete save.player.skills.Lockpicking;
+      restoreGame(save);
+      check(G.flags[key] && G.player.skills.Lockpicking === 15, 'unlock survives load and old save gets skill default');
+      // Exercise the actual controller polling path with press/release edges.
+      const pads = navigator.getGamepads;
+      const gp = { connected: true, axes: [0, 0, 0, 0], buttons: Array.from({ length: 18 }, () => ({ pressed: false })) };
+      navigator.getGamepads = () => [gp];
+      const target = G.map.get(5, 12); delete G.flags[key];
+      beginLockpick(target, key, 1, () => {});
+      controlsTick(); gp.buttons[15].pressed = true; controlsTick();
+      check(LOCKPICK.position === 55, 'controller D-pad moves pick');
+      gp.buttons[15].pressed = false; controlsTick();
+      LOCKPICK.position = LOCKPICK.centers[0]; gp.buttons[0].pressed = true; controlsTick();
+      check(LOCKPICK.pin === 1, 'controller A lifts pin');
+      gp.buttons[0].pressed = false; controlsTick(); gp.buttons[1].pressed = true; controlsTick();
+      check(!LOCKPICK && G.state === 'play', 'controller B cancels');
+      navigator.getGamepads = pads; G.state = 'panel';
+      return { pins: 3, inputs: ['keyboard', 'buttons', 'controller'] };
+    });
+    console.log('PASS lockpicking gates, failure, loot, skill, save/load and controls', locks);
     const motion = await page.evaluate(() => {
       function check(ok, label) { if (!ok) throw new Error(label); }
       const state = JSON.stringify({ attack: G.attack, hp: G.player.hp, fat: G.player.fat, noise: G.noise });

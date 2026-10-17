@@ -1,3 +1,6 @@
+.lock-study { position: relative; height: 58px; margin: 1.5em 1em; border: 5px ridge #a88a51; background: repeating-linear-gradient(90deg, #211910 0, #211910 9%, #655132 10%); box-shadow: inset 0 4px 14px #050403; }
+.lock-band { position: absolute; top: 5px; bottom: 5px; border: 2px solid #d4bd7a; background: #8c7c3b; opacity: .8; }
+.lock-pick { position: absolute; top: -8px; bottom: -8px; width: 4px; transform: translateX(-2px); background: #e7ece3; border: 1px solid #17120d; }
 .paper-doll { margin: 0 0 1em; padding: .8em; background: #191510; border: 3px ridge #967647; box-shadow: inset 0 0 25px #090706; text-align: center; }
 .paper-doll svg { display: block; width: min(100%, 240px); max-height: 33cqh; margin: auto; }
 .doll-heading { color: var(--gold); font-family: var(--font-display); font-size: .85em; letter-spacing: .12em; }
