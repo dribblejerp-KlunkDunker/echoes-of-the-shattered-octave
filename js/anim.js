@@ -74,12 +74,31 @@ function animCreature(e, dt, T) {
     if (e._atk > 0.3) e._strike = Math.max(e._strike || 0, 0.32);
     if (e._strike > 0) e._strike -= dt;
     let pick = null;
-    if (e._strike > 0) pick = '_a2';
+    // companions: Kaelen cocks the glass arm and brings it down; Lyra sings
+    let comp = null;
+    if (e.companion) {
+      const cd = G.party && G.party.cd;
+      const abil = cd != null && e._fcd != null && cd > e._fcd + 5; e._fcd = cd;
+      if (e.sprite === 'kaelen') {
+        if (e.atkT != null && e._catk != null && e.atkT > e._catk + 0.5) e._strike = Math.max(e._strike || 0, 0.34);
+        const melee = e.atkT != null && e._catk != null && e.atkT < e._catk; e._catk = e.atkT;
+        if (abil) e._strike = 0.55;
+        comp = e._strike > 0 ? '_a2' : melee && e.atkT < 0.45 ? '_a1' : null;
+      } else {
+        if (e.healT != null && e._fheal != null && e.healT > e._fheal + 5) e._fsing = 1.4; e._fheal = e.healT;
+        if (abil) e._fsong = 1.6;
+        if (e._fsong > 0) e._fsong -= dt; if (e._fsing > 0) e._fsing -= dt;
+        comp = e._fsong > 0 ? '_a2' : e._fsing > 0 ? '_a1' : null;
+      }
+    }
+    if (comp) pick = comp;
+    else if (e.companion && e.sprite === 'lyra') pick = null;
+    else if (e._strike > 0) pick = '_a2';
     else if (isEnemy && e.state === 'chase' && !e.stun && ((d.reach && dCam < d.reach + 0.35 && e.cool != null && e.cool < 0.38) || (shot != null && shot < 0.6 && shot > 0))) pick = '_a1';
     else if (d.horn && horn != null && horn > 0 && horn < 1) pick = '_a1';
     else if (d.horn) pick = [null, '_w1', null, '_w2'][Math.floor(((T * 0.45 + s) % 4 + 4) % 4)];
     else if (hover) pick = [null, '_w1', null, '_w2'][Math.floor(((T * 1.4 + s) % 4 + 4) % 4)];
-    else if (moving) {
+    if (!pick && moving && !hover) {
       const k = Math.floor((e._phase || 0) / (Math.PI / 2));
       pick = ANIM.quadruped.has(e.sprite) ? ['_w1', '_w2'][k & 1] : ['_w1', null, '_w2', null][k & 3];
     }
