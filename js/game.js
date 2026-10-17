@@ -232,7 +232,7 @@ function enemyUpdate(e, dt) {
     e.alertT = canSee ? 8 : e.alertT - dt;
     if (e.alertT <= 0 && dist > 9) { e.state = 'idle'; return; }
     // hounds will not touch the glassed; Root Note wards them
-    if (d.mimic || d.summon || d.horn || d.grapnel || d.dirge) enemyExtra(e, dt, dist, canSee);
+    if (d.mimic || d.summon || d.horn || d.grapnel || d.dirge || d.wilds) enemyExtra(e, dt, dist, canSee);
     const glassFear = d.cacophony && !d.fearless && ((p.glassed && G.glassLock <= 0) || G.rootWard > 0);
     if (glassFear) { if (dist < 3.5) { moveWithSlide(e, -dx / dist * d.speed * dt, -dy / dist * d.speed * dt, e); } return; }
     if (dist > d.reach) {
@@ -257,7 +257,7 @@ function enemyUpdate(e, dt) {
           if (d.press && p.glassed) { G.glassLock = 8; msg('The proctor strikes your glass with a hand-press tuned to 741. Your arm locks rigid, ringing flat.', 'bad'); Audio_.sfx.press(); }
           damagePlayer(dmg, d.name);
           if (d.chord && !G.dead && Math.random() < 0.45) chordBlast(e);
-          if (!G.dead && (d.web || d.forget || d.toll)) enemyHitFx(e, d);
+          if (!G.dead && (d.web || d.forget || d.toll || d.mute || d.moth)) enemyHitFx(e, d);
         } else msg(AR >= 6 && Math.random() < 0.5 ? `${theName(d.name, true)}'s blow skids off your armour.` : `You slip ${theName(d.name, false)}'s blow.`, '', 1800);
         if (d.quiet) Audio_.sfx.quiet();
         if (d.cacophony) addNoise(0.8);
@@ -284,6 +284,7 @@ function killEnemy(e, byGlass) {
   if (e.type === 'aegis') aegisDestroyed(e);
   if (e.type === 'weaver' || e.type === 'pressman') wgBossDown(e);
   if (e.type === 'bosun' || e.type === 'horn' || e.type === 'requiem' || e.type === 'wearer_coda' || e.type === 'broodmother') codaBossDown(e);
+  if (e.def.wildsBoss) wildsBossDown(e);
   if (e.type === 'wearer') { G.flags.wearer_dead = true; if (G.mapId === 'whispergrove') G.flags.wearer_porch_dead = true; }
   if (e.onDeath) e.onDeath();
   checkLevel();
@@ -380,7 +381,7 @@ function attack(dirLabel) {
   const hitChance = 0.55 + p.attrs.Agility / 250 + p.attrs.Luck / 600 + (w.ranged ? 0.15 : 0);
   if (Math.random() > hitChance) { msg(`You miss ${theName(d.name, false)}.`, '', 1500); return; }
   let dmg = rndi(w.dmg[0], w.dmg[1]) + Math.floor(p.attrs.Strength / 25);
-  if (w.type === 'shot') { if (d.cacophony) dmg *= 2; if (d.quiet) { dmg = 0; msg('The pellet cannot ring inside the quiet. It drops like a dropped coat.', 'warn'); } }
+  if (w.type === 'shot') { if (d.cacophony) dmg *= 2; if (d.quiet || d.hushkin) { dmg = 0; msg('The pellet cannot ring inside the quiet. It drops like a dropped coat.', 'warn'); } }
   if (w.type === 'iron' && d.quiet) dmg = Math.floor(dmg * 1.5);
   if (w.type === 'glass') { if (d.cacophony) dmg = Math.floor(dmg * 1.6); p.glass = Math.min(100, p.glass + 0.4); }
   if (w.type === 'iron' && d.cacophony && w !== WEAPONS.hands) dmg = Math.floor(dmg * 0.6);
@@ -402,6 +403,7 @@ function castSong(id) {
   const p = G.player, s = SONGS[id]; if (!s || G.song.t > 0 || G.attack.t > 0) return;
   // a quiet eats the air
   for (const e of G.ents) if (e.kind === 'enemy' && !e.dead && !e.hidden && e.def.quiet && dist2(e.x, e.y, Engine.cam.x, Engine.cam.y) < 16) { msg('You open your mouth and nothing comes out. The air here cannot carry it.', 'bad'); return; }
+  if (wildsSilenced()) return;
   if (id === 'murmur') { G.murmurT = 4; addNoise(s.noise); Audio_.sfx.murmur(); msg('You murmur, low, inside the Narrow.', '', 1500); return; }
   if (p.voice < s.cost) { msg('Your voice is torn. There is nothing left in it.', 'bad'); return; }
   p.voice -= s.cost; addNoise(s.noise); G.song.t = 0.7; fx('song', 600); G.songFx = 0.6;
@@ -477,7 +479,7 @@ function useItem(slot) {
   renderInventory();
 }
 function useDeco(e) {
-  if (codaUse(e) || wgUse(e)) return;
+  if (wildsUse(e) || codaUse(e) || wgUse(e)) return;
   if (e.use === 'crates') {
     if (!G.flags.crates_heard) { G.flags.crates_heard = true; ['Annet Sowerby', 'Corwin Aye', 'Mirren Salk'].forEach(n => G.ledger.push({ name: n, where: 'Hetty\'s cellar', day: G.day })); }
     showEvent('The crates in the cellar', 'You put your ear to the wood. Thirty-six lilac spheres, you would guess by the weight, each in its straw. For a long moment nothing. Then, very small, through the side of the crate: <i>"Is somebody there? I\'m Annet. Annet Sowerby. I\'m six. What\'s your name?"</i><br><br>You do not answer. You have learned that much. From further in, two more voices, each saying only a name, over and over, the way a person says a thing they are afraid of losing: Corwin Aye. Mirren Salk.', [{ t: 'Step away from the crates', f: () => { if (G.flags.crates_logged) return; G.flags.crates_logged = true; journal('side', 'The corsair\'s crates in Hetty\'s cellar hold glass cores. One of them is a six-year-old called Annet Sowerby. I wrote the names in my ledger.'); } }]);
@@ -529,7 +531,7 @@ function checkTriggers() {
   for (const t of G.map.triggers) {
     if (dist2(c.x, c.y, t.x, t.y) > t.r * t.r) { t.inside = false; continue; }
     if (t.inside) continue; t.inside = true;
-    if (codaTrigger(t) || wgTrigger(t)) continue;
+    if (wildsTrigger(t) || codaTrigger(t) || wgTrigger(t)) continue;
     if (t.id === 'hound_bed' && !t.done) { t.done = true; msg('A hound\'s bed. Twenty paces across, and no sound carries over it for a day. Your own footsteps arrive by bone.', 'warn', 6000); }
     if (t.id === 'hedge_voice' && !t.done) {
       t.done = true; Audio_.sfx.voice();
@@ -605,6 +607,7 @@ $('#btn-again').onclick = () => { hide('#ending'); show('#title'); G.state = 'ti
 // ---------------------------------------------------------------- dialogue
 const DLG = { npc: null, tone: 'normal', log: [] };
 function talk(e) {
+  if (wildsTalk(e)) return;
   if (e.id === 'hollow' && e.restore === 'hew' && G.flags.sable_returned) { talkHew(e); return; }
   if (e.id === 'cat') { talkCat(e); return; }
   if (e.id === 'lamplighter') { talkLamplighter(e); return; }
@@ -1066,7 +1069,7 @@ function update(dt) {
     }
   }
   checkTriggers();
-  wgTick(dt); codaTick(dt);
+  wgTick(dt); codaTick(dt); wildsTick(dt);
   if (G.boreHold > 0) { G.boreHold -= dt; if (G.boreHold <= 0) { G.boreHold = 0; if (!G.flags.bore_broken) finishBore(); } }
   // greening clock
   if (G.escapeTimer > 0) { G.escapeTimer -= dt; if (G.escapeTimer <= 0) { G.escapeTimer = 0; die('greening'); } }

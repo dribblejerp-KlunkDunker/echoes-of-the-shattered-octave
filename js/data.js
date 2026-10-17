@@ -1011,3 +1011,73 @@ PLACES_DW['The bell-tower (in the Mausoleum)'] = [27.5, 10.5];
     return xq(g);
   };
 })();
+
+// ---------------------------------------------------------------- Part Four, third pass: the Quiet Faith, the search party
+Object.assign(ENEMIES, {
+  tongueless: { name: 'Tongueless of the Quiet Faith', sprite: 'tongueless', hp: 30, dmg: [4, 9], speed: 1.5, reach: 1.1, scale: 1.0, xp: 26,
+    desc: 'A brother of the Quiet Faith. He cut out his own tongue to be already quiet. He makes no sound at all when he runs.' },
+  deacon: { name: 'The Deacon of the Unrung Bell', sprite: 'deacon', hp: 110, dmg: [6, 12], speed: 1.2, reach: 1.2, scale: 1.15, xp: 140, wilds: true, deaconAura: true, wildsBoss: true,
+    desc: 'He carries a bell with no clapper. When he lifts it, nothing rings, and nothing near him can.' },
+  outrider: { name: 'Office Outrider', sprite: 'outrider', hp: 30, dmg: [3, 7], speed: 1.4, reach: 1.1, core: true, scale: 1.0, xp: 30, wilds: true, crossbow: true,
+    desc: 'A crossbowman of the Arbiter\'s column, in a grey oilskin. He would rather shoot you from forty feet than meet you at four.' },
+  hushwarden: { name: 'Office Hushwarden', sprite: 'hushwarden', hp: 48, dmg: [5, 10], speed: 1.0, reach: 1.3, core: true, armored: true, scale: 1.1, xp: 40, mute: true,
+    desc: 'A felted iron bell on a staff. When it comes down on you, the sound goes out of your mouth for a while, and you cannot sing.' },
+  hushmoth: { name: 'Hush-Moths', sprite: 'hushmoth', hp: 12, dmg: [1, 3], speed: 1.9, reach: 0.9, hushkin: true, moth: true, scale: 0.8, yOff: -0.15, xp: 10,
+    desc: 'Pale moths of the Hush, drawn to light. They eat the light first and then the sound. Glass shot cannot ring in them.' },
+  captain: { name: 'Outrider-Captain Hal Brennick', sprite: 'captain', hp: 130, dmg: [6, 13], speed: 1.3, reach: 1.25, core: true, scale: 1.1, xp: 160, wilds: true, rally: true, wildsBoss: true,
+    desc: 'The officer the Arbiter\'s column sent to find out why OC-742 stopped reporting. He carries a lit hush-lantern and a sabre, and he is not in a hurry.' },
+});
+Object.assign(LOOT, {
+  tongueless: { chance: 0.4, table: [['whistle', 40], ['honey', 30], ['sovereigns', 30]] },
+  outrider: { chance: 0.6, table: [['bolts', 40], ['sovereigns', 30], ['tonic', 15], ['a_hood', 8], ['w_crossbow', 7]] },
+  hushwarden: { chance: 0.6, table: [['a_hushcoat', 25], ['sovereigns', 35], ['a_kettle', 15], ['w_mace', 10], ['tonic', 15]] },
+  hushmoth: { chance: 0.15, table: [['v_fork', 60], ['honey', 40]] },
+});
+Object.assign(ITEMS, {
+  unrungbell: { name: 'The Unrung Bell', sprite: 'loot', desc: 'A Quiet Faith handbell with no clapper. The Deacon of the Unrung Bell carried it. It has never made a sound.', key: true },
+  hornwax: { name: 'The Horn\'s Wax Cylinder', sprite: 'coil', desc: 'The listening-horn\'s recording cylinder, from the wrecked cutter. Wound and set going, it plays back everything the horn heard: your voices, the whole way from Oakhaven.', key: true },
+  dispatch: { name: 'The Arbiter\'s Dispatch', sprite: 'loot', desc: 'From the column of the Dread Arbiter, on the Tramway: find the DK and keep listening. The Cantor is not to be harmed. Signed A.V.', key: true },
+});
+NPCS.wren = {
+  name: 'A child, singing', sprite: 'wren', portrait: 'wren', tier: 'low', scale: 0.72,
+  greet: { polite: 'She does not stop singing.', normal: 'She does not stop singing.', blunt: 'She does not stop singing.' }, topics: {},
+  quest: () => ({ text: 'She does not stop singing.' }),
+};
+NPCS.wren_dw = {
+  name: 'Wren', sprite: 'wren', portrait: 'wren', tier: 'low', scale: 0.72,
+  greet: { polite: '"Hello," she says, very loudly, and then, remembering, much more quietly: "hello."', normal: '"Hello," she says, very loudly, and then, remembering, much more quietly: "hello."', blunt: 'She looks at you, and at your weapon, and decides you are all right.' },
+  topics: {
+    'The Quiet Faith': '"They don\'t talk. Mam said that\'s holy. Mam said if I sang nice the Quiet would come and be kind to me." She thinks about it. "It wasn\'t going to be kind, was it."',
+    'Lyra Ashgrove': '"She\'s teaching me the skipping one. Too loud brings the hounds, too still brings the Hush." She hops, twice, very softly. "You have to be in the middle. That\'s called the Narrow."',
+  },
+  quest: (g) => ({ text: g.flags.coda_done ? 'Wren is sitting by the fire, humming the skipping-rhyme under her breath, exactly in the middle of the Narrow. "Lyra says I can be a Cantor," she says. "If there are any Cantors left."' : 'Wren is sitting by the fire, as close to Lyra as she can get without being in her lap. "She says I sing too loud," she whispers. "She says that\'s a good problem."' }),
+};
+TOPICS['The Quiet Faith'] = { low: 'Them in the woods who cut their tongues out. Don\'t look at them.', high: 'A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be "already quiet", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else.' };
+TOPIC_KEYS.push('The Quiet Faith');
+PLACES_DW['The singing child (north-west, past the pools)'] = [6.0, 5.0];
+PLACES_DW['The north-east cart-track'] = [47.0, 8.0];
+(() => {
+  const mq = NPCS.mags_dw.quest;
+  NPCS.mags_dw.quest = (g) => {
+    const f = g.flags;
+    if (f.gift_heard && !f.mags_cant && f.mags_met) {
+      return { text: '"The singing in the north-west." She has been watching your mouth. "That\'s the Quiet Faith. Tongueless. They don\'t talk, they sign. Hand-cant. Same as the dock-crews of the Free Captains, near enough. I learned it when I stopped hearing." She puts the splice down. "Want it? Three signs and one sentence. Might keep you from having to kill a man with no tongue, which is a bad business all round."', choices: [
+        { t: '"Teach me."', f: () => { setTimeout(() => { closeModal(); wildsCantQuiz(0); }, 0); return 'She holds up her good hand.'; } },
+        { t: '"Later."', f: () => '"Later\'s fine. They\'re not going anywhere. That\'s rather their point."' },
+      ] };
+    }
+    return mq(g);
+  };
+  const vq = NPCS.vane_dw.quest;
+  NPCS.vane_dw.quest = (g) => {
+    const f = g.flags;
+    if (f.log_read && f.dw_vane_met && !f.party_come) {
+      const ch = [
+        { t: '"Then we meet them on the track."', f: () => { wildsPartyCome(false); return '"Good." He stands up and hefts the boarding axe. "North-east, where the cart-track comes out of the mist. The Captain will carry the lantern. Kill the lantern and you kill the column\'s eyes. Mind the ones with the felted bells. They take your voice, and a Cantor\'s crew with no voice is a crew of corpses."'; } },
+      ];
+      if (f.horn_dead) ch.push({ t: '"The horn heard everything we said. Let them follow it."', f: () => { G.give('hornwax'); wildsPartyCome(true); return 'He stares at you, and then he laughs, once, quietly. "The cylinder. It\'s still in the horn." He goes and gets it himself and puts it in your hand: brass and wax, wound tight. "Every word since Oakhaven. Set it going in the thickest of the webs, south-west, where the weaverlings nest, and let the Office follow its own ears. They have been very proud of those ears."'; } });
+      return { text: 'Vane is on his feet, looking north-east through the willows with the glass. "Lanterns," he says, and hands it to you. Through it: a line of hooded lights on the cart-track, coming out of the mist, slow. "The cutter didn\'t report. The Arbiter has sent somebody to find out why. A captain, by the lantern, and a file of outriders." He takes the glass back. "They will find the wreck by morning and us by noon."', choices: ch };
+    }
+    return vq(g);
+  };
+})();

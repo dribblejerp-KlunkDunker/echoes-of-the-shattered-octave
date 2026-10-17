@@ -503,6 +503,8 @@ function buildAllMaps() {
   placeCaches(maps.deepwoods, 4207, [2, 3, 3]); placeCaches(maps.mausoleum, 4209, [2, 3]);
   // Part Four, second pass (appended, never inserted)
   extendDeepWoods(maps.deepwoods); extendMausoleum(maps.mausoleum); maps.belfry = buildBelfry();
+  // Part Four, third pass (appended after the second)
+  extendDeepWoods3(maps.deepwoods);
   for (const k in maps) maps[k].baseCount = maps[k].entities.length;
   return maps;
 }
@@ -866,4 +868,44 @@ function buildBelfry() {
   m.enemy('dirge', 11.4, 2.4); m.enemy('dirge', 11.4, 7.6); m.enemy('mites', 6.4, 1.8);
   m.item('tonic', 12.4, 4.6);
   return m;
+}
+
+// ---------------------------------------------------------------- Part Four, third pass
+function extendDeepWoods3(m) {
+  // nudge a spot off any tree or deco it would stand inside
+  const spot = (x, y) => {
+    for (let k = 0; k < 12; k++) {
+      const a = k * 2.4, r = k ? 0.5 + k * 0.15 : 0, nx = x + Math.cos(a) * r, ny = y + Math.sin(a) * r;
+      if (m.isBlocked(nx | 0, ny | 0) || m.floorCells[(ny | 0) * m.w + (nx | 0)] === 2) continue;
+      if (m.entities.some(e => e.solid && e.kind === 'deco' && (e.x - nx) ** 2 + (e.y - ny) ** 2 < 0.8)) continue;
+      return [nx, ny];
+    }
+    return [x, y];
+  };
+  // the Quiet Faith's hush-gift, north-west past the pools
+  const [wx, wy] = spot(5.4, 4.4);
+  m.npc('wren', wx, wy, { facing: 0, until: 'wren_gone', radius: 0.25 });
+  m.deco('lamp', wx, wy - 1.0, { radius: 0.12, scale: 0.75, glow: 0.9, solid: false, use: 'gift_lamp', giftLamp: true, label: 'One hush-lamp, lit, on a stake beside the child. Its reed-whistle has been stopped with wax.' });
+  for (let i = 0; i < 6; i++) { const a = i / 6 * 6.283 + 0.5; m.deco('lamp', wx + Math.cos(a) * 1.5, wy + Math.sin(a) * 1.5, { radius: 0.1, scale: 0.5, glow: 0, solid: false, label: 'A hush-lamp, unlit, set in a ring in the moss' }); }
+  m.enemy('deacon', ...spot(12.4, 3.4), { passive: true, giftGuard: true });
+  [[13.2, 6.2], [11.2, 9.4], [3.0, 8.8], [9.2, 2.2]].forEach(([x, y]) => m.enemy('tongueless', ...spot(x, y), { passive: true, giftGuard: true }));
+  m.enemy('quiet', ...spot(15.0, 2.6), { requires: 'gift_quiets', passive: true, giftQ: true });
+  m.enemy('quiet', ...spot(2.6, 12.4), { requires: 'gift_quiets', passive: true, giftQ: true });
+  m.trigger(wx, wy + 1, 11, 'gift_far');
+  m.trigger(wx, wy, 4.4, 'gift_ring');
+  // hush-moths at the lights
+  [[4.2, 2.2], [44.4, 42.2], [47.8, 48.4], [42.4, 45.6]].forEach(([x, y]) => m.enemy('hushmoth', ...spot(x, y)));
+  // the Arbiter's search party, on the north-east cart-track
+  m.deco('sign', ...spot(47.4, 2.4), { radius: 0.2, scale: 0.8, label: 'A Synod way-post: TRAMWAY 9 DAYS. The paint is fresh.' });
+  m.enemy('captain', ...spot(48.4, 7.8), { requires: 'party_come', party: true });
+  [[45.0, 6.0], [51.0, 10.4], [46.4, 12.2]].forEach(([x, y]) => m.enemy('outrider', ...spot(x, y), { requires: 'party_come', party: true }));
+  [[49.6, 5.0], [43.6, 9.6]].forEach(([x, y]) => m.enemy('hushwarden', ...spot(x, y), { requires: 'party_come', party: true }));
+  [[48.6, 7.0], [45.6, 7.2], [50.6, 9.2]].forEach(([x, y]) => m.deco('lamp', ...spot(x, y), { radius: 0.12, scale: 0.55, glow: 0.5, solid: false, requires: 'party_come', until: 'party_webbed', label: 'An Office hush-lantern, hooded, set down in the moss' }));
+  // the false trail, in the heart of the nests
+  m.deco('web', ...spot(8.6, 42.4), { radius: 0.25, scale: 1.3, glow: 0.45, use: 'trail_spot', label: 'The heart of the nests, where every thread meets. A good place for a voice to get lost.' });
+  m.deco('cocoon', ...spot(6.0, 41.0), { radius: 0.3, scale: 1.0, glow: 0.3, requires: 'party_webbed', label: 'An Office outrider, wound in silk, still holding his crossbow' });
+  m.deco('cocoon', ...spot(10.8, 40.2), { radius: 0.3, scale: 1.0, glow: 0.3, requires: 'party_webbed', label: 'A hushwarden, wound in silk with his felted bell' });
+  m.deco('cocoon', ...spot(4.8, 44.0), { radius: 0.35, scale: 1.15, glow: 0.3, requires: 'party_webbed', use: 'captain_cocoon', label: 'Outrider-Captain Hal Brennick, wound in silk. His lantern is still lit inside it.' });
+  // Wren at the camp fire, once she is safe
+  m.npc('wren_dw', 24.7, 44.0, { facing: Math.PI / 2, requires: 'wren_saved', radius: 0.25 });
 }

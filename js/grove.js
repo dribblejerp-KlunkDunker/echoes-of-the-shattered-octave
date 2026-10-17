@@ -289,6 +289,7 @@ function drownedShriek(e) {
 function enemyHitFx(e, d) {
   if (d.web && Math.random() < (e.type === 'weaver' ? 0.6 : 0.4)) { const fresh = !(G.webT > 0); G.webT = 2.6; if (fresh) msg('Threads of lilac light catch at your legs. Every step comes slow.', 'warn', 2500); }
   if (d.toll) codaHitFx(e, d);
+  if (d.mute || d.moth) wildsHitFx(e, d);
   if (d.forget && Math.random() < 0.35) {
     const p = G.player; p.voice = Math.max(0, p.voice - 8); Audio_.sfx.press();
     msg(`The felted die catches you across the temple. For a moment you cannot remember your own name. Then: ${p.name}. ${p.name}. You hold on to it.`, 'bad', 4500);
@@ -305,6 +306,7 @@ const WEAVER_VOICES = [
 function enemyExtra(e, dt, dist, canSee) {
   const d = e.def;
   if (d.horn || d.grapnel || d.dirge) codaExtra(e, dt, dist, canSee);
+  if (d.wilds) wildsExtra(e, dt, dist, canSee);
   if (d.mimic) { e.mimicT = (e.mimicT == null ? 2 : e.mimicT) - dt; if (e.mimicT <= 0 && dist < 10) { e.mimicT = rnd(7, 11); const V = d.coda ? codaVoices(e) : WEAVER_VOICES; msg((d.coda ? d.name + ' sings. ' : 'The Weaver speaks. ') + V[rndi(0, V.length - 1)](G.player), 'voice', 6000); Audio_.sfx.voice(); } }
   if (d.summon && canSee) {
     e.summonT = (e.summonT == null ? 6 : e.summonT) - dt;
@@ -386,7 +388,7 @@ function bookOneEnd() {
   else if (f.mallow_dead) L.push('Pressman Mallow is dead in the water of the west quarter. Three ticks in his round-book are still blank.');
   if (f.halder_rest) L.push(f.halder_dead ? 'Halder Wick\'s table is set for four, with two name-tapes beside the small plates. Nobody sits at it.' : 'Halder Wick sits at his own table now. He is waiting for the boys to come home from choir, the way a man waits who knows they are coming.');
   const box = $('#ending-text'), ps = box.querySelectorAll('p'), anchor = ps[ps.length - 3];
-  L.push(...codaEndingLines());
+  L.push(...codaEndingLines(), ...wildsEndingLines());
   if (!L.length && !f.part4) return;
   for (const l of L) { const pEl = document.createElement('p'); pEl.innerHTML = l; box.insertBefore(pEl, anchor || null); }
   if (f.part4) for (const pEl of [...box.querySelectorAll('p')]) if (/^(Eleven hundred pounds|Mid-chase)/.test(pEl.textContent) || (f.cloak_given && /^Sable tells the Aegis what she knows/.test(pEl.textContent))) pEl.remove();
