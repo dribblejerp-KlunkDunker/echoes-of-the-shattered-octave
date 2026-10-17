@@ -16,6 +16,8 @@ const ANIM = {
   lamp: new Set(['lamp']),
 };
 
+const ANIM_FRAMES = {};
+function animHasFrames(name) { if (ANIM_FRAMES[name] == null) ANIM_FRAMES[name] = !!(Engine.sprites[name + '_w1'] && Engine.sprites[name + '_a2']); return ANIM_FRAMES[name]; }
 function animSeed(e) { if (e._seed == null) e._seed = ((e.x * 73.13 + e.y * 37.7) % 6.283 + 6.283) % 6.283; return e._seed; }
 function animReset(e) { e.animSY = 1; e.animSX = 1; e.animLift = 0; e.animSkew = 0; e.animHurt = 0; e.animGlow = 0; e.animAlpha = 1; }
 
@@ -59,6 +61,26 @@ function animCreature(e, dt, T) {
     const wind = f < 0.35 ? -Math.sin(f / 0.35 * Math.PI / 2) * 0.5 : Math.sin((f - 0.35) / 0.65 * Math.PI);
     sy *= 1 + 0.09 * wind; sx *= 1 + 0.07 * wind; lift += 0.03 * Math.max(0, wind); skew += (s > 3.14 ? 1 : -1) * 0.07 * wind;
   }
+  // real frames, where the enemy has them: walk steps, wind-up as the blow comes, strike as it lands
+  if (animHasFrames(e.sprite)) {
+    const dCam = Math.hypot(Engine.cam.x - e.x, Engine.cam.y - e.y);
+    const shot = e.shotT;
+    if (shot != null && e._shot != null && shot > e._shot + 0.5) e._strike = 0.4;
+    e._shot = shot;
+    if (e._atk > 0.3) e._strike = Math.max(e._strike || 0, 0.32);
+    if (e._strike > 0) e._strike -= dt;
+    let pick = null;
+    if (e._strike > 0) pick = '_a2';
+    else if (isEnemy && e.state === 'chase' && !e.stun && ((d.reach && dCam < d.reach + 0.35 && e.cool != null && e.cool < 0.38) || (shot != null && shot < 0.6 && shot > 0))) pick = '_a1';
+    else if (hover) pick = [null, '_w1', null, '_w2'][Math.floor(((T * 1.4 + s) % 4 + 4) % 4)];
+    else if (moving) {
+      const k = Math.floor((e._phase || 0) / (Math.PI / 2));
+      pick = ANIM.quadruped.has(e.sprite) ? ['_w1', '_w2'][k & 1] : ['_w1', null, '_w2', null][k & 3];
+    }
+    e.animSprite = pick ? e.sprite + pick : null;
+    // the frames carry the motion now, so the procedural bounce steps back
+    if (pick && pick !== '_a1') { skew *= 0.35; lift *= 0.5; sy = 1 + (sy - 1) * 0.4; sx = 1 + (sx - 1) * 0.4; }
+  } else e.animSprite = null;
   // hit: a flinch and a red flash
   if (e.hp != null && e._hp != null && e.hp < e._hp - 0.01) e._hurt = 0.3;
   e._hp = e.hp;

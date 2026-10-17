@@ -44,7 +44,7 @@ const Engine = (() => {
       const d = cx.getImageData(0, 0, im.width, im.height);
       const u32 = new Uint32Array(d.data.buffer);
       if (kind === 'tex') textures[k] = u32;
-      else if (kind === 'spr') sprites[k] = { w: im.width, h: im.height, data: u32, img: im };
+      else if (kind === 'spr') { sprites[k] = { w: im.width, h: im.height, data: u32, img: im }; const md = ASSETS.meta && ASSETS.meta[k]; if (md) { sprites[k].hs = md.hs || 1; sprites[k].cx = md.cx == null ? 0.5 : md.cx; sprites[k].dy = md.dy || 0; } }
       else images[k] = im;
       n++;
       if (onProgress) onProgress(n / keys.length);
@@ -258,21 +258,23 @@ const Engine = (() => {
     sprList.sort((a, b) => b._d2 - a._d2);
     const invDet = 1 / (planeX * dirY - dirX * planeY);
     for (const e of sprList) {
-      const sp = sprites[e.sprite]; if (!sp) continue;
+      const sp = (e.animSprite && sprites[e.animSprite]) || sprites[e.sprite]; if (!sp) continue;
       const sx = e.x - cam.x, sy = e.y - cam.y;
       const trX = invDet * (dirY * sx - dirX * sy);
       const trY = invDet * (-planeY * sx + planeX * sy);
       if (trY <= 0.08) continue;
       const screenX = ((w / 2) * (1 + trX / trY)) | 0;
       const scale = e.scale || 1;
-      const baseH = Math.abs((h / trY) * scale);
+      const unitH = Math.abs((h / trY) * scale);
+      const baseH = unitH * (sp.hs || 1);
       const sprH = (baseH * (e.animSY || 1)) | 0;
-      const vMove = (((e.yOff || 0) - (e.animLift || 0)) * h / trY) | 0; // + = lower
+      const vMove = (((e.yOff || 0) - (e.animLift || 0)) * h / trY + (sp.dy || 0) * unitH) | 0; // + = lower
       // sprites sit on the floor: bottom at horizon + half unit height
       const baseline = horizon + ((0.5 * h / trY) | 0) + vMove;
       const dsY = baseline - sprH, deY = baseline;
       const sprW = Math.max(1, (baseH * sp.w / sp.h * (e.animSX || 1)) | 0);
-      const dsX = screenX - (sprW >> 1), deX = dsX + sprW;
+      const cx0 = sp.cx == null ? 0.5 : sp.cx;
+      const dsX = screenX - ((e.animFlip ? 1 - cx0 : cx0) * sprW | 0), deX = dsX + sprW;
       const d = Math.sqrt(e._d2);
       let f = light * (1 - d * fogMul);
       if (f < 0) f = 0;

@@ -51,6 +51,10 @@ Explore Oakhaven and the land past the Hedge, then sail the Drift-Kestrel to Whi
 
   ![Kaelen meets two hounds at the Deep Woods camp](screenshots/animation.gif)
 
+  The twelve main enemies also have hand-painted frames: two walking steps, an attack wind-up and a strike for Proctors, Legionnaires, Weaverlings, Drowned Hollows, hounds, the Tongueless, Office Marines, Outriders, Chord-Wardens and the Wearer, and drifting and lashing frames for Dirges and Quiets. The wind-up shows as the blow is coming, so you can read an attack and step back.
+
+  ![A Proctor and a Legionnaire march up and strike](screenshots/frames.gif)
+
 - Dialogue in the Daggerfall manner, with tone choices (Polite / Normal / Blunt), topics and directions.
 - Songs: a magic system built on the Octave.
 - Quests: the main story, "The Rite", plus side quests. In one of them, Sable, the last Archivist of the Veil, asks you to gather names for the Bound Ledger. Reading a name back restores a Hollow, but it costs her a piece of herself, and your choice changes the ending.
