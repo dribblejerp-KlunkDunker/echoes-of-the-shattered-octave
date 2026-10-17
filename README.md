@@ -51,7 +51,7 @@ Explore Oakhaven and the land past the Hedge, then sail the Drift-Kestrel to Whi
 
   ![Kaelen meets two hounds at the Deep Woods camp](screenshots/animation.gif)
 
-  The twelve main enemies also have hand-painted frames: two walking steps, an attack wind-up and a strike for Proctors, Legionnaires, Weaverlings, Drowned Hollows, hounds, the Tongueless, Office Marines, Outriders, Chord-Wardens and the Wearer, and drifting and lashing frames for Dirges and Quiets. The wind-up shows as the blow is coming, so you can read an attack and step back.
+  The twelve main enemies also have hand-painted frames: two walking steps, an attack wind-up and a strike for Proctors, Legionnaires, Weaverlings, Drowned Hollows, hounds, the Tongueless, Office Marines, Outriders, Chord-Wardens and the Wearer, and drifting and lashing frames for Dirges and Quiets. The bosses have them too: the Steam Golem, the Aegis, Pressman Mallow, the Phantom Weaver, the Requiem, the Brood-Mother, the Deacon of the Unrung Bell and Outrider-Captain Brennick, along with the Office Hushwardens. The wind-up shows as the blow is coming, so you can read an attack and step back.
 
   ![A Proctor and a Legionnaire march up and strike](screenshots/frames.gif)
 
