@@ -1643,6 +1643,12 @@ function lesson(id, text) {
     if (maps.oakhaven) {
       maps.oakhaven.npc('townsman', 23.5, 20.5, { wander: true, nightWatch: true });
       maps.oakhaven.npc('townswoman', 23.5, 44.5, { wander: true, nightWatch: true });
+      // Append after all historical baseline extras: saves map entities by index.
+      if (!G.flags.greening) {
+        maps.oakhaven.npc('townsman', 52.5, 20.5, { lawGuard: true, wander: true, name: 'Oakhaven watch constable' });
+        Object.assign(maps.oakhaven.item('honey', 51.5, 19.2), { owner: 'market', label: 'Bettany’s honey — taking it is theft' });
+      }
+      maps.oakhaven.baseCount = maps.oakhaven.entities.length;
     }
   }
 

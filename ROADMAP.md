@@ -101,9 +101,9 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Throwable stone/bottle distractions and guard investigation.
 - [ ] Spot/disarm tripwires, falling nets and alarm-bell traps.
 - [ ] Note locks, pressure plates and turning-mirror puzzles in Cloister/Catacombs.
-- [ ] Oakhaven theft/witness/guard pursuit crime state.
+- [~] Oakhaven crime foundation: explicitly owned market honey prompts before theft; visible nearby NPC witnesses report a bounty, and the constable pursues with line of sight. Character sheet shows bounty/time served. Broader owned goods, assault and additional guard behavior remain pending.
 - [ ] Player wanted posters after crime thresholds.
-- [ ] Arrest, fine or jail, confiscation and escape/release paths.
+- [~] Guard intervention offers a checked gold fine, refusal with escape grace, or six hours of time-served jail and release at the town watch. Inventory/quest gear remains intact. Playable prison, confiscation and jail escape remain pending.
 - [ ] Personality bribes and Strength threats in dialogue.
 - [ ] Horse rental and world-map travel modifiers.
 - [ ] Optional hunger/sleep needs over long journeys.
@@ -137,6 +137,13 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
 - [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Crime-foundation pass verification
+- Crime data (bounty, theft count, served hours) uses existing saved player data and normalizes imported values; old saves default to no crime. New town entities append after historical world extras to preserve entity-index ordering.
+- Only the explicitly owned market honey invokes theft confirmation; cancellation and unowned loot create no theft, and duplicate pickup cannot duplicate stolen goods.
+- Chromium verifies witnessed/unwitnessed theft, hidden witnesses and wall occlusion, bounty save/load, guard pursuit/intervention, insufficient funds, exact fine deduction, refusal/grace and jail release.
+- Jail advances world time six hours, clears the bounty and preserves all inventory/quest equipment. It is a time-served resolution, not yet a playable prison map.
+- Existing lockpicking, visual, death, weapon/fire, hostile-save and gameplay smoke regressions pass. Human visual review and long-form balance playtesting remain outstanding.
 
 ### Lockpicking pass verification
 - Unlocks use existing `G.flags` keys per map/target; no save-version change. Missing Lockpicking skill in old saves defaults to 15.
