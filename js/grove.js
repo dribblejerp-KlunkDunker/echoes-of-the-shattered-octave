@@ -311,7 +311,7 @@ function enemyExtra(e, dt, dist, canSee) {
     if (e.summonT <= 0) {
       e.summonT = rnd(9, 13);
       const alive = G.ents.filter(o => o.kind === 'enemy' && o.type === d.summon && !o.dead && !o.hidden).length; if (alive >= 4) return;
-      for (let i = 0; i < 8; i++) { const a = rnd(0, 6.28), x = e.x + Math.cos(a) * 1.4, y = e.y + Math.sin(a) * 1.4; if (solidAt(x, y)) continue; const s = hydrate({ kind: 'enemy', type: d.summon, x, y }); s.state = 'chase'; s.alertT = 8; G.ents.push(s); msg('The Weaver pulls a thread out of its shroud, and the thread runs at you on eight legs.', 'bad', 3500); Audio_.sfx.hound(); break; }
+      for (let i = 0; i < 8; i++) { const a = rnd(0, 6.28), x = e.x + Math.cos(a) * 1.4, y = e.y + Math.sin(a) * 1.4; if (solidAt(x, y)) continue; const s = hydrate({ kind: 'enemy', type: d.summon, x, y }); s.state = 'chase'; s.alertT = 8; G.ents.push(s); msg(e.type === 'broodmother' ? 'The Brood-Mother\'s egg-sac splits along one seam, and a weaverling drops out of it running.' : 'The Weaver pulls a thread out of its shroud, and the thread runs at you on eight legs.', 'bad', 3500); Audio_.sfx.hound(); break; }
     }
   }
 }
@@ -387,6 +387,7 @@ function bookOneEnd() {
   if (f.halder_rest) L.push(f.halder_dead ? 'Halder Wick\'s table is set for four, with two name-tapes beside the small plates. Nobody sits at it.' : 'Halder Wick sits at his own table now. He is waiting for the boys to come home from choir, the way a man waits who knows they are coming.');
   const box = $('#ending-text'), ps = box.querySelectorAll('p'), anchor = ps[ps.length - 3];
   L.push(...codaEndingLines());
-  if (!L.length) return;
+  if (!L.length && !f.part4) return;
   for (const l of L) { const pEl = document.createElement('p'); pEl.innerHTML = l; box.insertBefore(pEl, anchor || null); }
+  if (f.part4) for (const pEl of [...box.querySelectorAll('p')]) if (/^(Eleven hundred pounds|Mid-chase)/.test(pEl.textContent) || (f.cloak_given && /^Sable tells the Aegis what she knows/.test(pEl.textContent))) pEl.remove();
 }

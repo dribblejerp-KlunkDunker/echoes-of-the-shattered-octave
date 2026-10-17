@@ -501,6 +501,8 @@ function buildAllMaps() {
   // Part Four
   maps.deepwoods = buildDeepWoods(); maps.mausoleum = buildMausoleum();
   placeCaches(maps.deepwoods, 4207, [2, 3, 3]); placeCaches(maps.mausoleum, 4209, [2, 3]);
+  // Part Four, second pass (appended, never inserted)
+  extendDeepWoods(maps.deepwoods); extendMausoleum(maps.mausoleum); maps.belfry = buildBelfry();
   for (const k in maps) maps[k].baseCount = maps[k].entities.length;
   return maps;
 }
@@ -832,5 +834,36 @@ function buildMausoleum() {
   m.npc('lyra_dw', 14.6, 11.0, { facing: -Math.PI / 2, requires: 'coda_go' });
   m.item('tonic', 2.6, 23.6); m.item('pellets', 37.2, 25.6); m.item('honey', 26.6, 2.6); m.item('w_mace', 12.8, 2.8);
   m.trigger(19.5, 12.4, 1.6, 'coda_choir');
+  return m;
+}
+
+// ---------------------------------------------------------------- Part Four, second pass
+function extendDeepWoods(m) {
+  // the Brood-Mother, at the heart of the nests
+  m.enemy('broodmother', 10.2, 45.8);
+  // Hollow mourners walking the yard to the Mausoleum door and back, waiting for the bell
+  const route = [[12.6, 17.6], [16.4, 15.6], [20.2, 14.2], [24.6, 13.8], [27.5, 13.7]];
+  const rests = [[6.5, 13.9], [8.9, 16.5], [11.3, 13.9], [13.7, 19.1]];
+  rests.forEach(([rx, ry], i) => {
+    const start = route[i % route.length];
+    m.npc('mourner', start[0], start[1] + (i % 2 ? 0.4 : -0.4), { solid: false, radius: 0.25, path: route.map(([x, y]) => [x + (i % 2 ? 0.3 : -0.3), y + (i - 1.5) * 0.25]), pi: i % route.length, dirn: i % 2 ? -1 : 1, rest: [rx, ry] });
+  });
+}
+function extendMausoleum(m) {
+  m.set(38, 22, DOOR({ portal: { map: 'belfry', x: 2.5, y: 5.5, dir: 0 }, label: 'The tower stair' }));
+}
+function buildBelfry() {
+  const W = 14, H = 10;
+  const m = new GameMap('belfry', 'The Bell-Tower', W, H, { floor: 't_wood', floorTextures: ['t_wood', 't_flag', 't_water'], ceil: 't_wood', fogDist: 10, ambient: 0.16, fogColor: [22, 16, 34], music: 'mausoleum', danger: 1, spawn: { x: 2.5, y: 5.5, dir: 0 } });
+  m.rect(0, 0, W - 1, H - 1, 't_mausoleum');
+  m.clear(1, 1, W - 2, H - 2);
+  m.set(0, 5, DOOR({ portal: { map: 'mausoleum', x: 37.0, y: 22.5, dir: Math.PI }, label: 'Down the tower stair' }));
+  [[4, 3], [4, 6], [8, 3], [8, 6]].forEach(([x, y]) => m.set(x, y, WALL('t_greymarble')));
+  m.deco('bigbell', 10.2, 4.9, { radius: 0.8, scale: 1.7, yOff: -0.15, glow: 0.2, use: 'tower_bell', label: 'The great bell of the Mausoleum of Chords' });
+  [[1.6, 1.6], [12.4, 1.6], [1.6, 8.4], [12.4, 8.4]].forEach(([x, y]) => m.deco('lamp', x, y, { radius: 0.12, scale: 0.55, glow: 0.4 }));
+  m.deco('coil', 6.2, 8.2, { radius: 0.3, scale: 0.6, label: 'The other end of the bell-rope, cut clean with a spade' });
+  m.deco('bones', 11.8, 7.6, { radius: 0.3, scale: 0.6 });
+  m.enemy('dirge', 11.4, 2.4); m.enemy('dirge', 11.4, 7.6); m.enemy('mites', 6.4, 1.8);
+  m.item('tonic', 12.4, 4.6);
   return m;
 }

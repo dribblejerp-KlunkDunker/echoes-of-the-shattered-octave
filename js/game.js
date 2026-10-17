@@ -28,6 +28,8 @@ const G = {
 };
 
 // ---------------------------------------------------------------- UI helpers
+// enemy names in sentences: 'A Quiet' -> 'the Quiet', 'The Brood-Mother' stays
+function theName(n, cap) { const b = /^(A|An|The) /.test(n) ? n.replace(/^(A|An|The) /, '') : n; return (cap ? 'The ' : 'the ') + b; }
 function show(id) { $(id).classList.remove('hidden'); }
 function hide(id) { $(id).classList.add('hidden'); }
 function msg(text, cls, ttl) {
@@ -256,7 +258,7 @@ function enemyUpdate(e, dt) {
           damagePlayer(dmg, d.name);
           if (d.chord && !G.dead && Math.random() < 0.45) chordBlast(e);
           if (!G.dead && (d.web || d.forget || d.toll)) enemyHitFx(e, d);
-        } else msg(AR >= 6 && Math.random() < 0.5 ? `The ${d.name}'s blow skids off your armour.` : `You slip the ${d.name}'s blow.`, '', 1800);
+        } else msg(AR >= 6 && Math.random() < 0.5 ? `${theName(d.name, true)}'s blow skids off your armour.` : `You slip ${theName(d.name, false)}'s blow.`, '', 1800);
         if (d.quiet) Audio_.sfx.quiet();
         if (d.cacophony) addNoise(0.8);
       }
@@ -275,13 +277,13 @@ function killEnemy(e, byGlass) {
     G.ledger.push({ name: e.name, where: G.map.name, day: G.day });
     msg(`The bell goes still. Inside it, a voice says: "${e.name}." Three times. Then nothing.`, 'voice', 7000);
     if (!G.has('core') && e.name === 'Tamsin Reed') { G.give('core'); msg('You take the cracked lilac core.', 'good'); }
-  } else if (e.def.cacophony) { msg(`The ${e.def.name} bursts, and everything it ever ate comes out at once.`, 'good', 4000); }
-  else msg(`The ${e.def.name} is destroyed.`, 'good', 3000);
+  } else if (e.def.cacophony) { msg(`${theName(e.def.name, true)} bursts, and everything it ever ate comes out at once.`, 'good', 4000); }
+  else msg(`${theName(e.def.name, true)} is destroyed.`, 'good', 3000);
   if (byGlass && e.def.cacophony) { const p = G.player; p.hp = Math.min(p.hpMax, p.hp + 4); p.glass = Math.min(100, p.glass + 3); fx('glass', 400); msg('The glass drinks what it broke. The ring is fuller. The tideline climbs.', 'warn'); if (p.glass >= 100) die('heartglass'); }
   dropLoot(e);
   if (e.type === 'aegis') aegisDestroyed(e);
   if (e.type === 'weaver' || e.type === 'pressman') wgBossDown(e);
-  if (e.type === 'bosun' || e.type === 'horn' || e.type === 'requiem' || e.type === 'wearer_coda') codaBossDown(e);
+  if (e.type === 'bosun' || e.type === 'horn' || e.type === 'requiem' || e.type === 'wearer_coda' || e.type === 'broodmother') codaBossDown(e);
   if (e.type === 'wearer') { G.flags.wearer_dead = true; if (G.mapId === 'whispergrove') G.flags.wearer_porch_dead = true; }
   if (e.onDeath) e.onDeath();
   checkLevel();
@@ -341,7 +343,7 @@ function dropLoot(e) {
   const id = pickWeighted(L.table), it = ITEMS[id];
   let x = e.x, y = e.y; for (let k = 0; k < 8; k++) { const a = Math.random() * 6.28, rr = 0.25 + Math.random() * 0.3; if (!G.map.isBlocked((e.x + Math.cos(a) * rr) | 0, (e.y + Math.sin(a) * rr) | 0)) { x = e.x + Math.cos(a) * rr; y = e.y + Math.sin(a) * rr; break; } }
   G.ents.push(hydrate({ kind: 'item', item: id, sprite: it.sprite || 'gear', x, y, scale: 0.35, yOff: 0, solid: false }));
-  msg(`Something falls from the ${e.def.name}.`, '', 2200);
+  msg(`Something falls from ${theName(e.def.name, false)}.`, '', 2200);
 }
 function openCache(e) {
   const T = CACHE[e.tier || 1]; const n = rndi(T.gold[0], T.gold[1]); G.gold(n);
@@ -376,7 +378,7 @@ function attack(dirLabel) {
   const e = best, d = e.def;
   // hit chance
   const hitChance = 0.55 + p.attrs.Agility / 250 + p.attrs.Luck / 600 + (w.ranged ? 0.15 : 0);
-  if (Math.random() > hitChance) { msg(`You miss the ${d.name}.`, '', 1500); return; }
+  if (Math.random() > hitChance) { msg(`You miss ${theName(d.name, false)}.`, '', 1500); return; }
   let dmg = rndi(w.dmg[0], w.dmg[1]) + Math.floor(p.attrs.Strength / 25);
   if (w.type === 'shot') { if (d.cacophony) dmg *= 2; if (d.quiet) { dmg = 0; msg('The pellet cannot ring inside the quiet. It drops like a dropped coat.', 'warn'); } }
   if (w.type === 'iron' && d.quiet) dmg = Math.floor(dmg * 1.5);
@@ -391,7 +393,7 @@ function attack(dirLabel) {
   e.hp -= dmg; e.flash = true; setTimeout(() => e.flash = false, 90);
   if (w.type === 'glass') Audio_.sfx.glasshit(); else if (w.type === 'bronze') { Audio_.sfx.hit(); Audio_.sfx.bell(); } else Audio_.sfx.hit();
   if (e.state === 'idle' || e.state === 'passive') e.state = 'chase';
-  if (dmg > 0) msg(w.type === 'bolt' ? `Your bolt takes the ${d.name} for ${dmg}.` : w.type === 'shot' ? `Your shot breaks on the ${d.name} for ${dmg}.` : `Your ${dirLabel || 'blow'} lands on the ${d.name} for ${dmg}.`, '', 1800);
+  if (dmg > 0) msg(w.type === 'bolt' ? `Your bolt takes ${theName(d.name, false)} for ${dmg}.` : w.type === 'shot' ? `Your shot breaks on ${theName(d.name, false)} for ${dmg}.` : `Your ${dirLabel || 'blow'} lands on ${theName(d.name, false)} for ${dmg}.`, '', 1800);
   if (e.hp <= 0) killEnemy(e, w.type === 'glass');
 }
 
@@ -712,7 +714,7 @@ function askPlace(place) {
   if (G.mapId !== hub) {
     const oh = G.maps[hub]; const idx = G.mapId === 'underhedge' ? -1 : oh.cells.findIndex(c => c && c.portal && c.portal.map === G.mapId);
     if (idx >= 0) { from = [idx % oh.w + 0.5, (idx / oh.w | 0) + 0.5]; pre = 'Out the door, then '; }
-    else { DLG.log.push({ who: 'them', t: wg ? `That is in ${ps.name}, back the way you came.` : 'That is in Oakhaven. You are a long way from Oakhaven.' }); return; }
+    else { DLG.log.push({ who: 'them', t: wg ? (G.mapId === 'belfry' ? (/bell-tower/.test(place) ? 'You are standing in it.' : `That is in ${ps.name}. Down the tower stair, west through the hall of tombs, and out of the Mausoleum's front door.`) : `That is in ${ps.name}, back the way you came.`) : 'That is in Oakhaven. You are a long way from Oakhaven.' }); return; }
   }
   const dx = tx - from[0], dy = ty - from[1]; const d = Math.sqrt(dx * dx + dy * dy);
   const ang = Math.atan2(dy, dx); const dirs = ['east', 'south-east', 'south', 'south-west', 'west', 'north-west', 'north', 'north-east'];

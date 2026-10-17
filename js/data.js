@@ -957,3 +957,57 @@ const CAMP = {
   },
 };
 Object.assign(NPCS, CAMP);
+
+// ---------------------------------------------------------------- Part Four, second pass
+Object.assign(ENEMIES, {
+  broodmother: { name: 'The Brood-Mother', sprite: 'broodmother', hp: 96, dmg: [5, 11], speed: 1.1, reach: 1.3, cacophony: true, fearless: true, web: true, summon: 'weaverling', scale: 1.25, yOff: 0.1, xp: 120,
+    desc: 'The queen of the nests. Her egg-sac is full of small faces, and every few breaths one of them gets legs.' },
+});
+NPCS.mourner = {
+  name: 'A Hollow mourner', sprite: 'mourner', portrait: 'townswoman', tier: 'low',
+  greet: { polite: '"...lilies for the Cantor... lilies..."', normal: '"...we\'re late... the bell hasn\'t gone..."', blunt: 'She walks past you with her lilies.' }, topics: {},
+  quest: (g) => ({ text: g.flags.bell_rung ? 'She is kneeling at a grave with her lilies laid out on it in a careful row, and she is not walking any more. "...there," she says, to no one. "...there now."' : 'A Hollow in a black veil, carrying a bunch of pale lilies that glow faintly. She walks from the yard to the Mausoleum door and back, and back, waiting for something. "...the bell hasn\'t gone..." she says. "...we can\'t start till the bell..."' }),
+};
+TOPICS['Vesper'] = { low: 'Never heard the name.', high: 'The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived.' };
+TOPIC_KEYS.push('Vesper');
+Object.assign(ITEMS, {
+  cutterlog: { name: 'The Cutter\'s Log', sprite: 'loot', desc: 'OC-742\'s log, in an Office hand. TASKED: follow DK by sound from Oakhaven. REPORT TO: the Arbiter\'s column, Tramway, ninth day. CARGO: Consignment 19, Hall of Carriage. The last line is not finished.', key: true },
+});
+PLACES_DW['The bell-tower (in the Mausoleum)'] = [27.5, 10.5];
+(() => {
+  const vq = NPCS.vane_dw.quest;
+  NPCS.vane_dw.quest = (g) => {
+    const f = g.flags;
+    if (f.dw_vane_met && !f.vane_vesper && (f.tank_patched || f.coda_done || f.bottles_done)) {
+      return { text: 'He is sitting on an upturned crate with the boarding axe across his knees, cleaning a blade that is already clean. "You know what I was counting, on the cutter," he says. "Ten. It was ten last time too. Her name was Vesper."', choices: [
+        { t: '"Tell me about her."', f: (g) => { f.vane_vesper = true; questXp(40); journal('side', 'Vesper: at the fire Vane told me about the Wave-Cutter, in 414. A tonal trench opened under the tow and he held the axe for ten heartbeats, looking at his first mate, Vesper, through the spray. Then he cut the hawser. Forty-eight men lived. This time, with the cutter\'s grapnel in our rail, he did not cut.'); return '"First mate of the Wave-Cutter. Better sailor than me; worse liar. A trench opened under the tow and the hawser went bar-taut, and I had the axe, and I looked at her through the spray for ten heartbeats, and she nodded. So I cut it. Forty-eight men lived. She went down with the tow." He turns the axe over. "I have been telling myself for five years that nothing matters enough to die for. It is a very comfortable thing to believe. It nearly worked."'; } },
+        { t: '"You didn\'t cut it this time."', f: (g) => { f.vane_vesper = true; f.vane_stays = true; questXp(50); journal('side', 'Vesper: I told Vane he did not cut the line this time. He said he has been looking for a ship that can sail past the edge of the world for five years, and it turns out what he needed was a reason to stay.'); return 'He looks at you for a long time. "No," he says. "I didn\'t." He puts the axe down on the moss, beside the crate, not across his knees. "Five years I have been looking for a ship that would go past the edge of the world, so I would never have to choose again. Turns out you just stay. That\'s the whole trick. You stay, and you don\'t cut." He gets up. "Don\'t tell Mags I said anything sensible. She reads lips."'; } },
+      ] };
+    }
+    return vq(g);
+  };
+  const kq = NPCS.kaelen_dw.quest;
+  NPCS.kaelen_dw.quest = (g) => {
+    const f = g.flags;
+    if (f.log_read && !f.kaelen_log) { f.kaelen_log = true; return { text: '"Follow DK by sound from Oakhaven." He says it twice. "They had a horn on us the whole way. Every word anybody said aboard that ship since the Reach, they heard. Every name Sable read." He looks at his glass hand. "The Arbiter\'s column is on the Tramway. Nine days. Aurelian Vaelen does not hurry, because he does not need to."' }; }
+    return kq(g);
+  };
+  const sq = NPCS.sable_dw.quest;
+  NPCS.sable_dw.quest = (g) => {
+    const f = g.flags;
+    if (f.log_read && !f.sable_log) { f.sable_log = true; return { text: 'Entry: the Office knew where we were for a hundred miles, and did not take us, because it wanted to know where we were going. That is not a hunt. That is a census. — The last line of the log is not finished. It says <i>DK making for</i>. Nobody knew. That is the only reason we are alive.' }; }
+    return sq(g);
+  };
+})();
+(() => {
+  const xq = NPCS.sexton.quest;
+  NPCS.sexton.quest = (g) => {
+    const f = g.flags;
+    if (f.sexton_rest && !f.bell_rung && !f.sexton_bell) {
+      f.sexton_bell = true;
+      journal('side', 'The Tower Bell: Amos Fell says nobody has rung the great bell in the Mausoleum\'s tower since Nan was buried. The rope is cut; you ring it with the hammer. The stair is in the east wing, under the tower.');
+      return { text: 'He turns his cap over in his hands. "...nobody rang her down," he says. "...the bell. In the tower. I cut the rope myself, after, so nobody would ring it for anybody else and I\'d have to hear it." He looks at the toll-hammer on your belt. "...that\'s what that\'s for. You don\'t pull that bell. You strike it. Three times for a death. The stair is in the east wing, under the tower... the mourners have been waiting three years for it to go."' };
+    }
+    return xq(g);
+  };
+})();

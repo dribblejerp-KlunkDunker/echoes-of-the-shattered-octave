@@ -50,6 +50,7 @@ function part4Land() {
 // ---------------------------------------------------------------- per-frame
 function codaTick(dt) {
   const f = G.flags;
+  if (f.part4 && G.mapId === 'deepwoods') codaMourners(dt);
   if (!f.part4 || !f.coda_fight || f.coda_sung || f.coda_done) return;
   if (G.mapId !== 'mausoleum') return;
   f.coda_t = (f.coda_t || 0) - dt;
@@ -86,8 +87,8 @@ function codaExtra(e, dt, dist, canSee) {
       e.hookT = rnd(6, 9);
       const a = Math.atan2(e.y - c.y, e.x - c.x);
       for (const k of [1.6, 1.1, 0.6]) { const nx = c.x + Math.cos(a) * k, ny = c.y + Math.sin(a) * k; if (!solidAt(nx, ny) && !solidAt(nx + 0.2, ny) && !solidAt(nx, ny + 0.2)) { c.x = nx; c.y = ny; break; } }
-      damagePlayer(2, `The ${d.name}'s grapnel`); G.hurtT = 0.35;
-      msg(`A grapnel line hisses out of the mist and bites into your coat. The ${d.name} reels you in.`, 'bad', 3000);
+      damagePlayer(2, `${theName(d.name, true)}'s grapnel`); G.hurtT = 0.35;
+      msg(`A grapnel line hisses out of the mist and bites into your coat. ${theName(d.name, true)} reels you in.`, 'bad', 3000);
     }
   }
   if (d.dirge && dist < 3.2 && !G.dead) {
@@ -120,6 +121,11 @@ function codaBossDown(e) {
     f.bosun_dead = true; G.give('holdkey'); questXp(30);
     msg('Bosun Teller goes down with his count unfinished. You take the hold key off its lanyard: TELLER — HOLD — 432.', 'good', 6000);
     journal('side', 'Four Hundred and Thirty-Two: I killed Bosun Teller at the wreck of the Office cutter and took the hold key off his neck. The hold is in the cutter\'s split hull.');
+  }
+  if (e.type === 'broodmother') {
+    f.brood_dead = true; questXp(60);
+    msg('The Brood-Mother folds up on her glass legs and her egg-sac goes dark, face by small face. Nothing else comes down the webs.', 'good', 7000);
+    journal('side', 'The Brood-Mother: I killed the queen of the weaverling nests in the south-west of the Deep Woods. Her egg-sac was full of small faces. The webs are quiet now.');
   }
   if (e.type === 'horn') { f.horn_dead = true; msg('The listening-horn goes over on its tripod with a sound like a dropped trumpet, and the dial spins down to nothing. Nobody else on the cutter can hear you now.', 'good', 6000); }
   if (e.type === 'requiem' || e.type === 'wearer_coda') {
@@ -160,7 +166,7 @@ function codaUse(e) {
     return true;
   }
   if (e.use === 'silk') {
-    if (G.ents.some(o => o.kind === 'enemy' && !o.dead && !o.hidden && o.type === 'weaverling' && dist2(o.x, o.y, Engine.cam.x, Engine.cam.y) < 25)) { msg('The web is shaking. Something is coming down it toward you. Deal with it first.', 'warn', 3000); return true; }
+    if (G.ents.some(o => o.kind === 'enemy' && !o.dead && !o.hidden && (o.type === 'weaverling' || o.type === 'broodmother') && dist2(o.x, o.y, Engine.cam.x, Engine.cam.y) < 25)) { msg('The web is shaking. Something is coming down it toward you. Deal with it first.', 'warn', 3000); return true; }
     e.hidden = true; G.give('liftsilk'); questXp(10); Audio_.sfx.pickup();
     const n = G.count('liftsilk');
     msg(`You cut a bolt of lift-silk off the web, light as breath. (${n} of 3)`, 'good', 4000);
@@ -168,6 +174,7 @@ function codaUse(e) {
     return true;
   }
   if (e.use === 'cutter') { codaCutter(e); return true; }
+  if (e.use === 'tower_bell') { codaBell(e); return true; }
   if (e.use === 'maus_inscription') { showEvent('Over the inner door', '<i>Here lie the Cantors of Memory, each in the stone of the note they kept. Sing them down as you would sing them home: from the highest, to the lowest. Then the choir will open, and you may say goodbye.</i>', [{ t: 'Step back.', f: null }]); return true; }
   if (e.use === 'tomb') { codaTomb(e); return true; }
   if (e.use === 'maus_register') {
@@ -188,6 +195,7 @@ function codaCutter(e) {
     if (G.has('holdkey')) ch.push({ t: 'Unlock the hold.', f: () => codaHold() });
     else ch.push({ t: 'Try the hold hatch.', f: () => msg('The hold hatch is locked, and from under it comes a murmur, very many voices, none of them loud. TELLER, says the plate on the lock.', 'warn', 5000) });
   }
+  if (!f.log_read) ch.push({ t: 'Read the cutter\'s log.', f: () => codaLog() });
   ch.push({ t: 'Leave the wreck.', f: null });
   showEvent('The Office cutter OC-742', 'Grey hull, grey canopy, split at the bow by a broken willow-crown with the leaves still on it. ' + (f.horn_dead ? 'The listening-horn lies on its side in the moss.' : 'Her listening-horn is still on its tripod.') + (f.bottles_done ? '' : ' Under the hold hatch, something murmurs in a great many voices.'), ch);
 }
@@ -277,6 +285,63 @@ function codaEndingLines() {
   else if (f.bottles_freed) L.push('In the Deep Woods you unstoppered four hundred and thirty-two voices and let them go into the willows. Something came through after them that ate the sound out of the air.');
   if (f.cloak_given) L.push('By the fire Sable told the Aegis what she knows and cannot read, and promised to find his name in the Organum, and it gave her the red cloak.');
   if (f.sexton_rest) L.push('Amos Fell, sexton of the Mausoleum of Chords, filled his wife\'s grave for the last time, and sits beside it.');
+  if (f.bell_rung) L.push('For the first time in three years the great bell of the Mausoleum of Chords was rung for the dead, three times, with the sexton\'s own hammer. The mourners in the yard laid down their lilies.');
+  if (f.brood_dead) L.push('The Brood-Mother is dead in her nest in the south-west of the Deep Woods, and the webs are quiet.');
+  if (f.log_read) L.push('In your pack is the log of OC-742: follow DK by sound, report to the Arbiter on the Tramway, ninth day. The last line says <i>DK making for</i>, and stops. Nobody knew. It is the only reason you are alive.');
+  if (f.vane_stays) L.push('At the fire Vane told you about Vesper, and put the axe down on the moss instead of across his knees.');
+  else if (f.vane_vesper) L.push('At the fire Vane told you about Vesper: ten heartbeats, the hawser, forty-eight men. He did not cut the line this time.');
   if (f.vane_told_cut) L.push('You told Vane to cut the line. He did not. "Not this time," he said.');
   return L;
+}
+
+// ---------------------------------------------------------------- second pass: mourners, the tower bell, the cutter's log
+function codaMourners(dt) {
+  const f = G.flags;
+  for (const e of G.ents) {
+    if (e.kind !== 'npc' || e.id !== 'mourner' || !e.path) continue;
+    let tx, ty;
+    if (f.bell_rung) { if (e.knelt) continue; [tx, ty] = e.rest; }
+    else { e.pi = e.pi || 0; [tx, ty] = e.path[e.pi]; }
+    const dx = tx - e.x, dy = ty - e.y, d = Math.hypot(dx, dy);
+    if (d < 0.25) {
+      if (f.bell_rung) { e.knelt = true; e.facing = -Math.PI / 2; continue; }
+      e.wait = (e.wait || 0) + dt; if (e.wait < 2.5) continue;
+      e.wait = 0; e.pi = (e.pi + e.dirn + e.path.length) % e.path.length;
+      if (e.pi === 0 || e.pi === e.path.length - 1) e.dirn = -e.dirn;
+      continue;
+    }
+    const sp = 0.55 * dt, nx = e.x + dx / d * sp, ny = e.y + dy / d * sp;
+    if (!G.map.isBlocked(nx | 0, ny | 0)) { e.x = nx; e.y = ny; e.facing = Math.atan2(dy, dx); }
+  }
+}
+function codaBell(e) {
+  const f = G.flags;
+  if (f.bell_rung) { msg('The great bell hangs still. You can still feel it in your back teeth.', '', 3500); return; }
+  if (G.ents.some(o => o.kind === 'enemy' && !o.dead && !o.hidden && dist2(o.x, o.y, Engine.cam.x, Engine.cam.y) < 36)) { msg('Not with things in the belfry with you.', 'warn', 3000); return; }
+  if (!G.player.weapons.includes('tollhammer')) {
+    showEvent('The bell of the Mausoleum', 'A funeral bell the size of a cart, green with age, the lip cracked where it was rung too hard once. The rope was cut long ago. Somebody has written along the yoke in chalk: <i>NOT WITH YOUR HANDS.</i><br><br>You put your palm on the bronze and strike it, and your fist makes no sound on it at all.', [{ t: 'Leave it.', f: null }]);
+    return;
+  }
+  showEvent('The bell of the Mausoleum', 'A funeral bell the size of a cart, green with age. The sexton\'s toll-hammer is heavy in your hand, and the head of it is the same green bronze as the bell.', [
+    { t: 'Ring it for the dead.', f: () => {
+      f.bell_rung = true; questXp(120);
+      [196, 196, 196].forEach((hz, i) => setTimeout(() => Audio_.sfx.song(hz, 1.4), i * 1400));
+      let n = 0;
+      for (const id in G.maps) for (const o of G.maps[id].entities) {
+        if (o.kind !== 'enemy' || o.dead || o.type !== 'dirge') continue;
+        n++;
+        if (id === G.mapId) killEnemy(o, true); else { o.dead = true; o.hidden = true; }
+      }
+      for (const id in G.maps) for (const o of G.maps[id].entities) if (o.kind === 'enemy' && o.type === 'warden' && !o.dead) { o.passive = true; o.state = 'passive'; }
+      msg('You ring it three times, the way a death is rung in the Reach. The sound goes out of the tower and down through the woods and does not come back. ' + (n ? 'Every Dirge in the Deep Woods hears its own funeral and comes apart in the air.' : 'The woods go still.'), 'good', 9000);
+      journal('side', 'The Tower Bell: with Amos Fell\'s toll-hammer I rang the great bell of the Mausoleum of Chords three times, the way a death is rung. The Dirges came apart, the Chord-Wardens stood down, and the Hollow mourners in the yard finally knelt at their graves and laid down their lilies.');
+    } },
+    { t: 'Not yet.', f: null },
+  ]);
+}
+function codaLog() {
+  const f = G.flags;
+  f.log_read = true; G.give('cutterlog'); questXp(40);
+  showEvent('The log of OC-742', 'An Office logbook, grey cloth, every page ruled. The hand is small and very tidy.<br><br><i>TASKED: follow DK by sound from Oakhaven. Do not board. Do not engage. Listen.<br>REPORT TO: the Arbiter\'s column, the Tramway, ninth day.<br>CARGO: Consignment 19, 432 units, for the Hall of Carriage.<br><br>Day 6. DK took on a press and an archivist at Whisper-Grove. Grapnel crew stood to. Horn has the Cantor\'s voice clear.<br>Day 7. DK making for</i><br><br>The last line is not finished.', [{ t: 'Take the log.', f: null }]);
+  journal('side', 'The Cutter\'s Log: the Office cutter OC-742 had orders to follow the Drift-Kestrel by sound from Oakhaven, listen and not board, and report to the Dread Arbiter\'s column on the Tramway on the ninth day. Its cargo was Consignment 19 for the Hall of Carriage. The last line says "DK making for" and stops. Kaelen and Sable should see this.');
 }
