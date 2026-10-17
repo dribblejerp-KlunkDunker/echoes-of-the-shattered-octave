@@ -177,6 +177,79 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       return { species: count, collapsePoses: frames.size };
     });
     console.log('PASS deaths, rewards, corpses, save/load and departure cleanup', deaths);
+    const motion = await page.evaluate(() => {
+      function check(ok, label) { if (!ok) throw new Error(label); }
+      const state = JSON.stringify({ attack: G.attack, hp: G.player.hp, fat: G.player.fat, noise: G.noise });
+      const families = new Set();
+      for (const w of Object.values(WEAPONS)) {
+        const start = animWeaponPose(w, 0, 'slash left');
+        const hit = animWeaponPose(w, 0.48, 'slash left');
+        const end = animWeaponPose(w, 1, 'slash left');
+        check(start.x === 0 && start.y === 0 && end.x === 0 && end.y === 0 && end.rotation === 0 && end.scale === 1, w.name + ' rests at sequence ends');
+        check(hit.x !== 0 || hit.y !== 0, w.name + ' has strike pose'); families.add(hit.family);
+        for (const f of [-1, 0.2, 0.5, 0.8, 2]) {
+          const pose = animWeaponPose(w, f, 'thrust');
+          check([pose.x, pose.y, pose.rotation, pose.scale].every(Number.isFinite), w.name + ' finite pose');
+        }
+      }
+      const left = animWeaponPose(WEAPONS.sword, 0.48, 'slash left');
+      const right = animWeaponPose(WEAPONS.sword, 0.48, 'slash right');
+      check(left.x === -right.x && left.rotation === -right.rotation, 'opposite slashes mirror');
+      check(animWeaponPose(WEAPONS.mace, 0.48).family === 'overhead', 'mace overhead');
+      check(animWeaponPose(WEAPONS.knife, 0.48).family === 'thrust', 'dagger thrust');
+      check(state === JSON.stringify({ attack: G.attack, hp: G.player.hp, fat: G.player.fat, noise: G.noise }), 'choreography cannot mutate combat state');
+      const hash = data => { let h = 0; for (const px of data) h = (Math.imul(h, 31) + px) | 0; return h; };
+      for (const name of ['campfire', 'hearth']) {
+        const source = Engine.sprites[name], before = hash(source.data), poses = new Set();
+        for (let i = 0; i < 4; i++) {
+          const art = animFireSprite(source, i); poses.add(hash(art.data));
+          check(art === animFireSprite(source, i), name + ' cached frame');
+          const base = Math.ceil(source.h * 0.68) * source.w;
+          check(art.data.slice(base).every((px, j) => px === source.data[base + j]), name + ' fuel bed anchored');
+        }
+        check(poses.size === 4, name + ' four distinct flame drawings');
+        check(before === hash(source.data), name + ' source unchanged');
+      }
+      const fire = { kind: 'deco', sprite: 'campfire', x: Engine.cam.x + 2, y: Engine.cam.y };
+      const oldTime = ANIM.T;
+      ANIM.T = 0; const firstFire = animDirectionalSprite(fire).sprite;
+      ANIM.T = 1 / 7; const nextFire = animDirectionalSprite(fire).sprite;
+      check(firstFire !== nextFire, 'renderer resolver advances fire frame with animation clock');
+      ANIM.T = oldTime;
+      // Use the real attack entrypoint: visuals do not create extra hits,
+      // change its cooldown or bypass the existing attack lock.
+      const savedWeapons = G.player.weapons, savedIndex = G.player.weapon;
+      const savedFat = G.player.fat, savedAttack = { ...G.attack }, savedSong = G.song.t, savedNoise = G.noise;
+      const savedEntities = G.ents;
+      G.ents = []; G.player.weapons = ['sword']; G.player.weapon = 0;
+      G.attack.t = 0; G.song.t = 0;
+      attack('slash right');
+      check(G.attack.t === WEAPONS.sword.speed && G.attack.dur === WEAPONS.sword.speed, 'real attack retains catalog cooldown');
+      check(G.player.fat === Math.max(0, savedFat - 1), 'real attack charges fatigue once');
+      const afterAttack = G.player.fat; attack('slash left');
+      check(G.player.fat === afterAttack && G.attack.dirLabel === 'slash right', 'attack lock prevents duplicate input');
+      G.ents = savedEntities; G.player.weapons = savedWeapons; G.player.weapon = savedIndex;
+      G.player.fat = savedFat; Object.assign(G.attack, savedAttack); G.song.t = savedSong; G.noise = savedNoise;
+      // Exercise the actual HUD draw path with every first-person catalog image.
+      const player = G.player, originalWeapons = player.weapons, originalIndex = player.weapon;
+      const attackState = { ...G.attack }, originalSong = G.song.t, originalFx = G.songFx;
+      G.fadeT = 0; G.glassLock = 0; G.song.t = 0; G.songFx = 0;
+      const rendered = new Set();
+      for (const key of Object.keys(WEAPONS)) {
+        player.weapons = [key]; player.weapon = 0;
+        for (const progress of [0, 0.24, 0.48, 0.74, 1]) {
+          Engine.ctx.clearRect(0, 0, VW, VH);
+          Object.assign(G.attack, { dur: WEAPONS[key].speed, t: WEAPONS[key].speed * (1 - progress), dirLabel: 'slash left' });
+          drawHUD();
+          if (key === 'sword') rendered.add(hash(Engine.ctx.getImageData(0, 0, VW, VIEW_H).data));
+        }
+      }
+      check(rendered.size >= 4, 'real HUD renders distinct sword sequence poses');
+      player.weapons = originalWeapons; player.weapon = originalIndex;
+      Object.assign(G.attack, attackState); G.song.t = originalSong; G.songFx = originalFx;
+      return { weapons: Object.keys(WEAPONS).length, families: [...families], flameFrames: 8 };
+    });
+    console.log('PASS weapon choreography and cached fire artwork', motion);
     await page.evaluate(() => {
       closeModal(); hide('#title'); G.state = 'panel';
       const c = Engine.ctx; c.fillStyle = '#18141e'; c.fillRect(0, 0, VW, VH);

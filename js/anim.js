@@ -79,9 +79,60 @@ function animProctorView(view, pose) {
   PROCTOR_VIEWS.set(key, sprite);
   return sprite;
 }
+// Four discrete, cached flame silhouettes from the original painted sprite.
+// Only warm flame pixels above the fuel bed move; logs/stone stay anchored.
+const FIRE_FRAMES = new WeakMap();
+function animFireSprite(source, phase) {
+  if (!source) return source;
+  let frames = FIRE_FRAMES.get(source);
+  if (!frames) { frames = []; FIRE_FRAMES.set(source, frames); }
+  const stage = ((phase % 4) + 4) % 4;
+  if (frames[stage]) return frames[stage];
+  const { w, h } = source, data = new Uint32Array(source.data);
+  const flame = [];
+  for (let y = 0; y < h * 0.68; y++) for (let x = 0; x < w; x++) {
+    const i = y * w + x, px = source.data[i];
+    const r = px & 255, g = (px >>> 8) & 255, b = (px >>> 16) & 255;
+    if ((px >>> 24) > 100 && r > 125 && r > g * 1.15 && g > b * 1.15) {
+      flame.push([x, y, px]); data[i] = 0;
+    }
+  }
+  for (const [x, y, px] of flame) {
+    const lift = Math.max(0, 1 - y / (h * 0.68));
+    const dx = Math.round(x + Math.sin(y * 0.21 + stage * Math.PI / 2) * lift * 3);
+    const dy = Math.max(0, Math.round(y - [0, 3, 1, 4][stage] * lift));
+    if (dx >= 0 && dx < w) data[dy * w + dx] = px;
+  }
+  frames[stage] = { ...source, data };
+  return frames[stage];
+}
+
+// Pure visual choreography: attack() remains the sole owner of hit rolls,
+// costs and cooldowns. Wind-up, strike and recovery follow its existing clock.
+function animWeaponPose(w, progress, direction) {
+  const f = Math.max(0, Math.min(1, progress));
+  const thrust = direction === 'thrust' || w.img === 'fp_knife' || w.img === 'fp_spear';
+  const overhead = !thrust && (w.blunt || w.img === 'fp_axe' || direction === 'chop down');
+  const family = w.ranged ? 'ranged' : thrust ? 'thrust' : overhead ? 'overhead' : 'sweep';
+  const tracks = {
+    ranged: [[0, 0, 0, 1], [4, 3, 0.02, 1], [10, 15, 0.08, 0.94], [4, 5, 0.02, 0.98], [0, 0, 0, 1]],
+    thrust: [[0, 0, 0, 1], [12, 9, 0.1, 0.92], [-30, -26, -0.12, 1.18], [-12, -9, -0.04, 1.06], [0, 0, 0, 1]],
+    overhead: [[0, 0, 0, 1], [14, -25, 0.5, 0.95], [-38, 12, -0.55, 1.1], [-18, 8, -0.2, 1.03], [0, 0, 0, 1]],
+    sweep: [[0, 0, 0, 1], [18, 5, 0.35, 0.98], [-68, -12, -0.85, 1.06], [-30, -4, -0.4, 1.02], [0, 0, 0, 1]],
+  };
+  const track = tracks[family], times = [0, 0.24, 0.48, 0.74, 1];
+  let i = 0; while (i < 3 && f > times[i + 1]) i++;
+  const t = Math.max(0, Math.min(1, (f - times[i]) / (times[i + 1] - times[i])));
+  const k = t * t * (3 - 2 * t), a = track[i], b = track[i + 1];
+  const mix = n => a[n] + (b[n] - a[n]) * k;
+  const mirror = family === 'sweep' && direction === 'slash right' ? -1 : 1;
+  return { x: mix(0) * mirror, y: mix(1), rotation: mix(2) * mirror, scale: mix(3), family };
+}
+
 function animDirectionalSprite(e) {
   const base = (e.animSprite && Engine.sprites[e.animSprite]) || Engine.sprites[e.sprite];
   if (e.deathArt) return { sprite: animDeathSprite(e), flip: !!e.animFlip };
+  if (ANIM.fire.has(e.sprite)) return { sprite: animFireSprite(base, Math.floor(ANIM.T * 7 + animSeed(e)) % 4), flip: false };
   if (e.kind !== 'enemy' || e.sprite !== 'proctor') return { sprite: base, flip: !!e.animFlip };
   const angle = animViewAngle(e), pose = e.animSprite ? e.animSprite.slice(e.sprite.length) : '';
   return { sprite: angle.view === 0 ? base : animProctorView(angle.view, pose), flip: angle.flip };
