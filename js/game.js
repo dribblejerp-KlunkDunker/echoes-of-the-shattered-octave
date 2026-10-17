@@ -432,6 +432,66 @@ function castSong(id) {
   }
 }
 
+// ---------------------------------------------------------------- Oakhaven law (player data is included in existing saves)
+function crimeState() {
+  const p = G.player;
+  const raw = p.crime && typeof p.crime === 'object' ? p.crime : {};
+  const number = (v, max) => Number.isFinite(Number(v)) ? clamp(Math.floor(Number(v)), 0, max) : 0;
+  p.crime = { bounty: number(raw.bounty, 9999), thefts: number(raw.thefts, 9999), jailHours: number(raw.jailHours, 99999) };
+  return p.crime;
+}
+function theftWitness(target) {
+  const c = Engine.cam;
+  return G.ents.find(e => e.kind === 'npc' && !e.companion && !e.dead && !e.hidden &&
+    dist2(e.x, e.y, c.x, c.y) < 64 && los(e.x, e.y, c.x, c.y) &&
+    (e.lawGuard || Math.abs(normAng(Math.atan2(c.y - e.y, c.x - e.x) - (Number.isFinite(e.facing) ? e.facing : e.dir || 0))) < Math.PI * 0.65));
+}
+function confirmTheft(e) {
+  G.state = 'panel';
+  openModal(`<h2>Not yours to take</h2><p>This honey belongs to Bettany's market stall. Taking it is theft. A witness can report you to the watch.</p><div class="btns"><button class="dfbtn" id="crime-take">Take it anyway</button><button class="dfbtn" id="crime-leave">Leave it</button></div>`, 'theft');
+  $('#crime-leave').onclick = () => { closeModal(); G.state = 'play'; };
+  const map = G.map;
+  $('#crime-take').onclick = () => {
+    closeModal(); G.state = 'play';
+    if (G.map !== map || e.dead || e.hidden) return;
+    const law = crimeState(), witness = theftWitness(e);
+    law.thefts++;
+    if (witness) { law.bounty = Math.min(9999, law.bounty + 20); msg('A witness calls for the watch. Your Oakhaven bounty rises by 20 sovereigns.', 'bad', 5000); }
+    else msg('No one sees you take it.', 'warn', 3000);
+    pickUp(e, true);
+  };
+}
+function renderArrest() {
+  const law = crimeState(); if (!law.bounty) return;
+  G.state = 'panel';
+  openModal(`<h2>The Oakhaven watch</h2><p>The watch has your description. Outstanding fine: <b>${law.bounty} sovereigns</b>.</p><p class="muted">Pay the fine, or serve six hours at the watch-house. Jail advances world time; your equipment and quest items stay with you. Refusing leaves the bounty outstanding.</p><div class="btns"><button class="dfbtn" id="crime-pay" ${G.player.gold < law.bounty ? 'disabled' : ''}>Pay fine</button><button class="dfbtn" id="crime-jail">Serve six hours</button><button class="dfbtn" id="crime-flee">Refuse and run</button></div>`, 'arrest');
+  $('#crime-pay').onclick = () => {
+    const current = crimeState(); if (G.player.gold < current.bounty) return;
+    G.player.gold -= current.bounty; current.bounty = 0;
+    closeModal(); G.state = 'play'; msg('The watch marks the fine paid. You are free to go.', 'good');
+  };
+  $('#crime-jail').onclick = () => {
+    const current = crimeState(); current.bounty = 0; current.jailHours += 6;
+    passHours(6); closeModal(); G.state = 'play';
+    loadMap('oakhaven', { x: 23.5, y: 6.5, dir: Math.PI / 2 });
+    msg('Six hours on a watch-house bench. At release they return your belongings and strike out the fine.', 'warn', 5500);
+  };
+  $('#crime-flee').onclick = () => { G.lawGrace = 5; closeModal(); G.state = 'play'; };
+}
+function tickLaw(dt) {
+  G.lawGrace = Math.max(0, (G.lawGrace || 0) - dt);
+  if (G.mapId !== 'oakhaven' || G.flags.greening || !crimeState().bounty) return;
+  const c = Engine.cam;
+  for (const e of G.ents) {
+    if (!e.lawGuard || e.hidden || e.dead) continue;
+    const dx = c.x - e.x, dy = c.y - e.y, distance = Math.hypot(dx, dy);
+    if (distance > 14 || !los(e.x, e.y, c.x, c.y)) continue;
+    e.facing = Math.atan2(dy, dx);
+    if (distance < 1.8 && !G.lawGrace) { renderArrest(); return; }
+    if (distance > 1.2) moveWithSlide(e, dx / distance * 1.6 * dt, dy / distance * 1.6 * dt, e);
+  }
+}
+
 // ---------------------------------------------------------------- optional mechanical locks
 // Only explicitly marked mechanical locks are pickable. Story seals always
 // use cell.locked and are never bypassed by these saved unlock flags.
@@ -515,8 +575,9 @@ function interact() {
 }
 function decoLabel(e) { return e.label || ({ oak: 'An iron-bark oak. When the wind moves it, it rings like bronze.', lamp: 'A hush-lamp. Its reed-whistle never lets the street go silent.', crates: 'Crates, iron-banded.', bones: 'Bones, and a torn cloth. A hound\'s bed: no sound carries here.', pump: 'A steam pump. Hollows work these.', bed: 'A straw bed.', table: 'A table.', shelf: 'Shelves of ledgers and jars.', hearth: 'A hearth, kept low.', chair: 'A chair with a sap-mark chalked on it.', sign: 'A signpost. The boards have been scraped blank.', grate: 'The tannery culvert. Beyond it, the Hedge. At the dead hour, it speaks.', lever: 'A sluice lever. It is chained.', bore: 'The bore.', cores: 'Crates of glass cores.', burlsick: 'One of the burl-sick. Roots in the skin. They do not see you.' })[e.sprite] || 'Something.'; }
 function wallLabel(cell) { return ({ t_hedge: 'The Hedge. Three men deep of thorn and packed wool.', t_glassrock: 'Rock veined with green-gold glass. It is faintly warm, and it hums.', t_marble: 'Old marble.', t_greymarble: 'Drowned marble, grey-white, furred with lilac lichen to the waterline.', t_catacomb: 'Burial niches, five deep. Somebody has strung lilac thread across the skulls.', t_mausoleum: 'Violet marble, carved with staves of music from floor to vault. Put your ear to it and it hums.', t_deepwood: 'Silver willow, trunk against trunk, too thick to pass. The fronds move when nothing else does.', t_brass: 'Riveted brass. Verdigris.', t_house: 'Plaster and oak timber.', t_wood: 'Old planks.', t_stone: 'Cold stone.', t_door: 'A door.' })[cell.tex] || 'A wall.'; }
-function pickUp(e) {
+function pickUp(e, theftConfirmed = false) {
   if (e.dead || e.hidden) return;
+  if (e.owner === 'market' && G.mapId === 'oakhaven' && !G.flags.greening && !theftConfirmed) { confirmTheft(e); return; }
   if (e.item === 'cache' && e.tier >= 2) {
     const key = mechanicalLockKey(e);
     if (!G.flags[key] && beginLockpick(e, key, Math.min(3, e.tier), () => pickUp(e))) return;
@@ -671,6 +732,7 @@ $('#btn-again').onclick = () => { hide('#ending'); show('#title'); G.state = 'ti
 // ---------------------------------------------------------------- dialogue
 const DLG = { npc: null, tone: 'normal', log: [] };
 function talk(e) {
+  if (e.lawGuard && G.mapId === 'oakhaven' && crimeState().bounty) { renderArrest(); return; }
   if (wildsTalk(e)) return;
   if (e.id === 'hollow' && e.restore === 'hew' && G.flags.sable_returned) { talkHew(e); return; }
   if (e.id === 'cat') { talkCat(e); return; }
@@ -860,7 +922,7 @@ function renderCharacter() {
   ${p.glassed ? `<div>Glassing — ${stage} (${Math.round(p.glass)}%)</div><div class="bar-h"><i style="width:${p.glass}%;background:#6fd6e0"></i></div>` : ''}
   ${p.fragments ? `<div>Identity fragments left: ${p.fragments}</div>` : ''}
   <div>Armour Rating ${armorRating()} · armour noise ${armorNoise() > 0 ? '+' : ''}${armorNoise().toFixed(1)} · ${currentWeapon().name}</div>
-  <p class="muted">Kills ${p.kills} · Names kept ${G.ledger.length} · ${p.gold} sovereigns</p></div></div>`, 'char');
+  <p class="muted">Kills ${p.kills} · Names kept ${G.ledger.length} · ${p.gold} sovereigns<br>Oakhaven bounty ${crimeState().bounty} · Jail served ${crimeState().jailHours} hours</p></div></div>`, 'char');
   $('#x').onclick = closeModal;
 }
 function renderLog() {
@@ -1119,6 +1181,7 @@ function update(dt) {
   G.time += dt;
   if (G.state !== 'play') return;
   const p = G.player, c = Engine.cam, k = G.keys;
+  tickLaw(dt); if (G.state !== 'play') return;
   // time of day: one game hour per 90 real seconds
   G.tod += dt / (90 * 24); if (G.tod >= 1) { G.tod -= 1; G.day++; }
   if (G.fadeT > 0) G.fadeT -= dt;
@@ -1170,6 +1233,7 @@ function update(dt) {
     if (e.kind === 'enemy') enemyUpdate(e, dt);
     else if ((e.kind === 'npc' && e.wander) || (e.kind === 'deco' && e.wander)) {
       e.wanderT -= dt; if (e.wanderT <= 0) { e.wanderT = rnd(2, 6); e.dir = rnd(0, 6.28); e.moving = Math.random() < 0.6; }
+      if (e.lawGuard && G.mapId === 'oakhaven' && crimeState().bounty) continue;
       if (e.moving && dist2(e.x, e.y, e.homeX, e.homeY) < 20) { if (!moveWithSlide(e, Math.cos(e.dir) * 0.6 * dt, Math.sin(e.dir) * 0.6 * dt, e)) e.dir += 1.5; } else if (e.moving) { e.dir = Math.atan2(e.homeY - e.y, e.homeX - e.x); moveWithSlide(e, Math.cos(e.dir) * 0.6 * dt, Math.sin(e.dir) * 0.6 * dt, e); }
     } else if (e.kind === 'npc' && e.loop) {
       e.loopT = (e.loopT || 0) + dt; moveWithSlide(e, Math.cos(e.loopT * 0.7) * 0.5 * dt * 1.2, 0, e);
