@@ -220,10 +220,10 @@ function enemyUpdate(e, dt) {
   if (e.stun > 0) { e.stun -= dt; e.flash = (e.stun % 0.3) < 0.1; return; } else e.flash = false;
   if (e.state === 'passive') return;
   const dx = c.x - e.x, dy = c.y - e.y, dist = Math.sqrt(dx * dx + dy * dy);
-  const canSee = dist < 7 && los(e.x, e.y, c.x, c.y);
-  const hearRange = 1.5 + G.noise * (d.noiseLure ? 1.4 : 0.8) + (G.flags.thread_kept && d.cacophony ? 0.8 : 0);
+  const canSee = dist < 7 * (UPG.weatherFx ? UPG.weatherFx.sight : 1) && los(e.x, e.y, c.x, c.y);
+  const hearRange = (1.5 + G.noise * (d.noiseLure ? 1.4 : 0.8) + (G.flags.thread_kept && d.cacophony ? 0.8 : 0)) * (UPG.weatherFx ? UPG.weatherFx.hear : 1);
   if (e.state === 'idle') {
-    if ((canSee && dist < 5) || (dist < hearRange && !e.guard) || (e.guard && canSee && dist < 4)) { e.state = 'chase'; if (d.shriek) drownedShriek(e); if (d.cacophony) Audio_.sfx.hound(); else if (d.core) Audio_.sfx.bell(); else if (e.type === 'golem') Audio_.sfx.golem(); }
+    if ((canSee && dist < 5) || (dist < hearRange && !e.guard) || (e.guard && canSee && dist < 4)) { e.state = 'chase'; if (d.shriek) drownedShriek(e); Audio_.sfx.enemy(d, 'alert'); }
     else if (!e.guard) { e.wanderT -= dt; if (e.wanderT <= 0) { e.wanderT = rnd(1, 4); e.wdir = rnd(0, 6.28); } if (dist2(e.x, e.y, e.homeX, e.homeY) < 9 && e.wanderT > 1.5) moveWithSlide(e, Math.cos(e.wdir) * d.speed * 0.3 * dt, Math.sin(e.wdir) * d.speed * 0.3 * dt, e); }
     return;
   }
@@ -255,6 +255,7 @@ function enemyUpdate(e, dt) {
           const soak = Math.floor(AR / (d.cacophony ? 9 : 4) * (0.6 + Math.random() * 0.4)); // static goes through steel; steel stops steel
           if (soak > 0) dmg = Math.max(1, dmg - soak);
           if (d.press && p.glassed) { G.glassLock = 8; msg('The proctor strikes your glass with a hand-press tuned to 741. Your arm locks rigid, ringing flat.', 'bad'); Audio_.sfx.press(); }
+          Audio_.sfx.enemy(d, 'attack');
           damagePlayer(dmg, d.name);
           if (d.chord && !G.dead && Math.random() < 0.45) chordBlast(e);
           if (!G.dead && (d.web || d.forget || d.toll || d.mute || d.moth)) enemyHitFx(e, d);
@@ -291,7 +292,11 @@ function killEnemy(e, byGlass) {
 }
 function checkLevel() {
   const p = G.player; const need = Math.floor(60 * Math.pow(p.level, 1.5));
-  if (p.xp >= need) { p.level++; p.xp -= need; const h = 4 + Math.floor(p.attrs.Endurance / 20), v = 2 + Math.floor(p.attrs.Willpower / 20); p.hpMax += h; p.hp += h; p.voiceMax += v; p.voice += v; msg(`You have learned enough from your travels to reach level ${p.level}.`, 'good', 6000); Audio_.sfx.pickup(); }
+  if (p.xp >= need) { p.level++; p.xp -= need; const h = 4 + Math.floor(p.attrs.Endurance / 20), v = 2 + Math.floor(p.attrs.Willpower / 20);  p.hpMax += h; p.hp += h; p.voiceMax += v; p.voice += v; msg(`You have learned enough from your travels to reach level ${p.level}.`, 'good', 6000); Audio_.sfx.pickup();
+    ensurePlayerUpgrades(p);
+    if (p.level % 2 === 0) { p.perkPoints++; msg(`You have grown quiet enough to fast on the root for a moment. Perk point earned (${p.perkPoints} available).`, 'good', 6000); }
+    if (UPG.difficulty === 'narrative') { p.hp = Math.min(p.hpMax, p.hp + 12); p.voice = Math.min(p.voiceMax, p.voice + 8); }
+  }
 }
 
 function questXp(n) { G.player.xp += n; checkLevel(); }
@@ -393,6 +398,7 @@ function attack(dirLabel) {
   if (d.coda) dmg = codaShield(e, dmg);
   e.hp -= dmg; e.flash = true; setTimeout(() => e.flash = false, 90);
   if (w.type === 'glass') Audio_.sfx.glasshit(); else if (w.type === 'bronze') { Audio_.sfx.hit(); Audio_.sfx.bell(); } else Audio_.sfx.hit();
+  Audio_.sfx.enemy(d, 'hurt');
   if (e.state === 'idle' || e.state === 'passive') e.state = 'chase';
   if (dmg > 0) msg(w.type === 'bolt' ? `Your bolt takes ${theName(d.name, false)} for ${dmg}.` : w.type === 'shot' ? `Your shot breaks on ${theName(d.name, false)} for ${dmg}.` : `Your ${dirLabel || 'blow'} lands on ${theName(d.name, false)} for ${dmg}.`, '', 1800);
   if (e.hp <= 0) killEnemy(e, w.type === 'glass');
@@ -1022,6 +1028,7 @@ function update(dt) {
   let fwd = G.touch.fy, str = G.touch.fx;
   if (k.w || k.arrowup) fwd += 1;
   if (k.s || k.arrowdown) fwd -= 1;
+  // swimming itself lives in upgrades.js (tickSwim + water-aware playerMove)
   if (k.d) str += 1;
   if (k.a) str -= 1;
   let mag = Math.hypot(fwd, str); if (mag > 1) { fwd /= mag; str /= mag; mag = 1; }
@@ -1335,6 +1342,7 @@ function renderLoad(fromTitle) {
   const html = `<h2>Load game</h2><button class="dfbtn small close" id="x">Close</button>
   <p><b style="color:var(--gold)">Session slots</b></p>
   ${[0, 1, 2].map(i => `<div class="slot"><span class="meta">${SLOTS[i] ? slotSummary(SLOTS[i]) : `Slot ${i + 1} — empty`}</span><button class="dfbtn small" data-slot="${i}" ${SLOTS[i] ? '' : 'disabled'}>Load</button></div>`).join('')}
+  ${UPG.autosaveSlot ? `<div class="slot"><span class="meta">Boss autosave (before the fight) - ${UPG.autosaveWhen || ''}</span><button class="dfbtn small" id="ld-auto">Load</button></div>` : ''}
   <p style="margin-top:1cqh"><b style="color:var(--gold)">Save code or file</b></p>
   <textarea id="savecode" placeholder="Paste a save code here…"></textarea>
   <div class="btns"><button class="dfbtn small" id="ld-code">Load code</button><label class="dfbtn small" for="ld-file" style="cursor:pointer">Load file…</label><input type="file" id="ld-file" accept=".txt,.json,text/plain" style="display:none"><button class="dfbtn small" id="ld-back">Back</button></div>
@@ -1346,6 +1354,7 @@ function renderLoad(fromTitle) {
   document.querySelectorAll('[data-slot]').forEach(b => b.onclick = () => { try { restoreGame(JSON.parse(JSON.stringify(SLOTS[+b.dataset.slot]))); } catch (e) { fail(e); } });
   $('#ld-code').onclick = async () => { try { restoreGame(await decodeSave($('#savecode').value)); } catch (e) { fail(e); } };
   $('#ld-file').onchange = async (ev) => { const f = ev.target.files[0]; if (!f) return; try { restoreGame(await decodeSave(await f.text())); } catch (e) { fail(e); } };
+  const auto = $('#ld-auto'); if (auto) auto.onclick = () => { try { restoreGame(JSON.parse(JSON.stringify(UPG.autosaveSlot))); } catch (e) { fail(e); } };
 }
 $('#btn-load').onclick = () => { Audio_.init(); Audio_.resume(); hide('#title'); G.state = 'panel'; renderLoad(true); };
 window.saveCode = async () => encodeSave(snapshotGame());
