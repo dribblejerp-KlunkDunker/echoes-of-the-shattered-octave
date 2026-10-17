@@ -39,6 +39,7 @@ const PARTY_BARKS = {
     hushwarden: 'Felted bell. Don\'t let it touch you before you\'ve sung what you need.',
     hound: 'Hounds. They won\'t touch the glass. Stay near me.',
     hurt: 'You\'re bleeding into the moss. Back off and let me take it.',
+    rest: 'Wake me if the arm starts ringing. You\'ll hear it before I do.',
     selfhurt: 'I\'m fine. The arm\'s ringing, that\'s all. Give me a minute.',
   },
   lyra: {
@@ -53,11 +54,49 @@ const PARTY_BARKS = {
     warden: 'Chord-Wardens. They guard the Cantors. Nobody told them there\'s no one left to guard.',
     outrider: 'Grey coats. Keep me behind you.',
     hurt: 'Hold still. I\'ve got you.',
+    rest: 'I\'ll take first watch. I\'ll hum. Sleep.',
     selfhurt: 'I\'m not built for this. I\'m a teacher.',
   },
 };
 
+// things they say when nothing is trying to kill you
+const PARTY_CHAT = {
+  kaelen: [
+    'I don\'t build things anymore. I just know how they break.',
+    'Every willow here has a split about a hand above the root. Damp gets in. Give it ten years.',
+    'The glass is louder out here. Like standing next to a bore that\'s still turning.',
+    'My father sold the Root to keep the town fed. I keep trying to hate him for it. I keep doing the arithmetic instead.',
+    'Lyra taught me the Root note when we were nine. I still hum it when the arm\'s bad. Don\'t tell her.',
+    'Hounds won\'t come near the glass. Neither will most people. It\'s restful.',
+  ],
+  lyra: [
+    'My father used to say a martyr is just a musician who gave up before the coda.',
+    'Feet on the moss, not the twigs. Breathe through your nose. There. That\'s the Narrow. You\'re good at it.',
+    'I remember the name of everyone I have sung into the ground. It\'s the only thing I\'m vain about.',
+    'Kaelen hums when the arm is bad. He thinks I don\'t know. I\'m the one who taught him that note.',
+    'The reed orchards used to sing in a west wind. Whole hillsides of them. You would have liked it.',
+    'Don\'t thank me for the healing. Thank me when we\'re all home.',
+  ],
+};
+const PARTY_BOSS = {
+  kaelen: ['There. That\'s what it sounds like when something stops.', 'Structural failure. Finally.', 'He flexes the glass hand until it stops ringing. "Next."'],
+  lyra: ['Rest now. Whoever you were.', 'She sings two bars of the burial office over it, quietly, out of habit.', '"It\'s over. Breathe. It\'s over."'],
+};
+function partySay(line) {
+  const P = G.party; if (!P || !P.id) return;
+  const n = COMPANIONS[P.id].name.split(' ')[0];
+  msg(/^(He|She) /.test(line) ? line.replace(/^(He|She) /, n + ' ') : line.startsWith('"') ? `${n}: ${line}` : `${n}: "${line}"`, 'voice', 5500);
+}
+function partyChat() {
+  const P = G.party, pool = PARTY_CHAT[P.id];
+  const left = pool.map((l, i) => i).filter(i => !P.said[P.id + ':chat' + 'abcdefghij'[i]]);
+  if (!left.length) return;
+  const i = left[Math.floor(Math.random() * left.length)];
+  P.said[P.id + ':chat' + 'abcdefghij'[i]] = true; partySay(pool[i]);
+}
+
 G.party = null;
+function partyMax(id) { return COMPANIONS[id].hp + 4 * Math.max(0, ((G.player && G.player.level) || 1) - 1); }
 
 function partyEnt() { for (const id in G.maps) { const e = G.maps[id].entities.find(o => o.companion); if (e) return e; } return null; }
 function partyRemoveEnt() { for (const id in G.maps) { const L = G.maps[id].entities; for (let i = L.length - 1; i >= 0; i--) if (L[i].companion) L.splice(i, 1); } }
@@ -95,7 +134,7 @@ function partyJoin(id) {
   const prev = G.party && G.party.id;
   if (prev && prev !== id) msg(COMPANIONS[prev].leave, '', 4000);
   const C = COMPANIONS[id], old = (G.party && G.party.hpById) || {};
-  G.party = { id, order: 'follow', hp: old[id] != null ? old[id] : C.hp, hpById: old, cd: 0, said: (G.party && G.party.said) || {}, downed: (G.party && G.party.downed) || {}, map: G.mapId, x: Engine.cam.x, y: Engine.cam.y, trail: [], hurtT: 0 };
+  G.party = { id, order: 'follow', hp: old[id] != null ? Math.min(old[id], partyMax(id)) : partyMax(id), hpById: old, cd: 0, said: (G.party && G.party.said) || {}, downed: (G.party && G.party.downed) || {}, map: G.mapId, x: Engine.cam.x, y: Engine.cam.y, trail: [], hurtT: 0 };
   if (!G.flags.party_tip) { G.flags.party_tip = true; setTimeout(() => msg('Companion: G gives orders (follow, wait, keep quiet). X uses their ability. Talk to them for more.', 'good', 8000), 400); }
   partySpawn();
   return C.join;
@@ -117,7 +156,7 @@ function partyOrder(o) {
 }
 function partyMenu(e) {
   const P = G.party, C = COMPANIONS[P.id], n = C.name.split(' ')[0];
-  showEvent(C.name, `${n} is ${PARTY_ORDER_NAME[P.order].toLowerCase()}. Health ${Math.ceil(P.hp)} of ${C.hp}. ${C.ability.name}: ${P.cd > 0 ? 'ready in ' + Math.ceil(P.cd) + ' seconds' : 'ready'}.`, [
+  showEvent(C.name, `${n} is ${PARTY_ORDER_NAME[P.order].toLowerCase()}. Health ${Math.ceil(P.hp)} of ${partyMax(P.id)}. ${C.ability.name}: ${P.cd > 0 ? 'ready in ' + Math.ceil(P.cd) + ' seconds' : 'ready'}.`, [
     { t: '"Follow me."', f: () => partyOrder('follow') },
     { t: '"Wait here."', f: () => partyOrder('wait') },
     { t: '"Keep quiet. Don\'t fight, don\'t sing."', f: () => partyOrder('quiet') },
@@ -173,7 +212,7 @@ function partyTick(dt) {
   if (!G.flags.part4 || !PARTY_MAPS.includes(G.mapId)) { if (!G.flags.part4) { G.party = null; partyRemoveEnt(); partyHud(); } return; }
   // story: Lyra takes her place in the choir once the coda begins
   if (P.id === 'lyra' && G.flags.coda_go) { msg('Lyra goes ahead of you into the choir, to her place.', 'voice', 4000); partyDismiss(true); return; }
-  if (P.cd > 0) P.cd -= dt;
+  if (P.cd > 0) { P.cd -= dt; if (P.cd <= 0 && G.ents.some(o => o.kind === 'enemy' && !o.dead && !o.hidden && o.state === 'chase')) { msg(`${COMPANIONS[P.id].name.split(' ')[0]} is ready: X for ${COMPANIONS[P.id].ability.name}.`, 'good', 2200); Audio_.sfx.song(P.id === 'kaelen' ? 660 : 523, 0.25); } }
   const e = partyEnt(); if (!e || P.map !== G.mapId) { partyHud(); return; }
   if (!e.firstMapBark || e.firstMapBark !== G.mapId) { e.firstMapBark = G.mapId; partyBark('map:' + G.mapId); }
   const c = Engine.cam, C = COMPANIONS[P.id];
@@ -188,17 +227,30 @@ function partyTick(dt) {
   }
   if (foe && !P.said[P.id + ':' + foe.type]) partyBark(foe.type);
   let tx = null, ty = null, sp = 2.6;
+  const pSpd = 2.6 + ((G.player.attrs && G.player.attrs.Speed) || 40) / 60;
+  const pMoving = e.lastCam ? Math.hypot(c.x - e.lastCam[0], c.y - e.lastCam[1]) > 0.002 : false; e.lastCam = [c.x, c.y];
   if (P.id === 'kaelen' && foe) {
     const d = Math.sqrt(fd);
     if (d > 1.0) { tx = foe.x; ty = foe.y; sp = 2.4; }
-    else { e.atkT = (e.atkT || 0) - dt; if (e.atkT <= 0) { e.atkT = 1.3; partyHit(foe, rndi(5, 11), false); addNoise(0.8); } }
+    else { e.atkT = (e.atkT || 0) - dt; if (e.atkT <= 0) { e.atkT = 1.3; partyHit(foe, rndi(5, 11) + Math.floor((G.player.level || 1) / 2), false); addNoise(0.8); } }
+  } else if (P.id === 'lyra' && foe && Math.sqrt(fd) < 2.2) {
+    // Lyra is a teacher, not a fighter: she backs away from anything that gets close, towards you
+    const ax = e.x - foe.x + (c.x - e.x) * 0.5, ay = e.y - foe.y + (c.y - e.y) * 0.5, al = Math.hypot(ax, ay) || 1;
+    tx = e.x + ax / al; ty = e.y + ay / al; sp = pSpd * 1.1;
   } else if (P.order === 'follow') {
-    // walk the player's footsteps
+    // walk the player's footsteps, at the player's pace
     const last = P.trail[P.trail.length - 1];
     if (!last || Math.hypot(last[0] - c.x, last[1] - c.y) > 0.4) { P.trail.push([c.x, c.y]); if (P.trail.length > 60) P.trail.shift(); }
     while (P.trail.length && Math.hypot(P.trail[0][0] - e.x, P.trail[0][1] - e.y) < 0.35) P.trail.shift();
-    if (dPlayer > 1.6 && P.trail.length) { [tx, ty] = P.trail[0]; sp = dPlayer > 5 ? 3.6 : 2.6; }
-    else if (dPlayer > 1.6) { tx = c.x; ty = c.y; sp = dPlayer > 5 ? 3.6 : 2.6; }
+    if (dPlayer > 2.1) e.walking = true; else if (dPlayer < 1.5) e.walking = false;
+    sp = dPlayer > 3.2 ? pSpd * 1.9 : dPlayer > 2.2 ? pSpd * 1.1 : pSpd * 0.85;
+    if (e.walking) { if (P.trail.length) [tx, ty] = P.trail[0]; else { tx = c.x; ty = c.y; } }
+    // step aside when you walk towards them
+    const fwx = Math.cos(c.dir), fwy = Math.sin(c.dir), rx = e.x - c.x, ry = e.y - c.y;
+    const ahead = rx * fwx + ry * fwy, side = rx * -fwy + ry * fwx;
+    if (!e.walking && dPlayer < 1.5 && ahead > 0 && Math.abs(side) < 0.6 && pMoving) {
+      const sgn = side >= 0 ? 1 : -1; tx = e.x - fwy * sgn * 0.8; ty = e.y + fwx * sgn * 0.8; sp = pSpd;
+    }
   }
   if (tx != null) {
     const dx = tx - e.x, dy = ty - e.y, d = Math.hypot(dx, dy) || 1;
@@ -207,7 +259,7 @@ function partyTick(dt) {
     e.stuckT = moved ? 0 : (e.stuckT || 0) + dt;
   }
   // too far behind, or stuck on a willow: catch up the way companions do in old games
-  if (P.order === 'follow' && (dPlayer > 10 || (e.stuckT || 0) > 1.5)) {
+  if (P.order === 'follow' && (dPlayer > 9 || (e.stuckT || 0) > 1.2)) {
     const b = P.trail.length > 3 ? P.trail[P.trail.length - 4] : [c.x - Math.cos(c.dir), c.y - Math.sin(c.dir)];
     if (!solidAt(b[0], b[1])) { e.x = b[0]; e.y = b[1]; } e.stuckT = 0; P.trail = [];
   }
@@ -217,7 +269,7 @@ function partyTick(dt) {
   if (P.id === 'lyra' && P.order !== 'quiet' && p.hp < p.hpMax * 0.45 && !G.dead) {
     e.healT = (e.healT || 0) - dt;
     const silenced = G.mutedT > 0 || G.ents.some(o => o.kind === 'enemy' && !o.dead && !o.hidden && o.def.quiet && dist2(o.x, o.y, e.x, e.y) < 16);
-    if (e.healT <= 0 && !silenced && dPlayer < 6) { e.healT = 18; p.hp = Math.min(p.hpMax, p.hp + 14); addNoise(1.8); Audio_.sfx.song(174, 1.2); fx('song', 500); if (!P.said['lyra:hurt']) partyBark('hurt'); else msg('Lyra sings the tending note under her breath. Something knits.', 'good', 2500); }
+    if (e.healT <= 0 && !silenced && dPlayer < 6) { e.healT = 18; p.hp = Math.min(p.hpMax, p.hp + Math.max(14, Math.round(p.hpMax * 0.22))); addNoise(1.8); Audio_.sfx.song(174, 1.2); fx('song', 500); if (!P.said['lyra:hurt']) partyBark('hurt'); else msg('Lyra sings the tending note under her breath. Something knits.', 'good', 2500); }
   }
   if (P.id === 'kaelen' && p.hp < p.hpMax * 0.35) partyBark('hurt');
   // taking hits: anything chasing that is closer to them than to you
@@ -229,14 +281,16 @@ function partyTick(dt) {
       const de = Math.hypot(o.x - e.x, o.y - e.y);
       if (de < o.def.reach + 0.3 && de < Math.hypot(o.x - c.x, o.y - c.y) && Math.random() < 0.6) {
         P.hp -= rndi(o.def.dmg[0], o.def.dmg[1]);
-        if (P.hp < C.hp * 0.35) partyBark('selfhurt');
+        if (P.hp < partyMax(P.id) * 0.35) partyBark('selfhurt');
         if (P.hp <= 0) { partyDowned(); return; }
         break;
       }
     }
   }
+  // now and then, out of a fight, they talk
+  if (!foe && P.order !== 'quiet') { e.chatT = (e.chatT == null ? rnd(90, 150) : e.chatT) - dt; if (e.chatT <= 0) { e.chatT = rnd(150, 240); partyChat(); } }
   // out of a fight they mend, slowly
-  if (!foe && P.hp < C.hp) P.hp = Math.min(C.hp, P.hp + dt * 0.35);
+  if (!foe && P.hp < partyMax(P.id)) P.hp = Math.min(partyMax(P.id), P.hp + dt * 0.35);
   partyHud();
 }
 function partyDowned() {
@@ -258,11 +312,16 @@ function partyHud() {
     el.querySelector('.po').onclick = (ev) => { ev.stopPropagation(); partyOrder(); };
     el.querySelector('.pa').onclick = (ev) => { ev.stopPropagation(); partyAbility(); };
   }
+  const C = COMPANIONS[P.id], mx = partyMax(P.id);
+  const sig = [P.id, P.order, Math.ceil(P.hp), mx, Math.ceil(Math.max(0, P.cd)), P.map === G.mapId].join('|');
+  if (el.dataset.sig === sig && !el.classList.contains('hidden')) return;
+  el.dataset.sig = sig;
   el.classList.remove('hidden');
-  const C = COMPANIONS[P.id];
+  el.classList.toggle('low', P.hp < mx * 0.35);
+  el.classList.toggle('ready', !(P.cd > 0));
   const img = el.querySelector('.pp'); if (img.dataset.id !== P.id) { img.src = `img/p_${C.portrait}.jpg`; img.dataset.id = P.id; }
   el.querySelector('.pn').textContent = C.name.split(' ')[0] + (P.map !== G.mapId ? ' (elsewhere)' : '');
-  el.querySelector('.pbar i').style.width = Math.max(0, Math.min(100, P.hp / C.hp * 100)) + '%';
+  el.querySelector('.pbar i').style.width = Math.max(0, Math.min(100, P.hp / mx * 100)) + '%';
   el.querySelector('.po').textContent = 'G · ' + PARTY_ORDER_NAME[P.order];
   el.querySelector('.pa').textContent = 'X · ' + C.ability.name + (P.cd > 0 ? ` ${Math.ceil(P.cd)}s` : '');
   el.querySelector('.pa').classList.toggle('cool', P.cd > 0);
@@ -294,7 +353,7 @@ function partyHud() {
   const _rest = doRest;
   doRest = function (kind) {
     const r = _rest(kind);
-    if (G.party) { G.party.downed = {}; G.party.hpById = {}; if (G.party.id) G.party.hp = COMPANIONS[G.party.id].hp; }
+    if (G.party) { G.party.downed = {}; G.party.hpById = {}; if (G.party.id) { G.party.hp = partyMax(G.party.id); partyBark('rest'); } }
     return r;
   };
   const _snap = snapshotGame;
@@ -312,11 +371,11 @@ function partyHud() {
       const id = COMPANIONS[s.id] ? s.id : null;
       const num = (v, lo, hi, def) => (typeof v === 'number' && isFinite(v)) ? Math.max(lo, Math.min(hi, v)) : def;
       const flags = (o) => { const out = {}; if (o && typeof o === 'object') for (const k in o) if (/^[a-z]+(:[a-z:_]+)?$/.test(k) && k.length < 40) out[k] = !!o[k]; return out; };
-      const hpById = {}; if (s.hpById && typeof s.hpById === 'object') for (const k of Object.keys(COMPANIONS)) if (typeof s.hpById[k] === 'number') hpById[k] = num(s.hpById[k], 1, COMPANIONS[k].hp, COMPANIONS[k].hp);
+      const hpById = {}; if (s.hpById && typeof s.hpById === 'object') for (const k of Object.keys(COMPANIONS)) if (typeof s.hpById[k] === 'number') hpById[k] = num(s.hpById[k], 1, partyMax(k), partyMax(k));
       G.party = {
         id: id && partyAvailable(id) ? id : null,
         order: PARTY_ORDERS.includes(s.order) ? s.order : 'follow',
-        hp: id ? num(s.hp, 1, COMPANIONS[id].hp, COMPANIONS[id].hp) : 0,
+        hp: id ? num(s.hp, 1, partyMax(id), partyMax(id)) : 0,
         cd: num(s.cd, 0, 60, 0), map: PARTY_MAPS.includes(s.map) ? s.map : G.mapId,
         x: num(s.x, 0, 100, Engine.cam.x), y: num(s.y, 0, 100, Engine.cam.y),
         said: flags(s.said), downed: flags(s.downed), hpById, trail: [],
@@ -329,6 +388,28 @@ function partyHud() {
   };
   window.loadCode = async (c) => restoreGame(await decodeSave(c));
   // keys
+  // a companion standing in front of you should not get in the way of the use key
+  const _interact = interact;
+  interact = function () {
+    const first = Engine.pick(G.ents, USE_RANGE);
+    if (first && first.companion) {
+      first.hidden = true;
+      const behind = Engine.pick(G.ents, USE_RANGE);
+      const c = Engine.cam, fx0 = Math.cos(c.dir), fy0 = Math.sin(c.dir);
+      const near = G.ents.some(o => !o.hidden && !o.dead && (o.kind === 'item' || o.kind === 'npc' || (o.kind === 'deco' && o.use)) && (() => { const dx = o.x - c.x, dy = o.y - c.y, d = Math.hypot(dx, dy); return d < 1.7 + (o.radius || 0) && (dx * fx0 + dy * fy0) / (d || 1) > 0.8; })());
+      const w = Engine.pickWall(2.0), door = w && w.cell && w.cell.door;
+      if (behind || near || door) { try { return _interact(); } finally { first.hidden = false; } }
+      first.hidden = false;
+    }
+    return _interact();
+  };
+  // they notice when a big one falls
+  const _kill = killEnemy;
+  killEnemy = function (e, byGlass) {
+    const r = _kill(e, byGlass); const P = G.party;
+    if (e && e.def && e.def.boss && P && P.id && P.map === G.mapId && P.order !== 'wait') { const L = PARTY_BOSS[P.id]; setTimeout(() => partySay(L[Math.floor(Math.random() * L.length)]), 1400); }
+    return r;
+  };
   window.addEventListener('keydown', (ev) => {
     if (G.state !== 'play' || ev.repeat) return;
     const k = keyOf(ev);
