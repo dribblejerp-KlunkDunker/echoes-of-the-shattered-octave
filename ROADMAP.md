@@ -4,6 +4,157 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 
 ---
 
+## Next expansion: art, animation, simulation and tools
+
+The checklist below is the authoritative scope for the new request. The older completed checklists later in this document describe the previous baseline, **not** completion of these enhanced versions. `[~]` means a partial implementation or pilot; `[x]` requires implementation and verification. No production republish is included.
+
+### Delivery order and gates
+1. **Visual identity pilot (current):** five-view Proctor, emissive Light-glass and equipment paper doll. Preserve saves, attack/walk animation, picking and inventory controls. Generated pixel illustrations are a pilot, not a claim of finished hand-painted art for every enemy.
+2. **Combat life:** expand directional art to every creature; death/flinch, first-person weapon sequences and drawn fire. Verify all enemy families, corpse cleanup and weapon timing.
+3. **Daggerfall systems:** lockpicking → crime/prison → traps, then stealth tools and physical puzzles. Persist state and test success/failure/escape and old-save defaults.
+4. **Spatial renderer:** variable wall heights → raised floors/stairs/ramps → ceilings, reflective water, skies and grounded fog. Needs per-pixel depth, camera elevation, collision and picking to agree; do not bolt height onto the existing single-depth-per-column renderer.
+5. **Living world and illustrated interface:** routines, scenery, portraits, panels and story presentation.
+6. **Audio, access and distribution:** positional audio, quality budgets, accessibility, translation, mod/editor interfaces and desktop packages.
+
+Every phase must retain the security regression tests and save/load behavior. Rendering changes need browser screenshots (day/night, indoor/outdoor, near/far), representative frame-time measurements before performance claims, and keyboard/touch/gamepad regression checks. Target low-end presets only after measurements on representative hardware; do not promise Chromebook frame rates from a server benchmark.
+
+### Graphics — 3D view
+- [~] Five-angle enemies: front/front-side/side/back-side/back, mirror opposite views. First pass is a Proctor pixel-art pilot; remaining species and final painted directional action sheets are pending.
+- [ ] Variable-height low walls, tall towers and stepped rooftops; correct occlusion behind low walls.
+- [ ] Stairs, ramps, raised platforms: Belfry and quarry terrace traversal with elevation-aware collision.
+- [ ] Painted Cloister ceilings, tavern beams and cave rock ceilings (existing texture support is only a foundation).
+- [ ] Area sky panoramas, drifting clouds, night stars and Part Three Kestrel flyovers.
+- [ ] Water sky/building reflections and step-driven ripples in Whisper-Grove.
+- [~] Light-glass emissive highlights and nearby wall light: Kaelen, shards and glass lamps. Light occlusion and dedicated arm masks remain later work.
+- [ ] Ground-hugging Spectral Woods mist and torch-driven interior darkness.
+- [ ] Higher-detail close-up wall artwork with asset-resolution and memory budgets.
+- [ ] Moss, cracks, scorch marks, posters and Synod notices as seeded wall detail layers.
+- [ ] More barrels, crates, carts, broken statues, graves and bones, placed without blocking routes.
+- [ ] Swaying, player-reactive grass and reeds.
+- [ ] Geographic landmark placement: Mausoleum tower across Deep Woods and Oakhaven chapel beyond Hedge (baseline silhouettes already exist).
+- [ ] Low/medium/high sharpness, view distance and particle presets; measure each before tuning defaults.
+- [ ] Refine optional CRT scanlines and curvature; retain a clean unfiltered setting.
+
+### Graphics — menus and screens
+- [ ] Carved-wood panel frames and brass corners throughout.
+- [~] Equipment-linked paper doll: armour layers and selected weapon, preserving equip/remove controls; final painted character/gear sheets pending.
+- [ ] Painted icons for every weapon, armour piece, potion and quest item.
+- [ ] Angry, sad, afraid and wry conversation portraits for Kaelen, Lyra and major NPCs.
+- [ ] Quest-specific logbook sketches.
+- [ ] Area-specific painted loading screens.
+- [ ] Cause-specific illustrated death screens.
+- [ ] Full-screen illustrations for each Book One ending.
+- [ ] Locally bundled, licensed blackletter title/heading font, with readable body text.
+- [ ] Painted automap stamps for doors, quest givers, shops and dangers.
+
+### Animation — enemies and creatures
+- [ ] Dedicated hit-flinch artwork for every enemy (not just tint/deformation).
+- [~] Three cached collapse poses generated from existing artwork; solid bodies persist until area departure, nonblocking/unpickable and excluded from saves. Browser lifecycle checks cover all 26 species. Bespoke hand-painted death sheets remain pending.
+- [ ] Species-specific idle fidgets: robes, sniffing hounds, Quiet head turns.
+- [ ] Detection turn/startle frames synchronized with hearing/sight alerts.
+- [ ] Separate fleeing/charging running strides.
+- [ ] Pressman/Deacon casting poses with pre-cast glow and readable timing.
+- [ ] Requiem half-health shatter and Brood-Mother egg-sac shedding artwork.
+- [x] Drowned Hollow sinking deaths on water/shallow-water floors; dry-land Hollows collapse and leave bodies. Verified clipping/fade, termination and dry-floor behavior in Chromium.
+- [x] Swarm/Hush-Moth outward-scattering deaths using cached radial pixel fragments, fading without a corpse. Both species verified in Chromium.
+- [ ] Grave emergence, ceiling drops and mist entrances with collision-safe spawn telegraphs.
+
+### Animation — companions and NPCs
+- [ ] Kaelen/Lyra hit reactions, injury poses and limping.
+- [ ] Kaelen chest-holding Root-note pose synchronized with existing low-health hum.
+- [ ] Lyra's visible musical air ripples.
+- [ ] Camp sharpening/warming-hands loops.
+- [ ] Townsfolk talking gestures/head turns.
+- [ ] Daily work/tavern/home routines, with time skips and quest availability preserved.
+- [ ] Cat/crow/rat walk and flee sheets; react to running.
+- [ ] Miller, tanner and barman working loops.
+
+### Animation — first person
+- [ ] Multi-frame painted swing sheets for every weapon.
+- [ ] Mace overhead, dagger thrust and staff sweep timing/poses.
+- [ ] Draw, holster and weapon-switch transitions.
+- [ ] Raised hands and Song-coloured casting glow.
+- [ ] Optional gentle head bob and landing dip.
+- [ ] Heavy-hit shake, deafness blur and Hushed grey/muffled effects, respecting access settings.
+- [ ] Swinging doors, lifting chest lids and pulling levers.
+- [ ] Ladder/climbing hands coordinated with traversal.
+- [ ] Full-screen held notes/books with accessible readable text.
+
+### Animation — world
+- [ ] Drawn torch/brazier/campfire frame loops (baseline procedural flicker is not this).
+- [ ] Chimney, Golem-vent and campfire smoke.
+- [ ] Player/enemy water splashes.
+- [ ] Wind-driven signs and banners.
+- [ ] Seasonal/area-specific leaves and blossom.
+- [ ] Chapel/Belfry bell swing synchronized with ringing.
+- [ ] Moored Kestrel drift/turn animation.
+- [ ] Glimmering dropped Light-glass shards.
+- [ ] Animated gates/portcullises with collision opening thresholds.
+- [ ] Story-driven wall collapses/quarry cave-in, with safe player recovery.
+
+### Gameplay
+- [ ] Skill-based lockpicking minigame for locked doors/chests; keyboard/touch/controller inputs.
+- [ ] Pickpocketing based on NPC attention and player position.
+- [ ] Drag/hide bodies; patrol discovery and alarm behavior.
+- [ ] Synod robe disguises, proximity inspection and detection.
+- [ ] Directional on-screen sound ripples, paired with positional sound.
+- [ ] Throwable stone/bottle distractions and guard investigation.
+- [ ] Spot/disarm tripwires, falling nets and alarm-bell traps.
+- [ ] Note locks, pressure plates and turning-mirror puzzles in Cloister/Catacombs.
+- [ ] Oakhaven theft/witness/guard pursuit crime state.
+- [ ] Player wanted posters after crime thresholds.
+- [ ] Arrest, fine or jail, confiscation and escape/release paths.
+- [ ] Personality bribes and Strength threats in dialogue.
+- [ ] Horse rental and world-map travel modifiers.
+- [ ] Optional hunger/sleep needs over long journeys.
+- [ ] Opt-in hardcore single-save/permadeath, isolated from normal saves/imports.
+
+### Story and world-building
+- [ ] Deed-sensitive tavern rumours.
+- [ ] Synod broadsheet with changing editorial spin.
+- [ ] Courier letters from helped NPCs.
+- [ ] Rest dream scenes about the Shattered Octave.
+- [ ] Light-glass memory echo scenes.
+- [ ] Collectible Tobin journal pages and completion tracking.
+- [ ] Choice-dependent Kaelen/Lyra endings.
+- [ ] Organum, Iron Peaks and Rift lore teasers.
+
+### Audio
+- [ ] Distinct area/dungeon compositions for Oakhaven, Whisper-Grove and Deep Woods.
+- [ ] Individual boss themes (not just shared boss-mode cues).
+- [ ] Authored greetings/grunts per NPC/enemy; voice asset/license tracking (optional TTS already exists).
+- [ ] Directional audio with wall muffling and distance falloff.
+- [ ] Willow wind, rooftop rain and thunder layers.
+- [ ] Story-evolving main theme across Book One.
+
+### Technical and polish
+- [ ] Audit/expand credits for all art, fonts, audio, tools and contributors.
+- [ ] Photo mode: hide interface, pause safely and export a screenshot.
+- [ ] Optional speedrun timer with pause/loading policy.
+- [ ] Statistics page: kills, distance, playtime and Songs cast.
+- [ ] Larger text, reduced shake, no flashes and high contrast across every new effect.
+- [ ] Translation message catalog, locale selection, fallback and text expansion tests.
+- [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
+- [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
+- [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Combat-life pass verification
+- Generated death artwork is cached by source/view and pose (three collapse poses or eight special poses), not allocated every frame or for every body.
+- Real `killEnemy` regression confirms rewards once, one body per death, corpse picking disabled, persistent opaque final pose and no collision.
+- All 26 catalog species pass death-art/cache/termination checks in Chromium; Hollow water/dry transitions and both scattering swarm species have dedicated assertions.
+- Real `snapshotGame`/`restoreGame` preserves killed enemy state while omitting transient body artwork. Existing save version is unchanged; corpses intentionally do not survive reload.
+- Area transfer clears session corpse/effect entities immediately; returning cannot resurrect them. Final hand-painted collapse art, directional species expansion, weapon sheets and drawn fire are still pending.
+- Browser assertions and screenshots are not a substitute for human visual art review. No low-end performance claim has been made.
+
+### Current pass acceptance
+- Keep `index.html` script order and existing save schema compatible; no new dependencies or services.
+- Direction choice uses enemy heading, not camera heading; mirror only opposite oblique views, retain animation poses and safe fallback for species without sheets.
+- Glass emitters illuminate the existing wall/floor renderer and stop emitting when hidden/dead.
+- Inventory doll reflects all five armour slots, selected weapon, portrait and two-handed shield suppression; HTML uses only validated catalog data.
+- Verify syntax, hostile-save regression, directional octants, doll gear variants and lighting render output. Do not count headless DOM stubs as visual inspection.
+
+---
+
 ## Status Legend
 - `[x]` **Shipped & Verified** — Live in the game and playable now.
 - `[~]` **In Progress** — Active pass underway.

@@ -76,7 +76,10 @@ const Engine = (() => {
       const e = entities[i];
       if (!e || e.hidden || e.dead) continue;
       const sp = e.sprite;
-      if (sp === 'lamp' && (e.glow === undefined || e.glow > 0.05)) {
+      if (sp === 'kaelen' || e.item === 'shard' || e.item === 'core' || e.glassLamp) {
+        const pulse = 0.88 + 0.12 * Math.sin(animT * 2.4 + e.x);
+        ptLights.push({ x: e.x, y: e.y, r: sp === 'kaelen' ? 3.2 : 2.5, cr: 18 * pulse, cg: 66 * pulse, cb: 58 * pulse });
+      } else if (sp === 'lamp' && (e.glow === undefined || e.glow > 0.05)) {
         ptLights.push({ x: e.x, y: e.y, r: 4.5, cr: 58, cg: 38, cb: 12 });
       } else if (sp === 'campfire' || sp === 'hearth') {
         ptLights.push({ x: e.x, y: e.y, r: 5.8, cr: 78, cg: 40, cb: 10 });
@@ -325,7 +328,9 @@ const Engine = (() => {
     sprList.sort((a, b) => b._d2 - a._d2);
     const invDet = 1 / (planeX * dirY - dirX * planeY);
     for (const e of sprList) {
-      const sp = (e.animSprite && sprites[e.animSprite]) || sprites[e.sprite]; if (!sp) continue;
+      const directional = typeof animDirectionalSprite === 'function' ? animDirectionalSprite(e) : { sprite: (e.animSprite && sprites[e.animSprite]) || sprites[e.sprite], flip: !!e.animFlip };
+      const sp = directional.sprite; if (!sp) continue;
+      const spriteFlip = directional.flip;
       const sx = e.x - cam.x, sy = e.y - cam.y;
       const trX = invDet * (dirY * sx - dirX * sy);
       const trY = invDet * (-planeY * sx + planeX * sy);
@@ -341,7 +346,7 @@ const Engine = (() => {
       const dsY = baseline - sprH, deY = baseline;
       const sprW = Math.max(1, (baseH * sp.w / sp.h * (e.animSX || 1)) | 0);
       const cx0 = sp.cx == null ? 0.5 : sp.cx;
-      const dsX = screenX - ((e.animFlip ? 1 - cx0 : cx0) * sprW | 0), deX = dsX + sprW;
+      const dsX = screenX - ((spriteFlip ? 1 - cx0 : cx0) * sprW | 0), deX = dsX + sprW;
       const d = Math.sqrt(e._d2);
       let f = light * (1 - d * fogMul);
       if (f < 0) f = 0;
@@ -349,9 +354,10 @@ const Engine = (() => {
       if (!outdoor) f *= flick;
       if (e.glow) f = Math.max(f, e.glow);
       if (e.animGlow) f = Math.max(f, e.animGlow);
+      if (e.item === 'shard' || e.item === 'core' || e.glassLamp) f = Math.max(f, 0.9);
       if (e.flash) f = 1;
       const fi = Math.round(f * 255) / 255;
-      const skew = e.animSkew || 0, flip = !!e.animFlip, alpha = e.animAlpha == null ? 1 : e.animAlpha, hurt = e.animHurt || 0;
+      const skew = e.animSkew || 0, flip = spriteFlip, alpha = e.animAlpha == null ? 1 : e.animAlpha, hurt = e.animHurt || 0;
       if (alpha <= 0.02) { e._screen = null; continue; }
       const shTop = skew * sprH;
       const xs = Math.max(0, (dsX + Math.min(0, shTop)) | 0), xe = Math.min(w - 1, (deX + Math.max(0, shTop)) | 0);

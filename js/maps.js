@@ -266,7 +266,7 @@ function buildClearing() {
   m.enemy('hound', 30.5, 12.5); m.enemy('hound', 6.5, 28.5); m.enemy('hound', 33.5, 28.5);
   m.enemy('mites', 28.5, 20.5);
   m.item('pellets', 4.5, 4.5); m.item('whistle', 34.5, 4.5); m.item('tonic', 30.5, 31.5);
-  m.deco('lamp', 20.5, 30.5, { radius: 0.15, scale: 0.9, glow: 0.5 });
+  m.deco('lamp', 20.5, 30.5, { radius: 0.15, scale: 0.9, glow: 0.5, glassLamp: true, label: 'A green-gold Light-glass lamp beside the Hedge' });
   return m;
 }
 
