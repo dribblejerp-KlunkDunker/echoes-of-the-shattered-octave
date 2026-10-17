@@ -288,7 +288,7 @@ function triggerBlock() {
 // ============================================================
 const SKILL_LIST = [
   'Blade', 'Blunt', 'Firearms', 'Law-Song', 'Stealth',
-  'Climbing', 'Mercantile', 'Glasswork', 'Lore', 'Physician',
+  'Climbing', 'Mercantile', 'Glasswork', 'Lore', 'Physician', 'Lockpicking',
 ];
 
 const BACKGROUNDS = [
@@ -366,6 +366,7 @@ function ensurePlayerUpgrades(p) {
     if (p.cls && p.cls.id === 'penitent') { p.skills.Blunt += 15; p.skills['Law-Song'] += 10; }
     if (p.cls && p.cls.id === 'quarry') { p.skills.Blunt += 15; p.skills.Climbing += 15; }
   }
+  p.skills.Lockpicking = clamp(Number(p.skills.Lockpicking) || 15, 1, 100);
   if (!p.skillProg) p.skillProg = {};
   if (!p.perks) p.perks = {};
   if (p.perkPoints == null) p.perkPoints = 0;
@@ -1596,6 +1597,15 @@ function lesson(id, text) {
     const btn = (i) => !!(gp.buttons[i] && gp.buttons[i].pressed);
     const edge = (i) => btn(i) && !prev[i];
     const play = G.state === 'play' && !G.dead;
+    if (G.openPanel === 'lockpick') {
+      if (edge(GBTN.dleft)) lockpickInput('left');
+      if (edge(GBTN.dright)) lockpickInput('right');
+      if (edge(GBTN.a)) lockpickInput('lift');
+      if (edge(GBTN.b) || edge(GBTN.start)) lockpickInput('cancel');
+      for (let i = 0; i < 32; i++) prev[i] = btn(i);
+      G.touch.fx = G.touch.fy = 0;
+      return;
+    }
     if (play) {
       if (edge(GBTN.a)) interact();
       if (edge(GBTN.b)) attack('swing');
