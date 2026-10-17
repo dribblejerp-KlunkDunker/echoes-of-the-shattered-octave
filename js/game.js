@@ -1069,7 +1069,7 @@ function update(dt) {
     }
   }
   checkTriggers();
-  wgTick(dt); codaTick(dt); wildsTick(dt);
+  wgTick(dt); codaTick(dt); wildsTick(dt); partyTick(dt);
   if (G.boreHold > 0) { G.boreHold -= dt; if (G.boreHold <= 0) { G.boreHold = 0; if (!G.flags.bore_broken) finishBore(); } }
   // greening clock
   if (G.escapeTimer > 0) { G.escapeTimer -= dt; if (G.escapeTimer <= 0) { G.escapeTimer = 0; die('greening'); } }

@@ -146,7 +146,7 @@ function wildsCaptainCocoon() {
 function wildsGiftEvent() {
   const f = G.flags;
   f.gift_quiets = true; wildsReveal('gift_quiets');
-  showEvent('The hush-gift', 'A girl of eight or so stands barefoot in a ring of unlit hush-lamps, in a crown of pale flowers, singing. She is singing loudly, the way you would sing if you had been told that singing nicely was the whole of your job. One lamp beside her is lit, and its reed-whistle has been stopped with wax.<br><br>In the willows, a little way off, men in undyed robes stand without moving. Their mouths are bound. One of them holds up a bell with no clapper.<br><br>And out of the mist to the north, the air is going thin. Two of them. They are coming to the light.', [
+  showEvent('The hush-gift', 'A girl of eight or so stands barefoot in a ring of unlit hush-lamps, in a crown of pale flowers, singing. She is singing loudly, the way you would sing if you had been told that singing nicely was the whole of your job. One lamp beside her is lit, and its reed-whistle has been stopped with wax.<br><br>In the willows, a little way off, men in undyed robes stand without moving. Their mouths are bound. One of them holds up a bell with no clapper.<br><br>And out of the mist to the north, the air is going thin. Two of them. They are coming to the light.' + partyLine({ kaelen: 'Kaelen is already moving. "Quiets. Iron, not glass. Get between them and her."', lyra: 'Lyra makes a sound you have never heard her make, and starts towards the child. "Put out that lamp," she says. "Quiets go to the light. Put it out."' }), [
     { t: 'Go for the Quiets.', f: null },
     { t: 'Put out the lamp. Quiets go to the light.', f: () => wildsLampOut() },
   ]);
@@ -164,7 +164,7 @@ function wildsDeacon() {
   const peace = f.mags_cant;
   showEvent('The Deacon of the Unrung Bell', 'The tall one comes out of the willows, slow, with the clapperless bell held up in front of him like a lantern. His brothers come with him. His mouth is bound with linen, and his hands begin to move.<br><br>' + (peace
     ? 'You can read it now, the way Mags taught you. <i>SHE IS GIVEN. THE QUIET IS MERCIFUL. GO.</i>'
-    : 'He signs something slow and formal, and waits. You do not know hand-cant. Mags would.'), [
+    : 'He signs something slow and formal, and waits. You do not know hand-cant. Mags would.') + partyLine({ kaelen: 'Kaelen, very quietly, at your shoulder: "Five of them. I can hear the sickles. Say the word."', lyra: 'Lyra, behind you, very quietly: "He thinks he is being kind. That is the worst of it."' }), [
     peace ? { t: 'Sign back: "The Hush is quiet. It is not merciful."', f: () => wildsPeace() } : null,
     { t: 'Draw your weapon.', f: () => { for (const o of G.ents) if (o.giftGuard && !o.dead) { o.state = 'chase'; o.alertT = 10; } } },
     { t: 'Back away from him, for now.', f: null },

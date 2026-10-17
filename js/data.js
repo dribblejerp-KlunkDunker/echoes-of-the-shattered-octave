@@ -506,7 +506,8 @@ TRADE  talk to merchants (Hob, Vane, Vosk, Tam, Ignatius) and choose Buy… or S
 SAVE  Esc (or the SAVE button) opens Options: save to a session slot, copy a save code, or change Controls
 SOUND  V sound on/off · B music on/off
 TOUCH  left thumb is a stick, right thumb drags to look, tap to use or strike · swipe across STRIKE to slash
-THE NARROW  the amber bar — keep it between the two marks. Above: hounds. Below: the Hush.`;
+COMPANIONS  Part Four: ask Kaelen or Lyra at the camp fire to come with you · G gives orders (follow, wait, keep quiet) · X uses their ability · talk to them for more
+THE NARROW  the amber bar — keep it between the two marks. Above: hounds. Below: the Hush. A companion adds a little noise unless told to keep quiet.`;
 
 // ---- merchants ----------------------------------------------------------------
 // shop entries: { item, price? } — price defaults to the item's value with the merchant's markup, haggled by Personality.

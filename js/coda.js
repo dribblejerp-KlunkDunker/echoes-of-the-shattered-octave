@@ -333,7 +333,7 @@ function codaBell(e) {
         if (id === G.mapId) killEnemy(o, true); else { o.dead = true; o.hidden = true; }
       }
       for (const id in G.maps) for (const o of G.maps[id].entities) if (o.kind === 'enemy' && o.type === 'warden' && !o.dead) { o.passive = true; o.state = 'passive'; }
-      msg('You ring it three times, the way a death is rung in the Reach. The sound goes out of the tower and down through the woods and does not come back. ' + (n ? 'Every Dirge in the Deep Woods hears its own funeral and comes apart in the air.' : 'The woods go still.'), 'good', 9000);
+      msg('You ring it three times, the way a death is rung in the Reach. The sound goes out of the tower and down through the woods and does not come back. ' + (n ? 'Every Dirge in the Deep Woods hears its own funeral and comes apart in the air.' : 'The woods go still.') + (G.party && G.party.id === 'lyra' && G.party.order !== 'wait' ? ' Lyra sings the response after the third stroke, the way a Cantor should, and the woods answer.' : G.party && G.party.id === 'kaelen' && G.party.order !== 'wait' ? ' Kaelen flinches at the first stroke, and then stands very still, listening to his arm ring with it.' : ''), 'good', 9000);
       journal('side', 'The Tower Bell: with Amos Fell\'s toll-hammer I rang the great bell of the Mausoleum of Chords three times, the way a death is rung. The Dirges came apart, the Chord-Wardens stood down, and the Hollow mourners in the yard finally knelt at their graves and laid down their lilies.');
     } },
     { t: 'Not yet.', f: null },
