@@ -100,7 +100,7 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Directional on-screen sound ripples, paired with positional sound.
 - [ ] Throwable stone/bottle distractions and guard investigation.
 - [x] Three visible, inspectable Catacombs mechanisms: barbed tripwire (one-shot 5 damage), suspended net (eight-second movement slow) and alarm bell (nearby enemy alert). Disarm via existing skill-based three-pin controls; cancellation/three slips leave it armed. Spent/disarmed state persists. Dedicated trap artwork/trigger animations and wider dungeon placement remain later polish.
-- [ ] Note locks, pressure plates and turning-mirror puzzles in Cloister/Catacombs.
+- [~] Optional Cloister three-voice reliquary: repeat Root → Fifth → Third using labelled notes, with an audible replay and equivalent written clue. Keyboard/touch/controller support; wrong notes reset without cost; one shard/Lore-progress reward saved once. Pressure plates, turning mirrors and further Catacombs puzzles remain pending.
 - [~] Oakhaven crime foundation: explicitly owned market honey prompts before theft; visible nearby NPC witnesses report a bounty, and the constable pursues with line of sight. Character sheet shows bounty/time served. Broader owned goods, assault and additional guard behavior remain pending.
 - [ ] Player wanted posters after crime thresholds.
 - [~] Guard intervention offers a checked gold fine, refusal with escape grace, or six hours of time-served jail and release at the town watch. Inventory/quest gear remains intact. Playable prison, confiscation and jail escape remain pending.
@@ -137,6 +137,13 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
 - [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Cloister note-lock pass verification
+- Optional nonblocking reliquary appends after existing Cloister entities at (16.5, 12.5), without altering story doors or save version.
+- In-world interaction opens a three-note puzzle; audio replay has equivalent written names/frequencies and no Voice cost. Keyboard 1–3/arrows/Enter/L/Escape, touch buttons and Gamepad D-pad/A/X/B are supported.
+- Incorrect notes reset the current phrase; leaving discards partial progress. A completion flag is set before awarding one Light-Glass Shard and Lore progress, preventing repeat rewards.
+- Chromium verifies real interaction, wrong-note feedback, cancellation/retry, keyboard and simulated-controller solves, touch input, no Voice/story-lock mutation, reopening empty, saved completion and old-save defaults.
+- Existing browser, security and gameplay smoke regressions pass. Audio listening quality, human visual review and physical-controller hardware testing remain unverified. Dedicated puzzle artwork, pressure plates and mirrors remain pending.
 
 ### Dungeon-trap pass verification
 - Three nonblocking mechanisms append after historical Catacombs entities, away from story triggers and the entrance. They reuse grate/web/bell artwork and advertise inspection in their labels.

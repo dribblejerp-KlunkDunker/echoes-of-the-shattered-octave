@@ -492,6 +492,62 @@ function tickLaw(dt) {
   }
 }
 
+// ---------------------------------------------------------------- optional Cloister note-lock
+const RELIQUARY_NOTES = [
+  { name: 'Root', hz: 174, mark: 'I' },
+  { name: 'Third', hz: 220, mark: 'III' },
+  { name: 'Fifth', hz: 261, mark: 'V' },
+];
+const RELIQUARY_PHRASE = [0, 2, 1];
+const RELIQUARY_FLAG = 'cloister_note_reliquary';
+let NOTELOCK = null;
+function openNoteLock(e) {
+  if (G.mapId !== 'cloister' || e.use !== 'note_reliquary' || G.dead) return;
+  NOTELOCK = { map: G.map, entered: [], selected: 0, message: 'The brass inscription reads: root, fifth, third. Repeat the phrase to release the lid.' };
+  G.state = 'panel'; renderNoteLock();
+}
+function noteLockInput(action) {
+  const n = NOTELOCK; if (!n || G.openPanel !== 'notelock') return;
+  if (action === 'leave' || n.map !== G.map || G.dead) {
+    NOTELOCK = null; closeModal(); G.keys = {}; G.touch.fx = G.touch.fy = 0;
+    if (!G.dead) G.state = 'play'; return;
+  }
+  if (action === 'left' || action === 'right') n.selected = (n.selected + (action === 'left' ? 2 : 1)) % 3;
+  if (action === 'listen') {
+    // Audio is an optional clue: the full phrase is also written in the UI.
+    RELIQUARY_PHRASE.forEach((index, beat) => setTimeout(() => {
+      if (NOTELOCK === n && G.openPanel === 'notelock' && G.map === n.map) Audio_.sfx.song(RELIQUARY_NOTES[index].hz, 0.3);
+    }, beat * 430));
+    n.message = 'The lid sings: Root (174 Hz), Fifth (261 Hz), Third (220 Hz).';
+  }
+  if (action === 'play') action = n.selected;
+  if (Number.isInteger(action) && action >= 0 && action < 3 && !G.flags[RELIQUARY_FLAG]) {
+    n.selected = action; Audio_.sfx.song(RELIQUARY_NOTES[action].hz, 0.25);
+    n.entered.push(action);
+    if (action !== RELIQUARY_PHRASE[n.entered.length - 1]) {
+      n.entered = []; n.message = 'The brass answers flat. The pins reset; try the phrase again. Nothing is lost.';
+    } else if (n.entered.length === 3) {
+      G.flags[RELIQUARY_FLAG] = true; // claim before awarding; reopening cannot duplicate loot
+      G.give('shard'); gainSkill('Lore', 2);
+      n.message = 'The lid opens. You take one Light-Glass Shard. Inside: “A choir is not one voice made louder. It is room left for the next voice.”';
+    } else n.message = 'The note holds. Continue the phrase.';
+  }
+  renderNoteLock();
+}
+function renderNoteLock() {
+  const n = NOTELOCK; if (!n) return;
+  const solved = !!G.flags[RELIQUARY_FLAG];
+  openModal(`<h2>The three-voice reliquary</h2><p class="muted">Optional Cloister puzzle · no Voice cost · no story-door changes</p>
+  <p>The inscription: <b>Root → Fifth → Third</b>. Labels and numbers provide the same clue as the sound.</p>
+  <div class="note-keys">${RELIQUARY_NOTES.map((note, i) => `<button class="dfbtn ${n.selected === i ? 'sel' : ''}" id="note-${i}" ${solved ? 'disabled' : ''} aria-pressed="${n.selected === i}"><strong>${note.mark}</strong><span>${i + 1}. ${note.name}</span><small>${note.hz} Hz</small></button>`).join('')}</div>
+  <p role="status" aria-live="polite">${solved && n.entered.length !== 3 ? 'The reliquary is empty. Its inscription remains; the shard has already been claimed.' : n.message}</p>
+  <p class="muted">Matched notes: ${solved ? 3 : n.entered.length}/3. Keys 1–3 play; arrows select, Enter plays; L listens; Escape leaves. Controller: D-pad, A plays, X listens, B leaves.</p>
+  <div class="btns"><button class="dfbtn" id="note-listen">Listen to phrase</button><button class="dfbtn" id="note-leave">Leave reliquary</button></div>`, 'notelock');
+  for (let i = 0; i < 3; i++) $('#note-' + i).onclick = () => noteLockInput(i);
+  $('#note-listen').onclick = () => noteLockInput('listen');
+  $('#note-leave').onclick = () => noteLockInput('leave');
+}
+
 // ---------------------------------------------------------------- dungeon mechanisms
 const TRAP_TYPES = {
   tripwire: { name: 'Barbed tripwire', effect: 'A spring lashes a barbed cord across your shins (5 damage).', sprite: 'grate' },
@@ -642,6 +698,7 @@ function useItem(slot) {
   renderInventory();
 }
 function useDeco(e) {
+  if (e.use === 'note_reliquary') { openNoteLock(e); return; }
   if (e.trapType) { inspectTrap(e); return; }
   if (wildsUse(e) || codaUse(e) || wgUse(e)) return;
   if (e.use === 'crates') {
@@ -1160,6 +1217,12 @@ window.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse' 
 window.addEventListener('keydown', (ev) => {
   if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
   const k = keyOf(ev);
+  if (G.openPanel === 'notelock') {
+    const action = { arrowleft: 'left', arrowright: 'right', enter: 'play', ' ': 'play', l: 'listen', escape: 'leave' }[k];
+    ev.preventDefault();
+    if (!ev.repeat) { if (action) noteLockInput(action); else if (['1', '2', '3'].includes(k)) noteLockInput(Number(k) - 1); }
+    return;
+  }
   if (G.openPanel === 'lockpick') {
     const action = { arrowleft: 'left', arrowright: 'right', ' ': 'lift', enter: 'lift', escape: 'cancel' }[k];
     if (action) { ev.preventDefault(); if (!ev.repeat || action === 'left' || action === 'right') lockpickInput(action); }
