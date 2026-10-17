@@ -793,13 +793,13 @@ function renderRest() {
 }
 function doRest(kind) {
   const p = G.player; const hours = kind === 'self' ? 4 : 8;
-  advanceTime(hours);
+  passHours(hours);
   if (kind === 'self') { p.hp = Math.min(p.hpMax, p.hp + p.hpMax * 0.5); p.voice = Math.min(p.voiceMax, p.voice + p.voiceMax * 0.5); p.fat = p.fatMax; msg(`You rest four hours with your back to the wall and your hand on your weapon.`, 'good'); if (G.map.danger > 0 && Math.random() < 0.35) { msg('Something came to the fire while you dozed.', 'bad'); spawnHound(); spawnHound(); } }
   else if (kind === 'lamp') { p.hp = p.hpMax; p.voice = p.voiceMax; p.fat = p.fatMax; msg('You sleep eight hours under the reed-whistle. Nothing comes.', 'good'); }
   else { p.hp = p.hpMax; p.voice = p.voiceMax; p.fat = p.fatMax; if (G.map.siphoned) { p.hpMax = Math.max(8, p.hpMax - 3); p.hp = p.hpMax; msg('You slept like the dead, and the dead do not keep the Narrow. Something leaned in and took a little. You are a little less than you were.', 'bad', 8000); } else { msg('You sleep deeply, and snore, and in the morning the hush-lamp has burned out and nobody will say what they heard.', 'warn'); if (G.map.danger > 0) { spawnHound(); } } }
   G.noise = 2; G.stillT = 0;
 }
-function advanceTime(hours) { G.tod += hours / 24; while (G.tod >= 1) { G.tod -= 1; G.day++; } }
+function passHours(hours) { G.tod += hours / 24; while (G.tod >= 1) { G.tod -= 1; G.day++; } }
 function timeName() { const h = G.tod * 24; return h < 5 ? 'the dead hour' : h < 7 ? 'before dawn' : h < 12 ? 'morning' : h < 17 ? 'afternoon' : h < 20 ? 'dusk' : 'night'; }
 function renderMap() {
   const m = G.map; const cw = 4; const html = `<h2>${m.name}</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">What you have walked. ${m.outdoor ? 'North is up.' : 'The automap remembers where the lamps were.'}</p><canvas id="amap" width="${m.w * cw}" height="${m.h * cw}" style="width:100%;max-height:70cqh;object-fit:contain;image-rendering:pixelated;background:#0a0806;border:2px solid #0b0806"></canvas>`;

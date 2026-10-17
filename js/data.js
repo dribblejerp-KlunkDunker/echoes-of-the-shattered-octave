@@ -500,7 +500,7 @@ LOOK  move the mouse over the view · rest it at a side edge to keep turning · 
 ATTACK  left-click to thrust · hold the button and move the mouse to slash or chop · wheel or 1-4 changes weapon · Tab opens song-book
 USE / TALK  E or Space · or click when the name under the crosshair is bright (dim means step closer)
 SONGS  F1-F5 cast the song in that slot · N to murmur (keeps the Hush off)
-PANELS  I inventory · C character · L logbook · M map · R rest · K ledger · Esc closes
+PANELS  I inventory · C character · L logbook · M map · T world map and travel · R rest · K ledger · Esc closes
 GEAR  I inventory: Wear / Off armour · AR blunts blows, but heavy armour is loud · 1–9 ready weapons · bronze rings the Cacophony, bolts bite the Quiet
 TRADE  talk to merchants (Hob, Vane, Vosk, Tam, Ignatius) and choose Buy… or Sell… · strongboxes and the fallen carry loot
 SAVE  Esc (or the SAVE button) opens Options: save to a session slot, copy a save code, or change Controls

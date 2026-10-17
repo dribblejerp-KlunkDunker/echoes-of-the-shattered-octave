@@ -55,6 +55,13 @@ Explore Oakhaven and the land past the Hedge, then sail the Drift-Kestrel to Whi
 
   ![A Proctor and a Legionnaire march up and strike](screenshots/frames.gif)
 
+  Kaelen and Lyra have frames too. Kaelen walks, cocks his glass arm back and brings it down like a hammer (the glass arm stays his left in every frame). Lyra sings with a hand on her chest when she tends you, and throws her arms wide for the Calling-Song.
+- World map and travel: press T, or World map on the automap. The Long Octave shows all eight realms of the series bible; the Resonant Reach and the Spectral Woods open into painted regional maps, Daggerfall-style, with a mark for every place you have found. Pick one, choose to go cautiously (slower, you arrive rested) or recklessly (faster, you arrive tired), and the hours pass on the road. Something may pick up your trail on the way. You can only set out from under the open sky, never with something on your heels, and places from earlier parts of the story turn grey: the Kestrel does not go back.
+
+  ![The Resonant Reach travel map](screenshots/worldmap_reach.jpg)
+
+  ![The Long Octave continent map](screenshots/worldmap_continent.jpg)
+
 - Dialogue in the Daggerfall manner, with tone choices (Polite / Normal / Blunt), topics and directions.
 - Songs: a magic system built on the Octave.
 - Quests: the main story, "The Rite", plus side quests. In one of them, Sable, the last Archivist of the Veil, asks you to gather names for the Bound Ledger. Reading a name back restores a Hollow, but it costs her a piece of herself, and your choice changes the ending.
@@ -91,7 +98,7 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Attack | Left-click to thrust · hold and move the mouse to slash or chop · wheel or 1–9 changes weapon |
 | Use / Talk | E or Space, or click a bright name under the crosshair |
 | Songs | Tab opens the song-book · F1–F5 cast · N murmurs |
-| Panels | I inventory · C character · L logbook · M map · R rest · K ledger · Esc options and save |
+| Panels | I inventory · C character · L logbook · M map · T world map and travel · R rest · K ledger · Esc options and save |
 | Sound | V sound on/off · B music on/off |
 | Touch | Left thumb stick, right thumb drags to look, tap to use or strike |
 
@@ -110,6 +117,7 @@ js/coda.js        Part Four: the Deep Woods and the Mausoleum of Chords
 js/wilds.js       Part Four: the Quiet Faith and the Arbiter's search party
 js/party.js       Companions (prototype): Kaelen and Lyra
 js/anim.js        Procedural animation and weather particles
+js/travel.js      World map and travel
 js/game.js        game logic, UI, combat, dialogue, trade, saving
 music/            soundtrack (MP3)
 img/              portraits, title, map and ending art

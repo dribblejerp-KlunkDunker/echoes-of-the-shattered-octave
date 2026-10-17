@@ -221,3 +221,29 @@ pre.help { font-family: var(--font-body); white-space: pre-wrap; font-size: 2.1c
 @keyframes partyLow { from { opacity: 1; } to { opacity: .35; } }
 #party.ready .pa { color: var(--gold); }
 @media (prefers-reduced-motion: reduce) { #party.low .pbar i { animation: none; background: #e0533a; } }
+
+/* ---- world map & travel ---- */
+.panel.travel { width: 84cqw; }
+.panel.travel .tv-top { display: flex; align-items: center; justify-content: space-between; gap: 1cqw; margin: 0 0 .8cqh; }
+.panel.travel .tv-legend { font-family: var(--font-sc); font-size: 1.7cqw; color: var(--parch-dim); }
+.panel.travel .tv-sw { display: inline-block; width: 1.2cqw; height: 1.2cqw; vertical-align: -.1cqw; border: 1px solid #1a1006; margin-right: .3cqw; }
+.panel.travel .tv-sw.gold { background: #e6b04a; }
+.panel.travel .tv-sw.grey { background: #8c8780; }
+.panel.travel .tv-sw.here { background: #9ff4ff; transform: rotate(45deg) scale(.8); }
+#tvmap { display: block; flex: none; max-width: 47cqw; max-height: 70cqh; width: auto; height: auto; margin: 0; border: 2px solid; border-color: var(--edge-d) var(--edge-l) var(--edge-l) var(--edge-d); background: #120d09; }
+.panel.travel .tv-body { display: flex; gap: 1.6cqw; align-items: flex-start; }
+.panel.travel .tv-side { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .8cqh; }
+.panel.travel .tv-info { font-size: 1.8cqw; min-height: 6cqh; text-align: left; line-height: 1.3; }
+.panel.travel .tv-info b { color: var(--gold); font-weight: 500; }
+.panel.travel .tv-ok { color: var(--gold); }
+.panel.travel .tv-list { display: flex; flex-direction: column; gap: .5cqh; max-height: 34cqh; overflow-y: auto; padding-right: .4cqw; }
+.panel.travel .tv-list .dfbtn.small { font-size: 1.55cqw; text-align: left; }
+.panel.travel .tv-list .muted { font-size: 1.7cqw; }
+.panel.travel .tv-confirm p { margin: .2cqh 0 .6cqh; font-size: 1.75cqw; line-height: 1.3; }
+.panel.travel .tv-confirm b { color: var(--gold); font-weight: 500; }
+.panel.travel .tv-row { display: flex; align-items: center; gap: .8cqh 1.2cqw; flex-wrap: wrap; }
+.panel.travel .tv-pace { font-size: 1.55cqw; flex-basis: 100%; }
+.panel.travel .tv-block { color: #e07a5f; }
+.panel.travel .tv-row .tone { flex-wrap: wrap; }
+.panel.travel .tv-row .dfbtn.small { font-size: 1.6cqw; }
+.panel.travel #tv-go { font-size: 2cqw; padding: .6cqh 1.8cqw; min-width: 0; }
