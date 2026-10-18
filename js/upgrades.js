@@ -1602,6 +1602,12 @@ function lesson(id, text) {
     const btn = (i) => !!(gp.buttons[i] && gp.buttons[i].pressed);
     const edge = (i) => btn(i) && !prev[i];
     const play = G.state === 'play' && !G.dead;
+    if (G.openPanel === 'pickpocket') {
+      if (edge(GBTN.a)) pickpocketInput('take');
+      if (edge(GBTN.b) || edge(GBTN.start)) pickpocketInput('leave');
+      for (let i = 0; i < 32; i++) prev[i] = btn(i);
+      G.touch.fx = G.touch.fy = 0; return;
+    }
     if (G.openPanel === 'notelock') {
       if (edge(GBTN.dleft)) noteLockInput('left');
       if (edge(GBTN.dright)) noteLockInput('right');
@@ -1639,7 +1645,10 @@ function lesson(id, text) {
       if (edge(GBTN.a)) interact();
       if (edge(GBTN.b)) attack('swing');
       if (edge(GBTN.x)) castSong('murmur');
-      if (edge(GBTN.y)) renderSongs();
+      if (edge(GBTN.y)) {
+        if (pickpocketTarget()) openPickpocket();
+        else { G.state = 'panel'; renderSongs(); }
+      }
       if (edge(GBTN.lb)) cycleWeapon(-1);
       if (edge(GBTN.rb)) cycleWeapon(1);
       if (btn(GBTN.lt)) triggerBlock();
@@ -1677,6 +1686,12 @@ function lesson(id, text) {
         maps.oakhaven.npc('townsman', 52.5, 20.5, { lawGuard: true, wander: true, name: 'Oakhaven watch constable' });
         Object.assign(maps.oakhaven.item('honey', 51.5, 19.2), { owner: 'market', label: 'Bettany’s honey — taking it is theft' });
       }
+      // Static metadata only; preserve all historical entity indexes and quest data.
+      maps.oakhaven.entities.forEach((e, index) => {
+        if (e.kind !== 'npc' || e.lawGuard || e.nightWatch || !['bettany', 'tam', 'hob', 'townsman', 'townswoman'].includes(e.id)) return;
+        e.pocketId = e.id + ':' + index;
+        e.pocketGold = ['bettany', 'tam', 'hob'].includes(e.id) ? 8 : 4;
+      });
       maps.oakhaven.baseCount = maps.oakhaven.entities.length;
     }
     // Append after historical entities; flags hold trap state, not entity indexes.

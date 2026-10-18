@@ -328,6 +328,143 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       return { theft: true, pursuit: true, fine: true, jail: true };
     });
     console.log('PASS crime confirmation, witnesses, pursuit, fine, jail and save/load', law);
+    const pocketRiskChecks = await page.evaluate(() => {
+      function check(ok, label) { if (!ok) throw new Error(label); }
+      window.pocketBaseline = JSON.parse(JSON.stringify(snapshotGame()));
+      loadMap('oakhaven', { x: 23.5, y: 22.25, dir: Math.PI / 2 });
+      G.state = 'panel'; G.vel.x = G.vel.y = 0; G.keys = {}; G.touch.fx = G.touch.fy = 0;
+      G.ents.forEach(e => { if (e.kind === 'npc' || e.kind === 'enemy') e.hidden = true; });
+      const e = G.ents.find(e => e.id === 'bettany'); window.pocketNPC = e;
+      Object.assign(e, { x: 23.5, y: 23.5, facing: Math.PI / 2, hidden: false, dead: false });
+      G.player.skills.Stealth = 15; G.noise = 2; G.tod = 0.5; // Night-watch visibility is driven by the ambient tick.
+      check(canPickpocket(e) && pickpocketTarget() === e, 'eligible nearby adult selected');
+      const rear = pocketRisk(e); check(rear.position === 'Behind', 'NPC-relative rear position');
+      e.facing = -Math.PI / 2;
+      const front = pocketRisk(e); check(front.position === 'In front' && front.chance < rear.chance && front.attention === 'Watching you', 'owner attention penalizes front approach');
+      e.facing = 0; check(pocketRisk(e).position === 'Beside', 'side approach classified');
+      e.facing = Math.PI / 2; G.noise = 6;
+      check(pocketRisk(e).chance < rear.chance && pocketRisk(e).attention === 'Listening for you', 'noise raises attention and lowers odds');
+      G.noise = 2; G.player.skills.Stealth = 100;
+      check(pocketRisk(e).chance > rear.chance && pocketRisk(e).chance <= 90, 'Stealth improves odds without certainty');
+      G.player.skills.Stealth = 15;
+      talk(e); check(pocketRisk(e).position === 'In front', 'conversation turns owner attention toward player'); closeModal();
+      e.facing = Math.PI / 2;
+      Engine.cam.dir = -Math.PI / 2; check(!pickpocketTarget(), 'must face target'); Engine.cam.dir = Math.PI / 2;
+      Engine.cam.y = 20.5; check(!pickpocketTarget(), 'out of reach rejected'); Engine.cam.y = 22.25;
+      const cell = G.map.get(23, 23); G.map.set(23, 23, WALL('t_stone'));
+      check(!pickpocketTarget(), 'wall occlusion blocks reach'); G.map.set(23, 23, cell);
+      e.hidden = true; check(!pickpocketTarget(), 'hidden target rejected'); e.hidden = false;
+      e.dead = true; check(!pickpocketTarget(), 'dead target rejected'); e.dead = false;
+      e.companion = true; check(!pickpocketTarget(), 'companions excluded'); delete e.companion;
+      const guard = G.ents.find(o => o.lawGuard); guard.hidden = false;
+      check(!canPickpocket(guard), 'constable excluded'); guard.hidden = true;
+      G.flags.greening = true; check(!pickpocketTarget(), 'greening disables town theft'); delete G.flags.greening;
+      check(!theftWitness(e), 'unaware owner is not their own third-party witness');
+      window.pocketBefore = { gold: G.player.gold, thefts: crimeState().thefts, inventory: JSON.stringify(G.player.inv), skills: G.player.skillProg.Stealth || 0 };
+      G.state = 'play';
+      return { rear: rear.chance, front: front.chance };
+    });
+    await page.keyboard.press('p');
+    await page.locator('#pocket-take').waitFor({ state: 'visible' });
+    await page.screenshot({ path: '/tmp/octave-pickpocket.png' });
+    await page.setViewportSize({ width: 640, height: 400 });
+    assert.equal(await page.locator('#modal-panel').evaluate(el => el.scrollWidth <= el.clientWidth + 1), true, 'purse panel has no horizontal overflow');
+    await page.screenshot({ path: '/tmp/octave-pickpocket-small.png' });
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.keyboard.press('Escape');
+    await page.evaluate(() => {
+      G.state = 'panel';
+      if (G.flags[pocketKey(pocketNPC)] || G.player.gold !== pocketBefore.gold || crimeState().thefts !== pocketBefore.thefts) throw new Error('inspection/cancel has no theft or reward');
+      G.state = 'play'; openPickpocket();
+      // Force outcomes only around the attempt, not the game frame loop.
+      const random = Math.random; Math.random = () => 0;
+      try { document.querySelector('#pocket-take').click(); } finally { Math.random = random; }
+      if (G.flags[pocketKey(pocketNPC)] !== 'taken' || G.player.gold !== pocketBefore.gold + 8 || crimeState().bounty !== 0) throw new Error('unnoticed rear success grants only loose coin: ' + JSON.stringify({ state: G.flags[pocketKey(pocketNPC)], gold: G.player.gold, before: pocketBefore.gold, bounty: crimeState().bounty }));
+      if (JSON.stringify(G.player.inv) !== pocketBefore.inventory || (G.player.skillProg.Stealth || 0) <= pocketBefore.skills) throw new Error('success trains Stealth without touching quest inventory');
+      const gold = G.player.gold, thefts = crimeState().thefts;
+      pickpocketInput('take');
+      if (G.player.gold !== gold || crimeState().thefts !== thefts || !document.querySelector('#pocket-take').disabled) throw new Error('duplicate attempt cannot farm coin');
+      pickpocketInput('leave'); G.state = 'panel';
+      const saved = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(saved); G.state = 'panel';
+      const e = G.ents.find(o => o.pocketId === pocketNPC.pocketId); window.pocketNPC = e;
+      if (G.flags[pocketKey(e)] !== 'taken' || G.player.gold !== gold) throw new Error('purse completion and coin persist');
+      G.state = 'play'; openPickpocket();
+      if (!document.querySelector('#pocket-take').disabled) throw new Error('saved empty purse stays disabled');
+      pickpocketInput('leave'); G.state = 'panel';
+      // Real old-save flags have no pocket entries.
+      for (const key of Object.keys(saved.flags)) if (key.startsWith('pocket:')) delete saved.flags[key];
+      restoreGame(saved); G.state = 'panel'; window.pocketNPC = G.ents.find(o => o.id === 'bettany');
+      if (G.flags[pocketKey(pocketNPC)]) throw new Error('old save defaults to untouched purse');
+      G.state = 'play'; openPickpocket();
+    });
+    // Touch cancellation never spends the one attempt.
+    await page.locator('#pocket-leave').tap();
+    const pockets = await page.evaluate(() => {
+      function check(ok, label) { if (!ok) throw new Error(label); }
+      G.state = 'panel';
+      check(!G.flags[pocketKey(pocketNPC)], 'touch cancel preserves opportunity');
+      G.opts.touch = 'on'; G.state = 'play'; controlsTick();
+      check(!document.querySelector('#t-pocket').hidden, 'contextual touch purse button visible in reach');
+      G.state = 'panel';
+      const originalPads = navigator.getGamepads;
+      const gp = { connected: true, axes: [0, 0, 0, 0], buttons: Array.from({ length: 18 }, () => ({ pressed: false })) };
+      navigator.getGamepads = () => [gp]; controlsTick();
+      const press = i => { gp.buttons[i].pressed = true; controlsTick(); gp.buttons[i].pressed = false; controlsTick(); };
+      try {
+        G.state = 'play'; press(3); check(G.openPanel === 'pickpocket', 'controller Y opens purse instead of songs');
+        const gold = G.player.gold, thefts = crimeState().thefts;
+        const random = Math.random; Math.random = () => 0.999;
+        try { press(0); } finally { Math.random = random; }
+        check(G.flags[pocketKey(pocketNPC)] === 'caught' && G.player.gold === gold && crimeState().thefts === thefts + 1 && crimeState().bounty === 20, 'caught attempt consumes opportunity, no coin, bounty');
+        press(0); check(crimeState().bounty === 20, 'held/repeated controller attempts cannot duplicate bounty');
+        press(1); check(!G.openPanel && G.state === 'play', 'controller B leaves');
+      } finally { navigator.getGamepads = originalPads; }
+      G.state = 'panel';
+      const failed = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(failed); G.state = 'panel';
+      check(G.flags[pocketKey(G.ents.find(o => o.id === 'bettany'))] === 'caught' && crimeState().bounty === 20, 'caught state and bounty persist');
+      const e = G.ents.find(o => o.id === 'tam'); Object.assign(e, { x: 23.5, y: 23.5, facing: Math.PI / 2, hidden: false });
+      G.ents.find(o => o.id === 'bettany').hidden = true;
+      const guard = G.ents.find(o => o.lawGuard); Object.assign(guard, { x: 24.5, y: 22.5, hidden: false });
+      G.state = 'play'; openPickpocket();
+      const gold = G.player.gold, random = Math.random; Math.random = () => 0;
+      try { pickpocketInput('take'); } finally { Math.random = random; }
+      check(G.flags[pocketKey(e)] === 'taken' && G.player.gold === gold + 8 && crimeState().bounty === 40, 'successful witnessed theft still reported');
+      pickpocketInput('leave'); guard.hidden = true;
+      // Revalidate even when a stale UI callback fires after transfer or movement.
+      const next = G.ents.find(o => o.id === 'hob'); Object.assign(next, { x: 23.5, y: 23.5, facing: Math.PI / 2, hidden: false }); e.hidden = true;
+      G.state = 'play'; openPickpocket(); Engine.cam.y = 18.5; pickpocketInput('take');
+      check(!G.flags[pocketKey(next)] && !G.openPanel, 'movement out of reach cancels stale attempt');
+      Engine.cam.y = 22.25; G.state = 'play'; openPickpocket(); loadMap('tavern'); pickpocketInput('take');
+      check(!G.flags[pocketKey(next)], 'map transfer cancels stale attempt');
+      restoreGame(pocketBaseline); G.opts.touch = 'on'; setTouchMode(true); G.state = 'panel';
+      loadMap('oakhaven', { x: 23.5, y: 22.25, dir: Math.PI / 2 }); G.state = 'panel'; G.tod = 0.5;
+      G.ents.forEach(o => { if (o.kind === 'npc' || o.kind === 'enemy') o.hidden = true; });
+      const touchTarget = G.ents.find(o => o.id === 'bettany');
+      Object.assign(touchTarget, { x: 23.5, y: 23.5, facing: Math.PI / 2, hidden: false });
+      G.vel.x = G.vel.y = 0; G.touch.fx = G.touch.fy = 0; G.state = 'play'; controlsTick();
+      window.pocketTouchGold = G.player.gold;
+      return { controls: ['keyboard', 'touch', 'controller'], rewardsOnce: true, savedFailure: true };
+    });
+    await page.locator('#t-pocket').tap();
+    await page.locator('#pocket-take').waitFor({ state: 'visible' });
+    await page.evaluate(() => { window.pocketRandom = Math.random; Math.random = () => 0; });
+    try { await page.locator('#pocket-take').tap(); }
+    finally { await page.evaluate(() => { Math.random = pocketRandom; }); }
+    assert.equal(await page.evaluate(() => G.player.gold === pocketTouchGold + 8 && G.flags[pocketKey(G.ents.find(e => e.id === 'bettany'))] === 'taken'), true, 'touch opens and takes purse');
+    await page.locator('#pocket-leave').tap();
+    await page.evaluate(() => {
+      G.state = 'panel'; G.ents.find(e => e.id === 'bettany').hidden = true;
+      const e = G.ents.find(o => o.id === 'hob');
+      Object.assign(e, { x: 23.5, y: 23.5, facing: -Math.PI / 2, hidden: false });
+      G.opts.touch = 'off'; setTouchMode(false); G.state = 'play'; openPickpocket();
+      window.pocketRandom = Math.random; Math.random = () => 0.999;
+    });
+    try { await page.keyboard.press('Enter'); }
+    finally { await page.evaluate(() => { Math.random = pocketRandom; }); }
+    assert.equal(await page.evaluate(() => G.flags[pocketKey(G.ents.find(e => e.id === 'hob'))] === 'caught'), true, 'keyboard Enter attempts theft');
+    await page.keyboard.press('Escape');
+    await page.evaluate(() => { restoreGame(pocketBaseline); G.opts.touch = 'auto'; setTouchMode(false); G.state = 'panel'; });
+    console.log('PASS pickpocket position/attention, witnesses, attempts, controls and save/load', pocketRiskChecks, pockets);
     await page.evaluate(() => {
       loadMap('catacombs', { x: 6.5, y: 5.1, dir: Math.PI / 2 }); G.state = 'panel';
       const e = G.ents.find(e => e.trapType === 'tripwire'); useDeco(e);

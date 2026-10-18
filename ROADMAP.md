@@ -94,7 +94,7 @@ Every phase must retain the security regression tests and save/load behavior. Re
 
 ### Gameplay
 - [x] Skill-based three-pin lockpicking for tier-2/3 strongboxes and the Cloister vestry mechanical lock. Keyboard arrows/Space/Enter/Escape, touch buttons and controller D-pad/A/B supported. Story seals remain gated. Successful unlocks advance Lockpicking; higher ranks widen the safe band, slips cost Fatigue/noise and three slips end the attempt. No consumable pick/breakage system in this milestone.
-- [ ] Pickpocketing based on NPC attention and player position.
+- [x] Oakhaven adult pickpocketing: inspect eligible townsfolk/merchants at arm’s reach with P, touch Purse or controller Y. NPC-relative front/side/rear position, owner attention, noise and Stealth determine displayed lift odds. Caught attempts or third-party witnesses add a 20-sovereign bounty. One saved attempt per purse; loose coin only, no quest items or shop stock. Broader regional placement remains future expansion.
 - [ ] Drag/hide bodies; patrol discovery and alarm behavior.
 - [ ] Synod robe disguises, proximity inspection and detection.
 - [ ] Directional on-screen sound ripples, paired with positional sound.
@@ -137,6 +137,13 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
 - [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Pickpocketing pass verification
+- Static purse IDs and fixed loose coin (4 sovereigns for townsfolk, 8 for merchants) are attached to existing Oakhaven adults without reordering/appending map entities. Children, companions, guards, night-watch extras and non-town NPCs are excluded; the Greening disables town theft.
+- Inspection requires facing a visible living target within 1.65 units and clear line of sight. It costs nothing and pauses like other inspection panels. Front/side/rear is relative to the NPC heading; conversations turn their attention toward the player. Stealth improves odds; noise and frontal attention worsen them. Odds remain between 5% and 90%.
+- An attempt records `pocket:oakhaven:<stable ID>` as `taken` or `caught` before awarding fixed gold or bounty. Success trains Stealth; every attempt counts as theft. The owner is excluded from the third-party witness scan; a caught owner always reports. Existing constable/fine/jail behavior handles the resulting bounty.
+- Chromium covers front/rear/side risk, noise and skill effects, conversation attention, range/facing/walls, hidden/dead/companion/guard exclusions, cancellation, success/failure, witness reports, duplicate attempts, saved success/failure, old-save defaults, stale callbacks, keyboard/touch/simulated-controller inputs, and compact-panel overflow. Screenshots: `/tmp/octave-pickpocket.png` and `/tmp/octave-pickpocket-small.png` (verification artifacts, not source files).
+- Physical-controller hardware testing and human visual/balance review remain outstanding; expanding purse placement beyond Oakhaven is not included in this pass.
 
 ### Cloister note-lock & Catacombs physical-puzzles pass verification
 - Optional nonblocking reliquary appends after existing Cloister entities at (16.5, 12.5), and Catacombs physical puzzles append after existing Catacombs entities without altering story doors or save version.
