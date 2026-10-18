@@ -94,6 +94,8 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       crimeState().bounty = 40; syncWantedPosters();
       Object.assign(Engine.cam, { x: 25.5, y: 20.6, dir: -Math.PI / 2 }); render(); interact();
       check(G.openPanel === 'wanted' && document.querySelector('.wanted-sheet').textContent.includes('40 sovereigns'), 'in-world sign opens current warrant: ' + JSON.stringify({ panel: G.openPanel, picked: Engine.pick(G.ents, USE_RANGE), nearby: G.ents.filter(e => !e.hidden && !e.dead && dist2(e.x, e.y, Engine.cam.x, Engine.cam.y) < 4).map(e => ({ kind: e.kind, id: e.id, use: e.use, x: e.x, y: e.y })) }));
+      const portrait = document.querySelector('.wanted-portrait');
+      check(portrait && /^img\/face_[1-6]\.jpg$/.test(portrait.getAttribute('src')), 'wanted notice uses one of the six built-in portrait assets');
       document.querySelector('#law-leave').click();
       // The existing facade portal enters the new map without a test teleport.
       Object.assign(Engine.cam, { x: 39.1, y: 6.5, dir: 0 }); render(); interact();
@@ -268,6 +270,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     await page.setViewportSize({ width: 640, height: 400 });
     assert.equal(await page.locator('#modal-panel').evaluate(e => e.scrollWidth <= e.clientWidth + 1), true);
     assert.equal(await page.locator('#law-leave').evaluate(b => { const r = b.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight; }), true);
+    assert.equal(await page.locator('.wanted-portrait').evaluate(img => { const r = img.getBoundingClientRect(), p = document.querySelector('#modal-panel').getBoundingClientRect(); return r.width > 0 && r.height > 0 && r.left >= p.left && r.right <= p.right + 1; }), true);
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.keyboard.press('Escape');
     await page.evaluate(() => {

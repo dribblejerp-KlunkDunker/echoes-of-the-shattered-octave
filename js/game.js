@@ -707,9 +707,51 @@ function syncWantedPosters() {
     e.hidden = !wanted; e.dead = false;
   }
 }
+function lawEscapeHTML(value) {
+  const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+  return String(value == null ? '' : value).slice(0, 60).replace(/[&<>"']/g, c => entities[c]);
+}
 function renderWantedPoster() {
-  const law = crimeState(); G.state = 'panel';
-  openModal(`<h2>By order of the Oakhaven watch</h2><div class="wanted-sheet"><p class="muted">WARRANT OF APPREHENSION</p><h3>${cleanName(G.player.name)}</h3><strong>${law.bounty} sovereigns</strong><p>${law.bounty >= 40 ? 'Wanted for questioning. Constables are to bring this traveller to the watch-house.' : 'This warrant has been withdrawn. No public notice is outstanding.'}</p></div><p>Reported offences: ${law.thefts} theft attempts · ${law.assaults} assaults · ${law.escapes} escapes. Payment or completed sentence withdraws the notice. Tearing down paper does not erase the registry.</p><div class="btns"><button class="dfbtn" id="law-leave">Leave notice</button></div><p class="muted">Enter / Escape / controller A or B: leave</p>`, 'wanted');
+  const law = crimeState(), p = G.player;
+  const active = law.bounty >= 40 && !G.flags.greening && !G.flags.part3;
+  // Only six shipped portrait assets exist. Imported/runtime-edited IDs never reach src.
+  const faceValue = Number(p.face);
+  const face = Number.isInteger(faceValue) && faceValue >= 1 && faceValue <= 6 ? faceValue : 1;
+  const name = lawEscapeHTML(p.name || 'Nameless') || 'Nameless';
+  const headline = active ? 'WARRANT OF APPREHENSION' : 'NO ACTIVE PUBLIC WARRANT';
+  let status;
+  if (active) status = 'Wanted for questioning. Constables are to bring this traveller to the watch-house.';
+  else if ((G.flags.greening || G.flags.part3) && law.bounty >= 40) status = 'Public postings are suspended during the current emergency; the recorded fine remains outstanding.';
+  else if (law.bounty > 0) status = 'The fine remains on the registry, but is below the public-posting threshold of 40 sovereigns.';
+  else status = 'This warrant has been withdrawn. No public notice is outstanding.';
+  const fineLabel = law.bounty > 0 ? 'OUTSTANDING WATCH FINE' : 'NO FINE OUTSTANDING';
+  G.state = 'panel';
+  openModal(
+    '<h2>By order of the Oakhaven watch</h2>' +
+    '<div class="wanted-sheet' + (active ? '' : ' wanted-sheet-inactive') + '">' +
+      '<p class="wanted-sheet-kicker">PROVINCE OF OAKHAVEN · WATCH CIRCULAR</p>' +
+      '<div class="wanted-sheet-layout">' +
+        '<img class="wanted-portrait" src="img/face_' + face + '.jpg" alt="Portrait from watch registry">' +
+        '<div class="wanted-sheet-details">' +
+          '<p class="wanted-sheet-headline">' + headline + '</p>' +
+          '<h3>' + name + '</h3>' +
+          '<p class="wanted-sheet-status">' + status + '</p>' +
+          '<span class="wanted-sheet-fine-label">' + fineLabel + '</span>' +
+          '<strong class="wanted-sheet-fine">' + law.bounty + ' sovereigns</strong>' +
+        '</div>' +
+      '</div>' +
+      '<div class="wanted-sheet-offences" aria-label="Recorded offences">' +
+        '<b>Recorded offences</b>' +
+        '<span>' + law.thefts + ' theft attempts</span>' +
+        '<span>' + law.assaults + ' assaults</span>' +
+        '<span>' + law.escapes + ' escapes</span>' +
+      '</div>' +
+    '</div>' +
+    '<p>Payment or a completed sentence withdraws the notice. Tearing down paper does not erase the registry.</p>' +
+    '<div class="btns"><button class="dfbtn" id="law-leave">Leave notice</button></div>' +
+    '<p class="muted">Enter / Escape / controller A or B: leave</p>',
+    'wanted'
+  );
   $('#law-leave').onclick = () => { closeModal(); G.state = 'play'; };
 }
 function assaultCivilian(e) {
