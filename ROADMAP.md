@@ -100,7 +100,7 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Directional on-screen sound ripples, paired with positional sound.
 - [ ] Throwable stone/bottle distractions and guard investigation.
 - [x] Three visible, inspectable Catacombs mechanisms: barbed tripwire (one-shot 5 damage), suspended net (eight-second movement slow) and alarm bell (nearby enemy alert). Disarm via existing skill-based three-pin controls; cancellation/three slips leave it armed. Spent/disarmed state persists. Dedicated trap artwork/trigger animations and wider dungeon placement remain later polish.
-- [~] Optional Cloister three-voice reliquary: repeat Root → Fifth → Third using labelled notes, with an audible replay and equivalent written clue. Keyboard/touch/controller support; wrong notes reset without cost; one shard/Lore-progress reward saved once. Pressure plates, turning mirrors and further Catacombs puzzles remain pending.
+- [x] Optional Cloister three-voice reliquary and Catacombs physical puzzles: repeat Root → Fifth → Third on the Cloister reliquary; weight or step onto the drowned-chapel pressure plate to unlatch the west counter-weight niche; rotate the three niche-gallery brass mirrors (`/` and `\`) to guide the green-gold lantern beam into the eastern prismatic lens. Keyboard/touch/controller support, written beam/note clues, no resource cost and one-time shard/Lore rewards saved in flags.
 - [~] Oakhaven crime foundation: explicitly owned market honey prompts before theft; visible nearby NPC witnesses report a bounty, and the constable pursues with line of sight. Character sheet shows bounty/time served. Broader owned goods, assault and additional guard behavior remain pending.
 - [ ] Player wanted posters after crime thresholds.
 - [~] Guard intervention offers a checked gold fine, refusal with escape grace, or six hours of time-served jail and release at the town watch. Inventory/quest gear remains intact. Playable prison, confiscation and jail escape remain pending.
@@ -138,12 +138,13 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
 
-### Cloister note-lock pass verification
-- Optional nonblocking reliquary appends after existing Cloister entities at (16.5, 12.5), without altering story doors or save version.
-- In-world interaction opens a three-note puzzle; audio replay has equivalent written names/frequencies and no Voice cost. Keyboard 1–3/arrows/Enter/L/Escape, touch buttons and Gamepad D-pad/A/X/B are supported.
-- Incorrect notes reset the current phrase; leaving discards partial progress. A completion flag is set before awarding one Light-Glass Shard and Lore progress, preventing repeat rewards.
-- Chromium verifies real interaction, wrong-note feedback, cancellation/retry, keyboard and simulated-controller solves, touch input, no Voice/story-lock mutation, reopening empty, saved completion and old-save defaults.
-- Existing browser, security and gameplay smoke regressions pass. Audio listening quality, human visual review and physical-controller hardware testing remain unverified. Dedicated puzzle artwork, pressure plates and mirrors remain pending.
+### Cloister note-lock & Catacombs physical-puzzles pass verification
+- Optional nonblocking reliquary appends after existing Cloister entities at (16.5, 12.5), and Catacombs physical puzzles append after existing Catacombs entities without altering story doors or save version.
+- Drowned-chapel pressure plate at (4.5, 25.5) activates on player proximity or via the ballast-block inspection panel, opening the counter-weight niche at (10, 26) and granting one Light-Glass Shard and Lore progress once.
+- Niche-gallery turning mirrors at (14.5, 2.5), (22.5, 2.5) and (22.5, 1.5) route a green-gold beam from (14.5, 4.5) to the eastern lens at (26.2, 1.5), updating in-world light segments and opening the prismatic niche at (27, 1) with a one-time shard and Lore reward.
+- In-world interactions support keyboard (`1–3`, arrows, `Enter`/`Space`, `R`/`L`, `Escape`), touch buttons and Gamepad (`D-pad`, `A`, `X`, `B`) with written status descriptions and zero Voice/Fatigue cost.
+- Chromium verifies in-world interaction, stepping onto the pressure plate, ballast toggling, mirror beam routing, reset/re-solve idempotence, keyboard/touch/controller inputs, save/load persistence and old-save defaults.
+- Existing browser, security and gameplay smoke regressions pass. Audio listening quality, human visual review and physical-controller hardware testing remain unverified. Dedicated puzzle sprite sheets remain later polish.
 
 ### Dungeon-trap pass verification
 - Three nonblocking mechanisms append after historical Catacombs entities, away from story triggers and the entrance. They reuse grate/web/bell artwork and advertise inspection in their labels.

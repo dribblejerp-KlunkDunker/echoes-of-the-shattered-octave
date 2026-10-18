@@ -420,6 +420,71 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       return { phrase: 3, rewardOnce: true, accessibleClue: true };
     });
     console.log('PASS note-lock retries, keyboard/touch/controller, reward and save/load', notes);
+    await page.evaluate(() => {
+      loadMap('catacombs', { x: 4.5, y: 24.3, dir: Math.PI / 2 }); G.state = 'panel';
+      const plate = G.ents.find(e => e.use === 'pressure_plate');
+      const m1 = G.ents.find(e => e.mirrorId === 'm1');
+      if (!plate || !m1 || G.map.isBlocked(plate.x | 0, plate.y | 0) || G.map.isBlocked(m1.x | 0, m1.y | 0)) {
+        throw new Error('catacombs plate and mirrors placed on accessible floor');
+      }
+      window.puzzleBefore = { shards: G.count('shard'), voice: G.player.voice, fat: G.player.fat };
+      G.ents.forEach(o => { o._screen = null; });
+      interact();
+      if (G.openPanel !== 'pressureplate') throw new Error('in-world interaction opens pressure plate panel');
+    });
+    await page.locator('#plate-toggle').tap();
+    assert.equal(await page.evaluate(() => !!G.flags[PLATE_ANCHOR_FLAG] && !!G.flags[PLATE_FLAG]), true);
+    assert.equal(await page.evaluate(() => G.count('shard') - puzzleBefore.shards), 1);
+    await page.keyboard.press('Escape');
+    await page.evaluate(() => {
+      loadMap('catacombs', { x: 14.5, y: 3.6, dir: -Math.PI / 2 }); G.state = 'panel';
+      G.ents.forEach(o => { o._screen = null; });
+      interact();
+      if (G.openPanel !== 'mirror') throw new Error('in-world interaction opens turning mirror panel');
+    });
+    await page.locator('#mirror-0').tap();
+    assert.equal(await page.evaluate(() => getMirrorAngle('m1', 1)), 0);
+    await page.keyboard.press('2');
+    await page.keyboard.press('3');
+    const puzzles = await page.evaluate(() => {
+      function check(ok, label) { if (!ok) throw new Error(label); }
+      const trace = traceCatacombsBeam();
+      check(trace.hit && G.flags[MIRROR_FLAG], 'beam reaches eastern lens and unlocks reliquary');
+      check(G.count('shard') - puzzleBefore.shards === 2, 'plate and mirror puzzles each grant one shard once');
+      check(G.player.voice === puzzleBefore.voice && G.player.fat === puzzleBefore.fat, 'puzzles cost no Voice or Fatigue');
+      check(G.map.doors[26 * G.map.w + 10].target === 1 && G.map.doors[1 * G.map.w + 27].target === 1, 'both niche doors open when solved');
+      const count = G.count('shard');
+      turningMirrorInput('reset');
+      check(!traceCatacombsBeam().hit && G.count('shard') === count, 'resetting mirrors updates beam without revoking or duplicating reward');
+      turningMirrorInput(0); turningMirrorInput(1); turningMirrorInput(2);
+      check(traceCatacombsBeam().hit && G.count('shard') === count, 're-solving mirrors cannot duplicate shard');
+      turningMirrorInput('leave');
+      const saved = JSON.parse(JSON.stringify(snapshotGame()));
+      restoreGame(saved); G.state = 'panel';
+      check(G.flags[PLATE_FLAG] && G.flags[MIRROR_FLAG] && traceCatacombsBeam().hit && G.count('shard') === count, 'solved plate/mirror states survive save/load');
+      // Old-save defaults & controller edges
+      delete saved.flags[PLATE_FLAG]; delete saved.flags[PLATE_ANCHOR_FLAG];
+      delete saved.flags[MIRROR_FLAG];
+      delete saved.flags['mirror:catacombs:m1']; delete saved.flags['mirror:catacombs:m2']; delete saved.flags['mirror:catacombs:m3'];
+      restoreGame(saved); G.state = 'panel';
+      check(!G.flags[PLATE_FLAG] && !G.flags[MIRROR_FLAG] && !traceCatacombsBeam().hit, 'old saves default to unsolved plate and mirrors');
+      // Stepping directly onto the pressure plate in-world triggers it
+      Engine.cam.x = 4.5; Engine.cam.y = 25.5; tickCatacombsPuzzles();
+      check(G.flags[PLATE_FLAG] && G.map.doors[26 * G.map.w + 10].target === 1, 'stepping onto pressure plate unlatches west niche');
+      // Controller polling on mirror panel
+      useDeco(G.ents.find(e => e.mirrorId === 'm1'));
+      const originalPads = navigator.getGamepads;
+      const gp = { connected: true, axes: [0, 0, 0, 0], buttons: Array.from({ length: 18 }, () => ({ pressed: false })) };
+      navigator.getGamepads = () => [gp]; controlsTick();
+      const press = index => { gp.buttons[index].pressed = true; controlsTick(); gp.buttons[index].pressed = false; controlsTick(); };
+      press(0); check(getMirrorAngle('m1', 1) === 0, 'controller A rotates mirror 1');
+      press(15); press(0); check(getMirrorAngle('m2', 1) === 0, 'controller D-right + A rotates mirror 2');
+      press(15); press(0); check(G.flags[MIRROR_FLAG] && traceCatacombsBeam().hit, 'controller completes mirror alignment');
+      press(1); check(!MIRROR_PUZZLE && !G.openPanel, 'controller B leaves mirror panel');
+      navigator.getGamepads = originalPads; G.state = 'panel';
+      return { plate: true, mirrors: 3, beamSegments: 4, rewardOnce: true };
+    });
+    console.log('PASS catacombs pressure plate & turning mirrors (step, ballast, beam, keyboard/touch/controller, save/load)', puzzles);
     const motion = await page.evaluate(() => {
       function check(ok, label) { if (!ok) throw new Error(label); }
       const state = JSON.stringify({ attack: G.attack, hp: G.player.hp, fat: G.player.fat, noise: G.noise });

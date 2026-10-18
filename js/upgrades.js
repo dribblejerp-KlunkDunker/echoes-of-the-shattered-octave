@@ -367,17 +367,22 @@ function ensurePlayerUpgrades(p) {
     if (p.cls && p.cls.id === 'quarry') { p.skills.Blunt += 15; p.skills.Climbing += 15; }
   }
   p.skills.Lockpicking = clamp(Number(p.skills.Lockpicking) || 15, 1, 100);
-  if (!p.skillProg) p.skillProg = {};
-  if (!p.perks) p.perks = {};
-  if (p.perkPoints == null) p.perkPoints = 0;
-  if (!p.injuries) p.injuries = [];
-  if (!p.titles) p.titles = ['Traveler on the Greenroot Road'];
-  if (!p.activeTitle) p.activeTitle = p.titles[0];
-  if (!p.factions) p.factions = { hedge: 10, synod: 0, office: -5, captains: 5 };
-  if (!p.weapCond) p.weapCond = {};
-  if (!p.weapEnch) p.weapEnch = {};
+  if (!p.skillProg || typeof p.skillProg !== 'object') p.skillProg = {};
+  if (!p.perks || typeof p.perks !== 'object') p.perks = {};
+  if (p.perkPoints == null || !isFinite(+p.perkPoints)) p.perkPoints = 0; else p.perkPoints = clamp(p.perkPoints | 0, 0, 99);
+  if (!Array.isArray(p.injuries)) p.injuries = [];
+  else p.injuries = p.injuries.filter(x => typeof x === 'string').map(x => cleanName(x)).slice(0, 12);
+  if (!Array.isArray(p.titles) || !p.titles.length) p.titles = ['Traveler on the Greenroot Road'];
+  else p.titles = p.titles.filter(x => typeof x === 'string').map(x => cleanText(x, 48).replace(/["'\\]/g, '')).filter(Boolean).slice(0, 32);
+  if (!p.titles.length) p.titles = ['Traveler on the Greenroot Road'];
+  if (typeof p.activeTitle !== 'string' || !p.titles.includes(p.activeTitle)) p.activeTitle = p.titles[0];
+  if (p.background != null) p.background = cleanText(p.background, 48);
+  if (!p.factions || typeof p.factions !== 'object') p.factions = { hedge: 10, synod: 0, office: -5, captains: 5 };
+  for (const fk of ['hedge', 'synod', 'office', 'captains']) p.factions[fk] = isFinite(+p.factions[fk]) ? clamp(Math.round(+p.factions[fk]), -100, 100) : 0;
+  if (!p.weapCond || typeof p.weapCond !== 'object') p.weapCond = {};
+  if (!p.weapEnch || typeof p.weapEnch !== 'object') p.weapEnch = {};
   if (!p.customSongs || typeof p.customSongs !== 'object') p.customSongs = {};
-  if (p.tknives == null) p.tknives = 3;
+  if (p.tknives == null || !isFinite(+p.tknives)) p.tknives = 3; else p.tknives = clamp(p.tknives | 0, 0, 999);
   if (!Array.isArray(p.houseStorage)) p.houseStorage = [];
   if (!p.houseDecor) p.houseDecor = {};
   // imported saves are untrusted: validate songs and storage before use
@@ -1606,6 +1611,21 @@ function lesson(id, text) {
       for (let i = 0; i < 32; i++) prev[i] = btn(i);
       G.touch.fx = G.touch.fy = 0; return;
     }
+    if (G.openPanel === 'pressureplate') {
+      if (edge(GBTN.a)) pressurePlateInput('toggle');
+      if (edge(GBTN.b) || edge(GBTN.start)) pressurePlateInput('leave');
+      for (let i = 0; i < 32; i++) prev[i] = btn(i);
+      G.touch.fx = G.touch.fy = 0; return;
+    }
+    if (G.openPanel === 'mirror') {
+      if (edge(GBTN.dleft)) turningMirrorInput('left');
+      if (edge(GBTN.dright)) turningMirrorInput('right');
+      if (edge(GBTN.a)) turningMirrorInput('rotate');
+      if (edge(GBTN.x)) turningMirrorInput('reset');
+      if (edge(GBTN.b) || edge(GBTN.start)) turningMirrorInput('leave');
+      for (let i = 0; i < 32; i++) prev[i] = btn(i);
+      G.touch.fx = G.touch.fy = 0; return;
+    }
     if (G.openPanel === 'lockpick') {
       if (edge(GBTN.dleft)) lockpickInput('left');
       if (edge(GBTN.dright)) lockpickInput('right');
@@ -1665,6 +1685,24 @@ function lesson(id, text) {
       for (const [type, id, x, y] of [['tripwire', 'charnel-cord', 6.5, 6.5], ['net', 'chapel-net', 7.5, 24.5], ['alarm', 'gallery-bell', 24.5, 3.5]]) {
         cat.deco(TRAP_TYPES[type].sprite, x, y, { solid: false, scale: type === 'alarm' ? 0.35 : 0.45, use: 'trap', trapType: type, trapId: id, label: TRAP_TYPES[type].name + ' — inspect to disarm', glow: 0.35 });
       }
+      // Optional drowned chapel counter-weight niche & pressure plate
+      cat.clear(10, 26, 11, 26);
+      cat.setFloor(10, 26, 1); cat.setFloor(11, 26, 1);
+      cat.set(10, 26, DOOR({ locked: PLATE_FLAG, lockMsg: 'A counter-weight grate bars the west chapel niche. A sunken pressure plate in the drowned chapel floor is linked to its chain.', label: 'Counter-weight niche grate' }));
+      cat.deco('grate', 4.5, 25.5, { solid: false, scale: 0.5, use: 'pressure_plate', plateId: 'chapel_plate', label: 'Sunken pressure plate — stand on it or inspect to place a ballast stone', glow: 0.35 });
+      cat.deco('chest', 11.5, 26.5, { solid: false, scale: 0.45, label: 'Opened counter-weight reliquary niche', glow: 0.5 });
+      // Optional niche gallery turning mirrors & eastern prismatic reliquary
+      cat.clear(27, 1, 28, 1);
+      cat.set(27, 1, DOOR({ locked: MIRROR_FLAG, lockMsg: 'A prismatic seal bars the eastern gallery niche. Angle the three brass mirrors in the gallery so the lantern beam reaches the lens.', label: 'Prismatic reliquary gate' }));
+      cat.deco('lamp', 14.5, 4.5, { solid: false, scale: 0.55, use: 'mirror_lantern', label: 'Green-gold emitter lantern (shines North) — inspect to align mirrors', glow: 0.85, glassLamp: true });
+      for (const [id, x, y, def] of [['m1', 14.5, 2.5, 1], ['m2', 22.5, 2.5, 1], ['m3', 22.5, 1.5, 0]]) {
+        cat.deco('lever', x, y, { solid: false, scale: 0.5, use: 'turning_mirror', mirrorId: id, defaultAngle: def, label: `Turning brass mirror (${MIRROR_ANGLES[def]}) — inspect to rotate`, glow: 0.55 });
+      }
+      cat.deco('cores', 26.2, 1.5, { solid: false, scale: 0.45, use: 'mirror_lantern', label: 'Prismatic lock lens — receives an East-bound beam along row 1.5', glow: 0.75, glassLamp: true });
+      for (const [seg, x, y] of [[1, 14.5, 3.5], [2, 18.5, 2.5], [3, 22.5, 2.0], [4, 24.5, 1.5]]) {
+        cat.deco('lamp', x, y, { solid: false, nopick: true, scale: 0.25, yOff: -0.18, glow: 0.95, beamSeg: seg, hidden: seg > 1, label: 'Reflected green-gold light beam' });
+      }
+      cat.deco('chest', 28.5, 1.5, { solid: false, scale: 0.45, label: 'Opened prismatic reliquary niche', glow: 0.5 });
       cat.baseCount = cat.entities.length;
     }
     if (maps.cloister) {
@@ -1675,13 +1713,13 @@ function lesson(id, text) {
 
   // -- engine & game hooks -------------------------------------------
   const _restoreGame = restoreGame;
-  restoreGame = function (d) { const r = _restoreGame(d); syncHouseDoor(); return r; };
+  restoreGame = function (d) { const r = _restoreGame(d); syncHouseDoor(); syncCatacombsPuzzles(); return r; };
 
   const _buildOakhaven = buildOakhaven;
   buildOakhaven = function (g) { const m = _buildOakhaven(g); syncHouseDoor(m); return m; };
 
   const _buildAllMaps = buildAllMaps;
-  buildAllMaps = function () { const maps = _buildAllMaps(); try { addWorldExtras(maps); } catch (e) { } return maps; };
+  buildAllMaps = function () { const maps = _buildAllMaps(); try { addWorldExtras(maps); syncCatacombsPuzzles(); } catch (e) { } return maps; };
 
   const _stepSfx = Audio_.sfx.step;
   Audio_.sfx.step = (surface) => _stepSfx(surface || stepSurface());

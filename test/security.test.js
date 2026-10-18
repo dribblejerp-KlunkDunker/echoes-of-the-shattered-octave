@@ -64,7 +64,7 @@ globalThis.Image = class {
 // ---- load the game exactly as index.html does, then expose handles ----
 const root = path.join(__dirname, '..');
 const order = ['assets', 'data', 'maps', 'engine', 'audio', 'grove', 'coda', 'wilds', 'game', 'party', 'anim', 'travel', 'upgrades'];
-const expose = `\nglobalThis.__T = { G, UPG, SONGS, SONG_NOTES, SONG_CADENCES, SONG_DYNAMICS, ITEMS, restoreGame, snapshotGame, buildAllMaps, renderSongs, renderHouseChest, renderLoad, ensurePlayerUpgrades, cleanText, cleanName };`;
+const expose = `\nglobalThis.__T = { G, UPG, SONGS, SONG_NOTES, SONG_CADENCES, SONG_DYNAMICS, ITEMS, restoreGame, snapshotGame, buildAllMaps, renderSongs, renderHouseChest, renderLoad, renderCodexModal, ensurePlayerUpgrades, cleanText, cleanName };`;
 const code = order.map(f => fs.readFileSync(path.join(root, 'js', f + '.js'), 'utf8')).join('\n') + expose;
 try {
   new Function(code)();
@@ -103,6 +103,9 @@ save.player.customSongs = {
 };
 save.player.songs = ['good_song', 'tending', '"><img src=x>', 'missing_song'];
 save.player.houseStorage = [{ id: '<img onerror=1>', n: '</td><script>' }, { id: 'tonic', n: '5' }, { id: 'tonic', n: 2.7 }, { id: 'tonic', n: 'x' }];
+save.player.titles = ['"><img src=x onerror=alert(4)>', 'Keeper of Names'];
+save.player.activeTitle = '"><img src=x onerror=alert(4)>';
+save.player.injuries = ['<script>alert(5)</script>'];
 
 T.restoreGame(JSON.parse(JSON.stringify(save)));
 const p = T.G.player;
@@ -136,10 +139,13 @@ T.renderHouseChest();
 html = document.querySelector('#modal-panel').innerHTML;
 assert(!INJECTION.test(html), 'strongbox HTML has no injected tags');
 T.UPG.autosaveSlot = { marker: true };
-T.UPG.autosaveWhen = 'The Reach (day ' + T.G.day + ')'; // G.day is still the hostile raw value
+T.UPG.autosaveWhen = 'The Reach (day ' + save.day + ')'; // hostile raw value in autosaveWhen
 T.renderLoad(true);
 html = document.querySelector('#modal-panel').innerHTML;
-assert(!INJECTION.test(html) && html.indexOf('DAY<') === -1, 'Load panel autosave row has no injected tags');
+assert(!INJECTION.test(html) && html.indexOf('DAY<') === -1 && typeof T.G.day === 'number', 'Load panel autosave row has no injected tags and G.day is coerced to number');
+T.renderCodexModal('factions');
+html = document.querySelector('#modal-panel').innerHTML;
+assert(!/<img|<script|<svg/i.test(html) && !/<b>c<\/b>/.test(html) && !p.titles.some(t => /[<>"'\\]/.test(t)), 'Codex factions/titles HTML has no injected tags');
 
 console.log(fails ? 'FAIL: ' + fails + ' assertion(s)' : 'OK: imported saves cannot inject script');
 process.exit(fails ? 1 : 0);
