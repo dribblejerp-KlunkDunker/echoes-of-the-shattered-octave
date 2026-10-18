@@ -222,7 +222,43 @@ const output = path.join(__dirname, '..', 'screenshots');
       if (HARDCORE.save !== null) throw new Error('Hardcore death must destroy the run save');
     });
     await capture('hardcore-run-over');
+
+    // --- the sky: hills and mountains, and the weather that walks over them
+    await page.evaluate(() => {
+      // the hardcore scene is over: put the run and the death screen back to normal
+      hide('#death'); G.dead = false; G.player.hardcore = false; HARDCORE.save = null;
+      closeModal(); galleryScene('oakhaven');
+      G.tod = 0.5;
+      Weather.hold('storm'); Weather.tick(1 / 60);
+      Object.assign(Engine.cam, { x: 23.5, y: 22.5, dir: -Math.PI / 2, pitch: 0, bob: 0 });
+      render();
+      if (!/storm/.test(weatherLine())) throw new Error('The storm scene must be held under a storm');
+      document.querySelector('#msgs').innerHTML = 'A storm walks up the river. The road will be slow, and loud, and lit in pieces.';
+    });
+    await capture('weather-storm');
+
+    await page.evaluate(() => {
+      closeModal(); galleryScene('oakhaven');
+      G.tod = 0.27;
+      Weather.hold('clear'); Weather.tick(1 / 60);
+      Object.assign(Engine.cam, { x: 23.5, y: 22.5, dir: 0, pitch: 0, bob: 0 });
+      render();
+      if (!/clear/.test(weatherLine())) throw new Error('The dawn scene must be held clear');
+      document.querySelector('#msgs').innerHTML = 'Light comes up behind the Grey Teeth. The town smells of wet grass and woodsmoke.';
+    });
+    await capture('weather-dawn-hills');
+
+    await page.evaluate(() => {
+      closeModal(); galleryScene('oakhaven');
+      G.tod = 0.42;
+      Weather.hold('mist'); Weather.tick(1 / 60);
+      Object.assign(Engine.cam, { x: 23.5, y: 20.5, dir: Math.PI / 2, pitch: 0, bob: 0 });
+      render();
+      if (Weather.STATES.mist.sight >= 1) throw new Error('Mist has to hide you');
+      document.querySelector('#msgs').innerHTML = 'A sea-fog walks up the river and sits down in the streets. They will not see you coming.';
+    });
+    await capture('weather-mist');
     assert.deepEqual(errors, [], 'capture has no browser runtime errors');
-    console.log('PASS thirteen feature screenshots captured from the managed preview');
+    console.log('PASS sixteen feature screenshots captured from the managed preview');
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

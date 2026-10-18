@@ -27,6 +27,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       window.travelBase = JSON.parse(JSON.stringify(snapshotGame()));
       window.resetTravel = () => {
         restoreGame(JSON.parse(JSON.stringify(travelBase))); G.state = 'play';
+        Weather.hold('clear');   // road maths is measured in still air; weather has its own suite
         G.opts.touch = 'off'; setTouchMode(false); UPG.tutorial = false; G.keys = {};
       };
       // --- stable placement and world interaction

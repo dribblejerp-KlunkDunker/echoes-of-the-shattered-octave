@@ -64,6 +64,19 @@ const Engine = (() => {
     return (255 << 24) | ((b | 0) << 16) | ((g | 0) << 8) | (r | 0);
   }
   let light_ = 1;
+  // ---- weather (driven by js/weather.js) ------------------------------
+  // Thick air and low light never touch the map: they bend what the renderer
+  // already draws, so a sunny save and a stormy one share the same map data.
+  let wxHaze = 0, wxDark = 0, wxFlash = 0, wxCloud = 0, wxTR = 0, wxTG = 0, wxTB = 0;
+  function setWeather(v) {
+    if (!v) return;
+    wxHaze = Math.max(0, Math.min(0.6, +v.haze || 0));
+    wxDark = Math.max(0, Math.min(0.6, +v.dark || 0));
+    wxFlash = Math.max(0, Math.min(1, +v.flash || 0));
+    wxCloud = Math.max(0, Math.min(1, +v.cloud || 0));
+    const t = v.tint && v.tint.length === 3 ? v.tint : [0, 0, 0];
+    wxTR = +t[0] || 0; wxTG = +t[1] || 0; wxTB = +t[2] || 0;
+  }
   function rgb(r, g, b) { return (255 << 24) | (b << 16) | (g << 8) | r; }
 
   // ---- dynamic coloured point-lights ----------------------------------
@@ -108,9 +121,10 @@ const Engine = (() => {
   let map = null;        // current map object (grid, w, h, cells)
   let fogDist = 12, fogR = 0, fogG = 0, fogB = 0, lightFlicker = 1, ambient = 0;
   let ambientDark = 1;   // night factor
+  let baseR = 0, baseG = 0, baseB = 0, baseFog = 12;   // the map's own air, before weather
   const FOV = 1.0;       // plane length (approx 90 deg)
 
-  function setMap(m) { map = m; fogDist = m.fogDist || 12; ambient = m.ambient || 0; const fc = m.fogColor || [0, 0, 0]; fogR = fc[0]; fogG = fc[1]; fogB = fc[2]; }
+  function setMap(m) { map = m; ambient = m.ambient || 0; const fc = m.fogColor || [0, 0, 0]; baseR = fc[0]; baseG = fc[1]; baseB = fc[2]; baseFog = m.fogDist || 12; fogDist = baseFog; fogR = baseR; fogG = baseG; fogB = baseB; }
 
   // ---- sky -----------------------------------------------------------
   const skyR = new Float32Array(VIEW_H), skyG = new Float32Array(VIEW_H), skyB = new Float32Array(VIEW_H);
@@ -129,6 +143,19 @@ const Engine = (() => {
       const dr = 140 + 70 * t, dg = 152 + 58 * t, db = 168 + 32 * t;
       let r = nr + (dr - nr) * dayness, g = ng + (dg - ng) * dayness, b = nb + (db - nb) * dayness;
       r += 70 * warm * t * t; g += 22 * warm * t * t; b -= 20 * warm * t * t;
+      if (wxHaze) { r = r * (1 - wxHaze) + wxTR * wxHaze; g = g * (1 - wxHaze) + wxTG * wxHaze; b = b * (1 - wxHaze) + wxTB * wxHaze; }
+      if (wxDark) { r *= 1 - wxDark * 0.62; g *= 1 - wxDark * 0.58; b *= 1 - wxDark * 0.42; }
+      // cloud: the noise this engine has always carried, now actually drawn.
+      // Thicker overhead, thinner at the horizon, and driven by the wind above.
+      if (wxCloud > 0.01) {
+        const t0 = (typeof performance !== 'undefined' ? performance.now() : Date.now()) / 1000;
+        const scroll = (t0 * (4 + 16 * wxCloud)) | 0;
+        const cl = cloud[((y * 5 + scroll) & (CLOUD_N - 1))];
+        const band = 0.4 + 0.6 * (1 - t);
+        const shade = 1 - (0.10 + 0.52 * wxCloud) * (0.5 + 0.5 * cl) * band;
+        r *= shade; g *= shade; b *= shade * 0.985;
+      }
+      if (wxFlash) { r += (255 - r) * 0.55 * wxFlash; g += (255 - g) * 0.55 * wxFlash; b += (255 - b) * 0.5 * wxFlash; }
       skyR[y] = r; skyG[y] = g; skyB[y] = b;
     }
     skyDay = dayness;
@@ -155,7 +182,14 @@ const Engine = (() => {
     const posZ = 0.5 * h;
     const flick = lightFlicker;
     const light = outdoor ? 1 : 1;
-    light_ = outdoor ? ambientDark : 1;
+    // weather: thicker air, lower light, and one bright frame of lightning.
+    // It is the sky's business only: interiors keep their own air and lamps.
+    const wxK = outdoor ? 1 : 0;
+    fogDist = baseFog * (1 - wxHaze * 0.4 * wxK);
+    fogR = baseR * (1 - wxHaze * wxK) + wxTR * wxHaze * wxK;
+    fogG = baseG * (1 - wxHaze * wxK) + wxTG * wxHaze * wxK;
+    fogB = baseB * (1 - wxHaze * wxK) + wxTB * wxHaze * wxK;
+    light_ = (outdoor ? ambientDark : 1) * (1 - wxDark * wxK) + wxFlash * 0.45 * wxK;
     const fogMul = 1 / fogDist;
 
     // -- floor & ceiling ----------------------------------------------
@@ -214,6 +248,42 @@ const Engine = (() => {
       }
     }
 
+    // -- sun and moon (outdoor only) ----------------------------------
+    // Drawn before the ridges so country can stand in front of the light.
+    if (outdoor) {
+      const sunA = (timeOfDay - 0.25) * Math.PI * 2;
+      const elev = Math.cos((timeOfDay - 0.5) * Math.PI * 2);
+      const night = elev < 0.02;
+      const bodyA = night ? sunA + Math.PI : sunA;
+      const bodyEl = night ? Math.min(0.8, Math.max(0.18, -elev)) : Math.min(0.95, elev);
+      const bodyCY = Math.max(2, Math.min(horizon - 1, horizon - bodyEl * h * 0.58));
+      const warm = 1 - Math.min(1, Math.abs(elev) * 1.5);
+      const tr = night ? 150 : 255, tg = night ? 160 : 236 * (1 - warm * 0.12), tb = night ? 190 : 196 * (1 - warm * 0.34);
+      const strength = (night ? 0.45 : 1) * (1 - Math.min(0.8, wxCloud * 0.8)) * (1 - wxDark * 0.5);
+      const row = new Float32Array(h);
+      for (let y = 0; y < horizon; y++) { const dd = (y - bodyCY) / (h * 0.44); row[y] = Math.exp(-dd * dd); }
+      const rDisc = Math.max(2.5, h * 0.05);
+      for (let x = 0; x < w; x++) {
+        const camX = 2 * x / w - 1;
+        const ang = Math.atan2(dirY + planeY * camX, dirX + planeX * camX);
+        let da = ang - bodyA; while (da > Math.PI) da -= Math.PI * 2; while (da < -Math.PI) da += Math.PI * 2;
+        const d = Math.abs(da);
+        if (d > 0.95) continue;
+        const k = d / 0.4;
+        const glow = Math.exp(-k * k) * strength;
+        const disc = d < rDisc / (w * 0.55) ? 1 : 0;
+        if (glow < 0.02 && !disc) continue;
+        for (let y = 0; y < horizon; y++) {
+          let a = glow * row[y] * 0.55;
+          if (disc) { const dy = (y - bodyCY) / rDisc, dx = da / (rDisc / (w * 0.55)); const dd2 = Math.sqrt(dx * dx + dy * dy); if (dd2 <= 1) a = Math.max(a, 0.9 - dd2 * 0.2); }
+          if (a <= 0.004) continue;
+          const i = y * w + x, px = fb[i];
+          const R = Math.min(255, (px & 255) + tr * a), G2 = Math.min(255, ((px >> 8) & 255) + tg * a), B = Math.min(255, ((px >> 16) & 255) + tb * a);
+          fb[i] = (255 << 24) | (B << 16) | (G2 << 8) | R;
+        }
+      }
+    }
+
     // -- distant landmarks (horizon silhouettes, outdoor only) --------
     if (outdoor && typeof LANDMARKS !== 'undefined') {
       const lms = LANDMARKS[map.id] || LANDMARKS._default;
@@ -226,14 +296,22 @@ const Engine = (() => {
           const ang = Math.atan2(dirY + planeY * camX, dirX + planeX * camX);
           let da = ang - lm.a; while (da > Math.PI) da -= Math.PI * 2; while (da < -Math.PI) da += Math.PI * 2;
           const t = Math.abs(da) / lm.aw; if (t >= 1) continue;
-          const top = Math.round(horizon - lm.h * h * Math.pow(1 - t, lm.p || 1.6));
+          // a ridge is a hill curve with a little lumpiness along its length, so
+          // hills, mountain ranges and cliff shoulders do not read as plain cones
+          let prof = Math.pow(1 - t, lm.p || 1.6);
+          if (lm.ridge) prof *= 1 + lm.ridge * Math.sin(t * 11 + (lm.seed || 0) * 2.7) * 0.5;
+          const top = Math.round(horizon - lm.h * h * Math.max(0, prof));
           const span = Math.max(1, horizon - top);
+          const cap = lm.cap, capH = cap ? (lm.capH || 0.3) : 0;
           for (let y = Math.max(0, top); y <= horizon; y++) {
             const v = (horizon - y) / span;
-            let mix = 0.30 + 0.5 * t * t + 0.25 * v; if (mix > 0.95) mix = 0.95;
-            const rr = (((sil[0] * (1 - mix) + fogR * mix) * dayM) | 0) & 255;
-            const gg = (((sil[1] * (1 - mix) + fogG * mix) * dayM) | 0) & 255;
-            const bb = (((sil[2] * (1 - mix) + fogB * mix) * dayM) | 0) & 255;
+            // aerial perspective: far country thins into the air more than near country
+            let mix = 0.30 + 0.5 * t * t + 0.25 * v + (lm.far || 0) * 0.55; if (mix > 0.95) mix = 0.95;
+            let sr = sil[0], sg = sil[1], sb = sil[2];
+            if (cap && v > 1 - capH) { const k = Math.min(1, (v - (1 - capH)) / Math.max(0.08, capH)); sr = sr * (1 - k) + cap[0] * k; sg = sg * (1 - k) + cap[1] * k; sb = sb * (1 - k) + cap[2] * k; }
+            const rr = (((sr * (1 - mix) + fogR * mix) * dayM) | 0) & 255;
+            const gg = (((sg * (1 - mix) + fogG * mix) * dayM) | 0) & 255;
+            const bb = (((sb * (1 - mix) + fogB * mix) * dayM) | 0) & 255;
             fb[y * w + x] = (255 << 24) | (bb << 16) | (gg << 8) | rr;
           }
         }
@@ -431,5 +509,5 @@ const Engine = (() => {
   function setFlicker(v) { lightFlicker = v; }
   function setTime(t) { animT = t; }
 
-  return { canvas, ctx, cam, textures, sprites, images, loadAll, render, setMap, pick, pickWall, setFlicker, setTime, rgb, VW, VH, VIEW_H };
+  return { canvas, ctx, cam, textures, sprites, images, loadAll, render, setMap, setWeather, pick, pickWall, setFlicker, setTime, rgb, VW, VH, VIEW_H };
 })();

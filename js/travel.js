@@ -149,6 +149,8 @@ function travelMinutes(d) {
   let mins = Math.max(10, Math.hypot(dx, dy) * R.across);
   if (TRAVEL.pace === 'cautious') mins *= 1.35;
   if (horseActive()) mins *= HORSE.speed;
+  // Foul weather is slower going, and the horse does not like it either.
+  if (typeof Weather !== 'undefined') mins *= Weather.travelFactor();
   return Math.round(mins / 5) * 5;
 }
 function travelFmt(mins) { const h = Math.floor(mins / 60), mm = mins % 60; return (h ? `${h} hour${h > 1 ? 's' : ''}` : '') + (h && mm ? ' ' : '') + (mm || !h ? `${mm} minutes` : ''); }
@@ -156,7 +158,8 @@ function travelRisk(d, mins) {
   const mc = TRAVEL_REGIONS[TRAVEL.region].maps[d.map];
   if (mc.safe) return 0;
   const night = G.tod < 0.25 || G.tod > 0.83 ? 1.4 : 1;
-  return Math.min(0.85, (mc.risk || 0.2) * (TRAVEL.pace === 'cautious' ? 0.4 : 1) * night * clamp(mins / 45, 0.4, 1.5));
+  const sky = typeof Weather !== 'undefined' ? Weather.riskFactor() : 1;
+  return Math.min(0.85, (mc.risk || 0.2) * (TRAVEL.pace === 'cautious' ? 0.4 : 1) * night * sky * clamp(mins / 45, 0.4, 1.5));
 }
 
 // ---------------------------------------------------------------- horses

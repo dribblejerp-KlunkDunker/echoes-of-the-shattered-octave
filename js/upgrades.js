@@ -1395,30 +1395,37 @@ function syncHouseDoor(m) {
 }
 
 // -- distant landmarks: horizon silhouettes seen from outdoor maps --
+// a = bearing, aw = angular width, h = share of the view it may take, p = peakiness,
+// ridge = lumpiness along the crest, seed = where that lumpiness starts, cap/capH = a
+// paler top for snow. Time and weather mix every ridge toward the fog colour, so the
+// same country greys out in mist, flushes at dusk and goes black under a storm.
 const LANDMARKS = {
   _default: [{ a: -Math.PI / 2, aw: Math.PI, h: 0.10, p: 0.8, c: [30, 30, 40] }],
   oakhaven: [
-    { a: -Math.PI / 2, aw: Math.PI, h: 0.09, p: 0.8, c: [28, 30, 38] },
-    { a: -2.2, aw: 0.55, h: 0.28, p: 0.9, c: [30, 28, 42] },
-    { a: -0.55, aw: 0.16, h: 0.24, p: 2.2, c: [36, 30, 46] },
-    { a: 0.35, aw: 0.12, h: 0.34, p: 2.6, c: [34, 28, 44] },
-    { a: 2.6, aw: 0.7, h: 0.16, p: 1.1, c: [26, 30, 36] },
+    { a: -Math.PI / 2, aw: 2.6, h: 0.30, p: 1.5, ridge: 0.45, seed: 1.3, far: 0.85, cap: [152, 158, 178], capH: 0.26, c: [40, 42, 58] }, // the Grey Teeth, north beyond the Hedge
+    { a: 2.1, aw: 0.9, h: 0.26, p: 1.35, ridge: 0.35, seed: 5.7, far: 0.15, c: [46, 44, 52] },                                             // chalk cliff shoulder over the water-meadow
+    { a: -2.2, aw: 1.1, h: 0.17, p: 1.1, ridge: 0.6, seed: 3.1, far: 0.5, c: [38, 40, 50] },                                               // downs to the east
+    { a: -0.55, aw: 0.16, h: 0.24, p: 2.2, far: 0.35, c: [36, 30, 46] },                                                                   // the Chapel spire-line
+    { a: 0.3, aw: 0.6, h: 0.24, p: 1.7, ridge: 0.8, seed: 2.3, far: 0.3, c: [34, 28, 44] },                                                                     // the quarry head
+    { a: 2.6, aw: 0.7, h: 0.16, p: 1.1, far: 0.45, c: [26, 30, 36] },
   ],
   clearing: [
-    { a: 0, aw: Math.PI, h: 0.17, p: 1.0, c: [24, 30, 28] },
-    { a: 0.35, aw: 0.12, h: 0.30, p: 2.6, c: [32, 28, 42] },
-    { a: -1.1, aw: 0.5, h: 0.22, p: 1.2, c: [28, 28, 40] },
+    { a: -1.1, aw: 1.0, h: 0.24, p: 1.25, ridge: 0.5, seed: 2.2, far: 0.7, cap: [142, 150, 170], capH: 0.22, c: [34, 36, 50] },
+    { a: 0, aw: 1.6, h: 0.17, p: 1.0, ridge: 0.4, seed: 8.4, far: 0.3, c: [26, 32, 30] },
+    { a: 0.35, aw: 0.14, h: 0.30, p: 2.6, far: 0.35, c: [32, 28, 42] },
+    { a: 2.4, aw: 1.2, h: 0.20, p: 1.2, ridge: 0.45, seed: 4.4, far: 0.55, c: [30, 34, 40] },
   ],
   whispergrove: [
-    { a: -Math.PI / 2, aw: Math.PI, h: 0.08, p: 0.8, c: [40, 34, 56] },
-    { a: -1.55, aw: 0.2, h: 0.36, p: 2.4, c: [46, 38, 62] },
-    { a: -0.9, aw: 0.3, h: 0.24, p: 1.6, c: [42, 36, 58] },
-    { a: 0.9, aw: 0.5, h: 0.18, p: 1.2, c: [38, 34, 54] },
+    { a: -Math.PI / 2, aw: Math.PI, h: 0.08, p: 0.8, far: 0.6, c: [40, 34, 56] },
+    { a: -1.55, aw: 0.2, h: 0.36, p: 2.4, far: 0.25, c: [46, 38, 62] },
+    { a: -0.9, aw: 0.6, h: 0.24, p: 1.4, ridge: 0.4, seed: 6.1, far: 0.45, c: [42, 36, 58] },
+    { a: 0.9, aw: 1.0, h: 0.18, p: 1.2, ridge: 0.5, seed: 1.9, far: 0.5, c: [38, 34, 54] },
   ],
   deepwoods: [
-    { a: 0, aw: Math.PI, h: 0.08, p: 0.8, c: [30, 32, 40] },
-    { a: -1.55, aw: 0.28, h: 0.32, p: 2.0, c: [40, 34, 56] },
-    { a: 1.6, aw: 0.6, h: 0.16, p: 1.3, c: [32, 32, 42] },
+    { a: -1.2, aw: 1.1, h: 0.26, p: 1.3, ridge: 0.5, seed: 7.3, far: 0.75, cap: [130, 140, 162], capH: 0.24, c: [34, 36, 50] },
+    { a: 0, aw: 1.8, h: 0.10, p: 0.9, ridge: 0.5, seed: 3.7, far: 0.3, c: [30, 32, 40] },
+    { a: -1.55, aw: 0.28, h: 0.32, p: 2.0, far: 0.3, c: [40, 34, 56] },
+    { a: 1.6, aw: 0.6, h: 0.16, p: 1.3, far: 0.5, c: [32, 32, 42] },
   ],
 };
 
@@ -1469,7 +1476,18 @@ function lesson(id, text) {
 (() => {
   // -- world ticks ---------------------------------------------------
   const WFX = { clear: { sight: 1, hear: 1 }, rain: { sight: 0.85, hear: 0.6 }, fog: { sight: 0.55, hear: 0.85 }, snow: { sight: 0.8, hear: 1.35 } };
+  // Dynamic weather lives in js/weather.js now. This adapter keeps the old call
+  // site, the old four-state names and UPG.weather/weatherFx in step, so anything
+  // that still sets UPG.weather by hand (captures, tests) still gets its sky.
+  const LEGACY_WEATHER = { fog: 'mist', rain: 'rain', snow: 'snow', clear: 'clear' };
   function tickWeather(dt) {
+    if (typeof Weather !== 'undefined' && Weather.tick) {
+      if (UPG.weather && LEGACY_WEATHER[UPG.weather] && UPG.weather !== Weather.state) UPG.weather = LEGACY_WEATHER[UPG.weather];
+      Weather.tick(dt);
+      if (UPG.weather !== Weather.state) { UPG.weather = Weather.state; UPG.weatherT = Weather.left * 3600; }
+      UPG.weatherFx = { sight: Weather.STATES[Weather.state].sight, hear: Weather.STATES[Weather.state].hear };
+      return;
+    }
     if (!G.map) return;
     if (UPG.weather == null) UPG.weather = 'clear';
     if (!(UPG.weatherT > 0)) UPG.weatherT = 45;
@@ -1557,6 +1575,7 @@ function lesson(id, text) {
 
   // -- weather overlay on the 3D view (drawn under the HUD) ----------
   function drawWeatherOverlay() {
+    if (typeof Weather !== 'undefined' && Weather.drawOverlay) { Weather.drawOverlay(); return; }
     if (!G.map || !G.map.outdoor) return;
     const wtr = UPG.weather; if (!wtr || wtr === 'clear') return;
     const ctx = Engine.ctx; if (!ctx) return;

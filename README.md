@@ -35,8 +35,10 @@ Hired horses, bargaining with the watch and the optional hunger and sleep system
 | The Oakhaven watch: pay the fine, offer a bribe, lean on him, or refuse and run. | Journey needs on: hunger and sleep on the character sheet, with rest and fatigue following them. |
 | ![The options panel with journey needs switched on](screenshots/journey-needs-menu.png) | ![The single save of a hardcore run being overwritten](screenshots/hardcore-save.png) |
 | Journey needs are opt-in. Turn hunger and sleep on in Options; old saves begin fed, rested and off. | A hardcore run keeps one save, with no codes, slots or autosaves. |
-| ![The death screen that ends a hardcore run](screenshots/hardcore-run-over.png) | |
-| Death in a hardcore run destroys its save: the lamp is taken away and the run ends at the title. | |
+| ![The death screen that ends a hardcore run](screenshots/hardcore-run-over.png) | ![Oakhaven at dawn, with the Grey Teeth on the horizon](screenshots/weather-dawn-hills.png) |
+| Death in a hardcore run destroys its save: the lamp is taken away and the run ends at the title. | Light comes up behind the Grey Teeth: hills, a mountain range and a cliff shoulder on the horizon. |
+| ![A storm over Oakhaven with slanted rain and a darkened sky](screenshots/weather-storm.png) | ![Sea-fog sitting in the streets of Oakhaven](screenshots/weather-mist.png) |
+| A storm: the road is slower and more dangerous, sound carries less, and the sky goes dark. | Sea-fog: they will not see you coming, and the distance dissolves into the air. |
 
 ### Places, characters and adventures
 
@@ -102,6 +104,9 @@ Hired horses, bargaining with the watch and the optional hunger and sleep system
 - Watch-house gaol and custody: constables offer to accept an exact fine, let you run with temporary grace, or escort you to a playable watch-house cell for a six-hour sentence. Non-quest equipment, carried goods and ammunition are confiscated into evidence; quest items and innate weapons remain with you. Serve the remaining sentence on the bunk or pay the fine to be released with all evidence returned. Alternatively, pick the cell lock to explore the watch-house, pick the evidence chest to recover your gear, and leave via the street door to escape (+60 bounty once, fine still outstanding).
 - Horses: the North Gate stables hire the roan mare for 25 sovereigns a day. While hired, world-map journeys take about a third less time and reckless travel leaves you far less tired; return her early for 10 sovereigns back. The hire lapses on the world clock and shows on the travel map.
 - Watch-house bargaining: when a constable confronts you, bribe him at 60% of the fine (checked against Personality) or lean on him (checked against Strength) for twelve seconds of grace. A refused bribe or threat raises the bounty; an accepted bribe withdraws the warrant and returns held gear.
+- Weather that moves on the world clock: clear, overcast, rain, storm, mist and snow, each with its own sky, light, wind and distance haze. Weather has its own climate per region (the Spectral Woods live in mist, the Deep Woods see more snow) and rolls on while you walk, rest or travel — hours on the road take hours off the sky. Storms darken the world, slant the rain, drive the clouds and throw lightning and thunder; rain and storm mask your noise, mist hides you, snow carries your footsteps. Foul weather lengthens and endangers world-map journeys, makes a traveller hungrier, and is named on the status line and the character sheet.
+- Horizon country: every outdoor map now has its own distant landscape — the Grey Teeth north beyond the Hedge, chalk downs, a cliff shoulder over the water-meadow, the Chapel spire-line and the quarry head, each ridge with a lumpy crest and the high ones capped in snow. Time and weather mix them into the air, so the same country greys out in mist, flushes at dawn and goes black under a storm.
+- A modern sky: a sun and moon that cross the sky with the clock, drawn behind the ridges; a cloud layer that thickens and races with the weather; aerial perspective that thins far country into the air; and a per-frame colour grade for light and weather.
 - Hardcore runs, opt-in and irreversible once taken: one save for the run, no session slots, no save codes, no downloads and no pre-boss autosave. That save lives in the page, so closing the tab ends the run just as dying does. Death destroys that save and ends the run at the title screen instead of waking you by the lamp. Ordinary saves are never touched, a hardcore run can never be opened by one, and a hardcore run can never be carried out of the page as a code or file. Start one from the Options panel; only a new traveller can start without it.
 - Journey needs, optional and off by default: switch hunger and sleep on in Options and the road starts to cost something. Ten hours on foot drains hunger twice as fast as the same ten hours in the saddle; hunger or sleeplessness below 20 warns you and halves what resting and idling give back, and an empty belly caps your fatigue at half until you eat. Honey feeds you, rest sleeps you, and the character sheet and journey panel always show where you stand. Old saves and hostile imports stay fed, rested and off.
 - Pickpocket Oakhaven adult townsfolk and merchants: inspect a purse, approach quietly from behind, and use Stealth to lift loose coin. Attention, position and noise affect the displayed odds; caught or witnessed theft adds a watch bounty. One saved attempt per person; quest items and shop stock stay untouched.
@@ -133,7 +138,7 @@ With a local server or managed preview running, install Playwright in your test 
 PREVIEW_URL=http://127.0.0.1:8000 node test/screenshots.js
 ```
 
-If Playwright is installed outside this repository, set `PLAYWRIGHT_MODULE` to its module path. The capture script starts a fresh disposable game, stages illustrative scenes with the game's own feature logic, checks each scene's interface and PNG output, and refreshes the six `screenshots/stealth-*.png` images plus the seven travel, stables, watch, journey-needs and hardcore images above. It does not start a server or alter game source or player save files.
+If Playwright is installed outside this repository, set `PLAYWRIGHT_MODULE` to its module path. The capture script starts a fresh disposable game, stages illustrative scenes with the game's own feature logic, checks each scene's interface and PNG output, and refreshes the six `screenshots/stealth-*.png` images plus the ten travel, stables, watch, journey-needs, hardcore and weather images above. It does not start a server or alter game source or player save files.
 
 Headless Chromium needs fonts installed in the capture environment; without a font stack the panels render empty. Install `fontconfig` with a serif family (DejaVu Serif is what these images use) before capturing.
 
@@ -159,6 +164,7 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Panels | I inventory · C character · L logbook · M map · T world map and travel · R rest · K ledger · Esc options and save |
 | Journey needs | Esc options → Journey needs toggles hunger and sleep; switching it on starts you fed and rested |
 | Hardcore | Esc options → Hardcore run asks to confirm; one save for the run, and death ends it |
+| Weather | No input: the sky changes with the world clock, and C names it, its strength and how long it has left |
 | Sound | V sound on/off · B music on/off |
 | Touch | Left thumb stick, right thumb drags to look, tap to use or strike |
 

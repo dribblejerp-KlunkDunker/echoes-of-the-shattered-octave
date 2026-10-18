@@ -14,7 +14,7 @@ The 94 unfinished checklist items at the start of this plan (85 not started, 9 p
 | Phase | Scope / checklist ownership | Starting remaining | Delivery milestones |
 |---|---|---:|---|
 | 1 — Stealth, law & gameplay | Gameplay | 11 | **Delivered: throwable distractions + investigation** → **Delivered: body hiding/discovery** → **Delivered: disguises/inspection** → **Delivered: broader crime/wanted posters/prison** → **Delivered: bribes/threats at the watch** → **Delivered: horse rental + travel modifiers** → **Delivered: optional hunger/sleep** → **Delivered: opt-in hardcore runs** → Phase 1 complete; next is phase 2, the spatial world. Directional sound feedback depends on phase 7 audio. |
-| 2 — Spatial world | Graphics — 3D view | 15 | Depth/elevation foundation → low walls and stairs/ramps → ceilings/skies/water/fog → scenery/emissive occlusion → measured presets/CRT. |
+| 2 — Spatial world | Graphics — 3D view | 15 | Depth/elevation foundation → low walls and stairs/ramps → **horizon country: hills, mountain ranges and cliff faces** → ceilings/skies/water/fog → scenery/emissive occlusion → **modern look: resolution presets, colour grade, bloom, detailed artwork** → measured presets/CRT. Dynamic weather was delivered ahead of this phase; walkable hills, mountains and cliffs are the elevation milestone at the head of it. |
 | 3 — Combat life | Animation — enemies and creatures; first person | 17 | Species/action sheets → hit/detect/death/boss phases → first-person draw/holster/casting/interaction sequences. |
 | 4 — Living world | Animation — companions and NPCs; world | 18 | Companion reactions/abilities → routines/work/wildlife → weather/scenery/fire/gates/collapse effects with safe collision. |
 | 5 — Illustrated interface | Graphics — menus and screens | 10 | Frames/fonts/credits → inventory icons/final paper doll → portraits/log/automap → loading/death/ending illustrations. |
@@ -35,18 +35,21 @@ Every phase must retain the security regression tests and save/load behavior. Re
 
 ### Graphics — 3D view
 - [~] Five-angle enemies: front/front-side/side/back-side/back, mirror opposite views. First pass is a Proctor pixel-art pilot; remaining species and final painted directional action sheets are pending.
+- [~] Horizon country: layered hill, mountain-range and cliff-shoulder silhouettes per outdoor map, with lumpy crests, snow caps, a sun and moon that cross the sky, drawn cloud cover and per-layer aerial perspective. **Visual only so far**: these ridges are distant scenery a player can see but not walk on, and they are not yet collision, terrain or picking.
+- [ ] Walkable hills, mountains and cliff faces: height-mapped terrain where slopes, ridges and cliff edges are real ground the player can climb, skirt or fall from, with per-pixel depth, collision, picking and the automap agreeing on every height.
 - [ ] Variable-height low walls, tall towers and stepped rooftops; correct occlusion behind low walls.
 - [ ] Stairs, ramps, raised platforms: Belfry and quarry terrace traversal with elevation-aware collision.
 - [ ] Painted Cloister ceilings, tavern beams and cave rock ceilings (existing texture support is only a foundation).
-- [ ] Area sky panoramas, drifting clouds, night stars and Part Three Kestrel flyovers.
+- [~] Sky: sun and moon bodies with dawn/dusk glow, drifting cloud layers driven by weather, and a sky that grades itself by hour. Painted area panoramas, night stars and Part Three Kestrel flyovers remain to do.
 - [ ] Water sky/building reflections and step-driven ripples in Whisper-Grove.
 - [~] Light-glass emissive highlights and nearby wall light: Kaelen, shards and glass lamps. Light occlusion and dedicated arm masks remain later work.
-- [ ] Ground-hugging Spectral Woods mist and torch-driven interior darkness.
+- [~] Ground-hugging mist now arrives with the weather (low drifting bands, distance haze, and Spectral Woods climates that favour it). Torch-driven interior darkness and permanent area-level mist remain to do.
 - [ ] Higher-detail close-up wall artwork with asset-resolution and memory budgets.
 - [ ] Moss, cracks, scorch marks, posters and Synod notices as seeded wall detail layers.
 - [ ] More barrels, crates, carts, broken statues, graves and bones, placed without blocking routes.
 - [ ] Swaying, player-reactive grass and reeds.
 - [ ] Geographic landmark placement: Mausoleum tower across Deep Woods and Oakhaven chapel beyond Hedge (baseline silhouettes already exist).
+- [ ] Modern look baseline: higher internal render resolution with clean upscaling (the view is still 320x150 stretched), softer depth-graded fog, bloom on lamps and glass, richer sky colour grades, and higher-detail wall artwork at close range.
 - [ ] Low/medium/high sharpness, view distance and particle presets; measure each before tuning defaults.
 - [ ] Refine optional CRT scanlines and curvature; retain a clean unfiltered setting.
 
@@ -152,6 +155,16 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
 - [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Dynamic weather and horizon country pass verification
+- `js/weather.js` owns the sky: six states (clear, overcast, rain, storm, mist, snow) with sight, hearing, haze, darkness, wind, wetness and cloud per state, and a climate table per region so the Spectral Woods sit in mist and the Deep Woods see more snow. The old four-state timer in `js/upgrades.js` now delegates to it, and `UPG.weather`, `UPG.weatherT` and `UPG.weatherFx` are written every tick, so anything that still reads or sets them - including existing perception code, captures and tests - keeps working unchanged.
+- Weather is the world's, not the view's: state and remaining hours live in the save (`weather: { s, left }`), older saves open clear, hostile states are refused and hostile durations are clamped to 24 hours. It rolls on the world clock through `Weather.advance` in `passHours`, so resting, travelling and serving a sentence all take hours off the sky, and a real-time trickle of one hour per fifty seconds turns it over during play.
+- Gameplay, all hung off the same state: perception ranges scale with sight and hearing (mist hides you at 0.5, a storm covers your noise at 0.45 hearing), world-map journeys take up to 12% longer and are up to 35% riskier in a storm, hunger drains 15% faster in rain or storm while outdoors (indoors it does not), running costs more fatigue in the wet, and the status line and character sheet name the sky, its strength and its remaining minutes.
+- The look: `Engine.setWeather` bends air, light, cloud and one bright frame of lightning without touching map data, so the same save renders sunlit or storm-lit; the renderer draws a sun and moon that cross the sky behind the ridges, a cloud layer that thickens and races with the weather, and a weather overlay of slanted rain, ground splashes, drifting mist bands and blowing snow that declines to draw indoors.
+- Hills, mountains and cliffs arrive as horizon country: `LANDMARKS` gained named ridges with lumpy crests, snow caps, `far` aerial perspective and per-layer colours for the outdoor maps, drawn before the ridges resolve and mixed by time and weather. They are scenery, not ground - walking on them needs the Phase 2 elevation renderer, and the roadmap now carries that as an explicit milestone.
+- Measured cost, not assumed: 200 renders per state in headless Chromium give 1.92 ms clear, 1.91 ms storm and 1.77 ms mist per frame in the same scene, so the whole modern sky pass is inside measurement noise of the pre-existing renderer.
+- The new `test/weather.test.js` covers the six states and their meanings, per-region climates and the fallback, every state reaching the renderer and the legacy hooks, the old `fog` name, hand-held skies and their release, clock-driven rolls, save/load, older saves, hostile skies, the status line, the character sheet, journey time and risk, hunger in the wet versus indoors, the overlay being drawn outdoors and not indoors, and a compact-layout check. The needs and travel suites now hold a clear sky, because hunger and road maths are their subject and weather has its own suite; that isolates the system under test rather than weakening any assertion.
+- Not done, and left in the roadmap: walkable elevation (hills, mountains, cliff faces with slopes and falling), painted area panoramas and night stars, torch-driven interior darkness, resolution presets and bloom, and weather-aware NPC behaviour beyond detection ranges. Human visual review of the new skies and physical-controller hardware remain unverified.
 
 ### Hardcore pass verification
 - The mode is a saved boolean on the run (`player.hardcore`), off for new travellers and older saves, chosen from the Options panel behind an explicit confirmation. Once on it is one-way for that run: the button is disabled and clicking it only prints why.

@@ -1694,6 +1694,7 @@ function renderCharacter() {
   <div>Armour Rating ${armorRating()} · armour noise ${armorNoise() > 0 ? '+' : ''}${armorNoise().toFixed(1)} · ${currentWeapon().name}</div>
   <p class="muted">${disguiseStatus()}</p>
   ${needsLine() ? `<p class="muted">${needsLine()}</p>` : ''}
+  ${typeof Weather !== 'undefined' && Weather.state !== 'clear' ? `<p class="muted">Sky: ${weatherLine()} · ${Math.max(1, Math.round(Weather.left * 60))} minutes of it left${Weather.state === 'storm' || Weather.state === 'rain' ? ', and the road is slow and loud' : ''}</p>` : ''}
   <p class="muted">Kills ${p.kills} · Names kept ${G.ledger.length} · ${p.gold} sovereigns<br>Oakhaven bounty ${crimeState().bounty} · Assaults ${crimeState().assaults} · Escapes ${crimeState().escapes}<br>Jail served ${crimeState().jailHours} hours${crimeState().custody ? ' · In custody' : ''}${crimeState().evidence ? ' · Gear held in watch-house evidence' : ''}</p></div></div>`, 'char');
   $('#x').onclick = () => { closeModal(); G.state = 'play'; };
 }
@@ -1757,13 +1758,15 @@ function drainNeeds(hours) {
   if (!needsOn() || !(hours > 0)) return;
   const p = G.player, mounted = typeof horseActive === 'function' && horseActive();
   const wasHungry = p.hunger < 20, wasWeary = p.sleep < 20;
-  p.hunger = clamp(p.hunger - hours * (mounted ? 1 : 2), 0, 100);
+  // Walking into weather costs more than walking in still air.
+  const wx = (typeof Weather !== 'undefined' && G.map && G.map.outdoor) ? Weather.exposure() : 1;
+  p.hunger = clamp(p.hunger - hours * (mounted ? 1 : 2) * wx, 0, 100);
   p.sleep = clamp(p.sleep - hours * 1.4, 0, 100);
   if (!wasHungry && p.hunger < 20) msg('Your stomach has been empty a while. You are hungry.', 'warn', 4200);
   if (!wasWeary && p.sleep < 20) msg('You have been awake too long. Your eyes keep closing.', 'warn', 4200);
   if (needsSpent()) p.fat = Math.min(p.fat, fatCap());
 }
-function passHours(hours) { G.tod += hours / 24; while (G.tod >= 1) { G.tod -= 1; G.day++; } tickCustody(hours); drainNeeds(hours); }
+function passHours(hours) { G.tod += hours / 24; while (G.tod >= 1) { G.tod -= 1; G.day++; } tickCustody(hours); drainNeeds(hours); if (typeof Weather !== 'undefined') Weather.advance(hours); }
 function timeName() { const h = G.tod * 24; return h < 5 ? 'the dead hour' : h < 7 ? 'before dawn' : h < 12 ? 'morning' : h < 17 ? 'afternoon' : h < 20 ? 'dusk' : 'night'; }
 function renderMap() {
   const m = G.map; const cw = 4; const html = `<h2>${m.name}</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">What you have walked. ${m.outdoor ? 'North is up.' : 'The automap remembers where the lamps were.'}</p><canvas id="amap" width="${m.w * cw}" height="${m.h * cw}" style="width:100%;max-height:70cqh;object-fit:contain;image-rendering:pixelated;background:#0a0806;border:2px solid #0b0806"></canvas>`;
@@ -2070,7 +2073,7 @@ function update(dt) {
   if (moving) {
     const pace = Math.min(1, Math.hypot(vel.x, vel.y) / Math.max(0.1, spd * Math.max(mag, 0.3)));
     G.bobPhase += dt * (running ? 13 : 9) * pace; c.bob = Math.sin(G.bobPhase) * 2 * pace;
-    if (running) p.fat = Math.max(0, p.fat - dt * 3);
+    if (running) p.fat = Math.max(0, p.fat - dt * 3 * ((typeof Weather !== 'undefined' && G.map.outdoor) ? Weather.exposure() : 1));
     if (G.time - G.lastStep > (running ? 0.28 : 0.45) / Math.max(0.5, mag)) { G.lastStep = G.time; Audio_.sfx.step(); }
   } else { c.bob *= Math.exp(-13 * dt); p.fat = Math.min(fatCap(), p.fat + dt * 2 * needsRecovery()); }
   G.map.visited[(c.y | 0) * G.map.w + (c.x | 0)] = 1;
@@ -2194,7 +2197,7 @@ function drawHUD() {
   for (const [lab, a] of pts) { let rel = normAng(a - heading); if (Math.abs(rel) > 1.6) continue; const x = cx0 + cw / 2 + rel / 1.6 * (cw / 2); ctx.fillStyle = lab.length === 1 ? '#d9a441' : '#7a6a58'; ctx.fillText(lab, x, y0 + 12); for (let t = 1; t < 4; t++) { ctx.fillStyle = '#4a3a2a'; const rx = cx0 + cw / 2 + (rel + t * 0.196) / 1.6 * (cw / 2); ctx.fillRect(rx, y0 + 16, 1, 2); } }
   ctx.restore(); ctx.fillStyle = '#fff1c8'; ctx.fillRect(cx0 + cw / 2, y0 + 5, 1, 14);
   // right-bottom: map name & level
-  ctx.textAlign = 'right'; ctx.fillStyle = '#b8a883'; ctx.font = '7px "Alegreya", serif'; ctx.fillText(G.map.name, 314, y0 + 27);
+  ctx.textAlign = 'right'; ctx.fillStyle = '#b8a883'; ctx.font = '7px "Alegreya", serif'; ctx.fillText(G.map.name + (G.map.outdoor && typeof Weather !== 'undefined' ? ' · ' + weatherLine() : ''), 314, y0 + 27);
   ctx.fillText(`${p.name} · Lv ${p.level} · ${p.gold} sov.`, 314, y0 + 37);
   if (p.fragments) ctx.fillText(`fragments ${p.fragments}`, 314, y0 + 46);
   ctx.textAlign = 'left';
@@ -2320,6 +2323,7 @@ function snapshotGame() {
     flags: G.flags, journal: G.journal, ledger: G.ledger, runs: G.runs,
     tod: G.tod, day: G.day, mapId: G.mapId, cam: { x: c.x, y: c.y, dir: c.dir },
     noise: G.noise, escapeTimer: G.escapeTimer, boreHold: G.boreHold || 0, boreGolems: G.boreGolems || 0, glassLock: G.glassLock, rootWard: G.rootWard,
+    weather: typeof Weather !== 'undefined' ? Weather.save() : null,
     maps,
   };
 }
@@ -2357,6 +2361,8 @@ function restoreGame(d) {
   G.player.needs = G.player.needs === true;
   G.player.hunger = isFinite(+G.player.hunger) ? clamp(+G.player.hunger, 0, 100) : 100;
   G.player.sleep = isFinite(+G.player.sleep) ? clamp(+G.player.sleep, 0, 100) : 100;
+  // Imported skies are untrusted: only known states, only sane hour counts.
+  if (typeof Weather !== 'undefined') Weather.load(d.weather);
   G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0; G.coverSuspicion = 0; G.lawGrace = 0;
   G.dead = false; G.stillT = 0; G.unwriting = false; G.murmurT = 0; G.whistleT = 0; G.attack.t = 0; G.song.t = 0; G.keys = {}; $('#msgs').innerHTML = '';
   G.maps = probe; if (G.flags.greening) G.maps.oakhaven = buildOakhaven(true);

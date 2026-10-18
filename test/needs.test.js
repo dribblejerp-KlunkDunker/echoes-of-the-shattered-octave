@@ -27,6 +27,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       window.needsBase = JSON.parse(JSON.stringify(snapshotGame()));
       window.resetNeeds = () => {
         restoreGame(JSON.parse(JSON.stringify(needsBase))); G.state = 'play';
+        Weather.hold('clear');   // hunger maths is measured in still air; weather has its own suite
         G.opts.touch = 'off'; setTouchMode(false); UPG.tutorial = false; G.keys = {}; $('#msgs').innerHTML = '';
       };
       // --- off by default, and off means nothing drains

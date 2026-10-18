@@ -110,6 +110,7 @@ const Audio_ = (() => {
     bird: () => { const f = 1800 + Math.random() * 900; tone(f, 0.09, 0.05, 'sine', f * 1.3); setTimeout(() => tone(f * 1.15, 0.08, 0.04, 'sine', f * 0.9), 140); },
     rat: () => { noiseBurst(0.07, 0.06, 2600, 2, 'bandpass'); setTimeout(() => noiseBurst(0.05, 0.05, 3000, 2, 'bandpass'), 110); },
     rain: () => noiseBurst(1.6, 0.06, 1400, 0.4, 'lowpass'),
+    thunder: () => { noiseBurst(2.2, 0.42, 180, 0.6, 'lowpass'); tone(48, 1.8, 0.22, 'triangle', 26); },
     swing: () => noiseBurst(0.18, 0.2, 900, 0.5, 'bandpass'),
     hit: () => { noiseBurst(0.12, 0.35, 250, 0.8, 'lowpass'); tone(90, 0.15, 0.2, 'triangle', 50); },
     glasshit: () => { tone(528, 0.5, 0.18, 'sine'); tone(1056, 0.4, 0.06, 'sine'); noiseBurst(0.1, 0.2, 2000, 1); },
