@@ -106,9 +106,15 @@ save.player.houseStorage = [{ id: '<img onerror=1>', n: '</td><script>' }, { id:
 save.player.titles = ['"><img src=x onerror=alert(4)>', 'Keeper of Names'];
 save.player.activeTitle = '"><img src=x onerror=alert(4)>';
 save.player.injuries = ['<script>alert(5)</script>'];
+// Body handling is runtime-only: imports cannot create interactive corpses or callbacks.
+save.dragBody = { corpse: true, stashedIn: { label: '<img onerror=1>' } };
+save.maps.oakhaven.extra.push({ kind: 'deco', corpse: true, bodyCover: true, use: 'body_cover', sprite: 'proctor', x: 23.5, y: 22.5 });
+save.maps.oakhaven.extra.push({ kind: 'enemy', type: 'proctor', x: 24.5, y: 22.5, corpse: true, bodyCover: true, stashedIn: '<img onerror=1>', bodyFound: true, dragReported: true });
 
 T.restoreGame(JSON.parse(JSON.stringify(save)));
 const p = T.G.player;
+assert(!T.G.dragBody && !T.G.ents.some(e => e.corpse || e.stashedIn || e.bodyFound || e.dragReported), 'imported body references and concealment metadata ignored');
+assert(T.G.ents.filter(e => e.bodyCover).length === 1, 'import cannot create fake body recesses or corpse decorations');
 
 // ---- 1. custom songs are strictly schema-validated ----
 assert(Object.keys(p.customSongs).every(id => /^[A-Za-z0-9_ -]{1,32}$/.test(id)), 'unsafe custom song ids rejected');

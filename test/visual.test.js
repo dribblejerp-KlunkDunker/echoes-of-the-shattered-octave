@@ -576,6 +576,160 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       G.state = 'panel'; restoreGame(throwBaseline); G.opts.touch = 'auto'; setTouchMode(false); G.state = 'panel';
     });
     console.log('PASS distractions: impacts, inventory, investigation, threat priority, controls and reload', distractions);
+    const bodies = await page.evaluate(() => {
+      function check(ok, label) { if (!ok) throw new Error(label); }
+      window.bodyBaseline = JSON.parse(JSON.stringify(snapshotGame()));
+      for (const id of ['oakhaven', 'quarry', 'cloister']) {
+        const m = G.maps[id], recess = m.entities.find(e => e.bodyCover);
+        check(recess && !recess.solid && !m.isBlocked(recess.x | 0, recess.y | 0), id + ' recess is accessible nonblocking floor');
+        check(m.entities.indexOf(recess) === m.baseCount - 1, id + ' recess appends after historical entities');
+      }
+      const map = new GameMap('oakhaven', 'Body fixture', 32, 24, { floor: 't_flag', ceil: 't_stone', fogDist: 20, spawn: { x: 5.5, y: 10.5, dir: 0 } });
+      map.border('t_stone'); G.maps.oakhaven = map; loadMap('oakhaven'); G.state = 'panel';
+      G.noise = 1; G.player.crime = {}; G.keys = {}; G.vel.x = G.vel.y = 0; G.player.level = 50;
+      const source = hydrate(map.enemy('proctor', 6.5, 10.5));
+      const cover = map.deco('crates', 8.5, 10.5, { solid: false, bodyCover: true, use: 'body_cover' });
+      map.baseCount = map.entities.length;
+      const kills = G.player.kills, xp = G.player.xp;
+      const random = Math.random; Math.random = () => 0;
+      try { killEnemy(source, false); } finally { Math.random = random; }
+      const body = G.ents.find(e => e.deathArt); window.testBody = body; window.bodyFixture = map;
+      check(!bodyReachable(body), 'collapsing body cannot be dragged'); animDying(body, 2);
+      const loot = G.ents.find(e => e.kind === 'item'), lootPosition = { x: loot.x, y: loot.y };
+      check(bodyTarget() === body && body.nopick && !body.solid, 'settled corpse is reachable without changing engine picking or collision');
+      Engine.cam.dir = Math.PI; check(!bodyTarget(), 'body selection requires facing'); Engine.cam.dir = 0;
+      map.set(6, 10, WALL('t_stone')); check(!bodyTarget(), 'body selection cannot reach through walls'); map.set(6, 10, null);
+      G.state = 'play'; openBody(); check(document.querySelector('#body-hide').disabled, 'conceal action disabled without nearby recess'); document.querySelector('#body-leave').click();
+      check(!G.dragBody && G.player.kills === kills + 1 && G.player.xp === xp + ENEMIES.proctor.xp, 'inspection and cancel grant no rewards');
+      openBody(); document.querySelector('#body-drag').click();
+      check(G.dragBody === body && !bodyCover(body), 'drag begins without a hiding place in range');
+      // Slow walking and no sprint: compare identical movement inputs.
+      const simulate = drag => {
+        Object.assign(Engine.cam, { x: 5.5, y: 10.5, dir: Math.PI / 2 });
+        Object.assign(body, { x: 6.5, y: 10.5 }); G.dragBody = drag ? body : null;
+        G.vel.x = G.vel.y = 0; G.keys = { w: true, shift: true }; G.touch.fx = G.touch.fy = 0; G.touch.run = false;
+        G.state = 'play'; const fat = G.player.fat;
+        for (let i = 0; i < 8; i++) update(0.016);
+        const result = { distance: Engine.cam.y - 10.5, fat: fat - G.player.fat };
+        G.state = 'panel'; G.keys = {}; G.vel.x = G.vel.y = 0; return result;
+      };
+      const walking = simulate(true), sprinting = simulate(false);
+      check(walking.distance < sprinting.distance * 0.4 && walking.fat <= 0, 'drag slows movement and prevents sprint fatigue');
+      Object.assign(Engine.cam, { x: 7.5, y: 10.5, dir: Math.PI }); Object.assign(body, { x: 6.5, y: 10.5 });
+      G.dragBody = body; tickBodies(0); check(body.x > 6.5 && body.x < 7.5, 'body follows movement with trailing gap');
+      Object.assign(body, { x: 6.5, y: 10.5 }); Engine.cam.x = 7.9;
+      const blocker = map.deco('crates', 7.25, 10.5, { radius: 0.3 }); tickBodies(0);
+      check(body.x < 6.8, 'solid prop blocks dragging without teleporting'); blocker.hidden = true;
+      map.set(7, 10, DOOR({})); tickBodies(0); check(!G.dragBody && body.x < 7, 'closing door releases drag on original side'); map.set(7, 10, null);
+      map.floorTextures = ['t_flag', 't_cobble', 't_water']; map.floorCells = new Uint8Array(map.w * map.h); map.setFloor(7, 10, 2);
+      G.dragBody = body; tickBodies(0); check(body.x < 6.8, 'body cannot be dragged into water even when player can swim'); map.setFloor(7, 10, 0);
+      Object.assign(Engine.cam, { x: 7.5, y: 10.5, dir: Math.PI }); Object.assign(body, { x: 7, y: 10.5 });
+      G.state = 'play'; openBody(); document.querySelector('#body-hide').click();
+      check(body.hidden && body.stashedIn === cover && !G.dragBody && body.x === cover.x, 'concealment uses nearby recess');
+      const watcher = hydrate(map.enemy('proctor', 12.5, 10.5, { guard: true }));
+      G.bodyScanT = 0; tickBodies(0.25); check(!body.bodyFound && !watcher.investigation, 'concealed body cannot raise alarm');
+      Engine.cam.dir = 0; G.state = 'play'; openBody(); document.querySelector('#body-drag').click();
+      check(!body.hidden && !body.stashedIn && G.dragBody === body, 'concealed body can be recovered during visit');
+      G.dragBody = null; Engine.cam.x = 2.5;
+      const ally = hydrate(map.enemy('legionnaire', 15.5, 10.5, { guard: true }));
+      const active = hydrate(map.enemy('proctor', 13.5, 12.5)); active.state = 'chase';
+      const passive = hydrate(map.enemy('proctor', 12.5, 13.5, { passive: true }));
+      const hidden = hydrate(map.enemy('proctor', 12.5, 14.5)); hidden.hidden = true;
+      const stunned = hydrate(map.enemy('proctor', 11.5, 11.5)); stunned.stun = 4;
+      const boss = hydrate(map.enemy('wearer', 9.5, 10.5));
+      check(!bodyPatrol(boss), 'bosses do not join body patrol alarms'); boss.hidden = true;
+      for (let y = 2; y < 22; y++) map.set(10, y, WALL('t_stone')); G.bodyScanT = 0; tickBodies(0.25);
+      check(!body.bodyFound, 'occluded and stunned patrols cannot discover body');
+      for (let y = 2; y < 22; y++) map.set(10, y, null);
+      G.bodyScanT = 0; tickBodies(0.25);
+      check(body.bodyFound && watcher.investigation.source === 'body' && ally.state === 'investigate', 'visible body raises local ally investigation');
+      check(active.state === 'chase' && passive.state === 'passive' && !hidden.investigation && !stunned.investigation, 'alarm preserves combat and listener exclusions');
+      const before = watcher.x; enemyUpdate(watcher, 0.1);
+      check(watcher.x < before && watcher.state !== 'chase', 'discovery searches body, not unseen player');
+      watcher.investigation.left = 3; G.bodyScanT = 0; tickBodies(0.25);
+      check(watcher.investigation.left === 3 && crimeState().bounty === 0, 'one alarm per body, no bounty from discovery alone');
+      G.player.inv.push({ id: 'empty_bottle', n: 2 }); G.throwReady = 0; G.state = 'play'; throwDistraction('empty_bottle'); G.state = 'panel';
+      check(watcher.investigation.source === 'body', 'distractions cannot override a body alarm');
+      Engine.cam.x = watcher.x - 3; enemyUpdate(watcher, 0.016);
+      check(watcher.state === 'chase' && !watcher.investigation, 'seeing player overrides body search');
+      watcher.hidden = ally.hidden = active.hidden = passive.hidden = stunned.hidden = true;
+      const guard = hydrate(map.npc('townsman', 11.5, 10.5, { lawGuard: true }));
+      Object.assign(Engine.cam, { x: 7.5, y: 10.5, dir: 0 }); G.dragBody = body;
+      G.bodyScanT = 0; tickBodies(0.25); check(crimeState().bounty === 20 && body.dragReported, 'constable witnessing drag reports one bounty');
+      G.bodyScanT = 0; tickBodies(0.25); check(crimeState().bounty === 20, 'repeated sight cannot duplicate bounty');
+      guard.hidden = true; G.player.crime = {};
+      check(loot.x === lootPosition.x && loot.y === lootPosition.y && !loot.dead, 'dragging never moves or consumes independent loot');
+      const saved = JSON.parse(JSON.stringify(snapshotGame()));
+      check(!saved.maps.oakhaven.extra.some(e => e.kind === 'deco' && e.sprite === body.sprite) && !('dragBody' in saved) && !JSON.stringify(saved.maps.oakhaven).includes('stashedIn'), 'body refs, concealment and alarm state are not serialized');
+      G.state = 'play'; openBody(); document.querySelector('#body-hide').click();
+      check(body.hidden && body.stashedIn, 'concealed remains prepared for departure cleanup');
+      G.state = 'play'; openBody(); const stale = document.querySelector('#body-drag');
+      loadMap('tavern'); stale.click(); check(!G.dragBody, 'stale body action cannot start dragging in another map');
+      check(!map.entities.some(e => e.corpse || e.transient), 'departure removes exposed or concealed corpses');
+      const legacy = JSON.parse(JSON.stringify(bodyBaseline));
+      for (const id of ['oakhaven', 'quarry', 'cloister']) legacy.maps[id].ents.pop();
+      restoreGame(legacy); G.state = 'panel';
+      check(['oakhaven', 'quarry', 'cloister'].every(id => G.maps[id].entities.some(e => e.bodyCover && !e.dead && !e.hidden)), 'older saves receive appended recesses');
+      check(!G.dragBody && !G.ents.some(e => e.corpse), 'reload clears drag and visual corpses');
+      // Real authored map lifecycle with a killed enemy and detached loot.
+      loadMap('quarry'); G.state = 'panel'; const authored = G.ents.find(e => e.kind === 'enemy');
+      killEnemy(authored, false); const realBody = G.ents.find(e => e.deathArt); animDying(realBody, 2);
+      G.dragBody = realBody; const realSaved = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(realSaved); G.state = 'panel';
+      check(!G.dragBody && !G.ents.some(e => e.corpse) && G.ents.some(e => e.kind === 'enemy' && e.dead), 'authored save/load keeps death without body resurrection');
+      restoreGame(bodyBaseline); G.state = 'panel';
+      // Controls use authored art in a deterministic indoor fixture.
+      G.maps.oakhaven = map; loadMap('oakhaven', { x: 7.5, y: 10.5, dir: 0 });
+      map.entities.forEach(e => { if (e.kind === 'npc' || e.kind === 'enemy' && !e.dead) e.hidden = true; });
+      const visual = animSpawnDeath(hydrate({ kind: 'enemy', type: 'proctor', x: 8.5, y: 10.5 })); animDying(visual, 2);
+      window.controlBody = visual; G.state = 'play'; G.keys = {}; G.vel.x = G.vel.y = 0; G.tod = 0.5;
+      return { dragCollision: true, concealRecover: true, oneAlarm: true, savedDeaths: true };
+    });
+    await page.keyboard.press('g'); await page.locator('#body-drag').waitFor({ state: 'visible' });
+    await page.screenshot({ path: '/tmp/octave-body-panel.png' });
+    await page.setViewportSize({ width: 640, height: 400 });
+    assert.equal(await page.evaluate(() => {
+      const panel = document.querySelector('#modal-panel'), button = document.querySelector('#body-hide');
+      const bounds = panel.getBoundingClientRect();
+      button.scrollIntoView({ block: 'nearest' });
+      const rect = button.getBoundingClientRect();
+      return bounds.left >= 0 && bounds.right <= innerWidth && panel.scrollWidth <= panel.clientWidth + 1 && rect.top >= 0 && rect.bottom <= innerHeight;
+    }), true, 'compact body panel remains readable and actions reachable');
+    await page.screenshot({ path: '/tmp/octave-body-small.png' });
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.keyboard.press('Escape'); assert.equal(await page.evaluate(() => !!G.dragBody), false, 'keyboard inspection/cancel is free');
+    await page.keyboard.press('g'); await page.keyboard.press('Enter');
+    assert.equal(await page.evaluate(() => G.dragBody === controlBody), true, 'keyboard starts drag');
+    await page.keyboard.press('g'); await page.keyboard.press('h');
+    assert.equal(await page.evaluate(() => !!controlBody.stashedIn && controlBody.hidden), true, 'keyboard conceals');
+    await page.evaluate(() => { G.opts.touch = 'on'; setTouchMode(true); controlsTick(); });
+    assert.equal(await page.evaluate(() => {
+      const game = document.querySelector('#game').getBoundingClientRect();
+      return [...document.querySelectorAll('#touchui button:not([hidden])')].every(el => {
+        const rect = el.getBoundingClientRect(); return rect.top >= game.top && rect.bottom <= game.bottom;
+      });
+    }), true, 'all touch actions stay within the game frame with Body visible');
+    await page.screenshot({ path: '/tmp/octave-body-touch.png' });
+    await page.locator('#t-body').tap(); await page.locator('#body-drag').tap();
+    assert.equal(await page.evaluate(() => G.dragBody === controlBody && !controlBody.hidden), true, 'touch recovers body');
+    await page.locator('#t-body').tap(); await page.locator('#body-drag').tap();
+    assert.equal(await page.evaluate(() => !!G.dragBody), false, 'touch drops body');
+    await page.evaluate(() => {
+      const original = navigator.getGamepads;
+      const gp = { connected: true, axes: [0, 0, 0, 0], buttons: Array.from({ length: 18 }, () => ({ pressed: false })) };
+      navigator.getGamepads = () => [gp]; controlsTick();
+      const press = i => { gp.buttons[i].pressed = true; controlsTick(); gp.buttons[i].pressed = false; controlsTick(); };
+      const check = (ok, label) => { if (!ok) throw new Error(label); };
+      try {
+        press(10); check(G.openPanel === 'body', 'left-stick opens body actions'); press(0); check(G.dragBody === controlBody, 'controller A drags');
+        press(10); press(2); check(controlBody.hidden && !G.dragBody, 'controller X conceals');
+        press(10); press(1); check(!G.openPanel && controlBody.hidden, 'controller B cancels');
+        G.state = 'panel'; openBody(); check(!G.openPanel, 'paused state cannot open body actions');
+      } finally { navigator.getGamepads = original; }
+      G.state = 'play'; openBody(); document.querySelector('#body-drag').click();
+      die('body regression'); check(!G.dragBody, 'player death releases body');
+      restoreGame(bodyBaseline); G.opts.touch = 'auto'; setTouchMode(false); G.state = 'panel';
+    });
+    console.log('PASS bodies: collision, conceal/recover, local alarms, bounties, controls and lifecycle', bodies);
     await page.evaluate(() => {
       loadMap('catacombs', { x: 6.5, y: 5.1, dir: Math.PI / 2 }); G.state = 'panel';
       const e = G.ents.find(e => e.trapType === 'tripwire'); useDeco(e);
@@ -675,6 +829,9 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       if (!plate || !m1 || G.map.isBlocked(plate.x | 0, plate.y | 0) || G.map.isBlocked(m1.x | 0, m1.y | 0)) {
         throw new Error('catacombs plate and mirrors placed on accessible floor');
       }
+      // Leaving a panel briefly resumes passive regeneration. Saturate the
+      // fixture resources so frame scheduling cannot change this no-cost check.
+      G.player.voice = G.player.voiceMax; G.player.fat = G.player.fatMax;
       window.puzzleBefore = { shards: G.count('shard'), voice: G.player.voice, fat: G.player.fat };
       G.ents.forEach(o => { o._screen = null; });
       interact();

@@ -1582,7 +1582,7 @@ function lesson(id, text) {
   }
 
   // -- gamepad -------------------------------------------------------
-  const GBTN = { a: 0, b: 1, x: 2, y: 3, lb: 4, rb: 5, lt: 6, rt: 7, start: 9, rstick: 11, dup: 12, ddown: 13, dleft: 14, dright: 15 };
+  const GBTN = { a: 0, b: 1, x: 2, y: 3, lb: 4, rb: 5, lt: 6, rt: 7, start: 9, lstick: 10, rstick: 11, dup: 12, ddown: 13, dleft: 14, dright: 15 };
   function gamepadTick() {
     const pads = navigator.getGamepads ? navigator.getGamepads() : null;
     let gp = null;
@@ -1606,6 +1606,13 @@ function lesson(id, text) {
     const btn = (i) => !!(gp.buttons[i] && gp.buttons[i].pressed);
     const edge = (i) => btn(i) && !prev[i];
     const play = G.state === 'play' && !G.dead;
+    if (G.openPanel === 'body') {
+      if (edge(GBTN.a)) $('#body-drag').click();
+      else if (edge(GBTN.x)) $('#body-hide').click();
+      else if (edge(GBTN.b) || edge(GBTN.start)) $('#body-leave').click();
+      for (let i = 0; i < 32; i++) prev[i] = btn(i);
+      G.touch.fx = G.touch.fy = 0; return;
+    }
     if (G.openPanel === 'distractions') {
       if (edge(GBTN.a)) $('#throw-pebble').click();
       else if (edge(GBTN.x)) $('#throw-empty_bottle').click();
@@ -1662,6 +1669,7 @@ function lesson(id, text) {
       }
       if (edge(GBTN.lb)) cycleWeapon(-1);
       if (edge(GBTN.rb)) cycleWeapon(1);
+      if (edge(GBTN.lstick)) openBody();
       if (edge(GBTN.rstick)) openDistractions();
       if (btn(GBTN.lt)) triggerBlock();
       if (edge(GBTN.rt)) attack('thrust');
@@ -1739,6 +1747,24 @@ function lesson(id, text) {
     if (maps.cloister) {
       maps.cloister.deco('chest', 16.5, 12.5, { solid: false, scale: 0.55, use: 'note_reliquary', label: 'Three-voice reliquary — Root, Fifth, Third' });
       maps.cloister.baseCount = maps.cloister.entities.length;
+    }
+    // Nonblocking concealment points append last: never reorder saved entities.
+    for (const id of ['oakhaven', 'quarry', 'cloister']) {
+      const m = maps[id]; if (!m || (id === 'oakhaven' && G.flags.greening)) continue;
+      const anchor = id === 'oakhaven' ? { x: 25, y: 28 } : { x: m.spawn.x + 4, y: m.spawn.y };
+      const spots = [];
+      for (let y = 2; y < m.h - 2; y++) for (let x = 2; x < m.w - 2; x++) {
+        if (m.isBlocked(x, y) || m.get(x, y) || dist2(x + 0.5, y + 0.5, m.spawn.x, m.spawn.y) < 9) continue;
+        if (m.entities.some(e => !e.hidden && !e.dead && dist2(x + 0.5, y + 0.5, e.x, e.y) < 2.25)) continue;
+        if (m.triggers.some(t => dist2(x + 0.5, y + 0.5, t.x, t.y) < (t.r + 1) ** 2)) continue;
+        if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => m.get(x + dx, y + dy)?.door)) continue;
+        spots.push({ x: x + 0.5, y: y + 0.5 });
+      }
+      spots.sort((a, b) => dist2(a.x, a.y, anchor.x, anchor.y) - dist2(b.x, b.y, anchor.x, anchor.y));
+      const spot = spots[0];
+      if (!spot) throw new Error('No safe body recess in ' + id);
+      m.deco('crates', spot.x, spot.y, { solid: false, scale: 0.65, bodyCover: true, use: 'body_cover', label: 'Shrouded body recess — G to conceal nearby remains', glow: 0.25 });
+      m.baseCount = m.entities.length;
     }
   }
 
