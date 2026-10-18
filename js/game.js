@@ -90,7 +90,7 @@ function newPlayer() {
   const hpMax = c.hp + Math.floor(a.Endurance / 10), voiceMax = c.voice + Math.floor(a.Willpower / 10), fatMax = a.Strength + a.Endurance;
   return { name: CREATE.name, cls: c, face: CREATE.face, attrs: a, hp: hpMax, hpMax, voice: voiceMax, voiceMax, fat: fatMax, fatMax, gold: 12, pellets: c.pellets,
     inv: [], weapons: c.weapons.slice(), weapon: 0, songs: c.songs.slice(), glass: c.glass ? 42 : 0, glassed: c.glass, fragments: c.id === 'archivist' ? 3 : 0, xp: 0, level: 1, kills: 0,
-    armor: {}, bolts: 0, horseUntil: 0 };
+    armor: {}, bolts: 0, horseUntil: 0, needs: false, hunger: 100, sleep: 100 };
 }
 // what each calling walks out of the door wearing
 const CLASS_KIT = { blade: ['a_jerkin', 'a_gloves'], cantor: ['a_gambeson', 'a_softboots'], corsair: ['a_jerkin', 'a_buckler', 'a_hobnails'], archivist: ['a_hood', 'a_gambeson'], penitent: ['a_gambeson', 'a_kettle'], quarry: ['a_jerkin', 'a_hobnails', 'a_gloves'] };
@@ -1330,8 +1330,8 @@ function pickUp(e, theftConfirmed = false) {
 function useItem(slot) {
   const it = ITEMS[slot.id], p = G.player;
   if (it.use === 'distraction') { closeModal(); G.state = 'play'; throwDistraction(slot.id); return; }
-  if (it.use === 'heal') { p.hp = Math.min(p.hpMax, p.hp + it.n); G.take(slot.id); msg('Honey, raw egg and willow-bark. You feel a little less like dying.', 'good'); }
-  else if (it.use === 'voice') { p.voice = Math.min(p.voiceMax, p.voice + it.n); G.take(slot.id); msg('The honey eases your throat.', 'good'); }
+  if (it.use === 'heal') { p.hp = Math.min(p.hpMax, p.hp + it.n); G.take(slot.id); if (needsOn()) { p.hunger = clamp(p.hunger + 35, 0, 100); msg('Honey, raw egg and willow-bark. You feel a little less like dying, and less empty.', 'good'); } else msg('Honey, raw egg and willow-bark. You feel a little less like dying.', 'good'); }
+  else if (it.use === 'voice') { p.voice = Math.min(p.voiceMax, p.voice + it.n); G.take(slot.id); if (needsOn()) { p.hunger = clamp(p.hunger + 35, 0, 100); msg('The honey eases your throat, and the hollow under your ribs.', 'good'); } else msg('The honey eases your throat.', 'good'); }
   else if (it.use === 'ammo') { const k = it.ammo || 'pellets'; p[k] = (p[k] || 0) + it.n; G.take(slot.id); msg(k === 'bolts' ? 'You fill your quiver.' : 'You load three pellets.', 'good'); }
   else if (it.armor) { if (isWorn(slot.id)) removeArmor(it.slot); else equipArmor(slot.id); }
   else if (it.weapon) { G.take(slot.id); if (!p.weapons.includes(it.weapon)) { p.weapons.push(it.weapon); msg(`You ready the ${it.name}.`, 'good'); } else { G.give(slot.id); msg('You already carry one of those. Sell the spare.', '', 2500); } }
@@ -1670,6 +1670,7 @@ function renderCharacter() {
   ${p.fragments ? `<div>Identity fragments left: ${p.fragments}</div>` : ''}
   <div>Armour Rating ${armorRating()} · armour noise ${armorNoise() > 0 ? '+' : ''}${armorNoise().toFixed(1)} · ${currentWeapon().name}</div>
   <p class="muted">${disguiseStatus()}</p>
+  ${needsLine() ? `<p class="muted">${needsLine()}</p>` : ''}
   <p class="muted">Kills ${p.kills} · Names kept ${G.ledger.length} · ${p.gold} sovereigns<br>Oakhaven bounty ${crimeState().bounty} · Assaults ${crimeState().assaults} · Escapes ${crimeState().escapes}<br>Jail served ${crimeState().jailHours} hours${crimeState().custody ? ' · In custody' : ''}${crimeState().evidence ? ' · Gear held in watch-house evidence' : ''}</p></div></div>`, 'char');
   $('#x').onclick = () => { closeModal(); G.state = 'play'; };
 }
@@ -1706,12 +1707,40 @@ function renderRest() {
 function doRest(kind) {
   const p = G.player; const hours = kind === 'self' ? 4 : 8;
   passHours(hours);
-  if (kind === 'self') { p.hp = Math.min(p.hpMax, p.hp + p.hpMax * 0.5); p.voice = Math.min(p.voiceMax, p.voice + p.voiceMax * 0.5); p.fat = p.fatMax; msg(`You rest four hours with your back to the wall and your hand on your weapon.`, 'good'); if (G.map.danger > 0 && Math.random() < 0.35) { msg('Something came to the fire while you dozed.', 'bad'); spawnHound(); spawnHound(); } }
-  else if (kind === 'lamp') { p.hp = p.hpMax; p.voice = p.voiceMax; p.fat = p.fatMax; msg('You sleep eight hours under the reed-whistle. Nothing comes.', 'good'); }
-  else { p.hp = p.hpMax; p.voice = p.voiceMax; p.fat = p.fatMax; if (G.map.siphoned) { p.hpMax = Math.max(8, p.hpMax - 3); p.hp = p.hpMax; msg('You slept like the dead, and the dead do not keep the Narrow. Something leaned in and took a little. You are a little less than you were.', 'bad', 8000); } else { msg('You sleep deeply, and snore, and in the morning the hush-lamp has burned out and nobody will say what they heard.', 'warn'); if (G.map.danger > 0) { spawnHound(); } } }
+  // A meal and a sleep are what a long road actually costs; hunger limits how much rest gives back.
+  const gain = needsRecovery(), cap = fatCap();
+  if (needsOn()) { p.sleep = 100; p.hunger = clamp(p.hunger + hours * 2, 0, 100); }
+  if (kind === 'self') { p.hp = Math.min(p.hpMax, p.hp + (p.hpMax - p.hp) * 0.5 * gain); p.voice = Math.min(p.voiceMax, p.voice + (p.voiceMax - p.voice) * 0.5 * gain); p.fat = Math.min(cap, Math.max(p.fat, p.fatMax)); msg(`You rest four hours with your back to the wall and your hand on your weapon.`, 'good'); if (G.map.danger > 0 && Math.random() < 0.35) { msg('Something came to the fire while you dozed.', 'bad'); spawnHound(); spawnHound(); } }
+  else if (kind === 'lamp') { p.hp = Math.min(p.hpMax, p.hp + (p.hpMax - p.hp) * gain); p.voice = Math.min(p.voiceMax, p.voice + (p.voiceMax - p.voice) * gain); p.fat = cap; msg('You sleep eight hours under the reed-whistle. Nothing comes.', 'good'); }
+  else { p.hp = Math.min(p.hpMax, p.hp + (p.hpMax - p.hp) * gain); p.voice = Math.min(p.voiceMax, p.voice + (p.voiceMax - p.voice) * gain); p.fat = cap; if (G.map.siphoned) { p.hpMax = Math.max(8, p.hpMax - 3); p.hp = p.hpMax; msg('You slept like the dead, and the dead do not keep the Narrow. Something leaned in and took a little. You are a little less than you were.', 'bad', 8000); } else { msg('You sleep deeply, and snore, and in the morning the hush-lamp has burned out and nobody will say what they heard.', 'warn'); if (G.map.danger > 0) { spawnHound(); } } }
   G.noise = 2; G.stillT = 0;
 }
-function passHours(hours) { G.tod += hours / 24; while (G.tod >= 1) { G.tod -= 1; G.day++; } tickCustody(hours); }
+// ---------------------------------------------------------------- optional journey needs
+// Off by default. When enabled, time on the road costs food and sleep; hunger and
+// sleeplessness scale fatigue recovery rather than adding hidden combat penalties.
+function needsOn() { return !!(G.player && G.player.needs === true); }
+function needsWarned() { return needsOn() && (G.player.hunger < 20 || G.player.sleep < 20); }
+function needsSpent() { return needsOn() && (G.player.hunger <= 0 || G.player.sleep <= 0); }
+function needsRecovery() { return needsWarned() ? 0.5 : 1; }
+function fatCap() { const p = G.player; return needsSpent() ? p.fatMax * 0.5 : p.fatMax; }
+function needsLine() {
+  if (!needsOn()) return '';
+  const p = G.player, h = Math.round(p.hunger), sl = Math.round(p.sleep);
+  const word = p.hunger <= 0 ? 'famished' : p.hunger < 20 ? 'hungry' : p.hunger < 50 ? 'peckish' : 'fed';
+  const rest = p.sleep <= 0 ? 'exhausted' : p.sleep < 20 ? 'weary' : p.sleep < 50 ? 'tired' : 'rested';
+  return `Hunger ${h}/100 (${word}) · Sleep ${sl}/100 (${rest})`;
+}
+function drainNeeds(hours) {
+  if (!needsOn() || !(hours > 0)) return;
+  const p = G.player, mounted = typeof horseActive === 'function' && horseActive();
+  const wasHungry = p.hunger < 20, wasWeary = p.sleep < 20;
+  p.hunger = clamp(p.hunger - hours * (mounted ? 1 : 2), 0, 100);
+  p.sleep = clamp(p.sleep - hours * 1.4, 0, 100);
+  if (!wasHungry && p.hunger < 20) msg('Your stomach has been empty a while. You are hungry.', 'warn', 4200);
+  if (!wasWeary && p.sleep < 20) msg('You have been awake too long. Your eyes keep closing.', 'warn', 4200);
+  if (needsSpent()) p.fat = Math.min(p.fat, fatCap());
+}
+function passHours(hours) { G.tod += hours / 24; while (G.tod >= 1) { G.tod -= 1; G.day++; } tickCustody(hours); drainNeeds(hours); }
 function timeName() { const h = G.tod * 24; return h < 5 ? 'the dead hour' : h < 7 ? 'before dawn' : h < 12 ? 'morning' : h < 17 ? 'afternoon' : h < 20 ? 'dusk' : 'night'; }
 function renderMap() {
   const m = G.map; const cw = 4; const html = `<h2>${m.name}</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">What you have walked. ${m.outdoor ? 'North is up.' : 'The automap remembers where the lamps were.'}</p><canvas id="amap" width="${m.w * cw}" height="${m.h * cw}" style="width:100%;max-height:70cqh;object-fit:contain;image-rendering:pixelated;background:#0a0806;border:2px solid #0b0806"></canvas>`;
@@ -2020,7 +2049,7 @@ function update(dt) {
     G.bobPhase += dt * (running ? 13 : 9) * pace; c.bob = Math.sin(G.bobPhase) * 2 * pace;
     if (running) p.fat = Math.max(0, p.fat - dt * 3);
     if (G.time - G.lastStep > (running ? 0.28 : 0.45) / Math.max(0.5, mag)) { G.lastStep = G.time; Audio_.sfx.step(); }
-  } else { c.bob *= Math.exp(-13 * dt); p.fat = Math.min(p.fatMax, p.fat + dt * 2); }
+  } else { c.bob *= Math.exp(-13 * dt); p.fat = Math.min(fatCap(), p.fat + dt * 2 * needsRecovery()); }
   G.map.visited[(c.y | 0) * G.map.w + (c.x | 0)] = 1;
   for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const xx = (c.x | 0) + dx, yy = (c.y | 0) + dy; if (xx >= 0 && yy >= 0 && xx < G.map.w && yy < G.map.h) G.map.visited[yy * G.map.w + xx] = 1; }
   // doors animate
@@ -2250,6 +2279,9 @@ function restoreGame(d) {
   const clockNow = G.day * 24 + G.tod * 24;
   const horseRaw = isFinite(+G.player.horseUntil) ? Math.max(0, +G.player.horseUntil) : 0;
   G.player.horseUntil = Math.min(horseRaw, clockNow + 48);
+  G.player.needs = G.player.needs === true;
+  G.player.hunger = isFinite(+G.player.hunger) ? clamp(+G.player.hunger, 0, 100) : 100;
+  G.player.sleep = isFinite(+G.player.sleep) ? clamp(+G.player.sleep, 0, 100) : 100;
   G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0; G.coverSuspicion = 0; G.lawGrace = 0;
   G.dead = false; G.stillT = 0; G.unwriting = false; G.murmurT = 0; G.whistleT = 0; G.attack.t = 0; G.song.t = 0; G.keys = {}; $('#msgs').innerHTML = '';
   G.maps = probe; if (G.flags.greening) G.maps.oakhaven = buildOakhaven(true);
@@ -2305,6 +2337,7 @@ function renderMenu() {
     <button class="dfbtn" id="mn-ctl">Controls</button>
     <button class="dfbtn" id="mn-mute">${Audio_.muted ? 'Sound on' : 'Sound off'}</button>
     <button class="dfbtn" id="mn-music">${Audio_.music.enabled ? 'Music off' : 'Music on'}</button>
+    <button class="dfbtn" id="mn-needs">Journey needs (hunger and sleep): ${G.player.needs ? 'On' : 'Off'}</button>
     <button class="dfbtn" id="mn-title">Return to title</button>
     <button class="dfbtn" id="mn-back">Continue</button>
   </div><p class="muted" style="margin-top:1cqh">${DAYS[G.day % DAYS.length]} · ${G.map.name} · ${G.player.name}, level ${G.player.level}</p>`;
@@ -2313,6 +2346,12 @@ function renderMenu() {
   $('#mn-save').onclick = () => renderSave(); $('#mn-load').onclick = () => renderLoad(false); $('#mn-help').onclick = () => renderHelp(); $('#mn-ctl').onclick = () => renderControls();
   $('#mn-mute').onclick = () => { Audio_.toggleMute(); renderMenu(); };
   $('#mn-music').onclick = () => { Audio_.music.enabled = !Audio_.music.enabled; renderMenu(); };
+  $('#mn-needs').onclick = () => {
+    const p = G.player; p.needs = p.needs !== true;
+    if (p.needs) { p.hunger = 100; p.sleep = 100; }
+    renderMenu();
+    msg(p.needs ? 'Journey needs on: food and sleep now matter on the road. Honey feeds you; rest sleeps you.' : 'Journey needs off: hunger and sleep no longer change anything.', '', 5000);
+  };
   $('#mn-title').onclick = () => { closeModal(); G.state = 'title'; G.keys = {}; $('#view').classList.remove('unwrite'); $('#msgs').innerHTML = ''; show('#title'); Audio_.setScene('title'); };
 }
 function renderControls() {

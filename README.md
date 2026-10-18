@@ -23,6 +23,19 @@ Staged scenes captured from the playable maps using the game's own feature logic
 | ![Equipped Synod Clerk Robes on the inventory paper doll](screenshots/stealth-robes.png) | ![A nearby Proctor inspecting the traveller at 50 percent suspicion](screenshots/stealth-inspection.png) |
 | Equipment-linked paper doll: the worn Clerk Robes appear in the body slot and character artwork. | Proximity inspection: written suspicion feedback warns you to back away before cover is exposed. |
 
+### The road out of Oakhaven
+
+Hired horses, bargaining with the watch and the optional hunger and sleep system, staged from the playable maps and captured the same way.
+
+| | |
+|---|---|
+| ![The North Gate stables, with the hire terms and return refund](screenshots/stables.png) | ![A hired roan mare shortening a journey on the world map](screenshots/travel-mounted.png) |
+| The North Gate stables: hire her for a day, or hand her back early for part of the coin. | A hired horse on the world map: about a third less road time, and she carries most of the wear. |
+| ![The Oakhaven watch confrontation offering a bribe or a threat](screenshots/watch-bargain.png) | ![The character sheet showing hunger and sleep with journey needs on](screenshots/journey-needs.png) |
+| The Oakhaven watch: pay the fine, offer a bribe, lean on him, or refuse and run. | Journey needs on: hunger and sleep on the character sheet, with rest and fatigue following them. |
+| ![The options panel with journey needs switched on](screenshots/journey-needs-menu.png) | |
+| Journey needs are opt-in. Turn hunger and sleep on in Options; old saves begin fed, rested and off. | |
+
 ### Places, characters and adventures
 
 | | |
@@ -87,6 +100,7 @@ Staged scenes captured from the playable maps using the game's own feature logic
 - Watch-house gaol and custody: constables offer to accept an exact fine, let you run with temporary grace, or escort you to a playable watch-house cell for a six-hour sentence. Non-quest equipment, carried goods and ammunition are confiscated into evidence; quest items and innate weapons remain with you. Serve the remaining sentence on the bunk or pay the fine to be released with all evidence returned. Alternatively, pick the cell lock to explore the watch-house, pick the evidence chest to recover your gear, and leave via the street door to escape (+60 bounty once, fine still outstanding).
 - Horses: the North Gate stables hire the roan mare for 25 sovereigns a day. While hired, world-map journeys take about a third less time and reckless travel leaves you far less tired; return her early for 10 sovereigns back. The hire lapses on the world clock and shows on the travel map.
 - Watch-house bargaining: when a constable confronts you, bribe him at 60% of the fine (checked against Personality) or lean on him (checked against Strength) for twelve seconds of grace. A refused bribe or threat raises the bounty; an accepted bribe withdraws the warrant and returns held gear.
+- Journey needs, optional and off by default: switch hunger and sleep on in Options and the road starts to cost something. Ten hours on foot drains hunger twice as fast as the same ten hours in the saddle; hunger or sleeplessness below 20 warns you and halves what resting and idling give back, and an empty belly caps your fatigue at half until you eat. Honey feeds you, rest sleeps you, and the character sheet and journey panel always show where you stand. Old saves and hostile imports stay fed, rested and off.
 - Pickpocket Oakhaven adult townsfolk and merchants: inspect a purse, approach quietly from behind, and use Stealth to lift loose coin. Attention, position and noise affect the displayed odds; caught or witnessed theft adds a watch bounty. One saved attempt per person; quest items and shop stock stay untouched.
 - Synod disguises: buy Clerk Robes from Hob and wear them to fool distant ordinary Proctors and Legionnaires. Close visible inspection builds suspicion; retreat before it fills. Witnessed suspicious acts expose you for that area across saves. Monsters, bosses, combat, body searches, story locks and bounty arrests are unaffected. Y / touch Cover / controller Back shows status and wear/remove actions.
 - Body handling: face settled physical remains and press G to drag, drop or conceal them in marked shrouded recesses in Oakhaven, the Quarry and the Cloister. Dragging halves walking speed and prevents sprinting. Visible remains raise a one-time patrol alarm; a constable witnessing a drag adds a bounty. Bodies and alarms last for the current area visit only; loot and saved enemy deaths remain independent.
@@ -108,7 +122,7 @@ python3 -m http.server 8000
 
 Opening `index.html` straight from disk usually works too, but some browsers block audio or file loading on `file://`, so a local server is the safer choice.
 
-### Refresh the stealth screenshots
+### Refresh the screenshots
 
 With a local server or managed preview running, install Playwright in your test environment and its Chromium browser, then run:
 
@@ -116,7 +130,9 @@ With a local server or managed preview running, install Playwright in your test 
 PREVIEW_URL=http://127.0.0.1:8000 node test/screenshots.js
 ```
 
-If Playwright is installed outside this repository, set `PLAYWRIGHT_MODULE` to its module path. The capture script starts a fresh disposable game, stages illustrative scenes, checks their interface and PNG output, and refreshes the six `screenshots/stealth-*.png` images above. It does not start a server or alter game source or player save files.
+If Playwright is installed outside this repository, set `PLAYWRIGHT_MODULE` to its module path. The capture script starts a fresh disposable game, stages illustrative scenes with the game's own feature logic, checks each scene's interface and PNG output, and refreshes the six `screenshots/stealth-*.png` images plus the five travel, stables, watch and journey-needs images above. It does not start a server or alter game source or player save files.
+
+Headless Chromium needs fonts installed in the capture environment; without a font stack the panels render empty. Install `fontconfig` with a serif family (DejaVu Serif is what these images use) before capturing.
 
 ### Host it on GitHub Pages
 
@@ -138,6 +154,7 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Distractions | Aim, then O / touch Throw / controller right-stick click · 1/A stone, 2/X empty bottle, Escape/B cancel |
 | Songs | Tab opens the song-book · F1–F5 cast · N murmurs |
 | Panels | I inventory · C character · L logbook · M map · T world map and travel · R rest · K ledger · Esc options and save |
+| Journey needs | Esc options → Journey needs toggles hunger and sleep; switching it on starts you fed and rested |
 | Sound | V sound on/off · B music on/off |
 | Touch | Left thumb stick, right thumb drags to look, tap to use or strike |
 

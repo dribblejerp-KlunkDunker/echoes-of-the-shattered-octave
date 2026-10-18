@@ -282,6 +282,7 @@ function travelConfirm(d) {
   const riskTxt = risk === 0 ? 'Inside the Hedge: no one will trouble you.' : risk < 0.1 ? 'The way looks quiet.' : risk < 0.22 ? 'Something may be abroad.' : 'This is hunting country.';
   el.innerHTML = `<p>Travel to <b>${d.name}</b>. About <b>${travelFmt(mins)}</b>, arriving ${arrive}. ${riskTxt}</p>
     ${horseActive() ? `<p class="muted">The roan mare is saddled: ${Math.round((1 - HORSE.speed) * 100)}% less road time, and she carries most of the wear.</p>` : ''}
+    ${needsLine() ? `<p class="muted">${needsLine()}</p>` : ''}
     <div class="tv-row"><span class="tone"><button class="dfbtn small${TRAVEL.pace === 'cautious' ? ' sel' : ''}" id="tv-c">Cautiously</button><button class="dfbtn small${TRAVEL.pace === 'reckless' ? ' sel' : ''}" id="tv-r">Recklessly</button></span>
     <span class="muted tv-pace">${TRAVEL.pace === 'cautious' ? 'Slower, keeps to cover, and you arrive rested.' : 'Faster, louder, and you arrive tired.'}</span>
     <button class="dfbtn" id="tv-go"${block ? ' disabled' : ''}>Begin the journey</button></div>
@@ -343,7 +344,7 @@ function travelGo(d) {
   const mounted = horseActive();
   travelClose();
   passHours(mins / 60);
-  if (pace === 'cautious') p.fat = Math.min(p.fatMax, p.fat + p.fatMax * 0.25);
+  if (pace === 'cautious') p.fat = Math.min(fatCap(), p.fat + p.fatMax * 0.25);
   else p.fat = Math.max(0, p.fat - p.fatMax * (mounted ? 0.08 : 0.2));
   loadMap(d.map, { x: d.x, y: d.y, dir: d.dir });
   G.noise = pace === 'cautious' ? 0.8 : 2.4; G.stillT = 0;

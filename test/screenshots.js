@@ -139,7 +139,66 @@ const output = path.join(__dirname, '..', 'screenshots');
     });
     await page.locator('#cover-status').waitFor({ state: 'visible' });
     await capture('stealth-inspection');
+
+    // --- travel, the watch's socials, and opt-in journey needs (feel systems)
+    await page.evaluate(() => {
+      closeModal(); galleryScene('oakhaven');
+      Object.assign(Engine.cam, { x: 23.5, y: 17.5, dir: -Math.PI / 2, pitch: 0, bob: 0 });
+      const guard = G.ents.find(e => e.lawGuard);
+      if (!guard) throw new Error('No watch constable in Oakhaven');
+      Object.assign(guard, { x: 23.5, y: 15.4, hidden: false });
+      G.player.gold = 100; crimeState().bounty = 40;
+      render(); renderArrest();
+      const bribe = document.querySelector('#crime-bribe');
+      if (!bribe || bribe.disabled) throw new Error('Bribe must be affordable in the screenshot');
+      if (!/%/.test(document.querySelector('.watch-social').textContent)) throw new Error('Watch socials must show live odds');
+    });
+    await capture('watch-bargain', 'arrest', 'The Oakhaven watch');
+
+    await page.evaluate(() => {
+      closeModal(); galleryScene('oakhaven');
+      const stall = G.ents.find(e => e.use === 'stable');
+      if (!stall) throw new Error('No stable in Oakhaven');
+      // Stand back across the lane from the sign, with the gate crowd in shot.
+      Object.assign(Engine.cam, { x: stall.x - 3.5, y: stall.y + 0.6, dir: 0, pitch: 0, bob: 0 });
+      for (const e of G.ents) if (e.kind === 'npc') e.hidden = false;
+      G.player.gold = 100; render(); openStable();
+      if (document.querySelector('#stable-rent').disabled) throw new Error('Hire must be affordable in the screenshot');
+    });
+    await capture('stables', 'stable', 'The North Gate stables');
+
+    await page.evaluate(() => {
+      document.querySelector('#stable-rent').click();
+      if (!horseActive()) throw new Error('Hiring at the stable must activate the horse');
+      // This capture page renders no frames, so it never records walked ground.
+      // Record the ground around the camera, as the running game would have.
+      G.map.visited.fill(0);
+      const cx = Engine.cam.x | 0, cy = Engine.cam.y | 0;
+      for (let dy = -8; dy <= 8; dy++) for (let dx = -8; dx <= 8; dx++) {
+        const x = cx + dx, y = cy + dy;
+        if (x >= 0 && y >= 0 && x < G.map.w && y < G.map.h) G.map.visited[y * G.map.w + x] = 1;
+      }
+      G.player.needs = true; G.player.hunger = 74; G.player.sleep = 61;
+      travelOpen();
+      const dest = travelDestinations(TRAVEL.region).find(d => d.state === 'ok');
+      if (!dest) throw new Error('No reachable destination for the travel screenshot');
+      travelSelect(dest);
+      const text = document.querySelector('#modal-panel').innerText;
+      if (!/roan mare/i.test(text) || !/Hunger \d+\/100/.test(text)) throw new Error('Travel panel must show the horse and journey needs');
+    });
+    const regionName = await page.evaluate(() => TRAVEL_REGIONS[TRAVEL.region].name);
+    await capture('travel-mounted', 'travel', regionName);
+
+    await page.evaluate(() => {
+      travelClose(); G.state = 'panel';
+      G.player.fat = G.player.fatMax * 0.62; renderCharacter();
+      if (!/Hunger 74\/100/.test(document.querySelector('#modal-panel').innerText)) throw new Error('Character sheet must show journey needs');
+    });
+    await capture('journey-needs', 'char', 'Rowan', true);
+
+    await page.evaluate(() => { closeModal(); G.state = 'panel'; renderMenu(); });
+    await capture('journey-needs-menu', 'menu', 'Options');
     assert.deepEqual(errors, [], 'capture has no browser runtime errors');
-    console.log('PASS six feature screenshots captured from the managed preview');
+    console.log('PASS eleven feature screenshots captured from the managed preview');
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });
