@@ -9,12 +9,21 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 The checklist below is the authoritative scope for the new request. The older completed checklists later in this document describe the previous baseline, **not** completion of these enhanced versions. `[~]` means a partial implementation or pilot; `[x]` requires implementation and verification. No production republish is included.
 
 ### Delivery order and gates
-1. **Visual identity pilot (current):** five-view Proctor, emissive Light-glass and equipment paper doll. Preserve saves, attack/walk animation, picking and inventory controls. Generated pixel illustrations are a pilot, not a claim of finished hand-painted art for every enemy.
-2. **Combat life:** expand directional art to every creature; death/flinch, first-person weapon sequences and drawn fire. Verify all enemy families, corpse cleanup and weapon timing.
-3. **Daggerfall systems:** lockpicking → crime/prison → traps, then stealth tools and physical puzzles. Persist state and test success/failure/escape and old-save defaults.
-4. **Spatial renderer:** variable wall heights → raised floors/stairs/ramps → ceilings, reflective water, skies and grounded fog. Needs per-pixel depth, camera elevation, collision and picking to agree; do not bolt height onto the existing single-depth-per-column renderer.
-5. **Living world and illustrated interface:** routines, scenery, portraits, panels and story presentation.
-6. **Audio, access and distribution:** positional audio, quality budgets, accessibility, translation, mod/editor interfaces and desktop packages.
+The 94 unfinished checklist items at the start of this plan (85 not started, 9 partial) are grouped once below; counts include partial work, not equal-sized implementation tasks. The visual identity, combat, crime, traps, physical puzzles and pickpocketing pilots already delivered remain the baseline. Each phase is delivered in tested milestones, not one oversized rewrite.
+
+| Phase | Scope / checklist ownership | Starting remaining | Delivery milestones |
+|---|---|---:|---|
+| 1 — Stealth, law & gameplay | Gameplay | 11 | **Delivered: throwable distractions + investigation** → **Next: body hiding/discovery** → disguises/inspection → broader crime/wanted posters/prison → bribes/threats → horses/needs/hardcore. Directional sound feedback depends on phase 7 audio. |
+| 2 — Spatial world | Graphics — 3D view | 15 | Depth/elevation foundation → low walls and stairs/ramps → ceilings/skies/water/fog → scenery/emissive occlusion → measured presets/CRT. |
+| 3 — Combat life | Animation — enemies and creatures; first person | 17 | Species/action sheets → hit/detect/death/boss phases → first-person draw/holster/casting/interaction sequences. |
+| 4 — Living world | Animation — companions and NPCs; world | 18 | Companion reactions/abilities → routines/work/wildlife → weather/scenery/fire/gates/collapse effects with safe collision. |
+| 5 — Illustrated interface | Graphics — menus and screens | 10 | Frames/fonts/credits → inventory icons/final paper doll → portraits/log/automap → loading/death/ending illustrations. |
+| 6 — Story reactivity | Story and world-building | 8 | Rumours/broadsheets/couriers → dreams/memory echoes/Tobin pages → choice-dependent endings and future-region lore. |
+| 7 — Sound, access & tools | Audio; technical and polish | 15 | Positional/muffled sound → area/boss score and voice licensing → access/translation/statistics/photo/timer → validated mod schemas/editor → desktop packaging. |
+
+Phase 1 acceptance for this pass: separate consumable stones and empty bottles (never the story Vox-Bottle); collision-clipped forward impact with readable feedback; idle guards and non-boss enemies investigate the impact, never abandon a visible wanted player or active combat; keyboard/touch/controller input; inventory save compatibility; transient sound targets cannot replay after load. No external services, production deployment, or Git delivery is included.
+
+Phase 2 requires per-pixel depth, camera elevation, collision and picking to agree; do not bolt height onto the existing single-depth-per-column renderer. Existing art pilots do not constitute finished hand-painted action sheets. Accessibility, save compatibility and security checks apply during every phase, not only phase 7.
 
 Every phase must retain the security regression tests and save/load behavior. Rendering changes need browser screenshots (day/night, indoor/outdoor, near/far), representative frame-time measurements before performance claims, and keyboard/touch/gamepad regression checks. Target low-end presets only after measurements on representative hardware; do not promise Chromebook frame rates from a server benchmark.
 
@@ -98,7 +107,7 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Drag/hide bodies; patrol discovery and alarm behavior.
 - [ ] Synod robe disguises, proximity inspection and detection.
 - [ ] Directional on-screen sound ripples, paired with positional sound.
-- [ ] Throwable stone/bottle distractions and guard investigation.
+- [x] Throwable stones and empty bottles: collision-clipped forward impacts attract idle Oakhaven constables and ordinary non-boss enemies for 6/9 seconds. Walls reduce hearing; visible wanted players, player detection, weapon/Song hits and active combat take priority. O/touch Throw/controller right-stick opens a no-cost choice; 1/A stone, 2/X bottle. Saved inventory, old-save supply pickups, transient targets cleared on load/departure. Vox-Bottles retain their story behavior.
 - [x] Three visible, inspectable Catacombs mechanisms: barbed tripwire (one-shot 5 damage), suspended net (eight-second movement slow) and alarm bell (nearby enemy alert). Disarm via existing skill-based three-pin controls; cancellation/three slips leave it armed. Spent/disarmed state persists. Dedicated trap artwork/trigger animations and wider dungeon placement remain later polish.
 - [x] Optional Cloister three-voice reliquary and Catacombs physical puzzles: repeat Root → Fifth → Third on the Cloister reliquary; weight or step onto the drowned-chapel pressure plate to unlatch the west counter-weight niche; rotate the three niche-gallery brass mirrors (`/` and `\`) to guide the green-gold lantern beam into the eastern prismatic lens. Keyboard/touch/controller support, written beam/note clues, no resource cost and one-time shard/Lore rewards saved in flags.
 - [~] Oakhaven crime foundation: explicitly owned market honey prompts before theft; visible nearby NPC witnesses report a bounty, and the constable pursues with line of sight. Character sheet shows bounty/time served. Broader owned goods, assault and additional guard behavior remain pending.
@@ -137,6 +146,13 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
 - [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Throwable-distraction pass verification
+- New travellers start with three `pebble` items and two `empty_bottle` items. Additional supplies append after historical Oakhaven entities at the square and east of the tavern for existing saves; no entity reordering or save-version change. Carried supplies can also be used from Inventory; the existing `bottle` (Vox-Bottle) remains unchanged.
+- Forward aim is sampled to 5/7 units with wall and solid-body clipping; a blocked short throw consumes nothing. Successful throws consume exactly one item and apply a 0.75-second simulation-time cooldown, a brief nonblocking impact marker and written/audio feedback. No damage and no noise increase at the thrower location.
+- Idle constables and ordinary non-boss enemies investigate a 7/11-unit sound radius (35% through walls), walking toward the impact and waiting until the 6/9-second investigation expires. Chasing, passive, hidden, dead, stunned and boss listeners are excluded. Seeing/hearing the player or taking a weapon/Song hit overrides investigation; constables prioritize visible wanted players and retain fine/jail behavior.
+- Investigation targets and impact markers are transient; map departure clears them and imported `investigate` states normalize to idle. Inventory consumption persists normally. Inspection/cancellation, blocked throws and unavailable inventory spend nothing.
+- Syntax, hostile-save security regressions and the full Chromium suite pass, including starting supplies, consumable counts, wall/body clipping, no source-noise/Vox changes, listener exclusions, movement/expiry, threat and hit priority, wall muffling, cooldown, departure/reload and actual keyboard/touch/simulated-controller controls. `/tmp/octave-distractions.png` records the throw panel. Physical-controller testing, human visual/audio review and long-form balance remain unverified; thrown flight artwork and navigation around complex obstacle mazes are not implemented.
 
 ### Pickpocketing pass verification
 - Static purse IDs and fixed loose coin (4 sovereigns for townsfolk, 8 for merchants) are attached to existing Oakhaven adults without reordering/appending map entities. Children, companions, guards, night-watch extras and non-town NPCs are excluded; the Greening disables town theft.

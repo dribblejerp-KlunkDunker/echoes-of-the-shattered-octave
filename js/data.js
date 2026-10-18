@@ -500,6 +500,7 @@ LOOK  move the mouse over the view · rest it at a side edge to keep turning · 
 ATTACK  left-click to thrust · hold the button and move the mouse to slash or chop · wheel or 1-4 changes weapon · Tab opens song-book
 USE / TALK  E or Space · or click when the name under the crosshair is bright (dim means step closer)
 PICKPOCKET  Oakhaven adults: face them within arm’s reach and press P to inspect · approach from behind, quietly · Enter attempts theft, Escape leaves · touch Purse / controller Y inspects, A attempts, B leaves · caught or witnessed theft adds bounty
+DISTRACTIONS  O / touch Throw / controller right-stick click opens throws · 1 or A stone, 2 or X empty bottle, Escape or B cancels · aim first; walls stop throws; active combat and bosses cannot be lured
 SONGS  F1-F5 cast the song in that slot · N to murmur (keeps the Hush off)
 PANELS  I inventory · C character · L logbook · M map · T world map and travel · R rest · K ledger · Esc closes
 GEAR  I inventory: Wear / Off armour · AR blunts blows, but heavy armour is loud · 1–9 ready weapons · bronze rings the Cacophony, bolts bite the Quiet

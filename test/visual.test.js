@@ -33,6 +33,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     await page.locator('.paper-doll svg').waitFor({ state: 'visible' });
     assert(await page.locator('.paper-doll').innerText().then(t => t.includes('THE TRAVELLER')));
     console.log('PASS normal Begin → character creation → inventory keyboard flow');
+    assert.equal(await page.evaluate(() => G.count('pebble') === 3 && G.count('empty_bottle') === 2), true, 'new travellers receive throwing supplies');
     const result = await page.evaluate(() => {
       function check(ok, label) { if (!ok) throw new Error(label); }
       check(Object.values(G.maps).some(m => m.entities.some(e => e.glassLamp)), 'glass lamp placed in playable map');
@@ -465,6 +466,116 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     await page.keyboard.press('Escape');
     await page.evaluate(() => { restoreGame(pocketBaseline); G.opts.touch = 'auto'; setTouchMode(false); G.state = 'panel'; });
     console.log('PASS pickpocket position/attention, witnesses, attempts, controls and save/load', pocketRiskChecks, pockets);
+    const distractions = await page.evaluate(() => {
+      function check(ok, label) { if (!ok) throw new Error(label); }
+      window.throwBaseline = JSON.parse(JSON.stringify(snapshotGame()));
+      const map = new GameMap('oakhaven', 'Distraction fixture', 32, 24, { floor: 't_flag', ceil: 't_stone', fogDist: 20, spawn: { x: 5.5, y: 10.5, dir: 0 } });
+      map.border('t_stone'); G.maps.oakhaven = map; loadMap('oakhaven'); G.state = 'panel';
+      G.noise = 1; G.player.crime = {}; G.throwReady = 0;
+      G.player.inv = [{ id: 'pebble', n: 10 }, { id: 'empty_bottle', n: 10 }, { id: 'bottle', n: 1 }];
+      const guard = map.npc('townsman', 12.5, 12.5, { lawGuard: true }); hydrate(guard); window.throwGuard = guard;
+      const foe = hydrate(map.enemy('proctor', 15.5, 10.5, { guard: true })); window.throwFoe = foe;
+      const active = hydrate(map.enemy('proctor', 18.5, 10.5)); active.state = 'chase';
+      const passive = hydrate(map.enemy('proctor', 14.5, 14.5, { passive: true }));
+      const boss = hydrate(map.enemy('weaver', 16.5, 17.5));
+      const hidden = hydrate(map.enemy('proctor', 14.5, 9.5)); hidden.hidden = true;
+      const dead = hydrate(map.enemy('proctor', 14.5, 8.5)); dead.dead = true;
+      check(distractionImpact('empty_bottle').distance > distractionImpact('pebble').distance, 'bottle travels farther');
+      const cell = map.get(7, 10); map.set(7, 10, WALL('t_stone'));
+      check(distractionImpact('pebble').x < 7, 'wall clips impact before collision'); map.set(7, 10, cell);
+      const blocker = map.deco('crates', 6.5, 10.5, { radius: 0.4 });
+      check(!distractionImpact('pebble'), 'near solid entity prevents throw');
+      G.state = 'play'; check(!throwDistraction('pebble') && G.count('pebble') === 10, 'blocked throw never consumes inventory'); G.state = 'panel';
+      blocker.hidden = true;
+      G.state = 'play'; check(throwDistraction('pebble'), 'stone throw accepted'); G.state = 'panel';
+      check(G.count('pebble') === 9 && G.count('bottle') === 1 && G.noise === 1, 'one consumable spent, Vox-Bottle and source noise unchanged');
+      check(guard.state === 'investigate' && foe.state === 'investigate', 'guard and ordinary idle enemy investigate impact');
+      check(active.state === 'chase' && passive.state === 'passive' && !boss.investigation && !hidden.investigation && !dead.investigation, 'combat, passive, boss, hidden and dead exclusions');
+      const target = { ...foe.investigation }, before = foe.x;
+      enemyUpdate(foe, 0.2); check(foe.x < before && foe.investigation.x === target.x, 'enemy moves to impact, not thrower');
+      const guardBefore = guard.x; tickLaw(0.2); check(guard.x < guardBefore, 'constable investigates without bounty');
+      G.state = 'play'; check(!throwDistraction('pebble') && G.count('pebble') === 9, 'cooldown prevents double spending'); G.state = 'panel';
+      tickDistractions(2); check(!G.ents.some(e => e.distractionT != null), 'impact marker expires');
+      updateInvestigation(foe, 10); check(foe.state === 'idle' && !foe.investigation, 'investigation expires to idle');
+      // Perception and attacks override investigation immediately.
+      foe.x = 15.5; foe.y = 10.5; G.throwReady = 0; G.state = 'play'; throwDistraction('empty_bottle'); G.state = 'panel';
+      Engine.cam.x = foe.x - 3; enemyUpdate(foe, 0.016);
+      check(foe.state === 'chase' && !foe.investigation, 'visible player supersedes impact');
+      Engine.cam.x = 5.5; G.player.crime = { bounty: 20 }; guard.x = 12.5; guard.y = 12.5;
+      guard.state = 'idle'; delete guard.investigation;
+      G.throwReady = 0; G.state = 'play'; throwDistraction('pebble'); G.state = 'panel';
+      check(!guard.investigation, 'visible wanted player prevents guard diversion');
+      // An existing investigation is interrupted when a wanted player becomes visible.
+      guard.state = 'investigate'; guard.investigation = { x: 20.5, y: 12.5, left: 6 };
+      tickLaw(0.1); check(!guard.investigation, 'wanted-player sight interrupts existing investigation');
+      G.player.crime = {}; foe.state = 'idle'; foe.x = 15.5; foe.y = 10.5;
+      // Nearby sound muffles through a wall; a distant listener cannot hear through it.
+      map.set(13, 10, WALL('t_stone')); G.throwReady = 0; G.state = 'play'; throwDistraction('pebble'); G.state = 'panel';
+      check(foe.state === 'idle', 'wall muffles distant impact'); map.set(13, 10, null);
+      G.throwReady = 0; G.state = 'play'; throwDistraction('pebble'); G.state = 'panel';
+      check(foe.state === 'investigate', 'same listener hears unobstructed impact');
+      const position = { x: Engine.cam.x, y: Engine.cam.y }, weapons = G.player.weapons, weapon = G.player.weapon;
+      Engine.cam.x = foe.x - 1; Engine.cam.y = foe.y; G.player.weapons = ['sword']; G.player.weapon = 0; G.attack.t = 0; G.song.t = 0;
+      const random = Math.random; Math.random = () => 0;
+      try { attack('thrust'); } finally { Math.random = random; }
+      check(foe.state === 'chase' && !foe.investigation, 'weapon hit interrupts investigation immediately');
+      Object.assign(Engine.cam, position); G.player.weapons = weapons; G.player.weapon = weapon; G.attack.t = 0;
+      foe.state = 'idle'; G.throwReady = 0; G.state = 'play'; throwDistraction('pebble'); G.state = 'panel';
+      check(foe.state === 'investigate', 'idle enemy can investigate a later sound');
+      // Save while investigating; no transient impact or stale target may replay.
+      map.baseCount = map.entities.filter(e => !e.transient).length;
+      const saved = JSON.parse(JSON.stringify(snapshotGame()));
+      check(!saved.maps.oakhaven.extra.some(e => e.kind === 'deco'), 'transient impacts excluded from snapshot');
+      check(pickEnt({ state: 'investigate' }).state === 'idle', 'saved investigation normalizes without transient target');
+      loadMap('tavern'); check(!foe.investigation && foe.state === 'idle', 'departure clears investigation');
+      restoreGame(throwBaseline); G.state = 'panel';
+      // Actual authored map round-trip with a listening constable.
+      loadMap('oakhaven', { x: 23.5, y: 22.5, dir: Math.PI / 2 }); G.state = 'panel';
+      G.ents.forEach(e => { if (e.kind === 'npc') e.hidden = true; });
+      const realGuard = G.ents.find(e => e.lawGuard); Object.assign(realGuard, { x: 26.5, y: 27.5, hidden: false });
+      G.player.crime = {}; G.player.inv = [{ id: 'pebble', n: 4 }, { id: 'empty_bottle', n: 3 }, { id: 'bottle', n: 1 }];
+      G.throwReady = 0; G.state = 'play'; throwDistraction('pebble'); G.state = 'panel';
+      check(realGuard.state === 'investigate', 'authored town guard hears throw');
+      const roundTrip = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(roundTrip); G.state = 'panel';
+      check(G.count('pebble') === 3 && G.count('empty_bottle') === 3 && G.count('bottle') === 1, 'inventory consumption survives reload');
+      check(!G.ents.some(e => e.investigation || e.distractionT != null || e.state === 'investigate'), 'reload never replays sound targets');
+      // Prepare actual keyboard/touch/controller panel flows without moving listeners.
+      G.ents.forEach(e => { if (e.kind === 'npc') e.hidden = true; }); G.tod = 0.5;
+      G.keys = {}; G.vel.x = G.vel.y = 0; G.throwReady = 0; G.state = 'play';
+      return { consumables: 2, investigation: true, savedInventory: true };
+    });
+    await page.keyboard.press('o');
+    await page.locator('#throw-pebble').waitFor({ state: 'visible' });
+    await page.screenshot({ path: '/tmp/octave-distractions.png' });
+    await page.keyboard.press('Escape');
+    assert.equal(await page.evaluate(() => G.count('pebble')), 3, 'keyboard cancel is free');
+    await page.keyboard.press('o'); await page.keyboard.press('1');
+    assert.equal(await page.evaluate(() => G.count('pebble')), 2, 'keyboard throws one stone');
+    await page.evaluate(() => { G.state = 'panel'; G.opts.touch = 'on'; setTouchMode(true); G.throwReady = 0; G.state = 'play'; controlsTick(); });
+    await page.locator('#t-throw').tap();
+    await page.locator('#throw-empty_bottle').tap();
+    assert.equal(await page.evaluate(() => G.count('empty_bottle')), 2, 'touch throws one empty bottle');
+    await page.evaluate(() => {
+      function check(ok, label) { if (!ok) throw new Error(label); }
+      G.state = 'panel'; G.throwReady = 0;
+      const originalPads = navigator.getGamepads;
+      const gp = { connected: true, axes: [0, 0, 0, 0], buttons: Array.from({ length: 18 }, () => ({ pressed: false })) };
+      navigator.getGamepads = () => [gp]; controlsTick();
+      const press = i => { gp.buttons[i].pressed = true; controlsTick(); gp.buttons[i].pressed = false; controlsTick(); };
+      try {
+        G.state = 'play'; press(11); check(G.openPanel === 'distractions', 'controller right stick opens throw panel');
+        press(0); check(G.count('pebble') === 1, 'controller A throws stone');
+        G.throwReady = 0; press(11); press(2); check(G.count('empty_bottle') === 1, 'controller X throws bottle');
+        press(11); press(1); check(!G.openPanel && G.state === 'play', 'controller B cancels');
+      } finally { navigator.getGamepads = originalPads; }
+      G.state = 'panel'; G.throwReady = 0; openDistractions();
+      const count = G.count('pebble'); check(!throwDistraction('pebble') && G.count('pebble') === count, 'paused gameplay cannot throw');
+      G.player.inv = []; G.state = 'play'; openDistractions();
+      check(document.querySelector('#throw-pebble').disabled && document.querySelector('#throw-empty_bottle').disabled, 'empty inventory disables throws');
+      document.querySelector('#throw-leave').click();
+      G.state = 'panel'; restoreGame(throwBaseline); G.opts.touch = 'auto'; setTouchMode(false); G.state = 'panel';
+    });
+    console.log('PASS distractions: impacts, inventory, investigation, threat priority, controls and reload', distractions);
     await page.evaluate(() => {
       loadMap('catacombs', { x: 6.5, y: 5.1, dir: Math.PI / 2 }); G.state = 'panel';
       const e = G.ents.find(e => e.trapType === 'tripwire'); useDeco(e);
