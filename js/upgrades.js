@@ -137,7 +137,7 @@ function executeCustomSong(s) {
         e.hp -= dmg; e.flash = true; setTimeout(() => { e.flash = false; }, 110);
         if (s.stun && e.def.cacophony) e.stun = Math.max(e.stun || 0, s.stun);
         if (s.bleed) e.bleed = (e.bleed || 0) + s.bleed;
-        if (e.state === 'idle' || e.state === 'passive') e.state = 'chase';
+        if (e.state === 'idle' || e.state === 'passive' || e.state === 'investigate') { delete e.investigation; e.state = 'chase'; e.alertT = 8; }
         spawnHitParticles(e, 'glass');
         if (e.hp <= 0) killEnemy(e, true);
         hitN++;
@@ -249,6 +249,8 @@ Object.assign(ITEMS, {
   w_tobin_blade: { name: 'Tobin\'s Tuning-Blade', sprite: 'gear', weapon: 'tobin_blade', value: 140, desc: WEAPONS.tobin_blade.desc },
   w_vesper_hook: { name: 'Vesper\'s Boarding Axe', sprite: 'gear', weapon: 'vesper_hook', value: 135, desc: WEAPONS.vesper_hook.desc },
   w_sable_dagger: { name: 'Sable\'s Ivory Nib-Knife', sprite: 'gear', weapon: 'sable_dagger', value: 125, desc: WEAPONS.sable_dagger.desc },
+  pebble: { name: 'Skipping Stone', sprite: 'loot', desc: 'A loose throwing stone. Clatters where it lands, drawing idle listeners. O opens the throw panel.', use: 'distraction', value: 1 },
+  empty_bottle: { name: 'Empty Glass Bottle', sprite: 'loot', desc: 'An empty bottle, not a Vox-Bottle. Shatters farther away and draws more listeners. O opens the throw panel.', use: 'distraction', value: 1 },
   bandage: { name: 'Clean Linen Bandage', sprite: 'loot', desc: 'Stops bleeding and restores 6 health.', use: 'bandage', n: 6, value: 4 },
   whetstone: { name: 'Quarry Whetstone', sprite: 'loot', desc: 'Restores 35% condition to your readied weapon.', use: 'whetstone', n: 35, value: 7 },
   shard: { name: 'Light-Glass Shard', sprite: 'coil', desc: 'A raw green-gold shard harvested from a root-vein. Used to enchant weapons at a forge or Song-book.', use: 'enchant', value: 24 },
@@ -464,6 +466,7 @@ function recordBestiary(type, killed) {
 // ============================================================
 const ITEM_WEIGHTS = {
   pellets: 0.2, bolts: 0.3, tknives: 0.4, tonic: 0.5, honey: 0.5, bandage: 0.2,
+  pebble: 0.3, empty_bottle: 0.4,
   whetstone: 0.6, shard: 0.4, whistle: 0.2, bottle: 0.6, flume_eel: 0.4,
   herb_willow: 0.1, herb_reed: 0.1, herb_moss: 0.1,
   a_cap: 1.5, a_hood: 1.0, a_kettle: 3.5, a_bellhelm: 5.0,
@@ -1212,6 +1215,7 @@ function renderKeyRebindMenu() {
   newPlayer = function () {
     const p = _newPlayer();
     ensurePlayerUpgrades(p);
+    p.inv.push({ id: 'pebble', n: 3 }, { id: 'empty_bottle', n: 2 });
     const bg = BACKGROUNDS[CREATE.bg || 0];
     if (bg) {
       p.background = bg.name;
@@ -1578,7 +1582,7 @@ function lesson(id, text) {
   }
 
   // -- gamepad -------------------------------------------------------
-  const GBTN = { a: 0, b: 1, x: 2, y: 3, lb: 4, rb: 5, lt: 6, rt: 7, start: 9, dup: 12, ddown: 13, dleft: 14, dright: 15 };
+  const GBTN = { a: 0, b: 1, x: 2, y: 3, lb: 4, rb: 5, lt: 6, rt: 7, start: 9, rstick: 11, dup: 12, ddown: 13, dleft: 14, dright: 15 };
   function gamepadTick() {
     const pads = navigator.getGamepads ? navigator.getGamepads() : null;
     let gp = null;
@@ -1602,6 +1606,13 @@ function lesson(id, text) {
     const btn = (i) => !!(gp.buttons[i] && gp.buttons[i].pressed);
     const edge = (i) => btn(i) && !prev[i];
     const play = G.state === 'play' && !G.dead;
+    if (G.openPanel === 'distractions') {
+      if (edge(GBTN.a)) $('#throw-pebble').click();
+      else if (edge(GBTN.x)) $('#throw-empty_bottle').click();
+      else if (edge(GBTN.b) || edge(GBTN.start)) $('#throw-leave').click();
+      for (let i = 0; i < 32; i++) prev[i] = btn(i);
+      G.touch.fx = G.touch.fy = 0; return;
+    }
     if (G.openPanel === 'pickpocket') {
       if (edge(GBTN.a)) pickpocketInput('take');
       if (edge(GBTN.b) || edge(GBTN.start)) pickpocketInput('leave');
@@ -1651,6 +1662,7 @@ function lesson(id, text) {
       }
       if (edge(GBTN.lb)) cycleWeapon(-1);
       if (edge(GBTN.rb)) cycleWeapon(1);
+      if (edge(GBTN.rstick)) openDistractions();
       if (btn(GBTN.lt)) triggerBlock();
       if (edge(GBTN.rt)) attack('thrust');
       if (edge(GBTN.dup)) castSong('tending');
@@ -1692,6 +1704,10 @@ function lesson(id, text) {
         e.pocketId = e.id + ':' + index;
         e.pocketGold = ['bettany', 'tam', 'hob'].includes(e.id) ? 8 : 4;
       });
+      // Append supplies after historical entities so old entity-index saves still align.
+      for (let i = 0; i < 3; i++) maps.oakhaven.item('pebble', 24.8 + i * 0.2, 26.5);
+      maps.oakhaven.item('empty_bottle', 34.8, 18.5);
+      maps.oakhaven.item('empty_bottle', 35.2, 18.5);
       maps.oakhaven.baseCount = maps.oakhaven.entities.length;
     }
     // Append after historical entities; flags hold trap state, not entity indexes.

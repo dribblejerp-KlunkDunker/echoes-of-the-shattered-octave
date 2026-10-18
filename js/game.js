@@ -100,6 +100,7 @@ function startGame() {
   G.boreHold = 0; G.boreGolems = 0; G.glassLock = 0; G.webT = 0; G.rootWard = 0; G.murmurT = 0; G.whistleT = 0; G.stillT = 0; G.unwriting = false; G.hurtT = 0; G.songFx = 0; G.attack.t = 0; G.song.t = 0; G.keys = {};
   $('#msgs').innerHTML = ''; $('#view').classList.remove('unwrite'); ['#death', '#ending', '#event'].forEach(hide); closeModal();
   for (let i = 0; i < CREATE.bio.length; i++) G.flags[BIOGRAPHY[i].a[CREATE.bio[i]].flag] = true;
+  G.throwReady = 0;
   G.maps = buildAllMaps();
   journal('main', 'I came up the Greenroot road to Oakhaven on Nullday, autumn, 419 SR. The gate-warden will know where the Cantor lives.');
   // intro
@@ -122,6 +123,10 @@ function hydrate(e) {
   return e;
 }
 function loadMap(id, pos) {
+  if (G.map) {
+    for (const e of G.map.entities) if (e.investigation) { delete e.investigation; if (e.state === 'investigate') e.state = 'idle'; }
+    for (let i = G.map.entities.length - 1; i >= 0; i--) if (G.map.entities[i].distractionT != null) G.map.entities.splice(i, 1);
+  }
   const m = G.maps[id]; G.map = m; G.mapId = id; G.ents = m.entities; m.entities.forEach(hydrate);
   for (const e of m.entities) { if (e.requires && !e.dead) e.hidden = !G.flags[e.requires]; if (e.until && G.flags[e.until]) e.hidden = true; if (e.drylamp) e.glow = G.flags.lamps_lit ? 0.65 : 0; if (e.id === 'halder' && G.flags.halder_rest) e.loop = false; }
   Engine.setMap(m);
@@ -214,6 +219,77 @@ function spawnHound() {
   }
 }
 
+// ---------------------------------------------------------------- throwable distractions
+const DISTRACTIONS = {
+  pebble: { name: 'Skipping stone', reach: 5, hearing: 7, duration: 6 },
+  empty_bottle: { name: 'Empty glass bottle', reach: 7, hearing: 11, duration: 9 },
+};
+function distractionImpact(id) {
+  const spec = DISTRACTIONS[id]; if (!spec || !G.map) return null;
+  const c = Engine.cam, dx = Math.cos(c.dir), dy = Math.sin(c.dir);
+  let point = null;
+  for (let d = 0.3; d <= spec.reach; d += 0.1) {
+    const x = c.x + dx * d, y = c.y + dy * d;
+    if (G.map.isSolidCell(Math.floor(x), Math.floor(y)) || G.ents.some(e => e.solid && !e.dead && !e.hidden && dist2(x, y, e.x, e.y) < (e.radius || 0.3) ** 2)) break;
+    point = { x, y, distance: d };
+  }
+  return point && point.distance >= 0.7 ? point : null;
+}
+function updateInvestigation(e, dt) {
+  const target = e.investigation;
+  if (!target || e.state !== 'investigate') return false;
+  target.left -= dt;
+  const dx = target.x - e.x, dy = target.y - e.y, distance = Math.hypot(dx, dy);
+  if (target.left <= 0) { delete e.investigation; e.state = 'idle'; return false; }
+  if (distance > 0.6) {
+    e.facing = Math.atan2(dy, dx);
+    moveWithSlide(e, dx / distance * (e.lawGuard ? 1.6 : e.def.speed) * dt, dy / distance * (e.lawGuard ? 1.6 : e.def.speed) * dt, e);
+  }
+  return true;
+}
+function throwDistraction(id) {
+  if (G.state !== 'play' || G.dead || !DISTRACTIONS[id]) return false;
+  if (!G.has(id)) { msg('You have none of those left. Find loose stones or empty bottles.', 'warn'); return false; }
+  if (G.time < (G.throwReady || 0)) { msg('Let the last throw land before throwing again.', 'warn', 1600); return false; }
+  const point = distractionImpact(id), spec = DISTRACTIONS[id];
+  if (!point) { msg('Not enough room to throw. Aim away from the nearby wall or person.', 'warn'); return false; }
+  G.take(id); G.throwReady = G.time + 0.75;
+  let heard = 0;
+  for (const e of G.ents) {
+    const enemy = e.kind === 'enemy' && e.def && !e.def.boss && !e.def.wildsBoss && !['wearer', 'weaver', 'pressman', 'aegis', 'horn'].includes(e.type);
+    if ((!e.lawGuard && !enemy) || e.dead || e.hidden || e.passive || e.state === 'passive' || e.state === 'chase' || e.stun > 0) continue;
+    if (e.lawGuard && crimeState().bounty && dist2(e.x, e.y, Engine.cam.x, Engine.cam.y) < 196 && los(e.x, e.y, Engine.cam.x, Engine.cam.y)) continue;
+    const range = spec.hearing * (los(e.x, e.y, point.x, point.y) ? 1 : 0.35);
+    if (dist2(e.x, e.y, point.x, point.y) > range * range) continue;
+    e.investigation = { x: point.x, y: point.y, left: spec.duration };
+    e.state = 'investigate'; heard++;
+  }
+  G.ents.push({ kind: 'deco', sprite: 'loot', x: point.x, y: point.y, scale: 0.18, glow: 0.85, solid: false, nopick: true, transient: true, distractionT: 1.2 });
+  // Impact sound does not raise noise at the thrower's location or deal damage.
+  if (id === 'empty_bottle') Audio_.sfx.crack(); else Audio_.sfx.step('stone');
+  msg(`${spec.name}: ${id === 'empty_bottle' ? 'glass breaks' : 'stone clatters'} ${point.distance.toFixed(1)} paces ahead. ${heard ? 'Nearby listeners turn toward the impact.' : 'No idle listener reacts.'}`, 'warn', 4000);
+  return true;
+}
+function openDistractions() {
+  if (G.state !== 'play' || G.dead) return;
+  const map = G.map; G.state = 'panel'; G.touch.fx = G.touch.fy = 0;
+  openModal(`<h2>A noise elsewhere</h2><p>Throw along your current aim. Walls and solid bodies stop the throw; it never deals damage. Bottles carry farther than stones. Idle guards and ordinary enemies investigate for a few seconds, but visible threats, active combat and bosses take priority.</p>
+  <p class="muted">Empty bottles are separate from Vox-Bottles. Aim before opening; inspection costs nothing.</p>
+  <div class="btns">${Object.entries(DISTRACTIONS).map(([id, spec], i) => `<button class="dfbtn" id="throw-${id}" ${!G.has(id) ? 'disabled' : ''}>${i + 1}. ${spec.name} (${G.count(id)})</button>`).join('')}<button class="dfbtn" id="throw-leave">Keep them</button></div><p class="muted">1 stone · 2 bottle · Escape leaves. Controller: A stone, X bottle, B leaves.</p>`, 'distractions');
+  const leave = () => { closeModal(); G.keys = {}; G.touch.fx = G.touch.fy = 0; if (!G.dead) G.state = 'play'; };
+  $('#throw-leave').onclick = leave;
+  for (const id of Object.keys(DISTRACTIONS)) $('#throw-' + id).onclick = () => {
+    if (G.openPanel !== 'distractions') return;
+    const valid = G.map === map && !G.dead; leave(); if (valid) throwDistraction(id);
+  };
+}
+function tickDistractions(dt) {
+  for (let i = G.ents.length - 1; i >= 0; i--) if (G.ents[i].distractionT != null) {
+    G.ents[i].distractionT -= dt;
+    if (G.ents[i].distractionT <= 0) G.ents.splice(i, 1);
+  }
+}
+
 // ---------------------------------------------------------------- enemies
 function enemyUpdate(e, dt) {
   const p = G.player, c = Engine.cam, d = e.def;
@@ -223,6 +299,10 @@ function enemyUpdate(e, dt) {
   const dx = c.x - e.x, dy = c.y - e.y, dist = Math.sqrt(dx * dx + dy * dy);
   const canSee = dist < 7 * (UPG.weatherFx ? UPG.weatherFx.sight : 1) && los(e.x, e.y, c.x, c.y);
   const hearRange = (1.5 + G.noise * (d.noiseLure ? 1.4 : 0.8) + (G.flags.thread_kept && d.cacophony ? 0.8 : 0)) * (UPG.weatherFx ? UPG.weatherFx.hear : 1);
+  if (e.state === 'investigate') {
+    if ((canSee && dist < 5) || dist < hearRange) { delete e.investigation; e.state = 'idle'; }
+    else if (updateInvestigation(e, dt)) return;
+  }
   if (e.state === 'idle') {
     if ((canSee && dist < 5) || (dist < hearRange && !e.guard) || (e.guard && canSee && dist < 4)) { e.state = 'chase'; if (d.shriek) drownedShriek(e); Audio_.sfx.enemy(d, 'alert'); }
     else if (!e.guard) { e.wanderT -= dt; if (e.wanderT <= 0) { e.wanderT = rnd(1, 4); e.wdir = rnd(0, 6.28); } if (dist2(e.x, e.y, e.homeX, e.homeY) < 9 && e.wanderT > 1.5) moveWithSlide(e, Math.cos(e.wdir) * d.speed * 0.3 * dt, Math.sin(e.wdir) * d.speed * 0.3 * dt, e); }
@@ -400,7 +480,7 @@ function attack(dirLabel) {
   e.hp -= dmg; e.flash = true; setTimeout(() => e.flash = false, 90);
   if (w.type === 'glass') Audio_.sfx.glasshit(); else if (w.type === 'bronze') { Audio_.sfx.hit(); Audio_.sfx.bell(); } else Audio_.sfx.hit();
   Audio_.sfx.enemy(d, 'hurt');
-  if (e.state === 'idle' || e.state === 'passive') e.state = 'chase';
+  if (e.state === 'idle' || e.state === 'passive' || e.state === 'investigate') { delete e.investigation; e.state = 'chase'; e.alertT = 8; }
   if (dmg > 0) msg(w.type === 'bolt' ? `Your bolt takes ${theName(d.name, false)} for ${dmg}.` : w.type === 'shot' ? `Your shot breaks on ${theName(d.name, false)} for ${dmg}.` : `Your ${dirLabel || 'blow'} lands on ${theName(d.name, false)} for ${dmg}.`, '', 1800);
   if (e.hp <= 0) killEnemy(e, w.type === 'glass');
 }
@@ -481,12 +561,13 @@ function renderArrest() {
 }
 function tickLaw(dt) {
   G.lawGrace = Math.max(0, (G.lawGrace || 0) - dt);
-  if (G.mapId !== 'oakhaven' || G.flags.greening || !crimeState().bounty) return;
-  const c = Engine.cam;
+  if (G.mapId !== 'oakhaven' || G.flags.greening) return;
+  const c = Engine.cam, wanted = crimeState().bounty > 0;
   for (const e of G.ents) {
     if (!e.lawGuard || e.hidden || e.dead) continue;
     const dx = c.x - e.x, dy = c.y - e.y, distance = Math.hypot(dx, dy);
-    if (distance > 14 || !los(e.x, e.y, c.x, c.y)) continue;
+    if (!wanted || distance > 14 || !los(e.x, e.y, c.x, c.y)) { updateInvestigation(e, dt); continue; }
+    delete e.investigation; e.state = 'idle';
     e.facing = Math.atan2(dy, dx);
     if (distance < 1.8 && !G.lawGrace) { renderArrest(); return; }
     if (distance > 1.2) moveWithSlide(e, dx / distance * 1.6 * dt, dy / distance * 1.6 * dt, e);
@@ -920,6 +1001,7 @@ function pickUp(e, theftConfirmed = false) {
 }
 function useItem(slot) {
   const it = ITEMS[slot.id], p = G.player;
+  if (it.use === 'distraction') { closeModal(); G.state = 'play'; throwDistraction(slot.id); return; }
   if (it.use === 'heal') { p.hp = Math.min(p.hpMax, p.hp + it.n); G.take(slot.id); msg('Honey, raw egg and willow-bark. You feel a little less like dying.', 'good'); }
   else if (it.use === 'voice') { p.voice = Math.min(p.voiceMax, p.voice + it.n); G.take(slot.id); msg('The honey eases your throat.', 'good'); }
   else if (it.use === 'ammo') { const k = it.ammo || 'pellets'; p[k] = (p[k] || 0) + it.n; G.take(slot.id); msg(k === 'bolts' ? 'You fill your quiver.' : 'You load three pellets.', 'good'); }
@@ -1435,6 +1517,7 @@ function tbtn(id, down, up) {
 tbtn('#t-atk', null, (dx, dy) => { const r = canvas.getBoundingClientRect(); attack(swingLabel(dx / r.width * VW, dy / r.height * VH, 6)); });
 tbtn('#t-use', null, () => interact());
 tbtn('#t-pocket', null, () => openPickpocket());
+tbtn('#t-throw', null, () => openDistractions());
 tbtn('#t-run', () => { G.touch.run = !G.touch.run; $('#t-run').classList.toggle('lit', G.touch.run); });
 tbtn('#t-song', () => { if (G.state === 'play') { G.state = 'panel'; renderSongs(); } });
 // per-frame housekeeping for the control layer
@@ -1455,6 +1538,11 @@ window.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse' 
 window.addEventListener('keydown', (ev) => {
   if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
   const k = keyOf(ev);
+  if (G.openPanel === 'distractions') {
+    const id = { '1': 'throw-pebble', '2': 'throw-empty_bottle', escape: 'throw-leave' }[k];
+    if (id) { ev.preventDefault(); if (!ev.repeat) $('#' + id).click(); }
+    return;
+  }
   if (G.openPanel === 'pickpocket') {
     const action = { enter: 'take', ' ': 'take', escape: 'leave' }[k];
     if (action) { ev.preventDefault(); if (!ev.repeat) pickpocketInput(action); }
@@ -1487,7 +1575,8 @@ window.addEventListener('keydown', (ev) => {
   if (ev.repeat && !['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'q', 'shift'].includes(k)) return;
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'tab', 'f1', 'f2', 'f3', 'f4', 'f5'].includes(k)) ev.preventDefault();
   if (G.state === 'play') {
-    if (k === 'p') openPickpocket();
+    if (k === 'o') openDistractions();
+    else if (k === 'p') openPickpocket();
     else if (k === 'e' || k === ' ') interact();
     else if (k === 'i') { G.state = 'panel'; renderInventory(); }
     else if (k === 'c') { G.state = 'panel'; renderCharacter(); }
@@ -1588,12 +1677,13 @@ function update(dt) {
   updateNarrow(dt, moving, running);
   tickTraps(); if (G.dead) return;
   tickCatacombsPuzzles();
+  tickDistractions(dt);
   // entities
   for (const e of G.ents) {
     if (e.kind === 'enemy') enemyUpdate(e, dt);
     else if ((e.kind === 'npc' && e.wander) || (e.kind === 'deco' && e.wander)) {
       e.wanderT -= dt; if (e.wanderT <= 0) { e.wanderT = rnd(2, 6); e.dir = rnd(0, 6.28); e.moving = Math.random() < 0.6; }
-      if (e.lawGuard && G.mapId === 'oakhaven' && crimeState().bounty) continue;
+      if (e.lawGuard && (e.state === 'investigate' || (G.mapId === 'oakhaven' && crimeState().bounty))) continue;
       if (e.moving && dist2(e.x, e.y, e.homeX, e.homeY) < 20) { if (!moveWithSlide(e, Math.cos(e.dir) * 0.6 * dt, Math.sin(e.dir) * 0.6 * dt, e)) e.dir += 1.5; } else if (e.moving) { e.dir = Math.atan2(e.homeY - e.y, e.homeX - e.x); moveWithSlide(e, Math.cos(e.dir) * 0.6 * dt, Math.sin(e.dir) * 0.6 * dt, e); }
     } else if (e.kind === 'npc' && e.loop) {
       e.loopT = (e.loopT || 0) + dt; moveWithSlide(e, Math.cos(e.loopT * 0.7) * 0.5 * dt * 1.2, 0, e);
@@ -1785,6 +1875,7 @@ function restoreGame(d) {
   G.boreGolems = Math.max(0, d.boreGolems | 0);
   G.glassLock = isFinite(+d.glassLock) ? Math.max(0, +d.glassLock) : 0;
   G.rootWard = isFinite(+d.rootWard) ? Math.max(0, +d.rootWard) : 0;
+  G.throwReady = 0;
   G.dead = false; G.stillT = 0; G.unwriting = false; G.murmurT = 0; G.whistleT = 0; G.attack.t = 0; G.song.t = 0; G.keys = {}; $('#msgs').innerHTML = '';
   G.maps = probe; if (G.flags.greening) G.maps.oakhaven = buildOakhaven(true);
   for (const id in G.maps) {
@@ -1822,7 +1913,7 @@ async function decodeSave(code) {
 }
 // player-typed or save-derived text is stripped of markup characters before it can reach innerHTML
 function cleanName(s) { return String(s == null ? '' : s).replace(/[<>&"`\\]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24) || 'Nameless'; }
-function pickEnt(o) { const r = {}; for (const k of ENT_FIELDS) if (o[k] !== undefined) r[k] = o[k]; if (r.name != null) r.name = cleanText(r.name, 60); for (const k of ['x', 'y', 'hp', 'homeX', 'homeY']) if (r[k] != null && !isFinite(r[k])) delete r[k]; return r; }
+function pickEnt(o) { const r = {}; for (const k of ENT_FIELDS) if (o[k] !== undefined) r[k] = o[k]; if (r.state === 'investigate') r.state = 'idle'; if (r.name != null) r.name = cleanText(r.name, 60); for (const k of ['x', 'y', 'hp', 'homeX', 'homeY']) if (r[k] != null && !isFinite(r[k])) delete r[k]; return r; }
 function cleanText(s, n) { return String(s == null ? '' : s).replace(/[<>]/g, '').slice(0, n || 2000); }
 function slotSummary(d) { const p = d.player; return `${cleanName(p.name)}, ${CLASSES.find(c => c.id === p.cls)?.name || ''} · Lv ${p.level} · ${DAYS[(d.day | 0) % DAYS.length]} · ${cleanText(d.mapName || d.mapId, 60)}`; }
 function renderMenu() {
