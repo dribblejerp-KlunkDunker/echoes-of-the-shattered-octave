@@ -1608,8 +1608,8 @@ function lesson(id, text) {
     const btn = (i) => !!(gp.buttons[i] && gp.buttons[i].pressed);
     const edge = (i) => btn(i) && !prev[i];
     const play = G.state === 'play' && !G.dead;
-    if (['arrest', 'prison', 'wanted', 'theft'].includes(G.openPanel)) {
-      const actions = { arrest: ['crime-pay', 'crime-flee', 'crime-jail', 'crime-bribe', 'crime-threat'], prison: ['prison-serve', 'law-leave', 'prison-pay'], wanted: ['law-leave', 'law-leave', 'law-leave'], theft: ['crime-take', 'crime-leave', 'crime-leave'] }[G.openPanel];
+    if (['arrest', 'prison', 'wanted', 'theft', 'stable'].includes(G.openPanel)) {
+      const actions = { arrest: ['crime-pay', 'crime-flee', 'crime-jail', 'crime-bribe', 'crime-threat'], prison: ['prison-serve', 'law-leave', 'prison-pay'], wanted: ['law-leave', 'law-leave', 'law-leave'], theft: ['crime-take', 'crime-leave', 'crime-leave'], stable: ['stable-rent', 'stable-leave', 'stable-return'] }[G.openPanel];
       if (edge(GBTN.a)) $('#' + actions[0])?.click();
       else if (edge(GBTN.b) || edge(GBTN.start)) $('#' + actions[1])?.click();
       else if (edge(GBTN.x)) $('#' + actions[2])?.click();

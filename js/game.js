@@ -90,7 +90,7 @@ function newPlayer() {
   const hpMax = c.hp + Math.floor(a.Endurance / 10), voiceMax = c.voice + Math.floor(a.Willpower / 10), fatMax = a.Strength + a.Endurance;
   return { name: CREATE.name, cls: c, face: CREATE.face, attrs: a, hp: hpMax, hpMax, voice: voiceMax, voiceMax, fat: fatMax, fatMax, gold: 12, pellets: c.pellets,
     inv: [], weapons: c.weapons.slice(), weapon: 0, songs: c.songs.slice(), glass: c.glass ? 42 : 0, glassed: c.glass, fragments: c.id === 'archivist' ? 3 : 0, xp: 0, level: 1, kills: 0,
-    armor: {}, bolts: 0 };
+    armor: {}, bolts: 0, horseUntil: 0 };
 }
 // what each calling walks out of the door wearing
 const CLASS_KIT = { blade: ['a_jerkin', 'a_gloves'], cantor: ['a_gambeson', 'a_softboots'], corsair: ['a_jerkin', 'a_buckler', 'a_hobnails'], archivist: ['a_hood', 'a_gambeson'], penitent: ['a_gambeson', 'a_kettle'], quarry: ['a_jerkin', 'a_hobnails', 'a_gloves'] };
@@ -1342,6 +1342,7 @@ function useItem(slot) {
 }
 function useDeco(e) {
   if (useLawDeco(e)) return;
+  if (e.use === 'stable') { openStable(); return; }
   if (e.bodyCover) { msg('A shrouded body recess. Drag a body within reach, then G / touch Body / controller left stick to conceal it. Hidden remains can be recovered here during this visit.', 'warn', 6500); return; }
   if (e.use === 'note_reliquary') { openNoteLock(e); return; }
   if (e.use === 'pressure_plate') { openPressurePlate(e); return; }
@@ -2245,6 +2246,10 @@ function restoreGame(d) {
   G.boreGolems = Math.max(0, d.boreGolems | 0);
   G.glassLock = isFinite(+d.glassLock) ? Math.max(0, +d.glassLock) : 0;
   G.rootWard = isFinite(+d.rootWard) ? Math.max(0, +d.rootWard) : 0;
+  // Imported hire terms are untrusted numbers: clamp to at most two days from the loaded clock.
+  const clockNow = G.day * 24 + G.tod * 24;
+  const horseRaw = isFinite(+G.player.horseUntil) ? Math.max(0, +G.player.horseUntil) : 0;
+  G.player.horseUntil = Math.min(horseRaw, clockNow + 48);
   G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0; G.coverSuspicion = 0; G.lawGrace = 0;
   G.dead = false; G.stillT = 0; G.unwriting = false; G.murmurT = 0; G.whistleT = 0; G.attack.t = 0; G.song.t = 0; G.keys = {}; $('#msgs').innerHTML = '';
   G.maps = probe; if (G.flags.greening) G.maps.oakhaven = buildOakhaven(true);

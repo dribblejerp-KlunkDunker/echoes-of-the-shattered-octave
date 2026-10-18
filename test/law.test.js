@@ -179,7 +179,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       check(G.mapId === 'oakhaven' && G.player.gold === 0 && crimeState().bounty === 0 && G.count('tonic') === 3 && G.count('honey') === 2, 'pay prison fine returns merged evidence exactly');
       check(Math.abs(G.day * 24 + G.tod * 24 - clock) < 1e-6 && crimeState().jailHours === 0, 'payment does not claim served time');
       resetLaw(); const old = JSON.parse(JSON.stringify(snapshotGame())); delete old.player.crime; delete old.maps.watchhouse;
-      old.maps.oakhaven.ents = old.maps.oakhaven.ents.slice(0, -3);
+      // Emulate an older save by dropping everything the town appends after its historical recess.
+      const liveOh = G.maps.oakhaven, recessIdx = liveOh.entities.findIndex(e => e.bodyCover);
+      const appendedTown = liveOh.entities.length - 1 - recessIdx;
+      old.maps.oakhaven.ents = old.maps.oakhaven.ents.slice(0, -appendedTown);
       for (const id of ['tavern', 'greenhall', 'mill', 'surgery', 'chapel', 'tannery']) old.maps[id].ents = old.maps[id].ents.slice(0, ['tavern', 'greenhall', 'mill'].includes(id) ? -2 : -1);
       const historicalRecess = old.maps.oakhaven.ents.length - 1;
       old.maps.oakhaven.ents[historicalRecess].name = 'Historical recess marker';

@@ -9,6 +9,10 @@
 #t-pocket[hidden], #t-body[hidden], #t-cover[hidden], #cover-status[hidden] { display: none; }
 .cover-study { margin: 1cqh 0; padding: 1.5cqh 2cqw; background: #1c2525; border: 2px ridge #a3b3a5; }
 .cover-study b { font-family: var(--font-display); color: #e3e9d0; }
+.horse-study { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1cqw; margin: 1.4cqh 0; padding: .9cqh 1.2cqw; background: #17140f; border-left: 3px solid #9c7a3f; }
+.horse-study b { font-family: var(--font-display); letter-spacing: .1em; color: var(--gold); }
+.horse-study span { font-family: var(--font-body); color: var(--parch-dim); }
+.tv-horse { margin: 0 0 .6cqh; }
 .watch-social { display: grid; gap: 1cqh; margin: 1.4cqh 0; }
 .watch-social div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1cqw; padding: .9cqh 1.2cqw; background: #17140f; border-left: 3px solid #9c7a3f; }
 .watch-social b { font-family: var(--font-display); letter-spacing: .1em; color: var(--gold); }

@@ -585,8 +585,9 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       for (const id of ['oakhaven', 'quarry', 'cloister']) {
         const m = G.maps[id], recess = m.entities.find(e => e.bodyCover);
         check(recess && !recess.solid && !m.isBlocked(recess.x | 0, recess.y | 0), id + ' recess is accessible nonblocking floor');
-        const lawAdditions = id === 'oakhaven' ? 3 : 0; // two warrants and a constable append after the historical recess
-        check(m.entities.indexOf(recess) === m.baseCount - 1 - lawAdditions, id + ' recess retains its historical index before new law entities');
+        const recessIdx = m.entities.indexOf(recess);
+        if (id === 'oakhaven') check(recessIdx >= 0 && recessIdx < m.baseCount && m.entities.slice(recessIdx + 1, m.baseCount).every(e => e.wantedPoster || e.lawGuard || e.use === 'stable'), id + ' recess retains its historical index before append-only law and stable entities');
+        else check(recessIdx === m.baseCount - 1, id + ' recess retains its historical index');
       }
       const map = new GameMap('oakhaven', 'Body fixture', 32, 24, { floor: 't_flag', ceil: 't_stone', fogDist: 20, spawn: { x: 5.5, y: 10.5, dir: 0 } });
       map.border('t_stone'); G.maps.oakhaven = map; loadMap('oakhaven'); G.state = 'panel';

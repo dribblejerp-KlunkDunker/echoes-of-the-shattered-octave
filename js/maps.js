@@ -84,6 +84,17 @@ function addLawWorld(maps) {
     }
     m.baseCount = m.entities.length;
   }
+  // Stable sign beside the North Gate square; appended last so historical indexes stay put.
+  let stall = null;
+  for (let r = 2; r <= 10 && !stall; r++) for (let a = 0; a < 32 && !stall; a++) {
+    const x = Math.round(oh.spawn.x + Math.cos(a / 32 * Math.PI * 2) * r), y = Math.round(oh.spawn.y + Math.sin(a / 32 * Math.PI * 2) * r);
+    if (x < 2 || y < 2 || x >= oh.w - 2 || y >= oh.h - 2) continue;
+    if (oh.get(x, y) || oh.isBlocked(x, y)) continue;
+    if (oh.entities.some(e => dist2(e.x, e.y, x + 0.5, y + 0.5) < 1.3)) continue;
+    stall = { x: x + 0.5, y: y + 0.5 };
+  }
+  if (!stall) throw new Error('No safe stable placement in Oakhaven');
+  oh.deco('sign', stall.x, stall.y, { solid: false, scale: 0.85, use: 'stable', label: 'North Gate stables — hire or return a horse' });
   oh.baseCount = oh.entities.length;
 }
 

@@ -148,6 +148,7 @@ function travelMinutes(d) {
   const dx = (d.fx - h[0]) * (ar >= 1 ? 1 : ar), dy = (d.fy - h[1]) * (ar >= 1 ? 1 / ar : 1);
   let mins = Math.max(10, Math.hypot(dx, dy) * R.across);
   if (TRAVEL.pace === 'cautious') mins *= 1.35;
+  if (horseActive()) mins *= HORSE.speed;
   return Math.round(mins / 5) * 5;
 }
 function travelFmt(mins) { const h = Math.floor(mins / 60), mm = mins % 60; return (h ? `${h} hour${h > 1 ? 's' : ''}` : '') + (h && mm ? ' ' : '') + (mm || !h ? `${mm} minutes` : ''); }
@@ -157,6 +158,54 @@ function travelRisk(d, mins) {
   const night = G.tod < 0.25 || G.tod > 0.83 ? 1.4 : 1;
   return Math.min(0.85, (mc.risk || 0.2) * (TRAVEL.pace === 'cautious' ? 0.4 : 1) * night * clamp(mins / 45, 0.4, 1.5));
 }
+
+// ---------------------------------------------------------------- horses
+// A hired horse is a travel modifier rather than a vehicle you steer: it shortens
+// road time and carries fatigue. The term is absolute world hours, validated on load.
+const HORSE = { cost: 25, refund: 10, hours: 24, speed: 0.65 };
+function horseClock() { return (Number(G.day) || 0) * 24 + (Number(G.tod) || 0) * 24; }
+function horseUntil() { const t = Number(G.player && G.player.horseUntil); return Number.isFinite(t) && t > 0 ? t : 0; }
+function horseActive() { return horseUntil() > horseClock() + 1e-6; }
+function horseHoursLeft() { return Math.max(0, horseUntil() - horseClock()); }
+function horseFmtLeft(h) { const m = Math.round(h * 60); return m >= 120 ? `${(m / 60).toFixed(1).replace(/\.0$/, '')} hours` : `${m} minutes`; }
+function openStable() {
+  if (G.state !== 'play' || G.dead) return;
+  const map = G.map;
+  G.state = 'panel';
+  const active = horseActive(), can = Number.isFinite(G.player.gold) && G.player.gold >= HORSE.cost;
+  openModal(`<h2>The North Gate stables</h2>
+    <p>Tack, hay and a mounting block under the Hedge. The ostler is a thin woman with a farrier's hands, and she does not ask where you are going.</p>
+    <div class="horse-study"><b>${active ? 'Hired: the roan mare' : 'On foot'}</b><span>${active ? `${horseFmtLeft(horseHoursLeft())} left on the hire · ${Math.round((1 - HORSE.speed) * 100)}% faster on the road` : `A day's hire is ${HORSE.cost} sovereigns`}</span></div>
+    <p>While she is hired, world-map journeys take about a third less time and you arrive less worn. She waits outside any door you go in by. Return her early and the ostler hands back ${HORSE.refund} sovereigns.</p>
+    <div class="btns"><button class="dfbtn" id="stable-rent" ${active || !can ? 'disabled' : ''}>Hire her for a day${can || active ? '' : ' (no coin)'}</button><button class="dfbtn" id="stable-return" ${active ? '' : 'disabled'}>Return her (+${HORSE.refund})</button><button class="dfbtn" id="stable-leave">Leave</button></div>
+    <p class="muted">1 hires · 2 returns · Escape leaves. Controller: A hires, X returns, B leaves.</p>`, 'stable');
+  const token = G.panelToken;
+  const valid = () => G.panelToken === token && G.openPanel === 'stable' && G.state === 'panel' && G.map === map && !G.dead;
+  const leave = () => { closeModal(); G.state = 'play'; G.keys = {}; };
+  $('#stable-leave').onclick = () => { if (valid()) leave(); };
+  $('#stable-rent').onclick = () => {
+    if (!valid()) return;
+    const p = G.player;
+    if (horseActive() || !Number.isFinite(p.gold) || p.gold < HORSE.cost) return;
+    p.gold -= HORSE.cost; p.horseUntil = horseClock() + HORSE.hours;
+    Audio_.sfx.pickup(); leave();
+    msg(`You hire the roan mare for ${HORSE.cost} sovereigns. The ostler ties a green ribbon to the bridle: she is yours until this time tomorrow.`, 'good', 6500);
+  };
+  $('#stable-return').onclick = () => {
+    if (!valid() || !horseActive()) return;
+    const p = G.player; p.horseUntil = 0;
+    p.gold = (Number.isFinite(p.gold) ? p.gold : 0) + HORSE.refund;
+    Audio_.sfx.ui(); leave();
+    msg(`You hand the mare back. The ostler counts ${HORSE.refund} sovereigns into your palm and hangs the green ribbon on its nail.`, '', 5500);
+  };
+}
+window.addEventListener('keydown', (ev) => {
+  if (G.openPanel !== 'stable' || ev.repeat) return;
+  if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
+  const k = typeof keyOf === 'function' ? keyOf(ev) : (ev.key || '').toLowerCase();
+  const id = { '1': 'stable-rent', '2': 'stable-return', escape: 'stable-leave' }[k];
+  if (id) { ev.preventDefault(); const b = $('#' + id); if (b) b.click(); }
+});
 
 // ---------------------------------------------------------------- the panel
 function travelOpen() {
@@ -175,6 +224,7 @@ function travelRender() {
   const html = `<h2>${cont ? 'The Long Octave' : R.name}</h2><button class="dfbtn small close" id="x">Close</button>
     <div class="tv-top"><button class="dfbtn small" id="tv-swap">${cont ? 'Back to ' + TRAVEL_REGIONS[travelRegionOfChapter(travelChapter())].name : 'The Long Octave'}</button>
     <span class="tv-legend">${cont ? '<i class="tv-sw gold"></i> Book One &nbsp; <i class="tv-sw here"></i> You' : '<i class="tv-sw gold"></i> Known &nbsp; <i class="tv-sw grey"></i> Left behind &nbsp; <i class="tv-sw here"></i> You'}</span></div>
+    ${horseActive() ? `<p class="muted tv-horse">Horse hired · ${horseFmtLeft(horseHoursLeft())} left</p>` : ''}
     <div class="tv-body"><canvas id="tvmap" width="${im.naturalWidth || 1440}" height="${im.naturalHeight || 960}"></canvas>
     <div class="tv-side"><div class="tv-info" id="tvinfo"></div>
     <div class="tv-list" id="tvlist">${list}</div>
@@ -222,7 +272,7 @@ function travelInfo(item, sticky) {
   if (!h) { el.innerHTML = TRAVEL.dests.some(d => d.state === 'ok') ? 'Click a gold mark, or a name below, to travel there.' : (TRAVEL.dests.length ? 'These are places you have left behind. The Kestrel does not go back.' : 'Walk, and the map fills in with the places you find.'); return; }
   if (h.state === 'behind') { el.innerHTML = `<b>${h.name}</b>. <span class="muted">Left behind. The Kestrel does not go back.</span>`; return; }
   const mins = travelMinutes(h);
-  el.innerHTML = `<b>${h.name}</b>. About ${travelFmt(mins)} ${TRAVEL.pace === 'cautious' ? 'cautiously' : 'recklessly'}.`;
+  el.innerHTML = `<b>${h.name}</b>. About ${travelFmt(mins)} ${TRAVEL.pace === 'cautious' ? 'cautiously' : 'recklessly'}${horseActive() ? ', mounted' : ''}.`;
 }
 function travelSelect(d) { TRAVEL.sel = d.name; for (const b of document.querySelectorAll('#tvlist [data-dest]')) b.classList.toggle('sel', b.textContent === d.name); travelConfirm(d); }
 function travelConfirm(d) {
@@ -231,6 +281,7 @@ function travelConfirm(d) {
   const arrive = (() => { let t = G.tod + mins / 60 / 24; t -= Math.floor(t); const h = t * 24; return h < 5 ? 'in the dead hour' : h < 7 ? 'before dawn' : h < 12 ? 'in the morning' : h < 17 ? 'in the afternoon' : h < 20 ? 'at dusk' : 'at night'; })();
   const riskTxt = risk === 0 ? 'Inside the Hedge: no one will trouble you.' : risk < 0.1 ? 'The way looks quiet.' : risk < 0.22 ? 'Something may be abroad.' : 'This is hunting country.';
   el.innerHTML = `<p>Travel to <b>${d.name}</b>. About <b>${travelFmt(mins)}</b>, arriving ${arrive}. ${riskTxt}</p>
+    ${horseActive() ? `<p class="muted">The roan mare is saddled: ${Math.round((1 - HORSE.speed) * 100)}% less road time, and she carries most of the wear.</p>` : ''}
     <div class="tv-row"><span class="tone"><button class="dfbtn small${TRAVEL.pace === 'cautious' ? ' sel' : ''}" id="tv-c">Cautiously</button><button class="dfbtn small${TRAVEL.pace === 'reckless' ? ' sel' : ''}" id="tv-r">Recklessly</button></span>
     <span class="muted tv-pace">${TRAVEL.pace === 'cautious' ? 'Slower, keeps to cover, and you arrive rested.' : 'Faster, louder, and you arrive tired.'}</span>
     <button class="dfbtn" id="tv-go"${block ? ' disabled' : ''}>Begin the journey</button></div>
@@ -289,12 +340,14 @@ function travelDraw() {
 function travelGo(d) {
   const block = travelBlocked(); if (block) { travelConfirm(d); return; }
   const mins = travelMinutes(d), risk = travelRisk(d, mins), pace = TRAVEL.pace, p = G.player;
+  const mounted = horseActive();
   travelClose();
   passHours(mins / 60);
-  if (pace === 'cautious') p.fat = Math.min(p.fatMax, p.fat + p.fatMax * 0.25); else p.fat = Math.max(0, p.fat - p.fatMax * 0.2);
+  if (pace === 'cautious') p.fat = Math.min(p.fatMax, p.fat + p.fatMax * 0.25);
+  else p.fat = Math.max(0, p.fat - p.fatMax * (mounted ? 0.08 : 0.2));
   loadMap(d.map, { x: d.x, y: d.y, dir: d.dir });
   G.noise = pace === 'cautious' ? 0.8 : 2.4; G.stillT = 0;
-  msg(`You travel ${pace === 'cautious' ? 'cautiously' : 'recklessly'} for ${travelFmt(mins)} and come to ${d.name}. It is ${timeName()}.`, '', 5000);
+  msg(`You travel ${pace === 'cautious' ? 'cautiously' : 'recklessly'} for ${travelFmt(mins)} and come to ${d.name}${mounted ? (horseActive() ? ', the mare blowing' : ', leading the mare the last mile') : ''}. It is ${timeName()}.`, '', 5000);
   if (Math.random() < risk) travelAmbush(d.map, pace);
 }
 function travelAmbush(mapId, pace) {
