@@ -443,7 +443,7 @@ function crimeState() {
 }
 function theftWitness(target) {
   const c = Engine.cam;
-  return G.ents.find(e => e.kind === 'npc' && !e.companion && !e.dead && !e.hidden &&
+  return G.ents.find(e => e.kind === 'npc' && e !== target && !e.companion && !e.dead && !e.hidden &&
     dist2(e.x, e.y, c.x, c.y) < 64 && los(e.x, e.y, c.x, c.y) &&
     (e.lawGuard || Math.abs(normAng(Math.atan2(c.y - e.y, c.x - e.x) - (Number.isFinite(e.facing) ? e.facing : e.dir || 0))) < Math.PI * 0.65));
 }
@@ -491,6 +491,88 @@ function tickLaw(dt) {
     if (distance < 1.8 && !G.lawGrace) { renderArrest(); return; }
     if (distance > 1.2) moveWithSlide(e, dx / distance * 1.6 * dt, dy / distance * 1.6 * dt, e);
   }
+}
+
+// ---------------------------------------------------------------- Oakhaven pickpocketing
+// Explicit purses only: no shop stock, quest items, children, or companions.
+const PICKPOCKET_RANGE = 1.65;
+let PICKPOCKET = null;
+function canPickpocket(e) {
+  return !!(e && G.mapId === 'oakhaven' && !G.flags.greening && e.kind === 'npc' &&
+    e.pocketId && !e.companion && !e.lawGuard && !e.dead && !e.hidden && G.ents.includes(e));
+}
+function pocketKey(e) { return 'pocket:oakhaven:' + e.pocketId; }
+function pocketReachable(e) {
+  const c = Engine.cam;
+  return canPickpocket(e) && dist2(c.x, c.y, e.x, e.y) <= PICKPOCKET_RANGE ** 2 &&
+    Math.abs(normAng(Math.atan2(e.y - c.y, e.x - c.x) - c.dir)) < 0.7 && los(c.x, c.y, e.x, e.y);
+}
+function pickpocketTarget() {
+  let target = null, best = Infinity;
+  for (const e of G.ents) if (pocketReachable(e)) {
+    const d = dist2(e.x, e.y, Engine.cam.x, Engine.cam.y);
+    if (d < best) { target = e; best = d; }
+  }
+  return target;
+}
+function pocketRisk(e) {
+  const heading = Number.isFinite(e.facing) ? e.facing : (Number.isFinite(e.dir) ? e.dir : 0);
+  const angle = Math.abs(normAng(Math.atan2(Engine.cam.y - e.y, Engine.cam.x - e.x) - heading));
+  const position = angle > Math.PI * 2 / 3 ? 'Behind' : angle < Math.PI / 3 ? 'In front' : 'Beside';
+  const noise = clamp(Number(G.noise) || 0, 0, 10);
+  const skill = clamp(Number(G.player.skills && G.player.skills.Stealth) || 15, 1, 100);
+  const attention = position === 'In front' ? 'Watching you' : noise >= 4 ? 'Listening for you' : 'Unaware of your hand';
+  const chance = Math.round(clamp(40 + skill * 0.4 + (position === 'Behind' ? 25 : position === 'In front' ? -30 : 0) - noise * 3, 5, 90));
+  return { position, attention, chance };
+}
+function openPickpocket() {
+  if (G.state !== 'play' || G.dead) return;
+  const target = pickpocketTarget();
+  if (!target) { msg('Face an Oakhaven adult within arm’s reach to inspect their purse. Walls block your reach.', 'warn', 3000); return; }
+  PICKPOCKET = { target, map: G.map };
+  G.state = 'panel'; G.vel.x = G.vel.y = 0; G.touch.fx = G.touch.fy = 0;
+  renderPickpocket();
+}
+function pickpocketInput(action) {
+  const p = PICKPOCKET;
+  if (!p || G.openPanel !== 'pickpocket' || G.state !== 'panel') return;
+  if (action === 'leave' || G.dead || p.map !== G.map || !pocketReachable(p.target)) {
+    PICKPOCKET = null; closeModal(); G.keys = {}; G.touch.fx = G.touch.fy = 0;
+    if (!G.dead) G.state = 'play'; return;
+  }
+  const e = p.target, key = pocketKey(e);
+  if (action === 'take' && !G.flags[key]) {
+    const risk = pocketRisk(e), witness = theftWitness(e), law = crimeState();
+    const success = Math.random() * 100 < risk.chance;
+    // Consume the opportunity before rewards/callbacks; neither outcome can be farmed.
+    G.flags[key] = success ? 'taken' : 'caught';
+    law.thefts = Math.min(9999, law.thefts + 1);
+    if (!success || witness) {
+      law.bounty = Math.min(9999, law.bounty + 20);
+      e.facing = Math.atan2(Engine.cam.y - e.y, Engine.cam.x - e.x);
+    }
+    if (success) { G.gold(e.pocketGold); gainSkill('Stealth', 2); Audio_.sfx.pickup(); }
+    else { addNoise(1); Audio_.sfx.ui(); }
+    p.message = success ? `You lift ${e.pocketGold} sovereigns.${witness ? ' A witness reports you: +20 Oakhaven bounty.' : ' No one notices.'}` :
+      'Their hand closes over yours. No coin taken; +20 Oakhaven bounty. They will guard their purse from you now.';
+  }
+  renderPickpocket();
+}
+function renderPickpocket() {
+  const p = PICKPOCKET; if (!p) return;
+  const e = p.target, risk = pocketRisk(e), state = G.flags[pocketKey(e)];
+  // NPC names may come from imported saves; escape for a text-only HTML sink.
+  const name = String(e.name || (NPCS[e.id] && NPCS[e.id].name) || 'Townsperson').replace(/[&<>"']/g,
+    c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  openModal(`<h2>A hand near the purse</h2><p>${name}</p>
+    <p class="muted">Optional theft · quest items and shop stock are never taken</p>
+    <div class="pocket-study"><b>${risk.position}</b><span>${risk.attention}</span><strong>${risk.chance}%</strong><span>Chance to lift unseen by the owner · Stealth ${Math.round(Number(G.player.skills && G.player.skills.Stealth) || 15)}</span></div>
+    <p>Approach from behind and let your noise settle. Nearby witnesses can report even a successful lift. Getting caught adds 20 sovereigns to your bounty.</p>
+    <p role="status" aria-live="polite">${p.message || (state === 'taken' ? 'This purse is empty. You already took its loose coin.' : state ? 'They are guarding their purse. You cannot try them again.' : `Purse: ${e.pocketGold} sovereigns. Inspection and leaving are free; each person allows one attempt per saved game.`)}</p>
+    <p class="muted">Enter / Space attempts; Escape leaves. Controller: A attempts, B leaves.</p>
+    <div class="btns"><button class="dfbtn" id="pocket-take" ${state ? 'disabled' : ''}>Lift purse (theft)</button><button class="dfbtn" id="pocket-leave">Leave untouched</button></div>`, 'pickpocket');
+  $('#pocket-take').onclick = () => pickpocketInput('take');
+  $('#pocket-leave').onclick = () => pickpocketInput('leave');
 }
 
 // ---------------------------------------------------------------- optional Cloister note-lock
@@ -981,6 +1063,7 @@ $('#btn-again').onclick = () => { hide('#ending'); show('#title'); G.state = 'ti
 // ---------------------------------------------------------------- dialogue
 const DLG = { npc: null, tone: 'normal', log: [] };
 function talk(e) {
+  if (canPickpocket(e)) e.facing = Math.atan2(Engine.cam.y - e.y, Engine.cam.x - e.x);
   if (e.lawGuard && G.mapId === 'oakhaven' && crimeState().bounty) { renderArrest(); return; }
   if (wildsTalk(e)) return;
   if (e.id === 'hollow' && e.restore === 'hew' && G.flags.sable_returned) { talkHew(e); return; }
@@ -1351,6 +1434,7 @@ function tbtn(id, down, up) {
 }
 tbtn('#t-atk', null, (dx, dy) => { const r = canvas.getBoundingClientRect(); attack(swingLabel(dx / r.width * VW, dy / r.height * VH, 6)); });
 tbtn('#t-use', null, () => interact());
+tbtn('#t-pocket', null, () => openPickpocket());
 tbtn('#t-run', () => { G.touch.run = !G.touch.run; $('#t-run').classList.toggle('lit', G.touch.run); });
 tbtn('#t-song', () => { if (G.state === 'play') { G.state = 'panel'; renderSongs(); } });
 // per-frame housekeeping for the control layer
@@ -1361,6 +1445,7 @@ function controlsTick() {
   if (G.state === 'play' && G.playStart == null) G.playStart = G.time;
   const showLock = G.state === 'play' && !G.touchMode && G.time > (G.playStart || 0) + 1.5 && G.time - (G.playStart || 0) < 45;
   if (showLock !== G._lockHint) { G._lockHint = showLock; $('#lockhint').classList.toggle('on', showLock); }
+  $('#t-pocket').hidden = !G.touchMode || G.state !== 'play' || !pickpocketTarget();
   const showTouch = G.state === 'play' && G.touchMode;
   if (showTouch !== G._touchUi) { G._touchUi = showTouch; $('#touchui').classList.toggle('on', showTouch); }
 }
@@ -1370,6 +1455,11 @@ window.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse' 
 window.addEventListener('keydown', (ev) => {
   if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
   const k = keyOf(ev);
+  if (G.openPanel === 'pickpocket') {
+    const action = { enter: 'take', ' ': 'take', escape: 'leave' }[k];
+    if (action) { ev.preventDefault(); if (!ev.repeat) pickpocketInput(action); }
+    return;
+  }
   if (G.openPanel === 'notelock') {
     const action = { arrowleft: 'left', arrowright: 'right', enter: 'play', ' ': 'play', l: 'listen', escape: 'leave' }[k];
     ev.preventDefault();
@@ -1397,7 +1487,8 @@ window.addEventListener('keydown', (ev) => {
   if (ev.repeat && !['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'q', 'shift'].includes(k)) return;
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'tab', 'f1', 'f2', 'f3', 'f4', 'f5'].includes(k)) ev.preventDefault();
   if (G.state === 'play') {
-    if (k === 'e' || k === ' ') interact();
+    if (k === 'p') openPickpocket();
+    else if (k === 'e' || k === ' ') interact();
     else if (k === 'i') { G.state = 'panel'; renderInventory(); }
     else if (k === 'c') { G.state = 'panel'; renderCharacter(); }
     else if (k === 'l') { G.state = 'panel'; renderLog(); }
@@ -1523,6 +1614,8 @@ function update(dt) {
   const usable = h && !h.dead && (h.kind === 'npc' || h.kind === 'item' || (h.kind === 'deco' && h.use));
   const inReach = usable && h._screen && h._screen.dist <= USE_RANGE;
   G.hintKind = inReach ? h.kind : (!h && hint ? 'door' : '');
+  const pocket = pickpocketTarget();
+  if (pocket) hint += `${hint ? ' · ' : ''}P: inspect purse · controller Y`;
   if (hint !== G.hint) { G.hint = hint; $('#hint').textContent = hint; }
   const far = !!usable && !inReach; if (far !== G.hintFar) { G.hintFar = far; $('#hint').classList.toggle('far', far); }
 }

@@ -2,6 +2,11 @@
 .note-keys button { display: grid; gap: .5em; min-height: 100px; border: 3px ridge #b1965d; background: linear-gradient(#4a3b2a, #201911); }
 .note-keys strong { font: 1.6em var(--font-display); color: #e6cc92; }
 .note-keys .sel { outline: 2px solid #e6cc92; outline-offset: 3px; }
+.pocket-study { display: grid; grid-template-columns: 1fr auto; gap: .6cqh 1.5cqw; margin: 1.5cqh 0; padding: 1.5cqh 2cqw; border: 2px ridge var(--gold-dim); background: #15120e; }
+.pocket-study b { color: var(--gold); font-family: var(--font-display); }
+.pocket-study strong { grid-column: 2; grid-row: 1 / span 2; align-self: center; font: 3.8cqw var(--font-display); color: var(--parch); }
+.pocket-study span:last-child { grid-column: 1 / -1; color: var(--parch-dim); }
+#t-pocket[hidden] { display: none; }
 .lock-study { position: relative; height: 58px; margin: 1.5em 1em; border: 5px ridge #a88a51; background: repeating-linear-gradient(90deg, #211910 0, #211910 9%, #655132 10%); box-shadow: inset 0 4px 14px #050403; }
 .lock-band { position: absolute; top: 5px; bottom: 5px; border: 2px solid #d4bd7a; background: #8c7c3b; opacity: .8; }
 .lock-pick { position: absolute; top: -8px; bottom: -8px; width: 4px; transform: translateX(-2px); background: #e7ece3; border: 1px solid #17120d; }

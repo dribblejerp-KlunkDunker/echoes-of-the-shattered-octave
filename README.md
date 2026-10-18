@@ -68,6 +68,7 @@ Explore Oakhaven and the land past the Hedge, then sail the Drift-Kestrel to Whi
 - Armour across five slots. Armour Rating softens hits, and heavy armour makes noise.
 - Weapons including swords, axe, mace, spear, steam-maul, glass-shot pistol and crossbow. Bronze, bolts and blunt weapons each work best against certain enemies.
 - Merchants who buy and sell. Prices shift with your Personality.
+- Pickpocket Oakhaven adult townsfolk and merchants: inspect a purse, approach quietly from behind, and use Stealth to lift loose coin. Attention, position and noise affect the displayed odds; caught or witnessed theft adds a watch bounty. One saved attempt per person; quest items and shop stock stay untouched.
 - Loot tables for enemies and 13 strongboxes hidden around the world.
 - An original orchestral score, including a Whisper-Grove theme built on Hymn 9, with a music director that changes the music as the situation changes.
 - Save slots for the session, save codes and save files.
@@ -97,6 +98,7 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Look | Move the mouse over the view (rest it at a side edge to keep turning) · right-drag · Q and arrow keys · Z levels your gaze |
 | Attack | Left-click to thrust · hold and move the mouse to slash or chop · wheel or 1–9 changes weapon |
 | Use / Talk | E or Space, or click a bright name under the crosshair |
+| Pickpocket | Face a nearby Oakhaven adult, P to inspect · touch Purse / controller Y · Enter/Space or A attempts, Escape or B leaves |
 | Songs | Tab opens the song-book · F1–F5 cast · N murmurs |
 | Panels | I inventory · C character · L logbook · M map · T world map and travel · R rest · K ledger · Esc options and save |
 | Sound | V sound on/off · B music on/off |
