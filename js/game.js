@@ -130,6 +130,7 @@ function loadMap(id, pos) {
   Audio_.setScene(m.music);
   msg(m.name, 'warn', 3500);
   if (id === 'lyra_house' && G.flags.rite_started && !G.flags.lyra_taken_seen) { G.flags.lyra_taken_seen = true; msg('The hearth is cold. A proctor\'s seal is pasted over the shutter. They have taken her into the Church\'s protection.', 'bad', 8000); }
+  if (id === 'catacombs') syncCatacombsPuzzles();
   G.fadeT = 0.5;
 }
 function transfer(portal) {
@@ -548,6 +549,156 @@ function renderNoteLock() {
   $('#note-leave').onclick = () => noteLockInput('leave');
 }
 
+// ---------------------------------------------------------------- optional Catacombs physical puzzles
+const PLATE_FLAG = 'catacombs_plate_vault';
+const PLATE_ANCHOR_FLAG = 'catacombs_plate_anchored';
+const MIRROR_FLAG = 'catacombs_mirror_vault';
+const MIRROR_DIRS = ['North', 'East', 'South', 'West'];
+const MIRROR_ANGLES = ['/', '\\']; // 0: N<->E, S<->W ; 1: N<->W, S<->E
+let MIRROR_PUZZLE = null;
+function mirrorKey(id) { return 'mirror:catacombs:' + id; }
+function getMirrorAngle(id, defAngle = 0) {
+  const v = G.flags && G.flags[mirrorKey(id)];
+  return v === 0 || v === 1 ? v : (defAngle ? 1 : 0);
+}
+function traceCatacombsBeam() {
+  const m1 = getMirrorAngle('m1', 1); // starts \ (1), needs / (0): S -> E
+  const m2 = getMirrorAngle('m2', 1); // starts \ (1), needs / (0): E -> N
+  const m3 = getMirrorAngle('m3', 0); // starts / (0), needs \ (1): N -> E
+  const path = [{ node: 'Lantern (14.5, 4.5)', dir: 'North', x: 14.5, y: 4.5 }];
+  const d1 = m1 === 0 ? 'East' : 'West';
+  path.push({ node: `West mirror [1] (${MIRROR_ANGLES[m1]})`, dir: d1, x: 14.5, y: 2.5 });
+  if (d1 !== 'East') return { hit: false, path, summary: 'The beam turns west into the niche wall at Mirror 1.' };
+  const d2 = m2 === 0 ? 'North' : 'South';
+  path.push({ node: `Center mirror [2] (${MIRROR_ANGLES[m2]})`, dir: d2, x: 22.5, y: 2.5 });
+  if (d2 !== 'North') return { hit: false, path, summary: 'The beam turns south into the gallery floor at Mirror 2.' };
+  const d3 = m3 === 1 ? 'East' : 'West';
+  path.push({ node: `North-east mirror [3] (${MIRROR_ANGLES[m3]})`, dir: d3, x: 22.5, y: 1.5 });
+  if (d3 !== 'East') return { hit: false, path, summary: 'The beam turns west away from the lens at Mirror 3.' };
+  path.push({ node: 'Prismatic Lens (26.0, 1.5)', dir: 'Lock lit', x: 26.0, y: 1.5 });
+  return { hit: true, path, summary: 'A green-gold beam links all three mirrors and fills the eastern prismatic lens.' };
+}
+function syncCatacombsPuzzles() {
+  const m = G.maps && G.maps.catacombs; if (!m || !G.flags) return;
+  const plateDoor = m.doors[26 * m.w + 10];
+  const plateHeld = !!G.flags[PLATE_ANCHOR_FLAG] || !!G.flags[PLATE_FLAG] ||
+    (G.map === m && G.ents.some(e => e.use === 'pressure_plate' && dist2(e.x, e.y, Engine.cam.x, Engine.cam.y) < 0.42));
+  if (plateHeld && !G.flags[PLATE_FLAG]) {
+    G.flags[PLATE_FLAG] = true; // claim before reward so reload/re-entry cannot duplicate
+    G.give('shard'); gainSkill('Lore', 2); Audio_.sfx.door();
+    msg('The drowned flagstones sink under the weight. In the west wall of the chapel, a counter-weight niche grinds open (1 Light-Glass Shard).', 'good', 4500);
+  }
+  if (plateDoor) plateDoor.target = (plateHeld || G.flags[PLATE_FLAG]) ? 1 : 0;
+  for (const e of m.entities) {
+    if (e.use === 'pressure_plate') {
+      const anchored = !!G.flags[PLATE_ANCHOR_FLAG];
+      e.glow = (anchored || G.flags[PLATE_FLAG]) ? 0.75 : 0.35;
+      e.label = anchored ? 'Weighted pressure plate — anchored with a ballast block (niche open)' : 'Sunken pressure plate — stand on it or inspect to place a ballast stone';
+    } else if (e.use === 'turning_mirror') {
+      const ang = getMirrorAngle(e.mirrorId, e.defaultAngle);
+      e.label = `Turning brass mirror (${MIRROR_ANGLES[ang]}) — inspect to rotate`;
+    }
+  }
+  const trace = traceCatacombsBeam();
+  if (trace.hit && !G.flags[MIRROR_FLAG]) {
+    G.flags[MIRROR_FLAG] = true; // claim before reward so re-opening cannot duplicate
+    G.give('shard'); gainSkill('Lore', 2); Audio_.sfx.door();
+    msg('The green-gold beam strikes the eastern lens. The gallery reliquary gate unlatches (1 Light-Glass Shard)!', 'good', 4500);
+  }
+  const mirrorDoor = m.doors[1 * m.w + 27];
+  if (mirrorDoor) mirrorDoor.target = G.flags[MIRROR_FLAG] ? 1 : 0;
+  for (const e of m.entities) if (e.beamSeg) {
+    if (e.beamSeg === 1) e.hidden = false;
+    else if (e.beamSeg === 2) e.hidden = getMirrorAngle('m1', 1) !== 0;
+    else if (e.beamSeg === 3) e.hidden = !(getMirrorAngle('m1', 1) === 0 && getMirrorAngle('m2', 1) === 0);
+    else if (e.beamSeg === 4) e.hidden = !trace.hit;
+  }
+}
+function tickCatacombsPuzzles() {
+  if (G.mapId !== 'catacombs' || G.dead) return;
+  syncCatacombsPuzzles();
+}
+function openPressurePlate(e) {
+  if (G.mapId !== 'catacombs' || e.use !== 'pressure_plate' || G.dead) return;
+  MIRROR_PUZZLE = { kind: 'plate', entity: e, map: G.map };
+  G.state = 'panel'; renderPressurePlate();
+}
+function pressurePlateInput(action) {
+  const p = MIRROR_PUZZLE; if (!p || p.kind !== 'plate' || G.openPanel !== 'pressureplate') return;
+  if (action === 'leave' || p.map !== G.map || G.dead) {
+    MIRROR_PUZZLE = null; closeModal(); G.keys = {}; G.touch.fx = G.touch.fy = 0;
+    if (!G.dead) G.state = 'play'; return;
+  }
+  if (action === 'toggle') {
+    G.flags[PLATE_ANCHOR_FLAG] = !G.flags[PLATE_ANCHOR_FLAG];
+    Audio_.sfx.door(); syncCatacombsPuzzles();
+  }
+  renderPressurePlate();
+}
+function renderPressurePlate() {
+  const p = MIRROR_PUZZLE; if (!p || p.kind !== 'plate') return;
+  const anchored = !!G.flags[PLATE_ANCHOR_FLAG], solved = !!G.flags[PLATE_FLAG];
+  openModal(`<h2>Drowned Chapel Pressure Plate</h2><p class="muted">Optional Catacombs mechanism · no Voice or Fatigue cost · no story-door changes</p>
+  <p>A square of counter-weighted flagstone set into the flooded floor. Stepping onto the plate or resting a fallen masonry block on its frame draws back the iron bolt on the west niche (10, 26).</p>
+  <p role="status" aria-live="polite">${anchored ? 'A fallen masonry block holds the plate depressed; the west counter-weight grate stands open.' : (solved ? 'The west counter-weight niche has been unlatched. You can still weight or release the plate.' : 'The plate is raised. Step onto it in the chapel or slide the fallen ballast block onto it to unlatch the west niche.')}</p>
+  <p class="muted">Enter or Space toggles the ballast stone; Escape leaves. Controller: A toggles, B leaves.</p>
+  <div class="btns"><button class="dfbtn" id="plate-toggle">${anchored ? 'Remove ballast block' : 'Slide ballast block onto plate'}</button><button class="dfbtn" id="plate-leave">Step back</button></div>`, 'pressureplate');
+  $('#plate-toggle').onclick = () => pressurePlateInput('toggle');
+  $('#plate-leave').onclick = () => pressurePlateInput('leave');
+}
+function openTurningMirror(e) {
+  if (G.mapId !== 'catacombs' || (e.use !== 'turning_mirror' && e.use !== 'mirror_lantern') || G.dead) return;
+  const idx = e.mirrorId === 'm2' ? 1 : e.mirrorId === 'm3' ? 2 : 0;
+  MIRROR_PUZZLE = { kind: 'mirror', map: G.map, selected: idx };
+  G.state = 'panel'; renderTurningMirror();
+}
+function turningMirrorInput(action) {
+  const m = MIRROR_PUZZLE; if (!m || m.kind !== 'mirror' || G.openPanel !== 'mirror') return;
+  if (action === 'leave' || m.map !== G.map || G.dead) {
+    MIRROR_PUZZLE = null; closeModal(); G.keys = {}; G.touch.fx = G.touch.fy = 0;
+    if (!G.dead) G.state = 'play'; return;
+  }
+  const defs = [{ id: 'm1', def: 1 }, { id: 'm2', def: 1 }, { id: 'm3', def: 0 }];
+  if (action === 'left' || action === 'right') m.selected = (m.selected + (action === 'left' ? 2 : 1)) % 3;
+  else if (action === 'rotate') {
+    const cur = defs[m.selected];
+    G.flags[mirrorKey(cur.id)] = getMirrorAngle(cur.id, cur.def) ? 0 : 1;
+    Audio_.sfx.ui(); syncCatacombsPuzzles();
+  } else if (action === 'reset') {
+    for (const d of defs) G.flags[mirrorKey(d.id)] = d.def;
+    Audio_.sfx.ui(); syncCatacombsPuzzles();
+  } else if (Number.isInteger(action) && action >= 0 && action < 3) {
+    m.selected = action;
+    const cur = defs[action];
+    G.flags[mirrorKey(cur.id)] = getMirrorAngle(cur.id, cur.def) ? 0 : 1;
+    Audio_.sfx.ui(); syncCatacombsPuzzles();
+  }
+  renderTurningMirror();
+}
+function renderTurningMirror() {
+  const m = MIRROR_PUZZLE; if (!m || m.kind !== 'mirror') return;
+  const specs = [
+    { id: 'm1', name: '1. West Stand', pos: '14.5, 2.5', def: 1, hint: 'Turns North beam → East (/)' },
+    { id: 'm2', name: '2. Center Stand', pos: '22.5, 2.5', def: 1, hint: 'Turns East beam → North (/)' },
+    { id: 'm3', name: '3. North-East Stand', pos: '22.5, 1.5', def: 0, hint: 'Turns North beam → East (\\)' },
+  ];
+  const trace = traceCatacombsBeam();
+  const solved = !!G.flags[MIRROR_FLAG];
+  openModal(`<h2>Niche Gallery Turning Mirrors</h2><p class="muted">Optional Catacombs puzzle · written beam path matches 3D light · no resource cost</p>
+  <p>A green-gold lantern at (14.5, 4.5) shines <b>North</b>. Angle the three turntable mirrors between <b>/</b> (N↔E, S↔W) and <b>\\</b> (N↔W, S↔E) so the beam strikes the eastern prismatic lens at (26.0, 1.5).</p>
+  <div class="note-keys">${specs.map((s, i) => {
+    const ang = getMirrorAngle(s.id, s.def);
+    return `<button class="dfbtn ${m.selected === i ? 'sel' : ''}" id="mirror-${i}" aria-pressed="${m.selected === i}"><strong>${MIRROR_ANGLES[ang]}</strong><span>${s.name}</span><small>${ang === 0 ? 'Slash / (N↔E)' : 'Backslash \\ (N↔W)'}</small></button>`;
+  }).join('')}</div>
+  <p role="status" aria-live="polite">${trace.summary}${solved ? ' The eastern reliquary niche (27, 1) stands open.' : ''}</p>
+  <p class="muted">Path: ${trace.path.map(p => `${p.node} → ${p.dir}`).join(' · ')}. Keys 1–3 rotate a stand; arrows select, Enter/Space rotates; R resets; Escape leaves. Controller: D-pad, A rotates, X resets, B leaves.</p>
+  <div class="btns"><button class="dfbtn" id="mirror-rotate">Rotate selected</button><button class="dfbtn" id="mirror-reset">Reset angles</button><button class="dfbtn" id="mirror-leave">Leave stand</button></div>`, 'mirror');
+  for (let i = 0; i < 3; i++) $('#mirror-' + i).onclick = () => turningMirrorInput(i);
+  $('#mirror-rotate').onclick = () => turningMirrorInput('rotate');
+  $('#mirror-reset').onclick = () => turningMirrorInput('reset');
+  $('#mirror-leave').onclick = () => turningMirrorInput('leave');
+}
+
 // ---------------------------------------------------------------- dungeon mechanisms
 const TRAP_TYPES = {
   tripwire: { name: 'Barbed tripwire', effect: 'A spring lashes a barbed cord across your shins (5 damage).', sprite: 'grate' },
@@ -699,6 +850,8 @@ function useItem(slot) {
 }
 function useDeco(e) {
   if (e.use === 'note_reliquary') { openNoteLock(e); return; }
+  if (e.use === 'pressure_plate') { openPressurePlate(e); return; }
+  if (e.use === 'turning_mirror' || e.use === 'mirror_lantern') { openTurningMirror(e); return; }
   if (e.trapType) { inspectTrap(e); return; }
   if (wildsUse(e) || codaUse(e) || wgUse(e)) return;
   if (e.use === 'crates') {
@@ -1003,7 +1156,7 @@ function renderInventory() {
   <p class="muted small-note">${AN > 0.05 ? `Your armour adds ${AN.toFixed(1)} to the noise you make while you move (more when you run).` : AN < -0.05 ? `Your clothes hush you: ${AN.toFixed(1)} to the noise you make while you move.` : 'Your armour is quiet.'} Steel turns blades and fists well, and the Cacophony's static poorly.</p>
   <h3>Weapons</h3><div class="weps">${weps}</div></div>
   <div><h3>Carried</h3><div class="carry"><table>${rows || '<tr><td class="muted">Nothing but the clothes you came in.</td></tr>'}</table></div></div></div>`, 'inv');
-  $('#x').onclick = closeModal;
+  $('#x').onclick = () => { closeModal(); G.state = 'play'; };
   document.querySelectorAll('[data-use]').forEach(b => b.onclick = () => useItem(p.inv[+b.dataset.use]));
   document.querySelectorAll('[data-off]').forEach(b => b.onclick = () => { removeArmor(b.dataset.off); renderInventory(); });
   document.querySelectorAll('[data-w]').forEach(b => b.onclick = () => { p.weapon = +b.dataset.w; renderInventory(); });
@@ -1019,24 +1172,24 @@ function renderCharacter() {
   ${p.fragments ? `<div>Identity fragments left: ${p.fragments}</div>` : ''}
   <div>Armour Rating ${armorRating()} · armour noise ${armorNoise() > 0 ? '+' : ''}${armorNoise().toFixed(1)} · ${currentWeapon().name}</div>
   <p class="muted">Kills ${p.kills} · Names kept ${G.ledger.length} · ${p.gold} sovereigns<br>Oakhaven bounty ${crimeState().bounty} · Jail served ${crimeState().jailHours} hours</p></div></div>`, 'char');
-  $('#x').onclick = closeModal;
+  $('#x').onclick = () => { closeModal(); G.state = 'play'; };
 }
 function renderLog() {
   const main = G.journal.filter(j => j.cat === 'main'), side = G.journal.filter(j => j.cat === 'side');
   const fmt = (j) => `<p><span class="muted">${DAYS[j.day % 8]} —</span> ${j.text}</p>`;
   openModal(`<h2>Logbook</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">${DAYS[G.day % 8]}, autumn, 419 SR · ${timeName()}</p><h3>The Rite</h3>${main.map(fmt).join('')}<h3>Other matters</h3>${side.map(fmt).join('') || '<p class="muted">Nothing yet.</p>'}`, 'log');
-  $('#x').onclick = closeModal;
+  $('#x').onclick = () => { closeModal(); G.state = 'play'; };
 }
 function renderLedger() {
   openModal(`<h2>The Ledger</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">Every Carillon Legionnaire dies saying a name. Whoever keeps the list, keeps them.</p>
   <table>${G.ledger.map((l, i) => `<tr><td class="n">Entry ${i + 1}</td><td>${l.name}</td><td class="muted">${l.where}, ${DAYS[l.day % 8]}</td></tr>`).join('') || '<tr><td class="muted">No entries. You have not yet been close enough to a bell when it stopped.</td></tr>'}</table>`, 'ledger');
-  $('#x').onclick = closeModal;
+  $('#x').onclick = () => { closeModal(); G.state = 'play'; };
 }
 function renderSongs() {
   const p = G.player;
   openModal(`<h2>Song-book</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">Voice ${Math.round(p.voice)} / ${p.voiceMax}. Every song is sound, and sound is the predator's sense. Cast with F1–F${p.songs.length}.</p>
   <table>${p.songs.map((s, i) => `<tr><td class="n">F${i + 1}</td><td><b style="color:var(--gold)">${SONGS[s].name}</b> <span class="muted">${SONGS[s].hz ? SONGS[s].hz + ' Hz' : 'under the breath'}</span><br><span class="muted">${SONGS[s].desc}</span></td><td class="n">${SONGS[s].cost} voice<br>${'♪'.repeat(Math.ceil(SONGS[s].noise))}<br><button class="dfbtn small" data-s="${s}">Sing</button></td></tr>`).join('')}</table>`, 'songs');
-  $('#x').onclick = closeModal;
+  $('#x').onclick = () => { closeModal(); G.state = 'play'; };
   document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { closeModal(); G.state = 'play'; castSong(b.dataset.s); });
 }
 function renderRest() {
@@ -1047,7 +1200,7 @@ function renderRest() {
   <div class="list"><button class="dfbtn" data-r="self">I hold the line myself <small class="muted">— half rest. If something comes, you hear it.</small></button>
   <button class="dfbtn" data-r="lamp" ${lampNear ? '' : 'disabled'}>Trust the lamp <small class="muted">— full rest, if a lamp is near.</small></button>
   <button class="dfbtn" data-r="dark">Let the dark take the watch <small class="muted">— full rest. ${G.map.siphoned ? 'Something will lean in, and take a little.' : 'You will sleep deeply, and loudly.'}</small></button></div>`, 'rest');
-  $('#x').onclick = closeModal;
+  $('#x').onclick = () => { closeModal(); G.state = 'play'; };
   document.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { closeModal(); G.state = 'play'; doRest(b.dataset.r); });
 }
 function doRest(kind) {
@@ -1062,7 +1215,7 @@ function passHours(hours) { G.tod += hours / 24; while (G.tod >= 1) { G.tod -= 1
 function timeName() { const h = G.tod * 24; return h < 5 ? 'the dead hour' : h < 7 ? 'before dawn' : h < 12 ? 'morning' : h < 17 ? 'afternoon' : h < 20 ? 'dusk' : 'night'; }
 function renderMap() {
   const m = G.map; const cw = 4; const html = `<h2>${m.name}</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">What you have walked. ${m.outdoor ? 'North is up.' : 'The automap remembers where the lamps were.'}</p><canvas id="amap" width="${m.w * cw}" height="${m.h * cw}" style="width:100%;max-height:70cqh;object-fit:contain;image-rendering:pixelated;background:#0a0806;border:2px solid #0b0806"></canvas>`;
-  openModal(html, 'map'); $('#x').onclick = closeModal;
+  openModal(html, 'map'); $('#x').onclick = () => { closeModal(); G.state = 'play'; };
   const cv = $('#amap'), cx = cv.getContext('2d');
   for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) {
     if (!m.visited[y * m.w + x]) continue;
@@ -1078,7 +1231,7 @@ function renderMap() {
 }
 function renderHelp() {
   openModal(`<h2>How to play</h2><button class="dfbtn small close" id="x">Close</button><pre class="help">${HELP_TEXT}</pre><h3>The Narrow</h3><p>This world has two predators and you live in the band between them. The amber bar on the HUD is how loud you are. Running, fighting, firing glass shot and singing push it up; above the upper mark, hounds come. Standing still in siphoned country (the quarry, the Root-vault) lets it fall; below the lower mark, the Hush begins to unwrite you. Murmur (<span class="kbd">N</span>) when you need to stand still.</p><p>Never answer a voice you cannot see. Glass shot breaks the Cacophony and does nothing to a quiet. A hound has to be hit with something that rings. Every Legionnaire dies saying a name; keep it.</p>`, 'help');
-  $('#x').onclick = closeModal;
+  $('#x').onclick = () => { closeModal(); G.state = 'play'; };
 }
 
 // ---------------------------------------------------------------- input
@@ -1223,6 +1376,18 @@ window.addEventListener('keydown', (ev) => {
     if (!ev.repeat) { if (action) noteLockInput(action); else if (['1', '2', '3'].includes(k)) noteLockInput(Number(k) - 1); }
     return;
   }
+  if (G.openPanel === 'pressureplate') {
+    const action = { enter: 'toggle', ' ': 'toggle', escape: 'leave' }[k];
+    ev.preventDefault();
+    if (!ev.repeat && action) pressurePlateInput(action);
+    return;
+  }
+  if (G.openPanel === 'mirror') {
+    const action = { arrowleft: 'left', arrowright: 'right', enter: 'rotate', ' ': 'rotate', r: 'reset', escape: 'leave' }[k];
+    ev.preventDefault();
+    if (!ev.repeat) { if (action) turningMirrorInput(action); else if (['1', '2', '3'].includes(k)) turningMirrorInput(Number(k) - 1); }
+    return;
+  }
   if (G.openPanel === 'lockpick') {
     const action = { arrowleft: 'left', arrowright: 'right', ' ': 'lift', enter: 'lift', escape: 'cancel' }[k];
     if (action) { ev.preventDefault(); if (!ev.repeat || action === 'left' || action === 'right') lockpickInput(action); }
@@ -1331,6 +1496,7 @@ function update(dt) {
   p.voice = Math.min(p.voiceMax, p.voice + dt * 0.08);
   updateNarrow(dt, moving, running);
   tickTraps(); if (G.dead) return;
+  tickCatacombsPuzzles();
   // entities
   for (const e of G.ents) {
     if (e.kind === 'enemy') enemyUpdate(e, dt);
@@ -1518,7 +1684,14 @@ function restoreGame(d) {
   G.flags = d.flags || {}; G.runs = d.runs | 0;
   G.journal = (Array.isArray(d.journal) ? d.journal : []).filter(j => j && typeof j === 'object').map(j => Object.assign({}, j, { text: cleanText(j.text), cat: cleanText(j.cat, 20), day: j.day | 0 }));
   G.ledger = (Array.isArray(d.ledger) ? d.ledger : []).filter(l => l && typeof l === 'object').map(l => Object.assign({}, l, { name: cleanText(l.name, 60), where: cleanText(l.where, 80), day: l.day | 0 }));
-  G.tod = d.tod; G.day = d.day; G.noise = d.noise || 2; G.escapeTimer = d.escapeTimer || 0; G.boreHold = d.boreHold || 0; G.boreGolems = d.boreGolems || 0; G.glassLock = d.glassLock || 0; G.rootWard = d.rootWard || 0;
+  G.tod = isFinite(+d.tod) ? ((+d.tod % 1) + 1) % 1 : 0.5;
+  G.day = Math.max(0, d.day | 0);
+  G.noise = isFinite(+d.noise) ? clamp(+d.noise, 0, 10) : 2;
+  G.escapeTimer = isFinite(+d.escapeTimer) ? Math.max(0, +d.escapeTimer) : 0;
+  G.boreHold = isFinite(+d.boreHold) ? Math.max(0, +d.boreHold) : 0;
+  G.boreGolems = Math.max(0, d.boreGolems | 0);
+  G.glassLock = isFinite(+d.glassLock) ? Math.max(0, +d.glassLock) : 0;
+  G.rootWard = isFinite(+d.rootWard) ? Math.max(0, +d.rootWard) : 0;
   G.dead = false; G.stillT = 0; G.unwriting = false; G.murmurT = 0; G.whistleT = 0; G.attack.t = 0; G.song.t = 0; G.keys = {}; $('#msgs').innerHTML = '';
   G.maps = probe; if (G.flags.greening) G.maps.oakhaven = buildOakhaven(true);
   for (const id in G.maps) {
