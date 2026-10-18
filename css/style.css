@@ -9,6 +9,11 @@
 #t-pocket[hidden], #t-body[hidden], #t-cover[hidden], #cover-status[hidden] { display: none; }
 .cover-study { margin: 1cqh 0; padding: 1.5cqh 2cqw; background: #1c2525; border: 2px ridge #a3b3a5; }
 .cover-study b { font-family: var(--font-display); color: #e3e9d0; }
+.watch-social { display: grid; gap: 1cqh; margin: 1.4cqh 0; }
+.watch-social div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1cqw; padding: .9cqh 1.2cqw; background: #17140f; border-left: 3px solid #9c7a3f; }
+.watch-social b { font-family: var(--font-display); letter-spacing: .1em; color: var(--gold); }
+.watch-social span { font-family: var(--font-body); color: var(--parch-dim); }
+#arrest-note { min-height: 2.4cqh; padding-left: 1.2cqw; border-left: 3px solid #7d5c33; color: var(--parch); font-style: italic; }
 #cover-status { position: absolute; left: 1.5cqw; bottom: 25cqh; max-width: 70cqw; padding: .6cqh 1cqw; border-left: 3px solid #b4c9aa; background: #182320; color: #e6ecd6; font: 1.6cqw var(--font-sc); pointer-events: none; }
 .body-study { padding: 1.5cqh 2cqw; margin: 1cqh 0; background: #151a16; border: 2px ridge #79866a; }
 .body-study b { color: #d3d9ad; font-family: var(--font-display); letter-spacing: .12em; }

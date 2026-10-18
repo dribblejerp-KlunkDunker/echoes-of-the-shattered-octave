@@ -819,12 +819,36 @@ function confirmTheft(e) {
     pickUp(e, true);
   };
 }
+// Social pressure at the watch: Personality buys silence, Strength buys seconds.
+const BRIBE_FLOOR = 5;
+const THREAT_GRACE = 12;
+let ARREST_NOTE = '';
+function socialOdds(attr, bounty, shift = 0) {
+  const a = clamp(Number(attr) || 0, 1, 100);
+  const b = clamp(Number(bounty) || 0, 0, 9999);
+  return Math.round(clamp(45 + (a - 45) - Math.min(20, b * 0.2) + shift, 10, 90));
+}
+function bribeTerms(law = crimeState()) {
+  const bounty = clamp(Number(law.bounty) || 0, 0, 9999);
+  return { cost: Math.max(BRIBE_FLOOR, Math.round(bounty * 0.6)), chance: socialOdds(G.player.attrs.Personality, bounty) };
+}
+function threatTerms(law = crimeState()) {
+  return { chance: socialOdds(G.player.attrs.Strength, law.bounty, -5), grace: THREAT_GRACE };
+}
 function renderArrest() {
   const law = crimeState(); if (!lawActive() || !law.bounty || law.custody || G.dead) return;
   const map = G.map;
+  // A refusal keeps its line across the re-render; a fresh confrontation starts clean.
+  if (G.openPanel !== 'arrest') ARREST_NOTE = '';
   const valid = () => G.panelToken === token && G.openPanel === 'arrest' && G.state === 'panel' && G.map === map && !G.dead && crimeState().bounty > 0 && !crimeState().custody;
+  const bribe = bribeTerms(law), threat = threatTerms(law);
+  const canBribe = Number.isFinite(G.player.gold) && G.player.gold >= bribe.cost;
   G.state = 'panel';
-  openModal(`<h2>The Oakhaven watch</h2><p>The watch has your description. Outstanding fine: <b>${law.bounty} sovereigns</b>.</p><p class="muted">Pay exactly the fine, or enter the watch-house for a six-hour sentence. Non-quest gear is held in evidence until release or recovery; quest possessions remain safe. Refusing leaves the bounty outstanding.</p><div class="btns"><button class="dfbtn" id="crime-pay" ${G.player.gold < law.bounty ? 'disabled' : ''}>Pay fine</button><button class="dfbtn" id="crime-jail">Enter prison</button><button class="dfbtn" id="crime-flee">Refuse and run</button></div><p class="muted">1 / A: pay · 2 / X: prison · 3 / Escape / B: refuse</p>`, 'arrest');
+  openModal(`<h2>The Oakhaven watch</h2><p>The watch has your description. Outstanding fine: <b>${law.bounty} sovereigns</b>.</p><p class="muted">Pay exactly the fine, or enter the watch-house for a six-hour sentence. Non-quest gear is held in evidence until release or recovery; quest possessions remain safe. Refusing leaves the bounty outstanding.</p>
+  <div class="watch-social"><div><b>Bribe</b><span>${bribe.cost} sovereigns · Personality ${Math.round(G.player.attrs.Personality)} · ${bribe.chance}%</span></div><div><b>Lean on him</b><span>Strength ${Math.round(G.player.attrs.Strength)} · ${threat.chance}% · ${threat.grace} seconds to go</span></div></div>
+  <p class="muted">A bribe is cheaper than the fine but may insult him; a threat wins no clemency, only room to run. Offering coin and reaching for steel are separate offences.</p>
+  <p id="arrest-note" role="status" aria-live="polite">${ARREST_NOTE || 'The constable waits with his hand near the whistle.'}</p>
+  <div class="btns"><button class="dfbtn" id="crime-pay" ${G.player.gold < law.bounty ? 'disabled' : ''}>Pay fine</button><button class="dfbtn" id="crime-jail">Enter prison</button><button class="dfbtn" id="crime-bribe" ${canBribe ? '' : 'disabled'}>Offer a bribe</button><button class="dfbtn" id="crime-threat">Lean on him</button><button class="dfbtn" id="crime-flee">Refuse and run</button></div><p class="muted">1 / A: pay · 2 / X: prison · 3 / Y: bribe · 4 / Back: threaten · 5 / Escape / B: refuse</p>`, 'arrest');
   const token = G.panelToken;
   $('#crime-pay').onclick = () => {
     if (!valid()) return;
@@ -833,6 +857,33 @@ function renderArrest() {
     closeModal(); G.state = 'play'; msg('The watch marks the fine paid and returns any remaining evidence. You are free to go.', 'good');
   };
   $('#crime-jail').onclick = () => { if (valid()) enterPrison(); };
+  $('#crime-bribe').onclick = () => {
+    if (!valid()) return;
+    const terms = bribeTerms(), p = G.player;
+    if (!Number.isFinite(p.gold) || p.gold < terms.cost) { ARREST_NOTE = 'You cannot raise even a token purse.'; renderArrest(); return; }
+    if (Math.random() * 100 < terms.chance) {
+      const held = !!crimeState().evidence;
+      p.gold -= terms.cost; crimeState().bounty = 0; returnEvidence(); syncWantedPosters();
+      closeModal(); G.state = 'play'; G.lawGrace = 5; Audio_.sfx.pickup();
+      msg(`You fold ${terms.cost} sovereigns under his thumb. The constable studies the rain, then his boots, and the warrant is quietly forgotten.${held ? ' Your held gear comes back with it.' : ''}`, 'good', 7000);
+    } else {
+      ARREST_NOTE = '“Coin for a watchman.” He does not take it, and he writes a longer line than before.';
+      reportCrime('an attempted bribe', 15); renderArrest();
+    }
+  };
+  $('#crime-threat').onclick = () => {
+    if (!valid()) return;
+    const terms = threatTerms();
+    if (Math.random() * 100 < terms.chance) {
+      G.lawGrace = terms.grace;
+      for (const e of G.ents) if (e.lawGuard && !e.dead && !e.hidden) { delete e.investigation; e.state = 'idle'; }
+      closeModal(); G.state = 'play'; Audio_.sfx.ui();
+      msg(`You set your hand on the hilt and let him measure you. He takes a step back and reaches for the whistle anyway: ${terms.grace} seconds before the next patrol.`, 'warn', 7000);
+    } else {
+      ARREST_NOTE = '“Threaten me, then.” The whistle is already at his lips.';
+      reportCrime('threatening a constable', 20); renderArrest();
+    }
+  };
   $('#crime-flee').onclick = () => { if (valid()) { G.lawGrace = 5; closeModal(); G.state = 'play'; } };
 }
 function tickLaw(dt) {
@@ -1827,7 +1878,7 @@ window.addEventListener('keydown', (ev) => {
   if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
   const k = keyOf(ev);
   if (['arrest', 'prison', 'wanted', 'theft'].includes(G.openPanel)) {
-    const actions = { arrest: { '1': 'crime-pay', '2': 'crime-jail', '3': 'crime-flee', escape: 'crime-flee' }, prison: { '1': 'prison-serve', enter: 'prison-serve', '2': 'prison-pay', escape: 'law-leave' }, wanted: { enter: 'law-leave', escape: 'law-leave' }, theft: { enter: 'crime-take', ' ': 'crime-take', escape: 'crime-leave' } };
+    const actions = { arrest: { '1': 'crime-pay', '2': 'crime-jail', '3': 'crime-bribe', '4': 'crime-threat', '5': 'crime-flee', escape: 'crime-flee' }, prison: { '1': 'prison-serve', enter: 'prison-serve', '2': 'prison-pay', escape: 'law-leave' }, wanted: { enter: 'law-leave', escape: 'law-leave' }, theft: { enter: 'crime-take', ' ': 'crime-take', escape: 'crime-leave' } };
     const id = actions[G.openPanel][k];
     if (id) { ev.preventDefault(); if (!ev.repeat) $('#' + id)?.click(); }
     return;

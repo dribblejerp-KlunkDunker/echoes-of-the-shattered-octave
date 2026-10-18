@@ -1609,10 +1609,12 @@ function lesson(id, text) {
     const edge = (i) => btn(i) && !prev[i];
     const play = G.state === 'play' && !G.dead;
     if (['arrest', 'prison', 'wanted', 'theft'].includes(G.openPanel)) {
-      const actions = { arrest: ['crime-pay', 'crime-flee', 'crime-jail'], prison: ['prison-serve', 'law-leave', 'prison-pay'], wanted: ['law-leave', 'law-leave', 'law-leave'], theft: ['crime-take', 'crime-leave', 'crime-leave'] }[G.openPanel];
+      const actions = { arrest: ['crime-pay', 'crime-flee', 'crime-jail', 'crime-bribe', 'crime-threat'], prison: ['prison-serve', 'law-leave', 'prison-pay'], wanted: ['law-leave', 'law-leave', 'law-leave'], theft: ['crime-take', 'crime-leave', 'crime-leave'] }[G.openPanel];
       if (edge(GBTN.a)) $('#' + actions[0])?.click();
       else if (edge(GBTN.b) || edge(GBTN.start)) $('#' + actions[1])?.click();
       else if (edge(GBTN.x)) $('#' + actions[2])?.click();
+      else if (actions[3] && edge(GBTN.y)) $('#' + actions[3])?.click();
+      else if (actions[4] && edge(GBTN.back)) $('#' + actions[4])?.click();
       for (let i = 0; i < 32; i++) prev[i] = btn(i);
       G.touch.fx = G.touch.fy = 0; return;
     }

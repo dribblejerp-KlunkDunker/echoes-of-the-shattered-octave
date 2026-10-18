@@ -199,6 +199,54 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       return { escape: true, evidence: true, oldSaves: true };
     });
     console.log('PASS cell lock, walkable escape, evidence lock/recovery, re-arrest, payment and old saves', escape);
+
+    const social = await page.evaluate(() => {
+      function check(ok, text) { if (!ok) throw new Error(text); }
+      const roll = Math.random;
+      try {
+        resetLaw(); gearFixture(); crimeState().bounty = 40; G.player.gold = 100; G.lawGrace = 0; renderArrest();
+        const pers = Math.round(G.player.attrs.Personality), str = Math.round(G.player.attrs.Strength);
+        const bribe = bribeTerms(), threat = threatTerms();
+        check(document.querySelector('#crime-bribe') && !document.querySelector('#crime-bribe').disabled, 'funded bribe is offered');
+        check(bribe.cost === 24 && bribe.chance === socialOdds(pers, 40) && bribe.chance >= 10 && bribe.chance <= 90, 'bribe cost is 60% of the fine and odds follow Personality');
+        check(threat.chance === socialOdds(str, 40, -5) && threat.grace === 12, 'threat odds follow Strength and offer 12 seconds');
+        // Deterministic acceptance: the purse is paid, the warrant is dropped, notices come down.
+        Math.random = () => 0;
+        document.querySelector('#crime-bribe').click();
+        check(crimeState().bounty === 0 && G.player.gold === 76 && !G.openPanel && G.state === 'play' && G.lawGrace === 5, 'accepted bribe clears the warrant at a discount');
+        check(G.ents.filter(e => e.wantedPoster).every(e => e.hidden), 'accepted bribe withdraws wanted notices');
+        // Deterministic refusal: no coin leaves the purse and the registry grows.
+        resetLaw(); gearFixture(); crimeState().bounty = 40; G.player.gold = 100; G.lawGrace = 0;
+        Math.random = () => 0.999;
+        renderArrest(); document.querySelector('#crime-bribe').click();
+        check(crimeState().bounty === 55 && G.player.gold === 100 && G.openPanel === 'arrest', 'refused bribe takes nothing and adds 15');
+        check(/Coin for a watchman/.test(document.querySelector('#arrest-note').textContent), 'refusal line is readable');
+        check(document.querySelector('#crime-pay').textContent && document.querySelector('#crime-jail'), 'fine and prison remain available after a refusal');
+        G.player.gold = 0; renderArrest();
+        check(document.querySelector('#crime-bribe').disabled, 'empty purse disables the bribe');
+        document.querySelector('#crime-threat').click();
+        check(crimeState().bounty === 75 && G.lawGrace === 0 && G.openPanel === 'arrest', 'refused threat adds 20 and buys no grace');
+        // Deterministic success: the warrant stands, but the constable steps back.
+        resetLaw(); gearFixture(); crimeState().bounty = 40; G.lawGrace = 0; Math.random = () => 0;
+        renderArrest(); document.querySelector('#crime-threat').click();
+        check(crimeState().bounty === 40 && G.lawGrace === 12 && !G.openPanel && G.state === 'play', 'successful threat keeps the warrant and buys 12 seconds');
+        check(!G.ents.some(e => e.lawGuard && e.investigation), 'threatened constable resets to idle');
+        // Stale callbacks from an older panel must not spend coin or clear a newer warrant.
+        renderArrest();
+        const staleBribe = document.querySelector('#crime-bribe').onclick, staleThreat = document.querySelector('#crime-threat').onclick;
+        document.querySelector('#crime-flee').click(); staleBribe(); staleThreat();
+        check(crimeState().bounty === 40 && G.player.gold === 100 && !G.openPanel, 'stale social callbacks are inert');
+        // The bribe result is ordinary saved state.
+        resetLaw(); gearFixture(); crimeState().bounty = 40; G.player.gold = 100; Math.random = () => 0;
+        renderArrest(); document.querySelector('#crime-bribe').click(); Math.random = roll;
+        const saved = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(saved); G.state = 'play';
+        check(crimeState().bounty === 0 && G.player.gold === 76 && G.ents.filter(e => e.wantedPoster).every(e => e.hidden), 'bribe result survives save/load');
+        // Hand the original prison-panel assertions their fixture back.
+        resetLaw(); gearFixture(); enterPrison(); G.player.gold = 0; renderPrison();
+        return { pers, str, cost: bribe.cost, bribeChance: bribe.chance, threatChance: threat.chance };
+      } finally { Math.random = roll; }
+    });
+    console.log('PASS watch bribes and threats: cost, odds, refusals, stale callbacks and saves', social);
     assert.equal(await page.locator('#prison-pay').isDisabled(), true);
     // Touch buttons use the same checked callbacks as keyboard and controller.
     await page.locator('#law-leave').tap();
@@ -233,6 +281,38 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       } finally { navigator.getGamepads = pads; controlsTick(); }
     });
     console.log('PASS keyboard, touch, simulated controller and compact prison layout');
+    // Keyboard 3/4, touch buttons and simulated controller Y/Back reach the same checked callbacks.
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.evaluate(() => {
+      resetLaw(); gearFixture(); crimeState().bounty = 40; G.player.gold = 100; G.lawGrace = 0;
+      window.__socialRoll = Math.random; Math.random = () => 0; renderArrest(); render();
+    });
+    await page.screenshot({ path: '/tmp/octave-arrest-social.png' });
+    await page.setViewportSize({ width: 640, height: 400 });
+    assert.equal(await page.locator('#modal-panel').evaluate(e => e.scrollWidth <= e.clientWidth + 1), true);
+    assert.equal(await page.locator('#crime-bribe').evaluate(b => { const r = b.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }), true);
+    await page.keyboard.press('3');
+    assert.equal(await page.evaluate(() => crimeState().bounty === 0 && G.player.gold === 76 && !G.openPanel), true);
+    await page.evaluate(() => { resetLaw(); gearFixture(); crimeState().bounty = 40; G.player.gold = 100; G.lawGrace = 0; renderArrest(); });
+    await page.keyboard.press('4');
+    assert.equal(await page.evaluate(() => crimeState().bounty === 40 && G.lawGrace === 12 && !G.openPanel), true);
+    await page.evaluate(() => { resetLaw(); gearFixture(); crimeState().bounty = 40; G.player.gold = 100; G.lawGrace = 0; renderArrest(); });
+    await page.locator('#crime-threat').tap();
+    assert.equal(await page.evaluate(() => G.lawGrace === 12 && !G.openPanel), true);
+    await page.evaluate(() => {
+      resetLaw(); gearFixture(); crimeState().bounty = 40; G.player.gold = 100; G.lawGrace = 0; renderArrest();
+      const pads = navigator.getGamepads;
+      const gp = { connected: true, axes: [0, 0, 0, 0], buttons: Array.from({ length: 16 }, () => ({ pressed: false })) };
+      navigator.getGamepads = () => [gp];
+      const press = i => { gp.buttons.forEach(b => { b.pressed = false; }); controlsTick(); gp.buttons[i].pressed = true; controlsTick(); };
+      try {
+        press(3); if (crimeState().bounty !== 0 || G.player.gold !== 76 || G.openPanel) throw new Error('controller Y does not bribe');
+        resetLaw(); gearFixture(); crimeState().bounty = 40; G.lawGrace = 0; renderArrest();
+        press(8); if (G.lawGrace !== 12 || G.openPanel) throw new Error('controller Back does not threaten');
+      } finally { navigator.getGamepads = pads; Math.random = window.__socialRoll; controlsTick(); }
+    });
+    await page.setViewportSize({ width: 1280, height: 800 });
+    console.log('PASS watch social keyboard, touch and simulated controller inputs');
     assert.deepEqual(errors, [], 'no browser runtime errors');
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });
