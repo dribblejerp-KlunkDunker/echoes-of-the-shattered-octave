@@ -10,6 +10,21 @@ Explore Oakhaven and the land past the Hedge, then sail the Drift-Kestrel to Whi
 
 ## Screenshots
 
+### New stealth features
+
+Staged scenes captured from the playable maps using the game's own feature logic and interface. Click an image for the full 1280 × 800 view.
+
+| | |
+|---|---|
+| ![Inspecting Bettany's purse from behind in Oakhaven](screenshots/stealth-pickpocket.png) | ![Choosing a stone or empty bottle for a distraction](screenshots/stealth-distractions.png) |
+| Pickpocketing: inspect the purse and see how position, attention and noise affect the odds. | Throwable distractions: choose a stone or empty bottle to draw idle patrols away. |
+| ![Body-handling panel with concealment available at a shrouded recess](screenshots/stealth-body-hiding.png) | ![Synod disguise status and wear or remove controls](screenshots/stealth-disguise.png) |
+| Body concealment: drag remains to a marked recess and hide them from patrols. | Synod disguises: check cover status, wear or remove robes, and review what breaks cover. |
+| ![Equipped Synod Clerk Robes on the inventory paper doll](screenshots/stealth-robes.png) | ![A nearby Proctor inspecting the traveller at 50 percent suspicion](screenshots/stealth-inspection.png) |
+| Equipment-linked paper doll: the worn Clerk Robes appear in the body slot and character artwork. | Proximity inspection: written suspicion feedback warns you to back away before cover is exposed. |
+
+### Places, characters and adventures
+
 | | |
 |---|---|
 | ![Oakhaven market by day](screenshots/oakhaven-market.jpg) | ![Oakhaven at dusk](screenshots/oakhaven-dusk.jpg) |
@@ -88,6 +103,16 @@ python3 -m http.server 8000
 ```
 
 Opening `index.html` straight from disk usually works too, but some browsers block audio or file loading on `file://`, so a local server is the safer choice.
+
+### Refresh the stealth screenshots
+
+With a local server or managed preview running, install Playwright in your test environment and its Chromium browser, then run:
+
+```bash
+PREVIEW_URL=http://127.0.0.1:8000 node test/screenshots.js
+```
+
+If Playwright is installed outside this repository, set `PLAYWRIGHT_MODULE` to its module path. The capture script starts a fresh disposable game, stages illustrative scenes, checks their interface and PNG output, and refreshes the six `screenshots/stealth-*.png` images above. It does not start a server or alter game source or player save files.
 
 ### Host it on GitHub Pages
 
