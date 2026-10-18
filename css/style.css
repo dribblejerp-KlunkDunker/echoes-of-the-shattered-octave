@@ -6,7 +6,10 @@
 .pocket-study b { color: var(--gold); font-family: var(--font-display); }
 .pocket-study strong { grid-column: 2; grid-row: 1 / span 2; align-self: center; font: 3.8cqw var(--font-display); color: var(--parch); }
 .pocket-study span:last-child { grid-column: 1 / -1; color: var(--parch-dim); }
-#t-pocket[hidden], #t-body[hidden] { display: none; }
+#t-pocket[hidden], #t-body[hidden], #t-cover[hidden], #cover-status[hidden] { display: none; }
+.cover-study { margin: 1cqh 0; padding: 1.5cqh 2cqw; background: #1c2525; border: 2px ridge #a3b3a5; }
+.cover-study b { font-family: var(--font-display); color: #e3e9d0; }
+#cover-status { position: absolute; left: 1.5cqw; bottom: 25cqh; max-width: 70cqw; padding: .6cqh 1cqw; border-left: 3px solid #b4c9aa; background: #182320; color: #e6ecd6; font: 1.6cqw var(--font-sc); pointer-events: none; }
 .body-study { padding: 1.5cqh 2cqw; margin: 1cqh 0; background: #151a16; border: 2px ridge #79866a; }
 .body-study b { color: #d3d9ad; font-family: var(--font-display); letter-spacing: .12em; }
 .body-study p { margin-bottom: 0; }
@@ -173,7 +176,7 @@ pre.help { font-family: var(--font-body); white-space: pre-wrap; font-size: 2.1c
 #t-knob { position: absolute; left: 50%; top: 50%; width: 5.5cqw; height: 8.8cqh; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle at 40% 35%, #f0d890, #9a6f2a); box-shadow: 0 0 6px rgba(0,0,0,.7); }
 #touchui { position: absolute; right: 1.5cqw; top: 40cqh; display: none; grid-template-columns: auto auto; gap: 1.2cqw; align-items: end; z-index: 3; }
 #touchui.on { display: grid; }
-#touchui:has(#t-body:not([hidden])) { top: 27cqh; }
+#touchui:has(#t-body:not([hidden])), #touchui:has(#t-cover:not([hidden])) { top: 24cqh; }
 #touchui .tb { font-family: var(--font-sc); color: var(--gold); background: radial-gradient(circle at 40% 35%, rgba(60,45,30,.82), rgba(20,14,9,.82)); border: 2px solid; border-color: var(--edge-l) var(--edge-d) var(--edge-d) var(--edge-l); border-radius: 50%; width: 9.5cqw; height: 15.2cqh; font-size: 1.8cqw; touch-action: none; user-select: none; -webkit-user-select: none; }
 #touchui .tb.small { width: 7.5cqw; height: 12cqh; font-size: 1.5cqw; }
 #touchui .tb.big { width: 11.5cqw; height: 18.4cqh; font-size: 2.1cqw; }

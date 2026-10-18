@@ -100,7 +100,7 @@ function startGame() {
   G.boreHold = 0; G.boreGolems = 0; G.glassLock = 0; G.webT = 0; G.rootWard = 0; G.murmurT = 0; G.whistleT = 0; G.stillT = 0; G.unwriting = false; G.hurtT = 0; G.songFx = 0; G.attack.t = 0; G.song.t = 0; G.keys = {};
   $('#msgs').innerHTML = ''; $('#view').classList.remove('unwrite'); ['#death', '#ending', '#event'].forEach(hide); closeModal();
   for (let i = 0; i < CREATE.bio.length; i++) G.flags[BIOGRAPHY[i].a[CREATE.bio[i]].flag] = true;
-  G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0;
+  G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0; G.coverSuspicion = 0;
   G.maps = buildAllMaps();
   journal('main', 'I came up the Greenroot road to Oakhaven on Nullday, autumn, 419 SR. The gate-warden will know where the Cantor lives.');
   // intro
@@ -123,7 +123,7 @@ function hydrate(e) {
   return e;
 }
 function loadMap(id, pos) {
-  G.dragBody = null; G.bodyScanT = 0;
+  G.dragBody = null; G.bodyScanT = 0; G.coverSuspicion = 0;
   if (G.map) {
     for (const e of G.map.entities) if (e.investigation) { delete e.investigation; if (e.state === 'investigate') e.state = 'idle'; }
     for (let i = G.map.entities.length - 1; i >= 0; i--) if (G.map.entities[i].distractionT != null) G.map.entities.splice(i, 1);
@@ -254,6 +254,7 @@ function throwDistraction(id) {
   if (G.time < (G.throwReady || 0)) { msg('Let the last throw land before throwing again.', 'warn', 1600); return false; }
   const point = distractionImpact(id), spec = DISTRACTIONS[id];
   if (!point) { msg('Not enough room to throw. Aim away from the nearby wall or person.', 'warn'); return false; }
+  exposeDisguise('A patrol sees you throw a distraction.');
   G.take(id); G.throwReady = G.time + 0.75;
   let heard = 0;
   for (const e of G.ents) {
@@ -382,6 +383,57 @@ function tickBodies(dt) {
   }
 }
 
+// ---------------------------------------------------------------- Synod cover: ordinary clothing, not faction immunity
+function synodInspector(e) {
+  return e.kind === 'enemy' && ['proctor', 'legionnaire'].includes(e.type) && e.def && !e.def.boss && !e.def.wildsBoss && !e.dead && !e.hidden && !e.passive && e.state !== 'passive' && !(e.stun > 0);
+}
+function wearingDisguise() { return isWorn('a_synodrobe') && G.has('a_synodrobe'); }
+function disguiseKey() { return 'disguise:exposed:' + G.mapId; }
+function disguiseExposed() { return G.flags[disguiseKey()] === true; }
+function disguiseWitness() {
+  const c = Engine.cam;
+  return G.ents.some(e => (synodInspector(e) || (e.lawGuard && !e.dead && !e.hidden)) &&
+    dist2(e.x, e.y, c.x, c.y) < 49 && los(e.x, e.y, c.x, c.y));
+}
+function exposeDisguise(reason, force = false) {
+  if (!wearingDisguise() || disguiseExposed() || (!force && !disguiseWitness())) return;
+  G.flags[disguiseKey()] = true; G.coverSuspicion = 3;
+  for (const e of G.ents) if (synodInspector(e) && dist2(e.x, e.y, Engine.cam.x, Engine.cam.y) < 49 && los(e.x, e.y, Engine.cam.x, Engine.cam.y)) {
+    delete e.investigation; e.state = 'chase'; e.alertT = 8;
+  }
+  msg(reason + ' Your cover is exposed in this area, even after changing clothes or reloading.', 'bad', 6000);
+}
+function tickDisguise(dt) {
+  if (!wearingDisguise() || disguiseExposed()) { if (!wearingDisguise()) G.coverSuspicion = 0; return; }
+  const close = G.ents.some(e => synodInspector(e) && dist2(e.x, e.y, Engine.cam.x, Engine.cam.y) < 2.4 ** 2 && los(e.x, e.y, Engine.cam.x, Engine.cam.y));
+  G.coverSuspicion = clamp((G.coverSuspicion || 0) + (close ? dt * (G.noise >= 4 ? 2 : 1) : -dt * 0.75), 0, 3);
+  if (G.dragBody) exposeDisguise('A patrol sees you dragging a body.');
+  if (G.coverSuspicion >= 3) exposeDisguise('The clerk cannot answer the inspection. The patrol recognizes an intruder.', true);
+}
+function disguiseProtects(e) {
+  return wearingDisguise() && !disguiseExposed() && synodInspector(e) && e.state !== 'chase' && e.investigation?.source !== 'body';
+}
+function disguiseStatus() {
+  if (!wearingDisguise()) return 'No cover · wear Synod Clerk Robes';
+  if (disguiseExposed()) return 'EXPOSED · patrols know you in this area';
+  const suspicion = Math.ceil((G.coverSuspicion || 0) / 3 * 100);
+  return suspicion ? `INSPECTION ${suspicion}% · back away to lower suspicion` : 'COVERED · distant Synod patrols accept the robes';
+}
+function openDisguise() {
+  if (G.state !== 'play' || G.dead) return;
+  const map = G.map; G.state = 'panel'; G.touch.fx = G.touch.fy = 0;
+  openModal(`<h2>The borrowed registry</h2><div class="cover-study"><b>${disguiseStatus()}</b><p>Ordinary Proctors and Legionnaires accept the robes at a distance. Within 2.4 paces of clear sight they inspect you: three seconds exposes you, faster at noise 4+. Back away or break sight to lower suspicion.</p></div>
+  <p>Witnessed attacks, loud or offensive Songs, throws, dragging bodies or putting on the robes break cover for this area. Exposure is saved; changing clothes cannot erase it. Monsters, bosses, active combat, body-alarm searches, story locks and watch bounties are not fooled.</p>
+  <p class="muted">Buy robes from Hob Wendle. Only the body slot changes; your other gear stays on.</p><div class="btns"><button class="dfbtn" id="cover-wear" ${!G.has('a_synodrobe') ? 'disabled' : ''}>${wearingDisguise() ? 'Remove robes' : 'Wear robes'}</button><button class="dfbtn" id="cover-leave">Keep current clothes</button></div><p class="muted">Enter / Space / controller A: wear or remove · Escape / B: leave. Inspection pauses while panels are open.</p>`, 'disguise');
+  const leave = () => { closeModal(); G.keys = {}; G.touch.fx = G.touch.fy = 0; if (!G.dead) G.state = 'play'; };
+  $('#cover-leave').onclick = leave;
+  $('#cover-wear').onclick = () => {
+    if (G.openPanel !== 'disguise' || G.map !== map || G.dead || !G.has('a_synodrobe')) return;
+    if (wearingDisguise()) removeArmor('body'); else equipArmor('a_synodrobe');
+    leave();
+  };
+}
+
 // ---------------------------------------------------------------- enemies
 function enemyUpdate(e, dt) {
   const p = G.player, c = Engine.cam, d = e.def;
@@ -389,6 +441,10 @@ function enemyUpdate(e, dt) {
   if (e.stun > 0) { e.stun -= dt; e.flash = (e.stun % 0.3) < 0.1; return; } else e.flash = false;
   if (e.state === 'passive') return;
   const dx = c.x - e.x, dy = c.y - e.y, dist = Math.sqrt(dx * dx + dy * dy);
+  if (disguiseProtects(e)) {
+    if (e.state === 'investigate') updateInvestigation(e, dt);
+    return;
+  }
   const canSee = dist < 7 * (UPG.weatherFx ? UPG.weatherFx.sight : 1) && los(e.x, e.y, c.x, c.y);
   const hearRange = (1.5 + G.noise * (d.noiseLure ? 1.4 : 0.8) + (G.flags.thread_kept && d.cacophony ? 0.8 : 0)) * (UPG.weatherFx ? UPG.weatherFx.hear : 1);
   if (e.state === 'investigate') {
@@ -500,7 +556,7 @@ function armorRating(p = G.player) { let ar = 0; for (const [slot] of ARMOR_SLOT
 function armorNoise(p = G.player) { let n = 0; for (const [slot] of ARMOR_SLOTS) { const a = worn(slot, p); if (a) n += a.noise; } return Math.max(-0.8, n); }
 function isWorn(id) { const a = ARMOR[id]; return !!(a && G.player.armor[a.slot] === id); }
 function spareCount(id) { const s = G.player.inv.find(x => x.id === id); return s ? s.n - (isWorn(id) ? 1 : 0) : 0; }
-function equipArmor(id) { const a = ARMOR[id]; if (!a || !G.has(id)) return; G.player.armor[a.slot] = id; Audio_.sfx.pickup(); msg(`You put on the ${a.name}.` + (a.slot === 'shield' && shieldBlocked() ? ' (Your two-handed weapon leaves no hand for it.)' : ''), '', 2200); }
+function equipArmor(id) { const a = ARMOR[id]; if (!a || !G.has(id)) return; G.player.armor[a.slot] = id; if (id === 'a_synodrobe') exposeDisguise('A patrol watches you put on the borrowed robes.'); Audio_.sfx.pickup(); msg(`You put on the ${a.name}.` + (a.slot === 'shield' && shieldBlocked() ? ' (Your two-handed weapon leaves no hand for it.)' : ''), '', 2200); }
 function removeArmor(slot) { const a = worn(slot); if (!a) return; delete G.player.armor[slot]; msg(`You take off the ${a.name}.`, '', 1600); }
 // take something into your keeping; returns a phrase for the message
 function gainItem(id) {
@@ -512,7 +568,7 @@ function gainItem(id) {
     G.give(id); return `a spare ${it.name}, worth selling`;
   }
   G.give(id);
-  if (it.armor && !p.armor[it.slot]) { p.armor[it.slot] = id; return `the ${it.name}, and put it on`; }
+  if (it.armor && !p.armor[it.slot]) { p.armor[it.slot] = id; if (id === 'a_synodrobe') exposeDisguise('A patrol watches you put on the borrowed robes.'); return `the ${it.name}, and put it on`; }
   return `the ${it.name}`;
 }
 function pickWeighted(table) { let t = 0; for (const [, w] of table) t += w; let r = Math.random() * t; for (const [id, w] of table) { r -= w; if (r <= 0) return id; } return table[0][0]; }
@@ -539,6 +595,7 @@ function attack(dirLabel) {
     p[k]--; if (k === 'bolts') Audio_.sfx.bow(); else Audio_.sfx.shot();
   }
   else Audio_.sfx.swing();
+  exposeDisguise('A patrol witnesses your attack.');
   G.attack.t = w.speed; G.attack.dur = w.speed; G.attack.dirLabel = dirLabel; addNoise(w.noise);
   p.fat = Math.max(0, p.fat - 1);
   // find target
@@ -585,6 +642,7 @@ function castSong(id) {
   if (wildsSilenced()) return;
   if (id === 'murmur') { G.murmurT = 4; addNoise(s.noise); Audio_.sfx.murmur(); msg('You murmur, low, inside the Narrow.', '', 1500); return; }
   if (p.voice < s.cost) { msg('Your voice is torn. There is nothing left in it.', 'bad'); return; }
+  if (s.noise >= 2.5 || id === 'name') exposeDisguise('A patrol hears your forbidden Song.');
   p.voice -= s.cost; addNoise(s.noise); G.song.t = 0.7; fx('song', 600); G.songFx = 0.6;
   if (id === 'tending') { p.hp = Math.min(p.hpMax, p.hp + 14); Audio_.sfx.song(174, 1.4); msg('You sing the tending note, low. Something knits.', 'good'); }
   else if (id === 'root') { G.rootWard = 12; Audio_.sfx.song(174, 2.0); msg('You sing the Root note, the one it keeps losing. The hounds will not come to you, for a little while.', 'good'); }
@@ -1190,7 +1248,7 @@ function checkTriggers() {
 
 // ---------------------------------------------------------------- death & ending
 function die(src) {
-  if (G.dead) return; G.dragBody = null; G.dead = true; G.state = 'dead'; G.player.hp = 0;
+  if (G.dead) return; G.dragBody = null; G.dead = true; $('#cover-status').hidden = true; G.state = 'dead'; G.player.hp = 0;
   const t = $('#death-title'), x = $('#death-text');
   if (src === 'heartglass') { t.textContent = 'Heartglass.'; x.textContent = 'The glass reaches your heart. You hear the Chorister clearly now, every note of its lullaby, and you understand that it has been singing to you the whole time. You stand very still. You will stand there a long time, humming, alive and aware.'; }
   else if (src === 'unwrite') { t.textContent = 'Too still.'; x.textContent = 'You lost warmth first, then your name, then your outline. Something leaned in through the thin place and took you the way it takes everything: slowly, consciously, without end.'; }
@@ -1366,7 +1424,7 @@ function inventoryDoll(p = G.player) {
   const equipped = slot => worn(slot, p);
   const body = equipped('body'), head = equipped('head'), hands = equipped('hands'), feet = equipped('feet');
   const metal = a => a && /Mail|Iron|Bell-|Brigandine/.test(a.name);
-  const color = a => !a ? '#665343' : /Hush/.test(a.name) ? '#354f49' : metal(a) ? '#849094' : /Leather/.test(a.name) ? '#805437' : '#9b805b';
+  const color = a => !a ? '#665343' : a === ARMOR.a_synodrobe ? '#8a9290' : /Hush/.test(a.name) ? '#354f49' : metal(a) ? '#849094' : /Leather/.test(a.name) ? '#805437' : '#9b805b';
   const weapon = WEAPONS[p.weapons[p.weapon]] || WEAPONS.sword;
   const shield = equipped('shield'), blocked = !!weapon.twoHanded;
   const weaponId = p.weapons[p.weapon];
@@ -1386,6 +1444,7 @@ function inventoryDoll(p = G.player) {
   <path d="M67 64L54 72L44 111L54 116L69 88M112 64L125 73L136 111L126 116L111 88" fill="${color(body)}"/>
   <path d="M71 60L108 60L117 118L65 118Z" fill="${color(body)}"/>
   ${body && metal(body) ? `<path d="M74 65L105 65L111 109L70 109Z" fill="${/Chain/.test(body.name) ? 'url(#doll-mail)' : '#9aa4a2'}"/><path d="M78 68V106M102 68V106" stroke="#c6c3a8"/>` : '<path d="M78 66L75 110M86 66V111M97 66L101 110" stroke="#af9469" opacity=".5"/>'}
+  ${body === ARMOR.a_synodrobe ? '<path d="M67 109L113 109L123 166H58Z" fill="#8a9290"/><path d="M81 63V143L90 152L100 143V63" fill="none" stroke="#c8c9b2" stroke-width="5"/><path d="M90 81V104M83 92H97" stroke="#514c39"/>' : ''}
   <path d="M67 110H115V118H67Z" fill="#322923"/><rect x="85" y="110" width="10" height="8" fill="#c5a866"/>
   <path d="M83 51V63L90 68L98 61V50" fill="#ae8063"/>
   <ellipse cx="90" cy="39" rx="15" ry="20" fill="#b99070"/>
@@ -1409,6 +1468,7 @@ function renderInventory() {
     const st = [itemStats(sl.id), it.value && !it.key ? `worth ~${sellPrice(sl.id)}` : ''].filter(Boolean).join(' · ');
     return `<tr class="${wornIt ? 'worn' : ''}"><td><span class="nm">${it.name}${sl.n > 1 ? ` ×${sl.n}` : ''}</span>${wornIt ? '<span class="tag">worn</span>' : ''}${st ? `<span class="muted st">${st}</span>` : ''}<span class="muted ds">${it.desc}</span></td><td class="n">${act}</td></tr>`; }).join('');
   openModal(`<h2>Inventory</h2><button class="dfbtn small close" id="x">Close</button>
+  <p class="muted cover-note">${disguiseStatus()} · Y opens cover details</p>
   <p class="muted invtop">${p.gold} sovereigns · ${p.pellets} glass pellets${p.bolts ? ` · ${p.bolts} bolts` : ''} · Fatigue ${Math.round(p.fat)}/${p.fatMax}</p>
   <div class="invgrid"><div>${inventoryDoll(p)}<h3>Worn — Armour Rating ${AR}</h3><div class="slots">${slots}</div>
   <p class="muted small-note">${AN > 0.05 ? `Your armour adds ${AN.toFixed(1)} to the noise you make while you move (more when you run).` : AN < -0.05 ? `Your clothes hush you: ${AN.toFixed(1)} to the noise you make while you move.` : 'Your armour is quiet.'} Steel turns blades and fists well, and the Cacophony's static poorly.</p>
@@ -1429,6 +1489,7 @@ function renderCharacter() {
   ${p.glassed ? `<div>Glassing — ${stage} (${Math.round(p.glass)}%)</div><div class="bar-h"><i style="width:${p.glass}%;background:#6fd6e0"></i></div>` : ''}
   ${p.fragments ? `<div>Identity fragments left: ${p.fragments}</div>` : ''}
   <div>Armour Rating ${armorRating()} · armour noise ${armorNoise() > 0 ? '+' : ''}${armorNoise().toFixed(1)} · ${currentWeapon().name}</div>
+  <p class="muted">${disguiseStatus()}</p>
   <p class="muted">Kills ${p.kills} · Names kept ${G.ledger.length} · ${p.gold} sovereigns<br>Oakhaven bounty ${crimeState().bounty} · Jail served ${crimeState().jailHours} hours</p></div></div>`, 'char');
   $('#x').onclick = () => { closeModal(); G.state = 'play'; };
 }
@@ -1612,6 +1673,7 @@ tbtn('#t-use', null, () => interact());
 tbtn('#t-pocket', null, () => openPickpocket());
 tbtn('#t-throw', null, () => openDistractions());
 tbtn('#t-body', null, () => openBody());
+tbtn('#t-cover', null, () => openDisguise());
 tbtn('#t-run', () => { G.touch.run = !G.touch.run; $('#t-run').classList.toggle('lit', G.touch.run); });
 tbtn('#t-song', () => { if (G.state === 'play') { G.state = 'panel'; renderSongs(); } });
 // per-frame housekeeping for the control layer
@@ -1624,6 +1686,8 @@ function controlsTick() {
   if (showLock !== G._lockHint) { G._lockHint = showLock; $('#lockhint').classList.toggle('on', showLock); }
   $('#t-pocket').hidden = !G.touchMode || G.state !== 'play' || !pickpocketTarget();
   $('#t-body').hidden = !G.touchMode || G.state !== 'play' || !bodyTarget();
+  $('#t-cover').hidden = !G.touchMode || G.state !== 'play' || !G.has('a_synodrobe');
+  if (G.state !== 'play') $('#cover-status').hidden = true;
   const showTouch = G.state === 'play' && G.touchMode;
   if (showTouch !== G._touchUi) { G._touchUi = showTouch; $('#touchui').classList.toggle('on', showTouch); }
 }
@@ -1633,6 +1697,11 @@ window.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse' 
 window.addEventListener('keydown', (ev) => {
   if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
   const k = keyOf(ev);
+  if (G.openPanel === 'disguise') {
+    const id = { enter: 'cover-wear', ' ': 'cover-wear', escape: 'cover-leave' }[k];
+    if (id) { ev.preventDefault(); if (!ev.repeat) $('#' + id).click(); }
+    return;
+  }
   if (G.openPanel === 'body') {
     const id = { enter: 'body-drag', ' ': 'body-drag', h: 'body-hide', escape: 'body-leave' }[k];
     if (id) { ev.preventDefault(); if (!ev.repeat) $('#' + id).click(); }
@@ -1675,7 +1744,8 @@ window.addEventListener('keydown', (ev) => {
   if (ev.repeat && !['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'q', 'shift'].includes(k)) return;
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'tab', 'f1', 'f2', 'f3', 'f4', 'f5'].includes(k)) ev.preventDefault();
   if (G.state === 'play') {
-    if (k === 'g') openBody();
+    if (k === 'y') openDisguise();
+    else if (k === 'g') openBody();
     else if (k === 'o') openDistractions();
     else if (k === 'p') openPickpocket();
     else if (k === 'e' || k === ' ') interact();
@@ -1778,6 +1848,7 @@ function update(dt) {
   updateNarrow(dt, moving, running);
   tickTraps(); if (G.dead) return;
   tickCatacombsPuzzles();
+  tickDisguise(dt);
   tickDistractions(dt);
   tickBodies(dt);
   if (G.dragBody && moving) addNoise(dt * 1.5);
@@ -1811,6 +1882,9 @@ function update(dt) {
   if (pocket) hint += `${hint ? ' · ' : ''}P: inspect purse · controller Y`;
   const body = bodyTarget();
   if (body) hint += `${hint ? ' · ' : ''}G: ${body.stashedIn ? 'recover body' : G.dragBody ? 'drop / conceal body' : 'drag body'} · controller left stick`;
+  const coverText = wearingDisguise() ? disguiseStatus() + ' · Y / Cover / controller Back' : '';
+  if ($('#cover-status').textContent !== coverText) $('#cover-status').textContent = coverText;
+  $('#cover-status').hidden = !coverText;
   if (hint !== G.hint) { G.hint = hint; $('#hint').textContent = hint; }
   const far = !!usable && !inReach; if (far !== G.hintFar) { G.hintFar = far; $('#hint').classList.toggle('far', far); }
 }
@@ -1980,7 +2054,7 @@ function restoreGame(d) {
   G.boreGolems = Math.max(0, d.boreGolems | 0);
   G.glassLock = isFinite(+d.glassLock) ? Math.max(0, +d.glassLock) : 0;
   G.rootWard = isFinite(+d.rootWard) ? Math.max(0, +d.rootWard) : 0;
-  G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0;
+  G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0; G.coverSuspicion = 0;
   G.dead = false; G.stillT = 0; G.unwriting = false; G.murmurT = 0; G.whistleT = 0; G.attack.t = 0; G.song.t = 0; G.keys = {}; $('#msgs').innerHTML = '';
   G.maps = probe; if (G.flags.greening) G.maps.oakhaven = buildOakhaven(true);
   for (const id in G.maps) {

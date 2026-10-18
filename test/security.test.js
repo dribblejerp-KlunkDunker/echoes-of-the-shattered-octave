@@ -64,7 +64,7 @@ globalThis.Image = class {
 // ---- load the game exactly as index.html does, then expose handles ----
 const root = path.join(__dirname, '..');
 const order = ['assets', 'data', 'maps', 'engine', 'audio', 'grove', 'coda', 'wilds', 'game', 'party', 'anim', 'travel', 'upgrades'];
-const expose = `\nglobalThis.__T = { G, UPG, SONGS, SONG_NOTES, SONG_CADENCES, SONG_DYNAMICS, ITEMS, restoreGame, snapshotGame, buildAllMaps, renderSongs, renderHouseChest, renderLoad, renderCodexModal, ensurePlayerUpgrades, cleanText, cleanName };`;
+const expose = `\nglobalThis.__T = { G, UPG, SONGS, SONG_NOTES, SONG_CADENCES, SONG_DYNAMICS, ITEMS, restoreGame, snapshotGame, buildAllMaps, renderSongs, renderHouseChest, renderLoad, renderCodexModal, ensurePlayerUpgrades, cleanText, cleanName, openDisguise, disguiseStatus, disguiseExposed };`;
 const code = order.map(f => fs.readFileSync(path.join(root, 'js', f + '.js'), 'utf8')).join('\n') + expose;
 try {
   new Function(code)();
@@ -115,6 +115,14 @@ T.restoreGame(JSON.parse(JSON.stringify(save)));
 const p = T.G.player;
 assert(!T.G.dragBody && !T.G.ents.some(e => e.corpse || e.stashedIn || e.bodyFound || e.dragReported), 'imported body references and concealment metadata ignored');
 assert(T.G.ents.filter(e => e.bodyCover).length === 1, 'import cannot create fake body recesses or corpse decorations');
+
+// Disguise status only renders static labels/numbers, never imported flag text.
+T.G.flags['disguise:exposed:oakhaven'] = '<img src=x onerror=alert(9)>';
+T.G.player.inv.push({ id: 'a_synodrobe', n: 1 }); T.G.player.armor.body = 'a_synodrobe';
+T.G.coverSuspicion = 0; T.G.state = 'play'; T.openDisguise();
+assert(!T.disguiseExposed() && !/<img|<script|<svg/i.test(document.querySelector('#modal-panel').innerHTML), 'hostile exposure flag is not rendered as markup or accepted as a boolean');
+T.G.flags['disguise:exposed:oakhaven'] = true;
+assert(T.disguiseExposed() && T.disguiseStatus().includes('EXPOSED'), 'legitimate boolean exposure is retained');
 
 // ---- 1. custom songs are strictly schema-validated ----
 assert(Object.keys(p.customSongs).every(id => /^[A-Za-z0-9_ -]{1,32}$/.test(id)), 'unsafe custom song ids rejected');

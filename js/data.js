@@ -112,6 +112,7 @@ const ARMOR = {
   a_hood: { name: 'Hush-Cloth Hood', slot: 'head', ar: 1, noise: -0.2, value: 16, desc: 'Packed-wool hood from the Hedge-weavers. Your own breathing goes soft inside it.' },
   a_kettle: { name: 'Iron Kettle Helm', slot: 'head', ar: 3, noise: 0.3, value: 20, desc: 'A broad-brimmed infantry helm. It rings when struck. Everything does, lately.' },
   a_bellhelm: { name: 'Carillon Bell-Helm', slot: 'head', ar: 5, noise: 0.6, value: 45, desc: 'A Legion helm, hollowed out. It still hums a name you don\'t know.' },
+  a_synodrobe: { name: 'Synod Clerk Robes', slot: 'body', ar: 1, noise: 0, value: 32, desc: 'Grey oilcloth and a silver registry stole. Wear to pass distant Proctors and Legionnaires; close inspection and witnessed suspicious acts expose you for this area. Y opens cover status. Not a pass through story seals or the town watch.' },
   a_gambeson: { name: 'Quilted Gambeson', slot: 'body', ar: 3, noise: 0, value: 14, desc: 'Layers of linen and wool. Quiet, warm, and better than nothing.' },
   a_jerkin: { name: 'Tanner\'s Leather Jerkin', slot: 'body', ar: 5, noise: 0.1, value: 24, desc: 'Hob Wendle\'s work. Oiled so it doesn\'t creak.' },
   a_hushcoat: { name: 'Hush-Cloth Coat', slot: 'body', ar: 3, noise: -0.6, value: 42, desc: 'A long coat of the Hedge\'s own wool. You move inside it like a held breath. Too quiet in siphoned country.' },
@@ -500,6 +501,7 @@ LOOK  move the mouse over the view · rest it at a side edge to keep turning · 
 ATTACK  left-click to thrust · hold the button and move the mouse to slash or chop · wheel or 1-4 changes weapon · Tab opens song-book
 USE / TALK  E or Space · or click when the name under the crosshair is bright (dim means step closer)
 PICKPOCKET  Oakhaven adults: face them within arm’s reach and press P to inspect · approach from behind, quietly · Enter attempts theft, Escape leaves · touch Purse / controller Y inspects, A attempts, B leaves · caught or witnessed theft adds bounty
+DISGUISE  Buy Synod Clerk Robes from Hob and Wear in Inventory · Y / touch Cover / controller Back opens status and wear/remove · distant Proctors/Legionnaires accept robes; close inspection fills suspicion in 3s; move away before exposure · noise 4+ speeds inspection; witnessed hostile acts break cover per area, saved · combat, monsters, bosses, alarms and bounty arrests still apply
 BODIES  Face settled physical remains: G / touch Body / controller left-stick click · Enter/A drags or drops, H/X conceals at a shrouded recess, Escape/B leaves · dragging slows you; visible remains raise one patrol alarm; witnessed dragging adds a watch bounty · remains last for this area visit, not through saves
 DISTRACTIONS  O / touch Throw / controller right-stick click opens throws · 1 or A stone, 2 or X empty bottle, Escape or B cancels · aim first; walls stop throws; active combat and bosses cannot be lured
 SONGS  F1-F5 cast the song in that slot · N to murmur (keeps the Hush off)
@@ -516,7 +518,7 @@ THE NARROW  the amber bar — keep it between the two marks. Above: hounds. Belo
 // shop entries: { item, price? } — price defaults to the item's value with the merchant's markup, haggled by Personality.
 NPCS.bettany.shopTalk = { hello: 'Tonic, honey, and shot I don\'t approve of. I\'ll take your bits and bobs too, if they\'re clean.', broke: 'Not for what you have in your purse, love.', thanks: ['There. Keep it wrapped.', 'Softly with the coin; it rings.', 'Blessings of the Narrow.'], buys: ['valuable', 'consumable'] };
 Object.assign(NPCS.hob, {
-  shop: [{ item: 'a_jerkin' }, { item: 'a_gambeson' }, { item: 'a_cap' }, { item: 'a_gloves' }, { item: 'a_softboots' }, { item: 'a_hobnails' }, { item: 'w_knife' }],
+  shop: [{ item: 'a_synodrobe' }, { item: 'a_jerkin' }, { item: 'a_gambeson' }, { item: 'a_cap' }, { item: 'a_gloves' }, { item: 'a_softboots' }, { item: 'a_hobnails' }, { item: 'w_knife' }],
   markup: 1.0,
   shopTalk: { hello: 'Leather, then. Oiled so it never creaks; a creak is a word, out there. I\'ll buy hides and gear if it\'s sound.', broke: 'Come back with the coin. The leather will wait. It is good at waiting.', thanks: ['Wear it in slowly.', 'Keep it oiled. Neatsfoot, not lard.', 'It fits. They always fit, in the end.'], buys: ['armor', 'weapon', 'valuable'] },
 });

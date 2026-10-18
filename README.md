@@ -69,6 +69,7 @@ Explore Oakhaven and the land past the Hedge, then sail the Drift-Kestrel to Whi
 - Weapons including swords, axe, mace, spear, steam-maul, glass-shot pistol and crossbow. Bronze, bolts and blunt weapons each work best against certain enemies.
 - Merchants who buy and sell. Prices shift with your Personality.
 - Pickpocket Oakhaven adult townsfolk and merchants: inspect a purse, approach quietly from behind, and use Stealth to lift loose coin. Attention, position and noise affect the displayed odds; caught or witnessed theft adds a watch bounty. One saved attempt per person; quest items and shop stock stay untouched.
+- Synod disguises: buy Clerk Robes from Hob and wear them to fool distant ordinary Proctors and Legionnaires. Close visible inspection builds suspicion; retreat before it fills. Witnessed suspicious acts expose you for that area across saves. Monsters, bosses, combat, body searches, story locks and bounty arrests are unaffected. Y / touch Cover / controller Back shows status and wear/remove actions.
 - Body handling: face settled physical remains and press G to drag, drop or conceal them in marked shrouded recesses in Oakhaven, the Quarry and the Cloister. Dragging halves walking speed and prevents sprinting. Visible remains raise a one-time patrol alarm; a constable witnessing a drag adds a bounty. Bodies and alarms last for the current area visit only; loot and saved enemy deaths remain independent.
 - Throwable distractions: new travellers carry three stones and two empty bottles; more can be found in Oakhaven. Impacts attract idle guards and ordinary enemies, with shorter hearing through walls. Visible wanted players and active combat take priority. These empty bottles are not story Vox-Bottles.
 - Loot tables for enemies and 13 strongboxes hidden around the world.
@@ -101,6 +102,7 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Attack | Left-click to thrust · hold and move the mouse to slash or chop · wheel or 1–9 changes weapon |
 | Use / Talk | E or Space, or click a bright name under the crosshair |
 | Pickpocket | Face a nearby Oakhaven adult, P to inspect · touch Purse / controller Y · Enter/Space or A attempts, Escape or B leaves |
+| Disguise | Wear Synod Clerk Robes in Inventory · Y / touch Cover / controller Back shows status · Enter/A wears or removes, Escape/B leaves |
 | Bodies | Face nearby remains, G / touch Body / controller left-stick click · Enter/A drag or drop, H/X conceal at a recess, Escape/B leave |
 | Distractions | Aim, then O / touch Throw / controller right-stick click · 1/A stone, 2/X empty bottle, Escape/B cancel |
 | Songs | Tab opens the song-book · F1–F5 cast · N murmurs |

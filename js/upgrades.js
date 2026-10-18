@@ -104,6 +104,7 @@ function computeCustomSong(st) {
 
 function executeCustomSong(s) {
   const p = G.player, c = Engine.cam;
+  if (s.noise >= 2.5 || (s.effects || []).some(ef => ['shatter', 'sear', 'stun_core'].includes(ef))) exposeDisguise('A patrol witnesses your resonant Song.');
   Audio_.sfx.song(s.freq || 174, 1.3);
   if (s.freq2) setTimeout(() => Audio_.sfx.song(s.freq2, 0.9), 360);
   gainSkill('Law-Song', 2);
@@ -470,7 +471,7 @@ const ITEM_WEIGHTS = {
   whetstone: 0.6, shard: 0.4, whistle: 0.2, bottle: 0.6, flume_eel: 0.4,
   herb_willow: 0.1, herb_reed: 0.1, herb_moss: 0.1,
   a_cap: 1.5, a_hood: 1.0, a_kettle: 3.5, a_bellhelm: 5.0,
-  a_gambeson: 4.0, a_jerkin: 5.5, a_hushcoat: 3.0, a_brig: 9.0, a_chain: 12.0, a_plate: 16.0,
+  a_synodrobe: 2.0, a_gambeson: 4.0, a_jerkin: 5.5, a_hushcoat: 3.0, a_brig: 9.0, a_chain: 12.0, a_plate: 16.0,
   a_gloves: 1.0, a_gauntlets: 2.5, a_softboots: 1.2, a_hobnails: 2.5, a_greaves: 4.0,
   a_buckler: 2.5, a_kite: 6.0,
   w_sword: 2.5, w_knife: 1.0, w_longsword: 3.8, w_axe: 3.5, w_mace: 4.0,
@@ -1582,7 +1583,7 @@ function lesson(id, text) {
   }
 
   // -- gamepad -------------------------------------------------------
-  const GBTN = { a: 0, b: 1, x: 2, y: 3, lb: 4, rb: 5, lt: 6, rt: 7, start: 9, lstick: 10, rstick: 11, dup: 12, ddown: 13, dleft: 14, dright: 15 };
+  const GBTN = { a: 0, b: 1, x: 2, y: 3, lb: 4, rb: 5, lt: 6, rt: 7, back: 8, start: 9, lstick: 10, rstick: 11, dup: 12, ddown: 13, dleft: 14, dright: 15 };
   function gamepadTick() {
     const pads = navigator.getGamepads ? navigator.getGamepads() : null;
     let gp = null;
@@ -1606,6 +1607,12 @@ function lesson(id, text) {
     const btn = (i) => !!(gp.buttons[i] && gp.buttons[i].pressed);
     const edge = (i) => btn(i) && !prev[i];
     const play = G.state === 'play' && !G.dead;
+    if (G.openPanel === 'disguise') {
+      if (edge(GBTN.a)) $('#cover-wear').click();
+      else if (edge(GBTN.b) || edge(GBTN.back) || edge(GBTN.start)) $('#cover-leave').click();
+      for (let i = 0; i < 32; i++) prev[i] = btn(i);
+      G.touch.fx = G.touch.fy = 0; return;
+    }
     if (G.openPanel === 'body') {
       if (edge(GBTN.a)) $('#body-drag').click();
       else if (edge(GBTN.x)) $('#body-hide').click();
@@ -1669,6 +1676,7 @@ function lesson(id, text) {
       }
       if (edge(GBTN.lb)) cycleWeapon(-1);
       if (edge(GBTN.rb)) cycleWeapon(1);
+      if (edge(GBTN.back)) openDisguise();
       if (edge(GBTN.lstick)) openBody();
       if (edge(GBTN.rstick)) openDistractions();
       if (btn(GBTN.lt)) triggerBlock();
