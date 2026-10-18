@@ -100,7 +100,7 @@ function startGame() {
   G.boreHold = 0; G.boreGolems = 0; G.glassLock = 0; G.webT = 0; G.rootWard = 0; G.murmurT = 0; G.whistleT = 0; G.stillT = 0; G.unwriting = false; G.hurtT = 0; G.songFx = 0; G.attack.t = 0; G.song.t = 0; G.keys = {};
   $('#msgs').innerHTML = ''; $('#view').classList.remove('unwrite'); ['#death', '#ending', '#event'].forEach(hide); closeModal();
   for (let i = 0; i < CREATE.bio.length; i++) G.flags[BIOGRAPHY[i].a[CREATE.bio[i]].flag] = true;
-  G.throwReady = 0;
+  G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0;
   G.maps = buildAllMaps();
   journal('main', 'I came up the Greenroot road to Oakhaven on Nullday, autumn, 419 SR. The gate-warden will know where the Cantor lives.');
   // intro
@@ -123,6 +123,7 @@ function hydrate(e) {
   return e;
 }
 function loadMap(id, pos) {
+  G.dragBody = null; G.bodyScanT = 0;
   if (G.map) {
     for (const e of G.map.entities) if (e.investigation) { delete e.investigation; if (e.state === 'investigate') e.state = 'idle'; }
     for (let i = G.map.entities.length - 1; i >= 0; i--) if (G.map.entities[i].distractionT != null) G.map.entities.splice(i, 1);
@@ -257,7 +258,7 @@ function throwDistraction(id) {
   let heard = 0;
   for (const e of G.ents) {
     const enemy = e.kind === 'enemy' && e.def && !e.def.boss && !e.def.wildsBoss && !['wearer', 'weaver', 'pressman', 'aegis', 'horn'].includes(e.type);
-    if ((!e.lawGuard && !enemy) || e.dead || e.hidden || e.passive || e.state === 'passive' || e.state === 'chase' || e.stun > 0) continue;
+    if ((!e.lawGuard && !enemy) || e.dead || e.hidden || e.passive || e.state === 'passive' || e.state === 'chase' || e.investigation?.source === 'body' || e.stun > 0) continue;
     if (e.lawGuard && crimeState().bounty && dist2(e.x, e.y, Engine.cam.x, Engine.cam.y) < 196 && los(e.x, e.y, Engine.cam.x, Engine.cam.y)) continue;
     const range = spec.hearing * (los(e.x, e.y, point.x, point.y) ? 1 : 0.35);
     if (dist2(e.x, e.y, point.x, point.y) > range * range) continue;
@@ -287,6 +288,97 @@ function tickDistractions(dt) {
   for (let i = G.ents.length - 1; i >= 0; i--) if (G.ents[i].distractionT != null) {
     G.ents[i].distractionT -= dt;
     if (G.ents[i].distractionT <= 0) G.ents.splice(i, 1);
+  }
+}
+
+// ---------------------------------------------------------------- bodies (current-visit visuals, never saved as loot or enemies)
+function bodyReachable(body) {
+  const c = Engine.cam;
+  return !!(body && body.corpse && !body.dead && (!body.hidden || body.stashedIn) && G.ents.includes(body) &&
+    dist2(c.x, c.y, body.x, body.y) <= 1.8 ** 2 && los(c.x, c.y, body.x, body.y));
+}
+function bodyTarget() {
+  if (bodyReachable(G.dragBody)) return G.dragBody;
+  const c = Engine.cam;
+  let best = null, distance = Infinity;
+  for (const body of G.ents) {
+    const d = dist2(c.x, c.y, body.x, body.y);
+    if (d < distance && bodyReachable(body) && Math.abs(normAng(Math.atan2(body.y - c.y, body.x - c.x) - c.dir)) < 0.85) { best = body; distance = d; }
+  }
+  return best;
+}
+function bodyCover(body) {
+  return G.ents.find(e => e.bodyCover && !e.dead && !e.hidden &&
+    dist2(e.x, e.y, body.x, body.y) <= 1.5 ** 2 && los(body.x, body.y, e.x, e.y) &&
+    dist2(e.x, e.y, Engine.cam.x, Engine.cam.y) <= 2.2 ** 2 && los(Engine.cam.x, Engine.cam.y, e.x, e.y));
+}
+function openBody() {
+  if (G.state !== 'play' || G.dead) return;
+  const body = bodyTarget();
+  if (!body) { msg('Face a settled body within reach. Only physical remains can be moved.', 'warn'); return; }
+  const map = G.map, cover = bodyCover(body), carried = G.dragBody === body;
+  G.state = 'panel'; G.touch.fx = G.touch.fy = 0;
+  openModal(`<h2>What the patrol will find</h2><div class="body-study"><b>${body.stashedIn ? 'CONCEALED' : carried ? 'DRAGGING' : body.bodyFound ? 'DISCOVERED' : 'EXPOSED'}</b><p role="status">${body.stashedIn ? 'The shroud hides this body from patrols. Recovering it leaves it exposed again.' : carried ? 'You move at half walking speed, without sprinting. Walls, water and solid bodies stop the drag.' : 'A visible body can raise one local alarm. Loot has already fallen separately; moving it grants no reward.'}</p></div>
+  <p>${cover ? 'A shrouded recess is close enough to conceal the body.' : 'Drag toward a marked shrouded recess, then conceal it there. Distractions can buy time.'}</p>
+  <div class="btns"><button class="dfbtn" id="body-drag">${body.stashedIn ? 'Recover and drag' : carried ? 'Drop body' : 'Drag body'}</button><button class="dfbtn" id="body-hide" ${body.stashedIn || !cover ? 'disabled' : ''}>Conceal in recess</button><button class="dfbtn" id="body-leave">Leave unchanged</button></div><p class="muted">Enter / controller A: drag or drop · H / controller X: conceal · Escape / B: leave. G / touch Body / left-stick click reopens. Remains and alarms last only for this area visit.</p>`, 'body');
+  const leave = () => { closeModal(); G.keys = {}; G.touch.fx = G.touch.fy = 0; if (!G.dead) G.state = 'play'; };
+  const valid = () => G.openPanel === 'body' && G.map === map && !G.dead && bodyReachable(body);
+  $('#body-leave').onclick = leave;
+  $('#body-drag').onclick = () => {
+    if (!valid()) return;
+    if (carried) G.dragBody = null;
+    else { body.hidden = false; delete body.stashedIn; G.dragBody = body; }
+    G.vel.x = G.vel.y = 0; leave();
+    msg(carried ? 'You let the body rest. It is exposed.' : 'You take hold. Walk slowly; G opens drop and conceal actions.', 'warn');
+  };
+  $('#body-hide').onclick = () => {
+    if (!valid() || body.stashedIn) return;
+    const recess = bodyCover(body); if (!recess) return;
+    body.x = recess.x; body.y = recess.y; body.hidden = true; body.stashedIn = recess;
+    G.dragBody = null; leave(); msg('You draw the shroud over the body. Patrols cannot see it here.', 'good');
+  };
+}
+function bodyPatrol(e) {
+  return !e.dead && !e.hidden && !e.passive && e.state !== 'passive' && !(e.stun > 0) &&
+    (e.lawGuard || (e.kind === 'enemy' && e.def && !e.def.boss && !e.def.wildsBoss && (e.def.core || ['marine', 'outrider', 'warden', 'captain', 'deacon'].includes(e.type))));
+}
+function tickBodies(dt) {
+  const body = G.dragBody, c = Engine.cam;
+  if (body) {
+    if (!bodyReachable(body) || body.hidden) G.dragBody = null;
+    else {
+      // Keep the body on its side of obstacles, including closed doors and water.
+      const distance = Math.hypot(c.x - body.x, c.y - body.y), travel = Math.max(0, distance - 0.8);
+      if (travel > 0) {
+        const nx = (c.x - body.x) / distance, ny = (c.y - body.y) / distance;
+        for (let moved = 0; moved < travel; moved += 0.1) {
+          const step = Math.min(0.1, travel - moved), x = body.x + nx * step, y = body.y + ny * step;
+          if (solidAt(x, y, null)) break;
+          body.x = x; body.y = y;
+        }
+      }
+    }
+  }
+  G.bodyScanT = (G.bodyScanT || 0) - dt; if (G.bodyScanT > 0) return; G.bodyScanT = 0.25;
+  const bodies = G.ents.filter(e => e.corpse && !e.dead && !e.hidden);
+  if (!bodies.length) return;
+  const patrols = G.ents.filter(bodyPatrol);
+  for (const remains of bodies) {
+    const witness = patrols.find(e => dist2(e.x, e.y, remains.x, remains.y) < 36 && los(e.x, e.y, remains.x, remains.y));
+    if (!witness) continue;
+    if (G.dragBody === remains && !remains.dragReported && G.mapId === 'oakhaven' && !G.flags.greening &&
+      patrols.some(e => e.lawGuard && dist2(e.x, e.y, c.x, c.y) < 36 && los(e.x, e.y, remains.x, remains.y) && los(e.x, e.y, c.x, c.y))) {
+      remains.dragReported = true;
+      const law = crimeState(); law.bounty = Math.min(9999, law.bounty + 20);
+      msg('The constable sees you dragging a body. +20 Oakhaven bounty.', 'bad', 5000);
+    }
+    if (remains.bodyFound) continue;
+    remains.bodyFound = true;
+    for (const e of patrols) {
+      if (e.state === 'chase' || dist2(e.x, e.y, witness.x, witness.y) > 100 || !los(e.x, e.y, witness.x, witness.y)) continue;
+      e.investigation = { x: remains.x, y: remains.y, left: 12, source: 'body' }; e.state = 'investigate';
+    }
+    Audio_.sfx.bell(); msg('A patrol finds a body and sounds the alarm. Nearby idle patrols search the discovery site.', 'bad', 5500);
   }
 }
 
@@ -1013,6 +1105,7 @@ function useItem(slot) {
   renderInventory();
 }
 function useDeco(e) {
+  if (e.bodyCover) { msg('A shrouded body recess. Drag a body within reach, then G / touch Body / controller left stick to conceal it. Hidden remains can be recovered here during this visit.', 'warn', 6500); return; }
   if (e.use === 'note_reliquary') { openNoteLock(e); return; }
   if (e.use === 'pressure_plate') { openPressurePlate(e); return; }
   if (e.use === 'turning_mirror' || e.use === 'mirror_lantern') { openTurningMirror(e); return; }
@@ -1097,7 +1190,7 @@ function checkTriggers() {
 
 // ---------------------------------------------------------------- death & ending
 function die(src) {
-  if (G.dead) return; G.dead = true; G.state = 'dead'; G.player.hp = 0;
+  if (G.dead) return; G.dragBody = null; G.dead = true; G.state = 'dead'; G.player.hp = 0;
   const t = $('#death-title'), x = $('#death-text');
   if (src === 'heartglass') { t.textContent = 'Heartglass.'; x.textContent = 'The glass reaches your heart. You hear the Chorister clearly now, every note of its lullaby, and you understand that it has been singing to you the whole time. You stand very still. You will stand there a long time, humming, alive and aware.'; }
   else if (src === 'unwrite') { t.textContent = 'Too still.'; x.textContent = 'You lost warmth first, then your name, then your outline. Something leaned in through the thin place and took you the way it takes everything: slowly, consciously, without end.'; }
@@ -1518,6 +1611,7 @@ tbtn('#t-atk', null, (dx, dy) => { const r = canvas.getBoundingClientRect(); att
 tbtn('#t-use', null, () => interact());
 tbtn('#t-pocket', null, () => openPickpocket());
 tbtn('#t-throw', null, () => openDistractions());
+tbtn('#t-body', null, () => openBody());
 tbtn('#t-run', () => { G.touch.run = !G.touch.run; $('#t-run').classList.toggle('lit', G.touch.run); });
 tbtn('#t-song', () => { if (G.state === 'play') { G.state = 'panel'; renderSongs(); } });
 // per-frame housekeeping for the control layer
@@ -1529,6 +1623,7 @@ function controlsTick() {
   const showLock = G.state === 'play' && !G.touchMode && G.time > (G.playStart || 0) + 1.5 && G.time - (G.playStart || 0) < 45;
   if (showLock !== G._lockHint) { G._lockHint = showLock; $('#lockhint').classList.toggle('on', showLock); }
   $('#t-pocket').hidden = !G.touchMode || G.state !== 'play' || !pickpocketTarget();
+  $('#t-body').hidden = !G.touchMode || G.state !== 'play' || !bodyTarget();
   const showTouch = G.state === 'play' && G.touchMode;
   if (showTouch !== G._touchUi) { G._touchUi = showTouch; $('#touchui').classList.toggle('on', showTouch); }
 }
@@ -1538,6 +1633,11 @@ window.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse' 
 window.addEventListener('keydown', (ev) => {
   if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
   const k = keyOf(ev);
+  if (G.openPanel === 'body') {
+    const id = { enter: 'body-drag', ' ': 'body-drag', h: 'body-hide', escape: 'body-leave' }[k];
+    if (id) { ev.preventDefault(); if (!ev.repeat) $('#' + id).click(); }
+    return;
+  }
   if (G.openPanel === 'distractions') {
     const id = { '1': 'throw-pebble', '2': 'throw-empty_bottle', escape: 'throw-leave' }[k];
     if (id) { ev.preventDefault(); if (!ev.repeat) $('#' + id).click(); }
@@ -1575,7 +1675,8 @@ window.addEventListener('keydown', (ev) => {
   if (ev.repeat && !['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'q', 'shift'].includes(k)) return;
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'tab', 'f1', 'f2', 'f3', 'f4', 'f5'].includes(k)) ev.preventDefault();
   if (G.state === 'play') {
-    if (k === 'o') openDistractions();
+    if (k === 'g') openBody();
+    else if (k === 'o') openDistractions();
     else if (k === 'p') openPickpocket();
     else if (k === 'e' || k === ' ') interact();
     else if (k === 'i') { G.state = 'panel'; renderInventory(); }
@@ -1634,8 +1735,8 @@ function update(dt) {
   if (G.fadeT > 0) G.fadeT -= dt;
   // movement: a short ramp up and down so steps feel weighted rather than twitchy
   const runHeld = (G.opts.alwaysRun ? !k.shift : !!k.shift) || G.touch.run;
-  const running = runHeld && p.fat > 0;
-  const spd = (2.6 + p.attrs.Speed / 60) * (running ? 1.7 : 1) * (G.webT > 0 ? 0.55 : 1);
+  const running = runHeld && p.fat > 0 && !G.dragBody;
+  const spd = (2.6 + p.attrs.Speed / 60) * (running ? 1.7 : 1) * (G.webT > 0 ? 0.55 : 1) * (G.dragBody ? 0.5 : 1);
   let fwd = G.touch.fy, str = G.touch.fx;
   if (k.w || k.arrowup) fwd += 1;
   if (k.s || k.arrowdown) fwd -= 1;
@@ -1678,6 +1779,8 @@ function update(dt) {
   tickTraps(); if (G.dead) return;
   tickCatacombsPuzzles();
   tickDistractions(dt);
+  tickBodies(dt);
+  if (G.dragBody && moving) addNoise(dt * 1.5);
   // entities
   for (const e of G.ents) {
     if (e.kind === 'enemy') enemyUpdate(e, dt);
@@ -1706,6 +1809,8 @@ function update(dt) {
   G.hintKind = inReach ? h.kind : (!h && hint ? 'door' : '');
   const pocket = pickpocketTarget();
   if (pocket) hint += `${hint ? ' · ' : ''}P: inspect purse · controller Y`;
+  const body = bodyTarget();
+  if (body) hint += `${hint ? ' · ' : ''}G: ${body.stashedIn ? 'recover body' : G.dragBody ? 'drop / conceal body' : 'drag body'} · controller left stick`;
   if (hint !== G.hint) { G.hint = hint; $('#hint').textContent = hint; }
   const far = !!usable && !inReach; if (far !== G.hintFar) { G.hintFar = far; $('#hint').classList.toggle('far', far); }
 }
@@ -1875,7 +1980,7 @@ function restoreGame(d) {
   G.boreGolems = Math.max(0, d.boreGolems | 0);
   G.glassLock = isFinite(+d.glassLock) ? Math.max(0, +d.glassLock) : 0;
   G.rootWard = isFinite(+d.rootWard) ? Math.max(0, +d.rootWard) : 0;
-  G.throwReady = 0;
+  G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0;
   G.dead = false; G.stillT = 0; G.unwriting = false; G.murmurT = 0; G.whistleT = 0; G.attack.t = 0; G.song.t = 0; G.keys = {}; $('#msgs').innerHTML = '';
   G.maps = probe; if (G.flags.greening) G.maps.oakhaven = buildOakhaven(true);
   for (const id in G.maps) {
