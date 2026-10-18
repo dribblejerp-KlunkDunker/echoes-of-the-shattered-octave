@@ -1526,6 +1526,7 @@ function lesson(id, text) {
   const BOSS_TYPES = ['aegis', 'weaver', 'pressman', 'broodmother', 'bosun', 'horn', 'requiem', 'wearer_coda', 'wearer'];
   function tickBossSave() {
     if (!G.map || G.state !== 'play' || G.dead) return;
+    if (hardcoreOn()) return; // a hardcore run gets no save to rewind to
     for (const e of G.ents) {
       if (e.kind !== 'enemy' || e.dead || e.hidden || e.state !== 'chase') continue;
       const d = e.def; if (!d || !(d.boss || d.wildsBoss || BOSS_TYPES.indexOf(e.type) >= 0)) continue;
@@ -1812,6 +1813,7 @@ function lesson(id, text) {
   const _die = die;
   die = function (src) {
     _die(src);
+    if (hardcoreOn()) return;
     if (!UPG.autosaveSlot) return;
     const old = $('#btn-auto-load'); if (old) old.remove();
     const wake = $('#btn-wake'); if (!wake || !wake.parentNode) return;

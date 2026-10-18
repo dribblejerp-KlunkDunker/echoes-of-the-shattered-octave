@@ -217,14 +217,15 @@ pre.help { font-family: var(--font-body); white-space: pre-wrap; font-size: 2.1c
 .invgrid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 1.6cqw; align-items: start; }
 .invgrid h3 { font-size: 2cqw; margin: .4cqh 0 .4cqh; }
 .slots { display: grid; gap: .35cqh; }
-.slot { display: grid; grid-template-columns: 6cqw 1fr auto; column-gap: .8cqw; align-items: center; padding: .3cqh .6cqw; border: 1px solid var(--edge-d); background: rgba(0,0,0,.25); min-height: 5.6cqh; }
-.slot .sl { font-family: var(--font-sc); color: var(--gold); font-size: 1.4cqw; }
-.slot .nm { line-height: 1.1; }
-.slot b { font-weight: 600; font-size: 1.55cqw; display: block; }
-.slot small { font-size: 1.25cqw; opacity: .75; display: block; }
-.slot .dfbtn { padding: .2cqh .7cqw; font-size: 1.3cqw; }
-.slot.empty b { opacity: .4; }
-.slot.off { opacity: .55; }
+/* scoped to the worn-armour list: the save and load panels use plain .slot rows */
+.slots .slot { display: grid; grid-template-columns: 6cqw 1fr auto; column-gap: .8cqw; align-items: center; padding: .3cqh .6cqw; border: 1px solid var(--edge-d); background: rgba(0,0,0,.25); min-height: 5.6cqh; }
+.slots .slot .sl { font-family: var(--font-sc); color: var(--gold); font-size: 1.4cqw; }
+.slots .slot .nm { line-height: 1.1; }
+.slots .slot b { font-weight: 600; font-size: 1.55cqw; display: block; }
+.slots .slot small { font-size: 1.25cqw; opacity: .75; display: block; }
+.slots .slot .dfbtn { padding: .2cqh .7cqw; font-size: 1.3cqw; }
+.slots .slot.empty b { opacity: .4; }
+.slots .slot.off { opacity: .55; }
 .weps { display: grid; grid-template-columns: 1fr 1fr; gap: .35cqh .5cqw; }
 .weps .weprow { display: block; text-align: left; width: 100%; padding: .3cqh .6cqw; }
 .weprow b { font-size: 1.45cqw; display: block; line-height: 1.15; }

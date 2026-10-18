@@ -90,7 +90,7 @@ function newPlayer() {
   const hpMax = c.hp + Math.floor(a.Endurance / 10), voiceMax = c.voice + Math.floor(a.Willpower / 10), fatMax = a.Strength + a.Endurance;
   return { name: CREATE.name, cls: c, face: CREATE.face, attrs: a, hp: hpMax, hpMax, voice: voiceMax, voiceMax, fat: fatMax, fatMax, gold: 12, pellets: c.pellets,
     inv: [], weapons: c.weapons.slice(), weapon: 0, songs: c.songs.slice(), glass: c.glass ? 42 : 0, glassed: c.glass, fragments: c.id === 'archivist' ? 3 : 0, xp: 0, level: 1, kills: 0,
-    armor: {}, bolts: 0, horseUntil: 0, needs: false, hunger: 100, sleep: 100 };
+    armor: {}, bolts: 0, horseUntil: 0, needs: false, hunger: 100, sleep: 100, hardcore: false };
 }
 // what each calling walks out of the door wearing
 const CLASS_KIT = { blade: ['a_jerkin', 'a_gloves'], cantor: ['a_gambeson', 'a_softboots'], corsair: ['a_jerkin', 'a_buckler', 'a_hobnails'], archivist: ['a_hood', 'a_gambeson'], penitent: ['a_gambeson', 'a_kettle'], quarry: ['a_jerkin', 'a_hobnails', 'a_gloves'] };
@@ -1434,9 +1434,32 @@ function die(src) {
   else if (src === 'unwrite') { t.textContent = 'Too still.'; x.textContent = 'You lost warmth first, then your name, then your outline. Something leaned in through the thin place and took you the way it takes everything: slowly, consciously, without end.'; }
   else if (src === 'greening') { t.textContent = 'The oaks close over.'; x.textContent = 'You hear the ship lift without you. Three hundred and eighty people stand in the mud and wave it away, and you are one of them, and then you are a tree.'; }
   else { t.textContent = 'You have been found.'; x.textContent = `${src} has you. The last thing you hear is your own voice, coming from somewhere else, saying your name.`; }
+  if (hardcoreOn()) {
+    // Permadeath: the run's only save is destroyed before the screen is drawn, and
+    // the lamp that drags ordinary travellers back is taken away for this one.
+    HARDCORE.save = null;
+    const stale = $('#btn-auto-load'); if (stale) stale.remove();
+    x.textContent += ' Hardcore: the one copy of this run is gone with you. There is nothing to go back to.';
+    const wake = document.getElementById('btn-wake'); if (wake) wake.hidden = true;
+    let btn = document.getElementById('btn-hardcore-title');
+    if (!btn) {
+      btn = document.createElement('button'); btn.className = 'dfbtn'; btn.id = 'btn-hardcore-title';
+      const host = document.querySelector('#death .death-inner') || (wake && wake.parentNode);
+      if (host) host.appendChild(btn);
+    }
+    btn.textContent = 'The run ends here';
+    btn.onclick = () => {
+      G.player.hardcore = false; hide('#death'); G.dead = false; G.keys = {}; closeModal();
+      G.state = 'title'; $('#view').classList.remove('unwrite'); $('#msgs').innerHTML = ''; show('#title'); Audio_.setScene('title');
+    };
+  } else {
+    const wake = document.getElementById('btn-wake'); if (wake) wake.hidden = false;
+    const hc = document.getElementById('btn-hardcore-title'); if (hc) hc.hidden = true;
+  }
   show('#death');
 }
 $('#btn-wake').onclick = () => {
+  if (hardcoreOn()) return; // a hardcore run does not wake by the lamp
   hide('#death'); G.dead = false; G.state = 'play'; const p = G.player; p.hp = Math.ceil(p.hpMax * 0.6); p.voice = Math.ceil(p.voiceMax * 0.5); p.gold = Math.max(0, p.gold - 5);
   if (p.glass >= 100) p.glass = 85;
   for (const e of G.ents) if (e.kind === 'enemy' && !e.dead && e.state === 'chase') { e.state = 'idle'; e.x = e.homeX; e.y = e.homeY; }
@@ -2227,6 +2250,55 @@ window.advanceTime = (ms) => { const steps = Math.max(1, Math.round(ms / (1000 /
 // The preview sandbox has no persistent storage, so saves are a portable code / file plus in-session slots.
 const SAVE_VERSION = 1;
 const SLOTS = [null, null, null];
+// ---------------------------------------------------------------- hardcore runs
+// Opt-in single-save permadeath. A hardcore run exists in exactly one place: the
+// in-page save below. It is never written to a code or a file, ordinary saves can
+// never open it, and it is destroyed the moment the traveller dies.
+const HARDCORE = { save: null };
+function hardcoreOn() { return !!(G.player && G.player.hardcore === true); }
+function hardcorePayload(d) { return !!(d && d.player && typeof d.player === 'object' && d.player.hardcore === true); }
+function setHardcoreRun() {
+  const p = G.player; p.hardcore = true; HARDCORE.save = null;
+  if (typeof UPG === 'object' && UPG) { UPG.autosaveSlot = null; UPG.autosaveWhen = ''; }
+  const old = $('#btn-auto-load'); if (old) old.remove();
+  renderMenu();
+  msg('Hardcore on: one save for this run, no codes, and death is final.', 'warn', 7000);
+}
+function renderHardcoreConfirm() {
+  openModal(`<h2>Make this run hardcore?</h2>
+  <p>Hardcore keeps <b>one save</b> for this run: no session slots, no save codes, no downloads and no pre-boss autosaves. Death destroys that save and ends the run; there is no waking by the lamp.</p>
+  <p class="muted">Ordinary saves are untouched by this, and a hardcore run can never be opened by one.</p>
+  <div class="btns"><button class="dfbtn" id="hc-yes">Turn hardcore on</button><button class="dfbtn" id="hc-no">Not yet</button></div>`, 'hardcore');
+  $('#hc-yes').onclick = () => setHardcoreRun();
+  $('#hc-no').onclick = () => renderMenu();
+}
+function renderHardcoreSave() {
+  const d = snapshotGame(); d.mapName = G.map.name;
+  const html = `<h2>Save game</h2><button class="dfbtn small close" id="x">Close</button>
+  <p class="muted">${slotSummary(d)}</p>
+  <p><b style="color:var(--gold)">Hardcore</b> — this run keeps one save, and only one. Writing it again replaces it.</p>
+  <div class="slot"><span class="meta">${HARDCORE.save ? slotSummary(HARDCORE.save) : 'The run’s save — empty'}</span><button class="dfbtn small" id="hc-save">${HARDCORE.save ? 'Overwrite' : 'Save the run'}</button></div>
+  <p class="muted">Save codes, downloads, session slots and pre-boss autosaves are closed to a hardcore run. Death destroys this save.</p>
+  <div class="btns"><button class="dfbtn small" id="sv-back">Back</button></div>`;
+  openModal(html, 'save');
+  $('#x').onclick = () => { closeModal(); G.state = 'play'; };
+  $('#sv-back').onclick = () => renderMenu();
+  $('#hc-save').onclick = () => { HARDCORE.save = d; Audio_.sfx.ui(); msg('The run is written down. There is still only one copy of it.', 'good', 4000); renderSave(); };
+}
+function renderHardcoreLoad(fromTitle) {
+  const html = `<h2>Load game</h2><button class="dfbtn small close" id="x">Close</button>
+  <p><b style="color:var(--gold)">Hardcore</b> — the run keeps one save, and this is it.</p>
+  ${HARDCORE.save ? `<div class="slot"><span class="meta">${slotSummary(HARDCORE.save)}</span><button class="dfbtn small" id="hc-load">Load</button></div>` : `<p class="muted">There is no hardcore save in this page. Death leaves none.</p>`}
+  <p class="muted">Session slots, save codes and downloaded files cannot open a hardcore run, and a hardcore run cannot be carried out as one.</p>
+  <div class="btns"><button class="dfbtn small" id="ld-back">Back</button></div>
+  <p class="muted" id="ld-err"></p>`;
+  openModal(html, fromTitle ? 'loadtitle' : 'load');
+  const back = () => { if (fromTitle) { closeModal(); G.state = 'title'; show('#title'); } else renderMenu(); };
+  $('#x').onclick = () => { if (fromTitle) back(); else { closeModal(); G.state = 'play'; } };
+  $('#ld-back').onclick = back;
+  const btn = $('#hc-load');
+  if (btn) btn.onclick = () => { try { restoreGame(JSON.parse(JSON.stringify(HARDCORE.save))); } catch (e) { $('#ld-err').textContent = 'That did not read as a hardcore save. ' + (e && e.message ? e.message : ''); } };
+}
 const ENT_FIELDS = ['x', 'y', 'hp', 'dead', 'hidden', 'state', 'name', 'solid', 'homeX', 'homeY', 'passive'];
 function b64(u8) { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); }
 function unb64(str) { const b = atob(str); const u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
@@ -2253,6 +2325,9 @@ function snapshotGame() {
 }
 function restoreGame(d) {
   if (!d || typeof d !== 'object' || !d.player || !d.maps || typeof d.mapId !== 'string') throw new Error('Not an Octave save.');
+  // Hardcore runs and ordinary saves never open each other, in either direction.
+  const mine = hardcoreOn(), theirs = hardcorePayload(d);
+  if (mine !== theirs) throw new Error(theirs ? 'That is a hardcore run. It only opens inside a hardcore run.' : 'A hardcore run does not open ordinary saves.');
   const custody = d.player.crime && d.player.crime.custody;
   if (custody && typeof custody.remaining === 'number' && Number.isFinite(custody.remaining) && d.mapId !== 'watchhouse') throw new Error('A custody save must be inside the watch-house.');
   const probe = buildAllMaps(); if (!probe[d.mapId] || !d.cam || !isFinite(d.cam.x) || !isFinite(d.cam.y)) throw new Error('That save points somewhere that does not exist.');
@@ -2307,6 +2382,7 @@ function restoreGame(d) {
   msg('The thread is picked up where you left it.', 'warn', 5000);
 }
 async function encodeSave(d) {
+  if (hardcorePayload(d)) throw new Error('A hardcore run cannot be written out as a save code.');
   const json = JSON.stringify(d); const bytes = new TextEncoder().encode(json);
   if (typeof CompressionStream !== 'undefined') {
     try { const cs = new CompressionStream('deflate-raw'); const w = cs.writable.getWriter(); w.write(bytes).catch(() => { }); w.close().catch(() => { }); const buf = new Uint8Array(await new Response(cs.readable).arrayBuffer()); return 'OCTZ1.' + b64(buf); } catch (e) { /* fall through */ }
@@ -2321,7 +2397,9 @@ async function decodeSave(code) {
   let bytes; try { bytes = unb64(body); } catch (e) { throw new Error('Not an Octave save.'); }
   if (tag === 'OCTZ1') { const ds = new DecompressionStream('deflate-raw'); const w = ds.writable.getWriter(); w.write(bytes).catch(() => { }); w.close().catch(() => { }); try { bytes = new Uint8Array(await new Response(ds.readable).arrayBuffer()); } catch (e) { throw new Error('The code is damaged or incomplete.'); } }
   else if (tag !== 'OCTJ1') throw new Error('Not an Octave save.');
-  let d; try { d = JSON.parse(new TextDecoder().decode(bytes)); } catch (e) { throw new Error('The code is damaged or incomplete.'); } if (!d || d.v !== SAVE_VERSION || !d.player || !d.maps) throw new Error('Not an Octave save.'); return d;
+  let d; try { d = JSON.parse(new TextDecoder().decode(bytes)); } catch (e) { throw new Error('The code is damaged or incomplete.'); } if (!d || d.v !== SAVE_VERSION || !d.player || !d.maps) throw new Error('Not an Octave save.');
+  if (hardcorePayload(d)) throw new Error('That is a hardcore run. Hardcore runs never travel as codes.');
+  return d;
 }
 // player-typed or save-derived text is stripped of markup characters before it can reach innerHTML
 function cleanName(s) { return String(s == null ? '' : s).replace(/[<>&"`\\]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24) || 'Nameless'; }
@@ -2338,6 +2416,7 @@ function renderMenu() {
     <button class="dfbtn" id="mn-mute">${Audio_.muted ? 'Sound on' : 'Sound off'}</button>
     <button class="dfbtn" id="mn-music">${Audio_.music.enabled ? 'Music off' : 'Music on'}</button>
     <button class="dfbtn" id="mn-needs">Journey needs (hunger and sleep): ${G.player.needs ? 'On' : 'Off'}</button>
+    <button class="dfbtn" id="mn-hardcore"${G.player.hardcore ? ' disabled' : ''}>Hardcore run (one save, death is final): ${G.player.hardcore ? 'On — this run cannot turn it off' : 'Off'}</button>
     <button class="dfbtn" id="mn-title">Return to title</button>
     <button class="dfbtn" id="mn-back">Continue</button>
   </div><p class="muted" style="margin-top:1cqh">${DAYS[G.day % DAYS.length]} · ${G.map.name} · ${G.player.name}, level ${G.player.level}</p>`;
@@ -2351,6 +2430,10 @@ function renderMenu() {
     if (p.needs) { p.hunger = 100; p.sleep = 100; }
     renderMenu();
     msg(p.needs ? 'Journey needs on: food and sleep now matter on the road. Honey feeds you; rest sleeps you.' : 'Journey needs off: hunger and sleep no longer change anything.', '', 5000);
+  };
+  $('#mn-hardcore').onclick = () => {
+    if (G.player.hardcore) { msg('This run is already hardcore. Only a new traveller can start without it.', 'warn', 5000); return; }
+    renderHardcoreConfirm();
   };
   $('#mn-title').onclick = () => { closeModal(); G.state = 'title'; G.keys = {}; $('#view').classList.remove('unwrite'); $('#msgs').innerHTML = ''; show('#title'); Audio_.setScene('title'); };
 }
@@ -2377,6 +2460,7 @@ function renderControls() {
   $('#c-touch').onclick = () => { o.touch = o.touch === 'auto' ? 'on' : o.touch === 'on' ? 'off' : 'auto'; if (o.touch === 'auto') setTouchMode(false); re(); };
 }
 async function renderSave() {
+  if (hardcoreOn()) { renderHardcoreSave(); return; }
   const d = snapshotGame(); d.mapName = G.map.name; const code = await encodeSave(d);
   const html = `<h2>Save game</h2><button class="dfbtn small close" id="x">Close</button>
   <p class="muted">${slotSummary(d)}</p>
@@ -2393,6 +2477,7 @@ async function renderSave() {
   $('#sv-dl').onclick = () => { try { const blob = new Blob([code], { type: 'text/plain' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `octave-${G.player.name.replace(/\W+/g, '_')}-${DAYS[G.day % DAYS.length]}.txt`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); msg('If the download was blocked, copy the code instead.', '', 4000); } catch (e) { msg('Download blocked here. Copy the code instead.', 'warn', 4000); } };
 }
 function renderLoad(fromTitle) {
+  if (hardcoreOn()) { renderHardcoreLoad(fromTitle); return; }
   const html = `<h2>Load game</h2><button class="dfbtn small close" id="x">Close</button>
   <p><b style="color:var(--gold)">Session slots</b></p>
   ${[0, 1, 2].map(i => `<div class="slot"><span class="meta">${SLOTS[i] ? slotSummary(SLOTS[i]) : `Slot ${i + 1} — empty`}</span><button class="dfbtn small" data-slot="${i}" ${SLOTS[i] ? '' : 'disabled'}>Load</button></div>`).join('')}

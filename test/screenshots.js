@@ -198,7 +198,31 @@ const output = path.join(__dirname, '..', 'screenshots');
 
     await page.evaluate(() => { closeModal(); G.state = 'panel'; renderMenu(); });
     await capture('journey-needs-menu', 'menu', 'Options');
+
+    // --- hardcore runs: one save, and the screen that ends it
+    await page.evaluate(() => {
+      closeModal(); galleryScene('oakhaven');
+      G.player.hardcore = true; HARDCORE.save = null; G.player.gold = 40;
+      renderSave();
+      const btn = document.querySelector('#hc-save');
+      if (!btn || !/Save the run/.test(btn.textContent)) throw new Error('A hardcore run must start with no save');
+      if (document.querySelector('#savecode')) throw new Error('A hardcore run must not offer a save code');
+      btn.click();
+      if (!HARDCORE.save) throw new Error('Saving must write the run');
+    });
+    await capture('hardcore-save', 'save', 'Save game');
+
+    await page.evaluate(() => {
+      closeModal(); G.state = 'play';
+      G.player.hardcore = true; HARDCORE.save = snapshotGame();
+      die('Cacophony hound');
+      const text = document.querySelector('#death-text').textContent;
+      if (!/Hardcore/.test(text)) throw new Error('The death screen must say the run is over');
+      if (document.querySelector('#btn-wake').hidden !== true) throw new Error('Hardcore death must hide the lamp');
+      if (HARDCORE.save !== null) throw new Error('Hardcore death must destroy the run save');
+    });
+    await capture('hardcore-run-over');
     assert.deepEqual(errors, [], 'capture has no browser runtime errors');
-    console.log('PASS eleven feature screenshots captured from the managed preview');
+    console.log('PASS thirteen feature screenshots captured from the managed preview');
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });
