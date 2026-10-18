@@ -19,7 +19,7 @@ function makeEl() {
     style: {}, classList: { add() {}, remove() {}, toggle() {}, contains: () => false },
     dataset: {}, innerHTML: '', textContent: '', value: '', files: [], id: '',
     onclick: null, onchange: null, parentNode: { children: [], insertBefore(e) { this.children.push(e); return e; } },
-    children: [], appendChild(e) { this.children.push(e); return e; },
+    children: [], get firstChild() { return this.children[0]; }, appendChild(e) { this.children.push(e); return e; },
     removeChild(e) { const i = this.children.indexOf(e); if (i >= 0) this.children.splice(i, 1); return e; },
     insertBefore(e) { this.children.push(e); return e; },
     remove() {}, addEventListener() {}, removeEventListener() {},
@@ -64,7 +64,7 @@ globalThis.Image = class {
 // ---- load the game exactly as index.html does, then expose handles ----
 const root = path.join(__dirname, '..');
 const order = ['assets', 'data', 'maps', 'engine', 'audio', 'grove', 'coda', 'wilds', 'game', 'party', 'anim', 'travel', 'upgrades'];
-const expose = `\nglobalThis.__T = { G, UPG, SONGS, SONG_NOTES, SONG_CADENCES, SONG_DYNAMICS, ITEMS, restoreGame, snapshotGame, buildAllMaps, renderSongs, renderHouseChest, renderLoad, renderCodexModal, ensurePlayerUpgrades, cleanText, cleanName, openDisguise, disguiseStatus, disguiseExposed };`;
+const expose = `\nglobalThis.__T = { G, UPG, SONGS, SONG_NOTES, SONG_CADENCES, SONG_DYNAMICS, ITEMS, restoreGame, snapshotGame, buildAllMaps, renderSongs, renderHouseChest, renderLoad, renderCodexModal, ensurePlayerUpgrades, cleanText, cleanName, openDisguise, disguiseStatus, disguiseExposed, crimeState, normalizeCrime, renderWantedPoster, renderPrison, returnEvidence };`;
 const code = order.map(f => fs.readFileSync(path.join(root, 'js', f + '.js'), 'utf8')).join('\n') + expose;
 try {
   new Function(code)();
@@ -160,6 +160,31 @@ assert(!INJECTION.test(html) && html.indexOf('DAY<') === -1 && typeof T.G.day ==
 T.renderCodexModal('factions');
 html = document.querySelector('#modal-panel').innerHTML;
 assert(!/<img|<script|<svg/i.test(html) && !/<b>c<\/b>/.test(html) && !p.titles.some(t => /[<>"'\\]/.test(t)), 'Codex factions/titles HTML has no injected tags');
+
+// ---- 5. custody/evidence are a schema, never arbitrary renderable save text ----
+const hostileLaw = JSON.parse(JSON.stringify(save));
+hostileLaw.player.name = '<img src=x onerror=1>';
+hostileLaw.player.crime = { bounty: '<svg>', thefts: -1, assaults: Infinity, escapes: {}, jailHours: 'six', custody: { remaining: '<img>' }, evidence: {
+  inv: [{ id: '<img>', n: 1 }, { id: 'coil', n: 1 }, { id: 'tonic', n: '<svg>' }, { id: 'tonic', n: 2 }, { id: '__proto__', n: 1 }],
+  weapons: ['<svg>', '__proto__', 'glass', 'sword', 'sword'], armor: { body: '<img>' }, selected: '<script>', pellets: -7, bolts: Infinity, tknives: '99',
+} };
+T.restoreGame(hostileLaw);
+let law = T.crimeState();
+assert(law.bounty === 0 && law.thefts === 0 && law.assaults === 0 && law.escapes === 0 && law.jailHours === 0 && !law.custody, 'hostile law stats and malformed custody rejected');
+assert(law.evidence.inv.length === 1 && law.evidence.inv[0].id === 'tonic' && law.evidence.inv[0].n === 2 && law.evidence.weapons.join() === 'sword', 'evidence rejects unknown/prototype IDs, quest gear, invalid counts and duplicate weapons');
+assert(!Object.keys(law.evidence.armor).length && law.evidence.pellets === 0 && law.evidence.bolts === 0 && law.evidence.tknives === 0, 'evidence armor and ammunition validated');
+T.renderWantedPoster();
+assert(!/<img|<script|<svg/i.test(document.querySelector('#modal-panel').innerHTML), 'warrant renders no hostile name/stat markup');
+const before = T.G.count('tonic'); T.returnEvidence(); T.returnEvidence();
+assert(T.G.count('tonic') === before + 2 && !T.crimeState().evidence, 'evidence consumed before return; repeated recovery cannot duplicate');
+const custodySave = JSON.parse(JSON.stringify(save)); custodySave.mapId = 'watchhouse'; custodySave.cam = { x: 3.5, y: 4.5, dir: 0 };
+custodySave.player.crime = { bounty: 40, custody: { remaining: 4 }, evidence: { inv: [{ id: 'tonic', n: 3 }], weapons: ['sword'], armor: {}, pellets: 2 } };
+const wrongMap = JSON.parse(JSON.stringify(custodySave)); wrongMap.mapId = 'oakhaven';
+const playerBefore = T.G.player;
+let rejected = false; try { T.restoreGame(wrongMap); } catch (e) { rejected = /custody save/.test(e.message); }
+assert(rejected && T.G.player === playerBefore, 'custody pointing outside prison is rejected before changing the live player');
+T.restoreGame(custodySave); T.renderPrison();
+assert(T.G.mapId === 'watchhouse' && T.crimeState().custody.remaining === 4 && T.crimeState().evidence.inv[0].n === 3 && !/<img|<script|<svg/i.test(document.querySelector('#modal-panel').innerHTML), 'legitimate custody/evidence survive untrusted restore and render');
 
 console.log(fails ? 'FAIL: ' + fails + ' assertion(s)' : 'OK: imported saves cannot inject script');
 process.exit(fails ? 1 : 0);

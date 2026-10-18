@@ -131,6 +131,7 @@ function travelHere(regionId) {
 function travelBlocked() {
   const m = G.map, f = G.flags, c = Engine.cam;
   if (G.dead) return 'You are in no state to go anywhere.';
+  if (G.mapId === 'watchhouse') return 'Leave the watch-house by its street door before travelling.';
   if (G.escapeTimer > 0 || G.boreHold > 0) return 'There is no time for that. Run.';
   if (f.wg_ambush && !f.wg_ambush_over) return 'The Sunken Court is a fight now. Finish it first.';
   if (f.coda_go) return 'The choir is waiting. There is nowhere else to be.';

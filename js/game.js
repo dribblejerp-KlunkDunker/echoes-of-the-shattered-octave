@@ -38,7 +38,7 @@ function msg(text, cls, ttl) {
   setTimeout(() => el.classList.add('fade'), ttl || 5200); setTimeout(() => el.remove(), (ttl || 5200) + 700);
 }
 function journal(cat, text) { G.journal.unshift({ cat, text, day: G.day }); msg('Your logbook has been updated.', 'warn', 2500); Audio_.sfx.ui(); }
-function openModal(html, name) { $('#modal-panel').innerHTML = html; show('#modal'); G.openPanel = name; G.keys = {}; }
+function openModal(html, name) { G.panelToken = (G.panelToken || 0) + 1; $('#modal-panel').innerHTML = html; show('#modal'); G.openPanel = name; G.keys = {}; }
 function closeModal() { hide('#modal'); G.openPanel = null; }
 function fx(cls, ms) { const f = $('#fx'); f.className = cls; clearTimeout(f._t); f._t = setTimeout(() => { if (f.className === cls) f.className = ''; }, ms || 200); }
 
@@ -101,6 +101,7 @@ function startGame() {
   $('#msgs').innerHTML = ''; $('#view').classList.remove('unwrite'); ['#death', '#ending', '#event'].forEach(hide); closeModal();
   for (let i = 0; i < CREATE.bio.length; i++) G.flags[BIOGRAPHY[i].a[CREATE.bio[i]].flag] = true;
   G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0; G.coverSuspicion = 0;
+  G.lawGrace = 0;
   G.maps = buildAllMaps();
   journal('main', 'I came up the Greenroot road to Oakhaven on Nullday, autumn, 419 SR. The gate-warden will know where the Cantor lives.');
   // intro
@@ -128,6 +129,7 @@ function loadMap(id, pos) {
     for (const e of G.map.entities) if (e.investigation) { delete e.investigation; if (e.state === 'investigate') e.state = 'idle'; }
     for (let i = G.map.entities.length - 1; i >= 0; i--) if (G.map.entities[i].distractionT != null) G.map.entities.splice(i, 1);
   }
+  syncWantedPosters();
   const m = G.maps[id]; G.map = m; G.mapId = id; G.ents = m.entities; m.entities.forEach(hydrate);
   for (const e of m.entities) { if (e.requires && !e.dead) e.hidden = !G.flags[e.requires]; if (e.until && G.flags[e.until]) e.hidden = true; if (e.drylamp) e.glow = G.flags.lamps_lit ? 0.65 : 0; if (e.id === 'halder' && G.flags.halder_rest) e.loop = false; }
   Engine.setMap(m);
@@ -140,6 +142,7 @@ function loadMap(id, pos) {
   G.fadeT = 0.5;
 }
 function transfer(portal) {
+  if (G.mapId === 'watchhouse' && portal.map === 'oakhaven') { leaveWatchhouse(); return; }
   let pos = null; const target = G.maps[portal.map];
   if (portal.useSpawn === 'shaft' && target.shaftReturn) pos = target.shaftReturn;
   else if (portal.useSpawn === 'shaft' && target.named && target.named.shaft) { const s = target.named.shaft; pos = { x: s.cx + 0.5, y: s.cy + 1.2, dir: Math.PI / 2 }; }
@@ -370,7 +373,7 @@ function tickBodies(dt) {
     if (G.dragBody === remains && !remains.dragReported && G.mapId === 'oakhaven' && !G.flags.greening &&
       patrols.some(e => e.lawGuard && dist2(e.x, e.y, c.x, c.y) < 36 && los(e.x, e.y, remains.x, remains.y) && los(e.x, e.y, c.x, c.y))) {
       remains.dragReported = true;
-      const law = crimeState(); law.bounty = Math.min(9999, law.bounty + 20);
+      reportCrime('dragging a body', 20);
       msg('The constable sees you dragging a body. +20 Oakhaven bounty.', 'bad', 5000);
     }
     if (remains.bodyFound) continue;
@@ -601,17 +604,18 @@ function attack(dirLabel) {
   // find target
   const c = Engine.cam; let best = null, bd = 1e9;
   for (const e of G.ents) {
-    if (e.kind !== 'enemy' || e.dead || e.hidden) continue;
+    if ((e.kind !== 'enemy' && !(lawActive() && e.kind === 'npc' && !e.companion && e.id !== 'cat')) || e.dead || e.hidden) continue;
     const dx = e.x - c.x, dy = e.y - c.y, d = Math.sqrt(dx * dx + dy * dy);
     if (d > w.reach + (e.radius || 0.3)) continue;
     const ang = Math.abs(normAng(Math.atan2(dy, dx) - c.dir));
     const cone = w.ranged ? 0.14 + 0.25 / Math.max(1, d) : 0.55;
     if (ang > cone) continue;
-    if (w.ranged && !los(c.x, c.y, e.x, e.y)) continue;
+    if (!los(c.x, c.y, e.x, e.y)) continue;
     if (d < bd) { bd = d; best = e; }
   }
   if (!best) { if (!w.ranged) msg(`Your ${dirLabel || 'swing'} finds nothing but air.`, '', 1200); return; }
   const e = best, d = e.def;
+  if (e.kind === 'npc') { assaultCivilian(e); return; }
   // hit chance
   const hitChance = 0.55 + p.attrs.Agility / 250 + p.attrs.Luck / 600 + (w.ranged ? 0.15 : 0);
   if (Math.random() > hitChance) { msg(`You miss ${theName(d.name, false)}.`, '', 1500); return; }
@@ -664,60 +668,183 @@ function castSong(id) {
 }
 
 // ---------------------------------------------------------------- Oakhaven law (player data is included in existing saves)
+const LAW_MAPS = new Set(['oakhaven', 'tavern', 'greenhall', 'surgery', 'mill', 'chapel', 'orla_house', 'lyra_house', 'tannery', 'watchhouse']);
+const PRISON_CELL_KEY = 'picked:watchhouse:door:5:4';
+const EVIDENCE_KEY = 'picked:watchhouse:evidence';
+const SAFE_WEAPONS = new Set(['tobin_blade', 'vesper_hook', 'sable_dagger']);
+const lawNumber = (v, max = 9999) => typeof v === 'number' && Number.isFinite(v) ? clamp(Math.floor(v), 0, max) : 0;
+function lawActive() { return LAW_MAPS.has(G.mapId) && !G.flags.greening && !G.flags.part3; }
+function safeWeapon(id) { return !!(WEAPONS[id] && (WEAPONS[id].innate || SAFE_WEAPONS.has(id))); }
 function crimeState() {
   const p = G.player;
   const raw = p.crime && typeof p.crime === 'object' ? p.crime : {};
-  const number = (v, max) => Number.isFinite(Number(v)) ? clamp(Math.floor(Number(v)), 0, max) : 0;
-  p.crime = { bounty: number(raw.bounty, 9999), thefts: number(raw.thefts, 9999), jailHours: number(raw.jailHours, 99999) };
-  return p.crime;
+  for (const key of ['bounty', 'thefts', 'assaults', 'escapes', 'jailHours']) raw[key] = lawNumber(raw[key], key === 'jailHours' ? 99999 : 9999);
+  p.crime = raw; return raw;
+}
+// Only whitelisted item/weapon IDs and bounded numeric counts enter saved escrow.
+function normalizeCrime() {
+  const law = crimeState(), raw = law.evidence;
+  law.custody = law.custody && typeof law.custody.remaining === 'number' && Number.isFinite(law.custody.remaining) ? { remaining: clamp(law.custody.remaining, 0, 6) } : null;
+  law.evidence = null;
+  if (raw && typeof raw === 'object') {
+    const inv = (Array.isArray(raw.inv) ? raw.inv : []).slice(0, 256).filter(s => s && Object.hasOwn(ITEMS, s.id) && !ITEMS[s.id].key && lawNumber(s.n) > 0).map(s => ({ id: s.id, n: lawNumber(s.n) }));
+    const weapons = [...new Set((Array.isArray(raw.weapons) ? raw.weapons : []).filter(id => Object.hasOwn(WEAPONS, id) && !safeWeapon(id)))];
+    const armor = {};
+    for (const [slot] of ARMOR_SLOTS) if (raw.armor && Object.hasOwn(ARMOR, raw.armor[slot]) && ARMOR[raw.armor[slot]].slot === slot && inv.some(s => s.id === raw.armor[slot])) armor[slot] = raw.armor[slot];
+    law.evidence = { inv, weapons, armor, selected: Object.hasOwn(WEAPONS, raw.selected) ? raw.selected : weapons[0], pellets: lawNumber(raw.pellets), bolts: lawNumber(raw.bolts), tknives: lawNumber(raw.tknives) };
+  }
+}
+function reportCrime(type, amount) {
+  const law = crimeState();
+  law.bounty = Math.min(9999, law.bounty + amount);
+  syncWantedPosters();
+  msg(`The watch records ${type}. +${amount} Oakhaven bounty (total ${law.bounty}).`, 'bad', 5000);
+}
+function syncWantedPosters() {
+  if (!G.maps) return;
+  const wanted = crimeState().bounty >= 40 && !G.flags.greening && !G.flags.part3;
+  for (const m of Object.values(G.maps)) for (const e of m.entities) if (e.wantedPoster) {
+    e.hidden = !wanted; e.dead = false;
+  }
+}
+function renderWantedPoster() {
+  const law = crimeState(); G.state = 'panel';
+  openModal(`<h2>By order of the Oakhaven watch</h2><div class="wanted-sheet"><p class="muted">WARRANT OF APPREHENSION</p><h3>${cleanName(G.player.name)}</h3><strong>${law.bounty} sovereigns</strong><p>${law.bounty >= 40 ? 'Wanted for questioning. Constables are to bring this traveller to the watch-house.' : 'This warrant has been withdrawn. No public notice is outstanding.'}</p></div><p>Reported offences: ${law.thefts} theft attempts · ${law.assaults} assaults · ${law.escapes} escapes. Payment or completed sentence withdraws the notice. Tearing down paper does not erase the registry.</p><div class="btns"><button class="dfbtn" id="law-leave">Leave notice</button></div><p class="muted">Enter / Escape / controller A or B: leave</p>`, 'wanted');
+  $('#law-leave').onclick = () => { closeModal(); G.state = 'play'; };
+}
+function assaultCivilian(e) {
+  // Nonlethal: quest-givers/children/companions never lose health or dialogue.
+  if (!lawActive() || G.mapId === 'watchhouse' || !e || e.kind !== 'npc' || !G.ents.includes(e) || e.companion || e.dead || e.hidden || e.id === 'cat') return;
+  if ((e.assaultUntil || 0) > G.time) return;
+  e.assaultUntil = G.time + 4;
+  const law = crimeState(); law.assaults = Math.min(9999, law.assaults + 1);
+  reportCrime('an assault', 40);
+  e.facing = Math.atan2(Engine.cam.y - e.y, Engine.cam.x - e.x);
+  msg('They recoil and call the watch. The blow is nonlethal; their story and services remain available.', 'warn', 4500);
+}
+function confiscateGear() {
+  const p = G.player, law = crimeState();
+  const fresh = { inv: p.inv.filter(s => !ITEMS[s.id].key).map(s => ({ id: s.id, n: s.n })), weapons: p.weapons.filter(id => !safeWeapon(id)), armor: { ...p.armor }, selected: p.weapons[p.weapon], pellets: p.pellets, bolts: p.bolts, tknives: p.tknives };
+  // Re-arrest never overwrites property still waiting in evidence.
+  if (law.evidence) {
+    fresh.inv.unshift(...law.evidence.inv); fresh.weapons = [...new Set([...law.evidence.weapons, ...fresh.weapons])];
+    fresh.armor = { ...law.evidence.armor, ...fresh.armor };
+    for (const key of ['pellets', 'bolts', 'tknives']) fresh[key] = lawNumber(fresh[key]) + law.evidence[key];
+  }
+  law.evidence = fresh; normalizeCrime();
+  p.inv = p.inv.filter(s => ITEMS[s.id].key); p.armor = {};
+  p.weapons = p.weapons.filter(safeWeapon); if (!p.weapons.length) p.weapons = ['hands'];
+  p.weapon = 0; p.pellets = p.bolts = p.tknives = 0;
+}
+function returnEvidence() {
+  const p = G.player, law = crimeState(), evidence = law.evidence;
+  if (!evidence) return;
+  law.evidence = null; // consume before rewards: stale callbacks cannot duplicate gear
+  for (const s of evidence.inv) G.give(s.id, s.n);
+  for (const id of evidence.weapons) if (!p.weapons.includes(id)) p.weapons.push(id);
+  if (evidence.weapons.length && p.weapons.length > 1 && evidence.selected !== 'hands') p.weapons = p.weapons.filter(id => id !== 'hands');
+  for (const [slot, id] of Object.entries(evidence.armor)) if (!p.armor[slot] && G.has(id)) p.armor[slot] = id;
+  for (const key of ['pellets', 'bolts', 'tknives']) p[key] = lawNumber(p[key]) + evidence[key];
+  const selected = p.weapons.indexOf(evidence.selected); if (selected >= 0) p.weapon = selected;
+}
+function enterPrison() {
+  const law = crimeState(); if (!lawActive() || law.custody || !law.bounty) return;
+  confiscateGear(); crimeState().custody = { remaining: 6 };
+  delete G.flags[PRISON_CELL_KEY]; delete G.flags[EVIDENCE_KEY];
+  const m = G.maps.watchhouse; for (const d of Object.values(m.doors)) d.open = d.target = 0;
+  closeModal(); G.state = 'play'; loadMap('watchhouse'); G.lawGrace = 0;
+  G.vel.x = G.vel.y = 0; G.touch.fx = G.touch.fy = 0;
+  msg('Six hours in custody. Your quest possessions are safe; other gear is held in evidence. Use the bunk to serve/pay, or pick the cell lock to escape.', 'warn', 8500);
+}
+function releasePrison(paid = false) {
+  const law = crimeState(); if (!law.custody || G.mapId !== 'watchhouse') return;
+  if (paid) { if (!Number.isFinite(G.player.gold) || G.player.gold < law.bounty) return; G.player.gold -= law.bounty; }
+  else if (law.custody.remaining > 0.00001) return;
+  law.bounty = 0; law.custody = null; returnEvidence(); syncWantedPosters();
+  closeModal(); G.state = 'play'; loadMap('oakhaven', { x: 39.5, y: 6.5, dir: Math.PI / 2 }); G.lawGrace = 5;
+  msg('The watch releases you, returns your remaining evidence and withdraws the warrant.', 'good', 5500);
+}
+function tickCustody(hours) {
+  const law = crimeState(); if (!law.custody || G.mapId !== 'watchhouse') return;
+  const served = Math.min(hours, law.custody.remaining);
+  law.custody.remaining = Math.max(0, law.custody.remaining - served);
+  // Fractional progress stays in remaining; completed sentences count six hours.
+  if (law.custody.remaining <= 0.00001) { law.jailHours = Math.min(99999, law.jailHours + 6); releasePrison(); }
+}
+function renderPrison() {
+  const law = crimeState(); if (!law.custody || G.mapId !== 'watchhouse') return;
+  G.state = 'panel';
+  openModal(`<h2>The watch-house cell</h2><p role="status">${Math.ceil(law.custody.remaining * 60)} minutes left · Outstanding fine ${law.bounty} sovereigns</p><p>Quest possessions stay with you. Other gear is in the evidence chest beyond the cell. Serve the remaining sentence or pay for immediate release and return of evidence. To escape, pick the cell lock, recover evidence if you can, then use the street door; escape adds 60 bounty.</p><div class="btns"><button class="dfbtn" id="prison-serve">Serve remaining sentence</button><button class="dfbtn" id="prison-pay" ${G.player.gold < law.bounty ? 'disabled' : ''}>Pay fine</button><button class="dfbtn" id="law-leave">Return to cell</button></div><p class="muted">1 / Enter / A: serve · 2 / X: pay · Escape / B: return</p>`, 'prison');
+  const token = G.panelToken;
+  const valid = () => G.panelToken === token && G.openPanel === 'prison' && G.state === 'panel' && G.mapId === 'watchhouse' && !G.dead && crimeState().custody;
+  $('#prison-serve').onclick = () => { if (valid()) passHours(crimeState().custody.remaining); };
+  $('#prison-pay').onclick = () => { if (valid()) releasePrison(true); };
+  $('#law-leave').onclick = () => { if (valid()) { closeModal(); G.state = 'play'; } };
+}
+function useLawDeco(e) {
+  if (e.wantedPoster) { renderWantedPoster(); return true; }
+  if (G.mapId !== 'watchhouse') return false;
+  if (e.use === 'prison_bunk') { if (crimeState().custody) renderPrison(); else msg('A watch-house bunk. You are not serving a sentence.', '', 3000); return true; }
+  if (e.use === 'prison_evidence') {
+    if (!crimeState().evidence) msg('The evidence chest is empty.', '', 2500);
+    else if (crimeState().custody && !G.flags[EVIDENCE_KEY]) beginLockpick(e, EVIDENCE_KEY, 2, () => { if (G.mapId === 'watchhouse' && !G.dead) { returnEvidence(); msg('You recover your confiscated belongings.', 'good'); } });
+    else { returnEvidence(); msg('You recover your confiscated belongings.', 'good'); }
+    return true;
+  }
+  return false;
+}
+function leaveWatchhouse() {
+  const law = crimeState();
+  if (law.custody) { law.custody = null; law.escapes = Math.min(9999, law.escapes + 1); reportCrime('a prison escape', 60); }
+  closeModal(); G.state = 'play'; loadMap('oakhaven', { x: 39.5, y: 6.5, dir: Math.PI / 2 }); G.lawGrace = 5;
 }
 function theftWitness(target) {
   const c = Engine.cam;
-  return G.ents.find(e => e.kind === 'npc' && e !== target && !e.companion && !e.dead && !e.hidden &&
+  return G.ents.find(e => e.kind === 'npc' && e !== target && !e.companion && !e.dead && !e.hidden && !(e.stun > 0) &&
     dist2(e.x, e.y, c.x, c.y) < 64 && los(e.x, e.y, c.x, c.y) &&
     (e.lawGuard || Math.abs(normAng(Math.atan2(c.y - e.y, c.x - e.x) - (Number.isFinite(e.facing) ? e.facing : e.dir || 0))) < Math.PI * 0.65));
 }
 function confirmTheft(e) {
   G.state = 'panel';
-  openModal(`<h2>Not yours to take</h2><p>This honey belongs to Bettany's market stall. Taking it is theft. A witness can report you to the watch.</p><div class="btns"><button class="dfbtn" id="crime-take">Take it anyway</button><button class="dfbtn" id="crime-leave">Leave it</button></div>`, 'theft');
-  $('#crime-leave').onclick = () => { closeModal(); G.state = 'play'; };
-  const map = G.map;
+  openModal(`<h2>Not yours to take</h2><p>This ${ITEMS[e.item].name} belongs to ${e.owner === 'market' ? 'Bettany’s market stall' : 'the local household or business'}. Taking it is theft. A witness can report you to the watch.</p><div class="btns"><button class="dfbtn" id="crime-take">Take it anyway</button><button class="dfbtn" id="crime-leave">Leave it</button></div>`, 'theft');
+  $('#crime-leave').onclick = () => { if (G.openPanel === 'theft') { closeModal(); G.state = 'play'; } };
+  const map = G.map, token = G.panelToken;
   $('#crime-take').onclick = () => {
+    if (G.panelToken !== token || G.openPanel !== 'theft' || G.state !== 'panel' || G.dead || G.map !== map || !G.ents.includes(e) || e.dead || e.hidden) return;
     closeModal(); G.state = 'play';
-    if (G.map !== map || e.dead || e.hidden) return;
     const law = crimeState(), witness = theftWitness(e);
-    law.thefts++;
-    if (witness) { law.bounty = Math.min(9999, law.bounty + 20); msg('A witness calls for the watch. Your Oakhaven bounty rises by 20 sovereigns.', 'bad', 5000); }
+    law.thefts = Math.min(9999, law.thefts + 1);
+    if (witness) reportCrime('a theft', 20);
     else msg('No one sees you take it.', 'warn', 3000);
     pickUp(e, true);
   };
 }
 function renderArrest() {
-  const law = crimeState(); if (!law.bounty) return;
+  const law = crimeState(); if (!lawActive() || !law.bounty || law.custody || G.dead) return;
+  const map = G.map;
+  const valid = () => G.panelToken === token && G.openPanel === 'arrest' && G.state === 'panel' && G.map === map && !G.dead && crimeState().bounty > 0 && !crimeState().custody;
   G.state = 'panel';
-  openModal(`<h2>The Oakhaven watch</h2><p>The watch has your description. Outstanding fine: <b>${law.bounty} sovereigns</b>.</p><p class="muted">Pay the fine, or serve six hours at the watch-house. Jail advances world time; your equipment and quest items stay with you. Refusing leaves the bounty outstanding.</p><div class="btns"><button class="dfbtn" id="crime-pay" ${G.player.gold < law.bounty ? 'disabled' : ''}>Pay fine</button><button class="dfbtn" id="crime-jail">Serve six hours</button><button class="dfbtn" id="crime-flee">Refuse and run</button></div>`, 'arrest');
+  openModal(`<h2>The Oakhaven watch</h2><p>The watch has your description. Outstanding fine: <b>${law.bounty} sovereigns</b>.</p><p class="muted">Pay exactly the fine, or enter the watch-house for a six-hour sentence. Non-quest gear is held in evidence until release or recovery; quest possessions remain safe. Refusing leaves the bounty outstanding.</p><div class="btns"><button class="dfbtn" id="crime-pay" ${G.player.gold < law.bounty ? 'disabled' : ''}>Pay fine</button><button class="dfbtn" id="crime-jail">Enter prison</button><button class="dfbtn" id="crime-flee">Refuse and run</button></div><p class="muted">1 / A: pay · 2 / X: prison · 3 / Escape / B: refuse</p>`, 'arrest');
+  const token = G.panelToken;
   $('#crime-pay').onclick = () => {
-    const current = crimeState(); if (G.player.gold < current.bounty) return;
-    G.player.gold -= current.bounty; current.bounty = 0;
-    closeModal(); G.state = 'play'; msg('The watch marks the fine paid. You are free to go.', 'good');
+    if (!valid()) return;
+    const current = crimeState(); if (!Number.isFinite(G.player.gold) || G.player.gold < current.bounty) return;
+    G.player.gold -= current.bounty; current.bounty = 0; returnEvidence(); syncWantedPosters();
+    closeModal(); G.state = 'play'; msg('The watch marks the fine paid and returns any remaining evidence. You are free to go.', 'good');
   };
-  $('#crime-jail').onclick = () => {
-    const current = crimeState(); current.bounty = 0; current.jailHours += 6;
-    passHours(6); closeModal(); G.state = 'play';
-    loadMap('oakhaven', { x: 23.5, y: 6.5, dir: Math.PI / 2 });
-    msg('Six hours on a watch-house bench. At release they return your belongings and strike out the fine.', 'warn', 5500);
-  };
-  $('#crime-flee').onclick = () => { G.lawGrace = 5; closeModal(); G.state = 'play'; };
+  $('#crime-jail').onclick = () => { if (valid()) enterPrison(); };
+  $('#crime-flee').onclick = () => { if (valid()) { G.lawGrace = 5; closeModal(); G.state = 'play'; } };
 }
 function tickLaw(dt) {
   G.lawGrace = Math.max(0, (G.lawGrace || 0) - dt);
-  if (G.mapId !== 'oakhaven' || G.flags.greening) return;
+  if (!lawActive() || crimeState().custody) return;
   const c = Engine.cam, wanted = crimeState().bounty > 0;
   for (const e of G.ents) {
-    if (!e.lawGuard || e.hidden || e.dead) continue;
+    if (!e.lawGuard || e.hidden || e.dead || e.stun > 0) continue;
     const dx = c.x - e.x, dy = c.y - e.y, distance = Math.hypot(dx, dy);
-    if (!wanted || distance > 14 || !los(e.x, e.y, c.x, c.y)) { updateInvestigation(e, dt); continue; }
-    delete e.investigation; e.state = 'idle';
+    if (!wanted) { if (e.investigation?.source === 'crime') { delete e.investigation; e.state = 'idle'; } updateInvestigation(e, dt); continue; }
+    if (distance > 14 || !los(e.x, e.y, c.x, c.y)) { updateInvestigation(e, dt); continue; }
+    e.investigation = { x: c.x, y: c.y, left: 10, source: 'crime' }; e.state = 'investigate';
     e.facing = Math.atan2(dy, dx);
     if (distance < 1.8 && !G.lawGrace) { renderArrest(); return; }
     if (distance > 1.2) moveWithSlide(e, dx / distance * 1.6 * dt, dy / distance * 1.6 * dt, e);
@@ -779,7 +906,7 @@ function pickpocketInput(action) {
     G.flags[key] = success ? 'taken' : 'caught';
     law.thefts = Math.min(9999, law.thefts + 1);
     if (!success || witness) {
-      law.bounty = Math.min(9999, law.bounty + 20);
+      reportCrime('a purse theft', 20);
       e.facing = Math.atan2(Engine.cam.y - e.y, Engine.cam.x - e.x);
     }
     if (success) { G.gold(e.pocketGold); gainSkill('Stealth', 2); Audio_.sfx.pickup(); }
@@ -1135,7 +1262,7 @@ function decoLabel(e) { return e.label || ({ oak: 'An iron-bark oak. When the wi
 function wallLabel(cell) { return ({ t_hedge: 'The Hedge. Three men deep of thorn and packed wool.', t_glassrock: 'Rock veined with green-gold glass. It is faintly warm, and it hums.', t_marble: 'Old marble.', t_greymarble: 'Drowned marble, grey-white, furred with lilac lichen to the waterline.', t_catacomb: 'Burial niches, five deep. Somebody has strung lilac thread across the skulls.', t_mausoleum: 'Violet marble, carved with staves of music from floor to vault. Put your ear to it and it hums.', t_deepwood: 'Silver willow, trunk against trunk, too thick to pass. The fronds move when nothing else does.', t_brass: 'Riveted brass. Verdigris.', t_house: 'Plaster and oak timber.', t_wood: 'Old planks.', t_stone: 'Cold stone.', t_door: 'A door.' })[cell.tex] || 'A wall.'; }
 function pickUp(e, theftConfirmed = false) {
   if (e.dead || e.hidden) return;
-  if (e.owner === 'market' && G.mapId === 'oakhaven' && !G.flags.greening && !theftConfirmed) { confirmTheft(e); return; }
+  if (e.owner && lawActive() && !ITEMS[e.item].key && !theftConfirmed) { confirmTheft(e); return; }
   if (e.item === 'cache' && e.tier >= 2) {
     const key = mechanicalLockKey(e);
     if (!G.flags[key] && beginLockpick(e, key, Math.min(3, e.tier), () => pickUp(e))) return;
@@ -1163,6 +1290,7 @@ function useItem(slot) {
   renderInventory();
 }
 function useDeco(e) {
+  if (useLawDeco(e)) return;
   if (e.bodyCover) { msg('A shrouded body recess. Drag a body within reach, then G / touch Body / controller left stick to conceal it. Hidden remains can be recovered here during this visit.', 'warn', 6500); return; }
   if (e.use === 'note_reliquary') { openNoteLock(e); return; }
   if (e.use === 'pressure_plate') { openPressurePlate(e); return; }
@@ -1297,7 +1425,7 @@ $('#btn-again').onclick = () => { hide('#ending'); show('#title'); G.state = 'ti
 const DLG = { npc: null, tone: 'normal', log: [] };
 function talk(e) {
   if (canPickpocket(e)) e.facing = Math.atan2(Engine.cam.y - e.y, Engine.cam.x - e.x);
-  if (e.lawGuard && G.mapId === 'oakhaven' && crimeState().bounty) { renderArrest(); return; }
+  if (e.lawGuard && lawActive() && crimeState().bounty) { renderArrest(); return; }
   if (wildsTalk(e)) return;
   if (e.id === 'hollow' && e.restore === 'hew' && G.flags.sable_returned) { talkHew(e); return; }
   if (e.id === 'cat') { talkCat(e); return; }
@@ -1490,7 +1618,7 @@ function renderCharacter() {
   ${p.fragments ? `<div>Identity fragments left: ${p.fragments}</div>` : ''}
   <div>Armour Rating ${armorRating()} · armour noise ${armorNoise() > 0 ? '+' : ''}${armorNoise().toFixed(1)} · ${currentWeapon().name}</div>
   <p class="muted">${disguiseStatus()}</p>
-  <p class="muted">Kills ${p.kills} · Names kept ${G.ledger.length} · ${p.gold} sovereigns<br>Oakhaven bounty ${crimeState().bounty} · Jail served ${crimeState().jailHours} hours</p></div></div>`, 'char');
+  <p class="muted">Kills ${p.kills} · Names kept ${G.ledger.length} · ${p.gold} sovereigns<br>Oakhaven bounty ${crimeState().bounty} · Assaults ${crimeState().assaults} · Escapes ${crimeState().escapes}<br>Jail served ${crimeState().jailHours} hours${crimeState().custody ? ' · In custody' : ''}${crimeState().evidence ? ' · Gear held in watch-house evidence' : ''}</p></div></div>`, 'char');
   $('#x').onclick = () => { closeModal(); G.state = 'play'; };
 }
 function renderLog() {
@@ -1512,6 +1640,7 @@ function renderSongs() {
   document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { closeModal(); G.state = 'play'; castSong(b.dataset.s); });
 }
 function renderRest() {
+  if (G.mapId === 'watchhouse' && crimeState().custody) { renderPrison(); return; }
   if (G.escapeTimer > 0 || G.boreHold > 0) { G.state = 'play'; msg('There is no time to rest. Not now.', 'bad', 2500); return; }
   if (G.ents.some(e => e.kind === 'enemy' && !e.dead && !e.hidden && e.state === 'chase' && dist2(e.x, e.y, Engine.cam.x, Engine.cam.y) < 144)) { G.state = 'play'; msg('You cannot rest with enemies nearby.', 'bad', 2500); return; }
   const lampNear = G.ents.some(e => e.sprite === 'lamp' && !e.hidden && dist2(e.x, e.y, Engine.cam.x, Engine.cam.y) < 12) || G.mapId.includes('house') || G.mapId === 'tavern';
@@ -1530,7 +1659,7 @@ function doRest(kind) {
   else { p.hp = p.hpMax; p.voice = p.voiceMax; p.fat = p.fatMax; if (G.map.siphoned) { p.hpMax = Math.max(8, p.hpMax - 3); p.hp = p.hpMax; msg('You slept like the dead, and the dead do not keep the Narrow. Something leaned in and took a little. You are a little less than you were.', 'bad', 8000); } else { msg('You sleep deeply, and snore, and in the morning the hush-lamp has burned out and nobody will say what they heard.', 'warn'); if (G.map.danger > 0) { spawnHound(); } } }
   G.noise = 2; G.stillT = 0;
 }
-function passHours(hours) { G.tod += hours / 24; while (G.tod >= 1) { G.tod -= 1; G.day++; } }
+function passHours(hours) { G.tod += hours / 24; while (G.tod >= 1) { G.tod -= 1; G.day++; } tickCustody(hours); }
 function timeName() { const h = G.tod * 24; return h < 5 ? 'the dead hour' : h < 7 ? 'before dawn' : h < 12 ? 'morning' : h < 17 ? 'afternoon' : h < 20 ? 'dusk' : 'night'; }
 function renderMap() {
   const m = G.map; const cw = 4; const html = `<h2>${m.name}</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">What you have walked. ${m.outdoor ? 'North is up.' : 'The automap remembers where the lamps were.'}</p><canvas id="amap" width="${m.w * cw}" height="${m.h * cw}" style="width:100%;max-height:70cqh;object-fit:contain;image-rendering:pixelated;background:#0a0806;border:2px solid #0b0806"></canvas>`;
@@ -1697,6 +1826,12 @@ window.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse' 
 window.addEventListener('keydown', (ev) => {
   if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
   const k = keyOf(ev);
+  if (['arrest', 'prison', 'wanted', 'theft'].includes(G.openPanel)) {
+    const actions = { arrest: { '1': 'crime-pay', '2': 'crime-jail', '3': 'crime-flee', escape: 'crime-flee' }, prison: { '1': 'prison-serve', enter: 'prison-serve', '2': 'prison-pay', escape: 'law-leave' }, wanted: { enter: 'law-leave', escape: 'law-leave' }, theft: { enter: 'crime-take', ' ': 'crime-take', escape: 'crime-leave' } };
+    const id = actions[G.openPanel][k];
+    if (id) { ev.preventDefault(); if (!ev.repeat) $('#' + id)?.click(); }
+    return;
+  }
   if (G.openPanel === 'disguise') {
     const id = { enter: 'cover-wear', ' ': 'cover-wear', escape: 'cover-leave' }[k];
     if (id) { ev.preventDefault(); if (!ev.repeat) $('#' + id).click(); }
@@ -1799,9 +1934,11 @@ function update(dt) {
   G.time += dt;
   if (G.state !== 'play') return;
   const p = G.player, c = Engine.cam, k = G.keys;
+  const priorMap = G.map;
   tickLaw(dt); if (G.state !== 'play') return;
   // time of day: one game hour per 90 real seconds
   G.tod += dt / (90 * 24); if (G.tod >= 1) { G.tod -= 1; G.day++; }
+  tickCustody(dt / 90); if (G.map !== priorMap) return;
   if (G.fadeT > 0) G.fadeT -= dt;
   // movement: a short ramp up and down so steps feel weighted rather than twitchy
   const runHeld = (G.opts.alwaysRun ? !k.shift : !!k.shift) || G.touch.run;
@@ -1857,7 +1994,7 @@ function update(dt) {
     if (e.kind === 'enemy') enemyUpdate(e, dt);
     else if ((e.kind === 'npc' && e.wander) || (e.kind === 'deco' && e.wander)) {
       e.wanderT -= dt; if (e.wanderT <= 0) { e.wanderT = rnd(2, 6); e.dir = rnd(0, 6.28); e.moving = Math.random() < 0.6; }
-      if (e.lawGuard && (e.state === 'investigate' || (G.mapId === 'oakhaven' && crimeState().bounty))) continue;
+      if (e.lawGuard && (e.state === 'investigate' || (lawActive() && crimeState().bounty))) continue;
       if (e.moving && dist2(e.x, e.y, e.homeX, e.homeY) < 20) { if (!moveWithSlide(e, Math.cos(e.dir) * 0.6 * dt, Math.sin(e.dir) * 0.6 * dt, e)) e.dir += 1.5; } else if (e.moving) { e.dir = Math.atan2(e.homeY - e.y, e.homeX - e.x); moveWithSlide(e, Math.cos(e.dir) * 0.6 * dt, Math.sin(e.dir) * 0.6 * dt, e); }
     } else if (e.kind === 'npc' && e.loop) {
       e.loopT = (e.loopT || 0) + dt; moveWithSlide(e, Math.cos(e.loopT * 0.7) * 0.5 * dt * 1.2, 0, e);
@@ -2035,6 +2172,8 @@ function snapshotGame() {
 }
 function restoreGame(d) {
   if (!d || typeof d !== 'object' || !d.player || !d.maps || typeof d.mapId !== 'string') throw new Error('Not an Octave save.');
+  const custody = d.player.crime && d.player.crime.custody;
+  if (custody && typeof custody.remaining === 'number' && Number.isFinite(custody.remaining) && d.mapId !== 'watchhouse') throw new Error('A custody save must be inside the watch-house.');
   const probe = buildAllMaps(); if (!probe[d.mapId] || !d.cam || !isFinite(d.cam.x) || !isFinite(d.cam.y)) throw new Error('That save points somewhere that does not exist.');
   if (!Array.isArray(d.player.inv) || !d.player.attrs) throw new Error('That save is damaged.');
   const cls = CLASSES.find(c => c.id === d.player.cls) || CLASSES[0];
@@ -2042,6 +2181,7 @@ function restoreGame(d) {
   G.player.name = cleanName(G.player.name); G.player.level = Math.max(1, G.player.level | 0);
   G.player.weapons = (G.player.weapons || []).filter(w => WEAPONS[w]); if (!G.player.weapons.length) G.player.weapons = ['hands']; G.player.weapon = clamp(G.player.weapon | 0, 0, G.player.weapons.length - 1);
   G.player.inv = G.player.inv.filter(s => s && ITEMS[s.id]); for (const k in G.player.armor) if (!ARMOR[G.player.armor[k]] || !G.player.inv.some(s => s.id === G.player.armor[k])) delete G.player.armor[k];
+  normalizeCrime();
   ensurePlayerUpgrades(G.player); // imported saves are untrusted: validate custom songs, house storage and the song list before any render path
   G.flags = d.flags || {}; G.runs = d.runs | 0;
   G.journal = (Array.isArray(d.journal) ? d.journal : []).filter(j => j && typeof j === 'object').map(j => Object.assign({}, j, { text: cleanText(j.text), cat: cleanText(j.cat, 20), day: j.day | 0 }));
@@ -2054,7 +2194,7 @@ function restoreGame(d) {
   G.boreGolems = Math.max(0, d.boreGolems | 0);
   G.glassLock = isFinite(+d.glassLock) ? Math.max(0, +d.glassLock) : 0;
   G.rootWard = isFinite(+d.rootWard) ? Math.max(0, +d.rootWard) : 0;
-  G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0; G.coverSuspicion = 0;
+  G.throwReady = 0; G.dragBody = null; G.bodyScanT = 0; G.coverSuspicion = 0; G.lawGrace = 0;
   G.dead = false; G.stillT = 0; G.unwriting = false; G.murmurT = 0; G.whistleT = 0; G.attack.t = 0; G.song.t = 0; G.keys = {}; $('#msgs').innerHTML = '';
   G.maps = probe; if (G.flags.greening) G.maps.oakhaven = buildOakhaven(true);
   for (const id in G.maps) {
@@ -2071,6 +2211,11 @@ function restoreGame(d) {
   const oh = G.maps.oakhaven; if (oh) for (const e of oh.entities) if (e.kind === 'enemy' && e.type === 'wearer' && !e.dead) e.onDeath = () => { G.flags.wearer_dead = true; msg('It bursts, and everything it ever ate comes out at once.', 'voice', 9000); setTimeout(ending, 2500); };
   ['#title', '#create', '#intro', '#death', '#ending', '#event'].forEach(hide); closeModal();
   loadMap(d.mapId, d.cam); G.state = 'play';
+  if (G.mapId === 'watchhouse' && crimeState().custody) {
+    // A saved open door is not authority to bypass a fresh locked cell.
+    if (!G.flags[PRISON_CELL_KEY]) { const door = G.map.doors[4 * G.map.w + 5]; door.open = door.target = 0; }
+    if (crimeState().custody.remaining <= 0.00001) tickCustody(0);
+  }
   msg('The thread is picked up where you left it.', 'warn', 5000);
 }
 async function encodeSave(d) {

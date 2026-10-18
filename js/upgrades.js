@@ -125,10 +125,11 @@ function executeCustomSong(s) {
     } else if (ef === 'shatter' || ef === 'sear' || ef === 'stun_core') {
       let hitN = 0;
       for (const e of G.ents) {
-        if (e.kind !== 'enemy' || e.dead || e.hidden) continue;
+        if ((e.kind !== 'enemy' && !(lawActive() && e.kind === 'npc' && !e.companion && e.id !== 'cat')) || e.dead || e.hidden) continue;
         const dx = e.x - c.x, dy = e.y - c.y, d = Math.hypot(dx, dy);
         if (d > (s.cadence === 'aoe' || s.cadence === 'fifth' || s.cadence === 'octave' ? 8.5 : 5.5)) continue;
         if (s.cadence === 'cone' && Math.abs(normAng(Math.atan2(dy, dx) - c.dir)) > 0.75) continue;
+        if (e.kind === 'npc') { if (los(c.x, c.y, e.x, e.y)) assaultCivilian(e); continue; }
         let dmg = s.power;
         if (ef === 'sear' && e.def.cacophony) dmg = Math.round(dmg * 1.5);
         if (ef === 'shatter' && (e.def.armored || e.def.core)) dmg = Math.round(dmg * 1.45);
@@ -1607,6 +1608,14 @@ function lesson(id, text) {
     const btn = (i) => !!(gp.buttons[i] && gp.buttons[i].pressed);
     const edge = (i) => btn(i) && !prev[i];
     const play = G.state === 'play' && !G.dead;
+    if (['arrest', 'prison', 'wanted', 'theft'].includes(G.openPanel)) {
+      const actions = { arrest: ['crime-pay', 'crime-flee', 'crime-jail'], prison: ['prison-serve', 'law-leave', 'prison-pay'], wanted: ['law-leave', 'law-leave', 'law-leave'], theft: ['crime-take', 'crime-leave', 'crime-leave'] }[G.openPanel];
+      if (edge(GBTN.a)) $('#' + actions[0])?.click();
+      else if (edge(GBTN.b) || edge(GBTN.start)) $('#' + actions[1])?.click();
+      else if (edge(GBTN.x)) $('#' + actions[2])?.click();
+      for (let i = 0; i < 32; i++) prev[i] = btn(i);
+      G.touch.fx = G.touch.fy = 0; return;
+    }
     if (G.openPanel === 'disguise') {
       if (edge(GBTN.a)) $('#cover-wear').click();
       else if (edge(GBTN.b) || edge(GBTN.back) || edge(GBTN.start)) $('#cover-leave').click();
@@ -1710,7 +1719,7 @@ function lesson(id, text) {
       maps.oakhaven.npc('townsman', 23.5, 20.5, { wander: true, nightWatch: true });
       maps.oakhaven.npc('townswoman', 23.5, 44.5, { wander: true, nightWatch: true });
       // Append after all historical baseline extras: saves map entities by index.
-      if (!G.flags.greening) {
+      if (maps.oakhaven.danger === 0) {
         maps.oakhaven.npc('townsman', 52.5, 20.5, { lawGuard: true, wander: true, name: 'Oakhaven watch constable' });
         Object.assign(maps.oakhaven.item('honey', 51.5, 19.2), { owner: 'market', label: 'Bettany’s honey — taking it is theft' });
       }
@@ -1758,7 +1767,7 @@ function lesson(id, text) {
     }
     // Nonblocking concealment points append last: never reorder saved entities.
     for (const id of ['oakhaven', 'quarry', 'cloister']) {
-      const m = maps[id]; if (!m || (id === 'oakhaven' && G.flags.greening)) continue;
+      const m = maps[id]; if (!m || (id === 'oakhaven' && m.danger > 0)) continue;
       const anchor = id === 'oakhaven' ? { x: 25, y: 28 } : { x: m.spawn.x + 4, y: m.spawn.y };
       const spots = [];
       for (let y = 2; y < m.h - 2; y++) for (let x = 2; x < m.w - 2; x++) {
@@ -1784,7 +1793,7 @@ function lesson(id, text) {
   buildOakhaven = function (g) { const m = _buildOakhaven(g); syncHouseDoor(m); return m; };
 
   const _buildAllMaps = buildAllMaps;
-  buildAllMaps = function () { const maps = _buildAllMaps(); try { addWorldExtras(maps); syncCatacombsPuzzles(); } catch (e) { } return maps; };
+  buildAllMaps = function () { const maps = _buildAllMaps(); addWorldExtras(maps); addLawWorld(maps); syncCatacombsPuzzles(); return maps; };
 
   const _stepSfx = Audio_.sfx.step;
   Audio_.sfx.step = (surface) => _stepSfx(surface || stepSurface());

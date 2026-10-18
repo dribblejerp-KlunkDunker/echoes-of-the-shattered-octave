@@ -314,7 +314,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       crimeState().bounty = 40;
       const clock = G.day * 24 + G.tod * 24, inventory = JSON.stringify(G.player.inv), weapon = JSON.stringify(G.player.weapons);
       renderArrest(); document.querySelector('#crime-jail').click();
-      check(crimeState().bounty === 0 && crimeState().jailHours === 6, 'jail clears bounty and records served hours');
+      check(G.mapId === 'watchhouse' && crimeState().custody.remaining === 6 && crimeState().bounty === 40, 'jail enters a playable prison without clearing the fine');
+      check(G.player.inv.every(s => ITEMS[s.id].key) && crimeState().evidence, 'non-quest gear held in evidence');
+      renderPrison(); document.querySelector('#prison-serve').click();
+      check(crimeState().bounty === 0 && crimeState().jailHours === 6, 'completed sentence clears bounty and records served hours');
       check(Math.abs(G.day * 24 + G.tod * 24 - clock - 6) < 0.0001, 'jail advances time six hours');
       check(JSON.stringify(G.player.inv) === inventory && JSON.stringify(G.player.weapons) === weapon, 'jail preserves quest items and equipment');
       check(G.mapId === 'oakhaven' && G.state === 'play', 'jail releases into playable town');
@@ -507,7 +510,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       check(!guard.investigation, 'visible wanted player prevents guard diversion');
       // An existing investigation is interrupted when a wanted player becomes visible.
       guard.state = 'investigate'; guard.investigation = { x: 20.5, y: 12.5, left: 6 };
-      tickLaw(0.1); check(!guard.investigation, 'wanted-player sight interrupts existing investigation');
+      tickLaw(0.1); check(guard.investigation?.source === 'crime', 'wanted-player sight replaces distraction with last-seen crime search');
       G.player.crime = {}; foe.state = 'idle'; foe.x = 15.5; foe.y = 10.5;
       // Nearby sound muffles through a wall; a distant listener cannot hear through it.
       map.set(13, 10, WALL('t_stone')); G.throwReady = 0; G.state = 'play'; throwDistraction('pebble'); G.state = 'panel';
@@ -582,7 +585,8 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       for (const id of ['oakhaven', 'quarry', 'cloister']) {
         const m = G.maps[id], recess = m.entities.find(e => e.bodyCover);
         check(recess && !recess.solid && !m.isBlocked(recess.x | 0, recess.y | 0), id + ' recess is accessible nonblocking floor');
-        check(m.entities.indexOf(recess) === m.baseCount - 1, id + ' recess appends after historical entities');
+        const lawAdditions = id === 'oakhaven' ? 3 : 0; // two warrants and a constable append after the historical recess
+        check(m.entities.indexOf(recess) === m.baseCount - 1 - lawAdditions, id + ' recess retains its historical index before new law entities');
       }
       const map = new GameMap('oakhaven', 'Body fixture', 32, 24, { floor: 't_flag', ceil: 't_stone', fogDist: 20, spawn: { x: 5.5, y: 10.5, dir: 0 } });
       map.border('t_stone'); G.maps.oakhaven = map; loadMap('oakhaven'); G.state = 'panel';

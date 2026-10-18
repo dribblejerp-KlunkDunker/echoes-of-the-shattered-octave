@@ -52,6 +52,10 @@ html, body { margin: 0; height: 100%; background: #050403; color: var(--parch); 
 #fx.green { background: rgba(60, 140, 40, 0.14); }
 #view.unwrite { filter: saturate(0.2) contrast(0.9); }
 
+.wanted-sheet { padding: 2cqh 2cqw; border: 3px double #70502d; background: #d6c39b; color: #32231c; text-align: center; }
+.wanted-sheet .muted, .wanted-sheet h3 { color: #52392a; }
+.wanted-sheet strong { display: block; font-family: var(--font-sc); font-size: 3cqw; }
+
 #msgs { position: absolute; left: 1.2cqw; top: 1cqh; width: 62cqw; pointer-events: none; font-family: var(--font-body); font-size: 2.1cqw; line-height: 1.25; color: var(--parch); text-shadow: 0 0 2px #000, 1px 1px 0 #000, -1px 0 0 #000; }
 #msgs .m { opacity: 1; transition: opacity 600ms; margin-bottom: .2em; }
 #msgs .m.fade { opacity: 0; }

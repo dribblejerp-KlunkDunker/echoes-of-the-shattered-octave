@@ -37,6 +37,56 @@ class GameMap {
   trigger(x, y, r, id, opts) { this.triggers.push(Object.assign({ x, y, r, id, done: false }, opts || {})); }
 }
 
+// A compact playable gaol; existing mechanical locks provide the escape route.
+function buildWatchhouse() {
+  const m = new GameMap('watchhouse', 'Oakhaven Watch-house', 14, 10, {
+    floor: 't_flag', ceil: 't_stone', fogDist: 14, ambient: 0.18, music: 'inside',
+    spawn: { x: 3.5, y: 4.5, dir: 0 },
+  });
+  m.border('t_stone'); m.rect(5, 1, 5, 8, 't_stone');
+  m.set(5, 4, DOOR({ lockDifficulty: 2, label: 'Watch-house cell lock — pick to escape' }));
+  m.set(12, 4, DOOR({ portal: { map: 'oakhaven', x: 39.5, y: 6.5, dir: Math.PI / 2 }, label: 'Street door — leaving in custody is escape (+60 bounty)' }));
+  // Wall behind the street door prevents walking around its portal trigger.
+  m.rect(12, 1, 12, 3, 't_stone'); m.rect(12, 5, 12, 8, 't_stone');
+  m.deco('bed', 2.5, 3.5, { solid: false, use: 'prison_bunk', label: 'Cell bunk — serve sentence or pay fine' });
+  m.deco('chest', 8.5, 3.5, { solid: false, scale: 0.6, use: 'prison_evidence', label: 'Locked evidence chest — recover confiscated belongings' });
+  m.deco('lamp', 3.5, 2.5, { solid: false, scale: 0.6, glow: 0.8 });
+  m.deco('lamp', 9.5, 6.5, { solid: false, scale: 0.6, glow: 0.8 });
+  m.deco('sign', 10.5, 2.5, { solid: false, use: 'prison_bunk', label: 'Watch-house sentence registry' });
+  m.baseCount = m.entities.length;
+  return m;
+}
+function addLawWorld(maps) {
+  maps.watchhouse = buildWatchhouse();
+  const oh = maps.oakhaven;
+  // Reuse the granary facade rather than changing streets or historical indexes.
+  oh.set(40, 6, DOOR({ portal: { map: 'watchhouse', x: 10.5, y: 4.5, dir: Math.PI }, label: 'Oakhaven watch-house and evidence office' }));
+  for (const [x, y] of [[25.5, 19.5], [39.5, 8.5]]) oh.deco('sign', x, y, { solid: false, scale: 0.85, use: 'wanted_poster', wantedPoster: true, hidden: true, label: 'Wanted by the Oakhaven watch — read warrant' });
+  oh.npc('townsman', 23.5, 9.5, { lawGuard: true, wander: true, name: 'North-road watch constable' });
+  for (const id of ['tavern', 'greenhall', 'mill', 'surgery', 'chapel', 'tannery']) {
+    const m = maps[id]; if (!m) continue;
+    const owner = m.entities.find(e => e.kind === 'npc');
+    // Deterministic, nonblocking owned stock beside an inhabitant (or spawn).
+    const anchor = owner || m.spawn;
+    const spots = [];
+    for (let y = 1; y < m.h - 1; y++) for (let x = 1; x < m.w - 1; x++) {
+      if (m.get(x, y) || m.isBlocked(x, y) || m.entities.some(e => dist2(e.x, e.y, x + 0.5, y + 0.5) < 1)) continue;
+      spots.push({ x: x + 0.5, y: y + 0.5 });
+    }
+    spots.sort((a, b) => dist2(a.x, a.y, anchor.x, anchor.y) - dist2(b.x, b.y, anchor.x, anchor.y));
+    if (!spots.length) throw new Error('No safe law placement in ' + id);
+    const spot = spots[0], item = id === 'surgery' ? 'tonic' : 'honey';
+    Object.assign(m.item(item, spot.x, spot.y), { owner: id, label: ITEMS[item].name + ' — owned stock (theft)' });
+    if (['tavern', 'greenhall', 'mill'].includes(id)) {
+      const guardSpot = spots.find(s => dist2(s.x, s.y, spot.x, spot.y) >= 4 && dist2(s.x, s.y, m.spawn.x, m.spawn.y) >= 4);
+      if (!guardSpot) throw new Error('No safe guard placement in ' + id);
+      m.npc('townsman', guardSpot.x, guardSpot.y, { lawGuard: true, name: 'Parish watch constable' });
+    }
+    m.baseCount = m.entities.length;
+  }
+  oh.baseCount = oh.entities.length;
+}
+
 // -------------------------------------------------------------------------
 //  OAKHAVEN
 // -------------------------------------------------------------------------
