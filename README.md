@@ -141,7 +141,7 @@ The ground and the skyline now have real height. These are captured the same way
 
 ## Features
 
-- Sound, access and tools: sounds come from where they happen and are muffled through walls; rain, willow wind and thunder follow the weather; every NPC and enemy family has its own voice. Options add an Extended score, an Accessibility block with captions and high contrast, a language choice, photo mode, a speedrun timer, a statistics page and data-only mod dungeons with a built-in editor. A desktop build (Windows, macOS, Linux) is configured in desktop/.
+- Sound, access and tools: sounds come from where they happen and are muffled through walls; rain, willow wind and thunder follow the weather; every speaking character and boss has recorded lines (greetings, barks, the mimics' borrowed voices), and every other creature its own grunt. Options add an Extended score, an Accessibility block with captions and high contrast, a language choice, photo mode, a speedrun timer, a statistics page and data-only mod dungeons with a built-in editor. A desktop build (Windows, macOS, Linux) is configured in desktop/.
 - Raycast 3D world with chunky Daggerfall-style textures, sprites and a first-person weapon view.
 - Six character templates, plus attributes, skills and level-ups.
 - Districts, interiors and dungeons: Oakhaven, the clearing, the quarry, the underhedge, the rootvault, the chapel and more.
@@ -246,7 +246,7 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Graphics | Esc options → Graphics & access: Original / Low / Medium / High, resolution 1x/2x, view distance, particles, upscaling, CRT curvature |
 | Camera feel | Esc options → Graphics & access: Head bob Off/Gentle, Reduce motion, No flashes |
 | Reading | Books and notes open full screen · ← → or PgUp/PgDn turn pages · + and − change the text size · touch arrows / controller shoulders or d-pad · Escape/B closes |
-| Sound | V sound on/off · B music on/off |
+| Sound | V sound on/off · B music on/off · Esc options → Graphics & access → Voices: Voiced (default), Voiced + read aloud, Grunts, Off |
 | Score | Esc options → Graphics & access → Score: Original (the recorded soundtrack, default) or Extended (adds procedural area, boss and story pieces) |
 | Accessibility | Esc options → Graphics & access: text size, reduce motion, no flashes, high contrast, sound captions, language |
 | Photo mode | \\ (backslash) or Esc options → Graphics & access → Photo mode · drag/arrows look, Q/E tilt, W A S D or wheel move a few paces · Save picture exports a PNG · Escape leaves |
@@ -308,7 +308,8 @@ js/dreams.js      rest dreams and Light-glass memory echoes
 js/tobin.js       Tobin's journal pages and the logbook tracker
 js/epilogue.js    Kaelen and Lyra epilogues; Organum, Iron Peaks and Rift teasers
 js/spatial-audio.js  positional sound with wall muffling; rain, willow wind, thunder
-js/voices.js      procedural greetings and grunts; the in-game credits
+js/voices.js      procedural grunts, the Voices setting; the in-game credits
+js/voice-acting.js  plays the recorded lines in voices/ (manifest js/voice-lines.js; built by tools/voices/)
 js/score.js       Extended score: area, dungeon, boss and story pieces (opt-in)
 js/playtools.js   photo mode, speedrun timer, statistics
 js/access.js      Accessibility block and the translation catalog (locales/)

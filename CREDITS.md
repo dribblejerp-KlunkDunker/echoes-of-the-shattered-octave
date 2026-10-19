@@ -19,7 +19,7 @@ Ten cues in `music/`: `coda.mp3`, `combat.mp3`, `dungeon.mp3`, `ending.mp3`, `gr
 
 ## Sound effects and voices
 
-Every sound effect is generated live with WebAudio in `js/audio.js`; no sample files ship. Vocal grunts and greetings are formant-synthesised in `js/voices.js` (a profile for every NPC and enemy family; the Quiet, the Tongueless and a voiceless Lyra are silent). The optional spoken line uses the player's own browser voices; none are bundled. Licence of the game's own code: **unverified** (no LICENSE file in the repository).
+Every sound effect is generated live with WebAudio in `js/audio.js`; no sample files ship. Vocal grunts and greetings are formant-synthesised in `js/voices.js` (a profile for every NPC and enemy family; the Quiet, the Tongueless and a voiceless Lyra are silent). Recorded voice lines in `voices/` (greetings, barks, boss and companion lines) were generated offline with the **Kokoro-82M** text-to-speech model and its voices by hexgrad (**Apache-2.0**), run through `kokoro-onnx` (MIT) and treated per character with `pedalboard` (GPL-3.0, a build tool only) and ffmpeg by `tools/voices/build.py`. The words are the game's own text; short barks written for this pass are marked PROPOSED in `voices/script.json`. The optional read-aloud setting uses the player's own browser voices; none are bundled. Licence of the game's own code: **unverified** (no LICENSE file in the repository).
 
 ## Art
 
@@ -33,6 +33,7 @@ Every sound effect is generated live with WebAudio in `js/audio.js`; no sample f
 - Playwright and Chromium run the browser tests in `test/`. They are not bundled and are not needed to play. Playwright is Apache-2.0 upstream; Chromium carries its own licences.
 - `@fontsource` packages supplied the font subsets (the typefaces remain OFL; the packaging licence is **unverified** here).
 - Python's `http.server` serves the game locally for play and tests (not bundled).
+- `tools/voices/build.py` renders the voice lines offline with kokoro-onnx (MIT), onnxruntime (MIT), pedalboard (GPL-3.0) and ffmpeg. None ships with the game.
 - The repository has no `package.json`, no build step and no npm dependency.
 
 ## Contributors

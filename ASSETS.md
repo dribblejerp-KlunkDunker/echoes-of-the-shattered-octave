@@ -75,6 +75,18 @@ Formant-synthesised vocal sounds: a sawtooth buzz through three band-pass forman
 | Enemies (every key of `ENEMIES`) | 26 families | brass (Legion, Office), beast (hound, Brood-Mother, weaverling), swarm (mites), golem, multi (Wearer, Weaver, Requiem, Dirge), breathy (Drowned, Deacon), chord (Aegis) | procedural stand-in |
 | Silent | the Quiet, Hush-moths, the Tongueless, the Hushwarden (marked mute), and Lyra when her slate flags say she has no voice | none | by design |
 
+## Recorded voice lines (voices/, js/voice-lines.js, js/voice-acting.js)
+
+Neural text-to-speech, rendered offline by `tools/voices/build.py` from `voices/script.json`; casting in `tools/voices/cast.py`.
+
+| Item | Source | Licence | Status |
+|---|---|---|---|
+| `voices/<speaker>/*.mp3` (mono, 24 kHz, 40 kbps) | Kokoro-82M (hexgrad) voices through kokoro-onnx, then per-character treatment (age waver, gravel, Hollow breath, Kaelen's 528 Hz glass ring, bell, many-voiced chorus, rooms) | Kokoro-82M and its voices: Apache-2.0 | generated; recorded actors could replace any file with the same name |
+| `voices/script.json` | the words: game text (greetings, mimicry, companions, the Aegis), plus short barks for speaking enemies marked PROPOSED | game text | for the author's review |
+| `js/voice-lines.js` | generated manifest | game source | generated |
+
+Not voiced: the player's own lines, lines that need the player's name, sung passages with no words in the game, the Deacon's hand-cant, and every silent character.
+
 ## Images (img/)
 
 None of these has a recorded author, tool or licence in the repository. How they were produced is **unverified**.

@@ -183,12 +183,13 @@ const ls = (d, re) => fs.readdirSync(path.join(ROOT, d)).filter((f) => re.test(f
       const fake = VOICES.hasSpeech();
       const npc = G.ents.find((e) => e.id === 'harrow') || G.ents.find((e) => NPCS[e.id] && !NPCS[e.id].shop);
       VOICES.setMode('grunts'); VOICES.resetLimits(); talk(npc); const grunts = calls.length; closeModal(); G.state = 'play';
-      VOICES.setMode('spoken'); VOICES.resetLimits(); talk(npc); const sp = calls.length; const ttsDuring = calls[0] ? calls[0][2] : null; closeModal(); G.state = 'play';
+      VOICES.setMode('spoken'); VOICES.resetLimits(); talk(npc); const sp = calls.length; const ttsDuring = calls[0] ? calls[0][2] : null; const covered = typeof VOICE_ACT !== 'undefined' && VOICE_ACT.covers(String(DLG.log[0].t)); closeModal(); G.state = 'play';
       speakLine = _sl; VOICES.setMode('grunts');
-      return { grunts, sp, ttsDuring, ttsAfter: UPG.tts, fake };
+      return { grunts, sp, ttsDuring, ttsAfter: UPG.tts, fake, covered };
     });
     assert.equal(spoken.grunts, 0, 'grunts mode never speaks');
-    if (spoken.fake) { assert.equal(spoken.sp, 1, 'spoken mode reads the greeting once'); assert.equal(spoken.ttsDuring, true); }
+    if (spoken.fake && !spoken.covered) { assert.equal(spoken.sp, 1, 'spoken mode reads the greeting once'); assert.equal(spoken.ttsDuring, true); }
+    if (spoken.covered) assert.equal(spoken.sp, 0, 'a recorded greeting is not read a second time');
     assert.equal(spoken.ttsAfter, false, 'the Speech setting is restored');
     console.log('PASS spoken: only in the spoken mode, Speech setting untouched');
 
@@ -202,7 +203,7 @@ const ls = (d, re) => fs.readdirSync(path.join(ROOT, d)).filter((f) => re.test(f
     await page.locator('#voices-mode').scrollIntoViewIfNeeded(); await shot('options-row');
     await page.locator('#voices-mode').click();
     const mode1 = await ev(() => ({ m: VOICES.mode, t: document.getElementById('voices-mode').textContent, ls: JSON.parse(localStorage.getItem('octave.voices.v1')).m }));
-    assert.ok(['spoken', 'off'].includes(mode1.m) && mode1.ls === mode1.m, 'the button cycles and persists');
+    assert.ok(['acted', 'spoken', 'off'].includes(mode1.m) && mode1.ls === mode1.m, 'the button cycles and persists');
     await ev(() => VOICES.setMode('grunts'));
     console.log('PASS options: Voices row cycles and persists; Full credits sits beside the font Credits');
 

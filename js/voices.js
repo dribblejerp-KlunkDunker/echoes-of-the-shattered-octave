@@ -18,9 +18,9 @@ const VOICES = (() => {
   // a private random stream: sound never draws from Math.random, so audio can't shift gameplay rolls
   const audioRnd = (() => { let s = (Date.now() ^ 0x9e3779b9) >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; })();
   const KEY = 'octave.voices.v1';
-  const MODES = ['off', 'grunts', 'spoken'];
-  const MODE_LABEL = { off: 'Off', grunts: 'Grunts', spoken: 'Grunts + spoken' };
-  const st = { mode: 'grunts', played: 0, limited: 0, silent: 0, nodes: 0, last: null, active: [], lastAt: -1e9, keyAt: {} };
+  const MODES = ['off', 'grunts', 'acted', 'spoken'];
+  const MODE_LABEL = { off: 'Off', grunts: 'Grunts', acted: 'Voiced', spoken: 'Voiced + read aloud' };
+  const st = { mode: 'acted', played: 0, limited: 0, silent: 0, nodes: 0, last: null, active: [], lastAt: -1e9, keyAt: {} };
 
   // ---- persistence (guarded: previews and private windows have no storage) -----------------------
   function save() { try { localStorage.setItem(KEY, JSON.stringify({ m: st.mode })); } catch (e) { /* no storage: fine */ } }
@@ -30,7 +30,7 @@ const VOICES = (() => {
   const hasSpeech = () => typeof window !== 'undefined' && typeof window.speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined';
   function setMode(m) { if (MODES.includes(m)) { st.mode = m; save(); } return st.mode; }
   function cycleMode() {
-    const order = hasSpeech() ? MODES : ['off', 'grunts'];
+    const order = hasSpeech() ? MODES : ['off', 'grunts', 'acted'];
     const i = order.indexOf(st.mode);
     return setMode(order[(i + 1) % order.length]);
   }
@@ -321,6 +321,15 @@ const VOICES = (() => {
     if (pr.silent) { st.silent++; return 0; }
     const t = atMs == null ? nowMs() : atMs, key = kind + ':' + id;
     if (!gate(key, ev, t)) { st.limited++; return 0; }
+    // recorded lines (js/voice-acting.js) take the event when one fits; the grunt is the fallback
+    if ((st.mode === 'acted' || st.mode === 'spoken') && typeof VOICE_ACT !== 'undefined') {
+      const dur = VOICE_ACT.handle(kind, id, ev, pr);
+      if (dur) {
+        st.lastAt = t; st.keyAt[key + ':' + ev] = t; st.active.push(t + dur * 1000);
+        st.played++; st.last = { kind, id, ev, style: 'acted', syllables: 0 };
+        return 1;
+      }
+    }
     const pat = pattern(pr, ev);
     if (!pat.length) return 0;
     const vol = (pr.kind === 'enemy' ? 0.36 : 0.28) * (ev === 'death' ? 1.1 : 1);
@@ -338,6 +347,7 @@ const VOICES = (() => {
     if (DLG.log.length <= spokenLen) return false;
     const last = DLG.log[DLG.log.length - 1]; spokenLen = DLG.log.length;
     if (!last || last.who !== 'them' || !last.t) return false;
+    if (typeof VOICE_ACT !== 'undefined' && VOICE_ACT.covers(String(last.t))) return false;   // a recorded line already says it
     const was = UPG.tts;
     try { UPG.tts = true; speakLine(String(last.t), String(DLG.npc.name || '')); } finally { UPG.tts = was; }
     return true;
@@ -376,6 +386,7 @@ const VOICES = (() => {
     { title: 'Sound effects and voices', rows: [
       ['Footsteps, weather, combat, bells, doors, songs', 'Generated live with WebAudio in js/audio.js; no recorded samples', 'Part of the game source; licence: unverified (no licence file in the repository)', []],
       ['Grunts and greetings (this panel\'s setting)', 'Formant synthesis in js/voices.js; one profile per character and enemy family; no recordings', 'Part of the game source; licence: unverified', []],
+      ['Voiced lines (voices/)', 'Greetings, barks, boss and companion lines for every speaking character, generated offline with the Kokoro-82M text-to-speech model and its voices (hexgrad), then treated per character by tools/voices/build.py; words from the game\'s own text, and short barks marked PROPOSED in voices/script.json', 'Kokoro-82M and voices: Apache-2.0; the lines are game text', []],
       ['Spoken lines (optional)', 'Your browser\'s own speech synthesis voices; nothing is bundled', 'Depends on your device', []],
     ] },
     { title: 'Art', rows: [
@@ -387,6 +398,7 @@ const VOICES = (() => {
       ['Playwright and Chromium', 'Browser tests (test/). Not bundled with the game', 'Playwright: Apache-2.0 upstream; Chromium: its own licences', []],
       ['Font subsets', 'Latin subsets of the typefaces above were cut with the @fontsource packages (per css/fonts.css)', 'Typefaces: OFL; packaging licence: unverified', []],
       ['Local server', 'Python http.server, for local play and tests', 'PSF licence upstream; not bundled', []],
+      ['Voice build tools', 'kokoro-onnx (MIT), onnxruntime (MIT), pedalboard (GPL-3.0) and ffmpeg, used offline by tools/voices/build.py; none ships with the game', 'Their own licences; not bundled', []],
     ] },
     { title: 'Contributors', rows: [
       ['Project owner', 'The GitHub account named in the README\'s Pages link (dribblejerp-klunkdunker)', 'Design, story and direction: stated by the project, not verifiable from the repository', []],
@@ -417,7 +429,7 @@ const VOICES = (() => {
     const grid = document.querySelector('#modal-panel .ctl-grid');
     if (!grid || document.getElementById('voices-mode')) return;
     const lab = el('span', { class: 'gfx-label' }, 'Voices ');
-    lab.appendChild(el('small', { class: 'muted' }, hasSpeech() ? 'grunts and greetings for everyone; spoken adds your browser reading the dialogue' : 'grunts and greetings for everyone (this browser has no speech)'));
+    lab.appendChild(el('small', { class: 'muted' }, hasSpeech() ? 'Voiced: recorded greetings, barks and boss lines, grunts for the rest; read aloud adds your browser reading the dialogue' : 'Voiced: recorded greetings, barks and boss lines, grunts for the rest'));
     const b = el('button', { class: 'dfbtn small', id: 'voices-mode', type: 'button' }, MODE_LABEL[st.mode]);
     b.setAttribute('aria-label', 'Voices');
     const paint = () => { b.textContent = MODE_LABEL[st.mode]; b.setAttribute('aria-pressed', st.mode === 'off' ? 'false' : 'true'); b.classList.toggle('sel', st.mode !== 'off'); };

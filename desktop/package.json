@@ -39,6 +39,7 @@
           "img/**/*",
           "fonts/**/*",
           "locales/**/*",
+          "voices/**/*.mp3",
           "music/**/*",
           "README.md"
         ]
