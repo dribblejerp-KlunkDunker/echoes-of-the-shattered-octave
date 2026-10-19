@@ -47,6 +47,16 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       for (let i = 0; i < 200; i++) enemyUpdate(foe2, 0.05);
       check(G.player.hp < G.player.hpMax, 'a foe on your own level still hits you');
       G.ents.splice(G.ents.indexOf(foe2), 1);
+      // --- a save taken while a spawned enemy is still arriving keeps it solid ---
+      if (typeof TELEGRAPHS !== 'undefined') {
+        loadMap('clearing', { x: 20.5, y: 28.5, dir: 0 }); G.state = 'play';
+        const arr = hydrate({ kind: 'enemy', type: 'hound', x: 23.5, y: 28.5 }); arr.state = 'chase'; G.ents.push(arr);
+        enemyUpdate(arr, 0.05);
+        check(arr._tg && arr.solid === false, 'a mid-play spawn is non-solid while it arrives');
+        const snap = snapshotGame(), saved = snap.maps.clearing.extra.find(o => o.type === 'hound' && Math.abs(o.x - arr.x) < 1e-6);
+        check(saved && saved.solid === true && arr.solid === false, 'the save records it as solid; the live entrance is untouched');
+        G.ents.splice(G.ents.indexOf(arr), 1);
+      }
       // --- sight over a knee-high wall, not through a full one ---
       loadMap('clearing', { x: 12.5, y: 11.5, dir: -Math.PI / 2 }); G.state = 'play';
       check(los(12.5, 11.5, 12.5, 7.5), 'you and a patrol see each other over the knee-high field wall');

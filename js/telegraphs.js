@@ -304,6 +304,16 @@ const TELEGRAPHS = (() => {
   }
   if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook((F) => { try { hook(F); } catch (err) { if (!hook.warned) { hook.warned = true; console.warn('telegraphs hook failed', err); } } }, 25);
 
+  // e.solid is a saved field: a save taken mid-entrance must record the enemy's
+  // real solidity, not the temporary "non-solid while arriving" state
+  if (typeof snapshotGame === 'function') {
+    const _snap = snapshotGame;
+    snapshotGame = function () {
+      const arriving = [];
+      for (const id in (G.maps || {})) for (const e of G.maps[id].entities) if (e._tg) { arriving.push([e, e.solid]); e.solid = e._tg.solid !== false; }
+      try { return _snap.apply(this, arguments); } finally { for (const [e, s] of arriving) e.solid = s; }
+    };
+  }
   return { CFG, CASTERS, chooseStyle, styleFor, safeSpot, hook, entranceLen };
 })();
 if (typeof window !== 'undefined') window.TELEGRAPHS = TELEGRAPHS;
