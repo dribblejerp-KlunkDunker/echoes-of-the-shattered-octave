@@ -15,3 +15,4 @@ js/painted.js uses each one when present and falls back to the procedural stand-
 - `area/street.jpg` - 1280x720, 102690 bytes
 - `area/woods.jpg` - 1280x720, 147106 bytes
 - `death/heartglass.jpg` - 1280x720, 131974 bytes
+- `death/unwrite.jpg` - 1280x720, 134454 bytes
