@@ -1587,7 +1587,8 @@ function lesson(id, text) {
       ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
     } else if (wtr === 'rain') {
       ctx.strokeStyle = 'rgba(170,182,205,0.28)'; ctx.lineWidth = 1; ctx.beginPath();
-      for (let i = 0; i < 60; i++) {
+      const nRain = Math.round(60 * (typeof GFX !== 'undefined' ? GFX.particles : 1));
+      for (let i = 0; i < nRain; i++) {
         const x = ((i * 53.7 + now * 240) % (w + 40)) - 20;
         const y = ((i * 97.3 + now * 500) % (h + 40)) - 20;
         ctx.moveTo(x, y); ctx.lineTo(x - 3, y + 9);
@@ -1596,7 +1597,8 @@ function lesson(id, text) {
       ctx.fillStyle = 'rgba(120,130,160,0.08)'; ctx.fillRect(0, 0, w, h);
     } else if (wtr === 'snow') {
       ctx.fillStyle = 'rgba(225,230,240,0.7)';
-      for (let i = 0; i < 55; i++) {
+      const nSnow = Math.round(55 * (typeof GFX !== 'undefined' ? GFX.particles : 1));
+      for (let i = 0; i < nSnow; i++) {
         const x = ((i * 61.9 + Math.sin(now * 0.8 + i) * 12 + now * 14) % (w + 16)) - 8;
         const y = ((i * 88.1 + now * (26 + (i % 5) * 7)) % (h + 16)) - 8;
         ctx.fillRect(x, y, i % 3 ? 1 : 2, i % 3 ? 1 : 2);

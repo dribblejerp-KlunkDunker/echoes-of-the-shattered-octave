@@ -11,7 +11,7 @@ const PRESETS = (() => {
   const LABEL = { original: 'Original', low: 'Low', medium: 'Medium', high: 'High', custom: 'Custom' };
   // Low keeps the cheap effects (decals, ceilings, emissive, stars, grade, detail, scenery) and drops these.
   // Any flag this list does not name is "unknown": on for low/medium/high, off for original.
-  const LOW_OFF = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'panoramas', 'flyovers'];
+  const LOW_OFF = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'panoramas', 'flyovers', 'darkInteriors'];
   // CRT curvature and the upscaling filter are display choices, not quality: presets leave them alone
   // (only 'original' switches curvature off, because GFX.plain() does).
   const NOT_PRESET = ['crtCurve'];
@@ -98,6 +98,8 @@ const PRESETS = (() => {
   function setViewDist(v) { GFX.viewDist = Math.round(Math.max(0.6, Math.min(1.4, v)) * 20) / 20; Engine.setLook({ fogK: GFX.viewDist }); touched(); }
   function setParticles(v) { GFX.particles = Math.round(Math.max(0, Math.min(2, v)) * 100) / 100; scaleParticles(GFX.particles); touched(); }
   function setCurve(on) { GFX.crtCurve = !!on; touched(); }
+  // darker interiors are an accessibility choice as much as a look: they get their own switch
+  function setDark(on) { GFX.darkInteriors = !!on; touched(); }
   function setUpscale(mode) { upscale.mode = mode === 'smooth' ? 'smooth' : 'sharp'; syncClasses(); }
 
   // --- DOM classes: CRT curvature only shows with CRT on; smooth upscaling is a CSS filter choice ----
@@ -182,6 +184,7 @@ const PRESETS = (() => {
     q('gfx-vd-val').textContent = GFX.viewDist.toFixed(2);
     q('gfx-pt-val').textContent = GFX.particles.toFixed(2);
     for (const m of ['sharp', 'smooth']) { const b = q('gfx-up-' + m); b.classList.toggle('sel', upscale.mode === m); b.setAttribute('aria-pressed', upscale.mode === m ? 'true' : 'false'); }
+    const dk = q('gfx-dark'); if (dk) { dk.textContent = GFX.darkInteriors ? 'On' : 'Off'; dk.setAttribute('aria-pressed', GFX.darkInteriors ? 'true' : 'false'); }
     const c = q('gfx-curve'); c.textContent = GFX.crtCurve ? 'On' : 'Off'; c.setAttribute('aria-pressed', GFX.crtCurve ? 'true' : 'false');
     const on = typeof UPG !== 'undefined' && UPG.crt;
     c.title = on ? '' : 'Curvature shows once CRT scanlines are on';
@@ -225,6 +228,8 @@ const PRESETS = (() => {
     ug.appendChild(btn('gfx-up-smooth', 'Smooth', () => { setUpscale('smooth'); refreshBlock(); }));
     grid.appendChild(ug);
 
+    grid.appendChild(row('Dark interiors', 'rooms lit only by their lamps and your lantern (U)'));
+    grid.appendChild(btn('gfx-dark', 'On', () => { setDark(!GFX.darkInteriors); refreshBlock(); }, 'Dark interiors'));
     grid.appendChild(row('CRT curvature', 'needs CRT scanlines on'));
     grid.appendChild(btn('gfx-curve', 'Off', () => { setCurve(!GFX.crtCurve); syncClasses(); refreshBlock(); }));
     refreshBlock();
@@ -268,6 +273,9 @@ const PRESETS = (() => {
       };
     }
     GFX.onChange(syncClasses);
+    // GFX.plain() (or anything else) changing the particle multiplier rescales the counts
+    let lastPt = GFX.particles;
+    GFX.onChange(() => { if (GFX.particles !== lastPt) { lastPt = GFX.particles; scaleParticles(GFX.particles); } });
   }
 
   const api = { apply, current, table, measure, scenes: SCENES, order: ORDER, upscale, setScale, setViewDist, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };

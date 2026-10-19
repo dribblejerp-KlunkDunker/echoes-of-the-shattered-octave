@@ -208,9 +208,28 @@ function moveWithSlide(o, dx, dy, self) {
   if (!solidAt(o.x, o.y + dy, self)) { o.y += dy; moved = true; }
   return moved;
 }
+// Feet height of an entity or the player on raised and sloped ground (0 on flat maps).
+function feetOf(e) {
+  const m = G.map; if (!m || (!m.lvls && !m.smooth)) return 0;
+  if (e === G.player || e === Engine.cam) return G.player && typeof G.player.feet === 'number' ? G.player.feet : m.groundAt(Engine.cam.x, Engine.cam.y);
+  return m.groundAt(e.x, e.y);
+}
+// Melee needs both fighters on roughly the same level: nobody swings a sword up a 1.8 gallery.
+const MELEE_RISE = 0.7;
 function los(ax, ay, bx, by) {
   const d = Math.sqrt(dist2(ax, ay, bx, by)); const n = Math.ceil(d / 0.2); const sx = (bx - ax) / n, sy = (by - ay) / n;
-  let x = ax, y = ay; for (let i = 0; i < n; i++) { x += sx; y += sy; if (G.map.isSolidCell(x | 0, y | 0)) return false; } return true;
+  const m = G.map, raised = !!(m.lvls || m.smooth);
+  // eye heights at both ends: a knee-high wall or railing below both of them does not block sight
+  const eyeLo = raised ? Math.min(m.groundAt(ax, ay), m.groundAt(bx, by)) + 0.5 : 0.5;
+  let x = ax, y = ay;
+  for (let i = 0; i < n; i++) {
+    x += sx; y += sy;
+    if (!m.isSolidCell(x | 0, y | 0)) continue;
+    const c = m.get(x | 0, y | 0);
+    if (c && !c.door && c.top != null && c.top < eyeLo - 0.05) continue;
+    return false;
+  }
+  return true;
 }
 
 // ---------------------------------------------------------------- noise / the Narrow
@@ -487,7 +506,9 @@ function enemyUpdate(e, dt) {
     if (d.mimic || d.summon || d.horn || d.grapnel || d.dirge || d.wilds) enemyExtra(e, dt, dist, canSee);
     const glassFear = d.cacophony && !d.fearless && ((p.glassed && G.glassLock <= 0) || G.rootWard > 0);
     if (glassFear) { if (dist < 3.5) { moveWithSlide(e, -dx / dist * d.speed * dt, -dy / dist * d.speed * dt, e); } return; }
-    if (dist > d.reach) {
+    // a foe on a gallery above or a pit below cannot be struck: close in (pathing finds the stair) instead
+    const outOfLevel = Math.abs(feetOf(e) - feetOf(p)) > MELEE_RISE;
+    if (dist > d.reach || outOfLevel) {
       // telegraph for golem
       let sp = d.speed; if (e.type === 'golem' && e.cool > 0) sp *= 0.3; if (e.slowed) sp *= 0.6;
       const nx = dx / dist, ny = dy / dist;
@@ -627,6 +648,7 @@ function attack(dirLabel) {
     if ((e.kind !== 'enemy' && !(lawActive() && e.kind === 'npc' && !e.companion && e.id !== 'cat')) || e.dead || e.hidden) continue;
     const dx = e.x - c.x, dy = e.y - c.y, d = Math.sqrt(dx * dx + dy * dy);
     if (d > w.reach + (e.radius || 0.3)) continue;
+    if (!w.ranged && Math.abs(feetOf(e) - feetOf(p)) > MELEE_RISE) continue;   // out of reach above or below
     const ang = Math.abs(normAng(Math.atan2(dy, dx) - c.dir));
     const cone = w.ranged ? 0.14 + 0.25 / Math.max(1, d) : 0.55;
     if (ang > cone) continue;

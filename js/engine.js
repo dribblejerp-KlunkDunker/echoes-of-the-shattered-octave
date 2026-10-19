@@ -179,6 +179,8 @@ const Engine = (() => {
         ptLights.push({ x: e.x, y: e.y, r: 4.0, cr: lc[0], cg: lc[1], cb: lc[2] });
       }
     }
+    // lights too far from the camera to touch anything in view are dropped before their masks are built
+    if (opts && opts.cull) { const lim = fogDist + 1; let j = 0; for (let k = 0; k < ptLights.length; k++) { const L = ptLights[k], dx = L.x - cam.x, dy = L.y - cam.y, r = lim + L.r; if (dx * dx + dy * dy <= r * r) ptLights[j++] = L; } ptLights.length = j; }
     if (map) for (let k = 0; k < ptLights.length; k++) { const L = ptLights[k]; if (L.occlude === false) { L.vis = null; continue; } lightVis(L, k); }
   }
   function litBy(L, wx, wy) {
@@ -281,7 +283,7 @@ const Engine = (() => {
     const outdoor = !!map.outdoor;
     ambient = outdoor ? ambientBase : ambientBase * ambK;
     if (outdoor) buildSky(timeOfDay);
-    gatherLights(entities, opts);
+    gatherLights(entities, { playerLight: opts.playerLight, cull: true });
     const grid = map.cells, mw = map.w, mh = map.h;
     const dirX = Math.cos(cam.dir), dirY = Math.sin(cam.dir);
     const planeX = -dirY * FOV * 0.66, planeY = dirX * FOV * 0.66;

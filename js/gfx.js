@@ -24,7 +24,11 @@ const GFX = {
   grass: true,       // swaying, player-reactive grass and reeds (js/flora.js)
   crtCurve: false,   // CRT curvature (scanlines stay on UPG.crt) (js/presets.js)
   // Every effect off: the original look, and what pixel-exact tests use.
-  plain() { for (const k of GFX.FX) GFX[k] = false; GFX.viewDist = 1; GFX.particles = 1; GFX.preset = 'plain'; GFX.changed(); },
+  // View distance and particle counts return to the original too (js/presets.js
+  // rescales particles on change). The render resolution is a display choice and
+  // is kept, so frames compare at the same size; PRESETS.apply('original')
+  // restores everything including 1x.
+  plain() { for (const k of GFX.FX) GFX[k] = false; GFX.viewDist = 1; GFX.particles = 1; GFX.preset = 'plain'; if (typeof Engine !== 'undefined') Engine.setLook({ fogK: 1 }); GFX.changed(); },
   FX: ['stars', 'panoramas', 'flyovers', 'softFog', 'bloom', 'grade', 'mist', 'reflections', 'decals', 'detail', 'scenery', 'grass', 'crtCurve'],
   listeners: [],
   onChange(fn) { GFX.listeners.push(fn); },
