@@ -221,6 +221,14 @@ const SCREENS = (function () {
     return 'plain';
   }
 
+  // Phase 8 paintings: the decoded Image when js/painted.js has one ready now, else null (stand-in).
+  function paintedReady(group, key) {
+    try { return typeof PAINTED !== 'undefined' ? PAINTED.ready(group, key) : null; } catch (e) { return null; }
+  }
+  function paintedLoad(group, key) {
+    try { return typeof PAINTED !== 'undefined' && PAINTED.has(group, key) ? PAINTED.load(group, key) : Promise.resolve(null); } catch (e) { return Promise.resolve(null); }
+  }
+
   const areaCache = {};
   function areaCanvas(family) {
     if (areaCache[family]) return areaCache[family];
@@ -266,7 +274,18 @@ const SCREENS = (function () {
     const m = G.maps && Object.prototype.hasOwnProperty.call(G.maps, id) ? G.maps[id] : null;
     const el = ensureCard(); if (!el || !m) return false;
     const fam = familyFor(id);
-    cardCanvas.getContext('2d').drawImage(areaCanvas(fam), 0, 0);
+    // Phase 8: a painting if one is already decoded (never wait: the stand-in serves this visit)
+    const pim = paintedReady('area', fam);
+    if (pim) {
+      const hw = el.clientWidth || 1280, hh = el.clientHeight || 720, cw = 1280, ch = Math.max(1, Math.round(cw * hh / hw));
+      if (cardCanvas.width !== cw || cardCanvas.height !== ch) { cardCanvas.width = cw; cardCanvas.height = ch; }
+      const px = cardCanvas.getContext('2d'); PAINTED.drawCover(px, pim, cw, ch); vignette(px, cw, ch, 0.55);
+      cardCanvas.classList.add('painted');
+    } else {
+      if (cardCanvas.width !== AW || cardCanvas.height !== AH) { cardCanvas.width = AW; cardCanvas.height = AH; }
+      cardCanvas.classList.remove('painted');
+      cardCanvas.getContext('2d').drawImage(areaCanvas(fam), 0, 0);
+    }
     cardName.textContent = String(m.name || ''); // textContent only: a map name is never markup
     clearTimeout(hideT);
     el.classList.remove('on', 'off', 'rm'); void el.offsetWidth;
@@ -417,11 +436,20 @@ const SCREENS = (function () {
     if (!missing) deathCache[k.key] = url;
     return url;
   }
+  let deathTok = 0;
   function applyDeath(src) {
     const el = document.getElementById('death'); if (!el) return;
-    if (!on()) { el.classList.remove('scr-art'); el.style.removeProperty('background-image'); return; }
-    const key = deathKind(src).key;
-    el.style.backgroundImage = `linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)), url("${deathURL(src)}")`;
+    if (!on()) { el.classList.remove('scr-art', 'scr-painted'); el.style.removeProperty('background-image'); return; }
+    const dk = deathKind(src), key = dk.key, pk = dk.kind || dk.key, tok = ++deathTok;
+    const pim = paintedReady('death', pk);
+    // the same dark wash sits over a painting so the text on top stays readable
+    const wash = 'linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55))';
+    if (pim) { el.style.backgroundImage = `${wash}, url("${PAINTED.url('death', pk)}")`; el.classList.add('scr-painted'); }
+    else {
+      el.style.backgroundImage = `${wash}, url("${deathURL(src)}")`; el.classList.remove('scr-painted');
+      // not decoded yet: the screen stays up for a while, so swap the painting in when it arrives
+      paintedLoad('death', pk).then((im) => { if (im && tok === deathTok && !el.classList.contains('hidden')) applyDeath(src); });
+    }
     el.classList.add('scr-art'); el.dataset.scrDeath = key.split(':')[0];
   }
 
@@ -500,6 +528,20 @@ const SCREENS = (function () {
     else v = f.part4 ? 'b1_herald' : (f.aegis_calmed && f.aegis_follow) ? 'b1_follow' : f.aegis_calmed ? 'b1_calmed' : f.aegis_destroyed ? 'b1_destroyed' : f.aegis_follow ? 'b1_follow' : 'b1_none';
     return { v, glassed: !!glassed };
   }
+  function glassVeins(x, R) { // the tideline: glass veining up from the corner of the picture (320x180 space)
+    for (let i = 0; i < 14; i++) { const px = 8 + i * 5 + R() * 4, h = 14 + R() * 26; x.fillStyle = `rgba(110,255,220,${0.25 + R() * 0.3})`; x.beginPath(); x.moveTo(px, 180); x.lineTo(px + 2, 180 - h); x.lineTo(px + 4, 180); x.fill(); }
+    glow(x, 40, 176, 70, '90,255,210', 0.25);
+  }
+  // A painted ending, with the glass tideline drawn over it for a glassed player. A canvas that
+  // cannot be exported (file:// taint) just shows the plain painting.
+  function paintedEndingURL(v, im, glassed) {
+    if (!glassed) return PAINTED.url('ending', v);
+    try {
+      const c = canvas(1280, 720), x = c.getContext('2d'); PAINTED.drawCover(x, im, 1280, 720);
+      x.save(); x.scale(4, 4); glassVeins(x, rng('end:' + v + '+glass')); x.restore();
+      return c.toDataURL('image/jpeg', 0.9);
+    } catch (e) { return PAINTED.url('ending', v); }
+  }
   const endCache = {};
   function endingURL(kind, f, glassed) {
     const o = endingVariant(kind, f, glassed), key = o.v + (o.glassed ? '+glass' : '');
@@ -510,10 +552,7 @@ const SCREENS = (function () {
     if (im) { x.imageSmoothingEnabled = false; x.drawImage(im, 0, 0, EW, EH); } else { missing = true; vgrad(x, EW, EH, [[0, '#13200f'], [1, '#4d5e22']]); }
     x.save(); x.scale(2, 2);
     END[kind](x, R, o.v);
-    if (o.glassed) { // the tideline: glass veining up from the corner of the picture
-      for (let i = 0; i < 14; i++) { const px = 8 + i * 5 + R() * 4, h = 14 + R() * 26; x.fillStyle = `rgba(110,255,220,${0.25 + R() * 0.3})`; x.beginPath(); x.moveTo(px, 180); x.lineTo(px + 2, 180 - h); x.lineTo(px + 4, 180); x.fill(); }
-      glow(x, 40, 176, 70, '90,255,210', 0.25);
-    }
+    if (o.glassed) glassVeins(x, R);
     x.restore();
     vignette(x, EW, EH, 0.35);
     const url = c.toDataURL('image/jpeg', 0.88);
@@ -522,11 +561,14 @@ const SCREENS = (function () {
   }
   function applyEnding(kind) {
     const el = document.querySelector('#ending img.bg'); if (!el) return;
-    if (!on()) { if (el.dataset.scrOrig) { el.src = el.dataset.scrOrig; el.alt = ''; delete el.dataset.scrOrig; delete el.dataset.scrEnding; } return; }
+    if (!on()) { if (el.dataset.scrOrig) { el.src = el.dataset.scrOrig; el.alt = ''; delete el.dataset.scrOrig; delete el.dataset.scrEnding; delete el.dataset.scrPainted; } return; }
     let glassed = false; try { glassed = !!(G.player && G.player.glassed); } catch (e) { /* none */ }
-    const r = endingURL(kind, G.flags, glassed);
+    const v = endingVariant(kind, G.flags, glassed).v, pim = paintedReady('ending', v);
+    const r = pim ? { url: paintedEndingURL(v, pim, glassed), key: v } : endingURL(kind, G.flags, glassed);
     if (!el.dataset.scrOrig) el.dataset.scrOrig = el.getAttribute('src') || 'img/ending.jpg';
     el.src = r.url; el.alt = ENDING_ALT[r.key] || ENDING_FALLBACK_ALT; el.dataset.scrEnding = r.key;
+    if (pim) el.dataset.scrPainted = '1'; else delete el.dataset.scrPainted;
+    if (!pim) paintedLoad('ending', v).then((im) => { if (im && typeof G !== 'undefined' && G.state === 'ending') applyEnding(kind); });
   }
 
   // ---------------------------------------------------------------- style
@@ -547,6 +589,8 @@ const SCREENS = (function () {
 @keyframes scr-hold { 0%, 55% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes scr-fade { 0% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes scr-drift { from { transform: scale(1.06); } to { transform: scale(1); } }
+#scr-card canvas.painted { image-rendering: auto; }
+#death.scr-painted { image-rendering: auto; }
 #death.scr-art { background-size: cover, cover; background-position: center, center; background-repeat: no-repeat; image-rendering: pixelated; }
 .death-inner { position: relative; }
 `;
