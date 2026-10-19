@@ -375,6 +375,9 @@ const POST = (() => {
       let r = lut[px & 255], g = lut[256 + ((px >> 8) & 255)], b = lut[512 + ((px >> 16) & 255)];
       const l = (r * 77 + g * 150 + b * 29) >> 8;
       r = l + (((r - l) * sat) >> 8); g = l + (((g - l) * sat) >> 8); b = l + (((b - l) * sat) >> 8);
+      // saturation above 1 pushes vivid colours past the byte range; clamp, or the
+      // overflow spills into the next channel (a dawn sun turned teal)
+      r = r < 0 ? 0 : r > 255 ? 255 : r; g = g < 0 ? 0 : g > 255 ? 255 : g; b = b < 0 ? 0 : b > 255 ? 255 : b;
       fb[i] = (px & 0xff000000) | (b << 16) | (g << 8) | r;
     }
     if (state.profile) { state.cost.grade = now() - t0; state.calls.grade++; }
