@@ -165,14 +165,14 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 | Phase | Theme | Items |
 |---|---|---|
 | 12 — Tools of the trade | gear and Songs | Shield bash; two-handed and dual-wielding; throwing nets; fire flasks; silence bombs; Office grappling hook; environmental kills; instruments that change Songs; tuning forks; dowsing for Anchor-roots |
-| 13 — The Hush comes closer | horror and festivals | Festivals of the Reach (the Last Sheaf, the Rite as false festival, the Eel-Run, the Drowned Lanterns); Whispers from behind; lights dying; night terrors; haunted house in Oakhaven; the Unrung Bell at night; jump-scare toggle; hounds sniffing your trail; Hushwardens' muffling wave; crows at bodies |
+| 13 — The Hush comes closer | horror | Whispers from behind; lights dying; night terrors; haunted house in Oakhaven; the Unrung Bell at night; jump-scare toggle; hounds sniffing your trail; Hushwardens' muffling wave; crows at bodies |
 | 14 — A world that shows the story | visuals and animation | The Greening in Oakhaven; spreading Light-glass; root veins; "Octave lights"; mirrors; sealed doorways; breakable barrels; Sunken Court light; NPC weather reactions; swaying capes; tavern sitting/eating; Kestrel flight scene |
 | 15 — The province moves | world events and Daggerfall systems | Synod sermons; eclipses; roadside events; burning and rebuilding, permanent deaths; Synod territory; paid training; letters of credit; cheat codes; "Where is" map marks; camp cooking; tavern card game; boss trophies |
 | 16 — New ground | new areas | Chlorophyll Flume; underwater dungeon beneath Whisper-Grove; heists (Synod cathedral, Consortium quarry); the Kestrel as a home base with crew |
 | 17 — Beyond Book One | extras | Book Two prologue; Port Cantabile trip and the Long Night (both after Book One in canon: presented as marked extras) |
 | 18 — Technical | engine and online | Sharper renderer; installable offline app; daily challenge dungeon; ghost replays; messages and leaderboards (need a small server: owner's decision) |
 
-Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach (PROPOSED)"). Built in Phase 13 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
+Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach (PROPOSED)"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
 
 **Phase 11 — feedback and feel** (delivered; items marked (P11) below; see the Phase 11 verification)
 
