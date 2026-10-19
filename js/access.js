@@ -81,7 +81,7 @@ const ACCESS = (() => {
     'ax.normal': 'Normal', 'ax.large': 'Large', 'ax.largest': 'Largest',
     'ax.contrast': 'High contrast', 'ax.contrast.hint': 'black panels, white text, strong outlines',
     'ax.captions': 'Sound captions', 'ax.captions.hint': 'a short written note for important sounds',
-    'ax.language': 'Language', 'ax.language.hint': 'menus and buttons; the story stays in English',
+    'ax.language': 'Language', 'ax.language.hint': 'menus, buttons and the story; recorded voices stay in English',
     'panel.inventory': 'Inventory', 'panel.worn': 'Worn — Armour Rating {n}', 'panel.weapons': 'Weapons', 'panel.carried': 'Carried',
     'panel.logbook': 'Logbook', 'panel.rite': 'The Rite', 'panel.other_matters': 'Other matters', 'panel.ledger': 'The Ledger',
     'panel.songbook': 'Song-book', 'panel.vitals': 'Vitals', 'panel.world_map': 'World map (T)', 'panel.session_slots': 'Session slots',
@@ -263,7 +263,11 @@ const ACCESS = (() => {
       } catch (e) { try { console.info('[i18n] could not load ' + code + ': ' + (e && e.message)); } catch (e2) { /* console optional */ } code = 'en'; }
     }
     loc = code; S.loc = code; save();
-    translateAll(); refreshLanguageRow();
+    translateAll();
+    // the story text (js/story-i18n.js) follows the same choice, after the menu keys so the key catalogue wins on
+    // rows both know; if its catalogue cannot load the story stays English
+    try { if (window.STORY_I18N) await window.STORY_I18N.setLocale(code); } catch (e) { /* the menus still switch */ }
+    refreshLanguageRow();
     return code;
   }
 
