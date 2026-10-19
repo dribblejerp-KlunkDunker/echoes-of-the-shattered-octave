@@ -15,7 +15,7 @@ The 94 unfinished checklist items at the start of this plan (85 not started, 9 p
 |---|---|---:|---|
 | 1 — Stealth, law & gameplay | Gameplay | 11 | **Delivered: throwable distractions + investigation** → **Delivered: body hiding/discovery** → **Delivered: disguises/inspection** → **Delivered: broader crime/wanted posters/prison** → **Delivered: bribes/threats at the watch** → **Delivered: horse rental + travel modifiers** → **Delivered: optional hunger/sleep** → **Delivered: opt-in hardcore runs** → Phase 1 complete; next is phase 2, the spatial world. Directional sound feedback depends on phase 7 audio. |
 | 2 — Spatial world | Graphics — 3D view | 15 | **Delivered: elevation foundation** → **Delivered: relief renderer with per-pixel depth — low walls, stepped rooftops, towers, stands** → **Delivered: slope terrain — walkable hills, crag cliffs, tumbling, ramps** → **Delivered: engine foundation — 1x/2x render scale, depth/material buffers, sky and post hooks, decals, light occlusion, ceilings at height** → **Delivered: ceilings/skies/water/fog — painted ceilings, stars, panoramas, Kestrel flyovers, reflections and ripples, soft fog, area mist, torch-lit interiors** → **Delivered: scenery and emissive — props and grass, decals, close-range detail, emissive masks, five-angle stand-ins** → **Delivered: modern look and measured presets — 2x resolution, bloom, colour grades, Original/Low/Medium/High, CRT** → Phase 2 complete. Still open, carried forward: final painted art for every procedural stand-in, walkable horizon country beyond the maps' walls, and the Chapel seen from beyond the Hedge. |
-| 3 — Combat life | Animation — enemies and creatures; first person | 17 | Species/action sheets → hit/detect/death/boss phases → first-person draw/holster/casting/interaction sequences. |
+| 3 — Combat life | Animation — enemies and creatures; first person | 17 | **Delivered: species life — idle fidgets, detection startle, fleeing/charging strides** → **Delivered: hit flinch for every enemy, Requiem shatter and Brood-Mother shedding** → **Delivered: casting tells and collision-safe spawn entrances** → **Delivered: first-person draw/holster/switch, Song-casting glow, climbing hands** → **Delivered: camera feel — gentle bob, landing dip, heavy-hit shake, deafness and the Hush, with access settings** → **Delivered: swinging doors, chest lids, levers; full-screen held documents** → Phase 3 complete. Still open, carried forward: hand-painted frames for every procedural stand-in. |
 | 4 — Living world | Animation — companions and NPCs; world | 18 | Companion reactions/abilities → routines/work/wildlife → weather/scenery/fire/gates/collapse effects with safe collision. |
 | 5 — Illustrated interface | Graphics — menus and screens | 10 | Frames/fonts/credits → inventory icons/final paper doll → portraits/log/automap → loading/death/ending illustrations. |
 | 6 — Story reactivity | Story and world-building | 8 | Rumours/broadsheets/couriers → dreams/memory echoes/Tobin pages → choice-dependent endings and future-region lore. |
@@ -66,16 +66,16 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Painted automap stamps for doors, quest givers, shops and dangers.
 
 ### Animation — enemies and creatures
-- [ ] Dedicated hit-flinch artwork for every enemy (not just tint/deformation).
+- [~] Hit-flinch frames for every enemy: the figure recoils away from the blow with a smear and a struck-edge highlight; swarms burst and scatter. Built once per species/pose/view and cached (`js/enemy-fx.js`). Procedural stand-in; hand-painted flinch sheets pending.
 - [~] Three cached collapse poses generated from existing artwork; solid bodies persist until area departure, nonblocking/unpickable and excluded from saves. Browser lifecycle checks cover all 26 species. Bespoke hand-painted death sheets remain pending.
-- [ ] Species-specific idle fidgets: robes, sniffing hounds, Quiet head turns.
-- [ ] Detection turn/startle frames synchronized with hearing/sight alerts.
-- [ ] Separate fleeing/charging running strides.
-- [ ] Pressman/Deacon casting poses with pre-cast glow and readable timing.
-- [ ] Requiem half-health shatter and Brood-Mother egg-sac shedding artwork.
+- [~] Species-specific idle fidgets: swaying robes, sniffing hounds, Quiet head turns and more, by family (`js/creature-life.js`). Procedural motion on existing art; painted idle sheets pending.
+- [~] Detection startle on the same tick as the alert sound: a turn toward the player when heard, a jolt when seen. Procedural stand-in.
+- [~] Separate fleeing and charging strides (lean, cadence, bounce). Procedural stand-in.
+- [~] Pressman Mallow and the Deacon raise their arms and build a coloured glow for a fixed lead before the original effect lands; stun, death or losing the target cancels it, and stepping out of range dodges it. Damage, chances and cooldowns unchanged (`js/telegraphs.js`). Stand-in glow; painted casting poses pending.
+- [~] The Requiem cracks and throws shards at half health, then fights on cracked; the Brood-Mother sheds her egg-sacs and fights on deflated. Procedural stand-in; painted phase art pending.
 - [x] Drowned Hollow sinking deaths on water/shallow-water floors; dry-land Hollows collapse and leave bodies. Verified clipping/fade, termination and dry-floor behavior in Chromium.
 - [x] Swarm/Hush-Moth outward-scattering deaths using cached radial pixel fragments, fading without a corpse. Both species verified in Chromium.
-- [ ] Grave emergence, ceiling drops and mist entrances with collision-safe spawn telegraphs.
+- [~] Enemies that appear mid-play get an entrance (earth rising, a thread from the ceiling, or a mist puff); the spot is checked collision-safe first and the enemy is harmless and non-solid until it lands. Saves taken during an entrance record it as solid. Procedural stand-in.
 
 ### Animation — companions and NPCs
 - [ ] Kaelen/Lyra hit reactions, injury poses and limping.
@@ -90,13 +90,13 @@ Every phase must retain the security regression tests and save/load behavior. Re
 ### Animation — first person
 - [~] Weapon-family wind-up/strike/recovery choreography across all 16 catalog weapons, using existing first-person images with grip-pivot rotation/translation/scale. Bespoke multi-frame painted swing sheets remain pending.
 - [~] Mace/maul/axe overhead arcs, knife/spear thrusts, mirrored blade sweeps and ranged recoil implemented and verified. No staff exists in the current weapon catalog; staff artwork/moves remain pending.
-- [ ] Draw, holster and weapon-switch transitions.
-- [ ] Raised hands and Song-coloured casting glow.
-- [ ] Optional gentle head bob and landing dip.
-- [ ] Heavy-hit shake, deafness blur and Hushed grey/muffled effects, respecting access settings.
-- [ ] Swinging doors, lifting chest lids and pulling levers.
-- [ ] Ladder/climbing hands coordinated with traversal.
-- [ ] Full-screen held notes/books with accessible readable text.
+- [~] Draw, holster and weapon-switch transitions; an attack or Song mid-switch snaps the weapon ready, so combat timing is unchanged (`js/fp-hands.js`). Stand-in hands tinted from the existing art.
+- [~] Raised hands and Song-coloured casting glow. Stand-in art.
+- [x] Optional gentle head bob (Options → Head bob: Off/Gentle; the original bob stays the default) and a landing dip scaled by the drop (`js/fp-feel.js`).
+- [x] Heavy-hit shake (one tick costing 18%+ of health), deafness blur with a grey rim, and the Hushed grey-out; deafness and the Hush also muffle all sound through a master low-pass, with written cues. Reduce motion (follows the OS setting) removes shake, dip and bob; No flashes removes hit, glass, Song and lightning flashes.
+- [~] Doors swing on a hinge away from whoever opened them, chest lids lift and levers pull; collision, locks and thresholds unchanged (`js/doors.js`). Stand-in frames cut from the existing sprites.
+- [~] Climbing hands reach and pull in time with the climb. Stand-in art.
+- [x] Books, letters, logs, registers, writs and inscriptions open as a full-screen sheet with large high-contrast text, paging by keyboard, touch and controller, and a text-size control; dialogue and story choices keep the normal panel (`js/reading.js`).
 
 ### Animation — world
 - [~] Campfire/hearth sprites now use four cached, distinct flame silhouettes generated from their existing painted warm-colour pixels; logs/stone remain anchored. Torch/brazier assets and bespoke drawn fire sheets remain pending.
@@ -155,6 +155,13 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
 - [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Phase 3 completion pass verification
+- **How it was built.** Seven parallel teams, each owning one new module and its test file in its own git worktree branched from the phase branch: species life (`creature-life`), hit and boss-phase art (`enemy-fx`), casting tells and entrances (`telegraphs`), first-person hands (`fp-hands`), camera feel (`fp-feel`), doors and props (`doors`) and held documents (`reading`). Every module wraps existing functions instead of editing them, keeps its state in unsaved `_` fields, and has one switch in `GFX` that restores the original behaviour exactly (tests compare frames byte for byte). Each branch was diff-checked before merging and the merged tree re-tested.
+- **Integration fixes found by testing the merged tree:** a save taken while a spawned enemy was still arriving recorded it as non-solid (the save now restores solidity); three settings for the same thing were unified (`GFX.reduceMotion`, now following the OS reduced-motion setting, with the old `reducedMotion` name kept as an alias; `GFX.noFlash` now also stops lightning); the deafness and Hush effects gained the sound muffling the feel team could not add from its own files (`Audio_.muffle`, a master low-pass); traversal tests that drop a chasing hound into the map now mark it as already arrived, since such a hound correctly gets a spawn entrance; a feel test that waited on wall-clock frames now waits on the stillness clock; and a pre-existing colour-grade overflow (a teal ring round the dawn sun) was clamped.
+- **Measured cost (median ms per frame, `PRESETS.measure()`, headless Chromium, same machine, same run):** Phase 2 tip → Phase 3, Medium preset: 7.0 → 7.0 (Oakhaven street), 9.6 → 9.2 (Deep Woods camp), 5.5 → 5.5 (Whisper-Grove), 5.8 → 5.6 (tavern), i.e. within noise when nothing is happening. Effects cost only while active (feel team, loaded box: Hush 0.4 ms, deafness up to 4.2 ms at full strength).
+- **Tests.** New suites `creature-life`, `enemy-fx`, `telegraphs`, `fp-hands`, `fp-feel`, `doors`, `reading` and `grade`; all 27 suites pass on the merged tree, including security, save/load and old-save checks.
+- **Still open:** hand-painted frames for every procedural stand-in (flinch, fidget, startle, stride, casting, phase-change, entrance, hands, door and lid art); human visual review and physical-controller hardware.
 
 ### Phase 2 completion pass verification
 - **How it was built.** An engine foundation first (commit `9394e37`): a 1x/2x render scale with the HUD and input kept in 320x200; per-pixel depth and material on both render paths; sky hooks (before the ridges) and post hooks (before present) that skip themselves on error; `addTexture`/`addSprite`/`setEmissive` for procedural art; per-cell wall decals; close-range detail; per-cell ceilings and absolute ceiling height; per-light visibility masks so lamps stop at walls (and carry over knee-high ones); and a view-distance/interior-darkness `setLook`. `js/gfx.js` holds one switch per effect. Then eight parallel teams, each owning its own module and test file in its own git worktree: sky, post-processing, water, surfaces (decals, detail, ceilings), scenery (props, grass), creatures and light (directions, emissive, dark interiors), traversal (Bell-Tower, quarry, pathing), and presets. Each branch was diff-checked before merging; the combined tree was re-tested, not the teams' reports.

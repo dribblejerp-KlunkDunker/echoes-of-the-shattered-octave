@@ -13,9 +13,8 @@
 //     soft horizontal blur plus a dim, steady grey rim. ALWAYS ON when triggered.
 //  5. Hushed: the view drains toward grey while you stand too still in siphoned
 //     country or an awake Quiet is close. ALWAYS ON when triggered.
-//  Audio: js/audio.js exposes no low-pass or filter (only master mute and the
-//  sfx.quiet() duck that the game itself calls), so deafness and the Hush are
-//  VISUAL ONLY plus written cues; nothing here touches Audio_.
+//  Audio: deafness and the Hush also close Audio_.muffle(), a master low-pass
+//  on js/audio.js, so the world sounds stuffed while the view is blurred/grey.
 //  Settings: GFX.headBob ('off'|'gentle'), GFX.reduceMotion, GFX.noFlash.
 //  Camera offsets are applied only for the duration of Engine.render and
 //  restored in a finally, so the player's own cam.bob/dir never drift.
