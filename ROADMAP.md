@@ -140,12 +140,12 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [x] Nine in-world documents on duplicate library shelves (an Office memo and a visitors' notice about the Organum, a Fortis soldier's letter home, a Null-Watch line-talk transcript...), "Heard beyond the Reach" codex stubs and margin notes on the continent map. No new regions are playable.
 
 ### Audio
-- [~] Distinct area/dungeon compositions for Oakhaven, Whisper-Grove and Deep Woods. *(Procedural stand-in pieces, opt-in under Score: Extended; composed recordings still to come.)*
-- [~] Individual boss themes (not just shared boss-mode cues). *(Procedural stand-ins, Extended score.)*
+- [x] Distinct area/dungeon compositions for Oakhaven, Whisper-Grove and Deep Woods. *(Composed and recorded for Score: Extended — seven area pieces in music/extended/; the original ten cues stay the default.)*
+- [x] Individual boss themes (not just shared boss-mode cues). *(Nine recorded boss themes, Extended score.)*
 - [x] Authored greetings/grunts per NPC/enemy; voice asset/license tracking (optional TTS already exists). *(Voiced lines for every speaking character and boss: their greetings, mimicry and companion lines from the game's text, plus PROPOSED barks for speaking enemies, generated with Kokoro-82M TTS (Apache-2.0) and treated per character; formant grunts for the rest; licences in ASSETS.md. Human actors could replace any file.)*
 - [x] Directional audio with wall muffling and distance falloff.
 - [x] Willow wind, rooftop rain and thunder layers.
-- [~] Story-evolving main theme across Book One. *(Procedural stand-in, Extended score.)*
+- [x] Story-evolving main theme across Book One. *(One theme in six recorded stages, tuned flat early and healing by the coda, Extended score.)*
 
 ### Technical and polish
 - [x] Audit/expand credits for all art, fonts, audio, tools and contributors. *(CREDITS.md, ASSETS.md, in-game credits.)*

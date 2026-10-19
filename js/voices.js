@@ -382,6 +382,8 @@ const VOICES = (() => {
     ] },
     { title: 'Music (music/)', rows: [
       ['Title, Town, Tavern, Wild, Dungeon, Grove, Coda, Combat, Greening, Ending', 'Score for this game, described in the README and audio.js as original orchestral cues; composer and rendering tool not recorded: unverified', 'Licence: unverified', MUSIC_FILES],
+      ['Extended score (music/extended/, 22 pieces)', 'Composed for this game in tools/music/ and rendered with FluidSynth using the FluidR3 GM soundfont (Frank Wen); reverb with pedalboard', 'Compositions: game source; FluidR3 GM soundfont: MIT', []],
+      ['Paintings (img/painted/)', 'Loading cards, death and ending pictures, logbook sketches: generated with Canva AI (five area cards) and locally with DreamShaper 8 LCM (tools/art/paint.py)', 'Canva: per the owner\'s Canva terms; DreamShaper: CreativeML OpenRAIL-M', []],
     ] },
     { title: 'Sound effects and voices', rows: [
       ['Footsteps, weather, combat, bells, doors, songs', 'Generated live with WebAudio in js/audio.js; no recorded samples', 'Part of the game source; licence: unverified (no licence file in the repository)', []],

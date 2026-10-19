@@ -247,7 +247,7 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Camera feel | Esc options → Graphics & access: Head bob Off/Gentle, Reduce motion, No flashes |
 | Reading | Books and notes open full screen · ← → or PgUp/PgDn turn pages · + and − change the text size · touch arrows / controller shoulders or d-pad · Escape/B closes |
 | Sound | V sound on/off · B music on/off · Esc options → Graphics & access → Voices: Voiced (default), Voiced + read aloud, Grunts, Off |
-| Score | Esc options → Graphics & access → Score: Original (the recorded soundtrack, default) or Extended (adds procedural area, boss and story pieces) |
+| Score | Esc options → Graphics & access → Score: Original (the recorded soundtrack, default) or Extended (adds composed area, boss and story-theme recordings) |
 | Accessibility | Esc options → Graphics & access: text size, reduce motion, no flashes, high contrast, sound captions, language |
 | Photo mode | \\ (backslash) or Esc options → Graphics & access → Photo mode · drag/arrows look, Q/E tilt, W A S D or wheel move a few paces · Save picture exports a PNG · Escape leaves |
 | Speedrun timer | Esc options → Graphics & access → Speedrun timer: real and game time, with splits at each story milestone |
@@ -310,7 +310,9 @@ js/epilogue.js    Kaelen and Lyra epilogues; Organum, Iron Peaks and Rift teaser
 js/spatial-audio.js  positional sound with wall muffling; rain, willow wind, thunder
 js/voices.js      procedural grunts, the Voices setting; the in-game credits
 js/voice-acting.js  plays the recorded lines in voices/ (manifest js/voice-lines.js; built by tools/voices/)
-js/score.js       Extended score: area, dungeon, boss and story pieces (opt-in)
+js/score.js       Extended score: recorded area, boss and story pieces (music/extended/, made by tools/music/), procedural fallback
+js/ripples.js     directional on-screen sound ripples
+js/painted.js     paintings in img/painted/ (made by tools/art/) with the procedural pictures as fallback
 js/playtools.js   photo mode, speedrun timer, statistics
 js/access.js      Accessibility block and the translation catalog (locales/)
 js/mods.js        data-only mod schemas (schemas/), validator, Mod dungeons, dungeon editor
