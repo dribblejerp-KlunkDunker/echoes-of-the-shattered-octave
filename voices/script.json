@@ -594,13 +594,13 @@
    "id": "halder.greet.polite",
    "speaker": "halder",
    "kind": "greet",
-   "text": "Four plates. The blue one is Ada's.",
+   "text": "Four plates. The blue one is Bryony's.",
    "source": "data.js NPCS.halder.greet.polite",
    "voiceOf": "halder",
    "delivery": "hollow-fragment",
    "segments": [
     "four plates",
-    "The blue one is Ada's"
+    "The blue one is Bryony's"
    ]
   },
   {
@@ -1010,9 +1010,9 @@
     "array": "WEAVER_VOICES",
     "index": 1
    },
-   "text": "The blue one is Ada's. The boys will be in directly.",
+   "text": "The blue one is Bryony's. The boys will be in directly.",
    "segments": [
-    "the blue one is Ada's",
+    "the blue one is Bryony's",
     "the boys will be in directly"
    ],
    "voiceOf": "halder",

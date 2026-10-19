@@ -806,7 +806,7 @@ function buildWhisperGrove() {
   [[18.5, 16.5], [30.5, 16.5], [18.5, 28.5], [30.5, 28.5]].forEach(([x, y], i) => m.deco('basin', x, y, { radius: 0.55, scale: 0.8, glow: 0.5, use: 'pool', pool: i, label: 'A reflecting pool' }));
   for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2 + Math.PI / 8; m.deco('lamp', cx + Math.cos(a) * 9.2, cy + Math.sin(a) * 9.2, { radius: 0.15, scale: 0.95, glow: 0, drylamp: true, label: 'A dry lamp. The wick has been lit a thousand times, and there is no oil.' }); }
   // Halder Wick's table for four
-  m.deco('table', 32.5, 22.5, { radius: 0.55, scale: 0.7, label: 'A table for four, set in a foot of water. The blue plate is Ada\'s.' });
+  m.deco('table', 32.5, 22.5, { radius: 0.55, scale: 0.7, label: 'A table for four, set in a foot of water. The blue plate is Bryony\'s.' });
   m.deco('chair', 31.6, 21.7, { radius: 0.2, scale: 0.55 }); m.deco('chair', 33.4, 23.3, { radius: 0.2, scale: 0.55 }); m.deco('chair', 31.6, 23.3, { radius: 0.2, scale: 0.55 });
   // the Hollows walking their loops
   const spots = [[20.5, 19.0], [28.5, 19.5], [21.0, 26.0], [27.5, 26.0], [16.5, 22.5], [26.5, 15.5], [22.0, 29.5], [29.5, 13.5], [14.5, 27.5], [34.5, 27.5], [17.5, 12.5], [12.5, 17.0]];
@@ -821,7 +821,7 @@ function buildWhisperGrove() {
   m.npc('sable_wg', 26.2, 42.0, { facing: Math.PI, requires: 'sable_aboard' });
   m.npc('sable_wg', cx, cy + 1.7, { facing: Math.PI / 2, until: 'sable_aboard' });
   m.deco('lamp', cx + 1.0, cy + 2.2, { radius: 0.12, scale: 0.7, glow: 0.5 });
-  m.npc('halder', 33.6, 21.6, { facing: Math.PI, loop: true, until: 'halder_dead', lines: ['...the blue one is Ada\'s...', '...four plates... four...'] });
+  m.npc('halder', 33.6, 21.6, { facing: Math.PI, loop: true, until: 'halder_dead', lines: ['...the blue one is Bryony\'s...', '...four plates... four...'] });
   m.npc('lamplighter', 20.5, 21.5, { loop: true, lines: ['...the lamps are late tonight...'] });
   m.npc('cat', 27.5, 31.5, { wander: true, radius: 0.2, solid: false });
   // willows, never on the paths

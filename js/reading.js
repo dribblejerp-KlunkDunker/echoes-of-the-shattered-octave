@@ -32,7 +32,7 @@ const READING = (function () {
     'Over the inner door':           { style: 'slate',  kind: 'Inscription' },      // js/coda.js maus_inscription
     'The writ':                      { style: 'office', kind: 'Writ of the Synod' },// js/coda.js herald's writ (has choices)
     'WELCOME TO RELIEF':             { style: 'office', kind: 'Pamphlet' },         // js/grove.js reg_sign
-    'Ada Wick\'s letter':            { style: 'paper',  kind: 'Letter' },           // js/grove.js wick_letter
+    'Bryony Wick\'s letter':            { style: 'paper',  kind: 'Letter' },           // js/grove.js wick_letter
     'The grey folder':               { style: 'office', kind: 'Office file' },      // js/grove.js Arbiterium folder
     'The Arbiter\'s dispatch':       { style: 'office', kind: 'Dispatch' },         // js/wilds.js wildsDispatch
   };

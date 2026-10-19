@@ -41,14 +41,14 @@
    "data.js:954"
   ]
  },
- "1mpcwu0xsgv": {
-  "en": "\"...the blue one is Ada's... the boys will be in directly...\" — in Halder Wick's voice.",
+ "1jrstzqztfz": {
+  "en": "\"...the blue one is Bryony's... the boys will be in directly...\" — in Halder Wick's voice.",
   "where": [
    "grove.js:300"
   ]
  },
- "11uokc3tg30": {
-  "en": "\"...the boys will be in directly... sit, sit, there's four...\" You have Ada's letter, and two name-tapes in red thread from the Cloister cloaks: TOM WICK. WAT WICK.",
+ "g1doiinya7": {
+  "en": "\"...the boys will be in directly... sit, sit, there's four...\" You have Bryony's letter, and two name-tapes in red thread from the Cloister cloaks: TOM WICK. WAT WICK.",
   "where": [
    "data.js:792"
   ]
@@ -65,10 +65,28 @@
    "data.js:974"
   ]
  },
+ "23i40d7c5ir": {
+  "en": "\"A day is long enough.\"",
+  "where": [
+   "companion-talk.js:238"
+  ]
+ },
+ "nfww1opi32": {
+  "en": "\"A lullaby, and the loss of the tune, over and over. I laid my hand on it once. It turned toward me. It is tired, and it does not know how to ask.\"",
+  "where": [
+   "companion-talk.js:212"
+  ]
+ },
  "1d1j8w1wxk6": {
   "en": "\"About time.\" He flexes the glass hand, and it rings, very faintly. \"I go where it's loudest and break what's about to break. You keep us in the Narrow.\"",
   "where": [
    "party.js:12"
+  ]
+ },
+ "2atb3xgtm1g": {
+  "en": "\"And if I said now?\"",
+  "where": [
+   "companion-talk.js:463"
   ]
  },
  "1zmcv59uy4h": {
@@ -77,10 +95,52 @@
    "dreams.js:165"
   ]
  },
+ "1g297yxxmzu": {
+  "en": "\"And you never stepped in?\"",
+  "where": [
+   "companion-talk.js:364"
+  ]
+ },
+ "193ayw8kndw": {
+  "en": "\"Annet Sowerby. Six.\" He says it like a man setting a cup down very carefully. \"She asked the Carder boy his name through the side of a crate.\"",
+  "where": [
+   "companion-talk.js:436"
+  ]
+ },
  "186rm6aet2r": {
   "en": "\"As you like. It is evidence of something. Most things are.\"",
   "where": [
    "data.js:783"
+  ]
+ },
+ "3lo5k8c320": {
+  "en": "\"Because the girl would not let go. That is the whole reason. I have no better one, and I have looked.\"",
+  "where": [
+   "companion-talk.js:394"
+  ]
+ },
+ "1zdv68jr02k": {
+  "en": "\"Bought with money I'd rather not discuss, from people I'd rather not name. She was the only thing for sale that didn't ask what I was running from.\"",
+  "where": [
+   "companion-talk.js:422"
+  ]
+ },
+ "fckxtqzjzf": {
+  "en": "\"Can we talk?\"",
+  "where": [
+   "companion-talk.js:540"
+  ]
+ },
+ "1x10c91e084": {
+  "en": "\"Can you hear me?\"",
+  "where": [
+   "companion-talk.js:214"
+  ]
+ },
+ "14kafeehcq1": {
+  "en": "\"Can you still play one?\"",
+  "where": [
+   "companion-talk.js:249"
   ]
  },
  "j1nos4tpl0": {
@@ -95,10 +155,59 @@
    "coda.js:29"
   ]
  },
+ "206pty1uih": {
+  "en": "\"Do you feel lighter?\"",
+  "where": [
+   "companion-talk.js:193"
+  ]
+ },
+ "1e3slg4g18s": {
+  "en": "\"Do you miss being inside?\"",
+  "where": [
+   "companion-talk.js:300"
+  ]
+ },
+ "6xgvklad16": {
+  "en": "\"Do you want the blade back?\"",
+  "where": [
+   "companion-talk.js:271"
+  ]
+ },
+ "pidfn58zcd": {
+  "en": "\"Does Lyra know the number?\"",
+  "where": [
+   "companion-talk.js:128"
+  ]
+ },
+ "1rfdeeqjvi1": {
+  "en": "\"Does it ever go quiet?\"",
+  "where": [
+   "companion-talk.js:216"
+  ]
+ },
+ "13dyn65j6cu": {
+  "en": "\"Does it hurt now?\"",
+  "where": [
+   "companion-talk.js:284"
+  ]
+ },
+ "pty85wrsfo": {
+  "en": "\"Does it hurt?\"",
+  "where": [
+   "companion-talk.js:137"
+  ]
+ },
  "1jy84x9ctyg": {
   "en": "\"Does it ring?\" they ask. You open your mouth to say",
   "where": [
    "dreams.js:78"
+  ]
+ },
+ "vkqrzasrp1": {
+  "en": "\"Does it understand you?\"",
+  "where": [
+   "companion-talk.js:395",
+   "companion-talk.js:396"
   ]
  },
  "rhlwf7m4qt": {
@@ -107,16 +216,34 @@
    "data.js:684"
   ]
  },
+ "ed7ej6lo7g": {
+  "en": "\"Don't decide. Walk with me.\"",
+  "where": [
+   "companion-talk.js:229"
+  ]
+ },
  "208i231rk9b": {
   "en": "\"Don't hum down here,\" says someone, not unkindly. \"It hums back.\"",
   "where": [
    "dreams.js:159"
   ]
  },
+ "77yhpl1j2m": {
+  "en": "\"Don't hum it.\"",
+  "where": [
+   "companion-talk.js:451"
+  ]
+ },
  "1gqu1uohac0": {
   "en": "\"Don't sing at the reed, love. Sing beside it.\"",
   "where": [
    "dreams.js:153"
+  ]
+ },
+ "287afyealk3": {
+  "en": "\"Don't. I knew the way you know a stair is missing in the dark. By not putting my weight on it.\"",
+  "where": [
+   "companion-talk.js:434"
   ]
  },
  "1luhh14a3zi": {
@@ -149,6 +276,90 @@
    "upgrades.js:922"
   ]
  },
+ "f25t7dg8p1": {
+  "en": "\"Entry: I did not merely sign the Catalogue. I designed the harvest schedule, and I made it efficient. I wrote 'in white' on the Stage Nine form, so the Cantor would not be mistaken for staff. I was proud of the handwriting.\"",
+  "where": [
+   "companion-talk.js:375"
+  ]
+ },
+ "jht30sy3kl": {
+  "en": "\"Entry: I knew the number. I knew the column. Not knowing is a luxury of the people who did not draft the form.\"",
+  "where": [
+   "companion-talk.js:379"
+  ]
+ },
+ "1lanclnrvpu": {
+  "en": "\"Entry: WG-forty-one thousand and five. A boy of the Cloister choir. A girl in a red cloak would not let go of him at intake, and my hand shook, and I made his surname illegible. The shaking is all the Office has of him now.\"",
+  "where": [
+   "companion-talk.js:390"
+  ]
+ },
+ "1c419scpngf": {
+  "en": "\"Entry: a list is not a cure. I said it so often it became a vow. Then a stranger came to the mist with a question, and I found I had stopped believing the second half.\"",
+  "where": [
+   "companion-talk.js:365"
+  ]
+ },
+ "y0y2dcccvb": {
+  "en": "\"Entry: it knows the alto line. I do not know what else it knows. I have not asked. I record that I have not asked.\"",
+  "where": [
+   "companion-talk.js:396"
+  ]
+ },
+ "1o0uxfm3y8n": {
+  "en": "\"Entry: nothing yet. I have three things, and I recite them every night, so that I know which one goes.\"",
+  "where": [
+   "companion-talk.js:347"
+  ]
+ },
+ "20qox4ki7r4": {
+  "en": "\"Entry: one thing, for a man on a bench. I could not name it afterwards. I am most careful about that. I record that I cannot name it.\"",
+  "where": [
+   "companion-talk.js:349"
+  ]
+ },
+ "vue2po8iro": {
+  "en": "\"Entry: the Bound Ledger keeps a name only at a price, weight for weight. I carry it open so that I never forget it is a debt.\"",
+  "where": [
+   "companion-talk.js:344"
+  ]
+ },
+ "z5fwyoj18z": {
+  "en": "\"Entry: the Veil records the death of civilisations. We do not hold it back. We do not hurry it. We write what was said, and by whom, and on which day.\"",
+  "where": [
+   "companion-talk.js:362"
+  ]
+ },
+ "21ovl9qzn6l": {
+  "en": "\"Entry: the question I asked in the Cloister doorway. I counted eleven in. I did not count them out. I am still writing the second column.\"",
+  "where": [
+   "companion-talk.js:364"
+  ]
+ },
+ "1gttbeezfpo": {
+  "en": "\"Entry: the question is asked. The answer is a weight, not a sentence. It is worth it to the one it is spent on. It is not worth it to the one who spends.\"",
+  "where": [
+   "companion-talk.js:352"
+  ]
+ },
+ "1sj235wjsgc": {
+  "en": "\"Entry: the scriptorium, and one thing more, for a man on a bench, which I cannot name. One left. I recite it every hour.\"",
+  "where": [
+   "companion-talk.js:350"
+  ]
+ },
+ "ey6mdqz3s8": {
+  "en": "\"Entry: the smell of the scriptorium. Lampblack and oak-gall. I am told it was good. I no longer know what that means.\"",
+  "where": [
+   "companion-talk.js:348"
+  ]
+ },
+ "xm09fuslj8": {
+  "en": "\"Entry: the stranger. I have a page for you and it is not full. I do not know what to put in the column marked 'reason.'\"",
+  "where": [
+   "companion-talk.js:405"
+  ]
+ },
  "1quxxoe8o89": {
   "en": "\"First mate of the Wave-Cutter. Better sailor than me; worse liar. A trench opened under the tow and the hawser went bar-taut, and I had the axe, and I looked at her through the spray for ten heartbeats, and she nodded. So I cut it. Forty-eight men lived. She went down with the tow.\" He turns the axe over. \"I have been telling myself for five years that nothing matters enough to die for. It is a very comfortable thing to believe. It nearly worked.\"",
   "where": [
@@ -165,6 +376,30 @@
   "en": "\"Follow me.\"",
   "where": [
    "party.js:160"
+  ]
+ },
+ "xqt1gm9ol2": {
+  "en": "\"Forty-mile hops, if the silk holds. Up, down, cool the tank, up. Stepping-stones, if the stones were on fire.\"",
+  "where": [
+   "companion-talk.js:421"
+  ]
+ },
+ "v5j46jyep2": {
+  "en": "\"Four fingers from the shoulder, when I last measured. I measure in fingers. It is the one unit the arm cannot argue with.\"",
+  "where": [
+   "companion-talk.js:139"
+  ]
+ },
+ "23ahtm1w4po": {
+  "en": "\"Four hundred and thirty-two, in felt sleeves. I heard them all the way down when she went into the willows. Nobody tells you a voice in a bottle keeps its tone. Some of them were singing.\"",
+  "where": [
+   "companion-talk.js:445"
+  ]
+ },
+ "1g3q7w36b36": {
+  "en": "\"Four-twelve. The Foundry floor, the morning of the Fracture. I had my sleeve rolled and my hand flat on the glass. 'Hold,' I said, to the room. The room held. That was the trouble.\"",
+  "where": [
+   "companion-talk.js:156"
   ]
  },
  "237h19po6ow": {
@@ -185,10 +420,28 @@
    "data.js:1082"
   ]
  },
+ "mo7pxq1nz2": {
+  "en": "\"Ha. A ship has never once asked me to feel anything. Mags would hit you for that.\" He grins. \"Then she'd agree.\"",
+  "where": [
+   "companion-talk.js:423"
+  ]
+ },
+ "38ryy4u6d0": {
+  "en": "\"Ha. Sap and splinters, you sound like the Cantor.\" He hums it anyway, one bar, and stops.",
+  "where": [
+   "companion-talk.js:451"
+  ]
+ },
  "1apv7l7iab": {
   "en": "\"Halder Wick,\" it says, kindly. You say \"Here,\" because someone should. Your own voice comes back to you in the next line, and you wake before it finishes.",
   "where": [
    "dreams.js:100"
+  ]
+ },
+ "15mq2hlbcie": {
+  "en": "\"He did. Keep saying it to me until it stops sounding like an excuse.\"",
+  "where": [
+   "companion-talk.js:169"
   ]
  },
  "76cr6ln72i": {
@@ -196,6 +449,12 @@
   "where": [
    "data.js:1054",
    "data.js:1054"
+  ]
+ },
+ "d4i9068i4l": {
+  "en": "\"How far has it climbed?\"",
+  "where": [
+   "companion-talk.js:139"
   ]
  },
  "dwfqx5p3mj": {
@@ -216,10 +475,70 @@
    "grove.js:302"
   ]
  },
+ "3qvyonmpsp": {
+  "en": "\"I believed the table. Tables don't lie. It's the people who hold them upside down.\"",
+  "where": [
+   "companion-talk.js:178"
+  ]
+ },
  "o903lvgf6d": {
   "en": "\"I can't read, lark,\" it says, gently. \"I only know what was said out loud.\"",
   "where": [
    "data.js:836"
+  ]
+ },
+ "t7cy38boqt": {
+  "en": "\"I could have. I was the one man in the building paid to.\" He says it without heat, like a load figure.",
+  "where": [
+   "companion-talk.js:159"
+  ]
+ },
+ "wqrca9kut": {
+  "en": "\"I did.\" He turns the blade over. \"Don't make it a thing. It's already a thing. That's why I put it down.\"",
+  "where": [
+   "companion-talk.js:464"
+  ]
+ },
+ "1cfa6rer4g9": {
+  "en": "\"I keep a list now, on a beam, in chalk. The Synod kept lists too. It is the same list. I just pay it down in smaller coin, one name a day, and I do not get to stop.\"",
+  "where": [
+   "companion-talk.js:146"
+  ]
+ },
+ "1aponwsign6": {
+  "en": "\"I kept quiet inside it.\"",
+  "where": [
+   "companion-talk.js:298"
+  ]
+ },
+ "a6096vpo1v": {
+  "en": "\"I know what she meant.\" He is quiet. \"I know what she meant, and I am still checking it for a flaw.\"",
+  "where": [
+   "companion-talk.js:192"
+  ]
+ },
+ "1rjwfyjnm5n": {
+  "en": "\"I listened to it.\"",
+  "where": [
+   "companion-talk.js:299"
+  ]
+ },
+ "24xw62o3dg9": {
+  "en": "\"I never had the ear.\"",
+  "where": [
+   "companion-talk.js:250"
+  ]
+ },
+ "ec4ikjz4x8": {
+  "en": "\"I promise.\"",
+  "where": [
+   "companion-talk.js:258"
+  ]
+ },
+ "2rm17be4ug": {
+  "en": "\"I put the glass to a thing and it tells me what it keeps. A bell keeps its last stroke. A wall keeps whoever leaned on it. Out here?\" He tilts his head. \"The woods. They are very loud.\"",
+  "where": [
+   "companion-talk.js:210"
   ]
  },
  "1suvjtlskxy": {
@@ -228,10 +547,28 @@
    "data.js:896"
   ]
  },
+ "1v53erd7boc": {
+  "en": "\"I told her. All of it, out loud. She said she would have forgiven me on Rootday, and cannot now.\" He flexes the glass hand. \"Then she took it. Not the easy hand. The glass one. It rang.\"",
+  "where": [
+   "companion-talk.js:190"
+  ]
+ },
  "btx8ijycar": {
   "en": "\"I will,\" she says, and opens the Ledger to tonight's page.",
   "where": [
    "data.js:653"
+  ]
+ },
+ "1m91y28x4pg": {
+  "en": "\"I'd answer. To see what it does.\"",
+  "where": [
+   "companion-talk.js:259"
+  ]
+ },
+ "296nlttl7ib": {
+  "en": "\"I'd have sung it for you.\"",
+  "where": [
+   "companion-talk.js:285"
   ]
  },
  "1r52octcnms": {
@@ -246,10 +583,28 @@
    "party.js:341"
   ]
  },
+ "2due10kdhsu": {
+  "en": "\"I'll sing the rude one for you.\"",
+  "where": [
+   "companion-talk.js:313"
+  ]
+ },
+ "1lparuazpsp": {
+  "en": "\"I'm fine.\"",
+  "where": [
+   "companion-talk.js:333"
+  ]
+ },
  "40j9fg8bc9": {
   "en": "\"I'm here,\" you say. The voice laughs, warmly, and says it again — in your voice, this time. Something has learned you.",
   "where": [
    "game.js:1452"
+  ]
+ },
+ "1f9dn2hqi8b": {
+  "en": "\"I'm sorry.\"",
+  "where": [
+   "companion-talk.js:269"
   ]
  },
  "161av0pwodu": {
@@ -276,10 +631,34 @@
    "dreams.js:173"
   ]
  },
+ "1xsl3vyd5wg": {
+  "en": "\"Is it worth it?\"",
+  "where": [
+   "companion-talk.js:352"
+  ]
+ },
  "1s6kpkr3k22": {
   "en": "\"Is somebody there? I'm Annet. Annet Sowerby. I'm six. What's your name?\"",
   "where": [
    "game.js:1396"
+  ]
+ },
+ "xll098rdk5": {
+  "en": "\"It does not come in pieces.\" After a while, not looking at you: \"Stay near anyway.\"",
+  "where": [
+   "companion-talk.js:148"
+  ]
+ },
+ "1hirbi9aojp": {
+  "en": "\"It drinks what it breaks. Every Legionnaire, every hound: the ring gets fuller. I know the price of every fight before I take it. I take it anyway.\" He closes the hand. \"That is not courage. That is arithmetic with the sign wrong.\"",
+  "where": [
+   "companion-talk.js:124"
+  ]
+ },
+ "b4oy79szlp": {
+  "en": "\"It gave me the cloak. Entry: whether it understood me is a question for the cloak.\"",
+  "where": [
+   "companion-talk.js:395"
   ]
  },
  "1hwhicxr8hw": {
@@ -292,6 +671,36 @@
   "en": "\"It is a root, sir. Roots don't.\"",
   "where": [
    "dreams.js:161"
+  ]
+ },
+ "fz6ya9o5jf": {
+  "en": "\"It paid. Fair enough.\"",
+  "where": [
+   "companion-talk.js:180"
+  ]
+ },
+ "9qng726n6o": {
+  "en": "\"It will do.\" The corner of his mouth moves. It is the closest thing to a smile you have seen on him.",
+  "where": [
+   "companion-talk.js:194"
+  ]
+ },
+ "4g17okra2z": {
+  "en": "\"It's a good voice.\"",
+  "where": [
+   "companion-talk.js:319"
+  ]
+ },
+ "19p4w2xoano": {
+  "en": "\"It's done now.\"",
+  "where": [
+   "companion-talk.js:449"
+  ]
+ },
+ "28p3mlvo6j7": {
+  "en": "\"It's done. I counted the quiet after. It's a different sort of count.\"",
+  "where": [
+   "companion-talk.js:449"
   ]
  },
  "1bwwiijcuse": {
@@ -342,10 +751,34 @@
    "data.js:1072"
   ]
  },
+ "1ei5040cjcs": {
+  "en": "\"Leave the column blank.\"",
+  "where": [
+   "companion-talk.js:409"
+  ]
+ },
+ "abj26t63gh": {
+  "en": "\"Let me carry it a while.\"",
+  "where": [
+   "companion-talk.js:353"
+  ]
+ },
+ "q2atg5wtev": {
+  "en": "\"Let me carry some of it.\"",
+  "where": [
+   "companion-talk.js:148"
+  ]
+ },
  "2d5b7b641pa": {
   "en": "\"Line ninety-four,\" it says, in Kaelen's voice, very tired. \"I initialled it. I was sure for three seconds.\"",
   "where": [
    "data.js:834"
+  ]
+ },
+ "1zgjemlufrq": {
+  "en": "\"Loudly. I'm told it counts. Mags says it counts.\"",
+  "where": [
+   "companion-talk.js:435"
   ]
  },
  "12jj9hedfnk": {
@@ -366,6 +799,18 @@
    "data.js:881"
   ]
  },
+ "vxjkokj7ea": {
+  "en": "\"My father sold the Root to keep the town fed. I told myself I was doing the same sum, only bigger and better. It is the same sum. It is always the same sum.\"",
+  "where": [
+   "companion-talk.js:166"
+  ]
+ },
+ "1qicne6efag": {
+  "en": "\"No one. There hasn't been time.\"",
+  "where": [
+   "companion-talk.js:332"
+  ]
+ },
  "x7iaptq52m": {
   "en": "\"No,\" he says. \"Not yet. That is what I always say.\"",
   "where": [
@@ -378,6 +823,24 @@
    "grove.js:228"
   ]
  },
+ "23a17rkqzys": {
+  "en": "\"No. I can only read it back, one name at a time. It is slower. It is the one direction left.\"",
+  "where": [
+   "companion-talk.js:378"
+  ]
+ },
+ "17p1ada4i11": {
+  "en": "\"No.\" Quickly. Then slower: \"No. Thank you. You will take your share and I will take mine, and neither of us will say whose was heavier.\"",
+  "where": [
+   "companion-talk.js:126"
+  ]
+ },
+ "1e3zgke36p": {
+  "en": "\"Nobody came to the hut in four years who did not want something broken, or someone forgiven. You came and asked how to stop a thing. I have been trying to work out what that makes you.\"",
+  "where": [
+   "companion-talk.js:225"
+  ]
+ },
  "1wbstfsjdky": {
   "en": "\"North,\" she says. Her voice is a ruin and it is hers. \"When you're ready.\"",
   "where": [
@@ -388,6 +851,24 @@
   "en": "\"Nose up. Hold her nose up, hold her, hold her—\"",
   "where": [
    "dreams.js:149"
+  ]
+ },
+ "1ps66t7ugd4": {
+  "en": "\"Not 'in white.' Anything but that.\"",
+  "where": [
+   "companion-talk.js:381"
+  ]
+ },
+ "3hv0b2n6dh": {
+  "en": "\"Not any more. The pain went first, and the glass came in behind it, like a tide over flat sand.\"",
+  "where": [
+   "companion-talk.js:137"
+  ]
+ },
+ "2f05p8ynspm": {
+  "en": "\"Not tonight.\" He taps two fingers against his knee, once. \"Ask me when I can say the first one without stopping.\"",
+  "where": [
+   "companion-talk.js:149"
   ]
  },
  "cfyaorosnw": {
@@ -414,10 +895,40 @@
    "party.js:338"
   ]
  },
+ "cd4344zxlc": {
+  "en": "\"Nothing clean. Break the right thing, slowly, and stay to hear it go.\"",
+  "where": [
+   "companion-talk.js:168"
+  ]
+ },
  "g35kxy0ccc": {
   "en": "\"Oh,\" she says, and sits down on the meal-sack. \"Oh.\" She holds the jar in both hands like a warm egg. \"Lyra will come tonight. He will pass. He will pass and we will be on the corsair's ship before the Rite and nobody will ever chalk his hands.\" She presses coin on you and will not hear no.",
   "where": [
    "data.js:432"
+  ]
+ },
+ "1uqfi52k4nd": {
+  "en": "\"On the hound-bed, outside my hut. A day without one voice in the glass. I used to walk out and stand there, just to remember what my own head sounded like.\"",
+  "where": [
+   "companion-talk.js:216"
+  ]
+ },
+ "1jaxv5w9qeu": {
+  "en": "\"One thousand three hundred and forty-two. I know the number now. I didn't want to. I carried twelve crates for two years and never asked what was in them. It's a skill. I was very good at it.\"",
+  "where": [
+   "companion-talk.js:432"
+  ]
+ },
+ "2cdtj7bzhr8": {
+  "en": "\"One tune, four hundred ways. I didn't know the tune. I hum it when I'm not watching myself.\"",
+  "where": [
+   "companion-talk.js:450"
+  ]
+ },
+ "1adxa6r8b20": {
+  "en": "\"Open them where nothing else is listening. Or don't. I won't tell you which. I've been wrong about doors before.\"",
+  "where": [
+   "companion-talk.js:448"
   ]
  },
  "pk3r0ifaf2": {
@@ -426,10 +937,46 @@
    "dreams.js:159"
   ]
  },
+ "2984y6rgyon": {
+  "en": "\"Quist kept your desk.\"",
+  "where": [
+   "companion-talk.js:380"
+  ]
+ },
+ "1hv4ll7itcl": {
+  "en": "\"Read me one name.\"",
+  "where": [
+   "companion-talk.js:149"
+  ]
+ },
+ "fpz5emfmwu": {
+  "en": "\"Read me what you have so far.\"",
+  "where": [
+   "companion-talk.js:408"
+  ]
+ },
+ "1dqoveqbhap": {
+  "en": "\"Sable keeps her promises.\"",
+  "where": [
+   "companion-talk.js:490"
+  ]
+ },
+ "rcuk5yuks3": {
+  "en": "\"Say Annet's name.\"",
+  "where": [
+   "companion-talk.js:436"
+  ]
+ },
  "1cfn93pk5j4": {
   "en": "\"Seat the casing.\"",
   "where": [
    "dreams.js:167"
+  ]
+ },
+ "voptlsxizx": {
+  "en": "\"Seen. It isn't lighter. Seen is heavier, in a way, and easier to carry.\"",
+  "where": [
+   "companion-talk.js:193"
   ]
  },
  "29puqnch4k4": {
@@ -438,10 +985,58 @@
    "grove.js:304"
   ]
  },
+ "1lraadhpbuw": {
+  "en": "\"She has never asked. That is a kind of knowing, and a kind of mercy, and I have not earned either.\"",
+  "where": [
+   "companion-talk.js:128"
+  ]
+ },
+ "22tf6at5qa": {
+  "en": "\"She meant the hand.\"",
+  "where": [
+   "companion-talk.js:192"
+  ]
+ },
+ "79lnvt8tpn": {
+  "en": "\"She taught me the Root note when we were nine. I hum it when the arm is bad. She knows, and has never said so, and that is her kindness, and I am wasting it.\"",
+  "where": [
+   "companion-talk.js:197"
+  ]
+ },
+ "1d4g71hpffm": {
+  "en": "\"She would want to hear it from you.\"",
+  "where": [
+   "companion-talk.js:199"
+  ]
+ },
+ "kxfq5wybvd": {
+  "en": "\"She'll lift when you say. I won't lift without the Cantor. I've done that sum before, and I didn't like the answer.\"",
+  "where": [
+   "companion-talk.js:460"
+  ]
+ },
+ "1s133pahrm": {
+  "en": "\"She's on her side in a wood with a hole in her you could post a sheep through, and I have never loved her more. Don't tell Tobiah. He thinks she's his.\"",
+  "where": [
+   "companion-talk.js:419"
+  ]
+ },
  "10731rk3999": {
   "en": "\"She's teaching me the skipping one. Too loud brings the hounds, too still brings the Hush.\" She hops, twice, very softly. \"You have to be in the middle. That's called the Narrow.\"",
   "where": [
    "data.js:1057"
+  ]
+ },
+ "3slfz2x569": {
+  "en": "\"Sing it now.\"",
+  "where": [
+   "companion-talk.js:320"
+  ]
+ },
+ "1kmzm3wyw4e": {
+  "en": "\"Some of it. By line ninety-four I knew enough to look away, and I looked away. That is the part I earned.\"",
+  "where": [
+   "companion-talk.js:179"
   ]
  },
  "2enq18ov0dl": {
@@ -450,10 +1045,52 @@
    "dreams.js:175"
   ]
  },
+ "2cqs4rzr90a": {
+  "en": "\"Someone has to remember.\"",
+  "where": [
+   "companion-talk.js:366"
+  ]
+ },
+ "22wmdwwfigy": {
+  "en": "\"Someone who needed an engineer.\"",
+  "where": [
+   "companion-talk.js:227"
+  ]
+ },
+ "241fpmiwxy4": {
+  "en": "\"Someone who stayed.\"",
+  "where": [
+   "companion-talk.js:228"
+  ]
+ },
+ "mel2jaewkt": {
+  "en": "\"Something answered me from it.\"",
+  "where": [
+   "companion-talk.js:297"
+  ]
+ },
+ "wsbl2q7zlt": {
+  "en": "\"Somewhere with a horizon and no paperwork. Mags says that's called dying. I say it's called Port Cantabile.\"",
+  "where": [
+   "companion-talk.js:466"
+  ]
+ },
+ "1k8p9vb4k2q": {
+  "en": "\"Soon. I have the words. What I do not have yet is the nerve to say them aloud, where they stop being a record and start being mine.\"",
+  "where": [
+   "companion-talk.js:200"
+  ]
+ },
  "n4jq0p88cd": {
   "en": "\"Stay by the fire.\"",
   "where": [
    "party.js:341"
+  ]
+ },
+ "1ku5rjkjz8u": {
+  "en": "\"Stop fighting, then.\"",
+  "where": [
+   "companion-talk.js:127"
   ]
  },
  "26s0jgiy2nw": {
@@ -486,10 +1123,28 @@
    "data.js:989"
   ]
  },
+ "1szuddmyhe": {
+  "en": "\"Tell me about the First Reed.\"",
+  "where": [
+   "companion-talk.js:248"
+  ]
+ },
  "x1u4zpuv1i": {
   "en": "\"Teller.\" She spits. \"He counted the crates on and off at Oakhaven every month for two years. He was very polite about it.\"",
   "where": [
    "data.js:886"
+  ]
+ },
+ "1hhxqnpqihr": {
+  "en": "\"That is a better answer than I deserve. I will take it.\"",
+  "where": [
+   "companion-talk.js:227"
+  ]
+ },
+ "1pajny83vav": {
+  "en": "\"That is the kindest instruction I have ever been given. It is also, technically, an omission.\" The corner of her mouth moves. \"I will allow it.\"",
+  "where": [
+   "companion-talk.js:409"
   ]
  },
  "20m26fzxhu5": {
@@ -498,10 +1153,34 @@
    "data.js:410"
   ]
  },
+ "irdwbq8os2": {
+  "en": "\"That is what frightens me. That she would.\"",
+  "where": [
+   "companion-talk.js:199"
+  ]
+ },
+ "2flnga5a4iz": {
+  "en": "\"That sounds like waste.\"",
+  "where": [
+   "companion-talk.js:239"
+  ]
+ },
  "zjcwb9ez5e": {
   "en": "\"That'll do,\" she says. \"Don't argue theology with them past that. They haven't got the tongues for it, and you haven't got the hands.\"",
   "where": [
    "wilds.js:205"
+  ]
+ },
+ "1l0ysywg9pt": {
+  "en": "\"That's the only sum I'll sign.\"",
+  "where": [
+   "companion-talk.js:462"
+  ]
+ },
+ "2b0enf37nxd": {
+  "en": "\"The Organum, third floor, the Hall of Carriage. I know the cabinet. I know the clerk's handwriting.\"",
+  "where": [
+   "companion-talk.js:393"
   ]
  },
  "5m9qofexd4": {
@@ -510,16 +1189,46 @@
    "data.js:1084"
   ]
  },
+ "1rlshw81ujk": {
+  "en": "\"The needle climbed. Everything in the hall leaned one way, the way grass leans before rain. Then the light turned, and the arm stopped being something I could describe.\"",
+  "where": [
+   "companion-talk.js:158"
+  ]
+ },
  "x2gtx8m3jz": {
   "en": "\"The singers are on the ship. Come and defend them.\"",
   "where": [
    "data.js:697"
   ]
  },
+ "240uf75bd0i": {
+  "en": "\"The singers are safe.\"",
+  "where": [
+   "companion-talk.js:478"
+  ]
+ },
  "smjk9sxi9r": {
   "en": "\"The singing in the north-west.\" She has been watching your mouth. \"That's the Quiet Faith. Tongueless. They don't talk, they sign. Hand-cant. Same as the dock-crews of the Free Captains, near enough. I learned it when I stopped hearing.\" She puts the splice down. \"Want it? Three signs and one sentence. Might keep you from having to kill a man with no tongue, which is a bad business all round.\"",
   "where": [
    "data.js:1070"
+  ]
+ },
+ "lqj7dh7jel": {
+  "en": "\"Then I'd say what I'd say to anyone who tried me. Not yet, and not without her.\" He is not smiling.",
+  "where": [
+   "companion-talk.js:463"
+  ]
+ },
+ "1nocv4okh3g": {
+  "en": "\"Then let me take the front.\"",
+  "where": [
+   "companion-talk.js:126"
+  ]
+ },
+ "v2ptjcj5dp": {
+  "en": "\"Then tell her. All of it.\"",
+  "where": [
+   "companion-talk.js:200"
   ]
  },
  "hzjsmx31uy": {
@@ -576,10 +1285,131 @@
    "party.js:161"
   ]
  },
+ "2a5zouw619j": {
+  "en": "\"Walking is the one thing I am certain I can still do.\"",
+  "where": [
+   "companion-talk.js:229"
+  ]
+ },
+ "cpqskitszx": {
+  "en": "\"Was any of it worth it?\"",
+  "where": [
+   "companion-talk.js:160"
+  ]
+ },
+ "ca1zgvpgsf": {
+  "en": "\"Was it worth it?\"",
+  "where": [
+   "companion-talk.js:270"
+  ]
+ },
+ "afp88bqvjd": {
+  "en": "\"Was the Hedge a mistake?\"",
+  "where": [
+   "companion-talk.js:296"
+  ]
+ },
+ "xogd9m9v19": {
+  "en": "\"We'll all go together.\"",
+  "where": [
+   "companion-talk.js:462"
+  ]
+ },
  "16xqoybggj2": {
   "en": "\"Well?\"",
   "where": [
    "wilds.js:212"
+  ]
+ },
+ "81q0xmer5p": {
+  "en": "\"What does the Root keep?\"",
+  "where": [
+   "companion-talk.js:212"
+  ]
+ },
+ "ckj8qt8t79": {
+  "en": "\"What happened?\"",
+  "where": [
+   "companion-talk.js:158"
+  ]
+ },
+ "1lkdim733em": {
+  "en": "\"What have you paid so far?\"",
+  "where": [
+   "companion-talk.js:346"
+  ]
+ },
+ "2cmyxv9e9px": {
+  "en": "\"What should we do with them?\"",
+  "where": [
+   "companion-talk.js:448"
+  ]
+ },
+ "n1292bsyvb": {
+  "en": "\"What wears his voice?\"",
+  "where": [
+   "companion-talk.js:272"
+  ]
+ },
+ "u75c4m6h6": {
+  "en": "\"What would you do with it now?\"",
+  "where": [
+   "companion-talk.js:168"
+  ]
+ },
+ "vklrjjf9yr": {
+  "en": "\"What would you write now?\"",
+  "where": [
+   "companion-talk.js:381"
+  ]
+ },
+ "1d5kj5sszkq": {
+  "en": "\"What's the rude one?\"",
+  "where": [
+   "companion-talk.js:311",
+   "companion-talk.js:318"
+  ]
+ },
+ "20afxropmbo": {
+  "en": "\"Where would you go, after?\"",
+  "where": [
+   "companion-talk.js:466"
+  ]
+ },
+ "2ail0kqzsx0": {
+  "en": "\"Who taught you the alto line?\"",
+  "where": [
+   "companion-talk.js:479"
+  ]
+ },
+ "1igy5bsg2ow": {
+  "en": "\"Why did your hand shake?\"",
+  "where": [
+   "companion-talk.js:394"
+  ]
+ },
+ "dfmu72qv90": {
+  "en": "\"Why leave the Veil?\"",
+  "where": [
+   "companion-talk.js:365"
+  ]
+ },
+ "2a7zyjabrbb": {
+  "en": "\"Why this ship?\"",
+  "where": [
+   "companion-talk.js:422"
+  ]
+ },
+ "25n974cz3ez": {
+  "en": "\"Will she fly again?\"",
+  "where": [
+   "companion-talk.js:421"
+  ]
+ },
+ "1z4vib2ff19": {
+  "en": "\"Write that I stayed.\"",
+  "where": [
+   "companion-talk.js:407"
   ]
  },
  "182rejhr0g6": {
@@ -588,10 +1418,130 @@
    "game.js:582"
   ]
  },
+ "7e58szg8qr": {
+  "en": "\"Yes. And someone has to forgive the remembering. I am not sure the Veil trained for that.\"",
+  "where": [
+   "companion-talk.js:366"
+  ]
+ },
+ "1ury849ywvh": {
+  "en": "\"Yes.\" Only that. He looks at the fire for a long time. \"Yes. That.\"",
+  "where": [
+   "companion-talk.js:228"
+  ]
+ },
+ "2atle72c4h4": {
+  "en": "\"You are allowed to stop.\"",
+  "where": [
+   "companion-talk.js:491"
+  ]
+ },
+ "1712ofkddiz": {
+  "en": "\"You believed it.\"",
+  "where": [
+   "companion-talk.js:178"
+  ]
+ },
+ "oy8iyt5q13": {
+  "en": "\"You can't undo that.\"",
+  "where": [
+   "companion-talk.js:378"
+  ]
+ },
+ "xuis5psxyr": {
+  "en": "\"You chose it.\"",
+  "where": [
+   "companion-talk.js:283"
+  ]
+ },
+ "1dkti8681gl": {
+  "en": "\"You could just hum at each other.\"",
+  "where": [
+   "companion-talk.js:201"
+  ]
+ },
+ "282hbtwob7a": {
+  "en": "\"You could not have known.\"",
+  "where": [
+   "companion-talk.js:159"
+  ]
+ },
+ "1v05gvop0x7": {
+  "en": "\"You couldn't have known.\"",
+  "where": [
+   "companion-talk.js:379"
+  ]
+ },
  "33g4u9h2vg": {
   "en": "\"You didn't cut it this time.\"",
   "where": [
    "data.js:990"
+  ]
+ },
+ "1gj74mc3gow": {
+  "en": "\"You didn't know.\"",
+  "where": [
+   "companion-talk.js:434"
+  ]
+ },
+ "1u3k78sp8vw": {
+  "en": "\"You heard them singing?\"",
+  "where": [
+   "companion-talk.js:450"
+  ]
+ },
+ "149s4p1x3s4": {
+  "en": "\"You knew.\"",
+  "where": [
+   "companion-talk.js:179"
+  ]
+ },
+ "1101ms469lg": {
+  "en": "\"You love a ship more than people.\"",
+  "where": [
+   "companion-talk.js:423"
+  ]
+ },
+ "1goyy36pbc2": {
+  "en": "\"You put the axe down at the fire.\"",
+  "where": [
+   "companion-talk.js:464"
+  ]
+ },
+ "2ev51wmtodz": {
+  "en": "\"You want to know why an engineer takes the Synod's money. It paid. The Conservatory paid, the Consortium paid more, and it looked like fixing things: a bore here, a table there, a town fed. I was seventeen and I could make a wrong note come right.\"",
+  "where": [
+   "companion-talk.js:176"
+  ]
+ },
+ "14mfrsyokkd": {
+  "en": "\"You'll find his name.\"",
+  "where": [
+   "companion-talk.js:393"
+  ]
+ },
+ "4j7fo1hqbh": {
+  "en": "\"You'll sing again.\"",
+  "where": [
+   "companion-talk.js:312"
+  ]
+ },
+ "cwd1cw947f": {
+  "en": "\"You're asking now.\"",
+  "where": [
+   "companion-talk.js:435"
+  ]
+ },
+ "1c6b8wlj7o0": {
+  "en": "\"You. When you're ready to listen.\"",
+  "where": [
+   "companion-talk.js:334"
+  ]
+ },
+ "1024jkiy8xk": {
+  "en": "\"Your father fed a town.\"",
+  "where": [
+   "companion-talk.js:169"
   ]
  },
  "1qe5n4u3931": {
@@ -625,6 +1575,12 @@
    "playtools.js:404"
   ]
  },
+ "28dss04h0y5": {
+  "en": "#modal-panel .p9t .port img",
+  "where": [
+   "companion-talk.js:667"
+  ]
+ },
  "1zkqlalk022": {
   "en": "(Day {0})",
   "where": [
@@ -643,6 +1599,13 @@
   "where": [
    "game.js:1220"
   ]
+ },
+ "24nuemr5tpz": {
+  "en": "(Wind-Reed ×{0})",
+  "where": [
+   "reedcraft.js:605"
+  ],
+  "pattern": true
  },
  "18su96ofgh2": {
   "en": "(You keep Tobin's Journal. Your logbook holds all twelve pages.)",
@@ -672,6 +1635,12 @@
   "en": "(and you have the valve, bless you)",
   "where": [
    "data.js:873"
+  ]
+ },
+ "13saucti0tn": {
+  "en": "(assist on)",
+  "where": [
+   "reedcraft.js:613"
   ]
  },
  "1hp0mhx0qyj": {
@@ -1096,8 +2065,8 @@
    "maps.js:639"
   ]
  },
- "244ifu7dc1c": {
-  "en": "...four plates. The blue one is Ada's...",
+ "15i75su168c": {
+  "en": "...four plates. The blue one is Bryony's...",
   "where": [
    "couriers.js:244",
    "data.js:659"
@@ -1109,8 +2078,8 @@
    "maps.js:824"
   ]
  },
- "1mjka2uu0wi": {
-  "en": "...four plates... the blue one is Ada's... the boys will be in directly...",
+ "2gqive959e": {
+  "en": "...four plates... the blue one is Bryony's... the boys will be in directly...",
   "where": [
    "data.js:663"
   ]
@@ -1232,8 +2201,8 @@
    "maps.js:767"
   ]
  },
- "1z5m723kpdj": {
-  "en": "...the blue one is Ada's...",
+ "17vfiaw2cij": {
+  "en": "...the blue one is Bryony's...",
   "where": [
    "data.js:794",
    "maps.js:824"
@@ -1312,6 +2281,12 @@
   "en": "1 hires · 2 returns · Escape leaves. Controller: A hires, X returns, B leaves.",
   "where": [
    "travel.js:179"
+  ]
+ },
+ "bhqrro9m": {
+  "en": "1 stone · 2 bottle · 3 lure reed · Escape leaves. Controller: A stone, X bottle, Y lure reed, B leaves.",
+  "where": [
+   "reedcraft.js:711"
   ]
  },
  "2fhjop6wu0j": {
@@ -1626,6 +2601,12 @@
    "maps.js:855"
   ]
  },
+ "1tgj27khhf8": {
+  "en": "A First Reed over a door, split down the slot by the frost. Its mouth hangs open.",
+  "where": [
+   "sidequests.js:132"
+  ]
+ },
  "ixngr7mpts": {
   "en": "A Flume sluice",
   "where": [
@@ -1795,8 +2776,8 @@
    "maps.js:1164"
   ]
  },
- "1qvxvsufbv8": {
-  "en": "A Table for Four: Halder Wick is dead, but I laid Tom and Wat's name-tapes beside their plates at his table anyway, and the blue plate in front of Ada's chair.",
+ "26l73r94tro": {
+  "en": "A Table for Four: Halder Wick is dead, but I laid Tom and Wat's name-tapes beside their plates at his table anyway, and the blue plate in front of Bryony's chair.",
   "where": [
    "grove.js:364"
   ]
@@ -1807,8 +2788,8 @@
    "data.js:793"
   ]
  },
- "nnz2vqv19l": {
-  "en": "A Table for Four: in the Wick house, a letter from Ada Wick to the Cloister: her sons Tom and Wat were to sing on the Thursday. Halder is setting their plates. Their cloaks may still be on the Cloister pegs.{0}",
+ "14diewul6lw": {
+  "en": "A Table for Four: in the Wick house, a letter from Bryony Wick to the Cloister: her sons Tom and Wat were to sing on the Thursday. Halder is setting their plates. Their cloaks may still be on the Cloister pegs.{0}",
   "where": [
    "grove.js:356"
   ],
@@ -1855,6 +2836,20 @@
   "where": [
    "scenery.js:183"
   ]
+ },
+ "lqn5alwp13": {
+  "en": "A bed of wind-reed, green and quiet in the wet. E cuts one.",
+  "where": [
+   "reedcraft.js:119",
+   "reedcraft.js:147"
+  ]
+ },
+ "alz01nxsu9": {
+  "en": "A bed of wind-reed. {0} still standing today.",
+  "where": [
+   "reedcraft.js:119"
+  ],
+  "pattern": true
  },
  "1udz6ya7g09": {
   "en": "A bell-ringer's hammer of bell-bronze, from the Mausoleum's tower. It rings the Cacophony, and breaks marble.",
@@ -2072,6 +3067,18 @@
    "data.js:34"
   ]
  },
+ "fpfj5zuenz": {
+  "en": "A consignment of ringing timber has been received at the quota in good order. Ringing is recorded as a property of the timber. It is not recorded as a property of the Reach.",
+  "where": [
+   "sidequests.js:244"
+  ]
+ },
+ "kcuqln2rwg": {
+  "en": "A constable glances over at the sound, then back to the street.",
+  "where": [
+   "reedcraft.js:476"
+  ]
+ },
  "23kb44d13fe": {
   "en": "A cooper's barrel, hooped in rust. Something sloshes.",
   "where": [
@@ -2125,6 +3132,18 @@
   "en": "A custody save must be inside the watch-house.",
   "where": [
    "game.js:2445"
+  ]
+ },
+ "1vzw0snj9ut": {
+  "en": "A cut reed dies in a day. It holds any pitch you ask, and by the next dusk it is a stick. That is why we cut them fresh. That is why we love them.",
+  "where": [
+   "companion-talk.js:236"
+  ]
+ },
+ "wi7knvxjxp": {
+  "en": "A cut wind-reed and a reed-knife",
+  "where": [
+   "logmap.js:40"
   ]
  },
  "rentp44y2o": {
@@ -2216,6 +3235,12 @@
   "en": "A favour, and a quiet one. These were Davin Hale's boots. His mother is rooted into her chair on the lane behind the tannery and cannot come for them. Take them to her. Do not sing. She may ask you to. Do not.",
   "where": [
    "data.js:353"
+  ]
+ },
+ "o54lhecsv": {
+  "en": "A felled iron-bough log, chalk-marked",
+  "where": [
+   "logmap.js:40"
   ]
  },
  "16biergj6w3": {
@@ -2381,6 +3406,12 @@
    "rumours.js:336"
   ]
  },
+ "1jsi1x1ivtx": {
+  "en": "A gust takes the note and carries it off.",
+  "where": [
+   "sidequests.js:189"
+  ]
+ },
  "186xeujlf3y": {
   "en": "A hand near the purse",
   "where": [
@@ -2520,6 +3551,18 @@
    "tobin.js:125"
   ]
  },
+ "17o2v099t53": {
+  "en": "A laugh, silent, in the whole of her shoulders.",
+  "where": [
+   "companion-talk.js:313"
+  ]
+ },
+ "294zno0rwbl": {
+  "en": "A length of iron-bough, heavy as a bell and nearly as willing to ring. Carry it; do not run with it.",
+  "where": [
+   "sidequests.js:201"
+  ]
+ },
  "xk3pc0vv93": {
   "en": "A letter on the dresser, in a woman's hand",
   "where": [
@@ -2621,6 +3664,12 @@
   "en": "A new headstone with a bell carved on it, and no name. Under it, a grave dug open.",
   "where": [
    "maps.js:1021"
+  ]
+ },
+ "28musdou0m4": {
+  "en": "A new reed on the old nail. It hangs level. It does not sound; nothing does in here.",
+  "where": [
+   "sidequests.js:133"
   ]
  },
  "l6te9xo1jq": {
@@ -2745,6 +3794,12 @@
    "upgrades.js:107"
   ]
  },
+ "15cmndzo1bh": {
+  "en": "A pause the width of a breath. Then one low fifth, and a high, shy note, a little flat on the turn. It is not a name. It is how a boy says one.",
+  "where": [
+   "companion-talk.js:479"
+  ]
+ },
  "1rpesms6nm1": {
   "en": "A pause, exactly long enough for a person to stand up. The next name, and the next.",
   "where": [
@@ -2828,6 +3883,12 @@
   "en": "A raw green-gold shard harvested from a root-vein. Used to enchant weapons at a forge or Song-book.",
   "where": [
    "upgrades.js:258"
+  ]
+ },
+ "1kfn94gww08": {
+  "en": "A reed tuned to 174. Sound it against your breastbone and you stand a little straighter in the Narrow. One breath of use.",
+  "where": [
+   "reedcraft.js:55"
   ]
  },
  "13n3cd6qfbj": {
@@ -2962,6 +4023,18 @@
   "en": "A sheet, ringed by the base of a cup, is tucked behind the tavern shelf.",
   "where": [
    "tobin.js:79"
+  ]
+ },
+ "29kmo51d1cy": {
+  "en": "A short sound in his throat. \"Don't let me off. I would only know.\"",
+  "where": [
+   "companion-talk.js:180"
+  ]
+ },
+ "rwhlritn5h": {
+  "en": "A short, dry breath, almost a laugh. \"I did that sum too. If I stop, somebody else pays in a different coin. I would rather it were mine.\"",
+  "where": [
+   "companion-talk.js:127"
   ]
  },
  "1mni32tizx1": {
@@ -3153,6 +4226,30 @@
    "game.js:1354"
   ]
  },
+ "6uel4td7nt": {
+  "en": "A straw bee-skep",
+  "where": [
+   "logmap.js:40"
+  ]
+ },
+ "sb1ubaaarb": {
+  "en": "A straw skep bound with bramble. The bees inside are quiet. Too quiet.",
+  "where": [
+   "sidequests.js:223"
+  ]
+ },
+ "1knumks5b4v": {
+  "en": "A straw skep. It hums low, like a kettle thinking about it.",
+  "where": [
+   "sidequests.js:222"
+  ]
+ },
+ "1bwrir2jg44": {
+  "en": "A straw skep. The bees hang in it in a silent clump.",
+  "where": [
+   "sidequests.js:221"
+  ]
+ },
  "2e4dywk45ey": {
   "en": "A strongbox",
   "where": [
@@ -3172,8 +4269,8 @@
    "logmap.js:35"
   ]
  },
- "1ybc71un75g": {
-  "en": "A table for four, set in a foot of water. The blue plate is Ada's.",
+ "1oz1bs5a6nn": {
+  "en": "A table for four, set in a foot of water. The blue plate is Bryony's.",
   "where": [
    "grove.js:366",
    "maps.js:809"
@@ -3209,10 +4306,22 @@
    "maps.js:389"
   ]
  },
- "ftfvyzini8": {
-  "en": "A thin old man in a waistcoat, wet to the knee, is setting a table that stands in a foot of lit water. Four plates. He sets them, and lifts them, and sets them again. \"...the blue one is Ada's... the boys will be in directly... sit, sit, there's four...\" He has been doing this for three years.",
+ "10c1w3nuk4i": {
+  "en": "A thin old man in a waistcoat, wet to the knee, is setting a table that stands in a foot of lit water. Four plates. He sets them, and lifts them, and sets them again. \"...the blue one is Bryony's... the boys will be in directly... sit, sit, there's four...\" He has been doing this for three years.",
   "where": [
    "data.js:664"
+  ]
+ },
+ "2digo4pnyle": {
+  "en": "A thin, high reed. Thrown (O opens the throw panel), it lies where it lands and sounds one note a long while. Idle listeners go to look.",
+  "where": [
+   "reedcraft.js:56"
+  ]
+ },
+ "1h4g3x9vk6c": {
+  "en": "A thing that practised him. I will not give it the dignity of a name until it gives him back.",
+  "where": [
+   "companion-talk.js:272"
   ]
  },
  "1umgu3on10s": {
@@ -3243,6 +4352,12 @@
   "en": "A tuned reed that keeps siphoned air from unwriting you.",
   "where": [
    "upgrades.js:520"
+  ]
+ },
+ "1wjq5klbeai": {
+  "en": "A two-note call. Follow it up and back.",
+  "where": [
+   "reedcraft.js:222"
   ]
  },
  "1pjs2etxsej": {
@@ -3411,6 +4526,14 @@
    "data.js:499"
   ]
  },
+ "10fex1mob14": {
+  "en": "About you",
+  "where": [
+   "companion-talk.js:222",
+   "companion-talk.js:326",
+   "companion-talk.js:402"
+  ]
+ },
  "b8fj75k2tb": {
   "en": "Achievement unlocked: {0}",
   "where": [
@@ -3431,17 +4554,28 @@
    "rumours.js:293"
   ]
  },
- "2fzcn6bdf3a": {
-  "en": "Ada Wick's Letter",
+ "1p04o8bw368": {
+  "en": "Ada Pellow has asked you to find her husband's note",
   "where": [
-   "data.js:730"
+   "sidequests.js:760"
   ]
  },
- "rph0i6aagv": {
-  "en": "Ada Wick's letter",
+ "1ckxutqkdj2": {
+  "en": "Ada Pellow has taken the reed down from over her door, the one that split in the frost, and she has been asking the lane what her husband used to hum. Nobody can say. We all thought we would remember.",
   "where": [
-   "grove.js:357",
-   "reading.js:35"
+   "sidequests.js:237"
+  ]
+ },
+ "yxnua076ik": {
+  "en": "Ada Pellow, on Cooper's Row, has taken her husband's First Reed down. It split in the frost. Joram Pellow went into the ground in 418 with a stone on his tongue, and Ada can no longer hold his pitch. She wants it found, and a new reed cut. Old Tam, at the Flume crossing, kept the night watch with him. The engineer outside the gate can Listen to what a reed has kept.",
+  "where": [
+   "sidequests.js:135"
+  ]
+ },
+ "wcoo7ha4x5": {
+  "en": "Ada Pellow, widow of Cooper's Row",
+  "where": [
+   "sidequests.js:104"
   ]
  },
  "1f9ywt5fuxa": {
@@ -3462,6 +4596,12 @@
   "en": "Afterward the Governor found me in the porch and said, \"Say it, Tobin.\" I said I had nothing to say that he had not said to himself. He said he had said it every night for a month. I thought that a very sad joke, and so did he.",
   "where": [
    "tobin.js:76"
+  ]
+ },
+ "27dmgiv5yk4": {
+  "en": "Again, then. Here.",
+  "where": [
+   "sidequests.js:147"
   ]
  },
  "27zhggb9a68": {
@@ -3528,6 +4668,12 @@
   "en": "All shutters are to be closed. Sealed shutters are to remain sealed.",
   "where": [
    "rumours.js:294"
+  ]
+ },
+ "buh29zfxti": {
+  "en": "All three skeps have had their news. Bettany will want to hear it.",
+  "where": [
+   "sidequests.js:218"
   ]
  },
  "1snhumblntn": {
@@ -3675,10 +4821,16 @@
    "upgrades.js:255"
   ]
  },
- "1d5ky3o7aox": {
-  "en": "An empty dresser. You have Ada's letter.",
+ "jcorrcv9ts": {
+  "en": "An empty dresser. You have Bryony's letter.",
   "where": [
    "grove.js:358"
+  ]
+ },
+ "277qzgqlbel": {
+  "en": "An empty nail over a door, worn bright where a cord has hung for fifty years.",
+  "where": [
+   "sidequests.js:134"
   ]
  },
  "kj3gkf03cy": {
@@ -3739,6 +4891,30 @@
   "en": "An iron-bark oak. When the wind moves it, it rings like bronze.",
   "where": [
    "game.js:1354"
+  ]
+ },
+ "9fzunj0zn4": {
+  "en": "An iron-bough log, lying where it fell.",
+  "where": [
+   "sidequests.js:197"
+  ]
+ },
+ "79tpndizyb": {
+  "en": "An iron-bough, chalked by Tomas. Strike it and it rings like a bell.",
+  "where": [
+   "sidequests.js:180"
+  ]
+ },
+ "ypaanj03ie": {
+  "en": "An iron-bough, chalked by Tomas. The wind is up, and will cover a stroke.",
+  "where": [
+   "sidequests.js:181"
+  ]
+ },
+ "1fq7cq3yxk8": {
+  "en": "An iron-bough, still humming from the last time. Leave it for a day.",
+  "where": [
+   "sidequests.js:182"
   ]
  },
  "m458gkdrju": {
@@ -3961,10 +5137,28 @@
    "data.js:939"
   ]
  },
+ "ek049at7r9": {
+  "en": "Ask about Joram Pellow",
+  "where": [
+   "sidequests.js:143"
+  ]
+ },
+ "10ilqxd1767": {
+  "en": "Ask about Joram Pellow.",
+  "where": [
+   "sidequests.js:144"
+  ]
+ },
  "1kpdli9gstm": {
   "en": "Ask her to reverse it. (It will cost her a fragment.)",
   "where": [
    "grove.js:224"
+  ]
+ },
+ "6poyuh3rrl": {
+  "en": "Ask him to Listen to the split reed",
+  "where": [
+   "sidequests.js:149"
   ]
  },
  "1qcjduexhds": {
@@ -4091,10 +5285,10 @@
  "21ety3yqhji": {
   "en": "Back",
   "where": [
+   "companion-talk.js:541",
    "game.js:58",
    "game.js:66",
-   "game.js:78",
-   "game.js:2389"
+   "game.js:78"
   ]
  },
  "2cv86j7msyp": {
@@ -4141,6 +5335,24 @@
    "coda.js:193"
   ]
  },
+ "1o2k72vaigh": {
+  "en": "Back to inventory",
+  "where": [
+   "reedcraft.js:611"
+  ]
+ },
+ "118mcyqy3tn": {
+  "en": "Back to rest",
+  "where": [
+   "reedcraft.js:611"
+  ]
+ },
+ "wlbqh07l7l": {
+  "en": "Back to the forge",
+  "where": [
+   "reedcraft.js:611"
+  ]
+ },
  "1hjpojkzbzi": {
   "en": "Back to the logbook.",
   "where": [
@@ -4179,6 +5391,12 @@
    "game.js:1224"
   ]
  },
+ "15fzby94n0r": {
+  "en": "Badly. It sulks. A reed knows when you have lost something.",
+  "where": [
+   "companion-talk.js:249"
+  ]
+ },
  "1y1lvshj6vz": {
   "en": "Balanced carder's blades for silent ranged work. Recuperable and deadly from behind.",
   "where": [
@@ -4213,6 +5431,12 @@
   "en": "Bare Hands",
   "where": [
    "data.js:90"
+  ]
+ },
+ "bakwhxp568": {
+  "en": "Bare hands will only bruise you. Tomas wants a blade on it.",
+  "where": [
+   "sidequests.js:190"
   ]
  },
  "19xyo9ul0is": {
@@ -4303,6 +5527,12 @@
   "en": "Behind it, on the board by the risers, someone chalked HYMN 9 three years ago and nobody ever rubbed it out.",
   "where": [
    "grove.js:92"
+  ]
+ },
+ "1q49fd5mgqf": {
+  "en": "Behind my house, in the Governor's orchard, by the Chapel. Close, and low. I can hear which of them have had it; they go quiet in a different way.",
+  "where": [
+   "sidequests.js:215"
   ]
  },
  "2d6sbu214st": {
@@ -4420,6 +5650,12 @@
    "game.js:972"
   ]
  },
+ "1s6sfo0x26s": {
+  "en": "Beside the Reed",
+  "where": [
+   "companion-talk.js:502"
+  ]
+ },
  "1njbkpfeagn": {
   "en": "Beside the reed",
   "where": [
@@ -4442,6 +5678,12 @@
   "en": "Bettany came by with honey for my throat and a lecture about my throat. I said a Cantor's voice is the one tool he cannot sharpen. She said that was a poor reason to leave it out in the rain.",
   "where": [
    "tobin.js:43"
+  ]
+ },
+ "1taegf47823": {
+  "en": "Bettany has asked you to tell her bees",
+  "where": [
+   "sidequests.js:764"
   ]
  },
  "2anecjstzdm": {
@@ -4472,6 +5714,24 @@
   "en": "Bettany's Tonic (+12 HP)",
   "where": [
    "upgrades.js:517"
+  ]
+ },
+ "2g3xfhhwmvi": {
+  "en": "Bettany's bees are home. She paid me in honey and warned me that a hum draws hounds; she will be buying fleece for the skeps. She says that is the invoice, and that she did not ask for it either.",
+  "where": [
+   "sidequests.js:219"
+  ]
+ },
+ "np0yc5izpl": {
+  "en": "Bettany's bees have stopped coming home to the skeps. She says nobody has told them anything since the Hedge went up. Half the town has started to feel guilty about its dead.",
+  "where": [
+   "sidequests.js:241"
+  ]
+ },
+ "1p7p5mo0uxo": {
+  "en": "Bettany's bees have stopped coming home. In the Reach you tell the bees every birth and death, and nobody has told them anything since the Hedge went up. I am to murmur the news close to three skeps: behind Bettany's house (a birth), in the Governor's orchard (the dead), by the Chapel (the stranger, which is me).",
+  "where": [
+   "sidequests.js:217"
   ]
  },
  "wys4p2gug8": {
@@ -4542,6 +5802,12 @@
   "en": "Blade",
   "where": [
    "upgrades.js:294"
+  ]
+ },
+ "2ecj3e364p5": {
+  "en": "Blank First Reed",
+  "where": [
+   "reedcraft.js:57"
   ]
  },
  "2beu9s3p268": {
@@ -4679,7 +5945,7 @@
  "1y34wk6rnxx": {
   "en": "Boss",
   "where": [
-   "logmap.js:447"
+   "logmap.js:466"
   ]
  },
  "1ri4zztn0mz": {
@@ -4787,10 +6053,35 @@
    "data.js:243"
   ]
  },
+ "2akanwaa9gp": {
+  "en": "Bryony Wick's Letter",
+  "where": [
+   "data.js:730"
+  ]
+ },
+ "10x1vwaabqd": {
+  "en": "Bryony Wick's letter",
+  "where": [
+   "grove.js:357",
+   "reading.js:35"
+  ]
+ },
+ "1btvwav3jy1": {
+  "en": "Bundle of Carded Wool",
+  "where": [
+   "sidequests.js:198"
+  ]
+ },
  "1zy4ul4bg56": {
   "en": "Burial niches, five deep. Somebody has strung lilac thread across the skulls.",
   "where": [
    "game.js:1355"
+  ]
+ },
+ "14vbna2zijb": {
+  "en": "Burn the dry reeds",
+  "where": [
+   "reedcraft.js:611"
   ]
  },
  "26vmvn4movp": {
@@ -5008,6 +6299,7 @@
  "1bowwv3oubm": {
   "en": "Captain Vane of the Drift-Kestrel",
   "where": [
+   "companion-talk.js:57",
    "data.js:335",
    "data.js:580",
    "data.js:847"
@@ -5142,6 +6434,12 @@
    "game.js:1106"
   ],
   "pattern": true
+ },
+ "23rnam4yojk": {
+  "en": "Chalked, and untouched.",
+  "where": [
+   "sidequests.js:183"
+  ]
  },
  "1sxuknnrw8s": {
   "en": "Champion of the Narrow",
@@ -5433,6 +6731,13 @@
    "upgrades.js:71"
   ]
  },
+ "1nzk83gxwtj": {
+  "en": "Companion conversations",
+  "where": [
+   "companion-talk.js:873",
+   "companion-talk.js:1055"
+  ]
+ },
  "21v2wj9ztmf": {
   "en": "Companion: G gives orders (follow, wait, keep quiet). X uses their ability. Talk to them for more.",
   "where": [
@@ -5714,6 +7019,24 @@
    "upgrades.js:206"
   ]
  },
+ "1qhxzjdlylb": {
+  "en": "Cut and slotted, and not yet tuned. In the Reach a reed like this hangs above every door, tuned to the one who sleeps behind it.",
+  "where": [
+   "reedcraft.js:57"
+  ]
+ },
+ "bp36tmird3": {
+  "en": "Cut green from a bed by the water. It holds any pitch you give it, and it is dead by this time tomorrow.",
+  "where": [
+   "reedcraft.js:53"
+  ]
+ },
+ "b6evgcmyl5": {
+  "en": "Cut the cane and tune it to his note.",
+  "where": [
+   "sidequests.js:121"
+  ]
+ },
  "194yhsouawx": {
   "en": "Cut the shroud. Let them all go.",
   "where": [
@@ -5725,6 +7048,12 @@
   "where": [
    "data.js:805",
    "theName():0"
+  ]
+ },
+ "1j0wzqj623a": {
+  "en": "DEFEND THE SINGERS, it says, as if in reply, and then a warm, dropped chord, like a cloak settling over a shoulder.",
+  "where": [
+   "companion-talk.js:490"
   ]
  },
  "2dcaih96p92": {
@@ -5782,7 +7111,7 @@
  "1sywz79n3d8": {
   "en": "Danger",
   "where": [
-   "logmap.js:447"
+   "logmap.js:466"
   ]
  },
  "1lltbelviz8": {
@@ -5994,10 +7323,22 @@
    "data.js:533"
   ]
  },
+ "7d48otyozf": {
+  "en": "Does it ring? Good. Keep it that way. I need someone who can be quiet, and I am not built for it. He holds up the glove. Three fingers to a saw, and the fourth grew back wrong. Everybody looks. Quota day is close and I am one load short. There is an iron-bough at the north-east end of the clearing, a stone's throw from where the hounds sleep. It rings like a bell the moment you strike it, and a hound comes to a ring like a dog to its name. The Hedge eats noise in town. Out here nothing eats anything.",
+  "where": [
+   "sidequests.js:165"
+  ]
+ },
  "1wsrntcunuh": {
   "en": "Does it ring? It rings, lark. True enough.",
   "where": [
    "tobin.js:132"
+  ]
+ },
+ "3ax40w2dgp": {
+  "en": "Does it ring? No, never mind; I only say it from habit. Look up. That is Joram's reed. His mother hung it over his cradle and I carried it to this door the day we married. It split in the frost three nights ago, down the slot, and now it hangs with its mouth open as if it had something to tell me. I held his pitch the night he died, in my head, because there is nowhere else to hold it now. I put the stone on his tongue when he let go. Since then I have hummed it every evening to keep it. Tonight it came out mine.",
+  "where": [
+   "sidequests.js:114"
   ]
  },
  "1mta468itpu": {
@@ -6010,6 +7351,24 @@
   "en": "Does it ring? The orchard rings. True enough.",
   "where": [
    "tobin.js:45"
+  ]
+ },
+ "10f562se7mw": {
+  "en": "Does it ring? True enough, I suppose. Keep it low.",
+  "where": [
+   "sidequests.js:107"
+  ]
+ },
+ "82p87axg42": {
+  "en": "Does it ring? True enough. The wagon is loaded, and it hums, and I find I am used to it.",
+  "where": [
+   "sidequests.js:157"
+  ]
+ },
+ "t98r7kup2e": {
+  "en": "Don't be sorry. Be accurate. He called a child home and she came. Write that down first.",
+  "where": [
+   "companion-talk.js:269"
   ]
  },
  "27i0xdkihca": {
@@ -6030,6 +7389,12 @@
    "data.js:848"
   ]
  },
+ "11np5ld27l": {
+  "en": "Done",
+  "where": [
+   "reedcraft.js:611"
+  ]
+ },
  "qbb05uu9qd": {
   "en": "Done.",
   "where": [
@@ -6045,7 +7410,7 @@
  "2yv3d8xa2h": {
   "en": "Door",
   "where": [
-   "logmap.js:447"
+   "logmap.js:466"
   ]
  },
  "3djdkv2208": {
@@ -6168,6 +7533,12 @@
   "en": "Drunk, somewhere on the Rust Coast, and I have never been so lucky.",
   "where": [
    "data.js:61"
+  ]
+ },
+ "1l3i0kdhfzg": {
+  "en": "Dry Reed",
+  "where": [
+   "reedcraft.js:54"
   ]
  },
  "xg30852ht8": {
@@ -6490,6 +7861,12 @@
    "upgrades.js:692"
   ]
  },
+ "17yhpwu7t2r": {
+  "en": "Entered in the Ledger",
+  "where": [
+   "companion-talk.js:504"
+  ]
+ },
  "1kfcr8dlhbj": {
   "en": "Entry {0}",
   "where": [
@@ -6579,6 +7956,12 @@
   ],
   "pattern": true
  },
+ "6i0aro2aq7": {
+  "en": "Entry: the stranger said someone has to remember. I have decided that it is a form of company.",
+  "where": [
+   "companion-talk.js:516"
+  ]
+ },
  "r06cb64v0m": {
   "en": "Entry: the subject asks the subject about the subject. Sable is a Veil designation. My own name is one of the three things I have left, and I do not spend it on strangers.",
   "where": [
@@ -6589,6 +7972,12 @@
   "en": "Entry: three proctors, in the Sunken Court, at dusk. One of them stopped when I read him his own surrendered name. It cost me nothing; it was never mine. — A fourth got away north before you came, with your ship's registry. That changes nothing. I still refuse. I am a list, not a cure.",
   "where": [
    "data.js:654"
+  ]
+ },
+ "s5qa8u4xe2": {
+  "en": "Envy isn't the worst thing to carry in a throat. Hunger is. I'm only envious.",
+  "where": [
+   "companion-talk.js:515"
   ]
  },
  "1ruvms1l3kx": {
@@ -6663,6 +8052,12 @@
    "coda.js:336"
   ]
  },
+ "2fqe0dk50dr": {
+  "en": "Every child gets one over the door, tuned before they can lift their head. I tuned ours standing on a chair, with my tongue between my teeth.",
+  "where": [
+   "companion-talk.js:248"
+  ]
+ },
  "1wqwj4v7xlm": {
   "en": "Every child in the Reach has a reed hung over the door, tuned to them at birth. A pedlar says in the silenced places not one of them sounds. Mine does, if the wind is right.",
   "where": [
@@ -6715,6 +8110,12 @@
   "en": "Every willow here has a split about a hand above the root. Damp gets in. Give it ten years.",
   "where": [
    "party.js:66"
+  ]
+ },
+ "1u1hz086a6s": {
+  "en": "Everyone does. It listens back. That is the whole of its charm.",
+  "where": [
+   "companion-talk.js:299"
   ]
  },
  "2o2j5g1zv9": {
@@ -6852,6 +8253,12 @@
    "travel.js:290"
   ]
  },
+ "1pfdbniy90": {
+  "en": "Father set me the long cane first, the one that sounds the root. I blew across it until the note stopped being a noise and became a place.",
+  "where": [
+   "companion-talk.js:246"
+  ]
+ },
  "wk9zycdvf1": {
   "en": "Fatigue {0} / {1}",
   "where": [
@@ -6919,6 +8326,12 @@
    "grove.js:208"
   ]
  },
+ "s6tixoylll": {
+  "en": "Find 174 and hold it.",
+  "where": [
+   "reedcraft.js:220"
+  ]
+ },
  "18c5qc1fdsx": {
   "en": "Find the Veil scribe the Reach talks about: she will be in the Sunken Court, north up the causeway, where the names are thickest.",
   "where": [
@@ -6929,6 +8342,12 @@
   "en": "Find the soft spot, then lift the pin.",
   "where": [
    "game.js:1287"
+  ]
+ },
+ "ebwkjuboby": {
+  "en": "Find their note, and hold it while it breathes.",
+  "where": [
+   "reedcraft.js:531"
   ]
  },
  "1eo5jh5u33j": {
@@ -7223,6 +8642,13 @@
    "game.js:2557"
   ]
  },
+ "n4jy1lbzsk": {
+  "en": "Fresh wind-reed ×{0}{1} · Dry reed ×{2}",
+  "where": [
+   "reedcraft.js:612"
+  ],
+  "pattern": true
+ },
  "16p6pzwoqqk": {
   "en": "Friend of the Hedge",
   "where": [
@@ -7506,9 +8932,22 @@
    "game.js:78"
   ]
  },
+ "287iqvv4b47": {
+  "en": "Good day to you. Softly. I sit out here more, now, under it. It does not sound, but I like to be under it.",
+  "where": [
+   "sidequests.js:106"
+  ]
+ },
+ "1fexyvf3yds": {
+  "en": "Good. Quiet is the Hedge's native tongue. You speak it better than most of us.",
+  "where": [
+   "companion-talk.js:298"
+  ]
+ },
  "23icm165v37": {
   "en": "Goodbye",
   "where": [
+   "companion-talk.js:541",
    "game.js:1590"
   ]
  },
@@ -7582,6 +9021,12 @@
   "en": "Grey coats. Keep me behind you.",
   "where": [
    "party.js:55"
+  ]
+ },
+ "1df1ab2yct2": {
+  "en": "Grey fleece from the Carders' mill. Wound round a blade, it deadens a ringing strike a few times over. Use it from your pack.",
+  "where": [
+   "sidequests.js:199"
   ]
  },
  "1dnztofxb1": {
@@ -7930,6 +9375,12 @@
    "extras.en.json:0"
   ]
  },
+ "1wd13utzz2w": {
+  "en": "Have you his note? No. Tam at the Flume crossing kept the watch with him. Or the engineer past the north gate, if you can bear him. Either will do.",
+  "where": [
+   "sidequests.js:119"
+  ]
+ },
  "bpx7nu9eyp": {
   "en": "He",
   "where": [
@@ -7948,6 +9399,12 @@
    "epilogue.js:63"
   ]
  },
+ "14a5wc8b5fe": {
+  "en": "He called me lark. He said a martyr is just a musician who gave up before the coda. Then a child in the lane went still, and he raised his voice above the Narrow to call her back, and she lived.",
+  "where": [
+   "companion-talk.js:266"
+  ]
+ },
  "22uk5lpxopw": {
   "en": "He carries a bell with no clapper. When he lifts it, nothing rings, and nothing near him can.",
   "where": [
@@ -7958,6 +9415,12 @@
   "en": "He clears his throat, and begins.",
   "where": [
    "data.js:962"
+  ]
+ },
+ "10a1oi6io5s": {
+  "en": "He closes his eyes. \"A low, steady note, a little sharp when you are lying. Don't take that as an accusation. Everyone is a little sharp.\"",
+  "where": [
+   "companion-talk.js:214"
   ]
  },
  "2002tg2gl6d": {
@@ -8082,6 +9545,12 @@
    "data.js:990"
   ]
  },
+ "1y8yw5y9mm4": {
+  "en": "He looks at you, and then at the glass. \"Good. Most people fill the gap.\"",
+  "where": [
+   "companion-talk.js:140"
+  ]
+ },
  "1n6ki9f465q": {
   "en": "He looks at you, and then at the line, and does not cut it. \"Not this time,\" he says. \"I counted last time. I'm not counting again.\"",
   "where": [
@@ -8202,10 +9671,28 @@
    "wilds.js:175"
   ]
  },
+ "1o61p6v8sxu": {
+  "en": "He takes the log in the crook of the bad hand and sets it on the wagon without a sound. The wagon hums. \"That is the quota. It goes to shore the headframe, because the Consortium likes timber that rings; they can hear the bore from the road. I know what it holds up.\" He counts eighteen sovereigns out of a sock, and the sock hums too. \"I need the quota or the Synod takes the wagon and the mare. You may think what you like of me. I have been thinking it since August.\"",
+  "where": [
+   "sidequests.js:173"
+  ]
+ },
+ "22uqe50e8in": {
+  "en": "He takes the reed as if it might still be warm. The glass palm lies along the split, and the glass hums once, far down its length. \"Cane keeps the cut it was given,\" he says. \"Somebody tuned this against a man's breastbone and cut the slot to what they heard. The slot remembers.\" A long breath. \"Two hundred and three, near enough. A man who hummed to himself. Not in a hurry.\" He gives it back. \"Tell her it was in the cane all along.\" A pause. \"It generally is.\"",
+  "where": [
+   "sidequests.js:151"
+  ]
+ },
  "1ypt72zil11": {
   "en": "He turns his cap over in his hands. \"...nobody rang her down,\" he says. \"...the bell. In the tower. I cut the rope myself, after, so nobody would ring it for anybody else and I'd have to hear it.\" He looks at the toll-hammer on your belt. \"...that's what that's for. You don't pull that bell. You strike it. Three times for a death. The stair is in the east wing, under the tower... the mourners have been waiting three years for it to go.\"",
   "where": [
    "data.js:1015"
+  ]
+ },
+ "1mseifwhccv": {
+  "en": "He turns the glass hand over on his knee, palm up, the way you would show someone a tool that had stopped being yours. \"Ask. Everybody wants to. Nobody does.\"",
+  "where": [
+   "companion-talk.js:135"
   ]
  },
  "19h9nv09qav": {
@@ -8393,6 +9880,20 @@
    "reading.js:164"
   ]
  },
+ "1peivfk1taa": {
+  "en": "Held {0}%",
+  "where": [
+   "reedcraft.js:463"
+  ],
+  "pattern": true
+ },
+ "ob1kewbmv6": {
+  "en": "Held {0}%.",
+  "where": [
+   "reedcraft.js:407"
+  ],
+  "pattern": true
+ },
  "ft71s347ne": {
   "en": "Her captain drinks in the corner and laughs too loud at nothing. His crates for the garrison are in my cellar. Last night I went down for a cask and I swear to you one of them said a name.",
   "where": [
@@ -8409,6 +9910,12 @@
   "en": "Her listening-horn is still on its tripod.",
   "where": [
    "coda.js:200"
+  ]
+ },
+ "1qzjyag153i": {
+  "en": "Her pen stops. \"Entry: he said that. He would. He poured the second cup.\" She does not write the next line.",
+  "where": [
+   "companion-talk.js:380"
   ]
  },
  "1fxjirc1g7f": {
@@ -8646,6 +10153,12 @@
    "data.js:403"
   ]
  },
+ "dqja6mtw3j": {
+  "en": "Hm? Joram? Ask me after. I have a question of my own sitting on me.",
+  "where": [
+   "sidequests.js:145"
+  ]
+ },
  "140t9hzj0n8": {
   "en": "Hob Wendle",
   "where": [
@@ -8706,10 +10219,41 @@
    "party.js:56"
   ]
  },
+ "1n5av2a1852": {
+  "en": "Hold the Pitch assist",
+  "where": [
+   "reedcraft.js:782",
+   "reedcraft.js:789"
+  ]
+ },
+ "cw21729bf2": {
+  "en": "Hold the pitch",
+  "where": [
+   "reedcraft.js:285"
+  ]
+ },
+ "sripib69ef": {
+  "en": "Hold the pitch. The gold band is the note to hold. Your voice is the bright line. Steer up and down.",
+  "where": [
+   "reedcraft.js:293"
+  ]
+ },
  "cnlw0lbgia": {
   "en": "Hold the room",
   "where": [
    "game.js:1415"
+  ]
+ },
+ "1ydwfgd0h3k": {
+  "en": "Holding a dead man's note costs you a little voice.",
+  "where": [
+   "sidequests.js:130"
+  ]
+ },
+ "1l6hg0f2t6g": {
+  "en": "Holding.",
+  "where": [
+   "reedcraft.js:386"
   ]
  },
  "2gc7gxudvy0": {
@@ -8952,6 +10496,12 @@
    "couriers.js:222"
   ]
  },
+ "14rrwp8hb50": {
+  "en": "I am sorry. I cannot help.",
+  "where": [
+   "sidequests.js:116"
+  ]
+ },
  "7slht2jtu5": {
   "en": "I am talking. Dawn gun in forty.",
   "where": [
@@ -9031,6 +10581,12 @@
   ],
   "pattern": true
  },
+ "1d3iqk4ng66": {
+  "en": "I cut and tuned a new reed for Joram Pellow, to the note he hummed, and Ada hung it over her door. It does not sound; nothing does in here. She says it was a comfort to have it wrong. She gave me eight sovereigns and a jar of honey.",
+  "where": [
+   "sidequests.js:138"
+  ]
+ },
  "behcfhoopl": {
   "en": "I cut the Weaver's shroud from its loom. The voices of Whisper-Grove went up the Sunken Stair into the mist.",
   "where": [
@@ -9047,6 +10603,12 @@
   "en": "I did not merely sign the catalogue. I designed the harvest schedule. I made it efficient. That is what I was good at.",
   "where": [
    "data.js:461"
+  ]
+ },
+ "v1eej7igoz": {
+  "en": "I did. We choose, and then we pay, and the paying is always later and always larger. That's not a complaint. It's tuning.",
+  "where": [
+   "companion-talk.js:283"
   ]
  },
  "18k7lz5ynzo": {
@@ -9127,6 +10689,12 @@
    "grove.js:171"
   ]
  },
+ "28vbfsdnr9r": {
+  "en": "I have buried a husband and I have hung his reed twice. I will not be shouted at on my own step.",
+  "where": [
+   "sidequests.js:108"
+  ]
+ },
  "1ji228nzmcq": {
   "en": "I have buried two apprentices this year. Try me.",
   "where": [
@@ -9164,6 +10732,12 @@
    "rumours.js:229"
   ]
  },
+ "1tgim7pvcyb": {
+  "en": "I have no time for bees.",
+  "where": [
+   "sidequests.js:212"
+  ]
+ },
  "1tkqe91gu9a": {
   "en": "I have not been down to the Flume since you told me. I thought I would. I stood at the end of the lane three nights running and listened from there, and it sang the second verse without me, and I went in. The second verse is mine. I gave it to something on the first night, to see. I would like it back, and I cannot have it, and I find that is the whole of what I knew.",
   "where": [
@@ -9186,6 +10760,12 @@
   "en": "I have nothing to say to that tone.",
   "where": [
    "game.js:1636"
+  ]
+ },
+ "l1o8mai0fa": {
+  "en": "I have one good hand and a bad temper. Choose which you want to speak to.",
+  "where": [
+   "sidequests.js:159"
   ]
  },
  "1k649iefnuc": {
@@ -9240,6 +10820,12 @@
   "en": "I hummed half this town into the world. I will not be barked at in my own stall.",
   "where": [
    "data.js:396"
+  ]
+ },
+ "1lbic9fmiip": {
+  "en": "I kept my hand on the wool the night we planted it. It's listening, I said. Father said it was packed wool. I said, I know.",
+  "where": [
+   "companion-talk.js:294"
   ]
  },
  "1z3zgcaut2s": {
@@ -9334,6 +10920,12 @@
    "couriers.js:200"
   ]
  },
+ "rqsed5and1": {
+  "en": "I taught children for years. I know what it looks like when someone pretends to be steady so the others can be. It's a skill, and it costs. Who do you sing to, when it's your turn?",
+  "where": [
+   "companion-talk.js:330"
+  ]
+ },
  "2dl6l0e25go": {
   "en": "I told Hob Wendle what I found under the culvert. He paid me, which I did not ask for, and put out the lamp in the twins' window.",
   "where": [
@@ -9388,6 +10980,12 @@
    "couriers.js:193"
   ]
  },
+ "1qlcrex8vfv": {
+  "en": "I will find his note.",
+  "where": [
+   "sidequests.js:115"
+  ]
+ },
  "1zytnjpcsa0": {
   "en": "I will recite my remaining fragments while you sleep, so I know if one is missing in the morning.",
   "where": [
@@ -9398,6 +10996,12 @@
   "en": "I'll find a use for it.",
   "where": [
    "game.js:1615"
+  ]
+ },
+ "he2x23elot": {
+  "en": "I'll take first watch, and I'll hum where she can hear it. Nobody asked me to. Sleep.",
+  "where": [
+   "companion-talk.js:510"
   ]
  },
  "1mr1pgkg87i": {
@@ -9517,6 +11121,12 @@
    "data.js:306"
   ]
  },
+ "oewom4tww1": {
+  "en": "If I could: the house song first. Then the Root, for Kaelen's arm. Then something rude, for me.",
+  "where": [
+   "companion-talk.js:309"
+  ]
+ },
  "rqx1nkdbqv": {
   "en": "If Lyra finds this: I walked south toward the culvert so the house would be further away. Keep your voice in your chest, lark.",
   "where": [
@@ -9551,6 +11161,12 @@
   "en": "If we reach Port Cantabile, the Hall of Carriage will have a clerk at the pier. I know his handwriting.",
   "where": [
    "upgrades.js:948"
+  ]
+ },
+ "gtdga8v1my": {
+  "en": "If you ever hear a man in the dark call \"lark,\" it is not him. Promise me you will not answer.",
+  "where": [
+   "companion-talk.js:256"
   ]
  },
  "19e27w1m15d": {
@@ -9714,7 +11330,7 @@
  "oya9uafdk5": {
   "en": "Ink sketch: {0}",
   "where": [
-   "logmap.js:386"
+   "logmap.js:405"
   ],
   "pattern": true
  },
@@ -9834,6 +11450,12 @@
    "game.js:2228"
   ]
  },
+ "1dy2f7yh3gu": {
+  "en": "Iron-bough Log",
+  "where": [
+   "sidequests.js:200"
+  ]
+ },
  "2g2nhwo3xls": {
   "en": "Isolde Crake",
   "where": [
@@ -9864,12 +11486,24 @@
    "coda.js:134"
   ]
  },
+ "h0awxv0eav": {
+  "en": "It chimes a long rising third, and holds it until you stop speaking.",
+  "where": [
+   "companion-talk.js:478"
+  ]
+ },
  "16yuozhyp1t": {
   "en": "It comes out of the dark at the far end of the choir wearing Tobin Ashgrove, singing his funeral office in his voice — and Lyra{0}",
   "where": [
    "coda.js:251"
   ],
   "pattern": true
+ },
+ "15nu48no0ku": {
+  "en": "It does not kneel. It chimes the root, once, and faces the dark, and you understand that it has been told something it means to keep.",
+  "where": [
+   "companion-talk.js:480"
+  ]
  },
  "xbehhdbuci": {
   "en": "It drinks what it breaks. Every Legionnaire I put down, the ring gets fuller and the tideline climbs. Three fingers from the shoulder, this morning. When it reaches the heart they call it Heartglass, and you become a humming statue, alive and aware.",
@@ -9937,6 +11571,12 @@
    "coda.js:183"
   ]
  },
+ "80qdltt68d": {
+  "en": "It is down. I felt it in the cart-boards before I heard anything. Fetch the log; it lies at the foot of the stump. Carry it, do not run it.",
+  "where": [
+   "sidequests.js:172"
+  ]
+ },
  "1rtesdgxae9": {
   "en": "It is locked.",
   "where": [
@@ -9947,6 +11587,12 @@
   "en": "It is long and plain, bell-bronze (from which bell, I do not ask), ground until it rings at one-seven-four when struck. Not loud. It rings the way a held breath rings. I tapped it on the tavern step and every glass on the counter shivered in sympathy, and the potboy dropped a tray.",
   "where": [
    "tobin.js:82"
+  ]
+ },
+ "jwwysvk4w8": {
+  "en": "It is nearly through. The bough has begun to lean.",
+  "where": [
+   "sidequests.js:186"
   ]
  },
  "2f2orcqygb3": {
@@ -9980,6 +11626,12 @@
    "couriers.js:183"
   ]
  },
+ "4zsjj5lvtz": {
+  "en": "It is the opposite. Waste is a reed nobody cut.",
+  "where": [
+   "companion-talk.js:239"
+  ]
+ },
  "2g6d6xzqam8": {
   "en": "It is {0} voice. It gets it exactly right, the way it used to say it when you were in trouble.",
   "where": [
@@ -9999,6 +11651,12 @@
    "data.js:695"
   ],
   "pattern": true
+ },
+ "5skavaic7v": {
+  "en": "It looks at its hands. It does not put anything down. It chimes the alto line once, to the empty air, and lets it end on the right note.",
+  "where": [
+   "companion-talk.js:491"
+  ]
  },
  "28xn8nxq4ln": {
   "en": "It sings a funeral office for a woman called Marta Hale, in a hundred voices, all of them mourners.",
@@ -10049,6 +11707,12 @@
   ],
   "pattern": true
  },
+ "wzbdgtbovd": {
+  "en": "It stands with its hands empty, which you have not seen before. It chimes a chord that resolves, for what may be the first time in three years, upward.",
+  "where": [
+   "companion-talk.js:488"
+  ]
+ },
  "78m3uexht8": {
   "en": "It stands. It takes the red cloak off the eleventh peg, gently, the way you would lift a sleeping child, and it chimes once, and it waits for you to lead.",
   "where": [
@@ -10067,6 +11731,12 @@
    "tobin.js:58"
   ]
  },
+ "14isg7r4xpf": {
+  "en": "It turns its bronze head toward you. DEFEND. THE. SINGERS. Underneath the words, very softly, a chord: the alto line, held.",
+  "where": [
+   "companion-talk.js:476"
+  ]
+ },
  "qhmohbfm40": {
   "en": "It was a carder from the mill who said it. Not a wall: a stopper. Wrap the town in what eats sound, the way you pad a cradle against a draught. Pack the thorn with wool, and plant the thorn deep. A hedge three men deep that swallows what we make, so the hounds hear nothing and have nothing to come for.",
   "where": [
@@ -10079,6 +11749,12 @@
    "grove.js:357"
   ]
  },
+ "ftvqc0scqa": {
+  "en": "It was the only plan anyone offered. A candle is safe in a jar. A candle in a jar is also no use to the room.",
+  "where": [
+   "companion-talk.js:296"
+  ]
+ },
  "23ptg0os280": {
   "en": "It wears Tobin Ashgrove. It has been practising your voice.",
   "where": [
@@ -10089,6 +11765,12 @@
   "en": "It wears Tobin Ashgrove. It has followed you a hundred miles through the mist, and it has practised everyone.",
   "where": [
    "data.js:816"
+  ]
+ },
+ "1f7bu25b8m8": {
+  "en": "It's a ruin, and it's mine. Don't lie to me with kindness. Lie to me with beer.",
+  "where": [
+   "companion-talk.js:319"
   ]
  },
  "pscdi89f4l": {
@@ -10152,6 +11834,30 @@
    "game.js:1729"
   ],
   "pattern": true
+ },
+ "11ui4nsjgzj": {
+  "en": "Joram Pellow",
+  "where": [
+   "sidequests.js:58"
+  ]
+ },
+ "26yl37uioa3": {
+  "en": "Joram Pellow's First Reed, split down the slot by the frost. A cane keeps the cut it was given, and the cut was made for one pitch.",
+  "where": [
+   "sidequests.js:141"
+  ]
+ },
+ "1fh6g0u4xij": {
+  "en": "Joram went in 418. The family holds the note until the body lets go, and in the old days it was sung out after. It cannot be now. The Hedge eats a note before it is halfway to the door.",
+  "where": [
+   "sidequests.js:112"
+  ]
+ },
+ "2cw90oww042": {
+  "en": "Joram. Hm. Nine winters on the bridge, the two of us, and he never said ten words. He hummed. One note, low, like a man testing a plank. He came in a hair under the bridge-post reed when the wind was right, and the post sang back at him, and he nodded at it. Here.",
+  "where": [
+   "sidequests.js:146"
+  ]
  },
  "2kgbshb8dm": {
   "en": "Jory Weld",
@@ -10250,6 +11956,7 @@
  "24i6rwmq9ge": {
   "en": "Kaelen Vance, the Dissonant Blade",
   "where": [
+   "companion-talk.js:54",
    "data.js:301",
    "data.js:608",
    "data.js:907"
@@ -10323,10 +12030,22 @@
    "upgrades.js:946"
   ]
  },
+ "22fhju0lpn9": {
+  "en": "Kaelen laid his glass hand along Joram Pellow's split reed and Listened: about two hundred and three. A cane keeps the cut it was given. I should take the note back to Ada.",
+  "where": [
+   "sidequests.js:137"
+  ]
+ },
  "14b41985hof": {
   "en": "Kaelen looks round for something to break and finds nothing.",
   "where": [
    "party.js:176"
+  ]
+ },
+ "13t8jr4za9p": {
+  "en": "Kaelen looks up from the glass hand.",
+  "where": [
+   "companion-talk.js:523"
   ]
  },
  "1wmnxsndphd": {
@@ -10351,6 +12070,18 @@
   "en": "Kaelen tells Lyra everything out loud, including the grey folder, and that his first feeling on reading it was relief, and that he decided he was not entitled to it. Her voice comes back at the worst possible moment, and the first thing she does with it is tell him she would have forgiven him on Rootday, and cannot now.",
   "where": [
    "grove.js:263"
+  ]
+ },
+ "1ewf4dyavu3": {
+  "en": "Kaelen thinks less of you.",
+  "where": [
+   "companion-talk.js:536"
+  ]
+ },
+ "21sdm3zy5y6": {
+  "en": "Kaelen thinks the better of you.",
+  "where": [
+   "companion-talk.js:533"
   ]
  },
  "1k1sxk0dlh7": {
@@ -10747,6 +12478,12 @@
    "travel.js:179"
   ]
  },
+ "1v2wvek3yxh": {
+  "en": "Leave her to it",
+  "where": [
+   "sidequests.js:129"
+  ]
+ },
  "i79plaiyec": {
   "en": "Leave him on his bench.",
   "where": [
@@ -10781,6 +12518,12 @@
   "en": "Leave it for now.",
   "where": [
    "grove.js:177"
+  ]
+ },
+ "2oi6x3v6r1": {
+  "en": "Leave it for today. A struck bough remembers the hour. Ask it again tomorrow.",
+  "where": [
+   "sidequests.js:171"
   ]
  },
  "196h6rdrzyq": {
@@ -11055,6 +12798,12 @@
    "data.js:822"
   ]
  },
+ "29324aoqxzu": {
+  "en": "Lifting off",
+  "where": [
+   "companion-talk.js:457"
+  ]
+ },
  "1w6xynxlq35": {
   "en": "Light-Glass Artificer",
   "where": [
@@ -11092,6 +12841,12 @@
    "data.js:734"
   ]
  },
+ "6b9rcvbrin": {
+  "en": "Listen for the note.",
+  "where": [
+   "reedcraft.js:386"
+  ]
+ },
  "1b10a5eh92s": {
   "en": "Listen to phrase",
   "where": [
@@ -11114,6 +12869,12 @@
   "en": "Listening for you",
   "where": [
    "game.js:975"
+  ]
+ },
+ "12ll23iwrfj": {
+  "en": "Listen…",
+  "where": [
+   "reedcraft.js:463"
   ]
  },
  "1ee7g58kob9": {
@@ -11167,6 +12928,12 @@
   "en": "Load the pre-boss autosave",
   "where": [
    "upgrades.js:1843"
+  ]
+ },
+ "23200po8oml": {
+  "en": "Load-Bearing",
+  "where": [
+   "companion-talk.js:500"
   ]
  },
  "1ij9ehsxvfq": {
@@ -11250,7 +13017,7 @@
    "game.js:1065",
    "game.js:1121",
    "game.js:1138",
-   "upgrades.js:295"
+   "reedcraft.js:489"
   ]
  },
  "18hw6u8ivwm": {
@@ -11320,13 +13087,32 @@
    "upgrades.js:261"
   ]
  },
+ "sve64xayba": {
+  "en": "Lure Reed",
+  "where": [
+   "reedcraft.js:56"
+  ]
+ },
+ "7mbkk92025": {
+  "en": "Lure reed",
+  "where": [
+   "reedcraft.js:64",
+   "reedcraft.js:221"
+  ]
+ },
  "2fr49tjbi3z": {
   "en": "Lyra",
   "where": [
    "coda.js:112",
    "coda.js:282",
-   "game.js:1831",
-   "portraits.js:38"
+   "companion-talk.js:187",
+   "game.js:1831"
+  ]
+ },
+ "25gsyu7ehq7": {
+  "en": "Lyra / state lines",
+  "where": [
+   "companion-talk.js:1056"
   ]
  },
  "210qp8hxnmn": {
@@ -11348,6 +13134,7 @@
  "16dal9v6f9s": {
   "en": "Lyra Ashgrove, Cantor of Oakhaven",
   "where": [
+   "companion-talk.js:55",
    "data.js:277",
    "data.js:595",
    "data.js:891"
@@ -11437,10 +13224,28 @@
    "coda.js:255"
   ]
  },
+ "27x4rimoqaq": {
+  "en": "Lyra is quiet for a long moment.",
+  "where": [
+   "companion-talk.js:272"
+  ]
+ },
  "ckb8vmznm5": {
   "en": "Lyra kept her hand on the wool a long while. \"It's listening,\" she said. I said it was packed wool. She said, \"I know,\" and kept her hand there.",
   "where": [
    "tobin.js:122"
+  ]
+ },
+ "xzkyeem3yj": {
+  "en": "Lyra lays down the slate, and her whole attention with it.",
+  "where": [
+   "companion-talk.js:524"
+  ]
+ },
+ "1lzm0c3nogc": {
+  "en": "Lyra looks at you the way she looks at a reed she suspects of lying.",
+  "where": [
+   "companion-talk.js:333"
   ]
  },
  "202y19tz5xr": {
@@ -11547,6 +13352,31 @@
    "party.js:69"
   ]
  },
+ "1y6ofmck4i8": {
+  "en": "Lyra thinks less of you.",
+  "where": [
+   "companion-talk.js:536"
+  ]
+ },
+ "29ygzwswp19": {
+  "en": "Lyra thinks the better of you.",
+  "where": [
+   "companion-talk.js:533"
+  ]
+ },
+ "a1bu2qdsli": {
+  "en": "Lyra turns her slate to you:",
+  "where": [
+   "companion-talk.js:1056"
+  ]
+ },
+ "c9x07q910x": {
+  "en": "Lyra turns her slate to you: {0}",
+  "where": [
+   "companion-talk.js:858"
+  ],
+  "pattern": true
+ },
  "1608ppvn0vg": {
   "en": "Lyra wants the reeds this year. She says she is not afraid of them. She has said so four times, which is how many times a person says it when she is.",
   "where": [
@@ -11625,6 +13455,13 @@
   "where": [
    "upgrades.js:960"
   ]
+ },
+ "12htc2mwlcj": {
+  "en": "Lyra: \"{0}\"",
+  "where": [
+   "companion-talk.js:858"
+  ],
+  "pattern": true
  },
  "144k0eb4y4c": {
   "en": "MAP",
@@ -12055,6 +13892,12 @@
    "playtools.js:366"
   ]
  },
+ "2cce01oz1kq": {
+  "en": "Murmur the news to them",
+  "where": [
+   "sidequests.js:226"
+  ]
+ },
  "87u2w9bghf": {
   "en": "Music (music/)",
   "where": [
@@ -12125,6 +13968,12 @@
   "en": "My fingernails grew a quarter-inch between dusk and dawn. Nobody's remarked on it. Nobody remarks on anything.",
   "where": [
    "data.js:250"
+  ]
+ },
+ "veyxdkwdi5": {
+  "en": "My first reed. Tobin wrote that he tuned each one against his own breastbone before he cut the slot. I held the cane to mine and hummed until the bone answered. It is not hard to find the note. It is hard to keep it.",
+  "where": [
+   "reedcraft.js:487"
   ]
  },
  "1xedkl0w2kx": {
@@ -12440,6 +14289,18 @@
    "playtools.js:370"
   ]
  },
+ "8aqsgyhdko": {
+  "en": "No. Nobody can, I suppose. Thank you for standing there.",
+  "where": [
+   "sidequests.js:117"
+  ]
+ },
+ "1njlimoggco": {
+  "en": "No. Nobody's trade. Come back if the quota frightens you more than the hounds do.",
+  "where": [
+   "sidequests.js:168"
+  ]
+ },
  "1yu7ed9ekr5": {
   "en": "Nobody comes down here who isn't on the roster. Which you aren't.",
   "where": [
@@ -12456,6 +14317,12 @@
   "en": "Nobody has rung for the dead out here in three years. You can hear it in the woods. They're waiting.",
   "where": [
    "party.js:47"
+  ]
+ },
+ "mfpjbv7ulu": {
+  "en": "Nobody has the ear. They have the patience. Listen anyway.",
+  "where": [
+   "companion-talk.js:250"
   ]
  },
  "10dosqmm5nf": {
@@ -12600,10 +14467,22 @@
    "data.js:644"
   ]
  },
+ "184yrwd9qfj": {
+  "en": "Not the walls. Being allowed to be loud and still found. Out here you are either quiet or found.",
+  "where": [
+   "companion-talk.js:300"
+  ]
+ },
  "19suqupzsrm": {
   "en": "Not to be harmed. Not \"taken\". Not \"silenced\". Somebody on the Tramway wants Lyra Ashgrove alive and singing, and is prepared to wait.",
   "where": [
    "wilds.js:108"
+  ]
+ },
+ "50fjea8lvs": {
+  "en": "Not while danger is near.",
+  "where": [
+   "companion-talk.js:540"
   ]
  },
  "bt0ksfhlys": {
@@ -12636,6 +14515,12 @@
    "coda.js:320"
   ]
  },
+ "cd4a6lgk6p": {
+  "en": "Not without a breath to put through it. I hold one sometimes anyway. It is company.",
+  "where": [
+   "companion-talk.js:249"
+  ]
+ },
  "123hj2dxbrs": {
   "en": "Not yet",
   "where": [
@@ -12656,6 +14541,18 @@
    "data.js:794",
    "grove.js:190",
    "grove.js:274"
+  ]
+ },
+ "20cwk926d46": {
+  "en": "Not yet. The bough is at the north-east end of the clearing, past the hound-bed, chalked. Quiet, mind. Wool on the blade, or wait for a gust.",
+  "where": [
+   "sidequests.js:170"
+  ]
+ },
+ "gei1uuu0ie": {
+  "en": "Not yet. Too heavy for a first fifth. I told him that once, and I was right then too.",
+  "where": [
+   "companion-talk.js:271"
   ]
  },
  "1hq4apy7tet": {
@@ -12734,6 +14631,12 @@
   "en": "Now three bolts of lift-silk from the weaverling nests in the south-west.",
   "where": [
    "coda.js:193"
+  ]
+ },
+ "1vwssl3wmzo": {
+  "en": "Now? With this? The Root, under my breath, for Kaelen's arm. Then something rude, for me.",
+  "where": [
+   "companion-talk.js:316"
   ]
  },
  "j0um4b5xi5": {
@@ -12862,6 +14765,24 @@
    "data.js:453"
   ]
  },
+ "zlw5u7kc2d": {
+  "en": "Oakhaven is gone under the oaks; Ada Pellow's door is a trunk now, and Joram's reed, split or whole, is somewhere in the bark.",
+  "where": [
+   "sidequests.js:139"
+  ]
+ },
+ "1tawpw9ab0n": {
+  "en": "Oakhaven is gone under the oaks; Bettany's bees went up into the new boughs, and the news I was carrying went with them.",
+  "where": [
+   "sidequests.js:220"
+  ]
+ },
+ "i9hctwo75w": {
+  "en": "Oakhaven is gone under the oaks; Tomas's wagon went down the road, and the iron-bough, felled or standing, is somebody else's quota now.",
+  "where": [
+   "sidequests.js:178"
+  ]
+ },
  "unvlet2scn": {
   "en": "Oakhaven orchardman",
   "where": [
@@ -12904,6 +14825,12 @@
    "rumours.js:287"
   ]
  },
+ "jsf368qhjz": {
+  "en": "Of course you are.",
+  "where": [
+   "companion-talk.js:333"
+  ]
+ },
  "yqwq4dzhte": {
   "en": "Of the Ninth Choir",
   "where": [
@@ -12913,10 +14840,16 @@
  "f8xmelzk4a": {
   "en": "Off",
   "where": [
+   "companion-talk.js:869",
    "dreams.js:508",
    "dreams.js:509",
-   "fp-feel.js:291",
-   "fp-feel.js:292"
+   "fp-feel.js:291"
+  ]
+ },
+ "23k9vf5kxtu": {
+  "en": "Off pitch.",
+  "where": [
+   "reedcraft.js:386"
   ]
  },
  "1ye84p8z8w5": {
@@ -13040,6 +14973,12 @@
   "en": "Old Tam has a coat of the Hedge's own wool. You walk in it like a held breath. He doesn't sell it to just anyone.",
   "where": [
    "data.js:244"
+  ]
+ },
+ "12db0z1o1za": {
+  "en": "Old Tam hummed Joram Pellow's note for me at the Flume crossing: one low note, a hair under the bridge-post reed, about two hundred and three. I should take it back to Ada.",
+  "where": [
+   "sidequests.js:136"
   ]
  },
  "2abx4sw58rs": {
@@ -13188,6 +15127,12 @@
    "game.js:1354"
   ]
  },
+ "2366c7r26j": {
+  "en": "One reed, tuned high and thin. Throw it to call the watch away.",
+  "where": [
+   "reedcraft.js:222"
+  ]
+ },
  "b1mfdhktiu": {
   "en": "One thousand three hundred and forty-two. I know the number now. I didn't want to; somebody made me hear it. The Office has me in a file under \"reliable, does not ask questions.\" I am asking questions now. Loudly.",
   "where": [
@@ -13198,6 +15143,12 @@
   "en": "One thousand three hundred and forty-two. I say it every morning. It does not get lighter; it gets more exactly the same weight, which I am told is what grief is. Right. Right.",
   "where": [
    "couriers.js:170"
+  ]
+ },
+ "j3u1ehe5je": {
+  "en": "Only when someone else sings well. That is not the voice. That is envy.",
+  "where": [
+   "companion-talk.js:284"
   ]
  },
  "19o7ukmmegs": {
@@ -13251,6 +15202,8 @@
  "13y4iyj8uki": {
   "en": "Options",
   "where": [
+   "companion-talk.js:1055",
+   "companion-talk.js:1055",
    "game.js:2525"
   ]
  },
@@ -13544,6 +15497,12 @@
   "en": "Pale moths of the Hush, drawn to light. They eat the light first and then the sound. Glass shot cannot ring in them.",
   "where": [
    "data.js:1032"
+  ]
+ },
+ "1cr7bktz6pp": {
+  "en": "Pale, brittle, and worth nothing. It will not hold a pitch. It will burn.",
+  "where": [
+   "reedcraft.js:54"
   ]
  },
  "3lck21jl9y": {
@@ -14088,6 +16047,12 @@
    "wilds.js:151"
   ]
  },
+ "27kizt06emz": {
+  "en": "Put the reed down",
+  "where": [
+   "reedcraft.js:293"
+  ]
+ },
  "16vcpfcijam": {
   "en": "QUARRY ROSTER UNDER ROUTINE RECONCILIATION",
   "where": [
@@ -14115,7 +16080,7 @@
  "aljkcr1rrq": {
   "en": "Quest giver",
   "where": [
-   "logmap.js:447"
+   "logmap.js:466"
   ]
  },
  "10wpp3s9unl": {
@@ -14388,11 +16353,37 @@
    "fp-feel.js:298"
   ]
  },
+ "4z1wl5q6ue": {
+  "en": "Reed beds",
+  "where": [
+   "reedcraft.js:787"
+  ]
+ },
  "8tpfx1lxzi": {
   "en": "Reed-Pith",
   "where": [
    "extras.en.json:0"
   ]
+ },
+ "23bfcbwhrse": {
+  "en": "Reed-craft",
+  "where": [
+   "reedcraft.js:777",
+   "reedcraft.js:781"
+  ]
+ },
+ "hhlrx6feuc": {
+  "en": "Reeds",
+  "where": [
+   "reedcraft.js:607"
+  ]
+ },
+ "25xynnnik0l": {
+  "en": "Reeds ({0})",
+  "where": [
+   "reedcraft.js:663"
+  ],
+  "pattern": true
  },
  "adxbrffbgr": {
   "en": "Reeds, tall as a man, heads nodding.",
@@ -14404,6 +16395,24 @@
   "en": "Reeds, whispering to each other.",
   "where": [
    "flora.js:98"
+  ]
+ },
+ "11fvku67st9": {
+  "en": "Reeds-Miner Tomas is a load short for quota day and has not a man in Oakhaven who will hold the other end of a saw. He asks strangers now. He says there is an iron-bough out past the hound-bed.",
+  "where": [
+   "sidequests.js:239"
+  ]
+ },
+ "so46t5d5um": {
+  "en": "Reeds-Miner Tomas is one load short for the Synod's quota day. The iron-bough he wants is chalked at the north-east end of the clearing, a stone's throw from where the hounds sleep, and it rings like a bell when struck. Wool from the mill on the blade, a gust of wind, or a thrown stone to draw the hounds off. Then carry the log to his wagon, and do not run.",
+  "where": [
+   "sidequests.js:174"
+  ]
+ },
+ "25m17tpzeao": {
+  "en": "Reeds-Miner Tomas, timber-cutter",
+  "where": [
+   "sidequests.js:155"
   ]
  },
  "79rvh261c9": {
@@ -14755,6 +16764,18 @@
    "game.js:1074"
   ]
  },
+ "k65ro72h9b": {
+  "en": "Root-Note Reed",
+  "where": [
+   "reedcraft.js:55"
+  ]
+ },
+ "24luxdrbyz2": {
+  "en": "Root-note reed",
+  "where": [
+   "reedcraft.js:219"
+  ]
+ },
  "8hsqvhuuzp": {
   "en": "Root-vault: Harmonics",
   "where": [
@@ -14938,6 +16959,12 @@
    "grove.js:23"
   ]
  },
+ "glmg574acq": {
+  "en": "Sable closes the Bound Ledger over one finger.",
+  "where": [
+   "companion-talk.js:525"
+  ]
+ },
  "pezlsn51q8": {
   "en": "Sable closes the Bound Ledger, tucks it under her coat, and returns to the fire.",
   "where": [
@@ -15024,6 +17051,18 @@
    "grove.js:255"
   ]
  },
+ "1r6lejvv0fk": {
+  "en": "Sable thinks less of you.",
+  "where": [
+   "companion-talk.js:536"
+  ]
+ },
+ "12pxzxy7oj4": {
+  "en": "Sable thinks the better of you.",
+  "where": [
+   "companion-talk.js:533"
+  ]
+ },
  "1pkj6yjtmhk": {
   "en": "Sable will come. She says she joins for arithmetic, not hope: the Kestrel can reach the Office's harvest-house, the Malting, on the Cloister road, where the presses are. The Cloister of the Lost Choir first, north of the Sunken Court; something in it guards the risers.",
   "where": [
@@ -15064,6 +17103,7 @@
  "254dlre1jci": {
   "en": "Sable, Archivist of the Veil",
   "where": [
+   "companion-talk.js:56",
    "data.js:458",
    "data.js:627",
    "data.js:920"
@@ -15121,6 +17161,18 @@
   "en": "Sable: \"Engineer Vance. Your signature is on forty-two requisitions in my third volume.\"",
   "where": [
    "upgrades.js:959"
+  ]
+ },
+ "e9a1sbj8xx": {
+  "en": "Sacking of grey fleece, carded and never collected.",
+  "where": [
+   "sidequests.js:202"
+  ]
+ },
+ "15x35zbdox2": {
+  "en": "Said",
+  "where": [
+   "companion-talk.js:541"
   ]
  },
  "1bevew80kmh": {
@@ -15233,6 +17285,12 @@
   "where": [
    "data.js:67",
    "game.js:1451"
+  ]
+ },
+ "1evg6z713ia": {
+  "en": "Say nothing. Wait.",
+  "where": [
+   "companion-talk.js:140"
   ]
  },
  "10w4q3qqbte": {
@@ -15370,6 +17428,12 @@
    "data.js:441"
   ]
  },
+ "1tkt60jp6fj": {
+  "en": "Seventy years in one street. It was louder when I was a girl. Everything was.",
+  "where": [
+   "sidequests.js:111"
+  ]
+ },
  "hq1ncmfzep": {
   "en": "Seventy-four thousand, and not one of them filed. The Hush did that, not us. We are the only people who ever came back to write them down.",
   "where": [
@@ -15442,6 +17506,12 @@
    "data.js:712"
   ]
  },
+ "25ixiiz7iok": {
+  "en": "She considers it with the whole of her face. \"No. But you may hold the lantern. That is a trust.\"",
+  "where": [
+   "companion-talk.js:353"
+  ]
+ },
  "j5vqa4xfuf": {
   "en": "She crouches and lays her ear to the soil. \"Hear it? Under the tune. The ground has an opinion.\" You nod. You don't. She laughs, and the whole orchard laughs a fifth above her.",
   "where": [
@@ -15460,6 +17530,12 @@
    "data.js:892"
   ]
  },
+ "zrk10a4ol7": {
+  "en": "She does not say anything for a moment. Then she lifts a hand to her ear. \"They are home. I can hear them from here, under the market. I would know that kettle-sound anywhere.\" She puts two jars of honey into your hands and six sovereigns on top. \"Now it hums, and a hum is a sound, and a sound brings hounds. I shall be buying fleece for the skeps till the leaf falls. There is your invoice, love. I did not ask for it either.\"",
+  "where": [
+   "sidequests.js:216"
+  ]
+ },
  "180q54hfhc5": {
   "en": "She does not stop singing.",
   "where": [
@@ -15467,6 +17543,12 @@
    "data.js:1049",
    "data.js:1049",
    "data.js:1050"
+  ]
+ },
+ "24s3xxi4bbj": {
+  "en": "She does, low and rough: three bars of something a Cantor should not know.",
+  "where": [
+   "companion-talk.js:320"
   ]
  },
  "wr4d25452e": {
@@ -15591,6 +17673,18 @@
    "data.js:900"
   ]
  },
+ "134zk37yypv": {
+  "en": "She puts the cane in your hand and steps back, and folds her arms as if she were cold.",
+  "where": [
+   "sidequests.js:124"
+  ]
+ },
+ "xyqqqc9x4z": {
+  "en": "She reaches up with a hooked stick and brings the reed down, and puts it in your hands as if it might spill. \"Joram hummed. Never a tune. One note, when he was thinking, or the bread was proving, or he had been told something he did not like. Old Tam kept the night watch with him nine winters; Tam will have it. Or the engineer outside the gate, with the arm. They say the glass hears what a thing has kept. I would not know how to ask him.\" She wipes her hand down her apron. \"When you have the note, come back. I will not hang a reed that is not his.\"",
+  "where": [
+   "sidequests.js:118"
+  ]
+ },
  "gc6lhl4sx": {
   "en": "She reads it standing up, all eight lines, and her face does not change. \"{0},\" she says. \"She used to sell eels by the ferry stair. Three ticks still blank.\" She copies all eight into the Ledger and tears the round-book in half, along the spine, the way you are taught not to.",
   "where": [
@@ -15639,6 +17733,18 @@
   "en": "She stops singing at last, all at once, and looks at you, and then at the empty willows. \"Is it over?\" she says, much too loud, and then remembers, and whispers it. \"Is it over? Mam said if I sang nicely the Quiet would come and be kind to me.\" Her name, she tells you, is Wren.",
   "where": [
    "wilds.js:187"
+  ]
+ },
+ "1j4ck9kbbhf": {
+  "en": "She touches her throat.",
+  "where": [
+   "companion-talk.js:316"
+  ]
+ },
+ "4wyjm4s3jr": {
+  "en": "She turns the page toward her chest, gently, as if it might wake. \"Not yet. Ask me again.\"",
+  "where": [
+   "companion-talk.js:408"
   ]
  },
  "1wq4sn06z5j": {
@@ -15693,6 +17799,18 @@
   "en": "She writes fast:",
   "where": [
    "data.js:900"
+  ]
+ },
+ "1w284d6i0wb": {
+  "en": "She writes it. You hear the nib. \"Entry: the stranger stayed. Reason: unrecorded. I will let it stand.\"",
+  "where": [
+   "companion-talk.js:407"
+  ]
+ },
+ "1kpr3iktz1y": {
+  "en": "She writes on her slate and turns it to you:",
+  "where": [
+   "companion-talk.js:530"
   ]
  },
  "1xb1dw0xddm": {
@@ -15796,7 +17914,7 @@
  "1qxw9l472du": {
   "en": "Shop",
   "where": [
-   "logmap.js:447"
+   "logmap.js:466"
   ]
  },
  "bw3jm64k5i": {
@@ -15993,6 +18111,12 @@
    "wilds.js:198"
   ]
  },
+ "196zihxczv7": {
+  "en": "Sleep. I'll hum the Root for the arm, and the Miller's Daughter for me. Both verses.",
+  "where": [
+   "companion-talk.js:511"
+  ]
+ },
  "1hvjygsgdwo": {
   "en": "Slide ballast block onto plate",
   "where": [
@@ -16048,6 +18172,12 @@
   "where": [
    "data.js:519",
    "game.js:1624"
+  ]
+ },
+ "frbe7fgi1b": {
+  "en": "Softly, love, and come round where the cloth hides my mouth. My bees have stopped coming home. Three skeps, my mother's and hers before, and they go out to the orchard and the chapel lime and they do not come back to the straw. They hang in the Hedge-wool in clumps, like a bruise. Nobody has told them anything since the Hedge went up. You tell the bees, in the Reach, every birth and every death, or they go. And you cannot tell a bee out loud in a town that eats its sounds. It wants a murmur, close, at the straw. I have a bad knee and forty-one lullabies in me and nothing left over. Will you tell them for me?",
+  "where": [
+   "sidequests.js:210"
   ]
  },
  "6nfkn8rk4t": {
@@ -16114,6 +18244,12 @@
   "en": "Somebody on the Tramway is prepared to wait.",
   "where": [
    "wilds.js:247"
+  ]
+ },
+ "1250mlc65ft": {
+  "en": "Somebody told Bettany's bees the news, a name at a time, in a murmur. They hum again behind her house. The hounds cannot hear it, which is the only reason I allow it.",
+  "where": [
+   "sidequests.js:242"
   ]
  },
  "2d9yuwaf8ih": {
@@ -16205,6 +18341,12 @@
   "en": "Something is said to be in the corsair's crates that Hetty will not name. She has stopped letting anyone carry a cask down there but herself.",
   "where": [
    "rumours.js:107"
+  ]
+ },
+ "ft8xv13qc3": {
+  "en": "Something is sitting on it. I know what. I'm not ready to ask it to get up.",
+  "where": [
+   "companion-talk.js:312"
   ]
  },
  "fh4mi71j5k": {
@@ -16394,6 +18536,12 @@
    "playtools.js:393"
   ]
  },
+ "foued990so": {
+  "en": "Split First Reed",
+  "where": [
+   "sidequests.js:140"
+  ]
+ },
  "1appt6hr307": {
   "en": "Spreads outward; stuns nearby Cacophony.",
   "where": [
@@ -16531,7 +18679,8 @@
   "where": [
    "game.js:1174",
    "game.js:1263",
-   "game.js:1399"
+   "game.js:1399",
+   "sidequests.js:227"
   ]
  },
  "1z92fjnb88n": {
@@ -16992,6 +19141,24 @@
    "upgrades.js:855"
   ]
  },
+ "1jkxwqr83s7": {
+  "en": "Take your time. He never hurried either.",
+  "where": [
+   "sidequests.js:123"
+  ]
+ },
+ "17tu4ts4x5g": {
+  "en": "Talk",
+  "where": [
+   "companion-talk.js:540"
+  ]
+ },
+ "6vs9deg5xf": {
+  "en": "Talk to your companion",
+  "where": [
+   "companion-talk.js:542"
+  ]
+ },
  "1f6jx78rkio": {
   "en": "Tam",
   "where": [
@@ -17011,6 +19178,12 @@
   "en": "Tam has not been to the Flume crossing in days. He sits at home with the lamp lit, which he never allowed. They say he got his answer.",
   "where": [
    "rumours.js:139"
+  ]
+ },
+ "1hnftdg1ny2": {
+  "en": "Tam hums it, low. You feel it in your breastbone before you hear it: a flat, patient note, about two hundred and three.",
+  "where": [
+   "sidequests.js:148"
   ]
  },
  "1y453l6x0w2": {
@@ -17105,6 +19278,18 @@
    "game.js:1590"
   ]
  },
+ "o1fua22ii6": {
+  "en": "Tell me how to fell it quietly.",
+  "where": [
+   "sidequests.js:166"
+  ]
+ },
+ "15mi5gnu9gl": {
+  "en": "Tell me what to say.",
+  "where": [
+   "sidequests.js:211"
+  ]
+ },
  "21n4zdd7nj9": {
   "en": "Ten Heartbeats",
   "where": [
@@ -17160,6 +19345,12 @@
   "en": "Thank her.",
   "where": [
    "wilds.js:205"
+  ]
+ },
+ "1tgmbr5y8sh": {
+  "en": "Thank you. That is a kindness I can use.",
+  "where": [
+   "companion-talk.js:258"
   ]
  },
  "23zpayku5ta": {
@@ -17226,6 +19417,12 @@
   ],
   "pattern": true
  },
+ "18kel7mhq5j": {
+  "en": "That is not my trade.",
+  "where": [
+   "sidequests.js:167"
+  ]
+ },
  "1at54bbkn1i": {
   "en": "That is the whole of it. A place where a sound should be, and is not. I have listened for the Hush all my life, the way one listens for a step on the stair. I did not know it would be so ordinary. It was not unkind. That was the worst of it.",
   "where": [
@@ -17289,10 +19486,10 @@
  "tnvphp9s8n": {
   "en": "The Aegis Sentinel",
   "where": [
+   "companion-talk.js:58",
    "data.js:557",
    "data.js:690",
-   "data.js:931",
-   "logmap.js:35"
+   "data.js:931"
   ]
  },
  "m9eria6oj0": {
@@ -17323,6 +19520,12 @@
   "en": "The Aegis still stands in its alcove in the Cloister, guarding eleven empty places. Nobody sang to it.",
   "where": [
    "grove.js:258"
+  ]
+ },
+ "5l3pc6s1kn": {
+  "en": "The Aegis turns its bronze head. The plates shiver, and chime.",
+  "where": [
+   "companion-talk.js:527"
   ]
  },
  "11kjnwfj76p": {
@@ -17368,6 +19571,12 @@
   "en": "The Bosun Teller",
   "where": [
    "theName():0"
+  ]
+ },
+ "2cvptqpz5hq": {
+  "en": "The Bound Ledger",
+  "where": [
+   "companion-talk.js:341"
   ]
  },
  "2azkcj4t30j": {
@@ -17864,6 +20073,12 @@
    "upgrades.js:727"
   ]
  },
+ "1kpm6dqfxbl": {
+  "en": "The Foundry",
+  "where": [
+   "companion-talk.js:153"
+  ]
+ },
  "2dkxjtnw4uy": {
   "en": "The Foundry Floor",
   "where": [
@@ -17942,10 +20157,10 @@
  "1bvfgm4hkh0": {
   "en": "The Hedge",
   "where": [
+   "companion-talk.js:291",
    "data.js:207",
    "data.js:268",
-   "data.js:370",
-   "data.js:404"
+   "data.js:370"
   ]
  },
  "22uhscl9qf4": {
@@ -17984,6 +20199,12 @@
    "game.js:1551"
   ],
   "pattern": true
+ },
+ "17p3jm2c0gv": {
+  "en": "The Hollows nearby slow, and stand.",
+  "where": [
+   "reedcraft.js:564"
+  ]
  },
  "keu13v2hwj": {
   "en": "The Horn's Wax Cylinder",
@@ -18063,6 +20284,12 @@
   "en": "The Iron Synod",
   "where": [
    "data.js:212"
+  ]
+ },
+ "1eko26m3b0i": {
+  "en": "The Kestrel",
+  "where": [
+   "companion-talk.js:416"
   ]
  },
  "cxroys8ixr": {
@@ -18259,6 +20486,13 @@
   "en": "The Memory Anchor. I calibrated its sister in the Dawning. Two percent survival at Stage Nine; I wrote the number down myself. I did not write down Whisper-Grove. I did not have to. It was in the next column.",
   "where": [
    "data.js:611"
+  ]
+ },
+ "1c3q9dntr6r": {
+  "en": "The Miller's Daughter, both verses. Father sang it for Tam. It is not a hymn. It is true.",
+  "where": [
+   "companion-talk.js:311",
+   "companion-talk.js:318"
   ]
  },
  "2qotof8nun": {
@@ -18602,10 +20836,10 @@
  "z8mduf7ee2": {
   "en": "The Rite",
   "where": [
+   "companion-talk.js:278",
    "data.js:215",
    "data.js:281",
-   "data.js:304",
-   "data.js:376"
+   "data.js:304"
   ]
  },
  "zj8o7suati": {
@@ -18772,6 +21006,12 @@
    "rumours.js:434"
   ]
  },
+ "1l18aathaty": {
+  "en": "The Synod counts timber by the load. It does not count what the load weighs on a man.",
+  "where": [
+   "sidequests.js:163"
+  ]
+ },
  "gq85mxfrdo": {
   "en": "The Synod herald",
   "where": [
@@ -18907,6 +21147,12 @@
    "upgrades.js:682"
   ]
  },
+ "1jmzfj2jv66": {
+  "en": "The Veil",
+  "where": [
+   "companion-talk.js:359"
+  ]
+ },
  "vy8issapnn": {
   "en": "The Watch-stone steps — the Grey Teeth are best seen from the top",
   "where": [
@@ -19008,6 +21254,12 @@
    "upgrades.js:880"
   ]
  },
+ "jkw1ihc3dr": {
+  "en": "The arm",
+  "where": [
+   "companion-talk.js:132"
+  ]
+ },
  "20o0j58sgk7": {
   "en": "The automap remembers where the lamps were.",
   "where": [
@@ -19054,6 +21306,24 @@
   "en": "The beam turns west into the niche wall at Mirror 1.",
   "where": [
    "game.js:1104"
+  ]
+ },
+ "h8bi5prqbd": {
+  "en": "The bed is cut to the stubble. It will come again with the next day.",
+  "where": [
+   "reedcraft.js:160"
+  ]
+ },
+ "1pr0r7peyl7": {
+  "en": "The bees hang in the straw in a clump, and nothing in the clump moves. Bettany said close, and low.",
+  "where": [
+   "sidequests.js:225"
+  ]
+ },
+ "2aag2yc2v8v": {
+  "en": "The bees lift off the comb at the noise and settle again, grumbling. Softer.",
+  "where": [
+   "sidequests.js:229"
   ]
  },
  "25uvhm2x7i2": {
@@ -19119,6 +21389,12 @@
    "game.js:1430"
   ]
  },
+ "28bzxfhjv85": {
+  "en": "The blade is already wrapped.",
+  "where": [
+   "sidequests.js:206"
+  ]
+ },
  "m4xyiztqeq": {
   "en": "The blue plate is in front of the chair by the door. I have not lifted it. I have not lifted it.",
   "where": [
@@ -19167,14 +21443,32 @@
    "game.js:467"
   ]
  },
+ "885o3xms78": {
+  "en": "The bough is still humming from the last time. Tomas said to leave it a day.",
+  "where": [
+   "sidequests.js:191"
+  ]
+ },
+ "1ma0tc06bof": {
+  "en": "The bough rings: a bell, struck in a cupboard.",
+  "where": [
+   "sidequests.js:187"
+  ]
+ },
  "1h8gkvh9mgq": {
   "en": "The box is empty. Paste a save code first.",
   "where": [
    "game.js:2509"
   ]
  },
- "1fe3zoax3al": {
-  "en": "The boys will be in directly. They are at choir. It is Thursday. Ada has let out their cloaks.",
+ "2cjb22g7ugj": {
+  "en": "The boy in the Cloister",
+  "where": [
+   "companion-talk.js:387"
+  ]
+ },
+ "oj828ozwol": {
+  "en": "The boys will be in directly. They are at choir. It is Thursday. Bryony has let out their cloaks.",
   "where": [
    "couriers.js:246"
   ]
@@ -19207,6 +21501,18 @@
   "en": "The camp fire",
   "where": [
    "maps.js:1007"
+  ]
+ },
+ "sxg2jus34o": {
+  "en": "The cane is green and a hand long. You hold it against your breastbone and hum until the cane hums back, then cut the slot. You blow across it and nothing comes. Of course nothing comes; it is the Hedge. But Ada's hand has closed on your wrist. \"That is him,\" she says. \"In the bone. You need not have heard it. That is him.\" She hangs it herself, on the old nail, with the hooked stick, and it turns once and hangs level. \"In the cane the whole time, the engineer said,\" she says. \"Well. I held it too hard, then.\" Then, more quietly: \"It was a comfort to have it wrong. A wrong reed can be mended. This one is right, and that is the end of him, isn't it.\" She presses eight sovereigns and a jar of honey on you and goes in. The door is barred from inside before you have turned, and from behind it, very low, someone begins to hum.",
+  "where": [
+   "sidequests.js:127"
+  ]
+ },
+ "1vtjy4ae6h5": {
+  "en": "The cane is green and a hand long. You hold it against your breastbone and hum until the cane hums back, then cut the slot. You blow across it and nothing comes. Of course nothing comes; it is the Hedge. But Ada's hand has closed on your wrist. \"That is him,\" she says. \"In the bone. You need not have heard it. That is him.\" She hangs it herself, on the old nail, with the hooked stick, and it turns once and hangs level. \"Tam had it right,\" she says. \"Tam would.\" Then, more quietly: \"It was a comfort to have it wrong. A wrong reed can be mended. This one is right, and that is the end of him, isn't it.\" She presses eight sovereigns and a jar of honey on you and goes in. The door is barred from inside before you have turned, and from behind it, very low, someone begins to hum.",
+  "where": [
+   "sidequests.js:126"
   ]
  },
  "1vtpateblit": {
@@ -19288,6 +21594,12 @@
   "en": "The child",
   "where": [
    "wilds.js:187"
+  ]
+ },
+ "1evkfy85692": {
+  "en": "The child is alive. I do the sum every night. The answer changes. She is alive in every one.",
+  "where": [
+   "companion-talk.js:270"
   ]
  },
  "1oopr7dvomj": {
@@ -19399,6 +21711,12 @@
    "travel.js:18"
   ]
  },
+ "1mifgyxu69o": {
+  "en": "The corner of his mouth moves. \"We have. For years. It is a poor way to say anything.\"",
+  "where": [
+   "companion-talk.js:201"
+  ]
+ },
  "1qlul7ly2f7": {
   "en": "The corsair came in the day after you spoke to him and did not laugh at anything. He sat in his corner and drank small beer, which tells you all you need. Whatever you said to him, he heard it.",
   "where": [
@@ -19435,6 +21753,12 @@
    "dreams.js:146"
   ]
  },
+ "10v6jj8k3s3": {
+  "en": "The crates",
+  "where": [
+   "companion-talk.js:429"
+  ]
+ },
  "8egf30bytq": {
   "en": "The crates in Hetty's cellar hold glass cores, and they say names. She paid me twenty sovereigns and wants the corsair to hear them.",
   "where": [
@@ -19457,6 +21781,12 @@
   "en": "The cutter's bosun. He has the hold key on a lanyard round his neck, and he keeps the count.",
   "where": [
    "data.js:808"
+  ]
+ },
+ "1hqjxe4ba5r": {
+  "en": "The cutter's hold",
+  "where": [
+   "companion-talk.js:442"
   ]
  },
  "1s899jro795": {
@@ -19883,10 +22213,40 @@
    "upgrades.js:1329"
   ]
  },
+ "23f1kjzo7p1": {
+  "en": "The iron-bough is down. The log lies at the foot of the stump, and it has to be carried to Tomas's wagon without running, or it will knock against everything I own.",
+  "where": [
+   "sidequests.js:176"
+  ]
+ },
+ "1ebegek2l0u": {
+  "en": "The iron-bough lets go. It comes down across the ferns with one long flat note, and then your ears are the loudest thing in the clearing.",
+  "where": [
+   "sidequests.js:193"
+  ]
+ },
+ "25mfpx9btz6": {
+  "en": "The iron-bough rang and a hound came up. Tomas called it off with two falling notes. He says to leave the wood a day to forget the hour.",
+  "where": [
+   "sidequests.js:175"
+  ]
+ },
  "1da9lhm31sw": {
   "en": "The keeper",
   "where": [
    "dreams.js:174"
+  ]
+ },
+ "1ig3gxnb3mv": {
+  "en": "The kerf is a hand deep.",
+  "where": [
+   "sidequests.js:184"
+  ]
+ },
+ "1klngk5z50a": {
+  "en": "The kerf is half through.",
+  "where": [
+   "sidequests.js:185"
   ]
  },
  "d2czsj6z41": {
@@ -19972,6 +22332,12 @@
   "en": "The listening-horn's recording cylinder, from the wrecked cutter. Wound and set going, it plays back everything the horn heard: your voices, the whole way from Oakhaven.",
   "where": [
    "data.js:1044"
+  ]
+ },
+ "1a4uiq4hyjm": {
+  "en": "The log knocks on your pack-buckle.",
+  "where": [
+   "sidequests.js:195"
   ]
  },
  "1h8w1wqtmsb": {
@@ -20259,6 +22625,12 @@
    "data.js:970"
   ]
  },
+ "210iz4uqtti": {
+  "en": "The red cloak",
+  "where": [
+   "companion-talk.js:485"
+  ]
+ },
  "am7cgo52ro": {
   "en": "The red cloak is folded in your pack. You have not decided whose it is.",
   "where": [
@@ -20271,6 +22643,37 @@
    "grove.js:257"
   ]
  },
+ "221aka850y5": {
+  "en": "The reed",
+  "where": [
+   "sidequests.js:128"
+  ]
+ },
+ "1kq9i7klurh": {
+  "en": "The reed bed is cut to the stubble. It will come again tomorrow.",
+  "where": [
+   "reedcraft.js:118"
+  ]
+ },
+ "1gvs0kcryfp": {
+  "en": "The reed beds by the Flume went under with the Hedge. There are beds yet in the clearing, where the ground stays wet. A reed is only good for a day, so I will cut them as I need them.",
+  "where": [
+   "reedcraft.js:755"
+  ]
+ },
+ "1gznc38tnb7": {
+  "en": "The reed finds the note and keeps it.",
+  "where": [
+   "reedcraft.js:537"
+  ]
+ },
+ "1mm5s0vpcez": {
+  "en": "The reed finds {0}'s note and keeps it.",
+  "where": [
+   "reedcraft.js:537"
+  ],
+  "pattern": true
+ },
  "6epw9s3ji9": {
   "en": "The reed on the lantern. It whistles so the house never goes quiet.",
   "where": [
@@ -20281,6 +22684,31 @@
   "en": "The reed orchards used to sing in a west wind. Whole hillsides of them. You would have liked it.",
   "where": [
    "party.js:77"
+  ]
+ },
+ "1xobfw9gs41": {
+  "en": "The reed rings true. The offcut makes a second.",
+  "where": [
+   "reedcraft.js:511"
+  ]
+ },
+ "1fxztvhnqtq": {
+  "en": "The reed sounds a little flat. It will do.",
+  "where": [
+   "reedcraft.js:511"
+  ]
+ },
+ "19e9c17qxz": {
+  "en": "The reed splits along the slot.",
+  "where": [
+   "reedcraft.js:506",
+   "reedcraft.js:536"
+  ]
+ },
+ "29cp3req5ia": {
+  "en": "The reeds",
+  "where": [
+   "companion-talk.js:243"
   ]
  },
  "1dgc9gc8fg2": {
@@ -20387,6 +22815,12 @@
    "data.js:350"
   ]
  },
+ "170c34rpgfa": {
+  "en": "The schedule",
+  "where": [
+   "companion-talk.js:372"
+  ]
+ },
  "10n5geix6ir": {
   "en": "The scribe in the mist",
   "where": [
@@ -20485,10 +22919,34 @@
    "rumours.js:89"
   ]
  },
+ "1ux6zh9uotd": {
+  "en": "The silence is long enough to count in. \"Ask me when the number is on the right side of the page.\"",
+  "where": [
+   "companion-talk.js:160"
+  ]
+ },
+ "1n7lsjgq2mg": {
+  "en": "The singers",
+  "where": [
+   "companion-talk.js:473"
+  ]
+ },
  "rpungcah6y": {
   "en": "The singing child (north-west, past the pools)",
   "where": [
    "extras.en.json:0"
+  ]
+ },
+ "1ckh6pe1rxy": {
+  "en": "The skep",
+  "where": [
+   "sidequests.js:224"
+  ]
+ },
+ "1h9xl19dz94": {
+  "en": "The skep hums back, softly.",
+  "where": [
+   "sidequests.js:228"
   ]
  },
  "us162ctj2b": {
@@ -20514,6 +22972,12 @@
   "en": "The spent mechanism cannot fire again.",
   "where": [
    "game.js:1263"
+  ]
+ },
+ "24220c99pn6": {
+  "en": "The stump of the iron-bough, sawn clean and chalked.",
+  "where": [
+   "sidequests.js:196"
   ]
  },
  "1qqm97x502f": {
@@ -20567,6 +23031,12 @@
    "game.js:1074"
   ]
  },
+ "1v61ucn8b9x": {
+  "en": "The timber wagon went out with the iron-bough wrapped in sacking and the hounds on the north road never stirred. Tomas stood a round for the mare. Not for the stranger. For the mare.",
+  "where": [
+   "sidequests.js:240"
+  ]
+ },
  "1z6hmcpuujl": {
   "en": "The tomb of the First Cantor of Memory. It is humming.",
   "where": [
@@ -20608,6 +23078,12 @@
   "en": "The vox-bottles",
   "where": [
    "logmap.js:37"
+  ]
+ },
+ "1vrcbj14kw8": {
+  "en": "The wagons do not creak any more. They hum. You feel it through the seat. A man could miss a creak.",
+  "where": [
+   "sidequests.js:158"
   ]
  },
  "aiks3yw31l": {
@@ -20708,6 +23184,12 @@
    "coda.js:336"
   ]
  },
+ "2776y1xa9e2": {
+  "en": "The wool takes the note. The bough only knocks.",
+  "where": [
+   "sidequests.js:188"
+  ]
+ },
  "1w20hirbk0r": {
   "en": "The wool-factor's",
   "where": [
@@ -20746,10 +23228,34 @@
    "data.js:1061"
   ]
  },
+ "12loi6jr0s6": {
+  "en": "Then I shall go on being a woman who talks to straw. Go softly.",
+  "where": [
+   "sidequests.js:213"
+  ]
+ },
+ "rz2y5pj4uy": {
+  "en": "Then I will hear it first. Be loud. Do not be right.",
+  "where": [
+   "companion-talk.js:313"
+  ]
+ },
  "1am7q38ntc1": {
   "en": "Then Lyra tells Kaelen he does not get to pay; he gets to help. She takes the glass hand, not the easy one. The ship needs a whole lift-tank, and there is one coast where you can get one.",
   "where": [
    "coda.js:276"
+  ]
+ },
+ "1tkfuiff1yz": {
+  "en": "Then borrow mine. Humming is free. No one has ever been charged for it.",
+  "where": [
+   "companion-talk.js:332"
+  ]
+ },
+ "s5rzubs5b8": {
+  "en": "Then do it with me beside you. I won't be left holding your silence.",
+  "where": [
+   "companion-talk.js:259"
   ]
  },
  "17j2pneq2h7": {
@@ -20804,6 +23310,18 @@
   "en": "Then the wind comes the other way and carries his voice down the lane, and you are standing in the road with a reed in your hand, and it is autumn, and you have forgotten which of you was meant to go home.",
   "where": [
    "dreams.js:92"
+  ]
+ },
+ "277n4tgh33y": {
+  "en": "Then we are waiting for the same thing. That's a start. That's a whole interval.",
+  "where": [
+   "companion-talk.js:334"
+  ]
+ },
+ "jcf6lutt8t": {
+  "en": "Then you've met it. It tried my father's fifth on me first. I won't ask what it said in yours.",
+  "where": [
+   "companion-talk.js:297"
   ]
  },
  "s307ypd3k1": {
@@ -20861,6 +23379,12 @@
    "couriers.js:145"
   ]
  },
+ "ucxlk4yucs": {
+  "en": "There is a new reed over the Pellow door. It does not sound, mind; nothing does in here. But Ada has started sitting out under it of an evening, and the lane has stopped crossing the street.",
+  "where": [
+   "sidequests.js:238"
+  ]
+ },
  "216xc3cbtx8": {
   "en": "There is a press at the back of the Malting. I keep my back to it. I eat when someone brings bread. Someone does.",
   "where": [
@@ -20909,6 +23433,12 @@
    "game.js:1406"
   ]
  },
+ "16dpq08vjh3": {
+  "en": "There is nothing more to say, for now. Come back when more has happened.",
+  "where": [
+   "companion-talk.js:529"
+  ]
+ },
  "1665dn7u27g": {
   "en": "There is talk on the barges of a skyship with a willow crown and a holed tank, down in the Deep Woods, and of an Office cutter nobody can account for. The Office has the cutter down as redeployed. [PROPOSED]",
   "where": [
@@ -20925,6 +23455,12 @@
   "en": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate.",
   "where": [
    "data.js:226"
+  ]
+ },
+ "1xs71m39ikp": {
+  "en": "There. Don't tell the Church.",
+  "where": [
+   "companion-talk.js:320"
   ]
  },
  "19q7eoijzpd": {
@@ -21048,6 +23584,12 @@
    "rumours.js:87"
   ]
  },
+ "110iq9l4ak0": {
+  "en": "They would have put a collar on my throat and a wire through my voice. I sang the falling fifth against the bore instead, and the bore broke. So did something in me. Nobody told me the singing was a loan.",
+  "where": [
+   "companion-talk.js:281"
+  ]
+ },
  "1tg13wyg0em": {
   "en": "They're not making a sound. Not breathing, not footfalls. That takes practice.",
   "where": [
@@ -21118,6 +23660,12 @@
   "en": "This warrant has been withdrawn. No public notice is outstanding.",
   "where": [
    "game.js:754"
+  ]
+ },
+ "1x9x2bc6pvo": {
+  "en": "This will come up again.",
+  "where": [
+   "companion-talk.js:538"
   ]
  },
  "h2w9adp0et": {
@@ -21194,6 +23742,18 @@
    "data.js:207"
   ]
  },
+ "2anq37rndha": {
+  "en": "Three skeps, three tellings. The one behind my house wants the birth: a girl to the Madders on Massday, with her grandmother's hands. The one in the Governor's orchard wants the dead, in order of the years: Essa, in the Cascade year, and Joram Pellow in 418. The one by the Chapel wants the stranger, and you know who that is. Stand close, keep your voice in your chest, and murmur it. N, if your hands know it. Or press E at the straw. Not loud. Bees mind a shout worse than hounds do.",
+  "where": [
+   "sidequests.js:214"
+  ]
+ },
+ "p0mlo61bkj": {
+  "en": "Three ways, and none of them sure. Wool: take a fistful of carded fleece from the mill and bind the blade, and the bough only knocks. Nell is not carding; she will not miss it. Wind: when a gust is up the wood has something else to ring over. Or draw the hounds off with a stone, if you are clever and they are not. Strike, wait, let the ringing die, strike again. Then carry the log to my wagon. Carry it; do not run it. It knocks on everything.",
+  "where": [
+   "sidequests.js:169"
+  ]
+ },
  "nrzhok4xvp": {
   "en": "Three-voice reliquary — Root, Fifth, Third",
   "where": [
@@ -21256,20 +23816,26 @@
    "playtools.js:284"
   ]
  },
+ "15lgqqml30x": {
+  "en": "Timber comes out of the clearing and goes into the town, and the Hedge takes the noise off it at the gate. I have wondered where the noise goes.",
+  "where": [
+   "sidequests.js:162"
+  ]
+ },
  "12p0py1t68d": {
   "en": "To OC-742, or any officer finding this.",
   "where": [
    "wilds.js:108"
   ]
  },
- "1c2zfoh4nj0": {
-  "en": "To the Precentor of the Cloister, from Ada Wick: Tom and Wat are to sing on Thursday; she has let out their cloaks; please mind Wat on the risers, he leans.",
+ "q6j9kni30f": {
+  "en": "To the Precentor of the Cloister, from Bryony Wick: Tom and Wat are to sing on Thursday; she has let out their cloaks; please mind Wat on the risers, he leans.",
   "where": [
    "data.js:730"
   ]
  },
- "berimixout": {
-  "en": "To the Precentor, the Cloister of the Lost Choir. Tom and Wat are to sing Thursday; I have let out their cloaks, which they have grown out of again, the pair of them. Please mind Wat on the risers, he leans. Halder will fetch them after. Supper is at seven and he will set it at six, he always does. — Ada Wick.",
+ "4a1lojzrjm": {
+  "en": "To the Precentor, the Cloister of the Lost Choir. Tom and Wat are to sing Thursday; I have let out their cloaks, which they have grown out of again, the pair of them. Please mind Wat on the risers, he leans. Halder will fetch them after. Supper is at seven and he will set it at six, he always does. — Bryony Wick.",
   "where": [
    "grove.js:357"
   ]
@@ -21370,6 +23936,12 @@
    "data.js:734"
   ]
  },
+ "1gd5lvxwk9k": {
+  "en": "Tobin",
+  "where": [
+   "companion-talk.js:263"
+  ]
+ },
  "4jldszbdf4": {
   "en": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge.",
   "where": [
@@ -21413,6 +23985,36 @@
   "where": [
    "upgrades.js:232",
    "upgrades.js:251"
+  ]
+ },
+ "lsztw82djn": {
+  "en": "Tomas has asked you to fell the iron-bough",
+  "where": [
+   "sidequests.js:762"
+  ]
+ },
+ "1ggbwg4yh56": {
+  "en": "Tomas has his last load. He paid me out of a sock that hums, and said I could think what I liked of him; he has been thinking it since August. The timber goes to shore the headframe.",
+  "where": [
+   "sidequests.js:177"
+  ]
+ },
+ "1apfa735dgs": {
+  "en": "Tomas has made quota",
+  "where": [
+   "sidequests.js:245"
+  ]
+ },
+ "zry2i27ir2": {
+  "en": "Tomas whistles from the camp: two notes, falling. A hound is up. He is calling it off.",
+  "where": [
+   "sidequests.js:192"
+  ]
+ },
+ "1cwbslxw7oc": {
+  "en": "Tomas's timber wagon. The boards hum under your hand.",
+  "where": [
+   "sidequests.js:179"
   ]
  },
  "2bu2g29cnsj": {
@@ -21503,7 +24105,7 @@
  "1eupi2b7bel": {
   "en": "Trap",
   "where": [
-   "logmap.js:447"
+   "logmap.js:466"
   ]
  },
  "6p7ztq9a5u": {
@@ -21556,6 +24158,31 @@
    "grove.js:148"
   ]
  },
+ "28ablfb18cn": {
+  "en": "Tune a First Reed",
+  "where": [
+   "reedcraft.js:531"
+  ]
+ },
+ "h9zmdbm609": {
+  "en": "Tune a reed to {0}",
+  "where": [
+   "reedcraft.js:531"
+  ],
+  "pattern": true
+ },
+ "bmctczzmnd": {
+  "en": "Tune the lure reed",
+  "where": [
+   "reedcraft.js:222"
+  ]
+ },
+ "2a4fch6ph": {
+  "en": "Tune the root-note reed",
+  "where": [
+   "reedcraft.js:220"
+  ]
+ },
  "2c44i5pk8fo": {
   "en": "Tuned stone. Every Cantor of the Memory Anchor, each in a tomb that rings the note they kept. Ring them in the order you would sing them home, high to low, and the choir opens. I know because I read the specification. I read all the specifications.",
   "where": [
@@ -21579,6 +24206,13 @@
   "where": [
    "data.js:99"
   ]
+ },
+ "1v130ril1z0": {
+  "en": "Tunings so far: {0} · the band is ±{1} cents{2}.",
+  "where": [
+   "reedcraft.js:613"
+  ],
+  "pattern": true
  },
  "xo02apj56": {
   "en": "Turn hardcore on",
@@ -21670,6 +24304,12 @@
   "en": "Two proctors stand between you and the press, felted rods up. They are not going to let you look at it.",
   "where": [
    "grove.js:167"
+  ]
+ },
+ "1yi5l3139l1": {
+  "en": "Two reeds, tuned to 174. Steadies you for a few breaths.",
+  "where": [
+   "reedcraft.js:220"
   ]
  },
  "130a10ta2kb": {
@@ -21893,6 +24533,18 @@
    "grove.js:182"
   ]
  },
+ "2c9ky5zf9uy": {
+  "en": "Vane put the axe down at the fire and said not to make it a thing. I did not.",
+  "where": [
+   "companion-talk.js:506"
+  ]
+ },
+ "1a3vihanehv": {
+  "en": "Vane puts the axe down within reach, and rubs his face.",
+  "where": [
+   "companion-talk.js:526"
+  ]
+ },
  "2eg8upyeoic": {
   "en": "Vane will not lift without Lyra. She went north, to the Mausoleum of Chords.",
   "where": [
@@ -22093,6 +24745,12 @@
   "where": [
    "data.js:227",
    "data.js:339"
+  ]
+ },
+ "49srqvn1y": {
+  "en": "W / S or Up / Down steer · drag with the mouse or a finger · left stick or D-pad · Esc puts the reed down.",
+  "where": [
+   "reedcraft.js:293"
   ]
  },
  "1ohe7fmsp33": {
@@ -22382,6 +25040,18 @@
    "data.js:73"
   ]
  },
+ "fuac5hhug6": {
+  "en": "What he hears",
+  "where": [
+   "companion-talk.js:207"
+  ]
+ },
+ "8c463q5ljr": {
+  "en": "What she would sing",
+  "where": [
+   "companion-talk.js:306"
+  ]
+ },
  "1rhtybe1c3n": {
   "en": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed.",
   "where": [
@@ -22538,6 +25208,18 @@
    "game.js:50"
   ]
  },
+ "b78zwl3fqv": {
+  "en": "Why the Synod",
+  "where": [
+   "companion-talk.js:173"
+  ]
+ },
+ "2akf5b8qhdk": {
+  "en": "Will you Listen to this reed?",
+  "where": [
+   "sidequests.js:150"
+  ]
+ },
  "pckbce2i2p": {
   "en": "Willow-Bark",
   "where": [
@@ -22548,6 +25230,12 @@
   "en": "Willpower",
   "where": [
    "data.js:8"
+  ]
+ },
+ "1ags5dzmkn": {
+  "en": "Wind-Reed",
+  "where": [
+   "reedcraft.js:53"
   ]
  },
  "kmdm6eppiq": {
@@ -22683,6 +25371,12 @@
   "en": "YOU SANG IT. THANK YOU.",
   "where": [
    "data.js:896"
+  ]
+ },
+ "28ga9ei2qke": {
+  "en": "Yes. A day is exactly long enough for the thing you meant to say.",
+  "where": [
+   "companion-talk.js:238"
   ]
  },
  "ofbcp2xrny": {
@@ -22838,6 +25532,18 @@
   ],
   "pattern": true
  },
+ "2af5z9ribt5": {
+  "en": "You brought Tomas his last load",
+  "where": [
+   "sidequests.js:763"
+  ]
+ },
+ "29cmz1y3cbg": {
+  "en": "You burn the dry reed. It gives a little smoke and no sound.",
+  "where": [
+   "reedcraft.js:650"
+  ]
+ },
  "3dw9k4twoc": {
   "en": "You came. Sit, keep your voice in your chest. I've a thing to ask that I should not ask anyone.",
   "where": [
@@ -22955,10 +25661,22 @@
   ],
   "pattern": true
  },
+ "1m40ktagzi0": {
+  "en": "You cut a wind-reed low, at the joint. The bed hardly notices.",
+  "where": [
+   "reedcraft.js:169"
+  ]
+ },
  "1zyaxcprhnr": {
   "en": "You cut it from the loom. For half a breath, under Whisper-Grove, seventy-four thousand voices speak at once, and then they go up the stair and out into the mist, and the mist is a little brighter for it.",
   "where": [
    "grove.js:347"
+  ]
+ },
+ "4tl9pr3b4w": {
+  "en": "You cut the last wind-reed. The bed will come again tomorrow.",
+  "where": [
+   "reedcraft.js:169"
   ]
  },
  "1u7971g3qcm": {
@@ -23036,6 +25754,12 @@
    "rumours.js:335"
   ]
  },
+ "5m7bo9uzkg": {
+  "en": "You feed the dry reeds to the fire. A little smoke, and no sound.",
+  "where": [
+   "reedcraft.js:618"
+  ]
+ },
  "qy7l4v8j1p": {
   "en": "You fill your quiver.",
   "where": [
@@ -23085,6 +25809,12 @@
   "en": "You gave Orla Hale the boots",
   "where": [
    "rumours.js:128"
+  ]
+ },
+ "ozmebito3u": {
+  "en": "You get the log onto your shoulder. It hums against your collarbone. Walk; do not run.",
+  "where": [
+   "sidequests.js:194"
   ]
  },
  "1zpyi9krvcc": {
@@ -23172,6 +25902,12 @@
    "rumours.js:343"
   ]
  },
+ "1ulgftvzfab": {
+  "en": "You have all the wool the work will want.",
+  "where": [
+   "sidequests.js:204"
+  ]
+ },
  "11989899cc7": {
   "en": "You have an Office round-book. I can smell the binding glue from here; I helped choose it.",
   "where": [
@@ -23234,6 +25970,12 @@
    "rumours.js:106"
   ]
  },
+ "afmv8zw3jz": {
+  "en": "You have it. It is in the way you hold your mouth. There is cane in the shed. Cut it, and tune it against your breastbone the way a Cantor does. I will watch, if you do not mind. I cannot do it; my breath is not what it was.",
+  "where": [
+   "sidequests.js:120"
+  ]
+ },
  "flwp810ehs": {
   "en": "You have learned enough from your travels to reach level {0}.",
   "where": [
@@ -23263,6 +26005,12 @@
   "en": "You have met Lyra",
   "where": [
    "rumours.js:318"
+  ]
+ },
+ "1x3gx2b3nat": {
+  "en": "You have no fresh wind-reed to tune.",
+  "where": [
+   "reedcraft.js:526"
   ]
  },
  "1v2yzhc4so7": {
@@ -23377,6 +26125,12 @@
    "rumours.js:134"
   ]
  },
+ "urode2f90y": {
+  "en": "You hung a new reed for Joram Pellow",
+  "where": [
+   "sidequests.js:761"
+  ]
+ },
  "ks9mmu6tyg": {
   "en": "You kept a thread. I can hear it in your pack. It is somebody. I will not ask whom.",
   "where": [
@@ -23402,14 +26156,14 @@
   ],
   "pattern": true
  },
- "fkc49j5ow0": {
-  "en": "You lay the two red-thread tapes beside the two small plates, and set the blue one in front of Ada's chair, the way he would have. The table is set for four. Nobody comes. That was never the point.",
+ "17ree5p92v6": {
+  "en": "You lay the two red-thread tapes beside the two small plates, and set the blue one in front of Bryony's chair, the way he would have. The table is set for four. Nobody comes. That was never the point.",
   "where": [
    "grove.js:365"
   ]
  },
- "1w2e0f06c1w": {
-  "en": "You lay the two red-thread tapes beside the two small plates. Halder stops with the blue plate in his hands. He looks at the tapes for a long time. Then he sets the blue plate down, and does not lift it again, and for the first time in three years Halder Wick sits down at his own table. \"They're at choir,\" he says, quite clearly. \"Thursday. Ada's let out their cloaks.\" He folds his hands. He waits for them the way a man waits who knows they are coming.",
+ "bw4u26p5xu": {
+  "en": "You lay the two red-thread tapes beside the two small plates. Halder stops with the blue plate in his hands. He looks at the tapes for a long time. Then he sets the blue plate down, and does not lift it again, and for the first time in three years Halder Wick sits down at his own table. \"They're at choir,\" he says, quite clearly. \"Thursday. Bryony's let out their cloaks.\" He folds his hands. He waits for them the way a man waits who knows they are coming.",
   "where": [
    "data.js:793"
   ]
@@ -23507,11 +26261,42 @@
    "game.js:364"
   ]
  },
+ "sruh52znox": {
+  "en": "You murmur it to the skep: a girl born to the Madders on Massday, with her grandmother's hands. The straw hums back once, the way a kettle thinks about boiling.",
+  "where": [
+   "sidequests.js:230"
+  ]
+ },
+ "urryi31igk": {
+  "en": "You murmur the dead to the skep, in the order of the years: Essa, in the Cascade year; Joram Pellow, in 418, whose reed hangs level over his door. Inside the straw something settles.",
+  "where": [
+   "sidequests.js:232"
+  ]
+ },
+ "2b51vwcvk6": {
+  "en": "You murmur the dead to the skep, in the order of the years: Essa, in the Cascade year; Joram Pellow, in 418. Inside the straw something settles.",
+  "where": [
+   "sidequests.js:231"
+  ]
+ },
+ "s6x1h7co6c": {
+  "en": "You murmur your own name to the skep, and that you came up the Greenroot road in the autumn. The hum inside changes by a half-tone, as if somebody had made room.",
+  "where": [
+   "sidequests.js:233"
+  ]
+ },
  "1amu1d7ureg": {
   "en": "You murmur, low, inside the Narrow.",
   "where": [
    "game.js:689"
   ]
+ },
+ "1tgudjafhhz": {
+  "en": "You need {0} fresh wind-reed{1} for that.",
+  "where": [
+   "reedcraft.js:495"
+  ],
+  "pattern": true
  },
  "1vvc5y2fumh": {
   "en": "You open your mouth and nothing comes but breath. Your voice is spent. The bronze chord comes instead.",
@@ -23567,6 +26352,19 @@
    "game.js:603"
   ],
   "pattern": true
+ },
+ "26pwhehjbc0": {
+  "en": "You put the cane down. Ada waits.",
+  "where": [
+   "sidequests.js:131"
+  ]
+ },
+ "8d66up3hgb": {
+  "en": "You put the reed down, uncut.",
+  "where": [
+   "reedcraft.js:501",
+   "reedcraft.js:532"
+  ]
  },
  "mt78404q6c": {
   "en": "You put your ear to the wood. Thirty-six lilac spheres, you would guess by the weight, each in its straw. For a long moment nothing. Then, very small, through the side of the crate:",
@@ -23841,6 +26639,13 @@
    "data.js:381"
   ]
  },
+ "1gubettq6zl": {
+  "en": "You sound the root-note reed against your breastbone, once, softly. Your hands warm. The air has a floor under it again.{0}",
+  "where": [
+   "reedcraft.js:564"
+  ],
+  "pattern": true
+ },
  "26bipwe8uwq": {
   "en": "You square the twelve pages against your knee, spring to autumn, and they sit together as if they had never been apart. They are not a book. They have no spine, and the hand wavers in the last four. But it is one hand, from the pear-grafts to the oaks, and it never once asks to be pitied.",
   "where": [
@@ -23869,6 +26674,12 @@
   "en": "You take 20 sovereigns and a Brass Governor-Gear.",
   "where": [
    "game.js:589"
+  ]
+ },
+ "ekaioevdn7": {
+  "en": "You take a bundle of grey fleece from the open sacking. Nobody has carded it since the engine stopped.",
+  "where": [
+   "sidequests.js:203"
   ]
  },
  "28n4cyxdv0f": {
@@ -23934,6 +26745,12 @@
   "en": "You tie the pages with a strip of your own sleeve. Does it ring? True enough.",
   "where": [
    "tobin.js:142"
+  ]
+ },
+ "146rq2ekdqd": {
+  "en": "You told Bettany's bees the news",
+  "where": [
+   "sidequests.js:765"
   ]
  },
  "1iw3965188v": {
@@ -24102,10 +26919,22 @@
    "wilds.js:126"
   ]
  },
+ "14jdcy0gydd": {
+  "en": "You wind the wool round the blade and bind it with a cord. It will deaden a ringing strike a few times.",
+  "where": [
+   "sidequests.js:205"
+  ]
+ },
  "23udu5kkz3q": {
   "en": "You wrote Joss and Wyn in your ledger",
   "where": [
    "rumours.js:122"
+  ]
+ },
+ "rpf59qjs3e": {
+  "en": "You'd have sung it flat. Thank you. Truly.",
+  "where": [
+   "companion-talk.js:285"
   ]
  },
  "1tlcjgil2cs": {
@@ -24245,6 +27074,12 @@
    "game.js:50"
   ]
  },
+ "6rv5hcm7wf": {
+  "en": "Your note has been steady since the Hedge. I stopped checking. In my trade that is a compliment.",
+  "where": [
+   "companion-talk.js:514"
+  ]
+ },
  "e95bohvpzf": {
   "en": "Your own Songs",
   "where": [
@@ -24302,6 +27137,18 @@
    "game.js:690"
   ]
  },
+ "16lmfehjlqq": {
+  "en": "Your wind-reed has gone pale and brittle.",
+  "where": [
+   "reedcraft.js:102"
+  ]
+ },
+ "1bl71hqktcf": {
+  "en": "Your wind-reeds have gone pale and brittle.",
+  "where": [
+   "reedcraft.js:102"
+  ]
+ },
  "b60gcc47b9": {
   "en": "Your {0} finds nothing but air.",
   "where": [
@@ -24322,6 +27169,13 @@
    "upgrades.js:412"
   ],
   "pattern": true
+ },
+ "kbogrh6rq6": {
+  "en": "a Talk option with your companions, when it is calm",
+  "where": [
+   "companion-talk.js:874",
+   "companion-talk.js:1055"
+  ]
  },
  "2ezgcu7g04z": {
   "en": "a first mate you once left in the water",
@@ -24400,6 +27254,12 @@
   "en": "a tonic",
   "where": [
    "couriers.js:163"
+  ]
+ },
+ "1r0ttu3cv09": {
+  "en": "a wider band to follow",
+  "where": [
+   "reedcraft.js:789"
   ]
  },
  "24ldmm2bnht": {
@@ -24536,10 +27396,10 @@
  "p1uok8w1rr": {
   "en": "clear",
   "where": [
+   "companion-talk.js:99",
+   "companion-talk.js:107",
    "firesmoke.js:344",
-   "rumours.js:40",
-   "rumours.js:201",
-   "upgrades.js:42"
+   "rumours.js:40"
   ]
  },
  "2ei1hgm48xw": {
@@ -25120,10 +27980,19 @@
    "presets.js:200"
   ]
  },
+ "1xgi9i2w9wc": {
+  "en": "she says, in her own ruined voice.",
+  "where": [
+   "companion-talk.js:531"
+  ]
+ },
  "1dukdqgwntp": {
   "en": "silent",
   "where": [
-   "game.js:1564"
+   "companion-talk.js:95",
+   "companion-talk.js:96",
+   "companion-talk.js:97",
+   "companion-talk.js:105"
   ]
  },
  "flcla9nff3": {
@@ -25167,6 +28036,12 @@
   "en": "something in the Malting's Tuning Room has not been read",
   "where": [
    "grove.js:187"
+  ]
+ },
+ "35sihzwz3v": {
+  "en": "something you said",
+  "where": [
+   "companion-talk.js:539"
   ]
  },
  "fm1n9alm6y": {
@@ -25512,6 +28387,12 @@
    "game.js:851"
   ]
  },
+ "1x4kqtm96ww": {
+  "en": "the panel",
+  "where": [
+   "companion-talk.js:1050"
+  ]
+ },
  "295y9pfyhrs": {
   "en": "the second verse",
   "where": [
@@ -25544,6 +28425,12 @@
    "game.js:615"
   ],
   "pattern": true
+ },
+ "25me7mx323w": {
+  "en": "them slate",
+  "where": [
+   "companion-talk.js:653"
+  ]
  },
  "41ly3k2keb": {
   "en": "third",
@@ -25623,6 +28510,12 @@
    "extras.en.json:0"
   ]
  },
+ "73165fiyp4": {
+  "en": "wind-reed to cut, the Reeds button at the forge, the lure in the throw menu",
+  "where": [
+   "reedcraft.js:787"
+  ]
+ },
  "1o7jqwhj2if": {
   "en": "worn",
   "where": [
@@ -25673,6 +28566,43 @@
   "en": "{0} / 4 slain",
   "where": [
    "upgrades.js:848"
+  ],
+  "pattern": true
+ },
+ "9roiplnxmf": {
+  "en": "{0} / at the rest fire",
+  "where": [
+   "companion-talk.js:1052"
+  ],
+  "pattern": true
+ },
+ "7aad761wai": {
+  "en": "{0} / logbook",
+  "where": [
+   "companion-talk.js:1054"
+  ],
+  "pattern": true
+ },
+ "1mycyjuhhym": {
+  "en": "{0} / on the road",
+  "where": [
+   "companion-talk.js:1053"
+  ],
+  "pattern": true
+ },
+ "mn6c0qi8se": {
+  "en": "{0} / the panel",
+  "where": [
+   "companion-talk.js:1049",
+   "companion-talk.js:1051",
+   "companion-talk.js:1051"
+  ],
+  "pattern": true
+ },
+ "y7kge5142w": {
+  "en": "{0} / title",
+  "where": [
+   "companion-talk.js:1054"
   ],
   "pattern": true
  },
@@ -26159,6 +29089,13 @@
    "game.js:1703"
   ]
  },
+ "es36iaf48w": {
+  "en": "· they keep about {0} more hours",
+  "where": [
+   "reedcraft.js:612"
+  ],
+  "pattern": true
+ },
  "vyd5rzdri9": {
   "en": "· they pay",
   "where": [
@@ -26292,6 +29229,12 @@
   "en": "— this run keeps one save, and only one. Writing it again replaces it.",
   "where": [
    "game.js:2389"
+  ]
+ },
+ "pjxeexzu1q": {
+  "en": "— while the wind-reed is still green.",
+  "where": [
+   "reedcraft.js:680"
   ]
  },
  "2889xxm8rpu": {

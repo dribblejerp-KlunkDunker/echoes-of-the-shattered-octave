@@ -450,11 +450,11 @@ const VOICE_LINES = {
 "voiceOf": "halder"
 },
 "halder.greet.polite": {
-"d": 3.48,
+"d": 3.67,
 "kind": "greet",
 "speaker": "halder",
 "src": "voices/halder/halder.greet.polite.mp3",
-"t": "Four plates. The blue one is Ada's.",
+"t": "Four plates. The blue one is Bryony's.",
 "voiceOf": "halder"
 },
 "harrow.greet.blunt": {
@@ -1883,7 +1883,7 @@ const VOICE_LINES = {
 "voiceOf": "player_mother"
 },
 "weaver.voice.1": {
-"d": 5.14,
+"d": 5.35,
 "kind": "mimic",
 "ref": {
 "array": "WEAVER_VOICES",
@@ -1891,7 +1891,7 @@ const VOICE_LINES = {
 },
 "speaker": "weaver",
 "src": "voices/weaver/weaver.voice.1.mp3",
-"t": "The blue one is Ada's. The boys will be in directly.",
+"t": "The blue one is Bryony's. The boys will be in directly.",
 "voiceOf": "halder"
 },
 "weaver.voice.3": {
