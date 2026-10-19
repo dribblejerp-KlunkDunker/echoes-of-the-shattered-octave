@@ -35,6 +35,8 @@ const output = path.join(__dirname, '..', 'screenshots');
       // Freeze only this disposable capture page; step/render scenes explicitly
       // so UI and simulation timers cannot race the screenshot.
       window.requestAnimationFrame = () => 0;
+      // these scenes show other features; keep the area loading cards (js/screens.js) out of them
+      if (typeof GFX !== 'undefined') GFX.illustratedScreens = false;
     });
     await page.waitForTimeout(100); // drain the single already-queued frame
     await page.evaluate(() => {

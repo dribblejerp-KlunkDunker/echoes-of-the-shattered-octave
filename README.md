@@ -10,6 +10,33 @@ Explore Oakhaven and the land past the Hedge, then sail the Drift-Kestrel to Whi
 
 ## Screenshots
 
+### The 2026 upgrade: a spatial, living, illustrated world
+
+Phases 2 to 5 of the roadmap: real height and a modern look, combat that reads at a glance, a world that moves around you, and an illustrated interface. Every effect has a switch, and the Original preset shows the game exactly as it was. All new art is generated stand-in work until the painted versions arrive.
+
+| | |
+|---|---|
+| ![Oakhaven at night with stars, bloom and the colour grade](screenshots/p2-oakhaven-night.gif) | ![Water reflecting the sky and rippling under footsteps](screenshots/p2-water.gif) |
+| Oakhaven at night: stars that turn with the view, lamp bloom and the evening grade. | Water reflects the sky, walls and figures, and rings out from your footsteps. |
+| ![A legionnaire recoiling from blows](screenshots/p3-flinch.gif) | ![Switching weapons, then raising glowing hands to cast](screenshots/p3-hands.gif) |
+| Every enemy recoils from a hit. | Draw, holster and switch weapons; raise glowing hands to cast a Song. |
+| ![A tavern door swinging open and shut](screenshots/p3-door.gif) | ![A heavy-hit shake, then deafness blurs the view](screenshots/p3-feel.gif) |
+| Doors swing away from you; chest lids lift and levers pull. | A heavy blow shakes the view; a chord blast leaves you half-deaf, blurred and muffled. |
+| ![Running at a crow until it takes wing, chimney smoke behind](screenshots/p4-crow.gif) | ![The North Gate portcullis rising](screenshots/p4-gate.gif) |
+| Crows take wing when you run at them; Oakhaven's chimneys smoke. | Gates and portcullises rise, and you pass once the bars clear your head. |
+| ![The Belfry bell swinging on each toll](screenshots/p4-bell.gif) | ![The quarry shaft caving in](screenshots/p4-cave.gif) |
+| The Belfry bell swings on every strike and keeps swinging as it fades. | Once the bore is broken, the quarry shaft caves in; anyone caught inside is moved to safe ground. |
+| ![Framed inventory with item icons and the paper doll](screenshots/p5-inventory.jpg) | ![The logbook with a quest sketch](screenshots/p5-logbook.jpg) |
+| Carved-wood frames, blackletter headings, an icon for every item and a shaded paper doll. | An ink sketch beside each storyline in the logbook. |
+| ![The automap with door, quest-giver, shop and danger stamps](screenshots/p5-automap.jpg) | ![A conversation with a mood portrait](screenshots/p5-dialogue.jpg) |
+| The automap marks doors, quest givers, shops, enemies and traps in the places you have walked. | Portraits turn angry, sad, afraid or wry as conversations go. |
+| ![The painted card shown on entering the Boar & Dulcimer](screenshots/p5-area-card.jpg) | ![A death screen illustrated for a fall](screenshots/p5-death.jpg) |
+| A painted card as you enter each area, during the existing fade. | The death screen shows what killed you. |
+| ![The Grab the Line ending with its own illustration](screenshots/p5-ending.jpg) | ![Every item icon](screenshots/p5-icons.jpg) |
+| Every ending has its own full-screen picture. | The icon set: weapons, armour, potions, herbs and all 21 quest items. |
+
+More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) · [Phase 3 stills](screenshots/p3-stills.jpg) · [Phase 4 stills](screenshots/p4-stills.jpg) · [mood portraits](screenshots/p5-portraits.jpg) · [logbook sketches](screenshots/p5-sketches.jpg).
+
 ### New stealth features
 
 Staged scenes captured from the playable maps using the game's own feature logic and interface. Click an image for the full 1280 × 800 view.
@@ -159,7 +186,7 @@ PREVIEW_URL=http://127.0.0.1:8000 node test/screenshots.js
 
 If Playwright is installed outside this repository, set `PLAYWRIGHT_MODULE` to its module path. The capture script starts a fresh disposable game, stages illustrative scenes with the game's own feature logic, checks each scene's interface and PNG output, and refreshes the six `screenshots/stealth-*.png` images plus the travel, stables, watch, journey-needs, hardcore, weather, terrain and relief images above. It does not start a server or alter game source or player save files.
 
-Headless Chromium needs fonts installed in the capture environment; without a font stack the panels render empty. Install `fontconfig` with a serif family (DejaVu Serif is what these images use) before capturing.
+The game's fonts are bundled in `fonts/`, so captures render in the intended typefaces without any system fonts or network access.
 
 ### Host it on GitHub Pages
 
