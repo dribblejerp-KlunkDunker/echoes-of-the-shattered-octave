@@ -285,3 +285,17 @@ pre.help { font-family: var(--font-body); white-space: pre-wrap; font-size: 2.1c
 .panel.travel .tv-row .tone { flex-wrap: wrap; }
 .panel.travel .tv-row .dfbtn.small { font-size: 1.6cqw; }
 .panel.travel #tv-go { font-size: 2cqw; padding: .6cqh 1.8cqw; min-width: 0; }
+
+/* ---- CRT filter and upscaling (js/presets.js owns .crt-curve and .smooth-up; js/upgrades.js owns .crt-on) ----
+   Pure CSS, no assets. Everything is sized in the game's own container units so the lines scale with the canvas.
+   Clean unfiltered = CRT off + Sharp pixels: none of these rules apply. */
+#game.crt-on::before, #game.crt-on::after { content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; }
+/* scanlines: one fine dark line per logical canvas row (the canvas is 200 rows tall), light enough not to muddy the art */
+#game.crt-on::after { z-index: 4; background: linear-gradient(rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .2) 100%) 0 0 / 100% calc(100cqh / 200); }
+/* slight vignette: darkens the corners a little, leaves the middle alone */
+#game.crt-on::before { z-index: 4; background: radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0) 58%, rgba(0, 0, 0, .34) 100%); }
+/* curvature illusion: rounded glass corners and a deeper inset falloff (no real warp, so clicks and the HUD stay exact) */
+#game.crt-curve { border-radius: 3.2% / 5%; }
+#game.crt-on.crt-curve::before { background: radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, .46) 100%); box-shadow: inset 0 0 9cqw 1.4cqw rgba(0, 0, 0, .55); }
+/* upscaling: smooth lets the browser filter the canvas; the default stays crisp pixels */
+#view.smooth-up { image-rendering: auto; }
