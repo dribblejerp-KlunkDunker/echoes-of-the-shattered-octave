@@ -642,6 +642,21 @@ function buildQuarry() {
     if (rnd() < 0.5) m.deco('lamp', r.cx + 0.5, r.y + 0.5, { radius: 0.12, scale: 0.7, glow: 0.6 });
   }
   m.item('bottle', e.x + e.w - 0.7, e.y + 0.6);
+  // The depot's loading terrace: a stone shelf along its north wall, a drop to
+  // the floor on the south side, reached by a real ramp at the east end. Only
+  // heights and side textures change; no entity moves, and the depot's three
+  // exits (west and east corridors on row 5, south door) stay on the floor.
+  if (dp) {
+    const TERRACE = 1.2, tx0 = dp.x, tx1 = dp.x + dp.w - 1, ty0 = dp.y;
+    m.ceilZ = 2.7;   // the quarry now has height to climb in; walls reach this
+    m.raise(tx0, ty0, tx1 - 3, ty0 + 1, TERRACE);
+    // 3 cells to climb 1.2 is a grade of 0.4, well under MAX_GRADE; the high end meets the shelf
+    m.ramp(tx1 - 2, ty0, tx1, ty0 + 2, TERRACE, 0, 'y');
+    m.setSide(tx0, ty0, tx1, ty0 + 2, 't_stone');
+    // walls reach ceilZ, which is taller than any floor+1 here: give the renderer's
+    // tallest-point scan one rock cell at ceiling height so it never stops early
+    m.block(0, 0, 't_stone', m.ceilZ);
+  }
   return m;
 }
 
@@ -1093,10 +1108,24 @@ function extendMausoleum(m) {
 function buildBelfry() {
   const W = 14, H = 10;
   const m = new GameMap('belfry', 'The Bell-Tower', W, H, { floor: 't_wood', floorTextures: ['t_wood', 't_flag', 't_water'], ceil: 't_wood', fogDist: 10, ambient: 0.16, fogColor: [22, 16, 34], music: 'mausoleum', danger: 1, spawn: { x: 2.5, y: 5.5, dir: 0 } });
+  m.ceilZ = 3.3;   // a tall room: the walls and pillars reach this, not one unit
   m.rect(0, 0, W - 1, H - 1, 't_mausoleum');
   m.clear(1, 1, W - 2, H - 2);
   m.set(0, 5, DOOR({ portal: { map: 'mausoleum', x: 37.0, y: 22.5, dir: Math.PI }, label: 'Down the tower stair' }));
-  [[4, 3], [4, 6], [8, 3], [8, 6]].forEach(([x, y]) => m.set(x, y, WALL('t_greymarble')));
+  // pillars are blocks topped at the ceiling, so the tallest point the renderer scans is the ceiling
+  [[4, 3], [4, 6], [8, 3], [8, 6]].forEach(([x, y]) => m.block(x, y, 't_greymarble', m.ceilZ));
+  // The timber stair: six 0.3 rises along the north wall, two cells wide, up to
+  // the bell gallery (stone-skirted, 1.8 high) on the east side.
+  const GALLERY = 1.8, stepH = (x) => 0.3 * (x - 2);
+  for (let x = 3; x <= 8; x++) for (const y of [1, 2]) m.setLvl(x, y, stepH(x));
+  m.raise(9, 1, 12, 8, GALLERY);
+  m.setSide(3, 1, 8, 2, 't_wood'); m.setSide(9, 1, 12, 8, 't_stone');
+  // Railings: low blocks, knee-high above the walkway they guard. The stair's
+  // south side runs between the pillars; the gallery's west edge is railed
+  // except the two south cells, which stay an open drop.
+  for (const x of [3, 5, 6, 7]) { m.setLvl(x, 3, stepH(x)); m.block(x, 3, 't_wood', stepH(x) + 0.3, { capTex: 't_wood' }); }
+  m.setSide(3, 3, 7, 3, 't_wood');
+  for (let y = 3; y <= 6; y++) m.block(9, y, 't_wood', GALLERY + 0.3, { capTex: 't_wood' });
   m.deco('bigbell', 10.2, 4.9, { radius: 0.8, scale: 1.7, yOff: -0.15, glow: 0.2, use: 'tower_bell', label: 'The great bell of the Mausoleum of Chords' });
   [[1.6, 1.6], [12.4, 1.6], [1.6, 8.4], [12.4, 8.4]].forEach(([x, y]) => m.deco('lamp', x, y, { radius: 0.12, scale: 0.55, glow: 0.4 }));
   m.deco('coil', 6.2, 8.2, { radius: 0.3, scale: 0.6, label: 'The other end of the bell-rope, cut clean with a spade' });
