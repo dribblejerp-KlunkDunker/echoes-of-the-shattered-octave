@@ -155,7 +155,14 @@ const TOWNSFOLK = (() => {
     Engine.render = function (ents, tod, opts) {
       try {
         if (typeof G !== 'undefined' && typeof G.tod === 'number') {
-          if (lastTod !== null) { let d = Math.abs(G.tod - lastTod); d = Math.min(d, 1 - d); if (d > 1 / 96) apply(true); }
+          if (lastTod !== null) {
+            let d = Math.abs(G.tod - lastTod); d = Math.min(d, 1 - d);
+            if (d > 1 / 96) {
+              // only when someone's routine actually differs between the two times; otherwise leave the scene alone
+              const h0 = ((((lastTod % 1) + 1) % 1) * 24 + 1e-7) % 24, h1 = hourNow();
+              if (ROSTER.some(r => stateAt(r, h0) !== stateAt(r, h1))) apply(true);
+            }
+          }
           lastTod = G.tod;
         }
       } catch (err) { /* never break a frame */ }
