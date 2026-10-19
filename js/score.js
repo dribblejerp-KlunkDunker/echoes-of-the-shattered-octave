@@ -14,7 +14,13 @@
 //    3. A story-evolving main theme: a motif layer played over title.mp3 (and the ending cue) whose voices follow the
 //       story flags: alone, harmonised, shadowed, broken, re-forming, and finally the 174 Hz root restored.
 //  How: Audio_.music.request and .tick are wrapped. Choosing is a pure function of (cue id, map id, flags, enemies);
-//  Original forwards every request untouched. Notes are scheduled ~2 s ahead with ctx.currentTime (no per-sample JS),
+//  Original forwards every request untouched. Phase 8: in Extended every piece below first plays as a COMPOSED, RECORDED
+//  MP3 from music/extended/ (written and rendered by tools/music/: GM orchestration through FluidSynth, see CREDITS.md); the
+//  procedural pieces remain as the fallback when a recording is missing, fails to load, or the browser cannot route it.
+//  A recording is an HTMLAudioElement routed through createMediaElementSource into the piece's gain (the same crossfade,
+//  mute, music-enabled and rest/return rules as the procedural piece). The story stages of the main theme are six recordings
+//  (maintheme_0..5) that take the title/ending cue's place and trade turns with title.mp3 like Oakhaven does with town.mp3.
+//  Procedural notes are scheduled ~2 s ahead with ctx.currentTime (no per-sample JS),
 //  every voice self-stops, and everything connects through one gain per piece into Audio_.master. There is no second
 //  AudioContext, and nothing happens until Audio_.ctx exists. No new saved fields: the stage is read from G.flags.
 //  Setting: localStorage 'octave.score.v1' {mode:'original'|'extended'}; a row in Graphics & access.
@@ -28,6 +34,22 @@ const SCORE = (() => {
   const LOOK = 2.0;                       // seconds of notes scheduled ahead of the audio clock
   const GAIN = 2.6;                       // piece output before the master gain
   const state = { mode: 'original' };   // the recorded score is the default; the generated pieces are opt-in
+
+  // ---- the composed recordings (Phase 8) ------------------------------------------------------------------
+  // pid -> file in music/extended/. loop: boss themes repeat seamlessly (the files carry their own reverb tail at the seam).
+  // The six main-theme stages are area-like (they replace the title/ending cue, then give the cue a turn back).
+  const REC_DIR = 'music/extended/', REC_V = '?v=1';
+  const REC_GAIN = 1.1;                    // the ten MP3 cues play at element volume 0.62 straight out; the master bus is 0.55
+  const REC = {
+    oakhaven: { file: 'oakhaven' }, whispergrove: { file: 'whispergrove' }, deepwoods: { file: 'deepwoods' }, quarry: { file: 'quarry' },
+    rootvault: { file: 'rootvault' }, catacombs: { file: 'catacombs' }, mausoleum: { file: 'mausoleum' },
+    boss_requiem: { file: 'boss_requiem', loop: true }, boss_broodmother: { file: 'boss_broodmother', loop: true }, boss_weaver: { file: 'boss_weaver', loop: true },
+    boss_aegis: { file: 'boss_aegis', loop: true }, boss_pressman: { file: 'boss_pressman', loop: true }, boss_deacon: { file: 'boss_deacon', loop: true },
+    boss_wearer: { file: 'boss_wearer', loop: true }, boss_golem: { file: 'boss_golem', loop: true }, boss_captain: { file: 'boss_captain', loop: true },
+  };
+  for (let i = 0; i < 6; i++) REC['maintheme_' + i] = { file: 'maintheme_' + i, gap: [5, 9], mp3Every: 2, mp3Window: [110, 160], main: true };
+  const recFailed = {};                    // pid -> true once its file 404'd, errored or stalled: that piece falls back for the session
+  let recsOn = true;                       // tests can switch recordings off to exercise the procedural scheduler
 
   // ---- setting -------------------------------------------------------------------------------------
   function load() {
@@ -402,6 +424,9 @@ const SCORE = (() => {
     },
   };
 
+  const defOf = (pid) => P[pid] || REC[pid];
+  const recOK = (pid) => recsOn && !ctxOverride && !!REC[pid] && !recFailed[pid] && typeof Audio !== 'undefined';
+
   // ---- area and boss choice: pure functions -----------------------------------------------------------
   const AREA_BY_MAP = {
     oakhaven: 'oakhaven', whispergrove: 'whispergrove', deepwoods: 'deepwoods',
@@ -452,7 +477,34 @@ const SCORE = (() => {
     rigCtx = ctx; rig = makeRig(ctx, dest());
     return rig;
   }
+  // a recorded piece: an <audio> element routed into the piece's gain. Same instance shape as a procedural one, so the
+  // scheduler, crossfades and retiring treat both alike; there is just nothing to schedule.
+  function makeRecInstance(ctx, pid, level) {
+    const spec = REC[pid], el = new Audio();
+    el.preload = 'auto'; el.loop = !!spec.loop; el.src = REC_DIR + spec.file + '.mp3' + REC_V;
+    const src = ctx.createMediaElementSource(el);       // throws on a context that cannot route media: caller falls back
+    const out = ctx.createGain(); out.gain.value = 0.0001; src.connect(out); out.connect(dest());
+    const inst = { pid, def: defOf(pid), ctx, out, rec: true, el, src, bar: 0, next: 0, done: false, endAt: 0, drones: [], S: {}, idle: 0, born: ctx.currentTime, level, failed: false, starting: false, playFails: 0 };
+    el.addEventListener('error', () => { inst.failed = true; });
+    el.addEventListener('ended', () => { inst.done = true; inst.endAt = ctx.currentTime; });
+    inst.dispose = () => {
+      try { el.pause(); el.removeAttribute('src'); el.load(); } catch (e) { /* already gone */ }
+      try { src.disconnect(); } catch (e) { /* ok */ }
+    };
+    return inst;
+  }
+  function recPlay(inst) {
+    if (inst.done || inst.starting || !inst.el.paused) return;
+    inst.starting = true;
+    const p = inst.el.play();
+    const ok = () => { inst.starting = false; };
+    const bad = () => { inst.starting = false; if (++inst.playFails > 6) inst.failed = true; };
+    if (p && p.then) p.then(ok, bad); else ok();
+  }
   function makeInstance(ctx, pid, level) {
+    if (recOK(pid)) {
+      try { return makeRecInstance(ctx, pid, level); } catch (e) { recFailed[pid] = true; console.warn('score recording unavailable for ' + pid, e); }
+    }
     const def = P[pid], r = ensureRig(ctx);
     const out = ctx.createGain(); out.gain.value = 0.0001; out.connect(r.input);
     const inst = { pid, def, ctx, out, rng: rngFrom(nextSeed()), bar: 0, next: ctx.currentTime + 0.15, done: false, endAt: 0, drones: [], S: {}, idle: 0, born: ctx.currentTime, level };
@@ -466,7 +518,8 @@ const SCORE = (() => {
   function setLevel(inst, level, tau) {
     if (!inst) return;
     inst.level = level;
-    try { inst.out.gain.setTargetAtTime(Math.max(0.0001, level * GAIN * (inst.def.trim || 1)), inst.ctx.currentTime, tau || (level > 0 ? 0.7 : 0.45)); } catch (e) { inst.out.gain.value = level * GAIN * (inst.def.trim || 1); }
+    const k = inst.rec ? REC_GAIN : GAIN * (inst.def.trim || 1);
+    try { inst.out.gain.setTargetAtTime(Math.max(0.0001, level * k), inst.ctx.currentTime, tau || (level > 0 ? 0.7 : 0.45)); } catch (e) { inst.out.gain.value = level * k; }
   }
   function retire(inst) {
     if (!inst) return;
@@ -477,11 +530,13 @@ const SCORE = (() => {
     for (let k = retired.length - 1; k >= 0; k--) {
       const r = retired[k]; if (now < r.at) continue;
       for (const n of r.inst.drones) { try { if (n.stop) n.stop(); n.disconnect(); } catch (e) { /* already stopped */ } }
+      if (r.inst.dispose) r.inst.dispose();
       try { r.inst.out.disconnect(); } catch (e) { /* ok */ }
       retired.splice(k, 1);
     }
   }
   function advance(inst, now) {
+    if (inst.rec) return;                                       // a recording plays itself
     while (!inst.done && inst.next < now + LOOK) {
       if (inst.next < now) inst.next = now + 0.05;             // resumed after a pause: never schedule into the past
       inst.def.bar(inst.V, inst.next, inst.bar, inst.S);
@@ -506,9 +561,17 @@ const SCORE = (() => {
       if (b) { want.boss = { pid: BOSS_BY_TYPE[b], level }; return false; }
       return true;
     }
-    if (id === 'title' || id === 'ending') { want.layer = { pid: 'maintheme', level: level * 0.9 }; return true; }
+    if (id === 'title' || id === 'ending') {
+      const mp = 'maintheme_' + storyStage(typeof G !== 'undefined' ? G.flags : null);
+      if (recOK(mp)) return planArea(mp, level);                // the stage's recording takes turns with the title cue
+      want.layer = { pid: 'maintheme', level: level * 0.9 }; return true;   // fallback: the procedural motif over title.mp3
+    }
     const pid = typeof G !== 'undefined' ? pieceFor(G.mapId, id) : null;
     if (!pid) return true;
+    return planArea(pid, level);
+  }
+  // the area slot: play (recording or procedural piece) -> gap -> maybe the MP3 cue's turn -> play again
+  function planArea(pid, level) {
     if (AS.pid !== pid) { retire(insts.area); insts.area = null; AS.pid = pid; AS.phase = 'play'; AS.t = 0; AS.count = 0; }
     want.area = { pid, level };
     return AS.phase === 'mp3';
@@ -530,25 +593,33 @@ const SCORE = (() => {
           if (AS.phase === 'mp3') { AS.phase = 'play'; }
           else {                                                      // end of a gap: maybe hand the turn to the MP3 cue
             AS.count++;
-            const def = P[AS.pid];
+            const def = defOf(AS.pid);
             if (def.mp3Every && AS.count % def.mp3Every === 0) { AS.phase = 'mp3'; AS.t = rand(def.mp3Window); } else AS.phase = 'play';
           }
         }
         continue;
       }
       if (w && inst && inst.pid !== w.pid) { retire(inst); inst = insts[k] = null; }
+      if (inst && inst.rec && (inst.failed || inst.el.error || (now - inst.born > 12 && inst.el.readyState < 2 && !inst.el.paused))) {
+        // the recording is missing or broken: this piece falls back to its procedural version for the rest of the session
+        recFailed[inst.pid] = true; console.warn('score: recording failed, falling back: ' + inst.pid);
+        retire(inst); inst = insts[k] = null;
+        if (REC[w ? w.pid : ''] && REC[w.pid].main) { AS.pid = null; want.area = null; continue; }   // main theme: the layer path takes over next request
+      }
       if (lvl > 0.001 && !inst && ctx.state !== 'closed') inst = insts[k] = makeInstance(ctx, w.pid, 0);
       if (!inst) continue;
       if (lvl > 0.001) {
         inst.idle = 0;
         if (Math.abs(inst.level - lvl) > 0.01) setLevel(inst, lvl);
-        if (ctx.state === 'running' || ctxOverride) advance(inst, now);
+        if (inst.rec) { if (ctx.state === 'running') recPlay(inst); }
+        else if (ctx.state === 'running' || ctxOverride) advance(inst, now);
         if (inst.done && now >= inst.endAt && k === 'area') {                 // the piece has played through: fall silent
-          retire(inst); insts.area = null; AS.phase = 'gap'; AS.t = rand(P[AS.pid].gap);
+          retire(inst); insts.area = null; AS.phase = 'gap'; AS.t = rand(defOf(AS.pid).gap);
         }
       } else {
         if (inst.level > 0) setLevel(inst, 0);
         inst.idle += dt;
+        if (inst.rec && inst.idle > 2.5 && !inst.el.paused) { try { inst.el.pause(); } catch (e) { /* ok */ } }   // faded out: stop streaming
         // a boss theme or title layer never resumes mid-phrase; an area piece waits a minute for you to come back
         if (inst.idle > (k === 'area' ? 60 : 4)) { retire(inst); insts[k] = null; }
       }
@@ -594,7 +665,7 @@ const SCORE = (() => {
     const grid = document.querySelector('#modal-panel .ctl-grid');
     if (!grid || document.getElementById('score-mode')) return;
     const lab = el('span', { class: 'gfx-label' }, 'Score ');
-    lab.appendChild(el('small', { class: 'muted' }, 'original is the ten recorded cues only; extended adds area, boss and story pieces'));
+    lab.appendChild(el('small', { class: 'muted' }, 'original is the ten recorded cues only; extended adds composed pieces for areas, bosses and the story'));
     const b = el('button', { class: 'dfbtn small', id: 'score-mode', type: 'button' }, '');
     const sync = () => { b.textContent = extended() ? 'Extended' : 'Original'; b.setAttribute('aria-pressed', extended() ? 'true' : 'false'); b.setAttribute('aria-label', 'Score: ' + b.textContent); b.classList.toggle('sel', extended()); };
     b.onclick = () => { setMode(extended() ? 'original' : 'extended'); sync(); };
@@ -628,10 +699,13 @@ const SCORE = (() => {
   return {
     state, extended, setMode, load, save, appendRow, plan, tick, pieceFor, bossFor, engagedBoss, storyStage, renderOffline, useContext, dropAll,
     PIECES: P, STAGES, AREA_BY_MAP, CUES_FOR, BOSS_BY_TYPE, MODE, deg,
+    recordings: REC, REC_DIR, recElement(slot) { const i = insts[slot]; return i && i.rec ? i.el : null; },
+    get recsOn() { return recsOn; }, set recsOn(v) { recsOn = !!v; },
+    get recFailed() { return Object.assign({}, recFailed); }, resetRecFailures() { for (const k in recFailed) delete recFailed[k]; },
     setSeed(s) { seedBase = s == null ? null : s >>> 0; seedN = 0; },
     get want() { return { area: want.area && want.area.pid, boss: want.boss && want.boss.pid, layer: want.layer && want.layer.pid }; },
     get area() { return { pid: AS.pid, phase: AS.phase, t: AS.t, count: AS.count }; },
-    get active() { const o = {}; for (const k in insts) if (insts[k]) o[k] = { pid: insts[k].pid, bar: insts[k].bar, done: insts[k].done, level: insts[k].level, stage: insts[k].S.stage }; return o; },
+    get active() { const o = {}; for (const k in insts) if (insts[k]) { const i = insts[k]; o[k] = { pid: i.pid, bar: i.bar, done: i.done, level: i.level, stage: i.S.stage, rec: !!i.rec, src: i.rec ? i.el.getAttribute('src') : null, paused: i.rec ? i.el.paused : null, loop: i.rec ? i.el.loop : null, t: i.rec ? i.el.currentTime : null }; } return o; },
     get retiredCount() { return retired.length; },
     forceArea(phase, t) { AS.phase = phase; AS.t = t || 0; },
   };

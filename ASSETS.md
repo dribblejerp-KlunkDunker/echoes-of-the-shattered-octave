@@ -54,6 +54,37 @@ Ten MP3 cues streamed by `Audio_.music` (js/audio.js). The README calls the scor
 
 If a General MIDI soundfont was used to render these, its licence also applies to the audio. Check this before any release.
 
+### Extended score (music/extended/)
+
+Phase 8. Twenty-two recorded pieces used only when Options > Score is Extended (js/score.js falls back to its procedural pieces if a file is missing). Each is written as Python in `tools/music/pieces/`, rendered with `python3 tools/music/render_all.py`, checked with `check.py` (duration, loudness, peak, silence, spectrogram) and `chroma.py` (key). The folder is about 28.8 MB. All pieces are normalised to about -17.5 LUFS with peaks under -2.5 dBFS; boss themes loop (the reverb tail is folded onto the start); area pieces end by fading to silence.
+
+| File | Used for | Size | Source | Licence | Status |
+|---|---|---|---|---|---|
+| `extended/oakhaven.mp3` | Oakhaven (Growth, F lydian, 76 bpm) | 1802 KB | composed in `tools/music/pieces/oakhaven.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/whispergrove.mp3` | Whisper-Grove (Memory, F# minor, 50 bpm) | 1812 KB | composed in `tools/music/pieces/whispergrove.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/deepwoods.mp3` | Deep Woods (F phrygian, 46 bpm) | 1924 KB | composed in `tools/music/pieces/deepwoods.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/quarry.mp3` | Quarry (C phrygian, 60 bpm) | 1719 KB | composed in `tools/music/pieces/quarry.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/rootvault.mp3` | Root-vault and Under-hedge (F pentatonic, 40 bpm) | 1640 KB | composed in `tools/music/pieces/rootvault.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/catacombs.mp3` | Catacombs (E dorian, 44 bpm) | 1560 KB | composed in `tools/music/pieces/catacombs.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/mausoleum.mp3` | Mausoleum and Belfry (G minor, 42 bpm) | 1650 KB | composed in `tools/music/pieces/mausoleum.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/boss_requiem.mp3` | the Requiem (Bb minor, in six) (looped) | 1085 KB | composed in `tools/music/pieces/boss_requiem.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/boss_broodmother.mp3` | the Brood-Mother (A phrygian) (looped) | 1045 KB | composed in `tools/music/pieces/boss_broodmother.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/boss_weaver.mp3` | the Phantom Weaver (F# pentatonic) (looped) | 1069 KB | composed in `tools/music/pieces/boss_weaver.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/boss_aegis.mp3` | the Aegis Sentinel (G minor) (looped) | 1055 KB | composed in `tools/music/pieces/boss_aegis.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/boss_pressman.mp3` | Pressman Mallow (A phrygian) (looped) | 1044 KB | composed in `tools/music/pieces/boss_pressman.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/boss_deacon.mp3` | the Deacon of the Unrung Bell (A minor) (looped) | 1023 KB | composed in `tools/music/pieces/boss_deacon.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/boss_wearer.mp3` | the Wearer (F) (looped) | 954 KB | composed in `tools/music/pieces/boss_wearer.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/boss_golem.mp3` | the Steam Golem (A phrygian) (looped) | 1055 KB | composed in `tools/music/pieces/boss_golem.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/boss_captain.mp3` | Outrider-Captain Brennick (A mixolydian) (looped) | 1049 KB | composed in `tools/music/pieces/boss_captain.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/maintheme_0.mp3` | main theme, stage 0 (alone); replaces the title and ending cue in turns | 1108 KB | composed in `tools/music/pieces/maintheme.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/maintheme_1.mp3` | main theme, stage 1 (harmonised); replaces the title and ending cue in turns | 1108 KB | composed in `tools/music/pieces/maintheme.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/maintheme_2.mp3` | main theme, stage 2 (shadowed); replaces the title and ending cue in turns | 1108 KB | composed in `tools/music/pieces/maintheme.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/maintheme_3.mp3` | main theme, stage 3 (broken); replaces the title and ending cue in turns | 1108 KB | composed in `tools/music/pieces/maintheme.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/maintheme_4.mp3` | main theme, stage 4 (re-forming); replaces the title and ending cue in turns | 1108 KB | composed in `tools/music/pieces/maintheme.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+| `extended/maintheme_5.mp3` | main theme, stage 5 (restored); replaces the title and ending cue in turns | 1108 KB | composed in `tools/music/pieces/maintheme.py`, FluidSynth + FluidR3 GM | MIT soundfont; composition original | verified |
+
+The soundfont is FluidR3 GM (Frank Wen), MIT licence per its Debian packaging (`fluid-soundfont-gm`); the licence text ships with that package, not with the game.
+
 ## Generated sounds (js/audio.js)
 
 No sample files. All run-time WebAudio: `Audio_.sfx.*` (footsteps by surface, hit, swing, bow, shot, hound, bell, golem, hurt, door, pickup, ui, song, fifth, murmur, press, quiet, crack, voice, thunder, rain, bird, rat), the drone and wind beds, the hush-lamp whistle and the `Audio_.hum` Root-note hum.
