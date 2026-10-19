@@ -11,7 +11,8 @@ const PRESETS = (() => {
   const LABEL = { original: 'Original', low: 'Low', medium: 'Medium', high: 'High', custom: 'Custom' };
   // Low keeps the cheap effects (decals, ceilings, emissive, stars, grade, detail, scenery) and drops these.
   // Any flag this list does not name is "unknown": on for low/medium/high, off for original.
-  const LOW_OFF = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'panoramas', 'flyovers', 'darkInteriors', 'groundShadows'];   // ground shadows cost about 1 ms a frame in town
+  const LOW_OFF = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'panoramas', 'flyovers', 'darkInteriors', 'groundShadows',
+    'sunShafts', 'heatHaze', 'glassGlare', 'seeThrough', 'coldBreath', 'footprints'];   // ground shadows cost about 1 ms a frame in town; the Phase 11 air effects are all per-frame (js/air11.js)
   // CRT curvature and the upscaling filter are display choices, not quality: presets leave them alone
   // (only 'original' switches curvature off, because GFX.plain() does).
   const NOT_PRESET = ['crtCurve'];
