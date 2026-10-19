@@ -12,5 +12,12 @@ const PAINTED_MANIFEST = {
   "area/root": {w: 1280, h: 720, bytes: 120485},
   "area/street": {w: 1280, h: 720, bytes: 102690},
   "area/woods": {w: 1280, h: 720, bytes: 147106},
-  "death/heartglass": {w: 1280, h: 720, bytes: 131974}
+  "death/bolt": {w: 1280, h: 720, bytes: 78895},
+  "death/drown": {w: 1280, h: 720, bytes: 119531},
+  "death/fall": {w: 1280, h: 720, bytes: 110390},
+  "death/greening": {w: 1280, h: 720, bytes: 143120},
+  "death/heartglass": {w: 1280, h: 720, bytes: 131974},
+  "death/quiet": {w: 1280, h: 720, bytes: 73628},
+  "death/unwrite": {w: 1280, h: 720, bytes: 134454},
+  "death/wearer": {w: 1280, h: 720, bytes: 142114}
 };

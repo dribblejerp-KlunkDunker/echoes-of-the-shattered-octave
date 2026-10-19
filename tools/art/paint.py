@@ -69,13 +69,14 @@ SKETCHES = {
     'vox': 'rows of corked glass bottles', 'tobin': 'a long tuning-fork blade', 'deed': 'a rolled deed with a wax seal', 'brood': 'egg sacs in a web',
     'vesper': 'an axe beside a coiled tow-line', 'herald': 'a herald with a lantern and scroll', 'folder': 'a thick grey folder tied with string',
     'footprints': 'scorched footprints on a wooden plank', 'quill': 'a quill and inkwell',
+    'reed': 'cut reed canes and a small reed-knife', 'timber': 'a felled log with a chalk cross', 'skep': 'a straw beehive skep with a few bees',
 }
 for i, (k, v) in enumerate(SKETCHES.items()): PICTURES.append(('sketch', k, v, 100 + i))
 
 
 # Pictures the local model could not paint well (anachronisms, wrong subject): left to the procedural stand-in until a
 # better painting exists (for example from Canva). --only still paints them on request.
-SKIP = {'area/workshop', 'area/arena', 'area/quarry'}
+SKIP = {'area/workshop', 'area/arena', 'area/quarry', 'death/beast', 'death/golem', 'death/grapnel', 'death/soldier', 'death/trap'}
 
 
 def trim_bars(im):
