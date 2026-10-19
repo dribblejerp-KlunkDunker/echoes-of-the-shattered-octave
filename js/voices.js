@@ -80,6 +80,7 @@ const VOICES = (() => {
     hob:       { f0: 98,  fs: 0.9,  style: 'gravel' },   // tanner
     nell:      { f0: 236, fs: 1.15, style: 'human' },
     ignatius:  { f0: 108, fs: 0.94, style: 'human' },    // Flambeau of the Pure Note
+    p12_herald: { f0: 124, fs: 0.97, style: 'human' },   // Phase 12: the Church's herald at the Rite, a carrying public voice
     townsman:  { f0: 122, fs: 0.97, style: 'human' },
     townswoman:{ f0: 202, fs: 1.08, style: 'human' },
     sable:     { f0: 208, fs: 1.1,  style: 'human' },
