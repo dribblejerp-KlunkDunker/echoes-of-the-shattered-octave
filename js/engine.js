@@ -15,19 +15,45 @@ const SNAP_DOWN = 0.2;  // walking down less than this per step keeps your feet 
 const Engine = (() => {
   const canvas = document.getElementById('view');
   const ctx = canvas.getContext('2d', { alpha: false });
-  const frame = ctx.createImageData(VW, VIEW_H);
-  const fb = new Uint32Array(frame.data.buffer);
-  const zbuf = new Float32Array(VW);
-  const ztop = new Float32Array(VW);   // screen row of the nearest wall's top edge, per column
-  // Per-pixel depth for maps with relief (raised ground, slopes, low walls,
-  // towers). Sprites test against it pixel by pixel, so a crest, a parapet or
-  // a stepped roof hides exactly what is behind it and nothing more.
-  const dbuf = new Float32Array(VW * VIEW_H);
+  // The 3D view renders at S times the logical 320x150 (S = 1 or 2). Everything
+  // outside the engine - HUD, overlays, input, picking - keeps working in the
+  // logical 320x200 space: the canvas grows and its 2D transform scales by S.
+  let S = 1, RW = VW, RH = VIEW_H;
+  let frame = ctx.createImageData(RW, RH);
+  let fb = new Uint32Array(frame.data.buffer);
+  let zbuf = new Float32Array(RW);
+  let ztop = new Float32Array(RW);   // screen row of the nearest wall's top edge, per column
+  // Per-pixel depth (both render paths fill it every frame). On relief maps
+  // sprites test against it pixel by pixel, so a crest, a parapet or a stepped
+  // roof hides exactly what is behind it; post passes use it everywhere.
+  let dbuf = new Float32Array(RW * RH);
+  // What each pixel shows, for post passes: see MAT below.
+  let mbuf = new Uint8Array(RW * RH);
+  const MAT = { other: 0, sky: 1, water: 2, shallows: 3, wall: 4, ground: 5, sprite: 6, ceiling: 7 };
   const SURF_BIAS = 0.45;   // ground never swallows the feet of what stands on it
+  // ---- extension points ------------------------------------------------
+  // Sky hooks run after the sky, sun and moon and before the horizon ridges;
+  // post hooks run after sprites, before the frame is shown. A hook that
+  // throws is skipped for that frame: effects never break a frame.
+  const skyHooks = [], postHooks = [];
+  function addSkyHook(fn, order) { skyHooks.push({ fn, order: order || 0 }); skyHooks.sort((a, b) => a.order - b.order); }
+  function addPostHook(fn, order) { postHooks.push({ fn, order: order || 0 }); postHooks.sort((a, b) => a.order - b.order); }
+  const FI = {};   // frame info handed to hooks; reused every frame
+  function runHooks(list) { for (let i = 0; i < list.length; i++) { try { list[i].fn(FI); } catch (err) { if (!list[i].warned) { list[i].warned = true; console.warn('render hook failed', err); } } } }
+  // close-range wall detail (a 64x64 greyscale modulation texture) and the view
+  // distance / interior darkness multipliers that presets and lighting set
+  let detail = null, detailDist = 2.5, fogK = 1, ambK = 1;
+  function setDetail(tex, dist) { detail = tex || null; if (dist) detailDist = dist; }
+  function setLook(o) { if (!o) return; if (o.fogK != null) fogK = Math.max(0.3, Math.min(2, +o.fogK || 1)); if (o.ambientK != null) ambK = Math.max(0, Math.min(2, +o.ambientK)); }
 
   // ---- asset decoding -------------------------------------------------
   const textures = {};   // name -> Uint32Array(64*64)
   const sprites = {};    // name -> {w,h,data:Uint32Array, img}
+  // Procedural art registers here the same way decoded art does.
+  function addTexture(name, data) { if (!(data instanceof Uint32Array) || data.length !== TEX * TEX) throw new Error('texture must be 64x64 Uint32Array'); textures[name] = data; return data; }
+  function addSprite(name, sp) { if (!sp || !(sp.data instanceof Uint32Array) || sp.data.length !== sp.w * sp.h) throw new Error('sprite needs w, h and Uint32Array data'); sprites[name] = Object.assign({ hs: 1, cx: 0.5, dy: 0 }, sp); return sprites[name]; }
+  // A sprite's emissive mask: 1 where a pixel gives its own light (glass, flame).
+  function setEmissive(name, mask) { const sp = sprites[name]; if (!sp) return false; sp.emit = mask && mask.length === sp.w * sp.h ? mask : null; return !!sp.emit; }
   const images = {};     // name -> HTMLImageElement (first-person weapons, etc.)
 
   function loadDataUrl(src) {
@@ -73,6 +99,13 @@ const Engine = (() => {
     const r = Math.min(255, ((px & 255) * f + tr * (1 - f)) * light_ + (cr || 0)), g = Math.min(255, (((px >> 8) & 255) * f + tg * (1 - f)) * light_ + (cg || 0)), b = Math.min(255, (((px >> 16) & 255) * f + tb * (1 - f)) * light_ + (cb || 0));
     return (255 << 24) | ((b | 0) << 16) | ((g | 0) << 8) | (r | 0);
   }
+  // close-range detail: modulate a texel by a finer greyscale pattern, k = 0..1 with distance
+  function detailPx(px, ty, tx, k) {
+    const d = detail[(((ty << 1) & 63) * TEX) + ((tx << 1) & 63)] & 255;
+    const m = 1 + (d / 255 - 0.5) * 0.45 * k;
+    const r = Math.min(255, (px & 255) * m), g = Math.min(255, ((px >> 8) & 255) * m), b = Math.min(255, ((px >> 16) & 255) * m);
+    return (px & 0xff000000) | ((b | 0) << 16) | ((g | 0) << 8) | (r | 0);
+  }
   let light_ = 1;
   let lastRelief = false;   // whether the last frame filled the per-pixel depth buffer
   // ---- weather (driven by js/weather.js) ------------------------------
@@ -92,6 +125,36 @@ const Engine = (() => {
 
   // ---- dynamic coloured point-lights ----------------------------------
   const ptLights = [];
+  // Each map light carries a visibility mask over the cells around it, so a
+  // lamp does not light the far side of a wall. Masks are pooled per frame.
+  const visPool = [];
+  function blocksLight(c, ci) {
+    if (!c) return false;
+    if (c.door) { const d = map.doors[ci]; return !(d && d.open > 0.7); }
+    if (c.top != null) { const g = map.lvls ? map.lvls[ci] : 0; if (c.top - g < 0.6) return false; }   // you can see (and light) over a low wall
+    return true;
+  }
+  function lightVis(L, k) {
+    const R = Math.ceil(L.r), D = 2 * R + 1, ox = (L.x | 0) - R, oy = (L.y | 0) - R;
+    let vis = visPool[k]; if (!vis || vis.length < D * D) vis = visPool[k] = new Uint8Array(D * D);
+    const mw = map.w, mh = map.h, grid = map.cells;
+    for (let j = 0; j < D; j++) for (let i = 0; i < D; i++) {
+      const tx = ox + i, ty = oy + j; let ok = 1;
+      if (tx < 0 || ty < 0 || tx >= mw || ty >= mh) ok = 0;
+      else {
+        // walk from the light to the cell centre; any blocking cell between them shadows it
+        const ex = tx + 0.5, ey = ty + 0.5, dx = ex - L.x, dy = ey - L.y, n = Math.ceil(Math.max(Math.abs(dx), Math.abs(dy)) * 2);
+        for (let s = 1; s < n; s++) {
+          const px = (L.x + dx * s / n) | 0, py = (L.y + dy * s / n) | 0;
+          if (px === tx && py === ty) break;
+          if (px === (L.x | 0) && py === (L.y | 0)) continue;
+          const ci = py * mw + px; if (blocksLight(grid[ci], ci)) { ok = 0; break; }
+        }
+      }
+      vis[j * D + i] = ok;
+    }
+    L.vis = vis; L.vox = ox; L.voy = oy; L.vd = D;
+  }
   function gatherLights(entities, opts) {
     ptLights.length = 0;
     if (opts && opts.playerLight) ptLights.push(opts.playerLight);
@@ -114,6 +177,12 @@ const Engine = (() => {
         ptLights.push({ x: e.x, y: e.y, r: 4.0, cr: lc[0], cg: lc[1], cb: lc[2] });
       }
     }
+    if (map) for (let k = 0; k < ptLights.length; k++) { const L = ptLights[k]; if (L.occlude === false) { L.vis = null; continue; } lightVis(L, k); }
+  }
+  function litBy(L, wx, wy) {
+    if (!L.vis) return true;
+    const i = (wx | 0) - L.vox, j = (wy | 0) - L.voy;
+    return i >= 0 && j >= 0 && i < L.vd && j < L.vd && L.vis[j * L.vd + i] === 1;
   }
   // the same sum, written to LR/LG/LB instead of a fresh array, for the
   // per-pixel relief passes where an allocation every few pixels shows up
@@ -122,7 +191,7 @@ const Engine = (() => {
     let cr = 0, cg = 0, cb = 0;
     for (let i = 0; i < ptLights.length; i++) {
       const L = ptLights[i], dx = wx - L.x, dy = wy - L.y, d2 = dx * dx + dy * dy, r2 = L.r * L.r;
-      if (d2 < r2) { const k = 1 - d2 / r2; const kk = k * k; cr += L.cr * kk; cg += L.cg * kk; cb += L.cb * kk; }
+      if (d2 < r2 && litBy(L, wx, wy)) { const k = 1 - d2 / r2; const kk = k * k; cr += L.cr * kk; cg += L.cg * kk; cb += L.cb * kk; }
     }
     LR = cr > 90 ? 90 : cr; LG = cg > 90 ? 90 : cg; LB = cb > 90 ? 90 : cb;
   }
@@ -130,7 +199,7 @@ const Engine = (() => {
     let cr = 0, cg = 0, cb = 0;
     for (let i = 0; i < ptLights.length; i++) {
       const L = ptLights[i], dx = wx - L.x, dy = wy - L.y, d2 = dx * dx + dy * dy, r2 = L.r * L.r;
-      if (d2 < r2) {
+      if (d2 < r2 && litBy(L, wx, wy)) {
         const k = 1 - d2 / r2; const kk = k * k;
         cr += L.cr * kk; cg += L.cg * kk; cb += L.cb * kk;
       }
@@ -158,10 +227,11 @@ const Engine = (() => {
     m.relief = any; m.maxTop = top;
     return any;
   }
-  function setMap(m) { scanRelief(m); map = m; cam.z = 0.5; ambient = m.ambient || 0; const fc = m.fogColor || [0, 0, 0]; baseR = fc[0]; baseG = fc[1]; baseB = fc[2]; baseFog = m.fogDist || 12; fogDist = baseFog; fogR = baseR; fogG = baseG; fogB = baseB; }
+  let ambientBase = 0;
+  function setMap(m) { scanRelief(m); map = m; cam.z = 0.5; ambientBase = ambient = m.ambient || 0; const fc = m.fogColor || [0, 0, 0]; baseR = fc[0]; baseG = fc[1]; baseB = fc[2]; baseFog = m.fogDist || 12; fogDist = baseFog; fogR = baseR; fogG = baseG; fogB = baseB; }
 
   // ---- sky -----------------------------------------------------------
-  const skyR = new Float32Array(VIEW_H), skyG = new Float32Array(VIEW_H), skyB = new Float32Array(VIEW_H);
+  let skyR = new Float32Array(RH), skyG = new Float32Array(RH), skyB = new Float32Array(RH);
   let skyDay = 1;
   // a band of slow cloud: smooth 1D noise, wrapped
   const CLOUD_N = 1024, cloud = new Float32Array(CLOUD_N);
@@ -170,8 +240,8 @@ const Engine = (() => {
     // timeOfDay 0..1 ; 0=midnight 0.5=noon; the Light is fading: colours pale
     const dayness = Math.max(0, Math.min(1, (Math.cos((timeOfDay - 0.5) * Math.PI * 2) + 0.3) / 1.3));
     const warm = Math.exp(-Math.pow(timeOfDay - 0.76, 2) / 0.004) + Math.exp(-Math.pow(timeOfDay - 0.26, 2) / 0.004);
-    for (let y = 0; y < VIEW_H; y++) {
-      const t = y / VIEW_H; // 0 top .. 1 horizon-ish
+    for (let y = 0; y < RH; y++) {
+      const t = y / RH; // 0 top .. 1 horizon-ish
       // night: deep indigo -> grey ; day: pale washed sky -> dusty horizon
       const nr = 10 + 30 * t, ng = 10 + 28 * t, nb = 24 + 36 * t;
       const dr = 140 + 70 * t, dg = 152 + 58 * t, db = 168 + 32 * t;
@@ -184,7 +254,7 @@ const Engine = (() => {
       if (wxCloud > 0.01) {
         const t0 = (typeof performance !== 'undefined' ? performance.now() : Date.now()) / 1000;
         const scroll = (t0 * (4 + 16 * wxCloud)) | 0;
-        const cl = cloud[((y * 5 + scroll) & (CLOUD_N - 1))];
+        const cl = cloud[((((y / S) | 0) * 5 + scroll) & (CLOUD_N - 1))];
         const band = 0.4 + 0.6 * (1 - t);
         const shade = 1 - (0.10 + 0.52 * wxCloud) * (0.5 + 0.5 * cl) * band;
         r *= shade; g *= shade; b *= shade * 0.985;
@@ -205,21 +275,22 @@ const Engine = (() => {
   function render(entities, timeOfDay, opts) {
     opts = opts || {};
     if (!map) return;
-    const w = VW, h = VIEW_H;
+    const w = RW, h = RH;
     const outdoor = !!map.outdoor;
+    ambient = outdoor ? ambientBase : ambientBase * ambK;
     if (outdoor) buildSky(timeOfDay);
     gatherLights(entities, opts);
     const grid = map.cells, mw = map.w, mh = map.h;
     const dirX = Math.cos(cam.dir), dirY = Math.sin(cam.dir);
     const planeX = -dirY * FOV * 0.66, planeY = dirX * FOV * 0.66;
-    const horizon = (h >> 1) + (cam.pitch | 0) + (cam.bob | 0);
+    const horizon = (h >> 1) + ((cam.pitch * S) | 0) + ((cam.bob * S) | 0);
     const posZ = 0.5 * h;
     const flick = lightFlicker;
     const light = outdoor ? 1 : 1;
     // weather: thicker air, lower light, and one bright frame of lightning.
     // It is the sky's business only: interiors keep their own air and lamps.
     const wxK = outdoor ? 1 : 0;
-    fogDist = baseFog * (1 - wxHaze * 0.4 * wxK);
+    fogDist = baseFog * fogK * (1 - wxHaze * 0.4 * wxK);
     fogR = baseR * (1 - wxHaze * wxK) + wxTR * wxHaze * wxK;
     fogG = baseG * (1 - wxHaze * wxK) + wxTG * wxHaze * wxK;
     fogB = baseB * (1 - wxHaze * wxK) + wxTB * wxHaze * wxK;
@@ -253,28 +324,36 @@ const Engine = (() => {
       return heightMap ? heightMap[i] : 0;
     };
     const fogPx = rgb(fogR, fogG, fogB);
+    const ceilZ = map.ceilZ || 1;                     // absolute ceiling height (interiors)
+    const ceilMap = map.ceilCells, ceilTexList = map.ceilTextures ? map.ceilTextures.map(n => textures[n]) : null;
+    const decals = map.decals || null;                // cell index -> decal texture name
+    const MAT_W = 4, MAT_G = 5;
 
     for (let y = 0; y < h; y++) {
       const isFloor = y > horizon;
       if (relief && isFloor) continue;   // the column pass owns the ground on relief maps
       if (!isFloor) {
         if (outdoor) {
-          const sy = Math.max(0, Math.min(h - 1, y - cam.pitch - cam.bob + (h >> 2)));
+          const sy = Math.max(0, Math.min(h - 1, y - ((cam.pitch + cam.bob) * S | 0) + (h >> 2)));
           const br = skyR[sy], bg = skyG[sy], bb = skyB[sy];
           const amp = (6 + 14 * skyDay) * (1 - sy / h);
-          const base = ((cam.dir / (Math.PI * 2)) * CLOUD_N * 1.6 + sy * 2.1) | 0;
+          const base = ((cam.dir / (Math.PI * 2)) * CLOUD_N * 1.6 + (sy / S) * 2.1) | 0;
           let o = y * w;
           for (let x = 0; x < w; x++) {
-            const cv = cloud[(base + ((x * 1.7) | 0)) & (CLOUD_N - 1)] * amp;
+            const cv = cloud[(base + (((x / S) * 1.7) | 0)) & (CLOUD_N - 1)] * amp;
+            dbuf[o] = 1e9; mbuf[o] = 1;
             fb[o++] = (255 << 24) | (((bb + cv) | 0) << 16) | (((bg + cv) | 0) << 8) | ((br + cv) | 0);
           }
           continue;
         }
-        if (!ceilTex) { let o = y * w; const c = rgb(fogR, fogG, fogB); for (let x = 0; x < w; x++) fb[o++] = c; continue; }
+        if (!ceilTex) { let o = y * w; const c = rgb(fogR, fogG, fogB); for (let x = 0; x < w; x++) { dbuf[o] = 1e9; mbuf[o] = 0; fb[o++] = c; } continue; }
       }
       const p = isFloor ? (y - horizon) : (horizon - y);
-      if (p === 0) { let o = y * w; for (let x = 0; x < w; x++) fb[o++] = fogPx; continue; }
-      const rowDist = posZ / p;
+      if (p === 0) { let o = y * w; for (let x = 0; x < w; x++) { dbuf[o] = 1e9; mbuf[o] = 0; fb[o++] = fogPx; } continue; }
+      // the floor is half a unit below the eye on flat maps; a ceiling sits at
+      // its own absolute height (one unit unless the map says otherwise)
+      const rowDist = isFloor ? posZ / p : (ceilZ - cam.z) * h / p;
+      const rowDepth = isFloor ? rowDist + SURF_BIAS : rowDist, rowMat = isFloor ? MAT_G : 7;
       let f = light * (1 - rowDist * fogMul);
       if (f < 0) f = 0;
       f = ambient + (1 - ambient) * f;
@@ -291,10 +370,12 @@ const Engine = (() => {
         const tx = ((fx - cx) * TEX) & 63, ty = ((fy - cy) * TEX) & 63;
         let t = tex;
         if (isFloor && floorMap && cx >= 0 && cy >= 0 && cx < mw && cy < mh) { const idx = floorMap[cy * mw + cx]; if (idx) t = floorTexList[idx]; }
-        let px;
-        if (t === texWater) px = t[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)];
-        else if (t === texShal) px = t[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)];
+        else if (!isFloor && ceilMap && cx >= 0 && cy >= 0 && cx < mw && cy < mh) { const idx = ceilMap[cy * mw + cx]; if (idx && ceilTexList[idx]) t = ceilTexList[idx]; }
+        let px, mat = rowMat;
+        if (t === texWater) { px = t[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)]; mat = 2; }
+        else if (t === texShal) { px = t[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)]; mat = 3; }
         else px = t[ty * TEX + tx];
+        dbuf[o] = rowDepth; mbuf[o] = mat;
         fb[o++] = outdoor ? tint(px, fi, fogR, fogG, fogB, fcr, fcg, fcb) : shade(px, fi, fcr, fcg, fcb);
         fx += stepX; fy += stepY;
       }
@@ -335,6 +416,10 @@ const Engine = (() => {
         }
       }
     }
+
+    // -- sky hooks: stars, panoramas, things crossing the sky -----------
+    Object.assign(FI, { fb, dbuf, mbuf, w, h, S, horizon, dirX, dirY, planeX, planeY, cam, map, outdoor, tod: timeOfDay, skyDay, light: light_, fogR, fogG, fogB, fogDist, animT, ptLights, relief, wx: { haze: wxHaze, dark: wxDark, cloud: wxCloud, flash: wxFlash } });
+    if (skyHooks.length) runHooks(skyHooks);
 
     // -- distant landmarks (horizon silhouettes, outdoor only) --------
     if (outdoor && typeof LANDMARKS !== 'undefined') {
@@ -400,15 +485,21 @@ const Engine = (() => {
       const fi = Math.round(f * 255) / 255;
       let tp = (dsC - ds) * step;
       let o = dsC * w + x;
-      const hitX = cam.x + dist * face.rdx, hitY = cam.y + dist * face.rdy;
+      // light is sampled just in front of the face, in the open cell it faces
+      const hitX = cam.x + (dist - 0.02) * face.rdx, hitY = cam.y + (dist - 0.02) * face.rdy;
       const [lcr, lcg, lcb] = ptLights.length ? sampleLight(hitX, hitY) : [0, 0, 0];
       const ditherOn = !!(opts && opts.dither);
+      const dec = decals && face.ci != null && decals[face.ci] ? textures[decals[face.ci]] : null;
+      const det = detail && dist < detailDist ? 1 - dist / detailDist : 0;
       for (let y = dsC; y <= deC; y++) {
         const ty = (tp | 0) & 63; tp += step;
-        const px = tex[ty * TEX + tx];
+        let px = tex[ty * TEX + tx];
+        if (dec) { const d = dec[ty * TEX + tx]; if ((d >>> 24) > 100) px = d; }
+        if (det) px = detailPx(px, ty, tx, det);
         const df = ditherOn ? (BAYER[((y & 3) << 2) | (x & 3)] - 7.5) * 0.0045 : 0;
         const fUse = df ? Math.max(0, Math.min(1, fi + df)) : fi;
         fb[o] = outdoor ? tint(px, fUse, fogR, fogG, fogB, lcr, lcg, lcb) : shade(px, fUse, lcr, lcg, lcb);
+        dbuf[o] = dist; mbuf[o] = MAT_W;
         o += w;
       }
       return dsC;
@@ -461,13 +552,13 @@ const Engine = (() => {
               frac = hx - mapX;
               if (frac < openAmt) continue;
             }
-            faces.push({ dist, wallX: frac - openAmt, base: cellLvl, top: cellLvl + 1, side, rdx, rdy, tex: c.tex });
+            faces.push({ dist, wallX: frac - openAmt, base: cellLvl, top: cellLvl + 1, side, rdx, rdy, tex: c.tex, ci: mapY * mw + mapX });
             break;
           }
           const dist = side === 0 ? (sdx - ddx) : (sdy - ddy);
           let wx = side === 0 ? cam.y + dist * rdy : cam.x + dist * rdx;
           wx -= Math.floor(wx);
-          faces.push({ dist, wallX: wx, base: cellLvl, top: c.top != null ? c.top : cellLvl + 1, side, rdx, rdy, tex: c.tex });
+          faces.push({ dist, wallX: wx, base: cellLvl, top: c.top != null ? c.top : cellLvl + 1, side, rdx, rdy, tex: c.tex, ci: mapY * mw + mapX });
           break;
         }
         if (heightMap) prevLvl = cellLvl;
@@ -518,10 +609,11 @@ const Engine = (() => {
           const t = t0 + s * dt;
           const fx = CX + t * rdx, fy = CY + t * rdy;
           const tx = ((fx - (fx | 0)) * TEX) & 63, ty = ((fy - (fy | 0)) * TEX) & 63;   // map space is never negative
-          let px;
-          if (tex === texWater) px = tex[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)];
-          else if (tex === texShal) px = tex[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)];
+          let px, mat = MAT_G;
+          if (tex === texWater) { px = tex[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)]; mat = 2; }
+          else if (tex === texShal) { px = tex[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)]; mat = 3; }
           else px = tex[ty * TEX + tx];
+          mbuf[o] = mat;
           let f = light * (1 - t * fogMul); if (f < 0) f = 0;
           f = ambient + (1 - ambient) * f;
           if (!outdoor) f *= flick;
@@ -534,7 +626,7 @@ const Engine = (() => {
       };
       // a vertical face at distance t from zLo to zHi: texHi above zSplit
       // (a wall), texLo below it (the side of the ground the wall stands on)
-      const riser = (x, rdx, rdy, t, zLo, zHi, wallX, side, texHi, zSplit, texLo, clip) => {
+      const riser = (x, rdx, rdy, t, zLo, zHi, wallX, side, texHi, zSplit, texLo, clip, ci) => {
         if (zHi - zLo < 0.02) return clip;
         const yT = horizon + h * (CZ - zHi) / t, yBt = horizon + h * (CZ - zLo) / t;
         let ys = yT | 0; if (ys < 0) ys = 0;
@@ -548,7 +640,9 @@ const Engine = (() => {
         if (!outdoor) f *= flick;
         const fi = Math.round(f * 255) / 255;
         let cr = 0, cg = 0, cb = 0;
-        if (nL) { sampleLightV(CX + t * rdx, CY + t * rdy); cr = LR; cg = LG; cb = LB; }
+        if (nL) { sampleLightV(CX + (t - 0.02) * rdx, CY + (t - 0.02) * rdy); cr = LR; cg = LG; cb = LB; }
+        const dec = decals && ci != null && decals[ci] ? textures[decals[ci]] : null;
+        const det = detail && t < detailDist ? 1 - t / detailDist : 0;
         const k = t / h;
         let o = ys * w + x;
         for (let y = ys; y <= ye; y++, o += w) {
@@ -556,14 +650,18 @@ const Engine = (() => {
           const hi = z >= zSplit - 1e-4;
           const tex = hi ? texHi : texLo;
           const ty = (((hi ? zHi : zSplit) - z) * TEX | 0) & 63;
-          const px = tex[ty * TEX + tx];
+          let px = tex[ty * TEX + tx];
+          if (hi && dec) { const d = dec[ty * TEX + tx]; if ((d >>> 24) > 100) px = d; }
+          if (det) px = detailPx(px, ty, tx, det);
           const df = ditherOn ? (BAYER[((y & 3) << 2) | (x & 3)] - 7.5) * 0.0045 : 0;
           const fUse = df ? Math.max(0, Math.min(1, fi + df)) : fi;
           fb[o] = outdoor ? tint(px, fUse, fogR, fogG, fogB, cr, cg, cb) : shade(px, fUse, cr, cg, cb);
-          dbuf[o] = t;
+          dbuf[o] = t; mbuf[o] = MAT_W;
         }
         return ys < clip ? ys : clip;
       };
+      // interiors: walls reach the ceiling unless they carry their own top
+      const wallTop0 = map.ceil ? ceilZ : 0;
       for (let x = 0; x < w; x++) {
         const camX = 2 * x / w - 1;
         const rdx = dirX + planeX * camX, rdy = dirY + planeY * camX;
@@ -619,10 +717,12 @@ const Engine = (() => {
                 clip = riser(x, rdx, rdy, tIn, zOut, base, wallX, side, sideOf(cx, cy), -1e9, null, clip);
                 clip = surf(x, rdx, rdy, tIn, base, tD, base, texOfFloor(cx, cy), clip);
                 const dTex = textures[c.tex] || stoneTex;
-                clip = riser(x, rdx, rdy, tD, base, base + 1, frac - openAmt, side, dTex, base, dTex, clip);
+                clip = riser(x, rdx, rdy, tD, base, base + 1, frac - openAmt, side, dTex, base, dTex, clip, ci);
+                // a lintel over the door, up to the ceiling of a tall room
+                if (wallTop0 > base + 1) clip = riser(x, rdx, rdy, tD, base + 1, wallTop0, frac - openAmt, side, stoneTex, base + 1, stoneTex, clip);
                 if (tD < nearest) nearest = tD;
                 // past a closed door: only taller things beyond can still show
-                capZ = base + 1; capTex = dTex; tIn = tD;
+                capZ = Math.max(base + 1, wallTop0); capTex = dTex; tIn = tD;
                 continue;
               }
             }
@@ -633,10 +733,10 @@ const Engine = (() => {
           if (c) {
             // a block: its face rises from whatever ground is in front to its
             // top; above its own base it wears the wall texture
-            const top = c.top != null ? c.top : base + 1;
+            const top = c.top != null ? c.top : Math.max(base + 1, wallTop0);
             const wTex = textures[c.tex] || stoneTex;
             if (tIn < nearest && top > zOut + 0.02) nearest = tIn;
-            clip = riser(x, rdx, rdy, tIn, zOut, top, wallX, side, wTex, base, sideOf(cx, cy), clip);
+            clip = riser(x, rdx, rdy, tIn, zOut, top, wallX, side, wTex, base, sideOf(cx, cy), clip, ci);
             capZ = top; capTex = (c.capTex && textures[c.capTex]) || wTex;
             continue;
           }
@@ -648,8 +748,9 @@ const Engine = (() => {
         }
         // what the ray never reached is air: haze below the horizon, sky above
         zbuf[x] = nearest; ztop[x] = clip;
-        let o = x;
-        for (let y = 0; y < clip; y++, o += w) { dbuf[o] = 1e9; if (y > horizon) fb[o] = fogPx; }
+        // rows at or above the horizon already hold sky or ceiling (and their depth)
+        let o = (horizon + 1) * w + x;
+        for (let y = horizon + 1; y < clip; y++, o += w) { if (y < 0) continue; dbuf[o] = 1e9; mbuf[o] = 0; fb[o] = fogPx; }
       }
     }
 
@@ -703,11 +804,12 @@ const Engine = (() => {
       const xs = Math.max(0, (dsX + Math.min(0, shTop)) | 0), xe = Math.min(w - 1, (deX + Math.max(0, shTop)) | 0);
       const ys = Math.max(0, dsY), ye = Math.min(h - 1, deY);
       if (xe < xs || ye < ys) continue;
-      e._screen = { x0: dsX, x1: deX, y0: dsY, y1: deY, dist: d, z: trY };
+      e._screen = { x0: dsX / S, x1: deX / S, y0: dsY / S, y1: deY / S, dist: d, z: trY };
       const tw = sp.w, th = sp.h, sdat = sp.data;
       const [scr, scg, scb] = ptLights.length ? sampleLight(e.x, e.y) : [0, 0, 0];
       const ecr = e.elite ? scr + 28 : scr, ecg = e.elite ? scg + 20 : scg, ecb = scb;
-      const plain = !skew && !flip && alpha >= 1 && !hurt;
+      const emit = sp.emit || null, fiE = Math.max(fi, 0.95);
+      const plain = !skew && !flip && alpha >= 1 && !hurt && !emit;
       const aT = alpha * 16;
       for (let x = xs; x <= xe; x++) {
         // a wall in front hides only the pixels below its top edge, so a body
@@ -721,7 +823,7 @@ const Engine = (() => {
           for (let y = ys; y <= yEnd; y++) {
             const ty = (((y - dsY) * th) / sprH) | 0;
             const px = sdat[ty * tw + tx];
-            if ((px >>> 24) > 100 && (!relief || dbuf[o] > trY)) fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fi, ecr, ecg, ecb));
+            if ((px >>> 24) > 100 && (!relief || dbuf[o] > trY)) { fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fi, ecr, ecg, ecb)); dbuf[o] = trY; mbuf[o] = 6; }
             o += w;
           }
           continue;
@@ -734,14 +836,18 @@ const Engine = (() => {
           const ty = (((y - dsY) * th) / sprH) | 0;
           let px = sdat[ty * tw + tx];
           if ((px >>> 24) > 100 && (!relief || dbuf[o] > trY)) {
+            const fiP = emit && emit[ty * tw + tx] ? fiE : fi;
+            dbuf[o] = trY; mbuf[o] = 6;
             if (hurt) { const r = px & 255, g = (px >>> 8) & 255, b = (px >>> 16) & 255, k = hurt * 0.45; px = ((px & 0xff000000) | ((b * (1 - k)) << 16) | ((g * (1 - k)) << 8) | (r + (255 - r) * k)) >>> 0; }
-            fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fi, ecr, ecg, ecb));
+            fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fiP, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fiP, ecr, ecg, ecb));
           }
           o += w;
         }
       }
     }
 
+    // -- post hooks: fog grading, bloom, mist, water ------------------
+    if (postHooks.length) { FI.light = light_; FI.ambient = ambient; runHooks(postHooks); }
     // -- post: hush / damage tints handled by caller via overlay -------
     ctx.putImageData(frame, 0, 0);
   }
@@ -761,8 +867,8 @@ const Engine = (() => {
       for (const cy of aim === eye ? [aim] : [aim, eye]) {
         if (!(cy >= s.y0 && cy <= s.y1 + 6)) continue;
         if (lastRelief && s.z) {
-          const ry = Math.max(s.y0, Math.min(s.y1, cy)) | 0, px = Math.max(0, Math.min(VW - 1, cx | 0));
-          if (ry >= 0 && ry < VIEW_H && dbuf[ry * VW + px] < s.z - 0.05) continue;   // something solid is in front
+          const ry = (Math.max(s.y0, Math.min(s.y1, cy)) * S) | 0, px = Math.max(0, Math.min(RW - 1, (cx * S) | 0));
+          if (ry >= 0 && ry < RH && dbuf[ry * RW + px] < s.z - 0.05) continue;   // something solid is in front
         }
         ok = true; break;
       }
@@ -786,6 +892,26 @@ const Engine = (() => {
   function setTime(t) { animT = t; }
 
   // depth of what was drawn at a screen pixel on the last relief frame (1e9 = sky/air)
-  function depthAt(x, y) { x |= 0; y |= 0; if (x < 0 || y < 0 || x >= VW || y >= VIEW_H) return 1e9; return dbuf[y * VW + x]; }
-  return { canvas, ctx, cam, textures, sprites, images, loadAll, render, setMap, scanRelief, setWeather, pick, pickWall, setFlicker, setTime, depthAt, rgb, VW, VH, VIEW_H };
+  // depth and material at a logical (320x150) pixel of the last frame
+  function depthAt(x, y) { x = (x * S) | 0; y = (y * S) | 0; if (x < 0 || y < 0 || x >= RW || y >= RH) return 1e9; return dbuf[y * RW + x]; }
+  function materialAt(x, y) { x = (x * S) | 0; y = (y * S) | 0; if (x < 0 || y < 0 || x >= RW || y >= RH) return 0; return mbuf[y * RW + x]; }
+  // Render the 3D view at 1x or 2x. The canvas grows with it and its 2D
+  // transform scales, so HUD and overlay code keep drawing in 320x200.
+  function setScale(s) {
+    s = s === 2 ? 2 : 1;
+    if (s === S && canvas.width === VW * s) return S;
+    S = s; RW = VW * S; RH = VIEW_H * S;
+    canvas.width = VW * S; canvas.height = VH * S;
+    ctx.setTransform(S, 0, 0, S, 0, 0); ctx.imageSmoothingEnabled = false;
+    frame = ctx.createImageData(RW, RH); fb = new Uint32Array(frame.data.buffer);
+    zbuf = new Float32Array(RW); ztop = new Float32Array(RW);
+    dbuf = new Float32Array(RW * RH); mbuf = new Uint8Array(RW * RH);
+    skyR = new Float32Array(RH); skyG = new Float32Array(RH); skyB = new Float32Array(RH);
+    return S;
+  }
+  function getScale() { return S; }
+  // the coloured light the given entities cast on a world point (walls shadow it)
+  function lightAt(entities, wx, wy) { if (!map) return [0, 0, 0]; gatherLights(entities, {}); return sampleLight(wx, wy); }
+  return { canvas, ctx, cam, textures, sprites, images, loadAll, render, setMap, scanRelief, setWeather, pick, pickWall, setFlicker, setTime, depthAt, materialAt, rgb, VW, VH, VIEW_H,
+    setScale, getScale, lightAt, addSkyHook, addPostHook, addTexture, addSprite, setEmissive, setDetail, setLook, MAT };
 })();

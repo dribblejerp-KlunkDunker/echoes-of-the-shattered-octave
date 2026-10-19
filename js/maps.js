@@ -272,7 +272,6 @@ function buildOakhaven(greening) {
       }
     }
   }
-  shapeOakhaven(m);
   // Mooring mast (east): a wooden pylon with crates
   m.rect(36, 19, 37, 20, 't_wood');
   m.deco('crates', 35.5, 21.5); m.deco('sign', 38.5, 21.5, { radius: 0.2 });
@@ -320,6 +319,7 @@ function buildOakhaven(greening) {
     m.npc('townswoman', 27.5, 19.5, { wander: true }); m.npc('townswoman', 9.5, 14.5, { wander: true }); m.npc('townswoman', 34.5, 34.5, { wander: true });
     m.item('tonic', 7.5, 36.5); m.item('pellets', 42.5, 12.5); m.item('sovereigns', 42.5, 35.5);
   }
+  shapeOakhaven(m);   // last, so later cells (the mast, the plinth) take their heights
   m.baseCount = m.entities.length;
   return m;
 }

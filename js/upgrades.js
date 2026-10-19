@@ -1063,7 +1063,7 @@ function applyVisualSettings() {
   if (vEl && UPG.pixelScale) {
     const w = UPG.pixelScale === 2 ? 640 : 320;
     const h = UPG.pixelScale === 2 ? 400 : 200;
-    if (vEl.width !== 320) { vEl.width = 320; vEl.height = 200; } // internal raycaster stays 320x200
+    // the canvas size belongs to the engine now (Engine.setScale renders the view at 1x or 2x)
     vEl.style.filter = UPG.crt ? 'contrast(1.08) brightness(1.04)' : '';
   }
 }
