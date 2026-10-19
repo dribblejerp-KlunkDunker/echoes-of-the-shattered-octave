@@ -509,7 +509,7 @@ const PARISH = (function () {
     hookClearing(maps.clearing);
     for (const id of MAPS) { const mm = maps[id]; mm.baseCount = mm.entities.length; }
     if (maps.clearing) {
-      maps.clearing.baseCount = maps.clearing.entities.length;
+      // no entity is added to the clearing, so its baseCount stays the game's own (scenery props sit after it)
       const rd = maps.clearing._p9pRoad, door = maps.greenroot.get(0, 13);
       if (rd && door && door.portal) door.portal = { map: 'clearing', x: maps.clearing.w - 1.6, y: rd.y + 0.5, dir: Math.PI };
     }

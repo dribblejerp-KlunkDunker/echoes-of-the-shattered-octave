@@ -634,7 +634,7 @@ const HELPERS = () => {
       const o = await E(() => {
         T.reset(); G.state = 'panel'; renderAccessibilityMenu();
         const cap = document.getElementById('ac-cap'), rp = document.getElementById('rp-toggle'), lab = document.getElementById('p9-despair-label'), b = document.getElementById('p9-despair');
-        const r = { has: !!b && !!lab, after: !!rp && rp.nextElementSibling === lab && lab.nextElementSibling === b };
+        const r = { has: !!b && !!lab, after: !!rp && !!lab && !!(rp.compareDocumentPosition(lab) & Node.DOCUMENT_POSITION_FOLLOWING) && lab.nextElementSibling === b };   // other Phase 9 rows may sit between
         renderAccessibilityMenu(); r.dup = document.querySelectorAll('#p9-despair').length;
         const btn = document.getElementById('p9-despair'); const was = UPG.p9Despair;
         btn.click(); r.off = UPG.p9Despair; r.stored = localStorage.getItem('octave.p9.despair.v1'); r.pressed = document.getElementById('p9-despair').getAttribute('aria-pressed');
