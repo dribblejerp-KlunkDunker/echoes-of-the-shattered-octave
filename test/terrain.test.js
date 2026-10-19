@@ -24,6 +24,9 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       function check(ok, text) { if (!ok) throw new Error(text); }
       const hold = n => { for (let i = 0; i < n; i++) { G.keys = { w: true }; update(0.033); } G.keys = {}; };
       G.state = 'play'; G.tod = 0.45; G.player.hp = G.player.hpMax;
+      // the Watch-stone has a proctor and mites on it: keep them out of the
+      // physics under test so a stray bite cannot masquerade as fall damage
+      for (const e of G.maps.clearing.entities) if (e.kind === 'enemy') e.hidden = true;
       // --- the Watch-stone is real ground, not scenery -------------------
       loadMap('clearing', { x: 20.5, y: 19.5, dir: 0 });
       const m = G.map;

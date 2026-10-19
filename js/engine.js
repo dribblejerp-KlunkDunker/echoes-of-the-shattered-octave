@@ -9,6 +9,8 @@ const VIEW_H = 150;             // 3D viewport height (HUD below)
 const TEX = 64;
 const STEP_UP = 0.36;   // tallest rise a walker takes without stairs
 const FALL_SAFE = 0.9;  // drops shorter than this cost no health
+const MAX_GRADE = 1.1;  // steepest slope (rise per unit run) a walker can climb
+const SNAP_DOWN = 0.2;  // walking down less than this per step keeps your feet on the ground
 
 const Engine = (() => {
   const canvas = document.getElementById('view');
@@ -17,6 +19,11 @@ const Engine = (() => {
   const fb = new Uint32Array(frame.data.buffer);
   const zbuf = new Float32Array(VW);
   const ztop = new Float32Array(VW);   // screen row of the nearest wall's top edge, per column
+  // Per-pixel depth for maps with relief (raised ground, slopes, low walls,
+  // towers). Sprites test against it pixel by pixel, so a crest, a parapet or
+  // a stepped roof hides exactly what is behind it and nothing more.
+  const dbuf = new Float32Array(VW * VIEW_H);
+  const SURF_BIAS = 0.45;   // ground never swallows the feet of what stands on it
 
   // ---- asset decoding -------------------------------------------------
   const textures = {};   // name -> Uint32Array(64*64)
@@ -67,6 +74,7 @@ const Engine = (() => {
     return (255 << 24) | ((b | 0) << 16) | ((g | 0) << 8) | (r | 0);
   }
   let light_ = 1;
+  let lastRelief = false;   // whether the last frame filled the per-pixel depth buffer
   // ---- weather (driven by js/weather.js) ------------------------------
   // Thick air and low light never touch the map: they bend what the renderer
   // already draws, so a sunny save and a stormy one share the same map data.
@@ -107,6 +115,17 @@ const Engine = (() => {
       }
     }
   }
+  // the same sum, written to LR/LG/LB instead of a fresh array, for the
+  // per-pixel relief passes where an allocation every few pixels shows up
+  let LR = 0, LG = 0, LB = 0;
+  function sampleLightV(wx, wy) {
+    let cr = 0, cg = 0, cb = 0;
+    for (let i = 0; i < ptLights.length; i++) {
+      const L = ptLights[i], dx = wx - L.x, dy = wy - L.y, d2 = dx * dx + dy * dy, r2 = L.r * L.r;
+      if (d2 < r2) { const k = 1 - d2 / r2; const kk = k * k; cr += L.cr * kk; cg += L.cg * kk; cb += L.cb * kk; }
+    }
+    LR = cr > 90 ? 90 : cr; LG = cg > 90 ? 90 : cg; LB = cb > 90 ? 90 : cb;
+  }
   function sampleLight(wx, wy) {
     let cr = 0, cg = 0, cb = 0;
     for (let i = 0; i < ptLights.length; i++) {
@@ -129,7 +148,17 @@ const Engine = (() => {
   let baseR = 0, baseG = 0, baseB = 0, baseFog = 12;   // the map's own air, before weather
   const FOV = 1.0;       // plane length (approx 90 deg)
 
-  function setMap(m) { map = m; cam.z = 0.5; ambient = m.ambient || 0; const fc = m.fogColor || [0, 0, 0]; baseR = fc[0]; baseG = fc[1]; baseB = fc[2]; baseFog = m.fogDist || 12; fogDist = baseFog; fogR = baseR; fogG = baseG; fogB = baseB; }
+  // A map has relief when anything in it is not a flat one-unit block on flat
+  // ground: a height field, sloped vertices, or a cell with its own top.
+  function scanRelief(m) {
+    let top = 1, any = false;
+    if (m.lvls) { any = true; for (let i = 0; i < m.lvls.length; i++) if (m.lvls[i] + 1 > top) top = m.lvls[i] + 1; }
+    if (m.verts) { any = true; for (let i = 0; i < m.verts.length; i++) if (m.verts[i] > top) top = m.verts[i]; }
+    for (let i = 0; i < m.cells.length; i++) { const c = m.cells[i]; if (c && c.top != null) { any = true; if (c.top > top) top = c.top; } }
+    m.relief = any; m.maxTop = top;
+    return any;
+  }
+  function setMap(m) { scanRelief(m); map = m; cam.z = 0.5; ambient = m.ambient || 0; const fc = m.fogColor || [0, 0, 0]; baseR = fc[0]; baseG = fc[1]; baseB = fc[2]; baseFog = m.fogDist || 12; fogDist = baseFog; fogR = baseR; fogG = baseG; fogB = baseB; }
 
   // ---- sky -----------------------------------------------------------
   const skyR = new Float32Array(VIEW_H), skyG = new Float32Array(VIEW_H), skyB = new Float32Array(VIEW_H);
@@ -208,10 +237,26 @@ const Engine = (() => {
     const floorMap = map.floorCells; // Uint8Array index into map.floorTextures or null
     const floorTexList = map.floorTextures ? map.floorTextures.map(n => textures[n]) : null;
     const heightMap = map.lvls;   // per-cell floor elevation, or null on flat maps
+    const verts = map.verts, smooth = map.smooth, VW1 = mw + 1;   // sloped ground: corner heights + mask
+    const relief = !!(map.relief || heightMap || verts);
+    lastRelief = relief;
+    // surface height of cell (cx,cy) at world point (px,py): sloped cells blend
+    // their four corners, every other cell is one flat height
+    const gAt = (px, py, cx, cy) => {
+      const i = cy * mw + cx;
+      if (smooth && smooth[i]) {
+        let fx = px - cx, fy = py - cy;
+        fx = fx < 0 ? 0 : fx > 1 ? 1 : fx; fy = fy < 0 ? 0 : fy > 1 ? 1 : fy;
+        const v = cy * VW1 + cx;
+        return (verts[v] * (1 - fx) + verts[v + 1] * fx) * (1 - fy) + (verts[v + VW1] * (1 - fx) + verts[v + VW1 + 1] * fx) * fy;
+      }
+      return heightMap ? heightMap[i] : 0;
+    };
     const fogPx = rgb(fogR, fogG, fogB);
 
     for (let y = 0; y < h; y++) {
       const isFloor = y > horizon;
+      if (relief && isFloor) continue;   // the column pass owns the ground on relief maps
       if (!isFloor) {
         if (outdoor) {
           const sy = Math.max(0, Math.min(h - 1, y - cam.pitch - cam.bob + (h >> 2)));
@@ -229,47 +274,6 @@ const Engine = (() => {
       }
       const p = isFloor ? (y - horizon) : (horizon - y);
       if (p === 0) { let o = y * w; for (let x = 0; x < w; x++) fb[o++] = fogPx; continue; }
-      // Raised ground: distance depends on the height of the surface under
-      // each pixel, not just on the row. Project, read the cell, re-project
-      // with that cell's height, and accept once it stops moving.
-      if (heightMap && isFloor) {
-        let o = y * w;
-        for (let x = 0; x < w; x++) {
-          const rx = rayDirX0 + (rayDirX1 - rayDirX0) * (x / w);
-          const ry = rayDirY0 + (rayDirY1 - rayDirY0) * (x / w);
-          let zs = cam.z - 0.5, d = 0, dead = false;
-          for (let it = 0; it < 3; it++) {
-            d = posZ * (cam.z - zs) / p;
-            if (!(d > 0.06)) { dead = true; break; }
-            const fx = cam.x + d * rx, fy = cam.y + d * ry;
-            const cx = fx | 0, cy = fy | 0;
-            if (cx < 0 || cy < 0 || cx >= mw || cy >= mh) { dead = true; break; }
-            const l2 = heightMap[cy * mw + cx];
-            if (Math.abs(l2 - zs) < 0.02) { zs = l2; break; }
-            zs = l2;
-          }
-          if (dead || zs >= cam.z - 0.01) { fb[o++] = fogPx; continue; }
-          d = posZ * (cam.z - zs) / p;
-          const fx = cam.x + d * rx, fy = cam.y + d * ry;
-          const cx = fx | 0, cy = fy | 0;
-          if (cx < 0 || cy < 0 || cx >= mw || cy >= mh) { fb[o++] = fogPx; continue; }
-          const tx = ((fx - cx) * TEX) & 63, ty = ((fy - cy) * TEX) & 63;
-          let t = floorTexDefault;
-          if (floorMap) { const idx = floorMap[cy * mw + cx]; if (idx) t = floorTexList[idx]; }
-          let px;
-          if (t === texWater) px = t[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)];
-          else if (t === texShal) px = t[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)];
-          else px = t[ty * TEX + tx];
-          let f2 = light * (1 - d * fogMul); if (f2 < 0) f2 = 0;
-          f2 = ambient + (1 - ambient) * f2;
-          if (!outdoor) f2 *= flick;
-          let lcr = 0, lcg = 0, lcb = 0;
-          if ((x & 3) === 0 && ptLights.length && d < 10) [lcr, lcg, lcb] = sampleLight(fx, fy);
-          const fi2 = Math.round(f2 * 255) / 255;
-          fb[o++] = outdoor ? tint(px, fi2, fogR, fogG, fogB, lcr, lcg, lcb) : shade(px, fi2, lcr, lcg, lcb);
-        }
-        continue;
-      }
       const rowDist = posZ / p;
       let f = light * (1 - rowDist * fogMul);
       if (f < 0) f = 0;
@@ -409,6 +413,7 @@ const Engine = (() => {
       }
       return dsC;
     }
+    if (!relief) {
     for (let x = 0; x < w; x++) {
       const camX = 2 * x / w - 1;
       const rdx = dirX + planeX * camX, rdy = dirY + planeY * camX;
@@ -475,6 +480,178 @@ const Engine = (() => {
       }
       faces.length = 0;
     }
+    }
+
+    // -- relief: ground, risers, walls and caps, front to back ---------
+    // Each column walks its ray from the eye outward and fills screen rows
+    // from the bottom up. Whatever is drawn first is nearest, so a row is
+    // written once and everything behind it is clipped by `clip`, the lowest
+    // row not yet filled. Ground is drawn as straight pieces along the ray,
+    // solved row by row for exact perspective; a rise between cells is a
+    // vertical face; a block below the eye shows its cap; and the walk goes on
+    // past tall faces for as long as anything taller could still show above.
+    if (relief) {
+      const CX = cam.x, CY = cam.y, CZ = cam.z;   // hoisted: these are read per pixel
+      const sideTex = map.sideTex || null;     // per-cell riser texture names
+      const maxTop = map.maxTop != null ? map.maxTop : 2;
+      const ditherOn = !!opts.dither;
+      const texOfFloor = (cx, cy) => { if (floorMap) { const idx = floorMap[cy * mw + cx]; if (idx) return floorTexList[idx]; } return floorTexDefault; };
+      const sideOf = (cx, cy) => { const n = sideTex && sideTex[cy * mw + cx]; return (n && textures[n]) || texOfFloor(cx, cy); };
+      const stoneTex = textures.t_stone;
+      let lcr = 0, lcg = 0, lcb = 0;
+      const nL = ptLights.length;
+      // a straight piece of surface along the ray, (t0,z0) to (t1,z1)
+      const surf = (x, rdx, rdy, t0, z0, t1, z1, tex, clip) => {
+        if (t0 < 0.03) t0 = 0.03;
+        if (t1 <= t0) return clip;
+        const yA = horizon + h * (CZ - z0) / t0, yB = horizon + h * (CZ - z1) / t1;
+        if (!(yB < yA)) return clip;                  // edge-on, or seen from behind
+        let ys = Math.ceil(yB); if (ys < 0) ys = 0;
+        let ye = yA < h ? Math.floor(yA) : h - 1; if (ye > clip - 1) ye = clip - 1;
+        if (ye < ys) return clip;
+        const dt = t1 - t0, dz = z1 - z0, K = h * (CZ - z0);
+        let o = ys * w + x;
+        for (let y = ys; y <= ye; y++, o += w) {
+          const p = y - horizon, den = p * dt + h * dz;
+          let s = den !== 0 ? (K - p * t0) / den : 0;
+          s = s < 0 ? 0 : s > 1 ? 1 : s;
+          const t = t0 + s * dt;
+          const fx = CX + t * rdx, fy = CY + t * rdy;
+          const tx = ((fx - (fx | 0)) * TEX) & 63, ty = ((fy - (fy | 0)) * TEX) & 63;   // map space is never negative
+          let px;
+          if (tex === texWater) px = tex[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)];
+          else if (tex === texShal) px = tex[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)];
+          else px = tex[ty * TEX + tx];
+          let f = light * (1 - t * fogMul); if (f < 0) f = 0;
+          f = ambient + (1 - ambient) * f;
+          if (!outdoor) f *= flick;
+          if (nL && (y === ys || (y & 3) === 0)) { if (t < 10) { sampleLightV(fx, fy); lcr = LR; lcg = LG; lcb = LB; } else lcr = lcg = lcb = 0; }
+          const fi = Math.round(f * 255) / 255;
+          fb[o] = outdoor ? tint(px, fi, fogR, fogG, fogB, lcr, lcg, lcb) : shade(px, fi, lcr, lcg, lcb);
+          dbuf[o] = t + SURF_BIAS;
+        }
+        return ys < clip ? ys : clip;
+      };
+      // a vertical face at distance t from zLo to zHi: texHi above zSplit
+      // (a wall), texLo below it (the side of the ground the wall stands on)
+      const riser = (x, rdx, rdy, t, zLo, zHi, wallX, side, texHi, zSplit, texLo, clip) => {
+        if (zHi - zLo < 0.02) return clip;
+        const yT = horizon + h * (CZ - zHi) / t, yBt = horizon + h * (CZ - zLo) / t;
+        let ys = yT | 0; if (ys < 0) ys = 0;
+        let ye = yBt < h ? yBt | 0 : h - 1; if (ye > clip - 1) ye = clip - 1;
+        if (ye < ys) return clip;
+        let tx = (wallX * TEX) | 0;
+        if ((side === 0 && rdx > 0) || (side === 1 && rdy < 0)) tx = TEX - tx - 1;
+        let f = light * (1 - t * fogMul); if (f < 0) f = 0;
+        f = ambient + (1 - ambient) * f;
+        if (side === 1) f *= 0.8;
+        if (!outdoor) f *= flick;
+        const fi = Math.round(f * 255) / 255;
+        let cr = 0, cg = 0, cb = 0;
+        if (nL) { sampleLightV(CX + t * rdx, CY + t * rdy); cr = LR; cg = LG; cb = LB; }
+        const k = t / h;
+        let o = ys * w + x;
+        for (let y = ys; y <= ye; y++, o += w) {
+          const z = CZ - (y + 0.5 - horizon) * k;
+          const hi = z >= zSplit - 1e-4;
+          const tex = hi ? texHi : texLo;
+          const ty = (((hi ? zHi : zSplit) - z) * TEX | 0) & 63;
+          const px = tex[ty * TEX + tx];
+          const df = ditherOn ? (BAYER[((y & 3) << 2) | (x & 3)] - 7.5) * 0.0045 : 0;
+          const fUse = df ? Math.max(0, Math.min(1, fi + df)) : fi;
+          fb[o] = outdoor ? tint(px, fUse, fogR, fogG, fogB, cr, cg, cb) : shade(px, fUse, cr, cg, cb);
+          dbuf[o] = t;
+        }
+        return ys < clip ? ys : clip;
+      };
+      for (let x = 0; x < w; x++) {
+        const camX = 2 * x / w - 1;
+        const rdx = dirX + planeX * camX, rdy = dirY + planeY * camX;
+        let cx = CX | 0, cy = CY | 0;
+        const ddx = Math.abs(1 / rdx), ddy = Math.abs(1 / rdy);
+        let stepX, stepY, sdx, sdy;
+        if (rdx < 0) { stepX = -1; sdx = (CX - cx) * ddx; } else { stepX = 1; sdx = (cx + 1 - CX) * ddx; }
+        if (rdy < 0) { stepY = -1; sdy = (CY - cy) * ddy; } else { stepY = 1; sdy = (cy + 1 - CY) * ddy; }
+        let clip = h, side = 0, tIn = 0, nearest = 1e9;
+        let capZ = null, capTex = null;     // set while the ray crosses the top of a block
+        for (let iter = 0; iter < 160; iter++) {
+          // -- the surface of the cell the ray is crossing, from tIn to tOut
+          const tOut = sdx < sdy ? sdx : sdy;
+          let zOut;
+          if (capZ !== null) {
+            zOut = capZ;
+            if (capZ < CZ) clip = surf(x, rdx, rdy, tIn, capZ, tOut, capZ, capTex, clip);
+          } else {
+            const ci = cy * mw + cx, tex = texOfFloor(cx, cy);
+            if (smooth && smooth[ci]) {
+              const tm = (tIn + tOut) * 0.5;
+              const z0 = gAt(CX + tIn * rdx, CY + tIn * rdy, cx, cy);
+              const zm = gAt(CX + tm * rdx, CY + tm * rdy, cx, cy);
+              zOut = gAt(CX + tOut * rdx, CY + tOut * rdy, cx, cy);
+              clip = surf(x, rdx, rdy, tIn, z0, tm, zm, tex, clip);
+              clip = surf(x, rdx, rdy, tm, zm, tOut, zOut, tex, clip);
+            } else {
+              zOut = heightMap ? heightMap[ci] : 0;
+              clip = surf(x, rdx, rdy, tIn, zOut, tOut, zOut, tex, clip);
+            }
+          }
+          // nothing further can show: the screen is full, or the tallest thing
+          // on the map would still project below what is already drawn
+          if (clip <= 0) break;
+          // (when the eye is above everything, things only approach the horizon)
+          if (tOut > 0.05 && (maxTop >= CZ ? horizon + h * (CZ - maxTop) / tOut : horizon) >= clip) break;
+          // -- step into the next cell
+          if (sdx < sdy) { sdx += ddx; cx += stepX; side = 0; } else { sdy += ddy; cy += stepY; side = 1; }
+          if (cx < 0 || cy < 0 || cx >= mw || cy >= mh) break;
+          tIn = tOut;
+          let wallX = side === 0 ? CY + tIn * rdy : CX + tIn * rdx;
+          wallX -= Math.floor(wallX);
+          const ci = cy * mw + cx, c = grid[ci];
+          const base = (smooth && smooth[ci]) ? gAt(CX + tIn * rdx, CY + tIn * rdy, cx, cy) : (heightMap ? heightMap[ci] : 0);
+          capZ = null;
+          if (c && c.door) {
+            const d = doors[ci]; const openAmt = d ? d.open : 0;
+            if (openAmt < 0.98) {
+              let tD, frac, hit = true;
+              if (side === 0) { tD = tIn + ddx * 0.5; const hy = CY + tD * rdy; if ((hy | 0) !== cy) hit = false; frac = hy - cy; }
+              else { tD = tIn + ddy * 0.5; const hx = CX + tD * rdx; if ((hx | 0) !== cx) hit = false; frac = hx - cx; }
+              if (hit && frac >= openAmt) {
+                clip = riser(x, rdx, rdy, tIn, zOut, base, wallX, side, sideOf(cx, cy), -1e9, null, clip);
+                clip = surf(x, rdx, rdy, tIn, base, tD, base, texOfFloor(cx, cy), clip);
+                const dTex = textures[c.tex] || stoneTex;
+                clip = riser(x, rdx, rdy, tD, base, base + 1, frac - openAmt, side, dTex, base, dTex, clip);
+                if (tD < nearest) nearest = tD;
+                // past a closed door: only taller things beyond can still show
+                capZ = base + 1; capTex = dTex; tIn = tD;
+                continue;
+              }
+            }
+            // an open (or missed) door is ground
+            if (base > zOut) clip = riser(x, rdx, rdy, tIn, zOut, base, wallX, side, sideOf(cx, cy), -1e9, null, clip);
+            continue;
+          }
+          if (c) {
+            // a block: its face rises from whatever ground is in front to its
+            // top; above its own base it wears the wall texture
+            const top = c.top != null ? c.top : base + 1;
+            const wTex = textures[c.tex] || stoneTex;
+            if (tIn < nearest && top > zOut + 0.02) nearest = tIn;
+            clip = riser(x, rdx, rdy, tIn, zOut, top, wallX, side, wTex, base, sideOf(cx, cy), clip);
+            capZ = top; capTex = (c.capTex && textures[c.capTex]) || wTex;
+            continue;
+          }
+          // open ground: a rise is a riser face, a drop draws nothing
+          if (base > zOut + 0.02) {
+            if (tIn < nearest) nearest = tIn;
+            clip = riser(x, rdx, rdy, tIn, zOut, base, wallX, side, sideOf(cx, cy), -1e9, null, clip);
+          }
+        }
+        // what the ray never reached is air: haze below the horizon, sky above
+        zbuf[x] = nearest; ztop[x] = clip;
+        let o = x;
+        for (let y = 0; y < clip; y++, o += w) { dbuf[o] = 1e9; if (y > horizon) fb[o] = fogPx; }
+      }
+    }
 
     // -- sprites ------------------------------------------------------
     sprList.length = 0;
@@ -503,7 +680,8 @@ const Engine = (() => {
       const sprH = (baseH * (e.animSY || 1)) | 0;
       const vMove = (((e.yOff || 0) - (e.animLift || 0)) * h / trY + (sp.dy || 0) * unitH) | 0; // + = lower
       // sprites stand on the floor of the cell they are in, whatever its height
-      const sprFloor = heightMap ? heightMap[Math.min(mh - 1, Math.max(0, e.y | 0)) * mw + Math.min(mw - 1, Math.max(0, e.x | 0))] : 0;
+      const scx = Math.min(mw - 1, Math.max(0, e.x | 0)), scy = Math.min(mh - 1, Math.max(0, e.y | 0));
+      const sprFloor = (heightMap || smooth) ? gAt(e.x, e.y, scx, scy) : 0;
       const baseline = horizon + (((cam.z - sprFloor) * h / trY) | 0) + vMove;
       const dsY = baseline - sprH, deY = baseline;
       const sprW = Math.max(1, (baseH * sp.w / sp.h * (e.animSX || 1)) | 0);
@@ -525,7 +703,7 @@ const Engine = (() => {
       const xs = Math.max(0, (dsX + Math.min(0, shTop)) | 0), xe = Math.min(w - 1, (deX + Math.max(0, shTop)) | 0);
       const ys = Math.max(0, dsY), ye = Math.min(h - 1, deY);
       if (xe < xs || ye < ys) continue;
-      e._screen = { x0: dsX, x1: deX, y0: dsY, y1: deY, dist: d };
+      e._screen = { x0: dsX, x1: deX, y0: dsY, y1: deY, dist: d, z: trY };
       const tw = sp.w, th = sp.h, sdat = sp.data;
       const [scr, scg, scb] = ptLights.length ? sampleLight(e.x, e.y) : [0, 0, 0];
       const ecr = e.elite ? scr + 28 : scr, ecg = e.elite ? scg + 20 : scg, ecb = scb;
@@ -535,7 +713,7 @@ const Engine = (() => {
         // a wall in front hides only the pixels below its top edge, so a body
         // behind a low wall still shows its head and shoulders
         let yEnd = ye;
-        if (trY >= zbuf[x]) { yEnd = Math.min(ye, ztop[x] - 1); if (yEnd < ys) continue; }
+        if (!relief && trY >= zbuf[x]) { yEnd = Math.min(ye, ztop[x] - 1); if (yEnd < ys) continue; }
         let o = ys * w + x;
         if (plain) {
           const tx = (((x - dsX) * tw) / sprW) | 0;
@@ -543,7 +721,7 @@ const Engine = (() => {
           for (let y = ys; y <= yEnd; y++) {
             const ty = (((y - dsY) * th) / sprH) | 0;
             const px = sdat[ty * tw + tx];
-            if ((px >>> 24) > 100) fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fi, ecr, ecg, ecb));
+            if ((px >>> 24) > 100 && (!relief || dbuf[o] > trY)) fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fi, ecr, ecg, ecb));
             o += w;
           }
           continue;
@@ -555,7 +733,7 @@ const Engine = (() => {
           if (flip) tx = tw - 1 - tx;
           const ty = (((y - dsY) * th) / sprH) | 0;
           let px = sdat[ty * tw + tx];
-          if ((px >>> 24) > 100) {
+          if ((px >>> 24) > 100 && (!relief || dbuf[o] > trY)) {
             if (hurt) { const r = px & 255, g = (px >>> 8) & 255, b = (px >>> 16) & 255, k = hurt * 0.45; px = ((px & 0xff000000) | ((b * (1 - k)) << 16) | ((g * (1 - k)) << 8) | (r + (255 - r) * k)) >>> 0; }
             fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fi, ecr, ecg, ecb));
           }
@@ -568,16 +746,27 @@ const Engine = (() => {
     ctx.putImageData(frame, 0, 0);
   }
 
-  // Which entity is under the crosshair (centre) and within reach
+  // Which entity is under the crosshair and within reach. The crosshair is
+  // the centre of the view, which is where a pitched look aims; eye level (the
+  // horizon row) still counts too, so level play picks exactly as it always
+  // has. On relief maps the pixel must not be hidden behind a crest or wall.
   function pick(entities, maxDist) {
     let best = null, bd = 1e9;
-    const cx = VW / 2, cy = VIEW_H / 2 + cam.pitch;
+    const cx = VW / 2, aim = VIEW_H / 2, eye = VIEW_H / 2 + cam.pitch;
     for (const e of entities) {
       const s = e._screen; if (!s || e.hidden || e.nopick) continue;
       if (s.dist > maxDist) continue;
-      if (cx >= s.x0 - 4 && cx <= s.x1 + 4 && cy >= s.y0 && cy <= s.y1 + 6) {
-        if (s.dist < bd) { bd = s.dist; best = e; }
+      if (!(cx >= s.x0 - 4 && cx <= s.x1 + 4)) continue;
+      let ok = false;
+      for (const cy of aim === eye ? [aim] : [aim, eye]) {
+        if (!(cy >= s.y0 && cy <= s.y1 + 6)) continue;
+        if (lastRelief && s.z) {
+          const ry = Math.max(s.y0, Math.min(s.y1, cy)) | 0, px = Math.max(0, Math.min(VW - 1, cx | 0));
+          if (ry >= 0 && ry < VIEW_H && dbuf[ry * VW + px] < s.z - 0.05) continue;   // something solid is in front
+        }
+        ok = true; break;
       }
+      if (ok && s.dist < bd) { bd = s.dist; best = e; }
     }
     return best;
   }
@@ -596,5 +785,7 @@ const Engine = (() => {
   function setFlicker(v) { lightFlicker = v; }
   function setTime(t) { animT = t; }
 
-  return { canvas, ctx, cam, textures, sprites, images, loadAll, render, setMap, setWeather, pick, pickWall, setFlicker, setTime, rgb, VW, VH, VIEW_H };
+  // depth of what was drawn at a screen pixel on the last relief frame (1e9 = sky/air)
+  function depthAt(x, y) { x |= 0; y |= 0; if (x < 0 || y < 0 || x >= VW || y >= VIEW_H) return 1e9; return dbuf[y * VW + x]; }
+  return { canvas, ctx, cam, textures, sprites, images, loadAll, render, setMap, scanRelief, setWeather, pick, pickWall, setFlicker, setTime, depthAt, rgb, VW, VH, VIEW_H };
 })();

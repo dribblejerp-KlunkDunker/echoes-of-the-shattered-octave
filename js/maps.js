@@ -23,6 +23,12 @@ class GameMap {
     // Floor elevation, one height per cell, in world units (eye height = 0.5).
     // Null on flat maps so they keep the fast render path untouched.
     this.lvls = null;
+    // Sloped ground: heights at cell corners ((w+1) x (h+1)) and a mask of the
+    // cells that blend them. Null until a map shapes a hill or a ramp.
+    this.verts = null; this.smooth = null;
+    // Optional per-cell texture for the side faces of raised ground (a stone
+    // skirt under a grass knoll, timber under a stand). Null = the top texture.
+    this.sideTex = null;
   }
   set(x, y, c) { if (x >= 0 && y >= 0 && x < this.w && y < this.h) { this.cells[y * this.w + x] = c; if (c && c.door) this.doors[y * this.w + x] = { open: 0, target: 0 }; } }
   get(x, y) { return (x < 0 || y < 0 || x >= this.w || y >= this.h) ? WALL('t_stone') : this.cells[y * this.w + x]; }
@@ -34,12 +40,83 @@ class GameMap {
   isBlocked(x, y) { if (this.isSolidCell(x, y)) return true; return !!(this.floorCells && x >= 0 && y >= 0 && x < this.w && y < this.h && this.floorCells[y * this.w + x] === 2); }
   // --- elevation ---------------------------------------------------------
   ensureLvls() { if (!this.lvls) this.lvls = new Float32Array(this.w * this.h); return this.lvls; }
-  lvlAt(x, y) {
-    if (!this.lvls) return 0;
-    const cx = x | 0, cy = y | 0;
+  lvlAt(x, y) { return this.groundAt(x, y); }
+  // The height of the ground at a world point: sloped cells blend their four
+  // corners, every other cell is flat at its own level.
+  groundAt(x, y) {
+    if (!this.lvls && !this.smooth) return 0;
+    const cx = Math.floor(x), cy = Math.floor(y);
     if (cx < 0 || cy < 0 || cx >= this.w || cy >= this.h) return 0;
-    return this.lvls[cy * this.w + cx];
+    const i = cy * this.w + cx;
+    if (this.smooth && this.smooth[i]) {
+      const fx = Math.min(1, Math.max(0, x - cx)), fy = Math.min(1, Math.max(0, y - cy)), W1 = this.w + 1, v = cy * W1 + cx, V = this.verts;
+      return (V[v] * (1 - fx) + V[v + 1] * fx) * (1 - fy) + (V[v + W1] * (1 - fx) + V[v + W1 + 1] * fx) * fy;
+    }
+    return this.lvls ? this.lvls[i] : 0;
   }
+  // How steep the ground is at a point, as rise per unit run (0 on flat cells).
+  gradeAt(x, y) {
+    if (!this.smooth) return 0;
+    const cx = Math.floor(x), cy = Math.floor(y);
+    if (cx < 0 || cy < 0 || cx >= this.w || cy >= this.h || !this.smooth[cy * this.w + cx]) return 0;
+    const fx = Math.min(1, Math.max(0, x - cx)), fy = Math.min(1, Math.max(0, y - cy)), W1 = this.w + 1, v = cy * W1 + cx, V = this.verts;
+    const a = V[v], b = V[v + 1], c = V[v + W1], d = V[v + W1 + 1];
+    const gx = (b - a) * (1 - fy) + (d - c) * fy, gy = (c - a) * (1 - fx) + (d - b) * fx;
+    return Math.hypot(gx, gy);
+  }
+  ensureVerts() {
+    if (!this.verts) { this.verts = new Float32Array((this.w + 1) * (this.h + 1)); this.smooth = new Uint8Array(this.w * this.h); }
+    return this.verts;
+  }
+  // Re-derive which cells are sloped and give each a coarse per-cell level
+  // (its centre height) for code that only reads one height per cell.
+  syncSlopes(x0, y0, x1, y1) {
+    const V = this.ensureVerts(), L = this.ensureLvls(), W1 = this.w + 1;
+    x0 = Math.max(0, x0); y0 = Math.max(0, y0); x1 = Math.min(this.w - 1, x1); y1 = Math.min(this.h - 1, y1);
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+      const v = y * W1 + x, a = V[v], b = V[v + 1], c = V[v + W1], d = V[v + W1 + 1];
+      const i = y * this.w + x;
+      // any cell a hill or ramp has touched follows its corners, including the
+      // flat top of a crag where all four corners agree
+      if (Math.max(a, b, c, d) > 0.001 || Math.min(a, b, c, d) < -0.001 || this.smooth[i]) { this.smooth[i] = 1; L[i] = (a + b + c + d) / 4; }
+    }
+  }
+  // A rounded hill (or, with `steep`, a crag with cliff-like flanks) centred
+  // on (cx, cy), radii rx/ry in cells, `height` above `base`. Overlapping
+  // hills keep the higher ground, so ranges are built from several.
+  hill(cx, cy, rx, ry, height, opts) {
+    opts = opts || {};
+    const V = this.ensureVerts(), W1 = this.w + 1, base = opts.base || 0, steep = opts.steep || 0;
+    const x0 = Math.floor(cx - rx) - 1, x1 = Math.ceil(cx + rx) + 1, y0 = Math.floor(cy - ry) - 1, y1 = Math.ceil(cy + ry) + 1;
+    for (let vy = Math.max(0, y0); vy <= Math.min(this.h, y1); vy++) for (let vx = Math.max(0, x0); vx <= Math.min(this.w, x1); vx++) {
+      const d = Math.hypot((vx - cx) / rx, (vy - cy) / ry); if (d >= 1) continue;
+      // a soft dome, or a flat-topped crag whose last `steep` of radius is its flank
+      const k = steep ? Math.min(1, (1 - d) / steep) : 0.5 + 0.5 * Math.cos(Math.PI * d);
+      const s = steep ? k * k * (3 - 2 * k) : k;
+      const z = base + height * s, j = vy * W1 + vx;
+      if (z > V[j]) V[j] = z;
+    }
+    this.syncSlopes(x0, y0, x1, y1);
+  }
+  // A straight ramp over a rectangle of cells, rising from h0 to h1 along x or y.
+  ramp(x0, y0, x1, y1, h0, h1, axis) {
+    const V = this.ensureVerts(), W1 = this.w + 1;
+    for (let vy = y0; vy <= y1 + 1; vy++) for (let vx = x0; vx <= x1 + 1; vx++) {
+      const k = axis === 'y' ? (vy - y0) / (y1 + 1 - y0) : (vx - x0) / (x1 + 1 - x0);
+      V[vy * W1 + vx] = h0 + (h1 - h0) * k;
+    }
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) this.smooth[y * this.w + x] = 1;
+    this.syncSlopes(x0, y0, x1, y1);
+  }
+  // Texture for the side faces of raised cells in a rectangle.
+  setSide(x0, y0, x1, y1, tex) {
+    if (!this.sideTex) this.sideTex = new Array(this.w * this.h).fill(null);
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (x >= 0 && y >= 0 && x < this.w && y < this.h) this.sideTex[y * this.w + x] = tex;
+  }
+  // A wall block with its own absolute top: low walls and parapets you see
+  // over, plinths, or tall towers and roof ridges that stand above the rest.
+  block(x, y, tex, top, opts) { const c = Object.assign({ tex, top }, opts || {}); this.set(x, y, c); return c; }
+  lowWall(x0, y0, x1, y1, tex, top, opts) { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) this.block(x, y, tex, top, opts); }
   setLvl(x, y, h) { if (x >= 0 && y >= 0 && x < this.w && y < this.h) this.ensureLvls()[y * this.w + x] = h; }
   raise(x0, y0, x1, y1, h) { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) this.setLvl(x, y, h); }
   add(e) { this.entities.push(e); return e; }
@@ -184,7 +261,18 @@ function buildOakhaven(greening) {
     m.set(b.door[0], b.door[1], d);
     // cobble apron in front of each door
     for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) m.setFloor(b.door[0] + dx, b.door[1] + dy, 1);
+    // stepped roofs: the inner cells of a building rise above its eaves, with
+    // a ridge along the long axis, so the town has a broken roofline
+    if (b.w >= 3 && b.h >= 3) {
+      const along = b.w >= b.h, ridge = along ? b.y + (b.h >> 1) : b.x + (b.w >> 1);
+      const roof = b.tex === 't_marble' ? 't_marble' : 't_roof';
+      for (let y = b.y + 1; y <= b.y + b.h - 2; y++) for (let x = b.x + 1; x <= b.x + b.w - 2; x++) {
+        const onRidge = along ? y === ridge || (b.h % 2 === 0 && y === ridge - 1) : x === ridge || (b.w % 2 === 0 && x === ridge - 1);
+        m.block(x, y, roof, onRidge ? 1.7 : 1.35, { capTex: 't_roof' });
+      }
+    }
   }
+  shapeOakhaven(m);
   // Mooring mast (east): a wooden pylon with crates
   m.rect(36, 19, 37, 20, 't_wood');
   m.deco('crates', 35.5, 21.5); m.deco('sign', 38.5, 21.5, { radius: 0.2 });
@@ -309,6 +397,66 @@ function buildInteriors() {
     m.npc('orla', 4.5, 3.0, { facing: Math.PI / 2 });
   });
   return maps;
+}
+
+// -------------------------------------------------------------------------
+//  RELIEF — heights that are not one flat block on flat ground
+// -------------------------------------------------------------------------
+// Oakhaven's skyline: towers over the roofs, and low stone you can see over.
+// Only cells change here, never entities, so saved entity indexes still line up.
+function shapeOakhaven(m) {
+  // the Chapel of the Carillon's bell-tower stands over everything in town
+  for (const [x, y] of [[48, 5], [49, 5], [48, 6], [49, 6]]) m.block(x, y, 't_marble', 3.2, { capTex: 't_stone' });
+  // the Greenhall's dome
+  m.block(30, 6, 't_marble', 2.1, { capTex: 't_roof' });
+  // the mooring mast: a tall timber pylon the Kestrel ties up to
+  m.lowWall(36, 19, 37, 20, 't_wood', 2.8, { capTex: 't_wood' });
+  // the empty bell-plinth is knee-high stone, not a wall
+  m.block(49, 11, 't_stone', 0.3);
+  // bridge piers become parapets: you can look over them into the Flume
+  for (const x of [8, 13, 20, 26, 34, 40, 50, 56]) m.lowWall(x, 49, x, 50, 't_stone', 0.32);
+}
+
+// The country outside the walls, shaped after every map is built so that new
+// entities append after all historical ones and old saves keep their indexes.
+function addReliefWorld(maps) {
+  const cl = maps.clearing;
+  if (cl) {
+    // the Watch-stone is held up by a stone skirt, and so are its steps
+    cl.setSide(25, 15, 31, 21, 't_stone'); cl.setSide(22, 19, 24, 20, 't_stone');
+    // a dry-stone field wall, knee-high, with a stile gap; you see over it
+    for (let x = 2; x <= 13; x++) if (x !== 7) cl.block(x, 9, 't_stone', 0.32);
+    // the old hound-watch stand: a timber platform on posts, three steps up
+    const WOOD = cl.floorTextures.indexOf('t_wood') >= 0 ? cl.floorTextures.indexOf('t_wood') : cl.floorTextures.push('t_wood') - 1;
+    cl.raise(35, 21, 37, 23, 1.2);
+    for (let y = 21; y <= 23; y++) { cl.setLvl(32, y, 0.3); cl.setLvl(33, y, 0.6); cl.setLvl(34, y, 0.9); }
+    for (let y = 21; y <= 23; y++) for (let x = 32; x <= 37; x++) cl.setFloor(x, y, WOOD);
+    cl.setSide(32, 21, 37, 23, 't_wood');
+    // a low grassy rise in the south-west, where the hound sleeps
+    cl.hill(6, 30, 4.2, 4.2, 0.9);
+    cl.deco('sign', 36.5, 22.5, { solid: false, scale: 0.85, label: 'The old hound-watch stand. From up here the Hedge looks like a wall built to keep something in.' });
+    cl.baseCount = cl.entities.length;
+  }
+  const dw = maps.deepwoods;
+  if (dw) {
+    // the Mausoleum stands on a low rise, so it is seen across the woods
+    dw.hill(27.5, 8, 11, 9, 0.8);
+    // a rolling willow rise north-east, and a knoll in the west
+    dw.hill(47, 9, 7, 6, 1.6);
+    dw.hill(5, 27, 3.5, 4.5, 1.2);
+    // the crag: a flat-topped outcrop with cliff flanks too steep to climb,
+    // its thicket standing on the top
+    dw.hill(51.5, 33.5, 4.6, 4.6, 2.6, { steep: 0.3 });
+    // bare rock where the ground is too steep to hold moss
+    const ROCK = dw.floorTextures.indexOf('t_stone') >= 0 ? dw.floorTextures.indexOf('t_stone') : dw.floorTextures.push('t_stone') - 1;
+    for (let y = 27; y <= 40; y++) for (let x = 45; x <= 55; x++) if (!dw.get(x, y) && dw.gradeAt(x + 0.5, y + 0.5) > 0.8) dw.setFloor(x, y, ROCK);
+    // the Mausoleum's stepped roof and bell-tower, measured from its own ground
+    const top = (x, y, k) => dw.groundAt(x + 0.5, y + 0.5) + k;
+    for (let y = 4; y <= 11; y++) for (let x = 22; x <= 33; x++) {
+      const inner = x >= 24 && x <= 31 && y >= 6 && y <= 9, tower = x >= 27 && x <= 28 && y >= 6 && y <= 7;
+      if (dw.get(x, y) && !dw.get(x, y).door) dw.block(x, y, 't_mausoleum', top(x, y, tower ? 4.2 : inner ? 2.0 : 1.5), { capTex: 't_greymarble' });
+    }
+  }
 }
 
 // -------------------------------------------------------------------------

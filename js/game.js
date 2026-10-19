@@ -158,8 +158,8 @@ function transfer(portal) {
 // eye rides half a unit above them. Flat maps keep feet at 0, exactly as before.
 function settleFeet() {
   const c = Engine.cam, p = G.player;
-  const feet = G.map.lvls ? G.map.lvlAt(c.x, c.y) : 0;
-  if (p) { p.feet = feet; p.fallV = 0; p.fallFrom = null; }
+  const feet = (G.map.lvls || G.map.smooth) ? G.map.groundAt(c.x, c.y) : 0;
+  if (p) { p.feet = feet; p.fallV = 0; p.fallFrom = null; p.tumble = false; }
   c.z = feet + 0.5;
 }
 
@@ -167,9 +167,13 @@ function settleFeet() {
 function solidAt(x, y, self) {
   const m = G.map; const r = 0.24;
   // a rise taller than a step is a cliff face, not floor you can walk onto
-  if (m.lvls) {
-    const feet = self ? (typeof self.feet === 'number' ? self.feet : m.lvlAt(self.x, self.y)) : (G.player && typeof G.player.feet === 'number' ? G.player.feet : 0);
-    if (m.lvlAt(x, y) - feet > STEP_UP) return true;
+  if (m.lvls || m.smooth) {
+    const feet = self ? (typeof self.feet === 'number' ? self.feet : m.groundAt(self.x, self.y)) : (G.player && typeof G.player.feet === 'number' ? G.player.feet : 0);
+    const g = m.groundAt(x, y);
+    if (g - feet > STEP_UP) return true;
+    // a slope steeper than a walker can climb is a cliff face going up;
+    // going down it is allowed, and that is how you tumble off a crag
+    if (m.smooth && g > feet + 0.02 && m.gradeAt(x, y) > MAX_GRADE) return true;
   }
   for (const [dx, dy] of [[-r, -r], [r, -r], [-r, r], [r, r]]) if (m.isBlocked((x + dx) | 0, (y + dy) | 0)) return true;
   if (self && dist2(x, y, Engine.cam.x, Engine.cam.y) < 0.4) return true;
@@ -1792,8 +1796,13 @@ function renderMap() {
     if (!m.visited[y * m.w + x]) continue;
     const c = m.cells[y * m.w + x];
     const fl = m.floorCells ? m.floorCells[y * m.w + x] : 0;
-    cx.fillStyle = c ? (c.door ? '#d9a441' : (c.tex === 't_hedge' ? '#2f4a22' : '#7a6a58')) : (fl === 2 ? '#2f7a64' : fl === 1 ? '#4a3e30' : '#2a2219');
+    const gz = (m.lvls || m.smooth) ? m.groundAt(x + 0.5, y + 0.5) : 0;
+    const low = c && !c.door && c.top != null && c.top < gz + 0.9, tall = c && !c.door && c.top != null && c.top > gz + 1.3;
+    cx.fillStyle = c ? (c.door ? '#d9a441' : low ? '#a89878' : tall ? '#4e4236' : (c.tex === 't_hedge' ? '#2f4a22' : '#7a6a58')) : (fl === 2 ? '#2f7a64' : fl === 1 ? '#4a3e30' : '#2a2219');
     cx.fillRect(x * cw, y * cw, cw, cw);
+    // raised and sloped ground: lighter the higher it stands, hatched where too steep to climb
+    if (!c && gz > 0.05) { cx.fillStyle = `rgba(232,214,160,${Math.min(0.42, gz * 0.16).toFixed(3)})`; cx.fillRect(x * cw, y * cw, cw, cw); }
+    if (!c && m.smooth && m.gradeAt(x + 0.5, y + 0.5) > MAX_GRADE) { cx.fillStyle = '#7a3a28'; cx.fillRect(x * cw, y * cw + 1, cw, 1); cx.fillRect(x * cw, y * cw + 3, cw, 1); }
   }
   for (const e of G.ents) { if (e.hidden || e.dead) continue; if (!m.visited[(e.y | 0) * m.w + (e.x | 0)]) continue; cx.fillStyle = e.kind === 'npc' ? '#6fa0e0' : e.kind === 'enemy' ? '#d04030' : e.kind === 'item' ? '#e0d060' : null; if (cx.fillStyle && e.kind !== 'deco') cx.fillRect(e.x * cw - 1, e.y * cw - 1, 3, 3); }
   if (G.mapId === 'oakhaven') { cx.font = '7px "Alegreya SC", serif'; cx.textAlign = 'center'; cx.fillStyle = '#f0d890'; for (const [lbl, [px, py]] of Object.entries({ 'Gate': [23.5, 3], 'Boar': [29.5, 16.6], 'Greenhall': [30.5, 8.4], 'Lyra': [21.5, 31.6], 'Rooke': [17.5, 14.4], 'Mast': [36.5, 18.4], 'Market': [52.5, 15.2], 'Mill': [62, 8.6], 'Chapel': [49, 6.8], 'Tannery': [15.5, 59.4], 'Flume': [36, 50.4], 'Culvert': [23.5, 60.6], 'Orchard': [56, 31] })) { const i = ((py | 0) * m.w + (px | 0)); if (m.visited[i]) cx.fillText(lbl, px * cw, py * cw); } cx.textAlign = 'left'; }
@@ -2081,21 +2090,31 @@ function update(dt) {
   if (mag <= 0.05 && Math.hypot(vel.x, vel.y) < 0.03) { vel.x = 0; vel.y = 0; }
   if (vel.x || vel.y) { const r = playerMove(c, vel.x * dt, vel.y * dt); if (r.bx) vel.x = 0; if (r.by) vel.y = 0; }
   // --- elevation: climb steps and ramps, fall off ledges ------------------
-  const ground = G.map.lvls ? G.map.lvlAt(c.x, c.y) : 0;
+  const ground = (G.map.lvls || G.map.smooth) ? G.map.groundAt(c.x, c.y) : 0;
   if (typeof p.feet !== 'number') p.feet = ground;
   if (ground > p.feet + 0.001) {
-    p.feet = Math.min(ground, p.feet + 3.2 * dt); p.fallV = 0; p.fallFrom = null;
+    // a slope carries you with it; a stair eases the eye up
+    p.feet = ground - p.feet < 0.12 ? ground : Math.min(ground, p.feet + 3.2 * dt); p.fallV = 0; p.fallFrom = null;
+  } else if (ground < p.feet - 0.001 && p.fallFrom == null && G.map.smooth && G.map.smooth[(c.y | 0) * G.map.w + (c.x | 0)] && p.feet - ground < SNAP_DOWN && G.map.gradeAt(c.x, c.y) <= MAX_GRADE) {
+    p.feet = ground;   // walking down a hillside, not falling off it
   } else if (ground < p.feet - 0.001) {
     if (p.fallFrom == null) { p.fallFrom = p.feet; p.fallV = 0; }
     p.fallV = (p.fallV || 0) + 7 * dt;
     p.feet -= p.fallV * dt;
-    if (p.feet <= ground) {
-      const drop = p.fallFrom - ground;
+    // coming down over a rock face (not off a sheer edge) is a tumble
+    if (G.map.smooth && G.map.gradeAt(c.x, c.y) > MAX_GRADE) p.tumble = true;
+    if (p.feet <= ground && G.map.smooth && G.map.gradeAt(c.x, c.y) > MAX_GRADE) {
+      // still on a face too steep to stand on: you tumble down it, and the
+      // whole way down counts when you come to rest on ground you can stand on
+      p.feet = ground; p.fallV = Math.min(p.fallV, 2.5); p.tumble = true;
+    } else if (p.feet <= ground) {
+      const drop = p.fallFrom - ground, tumbled = !!p.tumble; p.tumble = false;
       p.feet = ground; p.fallV = 0; p.fallFrom = null;
       if (drop > FALL_SAFE) {
-        const dmg = Math.max(1, Math.round((drop - FALL_SAFE) * 26));
+        // a sheer drop hits hard; tumbling down a rock face is bruising, not a plunge
+        const dmg = Math.max(1, Math.round((drop - FALL_SAFE) * (tumbled ? 12 : 26)));
         p.hp -= dmg; G.hurtT = 0.25; fx('hurt', 200); Audio_.sfx.hurt();
-        msg('You come down hard off the edge \u2014 ' + dmg + ' damage.', 'bad', 2800);
+        msg(tumbled ? 'You tumble down the rock face \u2014 ' + dmg + ' damage.' : 'You come down hard off the edge \u2014 ' + dmg + ' damage.', 'bad', 2800);
         if (p.hp <= 0) { die('the fall'); return; }
       } else if (drop > 0.25) Audio_.sfx.step('stone');
     }
@@ -2196,7 +2215,8 @@ function drawHUD() {
     if (G.glassLock > 0 && w.type === 'glass') { ctx.fillStyle = 'rgba(80,200,220,0.25)'; ctx.fillRect(bx + ax, VIEW_H - ih + 24 + ay, iw, ih); }
   }
   // crosshair
-  ctx.fillStyle = 'rgba(255,240,200,0.7)'; ctx.fillRect(VW / 2 - 1, VIEW_H / 2 + Engine.cam.pitch - 1, 2, 2);
+  // the crosshair is the centre of the view: a pitched look aims up or down with it
+  ctx.fillStyle = 'rgba(255,240,200,0.7)'; ctx.fillRect(VW / 2 - 1, VIEW_H / 2 - 1, 2, 2);
   // hurt / hush vignette are CSS; damage flash on canvas edge
   // bar
   ctx.fillStyle = '#2a2018'; ctx.fillRect(0, y0, VW, VH - y0);

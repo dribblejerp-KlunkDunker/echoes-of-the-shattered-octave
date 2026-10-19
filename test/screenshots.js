@@ -268,7 +268,33 @@ const output = path.join(__dirname, '..', 'screenshots');
       document.querySelector('#msgs').innerHTML = 'The Watch-stone: the meadow is a long way down from the top of the steps.';
     });
     await capture('terrain-watch-stone');
+
+    // --- relief: towers over roofs, low walls, a timber stand, walkable hills
+    const reliefScene = async (name, id, cam, check, caption) => {
+      await page.evaluate(([id, cam, check, caption]) => {
+        closeModal(); galleryScene(id); G.tod = 0.5;
+        Weather.hold('clear'); Weather.tick(1 / 60);
+        loadMap(id, { x: cam.x, y: cam.y, dir: cam.dir }); G.state = 'play'; G.fadeT = 0;
+        for (const e of G.ents) if (e.kind === 'enemy' || e.kind === 'npc') e.hidden = true;
+        if (cam.feet != null) { G.player.feet = cam.feet; Engine.cam.z = cam.feet + 0.5; }
+        Engine.cam.pitch = cam.pitch || 0; Engine.cam.bob = 0;
+        render();
+        if (!new Function('return (' + check + ')')()) throw new Error('Relief scene check failed: ' + check);
+        document.querySelector('#msgs').innerHTML = caption;
+      }, [id, cam, check, caption]);
+      await capture(name);
+    };
+    await reliefScene('relief-chapel-tower', 'oakhaven', { x: 44.5, y: 13.5, dir: -1.2 },
+      "G.map.relief && G.map.get(48, 5).top > 3", 'The Chapel of the Carillon: its bell-tower stands over every roof in Oakhaven.');
+    await reliefScene('relief-field-wall', 'clearing', { x: 12.5, y: 12.5, dir: -2.2 },
+      "G.map.get(12, 9).top < 0.5 && solidAt(12.5, 9.5, null)", 'A dry-stone field wall, knee-high: you see over it, you do not walk through it.');
+    await reliefScene('relief-hound-stand', 'clearing', { x: 36.2, y: 22.5, dir: 3.4, feet: 1.2 },
+      "Math.abs(G.map.lvlAt(36.5, 22.5) - 1.2) < 1e-6", 'From the hound-watch stand the Watch-stone is level with your boots.');
+    await reliefScene('relief-deepwoods-rise', 'deepwoods', { x: 44.5, y: 11.5, dir: 3.0, feet: 1.0 },
+      "G.map.smooth && G.map.gradeAt(44.5, 11.5) > 0.05", 'Over the willow rise: the Mausoleum tower is real stone now, seen from wherever you stand.');
+    await reliefScene('relief-crag', 'deepwoods', { x: 42.5, y: 30.5, dir: 0.3 },
+      "G.map.gradeAt(48, 30.5) > MAX_GRADE", 'The crag: bare rock on every flank, too steep to climb, and a long tumble down.');
     assert.deepEqual(errors, [], 'capture has no browser runtime errors');
-    console.log('PASS seventeen feature screenshots captured from the managed preview');
+    console.log('PASS twenty-two feature screenshots captured from the managed preview');
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

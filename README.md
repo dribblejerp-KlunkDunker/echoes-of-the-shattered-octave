@@ -40,6 +40,19 @@ Hired horses, bargaining with the watch and the optional hunger and sleep system
 | ![A storm over Oakhaven with slanted rain and a darkened sky](screenshots/weather-storm.png) | ![Sea-fog sitting in the streets of Oakhaven](screenshots/weather-mist.png) |
 | A storm: the road is slower and more dangerous, sound carries less, and the sky goes dark. | Sea-fog: they will not see you coming, and the distance dissolves into the air. |
 
+### Relief: towers, low walls, stands and hills
+
+The ground and the skyline now have real height. These are captured the same way, from the playable maps.
+
+| | |
+|---|---|
+| ![The Chapel of the Carillon's bell-tower over the Oakhaven roofline](screenshots/relief-chapel-tower.png) | ![A knee-high dry-stone field wall outside the Hedge](screenshots/relief-field-wall.png) |
+| The Chapel's bell-tower stands over a stepped roofline. Every building's roof rises above its eaves. | A dry-stone field wall, knee-high: you see over it and its cap, and you do not walk through it. |
+| ![The view west from the deck of the hound-watch stand](screenshots/relief-hound-stand.png) | ![The Mausoleum of Chords on its rise, seen over the willow hill](screenshots/relief-deepwoods-rise.png) |
+| From the timber hound-watch stand, three steps up, the Watch-stone is level with your boots. | Walking over the willow rise in the Deep Woods: the Mausoleum's stepped roof and tower are real stone, seen from wherever you stand. |
+| ![The crag in the Deep Woods, its flanks bare rock](screenshots/relief-crag.png) | |
+| The crag: a flat-topped outcrop with a thicket on top and flanks too steep to climb. Coming off it is a tumble. | |
+
 ### Places, characters and adventures
 
 | | |
@@ -105,9 +118,10 @@ Hired horses, bargaining with the watch and the optional hunger and sleep system
 - Horses: the North Gate stables hire the roan mare for 25 sovereigns a day. While hired, world-map journeys take about a third less time and reckless travel leaves you far less tired; return her early for 10 sovereigns back. The hire lapses on the world clock and shows on the travel map.
 - Watch-house bargaining: when a constable confronts you, bribe him at 60% of the fine (checked against Personality) or lean on him (checked against Strength) for twelve seconds of grace. A refused bribe or threat raises the bounty; an accepted bribe withdraws the warrant and returns held gear.
 - Weather that moves on the world clock: clear, overcast, rain, storm, mist and snow, each with its own sky, light, wind and distance haze. Weather has its own climate per region (the Spectral Woods live in mist, the Deep Woods see more snow) and rolls on while you walk, rest or travel — hours on the road take hours off the sky. Storms darken the world, slant the rain, drive the clouds and throw lightning and thunder; rain and storm mask your noise, mist hides you, snow carries your footsteps. Foul weather lengthens and endangers world-map journeys, makes a traveller hungrier, and is named on the status line and the character sheet.
-- Horizon country: every outdoor map now has its own distant landscape — the Grey Teeth north beyond the Hedge, chalk downs, a cliff shoulder over the water-meadow, the Chapel spire-line and the quarry head, each ridge with a lumpy crest and the high ones capped in snow. Time and weather mix them into the air, so the same country greys out in mist, flushes at dawn and goes black under a storm.
+- Horizon country: every outdoor map now has its own distant landscape — the Grey Teeth north beyond the Hedge, chalk downs, a cliff shoulder over the water-meadow and the quarry head, each ridge with a lumpy crest and the high ones capped in snow. Time and weather mix them into the air, so the same country greys out in mist, flushes at dawn and goes black under a storm.
 - A modern sky: a sun and moon that cross the sky with the clock, drawn behind the ridges; a cloud layer that thickens and races with the weather; aerial perspective that thins far country into the air; and a per-frame colour grade for light and weather.
 - Ground with a height: the Watch-stone above the Hedge is real terrain, not scenery. Four shallow steps climb its west face cell by cell, and from the top the meadow and its oaks sit below you. Any edge on the hill is a cliff: walk off it and you fall, and a long enough drop costs health when you land. Cell floors carry their own elevation, the eye rides half a unit above the feet, the renderer draws the ground's own riser faces (and draws both the low step in front and the taller bank behind it), sprites stand on the ground they are in, and a save on the hill restores you standing on it. Maps without heights keep the old flat path, so every other area is unchanged.
+- Relief and slopes: maps with any height in them (Oakhaven, the clearing, the Deep Woods) are drawn by a front-to-back renderer with a depth for every pixel. A wall can have its own height, so Oakhaven has a stepped roofline, a bell-tower on the Chapel, a tall mooring mast, a knee-high bell-plinth and bridge parapets you look over into the Flume. Outside the Hedge there is a dry-stone field wall and a timber hound-watch stand you climb by three steps. Ground can also slope: the Deep Woods have a low rise under the Mausoleum, a rolling willow hill, a west knoll and a crag whose bare-rock flanks are too steep to climb. Your feet follow a hillside smoothly, slopes steeper than a walker can manage stop you going up, and coming down a rock face is a tumble that hurts less than a sheer drop. Sprites stand on the slope under them, a figure behind a low wall shows its head and shoulders, anything behind a crest, roof or tower is hidden pixel by pixel, the crosshair aims where you look (up a hill or down from a stand), and the automap shades high ground lighter and hatches cliffs.
 - Hardcore runs, opt-in and irreversible once taken: one save for the run, no session slots, no save codes, no downloads and no pre-boss autosave. That save lives in the page, so closing the tab ends the run just as dying does. Death destroys that save and ends the run at the title screen instead of waking you by the lamp. Ordinary saves are never touched, a hardcore run can never be opened by one, and a hardcore run can never be carried out of the page as a code or file. Start one from the Options panel; only a new traveller can start without it.
 - Journey needs, optional and off by default: switch hunger and sleep on in Options and the road starts to cost something. Ten hours on foot drains hunger twice as fast as the same ten hours in the saddle; hunger or sleeplessness below 20 warns you and halves what resting and idling give back, and an empty belly caps your fatigue at half until you eat. Honey feeds you, rest sleeps you, and the character sheet and journey panel always show where you stand. Old saves and hostile imports stay fed, rested and off.
 - Pickpocket Oakhaven adult townsfolk and merchants: inspect a purse, approach quietly from behind, and use Stealth to lift loose coin. Attention, position and noise affect the displayed odds; caught or witnessed theft adds a watch bounty. One saved attempt per person; quest items and shop stock stay untouched.
@@ -139,7 +153,7 @@ With a local server or managed preview running, install Playwright in your test 
 PREVIEW_URL=http://127.0.0.1:8000 node test/screenshots.js
 ```
 
-If Playwright is installed outside this repository, set `PLAYWRIGHT_MODULE` to its module path. The capture script starts a fresh disposable game, stages illustrative scenes with the game's own feature logic, checks each scene's interface and PNG output, and refreshes the six `screenshots/stealth-*.png` images plus the travel, stables, watch, journey-needs, hardcore, weather and terrain images above. It does not start a server or alter game source or player save files.
+If Playwright is installed outside this repository, set `PLAYWRIGHT_MODULE` to its module path. The capture script starts a fresh disposable game, stages illustrative scenes with the game's own feature logic, checks each scene's interface and PNG output, and refreshes the six `screenshots/stealth-*.png` images plus the travel, stables, watch, journey-needs, hardcore, weather, terrain and relief images above. It does not start a server or alter game source or player save files.
 
 Headless Chromium needs fonts installed in the capture environment; without a font stack the panels render empty. Install `fontconfig` with a serif family (DejaVu Serif is what these images use) before capturing.
 
@@ -154,7 +168,7 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Move | W A S D · Shift runs · Caps Lock toggles always-run |
 | Look | Move the mouse over the view (rest it at a side edge to keep turning) · right-drag · Q and arrow keys · Z levels your gaze |
 | Attack | Left-click to thrust · hold and move the mouse to slash or chop · wheel or 1–9 changes weapon |
-| Use / Talk | E or Space, or click a bright name under the crosshair |
+| Use / Talk | E or Space, or click a bright name under the crosshair (the crosshair is the centre of the view, so look up or down to aim at something above or below you) |
 | Pickpocket | Face a nearby Oakhaven adult, P to inspect · touch Purse / controller Y · Enter/Space or A attempts, Escape or B leaves |
 | Disguise | Wear Synod Clerk Robes in Inventory · Y / touch Cover / controller Back shows status · Enter/A wears or removes, Escape/B leaves |
 | Stables | Face the stable sign by the North Gate · 1/A hire for a day · 2/X return her · Escape/B leave |
@@ -177,7 +191,7 @@ css/style.css     Daggerfall-style interface
 js/assets.js      embedded textures, sprites and weapon art
 js/data.js        canon: classes, NPCs, quests, items, weapons, armour, merchants, loot
 js/maps.js        districts, interiors and dungeons
-js/engine.js      raycaster renderer
+js/engine.js      raycaster renderer (flat path, and the relief path with per-pixel depth)
 js/audio.js       sound effects and music director
 js/grove.js       Part Three: Whisper-Grove story logic
 js/coda.js        Part Four: the Deep Woods and the Mausoleum of Chords
