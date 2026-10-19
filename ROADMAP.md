@@ -16,7 +16,7 @@ The 94 unfinished checklist items at the start of this plan (85 not started, 9 p
 | 1 — Stealth, law & gameplay | Gameplay | 11 | **Delivered: throwable distractions + investigation** → **Delivered: body hiding/discovery** → **Delivered: disguises/inspection** → **Delivered: broader crime/wanted posters/prison** → **Delivered: bribes/threats at the watch** → **Delivered: horse rental + travel modifiers** → **Delivered: optional hunger/sleep** → **Delivered: opt-in hardcore runs** → Phase 1 complete; next is phase 2, the spatial world. Directional sound feedback depends on phase 7 audio. |
 | 2 — Spatial world | Graphics — 3D view | 15 | **Delivered: elevation foundation** → **Delivered: relief renderer with per-pixel depth — low walls, stepped rooftops, towers, stands** → **Delivered: slope terrain — walkable hills, crag cliffs, tumbling, ramps** → **Delivered: engine foundation — 1x/2x render scale, depth/material buffers, sky and post hooks, decals, light occlusion, ceilings at height** → **Delivered: ceilings/skies/water/fog — painted ceilings, stars, panoramas, Kestrel flyovers, reflections and ripples, soft fog, area mist, torch-lit interiors** → **Delivered: scenery and emissive — props and grass, decals, close-range detail, emissive masks, five-angle stand-ins** → **Delivered: modern look and measured presets — 2x resolution, bloom, colour grades, Original/Low/Medium/High, CRT** → Phase 2 complete. Still open, carried forward: final painted art for every procedural stand-in, walkable horizon country beyond the maps' walls, and the Chapel seen from beyond the Hedge. |
 | 3 — Combat life | Animation — enemies and creatures; first person | 17 | **Delivered: species life — idle fidgets, detection startle, fleeing/charging strides** → **Delivered: hit flinch for every enemy, Requiem shatter and Brood-Mother shedding** → **Delivered: casting tells and collision-safe spawn entrances** → **Delivered: first-person draw/holster/switch, Song-casting glow, climbing hands** → **Delivered: camera feel — gentle bob, landing dip, heavy-hit shake, deafness and the Hush, with access settings** → **Delivered: swinging doors, chest lids, levers; full-screen held documents** → Phase 3 complete. Still open, carried forward: hand-painted frames for every procedural stand-in. |
-| 4 — Living world | Animation — companions and NPCs; world | 18 | Companion reactions/abilities → routines/work/wildlife → weather/scenery/fire/gates/collapse effects with safe collision. |
+| 4 — Living world | Animation — companions and NPCs; world | 18 | **Delivered: companions — hit reactions, limp, Kaelen's Root-note hum and pose, Lyra's rings, camp loops** → **Delivered: townsfolk — talking gestures, daily routines, work loops** → **Delivered: small life — crows, rats and the cat, the moored Kestrel, glinting Light-glass** → **Delivered: smoke, splashes, torches and braziers** → **Delivered: wind on signs and banners, area leaves, bells that swing on the strike** → **Delivered: rising gates and portcullises, the quarry cave-in with safe recovery** → Phase 4 complete. Still open, carried forward: hand-painted frames for every procedural stand-in; a visible Chapel bell (the story keeps the frame empty). |
 | 5 — Illustrated interface | Graphics — menus and screens | 10 | Frames/fonts/credits → inventory icons/final paper doll → portraits/log/automap → loading/death/ending illustrations. |
 | 6 — Story reactivity | Story and world-building | 8 | Rumours/broadsheets/couriers → dreams/memory echoes/Tobin pages → choice-dependent endings and future-region lore. |
 | 7 — Sound, access & tools | Audio; technical and polish | 15 | Positional/muffled sound → area/boss score and voice licensing → access/translation/statistics/photo/timer → validated mod schemas/editor → desktop packaging. |
@@ -78,14 +78,14 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [~] Enemies that appear mid-play get an entrance (earth rising, a thread from the ceiling, or a mist puff); the spot is checked collision-safe first and the enemy is harmless and non-solid until it lands. Saves taken during an entrance record it as solid. Procedural stand-in.
 
 ### Animation — companions and NPCs
-- [ ] Kaelen/Lyra hit reactions, injury poses and limping.
-- [ ] Kaelen chest-holding Root-note pose synchronized with existing low-health hum.
-- [ ] Lyra's visible musical air ripples.
-- [ ] Camp sharpening/warming-hands loops.
-- [ ] Townsfolk talking gestures/head turns.
-- [ ] Daily work/tavern/home routines, with time skips and quest availability preserved.
-- [ ] Cat/crow/rat walk and flee sheets; react to running.
-- [ ] Miller, tanner and barman working loops.
+- [~] Kaelen and Lyra flinch when hit, stoop from 60% health and limp when badly hurt (`js/companions.js`). Procedural stand-in; painted frames pending.
+- [~] Below 35% health Kaelen holds his chest and a 174 Hz Root-note hum rises (`Audio_.hum`); one ramp drives both, so they start and stop together, and both stop when he recovers, is downed, the map changes or play pauses. Stand-in pose repainted from his art.
+- [~] Faint rings spread from Lyra while she sings (tending and the Calling-Song), hidden by walls and nearer figures; Particles scales them, reduced motion shows one still ring. Stand-in.
+- [~] Kaelen sharpens his blade at the Deepwoods camp and his hut (three strokes and a small spark that No flashes removes); people standing by a fire lean in and rub their hands. Stand-in motion on existing art.
+- [~] Townsfolk gesture and turn their heads toward you while talking, and glance at you when you come close (`js/townsfolk.js`). Stand-in motion.
+- [x] Six Oakhaven townsfolk work by day, three go to the Boar in the evening and all go home at night. Who is out is worked out from the clock and flags after every load, rest, prison stay and journey, never saved separately; every quest-bearing NPC is present at every hour (checked in quarter-hour steps), and changes in view wait for you to look away.
+- [~] Crows peck and take wing, rats scurry for dark corners and the Whisper-Grove cat walks and darts, all fleeing further when you run (`js/smalllife.js`). They never block a path and are never witnesses, targets or saved. Procedural stand-in sprites.
+- [~] Hetty wipes the bar and pours, Hob Wendle scrapes a hide, and Nell and Pim card and sort wool at the mill (the game has no miller); each pauses while you talk to them. Stand-in motion.
 
 ### Animation — first person
 - [~] Weapon-family wind-up/strike/recovery choreography across all 16 catalog weapons, using existing first-person images with grip-pivot rotation/translation/scale. Bespoke multi-frame painted swing sheets remain pending.
@@ -99,16 +99,16 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [x] Books, letters, logs, registers, writs and inscriptions open as a full-screen sheet with large high-contrast text, paging by keyboard, touch and controller, and a text-size control; dialogue and story choices keep the normal panel (`js/reading.js`).
 
 ### Animation — world
-- [~] Campfire/hearth sprites now use four cached, distinct flame silhouettes generated from their existing painted warm-colour pixels; logs/stone remain anchored. Torch/brazier assets and bespoke drawn fire sheets remain pending.
-- [ ] Chimney, Golem-vent and campfire smoke.
-- [ ] Player/enemy water splashes.
-- [ ] Wind-driven signs and banners.
-- [ ] Seasonal/area-specific leaves and blossom.
-- [ ] Chapel/Belfry bell swing synchronized with ringing.
-- [ ] Moored Kestrel drift/turn animation.
-- [ ] Glimmering dropped Light-glass shards.
-- [ ] Animated gates/portcullises with collision opening thresholds.
-- [ ] Story-driven wall collapses/quarry cave-in, with safe player recovery.
+- [~] Campfire/hearth sprites now use four cached, distinct flame silhouettes generated from their existing painted warm-colour pixels; logs/stone remain anchored. Phase 4 added procedural wall torches and braziers with animated flames, glow and light (32 placed in dungeons and dark interiors, never blocking a path). Bespoke drawn fire sheets remain pending.
+- [~] Smoke rises from sixteen Oakhaven chimneys, the Deepwoods campfire and the Clearing hearth and drifts with the wind; interior hearths curl under the ceiling; the Steam Golem vents from its shoulders until it dies, and the Root-vault boiler surges (`js/firesmoke.js`). Stand-in art.
+- [~] Wading throws droplets ahead of you; stepping in, falling in and enemies wading or dying in water all splash. Stand-in.
+- [~] Outdoor signs swing with the wind and its gusts (barely in a calm, about five times as far in a gale); six cloth banners and pennants hang at the Greenhall, the watch-house and the gate (`js/windbells.js`). Stand-in cloth.
+- [~] Falling leaves differ by area (oak in Oakhaven and the Clearing, rust and willow strips in the Deepwoods, ghost-leaves and motes in the Whisper-Grove), are carried by the wind and settle briefly. No blossom: the story is set in autumn.
+- [~] The Belfry bell swings on each of its three tolls and keeps swinging as it decays; the Catacombs alarm bell and the arena's Challenger's Bell swing when they ring. The Chapel bell is deliberately not shown: its frame's chalk says the bells were taken in 412 SR and nothing in the story restores one.
+- [~] Before the Greening the Kestrel hangs from Oakhaven's mooring mast on its line, drifting and turning with the wind. Stand-in views of the existing sprite.
+- [~] Dropped Light-glass shards glint at a distance; No flashes and reduced motion leave a steady glow.
+- [~] Eight gates and grates rise as iron lattices; you can pass exactly when the bars clear your head (the existing open > 0.7 threshold, proved against collision at 101 points), and portal gates (the North Gate and others) open before the journey, with a timeout so they can never softlock (`js/gates.js`). Stand-in lattice.
+- [~] Once the bore is broken, the Quarry shaft room caves in: groaning and falling dust, then rubble. Anyone caught inside is moved to safe ground, every exit, item and quest target stays reachable (proved by a flood fill), and the rubble is restored from one saved flag after loading. Stand-in rubble.
 
 ### Gameplay
 - [x] Skill-based three-pin lockpicking for tier-2/3 strongboxes and the Cloister vestry mechanical lock. Keyboard arrows/Space/Enter/Escape, touch buttons and controller D-pad/A/B supported. Story seals remain gated. Successful unlocks advance Lockpicking; higher ranks widen the safe band, slips cost Fatigue/noise and three slips end the attempt. No consumable pick/breakage system in this milestone.
@@ -155,6 +155,14 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
 - [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Phase 4 completion pass verification
+- **How it was built.** A small foundation first: `Audio_.hum(level, freq, id)`, a sustained voice for continuous sounds (Kaelen's hum needed one; a code survey found the roadmap's "Kaelen hums at low health" had no code behind it), plus six module stubs. Then six parallel teams, one module and test each, in their own worktrees: companions, townsfolk, small life, fire and smoke, wind and bells, gates and cave-ins. Every branch was diff-checked (each touched only its own two files) before merging.
+- **Conventions settled during integration.** anim.js sweeps transient entities whenever a map changes, so decorations a module re-creates on each visit (chimneys, torches, banners, critters, tavern stand-ins) are re-added lazily and carry `_decor: true`; the visual and surfaces tests now exempt `_decor` alongside scenery and grass. Townsfolk routines change who is out only when someone's routine changes (or on a load, rest or journey), so they never overrule other code that hides a person.
+- **Integration fixes found by testing the merged tree:** the leaves module took over particle drawing and left anim.js's particle list stale after a preset change (it now keeps it in step); an evening stand-in could stand between the camera and the tavern hearth when a test set noon by hand (the post test's scene helper now re-applies routines); working townsfolk no longer also lean in to warm their hands; the doors test raced the live game loop across two pages (its freeze now pins poses and flame glow, and closed doors are compared on one page); and tests that measure one effect now hold other modules' smoke, leaves, crows and banners out of the frame.
+- **Measured cost (median ms per frame, `PRESETS.measure()`, same machine, same run):** Phase 3 tip → Phase 4, Medium preset: 7.1 → 7.7 (Oakhaven street, with chimneys, banners and crows), 9.2 → 9.1 (Deep Woods camp), 5.4 → 5.4 (Whisper-Grove), 5.7 → 5.3 (tavern). Original, Low and High move within noise.
+- **Tests.** New suites `companions`, `townsfolk`, `smalllife`, `firesmoke`, `windbells` and `gates`; all 33 suites pass on the merged tree. Each module proves its switch-off state matches the original, that nothing it adds is saved, and that save/load and leaving and re-entering a map keep it right.
+- **Still open:** hand-painted frames for every stand-in; the Dissonant Blade player's low-health hum; depth-aware leaves (they are screen-space, like the original particles); human visual review and physical-controller hardware.
 
 ### Phase 3 completion pass verification
 - **How it was built.** Seven parallel teams, each owning one new module and its test file in its own git worktree branched from the phase branch: species life (`creature-life`), hit and boss-phase art (`enemy-fx`), casting tells and entrances (`telegraphs`), first-person hands (`fp-hands`), camera feel (`fp-feel`), doors and props (`doors`) and held documents (`reading`). Every module wraps existing functions instead of editing them, keeps its state in unsaved `_` fields, and has one switch in `GFX` that restores the original behaviour exactly (tests compare frames byte for byte). Each branch was diff-checked before merging and the merged tree re-tested.
@@ -437,7 +445,7 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - `[x]` **Surface-Aware Footsteps**: Distinct procedural acoustics for stone/cobble, wood planks, grass/moss, and shallow/deep water.
 - `[x]` **Cave & Cathedral Echo / Reverb**: Procedural delay/reverb tail inside the Quarry, Root-vault, Whisper Catacombs, Cloister, and Mausoleum.
 - `[x]` **Distinct Enemy Sound Sets**: Idle, alert, attack, hurt, and death sound synthesis per enemy family.
-- `[x]` **Kaelen Humming the Root Note**: When Kaelen (or a Dissonant Blade player) is badly hurt (<35% HP), a low 174 Hz hum rises under the audio mix, just as described in the series bible.
+- `[~]` **Kaelen Humming the Root Note**: When Kaelen is badly hurt (<35% HP), a low 174 Hz hum rises under the audio mix while he holds his chest, just as described in the series bible. (A Phase 4 audit found this had been marked done with no code behind it; it was built in `js/companions.js`. The Dissonant Blade player's version is not built.)
 - `[x]` **Dynamic Alert Music Swell**: Music swells in tension when enemies spot you and fades smoothly back when you break line of sight.
 
 ### 8. Visuals
