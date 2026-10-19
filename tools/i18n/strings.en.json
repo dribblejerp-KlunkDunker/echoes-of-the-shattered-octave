@@ -2535,7 +2535,7 @@
  "h640n5hg1e": {
   "en": "A lone herald walks a mist-bound road at dusk with a lantern and a writ, nine miles to read it aloud, a crashed ship and the Mausoleum of Chords behind.",
   "where": [
-   "screens.js:434"
+   "screens.js:462"
   ]
  },
  "178m3t6soq4": {
@@ -4679,7 +4679,7 @@
  "1y34wk6rnxx": {
   "en": "Boss",
   "where": [
-   "logmap.js:440"
+   "logmap.js:447"
   ]
  },
  "1ri4zztn0mz": {
@@ -5102,7 +5102,7 @@
  "o3rohj1bd": {
   "en": "Catacombs: Whispers",
   "where": [
-   "score.js:234"
+   "score.js:256"
   ]
  },
  "1165hqal7y2": {
@@ -5782,7 +5782,7 @@
  "1sywz79n3d8": {
   "en": "Danger",
   "where": [
-   "logmap.js:440"
+   "logmap.js:447"
   ]
  },
  "1lltbelviz8": {
@@ -5874,7 +5874,7 @@
  "1pincm2b99x": {
   "en": "Deep Woods: Willow",
   "where": [
-   "score.js:186"
+   "score.js:208"
   ]
  },
  "1cn99gten4x": {
@@ -6045,7 +6045,7 @@
  "2yv3d8xa2h": {
   "en": "Door",
   "where": [
-   "logmap.js:440"
+   "logmap.js:447"
   ]
  },
  "3djdkv2208": {
@@ -6756,7 +6756,7 @@
  "8wkz0qcyrp": {
   "en": "Extended",
   "where": [
-   "score.js:599"
+   "score.js:670"
   ]
  },
  "1z05ndlpbb": {
@@ -9622,7 +9622,7 @@
  "24bhjn7ydow": {
   "en": "In the Cloister of the Lost Choir an automaton kneels beneath eleven empty pegs, chiming to nobody, while the wrecked ship smokes in the woods beyond.",
   "where": [
-   "screens.js:436"
+   "screens.js:464"
   ]
  },
  "1jqllaoijla": {
@@ -9672,13 +9672,13 @@
  "bxucquvvzf": {
   "en": "In the deep woods by the Mausoleum of Chords, a nine-foot bronze automaton stands beside Sable, holding a red choir cloak to its chest.",
   "where": [
-   "screens.js:435"
+   "screens.js:463"
   ]
  },
  "1h4uodlrd1k": {
   "en": "In the deep woods, scattered bronze plates from a broken automaton, and a red choir cloak folded on the ground.",
   "where": [
-   "screens.js:437"
+   "screens.js:465"
   ]
  },
  "21jzldhjmyw": {
@@ -9714,7 +9714,7 @@
  "oya9uafdk5": {
   "en": "Ink sketch: {0}",
   "where": [
-   "logmap.js:384"
+   "logmap.js:386"
   ],
   "pattern": true
  },
@@ -11727,7 +11727,7 @@
  "1p8ncm0408j": {
   "en": "Main theme",
   "where": [
-   "score.js:377"
+   "score.js:399"
   ]
  },
  "phkytxj83h": {
@@ -11825,7 +11825,7 @@
  "ywdo05fxg3": {
   "en": "Mausoleum: Chords",
   "where": [
-   "score.js:254"
+   "score.js:276"
   ]
  },
  "1ky4ubjy4n9": {
@@ -12889,7 +12889,7 @@
  "1gs7y4kgp6d": {
   "en": "Oakhaven: Growth",
   "where": [
-   "score.js:141"
+   "score.js:163"
   ]
  },
  "2e0mgjguh14": {
@@ -13318,7 +13318,7 @@
   "en": "Original",
   "where": [
    "presets.js:11",
-   "score.js:599"
+   "score.js:670"
   ]
  },
  "2dki503pacx": {
@@ -13459,7 +13459,7 @@
  "2aepwp3ps2s": {
   "en": "Outrider-Captain Brennick",
   "where": [
-   "score.js:355"
+   "score.js:377"
   ]
  },
  "2ezeo419btx": {
@@ -13532,6 +13532,13 @@
    "reading.js:119"
   ],
   "pattern": true
+ },
+ "5zhlzishij": {
+  "en": "Painted art",
+  "where": [
+   "painted.js:131",
+   "painted.js:133"
+  ]
  },
  "2arx28ulzub": {
   "en": "Pale moths of the Hush, drawn to light. They eat the light first and then the sound. Glass shot cannot ring in them.",
@@ -13950,7 +13957,7 @@
   "en": "Pressman Mallow",
   "where": [
    "data.js:722",
-   "score.js:313",
+   "score.js:335",
    "theName():0"
   ]
  },
@@ -14102,13 +14109,13 @@
  "1y8h04z2h8k": {
   "en": "Quarry: Stone",
   "where": [
-   "score.js:202"
+   "score.js:224"
   ]
  },
  "aljkcr1rrq": {
   "en": "Quest giver",
   "where": [
-   "logmap.js:440"
+   "logmap.js:447"
   ]
  },
  "10wpp3s9unl": {
@@ -14751,7 +14758,7 @@
  "8hsqvhuuzp": {
   "en": "Root-vault: Harmonics",
   "where": [
-   "score.js:219"
+   "score.js:241"
   ]
  },
  "24wl5y330h6": {
@@ -15249,7 +15256,7 @@
  "1kkkmzzlb29": {
   "en": "Score",
   "where": [
-   "score.js:596"
+   "score.js:667"
   ]
  },
  "1k0zxnlmwkw": {
@@ -15789,7 +15796,7 @@
  "1qxw9l472du": {
   "en": "Shop",
   "where": [
-   "logmap.js:440"
+   "logmap.js:447"
   ]
  },
  "bw3jm64k5i": {
@@ -16326,6 +16333,12 @@
    "game.js:2080"
   ]
  },
+ "126hq3sy9s": {
+  "en": "Sound ripples",
+  "where": [
+   "ripples.js:265"
+  ]
+ },
  "1qnvuhqqzc8": {
   "en": "Sound space",
   "where": [
@@ -16430,6 +16443,12 @@
    "game.js:1331"
   ],
   "pattern": true
+ },
+ "1lpx0ht4bhn": {
+  "en": "Stand-ins",
+  "where": [
+   "painted.js:134"
+  ]
  },
  "rsng2t6ilm": {
   "en": "Standard steel & shot",
@@ -17355,7 +17374,7 @@
   "en": "The Brood-Mother",
   "where": [
    "data.js:969",
-   "score.js:281",
+   "score.js:303",
    "theName():0",
    "theName():0"
   ]
@@ -17689,7 +17708,7 @@
   "en": "The Deacon of the Unrung Bell",
   "where": [
    "data.js:1025",
-   "score.js:325",
+   "score.js:347",
    "wilds.js:165",
    "wilds.js:175"
   ]
@@ -18061,19 +18080,19 @@
  "gxary68s9w": {
   "en": "The Kestrel lifts from the burning, greening town on a rope full of children, while the whole town stands in the mud and waves it away.",
   "where": [
-   "screens.js:433"
+   "screens.js:461"
   ]
  },
  "cohwxkhxsi": {
   "en": "The Kestrel lifts from the burning, greening town on a rope full of children. Behind it, where the thing that wore your voice burst, a ring of ground lies dead silent.",
   "where": [
-   "screens.js:431"
+   "screens.js:459"
   ]
  },
  "16387ws1s54": {
   "en": "The Kestrel lifts from the burning, greening town on a rope full of children. Over the Hedge, pale shapes of the town's dead rise in the mist, still speaking.",
   "where": [
-   "screens.js:432"
+   "screens.js:460"
   ]
  },
  "trg2jksijk": {
@@ -18329,7 +18348,7 @@
  "17kbpxxsnz2": {
   "en": "The Oakhaven oaks over the burning town, and a skyship leaving.",
   "where": [
-   "screens.js:440"
+   "screens.js:468"
   ]
  },
  "xlxr7uvsal": {
@@ -18450,7 +18469,7 @@
   "where": [
    "data.js:724",
    "logmap.js:35",
-   "score.js:291",
+   "score.js:313",
    "theName():0"
   ]
  },
@@ -18556,7 +18575,7 @@
   "en": "The Requiem",
   "where": [
    "data.js:813",
-   "score.js:269",
+   "score.js:291",
    "theName():0",
    "theName():0"
   ]
@@ -18693,7 +18712,7 @@
  "1tw1rg97y0e": {
   "en": "The Steam Golem",
   "where": [
-   "score.js:345",
+   "score.js:367",
    "theName():0"
   ]
  },
@@ -18905,7 +18924,7 @@
   "where": [
    "data.js:159",
    "data.js:815",
-   "score.js:335",
+   "score.js:357",
    "theName():0"
   ]
  },
@@ -19473,7 +19492,7 @@
  "izufl1v01e": {
   "en": "The deep woods at dusk by the Mausoleum of Chords, a wrecked ship smoking, and an empty alcove with eleven bare pegs.",
   "where": [
-   "screens.js:438"
+   "screens.js:466"
   ]
  },
  "oxfkbfi3c": {
@@ -21484,7 +21503,7 @@
  "1eupi2b7bel": {
   "en": "Trap",
   "where": [
-   "logmap.js:440"
+   "logmap.js:447"
   ]
  },
  "6p7ztq9a5u": {
@@ -22510,7 +22529,7 @@
  "1bueyavlidh": {
   "en": "Whisper-Grove: Memory",
   "where": [
-   "score.js:168"
+   "score.js:190"
   ]
  },
  "b7ie8tb9zx": {
@@ -24407,6 +24426,12 @@
    "coda.js:251"
   ]
  },
+ "1hx751669je": {
+  "en": "arcs at the edge of the view show where sounds come from",
+  "where": [
+   "ripples.js:266"
+  ]
+ },
  "194ipbm5xfw": {
   "en": "art, music, sound, fonts, tools and contributors",
   "where": [
@@ -24827,6 +24852,12 @@
    "upgrades.js:1318"
   ]
  },
+ "1edx7k8luqd": {
+  "en": "linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55))",
+  "where": [
+   "screens.js:446"
+  ]
+ },
  "121398holuo": {
   "en": "mist",
   "where": [
@@ -24852,6 +24883,12 @@
   "en": "muffled through Audio_.muffle (a master low-pass) as well as the picture",
   "where": [
    "fp-feel.js:310"
+  ]
+ },
+ "cv5w04bd4p": {
+  "en": "music/extended/",
+  "where": [
+   "score.js:41"
   ]
  },
  "288x6cxhtm0": {
@@ -24928,10 +24965,10 @@
    "couriers.js:166"
   ]
  },
- "1qb9j3kbkti": {
-  "en": "original is the ten recorded cues only; extended adds area, boss and story pieces",
+ "o13pc9qnyk": {
+  "en": "original is the ten recorded cues only; extended adds composed pieces for areas, bosses and the story",
   "where": [
-   "score.js:597"
+   "score.js:668"
   ]
  },
  "1f18grl0sox": {
@@ -24947,6 +24984,12 @@
   "en": "overhead chop",
   "where": [
    "upgrades.js:450"
+  ]
+ },
+ "1esp6kyxib6": {
+  "en": "paintings on area cards, death and ending screens and logbook sketches; Stand-ins uses the drawn pictures",
+  "where": [
+   "painted.js:132"
   ]
  },
  "26c653ne2oe": {
@@ -24990,6 +25033,12 @@
   "en": "rain, willow wind and thunder; works with sound effects on",
   "where": [
    "spatial-audio.js:276"
+  ]
+ },
+ "1umjycym8ee": {
+  "en": "reads positions only; makes no sound",
+  "where": [
+   "ripples.js:348"
   ]
  },
  "11z6i3jwfjj": {
