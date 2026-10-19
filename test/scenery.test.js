@@ -193,7 +193,7 @@ const SHOTS = process.env.SHOT_DIR || '/tmp/claude-0/-home-claude/9fd8ad51-4634-
       check(G.map._flora.every(e => !e.hidden || e._lod), 'and shows it again');
       // GFX.plain() turns everything off; the frame must equal one where the props were never there
       GFX.plain();
-      check(G.map._scn.every(e => e.hidden) && G.map._flora.every(e => e.hidden) && !G.ents.some(e => e.transient), 'GFX.plain() hides props and flora and leaves no transient decos in the list');
+      check(G.map._scn.every(e => e.hidden) && G.map._flora.every(e => e.hidden) && !G.ents.some(e => e.transient && !e._decor), 'GFX.plain() hides props and flora and leaves no transient decos in the list');   // _decor: story content (notice boards, journal pages) that is not a graphics effect
       const framePlain = grabFrame(), framePlain2 = grabFrame();
       check(diffPx(framePlain, framePlain2) === 0, 'the plain frame is repeatable');
       // hidden entities must not render or collide even if something puts them back in the list
