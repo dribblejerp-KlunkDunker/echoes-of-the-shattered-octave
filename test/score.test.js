@@ -3,6 +3,10 @@
 // Covers js/score.js: the right piece for each area, dungeon, boss and story stage; Original = the old music requests;
 // one AudioContext; bounded scheduling over a simulated ten minutes (a counting fake context); silence before audio
 // unlock and while muted; every piece rendered offline (finite, audible, not clipping); the Options row; hostile flags.
+// Phase 8 adds composed recordings (music/extended/*.mp3): the sections up to "every piece rendered offline" exercise the
+// procedural scheduler, so they run with SCORE.recsOn = false; the "recordings" sections then check that Extended plays the
+// recording for an area, a boss and each story stage, that mute/disable pause it, that it falls back to the procedural piece
+// when its file 404s, that the rest/return cycle survives, that Original never touches music/extended, and the files' size.
 // Set SCORE_SHOTS to a directory to keep screenshots.
 'use strict';
 const assert = require('node:assert/strict');
@@ -17,7 +21,9 @@ fs.mkdirSync(SHOTS, { recursive: true });
   try {
     const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
-    page.on('console', m => { if (m.type() === 'warning' && /score/.test(m.text())) errors.push('console: ' + m.text()); });
+    page.on('console', m => { if (m.type() === 'warning' && /score/.test(m.text()) && !/recording (failed|unavailable)/.test(m.text())) errors.push('console: ' + m.text()); });
+    let extRequests = 0;                         // requests for music/extended/*, to prove Original never streams them
+    page.on('request', r => { if (/\/music\/extended\//.test(r.url())) extRequests++; });
     // count every live AudioContext the page creates (there must be exactly one)
     await page.addInitScript(() => {
       window.__ctxCount = 0;
@@ -55,7 +61,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
     await page.locator('#c-go').click(); await page.locator('#btn-intro-skip').click();
     await page.waitForTimeout(500);
     // the recorded score is the default; these checks are about the generated pieces, so select Extended
-    await ev(() => { window.requestAnimationFrame = () => 0; Audio_.init(); Audio_.resume(); SCORE.setMode('extended'); });
+    await ev(() => { window.requestAnimationFrame = () => 0; Audio_.init(); Audio_.resume(); SCORE.setMode('extended'); SCORE.recsOn = false; });
     await page.waitForTimeout(200);
 
     // ---- pure choice: areas, bosses, story stages
@@ -151,7 +157,133 @@ fs.mkdirSync(SHOTS, { recursive: true });
     });
     story.forEach((s, i) => { assert.equal(s.cur, 'title', 'title.mp3 keeps playing under the theme layer'); assert.equal(s.want, 'maintheme'); assert.equal(s.stageNow, [0, 1, 2, 3, 4, 5][i]); });
 
+    // ---- recordings: Extended plays the composed MP3 for an area, a boss and each story stage
+    // serve music/extended with HTTP Range support (python's http.server has none, and an element without Range cannot seek)
+    await page.route('**/music/extended/*.mp3*', async route => {
+      const u = new URL(route.request().url()), f = path.join(__dirname, '..', decodeURIComponent(u.pathname));
+      if (!fs.existsSync(f)) return route.continue();
+      const buf = fs.readFileSync(f), m = /bytes=(\d+)-(\d*)/.exec(route.request().headers().range || '');
+      const h = { 'accept-ranges': 'bytes', 'content-type': 'audio/mpeg' };
+      if (m) { const a = +m[1], b = m[2] ? +m[2] : buf.length - 1; return route.fulfill({ status: 206, headers: Object.assign(h, { 'content-range': `bytes ${a}-${b}/${buf.length}` }), body: buf.subarray(a, b + 1) }); }
+      return route.fulfill({ status: 200, headers: h, body: buf });
+    });
+    await ev(() => { SCORE.recsOn = true; SCORE.resetRecFailures(); SCORE.dropAll(); });
+    // drive the game's music loop in real time until a predicate on SCORE.active holds (or give up after ms)
+    const driveUntil = (pred, ms) => page.evaluate(async ([predSrc, ms]) => {
+      const f = new Function('A', 'return (' + predSrc + ')(A)');
+      const end = performance.now() + ms; let A = SCORE.active;
+      while (performance.now() < end) {
+        musicDirector(0.05); Audio_.music.tick(0.05); A = SCORE.active;
+        if (f(A)) return { ok: true, A };
+        await new Promise(r => setTimeout(r, 50));
+      }
+      return { ok: false, A };
+    }, [pred.toString(), ms]);
+    const setup = (id) => ev((id) => { loadMap(id); G.state = 'play'; G.escapeTimer = 0; for (const e of G.ents) if (e.kind === 'enemy') e.hidden = true; SCORE.dropAll(); combatT = 0; }, id);
+    await setup('oakhaven');
+    let r = await driveUntil(A => A.area && A.area.rec && A.area.t > 0.3 && !A.area.paused, 8000);
+    assert.ok(r.ok, 'oakhaven: the recording is playing: ' + JSON.stringify(r.A));
+    assert.ok(/music\/extended\/oakhaven\.mp3/.test(r.A.area.src), 'the element source is the oakhaven recording');
+    assert.equal(r.A.area.loop, false, 'an area piece plays through once');
+    assert.equal(await ev(() => Audio_.music.current), null, 'the shared MP3 cue is replaced while the recording plays');
+    assert.ok((await ev(() => window.__ctxCount)) === 1, 'the recording is routed through the one AudioContext');
+    // rest/return: when the recording ends the area falls silent for a gap, as the procedural piece does
+    const seeked = await ev(() => { const i = SCORE.recElement('area'); if (!i || !isFinite(i.duration)) return false; i.currentTime = Math.max(0, i.duration - 0.4); return true; });
+    assert.ok(seeked, 'the recording has a duration (it loaded)');
+    r = await driveUntil(A => !A.area, 6000);
+    assert.ok(r.ok, 'a finished recording is retired');
+    assert.equal(await ev(() => SCORE.area.phase), 'gap', 'then the area rests for a gap');
+    assert.equal(await ev(() => Audio_.music.current), null, 'and nothing else plays in the gap');
+
+    // a boss takes over from combat with its own recording, looped
+    await setup('oakhaven');
+    const bossRec = await ev(() => {
+      const c = Engine.cam, e = hydrate({ kind: 'enemy', type: 'broodmother', x: c.x + 3, y: c.y }); e.state = 'chase'; G.ents.push(e); window.__b = e;
+      return true;
+    });
+    r = await driveUntil(A => A.boss && A.boss.rec && A.boss.t > 0.3 && !A.boss.paused, 8000);
+    assert.ok(r.ok, 'the Brood-Mother recording plays: ' + JSON.stringify(r.A));
+    assert.ok(/boss_broodmother\.mp3/.test(r.A.boss.src)); assert.equal(r.A.boss.loop, true, 'boss themes loop');
+    assert.equal(await ev(() => Audio_.music.current), null, 'the shared combat cue is replaced');
+    // mute and disable pause the stream after the fade; unmute resumes it
+    await ev(() => { if (!Audio_.muted) Audio_.toggleMute(); });
+    r = await driveUntil(A => A.boss && A.boss.paused, 7000);
+    assert.ok(r.ok, 'muted: the recording is faded out and paused');
+    await ev(() => { Audio_.toggleMute(); });
+    r = await driveUntil(A => A.boss && !A.boss.paused, 6000);
+    assert.ok(r.ok, 'unmuted: the recording resumes');
+    await ev(() => { Audio_.music.enabled = false; });
+    r = await driveUntil(A => A.boss && A.boss.paused, 7000);
+    assert.ok(r.ok, 'music disabled: the recording pauses');
+    await ev(() => { Audio_.music.enabled = true; });
+    await ev(() => { window.__b.hidden = true; G.ents.splice(G.ents.indexOf(window.__b), 1); SCORE.dropAll(); combatT = 0; });
+
+    // every boss type picks its own recording; every story stage its own main-theme file
+    const bossFiles = await ev(() => {
+      loadMap('oakhaven'); G.state = 'play'; for (const e of G.ents) if (e.kind === 'enemy') e.hidden = true;
+      const out = {}, c = Engine.cam, added = [];
+      for (const t of ['requiem', 'broodmother', 'weaver', 'aegis', 'pressman', 'deacon', 'wearer', 'wearer_coda', 'golem', 'captain']) {
+        SCORE.dropAll(); combatT = 0;
+        const e = hydrate({ kind: 'enemy', type: t, x: c.x + 3, y: c.y }); e.state = 'chase'; G.ents.push(e); added.push(e);
+        musicDirector(0.016); Audio_.music.tick(0.016);
+        const a = SCORE.active.boss; out[t] = a && a.rec ? a.src : null; e.hidden = true;
+      }
+      for (const e of added) G.ents.splice(G.ents.indexOf(e), 1);
+      SCORE.dropAll(); combatT = 0; return out;
+    });
+    for (const [t, f] of Object.entries({ requiem: 'boss_requiem', broodmother: 'boss_broodmother', weaver: 'boss_weaver', aegis: 'boss_aegis', pressman: 'boss_pressman', deacon: 'boss_deacon', wearer: 'boss_wearer', wearer_coda: 'boss_wearer', golem: 'boss_golem', captain: 'boss_captain' }))
+      assert.ok(bossFiles[t] && bossFiles[t].indexOf('music/extended/' + f + '.mp3') === 0, t + ' -> ' + f + ': ' + bossFiles[t]);
+    const stageFiles = await ev(() => {
+      G.state = 'title'; const saved = Object.assign({}, G.flags), out = [];
+      for (const f of [{}, { lyra_met: true }, { rite_started: true }, { greening: true }, { part4: true }, { book_one_done: true }]) {
+        for (const k of Object.keys(G.flags)) delete G.flags[k]; Object.assign(G.flags, f);
+        SCORE.dropAll(); Audio_.music.request('title'); Audio_.music.tick(0.016);
+        const a = SCORE.active.area; out.push({ pid: a && a.pid, rec: a && a.rec, src: a && a.src, cur: Audio_.music.current });
+      }
+      for (const k of Object.keys(G.flags)) delete G.flags[k]; Object.assign(G.flags, saved);
+      G.state = 'play'; SCORE.dropAll(); return out;
+    });
+    stageFiles.forEach((s2, i) => { assert.equal(s2.pid, 'maintheme_' + i); assert.ok(s2.rec && s2.src.indexOf('music/extended/maintheme_' + i + '.mp3') === 0, 'stage ' + i + ' recording: ' + s2.src); assert.equal(s2.cur, null, 'the recording takes the title cue\'s place'); });
+    // the ending cue (story complete) plays the last stage
+    const endCue = await ev(() => { G.state = 'title'; const saved = Object.assign({}, G.flags); G.flags.book_one_done = true; SCORE.dropAll(); Audio_.music.request('ending'); Audio_.music.tick(0.016); const a = SCORE.active.area; const o = a && a.pid; for (const k of Object.keys(G.flags)) delete G.flags[k]; Object.assign(G.flags, saved); G.state = 'play'; SCORE.dropAll(); return o; });
+    assert.equal(endCue, 'maintheme_5', 'the ending cue plays the restored-stage recording');
+
+    // fallback: a recording that 404s is replaced by its procedural piece (and the failure is remembered)
+    await page.route('**/music/extended/quarry.mp3*', route => route.fulfill({ status: 404, body: 'gone' }));
+    await ev(() => SCORE.resetRecFailures());
+    await setup('quarry');
+    r = await driveUntil(A => A.area && A.area.pid === 'quarry' && A.area.rec === false, 8000);
+    assert.ok(r.ok, 'quarry: a missing recording falls back to the procedural piece: ' + JSON.stringify(r.A));
+    assert.equal((await ev(() => SCORE.recFailed)).quarry, true, 'the failure is remembered for the session');
+    assert.equal(await ev(() => Audio_.music.current), null, 'the procedural piece replaces the shared cue as before');
+    await page.unroute('**/music/extended/quarry.mp3*');
+    // a missing main-theme recording falls back to the procedural layer over title.mp3
+    await page.route('**/music/extended/maintheme_0.mp3*', route => route.fulfill({ status: 404, body: 'gone' }));
+    const mainFb = await page.evaluate(async () => {
+      SCORE.resetRecFailures(); SCORE.dropAll(); G.state = 'title'; const saved = Object.assign({}, G.flags); for (const k of Object.keys(G.flags)) delete G.flags[k];
+      const end = performance.now() + 8000; let o = null;
+      while (performance.now() < end) {
+        Audio_.music.request('title'); Audio_.music.tick(0.05);
+        if (SCORE.want.layer === 'maintheme' && Audio_.music.current === 'title') { o = { layer: SCORE.want.layer, cur: Audio_.music.current, failed: SCORE.recFailed.maintheme_0 }; break; }
+        await new Promise(r => setTimeout(r, 50));
+      }
+      Object.assign(G.flags, saved); G.state = 'play'; SCORE.dropAll(); return o;
+    });
+    assert.ok(mainFb && mainFb.failed === true, 'main theme: a missing recording falls back to the procedural layer over title.mp3: ' + JSON.stringify(mainFb));
+    await page.unroute('**/music/extended/maintheme_0.mp3*');
+    await ev(() => { SCORE.resetRecFailures(); SCORE.dropAll(); SCORE.recsOn = false; });
+
+    // the files: every recording in the table exists, is a sensible size, and the folder stays within the 30 MB budget
+    const dirFiles = fs.readdirSync(path.join(__dirname, '..', 'music', 'extended')).filter(f => f.endsWith('.mp3'));
+    const table = await ev(() => Object.values(SCORE.recordings).map(r => r.file + '.mp3'));
+    assert.equal(table.length, 22, '16 pieces + 6 story stages');
+    let total = 0;
+    for (const f of table) { assert.ok(dirFiles.includes(f), 'recording exists: ' + f); const sz = fs.statSync(path.join(__dirname, '..', 'music', 'extended', f)).size; total += sz; assert.ok(sz > 600e3 && sz < 3.5e6, f + ' size ' + sz); }
+    console.log('music/extended: ' + (total / 1e6).toFixed(2) + ' MB in ' + table.length + ' files');
+    assert.ok(total <= 30e6, 'music/extended stays within 30 MB: ' + total);
+
     // ---- Original: exactly the old music requests, nothing procedural
+    const extBefore = extRequests;
     const orig = await ev(() => {
       const out = {};
       SCORE.setMode('original'); out.stored = localStorage.getItem('octave.score.v1');
@@ -177,6 +309,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
     assert.equal(orig.woods, 'coda', 'Deep Woods still shares its old cue'); assert.equal(orig.oak, 'town'); assert.equal(orig.boss, 'combat');
     assert.equal(orig.title, 'title'); assert.equal(orig.ending, 'ending'); assert.equal(orig.rate, 'dungeon');
     assert.deepEqual(orig.active, {}, 'no procedural instance in Original');
+    assert.equal(extRequests, extBefore, 'Original never requests anything from music/extended');
     assert.ok(orig.retired <= 60, 'retired pieces are queued for reaping (the sims below check they are reaped)');
 
     // ---- Options row (Graphics & access): switch + persistence, fits 1280x800 and 640x400
