@@ -153,7 +153,7 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [x] Optional speedrun timer with pause/loading policy.
 - [x] Statistics page: kills, distance, playtime and Songs cast.
 - [x] Larger text, reduced shake, no flashes and high contrast across every new effect.
-- [~] Translation message catalog, locale selection, fallback and text expansion tests. *(Catalog, English, pseudo-locale and a partial French; story text is not yet translated.)*
+- [x] Translation message catalog, locale selection, fallback and text expansion tests. *(Menus and the whole story in French: 4,255 strings, translated at display time by js/story-i18n.js from locales/story/fr.json; recorded voices stay English.)*
 - [~] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification. *(Shell, config, CI and decisions in docs/desktop.md; certificates and a signed release need the owner.)*
 - [x] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [x] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
