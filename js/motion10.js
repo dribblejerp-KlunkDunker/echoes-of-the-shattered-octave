@@ -587,7 +587,7 @@ const MOTION10 = (() => {
     if (typeof update === 'function') {
       const _up = update;
       update = function (dt) {
-        if (parryOn() && G.state === 'play') {
+        if (typeof GUARD === 'undefined' && parryOn() && G.state === 'play') {   // js/guard.js ticks them when present
           // the game's block timers are set when you press block but nothing ever counts them down; do it, so the guard can come up again
           if (UPG.parryWindow > 0) UPG.parryWindow = Math.max(0, UPG.parryWindow - dt);
           if (UPG.parryCool > 0) { UPG.parryCool = Math.max(0, UPG.parryCool - dt); if (UPG.parryCool === 0) UPG.blocking = false; }

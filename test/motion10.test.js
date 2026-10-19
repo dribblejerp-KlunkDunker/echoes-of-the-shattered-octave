@@ -346,7 +346,9 @@ const SHOTS = process.env.SHOTS || '';
       const slip = attempt(0, true), hit = attempt(0.999, true), noGuardSlip = attempt(0, false), noGuardHit = attempt(0.999, false), block = attempt(0, true, true);
       check(slip.fired === 1 && slip.kind === 'parry' && slip.hurt === 0, 'a blow slipped inside the parry window sparks as a parry');
       check(block.fired === 1 && block.kind === 'block' && block.hurt === 0, 'a blow slipped after the window, guard still up, sparks as a block');
-      check(hit.fired === 0 && hit.hurt > 0, 'a blow that lands sparks nothing');
+      // with js/guard.js a blow that would land inside the parry window is turned aside instead: a parry, no damage
+      check(hit.hurt === 0 && hit.fired === 1 && hit.kind === 'parry', 'a blow that would land inside the window is parried (guard.js)');
+      check(noGuardHit.fired === 0 && noGuardHit.hurt > 0, 'a blow that lands sparks nothing');
       check(noGuardSlip.fired === 0 && noGuardHit.fired === 0, 'no guard up: no sparks, slipped or not');
       // an ordinary hit by the player on a foe, and a foe struck while idle, do not spark either
       const w0 = G.player.weapon; const f0 = SPK.stats.fired; e1.state = 'chase'; e1.hp = e1.hpMax = 500; e1.x = 12.5; e1.y = 10.9; G.attack.t = 0; Math.random = () => 0.01; attack('swing'); Math.random = rnd0; G.attack.t = 0;

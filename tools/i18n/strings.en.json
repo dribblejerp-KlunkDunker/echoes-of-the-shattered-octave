@@ -1569,16 +1569,34 @@
    "dreams.js:179"
   ]
  },
+ "20qp313reqq": {
+  "en": "#create-panel .btns",
+  "where": [
+   "origins.js:265"
+  ]
+ },
  "1fbj6tjjp7q": {
   "en": "#game.p7-photo #fx, #game.p7-photo #msgs, #game.p7-photo #hint, #game.p7-photo #cover-status, #game.p7-photo #lockhint,",
   "where": [
    "playtools.js:404"
   ]
  },
+ "14ybj59254e": {
+  "en": "#modal-panel .ctl-grid",
+  "where": [
+   "origins.js:515"
+  ]
+ },
  "28dss04h0y5": {
   "en": "#modal-panel .p9t .port img",
   "where": [
    "companion-talk.js:667"
+  ]
+ },
+ "5w4wtdfzq2": {
+  "en": "#modal-panel pre.help",
+  "where": [
+   "origins.js:539"
   ]
  },
  "1zkqlalk022": {
@@ -1857,7 +1875,7 @@
  "22ujkgph2o6": {
   "en": ", leading the mare the last mile",
   "where": [
-   "travel.js:354"
+   "travel.js:355"
   ]
  },
  "14f6uc6wuwz": {
@@ -1875,7 +1893,7 @@
  "du6bb6kltk": {
   "en": ", now or on another day.",
   "where": [
-   "game.js:2584"
+   "game.js:2589"
   ]
  },
  "wnqtv9gl5o": {
@@ -1899,7 +1917,7 @@
  "259z5ufzbr": {
   "en": ", the mare blowing",
   "where": [
-   "travel.js:354"
+   "travel.js:355"
   ]
  },
  "v9t7zedrd6": {
@@ -2277,6 +2295,12 @@
    "game.js:819"
   ]
  },
+ "ure7lgampa": {
+  "en": "1 2 3 choose · Backspace goes back · Escape returns to the list. Controller: D-pad, A, B.",
+  "where": [
+   "origins.js:171"
+  ]
+ },
  "8bue0n008t": {
   "en": "1 hires · 2 returns · Escape leaves. Controller: A hires, X returns, B leaves.",
   "where": [
@@ -2631,6 +2655,12 @@
    "sidequests.js:132"
   ]
  },
+ "1bqmhm4ol2l": {
+  "en": "A Flambeau on the road asks you to say the Pure Note with him. You...",
+  "where": [
+   "origins.js:89"
+  ]
+ },
  "ixngr7mpts": {
   "en": "A Flume sluice",
   "where": [
@@ -2761,6 +2791,12 @@
   "en": "A Light-glass echo",
   "where": [
    "dreams.js:299"
+  ]
+ },
+ "obti7kr1mq": {
+  "en": "A Proctor at the gate asks your name. You...",
+  "where": [
+   "origins.js:54"
   ]
  },
  "2cap2p64y4y": {
@@ -3085,6 +3121,12 @@
    "game.js:2229"
   ]
  },
+ "ukfkjxi0nd": {
+  "en": "A closed door.",
+  "where": [
+   "origins.js:380"
+  ]
+ },
  "5svfdm50ez": {
   "en": "A coil in the lock. Of course. He always did break things from the inside. Go carefully in the quarry. The Hollows at the pumps will not hurt you; the bells will. If you hear a voice you know down there, you do not know it.",
   "where": [
@@ -3246,10 +3288,17 @@
    "game.js:2229"
   ]
  },
+ "eoghy3i1yn": {
+  "en": "A door stands open in the quiet part of town, a loaf still warm on the table. You...",
+  "where": [
+   "origins.js:99"
+  ]
+ },
  "1dr4wm17va5": {
   "en": "A door.",
   "where": [
-   "game.js:1355"
+   "game.js:1355",
+   "origins.js:380"
   ]
  },
  "1idadavs62v": {
@@ -3658,6 +3707,12 @@
    "companion-talk.js:313"
   ]
  },
+ "th2hvwypny": {
+  "en": "A ledger, with room left in it.",
+  "where": [
+   "origins.js:107"
+  ]
+ },
  "294zno0rwbl": {
   "en": "A length of iron-bough, heavy as a bell and nearly as willing to ring. Carry it; do not run with it.",
   "where": [
@@ -4058,6 +4113,12 @@
    "upgrades.js:1777"
   ]
  },
+ "1qfylg4n2dj": {
+  "en": "A pump holding its note, hour after hour, because nothing has gone wrong.",
+  "where": [
+   "origins.js:72"
+  ]
+ },
  "2ax2x8db4pa": {
   "en": "A quarry pass has been issued to a party not on the roster. Passes are sometimes issued in error. The error is considered to have been issued correctly.",
   "where": [
@@ -4180,10 +4241,22 @@
    "data.js:225"
   ]
  },
+ "1jz4jppgvo1": {
+  "en": "A rope, a good knife, and a place to be by morning.",
+  "where": [
+   "origins.js:105"
+  ]
+ },
  "1awc0db88ar": {
   "en": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else.",
   "where": [
    "data.js:1061"
+  ]
+ },
+ "117reqg13gq": {
+  "en": "A save file (.txt or .octave) can also be dropped onto this panel.",
+  "where": [
+   "origins.js:588"
   ]
  },
  "cvc4bahi48": {
@@ -4388,6 +4461,12 @@
    "maps.js:976"
   ]
  },
+ "hm9wph6tli": {
+  "en": "A small flame you are not sure you should still be carrying.",
+  "where": [
+   "origins.js:106"
+  ]
+ },
  "bepvkjo695": {
   "en": "A small stone. A small grave.",
   "where": [
@@ -4454,10 +4533,22 @@
    "weather.js:16"
   ]
  },
+ "1qb1q51excl": {
+  "en": "A stranger",
+  "where": [
+   "origins.js:387"
+  ]
+ },
  "1v11bkd88wb": {
   "en": "A stranger has been down the Tannery culvert and come back up. Hob's lamp is still in the window, and Hob is standing at it, not looking.",
   "where": [
    "rumours.js:121"
+  ]
+ },
+ "fc7og92u8k": {
+  "en": "A stranger is dying, and no one here knows her song. You...",
+  "where": [
+   "origins.js:84"
   ]
  },
  "cgrmn0yao6": {
@@ -4702,6 +4793,12 @@
    "parish.js:316"
   ]
  },
+ "4qlakkic0g": {
+  "en": "A wind-reed in an orchard, tuned to one person.",
+  "where": [
+   "origins.js:70"
+  ]
+ },
  "uctvo2bmpc": {
   "en": "A witness reports you: +20 Oakhaven bounty.",
   "where": [
@@ -4808,6 +4905,12 @@
    "companion-talk.js:222",
    "companion-talk.js:326",
    "companion-talk.js:402"
+  ]
+ },
+ "1sk3jxs8ng1": {
+  "en": "Accept this calling",
+  "where": [
+   "origins.js:188"
   ]
  },
  "b8fj75k2tb": {
@@ -4964,6 +5067,12 @@
    "epilogue.js:192"
   ]
  },
+ "2cjk9g375gh": {
+  "en": "Alt",
+  "where": [
+   "motion10.js:256"
+  ]
+ },
  "sp2mip8f01": {
   "en": "Always (town colour)",
   "where": [
@@ -4979,7 +5088,7 @@
  "167r2wckuso": {
   "en": "Always run",
   "where": [
-   "game.js:2557"
+   "game.js:2562"
   ]
  },
  "22jnqrp8wfu": {
@@ -5217,6 +5326,12 @@
    "game.js:2229"
   ]
  },
+ "780d3bxgwl": {
+  "en": "An open door.",
+  "where": [
+   "origins.js:380"
+  ]
+ },
  "152vypeaxgk": {
   "en": "An opened strongbox",
   "where": [
@@ -5284,6 +5399,12 @@
    "grove.js:243"
   ]
  },
+ "1olt0c1h1k8": {
+  "en": "Animated travel",
+  "where": [
+   "motion10.js:637"
+  ]
+ },
  "s51bxb1xz4": {
   "en": "Annet Sowerby",
   "where": [
@@ -5315,6 +5436,12 @@
    "grove.js:36"
   ]
  },
+ "29lgm3409y0": {
+  "en": "Answer again",
+  "where": [
+   "origins.js:190"
+  ]
+ },
  "28crtp6o346": {
   "en": "Answer him yourself.",
   "where": [
@@ -5325,6 +5452,12 @@
   "en": "Answer it. Just once.",
   "where": [
    "game.js:1452"
+  ]
+ },
+ "1tiok2jqwj5": {
+  "en": "Answer questions…",
+  "where": [
+   "origins.js:267"
   ]
  },
  "av9ispm4a8": {
@@ -5383,6 +5516,12 @@
   ],
   "pattern": true
  },
+ "201cadgnkn1": {
+  "en": "Arrived.",
+  "where": [
+   "motion10.js:270"
+  ]
+ },
  "op8mhxovxl": {
   "en": "Arrows or swipe to turn pages. Esc to put it down.",
   "where": [
@@ -5437,6 +5576,12 @@
    "sidequests.js:144"
   ]
  },
+ "2be67l4kh9q": {
+  "en": "Ask her name, and write it down, so that it is somewhere.",
+  "where": [
+   "origins.js:86"
+  ]
+ },
  "1kpdli9gstm": {
   "en": "Ask her to reverse it. (It will cost her a fragment.)",
   "where": [
@@ -5447,6 +5592,18 @@
   "en": "Ask him to Listen to the split reed",
   "where": [
    "sidequests.js:149"
+  ]
+ },
+ "o7omeacrfs": {
+  "en": "Ask what it fetches. Everything in the Reach has a price, even the awful things.",
+  "where": [
+   "origins.js:97"
+  ]
+ },
+ "2f9jwwg9ywq": {
+  "en": "Ask whose it was, and how long you would have to answer for it.",
+  "where": [
+   "origins.js:96"
   ]
  },
  "1qcjduexhds": {
@@ -5509,6 +5666,12 @@
    "grove.js:160"
   ]
  },
+ "1am6y9ey7j7": {
+  "en": "At the end of a long road, what would you rather have in your hands?",
+  "where": [
+   "origins.js:104"
+  ]
+ },
  "7ptmdu82iy": {
   "en": "At the fire Kaelen told Lyra everything, out loud. Her voice came back at the worst possible moment, and the first thing she did with it was tell him she would have forgiven him on Rootday, and cannot now.",
   "where": [
@@ -5543,7 +5706,7 @@
  "jsjluof8gc": {
   "en": "Auto",
   "where": [
-   "game.js:2565"
+   "game.js:2570"
   ]
  },
  "24t3hk2ny9a": {
@@ -5639,6 +5802,13 @@
   "en": "Back to the forge",
   "where": [
    "reedcraft.js:611"
+  ]
+ },
+ "lapblvo59m": {
+  "en": "Back to the list",
+  "where": [
+   "origins.js:167",
+   "origins.js:192"
   ]
  },
  "1hjpojkzbzi": {
@@ -5833,6 +6003,12 @@
   "en": "Behind you Sable has gone very still. \"WG-forty-one thousand and five,\" she says, reading its core. \"I made his surname illegible. My hand shook.\" She says nothing else.",
   "where": [
    "data.js:695"
+  ]
+ },
+ "28e0czwex5i": {
+  "en": "Behind you, the front of a word. Nobody is there.",
+  "where": [
+   "dread.js:67"
   ]
  },
  "y67atxkpnl": {
@@ -6239,7 +6415,7 @@
  "1ri4zztn0mz": {
   "en": "Boss autosave (before the fight) - {0}",
   "where": [
-   "game.js:2603"
+   "game.js:2608"
   ],
   "pattern": true
  },
@@ -6662,7 +6838,7 @@
  "4opasxw4st": {
   "en": "Capture mouse",
   "where": [
-   "game.js:2557"
+   "game.js:2562"
   ]
  },
  "rt9o9yg7vs": {
@@ -6822,6 +6998,18 @@
    "rumours.js:314"
   ]
  },
+ "ekilr2h03d": {
+  "en": "Check the back door and the roof. Then eat nothing.",
+  "where": [
+   "origins.js:101"
+  ]
+ },
+ "1fgv5f6fgbf": {
+  "en": "Check your footing and your ways out. Quiet is information.",
+  "where": [
+   "origins.js:80"
+  ]
+ },
  "1y9i6k65e50": {
   "en": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin.",
   "where": [
@@ -6923,6 +7111,12 @@
   "en": "Click to see it closer.",
   "where": [
    "travel.js:272"
+  ]
+ },
+ "2f31ppmz0ol": {
+  "en": "Click, press any key or A to skip.",
+  "where": [
+   "motion10.js:230"
   ]
  },
  "1lxsi5zltxk": {
@@ -7185,7 +7379,7 @@
    "game.js:50",
    "game.js:58",
    "game.js:66",
-   "game.js:2525"
+   "game.js:2530"
   ]
  },
  "edsaljfbkr": {
@@ -7194,11 +7388,17 @@
    "extras.en.json:0"
   ]
  },
+ "fm7xr88a8t": {
+  "en": "Control",
+  "where": [
+   "motion10.js:256"
+  ]
+ },
  "1pm8qq0dadx": {
   "en": "Controls",
   "where": [
-   "game.js:2525",
-   "game.js:2557"
+   "game.js:2530",
+   "game.js:2562"
   ]
  },
  "1daz8k8j1a5": {
@@ -7223,7 +7423,7 @@
  "2522dszwmj3": {
   "en": "Copy code",
   "where": [
-   "game.js:2584"
+   "game.js:2589"
   ]
  },
  "mcmyqfbutz": {
@@ -7405,6 +7605,12 @@
    "theName():0"
   ]
  },
+ "1trwn50cliw": {
+  "en": "Cycle interaction mode",
+  "where": [
+   "origins.js:501"
+  ]
+ },
  "1j0wzqj623a": {
   "en": "DEFEND THE SINGERS, it says, as if in reply, and then a warm, dropped chord, like a cloak settling over a shoulder.",
   "where": [
@@ -7547,6 +7753,12 @@
   "en": "Deck-hand off the western islands. +10 Blade, +10 Climbing, +15 Free Captains standing.",
   "where": [
    "upgrades.js:302"
+  ]
+ },
+ "1miled5elgh": {
+  "en": "Decline politely, and keep your good arm where he can see it.",
+  "where": [
+   "origins.js:91"
   ]
  },
  "1fj50yxa33e": {
@@ -7789,13 +8001,19 @@
  "1h7papz1uup": {
   "en": "Download blocked here. Copy the code instead.",
   "where": [
-   "game.js:2596"
+   "game.js:2601"
   ]
  },
  "273l1c4wo1k": {
   "en": "Download file",
   "where": [
-   "game.js:2584"
+   "game.js:2589"
+  ]
+ },
+ "1ambl83rl5a": {
+  "en": "Downloaded files cannot open a hardcore run.",
+  "where": [
+   "origins.js:565"
   ]
  },
  "q811gry4s6": {
@@ -7820,6 +8038,12 @@
   "en": "Draw your weapon.",
   "where": [
    "wilds.js:169"
+  ]
+ },
+ "h83tmf2q2s": {
+  "en": "Dread",
+  "where": [
+   "dread.js:63"
   ]
  },
  "hn6kczbh01": {
@@ -7869,6 +8093,12 @@
   "en": "Drop body",
   "where": [
    "game.js:366"
+  ]
+ },
+ "20tlrzgw5mn": {
+  "en": "Drop one save file at a time.",
+  "where": [
+   "origins.js:609"
   ]
  },
  "pnjttzi57x": {
@@ -8687,6 +8917,13 @@
    "game.js:1033"
   ]
  },
+ "dj6buuzxei": {
+  "en": "Fight marks",
+  "where": [
+   "look10.js:527",
+   "look10.js:528"
+  ]
+ },
  "1seze67dq18": {
   "en": "Filed. I read it before I filed it. The clerk does not know that, and you will not tell him.",
   "where": [
@@ -9018,7 +9255,7 @@
  "22y6h3kfhh4": {
   "en": "Free look",
   "where": [
-   "game.js:2557"
+   "game.js:2562"
   ]
  },
  "n4jy1lbzsk": {
@@ -9134,7 +9371,7 @@
  "1dpx2uhsibv": {
   "en": "Full screen",
   "where": [
-   "game.js:2557"
+   "game.js:2562"
   ]
  },
  "vdj64bnox6": {
@@ -9169,6 +9406,15 @@
    "game.js:2297"
   ],
   "pattern": true
+ },
+ "9xg4zunrup": {
+  "en": "Gain",
+  "where": [
+   "dread.js:199",
+   "dread.js:229",
+   "dread.js:229",
+   "dread.js:229"
+  ]
  },
  "ivft9kfdi0": {
   "en": "Gate",
@@ -9242,10 +9488,28 @@
    "parish.js:594"
   ]
  },
+ "i9subcch4r": {
+  "en": "Give it loud, and grin. A man who laughs is not worth the paperwork.",
+  "where": [
+   "origins.js:56"
+  ]
+ },
+ "vty1f7g975": {
+  "en": "Give it slowly, and watch where his pen goes afterwards.",
+  "where": [
+   "origins.js:55"
+  ]
+ },
  "1fynsdl0xlh": {
   "en": "Give it to her to keep.",
   "where": [
    "parish.js:600"
+  ]
+ },
+ "1s6qtprj251": {
+  "en": "Give your trade instead. Calloused hands seldom get a second question.",
+  "where": [
+   "origins.js:57"
   ]
  },
  "1a89v6qbudp": {
@@ -9365,6 +9629,12 @@
   "where": [
    "data.js:218",
    "data.js:382"
+  ]
+ },
+ "ed54zulnot": {
+  "en": "Grab",
+  "where": [
+   "origins.js:40"
   ]
  },
  "vtmzy8b5g0": {
@@ -9505,6 +9775,13 @@
    "parish.js:437"
   ]
  },
+ "zrxmf2oc64": {
+  "en": "Ground shadows",
+  "where": [
+   "look10.js:525",
+   "look10.js:526"
+  ]
+ },
  "29zift88jgv": {
   "en": "Growth sounds at 174 and Mass at 396, and a fifth apart is the most stable interval there is. Oakhaven and Fortis have never gone to war. The Compact does not call this friendship. It calls it a fifth, and expects it to hold.",
   "where": [
@@ -9515,6 +9792,12 @@
   "en": "Grunts",
   "where": [
    "extras.en.json:0"
+  ]
+ },
+ "2delb7i0mqj": {
+  "en": "Guard lanterns",
+  "where": [
+   "motion10.js:638"
   ]
  },
  "1grueejobh1": {
@@ -9696,6 +9979,12 @@
    "data.js:871"
   ]
  },
+ "oo62m3h194": {
+  "en": "Hand it back. You know what is inside, and that it can hear you.",
+  "where": [
+   "origins.js:95"
+  ]
+ },
  "1zeotkcrb22": {
   "en": "Hand-Cant: Mags taught me the hand-cant of the dock-crews and the Quiet Faith: quiet, go, give, and one sentence: THE HUSH IS QUIET. IT IS NOT MERCIFUL.",
   "where": [
@@ -9737,7 +10026,7 @@
  "4xvalximkk": {
   "en": "Hardcore run (one save, death is final): {0}",
   "where": [
-   "game.js:2525"
+   "game.js:2530"
   ],
   "pattern": true
  },
@@ -10229,7 +10518,8 @@
  "15ao3ym21d3": {
   "en": "Health {0} · Voice {1} · Glass shot ×{2} · Songs: {3}",
   "where": [
-   "game.js:60"
+   "game.js:60",
+   "origins.js:182"
   ],
   "pattern": true
  },
@@ -10826,8 +11116,8 @@
   "en": "How to play",
   "where": [
    "game.js:1836",
-   "game.js:2525",
-   "game.js:2633",
+   "game.js:2530",
+   "game.js:2638",
    "index.html:0"
   ]
  },
@@ -10835,6 +11125,12 @@
   "en": "Hum the tending note over his hands yourself.",
   "where": [
    "data.js:433"
+  ]
+ },
+ "k6ee6gft7n": {
+  "en": "Hum the tune back, very low, and follow it.",
+  "where": [
+   "origins.js:60"
   ]
  },
  "10wk95wym2r": {
@@ -11665,7 +11961,7 @@
  "1j968uxfnd7": {
   "en": "If the download was blocked, copy the code instead.",
   "where": [
-   "game.js:2596"
+   "game.js:2601"
   ]
  },
  "xjw55ikpol": {
@@ -11732,6 +12028,12 @@
   "en": "In Strongbox",
   "where": [
    "upgrades.js:822"
+  ]
+ },
+ "cbqsrjweix": {
+  "en": "In a silent town you hear a child humming. You...",
+  "where": [
+   "origins.js:59"
   ]
  },
  "2bwlicerm7o": {
@@ -11844,6 +12146,12 @@
    "coda.js:290"
   ]
  },
+ "1ontydh7t5w": {
+  "en": "Info",
+  "where": [
+   "origins.js:40"
+  ]
+ },
  "oya9uafdk5": {
   "en": "Ink sketch: {0}",
   "where": [
@@ -11868,6 +12176,12 @@
   "en": "Inscription",
   "where": [
    "extras.en.json:0"
+  ]
+ },
+ "nd47yfocs4": {
+  "en": "Inside the Hedge, sound dies where it falls. Whatever was behind you does not follow.",
+  "where": [
+   "dread.js:78"
   ]
  },
  "jrm4v4u1rp": {
@@ -11912,6 +12226,25 @@
    "data.js:8"
   ]
  },
+ "13mm3rjkbts": {
+  "en": "Interaction mode: {0}.",
+  "where": [
+   "origins.js:332"
+  ],
+  "pattern": true
+ },
+ "1rw3rq7q6mz": {
+  "en": "Interaction modes",
+  "where": [
+   "origins.js:517"
+  ]
+ },
+ "wewhzke683": {
+  "en": "Interaction modes: ] and [ cycle Steal, Grab, Info and Talk; click, tap, Enter or controller A uses the current one. E, Space and P work as always.",
+  "where": [
+   "origins.js:540"
+  ]
+ },
  "228ur1amjd3": {
   "en": "Inventory",
   "where": [
@@ -11921,7 +12254,7 @@
  "j59wcr5mw5": {
   "en": "Invert up and down look",
   "where": [
-   "game.js:2557"
+   "game.js:2562"
   ]
  },
  "v8m8pknxza": {
@@ -12433,20 +12766,20 @@
  "2akybyiw0ua": {
   "en": "Journey needs (hunger and sleep): {0}",
   "where": [
-   "game.js:2525"
+   "game.js:2530"
   ],
   "pattern": true
  },
  "1pyeudm4xop": {
   "en": "Journey needs off: hunger and sleep no longer change anything.",
   "where": [
-   "game.js:2547"
+   "game.js:2552"
   ]
  },
  "21tv0w6fwqn": {
   "en": "Journey needs on: food and sleep now matter on the road. Honey feeds you; rest sleeps you.",
   "where": [
-   "game.js:2547"
+   "game.js:2552"
   ]
  },
  "yrmyq2eqqn": {
@@ -12831,6 +13164,12 @@
    "party.js:23"
   ]
  },
+ "4ymjfc2g3l": {
+  "en": "Keeps the watch.",
+  "where": [
+   "origins.js:387"
+  ]
+ },
  "289bu7g0mft": {
   "en": "Key Rebinding",
   "where": [
@@ -12851,6 +13190,12 @@
    "game.js:1729"
   ],
   "pattern": true
+ },
+ "1q4ayspenty": {
+  "en": "Kneel, and say the old words, whether or not anyone is listening.",
+  "where": [
+   "origins.js:82"
+  ]
  },
  "1dcp8jda541": {
   "en": "Known",
@@ -13428,8 +13773,8 @@
   "en": "Load",
   "where": [
    "game.js:2403",
-   "game.js:2602",
-   "game.js:2603"
+   "game.js:2607",
+   "game.js:2608"
   ]
  },
  "1dnhxiim6dd": {
@@ -13441,22 +13786,28 @@
  "v2vsyvcrw1": {
   "en": "Load code",
   "where": [
-   "game.js:2600"
+   "game.js:2605"
   ]
  },
  "b71yr6i8jh": {
   "en": "Load file…",
   "where": [
-   "game.js:2600"
+   "game.js:2605"
+  ]
+ },
+ "1vsifmgstpu": {
+  "en": "Load from file…",
+  "where": [
+   "origins.js:584"
   ]
  },
  "1h4fwszmj5j": {
   "en": "Load game",
   "where": [
    "game.js:2401",
-   "game.js:2525",
-   "game.js:2584",
-   "game.js:2600"
+   "game.js:2530",
+   "game.js:2589",
+   "game.js:2605"
   ]
  },
  "e3brdc5pns": {
@@ -13543,7 +13894,7 @@
  "5syv1jfncv": {
   "en": "Look sensitivity",
   "where": [
-   "game.js:2557"
+   "game.js:2562"
   ]
  },
  "jjoqscm4ze": {
@@ -14309,6 +14660,12 @@
    "rumours.js:324"
   ]
  },
+ "1bgsv90gcdg": {
+  "en": "Meta",
+  "where": [
+   "motion10.js:256"
+  ]
+ },
  "1q05rqhqouk": {
   "en": "Mezzo (In the Narrow)",
   "where": [
@@ -14401,6 +14758,13 @@
    "extras.en.json:0"
   ]
  },
+ "2d8lw4ky362": {
+  "en": "Mode",
+  "where": [
+   "origins.js:322",
+   "origins.js:501"
+  ]
+ },
  "1ef1h5lktad": {
   "en": "Moon-Moss",
   "where": [
@@ -14484,7 +14848,7 @@
  "uinreqxdl7": {
   "en": "Music off",
   "where": [
-   "game.js:2532"
+   "game.js:2537"
   ]
  },
  "1ufateio62u": {
@@ -14496,7 +14860,7 @@
  "1z7169157d8": {
   "en": "Music on",
   "where": [
-   "game.js:2532"
+   "game.js:2537"
   ]
  },
  "a8qhah17wv": {
@@ -14592,7 +14956,7 @@
  "zz3l7ru010": {
   "en": "Nameless",
   "where": [
-   "game.js:2520"
+   "game.js:2525"
   ]
  },
  "4a4xz6fyeo": {
@@ -14821,10 +15185,22 @@
    "game.js:1767"
   ]
  },
+ "137kutwhaax": {
+  "en": "No one here to talk to.",
+  "where": [
+   "origins.js:424"
+  ]
+ },
  "905z0q98bh": {
   "en": "No one notices.",
   "where": [
    "game.js:1007"
+  ]
+ },
+ "xxndjyolur": {
+  "en": "No one owns this. Grab it instead.",
+  "where": [
+   "origins.js:409"
   ]
  },
  "1uus52tzj13": {
@@ -14997,7 +15373,7 @@
    "game.js:2440",
    "game.js:2511",
    "game.js:2512",
-   "game.js:2514"
+   "game.js:2519"
   ]
  },
  "1avkembuvpa": {
@@ -15023,6 +15399,12 @@
   "where": [
    "data.js:519",
    "game.js:1622"
+  ]
+ },
+ "1lkm3fwm81w": {
+  "en": "Not from a friend.",
+  "where": [
+   "origins.js:400"
   ]
  },
  "ekawatjl3c": {
@@ -15150,10 +15532,35 @@
    "game.js:1721"
   ]
  },
+ "104okgoi4hi": {
+  "en": "Nothing close enough to look at.",
+  "where": [
+   "origins.js:425"
+  ]
+ },
+ "1046l8wfly2": {
+  "en": "Nothing here to steal.",
+  "where": [
+   "origins.js:398",
+   "origins.js:412"
+  ]
+ },
+ "1avpt7obhlm": {
+  "en": "Nothing on them you could lift.",
+  "where": [
+   "origins.js:403"
+  ]
+ },
  "23yxgqr4jkj": {
   "en": "Nothing storable.",
   "where": [
    "upgrades.js:826"
+  ]
+ },
+ "2ebnoo6f2dj": {
+  "en": "Nothing touches you. When the sound comes back, the last line in your logbook is empty ruled paper, with its date still at the head.",
+  "where": [
+   "dread.js:79"
   ]
  },
  "11hbz939u0w": {
@@ -15430,9 +15837,9 @@
   "en": "Off",
   "where": [
    "companion-talk.js:869",
+   "dread.js:611",
    "dreams.js:508",
-   "dreams.js:509",
-   "fp-feel.js:291"
+   "dreams.js:509"
   ]
  },
  "23k9vf5kxtu": {
@@ -15663,21 +16070,21 @@
  "brmujjazef": {
   "en": "On the way, something picks up your trail: {0}.",
   "where": [
-   "travel.js:371"
+   "travel.js:372"
   ],
   "pattern": true
  },
  "1mept27k7c0": {
   "en": "On the way, two shapes fall in behind you. {0}, and another.",
   "where": [
-   "travel.js:371"
+   "travel.js:372"
   ],
   "pattern": true
  },
  "27ptwyo1xh2": {
   "en": "On — this run cannot turn it off",
   "where": [
-   "game.js:2534"
+   "game.js:2539"
   ]
  },
  "dxqtnl7oj2": {
@@ -15793,7 +16200,7 @@
   "where": [
    "companion-talk.js:1055",
    "companion-talk.js:1055",
-   "game.js:2525"
+   "game.js:2530"
   ]
  },
  "1b5um7km66g": {
@@ -16031,6 +16438,12 @@
    "travel.js:35"
   ]
  },
+ "98hht56b75": {
+  "en": "Outside the Hedge there is a quiet that keeps a little behind me. It has not touched me. I keep my voice low, I keep walking, and I keep a light.",
+  "where": [
+   "dread.js:84"
+  ]
+ },
  "1odo2j69iem": {
   "en": "Over the inner door",
   "where": [
@@ -16118,6 +16531,12 @@
    "maps.js:173"
   ]
  },
+ "2c0zoz5oh5v": {
+  "en": "Parry sparks",
+  "where": [
+   "motion10.js:639"
+  ]
+ },
  "27wz9a8dcuq": {
   "en": "Parry window is 40% wider and a successful parry restores 8 Fatigue and stuns for 2.5s.",
   "where": [
@@ -16188,7 +16607,7 @@
  "15nxtgqwq77": {
   "en": "Paste a save code here…",
   "where": [
-   "game.js:2600"
+   "game.js:2605"
   ]
  },
  "17fyqxrbc1r": {
@@ -16215,6 +16634,12 @@
   "where": [
    "game.js:819",
    "game.js:889"
+  ]
+ },
+ "1t6s6kicpba": {
+  "en": "Pay it before anyone asks, and light a candle for whoever earned it.",
+  "where": [
+   "origins.js:76"
   ]
  },
  "zc5noj3228": {
@@ -16539,6 +16964,12 @@
    "reading.js:164"
   ]
  },
+ "4zekhl9cqd": {
+  "en": "Previous question",
+  "where": [
+   "origins.js:165"
+  ]
+ },
  "f75vbo04mz": {
   "en": "Prismatic Lens (26.0, 1.5)",
   "where": [
@@ -16677,6 +17108,13 @@
   "where": [
    "game.js:819"
   ]
+ },
+ "g847v5tl2h": {
+  "en": "Questions · {0} of {1}",
+  "where": [
+   "origins.js:152"
+  ],
+  "pattern": true
  },
  "1ptnattc1aj": {
   "en": "Quiet! The Legionnaire in Depot Three walks when it hears boots.",
@@ -16841,6 +17279,12 @@
   "en": "Read him the last entry, out loud.",
   "where": [
    "data.js:953"
+  ]
+ },
+ "1zpclsadxhc": {
+  "en": "Read it twice, for the loophole. There is always one.",
+  "where": [
+   "origins.js:75"
   ]
  },
  "4od1nej0b8": {
@@ -17183,7 +17627,7 @@
  "537tx43lpx": {
   "en": "Return to title",
   "where": [
-   "game.js:2525"
+   "game.js:2530"
   ]
  },
  "1w9hahbogzo": {
@@ -17220,6 +17664,12 @@
   "en": "Ridden",
   "where": [
    "playtools.js:360"
+  ]
+ },
+ "27whs3kj07z": {
+  "en": "Riding.",
+  "where": [
+   "motion10.js:270"
   ]
  },
  "16jpn66mdi1": {
@@ -17400,6 +17850,12 @@
   "en": "Roots do not",
   "where": [
    "dreams.js:160"
+  ]
+ },
+ "1o5zqrxiypu": {
+  "en": "Rope running through a block as a ship comes about.",
+  "where": [
+   "origins.js:71"
   ]
  },
  "jrx6ong2bq": {
@@ -17810,19 +18266,19 @@
  "1ifkylgs3mz": {
   "en": "Save code",
   "where": [
-   "game.js:2584"
+   "game.js:2589"
   ]
  },
  "23csi3opgge": {
   "en": "Save code copied.",
   "where": [
-   "game.js:2595"
+   "game.js:2600"
   ]
  },
  "16e0wcamzjg": {
   "en": "Save code or file",
   "where": [
-   "game.js:2600"
+   "game.js:2605"
   ]
  },
  "20ss14ji04d": {
@@ -17835,14 +18291,14 @@
   "en": "Save game",
   "where": [
    "game.js:2389",
-   "game.js:2525",
-   "game.js:2584"
+   "game.js:2530",
+   "game.js:2589"
   ]
  },
  "hdree9uiqh": {
   "en": "Save here",
   "where": [
-   "game.js:2587"
+   "game.js:2592"
   ]
  },
  "13l2a0h0bev": {
@@ -17860,7 +18316,7 @@
  "1bnpv5fb49c": {
   "en": "Saved to slot {0}.",
   "where": [
-   "game.js:2593"
+   "game.js:2598"
   ],
   "pattern": true
  },
@@ -17868,6 +18324,18 @@
   "en": "Say it quick. I don't like a city that doesn't fall down.",
   "where": [
    "data.js:581"
+  ]
+ },
+ "1qcyx8pigxw": {
+  "en": "Say it. You know every word, and it still tastes of something.",
+  "where": [
+   "origins.js:90"
+  ]
+ },
+ "2g63jrzi6he": {
+  "en": "Say nothing, and hold something heavy until it stops.",
+  "where": [
+   "origins.js:65"
   ]
  },
  "1w60znxpat3": {
@@ -17893,6 +18361,30 @@
   "en": "Say nothing. Wait.",
   "where": [
    "companion-talk.js:140"
+  ]
+ },
+ "2b7n1hfs45v": {
+  "en": "Say the first line of the old prayer. If it cannot finish it, you will know.",
+  "where": [
+   "origins.js:66"
+  ]
+ },
+ "2ceqlruso8r": {
+  "en": "Say the household's names aloud, one at a time, in case they are listening.",
+  "where": [
+   "origins.js:100"
+  ]
+ },
+ "30pubrx39m": {
+  "en": "Say you have work. A man with work is rarely argued with.",
+  "where": [
+   "origins.js:92"
+  ]
+ },
+ "1iwfq0v2pre": {
+  "en": "Say you will think it over, and walk the other way, whistling.",
+  "where": [
+   "origins.js:67"
   ]
  },
  "10w4q3qqbte": {
@@ -17952,7 +18444,7 @@
  "1czugoq8awi": {
   "en": "Select the code and copy it by hand.",
   "where": [
-   "game.js:2595"
+   "game.js:2600"
   ]
  },
  "1c5th5cpydq": {
@@ -17989,8 +18481,8 @@
  "1evdwd8sk93": {
   "en": "Session slots",
   "where": [
-   "game.js:2584",
-   "game.js:2600"
+   "game.js:2589",
+   "game.js:2605"
   ]
  },
  "pxjxtwea0u": {
@@ -18501,6 +18993,12 @@
    "data.js:109"
   ]
  },
+ "1s8ns2azpov": {
+  "en": "Shift",
+  "where": [
+   "motion10.js:256"
+  ]
+ },
  "dxde36npyg": {
   "en": "Shift change",
   "where": [
@@ -18510,7 +19008,7 @@
  "iwgtlxiu5z": {
   "en": "Shift walks instead · Caps Lock toggles",
   "where": [
-   "game.js:2557"
+   "game.js:2562"
   ]
  },
  "1zksicopuuf": {
@@ -18554,6 +19052,12 @@
   "where": [
    "parish.js:488",
    "upgrades.js:1808"
+  ]
+ },
+ "hzrw88nmyl": {
+  "en": "Shut the door properly and mend the latch. Someone will want it to hold.",
+  "where": [
+   "origins.js:102"
   ]
  },
  "692dfdv86y": {
@@ -18652,6 +19156,12 @@
    "data.js:403"
   ]
  },
+ "1ff28q5eqcf": {
+  "en": "Sit with her and hold one plain low note until she has finished.",
+  "where": [
+   "origins.js:87"
+  ]
+ },
  "1vjrkp4tov8": {
   "en": "Sit with me if you are ever by the bridge. Keep your voice down. She comes on the water about the time the light goes.",
   "where": [
@@ -18681,6 +19191,12 @@
   "en": "Skills, Perks & Factions",
   "where": [
    "upgrades.js:1025"
+  ]
+ },
+ "25zuw1es8rz": {
+  "en": "Skip",
+  "where": [
+   "motion10.js:230"
   ]
  },
  "6vnz86j027": {
@@ -18735,8 +19251,8 @@
  "1ez9nchszgz": {
   "en": "Slot {0} — empty",
   "where": [
-   "game.js:2587",
-   "game.js:2602"
+   "game.js:2592",
+   "game.js:2607"
   ],
   "pattern": true
  },
@@ -18909,10 +19425,22 @@
    "data.js:182"
   ]
  },
+ "osqc0nedeg": {
+  "en": "Someone offers you a glass core, warm in the hand, and calls it a keepsake. You...",
+  "where": [
+   "origins.js:94"
+  ]
+ },
  "12b3iueivjh": {
   "en": "Someone sat with Old Tam at the crossing and never said a word, and he got up and went home. I cannot decide if that is the kindest thing I have heard or the cleverest.",
   "where": [
    "rumours.js:143"
+  ]
+ },
+ "253ri8xa5xr": {
+  "en": "Someone you could speak to.",
+  "where": [
+   "origins.js:387"
   ]
  },
  "1xj23xtl0w2": {
@@ -18940,6 +19468,12 @@
    "game.js:261"
   ]
  },
+ "n59bkuw2vy": {
+  "en": "Something has picked up the trail.",
+  "where": [
+   "motion10.js:270"
+  ]
+ },
  "23th57pj63w": {
   "en": "Something in the Hedge by the tannery culvert spoke to me in a voice I knew. I did not answer.",
   "where": [
@@ -18956,6 +19490,12 @@
   "en": "Something is sitting on it. I know what. I'm not ready to ask it to get up.",
   "where": [
    "companion-talk.js:312"
+  ]
+ },
+ "1ztiqt02ucg": {
+  "en": "Something leans close, finds nothing worth keeping, and withdraws.",
+  "where": [
+   "dread.js:80"
   ]
  },
  "fh4mi71j5k": {
@@ -18986,6 +19526,12 @@
   "en": "Something will lean in, and take a little.",
   "where": [
    "game.js:1770"
+  ]
+ },
+ "154jiy1otzt": {
+  "en": "Something you could pick up.",
+  "where": [
+   "origins.js:389"
   ]
  },
  "czhgzfltb4": {
@@ -19048,10 +19594,22 @@
    "upgrades.js:1573"
   ]
  },
+ "25jtmtjvhez": {
+  "en": "Songs too close together and the air behind my ears begins to murmur. A Cantor lets each note finish before the next. I will try to do the same.",
+  "where": [
+   "dread.js:83"
+  ]
+ },
  "970p709rfr": {
   "en": "Sotto Voce (Whisper)",
   "where": [
    "upgrades.js:75"
+  ]
+ },
+ "zgphr0p48m": {
+  "en": "Sound comes back a little at a time: a bird, your own boots, the water.",
+  "where": [
+   "dread.js:77"
   ]
  },
  "21jttuuymd6": {
@@ -19063,7 +19621,7 @@
  "1n653je5paa": {
   "en": "Sound off",
   "where": [
-   "game.js:2531"
+   "game.js:2536"
   ]
  },
  "12hq14tsxyh": {
@@ -19075,7 +19633,7 @@
  "frjj2motly": {
   "en": "Sound on",
   "where": [
-   "game.js:2531"
+   "game.js:2536"
   ]
  },
  "2evl96e532x": {
@@ -19201,6 +19759,12 @@
   ],
   "pattern": true
  },
+ "1zvkp6dgudb": {
+  "en": "Stand still and count the doors. Someone should write down which house.",
+  "where": [
+   "origins.js:61"
+  ]
+ },
  "1lpx0ht4bhn": {
   "en": "Stand-ins",
   "where": [
@@ -19211,6 +19775,12 @@
   "en": "Standard steel & shot",
   "where": [
    "upgrades.js:986"
+  ]
+ },
+ "10jvsth0vzz": {
+  "en": "Start singing something small and ordinary, to keep the place open.",
+  "where": [
+   "origins.js:81"
   ]
  },
  "1jt7wxbzog5": {
@@ -19249,6 +19819,18 @@
   "where": [
    "playtools.js:351",
    "playtools.js:396"
+  ]
+ },
+ "11ed6imkhxc": {
+  "en": "Steal",
+  "where": [
+   "origins.js:40"
+  ]
+ },
+ "1eo2sn0ox6t": {
+  "en": "Steal, Grab, Info and Talk, as in Daggerfall. ] or [ cycles; click, tap, Enter or controller A uses the current mode. E, Space and P keep their usual meaning.",
+  "where": [
+   "origins.js:518"
   ]
  },
  "20ikl3cyyl4": {
@@ -19756,6 +20338,12 @@
    "upgrades.js:855"
   ]
  },
+ "201yi8jbarx": {
+  "en": "Take your hand off your weapon. There is nothing here to hit.",
+  "where": [
+   "origins.js:62"
+  ]
+ },
  "1jkxwqr83s7": {
   "en": "Take your time. He never hurried either.",
   "where": [
@@ -19765,7 +20353,8 @@
  "17tu4ts4x5g": {
   "en": "Talk",
   "where": [
-   "companion-talk.js:540"
+   "companion-talk.js:540",
+   "origins.js:40"
   ]
  },
  "6vs9deg5xf": {
@@ -19872,6 +20461,12 @@
   "en": "Tannery's shut. Nobody wants leather off a town that is turning to wood.",
   "where": [
    "data.js:417"
+  ]
+ },
+ "u5gif9vl8z": {
+  "en": "Tell her a lie about the harbour, so the last thing she hears is good.",
+  "where": [
+   "origins.js:85"
   ]
  },
  "1fvoftrr9vc": {
@@ -19985,9 +20580,29 @@
  "29l4grvltcc": {
   "en": "That did not read as a save. {0}",
   "where": [
-   "game.js:2611"
+   "game.js:2616",
+   "origins.js:574"
   ],
   "pattern": true
+ },
+ "292c68wpzc6": {
+  "en": "That file could not be read.",
+  "where": [
+   "origins.js:569"
+  ]
+ },
+ "1sf3ds0v41e": {
+  "en": "That file is empty.",
+  "where": [
+   "origins.js:572"
+  ]
+ },
+ "1efncv9xvrw": {
+  "en": "That file is too large to be a save. The limit is 512 KB.",
+  "where": [
+   "origins.js:567",
+   "origins.js:571"
+  ]
  },
  "27dk1nkz135": {
   "en": "That is Inspector Mallow's round-book. Mallow is not one of mine; he is on loan from the Arbiterium, and he does second pressings on the ones who wander off the register. I have filed four complaints. They were all relieved.",
@@ -19998,7 +20613,7 @@
  "17sthuiqznm": {
   "en": "That is a hardcore run. Hardcore runs never travel as codes.",
   "where": [
-   "game.js:2516"
+   "game.js:2521"
   ]
  },
  "12uc9ugxss5": {
@@ -20073,6 +20688,12 @@
   "en": "That save is damaged.",
   "where": [
    "game.js:2447"
+  ]
+ },
+ "9m91k1arzk": {
+  "en": "That save is far too large to be a real one.",
+  "where": [
+   "game.js:2518"
   ]
  },
  "lb0dy8rler": {
@@ -20871,6 +21492,12 @@
    "upgrades.js:331"
   ]
  },
+ "9r04mm1ygm": {
+  "en": "The Hedge speaks in your mother's voice. You...",
+  "where": [
+   "origins.js:64"
+  ]
+ },
  "1esju5yznwt": {
   "en": "The Hedge whistled my whistle again. I did not go. I counted to forty first, and then to forty again, and then it stopped.",
   "where": [
@@ -21297,6 +21924,12 @@
   "en": "The Octave is tuned.",
   "where": [
    "upgrades.js:1126"
+  ]
+ },
+ "20h464bp2sl": {
+  "en": "The Octave suggests",
+  "where": [
+   "origins.js:175"
   ]
  },
  "14oouep1p0u": {
@@ -21743,6 +22376,12 @@
   "en": "The Synod herald, wry",
   "where": [
    "extras.en.json:0"
+  ]
+ },
+ "ay4fk31xjy": {
+  "en": "The Synod pins up a new fine for singing off-pitch. You...",
+  "where": [
+   "origins.js:74"
   ]
  },
  "joqnbdbb65": {
@@ -22427,8 +23066,8 @@
  "2dr9idhbooc": {
   "en": "The code is damaged or incomplete.",
   "where": [
-   "game.js:2513",
-   "game.js:2515"
+   "game.js:2518",
+   "game.js:2520"
   ]
  },
  "zn3ubabsco": {
@@ -22669,6 +23308,12 @@
   "en": "The eastern reliquary niche (27, 1) stands open.",
   "where": [
    "game.js:1226"
+  ]
+ },
+ "1aiqytgwgnm": {
+  "en": "The edge goes out of the air.",
+  "where": [
+   "dread.js:68"
   ]
  },
  "1m036kx1cyo": {
@@ -23065,6 +23710,12 @@
    "wilds.js:222"
   ]
  },
+ "21yhfzduyzf": {
+  "en": "The lamp is still lit. Its hum is gone.",
+  "where": [
+   "dread.js:74"
+  ]
+ },
  "1vn7zqyb4k4": {
   "en": "The lamplighter",
   "where": [
@@ -23076,6 +23727,12 @@
   "en": "The lamplighter stands under the last lamp with his pole raised, and looks at the flame, and does not light it again.",
   "where": [
    "grove.js:201"
+  ]
+ },
+ "191nogun6cx": {
+  "en": "The last Song has not finished leaving. The air keeps a thin edge.",
+  "where": [
+   "dread.js:66"
   ]
  },
  "hjocabogd9": {
@@ -23094,6 +23751,12 @@
   "en": "The last words of someone, stoppered. Opening it brings hounds. Do not.",
   "where": [
    "data.js:179"
+  ]
+ },
+ "1st5lymandu": {
+  "en": "The leaves are moving and you cannot hear them.",
+  "where": [
+   "dread.js:72"
   ]
  },
  "j5sw8j955n": {
@@ -23124,6 +23787,18 @@
   "en": "The lid sings: Root (174 Hz), Fifth (261 Hz), Third (220 Hz).",
   "where": [
    "game.js:1055"
+  ]
+ },
+ "pixsfe9y05": {
+  "en": "The line I could not read is back, and it is mine, and it is not quite how I wrote it. Everything returned is a gift, and the bill comes with it.",
+  "where": [
+   "dread.js:85"
+  ]
+ },
+ "16lvt5tmn5y": {
+  "en": "The line is back in your logbook, in your own writing.",
+  "where": [
+   "dread.js:81"
   ]
  },
  "b9rzkkba6o": {
@@ -23618,6 +24293,12 @@
    "dreams.js:82"
   ]
  },
+ "284empq4lue": {
+  "en": "The river has gone quiet. You did not hear it stop.",
+  "where": [
+   "dread.js:71"
+  ]
+ },
  "t6nxd8cm5o": {
   "en": "The roan mare is saddled: {0}% less road time, and she carries most of the wear.",
   "where": [
@@ -23850,6 +24531,12 @@
    "parish.js:570"
   ]
  },
+ "nl4dbr12cu": {
+  "en": "The street's reed-whistle stops. The quiet that follows is not rest. You...",
+  "where": [
+   "origins.js:79"
+  ]
+ },
  "24220c99pn6": {
   "en": "The stump of the iron-bough, sawn clean and chalked.",
   "where": [
@@ -24021,6 +24708,12 @@
   "en": "The watch-house cell",
   "where": [
    "game.js:819"
+  ]
+ },
+ "9rka425om5": {
+  "en": "The water that was ticking somewhere in the stone has stopped.",
+  "where": [
+   "dread.js:73"
   ]
  },
  "mqv426eihk": {
@@ -24571,7 +25264,7 @@
  "1vg2nhcd3j1": {
   "en": "This run is already hardcore. Only a new traveller can start without it.",
   "where": [
-   "game.js:2550"
+   "game.js:2555"
   ]
  },
  "gv2pc4zho6": {
@@ -24978,6 +25671,12 @@
    "tobin.js:52"
   ]
  },
+ "204sq9k4l0p": {
+  "en": "Too far, or something is in the way. Close in until the purse is within arm’s reach.",
+  "where": [
+   "origins.js:402"
+  ]
+ },
  "1pj0a7rr5we": {
   "en": "Too loud brings the hounds,",
   "where": [
@@ -25017,7 +25716,7 @@
  "2270170ir3p": {
   "en": "Touch controls",
   "where": [
-   "game.js:2557"
+   "game.js:2562"
   ]
  },
  "kb4llth2t7": {
@@ -25049,6 +25748,12 @@
   "where": [
    "upgrades.js:379",
    "upgrades.js:381"
+  ]
+ },
+ "23d81yv9206": {
+  "en": "Travelling with you.",
+  "where": [
+   "origins.js:387"
   ]
  },
  "24hur2w3u24": {
@@ -25776,6 +26481,12 @@
    "party.js:42"
   ]
  },
+ "1cojjkpizg4": {
+  "en": "Walk past. The fine is for people with time to sing.",
+  "where": [
+   "origins.js:77"
+  ]
+ },
  "1f4it6kv6j1": {
   "en": "Walk soft in it.",
   "where": [
@@ -25804,6 +26515,18 @@
   "en": "Walked up to the quarry at dusk. They have fenced the headframe. Even the fence hums.",
   "where": [
    "tobin.js:77"
+  ]
+ },
+ "n82ccn8btf": {
+  "en": "Walking fast.",
+  "where": [
+   "motion10.js:270"
+  ]
+ },
+ "25pcwoups2q": {
+  "en": "Walking, keeping to cover.",
+  "where": [
+   "motion10.js:270"
   ]
  },
  "1674ud9iikp": {
@@ -26225,7 +26948,7 @@
  "26luwd8oqdd": {
   "en": "World map (T)",
   "where": [
-   "travel.js:380"
+   "travel.js:381"
   ]
  },
  "2banbcqskpn": {
@@ -26382,6 +27105,18 @@
    "rumours.js:158"
   ]
  },
+ "15wkkycq60y": {
+  "en": "You answered with an ear before an opinion, and you would rather hold a place open than win it. The Cantor sings the births, fevers and burials of the orchards. The notes you carry are older than the Church knows.",
+  "where": [
+   "origins.js:113"
+  ]
+ },
+ "a7rgu9fcu6": {
+  "en": "You answered with your hands: shut the door, mend the latch, hold something heavy. The Quarry-Hand is a strong back and a short list of friends, and has heard the Root breathe through the pump-house floor.",
+  "where": [
+   "origins.js:117"
+  ]
+ },
  "1jktiugfiwb": {
   "en": "You are being lowered on a rope through green light. The shaft walls are wet and warm and veined like the inside of an arm. Far below, something is singing a lullaby, five notes, over and over, and each time it reaches the fifth it loses the tune and begins again, patient, tired, exact.",
   "where": [
@@ -26532,6 +27267,12 @@
   "en": "You cannot find your way from in here. Get out under the sky first.",
   "where": [
    "travel.js:138"
+  ]
+ },
+ "3o86b0e9zo": {
+  "en": "You cannot grab a person. Try Talk, or Steal.",
+  "where": [
+   "origins.js:421"
   ]
  },
  "vq0kaw5ym6": {
@@ -27121,6 +27862,12 @@
    "data.js:745"
   ]
  },
+ "1hjlxq293cj": {
+  "en": "You kept count: the doors, the names, the order things were said in. The Archivist of the Veil writes it down and knows what every glass core is. Each name kept costs a little of you, and you seem to have decided it is worth it.",
+  "where": [
+   "origins.js:115"
+  ]
+ },
  "q2r19z9ahn": {
   "en": "You killed the thing that wore voices at the Hedge",
   "where": [
@@ -27224,6 +27971,18 @@
   "en": "You lost warmth first, then your name, then your outline. Something leaned in through the thin place and took you the way it takes everything: slowly, consciously, without end.",
   "where": [
    "game.js:1476"
+  ]
+ },
+ "17r9jbkhamr": {
+  "en": "You made the room laugh, and left yourself a door. The Corsair counts rope and angles, trusts glass shot, and laughs loudest when most afraid. Nothing in the Reach is so grim that you cannot haggle over it.",
+  "where": [
+   "origins.js:114"
+  ]
+ },
+ "4zthra0y86": {
+  "en": "You may keep one sound for the rest of your life. Which?",
+  "where": [
+   "origins.js:69"
   ]
  },
  "166q99b8ikv": {
@@ -27661,6 +28420,12 @@
    "upgrades.js:1556"
   ]
  },
+ "kb9rb9jr4q": {
+  "en": "You still half-believe, and you answered like someone for whom half is the heavier weight. The Flambeau Penitent carried a censer for the Church until the light turned. The faith and the fire are both guttering, and you have not chosen which to feed.",
+  "where": [
+   "origins.js:116"
+  ]
+ },
  "176txghk10i": {
   "en": "You stood and listened at the Hedge",
   "where": [
@@ -27807,7 +28572,7 @@
  "5iajire0rf": {
   "en": "You travel {0} for {1} and come to {2}{3}. It is {4}.",
   "where": [
-   "travel.js:354"
+   "travel.js:355"
   ],
   "pattern": true
  },
@@ -27823,6 +28588,12 @@
    "game.js:2169"
   ],
   "pattern": true
+ },
+ "1j267d45cpk": {
+  "en": "You turn the blow aside.",
+  "where": [
+   "guard.js:32"
+  ]
  },
  "106atm2gzo7": {
   "en": "You uncouple the trigger. The mechanism is safe.",
@@ -27846,6 +28617,12 @@
   "en": "You wake by the lamp. Somebody dragged you. Nobody will say who.",
   "where": [
    "game.js:1510"
+  ]
+ },
+ "qon2slzjpd": {
+  "en": "You wake with your own voice in your head, and no other.",
+  "where": [
+   "dread.js:69"
   ]
  },
  "g7g322rhbu": {
@@ -27882,6 +28659,12 @@
   "en": "You want to help. You hum the missing note, and it is wrong, and the rope jerks, and the whole shaft winces.",
   "where": [
    "dreams.js:95"
+  ]
+ },
+ "1tx6o63lnit": {
+  "en": "You weighed each answer by what it would cost and who would pay, and you did not flinch from either number. The Dissonant Blade is an engineer's mind behind a glass arm: the sum of a fight is done long before it begins.",
+  "where": [
+   "origins.js:112"
   ]
  },
  "c909znp2zn": {
@@ -28022,6 +28805,12 @@
    "upgrades.js:751"
   ]
  },
+ "ew0sqoaxfc": {
+  "en": "Your boots come down and make no sound. Neither does your breathing, and it is very gentle about it.",
+  "where": [
+   "dread.js:76"
+  ]
+ },
  "29i2d4guf0c": {
   "en": "Your character is a glass-bearer (p.glassed)",
   "where": [
@@ -28120,6 +28909,12 @@
   ],
   "pattern": true
  },
+ "2d35btn8ogm": {
+  "en": "Your steps have stopped coming back to you.",
+  "where": [
+   "dread.js:75"
+  ]
+ },
  "1z9o3vqr2lz": {
   "en": "Your stomach has been empty a while. You are hungry.",
   "where": [
@@ -28185,11 +28980,71 @@
   ],
   "pattern": true
  },
+ "6j4fe0cscp": {
+  "en": "[a whisper behind you]",
+  "where": [
+   "dread.js:87"
+  ]
+ },
+ "aijjp9iraj": {
+  "en": "[the dripping stops]",
+  "where": [
+   "dread.js:88"
+  ]
+ },
+ "19ex7of177f": {
+  "en": "[the lamp's hum stops]",
+  "where": [
+   "dread.js:89"
+  ]
+ },
+ "2e5113l47vx": {
+  "en": "[the leaves go quiet]",
+  "where": [
+   "dread.js:88"
+  ]
+ },
+ "2glk41203kl": {
+  "en": "[the river goes quiet]",
+  "where": [
+   "dread.js:88"
+  ]
+ },
+ "22dymtutixd": {
+  "en": "[the sound drains away]",
+  "where": [
+   "dread.js:90"
+  ]
+ },
+ "17uj6pgsjcg": {
+  "en": "[your footsteps lose their echo]",
+  "where": [
+   "dread.js:89"
+  ]
+ },
+ "11x3u1t83gl": {
+  "en": "[your footsteps make no sound]",
+  "where": [
+   "dread.js:89"
+  ]
+ },
+ "16ib87iugp8": {
+  "en": "a Dissonance meter, whispers behind you and a stalker in the quiet · Jump scares: none",
+  "where": [
+   "dread.js:64"
+  ]
+ },
  "kbogrh6rq6": {
   "en": "a Talk option with your companions, when it is calm",
   "where": [
    "companion-talk.js:874",
    "companion-talk.js:1055"
+  ]
+ },
+ "i2m3qfesoh": {
+  "en": "a figure walks the route across the map as the hours pass",
+  "where": [
+   "motion10.js:637"
   ]
  },
  "2ezgcu7g04z": {
@@ -28250,6 +29105,12 @@
   "en": "a record, not a thanks",
   "where": [
    "couriers.js:81"
+  ]
+ },
+ "1k1az8o48vc": {
+  "en": "a soft shadow under people and creatures",
+  "where": [
+   "look10.js:525"
   ]
  },
  "21skojskghr": {
@@ -28334,7 +29195,7 @@
  "2fvykrt7q9c": {
   "en": "auto turns on when you touch the screen",
   "where": [
-   "game.js:2557"
+   "game.js:2562"
   ]
  },
  "1343ifsl5cg": {
@@ -28372,6 +29233,12 @@
   "en": "blackletter, titles and headings only",
   "where": [
    "extras.en.json:0"
+  ]
+ },
+ "kv16ldh5ni": {
+  "en": "blood, scorch and cracks, for this visit only",
+  "where": [
+   "look10.js:527"
   ]
  },
  "1f4xdczq3qw": {
@@ -28426,7 +29293,7 @@
  "2ei1hgm48xw": {
   "en": "click the view to capture it, so it never wanders off the window · Esc gives it back",
   "where": [
-   "game.js:2557"
+   "game.js:2562"
   ]
  },
  "24xgyw8mn4l": {
@@ -28618,7 +29485,7 @@
  "1pzpoywkh1p": {
   "en": "grid units, x east, y south, dir radians (0=east, +=clockwise)",
   "where": [
-   "game.js:2623"
+   "game.js:2628"
   ]
  },
  "17utijso72q": {
@@ -28693,7 +29560,8 @@
  "1kodlvhytf0": {
   "en": "iron",
   "where": [
-   "game.js:1560"
+   "game.js:1560",
+   "motion10.js:485"
   ]
  },
  "19u52g8kd83": {
@@ -28757,7 +29625,7 @@
  "gnsl23rlha": {
   "en": "move the mouse over the view to look · rest it at a side edge to keep turning · when off, hold the right button and drag",
   "where": [
-   "game.js:2557"
+   "game.js:2562"
   ]
  },
  "17tqdpnd9id": {
@@ -28782,6 +29650,12 @@
   "en": "night",
   "where": [
    "game.js:1813"
+  ]
+ },
+ "1xxmw9qvddq": {
+  "en": "night patrols carry swinging lights",
+  "where": [
+   "motion10.js:638"
   ]
  },
  "2aip2hjrp7": {
@@ -29072,6 +29946,12 @@
   ],
   "pattern": true
  },
+ "1jt1y4f9w5z": {
+  "en": "sparks and a metal tick when a guard turns a blow",
+  "where": [
+   "motion10.js:639"
+  ]
+ },
  "qf9bqnmtzs": {
   "en": "sprite needs w, h and Uint32Array data",
   "where": [
@@ -29105,6 +29985,12 @@
    "upgrades.js:149"
   ],
   "pattern": true
+ },
+ "2gklx9ry4yt": {
+  "en": "tb small",
+  "where": [
+   "origins.js:501"
+  ]
  },
  "2g28b53wsc6": {
   "en": "ten sovereigns",
@@ -29477,6 +30363,12 @@
    "grove.js:346"
   ]
  },
+ "1nsx8nw6oc6": {
+  "en": "too big",
+  "where": [
+   "game.js:2516"
+  ]
+ },
  "2g8v2au1pis": {
   "en": "trigger {0}@{1},{2}",
   "where": [
@@ -29535,6 +30427,12 @@
   "en": "waiting here",
   "where": [
    "extras.en.json:0"
+  ]
+ },
+ "1wh6qzzv62l": {
+  "en": "whispers and the drawn-off breath are band-passed noise through SPATIAL.mix; the ambient dip is Audio_.master",
+  "where": [
+   "dread.js:739"
   ]
  },
  "73165fiyp4": {
@@ -29921,7 +30819,7 @@
  "m2h2tg8yw": {
   "en": "{0} · {1} · {2}, level {3}",
   "where": [
-   "game.js:2525"
+   "game.js:2530"
   ],
   "pattern": true
  },
@@ -30218,7 +31116,7 @@
  "220x8ft87jy": {
   "en": "— copy it somewhere safe (or download it). Paste it under",
   "where": [
-   "game.js:2584"
+   "game.js:2589"
   ]
  },
  "72m8hiu2p8": {
@@ -30243,7 +31141,7 @@
  "1moxw93k8gv": {
   "en": "— quick saves that last until you leave the page.",
   "where": [
-   "game.js:2584"
+   "game.js:2589"
   ]
  },
  "1qnm4yyicit": {
