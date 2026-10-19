@@ -280,7 +280,7 @@ const SCENES = {
     const chroma = (c) => [c[0] - c[1], c[2] - c[1]];
     check(() => assert.notDeepEqual(gradeR.oak, gradeR.deep), 'grade: Oakhaven and Deep Woods grade a mid-grey differently');
     ok(gradeR.oak[0] > gradeR.oak[2], `grade: Oakhaven is warm-grey (${gradeR.oak})`);
-    ok(gradeR.grove[2] > gradeR.grove[1] && gradeR.grove[0] > gradeR.grove[1], `grade: Whisper-Grove is lilac (${gradeR.grove})`);
+    ok(gradeR.grove[2] > gradeR.grove[0] && gradeR.grove[1] > gradeR.grove[0], `grade: Whisper-Grove is cold teal (P10: was lilac) (${gradeR.grove})`);
     ok(gradeR.deep[0] > gradeR.deep[1] && gradeR.deep[2] > gradeR.deep[1], `grade: Deep Woods is violet-amber (${gradeR.deep})`);
     ok(gradeR.tavern[0] - gradeR.tavern[2] > gradeR.oak[0] - gradeR.oak[2] + 4, `grade: interiors are candle-warm, warmer than the street (${gradeR.tavern})`);
     ok(gradeR.crypt[2] > gradeR.crypt[0], `grade: the crypts run cold (${gradeR.crypt})`);
