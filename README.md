@@ -52,6 +52,17 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 9: new gameplay
+
+| | |
+|---|---|
+| ![The Third Parish](screenshots/p9-parish-table.jpg) | ![A Fret-crawler](screenshots/p9-fretcrawler.jpg) |
+| The Third Parish: off the Greenroot road, a village and chapel whose people are simply not there. | Fret-crawlers lie invisible on the undercroft stone; a bite stops you singing for a while. |
+| ![Hold the Pitch](screenshots/p9-hold-pitch.jpg) | ![Ada Pellow](screenshots/p9-ada.jpg) |
+| Cut wind-reeds by the Flume and tune them in Hold the Pitch: a root-note reed, a lure reed, a First Reed. | A Reed for Pellow: a widow's husband's reed split in the frost. |
+| ![Talking with Lyra](screenshots/p9-talk-lyra.jpg) | ![The ringing wood](screenshots/p9-ringing-wood.jpg) |
+| Talk with Kaelen, Lyra (on her slate), Sable and Vane; topics open as the story moves. | The Ringing Wood: fell iron-bough for Reeds-Miner Tomas without bringing the hounds. |
+
 ### Phase 8: painted, scored and translated
 
 | | |
