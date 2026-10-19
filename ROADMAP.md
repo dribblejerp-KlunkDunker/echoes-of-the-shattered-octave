@@ -172,7 +172,7 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 | 17 — Beyond Book One | extras | Book Two prologue; Port Cantabile trip and the Long Night (both after Book One in canon: presented as marked extras) |
 | 18 — Technical | engine and online | Sharper renderer; installable offline app; daily challenge dungeon; ghost replays; messages and leaderboards (need a small server: owner's decision) |
 
-Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach (PROPOSED)"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
+Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
 
 **Phase 11 — feedback and feel** (delivered; items marked (P11) below; see the Phase 11 verification)
 
