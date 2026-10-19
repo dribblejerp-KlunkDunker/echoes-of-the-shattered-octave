@@ -20,5 +20,12 @@ const PAINTED_MANIFEST = {
   "death/heartglass": {w: 1280, h: 720, bytes: 131974},
   "death/quiet": {w: 1280, h: 720, bytes: 73628},
   "death/unwrite": {w: 1280, h: 720, bytes: 134454},
-  "death/wearer": {w: 1280, h: 720, bytes: 142114}
+  "death/wearer": {w: 1280, h: 720, bytes: 142114},
+  "ending/b1_herald": {w: 1280, h: 720, bytes: 83102},
+  "ending/p2_answered": {w: 1280, h: 720, bytes: 134589},
+  "ending/p2_silent": {w: 1280, h: 720, bytes: 112419},
+  "sketch/gate": {w: 800, h: 600, bytes: 130956},
+  "sketch/greening": {w: 800, h: 600, bytes: 87305},
+  "sketch/hedge": {w: 800, h: 600, bytes: 78651},
+  "sketch/tam": {w: 800, h: 600, bytes: 115284}
 };
