@@ -103,7 +103,7 @@ const EPILOGUE = (function () {
     { id: 'lb_sang_wearer', when: (f) => gf(f, 'coda_done') && gf(f, 'wearer_coda_dead'),
       text: 'Lyra sang eight bars of her father\'s funeral office in harmony with the thing that ate him, and then sang the coda alone. She has not sung it since. At the fire she hums something else, anything else, a skipping-rhyme, a reed-orchard drone, with the care of a woman walking past a grave on the wrong side. Tobin Ashgrove got his office sung to him, properly, once. It was not the one he was owed.' },
     { id: 'lb_sang_req', when: (f) => gf(f, 'coda_done'),
-      text: 'Lyra sang the coda against the Requiem, and three hundred years of funeral offices came out of it sung properly, and for the length of one hymn she was exactly what she was trained to be. It cost her the rest of the voice she had. She is learning to speak again in small amounts, like a woman rationing salt.' },
+      text: 'Lyra sang the coda against the Requiem, and three hundred years of funeral offices came out of it sung properly, and for the length of one hymn she was exactly what she was trained to be. It cost her what was left of her voice. She talks in chalk now, in capitals, and makes every word earn its place on the wall.' },
     { id: 'lb_pending', when: (f) => gf(f, 'part4'),
       text: 'The Mausoleum is still singing to itself, a mile north, and Lyra faces it the way you face a debt that has been politely deferred. She has her father\'s office in her mouth and nowhere to put it. At night she hums the Root under her breath so that the woods will know a Cantor is still in them.' },
     { id: 'lb_p3', when: () => true,
