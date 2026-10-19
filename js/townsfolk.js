@@ -95,14 +95,15 @@ const TOWNSFOLK = (() => {
     if (d2 < 1.5 * 1.5) return true;
     return typeof los === 'function' ? los(c.x, c.y, e.x, e.y) : true;
   }
+  // returns false while a change is still waiting for the player to look away
   function setHidden(e, want, force, dt) {
-    if (e.dead) return;
-    if (!!e.hidden === want) { e._tfWait = 0; return; }
+    if (e.dead) return true;
+    if (!!e.hidden === want) { e._tfWait = 0; return true; }
     if (!force) {
       const inMap = G.ents && G.ents.includes(e);
-      if (inMap && ((typeof DLG !== 'undefined' && DLG.ent === e && G.state === 'dialogue') || (e._tfWait = (e._tfWait || 0) + dt) < WAIT_MAX && watched(e))) return;
+      if (inMap && ((typeof DLG !== 'undefined' && DLG.ent === e && G.state === 'dialogue') || (e._tfWait = (e._tfWait || 0) + dt) < WAIT_MAX && watched(e))) return false;
     }
-    e.hidden = want; e._tfWait = 0; stats.applied++;
+    e.hidden = want; e._tfWait = 0; stats.applied++; return true;
   }
   // anim.js removes transient entities of the map being left (loadMap) and of every
   // other map (animFrame). The stand-ins are transient so the game never saves them,
@@ -125,9 +126,13 @@ const TOWNSFOLK = (() => {
     for (const id in G.maps) {
       for (const e of G.maps[id].entities) {
         const r = e._tf; if (!r) continue;
-        const st = stateAt(r, h);
-        setHidden(e, on ? st !== 'work' : false, force, dt || 0);
-        if (e._tfStandIn) setHidden(e._tfStandIn, !(on && st === 'tavern'), force, dt || 0);
+        const st = stateAt(r, h), key = (on ? 'on:' : 'off:') + st;
+        // A tick only acts on a change of routine (or one still waiting to happen). Between changes it leaves
+        // hidden alone, so other code that hides a townsperson (a scene, a test fixture) is not overruled.
+        if (!force && e._tfKey === key && !e._tfPend) continue;
+        const a = setHidden(e, on ? st !== 'work' : false, force, dt || 0);
+        const b = e._tfStandIn ? setHidden(e._tfStandIn, !(on && st === 'tavern'), force, dt || 0) : true;
+        e._tfKey = key; e._tfPend = !(a && b);
       }
     }
   }
@@ -147,28 +152,6 @@ const TOWNSFOLK = (() => {
   passHours = function (hours) { const r = _pass(hours); try { apply(true); } catch (err) { /* ditto */ } return r; };
   const _update = update;
   update = function (dt) { const r = _update(dt); try { apply(false, dt); } catch (err) { /* never break a tick */ } return r; };
-  // The clock can also jump without passHours (scripted scenes, debug, tests setting G.tod). A jump of more than
-  // a quarter hour between frames is not the day going by, so whoever is out must be put right before drawing.
-  let lastTod = null;
-  if (typeof Engine !== 'undefined' && Engine.render) {
-    const _render = Engine.render;
-    Engine.render = function (ents, tod, opts) {
-      try {
-        if (typeof G !== 'undefined' && typeof G.tod === 'number') {
-          if (lastTod !== null) {
-            let d = Math.abs(G.tod - lastTod); d = Math.min(d, 1 - d);
-            if (d > 1 / 96) {
-              // only when someone's routine actually differs between the two times; otherwise leave the scene alone
-              const h0 = ((((lastTod % 1) + 1) % 1) * 24 + 1e-7) % 24, h1 = hourNow();
-              if (ROSTER.some(r => stateAt(r, h0) !== stateAt(r, h1))) apply(true);
-            }
-          }
-          lastTod = G.tod;
-        }
-      } catch (err) { /* never break a frame */ }
-      return _render.call(Engine, ents, tod, opts);
-    };
-  }
 
   // ------------------------------------------------------------ gestures and work loops
   let reduce = false;

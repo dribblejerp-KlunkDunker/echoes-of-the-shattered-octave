@@ -64,6 +64,8 @@ const SCENES = {
         const [map, x, y, dir, tod] = SCENES[name];
         for (const id in G.maps) for (const e of G.maps[id].entities) if (e.kind === 'enemy') e.hidden = true;
         loadMap(map, { x, y, dir }); G.state = 'play'; G.fadeT = 0; G.tod = tod;
+        // the clock was set by hand, not by passHours: put the townsfolk routines right for this hour
+        if (typeof TOWNSFOLK !== 'undefined') TOWNSFOLK.apply(true);
         Weather.hold('clear'); T.wx = {};
       };
       // flags: names to switch on; everything else off. wx: weather override.
