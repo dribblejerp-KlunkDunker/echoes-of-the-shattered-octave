@@ -195,6 +195,8 @@ const COMPANIONS_FX = (() => {
       return;
     }
     if (e.kind !== 'npc' || e.companion || e.hidden) return;
+    // townsfolk with a work loop (Hetty at the bar, the mill hands) are busy, not warming their hands
+    if (typeof TOWNSFOLK !== 'undefined' && TOWNSFOLK.LOOPS && TOWNSFOLK.LOOPS[G.mapId + '|' + e.id]) return;
     const F = fires(); if (!F.length) return;
     let best = null, bd = 2.6 * 2.6;
     for (let i = 0; i < F.length; i++) { const dx = F[i].x - e.x, dy = F[i].y - e.y, d2 = dx * dx + dy * dy; if (d2 < bd && d2 > 0.2) { bd = d2; best = F[i]; } }
