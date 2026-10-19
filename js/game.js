@@ -1726,7 +1726,7 @@ function renderInventory() {
 }
 function renderCharacter() {
   const p = G.player; const stage = p.glass >= 100 ? 'Heartglass' : p.glass >= 40 ? 'Set' : p.glass >= 15 ? 'Frost' : p.glass > 0 ? 'Ringing' : 'Unglassed';
-  openModal(`<h2>${p.name}</h2><button class="dfbtn small close" id="x">Close</button><div class="row"><div class="col" style="flex:0 0 18cqw"><img src="img/face_${p.face}.jpg" style="width:16cqw;height:16cqw;border:2px solid #0b0806"><p class="muted">${p.cls.name}<br>Level ${p.level} · ${p.xp} xp<br>${p.cls.hz}</p></div>
+  openModal(`<h2>${p.name}</h2><button class="dfbtn small close" id="x">Close</button><div class="row"><div class="col" style="flex:0 0 18cqw"><img src="img/face_${[1, 2, 3, 4, 5, 6].includes(p.face) ? p.face : 1}.jpg" style="width:16cqw;height:16cqw;border:2px solid #0b0806"><p class="muted">${p.cls.name}<br>Level ${p.level} · ${p.xp} xp<br>${p.cls.hz}</p></div>
   <div class="col"><div class="attrs">${ATTRS.map(a => `<div><span>${a}</span><b>${p.attrs[a]}</b></div>`).join('')}</div>
   <h3>Vitals</h3><div>Health ${Math.ceil(p.hp)} / ${p.hpMax}</div><div class="bar-h"><i style="width:${100 * p.hp / p.hpMax}%;background:var(--red)"></i></div>
   <div>Fatigue ${Math.round(p.fat)} / ${p.fatMax}</div><div class="bar-h"><i style="width:${100 * p.fat / p.fatMax}%;background:var(--green)"></i></div>
@@ -2593,7 +2593,7 @@ window.render_game_to_text = () => {
 // ---------------------------------------------------------------- boot
 (async function boot() {
   await Engine.loadAll((f) => { $('#load-fill').style.width = (f * 100) + '%'; });
-  try { await Promise.all(['8px "Alegreya SC"', '8px "Alegreya"', '700 20px "Cinzel"'].map(f => document.fonts.load(f))); await document.fonts.ready; } catch (e) { }
+  try { await Promise.all(['8px "Alegreya SC"', '8px "Alegreya"', '700 20px "Cinzel"', '20px "UnifrakturMaguntia"'].map(f => document.fonts.load(f))); await document.fonts.ready; } catch (e) { }
   hide('#loading'); G.state = 'title';
   $('#btn-new').onclick = () => { Audio_.init(); Audio_.resume(); hide('#title'); show('#create'); CREATE.step = 0; renderCreate(); G.state = 'create'; };
   $('#btn-help').onclick = () => { $('#modal-panel').innerHTML = `<h2>How to play</h2><button class="dfbtn small close" id="x">Close</button><pre class="help">${HELP_TEXT}</pre>`; show('#modal'); $('#x').onclick = closeModal; };

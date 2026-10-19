@@ -34,6 +34,7 @@
   --font-display: 'Cinzel', 'Alegreya SC', serif;
   --font-body: 'Alegreya', Georgia, serif;
   --font-sc: 'Alegreya SC', 'Alegreya', serif;
+  --font-blackletter: 'UnifrakturMaguntia', 'Cinzel', serif;   /* titles and headings only; body text stays Alegreya */
   --gold: #d9a441;
   --gold-dim: #9c7430;
   --parch: #e8d9b5;
