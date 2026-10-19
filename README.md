@@ -52,6 +52,21 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 11: feedback and feel
+
+| | |
+|---|---|
+| ![HUD options](screenshots/p11-hud.jpg) | ![Quest complete](screenshots/p11-banner.jpg) |
+| Optional hit-direction arcs, enemy health bars, damage numbers and organ-pipe gauges. | A banner unrolls when a quest is done; level-ups, loot and shop coins have their own flourishes. |
+| ![Sun shafts in the Cloister](screenshots/p11-shafts.jpg) | ![Ghosts at night](screenshots/p11-ghosts.jpg) |
+| Sun shafts, heat haze, Light-glass glare, cold breath and footprints. | Ghosts are drawn see-through, with a faint shimmer. |
+| ![Bones](screenshots/p11-bones.jpg) | ![The Boar's Reel](screenshots/p11-reel.jpg) |
+| Bones, a dice game with Garrow Finch at the Boar & Dulcimer. | Play for the room in the evening: a four-lane rhythm game. |
+| ![Massday market](screenshots/p11-market.jpg) | ![The canon calendar](screenshots/p11-logbook.jpg) |
+| Market day fills the square every Massday. | Dates follow the canon calendar ("Dawnday the eleventh of Harvestmonth"), with the day's quiet duty and the moon. |
+
+Also: hit-stop on strong blows, weapon trails, page turns; the Whisper-Grove cat you can adopt (she hisses at hidden danger); moon phases that make hounds bolder or fewer; birth signs from the seven modes; a "Previously..." card on load; and a performance overlay (F10). Every one has its own switch in Options.
+
 ### Phase 10: the owner's picks
 
 | | |

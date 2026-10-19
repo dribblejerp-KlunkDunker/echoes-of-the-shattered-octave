@@ -161,6 +161,8 @@ Every phase must retain the security regression tests and save/load behavior. Re
 ### Owner's list, October 2026 (100 ideas)
 Added from the owner's list. Statuses come from a check against the code: `[x]` already in the game, `[~]` partly there, `[ ]` new. Where an item is already in, the note says where.
 
+**Phase 11 — feedback and feel** (delivered; items marked (P11) below; see the Phase 11 verification)
+
 **Phase 10 — the owner's picks** (delivered; see the Phase 10 verification below)
 | Item | Status | Note |
 |---|---|---|
@@ -178,34 +180,34 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 
 **Graphics**
 - `[x]` Night palette (per-hour grades, js/post.js) · `[x]` Wet surfaces after rain (js/surfaces) · `[x]` Water reflections and ripples (js/water.js; extend to rippling light on the Sunken Court floor `[~]`)
-- `[ ]` Sun shafts through canopy and Cloister windows · `[ ]` Heat haze over braziers, forges, the Steam Golem · `[ ]` Light-glass glare
-- `[ ]` Footprints in mud and shallow water · `[ ]` Breakable barrels and crates with loot · `[ ]` The Greening visible in Oakhaven during Part Two
-- `[ ]` See-through shimmering ghosts · `[ ]` "Octave lights" aurora on story nights · `[ ]` Moon phases the Hush follows
-- `[ ]` Mirrors that show you (and sometimes something behind you) · `[ ]` Shimmering sealed doorways · `[ ]` Organ-pipe health, fatigue and Song gauges
-- `[ ]` Hit-direction marker (complements the sound ripples) · `[ ]` Optional enemy health bars · `[ ]` Optional damage numbers · `[ ]` Stillness tint at the screen edge
+- `[x]` Sun shafts through canopy and Cloister windows (P11) · `[x]` Heat haze over braziers, forges, the Steam Golem (P11) · `[x]` Light-glass glare (P11)
+- `[x]` Footprints in mud and shallow water (P11) · `[ ]` Breakable barrels and crates with loot · `[ ]` The Greening visible in Oakhaven during Part Two
+- `[x]` See-through shimmering ghosts (P11) · `[ ]` "Octave lights" aurora on story nights · `[x]` Moon phases the Hush follows (P11)
+- `[ ]` Mirrors that show you (and sometimes something behind you) · `[ ]` Shimmering sealed doorways · `[x]` Organ-pipe health, fatigue and Song gauges (P11)
+- `[x]` Hit-direction marker (complements the sound ripples) (P11) · `[x]` Optional enemy health bars (P11) · `[x]` Optional damage numbers (P11) · `[x]` Stillness tint at the screen edge (P11)
 
 **Animation**
 - `[ ]` Spreading Light-glass in story events · `[ ]` Glowing root veins near the Anchor-roots · `[~]` Crows that gather at bodies (crows exist, js/smalllife.js)
-- `[ ]` NPCs hood up in rain, huddle by fires in cold · `[ ]` Swaying coats and capes · `[ ]` Cold breath at night and in cold areas
-- `[ ]` Hounds sniffing your trail · `[ ]` The Hushwardens' grey muffling wave · `[ ]` Weapon trails on fast swings · `[ ]` Hit-stop on critical hits
-- `[~]` Kestrel flight scene between Parts Two and Three (flyovers exist, js/sky.js) · `[ ]` Level-up flourish with rising notes · `[ ]` Quest-complete banner
-- `[ ]` Loot flying to the inventory button · `[ ]` Coins counted out in shops · `[ ]` Page turns in books and the logbook · `[ ]` Sitting, eating and drinking in the tavern
+- `[ ]` NPCs hood up in rain, huddle by fires in cold · `[ ]` Swaying coats and capes · `[x]` Cold breath at night and in cold areas (P11)
+- `[ ]` Hounds sniffing your trail · `[ ]` The Hushwardens' grey muffling wave · `[x]` Weapon trails on fast swings (P11) · `[x]` Hit-stop on critical hits (P11)
+- `[~]` Kestrel flight scene between Parts Two and Three (flyovers exist, js/sky.js) · `[x]` Level-up flourish with rising notes (P11) · `[x]` Quest-complete banner (P11)
+- `[x]` Loot flying to the inventory button (P11) · `[x]` Coins counted out in shops (P11) · `[x]` Page turns in books and the logbook (P11) · `[ ]` Sitting, eating and drinking in the tavern
 
 **Daggerfall features**
-- `[ ]` Birth signs from musical modes · `[x]` "Where is...?" (dialogue button; add map marking `[~]`) · `[ ]` Paid training with per-level limits
-- `[ ]` Bank letters of credit · `[ ]` Holidays on the calendar · `[ ]` Cheat codes for testing
+- `[x]` Birth signs from musical modes (P11) · `[x]` "Where is...?" (dialogue button; add map marking `[~]`) · `[ ]` Paid training with per-level limits
+- `[ ]` Bank letters of credit · `[x]` Holidays on the calendar (P11) · `[ ]` Cheat codes for testing
 
 **Gameplay**
-- `[ ]` Instruments (lute, flute, hurdy-gurdy) that change Songs · `[ ]` Tavern performance rhythm game · `[ ]` Tuning forks that hum near secrets
+- `[ ]` Instruments (lute, flute, hurdy-gurdy) that change Songs · `[x]` Tavern performance rhythm game (P11) · `[ ]` Tuning forks that hum near secrets
 - `[ ]` Dowsing for Anchor-roots · `[x]` Carried light (the lantern, U) · `[ ]` Fire flasks · `[ ]` Environmental kills (chandeliers, scaffolds, deep water)
 - `[ ]` Office grappling hook · `[x]` Noise lures (thrown stones and bottles; the lure reed) · `[ ]` Silence bombs · `[ ]` Shield bash · `[ ]` Two-handed weapons and dual-wielding
-- `[ ]` Throwing nets · `[ ]` Adopt the Whisper-Grove cat (she hisses at danger) · `[ ]` Bones, a tavern dice game · `[ ]` A tavern card game · `[ ]` Camp cooking
+- `[ ]` Throwing nets · `[x]` Adopt the Whisper-Grove cat (she hisses at danger) (P11) · `[x]` Bones, a tavern dice game (P11) · `[ ]` A tavern card game · `[ ]` Camp cooking
 - `[ ]` Boss trophies for your house (the house exists)
 
 **World and events**
-- `[ ]` Market day in the square · `[ ]` Synod sermons to attend or disrupt · `[ ]` Festivals such as Hearthday · `[ ]` Eclipses
+- `[x]` Market day in the square (P11) · `[ ]` Synod sermons to attend or disrupt · `[ ]` Festivals such as Hearthday · `[ ]` Eclipses
 - `[~]` Roadside events on the world map (ambushes exist; add carts, refugees, checkpoints) · `[ ]` Buildings burn and are rebuilt; permanent NPC deaths
-- `[ ]` Synod territory spreading on the world map · `[ ]` "Previously..." recap on load
+- `[ ]` Synod territory spreading on the world map · `[x]` "Previously..." recap on load (P11)
 
 **Horror**
 - `[ ]` Whispers from behind at high Dissonance (with the meter above) · `[ ]` Lights dying one by one · `[ ]` Night terrors after resting somewhere unsafe
@@ -217,7 +219,17 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 
 **Technical**
 - `[ ]` A sharper renderer with the pixel look kept · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
-- `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[ ]` Performance overlay (frame rate, memory)
+- `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[x]` Performance overlay (frame rate, memory) (P11)
+
+### Phase 11 "Feedback and feel" verification
+- **How it was built.** Five parallel teams (hud, flourish, air, tavern, calendar), then integration on phase11-feel.
+- **HUD (js/hud11.js).** Hit-direction marker, enemy health bars, damage numbers, organ-pipe gauges, stillness tint; each its own switch, off by default; read-only (seeded fight traces identical on/off).
+- **Flourish (js/flourish11.js).** Hit-stop on strong blows and parries (pauses the simulation, not outcomes), weapon trails, level-up notes, quest banner, loot flight, shop coins, page turns.
+- **Air (js/air11.js).** Sun shafts (Deep Woods, Cloister), heat haze, Light-glass glare, see-through ghosts, cold breath, footprints; each under ~1 ms a frame and off in Low and Original.
+- **Tavern (js/tavern11.js).** Bones with Garrow Finch (own RNG stream, 1–20 stakes, 60 a day loss cap), the evening set "The Boar's Reel", the Whisper-Grove cat (adopt by feeding on three days; hisses at hidden foes).
+- **Calendar (js/calendar11.js).** Follows World Bible Vol VII: G.day 0 = Nullday the sixth of Harvestmonth, 419 SR; the Rota line per weekday; Canopy as a quiet remembrance; market every Massday; moon phases scale hound spawns (new ×1.25 … full ×0.75); birth signs (+5 to one attribute per mode); "Previously…" card on load; performance overlay (F10).
+- **Integration fixes.** gates and frames tests hold the new Air effects and the calendar date out of their "switch off = original" comparisons.
+- **Tests.** New suites hud11, flourish11, air11, tavern11, calendar11; all 69 suites pass on the merged tree (couriers and screens have real-time timing checks that fail now and then under load and pass on a rerun).
 
 ### Phase 10 completion pass verification
 - **How it was built.** Four parallel teams (look, motion, dread, origins), then integration.
