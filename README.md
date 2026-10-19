@@ -52,6 +52,17 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 8: painted, scored and translated
+
+| | |
+|---|---|
+| ![A painted loading card for Whisper-Grove](screenshots/p8-card-grove.jpg) | ![A painted loading card for the tavern](screenshots/p8-card-hearth.jpg) |
+| Loading cards, death pictures, endings and logbook sketches use paintings where one exists. | Options → Painted art switches back to the drawn stand-ins. |
+| ![Dialogue in French](screenshots/p8-french.jpg) | ![Sound ripples](screenshots/p8-ripples.jpg) |
+| The whole story can be played in French. | Sound ripples show where a sound comes from, for players who can't hear it. |
+
+Options → Score → Extended now plays a composed, recorded score: a piece for each area and boss and a main theme in six stages.
+
 ### Phase 7: sound, access and tools
 
 | | |
