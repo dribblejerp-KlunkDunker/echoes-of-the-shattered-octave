@@ -156,7 +156,7 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
         const id = COURIERS.tryDeliver('arrival');
         G.state = 'panel'; renderLog();
         const panel = document.querySelector('#modal-panel');
-        const bad = panel.querySelectorAll('script, [onerror], img:not([src^="data:image/"])').length;
+        const bad = panel.querySelectorAll('script, [onerror], img:not([src^="data:image/"]):not([src^="img/painted/"])').length;
         const out = { before, id, bad, after: COURIERS.deliveredLetters().map(l => l.id).join(), flag: G.flags.p6c_hob };
         closeModal(); G.state = 'play'; return out;
       }, typeof v === 'number' && isNaN(v) ? 'NaN' : v === Infinity ? 'Infinity' : v === undefined ? 'undef' : v);

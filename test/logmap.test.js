@@ -114,7 +114,7 @@ async function boot() {
     const info = await page.evaluate(() => {
       const panel = document.querySelector('#modal-panel');
       const groups = [...panel.querySelectorAll('.lm-group')];
-      const figs = groups.map(g => ({ id: g.querySelector('figure').dataset.sketch, alt: g.querySelector('img').alt, src: g.querySelector('img').src.slice(0, 22), n: g.querySelectorAll('.lm-entries > p').length }));
+      const figs = groups.map(g => ({ id: g.querySelector('figure').dataset.sketch, alt: g.querySelector('img').alt, src: g.querySelector('img').getAttribute('src').slice(0, 22), n: g.querySelectorAll('.lm-entries > p').length }));
       // the original entries, in the original order, are all still there unchanged
       const ps = [...panel.querySelectorAll('p')].filter(p => p.firstElementChild && p.firstElementChild.classList.contains('muted'));
       return { figs, ps: ps.map(p => p.outerHTML), h3: [...panel.querySelectorAll('h3')].map(h => h.textContent), heights: [...panel.querySelectorAll('img')].map(i => [i.naturalWidth, i.naturalHeight]) };
@@ -122,7 +122,7 @@ async function boot() {
     assert.deepEqual(info.figs.map(f => f.id), ['gate', 'coil', 'bells', 'boots', 'sable', 'pim'], 'sketches grouped per storyline: ' + JSON.stringify(info.figs.map(f => f.id)));
     assert.equal(info.figs[0].n, 2, 'two consecutive gate entries share one sketch');
     assert.equal(info.figs[3].n, 2, 'both boots entries share one sketch');
-    assert(info.figs.every(f => /^Ink sketch: \S/.test(f.alt) && f.src === 'data:image/png;base64,'), 'every sketch has alt text naming its subject and is a data URL');
+    assert(info.figs.every(f => /^Ink sketch: \S/.test(f.alt) && (f.src === 'data:image/png;base64,' || f.src.indexOf('img/painted/sketch/') === 0)), 'every sketch has alt text naming its subject and is a data URL (or, once decoded, its painting)');
     assert.deepEqual(info.h3, ['The Rite', 'Other matters'], 'headings unchanged');
     assert.equal(info.ps.length, 8, 'all eight entries kept');
     assert(info.heights.every(h => h[0] === 144 && h[1] === 108), 'sketches decode');
