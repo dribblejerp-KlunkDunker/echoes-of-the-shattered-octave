@@ -73,6 +73,11 @@ SKETCHES = {
 for i, (k, v) in enumerate(SKETCHES.items()): PICTURES.append(('sketch', k, v, 100 + i))
 
 
+# Pictures the local model could not paint well (anachronisms, wrong subject): left to the procedural stand-in until a
+# better painting exists (for example from Canva). --only still paints them on request.
+SKIP = {'area/workshop', 'area/arena', 'area/quarry'}
+
+
 def trim_bars(im):
     """The model sometimes letterboxes; cut away near-black rows and columns at the edges."""
     g = im.convert('L'); w, h = g.size; px = g.load()
@@ -92,7 +97,7 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--only', default=''); ap.add_argument('--force', action='store_true'); ap.add_argument('--steps', type=int, default=8)
     a = ap.parse_args()
     only = set(filter(None, a.only.split(',')))
-    todo = [p for p in PICTURES if (not only or p[0] + '/' + p[1] in only)
+    todo = [p for p in PICTURES if (p[0] + '/' + p[1] in only if only else p[0] + '/' + p[1] not in SKIP)
             and (a.force or not os.path.exists(os.path.join(ROOT, 'img', 'painted', p[0], p[1] + '.jpg')))]
     print('%d to paint' % len(todo), flush=True)
     if not todo: return
