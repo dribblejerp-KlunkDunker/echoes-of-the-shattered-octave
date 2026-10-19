@@ -66,7 +66,7 @@ assert(/path\.resolve\(__dirname, '\.\.'\)/.test(main) && /process\.resourcesPat
 assert(!fs.existsSync(path.join(root, 'desktop/index.html')) && !fs.existsSync(path.join(root, 'desktop/js')), 'desktop/ holds no copy of the game');
 const ex = pkg.build.extraResources[0];
 assert(ex.from === '..' && ex.to === 'game' && ex.filter.includes('index.html') && ex.filter.includes('js/**/*') && !ex.filter.some((f) => /test|desktop|\.git|docs/.test(f)), 'packaged game copies only runtime folders');
-for (const d of ['css', 'js', 'img', 'fonts', 'music']) assert(sec.ALLOWED_TOP.has(d) && fs.existsSync(path.join(root, d)), 'served folder exists: ' + d);
+for (const d of ['css', 'js', 'img', 'fonts', 'music', 'locales']) assert(sec.ALLOWED_TOP.has(d) && fs.existsSync(path.join(root, d)), 'served folder exists: ' + d);
 
 // electron-builder config
 const b = pkg.build;

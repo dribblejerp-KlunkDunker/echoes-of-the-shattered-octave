@@ -54,7 +54,8 @@ fs.mkdirSync(SHOTS, { recursive: true });
     }
     await page.locator('#c-go').click(); await page.locator('#btn-intro-skip').click();
     await page.waitForTimeout(500);
-    await ev(() => { window.requestAnimationFrame = () => 0; Audio_.init(); Audio_.resume(); });
+    // the recorded score is the default; these checks are about the generated pieces, so select Extended
+    await ev(() => { window.requestAnimationFrame = () => 0; Audio_.init(); Audio_.resume(); SCORE.setMode('extended'); });
     await page.waitForTimeout(200);
 
     // ---- pure choice: areas, bosses, story stages

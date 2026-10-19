@@ -205,7 +205,7 @@ const FLORA = (() => {
       const fog = (map.fogDist || 12) * (typeof GFX.viewDist === 'number' ? GFX.viewDist : 1) * 1.15, fog2 = fog * fog;
       const rx = -Math.sin(cam.dir), ry = Math.cos(cam.dir);              // screen-right in the world
       const ease = dt > 0 ? 1 - Math.exp(-14 * dt) : 0, back = dt > 0 ? 1 - Math.exp(-3.2 * dt) : 0;
-      const amp0 = 0.04 + 0.08 * wind, S = typeof Engine.getScale === 'function' ? Engine.getScale() : 1;
+      const amp0 = (0.04 + 0.08 * wind) * (GFX.reduceMotion ? 0.25 : 1), S = typeof Engine.getScale === 'function' ? Engine.getScale() : 1;
       for (let i = 0; i < list.length; i++) {
         const e = list[i];
         const dx = e.x - cam.x, dy = e.y - cam.y, d2 = dx * dx + dy * dy;

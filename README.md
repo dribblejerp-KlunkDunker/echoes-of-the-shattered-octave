@@ -52,6 +52,19 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 7: sound, access and tools
+
+| | |
+|---|---|
+| ![Photo mode](screenshots/p7-photo.jpg) | ![Sound captions in high contrast](screenshots/p7-captions.jpg) |
+| Photo mode pauses the world, hides the interface and saves a clean PNG. | Sound captions name what you hear: a door grinding, thunder. Sounds now come from where they happen and are muffled through walls. |
+| ![The Accessibility block](screenshots/p7-access.jpg) | ![Statistics](screenshots/p7-stats.jpg) |
+| One Accessibility block: text size, reduce motion, no flashes, high contrast, captions, language. | Statistics: the journey, Songs cast, kills by family and the run clock's splits. |
+| ![The dungeon editor](screenshots/p7-editor.jpg) | ![Playing a mod dungeon](screenshots/p7-mod-dungeon.jpg) |
+| The dungeon editor checks every dungeon as you build it, then previews, playtests and exports it. | Mods are data only: they cannot run code, and saves never depend on one. |
+| ![Options in French](screenshots/p7-french.jpg) | ![Full credits](screenshots/p7-credits.jpg) |
+| Menus can be switched to French (partial) or a pseudo-locale that tests long text. | Full credits for every font, sound, image and tool, also in CREDITS.md and ASSETS.md. |
+
 ### New stealth features
 
 Staged scenes captured from the playable maps using the game's own feature logic and interface. Click an image for the full 1280 × 800 view.
@@ -128,6 +141,7 @@ The ground and the skyline now have real height. These are captured the same way
 
 ## Features
 
+- Sound, access and tools: sounds come from where they happen and are muffled through walls; rain, willow wind and thunder follow the weather; every NPC and enemy family has its own voice. Options add an Extended score, an Accessibility block with captions and high contrast, a language choice, photo mode, a speedrun timer, a statistics page and data-only mod dungeons with a built-in editor. A desktop build (Windows, macOS, Linux) is configured in desktop/.
 - Raycast 3D world with chunky Daggerfall-style textures, sprites and a first-person weapon view.
 - Six character templates, plus attributes, skills and level-ups.
 - Districts, interiors and dungeons: Oakhaven, the clearing, the quarry, the underhedge, the rootvault, the chapel and more.
@@ -233,6 +247,12 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Camera feel | Esc options → Graphics & access: Head bob Off/Gentle, Reduce motion, No flashes |
 | Reading | Books and notes open full screen · ← → or PgUp/PgDn turn pages · + and − change the text size · touch arrows / controller shoulders or d-pad · Escape/B closes |
 | Sound | V sound on/off · B music on/off |
+| Score | Esc options → Graphics & access → Score: Original (the recorded soundtrack, default) or Extended (adds procedural area, boss and story pieces) |
+| Accessibility | Esc options → Graphics & access: text size, reduce motion, no flashes, high contrast, sound captions, language |
+| Photo mode | \\ (backslash) or Esc options → Graphics & access → Photo mode · drag/arrows look, Q/E tilt, W A S D or wheel move a few paces · Save picture exports a PNG · Escape leaves |
+| Speedrun timer | Esc options → Graphics & access → Speedrun timer: real and game time, with splits at each story milestone |
+| Statistics | Esc options → Graphics & access → Statistics |
+| Mod dungeons | Esc options → Mod dungeons: import, enable and play data-only mod dungeons, or build one in the dungeon editor (see docs/mods.md) |
 | Touch | Left thumb stick, right thumb drags to look, tap to use or strike |
 
 ## Project layout
@@ -287,6 +307,13 @@ js/couriers.js    letters from the people you helped
 js/dreams.js      rest dreams and Light-glass memory echoes
 js/tobin.js       Tobin's journal pages and the logbook tracker
 js/epilogue.js    Kaelen and Lyra epilogues; Organum, Iron Peaks and Rift teasers
+js/spatial-audio.js  positional sound with wall muffling; rain, willow wind, thunder
+js/voices.js      procedural greetings and grunts; the in-game credits
+js/score.js       Extended score: area, dungeon, boss and story pieces (opt-in)
+js/playtools.js   photo mode, speedrun timer, statistics
+js/access.js      Accessibility block and the translation catalog (locales/)
+js/mods.js        data-only mod schemas (schemas/), validator, Mod dungeons, dungeon editor
+desktop/          Electron desktop shell and packaging (docs/desktop.md)
 js/game.js        game logic, UI, combat, dialogue, trade, saving
 music/            soundtrack (MP3)
 img/              portraits, title, map and ending art

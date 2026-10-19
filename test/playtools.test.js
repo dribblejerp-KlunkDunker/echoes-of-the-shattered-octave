@@ -308,8 +308,9 @@ const SHOTS = process.env.SHOTS || '';
       await shot('stats-' + tag);
       await page.evaluate(() => { closeModal(); G.state = 'panel'; renderAccessibilityMenu(); });
       const opt = await page.evaluate(() => {
-        const p = document.querySelector('#modal-panel'), grid = p.querySelector('.ctl-grid');
-        grid.scrollTop = grid.scrollHeight;
+        const p = document.querySelector('#modal-panel'), grid = document.querySelector('#p7-photo-open').closest('.ctl-grid') || p.querySelector('.ctl-grid');
+        // other blocks (Accessibility, Sound space...) may follow ours: bring our row into view rather than assume it is last
+        document.querySelector('#p7-timer-opt').scrollIntoView({ block: 'center' });
         const row = ['#p7-photo-open', '#p7-timer-opt', '#p7-stats-open'].map(s => document.querySelector(s).getBoundingClientRect());
         const g = grid.getBoundingClientRect();
         return { hOver: p.scrollWidth > p.clientWidth + 1, gridOver: grid.scrollWidth > grid.clientWidth + 1, rowsIn: row.every(b => b.top >= g.top - 1 && b.bottom <= g.bottom + 1 && b.right <= innerWidth), back: document.querySelector('#ac-back').getBoundingClientRect().bottom <= innerHeight };

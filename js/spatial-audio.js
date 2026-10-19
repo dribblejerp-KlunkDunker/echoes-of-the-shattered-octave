@@ -18,6 +18,8 @@
 'use strict';
 
 const SPATIAL = (() => {
+  // a private random stream: sound never draws from Math.random, so audio can't shift gameplay rolls
+  const audioRnd = (() => { let s = (Date.now() ^ 0x9e3779b9) >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; })();
   const KEY = 'octave.spatial.v1';
   const set = { positional: true, weather: 2 };            // weather: 0 off, 1 low, 2 normal, 3 high
   const WEATHER_GAIN = [0, 0.5, 1, 1.5];
@@ -101,7 +103,7 @@ const SPATIAL = (() => {
   // ambient birds and rats come from the trees and walls: no entity, so a bearing out in the dark
   function ambientSpot() {
     const L = listener(); if (!L) return null;
-    const a = Math.random() * Math.PI * 2, r = 5 + Math.random() * 6;
+    const a = audioRnd() * Math.PI * 2, r = 5 + audioRnd() * 6;
     return { x: L.x + Math.cos(a) * r, y: L.y + Math.sin(a) * r };
   }
   const CTX_ONLY = { bell: 1, bellDie: 1, hound: 1, golem: 1, press: 1, bow: 1, shot: 1, voice: 1, song: 1, crack: 1 };
@@ -173,7 +175,7 @@ const SPATIAL = (() => {
   function build() {
     const ctx = Audio_.ctx, bus = Audio_.sfxBus;
     noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 3, ctx.sampleRate);
-    const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = audioRnd() * 2 - 1;
     const loop = () => { const s = ctx.createBufferSource(); s.buffer = noiseBuf; s.loop = true; return s; };
     // rain: hiss band, low-passed harder when a roof is overhead; a quick tremolo makes it patter
     const rs = loop(), rh = ctx.createBiquadFilter(), rl = ctx.createBiquadFilter(), rg = ctx.createGain();
@@ -223,7 +225,7 @@ const SPATIAL = (() => {
   let lastFlashAt = -99, prevFlash = 0;
   function rumble(dist, level) {
     const ctx = Audio_.ctx, t0 = ctx.currentTime, dur = 3.4 + dist * 0.5;
-    const s = ctx.createBufferSource(); s.buffer = noiseBuf || (() => { const b = ctx.createBuffer(1, ctx.sampleRate * 3, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; noiseBuf = b; return b; })();
+    const s = ctx.createBufferSource(); s.buffer = noiseBuf || (() => { const b = ctx.createBuffer(1, ctx.sampleRate * 3, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = audioRnd() * 2 - 1; noiseBuf = b; return b; })();
     s.loop = true;
     const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = Math.max(160, 520 - dist * 70) * (lay.indoors ? 0.6 : 1); lp.Q.value = 0.7;
     const g = ctx.createGain(), peak = clamp(0.5 - dist * 0.07, 0.08, 0.5) * level;
@@ -234,7 +236,7 @@ const SPATIAL = (() => {
     const sg = ctx.createGain(); sg.gain.setValueAtTime(0.0001, t0); sg.gain.linearRampToValueAtTime(peak * 0.5, t0 + 0.2); sg.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
     s.connect(lp); lp.connect(g); sub.connect(sg);
     let outNode = g;
-    if (ctx.createStereoPanner) { const p = ctx.createStereoPanner(); p.pan.value = (Math.random() - 0.5) * 0.6; g.connect(p); sg.connect(p); outNode = p; } else sg.connect(g);
+    if (ctx.createStereoPanner) { const p = ctx.createStereoPanner(); p.pan.value = (audioRnd() - 0.5) * 0.6; g.connect(p); sg.connect(p); outNode = p; } else sg.connect(g);
     outNode.connect(Audio_.sfxBus);
     s.start(t0); sub.start(t0); s.stop(t0 + dur + 0.1); sub.stop(t0 + dur + 0.1);
   }
@@ -244,7 +246,7 @@ const SPATIAL = (() => {
     lastFlashAt = now;
     const lvl = WEATHER_GAIN[set.weather] || 0;
     if (!lvl || typeof Audio_ === 'undefined' || !Audio_.ctx) return;
-    const dist = 0.3 + Math.random() * 3.7, delay = 0.35 + dist * 1.1;   // about 3 s per "kilometre", like the real thing slowed for play
+    const dist = 0.3 + audioRnd() * 3.7, delay = 0.35 + dist * 1.1;   // about 3 s per "kilometre", like the real thing slowed for play
     const rec = { delay, dist, level: lvl, fired: false };
     stats.thunders.push(rec); if (stats.thunders.length > 20) stats.thunders.shift();
     setTimeout(() => { try { if (ready() || (Audio_.ctx && !Audio_.muted)) { rumble(dist, lvl); rec.fired = true; } } catch (e) { console.warn('thunder failed', e); } }, delay * 1000);

@@ -15,6 +15,8 @@
 'use strict';
 
 const VOICES = (() => {
+  // a private random stream: sound never draws from Math.random, so audio can't shift gameplay rolls
+  const audioRnd = (() => { let s = (Date.now() ^ 0x9e3779b9) >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; })();
   const KEY = 'octave.voices.v1';
   const MODES = ['off', 'grunts', 'spoken'];
   const MODE_LABEL = { off: 'Off', grunts: 'Grunts', spoken: 'Grunts + spoken' };
@@ -254,7 +256,7 @@ const VOICES = (() => {
   function noise(ctx) {
     if (noiseBuf && noiseCtx === ctx) return noiseBuf;
     const n = Math.floor(ctx.sampleRate * 0.6), b = ctx.createBuffer(1, n, ctx.sampleRate), d = b.getChannelData(0);
-    for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    for (let i = 0; i < n; i++) d[i] = audioRnd() * 2 - 1;
     noiseBuf = b; noiseCtx = ctx; return b;
   }
   function node(x) { st.nodes++; return x; }
@@ -262,7 +264,7 @@ const VOICES = (() => {
   // one syllable at time t0 (AudioContext seconds)
   function syllable(ctx, out, pr, sy, t0, vol) {
     const sty = STYLE[pr.style], V = VOWEL[sy.v] || VOWEL.a, d = sy.d * (pr.style === 'golem' ? 1.15 : 1);
-    const f0 = (pr.f0 || 120) * (1 + (Math.random() - 0.5) * 0.03);
+    const f0 = (pr.f0 || 120) * (1 + (audioRnd() - 0.5) * 0.03);
     const fs = pr.fs || 1;
     const env = node(ctx.createGain());
     const peak = vol * (sy.g == null ? 1 : sy.g);
@@ -306,7 +308,7 @@ const VOICES = (() => {
       ns.connect(ng);
       if (sty.buzz === 0) feed(ng);
       else { const hp = node(ctx.createBiquadFilter()); hp.type = 'bandpass'; hp.frequency.value = 1800 * fs; hp.Q.value = 0.8; ng.connect(hp); hp.connect(env); }
-      ns.start(t0, Math.random() * 0.3); ns.stop(t0 + d + 0.05);
+      ns.start(t0, audioRnd() * 0.3); ns.stop(t0 + d + 0.05);
     }
   }
 

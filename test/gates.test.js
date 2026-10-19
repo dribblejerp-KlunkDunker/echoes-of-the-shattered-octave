@@ -245,7 +245,9 @@ const HELPERS = () => {
           d.open = d.target = 0;
         }
         T.look('oakhaven', 23.5, 2.2, -Math.PI / 2); G.keys = {}; interact(); T.adv(1500);
-        out.state = JSON.stringify({ map: G.mapId, flags: G.flags, doors: Object.keys(G.maps.oakhaven.doors).filter(k => G.maps.oakhaven.doors[k].open > 0) });
+        // the run clock and statistics counters (js/playtools.js) tick on their own; they are not gate state
+        const gateFlags = {}; for (const k in G.flags) if (!/^p7[st]_/.test(k)) gateFlags[k] = G.flags[k];
+        out.state = JSON.stringify({ map: G.mapId, flags: gateFlags, doors: Object.keys(G.maps.oakhaven.doors).filter(k => G.maps.oakhaven.doors[k].open > 0) });
         return out;
       };
       // each variant gets its own fresh page so the first run starts from the same state

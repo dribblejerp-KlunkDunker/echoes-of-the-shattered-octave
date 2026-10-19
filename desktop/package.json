@@ -38,6 +38,7 @@
           "js/**/*",
           "img/**/*",
           "fonts/**/*",
+          "locales/**/*",
           "music/**/*",
           "README.md"
         ]

@@ -1,7 +1,7 @@
 // ============================================================
 //  score — Phase 7: the procedural score (SCORE team)
 //  The game streams ten MP3 cues (music/*.mp3) through Audio_.music.request(id, vol, rate). This module adds, when the
-//  setting "Score" is Extended (the default), three things on top of them. Every note here is a PROCEDURAL STAND-IN
+//  setting "Score" is Extended (opt-in; the default is the Original recorded score), three things on top of them. Every note here is a PROCEDURAL STAND-IN
 //  for composed music, played by a tiny WebAudio sequencer; a final pass can swap authored recordings in per piece.
 //    1. Area and dungeon compositions: Oakhaven (Growth, 174 Hz root, wind-reed and orchard pluck), Whisper-Grove
 //       (Memory, 741 Hz glass), the Deep Woods (willow, low strings, dread) and one colour per dungeon family
@@ -22,10 +22,12 @@
 'use strict';
 
 const SCORE = (() => {
+  // a private random stream: sound never draws from Math.random, so audio can't shift gameplay rolls
+  const audioRnd = (() => { let s = (Date.now() ^ 0x9e3779b9) >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; })();
   const KEY = 'octave.score.v1';
   const LOOK = 2.0;                       // seconds of notes scheduled ahead of the audio clock
   const GAIN = 2.6;                       // piece output before the master gain
-  const state = { mode: 'extended' };
+  const state = { mode: 'original' };   // the recorded score is the default; the generated pieces are opt-in
 
   // ---- setting -------------------------------------------------------------------------------------
   function load() {
@@ -52,10 +54,19 @@ const SCORE = (() => {
   // ---- the rig: a convolver-free reverb (three feedback delays) shared by every piece ---------------
   function makeRig(ctx, dest) {
     const input = ctx.createGain(); input.gain.value = 1;
-    const dry = ctx.createGain(); dry.gain.value = 0.9; input.connect(dry); dry.connect(dest);
+    // a soft clipper before the master (0.9 * tanh): transparent at normal levels, and stacked voices can never clip.
+    // (DynamicsCompressorNode adds automatic make-up gain, so it is not a ceiling.)
+    let lim = null;
+    if (ctx.createWaveShaper) {
+      lim = ctx.createWaveShaper(); const n = 2048, c = new Float32Array(n);
+      for (let i = 0; i < n; i++) { const x = (i / (n - 1)) * 4 - 2; c[i] = 0.9 * Math.tanh(x / 0.9); }
+      lim.curve = c; lim.oversample = 'none'; lim.connect(dest);   // 'none': oversampling filters ring past the curve on sharp hits
+    }
+    const out = lim || dest;
+    const dry = ctx.createGain(); dry.gain.value = 0.9; input.connect(dry); dry.connect(out);
     const wet = ctx.createGain(); wet.gain.value = 0.4; input.connect(wet);
-    const mix = ctx.createGain(); mix.gain.value = 0.55; mix.connect(dest);
-    const nodes = [input, dry, wet, mix];
+    const mix = ctx.createGain(); mix.gain.value = 0.55; mix.connect(out);
+    const nodes = [input, dry, wet, mix]; if (lim) nodes.push(lim);
     for (const [d, fb, lp] of [[0.19, 0.46, 2600], [0.29, 0.42, 2000], [0.43, 0.38, 1400]]) {
       const dl = ctx.createDelay(1); dl.delayTime.value = d;
       const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = lp;
@@ -64,7 +75,7 @@ const SCORE = (() => {
     }
     // one short noise buffer shared by every noise voice (filled once; voices start it at random offsets)
     const len = Math.floor(ctx.sampleRate * 1.5), buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
-    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    for (let i = 0; i < len; i++) d[i] = audioRnd() * 2 - 1;
     return { input, noise: buf, nodes };
   }
 
@@ -434,7 +445,7 @@ const SCORE = (() => {
   const live = () => ctxOverride || (typeof Audio_ !== 'undefined' ? Audio_.ctx : null);
   const dest = () => (ctxOverride ? ctxOverride.__master : (typeof Audio_ !== 'undefined' ? Audio_.master : null));
   const silent = () => typeof Audio_ === 'undefined' || Audio_.muted || !(Audio_.music && Audio_.music.enabled);
-  const nextSeed = () => (seedBase == null ? (Math.random() * 4294967296) >>> 0 : (seedBase + (seedN++) * 7919) >>> 0);
+  const nextSeed = () => (seedBase == null ? (audioRnd() * 4294967296) >>> 0 : (seedBase + (seedN++) * 7919) >>> 0);
 
   function ensureRig(ctx) {
     if (rig && rigCtx === ctx) return rig;
@@ -478,7 +489,7 @@ const SCORE = (() => {
       if (inst.bar >= inst.total) { inst.done = true; inst.endAt = inst.next + 2.5; }
     }
   }
-  const rand = (a, rngv) => a[0] + (rngv == null ? Math.random() : rngv) * (a[1] - a[0]);
+  const rand = (a, rngv) => a[0] + (rngv == null ? audioRnd() : rngv) * (a[1] - a[0]);
 
   function dropAll() {
     for (const k of ['area', 'boss', 'layer']) { retire(insts[k]); insts[k] = null; want[k] = null; }

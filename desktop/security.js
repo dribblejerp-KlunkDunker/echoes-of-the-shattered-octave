@@ -25,7 +25,7 @@ const CSP = [
 ].join('; ');
 
 // Only these top-level entries of the repo root are served; tests, desktop/, .git and the like never are.
-const ALLOWED_TOP = new Set(['index.html', 'css', 'js', 'img', 'fonts', 'music']);
+const ALLOWED_TOP = new Set(['index.html', 'css', 'js', 'img', 'fonts', 'music', 'locales']);
 
 // Map a request URL to an absolute file under gameRoot, or null if it is not allowed.
 function resolveGamePath(requestUrl, gameRoot) {
