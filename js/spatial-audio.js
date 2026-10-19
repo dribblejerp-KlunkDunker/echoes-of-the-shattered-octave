@@ -133,6 +133,8 @@ const SPATIAL = (() => {
   // Run fn with every connect(sfxBus) sent to the chain instead; setTimeout callbacks started inside
   // (a second birdcall, a bell's later partials) are re-run under the same redirect so they stay in place.
   function withChain(chain, fn) {
+    // audio.js routes every effect (and its delayed parts) to the chain while fn runs
+    if (typeof Audio_.withRoute === 'function') return Audio_.withRoute(chain.input, fn);
     const bus = Audio_.sfxBus, oc = AudioNode.prototype.connect, ost = window.setTimeout;
     AudioNode.prototype.connect = function (dest) { const a = Array.prototype.slice.call(arguments); if (a[0] === bus) a[0] = chain.input; return oc.apply(this, a); };
     window.setTimeout = function (f, ms) {

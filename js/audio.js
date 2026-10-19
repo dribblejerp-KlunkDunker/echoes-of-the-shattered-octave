@@ -24,7 +24,7 @@ const Audio_ = (() => {
       const o2 = ctx.createOscillator(); o2.type = 'sine'; o2.frequency.value = (freq || 174) * 2.003;
       const g2 = ctx.createGain(); g2.gain.value = 0.18;
       const g = ctx.createGain(); g.gain.value = 0.0001;
-      o.connect(g); o2.connect(g2).connect(g); g.connect(sfxBus); o.start(); o2.start();
+      o.connect(g); o2.connect(g2).connect(g); g.connect(out()); o.start(); o2.start();
       h = hums[id] = { o, o2, g, level: 0 };
     }
     if (freq) { h.o.frequency.setTargetAtTime(freq, ctx.currentTime, 0.1); h.o2.frequency.setTargetAtTime(freq * 2.003, ctx.currentTime, 0.1); }
@@ -32,6 +32,12 @@ const Audio_ = (() => {
     h.level = level;
     h.g.gain.setTargetAtTime(muted ? 0.0001 : Math.max(0.0001, level * 0.06), ctx.currentTime, 0.25);
   }
+  // Routing for positional sound: withRoute(node, fn) sends every effect fn starts (and its delayed parts, scheduled
+  // with later()) to node instead of the effects bus; js/spatial-audio.js puts its pan/filter/gain chain there.
+  let route = null;
+  const out = () => route || sfxBus;
+  function withRoute(node, fn) { const prev = route; route = node || null; try { return fn(); } finally { route = prev; } }
+  function later(f, ms) { const r = route; return setTimeout(() => withRoute(r, f), ms); }
   let ctx = null, master = null, droneGain = null, wind = null, windGain = null, muted = false, lampOsc = null, lampGain = null, sfxBus = null, echoSend = null, echoDelay = null, echoTone = null, echoFb = null;
   function init() {
     if (ctx) return;
@@ -81,14 +87,14 @@ const Audio_ = (() => {
     const n = ctx.createBufferSource(); const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate); const d = buf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; n.buffer = buf;
     const f = ctx.createBiquadFilter(); f.type = type || 'bandpass'; f.frequency.value = freq; f.Q.value = q || 1;
     const g = ctx.createGain(); g.gain.setValueAtTime(vol, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-    n.connect(f).connect(g).connect(sfxBus); n.start();
+    n.connect(f).connect(g).connect(out()); n.start();
   }
   function tone(freq, dur, vol, type, slideTo) {
     if (!ctx || muted) return;
     const o = ctx.createOscillator(); o.type = type || 'sine'; o.frequency.setValueAtTime(freq, ctx.currentTime);
     if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, ctx.currentTime + dur);
     const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, ctx.currentTime); g.gain.exponentialRampToValueAtTime(vol, ctx.currentTime + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
-    o.connect(g).connect(sfxBus); o.start(); o.stop(ctx.currentTime + dur + 0.05);
+    o.connect(g).connect(out()); o.start(); o.stop(ctx.currentTime + dur + 0.05);
   }
   function famOf(def) {
     if (!def) return 'man';
@@ -139,8 +145,8 @@ const Audio_ = (() => {
       if (fam === 'golem') { tone(48, 0.6, 0.05, 'triangle'); return; }
       noiseBurst(0.2, 0.05, 600 + Math.random() * 300, 1, 'bandpass');
     },
-    bird: () => { const f = 1800 + Math.random() * 900; tone(f, 0.09, 0.05, 'sine', f * 1.3); setTimeout(() => tone(f * 1.15, 0.08, 0.04, 'sine', f * 0.9), 140); },
-    rat: () => { noiseBurst(0.07, 0.06, 2600, 2, 'bandpass'); setTimeout(() => noiseBurst(0.05, 0.05, 3000, 2, 'bandpass'), 110); },
+    bird: () => { const f = 1800 + Math.random() * 900; tone(f, 0.09, 0.05, 'sine', f * 1.3); later(() => tone(f * 1.15, 0.08, 0.04, 'sine', f * 0.9), 140); },
+    rat: () => { noiseBurst(0.07, 0.06, 2600, 2, 'bandpass'); later(() => noiseBurst(0.05, 0.05, 3000, 2, 'bandpass'), 110); },
     rain: () => noiseBurst(1.6, 0.06, 1400, 0.4, 'lowpass'),
     thunder: () => { noiseBurst(2.2, 0.42, 180, 0.6, 'lowpass'); tone(48, 1.8, 0.22, 'triangle', 26); },
     swing: () => noiseBurst(0.18, 0.2, 900, 0.5, 'bandpass'),
@@ -154,15 +160,15 @@ const Audio_ = (() => {
     golem: () => { noiseBurst(0.6, 0.3, 500, 0.5, 'lowpass'); tone(60, 0.5, 0.3, 'square', 40); },
     hurt: () => { noiseBurst(0.2, 0.35, 180, 1, 'lowpass'); tone(130, 0.3, 0.2, 'sawtooth', 70); },
     door: () => { tone(120, 0.5, 0.12, 'sawtooth', 70); noiseBurst(0.4, 0.1, 500, 0.5, 'lowpass'); },
-    pickup: () => { tone(660, 0.1, 0.12); setTimeout(() => tone(990, 0.15, 0.12), 90); },
+    pickup: () => { tone(660, 0.1, 0.12); later(() => tone(990, 0.15, 0.12), 90); },
     ui: () => tone(520, 0.05, 0.06, 'square'),
     song: (hz, dur) => { tone(hz, dur || 1.2, 0.2, 'sine'); tone(hz * 2, dur || 1.2, 0.05, 'sine'); tone(hz * 3.01, (dur || 1.2) * 0.7, 0.02, 'sine'); },
-    fifth: () => { tone(174, 0.6, 0.22, 'sine'); setTimeout(() => tone(174, 0.9, 0.22, 'sine', 116), 500); },
+    fifth: () => { tone(174, 0.6, 0.22, 'sine'); later(() => tone(174, 0.9, 0.22, 'sine', 116), 500); },
     murmur: () => tone(130 + Math.random() * 10, 0.5, 0.05, 'triangle'),
     press: () => { tone(741, 0.9, 0.3, 'square'); tone(741 * 2, 0.5, 0.08, 'sine'); },
     quiet: () => { if (ctx && !muted) { const t = ctx.currentTime; master.gain.setValueAtTime(master.gain.value, t); master.gain.linearRampToValueAtTime(0.05, t + 0.3); master.gain.linearRampToValueAtTime(0.55, t + 1.6); } },
     crack: () => { noiseBurst(1.2, 0.5, 200, 0.3, 'lowpass'); tone(174, 2.5, 0.3, 'sine', 60); tone(45, 2, 0.3, 'sawtooth'); },
-    voice: () => { tone(220, 0.35, 0.08, 'triangle', 180); setTimeout(() => tone(196, 0.5, 0.08, 'triangle', 160), 300); },
+    voice: () => { tone(220, 0.35, 0.08, 'triangle', 180); later(() => tone(196, 0.5, 0.08, 'triangle', 160), 300); },
   };
   function toggleMute() { muted = !muted; if (master) master.gain.value = muted ? 0 : 0.55; return muted; }
 
@@ -222,5 +228,5 @@ const Audio_ = (() => {
     return { request, preload, tick, debug, seek, get enabled() { return enabled; }, set enabled(v) { enabled = !!v; }, get current() { return want; }, get unlocked() { return unlocked; } };
   })();
 
-  return { init, resume, setScene, sfx, toggleMute, music, muffle, get muffled() { return muffleAmt; }, get ctx() { return ctx; }, get master() { return master; }, get sfxBus() { return sfxBus; }, hum, get hums() { const o = {}; for (const k in hums) o[k] = hums[k].level; return o; }, get ready() { return !!ctx; }, get muted() { return muted; } };
+  return { init, resume, setScene, sfx, toggleMute, music, muffle, get muffled() { return muffleAmt; }, get ctx() { return ctx; }, withRoute, get master() { return master; }, get sfxBus() { return sfxBus; }, hum, get hums() { const o = {}; for (const k in hums) o[k] = hums[k].level; return o; }, get ready() { return !!ctx; }, get muted() { return muted; } };
 })();
