@@ -5,5 +5,6 @@ const PAINTED_MANIFEST = {
   "area/hearth": {w: 1280, h: 720, bytes: 96517},
   "area/hedge": {w: 1280, h: 720, bytes: 114640},
   "area/mill": {w: 1280, h: 720, bytes: 103533},
+  "area/quarry": {w: 1280, h: 720, bytes: 146090},
   "area/street": {w: 1280, h: 720, bytes: 102690}
 };

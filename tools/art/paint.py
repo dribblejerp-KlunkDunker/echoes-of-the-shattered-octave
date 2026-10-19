@@ -14,13 +14,12 @@ shown; nothing from later books.
 import argparse, os, sys, time
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-STYLE = ('dark fantasy oil painting, painterly brushwork, moody chiaroscuro, muted earth palette, '
-         'medieval, 1990s CRPG loading screen art, detailed, ')
-SKETCH = 'sepia ink sketch on old parchment, cross-hatching, field journal illustration, simple, '
+STYLE = ', dark fantasy oil painting, painterly brushwork, moody chiaroscuro, muted earth palette, detailed'
+SKETCH = ', sepia ink sketch on old parchment, cross-hatching, field journal illustration, simple'
 NEG = ('text, letters, words, watermark, signature, frame, border, modern, photo, cartoon, anime, blurry, '
-       'cooling tower, factory chimney, power lines, cars, gore')
+       'cooling tower, factory chimney, power lines, cars, gore, castle, mountains, paintings on wall, letterbox, black bars, light bulb, electric light')
 
-# group, key, prompt, seed. Areas and pictures 16:9 (768x432 -> 1280x720); sketches 4:3 (512x384 -> 800x600).
+# group, key, prompt, seed. Areas and pictures painted 3:2 (768x512), bars trimmed, cropped to 16:9 1280x720; sketches 4:3 (512x384 -> 800x600).
 PICTURES = [
     # ---- area loading cards (street, hall, hearth, mill and hedge come from Canva)
     ('area', 'chapel', 'interior of a small stone village chapel, worn pews, tall candles, an empty bell frame high in an arch, cold blue window light', 11),
@@ -74,6 +73,21 @@ SKETCHES = {
 for i, (k, v) in enumerate(SKETCHES.items()): PICTURES.append(('sketch', k, v, 100 + i))
 
 
+def trim_bars(im):
+    """The model sometimes letterboxes; cut away near-black rows and columns at the edges."""
+    g = im.convert('L'); w, h = g.size; px = g.load()
+    dark = lambda vals: sum(vals) / len(vals) < 14
+    top = 0
+    while top < h // 4 and dark([px[x, top] for x in range(0, w, 4)]): top += 1
+    bot = h
+    while bot > h * 3 // 4 and dark([px[x, bot - 1] for x in range(0, w, 4)]): bot -= 1
+    left = 0
+    while left < w // 4 and dark([px[left, y] for y in range(0, h, 4)]): left += 1
+    right = w
+    while right > w * 3 // 4 and dark([px[right - 1, y] for y in range(0, h, 4)]): right -= 1
+    return im.crop((left, top, right, bot))
+
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--only', default=''); ap.add_argument('--force', action='store_true'); ap.add_argument('--steps', type=int, default=8)
     a = ap.parse_args()
@@ -90,10 +104,14 @@ def main():
     for group, key, prompt, seed in todo:
         t = time.time()
         sketch = group == 'sketch'
-        w, h, out_wh = (512, 384, (800, 600)) if sketch else (768, 432, (1280, 720))
-        im = pipe((SKETCH if sketch else STYLE) + prompt, negative_prompt=NEG, num_inference_steps=a.steps, guidance_scale=1.5,
+        w, h, out_wh = (512, 384, (800, 600)) if sketch else (768, 512, (1280, 720))
+        im = pipe(prompt + (SKETCH if sketch else STYLE), negative_prompt=NEG, num_inference_steps=a.steps, guidance_scale=2.0,
                   width=w, height=h, generator=torch.Generator().manual_seed(seed)).images[0]
         from PIL import Image, ImageFilter
+        im = trim_bars(im)
+        tw, th = out_wh; r = tw / th                                  # centre-crop to the target shape
+        if im.width / im.height > r: nw = int(im.height * r); im = im.crop(((im.width - nw) // 2, 0, (im.width - nw) // 2 + nw, im.height))
+        else: nh = int(im.width / r); im = im.crop((0, (im.height - nh) // 2, im.width, (im.height - nh) // 2 + nh))
         im = im.resize(out_wh, Image.LANCZOS).filter(ImageFilter.UnsharpMask(radius=1.2, percent=60, threshold=2))
         d = os.path.join(ROOT, 'img', 'painted', group); os.makedirs(d, exist_ok=True)
         im.convert('RGB').save(os.path.join(d, key + '.jpg'), quality=84, optimize=True, progressive=True)

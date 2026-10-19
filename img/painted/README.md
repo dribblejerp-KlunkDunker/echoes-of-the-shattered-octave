@@ -7,4 +7,5 @@ js/painted.js uses each one when present and falls back to the procedural stand-
 - `area/hearth.jpg` - 1280x720, 96517 bytes
 - `area/hedge.jpg` - 1280x720, 114640 bytes
 - `area/mill.jpg` - 1280x720, 103533 bytes
+- `area/quarry.jpg` - 1280x720, 146090 bytes
 - `area/street.jpg` - 1280x720, 102690 bytes
