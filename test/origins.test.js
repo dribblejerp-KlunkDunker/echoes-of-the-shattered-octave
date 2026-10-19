@@ -617,7 +617,7 @@ async function boot(page, opts) {
     const text = await run(async () => await saveCode());
     assert(text.startsWith('OCTZ1.') || text.startsWith('OCTJ1.'), 'a save code to work with');
     const good = path.join(TMP, 'good.txt'); fs.writeFileSync(good, text);
-    const probe = () => run(() => JSON.stringify({ name: G.player.name, cls: G.player.cls.id, gold: G.player.gold, flags: Object.fromEntries(Object.entries(G.flags).filter(([k]) => !/^p7t_/.test(k))),   // the play-clock counters tick on their own
+    const probe = () => run(() => JSON.stringify({ name: G.player.name, cls: G.player.cls.id, gold: G.player.gold, flags: Object.fromEntries(Object.entries(G.flags).filter(([k]) => !/^p7t_/.test(k) && k !== 'p12f_seen')),   // the play-clock counters tick on their own; p12f_seen marks a festival notice as shown on arrival
        day: G.day, map: G.mapId, hp: G.player.hp, journal: G.journal.map(j => j.text), inv: G.player.inv, state: G.state }));
     const before = await probe();
     const scramble = () => run(() => { G.player.gold = 1; delete G.flags.origins_probe; G.day = 0; G.journal.length = 0; G.player.inv.length = 0; G.state = 'play'; });
