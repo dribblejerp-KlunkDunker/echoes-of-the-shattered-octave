@@ -2589,10 +2589,34 @@
    "data.js:810"
   ]
  },
+ "obqc610khv": {
+  "en": "A Cantor's case of reeds",
+  "where": [
+   "parish.js:500"
+  ]
+ },
+ "1ncnxzmtq82": {
+  "en": "A Cantor's cloak on its peg",
+  "where": [
+   "parish.js:422"
+  ]
+ },
+ "15qrxrefs7t": {
+  "en": "A Cantor's cloak on its peg. The hem is stained to the knee and has dried that way.",
+  "where": [
+   "parish.js:403"
+  ]
+ },
  "1i7bqwa0s7o": {
   "en": "A Cantor's mending note. Heals 14. Sung low, inside the Narrow.",
   "where": [
    "data.js:141"
+  ]
+ },
+ "2fzxmgkcl6f": {
+  "en": "A Cantor's strongbox",
+  "where": [
+   "parish.js:499"
   ]
  },
  "2cyk3p9d0hu": {
@@ -2893,6 +2917,12 @@
    "data.js:822"
   ]
  },
+ "youl1i2f03": {
+  "en": "A book strapped shut, and your face the way a face is when it has carried a thing a long way. Is that the Greenroot register? Let me see it. No. Do not let me see it, I know what is in it. Give it here.",
+  "where": [
+   "parish.js:593"
+  ]
+ },
  "1u5teor59r7": {
   "en": "A boy in a grey choir cloak, singing Hymn 9 off the board and looking sideways at the girl in red beside him, who has the alto line and is getting it wrong on purpose to make him laugh. In the doorway a young woman in a Veil coat is counting them. Eleven.",
   "where": [
@@ -2945,6 +2975,18 @@
   "en": "A bronze counter-weight lever set into the stone",
   "where": [
    "upgrades.js:653"
+  ]
+ },
+ "1vvv57dk67k": {
+  "en": "A bronze counterweight lever",
+  "where": [
+   "parish.js:490"
+  ]
+ },
+ "2765csj68eg": {
+  "en": "A bronze counterweight lever, set into the stone. It is wired to a gate somewhere above.",
+  "where": [
+   "parish.js:443"
   ]
  },
  "1ouz2x5o89g": {
@@ -3091,10 +3133,25 @@
    "maps.js:232"
   ]
  },
+ "1rmbkgkl1b1": {
+  "en": "A cottage door",
+  "where": [
+   "parish.js:348",
+   "parish.js:349",
+   "parish.js:351",
+   "parish.js:352"
+  ]
+ },
  "hb4b3c49z4": {
   "en": "A counter-weight grate bars the west chapel niche. A sunken pressure plate in the drowned chapel floor is linked to its chain.",
   "where": [
    "upgrades.js:1772"
+  ]
+ },
+ "llvzxad593": {
+  "en": "A counterweight drops somewhere above, with a long iron sound. The reed gate in the ossuary hall has gone up.",
+  "where": [
+   "parish.js:564"
   ]
  },
  "1glbm853fqb": {
@@ -3195,6 +3252,12 @@
    "game.js:1355"
   ]
  },
+ "1idadavs62v": {
+  "en": "A doorpost with a hand-mirror grown into the wood. The wood has closed over the rim of it, the way a tree closes over a nail. Your own face is in it, a little green at the edges.",
+  "where": [
+   "parish.js:317"
+  ]
+ },
  "1b47tpzzvlm": {
   "en": "A dream",
   "where": [
@@ -3229,6 +3292,12 @@
   "en": "A fallen masonry block holds the plate depressed; the west counter-weight grate stands open.",
   "where": [
    "game.js:1176"
+  ]
+ },
+ "16wv4x74on0": {
+  "en": "A family's strongbox",
+  "where": [
+   "parish.js:501"
   ]
  },
  "1vl9har6srb": {
@@ -3271,6 +3340,12 @@
   "en": "A fist-sized shield for close work on a deck.",
   "where": [
    "data.js:127"
+  ]
+ },
+ "1v7mpa58yfx": {
+  "en": "A flat leather case of spare reeds, each tuned against a Cantor's own breastbone and long dead, as cut reeds are. It has a way of settling the breath. While you carry it, every Song costs you about a quarter less voice.",
+  "where": [
+   "parish.js:262"
   ]
  },
  "3roh4ihybx": {
@@ -3358,10 +3433,22 @@
    "maps.js:280"
   ]
  },
+ "1jcjkb07vli": {
+  "en": "A grave with a reed at its head",
+  "where": [
+   "parish.js:378"
+  ]
+ },
  "1ykxm69os2q": {
   "en": "A grave, dug and filled and dug again. The new headstone has a bell carved on it and no name.",
   "where": [
    "coda.js:159"
+  ]
+ },
+ "23pyyix1ard": {
+  "en": "A grave, with a reed set in the ground at its head instead of a name. The reed is dry.",
+  "where": [
+   "parish.js:321"
   ]
  },
  "1apw8dc4o76": {
@@ -3509,6 +3596,20 @@
    "maps.js:1033"
   ]
  },
+ "28iwdjev7p3": {
+  "en": "A hush-lamp, still burning",
+  "where": [
+   "parish.js:381",
+   "parish.js:427",
+   "parish.js:493"
+  ]
+ },
+ "231za7b9m69": {
+  "en": "A hush-lamp, still burning on the last of its oil. The reed in it is the only thing in Greenroot that has not stopped.",
+  "where": [
+   "parish.js:320"
+  ]
+ },
  "lq8xwxl9bp": {
   "en": "A hush-lamp, unlit, set in a ring in the moss",
   "where": [
@@ -3569,6 +3670,18 @@
    "maps.js:981"
   ]
  },
+ "p8mikr7prh": {
+  "en": "A lever beside the door",
+  "where": [
+   "parish.js:426"
+  ]
+ },
+ "1fi788ugf8q": {
+  "en": "A lever on the wall beside the door, wired to the bar that holds it. Whoever barred this door from inside went down the stair after, and did not come back up to lift it.",
+  "where": [
+   "parish.js:405"
+  ]
+ },
  "2949ogknh2a": {
   "en": "A lit hush-lamp with its whistle stopped. In the Narrow you keep a lamp whistling so the Hush stays off. This one is for calling it.",
   "where": [
@@ -3593,6 +3706,24 @@
    "dreams.js:161"
   ]
  },
+ "cm9rkgdfza": {
+  "en": "A long table laid down the nave for the whole parish: bowl, cup and spoon at every place, thirty-one by your count. The cloth is turned back at the far end, where someone was still laying it.",
+  "where": [
+   "parish.js:399"
+  ]
+ },
+ "27d7v8kmrp1": {
+  "en": "A long table, laid for the parish",
+  "where": [
+   "parish.js:424"
+  ]
+ },
+ "91a8ihkf48": {
+  "en": "A loom stands in the window with a half-woven length still on it. The shuttle lies where the weaver put it down, on the sill, beside a bowl of something that was blackberries.",
+  "where": [
+   "parish.js:311"
+  ]
+ },
  "154mflavajw": {
   "en": "A loose sheet of close, careful writing. Take it up and read.",
   "where": [
@@ -3603,6 +3734,12 @@
   "en": "A loose throwing stone. Clatters where it lands, drawing idle listeners. O opens the throw panel.",
   "where": [
    "upgrades.js:254"
+  ]
+ },
+ "1f34cd99zc7": {
+  "en": "A low, wallowing beast the size of a calf, the colour of the bank it lies in. It does not hunt. It hums, one note, under hearing, and everything near it gets a little heavier. Leave it be, or put it down.",
+  "where": [
+   "parish.js:266"
   ]
  },
  "209tyzj7xmz": {
@@ -3634,6 +3771,12 @@
   "en": "A martyr is just a musician who gave up before the coda. I would rather not be either.",
   "where": [
    "data.js:282"
+  ]
+ },
+ "15anzt6fmtj": {
+  "en": "A mirror grown into a doorpost",
+  "where": [
+   "parish.js:375"
   ]
  },
  "291nctm0jfa": {
@@ -3670,6 +3813,18 @@
   "en": "A new reed on the old nail. It hangs level. It does not sound; nothing does in here.",
   "where": [
    "sidequests.js:133"
+  ]
+ },
+ "5u8wxqc0h": {
+  "en": "A niche with a reed hung in it",
+  "where": [
+   "parish.js:487"
+  ]
+ },
+ "hbvupompv7": {
+  "en": "A niche with a reed hung in it, and the long bones of whoever it was kept for. The reed is dry.",
+  "where": [
+   "parish.js:436"
   ]
  },
  "l6te9xo1jq": {
@@ -3732,6 +3887,43 @@
   "where": [
    "logmap.js:32"
   ]
+ },
+ "bjj2s8t40k": {
+  "en": "A pair of small boots",
+  "where": [
+   "parish.js:376"
+  ]
+ },
+ "2cq14alw3xr": {
+  "en": "A pair of small boots stand side by side on the step. The door above is open by a hand's width. You do not push it.",
+  "where": [
+   "parish.js:309"
+  ]
+ },
+ "1u8aik0oib1": {
+  "en": "A pair of small boots, side by side on the step, laces tucked in.",
+  "where": [
+   "parish.js:318"
+  ]
+ },
+ "1ol2soq1wnp": {
+  "en": "A parish book from Greenroot. I do not know what it says. If it is a register, someone should read it to the end.",
+  "where": [
+   "parish.js:582"
+  ]
+ },
+ "wujejz0s7q": {
+  "en": "A parish register of unconfirmed provenance is reported to be read aloud in the Cantor's house of an evening. Reading aloud is not an offence. The reading is noted.",
+  "where": [
+   "parish.js:621"
+  ]
+ },
+ "qcic80kh39": {
+  "en": "A passing-bell on the rail. {0}.",
+  "where": [
+   "parish.js:486"
+  ],
+  "pattern": true
  },
  "1a0jlfh4a2i": {
   "en": "A patrol finds a body and sounds the alarm. Nearby idle patrols search the discovery site.",
@@ -3824,6 +4016,18 @@
    "rumours.js:284"
   ]
  },
+ "194cvl26n5c": {
+  "en": "A pew",
+  "where": [
+   "parish.js:425"
+  ]
+ },
+ "257dd202qjm": {
+  "en": "A pew. A folded shawl lies on the end of it.",
+  "where": [
+   "parish.js:400"
+  ]
+ },
  "25m5histnvn": {
   "en": "A place where a sound should be",
   "where": [
@@ -3866,6 +4070,18 @@
    "logmap.js:39"
   ]
  },
+ "1qe3k3grj4o": {
+  "en": "A rack of tuning-reeds",
+  "where": [
+   "parish.js:423"
+  ]
+ },
+ "1zerx4e32gd": {
+  "en": "A rack of tuning-reeds, one slot for each house in Greenroot. Every slot is full.",
+  "where": [
+   "parish.js:404"
+  ]
+ },
  "1li5wb40ye6": {
   "en": "A raft of dead roots over the glowing pool. Climbing gets you across.",
   "where": [
@@ -3883,6 +4099,12 @@
   "en": "A raw green-gold shard harvested from a root-vein. Used to enchant weapons at a forge or Song-book.",
   "where": [
    "upgrades.js:258"
+  ]
+ },
+ "16ozugt2fl0": {
+  "en": "A reed gate, iron-shod, shut. A bronze counterweight lever somewhere beyond the water would raise it.",
+  "where": [
+   "parish.js:440"
   ]
  },
  "1kfn94gww08": {
@@ -3908,6 +4130,12 @@
   "where": [
    "grove.js:137",
    "maps.js:806"
+  ]
+ },
+ "20mky0kwlsr": {
+  "en": "A register from Greenroot way went into the Church's vestry cupboard. Filed, they say. I notice nobody has said what it was filed under.",
+  "where": [
+   "parish.js:613"
   ]
  },
  "1m4yf0fgrm1": {
@@ -4049,6 +4277,12 @@
    "game.js:1388"
   ]
  },
+ "137kxqczsjt": {
+  "en": "A shrouded recess in the wall. Whatever is laid in it is not found.",
+  "where": [
+   "parish.js:445"
+  ]
+ },
  "1cbhdpoonos": {
   "en": "A shrouded recess is close enough to conceal the body.",
   "where": [
@@ -4068,6 +4302,12 @@
   "en": "A signpost. The boards have been scraped blank.",
   "where": [
    "game.js:1354"
+  ]
+ },
+ "1my08cdf6rd": {
+  "en": "A silent wind-reed",
+  "where": [
+   "parish.js:372"
   ]
  },
  "8zie5tmuxf": {
@@ -4122,6 +4362,18 @@
   "en": "A sluice lever. It is chained.",
   "where": [
    "game.js:1354"
+  ]
+ },
+ "1r36b2tt6dg": {
+  "en": "A sluice valve",
+  "where": [
+   "parish.js:489"
+  ]
+ },
+ "eq65gsec8j": {
+  "en": "A sluice valve, wheel and pipe, green with a century of damp. Turned, it would let the deep channel down into the shallows.",
+  "where": [
+   "parish.js:442"
   ]
  },
  "1nng1gmcz8r": {
@@ -4282,6 +4534,12 @@
    "grove.js:366"
   ]
  },
+ "xt6mzhqpf4": {
+  "en": "A table laid for the whole village",
+  "where": [
+   "parish.js:374"
+  ]
+ },
  "1a7ld69gz1e": {
   "en": "A table.",
   "where": [
@@ -4342,6 +4600,12 @@
    "rumours.js:338"
   ]
  },
+ "1ngea1ewect": {
+  "en": "A trestle table laid in the green for the whole village: bowl, cup and spoon at every place, a jug at the middle. The cloth has been rained on and dried and rained on. Nobody has taken a place.",
+  "where": [
+   "parish.js:315"
+  ]
+ },
  "1omi6l1zc1o": {
   "en": "A tuft of grass, grey at the roots.",
   "where": [
@@ -4358,6 +4622,12 @@
   "en": "A two-note call. Follow it up and back.",
   "where": [
    "reedcraft.js:222"
+  ]
+ },
+ "u04m1ip8iu": {
+  "en": "A verse carved over the stair",
+  "where": [
+   "parish.js:483"
   ]
  },
  "1pjs2etxsej": {
@@ -4424,6 +4694,12 @@
   "en": "A weighted net falls: movement slows for eight seconds.",
   "where": [
    "game.js:1238"
+  ]
+ },
+ "14zammpueaa": {
+  "en": "A wind-reed hung over the door on its cord, tuned to someone who lives here. It hangs perfectly straight. It does not sound.",
+  "where": [
+   "parish.js:316"
   ]
  },
  "uctvo2bmpc": {
@@ -4978,6 +5254,12 @@
    "data.js:317"
   ]
  },
+ "203it67tfpg": {
+  "en": "And the next. One more.",
+  "where": [
+   "parish.js:566"
+  ]
+ },
  "iu37565wz8": {
   "en": "And underneath, smaller:",
   "where": [
@@ -5019,6 +5301,12 @@
   "en": "Annet Sowerby. Six years old. She is in a crate in that ship's hold, and she asked the Carder boy his name.",
   "where": [
    "data.js:651"
+  ]
+ },
+ "1suw2addmn1": {
+  "en": "Ansa Pell, thirty-four",
+  "where": [
+   "parish.js:450"
   ]
  },
  "1p618pzvhl9": {
@@ -5981,6 +6269,12 @@
    "coda.js:39"
   ]
  },
+ "ied6oop6km": {
+  "en": "Bramble and thorn, three deep. Nothing to see through it, and no reason to push.",
+  "where": [
+   "parish.js:554"
+  ]
+ },
  "1vq1h6u627c": {
   "en": "Brannoch",
   "where": [
@@ -6009,6 +6303,18 @@
   "en": "Brass ticks as it settles.",
   "where": [
    "dreams.js:171"
+  ]
+ },
+ "1585p4wkmrf": {
+  "en": "Bread in a cloth, left on a step",
+  "where": [
+   "parish.js:377"
+  ]
+ },
+ "1dw701tvtex": {
+  "en": "Bread in a cloth, left on a step for somebody to collect.",
+  "where": [
+   "parish.js:319"
   ]
  },
  "1li5iicjsn0": {
@@ -6124,6 +6430,24 @@
   "en": "CARGO: Consignment 19, 432 units, for the Hall of Carriage.",
   "where": [
    "coda.js:345"
+  ]
+ },
+ "19lyzdt5yes": {
+  "en": "CARVED BESIDE THE GROOVED STONE: SING IT THE NOTE EVERY CANTOR LEARNS FIRST, AND STAND CLOSE. THE ROOT, OR THE MENDING OF IT.",
+  "where": [
+   "parish.js:439"
+  ]
+ },
+ "4qtj9ijuqp": {
+  "en": "CARVED BY THE BELLS: PELL. FOUR BELLS TO A HOUSE. NOBODY RINGS ONE OUT OF TURN.",
+  "where": [
+   "parish.js:435"
+  ]
+ },
+ "15yy0g6c4ye": {
+  "en": "CARVED OVER THE STAIR: HOLD IT AS THE FAMILY HOLDS IT. THE ELDEST FIRST, THE YOUNGEST LAST, AND EACH WAITS FOR THE ONE BEFORE TO GO QUIET.",
+  "where": [
+   "parish.js:434"
   ]
  },
  "lkirgfrxrk": {
@@ -6246,6 +6570,12 @@
   "en": "Cantor Aubrey Hale",
   "where": [
    "data.js:831"
+  ]
+ },
+ "s7lil1dr12": {
+  "en": "Cantor Ilse Verrow's parish register, a slim book strapped shut. The last entries are in a careful hand, and the last line stops. Somebody should have it who will read it through.",
+  "where": [
+   "parish.js:259"
   ]
  },
  "1djiumxmew2": {
@@ -6385,6 +6715,18 @@
    "coda.js:205"
   ]
  },
+ "1yrmezfvx39": {
+  "en": "Carved beside the grooved stone",
+  "where": [
+   "parish.js:485"
+  ]
+ },
+ "13iofut8ooj": {
+  "en": "Carved by the bells",
+  "where": [
+   "parish.js:484"
+  ]
+ },
  "1207cxlhvfo": {
   "en": "Cast by the Flambeaux from a cracked chapel bell. It rings when it lands, so it hurts the Cacophony like glass does, and calls them like a bell.",
   "where": [
@@ -6434,6 +6776,13 @@
    "game.js:1106"
   ],
   "pattern": true
+ },
+ "qxt4ve0fdu": {
+  "en": "Chairs set close, facing a fourth",
+  "where": [
+   "parish.js:491",
+   "parish.js:492"
+  ]
  },
  "23rnam4yojk": {
   "en": "Chalked, and untouched.",
@@ -6613,6 +6962,12 @@
   "en": "Close it.",
   "where": [
    "epilogue.js:213"
+  ]
+ },
+ "1vytsmc3w67": {
+  "en": "Close the book.",
+  "where": [
+   "parish.js:552"
   ]
  },
  "xbi1iytq02": {
@@ -7498,6 +7853,12 @@
    "tobin.js:124"
   ]
  },
+ "2bqynrh7tn8": {
+  "en": "Driftday. The Joss reed did not sound. I took it down and blew across it and it spoke perfectly well. I hung it back up. In the wind it was silent. Six.",
+  "where": [
+   "parish.js:543"
+  ]
+ },
  "6dezrfd1fa": {
   "en": "Drink to it.",
   "where": [
@@ -7585,6 +7946,12 @@
    "game.js:1089",
    "game.js:1102",
    "game.js:1108"
+  ]
+ },
+ "25zp4ya8gtz": {
+  "en": "East out of the clearing, between the oaks, the old cart-road. It goes to Greenroot. Nobody has been down it since the Cantors were called. Mind the wet ground; there is something in the reed-beds that makes a man sad enough to sit down in it.",
+  "where": [
+   "parish.js:279"
   ]
  },
  "26s8wqut9fj": {
@@ -8320,6 +8687,12 @@
    "game.js:1033"
   ]
  },
+ "1seze67dq18": {
+  "en": "Filed. I read it before I filed it. The clerk does not know that, and you will not tell him.",
+  "where": [
+   "parish.js:588"
+  ]
+ },
  "dm2aont3d": {
   "en": "Fill the lamps for him, one by one, ahead of his pole.",
   "where": [
@@ -8444,6 +8817,12 @@
   "en": "Flask of Lamp-Oil",
   "where": [
    "data.js:550"
+  ]
+ },
+ "16asp2hd764": {
+  "en": "Flat as a flagstone and the same grey, with a shell ridged like the neck of a lute. You do not see it until it moves. What it bites it cuts: after it, no Song will hold its pitch for a while.",
+  "where": [
+   "parish.js:268"
   ]
  },
  "bylqcqj6rh": {
@@ -8649,6 +9028,12 @@
   ],
   "pattern": true
  },
+ "mmk0ehiisg": {
+  "en": "Fret-crawler",
+  "where": [
+   "parish.js:267"
+  ]
+ },
  "16p6pzwoqqk": {
   "en": "Friend of the Hedge",
   "where": [
@@ -8851,6 +9236,18 @@
    "data.js:618"
   ]
  },
+ "2ukq73nolo": {
+  "en": "Give him the register.",
+  "where": [
+   "parish.js:594"
+  ]
+ },
+ "1fynsdl0xlh": {
+  "en": "Give it to her to keep.",
+  "where": [
+   "parish.js:600"
+  ]
+ },
  "1a89v6qbudp": {
   "en": "Give.",
   "where": [
@@ -8932,6 +9329,12 @@
    "game.js:78"
   ]
  },
+ "1k005283bly": {
+  "en": "Gone. The Greening came up through that road the night the oaks began to ring, and nobody is going down it now. Leave it with the others.",
+  "where": [
+   "parish.js:558"
+  ]
+ },
  "287iqvv4b47": {
   "en": "Good day to you. Softly. I sit out here more, now, under it. It does not sound, but I like to be under it.",
   "where": [
@@ -9011,6 +9414,42 @@
    "windbells.js:156"
   ]
  },
+ "1nb4xlcvqgl": {
+  "en": "Greenroot",
+  "where": [
+   "parish.js:329"
+  ]
+ },
+ "2gasr3e85va": {
+  "en": "Greenroot is the third parish Cantor Tobin called to the Greenhall. Two Cantors came. The third sent one line, and then nothing more, and the Reach has been politely not asking since.",
+  "where": [
+   "parish.js:284"
+  ]
+ },
+ "2c56zgbz91q": {
+  "en": "Greenroot, the third parish",
+  "where": [
+   "parish.js:1095"
+  ]
+ },
+ "12yslu8fxf1": {
+  "en": "Greenroot. Tables laid, doors shut, kettles cold, and nobody. The chapel stands on the knoll to the east, barred from the inside. There is a stair into the earth by the charnel house.",
+  "where": [
+   "parish.js:560"
+  ]
+ },
+ "29gsdihhzim": {
+  "en": "Greenroot. The register of the parish, kept by Ilse Verrow, Cantor, in her own hand. Seven houses and thirty-one souls.",
+  "where": [
+   "parish.js:539"
+  ]
+ },
+ "brakb0rgho": {
+  "en": "Greenroot. Three miles east by the road, off the clearing, outside the Hedge. They sent no word after the summer. I do not ask. You should not either, in a loud voice.",
+  "where": [
+   "parish.js:283"
+  ]
+ },
  "ux9fivs25s": {
   "en": "Grey coats on the wreck, between you and the hull. Not yet.",
   "where": [
@@ -9054,6 +9493,18 @@
    "maps.js:795"
   ]
  },
+ "2anshgt7a28": {
+  "en": "Grooved reed-stone, each groove cut to a pitch. The deepest hums.",
+  "where": [
+   "parish.js:438"
+  ]
+ },
+ "8wkqbinodk": {
+  "en": "Grooved reed-stone. Each groove is cut to a pitch. The deepest one hums, very faintly, when you stand near it. It wants a note sung into it.",
+  "where": [
+   "parish.js:437"
+  ]
+ },
  "29zift88jgv": {
   "en": "Growth sounds at 174 and Mass at 396, and a fifth apart is the most stable interval there is. Oakhaven and Fortis have never gone to war. The Compact does not call this friendship. It calls it a fifth, and expects it to hold.",
   "where": [
@@ -9084,6 +9535,12 @@
   "en": "HE WAS SETTING A TABLE.",
   "where": [
    "data.js:601"
+  ]
+ },
+ "15ksh7bwmav": {
+  "en": "HEAVY",
+  "where": [
+   "parish.js:1003"
   ]
  },
  "20qo38rkqrn": {
@@ -9331,6 +9788,12 @@
   "where": [
    "data.js:270",
    "data.js:272"
+  ]
+ },
+ "1mucusrv87l": {
+  "en": "Harrow says an old cart-road leaves the clearing by the east hedge and runs to a parish called Greenroot, off the Flume. Nobody has gone down it since the summer the third Cantor sent her note.",
+  "where": [
+   "parish.js:559"
   ]
  },
  "1ffsbwylwby": {
@@ -9581,6 +10044,12 @@
    "data.js:618"
   ]
  },
+ "12yvswof5xi": {
+  "en": "He reads it standing, to the very end, which takes a long time. Then he closes it and holds it flat in both hands. \"It will be filed,\" he says, in the voice of a man reading from a card, and for a moment he does not look at you. \"Take this. The Church is not ungrateful, whatever the file says.\"",
+  "where": [
+   "parish.js:595"
+  ]
+ },
  "5hzgletu2u": {
   "en": "He remembers all three years. Every loop. Every \"name, please.\" He takes your sleeve in both hands. \"Put me back,\" he says. \"Please. You have a press. Put me back.\"",
   "where": [
@@ -9820,6 +10289,12 @@
    "rumours.js:74"
   ]
  },
+ "1ic3urjo2x1": {
+  "en": "Hearthday, 417. Counted the reeds in the wind at dusk, as I do each week: seven houses, seven reeds, every one sounding. Thirty-one at supper on the green. Hesper Pell, eighty-one, said the grace and held it past the end, as she does, and we all waited for her.",
+  "where": [
+   "parish.js:540"
+  ]
+ },
  "nbg6hyhiud": {
   "en": "Hearthday, Ashfall, 412 SR",
   "where": [
@@ -9836,6 +10311,12 @@
   "en": "Hearthday. Go down by the shaft; the pass opens it. I will be at the casing with the needle, and my hands will be shaking, and that is all right. Seat the coil. Then run.",
   "where": [
    "data.js:320"
+  ]
+ },
+ "1ch7oogbsit": {
+  "en": "Hearthday. One, and it is mine. I have put a lamp in every window. A hush-lamp keeps a room from going quite still, and the reed in it is the only thing in Greenroot that still sounds, and I find I am listening to it the way you listen to a person who is about to",
+  "where": [
+   "parish.js:546"
   ]
  },
  "ozu8xcf8sx": {
@@ -9949,6 +10430,12 @@
   "en": "Here lie the Cantors of Memory, each in the stone of the note they kept. Sing them down as you would sing them home: from the highest, to the lowest. Then the choir will open, and you may say goodbye.",
   "where": [
    "coda.js:178"
+  ]
+ },
+ "10r0k1btvqb": {
+  "en": "Hesper Pell, eighty-one",
+  "where": [
+   "parish.js:450"
   ]
  },
  "1r1wyq6v2oo": {
@@ -10574,6 +11061,12 @@
    "coda.js:165"
   ]
  },
+ "2f1x97h6vuk": {
+  "en": "I could not say.",
+  "where": [
+   "parish.js:767"
+  ]
+ },
  "1tun57tsw3y": {
   "en": "I couldn't say. But I'll tell you what I heard: {0}",
   "where": [
@@ -10675,6 +11168,18 @@
   "en": "I gave Kaelen the grey Arbiterium folder. He read it standing up in a foot of water, twice, and then he folded it into his shirt and said nothing at all.",
   "where": [
    "data.js:618"
+  ]
+ },
+ "1h4zjnltv8b": {
+  "en": "I gave the Greenroot register to Ignatius Crane. He read it standing, all of it, and then he said it would be filed. I do not know what it will be filed under.",
+  "where": [
+   "parish.js:562"
+  ]
+ },
+ "1zfyqozsndl": {
+  "en": "I gave the Greenroot register to Lyra. She read the names aloud, quietly, to the end, and put it with Tobin's pages. She said a book that is read to the end is not lost.",
+  "where": [
+   "parish.js:563"
   ]
  },
  "1ygcc595p1v": {
@@ -10786,6 +11291,12 @@
    "couriers.js:87"
   ]
  },
+ "1h3fn8whehk": {
+  "en": "I have the Greenroot register. Cantor Ilse Verrow's last line stops in the middle of a sentence. It should go to someone who will read it to the end: Ignatius, who would have the Church file it, or Lyra, who would keep it with Tobin's pages.",
+  "where": [
+   "parish.js:561"
+  ]
+ },
  "3ek639r4a5": {
   "en": "I have the reverse-phase coil from Depot Three. Kaelen wants it brought to his hut outside the Hedge.",
   "where": [
@@ -10864,6 +11375,12 @@
   "en": "I pulled this from the Flume bank. It is sweet reed. It is for your voice. Do not eat it near the water.",
   "where": [
    "couriers.js:115"
+  ]
+ },
+ "1be9yzfvgbw": {
+  "en": "I read them out most evenings. The Pells, the Joss house, the Cantor. Thirty-one. Nobody asked me to, and I find I cannot stop.",
+  "where": [
+   "parish.js:589"
   ]
  },
  "1zb28xrk3n6": {
@@ -11632,6 +12149,12 @@
    "companion-talk.js:239"
   ]
  },
+ "y4fhe3xxph": {
+  "en": "It is very dark below. If you carry a lantern, this is the place for it (U).",
+  "where": [
+   "parish.js:576"
+  ]
+ },
  "2g6d6xzqam8": {
   "en": "It is {0} voice. It gets it exactly right, the way it used to say it when you were in trouble.",
   "where": [
@@ -11656,6 +12179,12 @@
   "en": "It looks at its hands. It does not put anything down. It chimes the alto line once, to the empty air, and lets it end on the right note.",
   "where": [
    "companion-talk.js:491"
+  ]
+ },
+ "1e1ukkcs3e3": {
+  "en": "It rings out of turn. The rail goes still, and something under the floor sets itself back.",
+  "where": [
+   "parish.js:567"
   ]
  },
  "28xn8nxq4ln": {
@@ -11869,6 +12398,12 @@
   "en": "Joss Carder",
   "where": [
    "data.js:165"
+  ]
+ },
+ "286vyliaabe": {
+  "en": "Joss Pell, fifty-six",
+  "where": [
+   "parish.js:450"
   ]
  },
  "vxjvmkev27": {
@@ -12524,6 +13059,12 @@
   "en": "Leave it for today. A struck bough remembers the hour. Ask it again tomorrow.",
   "where": [
    "sidequests.js:171"
+  ]
+ },
+ "8cp43o4ij6": {
+  "en": "Leave it where it lies.",
+  "where": [
+   "parish.js:551"
   ]
  },
  "196h6rdrzyq": {
@@ -13266,6 +13807,12 @@
    "tobin.js:84"
   ]
  },
+ "kcsrlygzy2": {
+  "en": "Lyra reads names out of a book of an evening, low, in the Cantor's chair at the back. Greenroot names. Nobody asks her where it came from, and she does not say.",
+  "where": [
+   "parish.js:615"
+  ]
+ },
  "zfb2sgmw8p": {
   "en": "Lyra sang Orla Hale down proper, all the lines, even the fourth, while the tree closed over her. The boots were on the chair. You put them there.",
   "where": [
@@ -13288,6 +13835,12 @@
   "en": "Lyra sang the two-voice coda alone",
   "where": [
    "coda.js:136"
+  ]
+ },
+ "2f29uh0sd87": {
+  "en": "Lyra sat in the corner with a book last night and read out names, soft, till the candles were low. I put a free drink in front of her. She did not drink it. She did not stop reading either.",
+  "where": [
+   "parish.js:617"
   ]
  },
  "2btjgaf68pt": {
@@ -13640,6 +14193,12 @@
    "rumours.js:357"
   ]
  },
+ "276dzudad90": {
+  "en": "Massday, 417. A letter from Tobin Ashgrove at Oakhaven. The Cantors of the three nearest parishes are to come to the Greenhall. I will go when the hay is in. The hounds have begun to sit on the Flume bank in the evenings. They do nothing. They sit.",
+  "where": [
+   "parish.js:541"
+  ]
+ },
  "1lcak8sfcc8": {
   "en": "Mast",
   "where": [
@@ -13718,6 +14277,12 @@
   "en": "Memoryday, spring, 417 SR",
   "where": [
    "tobin.js:101"
+  ]
+ },
+ "vhlqrdolhh": {
+  "en": "Memoryday. Four. Ansa Pell's kettle was boiling and she could not hear it. We both stood and watched it.",
+  "where": [
+   "parish.js:544"
   ]
  },
  "bn19w7uk3i": {
@@ -13802,6 +14367,18 @@
   "en": "Minor Third",
   "where": [
    "upgrades.js:69"
+  ]
+ },
+ "1mki6lrd60d": {
+  "en": "Mire-drone",
+  "where": [
+   "parish.js:265"
+  ]
+ },
+ "27mmwvfm2aq": {
+  "en": "Mire-drone despair",
+  "where": [
+   "parish.js:909"
   ]
  },
  "147hny5v25r": {
@@ -14658,6 +15235,12 @@
    "rumours.js:357"
   ]
  },
+ "a1chtu9h5r": {
+  "en": "Nullday, 417. I answered Tobin. I wrote it three times. The pen worked and the ink went on, and each time the page would carry only the one line. I have sent that. It says: We have stopped being able to send.",
+  "where": [
+   "parish.js:542"
+  ]
+ },
  "qwddp7pp3t": {
   "en": "Nullday, Ashfall, 415 SR",
   "where": [
@@ -14829,6 +15412,12 @@
   "en": "Of course you are.",
   "where": [
    "companion-talk.js:333"
+  ]
+ },
+ "h4tihlydec": {
+  "en": "Of course. When you are ready. It is not going anywhere. It is the one thing in this story that is not.",
+  "where": [
+   "parish.js:602"
   ]
  },
  "yqwq4dzhte": {
@@ -16801,6 +17390,12 @@
    "tobin.js:37"
   ]
  },
+ "155jgcfwi5q": {
+  "en": "Rootday. Two. We have carried the tables into the chapel, all of them, to be together where the lamps are, and to see one another speak. Thirty-one places laid. Hesper held the grace again and we watched her lips to the end of it.",
+  "where": [
+   "parish.js:545"
+  ]
+ },
  "142iiy5pylc": {
   "en": "Roots do not",
   "where": [
@@ -16890,6 +17485,13 @@
   "where": [
    "data.js:499"
   ]
+ },
+ "27lomfi945t": {
+  "en": "SEVERED {0}",
+  "where": [
+   "parish.js:1003"
+  ],
+  "pattern": true
  },
  "1v9j0h63mm8": {
   "en": "SHE IS GIVEN. THE QUIET IS MERCIFUL. GO.",
@@ -17692,6 +18294,12 @@
   ],
   "pattern": true
  },
+ "17yo7nreck2": {
+  "en": "She reads the names aloud, softly, one by one, to the very end, and when she reaches the line that stops she does not stop. She says the rest of it into the room, as if it were Ilse's. Then she puts the book with Tobin's pages. \"A book that is read to the end is not lost,\" she says. \"Thank you. Here. For the road.\"",
+  "where": [
+   "parish.js:601"
+  ]
+ },
  "l9pz1cluuy": {
   "en": "She rubs it out.",
   "where": [
@@ -17944,6 +18552,7 @@
  "19czdyyvr9y": {
   "en": "Shrouded body recess — G to conceal nearby remains",
   "where": [
+   "parish.js:488",
    "upgrades.js:1808"
   ]
  },
@@ -19111,6 +19720,12 @@
    "coda.js:183"
   ]
  },
+ "czjzpkvbrv": {
+  "en": "Take the register. Someone should read it to the end.",
+  "where": [
+   "parish.js:550"
+  ]
+ },
  "19f7k85vbi0": {
   "en": "Take the relief valve off her lift-tank.",
   "where": [
@@ -19268,7 +19883,8 @@
  "11ze5kf5m4y": {
   "en": "Tell me about {0}.",
   "where": [
-   "game.js:1634"
+   "game.js:1634",
+   "parish.js:764"
   ],
   "pattern": true
  },
@@ -19351,6 +19967,12 @@
   "en": "Thank you. That is a kindness I can use.",
   "where": [
    "companion-talk.js:258"
+  ]
+ },
+ "1p9yg7mejqn": {
+  "en": "That book. Where did you find it? Greenroot. Ilse Verrow. We were girls in the same Conservatory, she sat behind me. May I? Please. I would like to have it read, by someone, properly.",
+  "where": [
+   "parish.js:599"
   ]
  },
  "23zpayku5ta": {
@@ -19666,6 +20288,30 @@
    "epilogue.js:174"
   ]
  },
+ "5uooafv86i": {
+  "en": "The Cantor's house",
+  "where": [
+   "parish.js:350"
+  ]
+ },
+ "243heh2mnhu": {
+  "en": "The Cantor's house. A cloak is gone from its peg and the peg is bare. A pen lies across an inkwell gone to a crust. The bed is made, by someone who expected to be back for it.",
+  "where": [
+   "parish.js:308"
+  ]
+ },
+ "2fu5uignou5": {
+  "en": "The Cantor's kettle",
+  "where": [
+   "parish.js:421"
+  ]
+ },
+ "1g0vmoegbdu": {
+  "en": "The Cantor's kettle on the vestry stove. Long cold. The cup beside it has a ring in the bottom that has dried black.",
+  "where": [
+   "parish.js:402"
+  ]
+ },
  "a7rt0gph8g": {
   "en": "The Cantors of Memory. I learned their names when I was small. I never thought I'd walk on them.",
   "where": [
@@ -19733,6 +20379,12 @@
    "upgrades.js:771"
   ]
  },
+ "2ce1yj46wrx": {
+  "en": "The Chapel of Greenroot",
+  "where": [
+   "parish.js:412"
+  ]
+ },
  "h9crdie0e6": {
   "en": "The Chapel of the Carillon",
   "where": [
@@ -19763,6 +20415,12 @@
   "en": "The Choir-Church has a High Patriarch called Severin Ashe. They say he is kind. They say it the way you tell somebody the bridge is out.",
   "where": [
    "rumours.js:218"
+  ]
+ },
+ "229l2et7hnb": {
+  "en": "The Choir-Church keeps a file on Greenroot. It is short. The clerks write consolidated against parishes they cannot reach, and I have not signed it. I will say this once: if someone were to bring me that parish's own register, I could not sign the file at all, and I would have to ask it why.",
+  "where": [
+   "parish.js:587"
   ]
  },
  "24i4fkgqkw2": {
@@ -20146,6 +20804,50 @@
   "en": "The Greening",
   "where": [
    "game.js:1430"
+  ]
+ },
+ "pejsjw45bl": {
+  "en": "The Greenroot Register",
+  "where": [
+   "parish.js:258",
+   "parish.js:536"
+  ]
+ },
+ "w0202ipw45": {
+  "en": "The Greenroot Undercroft",
+  "where": [
+   "parish.js:454"
+  ]
+ },
+ "oolz328no8": {
+  "en": "The Greenroot register",
+  "where": [
+   "parish.js:580"
+  ]
+ },
+ "my38vthrsf": {
+  "en": "The Greenroot register. If it is Ilse Verrow's, then it is the only account there is. Hand it to someone who will read it through.",
+  "where": [
+   "parish.js:583"
+  ]
+ },
+ "1j31l2lt917": {
+  "en": "The Greenroot road",
+  "where": [
+   "parish.js:275",
+   "parish.js:555"
+  ]
+ },
+ "j15a9lmz9z": {
+  "en": "The Greenroot road leaves the clearing by the east hedge and runs three miles to the parish on the Flume, past the reed-beds. The Church came up it. Nobody has gone down it since the summer the third Cantor sent her note.",
+  "where": [
+   "parish.js:280"
+  ]
+ },
+ "1qg0mkha7nf": {
+  "en": "The Greenroot road, back to the clearing",
+  "where": [
+   "parish.js:364"
   ]
  },
  "thgr0640b2": {
@@ -21284,6 +21986,24 @@
    "maps.js:229"
   ]
  },
+ "ouylv2axe7": {
+  "en": "The bar is lifted. The chapel door will open now, from either side.",
+  "where": [
+   "parish.js:407"
+  ]
+ },
+ "w8lu5kflyv": {
+  "en": "The bar lies across the door, in its brackets. There is a lever on the wall beside it that would lift the bar.",
+  "where": [
+   "parish.js:406"
+  ]
+ },
+ "2f62n043mjj": {
+  "en": "The bar lifts out of its brackets with a sound like a held breath let go. The chapel door will open, from either side.",
+  "where": [
+   "parish.js:565"
+  ]
+ },
  "1w5jr7oh5sb": {
   "en": "The barbed tripwire",
   "where": [
@@ -21365,6 +22085,12 @@
    "tobin.js:54"
   ]
  },
+ "1x5ab7ksshp": {
+  "en": "The bells have been rung down in their order. They hang quiet, and the passing gate stands open.",
+  "where": [
+   "parish.js:568"
+  ]
+ },
  "1twl3bi03rs": {
   "en": "The bells. Every bell in the Reach went for bore-teeth.",
   "where": [
@@ -21387,6 +22113,12 @@
   "en": "The bit snaps. You hear it go, a sound like a bell dropped down a well.",
   "where": [
    "game.js:1430"
+  ]
+ },
+ "2167l3eseui": {
+  "en": "The bite cuts across your breath. You open your mouth for the interval and it will not hold. No Song will keep its pitch for a while.",
+  "where": [
+   "parish.js:571"
   ]
  },
  "28bzxfhjv85": {
@@ -21578,16 +22310,52 @@
    "maps.js:253"
   ]
  },
+ "1x0sgzfyvmb": {
+  "en": "The chapel door",
+  "where": [
+   "parish.js:418"
+  ]
+ },
+ "me4zbqvcmz": {
+  "en": "The chapel door is shut, not locked. It has been pulled to from the inside and held there. Nothing on this side of it will move.",
+  "where": [
+   "parish.js:359"
+  ]
+ },
  "2c02w5qb5us": {
   "en": "The chapel is quiet now. I keep humming into it, to see whether it will give me anything back.",
   "where": [
    "tobin.js:61"
   ]
  },
+ "17kh5u93b22": {
+  "en": "The chapel of Greenroot",
+  "where": [
+   "parish.js:359"
+  ]
+ },
  "1gylphrirxz": {
   "en": "The chapel's bells were taken for bore-teeth in 412. They rang in E. Somebody has asked, in chalk, who taught the Hedge to whistle.",
   "where": [
    "game.js:1399"
+  ]
+ },
+ "1x6nlbzzleq": {
+  "en": "The charnel stair",
+  "where": [
+   "parish.js:379"
+  ]
+ },
+ "226ftidxzcq": {
+  "en": "The charnel stair, down to the ossuary",
+  "where": [
+   "parish.js:362"
+  ]
+ },
+ "2ysmqplz7v": {
+  "en": "The charnel stair. Down to the ossuary, where Greenroot keeps its old dead.",
+  "where": [
+   "parish.js:322"
   ]
  },
  "32vzysx8se": {
@@ -21753,6 +22521,12 @@
    "dreams.js:146"
   ]
  },
+ "xequ9pyrzh": {
+  "en": "The counterweight hangs at the bottom of its run. The reed gate stands open.",
+  "where": [
+   "parish.js:691"
+  ]
+ },
  "10v6jj8k3s3": {
   "en": "The crates",
   "where": [
@@ -21843,6 +22617,12 @@
    "rumours.js:277"
   ]
  },
+ "24gsru9a2zh": {
+  "en": "The door is shut, not locked. Through the window a kettle sits on its hob, and the hob is cold, and the water in the kettle has long since dried to a ring of white.",
+  "where": [
+   "parish.js:307"
+  ]
+ },
  "2cgz7i4u31q": {
   "en": "The drover",
   "where": [
@@ -21873,6 +22653,12 @@
    "maps.js:235"
   ]
  },
+ "sh3vb0o038": {
+  "en": "The east hedge",
+  "where": [
+   "parish.js:556"
+  ]
+ },
  "1amp0sb9n1c": {
   "en": "The east rows",
   "where": [
@@ -21883,6 +22669,12 @@
   "en": "The eastern reliquary niche (27, 1) stands open.",
   "where": [
    "game.js:1226"
+  ]
+ },
+ "1m036kx1cyo": {
+  "en": "The eldest. The hall waits.",
+  "where": [
+   "parish.js:566"
   ]
  },
  "1l7ty4m0uxv": {
@@ -21958,6 +22750,12 @@
   "where": [
    "upgrades.js:1504",
    "weather.js:18"
+  ]
+ },
+ "7f6wi1ztud": {
+  "en": "The flagstones here are not quite flat. Something is lying very still on them.",
+  "where": [
+   "parish.js:575"
   ]
  },
  "1bt3gerc4xl": {
@@ -22135,6 +22933,12 @@
    "game.js:141"
   ]
  },
+ "265oy1bum7a": {
+  "en": "The hedge has grown across the old cart-road, thick and green and ringing faintly. Whatever road ran east of here is under the green now. Leave it with the others.",
+  "where": [
+   "parish.js:557"
+  ]
+ },
  "1ccgq3x7ido": {
   "en": "The herald bows, because the form requires that too, and walks the nine miles back alone.",
   "where": [
@@ -22290,6 +23094,24 @@
   "en": "The last words of someone, stoppered. Opening it brings hounds. Do not.",
   "where": [
    "data.js:179"
+  ]
+ },
+ "j5sw8j955n": {
+  "en": "The lectern",
+  "where": [
+   "parish.js:420"
+  ]
+ },
+ "wr4nb2f458": {
+  "en": "The lectern. The Greenroot register lies open on it, with a reed across the page.",
+  "where": [
+   "parish.js:401"
+  ]
+ },
+ "2qgr51efaq": {
+  "en": "The lectern. There is a pale oblong on the wood where the register lay, and a reed across it.",
+  "where": [
+   "parish.js:408"
   ]
  },
  "1c4o5sc3j4l": {
@@ -22468,6 +23290,18 @@
    "dreams.js:86"
   ]
  },
+ "1bfwi322e5r": {
+  "en": "The next line is ruled, and empty.",
+  "where": [
+   "parish.js:548"
+  ]
+ },
+ "2c3zbje8ykb": {
+  "en": "The next of the house. The hall waits.",
+  "where": [
+   "parish.js:566"
+  ]
+ },
  "95mwj8t9qn": {
   "en": "The night of the bore",
   "where": [
@@ -22556,6 +23390,24 @@
   "en": "The other end of the bell-rope, cut clean with a spade",
   "where": [
    "maps.js:1131"
+  ]
+ },
+ "yyuszfctfp": {
+  "en": "The parish of Greenroot is recorded as consolidated. Its register has been received and filed by the Choir-Church. Correspondence addressed to the parish will be answered by the file.",
+  "where": [
+   "parish.js:620"
+  ]
+ },
+ "j3geui2lrz": {
+  "en": "The passing gate",
+  "where": [
+   "parish.js:477"
+  ]
+ },
+ "9om0ikyo31": {
+  "en": "The passing gate. It will not rise until the house has been rung down in order.",
+  "where": [
+   "parish.js:441"
   ]
  },
  "7tpj9w44v4": {
@@ -22673,6 +23525,12 @@
    "reedcraft.js:537"
   ],
   "pattern": true
+ },
+ "kcag156wxs": {
+  "en": "The reed gate",
+  "where": [
+   "parish.js:478"
+  ]
  },
  "6epw9s3ji9": {
   "en": "The reed on the lantern. It whistles so the house never goes quiet.",
@@ -22974,6 +23832,24 @@
    "game.js:1263"
   ]
  },
+ "158v66pimbo": {
+  "en": "The stair down to the undercroft",
+  "where": [
+   "parish.js:417"
+  ]
+ },
+ "215kxq7w2u8": {
+  "en": "The stair up to the chapel",
+  "where": [
+   "parish.js:481"
+  ]
+ },
+ "1sc4lw47787": {
+  "en": "The stone hums under your note, a little, and will not open for it.",
+  "where": [
+   "parish.js:570"
+  ]
+ },
  "24220c99pn6": {
   "en": "The stump of the iron-bough, sawn clean and chalked.",
   "where": [
@@ -23017,6 +23893,12 @@
   "en": "The thing at the loom turns round. It is wearing a shroud of voices, and all of them say your name.",
   "where": [
    "grove.js:376"
+  ]
+ },
+ "21c5ijwtclf": {
+  "en": "The third parish",
+  "where": [
+   "parish.js:276"
   ]
  },
  "188eg938h42": {
@@ -23066,6 +23948,18 @@
   "en": "The vestry — a brass tumbler lock",
   "where": [
    "maps.js:860"
+  ]
+ },
+ "20ou71etbun": {
+  "en": "The village well",
+  "where": [
+   "parish.js:373"
+  ]
+ },
+ "1gh1hpqhuwy": {
+  "en": "The village well. The rope is dry and the bucket is on its hook. The water at the bottom is perfectly still, and there is nothing in it.",
+  "where": [
+   "parish.js:314"
   ]
  },
  "1p0t4q5syp8": {
@@ -23178,6 +24072,18 @@
    "travel.js:22"
   ]
  },
+ "1ooirxh2tw9": {
+  "en": "The wheel is spent. The channel is a shallow.",
+  "where": [
+   "parish.js:684"
+  ]
+ },
+ "23kp6jlaear": {
+  "en": "The wheel turns, and turns, and then there is a sound of water going somewhere. The channel sinks to a shallow.",
+  "where": [
+   "parish.js:446"
+  ]
+ },
  "18rmdcjjkh5": {
   "en": "The woods go still.",
   "where": [
@@ -23207,6 +24113,12 @@
   "where": [
    "coda.js:267",
    "reading.js:33"
+  ]
+ },
+ "11q03z8wtky": {
+  "en": "The youngest, last. Under your feet, a bolt draws back.",
+  "where": [
+   "parish.js:566"
   ]
  },
  "1bballwfsgz": {
@@ -23262,6 +24174,12 @@
   "en": "Then it's Hearthday. They will walk me down in white and the town will hum the Root note under the Pure Note, too quietly to punish. When the lock throws, I will sing the falling fifth against the bore. You will need to be at the casing with him. Take the shaft from the quarry. Go now — I can hear the censers from here.",
   "where": [
    "data.js:295"
+  ]
+ },
+ "28mlf803cxy": {
+  "en": "Then keep it a little longer. It will not get lighter.",
+  "where": [
+   "parish.js:596"
   ]
  },
  "15nzyzratb0": {
@@ -23717,6 +24635,12 @@
    "data.js:865"
   ]
  },
+ "23s562zbbf9": {
+  "en": "Three chairs set close, facing a fourth. This is where a family sat to hold the Last Note, in the old way. In the new way they sat in silence and held it anyway.",
+  "where": [
+   "parish.js:444"
+  ]
+ },
  "1yo6yz8qpgw": {
   "en": "Three deep",
   "where": [
@@ -23758,6 +24682,12 @@
   "en": "Three-voice reliquary — Root, Fifth, Third",
   "where": [
    "upgrades.js:1790"
+  ]
+ },
+ "tjnmj1avyw": {
+  "en": "Through the crack of the shutter: a table laid for four. Four bowls, four spoons, a loaf gone hard as a roof-tile. All four chairs are pulled out, the way you pull them out when you mean to sit.",
+  "where": [
+   "parish.js:306"
   ]
  },
  "uo488w03ox": {
@@ -24391,6 +25321,12 @@
    "upgrades.js:1318"
   ]
  },
+ "847qodmk6v": {
+  "en": "Under hearing, a single low note. Your limbs are heavier for it, and the road seems very long.",
+  "where": [
+   "parish.js:574"
+  ]
+ },
  "1lp58ijkxd": {
   "en": "Under it, in ink: \"Registry Square. Grey buildings, brass plates, a coffee stall. Do not be taken in by the stall.\"",
   "where": [
@@ -24462,6 +25398,12 @@
   "en": "Up the Sunken Stair",
   "where": [
    "maps.js:953"
+  ]
+ },
+ "15nafelrpqi": {
+  "en": "Up the charnel stair",
+  "where": [
+   "parish.js:480"
   ]
  },
  "21ttf990plz": {
@@ -24585,6 +25527,18 @@
   "en": "Vane, wry",
   "where": [
    "extras.en.json:0"
+  ]
+ },
+ "1qgnq8c715u": {
+  "en": "Verrow's Tuning-Reed Case",
+  "where": [
+   "parish.js:261"
+  ]
+ },
+ "2akf0q2ws3y": {
+  "en": "Verrow's case sits in your pack. Your breath settles a little.",
+  "where": [
+   "parish.js:577"
   ]
  },
  "1nk3hae7s0y": {
@@ -24881,6 +25835,12 @@
   "en": "Ward of a choir-school before the bells were taken. +10 Law-Song, +10 Lore, +10 Synod standing.",
   "where": [
    "upgrades.js:300"
+  ]
+ },
+ "1zq1idexrzj": {
+  "en": "Washing hangs in the yard on a line, dry, stiff and gone grey. Nobody has taken it in.",
+  "where": [
+   "parish.js:310"
   ]
  },
  "3e4z5m57gy": {
@@ -25212,6 +26172,12 @@
   "en": "Why the Synod",
   "where": [
    "companion-talk.js:173"
+  ]
+ },
+ "259458fhe95": {
+  "en": "Wick Pell, nineteen",
+  "where": [
+   "parish.js:450"
   ]
  },
  "2akf5b8qhdk": {
@@ -25811,6 +26777,24 @@
    "rumours.js:128"
   ]
  },
+ "212ajw13hgd": {
+  "en": "You gave the Greenroot register to Ignatius",
+  "where": [
+   "parish.js:612"
+  ]
+ },
+ "7vq6dnb4xx": {
+  "en": "You gave the Greenroot register to Lyra",
+  "where": [
+   "parish.js:614"
+  ]
+ },
+ "13j9t7lwzdc": {
+  "en": "You gave the Greenroot register to Lyra (Hetty)",
+  "where": [
+   "parish.js:616"
+  ]
+ },
  "ozmebito3u": {
   "en": "You get the log onto your shoulder. It hums against your collarbone. Walk; do not run.",
   "where": [
@@ -26384,6 +27368,12 @@
    "game.js:702"
   ]
  },
+ "29ssfupbrfn": {
+  "en": "You reach for the note and every interval slides off it. Your voice has been cut. Wait it out.",
+  "where": [
+   "parish.js:572"
+  ]
+ },
  "29tc7qt3k9a": {
   "en": "You reach the eighth bar and it is still with you — and then you do the thing it cannot do: you stop, and sing the coda's second voice alone. It has nothing to answer with. It can be hurt now.",
   "where": [
@@ -26413,6 +27403,13 @@
   "en": "You ready the {0}.",
   "where": [
    "game.js:1379"
+  ],
+  "pattern": true
+ },
+ "j863w9g27z": {
+  "en": "You receive {0}.",
+  "where": [
+   "parish.js:748"
   ],
   "pattern": true
  },
@@ -26565,6 +27562,12 @@
    "game.js:698"
   ]
  },
+ "74x9h5cwkr": {
+  "en": "You sing the root into the stone. The deepest groove takes the note, and gives it back a fifth higher, and the middle panel sinks into the wall.",
+  "where": [
+   "parish.js:569"
+  ]
+ },
  "1snlgd1stii": {
   "en": "You sing the tending note, low. Something knits.",
   "where": [
@@ -26694,6 +27697,12 @@
    "game.js:604"
   ],
   "pattern": true
+ },
+ "1lftcv5qz64": {
+  "en": "You take the Greenroot register.",
+  "where": [
+   "parish.js:716"
+  ]
  },
  "1h6zyp387bb": {
   "en": "You take the cloaks down off the pegs one at a time. Undyed grey wool, a child's size, and in every collar a name-tape stitched in red thread by somebody's mother:",
@@ -27131,6 +28140,12 @@
   ],
   "pattern": true
  },
+ "2an2s4wyjz5": {
+  "en": "Your voice finds its pitch again.",
+  "where": [
+   "parish.js:573"
+  ]
+ },
  "ff9ffica3l": {
   "en": "Your voice is torn. There is nothing left in it.",
   "where": [
@@ -27181,6 +28196,12 @@
   "en": "a first mate you once left in the water",
   "where": [
    "game.js:1449"
+  ]
+ },
+ "7j6mi7azd8": {
+  "en": "a heavy view-edge, drained strength and a low hum near a Mire-drone",
+  "where": [
+   "parish.js:910"
   ]
  },
  "1xfzfmqrc8a": {
@@ -28473,6 +29494,12 @@
   "en": "twelve sovereigns",
   "where": [
    "couriers.js:238"
+  ]
+ },
+ "1g25zers0fy": {
+  "en": "two tonics and a jar of honey",
+  "where": [
+   "parish.js:747"
   ]
  },
  "2f1dqv0vxvw": {
