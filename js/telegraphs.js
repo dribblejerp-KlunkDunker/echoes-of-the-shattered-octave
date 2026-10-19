@@ -30,7 +30,7 @@ const TELEGRAPHS = (() => {
     nudgeMax: 1.5,   // furthest a blocked spawn point may be moved
     minPlayer: 0.8,  // spawn point must be at least this far from the player
   };
-  const reduceMotion = () => { try { return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (err) { return false; } };
+  const reduceMotion = () => { if (typeof GFX !== 'undefined' && GFX.reduceMotion) return true; try { return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (err) { return false; } };
   const ease = (k) => (k <= 0 ? 0 : k >= 1 ? 1 : k * k * (3 - 2 * k));
   const on = () => typeof GFX === 'undefined' || GFX.telegraphs !== false;
 

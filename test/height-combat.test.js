@@ -57,6 +57,21 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
         check(saved && saved.solid === true && arr.solid === false, 'the save records it as solid; the live entrance is untouched');
         G.ents.splice(G.ents.indexOf(arr), 1);
       }
+      // --- access settings reach every module: one reduced-motion switch, no lightning flash, muffled sound ---
+      GFX.reduceMotion = true; check(GFX.reducedMotion === true, 'reducedMotion and reduceMotion are one switch');
+      GFX.reducedMotion = false; check(GFX.reduceMotion === false, 'and either name turns it off');
+      loadMap('clearing', { x: 20.5, y: 28.5, dir: -Math.PI / 2 }); G.state = 'play'; G.fadeT = 0;
+      const skyLum = () => { Engine.render(G.ents, G.tod); const d = Engine.ctx.getImageData(0, 0, 320, 30).data; let s = 0; for (let i = 0; i < d.length; i += 4) s += d[i] + d[i + 1] + d[i + 2]; return s / (d.length / 4); };
+      Engine.setWeather({}); const calm = skyLum();
+      Engine.setWeather({ flash: 1 }); const lit = skyLum();
+      GFX.noFlash = true; Engine.setWeather({ flash: 1 }); const unlit = skyLum(); GFX.noFlash = false; Engine.setWeather({});
+      check(lit > calm + 20 && Math.abs(unlit - calm) < 2, 'No flashes removes the lightning flash (' + calm.toFixed(0) + ' / ' + lit.toFixed(0) + ' / ' + unlit.toFixed(0) + ')');
+      if (typeof FEEL !== 'undefined' && Audio_.muffle) {
+        Audio_.muffle(0); check(Audio_.muffled === 0, 'sound starts clear');
+        FEEL.deafen(2, false);
+        for (let i = 0; i < 20; i++) update(0.05);
+        check(!FEEL.deafen || Audio_.muffled > 0.3, 'deafness muffles the sound (' + Audio_.muffled.toFixed(2) + ')');
+      }
       // --- sight over a knee-high wall, not through a full one ---
       loadMap('clearing', { x: 12.5, y: 11.5, dir: -Math.PI / 2 }); G.state = 'play';
       check(los(12.5, 11.5, 12.5, 7.5), 'you and a patrol see each other over the knee-high field wall');

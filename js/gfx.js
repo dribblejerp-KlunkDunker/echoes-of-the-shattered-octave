@@ -33,4 +33,10 @@ const GFX = {
   listeners: [],
   onChange(fn) { GFX.listeners.push(fn); },
   changed() { for (const fn of GFX.listeners) { try { fn(GFX); } catch (e) { console.warn('GFX listener failed', e); } } },
+  // Accessibility: one reduced-motion switch for every module (Options → Camera
+  // feel sets it; it starts from the system's prefers-reduced-motion), and no flashes.
+  reduceMotion: (() => { try { return !!(typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) { return false; } })(),
+  noFlash: false,
 };
+// some modules spell it reducedMotion: both names are the same switch
+Object.defineProperty(GFX, 'reducedMotion', { get() { return GFX.reduceMotion; }, set(v) { GFX.reduceMotion = !!v; }, enumerable: false });

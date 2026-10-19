@@ -118,7 +118,8 @@ const Engine = (() => {
     if (!v) return;
     wxHaze = Math.max(0, Math.min(0.6, +v.haze || 0));
     wxDark = Math.max(0, Math.min(0.6, +v.dark || 0));
-    wxFlash = Math.max(0, Math.min(1, +v.flash || 0));
+    // lightning respects the No flashes access setting
+    wxFlash = (typeof GFX !== 'undefined' && GFX.noFlash) ? 0 : Math.max(0, Math.min(1, +v.flash || 0));
     wxCloud = Math.max(0, Math.min(1, +v.cloud || 0));
     const t = v.tint && v.tint.length === 3 ? v.tint : [0, 0, 0];
     wxTR = +t[0] || 0; wxTG = +t[1] || 0; wxTB = +t[2] || 0;

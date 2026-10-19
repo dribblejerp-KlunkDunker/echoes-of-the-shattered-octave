@@ -126,6 +126,8 @@ const FEEL = (() => {
       st.hushCue = 1; st.hushCueAt = G.time;
       if (typeof msg === 'function') msg('The colour drains out of the world and sound goes flat. The Hush is close.', 'warn', 4200);
     } else if (st.hush < 0.08) st.hushCue = 0;
+    // deafness and the Hush muffle the sound as well as the picture
+    try { if (typeof Audio_ !== 'undefined' && Audio_.muffle) Audio_.muffle(Math.max(st.deaf, st.hush * 0.6)); } catch (e) { /* audio optional */ }
     // gentle bob pace
     const v = G.vel ? Math.hypot(G.vel.x, G.vel.y) : 0;
     st.gentle = clamp(v / 2.4, 0, 1);
@@ -306,7 +308,7 @@ const FEEL = (() => {
   return {
     state: st, settings, landing, heavyHit, deafen, offsets, post, tick, dipShape, appendRows, save, load,
     HEAVY, DIP_PER_DROP, DIP_MAX, get rawRender() { return rawRender; },
-    audio: 'visual-only: js/audio.js has no low-pass in its public API',
+    audio: 'muffled through Audio_.muffle (a master low-pass) as well as the picture',
   };
 })();
 if (typeof window !== 'undefined') window.FEEL = FEEL;

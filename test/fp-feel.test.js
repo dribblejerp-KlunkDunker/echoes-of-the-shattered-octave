@@ -40,6 +40,8 @@ fs.mkdirSync(SHOTS, { recursive: true });
         for (const e of G.ents) if (e.kind === 'enemy') e.hidden = true;
         Engine.setWeather({}); if (typeof PARTICLES !== 'undefined' && PARTICLES.list) PARTICLES.list.length = 0;
         if (typeof ANIM !== 'undefined') ANIM.dt = 0;
+        // other modules' animated looks (mist drift, star twinkle, grass sway) would move the brightness measures
+        if (typeof GFX.plain === 'function') GFX.plain();
         Object.assign(GFX, { headBob: 'off', reduceMotion: false, noFlash: false });
         const s = FEEL.state; Object.assign(s, { dip: 0, dipT: 1, shake: 0, deafT: 0, deaf: 0, hush: 0, hushCue: 0, deafCue: -99, hushCueAt: -99, rollDeg: 0, offY: 0, offDir: 0 });
         const p = G.player; p.hp = p.hpMax; p.fallFrom = null; p.fallV = 0; Engine.cam.bob = 0; Engine.cam.pitch = 0; G.vel.x = G.vel.y = 0;
@@ -183,10 +185,12 @@ fs.mkdirSync(SHOTS, { recursive: true });
       check(msgs().filter(m => m === 'Your ears ring.').length === 1, 'the written cue "Your ears ring." appears once');
       chordBlast(foe); for (let i = 0; i < 5; i++) update(1 / 60);
       check(msgs().filter(m => m === 'Your ears ring.').length === 1, 'a second chord within seconds does not repeat the cue');
-      check(typeof Audio_ === 'object' && !('lowpass' in Audio_) && !('filter' in Audio_), 'audio has no low-pass in its public API: deafness is visual plus written only');
+      check(typeof Audio_.muffle === 'function' && Audio_.muffled > 0.3, 'deafness also muffles the sound through the master low-pass (' + Audio_.muffled.toFixed(2) + ')');
       // no flash: with the setting on, the frames under deafness never get brighter than the clear frame
-      GFX.noFlash = true; let maxL = 0; for (let i = 0; i < 60; i++) { update(1 / 60); render(); maxL = Math.max(maxL, lum()); }
-      check(maxL <= base.l * 1.02, 'deafness never brightens the view (peak ' + maxL.toFixed(2) + ' vs clear ' + base.l.toFixed(2) + ')');
+      // each frame is compared with the original renderer in the same state (the world keeps moving meanwhile)
+      GFX.noFlash = true; let maxL = 0, rawL = 0, worst = 0;
+      for (let i = 0; i < 60; i++) { update(1 / 60); Engine.render(G.ents, G.tod); const a = lum(); FEEL.rawRender.call(Engine, G.ents, G.tod); const b = lum(); if (a / b > worst) { worst = a / b; maxL = a; rawL = b; } }
+      check(worst <= 1.005, 'deafness never brightens the view (worst frame ' + maxL.toFixed(2) + ' vs original ' + rawL.toFixed(2) + ')');
       GFX.noFlash = false;
       // it clears
       for (let i = 0; i < 400; i++) update(1 / 60);
@@ -205,7 +209,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
       performance.now = pn;
       return { base: base.g, during: during.g };
     });
-    console.log('PASS deafness: blur ' + deaf.base.toFixed(2) + ' -> ' + deaf.during.toFixed(2) + ' horizontal gradient, one "Your ears ring." cue, clears byte-identical, mute softens, no brightening; audio low-pass unavailable (visual only)');
+    console.log('PASS deafness: blur ' + deaf.base.toFixed(2) + ' -> ' + deaf.during.toFixed(2) + ' horizontal gradient, one "Your ears ring." cue, clears byte-identical, mute softens, no brightening; sound muffled too');
 
     // the funeral-bell trigger (random 40%): force the roll
     const bell = await page.evaluate(() => {
@@ -224,7 +228,9 @@ fs.mkdirSync(SHOTS, { recursive: true });
       setup(); const wasSiphoned = G.map.siphoned; G.map.siphoned = true; const c = Engine.cam;
       const pn = performance.now; performance.now = () => 5000;
       render(); const base = { c: chroma(), l: lum() }; const basePx = Array.from(pixels());
-      for (let i = 0; i < 60 * 5; i++) update(1 / 60);   // five seconds of standing still in siphoned country
+      // stand still in siphoned country until the stillness clock passes 5.5 s (at most ten seconds)
+      for (let i = 0; i < 60 * 10 && G.stillT < 5.5; i++) update(1 / 60);
+      for (let i = 0; i < 30; i++) update(1 / 60);
       render(); const mid = { c: chroma(), l: lum() };
       check(G.stillT > 3 && !G.unwriting, 'standing still builds the Hush without unwriting yet (' + G.stillT.toFixed(1) + 's)');
       check(FEEL.state.hush > 0.2, 'the Hushed effect is up (' + FEEL.state.hush.toFixed(2) + ')');

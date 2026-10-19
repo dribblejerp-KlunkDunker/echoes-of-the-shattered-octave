@@ -3,11 +3,22 @@
 // ============================================================
 'use strict';
 const Audio_ = (() => {
+  let muffler = null, muffleAmt = 0;
+  // 0 = clear, 1 = heavily muffled (about 450 Hz); eases so it never clicks
+  function muffle(a) {
+    a = Math.max(0, Math.min(1, +a || 0)); if (Math.abs(a - muffleAmt) < 0.01 && a !== 0) return; muffleAmt = a;
+    if (!ctx || !muffler) return;
+    const f = 20000 * Math.pow(450 / 20000, a);
+    try { muffler.frequency.setTargetAtTime(f, ctx.currentTime, 0.08); } catch (e) { muffler.frequency.value = f; }
+  }
   let ctx = null, master = null, droneGain = null, wind = null, windGain = null, muted = false, lampOsc = null, lampGain = null, sfxBus = null, echoSend = null, echoDelay = null, echoTone = null, echoFb = null;
   function init() {
     if (ctx) return;
     ctx = new (window.AudioContext || window.webkitAudioContext)();
-    master = ctx.createGain(); master.gain.value = 0.55; master.connect(ctx.destination);
+    master = ctx.createGain(); master.gain.value = 0.55;
+    // a low-pass on everything, opened wide; muffle() closes it for deafness and the Hush
+    muffler = ctx.createBiquadFilter(); muffler.type = 'lowpass'; muffler.frequency.value = 20000; muffler.Q.value = 0.5;
+    master.connect(muffler); muffler.connect(ctx.destination);
     // sfx bus with a reverb-ish echo send (caves and cathedrals ring)
     sfxBus = ctx.createGain(); sfxBus.gain.value = 1; sfxBus.connect(master);
     echoSend = ctx.createGain(); echoSend.gain.value = 0.06;
@@ -190,5 +201,5 @@ const Audio_ = (() => {
     return { request, preload, tick, debug, seek, get enabled() { return enabled; }, set enabled(v) { enabled = !!v; }, get current() { return want; }, get unlocked() { return unlocked; } };
   })();
 
-  return { init, resume, setScene, sfx, toggleMute, music, get ready() { return !!ctx; }, get muted() { return muted; } };
+  return { init, resume, setScene, sfx, toggleMute, music, muffle, get muffled() { return muffleAmt; }, get ready() { return !!ctx; }, get muted() { return muted; } };
 })();
