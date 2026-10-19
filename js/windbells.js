@@ -410,7 +410,16 @@ const WINDBELLS = (() => {
   // leaves: take over the four outdoor areas when on; every other map and the off state run the original
   const _animParticles = animParticles;
   animParticles = function (dt, T) {
-    if (GFX.leaves) { try { if (drawLeaves(dt)) return; } catch (err) { /* fall back to the original */ } }
+    if (GFX.leaves) {
+      try {
+        if (drawLeaves(dt)) {
+          // keep anim.js's own list in step (presets and tests read it), exactly as it would rebuild it
+          const st = PART_STYLE[G.mapId];
+          if (st && PARTICLES.mapId !== G.mapId) { PARTICLES.mapId = G.mapId; PARTICLES.list = []; for (let i = 0; i < st.n; i++) PARTICLES.list.push(partNew(st, true)); }
+          return;
+        }
+      } catch (err) { /* fall back to the original */ }
+    }
     return _animParticles(dt, T);
   };
   if (typeof Engine !== 'undefined') {

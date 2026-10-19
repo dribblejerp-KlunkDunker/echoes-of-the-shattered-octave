@@ -144,10 +144,13 @@ const HELPERS = () => {
     {
       const r = await E(() => {
         G.flags.gate_open = true; T.look('oakhaven', 23.5, 3.5, -Math.PI / 2);
+        // measure the lattice alone: other Phase 4 modules hang pennants, perch crows and blow smoke round the gate
+        const others = ['smoke', 'splashes', 'torches', 'windSigns', 'leaves', 'critters', 'kestrelMoored', 'shardGlint'], keepFx = others.map(k => GFX[k]);
+        others.forEach(k => { if (k in GFX) GFX[k] = false; });
         const m = G.map, d = m.doors[23], out = [];
         const F = { cam: Engine.cam };
         for (const o of [0.2, 0.5, 0.7, 0.85]) {
-          d.open = d.target = o; Engine.render(G.ents, G.tod);
+          d.open = d.target = o; Engine.render(G.ents.filter(e => !e._decor), G.tod);
           // find the lowest row in the centre columns that is lighter than the dark backing (an upright of the lattice)
           const W = Engine.VW, data = Engine.ctx.getImageData(0, 0, W, Engine.VIEW_H).data;
           let lowest = -1, highest = 1e9;
@@ -159,7 +162,7 @@ const HELPERS = () => {
           const t = 3.0, h = Engine.VIEW_H, horizon = (h >> 1), expect = horizon + (h / t) * (0.5 - GATES.barBottom(o));
           out.push({ o, lowest, expect: Math.round(expect), highest });
         }
-        d.open = d.target = 0;
+        d.open = d.target = 0; others.forEach((k, i) => { if (k in GFX) GFX[k] = keepFx[i]; });
         return out;
       });
       const okAll = r.every(x => x.lowest > 0 && Math.abs(x.lowest - x.expect) <= 6);
@@ -232,11 +235,13 @@ const HELPERS = () => {
     {
       const script = () => {
         const out = { frames: [], state: null };
+        // other Phase 4 modules animate on their own clocks (smoke, leaves, crows, banners): hold them out of these frames
+        for (const k of ['smoke', 'splashes', 'torches', 'windSigns', 'leaves', 'critters', 'kestrelMoored', 'shardGlint']) if (k in GFX) GFX[k] = false;
         G.flags.gate_open = true; G.flags.culvert_open = true;
         const views = [['oakhaven', 23.5, 3.4, -Math.PI / 2, 23, 0], ['clearing', 20.5, G.maps.clearing.h - 3.3, Math.PI / 2, 20, G.maps.clearing.h - 1], ['catacombs', 8.5, 26.5, Math.PI, 10, 26]];
         for (const [id, x, y, dir, gx, gy] of views) {
           T.look(id, x, y, dir); T.calm(); const d = G.map.doors[gy * G.map.w + gx];
-          for (const o of [0, 0.25, 0.6, 0.9]) { d.open = d.target = o; Engine.render(G.ents, G.tod); out.frames.push(id + '@' + o + ':' + T.frameHash()); }
+          for (const o of [0, 0.25, 0.6, 0.9]) { d.open = d.target = o; Engine.render(G.ents.filter(e => !e._decor), G.tod); out.frames.push(id + '@' + o + ':' + T.frameHash()); }
           d.open = d.target = 0;
         }
         T.look('oakhaven', 23.5, 2.2, -Math.PI / 2); G.keys = {}; interact(); T.adv(1500);

@@ -147,6 +147,21 @@ const TOWNSFOLK = (() => {
   passHours = function (hours) { const r = _pass(hours); try { apply(true); } catch (err) { /* ditto */ } return r; };
   const _update = update;
   update = function (dt) { const r = _update(dt); try { apply(false, dt); } catch (err) { /* never break a tick */ } return r; };
+  // The clock can also jump without passHours (scripted scenes, debug, tests setting G.tod). A jump of more than
+  // a quarter hour between frames is not the day going by, so whoever is out must be put right before drawing.
+  let lastTod = null;
+  if (typeof Engine !== 'undefined' && Engine.render) {
+    const _render = Engine.render;
+    Engine.render = function (ents, tod, opts) {
+      try {
+        if (typeof G !== 'undefined' && typeof G.tod === 'number') {
+          if (lastTod !== null) { let d = Math.abs(G.tod - lastTod); d = Math.min(d, 1 - d); if (d > 1 / 96) apply(true); }
+          lastTod = G.tod;
+        }
+      } catch (err) { /* never break a frame */ }
+      return _render.call(Engine, ents, tod, opts);
+    };
+  }
 
   // ------------------------------------------------------------ gestures and work loops
   let reduce = false;

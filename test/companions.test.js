@@ -103,7 +103,9 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       e._cRings = []; frozen(); const quiet = grab(); frozen(); const noise = changed(quiet, grab());   // render noise with nothing changed
       e._cRings = [0.3, 0.9]; frozen(); const ringsOn = grab();
       const nRing = changed(quiet, ringsOn); check(nRing > noise + 15, 'singing draws rings in the air (' + nRing + ' px)');
-      GFX.particles = 0; const none = changed(quiet, grab()); GFX.particles = 1; check(none <= noise + 2, 'GFX.particles 0 removes them (' + none + ' vs noise ' + noise + ')');
+      // particles 0 also thins other modules' smoke, leaves and critters, so compare like with like: rings vs none, both at 0
+      GFX.particles = 0; const saved = e._cRings; e._cRings = []; frozen(); const quiet0 = grab(); e._cRings = saved; frozen();
+      const none = changed(quiet0, grab()); GFX.particles = 1; check(none <= noise + 2, 'GFX.particles 0 removes them (' + none + ' vs noise ' + noise + ')');
       GFX.particles = 0.3; const few = changed(quiet, grab()); GFX.particles = 1; check(few < nRing, 'GFX.particles scales them (' + few + ' < ' + nRing + ')');
       GFX.noFlash = true; const nf = grab(); GFX.noFlash = false;
       check(changed(quiet, nf) > 5 && lum(nf) - lum(quiet) < (lum(ringsOn) - lum(quiet)) * 0.3, 'No flash: a teal cast, no brightening (' + (lum(nf) - lum(quiet)).toFixed(0) + ' vs ' + (lum(ringsOn) - lum(quiet)).toFixed(0) + ')');
