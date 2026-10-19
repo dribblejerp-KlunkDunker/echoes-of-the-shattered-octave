@@ -2510,7 +2510,12 @@ async function decodeSave(code) {
   if (code.startsWith('{')) return JSON.parse(code);
   const dot = code.indexOf('.'); if (dot < 0) throw new Error('Not an Octave save.'); const tag = code.slice(0, dot), body = code.slice(dot + 1);
   let bytes; try { bytes = unb64(body); } catch (e) { throw new Error('Not an Octave save.'); }
-  if (tag === 'OCTZ1') { const ds = new DecompressionStream('deflate-raw'); const w = ds.writable.getWriter(); w.write(bytes).catch(() => { }); w.close().catch(() => { }); try { bytes = new Uint8Array(await new Response(ds.readable).arrayBuffer()); } catch (e) { throw new Error('The code is damaged or incomplete.'); } }
+  if (tag === 'OCTZ1') { const ds = new DecompressionStream('deflate-raw'); const w = ds.writable.getWriter(); w.write(bytes).catch(() => { }); w.close().catch(() => { }); try {
+      // read the inflated save in chunks and stop at a sane size, so a tiny code cannot inflate into gigabytes
+      const rd = ds.readable.getReader(), parts = []; let n = 0;
+      for (;;) { const { done, value } = await rd.read(); if (done) break; n += value.length; if (n > 8 * 1024 * 1024) { try { rd.cancel(); } catch (x) { /* already closed */ } throw new Error('too big'); } parts.push(value); }
+      bytes = new Uint8Array(n); let o = 0; for (const p of parts) { bytes.set(p, o); o += p.length; }
+    } catch (e) { throw new Error(e && e.message === 'too big' ? 'That save is far too large to be a real one.' : 'The code is damaged or incomplete.'); } }
   else if (tag !== 'OCTJ1') throw new Error('Not an Octave save.');
   let d; try { d = JSON.parse(new TextDecoder().decode(bytes)); } catch (e) { throw new Error('The code is damaged or incomplete.'); } if (!d || d.v !== SAVE_VERSION || !d.player || !d.maps) throw new Error('Not an Octave save.');
   if (hardcorePayload(d)) throw new Error('That is a hardcore run. Hardcore runs never travel as codes.');

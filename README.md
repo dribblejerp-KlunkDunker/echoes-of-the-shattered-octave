@@ -52,6 +52,17 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 10: the owner's picks
+
+| | |
+|---|---|
+| ![Teal Whisper-Grove](screenshots/p10-teal.jpg) | ![Ground shadows and fight marks](screenshots/p10-marks.jpg) |
+| Each area has its own colour: amber Oakhaven, teal Whisper-Grove, violet Deep Woods. | Ground shadows under every creature; blood, scorch and cracks stay where you fought. |
+| ![The class questions](screenshots/p10-quiz.jpg) | ![A guard's lantern](screenshots/p10-lantern.jpg) |
+| Answer questions to find your calling, Daggerfall-style. | Guards carry swinging lanterns at night. |
+
+Also: a figure walks your route on the world map; parry sparks, and blocking that works (F); Steal/Grab/Info/Talk interaction modes; Load from file; and, if you turn Dread on, a Dissonance meter and a stalker from the Hush.
+
 ### Phase 9: new gameplay
 
 | | |
@@ -251,7 +262,7 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Move | W A S D · Shift runs · Caps Lock toggles always-run |
 | Look | Click the view to capture the mouse, then move it freely (Esc gives it back; Options → Controls → Capture mouse turns this off) · without capture, move over the view and rest at a side edge to keep turning · right-drag · Q and arrow keys · Z levels your gaze |
 | Full screen | Alt+Enter, or Options → Controls → Full screen |
-| Attack | Left-click to thrust · hold and move the mouse to slash or chop · wheel or 1–9 changes weapon |
+| Attack | Left-click to thrust · hold and move the mouse to slash or chop · wheel or 1–9 changes weapon · F raises your guard: a quick parry turns a blow aside, a held block halves it |
 | Use / Talk | E or Space, or click a bright name under the crosshair (the crosshair is the centre of the view, so look up or down to aim at something above or below you) |
 | Pickpocket | Face a nearby Oakhaven adult, P to inspect · touch Purse / controller Y · Enter/Space or A attempts, Escape or B leaves |
 | Disguise | Wear Synod Clerk Robes in Inventory · Y / touch Cover / controller Back shows status · Enter/A wears or removes, Escape/B leaves |

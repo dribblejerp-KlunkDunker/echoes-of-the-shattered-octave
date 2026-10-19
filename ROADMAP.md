@@ -161,20 +161,20 @@ Every phase must retain the security regression tests and save/load behavior. Re
 ### Owner's list, October 2026 (100 ideas)
 Added from the owner's list. Statuses come from a check against the code: `[x]` already in the game, `[~]` partly there, `[ ]` new. Where an item is already in, the note says where.
 
-**Phase 10 — the owner's picks** (planned next, in this order)
+**Phase 10 — the owner's picks** (delivered; see the Phase 10 verification below)
 | Item | Status | Note |
 |---|---|---|
-| Blob shadows under enemies, NPCs and companions | `[ ]` | Soft ground shadow drawn in the relief renderer at each sprite's foot. |
-| Colour grading per area (amber Oakhaven, teal Whisper-Grove, violet Deep Woods) | `[~]` | Per-area, per-hour grades exist (js/post.js); retune them to these palettes. |
-| Lasting marks where fights happened (blood, scorch, cracks) | `[~]` | Seeded decals exist (js/decals.js); add fight-driven marks for the visit. |
-| Animated travel route on the world map | `[ ]` | A small figure walks the route as the hours pass (js/travel.js). |
-| Swinging lanterns on patrolling guards, light moving on walls | `[~]` | Lights exist (js/lighting.js); add a carried, swinging light. |
-| Parry sparks when weapons clash | `[~]` | Hit sparks exist; add a distinct clash burst on a timed parry. |
-| Dissonance meter: overusing Songs draws the Hush; whispers and false foes at high Dissonance | `[ ]` | Builds on noise/Hush (fp-feel's Hush effect). Off by default. |
-| The stalker: one Hush-thing hunts you across Book One, mostly heard | `[ ]` | Never shown clearly, never fought (the Hush rules); a horror toggle. |
-| Question-based class picker | `[ ]` | Questions about music, the Synod and the Hush suggest a class. |
-| Four interaction modes (Steal, Grab, Info, Talk) | `[~]` | Pickpocket, use and talk exist as keys; add Daggerfall's cursor modes. |
-| Save to file | `[~]` | Save codes and a download exist (Save panel); add "Load from file". |
+| Blob shadows under enemies, NPCs and companions | `[x]` | js/look10.js: depth-correct ground shadows; Options → Ground shadows (off in Original and Low). |
+| Colour grading per area (amber Oakhaven, teal Whisper-Grove, violet Deep Woods) | `[x]` | Retuned in js/post.js, per-hour shifts kept, whites protected. |
+| Lasting marks where fights happened (blood, scorch, cracks) | `[x]` | js/look10.js: for the current visit, capped at 40; constructs spark, Hollows leave nothing. |
+| Animated travel route on the world map | `[x]` | js/motion10.js: presentation only, same outcome; skippable. |
+| Swinging lanterns on patrolling guards, light moving on walls | `[x]` | js/motion10.js: up to four lit, dropped when the carrier falls. |
+| Parry sparks when weapons clash | `[x]` | js/motion10.js. Blocking itself now works (js/guard.js): a parry turns a blow aside, a block halves it. |
+| Dissonance meter: overusing Songs draws the Hush; whispers and false foes at high Dissonance | `[x]` | js/dread.js, Options → Dread (off by default). |
+| The stalker: one Hush-thing hunts you across Book One, mostly heard | `[x]` | js/dread.js: heard as sounds going missing; it keeps one logbook line until dawn. |
+| Question-based class picker | `[x]` | js/origins.js: 11 questions; same character as a manual pick. |
+| Four interaction modes (Steal, Grab, Info, Talk) | `[x]` | js/origins.js, Options → Interaction modes; `]`/`[` cycle. |
+| Save to file | `[x]` | Load from file and drag-and-drop (js/origins.js); save codes now capped at 8 MB inflated. |
 
 **Graphics**
 - `[x]` Night palette (per-hour grades, js/post.js) · `[x]` Wet surfaces after rain (js/surfaces) · `[x]` Water reflections and ripples (js/water.js; extend to rippling light on the Sunken Court floor `[~]`)
@@ -218,6 +218,12 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 **Technical**
 - `[ ]` A sharper renderer with the pixel look kept · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
 - `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[ ]` Performance overlay (frame rate, memory)
+
+### Phase 10 completion pass verification
+- **How it was built.** Four parallel teams (look, motion, dread, origins), then integration.
+- **Integration fixes.** Ground shadows join the Low preset's off list (about 1 ms a frame in town). Blocking and parrying did nothing before (the timers never ran and no blow read them); js/guard.js makes them work: a parry turns a melee blow aside, a block halves it (a third with a shield), bolts and traps are never blocked. Save codes now inflate in chunks with an 8 MB cap. Tests that required data-URL sketches now also accept the logbook paintings.
+- **Switches.** Ground shadows, Fight marks, Travel route, Guard lanterns, Parry sparks, Dread, Interaction modes: all in Options; off gives the game as before, and the Original preset leaves the visual ones off.
+- **Tests.** New suites look10, motion10, dread, origins, guard; all suites pass on the merged tree except couriers, whose real-time timing checks fail about one run in three under load (this predates Phase 10; it passes on a rerun).
 
 ### Phase 9 completion pass verification
 - **How it was built.** Four parallel teams from a lore brief drawn from the author's bibles and Book Four (wind-reed dies in a day; the First Reed; Ada Pellow; Reeds-Miner Tomas; the third parish's note; Mire-drones and Fret-crawlers), then integration.

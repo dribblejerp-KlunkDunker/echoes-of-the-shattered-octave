@@ -423,7 +423,11 @@ const Engine = (() => {
     }
 
     // -- sky hooks: stars, panoramas, things crossing the sky -----------
-    Object.assign(FI, { fb, dbuf, mbuf, w, h, S, horizon, dirX, dirY, planeX, planeY, cam, map, outdoor, tod: timeOfDay, skyDay, light: light_, fogR, fogG, fogB, fogDist, animT, ptLights, relief, wx: { haze: wxHaze, dark: wxDark, cloud: wxCloud, flash: wxFlash } });
+    Object.assign(FI, { fb, dbuf, mbuf, w, h, S, horizon, dirX, dirY, planeX, planeY, cam, map, outdoor, tod: timeOfDay, skyDay, light: light_, fogR, fogG, fogB, fogDist, animT, ptLights, relief, wx: { haze: wxHaze, dark: wxDark, cloud: wxCloud, flash: wxFlash },
+      // Phase 10 (look10): what the ground-shadow and fight-mark pass needs to put a disc on the floor with the
+      // renderer's own depth rule: the sorted sprite list (filled below, same array), the ground-height lookup
+      // and the bias that sits between a ground pixel's depth and its true distance. Read-only for hooks.
+      sprList, gAt, surfBias: SURF_BIAS });
     if (skyHooks.length) runHooks(skyHooks);
 
     // -- distant landmarks (horizon silhouettes, outdoor only) --------
