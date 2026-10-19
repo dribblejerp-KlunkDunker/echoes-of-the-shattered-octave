@@ -76,7 +76,7 @@ for i, (k, v) in enumerate(SKETCHES.items()): PICTURES.append(('sketch', k, v, 1
 
 # Pictures the local model could not paint well (anachronisms, wrong subject): left to the procedural stand-in until a
 # better painting exists (for example from Canva). --only still paints them on request.
-SKIP = {'area/workshop', 'area/arena', 'area/quarry'}
+SKIP = {'area/workshop', 'area/arena', 'area/quarry', 'death/beast', 'death/golem', 'death/grapnel', 'death/soldier', 'death/trap'}
 
 
 def trim_bars(im):
