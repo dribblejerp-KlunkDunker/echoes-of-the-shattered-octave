@@ -161,6 +161,19 @@ Every phase must retain the security regression tests and save/load behavior. Re
 ### Owner's list, October 2026 (100 ideas)
 Added from the owner's list. Statuses come from a check against the code: `[x]` already in the game, `[~]` partly there, `[ ]` new. Where an item is already in, the note says where.
 
+**Remaining owner's-list phases (plan, October 2026)**
+| Phase | Theme | Items |
+|---|---|---|
+| 12 — Tools of the trade | gear and Songs | Shield bash; two-handed and dual-wielding; throwing nets; fire flasks; silence bombs; Office grappling hook; environmental kills; instruments that change Songs; tuning forks; dowsing for Anchor-roots |
+| 13 — The Hush comes closer | horror | Whispers from behind; lights dying; night terrors; haunted house in Oakhaven; the Unrung Bell at night; jump-scare toggle; hounds sniffing your trail; Hushwardens' muffling wave; crows at bodies |
+| 14 — A world that shows the story | visuals and animation | The Greening in Oakhaven; spreading Light-glass; root veins; "Octave lights"; mirrors; sealed doorways; breakable barrels; Sunken Court light; NPC weather reactions; swaying capes; tavern sitting/eating; Kestrel flight scene |
+| 15 — The province moves | world events and Daggerfall systems | Synod sermons; eclipses; roadside events; burning and rebuilding, permanent deaths; Synod territory; paid training; letters of credit; cheat codes; "Where is" map marks; camp cooking; tavern card game; boss trophies |
+| 16 — New ground | new areas | Chlorophyll Flume; underwater dungeon beneath Whisper-Grove; heists (Synod cathedral, Consortium quarry); the Kestrel as a home base with crew |
+| 17 — Beyond Book One | extras | Book Two prologue; Port Cantabile trip and the Long Night (both after Book One in canon: presented as marked extras) |
+| 18 — Technical | engine and online | Sharper renderer; installable offline app; daily challenge dungeon; ghost replays; messages and leaderboards (need a small server: owner's decision) |
+
+Dropped: "Festivals such as Hearthday" — World Bible Vol VII puts no feast in Harvestmonth, and Hearthday is the day of the Rite.
+
 **Phase 11 — feedback and feel** (delivered; items marked (P11) below; see the Phase 11 verification)
 
 **Phase 10 — the owner's picks** (delivered; see the Phase 10 verification below)
