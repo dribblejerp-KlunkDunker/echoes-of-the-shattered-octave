@@ -181,7 +181,8 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       resetLaw(); const old = JSON.parse(JSON.stringify(snapshotGame())); delete old.player.crime; delete old.maps.watchhouse;
       // Emulate an older save by dropping everything the town appends after its historical recess.
       const liveOh = G.maps.oakhaven, recessIdx = liveOh.entities.findIndex(e => e.bodyCover);
-      const appendedTown = liveOh.entities.length - 1 - recessIdx;
+      // transient scenery and grass are never saved, so only count saved entities
+      const appendedTown = liveOh.entities.filter(e => !e.transient).length - 1 - recessIdx;
       old.maps.oakhaven.ents = old.maps.oakhaven.ents.slice(0, -appendedTown);
       for (const id of ['tavern', 'greenhall', 'mill', 'surgery', 'chapel', 'tannery']) old.maps[id].ents = old.maps[id].ents.slice(0, ['tavern', 'greenhall', 'mill'].includes(id) ? -2 : -1);
       const historicalRecess = old.maps.oakhaven.ents.length - 1;

@@ -105,7 +105,9 @@ const SHOT_DIR = process.env.SHOT_DIR || path.join(os.tmpdir(), 'surfaces-shots'
           check(DEC.includes(m._decalsAll[k]), id + ' uses a known decal');
           check(!m.doors[k], id + ' never decorates a door cell');
         }
-        check(m.entities.length === b[id].entities.length && m.entities.every((e, i) => !e.transient && e.kind === b[id].entities[i].kind), id + ' entities are the same on every build and none is added by the surface layers');
+        // scenery props and grass (js/scenery.js, js/flora.js) are another module's transient layer
+        const own = list => list.filter(e => !e._scn && !e._flora), me = own(m.entities), them = own(b[id].entities);
+        check(me.length === them.length && me.every((e, i) => !e.transient && e.kind === them[i].kind), id + ' entities are the same on every build and none is added by the surface layers');
       }
       out.decalCells = total;
 
