@@ -43,7 +43,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
       check(Object.keys(orig).length >= 8, 'particle styles exist');
       const fogCalls = []; const _look = Engine.setLook;
       Engine.setLook = o => { fogCalls.push(o && o.fogK); return _look(o); };
-      const cheapOff = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'panoramas', 'flyovers', 'darkInteriors'];   // dark interiors are off in Low (accessibility; audit finding)
+      const cheapOff = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'panoramas', 'flyovers', 'darkInteriors', 'groundShadows'];   // dark interiors are off in Low (accessibility; audit finding)
       const expect = { original: [1, 1, 1], low: [1, 0.8, 0.5], medium: [1, 1, 1], high: [2, 1.15, 1.25] };
       const canvasOf = { 1: [320, 200], 2: [640, 400] };
       for (const name of ['original', 'low', 'medium', 'high']) {
