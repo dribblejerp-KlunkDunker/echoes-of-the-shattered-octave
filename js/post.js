@@ -32,8 +32,8 @@ const POST = (() => {
     // heights above the ground, col = colour (scaled by the light of the hour),
     // night = only at night, drift = how fast the bands slide.
     mist: {
-      whispergrove: { a: 0.46, top: 0.62, col: [150, 132, 186], drift: 1.0 },
-      deepwoods: { a: 0.40, top: 0.55, col: [118, 120, 112], drift: 0.8 },
+      whispergrove: { a: 0.46, top: 0.62, col: [118, 152, 170], drift: 1.0 },   // P10: cold teal (was lilac [150, 132, 186])
+      deepwoods: { a: 0.40, top: 0.55, col: [128, 112, 146], drift: 0.8 },   // P10: bruised violet (was grey-green [118, 120, 112])
       catacombs: { a: 0.40, top: 0.50, col: [60, 54, 84], drift: 0.6 },
       mausoleum: { a: 0.34, top: 0.45, col: [64, 56, 86], drift: 0.5 },
       belfry: { a: 0.26, top: 0.40, col: [62, 56, 78], drift: 0.7 },
@@ -60,12 +60,19 @@ const POST = (() => {
       meadow: { day: { gain: [1.00, 1.04, 0.95], lift: [3, 4, 2], sat: 0.96, con: 0.14 }, night: { gain: [0.88, 0.98, 1.08], lift: [1, 3, 6], sat: 0.88, con: 0.12 } },
       grove: { day: { gain: [1.03, 0.95, 1.08], lift: [5, 3, 7], sat: 0.96, con: 0.15 }, night: { gain: [0.98, 0.9, 1.14], lift: [4, 2, 9], sat: 0.92, con: 0.14 } },
       woods: { day: { gain: [1.08, 0.97, 1.02], lift: [8, 3, 9], sat: 0.98, con: 0.18 }, night: { gain: [1.02, 0.88, 1.12], lift: [8, 2, 11], sat: 0.92, con: 0.16 } },
+      // Phase 10: the owner's three palettes (procedural stand-ins for painted grades). Each keeps the
+      // day -> night blend of the older presets, so dawn, dusk and night behave as before.
+      amber: { keep: 0.7, day: { gain: [1.09, 1.00, 0.84], lift: [7, 3, 0], sat: 0.96, con: 0.16 }, night: { gain: [0.98, 0.97, 1.04], lift: [3, 2, 5], sat: 0.86, con: 0.12 } },   // Oakhaven streets: warm amber
+      amberIn: { keep: 0.7, day: { gain: [1.12, 1.00, 0.82], lift: [8, 3, 0], sat: 1.00, con: 0.15 }, night: { gain: [1.12, 1.00, 0.82], lift: [8, 3, 0], sat: 1.00, con: 0.15 } },   // Oakhaven interiors: candle preset, a touch more amber
+      teal: { keep: 0.7, day: { gain: [0.76, 1.03, 1.04], lift: [1, 5, 8], sat: 0.88, con: 0.15 }, night: { gain: [0.72, 0.98, 1.10], lift: [0, 5, 11], sat: 0.88, con: 0.14 } },   // Whisper-Grove: cold teal
+      violet: { keep: 0.7, day: { gain: [0.98, 0.74, 1.03], lift: [8, 0, 8], sat: 1.02, con: 0.20 }, night: { gain: [0.98, 0.72, 1.12], lift: [8, 0, 13], sat: 0.94, con: 0.16 } },   // Deep Woods: bruised violet
       crypt: { day: { gain: [0.96, 0.98, 1.10], lift: [3, 3, 9], sat: 0.84, con: 0.16 }, night: { gain: [0.96, 0.98, 1.10], lift: [3, 3, 9], sat: 0.84, con: 0.16 } },
       candle: { day: { gain: [1.10, 1.01, 0.86], lift: [7, 3, 0], sat: 0.98, con: 0.15 }, night: { gain: [1.10, 1.01, 0.86], lift: [7, 3, 0], sat: 0.98, con: 0.15 } },
     },
     grade: {
-      oakhaven: 'town', chapel: 'town', quarry: 'meadow', clearing: 'meadow', underhedge: 'meadow',
-      whispergrove: 'grove', sunken: 'grove', deepwoods: 'woods',
+      oakhaven: 'amber', chapel: 'amberIn', quarry: 'meadow', clearing: 'meadow', underhedge: 'meadow',
+      tavern: 'amberIn', greenhall: 'amberIn', surgery: 'amberIn', mill: 'amberIn', orla_house: 'amberIn', lyra_house: 'amberIn', tannery: 'amberIn', watchhouse: 'amberIn',
+      whispergrove: 'teal', sunken: 'teal', deepwoods: 'violet',
       catacombs: 'crypt', mausoleum: 'crypt', belfry: 'crypt', cloister: 'crypt', rootvault: 'crypt',
       _outdoor: 'meadow', _indoor: 'candle',
     },
@@ -355,10 +362,12 @@ const POST = (() => {
     const dusk = config.dusk;
     for (let ch = 0; ch < 3; ch++) {
       const gain = mix(p.day.gain[ch], p.night.gain[ch]) * (1 + (dusk[ch] - 1) * wk), lift = mix(p.day.lift[ch], p.night.lift[ch]);
+      const keep = p.keep || 0;   // P10: highlight protection, so a strong tint cannot dye the whites (sun, lamps, glints stay bright)
       for (let v = 0; v < 256; v++) {
         let u = v / 255;
         u = u * (1 - con) + smooth(u) * con;   // gentle S-curve
-        let o = u * gain * 255 + lift * (1 - u);   // lift raises the blacks and fades out toward white
+        const ge = keep && gain < 1 ? gain + (1 - gain) * keep * u * u * u : gain;
+        let o = u * ge * 255 + lift * (1 - u);   // lift raises the blacks and fades out toward white
         o = o < 0 ? 0 : o > 255 ? 255 : o;
         gradeLut[ch * 256 + v] = o | 0;
       }
