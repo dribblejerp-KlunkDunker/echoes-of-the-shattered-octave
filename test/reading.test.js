@@ -1,4 +1,4 @@
-// PREVIEW_URL=http://127.0.0.1:3207 PLAYWRIGHT_MODULE=/opt/npm-tools/node_modules/playwright node test/reading.test.js
+// PREVIEW_URL=http://127.0.0.1:3000 PLAYWRIGHT_MODULE=/opt/npm-tools/node_modules/playwright node test/reading.test.js
 // Held full-screen documents (js/reading.js): lore books, the cutter's log, notices, notes with choices.
 // Screenshots go to READING_SHOTS (default: the OS temp dir), never into the repo.
 'use strict';
@@ -15,7 +15,7 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
   try {
     const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
-    await page.goto(process.env.PREVIEW_URL || 'http://127.0.0.1:3207');
+    await page.goto(process.env.PREVIEW_URL || 'http://127.0.0.1:3000');
     await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && G.state === 'title' && typeof PRESETS !== 'undefined' && typeof READING !== 'undefined');
     await page.locator('#btn-new').click(); await page.locator('#cname').fill('Reader <b>X</b>');
     await page.locator('#c-next').click(); await page.locator('.classlist button').first().click();

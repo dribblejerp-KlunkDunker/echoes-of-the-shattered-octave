@@ -1,4 +1,4 @@
-// PREVIEW_URL=http://127.0.0.1:3106 PLAYWRIGHT_MODULE=/opt/npm-tools/node_modules/playwright node test/creatures.test.js
+// PREVIEW_URL=http://127.0.0.1:3000 PLAYWRIGHT_MODULE=/opt/npm-tools/node_modules/playwright node test/creatures.test.js
 // Uses the managed preview; never starts a server or writes player saves.
 // Covers the Phase 2 creature pass: five-angle enemies for every species
 // (js/directions.js), emissive masks and torch-driven interiors (js/lighting.js).

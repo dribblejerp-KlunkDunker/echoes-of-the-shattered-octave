@@ -1,4 +1,4 @@
-// PLAYWRIGHT_MODULE=/path/to/playwright PREVIEW_URL=http://127.0.0.1:3102 node test/post.test.js
+// PLAYWRIGHT_MODULE=/path/to/playwright PREVIEW_URL=http://127.0.0.1:3000 node test/post.test.js
 // Uses the managed preview; never starts a server or writes player saves.
 // Covers js/post.js: soft depth-graded fog, permanent area mist, bloom on lamps
 // and glass, and the per-area colour grade, all as post-processing on the

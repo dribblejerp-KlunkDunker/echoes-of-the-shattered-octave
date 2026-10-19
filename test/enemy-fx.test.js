@@ -1,4 +1,4 @@
-// PREVIEW_URL=http://127.0.0.1:3202 PLAYWRIGHT_MODULE=/opt/npm-tools/node_modules/playwright node test/enemy-fx.test.js
+// PREVIEW_URL=http://127.0.0.1:3000 PLAYWRIGHT_MODULE=/opt/npm-tools/node_modules/playwright node test/enemy-fx.test.js
 // Uses the managed preview; never starts a server or writes player saves.
 // Covers js/enemy-fx.js: a flinch frame for every enemy species, the hurt window
 // and the return to the pose / side view, the Requiem's half-health shatter, the

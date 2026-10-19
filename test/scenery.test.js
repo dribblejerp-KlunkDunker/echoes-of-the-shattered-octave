@@ -1,4 +1,4 @@
-// PLAYWRIGHT_MODULE=/path/to/playwright PREVIEW_URL=http://127.0.0.1:3105 node test/scenery.test.js
+// PLAYWRIGHT_MODULE=/path/to/playwright PREVIEW_URL=http://127.0.0.1:3000 node test/scenery.test.js
 // Covers js/scenery.js (barrels, crates, carts, broken statues, graves, bones) and
 // js/flora.js (swaying, player-reactive grass and reeds): placement on the named
 // maps, transient/append-only entities and saves, route safety (flood-fill and

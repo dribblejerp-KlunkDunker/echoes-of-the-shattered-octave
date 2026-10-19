@@ -7,7 +7,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const SHOTS = process.env.FPHANDS_SHOTS || '/tmp/claude-0/-home-claude/9fd8ad51-4634-5bea-b9bd-94d8450b3fd8/scratchpad/army/P3-HANDS';
-const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:3204';
+const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:3000';
 
 async function boot(browser, blockModule) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });

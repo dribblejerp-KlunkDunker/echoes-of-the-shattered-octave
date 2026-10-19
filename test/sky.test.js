@@ -1,4 +1,4 @@
-// PREVIEW_URL=http://127.0.0.1:3101 PLAYWRIGHT_MODULE=/path/to/playwright node test/sky.test.js
+// PREVIEW_URL=http://127.0.0.1:3000 PLAYWRIGHT_MODULE=/path/to/playwright node test/sky.test.js
 // Uses the managed preview; never starts a server or writes player saves.
 // Covers js/sky.js: night stars, painted area panoramas and the Drift-Kestrel's
 // flyovers, the three GFX switches, render scale 2, the pixel-exact "off" state

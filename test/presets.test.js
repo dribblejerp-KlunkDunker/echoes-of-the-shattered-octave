@@ -1,4 +1,4 @@
-// PREVIEW_URL=http://127.0.0.1:3108 PLAYWRIGHT_MODULE=/opt/npm-tools/node_modules/playwright node test/presets.test.js
+// PREVIEW_URL=http://127.0.0.1:3000 PLAYWRIGHT_MODULE=/opt/npm-tools/node_modules/playwright node test/presets.test.js
 // Uses the managed preview; never starts a server or writes player saves.
 // Covers the graphics presets (Original / Low / Medium / High), the Graphics block in the
 // Options -> accessibility menu, CRT curvature and upscaling, HUD input at 2x, and PRESETS.measure().
