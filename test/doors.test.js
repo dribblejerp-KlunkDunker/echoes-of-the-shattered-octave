@@ -60,6 +60,9 @@ const HELPERS = () => {
       Math.random = (() => { let s = 11; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
       G.state = 'play'; G.fadeT = 0; G.tod = 0.45; Engine.setFlicker(1); Engine.cam.pitch = 0; Engine.cam.bob = 0;
       if (typeof PRESETS !== 'undefined') { PRESETS.apply('original'); }
+      // The live game loop keeps animating between page.evaluate calls, so flame glow and figure poses are
+      // whatever its last frame left. Recompute them at the frozen time so two pages render the same moment.
+      for (const e of G.ents) { try { if (e.kind === 'deco') animDeco(e, 0, 3, G.map.outdoor); else animCreature(e, 0, 3); } catch (err) { /* a figure that cannot animate keeps its pose */ } }
     },
     // camera two cells off a door, on whichever side is open, looking at it
     look(mapId, mx, my, open, dist) {
@@ -232,7 +235,18 @@ const HELPERS = () => {
     const on = await frames(page, true);
     const diff = on.filter((h, i) => h !== old[i]).length;
     assert.ok(diff >= scenes.length * 3, 'swinging doors actually change the half-open frames (' + diff + ' of ' + on.length + ' differ)');
-    assert.equal(on.filter((h, i) => i % 5 === 0 && h !== old[i]).length, 0, 'closed doors look the same either way');
+    // Closed doors: compare swing on and off on the same page at the same moment. (Across two pages the live game
+    // loop keeps running between calls, so smoke, routines and figure poses drift; off == original is proven above.)
+    const closedPairs = await page.evaluate((scenes) => {
+      const out = [];
+      for (const [id, mx, my] of scenes) {
+        GFX.swingDoors = true; T.look(id, mx, my, 0, 1.8); const a = T.hash();
+        GFX.swingDoors = false; T.look(id, mx, my, 0, 1.8); const b = T.hash();
+        out.push(a === b);
+      }
+      GFX.swingDoors = true; return out;
+    }, scenes);
+    assert.ok(closedPairs.every(Boolean), 'closed doors look the same either way (' + closedPairs.map(ok => ok ? '.' : 'X').join('') + ')');
     console.log(`PASS swingDoors off: ${off.length} frames byte-identical to the sliding renderer; on: ${diff} differ, closed doors identical`);
     assert.deepEqual(base.errors, [], 'no baseline page errors'); await base.page.close();
 

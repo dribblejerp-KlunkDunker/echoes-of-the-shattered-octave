@@ -173,8 +173,9 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       const count = Object.keys(ENEMIES).length;
       const next = id === 'clearing' ? 'oakhaven' : 'clearing';
       loadMap(next);
-      // scenery props and grass (js/scenery.js, js/flora.js) are transient by design and are not corpses
-      const effect = e => e.transient && !e._scn && !e._flora;
+      // scenery props and grass (js/scenery.js, js/flora.js) and other decorations their modules re-create on
+      // every visit (marked _decor: chimneys, torches, stand-ins) are transient by design and are not corpses
+      const effect = e => e.transient && !e._scn && !e._flora && !e._decor;
       check(!map.entities.some(effect), 'departure clears all old-area corpses/effects');
       loadMap(id, cam);
       check(!G.ents.some(effect), 'revisit does not resurrect corpses');
@@ -677,7 +678,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       check(body.hidden && body.stashedIn, 'concealed remains prepared for departure cleanup');
       G.state = 'play'; openBody(); const stale = document.querySelector('#body-drag');
       loadMap('tavern'); stale.click(); check(!G.dragBody, 'stale body action cannot start dragging in another map');
-      check(!map.entities.some(e => e.corpse || (e.transient && !e._scn && !e._flora)), 'departure removes exposed or concealed corpses');
+      check(!map.entities.some(e => e.corpse || (e.transient && !e._scn && !e._flora && !e._decor)), 'departure removes exposed or concealed corpses');
       const legacy = JSON.parse(JSON.stringify(bodyBaseline));
       for (const id of ['oakhaven', 'quarry', 'cloister']) legacy.maps[id].ents.pop();
       restoreGame(legacy); G.state = 'panel';

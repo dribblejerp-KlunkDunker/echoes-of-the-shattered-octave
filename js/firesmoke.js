@@ -202,9 +202,9 @@ const FIRESMOKE = (() => {
     const sx = spec.side[0], sy = spec.side[1];
     if (spec.type === 'torch') {
       // set into the wall face: 0.14 from the wall, shoulder-high
-      return { kind: 'deco', sprite: 'torch', x: +(spec.x + 0.5 + sx * 0.36).toFixed(2), y: +(spec.y + 0.5 + sy * 0.36).toFixed(2), scale: 0.52, yOff: -0.36, solid: false, nopick: true, transient: true, glow: 0.8, lightCol: [66, 34, 9], _fs: 'torch', label: 'A torch in a wall bracket' };
+      return { kind: 'deco', sprite: 'torch', x: +(spec.x + 0.5 + sx * 0.36).toFixed(2), y: +(spec.y + 0.5 + sy * 0.36).toFixed(2), scale: 0.52, yOff: -0.36, solid: false, nopick: true, transient: true, _decor: true, glow: 0.8, lightCol: [66, 34, 9], _fs: 'torch', label: 'A torch in a wall bracket' };
     }
-    return { kind: 'deco', sprite: 'brazier', x: +(spec.x + 0.5 + sx * 0.22).toFixed(2), y: +(spec.y + 0.5 + sy * 0.22).toFixed(2), scale: 0.62, solid: false, nopick: true, transient: true, glow: 0.8, lightCol: [74, 38, 10], _fs: 'brazier', label: 'An iron brazier, coals banked' };
+    return { kind: 'deco', sprite: 'brazier', x: +(spec.x + 0.5 + sx * 0.22).toFixed(2), y: +(spec.y + 0.5 + sy * 0.22).toFixed(2), scale: 0.62, solid: false, nopick: true, transient: true, _decor: true, glow: 0.8, lightCol: [74, 38, 10], _fs: 'brazier', label: 'An iron brazier, coals banked' };
   }
 
   function placeMap(map) {
@@ -213,7 +213,7 @@ const FIRESMOKE = (() => {
     if (map.outdoor && map.id === 'oakhaven') {
       for (const c of findChimneys(map)) {
         const g = (map.lvls || map.smooth) ? map.groundAt(c.x, c.y) : 0;
-        const e = { kind: 'deco', sprite: 'chimney', x: c.x, y: c.y, scale: 0.55, yOff: -(c.top + g + 0.03), solid: false, nopick: true, transient: true, _fs: 'chimney', _fsTop: c.top + g + 0.58, label: 'A chimney stack' };
+        const e = { kind: 'deco', sprite: 'chimney', x: c.x, y: c.y, scale: 0.55, yOff: -(c.top + g + 0.03), solid: false, nopick: true, transient: true, _decor: true, _fs: 'chimney', _fsTop: c.top + g + 0.58, label: 'A chimney stack' };
         map._fs.chimneys.push(e);
       }
     }

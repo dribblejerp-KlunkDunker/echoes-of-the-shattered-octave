@@ -79,7 +79,7 @@ const TOWNSFOLK = (() => {
       const tav = maps.tavern;
       if (r.slot != null && tav) {
         const s = TAVERN_SLOTS[r.slot];
-        const st = tav.add({ kind: 'npc', id: r.id, x: s.x, y: s.y, sprite: NPCS[r.id].sprite, scale: NPCS[r.id].scale || 1, solid: true, radius: 0.35, facing: s.facing, transient: true, hidden: true, _tfStand: r.key });
+        const st = tav.add({ kind: 'npc', id: r.id, x: s.x, y: s.y, sprite: NPCS[r.id].sprite, scale: NPCS[r.id].scale || 1, solid: true, radius: 0.35, facing: s.facing, transient: true, _decor: true, hidden: true, _tfStand: r.key });
         e._tfStandIn = st;
       }
     }
