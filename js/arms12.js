@@ -134,10 +134,7 @@ const ARMS12 = (() => {
     let changed = false;
     const w = currentWeapon();
     if (S.two && isTwo(w)) {
-      if (p.armor.shield && worn('shield')) {
-        say(`You rest the shield against your leg: the ${w.name} needs both hands.`, '', 3000);
-        delete p.armor.shield; changed = true;
-      }
+      // the shield stays on and is stowed behind the two-hander, as the base game already does (shieldBlocked())
       if (G.flags.p12a_off !== undefined && offId()) {
         say(`You sheathe the off-hand blade to take the ${w.name} in both hands.`, '', 3000);
         clearOff(); changed = true;
@@ -331,15 +328,7 @@ const ARMS12 = (() => {
         if (a && a.slot === 'shield' && G.player && G.has(id)) {
           try {
             const w = currentWeapon();
-            if (S.two && isTwo(w)) {
-              // wearing the shield puts the two-hander away: go back to the best one-hand weapon you carry
-              const p = G.player; let pick = -1, score = -1;
-              p.weapons.forEach((wid, i) => { const W = WEAPONS[wid]; if (W && !W.twoHanded && !W.innate && !W.ranged) { const s = (W.dmg[0] + W.dmg[1]) / 2; if (s > score) { score = s; pick = i; } } });
-              if (pick < 0) p.weapons.forEach((wid, i) => { if (pick < 0 && WEAPONS[wid] && !WEAPONS[wid].twoHanded) pick = i; });
-              if (pick >= 0) { p.weapon = pick; r = _eq.apply(this, arguments); say(`You sling the ${w.name} on your back and take up the ${WEAPONS[p.weapons[pick]].name} with the shield.`, '', 3200); return r; }
-              say(`The ${w.name} needs both hands; you have nothing lighter to take up beside the shield.`, 'warn', 3200);
-              return undefined;
-            }
+            // a shield beside a two-hander is simply stowed by the base game (shieldBlocked()); nothing to swap
             if (S.dual && offId()) { clearOff(); r = _eq.apply(this, arguments); say('You sheathe the off-hand blade to take up the shield.', '', 2600); return r; }
           } catch (e) { console.warn('arms12 equip', e); }
         }

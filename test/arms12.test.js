@@ -180,10 +180,7 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
       __weapon('sword'); __shield(true); update(1 / 60);
       o.shieldBefore = !!worn('shield');
       __weapon('spear'); update(1 / 60);                         // taking up a two-hander puts the shield away
-      o.shieldAfterSpear = !!worn('shield'); o.shieldInInv = G.has('a_buckler');
-      o.msg1 = (document.querySelector('#msgs').textContent || '').includes('both hands');
-      equipArmor('a_buckler');                                   // wearing the shield puts the two-hander away
-      o.weaponAfterShield = p.weapons[p.weapon]; o.shieldWornAgain = !!worn('shield');
+      o.shieldAfterSpear = !!worn('shield'); o.blockedAfterSpear = shieldBlocked(); o.shieldInInv = G.has('a_buckler');
       // damage / speed table applied to a real swing
       __shield(false); __weapon('spear'); __seed(77);
       const dummy = __mk('proctor', 13.2, 11.5, 'passive'); dummy.hp = 99999; dummy.state = 'passive'; dummy.radius = 0.4;
@@ -195,8 +192,7 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
       __rm(dummy); __weapon('sword'); __shield(false);
       return o;
     });
-    ok(th.shieldBefore && !th.shieldAfterSpear && th.shieldInInv && th.msg1, 'taking up a two-hander puts the shield away (still in the pack) with a message');
-    ok(th.weaponAfterShield !== 'spear' && th.shieldWornAgain, 'wearing the shield puts the two-hander away and takes up a one-hander (' + th.weaponAfterShield + ')');
+    ok(th.shieldBefore && th.shieldAfterSpear && th.blockedAfterSpear && th.shieldInInv, 'taking up a two-hander stows the shield (still worn, blocked, as the base game does)');
     ok(th.spear.n >= 20 && th.spear.min >= 6 && th.spear.max <= 12 && th.spear.max >= 11, 'spear swings use the grip table: 5-11 becomes 6-12 (saw ' + th.spear.min + '-' + th.spear.max + ' over ' + th.spear.n + ' hits)');
     ok(Math.abs(th.spear.dur - 0.66) < 0.002 && th.spear.fat === 2 && th.spear.restored === '5-11/2.1/0.6', 'spear swing time 0.6 -> 0.66 s, fatigue 2 per swing, catalogue restored afterwards');
     console.log('INFO two-hand table ' + JSON.stringify(th.table));

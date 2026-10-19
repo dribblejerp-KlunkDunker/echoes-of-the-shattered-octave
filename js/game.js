@@ -707,6 +707,7 @@ function castSong(id) {
     msg(`You read it its own surrendered name. "${best.name}." It stops. You have forgotten something small to pay for it; you cannot tell what.`, 'voice', 7000);
     killEnemy(best, false);
   }
+  else if (s.custom && typeof executeCustomSong === 'function') executeCustomSong(s);   // composed Songs (Spellmaker) were paid for but never sung
 }
 
 // ---------------------------------------------------------------- Oakhaven law (player data is included in existing saves)
