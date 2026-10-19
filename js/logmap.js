@@ -367,6 +367,8 @@ const LOGMAP = (function () {
   // One PNG data URL per sketch id, drawn once.
   function sketchURL(id) {
     if (!M[id]) id = 'quill';
+    // Phase 8: a painted sketch when one is already decoded; the drawn one otherwise
+    try { if (typeof PAINTED !== 'undefined' && PAINTED.ready('sketch', id)) return PAINTED.url('sketch', id); } catch (e) { /* stand-in */ }
     if (cache[id]) return cache[id];
     const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
     const c = cv.getContext('2d'), r = rngFor(id);
@@ -382,6 +384,11 @@ const LOGMAP = (function () {
     const fig = document.createElement('figure'); fig.className = 'lm-sketch'; fig.dataset.sketch = id;
     const img = document.createElement('img'); img.src = sketchURL(id); img.width = W; img.height = H;
     img.alt = 'Ink sketch: ' + (SUBJECTS[id] || SUBJECTS.quill);
+    try { // the painting may still be on its way: swap it in when decoded, keep the drawn sketch if it never comes
+      if (typeof PAINTED !== 'undefined' && PAINTED.has('sketch', id) && !PAINTED.ready('sketch', id)) {
+        PAINTED.load('sketch', id).then((im) => { if (im) img.src = PAINTED.url('sketch', id); });
+      }
+    } catch (e) { /* stand-in */ }
     const cap = document.createElement('figcaption'); cap.textContent = SUBJECTS[id] || SUBJECTS.quill; cap.setAttribute('aria-hidden', 'true');
     fig.appendChild(img); fig.appendChild(cap);
     return fig;
