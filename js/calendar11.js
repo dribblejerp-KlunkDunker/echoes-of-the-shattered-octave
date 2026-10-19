@@ -3,14 +3,11 @@
 //
 //  Six items, two kinds of switch (Options -> Graphics & access, each persisted under octave.calendar11.v1):
 //   "Calendar events" (default On) governs 1-3 and, off, they do nothing at all:
-//     1. HOLIDAYS. Four named days on a 16-day round (day number G.day, so a pure function of the clock):
-//          day%16 == 2  Hearthday          provisions (healing, voice, food) cost 20% less in every shop
-//          day%16 == 5  Pure Note Vigil    a sermon in the Chapel (Oakhaven) / the Cloister (Whisper-Grove)
-//          day%16 == 7  Names-Eve          a gathering of small lights after dusk
-//          day%16 == 9  First-Reed Day     whistle-reeds cost 25% less in every shop
-//        Each shows in the clock panel of the HUD, in the logbook, as a line when the map is entered and as a
-//        line from the generic townsfolk when talked to. Before the Greening the lines are Oakhaven's; after it
-//        (G.flags.greening) the Whisper-Grove versions are used and Oakhaven townsfolk say nothing about them.
+//     1. THE CANON CALENDAR (Vol VII). G.day 0 is Nullday the sixth of Harvestmonth, 419 [PROPOSED: the day of month; the
+//        weekday matches js/data.js DAYS and the Vol VII formula). Years are 12 x 30 days, weeks are 8. The clock panel of
+//        the HUD and the logbook give the date in prose. The Rota: each weekday is one Anchor's duty, kept by one person,
+//        quietly; the logbook names it and the generic Oakhaven townsfolk mention it. No prices change. Canopy, the first
+//        Memoryday of Ashfall (G.day 31), is a quiet unofficial remembrance (not held openly since 416): a few lines only.
 //     2. MARKET DAY. day%8 == 3 (every Massday). Oakhaven's east square gets 3-5 transient stalls with a vendor
 //        each (the count is 3 + (2n+1)%3 for the n-th market, so the first has 4), selling 3 items each from a
 //        pool, rotated by n. Prices are the shop formula at markup 0.9. Never after the Greening.
@@ -23,7 +20,7 @@
 //
 //  Saved state: one small integer, G.flags.p11c_sign (0/absent = no sign, 1..7 = Ionian..Locrian), validated
 //  on every load. Stalls, vendors, the overlay and the recap are never saved. Everything else is derived from G.day.
-//  Wrapped (never edited): buyPrice, talk, loadMap, restoreGame, spawnHound, renderLog, renderCharacter,
+//  Wrapped (never edited): talk, loadMap, restoreGame, spawnHound, renderLog, renderCharacter,
 //  renderCreate, newPlayer, startGame, drawHUD, render, renderAccessibilityMenu.
 //  Lore: dates follow LORE_P6 (Book One, 419 SR, autumn); everything invented is marked [PROPOSED].
 // ============================================================
@@ -57,37 +54,40 @@ const CALENDAR11 = (function () {
   }
 
   // ================================================================ 1. the calendar
-  const ROUND = 16;
   const greened = () => !!(hasG() && G.flags && G.flags.greening);
   const dayNo = (d) => (d === undefined ? (hasG() ? G.day | 0 : 0) : d | 0);
-  // [PROPOSED] every holiday name, effect and line below is new (see P11-CALENDAR/TEXT.md).
-  const HOLIDAYS = [
-    { id: 'hearthday', at: 2, name: 'Hearthday', hud: 'HEARTHDAY', effect: 'Provisions cost a fifth less today.',
-      oak: 'Hearthday. Every chimney in Oakhaven is lit at once, and the smoke goes up straight and unashamed. Supper is shared at the doors.',
-      grove: 'Hearthday. Someone has set a small fire in the roofless court. Nobody sings over it. The warmth is kept all the same.',
-      folk: ['Hearthday! The bread burned, so it is a proper one.', 'Supper at my door if you have no hearth. Quietly, mind. The pot stirs itself soft.', 'We keep the fire in all night on Hearthday. Fire hums a little, if you listen. No one has ever complained.'] },
-    { id: 'vigil', at: 5, name: 'Pure Note Vigil', hud: 'THE VIGIL', effect: 'The Church holds a sermon.',
-      oak: 'The Pure Note Vigil. The bell-plinth is dressed in white cloth, and the street walks one way, towards the Chapel.',
-      grove: 'The Pure Note Vigil. No bell has rung in the Grove for years. The Vigil is kept anyway, by people standing very still.',
-      folk: ['Vigil tonight at the Chapel. You go, or you are noticed not going.', 'I hold the note with everyone else. I only hold it a little flat.', 'The Chaplain will ask for one note. We are good at giving one note, here.'] },
-    { id: 'names', at: 7, name: 'Names-Eve', hud: 'NAMES-EVE', effect: 'After dusk the town sets out small lights.',
-      oak: 'Names-Eve. Small lights have been set out on the doorsteps, one for each name the street has lost. Some steps have a great many.',
-      grove: 'Names-Eve. Small lights hang along the Weeping Canopy, one for each name. Someone is reading, very quietly, in no order at all.',
-      folk: ['Names-Eve. I light one for my brother, and one for the neighbour who never got a candle.', 'Light one if you have a name to put to it. No one asks whose.', 'The lights are small on purpose. Big ones get counted.'] },
-    { id: 'reed', at: 9, name: 'First-Reed Day', hud: 'FIRST REED', effect: 'Whistle-reeds cost a quarter less today.',
-      oak: 'First-Reed Day. New reeds hang over the doors of the year\'s children, each tuned to its child. In Oakhaven they hang very still.',
-      grove: 'First-Reed Day. Fresh reeds hang from the broken lintels. None of them sounds. Somebody comes every year anyway.',
-      folk: ['Hung ours this morning, tuned against the babe\'s own breastbone. It does not sound. We hang it anyway.', 'First-Reed Day. Reeds are cheap at the stalls. A day for it.', 'My mother hung one for me. I check it every morning. It has never said a word.'] },
+  // Vol VII: 12 months x 30 days; day-of-year -> weekday index in the Rootday-first list is ((doy+3)%8)+1; the game's DAYS
+  // starts at Nullday, so DAYS index = (doy+4)%8. Day 0 is Nullday: (270 + 6 + 4) % 8 == 0, so START_DOM = 6 [PROPOSED].
+  const MONTHS = ['Stillmonth', 'Thawmonth', 'Seedmonth', 'Lambmonth', 'Reedmonth', 'Longsun', 'Dustmonth', 'Firstfruit', 'Sheafmonth', 'Harvestmonth', 'Ashfall', 'Frostmonth'];
+  const WEEK = ['Nullday', 'Rootday', 'Hearthday', 'Massday', 'Stasisday', 'Dawnday', 'Driftday', 'Memoryday'];
+  const ORD = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth', 'twentieth', 'twenty-first', 'twenty-second', 'twenty-third', 'twenty-fourth', 'twenty-fifth', 'twenty-sixth', 'twenty-seventh', 'twenty-eighth', 'twenty-ninth', 'thirtieth'];
+  const START_MONTH = 10, START_DOM = 6;
+  const doyOf = (d) => (START_MONTH - 1) * 30 + START_DOM + Math.max(0, dayNo(d));    // day of the year, 1-based, may pass 360 (it wraps)
+  function dateOf(d) {
+    const doy = ((doyOf(d) - 1) % 360) + 1, month = Math.floor((doy - 1) / 30) + 1, dom = ((doy - 1) % 30) + 1;
+    return { doy, month, dom, monthName: MONTHS[month - 1], weekday: WEEK[(doyOf(d) + 4) % 8], weekIdx: (doyOf(d) + 4) % 8 };
+  }
+  const dateProse = (d) => { const t = dateOf(d); return t.weekday + ' the ' + ORD[t.dom] + ' of ' + t.monthName; };
+  const dateShort = (d) => { const t = dateOf(d); return 'The ' + ORD[t.dom] + ' of ' + t.monthName; };
+  // [PROPOSED] the Rota lines: one Anchor's duty a day, one keeper, quietly. logbook line, then what townsfolk say.
+  const ROTA = [
+    { log: 'Nullday. The last duty of the week: one person sits at the quiet end of the town and keeps it. The rest of Oakhaven is careful to be elsewhere.', folk: 'It is Nullday. Somebody is keeping the quiet end today. I would not go and look.' },
+    { log: 'Rootday. One person from the street goes to stand at a tree for the Root\'s hour, and says nothing.', folk: 'Rootday. Rootday. The tree is one neighbour\'s turn this week. They go alone. That is the whole of it.' },
+    { log: 'Hearthday. One person keeps the hearth-stone warm for the Rota, and makes no feast of it.', folk: 'Hearthday. One of us keeps the stone warm. Nobody talks about it. It is better that way.' },
+    { log: 'Massday. One person stands on the old floor of the square for the Mass duty, and stays until the weight is felt.', folk: 'Massday. Someone is standing on the square floor for the weight. Walk around them, if you would.' },
+    { log: 'Stasisday. One person winds the dial in the square and names the hour once, softly.', folk: 'Stasisday. The dial gets wound by one hand, and the hour is said once. Do not say it again after.' },
+    { log: 'Dawnday. One person opens a shutter to the first light and leaves it open an hour.', folk: 'Dawnday. Someone has the shutter today. You will see one window open on the whole street.' },
+    { log: 'Driftday. One person walks the Flume channel end to end for the Velocity duty, quietly, and walks back.', folk: 'Driftday. The walker is out on the Flume bank. Walks there and back and never hurries.' },
+    { log: 'Memoryday. One person says one name aloud at the Hedge side, and then stands there. Nobody asks whose.', folk: 'Memoryday. One of us says a name at the Hedge. We do not ask whose. We are good at not asking.' },
   ];
-  const PRICE_CUT = { hearthday: 0.8, reed: 0.75 };
-  const SERMON = {
-    oak: ['The Chapel is full. The Chaplain holds the Pure Note for the length of one breath, and everyone holds it with him. It is not hard. That is what is wrong with it.',
-      '"One note," the Chaplain says. "The Reach has sung in the plural, and look where it has got us." Under the pews, very low, someone hums the Root.'],
-    grove: ['The Cloister is full of people standing in lines. A man says the Pure Note aloud and no one follows him. After a while he says it again, more kindly.',
-      '"We kept the note," he says. "We only lost the choir." Nobody answers, and it is the most honest sermon in the Grove.'],
+  // Canopy: the first Memoryday of Ashfall. Not held openly since 416; a few candles and lines, nothing official, no shop effect.
+  const CANOPY = {
+    oak: ['The Canopy Feast would fall today. It has not been held in the open since 416. A few candles stand at the backs of windows, and no one says what for.', 'Someone has left a lit candle on a doorstep with its back to the road.'],
+    grove: ['The first Memoryday of Ashfall. Canopy. Nobody holds it in the Grove; someone has set a few small candles at the foot of the Weeping Canopy anyway, facing in.', 'A voice somewhere is reading names, quietly, and nobody tells it to stop.'],
+    folk: ['Canopy would be today. We do not hold it. A candle is not a feast.', 'Do not look at the windows too long today. There are candles in some of them.'],
   };
-  const holidayOf = (d) => { const r = ((dayNo(d) % ROUND) + ROUND) % ROUND; for (const h of HOLIDAYS) if (h.at === r) return h; return null; };
-  function holiday(d) { return cfg.events ? holidayOf(d) : null; }
+  function isCanopy(d) { const t = dateOf(d); return t.month === 11 && t.weekIdx === 7 && t.dom <= 7; }
+  const rotaOf = (d) => ROTA[dateOf(d).weekIdx];
 
   // ---- market day: every Massday (day%8 == 3), n-th market = (day-3)/8
   const marketIndex = (d) => { d = dayNo(d); return d >= 3 && d % 8 === 3 ? (d - 3) / 8 : -1; };
@@ -95,7 +95,7 @@ const CALENDAR11 = (function () {
   const stallCount = (n) => 3 + ((2 * n + 1) % 3);
 
   // ---- the moon: one phase a day, eight phases, a round of 8 days. 0 new, 2 first quarter, 4 full, 6 last quarter.
-  const MOON_OFFSET = 3;             // [PROPOSED] day 0 (Nullday, the arrival) is a waxing gibbous moon; day 1 is full, day 5 new, day 9 full
+  const MOON_OFFSET = 3;   // the eight-day cycle itself is [PROPOSED]; canon (Vol VII) gives the calendar, not a moon;             // [PROPOSED] day 0 (Nullday, the arrival) is a waxing gibbous moon; day 1 is full, day 5 new, day 9 full
   const MOON_NAMES = ['new moon', 'waxing crescent', 'first quarter', 'waxing gibbous', 'full moon', 'waning gibbous', 'last quarter', 'waning crescent'];
   // multiplier on how often the Hush's hounds come (js/game.js spawnHound): the dark nights are bolder, the lit ones slower
   const MOON_SPAWN = [1.25, 1.10, 1.00, 0.90, 0.75, 0.90, 1.00, 1.10];
@@ -113,37 +113,19 @@ const CALENDAR11 = (function () {
   const moonName = (d) => MOON_NAMES[moonIndex(d)];
   const moonSpawnMult = (d) => (cfg.events ? MOON_SPAWN[moonIndex(d)] : 1);
 
-  // ================================================================ prices (1)
-  function priceCut(e) {
-    const h = holiday(); if (!h || !PRICE_CUT[h.id] || !e || !ITEMS[e.item]) return 1;
-    const it = ITEMS[e.item];
-    if (h.id === 'hearthday') return (it.use === 'heal' || it.use === 'voice' || it.use === 'food') ? PRICE_CUT.hearthday : 1;
-    if (h.id === 'reed') return it.use === 'whistle' ? PRICE_CUT.reed : 1;
-    return 1;
-  }
-  function wirePrices() {
-    if (typeof buyPrice !== 'function') return;
-    const _bp = buyPrice;
-    buyPrice = function (n, e) {
-      const base = _bp.apply(this, arguments);
-      try { const k = priceCut(e); return k === 1 ? base : Math.max(1, Math.round(base * k)); } catch (err) { return base; }
-    };
-  }
-
   // ================================================================ event lines (1)
   const shownKey = {};                                  // day:map -> true, so an entry line is said once a visit
   const folkId = (id) => id === 'townsman' || id === 'townswoman';
   function entryLines(mapId) {
-    const out = [], d = dayNo(), h = holiday(d);
+    const out = [], d = dayNo();
     if (greened()) {
-      if (h && (mapId === 'whispergrove')) out.push([h.grove, 'warn']);
-      if (h && h.id === 'vigil' && mapId === 'cloister') out.push([SERMON.grove[0], 'voice'], [SERMON.grove[1], 'voice']);
+      if (isCanopy(d) && mapId === 'whispergrove') out.push([CANOPY.grove[0], 'warn'], [CANOPY.grove[1], 'voice']);
       return out;
     }
-    if (h && mapId === 'oakhaven') {
-      if (h.id !== 'names' || G.tod * 24 >= 17 || G.tod * 24 < 5) out.push([h.oak, 'warn']);
+    if (mapId === 'oakhaven') {
+      out.push([rotaOf(d).log, 'warn']);
+      if (isCanopy(d)) out.push([CANOPY.oak[0], 'warn'], [CANOPY.oak[1], 'voice']);
     }
-    if (h && h.id === 'vigil' && mapId === 'chapel') out.push([SERMON.oak[0], 'voice'], [SERMON.oak[1], 'voice']);
     if (marketOn(d) && mapId === 'oakhaven') out.push([MARKET_LINE, 'warn']);
     return out;
   }
@@ -160,10 +142,10 @@ const CALENDAR11 = (function () {
   // one line per (day, speaker) from the generic townsfolk, Oakhaven only and only before the Greening
   function folkLine(e) {
     if (!cfg.events || greened() || !e || !folkId(e.id) || !hasG() || G.mapId !== 'oakhaven') return null;
-    const h = holiday(), d = dayNo(), k = hash(d + ':' + Math.round(e.homeX * 10) + ':' + Math.round(e.homeY * 10));
-    if (h) return h.folk[k % h.folk.length];
-    if (marketOn(d)) return MARKET_FOLK[k % MARKET_FOLK.length];
-    return null;
+    const d = dayNo(), k = hash(d + ':' + Math.round(e.homeX * 10) + ':' + Math.round(e.homeY * 10));
+    if (isCanopy(d)) return CANOPY.folk[k % CANOPY.folk.length];
+    if (marketOn(d) && k % 2 === 0) return MARKET_FOLK[k % MARKET_FOLK.length];
+    return rotaOf(d).folk;
   }
   function wireTalk() {
     if (typeof talk !== 'function') return;
@@ -640,9 +622,7 @@ const CALENDAR11 = (function () {
   // ================================================================ HUD, logbook, map entry, loading
   function hudWord() {
     if (!cfg.events || !hasG()) return '';
-    const h = holiday(); if (h) return h.hud;
-    if (marketOn(dayNo()) && !greened()) return 'MARKET';
-    return '';
+    return dateShort(dayNo());
   }
   function wireHud() {
     if (typeof drawHUD === 'function') {
@@ -652,7 +632,8 @@ const CALENDAR11 = (function () {
         try {
           const word = hudWord();
           if (word && G.player && !(G.escapeTimer > 0 || G.boreHold > 0 || G.rootWard > 0 || G.whistleT > 0)) {
-            const ctx = Engine.ctx; ctx.save(); ctx.font = '7px "Alegreya SC", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#d9a441'; ctx.fillText(word, 188, VIEW_H + 42); ctx.restore();
+            const ctx = Engine.ctx; ctx.save(); ctx.font = '6px "Alegreya", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#d9a441';
+            ctx.fillText(word, 188, VIEW_H + 42, 60); ctx.restore();   // maxWidth squeezes a long month to the panel
           }
         } catch (e) { /* cosmetic */ }
         return r;
@@ -677,9 +658,11 @@ const CALENDAR11 = (function () {
   }
   function almanacLines() {
     if (!cfg.events || !hasG()) return [];
-    const out = [], h = holiday(), d = dayNo();
-    if (h) out.push(h.name + '. ' + h.effect);
-    if (marketOn(d) && !greened()) out.push('Massday market in the east square. Prices are a tenth under the shops’.');
+    const out = [], d = dayNo();
+    out.push(dateProse(d) + ', 419 SR.');
+    out.push(rotaOf(d).log);
+    if (isCanopy(d)) out.push(greened() ? CANOPY.grove[0] : CANOPY.oak[0]);
+    if (marketOn(d) && !greened()) out.push('Massday market in the east square. Prices are a tenth under the shops\u2019.');
     out.push('The moon: ' + MOON_NAMES[moonIndex(d)] + '. ' + MOON_LINES[moonIndex(d)]);
     return out;
   }
@@ -702,7 +685,7 @@ const CALENDAR11 = (function () {
   function appendRows() {
     const grid = $q('#modal-panel .ctl-grid');
     if (!grid || $q('#c11-events-opt')) return;
-    row(grid, 'c11-events-opt', 'Calendar events', 'Four holidays, a weekly market in Oakhaven, and a moon whose phase the Hush follows. Off: none of it.', () => cfg.events, (v) => { cfg.events = v; saveCfg(); try { syncMarket(true); } catch (e) { /* ignore */ } });
+    row(grid, 'c11-events-opt', 'Calendar events', 'The date, the weekly Rota, a market in Oakhaven, and a moon whose phase the Hush follows. Off: none of it.', () => cfg.events, (v) => { cfg.events = v; saveCfg(); try { syncMarket(true); } catch (e) { /* ignore */ } });
     row(grid, 'c11-signs-opt', 'Birth signs', 'Pick a musical mode when you make a character. Off: no picker.', () => cfg.signs, (v) => { cfg.signs = v; saveCfg(); });
     row(grid, 'c11-recap-opt', '“Previously…” recap', 'A short card when you load a save after a break, or from a file.', () => cfg.recap, (v) => { cfg.recap = v; saveCfg(); if (!v) hideRecap(); });
     row(grid, 'c11-perf-opt', 'Performance overlay', 'Frame time, frame rate, render scale, enemies, lights, particles, memory. F10 toggles it.', () => cfg.perf, (v) => setPerf(v));
@@ -751,14 +734,14 @@ html.ac-reduce-motion #p11c-recap { animation: none; }
   loadCfg();
   injectStyle();
   const wire = (name, fn) => { try { fn(); } catch (e) { console.warn('calendar11: ' + name + ' wiring failed', e); } };
-  wire('prices', wirePrices); wire('talk', wireTalk); wire('moon', wireMoon); wire('creation', wireCreation);
+  wire('talk', wireTalk); wire('moon', wireMoon); wire('creation', wireCreation);
   wire('recap', wireRecap); wire('render', wireRender); wire('hud', wireHud); wire('options', wireOptions);
   wire('vendors', defineVendors);
 
   return {
-    cfg, saveCfg, HOLIDAYS, ROUND, PRICE_CUT, SERMON, VENDORS, STALL_SPOTS, MODES, SIGN_BONUS, MOON_NAMES, MOON_SPAWN, MOON_LINES, MOON_OFFSET, RECAP_MIN_MS,
-    holiday, holidayOf, marketIndex, marketOn, stallCount, stockFor, vendorsFor, moonIndex, moonName, moonSpawnMult,
-    priceCut, sayEntry, entryLines, folkLine, syncMarket, marketInfo, stalls, ensureSprites, almanacLines, hudWord,
+    cfg, saveCfg, ROTA, CANOPY, MONTHS, WEEK, VENDORS, STALL_SPOTS, MODES, SIGN_BONUS, MOON_NAMES, MOON_SPAWN, MOON_LINES, MOON_OFFSET, RECAP_MIN_MS,
+    dateOf, dateProse, dateShort, rotaOf, isCanopy, marketIndex, marketOn, stallCount, stockFor, vendorsFor, moonIndex, moonName, moonSpawnMult,
+    sayEntry, entryLines, folkLine, syncMarket, marketInfo, stalls, ensureSprites, almanacLines, hudWord,
     moonHook, moonStats,
     validSign, signOf, sanitizeFlags, statsFor, signPicker,
     recapQualifies, recapData, showRecap, hideRecap, get recapEl() { return recapEl; },

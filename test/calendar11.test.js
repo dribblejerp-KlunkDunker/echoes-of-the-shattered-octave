@@ -74,46 +74,34 @@ async function go(page) { await page.locator('#c-go').click(); await page.locato
     const { page, errors } = B;
     await page.evaluate(() => { G.state = 'play'; G.fadeT = 0; closeModal(); });
 
-    // ---------------- 1. schedule is a pure function of the day number
+    // ---------------- 1. the canon calendar is a pure function of the day number
     const sched = await page.evaluate(() => {
-      const C = CALENDAR11, r = {}; r.hol = []; r.mk = []; r.moon = [];
-      for (let d = 0; d < 64; d++) { const h = C.holidayOf(d); r.hol.push(h ? h.id : '-'); r.mk.push(C.marketIndex(d)); r.moon.push(C.moonIndex(d)); }
-      r.again = []; for (let d = 0; d < 64; d++) { const h = C.holidayOf(d); r.again.push(h ? h.id : '-'); }
-      r.neg = C.holidayOf(-14) && C.holidayOf(-14).id; r.counts = [0, 1, 2, 3, 4, 5].map(n => C.stallCount(n));
+      const C = CALENDAR11, r = {}; r.mk = []; r.moon = []; r.days = [];
+      for (let d = 0; d < 64; d++) { r.mk.push(C.marketIndex(d)); r.moon.push(C.moonIndex(d)); r.days.push(C.dateOf(d).weekday === DAYS[d % 8]); }
+      r.d0 = C.dateProse(0); r.d4 = C.dateProse(4); r.d10 = C.dateProse(10); r.d24 = C.dateProse(24); r.d25 = C.dateProse(25); r.d31 = C.dateProse(31);
+      r.short0 = C.dateShort(0); r.canopy = []; for (let d = 0; d < 400; d++) if (C.isCanopy(d)) r.canopy.push(d);
+      // Vol VII formula, independent: weekday = ((doy+3) mod 8)+1 in the Rootday-first list
+      const root = ['Rootday', 'Hearthday', 'Massday', 'Stasisday', 'Dawnday', 'Driftday', 'Memoryday', 'Nullday'];
+      r.formula = true; for (let d = 0; d < 120; d++) { const t = C.dateOf(d); if (root[(t.doy + 3) % 8] !== t.weekday) r.formula = false; }
+      r.rotaAll = C.ROTA.length === 8 && C.ROTA.every(x => x.log && x.folk);
+      r.counts = [0, 1, 2, 3, 4, 5].map(n => C.stallCount(n));
       r.stock = [0, 1, 2].map(n => C.VENDORS.map(v => C.stockFor(v, n).join('+')));
       r.itemsOk = C.VENDORS.every(v => v.pool.every(id => ITEMS[id])) && C.VENDORS.every(v => [0, 1, 2, 3].every(n => C.stockFor(v, n).length === 3));
       r.kinds = [0, 1, 2, 3].map(n => new Set(C.vendorsFor(n).map(v => v.key)).size === C.vendorsFor(n).length);
       return r;
     });
-    const expectHol = d => ({ 2: 'hearthday', 5: 'vigil', 7: 'names', 9: 'reed' })[d % 16] || '-';
-    check(sched.hol.every((h, d) => h === expectHol(d)) && sched.hol.join() === sched.again.join(), 'holidays fall on day%16 in {2,5,7,9}, deterministic');
+    check(sched.days.every(Boolean), 'the weekday of the date is the game\'s own DAYS weekday for 64 days');
+    check(sched.formula, 'the weekday matches the Vol VII formula ((doy+3)%8)+1');
+    check(sched.d0 === 'Nullday the sixth of Harvestmonth' && sched.d10 === 'Hearthday the sixteenth of Harvestmonth' && sched.d24 === 'Nullday the thirtieth of Harvestmonth' && sched.d25 === 'Rootday the first of Ashfall', 'date prose: ' + [sched.d0, sched.d10, sched.d24, sched.d25]);
+    check(sched.canopy.join() === '31,391' && /Memoryday the seventh of Ashfall/.test(sched.d31), 'Canopy is the first Memoryday of Ashfall: ' + sched.canopy);
+    check(sched.rotaAll, 'every weekday has a Rota line and a townsfolk line');
     check(sched.mk.every((m, d) => m === (d % 8 === 3 ? (d - 3) / 8 : -1)), 'market days are every Massday (day%8==3), indexed from 0');
     check(sched.moon.every((m, d) => m === (d + 3) % 8), 'moon index is (day+3)%8');
     check(sched.counts.join() === '4,3,5,4,3,5' && sched.counts.every(c => c >= 3 && c <= 5), 'stall counts are 3-5: ' + sched.counts);
     check(sched.stock[0].join() !== sched.stock[1].join() && sched.itemsOk && sched.kinds.every(Boolean), 'stock rotates between markets, every pool item exists, a market has no repeated vendor kind');
-    check(sched.neg === null || sched.neg === 'hearthday', 'negative days do not throw');
-
-    // ---------------- 1b. prices restore after
-    const prices = await page.evaluate(() => {
-      const r = {}, n = NPCS.bettany, e = n.shop[0], reedE = { item: 'whistle' }, sword = { item: 'w_sword' };
-      const C = CALENDAR11;
-      const at = (d, ent) => { G.day = d; return buyPrice(n, ent); };
-      C.cfg.events = false; r.offTonic = at(2, e); r.offWhistle = at(9, reedE); C.cfg.events = true;
-      r.d1 = at(1, e); r.d2 = at(2, e); r.d3 = at(3, e);
-      r.honey2 = at(2, n.shop[1]); r.honey1 = at(1, n.shop[1]);
-      r.w1 = at(1, reedE); r.w9 = at(9, reedE); r.w10 = at(10, reedE);
-      r.sword1 = at(1, sword); r.sword2 = at(2, sword); r.sword9 = at(9, sword);
-      r.pellets2 = at(2, n.shop[2]); r.pellets1 = at(1, n.shop[2]);
-      r.tonicTwice = [at(2, e), at(1, e), at(2, e), at(3, e)];
-      G.day = 0; return r;
-    });
-    check(prices.offTonic === prices.d1 && prices.d1 === prices.d3, 'off and ordinary days price tonic the same (' + prices.offTonic + ', ' + prices.d1 + ', ' + prices.d3 + ')');
-    check(prices.d2 === Math.max(1, Math.round(prices.d1 * 0.8)) && prices.d2 < prices.d1, 'Hearthday: tonic ' + prices.d1 + ' -> ' + prices.d2 + ' (x0.8)');
-    check(prices.honey2 === Math.max(1, Math.round(prices.honey1 * 0.8)), 'Hearthday: honey ' + prices.honey1 + ' -> ' + prices.honey2);
-    check(prices.pellets2 === prices.pellets1, 'Hearthday leaves ammunition alone');
-    check(prices.w9 === Math.max(1, Math.round(prices.w1 * 0.75)) && prices.w9 < prices.w1 && prices.w10 === prices.w1 && prices.offWhistle === prices.w1, 'First-Reed Day: whistle ' + prices.w1 + ' -> ' + prices.w9 + ' (x0.75), restored the day after');
-    check(prices.sword1 === prices.sword2 && prices.sword2 === prices.sword9, 'weapons are never discounted');
-    check(prices.tonicTwice.join() === [prices.d2, prices.d1, prices.d2, prices.d1].join(), 'prices go down and come back up with the day');
+    // no price anywhere depends on the day any more
+    const prices = await page.evaluate(() => { const n = NPCS.bettany, out = []; for (const d of [0, 2, 3, 10, 31]) { G.day = d; out.push(n.shop.map(e => buyPrice(n, e)).join('/')); } G.day = 0; return out; });
+    check(new Set(prices).size === 1, 'shop prices do not change with the day: ' + prices);
 
     // ---------------- 2. market stalls
     const mk = await page.evaluate(async () => {
@@ -151,42 +139,39 @@ async function go(page) { await page.locator('#c-go').click(); await page.locato
     check(mk.n1 === 3 && mk.n2 === 5 && mk.stock1 !== mk.stock0, 'the next markets have 3 and 5 stalls and another stock (' + mk.n1 + ',' + mk.n2 + ')');
     check(mk.green === 0 && mk.greenMap === 0 && mk.greenLines === 0 && mk.greenFolk === null, 'after the Greening: no stalls, no Oakhaven entry lines, no townsfolk lines');
 
-    // ---------------- 1c. holiday lines, before and after the Greening
+    // ---------------- 1c. Rota and Canopy lines, before and after the Greening
     const hl = await page.evaluate(() => {
-      const C = CALENDAR11, r = {}; G.flags = Object.assign({}, G.flags); delete G.flags.greening; G.tod = 0.8;
-      r.oak = [2, 5, 7, 9].map(d => { G.day = d; return C.entryLines('oakhaven').map(x => x[0].slice(0, 12)).join('|'); });
-      G.day = 5; r.chapel = C.entryLines('chapel').length; r.cloisterBefore = C.entryLines('cloister').length;
-      G.day = 4; r.plain = C.entryLines('oakhaven').length;
-      G.day = 2; r.folk = C.folkLine({ id: 'townsman', homeX: 3.5, homeY: 4.5 }); r.notFolk = C.folkLine({ id: 'harrow', homeX: 3.5, homeY: 4.5 });
-      r.folkStable = C.folkLine({ id: 'townsman', homeX: 3.5, homeY: 4.5 }) === r.folk;
-      G.tod = 0.3; G.day = 7; r.namesMorning = C.entryLines('oakhaven').length; G.tod = 0.8; r.namesDusk = C.entryLines('oakhaven').length;
+      const C = CALENDAR11, r = {}; G.flags = Object.assign({}, G.flags); delete G.flags.greening; G.tod = 0.6;
+      r.oak = [0, 1, 2, 4, 5, 6, 7].map(d => { G.day = d; const l = C.entryLines('oakhaven'); return l.length + ':' + l[0][0].slice(0, 14); });
+      G.day = 3; r.market = C.entryLines('oakhaven').length;
+      r.folk = []; for (let d = 0; d < 8; d++) { G.day = d; r.folk.push(C.folkLine({ id: 'townsman', homeX: 3.5, homeY: 4.5 })); }
+      r.notFolk = C.folkLine({ id: 'harrow', homeX: 3.5, homeY: 4.5 }); G.day = 1; r.stable = C.folkLine({ id: 'townsman', homeX: 3.5, homeY: 4.5 }) === C.folkLine({ id: 'townsman', homeX: 3.5, homeY: 4.5 });
+      G.day = 31; r.canopyOak = C.entryLines('oakhaven').length; r.canopyFolk = C.folkLine({ id: 'townsman', homeX: 3.5, homeY: 4.5 });
+      r.canopyOther = (G.day = 30, C.entryLines('oakhaven').length);
       G.flags.greening = true;
-      r.grove = [2, 5, 7, 9].map(d => { G.day = d; return C.entryLines('whispergrove').map(x => x[0].slice(0, 12)).join('|'); });
-      G.day = 5; r.cloister = C.entryLines('cloister').length; r.chapelAfter = C.entryLines('chapel').length;
-      r.hudAfter = (G.day = 2, C.hudWord());
-      delete G.flags.greening; G.day = 0;
+      G.day = 31; r.groveCanopy = C.entryLines('whispergrove').map(x => x[0].slice(0, 20)); r.oakAfter = C.entryLines('oakhaven').length; r.folkAfter = C.folkLine({ id: 'townsman', homeX: 3.5, homeY: 4.5 });
+      G.day = 30; r.groveOther = C.entryLines('whispergrove').length;
+      delete G.flags.greening;
       // talking: the line lands in the dialogue log
-      G.day = 2; G.state = 'play'; const t = G.ents.find(e => e.kind === 'npc' && e.id === 'townsman'); G.mapId === 'oakhaven' || loadMap('oakhaven');
+      G.day = 2; G.state = 'play'; loadMap('oakhaven');
       const tt = G.maps.oakhaven.entities.find(e => e.kind === 'npc' && e.id === 'townsman' && !e._p11c); G.ents = G.maps.oakhaven.entities;
       talk(tt); r.dlgLines = DLG.log.filter(l => l.who === 'them').length; r.dlgLast = DLG.log[DLG.log.length - 1].t; closeModal(); G.state = 'play'; G.day = 0;
       return r;
     });
-    check(hl.oak.every(s => s.length > 0) && new Set(hl.oak).size === 4, 'each of the four holidays has its own Oakhaven entry line');
-    check(hl.chapel === 2 && hl.cloisterBefore === 0 && hl.plain === 0, 'the Vigil sermon is in the Chapel, plain days are silent');
-    check(hl.folk && hl.folkStable && hl.notFolk === null, 'townsfolk have a stable holiday line; named people do not');
-    check(hl.namesMorning === 0 && hl.namesDusk === 1, 'Names-Eve opens at dusk');
-    check(hl.grove.every(s => s.length > 0) && new Set(hl.grove).size === 4 && hl.grove.join() !== hl.oak.join(), 'after the Greening: Whisper-Grove versions, different text');
-    check(hl.cloister === 2 && hl.chapelAfter === 0 && hl.hudAfter === 'HEARTHDAY', 'after the Greening the sermon moves to the Cloister; the HUD still names the day');
-    check(hl.dlgLines >= 2 && /./.test(hl.dlgLast), 'talking to a townsman on Hearthday adds the holiday line (' + hl.dlgLines + ')');
+    check(hl.oak.every(s => /^1:/.test(s)) && new Set(hl.oak).size === 7 && hl.market === 2, 'each weekday has its own Rota line on entering Oakhaven (market day adds one)');
+    check(hl.folk.every(Boolean) && new Set(hl.folk).size >= 6 && hl.stable && hl.notFolk === null, 'townsfolk have a stable line every day; named people do not');
+    check(hl.canopyOak === 3 && hl.canopyFolk && hl.canopyOther === 1, 'Canopy before the Greening: quiet candles and lines on that day only');
+    check(hl.groveCanopy.length === 2 && hl.oakAfter === 0 && hl.folkAfter === null && hl.groveOther === 0, 'after the Greening: Canopy in Whisper-Grove only, nothing from Oakhaven');
+    check(hl.dlgLines >= 2 && /./.test(hl.dlgLast), 'talking to a townsman adds the line (' + hl.dlgLines + ')');
 
     // logbook and HUD word
     const ui = await page.evaluate(() => {
-      const C = CALENDAR11, r = {}; G.day = 2; G.state = 'panel'; renderLog(); r.log = document.querySelector('#p11c-almanac')?.textContent || ''; r.logHtml = document.querySelector('#p11c-almanac')?.innerHTML || ''; closeModal(); G.state = 'play';
-      r.hud = C.hudWord(); G.day = 3; r.hudM = C.hudWord(); G.day = 4; r.hud4 = C.hudWord(); C.cfg.events = false; G.day = 2; r.hudOff = C.hudWord(); G.state = 'panel'; renderLog(); r.logOff = !!document.querySelector('#p11c-almanac'); closeModal(); G.state = 'play'; C.cfg.events = true; G.day = 0;
+      const C = CALENDAR11, r = {}; G.day = 0; G.state = 'panel'; renderLog(); r.log = document.querySelector('#p11c-almanac')?.textContent || ''; r.logHtml = document.querySelector('#p11c-almanac')?.innerHTML || ''; closeModal(); G.state = 'play';
+      r.hud = C.hudWord(); G.day = 3; r.hudM = C.hudWord(); C.cfg.events = false; r.hudOff = C.hudWord(); G.state = 'panel'; renderLog(); r.logOff = !!document.querySelector('#p11c-almanac'); closeModal(); G.state = 'play'; C.cfg.events = true; G.day = 0;
       return r;
     });
-    check(/Hearthday/.test(ui.log) && /moon/.test(ui.log) && !/</.test(ui.logHtml.replace(/<\/?(p|small)[^>]*>/g, '')), 'the logbook names the holiday and the moon');
-    check(ui.hud === 'HEARTHDAY' && ui.hudM === 'MARKET' && ui.hud4 === '' && ui.hudOff === '' && !ui.logOff, 'HUD word follows the day and the switch');
+    check(/Nullday the sixth of Harvestmonth, 419 SR/.test(ui.log) && /moon/.test(ui.log) && /Nullday\./.test(ui.log) && !/</.test(ui.logHtml.replace(/<\/?(p|small)[^>]*>/g, '')), 'the logbook gives the prose date, the Rota line and the moon');
+    check(ui.hud === 'The sixth of Harvestmonth' && ui.hudM === 'The ninth of Harvestmonth' && ui.hudOff === '' && !ui.logOff, 'HUD date follows the day and the switch: ' + ui.hud);
 
     // ---------------- 3. the moon: spawns
     const sp = await page.evaluate(() => {
