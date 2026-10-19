@@ -121,7 +121,7 @@
     "ax.captions": "Sound captions",
     "ax.captions.hint": "a short written note for important sounds",
     "ax.language": "Language",
-    "ax.language.hint": "menus and buttons; the story stays in English",
+    "ax.language.hint": "menus, buttons and the story; recorded voices stay in English",
     "panel.inventory": "Inventory",
     "panel.worn": "Worn — Armour Rating {n}",
     "panel.weapons": "Weapons",

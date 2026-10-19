@@ -55,9 +55,9 @@ const ok = (c, m) => { assert.ok(c, m); console.log('PASS ' + m); };
       const ph = s => (s.match(/\{[a-z0-9_]+\}/gi) || []).sort().join();
       assert.equal(ph(fr[k]), ph(mem.en[k]), 'fr keeps the placeholders of ' + k);
     }
-    assert.ok(Object.keys(fr).length < mem.keys.length * 0.6 && Object.keys(fr).length > 20, 'fr is a real partial catalog');
+    assert.ok(Object.keys(fr).length > 20 && Object.keys(fr).length <= mem.keys.length, 'fr is a real catalog (Phase 8 completed it: every key)');
     const seen = new Set(); for (const v of Object.values(mem.en)) { assert.ok(!seen.has(v), 'English value is unique: ' + v); seen.add(v); }
-    console.log('PASS fr is a partial, placeholder-safe catalog; English values are unique');
+    console.log('PASS fr is a placeholder-safe catalog; English values are unique');
 
     // ---------------------------------------------------------------- defaults = the original game
     const d0 = await page.evaluate(() => ({ cls: document.documentElement.className, ts: ACCESS.settings.ts, hc: ACCESS.settings.hc, cap: ACCESS.settings.cap, loc: ACCESS.locale, rm: GFX.reduceMotion, nf: GFX.noFlash, tsStyle: !!document.getElementById('access-ts-style') && document.getElementById('access-ts-style').textContent.length }));
@@ -172,6 +172,12 @@ const ok = (c, m) => { assert.ok(c, m); console.log('PASS ' + m); };
     const fb = await p2.evaluate(async () => {
       const r = {};
       r.en = ACCESS.t('menu.save');
+      // Phase 8 completed locales/fr.json, so the fallback is exercised on a copy with two keys removed; the story
+      // module (which would translate the same rows from its own catalogue) is set aside: this block tests access.js alone
+      delete window.STORY_I18N;
+      const frFile = await (await fetch('locales/fr.json')).json();
+      delete frFile.messages['gfx.dark']; delete frFile.messages['menu.hardcore'];
+      ACCESS.register('fr', frFile);
       await ACCESS.setLocale('fr');
       r.fr = ACCESS.t('menu.save'); r.frMissing = ACCESS.t('gfx.dark'); r.frMissing2 = ACCESS.t('gfx.dark');
       r.unknown = ACCESS.t('nope.not_a_key'); r.unknown2 = ACCESS.t('nope.not_a_key');
