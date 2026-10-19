@@ -23,3 +23,10 @@ js/painted.js uses each one when present and falls back to the procedural stand-
 - `death/quiet.jpg` - 1280x720, 73628 bytes
 - `death/unwrite.jpg` - 1280x720, 134454 bytes
 - `death/wearer.jpg` - 1280x720, 142114 bytes
+- `ending/b1_herald.jpg` - 1280x720, 83102 bytes
+- `ending/p2_answered.jpg` - 1280x720, 134589 bytes
+- `ending/p2_silent.jpg` - 1280x720, 112419 bytes
+- `sketch/gate.jpg` - 800x600, 130956 bytes
+- `sketch/greening.jpg` - 800x600, 87305 bytes
+- `sketch/hedge.jpg` - 800x600, 78651 bytes
+- `sketch/tam.jpg` - 800x600, 115284 bytes
