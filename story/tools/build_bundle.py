@@ -1,18 +1,48 @@
-"""Rebuild the complete Shattered Octave Books bundle.
+"""Build the complete Shattered Octave Books bundle from this repo.
 
-Expects every project doc dumped as markdown into /mnt/user-data/outputs/projectdocs/
-with its original doc filename (minus the "claude/" prefix). Routes them into folders,
-builds a PDF for each, writes the README, and zips the lot.
+Input is the repo's own ``story/`` tree -- markdown is the source of truth. Every
+markdown file is mirrored into a staging folder, a PDF is built beside each
+content document with wkhtmltopdf, page numbers are stamped afterwards with
+pypdf + reportlab, and the whole thing is zipped as "Shattered Octave Books.zip".
+
+Earlier revisions of this script expected the project docs dumped into
+/mnt/user-data/outputs/projectdocs/ and restructured a pre-existing bundle
+folder. Both are gone: the docs now live in the repo, so the script walks the
+tree instead of carrying a routing table.
+
+Usage:  python3 story/tools/build_bundle.py [staging-dir]
+
+Notes worth keeping:
+  * wkhtmltopdf's --footer-center [page] is silently ignored by the installed
+    unpatched-Qt build, which is why page numbers are stamped afterwards.
+  * pip install needs --break-system-packages in this container.
+  * House style: Letter, 22/20/24/24mm margins, DejaVu Serif 11.5pt justified,
+    page break before each h2.
 """
-import pathlib, shutil, subprocess, io, markdown
-from pypdf import PdfReader, PdfWriter
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
+import io
+import pathlib
+import shutil
+import subprocess
+import sys
+import zipfile
 
-OUT  = pathlib.Path("/mnt/user-data/outputs")
-ROOT = OUT / "Shattered Octave Books"
-SRC  = OUT / "projectdocs"
-TMP  = pathlib.Path("/tmp/bundlebuild"); TMP.mkdir(exist_ok=True)
+import re
+
+import markdown
+from pypdf import PdfReader, PdfWriter
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
+HERE = pathlib.Path(__file__).resolve()
+STORY = HERE.parent.parent                      # the repo's story/ tree
+BUNDLE_NAME = "Shattered Octave Books"
+
+# Markdown that is mirrored but gets no PDF of its own.
+#   - Chapters/ is Book One split up; the full-manuscript PDF covers it
+#   - READMEs and the handoff note are repo housekeeping, not reading matter
+NO_PDF_DIRS = {"Chapters"}
+NO_PDF_NAMES = {"README.md", "_rebuild-progress.md"}
+SKIP_DIRS = {"tools"}
 
 CSS = """
 <style>
@@ -47,12 +77,17 @@ def wk(src, dest, title):
 
 
 def number(path):
-    reader = PdfReader(str(path)); writer = PdfWriter()
+    reader = PdfReader(str(path))
+    writer = PdfWriter()
     for i, page in enumerate(reader.pages, start=1):
         if i > 1:
-            buf = io.BytesIO(); c = canvas.Canvas(buf, pagesize=letter)
-            c.setFont("Times-Roman", 9); c.setFillGray(0.35)
-            c.drawCentredString(letter[0] / 2, 32, str(i)); c.save(); buf.seek(0)
+            buf = io.BytesIO()
+            c = canvas.Canvas(buf, pagesize=letter)
+            c.setFont("Times-Roman", 9)
+            c.setFillGray(0.35)
+            c.drawCentredString(letter[0] / 2, 32, str(i))
+            c.save()
+            buf.seek(0)
             page.merge_page(PdfReader(buf).pages[0])
         writer.add_page(page)
     with open(path, "wb") as f:
@@ -60,10 +95,22 @@ def number(path):
     return len(reader.pages)
 
 
-def pdf_from_markdown(md_path, dest, title, breaks=True):
-    body = markdown.markdown(md_path.read_text(encoding="utf-8"),
+# These documents contain no real HTML, but the game-text ones are full of
+# angle-bracket placeholders (<name>, <TAB>, <first sentence of ...>) that the
+# markdown converter would otherwise swallow as unknown tags. Escape those, and
+# only those, so the PDF reads what the markdown says. Blockquote ">" at the
+# start of a line is untouched.
+PLACEHOLDER = re.compile(r"<([A-Za-z][^<>\n]{0,60})>")
+
+
+def escape_placeholders(text):
+    return PLACEHOLDER.sub(lambda m: "&lt;" + m.group(1) + "&gt;", text)
+
+
+def pdf_from_markdown(md_path, dest, title, tmp, breaks=True):
+    body = markdown.markdown(escape_placeholders(md_path.read_text(encoding="utf-8")),
                              extensions=["nl2br", "tables"])
-    t = TMP / (dest.stem[:60] + ".html")
+    t = tmp / (dest.stem[:60] + ".html")
     t.write_text("<!doctype html><html><head><meta charset=utf-8>"
                  + (CSS % {"brk": "page-break-before:always;" if breaks else ""})
                  + "</head><body>" + body + "</body></html>", encoding="utf-8")
@@ -71,89 +118,52 @@ def pdf_from_markdown(md_path, dest, title, breaks=True):
     return number(dest)
 
 
-# ---------------------------------------------------------------- routing
-# (source filename in projectdocs/) -> (destination folder, destination stem, page-breaks)
-ROUTES = [
-    ("Book Two - Part One Ch4-7.md",
-     "Books/Book Two - The Great Discord", "Part One Ch4-7", True),
-    ("Book Two - Part Two Ch8-14.md",
-     "Books/Book Two - The Great Discord", "Part Two Ch8-14", True),
-    ("Book Three - Part One Ch1-4.md",
-     "Books/Book Three", "Part One Ch1-4", True),
-    ("Book Three - Part Two Ch5-8.md",
-     "Books/Book Three", "Part Two Ch5-8", True),
-    ("Book Three - Part Three Ch9-12.md",
-     "Books/Book Three", "Part Three Ch9-12", True),
-    ("Book Four - Part One Ch1-4.md",
-     "Books/Book Four", "Part One Ch1-4", True),
+def sources():
+    """Every markdown file under story/, as paths relative to story/."""
+    out = []
+    for p in sorted(STORY.rglob("*.md")):
+        rel = p.relative_to(STORY)
+        if set(rel.parts[:-1]) & SKIP_DIRS:
+            continue
+        out.append(rel)
+    return out
 
-    ("Source - The Expanded World Bible.md",
-     "World Bibles", "Vol I - The Expanded World Bible", True),
-    ("Source - World Bible Vol II - Gazetteer and Bestiary.md",
-     "World Bibles", "Vol II - Gazetteer and Bestiary", True),
-    ("Source - World Bible Vol III - Canon Reconciliation and the Road to Book Five.md",
-     "World Bibles", "Vol III - Canon Reconciliation and the Road to Book Five", True),
-    ("World Bible Vol III - Errata and Rulings.md",
-     "World Bibles", "Vol III (b) - Errata and Rulings", True),
-    ("Source - World Bible Vol IV - The Hush, the Organum, the Rust Coast.md",
-     "World Bibles", "Vol IV - The Hush, the Organum, the Rust Coast", True),
-    ("World Bible Vol V - The Winter Gazetteer.md",
-     "World Bibles", "Vol V - The Winter Gazetteer", True),
-    ("World Bible Vol VI - The Rift, the Organum Revisited, and the Press.md",
-     "World Bibles", "Vol VI - The Rift, the Organum Revisited, and the Press", True),
-    ("World Bible Vol VII - The Calendar of Aethelgard.md",
-     "World Bibles", "Vol VII - The Calendar of Aethelgard", True),
 
-    ("Game Design Document - Book One Prototype.md",
-     "Game Layer", "Game Design Document - Book One Prototype", True),
-    ("Game - Phase 6 New In-Game Text (for review).md",
-     "Game Layer", "Phase 6 - New In-Game Text", True),
-    ("Game - Phase 9 New In-Game Text (for review).md",
-     "Game Layer", "Phase 9 - New In-Game Text", True),
-]
+def wants_pdf(rel):
+    return rel.name not in NO_PDF_NAMES and not (set(rel.parts[:-1]) & NO_PDF_DIRS)
 
 
 def main():
-    missing, built = [], []
-    for fname, folder, stem, breaks in ROUTES:
-        src = SRC / fname
-        if not src.exists():
-            missing.append(fname)
-            continue
-        d = ROOT / folder
-        d.mkdir(parents=True, exist_ok=True)
-        md = d / f"{stem}.md"
-        shutil.copy(src, md)
-        pages = pdf_from_markdown(md, d / f"{stem}.pdf", stem, breaks=breaks)
-        built.append((folder + "/" + stem, pages))
+    staging = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 \
+        else pathlib.Path.home() / "bundle-build"
+    root = staging / BUNDLE_NAME
+    tmp = staging / "html"
+    if root.exists():
+        shutil.rmtree(root)
+    tmp.mkdir(parents=True, exist_ok=True)
 
-    # Book One and the Book Two chapters 1-3 draft already live at the bundle root;
-    # move them under Books/ so the whole thing has one shape.
-    books = ROOT / "Books"; books.mkdir(exist_ok=True)
-    for pat in ("Book One - The Silenced Province (manuscript).*", "Book One - Chapters"):
-        for p in ROOT.glob(pat):
-            target = books / p.name
-            if p.resolve() != target.resolve() and not target.exists():
-                shutil.move(str(p), str(target))
-    b2 = books / "Book Two - The Great Discord"; b2.mkdir(parents=True, exist_ok=True)
-    for p in list(ROOT.glob("Book Two - The Great Discord (draft).*")) + list(ROOT.glob("Book Two - Chapters")):
-        name = p.name.replace("Book Two - The Great Discord (draft)", "Part One Ch1-3")
-        target = b2 / name
-        if not target.exists():
-            shutil.move(str(p), str(target))
-    for p in list(ROOT.glob("Series Bible.*")):
-        target = ROOT / "World Bibles" / p.name.replace("Series Bible", "Series Bible (canon, v1.2)")
-        target.parent.mkdir(exist_ok=True)
-        if not target.exists():
-            shutil.move(str(p), str(target))
+    built, copied = [], 0
+    for rel in sources():
+        dest_md = root / rel
+        dest_md.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(STORY / rel, dest_md)
+        copied += 1
+        if wants_pdf(rel):
+            pages = pdf_from_markdown(dest_md, dest_md.with_suffix(".pdf"),
+                                      dest_md.stem, tmp)
+            built.append((str(rel.with_suffix("")), pages))
+
+    zip_path = staging / f"{BUNDLE_NAME}.zip"
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+        for p in sorted(root.rglob("*")):
+            if p.is_file():
+                z.write(p, p.relative_to(staging))
 
     print("BUILT:")
     for name, pages in built:
         print(f"  {name}  ({pages} pp)")
-    if missing:
-        print("MISSING (not found in projectdocs/):")
-        for m in missing:
-            print("  " + m)
+    print(f"\n{copied} markdown files mirrored, {len(built)} PDFs built.")
+    print(f"ZIP: {zip_path}  ({zip_path.stat().st_size / 1e6:.1f} MB)")
 
 
 if __name__ == "__main__":

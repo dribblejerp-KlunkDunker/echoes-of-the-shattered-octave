@@ -21,7 +21,7 @@ Pushed to `main` under `story/`:
   `The-Shattered-Octave-Updated-` repo (that repo holds nothing else unique; sleeves will
   delete it himself — repo deletion is blocked from these sessions)
 
-## What is left: 16 project docs
+## The 16 project docs — ALL DONE (19 Oct 2026)
 
 They live in the attached claude.ai Project "Shattered Octave", not on disk. Fetch each with
 the `Projects` tool, `method: "project_read"`, using the exact path.
@@ -31,22 +31,22 @@ the `Projects` tool, `method: "project_read"`, using the exact path.
 roughly 25k tokens round trip (it returns inline, then you write it to disk). Budget for that,
 work in small batches, and commit + push after each batch so progress survives a compaction.
 
-- [ ] `claude/Book Two - Part One Ch4-7.md`
-- [ ] `claude/Book Two - Part Two Ch8-14.md`
-- [ ] `claude/Book Three - Part One Ch1-4.md`
-- [ ] `claude/Book Three - Part Two Ch5-8.md`
-- [ ] `claude/Book Three - Part Three Ch9-12.md`
-- [ ] `claude/Book Four - Part One Ch1-4.md`
-- [ ] `claude/Source - The Expanded World Bible.md`
-- [ ] `claude/Source - World Bible Vol II - Gazetteer and Bestiary.md`
-- [ ] `claude/Source - World Bible Vol III - Canon Reconciliation and the Road to Book Five.md`
-- [ ] `claude/World Bible Vol III - Errata and Rulings.md`
-- [ ] `claude/Source - World Bible Vol IV - The Hush, the Organum, the Rust Coast.md`
-- [ ] `claude/World Bible Vol V - The Winter Gazetteer.md`
-- [ ] `claude/World Bible Vol VI - The Rift, the Organum Revisited, and the Press.md`
-- [ ] `claude/Game Design Document - Book One Prototype.md`
-- [ ] `claude/Game - Phase 6 New In-Game Text (for review).md`
-- [ ] `claude/Game - Phase 9 New In-Game Text (for review).md`
+- [x] `claude/Book Two - Part One Ch4-7.md`
+- [x] `claude/Book Two - Part Two Ch8-14.md`
+- [x] `claude/Book Three - Part One Ch1-4.md`
+- [x] `claude/Book Three - Part Two Ch5-8.md`
+- [x] `claude/Book Three - Part Three Ch9-12.md`
+- [x] `claude/Book Four - Part One Ch1-4.md`
+- [x] `claude/Source - The Expanded World Bible.md`
+- [x] `claude/Source - World Bible Vol II - Gazetteer and Bestiary.md`
+- [x] `claude/Source - World Bible Vol III - Canon Reconciliation and the Road to Book Five.md`
+- [x] `claude/World Bible Vol III - Errata and Rulings.md`
+- [x] `claude/Source - World Bible Vol IV - The Hush, the Organum, the Rust Coast.md`
+- [x] `claude/World Bible Vol V - The Winter Gazetteer.md`
+- [x] `claude/World Bible Vol VI - The Rift, the Organum Revisited, and the Press.md`
+- [x] `claude/Game Design Document - Book One Prototype.md`
+- [x] `claude/Game - Phase 6 New In-Game Text (for review).md`
+- [x] `claude/Game - Phase 9 New In-Game Text (for review).md`
 
 Write each verbatim — these are novel drafts, so no summarising, no reflowing, no tidying.
 Preserve every line and blank line exactly.
@@ -69,6 +69,12 @@ Preserve every line and blank line exactly.
 | Game Design Document | `Game Layer/Game Design Document - Book One Prototype.md` |
 | Phase 6 in-game text | `Game Layer/Phase 6 - New In-Game Text.md` |
 | Phase 9 in-game text | `Game Layer/Phase 9 - New In-Game Text.md` |
+
+### Added beyond the checklist
+
+`claude/Game - Phase 10 New In-Game Text (for review).md` exists in the Project but postdates
+this note and was not on the list above. It is committed to
+`Game Layer/Phase 10 - New In-Game Text.md` so nothing is lost. Flagged for sleeves to confirm.
 
 ## Then: the zip for sleeves
 
