@@ -144,9 +144,9 @@ const SCENES = {
         const w = bl.w, h = bl.h;
         // light sources: the brightest sprite pixels of the plain frame (a view may hold several lamps)
         let best = -1;
-        for (let i = 0; i < pf.length; i++) if (plain.mbuf[i] === 6) { const l = T.luma(pf[i]); if (l > best) best = l; }
+        for (let i = 0; i < pf.length; i++) if (plain.mbuf[i] === 6 || plain.mbuf[i] === 8) { const l = T.luma(pf[i]); if (l > best) best = l; }
         const srcs = [];
-        for (let i = 0; i < pf.length; i++) if (plain.mbuf[i] === 6 && T.luma(pf[i]) >= best * 0.7) srcs.push([i % w, (i / w) | 0]);
+        for (let i = 0; i < pf.length; i++) if ((plain.mbuf[i] === 6 || plain.mbuf[i] === 8) && T.luma(pf[i]) >= best * 0.7) srcs.push([i % w, (i / w) | 0]);
         const nearest = (x, y) => { let m = 1e9; for (const [sx, sy] of srcs) { const d = Math.hypot(x - sx, y - sy); if (d < m) m = d; } return m; };
         let ring = 0, ringN = 0, negative = 0, far = 0, farWalls = 0, farWallsChanged = 0;
         for (let i = 0; i < pf.length; i++) if (T.luma(bl.fb[i]) < T.luma(pf[i])) negative++;

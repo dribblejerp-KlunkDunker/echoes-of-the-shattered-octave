@@ -41,6 +41,29 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       let water = 0; for (let y = 76; y < 150; y++) for (let x = 0; x < 320; x += 4) if (Engine.materialAt(x, y) === Engine.MAT.water) water++;
       check(water > 0, 'the Flume is marked as water');
       check(Engine.materialAt(160, 5) === Engine.MAT.sky && Engine.depthAt(160, 5) >= 1e8, 'outdoor sky is sky, infinitely far');
+      // --- glow material: lamps are lights, a lamp-lit cart is not ---------------
+      if (typeof GFX !== 'undefined' && 'scenery' in GFX) { GFX.scenery = true; GFX.changed(); }
+      go('oakhaven', 52.6, 20.4, 0); Engine.render(G.ents, G.tod);
+      const cart = G.ents.find(e => e.sprite === 'p_cart' && Math.hypot(e.x - 56.9, e.y - 20.2) < 0.5);
+      const lamp = G.ents.find(e => e.sprite === 'lamp' && Math.hypot(e.x - 57.5, e.y - 21.5) < 0.6);
+      const matIn = (en, mat) => { const s = en && en._screen; if (!s) return -1; let n = 0; for (let y = Math.max(0, s.y0 | 0); y <= Math.min(149, s.y1 | 0); y++) for (let x = Math.max(0, s.x0 | 0); x <= Math.min(319, s.x1 | 0); x++) if (Engine.materialAt(x, y) === mat) n++; return n; };
+      check(matIn(lamp, Engine.MAT.glow) > 0, 'a lit street lamp is drawn as glow');
+      check(!!cart || typeof SCENERY === 'undefined', 'the market cart beside the lamp is placed');
+      if (cart) {
+        check(matIn(cart, Engine.MAT.glow) === 0 && matIn(cart, Engine.MAT.sprite) > 0, 'a lamp-lit cart is an ordinary sprite, not a light source');
+        if (typeof POST !== 'undefined' && POST.hooks && POST.hooks.bloom) {
+          // bloom never brightens the cart's own pixels (it may still spill a little from the lamp's halo)
+          const s = cart._screen, cx = ((s.x0 + s.x1) / 2) | 0, cy = ((s.y0 + s.y1) / 2) | 0;
+          const before = Array.from(Engine.ctx.getImageData(cx - 2, cy - 2, 5, 5).data);
+          const keep = GFX.bloom; GFX.bloom = true; Engine.render(G.ents, G.tod);
+          const after = Array.from(Engine.ctx.getImageData(cx - 2, cy - 2, 5, 5).data); GFX.bloom = keep;
+          let lift = 0; for (let i = 0; i < before.length; i += 4) lift = Math.max(lift, after[i] - before[i]);
+          r.cartBloomLift = lift;
+          check(lift < 40, 'bloom does not light up a lamp-lit cart (lift ' + lift + ')');
+        }
+      }
+      if (typeof GFX !== 'undefined') GFX.plain();
+
       // --- hooks: run each frame, in order, and a broken hook is skipped -----
       const calls = [];
       Engine.addSkyHook(F => { calls.push('sky:' + (F.w === 320) + ':' + (typeof F.horizon)); }, 5);

@@ -40,7 +40,7 @@ const POST = (() => {
       clearing: { a: 0.36, top: 0.50, col: [140, 150, 158], drift: 0.9, night: true },
     },
     bloom: {
-      lampLuma: 150,   // a sprite pixel this bright and coloured counts as a light source
+      lampLuma: 150,   // a glow pixel (Engine.MAT.glow) this bright and coloured blooms as a light source
       lampSat: 40,     // ...and this saturated; weight ramps up over the next 80 (skin and cloth are pale)
       sunK: 0.015,      // sun and moon discs are already broad glows; bloom only a little of them
       lampK: 9,        // lamps are a few pixels, so their weight is lifted to read after the blur
@@ -267,7 +267,7 @@ const POST = (() => {
             const l = (r * 77 + g * 150 + b * 29) >> 8;
             if (l < lowL) continue;
             const m = mbuf[o];
-            if (m === 6) {
+            if (m === 8) {   // the engine marks lamps, fire, glass and emissive pixels as glow
               const mx = r > g ? (r > b ? r : b) : (g > b ? g : b), mn = r < g ? (r < b ? r : b) : (g < b ? g : b);
               const ln = l * ilk, sat = (mx - mn) * ilk;
               // a flame or lantern is bright AND saturated; skin and cloth are bright but pale

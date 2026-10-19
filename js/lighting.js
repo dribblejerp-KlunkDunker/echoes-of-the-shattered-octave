@@ -126,7 +126,7 @@ const LIGHTING = (() => {
       for (let y = ys; y <= ye; y++) {
         const ty = (((y - dsY) * th) / sprH) | 0; if (ty < 0 || ty >= th) continue;
         for (let x = xs; x <= xe; x++) {
-          const o = y * w + x; if (F.mbuf[o] !== 6 || Math.abs(F.dbuf[o] - z) > 1e-3) continue;
+          const o = y * w + x; if ((F.mbuf[o] !== 6 && F.mbuf[o] !== 8) || Math.abs(F.dbuf[o] - z) > 1e-3) continue;
           const sx = skew ? x - skew * (deY - y) : x;
           let tx = (((sx - dsX) * tw) / sprW) | 0; if (tx < 0 || tx >= tw) continue;
           if (art.flip) tx = tw - 1 - tx;

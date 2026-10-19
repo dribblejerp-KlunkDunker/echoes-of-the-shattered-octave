@@ -29,7 +29,9 @@ const Engine = (() => {
   let dbuf = new Float32Array(RW * RH);
   // What each pixel shows, for post passes: see MAT below.
   let mbuf = new Uint8Array(RW * RH);
-  const MAT = { other: 0, sky: 1, water: 2, shallows: 3, wall: 4, ground: 5, sprite: 6, ceiling: 7 };
+  // glow: pixels that give their own light (lamps, fire, glass, emissive mask
+  // pixels), so post passes can bloom real lights instead of guessing from colour
+  const MAT = { other: 0, sky: 1, water: 2, shallows: 3, wall: 4, ground: 5, sprite: 6, ceiling: 7, glow: 8 };
   const SURF_BIAS = 0.45;   // ground never swallows the feet of what stands on it
   // ---- extension points ------------------------------------------------
   // Sky hooks run after the sky, sun and moon and before the horizon ridges;
@@ -809,6 +811,7 @@ const Engine = (() => {
       const [scr, scg, scb] = ptLights.length ? sampleLight(e.x, e.y) : [0, 0, 0];
       const ecr = e.elite ? scr + 28 : scr, ecg = e.elite ? scg + 20 : scg, ecb = scb;
       const emit = sp.emit || null, fiE = Math.max(fi, 0.95);
+      const glowEnt = e.glow > 0.3 || e.animGlow > 0.3 || !!e.glassLamp || e.item === 'shard' || e.item === 'core', matS = glowEnt ? 8 : 6;
       const plain = !skew && !flip && alpha >= 1 && !hurt && !emit;
       const aT = alpha * 16;
       for (let x = xs; x <= xe; x++) {
@@ -823,7 +826,7 @@ const Engine = (() => {
           for (let y = ys; y <= yEnd; y++) {
             const ty = (((y - dsY) * th) / sprH) | 0;
             const px = sdat[ty * tw + tx];
-            if ((px >>> 24) > 100 && (!relief || dbuf[o] > trY)) { fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fi, ecr, ecg, ecb)); dbuf[o] = trY; mbuf[o] = 6; }
+            if ((px >>> 24) > 100 && (!relief || dbuf[o] > trY)) { fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fi, ecr, ecg, ecb)); dbuf[o] = trY; mbuf[o] = matS; }
             o += w;
           }
           continue;
@@ -836,8 +839,8 @@ const Engine = (() => {
           const ty = (((y - dsY) * th) / sprH) | 0;
           let px = sdat[ty * tw + tx];
           if ((px >>> 24) > 100 && (!relief || dbuf[o] > trY)) {
-            const fiP = emit && emit[ty * tw + tx] ? fiE : fi;
-            dbuf[o] = trY; mbuf[o] = 6;
+            const lit = emit && emit[ty * tw + tx], fiP = lit ? fiE : fi;
+            dbuf[o] = trY; mbuf[o] = lit ? 8 : matS;
             if (hurt) { const r = px & 255, g = (px >>> 8) & 255, b = (px >>> 16) & 255, k = hurt * 0.45; px = ((px & 0xff000000) | ((b * (1 - k)) << 16) | ((g * (1 - k)) << 8) | (r + (255 - r) * k)) >>> 0; }
             fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fiP, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fiP, ecr, ecg, ecb));
           }

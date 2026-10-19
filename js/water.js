@@ -33,7 +33,7 @@ const WATER = (() => {
   const LUTN = 96, lut = new Float32Array(LUTN + 1);   // one ring's profile across its band, indexed by distance squared
   let copy = new Uint32Array(0), rip = new Float32Array(0), shim = new Int8Array(0), fres = new Float32Array(0);
   // how much of each material is worth reflecting: other, sky, water, shallows, wall, ground, sprite, ceiling
-  const WM = new Float32Array([0.6, 1, 0, 0, 0.9, 0.5, 1, 0.5]);
+  const WM = new Float32Array([0.6, 1, 0, 0, 0.9, 0.5, 1, 0.5, 1]);   // by Engine.MAT id; 8 = glow (lamps, fire, glass)
 
   function nameKind(n) { return n === 't_water' ? 2 : n === 't_shallows' ? 1 : 0; }
 
