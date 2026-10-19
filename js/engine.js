@@ -543,6 +543,12 @@ const Engine = (() => {
             const d = doors[mapY * mw + mapX];
             const openAmt = d ? d.open : 0;
             if (openAmt >= 0.98) continue;
+            if (openAmt > 0 && typeof Doors !== 'undefined') {
+              // swinging leaf (Doors.swing is 0 when GFX.swingDoors is off or the doorway is unclear)
+              const sw = Doors.swing(d, mapX, mapY, cam.x, cam.y, rdx, rdy, grid, mw);
+              if (sw === 1) continue;
+              if (sw === 2) { faces.push({ dist: Doors.out.t, wallX: Doors.out.u, base: cellLvl, top: cellLvl + 1, side: Doors.out.side, rdx, rdy, tex: c.tex, ci: mapY * mw + mapX }); break; }
+            }
             let dist, frac;
             if (side === 0) {
               dist = sdx - ddx + ddx * 0.5; // distance to mid-plane
@@ -715,16 +721,19 @@ const Engine = (() => {
           if (c && c.door) {
             const d = doors[ci]; const openAmt = d ? d.open : 0;
             if (openAmt < 0.98) {
-              let tD, frac, hit = true;
-              if (side === 0) { tD = tIn + ddx * 0.5; const hy = CY + tD * rdy; if ((hy | 0) !== cy) hit = false; frac = hy - cy; }
+              let tD, frac, hit = true, dSide = side;
+              // swinging leaf (0: sliding leaf; 1: miss; 2: hit)
+              const sw = (openAmt > 0 && typeof Doors !== 'undefined') ? Doors.swing(d, cx, cy, CX, CY, rdx, rdy, grid, mw) : 0;
+              if (sw) { hit = sw === 2; if (hit) { tD = Doors.out.t; frac = Doors.out.u + openAmt; dSide = Doors.out.side; } }
+              else if (side === 0) { tD = tIn + ddx * 0.5; const hy = CY + tD * rdy; if ((hy | 0) !== cy) hit = false; frac = hy - cy; }
               else { tD = tIn + ddy * 0.5; const hx = CX + tD * rdx; if ((hx | 0) !== cx) hit = false; frac = hx - cx; }
               if (hit && frac >= openAmt) {
                 clip = riser(x, rdx, rdy, tIn, zOut, base, wallX, side, sideOf(cx, cy), -1e9, null, clip);
                 clip = surf(x, rdx, rdy, tIn, base, tD, base, texOfFloor(cx, cy), clip);
                 const dTex = textures[c.tex] || stoneTex;
-                clip = riser(x, rdx, rdy, tD, base, base + 1, frac - openAmt, side, dTex, base, dTex, clip, ci);
+                clip = riser(x, rdx, rdy, tD, base, base + 1, frac - openAmt, dSide, dTex, base, dTex, clip, ci);
                 // a lintel over the door, up to the ceiling of a tall room
-                if (wallTop0 > base + 1) clip = riser(x, rdx, rdy, tD, base + 1, wallTop0, frac - openAmt, side, stoneTex, base + 1, stoneTex, clip);
+                if (wallTop0 > base + 1) clip = riser(x, rdx, rdy, tD, base + 1, wallTop0, frac - openAmt, dSide, stoneTex, base + 1, stoneTex, clip);
                 if (tD < nearest) nearest = tD;
                 // past a closed door: only taller things beyond can still show
                 capZ = Math.max(base + 1, wallTop0); capTex = dTex; tIn = tD;
