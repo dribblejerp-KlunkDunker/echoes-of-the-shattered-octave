@@ -1742,7 +1742,8 @@ function renderCharacter() {
 }
 function renderLog() {
   const main = G.journal.filter(j => j.cat === 'main'), side = G.journal.filter(j => j.cat === 'side');
-  const fmt = (j) => `<p><span class="muted">${DAYS[j.day % 8]} —</span> ${j.text}</p>`;
+  // journal text is plain prose: strip angle brackets here too, not only when a save is loaded
+  const fmt = (j) => `<p><span class="muted">${DAYS[(j.day | 0) % 8] || DAYS[0]} —</span> ${String(j.text == null ? '' : j.text).replace(/[<>]/g, '')}</p>`;
   openModal(`<h2>Logbook</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">${DAYS[G.day % 8]}, autumn, 419 SR · ${timeName()}</p><h3>The Rite</h3>${main.map(fmt).join('')}<h3>Other matters</h3>${side.map(fmt).join('') || '<p class="muted">Nothing yet.</p>'}`, 'log');
   $('#x').onclick = () => { closeModal(); G.state = 'play'; };
 }
