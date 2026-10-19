@@ -340,7 +340,7 @@ const QUARRY_ENTITIES = [
       // the hound that stalls: north of the crag, the player south of it, everyone else hidden
       const chase = (useOriginal, hx, hy, px, py, mapId, seconds, stopAt) => {
         go(mapId, px, py, -Math.PI / 2); G.tod = 0.45;
-        const h = hydrate({ kind: 'enemy', type: 'hound', x: hx, y: hy }); h.state = 'chase'; h.alertT = 8; G.ents.push(h);
+        const h = hydrate({ kind: 'enemy', type: 'hound', x: hx, y: hy }); h.state = 'chase'; h.alertT = 8; h._tgSeen = true; G.ents.push(h);
         const wrapped = enemyUpdate; if (useOriginal) enemyUpdate = PATHING.original;
         let t = 0, reached = null, panels = 0, maxDist = 0, pathLen = 0, lx = hx, ly = hy;
         try {
@@ -374,7 +374,7 @@ const QUARRY_ENTITIES = [
       // flat ground with a clear line: identical, frame for frame, with and without the wrapper
       const trace = (useOriginal) => {
         go('oakhaven', 23.5, 20.5, 0); G.tod = 0.45;
-        const h = hydrate({ kind: 'enemy', type: 'hound', x: 28.5, y: 20.5 }); h.state = 'chase'; h.alertT = 8; G.ents.push(h);
+        const h = hydrate({ kind: 'enemy', type: 'hound', x: 28.5, y: 20.5 }); h.state = 'chase'; h.alertT = 8; h._tgSeen = true; G.ents.push(h);   // already arrived: no spawn entrance
         const wrapped = enemyUpdate; if (useOriginal) enemyUpdate = PATHING.original;
         const pos = [];
         try { for (let i = 0; i < 60; i++) { G.player.hp = G.player.hpMax; enemyUpdate(h, 0.033); pos.push([h.x, h.y, h.state]); } } finally { enemyUpdate = wrapped; }
@@ -394,7 +394,7 @@ const QUARRY_ENTITIES = [
 
       // route-finding never throws inside the frame: a broken map falls back to the original
       go('deepwoods', 51.5, 40.0, -Math.PI / 2);
-      const bad = hydrate({ kind: 'enemy', type: 'hound', x: 51.5, y: 28.0 }); bad.state = 'chase'; bad.alertT = 8; G.ents.push(bad);
+      const bad = hydrate({ kind: 'enemy', type: 'hound', x: 51.5, y: 28.0 }); bad.state = 'chase'; bad.alertT = 8; bad._tgSeen = true; G.ents.push(bad);
       const e0 = PATHING.stats.errors, bx0 = bad.x; let threw = false;
       PATHING.fault = () => { throw new Error('boom'); };
       try { enemyUpdate(bad, 0.033); } catch (e) { threw = true; } finally { PATHING.fault = null; }
