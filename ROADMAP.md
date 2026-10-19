@@ -158,6 +158,67 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [x] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
 - [x] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
 
+### Owner's list, October 2026 (100 ideas)
+Added from the owner's list. Statuses come from a check against the code: `[x]` already in the game, `[~]` partly there, `[ ]` new. Where an item is already in, the note says where.
+
+**Phase 10 — the owner's picks** (planned next, in this order)
+| Item | Status | Note |
+|---|---|---|
+| Blob shadows under enemies, NPCs and companions | `[ ]` | Soft ground shadow drawn in the relief renderer at each sprite's foot. |
+| Colour grading per area (amber Oakhaven, teal Whisper-Grove, violet Deep Woods) | `[~]` | Per-area, per-hour grades exist (js/post.js); retune them to these palettes. |
+| Lasting marks where fights happened (blood, scorch, cracks) | `[~]` | Seeded decals exist (js/decals.js); add fight-driven marks for the visit. |
+| Animated travel route on the world map | `[ ]` | A small figure walks the route as the hours pass (js/travel.js). |
+| Swinging lanterns on patrolling guards, light moving on walls | `[~]` | Lights exist (js/lighting.js); add a carried, swinging light. |
+| Parry sparks when weapons clash | `[~]` | Hit sparks exist; add a distinct clash burst on a timed parry. |
+| Dissonance meter: overusing Songs draws the Hush; whispers and false foes at high Dissonance | `[ ]` | Builds on noise/Hush (fp-feel's Hush effect). Off by default. |
+| The stalker: one Hush-thing hunts you across Book One, mostly heard | `[ ]` | Never shown clearly, never fought (the Hush rules); a horror toggle. |
+| Question-based class picker | `[ ]` | Questions about music, the Synod and the Hush suggest a class. |
+| Four interaction modes (Steal, Grab, Info, Talk) | `[~]` | Pickpocket, use and talk exist as keys; add Daggerfall's cursor modes. |
+| Save to file | `[~]` | Save codes and a download exist (Save panel); add "Load from file". |
+
+**Graphics**
+- `[x]` Night palette (per-hour grades, js/post.js) · `[x]` Wet surfaces after rain (js/surfaces) · `[x]` Water reflections and ripples (js/water.js; extend to rippling light on the Sunken Court floor `[~]`)
+- `[ ]` Sun shafts through canopy and Cloister windows · `[ ]` Heat haze over braziers, forges, the Steam Golem · `[ ]` Light-glass glare
+- `[ ]` Footprints in mud and shallow water · `[ ]` Breakable barrels and crates with loot · `[ ]` The Greening visible in Oakhaven during Part Two
+- `[ ]` See-through shimmering ghosts · `[ ]` "Octave lights" aurora on story nights · `[ ]` Moon phases the Hush follows
+- `[ ]` Mirrors that show you (and sometimes something behind you) · `[ ]` Shimmering sealed doorways · `[ ]` Organ-pipe health, fatigue and Song gauges
+- `[ ]` Hit-direction marker (complements the sound ripples) · `[ ]` Optional enemy health bars · `[ ]` Optional damage numbers · `[ ]` Stillness tint at the screen edge
+
+**Animation**
+- `[ ]` Spreading Light-glass in story events · `[ ]` Glowing root veins near the Anchor-roots · `[~]` Crows that gather at bodies (crows exist, js/smalllife.js)
+- `[ ]` NPCs hood up in rain, huddle by fires in cold · `[ ]` Swaying coats and capes · `[ ]` Cold breath at night and in cold areas
+- `[ ]` Hounds sniffing your trail · `[ ]` The Hushwardens' grey muffling wave · `[ ]` Weapon trails on fast swings · `[ ]` Hit-stop on critical hits
+- `[~]` Kestrel flight scene between Parts Two and Three (flyovers exist, js/sky.js) · `[ ]` Level-up flourish with rising notes · `[ ]` Quest-complete banner
+- `[ ]` Loot flying to the inventory button · `[ ]` Coins counted out in shops · `[ ]` Page turns in books and the logbook · `[ ]` Sitting, eating and drinking in the tavern
+
+**Daggerfall features**
+- `[ ]` Birth signs from musical modes · `[x]` "Where is...?" (dialogue button; add map marking `[~]`) · `[ ]` Paid training with per-level limits
+- `[ ]` Bank letters of credit · `[ ]` Holidays on the calendar · `[ ]` Cheat codes for testing
+
+**Gameplay**
+- `[ ]` Instruments (lute, flute, hurdy-gurdy) that change Songs · `[ ]` Tavern performance rhythm game · `[ ]` Tuning forks that hum near secrets
+- `[ ]` Dowsing for Anchor-roots · `[x]` Carried light (the lantern, U) · `[ ]` Fire flasks · `[ ]` Environmental kills (chandeliers, scaffolds, deep water)
+- `[ ]` Office grappling hook · `[x]` Noise lures (thrown stones and bottles; the lure reed) · `[ ]` Silence bombs · `[ ]` Shield bash · `[ ]` Two-handed weapons and dual-wielding
+- `[ ]` Throwing nets · `[ ]` Adopt the Whisper-Grove cat (she hisses at danger) · `[ ]` Bones, a tavern dice game · `[ ]` A tavern card game · `[ ]` Camp cooking
+- `[ ]` Boss trophies for your house (the house exists)
+
+**World and events**
+- `[ ]` Market day in the square · `[ ]` Synod sermons to attend or disrupt · `[ ]` Festivals such as Hearthday · `[ ]` Eclipses
+- `[~]` Roadside events on the world map (ambushes exist; add carts, refugees, checkpoints) · `[ ]` Buildings burn and are rebuilt; permanent NPC deaths
+- `[ ]` Synod territory spreading on the world map · `[ ]` "Previously..." recap on load
+
+**Horror**
+- `[ ]` Whispers from behind at high Dissonance (with the meter above) · `[ ]` Lights dying one by one · `[ ]` Night terrors after resting somewhere unsafe
+- `[ ]` A haunted house in Oakhaven · `[ ]` The Unrung Bell at night · `[ ]` A jump-scare toggle
+
+**New areas and content**
+- `[ ]` The Chlorophyll Flume side area · `[ ]` An underwater dungeon beneath Whisper-Grove · `[ ]` Heists: a Synod cathedral, the Consortium's quarry
+- `[ ]` The Long Night survival event · `[ ]` A trip to Port Cantabile · `[ ]` A Book Two prologue after the ending · `[ ]` The Kestrel as an upgradable home base with crew
+
+**Technical**
+- `[ ]` A sharper renderer with the pixel look kept · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
+- `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[ ]` Performance overlay (frame rate, memory)
+
 ### Phase 9 completion pass verification
 - **How it was built.** Four parallel teams from a lore brief drawn from the author's bibles and Book Four (wind-reed dies in a day; the First Reed; Ada Pellow; Reeds-Miner Tomas; the third parish's note; Mire-drones and Fret-crawlers), then integration.
 - **Reed-craft.** Reed beds by the Flume crossing and in the clearing; cut reeds dry after a game day; Hold the Pitch is one reusable minigame (keyboard, mouse/touch, gamepad, an assist option, reduce-motion form); root-note and lure reeds, and REEDS.tuneFirstReed for quests.
