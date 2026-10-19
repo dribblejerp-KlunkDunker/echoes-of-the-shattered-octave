@@ -76,7 +76,11 @@ for i, (k, v) in enumerate(SKETCHES.items()): PICTURES.append(('sketch', k, v, 1
 
 # Pictures the local model could not paint well (anachronisms, wrong subject): left to the procedural stand-in until a
 # better painting exists (for example from Canva). --only still paints them on request.
-SKIP = {'area/workshop', 'area/arena', 'area/quarry', 'death/beast', 'death/golem', 'death/grapnel', 'death/soldier', 'death/trap'}
+SKIP = {'area/workshop', 'area/arena', 'area/quarry', 'death/beast', 'death/golem', 'death/grapnel', 'death/soldier', 'death/trap',
+        'ending/b1_calmed', 'ending/b1_follow', 'ending/b1_destroyed', 'ending/b1_none', 'ending/p2_plain'}
+# Sketches: the local model draws photographs, not ink; only gate, greening, hedge and tam were kept. Paint the rest with
+# a better model (or Canva) and pass --only sketch/<key>.
+SKETCH_KEEP_ONLY = True
 
 
 def trim_bars(im):
@@ -98,7 +102,7 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--only', default=''); ap.add_argument('--force', action='store_true'); ap.add_argument('--steps', type=int, default=8)
     a = ap.parse_args()
     only = set(filter(None, a.only.split(',')))
-    todo = [p for p in PICTURES if (p[0] + '/' + p[1] in only if only else p[0] + '/' + p[1] not in SKIP)
+    todo = [p for p in PICTURES if (p[0] + '/' + p[1] in only if only else (p[0] + '/' + p[1] not in SKIP and not (SKETCH_KEEP_ONLY and p[0] == 'sketch')))
             and (a.force or not os.path.exists(os.path.join(ROOT, 'img', 'painted', p[0], p[1] + '.jpg')))]
     print('%d to paint' % len(todo), flush=True)
     if not todo: return
