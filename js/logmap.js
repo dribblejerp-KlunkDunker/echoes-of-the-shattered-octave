@@ -37,11 +37,14 @@ const LOGMAP = (function () {
     vox: 'The vox-bottles', tobin: 'Tobin Ashgrove\'s Tuning-Blade', deed: 'The deed to Cooper\'s Row',
     brood: 'The Brood-Mother\'s web', vesper: 'Vane\'s axe and the tow-line', herald: 'The Synod herald',
     folder: 'The grey Arbiterium folder', footprints: 'Scorched footprints on a plank', quill: 'A quill and inkwell',
+    reed: 'A cut wind-reed and a reed-knife', timber: 'A felled iron-bough log, chalk-marked', skep: 'A straw bee-skep',
   };
   // Ordered: the first match wins, so specific storylines come before broad ones. Every journal()
   // string in the codebase is checked against this by test/logmap.test.js. 'quill' is the
   // deliberate generic for anything unforeseen (a future entry, an edited save).
   const PATTERNS = [
+    // Phase 9: reed-craft and the Oakhaven side quests (js/reedcraft.js, js/sidequests.js)
+    ['reed', /my first reed|wind-reed|joram pellow|ada pellow/], ['timber', /reeds-miner tomas|iron-bough|^tomas /], ['skep', /skeps?\b|telling the bees/],
     ['kestrel', /^part four/], ['sunken', /^part three/], ['tank', /^the lift-tank/],
     ['vox', /^four hundred and thirty-two/], ['brood', /^the brood-mother/], ['herald', /synod herald/],
     ['footprints', /scorched footprints/], ['hush', /hush-lamp shrine|^the hush-gift|^hand-cant/],
@@ -355,6 +358,22 @@ const LOGMAP = (function () {
     const foot = (x, y) => { P.shape(ellPts(x, y, 6, 11), 0.5, 0.9, 1.6); P.shape(ellPts(x + 1, y - 17, 4, 5), 0.5, null); };
     foot(52, 76); foot(86, 74);
     P.path([[70, 8], [62, 28], [74, 30], [60, 52]], 1.4); P.path([[104, 6], [96, 24], [106, 26], [94, 44]], 1.2);
+  };
+  M.reed = (P) => {
+    for (let i = 0; i < 4; i++) { const x = 34 + i * 12; P.line(x, 96, x + 30 + i * 4, 14 + i * 3, 1.3 - i * 0.15); P.line(x + 16 + i * 2, 56 - i * 2, x + 20 + i * 2, 52 - i * 2, 0.8); }
+    P.shape([[96, 80], [132, 72], [134, 78], [98, 86]], 0.5, 0.9, 1.6); P.shape([[80, 84], [98, 80], [98, 88], [82, 92]], 0.25, 0.8, 1.2);
+    P.path([[10, 98], [40, 94], [70, 99], [134, 95]], 0.8);
+  };
+  M.timber = (P) => {
+    P.shape(ellPts(30, 66, 14, 20), 0.35, 1.0, 1.8); P.ellipse(30, 66, 8, 12, 0, 6.3, 0.7); P.ellipse(30, 66, 3, 5, 0, 6.3, 0.6);
+    P.shape([[30, 46], [126, 50], [128, 84], [30, 86]], 0.25, 0.9, 2.6); P.line(96, 56, 104, 76, 1.6); P.line(104, 56, 96, 76, 1.6);
+    P.path([[12, 96], [60, 92], [134, 97]], 0.8);
+  };
+  M.skep = (P) => {
+    P.shape([[44, 92], [44, 60], [56, 34], [72, 26], [88, 34], [100, 60], [100, 92]], 0.3, 1.0, 2.6);
+    for (let i = 0; i < 6; i++) P.path([[44 + i * 0, 88 - i * 10], [72, 84 - i * 10], [100, 88 - i * 10]], 0.7, false, 0.6);
+    P.shape(ellPts(72, 86, 6, 4), 0.8, null); for (const [x, y] of [[112, 40], [118, 30], [124, 44]]) { P.ellipse(x, y, 2, 1.5, 0, 6.3, 0.8); }
+    P.ground(94);
   };
   M.quill = (P) => {
     P.shape([[52, 70], [92, 70], [96, 94], [48, 94]], 0.3, 1.0, 2.8); P.ellipse(72, 70, 20, 5, 0, 6.3, 1.2); P.ellipse(72, 70, 12, 3, 0, 6.3, 0.7);
