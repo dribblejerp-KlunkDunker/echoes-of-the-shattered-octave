@@ -213,7 +213,8 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Action | Input |
 |---|---|
 | Move | W A S D · Shift runs · Caps Lock toggles always-run |
-| Look | Move the mouse over the view (rest it at a side edge to keep turning) · right-drag · Q and arrow keys · Z levels your gaze |
+| Look | Click the view to capture the mouse, then move it freely (Esc gives it back; Options → Controls → Capture mouse turns this off) · without capture, move over the view and rest at a side edge to keep turning · right-drag · Q and arrow keys · Z levels your gaze |
+| Full screen | Alt+Enter, or Options → Controls → Full screen |
 | Attack | Left-click to thrust · hold and move the mouse to slash or chop · wheel or 1–9 changes weapon |
 | Use / Talk | E or Space, or click a bright name under the crosshair (the crosshair is the centre of the view, so look up or down to aim at something above or below you) |
 | Pickpocket | Face a nearby Oakhaven adult, P to inspect · touch Purse / controller Y · Enter/Space or A attempts, Escape or B leaves |

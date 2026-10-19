@@ -497,7 +497,7 @@ const INTRO = [
 ];
 
 const HELP_TEXT = `MOVE  W A S D (any keyboard layout) · Shift runs · Caps Lock toggles always-run
-LOOK  move the mouse over the view · rest it at a side edge to keep turning · or hold the right button and drag · Q and arrow keys turn · Z levels your gaze
+LOOK  click the view to capture the mouse, then just move it (Esc gives it back) · or move it over the view and rest it at a side edge to keep turning · or hold the right button and drag · Q and arrow keys turn · Z levels your gaze · Alt+Enter full screen
 ATTACK  left-click to thrust · hold the button and move the mouse to slash or chop · wheel or 1-4 changes weapon · Tab opens song-book
 USE / TALK  E or Space · or click when the name under the crosshair is bright (dim means step closer)
 PICKPOCKET  Oakhaven adults: face them within arm’s reach and press P to inspect · approach from behind, quietly · Enter attempts theft, Escape leaves · touch Purse / controller Y inspects, A attempts, B leaves · caught or witnessed theft adds bounty
