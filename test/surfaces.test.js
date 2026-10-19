@@ -205,7 +205,8 @@ const SHOT_DIR = process.env.SHOT_DIR || path.join(os.tmpdir(), 'surfaces-shots'
       check(G.maps.oakhaven.ceilCells == null && G.maps.clearing.ceilCells == null && !G.maps.deepwoods.ceilTextures, 'open-sky maps are untouched');
       check(G.maps.mausoleum.ceilTextures === undefined || G.maps.mausoleum.ceilTextures === null, 'maps outside the brief keep their ceilings');
       // nothing structural moved
-      const q = G.maps.quarry; check(q.ceilZ === undefined || q.ceilZ === 1, 'ceilZ untouched');
+      // the ceilings module never changes a room's height: compare with the quarry as its builder made it
+      const q = G.maps.quarry, qBuilt = buildQuarry(); check(q.ceilZ === qBuilt.ceilZ, 'ceilZ untouched');
 
       // --- saves: round trip in Oakhaven ---------------------------------------------------------------
       setFx({ decals: true, detail: true, ceilings: true });

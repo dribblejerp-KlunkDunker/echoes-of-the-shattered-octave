@@ -208,6 +208,9 @@ const save = (name, dataUrl) => fs.writeFileSync(path.join(SHOTS, name), Buffer.
     const emis = await page.evaluate(() => {
       const { check, lumAt } = T; const out = {};
       T.flagsOn(); const CR = T.spot('catacombs', 4.4, 4.6); T.go('catacombs', CR.x, CR.y, CR.dir); G.tod = 0.5; GFX.darkInteriors = true;
+      // measure the masks themselves: whole-frame looks from other modules (mist in the
+      // catacombs, grade, fog, bloom) would otherwise move the painted-brightness ratios
+      for (const f of ['softFog', 'mist', 'bloom', 'grade', 'reflections', 'stars', 'panoramas', 'flyovers']) if (f in GFX) GFX[f] = false;
       out.crypt = [CR.x, CR.y, +CR.dir.toFixed(2)];
       Engine.render(G.ents, G.tod);
       for (const name of LIGHTING.names) {

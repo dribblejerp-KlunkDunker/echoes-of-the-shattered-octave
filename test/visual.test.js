@@ -59,7 +59,12 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       }
       check(hashes.size === 4, 'four distinct non-front drawings');
       check(PROCTOR_VIEWS.size <= 24, 'bounded directional cache');
+      // with procedural directional views off, other species still fall back to their front art;
+      // with them on (js/directions.js), a hound seen from behind gets its own drawn back view
+      const dirOn = typeof GFX !== 'undefined' ? GFX.directions : undefined;
+      if (typeof GFX !== 'undefined') GFX.directions = false;
       check(animDirectionalSprite({ ...e, sprite: 'hound', animSprite: null }).sprite === Engine.sprites.hound, 'other species fallback');
+      if (typeof GFX !== 'undefined') { GFX.directions = true; check(animDirectionalSprite({ ...e, sprite: 'hound', animSprite: null }).sprite !== Engine.sprites.hound, 'other species get a procedural back view'); GFX.directions = dirOn; }
       Object.assign(Engine.cam, cam);
       const p = G.player;
       p.inv.push({ id: 'a_plate', n: 1 }, { id: 'a_kite', n: 1 });
