@@ -258,7 +258,17 @@ const output = path.join(__dirname, '..', 'screenshots');
       document.querySelector('#msgs').innerHTML = 'A sea-fog walks up the river and sits down in the streets. They will not see you coming.';
     });
     await capture('weather-mist');
+
+    await page.evaluate(() => {
+      closeModal(); galleryScene('clearing');
+      Object.assign(Engine.cam, { x: 30.6, y: 18.8, dir: -0.25, pitch: 0, bob: 0 });
+      Engine.cam.z = (G.map.lvlAt(30.6, 18.8) || 0) + 0.5;
+      render();
+      if (!G.map.lvls || Math.abs(G.map.lvlAt(28, 18) - 1.2) > 1e-6) throw new Error('The Watch-stone must be standing on real ground');
+      document.querySelector('#msgs').innerHTML = 'The Watch-stone: the meadow is a long way down from the top of the steps.';
+    });
+    await capture('terrain-watch-stone');
     assert.deepEqual(errors, [], 'capture has no browser runtime errors');
-    console.log('PASS sixteen feature screenshots captured from the managed preview');
+    console.log('PASS seventeen feature screenshots captured from the managed preview');
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

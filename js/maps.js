@@ -20,6 +20,9 @@ class GameMap {
     this.siphoned = !!opts.siphoned; this.danger = opts.danger || 0; this.music = opts.music || 'town';
     this.visited = new Uint8Array(w * h);
     this.triggers = [];
+    // Floor elevation, one height per cell, in world units (eye height = 0.5).
+    // Null on flat maps so they keep the fast render path untouched.
+    this.lvls = null;
   }
   set(x, y, c) { if (x >= 0 && y >= 0 && x < this.w && y < this.h) { this.cells[y * this.w + x] = c; if (c && c.door) this.doors[y * this.w + x] = { open: 0, target: 0 }; } }
   get(x, y) { return (x < 0 || y < 0 || x >= this.w || y >= this.h) ? WALL('t_stone') : this.cells[y * this.w + x]; }
@@ -29,6 +32,16 @@ class GameMap {
   border(tex) { for (let x = 0; x < this.w; x++) { this.set(x, 0, WALL(tex)); this.set(x, this.h - 1, WALL(tex)); } for (let y = 0; y < this.h; y++) { this.set(0, y, WALL(tex)); this.set(this.w - 1, y, WALL(tex)); } }
   isSolidCell(x, y) { const c = this.get(x, y); if (!c) return false; if (c.door) { const d = this.doors[y * this.w + x]; return !(d && d.open > 0.7); } return true; }
   isBlocked(x, y) { if (this.isSolidCell(x, y)) return true; return !!(this.floorCells && x >= 0 && y >= 0 && x < this.w && y < this.h && this.floorCells[y * this.w + x] === 2); }
+  // --- elevation ---------------------------------------------------------
+  ensureLvls() { if (!this.lvls) this.lvls = new Float32Array(this.w * this.h); return this.lvls; }
+  lvlAt(x, y) {
+    if (!this.lvls) return 0;
+    const cx = x | 0, cy = y | 0;
+    if (cx < 0 || cy < 0 || cx >= this.w || cy >= this.h) return 0;
+    return this.lvls[cy * this.w + cx];
+  }
+  setLvl(x, y, h) { if (x >= 0 && y >= 0 && x < this.w && y < this.h) this.ensureLvls()[y * this.w + x] = h; }
+  raise(x0, y0, x1, y1, h) { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) this.setLvl(x, y, h); }
   add(e) { this.entities.push(e); return e; }
   deco(sprite, x, y, opts) { return this.add(Object.assign({ kind: 'deco', sprite, x, y, solid: true, radius: 0.35 }, opts || {})); }
   npc(id, x, y, opts) { return this.add(Object.assign({ kind: 'npc', id, x, y, sprite: NPCS[id].sprite, scale: NPCS[id].scale || 1, solid: true, radius: 0.35 }, opts || {})); }
@@ -303,7 +316,7 @@ function buildInteriors() {
 // -------------------------------------------------------------------------
 function buildClearing() {
   const W = 40, H = 36;
-  const m = new GameMap('clearing', 'Outside the Hedge', W, H, { outdoor: true, floor: 't_grass', fogDist: 16, fogColor: [50, 55, 50], music: 'wild', danger: 1, spawn: { x: 20.5, y: 32.5, dir: -Math.PI / 2 } });
+  const m = new GameMap('clearing', 'Outside the Hedge', W, H, { outdoor: true, floor: 't_grass', floorTextures: ['t_grass', 't_moss', 't_water', 't_stone'], fogDist: 16, fogColor: [50, 55, 50], music: 'wild', danger: 1, spawn: { x: 20.5, y: 32.5, dir: -Math.PI / 2 } });
   m.border('t_hedge');
   m.set(20, H - 1, DOOR({ portal: { map: 'oakhaven', x: 23.5, y: 2.5, dir: Math.PI / 2 }, label: 'The North Gate of Oakhaven' }));
   // Kaelen's hut
@@ -315,12 +328,26 @@ function buildClearing() {
   // quarry headframe (north)
   m.rect(16, 1, 24, 4, 't_stone'); m.set(20, 4, DOOR({ portal: { map: 'quarry', x: 0, y: 0, dir: 0, useSpawn: true }, label: 'The quarry headframe' }));
   m.deco('pump', 15.0, 5.5, { radius: 0.4, scale: 1.0 }); m.deco('crates', 25.0, 5.5, { radius: 0.4 }); m.deco('sign', 22.5, 7.5, { radius: 0.2 });
+  // --- the Watch-stone: real ground you can climb and fall from ----------
+  // A grass knoll east of the path, held up by a stone skirt, with four
+  // shallow steps on its west face and one broken edge you can walk off.
+  const KX0 = 25, KX1 = 31, KY0 = 15, KY1 = 21, KTOP = 1.2;
+  m.raise(KX0, KY0, KX1, KY1, KTOP);
+  for (let y = KY0; y <= KY1; y++) for (let x = KX0; x <= KX1; x++) m.setFloor(x, y, 1);   // mossy hilltop
+  // The edge itself is the cliff: the renderer draws the ground's own riser
+  // face, so any border cell is a drop and the stair is the only way up.
+  // steps: 0 -> 0.3 -> 0.6 -> 0.9 -> 1.2, each rise inside a walking step
+  for (const y of [19, 20]) { m.setLvl(22, y, 0.3); m.setLvl(23, y, 0.6); m.setLvl(24, y, 0.9); m.setFloor(22, y, 1); m.setFloor(23, y, 1); m.setFloor(24, y, 1); }
+  m.setLvl(24, 18, 0); m.setLvl(24, 21, 0);
+  m.deco('sign', 21.4, 20.6, { solid: false, scale: 0.85, label: 'The Watch-stone steps — the Grey Teeth are best seen from the top' });
+  m.deco('sign', 28.5, 17.5, { radius: 0.35, scale: 1.15, label: 'The Watch-stone. The Grey Teeth stand up beyond the Hedge from here.' });
   // forest
   const rnd = mulberry32(99);
   for (let i = 0; i < 46; i++) {
     const x = 2 + rnd() * (W - 4), y = 2 + rnd() * (H - 4);
     if (Math.abs(x - 20) < 2.5 && y > 4) continue;           // keep the path clear
     if (x > 7 && x < 15 && y > 13 && y < 21) continue;       // hut
+    if (x > 21 && x < 34 && y > 12 && y < 24) continue;      // the Watch-stone
     if (y < 8 && x > 13 && x < 27) continue;
     m.deco('oak', x, y, { scale: 1.5 + rnd() * 0.9, radius: 0.45 });
   }

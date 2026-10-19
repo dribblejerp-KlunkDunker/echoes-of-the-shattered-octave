@@ -33,6 +33,7 @@ const Weather = (() => {
   const ALIAS = { fog: 'mist', rain: 'rain', snow: 'snow', clear: 'clear' };
 
   let state = 'clear', left = 3, blend = 1, bolt = 0, boltCd = 8, wrote = 'clear', pinned = false, held = false;
+  let wind = 0;   // set by apply(); declared so the HUD can read it before the first tick
 
   function climateOf(mapId) { return CLIMATES[CLIMATE_OF[mapId]] || CLIMATES.reach; }
   function fx(s) { return STATES[s] || STATES.clear; }

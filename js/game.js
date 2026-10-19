@@ -134,6 +134,7 @@ function loadMap(id, pos) {
   for (const e of m.entities) { if (e.requires && !e.dead) e.hidden = !G.flags[e.requires]; if (e.until && G.flags[e.until]) e.hidden = true; if (e.drylamp) e.glow = G.flags.lamps_lit ? 0.65 : 0; if (e.id === 'halder' && G.flags.halder_rest) e.loop = false; }
   Engine.setMap(m);
   const p = pos || m.spawn; Engine.cam.x = p.x; Engine.cam.y = p.y; Engine.cam.dir = p.dir || 0; Engine.cam.pitch = 0;
+  settleFeet();
   G.stillT = 0; G.unwriting = false; $('#view').classList.remove('unwrite');
   Audio_.setScene(m.music);
   msg(m.name, 'warn', 3500);
@@ -152,9 +153,24 @@ function transfer(portal) {
   loadMap(portal.map, pos);
 }
 
+// ---------------------------------------------------------------- elevation
+// The player's feet rest on the floor of whatever cell they are in, and the
+// eye rides half a unit above them. Flat maps keep feet at 0, exactly as before.
+function settleFeet() {
+  const c = Engine.cam, p = G.player;
+  const feet = G.map.lvls ? G.map.lvlAt(c.x, c.y) : 0;
+  if (p) { p.feet = feet; p.fallV = 0; p.fallFrom = null; }
+  c.z = feet + 0.5;
+}
+
 // ---------------------------------------------------------------- collision
 function solidAt(x, y, self) {
   const m = G.map; const r = 0.24;
+  // a rise taller than a step is a cliff face, not floor you can walk onto
+  if (m.lvls) {
+    const feet = self ? (typeof self.feet === 'number' ? self.feet : m.lvlAt(self.x, self.y)) : (G.player && typeof G.player.feet === 'number' ? G.player.feet : 0);
+    if (m.lvlAt(x, y) - feet > STEP_UP) return true;
+  }
   for (const [dx, dy] of [[-r, -r], [r, -r], [-r, r], [r, r]]) if (m.isBlocked((x + dx) | 0, (y + dy) | 0)) return true;
   if (self && dist2(x, y, Engine.cam.x, Engine.cam.y) < 0.4) return true;
   for (const e of G.ents) { if (e === self || !e.solid || e.hidden || e.dead) continue; const rr = (e.radius || 0.3) + 0.22; if (dist2(x, y, e.x, e.y) < rr * rr) return true; }
@@ -2064,6 +2080,27 @@ function update(dt) {
   vel.x += (wx - vel.x) * blend; vel.y += (wy - vel.y) * blend;
   if (mag <= 0.05 && Math.hypot(vel.x, vel.y) < 0.03) { vel.x = 0; vel.y = 0; }
   if (vel.x || vel.y) { const r = playerMove(c, vel.x * dt, vel.y * dt); if (r.bx) vel.x = 0; if (r.by) vel.y = 0; }
+  // --- elevation: climb steps and ramps, fall off ledges ------------------
+  const ground = G.map.lvls ? G.map.lvlAt(c.x, c.y) : 0;
+  if (typeof p.feet !== 'number') p.feet = ground;
+  if (ground > p.feet + 0.001) {
+    p.feet = Math.min(ground, p.feet + 3.2 * dt); p.fallV = 0; p.fallFrom = null;
+  } else if (ground < p.feet - 0.001) {
+    if (p.fallFrom == null) { p.fallFrom = p.feet; p.fallV = 0; }
+    p.fallV = (p.fallV || 0) + 7 * dt;
+    p.feet -= p.fallV * dt;
+    if (p.feet <= ground) {
+      const drop = p.fallFrom - ground;
+      p.feet = ground; p.fallV = 0; p.fallFrom = null;
+      if (drop > FALL_SAFE) {
+        const dmg = Math.max(1, Math.round((drop - FALL_SAFE) * 26));
+        p.hp -= dmg; G.hurtT = 0.25; fx('hurt', 200); Audio_.sfx.hurt();
+        msg('You come down hard off the edge \u2014 ' + dmg + ' damage.', 'bad', 2800);
+        if (p.hp <= 0) { die('the fall'); return; }
+      } else if (drop > 0.25) Audio_.sfx.step('stone');
+    }
+  }
+  c.z = p.feet + 0.5;
   // keyboard turning eases in and out
   let tin = clamp(edgeTurn * 0.9, -1, 1); if (k.q || k.arrowleft) tin -= 1; if (k.arrowright) tin += 1; tin = clamp(tin, -1, 1);
   G.turnV += (tin * 2.4 - G.turnV) * (1 - Math.exp(-(tin ? 11 : 18) * dt));

@@ -7,6 +7,8 @@
 const VW = 320, VH = 200;       // full canvas
 const VIEW_H = 150;             // 3D viewport height (HUD below)
 const TEX = 64;
+const STEP_UP = 0.36;   // tallest rise a walker takes without stairs
+const FALL_SAFE = 0.9;  // drops shorter than this cost no health
 
 const Engine = (() => {
   const canvas = document.getElementById('view');
@@ -14,6 +16,7 @@ const Engine = (() => {
   const frame = ctx.createImageData(VW, VIEW_H);
   const fb = new Uint32Array(frame.data.buffer);
   const zbuf = new Float32Array(VW);
+  const ztop = new Float32Array(VW);   // screen row of the nearest wall's top edge, per column
 
   // ---- asset decoding -------------------------------------------------
   const textures = {};   // name -> Uint32Array(64*64)
@@ -117,14 +120,16 @@ const Engine = (() => {
   }
 
   // ---- renderer state -------------------------------------------------
-  const cam = { x: 2, y: 2, dir: 0, pitch: 0, bob: 0 };
+  // z is the eye height above the world baseline. Flat maps keep it at 0.5;
+  // game.js lifts it as the player climbs stands on raised ground.
+  const cam = { x: 2, y: 2, dir: 0, pitch: 0, bob: 0, z: 0.5 };
   let map = null;        // current map object (grid, w, h, cells)
   let fogDist = 12, fogR = 0, fogG = 0, fogB = 0, lightFlicker = 1, ambient = 0;
   let ambientDark = 1;   // night factor
   let baseR = 0, baseG = 0, baseB = 0, baseFog = 12;   // the map's own air, before weather
   const FOV = 1.0;       // plane length (approx 90 deg)
 
-  function setMap(m) { map = m; ambient = m.ambient || 0; const fc = m.fogColor || [0, 0, 0]; baseR = fc[0]; baseG = fc[1]; baseB = fc[2]; baseFog = m.fogDist || 12; fogDist = baseFog; fogR = baseR; fogG = baseG; fogB = baseB; }
+  function setMap(m) { map = m; cam.z = 0.5; ambient = m.ambient || 0; const fc = m.fogColor || [0, 0, 0]; baseR = fc[0]; baseG = fc[1]; baseB = fc[2]; baseFog = m.fogDist || 12; fogDist = baseFog; fogR = baseR; fogG = baseG; fogB = baseB; }
 
   // ---- sky -----------------------------------------------------------
   const skyR = new Float32Array(VIEW_H), skyG = new Float32Array(VIEW_H), skyB = new Float32Array(VIEW_H);
@@ -202,6 +207,8 @@ const Engine = (() => {
     const rayDirX1 = dirX + planeX, rayDirY1 = dirY + planeY;
     const floorMap = map.floorCells; // Uint8Array index into map.floorTextures or null
     const floorTexList = map.floorTextures ? map.floorTextures.map(n => textures[n]) : null;
+    const heightMap = map.lvls;   // per-cell floor elevation, or null on flat maps
+    const fogPx = rgb(fogR, fogG, fogB);
 
     for (let y = 0; y < h; y++) {
       const isFloor = y > horizon;
@@ -221,7 +228,48 @@ const Engine = (() => {
         if (!ceilTex) { let o = y * w; const c = rgb(fogR, fogG, fogB); for (let x = 0; x < w; x++) fb[o++] = c; continue; }
       }
       const p = isFloor ? (y - horizon) : (horizon - y);
-      if (p === 0) { let o = y * w; for (let x = 0; x < w; x++) fb[o++] = rgb(fogR, fogG, fogB); continue; }
+      if (p === 0) { let o = y * w; for (let x = 0; x < w; x++) fb[o++] = fogPx; continue; }
+      // Raised ground: distance depends on the height of the surface under
+      // each pixel, not just on the row. Project, read the cell, re-project
+      // with that cell's height, and accept once it stops moving.
+      if (heightMap && isFloor) {
+        let o = y * w;
+        for (let x = 0; x < w; x++) {
+          const rx = rayDirX0 + (rayDirX1 - rayDirX0) * (x / w);
+          const ry = rayDirY0 + (rayDirY1 - rayDirY0) * (x / w);
+          let zs = cam.z - 0.5, d = 0, dead = false;
+          for (let it = 0; it < 3; it++) {
+            d = posZ * (cam.z - zs) / p;
+            if (!(d > 0.06)) { dead = true; break; }
+            const fx = cam.x + d * rx, fy = cam.y + d * ry;
+            const cx = fx | 0, cy = fy | 0;
+            if (cx < 0 || cy < 0 || cx >= mw || cy >= mh) { dead = true; break; }
+            const l2 = heightMap[cy * mw + cx];
+            if (Math.abs(l2 - zs) < 0.02) { zs = l2; break; }
+            zs = l2;
+          }
+          if (dead || zs >= cam.z - 0.01) { fb[o++] = fogPx; continue; }
+          d = posZ * (cam.z - zs) / p;
+          const fx = cam.x + d * rx, fy = cam.y + d * ry;
+          const cx = fx | 0, cy = fy | 0;
+          if (cx < 0 || cy < 0 || cx >= mw || cy >= mh) { fb[o++] = fogPx; continue; }
+          const tx = ((fx - cx) * TEX) & 63, ty = ((fy - cy) * TEX) & 63;
+          let t = floorTexDefault;
+          if (floorMap) { const idx = floorMap[cy * mw + cx]; if (idx) t = floorTexList[idx]; }
+          let px;
+          if (t === texWater) px = t[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)];
+          else if (t === texShal) px = t[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)];
+          else px = t[ty * TEX + tx];
+          let f2 = light * (1 - d * fogMul); if (f2 < 0) f2 = 0;
+          f2 = ambient + (1 - ambient) * f2;
+          if (!outdoor) f2 *= flick;
+          let lcr = 0, lcg = 0, lcb = 0;
+          if ((x & 3) === 0 && ptLights.length && d < 10) [lcr, lcg, lcb] = sampleLight(fx, fy);
+          const fi2 = Math.round(f2 * 255) / 255;
+          fb[o++] = outdoor ? tint(px, fi2, fogR, fogG, fogB, lcr, lcg, lcb) : shade(px, fi2, lcr, lcg, lcb);
+        }
+        continue;
+      }
       const rowDist = posZ / p;
       let f = light * (1 - rowDist * fogMul);
       if (f < 0) f = 0;
@@ -319,70 +367,38 @@ const Engine = (() => {
     }
 
     // -- walls --------------------------------------------------------
+    // A column can show more than one face: the low step of a stair in front,
+    // and the taller ground behind it. Rays collect faces while they can still
+    // see over each rise, then paint them far to near.
     const doors = map.doors;
-    for (let x = 0; x < w; x++) {
-      const camX = 2 * x / w - 1;
-      const rdx = dirX + planeX * camX, rdy = dirY + planeY * camX;
-      let mapX = cam.x | 0, mapY = cam.y | 0;
-      const ddx = Math.abs(1 / rdx), ddy = Math.abs(1 / rdy);
-      let stepX, stepY, sdx, sdy;
-      if (rdx < 0) { stepX = -1; sdx = (cam.x - mapX) * ddx; } else { stepX = 1; sdx = (mapX + 1 - cam.x) * ddx; }
-      if (rdy < 0) { stepY = -1; sdy = (cam.y - mapY) * ddy; } else { stepY = 1; sdy = (mapY + 1 - cam.y) * ddy; }
-      let hit = 0, side = 0, texName = null, dist = 0, wallX = 0, iter = 0;
-      while (!hit && iter++ < 96) {
-        if (sdx < sdy) { sdx += ddx; mapX += stepX; side = 0; } else { sdy += ddy; mapY += stepY; side = 1; }
-        if (mapX < 0 || mapY < 0 || mapX >= mw || mapY >= mh) { hit = 2; break; }
-        const c = grid[mapY * mw + mapX];
-        if (c) {
-          if (c.door) {
-            // thin door in the middle of the cell, sliding along its own axis
-            const d = doors[mapY * mw + mapX];
-            const openAmt = d ? d.open : 0;
-            if (openAmt >= 0.98) continue;
-            if (side === 0) {
-              const pd = sdx - ddx + ddx * 0.5; // distance to mid-plane
-              const hy = cam.y + pd * rdy;
-              if ((hy | 0) !== mapY) continue;
-              const frac = hy - mapY;
-              if (frac < openAmt) continue;
-              dist = pd; wallX = frac - openAmt; hit = 1; texName = c.tex;
-            } else {
-              const pd = sdy - ddy + ddy * 0.5;
-              const hx = cam.x + pd * rdx;
-              if ((hx | 0) !== mapX) continue;
-              const frac = hx - mapX;
-              if (frac < openAmt) continue;
-              dist = pd; wallX = frac - openAmt; hit = 1; texName = c.tex;
-            }
-          } else {
-            hit = 1; texName = c.tex;
-            dist = side === 0 ? (sdx - ddx) : (sdy - ddy);
-            wallX = side === 0 ? cam.y + dist * rdy : cam.x + dist * rdx;
-            wallX -= Math.floor(wallX);
-          }
-        }
+    const faces = [];
+    function drawFace(face, x) {
+      const dist = face.dist;
+      const tex = textures[face.tex] || textures.t_stone;
+      let ds, de, step;
+      if (heightMap) {
+        ds = horizon + (h / dist) * (cam.z - face.top);
+        de = horizon + (h / dist) * (cam.z - face.base);
+        step = TEX / Math.max(1, de - ds);
+      } else {
+        const lineH = (h / dist) | 0;
+        ds = -lineH / 2 + horizon; de = lineH / 2 + horizon; step = TEX / lineH;
       }
-      if (hit !== 1) { zbuf[x] = 1e9; continue; }
-      zbuf[x] = dist;
-      const lineH = (h / dist) | 0;
-      let ds = -lineH / 2 + horizon, de = lineH / 2 + horizon;
       const dsC = Math.max(0, ds | 0), deC = Math.min(h - 1, de | 0);
-      const tex = textures[texName] || textures.t_stone;
-      let tx = (wallX * TEX) | 0;
-      if ((side === 0 && rdx > 0) || (side === 1 && rdy < 0)) tx = TEX - tx - 1;
+      if (deC < dsC) return dsC;
+      let tx = (face.wallX * TEX) | 0;
+      if ((face.side === 0 && face.rdx > 0) || (face.side === 1 && face.rdy < 0)) tx = TEX - tx - 1;
       let f = light * (1 - dist * fogMul);
       if (f < 0) f = 0;
       f = ambient + (1 - ambient) * f;
-      if (side === 1) f *= 0.8;
+      if (face.side === 1) f *= 0.8;
       if (!outdoor) f *= flick;
       const fi = Math.round(f * 255) / 255;
-      const step = TEX / lineH;
       let tp = (dsC - ds) * step;
       let o = dsC * w + x;
-      const hitX = cam.x + dist * rdx, hitY = cam.y + dist * rdy;
+      const hitX = cam.x + dist * face.rdx, hitY = cam.y + dist * face.rdy;
       const [lcr, lcg, lcb] = ptLights.length ? sampleLight(hitX, hitY) : [0, 0, 0];
       const ditherOn = !!(opts && opts.dither);
-      // adjacent-door shading: darken door frames slightly
       for (let y = dsC; y <= deC; y++) {
         const ty = (tp | 0) & 63; tp += step;
         const px = tex[ty * TEX + tx];
@@ -391,6 +407,73 @@ const Engine = (() => {
         fb[o] = outdoor ? tint(px, fUse, fogR, fogG, fogB, lcr, lcg, lcb) : shade(px, fUse, lcr, lcg, lcb);
         o += w;
       }
+      return dsC;
+    }
+    for (let x = 0; x < w; x++) {
+      const camX = 2 * x / w - 1;
+      const rdx = dirX + planeX * camX, rdy = dirY + planeY * camX;
+      let mapX = cam.x | 0, mapY = cam.y | 0;
+      const ddx = Math.abs(1 / rdx), ddy = Math.abs(1 / rdy);
+      let stepX, stepY, sdx, sdy;
+      if (rdx < 0) { stepX = -1; sdx = (cam.x - mapX) * ddx; } else { stepX = 1; sdx = (mapX + 1 - cam.x) * ddx; }
+      if (rdy < 0) { stepY = -1; sdy = (cam.y - mapY) * ddy; } else { stepY = 1; sdy = (mapY + 1 - cam.y) * ddy; }
+      let side = 0;
+      // the ground the ray is currently over, so a rise becomes a visible face
+      let prevLvl = heightMap ? (heightMap[(cam.y | 0) * mw + (cam.x | 0)] || 0) : 0;
+      for (let iter = 0; iter < 96; iter++) {
+        if (sdx < sdy) { sdx += ddx; mapX += stepX; side = 0; } else { sdy += ddy; mapY += stepY; side = 1; }
+        if (mapX < 0 || mapY < 0 || mapX >= mw || mapY >= mh) break;
+        const c = grid[mapY * mw + mapX];
+        const cellLvl = heightMap ? heightMap[mapY * mw + mapX] : 0;
+        if (!c && heightMap && cellLvl - prevLvl > 0.02) {
+          // a rise in open ground is a cliff face: draw the ground's own edge
+          const dist = side === 0 ? (sdx - ddx) : (sdy - ddy);
+          let wx = side === 0 ? cam.y + dist * rdy : cam.x + dist * rdx;
+          wx -= Math.floor(wx);
+          const fidx = floorMap ? floorMap[mapY * mw + mapX] : 0;
+          faces.push({ dist, wallX: wx, base: prevLvl, top: cellLvl, side, rdx, rdy, tex: (map.floorTextures && fidx && map.floorTextures[fidx]) || map.floor });
+          prevLvl = cellLvl;
+          if (cellLvl > cam.z - 0.02) break;   // cannot see over this one
+          continue;
+        }
+        if (c) {
+          if (c.door) {
+            // thin door in the middle of the cell, sliding along its own axis
+            const d = doors[mapY * mw + mapX];
+            const openAmt = d ? d.open : 0;
+            if (openAmt >= 0.98) continue;
+            let dist, frac;
+            if (side === 0) {
+              dist = sdx - ddx + ddx * 0.5; // distance to mid-plane
+              const hy = cam.y + dist * rdy;
+              if ((hy | 0) !== mapY) continue;
+              frac = hy - mapY;
+              if (frac < openAmt) continue;
+            } else {
+              dist = sdy - ddy + ddy * 0.5;
+              const hx = cam.x + dist * rdx;
+              if ((hx | 0) !== mapX) continue;
+              frac = hx - mapX;
+              if (frac < openAmt) continue;
+            }
+            faces.push({ dist, wallX: frac - openAmt, base: cellLvl, top: cellLvl + 1, side, rdx, rdy, tex: c.tex });
+            break;
+          }
+          const dist = side === 0 ? (sdx - ddx) : (sdy - ddy);
+          let wx = side === 0 ? cam.y + dist * rdy : cam.x + dist * rdx;
+          wx -= Math.floor(wx);
+          faces.push({ dist, wallX: wx, base: cellLvl, top: c.top != null ? c.top : cellLvl + 1, side, rdx, rdy, tex: c.tex });
+          break;
+        }
+        if (heightMap) prevLvl = cellLvl;
+      }
+      if (!faces.length) { zbuf[x] = 1e9; ztop[x] = -1e9; continue; }
+      zbuf[x] = faces[0].dist;
+      for (let i = faces.length - 1; i >= 0; i--) {
+        const dsC = drawFace(faces[i], x);
+        if (i === 0) ztop[x] = dsC;
+      }
+      faces.length = 0;
     }
 
     // -- sprites ------------------------------------------------------
@@ -419,8 +502,9 @@ const Engine = (() => {
       const baseH = unitH * (sp.hs || 1);
       const sprH = (baseH * (e.animSY || 1)) | 0;
       const vMove = (((e.yOff || 0) - (e.animLift || 0)) * h / trY + (sp.dy || 0) * unitH) | 0; // + = lower
-      // sprites sit on the floor: bottom at horizon + half unit height
-      const baseline = horizon + ((0.5 * h / trY) | 0) + vMove;
+      // sprites stand on the floor of the cell they are in, whatever its height
+      const sprFloor = heightMap ? heightMap[Math.min(mh - 1, Math.max(0, e.y | 0)) * mw + Math.min(mw - 1, Math.max(0, e.x | 0))] : 0;
+      const baseline = horizon + (((cam.z - sprFloor) * h / trY) | 0) + vMove;
       const dsY = baseline - sprH, deY = baseline;
       const sprW = Math.max(1, (baseH * sp.w / sp.h * (e.animSX || 1)) | 0);
       const cx0 = sp.cx == null ? 0.5 : sp.cx;
@@ -448,12 +532,15 @@ const Engine = (() => {
       const plain = !skew && !flip && alpha >= 1 && !hurt;
       const aT = alpha * 16;
       for (let x = xs; x <= xe; x++) {
-        if (trY >= zbuf[x]) continue;
+        // a wall in front hides only the pixels below its top edge, so a body
+        // behind a low wall still shows its head and shoulders
+        let yEnd = ye;
+        if (trY >= zbuf[x]) { yEnd = Math.min(ye, ztop[x] - 1); if (yEnd < ys) continue; }
         let o = ys * w + x;
         if (plain) {
           const tx = (((x - dsX) * tw) / sprW) | 0;
           if (tx < 0 || tx >= tw) continue;
-          for (let y = ys; y <= ye; y++) {
+          for (let y = ys; y <= yEnd; y++) {
             const ty = (((y - dsY) * th) / sprH) | 0;
             const px = sdat[ty * tw + tx];
             if ((px >>> 24) > 100) fb[o] = e.flash ? rgb(255, 230, 200) : (outdoor ? tint(px, fi, fogR, fogG, fogB, ecr, ecg, ecb) : shade(px, fi, ecr, ecg, ecb));
@@ -461,7 +548,7 @@ const Engine = (() => {
           }
           continue;
         }
-        for (let y = ys; y <= ye; y++) {
+        for (let y = ys; y <= yEnd; y++) {
           const sx = skew ? x - skew * (deY - y) : x;
           let tx = (((sx - dsX) * tw) / sprW) | 0;
           if (tx < 0 || tx >= tw || (alpha < 1 && BAYER[((y & 3) << 2) | (x & 3)] >= aT)) { o += w; continue; }
