@@ -17,6 +17,7 @@ js/painted.js uses each one when present and falls back to the procedural stand-
 - `death/bolt.jpg` - 1280x720, 78895 bytes
 - `death/drown.jpg` - 1280x720, 119531 bytes
 - `death/fall.jpg` - 1280x720, 110390 bytes
+- `death/found.jpg` - 1280x720, 87466 bytes
 - `death/greening.jpg` - 1280x720, 143120 bytes
 - `death/heartglass.jpg` - 1280x720, 131974 bytes
 - `death/quiet.jpg` - 1280x720, 73628 bytes

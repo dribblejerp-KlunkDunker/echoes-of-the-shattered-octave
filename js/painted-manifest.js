@@ -15,6 +15,7 @@ const PAINTED_MANIFEST = {
   "death/bolt": {w: 1280, h: 720, bytes: 78895},
   "death/drown": {w: 1280, h: 720, bytes: 119531},
   "death/fall": {w: 1280, h: 720, bytes: 110390},
+  "death/found": {w: 1280, h: 720, bytes: 87466},
   "death/greening": {w: 1280, h: 720, bytes: 143120},
   "death/heartglass": {w: 1280, h: 720, bytes: 131974},
   "death/quiet": {w: 1280, h: 720, bytes: 73628},
