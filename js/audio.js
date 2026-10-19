@@ -222,5 +222,5 @@ const Audio_ = (() => {
     return { request, preload, tick, debug, seek, get enabled() { return enabled; }, set enabled(v) { enabled = !!v; }, get current() { return want; }, get unlocked() { return unlocked; } };
   })();
 
-  return { init, resume, setScene, sfx, toggleMute, music, muffle, get muffled() { return muffleAmt; }, hum, get hums() { const o = {}; for (const k in hums) o[k] = hums[k].level; return o; }, get ready() { return !!ctx; }, get muted() { return muted; } };
+  return { init, resume, setScene, sfx, toggleMute, music, muffle, get muffled() { return muffleAmt; }, get ctx() { return ctx; }, get master() { return master; }, get sfxBus() { return sfxBus; }, hum, get hums() { const o = {}; for (const k in hums) o[k] = hums[k].level; return o; }, get ready() { return !!ctx; }, get muted() { return muted; } };
 })();
