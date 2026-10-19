@@ -76,7 +76,7 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
       const tables = () => JSON.stringify([NPCS.vane.shop, NPCS.bettany.shop, [1, 2, 3].map(t => CACHE[t].table), LOOT.outrider, LOOT.hushwarden, !!LOOT.marine, ALCHEMY_RECIPES.map(r => r.id), Object.keys(DISTRACTIONS), CALENDAR11.VENDORS.map(v => v.pool)]);
       const setAll = (v) => { for (const k of ['flask', 'jar', 'net']) KIT12.setSwitch(k, v); };
       setAll(false); const off1 = tables();
-      const offHas = /p12_/.test(off1);
+      const offHas = /p12_(flask|jar|net)\b/.test(off1);   // other Phase 12 modules stock their own p12_ items (instruments, weapons)
       setAll(true); const on = tables(); setAll(false); const off2 = tables();
       const prevCount = ALCHEMY_RECIPES.length;
       // a throw with its switch off does nothing and costs nothing
