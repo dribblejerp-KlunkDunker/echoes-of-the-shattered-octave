@@ -286,7 +286,7 @@ const STORYRUM = (() => {
         'Residents are asked to make their way to the mooring mast in an orderly fashion. The mast is not an official relocation point. The Office has no comment on the mast.'],
       notice: 'Oaks that ring are to be treated as weather.' },
     { id: 'rite', no: 'No. 36', req: ['rite_started'], note: 'The Rite has begun',
-      head: 'THE RITE OF PURE UNISON PROCEEDS',
+      head: 'THE HOLD OVER OAKHAVEN PROCEEDS',
       items: [
         'The Cantor of Oakhaven is in the Church\'s protection for the duration of the hold, estimated at four hours. Protection is not detention. The shutters of her house have been sealed for their safety.',
         'Persons humming the Root note beneath the Pure Note are thanked for their participation. Participation was not requested.',
@@ -325,7 +325,7 @@ const STORYRUM = (() => {
     { id: 'arrival', no: 'No. 31', note: 'The default front page: before you have met anyone',
       head: 'THE PURE NOTE IS TO BE HELD OVER OAKHAVEN',
       items: [
-        'The Choir-Church announces a Rite of Pure Unison for Hearthday. Attendance is anticipated and will be noted. Humming beneath the Note is not attendance.',
+        'The Choir-Church announces that the Pure Note will be held over Oakhaven on Hearthday. Attendance is anticipated and will be noted. Humming beneath the Note is not attendance.',
         'The Consortium of Bores thanks the district for its patience during the preparation of Stage Nine. Bread will continue.',
         'An inspection of children\'s hands and feet is scheduled for Rootday week at the Greenhall. Chalk will be applied where indicated. Applied chalk is not an accusation.'],
       notice: 'Bells are not to be rung. The district has no bells. Reports of ringing are to be treated as weather.' },
