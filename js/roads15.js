@@ -20,7 +20,9 @@
 //        * A milestone with something chalked on it: the Reach's own quiet record-keeping.
 //        * A packman on the Reach roads with a tonic, glass shot and honey at road prices.
 //      One encounter a journey at most, never two within six world hours, never on the heels of an
-//      ambush, and never while a story lock holds the road (travelBlocked already refuses those).
+//      ambush, and never while a story lock holds the road (travelBlocked already refuses those). A
+//      scheduled encounter belongs to that arrival: it is dropped once you leave the map you arrived on,
+//      or two world hours after the journey ended, so it can never open on top of something else.
 //   2. "WHERE IS...?" MAP MARKS (cfg.marks). Asking an NPC "Where is...?" now also puts the place on
 //      your automap (M): a chalk cross and ring where it stands, and a line under the map giving the
 //      bearing and the paces, in the same words the directions used. Walk within two paces of a
@@ -47,7 +49,7 @@ const ROADS15 = (() => {
   const LIST = [];
   const S = (t) => { LIST.push(t); return t; };
   const cfg = { events: true, marks: true };
-  const MAX_MARKS = 12, FOUND_AT = 2.0, GAP_HOURS = 6, EV_BASE = 0.42;
+  const MAX_MARKS = 12, FOUND_AT = 2.0, GAP_HOURS = 6, EV_BASE = 0.42, PENDING_HOURS = 2;
 
   const clampR = (v, a, b) => (v < a ? a : v > b ? b : v);
   const num = (v, lo, hi, d) => { v = Number(v); return Number.isFinite(v) ? clampR(v, lo, hi) : d; };
@@ -463,11 +465,12 @@ const ROADS15 = (() => {
   };
   function tickPending() {
     if (!pending || !cfg.events) return;
+    // the encounter belongs to the arrival, not to whatever you do half a day later: it is dropped once
+    // you have gone somewhere else, or two world hours after the journey ended
+    if (hasG() && pending.ctx && pending.ctx.mapId && G.mapId !== pending.ctx.mapId) { pending = null; return; }
+    if (clock() - pending.at > PENDING_HOURS) { pending = null; return; }
     if (!playing() || G.openPanel || G.state !== 'play' || (G.fadeT || 0) > 0.25) return;
-    if (hostileNear()) {                                  // an ambush first: the road can wait
-      if (clock() - pending.at > 2) pending = null;       // two world hours of fighting: the moment is gone
-      return;
-    }
+    if (hostileNear()) return;                            // an ambush first: the road waits, up to its two hours
     const ev = EVENTS.find((e) => e.id === pending.id), ctx = pending.ctx;
     pending = null;
     if (!ev) return;
@@ -592,7 +595,7 @@ const ROADS15 = (() => {
   return {
     TX, LIST, cfg, saveCfg, loadCfg, MAX_MARKS, FOUND_AT, GAP_HOURS, EV_BASE, TOLL,
     catalogue, marks, addMark, dropMark, clearMarks, marksHere, markLines, drawMarks, tickMarks, bearing,
-    EVENTS, pick, schedule, fire, force, tickPending, eventChance, readyForEvent, tollFor, inSynod, synodStage,
+    EVENTS, pick, schedule, fire, force, tickPending, eventChance, readyForEvent, tollFor, inSynod, synodStage, PENDING_HOURS,
     setGrudge, grudgeOn, GRUDGE_HOURS,
     get pending() { return pending; }, set pending(v) { pending = v; },
     appendRows,

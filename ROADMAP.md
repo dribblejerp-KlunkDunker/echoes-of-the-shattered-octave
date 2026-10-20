@@ -167,12 +167,14 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 | 12 — Tools of the trade | gear and Songs | Shield bash; two-handed and dual-wielding; throwing nets; fire flasks; silence bombs; Office grappling hook; environmental kills; instruments that change Songs; tuning forks; dowsing for Anchor-roots |
 | 13 — The Hush comes closer | horror | Whispers from behind; lights dying; night terrors; haunted house in Oakhaven; the Unrung Bell at night; jump-scare toggle; hounds sniffing your trail; Hushwardens' muffling wave; crows at bodies |
 | 14 — A world that shows the story | visuals and animation | The Greening in Oakhaven; spreading Light-glass; root veins; "Octave lights"; mirrors; sealed doorways; breakable barrels; Sunken Court light; NPC weather reactions; swaying capes; tavern sitting/eating; Kestrel flight scene |
-| 15 — The province moves | world events and Daggerfall systems | Synod sermons; eclipses; roadside events; burning and rebuilding, permanent deaths; Synod territory; paid training; letters of credit; cheat codes; "Where is" map marks; camp cooking; tavern card game; boss trophies |
+| 15 — The province moves (delivered) | world events and Daggerfall systems | **Delivered:** Synod readings; eclipses; Synod territory; the Office's reprisal (a burnt shed, rebuilt, and a death that stays) → roadside events and "Where is" map marks → paid training, letters of credit, testing codes → camp cooking, the card game, boss trophies. See the Phase 15 verification. |
 | 16 — New ground | new areas | Chlorophyll Flume; underwater dungeon beneath Whisper-Grove; heists (Synod cathedral, Consortium quarry); the Kestrel as a home base with crew |
 | 17 — Beyond Book One | extras | Book Two prologue; Port Cantabile trip and the Long Night (both after Book One in canon: presented as marked extras) |
 | 18 — Technical | engine and online | Sharper renderer; installable offline app; daily challenge dungeon; ghost replays; messages and leaderboards (need a small server: owner's decision) |
 
 Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
+
+**Phase 15 — the province moves** (delivered; items marked (P15); see the Phase 15 verification)
 
 **Phase 14 — a world that shows the story** (delivered; items marked (P14); see the Phase 14 verification)
 
@@ -213,20 +215,20 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[x]` Loot flying to the inventory button (P11) · `[x]` Coins counted out in shops (P11) · `[x]` Page turns in books and the logbook (P11) · `[x]` Sitting, eating and drinking in the tavern (P14)
 
 **Daggerfall features**
-- `[x]` Birth signs from musical modes (P11) · `[x]` "Where is...?" (dialogue button; add map marking `[~]`) · `[ ]` Paid training with per-level limits
-- `[ ]` Bank letters of credit · `[x]` Holidays on the calendar (P11) · `[ ]` Cheat codes for testing
+- `[x]` Birth signs from musical modes (P11) · `[x]` "Where is...?" (dialogue button, and a chalk cross on the automap that comes off when you get there) (P15) · `[x]` Paid training with per-level limits (P15)
+- `[x]` Bank letters of credit (P15: an account and 25-sovereign letters at the Greenhall counting-house) · `[x]` Holidays on the calendar (P11) · `[x]` Cheat codes for testing (P15: off by default, and they mark the run)
 
 **Gameplay**
 - `[x]` Instruments (lute, flute, hurdy-gurdy) that change Songs (P12) · `[x]` Tavern performance rhythm game (P11) · `[x]` Tuning forks that hum near secrets (P12)
 - `[x]` Dowsing for Anchor-roots (P12) · `[x]` Carried light (the lantern, U) · `[x]` Fire flasks (P12) · `[x]` Environmental kills (chandeliers, scaffolds, deep water) (P12)
 - `[x]` Office grappling hook (P12) · `[x]` Noise lures (thrown stones and bottles; the lure reed) · `[x]` Silence bombs (P12) · `[x]` Shield bash (P12) · `[x]` Two-handed weapons and dual-wielding (P12)
-- `[x]` Throwing nets (P12) · `[x]` Adopt the Whisper-Grove cat (she hisses at danger) (P11) · `[x]` Bones, a tavern dice game (P11) · `[ ]` A tavern card game · `[ ]` Camp cooking
-- `[ ]` Boss trophies for your house (the house exists)
+- `[x]` Throwing nets (P12) · `[x]` Adopt the Whisper-Grove cat (she hisses at danger) (P11) · `[x]` Bones, a tavern dice game (P11) · `[x]` A tavern card game (P15: Eights) · `[x]` Camp cooking (P15)
+- `[x]` Boss trophies for your house (P15: nine of them, on the pegs on Cooper's Row)
 
 **World and events**
-- `[x]` Market day in the square (P11) · `[ ]` Synod sermons to attend or disrupt · `[ ]` Festivals such as Hearthday · `[ ]` Eclipses
-- `[~]` Roadside events on the world map (ambushes exist; add carts, refugees, checkpoints) · `[ ]` Buildings burn and are rebuilt; permanent NPC deaths
-- `[ ]` Synod territory spreading on the world map · `[x]` "Previously..." recap on load (P11)
+- `[x]` Market day in the square (P11) · `[x]` Synod sermons to attend or disrupt (P15: the Stasisday reading) · `[x]` Festivals such as Hearthday (P12) · `[x]` Eclipses (P15)
+- `[x]` Roadside events on the world map (P15: carts, people on the move, checkpoints, milestones, a packman; the ambush roll is unchanged) · `[x]` Buildings burn and are rebuilt; permanent NPC deaths (P15: the Office's reprisal on the west lane)
+- `[x]` Synod territory spreading on the world map (P15) · `[x]` "Previously..." recap on load (P11)
 
 **Horror**
 - `[x]` Whispers from behind at high Dissonance (with the meter above) (P13) · `[x]` Lights dying one by one (P13) · `[x]` Night terrors after resting somewhere unsafe (P13)
@@ -239,6 +241,16 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 **Technical**
 - `[~]` A sharper renderer with the pixel look kept (P14: the Ultra and Cinematic presets, view distance to 4x with sky-matched haze and far LOD; a WebGL renderer remains for a later phase — see the Project doc "Echoes of the Shattered Octave: Graphics Upgrade and View-Distance Roadmap") · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
 - `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[x]` Performance overlay (frame rate, memory) (P11)
+
+### Phase 15 "The province moves" verification
+- **How it was built.** Four teams in order on one branch (synod, roads, ledger, hearth), each its own commit, its own Playwright suite and its own French pair-file; nothing was merged without its suite passing and without the "every switch off" and "module blocked" checks.
+- **Synod (js/synod15.js).** The Stasisday reading on the Oakhaven chapel steps (10:00-11:30, six lections, a herald, two passive proctors, five parishioners): stand near three and stay for the blessing to attend (Synod +4, Hedge -1, Law-Song, a logbook line), or break it up by speaking against it (a Personality / Law-Song check, lawful, never charged), by singing within ten of the steps, or by a thrown stone in the crowd (Synod -8, Hedge +6, 25 bounty if a proctor or constable has clear sight). One resolution a day. Eclipses on one new moon in five (day 13, then every 40 days), announced by the almanac the evening before and at dawn; first contact 15:35, totality 16:06-16:26 with a corona, a sky hook on the engine's own sun and a post hook that takes up to two thirds of the light out of outdoor frames; people stop and look up, one nudge of Dissonance, hounds as bold as on a moonless night. Synod territory shaded on the region maps by story stage, with a legend swatch, a panel line, a warning and +0.06 road risk; the stage is read from the story's flags, so a save cannot forge it. The reprisal: once the Church is on the road the Office fires the cooper's shed for a First Reed over the door — burning, two days smouldering, hoarded and worked on, rebuilt on the sixth day, all keyed to the day the fire was set — and Bram Creel dies in it permanently, with his name in the Ledger and on the parish chalk-roll in the chapel.
+- **Roads (js/roads15.js).** Five roadside encounters handed to the game's own showEvent() panel after a world-map journey, once the player is standing in the world again (so the animated journey plays first and an ambush on arrival is finished first): a carter with a split wheel, people off the Greenroot road, a Synod checkpoint (only on Synod ground), a chalked milestone and a packman. One a journey, never two within six world hours, never the same one twice running, and travelGo() itself is untouched. "Where is...?" also marks the automap: a chalk cross and ring, a bearing line under the map, twelve at most, taken off when you walk up to the place. Marks are matched against the game's own live place tables on every read.
+- **Ledger (js/ledger15.js).** Paid training from ten people over eleven skills: one point, two hours and a fee that rises with your level and the skill, never past the trainer's ceiling, three sessions to a character level. The Greenhall counting-house: an account, and letters of credit at 25 sovereigns with a sovereign's stamp, cashable anywhere (a tenth kept away from the issuing house) and beyond the reach of a fine, a bribe or the evidence escrow. Testing codes behind a switch that is off by default: F8, ten words, and the run is marked for good — the count rides in the save and shows on the character sheet and in Statistics. Hardcore runs refuse them.
+- **Hearth (js/hearth15.js).** Camp cooking at any reachable fire: three ingredients (sold at Bettany's stall, or foraged once a day per outdoor map with Lore deciding the yield), four dishes at half an hour each, and a Physician's hand sometimes making one well (half again). The eel stew's warmth carries to the next journey. Eights at the Boar's east table in the evening: a 32-card Reach deck from the module's own seeded stream, two cards each with the dealer's one down, target eight, she draws under six, stakes 1-20, a 40-sovereign daily loss cap, three for two on a two-card eight. Boss trophies for the nine great enemies of Book One, hung on the pegs in the house on Cooper's Row, named on the rack, with a title for the full nine.
+- **Rules kept.** Every module is wrappers only (no game file was edited); everything placed in the world is transient, so no save's entity lists change; all new saved state is small integers in G.flags plus three validated player fields, clamped on every read, and each suite proves an imported save cannot forge a death, a stage, an account, a trophy or a hidden mark. Nothing new draws the game's Math.random stream for presentation.
+- **Tests.** New suites synod15 (37 checks), roads15 (29), ledger15 (25) and hearth15 (21), each with an "every switch off" check and a second page with the module blocked, plus a 640x400 pass; the existing suites were re-run on the finished tree.
+- **Still open, carried forward.** Painted art for the stand-ins this phase uses (the fire, the trophies, the cards are the game's existing procedural sprites and DOM panels); recorded voices for the new lines; the Daggerfall-style items the owner's list still leaves open are in later phases.
 
 ### Phase 14 "A world that shows the story" verification
 - **How it was built.** Four parallel teams (greening, skies, props, folk) plus two graphics teams (far, cinema), then integration on phase14-world; the aurora and the mirrors each went back for a rework before merging.

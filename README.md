@@ -52,6 +52,23 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 15: the province moves
+
+| | |
+|---|---|
+| ![A Synod reading on the chapel steps](screenshots/p15-reading.jpg) | ![The eclipse](screenshots/p15-eclipse.jpg) |
+| A Synod herald reads the Office's lections from the chapel steps every Stasisday: stand through it, or break it up. | One new moon in five crosses the sun. The day goes out, people stop to look up, and the Hush comes a little nearer. |
+| ![The Office fires the cooper's shed](screenshots/p15-reprisal.jpg) | ![Synod ground on the world map](screenshots/p15-territory.jpg) |
+| The Office makes an example of a shed with a reed over the door. It burns, it is hoarded, the parish rebuilds it — and the cooper stays dead. | The world map shades the ground the Office holds as the story turns, and warns you before a journey crosses it. |
+| ![A checkpoint on the road](screenshots/p15-checkpoint.jpg) | ![Cooking at a fire](screenshots/p15-cooking.jpg) |
+| Roads now have carts, people on the move, milestones, a packman — and checkpoints on Synod ground: pay, show your hands, show the robes, go round, or walk through. | Any fire cooks: broth, stew, hearth-cake and willow tea, with the makings bought at the stall or foraged once a day. |
+| ![Eights at the Boar](screenshots/p15-eights.jpg) | ![The trophy rack](screenshots/p15-rack.jpg) |
+| Eights, a card game at the Boar's east table: thirty-two cards, four suits, and eight to play for. | What you take off the nine great enemies hangs on the pegs in your house on Cooper's Row. |
+| ![Paid training](screenshots/p15-training.jpg) | ![The counting-house](screenshots/p15-counting-house.jpg) |
+| Ten people will teach a skill for coin — two hours, a fee, three sessions to a level, never past their own ceiling. | The Greenhall counting-house keeps an account and writes letters of credit that any house in the province will honour. |
+
+Also: "Where is...?" now puts a chalk cross on your automap and takes it off again when you get there; and a testing word-box (F8, off by default) that marks the run for good the moment you use it. Every one has its own switch in Options.
+
 ### Phase 14: a world that shows the story
 
 | | |
