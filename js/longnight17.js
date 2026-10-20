@@ -1174,7 +1174,7 @@ const LONGNIGHT17 = (function () {
   function climbToOrchard() {
     if (!R.active) return;
     R.phase = 'morning'; R.tick2 = 0;
-    G.tod = 0.27;
+    G.tod = 0.27; G.day = 85;      // Dawnday, the first of Stillmonth
     loadMap(ORCH, { x: 14.5, y: 8.2, dir: Math.PI / 2 });
     G.state = 'play';
     // the keepers come up one after another from the stairhead; those that were kept are given back last
@@ -1433,7 +1433,7 @@ const LONGNIGHT17 = (function () {
     flags()[FP + 'up'] = 0; setf('seen', 1);
     G.dead = false; G.state = 'play'; G.keys = {};
     try { if (typeof WINTER17 !== 'undefined') { WINTER17.apply(ORCH, { snow: 0.85, fall: 0.35, breath: true, grade: 0.5 }); WINTER17.apply(GAL, { snow: 0, fall: 0, breath: true, grade: 0.35 }); } } catch (e) { console.warn('longnight17 winter failed', e); }
-    G.tod = 0.76;
+    G.tod = 0.76; G.day = 84;      // Stasisday, the thirtieth of Frostmonth (calendar11: day 84 is the last day of the year, a Stasisday) [PROPOSED year-less]
     loadMap(ORCH, { x: 14.5, y: 14.5, dir: -Math.PI / 2 });
     G.state = 'play';
     R.phase = 'dusk';
@@ -1471,7 +1471,7 @@ const LONGNIGHT17 = (function () {
     restore();
     flowCache.clear();
     R.phase = 'idle';
-    try { if (typeof EXTRAS17 !== 'undefined' && EXTRAS17.finish) EXTRAS17.finish(res); } catch (e) { console.warn('longnight17 finish failed', e); }
+    try { if (typeof EXTRAS17 !== 'undefined' && EXTRAS17.finish) EXTRAS17.finish({ text: res.won ? TX.result.won : (res.how === 'tune' || res.how === 'fall') ? TX.result.lost : TX.result.left }); } catch (e) { console.warn('longnight17 finish failed', e); }
     return res;
   }
   function registerExtra() {

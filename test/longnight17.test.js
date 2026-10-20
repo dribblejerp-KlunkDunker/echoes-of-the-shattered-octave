@@ -414,7 +414,7 @@ const BOT = () => {
       L.resetTally(); o.empty = L.tally.best.length === 0 && localStorage.getItem(L.KEY) === null;
       return o;
     });
-    check(tl.won && tl.calls === 1 && tl.res && tl.res.won === true && tl.res.id === 'longnight17', 'EXTRAS17.finish is called once with the result (won, id, time, score)');
+    check(tl.won && tl.calls === 1 && tl.res && typeof tl.res.text === 'string' && tl.res.text.length > 0 && tl.res.text.length <= 160, 'EXTRAS17.finish is called once with a result line ({text}, at most 160 characters)');
     check(tl.len === 1 && tl.first.t > 300 && tl.stored === 1, 'a win is written to the local tally (and only a win)');
     check(tl.capped === 8 && tl.sorted && tl.mmss === '12:34' && /<ol/.test(tl.html), 'the tally keeps the eight fastest dawns, fastest first, and shows m:ss');
     check(tl.empty, 'the tally can be cleared');
@@ -460,6 +460,24 @@ const BOT = () => {
       return o;
     });
     check(peace.foes === 0 && peace.hp && peace.st === 'play' && peace.stoneOk && peace.lampOk, 'outside a run the gallery is a quiet unlocked visit: no foes, the Stone and the lamps do nothing');
+
+    // ---------------------------------------------------------------- 15. through the real Extras menu: an isolated session
+    const real = await E(() => {
+      const L = LONGNIGHT17, o = {}; try { loadMap('oakhaven', { x: 20, y: 20, dir: 0 }); } catch (e) { /* ok */ } G.state = 'play';
+      EXTRAS17.state.done = 1;
+      const strip = () => { const s = snapshotGame(); delete s.when; for (const k of Object.keys(s.flags || {})) if (/^p7[ts]_/.test(k)) delete s.flags[k]; return JSON.stringify(s); };
+      const before = strip(), name = G.player.name;
+      o.started = EXTRAS17.start('longnight17'); o.in = EXTRAS17.inExtra(); o.map = G.mapId; o.day = G.day;
+      o.winter = !!WINTER17.active('ln17_orchard') && WINTER17.active('ln17_orchard').snow > 0.5;
+      L.begin(); G.state = 'play'; for (let i = 0; i < 100; i++) update(0.05);
+      o.night = L.R.phase === 'night' && G.mapId === 'ln17_gallery' && G.flags.p17x_on === 1;
+      L.end({ won: false, how: 'no' });
+      o.out = EXTRAS17.inExtra() === null && G.state === 'title' && !WINTER17.active('ln17_orchard');
+      o.same = strip() === before && G.player.name === name;
+      return o;
+    });
+    check(real.started && real.in === 'longnight17' && real.map === 'ln17_orchard' && real.day === 84 && real.winter, 'EXTRAS17.start runs start() in a fresh session: the orchard is loaded on the Longest Night (day 84) with WINTER17 applied');
+    check(real.night && real.out && real.same, 'the run happens in the isolated session and leaving it puts Book One back exactly (snapshotGame identical, winter cleared)');
 
     check(errors.length === 0, 'no page errors (' + errors.slice(0, 3).join(' | ') + ')');
     console.log('\nOK ' + n + ' checks');
