@@ -10,8 +10,9 @@ const PRESETS = (() => {
   const ORDER = ['original', 'low', 'medium', 'high', 'ultra', 'cinematic'];
   const LABEL = { original: 'Original', low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra', cinematic: 'Cinematic', custom: 'Custom' };
   // Low keeps the cheap effects (decals, ceilings, emissive, stars, grade, detail, scenery) and drops these.
-  // Any flag this list does not name is "unknown": on for low/medium/high, off for original.
-  const LOW_OFF = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'panoramas', 'flyovers', 'darkInteriors', 'groundShadows',
+  // Any flag this list does not name is "unknown": on for low/medium/high, off for original. (The painted panoramas
+  // left this list in Phase 20 MAX: they are art, on in every preset; see ART below.)
+  const LOW_OFF = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'flyovers', 'darkInteriors', 'groundShadows',
     'sunShafts', 'heatHaze', 'glassGlare', 'seeThrough', 'coldBreath', 'footprints', 'hushWave', 'folkHoods', 'folkHuddle', 'folkCapes', 'folkTavern', 'greenStages', 'glassSpread', 'rootVeins', 'p14pMirrors', 'p14pShimmer', 'aurora', 'causticLight', 'deepView', 'flumeGlow', 'winter17'];   // ground shadows cost about 1 ms a frame in town; the Phase 11 air effects are all per-frame (js/air11.js)
   // Phase 14 CINEMA: these flags are on ONLY in the Cinematic preset (off in original/low/medium/high, so those frames are
   // unchanged); js/cinema14.js owns them. Any other flag in a 'cinema' preset follows the 'all' rule.
@@ -19,6 +20,15 @@ const PRESETS = (() => {
   // ...and these are off in Cinematic: its own emissive bloom (cineLight) replaces post.js bloom, which in far mode also
   // blooms hazed distance into pale discs
   const CINEMA_OFF = ['bloom'];
+  // Phase 20 MAX ("the graphics aren't high enough to leave anything off"): ART switches are on in EVERY preset,
+  // Original and Low included. They choose which built-once picture is drawn (hand-built enemy views, small-life
+  // sprites, wall and ceiling textures, set dressing, the painted panoramas), so they cost nothing per frame once
+  // built; per-frame EFFECTS keep the rules above. Art that is not a preset flag at all (painted art, item icons,
+  // mood portraits, companion life frames, carved frames, log sketches, map stamps, illustrated screens) was
+  // already on in every preset. A module can add its own art flag to GFX.ART; any 'p20_beast*' flag (each half of
+  // the Phase 20 bestiary) counts as art. GFX.plain() (the pixel-exact test switch) still turns everything off.
+  const ART = ['directions', 'p20_beastb', 'critters', 'kestrelMoored', 'carrionCrows', 'decals', 'detail', 'ceilings', 'scenery', 'panoramas'];
+  const isArt = (flag) => ART.includes(flag) || /^p20_beast/.test(flag) || (typeof GFX !== 'undefined' && Array.isArray(GFX.ART) && GFX.ART.includes(flag));
   // CRT curvature and the upscaling filter are display choices, not quality: presets leave them alone
   // (only 'original' switches curvature off, because GFX.plain() does).
   const NOT_PRESET = ['crtCurve'];
@@ -66,6 +76,7 @@ const PRESETS = (() => {
   }
 
   function fxWanted(kind, flag) {
+    if (isArt(flag)) return true;
     if (kind === 'none') return false;
     if (CINEMA_ONLY.includes(flag)) return kind === 'cinema';
     if (kind === 'cinema' && CINEMA_OFF.includes(flag)) return false;
@@ -304,7 +315,7 @@ const PRESETS = (() => {
     GFX.onChange(() => { if (GFX.particles !== lastPt) { lastPt = GFX.particles; scaleParticles(GFX.particles); } });
   }
 
-  const api = { apply, current, table, measure, scenes: SCENES, order: ORDER, cinemaOnly: CINEMA_ONLY, refresh: () => { try { refreshBlock(); } catch (e) { /* menu closed */ } }, upscale, setScale, setViewDist, stepViewDist, snapViewDist, farLabel: FAR_LABEL, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
+  const api = { apply, current, table, measure, scenes: SCENES, order: ORDER, cinemaOnly: CINEMA_ONLY, art: ART, isArt, fxWanted, refresh: () => { try { refreshBlock(); } catch (e) { /* menu closed */ } }, upscale, setScale, setViewDist, stepViewDist, snapViewDist, farLabel: FAR_LABEL, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
   rememberParticles();
   wire();
   apply(BOOT);
