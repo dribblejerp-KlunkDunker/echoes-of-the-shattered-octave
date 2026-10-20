@@ -707,6 +707,7 @@ function castSong(id) {
     msg(`You read it its own surrendered name. "${best.name}." It stops. You have forgotten something small to pay for it; you cannot tell what.`, 'voice', 7000);
     killEnemy(best, false);
   }
+  else if (s.custom && typeof executeCustomSong === 'function') executeCustomSong(s);   // composed Songs (Spellmaker) were paid for but never sung
 }
 
 // ---------------------------------------------------------------- Oakhaven law (player data is included in existing saves)
@@ -2306,9 +2307,9 @@ function drawHUD() {
   for (const [lab, a] of pts) { let rel = normAng(a - heading); if (Math.abs(rel) > 1.6) continue; const x = cx0 + cw / 2 + rel / 1.6 * (cw / 2); ctx.fillStyle = lab.length === 1 ? '#d9a441' : '#7a6a58'; ctx.fillText(lab, x, y0 + 12); for (let t = 1; t < 4; t++) { ctx.fillStyle = '#4a3a2a'; const rx = cx0 + cw / 2 + (rel + t * 0.196) / 1.6 * (cw / 2); ctx.fillRect(rx, y0 + 16, 1, 2); } }
   ctx.restore(); ctx.fillStyle = '#fff1c8'; ctx.fillRect(cx0 + cw / 2, y0 + 5, 1, 14);
   // right-bottom: map name & level
-  ctx.textAlign = 'right'; ctx.fillStyle = '#b8a883'; ctx.font = '7px "Alegreya", serif'; ctx.fillText(G.map.name + (G.map.outdoor && typeof Weather !== 'undefined' ? ' · ' + weatherLine() : ''), 314, y0 + 27);
-  ctx.fillText(`${p.name} · Lv ${p.level} · ${p.gold} sov.`, 314, y0 + 37);
-  if (p.fragments) ctx.fillText(`fragments ${p.fragments}`, 314, y0 + 46);
+  ctx.textAlign = 'right'; ctx.fillStyle = '#b8a883'; ctx.font = '7px "Alegreya", serif'; ctx.fillText(G.map.name + (G.map.outdoor && typeof Weather !== 'undefined' ? ' · ' + weatherLine() : ''), 314, y0 + 27, 86);   // maxWidth: long place names squeeze instead of running into the clock panel
+  ctx.fillText(`${p.name} · Lv ${p.level} · ${p.gold} sov.`, 314, y0 + 37, 86);
+  if (p.fragments) ctx.fillText(`fragments ${p.fragments}`, 314, y0 + 46, 86);
   ctx.textAlign = 'left';
   // fade-in on map load
   if (G.fadeT > 0) { ctx.fillStyle = `rgba(0,0,0,${clamp(G.fadeT * 2, 0, 1)})`; ctx.fillRect(0, 0, VW, VIEW_H); }

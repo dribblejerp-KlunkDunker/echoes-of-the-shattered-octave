@@ -52,6 +52,38 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 12: tools of the trade, and the festivals of the Reach
+
+| | |
+|---|---|
+| ![Dual-wielding](screenshots/p12-dual.jpg) | ![Shield bash](screenshots/p12-bash.jpg) |
+| Dual-wield a light blade in the off hand; two-handed weapons hit harder and stow the shield. | Shield bash: guard and strike to shove a foe back a stride. |
+| ![Fire flask](screenshots/p12-fire.jpg) | ![Weighted net](screenshots/p12-net.jpg) |
+| Oil flasks set a patch of fire that beasts will not cross. Damper jars silence the air. | Weighted nets pin small and ordinary foes. |
+| ![Falling chandelier](screenshots/p12-chandelier.jpg) | ![The Office grapnel](screenshots/p12-grapnel.jpg) |
+| Cut a chandelier's chain over the people under it; scaffolds come down too. | The Office grapnel, taken from the wrecked cutter, bites into iron rings. |
+| ![The tuning fork](screenshots/p12-fork.jpg) | ![The Last Sheaf](screenshots/p12-sheaf.jpg) |
+| A tuning fork hums near what is kept; a dowsing rod dips toward the Anchor-roots; the lute, flute and hurdy-gurdy change your Songs. | The Last Sheaf: Oakhaven readies its harvest festival, and the Church nails a notice under the sheaf. |
+| ![Cutting the last sheaf](screenshots/p12-cut.jpg) | ![The Drowned Lanterns](screenshots/p12-lanterns.jpg) |
+| Hold it in secret at the dead hour: a cut on every beat, and nobody speaks. | The Drowned Lanterns in Whisper-Grove: a lantern for every name. |
+
+Also: the Rite dressed as a false festival, the Eel-Run (fish only while you keep quiet), and composed Songs now actually sing.
+
+### Phase 11: feedback and feel
+
+| | |
+|---|---|
+| ![HUD options](screenshots/p11-hud.jpg) | ![Quest complete](screenshots/p11-banner.jpg) |
+| Optional hit-direction arcs, enemy health bars, damage numbers and organ-pipe gauges. | A banner unrolls when a quest is done; level-ups, loot and shop coins have their own flourishes. |
+| ![Sun shafts in the Cloister](screenshots/p11-shafts.jpg) | ![Ghosts at night](screenshots/p11-ghosts.jpg) |
+| Sun shafts, heat haze, Light-glass glare, cold breath and footprints. | Ghosts are drawn see-through, with a faint shimmer. |
+| ![Bones](screenshots/p11-bones.jpg) | ![The Boar's Reel](screenshots/p11-reel.jpg) |
+| Bones, a dice game with Garrow Finch at the Boar & Dulcimer. | Play for the room in the evening: a four-lane rhythm game. |
+| ![Massday market](screenshots/p11-market.jpg) | ![The canon calendar](screenshots/p11-logbook.jpg) |
+| Market day fills the square every Massday. | Dates follow the canon calendar ("Dawnday the eleventh of Harvestmonth"), with the day's quiet duty and the moon. |
+
+Also: hit-stop on strong blows, weapon trails, page turns; the Whisper-Grove cat you can adopt (she hisses at hidden danger); moon phases that make hounds bolder or fewer; birth signs from the seven modes; a "Previously..." card on load; and a performance overlay (F10). Every one has its own switch in Options.
+
 ### Phase 10: the owner's picks
 
 | | |

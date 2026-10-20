@@ -54,6 +54,7 @@ if (SHOTS) fs.mkdirSync(SHOTS, { recursive: true });
     const hud = await ev(() => {
       const ctx = Engine.ctx, cv = ctx.canvas, s = cv.width / 320;
       const grab = () => ctx.getImageData(0, 150 * s, 320 * s, 50 * s).data;
+      if (window.CALENDAR11) CALENDAR11.cfg.events = false;   // Phase 11 writes the date in the clock panel; hold it out of this comparison
       GFX.carvedFrames = true; FRAMES.sync();
       const raw = (FRAMES.rawDrawHUD)();   // bar drawn by the original
       const base = grab();
