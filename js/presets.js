@@ -16,6 +16,9 @@ const PRESETS = (() => {
   // Phase 14 CINEMA: these flags are on ONLY in the Cinematic preset (off in original/low/medium/high, so those frames are
   // unchanged); js/cinema14.js owns them. Any other flag in a 'cinema' preset follows the 'all' rule.
   const CINEMA_ONLY = ['cineLight', 'cineFog', 'cineGrade'];
+  // ...and these are off in Cinematic: its own emissive bloom (cineLight) replaces post.js bloom, which in far mode also
+  // blooms hazed distance into pale discs
+  const CINEMA_OFF = ['bloom'];
   // CRT curvature and the upscaling filter are display choices, not quality: presets leave them alone
   // (only 'original' switches curvature off, because GFX.plain() does).
   const NOT_PRESET = ['crtCurve'];
@@ -65,6 +68,7 @@ const PRESETS = (() => {
   function fxWanted(kind, flag) {
     if (kind === 'none') return false;
     if (CINEMA_ONLY.includes(flag)) return kind === 'cinema';
+    if (kind === 'cinema' && CINEMA_OFF.includes(flag)) return false;
     if (kind === 'cheap') return !LOW_OFF.includes(flag);
     return true;
   }
