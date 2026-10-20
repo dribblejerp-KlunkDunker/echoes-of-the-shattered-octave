@@ -312,7 +312,7 @@ const DREAD = (() => {
   }
   // a long sight-line ahead of you: the far end of a corridor, a ride, a hall
   function foeSpot() {
-    const c = Engine.cam, m = G.map, fog = Math.max(8, (m.fogDist || 12) * ((typeof GFX !== 'undefined' && GFX.viewDist) || 1));
+    const c = Engine.cam, m = G.map, fog = Math.max(8, (m.fogDist || 12));   // Phase 14: the view-distance setting is a look, not a rule: where the phantom may stand never depends on it
     let best = null;
     for (let a = -0.42; a <= 0.421; a += 0.14) {
       const ang = c.dir + a, ca = Math.cos(ang), sa = Math.sin(ang);

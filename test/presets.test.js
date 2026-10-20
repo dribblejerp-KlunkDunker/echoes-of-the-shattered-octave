@@ -64,7 +64,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
         check(PARTICLES.list.length === PART_STYLE.deepwoods.n, name + ': the particle list was rebuilt to ' + PART_STYLE.deepwoods.n + ', saw ' + PARTICLES.list.length);
         out[name] = { canvas: canvasOf[sc].join('x'), deepwoodsParticles: PARTICLES.list.length };
       }
-      check(PRESETS.table.original && PRESETS.table.low && PRESETS.table.medium && PRESETS.table.high, 'the table has all four presets');
+      check(PRESETS.table.original && PRESETS.table.low && PRESETS.table.medium && PRESETS.table.high && PRESETS.table.ultra, 'the table has all five presets');
       // an unknown flag added by another team follows the rule: on for low/medium/high, off for original
       GFX.FX.push('zzNewFlag'); GFX.zzNewFlag = false;
       PRESETS.apply('medium'); check(GFX.zzNewFlag === true, 'unknown flags default on for medium');
@@ -72,13 +72,13 @@ fs.mkdirSync(SHOTS, { recursive: true });
       PRESETS.apply('original'); check(GFX.zzNewFlag === false, 'unknown flags default off for original');
       GFX.FX.pop(); delete GFX.zzNewFlag;
       // invalid names are refused, state untouched
-      let threw = false; try { PRESETS.apply('ultra'); } catch (e) { threw = true; }
+      let threw = false; try { PRESETS.apply('bogus'); } catch (e) { threw = true; }
       check(threw && PRESETS.current() === 'original', 'unknown preset names are refused');
       // individual changes read as custom
       PRESETS.apply('medium'); PRESETS.setScale(2);
       check(PRESETS.current() === 'custom' && GFX.preset === 'custom' && Engine.canvas.width === 640, 'a lone resolution change is custom');
       PRESETS.setScale(1); check(PRESETS.current() === 'medium', 'putting it back is medium again');
-      PRESETS.setViewDist(10); check(GFX.viewDist === 1.4, 'view distance clamps at 1.4');
+      PRESETS.setViewDist(10); check(GFX.viewDist === 4, 'view distance clamps at 4 (Phase 14: the slider runs 0.6 to 4)');
       PRESETS.setViewDist(0); check(GFX.viewDist === 0.6, 'view distance clamps at 0.6');
       PRESETS.setParticles(0.5); check(GFX.particles === 0.5 && PART_STYLE.deepwoods.n === Math.round(orig.deepwoods * 0.5), 'particles scale from the original counts');
       PRESETS.apply('medium');

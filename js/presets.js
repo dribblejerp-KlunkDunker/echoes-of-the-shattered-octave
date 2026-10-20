@@ -7,8 +7,8 @@
 'use strict';
 
 const PRESETS = (() => {
-  const ORDER = ['original', 'low', 'medium', 'high'];
-  const LABEL = { original: 'Original', low: 'Low', medium: 'Medium', high: 'High', custom: 'Custom' };
+  const ORDER = ['original', 'low', 'medium', 'high', 'ultra'];
+  const LABEL = { original: 'Original', low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra', custom: 'Custom' };
   // Low keeps the cheap effects (decals, ceilings, emissive, stars, grade, detail, scenery) and drops these.
   // Any flag this list does not name is "unknown": on for low/medium/high, off for original.
   const LOW_OFF = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'panoramas', 'flyovers', 'darkInteriors', 'groundShadows',
@@ -21,6 +21,7 @@ const PRESETS = (() => {
     low: { scale: 1, viewDist: 0.8, particles: 0.5, fx: 'cheap' },
     medium: { scale: 1, viewDist: 1, particles: 1, fx: 'all' },
     high: { scale: 2, viewDist: 1.15, particles: 1.25, fx: 'all' },
+    ultra: { scale: 2, viewDist: 2.5, particles: 1.25, fx: 'all' },   // Phase 14 FAR; no preset offers 4x, that is the slider's top step
   };
   const BOOT = 'medium';
   // Why medium at boot. PRESETS.measure() times Engine.render per preset (round-robin, so machine noise
@@ -96,7 +97,20 @@ const PRESETS = (() => {
   // --- individual settings (each one makes the state "custom" unless it lands on a preset) ---------
   function touched() { GFX.preset = current(); GFX.changed(); }
   function setScale(s) { GFX.scale = s === 2 ? 2 : 1; Engine.setScale(GFX.scale); touched(); }
-  function setViewDist(v) { GFX.viewDist = Math.round(Math.max(0.6, Math.min(1.4, v)) * 20) / 20; Engine.setLook({ fogK: GFX.viewDist }); touched(); }
+  // Phase 14 FAR: the old 0.6..1.4 steps of 0.05, then four far steps (labelled Far / Far / Very far / Horizon)
+  const FAR_STEPS = [2, 2.5, 3, 4], FAR_LABEL = { 2: 'Far', 2.5: 'Far', 3: 'Very far', 4: 'Horizon' };
+  function snapViewDist(v) {
+    v = Math.max(0.6, Math.min(4, isFinite(+v) ? +v : 1));
+    if (v <= 1.4 + 1e-9) return Math.round(v * 20) / 20;
+    let best = 1.4, bd = v - 1.4; for (const s of FAR_STEPS) if (Math.abs(s - v) < bd) { bd = Math.abs(s - v); best = s; }
+    return best;
+  }
+  function viewSteps() { const a = []; for (let i = 12; i <= 28; i++) a.push(i / 20); return a.concat(FAR_STEPS); }
+  function stepViewDist(dir) {
+    const list = viewSteps(); let i = 0; for (let k = 0; k < list.length; k++) if (Math.abs(list[k] - GFX.viewDist) < Math.abs(list[i] - GFX.viewDist)) i = k;
+    setViewDist(list[Math.max(0, Math.min(list.length - 1, i + dir))]);
+  }
+  function setViewDist(v) { GFX.viewDist = snapViewDist(v); Engine.setLook({ fogK: GFX.viewDist }); touched(); }
   function setParticles(v) { GFX.particles = Math.round(Math.max(0, Math.min(2, v)) * 100) / 100; scaleParticles(GFX.particles); touched(); }
   function setCurve(on) { GFX.crtCurve = !!on; touched(); }
   // darker interiors are an accessibility choice as much as a look: they get their own switch
@@ -182,7 +196,7 @@ const PRESETS = (() => {
     q('gfx-state').textContent = 'Graphics: ' + LABEL[cur];
     for (const n of ORDER) { const b = q('gfx-p-' + n); b.classList.toggle('sel', cur === n); b.setAttribute('aria-pressed', cur === n ? 'true' : 'false'); }
     for (const s of [1, 2]) { const b = q('gfx-res' + s); b.classList.toggle('sel', GFX.scale === s); b.setAttribute('aria-pressed', GFX.scale === s ? 'true' : 'false'); }
-    q('gfx-vd-val').textContent = GFX.viewDist.toFixed(2);
+    q('gfx-vd-val').textContent = GFX.viewDist.toFixed(2) + (FAR_LABEL[GFX.viewDist] ? ' ' + FAR_LABEL[GFX.viewDist] : '');
     q('gfx-pt-val').textContent = GFX.particles.toFixed(2);
     for (const m of ['sharp', 'smooth']) { const b = q('gfx-up-' + m); b.classList.toggle('sel', upscale.mode === m); b.setAttribute('aria-pressed', upscale.mode === m ? 'true' : 'false'); }
     const dk = q('gfx-dark'); if (dk) { dk.textContent = GFX.darkInteriors ? 'On' : 'Off'; dk.setAttribute('aria-pressed', GFX.darkInteriors ? 'true' : 'false'); }
@@ -209,11 +223,11 @@ const PRESETS = (() => {
     rg.appendChild(btn('gfx-res2', '2x', () => { setScale(2); refreshBlock(); }, 'Resolution 2x'));
     grid.appendChild(rg);
 
-    grid.appendChild(row('View distance', 'fog reach, 0.6 to 1.4'));
+    grid.appendChild(row('View distance', 'fog reach, 0.6 to 4 (Horizon)'));
     const vg = group();
-    vg.appendChild(btn('gfx-vd-dn', '−', () => { setViewDist(GFX.viewDist - 0.05); refreshBlock(); }, 'Shorter view distance'));
+    vg.appendChild(btn('gfx-vd-dn', '−', () => { stepViewDist(-1); refreshBlock(); }, 'Shorter view distance'));
     vg.appendChild(el('b', { id: 'gfx-vd-val' }, ''));
-    vg.appendChild(btn('gfx-vd-up', '+', () => { setViewDist(GFX.viewDist + 0.05); refreshBlock(); }, 'Longer view distance'));
+    vg.appendChild(btn('gfx-vd-up', '+', () => { stepViewDist(1); refreshBlock(); }, 'Longer view distance'));
     grid.appendChild(vg);
 
     grid.appendChild(row('Particles', 'leaves, motes, dust and weather'));
@@ -279,7 +293,7 @@ const PRESETS = (() => {
     GFX.onChange(() => { if (GFX.particles !== lastPt) { lastPt = GFX.particles; scaleParticles(GFX.particles); } });
   }
 
-  const api = { apply, current, table, measure, scenes: SCENES, order: ORDER, upscale, setScale, setViewDist, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
+  const api = { apply, current, table, measure, scenes: SCENES, order: ORDER, upscale, setScale, setViewDist, stepViewDist, snapViewDist, farLabel: FAR_LABEL, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
   rememberParticles();
   wire();
   apply(BOOT);
