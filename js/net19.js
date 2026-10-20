@@ -57,6 +57,9 @@
 //                                lostMs, giveUpMs, joinTimeoutMs, reconnectTimeoutMs } into the default config (tests point the broker at
 //                                a local stub and set iceServers: [] so nothing reaches the internet).
 //
+//  ICE (CONFIG.iceServers): Google STUN for the direct way, which ICE always prefers, and PeerJS's public TURN relays
+//    (eu-0 / us-0.turn.peerjs.com, the ones PeerJS 1.5.5 ships) used only when no direct way exists (mobile data, strict
+//    NATs). Tests configure iceServers: [] so nothing reaches the internet.
 //  Transports (opts.transport): 'peer' (default: PeerJS broker + WebRTC, js/vendor/peerjs.min.js, loaded on demand),
 //    'bc' (BroadcastChannel: two tabs of the same browser, no network), 'loop' (two instances in one page), or an
 //    injected object { name, listen(code, onLink) -> Promise, connect(code) -> Promise<link>, close() } where
@@ -87,7 +90,13 @@ const NET19 = (function () {
 
   const DEFAULTS = {
     broker: { host: '0.peerjs.com', port: 443, path: '/', secure: true, key: 'peerjs' },  // PeerJS's free public broker
-    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],                              // Google STUN
+    // Google STUN finds the direct way (preferred: ICE tries direct candidates first); PeerJS's public TURN relays (the
+    // ones PeerJS 1.5.5 itself ships) carry the link only when no direct way exists, e.g. a phone on mobile data
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'turn:eu-0.turn.peerjs.com:3478', username: 'peerjs', credential: 'peerjsp' },
+      { urls: 'turn:us-0.turn.peerjs.com:3478', username: 'peerjs', credential: 'peerjsp' },
+    ],
     heartbeatMs: 1000, lostMs: 4500, giveUpMs: 90000, joinTimeoutMs: 20000, reconnectMs: 2500, reconnectTimeoutMs: 8000,
     inRate: 240, inBurst: 480,                       // all frames per second from the peer, any type
     abuse: 400,                                      // rejected frames within 10 s that close the link
@@ -885,7 +894,7 @@ const NET19 = (function () {
         const p = pc;
         await p.setRemoteDescription({ type: 'answer', sdp: o.s });
         return new Promise((resolve, reject) => {
-          const t = setTimeout(() => { off(); reject(err('timeout', 'No connection: try again on the same network, or new codes')); }, 20000);
+          const t = setTimeout(() => { off(); reject(err('timeout', 'No connection: try again, or make new codes')); }, 20000);
           const off = inst.on('net:peer', () => { clearTimeout(t); off(); resolve(); });
         });
       },
@@ -1092,7 +1101,7 @@ const NET19 = (function () {
     eBadCode: 'That is not a join code: six letters and numbers, like KRT-4MW.',
     eDesktop: 'The desktop app does not go online. Use codes by hand, or play together in the browser version.',
     manH: 'Codes by hand',
-    manP: 'No matchmaker needed: you swap two codes through any message app. It works best when both of you are on the same network.',
+    manP: 'No matchmaker needed: you swap two codes through any message app. It works at home or on mobile data.',
     manHostH: 'I am hosting',
     manMake: 'Make an invitation',
     manInvite: 'Send this invitation to your companion:',
@@ -1436,7 +1445,7 @@ const NET19 = (function () {
       for (const k of ['heartbeatMs', 'lostMs', 'giveUpMs', 'joinTimeoutMs', 'reconnectMs', 'reconnectTimeoutMs', 'abuse', 'inRate', 'inBurst']) if (Number.isFinite(+c[k]) && +c[k] > 0) CONFIG[k] = +c[k];
       return JSON.parse(JSON.stringify(CONFIG));
     },
-    _pure: { randomCode, normCode, showCode, cleanName, encodeFrame, decodeFrame, sane, packCode, unpackCode, joinLink, CODE_ABC, CODE_LEN, ID_PREFIX, LINK_CAP, TYPE_CAP, MAN },
+    _pure: { randomCode, normCode, showCode, cleanName, encodeFrame, decodeFrame, sane, packCode, unpackCode, joinLink, CODE_ABC, CODE_LEN, ID_PREFIX, LINK_CAP, TYPE_CAP, MAN, DEFAULTS: JSON.parse(JSON.stringify(DEFAULTS)) },
     _transports: { loop: loopTransport, bc: bcTransport, peer: () => peerTransport(), pairLinks, loadPeerJS },
     QR, TX, TEXTS,
     ui: { open: openPanel, render, chip, state: ui, appendRows, titleButton },

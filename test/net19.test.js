@@ -151,6 +151,7 @@ const until = (page, fn, arg, ms) => page.waitForFunction(fn, arg, { timeout: ms
       const big = new Uint8Array(2000000).fill(32);
       const cs = new CompressionStream('deflate-raw'); const w = cs.writable.getWriter(); w.write(big); w.close();
       const z = new Uint8Array(await new Response(cs.readable).arrayBuffer()); let s = ''; for (const b of z) s += String.fromCharCode(b);
+      o.ice = NET19._pure.DEFAULTS.iceServers; o.rto = NET19._pure.DEFAULTS.reconnectTimeoutMs;
       o.bomb = [z.length, await tryU('OCT1.' + btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''), 'a')];
       // QR: pinned matrices (verified while writing against an independent encoder and a decoder) and structure
       const h = (q) => { let x = 2166136261; for (const row of q.modules) for (const m of row) x = Math.imul(x ^ (m ? 1 : 0), 16777619) >>> 0; return q.version + ':' + q.mask + ':' + x.toString(16); };
@@ -160,6 +161,11 @@ const until = (page, fn, arg, ms) => page.waitForFunction(fn, arg, { timeout: ms
     ok(JSON.stringify(pure.codes) === JSON.stringify(['KRT4MW', 'KRT4MW', 'KRT4MW', '', '', '', '', '']) && pure.rand, 'join codes: case/space/dash/link forgiven; wrong length, characters outside the alphabet, markup and junk refused; random codes valid ' + JSON.stringify(pure.codes));
     ok(pure.names[0] === 'evilx' && pure.names[1] === 'Ada Lovelace' && pure.names[2] === 24 && pure.names[3] === '' && pure.names[4] === '<img src=x onerror=alert', 'names: bidi/zero-width/control/separator characters stripped, spaces collapsed, 24-character cap (markup stays text: it only ever goes in via textContent) ' + JSON.stringify(pure.names));
     ok(JSON.stringify(pure.frames) === JSON.stringify(['sync.in', 'version', 'json', 'type', 'seq', 'deep', 'deep', 'deep', 'too-big', 'not-text', 'deep']), 'frames: version byte, JSON, type, seq, depth, __proto__/constructor keys, 64 KB link cap, non-text and key-count caps ' + JSON.stringify(pure.frames));
+    {
+      const ice = pure.ice || [], stun = ice.filter((s) => s.urls === 'stun:stun.l.google.com:19302'), turn = ice.filter((s) => /^turn:(eu|us)-0\.turn\.peerjs\.com:3478$/.test(s.urls) && s.username === 'peerjs' && s.credential === 'peerjsp');
+      ok(ice.length === 3 && stun.length === 1 && turn.length === 2 && turn[0].urls !== turn[1].urls && ice[0] === stun[0], 'default ICE config: Google STUN first (direct preferred) plus PeerJS\'s two public TURN relays (eu-0, us-0) for mobile data; tests run with iceServers [] ' + JSON.stringify(ice.map((s) => s.urls)));
+      ok(pure.rto > 0 && pure.rto <= 15000, 'a reconnect attempt that never settles is given up after reconnectTimeoutMs (' + pure.rto + ' ms)');
+    }
     ok(JSON.stringify(pure.man) === JSON.stringify(['ok', 'bad-code', 'bad-code', 'bad-code', 'bad-code', 'bad-code', 'bad-code']) && pure.bomb[0] < 16384 && pure.bomb[1] === 'bad-code', 'manual codes: kind checked, size cap, prefix, SDP shape, extra keys, truncation, and a deflate bomb (' + pure.bomb[0] + ' B -> 2 MB) refused ' + JSON.stringify(pure.man));
     const QR_GOLD = ['3:1:9003c04f', '6:3:9d4fd8b5', '1:0:45b76c15'];
     console.log('  qr hashes ' + JSON.stringify(pure.qr.slice(0, 3)));

@@ -168,6 +168,7 @@ const TRACE = () => {
   delete phoneProfile.defaultBrowserType;
   try {
     broker = await startBroker(BPORT);
+    if (!process.env.T19_SOLO) {
     const hostCtx = await newCtx(browser, { viewport: { width: 1280, height: 800 } });
     const guestCtx = await newCtx(browser, phoneProfile);
     const host = await open(hostCtx, 'host', errors), guest = await open(guestCtx, 'guest', errors);
@@ -432,13 +433,14 @@ const TRACE = () => {
       ok(r.back && r.reconnects >= 1 && r.timeouts >= 3 && r.calls >= 5, 'NET19: three reconnect attempts that never settle each time out and the fourth gets through (' + r.ms + ' ms)');
     }
     await host.evaluate(() => NET19.leave('local'));
+    }
 
     // ================================================================ 10. single player unchanged with all three modules loaded
     {
       const A = await open(await newCtx(browser), 'solo', errors);
-      const Bctx = await newCtx(browser, null, /js\/(net19|sync19|partner19)\.js/);
+      const Bctx = await newCtx(browser, null, process.env.T19_B_MOD ? null : /js\/(net19|sync19|partner19)\.js/);
       const Bp = await open(Bctx, 'blocked', errors);
-      ok(await A.evaluate(() => typeof NET19 === 'object' && typeof SYNC19 === 'object' && typeof PARTNER19 === 'object') && await Bp.evaluate(() => typeof NET19 === 'undefined' && typeof SYNC19 === 'undefined' && typeof PARTNER19 === 'undefined'), 'the comparison page runs with js/net19.js, js/sync19.js and js/partner19.js blocked');
+      if (!process.env.T19_B_MOD) ok(await A.evaluate(() => typeof NET19 === 'object' && typeof SYNC19 === 'object' && typeof PARTNER19 === 'object') && await Bp.evaluate(() => typeof NET19 === 'undefined' && typeof SYNC19 === 'undefined' && typeof PARTNER19 === 'undefined'), 'the comparison page runs with js/net19.js, js/sync19.js and js/partner19.js blocked');
       const res = [];
       for (const P of [A, Bp]) {
         await newGame(P, 'Solo Tester');
@@ -447,7 +449,8 @@ const TRACE = () => {
           __stage(); const rc = __trace(0, 600); const s = __state(); s.rc = rc;
           GFX.particles = 0; GFX.reduceMotion = true; if (GFX.changed) GFX.changed();
           s.frames = {};
-          for (const id of ['oakhaven', 'mill', 'underhedge']) { __freeze(123456); loadMap(id, G.maps[id].spawn); G.fadeT = 0; __thaw(); s.frames[id] = __frame(); }
+          // (not Oakhaven: its townsfolk keep real-time state of their own, so it differs between any two pages)
+          for (const id of ['mill', 'greenhall', 'underhedge']) { __freeze(123456); loadMap(id, G.maps[id].spawn); G.fadeT = 0; __thaw(); s.frames[id] = __frame(); }
           PRESETS.apply('cinematic'); s.frames.cinematic = __frame(); PRESETS.apply('original'); s.frames.original = __frame(); PRESETS.apply('medium');
           s.frame = Object.values(s.frames).join('.');
           return s;
