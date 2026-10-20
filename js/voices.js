@@ -82,6 +82,14 @@ const VOICES = (() => {
     ignatius:  { f0: 108, fs: 0.94, style: 'human' },    // Flambeau of the Pure Note
     p12_herald: { f0: 124, fs: 0.97, style: 'human' },   // Phase 12: the Church's herald at the Rite, a carrying public voice
     p15s_preacher: { f0: 112, fs: 0.95, style: 'human' },   // Phase 15: the Chapel's preaching deacon, measured and even
+    // Phase 16: Stillwater Landing and the Flume Road, Depot Three, the Drift-Kestrel
+    p16f_pellam: { f0: 118, fs: 0.96, style: 'human' },     // the lockkeeper: smooth, selling
+    p16f_madge: { f0: 190, fs: 1.08, style: 'human' },      // the fence: low for a woman, unhurried
+    p16f_orrin: { f0: 98, fs: 0.93, style: 'human' },       // a Timber Compact cutter: deep, plain
+    p16f_hand: { f0: 108, fs: 0.95, style: 'human' },       // a dock hand
+    p16f_wife: { f0: 210, fs: 1.1, style: 'human' },       // the cutter's wife on the raft
+    p16h_vause: { f0: 184, fs: 1.07, style: 'human' },      // Sergeant Vause: professional, clipped
+    p16k_pennick: { f0: 104, fs: 0.94, style: 'human' },    // the Kestrel's engineer: dry, pessimistic
     townsman:  { f0: 122, fs: 0.97, style: 'human' },
     townswoman:{ f0: 202, fs: 1.08, style: 'human' },
     sable:     { f0: 208, fs: 1.1,  style: 'human' },
