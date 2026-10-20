@@ -174,6 +174,8 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 
 Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
 
+**Phase 15 — the province moves** (delivered; items marked (P15); see the Phase 15 verification)
+
 **Phase 14 — a world that shows the story** (delivered; items marked (P14); see the Phase 14 verification)
 
 **Phase 13 — the Hush comes closer** (delivered; items marked (P13); see the Phase 13 verification)
@@ -213,20 +215,20 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[x]` Loot flying to the inventory button (P11) · `[x]` Coins counted out in shops (P11) · `[x]` Page turns in books and the logbook (P11) · `[x]` Sitting, eating and drinking in the tavern (P14)
 
 **Daggerfall features**
-- `[x]` Birth signs from musical modes (P11) · `[x]` "Where is...?" (dialogue button; add map marking `[~]`) · `[ ]` Paid training with per-level limits
-- `[ ]` Bank letters of credit · `[x]` Holidays on the calendar (P11) · `[ ]` Cheat codes for testing
+- `[x]` Birth signs from musical modes (P11) · `[x]` "Where is...?" with map marking (P15) · `[x]` Paid training with per-level limits (P15)
+- `[x]` Bank letters of credit (P15) · `[x]` Holidays on the calendar (P11) · `[x]` Cheat codes for testing (P15)
 
 **Gameplay**
 - `[x]` Instruments (lute, flute, hurdy-gurdy) that change Songs (P12) · `[x]` Tavern performance rhythm game (P11) · `[x]` Tuning forks that hum near secrets (P12)
 - `[x]` Dowsing for Anchor-roots (P12) · `[x]` Carried light (the lantern, U) · `[x]` Fire flasks (P12) · `[x]` Environmental kills (chandeliers, scaffolds, deep water) (P12)
 - `[x]` Office grappling hook (P12) · `[x]` Noise lures (thrown stones and bottles; the lure reed) · `[x]` Silence bombs (P12) · `[x]` Shield bash (P12) · `[x]` Two-handed weapons and dual-wielding (P12)
-- `[x]` Throwing nets (P12) · `[x]` Adopt the Whisper-Grove cat (she hisses at danger) (P11) · `[x]` Bones, a tavern dice game (P11) · `[ ]` A tavern card game · `[ ]` Camp cooking
-- `[ ]` Boss trophies for your house (the house exists)
+- `[x]` Throwing nets (P12) · `[x]` Adopt the Whisper-Grove cat (she hisses at danger) (P11) · `[x]` Bones, a tavern dice game (P11) · `[x]` A tavern card game (P15) · `[x]` Camp cooking (P15)
+- `[x]` Boss trophies for your house (the house exists) (P15)
 
 **World and events**
-- `[x]` Market day in the square (P11) · `[ ]` Synod sermons to attend or disrupt · `[ ]` Festivals such as Hearthday · `[ ]` Eclipses
-- `[~]` Roadside events on the world map (ambushes exist; add carts, refugees, checkpoints) · `[ ]` Buildings burn and are rebuilt; permanent NPC deaths
-- `[ ]` Synod territory spreading on the world map · `[x]` "Previously..." recap on load (P11)
+- `[x]` Market day in the square (P11) · `[x]` Synod sermons to attend or disrupt (P15) · `[ ]` Festivals such as Hearthday · `[x]` Eclipses (P15)
+- `[x]` Roadside events on the world map (P15) · `[x]` Buildings burn and are rebuilt; permanent NPC deaths (P15)
+- `[x]` Synod territory spreading on the world map (P15) · `[x]` "Previously..." recap on load (P11)
 
 **Horror**
 - `[x]` Whispers from behind at high Dissonance (with the meter above) (P13) · `[x]` Lights dying one by one (P13) · `[x]` Night terrors after resting somewhere unsafe (P13)
@@ -239,6 +241,15 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 **Technical**
 - `[~]` A sharper renderer with the pixel look kept (P14: the Ultra and Cinematic presets, view distance to 4x with sky-matched haze and far LOD; a WebGL renderer remains for a later phase — see the Project doc "Echoes of the Shattered Octave: Graphics Upgrade and View-Distance Roadmap") · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
 - `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[x]` Performance overlay (frame rate, memory) (P11)
+
+### Phase 15 "The province moves" verification
+- **How it was built.** Four parallel teams (synod, roads, ledger, hearth), then integration on phase15-province.
+- **Synod (js/synod15.js).** Sermons on Dawnday mornings and Stasisday/Memoryday evenings (attend for Church standing and a day's easier inspection; disrupt = witnessed crime, Hedge up); ending at the Greening. The Synod wash on the world map by story stage. Eclipses on new-moon Dawndays, never on feast, festival or story days, x1.25 hounds.
+- **Roads (js/roads15.js).** One roadside event per trip at most (cart, refugees or graves, Synod checkpoint; turning back always allowed, key items never taken). Four unnamed houses can burn, char and be rebuilt over six days; witnessed arson +90 bounty. Permanent deaths for unnamed townsfolk with a floor population.
+- **Ledger (js/ledger15.js).** Eight trainers with caps and per-level session limits (Lyra teaches Law-Song only after the Greening, by slate). Letters of credit 25/100/500 (5% in Oakhaven; worse rates after the Greening, never lost). The test console (five codes; marks the save; shut in hardcore). "Where is…?" map pennants.
+- **Hearth (js/hearth15.js).** Camp cooking (three dishes, one warmth buff at a time). Rounds, a 24-card trick-taking game with its own seeded deck and a daily loss cap. Twelve boss trophies on pegs in your house, granted retroactively.
+- **Integration fixes.** The preacher's voice; hearth15 counts only its own items; motion10 checks the travel animation with roadside events off.
+- **Tests.** New suites synod15, roads15, ledger15, hearth15; all 89 suites pass on the merged tree (several perf and timing checks are load-sensitive and pass on a quiet rerun).
 
 ### Phase 14 "A world that shows the story" verification
 - **How it was built.** Four parallel teams (greening, skies, props, folk) plus two graphics teams (far, cinema), then integration on phase14-world; the aurora and the mirrors each went back for a rework before merging.

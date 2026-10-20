@@ -52,6 +52,21 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 15: the province moves
+
+| | |
+|---|---|
+| ![An eclipse](screenshots/p15-eclipse.jpg) | ![A sermon](screenshots/p15-sermon.jpg) |
+| Rare eclipses: noon goes the colour of dusk and the hounds grow bolder. | Synod sermons at the Chapel, to sit through or to disrupt. |
+| ![A Synod checkpoint](screenshots/p15-checkpoint.jpg) | ![A burned house](screenshots/p15-charred.jpg) |
+| Carts, refugees and Synod checkpoints on the road. | Houses burn, stand charred, and are rebuilt. |
+| ![Rounds](screenshots/p15-rounds.jpg) | ![Trophies](screenshots/p15-trophies.jpg) |
+| Rounds, a trick-taking card game with Nessa Tolliver at the Boar. | Trophies from beaten bosses hang in your house on Cooper's Row. |
+| ![Letters of credit](screenshots/p15-bank.jpg) | ![The test console](screenshots/p15-console.jpg) |
+| Letters of credit from the Consortium clerk. | A test console for cheats (they mark the save). |
+
+Also: paid training with per-level limits, camp cooking, "Where is…?" answers that mark your map, permanent deaths for unnamed townsfolk, and the Synod's reach spreading across the world map.
+
 ### Phase 14: a world that shows the story
 
 | | |
