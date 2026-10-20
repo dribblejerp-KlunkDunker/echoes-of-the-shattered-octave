@@ -1009,6 +1009,76 @@ BEAST20A.SPECIES.dirge = (() => {
   });
 })();
 
+// ---------------------------------------------------------------- the Office Listening-Horn
+// A brass gramophone horn on a jointed iron tripod, a pressure gauge on the
+// column, a small ear-trumpet on a hose. Its own frames already swing the horn
+// (scanning left and right, and full-face when it hears you), so as the stand
+// turns the bell is redrawn from whichever of those paintings matches the way
+// it now points: mouth-on, three-quarter, profile, or (pointing away) the
+// bell's brass back with the throat at its centre. Source: horn (71x120).
+BEAST20A.SPECIES.horn = (() => {
+  const B = BEAST20A, N = 'horn';
+  const BELL = {
+    '': { poly: [[0, 0], [21, 0], [37, 13], [55, 21], [57, 35], [41, 39], [23, 45], [0, 45]], A: 32.5, yaw: 55 },
+    _w1: { poly: [[0, 0], [15, 0], [31, 13], [45, 18], [47, 35], [29, 37], [13, 45], [0, 45]], A: 26.5, yaw: 85 },
+    _w2: { poly: [[60, 0], [44, 0], [30, 13], [11, 18], [9, 35], [29, 37], [46, 45], [60, 45]], A: 26.5, yaw: -85 },
+    _a1: { poly: [[3, 0], [44, 0], [46, 22], [44, 43], [3, 43], [1, 22]], A: 27, yaw: 0 },
+    _a2: { poly: [[5, 0], [47, 0], [49, 22], [47, 43], [5, 43], [3, 22]], A: 27, yaw: 0 },
+  };
+  const gauge = A => [[A - 10, 38], [A + 9, 38], [A + 11, 47], [A + 9, 58], [A - 10, 58], [A - 12, 47]];
+  const pieces = {};
+  function bellPiece(key) {
+    if (pieces[key]) return pieces[key];
+    const fr = key === 'back' ? '_a2' : key, b = BELL[fr], sp = Engine.sprites[N + fr];
+    const P = B.painter(sp.w, 48);
+    P.cut(N + fr, 0, 0, sp.w, 48, 0, 0, { mask: b.poly });
+    if (key === 'back') {
+      // the outside of the bell: brass, lit at the top, the throat pipe at its heart
+      const cx = 27, cy = 21, ring = [];
+      for (let i = 0; i < 24; i++) { const a = i / 24 * Math.PI * 2; ring.push([cx + Math.cos(a) * 18, cy + Math.sin(a) * 18]); }
+      P.clip(ring, () => P.grain(ring, B.tones(N + '_w1', [[22, 20], [26, 16], [30, 24], [18, 26], [34, 20]]), 3, 21));
+      P.lightIn(ring, (x, y) => 1.15 - 0.012 * Math.hypot(x - cx, y - cy) * 3 - 0.2 * (y - cy) / 18);
+      for (let r = 4; r <= 14; r += 5) { const q = []; for (let i = 0; i < 20; i++) { const a = i / 20 * Math.PI * 2; q.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]); } P.g.strokeStyle = B.at(N, 30, 30, 0.6); P.g.beginPath(); q.forEach((p, i) => (i ? P.g.lineTo(p[0], p[1]) : P.g.moveTo(p[0], p[1]))); P.g.closePath(); P.g.stroke(); }
+      P.rect(B.at(N, 30, 70, 0.5), cx - 3, cy - 3, 6, 6); P.rect(B.at(N, 40, 30, 1.1), cx - 2, cy - 2, 2, 2);
+    }
+    pieces[key] = P.c; return P.c;
+  }
+  const deg = Math.PI / 180;
+  return B.rigged(N, {
+    angles: [0, Math.PI / 4, Math.PI * 0.42, Math.PI * 0.75, Math.PI],
+    limbK: 1.0, limbB: 5,
+    poses: {
+      '': { A: 32.5, depth: [[60, 9], [80, 8], [999, 4]], body: [[60, [20, 46]], [999, null]], erase: [BELL[''].poly], gauge: gauge(32.5) },
+      _w1: { A: 26.5, body: [[60, [14, 40]], [999, null]], erase: [BELL._w1.poly], gauge: gauge(26.5) },
+      _w2: { A: 26.5, body: [[60, [14, 40]], [999, null]], erase: [BELL._w2.poly], gauge: gauge(26.5) },
+      _a1: { A: 27, body: [[60, [15, 40]], [999, null]], erase: [BELL._a1.poly], gauge: gauge(27) },
+      _a2: { A: 27, body: [[60, [15, 40]], [999, null]], erase: [BELL._a2.poly], gauge: gauge(27) },
+    },
+    back(P, S) {
+      // the gauge reads to the front; behind it, its brass case and a rivet
+      const g = B.mir(P.w, S.gauge); P.grain(g, B.tones(N, [[30, 70], [36, 66], [26, 64], [33, 74]]), 2, 5);
+      P.lightIn(g, (x, y) => 1.1 - 0.4 * (y - 38) / 20);
+      P.light(() => 0.85);
+    },
+    fin(P, ox, th, v, p) {
+      const b = BELL[p || ''], gamma = b.yaw - th / deg;
+      let key, flip = false;
+      const ag = ((gamma % 360) + 540) % 360 - 180;
+      if (Math.abs(ag) < 35) key = '_a2';
+      else if (Math.abs(ag) >= 125) key = 'back';
+      else if (ag > 0) key = ag < 70 ? '' : '_w1';
+      else if (ag > -70) { key = ''; flip = true; } else key = '_w2';
+      const src = key === 'back' ? '_a2' : key, pc = bellPiece(key), ax = BELL[src].A;
+      const behind = Math.cos(ag * deg) < -0.25;
+      const draw = () => {
+        P.g.save(); P.g.translate(ox, 0); if (flip) P.g.scale(-1, 1); P.g.drawImage(pc, -ax, 0); P.g.restore();
+      };
+      if (behind) P.under(() => { P.g.globalAlpha = 1; draw(); }); else draw();
+      if (behind) P.light((x, y) => (y < 46 && Math.abs(x - ox) > 2 ? 1 : 1));
+    },
+  });
+})();
+
 // Plug in: the hand-built views answer first for their species; everything else
 // (the Proctor pilot, BEASTB's species, the stand-ins) falls through unchanged.
 (() => {
