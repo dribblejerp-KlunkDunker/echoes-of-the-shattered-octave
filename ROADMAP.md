@@ -171,8 +171,17 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 | 16 — New ground | new areas | Chlorophyll Flume; underwater dungeon beneath Whisper-Grove; heists (Synod cathedral, Consortium quarry); the Kestrel as a home base with crew |
 | 17 — Beyond Book One | extras | Book Two prologue; Port Cantabile trip and the Long Night (both after Book One in canon: presented as marked extras) |
 | 18 — Technical | engine and online | Sharper renderer; installable offline app; daily challenge dungeon; ghost replays; messages and leaderboards (need a small server: owner's decision) |
+| 19 — Together | two-player co-op, phone-ready | Play Book One with a second player in the same world: one hosts on a computer, the other joins from a phone with a short code; peer-to-peer (no game server of our own); a phone layout and preset |
 
 Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
+
+**Phase 19 — Together** (planned; owner's request, October 2026: "me and my brother", the brother most likely on a phone)
+- `[ ]` Join with a code: the host opens "Play together" and gets a short code; the guest types it (or scans a QR code) on a phone. Peer-to-peer over WebRTC, matched by the free PeerJS broker; a copy-and-paste fallback that needs no broker at all. No game server of our own, no accounts.
+- `[ ]` Host-authoritative world: the host's game runs the world (enemies, the random streams, quests, the story); the guest sends inputs and receives compact snapshots, with smoothing and a little prediction so a phone on Wi-Fi feels responsive. Reconnect after a dropped connection; the host can always carry on alone.
+- `[ ]` The second traveller: the guest brings their own character (class, level, kit) from their own save; they appear in the host's world as a full player, not a companion. Revive a fallen partner instead of dying; enemies pick between the two; shared XP; loot split by turns; the host's story and choices stay the host's (the guest watches story scenes and can't make the host's choices).
+- `[ ]` What goes home: the guest's level, XP and items earned go back to the guest's own save; the host's save holds the world. Nothing in either save is ever overwritten by the other player.
+- `[ ]` Phone-ready: a "Phone" preset (render scale and effects tuned for phones), a portrait-or-landscape touch layout with bigger buttons, battery-friendly frame cap, the installable app from Phase 18. Tested on emulated phone sizes and touch.
+- Owner's decisions: can the guest also host from a phone (performance)? Should the guest be able to make story choices on their turn? (Defaults: host on a computer; host decides.)
 
 **Phase 16 — new ground** (delivered; items marked (P16); see the Phase 16 verification)
 
