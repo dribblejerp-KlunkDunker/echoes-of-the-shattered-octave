@@ -105,6 +105,12 @@ const VOICES = (() => {
     herald:    { f0: 130, fs: 0.96, style: 'brass' },    // a herald's carrying voice
     mourner:   { f0: 176, fs: 1.04, style: 'breathy' },
     wren:      { f0: 258, fs: 1.18, style: 'human' },
+    // Phase 17, team PROLOGUE: the river gate (an extra after Book One)
+    p17p_dorran: { f0: 84, fs: 0.9, style: 'gravel' },      // Dorran Sedge: "a voice like a bullfrog", sang bass
+    p17p_seraphina: { f0: 196, fs: 1.06, style: 'human' },  // Seraphina: low, even
+    p17p_aegis: { f0: 70, fs: 0.8, style: 'chord' },        // the Aegis, as the Sentinel
+    p17p_ignatius: { f0: 104, fs: 0.93, style: 'human' },   // Ignatius Crane, the preacher's voice gone thin
+    p17p_solenne: { f0: 200, fs: 1.08, style: 'brass' },    // Solenne: copper in the throat
   };
 
   // ---- the enemy families ---------------------------------------------------------------------------
