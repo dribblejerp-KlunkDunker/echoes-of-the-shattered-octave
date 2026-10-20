@@ -123,7 +123,7 @@ const AUDIT = () => {
       return { reg: !!x, hidden: !!(x && x.hidden), btn: (document.getElementById('btn-daily') || {}).textContent, menu, playable: EXTRAS17.playable('daily18'), opened: EXTRAS17.opened(), texts: DAILY18.TEXTS };
     });
     check(base.reg && base.hidden, 'the run is registered with EXTRAS17 as a hidden extra');
-    check(base.btn === 'Daily challenge' && base.menu.indexOf('btn-daily') === base.menu.indexOf('btn-help') - 1, 'the title screen has a "Daily challenge" button before How to play (' + base.menu.join(', ') + ')');
+    check(base.btn === 'Daily challenge' && base.menu.indexOf('btn-daily') > base.menu.indexOf('btn-extras') && base.menu.indexOf('btn-daily') < base.menu.indexOf('btn-help'), 'the title screen has a "Daily challenge" button before How to play (' + base.menu.join(', ') + ')');
     check(base.playable && !base.opened, 'it is playable without the Book One unlock (the extras themselves stay locked)');
     check(base.texts.every((t) => typeof t === 'string' && t && !/[\u{1F300}-\u{1FAFF}]/u.test(t) && !/\bscream/i.test(t) && !/[<>&]/.test(t)), 'texts are non-empty, emoji-free, markup-free, nobody screams');
     const tsv = fs.readFileSync(path.join(__dirname, '..', 'tools', 'i18n', 'p18-daily.tsv'), 'utf8').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
