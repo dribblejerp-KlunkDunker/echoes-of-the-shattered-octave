@@ -38,7 +38,7 @@ function msg(text, cls, ttl) {
   setTimeout(() => el.classList.add('fade'), ttl || 5200); setTimeout(() => el.remove(), (ttl || 5200) + 700);
 }
 function journal(cat, text) { G.journal.unshift({ cat, text, day: G.day }); msg('Your logbook has been updated.', 'warn', 2500); Audio_.sfx.ui(); }
-function openModal(html, name) { G.panelToken = (G.panelToken || 0) + 1; $('#modal-panel').innerHTML = html; show('#modal'); G.openPanel = name; G.keys = {}; }
+function openModal(html, name) { try { releaseMouse(); } catch (e) { /* not ready yet */ } G.panelToken = (G.panelToken || 0) + 1; $('#modal-panel').innerHTML = html; show('#modal'); G.openPanel = name; G.keys = {}; }
 function closeModal() { hide('#modal'); G.openPanel = null; }
 function fx(cls, ms) { const f = $('#fx'); f.className = cls; clearTimeout(f._t); f._t = setTimeout(() => { if (f.className === cls) f.className = ''; }, ms || 200); }
 
@@ -108,7 +108,7 @@ function startGame() {
   show('#intro'); const it = $('#intro-text'); it.innerHTML = '';
   INTRO.forEach((line, i) => { const pEl = document.createElement('p'); pEl.textContent = line; pEl.style.animationDelay = (i * 1.1) + 's'; it.appendChild(pEl); });
   G.state = 'intro';
-  const go = () => { if (G.state !== 'intro') return; Audio_.music.preload(['combat', 'town']); hide('#intro'); loadMap('oakhaven'); G.state = 'play'; Audio_.setScene('town'); msg('Nullday. Dusk. Oakhaven, inside the Hedge.', 'warn', 6000); msg('Press H for help at any time.', '', 7000); };
+  const go = () => { if (G.state !== 'intro') return; Audio_.music.preload(['combat', 'town']); hide('#intro'); loadMap('oakhaven'); G.state = 'play'; Audio_.setScene('town'); msg('Nullday. Dusk. Oakhaven, inside the Hedge.', 'warn', 6000); msg('Press H for help at any time.', '', 7000); if (!G.touchMode && G.opts.captureMouse) msg('Click the view to capture the mouse; Esc gives it back. Alt+Enter: full screen.', '', 9000); };
   $('#btn-intro-skip').onclick = (ev) => { ev.stopPropagation(); go(); };
   $('#intro').onclick = go;
 }
@@ -1431,7 +1431,7 @@ function finishBore() {
 }
 
 // ---------------------------------------------------------------- events & triggers
-function showEvent(title, html, choices) {
+function showEvent(title, html, choices) { try { releaseMouse(); } catch (e) { /* not ready yet */ }
   G.state = 'event'; const p = $('#event-panel');
   p.innerHTML = `<h2>${title}</h2><p>${html}</p><div class="list" style="margin-top:1cqh">${choices.map((c, i) => `<button class="dfbtn" data-i="${i}">${c.t}</button>`).join('')}</div>`;
   show('#event');
@@ -1841,7 +1841,7 @@ function renderHelp() {
 const canvas = $('#view');
 canvas.style.touchAction = 'none';
 // control options (held for this session)
-G.opts = { mouseLook: true, sens: 5, invertY: false, alwaysRun: false, touch: 'auto' };
+G.opts = { mouseLook: true, sens: 5, invertY: false, alwaysRun: false, touch: 'auto', captureMouse: true };
 function saveOpts() { /* options live in memory for the session */ }
 const sensK = () => 0.35 + clamp(G.opts.sens, 1, 10) * 0.13;
 function canvasPos(ev) { const r = canvas.getBoundingClientRect(); return { x: (ev.clientX - r.left) / r.width * VW, y: (ev.clientY - r.top) / r.height * VH }; }
@@ -1863,6 +1863,26 @@ function swingLabel(dx, dy, th) { const len = Math.hypot(dx, dy); if (len <= th)
 // The preview frame can't capture the mouse, so this works with the cursor free (and right-drag works too).
 const freeLook = () => G.opts.mouseLook && !G.touchMode;
 let edgeTurn = 0;
+// Captured mouse (Pointer Lock): one click on the view captures the mouse, so looking keeps working however far it
+// moves and it can never wander off the window. Esc (or opening any panel) gives it back.
+const mouseLocked = () => typeof document !== 'undefined' && document.pointerLockElement === canvas;
+function captureMouse() {
+  if (!canvas.requestPointerLock || mouseLocked()) return;
+  try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch (e) { /* not allowed here: free look still works */ }
+}
+function releaseMouse() { if (mouseLocked() && document.exitPointerLock) { try { document.exitPointerLock(); } catch (e) { /* ignore */ } } }
+document.addEventListener('pointerlockchange', () => { edgeTurn = 0; G.mouse.down = false; G.mouse.rdown = false; $('#game').classList.toggle('mouse-locked', mouseLocked()); });
+setInterval(() => { if (mouseLocked() && (G.state !== 'play' || G.openPanel || !G.opts.captureMouse)) releaseMouse(); }, 150);
+// Full screen for the whole page (the game fits the screen it is given); Alt+Enter toggles it too.
+const isFullscreen = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+function toggleFullscreen() {
+  try {
+    if (isFullscreen()) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); return; }
+    const el = document.documentElement, req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (req) { const r = req.call(el); if (r && r.catch) r.catch(() => msg('Full screen is not available here.', 'warn', 3000)); }
+  } catch (e) { msg('Full screen is not available here.', 'warn', 3000); }
+}
+window.addEventListener('keydown', (ev) => { if (ev.altKey && ev.key === 'Enter') { ev.preventDefault(); toggleFullscreen(); } });
 canvas.addEventListener('mouseleave', () => { edgeTurn = 0; });
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 canvas.addEventListener('mousedown', (ev) => {
@@ -1870,7 +1890,10 @@ canvas.addEventListener('mousedown', (ev) => {
   if (G.state !== 'play' || G.touchMode) return;
   const p = canvasPos(ev);
   if (ev.button === 2 || ev.button === 1) { G.mouse.rdown = true; ev.preventDefault(); return; }
-  if (p.y >= VIEW_H) { hudClick(p.x, p.y); return; }
+  const locked = mouseLocked();
+  if (!locked && p.y >= VIEW_H) { hudClick(p.x, p.y); return; }
+  // the first click on the view only captures the mouse (no swing), so capturing never costs you a blow
+  if (!locked && ev.button === 0 && freeLook() && G.opts.captureMouse && canvas.requestPointerLock) { captureMouse(); return; }
   G.mouse.down = true; G.mouse.sx = p.x; G.mouse.sy = p.y; G.mouse.ax = 0; G.mouse.ay = 0; G.mouse.t = performance.now();
 });
 window.addEventListener('mouseup', (ev) => {
@@ -1878,7 +1901,8 @@ window.addEventListener('mouseup', (ev) => {
   if (!G.mouse.down) return; G.mouse.down = false;
   if (G.state !== 'play') return;
   let dx, dy, th;
-  { const p = canvasPos(ev); dx = p.x - G.mouse.sx; dy = p.y - G.mouse.sy; th = 12; }
+  if (mouseLocked()) { const r = canvas.getBoundingClientRect(); dx = G.mouse.ax * VW / Math.max(1, r.width); dy = G.mouse.ay * VH / Math.max(1, r.height); th = 12; }
+  else { const p = canvasPos(ev); dx = p.x - G.mouse.sx; dy = p.y - G.mouse.sy; th = 12; }
   const label = swingLabel(dx, dy, th);
   if (G.hintKind && label === 'thrust') { interact(); return; }
   attack(label);
@@ -1889,6 +1913,11 @@ window.addEventListener('mousemove', (ev) => {
   const mx = ev.movementX || 0, my = ev.movementY || 0;
   const inView = p.y < VIEW_H && p.x >= 0 && p.x <= VW && p.y >= 0;
   const spike = Math.abs(mx) > 300 || Math.abs(my) > 300; // ignore the odd jump (window refocus, cursor warp)
+  if (mouseLocked()) {
+    edgeTurn = 0; if (spike) return;
+    if (G.mouse.down) { G.mouse.ax += mx; G.mouse.ay += my; return; }   // holding the button: the movement is the swing
+    look(mx, G.mouse.rdown ? my * 1.25 : my * 0.5); return;
+  }
   if (G.mouse.rdown) { if (!spike) look(mx * 1.25, my * 1.25); edgeTurn = 0; return; }
   if (!freeLook() || G.mouse.down || !inView) { edgeTurn = 0; return; } // holding the left button: the drag becomes the swing, as in 1996; over the HUD: leave the view alone
   if (!spike) look(mx, my * 0.5);
@@ -2528,6 +2557,8 @@ function renderControls() {
   const html = `<h2>Controls</h2><button class="dfbtn small close" id="x">Close</button>
   <div class="ctl-grid">
     <span>Free look <small class="muted">move the mouse over the view to look · rest it at a side edge to keep turning · when off, hold the right button and drag</small></span><button class="dfbtn small" id="c-ml">${onoff(o.mouseLook)}</button>
+    <span>Capture mouse <small class="muted">click the view to capture it, so it never wanders off the window · Esc gives it back</small></span><button class="dfbtn small" id="c-cap">${onoff(o.captureMouse)}</button>
+    <span>Full screen <small class="muted">Alt+Enter</small></span><button class="dfbtn small" id="c-fs">${isFullscreen() ? 'On' : 'Off'}</button>
     <span>Look sensitivity</span><span class="ctl-step"><button class="dfbtn small" id="c-sdn">−</button><b>${o.sens}</b><button class="dfbtn small" id="c-sup">+</button></span>
     <span>Invert up and down look</span><button class="dfbtn small" id="c-inv">${onoff(o.invertY)}</button>
     <span>Always run <small class="muted">Shift walks instead · Caps Lock toggles</small></span><button class="dfbtn small" id="c-run">${onoff(o.alwaysRun)}</button>
@@ -2539,6 +2570,8 @@ function renderControls() {
   $('#x').onclick = () => { closeModal(); G.state = 'play'; };
   $('#c-back').onclick = () => renderMenu();
   $('#c-ml').onclick = () => { o.mouseLook = !o.mouseLook; re(); };
+  $('#c-cap').onclick = () => { o.captureMouse = !o.captureMouse; re(); };
+  $('#c-fs').onclick = () => { toggleFullscreen(); setTimeout(() => { if (G.openPanel === 'controls') re(); }, 300); };
   $('#c-sdn').onclick = () => { o.sens = Math.max(1, o.sens - 1); re(); };
   $('#c-sup').onclick = () => { o.sens = Math.min(10, o.sens + 1); re(); };
   $('#c-inv').onclick = () => { o.invertY = !o.invertY; re(); };

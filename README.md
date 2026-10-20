@@ -37,6 +37,21 @@ Phases 2 to 5 of the roadmap: real height and a modern look, combat that reads a
 
 More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) · [Phase 3 stills](screenshots/p3-stills.jpg) · [Phase 4 stills](screenshots/p4-stills.jpg) · [mood portraits](screenshots/p5-portraits.jpg) · [logbook sketches](screenshots/p5-sketches.jpg).
 
+### Phase 6: a story that remembers you
+
+| | |
+|---|---|
+| ![The Synod Gazette after the Greening](screenshots/p6-gazette.jpg) | ![Asking Hetty for news](screenshots/p6-tavern-news.jpg) |
+| The Synod Gazette spins each turn of the story: the Greening is "an agricultural irregularity". | "Any news?" Hetty passes on what the town says about what you have done. |
+| ![A letter from Old Tam](screenshots/p6-letter.jpg) | ![The last page of Tobin's journal](screenshots/p6-tobin-page.jpg) |
+| People you helped write to you, in their own voices. | Twelve pages of Cantor Tobin's journal lie where he walked. |
+| ![Tobin's journal tracked in the logbook](screenshots/p6-tobin-log.jpg) | ![A dream of the First Reed](screenshots/p6-dream.jpg) |
+| The logbook keeps the pages you have found. | Dreams of the Octave when you rest. |
+| ![A Light-glass memory echo](screenshots/p6-echo.jpg) | ![An epilogue for Kaelen and Lyra](screenshots/p6-epilogue.jpg) |
+| Light-glass gives up what it heard. | Kaelen and Lyra's epilogues follow your choices. |
+| ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
+| Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
+
 ### New stealth features
 
 Staged scenes captured from the playable maps using the game's own feature logic and interface. Click an image for the full 1280 × 800 view.
@@ -153,6 +168,7 @@ The ground and the skyline now have real height. These are captured the same way
 - Combat that reads at a glance: enemies fidget while they wait (robes sway, hounds sniff, the Quiet turn their heads), start when they hear or see you, lean into a charge or scramble when they flee, and recoil from every blow. The Requiem cracks and sheds shards at half health; the Brood-Mother sheds her egg-sacs. Pressman Mallow and the Deacon raise their arms and glow before their attacks land, so you can step out of reach, and anything summoned mid-fight rises from the earth, drops on a thread or forms out of mist before it can act. In first person you draw, holster and switch weapons, raise glowing hands to cast a Song, and grip and pull as you climb; doors swing open away from you, chest lids lift and levers pull. A heavy blow shakes the view, a chord blast or a funeral bell leaves you half-deaf with blurred eyes and muffled ears, and standing still in siphoned country drains the colour and the sound out of the world. Books, letters and notices open full screen in large, clear type. Camera feel has its own options: Head bob (Off, the original, or Gentle), Reduce motion (follows your system setting) and No flashes.
 - A world that lives around you: Kaelen and Lyra flinch when hit and limp when badly hurt, and below a third of his health Kaelen holds his chest while a low Root-note hum rises; rings spread in the air when Lyra sings; at camp Kaelen sharpens his blade and people lean in to warm their hands. Oakhaven's townsfolk gesture as they talk, glance at you as you pass, work by day, drink at the Boar in the evening and go home at night; Hetty wipes the bar, the tanner scrapes hides and the mill hands card wool. Crows take wing and rats bolt for the dark when you run at them; the Kestrel hangs from the mooring mast, turning in the wind, until the Greening; dropped Light-glass glints. Chimneys smoke, the Steam Golem vents steam, water splashes underfoot, and torches and braziers light the dungeons. Signs and banners swing with the wind, leaves fall differently in each area, and bells swing on every strike. Gates and portcullises rise before you pass, and once the bore is broken the quarry shaft caves in. The purely visual ones (smoke, splashes, torches, wind, leaves, bells, critters, the moored Kestrel, gates) follow the graphics presets, so Original shows the game exactly as it was.
 - An illustrated interface: carved walnut frames with brass corners on every panel and on the HUD bar, blackletter titles over readable Alegreya text (all fonts now ship with the game, so it needs no internet); an icon for every item in the inventory, shops and chests, and a shaded paper doll carrying your weapon and shield; angry, sad, afraid and wry portraits for Kaelen, Lyra and the other major characters as conversations turn; an ink sketch beside each storyline in the logbook, and map markers for doors, quest givers, shops, enemies and traps in the places you have walked; a painted card as you enter each area, a picture on the death screen for whatever killed you, and a full-screen illustration for each ending. All of it is generated stand-in art until the painted versions arrive.
+- A story that remembers you: Hetty and the patrons pass on rumours of what you have actually done, and the Synod Gazette on the town boards spins every turn of the story in the Office's flat voice; people you helped write to you; you dream of the Octave when you rest, and Light-glass gives up what it heard; twelve pages of Cantor Tobin's journal lie where he walked; Kaelen and Lyra's epilogues follow your choices; and documents on the library shelves hint at the Organum, the Iron Peaks and the Rift beyond the Reach.
 - Hardcore runs, opt-in and irreversible once taken: one save for the run, no session slots, no save codes, no downloads and no pre-boss autosave. That save lives in the page, so closing the tab ends the run just as dying does. Death destroys that save and ends the run at the title screen instead of waking you by the lamp. Ordinary saves are never touched, a hardcore run can never be opened by one, and a hardcore run can never be carried out of the page as a code or file. Start one from the Options panel; only a new traveller can start without it.
 - Journey needs, optional and off by default: switch hunger and sleep on in Options and the road starts to cost something. Ten hours on foot drains hunger twice as fast as the same ten hours in the saddle; hunger or sleeplessness below 20 warns you and halves what resting and idling give back, and an empty belly caps your fatigue at half until you eat. Honey feeds you, rest sleeps you, and the character sheet and journey panel always show where you stand. Old saves and hostile imports stay fed, rested and off.
 - Pickpocket Oakhaven adult townsfolk and merchants: inspect a purse, approach quietly from behind, and use Stealth to lift loose coin. Attention, position and noise affect the displayed odds; caught or witnessed theft adds a watch bounty. One saved attempt per person; quest items and shop stock stay untouched.
@@ -197,7 +213,8 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Action | Input |
 |---|---|
 | Move | W A S D · Shift runs · Caps Lock toggles always-run |
-| Look | Move the mouse over the view (rest it at a side edge to keep turning) · right-drag · Q and arrow keys · Z levels your gaze |
+| Look | Click the view to capture the mouse, then move it freely (Esc gives it back; Options → Controls → Capture mouse turns this off) · without capture, move over the view and rest at a side edge to keep turning · right-drag · Q and arrow keys · Z levels your gaze |
+| Full screen | Alt+Enter, or Options → Controls → Full screen |
 | Attack | Left-click to thrust · hold and move the mouse to slash or chop · wheel or 1–9 changes weapon |
 | Use / Talk | E or Space, or click a bright name under the crosshair (the crosshair is the centre of the view, so look up or down to aim at something above or below you) |
 | Pickpocket | Face a nearby Oakhaven adult, P to inspect · touch Purse / controller Y · Enter/Space or A attempts, Escape or B leaves |
@@ -265,6 +282,11 @@ js/portraits.js   mood portraits in conversation
 js/logmap.js      logbook sketches and automap stamps
 js/screens.js     area loading cards, death and ending illustrations
 css/fonts.css     the bundled fonts (fonts/, SIL Open Font License)
+js/rumours.js     tavern rumours and the Synod Gazette
+js/couriers.js    letters from the people you helped
+js/dreams.js      rest dreams and Light-glass memory echoes
+js/tobin.js       Tobin's journal pages and the logbook tracker
+js/epilogue.js    Kaelen and Lyra epilogues; Organum, Iron Peaks and Rift teasers
 js/game.js        game logic, UI, combat, dialogue, trade, saving
 music/            soundtrack (MP3)
 img/              portraits, title, map and ending art
