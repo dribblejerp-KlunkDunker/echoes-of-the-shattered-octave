@@ -65,7 +65,7 @@ const btnsInside = (page) => page.evaluate(() => {
     // ================================================================= 0. the module, items, sprites, source hygiene
     const mod = await page.evaluate(() => {
       const H = HEARTH15, out = { fails: [] }, check = (c, m) => { if (!c) out.fails.push(m); };
-      const ids = Object.keys(ITEMS).filter((k) => k.startsWith('p15_'));
+      const ids = Object.keys(ITEMS).filter((k) => k.startsWith('p15_') && !k.startsWith('p15_letter'));   // js/ledger15.js adds its own p15_letter_* items
       check(ids.length === 15, '15 p15_ items (3 dishes, 12 trophies): ' + ids.length);
       for (const k of ['p15_smoked_eel', 'p15_toasted_round', 'p15_soothing_draught']) check(ITEMS[k] && ITEMS[k].use === 'p15_food' && !ITEMS[k].key, k + ' is a usable dish');
       for (const t of H.TX.trophy.items) { const it = ITEMS['p15_t_' + t.key]; check(it && it.key === true && it.use === 'p15_trophy', 'trophy item ' + t.key + ' is a key item'); check(Engine.sprites['p15_t_' + t.key], 'sprite ' + t.key); }

@@ -45,6 +45,7 @@ const SHOTS = process.env.SHOTS || '';
       const reset = (spec) => {
         restoreGame(JSON.parse(JSON.stringify(mBase))); G.state = 'play'; Weather.hold('clear');
         G.opts.touch = 'off'; setTouchMode(false); UPG.tutorial = false; G.keys = {}; G.fadeT = 0; MOTION10.setSwitch('travel', true);
+        if (window.ROADS15 && ROADS15.setSwitch) ROADS15.setSwitch('events', false);   // Phase 15 roadside events stop a trip on purpose; this suite checks the route animation's outcome
         if (spec.part >= 3) { G.flags.part3 = true; if (spec.part >= 4) G.flags.part4 = true; loadMap(spec.from, { x: G.maps[spec.from].spawn.x, y: G.maps[spec.from].spawn.y, dir: 0 }); G.state = 'play'; }
         for (const id of ['clearing', 'oakhaven', 'whispergrove', 'deepwoods']) if (G.maps[id]) G.maps[id].visited.fill(1);
         for (const e of G.ents) if (e.kind === 'enemy') { e.hidden = true; }
