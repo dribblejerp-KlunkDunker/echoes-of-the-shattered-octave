@@ -143,7 +143,7 @@ const NIGHT13 = (function () {
   function placeClass(m) { return m.outdoor ? (m.danger > 0 ? 'wild' : 'open') : (m.danger > 0 ? 'deep' : 'shut'); }
   // NERVES13 is built in parallel; until it exists (or says otherwise) every scare is the gentle version
   function scaresFull() {
-    try { if (typeof NERVES13 !== 'undefined' && NERVES13 && typeof NERVES13.scaresAllowed === 'function') { const v = NERVES13.scaresAllowed(); return v === true || v === 'full' || v === 'on' || v === 'all'; } } catch (e) { /* gentle */ }
+    try { if (typeof window !== 'undefined' && window.NERVES13 && typeof window.NERVES13.scaresAllowed === 'function') { const v = window.NERVES13.scaresAllowed(); return v === true || v === 'full' || v === 'on' || v === 'all'; } } catch (e) { /* gentle */ }
     return false;
   }
 
@@ -318,7 +318,7 @@ const NIGHT13 = (function () {
     try {
       if (typeof Audio_ === 'undefined' || !Audio_.ctx || !Audio_.sfxBus || !Audio_.sfxBus.gain) return;
       const g = Audio_.sfxBus.gain, t = Audio_.ctx.currentTime, depth = full ? DUCK.full : DUCK.gentle;
-      const prev = duckState ? duckState.prev : (g.value > 0.5 ? 1 : g.value);
+      const prev = duckState ? duckState.prev : ((typeof KIT12 !== 'undefined' && KIT12 && KIT12.audioMuted) ? g.value : 1);   // the bus rests at 1; a stinger swell (js/nerves13.js) in progress is not a resting level
       if (duckState) clearTimeout(duckState.timer);
       g.cancelScheduledValues(t); g.setValueAtTime(g.value, t);
       g.linearRampToValueAtTime(depth, t + DUCK.down);

@@ -189,9 +189,9 @@ const flagSig = (page) => page.evaluate(() => JSON.stringify(Object.keys(G.flags
     await pg.locator('#f12-cv').dispatchEvent('pointerdown');
     await pg.waitForTimeout(200);
     check(await pg.evaluate(() => FESTIVALS12.cutUi.cur.running), 'a tap on the canvas begins, as a touch would');
-    await pg.evaluate(() => { const c = FESTIVALS12.cutUi.cur; c.t = c.beats[0].t; });
+    await pg.evaluate(() => { const c = FESTIVALS12.cutUi.cur; const b = c.beats.find(x => !x.state || x.state === 'wait' || x.state === 'pending') || c.beats[c.beats.length - 1]; c.t = b.t;   /* the first beat still to come (an early one may already have passed while the page waited) */ });
     await pg.locator('#f12-go').click();   // the Cut button
-    check(await pg.evaluate(() => FESTIVALS12.cutUi.cur.landed >= 1), 'the Cut button lands a cut on the beat');
+    check(await pg.evaluate(() => FESTIVALS12.cutUi.cur.landed >= 1), 'the Cut button lands a cut on the beat ' + await pg.evaluate(() => { const c = FESTIVALS12.cutUi.cur; return JSON.stringify({ t: c.t, b0: c.beats[0], landed: c.landed, running: c.running, missed: c.missed, noise: G.noise, state: G.state }); }));
     await pg.evaluate(() => { let pressed = false; navigator.getGamepads = () => [{ connected: true, buttons: Array.from({ length: 17 }, (_, i) => ({ pressed: i === 1 && pressed, value: 0 })), axes: [0, 0, 0, 0] }]; window.__pad = () => { pressed = true; }; });
     await pg.waitForTimeout(150);     // a frame or two with nothing held (the module reads the pad's resting state first)
     await pg.evaluate(() => window.__pad()); await pg.waitForTimeout(250);
@@ -348,8 +348,8 @@ const flagSig = (page) => page.evaluate(() => JSON.stringify(Object.keys(G.flags
     // the pad drives the lantern panel
     await pg.evaluate(() => { G.day = 12; G.tod = 0.9; FESTIVALS12.syncCurrent(); Engine.cam.x = 22.5; Engine.cam.y = 40.6; for (const e of G.map.entities) if (e._p12f === 'set') e.dead = true; FESTIVALS12.state.lanterns = []; G.state = 'play'; FESTIVALS12.openLanterns(); window.__dp = { 13: false, 0: false, 1: false }; navigator.getGamepads = () => [{ connected: true, buttons: Array.from({ length: 17 }, (_, i) => ({ pressed: !!window.__dp[i], value: 0 })), axes: [0, 0, 0, 0] }]; });
     await pg.waitForTimeout(150);
-    await pg.evaluate(() => { window.__dp[13] = true; }); await pg.waitForTimeout(120); await pg.evaluate(() => { window.__dp[13] = false; }); await pg.waitForTimeout(80);
-    check(await pg.evaluate(() => [...document.querySelectorAll('.f12-row')].findIndex(b => b.classList.contains('sel')) === 1), 'D-pad down moves the selection');
+    await pg.evaluate(() => { window.__dp[13] = true; }); await pg.waitForTimeout(300); await pg.evaluate(() => { window.__dp[13] = false; }); await pg.waitForTimeout(80);
+    check(await pg.evaluate(() => [...document.querySelectorAll('.f12-row')].findIndex(b => b.classList.contains('sel')) === 1), 'D-pad down moves the selection ' + await pg.evaluate(() => JSON.stringify({ rows: document.querySelectorAll('.f12-row').length, sel: [...document.querySelectorAll('.f12-row')].findIndex(b => b.classList.contains('sel')), panel: G.openPanel, state: G.state, open: FESTIVALS12.lanternUi && FESTIVALS12.lanternUi.open })));
     await pg.evaluate(() => { window.__dp[1] = true; }); await pg.waitForTimeout(150);
     check(await pg.evaluate(() => G.openPanel !== 'p12f_lanterns' && G.state === 'play'), 'pad B steps back');
     await pg.evaluate(() => { delete navigator.getGamepads; });

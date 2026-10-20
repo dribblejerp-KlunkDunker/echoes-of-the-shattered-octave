@@ -104,7 +104,7 @@ const HUNTERS13 = (() => {
   const here = () => (hasG() ? G.mapId : null);
   const reduced = () => !!(typeof GFX !== 'undefined' && (GFX.reduceMotion || GFX.reducedMotion));
   const calm = () => !!(typeof GFX !== 'undefined' && GFX.noFlash);
-  const scaresOK = () => { try { return !(typeof NERVES13 !== 'undefined' && NERVES13 && typeof NERVES13.scaresAllowed === 'function') || !!NERVES13.scaresAllowed(); } catch (e) { return true; } };
+  const scaresOK = () => { try { return !(typeof window !== 'undefined' && window.NERVES13 && typeof window.NERVES13.scaresAllowed === 'function') || ![false, 'off'].includes(window.NERVES13.scaresAllowed()); } catch (e) { return true; } };
 
   // ---- strings (every one listed in P13-HUNTERS/TEXT.md, French in tools/i18n/p13-hunters.tsv) [PROPOSED] --------
   const TXT = {

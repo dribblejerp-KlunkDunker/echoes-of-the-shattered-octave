@@ -338,6 +338,7 @@ const QUARRY_ENTITIES = [
       out.route = { legs: route.length, length: +len.toFixed(1), ms: +pathMs.toFixed(1) };
 
       // the hound that stalls: north of the crag, the player south of it, everyone else hidden
+      if (window.HUNTERS13) HUNTERS13.setSwitch('trail', false);   // this checks the chase's own route-finding; Phase 13 scent trails (a hound with no sight follows where you walked) are tested in hunters13
       const chase = (useOriginal, hx, hy, px, py, mapId, seconds, stopAt) => {
         go(mapId, px, py, -Math.PI / 2); G.tod = 0.45;
         const h = hydrate({ kind: 'enemy', type: 'hound', x: hx, y: hy }); h.state = 'chase'; h.alertT = 8; h._tgSeen = true; G.ents.push(h);
