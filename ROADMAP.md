@@ -174,6 +174,8 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 
 Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
 
+**Phase 13 — the Hush comes closer** (delivered; items marked (P13); see the Phase 13 verification)
+
 **Phase 12 — tools of the trade, and the festivals** (delivered; items marked (P12); see the Phase 12 verification)
 
 **Phase 11 — feedback and feel** (delivered; items marked (P11) below; see the Phase 11 verification)
@@ -202,9 +204,9 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[x]` Hit-direction marker (complements the sound ripples) (P11) · `[x]` Optional enemy health bars (P11) · `[x]` Optional damage numbers (P11) · `[x]` Stillness tint at the screen edge (P11)
 
 **Animation**
-- `[ ]` Spreading Light-glass in story events · `[ ]` Glowing root veins near the Anchor-roots · `[~]` Crows that gather at bodies (crows exist, js/smalllife.js)
+- `[ ]` Spreading Light-glass in story events · `[ ]` Glowing root veins near the Anchor-roots · `[x]` Crows that gather at bodies (P13)
 - `[ ]` NPCs hood up in rain, huddle by fires in cold · `[ ]` Swaying coats and capes · `[x]` Cold breath at night and in cold areas (P11)
-- `[ ]` Hounds sniffing your trail · `[ ]` The Hushwardens' grey muffling wave · `[x]` Weapon trails on fast swings (P11) · `[x]` Hit-stop on critical hits (P11)
+- `[x]` Hounds sniffing your trail (P13) · `[x]` The Hushwardens' grey muffling wave (P13) · `[x]` Weapon trails on fast swings (P11) · `[x]` Hit-stop on critical hits (P11)
 - `[~]` Kestrel flight scene between Parts Two and Three (flyovers exist, js/sky.js) · `[x]` Level-up flourish with rising notes (P11) · `[x]` Quest-complete banner (P11)
 - `[x]` Loot flying to the inventory button (P11) · `[x]` Coins counted out in shops (P11) · `[x]` Page turns in books and the logbook (P11) · `[ ]` Sitting, eating and drinking in the tavern
 
@@ -225,8 +227,8 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[ ]` Synod territory spreading on the world map · `[x]` "Previously..." recap on load (P11)
 
 **Horror**
-- `[ ]` Whispers from behind at high Dissonance (with the meter above) · `[ ]` Lights dying one by one · `[ ]` Night terrors after resting somewhere unsafe
-- `[ ]` A haunted house in Oakhaven · `[ ]` The Unrung Bell at night · `[ ]` A jump-scare toggle
+- `[x]` Whispers from behind at high Dissonance (with the meter above) (P13) · `[x]` Lights dying one by one (P13) · `[x]` Night terrors after resting somewhere unsafe (P13)
+- `[x]` A haunted house in Oakhaven (P13) · `[x]` The Unrung Bell at night (P13) · `[x]` A jump-scare toggle (P13)
 
 **New areas and content**
 - `[ ]` The Chlorophyll Flume side area · `[ ]` An underwater dungeon beneath Whisper-Grove · `[ ]` Heists: a Synod cathedral, the Consortium's quarry
@@ -235,6 +237,15 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 **Technical**
 - `[ ]` A sharper renderer with the pixel look kept · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
 - `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[x]` Performance overlay (frame rate, memory) (P11)
+
+### Phase 13 "The Hush comes closer" verification
+- **How it was built.** Four parallel teams (nerves, night, house, hunters), then integration; merged to main with #21.
+- **Nerves (js/nerves13.js).** Jump scares setting (Off / Gentle / Full) that every other module reads; whispers from behind at Dissonance above 55 (Dread on); dying lights in five corridors.
+- **Night (js/night13.js).** Night terrors after unsafe rest (never in towns, inns, camps, near bosses); the Unrung Bell on some nights (always before the Rite), x1.25 hounds that night; stops after the Greening.
+- **House (js/house13.js).** The Tarrows' house: Nan Tarrow's unfinished count, settled with the kettle, the fork and a held pitch, and a name. No combat.
+- **Hunters (js/hunters13.js).** Scent trails (hounds follow where you walked at half speed; water, fire, damper jars and strong smells break it), the Hushwardens' grey wave, crows at bodies whose scattering can alert foes.
+- **Integration fixes.** One shared lookup of the scare setting; the grey wave honours Off; the bell's duck returns the sound bus to its resting level; older tests adjusted for scent trails and timing races.
+- **Tests.** New suites nerves13, night13, house13, hunters13; all 79 suites pass on the merged tree (several real-time checks are load-sensitive and pass on rerun).
 
 ### Phase 12 "Tools of the trade" verification
 - **How it was built.** Five parallel teams (arms, kit, rigging, songcraft, festivals), then integration on phase12-tools.

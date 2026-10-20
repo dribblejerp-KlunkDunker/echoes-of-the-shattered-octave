@@ -52,6 +52,19 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 13: the Hush comes closer
+
+| | |
+|---|---|
+| ![The Tarrows' house](screenshots/p13-wenna.jpg) | ![The nursery](screenshots/p13-nursery.jpg) |
+| A haunted house in Oakhaven: Wenna Marl asks you into the Tarrows' empty house. | A child's counting that always stops at seven. |
+| ![Lights dying](screenshots/p13-lights.jpg) | ![The sleep breaks](screenshots/p13-wake.jpg) |
+| In five long corridors the torches ahead go out one by one. | Rest somewhere unsafe at night and the sleep can break. |
+| ![A hound on your trail](screenshots/p13-hound.jpg) | ![The grey wave](screenshots/p13-wave.jpg) |
+| Hounds that lose sight of you follow your trail; water and fire break it. | A Hushwarden's muffle drains the colour and the sound. |
+
+Also: a Jump scares setting (Off / Gentle / Full), whispers from behind at high Dissonance, the Unrung Bell at night, and crows at bodies that scatter noisily.
+
 ### Phase 12: tools of the trade, and the festivals of the Reach
 
 | | |
