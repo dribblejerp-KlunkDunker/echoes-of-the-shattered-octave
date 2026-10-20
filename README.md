@@ -52,6 +52,19 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 18: technical
+
+| | |
+|---|---|
+| ![Crisp panel text](screenshots/p18-gpu-hud.jpg) | ![The daily dungeon](screenshots/p18-daily.jpg) |
+| The GPU compositor: the panel text drawn at your screen's resolution. | A daily challenge dungeon, the same for everyone on the day. |
+| ![The daily challenge](screenshots/p18-daily-panel.jpg) | ![A day's result](screenshots/p18-daily-result.jpg) |
+| Three floors, a fixed kit, a score and a share code. | Your result, checked against that day's dungeon. |
+| ![A ghost](screenshots/p18-ghost.jpg) | ![Watch a ghost](screenshots/p18-ghost-watch.jpg) |
+| Your best run against a boss replays beside you. | Watch your best run from the boss's trophy. |
+
+Also: the game installs as an app and plays offline after the first visit, with an update notice that waits until you're out of a fight.
+
 ### Phase 17: beyond Book One (extras)
 
 | | |

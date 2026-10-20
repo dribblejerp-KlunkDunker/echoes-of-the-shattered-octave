@@ -188,6 +188,8 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[ ]` Phones as they are: no separate phone mode (owner's call: the graphics are light enough). The guest uses the game's existing touch controls and presets; the phase only checks that joining and playing work in a phone browser.
 - Owner's decisions: can the guest also host from a phone (performance)? Should the guest be able to make story choices on their turn? (Defaults: host on a computer; host decides.)
 
+**Phase 18 — technical** (delivered; items marked (P18); see the Phase 18 verification)
+
 **Phase 17 — beyond Book One** (delivered as marked extras; items marked (P17); see the Phase 17 verification)
 
 **Phase 16 — new ground** (delivered; items marked (P16); see the Phase 16 verification)
@@ -257,8 +259,16 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[x]` The Long Night survival event (P17, an extra) · `[x]` A trip to Port Cantabile (P17, an extra) · `[x]` A prologue after the ending (P17: "The River Gate", Book Four's return to Oakhaven; see the Phase 17 verification) · `[x]` The Kestrel as an upgradable home base with crew (P16)
 
 **Technical**
-- `[~]` A sharper renderer with the pixel look kept (P14: the Ultra and Cinematic presets, view distance to 4x with sky-matched haze and far LOD; a WebGL renderer remains for a later phase — see the Project doc "Echoes of the Shattered Octave: Graphics Upgrade and View-Distance Roadmap") · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
+- `[x]` A sharper renderer with the pixel look kept (P14: Ultra and Cinematic presets, view distance to 4x; P18: a WebGL2 compositor in front of the CPU raycaster: integer upscale, HUD text at device resolution, grade/bloom/the Cinematic loop in shaders, canvas fallback; real-GPU timings still to be measured) · `[x]` Installable offline app from GitHub Pages (P18; the owner turns Pages on: Settings → Pages → Source: GitHub Actions) · `[x]` Daily challenge dungeon (P18) · `[x]` Ghost replays of boss runs (P18)
 - `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[x]` Performance overlay (frame rate, memory) (P11)
+
+### Phase 18 "Technical" verification
+- **How it was built.** Four parallel teams (gpu, pwa, daily, ghost), a rework of the ghost figure, then integration on phase18-tech (which also carries Phase 17 and the Phase 16 canon rulings).
+- **GPU (js/gpu18.js).** A WebGL2 compositor wraps render(): the CPU raycaster's frame, material and depth buffers are uploaded as textures and presented with an integer nearest-neighbour upscale; the HUD and everything drawn over the view go to a device-resolution canvas, so Medium's panel text is crisp; post.js's grade and bloom and cinema14's full-resolution loop run in shaders (bit-identical to the CPU path in seven reference scenes). Auto-on only with hardware WebGL2; Options switch; canvas fallback on any error or lost context; Original never uses it.
+- **PWA (js/pwa18.js, sw.js, manifest.webmanifest, tools/pwa/, .github/workflows/pages.yml).** Installable; offline after the first visit (195 core files precached, music and voices cached on first play or by an Options button); an update notice that never interrupts a fight or a hardcore run; optional "Keep saves on this device" (off by default; never hardcore saves or extras); a GitHub Actions workflow publishes the game to GitHub Pages. `node tools/pwa/precache.js` regenerates the file list and the test fails if it is stale.
+- **Daily (js/daily18.js).** A three-floor dungeon generated from the UTC date (same everywhere), early-game enemies only, a fixed kit, a score, a local table and a share code checked against that day's dungeon; its own title button; isolated like the extras (EXTRAS17's `hidden` option); races your best daily ghost.
+- **Ghost (js/ghost18.js).** Every boss fight is recorded; your best run per boss replays as a translucent figure in your likeness; Watch from the boss trophies; ghost codes to share; gameplay identical with ghosts on or off.
+- **Tests.** New suites gpu18, pwa18, daily18, ghost18; the full run's results are in the Phase 18 PR.
 
 ### Phase 17 "Beyond Book One" verification
 - **How it was built.** Four parallel teams (extras, prologue, cantabile, longnight), the Extras framework merged first so the others built on the real API, then a graphics-polish team over the three extras, then integration on phase17-beyond. Everything is set after Book One and reached only from the Extras menu.
