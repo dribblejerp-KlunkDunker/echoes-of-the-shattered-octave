@@ -16,8 +16,9 @@
 //  4. Kaelen sharpens his blade at the camp and the hut (strokes, a tiny spark
 //     that No-flash removes); anyone standing by a campfire/hearth leans in
 //     with warming hands.
-//  Art is procedural STAND-IN work (a repainted copy of the existing Kaelen
-//  sprite and a few hand-placed dots); painted frames can replace it later.
+//  Art: Phase 20 FOLK frames (flinch, stoop, two limp steps, Kaelen's chest-hold)
+//  re-posed from the companions' own painted sprites (see "the painted frames");
+//  the squash/skew above stays on top of them, much smaller.
 //  Switch: GFX.companionLife (default true). With it off the module does
 //  nothing at all. GFX.reduceMotion calms flinches, limp bobbing, the throb,
 //  and the sharpening; GFX.noFlash removes sparks and keeps rings steady;
@@ -38,51 +39,136 @@ const COMPANIONS_FX = (() => {
   const clamp01 = x => x < 0 ? 0 : x > 1 ? 1 : x;
   const nowS = () => (typeof performance !== 'undefined' ? performance.now() : Date.now()) / 1000;
 
+  // ---------------------------------------------------------------- Phase 20 FOLK: the painted frames
+  // Flinch, stoop, limp (two steps) for Kaelen and Lyra, and Kaelen's chest-hold, built ONCE from their own painted
+  // sprites: no new paint is invented for bodies, the existing pixels are re-posed. Stoop/flinch/limp use a smooth
+  // displacement field (the torso folds over the waist, the head bows into the collar, the bad leg lifts), so there
+  // are no seams or holes; the chest-hold lifts the real glass forearm as one rigid piece, turned about the elbow and
+  // foreshortened, and mends the coat behind where it hung. Every frame keeps the size and anchors of the sprite it
+  // comes from, so hit boxes and placement are unchanged. Deterministic (no random numbers).
+  const isGlass = p => { if ((p >>> 24) < 160) return false; const r = p & 255, g = (p >>> 8) & 255, b = (p >>> 16) & 255; return g > r + 25 && b > r + 25 && Math.max(g, b) >= 110; };
+  const smooth = (a, b, x) => { const t = clamp01((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+  // dest pixel (x, y) takes the source pixel at fn(x, y) (nearest)
+  function warp(src, fn) {
+    const w = src.w, h = src.h, sd = src.data, d = new Uint32Array(w * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const q = fn(x, y), sx = Math.round(q[0]), sy = Math.round(q[1]);
+      if (sx >= 0 && sy >= 0 && sx < w && sy < h) d[y * w + x] = sd[sy * w + sx];
+    }
+    return d;
+  }
+  // body proportions as fractions of the sprite height (both companions are drawn to the same 160px figure)
+  const BODY = {
+    kaelen: { waist: 0.40, neck: 0.165, shoulder: 0.2, hip: 0.56, knee: 0.78, lean: -1 },
+    lyra: { waist: 0.40, neck: 0.17, shoulder: 0.16, hip: 0.56, knee: 0.8, lean: 1 },
+  };
+  // the field for a pose. drop: how far the top of the figure comes down; bow: extra head drop into the collar;
+  // lean: sideways shift at the top (+ = viewer's right); rise: shoulders hunched up; leg: {side, lift, bend}
+  function poseField(src, B, o) {
+    const w = src.w, h = src.h, W = B.waist * h, N = B.neck * h, SH = B.shoulder * h, HIP = B.hip * h, cx = (src.cx != null ? src.cx : w / 2);
+    return (x, y) => {
+      let sx = x, sy = y;
+      if (y < W + 6) {
+        const t = clamp01((W + 6 - y) / (W + 6));
+        sy -= (o.drop || 0) * t;
+        sx -= (o.lean || 0) * Math.pow(t, 1.4);
+        sy -= (o.bow || 0) * smooth(N + 3, N - 5, y);                        // the head sinks into the collar
+        sy += (o.rise || 0) * smooth(SH - 10, SH, y) * smooth(SH + 22, SH + 8, y);   // shoulders hunch up
+      }
+      const L = o.leg;
+      if (L && y > HIP - 4) {
+        const side = L.side > 0 ? smooth(cx - 3, cx + 3, x) : smooth(cx + 3, cx - 3, x);
+        const k = smooth(HIP - 4, h - 1, y) * side;
+        sy += (L.lift || 0) * k;                                             // the bad leg drawn up: foot barely down
+        sx += (L.in || 0) * k * (L.side > 0 ? 1 : -1);
+      }
+      if (o.sink) sy -= o.sink * smooth(HIP + 10, HIP - 10, y);              // whole upper body dips onto a leg
+      return [sx, sy];
+    };
+  }
+  const POSES = {
+    stoop: { drop: 7, bow: 4, lean: 3.5 },
+    flinch: { drop: 3, bow: 4, lean: -7, rise: 3 },
+    limpA: { drop: 6, bow: 3, lean: -2.5, leg: { side: 1, lift: 7, in: 1.5 } },        // the drag: weight on the good leg
+    limpB: { drop: 6, bow: 4, lean: 5.5, sink: 4, leg: { side: 1, lift: 2, in: 0 } },  // the dip onto the bad one
+  };
+  function addFrame(name, srcName, d) {
+    const src = Engine.sprites[srcName];
+    const sp = Engine.addSprite(name, { w: src.w, h: src.h, data: d, hs: src.hs, cx: src.cx, dy: src.dy });
+    // glowing-glass pixels, as lighting.js marks on the plain sprite
+    const mask = new Uint8Array(src.w * src.h); let any = 0;
+    for (let i = 0; i < d.length; i++) if (isGlass(d[i])) { mask[i] = 1; any++; }
+    sp._mask = any ? mask : null;
+    return sp;
+  }
+  const frames = {};
+  // which painted frame stands in for a source frame, per companion and pose
+  function poseFrame(who, pose, srcName) {
+    const key = who + '|' + pose + '|' + srcName, f = frames[key];
+    if (f === null) return null;
+    if (f && Engine.sprites[f.name] === f.sp) return f.name;
+    const src = Engine.sprites[srcName], B = BODY[who];
+    if (!src || !src.data || !B || !POSES[pose]) { frames[key] = null; return null; }
+    const P = Object.assign({}, POSES[pose]); P.lean = (P.lean || 0) * B.lean;
+    if (P.leg) P.leg = Object.assign({}, P.leg, { side: P.leg.side * B.lean });
+    const name = who + '_p20' + pose + (srcName === who ? '' : srcName.slice(who.length));
+    const sp = addFrame(name, srcName, warp(src, poseField(src, B, P)));
+    frames[key] = { name, sp };
+    return name;
+  }
+
   // ---------------------------------------------------------------- the chest-holding sprite
-  // Copy of Kaelen with the glass arm taken down from his side and bent up so
-  // the hand rests on his chest. Built once, on first use.
+  // Kaelen's own glass forearm, lifted as one piece and turned up across his body so the hand rests on his chest.
   let chestSp = null;
   function buildChest() {
     const src = Engine.sprites.kaelen; if (!src || !src.data) return null;
-    const w = src.w, h = src.h, d = new Uint32Array(src.data), sd = src.data;
-    // 1. take the arm down: everything right of the coat below the shoulder goes
-    const x0 = Math.round(w * 0.82), y0 = Math.round(h * 0.325), y1 = Math.round(h * 0.62);
-    for (let y = y0; y <= y1; y++) for (let x = x0; x < w; x++) d[y * w + x] = 0;
-    // 2. paint the bent forearm and the hand in the glass colours sampled from the old arm
-    let sr = 0, sg = 0, sb = 0, n = 0;
-    for (let i = 0; i < sd.length; i++) { const p = sd[i]; if ((p >>> 24) < 200) continue; const r = p & 255, g = (p >>> 8) & 255, b = (p >>> 16) & 255; if (g > r + 25 && b > r + 25 && g > 110) { sr += r; sg += g; sb += b; n++; } }
-    if (!n) { sr = 90; sg = 200; sb = 190; n = 1; }
-    sr /= n; sg /= n; sb /= n;
-    const ex = w * 0.83, ey = h * 0.335, hx = w * 0.58, hy = h * 0.285;   // elbow and hand, in pixels
-    const px = (x, y, k) => {
-      x |= 0; y |= 0; if (x < 0 || x >= w || y < 0 || y >= h) return;
-      const f = 0.72 + 0.5 * k, r = Math.min(255, sr * f + 40 * k * k), g = Math.min(255, sg * f + 40 * k * k), b = Math.min(255, sb * f + 36 * k * k);
-      d[y * w + x] = ((255 << 24) | (b << 16) | (g << 8) | r) >>> 0;
-    };
-    const thick = Math.max(3, w * 0.075);
-    for (let t = 0; t <= 1.0001; t += 0.01) {
-      const cx = ex + (hx - ex) * t, cy = ey + (hy - ey) * t - Math.sin(t * Math.PI) * h * 0.012;
-      for (let a = -thick; a <= thick; a += 0.5) px(cx, cy + a * 0.9, 1 - Math.abs(a) / thick);   // light along the middle, dark at the rims
+    const w = src.w, h = src.h, sd = src.data;
+    // the forearm: glass pixels below the elbow on the glass side
+    const ex = Math.round(w * 0.835), ey = Math.round(h * 0.37);              // elbow (about 50, 59)
+    const fore = new Uint8Array(w * h); let fy1 = ey;
+    for (let y = ey - 2; y < h * 0.66; y++) for (let x = Math.round(w * 0.7); x < w; x++) { const i = y * w + x; if (isGlass(sd[i])) { fore[i] = 1; fy1 = Math.max(fy1, y); } }
+    // the dark rim pixels hugging the forearm go with it
+    for (let y = ey; y <= fy1 + 1 && y < h; y++) for (let x = Math.round(w * 0.7); x < w; x++) {
+      const i = y * w + x; if (fore[i] || (sd[i] >>> 24) < 160 || x < w * 0.78) continue;
+      if ((x > 0 && fore[i - 1] === 1) || (x + 1 < w && fore[i + 1] === 1)) fore[i] = 2;
     }
-    // the hand: a flat palm with fingertips folded over the coat
-    for (let yy = -3; yy <= 3; yy++) for (let xx = -4; xx <= 4; xx++) {
-      if (xx * xx / 20 + yy * yy / 11 > 1) continue;
-      px(hx + xx, hy + yy, 0.55 + 0.4 * (1 - Math.abs(yy) / 3));
+    // 1. lift it off: clear the piece, then mend the coat behind it from the coat's own pixels to the left
+    const d = new Uint32Array(sd);
+    for (let y = ey; y < h; y++) {
+      let last = 0;
+      for (let x = 0; x < w; x++) {
+        const i = y * w + x;
+        if (!fore[i]) { if ((sd[i] >>> 24) >= 160 && !isGlass(sd[i])) last = sd[i]; continue; }
+        // inside the coat's outline (opaque coat further right too)?  then paint coat; else leave clear
+        let coatRight = false; for (let k = x + 1; k < w; k++) { const p = sd[y * w + k]; if (fore[y * w + k]) continue; if ((p >>> 24) >= 160) { coatRight = true; } break; }
+        d[i] = coatRight && last ? last : 0;
+      }
     }
-    for (let f = -2; f <= 2; f++) px(hx - 5, hy + f * 1.3, 0.2);                 // fingertips
-    const sp = Engine.addSprite('kaelen_chest', { w, h, data: d, hs: src.hs, cx: src.cx, dy: src.dy });
-    // same glowing-glass pixels as lighting.js marks on the plain sprite
-    const mask = new Uint8Array(w * h); let any = 0;
-    for (let i = 0; i < d.length; i++) { const p = d[i]; if ((p >>> 24) < 160) continue; const r = p & 255, g = (p >>> 8) & 255, b = (p >>> 16) & 255; if (g > r + 25 && b > r + 25 && Math.max(g, b) >= 120) { mask[i] = 1; any++; } }
-    sp._mask = any ? mask : null;
-    return sp;
+    // 2. the piece turned about the elbow toward the chest, foreshortened (it comes toward the viewer)
+    const hx = w * 0.6, hy = h * 0.26;                                       // where the hand comes to rest
+    const ang = Math.atan2(hy - ey, hx - ex) - Math.PI / 2, len = Math.max(1, fy1 - ey), want = Math.hypot(hx - ex, hy - ey);
+    const k = want / len, cs = Math.cos(ang), sn = Math.sin(ang);
+    const put = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const u = x - ex, v = y - ey;
+      const ur = u * cs + v * sn, vr = (-u * sn + v * cs) / k;                 // undo the turn, then the shortening
+      const sx = Math.round(ex + ur), sy = Math.round(ey + vr);
+      if (sx < 0 || sy < 0 || sx >= w || sy >= h || !fore[sy * w + sx] || vr < -1) continue;
+      d[y * w + x] = sd[sy * w + sx]; put[y * w + x] = 1;
+    }
+    // 3. a dark seam where the arm crosses the coat, so it reads in front of him
+    for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+      const i = y * w + x; if (put[i] || (d[i] >>> 24) < 160) continue;
+      if (put[i - 1] || put[i + 1] || put[i - w] || put[i + w]) { const p = d[i]; d[i] = (((p >>> 24) << 24) | ((((p >>> 16) & 255) * 0.45) << 16) | ((((p >>> 8) & 255) * 0.45) << 8) | ((p & 255) * 0.45)) >>> 0; }
+    }
+    const out = warp({ w, h, data: d }, poseField(src, BODY.kaelen, { drop: 3, bow: 2, lean: 1.5 }));   // and he curls a little round it
+    return addFrame('kaelen_chest', 'kaelen', out);
   }
   function chestSprite() {
     if (!chestSp || Engine.sprites.kaelen_chest !== chestSp) chestSp = buildChest();
     if (chestSp) chestSp.emit = GFX.emissive && chestSp._mask ? chestSp._mask : null;
     return chestSp;
   }
-
   // ---------------------------------------------------------------- party state: hit diff, hum, pose ramp
   function companionEnt() { const L = typeof G !== 'undefined' && G.ents; if (!L) return null; for (let i = 0; i < L.length; i++) if (L[i].companion) return L[i]; return null; }
   function chestWanted() {
@@ -124,9 +210,25 @@ const COMPANIONS_FX = (() => {
     let sy = e.animSY, sx = e.animSX, lift = e.animLift, skew = e.animSkew, hurt = e.animHurt;
     const inj = P && P.id === (e.sprite) ? injury(e) : 0;
     const reduce = calm(), moving = (e._spd || 0) > 0.25;
+    // Phase 20: a painted frame carries the pose when one applies (strike and song frames keep priority)
+    const who = e.sprite, a0 = e.animSprite, plain = BODY[who] && (!a0 || a0 === who + '_w1' || a0 === who + '_w2');
+    let frame = null;
+    if (plain) {
+      if (e._cHit > HIT_T * 0.3) frame = poseFrame(who, 'flinch', who);
+      else if (who === 'kaelen' && state.chest > 0) frame = null;                     // the chest-hold below
+      else if (inj > 0.3) {
+        if (moving && !reduce) {
+          if (a0) frame = poseFrame(who, a0 === who + '_w1' ? 'limpA' : 'limpB', a0);
+          else if (who === 'kaelen') frame = poseFrame(who, 'stoop', who);
+          else frame = poseFrame(who, ['limpA', 'stoop', 'limpB', 'stoop'][Math.floor((e._phase || 0) / (Math.PI / 2)) & 3], who);
+        } else frame = poseFrame(who, 'stoop', who);
+      }
+      if (frame) { e.animSprite = frame; state.frames = (state.frames || 0) + 1; const fs = Engine.sprites[frame]; if (fs) fs.emit = GFX.emissive && fs._mask ? fs._mask : null; }
+    }
+    const fk = frame ? 0.3 : 1;                                                        // the frame does most of the work
     // injury: a stoop, and a limp where one step is short and dragged
     if (inj > 0) {
-      sy *= 1 - 0.035 * inj; skew -= 0.022 * inj * (e.sprite === 'lyra' ? 1.3 : 1);
+      sy *= 1 - 0.035 * inj * fk; skew -= 0.022 * inj * fk * (e.sprite === 'lyra' ? 1.3 : 1);
       if (moving && !reduce) {
         const ph = e._phase || 0, odd = (Math.floor(ph / Math.PI) & 1) === 1, a = Math.abs(Math.sin(ph));
         lift -= 0.02 * inj * (odd ? 1 : 0.2) * a;                     // the bad leg barely leaves the ground
@@ -138,8 +240,8 @@ const COMPANIONS_FX = (() => {
     if (e._cHit > 0) {
       e._cHit -= dt;
       const u = Math.max(0, e._cHit) / HIT_T, amp = reduce ? 0.4 : 1, dir = s > 3.14 ? 1 : -1;
-      skew += dir * 0.09 * u * amp + (reduce ? 0 : 0.03 * u * Math.sin(T * 38));
-      sy *= 1 - 0.06 * u * amp; sx *= 1 - 0.03 * u * amp; lift -= 0.012 * u * amp;
+      skew += (dir * 0.09 * u * amp + (reduce ? 0 : 0.03 * u * Math.sin(T * 38))) * fk;
+      sy *= 1 - 0.06 * u * amp * fk; sx *= 1 - 0.03 * u * amp * fk; lift -= 0.012 * u * amp * fk;
       if (!GFX.noFlash) hurt = Math.max(hurt, u * (reduce ? 0.5 : 1));
     }
     // Kaelen holds his chest while the Root note hums (frames for strikes keep priority)
@@ -310,5 +412,5 @@ const COMPANIONS_FX = (() => {
   // paused, dialogue, title: no frames reach the hook, so a slow timer lets the hum die away
   if (typeof setInterval === 'function') setInterval(() => { try { if (state.hum !== 0 || state.chest !== 0) sync(); } catch (err) { /* ignore */ } }, 250);
 
-  return { state, sync, injury, chestSprite, buildChest, HIT_T, LOW, HUM_ID, chestWanted };
+  return { state, sync, injury, chestSprite, buildChest, poseFrame, POSES, BODY, HIT_T, LOW, HUM_ID, chestWanted };
 })();
