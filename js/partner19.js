@@ -668,10 +668,10 @@ const PARTNER19 = (function () {
   function toneColour(look) {
     const TN = GHOST18.TONE, cp = CALL[look.cls] || CALL[0], coat = cp[0], acc = cp[1], hair = HAIR[look.face] || HAIR[1], p = [];
     const plate = ((look.arm >> 2) & 3) === 2;
-    const body = plate ? [118, 120, 120] : coat;
+    const body = plate ? [112, 112, 106] : coat;
     p[TN.OUT] = [OUTC, 6]; p[TN.INK] = [INKC, 6];
     p[TN.LIGHT] = [mul(body, 1.22), plate ? 4 : 1]; p[TN.BASE] = [body, plate ? 4 : 1];
-    p[TN.SHADE] = [mixc(mul(body, 0.7), TROUSER, 0.55), 1]; p[TN.DEEP] = [mixc(mul(body, 0.45), BOOT, 0.6), 5];
+    p[TN.SHADE] = plate ? [[66, 64, 60], 4] : [mixc(mul(body, 0.7), TROUSER, 0.55), 1]; p[TN.DEEP] = [mixc(mul(body, 0.45), BOOT, 0.6), 5];
     p[TN.ACC] = [acc, 1]; p[TN.ACCS] = [mul(acc, 0.72), 1]; p[TN.ACCL] = [mul(acc, 1.2), 1];
     p[TN.DARK] = [[38, 30, 26], 5]; p[TN.GLINT] = [[196, 182, 140], 4];
     p[TN.HAIR] = [hair, 3]; p[TN.HAIRS] = [mul(hair, 0.72), 3]; p[TN.HAIRL] = [mixc(hair, [214, 196, 160], 0.25), 3];
@@ -744,7 +744,7 @@ const PARTNER19 = (function () {
         else if (mat === 3) k *= 1 + (hash(x, y >> 2) - 0.5) * 0.34;                         // strands
         else if (mat === 5) k *= 1 + n2 * 0.14;
         else if (mat === 2) k *= 1 + n * 0.04;
-        else if (mat === 4 && lam > 0.86) col = mixc(col, [232, 230, 220], 0.45);           // a glint on steel
+        else if (mat === 4) { k *= 1 + n2 * 0.12 + (hash(x >> 2, y >> 1) - 0.5) * 0.1; if (lam > 0.86) col = mixc(col, [232, 230, 220], 0.45); }   // worn steel, a glint
       }
       const r = Math.max(0, Math.min(255, Math.round(col[0] * k))), g = Math.max(0, Math.min(255, Math.round(col[1] * k))), b = Math.max(0, Math.min(255, Math.round(col[2] * k)));
       data[i] = ((255 << 24) | (b << 16) | (g << 8) | r) >>> 0;
