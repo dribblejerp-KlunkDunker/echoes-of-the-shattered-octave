@@ -880,7 +880,7 @@ BEAST20A.SPECIES.deacon = (() => {
     back(P, S) {
       P.tex(...ROBE, B.mir(P.w, S.stole), { mul: 0.95 });
       B.hoodOver(P, N, S.face, B.tones(N, [[25, 18], [30, 14], [40, 25], [33, 12], [43, 34], [28, 16], [36, 15]]), B.tones(N, [[22, 30]], 0.6)[0]);
-      P.light(() => 0.82);
+      P.light(() => 0.76);
     },
   });
 })();
@@ -1074,7 +1074,7 @@ BEAST20A.SPECIES.dirge = (() => {
       const c = B.mir(P.w, S.core); P.heal(c, -13, 0); P.heal(c, 13, 0);
       const r = B.mir(P.w, S.ring); P.heal(r, 0, 30);
       P.lightIn(r, (x, y) => 1.0 - 0.35 * (y - r[0][1]) / 26);
-      P.light(() => 0.82);
+      P.light(() => 0.76);
     },
   });
 })();
@@ -1176,7 +1176,7 @@ BEAST20A.SPECIES.broodmother = (() => {
       // no mouths behind: bare veined sac, carried down from the shoulders of it
       const m = B.mir(P.w, S.pods); P.heal(m, 0, -36);
       P.heal([[m[0][0] + 2, m[0][1] + 34], [m[1][0] - 2, m[0][1] + 34], [m[2][0], m[2][1]], [m[3][0], m[3][1] + 2], [m[4][0], m[4][1] + 2], [m[5][0], m[5][1]]], 0, -34);
-      P.light(() => 0.84);
+      P.light(() => 0.78);
     },
     props(S) { return [{ canvas: S._legs, rx: 0, y: 0, ax: S.A, X: 0, Z: -2, minK: 0.86 }]; },
   });
@@ -1223,7 +1223,7 @@ BEAST20A.SPECIES.hound = (() => {
       // the ridge of bristles along the spine, seen end-on
       P.cut(N, 92, 14, 40, 22, A - 20, 22, { mul: 1.0 });
       P.cut(N, 0, 40, 56, 92, A, 40, { rot: -0.47, px: 52, py: 50 });
-    }, { cx: A * k / W, light: () => 0.86 });
+    }, { cx: A * k / W, light: () => 0.8 });
   }
   const recipe = (v, p) => {
     if (v === 0) return Engine.sprites[N + '_a2'];          // head-on it is the painting of the lunge
@@ -1301,7 +1301,7 @@ BEAST20A.SPECIES.briarsprite = (() => {
     const sp = Engine.sprites[N + p] || Engine.sprites[N];
     const P = B.painter(sp.w, sp.h); P.g.imageSmoothingEnabled = false;
     if (v === 2) P.g.drawImage(B.srcCanvas(N + p), 0, 0); else paint(P.g, p, ANG[v]);
-    if (v >= 3) P.light(() => 0.86);
+    if (v >= 3) P.light(() => (v === 4 ? 0.78 : 0.86));
     return B.finish(P, sp, 1, 0.5);
   };
   recipe.front0 = true;

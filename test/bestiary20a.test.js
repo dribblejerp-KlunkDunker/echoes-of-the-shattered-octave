@@ -160,13 +160,24 @@ const SIDE_ON = ['briarsprite', 'fretcrawler', 'hound'];
       GFX.p20_beastA = false; for (let i = 0; i < 10; i++) Engine.render(G.ents, G.tod); GFX.p20_beastA = true;
       let on = 1e9, off = 1e9;
       for (let r = 0; r < 12; r++) { on = Math.min(on, burst()); GFX.p20_beastA = false; off = Math.min(off, burst()); GFX.p20_beastA = true; }
-      return { on: +on.toFixed(2), off: +off.toFixed(2), n: added.length };
+      // how much screen the creatures cover each way (a head-on hound is a bigger shape than its flank seen end-on)
+      const area = () => { Engine.render(G.ents, G.tod); let a = 0; for (const e of added) if (e._screen) a += (e._screen.x1 - e._screen.x0) * (e._screen.y1 - e._screen.y0); return a; };
+      const aOn = area(); GFX.p20_beastA = false; const aOff = area(); GFX.p20_beastA = true;
+      // and the chooser's own cost per call
+      let t0 = performance.now(); for (let i = 0; i < 2000; i++) for (const e of added) animDirectionalSprite(e); const chooseOn = (performance.now() - t0) / 2000 / added.length * 1000;
+      GFX.p20_beastA = false; t0 = performance.now(); for (let i = 0; i < 2000; i++) for (const e of added) animDirectionalSprite(e); const chooseOff = (performance.now() - t0) / 2000 / added.length * 1000; GFX.p20_beastA = true;
+      return { on: +on.toFixed(2), off: +off.toFixed(2), n: added.length, areaRatio: +(aOn / aOff).toFixed(3), chooseUs: [+chooseOn.toFixed(2), +chooseOff.toFixed(2)] };
     }, MINE);
-    assert.ok(perf.on - perf.off < Math.max(1.0, perf.off * 0.08), 'frame cost unchanged (' + JSON.stringify(perf) + ')');
+    // no work per frame beyond looking a view up: the render may only cost what the drawn area costs
+    assert.ok(perf.chooseUs[0] - perf.chooseUs[1] < 5, 'the sprite chooser adds microseconds at most (' + JSON.stringify(perf.chooseUs) + ')');
+    assert.ok(perf.areaRatio < 1.15, 'the views cover about the same screen as the stand-ins (' + perf.areaRatio + ')');
+    // wall-clock on a shared build machine swings by several ms between bursts (measured per species it goes
+    // negative), so this bound only catches a real regression; the two checks above are the precise ones
+    assert.ok(perf.on <= perf.off * 1.3 + 1, 'frame cost in line with the stand-ins (' + JSON.stringify(perf) + ')');
     await page.addStyleTag({ content: '#msgs { display: none !important; }' });
     await page.waitForTimeout(800);
     await page.locator('#view').screenshot({ path: path.join(SHOTS, 'bestiary20a-scene.png') });
-    console.log('PASS scene: 12 species in play, frame ' + perf.on + ' ms with the views, ' + perf.off + ' ms with stand-ins');
+    console.log('PASS scene: 12 species in play, frame ' + perf.on + ' ms with the views, ' + perf.off + ' ms with stand-ins (area ratio ' + perf.areaRatio + ', chooser ' + perf.chooseUs.join('/') + ' us)');
     assert.deepEqual(errors, [], 'no page errors');
     console.log('PASS no page errors; screenshot ' + path.join(SHOTS, 'bestiary20a-scene.png'));
   } finally { await browser.close(); }
