@@ -19,28 +19,28 @@
 //  counts the ship as SAFE (NIGHT13.isSafePlace): no terror, ever.
 //  THE STASH is the existing house strongbox (p.houseStorage, use house_chest), retitled while aboard: same chest as Cooper's Row.
 //  THE TABLE opens the existing world-map panel (travel.js). Journeys begun at the table take their bonuses from the ship:
-//    minutes: envelope patch x0.85 (rounded to 5 min, min 5);  ambush chance (travelRisk): x(1-0.35 Mags) x(1-0.15 chart room).
+//    minutes: envelope patch x0.85 (rounded to 5 min, min 5);  ambush chance (travelRisk): x(1-0.35 the lookout) x(1-0.15 chart room).
 //  COOKING aboard: a lit stove (upgrade) carries use p15_cook, so js/hearth15.js's "Cook something" works; TROPHIES: the rail
 //  upgrade's six pegs hang hearth15's boss trophies (own flags p16k_rp0..5; a trophy hangs aboard or at home, never both).
 //
-//  THE UPGRADES (one table, UPG above; prices in sovereigns + existing items; Pennick takes a fifth off the gold):
+//  THE UPGRADES (one table, UPG above; prices in sovereigns + existing items; the engineer takes a fifth off the gold):
 //    envelope  60 + 3 Silver Proctor-Mesh + 1 Bell-Bronze Scrap   map-table journeys take 85% of the time        silk patch hung at the mast
 //    lamps     50 + 1 Light-Glass Shard + 2 Scrap                  rest 6 h not 8; passage ambient +0.10         six glass lanterns glow
 //    stove     45 + 4 Scrap                                        cooking aboard; Nell can bake                 cold stove becomes a lit one
 //    rail      35 + 2 Scrap                                        six trophy pegs                               pegged board + pegs
 //    bunks     40 + 2 Mesh + 1 Scrap                               rest also mends injuries                      four blanketed bunks
 //    chart     70 + 1 Mesh + 1 Shard                               map-table ambush chance x0.85                 awning, wall charts, sextant
-//    tank     140 + 6 Scrap + 4 Mesh + 2 Shard + 2 Governor-Gear   the two-mooring hop (needs Pennick, envelope, tank_patched)   a third, burnished tank
+//    tank     140 + 6 Scrap + 4 Mesh + 2 Shard + 2 Governor-Gear   the two-mooring hop (needs the engineer, envelope, tank_patched)   a third, burnished tank
 //  Materials are never out of reach: the chandler's locker in the hold sells Scrap 12, Mesh 18, Gear 30, Shard 55.
 //
-//  THE CREW [PROPOSED for Book One; the game's own text wins]. Mags Tennant (first mate) and Tobiah Marsh (second engineer) are
-//  already in the game; Pennick is the FIRST engineer Tobiah is second to, who has been below the whole time. Nobody is
-//  recruited by force: each has a short beat in dialogue, a place aboard, a daily line and one small effect.
-//    Mags     (deaf, lip-reads, signs)  part3+; pay 30 sovereigns for a new lens   ambush chance x0.65 on map-table journeys
-//             Her lines are italic with a [signs] note. She answers ONLY when she can see your face: stand in front of her
-//             (within 7 cells, her facing within ~78 degrees of you). From behind she does not hear you; after 4 s of you
-//             standing within 3.4 cells she feels the deck move and turns round.
-//    Pennick  (engineer, pessimist)     tank_patched and the envelope fitted          gold cost of every upgrade x0.80; builds the new tank
+//  THE CREW [PROPOSED for Book One; the game's own text wins]. Tobiah Marsh (second engineer) is already in the game. The
+//  lookout and the engineer are UNNAMED crew (author's ruling 2026-10-20: titles, not names; Mags and Pennick are Book Two
+//  people and do not appear here). The engineer is the FIRST engineer Tobiah is second to, who has been below the whole
+//  time. Their internal ids stay 'mags' and 'pennick' (CREW bits, p16k_seen bits, NPC ids p16k_mags / p16k_pennick) so
+//  saves that recruited them still load. Nobody is recruited by force: each has a short beat in dialogue, a place aboard,
+//  a daily line and one small effect.
+//    lookout  (keeps her eye to the glass) part3+; pay 30 sovereigns for a new lens   ambush chance x0.65 on map-table journeys
+//    engineer (dry, pessimist)          tank_patched and the envelope fitted          gold cost of every upgrade x0.80; builds the new tank
 //    Nell     (the mill; only if pim_safe) the stove is fitted                         once a game day, one Hearth Bread
 //    Hob      (the tanner; only if twins_named, i.e. he climbed) the lanterns fitted   once a game day, +35 condition to the readied weapon
 //    (Pim Carder, with his mother, sits in the bunk room when pim_safe: the existing NPC, no effect.) Nobody who dies in the
@@ -72,17 +72,15 @@ const KESTREL16 = (function () {
   // ---------------------------------------------------------------- balance, one table (the report repeats it)
   const B = {
     ENV_TIME: 0.85,        // Envelope patch: journeys begun at the map table take 85% of the time (rounded to 5 min, min 5)
-    MAGS_RISK: 0.35,       // Mags on lookout: ambush chance x (1 - 0.35)
+    MAGS_RISK: 0.35,       // the lookout on watch: ambush chance x (1 - 0.35)
     CHART_RISK: 0.15,      // Chart room: ambush chance x (1 - 0.15)   (the two multiply: 0.65 x 0.85 = 0.5525)
-    DISCOUNT: 0.20,        // Pennick: the gold cost of every upgrade x 0.80 (all base prices are multiples of 5, so exact)
+    DISCOUNT: 0.20,        // the engineer: the gold cost of every upgrade x 0.80 (all base prices are multiples of 5, so exact)
     REST_HOURS: 8, LAMP_HOURS: 6,
-    LENS: 30,              // what Mags asks for a new glass
+    LENS: 30,              // what the lookout asks for a new glass
     MEND: 35,              // Hob: +35 condition to the readied weapon, once a game day (the whetstone's number)
     LOAF: 1,               // Nell: one Hearth Bread, once a game day
     HOP_HOURS: 4,          // flying the Kestrel between the two moorings
     CHASE: 14,             // a hostile this close and chasing: nobody climbs a rope with that behind them
-    SIGHT: 0.2,            // Mags sees your face when dot(her facing, direction to you) > this, within SIGHT_R
-    SIGHT_R: 7,
     AMB_BELOW: 0.34, AMB_LAMPS: 0.10,
     FILL: [17, 12, 4],      // Cinematic only: warm fill light at the middle of each dark room below (its haze and grade read darker)
   };
@@ -95,7 +93,7 @@ const KESTREL16 = (function () {
   // rail       3    35   2 Scrap                                          six trophy pegs aboard (hearth15 trophies)    a pegged board on the mess bulkhead
   // bunks      4    40   2 Proctor-Mesh, 1 Scrap                          rest aboard also mends injuries               four more bunks, blanketed
   // chart      5    70   1 Proctor-Mesh, 1 Light-Glass Shard               map-table ambush chance x0.85                 an awning, wall charts and a sextant
-  // tank       6   140   6 Scrap, 4 Mesh, 2 Shard, 2 Governor-Gear         fly between the two moorings (Pennick, tank patched, envelope fitted)   a third, burnished tank
+  // tank       6   140   6 Scrap, 4 Mesh, 2 Shard, 2 Governor-Gear         fly between the two moorings (the engineer, tank patched, envelope fitted)   a third, burnished tank
   const UPG = [
     { id: 'envelope', bit: 0, gold: 60, mats: [['v_mesh', 3], ['v_scrap', 1]] },
     { id: 'lamps', bit: 1, gold: 50, mats: [['shard', 1], ['v_scrap', 2]] },
@@ -113,8 +111,6 @@ const KESTREL16 = (function () {
   // ---------------------------------------------------------------- the text [PROPOSED] (all of it; see TEXT.md)
   const LIST = [];
   const S = (t) => { LIST.push(t); return t; };
-  // Mags signs: every line of hers is italic with a sign note, registered whole so the French file matches what is shown
-  const SG = (t) => S('<i>[signs] ' + t + '</i>');
   const TX = {
     opts: {
       label: S('Aboard the Drift-Kestrel'),
@@ -124,7 +120,7 @@ const KESTREL16 = (function () {
     mapBelow: S('The Drift-Kestrel, below-decks'),
     board: {
       wgTitle: S('The mast-ladder'),
-      wgBody: S('A hundred feet of rope up into the lilac mist, and the Kestrel\'s keel above it, lift-tanks murmuring one note. At the rail a shape that might be Mags is looking down, and has probably been looking for some time.'),
+      wgBody: S('A hundred feet of rope up into the lilac mist, and the Kestrel\'s keel above it, lift-tanks murmuring one note. At the rail a shape that might be the lookout is looking down, and has probably been looking for some time.'),
       up: S('Climb up to the deck.'),
       on: S('Climb, and go on to the Deep Woods.'),
       no: S('Not yet.'),
@@ -162,7 +158,7 @@ const KESTREL16 = (function () {
       tankB: S('Number-two lift-tank, closed with weaverling silk and an Office valve. It hums a little flat.'),
       tankC: S('The new lift-tank, built up from the cutter\'s. The brass has been rubbed until it looks wet.'),
       gauge: S('A pressure gauge. The needle has said forty since Oakhaven.'),
-      bench: S('Pennick\'s bench. Every tool has a chalk outline, and every outline is occupied.'),
+      bench: S('The engineer\'s bench. Every tool has a chalk outline, and every outline is occupied.'),
       stoveCold: S('A cast-iron stove with a cold firebox and a pot hung on it. Somebody has swept it. Nobody has lit it.'),
       stove: S('The galley stove, drawing well. The pipe goes up through the deck and out into the mist.'),
       shelf: S('Tinned goods, a bag of grey flour, and a jar with a label that says only HONEY, in a child\'s hand.'),
@@ -173,7 +169,7 @@ const KESTREL16 = (function () {
       crates: S('Crates in straw. The hold murmurs, softly. Vane has stopped coming down.'),
       stash: S('The stash chest. What goes in weighs nothing on the road, and it is the same chest as the one on Cooper\'s Row.'),
       locker: S('The chandler\'s locker: a rack of scrap, mesh and gear, with a price chalked beside each, in three different hands.'),
-      board: S('The repair list, in Vane\'s hand, nailed to a stanchion. Most of it is Pennick\'s opinion.'),
+      board: S('The repair list, in Vane\'s hand, nailed to a stanchion. Most of it is the engineer\'s opinion.'),
       railBoard: S('A plank of Reach timber with brass pegs. It rings faintly when the ship moves.'),
       pegBare: S('A bare peg on the trophy rail. Something won could hang here.'),
       lantern: S('A Light-glass lantern. It hums at five twenty-eight, very faintly, and it is warm.'),
@@ -185,13 +181,13 @@ const KESTREL16 = (function () {
     table: {
       title: S('The map table'),
       body: S('Charts pinned flat under four brass weights: the Reach on one side, the Woods on the other, and the ring from a cup over the Hedge.'),
-      mags: S('<i>Mags has pencilled a small, neat cross at the edge of each road she does not like.</i>'),
+      mags: S('<i>The lookout has pencilled a small, neat cross at the edge of each road she does not like.</i>'),
       plan: S('Plan a journey from the table.'),
       flyCamp: S('Fly the Kestrel to the camp in the Deep Woods.'),
       flyCourt: S('Fly the Kestrel to the Sunken Court.'),
       back: S('Step back.'),
-      hopMsgCamp: S('Pennick holds the number-two tank at pressure for four hours, and the Kestrel makes the hop to the Deep Woods and settles in the willows.'),
-      hopMsgCourt: S('Pennick holds the tanks at pressure for four hours, and the Kestrel makes the hop back and hangs over the dry marble at the south landing.'),
+      hopMsgCamp: S('The engineer holds the number-two tank at pressure for four hours, and the Kestrel makes the hop to the Deep Woods and settles in the willows.'),
+      hopMsgCourt: S('The engineer holds the tanks at pressure for four hours, and the Kestrel makes the hop back and hangs over the dry marble at the south landing.'),
       hopNo: S('She will not make the hop yet. The tanks want a hand that knows them, and a third tank to share the load.'),
       hopWait: S('Vane will not lift while the choir is waiting. It is the one thing he has said on the subject, and he said it twice.'),
     },
@@ -203,9 +199,9 @@ const KESTREL16 = (function () {
     chest: S('The stash chest (shared storage)'),
     list: {
       title: S('The repair list'),
-      intro: S('In Vane\'s hand, with Pennick\'s opinions in the margin. The prices are the chandlers\'; he would like that noted.'),
+      intro: S('In Vane\'s hand, with the engineer\'s opinions in the margin. The prices are the chandlers\'; he would like that noted.'),
       purse: S('Purse: {0} sovereigns.'),
-      disc: S('Pennick takes a fifth off the gold.'),
+      disc: S('The engineer takes a fifth off the gold.'),
       fit: S('Fit it'), fitted: S('Fitted'), need: S('Needs: {0}'),
       cost: S('{0} sovereigns'),
       noGold: S('Not enough sovereigns.'), noMats: S('Missing materials.'),
@@ -213,7 +209,7 @@ const KESTREL16 = (function () {
       lockerHint: S('Anything the list asks for, at the locker\'s price.'),
       buy: S('Buy'), bought: S('You take the {0} out of the locker and leave the coin on the shelf.'),
       close: S('Close'),
-      reqPennick: S('Pennick aboard'), reqEnvelope: S('the envelope patch'), reqPatched: S('the number-two tank closed'),
+      reqPennick: S('the engineer aboard'), reqEnvelope: S('the envelope patch'), reqPatched: S('the number-two tank closed'),
       fitMsg: S('Done: {0}.'),
     },
     up: {
@@ -255,42 +251,40 @@ const KESTREL16 = (function () {
       },
       tank: {
         name: S('A new lift-tank'),
-        desc: S('Pennick\'s pride, built up from the cutter\'s. The Kestrel can make the forty-mile hop between the Deep Woods and the Sunken Court.'),
-        fit: S('Pennick works through the night without speaking. At dawn the new tank is bolted in, he has put his ear to it nine times, and he says it is going to fail, but later than the others.'),
+        desc: S('The engineer\'s pride, built up from the cutter\'s. The Kestrel can make the forty-mile hop between the Deep Woods and the Sunken Court.'),
+        fit: S('The engineer works through the night without speaking. At dawn the new tank is bolted in, he has put his ear to it nine times, and he says it is going to fail, but later than the others.'),
         remark: S('Three tanks, three notes, and one of them is the wrong one. I am not telling you which.'),
       },
     },
     crew: {
-      leaveSightNo: S('She is watching the mist, and the mist is not going to tell her you are there. She cannot hear you. Walk round in front of her, where she can see your face.'),
       mags: {
-        name: S('Mags Tennant, first mate'),
-        label: S('Mags Tennant, at the bow rail, watching'),
-        labelSeen: S('Mags Tennant, watching your mouth'),
-        greetP: SG('Slow, please. Face me.'),
-        greetN: SG('I read lips, not minds. Say it to my face.'),
-        greetB: S('<i>She watches your mouth for exactly as long as it takes you to stop, and turns back to the mist.</i>'),
-        tShip: SG('I cannot hear her hum. I feel it in my teeth. That is how I know she is still ours.'),
-        tTopic: SG('The rest of you go quiet and I do not notice. I notice when your mouths stop moving. It is the same, I think, from the other side.'),
-        intro: S('<i>She does not turn when you come up behind her. You step round into her line of sight and she lowers the brass glass, reads your mouth, and signs:</i> <i>[signs] I saw you coming from the far side of the Grove. I always see things first.</i>'),
-        offer: SG('The road looks different from up here. Give me a lens that is not cracked, thirty sovereigns, and I will watch it for you from the table. I will not tell you where the hounds are. I will tell you which road they are not on.'),
+        name: S('The Kestrel\'s lookout'),
+        label: S('The lookout, at the bow rail, with a glass to her eye'),
+        greetP: S('Go on. I can listen and watch at the same time. I cannot stop watching.'),
+        greetN: S('Say it to the side of my head. The glass stays where it is.'),
+        greetB: S('<i>She does not lower the glass. After a while you understand that she is not going to.</i>'),
+        tShip: S('She rolls before she pitches. I watch the horizon so I know which is coming, and nobody is sick on my watch. Nearly nobody.'),
+        tTopic: S('From up here the quiet has edges. I watch for the places where the birds stop, and I tell Vane to go round.'),
+        intro: S('She is at the bow rail with a brass glass to her eye, and she keeps it there while you come round beside her. "I heard the ladder. I am not turning round. There is a cart on the north road, and I want to know whose."'),
+        offer: S('The road looks different from up here. Give me a lens that is not cracked, thirty sovereigns, and I will watch it for you from the table. I will not tell you where the hounds are. I will tell you which road they are not on.'),
         pay: S('Pay for the lens. (30 sovereigns)'),
         later: S('Not yet.'),
-        short: SG('Thirty. I know what a lens costs. Come back with it, and face me when you do.'),
-        done: SG('Done. From the table, I am your eyes.'),
-        doneMsg: S('Mags stands the lookout: ambushes on journeys begun at the map table are 35% less likely.'),
-        j: S('Mags Tennant will stand the lookout at the Kestrel\'s map table. I bought her a new lens. She reads the road for ambushes before we set out.'),
+        short: S('Thirty. I know what a lens costs. Come back with it. I will be here, looking the other way.'),
+        done: S('Done. From the table, I am your eyes.'),
+        doneMsg: S('The lookout stands the watch: ambushes on journeys begun at the map table are 35% less likely.'),
+        j: S('The Kestrel\'s lookout will stand the watch at the map table. I bought her a new lens. She reads the road for ambushes before we set out.'),
         d: [
-          SG('Weather is turning. I can see it in the way Vane stops talking.'),
-          SG('Do not shout up the ladder. Wave. I would rather see you than be told.'),
-          SG('Tobiah talks to the tanks. Pennick talks to nobody and the tanks listen. I do not know which is better.'),
-          SG('You move like someone who is tired of being heard. Good. So is the ship.'),
-          SG('The children asked me for the sign for up. It took an afternoon. They use it for everything.'),
-          SG('If you see my back, step round. I am not rude. I am deaf. Those are different problems.'),
+          S('Weather is turning. I can see it in the way Vane stops talking.'),
+          S('Do not stand in front of the glass. Stand beside it. Everybody learns that once.'),
+          S('Tobiah talks to the tanks. The engineer talks to nobody and the tanks listen. I do not know which is better.'),
+          S('You move like someone who is tired of being heard. Good. So is the ship.'),
+          S('The children asked to look through the glass. I gave them a count of ten each. They looked at the deck.'),
+          S('If I do not look at you, it is not rudeness. It is the north road.'),
         ],
       },
       pennick: {
-        name: S('Pennick, engineer of the tanks'),
-        label: S('Pennick, at the tanks'),
+        name: S('The Kestrel\'s engineer'),
+        label: S('The engineer, at the tanks'),
         greetP: S('Mind the pipework. It is older than your manners and in better shape.'),
         greetN: S('It is going to fail. I am only deciding which morning.'),
         greetB: S('Touch nothing. If you must touch something, tell me what, so I know where to start.'),
@@ -301,8 +295,8 @@ const KESTREL16 = (function () {
         offer: S('You mended the envelope. Fine. I have looked at what you paid for. I could take the tanks in hand, and the prices, and I would make your money last. It will not last. It will last longer.'),
         take: S('Ask him to take the tanks in hand.'),
         done: S('Pessimist\'s terms. I keep the tanks. You keep the money. I will see it goes further.'),
-        doneMsg: S('Pennick takes the tanks in hand: every upgrade costs a fifth less gold, and he will build the new lift-tank.'),
-        j: S('Pennick, who has kept the Kestrel\'s tanks humming and has been below since Oakhaven, has taken them in hand. Every fitting on the repair list costs a fifth less gold, and he will build the new lift-tank.'),
+        doneMsg: S('The engineer takes the tanks in hand: every upgrade costs a fifth less gold, and he will build the new lift-tank.'),
+        j: S('The Kestrel\'s engineer, who has kept her tanks humming and has been below since Oakhaven, has taken them in hand. Every fitting on the repair list costs a fifth less gold, and he will build the new lift-tank.'),
         d: [
           S('The number-two tank is making the sound it makes before it makes another sound.'),
           S('Gauge says forty. Gauge has said forty since Oakhaven. I do not trust a number that steady.'),
@@ -369,12 +363,12 @@ const KESTREL16 = (function () {
         greetP: S('Welcome aboard. Wipe your feet. She has been sick on worse.'),
         greetN: S('You can look at her. You cannot lean on her.'),
         greetB: S('Say it quick. The rail is loose and so is my patience.'),
-        tShip: S('Wood, silk, three tanks and a debt. Pennick would give you a longer list and a worse mood. The repair list is in the hold, nailed to a stanchion. I did not write the prices; the chandlers did.'),
+        tShip: S('Wood, silk, three tanks and a debt. The engineer would give you a longer list and a worse mood. The repair list is in the hold, nailed to a stanchion. I did not write the prices; the chandlers did.'),
         tTopic: S('I have a file at the Office that says reliable, does not ask questions. I would like it burned, and I would like to read it first.'),
         first: S('You are up, then. Good. Take the bunk by the bulkhead, the one that does not drip. The map table is on deck, the hold is below, the list is on the stanchion, and nobody touches the wheel. That last one is not a courtesy.'),
         d: [
           S('Count is right. I count the lines every morning. Do not read anything into that.'),
-          S('Mags says the mist is thinner to the east. Mags says a great deal with two fingers.'),
+          S('The lookout says the mist is thinner to the east. She says it without lowering the glass.'),
           S('Somebody has been polishing the brass on the wheel. It was not me. I would like that noted, and I would like to know who.'),
           S('Weight is the whole trade. Keep your pack light and your opinions lighter.'),
           S('Eleven hundred pounds over, and she still lifts. I do not thank her. She would get ideas.'),
@@ -386,8 +380,8 @@ const KESTREL16 = (function () {
 
   // ---------------------------------------------------------------- state: G.flags under p16k_, validated on every read
   //   p16k_up    0-127   bit per upgrade (UPG[].bit)
-  //   p16k_crew  0-15    bit per recruit (CREW order: mags, pennick, nell, hob)
-  //   p16k_seen  0-63    beats seen: 0 aboard, 1 vane, 2 mags, 3 pennick, 4 nell, 5 hob
+  //   p16k_crew  0-15    bit per recruit (CREW order: mags = the lookout, pennick = the engineer, nell, hob; ids kept for saves)
+  //   p16k_seen  0-63    beats seen: 0 aboard, 1 vane, 2 the lookout, 3 the engineer, 4 nell, 5 hob
   //   p16k_moor  0-2     0 as the story left her (Whisper-Grove in Part Three, the Deep Woods in Part Four), 1 the Court, 2 the camp
   //   p16k_visits 0-9999 times you have climbed aboard
   //   p16k_loaf / p16k_mend  the game day + 1 on which Nell's loaf / Hob's edge were last given (0 never)
@@ -446,7 +440,7 @@ const KESTREL16 = (function () {
     return m ? { map: id, x: m.spawn.x, y: m.spawn.y, dir: m.spawn.dir || 0 } : { map: 'whispergrove', x: 24.5, y: 43.4, dir: want.dir };
   }
 
-  // costs: Pennick takes a fifth off the gold (exact: every base price is a multiple of 5)
+  // costs: the engineer takes a fifth off the gold (exact: every base price is a multiple of 5)
   function costOf(id) {
     const u = UPG.find((x) => x.id === id); if (!u) return null;
     return { gold: crewHas('pennick') ? Math.round(u.gold * (1 - B.DISCOUNT)) : u.gold, mats: u.mats.map((m) => [m[0], m[1]]) };
@@ -498,18 +492,6 @@ const KESTREL16 = (function () {
     return Math.max(5, Math.round(base * B.ENV_TIME / 5) * 5);
   }
   function riskFactor() { return (crewHas('mags') ? 1 - B.MAGS_RISK : 1) * (upHas('chart') ? 1 - B.CHART_RISK : 1); }
-
-  // Mags sees your face: she is facing you within the sight cone and near enough
-  function magsSees(e, px, py) {
-    if (!e) return false;
-    const c = typeof Engine !== 'undefined' && Engine.cam ? Engine.cam : null;
-    const x = px != null ? px : (c ? c.x : 0), y = py != null ? py : (c ? c.y : 0);
-    const dx = x - e.x, dy = y - e.y, d = Math.hypot(dx, dy);
-    if (d > B.SIGHT_R) return false;
-    if (d < 0.001) return true;
-    const f = Number.isFinite(e.facing) ? e.facing : 0;
-    return (Math.cos(f) * dx + Math.sin(f) * dy) / d > B.SIGHT;
-  }
 
   // ---------------------------------------------------------------- procedural stand-in art (canvas, painted once and cached)
   function paint(w, h, draw) {
@@ -570,7 +552,7 @@ const KESTREL16 = (function () {
       for (let r = 0; r < 5; r++) line(c, 12, 24 + r * 17, 68, 24 + r * 17, 'rgba(60,50,90,0.65)', 1.2);
       line(c, 20, 20, 18, 108, 'rgba(255,255,255,0.35)', 1.4);
     });
-    // a burnished brass lift-tank with riveted bands, a gauge and a feed-pipe: Pennick's pride
+    // a burnished brass lift-tank with riveted bands, a gauge and a feed-pipe: the engineer's pride
     reg('p16k_tank_new', 96, 148, (c) => {
       ell(c, 48, 142, 36, 5, 'rgba(0,0,0,0.38)');
       rect(c, 10, 22, 76, 112, (() => { const g = c.createLinearGradient(10, 0, 86, 0); g.addColorStop(0, '#6a4a14'); g.addColorStop(0.35, '#e0b84e'); g.addColorStop(0.6, '#b98a2a'); g.addColorStop(1, '#4e340c'); return g; })());
@@ -864,7 +846,7 @@ const KESTREL16 = (function () {
       },
     },
     p16k_mags: {
-      name: TX.crew.mags.name, sprite: 'mags', portrait: 'mags', tier: 'high',
+      name: TX.crew.mags.name, sprite: 'townswoman', portrait: 'townswoman', tier: 'high',
       greet: { polite: TX.crew.mags.greetP, normal: TX.crew.mags.greetN, blunt: TX.crew.mags.greetB },
       topics: { 'The Drift-Kestrel': TX.crew.mags.tShip, 'The Hush': TX.crew.mags.tTopic },
       quest: () => {
@@ -923,7 +905,7 @@ const KESTREL16 = (function () {
     if (typeof NPCS === 'undefined') return;
     for (const k in NPC_DEFS) if (!NPCS[k]) NPCS[k] = NPC_DEFS[k];
   }
-  // Pennick: the townsman, recoloured to engineer's blue-grey with the goggles pushed up (derived from the existing sprite)
+  // the engineer: the townsman, recoloured to engineer's blue-grey with the goggles pushed up (derived from the existing sprite)
   function paintPennick() {
     if (typeof Engine === 'undefined' || !Engine.addSprite || !Engine.sprites || Engine.sprites.p16k_pennick || !Engine.sprites.townsman) return;
     const src = Engine.sprites.townsman, d = new Uint32Array(src.data.length);
@@ -1183,7 +1165,7 @@ const KESTREL16 = (function () {
 
   // ---------------------------------------------------------------- sound: the one note, and its caption
   const audioOk = () => { try { return typeof Audio_ !== 'undefined' && Audio_.ctx && Audio_.sfxBus && !Audio_.muted; } catch (e) { return false; } };
-  const T = { hum: 0, capAt: -1e9, turnT: 0, away: 0, sayAt: -1e9, last: null };
+  const T = { hum: 0, capAt: -1e9, last: null };
   function capLine(text) {
     try {
       if (typeof ACCESS === 'undefined' || !ACCESS.settings || !ACCESS.settings.cap) return;
@@ -1203,7 +1185,7 @@ const KESTREL16 = (function () {
     return clamp(1 - d / 13, 0.12, 0.7);
   }
 
-  // ---------------------------------------------------------------- per-frame (cheap): hum, Mags turning, closing
+  // ---------------------------------------------------------------- per-frame (cheap): hum, captions, closing
   function tick(dt) {
     if (!hasG() || !aboard()) { if (T.hum) stopSounds(); return; }
     if (!cfg.on) { leaveShip(); return; }
@@ -1215,15 +1197,6 @@ const KESTREL16 = (function () {
       const c = Engine.cam, near = Math.hypot(c.x - TANK_AT[0], c.y - TANK_AT[1]) < 5;
       const t = typeof performance !== 'undefined' ? performance.now() : 0;
       if (near && t - T.capAt > 14000) { T.capAt = t; capLine(TX.below.hum); }
-    }
-    if (G.mapId === DECK && G.ents) {
-      const e = G.ents.find((o) => o && o._p16k === 'crew_mags'); if (!e) return;
-      const c = Engine.cam, d = Math.hypot(c.x - e.x, c.y - e.y), sees = magsSees(e);
-      if (!sees && d < 3.4) {
-        T.turnT += dt || 0;
-        if (T.turnT > 4) { e.facing = Math.atan2(c.y - e.y, c.x - e.x); T.turnT = 0; }      // she feels the deck move and turns round
-      } else T.turnT = 0;
-      if (d > 8) { T.away += dt || 0; if (T.away > 6) { e.facing = 0; T.away = 0; } } else T.away = 0;
     }
   }
 
@@ -1266,13 +1239,13 @@ const KESTREL16 = (function () {
       restoreGame = function () {
         stopSounds();
         const r = _rg.apply(this, arguments);                 // a bad save throws here, before anything below
-        try { sanitize(); T.turnT = 0; T.away = 0; refresh(); if (aboard()) onLoad(G.mapId); } catch (e) { warnOnce('restore', e); }
+        try { sanitize(); refresh(); if (aboard()) onLoad(G.mapId); } catch (e) { warnOnce('restore', e); }
         return r;
       };
     }
     if (typeof startGame === 'function') {
       const _sg = startGame;
-      startGame = function () { const r = _sg.apply(this, arguments); try { stopSounds(); T.turnT = 0; T.away = 0; refresh(); } catch (e) { warnOnce('start', e); } return r; };
+      startGame = function () { const r = _sg.apply(this, arguments); try { stopSounds(); refresh(); } catch (e) { warnOnce('start', e); } return r; };
     }
     if (typeof update === 'function') {
       const _up = update;
@@ -1301,19 +1274,6 @@ const KESTREL16 = (function () {
           }
         } catch (err) { warnOnce('use', err); }
         return _use.apply(this, arguments);
-      };
-    }
-    if (typeof talk === 'function') {
-      const _talk = talk;
-      talk = function (e) {
-        try {
-          if (e && e.id === 'p16k_mags' && !magsSees(e)) {
-            const t = typeof performance !== 'undefined' ? performance.now() : 0;
-            if (t - T.sayAt > 2500) { T.sayAt = t; say(TX.crew.leaveSightNo, 'warn', 7000); }
-            return;
-          }
-        } catch (err) { warnOnce('talk', err); }
-        return _talk.apply(this, arguments);
       };
     }
     if (typeof renderHouseChest === 'function') {
@@ -1392,7 +1352,7 @@ const KESTREL16 = (function () {
   return {
     CARDS, FILL_BELOW, DECK, BELOW, MAPS, B, UPG, LOCKER, CREW, FLAGS, TX, cfg, saveCfg, loadCfg, DECK_AT, BELOW_AT, RAIL_PEGS, OX, OY, T,
     get TEXTS() { return LIST.slice(); },
-    fint, fset, sanitize, upHas, crewHas, seenHas, mooring, landing, costOf, blockers, canFit, fit, buyMaterial, travelMinutesFor, riskFactor, magsSees,
+    fint, fset, sanitize, upHas, crewHas, seenHas, mooring, landing, costOf, blockers, canFit, fit, buyMaterial, travelMinutesFor, riskFactor,
     recruitCheck, hire, giveLoaf, mendWeapon, railState, hangRail, takeRail, furnish, refresh, board, boardBlock, leaveShip, goBelow, goDeck, rest, hop, hopAllowed,
     tableMenu, openList, boardMenu, tick, onLoad, buildDeck, buildBelow, shipExists, aboard, humLevel, stopSounds, isDeckLocal,
   };
