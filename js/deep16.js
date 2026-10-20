@@ -545,6 +545,10 @@ const DEEP16 = (function () {
     if (sfx && typeof sfx.step === 'function' && !sfx.step._p16d) {
       const _step = sfx.step;
       const w = function (surface) { try { if (swimming()) { T.stroke = (T.stroke || 0) + 1; return (T.stroke % 2) ? undefined : _step.call(this, 'water'); } } catch (e) { warnOnce('step', e); } return _step.apply(this, arguments); };
+      // pass the inner wrapper's hooks through (house13 keeps the game's step on ._orig, and a test may swap a spy there)
+      for (const k of ['_orig', '_test', '_p13h']) {
+        if (k in _step) Object.defineProperty(w, k, { configurable: true, enumerable: true, get: () => _step[k], set: (v) => { _step[k] = v; } });
+      }
       w._p16d = true; sfx.step = w;
     }
   }
