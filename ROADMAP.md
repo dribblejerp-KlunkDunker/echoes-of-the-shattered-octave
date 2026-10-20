@@ -174,6 +174,8 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 
 Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
 
+**Phase 16 — new ground** (delivered; items marked (P16); see the Phase 16 verification)
+
 **Phase 15 — the province moves** (delivered; items marked (P15); see the Phase 15 verification)
 
 **Phase 14 — a world that shows the story** (delivered; items marked (P14); see the Phase 14 verification)
@@ -235,12 +237,22 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[x]` A haunted house in Oakhaven (P13) · `[x]` The Unrung Bell at night (P13) · `[x]` A jump-scare toggle (P13)
 
 **New areas and content**
-- `[ ]` The Chlorophyll Flume side area · `[ ]` An underwater dungeon beneath Whisper-Grove · `[ ]` Heists: a Synod cathedral, the Consortium's quarry
-- `[ ]` The Long Night survival event · `[ ]` A trip to Port Cantabile · `[ ]` A Book Two prologue after the ending · `[ ]` The Kestrel as an upgradable home base with crew
+- `[x]` The Chlorophyll Flume side area (P16) · `[x]` An underwater dungeon beneath Whisper-Grove (P16) · `[x]` Heists: the Chapel's Held Letters (the Synod's house in the Reach) and the Consortium's Depot Three (P16)
+- `[ ]` The Long Night survival event · `[ ]` A trip to Port Cantabile · `[ ]` A Book Two prologue after the ending · `[x]` The Kestrel as an upgradable home base with crew (P16)
 
 **Technical**
 - `[~]` A sharper renderer with the pixel look kept (P14: the Ultra and Cinematic presets, view distance to 4x with sky-matched haze and far LOD; a WebGL renderer remains for a later phase — see the Project doc "Echoes of the Shattered Octave: Graphics Upgrade and View-Distance Roadmap") · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
 - `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[x]` Performance overlay (frame rate, memory) (P11)
+
+### Phase 16 "New ground" verification
+- **How it was built.** Four parallel teams (flume, deep, heist, kestrel), then a graphics-polish team over all four areas, then integration on phase16-ground. Every area is optional side content: nothing blocks or reorders Book One.
+- **Flume (js/flume16.js).** Three maps through a new east Hedge door in Oakhaven: the Flume Road (a grown-wood aqueduct carrying green water uphill, its held "ohh" positional at 174 Hz; Flume surges down the Wash that push, slow and tire but never hurt, telegraphed by a rising pitch; briar-sprites that bleed you and steal fatigue; ringing timber that carries noise), Stillwater Landing (the lock quest, three ways to open the wheel; Pellam Dree sells the same news to six parties; a fence) and the Low Rings, Oakhaven's flooded lower quarter. Closed after the Greening (the Hedge takes the door; an open quest closes with a journal line).
+- **Deep (js/deep16.js).** The Lower Plazas beneath the Sunken Court after the Greening: swimming under water (rise, sink, swim along your look), a breath meter with warnings, grace and rising damage, six air pockets, three depths, Drowned Hollows standing as guards; weapons slower, only the murmur carries; underwater view (murk, caustics, silt) and muffled sound. A 3D search finds no softlock (longest swim between air 15.5 s). Reward: the relief register, nine Lantern Row names for the Ledger and a new Sable topic.
+- **Heist (js/heist16.js).** Two planned break-ins with five approaches each (quiet, bribe, cover, disguise, loud): the Held Letters in the Chapel vestry (six letters to deliver; all six earn Letter-Bearer) and Depot Three at the quarry (the roster and the Reeve's lease; who you give them to moves standing). Caught = bounty and the haul seized through the existing law flow.
+- **Kestrel (js/kestrel16.js).** The Drift-Kestrel as a home base: deck and below-decks, boarded from the Whisper-Grove ladder (and from the Deep Woods once the tank is patched); seven upgrades; crew Mags, Pennick, Nell, Hob and Pim with small perks.
+- **Graphics.** The Flume walls are grown wood with the light in the water; the Low Rings dressed with sunk roofs, posts and wreckage; proper arrival paintings for the new outdoor maps (the woods fallback is gone for them); Cinematic-only fill light below-decks and in the heist rooms (stealth unchanged); the Deep balanced for Medium; long look-at lines wrap inside the view. All new effects are off in Original and Low.
+- **Integration fixes.** Authored voices for seven new speakers; the Deep's footstep wrapper passes the Tarrow house's hooks through.
+- **Tests.** New suites flume16, deep16, heist16, kestrel16; all 93 suites on the merged tree (several perf and timing checks are load-sensitive and pass on a quiet rerun).
 
 ### Phase 15 "The province moves" verification
 - **How it was built.** Four parallel teams (synod, roads, ledger, hearth), then integration on phase15-province.

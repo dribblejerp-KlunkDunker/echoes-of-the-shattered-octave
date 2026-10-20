@@ -52,6 +52,19 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 16: new ground
+
+| | |
+|---|---|
+| ![The Flume Road](screenshots/p16-flume.jpg) | ![A Flume surge](screenshots/p16-surge.jpg) |
+| The Chlorophyll Flume: a grown-wood aqueduct carrying green water uphill. | Flume surges come down the Wash: cross between them. |
+| ![The Low Rings](screenshots/p16-lowrings.jpg) | ![Pellam Dree](screenshots/p16-lockkeeper.jpg) |
+| The Low Rings, Oakhaven's flooded lower quarter. | Stillwater Landing's lockkeeper sells the same news to six parties. |
+| ![The Lower Plazas](screenshots/p16-deep.jpg) | ![The Chapel vestry](screenshots/p16-vestry.jpg) |
+| Swim the drowned Lower Plazas beneath Whisper-Grove, from air pocket to air pocket. | Heists: the Chapel's Held Letters and the Consortium's Depot Three. |
+| ![The Drift-Kestrel](screenshots/p16-kestrel.jpg) | ![Below decks](screenshots/p16-kestrel-below.jpg) |
+| The Drift-Kestrel as a home base. | Upgrade the ship; the crew each lend a hand. |
+
 ### Phase 15: the province moves
 
 | | |
