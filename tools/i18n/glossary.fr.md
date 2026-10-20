@@ -40,7 +40,7 @@ World terms
 | Tongueless, Free Captains, Veil | les Sans-Langue, les Capitaines libres, le Voile |
 | Drift-Kestrel | la Crécerelle (de dérive) |
 | days | Nuldi, Racinedi, Âtredi, Massedi, Stasedi, Aubedi, Dérivedi, Mémoiredi |
-| months | Moisson, Chute des cendres, Mois du givre |
+| months (Harvestmonth, Ashfall, Frostmonth, Stillmonth) | Moisson, Chute des cendres, Mois du givre, Mois d'accalmie (author-approved, October 2026) |
 | Brood-Mother, Wearer, Weaver | la Mère-Couvée, le Porteur, la Tisseuse |
 | Iron Peaks, Spectral Woods, Deep Woods | les Pics de Fer, les Bois spectraux, les Bois profonds |
 

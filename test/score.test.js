@@ -30,7 +30,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
       const AC = window.AudioContext;
       if (AC) window.AudioContext = class extends AC { constructor(...a) { super(...a); window.__ctxCount++; } };
     });
-    await page.goto(process.env.PREVIEW_URL || 'http://127.0.0.1:3402');
+    await page.goto((process.env.PREVIEW_URL || 'http://127.0.0.1:3402') + '/?nosw=1');   // the Phase 18 service worker would serve cached recordings past the test's missing-file routes
     await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && G.state === 'title' && typeof SCORE !== 'undefined');
     const ev = (fn, arg) => page.evaluate(fn, arg);
 

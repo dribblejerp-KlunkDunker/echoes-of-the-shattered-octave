@@ -1,7 +1,9 @@
 // ============================================================
 //  portraits — Phase 5 (illustrated interface): conversation mood portraits.
 //  Kaelen, Lyra and the NPCs who carry the story get four extra faces each:
-//  angry, sad, afraid and wry. They are a PROCEDURAL STAND-IN: each is the
+//  angry, sad, afraid and wry. Phase 20 FOLK: for every face but Harrow's, Sable's and Orla's these are now EXPRESSION EDITS of the
+//  painted portrait (brows, lids and mouth moved, see "expression edits"); the Phase 5 stand-in below remains for
+//  those three and for any id without measured features. The stand-in: each is the
 //  existing img/p_<id>.jpg regraded and lightly warped on a canvas (colour grade,
 //  contrast, framing tilt/shear, brow and mouth shading, vignette). The faces differ
 //  per portrait and we never guess feature coordinates, so every edit is global or
@@ -162,7 +164,88 @@ const PORTRAITS = (function () {
     },
   };
 
-  function render(img, mood) {
+  // ---------------------------------------------------------------- Phase 20 FOLK: expression edits
+  // Each face's features were measured by hand on the 96x96 source (eye centres, mouth centre and width):
+  // [left eye x, y, right eye x, y, mouth x, y, mouth width]. A mood is a set of small, smooth pulls of the painted
+  // pixels at those features (brows, lids, mouth corners), plus a few soft shading touches sampled from the face's
+  // own tones (a furrow, a mouth opening): the face itself changes expression, the colours stay the portrait's own.
+  const FACES = {
+    kaelen: [39, 16, 48.5, 16, 44.5, 28.3, 6], lyra: [39.5, 18, 50.8, 18, 47, 30.5, 7], vane: [38.6, 14.7, 46.75, 14.7, 44, 21.9, 7],
+    hetty: [38, 17, 48, 17, 45.4, 25, 8], aldric: [40.6, 14.4, 51, 14.4, 46.9, 25.4, 7],
+    halder: [38.3, 23.6, 48.25, 23.6, 46.6, 38, 6], rooke: [45.6, 15.6, 56, 15.6, 51.25, 26.9, 6], vosk: [42.75, 23.4, 54, 23.4, 47.75, 34.4, 8],
+    tobiah: [43.75, 16.5, 51.9, 16.5, 48, 29.4, 7], mags: [39.25, 17, 50.5, 17, 45.5, 28.4, 8], quist: [42.5, 21.5, 51.9, 21.5, 46.25, 34, 7],
+    flambeau: [50.5, 37, 59, 37, 55, 46.4, 5], pim: [34.6, 32.25, 52.75, 32.25, 44.6, 45, 10],
+    wren: [38.25, 31, 53.25, 31, 47.5, 42.75, 8], herald: [41.25, 19.4, 48.75, 19.4, 45, 30, 6], nell: [39.75, 29, 51.6, 29, 46, 43, 7],
+    tam: [31.6, 20.25, 40.4, 20.25, 36.5, 29.6, 6],
+    // Left out on purpose, keeping the Phase 5 graded stand-in below: Harrow (his face is a few pixels under the hood,
+    // eyes 5px apart, mouth in the beard), Sable and Orla (faces about 6px between the eyes): edits there do not
+    // read at the dialogue's portrait size. Measured, for later painted art: sable [35, 12.5, 41.5, 12.5, 37.5, 21.6, 4],
+    // orla [42, 11, 48.75, 11, 45.75, 21, 4], harrow [39.75, 15.4, 44.75, 15.4, 42, 23, 4].
+  };
+  // Faces whose eyes are hidden (Vosk's goggles) keep their brow and mouth moves only.
+  const NO_EYES = { vosk: true };
+  // handles: [x, y, dx, dy, r] in face units; paints: [x, y, rx, ry, k] darken (k < 1) in face units
+  function expression(mood, F, id) {
+    const u = (F[2] - F[0]) / 9.5, mid = (F[0] + F[2]) / 2, ey = (F[1] + F[3]) / 2, by = ey - 2.4 * u;
+    const mx = F[4], my = F[5], mw = F[6] / 2, H = [], P = [];
+    // small faces (most busts) get a firmer pull so the change still reads at the dialogue's portrait size
+    const g = u < 0.85 ? 1.7 : u < 1.3 ? 1.35 : 1;
+    const h = (x, y, dx, dy, r) => H.push([x, y, dx * u * g, dy * u * g, r * u]);
+    const lids = (up, low) => { if (NO_EYES[id]) return; for (const x of [F[0], F[2]]) { if (up) h(x, ey - 1.1 * u, 0, up, 1.25); if (low) h(x, ey + 1.15 * u, 0, low, 1.2); } };
+    if (mood === 'angry') {
+      h(mid - 1.6 * u, by + 0.3 * u, 0.5, 1.3, 1.6); h(mid + 1.6 * u, by + 0.3 * u, -0.5, 1.3, 1.6);
+      lids(0.6, -0.45);
+      h(mx - mw, my, 0.2, 0.9, 1.4); h(mx + mw, my, -0.2, 0.9, 1.4); h(mx, my - 0.9 * u, 0, 0.3, 1.2);
+      P.push([mid, by + 0.7 * u, 0.45 * u, 1.2 * u, 0.7], [mid - 1.7 * u, by + 0.6 * u, 1.3 * u, 0.6 * u, 0.86], [mid + 1.7 * u, by + 0.6 * u, 1.3 * u, 0.6 * u, 0.86]);
+    } else if (mood === 'sad') {
+      h(mid - 1.5 * u, by - 0.3 * u, 0.2, -1.3, 1.2); h(mid + 1.5 * u, by - 0.3 * u, -0.2, -1.3, 1.2);
+      h(F[0] - 1.5 * u, by + 0.2 * u, 0, 0.75, 1.5); h(F[2] + 1.5 * u, by + 0.2 * u, 0, 0.75, 1.5);
+      if (!NO_EYES[id]) { h(F[0] - 0.6 * u, ey - 1 * u, 0, 0.55, 1.2); h(F[2] + 0.6 * u, ey - 1 * u, 0, 0.55, 1.2); }
+      h(mx - mw, my, 0, 1.1, 1.4); h(mx + mw, my, 0, 1.1, 1.4); h(mx, my + 1.2 * u, 0, -0.45, 1.4);
+      if (!NO_EYES[id]) P.push([F[0], ey + 1.7 * u, 1.6 * u, 0.6 * u, 0.88], [F[2], ey + 1.7 * u, 1.6 * u, 0.6 * u, 0.88]);
+    } else if (mood === 'afraid') {
+      // brow lifts sit a little above the brow with a tight radius, so they stretch skin, not the eye below
+      h(mid - 1.5 * u, by - 0.3 * u, 0, -1.7, 1.25); h(mid + 1.5 * u, by - 0.3 * u, 0, -1.7, 1.25); h(F[0] - 1.4 * u, by - 0.3 * u, 0, -1.1, 1.2); h(F[2] + 1.4 * u, by - 0.3 * u, 0, -1.1, 1.2);
+      lids(-0.7, 0.45);
+      h(mx - mw, my, -0.7, 0.3, 1.3); h(mx + mw, my, 0.7, 0.3, 1.3); h(mx, my + 0.8 * u, 0, 1.0, 1.5);
+      P.push([mx, my + 0.5 * u, mw * 0.62, 0.55 * u, 0.42]);
+    } else {   // wry: one brow up, a lopsided half-smile, the other eye narrowed
+      h(F[2], by - 0.3 * u, 0, -1.4, 1.3); h(mid - 1.5 * u, by, 0.2, 0.6, 1.4);
+      if (!NO_EYES[id]) h(F[0], ey + 1.15 * u, 0, -0.55, 1.2);
+      h(mx + mw, my, 0.4, -1.25, 1.4); h(mx - mw, my, 0, 0.3, 1.2); h(mx + mw + 1 * u, my - 2.2 * u, 0, -0.6, 2);
+      P.push([mx + mw + 0.6 * u, my - 0.6 * u, 0.4 * u, 0.9 * u, 0.8]);
+    }
+    return { H, P };
+  }
+  function renderFace(img, mood, id) {
+    const c = document.createElement('canvas'); c.width = c.height = SIZE;
+    const ctx = c.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0, SIZE, SIZE);
+    const src = ctx.getImageData(0, 0, SIZE, SIZE), sp = src.data, out = ctx.createImageData(SIZE, SIZE), op = out.data;
+    const { H, P } = expression(mood, FACES[id], id);
+    for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) {
+      let dx = 0, dy = 0;
+      for (let i = 0; i < H.length; i++) { const q = H[i], ex = x + 0.5 - q[0], ey = y + 0.5 - q[1], w = Math.exp(-(ex * ex + ey * ey) / (q[4] * q[4])); dx += q[2] * w; dy += q[3] * w; }
+      // pull: this pixel shows what sat dx,dy away (bilinear, so the painted texture stays smooth)
+      const sx = Math.max(0, Math.min(SIZE - 1.001, x - dx)), sy = Math.max(0, Math.min(SIZE - 1.001, y - dy));
+      const x0 = sx | 0, y0 = sy | 0, fx = sx - x0, fy = sy - y0, o = (y * SIZE + x) * 4;
+      for (let k = 0; k < 3; k++) {
+        const a = sp[(y0 * SIZE + x0) * 4 + k], b = sp[(y0 * SIZE + x0 + 1) * 4 + k], cc = sp[((y0 + 1) * SIZE + x0) * 4 + k], d = sp[((y0 + 1) * SIZE + x0 + 1) * 4 + k];
+        op[o + k] = (a * (1 - fx) + b * fx) * (1 - fy) + (cc * (1 - fx) + d * fx) * fy;
+      }
+      op[o + 3] = 255;
+      // shading touches: darken toward the face's own deep tone
+      for (let i = 0; i < P.length; i++) {
+        const q = P[i], ex = (x + 0.5 - q[0]) / q[2], ey = (y + 0.5 - q[1]) / q[3], w = Math.exp(-(ex * ex + ey * ey) * 1.4);
+        if (w > 0.01) { const f = 1 - (1 - q[4]) * w; op[o] *= f; op[o + 1] *= f * 0.97; op[o + 2] *= f * 0.95; }
+      }
+    }
+    ctx.putImageData(out, 0, 0);
+    return c.toDataURL('image/jpeg', 0.92);
+  }
+
+  function render(img, mood, id) {
+    if (id && has(FACES, id)) return renderFace(img, mood, id);
     const c = document.createElement('canvas'); c.width = c.height = SIZE;
     const ctx = c.getContext('2d', { willReadFrequently: true });
     const f = FRAME[mood], gr = GRADE[mood];
@@ -197,7 +280,7 @@ const PORTRAITS = (function () {
     pending[id] = new Promise(resolve => {
       const img = new Image();
       img.onload = () => {
-        try { const out = {}; for (const m of MOODS) out[m] = render(img, m); cache[id] = out; resolve(out); }
+        try { const out = {}; for (const m of MOODS) out[m] = render(img, m, id); cache[id] = out; resolve(out); }
         catch (e) { console.warn('portraits: could not build ' + id, e); resolve(null); }
       };
       img.onerror = () => resolve(null);
@@ -250,5 +333,5 @@ const PORTRAITS = (function () {
     setTimeout(next, 800);
   }
 
-  return { MOODS, MAJOR, pick, variant, ensure, ready, label, apply, has: id => has(MAJOR, id) };
+  return { MOODS, MAJOR, FACES, pick, variant, ensure, ready, label, apply, has: id => has(MAJOR, id) };
 })();

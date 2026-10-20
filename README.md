@@ -52,6 +52,71 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 19: together (two-player co-op)
+
+| | |
+|---|---|
+| ![Play together](screenshots/p19-lobby.jpg) | ![Host and guest](screenshots/p19-together.jpg) |
+| Play together: the host gets a short code and a QR code; the guest scans it or types it. | Two travellers, one world: the host's computer runs it, the guest joins from a phone. |
+| ![Down](screenshots/p19-downed.jpg) | ![On a phone](screenshots/p19-phone.jpg) |
+| Fall and be revived: only when both are down is it the end. | The guest on a phone, held sideways. |
+
+Peer-to-peer over WebRTC with PeerJS's free matchmaker (and its free relay for mobile data), or codes swapped by hand with no matchmaker at all. No game server of our own, no accounts. The guest brings their own traveller and takes their progress home; the host's save holds the world and the story's choices.
+
+### Phase 18: technical
+
+| | |
+|---|---|
+| ![Crisp panel text](screenshots/p18-gpu-hud.jpg) | ![The daily dungeon](screenshots/p18-daily.jpg) |
+| The GPU compositor: the panel text drawn at your screen's resolution. | A daily challenge dungeon, the same for everyone on the day. |
+| ![The daily challenge](screenshots/p18-daily-panel.jpg) | ![A day's result](screenshots/p18-daily-result.jpg) |
+| Three floors, a fixed kit, a score and a share code. | Your result, checked against that day's dungeon. |
+| ![A ghost](screenshots/p18-ghost.jpg) | ![Watch a ghost](screenshots/p18-ghost-watch.jpg) |
+| Your best run against a boss replays beside you. | Watch your best run from the boss's trophy. |
+
+Also: the game installs as an app and plays offline after the first visit, with an update notice that waits until you're out of a fight.
+
+### Phase 17: beyond Book One (extras)
+
+| | |
+|---|---|
+| ![The Extras menu](screenshots/p17-extras.jpg) | ![The Greenroot road in winter](screenshots/p17-road.jpg) |
+| Extras on the title screen: after Book One, each on its own save, behind a spoiler notice. | Prologue: The River Gate. Lyra comes back up the Greenroot road, past the graves, with her lantern and her slate. |
+| ![Oakhaven as a wood](screenshots/p17-wood.jpg) | ![Port Cantabile](screenshots/p17-cantabile.jpg) |
+| Oakhaven as a wood: the houses carried up into the crowns, HALE & DAUGHTER sixty feet up. | A trip to Port Cantabile: the cliff harbour, the Long Mole and the Salt Stair. |
+| ![The Salt Stair at dusk](screenshots/p17-stair-dusk.jpg) | ![The Cay](screenshots/p17-cay.jpg) |
+| At dusk they light the Stair one landing at a time. | The Cay, where the children's graves are hung with small bells. |
+| ![The Long Night](screenshots/p17-longnight.jpg) | ![The lullaby](screenshots/p17-lullaby.jpg) |
+| The Long Night: keep the lullaby going under the orchard until dawn. | Hold the note; tend the lamps; call the keepers back from the dark. |
+
+### Phase 16: new ground
+
+| | |
+|---|---|
+| ![The Flume Road](screenshots/p16-flume.jpg) | ![A Flume surge](screenshots/p16-surge.jpg) |
+| The Chlorophyll Flume: a grown-wood aqueduct carrying green water uphill. | Flume surges come down the Wash: cross between them. |
+| ![The Low Rings](screenshots/p16-lowrings.jpg) | ![Pellam Dree](screenshots/p16-lockkeeper.jpg) |
+| The Low Rings, Oakhaven's flooded lower quarter. | Stillwater Landing's lockkeeper sells the same news to six parties. |
+| ![The Lower Plazas](screenshots/p16-deep.jpg) | ![The Chapel vestry](screenshots/p16-vestry.jpg) |
+| Swim the drowned Lower Plazas beneath Whisper-Grove, from air pocket to air pocket. | Heists: the Chapel's Held Letters and the Consortium's Depot Three. |
+| ![The Drift-Kestrel](screenshots/p16-kestrel.jpg) | ![Below decks](screenshots/p16-kestrel-below.jpg) |
+| The Drift-Kestrel as a home base. | Upgrade the ship; the crew each lend a hand. |
+
+### Phase 15: the province moves
+
+| | |
+|---|---|
+| ![An eclipse](screenshots/p15-eclipse.jpg) | ![A sermon](screenshots/p15-sermon.jpg) |
+| Rare eclipses: noon goes the colour of dusk and the hounds grow bolder. | Synod sermons at the Chapel, to sit through or to disrupt. |
+| ![A Synod checkpoint](screenshots/p15-checkpoint.jpg) | ![A burned house](screenshots/p15-charred.jpg) |
+| Carts, refugees and Synod checkpoints on the road. | Houses burn, stand charred, and are rebuilt. |
+| ![Rounds](screenshots/p15-rounds.jpg) | ![Trophies](screenshots/p15-trophies.jpg) |
+| Rounds, a trick-taking card game with Nessa Tolliver at the Boar. | Trophies from beaten bosses hang in your house on Cooper's Row. |
+| ![Letters of credit](screenshots/p15-bank.jpg) | ![The test console](screenshots/p15-console.jpg) |
+| Letters of credit from the Consortium clerk. | A test console for cheats (they mark the save). |
+
+Also: paid training with per-level limits, camp cooking, "Where is…?" answers that mark your map, permanent deaths for unnamed townsfolk, and the Synod's reach spreading across the world map.
+
 ### Phase 14: a world that shows the story
 
 | | |

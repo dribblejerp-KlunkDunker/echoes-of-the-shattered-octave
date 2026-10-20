@@ -171,8 +171,30 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 | 16 — New ground | new areas | Chlorophyll Flume; underwater dungeon beneath Whisper-Grove; heists (Synod cathedral, Consortium quarry); the Kestrel as a home base with crew |
 | 17 — Beyond Book One | extras | Book Two prologue; Port Cantabile trip and the Long Night (both after Book One in canon: presented as marked extras) |
 | 18 — Technical | engine and online | Sharper renderer; installable offline app; daily challenge dungeon; ghost replays; messages and leaderboards (need a small server: owner's decision) |
+| 19 — Together | two-player co-op | Play Book One with a second player in the same world: one hosts on a computer, the other joins from a phone with a short code; peer-to-peer (no game server of our own) |
+| 20 — The painted world | art and landmarks | Hand-painted art for every procedural stand-in (enemy angles, NPCs, panoramas, props); the horizon country finished and walkable; the Chapel seen beyond the Hedge; a visible Chapel bell |
 
 Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
+
+**Phase 20 — The painted world** (planned; owner's request, October 2026: work on the hand-painted art when the chance is opportune, and finish the horizon and landmarks)
+- `[ ]` Hand-painted art replacing every procedural stand-in, starting from the Proctor pilot's standard: the other species' five views, NPCs, the area panoramas, the Kestrel flyover, props.
+- `[ ]` The horizon country finished: walkable hills and cliffs beyond the maps' walls where the story allows, the Chapel seen from beyond the Hedge, a visible Chapel bell (the story keeps the frame empty until it rings).
+
+**Phase 19 — Together** (delivered; see the Phase 19 verification; owner's request, October 2026: "me and my brother", the brother most likely on a phone)
+- `[x]` Join with a code (P19): the host opens "Play together" and gets a short code; the guest types it (or scans a QR code) on a phone. Peer-to-peer over WebRTC, matched by the free PeerJS broker; a copy-and-paste fallback that needs no broker at all. No game server of our own, no accounts.
+- `[x]` Host-authoritative world (P19): the host's game runs the world (enemies, the random streams, quests, the story); the guest sends inputs and receives compact snapshots, with smoothing and a little prediction so a phone on Wi-Fi feels responsive. Reconnect after a dropped connection; the host can always carry on alone.
+- `[x]` The second traveller (P19): the guest brings their own character (class, level, kit) from their own save; they appear in the host's world as a full player, not a companion. Revive a fallen partner instead of dying; enemies pick between the two; shared XP; loot split by turns; the host's story and choices stay the host's (the guest watches story scenes and can't make the host's choices).
+- `[x]` What goes home (P19): the guest's level, XP and items earned go back to the guest's own save; the host's save holds the world. Nothing in either save is ever overwritten by the other player.
+- `[x]` Phones as they are (P19): no separate phone mode (owner's call: the graphics are light enough). The guest uses the game's existing touch controls and presets; the phase only checks that joining and playing work in a phone browser.
+- Owner's decisions: can the guest also host from a phone (performance)? Should the guest be able to make story choices on their turn? (Defaults: host on a computer; host decides.)
+
+**Phase 18 — technical** (delivered; items marked (P18); see the Phase 18 verification)
+
+**Phase 17 — beyond Book One** (delivered as marked extras; items marked (P17); see the Phase 17 verification)
+
+**Phase 16 — new ground** (delivered; items marked (P16); see the Phase 16 verification)
+
+**Phase 15 — the province moves** (delivered; items marked (P15); see the Phase 15 verification)
 
 **Phase 14 — a world that shows the story** (delivered; items marked (P14); see the Phase 14 verification)
 
@@ -213,32 +235,76 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[x]` Loot flying to the inventory button (P11) · `[x]` Coins counted out in shops (P11) · `[x]` Page turns in books and the logbook (P11) · `[x]` Sitting, eating and drinking in the tavern (P14)
 
 **Daggerfall features**
-- `[x]` Birth signs from musical modes (P11) · `[x]` "Where is...?" (dialogue button; add map marking `[~]`) · `[ ]` Paid training with per-level limits
-- `[ ]` Bank letters of credit · `[x]` Holidays on the calendar (P11) · `[ ]` Cheat codes for testing
+- `[x]` Birth signs from musical modes (P11) · `[x]` "Where is...?" with map marking (P15) · `[x]` Paid training with per-level limits (P15)
+- `[x]` Bank letters of credit (P15) · `[x]` Holidays on the calendar (P11) · `[x]` Cheat codes for testing (P15)
 
 **Gameplay**
 - `[x]` Instruments (lute, flute, hurdy-gurdy) that change Songs (P12) · `[x]` Tavern performance rhythm game (P11) · `[x]` Tuning forks that hum near secrets (P12)
 - `[x]` Dowsing for Anchor-roots (P12) · `[x]` Carried light (the lantern, U) · `[x]` Fire flasks (P12) · `[x]` Environmental kills (chandeliers, scaffolds, deep water) (P12)
 - `[x]` Office grappling hook (P12) · `[x]` Noise lures (thrown stones and bottles; the lure reed) · `[x]` Silence bombs (P12) · `[x]` Shield bash (P12) · `[x]` Two-handed weapons and dual-wielding (P12)
-- `[x]` Throwing nets (P12) · `[x]` Adopt the Whisper-Grove cat (she hisses at danger) (P11) · `[x]` Bones, a tavern dice game (P11) · `[ ]` A tavern card game · `[ ]` Camp cooking
-- `[ ]` Boss trophies for your house (the house exists)
+- `[x]` Throwing nets (P12) · `[x]` Adopt the Whisper-Grove cat (she hisses at danger) (P11) · `[x]` Bones, a tavern dice game (P11) · `[x]` A tavern card game (P15) · `[x]` Camp cooking (P15)
+- `[x]` Boss trophies for your house (the house exists) (P15)
 
 **World and events**
-- `[x]` Market day in the square (P11) · `[ ]` Synod sermons to attend or disrupt · `[ ]` Festivals such as Hearthday · `[ ]` Eclipses
-- `[~]` Roadside events on the world map (ambushes exist; add carts, refugees, checkpoints) · `[ ]` Buildings burn and are rebuilt; permanent NPC deaths
-- `[ ]` Synod territory spreading on the world map · `[x]` "Previously..." recap on load (P11)
+- `[x]` Market day in the square (P11) · `[x]` Synod sermons to attend or disrupt (P15) · `[ ]` Festivals such as Hearthday · `[x]` Eclipses (P15)
+- `[x]` Roadside events on the world map (P15) · `[x]` Buildings burn and are rebuilt; permanent NPC deaths (P15)
+- `[x]` Synod territory spreading on the world map (P15) · `[x]` "Previously..." recap on load (P11)
 
 **Horror**
 - `[x]` Whispers from behind at high Dissonance (with the meter above) (P13) · `[x]` Lights dying one by one (P13) · `[x]` Night terrors after resting somewhere unsafe (P13)
 - `[x]` A haunted house in Oakhaven (P13) · `[x]` The Unrung Bell at night (P13) · `[x]` A jump-scare toggle (P13)
 
 **New areas and content**
-- `[ ]` The Chlorophyll Flume side area · `[ ]` An underwater dungeon beneath Whisper-Grove · `[ ]` Heists: a Synod cathedral, the Consortium's quarry
-- `[ ]` The Long Night survival event · `[ ]` A trip to Port Cantabile · `[ ]` A Book Two prologue after the ending · `[ ]` The Kestrel as an upgradable home base with crew
+- `[x]` The Chlorophyll Flume side area (P16) · `[x]` An underwater dungeon beneath Whisper-Grove (P16) · `[x]` Heists: the Chapel's Held Letters (the Synod's house in the Reach) and the Consortium's Depot Three (P16)
+- `[x]` The Long Night survival event (P17, an extra) · `[x]` A trip to Port Cantabile (P17, an extra) · `[x]` A prologue after the ending (P17: "The River Gate", Book Four's return to Oakhaven; see the Phase 17 verification) · `[x]` The Kestrel as an upgradable home base with crew (P16)
 
 **Technical**
-- `[~]` A sharper renderer with the pixel look kept (P14: the Ultra and Cinematic presets, view distance to 4x with sky-matched haze and far LOD; a WebGL renderer remains for a later phase — see the Project doc "Echoes of the Shattered Octave: Graphics Upgrade and View-Distance Roadmap") · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
+- `[x]` A sharper renderer with the pixel look kept (P14: Ultra and Cinematic presets, view distance to 4x; P18: a WebGL2 compositor in front of the CPU raycaster: integer upscale, HUD text at device resolution, grade/bloom/the Cinematic loop in shaders, canvas fallback; real-GPU timings still to be measured) · `[x]` Installable offline app from GitHub Pages (P18; the owner turns Pages on: Settings → Pages → Source: GitHub Actions) · `[x]` Daily challenge dungeon (P18) · `[x]` Ghost replays of boss runs (P18)
 - `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[x]` Performance overlay (frame rate, memory) (P11)
+
+### Phase 19 "Together" verification
+- **How it was built.** Three parallel teams (net, sync, partner), each against the others' published contracts, then a finishing team that wired them end to end and polished the figures; integration on phase19-together. Owner's decisions: no separate phone mode; the host plays on a computer and makes the story's choices; the relay on for mobile data.
+- **Net (js/net19.js, js/vendor/peerjs.min.js 1.5.5 pinned).** "Play together" on the title screen and in Options: Host gives a six-character code, a QR code and a link; Join by code, by scanning, or by link. PeerJS's free matchmaker with Google STUN and PeerJS's public TURN relays (direct first; the relay only when direct fails); a no-matchmaker fallback of codes swapped by hand. Every frame is validated (size, shape, depth, sender, rate); names are text only; two players at most; reconnect within 90 s while the host plays on.
+- **Sync (js/sync19.js).** The host's game is the world: the guest sends inputs at 30 Hz with prediction and reconciliation; the host sends delta snapshots of what the guest can see at 15 Hz (12.8 KB/s average in a 30-enemy fight), including enemy strike, wind-up and hurt poses; the guest follows the host between maps.
+- **Partner (js/partner19.js).** The guest's own traveller in the host's world, drawn as a pixel-art figure in their likeness and lit like the townsfolk; enemies choose between the two; no friendly fire; downed and revived (both down is the host's death screen); full XP to both, loot by turns, enemies scaled for two; story scenes shown to the guest read-only. What the guest earns is written back only to the guest's own save, checked; the host's save never contains the guest.
+- **The guest's side.** The guest's HUD shows their own traveller; resting, items, loading and the hardcore switch defer to the host's world; "Part ways and go home".
+- **Tests.** New suites net19, sync19, partner19 and an end-to-end together19 (host desktop, guest Pixel 7 landscape, real NET19 + PeerJS + WebRTC through a local signalling stub, nothing leaves the machine; single-player identical with all three modules loaded); the full run's results are in the Phase 19 PR.
+
+### Phase 18 "Technical" verification
+- **How it was built.** Four parallel teams (gpu, pwa, daily, ghost), a rework of the ghost figure, then integration on phase18-tech (which also carries Phase 17 and the Phase 16 canon rulings).
+- **GPU (js/gpu18.js).** A WebGL2 compositor wraps render(): the CPU raycaster's frame, material and depth buffers are uploaded as textures and presented with an integer nearest-neighbour upscale; the HUD and everything drawn over the view go to a device-resolution canvas, so Medium's panel text is crisp; post.js's grade and bloom and cinema14's full-resolution loop run in shaders (bit-identical to the CPU path in seven reference scenes). Auto-on only with hardware WebGL2; Options switch; canvas fallback on any error or lost context; Original never uses it.
+- **PWA (js/pwa18.js, sw.js, manifest.webmanifest, tools/pwa/, .github/workflows/pages.yml).** Installable; offline after the first visit (195 core files precached, music and voices cached on first play or by an Options button); an update notice that never interrupts a fight or a hardcore run; optional "Keep saves on this device" (off by default; never hardcore saves or extras); a GitHub Actions workflow publishes the game to GitHub Pages. `node tools/pwa/precache.js` regenerates the file list and the test fails if it is stale.
+- **Daily (js/daily18.js).** A three-floor dungeon generated from the UTC date (same everywhere), early-game enemies only, a fixed kit, a score, a local table and a share code checked against that day's dungeon; its own title button; isolated like the extras (EXTRAS17's `hidden` option); races your best daily ghost.
+- **Ghost (js/ghost18.js).** Every boss fight is recorded; your best run per boss replays as a translucent figure in your likeness; Watch from the boss trophies; ghost codes to share; gameplay identical with ghosts on or off.
+- **Tests.** New suites gpu18, pwa18, daily18, ghost18; the full run's results are in the Phase 18 PR.
+
+### Phase 17 "Beyond Book One" verification
+- **How it was built.** Four parallel teams (extras, prologue, cantabile, longnight), the Extras framework merged first so the others built on the real API, then a graphics-polish team over the three extras, then integration on phase17-beyond. Everything is set after Book One and reached only from the Extras menu.
+- **Extras (js/extras17.js).** An Extras button on the title screen; a one-time spoiler notice (Book One's ending and the later books); unlocked only when Book One is truly finished (the "Not yet" ending; "Grab the Line" ends Part Two and does not count, author's ruling) or by loading or checking such a save; there is no early unlock. Each extra runs in an isolated session: the Book One game is set aside by reference and given back untouched (tested byte-identical); the extra keeps one save of its own; save codes and downloads are off inside an extra; a banner says "An extra — after Book One". WINTER17: snow on the ground and wall tops, falling snow, cold grade and breath (off in Original and Low).
+- **Prologue (js/prologue17.js): "The River Gate".** Rootday the nineteenth of Frostmonth 419 (Book Four, Part One, ch. 4): Lyra up the Greenroot road at dusk, stones set on the graves, the voice outside the Hedge ("Lyra-love") and NOBODY on the slate, Oakhaven as a wood with the houses in the crowns and the leaves down, Dorran Sedge at the river gate. No combat; Lyra has no voice, holds a lantern and her slate. Named "The River Gate", not "Book Two — prologue", because any Oakhaven scene earlier than Book Four would contradict the books.
+- **Cantabile (js/cantabile17.js): "A trip to Port Cantabile".** Ashfall 419, before the Burning: the cliff harbour on the Phase 2 height system, the Long Mole and the Mole-bell, the Salt Stair's six landings with lamps lit landing by landing at dusk, the counting-house sealed at the top, the Harbour Office, the chandler, the Cay with its grave bells. Errands: the dues paid at the slack key (read the hour from the reef's pitch), the valve, Marrin Tace's vox-bottle, the salvage crate.
+- **Long Night (js/longnight17.js): "The Long Night".** The Longest Night under the orchard: ten hours of a held-pitch lullaby against escalating waves, lamps to trim and refill, three young Cantors to keep out of the dark, sounds going missing as the tune falls; falls instead of death; dawn on 1 Stillmonth wins; a local best-times table. No Organum, no Vaelen.
+- **Integration fixes.** snapshotGame() now returns a copy (before, flags, journal, ledger and the player's arrays were live references, so a saved slot changed with later play); the extras17 test accepts the shipped extras; split-markup French fragments; a short sword in hand in Cantabile and the Long Night.
+- **Tests.** New suites extras17, prologue17, cantabile17, longnight17; the full run's results are in the Phase 17 PR.
+
+### Phase 16 "New ground" verification
+- **How it was built.** Four parallel teams (flume, deep, heist, kestrel), then a graphics-polish team over all four areas, then integration on phase16-ground. Every area is optional side content: nothing blocks or reorders Book One.
+- **Flume (js/flume16.js).** Three maps through a new east Hedge door in Oakhaven: the Flume Road (a grown-wood aqueduct carrying green water uphill, its held "ohh" positional at 174 Hz; Flume surges down the Wash that push, slow and tire but never hurt, telegraphed by a rising pitch; briar-sprites that bleed you and steal fatigue; ringing timber that carries noise), Stillwater Landing (the lock quest, three ways to open the wheel; Pellam Dree sells the same news to six parties; a fence) and the Low Rings, Oakhaven's flooded lower quarter. Closed after the Greening (the Hedge takes the door; an open quest closes with a journal line).
+- **Deep (js/deep16.js).** The Lower Plazas beneath the Sunken Court after the Greening: swimming under water (rise, sink, swim along your look), a breath meter with warnings, grace and rising damage, six air pockets, three depths, Drowned Hollows standing as guards; weapons slower, only the murmur carries; underwater view (murk, caustics, silt) and muffled sound. A 3D search finds no softlock (longest swim between air 15.5 s). Reward: the relief register, nine Lantern Row names for the Ledger and a new Sable topic.
+- **Heist (js/heist16.js).** Two planned break-ins with five approaches each (quiet, bribe, cover, disguise, loud): the Held Letters in the Chapel vestry (six letters to deliver; all six earn Letter-Bearer) and Depot Three at the quarry (the roster and the Reeve's lease; who you give them to moves standing). Caught = bounty and the haul seized through the existing law flow.
+- **Kestrel (js/kestrel16.js).** The Drift-Kestrel as a home base: deck and below-decks, boarded from the Whisper-Grove ladder (and from the Deep Woods once the tank is patched); seven upgrades; crew Mags, the engineer (unnamed), Nell, Hob and Pim with small perks.
+- **Graphics.** The Flume walls are grown wood with the light in the water; the Low Rings dressed with sunk roofs, posts and wreckage; proper arrival paintings for the new outdoor maps (the woods fallback is gone for them); Cinematic-only fill light below-decks and in the heist rooms (stealth unchanged); the Deep balanced for Medium; long look-at lines wrap inside the view. All new effects are off in Original and Low.
+- **Integration fixes.** Authored voices for seven new speakers; the Deep's footstep wrapper passes the Tarrow house's hooks through.
+- **Tests.** New suites flume16, deep16, heist16, kestrel16; all 93 suites on the merged tree (several perf and timing checks are load-sensitive and pass on a quiet rerun).
+
+### Phase 15 "The province moves" verification
+- **How it was built.** Four parallel teams (synod, roads, ledger, hearth), then integration on phase15-province.
+- **Synod (js/synod15.js).** Sermons on Dawnday mornings and Stasisday/Memoryday evenings (attend for Church standing and a day's easier inspection; disrupt = witnessed crime, Hedge up); ending at the Greening. The Synod wash on the world map by story stage. Eclipses on new-moon Dawndays, never on feast, festival or story days, x1.25 hounds.
+- **Roads (js/roads15.js).** One roadside event per trip at most (cart, refugees or graves, Synod checkpoint; turning back always allowed, key items never taken). Four unnamed houses can burn, char and be rebuilt over six days; witnessed arson +90 bounty. Permanent deaths for unnamed townsfolk with a floor population.
+- **Ledger (js/ledger15.js).** Eight trainers with caps and per-level session limits (Lyra teaches Law-Song only after the Greening, by slate). Letters of credit 25/100/500 (5% in Oakhaven; worse rates after the Greening, never lost). The test console (five codes; marks the save; shut in hardcore). "Where is…?" map pennants.
+- **Hearth (js/hearth15.js).** Camp cooking (three dishes, one warmth buff at a time). Rounds, a 24-card trick-taking game with its own seeded deck and a daily loss cap. Twelve boss trophies on pegs in your house, granted retroactively.
+- **Integration fixes.** The preacher's voice; hearth15 counts only its own items; motion10 checks the travel animation with roadside events off.
+- **Tests.** New suites synod15, roads15, ledger15, hearth15; all 89 suites pass on the merged tree (several perf and timing checks are load-sensitive and pass on a quiet rerun).
 
 ### Phase 14 "A world that shows the story" verification
 - **How it was built.** Four parallel teams (greening, skies, props, folk) plus two graphics teams (far, cinema), then integration on phase14-world; the aurora and the mirrors each went back for a rework before merging.

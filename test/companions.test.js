@@ -73,7 +73,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       e.hurtT = 0; const before = G.party.hp; let hits = 0;
       for (let i = 0; i < 40 && !FX.state.hits; i++) { foe.state = 'chase'; foe.x = e.x + 0.6; foe.y = e.y; foe.hp = foe.def.hp; partyTick(0.05); }
       check(FX.state.hits > 0 && G.party.hp < before && e._cHit > 0, 'a hit on the companion starts a flinch (' + FX.state.hits + ')');
-      step(e, 1, 0.016); check(e.animHurt > 0.5 && Math.abs(e.animSkew) > 0.04, 'flinch: red tint and a lurch (' + e.animHurt.toFixed(2) + '/' + e.animSkew.toFixed(3) + ')');
+      step(e, 1, 0.016); check(e.animHurt > 0.5 && (Math.abs(e.animSkew) > 0.04 || /_p20flinch/.test(e.animSprite || '')), 'flinch: red tint and a lurch or the painted flinch frame (' + e.animHurt.toFixed(2) + '/' + e.animSkew.toFixed(3) + ')');
       GFX.noFlash = true; e._cHit = 0.3; step(e, 1, 0.016); check(e.animHurt === 0, 'No flash: no red tint'); GFX.noFlash = false;
       GFX.reduceMotion = true; e._cHit = 0.3; const calmSkew = (step(e, 1, 0.016), Math.abs(e.animSkew)); GFX.reduceMotion = false; e._cHit = 0.3; const fullSkew = (step(e, 1, 0.016), Math.abs(e.animSkew));
       check(calmSkew < fullSkew, 'reduced motion calms the flinch (' + calmSkew.toFixed(3) + ' < ' + fullSkew.toFixed(3) + ')');
@@ -82,14 +82,16 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       // ---- 3. injury stoop and limp
       const walk = (hpFrac) => {
         e = join('kaelen', 27.5, 38.0, Math.PI / 2); G.party.hp = max * hpFrac; FX.state.chest = 0; GFX.companionLife = true;
-        e._phase = 0; e._spd = 0; const lifts = [], skews = []; let sy = 0;
-        for (let i = 0; i < 160; i++) { e.x += 0.012; ANIM.T += 0.016; animCreature(e, 0.016, ANIM.T); if (i > 40) { lifts.push(e.animLift); skews.push(e.animSkew); sy += e.animSY; } }
+        e._phase = 0; e._spd = 0; const lifts = [], skews = [], poses = {}; let sy = 0;
+        for (let i = 0; i < 160; i++) { e.x += 0.012; ANIM.T += 0.016; animCreature(e, 0.016, ANIM.T); if (i > 40) { lifts.push(e.animLift); skews.push(e.animSkew); sy += e.animSY; if (/_p20/.test(e.animSprite || '')) poses[e.animSprite] = 1; } }
         const m = a => a.reduce((x, y) => x + y, 0) / a.length;
-        return { lift: m(lifts), skew: m(skews), sy: sy / lifts.length, liftMax: Math.max(...lifts) };
+        return { lift: m(lifts), skew: m(skews), sy: sy / lifts.length, liftMax: Math.max(...lifts), poses: Object.keys(poses) };
       };
       const healthy = walk(1), hurt = walk(0.3);
       check(hurt.lift < healthy.lift - 0.003, 'a limp: the average lift drops (' + hurt.lift.toFixed(4) + ' < ' + healthy.lift.toFixed(4) + ')');
-      check(hurt.sy < healthy.sy && hurt.skew < healthy.skew + 0.03 && Math.abs(hurt.skew - healthy.skew) > 0.004, 'a stoop and a lean');
+      // Phase 20: the stoop and limp are painted frames now (the squash/skew on top is much smaller)
+      check(hurt.sy < healthy.sy && hurt.skew < healthy.skew + 0.03 && (Math.abs(hurt.skew - healthy.skew) > 0.004 || hurt.poses.length >= 2), 'a stoop and a lean');
+      check(!healthy.poses.length && hurt.poses.some(n => /limpA/.test(n)) && hurt.poses.some(n => /limpB/.test(n)), 'painted limp frames while hurt, none while healthy (' + hurt.poses.join(',') + ')');
       GFX.reduceMotion = true; const calmWalk = walk(0.3); GFX.reduceMotion = false;
       check(Math.abs(calmWalk.skew - hurt.skew) > 0.0005 || calmWalk.liftMax >= hurt.liftMax, 'reduced motion drops the limp bobbing');
       out.limp = { healthy, hurt };

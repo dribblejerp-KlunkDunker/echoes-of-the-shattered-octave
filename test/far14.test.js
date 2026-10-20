@@ -404,7 +404,7 @@ const COMPARE = ({ cases }) => {
     // the source: nothing that decides a fight reads the setting (flora's sway cut-off and the renderer are looks)
     const root = path.join(__dirname, '..', 'js');
     const readers = fs.readdirSync(root).filter(f => f.endsWith('.js')).filter(f => /GFX\.viewDist|\{\s*fogK\s*:/.test(fs.readFileSync(path.join(root, f), 'utf8'))).sort();
-    assert.deepEqual(readers, ['far14.js', 'flora.js', 'gfx.js', 'presets.js'], 'only the renderer, its settings and the grass sway read the view distance: ' + readers);
+    assert.deepEqual(readers, ['far14.js', 'flora.js', 'gfx.js', 'max20.js', 'presets.js'], 'only the renderer, its settings (max20.js: the first-launch preset keeps a custom view distance) and the grass sway read the view distance: ' + readers);
   });
 
   const traceFor = async (vd) => {

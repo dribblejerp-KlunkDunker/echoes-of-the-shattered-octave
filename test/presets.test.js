@@ -43,7 +43,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
       check(Object.keys(orig).length >= 8, 'particle styles exist');
       const fogCalls = []; const _look = Engine.setLook;
       Engine.setLook = o => { fogCalls.push(o && o.fogK); return _look(o); };
-      const cheapOff = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'panoramas', 'flyovers', 'darkInteriors', 'groundShadows', 'sunShafts', 'heatHaze', 'glassGlare', 'seeThrough', 'coldBreath', 'footprints', 'hushWave', 'folkHoods', 'folkHuddle', 'folkCapes', 'folkTavern', 'greenStages', 'glassSpread', 'rootVeins', 'p14pMirrors', 'p14pShimmer', 'aurora', 'causticLight'];   // dark interiors are off in Low (accessibility; audit finding)
+      const cheapOff = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'panoramas', 'flyovers', 'darkInteriors', 'groundShadows', 'sunShafts', 'heatHaze', 'glassGlare', 'seeThrough', 'coldBreath', 'footprints', 'hushWave', 'folkHoods', 'folkHuddle', 'folkCapes', 'folkTavern', 'greenStages', 'glassSpread', 'rootVeins', 'p14pMirrors', 'p14pShimmer', 'aurora', 'causticLight', 'deepView', 'flumeGlow', 'winter17'];   // dark interiors are off in Low (accessibility; audit finding)
       const expect = { original: [1, 1, 1], low: [1, 0.8, 0.5], medium: [1, 1, 1], high: [2, 1.15, 1.25] };
       const canvasOf = { 1: [320, 200], 2: [640, 400] };
       for (const name of ['original', 'low', 'medium', 'high']) {
@@ -56,8 +56,8 @@ fs.mkdirSync(SHOTS, { recursive: true });
         check(fogCalls.length === 1 && fogCalls[0] === vd, name + ': setLook fogK ' + fogCalls);
         for (const k of GFX.FX) {
           if (k === 'crtCurve') continue;
-          const want = PRESETS.cinemaOnly && PRESETS.cinemaOnly.includes(k) ? false : name === 'original' ? false : name === 'low' ? !cheapOff.includes(k) : true;   // Phase 14 CINEMA flags: Cinematic preset only
-          check(GFX[k] === want, name + ': flag ' + k + ' should be ' + want);
+          const want = PRESETS.isArt && PRESETS.isArt(k) ? true : PRESETS.allButLow && PRESETS.allButLow.includes(k) ? name !== 'low' : PRESETS.cinemaOnly && PRESETS.cinemaOnly.includes(k) ? false : name === 'original' ? false : name === 'low' ? !cheapOff.includes(k) : true;   // Phase 14 CINEMA flags: Cinematic preset only
+          check(GFX[k] === want, name + ': flag ' + k + ' should be ' + want);   // Phase 20 MAX: art switches are on in every preset
         }
         for (const id in PART_STYLE) check(PART_STYLE[id].n === Math.round(orig[id] * pt), name + ': particles ' + id + ' ' + PART_STYLE[id].n);
         go('deepwoods', 27.5, 30.5, -1.57); render();
@@ -111,7 +111,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
         // reference: the engine as it was before this phase, via GFX.plain() at the shipped scale and look
         Engine.setScale(1); Engine.setLook({ fogK: 1 });
         for (const k in orig) PART_STYLE[k].n = origN[k];
-        GFX.plain(); go(id, x, y, dir);
+        GFX.plain(); for (const k of (PRESETS.art || []).concat(PRESETS.allButLow || [])) if (GFX.FX.includes(k)) GFX[k] = true; GFX.changed(); go(id, x, y, dir);   // Phase 20 MAX: Original = no effects, art on
         frame();   // warm-up: the first frame in a place settles sky and cached art
         const ref = frame();
         // the long way round: high, then low, then original

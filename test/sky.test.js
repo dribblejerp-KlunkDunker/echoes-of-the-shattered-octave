@@ -138,7 +138,8 @@ const HELPERS = () => {
         pano[id] = { count, rows, ok, key: img.join(',') };
         check(count >= 150, 'the ' + id + ' panorama changes sky pixels (' + count + ')');
         check(ok, 'the ' + id + ' panorama only paints sky pixels at or above the horizon');
-        check(rows >= 4 && rows <= 40, 'the ' + id + ' panorama is a band just above the horizon (' + rows + ' rows)');
+        // Phase 20: the panorama also carries the LANDMARKS ridges as pixel art (the tallest, the Whisper-Grove spire-hill, stands 0.36 of the view: 54 rows)
+        check(rows >= 4 && rows <= 56, 'the ' + id + ' panorama is a band just above the horizon (' + rows + ' rows)');
       }
       G.map.id = real;
       const ids = Object.keys(pano);

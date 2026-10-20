@@ -81,6 +81,31 @@ const VOICES = (() => {
     nell:      { f0: 236, fs: 1.15, style: 'human' },
     ignatius:  { f0: 108, fs: 0.94, style: 'human' },    // Flambeau of the Pure Note
     p12_herald: { f0: 124, fs: 0.97, style: 'human' },   // Phase 12: the Church's herald at the Rite, a carrying public voice
+    p15s_preacher: { f0: 112, fs: 0.95, style: 'human' },   // Phase 15: the Chapel's preaching deacon, measured and even
+    // Phase 16: Stillwater Landing and the Flume Road, Depot Three, the Drift-Kestrel
+    p16f_pellam: { f0: 118, fs: 0.96, style: 'human' },     // the lockkeeper: smooth, selling
+    p16f_madge: { f0: 190, fs: 1.08, style: 'human' },      // the fence: low for a woman, unhurried
+    p16f_orrin: { f0: 98, fs: 0.93, style: 'human' },       // a Timber Compact cutter: deep, plain
+    p16f_hand: { f0: 108, fs: 0.95, style: 'human' },       // a dock hand
+    p16f_wife: { f0: 210, fs: 1.1, style: 'human' },       // the cutter's wife on the raft
+    p16h_vause: { f0: 184, fs: 1.07, style: 'human' },      // Sergeant Vause: professional, clipped
+    p16k_pennick: { f0: 104, fs: 0.94, style: 'human' },    // the Kestrel's engineer: dry, pessimistic
+    // Phase 17 CANTABILE: Port Cantabile (the Salt Stair, the Mole, the Cay)
+    p17c_teague: { f0: 112, fs: 0.95, style: 'human' },     // the harbour clerk: flat, bureaucratic
+    p17c_oona: { f0: 176, fs: 1.04, style: 'human' },       // the Harbour-Queen: level, withholding
+    p17c_bessa: { f0: 236, fs: 1.12, style: 'breathy' },    // the last Reef-Reader: old, eyes shut, soft
+    p17c_teel: { f0: 100, fs: 0.93, style: 'human' },       // a free captain: rum-roughened
+    p17c_sloe: { f0: 124, fs: 0.97, style: 'human' },       // the chandler: dry, particular
+    p17c_tace: { f0: 206, fs: 1.08, style: 'human' },       // Marrin Tace, the widow: careful, kind
+    p17c_dunmore: { f0: 130, fs: 0.98, style: 'human' },    // the Office clerk: pleasant as a shut door
+    p17c_hesper: { f0: 150, fs: 0.9, style: 'human' },      // Hesper: foghorn-deep, slow, gentle
+    p17c_quain: { f0: 96, fs: 0.92, style: 'human' },       // the Cay ferryman, hat over his eyes
+    p17c_hesper2: { f0: 150, fs: 0.9, style: 'human' },     // Hesper on the Cay
+    p17c_quain2: { f0: 96, fs: 0.92, style: 'human' },      // Quain on the Cay jetty
+    p17c_mags: { f0: 190, fs: 1.07, style: 'silent' },      // Mags signs, she does not speak
+    p17c_wife: { f0: 212, fs: 1.1, style: 'human' },
+    p17c_hand: { f0: 110, fs: 0.95, style: 'human' },
+    p17c_child: { f0: 300, fs: 1.25, style: 'human' },      // a child of the Cay
     townsman:  { f0: 122, fs: 0.97, style: 'human' },
     townswoman:{ f0: 202, fs: 1.08, style: 'human' },
     sable:     { f0: 208, fs: 1.1,  style: 'human' },
@@ -96,6 +121,16 @@ const VOICES = (() => {
     herald:    { f0: 130, fs: 0.96, style: 'brass' },    // a herald's carrying voice
     mourner:   { f0: 176, fs: 1.04, style: 'breathy' },
     wren:      { f0: 258, fs: 1.18, style: 'human' },
+    // Phase 17, team LONGNIGHT: the three Cantors of the Long Night [PROPOSED]
+    p17n_marl: { f0: 88, fs: 0.9, style: 'human' },       // Marl Dunning, bass: low, slow, unhurried
+    p17n_tansy: { f0: 226, fs: 1.12, style: 'human' },    // Tansy Quill, alto apprentice: thin, young
+    p17n_jory: { f0: 116, fs: 0.96, style: 'human' },     // Jory Fenn, lamplighter: plain
+    // Phase 17, team PROLOGUE: the river gate (an extra after Book One)
+    p17p_dorran: { f0: 84, fs: 0.9, style: 'gravel' },      // Dorran Sedge: "a voice like a bullfrog", sang bass
+    p17p_seraphina: { f0: 196, fs: 1.06, style: 'human' },  // Seraphina: low, even
+    p17p_aegis: { f0: 70, fs: 0.8, style: 'chord' },        // the Aegis, as the Sentinel
+    p17p_ignatius: { f0: 104, fs: 0.93, style: 'human' },   // Ignatius Crane, the preacher's voice gone thin
+    p17p_solenne: { f0: 200, fs: 1.08, style: 'brass' },    // Solenne: copper in the throat
   };
 
   // ---- the enemy families ---------------------------------------------------------------------------
@@ -115,6 +150,9 @@ const VOICES = (() => {
     requiem:     { f0: 98,  fs: 0.9,  style: 'multi' },
     quiet:       { style: 'silent' },
     hushmoth:    { style: 'silent' },
+    p17n_hollow: { f0: 138, fs: 1.0, style: 'breathy' },   // Phase 17 LONGNIGHT: a Hollow walking toward a held voice
+    p17n_hound:  { f0: 150, fs: 0.9, style: 'beast' },
+    p17n_moth:   { style: 'silent' },
     tongueless:  { style: 'silent' },                      // no tongue, no sound
     hushwarden:  { style: 'silent' },                      // the game marks it mute
     aegis:       { f0: 66,  fs: 0.8,  style: 'chord' },

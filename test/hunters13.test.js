@@ -448,7 +448,7 @@ async function boot(browser, opts) {
     ok(opts.head && opts.btns.join() === 'On:true,On:true,On:true', 'Options > Graphics & access has three switches, default On: ' + opts.btns);
     ok(opts.waveOff && opts.waveOn && opts.storedOff && opts.storedOff.wave === false && opts.stored && opts.stored.wave === true, 'the Grey wave row drives GFX.hushWave and persists (octave.hunters13.v1)');
     const pre = await page.evaluate(() => { PRESETS.apply('original'); const a = { wave: GFX.hushWave, crows: GFX.carrionCrows, setWave: HUNTERS13.set.wave }; PRESETS.apply('medium'); return a; });
-    ok(pre.wave === false && pre.crows === false && pre.setWave === false, 'the Original preset leaves the new visual effects off');
+    ok(pre.wave === false && pre.crows === true && pre.setWave === false, 'the Original preset leaves the Grey wave effect off and keeps the carrion crows (Phase 20 MAX: small-life art is on in every preset)');
     await page.evaluate(() => { PRESETS.apply('medium'); GFX.hushWave = true; GFX.carrionCrows = true; HUNTERS13.set.wave = true; HUNTERS13.set.crows = true; GFX.changed(); });
 
     // captions

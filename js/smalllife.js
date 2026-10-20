@@ -13,7 +13,8 @@
 //     finds her elsewhere, so the condition is: map oakhaven && !flags.greening && !flags.part3.
 //  3. LIGHT-GLASS GLIMMER. Shards lying on the floor glint now and then and wear a soft halo, visible
 //     from afar. noFlash and reduced motion keep only a steady glow.
-//  All art here is procedural STAND-IN work (canvas, no assets) pending painted sheets.
+//  Art: Phase 20 FOLK pixel art for the crows, rats and the cat's walk (see "pixel-art crows"); the canvas
+//  stand-ins below stay as the fallback. The moored Kestrel is still a procedural stand-in.
 //  Switches: GFX.critters, GFX.kestrelMoored, GFX.shardGlint (default on, all in GFX.FX so
 //  GFX.plain() gives the original frames and game state).
 // ============================================================
@@ -176,6 +177,118 @@ const SMALLLIFE = (() => {
     return catDone;
   }
 
+  // ---------------------------------------------------------------- Phase 20 FOLK: pixel-art crows, rats and the cat's walk
+  // Hand-placed pixel shapes run through the icon set's pixel engine (ICONS.pxSprite: five-tone ramps lit from the
+  // top-left, ink outline), so the small life shares one look with the item icons. Same canvases, same feet rows and
+  // the same frame names as the stand-ins above, so placement, scale and behaviour are unchanged; the stand-ins stay
+  // as the fallback if the engine is missing. The cat gets a real side-on walk (it used to walk as its sitting self).
+  // Deterministic: no random numbers.
+  const PXC = { crow: '#24242e', wing: '#2a2b3c', sheen: '#5d6a98', beak: '#5a4c3c', leg: '#4a3e30', eye: '#e2dccb',
+    rat: '#6a5f53', ratDark: '#4a4139', pink: '#b08480', ear: '#9a7470',
+    cat: '#7c7466', catDark: '#4a453e', catLight: '#c4bcab', catNose: '#b08a80', catEye: '#c8c060' };
+  function pxCrow(pose) {
+    return ICONS.pxSprite(40, 32, d => {
+      const fly = pose.startsWith('fly');
+      if (!fly) {
+        const peck = pose === 'peck', st = pose === 'w1' ? 1 : pose === 'w2' ? 2 : 0;
+        const l1 = st === 1 ? 14 : st === 2 ? 20 : 17, l2 = st === 1 ? 24 : st === 2 ? 20 : 22;
+        const leg = d.layer(PXC.leg, { shade: 'flat' }); leg.line(18, 24, l1, 30).line(22, 24, l2, 30).line(l1 - 1, 31, l1 + 2, 31).line(l2 - 1, 31, l2 + 2, 31);
+        d.layer(PXC.wing).poly([13, 17, 3, 22, 4, 26, 15, 23]);
+        const by = peck ? 20 : 19;
+        d.layer(PXC.crow, { lift: -1 }).ell(19, by, 9.5, 6);
+        const w = d.layer(PXC.wing, { lift: -1 }).poly([10, by - 3, 24, by - 4, 26, by, 20, by + 3, 8, by + 2]);
+        w.tone(1, 12, by + 1, 15, by + 2, 18, by + 2);
+        d.mark(PXC.sheen, 14, by - 3, 15, by - 3, 18, by - 4, 21, by - 4);
+        if (peck) {
+          d.layer(PXC.crow, { lift: -1 }).thick([25, 19, 29, 22], 2).ell(30.5, 23.5, 3.8, 3.4);
+          d.layer(PXC.beak).poly([33, 22, 38, 29, 32, 26]);
+          d.mark(PXC.eye, 31, 22);
+        } else {
+          d.layer(PXC.crow, { lift: -1 }).ell(28.5, 13.5, 4.4, 4.1).thick([25, 16, 27, 15], 2.4);
+          d.mark(PXC.sheen, 27, 10, 28, 10);
+          d.layer(PXC.beak).poly([31.5, 11.5, 38.5, 14, 31.5, 16]).tone(3, 32, 12, 33, 12);
+          d.mark(PXC.eye, 29, 12);
+        }
+      } else {
+        const up = pose === 'fly1', mid = pose === 'fly2';
+        d.layer(PXC.wing).poly([13, 15, 3, 16, 4, 21, 13, 19]);
+        const far = up ? [17, 13, 10, 1, 24, 4, 26, 13] : mid ? [17, 14, 6, 12, 8, 16, 26, 16] : [17, 16, 10, 29, 24, 25, 26, 17];
+        d.layer('#202030').poly(far);
+        d.layer(PXC.crow, { lift: -1 }).ell(20, 16, 8.5, 4.2).ell(29, 14, 3.6, 3.3);
+        d.layer(PXC.beak).poly([31.5, 12.5, 38.5, 15, 31.5, 16.5]);
+        const near = up ? [16, 14, 7, 3, 22, 6, 25, 14] : mid ? [16, 15, 3, 14, 5, 18, 25, 17] : [16, 17, 7, 30, 22, 27, 25, 17];
+        const nw = d.layer(PXC.wing, { lift: -1 }).poly(near);
+        d.mark(PXC.sheen, near[0] - 1, near[1] - 1, near[0] - 2, near[1] - (up ? 2 : 0));
+        // primaries: dark slits along the trailing edge
+        if (!mid) for (let i = 0; i < 4; i++) nw.tone(1, near[2] + 2 + i * 3, up ? 5 + i : 28 - i);
+        d.mark(PXC.eye, 30, 13);
+      }
+    });
+  }
+  function pxRat(pose) {
+    return ICONS.pxSprite(32, 16, d => {
+      const run = pose === 'run', sniff = pose === 'sniff', st = pose === 'w1' ? 1 : pose === 'w2' ? 2 : 0, lift = sniff ? 3 : 0;
+      d.layer(PXC.pink, { shade: 'flat' }).path(run ? [7, 11, 3, 11, 0, 9] : [7, 11, 3, 13, 1, 11, 1, 8]);
+      const f1 = run ? 20 : st === 1 ? 17 : st === 2 ? 21 : 19, f2 = run ? 7 : st === 1 ? 10 : st === 2 ? 7 : 9;
+      d.layer(PXC.ratDark, { shade: 'flat' }).line(18, 12, f1, 15).line(20, 12, f1 + 2, 15).line(9, 12, f2, 15).line(11, 12, f2 + 2, 15);
+      d.layer(PXC.rat, { shiny: 1 }).ell(run ? 14 : 13.5, run ? 10.5 : 10, run ? 9.5 : 8, run ? 3.4 : 4);
+      d.layer(PXC.rat, { shiny: 1 }).poly([19, 6 - lift, 28, 10 - lift, 27, 11 - lift, 19, 13]);
+      d.layer(PXC.ear).ell(18.5, 6 - lift, 2.2, 2.3);
+      d.mark('#e0dad0', 23, 8 - lift).mark(PXC.pink, 28, 10 - lift).mark('#2a2420', 23, 9 - lift);
+      d.mark('#8a8074', 11, 7, 14, 7, 16, 7);
+    });
+  }
+  // the cat walking, side on, bow to the right: 92x48 at the sitting cat's own pixel size (hs = 48/70)
+  function pxCat(pose) {
+    const sp = ICONS.pxSprite(92, 48, d => {
+      const run = pose === 'run', st = pose === 'w1' ? 1 : 2;
+      const x0 = run ? 24 : 28, x1 = run ? 66 : 62, by = run ? 30 : 29, ry = run ? 8 : 9.5;   // body: hips x0 .. shoulders x1
+      const legs = (far) => {
+        const L = d.layer(far ? PXC.catDark : PXC.cat, { lift: far ? 0 : 0 });
+        const a = (st === 1) !== far ? 1 : -1, o = far ? 2 : 0;
+        if (run) {
+          L.thick([x0 + 3, by, x0 - 6 - o, by + 8, x0 - 13 - o, 45], t => 3.6 - t * 1.4).thick([x1 - 3, by + 1, x1 + 6 + o, by + 9, x1 + 12 + o, 44], t => 3.2 - t * 1.2);
+        } else {
+          L.thick([x0 + 4, by, x0 + 4 + a * 3, by + 9, x0 + 4 + a * 6, 45], t => 3.8 - t * 1.6).thick([x1 - 4, by + 1, x1 - 4 - a * 3, by + 9, x1 - 4 - a * 5, 45], t => 3.2 - t * 1.2);
+        }
+        L.ell(run ? x0 - 13 - o : x0 + 4 + a * 6, 46, 2.4, 1.4).ell(run ? x1 + 12 + o : x1 - 4 - a * 5, 46, 2.2, 1.4);   // paws
+      };
+      legs(true);
+      const tail = d.layer(PXC.cat);
+      tail.thick(run ? [x0 + 1, by - 4, x0 - 8, by - 7, x0 - 16, by - 12, x0 - 18, by - 18] : [x0 + 1, by - 4, x0 - 7, by - 6, x0 - 12, by - 13, x0 - 11, by - 21], t => 2.8 - t * 0.9);
+      const b = d.layer(PXC.cat, { shiny: 1 }).ell((x0 + x1) / 2, by, (x1 - x0) / 2 + 5, ry).ell(x1 + 2, by - 4, 6, 7);
+      legs(false);
+      const hx = run ? x1 + 10 : x1 + 8, hy = run ? by - 9 : by - 13;
+      const h = d.layer(PXC.cat, { shiny: 1 }).ell(hx, hy, 7.2, 6.6);
+      d.layer(PXC.cat).poly([hx - 6, hy - 3, hx - 4.5, hy - 11, hx - 0.5, hy - 5]).poly([hx + 0.5, hy - 5, hx + 3.5, hy - 12, hx + 6, hy - 3]);
+      d.layer(PXC.catLight, { sep: false }).ell(hx + 4, hy + 3, 3.6, 2.6);
+      // tabby: dark stripes across the back, rings on the tail, an M on the brow
+      const on = (L, x, y) => L.m[y * 92 + x];
+      for (let x = x0 - 2; x < x1 + 2; x += 5) for (let k = 0; k < 7; k++) { const px = x + (k >> 1), py = Math.round(by - ry) + 1 + k; if (on(b, px, py)) b.tone(1, px, py); }
+      for (let y = 0; y < 48; y += 4) for (let x = 0; x < 40; x++) if (on(tail, x, y) && !on(b, x, y)) tail.tone(1, x, y);
+      h.tone(1, hx - 3, hy - 4, hx - 2, hy - 5, hx - 1, hy - 4, hx, hy - 5, hx + 1, hy - 4);
+      d.mark(PXC.catNose, hx + 7, hy + 1).mark(PXC.catEye, hx + 3, hy - 1).mark('#1a1410', hx + 4, hy - 1).mark('#5a5048', hx + 6, hy + 3, hx + 5, hy + 4);
+    });
+    sp.hs = 48 / 70;
+    return sp;
+  }
+  let pxDone = false;
+  function upgradeArt() {
+    if (pxDone || typeof ICONS === 'undefined' || !ICONS.pxSprite || !GFX.critters) return;
+    pxDone = true;
+    try {
+      for (const p of ['stand', 'peck', 'w1', 'w2', 'fly1', 'fly2', 'fly3']) SPR['crow_' + p] = Engine.addSprite('crow_' + p, pxCrow(p));
+      for (const p of ['idle', 'sniff', 'w1', 'w2', 'run']) SPR['rat_' + p] = Engine.addSprite('rat_' + p, pxRat(p === 'idle' ? 'stand' : p));
+      stats.pixelArt = true;
+    } catch (err) { console.warn('smalllife pixel art failed; stand-ins kept', err); }
+  }
+  // the cat's walk: pixel art when the engine is there, else the Phase 4 stand-in built from the sitting cat
+  const _catFrames = catFrames;
+  catFrames = function () {
+    if (typeof ICONS !== 'undefined' && ICONS.pxSprite) { try { return { cat_w1: pxCat('w1'), cat_w2: pxCat('w2'), cat_run: pxCat('run') }; } catch (err) { console.warn('pixel cat failed', err); } }
+    return _catFrames();
+  };
+
   // ---------------------------------------------------------------- private random numbers
   function hashStr(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
   function rngFor(seed) {
@@ -233,6 +346,7 @@ const SMALLLIFE = (() => {
   function populate() {
     clearCritters(); L.mapId = G.map ? G.mapId : null; L.lamps = null;
     if (!enabled()) return;
+    upgradeArt();
     const id = G.mapId, m = G.map, d = density();
     const kind = m.outdoor && CROWS[id] ? 'crow' : RATS[id] ? 'rat' : null;
     if (!kind) return;
@@ -593,7 +707,7 @@ const SMALLLIFE = (() => {
   const warned = { v: false };
   if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook(F => { try { rope(F); glimmer(F); } catch (err) { if (!warned.v) { warned.v = true; console.warn('smalllife render failed', err); } } }, 27);
 
-  return { stats, timing: false, CROWS, RATS, L, SPR, tick, populate, ensure() { syncShip(); if (L.mapId !== G.mapId) populate(); }, theCat, tickCat, shipPose, shipView, isMoored, syncShip, ship, playerPace, glimmer, rope, rngFor, hashStr, crowsAwake, MAST, SHIP,
+  return { stats, timing: false, CROWS, RATS, L, SPR, tick, populate, upgradeArt, pxCat, ensure() { syncShip(); if (L.mapId !== G.mapId) populate(); }, theCat, tickCat, shipPose, shipView, isMoored, syncShip, ship, playerPace, glimmer, rope, rngFor, hashStr, crowsAwake, MAST, SHIP,
     get critters() { return L.list; } };
 })();
 if (typeof window !== 'undefined') window.SMALLLIFE = SMALLLIFE;
