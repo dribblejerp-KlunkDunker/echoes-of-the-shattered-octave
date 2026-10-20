@@ -7,12 +7,15 @@
 'use strict';
 
 const PRESETS = (() => {
-  const ORDER = ['original', 'low', 'medium', 'high', 'ultra'];
-  const LABEL = { original: 'Original', low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra', custom: 'Custom' };
+  const ORDER = ['original', 'low', 'medium', 'high', 'ultra', 'cinematic'];
+  const LABEL = { original: 'Original', low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra', cinematic: 'Cinematic', custom: 'Custom' };
   // Low keeps the cheap effects (decals, ceilings, emissive, stars, grade, detail, scenery) and drops these.
   // Any flag this list does not name is "unknown": on for low/medium/high, off for original.
   const LOW_OFF = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'panoramas', 'flyovers', 'darkInteriors', 'groundShadows',
     'sunShafts', 'heatHaze', 'glassGlare', 'seeThrough', 'coldBreath', 'footprints', 'hushWave', 'folkHoods', 'folkHuddle', 'folkCapes', 'folkTavern', 'greenStages', 'glassSpread', 'rootVeins', 'p14pMirrors', 'p14pShimmer', 'aurora', 'causticLight'];   // ground shadows cost about 1 ms a frame in town; the Phase 11 air effects are all per-frame (js/air11.js)
+  // Phase 14 CINEMA: these flags are on ONLY in the Cinematic preset (off in original/low/medium/high, so those frames are
+  // unchanged); js/cinema14.js owns them. Any other flag in a 'cinema' preset follows the 'all' rule.
+  const CINEMA_ONLY = ['cineLight', 'cineFog', 'cineGrade'];
   // CRT curvature and the upscaling filter are display choices, not quality: presets leave them alone
   // (only 'original' switches curvature off, because GFX.plain() does).
   const NOT_PRESET = ['crtCurve'];
@@ -22,6 +25,9 @@ const PRESETS = (() => {
     medium: { scale: 1, viewDist: 1, particles: 1, fx: 'all' },
     high: { scale: 2, viewDist: 1.15, particles: 1.25, fx: 'all' },
     ultra: { scale: 2, viewDist: 2.5, particles: 1.25, fx: 'all' },   // Phase 14 FAR; no preset offers 4x, that is the slider's top step
+    // Phase 14 CINEMA: Ultra plus the cinematic post pass (js/cinema14.js): the engine's far haze (viewDist 2.5) is the
+    // aerial perspective outdoors; cinema14 adds ground fog, emissive bloom, god rays, grade and vignette (and indoor depth haze).
+    cinematic: { scale: 2, viewDist: 2.5, particles: 1.25, fx: 'cinema' },
   };
   const BOOT = 'medium';
   // Why medium at boot. PRESETS.measure() times Engine.render per preset (round-robin, so machine noise
@@ -58,6 +64,7 @@ const PRESETS = (() => {
 
   function fxWanted(kind, flag) {
     if (kind === 'none') return false;
+    if (CINEMA_ONLY.includes(flag)) return kind === 'cinema';
     if (kind === 'cheap') return !LOW_OFF.includes(flag);
     return true;
   }
@@ -293,7 +300,7 @@ const PRESETS = (() => {
     GFX.onChange(() => { if (GFX.particles !== lastPt) { lastPt = GFX.particles; scaleParticles(GFX.particles); } });
   }
 
-  const api = { apply, current, table, measure, scenes: SCENES, order: ORDER, upscale, setScale, setViewDist, stepViewDist, snapViewDist, farLabel: FAR_LABEL, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
+  const api = { apply, current, table, measure, scenes: SCENES, order: ORDER, cinemaOnly: CINEMA_ONLY, refresh: () => { try { refreshBlock(); } catch (e) { /* menu closed */ } }, upscale, setScale, setViewDist, stepViewDist, snapViewDist, farLabel: FAR_LABEL, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
   rememberParticles();
   wire();
   apply(BOOT);

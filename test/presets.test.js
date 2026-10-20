@@ -56,7 +56,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
         check(fogCalls.length === 1 && fogCalls[0] === vd, name + ': setLook fogK ' + fogCalls);
         for (const k of GFX.FX) {
           if (k === 'crtCurve') continue;
-          const want = name === 'original' ? false : name === 'low' ? !cheapOff.includes(k) : true;
+          const want = PRESETS.cinemaOnly && PRESETS.cinemaOnly.includes(k) ? false : name === 'original' ? false : name === 'low' ? !cheapOff.includes(k) : true;   // Phase 14 CINEMA flags: Cinematic preset only
           check(GFX[k] === want, name + ': flag ' + k + ' should be ' + want);
         }
         for (const id in PART_STYLE) check(PART_STYLE[id].n === Math.round(orig[id] * pt), name + ': particles ' + id + ' ' + PART_STYLE[id].n);

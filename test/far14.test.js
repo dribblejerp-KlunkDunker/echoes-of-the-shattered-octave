@@ -134,7 +134,7 @@ const COMPARE = ({ cases }) => {
     assert.deepEqual([r.t.medium.scale, r.t.medium.viewDist, r.t.medium.particles], [1, 1, 1]);
     assert.deepEqual([r.t.high.scale, r.t.high.viewDist, r.t.high.particles], [2, 1.15, 1.25]);
     assert.deepEqual([r.t.ultra.scale, r.t.ultra.viewDist], [2, 2.5]);
-    assert.deepEqual(r.order, ['original', 'low', 'medium', 'high', 'ultra']);
+    assert.deepEqual(r.order, ['original', 'low', 'medium', 'high', 'ultra', 'cinematic']);   // Phase 14 CINEMA adds Cinematic after Ultra
     const u = await q(() => { PRESETS.apply('ultra'); Engine.render(G.ents, G.tod); const o = { cur: PRESETS.current(), scale: GFX.scale, vd: GFX.viewDist, w: Engine.canvas.width, fogK: Engine.farInfo().fogK, farLook: GFX.farLook }; PRESETS.apply('medium'); o.back = PRESETS.current(); return o; });
     assert.deepEqual([u.cur, u.scale, u.vd, u.w, u.fogK, u.farLook, u.back], ['ultra', 2, 2.5, 640, 2.5, true, 'medium']);
     const orig = await q(() => { PRESETS.apply('original'); const o = { farLook: GFX.farLook, vd: GFX.viewDist }; PRESETS.apply('medium'); return o; });
