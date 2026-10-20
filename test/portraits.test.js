@@ -46,7 +46,11 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
       for (const id of Object.keys(PORTRAITS.MAJOR)) {
         const imgs = [await px('img/p_' + id + '.jpg')];
         for (const m of PORTRAITS.MOODS) { const u = PORTRAITS.variant(id, m); if (!/^data:image\//.test(u || '')) { bad.push(id + ':' + m + ' missing'); imgs.push(null); continue; } imgs.push(await px(u)); }
-        for (let a = 0; a < imgs.length; a++) for (let b = a + 1; b < imgs.length; b++) if (imgs[a] && imgs[b] && diff(imgs[a], imgs[b]) < 4) bad.push(id + ' ' + a + '/' + b);
+        // Phase 20: moods are local expression edits now (brows, lids, mouth), so "distinct" means either a global
+        // change (the graded stand-in) or a clear local one: at least 20 pixels that moved by more than 8 levels
+        // (JPEG re-encoding alone moves a pixel by 2-4)
+        const local = (a, b) => { let n = 0; for (let k = 0; k < a.length; k += 4) if ((Math.abs(a[k] - b[k]) + Math.abs(a[k + 1] - b[k + 1]) + Math.abs(a[k + 2] - b[k + 2])) / 3 > 8) n++; return n; };
+        for (let a = 0; a < imgs.length; a++) for (let b = a + 1; b < imgs.length; b++) if (imgs[a] && imgs[b] && diff(imgs[a], imgs[b]) < 4 && local(imgs[a], imgs[b]) < 20) bad.push(id + ' ' + a + '/' + b + ':' + local(imgs[a], imgs[b]));
       }
       return bad;
     });
