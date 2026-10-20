@@ -24,6 +24,8 @@
 //     (PRESETS.current(), or 'custom' over the last preset pressed). From then on nothing here changes the preset;
 //     the stored choice is applied at boot (the modules that keep their own switches still lay them over it).
 //
+//     A returning player with no entry here but settings stored by an earlier phase (Cinematic in 'octave.cinema14.v1',
+//     or a view distance of their own in 'echoes-far14') is treated the same way: their restored settings are their choice.
 //  Storage: localStorage 'octave.max20.v1' = { v: 1, user: <preset>|'custom'|null, base: <preset>|null,
 //  auto: <preset>|null, settled: bool }. Guarded: no storage = the pick is made fresh each launch.
 //  Automation (navigator.webdriver) leaves the game exactly as before, booting on Medium, unless the page opts in
@@ -148,6 +150,15 @@ const MAX20 = (() => {
   }
   const already = (name) => { try { return PRESETS.current() === name || (name === 'cinematic' && GFX.preset === 'cinematic'); } catch (e) { return false; } };
 
+  function legacyChoice() {
+    try {
+      const c = JSON.parse(localStorage.getItem('octave.cinema14.v1') || 'null');
+      if (c && c.p === 1) return true;
+      const f = JSON.parse(localStorage.getItem('echoes-far14') || 'null');
+      if (f && typeof f.viewDist === 'number' && Math.abs(f.viewDist - PRESETS.table[PRESETS.boot].viewDist) > 1e-6) return true;
+    } catch (e) { /* no storage */ }
+    return false;
+  }
   function boot() {
     if (!live || typeof PRESETS === 'undefined' || typeof GFX === 'undefined') { stats.reason = live ? 'no presets' : 'automation'; return; }
     load();
@@ -160,6 +171,15 @@ const MAX20 = (() => {
     if (S.auto) {
       stats.reason = 'stored auto ' + S.auto + (S.settled ? ' (settled)' : '');
       if (!already(S.auto)) applyPreset(S.auto, { flags: overrides(), viewDist: false });
+      return;
+    }
+    // a returning player from before this phase who already chose something (Cinematic, kept by js/cinema14.js, or a
+    // view distance of their own, kept by js/far14.js) has made a choice: keep what their settings restored
+    if (legacyChoice()) {
+      const cur = PRESETS.current();
+      S.user = cur; S.base = cur === 'custom' ? (GFX.preset === 'cinematic' ? 'cinematic' : PRESETS.boot) : cur;
+      stats.reason = 'earlier player settings: ' + cur;
+      save();
       return;
     }
     stats.profile = profile();

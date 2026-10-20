@@ -14,13 +14,19 @@ const KEY = 'octave.max20.v1';
 (async () => {
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
   const errors = [];
-  async function open(ctxOpts, max20, stored) {
+  async function open(ctxOpts, max20, stored, other) {
     const ctx = await browser.newContext(Object.assign({ viewport: { width: 1280, height: 800 } }, ctxOpts || {}));
-    await ctx.addInitScript(([cfg, key, st]) => {
+    await ctx.addInitScript(([cfg, key, st, other]) => {
       if (cfg) window.__max20 = cfg;
-      // a stored choice, planted once per context (later loads keep whatever the game wrote)
-      try { if (st && !sessionStorage.getItem('max20-planted')) { localStorage.setItem(key, JSON.stringify(st)); sessionStorage.setItem('max20-planted', '1'); } } catch (e) { /* fine */ }
-    }, [max20 || null, KEY, stored || null]);
+      // a stored choice (and other modules' stored settings), planted once per context (later loads keep what the game wrote)
+      try {
+        if ((st || other) && !sessionStorage.getItem('max20-planted')) {
+          if (st) localStorage.setItem(key, JSON.stringify(st));
+          for (const k in (other || {})) localStorage.setItem(k, JSON.stringify(other[k]));
+          sessionStorage.setItem('max20-planted', '1');
+        }
+      } catch (e) { /* fine */ }
+    }, [max20 || null, KEY, stored || null, other || null]);
     const page = await ctx.newPage();
     page.on('pageerror', e => errors.push(e.message));
     await page.goto(URL);
@@ -137,6 +143,21 @@ const KEY = 'octave.max20.v1';
     }
 
     // ------------------------------------------------------------------ the player's stored choice is never overridden
+    {
+      // a returning player from before this phase: Cinematic chosen (js/cinema14.js kept it), on a phone: stays Cinematic
+      const { ctx, page } = await open({ ...devices['Pixel 7'] }, { automation: true, fake: { hwgl2: true, cores: 8 } }, null, { 'octave.cinema14.v1': { p: 1, l: 1, f: 1, g: 1 } });
+      const r = await read(page);
+      assert.ok(r.preset === 'cinematic' && r.state.user === 'cinematic' && r.state.auto === null && !r.measuring && r.profile === null, 'an earlier Cinematic choice is kept, not re-picked ' + JSON.stringify(r));
+      await ctx.close();
+    }
+    {
+      // ...or a view distance of their own (js/far14.js kept 1.3): kept, recorded as a custom choice
+      const { ctx, page } = await open(null, DESKTOP, null, { 'echoes-far14': { viewDist: 1.3, farLook: null } });
+      const r = await read(page);
+      assert.ok(r.viewDist === 1.3 && r.state.user === 'custom' && r.state.base === 'medium' && !r.measuring && r.profile === null, 'an earlier custom view distance is kept ' + JSON.stringify(r));
+      console.log('PASS max20: settings stored by earlier phases (Cinematic, a view distance) count as the player\'s choice');
+      await ctx.close();
+    }
     {
       const { ctx, page } = await open(null, DESKTOP, { v: 1, user: 'low', base: 'low', auto: 'cinematic', settled: false });
       const r = await read(page);
