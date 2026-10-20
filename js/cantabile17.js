@@ -1665,6 +1665,8 @@ const CANTABILE17 = (function () {
       if (M && typeof M.request === 'function' && !M.request._p17c) {
         const _req = M.request;
         const w = function (id, vol, rate) { try { if (T.count > 0 && inMine(G.mapId)) return _req.call(this, id, (vol == null ? 1 : vol) * 0.12, rate); } catch (e) { /* default */ } return _req.apply(this, arguments); };
+        // pass the inner wrappers' markers through (deep16 keys its own wrapper on request._p16d: hiding it made it wrap again)
+        for (const k of Object.keys(_req)) Object.defineProperty(w, k, { configurable: true, enumerable: true, get: () => _req[k], set: (v) => { _req[k] = v; } });
         w._p17c = true; M.request = w;
       }
     } catch (e) { /* audio optional */ }
