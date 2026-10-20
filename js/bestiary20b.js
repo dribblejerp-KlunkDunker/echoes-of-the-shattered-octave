@@ -2,7 +2,7 @@
 //  bestiary20b — hand-built five-angle views, second half of the bestiary (Phase 20, team BEASTB)
 //
 //  Species (directions.js species list, sorted by sprite name, Proctor excluded, second half):
-//    ln17_hollow, marine, miredrone, mites, outrider, pressman, quiet, requiem, tongueless,
+//    legionnaire, ln17_hollow, marine, miredrone, mites, outrider, pressman, quiet, requiem, tongueless,
 //    warden, wearer, weaver, weaverling.   (mites is a swarm: symmetric by design, it keeps its one drawing.)
 //
 //  How the views are made. Each species has a hand-built RIG (the SPECIES table below): its body and
@@ -1169,7 +1169,7 @@ const BEASTB = (() => {
       const X = (f, l) => axT + f * sn + l * cs, Z = (f, l) => f * cs + l * sn;
       const E = (x, y, rx, ry, fill) => { g.beginPath(); g.ellipse(x, y, Math.max(0.5, rx), Math.max(0.5, ry), 0, 0, Math.PI * 2); g.fillStyle = fill; g.fill(); };
       const VG = (y0, y1, a, b) => { const q = g.createLinearGradient(0, y0, 0, y1); q.addColorStop(0, a); q.addColorStop(1, b); return q; };
-      const oy = C.h - 96;               // the painting's ground line, kept
+      const oy = C.h - 96 + 4;           // feet on the bottom row, where the painting's mud puddle reached
       const bob = P.bob, A = 66, Bw = 58;  // body half-length and half-width
       const hw = (a, b) => Math.sqrt((a * sn) * (a * sn) + (b * cs) * (b * cs));
       const parts = [];
@@ -1221,6 +1221,49 @@ const BEASTB = (() => {
       for (let i = 0; i < d32.length; i++) if ((d32[i] >>> 24) > 100) { C.col[i] = (d32[i] | 0xff000000) >>> 0; C.z[i] = 0; C.id[i] = 1; }
     },
   };
+
+  // ---------------------------------------------------------------- Carillon Legionnaire
+  // Black plate, a brass bell for a helm, a halberd. (BEASTA counted the title-screen species list, so
+  // the Legionnaire falls to this half; see the first commit.) Attack: the halberd swung up over the
+  // right shoulder (a1) and chopped down before him (a2).
+  SP.legionnaire = humanoid({
+    W: 120, axT: 56, knee: 112, hip: 96,
+    patches: { plate: [20, 74, 12, 20], sleeve: [52, 58, 8, 22], brass: [30, 22, 12, 12] },
+    sil: [[[25, 14], [49, 14], [50, 42], [56, 48], [54, 100], [16, 100], [14, 48], [24, 42]]],
+    lift: [
+      { poly: [[[0, 0], [22, 0], [22, 46], [17, 50], [18, 160], [0, 160]]], axis: 18.5 },
+      { poly: [[[50, 46], [66, 46], [66, 104], [52, 104]]], axis: 50.5 },
+    ],
+    body: { mask: [[[0, 14], [66, 14], [66, 101], [0, 101]]], depth: (y, al) => (y < 44 ? al * 0.95 : al * 0.62), fwd: y => (y < 44 ? 0 : 1) },
+    cuts: {
+      halberd: [[[[0, 4], [21, 4], [21, 42], [15, 46], [15, 160], [9, 160], [9, 46], [0, 42]]], [12, 72], null, [0, -68]],
+      hand: [[[[7, 64], [20, 64], [20, 80], [7, 80]]], [13, 70]],
+      armL: [[[[50, 46], [66, 46], [66, 104], [52, 104]]], [54, 50]],
+      legR: [[[[16, 98], [33, 98], [33, 160], [16, 160]]], [24, 100]],
+      legL: [[[[33, 98], [54, 98], [54, 160], [33, 160]]], [43, 100]],
+    },
+    legs(x) { stride(x, x.S.cut.legR, x.S.cut.legL, -9, 9, 100, 7); },
+    back(B, S) {
+      // the breastplate's shine and its gilt edging are on the front: a plain backplate
+      paintOut(B, [[[26, 46], [44, 46], [44, 96], [26, 96]]], S.pt.plate, { grain: 0.7, smooth: 80, like: S.pt.plate.mean, tol: 60 });
+      const ax = Math.round(S.ax);
+      for (let y = 46; y < 98; y++) { const i = y * B.w + ax; if (L.solidPx(B.data[i])) B.data[i] = mul(B.data[i], 0.6); }   // the backplate's ridge
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(50), sw = (P.swing || 0) * 6;
+      if (!x.atk) {
+        const hand = { f: 4, l: -22, y: x.row(72) };
+        arm(x, { f: 0, l: -18, y: shY }, hand, { pt: 'sleeve', w0: 12, w1: 10, w2: 9, bend: -2, id: 30, hand: S.cut.hand });
+        drawAlong(C, S.cut.halberd, th, axT, hand, { f: 0.05 * (P.swing || 0), l: 0, up: 1 }, { dz: x.front + 4, id: 40 });
+        hangArm(C, S.cut.armL, th, axT, P, v, 20, shY, -sw, 22);
+        return;
+      }
+      const up = x.atk === 1;
+      const hand = up ? { f: 2, l: -14, y: x.row(48) } : { f: 22, l: -2, y: x.row(84) };
+      for (const l of [-18, 18]) arm(x, { f: 0, l, y: shY }, hand, { pt: 'sleeve', w0: 12, w1: 10, w2: 9, bend: up ? 2 : -3, id: l < 0 ? 30 : 34, hand: l < 0 ? S.cut.hand : null });
+      drawAlong(C, S.cut.halberd, th, axT, hand, up ? { f: -0.3, l: 0.55, up: 0.75 } : { f: 0.85, l: 0.05, up: -0.35 }, { dz: x.front + 6, id: 40 });
+    },
+  });
 })();
 
 // ================================================================ the hook
