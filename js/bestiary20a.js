@@ -977,6 +977,38 @@ BEAST20A.SPECIES.aegis = (() => {
   });
 })();
 
+// ---------------------------------------------------------------- the Dirge
+// A hanging shape of grey tatters round a dark, root-veined core, its head a
+// ring of soft petals round a hole, trailing threads that drift and reach.
+// From behind: the petals close over, the tatters hang unbroken, no core,
+// no hole. It floats; nothing touches the ground. Source: dirge (65x150).
+BEAST20A.SPECIES.dirge = (() => {
+  const B = BEAST20A, N = 'dirge';
+  const ring = (cx, hy) => [[cx - 12, hy], [cx + 12, hy], [cx + 14, hy + 13], [cx + 10, hy + 26], [cx - 10, hy + 26], [cx - 14, hy + 13]];
+  const core = (cx, hy, len) => [[cx - 7, hy + 24], [cx + 8, hy + 24], [cx + 7, hy + len], [cx - 6, hy + len]];
+  const pose = (A, hy, len, o) => Object.assign({ A, ring: ring(A, hy), core: core(A, hy, len) }, o || {});
+  const TATTER = () => B.tones(N, [[14, 50], [18, 70], [48, 50], [44, 70], [20, 90], [45, 95], [12, 66], [52, 66]]);
+  return B.rigged(N, {
+    angles: [0, Math.PI / 4, Math.PI * 0.42, Math.PI * 0.75, Math.PI],
+    limbK: 0.8, limbB: 3, join: 3,
+    poses: {
+      '': pose(32, 0, 128, { depth: [[26, 11], [100, 12], [999, 9]] }),
+      _w1: pose(40, 2, 124),
+      _w2: pose(29, 2, 124),
+      _a1: pose(34, 20, 130),
+      _a2: pose(42, 2, 128),
+    },
+    back(P, S) {
+      // no core and no hole from behind: the tatters beside the core are carried
+      // across it, and the head is a hood of the same rags, darker towards the nape
+      const c = B.mir(P.w, S.core); P.heal(c, -13, 0); P.heal(c, 13, 0);
+      const r = B.mir(P.w, S.ring); P.heal(r, 0, 30);
+      P.lightIn(r, (x, y) => 1.0 - 0.35 * (y - r[0][1]) / 26);
+      P.light(() => 0.82);
+    },
+  });
+})();
+
 // Plug in: the hand-built views answer first for their species; everything else
 // (the Proctor pilot, BEASTB's species, the stand-ins) falls through unchanged.
 (() => {
