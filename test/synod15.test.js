@@ -43,6 +43,7 @@ async function boot(browser, opts) {
     window.__rep = (f) => G.player.factions[f];
     window.__bounty = () => crimeState().bounty;
     window.__seed = (v) => { Math.random = () => v; };
+    window.__visit = (id) => { const m = G.maps[id]; if (m && m.visited) m.visited.fill(1); };
   });
   return { page, errors };
 }
@@ -305,6 +306,7 @@ async function boot(browser, opts) {
       for (const k of ['part3', 'part4']) delete G.flags[k];
       G.flags.rite_ready = true; G.flags.rite_started = true; G.flags.escaped = true;   // stage 3: the roads outside the Hedge
       __stage('oakhaven', 23.5, 23.5, 0);
+      __visit('oakhaven'); __visit('clearing');            // the panel lists what you have walked: do not wait on a frame
       travelOpen();
       await new Promise(r => setTimeout(r, 120));
       o.legend = !!document.querySelector('.p15s-sw');
