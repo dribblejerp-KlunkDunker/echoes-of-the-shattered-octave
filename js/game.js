@@ -2427,7 +2427,7 @@ function snapshotGame() {
     const doors = {}; for (const k in m.doors) if (m.doors[k].open > 0 || m.doors[k].target > 0) doors[k] = [m.doors[k].open, m.doors[k].target];
     maps[id] = { ents, extra, doors, visited: rleEncode(m.visited), triggers: m.triggers.map(t => ({ done: !!t.done, said: !!t.said })) };
   }
-  return {
+  const snap = {
     v: SAVE_VERSION, when: Date.now(),
     player: Object.assign({}, p, { cls: p.cls.id }),
     flags: G.flags, journal: G.journal, ledger: G.ledger, runs: G.runs,
@@ -2436,6 +2436,10 @@ function snapshotGame() {
     weather: typeof Weather !== 'undefined' ? Weather.save() : null,
     maps,
   };
+  // A snapshot is a copy, not a view: session slots and the boss autosave keep these objects, and play after saving
+  // must not reach back into them (flags, journal, ledger and the player's arrays were live references before Phase 17).
+  // The JSON round-trip is exactly what a save code stores, so nothing a save can hold is lost.
+  return JSON.parse(JSON.stringify(snap));
 }
 function restoreGame(d) {
   if (!d || typeof d !== 'object' || !d.player || !d.maps || typeof d.mapId !== 'string') throw new Error('Not an Octave save.');
