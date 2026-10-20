@@ -695,19 +695,19 @@ const ICONS = (function () {
   }
   const mixRGB = (a, b, t) => [0, 1, 2].map(i => Math.round(a[i] + (b[i] - a[i]) * t));
 
-  function PxLayer(col, o) { this.col = col; this.o = o || {}; this.m = new Uint8Array(PXN * PXN); this.ov = {}; this.v = 1; }
+  function PxLayer(col, o, W, H) { this.col = col; this.o = o || {}; this.W = W || PXN; this.H = H || PXN; this.m = new Uint8Array(this.W * this.H); this.ov = {}; this.v = 1; }
   const LP = PxLayer.prototype;
-  LP.set = function (x, y) { x = Math.round(x); y = Math.round(y); if (x >= 0 && y >= 0 && x < PXN && y < PXN) { const i = y * PXN + x; this.m[i] = this.v; if (!this.v) delete this.ov[i]; } return this; };
+  LP.set = function (x, y) { x = Math.round(x); y = Math.round(y); if (x >= 0 && y >= 0 && x < this.W && y < this.H) { const i = y * this.W + x; this.m[i] = this.v; if (!this.v) delete this.ov[i]; } return this; };
   LP.cut = function () { this.v = 0; return this; };   // following primitives erase
   LP.add = function () { this.v = 1; return this; };
   LP.px = function () { for (let i = 0; i + 1 < arguments.length; i += 2) this.set(arguments[i], arguments[i + 1]); return this; };
   LP.rect = function (x, y, w, h) { for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) this.set(i, j); return this; };
   LP.ell = function (cx, cy, rx, ry) {
-    for (let y = 0; y < PXN; y++) for (let x = 0; x < PXN; x++) { const a = (x + 0.5 - cx) / rx, b = (y + 0.5 - cy) / ry; if (a * a + b * b <= 1.0001) this.set(x, y); }
+    for (let y = Math.max(0, Math.floor(cy - ry - 1)); y < Math.min(this.H, cy + ry + 1); y++) for (let x = Math.max(0, Math.floor(cx - rx - 1)); x < Math.min(this.W, cx + rx + 1); x++) { const a = (x + 0.5 - cx) / rx, b = (y + 0.5 - cy) / ry; if (a * a + b * b <= 1.0001) this.set(x, y); }
     return this;
   };
   LP.poly = function (p) {
-    for (let y = 0; y < PXN; y++) for (let x = 0; x < PXN; x++) {
+    for (let y = 0; y < this.H; y++) for (let x = 0; x < this.W; x++) {
       const X = x + 0.5, Y = y + 0.5; let inside = false;
       for (let i = 0, j = p.length - 2; i < p.length; j = i, i += 2) {
         const xi = p[i], yi = p[i + 1], xj = p[j], yj = p[j + 1];
@@ -735,7 +735,7 @@ const ICONS = (function () {
   // a band along the (1,-1) diagonal: columns x0..x1, anti-diagonals x+y = c0..c1 (blades, shafts, handles)
   LP.diag = function (x0, x1, c0, c1) { for (let x = x0; x <= x1; x++) for (let c = c0; c <= c1; c++) this.set(x, c - x); return this; };
   // force a ramp tone on pixels: tone(k, x, y, x, y, ...)
-  LP.tone = function (k) { for (let i = 1; i + 1 < arguments.length; i += 2) { const x = arguments[i], y = arguments[i + 1]; if (x >= 0 && y >= 0 && x < PXN && y < PXN) { const j = y * PXN + x; this.m[j] = 1; this.ov[j] = k; } } return this; };
+  LP.tone = function (k) { for (let i = 1; i + 1 < arguments.length; i += 2) { const x = arguments[i], y = arguments[i + 1]; if (x >= 0 && y >= 0 && x < this.W && y < this.H) { const j = y * this.W + x; this.m[j] = 1; this.ov[j] = k; } } return this; };
   LP.toneRect = function (k, x, y, w, h) { for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) this.tone(k, i, j); return this; };
   LP.toneDiag = function (k, x0, x1, c) { for (let x = x0; x <= x1; x++) this.tone(k, x, c - x); return this; };
 
@@ -752,8 +752,8 @@ const ICONS = (function () {
   // tone a local-space point (after the tilt)
   LP.rtone = function (k) { for (let i = 1; i + 1 < arguments.length; i += 2) { const p = this.ic.rp(arguments[i], arguments[i + 1]); this.tone(k, p[0], p[1]); } return this; };
 
-  function PxIcon() { this.layers = []; this.marks = []; this.T = [12, 12, 0.82]; }
-  PxIcon.prototype.layer = function (col, o) { const L = new PxLayer(col, o); L.ic = this; this.layers.push(L); return L; };
+  function PxIcon(W, H) { this.W = W || PXN; this.H = H || PXN; this.layers = []; this.marks = []; this.T = [12, 12, 0.82]; }
+  PxIcon.prototype.layer = function (col, o) { const L = new PxLayer(col, o, this.W, this.H); L.ic = this; this.layers.push(L); return L; };
   PxIcon.prototype.tilt = function (cx, cy, sc) { this.T = [cx, cy, sc || 0.82]; return this; };
   // the pixel a local (tilted) point lands on
   PxIcon.prototype.rp = function (x, y) { const c = this.T, k = RS * c[2]; return [Math.floor(c[0] + (x - y) * k), Math.floor(c[1] + (x + y) * k)]; };
@@ -772,7 +772,7 @@ const ICONS = (function () {
   // directional shading: how far a pixel sits from the lit (top-left) and shaded (bottom-right) edges of its own part,
   // weighted toward the part's thinner axis, mapped onto the ramp
   function pxShade(L, x, y) {
-    const m = L.m, inM = (i, j) => i >= 0 && j >= 0 && i < PXN && j < PXN && m[j * PXN + i];
+    const m = L.m, LW = L.W, inM = (i, j) => i >= 0 && j >= 0 && i < LW && j < L.H && m[j * LW + i];
     let dlx = 1, dsx = 1, dly = 1, dsy = 1;
     while (inM(x - dlx, y)) dlx++; while (inM(x + dsx, y)) dsx++;
     while (inM(x, y - dly)) dly++; while (inM(x, y + dsy)) dsy++;
@@ -789,40 +789,41 @@ const ICONS = (function () {
   const PX_PLATE = { weapon: [[66, 54, 42], [24, 18, 13]], armor: [[56, 61, 66], [19, 21, 23]], item: [[64, 49, 54], [22, 15, 18]], key: [[68, 60, 38], [23, 20, 11]], valuable: [[46, 62, 62], [14, 21, 21]] };
   const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
   function pxRender(icon, tone, plate) {
-    const N = PXN, A = new Array(N * N).fill(null), own = new Int16Array(N * N).fill(-1);
+    const N = icon.W, NH = icon.H, A = new Array(N * NH).fill(null), own = new Int16Array(N * NH).fill(-1);
     icon.layers.forEach((L, li) => {
       const R = ramp(L.col);
-      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      for (let y = 0; y < NH; y++) for (let x = 0; x < N; x++) {
         const i = y * N + x; if (!L.m[i]) continue;
         let k = L.ov[i] != null ? L.ov[i] : pxShade(L, x, y);
         if (L.ov[i] == null && L.o.sep !== false) {
           // a part laid over another part gets a dark seam on its lower-right edge, so parts read as separate pieces
-          const rb = (x + 1 < N && own[i + 1] >= 0 && !L.m[i + 1]) || (y + 1 < N && own[i + N] >= 0 && !L.m[i + N]);
+          const rb = (x + 1 < N && own[i + 1] >= 0 && !L.m[i + 1]) || (y + 1 < NH && own[i + N] >= 0 && !L.m[i + N]);
           if (rb) k = Math.min(k, 1);
         }
         A[i] = R[k]; own[i] = li;
       }
     });
     for (const [x, y, col] of icon.marks) {
-      if (x < 0 || y < 0 || x >= N || y >= N) continue;
+      if (x < 0 || y < 0 || x >= N || y >= NH) continue;
       const i = y * N + x; A[i] = Array.isArray(col) ? ramp(col[0].col)[col[1]] : hex(col); if (own[i] < 0) own[i] = 99;
     }
     // ink outline around the whole silhouette (4-neighbour), a little warmer on the lit side
     const O = A.slice();
-    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    for (let y = 0; y < NH; y++) for (let x = 0; x < N; x++) {
       const i = y * N + x; if (A[i]) continue;
-      const r = x + 1 < N && A[i + 1], b = y + 1 < N && A[i + N], l = x > 0 && A[i - 1], u = y > 0 && A[i - N];
+      const r = x + 1 < N && A[i + 1], b = y + 1 < NH && A[i + N], l = x > 0 && A[i - 1], u = y > 0 && A[i - N];
       if (r || b) O[i] = mixRGB(PX_INK, r || b, 0.18); else if (l || u) O[i] = PX_INK;
     }
-    const out = new Uint8ClampedArray(N * N * 4);
+    if (icon.noOutline) for (let i = 0; i < O.length; i++) if (!A[i]) O[i] = null;
+    const out = new Uint8ClampedArray(N * NH * 4);
     const P = PX_PLATE[tone] || PX_PLATE.item;
-    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    for (let y = 0; y < NH; y++) for (let x = 0; x < N; x++) {
       const i = y * N + x, q = i * 4; let c = O[i], a = 255;
       if (!c && plate) {
-        const corner = (x === 0 || x === N - 1) && (y === 0 || y === N - 1);
+        const corner = (x === 0 || x === N - 1) && (y === 0 || y === NH - 1);
         if (corner) { a = 0; c = [0, 0, 0]; }
         else if (x === 0 || y === 0) c = mixRGB(P[0], [200, 168, 104], 0.3);
-        else if (x === N - 1 || y === N - 1) c = mixRGB(P[1], [0, 0, 0], 0.35);
+        else if (x === N - 1 || y === NH - 1) c = mixRGB(P[1], [0, 0, 0], 0.35);
         else {
           const d = Math.hypot(x - 8, y - 7) / 19, lv = Math.max(0, Math.min(3, Math.floor(d * 4 + BAYER[(y & 3) * 4 + (x & 3)] / 16 - 0.5)));
           c = mixRGB(P[0], P[1], lv / 4);
@@ -842,6 +843,14 @@ const ICONS = (function () {
     sm.getContext('2d').putImageData(new ImageData(data, PXN, PXN), 0, 0);
     const c = cv.getContext('2d'); c.imageSmoothingEnabled = false; c.drawImage(sm, 0, 0, S, S);
     return cv;
+  }
+  // Phase 20 FOLK: the same pixel engine for small world sprites (crows, rats, the cat's walk): returns the engine's
+  // sprite format {w, h, data: Uint32Array} with an ink outline and no plate. o.ink: outline colour [r,g,b]
+  function pxSprite(W, H, draw, o) {
+    const icon = new PxIcon(W, H); icon.T = [W / 2, H / 2, 1]; draw(icon);
+    if (o && o.noOutline) icon.noOutline = true;
+    const px = pxRender(icon, 'item', false), d = new Uint32Array(px.buffer);
+    return { w: W, h: H, data: d };
   }
 
   // ---------------------------------------------------------------- palette (base tones; ramps derive the rest)
@@ -2011,6 +2020,6 @@ const ICONS = (function () {
     TABLE, KIND: Object.keys(KIND), SIZE: S, url, weaponUrl, itemLayerUrl, weaponLayerUrl, allIds, plan, weaponPlan, dollSvg,
     decorateInventory, decorateShop, decorateChest, decorateCrafting, armorId, cacheSize: () => cache.size,
     // Phase 20: which ids have a hand-built pixel drawing; setPixel(false) shows the Phase 5 painted stand-ins (contact sheets)
-    PIX, hasPixel: id => typeof id === 'string' && !!pixFor(id), setPixel: v => { pixelOn = !!v; },
+    PIX, pxSprite, C_PX: C, hasPixel: id => typeof id === 'string' && !!pixFor(id), setPixel: v => { pixelOn = !!v; },
   };
 })();
