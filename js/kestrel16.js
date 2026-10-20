@@ -1382,10 +1382,15 @@ const KESTREL16 = (function () {
   installNpc();
   wire('maps', wireMaps); wire('use', wireUse); wire('travel', wireTravel);
   if (typeof document !== 'undefined') wire('options', wireOptions);
+  // arrival cards (js/screens.js): the deck is outdoor, so it fell back to the 'woods' painting (a burning boat in a forest).
+  // Below-decks takes the timber-and-stair 'belfry' painting; the deck takes the plain stand-in card (no painting fits a
+  // ship in the air) (Phase 16 polish).
+  const CARDS = { [DECK]: 'plain', [BELOW]: 'belfry' };
+  try { if (typeof SCREENS !== 'undefined' && SCREENS.FAMILY) Object.assign(SCREENS.FAMILY, CARDS); } catch (e) { /* no cards */ }
   try { const h = H15(); if (h && Array.isArray(h.HEARTH_MAPS) && h.HEARTH_MAPS.indexOf(BELOW) < 0) h.HEARTH_MAPS.push(BELOW); } catch (e) { /* hearth15 absent */ }
 
   return {
-    DECK, BELOW, MAPS, B, UPG, LOCKER, CREW, FLAGS, TX, cfg, saveCfg, loadCfg, DECK_AT, BELOW_AT, RAIL_PEGS, OX, OY, T,
+    CARDS, FILL_BELOW, DECK, BELOW, MAPS, B, UPG, LOCKER, CREW, FLAGS, TX, cfg, saveCfg, loadCfg, DECK_AT, BELOW_AT, RAIL_PEGS, OX, OY, T,
     get TEXTS() { return LIST.slice(); },
     fint, fset, sanitize, upHas, crewHas, seenHas, mooring, landing, costOf, blockers, canFit, fit, buyMaterial, travelMinutesFor, riskFactor, magsSees,
     recruitCheck, hire, giveLoaf, mendWeapon, railState, hangRail, takeRail, furnish, refresh, board, boardBlock, leaveShip, goBelow, goDeck, rest, hop, hopAllowed,

@@ -292,52 +292,83 @@ const FLUME16 = (function () {
     Engine.addSprite(dst, Object.assign({}, sp, { data: d }));
   }
 
-  // wall textures, grown from t_wood: green sap in vertical veins (aqueduct), a great knot (the hidden doors), a black-seep gate
+  // wall textures. The aqueduct is GROWN wood (Phase 16 polish): bark-brown ribs of uneven width that wander a little,
+  // fissured bark between them, the odd knot, a ragged growth collar, moss low down, and a wet lip at the top where the
+  // channel water laps. The green light belongs to the water (glowHook), not to the wood. Three variants so a long wall
+  // never repeats one tile; all are periodic, so they tile cleanly. Procedural stand-ins, painted once.
+  const GROWN = ['p16f_grown', 'p16f_grown2', 'p16f_grown3'];
+  const grownAt = (x) => GROWN[((x * 7 + (x >> 2) * 3) % 5) % 3];
+  function hsh(x, y, s) { let h = (x * 374761393 + y * 668265263 + s * 2246822519) >>> 0; h = Math.imul(h ^ (h >>> 13), 1274126177) >>> 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
+  function vnoise(x, y, cx, cy, s) {             // value noise with cells cx by cy texels, periodic over 64
+    const nx = 64 / cx, ny = 64 / cy, fx = x / cx, fy = y / cy, x0 = Math.floor(fx), y0 = Math.floor(fy), u = fx - x0, v = fy - y0;
+    const X0 = ((x0 % nx) + nx) % nx, X1 = (X0 + 1) % nx, Y0 = ((y0 % ny) + ny) % ny, Y1 = (Y0 + 1) % ny;
+    const a = hsh(X0, Y0, s), b = hsh(X1, Y0, s), c = hsh(X0, Y1, s), d = hsh(X1, Y1, s), su = u * u * (3 - 2 * u), sv = v * v * (3 - 2 * v);
+    return a + (b - a) * su + (c - a) * sv + (a - b - c + d) * su * sv;
+  }
+  // one grown-wood tile: returns [r, g, b] per texel
+  function grownTexel(seed) {
+    // rib edges across the tile: uneven widths that add up to 64
+    const r0 = rng(seed), edges = [0]; let acc = 0;
+    while (acc < 64) { const wdt = 6 + Math.floor(r0() * 9); acc = Math.min(64, acc + wdt); edges.push(acc); }
+    if (64 - edges[edges.length - 2] < 5 && edges.length > 2) edges.splice(edges.length - 2, 1);
+    const knots = []; for (let i = 0; i < 2; i++) if (r0() < 0.5) knots.push([6 + r0() * 52, 8 + r0() * 44, 1.6 + r0() * 1.6]);
+    const collar = 18 + Math.floor(r0() * 30);
+    return (x, y) => {
+      const wob = (vnoise(x, y, 64, 16, seed + 1) - 0.5) * 4;              // the ribs wander as they climb
+      const xs = ((x + wob) % 64 + 64) % 64;
+      let i = 1; while (i < edges.length - 1 && xs >= edges[i]) i++;
+      const a = edges[i - 1], b = edges[i], t = (xs - a) / Math.max(1, b - a);
+      let k = 0.55 + 0.5 * Math.sin(t * Math.PI) - 0.18 * t;              // rounded rib, lit from the left
+      const grain = vnoise(x, y, 2, 16, seed + 2) * 0.22 + vnoise(x, y, 4, 32, seed + 3) * 0.18;
+      k *= 0.78 + grain;
+      if (t < 0.09 || t > 0.93) k *= 0.42;                                  // the fissure between two ribs
+      if (vnoise(x, y, 8, 8, seed + 4) > 0.8 && (t < 0.2 || t > 0.8)) k *= 0.7;   // bark breaking open
+      const cd = Math.abs(y - collar - (vnoise(x, 0, 16, 64, seed + 5) - 0.5) * 6);
+      if (cd < 1.6) k *= 1.18; else if (cd < 2.8) k *= 0.7;                  // a ragged growth collar
+      let r = 104 * k, g = 78 * k, bl = 50 * k;
+      for (const [kx, ky, kr] of knots) {                                   // knots: dark heart, rings, a pale rim
+        const dx = x - kx, dy = (y - ky) * 0.7, d = Math.sqrt(dx * dx + dy * dy);
+        if (d < kr * 2.2) { const ring = 0.86 + 0.14 * Math.sin(d * 2.6); const kk = d < kr * 0.6 ? 0.45 : d > kr * 1.9 ? 1.08 : ring * 0.85; r *= kk; g *= kk; bl *= kk; }
+      }
+      const moss = Math.max(0, (y - 44) / 20) * vnoise(x, y, 8, 8, seed + 6);   // moss low on the wood
+      if (moss > 0.25) { const m = Math.min(1, (moss - 0.25) * 2.2) * 0.55; r = r * (1 - m) + 52 * m; g = g * (1 - m) + 70 * m; bl = bl * (1 - m) + 34 * m; }
+      if (y < 3) { const w = (3 - y) / 3 * 0.5; r = r * (1 - w) + 40 * w; g = g * (1 - w) + 92 * w; bl = bl * (1 - w) + 64 * w; }   // the wet lip: water light, faint
+      return [r, g, bl];
+    };
+  }
   function paintTextures() {
     if (typeof Engine === 'undefined' || !Engine.addTexture || !Engine.textures || !Engine.textures.t_wood) return;
-    const src = Engine.textures.t_wood;
     const make = (name, fn) => {
       if (Engine.textures[name]) return;
       const d = new Uint32Array(64 * 64);
       for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
-        const p = src[y * 64 + x]; let r = p & 255, g = (p >>> 8) & 255, b = (p >>> 16) & 255;
-        const o = fn(x, y, r, g, b); r = o[0]; g = o[1]; b = o[2];
-        d[y * 64 + x] = (255 << 24) | ((clamp(b, 0, 255) | 0) << 16) | ((clamp(g, 0, 255) | 0) << 8) | (clamp(r, 0, 255) | 0);
+        const o = fn(x, y);
+        d[y * 64 + x] = (255 << 24) | ((clamp(o[2], 0, 255) | 0) << 16) | ((clamp(o[1], 0, 255) | 0) << 8) | (clamp(o[0], 0, 255) | 0);
       }
       Engine.addTexture(name, d);
     };
-    const veins = [5, 14, 23, 33, 41, 52, 59];
-    // grown wood: darker and greener than boards, with sap-lines that wander a little and glow along the middle
-    make('p16f_grown', (x, y, r, g, b) => {
-      r *= 0.62; g = g * 0.74 + 8; b *= 0.5;
-      for (const vx of veins) {
-        const wob = Math.round(Math.sin(y * 0.09 + vx) * 0.9), dx = Math.abs(x - (vx + wob));
-        if (dx === 0) { r = r * 0.4 + 40; g = g * 0.4 + 170; b = b * 0.4 + 70; }
-        else if (dx === 1) { r += 6; g += 38; b += 14; }
-      }
-      if (y % 21 === 0) { r *= 0.7; g *= 0.75; b *= 0.7; }
-      return [r, g, b];
-    });
-    // the hidden doors: the same wood with a round knot, its rings picked out
-    make('p16f_knot', (x, y, r, g, b) => {
-      r *= 0.62; g = g * 0.74 + 8; b *= 0.5;
+    GROWN.forEach((name, i) => make(name, grownTexel(1601 + i * 37)));
+    // the hidden doors: the same wood with one great knot, its rings picked out (it does not look like a door)
+    const kb = grownTexel(1601);
+    make('p16f_knot', (x, y) => {
+      let [r, g, b] = kb(x, y);
       const dx = x - 32, dy = y - 34, d = Math.sqrt(dx * dx * 0.8 + dy * dy * 0.55);
       if (d < 19) {
-        const ring = Math.sin(d * 1.15) * 0.5 + 0.5;
-        const k = d < 5 ? 0.35 : 0.62 + 0.4 * ring;
-        r = r * k + 12 * ring; g = g * k + 8 * ring; b *= k;
-        if (Math.abs(d - 19) < 0.9) { g += 40; r += 10; }
+        const ring = Math.sin(d * 1.15) * 0.5 + 0.5, k = d < 5 ? 0.35 : 0.62 + 0.4 * ring;
+        r = r * k + 14 * ring; g = g * k + 9 * ring; b = b * k + 4 * ring;
+        if (Math.abs(d - 19) < 0.9) { r *= 0.55; g *= 0.55; b *= 0.55; }
       }
-      for (const vx of [4, 59]) if (Math.abs(x - vx) === 0) { r = r * 0.4 + 40; g = g * 0.4 + 170; b = b * 0.4 + 70; }
       return [r, g, b];
     });
+    const src = Engine.textures.t_wood;
+    const make2 = (name, fn) => make(name, (x, y) => { const p = src[y * 64 + x]; return fn(x, y, p & 255, (p >>> 8) & 255, (p >>> 16) & 255); });
     // the lock gate: near-black timber, banded, with green seep running down it
-    make('p16f_gate', (x, y, r, g, b) => {
+    make2('p16f_gate', (x, y, r, g, b) => {
       r *= 0.36; g = g * 0.42 + 4; b *= 0.34;
       if (y % 22 < 3) { r = 38; g = 42; b = 40; }
       if ((y % 22 < 3) && (x % 16 === 4 || x % 16 === 11)) { r = 80; g = 84; b = 80; }
       const sx = (x * 7 + 3) % 17;
-      if (sx < 2 && ((y + x * 3) % 29) < 22) { g += 34; r += 4; b += 10; }
+      if (sx < 2 && ((y + x * 3) % 29) < 22) { g += 14; r += 2; b += 6; }   // seep: wet, only a little green
       return [r, g, b];
     });
   }
@@ -414,6 +445,20 @@ const FLUME16 = (function () {
       P(x, [[6, 22], [106, 22], [96, 38], [16, 38]], VG(x, 22, 38, '#5a4630', '#32261a'), '#1e160e');
       L(x, 10, 26, 102, 26, '#7a6040', 1.2); L(x, 56, 22, 56, 2, '#4a3826', 2.4);
       P(x, [[56, 4], [86, 20], [56, 20]], '#cfc8b0', '#6a6454');
+    });
+    // the Low Rings (Phase 16 polish): the ridge of a drowned house's roof standing out of the green water. Tiles in rows,
+    // a ridge-beam, a chimney stub; below the waterline nothing (the street's own water shows), with a pale ripple at it.
+    addSprite('p16f_sunkroof', 96, 44, (x) => {
+      const wl = 36;
+      P(x, [[6, wl], [48, 6], [90, wl]], VG(x, 6, wl, '#6a5a3a', '#3e3424'));
+      for (let row = 0; row < 6; row++) {                                       // tile courses: scalloped lines
+        const y = 10 + row * 4.6, half = (y - 6) / (wl - 6) * 42;
+        for (let tx = 48 - half; tx < 48 + half - 2; tx += 5) { x.beginPath(); x.arc(tx + 2.5, y, 2.5, 0, Math.PI); x.strokeStyle = row % 2 ? '#2e2618' : '#36301e'; x.lineWidth = 1; x.stroke(); }
+      }
+      L(x, 48, 6, 90, wl, 'rgba(0,0,0,0.35)', 2); L(x, 48, 6, 6, wl, 'rgba(255,240,200,0.18)', 1.5);
+      R(x, 44, 4, 8, 4, '#2a2216');                                             // the ridge-beam end
+      R(x, 62, 6, 7, 12, '#5a4a3a'); R(x, 61, 5, 9, 2, '#3a3026');                // a chimney stub
+      for (let i = 0; i < 7; i++) E(x, 10 + i * 12.5, wl + 1, 7, 1.2, 'rgba(200,235,215,0.85)');   // the ripple at the waterline
     });
     // a coil of briar-wrapped rope and a barrel are in the game already; here, a hanging lantern for the Low Rings
     addSprite('p16f_hang', 28, 56, (x) => {
@@ -498,14 +543,16 @@ const FLUME16 = (function () {
   const ringWall = (tex) => { const c = WALL(tex); c.p16fRing = true; return c; };
   const ringBlock = (m, x, y, tex, top, opts) => { const c = m.block(x, y, tex, top, opts); c.p16fRing = true; return c; };
   const J = (m, sprite, x, y, o) => m.deco(sprite, x, y, o);
+  // the sap-lamps' light: a restrained green spill near the channel, so the road stays a road (Phase 16 polish)
+  const LAMP_LIGHT = [8, 26, 14], LAMP_LIGHT_POCKET = [10, 32, 18];
 
   function buildRoad() {
     const W = 64, H = 32, Z = B.ZONE;
-    const m = new GameMap('flume_road', 'The Flume Road', W, H, { outdoor: true, floor: 't_moss', floorTextures: TEXTURES, fogDist: 17, fogColor: [46, 70, 58], music: 'wild', danger: 1, spawn: { x: 2.0, y: 12.5, dir: 0 } });
+    const m = new GameMap('flume_road', 'The Flume Road', W, H, { outdoor: true, floor: 't_moss', floorTextures: TEXTURES, fogDist: 17, fogColor: [62, 64, 56], music: 'wild', danger: 1, spawn: { x: 2.0, y: 12.5, dir: 0 } });
     m.border('t_hedge');
     // the hedge band behind the channel, and the grown-wood outer wall of the aqueduct
     m.rect(1, 1, W - 2, 6, 't_hedge');
-    for (let x = 1; x < W - 1; x++) m.set(x, 7, ringWall('p16f_grown'));
+    for (let x = 1; x < W - 1; x++) m.set(x, 7, ringWall(grownAt(x)));
     // heights: the path and verge are a smooth slope that climbs (the Wash is dipped); the channel and the hedge band behind it are
     // flat cells at their own level, so the channel's face is a riser of grown wood that grows over the Wash
     const V = m.ensureVerts(), W1 = W + 1, Lv = m.ensureLvls();
@@ -514,7 +561,7 @@ const FLUME16 = (function () {
     for (let y = 0; y <= 10; y++) for (let x = 0; x < W; x++) { m.smooth[y * W + x] = 0; Lv[y * W + x] = chanH(x + 0.5); }
     // the channel: three cells of deep water (walls to a walker), faced in grown wood on the path side
     for (let x = 1; x < W - 1; x++) for (let y = 8; y <= 10; y++) m.setFloor(x, y, 2);
-    m.setSide(1, 8, W - 2, 10, 'p16f_grown');
+    for (let x = 1; x < W - 1; x++) m.setSide(x, 8, x, 10, grownAt(x + 1));
     // the path (cobble) and the boarded Wash
     for (let x = 1; x < W - 1; x++) for (let y = 11; y <= 13; y++) m.setFloor(x, y, x >= Z.x0 && x < Z.x1 ? 5 : 1);
     for (let y = 14; y <= 18; y++) for (let x = 1; x < W - 1; x++) m.setFloor(x, y, (x * 7 + y * 3) % 11 === 0 ? 4 : 0);
@@ -523,7 +570,7 @@ const FLUME16 = (function () {
     m.rect(1, 20, 6, H - 2, 't_hedge'); m.rect(10, 20, W - 2, H - 2, 't_hedge');
     for (let y = 19; y <= H - 2; y++) for (let x = 7; x <= 9; x++) m.setFloor(x, y, 0);
     // the cutting: a solid pier of grown wood 14..18 deep under the Wash, with two pockets cut into its path face
-    for (let x = Z.x0; x < Z.x1; x++) for (let y = 14; y <= 18; y++) m.set(x, y, ringWall('p16f_grown'));
+    for (let x = Z.x0; x < Z.x1; x++) for (let y = 14; y <= 18; y++) m.set(x, y, ringWall(grownAt(x + y)));
     for (const [px, py] of B.POCKETS) { m.set(px, py, null); m.setFloor(px, py, 0); }
     // the hollow of the third pier: a tunnel along y 16 with a knot-door at each end, shut until the rumour is bought
     for (let x = Z.x0 + 1; x < Z.x1 - 1; x++) m.set(x, 16, null);
@@ -534,9 +581,9 @@ const FLUME16 = (function () {
     m.set(8, H - 1, DOOR({ portal: { map: 'flume_landing', x: 16.5, y: 1.6, dir: Math.PI / 2 }, label: TX.road.toLanding }));
     // ---- props
     const lampXs = [6.5, 13.5, 20.5, 44.5, 51.5, 58.0];
-    for (const x of lampXs) J(m, 'p16f_lamp', x, 11.45, { solid: false, radius: 0.1, scale: 0.7, glow: 0.7, lightCol: [24, 88, 50], label: TX.road.lamp });
-    for (const x of [28.5, 34.0]) J(m, 'p16f_lamp', x, 11.45, { solid: false, radius: 0.1, scale: 0.7, glow: 0.7, lightCol: [24, 88, 50], label: TX.road.lamp });
-    for (const [px, py] of B.POCKETS) J(m, 'p16f_lamp', px + 0.5, py + 0.45, { solid: false, radius: 0.1, scale: 0.55, glow: 0.8, lightCol: [28, 96, 56], label: TX.road.pocket, use: 'p16f_pocket' });
+    for (const x of lampXs) J(m, 'p16f_lamp', x, 11.45, { solid: false, radius: 0.1, scale: 0.7, glow: 0.7, lightCol: LAMP_LIGHT, label: TX.road.lamp });
+    for (const x of [28.5, 34.0]) J(m, 'p16f_lamp', x, 11.45, { solid: false, radius: 0.1, scale: 0.7, glow: 0.7, lightCol: LAMP_LIGHT, label: TX.road.lamp });
+    for (const [px, py] of B.POCKETS) J(m, 'p16f_lamp', px + 0.5, py + 0.45, { solid: false, radius: 0.1, scale: 0.55, glow: 0.8, lightCol: LAMP_LIGHT_POCKET, label: TX.road.pocket, use: 'p16f_pocket' });
     J(m, 'sign', 22.2, 13.2, { solid: false, radius: 0.15, scale: 0.75, label: TX.road.sign });
     J(m, 'sign', 10.6, 17.2, { solid: false, radius: 0.15, scale: 0.75, label: TX.road.branch });
     for (const [x, y] of [[9.5, 15.6], [19.0, 16.4], [43.0, 15.6], [50.0, 16.8], [46.4, 13.0]]) J(m, 'p16f_post', x, y, { solid: true, radius: 0.22, scale: 0.9, label: TX.road.post, use: 'p16f_ring', ring: true });
@@ -549,7 +596,7 @@ const FLUME16 = (function () {
     }
     // ---- the strongbox in the hollow pier, and the view at the end of the road
     m.add({ kind: 'item', item: 'cache', tier: 2, x: 31.5, y: 16.5, sprite: 'chest', scale: 0.5, solid: false, label: TX.road.box });
-    for (const x of [27.5, 36.5]) J(m, 'p16f_lamp', x, 16.2, { solid: false, radius: 0.1, scale: 0.5, glow: 0.8, lightCol: [28, 96, 56], label: TX.road.lamp });
+    for (const x of [27.5, 36.5]) J(m, 'p16f_lamp', x, 16.2, { solid: false, radius: 0.1, scale: 0.5, glow: 0.8, lightCol: LAMP_LIGHT_POCKET, label: TX.road.lamp });
     J(m, 'sign', 58.4, 12.2, { solid: false, radius: 0.15, scale: 0.75, label: TX.road.end });
     m.add({ kind: 'item', item: 'cache', tier: 1, x: 60.2, y: 16.2, sprite: 'chest', scale: 0.5, solid: false });
     // ---- foes: two briar packs in the verge, two hounds that listen for ringing wood
@@ -565,7 +612,7 @@ const FLUME16 = (function () {
   const LANDING = { wheel: [26.6, 14.5], gate: [28, 19], gate2: [28, 20], raft: [25.4, 19.6] };
   function buildLanding() {
     const W = 34, H = 26;
-    const m = new GameMap('flume_landing', 'Stillwater Landing', W, H, { outdoor: true, floor: 't_moss', floorTextures: ['t_moss', 't_wood', 't_water', 't_shallows', 't_cobble', 't_grass'], fogDist: 16, fogColor: [48, 66, 60], music: 'town', danger: 0, spawn: { x: 16.5, y: 2.0, dir: Math.PI / 2 } });
+    const m = new GameMap('flume_landing', 'Stillwater Landing', W, H, { outdoor: true, floor: 't_moss', floorTextures: ['t_moss', 't_wood', 't_water', 't_shallows', 't_cobble', 't_grass'], fogDist: 16, fogColor: [58, 62, 58], music: 'town', danger: 0, spawn: { x: 16.5, y: 2.0, dir: Math.PI / 2 } });
     m.border('t_hedge');
     const rect = (x0, y0, x1, y1, idx) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m.setFloor(x, y, idx); };
     // the lane from the road, and the quay along the top of the basin
@@ -592,7 +639,7 @@ const FLUME16 = (function () {
     // ---- props
     J(m, 'sign', 14.2, 11.4, { solid: false, radius: 0.15, scale: 0.75, label: TX.landing.sign });
     for (const [x, y] of [[3.5, 12.4], [10.5, 12.4], [18.6, 12.4], [30.5, 12.4], [12.8, 14.3], [21.0, 14.3]]) J(m, 'lamp', x, y, { solid: true, radius: 0.15, scale: 0.7, glow: 0.7 });
-    for (const [x, y] of [[8.5, 14.2], [20.2, 12.2], [29.5, 14.2]]) J(m, 'p16f_lamp', x, y, { solid: false, radius: 0.1, scale: 0.7, glow: 0.7, lightCol: [24, 88, 50], label: TX.road.lamp });
+    for (const [x, y] of [[8.5, 14.2], [20.2, 12.2], [29.5, 14.2]]) J(m, 'p16f_lamp', x, y, { solid: false, radius: 0.1, scale: 0.7, glow: 0.7, lightCol: LAMP_LIGHT, label: TX.road.lamp });
     J(m, 'p_barrel', 10.4, 13.4, { radius: 0.3, scale: 0.65, label: TX.landing.barrels }); J(m, 'p_barrel', 11.2, 13.8, { radius: 0.3, scale: 0.65, label: TX.landing.barrels });
     J(m, 'p_crate', 5.5, 13.5, { radius: 0.3, scale: 0.7 }); J(m, 'p_crate', 30.4, 13.6, { radius: 0.3, scale: 0.7 });
     J(m, 'p16f_boat', 11.0, 18.6, { solid: false, scale: 0.75, yOff: -0.12, label: TX.landing.boat }); J(m, 'p16f_boat', 19.0, 22.0, { solid: false, scale: 0.7, yOff: -0.12, label: TX.landing.boat });
@@ -618,7 +665,7 @@ const FLUME16 = (function () {
   const RINGS = { loft: { stove: [29.5, 4.6], reed: [29.5, 7.6] } };
   function buildRings() {
     const W = 38, H = 30;
-    const m = new GameMap('flume_lowrings', 'The Low Rings', W, H, { outdoor: true, floor: 't_shallows', floorTextures: ['t_shallows', 't_cobble', 't_water', 't_wood', 't_moss'], fogDist: 14, fogColor: [34, 58, 50], music: 'grove', danger: 1, spawn: { x: 36.4, y: 18.5, dir: Math.PI } });
+    const m = new GameMap('flume_lowrings', 'The Low Rings', W, H, { outdoor: true, floor: 't_shallows', floorTextures: ['t_shallows', 't_cobble', 't_water', 't_wood', 't_moss'], fogDist: 14, fogColor: [44, 54, 50], music: 'grove', danger: 1, spawn: { x: 36.4, y: 18.5, dir: Math.PI } });
     m.border('t_hedge');
     const rect = (x0, y0, x1, y1, idx) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) m.setFloor(x, y, idx); };
     // sinkholes in the street (deep: not wadeable) and boards laid across between the roofs
@@ -648,7 +695,7 @@ const FLUME16 = (function () {
     J(m, 'p16f_hang', 6.5, 9.6, { solid: false, radius: 0.1, scale: 0.7, glow: 0.8, lightCol: [64, 58, 24], label: TX.rings.lamp });
     J(m, 'p16f_hang', 17.5, 9.6, { solid: false, radius: 0.1, scale: 0.7, glow: 0.8, lightCol: [64, 58, 24], label: TX.rings.lamp });
     J(m, 'p16f_hang', 29.5, 9.6, { solid: false, radius: 0.1, scale: 0.7, glow: 0.8, lightCol: [64, 58, 24], label: TX.rings.lamp });
-    for (const [x, y] of [[9.5, 11.2], [25.5, 13.5], [34.5, 12.2], [14.5, 17.4], [3.5, 14.6], [21.5, 18.6]]) J(m, 'p16f_lamp', x, y, { solid: false, radius: 0.1, scale: 0.7, glow: 0.7, lightCol: [24, 88, 50], label: TX.road.lamp });
+    for (const [x, y] of [[9.5, 11.2], [25.5, 13.5], [34.5, 12.2], [14.5, 17.4], [3.5, 14.6], [21.5, 18.6]]) J(m, 'p16f_lamp', x, y, { solid: false, radius: 0.1, scale: 0.7, glow: 0.7, lightCol: LAMP_LIGHT, label: TX.road.lamp });
     // room 1: the chandler's loft
     J(m, 'shelf', 4.7, 4.4, { solid: false, radius: 0.3, scale: 0.8, label: TX.rings.chandler });
     m.item('bandage', 7.5, 6.4); m.item('honey', 5.0, 6.8);
@@ -664,6 +711,14 @@ const FLUME16 = (function () {
     m.enemy('miredrone', 12.5, 16.6, { passive: true, facing: 0.6 }); m.enemy('miredrone', 24.0, 9.9, { passive: true, facing: 3.4 }); m.enemy('miredrone', 29.5, 15.6, { passive: true, facing: 1.2 });
     for (const [x, y] of [[8.4, 12.4], [19.4, 10.8], [28.4, 12.6]]) m.enemy('briarsprite', x, y);
     m.item('tonic', 22.4, 17.4);
+    // ---- the flooded quarter's dressing (Phase 16 polish), appended last so every earlier entity keeps its index: roofs of
+    // drowned houses in the gaps between the barred houses, mooring posts, a cart and barrels gone over, a floating log, reeds.
+    for (const [x, y, sc] of [[12.0, 23.0, 1.0], [23.0, 23.6, 1.1], [35.6, 23.2, 0.9], [27.6, 17.9, 0.85]]) J(m, 'p16f_sunkroof', x, y, { solid: true, radius: 0.45, scale: sc, label: TX.rings.sunken });
+    for (const [x, y] of [[14.2, 17.9], [25.2, 18.9], [33.8, 17.6], [9.6, 10.6]]) J(m, 'p12r_post', x, y, { solid: true, radius: 0.12, scale: 0.6 });
+    J(m, 'p_cart_broken', 1.9, 15.4, { solid: true, radius: 0.4, scale: 0.6, label: TX.rings.sunken });
+    for (const [x, y] of [[19.6, 18.3], [30.6, 13.1]]) J(m, 'p_barrel_side', x, y, { solid: false, radius: 0.2, scale: 0.45 });
+    for (const [x, y] of [[8.0, 14.9], [27.2, 10.7]]) J(m, 'p9_log', x, y, { solid: false, radius: 0.2, scale: 0.55 });
+    for (const [x, y, k] of [[1.4, 10.4, 1], [1.5, 18.7, 2], [35.7, 10.3, 2], [10.4, 19.4, 1], [24.7, 19.4, 2], [36.4, 12.6, 1]]) J(m, 'p_reed' + k, x, y, { solid: false, radius: 0.1, scale: 0.55 });
     m.baseCount = m.entities.length;
     return m;
   }
@@ -1285,6 +1340,13 @@ const FLUME16 = (function () {
           if (inMine(G.mapId)) {
             if (!inMine(from)) { resetRun(); clearWaves(); syncFloor(); }
             applyMapState(G.mapId); arrive();
+            // back on the road mid-surge (by the lane from the Landing): loading drops transient props, so the wall of
+            // water would be missing until the next cycle. Stand it up again as it was (Phase 16 polish).
+            if (G.mapId === 'flume_road' && T.waves.length && T.waves.some((w) => G.map.entities.indexOf(w) < 0)) {
+              const ph = T.phase; raiseWaves();
+              for (const w of T.waves) w.scale = w.top;
+              if (ph === 'drain') lowerWaves();
+            }
           }
         } catch (er) { console.warn('flume16 arrival failed', er); }
         return r;
@@ -1318,11 +1380,16 @@ const FLUME16 = (function () {
   function state() {
     return { phase: T.phase, t: T.t, met: T.met, caught: T.caught, ohh: Object.assign({}, T.ohh), bleed: T.bleedHud, waves: T.waves.length, cfg: Object.assign({}, cfg) };
   }
+  const CARDS = { flume_road: 'hedge', flume_landing: 'street', flume_lowrings: 'street' };
   function init() {
     loadCfg();
     paintTextures(); paintProps(); paintFoes(); installCatalog(); installNpcs();
     wrap(); wrapSell(); wireTravel(); wireStory(); wireLog();
     if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook(glowHook, 27);
+    // arrival cards (js/screens.js): an unlisted outdoor map falls back to the 'woods' painting (a burning boat in a
+    // forest). Name the right existing paintings instead: the road leaves by the Hedge; the Landing and the Low Rings
+    // are wet lanes of a town at night (Phase 16 polish).
+    try { if (typeof SCREENS !== 'undefined' && SCREENS.FAMILY) Object.assign(SCREENS.FAMILY, CARDS); } catch (e) { /* no cards */ }
     if (typeof document !== 'undefined' && document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireMenu); else wireMenu();
   }
   init();
@@ -1332,7 +1399,7 @@ const FLUME16 = (function () {
     state, fint, setf, validate, greening, applyMapState, openLock, useWheel, onUse, completeLock, ringOut, briarHit, tickBleed,
     setPhase, tickClock, surgeActive, inZone, ohhNow, ohhMix, ohhAudio, ohhSource, glowHook, setSwitch, appendRows, syncFloor, raiseWaves, clearWaves,
     pathH, chanH, pathAt, buildRoad, buildLanding, buildRings, hookOakhaven, beforeUpdate, afterUpdate, timberAt, pellamQuest, orrinQuest, resetRun,
-    RUMOUR_DEFS, GAZETTE_ITEMS, OA,
+    RUMOUR_DEFS, GAZETTE_ITEMS, OA, CARDS, GROWN, grownAt,
   };
 })();
 if (typeof window !== 'undefined') window.FLUME16 = FLUME16;
