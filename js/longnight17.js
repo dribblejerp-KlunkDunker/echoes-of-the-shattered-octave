@@ -1438,7 +1438,7 @@ const LONGNIGHT17 = (function () {
     const p = G.player, c = cam();
     return {
       mapId: G.mapId, cam: { x: c.x, y: c.y, dir: c.dir, pitch: c.pitch }, tod: G.tod, day: G.day, state: G.state, noise: G.noise,
-      hp: p.hp, voice: p.voice, fat: p.fat, hpMax: p.hpMax, voiceMax: p.voiceMax, gold: p.gold, inv: JSON.parse(JSON.stringify(p.inv)), songs: p.songs.slice(), weapon: p.weapon,
+      hp: p.hp, voice: p.voice, fat: p.fat, hpMax: p.hpMax, voiceMax: p.voiceMax, gold: p.gold, inv: JSON.parse(JSON.stringify(p.inv)), songs: p.songs.slice(), weapon: p.weapon, weapons: (p.weapons || []).slice(),
       xp: p.xp, level: p.level, kills: p.kills,
       flags: Object.keys(flags()).filter((k) => k.indexOf(FP) === 0).reduce((o, k) => { o[k] = flags()[k]; return o; }, {}),
       hadFlags: Object.keys(flags()).filter((k) => k.indexOf(FP) === 0), flagsAll: JSON.stringify(flags()),
@@ -1450,7 +1450,7 @@ const LONGNIGHT17 = (function () {
     if (!SNAP) return;
     const p = G.player, s = SNAP;
     if (p) {
-      p.hp = s.hp; p.voice = s.voice; p.fat = s.fat; p.hpMax = s.hpMax; p.voiceMax = s.voiceMax; p.gold = s.gold; p.inv = s.inv; p.songs = s.songs; p.weapon = s.weapon;
+      p.hp = s.hp; p.voice = s.voice; p.fat = s.fat; p.hpMax = s.hpMax; p.voiceMax = s.voiceMax; p.gold = s.gold; p.inv = s.inv; p.songs = s.songs; p.weapon = s.weapon; if (s.weapons) p.weapons = s.weapons;
       p.xp = s.xp; p.level = s.level; p.kills = s.kills;
     }
     G.tod = s.tod; G.day = s.day; G.noise = s.noise; G.rootWard = 0;
@@ -1479,6 +1479,8 @@ const LONGNIGHT17 = (function () {
     // the night's kit: a full voice for the Songs, two jars of honey, a tonic; the Songs a Cantor would know
     p.voiceMax = Math.max(p.voiceMax, 30); p.voice = p.voiceMax; p.hp = p.hpMax; p.fat = p.fatMax;
     for (const s of ['murmur', 'tending', 'fifth', 'root']) if (!p.songs.includes(s)) p.songs.push(s);
+    // a short sword in hand, so the night is not seen through the glowing casting hands
+    if (Array.isArray(p.weapons)) { if (!p.weapons.includes('sword')) p.weapons.push('sword'); p.weapon = p.weapons.indexOf('sword'); }
     if (!G.has('honey')) G.give('honey', 2); else G.give('honey', 1);
     if (!G.has('tonic')) G.give('tonic', 1);
     setf('nights', fint('nights') + 1); tally.nights++; saveTally();

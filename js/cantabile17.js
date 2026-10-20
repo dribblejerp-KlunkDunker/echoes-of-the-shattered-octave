@@ -1791,6 +1791,8 @@ const CANTABILE17 = (function () {
     validate(); resetRun();
     try { if (typeof Weather !== 'undefined' && Weather.load) Weather.load(null); } catch (e) { /* ignore */ }
     ensureCoats();
+    // a short sword at the belt, so the harbour is not seen through the glowing casting hands
+    try { const p = G.player; if (Array.isArray(p.weapons)) { if (!p.weapons.includes('sword')) p.weapons.push('sword'); p.weapon = p.weapons.indexOf('sword'); } } catch (e) { /* ignore */ }
     G.day = B.DAY; G.tod = B.TOD; G.player.gold = B.PURSE;
     setf('act', 1);
     try { journal('main', TX.ex.journal); } catch (e) { /* ignore */ }
