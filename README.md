@@ -52,6 +52,23 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 14: a world that shows the story
+
+| | |
+|---|---|
+| ![The Greening in the square](screenshots/p14-greening.jpg) | ![Light-glass in the Root-vault](screenshots/p14-vault.jpg) |
+| Oakhaven greens as the story turns: vines, moss in the paving, roots breaking the square. | Light-glass spreads from the bore at the story's turns, and root veins glow near the Anchor-roots. |
+| ![The Kestrel flight](screenshots/p14-kestrel.jpg) | ![The Octave lights](screenshots/p14-aurora.jpg) |
+| A short flight on the Drift-Kestrel's deck carries you over the Hedge to Whisper-Grove. | The Octave lights ripple over story nights; light ripples on the Sunken Court's flooded floor. |
+| ![Rain in Oakhaven](screenshots/p14-rain.jpg) | ![A mirror](screenshots/p14-mirror.jpg) |
+| Townsfolk hood up in the rain and huddle by fires in the cold; coats and capes sway. | Mirrors show you and the room behind you — and rarely, in three haunted rooms, something else. |
+| ![A smashed crate](screenshots/p14-smash.jpg) | ![View distance](screenshots/p14-far.jpg) |
+| Barrels and crates smash for loot; the watch minds whose crate it was. Sealed doors shimmer until opened. | View distance now reaches 4x, with far country fading into sky-matched haze. |
+
+![The Cinematic preset](screenshots/p14-cinema.jpg)
+
+Two new graphics presets: **Ultra** (double resolution, far view) and **Cinematic** (emissive bloom, god rays, ground fog and a filmic grade — the sheet above shows Medium, the approved concept, and the build). Tavern patrons sit, eat and drink; Hetty serves.
+
 ### Phase 13: the Hush comes closer
 
 | | |
