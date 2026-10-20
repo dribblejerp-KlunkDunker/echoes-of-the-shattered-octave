@@ -1134,7 +1134,7 @@ const BEASTB = (() => {
     },
     legs(x) {
       const { C, S, th, axT, P } = x, cs = Math.abs(x.cs), y0 = x.row(32), sw = (P.swing || 0) * 9;
-      const kx = Math.max(0.55, cs);
+      const kx = 0.85 + 0.15 * cs;   // legs splay whichever way it faces
       // hind pairs first (they are mostly behind), then the fore pairs
       for (const [f, s] of [[-7, 1], [7, -1]]) {
         const lift = x.atk === 1 && f > 0 ? -38 : x.atk === 2 && f > 0 ? -16 : 0;
