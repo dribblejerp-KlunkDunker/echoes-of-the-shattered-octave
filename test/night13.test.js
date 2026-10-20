@@ -275,7 +275,7 @@ const SHOTS = process.env.NIGHT13_SHOTS || '';
       NIGHT13.tick(0.1); r.rings = NIGHT13.stats.rings; r.caps = caps(); r.msg = msgs(); r.duck = NIGHT13.stats.duck && Object.assign({}, NIGHT13.stats.duck);
       r.busDuring = bus ? bus.value : null;
       NIGHT13.tick(0.1); r.once = NIGHT13.stats.rings;
-      NIGHT13.finishDuck(); r.restored = bus ? Math.abs(bus.value - 1) < 0.01 : null; r.dflag = NIGHT13.stats.duck && NIGHT13.stats.duck.restored;
+      NIGHT13.finishDuck(); r.busAfter = bus ? bus.value : null; r.restored = bus ? Math.abs(bus.value - 1) < 0.01 : null; r.dflag = NIGHT13.stats.duck && NIGHT13.stats.duck.restored;
       // spawn multiplier: 1 until 45 s after the ring, exactly 1.25 until dawn, then 1 again
       r.m0 = NIGHT13.spawnMult(); NIGHT13.tick(30); r.m30 = NIGHT13.spawnMult(); NIGHT13.tick(16); r.m46 = NIGHT13.spawnMult();
       const tod0 = G.tod, day0 = G.day; G.tod = 0.5; r.noonMult = NIGHT13.spawnMult(); G.tod = tod0; G.day = day0 + 1; r.nextNightMult = NIGHT13.spawnMult(); G.day = day0;
@@ -294,7 +294,7 @@ const SHOTS = process.env.NIGHT13_SHOTS || '';
     assert.deepEqual(bell.caps, ['[a bell that does not ring]'], 'the caption'); assert.ok(/bell is struck/.test(bell.msg), 'and a line for those without captions');
     if (bell.ctx) {
       assert.ok(bell.duck && bell.duck.depth === 0.35 && bell.duck.prev === 1, 'sfx bus ducked to the gentle depth from 1 (' + JSON.stringify(bell.duck) + ')');
-      assert.ok(bell.restored && bell.dflag, 'the duck is restored to where the bus was');
+      assert.ok(bell.restored && bell.dflag, 'the duck is restored to where the bus was (bus ' + bell.busAfter + ')');
     }
     assert.equal(bell.m0, 1, 'multiplier 1 at the ring'); assert.equal(bell.m30, 1, '1 at 30 s'); assert.equal(bell.m46, 1.25, 'exactly 1.25 after 45 s');
     assert.equal(bell.noonMult, 1, 'back to 1 by day'); assert.equal(bell.nextNightMult, 1, 'and on the next night'); assert.equal(bell.offMult, 1, 'switch off: 1'); assert.equal(bell.greenMult, 1, 'Greening: 1');

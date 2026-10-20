@@ -8,7 +8,7 @@
 const GFX = {
   preset: 'medium',
   scale: 1,          // 3D view resolution: 1 = 320x150 (original), 2 = 640x300
-  viewDist: 1,       // multiplies each map's fog distance
+  viewDist: 1,       // multiplies each map's fog distance: 0.6 to 4 (above 1.4 is "far mode", js/far14.js and engine.js)
   particles: 1,      // multiplies weather/leaf particle counts
   stars: true,       // night stars (js/sky.js)
   panoramas: true,   // painted area panoramas behind the ridges (js/sky.js)
@@ -23,13 +23,14 @@ const GFX = {
   scenery: true,     // barrels, carts, statues, graves, bones (js/scenery.js)
   grass: true,       // swaying, player-reactive grass and reeds (js/flora.js)
   crtCurve: false,   // CRT curvature (scanlines stay on UPG.crt) (js/presets.js)
+  farLook: true,     // Phase 14: far-view look above 1.4x view distance: sky haze, distance-average, sprite LOD (js/engine.js)
   // Every effect off: the original look, and what pixel-exact tests use.
   // View distance and particle counts return to the original too (js/presets.js
   // rescales particles on change). The render resolution is a display choice and
   // is kept, so frames compare at the same size; PRESETS.apply('original')
   // restores everything including 1x.
   plain() { for (const k of GFX.FX) GFX[k] = false; GFX.viewDist = 1; GFX.particles = 1; GFX.preset = 'plain'; if (typeof Engine !== 'undefined') Engine.setLook({ fogK: 1 }); GFX.changed(); },
-  FX: ['stars', 'panoramas', 'flyovers', 'softFog', 'bloom', 'grade', 'mist', 'reflections', 'decals', 'detail', 'scenery', 'grass', 'crtCurve'],
+  FX: ['stars', 'panoramas', 'flyovers', 'softFog', 'bloom', 'grade', 'mist', 'reflections', 'decals', 'detail', 'scenery', 'grass', 'crtCurve', 'farLook'],
   listeners: [],
   onChange(fn) { GFX.listeners.push(fn); },
   changed() { for (const fn of GFX.listeners) { try { fn(GFX); } catch (e) { console.warn('GFX listener failed', e); } } },

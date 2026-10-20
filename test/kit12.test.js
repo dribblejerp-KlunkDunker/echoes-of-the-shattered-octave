@@ -94,6 +94,7 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
       const run = (mode) => {
         for (const k of ['flask', 'jar', 'net']) KIT12.setSwitch(k, mode === 'on');
         Object.assign(G.player, JSON.parse(base)); __seed(4242); __stage(); G.player.hp = G.player.hpMax; G.noise = 2;
+        if (window.HUNTERS13 && HUNTERS13.resetState) HUNTERS13.resetState();   // Phase 13 scent trails remember where you walked; start each run clean
         const es = [__mk('proctor', 22.5, 19.3, 'chase'), __mk('hound', 23.4, 19.0, 'chase'), __mk('proctor', 21.3, 19.6, 'chase'), __mk('drowned', 24, 18, 'idle')];
         const tr = [];
         for (let i = 0; i < 360; i++) {

@@ -174,6 +174,10 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 
 Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
 
+**Phase 14 — a world that shows the story** (delivered; items marked (P14); see the Phase 14 verification)
+
+**Phase 13 — the Hush comes closer** (delivered; items marked (P13); see the Phase 13 verification)
+
 **Phase 12 — tools of the trade, and the festivals** (delivered; items marked (P12); see the Phase 12 verification)
 
 **Phase 11 — feedback and feel** (delivered; items marked (P11) below; see the Phase 11 verification)
@@ -194,19 +198,19 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 | Save to file | `[x]` | Load from file and drag-and-drop (js/origins.js); save codes now capped at 8 MB inflated. |
 
 **Graphics**
-- `[x]` Night palette (per-hour grades, js/post.js) · `[x]` Wet surfaces after rain (js/surfaces) · `[x]` Water reflections and ripples (js/water.js; extend to rippling light on the Sunken Court floor `[~]`)
+- `[x]` Night palette (per-hour grades, js/post.js) · `[x]` Wet surfaces after rain (js/surfaces) · `[x]` Water reflections and ripples (js/water.js; rippling light on the Sunken Court floor done in P14)
 - `[x]` Sun shafts through canopy and Cloister windows (P11) · `[x]` Heat haze over braziers, forges, the Steam Golem (P11) · `[x]` Light-glass glare (P11)
-- `[x]` Footprints in mud and shallow water (P11) · `[ ]` Breakable barrels and crates with loot · `[ ]` The Greening visible in Oakhaven during Part Two
-- `[x]` See-through shimmering ghosts (P11) · `[ ]` "Octave lights" aurora on story nights · `[x]` Moon phases the Hush follows (P11)
-- `[ ]` Mirrors that show you (and sometimes something behind you) · `[ ]` Shimmering sealed doorways · `[x]` Organ-pipe health, fatigue and Song gauges (P11)
+- `[x]` Footprints in mud and shallow water (P11) · `[x]` Breakable barrels and crates with loot (P14) · `[x]` The Greening visible in Oakhaven during Part Two (P14)
+- `[x]` See-through shimmering ghosts (P11) · `[x]` "Octave lights" aurora on story nights (P14) · `[x]` Moon phases the Hush follows (P11)
+- `[x]` Mirrors that show you (and sometimes something behind you) (P14) · `[x]` Shimmering sealed doorways (P14) · `[x]` Organ-pipe health, fatigue and Song gauges (P11)
 - `[x]` Hit-direction marker (complements the sound ripples) (P11) · `[x]` Optional enemy health bars (P11) · `[x]` Optional damage numbers (P11) · `[x]` Stillness tint at the screen edge (P11)
 
 **Animation**
-- `[ ]` Spreading Light-glass in story events · `[ ]` Glowing root veins near the Anchor-roots · `[~]` Crows that gather at bodies (crows exist, js/smalllife.js)
-- `[ ]` NPCs hood up in rain, huddle by fires in cold · `[ ]` Swaying coats and capes · `[x]` Cold breath at night and in cold areas (P11)
-- `[ ]` Hounds sniffing your trail · `[ ]` The Hushwardens' grey muffling wave · `[x]` Weapon trails on fast swings (P11) · `[x]` Hit-stop on critical hits (P11)
-- `[~]` Kestrel flight scene between Parts Two and Three (flyovers exist, js/sky.js) · `[x]` Level-up flourish with rising notes (P11) · `[x]` Quest-complete banner (P11)
-- `[x]` Loot flying to the inventory button (P11) · `[x]` Coins counted out in shops (P11) · `[x]` Page turns in books and the logbook (P11) · `[ ]` Sitting, eating and drinking in the tavern
+- `[x]` Spreading Light-glass in story events (P14) · `[x]` Glowing root veins near the Anchor-roots (P14) · `[x]` Crows that gather at bodies (P13)
+- `[x]` NPCs hood up in rain, huddle by fires in cold (P14) · `[x]` Swaying coats and capes (P14) · `[x]` Cold breath at night and in cold areas (P11)
+- `[x]` Hounds sniffing your trail (P13) · `[x]` The Hushwardens' grey muffling wave (P13) · `[x]` Weapon trails on fast swings (P11) · `[x]` Hit-stop on critical hits (P11)
+- `[x]` Kestrel flight scene between Parts Two and Three (P14) · `[x]` Level-up flourish with rising notes (P11) · `[x]` Quest-complete banner (P11)
+- `[x]` Loot flying to the inventory button (P11) · `[x]` Coins counted out in shops (P11) · `[x]` Page turns in books and the logbook (P11) · `[x]` Sitting, eating and drinking in the tavern (P14)
 
 **Daggerfall features**
 - `[x]` Birth signs from musical modes (P11) · `[x]` "Where is...?" (dialogue button; add map marking `[~]`) · `[ ]` Paid training with per-level limits
@@ -225,16 +229,35 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[ ]` Synod territory spreading on the world map · `[x]` "Previously..." recap on load (P11)
 
 **Horror**
-- `[ ]` Whispers from behind at high Dissonance (with the meter above) · `[ ]` Lights dying one by one · `[ ]` Night terrors after resting somewhere unsafe
-- `[ ]` A haunted house in Oakhaven · `[ ]` The Unrung Bell at night · `[ ]` A jump-scare toggle
+- `[x]` Whispers from behind at high Dissonance (with the meter above) (P13) · `[x]` Lights dying one by one (P13) · `[x]` Night terrors after resting somewhere unsafe (P13)
+- `[x]` A haunted house in Oakhaven (P13) · `[x]` The Unrung Bell at night (P13) · `[x]` A jump-scare toggle (P13)
 
 **New areas and content**
 - `[ ]` The Chlorophyll Flume side area · `[ ]` An underwater dungeon beneath Whisper-Grove · `[ ]` Heists: a Synod cathedral, the Consortium's quarry
 - `[ ]` The Long Night survival event · `[ ]` A trip to Port Cantabile · `[ ]` A Book Two prologue after the ending · `[ ]` The Kestrel as an upgradable home base with crew
 
 **Technical**
-- `[ ]` A sharper renderer with the pixel look kept · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
+- `[~]` A sharper renderer with the pixel look kept (P14: the Ultra and Cinematic presets, view distance to 4x with sky-matched haze and far LOD; a WebGL renderer remains for a later phase — see the Project doc "Echoes of the Shattered Octave: Graphics Upgrade and View-Distance Roadmap") · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
 - `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[x]` Performance overlay (frame rate, memory) (P11)
+
+### Phase 14 "A world that shows the story" verification
+- **How it was built.** Four parallel teams (greening, skies, props, folk) plus two graphics teams (far, cinema), then integration on phase14-world; the aurora and the mirrors each went back for a rework before merging.
+- **Greening (js/greening14.js).** Oakhaven greens in stages keyed to story flags, creeping during the escape; Light-glass spreads from the bore at rite/seat/greening; root veins pulse near story-gated Anchor-roots.
+- **Skies (js/skies14.js).** The Octave lights (thin translucent ribbons, story nights, sky pixels only); the once-only skippable Kestrel flight (outcome identical); caustic light on the Sunken Court.
+- **Props (js/props14.js).** Mirrors with a real reflected room and figure (cached ray pass; the rare dark shape never with scares off); shimmering membranes on six sealed doors (including relief maps, where no membrane drew at all before); breakable barrels and crates with seeded loot, story props excluded, crime if witnessed.
+- **Folk (js/folk14.js).** Hoods in rain, huddling at fires in cold, swaying coats and capes, tavern seating, eating, drinking, and Hetty serving.
+- **Far (js/far14.js + engine).** View distance slider to 4x (Far / Very far / Horizon) and the Ultra preset; sky-matched aerial haze, texture-averaged far detail, sprite LOD, flat far fills; indoors capped at 1.4x so darkness stays the limit; gameplay traces identical at 1x vs 4x.
+- **Cinema (js/cinema14.js).** The owner-approved Cinematic preset: bloom only from lamps and Light-glass, god rays at quarter resolution, noise-modulated ground fog, grade and vignette on the compositor; ~1-2.3 ms a frame added at 2x in the reference scenes; no depth-of-field, no particles.
+- **Tests.** New suites greening14, skies14, props14, folk14, far14, cinema14; all 85 suites on the merged tree (the full run's results are in the Phase 14 PR).
+
+### Phase 13 "The Hush comes closer" verification
+- **How it was built.** Four parallel teams (nerves, night, house, hunters), then integration; merged to main with #21.
+- **Nerves (js/nerves13.js).** Jump scares setting (Off / Gentle / Full) that every other module reads; whispers from behind at Dissonance above 55 (Dread on); dying lights in five corridors.
+- **Night (js/night13.js).** Night terrors after unsafe rest (never in towns, inns, camps, near bosses); the Unrung Bell on some nights (always before the Rite), x1.25 hounds that night; stops after the Greening.
+- **House (js/house13.js).** The Tarrows' house: Nan Tarrow's unfinished count, settled with the kettle, the fork and a held pitch, and a name. No combat.
+- **Hunters (js/hunters13.js).** Scent trails (hounds follow where you walked at half speed; water, fire, damper jars and strong smells break it), the Hushwardens' grey wave, crows at bodies whose scattering can alert foes.
+- **Integration fixes.** One shared lookup of the scare setting; the grey wave honours Off; the bell's duck returns the sound bus to its resting level; older tests adjusted for scent trails and timing races.
+- **Tests.** New suites nerves13, night13, house13, hunters13; all 79 suites pass on the merged tree (several real-time checks are load-sensitive and pass on rerun).
 
 ### Phase 12 "Tools of the trade" verification
 - **How it was built.** Five parallel teams (arms, kit, rigging, songcraft, festivals), then integration on phase12-tools.
