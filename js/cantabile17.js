@@ -206,6 +206,7 @@ const CANTABILE17 = (function () {
       box: S('A pine box under the desk, two feet by one, with a lock on it. Teague says the key stays with the Harbour-Queen, and that it has been used four times in nineteen years.'),
       gaffs: S('A rack of gaffs and long hooks and lanterns, hung ready by size. The Harbour boards a thing that comes in under no hand, and it does not do it with its bare hands.'),
       out: S('Out to the Lantern Yard'),
+      vox: S('A high shelf of vox-bottles, wax-sealed, each with a salvage tag and a chalk number. Found in the harbour, held for the Harbour, and never opened.'),   // [PROPOSED] POLISH17
     },
     chandler: {
       arrive: S('A chandler\'s, cut back into the rock. Coils of rope hang from the ceiling, lamp-oil and tar are in the air, and in the window stands a diving-helm that was new in his grandfather\'s time.'),
@@ -543,7 +544,7 @@ const CANTABILE17 = (function () {
   }
 
   // wall and floor textures. Floors read the world as tx = x across the cell, ty = y down the cell (engine.js).
-  const TEXN = { cliff: 'p17c_cliff', stLo: 'p17c_stlo', stHi: 'p17c_sthi', mole: 'p17c_mole', flags: 'p17c_flags', plank: 'p17c_plank', quay: 'p17c_quay', retain: ['p17c_retain', 'p17c_retain2', 'p17c_retain3'], ash: 'p17c_ashlar', shut: 'p17c_shutter', slate: 'p17c_slate', pl: ['p17c_plaster', 'p17c_plaster2', 'p17c_plaster3'], rail: 'p17c_rail', door: 'p17c_door' };
+  const TEXN = { cliff: 'p17c_cliff', stLo: 'p17c_stlo', stHi: 'p17c_sthi', mole: 'p17c_mole', flags: 'p17c_flags', plank: 'p17c_plank', quay: 'p17c_quay', retain: ['p17c_retain', 'p17c_retain2', 'p17c_retain3'], ash: 'p17c_ashlar', shut: 'p17c_shutter', slate: 'p17c_slate', pl: ['p17c_plaster', 'p17c_plaster2', 'p17c_plaster3'], rail: 'p17c_rail', door: 'p17c_door', para: 'p17c_parapet', front: ['p17c_front', 'p17c_front2', 'p17c_front3'] };
   const plasterAt = (x, y) => TEXN.pl[(x * 5 + y * 3 + (x >> 1)) % 3];
   function paintTextures() {
     if (typeof Engine === 'undefined' || !Engine.addTexture || !Engine.textures || !Engine.textures.t_wood) return;
@@ -556,19 +557,22 @@ const CANTABILE17 = (function () {
       }
       Engine.addTexture(name, d);
     };
-    // the cliff: wet, warm grey rock. Big blobs, soft bedding, wandering fissures, lichen and salt; nothing that reads as masonry
+    // the cliff (POLISH17): dark wet rock in vertical joints, salt and wet streaks running down it, lichen in patches, and a
+    // no horizontal line in it (on a relief map a face repeats once a unit, so any band would stripe the whole cliff);
+    // nothing in it reads as courses of masonry.
     make(TEXN.cliff, (x, y) => {
-      const n1 = vnoise(x, y, 32, 32, 11), n2 = vnoise(x, y, 12, 12, 12), n3 = vnoise(x, y, 5, 5, 13);
-      const bed = Math.sin(((y + 9 * n1) / 64) * Math.PI * 6) * 0.1;
-      let k = 0.5 + 0.42 * n1 + 0.26 * n2 + 0.16 * n3 + bed;
-      const fis = Math.abs(vnoise(x + 7 * n2, y, 16, 64, 14) - 0.5);
-      if (fis < 0.016) k *= 0.5;                                    // a fissure, wandering down the face
-      const fis2 = Math.abs(vnoise(x, y + 5 * n1, 64, 18, 15) - 0.5);
-      if (fis2 < 0.012) k *= 0.62;                                  // a bedding plane
-      let r = 104 * k, g = 96 * k, b = 86 * k;
-      const li = vnoise(x, y, 10, 10, 16);
-      if (li > 0.8) { const t = (li - 0.8) * 4; r = r * (1 - 0.3 * t) + 24 * t; g = g * (1 - 0.1 * t) + 30 * t; b *= 1 - 0.4 * t; }   // lichen
-      if (vnoise(x, y, 4, 34, 17) > 0.82) { r = r * 0.55 + 96; g = g * 0.55 + 100; b = b * 0.55 + 96; }                                   // a salt streak
+      const n1 = vnoise(x, y, 32, 64, 11), n2 = vnoise(x, y, 8, 16, 12), n3 = vnoise(x, y, 4, 4, 13);
+      let k = 0.62 + 0.3 * n1 + 0.16 * n2 + 0.1 * n3;
+      const jx = (x + 9 * vnoise(x, y, 64, 32, 14)) % 32;                                          // two wandering vertical joints a tile
+      if (jx < 1.6) k *= 0.42; else if (jx < 2.6) k *= 0.7; else if (jx > 30.6) k *= 1.12;
+      const jx2 = (x + 21 + 7 * vnoise(x, y, 64, 16, 15)) % 64;
+      if (jx2 < 1.2) k *= 0.55;
+      let r = 92 * k, g = 88 * k, b = 80 * k;
+      const wet = vnoise(x, y, 4, 64, 16);                                                          // wet streaks: darker, a little green
+      if (wet > 0.66) { const t = (wet - 0.66) * 2.2; r *= 1 - 0.32 * t; g *= 1 - 0.24 * t; b *= 1 - 0.3 * t; }
+      if (vnoise(x, y, 2, 64, 17) > 0.86) { r = r * 0.6 + 70; g = g * 0.6 + 72; b = b * 0.6 + 70; }        // salt, running down
+      const li = vnoise(x, y, 8, 8, 18);
+      if (li > 0.78) { const t = (li - 0.78) * 4; r = r * (1 - 0.35 * t) + 48 * t; g = g * (1 - 0.2 * t) + 52 * t; b *= 1 - 0.45 * t; }   // lichen
       return [r, g, b];
     });
     // the Salt Stair's treads: three steps a cell along x, a lit nosing and a dark riser, worn dips, and the gutter's wet channel
@@ -622,13 +626,14 @@ const CANTABILE17 = (function () {
     // the Stair's retaining walls (tall, seen from the flights and from below): rough ashlar in three variants, patchy moss
     // and salt, with no band that would repeat at every unit of height
     TEXN.retain.forEach((nm, i) => make(nm, (x, y) => {
-      const row = (y / 21.33) | 0, off = ((row + i) % 2) * 16, bx = (x + off) % 32, by = y % 21.33, id = hsh(row, ((x + off) / 32) | 0, 130 + i);
-      let k = 0.74 + 0.4 * id + 0.14 * vnoise(x, y, 5, 5, 140 + i);
-      if (bx < 1.4 || by < 1.4) k *= 0.55;
-      let r = 112 * k, g = 108 * k, b = 102 * k;
+      // POLISH17: the Stair's walls are cut from the cliff and faced roughly: dark, wet, big irregular stones
+      const row = ((y + 6 + 6 * vnoise(x, 0, 16, 64, 129 + i)) / 21) | 0, off = ((row + i) % 2) * 17, bx = (x + off) % 34, by = (y + 6 + 6 * vnoise(x, 0, 16, 64, 129 + i)) % 21, id = hsh(row, ((x + off) / 34) | 0, 130 + i);
+      let k = 0.56 + 0.3 * id + 0.18 * vnoise(x, y, 5, 5, 140 + i);
+      if (bx < 1.2 || by < 1.2) k *= 0.58;
+      let r = 90 * k, g = 87 * k, b = 80 * k;
       const mv = vnoise(x, y, 14, 14, 150 + i);
-      if (mv > 0.72) { const t = (mv - 0.72) * 3; r *= 1 - 0.3 * t; g = g * (1 + 0.05 * t) + 10 * t; b *= 1 - 0.35 * t; }
-      if (vnoise(x, y, 4, 40, 160 + i) > 0.8) { r = r * 0.8 + 26; g = g * 0.8 + 28; b = b * 0.8 + 28; }
+      if (mv > 0.7) { const t = (mv - 0.7) * 3; r *= 1 - 0.3 * t; g = g * (1 + 0.04 * t) + 8 * t; b *= 1 - 0.35 * t; }
+      if (vnoise(x, y, 4, 40, 160 + i) > 0.8) { r *= 0.72; g *= 0.74; b *= 0.76; }                // wet runs from the gutter
       return [r, g, b];
     }));
     // the Yard's lime-washed houses: salt streaked down from the sills (three variants)
@@ -640,6 +645,47 @@ const CANTABILE17 = (function () {
       if (y > 50) { r *= 0.85; g *= 0.92; b *= 0.9 + 0.04 * vnoise(x, y, 8, 8, 78); }              // damp at the foot
       return [r, g, b];
     }));
+    // the Stair's parapet (POLISH17): pale dressed coping along the edge of every flight, iron stanchions leaded into it
+    make(TEXN.para, (x, y) => {
+      let k = 0.86 + 0.12 * vnoise(x, y, 6, 6, 191);
+      if (x % 21 < 1.2) k *= 0.62;                                                                   // joints between the copings
+      if (y < 4) k *= 1.12; else if (y > 26) k *= 0.6;                                               // the lit top, the shadowed foot
+      let r = 168 * k, g = 164 * k, b = 152 * k;
+      if ((x + 4) % 16 < 2 && y > 4 && y < 26) { r = 52; g = 54; b = 58; }                            // a stanchion's lead socket
+      if (vnoise(x, y, 4, 12, 192) > 0.82) { r *= 0.8; g *= 0.86; b *= 0.8; }                        // lichen
+      return [r, g, b];
+    });
+    // the fronts of the houses on the cliff (POLISH17): the same lime-wash, a shuttered window to each storey (the texture
+    // repeats once a unit of height, so a house two units tall shows two), a dark lintel, salt under the sill
+    [[236, 230, 214], [226, 214, 192], [216, 222, 214]].forEach((c, i) => make(TEXN.front[i], (x, y) => {
+      let k = 0.9 + 0.16 * vnoise(x, y, 6, 6, 171 + i);
+      if (vnoise(x, y, 4, 36, 175 + i) > 0.76) k *= 0.8;
+      let r = c[0] * k * 0.82, g = c[1] * k * 0.82, b = c[2] * k * 0.82;
+      const wx0 = 20 + (i * 3), wx1 = wx0 + 22, wy0 = 18, wy1 = 42;
+      if (x >= wx0 && x < wx1 && y >= wy0 && y < wy1) {                                             // the window: dark glass in a frame, a glazing bar
+        const fr = x < wx0 + 2 || x >= wx1 - 2 || y < wy0 + 2 || y >= wy1 - 2, bar = Math.abs(x - (wx0 + wx1) / 2) < 1 || Math.abs(y - (wy0 + wy1) / 2) < 1;
+        if (fr || bar) { r = 70; g = 54; b = 40; } else { r = 36 + 10 * (y < 26 ? 1 : 0); g = 44 + 10 * (y < 26 ? 1 : 0); b = 54 + 12 * (y < 26 ? 1 : 0); }
+      } else if ((x >= wx0 - 8 && x < wx0 && y >= wy0 && y < wy1) || (x >= wx1 && x < wx1 + 8 && y >= wy0 && y < wy1)) {   // the shutters, open
+        const pl = (x % 4) === 0; r = (pl ? 58 : 84) + i * 6; g = (pl ? 70 : 98) - i * 4; b = (pl ? 74 : 104) - i * 10;
+      } else if (y >= wy0 - 4 && y < wy0 - 1 && x >= wx0 - 2 && x < wx1 + 2) { r *= 0.5; g *= 0.48; b *= 0.46; }   // the lintel
+      else if (y >= wy1 && y < wy1 + 3 && x >= wx0 - 3 && x < wx1 + 3) { r *= 1.08; g *= 1.08; b *= 1.08; }      // the sill
+      else if (y >= wy1 + 3 && y < 58 && x >= wx0 + 4 && x < wx1 - 4 && vnoise(x, y, 3, 20, 178 + i) > 0.6) { r *= 0.86; g *= 0.88; b *= 0.9; }   // salt run under it
+      if (y > 60) { r *= 0.7; g *= 0.7; b *= 0.72; }                                                  // the floor line between storeys
+      return [r, g, b];
+    }));
+    // coastal turf for the Cay and the cliff-tops (POLISH17): salt-bitten grey-green, tussocks, dry blades, sea-pinks and
+    // pale stones (the game's t_grass is a mustard lawn); turf2 is the same with more stone and less grass
+    const turf = (seed, stone) => (x, y) => {
+      const n = vnoise(x, y, 16, 16, seed), t = vnoise(x, y, 6, 6, seed + 1), f = vnoise(x, y, 3, 3, seed + 2);
+      let r = 88 + 22 * n, g = 96 + 18 * n, b = 78 + 10 * n;
+      if (t > 0.62) { const k = (t - 0.62) * 2.4; r -= 22 * k; g -= 16 * k; b -= 14 * k; }                       // tussock shadow
+      if (f > 0.76 && ((x + y * 3) % 5) < 2) { r += 22; g += 20; b += 12; }                                       // dry blades catching the light
+      if (hsh(x >> 1, y >> 1, seed + 3) > 0.996) { r = 176; g = 120; b = 132; }                                    // a sea-pink
+      const st = vnoise(x, y, 8, 8, seed + 4);
+      if (st > 1 - stone) { const k = Math.min(1, (st - (1 - stone)) * 6); r = r * (1 - k) + 150 * k; g = g * (1 - k) + 148 * k; b = b * (1 - k) + 138 * k; }   // a pale stone
+      return [r, g, b];
+    };
+    make('p17c_turf', turf(201, 0.1)); make('p17c_turf2', turf(211, 0.22));
     // the counting-house: square ashlar, dark with age, with a pale band of coping
     make(TEXN.ash, (x, y) => {
       const row = (y / 16) | 0, off = (row % 2) * 16, bx = (x + off) % 32; let k = 0.62 + 0.36 * hsh(row, ((x + off) / 32) | 0, 81) + 0.1 * vnoise(x, y, 4, 4, 82);
@@ -696,6 +742,22 @@ const CANTABILE17 = (function () {
       E(x, 12, 26, 9, 11, GOLD + '0.14)');
     });
     glowMask('p17c_lantern', (r, g, b) => r > 235 && g > 215 && b > 140);
+    // by day the lamps are out (POLISH17): the same iron, dark glass, a cold wick; the spar's lantern burns low all day
+    addSprite('p17c_lamppost_off', 28, 80, (x) => {
+      E(x, 14, 77, 9, 2.4, 'rgba(0,0,0,0.3)');
+      R(x, 12.5, 24, 3, 52, VG(x, 24, 76, '#4a4c50', '#26282c')); R(x, 9, 70, 10, 6, '#34363a'); R(x, 10.5, 60, 7, 2, '#3a3c40');
+      R(x, 8, 12, 12, 3, '#2c2e32'); R(x, 8, 23, 12, 3, '#2c2e32'); R(x, 9, 15, 10, 8, VG(x, 15, 23, '#5a6466', '#3a4244'));
+      L(x, 8, 15, 8, 23, '#2c2e32', 1.2); L(x, 20, 15, 20, 23, '#2c2e32', 1.2); R(x, 11, 16, 2, 6, 'rgba(220,235,240,0.35)'); R(x, 13.4, 19, 1.2, 3, '#1a1a1a');
+      P(x, [[8, 12], [14, 5], [20, 12]], '#2c2e32');
+    });
+    const lanternOff = (flame) => (x) => {
+      L(x, 12, 0, 12, 14, '#2c2e32', 1.4); R(x, 6, 14, 12, 3, '#2c2e32'); R(x, 7, 17, 10, 16, VG(x, 17, 33, '#5a6466', '#3a4244')); R(x, 6, 33, 12, 3, '#2c2e32');
+      L(x, 7, 17, 7, 33, '#2c2e32', 1); L(x, 17, 17, 17, 33, '#2c2e32', 1); R(x, 8.5, 18, 1.6, 9, 'rgba(220,235,240,0.35)');
+      if (flame) { E(x, 12, 28, 1.4, 2.2, '#ffd890'); E(x, 12, 28.6, 0.7, 1, '#fff4d0'); } else R(x, 11.4, 27, 1.2, 4, '#1a1a1a');
+    };
+    addSprite('p17c_lantern_off', 24, 56, lanternOff(false));
+    addSprite('p17c_lantern_low', 24, 56, lanternOff(true));
+    glowMask('p17c_lantern_low', (r, g, b) => r > 235 && g > 200 && b > 120);
     // the mast-tower: a tall iron lattice with rungs, and a gantry at the top where the Kestrel moors
     addSprite('p17c_mast', 48, 192, (x) => {
       R(x, 17, 4, 3, 188, VG(x, 4, 192, '#5a5c60', '#2c2e32')); R(x, 28, 4, 3, 188, VG(x, 4, 192, '#4e5054', '#26282c'));
@@ -744,15 +806,19 @@ const CANTABILE17 = (function () {
       for (let i = 0; i < 5; i++) { const px = 12 + i * 14, h = 16 + (i * 7) % 12; P(x, [[px, 11 + i % 2], [px + 11, 12], [px + 10, 12 + h], [px + 1, 12 + h - (i % 3)]], cols[i], 'rgba(0,0,0,0.25)'); }
     });
     // a small bronze bell on an iron hook, over a low mound; and the bare hook
-    addSprite('p17c_gravebell', 32, 48, (x) => {
-      E(x, 16, 45, 13, 2.6, 'rgba(0,0,0,0.3)'); P(x, [[3, 45], [8, 38], [24, 38], [29, 45]], VG(x, 38, 45, '#6a5a44', '#3e3424'));
-      R(x, 15, 4, 2, 36, '#3a3c40'); R(x, 7, 4, 16, 2, '#3a3c40'); L(x, 22, 5, 22, 10, '#3a3c40', 1);
-      x.beginPath(); x.moveTo(18, 12); x.quadraticCurveTo(18, 22, 14, 26); x.lineTo(30, 26); x.quadraticCurveTo(26, 22, 26, 12); x.closePath(); x.fillStyle = VG(x, 12, 26, '#d8a85a', '#8a6030'); x.fill(); E(x, 22, 27, 7, 1.6, '#6a4820');
+    // a small bronze bell on an iron hook at the head of a child's grave, and the bare hook (POLISH17: painted larger, so
+    // that from the path the hooks and the bells read against the turf and the sky)
+    const mound = (x) => { E(x, 20, 61, 17, 2.6, 'rgba(0,0,0,0.3)'); x.beginPath(); x.moveTo(3, 61); x.quadraticCurveTo(8, 50, 20, 50); x.quadraticCurveTo(32, 50, 37, 61); x.closePath(); x.fillStyle = VG(x, 50, 61, '#6e7a54', '#3e4630'); x.fill();
+      for (const [sx, sy] of [[10, 58], [16, 55], [25, 56], [30, 59]]) E(x, sx, sy, 2, 1.2, '#9a988c'); };
+    const crook = (x) => { R(x, 17, 10, 3, 44, '#2e3034'); R(x, 17, 10, 1, 44, '#4a4c50'); x.beginPath(); x.moveTo(18.5, 11); x.quadraticCurveTo(19, 4, 26, 4); x.quadraticCurveTo(32, 5, 31, 11); x.strokeStyle = '#2e3034'; x.lineWidth = 2.6; x.stroke(); };
+    addSprite('p17c_gravebell', 40, 64, (x) => {
+      mound(x); crook(x);
+      L(x, 31, 11, 31, 15, '#2e3034', 1.4);
+      x.beginPath(); x.moveTo(27, 15); x.quadraticCurveTo(26, 24, 23, 27); x.lineTo(39, 27); x.quadraticCurveTo(36, 24, 35, 15); x.closePath(); x.fillStyle = VG(x, 15, 27, '#e8b868', '#8a6030'); x.fill();
+      E(x, 31, 27.5, 8, 1.6, '#6a4820'); L(x, 28, 17, 27, 25, 'rgba(255,240,200,0.6)', 1.2); E(x, 31, 29.5, 1.6, 1.6, '#4a3418');   // lip, shine, clapper
+      L(x, 31, 31, 29, 38, '#c8b088', 1); L(x, 31, 31, 33, 37, '#c8b088', 1);                                                          // a frayed bit of cord
     });
-    addSprite('p17c_barehook', 28, 48, (x) => {
-      E(x, 14, 45, 11, 2.4, 'rgba(0,0,0,0.3)'); P(x, [[3, 45], [8, 38], [20, 38], [25, 45]], VG(x, 38, 45, '#6a5a44', '#3e3424'));
-      R(x, 13, 6, 2, 34, '#3a3c40'); R(x, 6, 6, 14, 2, '#3a3c40'); L(x, 18, 7, 18, 14, '#3a3c40', 1.2); L(x, 18, 14, 15, 17, '#3a3c40', 1.2);
-    });
+    addSprite('p17c_barehook', 40, 64, (x) => { mound(x); crook(x); L(x, 31, 11, 31, 16, '#2e3034', 1.4); L(x, 31, 16, 28, 19, '#2e3034', 1.4); });
     addSprite('p17c_sundisc', 56, 56, (x) => {
       E(x, 28, 28, 26, 26, '#6a4a1a'); E(x, 28, 28, 24, 24, VG(x, 4, 52, '#e8c870', '#a07a30')); E(x, 28, 28, 20, 20, 'rgba(0,0,0,0.12)');
       for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; L(x, 28 + Math.cos(a) * 12, 28 + Math.sin(a) * 12, 28 + Math.cos(a) * 22, 28 + Math.sin(a) * 22, '#7a5a20', 1.4); }
@@ -790,6 +856,26 @@ const CANTABILE17 = (function () {
       L(x, 6, 12, 42, 30, 'rgba(0,0,0,0.3)', 1.2); L(x, 42, 12, 6, 30, 'rgba(0,0,0,0.3)', 1.2); for (let i = 0; i < 5; i++) E(x, 6 + i * 9, 31, 4, 1.2, 'rgba(230,250,255,0.5)');
     });
     addSprite('p17c_bench', 64, 36, (x) => { E(x, 32, 33, 26, 2.4, 'rgba(0,0,0,0.3)'); R(x, 6, 16, 52, 5, VG(x, 16, 21, '#8a6a44', '#5a4228')); R(x, 10, 21, 4, 12, '#4a3822'); R(x, 50, 21, 4, 12, '#4a3822'); R(x, 6, 8, 52, 4, '#6a5034'); });
+    // the Harbour office's furniture (POLISH17): a brass stamp, a chart of the harbour and the reef, the vox-bottle shelf
+    addSprite('p17c_stamp', 24, 28, (x) => { E(x, 12, 26, 9, 2, 'rgba(0,0,0,0.3)'); R(x, 5, 18, 14, 7, VG(x, 18, 25, '#c89a50', '#7a5826')); R(x, 10, 6, 4, 12, '#5a3e24'); E(x, 12, 6, 4, 3, '#7a5432'); R(x, 4, 24, 16, 2, '#3a2a1a'); });
+    addSprite('p17c_chart', 64, 48, (x) => {
+      R(x, 2, 2, 60, 44, '#5a4430'); R(x, 4, 4, 56, 40, '#d8caa0'); R(x, 4, 4, 56, 40, 'rgba(120,90,50,0.12)');
+      x.beginPath(); x.moveTo(4, 14); x.quadraticCurveTo(18, 10, 24, 18); x.quadraticCurveTo(30, 26, 22, 34); x.lineTo(14, 44); x.lineTo(4, 44); x.closePath(); x.fillStyle = '#b8a476'; x.fill(); x.strokeStyle = '#6a5434'; x.lineWidth = 1; x.stroke();   // the cliff shore
+      L(x, 24, 30, 46, 30, '#6a5434', 1.6); L(x, 46, 30, 48, 26, '#6a5434', 1.6);                                                       // the Mole
+      for (let i = 0; i < 7; i++) E(x, 36 + (i * 7) % 18, 12 + (i * 5) % 12, 1.4, 1, '#4a7a6a');                                       // the reef
+      for (let i = 0; i < 5; i++) L(x, 32, 22, 32 + Math.cos(i * 1.26) * 26, 22 + Math.sin(i * 1.26) * 20, 'rgba(120,60,40,0.35)', 0.8); // rhumb lines
+      E(x, 52, 38, 4, 2.4, '#b8a476'); R(x, 6, 6, 14, 2, '#6a5434');                                                                    // the Cay; the title
+      for (const [px, py] of [[5, 5], [59, 5], [5, 43], [59, 43]]) E(x, px, py, 1.4, 1.4, '#8a7a5a');
+    });
+    addSprite('p17c_voxshelf', 64, 40, (x) => {
+      R(x, 2, 30, 60, 4, '#6a4a2e'); R(x, 2, 34, 60, 2, '#3a2818'); R(x, 6, 34, 3, 6, '#3a2818'); R(x, 55, 34, 3, 6, '#3a2818');
+      const cols = [['#3a6aa8', '#1a3a68'], ['#3a8a7a', '#1a4a40'], ['#5a7aa0', '#2a3a58'], ['#4a6a3a', '#24361c']];
+      for (let i = 0; i < 7; i++) {
+        const bx = 6 + i * 8, h = 18 + (i * 5) % 6, c = cols[i % 4];
+        R(x, bx, 30 - h, 6, h, VG(x, 30 - h, 30, c[0], c[1])); R(x, bx + 1.5, 30 - h - 4, 3, 4, c[1]); R(x, bx + 1, 30 - h - 6, 4, 2.4, '#b8a070');   // bottle, neck, the wax
+        R(x, bx + 1, 30 - h + 2, 1, h - 4, 'rgba(210,235,255,0.45)'); R(x, bx, 30 - h / 2, 6, 3, 'rgba(232,224,196,0.85)');                       // shine, the chalk-tag
+      }
+    });
     addSprite('p17c_ring', 24, 24, (x) => { E(x, 12, 12, 7, 7, '#3a3c40'); E(x, 12, 12, 4.6, 4.6, 'rgba(0,0,0,0)'); x.globalCompositeOperation = 'destination-out'; E(x, 12, 12, 4.4, 4.4, '#000'); x.globalCompositeOperation = 'source-over'; R(x, 10, 2, 4, 5, '#5a4a3a'); });
     addSprite('p17c_hat', 40, 28, (x) => { E(x, 20, 22, 17, 2.6, 'rgba(0,0,0,0.3)'); E(x, 20, 18, 17, 4, '#3a3028'); x.beginPath(); x.ellipse(20, 14, 10, 8, 0, Math.PI, 0); x.fillStyle = '#4a3c30'; x.fill(); });
     ensureCoats();
@@ -845,13 +931,27 @@ const CANTABILE17 = (function () {
     return null;
   }
   const cliffTop = (x, y) => 12.3 + 0.9 * Math.sin(x * 0.55 + 1.3) * Math.cos(y * 0.43) + 0.9 * hsh(x, y, 7);
+  // The terraces (POLISH17): [first row, height] from the Yard northward; a column's band edges are nudged a row either way
+  // so the rock does not read as a ruler. W is west of the Stair, E the lower shoulder and headland east of it.
+  const TERR = { W: [[39, 2.4], [33, 4.8], [27, 7.2], [20, 9.6], [-99, 12.0]], E: [[36, 1.5], [30, 3.4], [24, 5.4], [17, 7.4], [-99, 9.2]] };
+  function terrK(tab, x, y) { const j = hsh(x >> 1, 7, 61), yy = y + (j < 0.3 ? 1 : j > 0.7 ? -1 : 0); for (let k = 0; k < tab.length; k++) if (yy >= tab[k][0]) return k; return tab.length - 1; }
+  const terrTop = (tab, x, y) => { const k = terrK(tab, x, y); return tab[k][1] + 0.35 * hsh(x, y, 17) + (k === tab.length - 1 ? 0.5 * hsh(x, y, 18) : 0); };
+  // [table, first column, last column, terrace]: the houses stacked on the cliff
+  const CLIFF_HOUSES = [
+    [TERR.W, 3, 6, 0], [TERR.W, 10, 13, 0], [TERR.W, 17, 20, 0], [TERR.W, 22, 24, 0],
+    [TERR.W, 2, 5, 1], [TERR.W, 8, 11, 1], [TERR.W, 14, 17, 1], [TERR.W, 20, 24, 1],
+    [TERR.W, 4, 7, 2], [TERR.W, 11, 14, 2], [TERR.W, 18, 22, 2],
+    [TERR.W, 3, 6, 3], [TERR.W, 9, 13, 3], [TERR.W, 17, 20, 3],
+    [TERR.E, 52, 55, 0], [TERR.E, 51, 54, 1], [TERR.E, 56, 58, 1], [TERR.E, 52, 56, 2], [TERR.E, 51, 54, 3], [TERR.E, 56, 58, 3],
+    [TERR.E, 60, 63, 1], [TERR.E, 61, 65, 2], [TERR.E, 59, 62, 3],
+  ];
   function buildHarbour() {
     const W = 96, H = 68, S_ = STAIR, YL = S_.L[0];
-    const m = new GameMap(HARBOUR, 'Port Cantabile', W, H, { outdoor: true, floor: 'p17c_flags', floorTextures: FLOORS, fogDist: 30, fogColor: [150, 158, 156], ambient: 0.2, music: 'town', danger: 0, spawn: { x: 79.5, y: 53.4, dir: Math.PI } });
+    const m = new GameMap(HARBOUR, 'Port Cantabile', W, H, { outdoor: true, floor: 'p17c_flags', floorTextures: FLOORS, fogDist: 52, fogColor: [150, 158, 156], ambient: 0.2, music: 'town', danger: 0, spawn: { x: 79.5, y: 53.4, dir: Math.PI } });
     m.floorCells.fill(F.water);
     m.ensureLvls(); m.ensureVerts();
     const fill = (x0, y0, x1, y1, idx, lv) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { m.setFloor(x, y, idx); if (lv != null) m.setLvl(x, y, lv); } };
-    const cliff = (x, y, lv, top, cap) => m.block(x, y, TEXN.cliff, top, { capTex: cap || 't_grass' });
+    const cliff = (x, y, lv, top, cap) => m.block(x, y, TEXN.cliff, top, { capTex: cap || 'p17c_turf' });
     // ---- the Yard (the Lantern Yard is the lower town), the Long Mole, the Mole-head and the Mole steps
     fill(4, 44, 52, 57, F.flag, YL);
     fill(20, 58, 22, 58, F.shal, 0.2);                                                       // the Yard steps, going down to the water
@@ -867,24 +967,36 @@ const CANTABILE17 = (function () {
     fill(S_.FOOT.x0, S_.FOOT.y0, S_.FOOT.x1, S_.FOOT.y1, F.flag, YL);
     fill(S_.TOP.x0, S_.TOP.y0, S_.TOP.x1, S_.TOP.y1, F.flag, S_.L[6]);
     m.setSide(S_.WX0, S_.TOP.y0, S_.EX1, S_.FOOT.y1, TEXN.quay);
-    // ---- the cliff mass: west of the Stair, behind the top yard, and the headland to the north-east
+    // ---- the cliff (POLISH17): the whole north side of the harbour is the cliff the town is built on. West of the Stair the
+    // rock climbs in terraces to the summit; east of it a lower shoulder runs out to the headland, falling away to the sea.
+    // Houses stand on the terraces, stacked one row above another, with the Stair cut up the middle and the counting-house
+    // at the top against the sky. Only cells that were already rock or open water change: nobody can walk on any of it.
+    const rowMax = (y) => { let v = YL; for (let yy = y - 1; yy <= y + 1; yy++) for (let x = S_.WX0; x <= S_.EX1; x++) { const l = stairLevel(x, yy); if (l != null && l > v) v = l; } return v; };
     for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
-      const stairBox = x >= 26 && x <= 49 && y >= 8 && y <= 43;
-      let isCliff = false;
-      if (x <= 25 && y <= 43) isCliff = true;
-      else if (y <= 13 && x >= 26 && x <= 48) isCliff = true;
-      else if (x >= 59 && y <= 40) isCliff = true;
-      else if (x >= 26 && x <= 48 && y <= 7) isCliff = true;
-      if (stairBox && !(y <= 13 || x === 26)) isCliff = false;
-      if (isCliff) {
-        let top = cliffTop(x, y);
-        if (x >= 59) top = 3.6 + 1.0 * Math.sin(x * 0.4) * Math.cos(y * 0.5) + 1.4 * hsh(x, y, 9) - 0.06 * Math.max(0, x - 70);   // the headland, low and grassy, falling away east
-        cliff(x, y, YL, top);
+      let top = null;
+      if (x <= 25 && y <= 43) top = terrTop(TERR.W, x, y);
+      else if (x >= 26 && x <= 48 && y <= 13) top = 11.5 + 0.3 * hsh(x, y, 3);                          // behind the counting-house: the cliff-top, low
+      else if (x >= 50 && y <= 40) {                                                                        // the shoulder east of the Stair, and the headland
+        top = terrTop(TERR.E, x, y);
+        if (x > 66) top = Math.max(1.4, top * Math.max(0.34, 1 - (x - 66) * 0.05) + 0.6 * hsh(x, y, 9));
+      }
+      if (top != null) cliff(x, y, YL, top);
+    }
+    // west wall of the Stair (x=26): a parapet of rock a little above every flight and landing beside it
+    for (let y = 14; y <= 43; y++) cliff(26, y, YL, Math.max(terrTop(TERR.W, 25, y), rowMax(y) + 1.0));
+    for (let x = 26; x <= 48; x++) cliff(x, 13, YL, 11.65 + 0.2 * hsh(x, 13, 3));
+    // the houses on the terraces: a lime-washed front with its windows, set back a step from the rock edge, and the slate
+    // roof rising behind it
+    for (const [tab, x0, x1, k] of CLIFF_HOUSES) {
+      const T = tab[k][1];
+      for (let x = x0; x <= x1; x++) {
+        let f = 43; while (f > 1 && terrK(tab, x, f) !== k) f--;                                            // the south face of terrace k in this column
+        f -= 1;
+        if (f < 3) continue;
+        m.block(x, f, TEXN.front[(x + k) % 3], T + 1.7, { capTex: TEXN.slate });
+        m.block(x, f - 1, TEXN.slate, T + 2.2 + (x === x0 || x === x1 ? -0.2 : 0), { capTex: TEXN.slate });
       }
     }
-    // west wall of the Stair (x=26) and the counting-house rise: the cliff all the way round the top yard
-    for (let y = 14; y <= 43; y++) cliff(26, y, YL, cliffTop(26, y));
-    for (let x = 26; x <= 48; x++) cliff(x, 13, YL, 12.8 + 0.6 * hsh(x, 13, 3));
     // the bands between flights and landings: low rails seen from above, retaining walls seen from below
     const bandTop = new Map();
     for (const y of [...S_.BANDS, 43]) for (let x = S_.WX0; x <= S_.EX1; x++) {
@@ -892,7 +1004,9 @@ const CANTABILE17 = (function () {
       const a = stairLevel(x, y - 1), b = y === 43 ? YL : stairLevel(x, y + 1);
       if (a == null || b == null) continue;
       const lo = Math.min(a, b), hi = Math.max(a, b);
-      m.block(x, y, TEXN.retain[(x * 7 + y) % 3], hi + 0.45, { capTex: 'p17c_mole' }); m.setLvl(x, y, lo); bandTop.set(x + ',' + y, hi);
+      // POLISH17: the wall wears its rock below the upper flight and a pale coping parapet above it (the cell's level is the
+      // upper flight's, so the riser below it takes the side texture), and the parapets draw the zigzag up the cliff
+      m.block(x, y, TEXN.para, hi + 0.45, { capTex: 'p17c_mole' }); m.setLvl(x, y, hi); m.setSide(x, y, x, y, TEXN.retain[(x * 7 + y) % 3]); bandTop.set(x + ',' + y, hi);
     }
     // the east rail (x=49): a rail of stanchions and cables, below eye height so the harbour stays open
     for (let y = 14; y <= 43; y++) {
@@ -904,14 +1018,14 @@ const CANTABILE17 = (function () {
     const zig = [[43, 38], [40, 33], [37, 42], [34, 33], [31, 42], [28, 33]];
     for (const [zy, zx] of zig) {
       const lo = zy === 43 ? YL : Math.min(stairLevel(zx, zy - 1), stairLevel(zx, zy + 1)), hi = zy === 43 ? stairLevel(zx, 42) : Math.max(stairLevel(zx, zy - 1), stairLevel(zx, zy + 1));
-      m.add({ kind: 'deco', sprite: 'p17c_lamppost', x: zx + 0.5, y: zy + 0.5, solid: false, radius: 0.1, scale: 1.7, yOff: -(hi + 0.45 - lo), glow: 1.0, lightCol: GOLD_LIGHT, label: TX.harbour.post, nopick: true });
+      m.add({ kind: 'deco', sprite: 'p17c_lamppost', x: zx + 0.5, y: zy + 0.5, solid: false, radius: 0.1, scale: 1.7, yOff: -0.45, glow: 1.0, lightCol: GOLD_LIGHT, label: TX.harbour.post, nopick: true, _lamp: 'p17c_lamppost', _lampG: 1.0, _lampZ: hi });
     }
     for (let x = 27; x < S_.EX0; x++) if (!m.get(x, 25)) m.block(x, 25, TEXN.retain[x % 3], S_.L[6] + 0.45, { capTex: 'p17c_mole' });
     // ---- the sea's edge: breakers, rock stacks, and the Cay low in the south-east
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {                                    // the sea's edge: rock, low in the south and east so the haze takes it
-      if (x === 0 || y === 0 || x === W - 1 || y === H - 1) m.block(x, y, TEXN.cliff, (x === 0 || y === 0) ? 3.6 + 2 * hsh(x, y, 19) : 1.0 + 1.2 * hsh(x, y, 19), { capTex: 't_grass' });
+      if (x === 0 || y === 0 || x === W - 1 || y === H - 1) m.block(x, y, TEXN.cliff, (x === 0 || y === 0) ? 3.6 + 2 * hsh(x, y, 19) : 1.0 + 1.2 * hsh(x, y, 19), { capTex: 'p17c_turf' });
     }
-    for (const [x, y, h] of [[63, 58, 3.4], [64, 58, 2.6], [63, 59, 2.2], [72, 62, 4.6], [73, 62, 3.4], [72, 63, 3.0], [55, 63, 2.4], [84, 57, 3.0], [85, 57, 2.4], [38, 61, 2.2], [6, 62, 2.8], [7, 62, 2.0], [88, 60, 2.8], [89, 60, 3.6], [90, 60, 2.6], [89, 61, 3.2], [90, 61, 2.2], [88, 62, 2.0], [91, 59, 2.2]]) m.block(x, y, TEXN.cliff, h, { capTex: 't_grass' });
+    for (const [x, y, h] of [[63, 58, 3.4], [64, 58, 2.6], [63, 59, 2.2], [72, 62, 4.6], [73, 62, 3.4], [72, 63, 3.0], [55, 63, 2.4], [84, 57, 3.0], [85, 57, 2.4], [38, 61, 2.2], [6, 62, 2.8], [7, 62, 2.0], [88, 60, 2.8], [89, 60, 3.6], [90, 60, 2.6], [89, 61, 3.2], [90, 61, 2.2], [88, 62, 2.0], [91, 59, 2.2]]) m.block(x, y, TEXN.cliff, h, { capTex: 'p17c_turf' });
     // ---- the Yard: four of Hesper's houses, the Harbour office
     for (const hx of HOUSE_X) {
       for (let y = 45; y <= 49; y++) for (let x = hx; x <= hx + 4; x++) m.set(x, y, { tex: plasterAt(x, y) });
@@ -938,11 +1052,11 @@ const CANTABILE17 = (function () {
     m.set(39, 16, DOOR({ tex: TEXN.door, locked: '__never', lockMsg: TX.top.shut, label: TX.top.shut }));
     for (let y = 8; y <= 16; y++) for (let x = 34; x <= 44; x++) m.setLvl(x, y, S_.L[6]);
     // ---- the lamps of the Stair, the flags of the landings (props)
-    const lamp = (x, y, sc) => J(m, 'p17c_lamppost', x, y, { solid: false, radius: 0.12, scale: sc || 0.95, glow: 0.8, lightCol: GOLD_LIGHT, label: TX.harbour.post });
+    const lamp = (x, y, sc) => J(m, 'p17c_lamppost', x, y, { solid: false, radius: 0.12, scale: sc || 0.95, glow: 0.8, lightCol: GOLD_LIGHT, label: TX.harbour.post, _lamp: 'p17c_lamppost', _lampG: 0.8 });
     for (let k = 1; k <= 6; k++) {
       const lr = S_.LAND[k], west = k % 2 === 1, cx = west ? 28.4 : 46.6;
       const ly = lr[0] + 0.8;
-      J(m, 'p17c_lantern', cx + (west ? -0.6 : 0.6), ly + 1.2, { solid: false, radius: 0.1, scale: 0.7, yOff: -0.48, glow: 0.8, lightCol: GOLD_LIGHT, label: TX.harbour.lamp });
+      J(m, 'p17c_lantern', cx + (west ? -0.6 : 0.6), ly + 1.2, { solid: false, radius: 0.1, scale: 0.7, yOff: -0.48, glow: 0.8, lightCol: GOLD_LIGHT, label: TX.harbour.lamp, _lamp: 'p17c_lantern', _lampG: 0.8 });
       lamp(west ? 29.6 : 47.4, lr[1] - 0.6, 0.85);
     }
     for (const [k, xs] of [[1, [36.5]], [2, [38.5]], [3, [36.5]], [4, [39.5]], [5, [36.5]], [6, [39.5]]]) {
@@ -959,7 +1073,7 @@ const CANTABILE17 = (function () {
     J(m, 'p_crate', 47.4, 38.6, { radius: 0.3, scale: 0.55 }); J(m, 'p_barrel', 46.2, 31.2, { radius: 0.3, scale: 0.6 });
     J(m, 'p17c_coil', 28.0, 38.6, { solid: false, scale: 0.5, label: TX.harbour.coil });
     // the fourth flight's rail, mended with a spar and a lantern (aftermath, seen by the tenth)
-    J(m, 'p17c_lantern', 39.5, 31.4, { solid: false, radius: 0.1, scale: 0.7, yOff: -0.3, glow: 0.8, lightCol: GOLD_LIGHT, label: TX.harbour.spar });
+    J(m, 'p17c_lantern', 39.5, 31.4, { solid: false, radius: 0.1, scale: 0.7, yOff: -0.3, glow: 0.8, lightCol: GOLD_LIGHT, label: TX.harbour.spar, _lamp: 'p17c_lantern', _lampG: 0.8, _lampLow: true });
     // the top yard: cistern, flags, lamps, a view
     J(m, 'p17c_cistern', 29.2, 18.4, { radius: 0.5, scale: 1.1, label: TX.harbour.cistern });
     J(m, 'p17c_sundisc', 39.5, 16.9, { solid: false, scale: 0.9, yOff: -0.5, glow: 0.4, label: TX.top.sun });
@@ -978,7 +1092,7 @@ const CANTABILE17 = (function () {
     J(m, 'sign', 40.8, 51.4, { solid: false, scale: 0.7, label: TX.harbour.sign });
     // moored boats with carillon bars at the shroud-head (they hang slack at the slack: see swing())
     const boats = [];
-    for (const [x, y, s, v] of [[14.5, 60.5, 1.7, 1], [29.0, 61.5, 1.8, 2], [44.0, 60.6, 1.7, 1], [60.5, 56.4, 1.6, 2], [67.0, 55.6, 1.7, 1], [58.0, 46.6, 1.6, 2], [68.0, 46.8, 1.7, 1], [52.0, 63.0, 1.8, 2], [85.0, 52.0, 1.6, 1]]) {
+    for (const [x, y, s, v] of [[14.5, 60.5, 1.9, 1], [29.0, 61.5, 2.0, 2], [44.0, 60.6, 1.9, 1], [60.5, 56.4, 2.0, 2], [67.0, 55.6, 2.1, 1], [58.0, 46.6, 1.9, 2], [68.0, 46.8, 2.0, 1], [52.0, 63.0, 2.0, 2], [85.0, 52.0, 1.8, 1], [63.5, 48.75, 2.1, 2], [69.5, 53.75, 2.1, 1]]) {   // POLISH17: bigger, and two lying along the Mole
       const e = J(m, 'p17c_boat' + v, x, y, { solid: false, scale: s, yOff: -0.02, label: TX.harbour.boat, use: 'p17c_listen', p17cBoat: true, _ph: x * 0.37 + y });
       boats.push(e);
     }
@@ -987,7 +1101,7 @@ const CANTABILE17 = (function () {
     J(m, 'p17c_molebell', 74.4, 51.0, { radius: 0.4, scale: 1.7, use: 'p17c_bellrope', label: TX.harbour.bell, glow: 0.2 });
     J(m, 'p17c_mast', 80.2, 48.6, { radius: 0.5, scale: 9.0, use: 'p17c_mast', label: TX.harbour.mast });
     J(m, 'kestrel', 79.0, 49.2, { solid: false, scale: 3.4, yOff: -7.2, label: TX.harbour.mast, nopick: true, _p17cKestrel: true });
-    J(m, 'ladder', 79.6, 49.4, { solid: false, scale: 0.9, use: 'p17c_mast', label: TX.harbour.rungs });
+    J(m, 'ladder', 79.75, 49.25, { solid: false, scale: 3.4, use: 'p17c_mast', label: TX.harbour.rungs });   // POLISH17: the rungs to the height of a house, not a step-ladder
     lamp(77.0, 53.2, 0.95); lamp(72.8, 54.2, 0.9); lamp(56.6, 53.4, 0.9); lamp(61.0, 50.4, 0.9); lamp(68.0, 50.4, 0.9);
     J(m, 'p17c_coil', 76.8, 54.4, { solid: false, scale: 0.6, label: TX.harbour.coil });
     // ---- the crate off the Yard steps (Article the Sixteenth)
@@ -1009,7 +1123,7 @@ const CANTABILE17 = (function () {
 
   // Interiors are small rooms: walls of the house texture, a wooden floor, a door on the south wall.
   function room(id, name, w, h, music, tex, floor) {
-    const m = new GameMap(id, name, w, h, { outdoor: false, floor: floor || 't_wood', fogDist: 12, fogColor: [14, 12, 10], ambient: 0.5, music: music || 'inside', spawn: { x: w / 2, y: h - 1.6, dir: -Math.PI / 2 } });
+    const m = new GameMap(id, name, w, h, { outdoor: false, floor: floor || 't_wood', ceil: 't_wood', fogDist: 12, fogColor: [14, 12, 10], ambient: 0.5, music: music || 'inside', spawn: { x: w / 2, y: h - 1.6, dir: -Math.PI / 2 } });   // a plank ceiling (POLISH17), not a black void
     m.border(tex || 't_house');
     return m;
   }
@@ -1023,6 +1137,18 @@ const CANTABILE17 = (function () {
     J(m, 'shelf', 12.0, 5.4, { radius: 0.3, scale: 0.9, label: TX.office.gaffs }); J(m, 'shelf', 1.8, 6.0, { radius: 0.3, scale: 0.9, label: TX.office.gaffs });
     J(m, 'lamp', 5.2, 2.6, { radius: 0.15, scale: 0.8, glow: 0.8, lightCol: GOLD_LIGHT }); J(m, 'lamp', 9.6, 5.2, { radius: 0.15, scale: 0.8, glow: 0.8, lightCol: GOLD_LIGHT });
     J(m, 'p_barrel', 2.4, 3.4, { radius: 0.3, scale: 0.6 }); J(m, 'p_crate', 11.6, 3.2, { radius: 0.3, scale: 0.55 });
+    // POLISH17: an office that does business. Ledger-shelves down both walls, the day-book open on a lectern, the stamp and
+    // the ledger on the desk, a chart of the harbour and the reef pinned up, the pine box, a bench for captains who wait, and
+    // high on the east wall the shelf where salvaged vox-bottles are held for the Harbour, sealed
+    J(m, 'shelf', 1.3, 3.0, { radius: 0.3, scale: 1.0, label: TX.office.gaffs }); J(m, 'shelf', 12.7, 3.0, { radius: 0.3, scale: 1.0, label: TX.office.gaffs });
+    J(m, 'p9p_lectern', 4.4, 3.6, { radius: 0.25, scale: 0.72 });
+    J(m, 'p9p_regbook', 7.0, 3.55, { solid: false, scale: 0.16, yOff: -0.47, nopick: true }); J(m, 'p17c_stamp', 8.3, 3.5, { solid: false, scale: 0.16, yOff: -0.47, nopick: true });
+    J(m, 'p17c_chart', 7.5, 0.75, { solid: false, scale: 1.25, yOff: -0.42, nopick: true, glow: 0.25 });
+    J(m, 'chest', 9.6, 2.2, { radius: 0.3, scale: 0.5, label: TX.office.box }); J(m, 'chair', 6.3, 2.0, { radius: 0.25, scale: 0.75 });
+    J(m, 'p17c_voxshelf', 12.75, 6.9, { solid: false, scale: 0.95, yOff: -0.55, label: TX.office.vox, glow: 0.2 });
+    J(m, 'p17c_bench', 2.6, 8.3, { solid: false, scale: 0.75 }); J(m, 'p17c_coil', 11.4, 8.3, { solid: false, scale: 0.55, label: TX.harbour.coil }); J(m, 'crates', 12.4, 8.2, { radius: 0.35, scale: 0.75 });
+    J(m, 'p9p_table', 7.0, 6.0, { radius: 0.5, scale: 0.75 });   // a table in the middle, the day's papers on it
+    J(m, 'lamp', 7.0, 4.8, { radius: 0.15, scale: 0.8, glow: 0.8, lightCol: GOLD_LIGHT }); J(m, 'p_barrel', 1.6, 8.2, { radius: 0.3, scale: 0.6 });
     NPCAT(m, 'p17c_teague', 'p17c_teague', 7.5, 2.2, Math.PI / 2);
     m.baseCount = m.entities.length; return m;
   }
@@ -1053,15 +1179,15 @@ const CANTABILE17 = (function () {
   const CAY_BARE = [[26.0, 8.6], [30.0, 11.0], [24.0, 12.8]];
   function buildCay() {
     const W = 44, H = 30;
-    const m = new GameMap(CAY, 'Driftwood Cay', W, H, { outdoor: true, floor: 't_grass', floorTextures: ['t_grass', 'p17c_flags', 't_water', 't_shallows', 'p17c_plank', 't_moss'], fogDist: 30, fogColor: [124, 138, 144], music: 'wild', danger: 0, spawn: { x: 6.5, y: 14.5, dir: 0 } });
+    const m = new GameMap(CAY, 'Driftwood Cay', W, H, { outdoor: true, floor: 'p17c_turf', floorTextures: ['p17c_turf', 'p17c_flags', 't_water', 't_shallows', 'p17c_plank', 'p17c_turf2'], fogDist: 30, fogColor: [124, 138, 144], music: 'wild', danger: 0, spawn: { x: 6.5, y: 14.5, dir: 0 } });
     m.floorCells.fill(2); m.ensureLvls(); m.ensureVerts();
     for (let y = 5; y <= 24; y++) for (let x = 6; x <= 38; x++) { const e = (x - 22) / 17, f = (y - 14.5) / 10; if (e * e + f * f < 1) { m.setFloor(x, y, (x * 7 + y * 3) % 9 === 0 ? 5 : 0); m.setLvl(x, y, 0.5); } }
     for (let y = 13; y <= 15; y++) for (let x = 2; x <= 7; x++) { m.setFloor(x, y, 4); m.setLvl(x, y, 0.45); }
     m.hill(27, 10.5, 8.5, 5.0, 2.0, { steep: 0.55, base: 0.5 });
     for (let y = 5; y <= 24; y++) for (let x = 6; x <= 38; x++) if (m.floorCells[y * W + x] !== 2 && m.smooth[y * W + x]) m.setFloor(x, y, (x * 5 + y) % 4 === 0 ? 5 : 0);
     m.border('p17c_cliff');
-    for (let x = 0; x < W; x++) { m.block(x, 0, TEXN.cliff, 2.4, { capTex: 't_grass' }); m.block(x, H - 1, TEXN.cliff, 2.2, { capTex: 't_grass' }); }
-    for (let y = 0; y < H; y++) { m.block(0, y, TEXN.cliff, 2.4, { capTex: 't_grass' }); m.block(W - 1, y, TEXN.cliff, 2.2, { capTex: 't_grass' }); }
+    for (let x = 0; x < W; x++) { m.block(x, 0, TEXN.cliff, 2.4, { capTex: 'p17c_turf' }); m.block(x, H - 1, TEXN.cliff, 2.2, { capTex: 'p17c_turf' }); }
+    for (let y = 0; y < H; y++) { m.block(0, y, TEXN.cliff, 2.4, { capTex: 'p17c_turf' }); m.block(W - 1, y, TEXN.cliff, 2.2, { capTex: 'p17c_turf' }); }
     // Hesper's orphan-house: low, square, a lit kitchen window
     for (let y = 16; y <= 20; y++) for (let x = 9; x <= 14; x++) m.set(x, y, { tex: plasterAt(x, y) });
     for (let y = 17; y <= 19; y++) for (let x = 10; x <= 13; x++) m.block(x, y, TEXN.slate, 1.55, { capTex: TEXN.slate });
@@ -1069,8 +1195,8 @@ const CANTABILE17 = (function () {
     J(m, 'lamp', 12.4, 15.4, { radius: 0.15, scale: 0.8, glow: 0.8, lightCol: GOLD_LIGHT, label: TX.cay.house });
     J(m, 'p17c_wash', 7.6, 17.8, { solid: false, scale: 0.8, label: TX.cay.house });
     // the burying-ground: a small bell on an iron hook at every grave; some hooks are bare
-    for (const [x, y] of CAY_GRAVES) J(m, 'p17c_gravebell', x, y, { solid: false, radius: 0.2, scale: 0.55, label: TX.cay.grave, _grave: true });
-    CAY_BARE.forEach(([x, y], i) => J(m, 'p17c_barehook', x, y, { solid: false, radius: 0.25, scale: 0.55, label: TX.cay.bare, use: 'p17c_hook', _hook: i }));
+    for (const [x, y] of CAY_GRAVES) J(m, 'p17c_gravebell', x, y, { solid: false, radius: 0.2, scale: 0.85, label: TX.cay.grave, _grave: true });
+    CAY_BARE.forEach(([x, y], i) => J(m, 'p17c_barehook', x, y, { solid: false, radius: 0.25, scale: 0.85, label: TX.cay.bare, use: 'p17c_hook', _hook: i }));
     J(m, 'sign', 20.4, 15.6, { solid: false, scale: 0.7, label: TX.cay.rock }); J(m, 'p17c_boat1', 3.2, 17.6, { solid: false, scale: 1.1, label: TX.cay.jetty, yOff: -0.05 });
     J(m, 'sign', 34.6, 17.8, { solid: false, scale: 0.7, label: TX.cay.harbour }); J(m, 'p_reed1', 8.4, 22.0, { solid: false, scale: 0.55, label: TX.cay.scrub }); J(m, 'p_reed2', 35.0, 22.4, { solid: false, scale: 0.55, label: TX.cay.scrub });
     J(m, 'p17c_gull', 18.0, 12.4, { solid: false, scale: 0.26, label: TX.harbour.gull });
@@ -1424,7 +1550,7 @@ const CANTABILE17 = (function () {
   const reefCaption = (force) => capLine(TX.reef.cap, force ? 0 : 18);
   const outdoors = () => G.mapId === HARBOUR || G.mapId === CAY;
   function resetRun() {
-    T.key = B.START_KEY; T.t = B.START_T; T.clock = 0; T.count = 0; T.mourn = -1; T.walked = 0; T.capT = {}; T.said = {}; T.ending = false; T.swing = 0;
+    T.key = B.START_KEY; T.t = B.START_T; T.clock = 0; T.count = 0; T.mourn = -1; T.walked = 0; T.capT = {}; T.said = {}; T.ending = false; T.swing = 0; T.lampT = 0;
   }
   function setKey(i) { T.key = ((i % B.KEYS) + B.KEYS) % B.KEYS; T.t = 0; }
   function reefTick(dt) {
@@ -1561,8 +1687,31 @@ const CANTABILE17 = (function () {
       }
       if (!T.said.dark && G.tod > 0.8 && G.tod < 0.95) { T.said.dark = 1; say(TX.harbour.dusk, 'warn', 6500); }
       animateBoats();
+      syncLamps(dt, false);
     }
     ambience(dt);
+  }
+  // the harbour's lamps (POLISH17): out by day; at dusk the lamplighter starts at the bottom of the Stair and lights it one
+  // landing at a time on his way up (the wall-top lamps of the zigzag go in the order of their height); out again at dawn.
+  // Checked four times a second, and only the lamps of the harbour map; nothing here is saved.
+  const LAMP = { on: 0.715, step: 0.0035, off: 0.26, every: 0.25, low: [16, 11, 4] };
+  function lampLit(e, m) {
+    const t = G.tod, z = e._lampZ != null ? e._lampZ : (m.groundAt ? m.groundAt(e.x, e.y) : 0);
+    return t < LAMP.off || t >= LAMP.on + LAMP.step * Math.min(11.2, z);
+  }
+  function syncLamps(dt, force) {
+    const m = G.map; if (!m || G.mapId !== HARBOUR) return;
+    T.lampT = (T.lampT || 0) - (dt || 0); if (!force && T.lampT > 0) return;
+    T.lampT = LAMP.every;
+    for (const e of m.entities) {
+      if (!e._lamp) continue;
+      const lit = lampLit(e, m);
+      if (e._lampOn === lit && !force) continue;
+      e._lampOn = lit;
+      e.sprite = lit ? e._lamp : (e._lampLow ? 'p17c_lantern_low' : e._lamp + '_off');
+      e.glow = lit ? e._lampG : 0;
+      e.lightCol = lit ? GOLD_LIGHT : (e._lampLow ? LAMP.low : null);
+    }
   }
   function animateBoats() {
     const m = G.map; if (!m || !m.p17cBoats) return;
@@ -1590,6 +1739,7 @@ const CANTABILE17 = (function () {
     if (first) setf('seen', fint('seen') | bit);
     const t = { [HARBOUR]: TX.harbour, [OFFICE]: TX.office, [CHANDLER]: TX.chandler, [WIDOW]: TX.widow, [CAY]: TX.cay }[G.mapId];
     if (t && t.arrive) { say(t.arrive, '', 7000); if (first && t.journal) jour(t.journal); }
+    syncLamps(0, true);
     if (outdoors()) {
       try { if (typeof WINTER17 !== 'undefined') WINTER17.apply(G.mapId, { snow: 0, fall: 0, breath: true, grade: 0.16 }); } catch (e) { /* the winter look is optional */ }
     }
