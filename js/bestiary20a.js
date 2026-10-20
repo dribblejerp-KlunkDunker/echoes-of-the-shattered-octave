@@ -275,6 +275,8 @@ const BEAST20A = (() => {
     const ct = Math.cos(theta), st = Math.sin(theta);
     const lx0 = -0.5, lz0 = 0.86, relight = rig.relight == null ? 0.55 : rig.relight;
     const A = rig.axis, join = rig.join == null ? 2 : rig.join;
+    // pass 1: the slices of every row
+    const rows = [];
     for (let y = 0; y < h; y++) {
       let runs = rowRuns(fd, w, y, join);
       // hand-drawn torso bounds: what lies inside is the body column, what
@@ -293,24 +295,43 @@ const BEAST20A = (() => {
           runs = out2;
         }
       }
-      const depth = typeof rig.depth === 'function' ? rig.depth(y) : rig.depth;
-      for (const [xl, xr] of runs) {
-        // the run the axis passes through turns about the axis itself, so the
-        // body stays one coherent column whatever an arm or a hem does to its edges
+      // the run the axis passes through turns about the axis itself, so the
+      // body stays one coherent column whatever an arm or a hem does to its edges
+      rows.push(runs.map(([xl, xr]) => {
         const main = xl <= A && xr >= A;
+        return { xl, xr, main, a: main ? Math.max(A - xl, xr + 1 - A) : (xr - xl + 1) / 2, c: main ? A : (xl + xr + 1) / 2 };
+      }));
+    }
+    // pass 2: an arm or a leg is a ragged column; steady its centre and girth
+    // over a few rows so it turns as one limb instead of a stack of coins
+    for (let y = 0; y < h; y++) for (const r of rows[y]) {
+      if (r.main) continue;
+      let sc = 0, sa = 0, n = 0;
+      for (let k = -3; k <= 3; k++) {
+        const row = rows[y + k]; if (!row) continue;
+        for (const q of row) if (!q.main && q.xr >= r.xl - 1 && q.xl <= r.xr + 1) { const wgt = 4 - Math.abs(k); sc += (q.c0 == null ? q.c : q.c0) * wgt; sa += (q.a0 == null ? q.a : q.a0) * wgt; n += wgt; }
+      }
+      r.c0 = r.c; r.a0 = r.a; r.cs = sc / n; r.as = sa / n;
+    }
+    for (let y = 0; y < h; y++) {
+      const depth = typeof rig.depth === 'function' ? rig.depth(y) : rig.depth;
+      for (const r of rows[y]) {
+        const { xl, xr, main } = r;
         // depth: a fraction of the slice's half-width, or (above 2) a half-depth in pixels
-        const a = main ? Math.max(A - xl, xr + 1 - A) : (xr - xl + 1) / 2, c = main ? A : (xl + xr + 1) / 2;
+        // the body column is two half-ellipses meeting at the axis, one per side,
+        // so a figure wider on one side (a cape flung out, a hip) wraps without gaps
+        const a = main ? r.a : Math.max(r.as, (xr - xl + 1) / 2), c = main ? r.c : r.cs;
+        const aL = main ? Math.max(0.5, A - xl) : a, aR = main ? Math.max(0.5, xr + 1 - A) : a, am = (aL + aR) / 2;
         const dv = typeof depth === 'function' ? depth(y, main) : depth;
-        const b = Math.max(1, dv > 2 ? (main ? dv : Math.min(dv, a * 1.3)) : a * dv);
-        // which slice: its own centre, and how far forward a stepping leg sits
+        const b = Math.max(1, dv > 2 ? Math.min(dv, main ? am * 1.6 + 1 : a * (rig.limbK || 1.3)) : am * dv);   // a slice is never much deeper than it is wide: no blades off a hood's tip
         let X0 = c - A, Z0 = 0;
         if (rig.zOf) Z0 = rig.zOf(c, y, a) || 0;
-        const steps = Math.ceil(Math.PI * 2 * Math.max(a, b) * 2.2);
+        const steps = Math.ceil(Math.PI * 2 * Math.max(aL, aR, b) * 2.2);
         for (let i = 0; i < steps; i++) {
           const phi = -Math.PI + (i + 0.5) * (Math.PI * 2 / steps);
-          const sp = Math.sin(phi), cp = Math.cos(phi);
-          const lx = a * sp, lz = b * cp;
-          let nx = sp / a, nz = cp / b; const nl = Math.hypot(nx, nz); nx /= nl; nz /= nl;
+          const sp = Math.sin(phi), cp = Math.cos(phi), ah = sp < 0 ? aL : aR;
+          const lx = ah * sp, lz = b * cp;
+          let nx = sp / ah, nz = cp / b; const nl = Math.hypot(nx, nz); nx /= nl; nz /= nl;
           const rnz = -nx * st + nz * ct; if (rnz < -0.02) continue;
           const rnx = nx * ct + nz * st;
           const px = Math.round(ox + (X0 + lx) * ct + (Z0 + lz) * st - 0.5);
@@ -320,7 +341,7 @@ const BEAST20A = (() => {
           let si, src;
           // only the run's own pixels: beyond its real edge (an off-axis run is
           // shorter on one side) the column is left open rather than smeared
-          const fx = Math.floor(c + lx); if (fx < xl || fx > xr) continue;
+          const fx = Math.floor(main ? c + lx : r.c0 + lx * r.a0 / a); if (fx < xl || fx > xr) continue;
           if (cp >= 0) { si = (y * w + fx) * 4; src = fd; }
           else { si = (y * w + (w - 1 - fx)) * 4; src = bd; }
           if (src[si + 3] < 100) continue;   // the gap beside an off-centre run stays open
@@ -431,7 +452,7 @@ const BEAST20A = (() => {
       });
       const zOf = S.stride ? (c, y) => (y >= S.legY ? (c < S.A ? S.stride : -S.stride) : 0) : null;
       return {
-        front: front.c, back: back.c, axis: S.A, props, zOf, relight: S.relight, join: S.join,
+        front: front.c, back: back.c, axis: S.A, props, zOf, relight: S.relight, join: S.join, limbK: cfg.limbK,
         depth: y => { const d = band(S.depth, y); return typeof d === 'function' ? d(y) : d; },
         body: S.body ? y => { const b = band(S.body, y); return b && b[0] != null ? b : null; } : null,
       };
@@ -444,7 +465,36 @@ const BEAST20A = (() => {
     return recipe;
   }
 
+  // front-frame coordinates -> the mirrored back layer's coordinates
+  const mir = (w, pts) => pts.map(q => [w - 1 - q[0], q[1]]);
+  // Cover a face (or a visor) with the hood's own cloth when seen from behind:
+  // a tile of the hood, light from the crown, a seam down the middle.
+  function hoodBack(P, name, facePts, tile, opt) {
+    opt = opt || {};
+    const pts = mir(P.w, facePts), ys = pts.map(q => q[1]), xs = pts.map(q => q[0]);
+    const y0 = Math.min(...ys), y1 = Math.max(...ys), cx = (Math.min(...xs) + Math.max(...xs)) / 2;
+    P.tex(name, tile[0], tile[1], tile[2], tile[3], pts, { mul: opt.mul == null ? 0.95 : opt.mul });
+    P.lightIn(pts, (x, y) => 1.1 - 0.35 * (y - y0) / Math.max(1, y1 - y0));
+    if (opt.seam) P.line(at(name, opt.seam[0], opt.seam[1], 0.55), cx, opt.seamTop == null ? y0 : opt.seamTop, cx, y1);
+  }
+
+  // the opaque colours among the given points of a frame (palette for grain)
+  function tones(name, pts, k) {
+    const sp = Engine.sprites[name], out = [];
+    for (const q of pts) { const p = sp.data[q[1] * sp.w + q[0]]; if ((p >>> 24) > 100) out.push(css([p & 255, (p >>> 8) & 255, (p >>> 16) & 255], q[2] == null ? k : q[2])); }
+    return out.length ? out : ['rgb(60,56,52)'];
+  }
+  // A hood seen from behind over a face polygon (front coordinates): woven
+  // grain in the hood's own tones, light from the crown, a seam from the tip.
+  function hoodOver(P, name, face, tns, seamCol, tip) {
+    const f = mir(P.w, face), ys = f.map(q => q[1]), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    P.grain(f, tns, 4, 3);
+    P.lightIn(f, (x, y) => 1.08 - 0.35 * (y - y0) / Math.max(1, y1 - y0));
+    const cx = Math.round((f[0][0] + f[1][0]) / 2); if (seamCol) P.line(seamCol, cx, y0 - (tip || 10), cx, y1);
+  }
+
   return {
+    mir, hoodBack, tones, hoodOver,
     turned, rigged, band,
     turn, layerOf, backOf, piece, cropTo, VIEW_ANGLE, finish,
     view, make, painter, at, css, hash, stride, sideLight, srcCanvas, SPECIES, POSES,
@@ -624,6 +674,115 @@ BEAST20A.SPECIES.captain = (() => {
     },
   });
   return recipe;
+})();
+
+// ---------------------------------------------------------------- the Office Hushwarden
+// A grey field-robe with a shoulder cape, a deep pointed hood over a barred
+// visor, cross-straps and belt, and the warden's staff crowned with a muffled
+// bell, carried in the left hand. Source: hushwarden (74x165).
+BEAST20A.SPECIES.hushwarden = (() => {
+  const B = BEAST20A, N = 'hushwarden';
+  const HOOD = [19, 24, 5, 10];
+  const staff = (dx, top) => [[50 + dx, 0 + top], [75 + dx, 0 + top], [75 + dx, 33 + top], [67 + dx, 35 + top], [68 + dx, 58], [68 + dx, 78], [66 + dx, 80], [66 + dx, 168], [55 + dx, 168], [55 + dx, 80], [52 + dx, 78], [52 + dx, 58], [55 + dx, 35 + top], [50 + dx, 33 + top]];
+  return B.rigged(N, {
+    angles: [0, Math.PI / 4, Math.PI * 0.42, Math.PI * 0.75, Math.PI],
+    poses: {
+      '': {
+        A: 33, face: [[25, 15], [42, 15], [46, 30], [44, 42], [23, 42], [21, 30]],
+        depth: [[45, 11], [62, 15], [100, 13], [150, y => 13 + (y - 100) * 0.1], [999, 8]],
+        body: [[45, [19, 47]], [62, [0, 60]], [95, [15, 53]], [999, null]],
+        erase: [staff(0, 0)], heal: [[[[50, 60], [58, 60], [58, 150], [50, 150]], -6]],
+        props: [{ r: [50, 0, 25, 166], mask: staff(0, 0), X: 61, Z: 7, minK: 0.85 }],
+      },
+      _w1: {
+        A: 33, face: [[25, 21], [42, 21], [46, 36], [44, 48], [23, 48], [21, 36]], legY: 140, stride: 5,
+        erase: [staff(-4, 0)], heal: [[[[46, 60], [54, 60], [54, 150], [46, 150]], -6]],
+        props: [{ r: [46, 0, 25, 167], mask: staff(-4, 0), X: 57, Z: 7, minK: 0.85 }],
+        body: [[50, [19, 47]], [66, [0, 60]], [100, [14, 50]], [999, null]],
+      },
+      _w2: {
+        A: 33, face: [[25, 21], [42, 21], [46, 36], [44, 48], [23, 48], [21, 36]], legY: 140, stride: -5,
+        erase: [staff(-3, 0)], heal: [[[[47, 60], [55, 60], [55, 150], [47, 150]], -6]],
+        props: [{ r: [47, 0, 24, 167], mask: staff(-3, 0), X: 58, Z: 7, minK: 0.85 }],
+        body: [[50, [19, 47]], [66, [0, 60]], [100, [14, 50]], [999, null]],
+      },
+      _a1: {
+        A: 39, face: [[32, 60], [47, 60], [50, 72], [48, 84], [31, 84], [29, 72]],
+        depth: [[56, 9], [90, 12], [140, 13], [185, y => 13 + (y - 140) * 0.1], [999, 8]],
+        body: [[90, [10, 70]], [999, null]],
+        erase: [[[38, 0], [64, 0], [64, 32], [53, 36], [51, 62], [38, 84], [30, 80], [33, 60], [45, 34], [38, 32]]],
+        heal: [[[[34, 60], [48, 60], [48, 86], [34, 86]], 10]],
+        props: [{ r: [28, 0, 38, 86], mask: [[38, 0], [64, 0], [64, 32], [53, 36], [51, 62], [38, 84], [30, 80], [33, 60], [45, 34], [38, 32]], X: 45, Z: 6, minK: 0.85 }],
+      },
+      _a2: {
+        A: 41, face: [[33, 15], [48, 15], [51, 28], [49, 38], [32, 38], [30, 28]],
+        depth: [[42, 11], [60, 15], [100, 14], [135, y => 14 + (y - 100) * 0.12], [999, 8]],
+        body: [[42, [27, 55]], [999, null]],
+        erase: [[[26, 52], [52, 52], [49, 86], [62, 96], [62, 133], [20, 133], [23, 96], [34, 86]]],
+        patch: [[N, 6, 96, 14, 30, [[24, 52], [54, 52], [62, 96], [64, 134], [18, 134], [21, 96]], 0.95]],
+        props: [{ r: [18, 50, 46, 85], mask: [[26, 52], [52, 52], [49, 86], [62, 96], [62, 133], [20, 133], [23, 96], [34, 86]], X: 41, Z: 16, minK: 0.85 }],
+      },
+    },
+    back(P, S) {
+      P.grain(B.mir(P.w, S.face), [B.at(N, 27, 12), B.at(N, 30, 10), B.at(N, 26, 16), B.at(N, 24, 25), B.at(N, 42, 15), B.at(N, 44, 25, 0.9)], 4, 3);
+      const f = B.mir(P.w, S.face), ys = f.map(q => q[1]), y0 = Math.min(...ys), y1 = Math.max(...ys);
+      P.lightIn(f, (x, y) => 1.08 - 0.35 * (y - y0) / (y1 - y0));
+      const cx = Math.round((f[0][0] + f[1][0]) / 2); P.line(B.at(N, 23, 28), cx, y0 - 10, cx, y1);
+      P.light(() => 0.8);
+    },
+  });
+})();
+
+// ---------------------------------------------------------------- the Deacon of the Unrung Bell
+// A skull-faced deacon in a long, rotted brown robe and hood, barefoot, a
+// hand-bell held up in the right hand (both hands, overhead, to strike; low
+// before the body for the toll). Source: deacon (62x170).
+BEAST20A.SPECIES.deacon = (() => {
+  const B = BEAST20A, N = 'deacon';
+  // the raised right arm: bell, hand, and the sleeve falling from the forearm
+  const arm = dx => [[5 + dx, 0], [20 + dx, 0], [20 + dx, 18], [18 + dx, 32], [19 + dx, 40], [18 + dx, 62], [16 + dx, 80], [0, 80], [0, 40], [6 + dx, 30], [6 + dx, 18]];
+  const face = (dx, dy) => [[22 + dx, 19 + dy], [42 + dx, 19 + dy], [44 + dx, 32 + dy], [41 + dx, 45 + dy], [23 + dx, 45 + dy], [20 + dx, 32 + dy]];
+  // the stole and its bead-weights hang at the front; from behind it is all robe
+  const stole = (dx, dy) => [[18 + dx, 44 + dy], [47 + dx, 44 + dy], [44 + dx, 80 + dy], [21 + dx, 80 + dy]];
+  const ROBE = [N, 30, 92, 10, 26];
+  // the robe's shoulder and flank that the raised sleeve hid, in the robe's own cloth
+  const under = dx => [N, 6, 88, 12, 30, [[17 + dx, 36], [21 + dx, 36], [21 + dx, 84], [6 + dx * 0.5, 86], [8 + dx * 0.5, 60], [12 + dx, 44]], 0.92];
+  return B.rigged(N, {
+    angles: [0, Math.PI / 4, Math.PI * 0.42, Math.PI * 0.75, Math.PI],
+    limbK: 0.9,
+    poses: {
+      '': {
+        A: 32, face: face(0, 0), stole: stole(0, 0),
+        depth: [[45, 11], [62, 14], [110, 13], [158, y => 13 + (y - 110) * 0.07], [999, 6]],
+        body: [[45, [19, 46]], [82, null], [118, [0, 50]], [999, null]],
+        erase: [arm(0)], patch: [under(0)], props: [{ r: [0, 0, 22, 81], mask: arm(0), X: 11, Z: 3, minK: 0.85 }],
+      },
+      _w1: { A: 33, face: face(2, 0), stole: stole(2, 0), legY: 150, stride: 4, erase: [arm(2)], patch: [under(2)], props: [{ r: [0, 0, 24, 81], mask: arm(2), X: 13, Z: 3, minK: 0.85 }],
+        body: [[45, [21, 48]], [82, null], [118, [0, 52]], [999, null]] },
+      _w2: { A: 34, face: face(3, 0), stole: stole(3, 0), legY: 150, stride: -4, erase: [arm(5)], patch: [under(5)], props: [{ r: [0, 0, 27, 81], mask: arm(5), X: 16, Z: 3, minK: 0.85 }],
+        body: [[45, [22, 49]], [82, null], [118, [0, 54]], [999, null]] },
+      _a1: {
+        A: 29, face: [[21, 42], [36, 42], [38, 52], [35, 63], [22, 63], [19, 52]], stole: stole(-3, 20),
+        depth: [[64, 11], [92, 14], [140, 13], [178, y => 13 + (y - 140) * 0.08], [999, 6]],
+        body: null,
+        erase: [[[24, 0], [41, 0], [41, 22], [39, 38], [24, 38], [24, 22]]],
+        props: [{ r: [23, 0, 19, 40], mask: [[24, 0], [41, 0], [41, 22], [39, 38], [24, 38], [24, 22]], X: 32, Z: 4, minK: 0.85 }],
+      },
+      _a2: {
+        A: 30, face: [[20, 9], [40, 9], [42, 22], [39, 35], [21, 35], [18, 22]], stole: [[17, 36], [43, 36], [41, 52], [19, 52]],
+        depth: [[36, 11], [55, 14], [110, 14], [142, y => 14 + (y - 110) * 0.1], [999, 6]],
+        body: null,
+        erase: [[[18, 52], [40, 52], [42, 85], [42, 112], [20, 112], [20, 85]]],
+        heal: [[[[18, 52], [40, 52], [42, 85], [42, 112], [20, 112], [20, 85]], -15]],
+        props: [{ r: [17, 50, 27, 64], mask: [[18, 52], [40, 52], [42, 85], [42, 112], [20, 112], [20, 85]], X: 30, Z: 15, minK: 0.85 }],
+      },
+    },
+    back(P, S) {
+      P.tex(...ROBE, B.mir(P.w, S.stole), { mul: 0.95 });
+      B.hoodOver(P, N, S.face, B.tones(N, [[25, 18], [30, 14], [40, 25], [33, 12], [43, 34], [28, 16], [36, 15]]), B.tones(N, [[22, 30]], 0.6)[0]);
+      P.light(() => 0.82);
+    },
+  });
 })();
 
 // Plug in: the hand-built views answer first for their species; everything else
