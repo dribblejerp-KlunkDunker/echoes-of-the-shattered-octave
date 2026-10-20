@@ -170,9 +170,10 @@ const KEY = 'octave.max20.v1';
     {
       const { ctx, page } = await open(null, DESKTOP);
       await newGame(page);
-      // the real requestAnimationFrame path: 50 ms frames (20 fps) step Cinematic down to Ultra after ~4 s of play
-      await page.evaluate(() => { MAX20.forceFrameMs = 50; });
-      await page.waitForFunction(() => MAX20.state.auto !== 'cinematic', null, { timeout: 30000, polling: 200 });
+      // the real requestAnimationFrame path: 200 ms frames (5 fps; headless Cinematic is about that slow here anyway, so
+      // few real frames are needed) step Cinematic down to Ultra after ~4 s of play
+      await page.evaluate(() => { MAX20.forceFrameMs = 200; });
+      await page.waitForFunction(() => MAX20.state.auto !== 'cinematic', null, { timeout: 90000, polling: 250 });
       const a = await page.evaluate(() => ({ preset: PRESETS.current(), auto: MAX20.state.auto, steps: MAX20.stats.steps.slice(), notices: MAX20.stats.notices.slice(), msgs: document.getElementById('msgs').textContent }));
       assert.equal(a.preset, 'ultra'); assert.equal(a.auto, 'ultra');
       assert.equal(a.notices[0], 'Graphics eased to Ultra to keep the game smooth — Options to change');
@@ -189,7 +190,7 @@ const KEY = 'octave.max20.v1';
       await page.reload(); await page.waitForFunction(() => typeof MAX20 !== 'undefined' && G.state === 'title');
       const c = await read(page);
       assert.ok(c.preset === 'medium' && !c.measuring, 'relaunch: Medium, not measured again');
-      console.log('PASS max20: forced 50 ms frames step Cinematic -> Ultra (real rAF path) -> High -> Medium with a notice each, settled and stored');
+      console.log('PASS max20: forced slow frames step Cinematic -> Ultra (real rAF path, 200 ms) -> High -> Medium (50 ms) with a notice each, settled and stored');
       await ctx.close();
     }
     {

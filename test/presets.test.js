@@ -56,8 +56,8 @@ fs.mkdirSync(SHOTS, { recursive: true });
         check(fogCalls.length === 1 && fogCalls[0] === vd, name + ': setLook fogK ' + fogCalls);
         for (const k of GFX.FX) {
           if (k === 'crtCurve') continue;
-          const want = PRESETS.cinemaOnly && PRESETS.cinemaOnly.includes(k) ? false : name === 'original' ? false : name === 'low' ? !cheapOff.includes(k) : true;   // Phase 14 CINEMA flags: Cinematic preset only
-          check(GFX[k] === want, name + ': flag ' + k + ' should be ' + want);
+          const want = PRESETS.isArt && PRESETS.isArt(k) ? true : PRESETS.cinemaOnly && PRESETS.cinemaOnly.includes(k) ? false : name === 'original' ? false : name === 'low' ? !cheapOff.includes(k) : true;   // Phase 14 CINEMA flags: Cinematic preset only
+          check(GFX[k] === want, name + ': flag ' + k + ' should be ' + want);   // Phase 20 MAX: art switches are on in every preset
         }
         for (const id in PART_STYLE) check(PART_STYLE[id].n === Math.round(orig[id] * pt), name + ': particles ' + id + ' ' + PART_STYLE[id].n);
         go('deepwoods', 27.5, 30.5, -1.57); render();
@@ -111,7 +111,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
         // reference: the engine as it was before this phase, via GFX.plain() at the shipped scale and look
         Engine.setScale(1); Engine.setLook({ fogK: 1 });
         for (const k in orig) PART_STYLE[k].n = origN[k];
-        GFX.plain(); go(id, x, y, dir);
+        GFX.plain(); for (const k of PRESETS.art || []) if (GFX.FX.includes(k)) GFX[k] = true; GFX.changed(); go(id, x, y, dir);   // Phase 20 MAX: Original = no effects, art on
         frame();   // warm-up: the first frame in a place settles sky and cached art
         const ref = frame();
         // the long way round: high, then low, then original

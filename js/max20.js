@@ -14,8 +14,8 @@
 //       anything else                                                                      -> Medium
 //     View distance is the chosen preset's own (Cinematic and Ultra: 2.5, "Far").
 //  2. THE SAFETY NET (only for an auto choice above Medium, never for a preset the player chose): during the first
-//     ~20 s of play the frame interval is measured (requestAnimationFrame, play state only, the tab visible, hitches
-//     over 250 ms and the first second after a preset change or map load skipped). Every 4 s of play, if the median
+//     ~20 s of play the frame interval is measured (requestAnimationFrame, play state only, the tab visible, pauses
+//     over 1 s and the first second after a preset change or map load skipped). Every 4 s of play, if the median
 //     frame is over 33.3 ms (below 30 fps), the preset steps down one (Cinematic -> Ultra -> High -> Medium) with a
 //     one-line notice. Once 20 s of play pass at a preset whose last window was smooth (or Medium is reached) the
 //     choice is SETTLED and stored, so it is not measured again on later launches.
@@ -40,6 +40,7 @@ const MAX20 = (() => {
   const WINDOW_S = 4;            // seconds of play per verdict
   const BUDGET_S = 20;           // seconds of smooth play before the choice is settled
   const SKIP_S = 1;              // seconds skipped after a preset change or map load
+  const HITCH_MS = 1000;         // a longer gap is a pause (loading, a tab switch), not a frame; a 4 fps device still counts
   const opts = (typeof window !== 'undefined' && window.__max20 && typeof window.__max20 === 'object') ? window.__max20 : {};
   const automation = (() => { try { return !!(typeof navigator !== 'undefined' && navigator.webdriver); } catch (e) { return false; } })();
   const live = !automation || opts.automation === true;
@@ -190,7 +191,7 @@ const MAX20 = (() => {
   // one frame interval (ms) of play; returns whether the net is still measuring
   function feed(ms) {
     if (!measuring()) return false;
-    if (!(ms > 0) || ms > 250) return true;     // a hitch (loading, a tab switch): not a frame
+    if (!(ms > 0) || ms > HITCH_MS) return true;     // a hitch (loading, a tab switch): not a frame
     const s = ms / 1000;
     if (stats.skipS > 0) { stats.skipS -= s; return true; }
     stats.samples.push(ms); stats.playS += s; stats.presetS += s;
