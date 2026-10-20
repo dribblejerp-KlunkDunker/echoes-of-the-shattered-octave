@@ -34,6 +34,8 @@
         "to": "game",
         "filter": [
           "index.html",
+          "manifest.webmanifest",
+          "assets/**/*",
           "css/**/*",
           "js/**/*",
           "img/**/*",
