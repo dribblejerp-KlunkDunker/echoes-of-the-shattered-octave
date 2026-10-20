@@ -52,6 +52,19 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 17: beyond Book One (extras)
+
+| | |
+|---|---|
+| ![The Extras menu](screenshots/p17-extras.jpg) | ![The Greenroot road in winter](screenshots/p17-road.jpg) |
+| Extras on the title screen: after Book One, each on its own save, behind a spoiler notice. | Prologue: The River Gate. Lyra comes back up the Greenroot road, past the graves, with her lantern and her slate. |
+| ![Oakhaven as a wood](screenshots/p17-wood.jpg) | ![Port Cantabile](screenshots/p17-cantabile.jpg) |
+| Oakhaven as a wood: the houses carried up into the crowns, HALE & DAUGHTER sixty feet up. | A trip to Port Cantabile: the cliff harbour, the Long Mole and the Salt Stair. |
+| ![The Salt Stair at dusk](screenshots/p17-stair-dusk.jpg) | ![The Cay](screenshots/p17-cay.jpg) |
+| At dusk they light the Stair one landing at a time. | The Cay, where the children's graves are hung with small bells. |
+| ![The Long Night](screenshots/p17-longnight.jpg) | ![The lullaby](screenshots/p17-lullaby.jpg) |
+| The Long Night: keep the lullaby going under the orchard until dawn. | Hold the note; tend the lamps; call the keepers back from the dark. |
+
 ### Phase 16: new ground
 
 | | |

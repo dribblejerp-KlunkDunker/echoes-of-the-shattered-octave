@@ -201,7 +201,7 @@ async function boot(browser, viewport, opts) {
       G.flags.p16k_up = 1 << K.UPG.find((u) => u.id === 'envelope').bit; const d = K.canFit('tank');
       return { a: a.req, b: b.req, c: c.req, d: d.why };
     });
-    check(tk.a.length === 3 && tk.b.length === 2 && tk.c.length === 1 && tk.d !== 'req', 'the tank needs Pennick, the envelope and the patched tank, in that count: ' + [tk.a.length, tk.b.length, tk.c.length].join('/'));
+    check(tk.a.length === 3 && tk.b.length === 2 && tk.c.length === 1 && tk.d !== 'req', 'the tank needs the engineer, the envelope and the patched tank, in that count: ' + [tk.a.length, tk.b.length, tk.c.length].join('/'));
 
     // ---------------------------------------------------------------- effects: stove, lamps, envelope, chart
     const fx = await ev(() => {
@@ -259,8 +259,8 @@ async function boot(browser, viewport, opts) {
       return out;
     });
     check(cr.mAbsentGold.why === 'gold' && cr.mOk.ok && cr.mHire.ok && cr.mPaid === 30 && cr.mDone === 'done', 'Mags: needs 30 sovereigns, pays exactly 30, cannot be hired twice');
-    check(cr.pEarly === 'early' && cr.pEnv === 'envelope' && cr.pOk && cr.pHired, 'Pennick: needs the patched tank and the envelope');
-    check(cr.cost === 28 && cr.cost2 === 56 && cr.costMats === '[["v_mesh",1],["shard",1]]', 'Pennick: gold costs exactly x0.80 (rail 35 -> ' + cr.cost + ', chart 70 -> ' + cr.cost2 + '), materials unchanged');
+    check(cr.pEarly === 'early' && cr.pEnv === 'envelope' && cr.pOk && cr.pHired, 'the engineer: needs the patched tank and the envelope');
+    check(cr.cost === 28 && cr.cost2 === 56 && cr.costMats === '[["v_mesh",1],["shard",1]]', 'the engineer: gold costs exactly x0.80 (rail 35 -> ' + cr.cost + ', chart 70 -> ' + cr.cost2 + '), materials unchanged');
     check(cr.nAbsent === 'absent' && cr.nStove === 'stove' && cr.nOk, 'Nell: aboard only if Pim is safe, asks for the stove');
     check(cr.hAbsent === 'absent' && cr.hLamp === 'lamps' && cr.hOk, 'Hob: aboard only if he climbed (twins_named), asks for the lanterns');
     check(cr.pre === 'absent', 'before the escape nobody is recruitable');
@@ -292,6 +292,9 @@ async function boot(browser, viewport, opts) {
       e.facing = 0; c.x = e.x - 2; c.y = e.y; K.T.turnT = 0; for (let i = 0; i < 30; i++) K.tick(0.2); out.turnedAfter = K.magsSees(e);
       out.lines = KESTREL16.TX.crew.mags.d.every((t) => /^<i>/.test(t) || /signs|sign/i.test(t));
       out.sign = /<i>/.test(KESTREL16.TX.crew.mags.d[0]);
+      // the engineer is unnamed (author's ruling 2026-10-20: Pennick is a Book Two person); Mags speaks as well as signs (js/data.js mags_dw)
+      out.eng = [KESTREL16.TX.crew.pennick.name, KESTREL16.TX.crew.pennick.label]; out.noPennick = KESTREL16.TEXTS.filter((t) => /Pennick/.test(t)).length;
+      out.speaks = /answers aloud/.test(KESTREL16.TX.crew.mags.intro);
       // talking from behind: she does not answer
       e.facing = 0; c.x = e.x - 2; c.y = e.y; K.T.sayAt = -1e9; talk(e); out.stateAfter = G.state;
       return out;
@@ -299,7 +302,33 @@ async function boot(browser, viewport, opts) {
     check(mg.has && mg.front === true && mg.behind === false && mg.far === false && mg.turned === true, 'Mags answers only when she faces you within range (front ' + mg.front + ', behind ' + mg.behind + ', far ' + mg.far + ')');
     check(mg.turnedAfter === true, 'after four seconds close behind her she feels the deck and turns round');
     check(mg.sign && mg.lines, 'her daily lines are italic and carry a sign note');
+    check(mg.eng.join('|') === "The Kestrel's engineer|The engineer, at the tanks" && mg.noPennick === 0 && mg.speaks, 'the engineer goes by his title, no string names Pennick, and Mags answers aloud as she signs');
     check(mg.stateAfter === 'play', 'talking to her from behind opens no conversation');
+
+    // ---------------------------------------------------------------- never two Mags: the deck Mags and the camp Mags (mags_dw)
+    const two = await ev(() => {
+      const K = KESTREL16, out = {};
+      // how many Mags stand in the world the story has reached: the deck one, plus the camp one once Part Four has begun
+      const count = () => {
+        const deck = G.maps[K.DECK].entities.filter((e) => e.kind === 'npc' && /mags/.test(e.id) && !e.hidden).length;
+        const dw = G.maps.deepwoods, camp = G.flags.part4 && dw ? dw.entities.filter((e) => e.id === 'mags_dw' && !e.hidden).length : 0;
+        return { deck, camp, all: deck + camp };
+      };
+      G.flags.p16k_crew = 0; G.flags.p16k_seen = 0; delete G.flags.part4; delete G.flags.mags_met; G.flags.part3 = true; K.board(); out.p3 = count();
+      out.wg = K.TX.board.wgBody;
+      K.leaveShip(); G.flags.part4 = true; K.board(); out.p4 = count();
+      out.note = !!G.maps[K.DECK].entities.find((e) => e._p16k === 'mags_away');
+      K.leaveShip();
+      // at the camp, once met and with no story beat left, she makes the lens offer one-handed
+      G.flags.mags_met = true; G.flags.mags_bosun = true; G.flags.mags_cant = true;
+      const q = NPCS.mags_dw.quest(G); out.camp = !!(q && /sling/.test(q.text) && q.choices && q.choices.length === 2);
+      G.player.gold = 100; const r = q.choices[0].f(); out.hired = K.crewHas('mags') && r === K.TX.crew.mags.done && G.player.gold === 70;
+      out.after = NPCS.mags_dw.quest(G) === null;
+      return out;
+    });
+    check(two.p3.all === 1 && two.p3.deck === 1, 'Part Three: Mags is on the deck and nowhere else (' + JSON.stringify(two.p3) + ')');
+    check(two.p4.all === 1 && two.p4.deck === 0 && two.p4.camp === 1 && two.note, 'Part Four: Mags is at the camp only; the deck has her glass instead (' + JSON.stringify(two.p4) + ')');
+    check(two.camp && two.hired && two.after, 'at the camp, once met, she makes the lens offer one-handed (sling) and it hires her as on the deck');
 
     // ---------------------------------------------------------------- save and load aboard
     const sv = await ev(async () => {

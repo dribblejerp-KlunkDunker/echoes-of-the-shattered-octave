@@ -111,6 +111,7 @@ const LONGNIGHT17 = (function () {
   const LAMPS = [[10.2, 12.5], [23.8, 12.5], [10.2, 17.5], [23.8, 17.5], [14.4, 21.7], [19.6, 21.7]];
   const KEEPER_AT = [[11.7, 11.5], [22.3, 11.5], [11.0, 18.6]];
   const OIL_AT = [24.9, 19.1];
+  const BENCHES = [[8.0, 11.0], [26.0, 11.0], [7.6, 19.0], [26.4, 19.0], [12.5, 7.6], [21.5, 7.6]];   // POLISH17
   const MOUTH = { W: [2.6, 15.0], E: [31.4, 15.0], S: [17.0, 27.0] };
   const MOUTH_NAME = { W: 'west', E: 'east', S: 'south' };
   const GAL_W = 34, GAL_H = 30;
@@ -369,6 +370,30 @@ const LONGNIGHT17 = (function () {
     }
     Engine.addSprite(dst, Object.assign({}, sp, { data: d }));
   }
+  // The Hollow as a FOE needs the five poses every enemy species has (walk and attack frames: js/anim.js, js/directions.js).
+  // The Book One 'hollow' is an NPC drawing with none, and must stay untouched, so the foe walks on its own copies:
+  // ln17_hollow (idle) plus _w1/_w2 (a sway and a dragged step) and _a1/_a2 (the lean in, the reach), cut from that drawing.
+  const HOLLOW_POSES = { '': [0, 0, 0], _w1: [-1, -2, 0], _w2: [1, 1, 0], _a1: [0, -1, -3], _a2: [2, 1, 4] };   // [dx, dy, lean]
+  function ensureHollowFrames() {
+    if (typeof Engine === 'undefined' || !Engine.sprites || !Engine.addSprite) return false;
+    if (Engine.sprites.ln17_hollow_a2) return true;
+    const sp = Engine.sprites.hollow; if (!sp || !sp.data) return false;
+    const w = sp.w, h = sp.h;
+    for (const pose in HOLLOW_POSES) {
+      const [dx, dy, lean] = HOLLOW_POSES[pose], d = new Uint32Array(w * h);
+      for (let y = 0; y < h; y++) {
+        const sh = dx + Math.round(lean * (1 - y / h));   // lean: the head moves, the feet stay
+        for (let x = 0; x < w; x++) {
+          const sx = x - sh, sy = y - dy;
+          if (sx >= 0 && sx < w && sy >= 0 && sy < h) d[y * w + x] = sp.data[sy * w + sx];
+        }
+      }
+      if (pose && !d.some((p, i) => p !== sp.data[i])) d[(h >> 1) * w + (w >> 1)] ^= 0x00010101;   // never identical to idle
+      Engine.addSprite('ln17_hollow' + pose, Object.assign({}, sp, { data: d }));
+    }
+    if (typeof ANIM_FRAMES !== 'undefined') delete ANIM_FRAMES.ln17_hollow;
+    return !!Engine.sprites.ln17_hollow_a2;
+  }
   function paintTextures() {
     if (typeof Engine === 'undefined' || !Engine.addTexture || !Engine.textures || !Engine.textures.t_flag) return;
     const make = (name, fn) => {
@@ -391,6 +416,47 @@ const LONGNIGHT17 = (function () {
       const k = 0.88 + n * 0.08 + g * 0.04;
       return [206 * k, 216 * k, 232 * k];
     });
+    // ---- the gallery's stone (POLISH17). Flat-shaded pixel shapes rather than per-texel noise, because the rail is seen from
+    // half a pace and a wall from a pace or two: magnified, these stay crisp blocks and carved lines instead of a smear.
+    // On this relief map a face's texture is anchored at its top, so the rail (0.46 high) shows the top 29 rows only.
+    const mark = (x, y, gx, gy, kind) => {                                    // an incised keepers' mark: true where the cut is
+      const u = x - gx, v = y - gy;
+      if (kind === 0) return (u >= 0 && u < 11 && v >= 0 && v < 9) && ((u % 3 === 0 && u < 10) || (v === 4 && u < 11));   // a tally: four strokes and the fifth across
+      if (kind === 1) return (Math.abs(u - 1) <= 1 && Math.abs(v - 1) <= 1) || (Math.abs(u - 9) <= 1 && Math.abs(v - 6) <= 1) || (u > 1 && u < 9 && Math.abs(v - (1 + (u - 1) * 5 / 8)) < 0.7);   // two notes, a falling fifth
+      return (u >= 0 && u < 9 && (v === 0 || v === 8) && u % 2 === 0) || ((u === 0 || u === 8) && v >= 0 && v <= 8);          // a keeper's square
+    };
+    const stone = (x, y, row, seed, base) => {
+      const off = (row % 2) * 16, bx = (x + off) % 32, id = hsh(row, ((x + off) / 32) | 0, seed);
+      let k = 0.82 + 0.26 * id;
+      if (((x * 7 + y * 13 + row * 5) % 23) === 0) k *= 0.88;                // a few chisel pocks, not noise
+      return { k, joint: bx === 0 };
+    };
+    make('ln17_wall', (x, y) => {
+      const row = (y / 21.34) | 0, by = y - ((row * 21.34) | 0), st = stone(x, y, row, 301);
+      let k = st.k; if (st.joint || by === 0) k = 0.42; else if (by === 1) k *= 1.14; else if (by > 18) k *= 0.82;
+      return [58 * k, 54 * k, 47 * k];
+    });
+    make('ln17_wall2', (x, y) => {
+      const row = (y / 21.34) | 0, by = y - ((row * 21.34) | 0), st = stone(x, y, row, 311);
+      let k = st.k; if (st.joint || by === 0) k = 0.42; else if (by === 1) k *= 1.14; else if (by > 18) k *= 0.82;
+      let c = [58 * k, 54 * k, 47 * k];
+      if (row === 1 && (mark(x, y, 6, 27, 0) || mark(x, y, 38, 26, 1))) c = [26, 24, 21];
+      else if (row === 1 && (mark(x, y - 1, 6, 27, 0) || mark(x, y - 1, 38, 26, 1))) c = [86, 80, 70];   // the lit lower lip of the cut
+      return c;
+    });
+    // the rail round the pit: a pale worn coping, a frieze of keepers' marks under it, a dark foot
+    make('ln17_rail', (x, y) => {
+      if (y < 6) { const k = y === 0 ? 1.18 : y === 5 ? 0.78 : 1 - 0.03 * y + 0.06 * hsh(x >> 3, 0, 321); return [118 * k, 110 * k, 96 * k]; }
+      if (y < 8) return [34, 31, 27];
+      if (y >= 26) return [30, 28, 25];
+      const bx = x % 32, k = 0.86 + 0.18 * hsh((x / 32) | 0, 1, 322);
+      if (bx === 0) return [36, 33, 29];
+      const kind = ((x / 32) | 0) % 3;
+      if (mark(bx, y, 11, 12, kind)) return [30, 27, 23];
+      if (mark(bx, y - 1, 11, 12, kind)) return [104, 96, 84];
+      return [72 * k, 67 * k, 58 * k];
+    });
+    make('ln17_coping', (x, y) => { const k = 0.9 + 0.14 * hsh(x >> 4, y >> 4, 331) + ((x + y) % 29 === 0 ? -0.12 : 0); return [112 * k, 104 * k, 92 * k]; });
     // the mouth of the stair: dark, with the edges of steps going down into it
     make('ln17_stairhole', (x, y) => {
       const d = Math.abs(x - 32) / 32, step = (y % 11) / 11;
@@ -437,14 +503,22 @@ const LONGNIGHT17 = (function () {
     addSprite('ln17_root_grey', 96, 176, (x, w, h) => paintRoot(x, w, h, 2), { hs: 1, cx: 0.5, dy: 0 });
     glowMask('ln17_root', (r, g, b) => g > 200 && g > r + 20 && g > b + 40);
     glowMask('ln17_root_dim', (r, g, b) => g > 140 && g > r + 10 && g > b + 40);
-    // the Keeper's Stone: a low flat stone, worn at five places where knees have rested
-    addSprite('ln17_stone', 64, 40, (x) => {
-      E_(x, 32, 34, 28, 5, 'rgba(0,0,0,0.4)');
-      x.beginPath(); x.moveTo(6, 32); x.quadraticCurveTo(4, 14, 16, 12); x.lineTo(48, 12); x.quadraticCurveTo(60, 14, 58, 32); x.closePath();
-      x.fillStyle = VG(x, 12, 34, '#6a665c', '#35322c'); x.fill();
-      E_(x, 32, 14, 24, 4, '#7c786c');
-      for (let i = 0; i < 5; i++) { E_(x, 14 + i * 9, 21 + (i % 2), 3.2, 2, '#2a2824'); E_(x, 14 + i * 9, 20 + (i % 2), 2.2, 1.2, '#4a463c'); }
-      L_(x, 10, 30, 54, 30, 'rgba(0,0,0,0.25)', 1);
+    // the Keeper's Stone: a low flat stone, worn at five places where knees have rested (POLISH17: larger, its face carved
+    // with the five notes of the lullaby falling a fifth, its top pale with use, so it reads across the dark)
+    addSprite('ln17_stone', 80, 48, (x) => {
+      E_(x, 40, 43, 36, 5, 'rgba(0,0,0,0.45)');
+      R_(x, 6, 16, 68, 26, '#4e4a42'); R_(x, 6, 16, 68, 3, '#8a8474'); R_(x, 6, 38, 68, 4, '#2c2a26'); R_(x, 6, 16, 2, 26, '#625e54'); R_(x, 72, 16, 2, 26, '#36332e');
+      R_(x, 8, 10, 64, 6, '#9a9482'); R_(x, 8, 10, 64, 1, '#b4ae9a');                                           // the top, worn pale
+      for (let i = 0; i < 5; i++) { R_(x, 13 + i * 12, 11, 7, 3, '#5a564c'); R_(x, 14 + i * 12, 12, 5, 1, '#3e3b34'); }   // five places worn by knees
+      const notes = [[18, 21], [28, 23], [38, 25], [48, 30], [58, 33]];                                          // the lullaby, falling a fifth
+      for (const [nx, ny] of notes) { R_(x, nx - 2, ny, 5, 4, '#26241f'); R_(x, nx - 2, ny + 4, 5, 1, '#7a7466'); R_(x, nx + 2, ny - 5, 1, 6, '#26241f'); }
+      L_(x, 12, 36, 68, 36, 'rgba(20,18,15,0.6)', 1);
+    });
+    // a keepers' bench: a plank on two stone blocks, worn
+    addSprite('ln17_bench', 64, 32, (x) => {
+      E_(x, 32, 29, 28, 3, 'rgba(0,0,0,0.4)');
+      R_(x, 8, 16, 10, 13, '#4a463e'); R_(x, 46, 16, 10, 13, '#4a463e'); R_(x, 8, 16, 10, 2, '#6a655a'); R_(x, 46, 16, 10, 2, '#6a655a');
+      R_(x, 2, 10, 60, 6, '#6a5236'); R_(x, 2, 10, 60, 2, '#8a6c48'); R_(x, 2, 15, 60, 1, '#3a2a1a');
     });
     // the oil niche: a rack of brass flasks in a stone frame
     addSprite('ln17_oil', 48, 56, (x) => {
@@ -482,12 +556,13 @@ const LONGNIGHT17 = (function () {
     if (typeof Engine === 'undefined' || !Engine.sprites) return false;
     let all = true;
     for (const [src, dst, k] of COATS) { if (!Engine.sprites[dst]) tintSprite(src, dst, k); if (!Engine.sprites[dst]) all = false; }
+    if (!ensureHollowFrames()) all = false;
     return all;
   }
 
   // ---------------------------------------------------------------- the catalogue: foes, people
   const ENEMY_DEFS = {
-    p17n_hollow: { name: TX.enemy.hollow.name, sprite: 'hollow', hp: B.FOE.hollow.hp, dmg: B.FOE.hollow.dmg.slice(), speed: B.FOE.hollow.speed, reach: B.FOE.hollow.reach, scale: 1, xp: B.FOE.hollow.xp, p17n: 'hollow', desc: TX.enemy.hollow.desc },
+    p17n_hollow: { name: TX.enemy.hollow.name, sprite: 'ln17_hollow', hp: B.FOE.hollow.hp, dmg: B.FOE.hollow.dmg.slice(), speed: B.FOE.hollow.speed, reach: B.FOE.hollow.reach, scale: 1, xp: B.FOE.hollow.xp, p17n: 'hollow', desc: TX.enemy.hollow.desc },
     p17n_hound: { name: TX.enemy.hound.name, sprite: 'hound', hp: B.FOE.hound.hp, dmg: B.FOE.hound.dmg.slice(), speed: B.FOE.hound.speed, reach: B.FOE.hound.reach, cacophony: true, noiseLure: true, scale: 0.8, xp: B.FOE.hound.xp, p17n: 'hound', desc: TX.enemy.hound.desc },
     p17n_moth: { name: TX.enemy.moth.name, sprite: 'hushmoth', hp: B.FOE.moth.hp, dmg: [0, 0], speed: B.FOE.moth.speed, reach: 0.6, hushkin: true, moth: true, scale: 0.8, yOff: -0.15, xp: B.FOE.moth.xp, p17n: 'moth', desc: TX.enemy.moth.desc },
   };
@@ -568,9 +643,9 @@ const LONGNIGHT17 = (function () {
   const walkable = (m, x, y) => x >= 0 && y >= 0 && x < m.w && y < m.h && !m.isSolidCell(x, y) && !(m.floorCells && m.floorCells[y * m.w + x] === 2);
 
   function buildGallery() {
-    const m = new GameMap(GAL, TX.galleryName, GAL_W, GAL_H, { floor: 't_flag', floorTextures: ['t_flag', 't_cobble', 'ln17_depth'], ceil: 't_glassrock', fogDist: 13, ambient: 0.085, fogColor: [6, 10, 8], music: 'root', danger: 0, spawn: { x: 17.5, y: 6.6, dir: Math.PI / 2 } });
+    const m = new GameMap(GAL, TX.galleryName, GAL_W, GAL_H, { floor: 't_flag', floorTextures: ['t_flag', 't_cobble', 'ln17_depth'], ceil: 'c_rock', fogDist: 15, ambient: 0.13, fogColor: [6, 10, 8], music: 'root', danger: 0, spawn: { x: 17.5, y: 6.6, dir: Math.PI / 2 } });
     m.ceilZ = 2.6;
-    for (let y = 0; y < GAL_H; y++) for (let x = 0; x < GAL_W; x++) m.set(x, y, WALL(hsh(x, y, 3) < 0.22 ? 't_stone' : 't_glassrock'));
+    for (let y = 0; y < GAL_H; y++) for (let x = 0; x < GAL_W; x++) m.set(x, y, WALL(hsh(x, y, 3) < 0.3 ? 'ln17_wall2' : 'ln17_wall'));   // POLISH17: dressed stone, the keepers' marks cut in it
     // the hall: an ellipse around the Root
     for (let y = 0; y < GAL_H; y++) for (let x = 0; x < GAL_W; x++) {
       const ex = (x + 0.5 - C.x) / 12.6, ey = (y + 0.5 - C.y) / 10.6;
@@ -585,13 +660,15 @@ const LONGNIGHT17 = (function () {
     for (let y = 0; y < GAL_H; y++) for (let x = 0; x < GAL_W; x++) {
       const d = hyp(x + 0.5 - C.x, y + 0.5 - C.y);
       if (d < 3.3) { m.set(x, y, null); m.setFloor(x, y, 2); }
-      else if (d < 4.4 && walkable(m, x, y)) m.block(x, y, 't_stone', 0.46);
+      else if (d < 4.4 && walkable(m, x, y)) m.block(x, y, 'ln17_rail', 0.46, { capTex: 'ln17_coping' });
     }
     m.set(17, 0, DOOR({ tex: 'ln17_stairhole', portal: { map: ORCH, x: 14.5, y: 8.4, dir: Math.PI / 2, ln17up: true }, label: TX.gallery.up }));
     // ---- props
-    LAMPS.forEach((p, i) => m.deco('lamp', p[0], p[1], { solid: true, radius: 0.22, scale: 0.9, glow: 0.9, label: TX.gallery.lamp, use: 'p17n_lamp', _lampIdx: i }));
+    LAMPS.forEach((p, i) => m.deco('lamp', p[0], p[1], { solid: true, radius: 0.22, scale: 1.0, glow: 0.9, label: TX.gallery.lamp, use: 'p17n_lamp', _lampIdx: i }));
     m.deco('ln17_root', C.x, C.y + 0.2, { solid: false, radius: 0.1, scale: 3.3, glow: 0.5, lightCol: [30, 60, 20], label: TX.gallery.root, use: 'p17n_root', yOff: 0 });
-    m.deco('ln17_stone', STONE.x, STONE.y, { solid: false, radius: 0.5, scale: 0.8, label: TX.gallery.stoneSing, use: 'p17n_stone' });
+    m.deco('ln17_stone', STONE.x, STONE.y, { solid: false, radius: 0.5, scale: 1.05, glow: 0.32, label: TX.gallery.stoneSing, use: 'p17n_stone' });
+    // POLISH17: the keepers' benches round the outer wall, facing the Root (not solid: nothing in the hall's ways changes)
+    for (const [x, y] of BENCHES) m.deco('ln17_bench', x, y, { solid: false, radius: 0.3, scale: 0.62, nopick: true });
     m.deco('ln17_oil', OIL_AT[0], OIL_AT[1], { solid: true, radius: 0.35, scale: 0.8, label: TX.gallery.oil, use: 'p17n_oil' });
     m.deco('ln17_rubble', 3.6, 15.0, { solid: false, scale: 1.0, label: TX.gallery.rubble });
     m.deco('ln17_rubble', 30.4, 15.0, { solid: false, scale: 1.0, label: TX.gallery.rubble });
@@ -705,7 +782,9 @@ const LONGNIGHT17 = (function () {
     const o = MOUTH[from], off = ((k % 3) - 1) * 0.8;
     const x = o[0] + (from === 'S' ? off : 0), y = o[1] + (from === 'S' ? 0 : off);
     const e = { kind: 'enemy', type, x, y, transient: true, passive: true, _ln: { kind, wind: 0, cool: 1.2, st: 'walk', sit: 0, perch: -1, tx: 0, ty: 0, born: R.t, drift: R.rng() * 6.28, from } };
-    m.entities.push(e); hydrate(e); e.state = 'passive'; e.alertT = 0; R.spawned++;
+    m.entities.push(e); hydrate(e);
+    if (kind === 'h' && !ensureHollowFrames()) e.sprite = 'hollow';   // the art has not decoded yet: the plain drawing
+    e.state = 'passive'; e.alertT = 0; R.spawned++;
     return e;
   }
   const foes = () => G.map.entities.filter((e) => e._ln && !e.dead && !e.hidden);
@@ -962,11 +1041,24 @@ const LONGNIGHT17 = (function () {
 
   // ---------------------------------------------------------------- the vault's own sound (what the Hush takes, and gives back)
   const AM = { ctx: null, drone: null, hum: null, wind: null, dripT: 0, ok: false };
+  function dropAmb() {
+    const ctx = AM.ctx, srcs = AM.srcs || [], outs = AM.outs || [], gains = (AM.drone || []).concat(AM.hum || []).map((n) => n.g).concat(AM.wind ? [AM.wind] : []);
+    AM.ok = false; AM.ctx = null; AM.srcs = null; AM.outs = null;
+    try {
+      const t = ctx.currentTime;
+      for (const g of gains) { g.gain.cancelScheduledValues(t); g.gain.setTargetAtTime(0, t, 0.3); }
+      for (const o of srcs) o.stop(t + 1.6);
+      setTimeout(() => { for (const n of outs) { try { n.disconnect(); } catch (e) { /* gone */ } } }, 1800);
+    } catch (e) { /* closed context */ }
+  }
   function ambTick(dt) {
     const A = typeof Audio_ !== 'undefined' ? Audio_ : null;
     if (!A || !A.ctx || !A.sfxBus) return;
     const ctx = A.ctx;
-    if (!AM.ctx || AM.ctx !== ctx) {
+    // outside the night (every other map in the game) the bed is not built, or is faded out and stopped: no sources run and
+    // nothing is automated per frame; it is built again when a night begins
+    if (!(live() && !!R.active && !R.over)) { if (AM.ok) dropAmb(); return; }
+    if (!AM.ok || AM.ctx !== ctx) {
       try {
         AM.ctx = ctx;
         const mk = (type, f, g0) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = type; o.frequency.value = f; g.gain.value = 0; o.connect(g); return { o, g }; };
@@ -979,6 +1071,7 @@ const LONGNIGHT17 = (function () {
         const ns = ctx.createBufferSource(); ns.buffer = buf; ns.loop = true;
         const wl = ctx.createBiquadFilter(); wl.type = 'lowpass'; wl.frequency.value = 380; const wg = ctx.createGain(); wg.gain.value = 0;
         ns.connect(wl); wl.connect(wg); wg.connect(A.sfxBus); ns.start(); AM.wind = wg;
+        AM.srcs = AM.drone.concat(AM.hum).map((n) => n.o).concat([ns]); AM.outs = [lp, wg];
         AM.ok = true;
       } catch (e) { AM.ok = false; return; }
     }
@@ -1007,6 +1100,7 @@ const LONGNIGHT17 = (function () {
     const _s = Audio_.sfx.step;
     if (typeof _s !== 'function') return;
     Audio_.sfx.step = function () { try { if (R && live() && R.missing.steps) return; } catch (e) { /* normal */ } return _s.apply(this, arguments); };
+    for (const k of ['_orig', '_test', '_p13h', '_p16d']) if (k in _s) Object.defineProperty(Audio_.sfx.step, k, { configurable: true, enumerable: true, get: () => _s[k], set: (v) => { _s[k] = v; } });   // pass inner wrappers' hooks through (house13 keeps its spy on ._orig)
     Audio_.sfx.__ln17 = true;
   }
   const LAYERS = ['drip', 'breath', 'wind', 'steps'];
@@ -1386,7 +1480,7 @@ const LONGNIGHT17 = (function () {
     const p = G.player, c = cam();
     return {
       mapId: G.mapId, cam: { x: c.x, y: c.y, dir: c.dir, pitch: c.pitch }, tod: G.tod, day: G.day, state: G.state, noise: G.noise,
-      hp: p.hp, voice: p.voice, fat: p.fat, hpMax: p.hpMax, voiceMax: p.voiceMax, gold: p.gold, inv: JSON.parse(JSON.stringify(p.inv)), songs: p.songs.slice(), weapon: p.weapon,
+      hp: p.hp, voice: p.voice, fat: p.fat, hpMax: p.hpMax, voiceMax: p.voiceMax, gold: p.gold, inv: JSON.parse(JSON.stringify(p.inv)), songs: p.songs.slice(), weapon: p.weapon, weapons: (p.weapons || []).slice(),
       xp: p.xp, level: p.level, kills: p.kills,
       flags: Object.keys(flags()).filter((k) => k.indexOf(FP) === 0).reduce((o, k) => { o[k] = flags()[k]; return o; }, {}),
       hadFlags: Object.keys(flags()).filter((k) => k.indexOf(FP) === 0), flagsAll: JSON.stringify(flags()),
@@ -1398,7 +1492,7 @@ const LONGNIGHT17 = (function () {
     if (!SNAP) return;
     const p = G.player, s = SNAP;
     if (p) {
-      p.hp = s.hp; p.voice = s.voice; p.fat = s.fat; p.hpMax = s.hpMax; p.voiceMax = s.voiceMax; p.gold = s.gold; p.inv = s.inv; p.songs = s.songs; p.weapon = s.weapon;
+      p.hp = s.hp; p.voice = s.voice; p.fat = s.fat; p.hpMax = s.hpMax; p.voiceMax = s.voiceMax; p.gold = s.gold; p.inv = s.inv; p.songs = s.songs; p.weapon = s.weapon; if (s.weapons) p.weapons = s.weapons;
       p.xp = s.xp; p.level = s.level; p.kills = s.kills;
     }
     G.tod = s.tod; G.day = s.day; G.noise = s.noise; G.rootWard = 0;
@@ -1427,6 +1521,8 @@ const LONGNIGHT17 = (function () {
     // the night's kit: a full voice for the Songs, two jars of honey, a tonic; the Songs a Cantor would know
     p.voiceMax = Math.max(p.voiceMax, 30); p.voice = p.voiceMax; p.hp = p.hpMax; p.fat = p.fatMax;
     for (const s of ['murmur', 'tending', 'fifth', 'root']) if (!p.songs.includes(s)) p.songs.push(s);
+    // a short sword in hand, so the night is not seen through the glowing casting hands
+    if (Array.isArray(p.weapons)) { if (!p.weapons.includes('sword')) p.weapons.push('sword'); p.weapon = p.weapons.indexOf('sword'); }
     if (!G.has('honey')) G.give('honey', 2); else G.give('honey', 1);
     if (!G.has('tonic')) G.give('tonic', 1);
     setf('nights', fint('nights') + 1); tally.nights++; saveTally();

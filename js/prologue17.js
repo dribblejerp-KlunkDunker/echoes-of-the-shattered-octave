@@ -61,7 +61,7 @@ const PROLOGUE17 = (function () {
     LIMB_Y: 85.5, COUNT_Y: 50.5, RISE_Y: 23,
     GATE: { x: 26.5, y: 13.5 }, GATE_ZONE: { x0: 21.5, x1: 31.5, y1: 18.6 }, VOICE_X: 31.6, VOICE_AWAY: 1.4,
     WOOD_LINES: [0.6, 4.2, 8.4, 12.6, 15.4, 18.6],   // seconds after the river gate: the three sights, Seraphina, "You do not know", Dorran
-    WINTER: { p17p_road: { snow: 0.8, fall: 0.35, breath: true, grade: 0.45 }, p17p_wood: { snow: 0.4, fall: 0.25, breath: true, grade: 0.6 } },   // in the wood the snow is thin enough that the leaves show through
+    WINTER: { p17p_road: { snow: 0.8, fall: 0.35, breath: true, grade: 0.45 }, p17p_wood: { snow: 0.4, fall: 0.25, breath: true, grade: 0.45 } },   // in the wood the snow is thin enough that the leaves show through
   };
 
   // ---------------------------------------------------------------- flags (validated small integers, p17p_ only)
@@ -423,63 +423,91 @@ const PROLOGUE17 = (function () {
       for (const [a, l] of [[-1.95, 22], [-1.45, 26], [-1.05, 22], [-2.5, 17], [-0.6, 17]]) branch(x, r, 32, 50, a, l, 5, 3, '#5a5852');
     });
   }
-  // the crowns of Oakhaven's oaks, with what they carried up into them
+  // the crowns of Oakhaven's oaks, with what they carried up into them (POLISH17: painted larger and lower in the crown,
+  // so each reads as a house from the street: a roof with snow on it, a chimney, a door hanging open on nothing)
   const CROWNS = ['bare', 'cottage', 'shop', 'cart', 'bed', 'house'];
-  const HC = { plaster: '#f4e4bc', plasterSh: '#c8b48e', timber: '#6a4a30', roof: '#946c4c', roofSh: '#6a4c36', dark: '#1a1612', door: '#a87448', snow: '#ffffff', win: '#e8b860' };   // bright: they hang in the dark
-  function paintHouse(x, kind) {
-    const C = HC;
-    x.save(); x.translate(48, 78); x.scale(1.3, 1.3); x.translate(-48, -66);   // the house is drawn round (48, 66): larger, and a little lower
-    x.save();
-    if (kind === 'cottage') {            // a cottage on its side; its chimney points right, at the river as you walk up the street
-      x.translate(48, 66); x.rotate(Math.PI / 2);
-      R(x, -17, -6, 34, 20, C.plaster); R(x, -17, 9, 34, 5, C.plasterSh); R(x, -17, -6, 34, 2, C.timber); R(x, -1, -6, 2, 20, C.timber);
-      R(x, -12, 0, 5, 5, C.dark); R(x, 8, 0, 5, 5, C.dark); R(x, -4, 3, 7, 11, C.dark);
-      P(x, [[-20, -6], [0, -21], [20, -6]], C.roof); P(x, [[0, -21], [20, -6], [6, -6]], C.roofSh);
-      R(x, 8, -24, 5, 12, '#7a6a5a'); R(x, 7, -25, 7, 2, '#3a3028');
-      x.restore(); x.save();
-      R(x, 41, 47, 4, 38, C.snow);                                           // snow on what is now its top
-    } else if (kind === 'shop') {        // HALE & DAUGHTER, CORDWAINERS: tilted, its door hanging open on nothing
-      x.translate(48, 64); x.rotate(-0.2);
-      R(x, -21, -16, 42, 34, C.plaster); R(x, 12, -16, 9, 34, C.plasterSh); R(x, -21, -16, 42, 2, C.timber);
-      R(x, -19, -13, 38, 8, '#2c4a38'); R(x, -19, -13, 38, 1, '#c8a85a'); R(x, -19, -6, 38, 1, '#c8a85a');
-      x.fillStyle = '#f0e2b0'; x.font = 'bold 5px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('HALE & DAUGHTER', 0, -9.5);
-      R(x, -17, -2, 13, 11, '#36424e'); R(x, -16, -1, 11, 9, '#8696a4');
-      R(x, 3, -3, 10, 21, C.dark); P(x, [[13, -3], [19, 1], [19, 18], [13, 18]], C.door);
-      R(x, -23, -19, 46, 3, C.snow);
-      x.restore(); x.save();
-    } else if (kind === 'cart') {
-      x.translate(48, 68); x.rotate(0.32);
-      R(x, -18, -5, 36, 8, '#7a5a3a'); R(x, -18, 1, 36, 2, '#4a3624'); R(x, -18, -7, 36, 2, C.snow);
-      L(x, 18, -1, 31, -7, '#5a4230', 2.4);
-      for (const wx of [-10, 9]) { x.beginPath(); x.arc(wx, 7, 6, 0, Math.PI * 2); x.strokeStyle = '#3a2a1c'; x.lineWidth = 2.4; x.stroke(); L(x, wx - 5, 7, wx + 5, 7, '#4a3624', 1.5); L(x, wx, 2, wx, 12, '#4a3624', 1.5); }
-      x.restore(); x.save();
-    } else if (kind === 'bed') {         // an iron bed caught in a fork, its blankets frozen to it
-      x.translate(48, 64); x.rotate(-0.38);
-      R(x, -18, -12, 3, 22, '#26262a'); R(x, 15, -8, 3, 18, '#26262a');
-      R(x, -16, -2, 32, 7, '#c4ccd6'); P(x, [[-16, -3], [16, -4], [18, 6], [4, 13], [-15, 7]], '#9eacbc'); R(x, -15, -5, 30, 2, C.snow);
-      L(x, -16, 6, 16, 6, '#26262a', 2);
-      x.restore(); x.save();
-    } else if (kind === 'house') {       // broken-backed: two halves at an angle, a door hanging open on nothing
-      x.translate(38, 68); x.rotate(-0.26);
-      R(x, -15, -9, 18, 22, C.plaster); R(x, -15, 8, 18, 5, C.plasterSh); R(x, -11, -4, 5, 5, C.dark);
-      P(x, [[-18, -9], [-6, -21], [6, -9]], C.roof); R(x, -18, -11, 24, 2, C.snow);
-      x.restore(); x.save(); x.translate(60, 66); x.rotate(0.32);
-      R(x, -4, -9, 19, 22, C.plaster); R(x, 9, -9, 6, 22, C.plasterSh); R(x, 0, 0, 6, 13, C.dark); P(x, [[6, 0], [10, 3], [10, 13], [6, 13]], C.door);
-      P(x, [[-7, -9], [5, -21], [17, -9]], C.roof); P(x, [[5, -21], [17, -9], [10, -9]], C.roofSh); R(x, -7, -11, 24, 2, C.snow);
-      x.restore(); x.save();
+  const CW = 128, CH = 224;                                    // the crown sprite; FORK is where the trunk divides
+  const FORK = { bare: 140, cottage: 158, shop: 152, cart: 154, bed: 152, house: 148 };
+  const HC = { plaster: '#eadcbc', plasterSh: '#b8a684', plasterDk: '#8e7e62', timber: '#5a3e28', roof: '#7a5a42', roofSh: '#54402e', tile: '#4a3828',
+    dark: '#100c0a', door: '#9a6a40', doorSh: '#6a4628', snow: '#f4f7fb', snowSh: '#c6d0de', glass: '#2a3440', stone: '#7a746a' };
+  // a 3x5 pixel font for the shop board, so the letters stay crisp when the sprite is scaled by nearest neighbour
+  const GLYPH = { H: '101101111101101', A: '010101111101101', L: '100100100100111', E: '111100110100111', '&': '010101010101011', D: '110101101101110',
+    U: '101101101101111', G: '011100101101011', T: '111010010010010', R: '110101110101101', C: '011100100100011', O: '010101101101010',
+    W: '101101101111101', I: '111010010010111', N: '110101101101101', S: '011100010001110', ' ': '000000000000000' };
+  function pixText(x, str, x0, y0, col, sc) {
+    x.fillStyle = col; let cx = x0;
+    for (const ch of str) { const g = GLYPH[ch] || GLYPH[' ']; for (let i = 0; i < 15; i++) if (g[i] === '1') x.fillRect(cx + (i % 3) * sc, y0 + ((i / 3) | 0) * sc, sc, sc); cx += 4 * sc; }
+    return cx - x0 - sc;
+  }
+  // a house drawn about its own centre (0, 0): front wall w x h, a roof of height rh, a side wall seen in three-quarter,
+  // windows, a chimney, and a door (open: a dark doorway and the leaf swung out on one hinge)
+  function house(x, o) {
+    const C = HC, w = o.w, h = o.h, rh = o.rh, sd = o.side || 10, l = -w / 2, t = -h / 2;
+    P(x, [[w / 2, t], [w / 2 + sd, t - sd * 0.5], [w / 2 + sd, h / 2 - sd * 0.5], [w / 2, h / 2]], C.plasterDk);          // the side wall
+    P(x, [[w / 2 + sd, t - sd * 0.5], [w / 2 + sd + 2, t - sd * 0.5 - 2], [w / 2 + sd + 2, h / 2 - sd * 0.5], [w / 2 + sd, h / 2 - sd * 0.5]], C.timber);
+    R(x, l, t, w, h, C.plaster); R(x, l, h / 2 - 5, w, 5, C.plasterSh);                                             // the front
+    R(x, l, t, w, 3, C.timber); R(x, l, h / 2 - 2, w, 2, C.timber); R(x, l, t, 3, h, C.timber); R(x, w / 2 - 3, t, 3, h, C.timber);   // the frame
+    if (o.mid) R(x, -1.5, t, 3, h, C.timber);
+    // the roof: tiles in rows, the ridge, the snow lying along it
+    P(x, [[l - 5, t], [0, t - rh], [w / 2 + 5, t]], C.roof);
+    P(x, [[0, t - rh], [w / 2 + 5, t], [w / 2 + sd + 5, t - sd * 0.5], [sd, t - rh - sd * 0.5]], C.roofSh);
+    for (let k = 1; k < 4; k++) { const yy = t - rh + rh * k / 4, hw = (w / 2 + 5) * k / 4; L(x, -hw, yy, hw, yy, C.tile, 1.4); }
+    P(x, [[l - 5, t], [l - 1, t - 4], [0, t - rh - 3], [sd + 1, t - rh - sd * 0.5 - 3], [sd + 2, t - rh - sd * 0.5 + 1], [0, t - rh + 2], [l + 1, t + 1]], C.snow);
+    P(x, [[0, t - rh + 2], [sd + 2, t - rh - sd * 0.5 + 1], [w / 2 + sd + 5, t - sd * 0.5], [w / 2 + 5, t]], C.snowSh);
+    if (o.chimney !== false) { const cx = o.chimney || w * 0.22; R(x, cx - 4, t - rh * 0.85 - 6, 8, 16, C.stone); R(x, cx - 5, t - rh * 0.85 - 8, 10, 3, '#3e3a34'); R(x, cx - 5, t - rh * 0.85 - 10, 10, 2, C.snow); }
+    // windows: dark glass, a pale sill, one shutter hanging
+    for (const wx of o.wins || []) { R(x, wx - 5, t + 7, 10, 10, C.glass); R(x, wx - 5, t + 7, 10, 2, C.dark); R(x, wx - 6, t + 17, 12, 2, C.snow); L(x, wx, t + 7, wx, t + 17, C.timber, 1.2);
+      P(x, [[wx + 5, t + 7], [wx + 11, t + 9], [wx + 11, t + 20], [wx + 5, t + 17]], C.door); }
+    if (o.door) {                                                                                                  // the doorway, open on nothing
+      const dx = o.door, dw = 11, dh = Math.min(h - 6, 20);
+      R(x, dx - dw / 2, h / 2 - dh - 1, dw, dh, C.dark); R(x, dx - dw / 2 - 1, h / 2 - dh - 3, dw + 2, 2, C.timber);
+      P(x, [[dx + dw / 2, h / 2 - dh - 1], [dx + dw / 2 + 8, h / 2 - dh + 3], [dx + dw / 2 + 8, h / 2 + 3], [dx + dw / 2, h / 2 - 1]], C.door);
+      L(x, dx + dw / 2 + 2, h / 2 - dh + 4, dx + dw / 2 + 6, h / 2 - dh + 6, C.doorSh, 1.2); E(x, dx + dw / 2 + 6, h / 2 - dh / 2, 1.2, 1.2, '#2a2018');
     }
-    x.restore(); x.restore();
+  }
+  function paintHouse(x, kind, fy) {
+    const C = HC, cx = CW / 2;
+    x.save();
+    if (kind === 'cottage') {                  // a cottage on its side in the crown, its chimney pointing at the river
+      x.translate(cx + 2, fy - 30); x.rotate(Math.PI / 2 - 0.08);
+      house(x, { w: 58, h: 34, rh: 24, wins: [-16, 14], door: -1, chimney: 16, side: 9 });
+    } else if (kind === 'shop') {              // HALE & DAUGHTER, CORDWAINERS: the board still over the door, the door hanging open
+      const sc = document.createElement('canvas'); sc.width = 100; sc.height = 92;
+      const q = sc.getContext('2d'); q.translate(46, 56);
+      house(q, { w: 80, h: 46, rh: 18, wins: [], door: 24, chimney: -24, side: 10, mid: false });
+      R(q, -38, -18, 50, 24, '#2c3a4a'); R(q, -36, -16, 46, 20, '#6e8294'); L(q, -13, -16, -13, 4, C.timber, 2); L(q, -36, -6, 10, -6, C.timber, 1.5);   // the shop window
+      R(q, -40, -52, 80, 32, '#1e3a2c'); R(q, -40, -52, 80, 2, '#c8a85a'); R(q, -40, -22, 80, 2, '#c8a85a');                                           // the board
+      pixText(q, 'HALE &', -23, -49, '#f2e2a8', 2); pixText(q, 'DAUGHTER', -31, -38, '#f2e2a8', 2); pixText(q, 'CORDWAINERS', -22, -27, '#d8c48a', 1);
+      R(q, -42, -55, 84, 3, C.snow);
+      x.imageSmoothingEnabled = false; x.translate(cx, fy - 30); x.rotate(-0.07); x.drawImage(sc, -46, -56);
+    } else if (kind === 'cart') {              // a cart, up in the crown
+      x.translate(cx, fy - 22); x.rotate(0.3);
+      R(x, -30, -9, 60, 14, '#6e5034'); R(x, -30, -9, 60, 3, '#8a6a46'); R(x, -30, 3, 60, 3, '#3e2c1c'); for (let k = -20; k <= 20; k += 10) L(x, k, -9, k, 5, '#4a3624', 1.2);
+      R(x, -31, -13, 62, 4, C.snow);
+      L(x, 30, -2, 52, -14, '#5a4230', 3); L(x, 30, 3, 52, -9, '#5a4230', 3);
+      for (const wx of [-17, 16]) { x.beginPath(); x.arc(wx, 10, 10, 0, Math.PI * 2); x.strokeStyle = '#2e2216'; x.lineWidth = 3.2; x.stroke(); for (let a = 0; a < 6; a++) L(x, wx, 10, wx + Math.cos(a) * 9, 10 + Math.sin(a) * 9, '#4a3624', 1.6); E(x, wx, 10, 2.6, 2.6, '#2e2216'); }
+    } else if (kind === 'bed') {               // an iron bed caught in a fork, its blankets frozen to it
+      x.translate(cx, fy - 24); x.rotate(-0.36);
+      R(x, -30, -22, 4, 40, '#22222a'); R(x, 26, -14, 4, 32, '#22222a'); for (let k = 0; k < 4; k++) L(x, -30, -18 + k * 5, -26, -18 + k * 5, '#3a3a44', 1.2);
+      R(x, -27, -4, 54, 10, '#d8dde4'); R(x, -27, -6, 18, 6, '#eef1f6');                                                  // mattress, pillow
+      P(x, [[-12, -6], [27, -7], [30, 10], [22, 26], [6, 18], [-8, 24], [-12, 8]], '#8a9cb4'); L(x, -4, 0, 18, 22, '#6a7c94', 1.4); L(x, 8, -4, 26, 12, '#6a7c94', 1.4);   // the blankets, frozen hanging
+      R(x, -27, -9, 56, 3, C.snow); L(x, -28, 8, 28, 8, '#22222a', 2.4);
+    } else if (kind === 'house') {             // broken-backed: two halves at an angle, a door hanging open on nothing
+      x.save(); x.translate(cx - 18, fy - 28); x.rotate(-0.34); house(x, { w: 36, h: 32, rh: 20, wins: [-6], chimney: -10, side: 6 }); x.restore();
+      x.translate(cx + 20, fy - 32); x.rotate(0.3); house(x, { w: 38, h: 34, rh: 22, wins: [], door: 2, chimney: 10, side: 9 });
+    }
+    x.restore();
   }
   function paintCrowns() {
     CROWNS.forEach((kind, i) => {
-      addSprite('p17p_crown_' + kind, 96, 192, (x, w, h) => {
-        const r = rng(1711 + i * 31);
-        trunk(x, w, h, 42, 24, 96);
-        const col = '#6c6a64';
-        for (const [a, l] of [[-2.2, 34], [-1.62, 42], [-1.05, 34], [-2.75, 24], [-0.4, 24]]) branch(x, r, 48, 98, a + (r() - 0.5) * 0.1, l, 9, 3, col);
+      addSprite('p17p_crown_' + kind, CW, CH, (x, w, h) => {
+        const r = rng(1711 + i * 31), fy = FORK[kind], col = '#6c6a64';
+        trunk(x, w, h, 50, 30, fy);
+        const limbs = kind === 'bare' ? [[-2.2, 44], [-1.62, 52], [-1.05, 44], [-2.75, 30], [-0.4, 30]] : [[-2.5, 46], [-0.65, 46], [-2.95, 30], [-0.2, 30], [-1.58, 30]];
+        for (const [a, l] of limbs) branch(x, r, 64, fy + 2, a + (r() - 0.5) * 0.1, l, 10, 3, col);
         if (kind !== 'bare') {
-          paintHouse(x, kind);
-          for (let k = 0; k < 3; k++) branch(x, r, 34 + r() * 28, 74 + r() * 12, -1.1 - r() * 0.9, 12 + r() * 6, 2.5, 1, col);   // twigs over what it carries
+          paintHouse(x, kind, fy);
+          for (const [bx, a, l] of [[50, -1.25, 22], [80, -1.9, 20], [64, -1.5, 14]]) branch(x, r, bx, fy - 2, a, l, 4, 1, col);   // limbs over what it carries: it is wedged, not set down
         }
       });
     });
@@ -583,6 +611,88 @@ const PROLOGUE17 = (function () {
     return all;
   }
 
+  // ---------------------------------------------------------------- Lyra's own hands (POLISH17)
+  // She has no voice, so she never shows the game's spell-casting hands (fp_hands, with the Song-light in the palms). In
+  // this extra the first-person art is hers: her good right hand holding the lantern up by its bail, and the slate on its
+  // cord with her burned left hand, bound in clean linen, on its edge. Painted once (640x380: the engine draws the
+  // bare-hands art centred at half scale, so this covers the whole view), in two states: the lantern dark (the road by day) and lit (dusk on, the wood).
+  // It is swapped in only for the length of drawHUD while this extra is on screen (wrap below), so every other module
+  // that draws the bare-hands weapon draws hers instead, and nothing outside the extra ever sees it.
+  const FPH = { dark: null, lit: null };
+  function paintFpHands(lit) {
+    // a full-view overlay: 640x380 is drawn at half scale over the whole 320-wide view, its top above the frame, so the
+    // sleeves come in from the edges and the slate's cord runs up out of sight instead of stopping in the air
+    const c = document.createElement('canvas'); c.width = 640; c.height = 380;
+    const x = c.getContext('2d');
+    x.translate(320, 374); x.scale(0.8, 0.8); x.translate(-320, -380);                                          // low in the view, out of the way
+    const sk = lit ? ['#c88a58', '#9a6238', '#6a3c22', '#e2a874'] : ['#a87650', '#7e5234', '#523020', '#c2906a'];   // skin: mid, shade, line, light
+    const wool = lit ? ['#4a3a30', '#2e241e', '#5e4a3a'] : ['#3a3230', '#221e1c', '#4a3e38'];                       // her coat: mid, dark, lit edge
+    // a sleeve: a tapered quad from the screen edge to the wrist, darker underneath, with two folds
+    const sleeve = (pts, under, fold) => {
+      P(x, pts, wool[0]); P(x, under, wool[1]);
+      for (const f of fold) L(x, f[0], f[1], f[2], f[3], wool[2], 2.2);
+    };
+    // ---- the slate (left of centre), its cord running down toward her neck below the frame
+    L(x, 232, 236, 262, 380, '#3a2c1e', 2.6); L(x, 318, 232, 300, 380, '#3a2c1e', 2.6);
+    x.save(); x.translate(270, 302); x.rotate(-0.1);
+    R(x, -54, -58, 108, 124, lit ? '#8a6a44' : '#6e5638');                                                      // the frame
+    R(x, -54, -58, 108, 5, lit ? '#b08a5a' : '#8a6c48'); R(x, -54, -58, 5, 124, lit ? '#a48052' : '#7e6442');
+    R(x, -45, -49, 90, 106, lit ? '#3e4850' : '#323a42');                                                       // the slate
+    x.fillStyle = 'rgba(220,226,230,0.15)'; for (let i = 0; i < 5; i++) x.fillRect(-38 + i * 15, -38 + (i % 3) * 24, 20, 8);   // old chalk, rubbed out
+    L(x, -36, 8, 34, 4, 'rgba(230,236,240,0.30)', 2.4); L(x, -34, 22, 14, 19, 'rgba(230,236,240,0.24)', 2.4);     // the ghost of a word
+    R(x, -45, -49, 90, 3, 'rgba(255,255,255,0.10)');
+    R(x, -6, -56, 12, 5, '#2a2018');                                                                             // where the cord goes through
+    x.restore();
+    // ---- her burned left hand, bound in clean linen, on the slate's top edge; the forearm from the bottom left
+    sleeve([[84, 380], [206, 250], [252, 264], [214, 380]], [[160, 380], [236, 262], [252, 264], [214, 380]], [[136, 350, 196, 288], [170, 360, 226, 296]]);
+    P(x, [[208, 246], [232, 236], [256, 262], [236, 272]], wool[1]);                                             // the cuff
+    const lin = lit ? ['#ece2c8', '#c8b894', '#9a8a6a'] : ['#cfc6b0', '#a89c82', '#7a7060'];
+    x.beginPath(); x.moveTo(236, 238); x.quadraticCurveTo(250, 220, 274, 224); x.quadraticCurveTo(296, 228, 300, 244); x.quadraticCurveTo(290, 260, 264, 264); x.quadraticCurveTo(244, 262, 236, 238); x.fillStyle = lin[0]; x.fill();
+    x.strokeStyle = lin[2]; x.lineWidth = 2; x.stroke();
+    for (let i = 0; i < 5; i++) L(x, 245 + i * 10, 228 + i * 1.5, 250 + i * 9, 260 - i, lin[1], 1.6);           // the wrapping
+    for (let i = 0; i < 4; i++) { E(x, 278 + i * 6.5, 248 + i * 1.6, 3.4, 4.6, sk[0]); E(x, 278 + i * 6.5, 250 + i * 1.6, 2.2, 2.4, sk[1]); }   // fingertips over the edge
+    // ---- the lantern, held out in her good right hand (right of centre); the forearm from the bottom right
+    const lx = 382;
+    sleeve([[486, 380], [410, 222], [446, 196], [640, 292], [640, 380]], [[486, 380], [410, 222], [424, 214], [540, 380]], [[540, 330, 470, 250], [590, 330, 500, 246]]);
+    P(x, [[404, 204], [440, 186], [458, 212], [418, 232]], wool[1]);                                             // the cuff
+    P(x, [[404, 184], [424, 182], [436, 202], [410, 214]], sk[1]);                                               // the wrist
+    // the bail: an iron hoop from the fist down to the cap
+    x.beginPath(); x.moveTo(lx - 24, 252); x.quadraticCurveTo(lx - 24, 216, lx, 212); x.quadraticCurveTo(lx + 24, 216, lx + 24, 252); x.strokeStyle = '#1e1a16'; x.lineWidth = 3.2; x.stroke();
+    x.strokeStyle = lit ? '#8a6a3a' : '#5a5048'; x.lineWidth = 1.1; x.stroke();
+    // the fist round the top of the bail, seen from behind: the back of the hand with its knuckle ridge, four fingers
+    // folded down round the hoop, the thumb across them
+    x.beginPath(); x.moveTo(360, 196); x.quadraticCurveTo(364, 178, 386, 176); x.quadraticCurveTo(408, 176, 414, 190); x.lineTo(416, 210); x.lineTo(360, 212); x.closePath();
+    x.fillStyle = sk[0]; x.fill(); x.strokeStyle = sk[2]; x.lineWidth = 1.8; x.stroke();
+    L(x, 370, 186, 404, 184, sk[3], 2.6); L(x, 376, 196, 408, 198, sk[1], 1.4);                                  // the knuckle ridge, catching the light
+    for (let i = 0; i < 4; i++) {                                                                                // the folded fingers
+      const fx = 363 + i * 13, fy = 206;
+      x.beginPath(); x.moveTo(fx, fy); x.lineTo(fx + 12, fy); x.quadraticCurveTo(fx + 13, fy + 18, fx + 6, fy + 22); x.quadraticCurveTo(fx - 1, fy + 18, fx, fy); x.closePath();
+      x.fillStyle = i % 2 ? sk[0] : sk[3]; x.fill(); x.strokeStyle = sk[2]; x.lineWidth = 1.4; x.stroke();
+      L(x, fx + 2, fy + 9, fx + 10, fy + 9, sk[1], 1.2);
+    }
+    x.beginPath(); x.moveTo(352, 200); x.quadraticCurveTo(346, 220, 360, 228); x.quadraticCurveTo(378, 230, 384, 220); x.quadraticCurveTo(372, 210, 352, 200); x.fillStyle = sk[1]; x.fill(); x.strokeStyle = sk[2]; x.lineWidth = 1.5; x.stroke();   // the thumb
+    E(x, 378, 220, 4, 3, sk[3]);
+    // the lantern: a pierced iron cap, four bars and the glass, a flame or a dead wick, the base
+    R(x, lx - 3, 248, 6, 6, '#1e1a16');
+    P(x, [[lx - 13, 254], [lx + 13, 254], [lx + 24, 265], [lx - 24, 265]], '#2a2622', '#141210', 1.4);
+    for (let i = 0; i < 3; i++) R(x, lx - 9 + i * 7.5, 257.5, 3, 3, lit ? '#ffcf70' : '#0e0c0a');
+    R(x, lx - 26, 265, 52, 5, '#34302a'); R(x, lx - 26, 265, 52, 1.6, lit ? '#8a7454' : '#5a544c');
+    const gl = x.createLinearGradient(lx - 22, 0, lx + 22, 0);
+    if (lit) { gl.addColorStop(0, '#d8902e'); gl.addColorStop(0.5, '#ffe2a0'); gl.addColorStop(1, '#c87a24'); }
+    else { gl.addColorStop(0, '#2c3434'); gl.addColorStop(0.5, '#46504e'); gl.addColorStop(1, '#262c2c'); }
+    R(x, lx - 22, 270, 44, 44, gl);
+    if (lit) { x.beginPath(); x.moveTo(lx, 276); x.quadraticCurveTo(lx + 8, 294, lx, 302); x.quadraticCurveTo(lx - 8, 294, lx, 276); x.fillStyle = '#fff6d8'; x.fill(); E(x, lx, 297, 2.6, 4, '#ffb040'); }
+    else { R(x, lx - 1, 294, 2, 7, '#141210'); L(x, lx - 15, 274, lx - 11, 308, 'rgba(220,235,240,0.28)', 2); }
+    for (const bx of [-22, -8, 6, 20]) R(x, lx + bx, 270, 2.8, 44, '#1e1a16');
+    R(x, lx - 26, 313, 52, 7, '#2a2622'); R(x, lx - 22, 320, 44, 5, '#1e1a16');
+    return c;
+  }
+  function fpHands(lit) {
+    const k = lit ? 'lit' : 'dark';
+    if (!FPH[k]) { try { FPH[k] = paintFpHands(lit); } catch (e) { FPH[k] = null; } }
+    return FPH[k];
+  }
+
   // ---------------------------------------------------------------- catalogue: items and people (global, never saved)
   const ITEM_DEFS = {
     p17p_slate: { name: TX.item.slate, sprite: 'loot', key: true, desc: TX.item.slateDesc },
@@ -660,7 +770,7 @@ const PROLOGUE17 = (function () {
   }
   function buildWood() {
     const W = 48, H = 64;
-    const m = new GameMap('p17p_wood', TX.wood.name, W, H, { outdoor: true, floor: 'p17p_leaves', floorTextures: ['p17p_leaves', 'p17p_leaves2', 't_water'], fogDist: 19, fogColor: [54, 60, 80], ambient: 0.42, music: 'coda', danger: 0, spawn: { x: 40.5, y: 61.2, dir: -Math.PI / 2 } });
+    const m = new GameMap('p17p_wood', TX.wood.name, W, H, { outdoor: true, floor: 'p17p_leaves', floorTextures: ['p17p_leaves', 'p17p_leaves2', 't_water'], fogDist: 19, fogColor: [74, 82, 106], ambient: 0.56, music: 'coda', danger: 0, spawn: { x: 40.5, y: 61.2, dir: -Math.PI / 2 } });
     m.border('p17p_hedge');
     for (let x = 0; x < W; x++) for (const y of [0, H - 1]) m.block(x, y, 'p17p_hedge', 2.1);
     for (let y = 0; y < H; y++) for (const x of [0, W - 1]) m.block(x, y, 'p17p_hedge', 2.1);
@@ -669,7 +779,9 @@ const PROLOGUE17 = (function () {
     m.set(40, H - 1, DOOR({ tex: 'p17p_rivergate', portal: { map: 'p17p_road', x: 46.5, y: 13.7, dir: Math.PI / 2 }, label: TX.wood.back }));
     const LAB = { cottage: TX.wood.cottage, shop: TX.wood.shop, cart: TX.wood.cart, bed: TX.wood.bed, house: TX.wood.house, bare: TX.wood.bare };
     for (const [x, y, k] of GIANTS) {
-      m.deco('p17p_crown_' + k, x + 1, y + 1, { scale: 8.6, radius: 0.85, solid: true, glow: 0.72, label: LAB[k], p17pWood: true });   // glow: the snow-light; they read against the sky
+      // glow: the snow-light; they read against the sky. The crowns that carry something also carry a faint cold light
+      // (POLISH17): at night outdoors everything is darkened together, and only a light lifts the houses out of it
+      m.deco('p17p_crown_' + k, x + 1, y + 1, { scale: 8.2, radius: 0.85, solid: true, glow: 0.8, label: LAB[k], p17pWood: true, lightCol: k === 'bare' ? undefined : [21, 24, 33] });
     }
     const r = rng(1753);
     for (let i = 0, n = 0; i < 400 && n < 30; i++) {
@@ -997,6 +1109,18 @@ const PROLOGUE17 = (function () {
       };
     });
     W('wallLabel', () => { const _f = wallLabel; wallLabel = function (cell) { try { if (here() && cell && typeof cell.tex === 'string' && cell.tex.indexOf(FP) === 0 && !cell.label) { const t = WALL_LABELS()[cell.tex]; if (t) return t; } } catch (er) { /* fall through */ } return _f.apply(this, arguments); }; });
+    // Lyra's hands: hers for the length of one HUD draw, then the game's own again (POLISH17)
+    W('drawHUD', () => {
+      const _f = drawHUD;
+      drawHUD = function () {
+        let im = null, prev = null;
+        try {
+          const imgs = typeof Engine !== 'undefined' && Engine.images;
+          if (imgs && here() && G.player) { im = fpHands(G.mapId === 'p17p_wood' || G.tod >= B.LAMP_FROM); if (im) { prev = imgs.fp_hands; imgs.fp_hands = im; } }
+        } catch (er) { im = null; }
+        try { return _f.apply(this, arguments); } finally { if (im) Engine.images.fp_hands = prev; }
+      };
+    });
     W('startGame', () => { const _f = startGame; startGame = function () { if (!RUN.starting) { RUN.aware = extraId() === ID; RUN.on = RUN.aware; } return _f.apply(this, arguments); }; });
     W('restoreGame', () => { const _f = restoreGame; restoreGame = function () { if (!RUN.starting) { RUN.aware = extraId() === ID; RUN.on = RUN.aware; } return _f.apply(this, arguments); }; });   // EXTRAS17 restoring an extra's own save keeps it running
     // the leaves do not rustle
@@ -1004,6 +1128,7 @@ const PROLOGUE17 = (function () {
       if (typeof Audio_ !== 'undefined' && Audio_.sfx && typeof Audio_.sfx.step === 'function') {
         const _s = Audio_.sfx.step;
         Audio_.sfx.step = function () { if (here() && G.mapId === 'p17p_wood') return; return _s.apply(this, arguments); };
+        for (const k of ['_orig', '_test', '_p13h', '_p16d']) if (k in _s) Object.defineProperty(Audio_.sfx.step, k, { configurable: true, enumerable: true, get: () => _s[k], set: (v) => { _s[k] = v; } });   // pass inner wrappers' hooks through (house13 keeps its spy on ._orig)
       }
     } catch (er) { /* audio optional */ }
   }

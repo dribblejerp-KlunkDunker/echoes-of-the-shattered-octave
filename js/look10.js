@@ -236,7 +236,7 @@ const LOOK10 = (() => {
   // 'spark': constructs and glass-cored men (sparks and scorch, never blood); 'blood': everything else
   function classify(e) {
     const d = (e && e.def) || {}, t = (e && e.type) || '';
-    if (!e || d.quiet || d.hushkin || d.moth || NONE_TYPES.has(t) || e.sprite === 'hollow') return 'none';
+    if (!e || d.quiet || d.hushkin || d.moth || NONE_TYPES.has(t) || e.sprite === 'hollow' || e.sprite === 'ln17_hollow') return 'none';   // ln17_hollow: the Long Night's Hollow (js/longnight17.js)
     if (d.core || CONSTRUCT_TYPES.has(t)) return 'spark';
     return 'blood';
   }
@@ -248,7 +248,7 @@ const LOOK10 = (() => {
     const d = e.def || {};
     if (d.quiet || d.hushkin || d.moth || NO_SHADOW_SPRITES.has(e.sprite) || NO_SHADOW_SPRITES.has(e.type)) return 0;
     if ((e.yOff || 0) < 0 || (d.yOff || 0) < 0) return 0;          // flying things do not touch the ground
-    if (e.sprite === 'hollow' || e.type === 'drowned') return 0.35;  // ghost-like: a faint one
+    if (e.sprite === 'hollow' || e.sprite === 'ln17_hollow' || e.type === 'drowned') return 0.35;  // ghost-like: a faint one
     return 1;
   }
 

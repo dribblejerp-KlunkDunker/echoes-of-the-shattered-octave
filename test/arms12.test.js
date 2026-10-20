@@ -55,6 +55,9 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
     const tr = await E(() => {
       const baseP = JSON.stringify(G.player);
       const run = (sw) => {
+        // the ambient bird/rat timer (js/upgrades.js UPG._ambT) runs on from run to run and from the live loop before the freeze:
+        // left alone it fires at a different step in each run (one Math.random call or ~3000 for a rat) and the traces differ by chance
+        UPG._ambT = 4;
         Object.assign(G.player, JSON.parse(baseP)); __seed(4242); __stage(12.5, 11.5, 0); G.noise = 2; __sw(...sw); __shield(true); __weapon('spear'); __weapon('sword');
         const es = [__mk('proctor', 13.6, 11.5, 'chase'), __mk('hound', 13.9, 11.8, 'chase')];
         const out = []; __seed(4242);
