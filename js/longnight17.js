@@ -370,6 +370,30 @@ const LONGNIGHT17 = (function () {
     }
     Engine.addSprite(dst, Object.assign({}, sp, { data: d }));
   }
+  // The Hollow as a FOE needs the five poses every enemy species has (walk and attack frames: js/anim.js, js/directions.js).
+  // The Book One 'hollow' is an NPC drawing with none, and must stay untouched, so the foe walks on its own copies:
+  // ln17_hollow (idle) plus _w1/_w2 (a sway and a dragged step) and _a1/_a2 (the lean in, the reach), cut from that drawing.
+  const HOLLOW_POSES = { '': [0, 0, 0], _w1: [-1, -2, 0], _w2: [1, 1, 0], _a1: [0, -1, -3], _a2: [2, 1, 4] };   // [dx, dy, lean]
+  function ensureHollowFrames() {
+    if (typeof Engine === 'undefined' || !Engine.sprites || !Engine.addSprite) return false;
+    if (Engine.sprites.ln17_hollow_a2) return true;
+    const sp = Engine.sprites.hollow; if (!sp || !sp.data) return false;
+    const w = sp.w, h = sp.h;
+    for (const pose in HOLLOW_POSES) {
+      const [dx, dy, lean] = HOLLOW_POSES[pose], d = new Uint32Array(w * h);
+      for (let y = 0; y < h; y++) {
+        const sh = dx + Math.round(lean * (1 - y / h));   // lean: the head moves, the feet stay
+        for (let x = 0; x < w; x++) {
+          const sx = x - sh, sy = y - dy;
+          if (sx >= 0 && sx < w && sy >= 0 && sy < h) d[y * w + x] = sp.data[sy * w + sx];
+        }
+      }
+      if (pose && !d.some((p, i) => p !== sp.data[i])) d[(h >> 1) * w + (w >> 1)] ^= 0x00010101;   // never identical to idle
+      Engine.addSprite('ln17_hollow' + pose, Object.assign({}, sp, { data: d }));
+    }
+    if (typeof ANIM_FRAMES !== 'undefined') delete ANIM_FRAMES.ln17_hollow;
+    return !!Engine.sprites.ln17_hollow_a2;
+  }
   function paintTextures() {
     if (typeof Engine === 'undefined' || !Engine.addTexture || !Engine.textures || !Engine.textures.t_flag) return;
     const make = (name, fn) => {
@@ -532,12 +556,13 @@ const LONGNIGHT17 = (function () {
     if (typeof Engine === 'undefined' || !Engine.sprites) return false;
     let all = true;
     for (const [src, dst, k] of COATS) { if (!Engine.sprites[dst]) tintSprite(src, dst, k); if (!Engine.sprites[dst]) all = false; }
+    if (!ensureHollowFrames()) all = false;
     return all;
   }
 
   // ---------------------------------------------------------------- the catalogue: foes, people
   const ENEMY_DEFS = {
-    p17n_hollow: { name: TX.enemy.hollow.name, sprite: 'hollow', hp: B.FOE.hollow.hp, dmg: B.FOE.hollow.dmg.slice(), speed: B.FOE.hollow.speed, reach: B.FOE.hollow.reach, scale: 1, xp: B.FOE.hollow.xp, p17n: 'hollow', desc: TX.enemy.hollow.desc },
+    p17n_hollow: { name: TX.enemy.hollow.name, sprite: 'ln17_hollow', hp: B.FOE.hollow.hp, dmg: B.FOE.hollow.dmg.slice(), speed: B.FOE.hollow.speed, reach: B.FOE.hollow.reach, scale: 1, xp: B.FOE.hollow.xp, p17n: 'hollow', desc: TX.enemy.hollow.desc },
     p17n_hound: { name: TX.enemy.hound.name, sprite: 'hound', hp: B.FOE.hound.hp, dmg: B.FOE.hound.dmg.slice(), speed: B.FOE.hound.speed, reach: B.FOE.hound.reach, cacophony: true, noiseLure: true, scale: 0.8, xp: B.FOE.hound.xp, p17n: 'hound', desc: TX.enemy.hound.desc },
     p17n_moth: { name: TX.enemy.moth.name, sprite: 'hushmoth', hp: B.FOE.moth.hp, dmg: [0, 0], speed: B.FOE.moth.speed, reach: 0.6, hushkin: true, moth: true, scale: 0.8, yOff: -0.15, xp: B.FOE.moth.xp, p17n: 'moth', desc: TX.enemy.moth.desc },
   };
@@ -757,7 +782,9 @@ const LONGNIGHT17 = (function () {
     const o = MOUTH[from], off = ((k % 3) - 1) * 0.8;
     const x = o[0] + (from === 'S' ? off : 0), y = o[1] + (from === 'S' ? 0 : off);
     const e = { kind: 'enemy', type, x, y, transient: true, passive: true, _ln: { kind, wind: 0, cool: 1.2, st: 'walk', sit: 0, perch: -1, tx: 0, ty: 0, born: R.t, drift: R.rng() * 6.28, from } };
-    m.entities.push(e); hydrate(e); e.state = 'passive'; e.alertT = 0; R.spawned++;
+    m.entities.push(e); hydrate(e);
+    if (kind === 'h' && !ensureHollowFrames()) e.sprite = 'hollow';   // the art has not decoded yet: the plain drawing
+    e.state = 'passive'; e.alertT = 0; R.spawned++;
     return e;
   }
   const foes = () => G.map.entities.filter((e) => e._ln && !e.dead && !e.hidden);
@@ -1014,11 +1041,24 @@ const LONGNIGHT17 = (function () {
 
   // ---------------------------------------------------------------- the vault's own sound (what the Hush takes, and gives back)
   const AM = { ctx: null, drone: null, hum: null, wind: null, dripT: 0, ok: false };
+  function dropAmb() {
+    const ctx = AM.ctx, srcs = AM.srcs || [], outs = AM.outs || [], gains = (AM.drone || []).concat(AM.hum || []).map((n) => n.g).concat(AM.wind ? [AM.wind] : []);
+    AM.ok = false; AM.ctx = null; AM.srcs = null; AM.outs = null;
+    try {
+      const t = ctx.currentTime;
+      for (const g of gains) { g.gain.cancelScheduledValues(t); g.gain.setTargetAtTime(0, t, 0.3); }
+      for (const o of srcs) o.stop(t + 1.6);
+      setTimeout(() => { for (const n of outs) { try { n.disconnect(); } catch (e) { /* gone */ } } }, 1800);
+    } catch (e) { /* closed context */ }
+  }
   function ambTick(dt) {
     const A = typeof Audio_ !== 'undefined' ? Audio_ : null;
     if (!A || !A.ctx || !A.sfxBus) return;
     const ctx = A.ctx;
-    if (!AM.ctx || AM.ctx !== ctx) {
+    // outside the night (every other map in the game) the bed is not built, or is faded out and stopped: no sources run and
+    // nothing is automated per frame; it is built again when a night begins
+    if (!(live() && !!R.active && !R.over)) { if (AM.ok) dropAmb(); return; }
+    if (!AM.ok || AM.ctx !== ctx) {
       try {
         AM.ctx = ctx;
         const mk = (type, f, g0) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = type; o.frequency.value = f; g.gain.value = 0; o.connect(g); return { o, g }; };
@@ -1031,6 +1071,7 @@ const LONGNIGHT17 = (function () {
         const ns = ctx.createBufferSource(); ns.buffer = buf; ns.loop = true;
         const wl = ctx.createBiquadFilter(); wl.type = 'lowpass'; wl.frequency.value = 380; const wg = ctx.createGain(); wg.gain.value = 0;
         ns.connect(wl); wl.connect(wg); wg.connect(A.sfxBus); ns.start(); AM.wind = wg;
+        AM.srcs = AM.drone.concat(AM.hum).map((n) => n.o).concat([ns]); AM.outs = [lp, wg];
         AM.ok = true;
       } catch (e) { AM.ok = false; return; }
     }

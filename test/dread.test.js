@@ -584,6 +584,10 @@ const SHOTS = process.env.DREAD_SHOTS || '';
       let fxCalls = 0; const _fx = window.fx; window.fx = function () { fxCalls++; return _fx.apply(this, arguments); };
       const shake0 = FEEL.state.shake, dip0 = FEEL.state.dipT; let maxShake = 0, maxFxClass = '';
       // run the whole show: Dissonance high, shadow, hound-shape, stalker to the top, keeping
+      // js/dread.js seeds its own generator from Date.now(), and the restore above already drew this session's timers from it:
+      // unseeded, a false foe drawn before the first shadow ends this run at the keeping with no shadow about one time in four
+      // (Phase 16 as well). Seeded and the timers drawn again, the whole show runs the same way every time.
+      DREAD.seed(7); DREAD.resetSession();
       DREAD.st.D = 100; const keepsB = DREAD.stats.keeps, visB = DREAD.stats.visits, whB = DREAD.stats.whispers, shB = DREAD.stats.shadows;
       for (let t = 0; t < 700; t += 0.25) {
         G.noise = 1; DREAD.st.D = Math.max(DREAD.st.D, 90); update(0.25);
