@@ -109,6 +109,12 @@ const VOICES = (() => {
     p17n_marl: { f0: 88, fs: 0.9, style: 'human' },       // Marl Dunning, bass: low, slow, unhurried
     p17n_tansy: { f0: 226, fs: 1.12, style: 'human' },    // Tansy Quill, alto apprentice: thin, young
     p17n_jory: { f0: 116, fs: 0.96, style: 'human' },     // Jory Fenn, lamplighter: plain
+    // Phase 17, team PROLOGUE: the river gate (an extra after Book One)
+    p17p_dorran: { f0: 84, fs: 0.9, style: 'gravel' },      // Dorran Sedge: "a voice like a bullfrog", sang bass
+    p17p_seraphina: { f0: 196, fs: 1.06, style: 'human' },  // Seraphina: low, even
+    p17p_aegis: { f0: 70, fs: 0.8, style: 'chord' },        // the Aegis, as the Sentinel
+    p17p_ignatius: { f0: 104, fs: 0.93, style: 'human' },   // Ignatius Crane, the preacher's voice gone thin
+    p17p_solenne: { f0: 200, fs: 1.08, style: 'brass' },    // Solenne: copper in the throat
   };
 
   // ---- the enemy families ---------------------------------------------------------------------------

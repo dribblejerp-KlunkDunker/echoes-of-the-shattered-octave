@@ -71,7 +71,7 @@
     sub: 'Short chapters set after the end of Book One. Each one runs on its own save: your Book One game is put aside, untouched, and given back when you leave.',
     spoilH: 'Before you go on',
     spoil: 'These extras take place after Book One and spoil its ending.',
-    spoilMore: 'They open by themselves when you finish Book One, by either ending.',
+    spoilMore: 'Some of them also show people and events from the books that follow. They open by themselves when you finish Book One, by either ending.',
     spoilYes: 'Show me the extras',
     spoilNo: 'Back to the title',
     lockedAll: 'The extras open when you finish Book One, by either ending.',
