@@ -16,6 +16,10 @@
 //                                   { name, cls, face, map, x, y, dir, hp, hpMax, voice, voiceMax, lvl, xp, down, downLeft,
 //                                     revive, act, weapon, loot: 'host'|'guest' (whose drop is next), xpEarned }
 //   PARTNER19.hostState()        -> { hp, hpMax, down, downLeft, revive }   the host's own state, for the guest's HUD
+//   PARTNER19.setPose({ x, y, dir, feet, spd }) -> boolean   SYNC (the mover of the guest's traveller) places the partner
+//                                   on the host's map each input: position in tiles, facing in radians, feet height, walking
+//                                   speed in tiles/s (for the gait). Validated (finite, on the map); ignored while paused;
+//                                   a downed partner keeps its facing. The partner's own mover stands aside while poses come.
 //   PARTNER19.pause(on)          -> the guest dropped (NET reconnecting): the partner steps out of the world (not drawn,
 //                                   not targetable, timers frozen) until pause(false). The host carries on alone.
 //   PARTNER19.onStory(fn)        -> subscribe to the read-only copy of every story scene the host sees (STORY below).
@@ -23,8 +27,9 @@
 //   PARTNER19.drainFeed()        -> [{ text, cls }]   messages meant for the guest (blows they took, their loot) since
 //                                   the last call; SYNC forwards them. The host never sees them in its own message line.
 //  GUEST SIDE
-//   PARTNER19.guest.card(src?)   -> CARD | { error }  src: omitted = the live game (G.player); or a save object (a session
-//                                   slot or a decoded save code). Hardcore runs cannot travel.
+//   PARTNER19.guest.card(src?, opts?) -> CARD | { error }  src: omitted = the live game (G.player); or a save object (a
+//                                   session slot or a decoded save code; opts.slot = that slot's index: it gets the
+//                                   write-back too). Hardcore runs cannot travel.
 //   PARTNER19.guest.enter()      -> boolean   Puts the guest's own game aside (EXTRAS17 isolation, a hidden registration)
 //                                   while the guest plays in the host's world. SYNC calls it before taking over G.
 //   PARTNER19.guest.returnHome(wb?) -> { ok, reason?, gained? }   Gives the guest's own game back and applies a validated
@@ -101,6 +106,7 @@ const PARTNER19 = (function () {
     RATE: 60, BURST: 90,      // guest inputs per second, and the burst allowed
     WB_MAX_XP: 60000, WB_MAX_GOLD: 5000, WB_MAX_ITEMS: 60, WB_MAX_N: 20, WB_QUEST_XP: 3000,
     FOLLOW: 1.2,              // tiles behind the host where the partner arrives on a new map
+    POSE_HOLD_MS: 200,        // after setPose() the partner's own mover waits this long for the next pose
   };
 
   // ---------------------------------------------------------------- text (all of it; see TEXT.md and tools/i18n/p19-partner.tsv)
@@ -321,6 +327,19 @@ const PARTNER19 = (function () {
     }
     S.x = px; S.y = py; S.dir = c.dir; S.feet = groundAt(px, py); S.vx = S.vy = 0;
     syncProx();
+  }
+  // SYNC (or any driver) places the partner: a validated pose on the host's map. The partner's own mover stands aside
+  // while poses keep coming (B.POSE_HOLD_MS); a downed partner keeps its facing.
+  function setPose(p) {
+    if (!S.active || S.paused || !p || typeof p !== 'object' || !hasGame() || !G.map) return false;
+    const { x, y, dir, feet, spd } = p;
+    if (!isNum(x) || !isNum(y) || x < 0 || y < 0 || x > G.map.w || y > G.map.h) return false;
+    S.map = G.mapId; S.x = x; S.y = y; S.vx = 0; S.vy = 0;
+    if (isNum(dir) && !S.down) S.dir = normAng(dir);
+    S.feet = isNum(feet) ? feet : groundAt(x, y);
+    syncProx();
+    S.ext = { at: performance.now(), spd: isNum(spd) ? clampN(spd, 0, 20) : 0 };
+    return true;
   }
   function groundAt(x, y) { const m = G.map; return m && (m.lvls || m.smooth) ? m.groundAt(x, y) : 0; }
   function syncProx() { S.prox.x = S.x; S.prox.y = S.y; S.prox.feet = S.feet; if (S.pp) S.pp.feet = S.feet; }
@@ -590,7 +609,9 @@ const PARTNER19 = (function () {
     if (S.actT <= 0) S.act = 0;
     const p = S.pp; p.voice = Math.min(p.voiceMax, p.voice + dt * 0.08);
     let spd = 0;
-    if (!S.down) {
+    const ext = S.ext && (performance.now() - S.ext.at) < B.POSE_HOLD_MS;
+    if (ext) spd = S.down ? 0 : S.ext.spd;            // SYNC moves the partner (setPose): its gait comes with the pose
+    else if (!S.down) {
       const h = S.held, run = h.run && p.fat > 0;
       const sp = (2.6 + p.attrs.Speed / 60) * (run ? 1.7 : 1);
       let f = h.f, s = h.s, mag = Math.hypot(f, s); if (mag > 1) { f /= mag; s /= mag; mag = 1; }
@@ -620,107 +641,238 @@ const PARTNER19 = (function () {
     net.send('p19p:story', P);
   }
 
-  // ================================================================ THE FIGURE (procedural stand-in art)
-  // A solid, coloured figure in the guest's likeness, painted by the ghost painter (GHOST18.paintFigure gives the tone
-  // map: which body part each pixel is) and coloured here: a blue travelling cloak no townsperson wears, the calling's
-  // accent, the face's hair, a dark ink outline so it reads at a distance. One tile tall, like a standing NPC sprite.
-  const FW = 40, FH = 96;
-  const CLOAK = [64, 104, 168];
-  const ACC = [[214, 150, 60], [156, 112, 200], [64, 164, 150], [96, 150, 84], [160, 160, 168], [196, 140, 64]];   // blade, cantor, corsair, archivist, penitent, quarry
-  const HAIR = { 1: [74, 54, 40], 2: [150, 72, 40], 3: [210, 184, 116], 4: [42, 34, 30], 5: [26, 24, 26], 6: [206, 206, 200] };
-  const SKIN = [220, 172, 134];
-  const mul = (c, k) => [Math.min(255, Math.round(c[0] * k)), Math.min(255, Math.round(c[1] * k)), Math.min(255, Math.round(c[2] * k))];
-  function solidPalette(look) {
-    const TN = GHOST18.TONE, acc = ACC[look.cls] || ACC[0], hair = HAIR[look.face] || HAIR[1], p = [];
-    p[TN.OUT] = [22, 18, 16]; p[TN.INK] = [30, 24, 22];
-    p[TN.DEEP] = mul(CLOAK, 0.5); p[TN.SHADE] = mul(CLOAK, 0.74); p[TN.BASE] = CLOAK; p[TN.LIGHT] = mul(CLOAK, 1.28);
-    p[TN.ACC] = acc; p[TN.ACCS] = mul(acc, 0.72); p[TN.ACCL] = mul(acc, 1.22);
-    p[TN.DARK] = [34, 28, 32]; p[TN.GLINT] = [232, 234, 240];
-    p[TN.HAIR] = hair; p[TN.HAIRS] = mul(hair, 0.7); p[TN.HAIRL] = mul(hair, 1.3);
-    p[TN.SKIN] = SKIN; p[TN.SKINS] = mul(SKIN, 0.78);
+  // ================================================================ THE FIGURE (procedural pixel art, drawn as a sprite)
+  // The two travellers are painted in the manner of the game's own NPC sprites: GHOST18's painter gives the pose (its
+  // tone map says which body part each pixel is, in 5 views x walk x action); here that map is doubled with Scale2x to
+  // NPC resolution (80 x 192, one tile tall like a standing townsperson) and coloured as pixel art: a muted, earthy
+  // palette by calling (coat, cloak or robe, trousers, boots), skin and the face's hair, steel or wood for the weapon in
+  // hand (found by painting the pose once without it), light from the upper left across every part and darker toward the
+  // feet, a cloth weave and folds, a dark outline. The frame is registered as an Engine sprite and drawn by the engine's
+  // own sprite pass, so the scene's light, lamps, fog, darkness, shadows and depth apply to it exactly as to any NPC.
+  // Cached per pose; never per frame. Not an entity: it is added to the list the renderer draws, never to G.ents.
+  const FW = 40, FH = 96, AW = FW * 2, AH = FH * 2;
+  // calling palettes, folded toward the townsfolk's browns: [coat, cloak/robe accent]
+  const CALL = [
+    [[92, 70, 52], [104, 48, 40]],     // blade: a leather jerkin, an oxblood cloak
+    [[70, 60, 74], [96, 76, 100]],     // cantor: a dusty plum robe
+    [[56, 66, 84], [118, 56, 44]],     // corsair: a faded sea coat, a red sash-cloak
+    [[74, 76, 56], [90, 94, 62]],      // archivist: an olive robe
+    [[92, 88, 82], [112, 108, 98]],    // penitent: an ash-grey robe
+    [[116, 92, 62], [86, 64, 46]],     // quarry: ochre canvas, an umber cloak
+  ];
+  const HAIR = { 1: [70, 54, 42], 2: [122, 62, 40], 3: [168, 140, 92], 4: [44, 36, 30], 5: [36, 30, 28], 6: [164, 160, 152] };
+  const SKIN = [188, 146, 116], TROUSER = [62, 56, 50], BOOT = [46, 36, 30], INKC = [30, 24, 21], OUTC = [20, 16, 14];
+  const mul = (c, k) => [c[0] * k, c[1] * k, c[2] * k];
+  const mixc = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  // material of each tone: 0 none, 1 cloth, 2 skin, 3 hair, 4 metal, 5 leather, 6 outline
+  function toneColour(look) {
+    const TN = GHOST18.TONE, cp = CALL[look.cls] || CALL[0], coat = cp[0], acc = cp[1], hair = HAIR[look.face] || HAIR[1], p = [];
+    const plate = ((look.arm >> 2) & 3) === 2;
+    const body = plate ? [118, 120, 120] : coat;
+    p[TN.OUT] = [OUTC, 6]; p[TN.INK] = [INKC, 6];
+    p[TN.LIGHT] = [mul(body, 1.22), plate ? 4 : 1]; p[TN.BASE] = [body, plate ? 4 : 1];
+    p[TN.SHADE] = [mixc(mul(body, 0.7), TROUSER, 0.55), 1]; p[TN.DEEP] = [mixc(mul(body, 0.45), BOOT, 0.6), 5];
+    p[TN.ACC] = [acc, 1]; p[TN.ACCS] = [mul(acc, 0.72), 1]; p[TN.ACCL] = [mul(acc, 1.2), 1];
+    p[TN.DARK] = [[38, 30, 26], 5]; p[TN.GLINT] = [[196, 182, 140], 4];
+    p[TN.HAIR] = [hair, 3]; p[TN.HAIRS] = [mul(hair, 0.72), 3]; p[TN.HAIRL] = [mixc(hair, [214, 196, 160], 0.25), 3];
+    p[TN.SKIN] = [SKIN, 2]; p[TN.SKINS] = [mul(SKIN, 0.78), 2];
+    p[17] = [mul(SKIN, 0.62), 2]; p[18] = [[118, 66, 56], 2]; p[19] = [[40, 30, 28], 7]; p[20] = [mul(SKIN, 0.7), 2];
     return p;
   }
-  const figCache = new Map();
-  function toFrame(tones, look, w, h) {
-    const pal = solidPalette(look), data = new Uint32Array(w * h);
-    let top = h, bot = -1;
+  function weaponColour(tone, wpn) {
+    const TN = GHOST18.TONE;
+    if (wpn === 9) return tone === TN.GLINT ? [[200, 236, 236], 4] : [[96, 168, 172], 4];          // a glass arm
+    if (tone === TN.GLINT) return [[214, 212, 200], 4];
+    if (tone === TN.LIGHT) return [[150, 150, 144], 4];
+    if (tone === TN.SHADE || tone === TN.BASE) return [[104, 104, 100], 4];
+    if (tone === TN.ACC) return [[150, 120, 70], 4];
+    return [[78, 56, 38], 5];                                                                          // grips and hafts: wood
+  }
+  // Scale2x (EPX) on a code map: rounder edges at twice the size, no new codes
+  function scale2x(src, w, h) {
+    const out = new Uint16Array(w * h * 4), W2 = w * 2, at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h ? 0 : src[y * w + x]);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      const q = pal[tones[y * w + x]]; if (!q) continue;
-      data[y * w + x] = ((255 << 24) | (q[2] << 16) | (q[1] << 8) | q[0]) >>> 0;
-      if (y < top) top = y; if (y > bot) bot = y;
+      const P = at(x, y), A = at(x, y - 1), B = at(x + 1, y), C = at(x - 1, y), D = at(x, y + 1);
+      let p1 = P, p2 = P, p3 = P, p4 = P;
+      if (C === A && C !== D && A !== B) p1 = A;
+      if (A === B && A !== C && B !== D) p2 = B;
+      if (D === C && D !== B && C !== A) p3 = C;
+      if (B === D && B !== A && D !== C) p4 = D;
+      const o = (y * 2) * W2 + x * 2; out[o] = p1; out[o + 1] = p2; out[o + W2] = p3; out[o + W2 + 1] = p4;
     }
-    return { w, h, data, top, bot };
+    return out;
+  }
+  const hash = (x, y) => { let h = (x * 374761393 + y * 668265263) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+  // tones (40 x 96, or 96 x 40 lying down) + a weapon mask -> an ABGR sprite at twice the size
+  function colourFrame(tones, wmask, look, w, h) {
+    const code = new Uint16Array(w * h);
+    for (let i = 0; i < w * h; i++) code[i] = tones[i] ? tones[i] | (wmask && wmask[i] ? 32 : 0) : 0;
+    const big = scale2x(code, w, h), W = w * 2, H = h * 2, N = W * H, data = new Uint32Array(N);
+    const pal = toneColour(look), TN = GHOST18.TONE;
+    if (h > w) faceDetail(tones, big, w, h, TN);
+    const edge = (i) => { const t = big[i] & 31; return !t || t === TN.OUT || t === TN.INK; };
+    // each part as a rounded form: distance in from its edges (the painter's outline and the ink between parts),
+    // turned into a height and lit from the upper left and the front
+    const R = 5, d = new Float32Array(N);
+    for (let i = 0; i < N; i++) d[i] = edge(i) ? 0 : 99;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const i = y * W + x; if (!d[i]) continue; let v = d[i]; if (x) v = Math.min(v, d[i - 1] + 1); if (y) v = Math.min(v, d[i - W] + 1); if (x && y) v = Math.min(v, d[i - W - 1] + 1.4); if (x < W - 1 && y) v = Math.min(v, d[i - W + 1] + 1.4); d[i] = v; }
+    for (let y = H - 1; y >= 0; y--) for (let x = W - 1; x >= 0; x--) { const i = y * W + x; if (!d[i]) continue; let v = d[i]; if (x < W - 1) v = Math.min(v, d[i + 1] + 1); if (y < H - 1) v = Math.min(v, d[i + W] + 1); if (x < W - 1 && y < H - 1) v = Math.min(v, d[i + W + 1] + 1.4); if (x && y < H - 1) v = Math.min(v, d[i + W - 1] + 1.4); d[i] = v; }
+    const hgt = new Float32Array(N);
+    for (let i = 0; i < N; i++) { const t = Math.min(1, d[i] / R); hgt[i] = Math.sqrt(Math.max(0, 1 - (1 - t) * (1 - t))); }
+    const Lx = -0.55, Ly = -0.5, Lz = 0.67;
+    let top = H, bot = -1, left = W, right = -1;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x, c = big[i]; if (!c) continue;
+      const tone = c & 31, isW = !!(c & 32);
+      const pm = isW ? weaponColour(tone, look.wpn) : pal[tone]; if (!pm) continue;
+      let col = pm[0]; const mat = pm[1];
+      let k = 1;
+      if (mat === 6) {
+        // the outline: dark only where it meets the air; inside it is the part's own deepest shade (a thin, soft line)
+        let air = false, nb = 0;
+        for (const j of [i - 1, i + 1, i - W, i + W]) { if (j < 0 || j >= N || !big[j]) air = true; else if (!edge(j)) nb = j; }
+        if (!air && nb && tone === TN.OUT) { const q = big[nb], pq = (q & 32) ? weaponColour(q & 31, look.wpn) : pal[q & 31]; if (pq) { col = mul(pq[0], 0.5); } }
+      } else {
+        const hx = (x > 0 ? hgt[i - 1] : 0) - (x < W - 1 ? hgt[i + 1] : 0), hy = (y > 0 ? hgt[i - W] : 0) - (y < H - 1 ? hgt[i + W] : 0);
+        let nx = hx * 1.6, ny = hy * 1.6, nz = 1; const nl = Math.hypot(nx, ny, nz); nx /= nl; ny /= nl; nz /= nl;
+        const lam = Math.max(0, nx * Lx + ny * Ly + nz * Lz);
+        k = 0.42 + 0.78 * lam;
+        if (mat === 4) k = 0.5 + 0.9 * lam * lam;                                            // steel: hard light
+        k *= 1.04 - 0.2 * (y / H);                                                            // darker toward the feet
+        const n = hash(x, y) - 0.5, n2 = hash(x >> 1, y >> 1) - 0.5;
+        if (mat === 1) k *= 1 + n2 * 0.16 + n * 0.06 + (hash(x >> 2, 11) - 0.5) * 0.08;      // weave, worn patches, folds
+        else if (mat === 3) k *= 1 + (hash(x, y >> 2) - 0.5) * 0.34;                         // strands
+        else if (mat === 5) k *= 1 + n2 * 0.14;
+        else if (mat === 2) k *= 1 + n * 0.04;
+        else if (mat === 4 && lam > 0.86) col = mixc(col, [232, 230, 220], 0.45);           // a glint on steel
+      }
+      const r = Math.max(0, Math.min(255, Math.round(col[0] * k))), g = Math.max(0, Math.min(255, Math.round(col[1] * k))), b = Math.max(0, Math.min(255, Math.round(col[2] * k)));
+      data[i] = ((255 << 24) | (b << 16) | (g << 8) | r) >>> 0;
+      if (y < top) top = y; if (y > bot) bot = y; if (x < left) left = x; if (x > right) right = x;
+    }
+    return { w: W, h: H, data, top, bot, left, right };
+  }
+  // the face at twice the size: brows over the eyes, a nose, a mouth, and the hair (or the hood) over the forehead
+  const BROW = 17, MOUTH = 18, EYE = 19, NOSE = 20;
+  function faceDetail(t, big, w, h, TN) {
+    const W = w * 2, at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h ? 0 : t[y * w + x]);
+    const skin = (v) => v === TN.SKIN || v === TN.SKINS, set = (x, y, v) => { if (x >= 0 && y >= 0 && x < W && y < h * 2 && skin(big[y * W + x] & 31)) big[y * W + x] = v; };
+    const eyes = [];
+    for (let y = 2; y < Math.min(h, 34); y++) for (let x = 1; x < w - 1; x++) if (at(x, y) === TN.DARK && (skin(at(x - 1, y)) || skin(at(x + 1, y))) && skin(at(x, y + 1))) eyes.push([x, y]);
+    if (!eyes.length) return;
+    for (const [x, y] of eyes) {
+      const o = (y * 2) * W + x * 2; big[o] = BROW; big[o + 1] = BROW; big[o + W] = EYE; big[o + W + 1] = EYE;
+      set(x * 2, y * 2 - 1, BROW); set(x * 2 + 1, y * 2 - 1, BROW);
+    }
+    const ey = eyes[0][1];
+    let mx;
+    if (eyes.length >= 2 && eyes[1][1] === ey) mx = eyes[0][0] + eyes[1][0] + 1;            // between the eyes (2x units)
+    else { const ex = eyes[0][0], side = skin(at(ex + 2, ey)) ? 1 : -1; mx = ex * 2 + 1 + side * 3; }
+    set(mx, ey * 2 + 3, NOSE); set(mx, ey * 2 + 4, NOSE); set(mx + 1, ey * 2 + 4, NOSE);
+    for (let dx = -2; dx <= 2; dx++) set(mx + dx, ey * 2 + 8, MOUTH);
+    // the hairline: the first skin pixel under hair or hood takes their colour
+    for (let x = 0; x < w; x++) for (let y = 1; y < Math.min(h, 34); y++) {
+      const v = at(x, y); if (!skin(v)) continue;
+      const a = at(x, y - 1);
+      if (a === TN.HAIR || a === TN.HAIRS || a === TN.HAIRL || a === TN.ACC || a === TN.ACCS) { const o = (y * 2) * W + x * 2; if (skin(big[o] & 31)) big[o] = a; if (skin(big[o + 1] & 31)) big[o + 1] = a; }
+      break;
+    }
+  }
+  function weaponMask(withW, noW) {
+    const TN = GHOST18.TONE, m = new Uint8Array(withW.length);
+    for (let i = 0; i < withW.length; i++) { const t = withW[i]; if (t !== noW[i] && t && t !== TN.OUT && t !== TN.INK && t !== TN.SKIN && t !== TN.SKINS) m[i] = 1; }
+    return m;
+  }
+  const figCache = new Map();
+  let figN = 0;
+  function remember(k, f) {
+    if (figCache.size > 240) { const old = figCache.keys().next().value, of = figCache.get(old); figCache.delete(old); try { if (of && of.name) delete Engine.sprites[of.name]; } catch (e) { /* gone */ } }
+    figCache.set(k, f); return f;
+  }
+  function register(f, hs, dy) {
+    f.name = 'p19fig_' + (++figN);
+    try { Engine.addSprite(f.name, { w: f.w, h: f.h, data: f.data, hs, cx: 0.5, dy }); } catch (e) { warnOnce('sprite', e); }
+    return f;
   }
   function frameOf(b, loco, act, ph, look) {
     const k = [b, loco, act, ph, look.cls, look.face, look.wpn, look.arm].join(',');
     let f = figCache.get(k); if (f) return f;
-    f = toFrame(GHOST18.paintFigure(b, loco, act, ph, look), look, FW, FH);
-    if (figCache.size > 240) figCache.delete(figCache.keys().next().value);
-    figCache.set(k, f); return f;
+    const lk = Object.assign({}, look, { snug: true });
+    const t = GHOST18.paintFigure(b, loco, act, ph, lk);
+    const m = look.wpn ? weaponMask(t, GHOST18.paintFigure(b, loco, act, ph, Object.assign({}, lk, { wpn: 0 }))) : null;
+    f = colourFrame(t, m, look, FW, FH);
+    // the painter's feet stand 3 rows above its bottom edge: set the sprite down onto the ground
+    return remember(k, register(f, 1, (AH - 1 - f.bot) / AH));
   }
-  // lying on the ground: the side view turned a quarter (head to the right), 96 wide and 40 tall
+  // lying on the ground: the side view turned a quarter (head to the right)
   function downFrame(look) {
     const k = 'down,' + [look.cls, look.face, look.wpn, look.arm].join(',');
     let f = figCache.get(k); if (f) return f;
-    const src = GHOST18.paintFigure(2, 0, 0, 0, look), rot = new Uint8Array(FW * FH);
-    for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) rot[x * FH + (FH - 1 - y)] = src[y * FW + x];
-    f = toFrame(rot, look, FH, FW); figCache.set(k, f); return f;
+    const rot = (src) => { const r = new Uint8Array(FW * FH); for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) r[x * FH + (FH - 1 - y)] = src[y * FW + x]; return r; };
+    const t = GHOST18.paintFigure(2, 0, 0, 0, look);
+    const m = look.wpn ? weaponMask(t, GHOST18.paintFigure(2, 0, 0, 0, Object.assign({}, look, { wpn: 0 }))) : null;
+    f = colourFrame(rot(t), m ? rot(m) : null, look, FH, FW);
+    const hs = FW / FH;
+    return remember(k, register(f, hs, (f.h - 1 - f.bot) / f.h * hs));
   }
-  function drawHook(F) {
-    S.screen = null; S.stats.drawn = 0;
-    if (!S.active || S.paused || !F.map || F.map !== G.map || typeof GHOST18 !== 'object' || !GHOST18.paintFigure) return;
-    const cam = F.cam, w = F.w, h = F.h, fb = F.fb, dbuf = F.dbuf, mbuf = F.mbuf;
-    const dx = S.x - cam.x, dy = S.y - cam.y, dist = Math.hypot(dx, dy);
-    const invDet = 1 / (F.planeX * F.dirY - F.dirX * F.planeY);
-    const trX = invDet * (F.dirY * dx - F.dirX * dy), trY = invDet * (-F.planeY * dx + F.planeX * dy);
-    if (trY <= 0.12) return;
-    const look = S.look;
-    let fr, mirror = false;
-    if (S.down) fr = downFrame(look);
+  // a figure to draw: a plain object the engine's sprite pass reads (never in G.ents, never picked)
+  const FIG = { partner: { kind: 'npc', p19fig: 'guest', nopick: true, transient: true, scale: 1, x: 0, y: 0 }, host: { kind: 'npc', p19fig: 'host', nopick: true, transient: true, scale: 1, x: 0, y: 0 } };
+  // pose one figure: { x, y, dir, act, ph, spd, stride, hurt, down, look } -> the figure object, ready for the renderer
+  function poseFig(o, st, camDir, t) {
+    let fr;
+    if (st.down) { fr = downFrame(st.look); o.animFlip = false; }
     else {
-      const v = GHOST18.viewOf(S.dir, Math.atan2(F.dirY, F.dirX)); mirror = v.mirror;
-      const loco = S.spd < 0.35 ? 0 : 1 + (Math.floor(S.stride / 0.42) & 1);
-      const ph = S.act ? Math.min(3, Math.floor((1 - S.actT / Math.max(0.01, S.actDur)) * 4)) : 0;
-      fr = frameOf(v.b, loco, S.act || (S.hurtT > 0 ? 8 : 0), S.act ? ph : 0, look);
+      const v = GHOST18.viewOf(st.dir, camDir), moving = st.spd >= 0.35;
+      const loco = moving ? 1 + (Math.floor(st.stride / 0.42) & 1) : 0;
+      fr = frameOf(v.b, loco, st.act || (st.hurt ? 8 : 0), st.act ? st.ph : 0, st.look); o.animFlip = v.mirror;
     }
-    const ppx = Math.abs(h / trY) / FH; if (ppx * FH < 3) return;
-    const screenX = ((w / 2) * (1 + trX / trY)) | 0;
-    const sprW = Math.max(1, (fr.w * ppx) | 0), sprH = Math.max(1, (fr.h * ppx) | 0);
-    const map = F.map, scx = Math.min(map.w - 1, Math.max(0, S.x | 0)), scy = Math.min(map.h - 1, Math.max(0, S.y | 0));
-    const floor = (map.lvls || map.smooth) && F.gAt ? F.gAt(S.x, S.y, scx, scy) : 0;
-    const baseline = F.horizon + (((cam.z - floor) * h / trY) | 0);
-    const dsY = S.down ? baseline - (((fr.bot + 1) * ppx) | 0) : baseline - sprH, dsX = screenX - ((sprW / 2) | 0);
-    const xs = Math.max(0, dsX), xe = Math.min(w - 1, dsX + sprW - 1), ys = Math.max(0, dsY), ye = Math.min(h - 1, dsY + sprH - 1);
-    if (xe < xs || ye < ys) return;
-    // light: never darker than MIN so the partner stays readable; fog thins it into the distance like any sprite
-    const fogD = F.fogDist || 12, fogK = clampN(1 - Math.max(0, dist - fogD * 0.45) / (fogD * 0.75), 0.2, 1);
-    let lk = F.outdoor ? (isNum(F.light) ? F.light : 1) : Math.max(0.55, (isNum(F.ambient) ? F.ambient : 0.4) + 0.35);
-    lk = clampN(lk, 0.62, 1.1);
-    let pr = 0, pg = 0, pbl = 0;
-    if (F.ptLights) for (const L of F.ptLights) { const d2 = (S.x - L.x) * (S.x - L.x) + (S.y - L.y) * (S.y - L.y), r2 = L.r * L.r; if (d2 < r2) { const kk = (1 - d2 / r2) * (1 - d2 / r2); pr += L.cr * kk; pg += L.cg * kk; pbl += L.cb * kk; } }
-    pr = Math.min(70, pr); pg = Math.min(70, pg); pbl = Math.min(70, pbl);
-    const fR = F.fogR || 0, fG = F.fogG || 0, fB = F.fogB || 0, hurt = S.hurtT > 0 && !(typeof GFX !== 'undefined' && GFX.noFlash) ? 0.35 : 0;
-    const data = fr.data, tw = fr.w, th = fr.h;
-    let drawn = 0, headY = h;
-    for (let x = xs; x <= xe; x++) {
-      let tx = (((x - dsX) * tw) / sprW) | 0; if (tx < 0 || tx >= tw) continue; if (mirror) tx = tw - 1 - tx;
-      let o = ys * w + x;
-      for (let y = ys; y <= ye; y++, o += w) {
-        if (dbuf[o] < trY - 0.02) continue;                     // a wall or body in front
-        const ty = (((y - dsY) * th) / sprH) | 0; if (ty < 0 || ty >= th) continue;
-        const px = data[ty * tw + tx]; if (!px) continue;
-        let r = (px & 255) * lk + pr, g = ((px >>> 8) & 255) * lk + pg, b = ((px >>> 16) & 255) * lk + pbl;
-        if (hurt) { r += (255 - r) * hurt; g *= 1 - hurt * 0.5; b *= 1 - hurt * 0.5; }
-        if (fogK < 1) { r = r * fogK + fR * (1 - fogK); g = g * fogK + fG * (1 - fogK); b = b * fogK + fB * (1 - fogK); }
-        fb[o] = (0xff000000 | (Math.min(255, b) << 16) | (Math.min(255, g) << 8) | Math.min(255, r)) >>> 0;
-        dbuf[o] = trY; mbuf[o] = 6;
-        if (y < headY) headY = y;
-        drawn++;
-      }
-    }
-    S.stats.drawn = drawn;
-    if (drawn) S.screen = { x: screenX / w, y: (headY < h ? headY : dsY) / F.S, w: sprW / w, dist, S: F.S };
+    o.sprite = fr.name; o.x = st.x; o.y = st.y; o.hidden = false;
+    // the same small life the engine gives a walking townsperson (anim.js): a step bob and a lean, breathing at rest
+    const s = st.who === 'host' ? 1.3 : 4.1;
+    if (st.down) { o.animSY = 1; o.animSX = 1; o.animLift = 0; o.animSkew = 0; }
+    else if (st.spd >= 0.35) { const ph = st.stride * 2.4; o.animLift = Math.abs(Math.sin(ph)) * 0.03; o.animSkew = Math.sin(ph) * 0.02; o.animSY = 1 - Math.abs(Math.cos(ph)) * 0.015; o.animSX = 1; }
+    else { o.animLift = 0; o.animSkew = 0; o.animSY = 1 + 0.012 * Math.sin(t * 1.6 + s); o.animSX = 1 - 0.006 * Math.sin(t * 1.6 + s); }
+    o.animHurt = st.hurt && !(typeof GFX !== 'undefined' && GFX.noFlash) ? 0.6 : 0;
+    o.animAlpha = 1;
+    return o;
   }
+  // the figures this page draws now: the partner on the host's screen, the host on the guest's
+  function coopFigures() {
+    const out = [], t = performance.now() / 1000, camDir = Engine.cam.dir;
+    if (S.active && !S.paused && S.pp && S.look && S.map === G.mapId) {
+      let x = S.x, y = S.y, dir = S.dir;
+      // SYNC's smoothed (interpolated) position of the guest's traveller, when SYNC moves it
+      try { if (typeof SYNC19 === 'object' && SYNC19.isHost && SYNC19.isHost()) { const f = SYNC19.figures().find((q) => q.who === 'guest'); if (f && isNum(f.x) && isNum(f.y)) { x = f.x; y = f.y; if (isNum(f.dir) && !S.down) dir = f.dir; } } } catch (e) { warnOnce('figs', e); }
+      const ph = S.act ? Math.min(3, Math.floor((1 - S.actT / Math.max(0.01, S.actDur)) * 4)) : 0;
+      out.push(poseFig(FIG.partner, { who: 'guest', x, y, dir, act: S.act, ph, spd: S.spd, stride: S.stride, hurt: S.hurtT > 0, down: S.down, look: S.look }, camDir, t));
+    }
+    try {
+      if (typeof SYNC19 === 'object' && SYNC19.isGuest && SYNC19.isGuest() && SYNC19.hostLook) {
+        const look = SYNC19.hostLook(), f = SYNC19.figures().find((q) => q.who === 'host');
+        if (look && f) {
+          const H = FIG.host, tt = performance.now();
+          H.stride = (H.stride || 0) + (f.spd || 0) * Math.max(0, Math.min(0.1, (tt - (H.at || tt)) / 1000)); H.at = tt;
+          const act = f.act | 0, hp = SYNC19.hostPartnerState ? SYNC19.hostPartnerState() : null;
+          out.push(poseFig(H, { who: 'host', x: f.x, y: f.y, dir: f.dir, act: act === 8 ? 0 : act, ph: act ? Math.min(3, Math.floor((f.ap || 0) * 4)) : 0, spd: f.spd || 0, stride: H.stride, hurt: act === 8, down: !!(hp && hp.down), look }, camDir, t));
+        }
+      }
+    } catch (e) { warnOnce('hostfig', e); }
+    return out;
+  }
+  // how much of each figure the last frame showed (pixels the sprite pass wrote at its depth), and where (name tags)
+  function measure(F) {
+    S.stats.drawn = 0; S.screen = null; FIG.host.screen = null;
+    for (const o of [FIG.partner, FIG.host]) {
+      const s = o._screen; if (!o.drawing || !s) continue;
+      const sc = F.S || 1, w = F.w, h = F.h, x0 = Math.max(0, Math.floor(s.x0 * sc)), x1 = Math.min(w - 1, Math.ceil(s.x1 * sc)), y0 = Math.max(0, Math.floor(s.y0 * sc)), y1 = Math.min(h - 1, Math.ceil(s.y1 * sc));
+      let n = 0, headY = -1; const zf = Math.fround(s.z);
+      for (let y = y0; y <= y1; y++) { let o2 = y * w + x0; for (let x = x0; x <= x1; x++, o2++) if (F.dbuf[o2] === zf) { n++; if (headY < 0) headY = y; } }
+      const scr = n ? { x: (s.x0 + s.x1) / 2 / VW, y: (headY >= 0 ? headY / sc : s.y0), w: (s.x1 - s.x0) / VW, dist: s.dist } : null;
+      if (o === FIG.partner) { S.stats.drawn = n; S.screen = scr; } else { FIG.host.drawn = n; FIG.host.screen = scr; }
+    }
+  }
+  // kept for the tests and other modules: the old post hook's name now only measures what the engine drew
+  function drawHook(F) { measure(F); }
 
   // ================================================================ UI (host side: HUD chip, name tag, downed bar)
   // Everything is built with createElement + textContent; the names come from the validated card (cleanName).
@@ -735,13 +887,13 @@ const PARTNER19 = (function () {
 #p19p-hud .s, #p19p-hud .l { font-size: 1.45cqw; line-height: 1.2; }
 #p19p-hud .s.down { color: #ff8a70; }
 #p19p-hud .l { color: #c9b38a; }
-#p19p-tag { position: absolute; transform: translate(-50%, -100%); pointer-events: none; z-index: 4; text-align: center; font-family: var(--font-sc, serif);
-  font-size: 1.9cqw; line-height: 1.05; color: #cfe0ff; text-shadow: 0 0 2px #000, 1px 1px 0 #000, -1px 0 0 #000, 0 -1px 0 #000; white-space: nowrap; }
-#p19p-tag .tb { display: block; margin: .25cqh auto 0; width: 6cqw; height: .55cqw; background: rgba(0,0,0,.65); border: 1px solid #000; }
-#p19p-tag .tb i { display: block; height: 100%; background: #c8503a; }
-#p19p-tag.down { color: #ffb0a0; }
-#p19p-tag .rv { display: block; margin: .2cqh auto 0; width: 6cqw; height: .45cqw; background: rgba(0,0,0,.65); }
-#p19p-tag .rv i { display: block; height: 100%; background: #e9d27a; }
+#p19p-tag, #p19p-htag { position: absolute; transform: translate(-50%, -100%); pointer-events: none; z-index: 4; text-align: center; font-family: var(--font-sc, serif);
+  font-size: 1.25cqw; line-height: 1; color: #e4d6b8; opacity: .82; text-shadow: 0 0 2px #000, 1px 1px 0 #000; white-space: nowrap; }
+#p19p-tag .tb, #p19p-htag .tb { display: block; margin: .2cqh auto 0; width: 3.6cqw; height: .3cqw; background: rgba(0,0,0,.6); }
+#p19p-tag .tb i, #p19p-htag .tb i { display: block; height: 100%; background: #b0483a; }
+#p19p-tag.down, #p19p-htag.down { color: #ffb0a0; opacity: 1; }
+#p19p-tag .rv, #p19p-htag .rv { display: block; margin: .2cqh auto 0; width: 5cqw; height: .4cqw; background: rgba(0,0,0,.65); }
+#p19p-tag .rv i, #p19p-htag .rv i { display: block; height: 100%; background: #e9d27a; }
 #p19p-down { position: absolute; left: 50%; top: 40cqh; transform: translate(-50%, -50%); z-index: 5; pointer-events: none; padding: 1cqh 2cqw; background: rgba(40, 8, 6, .72);
   border: 1px solid #a8452f; color: #ffd8c8; font-family: var(--font-sc, serif); font-size: 2.2cqw; text-align: center; }
 #p19p-down .rv { display: block; margin: .6cqh auto 0; width: 24cqw; height: .8cqw; background: rgba(0,0,0,.6); }
@@ -752,7 +904,7 @@ const PARTNER19 = (function () {
 #p19p-story .tx { white-space: pre-wrap; }
 #p19p-story ul { margin: .8cqh 0 0; padding-left: 2cqw; color: #a8987c; }
 #p19p-story .who { margin-top: .8cqh; font-family: var(--font-sc, serif); color: #c9b38a; font-size: 1.7cqw; }
-#p19p-story[hidden], #p19p-hud[hidden], #p19p-tag[hidden], #p19p-down[hidden], #p19p-tag .rv[hidden] { display: none; }
+#p19p-story[hidden], #p19p-hud[hidden], #p19p-tag[hidden], #p19p-htag[hidden], #p19p-down[hidden], #p19p-tag .rv[hidden], #p19p-htag .rv[hidden] { display: none; }
 `;
   function injectStyle() { if (document.getElementById('partner19-style')) return; const st = document.createElement('style'); st.id = 'partner19-style'; st.textContent = CSS; document.head.appendChild(st); }
   const mk = (tag, attrs, text) => { const e = document.createElement(tag); if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; };
@@ -803,6 +955,25 @@ const PARTNER19 = (function () {
       tg.querySelector('.tb i').style.width = clampN(S.pp.hp / S.pp.hpMax * 100, 0, 100) + '%';
       const rv = tg.querySelector('.rv'); rv.hidden = !S.down; if (S.down) rv.firstChild.style.width = clampN(S.revive / B.REVIVE_TIME * 100, 0, 100) + '%';
     },
+    // the guest's screen: the host's name (from SYNC's welcome, cleaned) small above the host's figure
+    hostTag() {
+      let tg = document.getElementById('p19p-htag');
+      const guestOn = typeof SYNC19 === 'object' && SYNC19 && SYNC19.isGuest && SYNC19.isGuest();
+      const sc = guestOn ? FIG.host.screen : null, view = document.getElementById('view'), game = document.getElementById('game');
+      if (!sc || !view || !game || G.state !== 'play' || sc.dist > 22) { if (tg) tg.hidden = true; return; }
+      if (!tg) {
+        injectStyle(); tg = mk('div', { id: 'p19p-htag', 'aria-hidden': 'true' }); tg.append(mk('span', { class: 'nm' }), mk('span', { class: 'tb' }));
+        tg.querySelector('.tb').appendChild(mk('i')); game.appendChild(tg);
+      }
+      const st = SYNC19.hostPartnerState ? SYNC19.hostPartnerState() : null, name = cleanName(SYNC19.hostName ? SYNC19.hostName() : '');
+      const r = view.getBoundingClientRect(), gr = game.getBoundingClientRect();
+      tg.hidden = false; tg.classList.toggle('down', !!(st && st.down));
+      tg.style.left = (r.left - gr.left + sc.x * r.width) + 'px';
+      tg.style.top = Math.max(r.top - gr.top + (tg.offsetHeight || 0) + 2, r.top - gr.top + (sc.y / VH) * r.height - 2) + 'px';
+      const txt = st && st.down ? name + ' · ' + TX.tagDown : name, nm = tg.querySelector('.nm');
+      if (nm.textContent !== txt) nm.textContent = txt;
+      tg.querySelector('.tb i').style.width = (st ? clampN(st.hp / Math.max(1, st.hpMax) * 100, 0, 100) : 100) + '%';
+    },
   };
 
   // ================================================================ GUEST SIDE
@@ -814,7 +985,7 @@ const PARTNER19 = (function () {
       for (let i = 0; i < b.length; i++) s += A[b[i] % A.length];
       return s;
     }
-    function card(src) {
+    function card(src, opts) {
       let p, from;
       if (src && typeof src === 'object') { if (!src.player || typeof src.player !== 'object') return { error: 'not-a-save' }; p = src.player; from = 'save'; }
       else { if (!hasGame() || !G.player) return { error: 'no-game' }; p = G.player; from = 'live'; }
@@ -822,6 +993,7 @@ const PARTNER19 = (function () {
       try { if (typeof EXTRAS17 === 'object' && EXTRAS17.inExtra && EXTRAS17.inExtra() && from === 'live') return { error: 'in-extra' }; } catch (e) { /* ignore */ }
       home.token = newToken(); home.from = from; home.used = false; home.entered = false;
       home.d = from === 'save' ? JSON.parse(JSON.stringify(src)) : null;
+      home.slot = from === 'save' && opts && Number.isInteger(opts.slot) && opts.slot >= 0 && opts.slot < 3 ? opts.slot : null;
       home.baseLevel = p.level | 0;
       const cls = typeof p.cls === 'string' ? p.cls : (p.cls && p.cls.id);
       return {
@@ -911,7 +1083,11 @@ const PARTNER19 = (function () {
       let res = { ok: false, reason: 'no-write-back' };
       if (wb !== undefined) res = applyWriteBack(wb);
       try {
-        if (home.from === 'save' && home.d) { restoreGame(JSON.parse(JSON.stringify(home.d))); }
+        if (home.from === 'save' && home.d) {
+          restoreGame(JSON.parse(JSON.stringify(home.d)));
+          // the session slot the traveller came from keeps what they earned (it is their save: the write-back is in it)
+          if (res.ok && home.slot != null && typeof SLOTS !== 'undefined') { const d = snapshotGame(); d.mapName = G.map && G.map.name; SLOTS[home.slot] = d; }
+        }
         else if (home.from === 'live' && wasIn && G.player && G.map) {
           hide('#title'); G.state = 'play'; G.keys = {};
           try { Engine.setMap(G.map); Audio_.setScene(G.map.music); } catch (e) { /* the scene is cosmetic */ }
@@ -1125,11 +1301,25 @@ const PARTNER19 = (function () {
     const _end = ending;
     ending = function () { const r = _end.apply(this, arguments); if (S.active) { try { story({ kind: 'ending', title: plain($('#ending-title').textContent, 200), text: plain($('#ending-text').innerHTML), choices: [] }); } catch (e) { warnOnce('ending', e); } } return r; };
     const _render = render;
-    render = function () { const r = _render.apply(this, arguments); if (S.active) { try { ui.place(); } catch (e) { warnOnce('place', e); } } return r; };
+    render = function () { const r = _render.apply(this, arguments); if (S.active) { try { ui.place(); } catch (e) { warnOnce('place', e); } } if (FIG.host.drawing || document.getElementById('p19p-htag')) { try { ui.hostTag(); } catch (e) { warnOnce('hostTag', e); } } return r; };
     // waking by the lamp after both fell: the partner wakes beside the host
     const wake = document.getElementById('btn-wake');
     if (wake) wake.addEventListener('click', () => { if (!S.active) return; S.down = false; S.hostDown = false; S.revive = S.hostRevive = 0; S.pp.hp = Math.max(1, Math.ceil(S.pp.hpMax * 0.6)); placeBehindHost(); ui.hud(); });
-    if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook((F) => { if (!S.active) return; try { drawHook(F); } catch (e) { warnOnce('draw', e); } }, 9);
+    // the travellers' figures go into the list the renderer draws (a copy: G.ents is never touched); nobody joined =
+    // the very same call with the very same list
+    if (typeof Engine !== 'undefined' && Engine.render) {
+      const _er = Engine.render;
+      Engine.render = function (ents, tod, opts) {
+        FIG.partner.drawing = false; FIG.host.drawing = false;
+        if (!S.active && !(typeof SYNC19 === 'object' && SYNC19 && SYNC19.isGuest && SYNC19.isGuest())) return _er.apply(this, arguments);
+        let figs = null; try { figs = coopFigures(); } catch (e) { warnOnce('figures', e); }
+        if (!figs || !figs.length || !Array.isArray(ents)) return _er.apply(this, arguments);
+        for (const f of figs) f.drawing = true;
+        return _er.call(this, ents.concat(figs), tod, opts);
+      };
+    }
+    if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook((F) => { if (!FIG.partner.drawing && !FIG.host.drawing) { if (S.stats.drawn) { S.stats.drawn = 0; S.screen = null; } return; } try { measure(F); } catch (e) { warnOnce('measure', e); } }, 0.5);
+    try { if (typeof SYNC19 === 'object' && SYNC19 && SYNC19.fallbackFigure) SYNC19.fallbackFigure(false); } catch (e) { /* no SYNC */ }
     guest.register();
     net.wire();
   }
@@ -1152,11 +1342,11 @@ const PARTNER19 = (function () {
   try { install(); } catch (e) { console.warn('partner19: install failed', e); }
 
   const api = {
-    join, input, leave, pause, active: () => S.active, snapshot, hostState, drainFeed,
+    join, input, leave, pause, setPose, active: () => S.active, snapshot, hostState, drainFeed,
     onStory(fn) { if (typeof fn === 'function') S.storySubs.push(fn); return () => { const i = S.storySubs.indexOf(fn); if (i >= 0) S.storySubs.splice(i, 1); }; },
     guest,
     // not in the contract: the tests and the report read these
-    B, TX, LIST, validateCard, chooseTarget, drawHook, frameOf, downFrame, solidPalette, story,
+    B, TX, LIST, validateCard, chooseTarget, drawHook, frameOf, downFrame, toneColour, coopFigures, FIG, story,
     stats: S.stats, wireNet: net.wire,
   };
   Object.defineProperties(api, { S: { get: () => S, enumerable: false }, earned: { get: () => S.earned, enumerable: true } });

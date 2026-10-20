@@ -666,7 +666,8 @@ const GHOST18 = (function () {
 
     // -- poses: hand positions in the ghost's frame (forward, right, up) --------------------------------------------
     const swing = st * 2.6;
-    let offH = [(st ? 0.4 : 1.4) + swing, -9.6, 25.5], wH = [(st ? 0.4 : -0.4) - swing, 9.6, 25.5], wV = (W === 4 || W === 5 || W === 6) ? [0.35, 0.1, 0.93] : [0.5, 0.12, -0.86], blockSh = false;   // at rest a blade hangs point-down, a haft stands
+    const armR = look.snug ? 8.0 : 9.6;                         // look.snug (Phase 19's solid travellers): arms hang closer
+    let offH = [(st ? 0.4 : 1.4) + swing, -armR, 25.5], wH = [(st ? 0.4 : -0.4) - swing, armR, 25.5], wV = (W === 4 || W === 5 || W === 6) ? [0.35, 0.1, 0.93] : [0.5, 0.12, -0.86], blockSh = false;   // at rest a blade hangs point-down, a haft stands
     const KF = { // [hand0, dir0, hand1, dir1]
       1: [[0.4, 8.4, 46], [0.2, 0.9, 0.7], [3.0, -1.7, 35], [0.7, -0.8, -0.3]],
       2: [[0.5, 1.7, 46], [0.4, -0.8, 0.8], [3.0, 9.5, 35], [0.6, 0.9, -0.3]],

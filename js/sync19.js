@@ -61,8 +61,8 @@
 //
 //  ---------------------------------------------------------------- PARTNER (js/partner19.js, merged): HOW THEY MEET
 //   SYNC owns the guest traveller's POSITION and facing (one deterministic mover on both sides: that is what makes
-//   prediction and reconciliation exact) and writes it into PARTNER's partner each input (PARTNER19.setPose when it
-//   exists, else its state object). Everything else goes through PARTNER19's API: join(card) on hello, input() for
+//   prediction and reconciliation exact) and writes it into PARTNER's partner each input through PARTNER19.setPose({ x, y, dir,
+//   feet, spd }) (the contract method; SYNC never writes PARTNER's state). Everything else goes through PARTNER19's API: join(card) on hello, input() for
 //   attack / weapon / block / song / use, pause(true) on a drop and pause(false) when the guest is back, leave() when
 //   the guest says goodbye, snapshot()/hostState() into every snapshot, drainFeed() onto 'sync.msg'. When PARTNER moves
 //   its partner itself (set down behind the host on a new map, woken by the lamp) SYNC follows. A downed or paused
@@ -149,6 +149,10 @@ const SYNC19 = (function () {
     SNAP_DIST: 2,         // a correction bigger than this (tiles) is a jump, not a slide
     WB_WAIT: 3000,        // ms a leaving guest waits for the host's write-back
     PAUSE_MAX: 60000,     // ms the host keeps a dropped partner paused before sending it home
+    NEAR: 14,             // tiles: entities further from the guest than this are compared every other snapshot
+    STRIKE_MS: 420,       // an enemy's blow shows this long on the guest (anim.js's lunge)
+    HURT_MS: 300,         // and its flinch
+    PT_REFRESH: 15,       // PARTNER's read-out goes when it changes, and at least every this many snapshots
   };
   const SWINGS = ['slash right', 'slash left', 'chop down', 'cut up', 'thrust'];
   const STATE_CODE = { idle: 0, chase: 1, passive: 2, investigate: 3 };
@@ -166,6 +170,11 @@ const SYNC19 = (function () {
     noSave: 'Saving waits until you are back on your own road.',
     refused: 'The host\'s fire turned you away ({0}).',
     companion: 'your companion',
+    noRest: 'This is your companion\'s road: you rest when {0} rests.',
+    noItem: 'Your pack waits for your own road. Here you carry only what you fight with.',
+    noLoad: 'Loading waits until you are back on your own road.',
+    noNeeds: 'Food and sleep wait for your own road; on your companion\'s you keep pace with them.',
+    goHome: 'Part ways and go home',
   };
   const fmt = (s, ...a) => String(s).replace(/\{(\d+)\}/g, (m, i) => (a[+i] == null ? '' : a[+i]));
 
@@ -364,38 +373,35 @@ const SYNC19 = (function () {
 
   // ================================================================ HOST
   const H = {
-    gs: null, ep: 0, q: 0, ring: new Map(), sid: new WeakMap(), nextSid: 100000, lastSnap: 0, actFns: [], ext: new Map(),
+    gs: null, ep: 0, q: 0, ring: new Map(), sid: new WeakMap(), pose: new WeakMap(), nextSid: 100000, lastSnap: 0, actFns: [], ext: new Map(),
     spdAttr: 50, frozen: false, flagsSent: new Map(), lastFlags: 0, msgB: { t: 0, n: B.MSG_RATE }, wxSent: '', figBuf: [], figOut: {},
   };
   const hostActive = () => !!H.gs;
   // ---------------------------------------------------------------- the PARTNER bridge (js/partner19.js, when loaded)
   // SYNC owns the guest traveller's POSITION (one deterministic mover on both sides is what makes prediction work) and
   // writes it into PARTNER's partner; PARTNER owns everything else about it (health, aggro, blows, Songs, downed and
-  // revive, loot, write-back). Pose writes use PARTNER19.setPose when PARTNER offers it, else its live state object.
+  // revive, loot, write-back). Pose writes go through PARTNER19.setPose (the contract method; never its state).
   const partnerLib = () => (typeof PARTNER19 === 'object' && PARTNER19 ? PARTNER19 : null);
   // PARTNER wires itself to the global NET19 and sends its own story and write-back there; SYNC only carries them
   // when the session runs on some other transport (SYNC19.useTransport)
   const partnerWired = () => { try { return !!(partnerLib() && typeof NET19 === 'object' && T === NET19); } catch (e) { return false; } };
   const partner = () => { const P = partnerLib(); try { return P && P.active && P.active() ? P : null; } catch (e) { return null; } };
   function pState(P) { try { return P.S || null; } catch (e) { return null; } }
-  function partnerBlocked() { const P = partner(), S = P && pState(P); return !!(S && (S.down || S.paused)); }
+  // PARTNER's own read-out of its partner (snapshot(): position, down, paused): SYNC reads it, never its state
+  function pSnap(P) { try { return P && typeof P.snapshot === 'function' ? P.snapshot() : null; } catch (e) { return null; } }
+  function partnerBlocked() { const S = pSnap(partner()); return !!(S && (S.down || S.paused)); }
   function writePartner() {
     const P = partner(), g = H.gs; if (!P || !g) return;
     try {
-      if (typeof P.setPose === 'function') P.setPose({ x: g.x, y: g.y, dir: g.dir, feet: g.feet, spd: Math.hypot(g.vx, g.vy) });
-      else {
-        const S = pState(P); if (!S) return;
-        S.x = g.x; S.y = g.y; S.dir = g.dir; S.feet = g.feet; S.vx = 0; S.vy = 0; S.map = G.mapId;
-        if (S.prox) { S.prox.x = g.x; S.prox.y = g.y; S.prox.feet = g.feet; } if (S.pp) S.pp.feet = g.feet;
-      }
-      const S = pState(P); H.pw = S ? { x: S.x, y: S.y } : null;
+      if (typeof P.setPose !== 'function' || !P.setPose({ x: g.x, y: g.y, dir: g.dir, feet: g.feet, spd: Math.hypot(g.vx, g.vy) })) return;
+      const S = pSnap(P); H.pw = S ? { x: S.x, y: S.y } : null;
     } catch (e) { reject('partner-pose'); }
   }
   // PARTNER moved its partner itself (set down behind the host on a new map, woken by the lamp): SYNC follows
   function adoptPartner() {
-    const P = partner(), g = H.gs, S = P && pState(P); if (!S || !g || !isNum(S.x) || !isNum(S.y)) return false;
+    const P = partner(), g = H.gs, S = pSnap(P); if (!S || !g || !isNum(S.x) || !isNum(S.y) || S.map !== G.mapId) return false;
     if (H.pw && Math.abs(S.x - H.pw.x) < 1e-6 && Math.abs(S.y - H.pw.y) < 1e-6) return false;
-    g.x = S.x; g.y = S.y; g.feet = isNum(S.feet) ? S.feet : g.feet; g.vx = g.vy = 0; g.buf = []; H.pw = { x: S.x, y: S.y };
+    g.x = S.x; g.y = S.y; g.feet = (G.map.lvls || G.map.smooth) ? G.map.groundAt(S.x, S.y) : 0; g.vx = g.vy = 0; g.buf = []; H.pw = { x: S.x, y: S.y };
     return true;
   }
   function partnerInput(cmd) { const P = partner(); if (!P) return null; try { return P.input(cmd); } catch (e) { reject('partner-input'); return null; } }
@@ -411,9 +417,33 @@ const SYNC19 = (function () {
     const n = Math.min(m.baseCount || 0, m.entities.length);
     if (!m.entities.some((e) => BASE.has(e))) for (let i = 0; i < n; i++) BASE.set(m.entities[i], i);
   }
+  // an enemy's pose, for the guest's copy of it (anim.js draws it from these): 16 striking (its blow or shot just
+  // came, B.STRIKE_MS), 32 winding up (in reach of its target with the blow nearly due, or a shot about to fly),
+  // 64 hurt (it lost health in the last B.HURT_MS). Read from the enemy, never written to it.
+  function windingUp(e) {
+    const d = e.def || {};
+    if (isNum(e.shotT) && e.shotT > 0 && e.shotT < 0.6) return true;
+    if (!d.reach || !isNum(e.cool) || e.cool >= 0.38) return false;
+    const g = H.gs, tx = e.p19t === 'guest' && g ? g.x : Engine.cam.x, ty = e.p19t === 'guest' && g ? g.y : Engine.cam.y;
+    return Math.hypot(tx - e.x, ty - e.y) < d.reach + 0.35;
+  }
+  function poseBits(e) {
+    if (e.kind !== 'enemy' || e.dead || e.hidden) return 0;
+    const t = now();
+    let P = H.pose.get(e);
+    if (!P) { P = { cool: e.cool, shot: e.shotT, horn: e.hornT, hp: e.hp, strikeAt: -1e9, hurtAt: -1e9 }; H.pose.set(e, P); }
+    if ((isNum(e.cool) && isNum(P.cool) && e.cool > P.cool + 0.3) || (isNum(e.shotT) && isNum(P.shot) && e.shotT > P.shot + 0.5) || (isNum(e.hornT) && isNum(P.horn) && e.hornT > P.horn + 0.5)) P.strikeAt = t;
+    if (isNum(e.hp) && isNum(P.hp) && e.hp < P.hp - 0.01) P.hurtAt = t;
+    P.cool = e.cool; P.shot = e.shotT; P.horn = e.hornT; P.hp = e.hp;
+    let b = 0;
+    if (t - P.strikeAt < B.STRIKE_MS) b |= 16;
+    else if (e.state === 'chase' && !(e.stun > 0) && windingUp(e)) b |= 32;
+    if (t - P.hurtAt < B.HURT_MS) b |= 64;
+    return b;
+  }
   function entTuple(e, sid) {
     if (!isNum(e.x) || !isNum(e.y)) return null;
-    const bits = (e.dead ? 1 : 0) | (e.hidden ? 2 : 0) | (e.solid ? 4 : 0) | (e.flash ? 8 : 0);
+    const bits = (e.dead ? 1 : 0) | (e.hidden ? 2 : 0) | (e.solid ? 4 : 0) | (e.flash ? 8 : 0) | poseBits(e);
     const hp = e.kind === 'enemy' && e.hpMax > 0 && isNum(e.hp) ? clampN(Math.round(100 * e.hp / e.hpMax), 0, 100) : -1;
     const stc = e.state in STATE_CODE ? STATE_CODE[e.state] : 4;
     const t = [sid, Math.round(e.x * 32), Math.round(e.y * 32), bits, hp, stc, isNum(e.dir) ? dirByte(e.dir) : 0];
@@ -505,14 +535,15 @@ const SYNC19 = (function () {
     if (full) gs.censusDone = false;
     const wide = full || !gs.censusDone;   // the census of the whole map, in chunks, until it has all gone over
     const held = full ? new Map() : new Map(base);
-    const q = ++H.q, R2 = B.RANGE * B.RANGE;
+    const q = ++H.q, R2 = B.RANGE * B.RANGE, NEAR2 = B.NEAR * B.NEAR;
     const cand = [], seen = new Set();
     const ents = m.entities;
     for (let i = 0; i < ents.length; i++) {
-      const e = ents[i]; if (!e || typeof e !== 'object') continue;
+      const e = ents[i]; if (!e || typeof e !== 'object' || e.deathArt) continue;   // a death playing out: the guest plays its own
       const sid = sidOf(e); seen.add(sid);
       const d2 = (e.x - gs.x) * (e.x - gs.x) + (e.y - gs.y) * (e.y - gs.y);
       if (!wide && !(d2 <= R2)) continue;
+      if (!wide && d2 > NEAR2 && (q & 1)) continue;   // beyond B.NEAR tiles: every other snapshot (7.5 Hz) is plenty
       const t = entTuple(e, sid); if (!t) continue;
       const k = t.join(',');
       if (held.get(sid) === k) continue;
@@ -548,7 +579,14 @@ const SYNC19 = (function () {
     }
     if (H.spdSent !== H.spdAttr) { snap.spd = H.spdAttr; H.spdSent = H.spdAttr; }
     const lk = hostLook(); if (lk) { const ls = JSON.stringify(lk); if (ls !== H.lookSent || full) { snap.lk = lk; H.lookSent = ls; } }
-    const P = partner(); if (P) { try { snap.pt = { me: P.snapshot(), host: P.hostState() }; } catch (err) { reject('partner-snap'); } }
+    const P = partner();
+    if (P) {
+      try {
+        const me = P.snapshot(); if (me) { delete me.x; delete me.y; delete me.dir; delete me.map; }
+        const pt = { me, host: P.hostState() }, ps = JSON.stringify(pt);
+        if (full || ps !== H.ptSent || q - H.ptAt >= B.PT_REFRESH) { snap.pt = pt; H.ptSent = ps; H.ptAt = q; }
+      } catch (err) { reject('partner-snap'); }
+    }
     H.ring.set(q, held); H.ring.delete(q - B.RING);
     const n = send('sync.snap', snap, false);
     ST.snaps++; ST.snapBytes += n || 0; ST.snapMax = Math.max(ST.snapMax, n || 0); ST.snapEntsMax = Math.max(ST.snapEntsMax, wide ? 0 : e.length); if (full) ST.census++;
@@ -717,6 +755,21 @@ const SYNC19 = (function () {
       pl.pellets = clampN(cd.pellets | 0, 0, 999); pl.bolts = clampN(cd.bolts | 0, 0, 999);
     } catch (e) { reject('dress'); }
   }
+  // the guest's HUD shows the guest's own traveller: the extra session's stand-in takes the copy's name, calling, face,
+  // level, attributes, kit and purse (health, voice and level then come from PARTNER's read-out on the host). A copy:
+  // nothing done here reaches the guest's own game; what was earned comes home only through the write-back.
+  function wearOwn(pl, own) {
+    try {
+      const cls = CLASSES.find((k) => k.id === own.cls); if (!cls) { dressAs(pl, C.card); return; }
+      const keep = { feet: pl.feet };
+      for (const k of Object.keys(own)) { if (BAD_KEYS.has(k)) continue; pl[k] = own[k]; }
+      pl.cls = cls; pl.name = cleanName(own.name); pl.feet = keep.feet;
+      pl.needs = false; pl.hardcore = false;                 // the road's needs and the run's rules stay home
+      if (!Array.isArray(pl.inv)) pl.inv = []; if (!Array.isArray(pl.weapons) || !pl.weapons.length) pl.weapons = cls.weapons.slice();
+      pl.weapon = clampN(pl.weapon | 0, 0, pl.weapons.length - 1);
+      try { if (typeof ensurePlayerUpgrades === 'function') ensurePlayerUpgrades(pl); } catch (e) { /* optional table */ }
+    } catch (e) { reject('wear'); dressAs(pl, C.card); }
+  }
   function hostLookOk(l) {
     if (!l || typeof l !== 'object') return null;
     const { cls, face, wpn, arm } = l;
@@ -736,6 +789,9 @@ const SYNC19 = (function () {
     // own saves); SYNC then puts that session aside too and shows the host's world in its place
     C.entered = false;
     const PL = partnerLib();
+    // a copy of the guest's own traveller (the live one, or the one in the save it brought), to wear in the host's world
+    let own = null;
+    try { const hp = G.player || (PL && PL.guest.home && PL.guest.home.d && PL.guest.home.d.player); if (hp && C.card && !C.card.error) own = JSON.parse(JSON.stringify(Object.assign({}, hp, { cls: hp.cls && hp.cls.id ? hp.cls.id : hp.cls }))); } catch (e) { own = null; }
     if (PL && C.card && !C.card.error) { try { C.entered = !!PL.guest.enter(); } catch (e) { C.entered = false; } }
     const c = Engine.cam;
     C.stash = {
@@ -744,8 +800,9 @@ const SYNC19 = (function () {
       escapeTimer: G.escapeTimer, boreHold: G.boreHold, fadeT: G.fadeT, vel: { x: G.vel.x, y: G.vel.y }, feet: G.player ? G.player.feet : undefined,
     };
     C.standIn = !G.player && !C.entered; if (C.standIn) G.player = standInTraveller();
-    if (C.entered && C.card && G.player) dressAs(G.player, C.card);
+    if (C.entered && C.card && G.player) { if (own) wearOwn(G.player, own); else dressAs(G.player, C.card); }
     C.on = true; C.peer = from; C.hostName = plainStr(p.name, 24);
+    try { installGuestGuards(); } catch (e) { console.warn('sync19: guest guards', e); }
     G.flags = cleanFlags(p.flags, {}); G.maps = probe; if (p.gr || G.flags.greening) { G.maps.oakhaven = buildOakhaven(true); C.green = true; } else C.green = false;
     G.escapeTimer = 0; G.boreHold = 0; G.dead = false;
     if (isNum(p.tod)) G.tod = clampN(p.tod / 10000, 0, 0.9999); if (isInt(p.day) && p.day >= 0) G.day = p.day;
@@ -809,7 +866,7 @@ const SYNC19 = (function () {
   function validTuple(t) {
     if (!Array.isArray(t) || t.length < 7 || t.length > 9) return false;
     for (let i = 0; i < 7; i++) if (!isInt(t[i])) return false;
-    return t[0] >= 0 && t[0] < 1e7 && Math.abs(t[1]) < 32 * 2048 && Math.abs(t[2]) < 32 * 2048 && t[3] >= 0 && t[3] < 16 && t[4] >= -1 && t[4] <= 100 && t[5] >= 0 && t[5] <= 4 && t[6] >= 0 && t[6] < 256;
+    return t[0] >= 0 && t[0] < 1e7 && Math.abs(t[1]) < 32 * 2048 && Math.abs(t[2]) < 32 * 2048 && t[3] >= 0 && t[3] < 128 && t[4] >= -1 && t[4] <= 100 && t[5] >= 0 && t[5] <= 4 && t[6] >= 0 && t[6] < 256;
   }
   function applyEnt(t, ts, census) {
     const sid = t[0];
@@ -827,7 +884,22 @@ const SYNC19 = (function () {
     const x = t[1] / 32, y = t[2] / 32;
     if (census || !e._sbuf) { e._sbuf = []; e.x = x; e.y = y; }
     if (e.x !== x || e.y !== y || e._sbuf.length) { sample(e._sbuf, ts, { x, y }); C.moving.add(e); }
+    const wasAlive = !e.dead && !e.hidden;
+    if (!census && wasAlive && e.kind === 'enemy' && (t[3] & 1) && typeof animSpawnDeath === 'function' && G.ents === G.map.entities) {
+      // it fell on the host: play its death here, as the host's page does (a local effect, never sent back)
+      const n0 = G.ents.length;
+      try { animSpawnDeath(e); } catch (err) { reject('death-fx'); }
+      for (let i = n0; i < G.ents.length; i++) G.ents[i]._fx19 = true;
+    }
     e.dead = !!(t[3] & 1); e.hidden = !!(t[3] & 2); e.solid = !!(t[3] & 4); e.flash = !!(t[3] & 8);
+    if (e.kind === 'enemy') {
+      // the host's pose of it (see poseBits): anim.js's own lunge and strike frame, its flinch, its wind-up frame
+      const was = e._p19pb || 0, pb = t[3] & 112;
+      e.cool = 1;                                            // the guest's camera is not its target: no local wind-up guess
+      if ((pb & 16) && !(was & 16)) e._atk = 0.42;
+      if ((pb & 64) && !(was & 64)) e._hurt = 0.3;
+      e._p19wind = !!(pb & 32); e._p19pb = pb;
+    }
     if (t[4] >= 0 && e.kind === 'enemy') e.hp = (e.hpMax || 1) * t[4] / 100;
     if (e.kind === 'enemy' || e.kind === 'npc') { const sn = STATE_NAME[t[5]]; if (e.state !== sn && !(e.state === 'passive' && t[5] === 2)) e.state = sn; }
     if (e.kind === 'npc' || e.kind === 'deco') e.dir = byteDir(t[6]);
@@ -935,7 +1007,7 @@ const SYNC19 = (function () {
   function sweep() {
     const es = G.map.entities;
     for (let i = es.length - 1; i >= 0; i--) {
-      const e = es[i]; if (e._sid19 != null) continue;
+      const e = es[i]; if (e._sid19 != null || e._fx19) continue;
       // a module put its own copy back: if the host's copy is here as a stand-in, the module's own one takes its place
       const d = descOf(e); let swapped = false;
       if (d) for (const [sid, m] of C.ents) {
@@ -1059,11 +1131,18 @@ const SYNC19 = (function () {
     const PL = partnerLib();
     if (PL && !C.card) {
       try {
+        const sl = G.player ? -1 : newestSlot();
         if (G.player) C.card = PL.guest.card();
+        else if (sl >= 0) C.card = PL.guest.card(SLOTS[sl], { slot: sl });   // from the title: the traveller in the newest saved slot
         else { const keep = G.player; G.player = standInTraveller(); try { C.card = PL.guest.card(); } finally { G.player = keep; } }
       } catch (e) { C.card = { error: 'card' }; }
     }
     send('sync.hello', C.card && !C.card.error ? { v: B.V, card: C.card } : { v: B.V }, true);
+  }
+  function newestSlot() {
+    let best = -1, when = -Infinity;
+    try { if (typeof SLOTS === 'undefined') return -1; for (let i = 0; i < SLOTS.length; i++) { const d = SLOTS[i]; if (!d || !d.player || d.player.hardcore || (d.flags && d.flags.p17x_on)) continue; const w = isNum(d.when) ? d.when : 0; if (w > when) { when = w; best = i; } } } catch (e) { return -1; }
+    return best;
   }
   function onFlags(p, from) { if (!C.on || from !== C.peer || !p || typeof p.f !== 'object' || !p.f) return reject('flags'); cleanFlags(p.f, G.flags); }
   function onMsg(p, from) {
@@ -1155,6 +1234,15 @@ const SYNC19 = (function () {
     try { for (const id in maps) { const m = maps[id], n = Math.min(m.baseCount || 0, m.entities.length); for (let i = 0; i < n; i++) BASE.set(m.entities[i], i); } } catch (e) { /* bookkeeping only */ }
     return maps;
   };
+  // the guest: an enemy the host shows winding up takes its wind-up frame (anim.js picks the other frames itself)
+  if (typeof animFrame === 'function' && typeof animHasFrames === 'function') {
+    ORIG.animFrame = animFrame;
+    animFrame = function () {
+      const r = ORIG.animFrame.apply(this, arguments);
+      if (C.on && G.ents) { try { for (const e of G.ents) if (e._p19wind && e.kind === 'enemy' && !e.dead && !e.hidden && !(e._strike > 0) && animHasFrames(e.sprite)) e.animSprite = e.sprite + '_a1'; } catch (err) { /* cosmetic */ } }
+      return r;
+    };
+  }
   ORIG.update = update; ORIG.loadMap = loadMap; ORIG.interact = interact; ORIG.attack = attack; ORIG.castSong = castSong;
   ORIG.transfer = transfer; ORIG.snapshotGame = snapshotGame; ORIG.msg = msg; ORIG.renderSave = renderSave;
   update = function (dt) {
@@ -1230,6 +1318,29 @@ const SYNC19 = (function () {
     G.state = 'play'; say(TX.noSave, 'warn', 4000);
     return Promise.resolve();
   };
+  // the guest's own game is put aside while joined: what would act on it (rest, items, load, the road's needs, the
+  // title) is closed with a short line, or routed to parting ways. Installed on the first join (after every other
+  // module has put its own wrappers on these), so these are the outermost; each is a pass-through when not joined.
+  let guardsOn = false;
+  function installGuestGuards() {
+    if (guardsOn) return; guardsOn = true;
+    for (const name of ['renderRest', 'useItem', 'removeArmor', 'renderLoad', 'renderMenu']) if (typeof window[name] === 'function') ORIG[name] = window[name];
+    if (ORIG.renderRest) renderRest = function () { if (!C.on) return ORIG.renderRest.apply(this, arguments); try { closeModal(); } catch (e) { /* none */ } G.state = 'play'; say(fmt(TX.noRest, C.hostName || TX.companion), 'warn', 4000); };
+    if (ORIG.useItem) useItem = function () { if (!C.on) return ORIG.useItem.apply(this, arguments); say(TX.noItem, 'warn', 3500); };
+    if (ORIG.removeArmor) removeArmor = function () { if (!C.on) return ORIG.removeArmor.apply(this, arguments); say(TX.noItem, 'warn', 3500); };
+    if (ORIG.renderLoad) renderLoad = function () { if (!C.on) return ORIG.renderLoad.apply(this, arguments); try { closeModal(); } catch (e) { /* none */ } G.state = 'play'; say(TX.noLoad, 'warn', 4000); };
+    if (ORIG.renderMenu) renderMenu = function () {
+      const r = ORIG.renderMenu.apply(this, arguments);
+      if (C.on) {
+        try {
+          const nd = document.getElementById('mn-needs'); if (nd) { nd.disabled = true; nd.onclick = () => say(TX.noNeeds, 'warn', 3500); }
+          const hc = document.getElementById('mn-hardcore'); if (hc) hc.disabled = true;
+          const tt = document.getElementById('mn-title'); if (tt) { tt.textContent = TX.goHome; tt.onclick = () => { try { closeModal(); } catch (e) { /* none */ } G.state = 'play'; leave('left'); }; }
+        } catch (e) { reject('menu'); }
+      }
+      return r;
+    };
+  }
   msg = function (text, cls) {
     const r = ORIG.msg.apply(this, arguments);
     if (H.gs && cls === 'voice' && typeof text === 'string' && bucket(H.msgB, B.MSG_RATE, B.MSG_RATE)) send('sync.msg', { t: plainStr(text, B.MSG_MAX), c: 'voice' }, true);
@@ -1249,16 +1360,19 @@ const SYNC19 = (function () {
   on('p19p:wb', (p, from) => { if (C.on && C.entered && from === C.peer) finishLeave(C.leaving ? 'left' : 'ended', undefined, true); }); on('sync.refused', onRefused); on('sync.story', onStory);
   on('sync.welcome', onWelcome); on('sync.map', onMap); on('sync.snap', onSnap); on('sync.flags', onFlags); on('sync.msg', onMsg); on('sync.full', onFull);
   bind();
-  // PARTNER's figure walks from its own speed and stride, which its tick sets from its own movement (none: SYNC moves
-  // it). Just before PARTNER paints (same hook order, registered earlier), give it the guest's walking speed.
-  function feedPartnerGait() {
-    const P = partner(), g = H.gs; if (!P || !g || typeof P.setPose === 'function') return;
-    const S = pState(P); if (!S) return;
-    const t = now(), dt = Math.min(0.1, Math.max(0, (t - (H.gaitAt || t)) / 1000)); H.gaitAt = t;
-    const sp = (t - g.lastInputAt < 150) ? Math.hypot(g.vx, g.vy) : 0;
-    S.spd = sp; S.stride = (S.stride || 0) + sp * dt;
-  }
-  if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook((F) => { if (H.gs) { try { feedPartnerGait(); } catch (e) { /* gait is cosmetic */ } } try { drawFigures(F); } catch (e) { if (!drawFigures.warned) { drawFigures.warned = true; console.warn('sync19: figure draw failed', e); } } }, 9);
+  // a guest who leaves from the Play together panel (NET19.leave) parts ways the same way as from the menu: the host is
+  // told, the write-back comes home, then the transport closes. A page being closed goes at once.
+  try {
+    if (typeof NET19 === 'object' && NET19 && typeof NET19.leave === 'function') {
+      const netLeave = NET19.leave;
+      NET19.leave = function (reason) {
+        let hidden = false; try { hidden = document.visibilityState === 'hidden'; } catch (e) { /* no document */ }
+        if (C.on && C.entered && !C.leaving && !hidden && reason !== 'left' && T === NET19 && role() === 'guest' && peerCount() > 0) { leave('left'); return undefined; }
+        return netLeave.apply(this, arguments);
+      };
+    }
+  } catch (e) { console.warn('sync19: could not wrap NET19.leave', e); }
+  if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook((F) => { try { drawFigures(F); } catch (e) { if (!drawFigures.warned) { drawFigures.warned = true; console.warn('sync19: figure draw failed', e); } } }, 9);
 
   // ================================================================ the API (see the contract at the top)
   const api = {
@@ -1283,6 +1397,10 @@ const SYNC19 = (function () {
     sendAction, leave: () => leave('left'), figures,
     on(evt, fn) { if (EV[evt] && typeof fn === 'function') EV[evt].push(fn); },
     fallbackFigure(b) { fallbackOn = !!b; },
+    // guest side, for PARTNER's painter and name tag: the host's look (GHOST18 terms), name, and health/down state
+    hostLook: () => (C.on ? C.hostLook || null : null),
+    hostName: () => (C.on ? C.hostName || '' : ''),
+    hostPartnerState: () => (C.on && C.partner && C.partner.host ? Object.assign({}, C.partner.host) : null),
     stats() {
       rateTick();
       return {

@@ -54,7 +54,7 @@
 //    NET19.loopbackPair(opts?)-> Promise<{ host, guest }> two fresh instances already connected in-page (no network);
 //                                opts.loss (0..1) drops that share of unreliable frames, opts.latency adds ms each way.
 //    NET19.configure(cfg)     -> merge { broker: { host, port, path, secure, key }, iceServers: [...], heartbeatMs,
-//                                lostMs, giveUpMs, joinTimeoutMs } into the default config (tests point the broker at
+//                                lostMs, giveUpMs, joinTimeoutMs, reconnectTimeoutMs } into the default config (tests point the broker at
 //                                a local stub and set iceServers: [] so nothing reaches the internet).
 //
 //  Transports (opts.transport): 'peer' (default: PeerJS broker + WebRTC, js/vendor/peerjs.min.js, loaded on demand),
@@ -88,7 +88,7 @@ const NET19 = (function () {
   const DEFAULTS = {
     broker: { host: '0.peerjs.com', port: 443, path: '/', secure: true, key: 'peerjs' },  // PeerJS's free public broker
     iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],                              // Google STUN
-    heartbeatMs: 1000, lostMs: 4500, giveUpMs: 90000, joinTimeoutMs: 20000, reconnectMs: 2500,
+    heartbeatMs: 1000, lostMs: 4500, giveUpMs: 90000, joinTimeoutMs: 20000, reconnectMs: 2500, reconnectTimeoutMs: 8000,
     inRate: 240, inBurst: 480,                       // all frames per second from the peer, any type
     abuse: 400,                                      // rejected frames within 10 s that close the link
   };
@@ -461,14 +461,19 @@ const NET19 = (function () {
       if (S.role !== 'guest' || S.reconnecting || S.state !== 'lost') return;
       if (now() > S.giveUpAt) { finish('gave-up'); return; }
       S.reconnecting = true;
+      // one attempt at a time, and every attempt ends: a transport whose connect() never settles is given up on after
+      // reconnectTimeoutMs (a link that turns up later is closed), so the next tick can try again
+      const attempt = S.attempt = (S.attempt || 0) + 1;
+      const tmo = setTimeout(() => { if (S.attempt === attempt && S.reconnecting && !S.pending) { S.attempt++; S.reconnecting = false; S.st.reasons['reconnect-timeout'] = (S.st.reasons['reconnect-timeout'] || 0) + 1; } }, cfg().reconnectTimeoutMs);
       let p;
-      try { p = S.transport.connect(S.code, { reconnect: true }); } catch (e) { p = Promise.reject(e); }
+      try { p = Promise.resolve(S.transport.connect(S.code, { reconnect: true })); } catch (e) { p = Promise.reject(e); }
       p.then((link) => {
-        if (S.state !== 'lost') { try { link.close(); } catch (e) { /* gone */ } return; }
+        clearTimeout(tmo);
+        if (S.attempt !== attempt || S.state !== 'lost') { try { link.close(); } catch (e) { /* gone */ } if (S.attempt === attempt) S.reconnecting = false; return; }
         adopt(link); S.pending = link;
         rawSend(link, 'net.hello', { v: PROTO, name: S.myName, token: S.token }, true);
         setTimeout(() => { if (S.pending === link) { S.pending = null; try { link.close(); } catch (e) { /* gone */ } S.reconnecting = false; } }, 6000);
-      }).catch(() => { S.reconnecting = false; });
+      }).catch(() => { clearTimeout(tmo); if (S.attempt === attempt) S.reconnecting = false; });
     }
 
     // ------------------------------------------------ heartbeat
@@ -1428,7 +1433,7 @@ const NET19 = (function () {
       if (!c || typeof c !== 'object') return Object.assign({}, CONFIG);
       if (c.broker && typeof c.broker === 'object') CONFIG.broker = Object.assign({}, CONFIG.broker, c.broker);
       if (Array.isArray(c.iceServers)) CONFIG.iceServers = c.iceServers.slice();
-      for (const k of ['heartbeatMs', 'lostMs', 'giveUpMs', 'joinTimeoutMs', 'reconnectMs', 'abuse', 'inRate', 'inBurst']) if (Number.isFinite(+c[k]) && +c[k] > 0) CONFIG[k] = +c[k];
+      for (const k of ['heartbeatMs', 'lostMs', 'giveUpMs', 'joinTimeoutMs', 'reconnectMs', 'reconnectTimeoutMs', 'abuse', 'inRate', 'inBurst']) if (Number.isFinite(+c[k]) && +c[k] > 0) CONFIG[k] = +c[k];
       return JSON.parse(JSON.stringify(CONFIG));
     },
     _pure: { randomCode, normCode, showCode, cleanName, encodeFrame, decodeFrame, sane, packCode, unpackCode, joinLink, CODE_ABC, CODE_LEN, ID_PREFIX, LINK_CAP, TYPE_CAP, MAN },
