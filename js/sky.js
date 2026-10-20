@@ -326,7 +326,8 @@ const SKY = (() => {
   function syncLandmarks(id, want) {
     if (typeof LANDMARKS === 'undefined') return;
     if (want) { const L = lmList(id); if (L && LANDMARKS[L.key] !== EMPTY) LANDMARKS[L.key] = EMPTY; return; }
-    for (const k in LM_ORIG) if (LANDMARKS[k] !== LM_ORIG[k]) LANDMARKS[k] = LM_ORIG[k];
+    // put back only what this module took away (anyone else's own edits to LANDMARKS stand)
+    for (const k in LM_ORIG) if (LANDMARKS[k] === EMPTY) LANDMARKS[k] = LM_ORIG[k];
   }
   function landmarkLayer(lm, idx) {
     const c = lm.c || [30, 26, 42], cap = lm.cap || null;

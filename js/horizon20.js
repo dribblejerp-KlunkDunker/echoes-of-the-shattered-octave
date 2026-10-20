@@ -372,6 +372,8 @@ const HORIZON20 = (() => {
   function hookClearing(cl, yc) {
     cl.set(0, yc, DOOR({ tex: 't_p20_gate', portal: { map: DOWNS, x: DW - 2.4, y: yc - D2C[1] + 0.5, dir: Math.PI }, label: TX.gateIn }));
     cl._p20Gate = { x: 0, y: yc };
+    // js/decals.js marks walls, never doors: the hedge cell that became the hurdle loses any mark it was given
+    if (cl._decalsAll) delete cl._decalsAll[yc * cl.w];
   }
 
   // the movement graph a walker really has (the height rules of solidAt; drops are always allowed, and are falls when
