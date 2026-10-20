@@ -323,9 +323,9 @@ const BEAST20A = (() => {
         const a = main ? r.a : Math.max(r.as, (xr - xl + 1) / 2), c = main ? r.c : r.cs;
         const aL = main ? Math.max(0.5, A - xl) : a, aR = main ? Math.max(0.5, xr + 1 - A) : a, am = (aL + aR) / 2;
         const dv = typeof depth === 'function' ? depth(y, main) : depth;
-        const b = Math.max(1, dv > 2 ? Math.min(dv, main ? am * 1.6 + 1 : a * (rig.limbK || 1.3)) : am * dv);   // a slice is never much deeper than it is wide: no blades off a hood's tip
+        const b = Math.max(1, dv > 2 ? Math.min(dv, main ? am * 1.6 + 1 : Math.min(a * (rig.limbK || 1.3), rig.limbB || 6)) : am * dv);   // a slice is never much deeper than it is wide: no blades off a hood's tip
         let X0 = c - A, Z0 = 0;
-        if (rig.zOf) Z0 = rig.zOf(c, y, a) || 0;
+        if (rig.zOf) Z0 = rig.zOf(c, y, a, main) || 0;
         const steps = Math.ceil(Math.PI * 2 * Math.max(aL, aR, b) * 2.2);
         for (let i = 0; i < steps; i++) {
           const phi = -Math.PI + (i + 0.5) * (Math.PI * 2 / steps);
@@ -341,7 +341,11 @@ const BEAST20A = (() => {
           let si, src;
           // only the run's own pixels: beyond its real edge (an off-axis run is
           // shorter on one side) the column is left open rather than smeared
-          const fx = Math.floor(main ? c + lx : r.c0 + lx * r.a0 / a); if (fx < xl || fx > xr) continue;
+          // texture position: by arc length round the slice (rig.wrap 'arc', the
+          // default: every texel keeps its share of the surface, so the edges
+          // of the painting are not smeared out as they come round) or by plain projection
+          const tx = rig.wrap === 'proj' ? lx : (phi > Math.PI / 2 ? ah * (2 / Math.PI) * (Math.PI - phi) : phi < -Math.PI / 2 ? -ah * (2 / Math.PI) * (Math.PI + phi) : ah * (2 / Math.PI) * phi);
+          const fx = Math.floor(main ? c + tx : r.c0 + tx * r.a0 / a); if (fx < xl || fx > xr) continue;
           if (cp >= 0) { si = (y * w + fx) * 4; src = fd; }
           else { si = (y * w + (w - 1 - fx)) * 4; src = bd; }
           if (src[si + 3] < 100) continue;   // the gap beside an off-centre run stays open
@@ -358,6 +362,7 @@ const BEAST20A = (() => {
     // placed at their spot in the round and depth-tested against the body
     for (const pr of rig.props || []) {
       if (pr.show && !pr.show(theta)) continue;
+      if (pr.bone) { boneProp(pr); continue; }
       const pc = pr.canvas, pw = pc.width, ph = pc.height, pdat = pc.getContext('2d').getImageData(0, 0, pw, ph).data;
       const X = pr.X, Z = pr.Z || 0;
       const cxp = ox + X * ct + Z * st, cz = -X * st + Z * ct + (pr.dz || 0);
@@ -374,6 +379,27 @@ const BEAST20A = (() => {
           const o = Y * outW + px; if (cz <= zb[o]) continue;
           zb[o] = cz; out[o * 4] = pdat[si] * mul; out[o * 4 + 1] = pdat[si + 1] * mul; out[o * 4 + 2] = pdat[si + 2] * mul; out[o * 4 + 3] = 255;
         }
+      }
+    }
+    // A limb on a bone: its painted piece is laid along the line from the
+    // joint to the hand, both placed in the round (so an arm reaching at you
+    // in the front view reaches forward, full length, in the side view).
+    function boneProp(pr) {
+      const [[sx, sy], [hx, hy]] = pr.bone, [zs, zh] = pr.boneZ || [0, 0];
+      const Sx = sx - A, Hx = hx - A;
+      const s1 = ox + Sx * ct + zs * st, h1 = ox + Hx * ct + zh * st;
+      const a0 = Math.atan2(hy - sy, hx - sx), L = Math.hypot(hx - sx, hy - sy);
+      const a1 = Math.atan2(hy - sy, h1 - s1), L1 = Math.hypot(h1 - s1, hy - sy);
+      const t = document.createElement('canvas'); t.width = outW; t.height = h;
+      const tg = t.getContext('2d'); tg.imageSmoothingEnabled = false;
+      tg.translate(s1, sy); tg.rotate(a1); tg.scale(Math.max(0.3, L1 / Math.max(1, L)), 1); tg.rotate(-a0); tg.translate(-sx, -sy);
+      tg.drawImage(pr.canvas, pr.rx, pr.y);
+      const td = tg.getImageData(0, 0, outW, h).data;
+      const cz = (-Sx * st + zs * ct - Hx * st + zh * ct) / 2 + (pr.dz || 0);
+      const mul = Math.cos(theta) < 0 ? (pr.backMul == null ? 0.8 : pr.backMul) : 1;
+      for (let o = 0; o < outW * h; o++) {
+        if (td[o * 4 + 3] < 110 || cz <= zb[o]) continue;
+        zb[o] = cz; out[o * 4] = td[o * 4] * mul; out[o * 4 + 1] = td[o * 4 + 1] * mul; out[o * 4 + 2] = td[o * 4 + 2] * mul; out[o * 4 + 3] = 255;
       }
     }
     const c = document.createElement('canvas'); c.width = outW; c.height = h;
@@ -436,7 +462,10 @@ const BEAST20A = (() => {
   //   stride: how far the screen-left leg steps forward (below legY).
   // cfg.back(P, spec, pose) paints the back by hand; cfg.fin(P, ox, theta, v, pose, spec) finishes a view.
   function rigged(N, cfg) {
-    const specOf = p => Object.assign({}, cfg.poses[''], cfg.poses[p] || {});
+    // a pose inherits only the idle frame's proportions; geometry (axis, bounds,
+    // masks, props) is always the pose's own, because every frame is drawn anew
+    const INHERIT = ['depth', 'legY', 'join'];
+    const specOf = p => { const o = {}; for (const k of INHERIT) if (cfg.poses[''][k] !== undefined) o[k] = cfg.poses[''][k]; return Object.assign(o, p ? cfg.poses[p] || {} : cfg.poses['']); };
     function rig(p) {
       const name = N + p, S = specOf(p);
       const front = layerOf(name, P => {
@@ -448,11 +477,12 @@ const BEAST20A = (() => {
       const back = backOf(front.c, P => { if (cfg.back) cfg.back(P, S, p); });
       const props = (S.props || []).map(q => {
         const r = q.r, c = piece(name, r[0], r[1], r[2], r[3], q.mask);
-        return Object.assign({}, q, { canvas: c, y: r[1], ax: q.ax == null ? q.X - r[0] : q.ax, X: q.X - S.A });
+        return Object.assign({}, q, { canvas: c, rx: r[0], y: r[1], ax: q.ax == null ? q.X - r[0] : q.ax, X: q.X - S.A });
       });
-      const zOf = S.stride ? (c, y) => (y >= S.legY ? (c < S.A ? S.stride : -S.stride) : 0) : null;
+      // a stepping leg sits forward or back; reaching arms (limbs above reachY) sit forward
+      const zOf = (S.stride || S.reach) ? (c, y, a, main) => (S.stride && y >= S.legY ? (c < S.A ? S.stride : -S.stride) : S.reach && !main && y < S.reachY ? S.reach : 0) : null;
       return {
-        front: front.c, back: back.c, axis: S.A, props, zOf, relight: S.relight, join: S.join, limbK: cfg.limbK,
+        front: front.c, back: back.c, axis: S.A, props, zOf, relight: S.relight, join: S.join == null ? cfg.join : S.join, limbK: cfg.limbK, limbB: cfg.limbB, wrap: cfg.wrap,
         depth: y => { const d = band(S.depth, y); return typeof d === 'function' ? d(y) : d; },
         body: S.body ? y => { const b = band(S.body, y); return b && b[0] != null ? b : null; } : null,
       };
@@ -620,7 +650,7 @@ BEAST20A.SPECIES.captain = (() => {
         erase: [[[57, 17], [79, 17], [79, 70], [57, 70]], [[9, 93], [16, 93], [37, 153], [30, 155]]],
         patch: [], heal: [[[[9, 96], [17, 96], [37, 150], [29, 150]], 9]],
         props: [{ r: [57, 17, 22, 53], X: 68, Z: 18, minK: 0.8 },
-          { r: [8, 90, 32, 66], mask: [[9, 93], [16, 93], [37, 153], [30, 155]], X: 16, Z: 0, minK: 0.7 }],
+          { r: [8, 90, 32, 66], mask: [[9, 93], [16, 93], [37, 153], [30, 155]], X: 16, Z: 9, minK: 0.7 }],
       },
       _w1: {
         A: 41, head: [32, 0, 50, 26], legY: 130, stride: 6,
@@ -628,7 +658,7 @@ BEAST20A.SPECIES.captain = (() => {
         erase: [[[69, 50], [89, 50], [89, 104], [69, 104]], [[7, 90], [14, 90], [29, 150], [22, 152]]],
         patch: [], heal: [[[[8, 96], [15, 96], [28, 146], [21, 146]], 8]],
         props: [{ r: [69, 50, 20, 54], X: 79, Z: 10, minK: 0.8 },
-          { r: [6, 88, 26, 66], mask: [[7, 90], [14, 90], [29, 150], [22, 152]], X: 13, Z: 0, minK: 0.7 }],
+          { r: [6, 88, 26, 66], mask: [[7, 90], [14, 90], [29, 150], [22, 152]], X: 13, Z: 9, minK: 0.7 }],
       },
       _w2: {
         A: 37, head: [28, 0, 46, 25], legY: 130, stride: -6,
@@ -636,7 +666,7 @@ BEAST20A.SPECIES.captain = (() => {
         erase: [[[66, 58], [85, 58], [85, 106], [66, 106]], [[7, 90], [14, 90], [29, 150], [22, 152]]],
         patch: [], heal: [[[[8, 96], [15, 96], [28, 146], [21, 146]], 8]],
         props: [{ r: [66, 58, 19, 48], X: 76, Z: 10, minK: 0.8 },
-          { r: [6, 88, 26, 66], mask: [[7, 90], [14, 90], [29, 150], [22, 152]], X: 11, Z: 0, minK: 0.7 }],
+          { r: [6, 88, 26, 66], mask: [[7, 90], [14, 90], [29, 150], [22, 152]], X: 11, Z: 9, minK: 0.7 }],
       },
       _a1: {
         A: 47, head: [37, 17, 56, 45],
@@ -781,6 +811,60 @@ BEAST20A.SPECIES.deacon = (() => {
       P.tex(...ROBE, B.mir(P.w, S.stole), { mul: 0.95 });
       B.hoodOver(P, N, S.face, B.tones(N, [[25, 18], [30, 14], [40, 25], [33, 12], [43, 34], [28, 16], [36, 15]]), B.tones(N, [[22, 30]], 0.6)[0]);
       P.light(() => 0.82);
+    },
+  });
+})();
+
+// ---------------------------------------------------------------- the Drowned Hollow
+// A gaunt, grey, water-swollen hollow in a rotted shift, hair in wet strings,
+// mouth open on a cry nobody hears, both hands reaching for you. No props:
+// the reaching arms ride forward of the body as it turns. Source: drowned (86x160).
+BEAST20A.SPECIES.drowned = (() => {
+  const B = BEAST20A, N = 'drowned';
+  const HAIR = () => B.tones(N, [[31, 10], [29, 16], [47, 12], [36, 3], [40, 2], [30, 22], [48, 20]]);
+  const RAGS = () => B.tones(N, [[28, 60], [50, 70], [30, 80], [45, 85], [40, 75]]);
+  // the reaching arms, each laid on its own bone (shoulder to hand)
+  const ARM_L = [[24, 36], [26, 50], [20, 58], [12, 65], [0, 63], [0, 44], [8, 39], [16, 35]];
+  const ARM_R = [[54, 37], [64, 43], [73, 55], [86, 65], [86, 84], [64, 85], [57, 72], [51, 56]];
+  const A1_L = [[0, 0], [29, 0], [29, 52], [30, 72], [14, 72], [2, 40]];
+  const A1_R = [[48, 0], [80, 0], [80, 40], [64, 72], [51, 72], [49, 50]];
+  const A2_L = [[12, 44], [36, 44], [40, 60], [38, 84], [12, 84]];
+  const A2_R = [[53, 40], [70, 52], [84, 68], [84, 92], [62, 92], [54, 70]];
+  return B.rigged(N, {
+    angles: [0, Math.PI / 4, Math.PI * 0.42, Math.PI * 0.75, Math.PI],
+    limbK: 1.0, limbB: 4, join: 4,
+    poses: {
+      '': {
+        A: 39, face: [[32, 4], [46, 4], [48, 14], [46, 27], [33, 27], [30, 14]], chest: [[33, 28], [47, 28], [46, 62], [34, 62]],
+        depth: [[28, 10], [60, 13], [110, 12], [999, 7]],
+        body: [[30, [28, 50]], [92, [21, 58]], [999, null]],
+        erase: [ARM_L, ARM_R],
+        props: [{ r: [0, 32, 26, 34], mask: ARM_L, bone: [[22, 42], [4, 52]], boneZ: [0, 24] },
+          { r: [50, 36, 36, 50], mask: ARM_R, bone: [[56, 46], [78, 72]], boneZ: [0, 24] }],
+      },
+      _w1: { A: 37, face: [[30, 4], [44, 4], [46, 14], [44, 28], [31, 28], [28, 14]], chest: [[31, 29], [45, 29], [44, 62], [32, 62]], legY: 110, stride: 5,
+        body: [[30, [28, 47]], [95, [20, 53]], [999, null]] },
+      _w2: { A: 38, face: [[31, 4], [45, 4], [47, 14], [45, 28], [32, 28], [29, 14]], chest: [[32, 29], [46, 29], [45, 62], [33, 62]], legY: 110, stride: -5,
+        body: [[30, [29, 48]], [95, [21, 54]], [999, null]] },
+      _a1: { A: 38, face: [[32, 24], [46, 24], [48, 34], [46, 50], [33, 50], [30, 34]], chest: [[33, 51], [47, 51], [46, 82], [34, 82]],
+        erase: [A1_L, A1_R],
+        props: [{ r: [0, 0, 30, 73], mask: A1_L, bone: [[26, 64], [15, 8]], boneZ: [0, 8] },
+          { r: [48, 0, 32, 73], mask: A1_R, bone: [[52, 62], [65, 10]], boneZ: [0, 8] }],
+        depth: [[52, 9], [85, 11], [130, 10], [999, 6]],
+        body: [[52, [29, 49]], [100, [22, 58]], [999, null]] },
+      _a2: { A: 40, face: [[34, 6], [49, 6], [51, 17], [49, 33], [35, 33], [32, 17]], chest: [[35, 34], [49, 34], [48, 60], [36, 60]],
+        erase: [A2_L, A2_R],
+        props: [{ r: [10, 40, 30, 46], mask: A2_L, bone: [[30, 44], [22, 76]], boneZ: [0, 28] },
+          { r: [52, 40, 32, 54], mask: A2_R, bone: [[55, 44], [76, 82]], boneZ: [0, 28] }],
+        depth: [[35, 9], [65, 12], [110, 11], [999, 6]],
+        body: [[35, [30, 52]], [100, [26, 58]], [999, null]] },
+    },
+    back(P, S) {
+      P.grain(B.mir(P.w, S.chest), RAGS(), 3, 5);
+      P.grain(B.mir(P.w, S.face), HAIR(), 5, 9);
+      const f = B.mir(P.w, S.face), ys = f.map(q => q[1]);
+      P.lightIn(f, (x, y) => 1.05 - 0.3 * (y - Math.min(...ys)) / (Math.max(...ys) - Math.min(...ys)));
+      P.light(() => 0.8);
     },
   });
 })();
