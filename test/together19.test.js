@@ -387,7 +387,7 @@ const TRACE = () => {
 
     // ================================================================ 8. no game open: the traveller of the newest slot travels; the slot gets the write-back
     {
-      const code = await guest.evaluate(() => saveCode());
+      const code = await guest.evaluate(() => saveCode()), gold1 = await guest.evaluate(() => G.player.gold);
       const fresh = await newCtx(browser, phoneProfile);
       const p2 = await open(fresh, 'guest2', errors); await p2.evaluate(MSGLOG);
       await p2.evaluate(async (c) => { SLOTS[1] = await decodeSave(c); SLOTS[1].when = 5; }, code);
@@ -398,7 +398,7 @@ const TRACE = () => {
       await until(p2, () => SYNC19.isGuest() && G.state === 'play', null, 20000);
       await until(host, () => PARTNER19.active());
       const who = await p2.evaluate(() => ({ name: G.player.name, gold: G.player.gold }));
-      ok(!before.p && who.name === 'Brother' && who.gold === 37, 'a guest with no game open joins with the traveller of its newest session slot (' + who.name + ', ' + who.gold + ' sovereigns)');
+      ok(!before.p && who.name === 'Brother' && who.gold === gold1, 'a guest with no game open joins with the traveller of its newest session slot (' + who.name + ', ' + who.gold + ' sovereigns)');
       const xp = await host.evaluate(() => { const c = Engine.cam, e = hydrate({ kind: 'enemy', type: 'tongueless', x: c.x + 1.2, y: c.y }); G.ents.push(e); killEnemy(e, false); return PARTNER19.earned.xp; });
       await p2.waitForTimeout(300);
       await p2.evaluate(() => { G.state = 'panel'; renderMenu(); });

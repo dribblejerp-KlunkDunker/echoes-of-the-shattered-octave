@@ -180,8 +180,9 @@ const TRACE = () => {
     await guest.page.evaluate(() => { loadMap('tavern', { x: 8.5, y: 10.5, dir: -Math.PI / 2 }); G.state = 'play'; });
     await guest.page.waitForTimeout(200);
     // (the clock of the guest's own world runs while it is on screen, before joining and after coming home: tod and the
-    // play-time counters are left out; everything else must come back exactly)
-    const OWN = () => { const d = snapshotGame(); delete d.when; delete d.tod; for (const k of Object.keys(d.flags)) if (/^p7t_/.test(k)) delete d.flags[k]; return JSON.stringify(d); };
+    // play-time counters are left out, and so is the noise you make, which settles a little more each frame it is on
+    // screen (under load that is more frames); everything else must come back exactly)
+    const OWN = () => { const d = snapshotGame(); delete d.when; delete d.tod; delete d.noise; for (const k of Object.keys(d.flags)) if (/^p7t_/.test(k)) delete d.flags[k]; return JSON.stringify(d); };
     const ownBefore = await guest.page.evaluate(`(${OWN})()`);
     // host stands in Oakhaven's street
     await host.page.evaluate(() => { for (const id in G.maps) for (const e of G.maps[id].entities) if (e.kind === 'enemy') e.hidden = true; loadMap('oakhaven', { x: 23.5, y: 6.5, dir: Math.PI / 2 }); G.state = 'play'; G.fadeT = 0; G.player.hp = G.player.hpMax = 9999; });

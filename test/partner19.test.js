@@ -424,13 +424,14 @@ const HELPERS = () => {
         render();
         const o = { near: PARTNER19.stats.drawn, screen: PARTNER19.S.screen };
         const tag = document.getElementById('p19p-tag'); o.tag = !tag.hidden && tag.querySelector('.nm').textContent;
-        // solid: a centre column of the figure is opaque cloak-blue or outline, never see-through
+        // solid pixel art: opaque, a dark outline, shaded (many tones), a muted palette (no saturated blocks of colour)
         const F = { pix: 0 }; const fr = PARTNER19.frameOf(0, 0, 0, 0, PARTNER19.S.look);
-        let opaque = 0, blue = 0; for (const px of fr.data) { if (!px) continue; opaque += (px >>> 24) === 255 ? 1 : 0; const r = px & 255, g = (px >>> 8) & 255, b = (px >>> 16) & 255; if (b > r + 30) blue++; }
-        o.opaque = opaque; o.blue = blue; o.frame = [fr.w, fr.h, fr.top, fr.bot];
+        let opaque = 0, dark = 0, loud = 0; const tones = new Set();
+        for (const px of fr.data) { if (!px) continue; opaque += (px >>> 24) === 255 ? 1 : 0; const r = px & 255, g = (px >>> 8) & 255, b = (px >>> 16) & 255; tones.add(px); if (r + g + b < 120) dark++; const mx = Math.max(r, g, b), mn = Math.min(r, g, b); if (mx > 60 && (mx - mn) / mx > 0.62) loud++; }
+        o.opaque = opaque; o.dark = dark; o.tones = tones.size; o.loud = loud; o.frame = [fr.w, fr.h, fr.top, fr.bot]; o.sprite = !!Engine.sprites[fr.name];
         // NPC size: the same projection as a standing NPC one tile away
         const npc = hydrate({ kind: 'npc', id: 'p19test', sprite: 'kaelen', x: 13.3, y: 11.5, scale: 1 }); G.ents.push(npc); render();
-        o.npcH = npc._screen ? (npc._screen.y1 - npc._screen.y0) : 0; o.figH = (fr.bot - fr.top + 1) * (VIEW_H * Engine.getScale() / 3) / 96 / Engine.getScale();
+        o.npcH = npc._screen ? (npc._screen.y1 - npc._screen.y0) : 0; o.figH = (fr.bot - fr.top + 1) * (VIEW_H * Engine.getScale() / 3) / fr.h / Engine.getScale();
         G.ents.splice(G.ents.indexOf(npc), 1);
         __put(12.5, 5.5, Math.PI / 2); render(); o.far = PARTNER19.stats.drawn; o.farTag = !tag.hidden;
         // behind a body: a big solid enemy between the camera and the partner hides it (the depth test, as for a wall)
@@ -440,7 +441,7 @@ const HELPERS = () => {
         return o;
       });
       assert.ok(r.near > 200, 'drawn near: ' + r.near); assert.equal(r.tag, 'Brother');
-      assert.ok(r.opaque > 600 && r.blue > 200, 'solid and coloured: ' + r.opaque + ' opaque, ' + r.blue + ' cloak');
+      assert.ok(r.opaque > 2400 && r.dark > 300 && r.tones > 300 && r.loud < r.opaque * 0.03 && r.sprite, 'solid pixel art, drawn as an engine sprite: ' + JSON.stringify([r.opaque, r.dark, r.tones, r.loud, r.frame]));
       assert.ok(r.npcH > 0 && Math.abs(r.figH - r.npcH) / r.npcH < 0.35, 'NPC size: figure ' + r.figH.toFixed(1) + ' vs NPC ' + r.npcH.toFixed(1));
       assert.ok(r.far > 20 && r.farTag, 'still drawn and named at 9 tiles: ' + r.far);
       assert.ok(r.open > 100 && r.hidden < r.open * 0.25, 'a body in front hides most of it: ' + r.open + ' -> ' + r.hidden);
