@@ -103,102 +103,282 @@ const SKY = (() => {
     stats.stars = n;
   }
 
-  // ---- painted area panoramas --------------------------------------
-  // Per map, three layers of distant country painted once into a 2048-wide
-  // height table (plus a tone table for patchy light). Each frame they are laid
-  // just above the horizon at fixed bearings, far layer first, mixed toward the
-  // air colour by time of day and weather. Procedural stand-in for painted art.
-  function mkLayer(maxH, col, mix, alpha, cap) { return { h: new Float32Array(PN), tone: new Uint8Array(PN), maxH: maxH * 1.5, col, mix: mix - 0.08, a: Math.min(1, alpha + 0.04), cap: cap || null, lights: null }; }
-  // smooth periodic value noise added into a layer's heights
-  function addNoise(a, r, cells, amp, base) {
-    const v = new Float32Array(cells); for (let i = 0; i < cells; i++) v[i] = r();
-    for (let i = 0; i < PN; i++) { const u = i / PN * cells, i0 = u | 0, f = u - i0, sm = f * f * (3 - 2 * f); a[i] += base + amp * (v[i0 % cells] * (1 - sm) + v[(i0 + 1) % cells] * sm); }
+  // ---- painted area panoramas (Phase 20: pixel art) ----------------
+  // Per map, three layers of distant country drawn once, at load, as a strip of
+  // pixel art AW columns round and up to AH rows tall: a far wash of hills, a
+  // middle band of woods, a near skyline of farmsteads, ruins or trees. The
+  // shapes are hand-made stamps (strings below) and hand-shaped ridges, coloured
+  // from a small palette per layer; every art pixel is drawn as one S x S block,
+  // so the country stays crisp at either render scale. Each frame the palette is
+  // mixed toward the air (time of day, weather) row by row, and the windows in
+  // the near layer light up after dark. Only sky pixels are touched.
+  const AW = 1536;             // art columns per full turn: one per screen column at the view's centre at 1x
+  const AH = 56;               // the tallest a layer may stand, in art rows (one row = S screen rows); the Grove spire-hill needs 54
+  // palette slots: 1 dark edge, 2 shadow, 3 body, 4 lit, 5 crest light, 6 snow, 7 snow in shade,
+  // 8 window (lit after dark), 9 roof, 10 pale stone or wall, 11 bark and dark timber
+  const NSLOT = 12;
+  function mkLayer(pal, mix) { return { art: new Uint8Array(AW * AH), top: new Uint8Array(AW), pal, mix, h: new Float32Array(PN) }; }
+  const wrapX = (x) => ((x % AW) + AW) % AW;
+  function put(L, x, row, c) {
+    if (row < 0 || row >= AH) return;
+    x = wrapX(x); L.art[row * AW + x] = c;
+    if (c && row + 1 > L.top[x]) L.top[x] = row + 1;
   }
-  // a stand of trees: conifers are narrow spires, round crowns are soft domes
-  function addTrees(a, r, base, spacing, hLo, hHi, wLo, wHi, kind) {
-    for (let pos = r() * spacing; pos < PN; pos += spacing * (0.55 + 0.9 * r())) {
-      const hh = hLo + r() * (hHi - hLo), wd = wLo + r() * (wHi - wLo), c = Math.round(pos);
-      for (let d = -Math.ceil(wd); d <= Math.ceil(wd); d++) {
-        const t = Math.abs(d) / wd; if (t >= 1) continue;
-        const prof = kind === 'conifer' ? Math.pow(1 - t, 0.85) * (0.9 + 0.1 * ((d & 1) ? 1 : 0)) : Math.sqrt(1 - t * t);
-        const i = (c + d + PN) & (PN - 1), v = base + hh * prof; if (v > a[i]) a[i] = v;
+  // a column index from a world bearing (0 = east, as atan2)
+  const colOf = (ang) => wrapX(Math.round((ang / TAU + 0.5) * AW));
+  // smooth periodic noise, amp rows tall, `cells` bumps per turn
+  function noise(r, cells, amp) {
+    const v = new Float32Array(cells), out = new Float32Array(AW); for (let i = 0; i < cells; i++) v[i] = r();
+    for (let i = 0; i < AW; i++) { const u = i / AW * cells, i0 = u | 0, f = u - i0, sm = f * f * (3 - 2 * f); out[i] = amp * (v[i0 % cells] * (1 - sm) + v[(i0 + 1) % cells] * sm); }
+    return out;
+  }
+  const sum = (...a) => { const o = new Float32Array(AW); for (const b of a) for (let i = 0; i < AW; i++) o[i] += typeof b === 'number' ? b : b[i]; return o; };
+  // a ridge filled from the horizon up: faces rising toward +x catch the light, falling ones are in shade,
+  // the crest carries a one-pixel highlight; optional snow above a ragged snowline, field lines on downland
+  function ridge(L, hts, o) {
+    o = o || {};
+    const base = o.shape || hts;   // faces are read from the smooth shape; the drawn crest may be craggier
+    const snowN = o.snow ? noise(mulberry(0xC0FFEE ^ (L.art.length + Math.round(hts[7] * 97))), 61, 3) : null;
+    // snow lies above one height for the whole range, so only the high summits carry it
+    let peak = 0; for (let x = 0; x < AW; x++) if (hts[x] > peak) peak = hts[x];
+    const snowLine = peak * (o.snow || 0);
+    for (let x = 0; x < AW; x++) {
+      const H = Math.round(hts[x]); if (H < 1) continue;
+      // slope over nine columns: broad sunlit and shaded flanks, not column-by-column flicker
+      const sl = (base[(x + 4) % AW] - base[(x + AW - 4) % AW]) / 8;
+      // tone runs from shade (2) through body (3) to sunlit (4), dithered so the flanks are gradients, not panels
+      const tone = clamp(0.5 + sl * 5, 0, 0.999) * 2;
+      const face = sl > 0.09 ? 4 : sl < -0.09 ? 2 : 3;
+      const crestSl = hts[(x + 1) % AW] - hts[(x + AW - 1) % AW];
+      const snowAt = snowN ? snowLine + snowN[x] - 1.5 + (sl > 0 ? 1 : 0) : 1e9;   // the sunlit flank holds its snow a row higher
+      for (let row = 0; row < H; row++) {
+        let c = 2 + ((tone | 0) + ((tone % 1) > dith2(x, row) ? 1 : 0));
+        if (row === H - 1) c = crestSl > 0.5 || face === 4 ? 5 : face === 2 ? 3 : 4;
+        if (row >= snowAt + (dith2(x, row) - 0.5) * 2) c = tone - 0.4 > dith2(x + 1, row + 2) * 1.2 ? 6 : 7;
+        else if (o.fields && row < H - 2 && row > 0) {
+          // hedgerows and field edges: contour lines, broken every few dozen columns
+          const band = (row + ((x >> 5) & 1)) % o.fields;
+          if (band === 0 && ((x * 7) % 41) > 6) c = 2;
+          if (((x + row * 3) % 53) === 0) c = 2;
+        }
+        else if (o.rock && row < H - 1 && row > 1) {
+          // crags: short diagonal fissures and ledges, darker on the shaded faces
+          if (((x * 2 + row * 3) % 23) === 0 || ((x * 5 - row * 7) % 61) === 0) c = face === 2 ? 1 : 2;
+          else if (face !== 2 && ((x + row * 11) % 37) === 0) c = 5;
+        }
+        if (o.base && row < o.base) c = 2;
+        put(L, x, row, c);
       }
     }
   }
-  function addBlock(a, c, w, top, slope) { for (let k = 0; k < w; k++) { const i = (c + k + PN) & (PN - 1), v = top * (1 - slope * (k / w)); if (v > a[i]) a[i] = v; } }
-  function addSpire(a, c, w, top) { for (let k = -w; k <= w; k++) { const i = (c + k + PN) & (PN - 1), v = top * (1 - Math.abs(k) / (w + 1)); if (v > a[i]) a[i] = v; } }
-  function addHouse(L, r, c, w, wall, roof) {
-    for (let k = 0; k < w; k++) { const i = (c + k) & (PN - 1), v = wall + roof * (1 - Math.abs(2 * k / (w - 1) - 1)); if (v > L.h[i]) L.h[i] = v; }
-    const ch = (c + Math.round(w * 0.7)) & (PN - 1); for (let k = 0; k < 2; k++) { const i = (ch + k) & (PN - 1); L.h[i] = Math.max(L.h[i], wall + roof * 0.7 + 0.13); }
-    if (L.lights && r() < 0.6) L.lights.push({ i: (c + 1 + Math.floor(r() * (w - 2))) & (PN - 1), f: wall * 0.55 });
+  const BAY = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  const dith2 = (x, y) => (BAY[((y & 3) << 2) | (x & 3)] + 0.5) / 16;
+  // stamps: rows top to bottom; '.' is empty, 1-9 are slots, 'a' is slot 10 and 'b' slot 11
+  const STAMP = {
+    con1: ['..4..', '.443.', '..43.', '.4432', '44332', '.443.', '44332', '43322', '..b..'],
+    con2: ['...4...', '...43..', '..443..', '...43..', '..4432.', '.44332.', '..4432.', '.443322', '4443322', '..4432.', '.443322', '4433222', '...b...'],
+    con3: ['..5..', '..4..', '.443.', '..43.', '.4432', '..432', '.4432', '44322', '..b..', '..b..'],
+    rt1: ['..454..', '.44443.', '4444332', '4443322', '.33222.', '...b...'],
+    rt2: ['..44543..', '.4454433.', '444443332', '444433322', '.4433322.', '..32222..', '....b....', '....b....'],
+    rt3: ['.454.', '44433', '44332', '.322.', '..b..'],
+    thorn: ['.4..4..', '4443.43', '.44332.', '..43...', '...b...', '..b....'],
+    willow: ['...4443..', '.4444433.', '444443333', '4.44333.3', '4.4.33.3.', '3.4.3..3.', '..3.3..2.', '..2.b..2.', '....b....'],
+    house: ['......1..', '....9991.', '...99999.', '..9999999', '.99999999', 'aaa8aaa8a', 'aaaaaaaaa', 'aa1aaa8aa'],
+    house2: ['.1......', '.1.99...', '.199999.', '99999999', 'a8aa8aaa', 'aaaaaaaa', 'aa1aa8aa'],
+    barn: ['....9999999..', '..99999999999', '9999999999999', 'aaaaaaaaaaaaa', 'a1aaaa11aaaaa', 'a1aaaa11aaaa8'],
+    spire: ['..5..', '..4..', '.443.', '.443.', '.432.', '.432.', '44322', '4a322', '4a322', '48322', '44322', '44322', '48322', '44322'],
+    chapel: ['..5.......', '..4.......', '.443......', '.432......', '44322.....', '4a3229999.', '4832999999', '4432aaaaaa', '4432a8aa8a', '4432aaaaaa'],
+    stone: ['.4.', '443', '432', '432', '432'],
+    stone2: ['44.', '432', '432', '432'],
+    pylon: ['.....1', '....1.', '...11.', '..1.1.', '..131.', '..1.1.', '.1131.', '.1.11.', '.131.1', '.1.1.1', '11311.', '1.1.1.', '13111.', '1.1.11', '131.1.', '1.1.1.', '11.111'],
+    col: ['555', '444', '432', '432', '432', '432', '432', '432', '432', '432', '544'],
+    colb: ['5.', '44.', '432', '432', '432', '432', '432', '544'],
+    colc: ['..5', '.43', '432', '432', '544'],
+    arch: ['..5555555..', '.44333334..', '44.......44', '43.......43', '43.......43', '43.......43', '43.......43'],
+    mspire: ['..5..', '..4..', '..4..', '.443.', '.443.', '.432.', '44432', '44432', '4a432', '44432', '44432', '4a432', '44432', '44432', '44432'],
+    stump: ['4..5.4...', '44.44344.', '4443433.4', '444333332', '448333322', '444333322', '444333322', '4a4333322', '444333322', '444333322', '448333322', '444333322'],
+    fold: ['aaaa.aaaa', 'a2aaaaa2a'],
+    cairn: ['..a..', '.aa4.', 'aa4a3', 'a4a33'],
+  };
+  const SLOT = { '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, a: 10, b: 11 };
+  function stamp(L, name, x, base, flip) {
+    const s = STAMP[name], h = s.length, w = s[0].length, x0 = Math.round(x - w / 2);
+    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
+      const ch = s[j][flip ? w - 1 - i : i], c = SLOT[ch]; if (!c) continue;
+      put(L, x0 + i, base + (h - 1 - j), c);
+    }
   }
-  function addTone(L, r) { const v = new Float32Array(48); for (let i = 0; i < 48; i++) v[i] = r(); for (let i = 0; i < PN; i++) { const u = i / PN * 48, i0 = u | 0, f = u - i0; L.tone[i] = clamp(((v[i0 % 48] * (1 - f) + v[(i0 + 1) % 48] * f) * 4) | 0, 0, 3); } }
-  function finish(L, r) { for (let i = 0; i < PN; i++) L.h[i] = clamp(L.h[i], 0, 1); addTone(L, r); return L; }
+  // a woodland band: ground of a few rows, then trees standing on it at irregular spacing
+  function wood(L, r, base, spacing, kinds, opts) {
+    opts = opts || {};
+    const g = sum(base, noise(r, 23, 2.2));
+    for (let x = 0; x < AW; x++) { const H = Math.round(g[x]); for (let row = 0; row < H; row++) put(L, x, row, row === H - 1 ? 3 : 2); }
+    for (let x = r() * spacing; x < AW; x += spacing * (0.5 + r())) {
+      if (opts.skip && opts.skip(x)) continue;
+      const k = kinds[(r() * kinds.length) | 0];
+      stamp(L, k, x, Math.round(g[Math.round(x) % AW]) - 1, r() < 0.5);
+      if (opts.double && r() < opts.double) stamp(L, kinds[(r() * kinds.length) | 0], x + 3 + r() * 3, Math.round(g[Math.round(x) % AW]) - 1, r() < 0.5);
+    }
+    return g;
+  }
+  function finish(L) {
+    for (let i = 0; i < PN; i++) L.h[i] = L.top[Math.floor(i * AW / PN)] / AH;
+    return L;
+  }
+  const P = (o) => { const p = new Array(NSLOT).fill(null); for (const k in o) p[+k] = o[k]; return p; };
+  const near = (x, c, w) => { let d = Math.abs(x - c); if (d > AW / 2) d = AW - d; return d < w; };
 
-  // recipes: far wash, middle treeline, near skyline. Colours are the silhouette
-  // before the air takes it; mix is how far each layer sits in the haze.
+  // the recipes. Bearings: 0 east, PI/2 south, -PI/2 north (atan2 on the map grid).
   const RECIPES = {
-    oakhaven(r) {   // wooded downs, the Hedge wall and the old town's roofs and chimneys
-      const A = mkLayer(0.085, [54, 58, 78], 0.78, 0.62, [150, 156, 176]); addNoise(A.h, r, 9, 0.5, 0.18); addNoise(A.h, r, 31, 0.18, 0);
-      const B = mkLayer(0.075, [34, 44, 56], 0.66, 0.86); addNoise(B.h, r, 14, 0.2, 0.16); addTrees(B.h, r, 0.12, 9, 0.2, 0.55, 5, 9, 'round');
-      const C = mkLayer(0.115, [32, 30, 42], 0.52, 0.96); C.lights = [];
-      for (let i = 0; i < PN; i++) C.h[i] = 0.12 + 0.03 * ((i >> 2) & 1);  // the Hedge wall's crenellations
-      for (let c = 20; c < PN - 30; c += 20 + Math.floor(r() * 26)) { if (r() < 0.78) addHouse(C, r, c, 9 + Math.floor(r() * 9), 0.22 + r() * 0.2, 0.18 + r() * 0.16); }
-      addBlock(C.h, 310, 14, 0.78, 0.35); addSpire(C.h, 700, 5, 0.9); addBlock(C.h, 1180, 12, 0.66, 0.5); addBlock(C.h, 1620, 16, 0.58, 0.2); addSpire(C.h, 1900, 4, 0.74);
-      return [finish(A, r), finish(B, r), finish(C, r)];
+    oakhaven(r) {   // chalk downs with their field lines, wooded crests and orchards, farmsteads and Greenroot's spire
+      const A = mkLayer(P({ 1: [50, 56, 70], 2: [60, 66, 82], 3: [70, 78, 94], 4: [84, 92, 108], 5: [104, 112, 126] }), 0.6);
+      ridge(A, sum(5, noise(r, 9, 9), noise(r, 31, 3)), { fields: 4 });
+      const B = mkLayer(P({ 1: [20, 28, 24], 2: [28, 40, 32], 3: [38, 52, 38], 4: [52, 68, 46], 5: [70, 86, 56], 11: [38, 30, 22] }), 0.4);
+      wood(B, r, sum(2, noise(r, 13, 5)), 9, ['rt1', 'rt2', 'rt3'], { double: 0.5 });
+      const C = mkLayer(P({ 1: [22, 20, 24], 2: [34, 32, 38], 3: [48, 44, 48], 4: [64, 58, 56], 5: [82, 74, 64], 8: [38, 38, 50], 9: [88, 50, 40], 10: [146, 132, 108], 11: [42, 30, 22] }), 0.24);
+      const g = sum(1, noise(r, 19, 2));
+      for (let x = 0; x < AW; x++) for (let row = 0; row < Math.round(g[x]); row++) put(C, x, row, 2);
+      const gb = (x) => Math.round(g[Math.round(wrapX(x))]) - 1;
+      const greenroot = colOf(-0.75);
+      for (let x = 30; x < AW; x += 40 + r() * 70) {
+        if (near(x, greenroot, 40)) continue;
+        const k = r();
+        if (k < 0.34) { stamp(C, r() < 0.5 ? 'house' : 'house2', x, gb(x), r() < 0.5); stamp(C, 'rt1', x + 9, gb(x + 9)); }
+        else if (k < 0.5) { stamp(C, 'barn', x, gb(x), r() < 0.5); stamp(C, 'rt3', x - 9, gb(x - 9)); }
+        else for (let t = 0; t < 3; t++) stamp(C, ['rt1', 'rt3', 'thorn'][(r() * 3) | 0], x + t * 7, gb(x + t * 7));
+      }
+      stamp(C, 'chapel', greenroot, gb(greenroot)); stamp(C, 'house2', greenroot + 14, gb(greenroot + 14)); stamp(C, 'rt2', greenroot - 12, gb(greenroot - 12));
+      return [finish(A), finish(B), finish(C)];
     },
-    clearing(r) {   // the forest edge outside the Hedge, a standing-stone ring and a broken pylon
-      const A = mkLayer(0.09, [44, 52, 70], 0.8, 0.6, [142, 150, 170]); addNoise(A.h, r, 7, 0.55, 0.15); addNoise(A.h, r, 25, 0.16, 0);
-      const B = mkLayer(0.085, [26, 40, 38], 0.68, 0.88); addNoise(B.h, r, 18, 0.14, 0.12); addTrees(B.h, r, 0.1, 6, 0.3, 0.85, 4, 7, 'conifer');
-      const C = mkLayer(0.1, [24, 32, 32], 0.54, 0.96); addNoise(C.h, r, 22, 0.1, 0.08); addTrees(C.h, r, 0.08, 11, 0.25, 0.7, 6, 10, 'round');
-      for (let k = 0; k < 7; k++) addBlock(C.h, 1000 + k * 18, 5, 0.34 + r() * 0.2, 0.25);   // the standing stones
-      addBlock(C.h, 1700, 7, 0.95, 0.65);                                                   // the pylon, snapped
-      return [finish(A, r), finish(B, r), finish(C, r)];
+    clearing(r) {   // blue hills with snow behind, the conifer edge of the forest, the stone ring and the snapped pylon
+      const A = mkLayer(P({ 1: [44, 50, 66], 2: [54, 60, 78], 3: [64, 72, 92], 4: [80, 88, 108], 5: [100, 108, 128], 6: [176, 182, 196], 7: [136, 144, 164] }), 0.58);
+      ridge(A, sum(4, noise(r, 7, 14), noise(r, 25, 4)), { snow: 0.74 });
+      const B = mkLayer(P({ 1: [16, 26, 26], 2: [22, 36, 34], 3: [30, 46, 42], 4: [42, 60, 50], 5: [58, 76, 60], 11: [34, 28, 22] }), 0.4);
+      wood(B, r, sum(2, noise(r, 17, 4)), 4, ['con1', 'con2', 'con3'], { double: 0.4 });
+      const C = mkLayer(P({ 1: [18, 22, 22], 2: [26, 34, 32], 3: [36, 46, 40], 4: [52, 62, 50], 5: [70, 80, 60], 10: [120, 116, 104], 11: [34, 28, 22] }), 0.24);
+      const ring = colOf(0.11), pylon = colOf(2.07);
+      const g = wood(C, r, sum(1, noise(r, 21, 2)), 14, ['rt1', 'rt2', 'rt3', 'thorn'], { skip: (x) => near(x, ring, 40) || near(x, pylon, 12) });
+      const gb = (x) => Math.round(g[Math.round(wrapX(x))]) - 1;
+      for (let k = 0; k < 7; k++) { const x = ring - 30 + k * 10 + ((r() * 3) | 0); stamp(C, k % 3 === 1 ? 'stone2' : 'stone', x, gb(x), k > 3); }
+      // the pylon: iron lattice, snapped near the top, a rust slot in the palette
+      stamp(C, 'pylon', pylon, gb(pylon));
+      return [finish(A), finish(B), finish(C)];
     },
-    whispergrove(r) {   // violet hush: weeping willows, the sunken court's broken colonnade and spires
-      const A = mkLayer(0.08, [64, 52, 88], 0.8, 0.58); addNoise(A.h, r, 8, 0.5, 0.2); addNoise(A.h, r, 27, 0.15, 0);
-      const B = mkLayer(0.08, [46, 38, 68], 0.68, 0.84); addNoise(B.h, r, 16, 0.18, 0.14); addTrees(B.h, r, 0.1, 10, 0.3, 0.7, 7, 12, 'round');
-      const C = mkLayer(0.13, [34, 28, 54], 0.54, 0.95); addNoise(C.h, r, 12, 0.08, 0.06);
-      for (let k = 0; k < 34; k++) { const c = 60 + k * 54 + Math.floor(r() * 10); addBlock(C.h, c, 3, 0.25 + r() * 0.65, r() < 0.5 ? 0.6 : 0.05); if (r() < 0.2) addBlock(C.h, c, 40, 0.3, 0); }
-      for (let k = 0; k < 6; k++) addSpire(C.h, 150 + k * 330 + Math.floor(r() * 60), 3, 0.82 + r() * 0.18);
-      return [finish(A, r), finish(B, r), finish(C, r)];
+    whispergrove(r) {   // violet hills, weeping willows, the sunken court's broken colonnade and the marble spires
+      const A = mkLayer(P({ 1: [58, 48, 80], 2: [66, 54, 90], 3: [76, 62, 100], 4: [90, 76, 114], 5: [108, 94, 130] }), 0.58);
+      ridge(A, sum(5, noise(r, 8, 9), noise(r, 27, 3)));
+      const B = mkLayer(P({ 1: [36, 30, 54], 2: [44, 36, 64], 3: [56, 46, 78], 4: [72, 62, 94], 5: [92, 82, 112], 11: [40, 32, 46] }), 0.42);
+      wood(B, r, sum(2, noise(r, 15, 3)), 11, ['willow', 'willow', 'rt2'], { double: 0.3 });
+      const C = mkLayer(P({ 1: [30, 24, 46], 2: [44, 36, 62], 3: [62, 54, 82], 4: [86, 78, 106], 5: [118, 110, 138], 10: [104, 96, 124], 8: [50, 44, 70] }), 0.28);
+      const g = sum(1, noise(r, 12, 1.5));
+      for (let x = 0; x < AW; x++) for (let row = 0; row < Math.round(g[x]); row++) put(C, x, row, 2);
+      const gb = (x) => Math.round(g[Math.round(wrapX(x))]) - 1;
+      for (let x = 20; x < AW; x += 34 + r() * 24) {
+        const k = r();
+        if (k < 0.22) { stamp(C, 'arch', x, gb(x)); }
+        else if (k < 0.75) { for (let n = 0; n < 4; n++) { const xx = x + n * 6; if (r() < 0.8) stamp(C, ['col', 'colb', 'colc'][(r() * 3) | 0], xx, gb(xx)); } }
+        else stamp(C, 'willow', x, gb(x), r() < 0.5);
+      }
+      for (let k = 0; k < 6; k++) { const x = Math.round(AW * (0.07 + k * 0.161) + r() * 30); stamp(C, 'mspire', x, gb(x)); }
+      return [finish(A), finish(B), finish(C)];
     },
     deepwoods(r) {   // snow-shouldered far hills, black conifer forest, a broken tower stump
-      const A = mkLayer(0.1, [50, 54, 74], 0.8, 0.62, [150, 160, 184]); addNoise(A.h, r, 6, 0.6, 0.18); addNoise(A.h, r, 22, 0.2, 0);
-      const B = mkLayer(0.1, [24, 32, 36], 0.66, 0.9); addNoise(B.h, r, 15, 0.12, 0.1); addTrees(B.h, r, 0.08, 4, 0.35, 0.95, 3, 6, 'conifer');
-      const C = mkLayer(0.12, [18, 24, 28], 0.52, 0.97); addNoise(C.h, r, 24, 0.08, 0.06); addTrees(C.h, r, 0.06, 5, 0.3, 1, 3, 6, 'conifer');
-      addBlock(C.h, 900, 11, 0.7, 0.4);
-      return [finish(A, r), finish(B, r), finish(C, r)];
+      const A = mkLayer(P({ 1: [46, 48, 68], 2: [54, 56, 78], 3: [64, 66, 90], 4: [78, 80, 104], 5: [98, 100, 122], 6: [168, 172, 194], 7: [128, 132, 158] }), 0.58);
+      ridge(A, sum(5, noise(r, 6, 15), noise(r, 22, 4)), { snow: 0.7 });
+      const B = mkLayer(P({ 1: [14, 20, 24], 2: [20, 28, 32], 3: [26, 36, 40], 4: [36, 48, 50], 5: [50, 64, 62], 11: [26, 22, 22] }), 0.42);
+      wood(B, r, sum(2, noise(r, 15, 3)), 3, ['con1', 'con2', 'con3'], { double: 0.5 });
+      const C = mkLayer(P({ 1: [12, 16, 18], 2: [18, 24, 28], 3: [24, 32, 36], 4: [34, 44, 46], 5: [46, 58, 58], 10: [84, 84, 92], 8: [30, 30, 40], 11: [22, 18, 18] }), 0.26);
+      const tower = colOf(-0.38);
+      const g = wood(C, r, sum(1, noise(r, 24, 2)), 5, ['con1', 'con2', 'con3', 'con2'], { skip: (x) => near(x, tower, 9) });
+      stamp(C, 'stump', tower, Math.round(g[tower]) - 1);
+      return [finish(A), finish(B), finish(C)];
+    },
+    p20_downs(r) {   // the Watch Downs [PROPOSED]: chalk country west of the clearing, sheepfolds and thorn, woods below
+      const A = mkLayer(P({ 1: [50, 56, 70], 2: [60, 66, 82], 3: [72, 80, 96], 4: [86, 94, 110], 5: [106, 114, 128], 6: [172, 178, 192], 7: [134, 142, 162] }), 0.58);
+      ridge(A, sum(4, noise(r, 8, 13), noise(r, 29, 3)), { snow: 0.8 });
+      const B = mkLayer(P({ 1: [22, 30, 26], 2: [30, 42, 32], 3: [42, 56, 40], 4: [56, 72, 48], 5: [74, 90, 58], 10: [150, 146, 128], 11: [38, 30, 22] }), 0.4);
+      ridge(B, sum(3, noise(r, 11, 6), noise(r, 37, 2)), { fields: 5 });
+      for (let x = r() * 40; x < AW; x += 30 + r() * 60) stamp(B, r() < 0.5 ? 'rt3' : 'thorn', x, Math.max(0, B.top[Math.round(wrapX(x))] - 1));
+      const C = mkLayer(P({ 1: [22, 24, 22], 2: [34, 40, 32], 3: [48, 56, 42], 4: [64, 72, 52], 5: [84, 92, 64], 10: [138, 132, 116], 11: [40, 30, 22] }), 0.24);
+      const g = wood(C, r, sum(1, noise(r, 19, 2)), 26, ['thorn', 'rt3', 'rt1'], {});
+      for (let x = 60; x < AW; x += 160 + r() * 120) stamp(C, 'fold', x, Math.round(g[Math.round(wrapX(x))]) - 1);
+      return [finish(A), finish(B), finish(C)];
     },
     _default(r) {   // rolling country with a few lone trees
-      const A = mkLayer(0.085, [52, 56, 74], 0.8, 0.6); addNoise(A.h, r, 8, 0.5, 0.18); addNoise(A.h, r, 27, 0.15, 0);
-      const B = mkLayer(0.075, [38, 42, 52], 0.68, 0.84); addNoise(B.h, r, 13, 0.3, 0.1);
-      const C = mkLayer(0.08, [30, 32, 40], 0.56, 0.94); addNoise(C.h, r, 18, 0.16, 0.06); addTrees(C.h, r, 0.06, 40, 0.3, 0.6, 5, 8, 'round');
-      return [finish(A, r), finish(B, r), finish(C, r)];
+      const A = mkLayer(P({ 1: [50, 54, 70], 2: [58, 62, 80], 3: [68, 74, 92], 4: [82, 88, 106], 5: [100, 106, 124] }), 0.6);
+      ridge(A, sum(4, noise(r, 8, 9), noise(r, 27, 3)));
+      const B = mkLayer(P({ 1: [32, 36, 44], 2: [40, 44, 54], 3: [50, 54, 64], 4: [62, 66, 74], 5: [78, 82, 88] }), 0.44);
+      ridge(B, sum(2, noise(r, 13, 6)));
+      const C = mkLayer(P({ 1: [24, 26, 30], 2: [32, 34, 40], 3: [42, 44, 50], 4: [56, 58, 62], 5: [72, 74, 76], 11: [36, 30, 24] }), 0.28);
+      wood(C, r, sum(1, noise(r, 18, 2)), 40, ['rt1', 'rt3', 'thorn'], {});
+      return [finish(A), finish(B), finish(C)];
     },
   };
-  const panos = {};
-  function panorama(id) {
-    const key = RECIPES[id] ? id : '_default';
-    if (!panos[key]) panos[key] = RECIPES[key](mulberry(hashStr('pano:' + key)));
-    return panos[key];
+  // The LANDMARKS ridges (js/upgrades.js: the Grey Teeth, cliff shoulders, downs, per outdoor map) were drawn by
+  // the engine as smooth gradient silhouettes over the panorama. With panoramas on they are baked here instead, one
+  // pixel-art layer per ridge from the same numbers (bearing, width, height, peakiness, lumpiness, snow cap, colour,
+  // aerial distance), and the engine's own pass is handed an empty list for that map; with panoramas off the original
+  // lists are put back untouched, so the off state is the old frame exactly.
+  const EMPTY = Object.freeze([]);
+  const LM_ORIG = {};
+  const lmList = (id) => { if (typeof LANDMARKS === 'undefined') return null; const k = LM_ORIG[id] ? id : (LANDMARKS[id] && LANDMARKS[id] !== EMPTY ? id : '_default'); if (!LM_ORIG[k] && LANDMARKS[k] && LANDMARKS[k] !== EMPTY) LM_ORIG[k] = LANDMARKS[k]; return { key: k, list: LM_ORIG[k] || [] }; };
+  function syncLandmarks(id, want) {
+    if (typeof LANDMARKS === 'undefined') return;
+    if (want) { const L = lmList(id); if (L && LANDMARKS[L.key] !== EMPTY) LANDMARKS[L.key] = EMPTY; return; }
+    for (const k in LM_ORIG) if (LANDMARKS[k] !== LM_ORIG[k]) LANDMARKS[k] = LM_ORIG[k];
   }
-  for (const k in RECIPES) panorama(k);   // built once at load, never per frame
+  function landmarkLayer(lm, idx) {
+    const c = lm.c || [30, 26, 42], cap = lm.cap || null;
+    const sc = (k, add) => c.map((v) => clamp(v * k + add, 0, 255));
+    const L = mkLayer(P({ 1: sc(0.7, 0), 2: sc(0.84, 0), 3: c, 4: sc(1.18, 6), 5: sc(1.4, 12), 6: cap, 7: cap ? cap.map((v) => v * 0.8) : null }), clamp(0.2 + (lm.far || 0) * 0.5, 0, 0.82));
+    const hts = new Float32Array(AW), jag = mulberry(0x51A0 + idx * 977);
+    for (let x = 0; x < AW; x++) {
+      let da = (x + 0.5) / AW * TAU - Math.PI - lm.a; while (da > Math.PI) da -= TAU; while (da < -Math.PI) da += TAU;
+      const tt = Math.abs(da) / lm.aw; if (tt >= 1) continue;
+      let prof = Math.pow(1 - tt, lm.p || 1.6);
+      if (lm.ridge) prof *= 1 + lm.ridge * Math.sin(tt * 11 + (lm.seed || 0) * 2.7) * 0.5;
+      hts[x] = Math.max(0, prof) * lm.h * 150;
+    }
+    // a little crag along the crest, so a range reads as rock and not as a curve
+    const crag = Float32Array.from(hts);
+    for (let x = 0, run = 0, off = 0; x < AW; x++) { if (--run <= 0) { run = 3 + ((jag() * 7) | 0); off = jag() < 0.55 ? 0 : jag() < 0.6 ? 1 : -1; } if (hts[x] > 6) crag[x] += off; }
+    ridge(L, crag, { shape: hts, snow: cap ? 1 - (lm.capH || 0.3) : 0, rock: lm.h > 0.15 });
+    L.far = lm.far || 0;
+    return finish(L);
+  }
+  const panos = {}, recipeCache = {};
+  // the layers for a map, farthest first: its baked LANDMARKS ridges, then the recipe's far, middle and near layers
+  function panorama(id) {
+    const key = RECIPES[id] ? id : '_default', lmk = lmList(id), ck = key + '|' + (lmk ? lmk.key : '');
+    if (panos[ck]) return panos[ck];
+    if (!recipeCache[key]) recipeCache[key] = RECIPES[key](mulberry(hashStr('pano:' + key)));
+    const ridges = lmk ? lmk.list.map(landmarkLayer) : [];
+    const all = ridges.concat(recipeCache[key]).sort((a, b) => b.mix - a.mix);
+    panos[ck] = all;
+    return all;
+  }
+  for (const k in RECIPES) recipeCache[k] = RECIPES[k](mulberry(hashStr('pano:' + k)));   // built once at load, never per frame
+  // the ridge layers are baked just after load, once every module has registered its maps' LANDMARKS
+  setTimeout(() => { try { for (const k of ['oakhaven', 'clearing', 'whispergrove', 'deepwoods', '_default']) panorama(k); } catch (e) { /* drawn lazily instead */ } }, 0);
 
   // per-frame state kept outside the draw so nothing allocates
-  let bi = new Int16Array(320), biDir = NaN, biW = 0, biP = NaN;
-  const lut = new Uint8Array(3 * 4 * 16 * 3);       // layer x tone x step x rgb, rebuilt each frame
+  let ai = new Int16Array(320), aiDir = NaN, aiW = 0, aiP = NaN;
+  let lut = new Uint8Array(8 * NSLOT * AH * 3);   // layer x slot x art row x rgb, rebuilt each frame
   function drawPanorama(F) {
     stats.panoPx = 0;
-    if (!F.outdoor || !on('panoramas')) return;
-    const { fb, mbuf, w, h, horizon } = F;
+    if (!F.outdoor) return;
+    const want = on('panoramas');
+    syncLandmarks(F.map && F.map.id, want);
+    if (!want) return;
+    const { fb, mbuf, w, h, S, horizon } = F;
     if (horizon < 1) return;
-    const layers = panorama(F.map && F.map.id);
-    // bearing index of every column, recomputed only when the view turns
-    if (bi.length !== w) { bi = new Int16Array(w); biDir = NaN; }
-    if (biDir !== F.cam.dir || biW !== w || biP !== F.planeX) {
-      for (let x = 0; x < w; x++) { const cx = 2 * x / w - 1; const ang = Math.atan2(F.dirY + F.planeY * cx, F.dirX + F.planeX * cx); bi[x] = (((ang / TAU + 0.5) * PN) | 0) & (PN - 1); }
-      biDir = F.cam.dir; biW = w; biP = F.planeX;
+    const layers = panorama(F.map && F.map.id), NL = layers.length;
+    if (lut.length < NL * NSLOT * AH * 3) lut = new Uint8Array(NL * NSLOT * AH * 3);
+    // art column of every screen column, recomputed only when the view turns
+    if (ai.length !== w) { ai = new Int16Array(w); aiDir = NaN; }
+    if (aiDir !== F.cam.dir || aiW !== w || aiP !== F.planeX) {
+      for (let x = 0; x < w; x++) { const cx = 2 * (x + 0.5) / w - 1; const ang = Math.atan2(F.dirY + F.planeY * cx, F.dirX + F.planeX * cx); ai[x] = (((ang / TAU + 0.5) * AW) | 0) % AW; }
+      aiDir = F.cam.dir; aiW = w; aiP = F.planeX;
     }
     // the air: half the sky's own colour at the horizon, half the map's fog (which already carries weather)
     const yh = clamp(horizon, 0, h - 1) * w;
@@ -207,52 +387,37 @@ const SKY = (() => {
     const hr = sr / 6 + F.fogR * 0.5, hg = sg / 6 + F.fogG * 0.5, hb = sb / 6 + F.fogB * 0.5;
     const dayM = (0.34 + 0.66 * F.skyDay) * (1 - F.wx.dark * 0.45);
     const hazeAdd = F.wx.haze * 0.7;
-    for (let li = 0; li < 3; li++) {
+    // windows in the near layer glow after dark (none in a sea-fog)
+    const night = nightOf(F), glow = night > 0.25 && F.wx.haze < 0.25 ? night * (1 - F.wx.haze * 3) * 0.85 : 0;
+    for (let li = 0; li < NL; li++) {
       const L = layers[li];
-      for (let tn = 0; tn < 4; tn++) {
-        const tf = (0.86 + 0.09 * tn) * dayM;
-        for (let s = 0; s < 16; s++) {
-          const v = (s + 0.5) / 16;
-          let r = L.col[0], g = L.col[1], b = L.col[2];
-          if (L.cap && v > 0.68) { const k = (v - 0.68) / 0.32 * 0.55; r += (L.cap[0] - r) * k; g += (L.cap[1] - g) * k; b += (L.cap[2] - b) * k; }
-          // soft wash: the base of each layer drowns in ground haze, the crest stays clearer
-          const mix = clamp(L.mix + hazeAdd + (1 - v) * 0.28 - v * 0.05, 0, 0.96);
-          const o = ((li * 4 + tn) * 16 + s) * 3;
-          lut[o] = r * tf * (1 - mix) + hr * mix; lut[o + 1] = g * tf * (1 - mix) + hg * mix; lut[o + 2] = b * tf * (1 - mix) + hb * mix;
+      for (let s = 1; s < NSLOT; s++) {
+        const c = L.pal[s]; if (!c) continue;
+        for (let row = 0; row < AH; row++) {
+          const v = (row + 0.5) / 18;   // rows above the base climb out of the ground haze
+          let mix = clamp(L.mix + hazeAdd + Math.max(0, 1 - v) * 0.2 - Math.min(1, v) * 0.04, 0, 0.96);
+          let r = c[0] * dayM, g = c[1] * dayM, b = c[2] * dayM;
+          if (s === 8 && glow > 0) { r += (255 - r) * glow; g += (178 - g) * glow; b += (70 - b) * glow; mix *= 1 - glow * 0.8; }
+          const o = ((li * NSLOT + s) * AH + row) * 3;
+          lut[o] = r * (1 - mix) + hr * mix; lut[o + 1] = g * (1 - mix) + hg * mix; lut[o + 2] = b * (1 - mix) + hb * mix;
         }
       }
     }
     const yEnd = Math.min(horizon, h - 1);
     let n = 0;
-    for (let li = 0; li < 3; li++) {
-      const L = layers[li], a8 = (L.a * 256) | 0, a4 = a8 >> 1, span = L.maxH * h;
-      const lb = li * 64 * 3;
+    for (let li = 0; li < NL; li++) {
+      const L = layers[li], art = L.art, top = L.top, lb = li * NSLOT;
       for (let x = 0; x < w; x++) {
-        const idx = bi[x], hg = L.h[idx]; if (hg <= 0.004) continue;
-        const rows = (hg * span + 0.5) | 0; if (rows < 1) continue;
-        const yTop = horizon - rows + 1, y0 = yTop < 0 ? 0 : yTop;
-        const tb = lb + L.tone[idx] * 16 * 3;
-        for (let y = y0; y <= yEnd; y++) {
-          const o = y * w + x; if (mbuf[o] !== 1) continue;
-          const s = (((horizon - y) / rows) * 16) | 0, q = tb + (s > 15 ? 15 : s) * 3;
-          const al = y === yTop ? a4 : a8;
-          const px = fb[o], pr = px & 255, pg = (px >> 8) & 255, pb = (px >> 16) & 255;
-          fb[o] = (255 << 24) | ((pb + (((lut[q + 2] - pb) * al) >> 8)) << 16) | ((pg + (((lut[q + 1] - pg) * al) >> 8)) << 8) | (pr + (((lut[q] - pr) * al) >> 8));
-          n++;
-        }
-      }
-    }
-    // lit windows in the old town after dark
-    const night = nightOf(F), L2 = layers[2];
-    if (L2.lights && night > 0.25 && F.wx.haze < 0.25) {
-      const aw = night * (1 - F.wx.haze * 3) * 0.85;
-      for (let k = 0; k < L2.lights.length; k++) {
-        const lt = L2.lights[k], x = projectX(F, (lt.i / PN - 0.5) * TAU, 0.02); if (x < 0) continue;
-        const y = (horizon - lt.f * L2.maxH * h) | 0, xi = x | 0;
-        for (let dy = 0; dy < F.S; dy++) for (let dx = 0; dx < F.S; dx++) {
-          const yy = y + dy, xx = xi + dx; if (yy < 0 || yy > yEnd || xx >= w) continue;
-          const o = yy * w + xx, px = fb[o], pr = px & 255, pg = (px >> 8) & 255, pb = (px >> 16) & 255;
-          fb[o] = (255 << 24) | ((pb + ((70 - pb) * aw)) << 16) | ((pg + ((178 - pg) * aw)) << 8) | (pr + ((255 - pr) * aw));
+        const a = ai[x], tp = top[a]; if (!tp) continue;
+        for (let row = 0; row < tp; row++) {
+          const s = art[row * AW + a]; if (!s) continue;
+          const q = ((lb + s) * AH + row) * 3, col = (255 << 24) | (lut[q + 2] << 16) | (lut[q + 1] << 8) | lut[q];
+          const yb = yEnd - row * S;   // this art row's S screen rows, counted up from the horizon
+          for (let k = 0; k < S; k++) {
+            const y = yb - k; if (y < 0) break;
+            const o = y * w + x; if (mbuf[o] !== 1) continue;
+            fb[o] = col; n++;
+          }
         }
       }
     }
@@ -274,27 +439,44 @@ const SKY = (() => {
     if (t < start || t >= start + FLY.dur) return null;
     return { start, u: (t - start) / FLY.dur, b0: hash01(k, 2) * TAU - Math.PI, dir: hash01(k, 3) < 0.5 ? -1 : 1, k, forced: false };
   }
-  const ship = { S: 0, dw: 0, dh: 0, r: null, g: null, b: null, a: null };
-  // area-average the Kestrel sprite down to a few pixels once per render scale
+  // The ship is hand-drawn pixel art (Phase 20): the Drift-Kestrel as the game paints her at the crash, a timber
+  // hull with a bowsprit, two masts under square sails, the brass lift-tank slung along her side, and lanterns at
+  // bow and stern. Bow to the right; the art is mirrored when she flies the other way. One art pixel is drawn as an
+  // S x S block. The two red pennants are [PROPOSED].
+  const SHIP_ART = [
+    '............ppm.........ppm.............',
+    '...........p..mllllllllpllm.............',
+    '...........occmCCo.....occmCCo..........',
+    '..........ccccmCCCC...ccccmCCCC.........',
+    '..........RRRRmRRRR...RRRRmRRRR.........',
+    '..........ccccmCCCC...ccccmCCCCl........',
+    '........ll.cccmCCCC....cccmCCCC.l.......',
+    '.......l......m...l....l..m......ll....m',
+    '...oooooo.....m...l....l..m........lmmmL',
+    '..Lowwwwrrrrrrrrrrrrrrrrrrrrrrrrrrrml...',
+    '...owgwgwwwwoYYYSYYYSYYYowwwwwwwwwwoo...',
+    '....owwwwwwoBBBBSBBBSBBBBowwwwwwwwwwo...',
+    '.....oWWWWWWoDDDSDDDSDDDoWWWWWWWWWWo....',
+    '......owwwwwwwwwwwwwwwwwwwwwwwwwwo......',
+    '........okkkkkkkkkkkkkkkkkkkkkko........',
+    '...........ooooooooooooooooo............',
+  ];
+  const SHIP_PAL = {
+    o: [36, 26, 18], w: [90, 58, 32], W: [122, 82, 48], k: [46, 31, 18], r: [160, 120, 64], m: [74, 50, 32],
+    c: [200, 184, 150], C: [156, 140, 108], R: [126, 112, 86], p: [138, 42, 34], l: [60, 48, 36],
+    Y: [224, 192, 112], B: [176, 138, 60], D: [110, 82, 32], S: [58, 42, 24], g: [224, 176, 80], L: [255, 208, 112],
+  };
+  const SW = SHIP_ART[0].length, SHH = SHIP_ART.length;
+  const ship = { S: 0, dw: 0, dh: 0, r: null, g: null, b: null, a: null, lamps: [] };
   function buildShip(S) {
-    const sp = typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites.kestrel; if (!sp) return false;
-    const dw = 30 * S, dh = Math.max(2, Math.round(dw * sp.h / sp.w)), n = dw * dh;
-    const r = new Uint8Array(n), g = new Uint8Array(n), b = new Uint8Array(n), a = new Uint8Array(n);
-    const sx = sp.w / dw, sy = sp.h / dh;
-    for (let y = 0; y < dh; y++) for (let x = 0; x < dw; x++) {
-      let tr = 0, tg = 0, tb = 0, ta = 0, cnt = 0;
-      for (let yy = (y * sy) | 0, ye = Math.max(yy + 1, ((y + 1) * sy) | 0); yy < ye; yy++) for (let xx = (x * sx) | 0, xe = Math.max(xx + 1, ((x + 1) * sx) | 0); xx < xe; xx++) {
-        let px = sp.data[yy * sp.w + xx], al = px >>> 24;
-        // willow foliage is olive (green close to red); the bronze hull and the mast are what should read at this size
-        if (al > 0 && ((px >> 8) & 255) >= (px & 255) - 4) al *= 0.35;
-        ta += al; cnt++;
-        if (al > 0) { tr += (px & 255) * al; tg += ((px >> 8) & 255) * al; tb += ((px >> 16) & 255) * al; }
-      }
-      const o = y * dw + x;
-      if (ta > 0) { r[o] = tr / ta; g[o] = tg / ta; b[o] = tb / ta; }
-      a[o] = ta / cnt;
+    const dw = SW * S, dh = SHH * S, n = dw * dh;
+    const r = new Uint8Array(n), g = new Uint8Array(n), b = new Uint8Array(n), a = new Uint8Array(n), lamps = [];
+    for (let j = 0; j < SHH; j++) for (let i = 0; i < SW; i++) {
+      const ch = SHIP_ART[j][i], c = SHIP_PAL[ch]; if (!c) continue;
+      if (ch === 'L') lamps.push([i * S, j * S]);
+      for (let yy = 0; yy < S; yy++) for (let xx = 0; xx < S; xx++) { const o = (j * S + yy) * dw + i * S + xx; r[o] = c[0]; g[o] = c[1]; b[o] = c[2]; a[o] = 255; }
     }
-    Object.assign(ship, { S, dw, dh, r, g, b, a });
+    Object.assign(ship, { S, dw, dh, r, g, b, a, lamps });
     return true;
   }
   function drawFlyover(F) {
@@ -316,7 +498,7 @@ const SKY = (() => {
     const night = nightOf(F);
     const dayM = (0.34 + 0.66 * F.skyDay) * (1 - F.wx.dark * 0.45);
     // hazed: the ship is only ever part-covered, and the weather thins it further
-    const dens = 0.62 * fade * clamp(1 - F.wx.haze * 1.6, 0.15, 1);
+    const dens = 0.8 * fade * clamp(1 - F.wx.haze * 1.6, 0.15, 1);
     const x0 = Math.round(xc - dw / 2), y0 = Math.round(yc - dh / 2), flip = f.dir < 0;
     let n = 0;
     for (let y = 0; y < dh; y++) {
@@ -331,13 +513,16 @@ const SKY = (() => {
         n++;
       }
     }
-    // after dark she carries a blinking lamp at the bow
-    if (night > 0.3 && (F.animT % 1.6) < 0.25 && F.wx.haze < 0.3) {
-      const lx = x0 + (flip ? 2 : dw - 3), ly = y0 + (dh >> 1);
-      for (let dy = 0; dy < S; dy++) for (let dx = 0; dx < S; dx++) {
-        const yy = ly + dy, xx = lx + dx; if (yy < 0 || yy >= horizon || xx < 0 || xx >= w) continue;
-        const o = yy * w + xx; if (mbuf[o] !== 1) continue;
-        fb[o] = (255 << 24) | (60 << 16) | (70 << 8) | 255; n++;
+    // after dark her lanterns burn (the bow lamp blinks, as it always has)
+    if (night > 0.3 && F.wx.haze < 0.3) {
+      for (let li = 0; li < ship.lamps.length; li++) {
+        const lp = ship.lamps[li]; if (li === 0 && (F.animT % 1.6) >= 0.25) continue;
+        const lx = x0 + (flip ? dw - S - lp[0] : lp[0]), ly = y0 + lp[1];
+        for (let dy = 0; dy < S; dy++) for (let dx = 0; dx < S; dx++) {
+          const yy = ly + dy, xx = lx + dx; if (yy < 0 || yy >= horizon || xx < 0 || xx >= w) continue;
+          const o = yy * w + xx; if (mbuf[o] !== 1) continue;
+          fb[o] = (255 << 24) | (70 << 16) | (180 << 8) | 255; n++;
+        }
       }
     }
     last.drawn = n; stats.flyPx = n;
