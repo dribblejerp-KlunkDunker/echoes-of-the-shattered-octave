@@ -91,7 +91,7 @@ const PROPS14 = (() => {
   const KIND_COL = { glass: [70, 220, 210], song: [235, 190, 80], synod: [235, 238, 245], hush: [140, 140, 140] };
   const KEY = 'octave.props14.v1';
   const set = { mirrors: true, shimmer: true, breaks: true };
-  const stats = { mirrorMs: 0, mirrorFrames: 0, mirrorPx: 0, shimmerMs: 0, shimmerFrames: 0, shimmerPx: 0, smashed: 0, partial: 0, loot: 0, crimes: 0, shades: 0, errors: 0, captions: 0 };
+  const stats = { mirrorMs: 0, mirrorFrames: 0, mirrorPx: 0, shimmerMs: 0, shimmerFrames: 0, traces: 0, shimmerPx: 0, smashed: 0, partial: 0, loot: 0, crimes: 0, shades: 0, errors: 0, captions: 0 };
 
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
   const hasG = () => typeof G !== 'undefined' && G && G.map && G.player && typeof Engine !== 'undefined';
@@ -282,7 +282,6 @@ const PROPS14 = (() => {
     return [cr > 90 ? 90 : cr, cg > 90 ? 90 : cg, cb > 90 ? 90 : cb];
   }
   const TEXN = 64;
-  let rowGen = new Int32Array(0), rowR = null, rowG = null, rowB = null, gen = 0;       // the solved colour of each block row of the current block column
   const WOOD = [0xff2a3f5a, 0xff3f5f84]; // frame wood, ABGR (dark / light)
   function drawMirror(F, m) {
     const g = m.g, st = m.st, map = F.map, cam = F.cam, w = F.w, h = F.h, fb = F.fb, dbuf = F.dbuf, mbuf = F.mbuf, horizon = F.horizon;
@@ -312,10 +311,11 @@ const PROPS14 = (() => {
       }
     }
     if (xb < xa) return 0;
-    // lights on the wall face and in the room
-    const lt = lampTint(F, cam.x, cam.y);
+    // light, as the engine's own passes give it: the room's point lights (colour) and the dark-interiors factor
+    const pl = F.ptLights, dkOn = !F.outdoor && GFX.darkInteriors !== false && !!pl && typeof LIGHTING !== 'undefined';
+    const dkFloor = dkOn && LIGHTING.FLOOR != null ? LIGHTING.FLOOR : 0.45;
     const frontX = ax === 0 ? g.plane + nx * 0.3 : g.lat0 + 0.5, frontY = ax === 0 ? g.lat0 + 0.5 : g.plane + ny * 0.3;
-    const lf = lampTint(F, frontX, frontY);
+    lightAt(pl, dkOn, dkFloor, frontX, frontY); const lfR = LR, lfG = LG, lfB = LB, lfD = LD;
     // ---- who is in the reflected room
     nCand = 0;
     const shadeOn = st.alpha > 0.01 && st.spot && st.phase > 0;
@@ -324,13 +324,14 @@ const PROPS14 = (() => {
     const ents = G.ents || map.entities;
     const mcx = ax0(m), mcy = ay0(m);
     const lampOut = shadeOn && st.variant === 'lamp' && st.alpha > 0.3;
-    const project = (ex, ey, sp, scale, zBase, dark, light, strength) => {
+    const project = (ex, ey, sp, scale, zBase, dark, light, strength, fig) => {
       const sx = ex - Ex, sy = ey - Ey, trY = invDet * (-pvy * sx + pvx * sy);
       if (trY <= 0.1) return;
       const trX = invDet * (dvy * sx - dvx * sy);
       const Hh = scale * (sp.hs || 1), span = 2 * h * Hh * sp.w / (sp.h * trY * w);
       const cxn = trX / trY, l = cxn - (sp.cx == null ? 0.5 : sp.cx) * span;
-      addCand({ trY, l, r: l + span, span, H: Hh, zb: zBase, sp, dark, light, str: strength, d: Math.sqrt(sx * sx + sy * sy) });
+      lightAt(pl, dkOn, dkFloor, ex, ey); let lf = LD; if (fig && lf < 0.8) lf = 0.8;
+      addCand({ trY, l, r: l + span, span, H: Hh, zb: zBase, sp, dark, light, str: strength, d: Math.sqrt(sx * sx + sy * sy), lf, tr: LR, tg: LG, tb: LB, fig: !!fig });
     };
     for (let i = 0; i < ents.length; i++) {
       const e = ents[i];
@@ -347,24 +348,74 @@ const PROPS14 = (() => {
     // the player: where the eye is, a figure that faces the glass
     {
       const f = figureFor(), sw = hasG() && G.attack && G.attack.t > 0;
-      project(cam.x, cam.y, sw ? f.swing : f.idle, 0.56, 0, false, 0, 0);
+      project(cam.x, cam.y, sw ? f.swing : f.idle, 0.86, 0, false, 0, 0, true);
     }
     if (shadeOn) project(st.spot.x, st.spot.y, shadeArt(), 1.12, 0, true, 0, st.alpha);
     if (nCand > 1) { const part = cands.slice(0, nCand).sort(sorter); for (let i = 0; i < nCand; i++) cands[i] = part[i]; }
-    // ---- the columns. The picture in the glass is solved once per B x B block (B = 2 at 1x, 4 at 2x): it is a small, low-res
-    //      reflection; the frame, the depth test and the glass finish are done per pixel.
+    // ---- is last frame's picture still true? (same eye, same room contents, same lights)
+    let sig = 0;
+    for (let i = 0; i < nCand; i++) { const c = cands[i]; sig += (c.trY * 13.1 + c.l * 7.7 + c.zb * 3.3 + c.H * 5.1 + spriteId(c.sp) * 0.37 + c.str * 2.9 + c.light * 1.7 + c.lf * 0.9) * (1 + i * 0.013); }
+    if (pl) for (let i = 0; i < pl.length; i++) sig += pl[i].cr * 0.011 + pl[i].cg * 0.007 + pl[i].r * 0.31;
     const stdim = lampOut ? 1 - 0.3 * st.alpha : 1;
+    const KEY = keyArr; KEY[0] = cam.x; KEY[1] = cam.y; KEY[2] = dirX; KEY[3] = dirY; KEY[4] = horizon; KEY[5] = w; KEY[6] = h; KEY[7] = amb; KEY[8] = F.fogDist; KEY[9] = sig; KEY[10] = stdim; KEY[11] = nCand; KEY[12] = plX; KEY[13] = dkOn ? 1 : 0;
+    let C = m.cache;
+    if (!C || C.w !== w || C.h !== h) C = m.cache = { w, h, buf: new Uint32Array(w * h), tc: new Float32Array(w), key: new Float64Array(16), ya: 0, yb: -1, age: 99 };
+    let same = C.age < 8; if (same) for (let i = 0; i < 14; i++) if (C.key[i] !== KEY[i]) { same = false; break; }
+    const buf = C.buf, tc = C.tc;
+    if (!same) {
+      stats.traces++;
+      for (let i = 0; i < 14; i++) C.key[i] = KEY[i];
+      C.age = 0;
+      if (C.yb >= C.ya) buf.fill(0, C.ya * w, (C.yb + 1) * w);
+      tc.fill(0);
+      traceMirror(F, m, C, xa, xb, cands, nCand, floorTex, ceilTex, stdim, lfR, lfG, lfB, lfD, pl, dkOn, dkFloor);
+    } else C.age++;
+    // ---- put it on the frame, behind anything that stands in front of the glass
     let painted = 0;
-    const gu0 = 0.2, gu1 = 0.8, gv0 = 0.17, gv1 = 0.83;      // the glass inside the frame (u along the face, v from the top)
-    const fu0 = 0.12, fu1 = 0.88, fv0 = 0.1, fv1 = 0.9;       // the frame
-    const grid = map.cells, mw = map.w, mh = map.h, gapD = Math.abs(g.plane - (ax === 0 ? cam.x : cam.y)), B = (F.S === 2 ? 2 : 1) * (gapD < 1.2 ? 8 : gapD < 2.2 ? 5 : 3), half = B >> 1;   // integration: nose to the glass uses bigger blocks (it fills the screen; cost was 3-10 ms)
-    const nRows = ((h / B) | 0) + 2;
-    if (rowGen.length < nRows) { rowGen = new Int32Array(nRows); rowR = new Float32Array(nRows); rowG = new Float32Array(nRows); rowB = new Float32Array(nRows); gen = 0; }
-    const lampR = lt[0] * 0.5 + 3, lampG = lt[1] * 0.5 + 4, lampB = lt[2] * 0.5 + 6;
+    const ya = C.ya, yb = C.yb;
+    for (let x = xa; x <= xb; x++) {
+      const t = tc[x]; if (t === 0) continue;
+      for (let y = ya; y <= yb; y++) {
+        const o = y * w + x, c = buf[o]; if (c === 0) continue;
+        if (Math.abs(dbuf[o] - t) > 0.004 || mbuf[o] !== 4) continue;
+        fb[o] = c; painted++;
+      }
+    }
+    return painted;
+  }
+  const keyArr = new Float64Array(16);
+  const spriteIds = new WeakMap(); let spriteN = 0;
+  const spriteId = (sp) => { let v = spriteIds.get(sp); if (v === undefined) { v = ++spriteN; spriteIds.set(sp, v); } return v; };
+  // light at a world point: colour of the room's point lights, and the dark-interiors pass's brightness factor there
+  let LR = 0, LG = 0, LB = 0, LD = 1;
+  function lightAt(pl, dkOn, dkFloor, wx, wy) {
+    let cr = 0, cg = 0, cb = 0, sum = 0;
+    if (pl) for (let i = 0; i < pl.length; i++) {
+      const L = pl[i], dx = wx - L.x, dy = wy - L.y, d2 = dx * dx + dy * dy, r2 = L.r * L.r;
+      if (d2 >= r2) continue;
+      if (L.vis) { const ii = (wx | 0) - L.vox, jj = (wy | 0) - L.voy; if (!(ii >= 0 && jj >= 0 && ii < L.vd && jj < L.vd && L.vis[jj * L.vd + ii] === 1)) continue; }
+      const k = 1 - d2 / r2, kk = k * k; cr += L.cr * kk; cg += L.cg * kk; cb += L.cb * kk;
+      const str = (L.cr + L.cg + L.cb) * 0.01; sum += k * (str > 1 ? 1 : str) * 1.35;
+    }
+    LR = cr > 90 ? 90 : cr; LG = cg > 90 ? 90 : cg; LB = cb > 90 ? 90 : cb;
+    LD = dkOn ? dkFloor + (1 - dkFloor) * (sum > 1 ? 1 : sum) : 1;
+  }
+  let sR = new Float32Array(160), sG = new Float32Array(160), sB = new Float32Array(160);
+  // The reflection: one traced ray per screen column across the glass, a solved colour every R rows down it, rows in between interpolated.
+  function traceMirror(F, m, C, xa, xb, cands, nCand, floorTex, ceilTex, stdim, lfR, lfG, lfB, lfD, pl, dkOn, dkFloor) {
+    const g = m.g, map = F.map, cam = F.cam, w = F.w, h = F.h, horizon = F.horizon, ax = g.axis, nx = g.nx, ny = g.ny;
+    const tex = Engine.textures, fogMul = 1 / F.fogDist, amb = F.ambient, buf = C.buf, tc = C.tc;
+    const dirX = F.dirX, dirY = F.dirY, plX = F.planeX, plY = F.planeY;
+    const grid = map.cells, mw = map.w, mh = map.h;
+    const gu0 = 0.2, gu1 = 0.8, gv0 = 0.17, gv1 = 0.83, fu0 = 0.12, fu1 = 0.88, fv0 = 0.1, fv1 = 0.9;
     const gSpan = 1 / (gu1 - gu0), gvSpan = 1 / (gv1 - gv0);
-    // per-block state (assigned when a block's first valid column is met)
-    let lastBlk = -1, bCamX = 0, bT = 0, bPx = 0, bPy = 0, bRx = 0, bRy = 0, bTw = 0, bW0 = 0, bWtex = null, bWu = 0, nc = 0;
-    const solve = (yy, yi) => {
+    const S = F.S || 1, bigR = (h / (Math.abs(g.plane - (ax === 0 ? cam.x : cam.y)) + 0.01)) > 110 * S;
+    const R = (bigR ? 4 : 3) * S, invR = 1 / R;
+    if (sR.length < ((h / R) | 0) + 4) { const n = ((h / R) | 0) + 8; sR = new Float32Array(n); sG = new Float32Array(n); sB = new Float32Array(n); }
+    // per-column state
+    let bCamX = 0, bT = 0, bPx = 0, bPy = 0, bRx = 0, bRy = 0, bTw = 0, bW0 = 0, bWtex = null, bWu = 0, nc = 0, wR = 0, wG = 0, wB = 0, wD = 1;
+    let yMin = h, yMax = -1;
+    const solve = (yy, k) => {
       const kk = (yy - horizon) / h;
       let pr = 0, pg = 0, pb = 0, got = false, darkA = 0;
       for (let i = 0; i < nc; i++) {
@@ -375,28 +426,31 @@ const PROPS14 = (() => {
         const px = sp.data[ty * sp.w + tx], a = px >>> 24;
         if (c.dark) { const da = (a / 255) * c.str; if (da > darkA) darkA = da; continue; }
         if (a <= 100) continue;
-        let f = 1 - c.d * fogMul; if (f < 0) f = 0; f = amb + (1 - amb) * f; if (c.light && c.light > f) f = c.light;
-        pr = (px & 255) * f; pg = ((px >> 8) & 255) * f; pb = ((px >> 16) & 255) * f; got = true; break;
+        let f = 1 - c.d * fogMul; if (f < 0) f = 0; f = amb + (1 - amb) * f; if (c.fig && f < 0.72) f = 0.72;
+        let dk = c.lf; if (c.light) { if (c.light > f) f = c.light; dk = 1; }
+        pr = ((px & 255) * f + c.tr) * dk; pg = (((px >> 8) & 255) * f + c.tg) * dk; pb = (((px >> 16) & 255) * f + c.tb) * dk; got = true; break;
       }
       if (!got) {
         const z = 0.5 - kk * bTw;
         if (bWtex && z >= 0 && z < 1) {
           const px = bWtex[(((1 - z) * TEXN) & 63) * TEXN + bWu];
-          pr = (px & 255) * bW0; pg = ((px >> 8) & 255) * bW0; pb = ((px >> 16) & 255) * bW0;
+          pr = ((px & 255) * bW0 + wR) * wD; pg = (((px >> 8) & 255) * bW0 + wG) * wD; pb = (((px >> 16) & 255) * bW0 + wB) * wD;
         } else if (z < 0 && kk > 0) {
           const Tf = 0.5 / kk, d = Tf - bT, fx = bPx + d * bRx, fy = bPy + d * bRy;
           let f = 1 - Tf * fogMul; if (f < 0) f = 0; f = amb + (1 - amb) * f;
-          if (floorTex) { const px = floorTex[(((fy * TEXN) | 0) & 63) * TEXN + (((fx * TEXN) | 0) & 63)]; pr = (px & 255) * f; pg = ((px >> 8) & 255) * f; pb = ((px >> 16) & 255) * f; }
-          else { pr = 30 * f; pg = 26 * f; pb = 22 * f; }
+          lightAt(pl, dkOn, dkFloor, fx, fy);
+          if (floorTex) { const px = floorTex[(((fy * TEXN) | 0) & 63) * TEXN + (((fx * TEXN) | 0) & 63)]; pr = ((px & 255) * f + LR) * LD; pg = (((px >> 8) & 255) * f + LG) * LD; pb = (((px >> 16) & 255) * f + LB) * LD; }
+          else { pr = 30 * f * LD; pg = 26 * f * LD; pb = 22 * f * LD; }
         } else if (z >= 1 && kk < 0) {
           const Tc = 0.5 / -kk, d = Tc - bT, fx = bPx + d * bRx, fy = bPy + d * bRy;
           let f = 1 - Tc * fogMul; if (f < 0) f = 0; f = amb + (1 - amb) * f;
-          if (ceilTex) { const px = ceilTex[(((fy * TEXN) | 0) & 63) * TEXN + (((fx * TEXN) | 0) & 63)]; pr = (px & 255) * f; pg = ((px >> 8) & 255) * f; pb = ((px >> 16) & 255) * f; }
-          else { pr = 14 * f; pg = 12 * f; pb = 10 * f; }
+          lightAt(pl, dkOn, dkFloor, fx, fy);
+          if (ceilTex) { const px = ceilTex[(((fy * TEXN) | 0) & 63) * TEXN + (((fx * TEXN) | 0) & 63)]; pr = ((px & 255) * f + LR) * LD; pg = (((px >> 8) & 255) * f + LG) * LD; pb = (((px >> 16) & 255) * f + LB) * LD; }
+          else { pr = 14 * f * LD; pg = 12 * f * LD; pb = 10 * f * LD; }
         } else { pr = F.fogR * 0.5; pg = F.fogG * 0.5; pb = F.fogB * 0.5; }
       }
-      if (darkA > 0) { const k = 1 - darkA * 0.92; pr *= k; pg *= k; pb *= k; }
-      rowR[yi] = pr; rowG[yi] = pg; rowB[yi] = pb;
+      if (darkA > 0) { const q = 1 - darkA * 0.92; pr *= q; pg *= q; pb *= q; }
+      sR[k] = pr; sG[k] = pg; sB[k] = pb;
     };
     for (let x = xa; x <= xb; x++) {
       const camX = 2 * x / w - 1, rdx = dirX + plX * camX, rdy = dirY + plY * camX;
@@ -406,67 +460,68 @@ const PROPS14 = (() => {
       const lineH = (h / t) | 0; if (lineH < 4) continue;
       const ds = -lineH / 2 + horizon, invL = 1 / lineH;
       const y0 = Math.max(0, Math.ceil(ds + lineH * fv0)), y1 = Math.min(h - 1, Math.floor(ds + lineH * fv1)); if (y1 < y0) continue;
-      const blk = (x / B) | 0;
-      if (blk !== lastBlk) {
-        lastBlk = blk; gen++;
-        bCamX = camX; bT = t;
-        // the reflected ray: bounce, then walk the grid
-        const Px = cam.x + t * rdx, Py = cam.y + t * rdy, rx = ax === 0 ? -rdx : rdx, ry = ax === 1 ? -rdy : rdy;
-        bPx = Px; bPy = Py; bRx = rx; bRy = ry;
-        let mapX = (Px + nx * 0.02) | 0, mapY = (Py + ny * 0.02) | 0;
-        const ddx = rx === 0 ? 1e30 : Math.abs(1 / rx), ddy = ry === 0 ? 1e30 : Math.abs(1 / ry);
-        let sdx, sdy, stX, stY;
-        if (rx < 0) { stX = -1; sdx = (Px - mapX) * ddx; } else { stX = 1; sdx = (mapX + 1 - Px) * ddx; }
-        if (ry < 0) { stY = -1; sdy = (Py - mapY) * ddy; } else { stY = 1; sdy = (mapY + 1 - Py) * ddy; }
-        let s = 1e9, wside = 0; bWtex = null; bWu = 0;
-        for (let it = 0; it < 48; it++) {
-          if (sdx < sdy) { sdx += ddx; mapX += stX; wside = 0; } else { sdy += ddy; mapY += stY; wside = 1; }
-          if (mapX < 0 || mapY < 0 || mapX >= mw || mapY >= mh) break;
-          const c = grid[mapY * mw + mapX];
-          if (c) {
-            if (c.door) { const d = map.doors && map.doors[mapY * mw + mapX]; if (d && d.open > 0.5) continue; }
-            s = wside === 0 ? sdx - ddx : sdy - ddy;
-            const hp = wside === 0 ? Py + s * ry : Px + s * rx; let u = hp - Math.floor(hp);
-            if ((wside === 0 && rx > 0) || (wside === 1 && ry < 0)) u = 1 - u;
-            bWu = (u * TEXN) | 0; bWtex = tex[c.tex] || tex.t_stone;
-            break;
-          }
-        }
-        bTw = t + s;
-        { let f = 1 - bTw * fogMul; if (f < 0) f = 0; bW0 = (amb + (1 - amb) * f) * (wside ? 0.8 : 1); }
-        // which reflected things this column can see
-        nc = 0;
-        for (let i = 0; i < nCand; i++) { const c = cands[i]; if (camX >= c.l && camX < c.r && c.trY < bTw) { if (nc < colList.length) colList[nc] = c; else colList.push(c); nc++; } }
-      }
-      // light on the wall face (frame)
+      tc[x] = t; if (y0 < yMin) yMin = y0; if (y1 > yMax) yMax = y1;
+      const inGlassU = lat >= gu0 && lat <= gu1;
+      const yg0 = inGlassU ? Math.max(y0, Math.ceil(ds + lineH * gv0)) : 1e9, yg1 = inGlassU ? Math.min(y1, Math.floor(ds + lineH * gv1)) : -1;
+      // the frame: how it is lit
       let fw = 1 - t * fogMul; if (fw < 0) fw = 0; fw = amb + (1 - amb) * fw; if (ax === 1) fw *= 0.8;
       const edgeU = (lat < gu0 + 0.015 && lat >= gu0 - 0.015) || (lat > gu1 - 0.015 && lat <= gu1 + 0.015), guu = (lat - gu0) * gSpan;
-      const fwR = fw, lfR = lf[0], lfG = lf[1], lfB = lf[2];
+      const woodSide = lat < 0.2;
       for (let y = y0; y <= y1; y++) {
-        const o = y * w + x;
-        if (Math.abs(dbuf[o] - t) > 0.004 || mbuf[o] !== 4) continue;     // something stands in front of the glass
-        const v = (y - ds) * invL;
-        if (!(lat >= gu0 && lat <= gu1 && v >= gv0 && v <= gv1)) {
-          // the frame: dark wood, a lit top edge and a thin gold fillet where it meets the glass
-          let r, gg, b;
-          if (edgeU || (v < gv0 + 0.012 && v >= gv0 - 0.012) || (v > gv1 - 0.012 && v <= gv1 + 0.012)) { r = 190; gg = 150; b = 70; }
-          else { const c = (lat < 0.2 || v < 0.2) ? WOOD[1] : WOOD[0], grain = ((y * 7 + x * 3) & 7) - 3; r = (c & 255) + grain; gg = ((c >> 8) & 255) + grain; b = ((c >> 16) & 255) + grain; }
-          r = r * fwR + lfR; gg = gg * fwR + lfG; b = b * fwR + lfB;
-          fb[o] = (255 << 24) | ((b > 255 ? 255 : b | 0) << 16) | ((gg > 255 ? 255 : gg | 0) << 8) | (r > 255 ? 255 : r | 0);
-          painted++; continue;
+        if (y >= yg0 && y <= yg1) { y = yg1; continue; }      // the glass is filled below
+        const v = (y - ds) * invL, o = y * w + x;
+        let r, gg, b;
+        if (edgeU || (v < gv0 + 0.012 && v >= gv0 - 0.012) || (v > gv1 - 0.012 && v <= gv1 + 0.012)) { r = 190; gg = 150; b = 70; }
+        else { const c = (woodSide || v < 0.2) ? WOOD[1] : WOOD[0], grain = ((y * 7 + x * 3) & 7) - 3; r = (c & 255) + grain; gg = ((c >> 8) & 255) + grain; b = ((c >> 16) & 255) + grain; }
+        r = (r * fw + lfR) * lfD; gg = (gg * fw + lfG) * lfD; b = (b * fw + lfB) * lfD;
+        buf[o] = (255 << 24) | ((b > 255 ? 255 : b | 0) << 16) | ((gg > 255 ? 255 : gg | 0) << 8) | (r > 255 ? 255 : r | 0);
+      }
+      if (yg1 < yg0) continue;
+      // ---- the reflected ray for this column: bounce off the glass, then walk the grid
+      bCamX = camX; bT = t;
+      const Px = cam.x + t * rdx, Py = cam.y + t * rdy, rx = ax === 0 ? -rdx : rdx, ry = ax === 1 ? -rdy : rdy;
+      bPx = Px; bPy = Py; bRx = rx; bRy = ry;
+      let mapX = (Px + nx * 0.02) | 0, mapY = (Py + ny * 0.02) | 0;
+      const ddx = rx === 0 ? 1e30 : Math.abs(1 / rx), ddy = ry === 0 ? 1e30 : Math.abs(1 / ry);
+      let sdx, sdy, stX, stY;
+      if (rx < 0) { stX = -1; sdx = (Px - mapX) * ddx; } else { stX = 1; sdx = (mapX + 1 - Px) * ddx; }
+      if (ry < 0) { stY = -1; sdy = (Py - mapY) * ddy; } else { stY = 1; sdy = (mapY + 1 - Py) * ddy; }
+      let s = 1e9, wside = 0; bWtex = null; bWu = 0;
+      for (let it = 0; it < 48; it++) {
+        if (sdx < sdy) { sdx += ddx; mapX += stX; wside = 0; } else { sdy += ddy; mapY += stY; wside = 1; }
+        if (mapX < 0 || mapY < 0 || mapX >= mw || mapY >= mh) break;
+        const c = grid[mapY * mw + mapX];
+        if (c) {
+          if (c.door) { const d = map.doors && map.doors[mapY * mw + mapX]; if (d && d.open > 0.5) continue; }
+          s = wside === 0 ? sdx - ddx : sdy - ddy;
+          const hp = wside === 0 ? Py + s * ry : Px + s * rx; let u = hp - Math.floor(hp);
+          if ((wside === 0 && rx > 0) || (wside === 1 && ry < 0)) u = 1 - u;
+          bWu = (u * TEXN) | 0; bWtex = tex[c.tex] || tex.t_stone;
+          break;
         }
-        // ---- the glass: the block's solved colour, then a little cooler and dimmer, a silver streak, a darker rim
-        const yi = (y / B) | 0;
-        if (rowGen[yi] !== gen) { solve(yi * B + half, yi); rowGen[yi] = gen; }
-        const gvv = (v - gv0) * gvSpan, q = guu * 0.7 + gvv * 0.9, qf = q - (q | 0);
-        const streak = (qf > 0.275 && qf < 0.365) ? 20 : 0;
-        const rim = Math.min(guu, 1 - guu, gvv, 1 - gvv), lim = (rim < 0.12 ? 0.72 + rim * 2.3 : 1) * stdim;
-        const pr = rowR[yi] * lim * 0.9 + lampR + streak, pg = rowG[yi] * lim * 0.97 + lampG + streak, pb = rowB[yi] * lim + lampB + streak;
-        fb[o] = (255 << 24) | ((pb > 255 ? 255 : pb | 0) << 16) | ((pg > 255 ? 255 : pg | 0) << 8) | (pr > 255 ? 255 : pr | 0);
-        painted++;
+      }
+      bTw = t + s;
+      { let f = 1 - bTw * fogMul; if (f < 0) f = 0; bW0 = (amb + (1 - amb) * f) * (wside ? 0.8 : 1); }
+      if (s < 1e8) { lightAt(pl, dkOn, dkFloor, Px + (s - 0.06) * rx, Py + (s - 0.06) * ry); wR = LR; wG = LG; wB = LB; wD = LD; } else { wR = wG = wB = 0; wD = 1; }
+      nc = 0;
+      for (let i = 0; i < nCand; i++) { const c = cands[i]; if (camX >= c.l && camX < c.r && c.trY < bTw) { if (nc < colList.length) colList[nc] = c; else colList.push(c); nc++; } }
+      // a solved colour every R rows (the last one clamped to the bottom of the glass) ...
+      const n = yg1 - yg0, ns = ((n * invR) | 0) + 2;
+      for (let k = 0; k < ns; k++) solve(yg0 + k * R, k);
+      // ... and the rows between them interpolated, with a gentle silver cast and a soft vignette at the frame
+      for (let y = yg0; y <= yg1; y++) {
+        const kf = (y - yg0) * invR, k = kf | 0, a = kf - k;
+        const rr = sR[k] + (sR[k + 1] - sR[k]) * a, rg = sG[k] + (sG[k + 1] - sG[k]) * a, rb = sB[k] + (sB[k + 1] - sB[k]) * a;
+        const v = (y - ds) * invL, gvv = (v - gv0) * gvSpan, q = guu * 0.7 + gvv * 0.9, qf = q - (q | 0);
+        const rim = Math.min(guu, 1 - guu, gvv, 1 - gvv), lim = (rim < 0.14 ? 0.8 + rim * 1.43 : 1) * stdim;
+        const streak = (qf > 0.275 && qf < 0.34) ? 14 : 0;
+        const pr = rr * lim * 0.95 + 3 + streak, pg = rg * lim * 0.98 + 4 + streak, pb = rb * lim + 6 + streak;
+        buf[y * w + x] = (255 << 24) | ((pb > 255 ? 255 : pb | 0) << 16) | ((pg > 255 ? 255 : pg | 0) << 8) | (pr > 255 ? 255 : pr | 0);
       }
     }
+    C.ya = yMin; C.yb = yMax;
   }
+
   function mirrorHook(F) {
     if (!mirrorsOn() || !F.map || F.outdoor || F.relief) return;
     const list = mirrorsOf(F.map.id); if (!list.length) return;
@@ -585,7 +640,7 @@ const PROPS14 = (() => {
     return -1;
   }
   function shimmerHook(F) {
-    if (!shimmerOn() || !F.map || F.relief) return;
+    if (!shimmerOn() || !F.map) return;
     const list = sealsOf(F.map); if (!list.length) return;
     // time: still under No flashes, a quarter speed under Reduce motion
     const now = F.animT || 0; let dt = sealLast < 0 ? 0 : now - sealLast; sealLast = now; if (dt < 0 || dt > 0.5) dt = 0;
@@ -621,9 +676,15 @@ const PROPS14 = (() => {
       const rc = ax === 0 ? rdx : rdy; if (rc === 0) continue;
       const t = (plane - (ax === 0 ? cam.x : cam.y)) / rc; if (!(t > 0.05)) continue;
       const u = (ax === 0 ? cam.y + t * rdy : cam.x + t * rdx) - lat0; if (u < 0 || u > 1) continue;
-      const lineH = (h / t) | 0; if (lineH < 3) continue;
-      const ds = -lineH / 2 + horizon;
-      const y0 = Math.max(0, Math.ceil(ds)), y1 = Math.min(h - 1, Math.floor(ds + lineH - 1));
+      let lineH = (h / t) | 0; if (lineH < 3) continue;
+      let ds = -lineH / 2 + horizon;
+      let y0 = Math.max(0, Math.ceil(ds)), y1 = Math.min(h - 1, Math.floor(ds + lineH - 1));
+      if (F.relief) {
+        // relief maps: the ground is not at one height, so find the slab in the column from the depth and material buffers
+        let a = -1, z = -1; for (let y = 0; y < h; y++) { const o = y * w + x; if (mbuf[o] === 4 && Math.abs(dbuf[o] - t) <= 0.004) { if (a < 0) a = y; z = y; } }
+        if (a < 0) continue;
+        y0 = a; y1 = z; ds = a; lineH = z - a + 1; if (lineH < 3) continue;
+      }
       const eu = Math.min(u, 1 - u);
       for (let y = y0; y <= y1; y++) {
         const o = y * w + x;
@@ -635,7 +696,7 @@ const PROPS14 = (() => {
         const I = amt * kk * (0.1 + 0.24 * n1 * band + 0.4 * Math.max(edge, top * 0.8));
         const px = fb[o]; let r = px & 255, g = (px >> 8) & 255, b = (px >> 16) & 255;
         if (hush) {
-          const lum = (r + g + b) * 0.3333, k = clamp(I * 1.5, 0, 0.7);
+          const lum = (r + g + b) * 0.3333, k = clamp(I * 2.4, 0, 0.85);
           r += (lum * 0.78 - r) * k; g += (lum * 0.78 - g) * k; b += (lum * 0.78 - b) * k;
         } else { r += kr * I; g += kg * I; b += kb * I; }
         fb[o] = (255 << 24) | ((b > 255 ? 255 : b | 0) << 16) | ((g > 255 ? 255 : g | 0) << 8) | (r > 255 ? 255 : r | 0);
@@ -822,7 +883,7 @@ const PROPS14 = (() => {
   // ================================================================ wiring
   function wire() {
     if (typeof Engine !== 'undefined' && Engine.addPostHook) {
-      Engine.addPostHook(mirrorHook, -8);     // before the dark-interiors pass (-5): the glass is darkened with the room
+      Engine.addPostHook(mirrorHook, -4);     // after the dark-interiors pass (-5): the reflection takes the room's light itself, once
       Engine.addPostHook(shimmerHook, -7);
     }
     if (typeof attack === 'function') {

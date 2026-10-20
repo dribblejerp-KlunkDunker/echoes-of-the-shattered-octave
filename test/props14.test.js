@@ -39,6 +39,7 @@ async function boot(browser, opts) {
       const c = Engine.cam; c.x = x; c.y = y; c.dir = dir; c.pitch = 0; c.bob = 0;
     };
     window.__frame = () => { Math.random = (() => { let s = 99; return () => (s = (s * 16807) % 2147483647) / 2147483647; })(); PARTICLES.list.length = 0; Engine.setTime(5); Engine.render(G.ents, G.tod); return Engine.ctx.getImageData(0, 0, Engine.canvas.width, Math.floor(Engine.canvas.height * 0.75)); };
+    window.__reseal = () => { for (const q of PROPS14.SEALS) { const m = G.maps[q.map], c = m.cells[q.y * m.w + q.x]; if (c && c.locked && c.locked !== 'pass' && c.locked !== '__never') delete G.flags[c.locked]; } for (const s of PROPS14.seals.values()) s.amt = 1; G.ents.forEach((e) => { if (e.kind === 'enemy' || e.kind === 'npc' || e.sprite === 'cocoon') e.hidden = true; }); };
     window.__hash = (id) => { let h = 2166136261; const d = new Uint32Array(id.data.buffer); for (let i = 0; i < d.length; i++) h = Math.imul(h ^ d[i], 16777619); return h >>> 0; };
     window.__diff = (a, b) => { const A = new Uint32Array(a.data.buffer), B = new Uint32Array(b.data.buffer); let n = 0, x0 = 1e9, x1 = -1, y0 = 1e9, y1 = -1; const w = a.width; for (let i = 0; i < A.length; i++) if (A[i] !== B[i]) { n++; const x = i % w, y = (i / w) | 0; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } return { n, x0, x1, y0, y1 }; };
     window.__mean = (id, r) => { const d = id.data; let R = 0, Gc = 0, B = 0, n = 0; for (let y = r.y0; y <= r.y1; y++) for (let x = r.x0; x <= r.x1; x++) { const i = (y * id.width + x) * 4; R += d[i]; Gc += d[i + 1]; B += d[i + 2]; n++; } return [R / n, Gc / n, B / n]; };
@@ -57,7 +58,14 @@ async function boot(browser, opts) {
 (async () => {
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--use-gl=swiftshader'] });
   const allErrors = [];
-  const snapTo = async (page, name) => { if (SHOTS) await page.screenshot({ path: path.join(SHOTS, name + '.png') }); };
+  // the painted area card shows on entering an area: wait for it to fade (it never covers a review shot)
+  const snapTo = async (page, name) => {
+    if (!SHOTS) return;
+    try { await page.waitForFunction(() => !document.querySelector('#scr-card.show'), null, { timeout: 8000 }); } catch (e) { await page.evaluate(() => { const c = document.querySelector('#scr-card'); if (c) c.classList.remove('show'); }); }
+    await page.waitForTimeout(250);
+    await page.evaluate(() => { try { PARTICLES.list.length = 0; Engine.render(G.ents, G.tod); } catch (e) { /* keep the last frame */ } });
+    await page.screenshot({ path: path.join(SHOTS, name + '.png') });
+  };
   try {
     const A = await boot(browser); const pg = A.page; allErrors.push(A.errors);
     const ev = (fn, arg) => pg.evaluate(fn, arg);
@@ -156,6 +164,16 @@ async function boot(browser, opts) {
     const behind = await ev(() => { __go('lyra_house', 7.5, 3.0, Math.PI / 2); GFX.p14pMirrors = false; const a = __hash(__frame()); GFX.p14pMirrors = true; const b = __hash(__frame()); return a === b; });
     ok(behind, 'looking away from the glass draws nothing (frame equals the switch-off frame)');
     await ev(() => __go('lyra_house', 7.5, 3.0, -Math.PI / 2)); await snapTo(pg, 'mirror-lyra');
+    // the figure in the glass from 1.5 and 3 tiles, in bell-plate with a mace; and the same at night
+    await ev(() => { G.player.armor = Object.assign({}, G.player.armor, { body: Object.keys(ARMOR).find((k) => /Bell-/.test(ARMOR[k].name || '')) || null }); G.player.weapons = ['mace']; G.player.weapon = 0; __go('lyra_house', 7.5, 1.5, -Math.PI / 2); });
+    await snapTo(pg, 'mirror-lyra-near');
+    await ev(() => { __go('lyra_house', 7.5, 4.5, -Math.PI / 2); });
+    await snapTo(pg, 'mirror-lyra-far');
+    await ev(() => { __go('lyra_house', 7.5, 2.5, -Math.PI / 2); G.tod = 0.0; });
+    await snapTo(pg, 'mirror-lyra-night');
+    await ev(() => { G.tod = 0.5; G.player.armor = {}; G.player.weapons = ['sword']; G.player.weapon = 0; });
+    await ev(() => __go('cloister', 4.5, 12.5, Math.PI)); await snapTo(pg, 'mirror-vestry');
+    await ev(() => __go('p13h_tarrow', 1.5, 10.2, -Math.PI / 2)); await snapTo(pg, 'mirror-tarrow');
 
     // measured cost: the mirror hook in view, and a 12-enemy frame with and without
     const cost = await ev(() => {
@@ -172,11 +190,16 @@ async function boot(browser, opts) {
       const hookMs = (PROPS14.stats.mirrorMs - s0) / Math.max(1, PROPS14.stats.mirrorFrames - f0);
       // worst case: nose to the glass (the biggest rectangle)
       __go('lyra_house', 7.5, 1.3, -Math.PI / 2); const t1 = PROPS14.stats.mirrorMs, g1 = PROPS14.stats.mirrorFrames; for (let i = 0; i < 40; i++) frame(); const closeMs = (PROPS14.stats.mirrorMs - t1) / Math.max(1, PROPS14.stats.mirrorFrames - g1);
+      // the same two distances with the eye moving (no frame can come from the cache)
+      const mv = (y) => { __go('lyra_house', 7.5, y, -Math.PI / 2); const t1 = PROPS14.stats.mirrorMs, g1 = PROPS14.stats.mirrorFrames; for (let i = 0; i < 40; i++) { Engine.cam.x = 7.5 + (i % 2 ? 0.004 : -0.004); frame(); } return (PROPS14.stats.mirrorMs - t1) / Math.max(1, PROPS14.stats.mirrorFrames - g1); };
+      const movingTwo = mv(2.0), movingNose = mv(1.2);
       for (let i = G.ents.length - 1; i >= 0; i--) if (G.ents[i].kind === 'enemy' && !G.ents[i]._orig && G.ents[i].state === 'passive' && G.ents[i].y > 3) G.ents.splice(i, 1);
-      return { off: med(offs), on: med(ons), hookMs, closeMs, w: Engine.canvas.width, h: Engine.canvas.height };
+      return { off: med(offs), on: med(ons), hookMs, closeMs, movingTwo, movingNose, w: Engine.canvas.width, h: Engine.canvas.height };
     });
     console.log('INFO perf: 12-enemy frame median ' + cost.off.toFixed(2) + ' ms mirrors off, ' + cost.on.toFixed(2) + ' ms on (mirror in view, +' + (cost.on - cost.off).toFixed(2) + ' ms); hook ' + cost.hookMs.toFixed(2) + ' ms mean, nose-to-glass ' + cost.closeMs.toFixed(2) + ' ms, at ' + cost.w + 'x' + cost.h);
     ok(cost.hookMs < 2.0 && cost.on - cost.off < 2.0, 'mirror cost: hook ' + cost.hookMs.toFixed(2) + ' ms in view (< 2 ms on a shared box; ~0.5 ms at 3 cells), frame delta ' + (cost.on - cost.off).toFixed(2) + ' ms');
+    console.log('INFO perf moving eye: ' + cost.movingTwo.toFixed(2) + ' ms at 2 tiles, ' + cost.movingNose.toFixed(2) + ' ms nose to glass');
+    ok(cost.movingTwo < 2.5 && cost.movingNose < 5, 'moving eye (every frame re-traced): ' + cost.movingTwo.toFixed(2) + ' ms at 2 tiles (< 2.5), ' + cost.movingNose.toFixed(2) + ' ms nose to glass (< 5), shared box');
     ok(cost.closeMs < 12, 'worst case, nose to the glass: ' + cost.closeMs.toFixed(2) + ' ms');
 
     // ---------------------------------------------------------------- the figure behind you
@@ -327,13 +350,13 @@ async function boot(browser, opts) {
     });
     ok(motion.norm > 100 && motion.reduced < motion.norm && motion.reduced > 0, 'Reduce motion runs the ripple slower (changed pixels over 0.4 s: ' + motion.norm + ' normal, ' + motion.reduced + ' reduced)');
     ok(motion.still === 0, 'No flashes: a static tint (the membrane\'s own pixels differ in ' + motion.still + ' places between t=10 and t=31.7; -1 means it drew nothing)');
-    await ev(() => { __go('catacombs', 24.5, 1.5, 0); for (const s of PROPS14.seals.values()) s.amt = 1; for (let i = 0; i < 5; i++) { Engine.setTime(8 + i * 0.1); Engine.render(G.ents, G.tod); } });
+        await ev(() => { __go('catacombs', 23.5, 1.5, 0); __reseal(); for (const s of PROPS14.seals.values()) s.amt = 1; for (let i = 0; i < 5; i++) { Engine.setTime(8 + i * 0.1); Engine.render(G.ents, G.tod); } });
     await snapTo(pg, 'shimmer-glass');
-    await ev(() => { __go('mausoleum', 19.5, 19.2, -Math.PI / 2); for (let i = 0; i < 5; i++) { Engine.setTime(8 + i * 0.1); Engine.render(G.ents, G.tod); } });
+    await ev(() => { __go('mausoleum', 19.5, 19.2, -Math.PI / 2); __reseal(); for (let i = 0; i < 5; i++) { Engine.setTime(8 + i * 0.1); Engine.render(G.ents, G.tod); } });
     await snapTo(pg, 'shimmer-song');
-    await ev(() => { __go('whispergrove', 32.5, 8.5, -Math.PI / 2); for (let i = 0; i < 5; i++) { Engine.setTime(8 + i * 0.1); Engine.render(G.ents, G.tod); } });
+    await ev(() => { __go('whispergrove', 29.5, 5.5, 0); __reseal(); for (let i = 0; i < 5; i++) { Engine.setTime(8 + i * 0.1); Engine.render(G.ents, G.tod); } });
     await snapTo(pg, 'shimmer-synod');
-    await ev(() => { __go('greenroot', 30.5, 11.5, -Math.PI / 2); for (let i = 0; i < 5; i++) { Engine.setTime(8 + i * 0.1); Engine.render(G.ents, G.tod); } });
+    await ev(() => { __go('greenroot', 30.5, 10.5, -Math.PI / 2); __reseal(); for (let i = 0; i < 5; i++) { Engine.setTime(8 + i * 0.1); Engine.render(G.ents, G.tod); } });
     await snapTo(pg, 'shimmer-hush');
     // its cost
     const sc = await ev(() => {
