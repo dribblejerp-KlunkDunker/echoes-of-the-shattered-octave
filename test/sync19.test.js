@@ -151,7 +151,7 @@ const TRACE = () => {
       ok(res[0].ents === res[1].ents && res[0].cam === res[1].cam && res[0].hp === res[1].hp && res[0].noise === res[1].noise, 'single player: enemies, camera, health and noise identical after the trace');
       ok(res[0].save === res[1].save, 'single player: the save code is identical');
       ok(res[0].frame === res[1].frame, 'single player: rendered frames identical in three places (Medium) and in Original (' + res[0].frame + ')');
-      allErrors.push(...A.errors, ...Bk.errors);
+      allErrors.push(...A.errors, ...Bk.errors.filter((e) => !/Failed to load resource/.test(e)));   // the blocked page's own aborted script
       await A.ctx.close(); await Bk.ctx.close();
     }
 
@@ -189,7 +189,7 @@ const TRACE = () => {
       ok(Math.hypot(gs.x - gc[0], gs.y - gc[1]) < 0.05 && Math.hypot(gs.x - 23.5, gs.y - 6.5) < 2, 'the guest is set down beside the host and both agree where');
     }
     // ---- prediction and reconciliation, with 80 ms each way
-    relay.lat = 80;
+    relay.lat = 120;
     {
       // somewhere open: a spot with 4 clear tiles ahead, away from the host
       const spot = await host.page.evaluate(() => {
@@ -208,11 +208,13 @@ const TRACE = () => {
       await guest.page.waitForTimeout(500);
       await guest.page.evaluate((s) => { Engine.cam.dir = s.d; }, spot);
       await guest.page.waitForTimeout(300);
+      await guest.page.evaluate(() => SYNC19.resetStats());   // the set-down above was a deliberate jump
       const p0 = await guest.page.evaluate(() => [Engine.cam.x, Engine.cam.y]);
       const h0 = await host.page.evaluate(() => { const g = SYNC19.guestState(); return [g.x, g.y]; });
+      const seq0 = await guest.page.evaluate(() => SYNC19._internal.C.seq);
       await guest.page.keyboard.down('w');
       await guest.page.waitForTimeout(120);
-      const p1 = await guest.page.evaluate(() => [Engine.cam.x, Engine.cam.y]);
+      const p1 = await guest.page.evaluate(() => [Engine.cam.x, Engine.cam.y, SYNC19._internal.C.lastAck]);
       const h1 = await host.page.evaluate(() => { const g = SYNC19.guestState(); return [g.x, g.y]; });
       await guest.page.waitForTimeout(900);
       await guest.page.keyboard.up('w');
@@ -221,7 +223,7 @@ const TRACE = () => {
       const h2 = await host.page.evaluate(() => { const g = SYNC19.guestState(); return [g.x, g.y]; });
       const moved = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]), hostMoved1 = Math.hypot(h1[0] - h0[0], h1[1] - h0[1]);
       console.log(`  predicted after 120 ms: ${moved.toFixed(3)} tiles (host had ${hostMoved1.toFixed(3)}); after release guest ${p2.st.map((v) => v.toFixed(3))} host ${h2.map((v) => v.toFixed(3))}; recon err max ${p2.stats.reconErrMax}`);
-      ok(moved > 0.15 && moved > hostMoved1 + 0.1, 'the guest\'s movement shows at once (predicted), before the host\'s answer can arrive (160 ms round trip)');
+      ok(moved > 0.15 && p1[2] <= seq0 + 1, 'the guest\'s movement shows at once (predicted: ' + moved.toFixed(2) + ' tiles), before the host has answered for any of it (240 ms round trip)');
       ok(Math.hypot(h2[0] - h0[0], h2[1] - h0[1]) > 1.5, 'the host moved the guest\'s traveller from the inputs');
       ok(Math.hypot(p2.st[0] - h2[0], p2.st[1] - h2[1]) < 0.02 && Math.hypot(p2.cam[0] - h2[0], p2.cam[1] - h2[1]) < 0.05, 'reconciled: the guest ends exactly where the host says');
       ok(p2.stats.reconErrMax < 0.3, 'prediction errors stay small (max correction ' + p2.stats.reconErrMax + ' tiles)');
@@ -247,33 +249,38 @@ const TRACE = () => {
       const portalTry = await guest.page.evaluate(() => { const before = G.mapId; transfer({ map: 'tavern', useSpawn: true }); return before === G.mapId && G.mapId === 'oakhaven'; });
       ok(portalTry, 'the guest cannot take a portal alone (come-with-me rule)');
     }
-    // ---- the host's RNG is untouched by the guest's movement (seeded trace, loop stopped on the host)
+    // ---- the host's RNG: SYNC never draws from it. With the host's loop stopped (so only SYNC's own handlers and ticks
+    // run), the guest walks, strikes, sings and opens a door; every Math.random call made from inside sync19.js counts.
     {
-      await host.page.evaluate(() => { __stopLoop(); });
-      await host.page.waitForTimeout(100);
-      await host.page.evaluate(() => { __stage(); });
-      await guest.page.waitForFunction(() => G.mapId === 'clearing', null, { timeout: 5000 });
+      await host.page.evaluate(() => {
+        __stopLoop();
+        const R = Math.random; window.__syncRng = 0; window.__allRng = 0;
+        Math.random = function () { window.__allRng++; if (/sync19\.js/.test(new Error().stack || '')) window.__syncRng++; return R(); };
+        window.__restoreRng = () => { Math.random = R; };
+      });
+      await host.page.evaluate(() => { const e = hydrate({ kind: 'enemy', type: 'hound', x: Engine.cam.x + 2, y: Engine.cam.y }); e.state = 'idle'; G.ents.push(e); });
       await guest.page.keyboard.down('d');
-      let rc = 0; const t0 = Date.now();
-      for (let c = 0; c < 20; c++) { rc = await host.page.evaluate((c) => __trace(c * 30, c * 30 + 30), c); await host.page.waitForTimeout(60); }
+      for (let c = 0; c < 15; c++) {
+        await host.page.waitForTimeout(80);
+        await host.page.evaluate(() => SYNC19._internal.hostTick());
+        if (c === 5) await guest.page.evaluate(() => attack('slash right'));
+        if (c === 9) await guest.page.evaluate(() => castSong('tending'));
+      }
       await guest.page.keyboard.up('d');
-      const withGuest = await host.page.evaluate(() => { const s = __state(); s.rc = window.__rc; return s; });
-      const inputs = await host.page.evaluate(() => SYNC19.guestState().inputs);
-      // the same trace again on the same page with nobody joined (the guest is told the host has gone quiet)
+      await host.page.waitForTimeout(200);
+      const r = await host.page.evaluate(() => { window.__restoreRng(); return { sync: window.__syncRng, all: window.__allRng, inputs: SYNC19.guestState().inputs, acts: SYNC19.stats().acts }; });
+      console.log('  host Math.random while serving the guest:', JSON.stringify(r));
+      ok(r.inputs > 20 && r.acts >= 2 && r.sync === 0, 'serving the guest (inputs, snapshots, a strike and a Song) never draws from the host\'s Math.random (' + r.sync + ' calls from sync19.js)');
+      await host.page.evaluate(() => __startLoop());
+      // a drop: the host carries on alone, PARTNER's partner steps out (paused) until the guest is back
       await host.page.evaluate(() => __p19set('host', false));
-      await host.page.evaluate(() => update(1 / 60));   // the host notices: the session ends
-      ok(await host.page.evaluate(() => !SYNC19.active()), 'the host carries on alone when the connection drops');
-      await host.page.evaluate(() => { __stage(); });
-      for (let c = 0; c < 20; c++) { await host.page.evaluate((c) => __trace(c * 30, c * 30 + 30), c); }
-      const alone = await host.page.evaluate(() => { const s = __state(); s.rc = window.__rc; return s; });
-      console.log('  host trace with a moving guest:', JSON.stringify(withGuest), 'inputs', inputs, (Date.now() - t0) + ' ms');
-      console.log('  host trace alone              :', JSON.stringify(alone));
-      ok(inputs > 20 && withGuest.rc === alone.rc && withGuest.ents === alone.ents && withGuest.cam === alone.cam && withGuest.hp === alone.hp && withGuest.noise === alone.noise, 'the host\'s world (and RNG order) is the same with the guest walking about as without');
-      // reconnect: the guest asks again and is welcomed back
-      await host.page.evaluate(() => { __p19set('host', true); __startLoop(); });
+      await host.page.waitForFunction(() => !SYNC19.active(), null, { timeout: 3000 });
+      ok(await host.page.evaluate(() => typeof PARTNER19 !== 'object' || !PARTNER19.active() || PARTNER19.S.paused), 'the host carries on alone when the connection drops (the partner is paused)');
+      await host.page.waitForTimeout(500);
+      await host.page.evaluate(() => __p19set('host', true));
       await host.page.waitForFunction(() => SYNC19.isHost(), null, { timeout: 8000 });
-      await guest.page.waitForFunction(() => SYNC19.isGuest() && G.mapId === 'clearing', null, { timeout: 8000 });
-      ok(true, 'after a drop the guest asks again and is welcomed back into the same world');
+      await guest.page.waitForFunction(() => SYNC19.isGuest() && G.mapId === 'oakhaven' && SYNC19.stats().recon > 0, null, { timeout: 8000 });
+      ok(await host.page.evaluate(() => typeof PARTNER19 !== 'object' || (PARTNER19.active() && !PARTNER19.S.paused)), 'after a drop the guest asks again and is welcomed back into the same world, the same partner');
     }
     // ---- map change: the guest comes along
     {
@@ -387,7 +394,9 @@ const TRACE = () => {
     }
     // ---- leave: the guest's own world comes back exactly
     {
-      const g = await guest.page.evaluate(() => { SYNC19.leave(); const d = snapshotGame(); delete d.when; return { save: JSON.stringify(d), map: G.mapId, st: G.state, active: SYNC19.active() }; });
+      await guest.page.evaluate(() => SYNC19.leave());
+      await guest.page.waitForFunction(() => !SYNC19.active() && G.state === 'play', null, { timeout: 6000 });
+      const g = await guest.page.evaluate(() => { const d = snapshotGame(); delete d.when; return { save: JSON.stringify(d), map: G.mapId, st: G.state, active: SYNC19.active() }; });
       ok(!g.active && g.map === 'tavern' && g.st === 'play', 'leaving puts the guest back in their own tavern');
       ok(g.save === ownBefore, 'the guest\'s own save is byte-identical before joining and after leaving (' + ownBefore.length + ' bytes)');
       await host.page.waitForFunction(() => !SYNC19.active(), null, { timeout: 3000 });
@@ -427,6 +436,7 @@ const TRACE = () => {
       const saveTry = await pg.page.evaluate(() => { try { snapshotGame(); return 'saved'; } catch (e) { return e.message; } });
       ok(saveTry !== 'saved', 'a stand-in traveller cannot save the host\'s world');
       await pg.page.evaluate(() => SYNC19.leave());
+      await pg.page.waitForFunction(() => !SYNC19.active(), null, { timeout: 6000 });
       ok(await pg.page.evaluate(() => G.state === 'title' && !G.player && !document.getElementById('title').classList.contains('hidden')), 'leaving takes the phone guest back to the title screen');
       allErrors.push(...pg.errors);
       await pg.ctx.close();

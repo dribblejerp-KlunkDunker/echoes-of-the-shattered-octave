@@ -129,6 +129,8 @@ const SYNC19 = (function () {
     MSG_MAX: 200,
     SMOOTH: 10,           // the guest's reconciliation error decays at this rate (1/s)
     SNAP_DIST: 2,         // a correction bigger than this (tiles) is a jump, not a slide
+    WB_WAIT: 3000,        // ms a leaving guest waits for the host's write-back
+    PAUSE_MAX: 60000,     // ms the host keeps a dropped partner paused before sending it home
   };
   const SWINGS = ['slash right', 'slash left', 'chop down', 'cut up', 'thrust'];
   const STATE_CODE = { idle: 0, chase: 1, passive: 2, investigate: 3 };
@@ -144,6 +146,7 @@ const SYNC19 = (function () {
     lost: 'The thread to your companion has gone slack. You are back on your own road.',
     full: 'That fire already has two travellers at it.',
     noSave: 'Saving waits until you are back on your own road.',
+    refused: 'The host\'s fire turned you away ({0}).',
     companion: 'your companion',
   };
   const fmt = (s, ...a) => String(s).replace(/\{(\d+)\}/g, (m, i) => (a[+i] == null ? '' : a[+i]));
@@ -315,6 +318,34 @@ const SYNC19 = (function () {
     spdAttr: 50, frozen: false, flagsSent: new Map(), lastFlags: 0, msgB: { t: 0, n: B.MSG_RATE }, wxSent: '', figBuf: [], figOut: {},
   };
   const hostActive = () => !!H.gs;
+  // ---------------------------------------------------------------- the PARTNER bridge (js/partner19.js, when loaded)
+  // SYNC owns the guest traveller's POSITION (one deterministic mover on both sides is what makes prediction work) and
+  // writes it into PARTNER's partner; PARTNER owns everything else about it (health, aggro, blows, Songs, downed and
+  // revive, loot, write-back). Pose writes use PARTNER19.setPose when PARTNER offers it, else its live state object.
+  const partnerLib = () => (typeof PARTNER19 === 'object' && PARTNER19 ? PARTNER19 : null);
+  const partner = () => { const P = partnerLib(); try { return P && P.active && P.active() ? P : null; } catch (e) { return null; } };
+  function pState(P) { try { return P.S || null; } catch (e) { return null; } }
+  function partnerBlocked() { const P = partner(), S = P && pState(P); return !!(S && (S.down || S.paused)); }
+  function writePartner() {
+    const P = partner(), g = H.gs; if (!P || !g) return;
+    try {
+      if (typeof P.setPose === 'function') P.setPose({ x: g.x, y: g.y, dir: g.dir, feet: g.feet, spd: Math.hypot(g.vx, g.vy) });
+      else {
+        const S = pState(P); if (!S) return;
+        S.x = g.x; S.y = g.y; S.dir = g.dir; S.feet = g.feet; S.vx = 0; S.vy = 0; S.map = G.mapId;
+        if (S.prox) { S.prox.x = g.x; S.prox.y = g.y; S.prox.feet = g.feet; } if (S.pp) S.pp.feet = g.feet;
+      }
+      const S = pState(P); H.pw = S ? { x: S.x, y: S.y } : null;
+    } catch (e) { reject('partner-pose'); }
+  }
+  // PARTNER moved its partner itself (set down behind the host on a new map, woken by the lamp): SYNC follows
+  function adoptPartner() {
+    const P = partner(), g = H.gs, S = P && pState(P); if (!S || !g || !isNum(S.x) || !isNum(S.y)) return false;
+    if (H.pw && Math.abs(S.x - H.pw.x) < 1e-6 && Math.abs(S.y - H.pw.y) < 1e-6) return false;
+    g.x = S.x; g.y = S.y; g.feet = isNum(S.feet) ? S.feet : g.feet; g.vx = g.vy = 0; g.buf = []; H.pw = { x: S.x, y: S.y };
+    return true;
+  }
+  function partnerInput(cmd) { const P = partner(); if (!P) return null; try { return P.input(cmd); } catch (e) { reject('partner-input'); return null; } }
   // A map-built entity's sid is its place in the map as built (BASE, recorded when the maps are built), so it survives
   // anything later taking entities out of the list; the guest's own copy of the map has the same entity at that place.
   function sidOf(e) {
@@ -350,20 +381,28 @@ const SYNC19 = (function () {
     }
     return { x, y };
   }
-  function hostStart(peer) {
+  function hostStart(peer, card) {
     const c = Engine.cam, p = G.player;
+    const P = partnerLib();
+    if (P && !partner()) {   // the guest's own traveller joins the world (PARTNER validates and clamps the card)
+      let r = null; try { r = P.join(card, { seed: (Math.floor(now() * 7919) ^ 0x5bd1e995) >>> 0 }); } catch (e) { r = { ok: false, reason: 'error' }; }
+      if (!r || !r.ok) { send('sync.refused', { reason: plainStr(r && r.reason, 40) }, true); return reject('hello-card'); }
+    } else if (P && partner()) { try { P.pause(false); } catch (e) { /* not paused */ } }
+    if (partner()) { try { const S = pState(P); if (S && S.pp && S.pp.attrs && isNum(S.pp.attrs.Speed)) H.spdAttr = clampN(S.pp.attrs.Speed, 0, 100); } catch (e) { /* default speed */ } }
     const at = placeNear(c.x, c.y, c.dir);
     H.gs = {
       peer, map: G.mapId, x: at.x, y: at.y, vx: 0, vy: 0, feet: (G.map.lvls || G.map.smooth) ? G.map.groundAt(at.x, at.y) : 0, dir: c.dir, pitch: 0,
       run: false, block: false, act: 0, ap: 0, lastSeq: -1, ackEp: -1, ackQ: -1, budget: B.STEP * 3, budgetAt: now(), lastInputAt: now(),
       inputs: 0, rejected: 0, inB: { t: now(), n: B.IN_RATE }, actB: { t: now(), n: B.ACT_RATE }, buf: [], gclock: null,
     };
-    H.ep++; H.ring.clear(); H.lastSnap = 0; H.flagsSent.clear(); H.wxSent = ''; H.figBuf = [];
+    H.ep++; H.ring.clear(); H.lastSnap = 0; H.flagsSent.clear(); H.wxSent = ''; H.figBuf = []; H.lookSent = ''; H.pausedAt = 0; H.mapPending = false;
     primeSids(G.map);
+    writePartner();
+    if (P && !H.storySub && typeof P.onStory === 'function') { H.storySub = true; P.onStory((st) => { if (H.gs && st && typeof st === 'object' && jsonLen(st) <= 6000) send('sync.story', st, true); }); }
     const flags = flagsDiff(true);
     send('sync.welcome', {
       v: B.V, ep: H.ep, map: G.mapId, x: H.gs.x, y: H.gs.y, dir: c.dir, spd: H.spdAttr, flags, gr: !!G.flags.greening,
-      wx: typeof Weather !== 'undefined' ? Weather.save() : null, tod: Math.round(G.tod * 10000), day: G.day | 0, sig: mapSig(G.map), name: p ? plainStr(p.name, 24) : '',
+      wx: typeof Weather !== 'undefined' ? Weather.save() : null, tod: Math.round(G.tod * 10000), day: G.day | 0, sig: mapSig(G.map), name: p ? plainStr(p.name, 24) : '', look: hostLook(),
     }, true);
     H.lastFlags = now();
     emit('join', { side: 'host', peer });
@@ -371,8 +410,15 @@ const SYNC19 = (function () {
   function hostEnd(why) {
     if (!H.gs) return;
     const peer = H.gs.peer; H.gs = null; H.ring.clear();
+    const P = partner();
+    if (P) {
+      if (why === 'dropped') { try { P.pause(true); } catch (e) { /* fine */ } H.pausedAt = now(); }   // NET reconnects; the host carries on
+      else { let wb = null; try { wb = P.leave(why); } catch (e) { wb = null; } if (wb && why === 'bye') send('sync.wb', { wb }, true); }
+    }
     emit('leave', { side: 'host', peer, why });
   }
+  // what the host looks like, in the ghost painter's terms, so the guest can paint the host's figure
+  function hostLook() { try { if (typeof GHOST18 === 'object' && GHOST18.lookNow) return GHOST18.lookNow(); } catch (e) { /* no painter */ } return null; }
   function mapSig(m) { return { n: m.baseCount || 0, w: m.w, h: m.h }; }
   // flags the guest's renderers may need, as a diff against what was sent (primitive values only)
   function flagsDiff(full) {
@@ -443,6 +489,8 @@ const SYNC19 = (function () {
       snap.x = x;
     }
     if (H.spdSent !== H.spdAttr) { snap.spd = H.spdAttr; H.spdSent = H.spdAttr; }
+    const lk = hostLook(); if (lk) { const ls = JSON.stringify(lk); if (ls !== H.lookSent || full) { snap.lk = lk; H.lookSent = ls; } }
+    const P = partner(); if (P) { try { snap.pt = { me: P.snapshot(), host: P.hostState() }; } catch (err) { reject('partner-snap'); } }
     H.ring.set(q, held); H.ring.delete(q - B.RING);
     const n = send('sync.snap', snap, false);
     ST.snaps++; ST.snapBytes += n || 0; ST.snapMax = Math.max(ST.snapMax, n || 0); ST.snapEntsMax = Math.max(ST.snapEntsMax, full ? 0 : e.length); if (full) ST.census++;
@@ -462,12 +510,16 @@ const SYNC19 = (function () {
     for (const a of p.i) { const d = decodeInput(a); if (!d) { gs.rejected++; reject('in-value'); continue; } ins.push(d); }
     ins.sort((a, b) => a.seq - b.seq);
     const ctx = hostCtx(), base = speedOf(H.spdAttr);
+    adoptPartner();
+    const held = partnerBlocked();
+    let blockEdge = false;
     for (const d of ins) {
       if (d.seq <= gs.lastSeq) continue;
       if (gs.lastSeq >= 0 && d.seq - gs.lastSeq > B.SEQ_JUMP) { gs.rejected++; reject('in-jump'); continue; }
       gs.lastSeq = d.seq; gs.inputs++; ST.inputs++;
-      gs.pitch = d.pitch; gs.act = d.act; gs.ap = d.ap; gs.block = d.block; gs.run = d.run; gs.dir = d.dir;
-      if (ep !== H.ep || H.frozen) { gs.vx = gs.vy = 0; continue; }   // an input from before the last map change moves nothing
+      if (d.block && !gs.block) blockEdge = true;
+      gs.pitch = d.pitch; gs.act = d.act; gs.ap = d.ap; gs.block = d.block; gs.run = d.run; if (!held) gs.dir = d.dir;
+      if (ep !== H.ep || H.frozen || held || H.mapPending) { gs.vx = gs.vy = 0; continue; }   // an input from before the last map change moves nothing
       if (gs.budget < B.STEP * 0.999) { gs.rejected++; reject('in-budget'); continue; }   // faster than real time: dropped
       gs.budget -= B.STEP;
       stepMover(gs, d, base, ctx);
@@ -476,7 +528,8 @@ const SYNC19 = (function () {
       gs.gclock = gs.gclock == null || off < gs.gclock ? off : gs.gclock + (off - gs.gclock) * 0.02;
       sample(gs.buf, gt, { x: gs.x, y: gs.y, feet: gs.feet, dir: gs.dir, act: gs.act, ap: gs.ap, spd: Math.hypot(gs.vx, gs.vy) });
     }
-    if (ins.length) gs.lastInputAt = t;
+    if (ins.length) { gs.lastInputAt = t; writePartner(); }
+    if (blockEdge) partnerInput({ t: 'block' });
   }
   function entBySid(sid) { const m = G.map; for (let i = 0; i < m.entities.length; i++) { const e = m.entities[i]; if (H.sid.get(e) === sid) return e; } return null; }
   function onAct(p, from) {
@@ -508,7 +561,13 @@ const SYNC19 = (function () {
       a = { a: p.a, v: JSON.parse(JSON.stringify(v)) };
     } else { gs.rejected++; return reject('act-unknown'); }
     ST.acts++;
-    if (!H.actFns.length) return reject('act-unhandled');
+    // PARTNER plays the guest's traveller: blows, Songs, lifting (use) go to it
+    if (partner()) {
+      if (a.a === 'atk') { const S = pState(partner()); if (S && S.pp && S.pp.weapon !== a.w && a.w < (S.pp.weapons || []).length) partnerInput({ t: 'weapon', i: a.w }); partnerInput({ t: 'attack', label: a.dir }); }
+      else if (a.a === 'song') partnerInput({ t: 'song', id: a.id });
+      else if (a.a === 'use') partnerInput({ t: 'use' });
+    }
+    if (!H.actFns.length) return partner() ? true : reject('act-unhandled');
     for (const fn of H.actFns) { try { fn(a, publicGuest()); } catch (e) { console.warn('sync19: PARTNER action handler failed', e); } }
     return true;
   }
@@ -519,16 +578,24 @@ const SYNC19 = (function () {
   function onHello(p, from) {
     if (role() !== 'host') return reject('hello-role');
     if (!p || p.v !== B.V) return reject('hello-version');
-    if (!hasG() || !G.map || !G.player || !G.mapId) return reject('hello-wait');   // no world yet: the guest asks again
+    if (!hasG() || !G.map || !G.player || !G.mapId || G.state === 'title' || G.state === 'dead') return reject('hello-wait');   // no world yet: the guest asks again
     if (H.gs && H.gs.peer !== from && now() - H.gs.lastInputAt < 5000) { send('sync.full', {}, true); return reject('hello-full'); }
-    hostStart(from);
+    if (p.card != null && jsonLen(p.card) > 8192) return reject('hello-card');
+    hostStart(from, p.card);
   }
   function onBye(p, from) { if (H.gs && H.gs.peer === from) hostEnd('bye'); }
   function hostTick() {
     const t0 = now();
     if (role() !== 'host' || peerCount() === 0) { hostEnd('dropped'); return; }
     const gs = H.gs; gs.map = G.mapId;
-    if (G.map && t0 - H.lastSnap >= B.SNAP_MS) { H.lastSnap = H.lastSnap && t0 - H.lastSnap < B.SNAP_MS * 2 ? H.lastSnap + B.SNAP_MS : t0; buildSnap(); }
+    if (partner()) {
+      adoptPartner();
+      if (H.mapPending) { H.mapPending = false; sendMap(); }
+      // what PARTNER says to the guest (blows taken, loot) goes on the reliable channel, a few lines at a time
+      let feed = []; try { feed = partner().drainFeed() || []; } catch (e) { feed = []; }
+      for (const f of feed.slice(0, 8)) if (f && typeof f.text === 'string') send('sync.msg', { t: plainStr(f.text, B.MSG_MAX), c: ['voice', 'warn', 'good', 'bad', ''].includes(f.cls) ? f.cls : '' }, true);
+    } else if (H.mapPending) { H.mapPending = false; sendMap(); }
+    if (G.map && !H.mapPending && t0 - H.lastSnap >= B.SNAP_MS) { H.lastSnap = H.lastSnap && t0 - H.lastSnap < B.SNAP_MS * 2 ? H.lastSnap + B.SNAP_MS : t0; buildSnap(); }
     if (t0 - H.lastFlags >= B.FLAG_MS) { H.lastFlags = t0; const f = flagsDiff(false); if (Object.keys(f).length) send('sync.flags', { f }, true); }
     ST.cpu.frames++; cpu(now() - t0); rateTick();
   }
@@ -538,9 +605,17 @@ const SYNC19 = (function () {
     primeSids(G.map);
     const c = Engine.cam, at = placeNear(c.x, c.y, c.dir);
     gs.x = at.x; gs.y = at.y; gs.vx = gs.vy = 0; gs.dir = c.dir; gs.map = G.mapId; gs.feet = (G.map.lvls || G.map.smooth) ? G.map.groundAt(at.x, at.y) : 0;
-    send('sync.map', { ep: H.ep, map: G.mapId, x: gs.x, y: gs.y, dir: c.dir, sig: mapSig(G.map), gr: !!G.flags.greening }, true);
+    H.pw = null;
+    // PARTNER sets its partner down behind the host after this (its loadMap wrapper runs outside this one): the guest
+    // is told where on the next tick, once that has happened
+    if (partner()) { H.mapPending = true; H.pw = { x: NaN, y: NaN }; } else sendMap();
     H.lastSnap = 0;
     emit('map', { side: 'host', map: G.mapId });
+  }
+  function sendMap() {
+    const gs = H.gs; if (!gs) return;
+    if (partner()) adoptPartner(); else writePartner();
+    send('sync.map', { ep: H.ep, map: G.mapId, x: gs.x, y: gs.y, dir: Engine.cam.dir, sig: mapSig(G.map), gr: !!G.flags.greening }, true);
   }
 
   // ================================================================ GUEST
@@ -571,6 +646,25 @@ const SYNC19 = (function () {
     }
     return out;
   }
+  // the traveller the guest sees in its HUD while joined: its own card (name, calling, kit), health from the host
+  function dressAs(pl, cd) {
+    try {
+      pl.name = cleanName(cd.name);
+      const cls = CLASSES.find((k) => k.id === cd.cls); if (cls) pl.cls = cls;
+      if ([1, 2, 3, 4, 5, 6].includes(cd.face)) pl.face = cd.face;
+      const ws = Array.isArray(cd.weapons) ? cd.weapons.filter((w) => typeof w === 'string' && own(WEAPONS, w)).slice(0, 9) : [];
+      if (ws.length) { pl.weapons = ws; pl.weapon = clampN(cd.weapon | 0, 0, ws.length - 1); }
+      if (cd.attrs && typeof cd.attrs === 'object') for (const k of ATTRS) if (isNum(cd.attrs[k])) pl.attrs[k] = clampN(cd.attrs[k], 0, 100);
+      if (isInt(cd.level)) pl.level = clampN(cd.level, 1, 99);
+      pl.pellets = clampN(cd.pellets | 0, 0, 999); pl.bolts = clampN(cd.bolts | 0, 0, 999);
+    } catch (e) { reject('dress'); }
+  }
+  function hostLookOk(l) {
+    if (!l || typeof l !== 'object') return null;
+    const { cls, face, wpn, arm } = l;
+    if (![cls, face, wpn, arm].every(isInt) || cls < 0 || cls > 15 || face < 1 || face > 6 || wpn < 0 || wpn > 15 || arm < 0 || arm > 63) return null;
+    return { cls, face, wpn, arm };
+  }
   function knownMap(id) { return typeof id === 'string' && id.length <= 48 && G.maps && Object.prototype.hasOwnProperty.call(G.maps, id) && G.maps[id] && G.maps[id].w; }
   function onWelcome(p, from) {
     if (role() !== 'guest') return reject('welcome-state');
@@ -580,14 +674,19 @@ const SYNC19 = (function () {
     }
     if (!p || p.v !== B.V || !isInt(p.ep) || typeof p.map !== 'string' || !isNum(p.x) || !isNum(p.y) || !isNum(p.dir)) return reject('welcome-shape');
     const probe = buildAllMaps(); if (!Object.prototype.hasOwnProperty.call(probe, p.map)) return reject('welcome-map');
-    // put the guest's own world aside, exactly as it is
+    // PARTNER puts the guest's own game aside first (an isolated session, so nothing played here can reach the guest's
+    // own saves); SYNC then puts that session aside too and shows the host's world in its place
+    C.entered = false;
+    const PL = partnerLib();
+    if (PL && C.card && !C.card.error) { try { C.entered = !!PL.guest.enter(); } catch (e) { C.entered = false; } }
     const c = Engine.cam;
     C.stash = {
       had: !!(G.player && G.map), player: G.player, maps: G.maps, map: G.map, mapId: G.mapId, ents: G.ents, flags: G.flags, tod: G.tod, day: G.day,
       wx: typeof Weather !== 'undefined' ? Weather.save() : null, cam: { x: c.x, y: c.y, dir: c.dir, pitch: c.pitch, z: c.z }, state: G.state,
       escapeTimer: G.escapeTimer, boreHold: G.boreHold, fadeT: G.fadeT, vel: { x: G.vel.x, y: G.vel.y }, feet: G.player ? G.player.feet : undefined,
     };
-    C.standIn = !G.player; if (C.standIn) G.player = standInTraveller();
+    C.standIn = !G.player && !C.entered; if (C.standIn) G.player = standInTraveller();
+    if (C.entered && C.card && G.player) dressAs(G.player, C.card);
     C.on = true; C.peer = from; C.hostName = plainStr(p.name, 24);
     G.flags = cleanFlags(p.flags, {}); G.maps = probe; if (p.gr || G.flags.greening) { G.maps.oakhaven = buildOakhaven(true); C.green = true; } else C.green = false;
     G.escapeTimer = 0; G.boreHold = 0; G.dead = false;
@@ -597,7 +696,8 @@ const SYNC19 = (function () {
     ['#title', '#create', '#intro', '#death', '#ending', '#event'].forEach((s) => { try { hide(s); } catch (e) { /* absent */ } });
     try { closeModal(); } catch (e) { /* none open */ }
     C.lastSnapAt = now(); C.offset = null;
-    if (!follow(p)) { C.on = false; G.flags = C.stash.flags; G.maps = C.stash.maps; G.player = C.stash.player; C.stash = null; return; }
+    if (!follow(p)) { C.on = false; G.flags = C.stash.flags; G.maps = C.stash.maps; G.player = C.stash.player; C.stash = null; if (C.entered) { try { PL.guest.returnHome(); } catch (e) { /* home */ } } return; }
+    if (typeof hostLookOk === 'function') C.hostLook = hostLookOk(p.look);
     G.state = 'play'; G.keys = {};
     say(fmt(TX.joined, C.hostName || TX.companion), 'good', 6000);
     emit('join', { side: 'guest', peer: from });
@@ -716,9 +816,23 @@ const SYNC19 = (function () {
     if (p.wx && typeof Weather !== 'undefined') Weather.load(p.wx);
     if (isNum(p.spd)) C.spd = clampN(p.spd, 0, 100);
     if (Array.isArray(p.you) && p.you.length === 6 && p.you.every(isInt)) reconcile(p.you);
+    if (p.lk) { const l = hostLookOk(p.lk); if (l) C.hostLook = l; }
+    if (p.pt && typeof p.pt === 'object') applyPartner(p.pt);
     if (p.x && typeof p.x === 'object') for (const key of Object.keys(p.x)) { const h = C.extFns.get(key); if (h) { try { h(p.x[key]); } catch (e) { console.warn('sync19: extension ' + key + ' failed', e); } } }
     cpu(now() - t0);
     emit('snap', p.q);
+  }
+  // PARTNER's view of this guest's traveller (health, voice, level, down) drives the guest's own HUD
+  function applyPartner(pt) {
+    const me = pt.me, pl = G.player; if (!me || typeof me !== 'object' || !pl) { C.down = false; return; }
+    const n = (v, a, b, d) => (isNum(v) ? clampN(v, a, b) : d);
+    pl.hpMax = n(me.hpMax, 1, 9999, pl.hpMax); pl.hp = n(me.hp, 0, pl.hpMax, pl.hp);
+    pl.voiceMax = n(me.voiceMax, 1, 9999, pl.voiceMax); pl.voice = n(me.voice, 0, pl.voiceMax, pl.voice);
+    pl.level = Math.round(n(me.lvl, 1, 99, pl.level)); pl.xp = Math.round(n(me.xp, 0, 1e7, pl.xp));
+    const wasDown = C.down; C.down = me.down === true;
+    if (C.down && !wasDown) G.hurtT = 0.25;
+    C.partner = { down: C.down, downLeft: n(me.downLeft, 0, 999, 0), revive: n(me.revive, 0, 1, 0), loot: me.loot === 'guest' ? 'guest' : 'host', xpEarned: Math.round(n(me.xpEarned, 0, 1e7, 0)),
+      host: pt.host && typeof pt.host === 'object' ? { hp: n(pt.host.hp, 0, 99999, 0), hpMax: n(pt.host.hpMax, 1, 99999, 1), down: pt.host.down === true } : null };
   }
   function guestCtx() {
     const o = C.hostOut, has = lerpAt(C.hostBuf, now() - (C.offset || 0) - B.INTERP_MS, o);
@@ -726,6 +840,7 @@ const SYNC19 = (function () {
   }
   function reconcile(you) {
     const [ack, xq, yq, vxq, vyq, fq] = you;
+    C.lastAck = ack;
     const st = C.st, ox = st.x, oy = st.y;
     C.pending = C.pending.filter((i) => i.seq > ack);
     st.x = xq / 256; st.y = yq / 256; st.vx = vxq / 256; st.vy = vyq / 256; st.feet = fq / 32;
@@ -739,7 +854,7 @@ const SYNC19 = (function () {
   function guestInput() {
     const k = G.keys, c = Engine.cam, play = G.state === 'play';
     let fwd = 0, str = 0, run = false;
-    if (play) {
+    if (play && !C.down) {
       fwd = G.touch.fy; str = G.touch.fx;
       if (k.w || k.arrowup) fwd += 1; if (k.s || k.arrowdown) fwd -= 1; if (k.d) str += 1; if (k.a) str -= 1;
       run = (G.opts.alwaysRun ? !k.shift : !!k.shift) || G.touch.run;
@@ -821,14 +936,26 @@ const SYNC19 = (function () {
     G.hintKind = usable && h._screen && h._screen.dist <= USE_RANGE ? h.kind : '';
     if (hint !== G.hint) { G.hint = hint; const el = document.getElementById('hint'); if (el) el.textContent = hint; }
     const tl = now();
-    if (tl - C.lastSnapAt > B.LOST_MS) { leave('lost'); return; }
+    if (C.leaving && tl - C.leaving > B.WB_WAIT) { finishLeave('left', undefined); return; }
+    if (tl - C.lastSnapAt > B.LOST_MS) { finishLeave('lost', undefined); return; }
     if (tl - C.lastSnapAt > 3000 && tl - C.helloAt > B.HELLO_MS && peerCount() > 0) { C.helloAt = tl; send('sync.hello', { v: B.V }, true); }   // the host lost us: ask again
     ST.cpu.frames++; cpu(now() - t0); rateTick();
   }
+  // leaving: ask the host for the write-back (what the guest earned) and go home when it comes, or after B.WB_WAIT
   function leave(why) {
     if (!C.on) return;
+    if (why === 'left' && C.entered && peerCount() > 0 && !C.leaving) { C.leaving = now(); send('sync.bye', {}, true); return; }
+    finishLeave(why, undefined);
+  }
+  function onWb(p, from) {
+    if (!C.on || from !== C.peer || !p || typeof p.wb !== 'object') return reject('wb');
+    finishLeave(C.leaving ? 'left' : 'ended', p.wb);
+  }
+  function finishLeave(why, wb) {
+    if (!C.on) return;
     const s = C.stash, c = Engine.cam;
-    if (why !== 'lost') send('sync.bye', {}, true);
+    if (why !== 'lost' && !C.leaving) send('sync.bye', {}, true);
+    C.leaving = 0;
     C.on = false; C.stash = null; C.ents.clear(); C.moving.clear(); C.ring.clear(); C.applied.clear(); C.pending = []; C.hostBuf = [];
     G.flags = s.flags; G.maps = s.maps; G.tod = s.tod; G.day = s.day; G.escapeTimer = s.escapeTimer; G.boreHold = s.boreHold; G.vel.x = s.vel.x; G.vel.y = s.vel.y;
     if (typeof Weather !== 'undefined' && s.wx) Weather.load(s.wx);
@@ -844,14 +971,25 @@ const SYNC19 = (function () {
       try { closeModal(); } catch (e) { /* none */ }
       G.state = 'title'; G.keys = {}; try { show('#title'); Audio_.setScene('title'); } catch (e) { /* title absent */ }
     }
-    C.standIn = false;
+    C.standIn = false; C.down = false; C.partner = null; C.card = null;
+    // PARTNER gives the guest's own game back, with the write-back applied to it (validated there) when there is one
+    if (C.entered) { C.entered = false; const PL = partnerLib(); try { if (PL) PL.guest.returnHome(wb); } catch (e) { console.warn('sync19: going home failed', e); } }
     emit('leave', { side: 'guest', why });
   }
   function guestPoll() {
     // not joined: ask to join while NET says we are a connected guest
-    if (role() !== 'guest' || peerCount() === 0) return;
+    if (role() !== 'guest' || peerCount() === 0) { C.card = null; return; }
     const t = now(); if (t < C.fullUntil || t - C.helloAt < B.HELLO_MS) return;
-    C.helloAt = t; send('sync.hello', { v: B.V }, true);
+    C.helloAt = t;
+    // the guest's own traveller travels as PARTNER's card (made once per attempt: it carries the write-back token)
+    const PL = partnerLib();
+    if (PL && !C.card) {
+      try {
+        if (G.player) C.card = PL.guest.card();
+        else { const keep = G.player; G.player = standInTraveller(); try { C.card = PL.guest.card(); } finally { G.player = keep; } }
+      } catch (e) { C.card = { error: 'card' }; }
+    }
+    send('sync.hello', C.card && !C.card.error ? { v: B.V, card: C.card } : { v: B.V }, true);
   }
   function onFlags(p, from) { if (!C.on || from !== C.peer || !p || typeof p.f !== 'object' || !p.f) return reject('flags'); cleanFlags(p.f, G.flags); }
   function onMsg(p, from) {
@@ -860,6 +998,8 @@ const SYNC19 = (function () {
     say(plainStr(p.t, B.MSG_MAX), cls, 4500);   // msg() writes textContent: never markup
   }
   function onFull() { C.fullUntil = now() + 10000; say(TX.full, 'warn', 5000); }
+  function onRefused(p, from) { if (C.on) return reject('refused-state'); C.fullUntil = now() + 10000; C.card = null; say(fmt(TX.refused, plainStr(p && p.reason, 40)), 'warn', 6000); }
+  function onStory(p, from) { if (!C.on || from !== C.peer) return reject('story'); const PL = partnerLib(); if (PL) { try { PL.guest.showStory(p); } catch (e) { reject('story'); } } }
 
   // ================================================================ the stand-in figure (procedural stand-in art)
   // Until PARTNER draws the travellers, each remote one is a plain townsperson sprite tinted toward a colour of its
@@ -871,29 +1011,50 @@ const SYNC19 = (function () {
     for (const n of ['harrow', 'aldric', 'herald', 'bettis', 'hetty', 'halder', 'proctor']) if (Engine.sprites[n]) { figSprite = n; return Engine.sprites[n]; }
     return null;
   }
+  // the host's figure on the guest's screen in the ghost painter's solid style (PARTNER's frames) when both are loaded
+  function painterFrame(f, camDir) {
+    const PL = partnerLib(), look = C.hostLook;
+    if (f.who !== 'host' || !look || !PL || typeof PL.frameOf !== 'function' || typeof GHOST18 !== 'object' || !GHOST18.viewOf || !GHOST18.paintFigure) return null;
+    const v = GHOST18.viewOf(f.dir, camDir);
+    C.stride = (C.stride || 0) + (f.spd || 0) * Math.max(0, Math.min(0.1, (now() - (C.strideAt || now())) / 1000)); C.strideAt = now();
+    const loco = (f.spd || 0) < 0.35 ? 0 : 1 + (Math.floor(C.stride / 0.42) & 1);
+    const act = f.act | 0, ph = act ? Math.min(3, Math.floor((f.ap || 0) * 4)) : 0;
+    try { return { fr: PL.frameOf(v.b, loco, act, ph, look), mirror: v.mirror }; } catch (e) { return null; }
+  }
   function drawFigures(F) {
     if (!fallbackOn || !(C.on || H.gs)) return;
-    const sp = pickFigSprite(); if (!sp) return;
     for (const f of figures()) {
+      if (f.who === 'guest' && partner()) continue;   // PARTNER draws its partner on the host's screen
       const cam = F.cam, w = F.w, h = F.h, fb = F.fb, dbuf = F.dbuf;
-      const dx = f.x - cam.x, dy = f.y - cam.y;
+      const dx = f.x - cam.x, dy = f.y - cam.y, dist = Math.hypot(dx, dy);
       const invDet = 1 / (F.planeX * F.dirY - F.dirX * F.planeY);
       const trX = invDet * (F.dirY * dx - F.dirX * dy), trY = invDet * (-F.planeY * dx + F.planeX * dy);
       if (trY <= 0.1) continue;
+      const pf = painterFrame(f, Math.atan2(F.dirY, F.dirX));
+      let tw, th, data, mirror = false, tint = null, cxk = 0.5, alphaCut = 128;
+      if (pf) { tw = pf.fr.w; th = pf.fr.h; data = pf.fr.data; mirror = pf.mirror; alphaCut = 1; }
+      else { const sp = pickFigSprite(); if (!sp) continue; tw = sp.w; th = sp.h; data = sp.data; tint = TINT[f.who] || TINT.guest; cxk = sp.cx == null ? 0.5 : sp.cx; }
       const screenX = ((w / 2) * (1 + trX / trY)) | 0, sprH = Math.abs(h / trY) | 0; if (sprH < 3) continue;
-      const sprW = Math.max(1, (sprH * sp.w / sp.h) | 0);
-      const baseline = F.horizon + (((cam.z - (f.feet || 0)) * h / trY) | 0), dsY = baseline - sprH, dsX = screenX - ((sprW * (sp.cx == null ? 0.5 : sp.cx)) | 0);
+      const sprW = Math.max(1, (sprH * tw / th) | 0);
+      const baseline = F.horizon + (((cam.z - (f.feet || 0)) * h / trY) | 0), dsY = baseline - sprH, dsX = screenX - ((sprW * cxk) | 0);
       const xs = Math.max(0, dsX), xe = Math.min(w - 1, dsX + sprW - 1), ys = Math.max(0, dsY), ye = Math.min(h - 1, baseline - 1);
       if (xe < xs || ye < ys) continue;
-      const tn = TINT[f.who] || TINT.guest, data = sp.data, tw = sp.w, th = sp.h, fog = clampN(1 - (trY - (F.fogDist || 12) * 0.6) / ((F.fogDist || 12) * 0.5), 0.15, 1);
+      // light: never so dark the companion is lost; fog thins it into the distance like any sprite
+      const fogD = F.fogDist || 12, fogK = clampN(1 - Math.max(0, dist - fogD * 0.45) / (fogD * 0.75), 0.2, 1);
+      const lk = clampN(F.outdoor ? (isNum(F.light) ? F.light : 1) : Math.max(0.55, (isNum(F.ambient) ? F.ambient : 0.4) + 0.35), 0.62, 1.1);
+      const fR = F.fogR || 0, fG = F.fogG || 0, fB = F.fogB || 0;
       for (let x = xs; x <= xe; x++) {
-        const tx = (((x - dsX) * tw) / sprW) | 0; if (tx < 0 || tx >= tw) continue;
+        let tx = (((x - dsX) * tw) / sprW) | 0; if (tx < 0 || tx >= tw) continue; if (mirror) tx = tw - 1 - tx;
         let o = ys * w + x;
         for (let y = ys; y <= ye; y++, o += w) {
-          if (dbuf[o] < trY) continue;
-          const px = data[((((y - dsY) * th) / sprH) | 0) * tw + tx]; if ((px >>> 24) < 128) continue;
-          const r = ((px & 255) * 0.55 + tn[0] * 0.45) * fog, g = (((px >>> 8) & 255) * 0.55 + tn[1] * 0.45) * fog, b = (((px >>> 16) & 255) * 0.55 + tn[2] * 0.45) * fog;
-          fb[o] = (0xff000000 | ((b | 0) << 16) | ((g | 0) << 8) | (r | 0)) >>> 0; dbuf[o] = trY;
+          if (dbuf[o] < trY - 0.02) continue;
+          const ty = (((y - dsY) * th) / sprH) | 0; if (ty < 0 || ty >= th) continue;
+          const px = data[ty * tw + tx]; if ((px >>> 24) < alphaCut) continue;
+          let r = px & 255, g = (px >>> 8) & 255, b = (px >>> 16) & 255;
+          if (tint) { r = r * 0.55 + tint[0] * 0.45; g = g * 0.55 + tint[1] * 0.45; b = b * 0.55 + tint[2] * 0.45; }
+          r *= lk; g *= lk; b *= lk;
+          if (fogK < 1) { r = r * fogK + fR * (1 - fogK); g = g * fogK + fG * (1 - fogK); b = b * fogK + fB * (1 - fogK); }
+          fb[o] = (0xff000000 | (Math.min(255, b | 0) << 16) | (Math.min(255, g | 0) << 8) | Math.min(255, r | 0)) >>> 0; dbuf[o] = trY;
         }
       }
     }
@@ -928,7 +1089,10 @@ const SYNC19 = (function () {
     if (T || Toverride || typeof NET19 !== 'undefined' || window.NET19) {
       bind();
       if (H.gs) { try { hostTick(); } catch (e) { console.warn('sync19: host tick failed', e); } }
-      else if (T) guestPoll();
+      else if (T) {
+        guestPoll();
+        if (H.pausedAt && now() - H.pausedAt > B.PAUSE_MAX) { H.pausedAt = 0; const P = partner(); if (P) { try { P.leave('lost'); } catch (e) { /* gone */ } } }
+      }
     }
     return r;
   };
@@ -1005,9 +1169,19 @@ const SYNC19 = (function () {
 
   // ---------------------------------------------------------------- listen
   on('sync.hello', onHello); on('sync.in', onIn); on('sync.act', onAct); on('sync.bye', onBye);
+  on('sync.wb', onWb); on('sync.refused', onRefused); on('sync.story', onStory);
   on('sync.welcome', onWelcome); on('sync.map', onMap); on('sync.snap', onSnap); on('sync.flags', onFlags); on('sync.msg', onMsg); on('sync.full', onFull);
   bind();
-  if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook((F) => { try { drawFigures(F); } catch (e) { if (!drawFigures.warned) { drawFigures.warned = true; console.warn('sync19: figure draw failed', e); } } }, 9);
+  // PARTNER's figure walks from its own speed and stride, which its tick sets from its own movement (none: SYNC moves
+  // it). Just before PARTNER paints (same hook order, registered earlier), give it the guest's walking speed.
+  function feedPartnerGait() {
+    const P = partner(), g = H.gs; if (!P || !g || typeof P.setPose === 'function') return;
+    const S = pState(P); if (!S) return;
+    const t = now(), dt = Math.min(0.1, Math.max(0, (t - (H.gaitAt || t)) / 1000)); H.gaitAt = t;
+    const sp = (t - g.lastInputAt < 150) ? Math.hypot(g.vx, g.vy) : 0;
+    S.spd = sp; S.stride = (S.stride || 0) + sp * dt;
+  }
+  if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook((F) => { if (H.gs) { try { feedPartnerGait(); } catch (e) { /* gait is cosmetic */ } } try { drawFigures(F); } catch (e) { if (!drawFigures.warned) { drawFigures.warned = true; console.warn('sync19: figure draw failed', e); } } }, 9);
 
   // ================================================================ the API (see the contract at the top)
   const api = {
@@ -1046,7 +1220,7 @@ const SYNC19 = (function () {
     resetStats() { for (const k of ['out', 'in', 'outN', 'inN', 'rejected']) ST[k] = {}; Object.assign(ST, { snaps: 0, snapBytes: 0, snapMax: 0, snapEntsMax: 0, census: 0, inputs: 0, acts: 0, recon: 0, reconErr: 0, reconErrMax: 0, peakOut: 0, peakIn: 0, mapMismatch: 0 }); ST.cpu.peak = 0; },
     useTransport(t) { Toverride = t || null; bind(); },
     // for tests
-    _internal: { H, C, stepMover, decodeInput, blockedAt },
+    _internal: { H, C, stepMover, decodeInput, blockedAt, hostTick: () => { if (H.gs) hostTick(); } },
   };
   return api;
 })();
