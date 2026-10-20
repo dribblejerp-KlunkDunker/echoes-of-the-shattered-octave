@@ -161,6 +161,21 @@ Every phase must retain the security regression tests and save/load behavior. Re
 ### Owner's list, October 2026 (100 ideas)
 Added from the owner's list. Statuses come from a check against the code: `[x]` already in the game, `[~]` partly there, `[ ]` new. Where an item is already in, the note says where.
 
+**Remaining owner's-list phases (plan, October 2026)**
+| Phase | Theme | Items |
+|---|---|---|
+| 12 — Tools of the trade | gear and Songs | Shield bash; two-handed and dual-wielding; throwing nets; fire flasks; silence bombs; Office grappling hook; environmental kills; instruments that change Songs; tuning forks; dowsing for Anchor-roots |
+| 13 — The Hush comes closer | horror | Whispers from behind; lights dying; night terrors; haunted house in Oakhaven; the Unrung Bell at night; jump-scare toggle; hounds sniffing your trail; Hushwardens' muffling wave; crows at bodies |
+| 14 — A world that shows the story | visuals and animation | The Greening in Oakhaven; spreading Light-glass; root veins; "Octave lights"; mirrors; sealed doorways; breakable barrels; Sunken Court light; NPC weather reactions; swaying capes; tavern sitting/eating; Kestrel flight scene |
+| 15 — The province moves | world events and Daggerfall systems | Synod sermons; eclipses; roadside events; burning and rebuilding, permanent deaths; Synod territory; paid training; letters of credit; cheat codes; "Where is" map marks; camp cooking; tavern card game; boss trophies |
+| 16 — New ground | new areas | Chlorophyll Flume; underwater dungeon beneath Whisper-Grove; heists (Synod cathedral, Consortium quarry); the Kestrel as a home base with crew |
+| 17 — Beyond Book One | extras | Book Two prologue; Port Cantabile trip and the Long Night (both after Book One in canon: presented as marked extras) |
+| 18 — Technical | engine and online | Sharper renderer; installable offline app; daily challenge dungeon; ghost replays; messages and leaderboards (need a small server: owner's decision) |
+
+Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
+
+**Phase 12 — tools of the trade, and the festivals** (delivered; items marked (P12); see the Phase 12 verification)
+
 **Phase 11 — feedback and feel** (delivered; items marked (P11) below; see the Phase 11 verification)
 
 **Phase 10 — the owner's picks** (delivered; see the Phase 10 verification below)
@@ -198,10 +213,10 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 - `[ ]` Bank letters of credit · `[x]` Holidays on the calendar (P11) · `[ ]` Cheat codes for testing
 
 **Gameplay**
-- `[ ]` Instruments (lute, flute, hurdy-gurdy) that change Songs · `[x]` Tavern performance rhythm game (P11) · `[ ]` Tuning forks that hum near secrets
-- `[ ]` Dowsing for Anchor-roots · `[x]` Carried light (the lantern, U) · `[ ]` Fire flasks · `[ ]` Environmental kills (chandeliers, scaffolds, deep water)
-- `[ ]` Office grappling hook · `[x]` Noise lures (thrown stones and bottles; the lure reed) · `[ ]` Silence bombs · `[ ]` Shield bash · `[ ]` Two-handed weapons and dual-wielding
-- `[ ]` Throwing nets · `[x]` Adopt the Whisper-Grove cat (she hisses at danger) (P11) · `[x]` Bones, a tavern dice game (P11) · `[ ]` A tavern card game · `[ ]` Camp cooking
+- `[x]` Instruments (lute, flute, hurdy-gurdy) that change Songs (P12) · `[x]` Tavern performance rhythm game (P11) · `[x]` Tuning forks that hum near secrets (P12)
+- `[x]` Dowsing for Anchor-roots (P12) · `[x]` Carried light (the lantern, U) · `[x]` Fire flasks (P12) · `[x]` Environmental kills (chandeliers, scaffolds, deep water) (P12)
+- `[x]` Office grappling hook (P12) · `[x]` Noise lures (thrown stones and bottles; the lure reed) · `[x]` Silence bombs (P12) · `[x]` Shield bash (P12) · `[x]` Two-handed weapons and dual-wielding (P12)
+- `[x]` Throwing nets (P12) · `[x]` Adopt the Whisper-Grove cat (she hisses at danger) (P11) · `[x]` Bones, a tavern dice game (P11) · `[ ]` A tavern card game · `[ ]` Camp cooking
 - `[ ]` Boss trophies for your house (the house exists)
 
 **World and events**
@@ -220,6 +235,16 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 **Technical**
 - `[ ]` A sharper renderer with the pixel look kept · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
 - `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[x]` Performance overlay (frame rate, memory) (P11)
+
+### Phase 12 "Tools of the trade" verification
+- **How it was built.** Five parallel teams (arms, kit, rigging, songcraft, festivals), then integration on phase12-tools.
+- **Arms (js/arms12.js).** Shield bash (guard + strike; heavy foes only stagger, bosses ignore it), two-handed grip table and three new two-handers, dual-wielding with an off-hand slot. Integration kept the base game's shield stowing beside a two-hander instead of removing the shield.
+- **Kit (js/kit12.js).** Oil flasks (fire patch, 8 s, beasts and people will not cross; loud; a witnessed fire in town is a crime), damper jars (6 s silence; no Songs inside), weighted nets (pin small/ordinary foes; bosses and the Hush immune).
+- **Rigging (js/rigging12.js).** The Office grapnel (found at the wrecked cutter; five safe anchors), chandeliers and scaffolds that fall on foes (permanent), shoving small foes into deep water.
+- **Songcraft (js/songcraft12.js).** Lute, flute and hurdy-gurdy change Songs; tuning fork; dowsing rod (story-gated). Integration fix: composed Songs (Spellmaker) were paid for but never sung; castSong now calls executeCustomSong (test/customsong.test.js).
+- **Festivals (js/festivals12.js).** Canon from the approved Vol VII addendum: the Last Sheaf (prepared, postponed by the Church, held in secret at the dead hour), the Rite as false festival, the Eel-Run, the Drowned Lanterns.
+- **Other fixes.** Long place names in the HUD squeeze to fit; the Rite herald has an authored voice.
+- **Tests.** New suites arms12, kit12, rigging12, songcraft12, festivals12, customsong; all 75 suites pass on the merged tree (air11, festivals12, logmap and screens have timing checks that failed once under load and passed on rerun).
 
 ### Phase 11 "Feedback and feel" verification
 - **How it was built.** Five parallel teams (hud, flourish, air, tavern, calendar), then integration on phase11-feel.
