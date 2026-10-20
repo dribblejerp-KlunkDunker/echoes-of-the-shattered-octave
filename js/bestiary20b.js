@@ -524,70 +524,357 @@ const BEASTB = (() => {
   // The head row map: the head follows the body's row map, lowered into a strike.
   const headMap = (ym, drop) => yt => { const y = ym(yt); return y < 0 ? -1 : y - drop < 0 ? -1 : y - drop; };
 
+  // ---------------------------------------------------------------- the humanoid rig
+  // A species is a table: the body's true silhouette and its depth, the head, what is lifted off the
+  // painting (and how the hole is painted in: mirrored about an axis, or bridged top to bottom), the
+  // cut-outs and patches it uses, how its back is painted, and a dress() that hangs arms, tools, hats.
+  function humanoid(cfg) {
+    return {
+      W: cfg.W, axT: cfg.axT, knee: cfg.knee, hip: cfg.hip, ink: cfg.ink,
+      prep(S, src) {
+        S.pt = {};
+        for (const k in cfg.patches || {}) { const q = cfg.patches[k]; S.pt[k] = patch(sp0(q[4]) || src, q[0], q[1], q[2], q[3]); }
+        let F = src;
+        for (const f of cfg.lift || []) {
+          const pt = S.pt[f.pt || 'cloth'];
+          F = cleanPainting(F, cfg.sil, f.poly, pt, f.axis != null ? { axis: f.axis } : { vertical: f.mode !== 'onion', smooth: f.smooth || 300, vert: 1, like: f.like === false ? null : pt && pt.mean, tol: f.tol || 55, grain: f.grain == null ? 0.6 : f.grain });
+        }
+        S.front = F;
+        S.body = buildStack(F, S.ax, cfg.body);
+        if (cfg.head) S.head = buildStack(F, S.ax, cfg.head);
+        S.cut = {};
+        for (const k in cfg.cuts || {}) { const q = cfg.cuts[k]; let c = cutout(sp0(q[2]) || src, q[0], q[1]); if (c && q[3]) c = alignCut(c, q[3][0], q[3][1]); S.cut[k] = c; }
+        const B = editable(F);
+        if (cfg.back) cfg.back(B, S, L);
+        S.backSrc = B;
+        if (cfg.prep) cfg.prep(S, src);
+      },
+      pose: cfg.pose || bipedPose,
+      draw(C, S, th, axT, P, v) {
+        const x = { C, S, th, axT, P, v, sn: Math.sin(th), cs: Math.cos(th), back: v >= 3, atk: P.atk || 0 };
+        x.ym = ymapper(S, P); x.sh = shearer(S, P, th); x.row = ys => rowT(S, P, ys);
+        x.lean = (P.lean || 0) * x.sn;
+        x.front = 7 * Math.max(0, x.cs);   // hands and arms sit proud of the cloth when they face us
+        if (cfg.legs) cfg.legs(x); else if (S.cut.bootR) boots(C, S, th, axT, P, v, S.cut.bootR, S.cut.bootL, cfg.bootL[0], cfg.bootL[1], cfg.bootRow);
+        drawStack(C, S, S.body, th, S.ax, axT, x.ym, x.sh, 1, cfg.bodyOpt);
+        if (S.head) drawStack(C, S, S.head, th, S.ax, axT + (cfg.headLean == null ? 1 : cfg.headLean) * x.lean, headMap(x.ym, x.atk === 2 ? (cfg.headDrop == null ? 4 : cfg.headDrop) : 0), null, 2, cfg.headOpt);
+        if (cfg.dress) cfg.dress(x);
+      },
+    };
+  }
+  const sp0 = n => (n ? Engine.sprites[n] : null);
+
+  // An arm: shoulder -> elbow -> hand in the body frame (f, l, canvas y), a sleeve patch, a hand cut-out.
+  function arm(x, sh, hand, o) {
+    o = o || {};
+    const fz = o.dz == null ? x.front : o.dz;
+    const el = o.elbow || { f: (sh.f + hand.f) / 2 - (o.bend == null ? 3 : o.bend), l: (sh.l + hand.l) / 2 + (sh.l > 0 ? 2 : -2), y: (sh.y + hand.y) / 2 + 2 };
+    const w0 = o.w0 || 10, w1 = o.w1 || 8, w2 = o.w2 || 7, pt = x.S.pt[o.pt || 'sleeve'], sh2 = o.shade || (sh.l * x.cs < 0 && !x.back ? 0.86 : 1);
+    drawLimb(x.C, x.th, x.axT, Object.assign({ dz: fz }, sh), Object.assign({ dz: fz + 1 }, el), w0, w1, pt, o.id || 30, sh2);
+    drawLimb(x.C, x.th, x.axT, Object.assign({ dz: fz + 1 }, el), Object.assign({ dz: fz + 2 }, hand), w1, w2, pt, (o.id || 30) + 1, sh2);
+    if (o.hand) drawCut(x.C, o.hand, x.th, x.axT, hand.f, hand.l, hand.y, o.handRot || 0, { dz: fz + 3, mirror: x.back, shade: x.back ? 0.8 : 1, id: (o.id || 30) + 2 });
+  }
+
   // ---------------------------------------------------------------- Cutter-Man (marine)
   // Office boarding crew: grey oilcloth hooded coat with a shoulder mantle, a blank face-plate in the
   // hood, crossed leather straps and a belt with pouches, a coiled grapnel line in the right hand and
   // a cudgel in the left. Attack: the grapnel swung up two-handed (a1) and driven down (a2).
-  SP.marine = {
+  SP.marine = humanoid({
     W: 112, axT: 52, knee: 112, hip: 92,
-    prep(S, src) {
-      const a1 = Engine.sprites.marine_a1 || src;
-      const cloth = patch(src, 28, 100, 16, 40), hood = patch(src, 13, 14, 6, 24), mantle = patch(src, 44, 44, 12, 10);
-      // the coat's own silhouette, under the line and the cudgel arm
-      const body = [[[22, 2], [42, 2], [50, 40], [58, 46], [58, 62], [55, 80], [57, 120], [61, 150], [6, 150], [8, 110], [9, 70], [6, 52], [14, 40]]];
-      const lift = [[[0, 50], [12, 50], [19, 58], [21, 70], [22, 150], [0, 150]], [[51, 48], [75, 14], [75, 100], [53, 100], [53, 70]]];
-      S.front = cleanPainting(src, body, [lift[0]], cloth, { axis: 22.5 });
-      S.front = cleanPainting(S.front, body, [lift[1]], cloth, { axis: 51.5 });
-      S.body = buildStack(S.front, S.ax, {
-        mask: [[[0, 40], [75, 40], [75, 150], [0, 150]]],
-        depth: (y, al) => (y < 56 ? al * 0.6 : y < 72 ? al * 0.66 : al * 0.74),
-        fwd: y => (y < 56 ? -1 : y > 120 ? 1 : 0),
-      });
-      S.head = buildStack(S.front, S.ax, {
-        mask: [[[17, 0], [47, 0], [50, 40], [14, 40]]],
-        depth: (y, al) => al * (y < 10 ? 1.1 : 0.98),
-        fwd: y => (y < 12 ? -6 + y * 0.45 : y > 34 ? -1 : 0),
-      });
-      S.armR = cutout(src, lift.slice(0, 1), [12, 54]);       // the line and grapnel (screen left)
-      S.armL = cutout(src, lift.slice(1), [54, 54]);          // the cudgel hand (screen right)
-      S.bootR = cutout(src, [[[6, 146], [30, 146], [30, 160], [6, 160]]], [18, 147]);
-      S.bootL = cutout(src, [[[36, 146], [60, 146], [60, 160], [36, 160]]], [48, 147]);
-      S.coil = cutout(src, [[[0, 60], [24, 60], [24, 120], [0, 120]]], [12, 64]);
-      // the grapnel from the wind-up painting, turned so its haft is its length (fist -> head)
-      const g = cutout(a1, [[[0, 26], [44, 4], [50, 0], [68, 0], [68, 24], [50, 24], [22, 42], [0, 46]]], [12, 35]);
-      S.grap = alignCut(g, 44, -25);
-      S.sleeve = patch(src, 50, 58, 8, 16);
-      // the back: no face-plate, no straps, no buckle or pouches; a centre seam down the coat
-      const B = editable(S.front);
-      paintOut(B, [[[20, 9], [44, 9], [45, 44], [19, 44]]], hood, { grain: 0, smooth: 80 });
-      paintOut(B, [[[18, 42], [50, 42], [52, 62], [16, 62]]], mantle, { grain: 0.9, smooth: 40, vert: 0.4, from: [[[0, 43], [75, 43], [75, 62], [0, 62]]] });
+    patches: { cloth: [28, 100, 16, 40], hood: [13, 14, 6, 24], mantle: [44, 44, 12, 10], sleeve: [50, 58, 8, 16] },
+    sil: [[[22, 2], [42, 2], [50, 40], [58, 46], [58, 62], [55, 80], [57, 120], [61, 150], [6, 150], [8, 110], [9, 70], [6, 52], [14, 40]]],
+    lift: [
+      { poly: [[[0, 50], [12, 50], [19, 58], [21, 70], [22, 150], [0, 150]]], axis: 22.5 },
+      { poly: [[[51, 48], [75, 14], [75, 100], [53, 100], [53, 70]]], axis: 51.5 },
+    ],
+    body: { mask: [[[0, 40], [75, 40], [75, 150], [0, 150]]], depth: (y, al) => (y < 56 ? al * 0.6 : y < 72 ? al * 0.66 : al * 0.74), fwd: y => (y < 56 ? -1 : y > 120 ? 1 : 0) },
+    head: { mask: [[[17, 0], [47, 0], [50, 40], [14, 40]]], depth: (y, al) => al * (y < 10 ? 1.1 : 0.98), fwd: y => (y < 12 ? -6 + y * 0.45 : y > 34 ? -1 : 0) },
+    cuts: {
+      armR: [[[[0, 50], [12, 50], [19, 58], [21, 70], [22, 150], [0, 150]]], [12, 54]],
+      armL: [[[[51, 48], [75, 14], [75, 100], [53, 100], [53, 70]]], [54, 54]],
+      bootR: [[[[6, 146], [30, 146], [30, 160], [6, 160]]], [18, 147]],
+      bootL: [[[[36, 146], [60, 146], [60, 160], [36, 160]]], [48, 147]],
+      coil: [[[[0, 60], [24, 60], [24, 120], [0, 120]]], [12, 64]],
+      grap: [[[[0, 26], [44, 4], [50, 0], [68, 0], [68, 24], [50, 24], [22, 42], [0, 46]]], [12, 35], 'marine_a1', [44, -25]],
+    },
+    bootL: [-10, 12], bootRow: 147,
+    back(B, S) {
+      paintOut(B, [[[20, 9], [44, 9], [45, 44], [19, 44]]], S.pt.hood, { grain: 0, smooth: 80 });
+      paintOut(B, [[[18, 42], [50, 42], [52, 62], [16, 62]]], S.pt.mantle, { grain: 0.9, smooth: 40, vert: 0.4, from: [[[0, 43], [75, 43], [75, 62], [0, 62]]] });
       clone(B, 18, 96, 38, 26, 18, 70);
       clone(B, 21, 63, 9, 7, 30, 63); clone(B, 21, 63, 9, 7, 39, 63);
-      for (let y = 6; y < 150; y++) { const x = Math.round(S.ax); const i = y * B.w + x; if (L.solidPx(B.data[i]) && (y < 41 || y > 70)) B.data[i] = mul(B.data[i], 0.75); }
-      S.backSrc = B;
+      const ax = Math.round(S.ax);
+      for (let y = 6; y < 150; y++) { const i = y * B.w + ax; if (L.solidPx(B.data[i]) && (y < 41 || y > 70)) B.data[i] = mul(B.data[i], 0.75); }
     },
-    pose: bipedPose,
-    draw(C, S, th, axT, P, v) {
-      const ym = ymapper(S, P), sh = shearer(S, P, th), sn = Math.sin(th), atk = P.atk || 0;
-      boots(C, S, th, axT, P, v, S.bootR, S.bootL, -10, 12, 147);
-      drawStack(C, S, S.body, th, S.ax, axT, ym, sh, 1);
-      const lean = (P.lean || 0) * sn;
-      drawStack(C, S, S.head, th, S.ax, axT + lean, headMap(ym, atk === 2 ? 4 : 0), null, 2);
-      const shY = rowT(S, P, 54);
-      if (!atk) {
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(54);
+      if (!x.atk) {
         const sw = (P.swing || 0) * 9;
-        hangArm(C, S.armR, th, axT, P, v, -19, shY, sw, 21);
-        hangArm(C, S.armL, th, axT, P, v, 21, shY, -sw, 22);
+        hangArm(C, S.cut.armR, th, axT, P, v, -19, shY, sw, 21);
+        hangArm(C, S.cut.armL, th, axT, P, v, 21, shY, -sw, 22);
         return;
       }
-      drawCut(C, S.coil, th, axT, -2, -18, rowT(S, P, 66), 0, { kx: 0.8, shade: 0.9, dz: 1, id: 21 });
-      const up = atk === 1;
-      const hand = up ? { f: 2, l: -15, y: rowT(S, P, 30) } : { f: 21, l: 0, y: rowT(S, P, 100) };
-      const dzF = 7 * Math.max(0, Math.cos(th));
-      for (const l of [-22, 22]) drawLimb(C, th, axT, { f: 8, l, y: shY + 1, dz: dzF }, Object.assign({}, hand, { dz: dzF + 2 }), 11, 8, S.sleeve, 30 + (l > 0 ? 1 : 0), l > 0 ? 1 : 0.85);
-      drawAlong(C, S.grap, th, axT, hand, up ? { f: -0.55, l: 0.5, up: 0.5 } : { f: 0.7, l: 0.1, up: -0.7 }, { dz: 6, id: 32 });
+      drawCut(C, S.cut.coil, th, axT, -2, -18, x.row(66), 0, { kx: 0.8, shade: 0.9, dz: 1, id: 21 });
+      const up = x.atk === 1;
+      const hand = up ? { f: 2, l: -15, y: x.row(30) } : { f: 21, l: 0, y: x.row(100) };
+      for (const l of [-22, 22]) arm(x, { f: 8, l, y: shY + 1 }, hand, { w0: 11, w1: 9, w2: 8, id: l > 0 ? 30 : 34 });
+      drawAlong(C, S.cut.grap, th, axT, hand, up ? { f: -0.55, l: 0.5, up: 0.5 } : { f: 0.7, l: 0.1, up: -0.7 }, { dz: 6, id: 40 });
     },
-  };
+  });
+
+  // A crossbow in the body frame: stock from rear to front, the prod (bow) across its front end.
+  function crossbow(x, rear, front, o) {
+    o = o || {};
+    const pt = x.S.pt.wood, dz = x.front + 4;
+    drawLimb(x.C, x.th, x.axT, Object.assign({ dz }, rear), Object.assign({ dz }, front), 5, 4, pt, 50, 1);
+    const half = 13, back = 4, f = front.f - 1;
+    for (const s of [-1, 1]) drawLimb(x.C, x.th, x.axT, { f, l: front.l, y: front.y, dz }, { f: f - back, l: front.l + s * half, y: front.y + 1, dz }, 3, 2, x.S.pt.steel || pt, 52, 0.95);
+  }
+
+  // ---------------------------------------------------------------- Office Outrider
+  // A crossbowman of the Arbiter's column in a grey oilskin greatcoat and a tricorn, his face behind
+  // a dark leather mask, the crossbow carried across the chest; belt, powder flask, high boots.
+  // Attack: the crossbow brought up to the eye (a1) and its kick as it looses (a2).
+  SP.outrider = humanoid({
+    W: 116, axT: 54, knee: 112, hip: 64,
+    pose(pose) {
+      if (pose === '_a1') return { atk: 1 };
+      if (pose === '_a2') return { atk: 2, lean: -3 };
+      return bipedPose(pose);
+    },
+    headDrop: 0,
+    patches: { cloth: [8, 98, 20, 28], collar: [16, 26, 8, 8], sleeve: [4, 32, 10, 18], wood: [40, 46, 16, 4], hat: [20, 2, 24, 8] },
+    sil: [[[14, 0], [52, 0], [52, 22], [58, 28], [61, 36], [58, 58], [64, 96], [70, 132], [4, 132], [10, 96], [14, 58], [10, 36], [13, 28], [16, 22]]],
+    lift: [
+      { poly: [[[0, 28], [77, 28], [77, 57], [0, 57]]], pt: 'cloth', mode: 'onion', tol: 60, grain: 0.9 },
+    ],
+    body: { mask: [[[0, 24], [77, 24], [77, 133], [0, 133]]], depth: (y, al) => (y < 60 ? al * 0.6 : al * 0.62), fwd: y => (y < 40 ? 0 : y > 100 ? 1 : 0) },
+    head: { mask: [[[12, 0], [54, 0], [54, 24], [12, 24]]], depth: (y, al) => (y < 13 ? al * 0.95 : al * 0.82), fwd: y => (y < 13 ? -1 : 1) },
+    cuts: {
+      bootR: [[[[6, 128], [30, 128], [30, 160], [6, 160]]], [18, 129]],
+      bootL: [[[[40, 128], [66, 128], [66, 160], [40, 160]]], [52, 129]],
+      hand: [[[[17, 43], [28, 43], [28, 54], [17, 54]]], [22, 48]],
+    },
+    legs(x) {
+      const { C, S, th, axT, P, v } = x, step = P.step || 0, back = v >= 3;
+      const kx = 0.8 + 0.4 * Math.abs(x.sn), y0 = x.row(129);
+      drawCut(C, S.cut.bootR, th, axT, -6 * step, -13, y0 + (step < 0 ? -2 : 0), -step * 6 * x.sn, { kx, mirror: back, shade: 0.92, id: 11 });
+      drawCut(C, S.cut.bootL, th, axT, 6 * step, 13, y0 + (step > 0 ? -2 : 0), step * 6 * x.sn, { kx, mirror: back, shade: 0.92, id: 12 });
+    },
+    back(B, S) {
+      paintOut(B, [[[22, 11], [44, 11], [46, 27], [20, 27]]], S.pt.collar, { grain: 0.8, smooth: 20 });       // the mask: the back of the head and the collar
+      paintOut(B, [[[28, 56], [40, 56], [40, 70], [28, 70]]], S.pt.cloth, { grain: 0.5, smooth: 30 });       // the buckle
+      paintOut(B, [[[40, 70], [58, 70], [58, 102], [40, 102]], [[29, 70], [37, 70], [37, 130], [29, 130]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.6 });   // flask and buttons
+      // a vent seam up the back of the coat
+      const ax = Math.round(S.ax);
+      for (let y = 96; y < 132; y++) { const i = y * B.w + ax; if (L.solidPx(B.data[i])) B.data[i] = mul(B.data[i], 0.6); }
+    },
+    dress(x) {
+      const { S, P } = x, atk = x.atk, sw = (P.swing || 0) * 2;
+      let rear, front;
+      if (atk === 1) { rear = { f: 4, l: -7, y: x.row(21) }; front = { f: 36, l: -5, y: x.row(22) }; }
+      else if (atk === 2) { rear = { f: 4, l: -7, y: x.row(22) }; front = { f: 33, l: -5, y: x.row(12) }; }
+      else { rear = { f: 8, l: -10, y: x.row(50) + sw }; front = { f: 32, l: -2, y: x.row(54) + sw }; }
+      const grip = { f: rear.f + 4, l: rear.l, y: rear.y + 3 }, fore = { f: rear.f + (front.f - rear.f) * 0.6, l: -3, y: rear.y + (front.y - rear.y) * 0.6 + 3 };
+      crossbow(x, rear, front);
+      const shY = x.row(32);
+      arm(x, { f: 3, l: -20, y: shY }, grip, { hand: S.cut.hand, w0: 11, w1: 9, w2: 8, bend: atk ? -6 : 4, id: 30 });
+      arm(x, { f: 3, l: 20, y: shY }, fore, { hand: S.cut.hand, w0: 11, w1: 9, w2: 8, bend: atk ? -4 : 2, id: 34 });
+    },
+  });
+
+  // Generic stride: two leg/boot cut-outs swung along the heading.
+  function stride(x, R_, L_, lR, lL, yRow, k) {
+    const { C, th, axT, P, v } = x, step = P.step || 0, back = v >= 3, kx = 0.8 + 0.4 * Math.abs(x.sn), y0 = x.row(yRow), a = (k || 6);
+    drawCut(C, R_, th, axT, -a * step, lR, y0 + (step < 0 ? -2 : 0), -step * a * x.sn, { kx, mirror: back, shade: 0.92, id: 11 });
+    drawCut(C, L_, th, axT, a * step, lL, y0 + (step > 0 ? -2 : 0), step * a * x.sn, { kx, mirror: back, shade: 0.92, id: 12 });
+  }
+
+  // ---------------------------------------------------------------- Tongueless of the Quiet Faith
+  // A brother of the Quiet Faith: a sand-coloured habit and deep hood, a rope girdle, a hand-bell he
+  // never rings in his left hand and a reaping hook in his right. Attack: the hook raised (a1) and
+  // swept across (a2).
+  SP.tongueless = humanoid({
+    W: 108, axT: 52, knee: 110, hip: 62,
+    patches: { cloth: [20, 104, 26, 30], hood: [44, 8, 6, 22], sleeve: [4, 50, 9, 22], cord: [30, 58, 10, 4] },
+    sil: [[[20, 0], [48, 0], [54, 40], [53, 60], [57, 100], [62, 140], [7, 140], [12, 100], [16, 60], [15, 40]]],
+    lift: [
+      { poly: [[[0, 38], [17, 40], [17, 132], [0, 132]]], axis: 17.5 },
+      { poly: [[[52, 40], [69, 40], [69, 106], [52, 106]]], axis: 51.5 },
+    ],
+    body: { mask: [[[0, 34], [69, 34], [69, 140], [0, 140]]], depth: (y, al) => (y < 60 ? al * 0.62 : al * 0.72), fwd: y => (y > 110 ? 1 : 0) },
+    head: { mask: [[[16, 0], [52, 0], [54, 34], [14, 34]]], depth: (y, al) => al * 1.0, fwd: y => (y < 10 ? -3 : 0) },
+    cuts: {
+      armR: [[[[0, 38], [17, 40], [17, 132], [0, 132]]], [12, 42]],
+      armL: [[[[52, 40], [69, 40], [69, 106], [52, 106]]], [56, 42]],
+      bootR: [[[[6, 134], [31, 134], [31, 160], [6, 160]]], [19, 135]],
+      bootL: [[[[38, 134], [64, 134], [64, 160], [38, 160]]], [51, 135]],
+      hook: [[[[0, 0], [56, 0], [56, 10], [32, 10], [20, 34], [0, 36]]], [9, 26], 'tongueless_a1', [38, -24]],
+      hand: [[[[3, 80], [13, 80], [13, 94], [3, 94]]], [8, 84]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -12, 14, 135); },
+    back(B, S) {
+      paintOut(B, [[[23, 5], [45, 5], [46, 34], [22, 34]]], S.pt.hood, { grain: 0.15, smooth: 60 });
+      paintOut(B, [[[29, 62], [39, 62], [39, 104], [29, 104]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+      const ax = Math.round(S.ax);
+      for (let y = 4; y < 34; y++) { const i = y * B.w + ax; if (L.solidPx(B.data[i])) B.data[i] = mul(B.data[i], 0.8); }   // the hood's back seam
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(42), sw = (P.swing || 0) * 8;
+      if (!x.atk) { hangArm(C, S.cut.armR, th, axT, P, v, -20, shY, sw, 21); hangArm(C, S.cut.armL, th, axT, P, v, 20, shY, -sw, 22); return; }
+      hangArm(C, S.cut.armL, th, axT, P, v, 20, shY, x.atk === 2 ? 14 : -6, 22);
+      const hand = x.atk === 1 ? { f: -2, l: -20, y: x.row(12) } : { f: 22, l: 6, y: x.row(60) };
+      arm(x, { f: 3, l: -21, y: shY }, hand, { w0: 13, w1: 11, w2: 9, bend: x.atk === 1 ? 2 : -2, id: 30 });
+      drawAlong(C, S.cut.hook, th, axT, hand, x.atk === 1 ? { f: -0.3, l: -0.35, up: 0.9 } : { f: 0.35, l: 0.9, up: 0.1 }, { dz: x.front + 6, id: 40 });
+    },
+  });
+
+  // ---------------------------------------------------------------- Pressman Mallow
+  // Office of the Catalogue, Second Pressings: a grey pressing-coat with a deep pointed hood, a brass
+  // hand-press strapped to his back and rising over his head, a long iron rod in his right hand, a
+  // chain belt and the round-book on its chain. Attack: the rod raised two-handed while the press
+  // over his shoulders heats (a1), then brought down (a2). [PROPOSED: the press's glow in the strike
+  // follows the painted attack frames.]
+  SP.pressman = humanoid({
+    W: 120, axT: 58, knee: 118, hip: 82,
+    patches: { cloth: [24, 120, 22, 34], hood: [28, 40, 6, 20], mantle: [56, 56, 8, 14], sleeve: [62, 70, 8, 16], brass: [24, 8, 30, 6] },
+    sil: [[[29, 22], [47, 22], [52, 50], [64, 56], [64, 80], [62, 120], [68, 160], [6, 160], [12, 120], [14, 80], [14, 56], [25, 50]]],
+    lift: [
+      { poly: [[[0, 18], [17, 18], [17, 168], [0, 168]], [[17, 18], [28, 18], [26, 50], [17, 54]], [[48, 18], [64, 18], [64, 54], [50, 50]]], axis: 17.5 },
+      { poly: [[[58, 76], [80, 76], [80, 118], [60, 118]]], axis: 57.5 },
+    ],
+    body: { mask: [[[0, 50], [80, 50], [80, 162], [0, 162]]], depth: (y, al) => (y < 80 ? al * 0.6 : al * 0.7), fwd: y => (y > 130 ? 1 : 0) },
+    head: { mask: [[[25, 22], [51, 22], [52, 70], [24, 70]]], depth: (y, al) => al * 0.95, fwd: y => (y < 34 ? -2 : 1) },
+    cuts: {
+      press: [[[[8, 0], [66, 0], [66, 56], [8, 56]]], [37, 50]],
+      rod: [[[[2, 22], [12, 22], [14, 168], [4, 168]]], [8, 80], null, [2, 146]],
+      armL: [[[[58, 60], [80, 60], [80, 118], [60, 118]]], [62, 64]],
+      hand: [[[[2, 72], [16, 72], [16, 90], [2, 90]]], [9, 80]],
+      bootR: [[[[14, 158], [36, 158], [36, 170], [14, 170]]], [25, 159]],
+      bootL: [[[[42, 158], [64, 158], [64, 170], [42, 170]]], [53, 159]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -14, 14, 159, 5); },
+    prep(S, src) {
+      // the press: the hood hid its middle in the painting, so its screw and platen are painted in
+      const c = S.cut.press, dx = c.px - 37, dy = c.py - 50, m = L.polyMask(c.w, c.h, [[[25 + dx, 21 + dy], [52 + dx, 21 + dy], [52 + dx, 58 + dy], [25 + dx, 58 + dy]]]);
+      const fill = new Uint8Array(c.w * c.h), known = new Uint8Array(c.w * c.h);
+      for (let i = 0; i < c.data.length; i++) { if (m[i]) fill[i] = 1; else if (L.solidPx(c.data[i])) known[i] = 1; }
+      for (let i = 0; i < c.data.length; i++) if (m[i]) c.data[i] = 0xff000000;
+      L.inpaint(c, fill, known, S.pt.brass, { vertical: true, grain: 0.5 });
+      // the screw down the middle, darker
+      for (let y = 8; y < c.h - 4; y++) for (const xx of [37 + dx, 38 + dx, 39 + dx]) { const i = y * c.w + xx; if (L.solidPx(c.data[i])) c.data[i] = mul(c.data[i], xx === 38 + dx ? 0.65 : 0.85); }
+      // hand-placed: the platen and the bed, brass plates across the frame, and the screw between
+      const bar = (y0, y1, x0, x1, f) => { for (let y = y0 + dy; y < y1 + dy; y++) for (let xx = x0 + dx; xx < x1 + dx; xx++) { if (y < 0 || y >= c.h || xx < 0 || xx >= c.w) continue; const edge = y === y0 + dy || y === y1 + dy - 1; c.data[y * c.w + xx] = mul(tap(S.pt.brass, xx, y), edge ? f * 0.6 : f) | 0xff000000; } };
+      bar(16, 54, 36, 41, 0.9); bar(30, 35, 22, 56, 1.05); bar(50, 56, 20, 58, 0.95);
+      S.pressHot = { w: c.w, h: c.h, px: c.px, py: c.py, data: c.data.map(p => { if (!L.solidPx(p)) return 0; const warm = L.R(p) > L.Bn(p) + 18; return warm ? (mix(mul(p, 1.5), hex('#ffe27a'), 0.45) | 0xff000000) >>> 0 : p; }) };
+    },
+    back(B, S) {
+      paintOut(B, [[[28, 34], [48, 34], [48, 68], [28, 68]]], S.pt.hood, { grain: 0.4, smooth: 50 });
+      paintOut(B, [[[30, 76], [44, 76], [44, 86], [30, 86]], [[42, 84], [58, 84], [58, 118], [42, 118]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.6 });
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(58), sw = (P.swing || 0) * 7, cs = x.cs;
+      // the press rides on his back: behind him from the front, over him from behind
+      const hot = x.atk ? S.pressHot : S.cut.press;
+      drawCut(C, hot, th, axT, -14, 0, x.row(50) + (x.atk === 2 ? 6 : 0), 0, { kx: Math.max(0.42, Math.abs(cs)), mirror: x.back, shade: x.back ? 0.95 : 1, id: 60 });
+      if (!x.atk) {
+        const hand = { f: 4, l: -24, y: x.row(80) };
+        arm(x, { f: 0, l: -22, y: shY }, hand, { w0: 12, w1: 10, w2: 9, bend: -2, id: 30, hand: S.cut.hand });
+        drawAlong(C, S.cut.rod, th, axT, hand, { f: 0.06 * (P.swing || 0), l: 0, up: -1 }, { dz: x.front + 4, id: 40 });
+        hangArm(C, S.cut.armL, th, axT, P, v, 24, shY, -sw, 22);
+        return;
+      }
+      const up = x.atk === 1;
+      const hand = up ? { f: 4, l: -16, y: x.row(30) } : { f: 22, l: -2, y: x.row(100) };
+      for (const l of [-22, 22]) arm(x, { f: 2, l, y: shY }, hand, { w0: 12, w1: 10, w2: 9, bend: up ? 0 : -3, id: l < 0 ? 30 : 34, hand: l < 0 ? S.cut.hand : null });
+      drawAlong(C, S.cut.rod, th, axT, hand, up ? { f: -0.2, l: 0.5, up: 0.85 } : { f: 0.35, l: 0.05, up: -0.95 }, { dz: x.front + 6, id: 40, kx: 0.8 });
+    },
+  });
+
+  // ---------------------------------------------------------------- Chord-Warden
+  // A marble choirmaster in gilt vestments and a tall mitre, the mouth open on a note; a trident
+  // crozier in the right hand, the left hand open in a wide sleeve. It moves slowly. Attack: the
+  // crozier lifted across the body (a1) and driven down into the ground before it (a2).
+  SP.warden = humanoid({
+    W: 124, axT: 58, knee: 128, hip: 100,
+    patches: { cloth: [24, 150, 20, 30], marble: [56, 140, 10, 30], sleeve: [58, 72, 10, 22], gilt: [22, 52, 30, 6] },
+    sil: [[[30, 14], [48, 14], [50, 50], [58, 56], [62, 90], [62, 140], [66, 186], [8, 186], [14, 140], [16, 90], [18, 56], [28, 50]]],
+    lift: [
+      { poly: [[[0, 0], [15, 0], [17, 92], [16, 188], [0, 188]]], axis: 16.5 },
+      { poly: [[[56, 58], [81, 58], [81, 126], [58, 126]]], axis: 56.5 },
+    ],
+    body: { mask: [[[0, 48], [81, 48], [81, 187], [0, 187]]], depth: (y, al) => (y < 90 ? al * 0.58 : al * 0.74), fwd: y => (y > 150 ? 2 : 0) },
+    head: { mask: [[[26, 12], [52, 12], [52, 52], [26, 52]]], depth: (y, al) => (y < 32 ? al * 0.75 : al * 0.95), fwd: y => (y < 32 ? -1 : 1) },
+    headDrop: 6,
+    cuts: {
+      staff: [[[[0, 0], [14, 0], [14, 184], [0, 184]]], [8, 84], null, [-2, -84]],
+      hand: [[[[2, 74], [16, 74], [16, 92], [2, 92]]], [9, 82]],
+      armL: [[[[56, 58], [81, 58], [81, 126], [58, 126]]], [60, 62]],
+      bootR: [[[[16, 176], [40, 176], [40, 190], [16, 190]]], [28, 177]],
+      bootL: [[[[40, 176], [64, 176], [64, 190], [40, 190]]], [52, 177]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -10, 12, 177, 4); },
+    back(B, S) {
+      // a chasuble is worked on the back as well as the front: the orphreys stay, the face goes
+      paintOut(B, [[[30, 24], [48, 24], [48, 52], [30, 52]]], S.pt.marble, { grain: 0.3, smooth: 60 });
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(60), sw = (P.swing || 0) * 5;
+      if (!x.atk) {
+        const hand = { f: 4, l: -28, y: x.row(84) };
+        arm(x, { f: 0, l: -22, y: shY }, hand, { w0: 14, w1: 12, w2: 10, bend: -2, id: 30, hand: S.cut.hand });
+        drawAlong(C, S.cut.staff, th, axT, hand, { f: 0.05 * (P.swing || 0), l: 0, up: 1 }, { dz: x.front + 4, id: 40 });
+        hangArm(C, S.cut.armL, th, axT, P, v, 26, shY, -sw, 22);
+        return;
+      }
+      const up = x.atk === 1;
+      const hand = up ? { f: 10, l: -8, y: x.row(64) } : { f: 22, l: 0, y: x.row(96) };
+      for (const l of [-22, 22]) arm(x, { f: 2, l, y: shY }, hand, { w0: 14, w1: 12, w2: 10, bend: -3, id: l < 0 ? 30 : 34, hand: l < 0 ? S.cut.hand : null });
+      drawAlong(C, S.cut.staff, th, axT, hand, up ? { f: 0.3, l: 0.6, up: 0.75 } : { f: 0.25, l: 0, up: -1 }, { dz: x.front + 6, id: 40 });
+    },
+  });
+
+  // ---------------------------------------------------------------- The Wearer
+  // It wears Tobin Ashgrove: his long brown coat hanging open on a body of shadow, a pale face with a
+  // cantor's mark on the brow, long arms and clawed, pale-lit hands. Attack: the arms flung wide (a1),
+  // then the lunge with both claws reaching (a2).
+  SP.wearer = humanoid({
+    W: 132, axT: 66, knee: 104, hip: 70,
+    pose(pose) { if (pose === '_a2') return { atk: 2, lean: 9 }; return bipedPose(pose); },
+    patches: { cloth: [8, 50, 14, 60], dark: [26, 60, 12, 40], sleeve: [2, 40, 8, 30], hair: [18, 2, 6, 14] },
+    sil: [[[18, 0], [44, 0], [46, 22], [52, 28], [52, 70], [56, 126], [8, 126], [12, 70], [11, 28], [16, 22]]],
+    lift: [
+      { poly: [[[0, 26], [13, 26], [13, 106], [0, 106]]], axis: 13.5 },
+      { poly: [[[50, 26], [63, 26], [63, 106], [50, 106]]], axis: 49.5 },
+    ],
+    body: { mask: [[[0, 22], [63, 22], [63, 127], [0, 127]]], depth: (y, al) => (y < 60 ? al * 0.6 : al * 0.66), fwd: y => 0 },
+    head: { mask: [[[16, 0], [46, 0], [46, 24], [16, 24]]], depth: (y, al) => al * (y < 6 ? 0.55 + y * 0.07 : 0.9), fwd: y => (y < 8 ? -2 : 0) },
+    cuts: {
+      armR: [[[[0, 26], [13, 26], [13, 106], [0, 106]]], [8, 30]],
+      armL: [[[[50, 26], [63, 26], [63, 106], [50, 106]]], [55, 30]],
+      clawR: [[[[0, 78], [12, 78], [12, 104], [0, 104]]], [6, 80]],
+      clawL: [[[[51, 80], [63, 80], [63, 104], [51, 104]]], [57, 82]],
+      legR: [[[[13, 108], [31, 108], [31, 160], [13, 160]]], [22, 110]],
+      legL: [[[[31, 108], [51, 108], [51, 160], [31, 160]]], [41, 110]],
+    },
+    legs(x) { stride(x, x.S.cut.legR, x.S.cut.legL, -9, 10, 110, 7); },
+    back(B, S) {
+      // the back of his head: hair, no face, no mark; the coat's back is whole (no open front)
+      paintOut(B, [[[22, 4], [42, 4], [42, 24], [22, 24]]], S.pt.hair, { grain: 0.6, smooth: 30 });
+      paintOut(B, [[[20, 28], [44, 28], [46, 124], [18, 124]]], S.pt.cloth, { grain: 0.45, smooth: 200, like: S.pt.cloth.mean, tol: 50 });
+      const ax = Math.round(S.ax);
+      for (let y = 30; y < 124; y++) { const i = y * B.w + ax; if (L.solidPx(B.data[i])) B.data[i] = mul(B.data[i], 0.7); }
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(30), sw = (P.swing || 0) * 10;
+      if (!x.atk) { hangArm(C, S.cut.armR, th, axT, P, v, -21, shY, sw, 21); hangArm(C, S.cut.armL, th, axT, P, v, 21, shY, -sw, 22); return; }
+      const wide = x.atk === 1;
+      for (const s of [-1, 1]) {
+        const hand = wide ? { f: 4, l: s * 54, y: x.row(58) } : { f: 34, l: s * 9, y: x.row(48) };
+        arm(x, { f: 0, l: s * 20, y: shY }, hand, { w0: 9, w1: 8, w2: 6, bend: wide ? 0 : -4, id: s < 0 ? 30 : 34, hand: s < 0 ? S.cut.clawR : S.cut.clawL, handRot: wide ? -s * 70 : -s * 20 });
+      }
+    },
+  });
 })();
 
 // ================================================================ the hook
