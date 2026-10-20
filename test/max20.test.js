@@ -76,7 +76,7 @@ const KEY = 'octave.max20.v1';
         const bad = [], seen = {};
         const ART = PRESETS.art.filter(k => GFX.FX.includes(k)).concat(GFX.FX.filter(k => /^p20_beast/.test(k) && !PRESETS.art.includes(k)));
         const NONFX = ['paintedArt', 'itemIcons', 'moodPortraits', 'companionLife', 'carvedFrames', 'logSketches', 'mapStamps', 'illustratedScreens', 'creatureLife'];
-        for (const k of ['directions', 'p20_beastb', 'critters', 'kestrelMoored', 'scenery', 'decals', 'ceilings', 'panoramas', 'belfryArt']) if (!ART.includes(k)) bad.push('not art: ' + k);
+        for (const k of ['directions', 'p20_beastA', 'p20_beastb', 'critters', 'kestrelMoored', 'scenery', 'decals', 'ceilings', 'panoramas', 'belfryArt']) if (!ART.includes(k)) bad.push('not art: ' + k);
         for (const k of NONFX) if (GFX.FX.includes(k) || GFX[k] !== true) bad.push('non-preset art switch ' + k + ' = ' + GFX[k]);
         for (const n of PRESETS.order) {
           PRESETS.apply(n);

@@ -27,7 +27,7 @@ const PRESETS = (() => {
   // mood portraits, companion life frames, carved frames, log sketches, map stamps, illustrated screens) was
   // already on in every preset. A module can add its own art flag to GFX.ART; any 'p20_beast*' flag (each half of
   // the Phase 20 bestiary) counts as art. GFX.plain() (the pixel-exact test switch) still turns everything off.
-  const ART = ['directions', 'p20_beastb', 'critters', 'kestrelMoored', 'carrionCrows', 'decals', 'detail', 'ceilings', 'scenery', 'panoramas', 'belfryArt'];
+  const ART = ['directions', 'p20_beastA', 'p20_beastb', 'critters', 'kestrelMoored', 'carrionCrows', 'decals', 'detail', 'ceilings', 'scenery', 'panoramas', 'belfryArt'];
   // ...and these cheap per-frame effects are on in every preset but Low, Original included (Phase 20 MAX; the country
   // beyond the walls, js/horizon20.js, costs about 1 ms: Low stays light for weak devices)
   const ALL_BUT_LOW = ['farCountry'];
