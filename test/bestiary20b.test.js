@@ -111,7 +111,7 @@ const OURS = ['legionnaire', 'ln17_hollow', 'marine', 'miredrone', 'outrider', '
       }
       Object.assign(Engine.cam, cam);
       PRESETS.apply('original');
-      check(GFX.p20_beastb === false && GFX.directions === false, 'the Original preset switches the views off');
+      check(GFX.p20_beastb === true && GFX.directions === true, 'the Original preset keeps the hand-built views (Phase 20 MAX: art is on in every preset)');
       PRESETS.apply('medium');
       check(GFX.p20_beastb === true, 'Medium has the hand-built views');
       PRESETS.apply('cinematic');
@@ -119,7 +119,7 @@ const OURS = ['legionnaire', 'ln17_hollow', 'marine', 'miredrone', 'outrider', '
       PRESETS.apply('medium'); Engine.setScale(GFX.scale);
       return true;
     }, OURS);
-    console.log('PASS switches: GFX.p20_beastb off gives the stand-ins, directions off and the Original preset give the original sprite');
+    console.log('PASS switches: GFX.p20_beastb off gives the stand-ins, directions off gives the original sprite; every preset, Original included, has the hand-built views');
 
     // 3. frame cost: twelve of ours around the player, cached views, on vs off (best of runs)
     const r3 = await page.evaluate((OURS) => {

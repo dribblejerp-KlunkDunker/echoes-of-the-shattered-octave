@@ -61,8 +61,11 @@ async function boot(browser, block) {
       ['clearing', 20.5, 24.5, 0.57, 0.5], ['clearing', 29.5, 19.5, 0.9, 0.77], ['oakhaven', 44.5, 15.5, -1.2, 0.5], ['oakhaven', 49.0, 13.5, -1.57, 0.8],
       ['chapel', 6.5, 5.5, -Math.PI / 2, 0.5], ['tavern', 8.5, 9.5, -Math.PI / 2, 0.5], ['deepwoods', 27.5, 30.5, 3.0, 0.5], ['whispergrove', 20.5, 20.5, 1.0, 0.5],
     ];
+    // Phase 20 MAX: the Original preset now has both switches on (belfryArt is art, farCountry is on in all but Low), so
+    // the off state compares Original with the two switches turned off
+    assert.deepEqual(await A.page.evaluate(() => { PRESETS.apply('original'); return [GFX.farCountry, GFX.belfryArt]; }), [true, true], 'the Original preset has both switches on');
     const hashes = (page, preset) => page.evaluate(({ scenes, preset }) => {
-      PRESETS.apply(preset); GFX.preset = PRESETS.current(); GFX.changed();
+      PRESETS.apply(preset); if (typeof HORIZON20 !== 'undefined') { GFX.farCountry = false; GFX.belfryArt = false; } GFX.preset = PRESETS.current(); GFX.changed();
       return scenes.map(([m, x, y, d, tod]) => { go(m, x, y, d); return hash(grab(tod, d, m === 'chapel')); });
     }, { scenes, preset });
     for (const flag of ['rite', 'plain']) {
@@ -79,7 +82,7 @@ async function boot(browser, block) {
     const offA = await A.page.evaluate((scenes) => { PRESETS.apply('medium'); GFX.farCountry = false; GFX.belfryArt = false; GFX.changed(); return scenes.map(([m, x, y, d, tod]) => { go(m, x, y, d); return hash(grab(tod, d, false)); }); }, dayScenes);
     const offB = await B.page.evaluate((scenes) => { PRESETS.apply('medium'); GFX.changed(); return scenes.map(([m, x, y, d, tod]) => { go(m, x, y, d); return hash(grab(tod, d, false)); }); }, dayScenes);
     assert.deepEqual(offA.map((h, i) => (h === offB[i] ? '' : dayScenes[i].join(','))).filter(Boolean), [], 'Medium with Country beyond walls and Chapel belfry off matches a build without the module');
-    console.log('PASS off state: the Original preset (with and without rite_ready) and both switches off are byte-identical to a build without js/horizon20.js in ' + scenes.length + ' scenes');
+    console.log('PASS off state: the Original preset with both switches off (with and without rite_ready) and Medium with both off are byte-identical to a build without js/horizon20.js in ' + scenes.length + ' scenes');
 
     // ---- maps and saves: the clearing gains one door cell, no entity ----
     const shape = (page) => page.evaluate(() => { const c = G.maps.clearing; return { n: c.entities.length, base: c.baseCount, cells: c.cells.map((q) => (q ? (q.door ? 'D' : q.tex + '@' + (q.top == null ? '' : q.top)) : '.')) }; });

@@ -76,7 +76,7 @@ const KEY = 'octave.max20.v1';
         const bad = [], seen = {};
         const ART = PRESETS.art.filter(k => GFX.FX.includes(k)).concat(GFX.FX.filter(k => /^p20_beast/.test(k) && !PRESETS.art.includes(k)));
         const NONFX = ['paintedArt', 'itemIcons', 'moodPortraits', 'companionLife', 'carvedFrames', 'logSketches', 'mapStamps', 'illustratedScreens', 'creatureLife'];
-        for (const k of ['directions', 'p20_beastb', 'critters', 'kestrelMoored', 'scenery', 'decals', 'ceilings', 'panoramas']) if (!ART.includes(k)) bad.push('not art: ' + k);
+        for (const k of ['directions', 'p20_beastb', 'critters', 'kestrelMoored', 'scenery', 'decals', 'ceilings', 'panoramas', 'belfryArt']) if (!ART.includes(k)) bad.push('not art: ' + k);
         for (const k of NONFX) if (GFX.FX.includes(k) || GFX[k] !== true) bad.push('non-preset art switch ' + k + ' = ' + GFX[k]);
         for (const n of PRESETS.order) {
           PRESETS.apply(n);
@@ -85,16 +85,18 @@ const KEY = 'octave.max20.v1';
         }
         // per-frame EFFECTS keep their preset logic: Original has none of them, Low drops its list
         PRESETS.apply('original');
-        const origOn = GFX.FX.filter(k => k !== 'crtCurve' && GFX[k] === true && !PRESETS.isArt(k));
+        const origOn = GFX.FX.filter(k => k !== 'crtCurve' && GFX[k] === true && !PRESETS.isArt(k) && !PRESETS.allButLow.includes(k));
+        const origAllButLow = PRESETS.allButLow.filter(k => GFX.FX.includes(k) && GFX[k] !== true);
         PRESETS.apply('low');
-        const lowOn = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'groundShadows', 'sunShafts', 'aurora', 'winter17'].filter(k => GFX[k] === true);
+        const lowOn = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'groundShadows', 'sunShafts', 'aurora', 'winter17'].concat(PRESETS.allButLow).filter(k => GFX[k] === true);
         PRESETS.apply('medium');
-        return { bad, seen, art: ART, origOn, lowOn };
+        return { bad, seen, art: ART, origOn, origAllButLow, lowOn };
       });
       assert.deepEqual(r.bad, [], r.bad.join('; '));
       assert.deepEqual(r.origOn, [], 'Original keeps every per-frame effect off: ' + r.origOn);
-      assert.deepEqual(r.lowOn, [], 'Low still drops its heavy effects: ' + r.lowOn);
-      console.log('PASS max20: art switches on in all ' + Object.keys(r.seen).length + ' presets (' + r.art.join(', ') + '; plus painted art, icons, portraits, companion life, frames, sketches, stamps, screens); effects unchanged', JSON.stringify(r.seen));
+      assert.deepEqual(r.lowOn, [], 'Low still drops its heavy effects (and the country beyond the walls): ' + r.lowOn);
+      assert.deepEqual(r.origAllButLow, [], 'Original has the cheap all-but-Low effects: ' + r.origAllButLow);
+      console.log('PASS max20: art switches on in all ' + Object.keys(r.seen).length + ' presets (' + r.art.join(', ') + '; plus painted art, icons, portraits, companion life, frames, sketches, stamps, screens); effects unchanged; farCountry on in all but Low', JSON.stringify(r.seen));
       await ctx.close();
     }
 

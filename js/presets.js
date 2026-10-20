@@ -27,7 +27,10 @@ const PRESETS = (() => {
   // mood portraits, companion life frames, carved frames, log sketches, map stamps, illustrated screens) was
   // already on in every preset. A module can add its own art flag to GFX.ART; any 'p20_beast*' flag (each half of
   // the Phase 20 bestiary) counts as art. GFX.plain() (the pixel-exact test switch) still turns everything off.
-  const ART = ['directions', 'p20_beastb', 'critters', 'kestrelMoored', 'carrionCrows', 'decals', 'detail', 'ceilings', 'scenery', 'panoramas'];
+  const ART = ['directions', 'p20_beastb', 'critters', 'kestrelMoored', 'carrionCrows', 'decals', 'detail', 'ceilings', 'scenery', 'panoramas', 'belfryArt'];
+  // ...and these cheap per-frame effects are on in every preset but Low, Original included (Phase 20 MAX; the country
+  // beyond the walls, js/horizon20.js, costs about 1 ms: Low stays light for weak devices)
+  const ALL_BUT_LOW = ['farCountry'];
   const isArt = (flag) => ART.includes(flag) || /^p20_beast/.test(flag) || (typeof GFX !== 'undefined' && Array.isArray(GFX.ART) && GFX.ART.includes(flag));
   // CRT curvature and the upscaling filter are display choices, not quality: presets leave them alone
   // (only 'original' switches curvature off, because GFX.plain() does).
@@ -77,6 +80,7 @@ const PRESETS = (() => {
 
   function fxWanted(kind, flag) {
     if (isArt(flag)) return true;
+    if (ALL_BUT_LOW.includes(flag)) return kind !== 'cheap';
     if (kind === 'none') return false;
     if (CINEMA_ONLY.includes(flag)) return kind === 'cinema';
     if (kind === 'cinema' && CINEMA_OFF.includes(flag)) return false;
@@ -315,7 +319,7 @@ const PRESETS = (() => {
     GFX.onChange(() => { if (GFX.particles !== lastPt) { lastPt = GFX.particles; scaleParticles(GFX.particles); } });
   }
 
-  const api = { apply, current, table, measure, scenes: SCENES, order: ORDER, cinemaOnly: CINEMA_ONLY, art: ART, isArt, fxWanted, refresh: () => { try { refreshBlock(); } catch (e) { /* menu closed */ } }, upscale, setScale, setViewDist, stepViewDist, snapViewDist, farLabel: FAR_LABEL, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
+  const api = { apply, current, table, measure, scenes: SCENES, order: ORDER, cinemaOnly: CINEMA_ONLY, art: ART, allButLow: ALL_BUT_LOW, isArt, fxWanted, refresh: () => { try { refreshBlock(); } catch (e) { /* menu closed */ } }, upscale, setScale, setViewDist, stepViewDist, snapViewDist, farLabel: FAR_LABEL, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
   rememberParticles();
   wire();
   apply(BOOT);

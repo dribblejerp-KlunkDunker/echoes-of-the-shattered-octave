@@ -115,11 +115,12 @@ const URL = (process.env.PREVIEW_URL || 'http://127.0.0.1:4075') + '/?nosw=1';
     ok(pt.missing.length === 0, 'every major face has all four moods');
     ok(pt.faces === 17 && pt.kept.join() === 'sable,harrow,orla', pt.faces + ' of ' + pt.n + ' faces are expression edits; stand-ins kept: ' + pt.kept.join(', '));
 
-    // ---- 5. Original preset: none of it
+    // ---- 5. Original preset: all of it (Phase 20 MAX)
     const orig = await page.evaluate(() => { PRESETS.apply('original'); const r = { icons: GFX.itemIcons, comp: GFX.companionLife, crit: GFX.critters, mood: GFX.moodPortraits }; PRESETS.apply('medium'); return r; });
-    // As before Phase 20: the Original preset turns small life off; the item icons, companion life and mood portraits
-    // have their own switches (GFX.itemIcons / companionLife / moodPortraits), which the presets have never touched.
-    ok(!orig.crit && orig.icons === true && orig.comp === true, 'the Original preset treats these switches exactly as before (' + JSON.stringify(orig) + ')');
+    // Phase 20 MAX: art is on in every preset, so the Original preset keeps small life (GFX.critters) too; the item icons,
+    // companion life and mood portraits have their own switches (GFX.itemIcons / companionLife / moodPortraits), which
+    // the presets have never touched.
+    ok(orig.crit === true && orig.mood === true && orig.icons === true && orig.comp === true, 'the Original preset treats these switches exactly as before (' + JSON.stringify(orig) + ')');
     ok(errors.length === 0, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   } catch (e) { failed++; console.log('FAIL folk20: ' + (e && e.stack || e)); }
   finally { await browser.close(); }
