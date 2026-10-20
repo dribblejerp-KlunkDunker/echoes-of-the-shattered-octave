@@ -64,12 +64,13 @@ async function boot(browser, viewport, opts) {
     const base = await ev(() => ({
       w: ['apply', 'clear', 'active'].every((k) => typeof WINTER17[k] === 'function'),
       x: ['register', 'list', 'inExtra', 'finish'].every((k) => typeof EXTRAS17[k] === 'function'),
-      inExtra: EXTRAS17.inExtra(), n: EXTRAS17.list().length, btn: !!document.getElementById('btn-extras'),
+      inExtra: EXTRAS17.inExtra(), n: EXTRAS17.list().length, ids: EXTRAS17.list().map((x) => x.id), btn: !!document.getElementById('btn-extras'),
       btnText: (document.getElementById('btn-extras') || {}).textContent, fx: GFX.FX.includes('winter17'), flag: GFX.winter17,
       texts: EXTRAS17.TEXTS, bad: [EXTRAS17.register(null), EXTRAS17.register({ id: 'Bad Id!', start() {} }), EXTRAS17.register({ id: 'nostart' }), EXTRAS17.register({ id: 'x17demo', title: 'dup', start() {} })],
     }));
     check(base.w && base.x, 'WINTER17.apply/clear/active and EXTRAS17.register/list/inExtra/finish exist');
-    check(base.inExtra === null && base.n === 1, 'not in an extra at boot; the demo is the only registered extra');
+    // the shipped extras (prologue, cantabile, longnight) register too; the demo is this test's own, registered once
+    check(base.inExtra === null && base.ids.filter((i) => i === 'x17demo').length === 1 && new Set(base.ids).size === base.n, 'not in an extra at boot; the demo is registered once and every extra id is unique (' + base.ids.join(', ') + ')');
     check(base.btn && base.btnText === 'Extras', 'the title screen has an Extras button');
     check(base.fx && base.flag === true, 'GFX.winter17 is a GFX.FX flag, on in Medium');
     check(base.bad.every((b) => b === false), 'bad registrations (no id, bad id, no start, duplicate) are refused');
