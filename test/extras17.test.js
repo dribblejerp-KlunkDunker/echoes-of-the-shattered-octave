@@ -94,6 +94,9 @@ async function boot(browser, viewport, opts) {
     const menu = await ev(() => ({ panel: G.openPanel, ack: EXTRAS17.state.ack, ls: localStorage.getItem('octave.extras17.v1'), locked: !!document.getElementById('x17-locked'), card: !!document.querySelector('[data-extra="x17demo"]'), play: !!document.getElementById('x17-play-x17demo'), lockedCard: /Locked: finish Book One/.test((document.querySelector('[data-extra="x17demo"]') || {}).textContent || ''), tag: /An extra — after Book One/.test((document.querySelector('[data-extra="x17demo"]') || {}).textContent || '') }));
     check(menu.panel === 'x17menu' && menu.ack === 1 && /"ack":1/.test(menu.ls || ''), 'accepting opens the Extras menu and is remembered');
     check(menu.locked && menu.card && !menu.play && menu.lockedCard && menu.tag, 'before Book One is finished the demo card is locked and labelled "An extra — after Book One"');
+    // author's ruling (FIX17): no early unlock of any kind
+    const noEarly = await ev(() => ({ btn: !!document.getElementById('x17-early') || Array.from(document.querySelectorAll('#modal-panel button')).some((b) => /anyway|early/i.test(b.textContent)), txt: /anyway|either ending/i.test(document.getElementById('modal-panel').textContent), tx: EXTRAS17.TEXTS.some((t) => /anyway|either ending|Opened early/i.test(t)) }));
+    check(!noEarly.btn && !noEarly.txt && !noEarly.tx, 'there is no "open them anyway" control or text: the extras open only at the end of Book One');
     check(await ev(() => EXTRAS17.start('x17demo') === false && EXTRAS17.inExtra() === null), 'a locked extra cannot be started');
     if (SHOTS) await pg.screenshot({ path: SHOTS + '/x17-menu-locked.png' });
     await pg.locator('#x17-back').click();
@@ -101,36 +104,50 @@ async function boot(browser, viewport, opts) {
     check(await ev(() => G.openPanel === 'x17menu'), 'second visit goes straight to the menu (one-time notice)');
     await pg.keyboard.press('Escape');
 
-    // ------------------------------------------------------------ unlock: Grab the Line ending
+    // ------------------------------------------------------------ unlock: only the end of Book One ("Not yet")
     await toGame(pg, 'Ending One');
-    const e1 = await ev(() => { ending(); return { done: EXTRAS17.state.done, note: (document.getElementById('x17-unlock-note') || {}).textContent || '', state: G.state }; });
-    check(e1.done === 1 && /The extras are open/.test(e1.note) && e1.state === 'ending', 'finishing Book One by "Grab the Line" unlocks the extras and says so on the ending');
+    const e1 = await ev(() => { ending(); return { done: EXTRAS17.state.done, escaped: G.flags.escaped, note: !!document.getElementById('x17-unlock-note'), state: G.state, opened: EXTRAS17.opened(), play: EXTRAS17.start('x17demo') }; });
+    check(e1.done === 0 && e1.escaped === true && !e1.note && e1.state === 'ending' && !e1.opened && e1.play === false, '"Grab the Line" (flag escaped, the end of Part Two) does not unlock the extras (author\'s ruling)');
     const e2 = await ev(() => {
       EXTRAS17.state.done = 0; G.state = 'play'; let err = null;
       try { bookOneEnd1(); } catch (e) { err = String(e); }
-      return { done: EXTRAS17.state.done, flag: G.flags.book_one_done, err };
+      return { done: EXTRAS17.state.done, flag: G.flags.book_one_done, note: (document.getElementById('x17-unlock-note') || {}).textContent || '', err };
     });
-    check(e2.done === 1 && e2.flag === true, 'finishing by "Not yet" (bookOneEnd1) unlocks too ' + (e2.err || ''));
+    check(e2.done === 1 && e2.flag === true && /The extras are open/.test(e2.note), 'finishing Book One by "Not yet" (bookOneEnd1) unlocks the extras and says so on the ending ' + (e2.err || ''));
+    // a stored record from before the ruling (escape or "open anyway") unlocks nothing; a v:2 record does
+    const e2b = await ev(() => {
+      const KEY = 'octave.extras17.v1', keep = localStorage.getItem(KEY), out = {};
+      const load = (o) => { localStorage.setItem(KEY, JSON.stringify(o)); EXTRAS17._load(); return EXTRAS17.state.done; };
+      out.early = load({ ack: 1, done: 0, early: 1, w: 1, res: {} });
+      out.oldDone = load({ ack: 1, done: 1, w: 1, res: {} });
+      out.v2 = load({ v: 2, ack: 1, done: 1, w: 1, res: {} });
+      localStorage.setItem(KEY, keep); EXTRAS17._load();
+      return out;
+    });
+    check(e2b.early === 0 && e2b.oldDone === 0 && e2b.v2 === 1, 'a stored "early" flag or a pre-ruling record no longer unlocks; a v:2 record does');
     // old saves: loading a finished save unlocks; the menu can check a code without loading it
     const e3 = await ev(async () => {
       const out = {};
-      EXTRAS17.state.done = 0; const d = snapshotGame(); const fin = JSON.parse(JSON.stringify(d)); fin.flags.escaped = true; fin.flags.book_one_done = false;
+      EXTRAS17.state.done = 0; const d = snapshotGame(); const fin = JSON.parse(JSON.stringify(d)); fin.flags.escaped = true; fin.flags.book_one_done = true;
       const unfin = JSON.parse(JSON.stringify(d)); delete unfin.flags.escaped; delete unfin.flags.book_one_done;
-      out.codeFin = await encodeSave(fin); out.codeUn = await encodeSave(unfin);
-      out.chkFin = await EXTRAS17.checkCode(out.codeFin); out.chkUn = await EXTRAS17.checkCode(out.codeUn); out.chkBad = await EXTRAS17.checkCode('OCTZ1.notasave'); out.chkHtml = await EXTRAS17.checkCode('<img src=x onerror=alert(1)>');
+      const esc = JSON.parse(JSON.stringify(d)); esc.flags.escaped = true; delete esc.flags.book_one_done;
+      out.codeFin = await encodeSave(fin); out.codeUn = await encodeSave(unfin); out.codeEsc = await encodeSave(esc);
+      out.chkFin = await EXTRAS17.checkCode(out.codeFin); out.chkUn = await EXTRAS17.checkCode(out.codeUn); out.chkEsc = await EXTRAS17.checkCode(out.codeEsc); out.chkBad = await EXTRAS17.checkCode('OCTZ1.notasave'); out.chkHtml = await EXTRAS17.checkCode('<img src=x onerror=alert(1)>');
       out.stillLocked = EXTRAS17.state.done;
       restoreGame(JSON.parse(JSON.stringify(fin))); out.afterLoad = EXTRAS17.state.done;
       EXTRAS17.state.done = 0; restoreGame(JSON.parse(JSON.stringify(unfin))); out.afterUnfin = EXTRAS17.state.done;
+      restoreGame(JSON.parse(JSON.stringify(esc))); out.afterEsc = EXTRAS17.state.done;
       return out;
     });
     check(e3.chkFin === 'yes' && e3.chkUn === 'no' && e3.chkBad === 'bad' && e3.chkHtml === 'bad' && e3.stillLocked === 0, 'checkCode reads a finished save as yes, an unfinished one as no, junk as bad, and only reads');
     check(e3.afterLoad === 1 && e3.afterUnfin === 0, 'loading a save that already finished Book One unlocks; an unfinished one does not');
+    check(e3.chkEsc === 'no' && e3.afterEsc === 0, 'a save that only escaped (Grab the Line) neither checks as finished nor unlocks when loaded');
     // the menu's checker, by the UI
     await ev(() => { closeModal(); G.state = 'title'; document.getElementById('title').classList.remove('hidden'); });
     await pg.locator('#btn-extras').click();
     await pg.locator('#x17-code').fill(e3.codeUn); await pg.locator('#x17-check').click(); await pg.waitForTimeout(150);
     const ui1 = await ev(() => ({ out: (document.getElementById('x17-check-out') || {}).textContent, done: EXTRAS17.state.done }));
-    check(/has not reached either ending/.test(ui1.out || '') && ui1.done === 0, 'the menu checker says an unfinished save has not reached an ending');
+    check(/has not reached the end of Book One/.test(ui1.out || '') && ui1.done === 0, 'the menu checker says an unfinished save has not reached the end of Book One');
     await pg.locator('#x17-code').fill(e3.codeFin); await pg.locator('#x17-check').click(); await pg.waitForTimeout(150);
     const ui2 = await ev(() => ({ done: EXTRAS17.state.done, play: !!document.getElementById('x17-play-x17demo'), txt: document.getElementById('modal-panel').textContent, map: G.mapId }));
     check(ui2.done === 1 && ui2.play && /finished Book One/.test(ui2.txt), 'the menu checker unlocks from a finished save code; the demo is now playable');

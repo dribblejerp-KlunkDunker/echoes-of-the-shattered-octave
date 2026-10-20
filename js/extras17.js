@@ -35,11 +35,12 @@
 //   the extra's card says the visit was interrupted. Nothing starts by itself.
 //
 // UNLOCKS
-//   Each extra is playable once Book One is finished, by either ending: "Grab the Line" (game.js ending(), flag
-//   escaped) or "Not yet" (grove.js bookOneEnd1(), flag book_one_done). Remembered in localStorage (per browser).
+//   Each extra is playable once Book One is truly finished: only the "Not yet" ending (grove.js bookOneEnd1(), flag
+//   book_one_done) unlocks. "Grab the Line" (game.js ending(), flag escaped) ends Part Two, not the book, and does
+//   not count (author's ruling, FIX17). Remembered in localStorage (per browser, as v:2; an older record, which an
+//   escape or "Open them anyway" could have written, unlocks nothing). There is no early unlock.
 //   Players who finished before this phase: loading such a save unlocks, and the Extras menu can check a save code
-//   or file without loading it. The menu also offers "Open them anyway" behind its own spoiler line.
-//   An extra's own unlocked() (optional) can further hold it back.
+//   or file without loading it. An extra's own unlocked() (optional) can further hold it back.
 //
 // WINTER17 (GFX.winter17 + Options row "Winter in the extras"; per-frame, so off in Low and Original)
 //   ground  (post hook 6)  world-anchored snow on outdoor ground pixels (a stable noise field, coverage = snow),
@@ -71,19 +72,17 @@
     sub: 'Short chapters set after the end of Book One. Each one runs on its own save: your Book One game is put aside, untouched, and given back when you leave.',
     spoilH: 'Before you go on',
     spoil: 'These extras take place after Book One and spoil its ending.',
-    spoilMore: 'Some of them also show people and events from the books that follow. They open by themselves when you finish Book One, by either ending.',
+    spoilMore: 'Some of them also show people and events from the books that follow. They open by themselves when Book One is truly finished, at its very end.',
     spoilYes: 'Show me the extras',
     spoilNo: 'Back to the title',
-    lockedAll: 'The extras open when you finish Book One, by either ending.',
-    early: 'Open them anyway (they spoil the ending)',
-    earlyDone: 'Opened early, at your word.',
+    lockedAll: 'The extras open when Book One is truly finished, at its very end.',
     doneNote: 'Book One is finished in this browser. The extras are open.',
     checkH: 'Finished Book One already?',
     checkP: 'Paste a save code from a finished game, or choose its file. It is only read, never loaded.',
     checkBtn: 'Check the save',
     checkFile: 'Check a file…',
     checkYes: 'That traveller finished Book One. The extras are open.',
-    checkNo: 'That save has not reached either ending of Book One yet.',
+    checkNo: 'That save has not reached the end of Book One yet.',
     checkBad: 'That did not read as a save.',
     none: 'No extras are in this build yet.',
     locked: 'Locked: finish Book One to open it.',
@@ -119,15 +118,17 @@
   const TEXTS = Object.values(TX);
 
   // ------------------------------------------------------------------------------------------------ storage
-  // { ack: 0/1 spoiler notice seen, done: 0/1 Book One finished, early: 0/1 opened early, w: 0/1 winter look,
+  // { v: 2, ack: 0/1 spoiler notice seen, done: 0/1 Book One truly finished (the "Not yet" ending), w: 0/1 winter look,
   //   res: { id: short result text }, run: id of an extra in progress (a reload clears it), cut: id interrupted }
+  //   done is read only from a v:2 record: before the ruling it was also set by the escape ending and by "Open them
+  //   anyway", so an older record keeps its other fields and unlocks nothing; a stored "early" is ignored.
   const ID_RE = /^[a-z0-9][a-z0-9_-]{0,39}$/;
-  const st = { ack: 0, done: 0, early: 0, w: 1, res: {}, run: null, cut: null };
+  const st = { v: 2, ack: 0, done: 0, w: 1, res: {}, run: null, cut: null };
   function cleanRes(s) { return String(s == null ? '' : s).replace(/[\u0000-\u001f<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160); }
   function load() {
     try {
       const o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (!o || typeof o !== 'object') return;
-      st.ack = o.ack === 1 ? 1 : 0; st.done = o.done === 1 ? 1 : 0; st.early = o.early === 1 ? 1 : 0; st.w = o.w === 0 ? 0 : 1;
+      st.ack = o.ack === 1 ? 1 : 0; st.done = o.v === 2 && o.done === 1 ? 1 : 0; st.w = o.w === 0 ? 0 : 1;
       st.res = {};
       if (o.res && typeof o.res === 'object') for (const k of Object.keys(o.res).slice(0, 32)) if (ID_RE.test(k) && typeof o.res[k] === 'string') st.res[k] = cleanRes(o.res[k]);
       st.run = typeof o.run === 'string' && ID_RE.test(o.run) ? o.run : null;
@@ -151,13 +152,13 @@
   const byId = (id) => reg.find((r) => r.id === id) || null;
   function titleOf(x) { return cleanRes(x && x.title) || (x && x.id) || ''; }
   function idCode(id) { let h = 7; for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 999983; return h + 1; }
-  const opened = () => st.done === 1 || st.early === 1;
+  const opened = () => st.done === 1;
   function playable(x) {
     if (!opened()) return false;
     if (typeof x.unlocked === 'function') { try { return x.unlocked() !== false; } catch (e) { warnOnce('unlocked', e); return false; } }
     return true;
   }
-  const finishedFlags = (f) => !!(f && typeof f === 'object' && (f.escaped === true || f.book_one_done === true));
+  const finishedFlags = (f) => !!(f && typeof f === 'object' && f.book_one_done === true);   // "escaped" (Part Two) alone does not count
   function markDone(note) {
     if (st.done === 1) return false;
     st.done = 1; save();
@@ -357,13 +358,7 @@
     const x = btn('x17-x', TX.close, () => { closeModal(); }, true); x.classList.add('close'); p.appendChild(x);
     p.appendChild(el('p', { class: 'muted' }, TX.sub));
     if (st.done) p.appendChild(el('p', { class: 'muted', id: 'x17-done' }, TX.doneNote));
-    else if (st.early) p.appendChild(el('p', { class: 'muted', id: 'x17-early' }, TX.earlyDone));
-    else {
-      p.appendChild(el('p', { class: 'x17-lock', id: 'x17-locked' }, TX.lockedAll));
-      const row = el('div', { class: 'btns' });
-      row.appendChild(btn('x17-early', TX.early, () => { st.early = 1; save(); renderExtras(); }, true));
-      p.appendChild(row);
-    }
+    else p.appendChild(el('p', { class: 'x17-lock', id: 'x17-locked' }, TX.lockedAll));
     if (!reg.length) p.appendChild(el('p', { class: 'muted', id: 'x17-none' }, TX.none));
     for (const xx of reg) p.appendChild(card(xx, opt));
     if (!st.done) checker(p);
@@ -504,7 +499,8 @@
       const _f = encodeSave;
       encodeSave = async function (d) { if (cur || (d && d.flags && d.flags.p17x_on)) throw new Error(TX.refuseIn); return _f.apply(this, arguments); };
     }
-    // both Book One endings unlock the extras (function declarations in game.js / grove.js are globals: rebind them)
+    // the end of Book One ("Not yet", bookOneEnd1) unlocks the extras; the escape (ending(), end of Part Two) does not, and
+    // finishedFlags() would refuse it anyway (function declarations in grove.js are globals: rebind it)
     const endHook = (orig) => function () {
       const r = orig.apply(this, arguments);
       try {
@@ -515,7 +511,6 @@
       } catch (e) { warnOnce('end', e); }
       return r;
     };
-    if (typeof ending === 'function') ending = endHook(ending);
     if (typeof bookOneEnd1 === 'function') bookOneEnd1 = endHook(bookOneEnd1);
     // death inside an extra: a way out besides waking by the lamp
     if (typeof die === 'function') {
@@ -793,6 +788,7 @@
     start, quit, resume, open: openExtras, render: renderExtras, opened, playable: (id) => { const x = byId(id); return !!(x && playable(x)); },
     state: st, TX, TEXTS, BANNER: TX.banner, idCode, checkCode,
     hasSave: (id) => !!xslot[id],
-    _reset() { st.ack = 0; st.done = 0; st.early = 0; st.res = {}; st.run = null; st.cut = null; save(); },
+    _load() { load(); },
+    _reset() { st.ack = 0; st.done = 0; st.res = {}; st.run = null; st.cut = null; save(); },
   };
 })();
