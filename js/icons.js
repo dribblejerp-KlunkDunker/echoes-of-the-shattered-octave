@@ -657,7 +657,1134 @@ const ICONS = (function () {
     return TABLE['weapon:sword'];
   }
 
-  // ---------------------------------------------------------------- rendering + cache
+  // ================================================================ Phase 20 FOLK: hand-built pixel-art icons
+  // Every catalog id has its own 24x24 pixel drawing (PIX below), shown at 2x on a pixel-art plate. The drawings are
+  // pixel data placed by hand on an integer grid (ASCII rows or integer primitives); one shading rule (light from the
+  // top-left, five-tone hue-shifted ramps: shadows lean cool, lights lean warm), one ink outline and one 1px drop
+  // shadow keep the whole set consistent. Deterministic: no random numbers anywhere. The Phase 5 painted kinds above
+  // stay as the fallback for ids added later without a drawing, and for the paper doll's layers.
+  const PXN = 24, PX_INK = [24, 16, 11];
+  function rgb2hsl(c) {
+    const r = c[0] / 255, g = c[1] / 255, b = c[2] / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2;
+    if (mx === mn) return [0, 0, l];
+    const d = mx - mn, s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+    const h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    return [h * 60, s, l];
+  }
+  function hsl2rgb(h, s, l) {
+    s = Math.max(0, Math.min(1, s)); l = Math.max(0, Math.min(1, l));
+    const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+    const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    return [Math.round(f(0) * 255), Math.round(f(8) * 255), Math.round(f(4) * 255)];
+  }
+  function hueTo(h, target, amt) { const d = ((target - h + 540) % 360) - 180; return (h + d * amt + 360) % 360; }
+  const rampCache = {};
+  // five tones per base colour: 0 deep shadow, 1 shadow, 2 base, 3 light, 4 glint
+  function ramp(base) {
+    if (rampCache[base]) return rampCache[base];
+    const hs = rgb2hsl(hex(base)), h = hs[0], s = hs[1], l = hs[2];
+    const grey = s < 0.08;
+    const T = [
+      [grey ? h : hueTo(h, 245, 0.18), grey ? s : Math.min(1, s * 1.08 + 0.04), Math.max(0.1, l * 0.5)],
+      [grey ? h : hueTo(h, 245, 0.08), grey ? s : Math.min(1, s * 1.04 + 0.02), Math.max(0.16, l * 0.74)],
+      [h, s, l],
+      [grey ? h : hueTo(h, 52, 0.08), s * 0.95, l + (1 - l) * 0.3],
+      [grey ? h : hueTo(h, 52, 0.14), s * 0.75, l + (1 - l) * 0.62],
+    ].map(t => hsl2rgb(t[0], t[1], t[2]));
+    return (rampCache[base] = T);
+  }
+  const mixRGB = (a, b, t) => [0, 1, 2].map(i => Math.round(a[i] + (b[i] - a[i]) * t));
+
+  function PxLayer(col, o) { this.col = col; this.o = o || {}; this.m = new Uint8Array(PXN * PXN); this.ov = {}; this.v = 1; }
+  const LP = PxLayer.prototype;
+  LP.set = function (x, y) { x = Math.round(x); y = Math.round(y); if (x >= 0 && y >= 0 && x < PXN && y < PXN) { const i = y * PXN + x; this.m[i] = this.v; if (!this.v) delete this.ov[i]; } return this; };
+  LP.cut = function () { this.v = 0; return this; };   // following primitives erase
+  LP.add = function () { this.v = 1; return this; };
+  LP.px = function () { for (let i = 0; i + 1 < arguments.length; i += 2) this.set(arguments[i], arguments[i + 1]); return this; };
+  LP.rect = function (x, y, w, h) { for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) this.set(i, j); return this; };
+  LP.ell = function (cx, cy, rx, ry) {
+    for (let y = 0; y < PXN; y++) for (let x = 0; x < PXN; x++) { const a = (x + 0.5 - cx) / rx, b = (y + 0.5 - cy) / ry; if (a * a + b * b <= 1.0001) this.set(x, y); }
+    return this;
+  };
+  LP.poly = function (p) {
+    for (let y = 0; y < PXN; y++) for (let x = 0; x < PXN; x++) {
+      const X = x + 0.5, Y = y + 0.5; let inside = false;
+      for (let i = 0, j = p.length - 2; i < p.length; j = i, i += 2) {
+        const xi = p[i], yi = p[i + 1], xj = p[j], yj = p[j + 1];
+        if ((yi > Y) !== (yj > Y) && X < (xj - xi) * (Y - yi) / (yj - yi) + xi) inside = !inside;
+      }
+      if (inside) this.set(x, y);
+    }
+    return this;
+  };
+  LP.line = function (x0, y0, x1, y1) {
+    x0 = Math.round(x0); y0 = Math.round(y0); x1 = Math.round(x1); y1 = Math.round(y1);
+    const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1; let e = dx + dy;
+    for (let n = 0; n < 99; n++) { this.set(x0, y0); if (x0 === x1 && y0 === y1) break; const e2 = 2 * e; if (e2 >= dy) { e += dy; x0 += sx; } if (e2 <= dx) { e += dx; y0 += sy; } }
+    return this;
+  };
+  // a fat stroke: discs of radius r stamped along a polyline (eels, cords, curls)
+  LP.thick = function (pts, r) {
+    for (let i = 0; i + 3 < pts.length; i += 2) {
+      const x0 = pts[i], y0 = pts[i + 1], x1 = pts[i + 2], y1 = pts[i + 3], n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) * 2));
+      for (let k = 0; k <= n; k++) { const t = k / n, rr = typeof r === 'function' ? r((i / 2 + t) / (pts.length / 2 - 1)) : r; this.ell(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, rr, rr); }
+    }
+    return this;
+  };
+  LP.path = function (pts) { for (let i = 0; i + 3 < pts.length; i += 2) this.line(pts[i], pts[i + 1], pts[i + 2], pts[i + 3]); return this; };
+  // a band along the (1,-1) diagonal: columns x0..x1, anti-diagonals x+y = c0..c1 (blades, shafts, handles)
+  LP.diag = function (x0, x1, c0, c1) { for (let x = x0; x <= x1; x++) for (let c = c0; c <= c1; c++) this.set(x, c - x); return this; };
+  // force a ramp tone on pixels: tone(k, x, y, x, y, ...)
+  LP.tone = function (k) { for (let i = 1; i + 1 < arguments.length; i += 2) { const x = arguments[i], y = arguments[i + 1]; if (x >= 0 && y >= 0 && x < PXN && y < PXN) { const j = y * PXN + x; this.m[j] = 1; this.ov[j] = k; } } return this; };
+  LP.toneRect = function (k, x, y, w, h) { for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) this.tone(k, i, j); return this; };
+  LP.toneDiag = function (k, x0, x1, c) { for (let x = x0; x <= x1; x++) this.tone(k, x, c - x); return this; };
+
+  // upright shapes laid on the 45-degree diagonal (tip to the top-right): local x right, local y down, around the
+  // icon's tilt centre; edges that are upright in local space come out as clean 45-degree pixel stairs
+  const RS = Math.SQRT1_2;
+  LP.rpoly = function (p) {
+    const c = (this.ic && this.ic.T) || [12, 12, 0.82], k = RS * c[2], q = [];
+    for (let i = 0; i + 1 < p.length; i += 2) q.push(c[0] + (p[i] - p[i + 1]) * k, c[1] + (p[i] + p[i + 1]) * k);
+    return this.poly(q);
+  };
+  LP.rrect = function (x, y, w, h) { return this.rpoly([x, y, x + w, y, x + w, y + h, x, y + h]); };
+  LP.rell = function (cx, cy, rx, ry) { const q = []; for (let i = 0; i < 20; i++) { const a = i / 20 * Math.PI * 2; q.push(cx + Math.cos(a) * rx, cy + Math.sin(a) * ry); } return this.rpoly(q); };
+  // tone a local-space point (after the tilt)
+  LP.rtone = function (k) { for (let i = 1; i + 1 < arguments.length; i += 2) { const p = this.ic.rp(arguments[i], arguments[i + 1]); this.tone(k, p[0], p[1]); } return this; };
+
+  function PxIcon() { this.layers = []; this.marks = []; this.T = [12, 12, 0.82]; }
+  PxIcon.prototype.layer = function (col, o) { const L = new PxLayer(col, o); L.ic = this; this.layers.push(L); return L; };
+  PxIcon.prototype.tilt = function (cx, cy, sc) { this.T = [cx, cy, sc || 0.82]; return this; };
+  // the pixel a local (tilted) point lands on
+  PxIcon.prototype.rp = function (x, y) { const c = this.T, k = RS * c[2]; return [Math.floor(c[0] + (x - y) * k), Math.floor(c[1] + (x + y) * k)]; };
+  PxIcon.prototype.rmark = function (col, x, y) { const p = this.rp(x, y); return this.mark(col, p[0], p[1]); };
+  // detail pixels painted after shading: mark(col, x, y, x, y, ...) where col is '#rrggbb' or [layer, tone]
+  PxIcon.prototype.mark = function (col) { for (let i = 1; i + 1 < arguments.length; i += 2) this.marks.push([arguments[i], arguments[i + 1], col]); return this; };
+  // ASCII pixel rows placed at (ox, oy): each character maps to a layer, or to [layer, tone]; '.' and ' ' are empty
+  PxIcon.prototype.grid = function (ox, oy, rows, map) {
+    for (let y = 0; y < rows.length; y++) for (let x = 0; x < rows[y].length; x++) {
+      const ch = rows[y][x], t = map[ch]; if (!t) continue;
+      if (Array.isArray(t)) t[0].tone(t[1], ox + x, oy + y); else t.set(ox + x, oy + y);
+    }
+    return this;
+  };
+
+  // directional shading: how far a pixel sits from the lit (top-left) and shaded (bottom-right) edges of its own part,
+  // weighted toward the part's thinner axis, mapped onto the ramp
+  function pxShade(L, x, y) {
+    const m = L.m, inM = (i, j) => i >= 0 && j >= 0 && i < PXN && j < PXN && m[j * PXN + i];
+    let dlx = 1, dsx = 1, dly = 1, dsy = 1;
+    while (inM(x - dlx, y)) dlx++; while (inM(x + dsx, y)) dsx++;
+    while (inM(x, y - dly)) dly++; while (inM(x, y + dsy)) dsy++;
+    const spx = dlx + dsx - 1, spy = dly + dsy - 1, rx = (dlx - 0.5) / spx, ry = (dly - 0.5) / spy;
+    const wx = 1 / spx, wy = 1 / spy, t = (rx * wx + ry * wy) / (wx + wy);
+    const o = L.o, shiny = o.shiny;
+    if (o.shade === 'flat') { return (dlx === 1 || dly === 1) ? 3 : (dsx === 1 || dsy === 1) ? 1 : 2; }
+    let k = t < 0.2 ? (shiny ? 4 : 3) : t < 0.42 ? 3 : t < 0.62 ? 2 : t < 0.84 ? 1 : 0;
+    if (k === 0 && Math.min(spx, spy) < 5) k = 1;   // thin parts never sink to the deepest tone
+    if (o.lift) k = Math.max(0, Math.min(4, k + o.lift));
+    return k;
+  }
+  // tones: 'weapon' | 'armor' | 'item' | 'key' | 'valuable' plate colours (same family as the painted plates)
+  const PX_PLATE = { weapon: [[66, 54, 42], [24, 18, 13]], armor: [[56, 61, 66], [19, 21, 23]], item: [[64, 49, 54], [22, 15, 18]], key: [[68, 60, 38], [23, 20, 11]], valuable: [[46, 62, 62], [14, 21, 21]] };
+  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  function pxRender(icon, tone, plate) {
+    const N = PXN, A = new Array(N * N).fill(null), own = new Int16Array(N * N).fill(-1);
+    icon.layers.forEach((L, li) => {
+      const R = ramp(L.col);
+      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+        const i = y * N + x; if (!L.m[i]) continue;
+        let k = L.ov[i] != null ? L.ov[i] : pxShade(L, x, y);
+        if (L.ov[i] == null && L.o.sep !== false) {
+          // a part laid over another part gets a dark seam on its lower-right edge, so parts read as separate pieces
+          const rb = (x + 1 < N && own[i + 1] >= 0 && !L.m[i + 1]) || (y + 1 < N && own[i + N] >= 0 && !L.m[i + N]);
+          if (rb) k = Math.min(k, 1);
+        }
+        A[i] = R[k]; own[i] = li;
+      }
+    });
+    for (const [x, y, col] of icon.marks) {
+      if (x < 0 || y < 0 || x >= N || y >= N) continue;
+      const i = y * N + x; A[i] = Array.isArray(col) ? ramp(col[0].col)[col[1]] : hex(col); if (own[i] < 0) own[i] = 99;
+    }
+    // ink outline around the whole silhouette (4-neighbour), a little warmer on the lit side
+    const O = A.slice();
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      const i = y * N + x; if (A[i]) continue;
+      const r = x + 1 < N && A[i + 1], b = y + 1 < N && A[i + N], l = x > 0 && A[i - 1], u = y > 0 && A[i - N];
+      if (r || b) O[i] = mixRGB(PX_INK, r || b, 0.18); else if (l || u) O[i] = PX_INK;
+    }
+    const out = new Uint8ClampedArray(N * N * 4);
+    const P = PX_PLATE[tone] || PX_PLATE.item;
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      const i = y * N + x, q = i * 4; let c = O[i], a = 255;
+      if (!c && plate) {
+        const corner = (x === 0 || x === N - 1) && (y === 0 || y === N - 1);
+        if (corner) { a = 0; c = [0, 0, 0]; }
+        else if (x === 0 || y === 0) c = mixRGB(P[0], [200, 168, 104], 0.3);
+        else if (x === N - 1 || y === N - 1) c = mixRGB(P[1], [0, 0, 0], 0.35);
+        else {
+          const d = Math.hypot(x - 8, y - 7) / 19, lv = Math.max(0, Math.min(3, Math.floor(d * 4 + BAYER[(y & 3) * 4 + (x & 3)] / 16 - 0.5)));
+          c = mixRGB(P[0], P[1], lv / 4);
+          // drop shadow: one pixel down-right of the outlined silhouette
+          if (x > 0 && y > 0 && O[i - N - 1]) c = mixRGB(c, [0, 0, 0], 0.45);
+        }
+      } else if (!c) { a = 0; c = [0, 0, 0]; }
+      out[q] = c[0]; out[q + 1] = c[1]; out[q + 2] = c[2]; out[q + 3] = a;
+    }
+    return out;
+  }
+  function pxCanvas(draw, tone, plate) {
+    const cv = makeCanvas(); if (!cv) return null;
+    const icon = new PxIcon(); draw(icon);
+    const data = pxRender(icon, tone, plate !== false);
+    const sm = document.createElement('canvas'); sm.width = sm.height = PXN;
+    sm.getContext('2d').putImageData(new ImageData(data, PXN, PXN), 0, 0);
+    const c = cv.getContext('2d'); c.imageSmoothingEnabled = false; c.drawImage(sm, 0, 0, S, S);
+    return cv;
+  }
+
+  // ---------------------------------------------------------------- palette (base tones; ramps derive the rest)
+  const C = {
+    iron: '#8f989b', steel: '#aeb8bc', dsteel: '#6c7478', bronze: '#b27a3c', bell: '#c48f42', brass: '#c79a38', gold: '#d8ad3c',
+    silver: '#c3cbcf', copper: '#b0613a', lead: '#6e7176', glass: '#56c9d6', lilac: '#a184d4', green: '#7cc45a',
+    wood: '#7a5130', ash: '#a07c4e', dwood: '#56371f', pale: '#c9b58a', leather: '#83522f', dleather: '#5b3822', tan: '#a8774a',
+    cloth: '#a48a62', wool: '#9c978c', grey: '#7d7f80', felt: '#6f6a64', linen: '#d8ceb4', paper: '#ddcda2', parch: '#c9b17e',
+    wax: '#a52a26', red: '#a8342a', crimson: '#8c1f24', blue: '#3e5f92', navy: '#2e3e60', teal: '#3c6a62', moss: '#5f7a3c',
+    reed: '#a9b25e', straw: '#d0b45a', honey: '#d4921f', amber: '#d07a22', bone: '#ddd0ae', ivory: '#e4d8ba', stone: '#8c877d',
+    slate: '#4f565c', clay: '#a8683e', eel: '#5e7a3c', skin: '#c99272', ink: '#2d2620', cream: '#e8dfc4', black: '#34302c',
+  };
+  const PIX = {};
+  // PIX-BEGIN
+  // ---------------------------------------------------------------- weapons (tip to the top-right)
+  const wrap = (L, y0, y1, step) => { for (let y = y0; y < y1; y += step || 2) L.rtone(1, 0, y); return L; };
+  PIX['weapon:sword'] = d => {   // Short Sword: plain Synod iron, brass guard
+    wrap(d.layer(C.leather).rrect(-1.2, 4, 2.4, 6.6), 5, 11);
+    d.layer(C.iron, { shiny: 1 }).rpoly([-1.7, 4, -1.7, -9.5, 0, -12.5, 1.7, -9.5, 1.7, 4]);
+    d.layer(C.brass).rrect(-4.6, 3, 9.2, 2.2);
+    d.layer(C.brass, { shiny: 1 }).rell(0, 12, 1.8, 1.8);
+  };
+  PIX['weapon:longsword'] = d => {   // Synod Longsword: long steel, fuller, iron cross
+    d.tilt(12, 12);
+    wrap(d.layer(C.dleather).rrect(-1.2, 4.5, 2.4, 7.5), 5, 12);
+    const b = d.layer(C.steel, { shiny: 1 }).rpoly([-1.8, 4, -1.8, -12, 0, -15, 1.8, -12, 1.8, 4]);
+    for (let y = -11; y < 3; y++) b.rtone(1, 0.2, y);
+    d.layer(C.iron).rpoly([-6.5, 2.6, 6.5, 2.6, 6.5, 4.8, -6.5, 4.8]).rtone(3, -6, 3, 6, 3);
+    d.layer(C.iron, { shiny: 1 }).rell(0, 13.4, 1.9, 1.9);
+  };
+  PIX['weapon:knife'] = d => {   // Carder's Knife: short hooked blade on a pale wooden handle
+    d.tilt(13, 11);
+    const h = d.layer(C.pale).rrect(-1.6, 1, 3.2, 9);
+    d.layer(C.iron, { shiny: 1 }).rpoly([-1.6, 1.4, -1.8, -4, -0.6, -8, 1.2, -9.2, 2.2, -6.5, 1.8, 1.4]);
+    d.layer(C.brass).rrect(-1.9, 0.4, 3.8, 1.6);
+    h.rtone(1, 0.3, 4.5).rtone(1, 0.3, 7.5);
+    d.mark('#e9dcae', 13, 14);
+  };
+  PIX['weapon:sable_dagger'] = d => {   // Sable's Ivory Nib-Knife: ivory handle, silver guard, lilac glass point
+    d.tilt(12, 12);
+    d.layer(C.ivory).rpoly([-1.3, 3, 1.3, 3, 1.6, 10, 0, 11.5, -1.6, 10]);
+    d.layer(C.silver, { shiny: 1 }).rpoly([-1.2, 3, -1.2, -6, 1.2, -6, 1.2, 3]);
+    d.layer(C.lilac, { shiny: 1 }).rpoly([-1.2, -5.6, 1.2, -5.6, 0, -11.5]);
+    d.layer(C.silver).rrect(-3.4, 2, 6.8, 1.8);
+    d.mark('#efe6ff', 16, 5).mark('#d9c8ff', 18, 3);
+  };
+  PIX['weapon:tobin_blade'] = d => {   // Tobin's Tuning-Blade: bronze, runes that hold a little light
+    d.tilt(12, 12);
+    wrap(d.layer(C.dleather).rrect(-1.2, 4.4, 2.4, 7), 5, 12);
+    const b = d.layer(C.bronze, { shiny: 1 }).rpoly([-2, 4, -2, -11.5, 0, -15, 2, -11.5, 2, 4]);
+    d.layer(C.bronze).rpoly([-6, 3.4, -4.5, 2.2, 4.5, 2.2, 6, 3.4, 4.5, 4.8, -4.5, 4.8]);
+    d.layer(C.bronze, { shiny: 1 }).rell(0, 12.8, 2, 2);
+    for (let y = -10; y <= 1; y += 3) d.rmark('#a8f0ff', 0.2, y);
+    void b;
+  };
+  PIX['weapon:axe'] = d => {   // Boarding Axe: bearded iron head, hatch spike, corded haft
+    d.tilt(11, 13);
+    const h = d.layer(C.wood).rrect(-1.2, -12, 2.4, 25);
+    d.layer(C.iron, { shiny: 1 }).rpoly([0.8, -12.5, 4.5, -13.5, 8, -11.5, 9.2, -6, 8.4, -1.5, 6.4, -3.2, 4.6, -6.6, 0.8, -7.8]);
+    d.layer(C.iron).rpoly([-0.8, -11.6, -6.5, -10.2, -0.8, -8.6]);
+    for (let y = 6; y < 11; y += 2) h.rtone(0, 0, y);
+  };
+  PIX['weapon:vesper_hook'] = d => {   // Vesper's Boarding Axe: steel deck-axe, brass rim, red cord
+    d.tilt(11, 13);
+    d.layer(C.dwood).rrect(-1.2, -12, 2.4, 25);
+    d.layer(C.steel, { shiny: 1 }).rpoly([0.8, -13, 5, -14, 9, -12, 10, -7, 9, -1, 6.6, -2.6, 5, -6.4, 0.8, -7.4]);
+    d.layer(C.brass, { shiny: 1 }).rpoly([8.4, -12.6, 10.2, -12, 11.2, -7, 10.2, -0.6, 9, -1, 9.4, -7]);
+    d.layer(C.steel).rpoly([-0.8, -11.6, -5, -10.6, -6.6, -8.2, -0.8, -8.8]);
+    d.layer(C.red).rrect(-1.5, 5.5, 3, 1.4).rrect(-1.5, 8, 3, 1.4);
+  };
+  PIX['weapon:mace'] = d => {   // Bell-Bronze Mace: flanged head cast from a chapel bell
+    d.tilt(12, 12);
+    d.layer(C.wood).rrect(-1.1, -4, 2.2, 17);
+    const hd = d.layer(C.bell, { shiny: 1 });
+    hd.rell(0, -8.5, 3.6, 4.2).rrect(-5.6, -9.6, 11.2, 2.2).rrect(-1.1, -14.4, 2.2, 11.6).rpoly([-4.6, -12.8, -3, -13.8, 4.6, -4.6, 3, -3.6]).rpoly([4.6, -12.8, 3, -13.8, -4.6, -4.6, -3, -3.6]);
+    d.layer(C.bronze).rrect(-1.8, -3.6, 3.6, 1.6);
+    d.layer(C.iron).rrect(-1.4, 11.4, 2.8, 1.8);
+  };
+  PIX['weapon:tollhammer'] = d => {   // Sexton's Toll-Hammer: a little bell for a head
+    d.tilt(12, 12);
+    d.layer(C.ash).rrect(-1.1, -2, 2.2, 15);
+    d.layer(C.bell, { shiny: 1 }).rpoly([-5.4, -2.4, -4.4, -8.6, -2.6, -11.4, 0, -12.2, 2.6, -11.4, 4.4, -8.6, 5.4, -2.4, 6.4, -1.2, -6.4, -1.2]);
+    d.layer(C.iron).rrect(-1.3, -14.4, 2.6, 2.6);
+    d.layer(C.dsteel).rell(0, -0.2, 1.4, 1.4);
+    d.layer(C.wax).rrect(-1.3, 9, 2.6, 1.6);
+  };
+  PIX['weapon:maul'] = d => {   // Cinderhold Steam-Maul: foundry head, pressure gauge
+    d.tilt(12, 12);
+    d.layer(C.wood).rrect(-1.3, -5, 2.6, 18);
+    d.layer(C.dsteel, { shiny: 1 }).rrect(-8, -13.6, 16, 8.4);
+    d.layer(C.iron).rrect(-8.8, -14.2, 2.6, 9.6).rrect(6.2, -14.2, 2.6, 9.6);
+    d.layer(C.brass, { shiny: 1 }).rell(0, -9.4, 2.9, 2.9);
+    d.layer(C.cream).rell(0, -9.4, 1.8, 1.8);
+    d.rmark('#a3261c', 0.6, -10.2);
+    d.layer(C.iron).rrect(-1.8, -5.4, 3.6, 1.6).rrect(-1.6, 11.4, 3.2, 1.6);
+  };
+  PIX['weapon:p12_greatmaul'] = d => {   // Quarry Great-Maul: lead-weighted sledge on a long ash haft
+    d.tilt(12, 12);
+    const h = d.layer(C.ash).rrect(-1.1, -6, 2.2, 21);
+    d.layer(C.lead, { shiny: 1 }).rpoly([-7.4, -14.2, 7.4, -14.2, 6.4, -6.6, -6.4, -6.6]);
+    d.layer(C.iron).rrect(-7.6, -11.4, 15.2, 1.4);
+    d.layer(C.iron).rrect(-1.6, -6.6, 3.2, 2.2);
+    h.rtone(0, 0, 4).rtone(0, 0, 8);
+  };
+  PIX['weapon:spear'] = d => {   // Tuning-Fork Spear: bronze fork on an ash shaft
+    d.tilt(12, 12);
+    d.layer(C.ash).rrect(-1, -4, 2, 18);
+    d.layer(C.bronze, { shiny: 1 }).rpoly([-3.6, -15, -1.6, -15, -1.6, -8.6, 1.6, -8.6, 1.6, -15, 3.6, -15, 3.6, -7, 1.4, -5, 1.4, -3, -1.4, -3, -1.4, -5, -3.6, -7]);
+    d.layer(C.iron).rrect(-1.6, -3.6, 3.2, 1.8);
+    d.mark('#fff3c0', 21, 1).mark('#fff3c0', 23, 4);
+  };
+  PIX['weapon:p12_bellglaive'] = d => {   // Bell-Bronze Glaive: curved blade on a six-foot shaft
+    d.tilt(12, 12);
+    d.layer(C.wood).rrect(-1, -6, 2, 20);
+    d.layer(C.bell, { shiny: 1 }).rpoly([-1.4, -6, -1.8, -10, -0.6, -14, 1.6, -15.6, 3.4, -13.4, 4, -9.6, 3.2, -6.6, 1.4, -6]);
+    d.layer(C.bronze).rrect(-2, -6.6, 4, 2);
+    d.layer(C.bronze).rrect(-1.6, 11.6, 3.2, 1.4);
+  };
+  PIX['weapon:p12_glassblade'] = d => {   // Long Glass-Edged Blade: steel spine, a salvaged glass edge
+    d.tilt(12, 12);
+    wrap(d.layer(C.dleather).rrect(-1.2, 2.6, 2.4, 10), 3, 13);
+    d.layer(C.dsteel).rpoly([-0.2, 2.4, -0.2, -12.5, 2.2, -11, 2.2, 2.4]);
+    d.layer(C.glass, { shiny: 1, sep: false }).rpoly([-2.4, 2.4, -2.4, -11.5, -0.6, -15, -0.2, -12.5, -0.2, 2.4]);
+    d.layer(C.iron).rrect(-5, 1.4, 10, 2);
+    d.layer(C.iron).rell(0, 13.6, 1.6, 1.6);
+  };
+  PIX['weapon:p12_dirk'] = d => {   // Reed-Guard Dirk: stiff blade, basket hilt
+    d.tilt(13, 11);
+    d.layer(C.dleather).rrect(-1, 2, 2, 7);
+    d.layer(C.steel, { shiny: 1 }).rpoly([-1.4, 1, -1.4, -9, 0, -11.5, 1.4, -9, 1.4, 1]);
+    const bk = d.layer(C.iron).rell(0, 4.8, 3.8, 4.2);
+    bk.cut().rell(0, 4.8, 2.3, 2.9).add();
+    d.layer(C.iron, { shiny: 1 }).rell(0, 10, 1.5, 1.5);
+  };
+  PIX['weapon:crossbow'] = d => {   // Rust Coast Crossbow: iron prod, wooden stock, bolt on the rail
+    d.tilt(12, 12);
+    d.layer(C.wood).rpoly([-1.6, -7, 1.6, -7, 1.8, 6, 3, 13, -3, 13, -1.8, 6]);
+    d.layer(C.dsteel, { shiny: 1 }).rpoly([-11, -4.4, -6, -7.4, 0, -8.6, 6, -7.4, 11, -4.4, 11, -3, 6, -5.6, 0, -6.8, -6, -5.6, -11, -3]);
+    const st = d.layer(C.linen, { shade: 'flat', sep: false }), a = d.rp(-10.4, -3.4), b = d.rp(10.4, -3.4), n = d.rp(0, 1.5);
+    st.line(a[0], a[1], n[0], n[1]).line(b[0], b[1], n[0], n[1]);
+    d.layer(C.steel).rpoly([-0.6, -12, 0.6, -12, 0.6, 1, -0.6, 1]);
+    d.layer(C.iron).rrect(-2, -9.6, 4, 1.4);
+  };
+  PIX['weapon:pistol'] = d => {   // Glass-Shot Pistol: silver barrel, glass pellet glowing in the breech
+    const fr = d.layer(C.wood);
+    fr.poly([9, 11, 15, 11, 12, 21, 5, 21, 8, 13]);
+    d.layer(C.silver, { shiny: 1 }).rect(5, 7, 16, 4).rect(20, 6, 2, 6);
+    d.layer(C.iron).rect(3, 8, 3, 2).px(4, 7);
+    d.layer(C.dsteel).path([11, 11, 11, 14, 14, 14, 14, 12]);
+    d.layer(C.glass, { shiny: 1, sep: false }).rect(8, 8, 3, 2);
+    fr.tone(3, 9, 12).tone(1, 7, 20, 8, 20);
+    d.mark('#d8fbff', 9, 8).mark('#bff7fb', 22, 8).mark('#8ff0f8', 23, 9);
+  };
+  PIX['weapon:throwknife'] = d => {   // Throwing Knives: three balanced blades
+    [[6, 11], [11, 13], [16, 15]].forEach(([x, y]) => {
+      d.tilt(x, y, 1);
+      d.layer(C.dleather).rrect(-0.9, 1, 1.8, 4.4);
+      d.layer(C.steel, { shiny: 1 }).rpoly([-1.1, 1, -1.1, -4.5, 0, -6.8, 1.1, -4.5, 1.1, 1]);
+      d.layer(C.iron).rell(0, 6, 1.1, 1.1);
+    });
+  };
+  PIX['weapon:hands'] = d => {   // Bare Hands: a fist, knuckles forward
+    d.layer(C.dleather).rect(8, 17, 9, 4).tone(3, 8, 17, 9, 17);
+    d.layer(C.skin).rect(8, 13, 9, 5);
+    [[16, 6], [13, 5], [10, 5], [7, 6]].forEach(([x, y]) => d.layer(C.skin).rect(x, y + 1, 3, 6).rect(x + 1, y, 1, 1).px(x, y + 1));
+    d.layer(C.skin).rect(6, 12, 8, 3).rect(5, 11, 3, 3).px(14, 13);
+    d.mark('#e3b394', 8, 6, 11, 5, 14, 5, 17, 6);
+  };
+  PIX['weapon:glass'] = d => {   // Glass Arm: Kaelen's arm, glassed past the elbow
+    d.tilt(11, 13);
+    d.layer(C.dleather).rrect(-3.2, 7, 6.4, 6);
+    const g = d.layer(C.glass, { shiny: 1 });
+    g.rpoly([-2.6, 7.4, -3, 0, -3.6, -5, -2.6, -9.4, 0, -11.6, 2.8, -10, 3.6, -5, 3, 0, 2.6, 7.4]);
+    g.rrect(-3.2, -14.6, 1.4, 5).rrect(-1.2, -15.4, 1.4, 5).rrect(0.8, -15, 1.4, 5).rrect(2.6, -13.4, 1.3, 4);
+    g.rtone(4, -1.6, -3).rtone(4, -1.6, 2).rtone(1, 1.6, -7).rtone(1, 1.4, 1).rtone(3, 0, 4);
+    d.mark('#e9ffff', 14, 6);
+  };
+  // ---------------------------------------------------------------- armour
+  // a garment front: shoulders, sleeves to the elbow or wrist, hem at y = bot
+  function garment(L, bot, sleeve) {
+    const s = sleeve || 14;
+    L.poly([8, 4, 16, 4, 20, 6, 22, s, 19, s + 1, 17, 10, 17.5, bot, 6.5, bot, 7, 10, 5, s + 1, 2, s, 4, 6]);
+    return L.cut().poly([10, 3.6, 14, 3.6, 12, 7]).add();
+  }
+  PIX.a_cap = d => {   // Leather Cap: boiled leather, a seam and a short brim
+    const c = d.layer(C.leather).ell(12, 13, 7.5, 7).cut().rect(0, 13, 24, 11).add().rect(5, 12, 14, 3);
+    for (let y = 7; y < 13; y++) c.tone(1, 12, y);
+    c.tone(3, 9, 8, 10, 7);
+    d.layer(C.dleather).rect(4, 15, 16, 2);
+    d.mark('#d9b98a', 7, 13, 10, 13, 13, 13, 16, 13);
+  };
+  PIX.a_hood = d => {   // Hush-Cloth Hood: packed wool, a soft dark opening
+    d.layer(C.teal).poly([12, 3, 17, 5, 19.5, 10, 20, 17, 21.5, 21, 2.5, 21, 4, 17, 4.5, 10, 7, 5]);
+    d.layer(C.black, { shade: 'flat', sep: false }).ell(12, 13, 4.2, 5.4).rect(8, 13, 8, 5);
+    d.layer(C.teal).rect(6, 18, 12, 3).tone(3, 6, 18, 7, 18);
+    d.mark('#6e9a90', 9, 6, 8, 7);
+  };
+  PIX.a_kettle = d => {   // Iron Kettle Helm: a broad brim that rings
+    d.layer(C.iron, { shiny: 1 }).ell(12, 13, 6.2, 8).cut().rect(0, 13, 24, 11).add();
+    d.layer(C.iron).ell(12, 14.5, 11, 3).cut().ell(12, 13.6, 6, 1.4).add();
+    d.layer(C.dsteel).rect(11, 5, 2, 9);
+    d.mark('#f2f6f6', 9, 8);
+  };
+  PIX.a_bellhelm = d => {   // Carillon Bell-Helm: a Legion bell, hollowed, with a gold finial
+    d.layer(C.bell, { shiny: 1 }).poly([12, 3, 15.5, 4.5, 17, 9, 18, 16, 20.5, 19, 20.5, 21, 3.5, 21, 3.5, 19, 6, 16, 7, 9, 8.5, 4.5]);
+    d.layer(C.black, { shade: 'flat', sep: false }).rect(8, 12, 8, 2).rect(11, 12, 2, 6);
+    d.layer(C.gold, { shiny: 1 }).rect(11, 1, 2, 3);
+    d.layer(C.bronze).rect(4, 19, 16, 2);
+  };
+  PIX.a_synodrobe = d => {   // Synod Clerk Robes: grey oilcloth, a silver registry stole
+    garment(d.layer(C.grey), 22, 20);
+    d.layer(C.silver, { shiny: 1 }).rect(9, 5, 2, 17).rect(13, 5, 2, 17);
+    d.layer(C.dsteel).rect(10, 11, 4, 1);
+    d.mark('#e8e8e0', 9, 22, 14, 22);
+  };
+  PIX.a_gambeson = d => {   // Quilted Gambeson: linen and wool in quilted rows
+    const g = garment(d.layer(C.cloth), 20, 13);
+    for (let y = 8; y < 20; y += 3) for (let x = 7; x < 18; x++) g.tone(1, x, y);
+    for (let x = 9; x < 17; x += 3) for (let y = 7; y < 20; y++) if (y % 3) g.tone(2, x, y);
+    d.layer(C.linen).rect(11, 6, 2, 14).tone(3, 11, 6);
+  };
+  PIX.a_jerkin = d => {   // Tanner's Leather Jerkin: oiled leather, laced front
+    garment(d.layer(C.leather, { shiny: 1 }), 20, 11);
+    d.layer(C.dleather).rect(11, 6, 2, 14);
+    d.mark('#e0c08a', 10, 8, 13, 9, 10, 11, 13, 12, 10, 14, 13, 15, 10, 17, 13, 18);
+    d.layer(C.dleather).rect(7, 17, 10, 1);
+  };
+  PIX.a_hushcoat = d => {   // Hush-Cloth Coat: long, the Hedge's own wool
+    garment(d.layer(C.teal), 22, 19);
+    d.layer('#2e4f48').poly([12, 6, 13, 6, 15, 22, 12, 22]);
+    d.layer('#4c7a70').poly([9, 4, 12, 7, 10, 12, 8, 6]).poly([15, 4, 12, 7, 14, 12, 16, 6]);
+    d.mark('#c9b07a', 13, 12, 13, 15);
+  };
+  PIX.a_brig = d => {   // Consortium Brigandine: plates under company canvas, rows of rivets
+    garment(d.layer(C.moss), 20, 11);
+    d.layer('#4d5a3a').rect(7, 9, 10, 1).rect(7, 13, 10, 1).rect(7, 17, 10, 1);
+    for (let y = 8; y < 20; y += 4) for (let x = 8; x < 17; x += 2) d.mark('#e3d6a6', x, y);
+    d.layer(C.wax).rect(15, 5, 2, 2);
+  };
+  PIX.a_chain = d => {   // Synod Chainmail: arsenal mail that shushes as you walk
+    const m = garment(d.layer(C.steel, { shiny: 1 }), 21, 15);
+    for (let y = 5; y < 22; y++) for (let x = 2; x < 23; x++) if (((x + y) & 1) === 0 && (y & 1)) m.tone(1, x, y);
+    m.cut().rect(0, 22, 24, 2).add();
+    for (let x = 7; x < 18; x += 2) d.mark('#5d666a', x, 21);
+    d.layer(C.leather).rect(7, 14, 10, 2);
+  };
+  PIX.a_plate = d => {   // Carillon Bell-Plate: a bell-cast cuirass
+    d.layer(C.bell, { shiny: 1 }).poly([6, 4, 18, 4, 19, 10, 18, 18, 15, 21, 9, 21, 6, 18, 5, 10]);
+    d.layer(C.bronze, { shiny: 1 }).poly([2.5, 5, 8, 3.5, 8, 9, 3, 10]).poly([21.5, 5, 16, 3.5, 16, 9, 21, 10]);
+    d.layer(C.bronze).rect(7, 14, 10, 2);
+    d.mark('#fff2c8', 9, 7, 9, 8, 10, 7);
+    d.mark('#6a4318', 12, 9, 12, 10, 12, 11, 12, 12);
+  };
+  PIX.a_gloves = d => {   // Leather Gloves: a work pair
+    const g = (x, col) => { const L = d.layer(col); L.rect(x, 9, 6, 8).rect(x, 4, 1, 6).rect(x + 2, 3, 1, 6).rect(x + 4, 4, 1, 6).rect(x + 5, 6, 1, 4).rect(x - 1, 10, 1, 4).rect(x, 17, 6, 4); L.tone(1, x + 1, 4, x + 3, 4, x + 1, 5, x + 3, 5); return L; };
+    g(4, C.leather); g(13, C.tan);
+    d.layer(C.dleather).rect(4, 17, 6, 1).rect(13, 17, 6, 1);
+  };
+  PIX.a_gauntlets = d => {   // Mail Gauntlets: mail backs on leather palms
+    const g = (x) => { const L = d.layer(C.steel); L.rect(x, 9, 6, 7).rect(x, 4, 1, 6).rect(x + 2, 3, 1, 6).rect(x + 4, 4, 1, 6).rect(x + 5, 6, 1, 4).rect(x - 1, 10, 1, 4); for (let y = 9; y < 16; y++) for (let i = x; i < x + 6; i++) if (((i + y) & 1) === 0) L.tone(1, i, y); return L; };
+    g(4); g(13);
+    d.layer(C.dleather).rect(3, 16, 8, 5).rect(12, 16, 8, 5);
+    d.layer(C.iron).rect(3, 16, 8, 1).rect(12, 16, 8, 1);
+  };
+  const boot = (L, x, top) => L.rect(x, top, 5, 17 - top).rect(x, 15, 9, 4).px(x + 9, 17, x + 9, 18);
+  PIX.a_softboots = d => {   // Soft Boots: felt-soled
+    boot(d.layer(C.felt), 3, 5); boot(d.layer('#8d8576'), 11, 6);
+    d.layer('#4a4540').rect(3, 19, 10, 1).rect(11, 19, 10, 1);
+    d.layer('#a39a88').rect(3, 5, 5, 2).rect(11, 6, 5, 2);
+  };
+  PIX.a_hobnails = d => {   // Hobnail Boots: studded and loud
+    boot(d.layer(C.dleather, { shiny: 1 }), 3, 4); boot(d.layer(C.leather, { shiny: 1 }), 11, 5);
+    d.layer(C.black).rect(3, 19, 10, 2).rect(11, 19, 10, 2);
+    d.mark('#d9dde0', 4, 20, 6, 20, 8, 20, 10, 20, 12, 20, 14, 20, 16, 20, 18, 20);
+    d.mark('#d8b07a', 5, 7, 5, 10, 13, 8, 13, 11);
+  };
+  PIX.a_greaves = d => {   // Iron Greaves: shin-plates over riding boots
+    boot(d.layer(C.dleather), 3, 5); boot(d.layer(C.dleather), 11, 6);
+    d.layer(C.iron, { shiny: 1 }).rect(3, 4, 5, 10).rect(11, 5, 5, 10);
+    d.layer(C.dsteel).rect(3, 9, 5, 1).rect(11, 10, 5, 1);
+    d.mark('#e8dcb0', 4, 6, 12, 7);
+  };
+  PIX.a_buckler = d => {   // Corsair Buckler: fist-sized, iron boss
+    d.layer(C.wood).ell(12, 12, 9, 9);
+    d.layer(C.iron).ell(12, 12, 9, 9).cut().ell(12, 12, 7.6, 7.6).add();
+    d.layer(C.iron, { shiny: 1 }).ell(12, 12, 3.4, 3.4);
+    d.mark('#e8dcb0', 12, 4, 19, 12, 12, 19, 4, 12);
+  };
+  PIX.a_kite = d => {   // Synod Kite Shield: painted with the Synod's dead queen (a crowned head in profile)
+    d.layer(C.red).poly([4, 3, 20, 3, 20, 10, 12, 22, 4, 10]);
+    d.layer(C.brass).poly([4, 3, 20, 3, 20, 10, 12, 22, 4, 10]).cut().poly([5.4, 4.4, 18.6, 4.4, 18.6, 9.8, 12, 20, 5.4, 9.8]).add();
+    d.grid(8, 5, [
+      '.y.y.y..',
+      '.yyyyy..',
+      '.wwww...',
+      'wwwwww..',
+      '.wwwwww.',
+      '.wwwww..',
+      '..www...',
+      '.wwwww..',
+      'wwwwwww.',
+    ], { y: d.layer(C.gold, { shiny: 1 }), w: d.layer(C.ivory) });
+  };
+  // ---------------------------------------------------------------- supplies, food, ammunition
+  // a bottle: body ellipse/round or tall, neck, stopper; liquid fills the lower part
+  function bottle(d, o) {
+    const gl = d.layer(o.glass || '#9fc7c4', { shiny: 1 });
+    if (o.round) gl.ell(12, 15, o.r || 6.5, o.r || 6.5).rect(10, 5, 4, 6);
+    else gl.rect(7, 9, 10, 12).ell(12, 10, 5, 3).rect(10, 4, 4, 6);
+    if (o.liq) {
+      const lq = d.layer(o.liq, { shiny: 1, sep: false });
+      if (o.round) lq.ell(12, 15, (o.r || 6.5) - 1, (o.r || 6.5) - 1).cut().rect(0, 0, 24, o.level || 13).add();
+      else lq.rect(8, o.level || 12, 8, 21 - (o.level || 12));
+    }
+    if (o.cork !== false) d.layer(o.cork || C.tan).rect(10, 2, 4, 3);
+    return gl;
+  }
+  PIX.tonic = d => {   // Bettany's Tonic: honey, egg and willow-bark in a round bottle, a paper label
+    bottle(d, { round: true, liq: C.amber, level: 12 });
+    d.layer(C.paper, { shade: 'flat' }).rect(9, 15, 6, 4);
+    d.mark('#7a3a20', 10, 16, 11, 16, 13, 16, 10, 17, 12, 17).mark('#ffffff', 8, 11, 8, 12);
+  };
+  PIX.honey = d => {   // Oiled Honey: a clay pot, a cloth cover, a drip
+    d.layer(C.clay).ell(12, 15, 7, 6.5).rect(7, 7, 10, 4);
+    d.layer(C.linen).rect(6, 5, 12, 4).px(5, 8, 18, 8);
+    d.layer(C.red).rect(6, 9, 12, 1);
+    d.layer(C.honey, { shiny: 1, sep: false }).rect(14, 9, 2, 5).px(15, 14).rect(8, 9, 2, 2);
+    d.mark('#fff0b0', 14, 10);
+  };
+  PIX.sovereigns = d => {   // Sovereigns: Synod coin, a dead queen's head
+    for (let i = 0; i < 4; i++) d.layer(C.gold).ell(8, 19 - i * 2.2, 5.5, 2.4);
+    const f = d.layer(C.gold, { shiny: 1 }).ell(15, 12, 6.2, 6.2);
+    f.tone(1, 15, 9, 14, 10, 14, 11, 15, 11, 16, 12, 14, 13, 15, 14, 16, 14);
+    d.layer(C.gold).ell(15, 12, 6.2, 6.2).cut().ell(15, 12, 5.2, 5.2).add();
+  };
+  PIX.pellets = d => {   // Glass Shot: Aether-Glass pellets
+    [[8, 8], [15, 7], [18, 13], [11, 13], [6, 17], [14, 18]].forEach(([x, y]) => { d.layer(C.glass, { shiny: 1 }).ell(x, y, 2.9, 2.9); d.mark('#e9ffff', x - 2, y - 2); });
+  };
+  PIX.bolts = d => {   // Crossbow Bolts: iron heads, grey fletching
+    [[8, 14], [12, 12], [16, 10]].forEach(([x, y]) => {
+      d.tilt(x, y, 1);
+      d.layer(C.ash).rrect(-0.5, -6, 1, 15);
+      d.layer(C.linen).rpoly([-0.5, 5, -2.2, 7, -2.2, 9.5, -0.5, 8]).rpoly([0.5, 5, 2.2, 7, 2.2, 9.5, 0.5, 8]);
+      d.layer(C.iron, { shiny: 1 }).rpoly([-1.4, -5.4, 0, -9.4, 1.4, -5.4]);
+    });
+  };
+  PIX.tknives = d => {   // Throwing Knives (x5): a bundle fanned and tied with cord
+    [-0.5, -0.25, 0, 0.25, 0.5].forEach((a, i) => {
+      const L = d.layer(C.steel, { shiny: 1 }), H = d.layer(C.dleather), cx = 12 + a * 14;
+      L.poly([12 + a * 3 - 1, 14, cx - 1, 5, cx, 3, cx + 1, 5, 12 + a * 3 + 1, 14]);
+      H.rect(Math.round(12 + a * 3 - 1), 14, 2, 6 + (i % 2));
+    });
+    d.layer(C.red).rect(8, 13, 9, 2);
+  };
+  PIX.bottle = d => {   // Vox-Bottle: somebody's last words, stoppered; a lilac breath inside
+    bottle(d, { glass: '#7a6a9a', cork: C.wax });
+    d.layer(C.lilac, { shiny: 1, sep: false }).px(10, 12, 11, 11, 12, 11, 13, 12, 13, 13, 12, 14, 11, 15, 10, 16, 11, 17, 12, 17, 13, 18);
+    d.layer(C.wax).rect(9, 5, 6, 2);
+    d.mark('#e9ddff', 8, 10, 8, 11);
+  };
+  PIX.empty_bottle = d => {   // Empty Glass Bottle: clear glass, nothing in it
+    bottle(d, { glass: '#b8d0cc', cork: false });
+    d.layer('#b8d0cc', { shade: 'flat' }).rect(9, 2, 6, 2);
+    d.mark('#ffffff', 8, 10, 8, 11, 8, 12, 15, 17);
+  };
+  PIX.whistle = d => {   // Hush-Whistle: a reed whistle from a hush-lamp, on a cord
+    d.tilt(12, 12, 1);
+    d.layer(C.reed).rrect(-1.8, -9, 3.6, 16);
+    d.layer(C.dwood).rrect(-2, -9.5, 4, 2);
+    const h = d.layer('#2a2a1a', { shade: 'flat', sep: false }); [-4, -1, 2].forEach(y => h.rp && 0); d.rmark('#2a2414', 0, -4); d.rmark('#2a2414', 0, -1); d.rmark('#2a2414', 0, 2);
+    const a = d.rp(0, 7), cord = d.layer(C.tan, { shade: 'flat' }); cord.line(a[0], a[1] + 1, a[0] - 3, a[1] + 4).line(a[0] - 3, a[1] + 4, a[0] - 7, a[1] + 3);
+  };
+  PIX.bandage = d => {   // Clean Linen Bandage: a roll and its tail
+    d.layer(C.linen).poly([12, 14, 21, 18, 20, 21, 11, 17]);
+    d.layer(C.linen, { shiny: 1 }).ell(10, 11, 7, 7);
+    d.layer('#b9ad92').ell(10, 11, 3, 3);
+    d.layer('#6a5d48', { shade: 'flat' }).ell(10, 11, 1.4, 1.4);
+    d.mark('#b9ad92', 6, 7, 5, 9, 6, 14, 14, 7);
+  };
+  PIX.whetstone = d => {   // Quarry Whetstone
+    d.tilt(12, 12, 1);
+    d.layer(C.slate).rrect(-3.6, -8, 7.2, 16);
+    d.layer('#8a9096', { sep: false }).rrect(-2.2, -6.6, 2, 13);
+    d.rmark('#d0d6d8', -1.6, -5);
+  };
+  PIX.pebble = d => {   // Skipping Stone: flat, grey, round
+    d.layer(C.stone).ell(12, 13, 8.5, 6);
+    d.layer('#a29d92', { sep: false }).ell(10, 11, 4, 2.2);
+    d.mark('#d6d2c8', 8, 10, 9, 10).mark('#6a655c', 16, 16, 14, 17);
+  };
+  PIX.shard = d => {   // Light-Glass Shard: raw green-gold, from a root-vein
+    d.layer(C.green, { shiny: 1 }).poly([12, 2, 16, 8, 15, 18, 12, 22, 8, 17, 8.5, 8]);
+    d.layer('#c8d85a', { sep: false }).poly([12, 3, 12.6, 21, 10, 17, 9.4, 8]);
+    d.layer(C.green).poly([16, 12, 20, 15, 18, 20, 15, 19]);
+    d.mark('#f8ffd8', 11, 6, 11, 7, 10, 9);
+  };
+  PIX.flume_eel = d => {   // Smoked Flume-Eel: boiled twice, hung on a cord, golden-brown
+    d.layer(C.tan, { shade: 'flat' }).path([7, 6, 6, 2, 11, 2]);
+    d.layer('#9a6a36', { shiny: 1 }).thick([7.5, 7, 7, 11, 9, 15, 13, 17.5, 17, 17, 19.5, 14], t => 2.6 - t * 1.5);
+    d.layer('#5a3418').poly([18, 15, 21, 11, 22, 14]);
+    d.layer('#c88a4a', { shade: 'flat', sep: false }).path([7, 9, 7, 12, 9, 15]).path([11, 16, 14, 16]);
+    d.mark('#2a1608', 7, 6);
+  };
+  PIX.cache = d => {   // A strongbox: iron-banded
+    d.layer(C.wood).rect(4, 10, 16, 10);
+    d.layer(C.wood, { shiny: 1 }).rect(4, 6, 16, 4).rect(5, 5, 14, 1);
+    d.layer(C.iron).rect(4, 9, 16, 2).rect(7, 5, 2, 15).rect(15, 5, 2, 15);
+    d.layer(C.brass, { shiny: 1 }).rect(11, 10, 2, 3);
+    d.mark('#1a120c', 11, 12);
+  };
+  PIX.herb_willow = d => {   // Silver Willow-Bark: rolled quills of bark, silver outside, brown within
+    [[9, 10], [14, 13]].forEach(([x, y]) => {
+      d.tilt(x, y, 1);
+      d.layer('#aeb2a6', { shiny: 1 }).rrect(-2.2, -8, 4.4, 15);
+      d.layer('#7a5232', { shade: 'flat' }).rell(0, -8, 2.2, 1.2);
+      d.layer('#4a2e18', { shade: 'flat', sep: false }).rell(0.4, -8, 1, 0.5);
+      d.rmark('#e8ece4', -1, -4); d.rmark('#6a6c62', 1, 2); d.rmark('#6a6c62', 1, -1);
+    });
+  };
+  PIX.herb_reed = d => {   // Sweet Reed-Pith: cut green stalks, white pith
+    [[6, 4], [9, 3], [12, 5], [15, 4]].forEach(([x, y]) => { d.layer(C.reed).rect(x, y, 3, 17 - y + 2); d.layer(C.cream, { sep: false }).rect(x + 1, y, 1, 1); });
+    d.layer(C.tan).rect(5, 13, 14, 2);
+    d.layer('#7a8a3a').path([17, 8, 20, 4, 21, 3]);
+  };
+  PIX.herb_moss = d => {   // Lilac Moon-Moss: luminous moss from drowned stone
+    d.layer(C.stone).ell(12, 17, 8.5, 4);
+    const m = d.layer(C.lilac, { shiny: 1 });
+    [[8, 12, 3.4], [12, 10, 4], [16, 12, 3.2], [10, 14, 3], [15, 15, 3]].forEach(([x, y, r]) => m.ell(x, y, r, r * 0.85));
+    d.mark('#f2e8ff', 11, 8, 7, 11, 15, 10, 9, 13).mark('#7a5aa8', 13, 14, 17, 14);
+  };
+  PIX.p12_hearth_bread = d => {   // Hearth Bread: a round loaf, scored
+    d.layer('#b0742e', { shiny: 1 }).ell(12, 14, 9, 6.5);
+    d.layer('#c99a52', { sep: false }).path([7, 11, 9, 13]).path([11, 10, 13, 12]).path([15, 10, 17, 12]);
+    d.layer('#7a4a1c').rect(4, 17, 16, 1);
+  };
+  PIX.p12_cider = d => {   // Last-Apple Cider: a stoppered clay jug
+    d.layer(C.clay, { shiny: 1 }).ell(11, 15, 7, 6.5).rect(8, 4, 6, 6);
+    d.layer(C.clay).path([14, 7, 18, 7, 19, 9, 18, 13, 17, 14]).path([14, 8, 17, 8]);
+    d.layer('#e6d8b0').rect(6, 13, 10, 2);
+    d.layer(C.tan).rect(8, 2, 6, 2);
+  };
+  PIX.p12_moot_curd = d => {   // Moot-Curd: soft salted curd in a dock-leaf
+    d.layer('#4f7a34').poly([3, 14, 9, 9, 15, 9, 21, 13, 17, 19, 7, 19]);
+    d.layer(C.cream, { shiny: 1 }).ell(12, 13, 5.4, 3.6);
+    d.layer('#365a22', { shade: 'flat', sep: false }).path([4, 14, 8, 16, 12, 17, 16, 16, 20, 14]);
+    d.mark('#ffffff', 10, 11, 11, 11);
+  };
+  PIX.p12_flume_eel = d => {   // Run-Eel: green, alive and quiet, coiled
+    const e = d.layer(C.eel, { shiny: 1 });
+    e.ell(12, 13, 8, 7).cut().ell(12, 13, 5.5, 4.5).add().rect(16, 6, 5, 3).cut().rect(15, 9, 2, 3).add();
+    e.ell(10, 14, 3, 2.4);
+    d.mark('#e8f0a0', 19, 7).mark('#1a120c', 20, 7).mark('#a8c870', 7, 8, 5, 12);
+  };
+  PIX.p15_smoked_eel = d => {   // Smoked Run-Eel: split and salted on a skewer, crackling
+    d.layer(C.ash).line(2, 20, 21, 3).line(3, 20, 22, 3);
+    const e = d.layer('#7a4420', { shiny: 1 });
+    e.poly([5, 16, 10, 9, 16, 5, 19, 6, 14, 12, 8, 18]);
+    d.layer('#c88a4a', { sep: false }).path([8, 15, 12, 11, 16, 7]);
+    d.mark('#e8b070', 10, 12, 14, 9);
+  };
+  PIX.p15_toasted_round = d => {   // Toasted Round: bread with curd melted into the crumb
+    d.layer('#8a5222').ell(12, 14, 9, 6.2);
+    d.layer('#d8a860', { sep: false }).ell(12, 13.5, 7.2, 4.6);
+    d.layer(C.cream, { shiny: 1, sep: false }).ell(11, 13, 4.4, 2.4).px(15, 14, 15, 15, 8, 15);
+    d.mark('#6a3812', 7, 12, 17, 12, 10, 16);
+  };
+  PIX.p15_soothing_draught = d => {   // Soothing Draught: hot honey and bark in a tin cup
+    d.layer(C.iron, { shiny: 1 }).rect(6, 9, 10, 11).ell(11, 20, 5, 1.2);
+    d.layer(C.iron).path([16, 11, 19, 11, 19, 16, 16, 16]);
+    d.layer(C.honey, { shade: 'flat', sep: false }).rect(7, 9, 8, 2);
+    d.layer('#d8d0c4', { shade: 'flat' }).px(9, 6, 10, 5, 10, 4, 13, 7, 12, 6, 12, 5, 13, 3);
+  };
+  PIX.p12_flask = d => {   // Oil Flask: lamp-oil, a rag wick
+    bottle(d, { round: true, r: 6, liq: '#c8a03a', level: 13, cork: '#7a7060' });
+    d.layer(C.linen).poly([11, 2, 13, 2, 16, 5, 15, 6, 13, 4]).rect(11, 1, 2, 2);
+    d.mark('#ffffff', 8, 13, 8, 14);
+  };
+  PIX.p12_jar = d => {   // Damper Jar: wool-fat and wax, sealed
+    d.layer(C.lead, { shiny: 1 }).rect(6, 8, 12, 13).ell(12, 8, 6, 1.6);
+    d.layer('#d8c890').rect(5, 4, 14, 4);
+    d.layer(C.tan).rect(5, 7, 14, 1);
+    d.layer(C.paper, { shade: 'flat' }).rect(8, 12, 8, 5);
+    d.layer('#5a4a3a', { shade: 'flat', sep: false }).rect(9, 13, 6, 1).rect(9, 15, 4, 1);
+  };
+  PIX.p12_net = d => {   // Weighted Net: reed-cord around clay weights
+    const n = d.layer('#c0a66a', { shade: 'flat' });
+    for (let i = 0; i < 5; i++) { n.line(4 + i * 3, 4, 4 + i * 3 + 4, 18); n.line(20 - i * 3, 4, 20 - i * 3 - 4, 18); }
+    [[4, 19], [10, 20], [15, 20], [20, 19]].forEach(([x, y]) => d.layer(C.clay).ell(x, y, 1.8, 1.8));
+  };
+  PIX.p13h_beads = d => {   // Linnet's Counting-Beads: eight beads, the eighth worn smooth
+    const cord = d.layer(C.tan, { shade: 'flat' }); cord.path([4, 4, 6, 10, 9, 15, 13, 18, 17, 18, 20, 15]);
+    [[5, 7], [6, 10], [8, 13], [10, 15], [13, 17], [16, 18], [19, 16]].forEach(([x, y]) => d.layer('#6a3a2a', { shiny: 1 }).ell(x + 0.5, y + 0.5, 1.5, 1.5));
+    d.layer(C.bone, { shiny: 1 }).ell(20.5, 13, 1.7, 1.7);
+  };
+  // ---------------------------------------------------------------- valuables, tools, instruments
+  PIX.v_scrap = d => {   // Bell-Bronze Scrap: a broken piece of a Legion bell, lip and all
+    d.layer(C.bell, { shiny: 1 }).poly([3, 15, 6, 9, 9, 6, 12, 7, 14, 4, 17, 6, 19, 10, 21, 15, 18, 18, 12, 17, 6, 18]);
+    d.layer(C.bronze, { shiny: 1 }).poly([3, 15, 6, 18, 12, 17, 18, 18, 21, 15, 21, 18, 18, 21, 12, 20, 6, 21, 3, 18]);
+    d.mark('#fff0c0', 8, 9, 9, 8, 10, 8).mark('#5a3a18', 13, 9, 13, 10, 14, 11);
+  };
+  PIX.v_mesh = d => {   // Silver Proctor-Mesh: fine silver mesh from a mask
+    const m = d.layer(C.silver, { shiny: 1 }).poly([5, 5, 19, 4, 20, 18, 6, 20]);
+    for (let y = 5; y < 21; y++) for (let x = 5; x < 21; x++) if (x % 2 === 0 && y % 2 === 0) m.tone(0, x, y);
+    d.layer(C.dsteel).path([5, 5, 19, 4]).path([6, 20, 20, 18]);
+  };
+  PIX.v_gear = d => {   // Brass Governor-Gear: from a Steam Golem's works, still warm
+    const g = d.layer(C.brass, { shiny: 1 }).ell(12, 12, 6.6, 6.6);
+    for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2, x = 12 + Math.cos(a) * 8, y = 12 + Math.sin(a) * 8; g.rect(Math.round(x - 1.5), Math.round(y - 1.5), 3, 3); }
+    g.cut().ell(12, 12, 2.2, 2.2).add();
+    d.layer(C.copper).ell(12, 12, 3.6, 3.6).cut().ell(12, 12, 2.2, 2.2).add();
+    d.mark('#ffd8a0', 21, 3, 22, 4).mark('#ff9a50', 21, 21);
+  };
+  PIX.v_signet = d => {   // Synod Signet: an officer's ring
+    d.layer(C.gold, { shiny: 1 }).ell(12, 14, 7, 6.6).cut().ell(12, 14.4, 4.4, 4).add();
+    d.layer(C.gold, { shiny: 1 }).rect(8, 4, 8, 5);
+    d.layer(C.crimson, { shiny: 1 }).rect(9, 5, 6, 3);
+    d.mark('#ffd0c0', 10, 5).mark('#5a1010', 12, 6, 13, 6);
+  };
+  PIX.v_fork = d => {   // Silver Tuning Fork: tuned to 528
+    d.tilt(12, 12, 1);
+    d.layer(C.silver, { shiny: 1 }).rpoly([-3, -11, -1.4, -11, -1.4, -3, 1.4, -3, 1.4, -11, 3, -11, 3, -2, 1, 0, 0.8, 10, -0.8, 10, -1, 0, -3, -2]);
+    d.layer(C.silver).rell(0, 10.5, 1.6, 1.6);
+    d.mark('#ffffff', 15, 2, 20, 6).mark('#fff6c0', 21, 1);
+  };
+  PIX.coil = d => {   // Reverse-Phase Coil: brass and copper wound round a Growth crystal
+    d.layer(C.green, { shiny: 1 }).poly([12, 2, 15, 6, 15, 18, 12, 22, 9, 18, 9, 6]);
+    for (let y = 7; y <= 17; y += 2) d.layer(y % 4 === 3 ? C.copper : C.brass, { shiny: 1 }).rect(6, y, 12, 2);
+    d.mark('#f0ffd0', 11, 4, 11, 5);
+  };
+  PIX.p12_fork = d => {   // Iron Tuning Fork: Bettany's, from a Cantor's widow
+    d.tilt(12, 13, 1);
+    d.layer(C.dsteel).rpoly([-3.4, -10, -1.6, -10, -1.6, -1, 1.6, -1, 1.6, -10, 3.4, -10, 3.4, 0, 1.2, 2, 1.2, 6, -1.2, 6, -1.2, 2, -3.4, 0]);
+    d.layer(C.wood).rrect(-1.6, 6, 3.2, 6);
+    d.layer(C.iron).rrect(-1.8, 5.4, 3.6, 1.2);
+    d.mark('#cfd6d8', 15, 3);
+  };
+  PIX.p12_rod = d => {   // Resonance Rod: bell-bronze, ground at the forge to 174
+    d.tilt(12, 12, 1);
+    const r = d.layer(C.bronze, { shiny: 1 }).rrect(-1.3, -13, 2.6, 25);
+    for (let y = -10; y < 10; y += 4) r.rtone(0, 0.6, y);
+    d.layer(C.leather).rrect(-1.8, 6, 3.6, 5);
+    d.layer(C.bell, { shiny: 1 }).rell(0, -13, 2, 2);
+  };
+  PIX.p12_lute = d => {   // Lute: Hob Wendle strings these with his own gut
+    d.tilt(12, 12, 1);
+    d.layer(C.ash, { shiny: 1 }).rell(0, 4, 6, 7);
+    d.layer(C.dwood).rrect(-1.3, -12, 2.6, 11);
+    d.layer(C.dwood).rpoly([-1.8, -12, 1.8, -12, 1, -15, -1, -15]);
+    d.layer(C.dwood, { shade: 'flat' }).rell(0, 2, 1.8, 1.8);
+    d.layer(C.cream, { shade: 'flat', sep: false }).rrect(-0.4, -11, 0.8, 18);
+    d.layer(C.dwood).rrect(-2.4, 7.4, 4.8, 1.2);
+  };
+  PIX.p12_flute = d => {   // Alder Flute: bored alder, packed in hush-cloth
+    d.tilt(12, 12, 1);
+    d.layer(C.pale, { shiny: 1 }).rrect(-1.6, -13, 3.2, 26);
+    [-8, -5, -2, 1, 4].forEach(y => d.rmark('#2a1c10', 0, y));
+    d.layer(C.teal).rrect(-2.2, 7, 4.4, 4).rrect(-2.2, -13, 4.4, 2);
+  };
+  PIX.p12_gurdy = d => {   // Hurdy-Gurdy: a wheel-fiddle with a drone that never stops
+    d.layer(C.wood, { shiny: 1 }).poly([3, 13, 6, 8, 14, 7, 20, 9, 21, 14, 18, 18, 8, 19]);
+    d.layer(C.dwood).rect(7, 11, 12, 3);
+    [8, 10, 12, 14, 16].forEach(x => d.layer(C.ivory).rect(x, 11, 1, 2));
+    d.layer(C.brass).ell(18, 16, 2.6, 2.6);
+    d.layer(C.iron).path([3, 13, 1, 15]).path([1, 15, 2, 18]);
+    d.layer(C.dwood).ell(2, 18.5, 1.2, 1.2);
+    d.layer(C.cream, { shade: 'flat', sep: false }).line(5, 12, 21, 12);
+  };
+  PIX.p12_grapnel = d => {   // Office Grapnel: a cutter-man's grapnel gun, OC-742 on the stock
+    d.layer(C.dwood).poly([4, 13, 10, 13, 8, 21, 3, 21]);
+    d.layer(C.dsteel, { shiny: 1 }).rect(4, 9, 12, 4);
+    d.layer(C.iron, { shiny: 1 }).rect(16, 10, 2, 2).path([18, 11, 21, 8]).path([18, 11, 21, 14]).path([18, 11, 22, 11]).px(21, 7, 22, 10, 21, 15);
+    d.layer('#c8b07a', { shade: 'flat' }).ell(9, 11, 2.4, 2.4).cut().ell(9, 11, 1, 1).add();
+    d.mark('#e8e0c0', 5, 15, 6, 15);
+  };
+  PIX.p12_sheaf_figure = d => {   // Plaited Sheaf-Figure: the last stand of the north field
+    const s = d.layer(C.straw, { shiny: 1 });
+    s.ell(12, 6, 2.6, 2.8).rect(10, 9, 4, 7).poly([10, 16, 14, 16, 18, 22, 6, 22]).rect(5, 10, 14, 2);
+    for (let y = 10; y < 16; y += 2) s.tone(1, 11, y, 12, y + 1);
+    d.layer(C.red).rect(10, 9, 4, 1).rect(10, 15, 4, 1);
+    d.layer('#b89a40', { shade: 'flat', sep: false }).px(8, 20, 10, 20, 12, 21, 14, 20, 16, 20);
+  };
+  // ---------------------------------------------------------------- books, letters, papers
+  // a closed book seen a little from the side: cover, page block on the right edge
+  function book(d, o) {
+    const x = o.x || 5, y = o.y || 3, w = o.w || 13, h = o.h || 18;
+    d.layer(C.paper).rect(x + 2, y + 1, w, h - 1);
+    const cv = d.layer(o.cov, { shiny: !!o.shiny }).rect(x, y, w, h);
+    d.layer(dark(o.cov, 0.3)).rect(x, y, 2, h);
+    for (let j = y + 2; j < y + h; j += 2) d.mark('#f2ead2', x + w + 1, j);
+    return cv;
+  }
+  // a folded letter with a wax seal; o.tie draws a string across
+  function letter(d, o) {
+    const p = d.layer(o.paper || C.paper);
+    p.rect(3, 6, 18, 12);
+    p.tone(1, ...[].concat(...Array.from({ length: 9 }, (_, i) => [3 + i, 6 + Math.floor(i * 0.66)]), ...Array.from({ length: 9 }, (_, i) => [20 - i, 6 + Math.floor(i * 0.66)])));
+    if (o.tie) d.layer(o.tie, { shade: 'flat', sep: false }).rect(o.tieX || 15, 6, 1, 12);
+    if (o.seal) d.layer(o.seal, { shiny: 1 }).ell(12, 12.5, 2.3, 2.3);
+    if (o.mark) d.mark(...o.mark);
+    return p;
+  }
+  // a rolled scroll/chart: rolls at both ends
+  function scroll(d, o) {
+    const p = d.layer(o.paper || C.paper).rect(6, 5, 12, 14);
+    d.layer(dark(o.paper || C.paper, 0.12), { shiny: 1 }).rect(4, 3, 16, 3).rect(4, 18, 16, 3);
+    return p;
+  }
+  PIX.charts = d => {   // Tobiah's Charts: night-shift charts, a red trace
+    scroll(d, {});
+    d.layer('#6a8aa0', { shade: 'flat', sep: false }).rect(7, 8, 10, 1).rect(7, 11, 10, 1).rect(7, 14, 10, 1);
+    d.mark('#a3261c', 7, 15, 8, 14, 9, 14, 10, 12, 11, 11, 12, 12, 13, 9, 14, 8, 15, 10, 16, 9);
+  };
+  PIX.pass = d => {   // Consortium Pass: Factor Vosk's seal
+    d.layer(C.parch).rect(3, 6, 18, 12);
+    d.layer('#6a5a3a', { shade: 'flat', sep: false }).rect(5, 8, 8, 1).rect(5, 10, 6, 1).rect(5, 12, 8, 1);
+    d.layer(C.wax, { shiny: 1 }).ell(16.5, 14, 3, 3);
+    d.layer(C.red).rect(15, 16, 1, 4).rect(18, 16, 1, 3);
+    d.mark('#e8a090', 15, 13);
+  };
+  PIX.returns = d => {   // Calibration Returns: K. Vance's, initialled at line ninety-four
+    d.layer(C.paper).rect(7, 3, 13, 17);
+    d.layer(C.linen).rect(4, 5, 13, 17);
+    d.layer('#7a7a8a', { shade: 'flat', sep: false }).rect(6, 8, 9, 1).rect(6, 10, 9, 1).rect(6, 12, 9, 1).rect(6, 14, 9, 1).rect(6, 16, 9, 1);
+    d.mark('#a3261c', 12, 14, 13, 14, 14, 13);
+    d.layer(C.iron, { shiny: 1 }).rect(9, 3, 4, 3);
+  };
+  PIX.folder = d => {   // The Grey Arbiterium Folder: tied with a ribbon
+    d.layer(C.paper).rect(5, 5, 15, 15);
+    d.layer('#7c8084').rect(3, 6, 16, 15).rect(3, 4, 7, 2);
+    d.layer('#5a2a2a', { shade: 'flat' }).rect(3, 13, 16, 1);
+    d.layer('#c8c4b8', { shade: 'flat', sep: false }).rect(6, 9, 8, 2);
+    d.mark('#5a2a2a', 19, 13, 20, 14, 20, 15);
+  };
+  PIX.redcloak = d => {   // The Red Cloak: a child's choir cloak on the eleventh peg
+    d.layer(C.wood).rect(9, 2, 6, 2);
+    d.layer(C.crimson, { shiny: 1 }).poly([10, 4, 14, 4, 17, 10, 19, 21, 5, 21, 7, 10]);
+    d.layer('#6a1218', { shade: 'flat', sep: false }).path([12, 6, 11, 20]).path([15, 9, 16, 20]);
+    d.layer(C.cream).rect(10, 4, 4, 2);
+  };
+  PIX.roundbook = d => {   // Mallow's Round-Book: Office blue, on a broken chain
+    book(d, { cov: C.blue, x: 6, y: 4, w: 12, h: 16 });
+    d.layer(C.gold).rect(6, 7, 12, 1).rect(6, 16, 12, 1);
+    d.layer(C.iron, { shiny: 1 }).path([6, 6, 4, 5, 3, 7, 2, 9]).px(4, 4, 2, 10);
+  };
+  PIX.thread = d => {   // The Weaver's Last Thread: lilac, wound on a finger-bone
+    d.layer(C.bone, { shiny: 1 }).rect(10, 3, 4, 18).rect(9, 3, 6, 2).rect(9, 19, 6, 2);
+    const t = d.layer(C.lilac, { shiny: 1 }).rect(8, 7, 8, 10);
+    for (let y = 7; y < 17; y += 2) t.tone(1, 9, y, 11, y, 13, y, 15, y);
+    d.layer(C.lilac, { shade: 'flat' }).path([16, 16, 19, 18, 21, 17]);
+  };
+  PIX.adaletter = d => {   // Bryony Wick's Letter: to the Precentor of the Cloister
+    letter(d, { paper: C.paper, seal: '#3e5f92', tie: '#a07a50' });
+  };
+  PIX.liftsilk = d => {   // Lift-Silk: a bolt of weaverling silk, light as breath
+    d.layer('#d8d4e0', { shiny: 1 }).rect(4, 6, 16, 11);
+    d.layer('#d8d4e0', { shiny: 1 }).ell(19, 11.5, 2.4, 5.5);
+    d.layer('#b8b0c8', { shade: 'flat' }).ell(19, 11.5, 1, 2.6);
+    d.layer('#e8e6f0').poly([4, 16, 9, 16, 13, 21, 7, 21]);
+    d.mark('#ffffff', 6, 8, 7, 8, 8, 8);
+  };
+  PIX.valve = d => {   // Brass Relief Valve: OK-CATALOGUE, off the cutter's lift-tank
+    d.layer(C.brass, { shiny: 1 }).rect(5, 13, 14, 5).rect(10, 9, 4, 4);
+    d.layer(C.dsteel).rect(3, 14, 2, 3).rect(19, 14, 2, 3);
+    const w = d.layer(C.red).ell(12, 6, 6, 2.4).cut().ell(12, 6, 3.8, 1).add();
+    d.layer(C.red).rect(11, 4, 2, 5).rect(7, 5, 10, 1);
+    d.mark('#fff2c0', 7, 14, 8, 14);
+    void w;
+  };
+  PIX.holdkey = d => {   // The Cutter's Hold Key: iron, on a bosun's lanyard
+    d.layer(C.tan, { shade: 'flat' }).path([3, 3, 6, 8, 8, 10]);
+    d.layer(C.iron, { shiny: 1 }).ell(10, 12, 4, 4).cut().ell(10, 12, 1.8, 1.8).add().line(13, 15, 20, 22).line(14, 15, 21, 22).rect(17, 19, 2, 2).rect(19, 17, 2, 2);
+  };
+  PIX.register = d => {   // The Mausoleum Register: a clasp and a red ribbon
+    book(d, { cov: '#4a2f3a', x: 5, y: 3, w: 13, h: 18 });
+    d.layer(C.brass, { shiny: 1 }).rect(16, 10, 4, 3);
+    d.layer(C.red, { shade: 'flat' }).rect(10, 21, 2, 2);
+    d.layer('#6a4a52', { shade: 'flat', sep: false }).rect(8, 6, 7, 1).rect(8, 17, 7, 1);
+  };
+  PIX.cutterlog = d => {   // The Cutter's Log: OC-742, in an Office hand
+    book(d, { cov: '#4f5b3c', x: 5, y: 3, w: 13, h: 18 });
+    d.layer('#c9b987', { shade: 'flat', sep: false }).rect(8, 7, 7, 4);
+    d.mark('#2a2a22', 9, 8, 10, 8, 12, 8, 13, 9, 9, 9, 10, 10, 12, 10);
+    d.layer(C.iron).rect(5, 15, 13, 1);
+  };
+  PIX.unrungbell = d => {   // The Unrung Bell: a Quiet Faith handbell, no clapper
+    d.layer(C.dwood, { shiny: 1 }).rect(11, 2, 2, 6).ell(12, 2, 1.8, 1.4);
+    d.layer('#8a6a3a', { shiny: 1 }).poly([12, 7, 15, 8, 16, 13, 18, 18, 19, 20, 5, 20, 6, 18, 8, 13, 9, 8]);
+    d.layer(C.black, { shade: 'flat', sep: false }).ell(12, 20.5, 5.5, 1.3);
+    d.layer('#6a5030').rect(6, 17, 12, 1);
+  };
+  PIX.hornwax = d => {   // The Horn's Wax Cylinder: everything the horn heard
+    d.layer('#a8743a', { shiny: 1 }).rect(5, 6, 14, 12).ell(12, 6, 7, 2).ell(12, 18, 7, 2);
+    for (let x = 6; x < 19; x += 2) d.layer('#7a4e22', { shade: 'flat', sep: false }).rect(x, 7, 1, 11);
+    d.layer('#d8a860', { shade: 'flat' }).ell(12, 5.5, 5.5, 1.3);
+    d.layer(C.dsteel).ell(12, 5.5, 1.4, 0.9);
+  };
+  PIX.dispatch = d => {   // The Arbiter's Dispatch: a black seal, signed A.V.
+    letter(d, { paper: '#d6d0c0', seal: C.black, tie: '#3a3a3a', tieX: 7 });
+    d.mark('#8a8a8a', 11, 11);
+  };
+  PIX.tobin_page = d => {   // A page in a Cantor's hand
+    d.layer(C.paper).poly([5, 3, 18, 3, 19, 20, 6, 21]);
+    const ink = d.layer('#4a3a2a', { shade: 'flat', sep: false });
+    for (let y = 6; y < 19; y += 2) ink.rect(7, y, 10 - (y % 4 === 0 ? 2 : 0), 1);
+    d.mark('#bfa878', 17, 3, 18, 4, 18, 3);
+  };
+  PIX.tobin_journal = d => {   // Tobin's Journal: twelve pages tied with a strip of sleeve
+    d.layer(C.parch).rect(6, 3, 14, 18);
+    d.layer(C.paper).rect(4, 4, 14, 18);
+    const ink = d.layer('#4a3a2a', { shade: 'flat', sep: false }); for (let y = 6; y < 20; y += 2) ink.rect(6, y, 7, 1);
+    d.layer('#5a6a7a').rect(3, 11, 17, 3);
+    d.layer('#5a6a7a').rect(14, 13, 2, 4);
+  };
+  PIX.p9_greenroot_register = d => {   // The Greenroot Register: slim, strapped shut
+    book(d, { cov: '#3e5a32', x: 6, y: 3, w: 11, h: 18 });
+    d.layer(C.leather).rect(4, 11, 16, 2);
+    d.layer(C.brass).rect(16, 10, 2, 4);
+  };
+  PIX.p9_verrow_reedcase = d => {   // Verrow's Tuning-Reed Case: flat leather, spare reeds
+    [7, 10, 13, 16].forEach((x, i) => d.layer(i % 2 ? C.reed : '#b8b070').rect(x, 3 + (i % 2), 2, 10));
+    d.layer(C.leather, { shiny: 1 }).rect(4, 10, 16, 11);
+    d.layer(C.dleather).rect(4, 10, 16, 2);
+    d.layer(C.brass).rect(11, 15, 2, 2);
+  };
+  PIX.p16d_register = d => {   // The Relief Register: swollen with water, pencil inside
+    const b = book(d, { cov: '#6a6a5a', x: 5, y: 3, w: 13, h: 18 });
+    b.toneRect(1, 9, 13, 6, 6).tone(1, 8, 15, 15, 19, 7, 17);
+    d.layer('#8a8a70', { shade: 'flat', sep: false }).px(8, 6, 9, 6, 10, 7, 11, 6, 12, 6);
+  };
+  PIX.p16h_roster = d => {   // Depot Three roster ledger: tall, grey cloth
+    book(d, { cov: '#5a5e66', x: 6, y: 2, w: 11, h: 20 });
+    d.layer(C.gold).rect(6, 5, 11, 1).rect(6, 18, 11, 1);
+    d.layer('#d8d4c8', { shade: 'flat', sep: false }).rect(9, 9, 6, 3);
+  };
+  PIX.p16h_lease = d => {   // Quarry lease, copy: the Consortium's clerk's hand
+    scroll(d, { paper: '#e0d2a4' });
+    const ink = d.layer('#6a2a1c', { shade: 'flat', sep: false }); for (let y = 8; y < 16; y += 2) ink.rect(7, y, 10, 1);
+    d.layer(C.wax, { shiny: 1 }).ell(15, 16, 2, 2);
+  };
+  // the six letters held at the Chapel: same fold, each its own seal and tie
+  PIX.p16h_letter_lyra = d => letter(d, { seal: '#5a9a3a', tie: '#8a6a3a' });
+  PIX.p16h_letter_kaelen = d => letter(d, { paper: '#d6cfb8', seal: '#3a6a8a', tie: '#3a3a3a', tieX: 7 });
+  PIX.p16h_letter_hetty = d => letter(d, { paper: '#e4d2a0', seal: C.wax, mark: ['#8a5a3a', 5, 8, 6, 9, 18, 8] });
+  PIX.p16h_letter_orla = d => letter(d, { seal: '#7a5a2a', tie: '#c0a070', tieX: 9 });
+  PIX.p16h_letter_pim = d => letter(d, { paper: '#ddd6c4', seal: '#8a8a8a', tie: '#b8b4a8', tieX: 16 });
+  PIX.p16h_letter_dessa = d => letter(d, { paper: '#e6dcc0', seal: '#6a3a8a', tie: '#3e5f92', tieX: 6 });
+  // letters of credit: one, two or three seals and a gilt edge for the largest
+  PIX.p15_letter_25 = d => { d.layer('#e5d7ae').rect(3, 5, 18, 14); d.layer('#355a8a', { shade: 'flat', sep: false }).rect(5, 7, 10, 1).rect(5, 9, 8, 1); d.layer('#355a8a', { shiny: 1 }).ell(17, 15, 2.2, 2.2); };
+  PIX.p15_letter_100 = d => { d.layer('#e5d7ae').rect(3, 5, 18, 14); d.layer('#3f6a3a', { shade: 'flat', sep: false }).rect(5, 7, 10, 1).rect(5, 9, 8, 1).rect(5, 11, 9, 1); [13, 18].forEach(x => d.layer('#3f6a3a', { shiny: 1 }).ell(x, 15, 2.2, 2.2)); };
+  PIX.p15_letter_500 = d => { d.layer(C.gold, { shiny: 1 }).rect(2, 4, 20, 16); d.layer('#ecdcae').rect(3, 5, 18, 14); d.layer('#8a2d22', { shade: 'flat', sep: false }).rect(5, 7, 12, 1).rect(5, 9, 10, 1).rect(5, 11, 11, 1); [9, 13.5, 18].forEach(x => d.layer(C.wax, { shiny: 1 }).ell(x, 15.5, 2.2, 2.2)); };
+  PIX.p17p_slate = d => {   // The slate: on a cord, a stub of chalk
+    d.layer(C.tan, { shade: 'flat' }).path([7, 6, 12, 2, 17, 6]);
+    d.layer(C.wood).rect(4, 6, 16, 14);
+    d.layer(C.slate).rect(5, 7, 14, 12);
+    d.layer('#e8e4d8', { shade: 'flat', sep: false }).rect(7, 10, 3, 1).rect(7, 10, 1, 4).rect(11, 10, 3, 1).rect(12, 10, 1, 4);
+    d.layer(C.cream, { shiny: 1 }).rect(16, 18, 4, 2);
+  };
+  PIX.p17p_stone = d => {   // A flat stone, from under the snow
+    d.layer('#6e6a64').ell(12, 14, 8, 5.5);
+    d.layer('#eef2f6', { sep: false }).ell(10, 11, 4.4, 1.8);
+    d.mark('#ffffff', 8, 10, 9, 10).mark('#4a4640', 16, 17, 18, 15);
+  };
+  PIX.p17c_receipt = d => {   // The Harbour's Receipt: tarred paper, a chalk stamp
+    d.layer('#4a3e30').poly([4, 6, 20, 5, 19, 18, 5, 19]);
+    d.layer('#e8e4d8', { shade: 'flat', sep: false }).ell(14, 12, 3.4, 3.4).cut().ell(14, 12, 2.2, 2.2).add();
+    d.layer('#c8b890', { shade: 'flat', sep: false }).path([6, 9, 10, 8]).path([6, 12, 9, 15]);
+  };
+  PIX.p17c_valve = d => {   // A Gauge-Valve: Fortis brass, in a twist of oiled cloth
+    d.layer('#8a8058').poly([2, 18, 8, 13, 16, 14, 22, 19, 18, 22, 6, 22]);
+    d.layer(C.brass, { shiny: 1 }).ell(12, 10, 6, 6).rect(10, 15, 4, 4);
+    d.layer(C.cream).ell(12, 10, 4, 4);
+    d.mark('#1a120c', 12, 10, 13, 9, 14, 8).mark('#a3261c', 12, 7);
+  };
+  PIX.p17c_bottle = d => {   // Marrin Tace's Bottle: blue glass, wax-sealed, a chalk four
+    bottle(d, { glass: '#3a5aa8', cork: C.wax });
+    d.layer(C.wax).rect(9, 4, 6, 2);
+    d.layer('#e8e4d8', { shade: 'flat', sep: false }).rect(10, 13, 1, 3).rect(10, 15, 4, 1).rect(13, 13, 1, 5);
+    d.mark('#b8d0ff', 8, 10, 8, 11);
+  };
+  PIX.p17c_gravebell = d => {   // A Small Bell: bronze, on an iron hook
+    d.layer(C.iron).path([12, 2, 15, 2, 15, 5, 12, 5, 12, 8]);
+    d.layer(C.bronze, { shiny: 1 }).poly([12, 8, 15, 10, 16, 15, 18, 18, 6, 18, 8, 15, 9, 10]);
+    d.layer(C.dsteel).ell(12, 19, 1.4, 1.4);
+  };
+  PIX.p17c_whistle = d => {   // Jory's Pilot's Whistle: tin, worn bright at the mouth
+    d.tilt(12, 12, 1);
+    d.layer('#a8aeb0', { shiny: 1 }).rrect(-1.6, -10, 3.2, 18);
+    d.layer('#e0e6e8', { shiny: 1 }).rrect(-1.6, -10, 3.2, 3);
+    [-4, -1, 2, 5].forEach(y => d.rmark('#2a2a2a', 0, y));
+    const a = d.rp(0, 8); d.layer(C.red, { shade: 'flat' }).line(a[0], a[1], a[0] - 4, a[1] + 1).line(a[0] - 4, a[1] + 1, a[0] - 6, a[1] - 3);
+  };
+  // ---------------------------------------------------------------- quest things, reeds, trophies
+  PIX.boots = d => {   // Davin's Boots: a boy's boots, worn at the toe
+    const b = (x, top, col) => d.layer(col).rect(x, top, 4, 17 - top).rect(x, 14, 7, 4).px(x + 7, 16, x + 7, 17);
+    b(4, 7, '#6a4a30'); b(12, 8, '#7a5636');
+    d.layer(C.black).rect(4, 18, 8, 1).rect(12, 18, 8, 1);
+    d.mark('#c8a070', 5, 9, 13, 10).mark('#d8c8a0', 10, 15, 18, 15);
+  };
+  PIX.core = d => {   // Cracked Lilac Core: a Legionnaire's glass core
+    d.layer(C.lilac, { shiny: 1 }).ell(12, 12, 8, 8);
+    d.layer('#5a3a8a', { shade: 'flat', sep: false }).path([9, 4, 11, 8, 10, 11, 13, 14, 12, 17, 14, 20]).path([11, 8, 15, 9]);
+    d.mark('#ffffff', 8, 7, 9, 7, 8, 8).mark('#f0e4ff', 15, 15);
+  };
+  PIX.oil = d => {   // Flask of Lamp-Oil: colza oil from the Cloister vestry
+    d.layer(C.copper, { shiny: 1 }).poly([7, 10, 17, 10, 19, 20, 5, 20]).rect(10, 6, 4, 4);
+    d.layer(C.copper).path([17, 12, 20, 12, 20, 17, 18, 17]);
+    d.layer(C.copper).path([14, 7, 19, 4]);
+    d.layer('#d8b040', { shade: 'flat' }).px(20, 3);
+    d.layer(C.dwood).rect(9, 5, 6, 2);
+    d.mark('#ffd8b0', 8, 12, 8, 13);
+  };
+  PIX.press741 = d => {   // Office Hand-Press, 741: iron and brass, a dial that reads in Hertz
+    d.layer(C.dsteel, { shiny: 1 }).rect(4, 15, 16, 5).rect(6, 5, 3, 10).rect(15, 5, 3, 10).rect(6, 4, 12, 3);
+    d.layer(C.felt).rect(8, 13, 8, 2);
+    d.layer(C.brass, { shiny: 1 }).ell(12, 9, 3.4, 3.4);
+    d.layer(C.cream).ell(12, 9, 2.2, 2.2);
+    d.mark('#a3261c', 13, 8).mark('#1a120c', 12, 9);
+    d.layer(C.brass).rect(17, 2, 2, 4).rect(19, 2, 3, 1);
+  };
+  PIX.p16_lock_key = d => {   // The Lock-Wheel Key: heavy brass, still warm
+    d.tilt(12, 12, 1);
+    d.layer(C.brass, { shiny: 1 }).rell(0, -7, 4.6, 4.6).rrect(-1.2, -3, 2.4, 14).rrect(1.2, 6, 3.4, 2).rrect(1.2, 9, 2.6, 2);
+    d.layer(C.brass).rell(0, -7, 2, 2).cut().rell(0, -7, 1.6, 1.6).add();
+    d.rmark('#fff4c8', -2, -9);
+  };
+  // reeds: a cane with a node or two and a slot; each kind its own colour and binding
+  function reed(d, o) {
+    d.tilt(12, 12, 1);
+    const r = d.layer(o.col, { shiny: 1 }).rrect(-1.4, -o.len / 2, 2.8, o.len);
+    (o.nodes || []).forEach(y => r.rtone(1, 0, y).rtone(1, 1, y));
+    if (o.slot) d.layer('#2a2010', { shade: 'flat', sep: false }).rrect(-0.3, -o.len / 2 + 1, 0.6, 4);
+    if (o.bind) d.layer(o.bind).rrect(-1.8, o.bindY || 2, 3.6, 1.6);
+    return r;
+  }
+  PIX.p9_windreed = d => {   // Wind-Reed: cut green, holds any pitch, dead tomorrow
+    reed(d, { col: '#6aa040', len: 22, nodes: [-3, 5] });
+    d.layer('#4f8a2e').rpoly([1, -2, 6, -6, 7, -5, 1.4, 0]);
+  };
+  PIX.p9_dryreed = d => {   // Dry Reed: pale, brittle, worthless
+    reed(d, { col: '#cfc29a', len: 20, nodes: [-2, 6] });
+    d.rmark('#8a7a5a', 0.5, -9).rmark('#8a7a5a', 0.5, 9);
+  };
+  PIX.p9_reed_root = d => {   // Root-Note Reed: tuned to 174, bound in green
+    reed(d, { col: '#b8a050', len: 16, nodes: [0], slot: true, bind: '#4f7a34', bindY: 3 });
+    d.rmark('#c8e870', 0, 6);
+  };
+  PIX.p9_reed_lure = d => {   // Lure Reed: thin and high, one long note
+    d.tilt(12, 12, 1);
+    d.layer('#c0b060', { shiny: 1 }).rrect(-0.8, -12, 1.8, 24);
+    d.layer(C.red).rrect(-1.4, 4, 2.8, 1.4).rrect(-1.4, 7, 2.8, 1.4);
+    d.layer('#2a2010', { shade: 'flat', sep: false }).rrect(-0.2, -11, 0.5, 3);
+  };
+  PIX.p9_reed_first = d => {   // Blank First Reed: cut and slotted, not yet tuned, a hanging loop
+    reed(d, { col: '#bba872', len: 16, nodes: [2], slot: true });
+    const a = d.rp(0, -8); d.layer(C.tan, { shade: 'flat' }).path([a[0], a[1], a[0] + 1, a[1] - 3, a[0] + 3, a[1] - 3, a[0] + 3, a[1] - 1]);
+  };
+  PIX.p9_split_reed = d => {   // Split First Reed: split down the slot by the frost
+    d.tilt(12, 12, 1);
+    d.layer('#bba872', { shiny: 1 }).rrect(-2.6, -8, 2.2, 16);
+    d.layer('#a8955e', { shiny: 1 }).rpoly([0.6, -8, 2.8, -8, 2.8, 8, 1, 8, 1.6, 0]);
+    d.layer('#e8eef4', { shade: 'flat' }).rrect(-1, -10, 1.4, 1.2);
+    d.rmark('#2a2010', -0.2, -4);
+  };
+  PIX.p9_wool = d => {   // Bundle of Carded Wool: grey fleece
+    const w = d.layer(C.wool, { shiny: 1 });
+    [[8, 10, 5], [14, 9, 5.5], [11, 14, 6], [17, 14, 4], [6, 15, 3.6]].forEach(([x, y, r]) => w.ell(x, y, r, r * 0.8));
+    d.mark('#d8d6d0', 7, 7, 13, 6, 14, 6, 9, 11).mark('#6a6862', 12, 17, 16, 16);
+    d.layer(C.tan, { shade: 'flat' }).rect(4, 13, 16, 1);
+  };
+  PIX.p9_bough = d => {   // Iron-bough Log: heavy as a bell
+    d.tilt(12, 12, 1);
+    d.layer('#5a4e48', { shiny: 1 }).rrect(-4.4, -9, 8.8, 18);
+    d.layer('#8a7a6a').rell(0, -9, 4.4, 1.6);
+    d.layer('#6a5a4e', { shade: 'flat' }).rell(0, -9, 2.2, 0.8);
+    [-4, 0, 4].forEach(y => d.rmark('#9aa2a8', -2.6, y));
+  };
+  PIX.p15_t_wearer = d => {   // The Borrowed Collar: knotted cord, only cord now
+    const c = d.layer('#8a7a5a', { shiny: 1 }).ell(12, 12, 8, 7).cut().ell(12, 12, 5.6, 4.8).add();
+    [[6, 8], [12, 5], [18, 8], [19, 14], [12, 19], [5, 14]].forEach(([x, y]) => d.layer('#6a5a3e', { shiny: 1 }).ell(x + 0.5, y + 0.5, 1.6, 1.6));
+    void c;
+  };
+  PIX.p15_t_coda = d => {   // The Split Funeral-Reed: black, split, the right nothing
+    d.tilt(12, 12, 1);
+    d.layer('#3a3430', { shiny: 1 }).rrect(-2.8, -11, 2.4, 22);
+    d.layer('#4a4440', { shiny: 1 }).rpoly([0.4, -11, 2.8, -11, 2.8, 11, 0.6, 11, 1.4, -1]);
+    d.layer(C.linen).rrect(-3.2, 4, 6.4, 1.4);
+  };
+  PIX.p15_t_requiem = d => {   // The Requiem's Chord-Plate: a chord with one voice too many
+    d.layer(C.bronze, { shiny: 1 }).rect(3, 5, 18, 14);
+    const l = d.layer('#6a4418', { shade: 'flat', sep: false }); for (let y = 8; y <= 16; y += 2) l.rect(5, y, 14, 1);
+    d.mark('#3a2408', 9, 9, 9, 11, 9, 13, 9, 15, 10, 9, 10, 11, 10, 13, 10, 15).mark('#fff0c0', 15, 12, 4, 6);
+  };
+  PIX.p15_t_aegis = d => {   // The Aegis's Cheek-Plate: brass, a chalk hymn-number
+    d.layer(C.brass, { shiny: 1 }).poly([6, 3, 17, 4, 19, 12, 15, 20, 8, 21, 5, 14]);
+    d.layer('#e8e4d8', { shade: 'flat', sep: false }).px(9, 9, 10, 9, 11, 9, 11, 10, 10, 11, 10, 12, 13, 9, 14, 9, 13, 10, 14, 11, 14, 12, 13, 12);
+    d.mark('#7a5a18', 6, 17, 7, 18, 16, 16).mark('#1a120c', 9, 15, 10, 15);
+  };
+  PIX.p15_t_hymn = d => {   // The Hymn-Nine Slate: chalked HYMN 9
+    d.layer(C.wood).rect(3, 4, 18, 16);
+    d.layer(C.slate).rect(4, 5, 16, 14);
+    d.layer('#e8e4d8', { shade: 'flat', sep: false }).rect(10, 7, 4, 1).rect(10, 7, 1, 4).rect(13, 7, 1, 9).rect(10, 10, 4, 1).rect(10, 15, 4, 1);
+  };
+  PIX.p15_t_weaver = d => {   // The Weaver's Shuttle: pale wood, shroud-thread in no colour
+    d.tilt(12, 12, 1);
+    d.layer(C.pale, { shiny: 1 }).rpoly([0, -12, 2.6, -6, 2.6, 6, 0, 12, -2.6, 6, -2.6, -6]);
+    d.layer('#c8c4bc', { shade: 'flat', sep: false }).rrect(-1.4, -4, 2.8, 8);
+    for (let y = -3; y < 4; y += 2) d.rmark('#9a968e', 0, y);
+  };
+  PIX.p15_t_mallow = d => {   // The Pressman's Plate: a brass numbering-plate, worn smooth
+    d.layer(C.brass, { shiny: 1 }).rect(3, 7, 18, 10);
+    d.layer('#8a6a20', { shade: 'flat', sep: false }).rect(5, 9, 3, 6).rect(10, 9, 3, 6).rect(15, 9, 3, 6);
+    d.layer(C.brass).rect(6, 10, 1, 4).rect(11, 10, 1, 4).rect(16, 10, 1, 4);
+    d.mark('#1a120c', 4, 8, 19, 8, 4, 15, 19, 15);
+  };
+  PIX.p15_t_brood = d => {   // The Weaverling Spindle: lift-silk, light as breath
+    d.layer(C.ash).rect(11, 2, 2, 20);
+    d.layer('#e0dcea', { shiny: 1 }).ell(12, 12, 5.6, 7);
+    d.layer(C.ash, { shiny: 1 }).ell(12, 19.5, 3.4, 1.4);
+    d.mark('#ffffff', 9, 8, 9, 9, 10, 7).mark('#b8b0c8', 15, 14, 14, 16);
+  };
+  PIX.p15_t_bosun = d => {   // Teller's Lanyard: a brass tag, TELLER, HOLD, 432
+    d.layer(C.leather, { shade: 'flat' }).path([5, 3, 4, 8, 6, 12, 10, 14]).path([18, 3, 19, 8, 15, 13, 12, 14]);
+    d.layer(C.brass, { shiny: 1 }).rect(8, 14, 8, 7).px(11, 13, 12, 13);
+    d.mark('#6a4a10', 10, 16, 11, 16, 13, 16, 10, 18, 12, 18, 14, 18);
+  };
+  PIX.p15_t_horn = d => {   // The Horn-Lens: thick glass in a brass rim
+    d.layer(C.brass, { shiny: 1 }).ell(12, 12, 8.6, 8.6);
+    d.layer('#9ad8e0', { shiny: 1 }).ell(12, 12, 6.6, 6.6);
+    d.mark('#ffffff', 8, 8, 9, 8, 8, 9, 10, 7).mark('#5aa0aa', 15, 15, 16, 14);
+  };
+  PIX.p15_t_deacon = d => {   // The Felted Clapper: wrapped in grey felt, unwrapped a little
+    d.layer(C.iron).rect(11, 2, 2, 8).ell(12, 2.5, 2, 1.5);
+    d.layer(C.felt, { shiny: 1 }).ell(12, 15, 5.4, 6.6);
+    d.layer(C.dsteel, { shiny: 1 }).ell(14, 18, 2.6, 2.6);
+    d.layer('#8a847c', { shade: 'flat', sep: false }).path([7, 13, 16, 10]).path([7, 16, 12, 14]);
+  };
+  PIX.p15_t_captain = d => {   // The Captain's Gorget: dented steel, a rank stamp
+    d.layer(C.steel, { shiny: 1 }).ell(12, 8, 10, 11).cut().ell(12, 5, 6.4, 7.6).rect(0, 0, 24, 3).add();
+    d.layer(C.brass, { shiny: 1 }).ell(12, 15.5, 2, 2);
+    d.mark('#6c7478', 6, 14, 7, 15).mark('#ffffff', 5, 10, 5, 11);
+  };
+  // PIX-END
+
   const PLATE = { weapon: ['#3a3027', '#17110c'], armor: ['#32363a', '#121416'], item: ['#3a2d32', '#150f12'], key: ['#3d3624', '#16130a'], valuable: ['#2c3a3a', '#0e1414'] };
   const cache = new Map();
   function makeCanvas() {
@@ -691,14 +1818,26 @@ const ICONS = (function () {
     cache.set(key, url); return url;
   }
   // Data URL for an item id, or null when the id is not a catalog id.
+  // Phase 20: the hand-built pixel drawing for a (validated) id, or null for ids added later without one
+  let pixelOn = true;
+  function pixFor(id) {
+    if (has(PIX, id)) return PIX[id];
+    const it = catalogHas('item', id) ? ITEMS[id] : null;
+    if (it && it.weapon && has(PIX, 'weapon:' + it.weapon)) return PIX['weapon:' + it.weapon];
+    return null;
+  }
   function url(id) {
     if (typeof id !== 'string') return null;
     const pl = plan(id); if (!pl) return null;
+    const px = pixelOn && pixFor(id);
+    if (px) return memo('p:' + id, () => pxCanvas(px, toneOf(id, false)));
     return memo('i:' + id, () => paintIcon('i:' + id, pl, toneOf(id, false), false));
   }
   function weaponUrl(wid) {
     if (typeof wid !== 'string') return null;
     const pl = weaponPlan(wid); if (!pl) return null;
+    const px = pixelOn && has(PIX, 'weapon:' + wid) && PIX['weapon:' + wid];
+    if (px) return memo('p:weapon:' + wid, () => pxCanvas(px, 'weapon'));
     return memo('w:' + wid, () => paintIcon('w:' + wid, pl, 'weapon', false));
   }
   // Upright, plate-less art for the paper doll (weapon in hand, shield on arm).
@@ -871,5 +2010,7 @@ const ICONS = (function () {
   return {
     TABLE, KIND: Object.keys(KIND), SIZE: S, url, weaponUrl, itemLayerUrl, weaponLayerUrl, allIds, plan, weaponPlan, dollSvg,
     decorateInventory, decorateShop, decorateChest, decorateCrafting, armorId, cacheSize: () => cache.size,
+    // Phase 20: which ids have a hand-built pixel drawing; setPixel(false) shows the Phase 5 painted stand-ins (contact sheets)
+    PIX, hasPixel: id => typeof id === 'string' && !!pixFor(id), setPixel: v => { pixelOn = !!v; },
   };
 })();
