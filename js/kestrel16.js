@@ -84,6 +84,7 @@ const KESTREL16 = (function () {
     SIGHT: 0.2,            // Mags sees your face when dot(her facing, direction to you) > this, within SIGHT_R
     SIGHT_R: 7,
     AMB_BELOW: 0.34, AMB_LAMPS: 0.10,
+    FILL: [17, 12, 4],      // Cinematic only: warm fill light at the middle of each dark room below (its haze and grade read darker)
   };
 
   // ---------------------------------------------------------------- the upgrades (the one table; the text is in TX.up)
@@ -530,6 +531,7 @@ const KESTREL16 = (function () {
   const vg = (c, y0, y1, a, b) => { const g = c.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, a); g.addColorStop(1, b); return g; };
 
   function paintAll() {
+    reg('p16k_fill', 2, 2, () => {});   // blank: the carrier of a fill light, never seen
     // the ship's wheel on its post, brass hub, eight spokes, the rim worn pale where hands go
     reg('p16k_helm', 72, 104, (c) => {
       ell(c, 36, 98, 22, 4, 'rgba(0,0,0,0.35)');
@@ -790,6 +792,11 @@ const KESTREL16 = (function () {
     m.deco('crates', ...at('crateB'), { radius: 0.4, scale: 0.8, label: TX.below.crates });
     m.deco('crates', ...at('crateC'), { radius: 0.4, scale: 0.8, label: TX.below.crates });
     m.deco('lamp', 27.6, 8.6, { radius: 0.12, scale: 0.7, glow: 0.4, label: TX.deck.lamp });
+    // two more lamps (Phase 16 polish): the tank room and the back of the hold were the darkest corners aboard.
+    // Appended last, so every earlier entity keeps its index.
+    m.deco('lamp', 8.6, 4.4, { radius: 0.12, scale: 0.7, glow: 0.45, label: TX.deck.lamp });
+    m.deco('lamp', 25.9, 12.4, { radius: 0.12, scale: 0.7, glow: 0.4, label: TX.deck.lamp });
+    m.deco('lamp', 25.2, 1.3, { radius: 0.12, scale: 0.7, glow: 0.4, label: TX.deck.lamp });
     m.baseCount = m.entities.length;
     return m;
   }
@@ -989,11 +996,18 @@ const KESTREL16 = (function () {
   const GL_DECK = [D(9.6, 1.4), D(21.0, 8.4)];
   const BUNKS = [[22.2, 5.5], [24.3, 5.6], [26.2, 5.6], [27.5, 4.9]];
   const settle = (e) => { e._h = true; e.homeX = e.x; e.homeY = e.y; e.wanderT = 0; e.dir = 0; return e; };   // as tavern11: hydrate() would draw Math.random
+  // Cinematic's indoor depth haze and contrast read darker than Medium below-decks, and the torch-lit interiors pass
+  // (js/lighting.js) lifts only what a light reaches: so in Cinematic each dark room gets an unseen warm fill light
+  // (a transient, unpickable deco with a blank sprite and a lightCol). Medium and Original are untouched.
+  const cineOn = () => typeof GFX !== 'undefined' && (GFX.cineFog === true || GFX.cineGrade === true);
+  const FILL_BELOW = [[5.0, 6.6], [24.6, 3.6], [24.4, 10.4], [14.6, 10.6]];
+  let cineWas = null;
+  function belowAmbient() { return B.AMB_BELOW + (upHas('lamps') ? B.AMB_LAMPS : 0); }
   function furnish(m) {
     if (!m || !Array.isArray(m.entities) || MAPS.indexOf(m.id) < 0) return;
     for (let i = m.entities.length - 1; i >= 0; i--) if (m.entities[i] && m.entities[i]._p16k) m.entities.splice(i, 1);
     const own = m.id === DECK ? DECK : BELOW;
-    if (own === BELOW) m.ambient = B.AMB_BELOW + (upHas('lamps') ? B.AMB_LAMPS : 0);
+    if (own === BELOW) m.ambient = belowAmbient();
     if (own === DECK) { m.music = mooring() === 'deepwoods' ? 'coda' : 'grove'; }
     // the ladder says where it goes
     for (const e of m.entities) if (e.use === 'p16k_exit') e.label = fmt(TX.board.ladderLabel, mooring() === 'deepwoods' ? TX.board.toCamp : TX.board.toCourt);
@@ -1017,6 +1031,8 @@ const KESTREL16 = (function () {
       return;
     }
     // below-decks
+    cineWas = cineOn();
+    if (cineWas) for (const [x, y] of FILL_BELOW) add({ kind: 'deco', sprite: 'p16k_fill', x, y, solid: false, radius: 0.05, nopick: true, lightCol: B.FILL }, 'fill');
     if (upHas('stove')) {
       const s = prop('hearth', ...BELOW_AT.stove, 'u_stove', { scale: 0.9, solid: true, radius: 0.3, glow: 0.85, label: TX.below.stove });
       const h = H15(); if (h && h.cfg.cook) { s.use = 'p15_cook'; s._p15h = 'hearth'; }
@@ -1195,6 +1211,7 @@ const KESTREL16 = (function () {
     const lvl = humLevel();
     if (audioOk()) { try { Audio_.hum(lvl, HUM_HZ, 'p16k_tank'); } catch (e) { /* none */ } T.hum = lvl; }
     if (G.mapId === BELOW) {
+      if (cineWas !== cineOn()) { cineWas = cineOn(); refresh(); }   // the preset changed aboard: the fill lights follow it
       const c = Engine.cam, near = Math.hypot(c.x - TANK_AT[0], c.y - TANK_AT[1]) < 5;
       const t = typeof performance !== 'undefined' ? performance.now() : 0;
       if (near && t - T.capAt > 14000) { T.capAt = t; capLine(TX.below.hum); }
@@ -1365,10 +1382,15 @@ const KESTREL16 = (function () {
   installNpc();
   wire('maps', wireMaps); wire('use', wireUse); wire('travel', wireTravel);
   if (typeof document !== 'undefined') wire('options', wireOptions);
+  // arrival cards (js/screens.js): the deck is outdoor, so it fell back to the 'woods' painting (a burning boat in a forest).
+  // Below-decks takes the timber-and-stair 'belfry' painting; the deck takes the plain stand-in card (no painting fits a
+  // ship in the air) (Phase 16 polish).
+  const CARDS = { [DECK]: 'plain', [BELOW]: 'belfry' };
+  try { if (typeof SCREENS !== 'undefined' && SCREENS.FAMILY) Object.assign(SCREENS.FAMILY, CARDS); } catch (e) { /* no cards */ }
   try { const h = H15(); if (h && Array.isArray(h.HEARTH_MAPS) && h.HEARTH_MAPS.indexOf(BELOW) < 0) h.HEARTH_MAPS.push(BELOW); } catch (e) { /* hearth15 absent */ }
 
   return {
-    DECK, BELOW, MAPS, B, UPG, LOCKER, CREW, FLAGS, TX, cfg, saveCfg, loadCfg, DECK_AT, BELOW_AT, RAIL_PEGS, OX, OY, T,
+    CARDS, FILL_BELOW, DECK, BELOW, MAPS, B, UPG, LOCKER, CREW, FLAGS, TX, cfg, saveCfg, loadCfg, DECK_AT, BELOW_AT, RAIL_PEGS, OX, OY, T,
     get TEXTS() { return LIST.slice(); },
     fint, fset, sanitize, upHas, crewHas, seenHas, mooring, landing, costOf, blockers, canFit, fit, buyMaterial, travelMinutesFor, riskFactor, magsSees,
     recruitCheck, hire, giveLoaf, mendWeapon, railState, hangRail, takeRail, furnish, refresh, board, boardBlock, leaveShip, goBelow, goDeck, rest, hop, hopAllowed,

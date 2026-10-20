@@ -588,7 +588,33 @@ const HEIST16 = (function () {
     if (typeof Engine === 'undefined' || !Engine.addSprite || (Engine.sprites && Engine.sprites[name])) return;
     Engine.addSprite(name, { w, h, data: paint(w, h, draw), hs: 1, cx: 0.5, dy: 0 });
   }
+  // the bore gallery's walls (Phase 16 polish): hewn quarry rock, the drill's scores and a few dull flecks of glass, in place
+  // of t_glassrock, whose big flat facets read as a bright yellow slab up close. Periodic noise, so the tile repeats cleanly.
+  function paintRock() {
+    if (typeof Engine === 'undefined' || !Engine.addTexture || !Engine.textures || Engine.textures.p16h_rock) return;
+    const N = 64, d = new Uint32Array(N * N);
+    const hsh = (x, y, s) => { let h = (x * 374761393 + y * 668265263 + s * 2246822519) >>> 0; h = Math.imul(h ^ (h >>> 13), 1274126177) >>> 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+    const vn = (x, y, cell, s) => {                       // value noise, periodic over the 64-texel tile
+      const n = N / cell, fx = x / cell, fy = y / cell, x0 = Math.floor(fx), y0 = Math.floor(fy), u = fx - x0, v = fy - y0;
+      const a = hsh(x0 % n, y0 % n, s), b = hsh((x0 + 1) % n, y0 % n, s), c = hsh(x0 % n, (y0 + 1) % n, s), e = hsh((x0 + 1) % n, (y0 + 1) % n, s);
+      const su = u * u * (3 - 2 * u), sv = v * v * (3 - 2 * v);
+      return a + (b - a) * su + (c - a) * sv + (a - b - c + e) * su * sv;
+    };
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      const n = vn(x, y, 16, 1) * 0.55 + vn(x, y, 8, 2) * 0.3 + vn(x, y, 4, 3) * 0.15;
+      const strata = 0.08 * Math.sin((y + 6 * vn(x, y, 16, 4)) * 0.42);
+      let k = 0.62 + 0.55 * n + strata;
+      const sc = (x + 3) % 21; if ((sc === 0 || sc === 4) && ((y * 7 + x) % 64) < 40) k *= 0.72;    // paired drill scores, vertical
+      if (Math.abs(vn(x, y, 16, 5) - 0.5) < 0.012) k *= 0.6;                                          // hairline cracks
+      let r = 84 * k, g = 76 * k, b = 66 * k;
+      if (hsh(x, y, 9) > 0.993) { r = 132; g = 128; b = 104; }                                         // a dull fleck of glass
+      d[y * N + x] = (255 << 24) | ((Math.min(255, b) | 0) << 16) | ((Math.min(255, g) | 0) << 8) | (Math.min(255, r) | 0);
+    }
+    Engine.addTexture('p16h_rock', d);
+  }
   function paintAll() {
+    paintRock();
+    reg('p16h_fill', 2, 2, () => {});   // blank: the carrier of a Cinematic fill light, never seen
     // the Held Cabinet: oak, iron corners, a red seal across the doors, paper showing at the crack [PROPOSED]
     reg('p16h_cabinet', 64, 88, (c) => {
       c.fillStyle = 'rgba(0,0,0,0.35)'; c.beginPath(); c.ellipse(32, 84, 24, 4, 0, 0, Math.PI * 2); c.fill();
@@ -714,7 +740,7 @@ const HEIST16 = (function () {
     g[13][22] = 'B'; g[14][22] = 'B';                       // the brass screen: Pike keeps the east half, the safe is in the dark west half
     const m = new GameMap(MAP_D, TX.names.mapD, D.W, D.H, { floor: 't_flag', ceil: 't_stone', fogDist: 14, ambient: 0.17, fogColor: [0, 0, 0], music: 'dungeon', spawn: D.SPAWN });
     for (let y = 0; y < D.H; y++) for (let x = 0; x < D.W; x++) {
-      if (g[y][x] === '#') m.set(x, y, WALL(x >= 14 && y <= 9 ? 't_glassrock' : (x >= 17 && y >= 12) ? 't_brass' : 't_stone'));
+      if (g[y][x] === '#') m.set(x, y, WALL(x >= 14 && y <= 9 ? (Engine.textures && Engine.textures.p16h_rock ? 'p16h_rock' : 't_glassrock') : (x >= 17 && y >= 12) ? 't_brass' : 't_stone'));
       else if (g[y][x] === 'B') m.set(x, y, WALL('t_brass'));
     }
     m.set(D.EXIT[0], D.EXIT[1], DOOR({ portal: { map: 'quarry', x: 31.3, y: 6.5, dir: Math.PI }, label: TX.look2.exit }));
@@ -952,8 +978,29 @@ const HEIST16 = (function () {
       const ines = find(m, 'ines'); if (ines) ines.hidden = fbool('p16h_d_br') && T.away.pike > 0;
     }
   }
+  // Cinematic only (Phase 16 polish): its indoor depth haze and contrast take the vestry and the depot from dark to black.
+  // A few unseen, dim fill lights (transient, unpickable, blank sprite, lightCol) keep walls and furniture readable there.
+  // They carry no _lamp, so the guards' sight (litLamps / isLit) is untouched; Medium and Original get none.
+  const FILL_COL = [15, 12, 9];
+  const FILLS = {
+    p16h_vestry: [[14.0, 3.0], [19.0, 3.0], [23.8, 3.4], [18.6, 7.6], [24.0, 7.2], [13.0, 11.5], [19.0, 11.6], [23.0, 14.6], [4.6, 12.6], [6.0, 5.5]],
+    p16h_depot3: [[4.0, 4.5], [9.5, 4.5], [17.5, 4.5], [24.5, 4.5], [8.0, 10.6], [18.0, 10.6], [5.5, 14.6], [20.5, 14.6], [25.5, 14.6]],
+  };
+  const cineOn = () => typeof GFX !== 'undefined' && (GFX.cineFog === true || GFX.cineGrade === true);
+  function syncFill() {
+    if (!hasG() || !G.maps) return;
+    const want = cineOn();
+    for (const id in FILLS) {
+      const m = G.maps[id]; if (!m || !Array.isArray(m.entities)) continue;
+      const have = m.entities.some((e) => e && e._p16hFill);
+      if (have === want) continue;
+      if (want) for (const [x, y] of FILLS[id]) m.entities.push({ kind: 'deco', sprite: 'p16h_fill', x, y, solid: false, radius: 0.05, nopick: true, transient: true, lightCol: FILL_COL, _p16hFill: true });
+      else for (let i = m.entities.length - 1; i >= 0; i--) if (m.entities[i] && m.entities[i]._p16hFill) m.entities.splice(i, 1);
+    }
+  }
   function syncAll() {
     if (!hasG() || !G.maps) return;
+    try { syncFill(); } catch (e) { warnOnce('fill', e); }
     try { for (const id in G.maps) ensure(G.maps[id]); } catch (e) { warnOnce('sync', e); }
     try { syncDoors(); } catch (e) { warnOnce('doors', e); }
     try { syncProps(); } catch (e) { warnOnce('props', e); }
@@ -1501,6 +1548,7 @@ const HEIST16 = (function () {
     if (!hasG() || typeof Engine === 'undefined' || !Engine.cam || !G.maps) return;
     dt = clamp(Number(dt) || 0, 0, 0.25);
     T.clock += dt;
+    if (inHeist() && cineOn() !== G.map.entities.some((e) => e && e._p16hFill)) { try { syncFill(); } catch (e) { warnOnce('fill', e); } }   // a preset changed inside
     T.doorT -= dt;
     if (T.doorT <= 0) { T.doorT = 1; try { if (gone()) checkClosure(); syncAll(); settleStale(); } catch (e) { warnOnce('slow', e); } }
     if (T.collarPending) { try { doCollar(); } catch (e) { T.collarPending = false; warnOnce('collar', e); } return; }

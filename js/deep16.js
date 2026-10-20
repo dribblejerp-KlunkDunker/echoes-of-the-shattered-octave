@@ -582,7 +582,7 @@ const DEEP16 = (function () {
     if (typeof document === 'undefined' || document.getElementById('deep16-style')) return;
     const s = document.createElement('style'); s.id = 'deep16-style';
     s.textContent = [
-      '#p16d-breath { position: absolute; left: 50%; bottom: 34.5cqh; transform: translateX(-50%); width: 20cqw; display: flex; align-items: center; gap: .8cqw; padding: .5cqh .9cqw; background: rgba(6,18,20,.62); border: 1px solid rgba(160,200,196,.45); border-radius: .6cqw; pointer-events: none; z-index: 5; font-family: var(--font-sc, serif); font-size: 1.6cqw; color: #d8ece6; }',
+      '#p16d-breath { position: absolute; left: 50%; bottom: 43cqh; transform: translateX(-50%); width: 20cqw; display: flex; align-items: center; gap: .8cqw; padding: .5cqh .9cqw; background: rgba(6,18,20,.62); border: 1px solid rgba(160,200,196,.45); border-radius: .6cqw; pointer-events: none; z-index: 5; font-family: var(--font-sc, serif); font-size: 1.6cqw; color: #d8ece6; }',
       '#p16d-breath[hidden] { display: none; }',
       '#p16d-breath .p16d-bar { flex: 1; height: 1.4cqh; min-height: 4px; background: rgba(0,0,0,.55); border-radius: .4cqw; overflow: hidden; }',
       '#p16d-breath .p16d-fill { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #6fb7ad, #c8eae2); transition: width .2s linear; }',
@@ -824,7 +824,9 @@ const DEEP16 = (function () {
   }
 
   // ---------------------------------------------------------------- the under-water view (a post pass)
-  const VW = { parts: { wobble: true, caustics: true, motes: true }, fogLut: new Uint8Array(256), fogA: new Uint8Array(256), absR: new Uint8Array(256), absG: new Uint8Array(256), absB: new Uint8Array(256), vxI: new Int32Array(0), cvCol: new Float32Array(0), cvM: new Uint8Array(0), rowR: new Float32Array(0), rowG: new Float32Array(0), rowB: new Float32Array(0), vx: new Float32Array(0), vy: new Float32Array(0), rx: new Float32Array(0), ry: new Float32Array(0), tmp: new Uint32Array(0), w: 0, h: 0, ctex: null };
+  const VW = { parts: { wobble: true, caustics: true, motes: true }, fogLut: new Uint8Array(256), fogA: new Uint8Array(256), absR: new Uint8Array(256), absG: new Uint8Array(256), absB: new Uint8Array(256), vxI: new Int32Array(0), cvCol: new Float32Array(0), cvM: new Uint8Array(0), rowR: new Float32Array(0), rowG: new Float32Array(0), rowB: new Float32Array(0), vx: new Float32Array(0), vy: new Float32Array(0), rx: new Float32Array(0), ry: new Float32Array(0), tmp: new Uint32Array(0), w: 0, h: 0, ctex: null,
+    // the Medium balance (see viewHook): contrast about a pivot, a small lift, the murk thinned by a fraction, vignette strength
+    med: { con: 0.22, pivot: 52, lift: 6, fog: 0.16, vig: 0.55 } };
   const stats = { ms: 0, px: 0, calls: 0, profile: false, vig: false };
   const FOG_SPAN = 16, FOG_LEN = 6.5;
   for (let i = 0; i < 256; i++) { const d = i / 255 * FOG_SPAN; VW.fogLut[i] = Math.round(Math.min(0.82, 1 - Math.exp(-d / FOG_LEN)) * 255); }
@@ -888,13 +890,19 @@ const DEEP16 = (function () {
     // absorption (red goes first), then the depth fog toward the row's water colour, then the vignette: all in integers,
     // through tables rebuilt once a frame (U, the blend in and out of the water, is folded into them)
     const absR = VW.absR, absG = VW.absG, absB = VW.absB, fogA = VW.fogA, vxI = VW.vxI;
-    for (let v = 0; v < 256; v++) { absR[v] = (v * (1 - 0.36 * U)) | 0; absG[v] = (v * (1 - 0.06 * U)) | 0; absB[v] = (v * (1 - 0.1 * U)) | 0; fogA[v] = (lut[v] * uq) >> 8; }
-    for (let x = 0; x < w; x++) vxI[x] = (vx[x] * 256) | 0;
+    // Medium (no cinema grade after this pass) gets the balance Cinematic gets from cinema14's grade: a little contrast
+    // folded into the absorption tables, a thinner murk and a gentler vignette. All in the per-frame tables: no cost per pixel.
+    const MB = VW.med, mk = vig ? U : 0, con = 1 + MB.con * mk, piv = MB.pivot, lift = MB.lift * mk, fk = 1 - MB.fog * mk, vs = vig ? MB.vig : 1;
+    for (let v = 0; v < 256; v++) {
+      let c = mk ? piv + (v - piv) * con + lift : v; c = c < 0 ? 0 : c > 255 ? 255 : c;
+      absR[v] = (c * (1 - 0.36 * U)) | 0; absG[v] = (c * (1 - 0.06 * U)) | 0; absB[v] = (c * (1 - 0.1 * U)) | 0; fogA[v] = (lut[v] * uq * fk) >> 8;
+    }
+    for (let x = 0; x < w; x++) vxI[x] = ((1 - vs * (1 - vx[x])) * 256) | 0;
     const cvCol = VW.cvCol, cvM = VW.cvM; cvM.fill(255);
     const fogSky = (240 * uq) >> 8, vA = vig ? ((1 - U) * 256) | 0 : 256;
     let px = 0;
     for (let y = 0; y < h; y++) {
-      const rR = VW.rowR[y] | 0, rG = VW.rowG[y] | 0, rB = VW.rowB[y] | 0, vB = vig ? (U * vy[y] * 256) | 0 : 0;
+      const rR = VW.rowR[y] | 0, rG = VW.rowG[y] | 0, rB = VW.rowB[y] | 0, vB = vig ? (U * (1 - vs * (1 - vy[y])) * 256) | 0 : 0;
       let o = y * w, lastCv = 0, lastM = -1;
       for (let x = 0; x < w; x++, o++) {
         const p = fb[o], m = mb[o], d = db[o];

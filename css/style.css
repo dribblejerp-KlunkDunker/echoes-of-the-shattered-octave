@@ -74,6 +74,9 @@ html, body { margin: 0; height: 100%; background: #050403; color: var(--parch); 
 #msgs .m.good { color: #a9e07a; }
 #msgs .m.voice { color: #c9b6ff; font-style: normal; }
 #hint { position: absolute; left: 50%; top: 66cqh; transform: translateX(-50%); font-family: var(--font-sc); font-size: 2.2cqw; color: var(--gold); text-shadow: 0 0 3px #000, 1px 1px 0 #000; pointer-events: none; white-space: nowrap; }
+/* a long look-at description wraps inside the view instead of running off both edges, growing upward so it clears the
+   tips line under it (one line stays exactly where it was) */
+#hint { width: max-content; max-width: 92cqw; white-space: normal; text-align: center; transform: translate(-50%, calc(-100% + 1lh)); }
 #debug { position: absolute; right: 0; top: 0; font: 10px/1.3 monospace; color: #7f7; background: rgba(0,0,0,.6); padding: 2px 5px; pointer-events: none; white-space: pre; display: none; }
 
 .screen { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 5; }
