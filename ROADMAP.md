@@ -19,7 +19,7 @@ The 94 unfinished checklist items at the start of this plan (85 not started, 9 p
 | 4 — Living world | Animation — companions and NPCs; world | 18 | **Delivered: companions — hit reactions, limp, Kaelen's Root-note hum and pose, Lyra's rings, camp loops** → **Delivered: townsfolk — talking gestures, daily routines, work loops** → **Delivered: small life — crows, rats and the cat, the moored Kestrel, glinting Light-glass** → **Delivered: smoke, splashes, torches and braziers** → **Delivered: wind on signs and banners, area leaves, bells that swing on the strike** → **Delivered: rising gates and portcullises, the quarry cave-in with safe recovery** → Phase 4 complete. Still open, carried forward: hand-painted frames for every procedural stand-in; a visible Chapel bell (the story keeps the frame empty). |
 | 5 — Illustrated interface | Graphics — menus and screens | 10 | **Delivered: fonts bundled locally, blackletter headings, carved-wood frames with brass corners, font credits** → **Delivered: painted icons for every item, a painted paper doll** → **Delivered: mood portraits, logbook sketches, automap stamps** → **Delivered: area loading cards, cause-specific death art, ending illustrations** → Phase 5 complete. Still open, carried forward: hand-painted art to replace every procedural stand-in. |
 | 6 — Story reactivity | Story and world-building | 8 | **Delivered: tavern rumours and the Synod Gazette** → **Delivered: courier letters** → **Delivered: rest dreams and Light-glass echoes** → **Delivered: Tobin's journal pages** → **Delivered: Kaelen and Lyra epilogues, Organum/Iron Peaks/Rift teasers** → Phase 6 complete. All new prose is marked [PROPOSED] in the code where it goes beyond the game and the world bibles, for the author's review. |
-| 7 — Sound, access & tools | Audio; technical and polish | 15 | Positional/muffled sound → area/boss score and voice licensing → access/translation/statistics/photo/timer → validated mod schemas/editor → desktop packaging. |
+| 7 — Sound, access & tools | Audio; technical and polish | 15 | **Delivered: positional sound — pan, distance falloff, wall muffling; willow wind, roof rain, delayed thunder** → **Delivered: procedural greetings and grunts per NPC and enemy; full credits and asset/licence audit** → **Delivered: area, dungeon and boss pieces and a story-evolving main theme, as an opt-in Extended score (the Original recorded score stays the default)** → **Delivered: photo mode, speedrun timer, statistics** → **Delivered: one Accessibility block (text size, reduce motion, no flashes, high contrast, sound captions) and a translation catalog with locale choice and fallback** → **Delivered: versioned data-only mod schemas, validator, Mod dungeons panel and grid dungeon editor** → **Delivered: Electron desktop shell, Windows/macOS/Linux packaging config and CI, signing/update decisions** → Phase 7 complete. Still open, carried forward: composed recordings and recorded voices to replace the procedural stand-ins; signing certificates and a published release; a full French translation. |
 
 Phase 1 acceptance for this pass: separate consumable stones and empty bottles (never the story Vox-Bottle); collision-clipped forward impact with readable feedback; idle guards and non-boss enemies investigate the impact, never abandon a visible wanted player or active combat; keyboard/touch/controller input; inventory save compatibility; transient sound targets cannot replay after load. No external services, production deployment, or Git delivery is included.
 
@@ -138,23 +138,30 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [x] Nine in-world documents on duplicate library shelves (an Office memo and a visitors' notice about the Organum, a Fortis soldier's letter home, a Null-Watch line-talk transcript...), "Heard beyond the Reach" codex stubs and margin notes on the continent map. No new regions are playable.
 
 ### Audio
-- [ ] Distinct area/dungeon compositions for Oakhaven, Whisper-Grove and Deep Woods.
-- [ ] Individual boss themes (not just shared boss-mode cues).
-- [ ] Authored greetings/grunts per NPC/enemy; voice asset/license tracking (optional TTS already exists).
-- [ ] Directional audio with wall muffling and distance falloff.
-- [ ] Willow wind, rooftop rain and thunder layers.
-- [ ] Story-evolving main theme across Book One.
+- [~] Distinct area/dungeon compositions for Oakhaven, Whisper-Grove and Deep Woods. *(Procedural stand-in pieces, opt-in under Score: Extended; composed recordings still to come.)*
+- [~] Individual boss themes (not just shared boss-mode cues). *(Procedural stand-ins, Extended score.)*
+- [~] Authored greetings/grunts per NPC/enemy; voice asset/license tracking (optional TTS already exists). *(Procedural voices per character and family; licences tracked in ASSETS.md; recorded voices still to come.)*
+- [x] Directional audio with wall muffling and distance falloff.
+- [x] Willow wind, rooftop rain and thunder layers.
+- [~] Story-evolving main theme across Book One. *(Procedural stand-in, Extended score.)*
 
 ### Technical and polish
-- [ ] Audit/expand credits for all art, fonts, audio, tools and contributors.
-- [ ] Photo mode: hide interface, pause safely and export a screenshot.
-- [ ] Optional speedrun timer with pause/loading policy.
-- [ ] Statistics page: kills, distance, playtime and Songs cast.
-- [ ] Larger text, reduced shake, no flashes and high contrast across every new effect.
-- [ ] Translation message catalog, locale selection, fallback and text expansion tests.
-- [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
-- [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
-- [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+- [x] Audit/expand credits for all art, fonts, audio, tools and contributors. *(CREDITS.md, ASSETS.md, in-game credits.)*
+- [x] Photo mode: hide interface, pause safely and export a screenshot.
+- [x] Optional speedrun timer with pause/loading policy.
+- [x] Statistics page: kills, distance, playtime and Songs cast.
+- [x] Larger text, reduced shake, no flashes and high contrast across every new effect.
+- [~] Translation message catalog, locale selection, fallback and text expansion tests. *(Catalog, English, pseudo-locale and a partial French; story text is not yet translated.)*
+- [~] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification. *(Shell, config, CI and decisions in docs/desktop.md; certificates and a signed release need the owner.)*
+- [x] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
+- [x] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Phase 7 completion pass verification
+- **How it was built.** Seven parallel teams in their own worktrees, one module and test each: spatial sound, voices and credits, score, play tools, accessibility and translation, mods and the editor, desktop packaging. A small scaffolding commit first exposed the audio context and a routing hook (Audio_.withRoute) so sound modules never patch the browser's audio nodes.
+- **Sound.** Sounds with a place in the world pan to their angle, fall off with distance and are muffled through walls; rain beds, willow wind and thunder follow the weather. Voices are a buzz through vowel formants, different per character and family. The procedural score is a stand-in and is opt-in: after listening, the owner preferred the recorded score, so Options > Score defaults to Original and Extended adds the area, boss and story pieces. A soft limiter keeps the mix below clipping.
+- **Rules.** Sound modules use their own random stream, so playing a sound can never change a gameplay roll (the creature-life trace check found that). New state lives in G.flags under p7t_ and p7s_ as small integers, validated on read. Mods are JSON only: an allow-list validator rebuilds a clean copy, ids are namespaced, nothing is executed. The desktop shell has context isolation, sandbox, no Node in the page, and a file allow-list.
+- **Access.** Reduce motion now also calms swaying grass and creature fidgets; the old subtitles row drives the new captions. Captured mouse and full screen (Alt+Enter) arrived just before this phase.
+- **Tests.** New suites `spatial-audio`, `voices`, `score`, `playtools`, `access`, `mods` and the static `desktop` check; all suites pass on the merged tree.
 
 ### Phase 6 completion pass verification
 - **How it was built.** A lore brief compiled from the author's world bibles and manuscripts (timeline, institutions, Office dialect, the Hush rules, Fortis and Null-Watch voices, tone rules), with the order of authority the game's own text, then the manuscripts, then the bibles. Five parallel teams, one module and test each: rumours and the Gazette, couriers, dreams and echoes, Tobin's pages, epilogues and teasers. Every team wrote all its new prose into a review file; the Commander read it against the game's text before merging.

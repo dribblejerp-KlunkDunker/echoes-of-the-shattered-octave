@@ -1096,7 +1096,7 @@ function renderAccessibilityMenu() {
     <span>Colourblind-Safe Markers & Bars</span>
     <button class="dfbtn small" id="ac-cb">${UPG.colorblind ? 'On' : 'Off'}</button>
     <span>Subtitles & Audio Captions</span>
-    <button class="dfbtn small" id="ac-sub">${UPG.subtitles ? 'On' : 'Off'}</button>
+    <button class="dfbtn small" id="ac-sub">${(typeof ACCESS !== 'undefined' ? ACCESS.settings.cap : UPG.subtitles) ? 'On' : 'Off'}</button>
     <span>Voiced Key Lines (TTS Synthesis)</span>
     <button class="dfbtn small" id="ac-tts">${UPG.tts ? 'On' : 'Off'}</button>
     <span>Corner Minimap Overlay</span>
@@ -1122,7 +1122,7 @@ function renderAccessibilityMenu() {
   $('#ac-crt').onclick = () => { UPG.crt = !UPG.crt; applyVisualSettings(); renderAccessibilityMenu(); };
   $('#ac-dith').onclick = () => { UPG.dither = !UPG.dither; renderAccessibilityMenu(); };
   $('#ac-cb').onclick = () => { UPG.colorblind = !UPG.colorblind; applyVisualSettings(); renderAccessibilityMenu(); };
-  $('#ac-sub').onclick = () => { UPG.subtitles = !UPG.subtitles; renderAccessibilityMenu(); };
+  $('#ac-sub').onclick = () => { if (typeof ACCESS !== 'undefined') { ACCESS.setCaptions(!ACCESS.settings.cap); UPG.subtitles = ACCESS.settings.cap; } else UPG.subtitles = !UPG.subtitles; renderAccessibilityMenu(); };   // the sound captions live in js/access.js
   $('#ac-tts').onclick = () => { UPG.tts = !UPG.tts; if (UPG.tts) speakLine('The Octave is tuned.', 'lyra'); renderAccessibilityMenu(); };
   $('#ac-mm').onclick = () => { UPG.minimap = !UPG.minimap; renderAccessibilityMenu(); };
   $('#ac-qm').onclick = () => { UPG.questMarkers = !UPG.questMarkers; renderAccessibilityMenu(); };
