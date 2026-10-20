@@ -73,7 +73,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       e.hurtT = 0; const before = G.party.hp; let hits = 0;
       for (let i = 0; i < 40 && !FX.state.hits; i++) { foe.state = 'chase'; foe.x = e.x + 0.6; foe.y = e.y; foe.hp = foe.def.hp; partyTick(0.05); }
       check(FX.state.hits > 0 && G.party.hp < before && e._cHit > 0, 'a hit on the companion starts a flinch (' + FX.state.hits + ')');
-      step(e, 1, 0.016); check(e.animHurt > 0.5 && Math.abs(e.animSkew) > 0.04, 'flinch: red tint and a lurch (' + e.animHurt.toFixed(2) + '/' + e.animSkew.toFixed(3) + ')');
+      step(e, 1, 0.016); check(e.animHurt > 0.5 && (Math.abs(e.animSkew) > 0.04 || /_p20flinch/.test(e.animSprite || '')), 'flinch: red tint and a lurch or the painted flinch frame (' + e.animHurt.toFixed(2) + '/' + e.animSkew.toFixed(3) + ')');
       GFX.noFlash = true; e._cHit = 0.3; step(e, 1, 0.016); check(e.animHurt === 0, 'No flash: no red tint'); GFX.noFlash = false;
       GFX.reduceMotion = true; e._cHit = 0.3; const calmSkew = (step(e, 1, 0.016), Math.abs(e.animSkew)); GFX.reduceMotion = false; e._cHit = 0.3; const fullSkew = (step(e, 1, 0.016), Math.abs(e.animSkew));
       check(calmSkew < fullSkew, 'reduced motion calms the flinch (' + calmSkew.toFixed(3) + ' < ' + fullSkew.toFixed(3) + ')');
