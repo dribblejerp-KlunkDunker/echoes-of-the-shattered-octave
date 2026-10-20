@@ -107,7 +107,8 @@ const SYNC19 = (function () {
     SNAP_MS: 1000 / 15,   // a snapshot every 66.7 ms
     RANGE: 28,            // tiles: entities further from the guest than this are not compared (after the census)
     MAX_ENTS: 64,         // changed entities per snapshot, nearest first
-    CENSUS_MAX: 3000,     // entities in a full snapshot
+    CENSUS_MAX: 3000,     // entities a guest accepts in one snapshot
+    CENSUS_CHUNK: 600,    // entities per census snapshot (NET19 caps a frame at 1024 JSON values: each entity is one string)
     SNAP_MAX: 16000,      // bytes of JSON per snapshot (entities beyond it wait for the next one)
     RING: 32,             // snapshots kept for delta baselines, each side
     INTERP_MS: 100,       // the guest draws the host's world this far behind
@@ -123,7 +124,7 @@ const SYNC19 = (function () {
     FLAG_MS: 1000,        // how often the host looks for changed world flags
     MAX_FLAGS: 6000, FLAG_STR: 64,
     HELLO_MS: 2000,       // the guest asks again this often until welcomed
-    LOST_MS: 20000,       // a guest with no snapshot for this long goes home
+    LOST_MS: 30000,       // a guest with no snapshot for this long goes home (NET's own give-up closes sooner or later)
     EXT_MAX: 2048,        // bytes per PARTNER extension per snapshot
     ACT_V_MAX: 512,       // bytes of a PARTNER action value
     MSG_MAX: 200,
@@ -200,23 +201,55 @@ const SYNC19 = (function () {
   let T = null, Tbound = null, Toverride = null;
   const HANDLERS = {};
   function transport() { if (Toverride) return Toverride; try { if (typeof NET19 !== 'undefined' && NET19) return NET19; } catch (e) { /* not loaded */ } return (typeof window !== 'undefined' && window.NET19) || null; }
+  // NET19.define() for every type SYNC uses (sender role, frame size, rate) plus PARTNER's p19p:* types (PARTNER is
+  // finished and does not define its own). NET drops anything that breaks these before a handler sees it.
+  const obj = (p) => !!p && typeof p === 'object' && !Array.isArray(p);
+  const SPECS = {
+    'sync.hello': { from: 'guest', max: 10240, rate: 2, burst: 4, validate: obj },
+    'sync.in': { from: 'guest', max: 1024, rate: 40, burst: 80, validate: obj },
+    'sync.act': { from: 'guest', max: 1024, rate: 15, burst: 20, validate: obj },
+    'sync.bye': { from: 'guest', max: 128, rate: 1, burst: 2, validate: obj },
+    'sync.welcome': { from: 'host', max: 4096, rate: 2, burst: 4, validate: obj },
+    'sync.map': { from: 'host', max: 512, rate: 4, burst: 8, validate: obj },
+    'sync.snap': { from: 'host', max: 20480, rate: 20, burst: 40, validate: obj },
+    'sync.flags': { from: 'host', max: 24576, rate: 10, burst: 40, validate: (p) => obj(p) && obj(p.f) },
+    'sync.msg': { from: 'host', max: 640, rate: 20, burst: 40, validate: (p) => obj(p) && typeof p.t === 'string' },
+    'sync.full': { from: 'host', max: 64, rate: 1, burst: 2, validate: obj },
+    'sync.refused': { from: 'host', max: 256, rate: 1, burst: 2, validate: obj },
+    'sync.wb': { from: 'host', max: 17408, rate: 1, burst: 2, validate: obj },
+    'sync.story': { from: 'host', max: 8192, rate: 5, burst: 10, validate: obj },
+    'p19p:join': { from: 'guest', max: 8192, rate: 2, burst: 4, validate: obj },
+    'p19p:in': { from: 'guest', max: 2048, rate: 60, burst: 90, validate: obj },
+    'p19p:leave': { from: 'guest', max: 64, rate: 2, burst: 4 },
+    'p19p:joined': { from: 'host', max: 256, rate: 2, burst: 4, validate: obj },
+    'p19p:story': { from: 'host', max: 8192, rate: 5, burst: 10, validate: obj },
+    'p19p:wb': { from: 'host', max: 16384, rate: 1, burst: 2, validate: obj },
+    'p19p:host': { from: 'host', max: 512, rate: 10, burst: 20, validate: obj },
+  };
   function bind() {
     const t = transport();
     if (t === Tbound) { T = t; return T; }
+    if (t && typeof t.define === 'function') for (const k in SPECS) { try { t.define(k, SPECS[k]); } catch (e) { console.warn('sync19: could not define ' + k, e); } }
     if (Tbound && typeof Tbound.off === 'function') for (const k in HANDLERS) { try { Tbound.off(k, HANDLERS[k]); } catch (e) { /* gone */ } }
     Tbound = t; T = t;
     if (t && typeof t.on === 'function') for (const k in HANDLERS) { try { t.on(k, HANDLERS[k]); } catch (e) { console.warn('sync19: could not listen for ' + k, e); } }
     return T;
   }
   function role() { const t = T; if (!t || typeof t.role !== 'function') return null; try { return t.role(); } catch (e) { return null; } }
-  function peerCount() { const t = T; if (!t || typeof t.peers !== 'function') return 0; try { const p = t.peers(); return Array.isArray(p) ? p.length : (p && typeof p.size === 'number' ? p.size : 0); } catch (e) { return 0; } }
+  // someone is on the other end right now (NET19.connected(); a transport without it: any peer listed)
+  function peerCount() {
+    const t = T; if (!t) return 0;
+    try { if (typeof t.connected === 'function') return t.connected() ? 1 : 0; } catch (e) { return 0; }
+    if (typeof t.peers !== 'function') return 0; try { const p = t.peers(); return Array.isArray(p) ? p.length : (p && typeof p.size === 'number' ? p.size : 0); } catch (e) { return 0; }
+  }
   function send(type, payload, reliable) {
     const t = T; if (!t || typeof t.send !== 'function') return false;
     let n = 0; try { n = JSON.stringify(payload).length; } catch (e) { return false; }
     try { t.send(type, payload, { reliable: !!reliable }); } catch (e) { return false; }
     countOut(type, n); return n;
   }
-  function on(type, fn) { HANDLERS[type] = function (payload, from) { try { countIn(type, jsonLen(payload)); fn(payload, from == null ? 'peer' : String(from)); } catch (e) { reject('throw'); console.warn('sync19: ' + type + ' failed', e); } }; }
+  // NET19 hands handlers (payload, { from: 'host'|'guest', seq, reliable, at }); a plain id is taken as it is
+  function on(type, fn) { HANDLERS[type] = function (payload, meta) { const from = meta && typeof meta === 'object' ? meta.from : meta; try { countIn(type, jsonLen(payload)); fn(payload, from == null ? 'peer' : String(from)); } catch (e) { reject('throw'); console.warn('sync19: ' + type + ' failed', e); } }; }
 
   // ---------------------------------------------------------------- the shared mover (host simulates, guest predicts: same code)
   // st: { x, y, vx, vy, feet, dir }; inp: { f, r (-1..1), run, dir }; ctx: { map, ents, other: {x,y}|null }
@@ -323,6 +356,9 @@ const SYNC19 = (function () {
   // writes it into PARTNER's partner; PARTNER owns everything else about it (health, aggro, blows, Songs, downed and
   // revive, loot, write-back). Pose writes use PARTNER19.setPose when PARTNER offers it, else its live state object.
   const partnerLib = () => (typeof PARTNER19 === 'object' && PARTNER19 ? PARTNER19 : null);
+  // PARTNER wires itself to the global NET19 and sends its own story and write-back there; SYNC only carries them
+  // when the session runs on some other transport (SYNC19.useTransport)
+  const partnerWired = () => { try { return !!(partnerLib() && typeof NET19 === 'object' && T === NET19); } catch (e) { return false; } };
   const partner = () => { const P = partnerLib(); try { return P && P.active && P.active() ? P : null; } catch (e) { return null; } };
   function pState(P) { try { return P.S || null; } catch (e) { return null; } }
   function partnerBlocked() { const P = partner(), S = P && pState(P); return !!(S && (S.down || S.paused)); }
@@ -398,12 +434,14 @@ const SYNC19 = (function () {
     H.ep++; H.ring.clear(); H.lastSnap = 0; H.flagsSent.clear(); H.wxSent = ''; H.figBuf = []; H.lookSent = ''; H.pausedAt = 0; H.mapPending = false;
     primeSids(G.map);
     writePartner();
-    if (P && !H.storySub && typeof P.onStory === 'function') { H.storySub = true; P.onStory((st) => { if (H.gs && st && typeof st === 'object' && jsonLen(st) <= 6000) send('sync.story', st, true); }); }
-    const flags = flagsDiff(true);
+    if (P && !H.storySub && typeof P.onStory === 'function') { H.storySub = true; P.onStory((st) => { if (H.gs && !partnerWired() && st && typeof st === 'object' && jsonLen(st) <= 6000) send('sync.story', st, true); }); }
+    const flags = flagsDiff(true), fk = Object.keys(flags);
     send('sync.welcome', {
-      v: B.V, ep: H.ep, map: G.mapId, x: H.gs.x, y: H.gs.y, dir: c.dir, spd: H.spdAttr, flags, gr: !!G.flags.greening,
+      v: B.V, ep: H.ep, map: G.mapId, x: H.gs.x, y: H.gs.y, dir: c.dir, spd: H.spdAttr, flags: {}, gr: !!G.flags.greening,
       wx: typeof Weather !== 'undefined' ? Weather.save() : null, tod: Math.round(G.tod * 10000), day: G.day | 0, sig: mapSig(G.map), name: p ? plainStr(p.name, 24) : '', look: hostLook(),
     }, true);
+    // the host's world flags follow in chunks (NET caps a frame at 1024 JSON values)
+    for (let i = 0; i < fk.length; i += 400) { const f = {}; for (const k of fk.slice(i, i + 400)) f[k] = flags[k]; send('sync.flags', { f }, true); }
     H.lastFlags = now();
     emit('join', { side: 'host', peer });
   }
@@ -413,7 +451,7 @@ const SYNC19 = (function () {
     const P = partner();
     if (P) {
       if (why === 'dropped') { try { P.pause(true); } catch (e) { /* fine */ } H.pausedAt = now(); }   // NET reconnects; the host carries on
-      else { let wb = null; try { wb = P.leave(why); } catch (e) { wb = null; } if (wb && why === 'bye') send('sync.wb', { wb }, true); }
+      else { let wb = null; try { wb = P.leave(why); } catch (e) { wb = null; } if (wb && why === 'bye' && !partnerWired()) send('sync.wb', { wb }, true); }
     }
     emit('leave', { side: 'host', peer, why });
   }
@@ -447,6 +485,8 @@ const SYNC19 = (function () {
     const gs = H.gs, m = G.map;
     const base = gs.ackEp === H.ep ? H.ring.get(gs.ackQ) : null;
     const full = !base;
+    if (full) gs.censusDone = false;
+    const wide = full || !gs.censusDone;   // the census of the whole map, in chunks, until it has all gone over
     const held = full ? new Map() : new Map(base);
     const q = ++H.q, R2 = B.RANGE * B.RANGE;
     const cand = [], seen = new Set();
@@ -455,32 +495,33 @@ const SYNC19 = (function () {
       const e = ents[i]; if (!e || typeof e !== 'object') continue;
       const sid = sidOf(e); seen.add(sid);
       const d2 = (e.x - gs.x) * (e.x - gs.x) + (e.y - gs.y) * (e.y - gs.y);
-      if (!full && !(d2 <= R2)) continue;
+      if (!wide && !(d2 <= R2)) continue;
       const t = entTuple(e, sid); if (!t) continue;
       const k = t.join(',');
       if (held.get(sid) === k) continue;
       cand.push([d2, sid, t, k]);
     }
-    if (!full) cand.sort((a, b) => a[0] - b[0]);
-    const lim = full ? B.CENSUS_MAX : B.MAX_ENTS;
+    cand.sort((a, b) => a[0] - b[0]);
+    const lim = wide ? B.CENSUS_CHUNK : B.MAX_ENTS;
     const e = [], rm = [], d = [];
     let bytes = 160;
     for (const c of cand) {
       if (e.length >= lim || bytes + c[3].length + 3 > B.SNAP_MAX - 2000) break;
-      e.push(c[2]); held.set(c[1], c[3]); bytes += c[3].length + 3;
+      e.push(c[3]); held.set(c[1], c[3]); bytes += c[3].length + 3;
     }
+    if (wide && e.length === cand.length) gs.censusDone = true;
     for (const k of held.keys()) if (k >= 0 && !seen.has(k)) { rm.push(k); held.delete(k); }
     if (full) for (let i = 0; i < (m.baseCount || 0); i++) if (!seen.has(i)) rm.push(i);   // map-built things the host's world no longer has
     for (const key in m.doors) {
       const dr = m.doors[key], t = dr.target > 0.5 ? 1 : 0, hk = -(+key) - 1;
       if (held.get(hk) === t) continue;
       if (bytes > B.SNAP_MAX - 400) break;
-      d.push([+key, t]); held.set(hk, t); bytes += 12;
+      d.push(key + ':' + t); held.set(hk, t); bytes += 12;
     }
     const snap = {
       q, b: full ? -1 : gs.ackQ, ep: H.ep, t: Math.round(now()), tod: Math.round(G.tod * 10000), day: G.day | 0, h: hostFigure(),
       you: [gs.lastSeq, Math.round(gs.x * 256), Math.round(gs.y * 256), Math.round(gs.vx * 256), Math.round(gs.vy * 256), Math.round(gs.feet * 32)],
-      e, rm, d,
+      e, rm: rm.join(','), d: d.join(','),
     };
     if (typeof Weather !== 'undefined') { const w = Weather.save(), ws = JSON.stringify(w); if (ws !== H.wxSent || full) { snap.wx = w; H.wxSent = ws; } }
     if (H.ext.size) {
@@ -493,7 +534,7 @@ const SYNC19 = (function () {
     const P = partner(); if (P) { try { snap.pt = { me: P.snapshot(), host: P.hostState() }; } catch (err) { reject('partner-snap'); } }
     H.ring.set(q, held); H.ring.delete(q - B.RING);
     const n = send('sync.snap', snap, false);
-    ST.snaps++; ST.snapBytes += n || 0; ST.snapMax = Math.max(ST.snapMax, n || 0); ST.snapEntsMax = Math.max(ST.snapEntsMax, full ? 0 : e.length); if (full) ST.census++;
+    ST.snaps++; ST.snapBytes += n || 0; ST.snapMax = Math.max(ST.snapMax, n || 0); ST.snapEntsMax = Math.max(ST.snapEntsMax, wide ? 0 : e.length); if (full) ST.census++;
   }
   function bucket(b, rate, burst) { const t = now(); b.n = Math.min(burst, b.n + (t - b.t) / 1000 * rate); b.t = t; if (b.n < 1) return false; b.n -= 1; return true; }
   function hostCtx() { return { map: G.map, ents: G.ents, other: { x: Engine.cam.x, y: Engine.cam.y } }; }
@@ -596,7 +637,7 @@ const SYNC19 = (function () {
       for (const f of feed.slice(0, 8)) if (f && typeof f.text === 'string') send('sync.msg', { t: plainStr(f.text, B.MSG_MAX), c: ['voice', 'warn', 'good', 'bad', ''].includes(f.cls) ? f.cls : '' }, true);
     } else if (H.mapPending) { H.mapPending = false; sendMap(); }
     if (G.map && !H.mapPending && t0 - H.lastSnap >= B.SNAP_MS) { H.lastSnap = H.lastSnap && t0 - H.lastSnap < B.SNAP_MS * 2 ? H.lastSnap + B.SNAP_MS : t0; buildSnap(); }
-    if (t0 - H.lastFlags >= B.FLAG_MS) { H.lastFlags = t0; const f = flagsDiff(false); if (Object.keys(f).length) send('sync.flags', { f }, true); }
+    if (t0 - H.lastFlags >= B.FLAG_MS) { H.lastFlags = t0; const f = flagsDiff(false), fk = Object.keys(f); for (let i = 0; i < fk.length; i += 400) { const c = {}; for (const k of fk.slice(i, i + 400)) c[k] = f[k]; send('sync.flags', { f: c }, true); } }
     ST.cpu.frames++; cpu(now() - t0); rateTick();
   }
   function hostMapChanged() {
@@ -740,6 +781,14 @@ const SYNC19 = (function () {
     }
     return null;
   }
+  // "sid,x,y,bits,hp,state,dir[,kind,name]" -> the tuple, or null
+  function parseTuple(str) {
+    if (typeof str !== 'string' || str.length > 120) return null;
+    const a = str.split(','); if (a.length !== 7 && a.length !== 9) return null;
+    const t = a.slice(0, 7).map((x) => (/^-?\d{1,7}$/.test(x) ? +x : NaN));
+    if (a.length === 9) { t.push(/^\d$/.test(a[7]) ? +a[7] : NaN, a[8]); }
+    return validTuple(t) ? t : null;
+  }
   function validTuple(t) {
     if (!Array.isArray(t) || t.length < 7 || t.length > 9) return false;
     for (let i = 0; i < 7; i++) if (!isInt(t[i])) return false;
@@ -789,15 +838,16 @@ const SYNC19 = (function () {
     if (!p || typeof p !== 'object' || !isInt(p.q) || !isInt(p.b) || !isInt(p.ep) || !isNum(p.t)) return reject('snap-shape');
     if (p.ep !== C.ep) return reject('snap-epoch');
     if (p.q <= C.lastQ) return reject('snap-old');
-    if (!Array.isArray(p.e) || !Array.isArray(p.rm) || !Array.isArray(p.d) || p.e.length > B.CENSUS_MAX || p.rm.length > B.CENSUS_MAX || p.d.length > 20000) return reject('snap-shape');
+    if (!Array.isArray(p.e) || typeof p.rm !== 'string' || typeof p.d !== 'string' || p.e.length > B.CENSUS_MAX || p.rm.length > 60000 || p.d.length > 120000) return reject('snap-shape');
+    const rmList = p.rm ? p.rm.split(',').map(Number) : [], dList = p.d ? p.d.split(',').map((x) => x.split(':').map(Number)) : [];
     const base = p.b === -1 ? new Map() : C.ring.get(p.b);
     if (!base) return reject('snap-baseline');
     const census = p.b === -1;
     const next = new Map(base);
-    for (const t of p.e) { if (!validTuple(t)) { reject('snap-ent'); continue; } next.set(t[0], t); }
-    for (const sid of p.rm) if (isInt(sid) && sid >= 0) { next.delete(sid); removeEnt(sid); C.applied.delete(sid); }
+    for (const str of p.e) { const t = parseTuple(str); if (!t) { reject('snap-ent'); continue; } next.set(t[0], t); }
+    for (const sid of rmList) if (isInt(sid) && sid >= 0) { next.delete(sid); removeEnt(sid); C.applied.delete(sid); }
     const m = G.map;
-    for (const dd of p.d) { if (Array.isArray(dd) && isInt(dd[0]) && dd[0] >= 0 && dd[0] < m.w * m.h && (dd[1] === 0 || dd[1] === 1)) next.set(-dd[0] - 1, dd[1]); }
+    for (const dd of dList) { if (dd.length === 2 && isInt(dd[0]) && dd[0] >= 0 && dd[0] < m.w * m.h && (dd[1] === 0 || dd[1] === 1)) next.set(-dd[0] - 1, dd[1]); }
     C.ring.set(p.q, next); C.ring.delete(p.q - B.RING);
     // clock: the guest draws the host's world INTERP_MS behind the host's newest moment
     const est = t0 - p.t; C.offset = C.offset == null || est < C.offset ? est : C.offset + (est - C.offset) * 0.02;
@@ -951,12 +1001,16 @@ const SYNC19 = (function () {
     if (!C.on || from !== C.peer || !p || typeof p.wb !== 'object') return reject('wb');
     finishLeave(C.leaving ? 'left' : 'ended', p.wb);
   }
-  function finishLeave(why, wb) {
+  // noHome: PARTNER's own 'p19p:wb' handler is about to take the guest home itself
+  function finishLeave(why, wb, noHome) {
     if (!C.on) return;
     const s = C.stash, c = Engine.cam;
     if (why !== 'lost' && !C.leaving) send('sync.bye', {}, true);
     C.leaving = 0;
     C.on = false; C.stash = null; C.ents.clear(); C.moving.clear(); C.ring.clear(); C.applied.clear(); C.pending = []; C.hostBuf = [];
+    // PARTNER already took the guest home (its handler ran first): its isolated session is gone, nothing to put back
+    let gone = false; try { gone = C.entered && typeof EXTRAS17 === 'object' && EXTRAS17.inExtra && EXTRAS17.inExtra() !== 'p19coop'; } catch (e) { gone = false; }
+    if (gone) { if (why === 'left') C.quit = true; C.entered = false; C.standIn = false; C.down = false; C.partner = null; C.card = null; emit('leave', { side: 'guest', why }); return; }
     G.flags = s.flags; G.maps = s.maps; G.tod = s.tod; G.day = s.day; G.escapeTimer = s.escapeTimer; G.boreHold = s.boreHold; G.vel.x = s.vel.x; G.vel.y = s.vel.y;
     if (typeof Weather !== 'undefined' && s.wx) Weather.load(s.wx);
     if (s.had) {
@@ -973,12 +1027,15 @@ const SYNC19 = (function () {
     }
     C.standIn = false; C.down = false; C.partner = null; C.card = null;
     // PARTNER gives the guest's own game back, with the write-back applied to it (validated there) when there is one
-    if (C.entered) { C.entered = false; const PL = partnerLib(); try { if (PL) PL.guest.returnHome(wb); } catch (e) { console.warn('sync19: going home failed', e); } }
+    // a guest who chose to leave ends the session on the transport too (the host carries on alone)
+    if (why === 'left') { C.quit = true; const t = T; setTimeout(() => { try { if (t && typeof t.leave === 'function' && t.role && t.role() === 'guest') t.leave('left'); } catch (e) { /* closed */ } }, 50); }
+    if (C.entered) { C.entered = false; const PL = partnerLib(); if (!noHome) { try { if (PL) PL.guest.returnHome(wb); } catch (e) { console.warn('sync19: going home failed', e); } } }
     emit('leave', { side: 'guest', why });
   }
   function guestPoll() {
     // not joined: ask to join while NET says we are a connected guest
-    if (role() !== 'guest' || peerCount() === 0) { C.card = null; return; }
+    if (role() !== 'guest' || peerCount() === 0) { C.card = null; C.quit = false; return; }
+    if (C.quit) return;   // left on purpose: no asking again in this session
     const t = now(); if (t < C.fullUntil || t - C.helloAt < B.HELLO_MS) return;
     C.helloAt = t;
     // the guest's own traveller travels as PARTNER's card (made once per attempt: it carries the write-back token)
@@ -1169,7 +1226,10 @@ const SYNC19 = (function () {
 
   // ---------------------------------------------------------------- listen
   on('sync.hello', onHello); on('sync.in', onIn); on('sync.act', onAct); on('sync.bye', onBye);
-  on('sync.wb', onWb); on('sync.refused', onRefused); on('sync.story', onStory);
+  on('net:lost', () => { if (H.gs) hostEnd('dropped'); });
+  on('net:closed', () => { if (H.gs) hostEnd('closed'); if (C.on) finishLeave('lost', undefined); });
+  on('sync.wb', onWb);
+  on('p19p:wb', (p, from) => { if (C.on && C.entered && from === C.peer) finishLeave(C.leaving ? 'left' : 'ended', undefined, true); }); on('sync.refused', onRefused); on('sync.story', onStory);
   on('sync.welcome', onWelcome); on('sync.map', onMap); on('sync.snap', onSnap); on('sync.flags', onFlags); on('sync.msg', onMsg); on('sync.full', onFull);
   bind();
   // PARTNER's figure walks from its own speed and stride, which its tick sets from its own movement (none: SYNC moves
