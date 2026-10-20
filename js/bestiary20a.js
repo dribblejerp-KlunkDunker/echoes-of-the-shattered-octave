@@ -869,6 +869,114 @@ BEAST20A.SPECIES.drowned = (() => {
   });
 })();
 
+// ---------------------------------------------------------------- the Steam Golem
+// A riveted brass engine-man: barrel chest round a furnace grate, a helm with
+// a barred visor, twin smokestacks venting, arms like boilers. From behind:
+// plate, rivets and the stacks; the fire is on the other side. Source: golem (84x160).
+BEAST20A.SPECIES.golem = (() => {
+  const B = BEAST20A, N = 'golem';
+  const BRASS = [N, 36, 82, 12, 12];
+  const PLATE = () => B.tones(N, [[30, 45], [55, 45], [26, 80], [58, 80], [42, 40], [35, 88], [50, 88]]);
+  return B.rigged(N, {
+    angles: [0, Math.PI / 4, Math.PI * 0.42, Math.PI * 0.75, Math.PI],
+    limbK: 1.0, limbB: 11,
+    poses: {
+      '': {
+        A: 42, grate: [[31, 46], [53, 46], [54, 72], [30, 72]], visor: [[35, 20], [49, 20], [49, 35], [35, 35]],
+        depth: [[38, 10], [100, 18], [115, 14], [999, 10]],
+        body: [[40, [30, 55]], [100, [22, 62]], [999, null]],
+      },
+      _w1: { A: 43, grate: [[32, 46], [54, 46], [55, 72], [31, 72]], visor: [[36, 22], [50, 22], [50, 37], [36, 37]], legY: 110, stride: 6,
+        body: [[42, [31, 56]], [100, [22, 64]], [999, null]] },
+      _w2: { A: 42, grate: [[31, 46], [53, 46], [54, 72], [30, 72]], visor: [[35, 22], [49, 22], [49, 37], [35, 37]], legY: 110, stride: -6,
+        body: [[42, [30, 55]], [100, [22, 62]], [999, null]] },
+      _a1: {
+        A: 46, grate: [[33, 60], [61, 60], [62, 96], [32, 96]], visor: [[38, 36], [52, 36], [52, 52], [38, 52]],
+        depth: [[56, 10], [118, 18], [130, 14], [999, 10]],
+        body: [[56, [34, 58]], [118, [26, 66]], [999, null]],
+        erase: [[[0, 0], [33, 0], [36, 30], [34, 75], [12, 78], [0, 50]]],
+        props: [{ r: [0, 0, 37, 79], mask: [[0, 0], [33, 0], [36, 30], [34, 75], [12, 78], [0, 50]], bone: [[30, 68], [24, 8]], boneZ: [0, 6] }],
+      },
+      _a2: {
+        A: 52, grate: [[42, 56], [62, 56], [63, 78], [41, 78]], visor: [[44, 28], [58, 28], [58, 44], [44, 44]],
+        depth: [[48, 10], [105, 18], [999, 11]],
+        body: [[48, [40, 64]], [105, [30, 75]], [999, null]],
+        erase: [[[0, 58], [34, 56], [50, 92], [52, 146], [0, 146]]],
+        props: [{ r: [0, 54, 53, 92], mask: [[0, 58], [34, 56], [50, 92], [52, 146], [0, 146]], bone: [[30, 62], [22, 130]], boneZ: [0, 24] }],
+      },
+    },
+    back(P, S) {
+      // the grate and the visor are on the other side: riveted plate here
+      // the furnace and the visor are on the other side: the back is riveted plate,
+      // cut from the golem's own belly-plates and helm-crown and fitted over them
+      const fit = (poly, sx, sy, sw, sh, mul) => {
+        const m = B.mir(P.w, poly), xs = m.map(q => q[0]), ys = m.map(q => q[1]);
+        const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+        P.clip(m, () => P.cut(N, sx, sy, sw, sh, x0, y0, { k: (x1 - x0 + 1) / sw, ky: (y1 - y0 + 1) / sh, mul }));
+        return { x0, x1, y0, y1 };
+      };
+      const g = fit(S.grate, 30, 74, 26, 18, 0.9);
+      P.line(B.at(N, 42, 40, 0.55), (g.x0 + g.x1) / 2, g.y0 + 1, (g.x0 + g.x1) / 2, g.y1 - 1);
+      for (const y of [g.y0 + 4, g.y1 - 4]) { P.px(B.at(N, 42, 40, 1.3), g.x0 + 3, y); P.px(B.at(N, 42, 40, 1.3), g.x1 - 3, y); }
+      fit(S.visor, 37, 6, 12, 10, 0.95);
+      P.light(() => 0.82);
+    },
+  });
+})();
+
+// ---------------------------------------------------------------- the Aegis Sentinel
+// Bronze-and-iron plate built round a violet light-core in the chest, an
+// eye-slit helm, a red rag of cloth hanging from its right hand. From
+// behind: the core's back-plate, the helm's crest, the rag swinging at its
+// side. Source: aegis (83x160).
+BEAST20A.SPECIES.aegis = (() => {
+  const B = BEAST20A, N = 'aegis';
+  const PLATE = [N, 36, 62, 12, 16];
+  const rag = (x0, y0, x1, y1) => [[x0, y0], [x1, y0 + 2], [x1 - 3, y1], [x0 + 4, y1 + 2], [x0 - 2, y1 - 15]];
+  return B.rigged(N, {
+    angles: [0, Math.PI / 4, Math.PI * 0.42, Math.PI * 0.75, Math.PI],
+    limbK: 1.0, limbB: 9,
+    poses: {
+      '': {
+        A: 42, core: [[35, 28], [58, 28], [58, 58], [35, 58]], visor: [[35, 4], [50, 4], [50, 24], [35, 24]],
+        depth: [[26, 11], [62, 20], [100, 17], [999, 10]],
+        body: [[26, [32, 52]], [96, [24, 62]], [999, null]],
+        erase: [rag(2, 88, 26, 136)], props: [{ r: [0, 86, 27, 54], mask: rag(2, 88, 26, 136), X: 14, Z: 4, minK: 0.8, flipBack: true }],
+      },
+      _w1: { A: 42, core: [[35, 28], [58, 28], [58, 58], [35, 58]], visor: [[35, 4], [50, 4], [50, 24], [35, 24]], legY: 115, stride: 6,
+        body: [[26, [32, 52]], [96, [24, 62]], [999, null]],
+        erase: [rag(4, 88, 28, 128)], props: [{ r: [0, 86, 29, 46], mask: rag(4, 88, 28, 128), X: 16, Z: 4, minK: 0.8, flipBack: true }] },
+      _w2: { A: 41, core: [[34, 28], [57, 28], [57, 58], [34, 58]], visor: [[34, 4], [49, 4], [49, 24], [34, 24]], legY: 115, stride: -6,
+        body: [[26, [31, 51]], [96, [23, 61]], [999, null]],
+        erase: [rag(3, 84, 26, 128)], props: [{ r: [0, 82, 27, 50], mask: rag(3, 84, 26, 128), X: 14, Z: 4, minK: 0.8, flipBack: true }] },
+      _a1: { A: 45, core: [[36, 26], [62, 26], [62, 58], [36, 58]], visor: [[38, 2], [53, 2], [53, 22], [38, 22]],
+        body: [[24, [35, 55]], [70, [24, 70]], [999, null]],
+        erase: [rag(3, 72, 24, 118)], props: [{ r: [0, 70, 25, 52], mask: rag(3, 72, 24, 118), X: 13, Z: 6, minK: 0.8, flipBack: true }] },
+      _a2: { A: 42, core: [[32, 28], [56, 28], [56, 58], [32, 58]], visor: [[35, 2], [50, 2], [50, 22], [35, 22]],
+        body: [[24, [33, 52]], [999, null]],
+        erase: [rag(2, 70, 22, 112), [[2, 18], [30, 14], [36, 36], [30, 62], [4, 62]]],
+        props: [{ r: [0, 68, 24, 48], mask: rag(2, 70, 22, 112), X: 12, Z: 6, minK: 0.8, flipBack: true },
+          { r: [0, 12, 37, 52], mask: [[2, 18], [30, 14], [36, 36], [30, 62], [4, 62]], bone: [[30, 40], [14, 36]], boneZ: [0, 26] }] },
+    },
+    back(P, S) {
+      // the core is set in the breast: from behind there is only its back-plate, riveted
+      // the core is set in the breast: from behind only its back-plate shows,
+      // fitted from the sentinel's own abdomen plates, with a riveted spine
+      const fit = (poly, sx, sy, sw, sh, mul) => {
+        const m = B.mir(P.w, poly), xs = m.map(q => q[0]), ys = m.map(q => q[1]);
+        const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+        P.clip(m, () => P.cut(N, sx, sy, sw, sh, x0, y0, { k: (x1 - x0 + 1) / sw, ky: (y1 - y0 + 1) / sh, mul }));
+        return { x0, x1, y0, y1 };
+      };
+      const c = fit(S.core, 32, 60, 22, 26, 0.85), cx = Math.round((c.x0 + c.x1) / 2);
+      P.line(B.at(N, 30, 70, 0.5), cx, c.y0 + 1, cx, c.y1 - 1);
+      for (let y = c.y0 + 4; y < c.y1 - 2; y += 7) { P.px(B.at(N, 38, 64, 1.45), cx - 2, y); P.px(B.at(N, 38, 64, 1.45), cx + 2, y); }
+      fit(S.visor, 36, 62, 12, 12, 0.9);
+      P.light(() => 0.8);
+    },
+  });
+})();
+
 // Plug in: the hand-built views answer first for their species; everything else
 // (the Proctor pilot, BEASTB's species, the stand-ins) falls through unchanged.
 (() => {
