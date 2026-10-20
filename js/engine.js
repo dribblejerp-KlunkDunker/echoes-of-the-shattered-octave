@@ -46,7 +46,58 @@ const Engine = (() => {
   // distance / interior darkness multipliers that presets and lighting set
   let detail = null, detailDist = 2.5, fogK = 1, ambK = 1;
   function setDetail(tex, dist) { detail = tex || null; if (dist) detailDist = dist; }
-  function setLook(o) { if (!o) return; if (o.fogK != null) fogK = Math.max(0.3, Math.min(2, +o.fogK || 1)); if (o.ambientK != null) ambK = Math.max(0, Math.min(2, +o.ambientK)); }
+  function setLook(o) { if (!o) return; if (o.fogK != null) fogK = Math.max(0.3, Math.min(4, +o.fogK || 1)); if (o.ambientK != null) ambK = Math.max(0, Math.min(2, +o.ambientK)); }
+
+  // ---- Phase 14 FAR: view distances beyond the old 1.4x ceiling --------------------------------------------
+  // "Far mode" is on only outdoors, with GFX.farLook not false, when the effective multiplier is above FAR_FROM.
+  // At or below it every line below is skipped, so the original / low / medium / high frames are unchanged.
+  //  - INDOOR_CAP: interiors never see farther than the old ceiling (the dark is their limit, lamps light a few units).
+  //  - haze: distant air blends to the colour of the sky just above the horizon (not to the map's fog colour),
+  //    more the higher the multiplier, so a long outdoor view reads as depth and follows the time of day.
+  //  - distance-average: terrain, walls and ground sprites beyond 0.3 and 0.85 base fog lengths blend into the average colour of their
+  //    texture (a cheap mip: nothing shimmers once a texel is under a pixel); a wall past fa1 is one flat fill.
+  //  - sprite LOD: past two base fog lengths a sprite skips its light sample, uses a nearest-neighbour half/quarter/
+  //    eighth-size copy, and post hooks (outlines, shadows, marks, air effects) do not see it (FI.sprList is
+  //    narrowed to the near sprites after the sprite pass).
+  //  - ray walks and the point-light cull are sized to the map / to 1.6 base fog lengths instead of 96 / fogDist + 1.
+  // Gameplay never reads any of this: AI, detection, sound, picking and Dread use the map's own distances.
+  const FAR_FROM = 1.4, INDOOR_CAP = 1.4;
+  let farDR = 0, farDG = 0, farDB = 0, far = false, farHaze = 0, farLod2 = 1e18, farA0 = 1e9, farA1 = 1e9 + 1, farLightLim = 1e9, farK = 1, farBase = 12;
+  const farOn = () => typeof GFX === 'undefined' || GFX.farLook !== false;
+  function mixPx(px, avg, a) {
+    const k = (a * 256) | 0, r = px & 255, g = (px >> 8) & 255, b = (px >> 16) & 255;
+    return (px & 0xff000000) | ((b + ((((avg >> 16) & 255) - b) * k >> 8)) << 16) | ((g + ((((avg >> 8) & 255) - g) * k >> 8)) << 8) | (r + (((avg & 255) - r) * k >> 8));
+  }
+  const avgCache = new WeakMap();
+  let avgLastT = null, avgLastV = 0;   // consecutive pixels mostly share a texture: skip the map lookup
+  function avgOf(tex) {
+    if (tex === avgLastT) return avgLastV;
+    let v = avgCache.get(tex); if (v !== undefined) { avgLastT = tex; avgLastV = v; return v; }
+    let r = 0, g = 0, b = 0, n = 0;
+    for (let i = 0; i < tex.length; i++) { const p = tex[i]; if ((p >>> 24) < 128) continue; r += p & 255; g += (p >> 8) & 255; b += (p >> 16) & 255; n++; }
+    v = n ? (255 << 24) | (((b / n) | 0) << 16) | (((g / n) | 0) << 8) | ((r / n) | 0) : 0xff808080;
+    avgCache.set(tex, v); avgLastT = tex; avgLastV = v; return v;
+  }
+  // how far into the distance-average a point at distance t is (0 near, 1 far), a smoothstep
+  function farMix(t) { if (t <= farA0) return 0; if (t >= farA1) return 1; const u = (t - farA0) / (farA1 - farA0); return u * u * (3 - 2 * u); }
+  // half / quarter / eighth size copies of a sprite, nearest-neighbour: a block keeps its mean colour and is solid when
+  // at least two of its pixels are, so thin shapes thin out rather than sparkle
+  function spriteMip(sp, L) {
+    if (sp._mipsSrc !== sp.data) { sp._mips = [sp]; sp._mipsSrc = sp.data; }
+    const mips = sp._mips;
+    while (mips.length <= L) {
+      const src = mips[mips.length - 1], w = src.w >> 1, h = src.h >> 1;
+      if (w < 2 || h < 2) return src;
+      const d = new Uint32Array(w * h), sd = src.data;
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        let r = 0, g = 0, b = 0, n = 0;
+        for (let j = 0; j < 2; j++) for (let i = 0; i < 2; i++) { const p = sd[(y * 2 + j) * src.w + x * 2 + i]; if ((p >>> 24) > 100) { r += p & 255; g += (p >> 8) & 255; b += (p >> 16) & 255; n++; } }
+        if (n >= 2) d[y * w + x] = ((255 << 24) | (((b / n) | 0) << 16) | (((g / n) | 0) << 8) | ((r / n) | 0)) >>> 0;
+      }
+      mips.push({ w, h, data: d, hs: src.hs, cx: src.cx, dy: src.dy });
+    }
+    return mips[L];
+  }
 
   // ---- asset decoding -------------------------------------------------
   const textures = {};   // name -> Uint32Array(64*64)
@@ -181,7 +232,7 @@ const Engine = (() => {
       }
     }
     // lights too far from the camera to touch anything in view are dropped before their masks are built
-    if (opts && opts.cull) { const lim = fogDist + 1; let j = 0; for (let k = 0; k < ptLights.length; k++) { const L = ptLights[k], dx = L.x - cam.x, dy = L.y - cam.y, r = lim + L.r; if (dx * dx + dy * dy <= r * r) ptLights[j++] = L; } ptLights.length = j; }
+    if (opts && opts.cull) { const lim = (far ? Math.min(fogDist, farLightLim) : fogDist) + 1; let j = 0; for (let k = 0; k < ptLights.length; k++) { const L = ptLights[k], dx = L.x - cam.x, dy = L.y - cam.y, r = lim + L.r; if (dx * dx + dy * dy <= r * r) ptLights[j++] = L; } ptLights.length = j; }
     if (map) for (let k = 0; k < ptLights.length; k++) { const L = ptLights[k]; if (L.occlude === false) { L.vis = null; continue; } lightVis(L, k); }
   }
   function litBy(L, wx, wy) {
@@ -273,7 +324,7 @@ const Engine = (() => {
   buildSky(0.3);
 
   // ---- main render ---------------------------------------------------
-  const sprList = [];
+  const sprList = [], sprNear = [];
   let animT = 0;
   const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
   const wave = new Int8Array(64);
@@ -295,12 +346,30 @@ const Engine = (() => {
     // weather: thicker air, lower light, and one bright frame of lightning.
     // It is the sky's business only: interiors keep their own air and lamps.
     const wxK = outdoor ? 1 : 0;
-    fogDist = baseFog * fogK * (1 - wxHaze * 0.4 * wxK);
+    const kEff = outdoor ? fogK : Math.min(fogK, INDOOR_CAP);   // FAR: interiors keep the old ceiling
+    fogDist = baseFog * kEff * (1 - wxHaze * 0.4 * wxK);
     fogR = baseR * (1 - wxHaze * wxK) + wxTR * wxHaze * wxK;
     fogG = baseG * (1 - wxHaze * wxK) + wxTG * wxHaze * wxK;
     fogB = baseB * (1 - wxHaze * wxK) + wxTB * wxHaze * wxK;
     light_ = (outdoor ? ambientDark : 1) * (1 - wxDark * wxK) + wxFlash * 0.45 * wxK;
     const fogMul = 1 / fogDist;
+    // FAR: outdoors above the old ceiling the distant air becomes sky-coloured. The displayed far colour is the map's fog
+    // (as the light of the hour leaves it) pulled toward the sky row just above the horizon; tint() multiplies by light_
+    // after blending, so the blend target is stored divided by it.
+    far = outdoor && kEff > FAR_FROM + 1e-6 && farOn();
+    let fogPx = 0;
+    if (far) {
+      const ramp = Math.min(1, (kEff - FAR_FROM) / 0.6);
+      farHaze = ramp * (0.55 + 0.30 * Math.max(0, Math.min(1, (kEff - 2) / 2)));
+      const iH = Math.max(0, Math.min(h - 1, ((h * 0.75) | 0) - 1)), li = light_ > 0.05 ? light_ : 0.05;
+      const dR = fogR * light_ + (skyR[iH] - fogR * light_) * farHaze, dG = fogG * light_ + (skyG[iH] - fogG * light_) * farHaze, dB = fogB * light_ + (skyB[iH] - fogB * light_) * farHaze;
+      fogPx = rgb(Math.max(0, Math.min(255, dR)) | 0, Math.max(0, Math.min(255, dG)) | 0, Math.max(0, Math.min(255, dB)) | 0);
+      farDR = dR; farDG = dG; farDB = dB;
+      fogR = dR / li; fogG = dG / li; fogB = dB / li;
+      const baseEff = baseFog * (1 - wxHaze * 0.4 * wxK);
+      farBase = baseEff; farK = kEff;
+      farLod2 = 4 * baseEff * baseEff; farA0 = 0.3 * baseEff; farA1 = 0.85 * baseEff; farLightLim = 1.6 * baseEff;
+    } else { farHaze = 0; farLod2 = 1e18; farK = kEff; farBase = baseFog; }
 
     // -- floor & ceiling ----------------------------------------------
     const floorTexDefault = textures[map.floor] || textures.t_flag;
@@ -328,7 +397,7 @@ const Engine = (() => {
       }
       return heightMap ? heightMap[i] : 0;
     };
-    const fogPx = rgb(fogR, fogG, fogB);
+    if (!far) fogPx = rgb(fogR, fogG, fogB);
     const ceilZ = map.ceilZ || 1;                     // absolute ceiling height (interiors)
     const ceilMap = map.ceilCells, ceilTexList = map.ceilTextures ? map.ceilTextures.map(n => textures[n]) : null;
     const decals = map.decals || null;                // cell index -> decal texture name
@@ -369,6 +438,7 @@ const Engine = (() => {
       const tex = isFloor ? floorTexDefault : ceilTex;
       const fi = Math.round(f * 255) / 255;
       let fcr = 0, fcg = 0, fcb = 0;
+      const rowMix = far && isFloor ? farMix(rowDist) : 0;   // FAR: how far this row sits into the distance-average
       for (let x = 0; x < w; x++) {
         if ((x & 3) === 0 && ptLights.length && rowDist < 10) [fcr, fcg, fcb] = sampleLight(fx, fy);
         const cx = fx | 0, cy = fy | 0;
@@ -377,9 +447,13 @@ const Engine = (() => {
         if (isFloor && floorMap && cx >= 0 && cy >= 0 && cx < mw && cy < mh) { const idx = floorMap[cy * mw + cx]; if (idx) t = floorTexList[idx]; }
         else if (!isFloor && ceilMap && cx >= 0 && cy >= 0 && cx < mw && cy < mh) { const idx = ceilMap[cy * mw + cx]; if (idx && ceilTexList[idx]) t = ceilTexList[idx]; }
         let px, mat = rowMat;
-        if (t === texWater) { px = t[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)]; mat = 2; }
-        else if (t === texShal) { px = t[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)]; mat = 3; }
-        else px = t[ty * TEX + tx];
+        if (rowMix >= 1) { px = avgOf(t); mat = t === texWater ? 2 : t === texShal ? 3 : rowMat; }
+        else {
+          if (t === texWater) { px = t[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)]; mat = 2; }
+          else if (t === texShal) { px = t[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)]; mat = 3; }
+          else px = t[ty * TEX + tx];
+          if (rowMix > 0) px = mixPx(px, avgOf(t), rowMix);
+        }
         dbuf[o] = rowDepth; mbuf[o] = mat;
         fb[o++] = outdoor ? tint(px, fi, fogR, fogG, fogB, fcr, fcg, fcb) : shade(px, fi, fcr, fcg, fcb);
         fx += stepX; fy += stepY;
@@ -423,17 +497,21 @@ const Engine = (() => {
     }
 
     // -- sky hooks: stars, panoramas, things crossing the sky -----------
-    Object.assign(FI, { fb, dbuf, mbuf, w, h, S, horizon, dirX, dirY, planeX, planeY, cam, map, outdoor, tod: timeOfDay, skyDay, light: light_, fogR, fogG, fogB, fogDist, animT, ptLights, relief, wx: { haze: wxHaze, dark: wxDark, cloud: wxCloud, flash: wxFlash },
+    Object.assign(FI, { fb, dbuf, mbuf, w, h, S, horizon, dirX, dirY, planeX, planeY, cam, map, outdoor, tod: timeOfDay, skyDay, light: light_, fogR, fogG, fogB, fogDist, animT, ptLights, relief, far, farHaze, wx: { haze: wxHaze, dark: wxDark, cloud: wxCloud, flash: wxFlash },
       // Phase 10 (look10): what the ground-shadow and fight-mark pass needs to put a disc on the floor with the
       // renderer's own depth rule: the sorted sprite list (filled below, same array), the ground-height lookup
       // and the bias that sits between a ground pixel's depth and its true distance. Read-only for hooks.
       sprList, gAt, surfBias: SURF_BIAS });
+    // FAR: sky hooks (panoramas) take the fog colour as what is seen; post hooks take it per unit of light, as tint() does
+    if (far) { FI.fogR = farDR; FI.fogG = farDG; FI.fogB = farDB; }
     if (skyHooks.length) runHooks(skyHooks);
+    if (far) { FI.fogR = fogR; FI.fogG = fogG; FI.fogB = fogB; }
 
     // -- distant landmarks (horizon silhouettes, outdoor only) --------
     if (outdoor && typeof LANDMARKS !== 'undefined') {
       const lms = LANDMARKS[map.id] || LANDMARKS._default;
       const dayM = 0.32 + 0.68 * skyDay;
+      const fk = far ? light_ / dayM : 1;   // FAR: the haze colour is stored per unit of light; a ridge is dimmed by dayM instead
       for (let li = 0; li < lms.length; li++) {
         const lm = lms[li];
         const sil = lm.c || [30, 26, 42];
@@ -455,9 +533,9 @@ const Engine = (() => {
             let mix = 0.30 + 0.5 * t * t + 0.25 * v + (lm.far || 0) * 0.55; if (mix > 0.95) mix = 0.95;
             let sr = sil[0], sg = sil[1], sb = sil[2];
             if (cap && v > 1 - capH) { const k = Math.min(1, (v - (1 - capH)) / Math.max(0.08, capH)); sr = sr * (1 - k) + cap[0] * k; sg = sg * (1 - k) + cap[1] * k; sb = sb * (1 - k) + cap[2] * k; }
-            const rr = (((sr * (1 - mix) + fogR * mix) * dayM) | 0) & 255;
-            const gg = (((sg * (1 - mix) + fogG * mix) * dayM) | 0) & 255;
-            const bb = (((sb * (1 - mix) + fogB * mix) * dayM) | 0) & 255;
+            const rr = (((sr * (1 - mix) + fogR * fk * mix) * dayM) | 0) & 255;
+            const gg = (((sg * (1 - mix) + fogG * fk * mix) * dayM) | 0) & 255;
+            const bb = (((sb * (1 - mix) + fogB * fk * mix) * dayM) | 0) & 255;
             fb[y * w + x] = (255 << 24) | (bb << 16) | (gg << 8) | rr;
           }
         }
@@ -500,10 +578,18 @@ const Engine = (() => {
       const ditherOn = !!(opts && opts.dither);
       const dec = decals && face.ci != null && decals[face.ci] ? textures[decals[face.ci]] : null;
       const det = detail && dist < detailDist ? 1 - dist / detailDist : 0;
+      // FAR: past the distance-average a column is one flat colour (no texture, decal or detail lookups)
+      const fm = far ? farMix(dist) : 0, avgW = fm > 0 ? avgOf(tex) : 0;
+      if (fm >= 1 && !ditherOn) {
+        const flat = outdoor ? tint(avgW, fi, fogR, fogG, fogB, lcr, lcg, lcb) : shade(avgW, fi, lcr, lcg, lcb);
+        for (let y = dsC; y <= deC; y++) { fb[o] = flat; dbuf[o] = dist; mbuf[o] = MAT_W; o += w; }
+        return dsC;
+      }
       for (let y = dsC; y <= deC; y++) {
         const ty = (tp | 0) & 63; tp += step;
         let px = tex[ty * TEX + tx];
         if (dec) { const d = dec[ty * TEX + tx]; if ((d >>> 24) > 100) px = d; }
+        if (fm > 0) px = mixPx(px, avgW, fm);
         if (det) px = detailPx(px, ty, tx, det);
         const df = ditherOn ? (BAYER[((y & 3) << 2) | (x & 3)] - 7.5) * 0.0045 : 0;
         const fUse = df ? Math.max(0, Math.min(1, fi + df)) : fi;
@@ -514,6 +600,7 @@ const Engine = (() => {
       return dsC;
     }
     if (!relief) {
+    const maxIter = far ? mw + mh + 2 : 96;   // FAR: a ray may cross the whole map
     for (let x = 0; x < w; x++) {
       const camX = 2 * x / w - 1;
       const rdx = dirX + planeX * camX, rdy = dirY + planeY * camX;
@@ -525,7 +612,7 @@ const Engine = (() => {
       let side = 0;
       // the ground the ray is currently over, so a rise becomes a visible face
       let prevLvl = heightMap ? (heightMap[(cam.y | 0) * mw + (cam.x | 0)] || 0) : 0;
-      for (let iter = 0; iter < 96; iter++) {
+      for (let iter = 0; iter < maxIter; iter++) {
         if (sdx < sdy) { sdx += ddx; mapX += stepX; side = 0; } else { sdy += ddy; mapY += stepY; side = 1; }
         if (mapX < 0 || mapY < 0 || mapX >= mw || mapY >= mh) break;
         const c = grid[mapY * mw + mapX];
@@ -628,6 +715,7 @@ const Engine = (() => {
           if (tex === texWater) { px = tex[((ty + wScroll) & 63) * TEX + ((tx + wave[ty]) & 63)]; mat = 2; }
           else if (tex === texShal) { px = tex[((ty + sScroll) & 63) * TEX + ((tx + (wave[(ty + 16) & 63] >> 1)) & 63)]; mat = 3; }
           else px = tex[ty * TEX + tx];
+          if (far) { const fm = farMix(t); if (fm > 0) px = fm >= 1 ? avgOf(tex) : mixPx(px, avgOf(tex), fm); }   // FAR: distance-average
           mbuf[o] = mat;
           let f = light * (1 - t * fogMul); if (f < 0) f = 0;
           f = ambient + (1 - ambient) * f;
@@ -659,6 +747,7 @@ const Engine = (() => {
         const dec = decals && ci != null && decals[ci] ? textures[decals[ci]] : null;
         const det = detail && t < detailDist ? 1 - t / detailDist : 0;
         const k = t / h;
+        const fm = far ? farMix(t) : 0, avgHi = fm > 0 ? avgOf(texHi) : 0, avgLo = fm > 0 && texLo ? avgOf(texLo) : 0;   // FAR: distance-average
         let o = ys * w + x;
         for (let y = ys; y <= ye; y++, o += w) {
           const z = CZ - (y + 0.5 - horizon) * k;
@@ -667,6 +756,7 @@ const Engine = (() => {
           const ty = (((hi ? zHi : zSplit) - z) * TEX | 0) & 63;
           let px = tex[ty * TEX + tx];
           if (hi && dec) { const d = dec[ty * TEX + tx]; if ((d >>> 24) > 100) px = d; }
+          if (fm > 0) px = fm >= 1 ? (hi ? avgHi : avgLo) : mixPx(px, hi ? avgHi : avgLo, fm);
           if (det) px = detailPx(px, ty, tx, det);
           const df = ditherOn ? (BAYER[((y & 3) << 2) | (x & 3)] - 7.5) * 0.0045 : 0;
           const fUse = df ? Math.max(0, Math.min(1, fi + df)) : fi;
@@ -677,6 +767,7 @@ const Engine = (() => {
       };
       // interiors: walls reach the ceiling unless they carry their own top
       const wallTop0 = map.ceil ? ceilZ : 0;
+      const maxIter = far ? Math.max(160, mw + mh + 2) : 160;   // FAR: a ray may cross the whole map
       for (let x = 0; x < w; x++) {
         const camX = 2 * x / w - 1;
         const rdx = dirX + planeX * camX, rdy = dirY + planeY * camX;
@@ -687,7 +778,7 @@ const Engine = (() => {
         if (rdy < 0) { stepY = -1; sdy = (CY - cy) * ddy; } else { stepY = 1; sdy = (cy + 1 - CY) * ddy; }
         let clip = h, side = 0, tIn = 0, nearest = 1e9;
         let capZ = null, capTex = null;     // set while the ray crosses the top of a block
-        for (let iter = 0; iter < 160; iter++) {
+        for (let iter = 0; iter < maxIter; iter++) {
           // -- the surface of the cell the ray is crossing, from tIn to tOut
           const tOut = sdx < sdy ? sdx : sdy;
           let zOut;
@@ -823,12 +914,18 @@ const Engine = (() => {
       const ys = Math.max(0, dsY), ye = Math.min(h - 1, deY);
       if (xe < xs || ye < ys) continue;
       e._screen = { x0: dsX / S, x1: deX / S, y0: dsY / S, y1: deY / S, dist: d, z: trY };
-      const tw = sp.w, th = sp.h, sdat = sp.data;
-      const [scr, scg, scb] = ptLights.length ? sampleLight(e.x, e.y) : [0, 0, 0];
+      let tw = sp.w, th = sp.h, sdat = sp.data;
+      // FAR: beyond two base fog lengths no light sample, and (plain sprites) a smaller nearest-neighbour copy
+      const farSpr = e._d2 > farLod2;
+      const [scr, scg, scb] = ptLights.length && !farSpr ? sampleLight(e.x, e.y) : [0, 0, 0];
       const ecr = e.elite ? scr + 28 : scr, ecg = e.elite ? scg + 20 : scg, ecb = scb;
       const emit = sp.emit || null, fiE = Math.max(fi, 0.95);
       const glowEnt = e.glow > 0.3 || e.animGlow > 0.3 || !!e.glassLamp || e.item === 'shard' || e.item === 'core', matS = glowEnt ? 8 : 6;
       const plain = !skew && !flip && alpha >= 1 && !hurt && !emit;
+      if (farSpr && plain) {
+        let L = 0; while (L < 3 && (tw >> (L + 1)) >= sprW && (th >> (L + 1)) >= sprH) L++;
+        if (L) { const m = spriteMip(sp, L); tw = m.w; th = m.h; sdat = m.data; }
+      }
       const aT = alpha * 16;
       for (let x = xs; x <= xe; x++) {
         // a wall in front hides only the pixels below its top edge, so a body
@@ -866,6 +963,8 @@ const Engine = (() => {
     }
 
     // -- post hooks: fog grading, bloom, mist, water ------------------
+    // FAR: hooks that decorate sprites (outlines, shadows, marks, air effects) only see the near ones
+    if (far) { sprNear.length = 0; for (let i = 0; i < sprList.length; i++) if (sprList[i]._d2 <= farLod2) sprNear.push(sprList[i]); FI.sprList = sprNear; } else FI.sprList = sprList;
     if (postHooks.length) { FI.light = light_; FI.ambient = ambient; runHooks(postHooks); }
     // -- post: hush / damage tints handled by caller via overlay -------
     ctx.putImageData(frame, 0, 0);
@@ -929,8 +1028,10 @@ const Engine = (() => {
     return S;
   }
   function getScale() { return S; }
+  // what the last frame did about distance (tests and the Options label read this)
+  function farInfo() { return { far, kEff: farK, fogDist, baseFog: farBase, haze: farHaze, lodDist: far ? Math.sqrt(farLod2) : null, mixFrom: far ? farA0 : null, mixTo: far ? farA1 : null, lightLimit: far ? farLightLim : null, indoorCap: INDOOR_CAP, farFrom: FAR_FROM, fogK }; }
   // the coloured light the given entities cast on a world point (walls shadow it)
   function lightAt(entities, wx, wy) { if (!map) return [0, 0, 0]; gatherLights(entities, {}); return sampleLight(wx, wy); }
   return { canvas, ctx, cam, textures, sprites, images, loadAll, render, setMap, scanRelief, setWeather, pick, pickWall, setFlicker, setTime, depthAt, materialAt, rgb, VW, VH, VIEW_H,
-    setScale, getScale, lightAt, addSkyHook, addPostHook, addTexture, addSprite, setEmissive, setDetail, setLook, MAT };
+    setScale, getScale, farInfo, lightAt, addSkyHook, addPostHook, addTexture, addSprite, setEmissive, setDetail, setLook, MAT };
 })();
