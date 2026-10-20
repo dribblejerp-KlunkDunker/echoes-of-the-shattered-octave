@@ -52,6 +52,17 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 19: together (two-player co-op)
+
+| | |
+|---|---|
+| ![Play together](screenshots/p19-lobby.jpg) | ![Host and guest](screenshots/p19-together.jpg) |
+| Play together: the host gets a short code and a QR code; the guest scans it or types it. | Two travellers, one world: the host's computer runs it, the guest joins from a phone. |
+| ![Down](screenshots/p19-downed.jpg) | ![On a phone](screenshots/p19-phone.jpg) |
+| Fall and be revived: only when both are down is it the end. | The guest on a phone, held sideways. |
+
+Peer-to-peer over WebRTC with PeerJS's free matchmaker (and its free relay for mobile data), or codes swapped by hand with no matchmaker at all. No game server of our own, no accounts. The guest brings their own traveller and takes their progress home; the host's save holds the world and the story's choices.
+
 ### Phase 18: technical
 
 | | |
