@@ -225,11 +225,18 @@ const BEASTB = (() => {
     const rows = [];
     for (let y = 0; y < src.h; y++) {
       let xl = -1, xr = -1;
-      for (let x = 0; x < src.w; x++) if (m[y * src.w + x] && solidPx(src.data[y * src.w + x])) { if (xl < 0) xl = x; xr = x; }
+      const okp = def.solid || solidPx;
+      for (let x = 0; x < src.w; x++) if (m[y * src.w + x] && okp(src.data[y * src.w + x])) { if (xl < 0) xl = x; xr = x; }
       if (xl < 0) { rows.push(null); continue; }
-      const al = Math.max(1, (xr - xl + 1) / 2), cl = (xl + xr + 1) / 2 - ax;
-      const t = def.depth(y, al);
-      rows.push({ cl, al, af: Math.max(1, t), cf: def.fwd ? def.fwd(y) : 0, xl, xr });
+      rows.push({ xl, xr });
+    }
+    // a ragged outline can be eased over a few rows (smoke, tatters), so the turned shape is not jagged
+    const sm = def.smooth || 0, raw = rows.map(r => r && { xl: r.xl, xr: r.xr });
+    for (let y = 0; y < src.h; y++) {
+      const r = rows[y]; if (!r) continue;
+      if (sm) { let a = 0, b = 0, n = 0; for (let k = -sm; k <= sm; k++) { const q = raw[y + k]; if (q) { a += q.xl; b += q.xr; n++; } } r.xl = Math.round(a / n); r.xr = Math.round(b / n); }
+      const al = Math.max(1, (r.xr - r.xl + 1) / 2), cl = (r.xl + r.xr + 1) / 2 - ax;
+      r.al = al; r.cl = cl; r.af = Math.max(1, def.depth(y, al)); r.cf = def.fwd ? def.fwd(y) : 0;
     }
     return { m, rows, def, img: src };
   }
@@ -267,6 +274,7 @@ const BEASTB = (() => {
         const nx = nf * sn + nl * cs, nz = nf * cs + nl * sn;
         const litNow = 0.55 + 0.55 * Math.max(0, LX * nx + LZ * nz);
         let c = 0;
+        if (opt && opt.paint) { c = opt.paint(row, yi, sphi, cphi, x, yt, litNow); if (c) put(C, x, yt, zc + z, c, id); continue; }
         const clampX = xs => Math.max(row.xl + 1, Math.min(row.xr - 1, xs));
         const take = (img, xs) => { const xx = clampX(xs), p = px(img, xx, yi); return solidPx(p) && st.m[yi * src.w + xx] ? p : 0; };
         if (cphi >= 0) {
@@ -371,18 +379,47 @@ const BEASTB = (() => {
   // Project a body-frame point to screen x and depth.
   const proj = (th, axT, f, l) => ({ x: axT + f * Math.sin(th) + l * Math.cos(th), z: f * Math.cos(th) + l * Math.sin(th) });
 
+  // Smoke on the edge of a void: curls of a pale colour in the first pixels outside the silhouette,
+  // laid out by a fixed hash so every view keeps the same kind of edge.
+  function halo(C, cols, seed) {
+    const { w, h, col } = C, near = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      if (col[y * w + x]) continue;
+      let d = 0;
+      for (let r = 1; r <= 3 && !d; r++) for (let dy = -r; dy <= r && !d; dy++) for (let dx = -r; dx <= r; dx++) {
+        const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+        if (col[yy * w + xx] && C.id[yy * w + xx] < 90) { d = r; break; }
+      }
+      if (!d) continue;
+      // curls: a wavy band, thinner further out
+      const wave = Math.sin(y * 0.55 + x * 0.3 + seed) + Math.sin(y * 0.21 - x * 0.47 + seed * 2);
+      if ((d === 1 && wave > -1.5) || (d === 2 && wave > -0.5) || (d === 3 && wave > 0.6)) near[y * w + x] = d;
+    }
+    for (let i = 0; i < w * h; i++) if (near[i]) { col[i] = cols[Math.min(cols.length - 1, near[i] - 1)]; C.z[i] = -1e6; C.id[i] = 95; }
+  }
+
   // ---------------------------------------------------------------- finishing
-  function finish(C, v, ink) {
+  function finish(C, v, ink, line) {
     const { w, h, col, id } = C, out = new Uint32Array(w * h), dark = VIEW_DARK[v];
+    const k = line == null ? 0.45 : line;
+    // the outside: transparent pixels reachable from the border (holes in rags are not outlined)
+    const outside = new Uint8Array(w * h), stack = [];
+    for (let x = 0; x < w; x++) { stack.push(x, (h - 1) * w + x); }
+    for (let y = 0; y < h; y++) { stack.push(y * w, y * w + w - 1); }
+    while (stack.length) {
+      const i = stack.pop(); if (outside[i] || col[i]) continue; outside[i] = 1;
+      const x = i % w;
+      if (x > 0) stack.push(i - 1); if (x < w - 1) stack.push(i + 1); if (i >= w) stack.push(i - w); if (i < w * (h - 1)) stack.push(i + w);
+    }
+    const out_ = j => j < 0 || j >= w * h || outside[j];
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
       const i = y * w + x, c = col[i]; if (!c) continue;
       let f = dark;
-      // a dark pixel-art outline on the silhouette
-      const edge = (x === 0 || !col[i - 1]) || (x === w - 1 || !col[i + 1]) || (y === 0 || !col[i - w]) || (y === h - 1 || !col[i + w]);
-      if (edge) { out[i] = ink ? mix(c, ink, 0.6) : mul(c, 0.45 * dark); continue; }
+      const edge = (x === 0 || out_(i - 1)) || (x === w - 1 || out_(i + 1)) || out_(i - w) || out_(i + w);
+      if (edge) { out[i] = ink ? mix(c, ink, 0.6) : mul(c, k * dark); continue; }
       // a softer seam where a nearer part overlaps a farther one
       const zi = C.z[i];
-      if (id[i] !== id[i - 1] && C.z[i - 1] < zi - 2.5 || id[i] !== id[i + 1] && C.z[i + 1] < zi - 2.5 || id[i] !== id[i - w] && C.z[i - w] < zi - 2.5 || id[i] !== id[i + w] && C.z[i + w] < zi - 2.5) f *= 0.72;
+      if (id[i] !== id[i - 1] && C.z[i - 1] < zi - 2.5 || id[i] !== id[i + 1] && C.z[i + 1] < zi - 2.5 || id[i] !== id[i - w] && C.z[i - w] < zi - 2.5 || id[i] !== id[i + w] && C.z[i + w] < zi - 2.5) f *= 0.72 + (k - 0.45) * 0.5;
       out[i] = mul(c, f);
     }
     return out;
@@ -429,7 +466,7 @@ const BEASTB = (() => {
     P.lift = P.lift || 0;
     P.H = H; P.drop = Math.max(0, idle.h - H);
     S.def.draw(C, S, th, axT, P, v);
-    const data = finish(C, v, S.def.ink);
+    const data = finish(C, v, S.def.ink, S.def.line);
     // never two identical drawings for different poses (a pixel of the outline moves)
     return { w: W, h: H, data, hs, cx: axT / W, dy: 0 };
   }
@@ -453,12 +490,12 @@ const BEASTB = (() => {
     const idleH = S.src.h, H = P.H, knee = S.def.knee || Math.round(idleH * 0.62);
     const up = Math.round(P.lift || 0);
     if (H >= idleH) { const off = H - idleH; return yt => { const y = yt - off + up; return y >= idleH ? -1 : y; }; }
-    const drop = idleH - H, kT = knee - drop;
+    // crouch: the body above the knee keeps its rows; the legs below it fold into what is left
+    const k2 = Math.min(knee, H - 8), sc = (idleH - k2) / Math.max(1, H - k2);
     return yt => {
       const y = yt + up;
-      if (y < kT) return y + drop;
-      const t = (y - kT) / Math.max(1, H - kT);
-      const ys = knee + t * (idleH - knee);
+      if (y < k2) return y;
+      const ys = k2 + (y - k2) * sc;
       return ys >= idleH ? -1 : ys | 0;
     };
   }
@@ -467,9 +504,9 @@ const BEASTB = (() => {
     const idleH = S.src.h, H = P.H, knee = S.def.knee || Math.round(idleH * 0.62);
     const up = Math.round(P.lift || 0);
     if (H >= idleH) return ys + (H - idleH) - up;
-    const drop = idleH - H;
-    if (ys < knee) return ys - drop - up;
-    return knee - drop + (ys - knee) / (idleH - knee) * (H - (knee - drop)) - up;
+    const k2 = Math.min(knee, H - 8);
+    if (ys < k2) return ys - up;
+    return k2 + (ys - k2) * (H - k2) / (idleH - k2) - up;
   }
   // forward lean: rows above the hip move along the heading
   function shearer(S, P, th) {
@@ -493,7 +530,7 @@ const BEASTB = (() => {
 
   return { SPECIES, view, render, prep, cache, budgetBytes: () => bytes, cap: CAP, clear() { cache.clear(); bytes = 0; },
     poses: POSES,
-    lib: { inpaint, cleanPainting, paintOut, editable, clone, paintIn, drawLimb, alignCut, drawAlong, polyMask, rectPoly, cutout, patch, tap, wrap, buildStack, drawStack, drawCut, fillPoly, proj, ymapper, rowT, shearer, bandBack, hex, mix, mul, pack, lum, hash, px, solidPx, R, Gn, Bn, A, put } };
+    lib: { halo, inpaint, cleanPainting, paintOut, editable, clone, paintIn, drawLimb, alignCut, drawAlong, polyMask, rectPoly, cutout, patch, tap, wrap, buildStack, drawStack, drawCut, fillPoly, proj, ymapper, rowT, shearer, bandBack, hex, mix, mul, pack, lum, hash, px, solidPx, R, Gn, Bn, A, put } };
 })();
 
 // ================================================================ species rigs
@@ -530,7 +567,7 @@ const BEASTB = (() => {
   // cut-outs and patches it uses, how its back is painted, and a dress() that hangs arms, tools, hats.
   function humanoid(cfg) {
     return {
-      W: cfg.W, axT: cfg.axT, knee: cfg.knee, hip: cfg.hip, ink: cfg.ink,
+      W: cfg.W, axT: cfg.axT, knee: cfg.knee, hip: cfg.hip, ink: cfg.ink, line: cfg.line,
       prep(S, src) {
         S.pt = {};
         for (const k in cfg.patches || {}) { const q = cfg.patches[k]; S.pt[k] = patch(sp0(q[4]) || src, q[0], q[1], q[2], q[3]); }
@@ -875,6 +912,315 @@ const BEASTB = (() => {
       }
     },
   });
+
+  // A painted arm swung as one piece from its shoulder toward a body-frame direction (it foreshortens
+  // when it points at the viewer). Used by the long-armed horrors.
+  function swingArm(x, cut, sh, dir, o) {
+    o = o || {};
+    drawAlong(x.C, cut, x.th, x.axT, sh, dir, { dz: (o.dz == null ? x.front : o.dz) + 1, id: o.id || 30, shade: x.back && !o.keep ? 0.82 : 1, ky: o.ky });
+  }
+  const down = (sw, out) => ({ f: sw || 0, l: out || 0, up: -1 });
+
+  // ---------------------------------------------------------------- A Hollow (the Long Night's foe)
+  // The Book One Hollow drawing walked as a foe (js/longnight17.js): a gaunt, pale, barefoot figure in
+  // a grey smock, arms hanging. It drags a foot (walk) and leans in (a1) to reach for you (a2).
+  SP.ln17_hollow = humanoid({
+    line: 0.8, W: 96, axT: 48, knee: 112, hip: 64,
+    pose(pose) {
+      if (pose === '_w1') return { step: 1, swing: 1, lean: 2 };
+      if (pose === '_w2') return { step: -1, swing: -1, lean: -1 };
+      if (pose === '_a1') return { atk: 1, lean: 5 };
+      if (pose === '_a2') return { atk: 2, lean: 8 };
+      return bipedPose(pose);
+    },
+    headDrop: 0,
+    patches: { cloth: [18, 96, 14, 22], hair: [16, 2, 6, 8], skin: [6, 50, 3, 20] },
+    sil: [[[14, 0], [37, 0], [38, 26], [42, 32], [41, 70], [42, 122], [9, 122], [10, 70], [9, 32], [13, 26]]],
+    lift: [
+      { poly: [[[0, 28], [10, 30], [10, 96], [0, 96]]], axis: 10.5 },
+      { poly: [[[41, 30], [51, 28], [51, 96], [41, 96]]], axis: 40.5 },
+    ],
+    body: { mask: [[[0, 26], [51, 26], [51, 122], [0, 122]]], depth: (y, al) => al * 0.62, fwd: y => 0 },
+    head: { mask: [[[12, 0], [39, 0], [39, 27], [12, 27]]], depth: (y, al) => al * (y < 5 ? 0.7 : 1.0), fwd: y => (y > 18 ? 1 : 0) },
+    cuts: {
+      armR: [[[[0, 28], [10, 30], [11, 96], [0, 96]]], [6, 32], null, [0, 60]],
+      armL: [[[[41, 30], [51, 28], [51, 96], [40, 96]]], [45, 32], null, [0, 60]],
+      legR: [[[[9, 118], [26, 118], [26, 160], [9, 160]]], [18, 120]],
+      legL: [[[[26, 118], [43, 118], [43, 160], [26, 160]]], [34, 120]],
+    },
+    legs(x) { stride(x, x.S.cut.legR, x.S.cut.legL, -8, 8, 120, 5); },
+    back(B, S) {
+      paintOut(B, [[[17, 6], [34, 6], [34, 26], [17, 26]]], S.pt.hair, { grain: 0.4, smooth: 40 });
+      paintOut(B, [[[16, 30], [36, 30], [36, 60], [16, 60]]], S.pt.cloth, { grain: 0.6, smooth: 100, like: S.pt.cloth.mean, tol: 60 });
+    },
+    dress(x) {
+      const { S, P } = x, sw = (P.swing || 0) * 0.25, shY = x.row(31);
+      const reach = x.atk === 2 ? { f: 1, l: 0.08, up: 0.12 } : x.atk === 1 ? { f: 0.55, l: 0.05, up: -0.7 } : null;
+      swingArm(x, S.cut.armR, { f: 0, l: -17, y: shY }, reach ? Object.assign({}, reach, { l: -reach.l }) : down(sw));
+      swingArm(x, S.cut.armL, { f: 0, l: 17, y: shY }, reach || down(-sw), { id: 34 });
+    },
+  });
+
+  // ---------------------------------------------------------------- A Quiet
+  // A hole in the world: a man-shaped absence with smoke curling off its edges. It has no face, no
+  // front and no back, but it turns: its shoulders and arms show which way it goes. Attack: the arms
+  // thrown up (a1), then reaching wide and low (a2).
+  SP.quiet = humanoid({
+    line: 1, W: 112, axT: 56, knee: 110, hip: 70,
+    pose(pose) {
+      if (pose === '_w1') return { swing: 1, lean: 3 };
+      if (pose === '_w2') return { swing: -1, lean: -3 };
+      if (pose === '_a1') return { atk: 1, lean: -2 };
+      if (pose === '_a2') return { atk: 2, lean: 6 };
+      return {};
+    },
+    headDrop: 0,
+    sil: [[[22, 4], [44, 4], [46, 30], [50, 40], [48, 100], [50, 160], [16, 160], [18, 100], [16, 40], [20, 30]]],
+    lift: [],
+    // its silhouette is the black, not the smoke around it; it is painted as an absence
+    body: { mask: [[[16, 28], [50, 28], [50, 104], [16, 104]]], depth: (y, al) => al * 0.62, fwd: y => 0, smooth: 4, solid: p => L.solidPx(p) && L.lum(p) < 55 },
+    head: { mask: [[[16, 0], [50, 0], [50, 29], [16, 29]]], depth: (y, al) => al * 0.9, fwd: y => 0, smooth: 2, solid: p => L.solidPx(p) && L.lum(p) < 55 },
+    bodyOpt: { paint: (row, y, sphi, cphi, x, yt, lit) => L.pack(10 + 6 * lit + 3 * L.hash(x >> 1, yt >> 1, 7), 8 + 5 * lit, 9 + 5 * lit) },
+    headOpt: { paint: (row, y, sphi, cphi, x, yt, lit) => L.pack(10 + 6 * lit + 3 * L.hash(x >> 1, yt >> 1, 7), 8 + 5 * lit, 9 + 5 * lit) },
+    cuts: {
+      armR: [[[[0, 34], [19, 36], [19, 106], [0, 106]]], [14, 38], null, [-6, 62]],
+      armL: [[[[47, 36], [66, 34], [66, 106], [47, 106]]], [52, 38], null, [6, 62]],
+      legR: [[[[12, 100], [33, 100], [33, 160], [12, 160]]], [24, 102]],
+      legL: [[[[33, 100], [54, 100], [54, 160], [33, 160]]], [42, 102]],
+    },
+    prep(S) {
+      // the cut limbs keep only their black: the smoke is grown again round the new outline
+      const v = p => (L.solidPx(p) && L.lum(p) < 80 ? L.pack(12, 10, 11) : 0);
+      for (const k of ['armR', 'armL', 'legR', 'legL']) { const c = S.cut[k]; if (c) for (let i = 0; i < c.data.length; i++) c.data[i] = v(c.data[i]); }
+    },
+    legs(x) { const { C, S, th, axT } = x; const k = 0.8 + 0.3 * Math.abs(x.sn), y0 = x.row(102);
+      drawCut(C, S.cut.legR, th, axT, 0, -8, y0, 0, { kx: k, mirror: x.back, id: 11 }); drawCut(C, S.cut.legL, th, axT, 0, 9, y0, 0, { kx: k, mirror: x.back, id: 12 }); },
+    back() {},
+    dress(x) {
+      const { S, P } = x, sw = (P.swing || 0) * 0.2, shY = x.row(38);
+      let dR, dL;
+      if (x.atk === 1) { dR = { f: 0.1, l: -0.75, up: 0.62 }; dL = { f: 0.1, l: 0.75, up: 0.62 }; }
+      else if (x.atk === 2) { dR = { f: 0.8, l: -0.6, up: -0.2 }; dL = { f: 0.8, l: 0.6, up: -0.2 }; }
+      else { dR = { f: sw, l: -0.12, up: -1 }; dL = { f: -sw, l: 0.12, up: -1 }; }
+      swingArm(x, S.cut.armR, { f: 0, l: -15, y: shY }, dR, { keep: true });
+      swingArm(x, S.cut.armL, { f: 0, l: 15, y: shY }, dL, { keep: true, id: 34 });
+      L.halo(x.C, [hex('#4a4036'), hex('#8c7a5e'), hex('#6a5c48')], x.v * 1.7 + (P.swing || 0) + (x.atk || 0) * 3);
+    },
+  });
+
+  // ---------------------------------------------------------------- The Requiem
+  // A named horror of the Cacophony: an iron bell for a head, slit down the front, a cage of ribs
+  // like organ-stops, a shroud of black tatters to the ground and long bone arms. Attack: the arms
+  // spread like a choir-master's (a1) and the claws brought together in front (a2).
+  SP.requiem = humanoid({
+    line: 0.7, W: 200, axT: 100, knee: 150, hip: 100,
+    pose(pose) {
+      if (pose === '_w1') return { swing: 1, lean: 3 };
+      if (pose === '_w2') return { swing: -1, lean: -2 };
+      if (pose === '_a1') return { atk: 1, lean: -2 };
+      if (pose === '_a2') return { atk: 2, lean: 7 };
+      return {};
+    },
+    headDrop: 4,
+    patches: { shroud: [10, 150, 30, 40], iron: [34, 10, 8, 24] },
+    sil: [[[34, 0], [60, 0], [64, 40], [76, 50], [76, 120], [82, 205], [10, 205], [16, 120], [16, 50], [30, 40]]],
+    lift: [
+      { poly: [[[0, 54], [18, 54], [20, 150], [0, 150]]], axis: 18.5 },
+      { poly: [[[74, 54], [93, 54], [93, 150], [72, 150]]], axis: 73.5 },
+    ],
+    body: { mask: [[[0, 42], [93, 42], [93, 210], [0, 210]]], depth: (y, al) => al * (y < 100 ? 0.6 : 0.7), fwd: y => 0, smooth: 3 },
+    head: { mask: [[[28, 0], [66, 0], [66, 46], [28, 46]]], depth: (y, al) => al * 0.95, fwd: y => 0 },
+    cuts: {
+      armR: [[[[0, 54], [18, 54], [20, 150], [0, 150]]], [12, 58], null, [-2, 80]],
+      armL: [[[[74, 54], [93, 54], [93, 150], [72, 150]]], [80, 58], null, [2, 80]],
+    },
+    legs() {},
+    back(B, S) {
+      // the bell's slit and the ribs are on its front; its back is iron and tatters
+      paintOut(B, [[[42, 8], [52, 8], [52, 46], [42, 46]]], S.pt.iron, { grain: 0.5, smooth: 40 });
+      clone(B, 20, 118, 54, 58, 20, 48);
+    },
+    dress(x) {
+      const { S, P } = x, sw = (P.swing || 0) * 0.15, shY = x.row(56);
+      let dR, dL;
+      if (x.atk === 1) { dR = { f: 0.2, l: -0.9, up: 0.35 }; dL = { f: 0.2, l: 0.9, up: 0.35 }; }
+      else if (x.atk === 2) { dR = { f: 0.9, l: 0.3, up: -0.25 }; dL = { f: 0.9, l: -0.3, up: -0.25 }; }
+      else { dR = { f: sw, l: -0.15, up: -1 }; dL = { f: -sw, l: 0.15, up: -1 }; }
+      swingArm(x, S.cut.armR, { f: 0, l: -28, y: shY }, dR);
+      swingArm(x, S.cut.armL, { f: 0, l: 28, y: shY }, dL, { id: 34 });
+    },
+  });
+
+  // ---------------------------------------------------------------- The Phantom Weaver
+  // A named horror of the Cacophony: a hooded, eyeless face over a shroud woven of the forgotten
+  // voices of Whisper-Grove (the faces are in the weave, front and back), long arms and longer
+  // fingers. Attack: the arms thrown wide, threads between them (a1), then the hands drawn in (a2).
+  SP.weaver = humanoid({
+    line: 0.7, W: 230, axT: 115, knee: 140, hip: 90,
+    pose(pose) {
+      if (pose === '_w1') return { swing: 1, lean: 3 };
+      if (pose === '_w2') return { swing: -1, lean: -2 };
+      if (pose === '_a1') return { atk: 1 };
+      if (pose === '_a2') return { atk: 2, lean: 6 };
+      return {};
+    },
+    headDrop: 2,
+    patches: { hood: [26, 8, 8, 20], weave: [20, 120, 40, 40] },
+    sil: [[[30, 0], [54, 0], [58, 28], [70, 40], [70, 120], [80, 195], [8, 195], [16, 120], [16, 40], [28, 28]]],
+    lift: [
+      { poly: [[[0, 34], [27, 32], [23, 62], [17, 140], [0, 140]]], axis: 20.5 },
+      { poly: [[[60, 32], [88, 34], [88, 140], [69, 140], [64, 62]]], axis: 66.5 },
+    ],
+    body: { mask: [[[0, 28], [88, 28], [88, 200], [0, 200]]], depth: (y, al) => al * 0.6, fwd: y => 0 },
+    head: { mask: [[[26, 0], [58, 0], [58, 30], [26, 30]]], depth: (y, al) => al * 0.95, fwd: y => (y < 8 ? -2 : 0) },
+    cuts: {
+      armR: [[[[0, 34], [27, 32], [23, 62], [17, 140], [0, 140]]], [20, 38], null, [-12, 80]],
+      armL: [[[[60, 32], [88, 34], [88, 140], [69, 140], [64, 62]]], [68, 38], null, [12, 80]],
+    },
+    legs() {},
+    back(B, S) { paintOut(B, [[[36, 6], [50, 6], [50, 30], [36, 30]]], S.pt.hood, { grain: 0.4, smooth: 50 }); },
+    dress(x) {
+      const { C, S, P } = x, sw = (P.swing || 0) * 0.15, shY = x.row(36);
+      let dR, dL;
+      if (x.atk === 1) { dR = { f: 0.1, l: -1, up: 0.15 }; dL = { f: 0.1, l: 1, up: 0.15 }; }
+      else if (x.atk === 2) { dR = { f: 0.85, l: 0.25, up: -0.3 }; dL = { f: 0.85, l: -0.25, up: -0.3 }; }
+      else { dR = { f: sw, l: -0.2, up: -1 }; dL = { f: -sw, l: 0.2, up: -1 }; }
+      swingArm(x, S.cut.armR, { f: 0, l: -24, y: shY }, dR);
+      swingArm(x, S.cut.armL, { f: 0, l: 24, y: shY }, dL, { id: 34 });
+      if (x.atk === 1) {
+        // lilac threads strung between the spread hands, sagging
+        const reach = 70, P0 = proj(x.th, x.axT, dR.f * reach, -24 + dR.l * reach), P1 = proj(x.th, x.axT, dL.f * reach, 24 + dL.l * reach);
+        const y0 = shY - dR.up * reach;
+        for (let k = 0; k < 3; k++) for (let t = 0; t <= 160; t++) {
+          const u = t / 160, sag = Math.sin(Math.PI * u) * (14 + k * 12);
+          L.put(C, Math.round(P0.x + (P1.x - P0.x) * u), Math.round(y0 + k * 9 + sag), P0.z + (P1.z - P0.z) * u + 20, hex(k === 1 ? '#c58ee0' : '#9c6ab8'), 70);
+        }
+      }
+    },
+  });
+
+  // ---------------------------------------------------------------- Weaverling
+  // A spider of static and lilac thread with a cluster of little mouths, reared up on its legs. The
+  // body turns as a body; each side's legs are hung twice, a fore pair and a hind pair, so that from
+  // the side they splay forward and back. Walk: the pairs scissor. Attack: it rears, forelegs up (a1),
+  // then lunges (a2).
+  SP.weaverling = humanoid({
+    W: 96, axT: 48, knee: 62, hip: 40, line: 0.92,
+    pose(pose) {
+      if (pose === '_w1') return { swing: 1 };
+      if (pose === '_w2') return { swing: -1 };
+      if (pose === '_a1') return { atk: 1, lean: -3 };
+      if (pose === '_a2') return { atk: 2, lean: 6 };
+      return {};
+    },
+    headDrop: 0,
+    patches: { hide: [16, 14, 10, 12] },
+    sil: [[[12, 0], [42, 0], [42, 56], [12, 56]]],
+    lift: [],
+    body: { mask: [[[11, 2], [43, 2], [43, 50], [36, 56], [18, 56], [11, 50]]], depth: (y, al) => al * 0.9, fwd: y => (y < 20 ? -2 : 0), smooth: 2 },
+    cuts: {
+      legsR: [[[[0, 28], [13, 28], [17, 50], [24, 52], [24, 80], [0, 80]]], [14, 32]],
+      legsL: [[[[54, 28], [41, 28], [37, 50], [30, 52], [30, 80], [54, 80]]], [40, 32]],
+      crown: [[[[16, 0], [38, 0], [38, 12], [16, 12]]], [27, 11]],
+      spikesR: [[[[0, 8], [15, 8], [15, 30], [0, 30]]], [14, 18]],
+      spikesL: [[[[39, 8], [54, 8], [54, 30], [39, 30]]], [40, 18]],
+    },
+    dress(x) {
+      const { C, S, th, axT } = x, kx = Math.max(0.55, Math.abs(x.cs)), side = x.sn > 0.4;
+      // the crown of static-tendrils, and the bristles down its flanks
+      drawCut(C, S.cut.crown, th, axT, -2 + x.lean * 0.5, 0, x.row(11), 0, { kx, id: 15, dz: 6 * Math.abs(x.cs) });
+      drawCut(C, S.cut.spikesR, th, axT, 0, -13, x.row(18), 0, { kx, mirror: side && x.v > 2, id: 16, dz: 8 * Math.abs(x.cs) });
+      drawCut(C, S.cut.spikesL, th, axT, 0, 13, x.row(18), 0, { kx, mirror: side && x.v > 2, id: 17, dz: 8 * Math.abs(x.cs) });
+    },
+    legs(x) {
+      const { C, S, th, axT, P } = x, cs = Math.abs(x.cs), y0 = x.row(32), sw = (P.swing || 0) * 9;
+      const kx = Math.max(0.55, cs);
+      // hind pairs first (they are mostly behind), then the fore pairs
+      for (const [f, s] of [[-7, 1], [7, -1]]) {
+        const lift = x.atk === 1 && f > 0 ? -38 : x.atk === 2 && f > 0 ? -16 : 0;
+        const mirrorSide = x.sn > 0.4 && f < 0;   // seen from the side, the hind pair splays backwards
+        drawCut(C, S.cut.legsR, th, axT, f, -9, y0, (sw * s) + lift, { kx, mirror: mirrorSide, id: f > 0 ? 13 : 11, dz: -2 });
+        drawCut(C, S.cut.legsL, th, axT, f, 9, y0, (-sw * s) - lift, { kx, mirror: mirrorSide, id: f > 0 ? 14 : 12, dz: -2 });
+      }
+    },
+    back(B, S) {
+      // the mouths are on its front; behind, the static-grey hide
+      paintOut(B, [[[16, 16], [38, 16], [38, 52], [16, 52]]], S.pt.hide, { grain: 0.8, smooth: 40 });
+      for (let i = 0; i < B.data.length; i++) if (L.solidPx(B.data[i])) B.data[i] = mul(B.data[i], 0.78);
+    },
+  });
+
+  // ---------------------------------------------------------------- Mire-drone
+  // The parish's Mire-drone (js/parish.js), redrawn round: a low, bovine-sized wallower the colour of
+  // its bank, plated down the spine, the head low and forward with a slit mouth of reed-like plates
+  // and small dull eyes. Painted directly in the same manner as its front (canvas shapes, the same
+  // colours), but as a body in the round: the length of it shows from the side, the head goes behind
+  // it from the back. Walk shifts the legs; a1 rears the head; a2 lunges it forward.
+  SP.miredrone = {
+    W: 200, axT: 100,
+    prep(S) { S.src = Engine.sprites.miredrone; },
+    pose: (pose) => ({ bob: pose === '_w1' ? -2 : pose === '_w2' ? 2 : pose === '_a1' ? 3 : pose === '_a2' ? 6 : 0,
+      leg: pose === '_w1' ? 5 : pose === '_w2' ? -5 : 0, hy: pose === '_a1' ? -12 : pose === '_a2' ? 8 : 0, hf: pose === '_a2' ? 8 : 0,
+      gape: pose === '_a2' ? 8 : pose === '_a1' ? 4 : 1.5 }),
+    draw(C, S, th, axT, P, v) {
+      const sn = Math.sin(th), cs = Math.cos(th);
+      const cv = document.createElement('canvas'); cv.width = C.w; cv.height = C.h;
+      const g = cv.getContext('2d');
+      const X = (f, l) => axT + f * sn + l * cs, Z = (f, l) => f * cs + l * sn;
+      const E = (x, y, rx, ry, fill) => { g.beginPath(); g.ellipse(x, y, Math.max(0.5, rx), Math.max(0.5, ry), 0, 0, Math.PI * 2); g.fillStyle = fill; g.fill(); };
+      const VG = (y0, y1, a, b) => { const q = g.createLinearGradient(0, y0, 0, y1); q.addColorStop(0, a); q.addColorStop(1, b); return q; };
+      const oy = C.h - 96;               // the painting's ground line, kept
+      const bob = P.bob, A = 66, Bw = 58;  // body half-length and half-width
+      const hw = (a, b) => Math.sqrt((a * sn) * (a * sn) + (b * cs) * (b * cs));
+      const parts = [];
+      // mud
+      // (the painted front's mud puddle is left out of the turned views: the engine's ground shadow stands in)
+      // legs: four, at the corners
+      for (const [f, l, s] of [[40, -40, 1], [40, 40, -1], [-40, -40, -1], [-40, 40, 1]]) {
+        const ff = f + P.leg * s, x = X(ff, l), z = Z(ff, l);
+        parts.push({ z: z - 10, d: () => { g.fillStyle = VG(oy + 74, oy + 84, '#3c4034', '#23251c'); g.fillRect(x - 7, oy + 74, 14, 14); E(x, oy + 88, 9, 3.4, '#2a2418'); } });
+      }
+      // the body and its belly, sheen and spine plates
+      parts.push({ z: 0, d: () => {
+        const bwid = hw(A, Bw);
+        E(axT, oy + 56 + bob, bwid, 32, VG(oy + 24, oy + 88, '#566048', '#2a2f24'));
+        E(axT, oy + 66 + bob, bwid * 0.96, 22, 'rgba(48,40,26,0.55)');
+        // mottling: fixed, so every view of the same pose matches
+        for (let i = 0; i < 30; i++) { const h1 = L.hash(i, 1, 77), h2 = L.hash(i, 2, 77), h3 = L.hash(i, 3, 77);
+          E(axT + (h1 * 2 - 1) * bwid * 0.85, oy + 38 + h2 * 40 + bob, 2 + h3 * 4, 1 + h3 * 2, `rgba(${30 + (h2 * 30 | 0)},${34 + (h3 * 24 | 0)},22,0.5)`); }
+        g.strokeStyle = 'rgba(190,215,205,0.28)'; g.lineWidth = 2; g.beginPath(); g.moveTo(axT - bwid * 0.6, oy + 40 + bob); g.lineTo(axT + bwid * 0.3, oy + 34 + bob); g.stroke();
+        // spine plates down the back (f), drawn back to front; nearer ones larger
+        const plates = [];
+        for (let i = 0; i < 9; i++) { const f = -52 + i * 13, l = 0; plates.push({ f, x: X(f, l), z: Z(f, l), lift: Math.abs(i - 4) * 2.4 }); }
+        plates.sort((a, b) => a.z - b.z);
+        for (const p of plates) {
+          const py = oy + 30 + bob + p.lift;
+          g.beginPath(); g.moveTo(p.x - 5, py + 7); g.lineTo(p.x, py - 3); g.lineTo(p.x + 5, py + 7); g.closePath(); g.fillStyle = '#7a8458'; g.fill(); g.strokeStyle = '#2c3220'; g.lineWidth = 1; g.stroke();
+        }
+      } });
+      // the head: low and forward
+      const hf = A - 4 + P.hf, hx = X(hf, 0), hz = Z(hf, 0), hyy = oy + 70 + bob + P.hy;
+      parts.push({ z: hz, d: () => {
+        const hwid = hw(30, 25);
+        E(hx, hyy, hwid, 19, VG(oy + 52, oy + 90, '#5c6650', '#2c3126'));
+        E(hx, hyy - 10, hwid * 0.88, 7, '#2a2e22');           // the brow
+        if (cs > -0.2) {
+          // the face: eyes and the reed-plated mouth, on the front of the head
+          for (const l of [-10, 10]) { const ex = X(hf + 26, l * 1.0), front = Z(hf + 26, l) - hz; if (front < -4) continue;
+            E(ex, hyy - 7, 3 * Math.max(0.4, cs), 2.2, '#b79a4a'); E(ex, hyy - 7, 1.2, 1.2, '#1a1608'); }
+          const mx = X(hf + 26, 0), mw = 14 * Math.max(0.25, cs);
+          E(mx, hyy + 7 + P.gape * 0.4, mw, 3 + P.gape, '#150f0c');
+          g.strokeStyle = '#c9c394'; g.lineWidth = 1;
+          for (let i = -6; i <= 6; i++) { const lx = mx + i * 2 * Math.max(0.25, cs); g.beginPath(); g.moveTo(lx, hyy + 6); g.lineTo(lx, hyy + 9 + P.gape); g.stroke(); }
+        }
+      } });
+      parts.sort((a, b) => a.z - b.z);
+      for (const p of parts) p.d();
+      // hand the painting to the shared finishing pass (outline, view shading)
+      const id = g.getImageData(0, 0, C.w, C.h), d32 = new Uint32Array(id.data.buffer);
+      for (let i = 0; i < d32.length; i++) if ((d32[i] >>> 24) > 100) { C.col[i] = (d32[i] | 0xff000000) >>> 0; C.z[i] = 0; C.id[i] = 1; }
+    },
+  };
 })();
 
 // ================================================================ the hook
