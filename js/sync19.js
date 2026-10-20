@@ -17,11 +17,13 @@
 //  hash against a page with this file blocked.)
 //
 //  ---------------------------------------------------------------- TRANSPORT (NET19, team NET)
-//   NET19.on(type, fn(payload, peerId)) / NET19.off(type, fn) / NET19.send(type, payload, { reliable })
-//   NET19.role() -> 'host' | 'guest' | null    NET19.peers() -> array (length > 0 = connected)    NET19.stats()
-//   SYNC19.useTransport(t) swaps in any object with that shape (the tests' loopback). NET validates size/shape at the
-//   transport; SYNC validates meaning (below). Message types used (all JSON-able plain objects):
-//     guest -> host  'sync.hello'  { v }                                   reliable   ask to join / re-join
+//   NET19.on(type, fn(payload, { from, seq, reliable, at })) / off / send(type, payload, { reliable }) / role() /
+//   connected() / define(type, spec) and the lifecycle events 'net:lost' (host: the partner is paused, the host plays
+//   on) and 'net:closed'. SYNC define()s every type below (sender role, frame size, rate) and PARTNER's p19p:* types
+//   too. SYNC19.useTransport(t) swaps in any object with that shape. NET validates frames at the transport; SYNC
+//   validates meaning. NET caps a frame at 1024 JSON values, so entity rows, removals and doors travel as strings and
+//   the census and flags go in chunks. Message types (all plain JSON):
+//     guest -> host  'sync.hello'  { v, card? }  (card = PARTNER19.guest.card())  reliable   ask to join / re-join
 //                    'sync.in'     { k:[ep, ackSnap], i:[[seq, f, r, bits, dir, pitch, act, ap], ...] }   unreliable, 30 Hz
 //                    'sync.act'    { a, ... } (see ACTIONS)                 reliable
 //                    'sync.bye'    {}                                      reliable
@@ -31,27 +33,42 @@
 //                    'sync.flags'  { f: { key: value } }                   reliable   changed world flags (1 Hz check)
 //                    'sync.msg'    { t, c }                                reliable   a world line to show (textContent)
 //                    'sync.full'   {}                                      reliable   a second guest is refused
+//                    'sync.refused' { reason }                             reliable   PARTNER refused the card
+//                    'sync.wb' { wb } / 'sync.story' STORY   only when PARTNER is NOT wired to the same transport
+//                    (on NET19 PARTNER sends its own 'p19p:wb' and 'p19p:story'; SYNC hooks 'p19p:wb' to hand the
+//                    guest's game back in the right order)
 //
 //  ---------------------------------------------------------------- SNAPSHOT FORMAT ('sync.snap')
 //   { q, b, ep, t, tod, day, h, you, e, rm, d, wx?, x? }
 //     q    snapshot sequence;  b  the snapshot it is a delta against (the newest one the guest acknowledged), -1 = full
-//          (a full snapshot is a census of EVERY entity and door of the map, sent after a join or a map change)
+//          (after a join or a map change a census of EVERY entity and door of the map goes first, in chunks of
+//          B.CENSUS_CHUNK entities; only then does the range filter apply)
 //     ep   map epoch (bumps on every host map change; anything from another epoch is ignored on both sides)
 //     t    host clock, ms (the guest interpolates 100 ms behind it)
 //     tod  time of day x 10000; day = G.day
 //     h    the host's figure  [x*32, y*32, feet*32, dir 0-255, act, ap 0-15, speed*10]
 //     you  the guest's authoritative state [lastInputSeq, x*256, y*256, vx*256, vy*256, feet*32] (reconciliation)
-//     e    changed entities   [[sid, x*32, y*32, bits, hp% | -1, state, dir 0-255, kind?, name?], ...]
+//     e    changed entities   ["sid,x*32,y*32,bits,hp%|-1,state,dir 0-255[,kind,name]", ...]   (strings)
 //          sid < map.baseCount is the index of a map-built entity (the guest's own copy of the map has the same one);
 //          sid >= 100000 is something spawned since (loot, hounds): it carries kind (0 enemy, 1 item, 2 deco, 3 npc)
 //          and its catalogue name (ENEMIES type / ITEMS id / sprite / NPCS id), which the guest checks before use.
 //          bits: 1 dead, 2 hidden, 4 solid, 8 flash.  state: 0 idle, 1 chase, 2 passive, 3 investigate, 4 other.
-//     rm   sids gone from the map;  d  changed doors [[cellIndex, target 0|1], ...]
+//     rm   "sid,sid,..." gone from the map;  d  changed doors "cell:target,cell:target" (target 0|1)
+//     lk   the host's look for the ghost painter (when it changed);  pt  { me: PARTNER19.snapshot(), host: hostState() }
 //     wx   weather (Weather.save()) when it changed;  x  PARTNER's extension data { key: data } (SYNC19.extend)
 //   Interest: after the census, only entities within B.RANGE tiles of the guest are compared and sent; at most
 //   B.MAX_ENTS per snapshot, nearest first; the rest wait for the next one. Caps: B.SNAP_MAX bytes per snapshot.
 //
-//  ---------------------------------------------------------------- THE CONTRACT FOR PARTNER (js/partner19.js)
+//  ---------------------------------------------------------------- PARTNER (js/partner19.js, merged): HOW THEY MEET
+//   SYNC owns the guest traveller's POSITION and facing (one deterministic mover on both sides: that is what makes
+//   prediction and reconciliation exact) and writes it into PARTNER's partner each input (PARTNER19.setPose when it
+//   exists, else its state object). Everything else goes through PARTNER19's API: join(card) on hello, input() for
+//   attack / weapon / block / song / use, pause(true) on a drop and pause(false) when the guest is back, leave() when
+//   the guest says goodbye, snapshot()/hostState() into every snapshot, drainFeed() onto 'sync.msg'. When PARTNER moves
+//   its partner itself (set down behind the host on a new map, woken by the lamp) SYNC follows. A downed or paused
+//   partner does not move. PARTNER draws the partner on the host; SYNC paints the host on the guest with PARTNER's
+//   frames (GHOST18's painter). Guest side: PARTNER19.guest.enter() before SYNC takes over the page, returnHome(wb)
+//   after. Below, the original SYNC-only hooks (still there for any other module):
 //   How the guest's traveller appears to the host simulation: it is NOT an entity. It is SYNC19.guestState(), moved
 //   by SYNC from the guest's validated inputs. It blocks enemies only if PARTNER makes it (SYNC never puts anything
 //   into G.ents). SYNC draws a plain stand-in figure for each remote traveller until PARTNER calls
