@@ -127,6 +127,7 @@ const KESTREL16 = (function () {
     board: {
       wgTitle: S('The mast-ladder'),
       wgBody: S('A hundred feet of rope up into the lilac mist, and the Kestrel\'s keel above it, lift-tanks murmuring one note. At the rail a shape that might be Mags is looking down, and has probably been looking for some time.'),
+      wgBodyAway: S('A hundred feet of rope up into the lilac mist, and the Kestrel\'s keel above it, lift-tanks murmuring one note. Nobody is at the rail. Mags is down at the camp in the Deep Woods with her arm in a sling.'),
       up: S('Climb up to the deck.'),
       on: S('Climb, and go on to the Deep Woods.'),
       no: S('Not yet.'),
@@ -157,6 +158,7 @@ const KESTREL16 = (function () {
       awning: S('An awning of waxed canvas over the map table, so the charts stay dry in the mist.'),
       charts: S('Wall charts of the Reach and the Woods, pinned flat. Somebody has pencilled small crosses along two of the roads.'),
       sextant: S('A brass sextant with a Light-glass sight. It points, unhelpfully, at the Grove.'),
+      magsAway: S('Mags\'s brass glass, capped and lashed to the bow rail where she stands her watch. She is down at the camp in the Deep Woods, with her arm in a sling.'),
       glass: S('A Light-glass lantern. It hums at five twenty-eight, very faintly, and it is warm.'),
     },
     below: {
@@ -275,6 +277,7 @@ const KESTREL16 = (function () {
         tTopic: SG('The rest of you go quiet and I do not notice. I notice when your mouths stop moving. It is the same, I think, from the other side.'),
         intro: S('<i>She does not turn when you come up behind her. You step round into her line of sight and she lowers the brass glass, reads your mouth, and answers aloud, signing as she speaks:</i> <i>[signs] I saw you coming from the far side of the Grove. I always see things first.</i>'),
         offer: SG('The road looks different from up here. Give me a lens that is not cracked, thirty sovereigns, and I will watch it for you from the table. I will not tell you where the hounds are. I will tell you which road they are not on.'),
+        camp: S('<i>She tucks the splice under her sling arm and talks with the free hand, signing one-handed as she speaks:</i>'),
         pay: S('Pay for the lens. (30 sovereigns)'),
         later: S('Not yet.'),
         short: SG('Thirty. I know what a lens costs. Come back with it, and face me when you do.'),
@@ -810,6 +813,9 @@ const KESTREL16 = (function () {
     if (id === 'hob') return hasG() && !!G.flags.twins_named;
     return shipExists();
   };
+  // Mags: the original mags_dw stands at the Deep Woods camp from Part Four on (js/maps.js: no requires/until, and the
+  // camp is only reachable from Part Four). Then she is not on the deck; her lens offer is made at the camp instead.
+  const magsAtCamp = () => hasG() && !!G.flags.part4;
   // [PROPOSED] conditions, all from flags the story already sets
   function recruitCheck(id) {
     if (!hasG() || !shipExists() || !here(id)) return { ok: false, why: 'absent' };
@@ -924,6 +930,20 @@ const KESTREL16 = (function () {
   function installNpc() {
     if (typeof NPCS === 'undefined') return;
     for (const k in NPC_DEFS) if (!NPCS[k]) NPCS[k] = NPC_DEFS[k];
+    // wrap, never edit: when the camp Mags has no story beat to give, she makes the lens offer one-handed (sling)
+    const md = NPCS.mags_dw;
+    if (md && typeof md.quest === 'function' && !md.quest._p16k) {
+      const q = md.quest;
+      md.quest = function (g) {
+        const r = q.apply(this, arguments);
+        try {
+          if (r || !cfg.on || !shipExists() || crewHas('mags') || !(hasG() && G.flags.mags_met)) return r;
+          const M = TX.crew.mags; seenSet(2);
+          return { text: M.camp + '<br>' + M.offer, choices: [{ t: M.pay, f: () => { const h = hire('mags'); return h.ok ? M.done : M.short; } }, NO(M.later)] };
+        } catch (e) { return r; }
+      };
+      md.quest._p16k = true;
+    }
   }
   // the engineer: the townsman, recoloured to engineer's blue-grey with the goggles pushed up (derived from the existing sprite)
   function paintPennick() {
@@ -1029,7 +1049,9 @@ const KESTREL16 = (function () {
         prop('p16k_sextant', ...D(6.7, 2.6), 'u_chart', { scale: 0.55, solid: true, radius: 0.2, label: TX.deck.sextant });
       }
       person('p16k_vane', ...D(DECK_AT.vane[0], DECK_AT.vane[1]), Math.PI, 'crew_vane', { label: TX.crew.vane.label });
-      person('p16k_mags', ...D(DECK_AT.mags[0], DECK_AT.mags[1]), 0, 'crew_mags', { label: TX.crew.mags.label });
+      // never two Mags: from Part Four on she is at the Deep Woods camp (mags_dw, js/maps.js), so the deck has her glass instead
+      if (!magsAtCamp()) person('p16k_mags', ...D(DECK_AT.mags[0], DECK_AT.mags[1]), 0, 'crew_mags', { label: TX.crew.mags.label });
+      else prop('p16k_sextant', ...D(DECK_AT.mags[0], DECK_AT.mags[1]), 'mags_away', { scale: 0.5, solid: true, radius: 0.2, label: TX.deck.magsAway });
       return;
     }
     // below-decks
@@ -1109,7 +1131,7 @@ const KESTREL16 = (function () {
       const ch = [{ t: T.up, f: () => board() }];
       if (hasG() && G.flags.part3 && !G.flags.part4 && orig) ch.push({ t: T.on, f: () => setTimeout(orig, 0) });
       ch.push(NO(T.no));
-      showEvent(T.wgTitle, T.wgBody, ch);
+      showEvent(T.wgTitle, magsAtCamp() ? T.wgBodyAway : T.wgBody, ch);
     } else showEvent(T.dwTitle, T.dwBody, [{ t: T.dwUp, f: () => board() }, NO(T.dwNo)]);
   }
 
@@ -1394,7 +1416,7 @@ const KESTREL16 = (function () {
   return {
     CARDS, FILL_BELOW, DECK, BELOW, MAPS, B, UPG, LOCKER, CREW, FLAGS, TX, cfg, saveCfg, loadCfg, DECK_AT, BELOW_AT, RAIL_PEGS, OX, OY, T,
     get TEXTS() { return LIST.slice(); },
-    fint, fset, sanitize, upHas, crewHas, seenHas, mooring, landing, costOf, blockers, canFit, fit, buyMaterial, travelMinutesFor, riskFactor, magsSees,
+    fint, fset, sanitize, upHas, crewHas, seenHas, mooring, landing, costOf, blockers, canFit, fit, buyMaterial, travelMinutesFor, riskFactor, magsSees, magsAtCamp,
     recruitCheck, hire, giveLoaf, mendWeapon, railState, hangRail, takeRail, furnish, refresh, board, boardBlock, leaveShip, goBelow, goDeck, rest, hop, hopAllowed,
     tableMenu, openList, boardMenu, tick, onLoad, buildDeck, buildBelow, shipExists, aboard, humLevel, stopSounds, isDeckLocal,
   };

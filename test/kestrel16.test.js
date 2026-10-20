@@ -305,6 +305,31 @@ async function boot(browser, viewport, opts) {
     check(mg.eng.join('|') === "The Kestrel's engineer|The engineer, at the tanks" && mg.noPennick === 0 && mg.speaks, 'the engineer goes by his title, no string names Pennick, and Mags answers aloud as she signs');
     check(mg.stateAfter === 'play', 'talking to her from behind opens no conversation');
 
+    // ---------------------------------------------------------------- never two Mags: the deck Mags and the camp Mags (mags_dw)
+    const two = await ev(() => {
+      const K = KESTREL16, out = {};
+      // how many Mags stand in the world the story has reached: the deck one, plus the camp one once Part Four has begun
+      const count = () => {
+        const deck = G.maps[K.DECK].entities.filter((e) => e.kind === 'npc' && /mags/.test(e.id) && !e.hidden).length;
+        const dw = G.maps.deepwoods, camp = G.flags.part4 && dw ? dw.entities.filter((e) => e.id === 'mags_dw' && !e.hidden).length : 0;
+        return { deck, camp, all: deck + camp };
+      };
+      G.flags.p16k_crew = 0; G.flags.p16k_seen = 0; delete G.flags.part4; delete G.flags.mags_met; G.flags.part3 = true; K.board(); out.p3 = count();
+      out.wg = K.TX.board.wgBody;
+      K.leaveShip(); G.flags.part4 = true; K.board(); out.p4 = count();
+      out.note = !!G.maps[K.DECK].entities.find((e) => e._p16k === 'mags_away');
+      K.leaveShip();
+      // at the camp, once met and with no story beat left, she makes the lens offer one-handed
+      G.flags.mags_met = true; G.flags.mags_bosun = true; G.flags.mags_cant = true;
+      const q = NPCS.mags_dw.quest(G); out.camp = !!(q && /sling/.test(q.text) && q.choices && q.choices.length === 2);
+      G.player.gold = 100; const r = q.choices[0].f(); out.hired = K.crewHas('mags') && r === K.TX.crew.mags.done && G.player.gold === 70;
+      out.after = NPCS.mags_dw.quest(G) === null;
+      return out;
+    });
+    check(two.p3.all === 1 && two.p3.deck === 1, 'Part Three: Mags is on the deck and nowhere else (' + JSON.stringify(two.p3) + ')');
+    check(two.p4.all === 1 && two.p4.deck === 0 && two.p4.camp === 1 && two.note, 'Part Four: Mags is at the camp only; the deck has her glass instead (' + JSON.stringify(two.p4) + ')');
+    check(two.camp && two.hired && two.after, 'at the camp, once met, she makes the lens offer one-handed (sling) and it hires her as on the deck');
+
     // ---------------------------------------------------------------- save and load aboard
     const sv = await ev(async () => {
       const K = KESTREL16, bit = (id) => 1 << K.UPG.find((u) => u.id === id).bit, out = {};
