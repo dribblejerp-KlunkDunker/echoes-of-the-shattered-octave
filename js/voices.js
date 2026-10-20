@@ -90,6 +90,22 @@ const VOICES = (() => {
     p16f_wife: { f0: 210, fs: 1.1, style: 'human' },       // the cutter's wife on the raft
     p16h_vause: { f0: 184, fs: 1.07, style: 'human' },      // Sergeant Vause: professional, clipped
     p16k_pennick: { f0: 104, fs: 0.94, style: 'human' },    // the Kestrel's engineer: dry, pessimistic
+    // Phase 17 CANTABILE: Port Cantabile (the Salt Stair, the Mole, the Cay)
+    p17c_teague: { f0: 112, fs: 0.95, style: 'human' },     // the harbour clerk: flat, bureaucratic
+    p17c_oona: { f0: 176, fs: 1.04, style: 'human' },       // the Harbour-Queen: level, withholding
+    p17c_bessa: { f0: 236, fs: 1.12, style: 'breathy' },    // the last Reef-Reader: old, eyes shut, soft
+    p17c_teel: { f0: 100, fs: 0.93, style: 'human' },       // a free captain: rum-roughened
+    p17c_sloe: { f0: 124, fs: 0.97, style: 'human' },       // the chandler: dry, particular
+    p17c_tace: { f0: 206, fs: 1.08, style: 'human' },       // Marrin Tace, the widow: careful, kind
+    p17c_dunmore: { f0: 130, fs: 0.98, style: 'human' },    // the Office clerk: pleasant as a shut door
+    p17c_hesper: { f0: 150, fs: 0.9, style: 'human' },      // Hesper: foghorn-deep, slow, gentle
+    p17c_quain: { f0: 96, fs: 0.92, style: 'human' },       // the Cay ferryman, hat over his eyes
+    p17c_hesper2: { f0: 150, fs: 0.9, style: 'human' },     // Hesper on the Cay
+    p17c_quain2: { f0: 96, fs: 0.92, style: 'human' },      // Quain on the Cay jetty
+    p17c_mags: { f0: 190, fs: 1.07, style: 'silent' },      // Mags signs, she does not speak
+    p17c_wife: { f0: 212, fs: 1.1, style: 'human' },
+    p17c_hand: { f0: 110, fs: 0.95, style: 'human' },
+    p17c_child: { f0: 300, fs: 1.25, style: 'human' },      // a child of the Cay
     townsman:  { f0: 122, fs: 0.97, style: 'human' },
     townswoman:{ f0: 202, fs: 1.08, style: 'human' },
     sable:     { f0: 208, fs: 1.1,  style: 'human' },
