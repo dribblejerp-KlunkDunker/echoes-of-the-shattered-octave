@@ -1,0 +1,75 @@
+# Phase 15, team LEDGER: english<TAB>french. Paid training, the Greenhall counting-house and its letters of credit, the testing codes.
+Ask to be taught	Demander à être instruit
+Ask to be taught ({0} left this level)	Demander à être instruit ({0} restantes à ce niveau)
+What they can teach	Ce qu'ils peuvent enseigner
+A session is two hours of the day and a fee in coin. Nobody teaches past their own ceiling, and three sessions in one level of your own is as much as anybody will take money for.	Une séance coûte deux heures de la journée et des espèces. Personne n'enseigne au-delà de son propre plafond, et trois séances dans un même niveau du vôtre, c'est tout ce que l'on acceptera de vous facturer.
+You have {0} sovereigns. Sessions left at this level: {1} of {2}.	Vous avez {0} souverains. Séances restantes à ce niveau : {1} sur {2}.
+{0}: {1} now, {2} is as far as they go — {3} sovereigns	{0} : {1} à présent, {2} est leur limite — {3} souverains
+{0}: {1} now, and that is as far as they go	{0} : {1} à présent, et c'est leur limite
+Take the session	Prendre la séance
+Leave it there	En rester là
+Two hours of it, and your {0} is {1}. Your purse is {2} sovereigns lighter and you have learned the thing they could not say in words.	Deux heures de cela, et votre {0} est à {1}. Votre bourse est allégée de {2} souverains et vous avez appris ce qu'ils ne savaient pas dire avec des mots.
+You have not the fee, and nobody here teaches on credit.	Vous n'avez pas la somme, et personne ici n'enseigne à crédit.
+You have had three sessions since you last came up a level. Go and use them.	Vous avez pris trois séances depuis votre dernier niveau. Allez vous en servir.
+"That is the whole of what I know," they say, and they are not being modest. "Find somebody worse-tempered and better travelled."	« C'est tout ce que je sais », dit-on, et ce n'est pas de la modestie. « Trouvez quelqu'un de plus mal luné et de mieux voyagé. »
+Training: people in this town will teach what they know for coin — two hours and a fee, three sessions to a level, and never past their own ceiling. Harrow has a gate-warden's cudgel work; Hob walks quietly; Rooke mends; Vane sells both ends of a fight; Vosk counts; Lyra sings the law; Kaelen knows the glass; Sable knows locks; Tam knows the Reach; Tobiah knows how to get up a rock face.	Instruction : dans cette ville, on enseigne ce qu'on sait contre des espèces — deux heures et une somme, trois séances par niveau, et jamais au-delà de son propre plafond. Harrow a le gourdin du gardien de porte ; Hob marche sans bruit ; Rooke répare ; Vane vend les deux bouts d'une bagarre ; Vosk compte ; Lyra chante la loi ; Kaelen connaît le verre ; Sable connaît les serrures ; Tam connaît les Confins ; Tobiah sait grimper une paroi.
+"A cudgel is not a sword. You do not swing it, you let it fall and you are somewhere else when it lands."	« Un gourdin n'est pas une épée. On ne le balance pas : on le laisse tomber, et on est ailleurs quand il arrive. »
+"Oil the leather. Walk on the whole foot. Breathe out on the step, not in. That is the lot, and it took me nine years."	« Huilez le cuir. Marchez sur tout le pied. Soufflez sur le pas, n'inspirez pas. C'est tout, et il m'a fallu neuf ans. »
+"You will not learn anatomy in two hours. You will learn which bleeding kills you in four minutes, which is better value."	« Vous n'apprendrez pas l'anatomie en deux heures. Vous apprendrez quelle hémorragie vous tue en quatre minutes, ce qui est d'un meilleur rapport. »
+"Keep the point between you and the trouble. If you are going to shoot, shoot early. If you are going to board, board laughing."	« Gardez la pointe entre vous et l'ennui. Si vous devez tirer, tirez tôt. Si vous devez aborder, abordez en riant. »
+"Price is what a thing costs. Value is what you can be persuaded to pay. The Consortium made a very great deal of money out of the gap."	« Le prix, c'est ce que la chose coûte. La valeur, c'est ce qu'on peut vous convaincre de payer. Le Consortium a gagné énormément d'argent dans l'écart. »
+"The law is a key signature. Learn it, and you can sing almost anything inside it and nobody can write you up for it."	« La loi est une armure de clé. Apprenez-la, et vous pourrez chanter presque n'importe quoi à l'intérieur sans qu'on puisse vous verbaliser. »
+"Glass does what it was tuned to do. Stop asking it to be kind. Hold it at the node, there, and it will not take your hand."	« Le verre fait ce pour quoi il a été accordé. Cessez de lui demander d'être bon. Tenez-le au nœud, là, et il ne vous prendra pas la main. »
+"A lock is a little argument about who is allowed. Listen to it. The third pin is where they get proud."	« Une serrure est une petite dispute sur qui a le droit. Écoutez-la. C'est à la troisième goupille qu'elles deviennent orgueilleuses. »
+"You want to know the Reach? Then learn its bad corners first. I will do you a list, and I will tell you why for each one."	« Vous voulez connaître les Confins ? Alors apprenez d'abord leurs mauvais coins. Je vous en ferai la liste, et je vous dirai pourquoi pour chacun. »
+"Three points on the rock at all times. Look for the crack, not the hold. And do not go up anything you cannot come down in the dark."	« Trois points sur la roche en tout temps. Cherchez la fissure, pas la prise. Et ne montez rien que vous ne puissiez redescendre dans le noir. »
+The counting-house grille	Le guichet de la maison de comptes
+The counting-house	La maison de comptes
+The counting-house of the Greenhall	La maison de comptes de la Halle verte
+A brass grille, a ledger the size of a door and a clerk who writes down everything you say and some of what you do not. The Office keeps accounts because the Office keeps everything.	Un guichet de cuivre, un registre grand comme une porte et un commis qui note tout ce que vous dites et une part de ce que vous ne dites pas. L'Office tient des comptes parce que l'Office tient tout.
+In hand: {0} sovereigns. On account: {1}. Letters of credit carried: {2}.	En main : {0} souverains. En compte : {1}. Lettres de crédit portées : {2}.
+A letter is {0} sovereigns off the account and a sovereign in stamp duty. Any house in the province will honour one; a house that did not issue it keeps a tenth. What is on account is not coin in hand, so no fine, bribe or evidence escrow can reach it.	Une lettre, c'est {0} souverains retirés du compte et un souverain de timbre. Toute maison de la province l'honorera ; une maison qui ne l'a pas émise en garde un dixième. Ce qui est en compte n'est pas de l'argent en main : ni amende, ni pot-de-vin, ni séquestre de pièces à conviction ne peut l'atteindre.
+Pay in {0} sovereigns	Verser {0} souverains
+Draw out {0} sovereigns	Retirer {0} souverains
+Draw a letter of credit ({0} + {1} stamp)	Tirer une lettre de crédit ({0} + {1} de timbre)
+Cash a letter here ({0} sovereigns)	Encaisser une lettre ici ({0} souverains)
+Cash a letter ({0} sovereigns, a tenth kept)	Encaisser une lettre ({0} souverains, un dixième retenu)
+Close the grille	Fermer le guichet
+The clerk counts it twice, writes it once, and the account is {0}.	Le commis compte deux fois, écrit une fois, et le compte est à {0}.
+He counts it out in fives, and the account is {0}.	Il compte par cinq, et le compte est à {0}.
+He stamps a half-sheet, writes the sum in words and in figures, and holds it under the grille until you have read it. One letter of credit, {0} sovereigns.	Il timbre une demi-feuille, écrit la somme en lettres et en chiffres, et la tient sous le guichet jusqu'à ce que vous l'ayez lue. Une lettre de crédit, {0} souverains.
+A letter of credit, honoured: {0} sovereigns.	Une lettre de crédit, honorée : {0} souverains.
+You have no letter of credit to cash.	Vous n'avez aucune lettre de crédit à encaisser.
+You have not that much in hand.	Vous n'avez pas autant en main.
+There is not that much on the account.	Il n'y a pas autant sur le compte.
+The counting-house: the Greenhall keeps an account for anyone with coin, and will write a letter of credit at twenty-five sovereigns a sheet. Any house in the province honours one; what is on the account is beyond a fine.	La maison de comptes : la Halle verte tient un compte pour quiconque a des espèces, et rédige une lettre de crédit à vingt-cinq souverains la feuille. Toute maison de la province l'honore ; ce qui est en compte est hors d'atteinte d'une amende.
+Letter of Credit	Lettre de crédit
+A stamped half-sheet on the Greenhall counting-house, for twenty-five sovereigns, payable to the bearer at any house in the province. The Office honours its own paper. It has to.	Une demi-feuille timbrée sur la maison de comptes de la Halle verte, de vingt-cinq souverains, payable au porteur dans toute maison de la province. L'Office honore son propre papier. Il y est obligé.
+Testing codes	Codes de test
+A word-box for testing. Anything you do here is written into the run: the count rides in the save and the character sheet and Statistics both say so. Nothing clears it.	Une boîte à mots, pour les tests. Tout ce que vous faites ici est inscrit dans la partie : le compte voyage avec la sauvegarde, et la feuille de personnage comme les Statistiques le disent. Rien ne l'efface.
+The word	Le mot
+Use it	L'employer
+Close the box	Fermer la boîte
+The Office has no record of that word.	L'Office n'a aucune trace de ce mot.
+Not in a hardcore run. That is the whole point of a hardcore run.	Pas dans une partie extrême. C'est tout l'intérêt d'une partie extrême.
+This run is marked as tested ({0} codes used).	Cette partie est marquée comme testée ({0} codes employés).
+Tested run: {0} testing codes used.	Partie testée : {0} codes de test employés.
+Testing codes used	Codes de test employés
+F8 opens the word-box while the switch is on.	F8 ouvre la boîte à mots tant que l'option est activée.
+mendme · fullpurse · allsongs · skipnight · thickskin · openhedge · showall · tellall · hushoff · nocodes	mendme · fullpurse · allsongs · skipnight · thickskin · openhedge · showall · tellall · hushoff · nocodes
+Mended: health, voice and wind full, injuries cleared.	Réparé : santé, voix et souffle au complet, blessures effacées.
+The purse is 250 sovereigns heavier.	La bourse est plus lourde de 250 souverains.
+Every Song in the book is in your throat.	Tous les Chants du livre sont dans votre gorge.
+Eight hours pass.	Huit heures passent.
+Thick skin: nothing can hurt you.	Peau dure : rien ne peut vous blesser.
+Thick skin off: the world can reach you again.	Peau dure désactivée : le monde peut de nouveau vous atteindre.
+The North Gate is unbarred and the culvert grate is open.	La porte Nord est débarrée et la grille du caniveau est ouverte.
+This map is all walked.	Cette carte est entièrement parcourue.
+The Narrow is held open: no hounds, no unwriting.	L'Étroit est maintenu ouvert : pas de chiens, pas d'effacement.
+The Narrow is live again.	L'Étroit est de nouveau vivant.
+The word-box is closed and the switch is off. The mark stays.	La boîte à mots est fermée et l'option désactivée. La marque reste.
+Paid training	Instruction payante
+ten people will teach a skill for coin: two hours, a fee, three sessions a level	dix personnes enseignent une compétence contre des espèces : deux heures, une somme, trois séances par niveau
+Letters of credit	Lettres de crédit
+an account and letters of credit at the Greenhall counting-house	un compte et des lettres de crédit à la maison de comptes de la Halle verte
+F8 opens a word-box; using one marks the run for good	F8 ouvre une boîte à mots ; en employer un marque la partie définitivement
