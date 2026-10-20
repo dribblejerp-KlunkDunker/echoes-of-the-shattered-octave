@@ -19,7 +19,9 @@ The 94 unfinished checklist items at the start of this plan (85 not started, 9 p
 | 4 — Living world | Animation — companions and NPCs; world | 18 | **Delivered: companions — hit reactions, limp, Kaelen's Root-note hum and pose, Lyra's rings, camp loops** → **Delivered: townsfolk — talking gestures, daily routines, work loops** → **Delivered: small life — crows, rats and the cat, the moored Kestrel, glinting Light-glass** → **Delivered: smoke, splashes, torches and braziers** → **Delivered: wind on signs and banners, area leaves, bells that swing on the strike** → **Delivered: rising gates and portcullises, the quarry cave-in with safe recovery** → Phase 4 complete. Still open, carried forward: hand-painted frames for every procedural stand-in; a visible Chapel bell (the story keeps the frame empty). |
 | 5 — Illustrated interface | Graphics — menus and screens | 10 | **Delivered: fonts bundled locally, blackletter headings, carved-wood frames with brass corners, font credits** → **Delivered: painted icons for every item, a painted paper doll** → **Delivered: mood portraits, logbook sketches, automap stamps** → **Delivered: area loading cards, cause-specific death art, ending illustrations** → Phase 5 complete. Still open, carried forward: hand-painted art to replace every procedural stand-in. |
 | 6 — Story reactivity | Story and world-building | 8 | **Delivered: tavern rumours and the Synod Gazette** → **Delivered: courier letters** → **Delivered: rest dreams and Light-glass echoes** → **Delivered: Tobin's journal pages** → **Delivered: Kaelen and Lyra epilogues, Organum/Iron Peaks/Rift teasers** → Phase 6 complete. All new prose is marked [PROPOSED] in the code where it goes beyond the game and the world bibles, for the author's review. |
-| 7 — Sound, access & tools | Audio; technical and polish | 15 | Positional/muffled sound → area/boss score and voice licensing → access/translation/statistics/photo/timer → validated mod schemas/editor → desktop packaging. |
+| 7 — Sound, access & tools | Audio; technical and polish | 15 | **Delivered: positional sound — pan, distance falloff, wall muffling; willow wind, roof rain, delayed thunder** → **Delivered: procedural greetings and grunts per NPC and enemy; full credits and asset/licence audit** → **Delivered: area, dungeon and boss pieces and a story-evolving main theme, as an opt-in Extended score (the Original recorded score stays the default)** → **Delivered: photo mode, speedrun timer, statistics** → **Delivered: one Accessibility block (text size, reduce motion, no flashes, high contrast, sound captions) and a translation catalog with locale choice and fallback** → **Delivered: versioned data-only mod schemas, validator, Mod dungeons panel and grid dungeon editor** → **Delivered: Electron desktop shell, Windows/macOS/Linux packaging config and CI, signing/update decisions** → Phase 7 complete. Still open, carried forward: composed recordings to replace the procedural score pieces (voices: see the voice-casting pass); signing certificates and a published release; a full French translation. |
+| 8 — Finish and paint | Carried-forward polish | 4 workstreams | **Delivered: directional sound ripples** → **Delivered: composed, recorded Extended score (area, boss, story theme)** → **Delivered: full French story translation** → **Delivered: painted loading cards, death and ending pictures and logbook sketches where a good painting exists (procedural fallback)** → Phase 8 complete. Still open: paintings for the pictures the local model could not paint well. |
+| 9 — New gameplay systems | Gameplay | 4 workstreams | **Delivered: reed-craft — wind-reeds cut by the Flume, tuned in a Hold the Pitch minigame** → **Delivered: three Oakhaven side quests (A Reed for Pellow, The Ringing Wood, Telling the Bees)** → **Delivered: companion conversations (23 topics)** → **Delivered: The Third Parish, a three-map dungeon with Mire-drones and Fret-crawlers** → Phase 9 complete. |
 
 Phase 1 acceptance for this pass: separate consumable stones and empty bottles (never the story Vox-Bottle); collision-clipped forward impact with readable feedback; idle guards and non-boss enemies investigate the impact, never abandon a visible wanted player or active combat; keyboard/touch/controller input; inventory save compatibility; transient sound targets cannot replay after load. No external services, production deployment, or Git delivery is included.
 
@@ -115,7 +117,7 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [x] Oakhaven adult pickpocketing: inspect eligible townsfolk/merchants at arm’s reach with P, touch Purse or controller Y. NPC-relative front/side/rear position, owner attention, noise and Stealth determine displayed lift odds. Caught attempts or third-party witnesses add a 20-sovereign bounty. One saved attempt per purse; loose coin only, no quest items or shop stock. Broader regional placement remains future expansion.
 - [x] Drag/drop settled physical bodies at half walking speed without sprinting; conceal/recover them in nonblocking shrouded recesses in Oakhaven, the Quarry and the Cloister. G/touch Body/controller left-stick opens actions. Collision, closed doors and water constrain movement. Visible remains trigger one local 12-second patrol search, without overriding combat or revealing an unseen player; a constable witnessing dragging adds one 20-sovereign bounty per body. Remains/concealment/alarms are current-visit-only; enemy deaths and independent loot retain existing save behavior.
 - [x] Synod Clerk Robes sold by Hob, worn through the body armour slot with grey-robed paper-doll art. Ordinary non-boss Proctors/Legionnaires accept distant cover; visible inspection within 2.4 units exposes you in three seconds, twice as fast at noise 4+. Retreat/occlusion reduces suspicion. Witnessed attacks, loud/offensive Songs, throws, dragging bodies and putting on robes break cover. Area exposure survives saves and clothes changes. Combat, body searches, monsters/bosses, story locks and bounty arrests are unaffected. Y/touch Cover/controller Back status and wear/remove actions; written inspection feedback.
-- [ ] Directional on-screen sound ripples, paired with positional sound.
+- [x] Directional on-screen sound ripples, paired with positional sound. *(Options → Sound ripples; js/ripples.js.)*
 - [x] Throwable stones and empty bottles: collision-clipped forward impacts attract idle Oakhaven constables and ordinary non-boss enemies for 6/9 seconds. Walls reduce hearing; visible wanted players, player detection, weapon/Song hits and active combat take priority. O/touch Throw/controller right-stick opens a no-cost choice; 1/A stone, 2/X bottle. Saved inventory, old-save supply pickups, transient targets cleared on load/departure. Vox-Bottles retain their story behavior.
 - [x] Three visible, inspectable Catacombs mechanisms: barbed tripwire (one-shot 5 damage), suspended net (eight-second movement slow) and alarm bell (nearby enemy alert). Disarm via existing skill-based three-pin controls; cancellation/three slips leave it armed. Spent/disarmed state persists. Dedicated trap artwork/trigger animations and wider dungeon placement remain later polish.
 - [x] Optional Cloister three-voice reliquary and Catacombs physical puzzles: repeat Root → Fifth → Third on the Cloister reliquary; weight or step onto the drowned-chapel pressure plate to unlatch the west counter-weight niche; rotate the three niche-gallery brass mirrors (`/` and `\`) to guide the green-gold lantern beam into the eastern prismatic lens. Keyboard/touch/controller support, written beam/note clues, no resource cost and one-time shard/Lore rewards saved in flags.
@@ -138,23 +140,152 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [x] Nine in-world documents on duplicate library shelves (an Office memo and a visitors' notice about the Organum, a Fortis soldier's letter home, a Null-Watch line-talk transcript...), "Heard beyond the Reach" codex stubs and margin notes on the continent map. No new regions are playable.
 
 ### Audio
-- [ ] Distinct area/dungeon compositions for Oakhaven, Whisper-Grove and Deep Woods.
-- [ ] Individual boss themes (not just shared boss-mode cues).
-- [ ] Authored greetings/grunts per NPC/enemy; voice asset/license tracking (optional TTS already exists).
-- [ ] Directional audio with wall muffling and distance falloff.
-- [ ] Willow wind, rooftop rain and thunder layers.
-- [ ] Story-evolving main theme across Book One.
+- [x] Distinct area/dungeon compositions for Oakhaven, Whisper-Grove and Deep Woods. *(Composed and recorded for Score: Extended — seven area pieces in music/extended/; the original ten cues stay the default.)*
+- [x] Individual boss themes (not just shared boss-mode cues). *(Nine recorded boss themes, Extended score.)*
+- [x] Authored greetings/grunts per NPC/enemy; voice asset/license tracking (optional TTS already exists). *(Voiced lines for every speaking character and boss: their greetings, mimicry and companion lines from the game's text, plus PROPOSED barks for speaking enemies, generated with Kokoro-82M TTS (Apache-2.0) and treated per character; formant grunts for the rest; licences in ASSETS.md. Human actors could replace any file.)*
+- [x] Directional audio with wall muffling and distance falloff.
+- [x] Willow wind, rooftop rain and thunder layers.
+- [x] Story-evolving main theme across Book One. *(One theme in six recorded stages, tuned flat early and healing by the coda, Extended score.)*
 
 ### Technical and polish
-- [ ] Audit/expand credits for all art, fonts, audio, tools and contributors.
-- [ ] Photo mode: hide interface, pause safely and export a screenshot.
-- [ ] Optional speedrun timer with pause/loading policy.
-- [ ] Statistics page: kills, distance, playtime and Songs cast.
-- [ ] Larger text, reduced shake, no flashes and high contrast across every new effect.
-- [ ] Translation message catalog, locale selection, fallback and text expansion tests.
-- [ ] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification.
-- [ ] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
-- [ ] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+- [x] Audit/expand credits for all art, fonts, audio, tools and contributors. *(CREDITS.md, ASSETS.md, in-game credits.)*
+- [x] Photo mode: hide interface, pause safely and export a screenshot.
+- [x] Optional speedrun timer with pause/loading policy.
+- [x] Statistics page: kills, distance, playtime and Songs cast.
+- [x] Larger text, reduced shake, no flashes and high contrast across every new effect.
+- [x] Translation message catalog, locale selection, fallback and text expansion tests. *(Menus and the whole story in French: 4,255 strings, translated at display time by js/story-i18n.js from locales/story/fr.json; recorded voices stay English.)*
+- [~] Windows/macOS/Linux desktop packages, licenses, signing/update decisions and platform input verification. *(Shell, config, CI and decisions in docs/desktop.md; certificates and a signed release need the owner.)*
+- [x] Versioned quest/enemy/map mod schemas with validation; no arbitrary script execution from imported content.
+- [x] Built-in dungeon editor using those schemas, preview/playtest and safe export/import.
+
+### Owner's list, October 2026 (100 ideas)
+Added from the owner's list. Statuses come from a check against the code: `[x]` already in the game, `[~]` partly there, `[ ]` new. Where an item is already in, the note says where.
+
+**Remaining owner's-list phases (plan, October 2026)**
+| Phase | Theme | Items |
+|---|---|---|
+| 12 — Tools of the trade | gear and Songs | Shield bash; two-handed and dual-wielding; throwing nets; fire flasks; silence bombs; Office grappling hook; environmental kills; instruments that change Songs; tuning forks; dowsing for Anchor-roots |
+| 13 — The Hush comes closer | horror | Whispers from behind; lights dying; night terrors; haunted house in Oakhaven; the Unrung Bell at night; jump-scare toggle; hounds sniffing your trail; Hushwardens' muffling wave; crows at bodies |
+| 14 — A world that shows the story | visuals and animation | The Greening in Oakhaven; spreading Light-glass; root veins; "Octave lights"; mirrors; sealed doorways; breakable barrels; Sunken Court light; NPC weather reactions; swaying capes; tavern sitting/eating; Kestrel flight scene |
+| 15 — The province moves | world events and Daggerfall systems | Synod sermons; eclipses; roadside events; burning and rebuilding, permanent deaths; Synod territory; paid training; letters of credit; cheat codes; "Where is" map marks; camp cooking; tavern card game; boss trophies |
+| 16 — New ground | new areas | Chlorophyll Flume; underwater dungeon beneath Whisper-Grove; heists (Synod cathedral, Consortium quarry); the Kestrel as a home base with crew |
+| 17 — Beyond Book One | extras | Book Two prologue; Port Cantabile trip and the Long Night (both after Book One in canon: presented as marked extras) |
+| 18 — Technical | engine and online | Sharper renderer; installable offline app; daily challenge dungeon; ghost replays; messages and leaderboards (need a small server: owner's decision) |
+
+Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
+
+**Phase 12 — tools of the trade, and the festivals** (delivered; items marked (P12); see the Phase 12 verification)
+
+**Phase 11 — feedback and feel** (delivered; items marked (P11) below; see the Phase 11 verification)
+
+**Phase 10 — the owner's picks** (delivered; see the Phase 10 verification below)
+| Item | Status | Note |
+|---|---|---|
+| Blob shadows under enemies, NPCs and companions | `[x]` | js/look10.js: depth-correct ground shadows; Options → Ground shadows (off in Original and Low). |
+| Colour grading per area (amber Oakhaven, teal Whisper-Grove, violet Deep Woods) | `[x]` | Retuned in js/post.js, per-hour shifts kept, whites protected. |
+| Lasting marks where fights happened (blood, scorch, cracks) | `[x]` | js/look10.js: for the current visit, capped at 40; constructs spark, Hollows leave nothing. |
+| Animated travel route on the world map | `[x]` | js/motion10.js: presentation only, same outcome; skippable. |
+| Swinging lanterns on patrolling guards, light moving on walls | `[x]` | js/motion10.js: up to four lit, dropped when the carrier falls. |
+| Parry sparks when weapons clash | `[x]` | js/motion10.js. Blocking itself now works (js/guard.js): a parry turns a blow aside, a block halves it. |
+| Dissonance meter: overusing Songs draws the Hush; whispers and false foes at high Dissonance | `[x]` | js/dread.js, Options → Dread (off by default). |
+| The stalker: one Hush-thing hunts you across Book One, mostly heard | `[x]` | js/dread.js: heard as sounds going missing; it keeps one logbook line until dawn. |
+| Question-based class picker | `[x]` | js/origins.js: 11 questions; same character as a manual pick. |
+| Four interaction modes (Steal, Grab, Info, Talk) | `[x]` | js/origins.js, Options → Interaction modes; `]`/`[` cycle. |
+| Save to file | `[x]` | Load from file and drag-and-drop (js/origins.js); save codes now capped at 8 MB inflated. |
+
+**Graphics**
+- `[x]` Night palette (per-hour grades, js/post.js) · `[x]` Wet surfaces after rain (js/surfaces) · `[x]` Water reflections and ripples (js/water.js; extend to rippling light on the Sunken Court floor `[~]`)
+- `[x]` Sun shafts through canopy and Cloister windows (P11) · `[x]` Heat haze over braziers, forges, the Steam Golem (P11) · `[x]` Light-glass glare (P11)
+- `[x]` Footprints in mud and shallow water (P11) · `[ ]` Breakable barrels and crates with loot · `[ ]` The Greening visible in Oakhaven during Part Two
+- `[x]` See-through shimmering ghosts (P11) · `[ ]` "Octave lights" aurora on story nights · `[x]` Moon phases the Hush follows (P11)
+- `[ ]` Mirrors that show you (and sometimes something behind you) · `[ ]` Shimmering sealed doorways · `[x]` Organ-pipe health, fatigue and Song gauges (P11)
+- `[x]` Hit-direction marker (complements the sound ripples) (P11) · `[x]` Optional enemy health bars (P11) · `[x]` Optional damage numbers (P11) · `[x]` Stillness tint at the screen edge (P11)
+
+**Animation**
+- `[ ]` Spreading Light-glass in story events · `[ ]` Glowing root veins near the Anchor-roots · `[~]` Crows that gather at bodies (crows exist, js/smalllife.js)
+- `[ ]` NPCs hood up in rain, huddle by fires in cold · `[ ]` Swaying coats and capes · `[x]` Cold breath at night and in cold areas (P11)
+- `[ ]` Hounds sniffing your trail · `[ ]` The Hushwardens' grey muffling wave · `[x]` Weapon trails on fast swings (P11) · `[x]` Hit-stop on critical hits (P11)
+- `[~]` Kestrel flight scene between Parts Two and Three (flyovers exist, js/sky.js) · `[x]` Level-up flourish with rising notes (P11) · `[x]` Quest-complete banner (P11)
+- `[x]` Loot flying to the inventory button (P11) · `[x]` Coins counted out in shops (P11) · `[x]` Page turns in books and the logbook (P11) · `[ ]` Sitting, eating and drinking in the tavern
+
+**Daggerfall features**
+- `[x]` Birth signs from musical modes (P11) · `[x]` "Where is...?" (dialogue button; add map marking `[~]`) · `[ ]` Paid training with per-level limits
+- `[ ]` Bank letters of credit · `[x]` Holidays on the calendar (P11) · `[ ]` Cheat codes for testing
+
+**Gameplay**
+- `[x]` Instruments (lute, flute, hurdy-gurdy) that change Songs (P12) · `[x]` Tavern performance rhythm game (P11) · `[x]` Tuning forks that hum near secrets (P12)
+- `[x]` Dowsing for Anchor-roots (P12) · `[x]` Carried light (the lantern, U) · `[x]` Fire flasks (P12) · `[x]` Environmental kills (chandeliers, scaffolds, deep water) (P12)
+- `[x]` Office grappling hook (P12) · `[x]` Noise lures (thrown stones and bottles; the lure reed) · `[x]` Silence bombs (P12) · `[x]` Shield bash (P12) · `[x]` Two-handed weapons and dual-wielding (P12)
+- `[x]` Throwing nets (P12) · `[x]` Adopt the Whisper-Grove cat (she hisses at danger) (P11) · `[x]` Bones, a tavern dice game (P11) · `[ ]` A tavern card game · `[ ]` Camp cooking
+- `[ ]` Boss trophies for your house (the house exists)
+
+**World and events**
+- `[x]` Market day in the square (P11) · `[ ]` Synod sermons to attend or disrupt · `[ ]` Festivals such as Hearthday · `[ ]` Eclipses
+- `[~]` Roadside events on the world map (ambushes exist; add carts, refugees, checkpoints) · `[ ]` Buildings burn and are rebuilt; permanent NPC deaths
+- `[ ]` Synod territory spreading on the world map · `[x]` "Previously..." recap on load (P11)
+
+**Horror**
+- `[ ]` Whispers from behind at high Dissonance (with the meter above) · `[ ]` Lights dying one by one · `[ ]` Night terrors after resting somewhere unsafe
+- `[ ]` A haunted house in Oakhaven · `[ ]` The Unrung Bell at night · `[ ]` A jump-scare toggle
+
+**New areas and content**
+- `[ ]` The Chlorophyll Flume side area · `[ ]` An underwater dungeon beneath Whisper-Grove · `[ ]` Heists: a Synod cathedral, the Consortium's quarry
+- `[ ]` The Long Night survival event · `[ ]` A trip to Port Cantabile · `[ ]` A Book Two prologue after the ending · `[ ]` The Kestrel as an upgradable home base with crew
+
+**Technical**
+- `[ ]` A sharper renderer with the pixel look kept · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
+- `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[x]` Performance overlay (frame rate, memory) (P11)
+
+### Phase 12 "Tools of the trade" verification
+- **How it was built.** Five parallel teams (arms, kit, rigging, songcraft, festivals), then integration on phase12-tools.
+- **Arms (js/arms12.js).** Shield bash (guard + strike; heavy foes only stagger, bosses ignore it), two-handed grip table and three new two-handers, dual-wielding with an off-hand slot. Integration kept the base game's shield stowing beside a two-hander instead of removing the shield.
+- **Kit (js/kit12.js).** Oil flasks (fire patch, 8 s, beasts and people will not cross; loud; a witnessed fire in town is a crime), damper jars (6 s silence; no Songs inside), weighted nets (pin small/ordinary foes; bosses and the Hush immune).
+- **Rigging (js/rigging12.js).** The Office grapnel (found at the wrecked cutter; five safe anchors), chandeliers and scaffolds that fall on foes (permanent), shoving small foes into deep water.
+- **Songcraft (js/songcraft12.js).** Lute, flute and hurdy-gurdy change Songs; tuning fork; dowsing rod (story-gated). Integration fix: composed Songs (Spellmaker) were paid for but never sung; castSong now calls executeCustomSong (test/customsong.test.js).
+- **Festivals (js/festivals12.js).** Canon from the approved Vol VII addendum: the Last Sheaf (prepared, postponed by the Church, held in secret at the dead hour), the Rite as false festival, the Eel-Run, the Drowned Lanterns.
+- **Other fixes.** Long place names in the HUD squeeze to fit; the Rite herald has an authored voice.
+- **Tests.** New suites arms12, kit12, rigging12, songcraft12, festivals12, customsong; all 75 suites pass on the merged tree (air11, festivals12, logmap and screens have timing checks that failed once under load and passed on rerun).
+
+### Phase 11 "Feedback and feel" verification
+- **How it was built.** Five parallel teams (hud, flourish, air, tavern, calendar), then integration on phase11-feel.
+- **HUD (js/hud11.js).** Hit-direction marker, enemy health bars, damage numbers, organ-pipe gauges, stillness tint; each its own switch, off by default; read-only (seeded fight traces identical on/off).
+- **Flourish (js/flourish11.js).** Hit-stop on strong blows and parries (pauses the simulation, not outcomes), weapon trails, level-up notes, quest banner, loot flight, shop coins, page turns.
+- **Air (js/air11.js).** Sun shafts (Deep Woods, Cloister), heat haze, Light-glass glare, see-through ghosts, cold breath, footprints; each under ~1 ms a frame and off in Low and Original.
+- **Tavern (js/tavern11.js).** Bones with Garrow Finch (own RNG stream, 1–20 stakes, 60 a day loss cap), the evening set "The Boar's Reel", the Whisper-Grove cat (adopt by feeding on three days; hisses at hidden foes).
+- **Calendar (js/calendar11.js).** Follows World Bible Vol VII: G.day 0 = Nullday the sixth of Harvestmonth, 419 SR; the Rota line per weekday; Canopy as a quiet remembrance; market every Massday; moon phases scale hound spawns (new ×1.25 … full ×0.75); birth signs (+5 to one attribute per mode); "Previously…" card on load; performance overlay (F10).
+- **Integration fixes.** gates and frames tests hold the new Air effects and the calendar date out of their "switch off = original" comparisons.
+- **Tests.** New suites hud11, flourish11, air11, tavern11, calendar11; all 69 suites pass on the merged tree (couriers and screens have real-time timing checks that fail now and then under load and pass on a rerun).
+
+### Phase 10 completion pass verification
+- **How it was built.** Four parallel teams (look, motion, dread, origins), then integration.
+- **Integration fixes.** Ground shadows join the Low preset's off list (about 1 ms a frame in town). Blocking and parrying did nothing before (the timers never ran and no blow read them); js/guard.js makes them work: a parry turns a melee blow aside, a block halves it (a third with a shield), bolts and traps are never blocked. Save codes now inflate in chunks with an 8 MB cap. Tests that required data-URL sketches now also accept the logbook paintings.
+- **Switches.** Ground shadows, Fight marks, Travel route, Guard lanterns, Parry sparks, Dread, Interaction modes: all in Options; off gives the game as before, and the Original preset leaves the visual ones off.
+- **Tests.** New suites look10, motion10, dread, origins, guard; all suites pass on the merged tree except couriers, whose real-time timing checks fail about one run in three under load (this predates Phase 10; it passes on a rerun).
+
+### Phase 9 completion pass verification
+- **How it was built.** Four parallel teams from a lore brief drawn from the author's bibles and Book Four (wind-reed dies in a day; the First Reed; Ada Pellow; Reeds-Miner Tomas; the third parish's note; Mire-drones and Fret-crawlers), then integration.
+- **Reed-craft.** Reed beds by the Flume crossing and in the clearing; cut reeds dry after a game day; Hold the Pitch is one reusable minigame (keyboard, mouse/touch, gamepad, an assist option, reduce-motion form); root-note and lure reeds, and REEDS.tuneFirstReed for quests.
+- **Side quests.** A Reed for Pellow (Joram Pellow's note, from Tam or Kaelen's glass hand), The Ringing Wood (felling iron-bough with the real noise system), Telling the Bees (Bettany). Each closes with one line if the Greening comes first.
+- **The Third Parish.** Reached through Harrow's new topics and a world-map waypoint; Greenroot village, the chapel and the undercroft with a flooded crypt, a bell puzzle and a sung-note wall; the story told by absence only; the register goes to Ignatius or to Lyra.
+- **Companion talk.** 23 once-only topics for Kaelen, Lyra (slate, then her ruined voice, following the game's flags), Sable, Vane and the Aegis; approval is now kept in the save.
+- **Canon fix.** Halder Wick's wife is renamed Bryony so that Ada Pellow, from Book Four, is the only Ada; Halder's affected voice lines were re-recorded.
+- **Review.** All new text is in the Project document "Game - Phase 9 New In-Game Text (for review)", with invented facts marked [PROPOSED]. Every new string has French.
+- **Tests.** New suites reedcraft, sidequests, parish, companion-talk; all suites pass on the merged tree.
+
+### Phase 8 completion pass verification
+- **How it was built.** Four parallel teams (ripples, music, French, painted-art support), then the Commander's art pipeline.
+- **Sound ripples.** Options → Sound ripples (off by default) draws arcs at the edge of the view on the side a positioned sound comes from, dashed when it is behind a wall; it follows reduce motion, no flashes, high contrast and photo mode, and changes no gameplay (AI traces identical on and off).
+- **Composed score.** 22 recorded pieces in music/extended/ (seven areas, nine bosses, the main theme in six stages that heal from a flat solo cello to choir and bells), written in tools/music/ and rendered with FluidSynth and the FluidR3 GM soundfont. They play only under Score: Extended; the Original ten cues stay the default. A missing file falls back to the procedural piece.
+- **French.** The whole story is translated at display time (js/story-i18n.js, locales/story/fr.json, 4,700+ strings, glossary in tools/i18n/glossary.fr.md); English is untouched when English is chosen, and recorded voices stay English.
+- **Paintings.** js/painted.js shows a painting from img/painted/ when one exists and decodes, else the procedural picture; the switch is Options → Painted art. Five area cards were painted with Canva AI before its free allowance ran out; the rest are painted locally with DreamShaper 8 LCM (tools/art/paint.py). Pictures the local model got wrong (anachronisms, wrong subjects) were dropped and keep their stand-ins (the SKIP list in paint.py) until a better painting exists.
+- **Tests.** New suites ripples, painted, story-i18n; score extended for the recordings; all suites pass on the merged tree.
+
+### Phase 7 completion pass verification
+- **How it was built.** Seven parallel teams in their own worktrees, one module and test each: spatial sound, voices and credits, score, play tools, accessibility and translation, mods and the editor, desktop packaging. A small scaffolding commit first exposed the audio context and a routing hook (Audio_.withRoute) so sound modules never patch the browser's audio nodes.
+- **Sound.** Sounds with a place in the world pan to their angle, fall off with distance and are muffled through walls; rain beds, willow wind and thunder follow the weather. Voices are a buzz through vowel formants, different per character and family. The procedural score is a stand-in and is opt-in: after listening, the owner preferred the recorded score, so Options > Score defaults to Original and Extended adds the area, boss and story pieces. A soft limiter keeps the mix below clipping.
+- **Rules.** Sound modules use their own random stream, so playing a sound can never change a gameplay roll (the creature-life trace check found that). New state lives in G.flags under p7t_ and p7s_ as small integers, validated on read. Mods are JSON only: an allow-list validator rebuilds a clean copy, ids are namespaced, nothing is executed. The desktop shell has context isolation, sandbox, no Node in the page, and a file allow-list.
+- **Access.** Reduce motion now also calms swaying grass and creature fidgets; the old subtitles row drives the new captions. Captured mouse and full screen (Alt+Enter) arrived just before this phase.
+- **Tests.** New suites `spatial-audio`, `voices`, `score`, `playtools`, `access`, `mods` and the static `desktop` check; all suites pass on the merged tree.
 
 ### Phase 6 completion pass verification
 - **How it was built.** A lore brief compiled from the author's world bibles and manuscripts (timeline, institutions, Office dialect, the Hush rules, Fortis and Null-Watch voices, tone rules), with the order of authority the game's own text, then the manuscripts, then the bibles. Five parallel teams, one module and test each: rumours and the Gazette, couriers, dreams and echoes, Tobin's pages, epilogues and teasers. Every team wrote all its new prose into a review file; the Commander read it against the game's text before merging.

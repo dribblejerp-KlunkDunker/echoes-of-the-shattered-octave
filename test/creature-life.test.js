@@ -146,6 +146,8 @@ const SHOTS = process.env.SHOTS || '';
             if (i === 120) { e.state = t.state = 'chase'; }
             if (i >= 120) { y += (i < 260 ? 2.0 : -1.5) * DT; e.y = t.y = y; }
             animCreature(e, DT, T); CL.origAnim(t, DT, T);
+            // under reduced motion js/access.js also calms the original idle motion; compare like with like
+            if (mode === 'reduced' && typeof ACCESS !== 'undefined' && ACCESS.calmEntity) ACCESS.calmEntity(t);
             check(same(snap(e), snap(t)), mode + ' off: ' + type + ' equals the original at step ' + i);
           }
           on();

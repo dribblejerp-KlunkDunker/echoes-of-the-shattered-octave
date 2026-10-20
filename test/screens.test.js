@@ -92,7 +92,7 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
       await page.waitForTimeout(80);
       await page.screenshot({ path: path.join(SHOTS, 'area-' + fam + '.png') });
     }
-    ok(await ev(() => Object.keys(SCREENS.caches.area).length >= 14), 'all families painted and cached');
+    ok(await ev(() => ['street', 'hearth', 'hall', 'mill', 'workshop', 'chapel', 'hedge', 'quarry', 'root', 'grove', 'woods', 'crypt', 'belfry', 'arena'].filter((f) => Object.keys(SCREENS.caches.area).some((k) => k.indexOf(f) === 0) || (typeof PAINTED !== 'undefined' && PAINTED.has('area', f))).length >= 14), 'all families painted (stand-in cached, or a painting in the manifest)');
     await page.setViewportSize({ width: 640, height: 400 });
     await ev(() => { SCREENS.dismiss(); SCREENS.showArea('oakhaven'); }); await page.waitForTimeout(100);
     await page.screenshot({ path: path.join(SHOTS, 'compact-area.png') });

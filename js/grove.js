@@ -297,7 +297,7 @@ function enemyHitFx(e, d) {
 }
 const WEAVER_VOICES = [
   (p) => `"${p.name.split(' ')[0]}... ${p.name.split(' ')[0]}, come in now, the water's warm..." — in your own mother's voice.`,
-  () => '"...the blue one is Ada\'s... the boys will be in directly..." — in Halder Wick\'s voice.',
+  () => '"...the blue one is Bryony\'s... the boys will be in directly..." — in Halder Wick\'s voice.',
   () => 'It sings the calling-song, beautifully, in Lyra Ashgrove\'s voice. The voice she does not have any more.',
   () => '"I am a list, not a cure," it says, in Sable\'s voice, and laughs in eleven children\'s.',
   () => '"Hymn nine, page forty... all rise... all rise..." — in two hundred voices, all slightly out of time.',
@@ -353,17 +353,17 @@ function wgUse(e) {
   if (e.use === 'wick_letter') {
     if (!G.has('adaletter') && !f.adaletter_read) {
       f.adaletter_read = true; G.give('adaletter');
-      journal('side', 'A Table for Four: in the Wick house, a letter from Ada Wick to the Cloister: her sons Tom and Wat were to sing on the Thursday. Halder is setting their plates. Their cloaks may still be on the Cloister pegs.' + (f.cloak_names ? ' I already have their name-tapes.' : ''));
-      showEvent('Ada Wick\'s letter', '<i>To the Precentor, the Cloister of the Lost Choir. Tom and Wat are to sing Thursday; I have let out their cloaks, which they have grown out of again, the pair of them. Please mind Wat on the risers, he leans. Halder will fetch them after. Supper is at seven and he will set it at six, he always does. — Ada Wick.</i><br><br>It was never sent. It is dated the day the Anchor went quiet.', [{ t: 'Fold it into your pack.', f: null }]);
-    } else msg('An empty dresser. You have Ada\'s letter.', '', 3000);
+      journal('side', 'A Table for Four: in the Wick house, a letter from Bryony Wick to the Cloister: her sons Tom and Wat were to sing on the Thursday. Halder is setting their plates. Their cloaks may still be on the Cloister pegs.' + (f.cloak_names ? ' I already have their name-tapes.' : ''));
+      showEvent('Bryony Wick\'s letter', '<i>To the Precentor, the Cloister of the Lost Choir. Tom and Wat are to sing Thursday; I have let out their cloaks, which they have grown out of again, the pair of them. Please mind Wat on the risers, he leans. Halder will fetch them after. Supper is at seven and he will set it at six, he always does. — Bryony Wick.</i><br><br>It was never sent. It is dated the day the Anchor went quiet.', [{ t: 'Fold it into your pack.', f: null }]);
+    } else msg('An empty dresser. You have Bryony\'s letter.', '', 3000);
     return true;
   }
   if (e.use === 'wick_table') {
     if (f.halder_dead && G.has('adaletter') && f.cloak_names && !f.halder_rest) {
       f.halder_rest = true; questXp(50);
-      journal('side', 'A Table for Four: Halder Wick is dead, but I laid Tom and Wat\'s name-tapes beside their plates at his table anyway, and the blue plate in front of Ada\'s chair.');
-      msg('You lay the two red-thread tapes beside the two small plates, and set the blue one in front of Ada\'s chair, the way he would have. The table is set for four. Nobody comes. That was never the point.', 'voice', 8000);
-    } else msg(f.halder_rest ? 'A table for four, set, in a foot of lit water. Two name-tapes beside the small plates.' : 'A table for four, set in a foot of water. The blue plate is Ada\'s.', '', 4000);
+      journal('side', 'A Table for Four: Halder Wick is dead, but I laid Tom and Wat\'s name-tapes beside their plates at his table anyway, and the blue plate in front of Bryony\'s chair.');
+      msg('You lay the two red-thread tapes beside the two small plates, and set the blue one in front of Bryony\'s chair, the way he would have. The table is set for four. Nobody comes. That was never the point.', 'voice', 8000);
+    } else msg(f.halder_rest ? 'A table for four, set, in a foot of lit water. Two name-tapes beside the small plates.' : 'A table for four, set in a foot of water. The blue plate is Bryony\'s.', '', 4000);
     return true;
   }
   return wgUse1(e);

@@ -191,7 +191,7 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
       const lum = (c) => { const m = c.match(/[\d.]+/g).map(Number); const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(m[0]) + 0.7152 * f(m[1]) + 0.0722 * f(m[2]); };
       const out = {};
       readLoreBook(0); { const sheet = document.querySelector('.hd-sheet'), b = document.querySelector('.hd-body'); const fg = lum(getComputedStyle(b).color), bg = lum(getComputedStyle(sheet).backgroundColor); out.parch = (Math.max(fg, bg) + 0.05) / (Math.min(fg, bg) + 0.05); READING.choose(0); }
-      for (const t of ['The log of OC-742', 'The register of interments', 'Over the inner door', 'Ada Wick\'s letter']) {
+      for (const t of ['The log of OC-742', 'The register of interments', 'Over the inner door', 'Bryony Wick\'s letter']) {
         showEvent(t, 'Body.', [{ t: 'ok', f: null }]);
         const sheet = document.querySelector('.hd-sheet'), b = document.querySelector('.hd-body');
         const fg = lum(getComputedStyle(b).color), bg = lum(getComputedStyle(sheet).backgroundColor);

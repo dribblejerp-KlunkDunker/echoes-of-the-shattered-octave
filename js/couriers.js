@@ -241,9 +241,9 @@ const COURIERS = (function () {
       id: 'halder', from: 'Halder Wick', note: 'four plates', title: 'Letter from Halder Wick',
       when: (f) => f.halder_rest && !f.halder_dead, alive: (f) => roadOpen(f) && !f.halder_dead, npc: ['halder'],
       text: (f) => P(
-        '...four plates. The blue one is Ada\'s...',
+        '...four plates. The blue one is Bryony\'s...',
         'To the one at the door. I have not the word for you. The one at the door.',
-        'The boys will be in directly. They are at choir. It is Thursday. Ada has let out their cloaks.',
+        'The boys will be in directly. They are at choir. It is Thursday. Bryony has let out their cloaks.',
         'There are four chairs. I have sat down in one. The water is warm.',
         f.halder_sat
           ? 'The blue plate is in front of the fourth chair, where you sat. I have not lifted it. I have not lifted it.'

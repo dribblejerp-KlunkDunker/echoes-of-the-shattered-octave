@@ -52,6 +52,84 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 12: tools of the trade, and the festivals of the Reach
+
+| | |
+|---|---|
+| ![Dual-wielding](screenshots/p12-dual.jpg) | ![Shield bash](screenshots/p12-bash.jpg) |
+| Dual-wield a light blade in the off hand; two-handed weapons hit harder and stow the shield. | Shield bash: guard and strike to shove a foe back a stride. |
+| ![Fire flask](screenshots/p12-fire.jpg) | ![Weighted net](screenshots/p12-net.jpg) |
+| Oil flasks set a patch of fire that beasts will not cross. Damper jars silence the air. | Weighted nets pin small and ordinary foes. |
+| ![Falling chandelier](screenshots/p12-chandelier.jpg) | ![The Office grapnel](screenshots/p12-grapnel.jpg) |
+| Cut a chandelier's chain over the people under it; scaffolds come down too. | The Office grapnel, taken from the wrecked cutter, bites into iron rings. |
+| ![The tuning fork](screenshots/p12-fork.jpg) | ![The Last Sheaf](screenshots/p12-sheaf.jpg) |
+| A tuning fork hums near what is kept; a dowsing rod dips toward the Anchor-roots; the lute, flute and hurdy-gurdy change your Songs. | The Last Sheaf: Oakhaven readies its harvest festival, and the Church nails a notice under the sheaf. |
+| ![Cutting the last sheaf](screenshots/p12-cut.jpg) | ![The Drowned Lanterns](screenshots/p12-lanterns.jpg) |
+| Hold it in secret at the dead hour: a cut on every beat, and nobody speaks. | The Drowned Lanterns in Whisper-Grove: a lantern for every name. |
+
+Also: the Rite dressed as a false festival, the Eel-Run (fish only while you keep quiet), and composed Songs now actually sing.
+
+### Phase 11: feedback and feel
+
+| | |
+|---|---|
+| ![HUD options](screenshots/p11-hud.jpg) | ![Quest complete](screenshots/p11-banner.jpg) |
+| Optional hit-direction arcs, enemy health bars, damage numbers and organ-pipe gauges. | A banner unrolls when a quest is done; level-ups, loot and shop coins have their own flourishes. |
+| ![Sun shafts in the Cloister](screenshots/p11-shafts.jpg) | ![Ghosts at night](screenshots/p11-ghosts.jpg) |
+| Sun shafts, heat haze, Light-glass glare, cold breath and footprints. | Ghosts are drawn see-through, with a faint shimmer. |
+| ![Bones](screenshots/p11-bones.jpg) | ![The Boar's Reel](screenshots/p11-reel.jpg) |
+| Bones, a dice game with Garrow Finch at the Boar & Dulcimer. | Play for the room in the evening: a four-lane rhythm game. |
+| ![Massday market](screenshots/p11-market.jpg) | ![The canon calendar](screenshots/p11-logbook.jpg) |
+| Market day fills the square every Massday. | Dates follow the canon calendar ("Dawnday the eleventh of Harvestmonth"), with the day's quiet duty and the moon. |
+
+Also: hit-stop on strong blows, weapon trails, page turns; the Whisper-Grove cat you can adopt (she hisses at hidden danger); moon phases that make hounds bolder or fewer; birth signs from the seven modes; a "Previously..." card on load; and a performance overlay (F10). Every one has its own switch in Options.
+
+### Phase 10: the owner's picks
+
+| | |
+|---|---|
+| ![Teal Whisper-Grove](screenshots/p10-teal.jpg) | ![Ground shadows and fight marks](screenshots/p10-marks.jpg) |
+| Each area has its own colour: amber Oakhaven, teal Whisper-Grove, violet Deep Woods. | Ground shadows under every creature; blood, scorch and cracks stay where you fought. |
+| ![The class questions](screenshots/p10-quiz.jpg) | ![A guard's lantern](screenshots/p10-lantern.jpg) |
+| Answer questions to find your calling, Daggerfall-style. | Guards carry swinging lanterns at night. |
+
+Also: a figure walks your route on the world map; parry sparks, and blocking that works (F); Steal/Grab/Info/Talk interaction modes; Load from file; and, if you turn Dread on, a Dissonance meter and a stalker from the Hush.
+
+### Phase 9: new gameplay
+
+| | |
+|---|---|
+| ![The Third Parish](screenshots/p9-parish-table.jpg) | ![A Fret-crawler](screenshots/p9-fretcrawler.jpg) |
+| The Third Parish: off the Greenroot road, a village and chapel whose people are simply not there. | Fret-crawlers lie invisible on the undercroft stone; a bite stops you singing for a while. |
+| ![Hold the Pitch](screenshots/p9-hold-pitch.jpg) | ![Ada Pellow](screenshots/p9-ada.jpg) |
+| Cut wind-reeds by the Flume and tune them in Hold the Pitch: a root-note reed, a lure reed, a First Reed. | A Reed for Pellow: a widow's husband's reed split in the frost. |
+| ![Talking with Lyra](screenshots/p9-talk-lyra.jpg) | ![The ringing wood](screenshots/p9-ringing-wood.jpg) |
+| Talk with Kaelen, Lyra (on her slate), Sable and Vane; topics open as the story moves. | The Ringing Wood: fell iron-bough for Reeds-Miner Tomas without bringing the hounds. |
+
+### Phase 8: painted, scored and translated
+
+| | |
+|---|---|
+| ![A painted loading card for Whisper-Grove](screenshots/p8-card-grove.jpg) | ![A painted loading card for the tavern](screenshots/p8-card-hearth.jpg) |
+| Loading cards, death pictures, endings and logbook sketches use paintings where one exists. | Options → Painted art switches back to the drawn stand-ins. |
+| ![Dialogue in French](screenshots/p8-french.jpg) | ![Sound ripples](screenshots/p8-ripples.jpg) |
+| The whole story can be played in French. | Sound ripples show where a sound comes from, for players who can't hear it. |
+
+Options → Score → Extended now plays a composed, recorded score: a piece for each area and boss and a main theme in six stages.
+
+### Phase 7: sound, access and tools
+
+| | |
+|---|---|
+| ![Photo mode](screenshots/p7-photo.jpg) | ![Sound captions in high contrast](screenshots/p7-captions.jpg) |
+| Photo mode pauses the world, hides the interface and saves a clean PNG. | Sound captions name what you hear: a door grinding, thunder. Sounds now come from where they happen and are muffled through walls. |
+| ![The Accessibility block](screenshots/p7-access.jpg) | ![Statistics](screenshots/p7-stats.jpg) |
+| One Accessibility block: text size, reduce motion, no flashes, high contrast, captions, language. | Statistics: the journey, Songs cast, kills by family and the run clock's splits. |
+| ![The dungeon editor](screenshots/p7-editor.jpg) | ![Playing a mod dungeon](screenshots/p7-mod-dungeon.jpg) |
+| The dungeon editor checks every dungeon as you build it, then previews, playtests and exports it. | Mods are data only: they cannot run code, and saves never depend on one. |
+| ![Options in French](screenshots/p7-french.jpg) | ![Full credits](screenshots/p7-credits.jpg) |
+| Menus can be switched to French (partial) or a pseudo-locale that tests long text. | Full credits for every font, sound, image and tool, also in CREDITS.md and ASSETS.md. |
+
 ### New stealth features
 
 Staged scenes captured from the playable maps using the game's own feature logic and interface. Click an image for the full 1280 × 800 view.
@@ -128,6 +206,7 @@ The ground and the skyline now have real height. These are captured the same way
 
 ## Features
 
+- Sound, access and tools: sounds come from where they happen and are muffled through walls; rain, willow wind and thunder follow the weather; every speaking character and boss has recorded lines (greetings, barks, the mimics' borrowed voices), and every other creature its own grunt. Options add an Extended score, an Accessibility block with captions and high contrast, a language choice, photo mode, a speedrun timer, a statistics page and data-only mod dungeons with a built-in editor. A desktop build (Windows, macOS, Linux) is configured in desktop/.
 - Raycast 3D world with chunky Daggerfall-style textures, sprites and a first-person weapon view.
 - Six character templates, plus attributes, skills and level-ups.
 - Districts, interiors and dungeons: Oakhaven, the clearing, the quarry, the underhedge, the rootvault, the chapel and more.
@@ -215,7 +294,7 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Move | W A S D · Shift runs · Caps Lock toggles always-run |
 | Look | Click the view to capture the mouse, then move it freely (Esc gives it back; Options → Controls → Capture mouse turns this off) · without capture, move over the view and rest at a side edge to keep turning · right-drag · Q and arrow keys · Z levels your gaze |
 | Full screen | Alt+Enter, or Options → Controls → Full screen |
-| Attack | Left-click to thrust · hold and move the mouse to slash or chop · wheel or 1–9 changes weapon |
+| Attack | Left-click to thrust · hold and move the mouse to slash or chop · wheel or 1–9 changes weapon · F raises your guard: a quick parry turns a blow aside, a held block halves it |
 | Use / Talk | E or Space, or click a bright name under the crosshair (the crosshair is the centre of the view, so look up or down to aim at something above or below you) |
 | Pickpocket | Face a nearby Oakhaven adult, P to inspect · touch Purse / controller Y · Enter/Space or A attempts, Escape or B leaves |
 | Disguise | Wear Synod Clerk Robes in Inventory · Y / touch Cover / controller Back shows status · Enter/A wears or removes, Escape/B leaves |
@@ -232,7 +311,13 @@ Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pic
 | Graphics | Esc options → Graphics & access: Original / Low / Medium / High, resolution 1x/2x, view distance, particles, upscaling, CRT curvature |
 | Camera feel | Esc options → Graphics & access: Head bob Off/Gentle, Reduce motion, No flashes |
 | Reading | Books and notes open full screen · ← → or PgUp/PgDn turn pages · + and − change the text size · touch arrows / controller shoulders or d-pad · Escape/B closes |
-| Sound | V sound on/off · B music on/off |
+| Sound | V sound on/off · B music on/off · Esc options → Graphics & access → Voices: Voiced (default), Voiced + read aloud, Grunts, Off |
+| Score | Esc options → Graphics & access → Score: Original (the recorded soundtrack, default) or Extended (adds composed area, boss and story-theme recordings) |
+| Accessibility | Esc options → Graphics & access: text size, reduce motion, no flashes, high contrast, sound captions, language |
+| Photo mode | \\ (backslash) or Esc options → Graphics & access → Photo mode · drag/arrows look, Q/E tilt, W A S D or wheel move a few paces · Save picture exports a PNG · Escape leaves |
+| Speedrun timer | Esc options → Graphics & access → Speedrun timer: real and game time, with splits at each story milestone |
+| Statistics | Esc options → Graphics & access → Statistics |
+| Mod dungeons | Esc options → Mod dungeons: import, enable and play data-only mod dungeons, or build one in the dungeon editor (see docs/mods.md) |
 | Touch | Left thumb stick, right thumb drags to look, tap to use or strike |
 
 ## Project layout
@@ -287,6 +372,16 @@ js/couriers.js    letters from the people you helped
 js/dreams.js      rest dreams and Light-glass memory echoes
 js/tobin.js       Tobin's journal pages and the logbook tracker
 js/epilogue.js    Kaelen and Lyra epilogues; Organum, Iron Peaks and Rift teasers
+js/spatial-audio.js  positional sound with wall muffling; rain, willow wind, thunder
+js/voices.js      procedural grunts, the Voices setting; the in-game credits
+js/voice-acting.js  plays the recorded lines in voices/ (manifest js/voice-lines.js; built by tools/voices/)
+js/score.js       Extended score: recorded area, boss and story pieces (music/extended/, made by tools/music/), procedural fallback
+js/ripples.js     directional on-screen sound ripples
+js/painted.js     paintings in img/painted/ (made by tools/art/) with the procedural pictures as fallback
+js/playtools.js   photo mode, speedrun timer, statistics
+js/access.js      Accessibility block and the translation catalog (locales/)
+js/mods.js        data-only mod schemas (schemas/), validator, Mod dungeons, dungeon editor
+desktop/          Electron desktop shell and packaging (docs/desktop.md)
 js/game.js        game logic, UI, combat, dialogue, trade, saving
 music/            soundtrack (MP3)
 img/              portraits, title, map and ending art

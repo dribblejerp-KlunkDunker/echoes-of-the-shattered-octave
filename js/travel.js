@@ -292,7 +292,8 @@ function travelConfirm(d) {
     ${block ? `<p class="tv-block">${block}</p>` : ''}`;
   $('#tv-c').onclick = () => { TRAVEL.pace = 'cautious'; travelConfirm(d); travelInfo(); };
   $('#tv-r').onclick = () => { TRAVEL.pace = 'reckless'; travelConfirm(d); travelInfo(); };
-  $('#tv-go').onclick = () => travelGo(d);
+  // Phase 10: js/motion10.js shows the finished journey as a walk across the map; the journey itself is still travelGo()
+  $('#tv-go').onclick = () => (typeof MOTION10 !== 'undefined' && MOTION10.travel ? MOTION10.travel.go(d) : travelGo(d));
 }
 
 function travelDraw() {

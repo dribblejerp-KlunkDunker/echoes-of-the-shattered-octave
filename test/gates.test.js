@@ -236,7 +236,7 @@ const HELPERS = () => {
       const script = () => {
         const out = { frames: [], state: null };
         // other Phase 4 modules animate on their own clocks (smoke, leaves, crows, banners): hold them out of these frames
-        for (const k of ['smoke', 'splashes', 'torches', 'windSigns', 'leaves', 'critters', 'kestrelMoored', 'shardGlint']) if (k in GFX) GFX[k] = false;
+        for (const k of ['smoke', 'splashes', 'torches', 'windSigns', 'leaves', 'critters', 'kestrelMoored', 'shardGlint', 'sunShafts', 'heatHaze', 'glassGlare', 'seeThrough', 'coldBreath', 'footprints']) if (k in GFX) GFX[k] = false;
         G.flags.gate_open = true; G.flags.culvert_open = true;
         const views = [['oakhaven', 23.5, 3.4, -Math.PI / 2, 23, 0], ['clearing', 20.5, G.maps.clearing.h - 3.3, Math.PI / 2, 20, G.maps.clearing.h - 1], ['catacombs', 8.5, 26.5, Math.PI, 10, 26]];
         for (const [id, x, y, dir, gx, gy] of views) {
@@ -245,7 +245,9 @@ const HELPERS = () => {
           d.open = d.target = 0;
         }
         T.look('oakhaven', 23.5, 2.2, -Math.PI / 2); G.keys = {}; interact(); T.adv(1500);
-        out.state = JSON.stringify({ map: G.mapId, flags: G.flags, doors: Object.keys(G.maps.oakhaven.doors).filter(k => G.maps.oakhaven.doors[k].open > 0) });
+        // the run clock and statistics counters (js/playtools.js) tick on their own; they are not gate state
+        const gateFlags = {}; for (const k in G.flags) if (!/^p7[st]_/.test(k)) gateFlags[k] = G.flags[k];
+        out.state = JSON.stringify({ map: G.mapId, flags: gateFlags, doors: Object.keys(G.maps.oakhaven.doors).filter(k => G.maps.oakhaven.doors[k].open > 0) });
         return out;
       };
       // each variant gets its own fresh page so the first run starts from the same state

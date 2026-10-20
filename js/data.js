@@ -656,12 +656,12 @@ Object.assign(NPCS, {
   },
   halder: {
     name: 'Halder Wick', sprite: 'halder', portrait: 'halder', tier: 'low',
-    greet: { polite: '...four plates. The blue one is Ada\'s...', normal: '...the boys will be in directly...', blunt: '...sit, sit, there\'s four...' },
+    greet: { polite: '...four plates. The blue one is Bryony\'s...', normal: '...the boys will be in directly...', blunt: '...sit, sit, there\'s four...' },
     topics: {},
     quest: (g) => {
       const f = g.flags;
-      if (f.halder_done) return { text: f.halder_sat ? 'He sets the blue plate in front of you, again, very carefully, and pats it once, as though you are someone he has been expecting.' : '...four plates... the blue one is Ada\'s... the boys will be in directly...' };
-      return { text: 'A thin old man in a waistcoat, wet to the knee, is setting a table that stands in a foot of lit water. Four plates. He sets them, and lifts them, and sets them again. "...the blue one is Ada\'s... the boys will be in directly... sit, sit, there\'s four..." He has been doing this for three years.', choices: [
+      if (f.halder_done) return { text: f.halder_sat ? 'He sets the blue plate in front of you, again, very carefully, and pats it once, as though you are someone he has been expecting.' : '...four plates... the blue one is Bryony\'s... the boys will be in directly...' };
+      return { text: 'A thin old man in a waistcoat, wet to the knee, is setting a table that stands in a foot of lit water. Four plates. He sets them, and lifts them, and sets them again. "...the blue one is Bryony\'s... the boys will be in directly... sit, sit, there\'s four..." He has been doing this for three years.', choices: [
         { t: 'Sit down in the fourth chair.', f: (g) => { f.halder_done = true; f.halder_sat = true; questXp(25); journal('side', 'I sat at Halder Wick\'s table in the Sunken Court, in the fourth chair. He set the blue plate in front of me. I did not know what else to do.'); return 'You sit. The water is warm. He sets the blue plate in front of you, very carefully, and pats it once, and for the length of a breath his face is the face of a man whose family has come home. Then he lifts the plate and sets it again.'; } },
         { t: '"They are not coming, Halder."', f: (g) => { f.halder_done = true; f.halder_told = true; questXp(10); return 'He stops with the blue plate in his hands. He looks at you, or at the place where your voice came from. "...the boys will be in directly," he says, kindly, as if you are the one who has forgotten, and sets it down.'; } },
         { t: 'Leave him to his table.', f: () => 'You leave him setting it. Behind you, plate by plate, he begins again.' },
@@ -727,7 +727,7 @@ Object.assign(ENEMIES, {
 Object.assign(ITEMS, {
   roundbook: { name: 'Mallow\'s Round-Book', sprite: 'loot', desc: 'An Office round-book on a broken chain. SECOND PRESSINGS — WEST QUARTER. Eight names, each with a date, a time, and a tick. Three ticks are still blank.', key: true },
   thread: { name: 'The Weaver\'s Last Thread', sprite: 'loot', desc: 'One lilac thread from the shroud, wound on a finger-bone. It hums in a voice you nearly know. (+10 maximum voice. Hounds hear you a little further.)', key: true },
-  adaletter: { name: 'Ada Wick\'s Letter', sprite: 'loot', desc: 'To the Precentor of the Cloister, from Ada Wick: Tom and Wat are to sing on Thursday; she has let out their cloaks; please mind Wat on the risers, he leans.', key: true },
+  adaletter: { name: 'Bryony Wick\'s Letter', sprite: 'loot', desc: 'To the Precentor of the Cloister, from Bryony Wick: Tom and Wat are to sing on Thursday; she has let out their cloaks; please mind Wat on the risers, he leans.', key: true },
 });
 CLOISTER_NAMES[0] = 'Tom Wick'; CLOISTER_NAMES[7] = 'Wat Wick';
 const FREED_NAMES = ['Corra Bell', 'Simeon Rusk', 'Pip Lawler', 'Agnes Moy', 'Harl Teague'];
@@ -789,9 +789,9 @@ Object.assign(PLACES_WG, { 'The Sunken Stair (the Catacombs)': [8.5, 20.5], 'The
   NPCS.halder.quest = (g) => {
     const f = g.flags;
     if (g.has('adaletter') && f.cloak_names && !f.halder_rest) {
-      return { text: '"...the boys will be in directly... sit, sit, there\'s four..." You have Ada\'s letter, and two name-tapes in red thread from the Cloister cloaks: TOM WICK. WAT WICK.', choices: [
-        { t: 'Lay the boys\' name-tapes beside their plates.', f: (g) => { f.halder_rest = true; f.halder_done = true; questXp(80); for (const e of G.ents) if (e.id === 'halder') e.loop = false; journal('side', 'A Table for Four: I laid Tom and Wat Wick\'s name-tapes from the Cloister cloaks beside their plates on Halder\'s table. He stopped setting it. He sat down.'); return 'You lay the two red-thread tapes beside the two small plates. Halder stops with the blue plate in his hands. He looks at the tapes for a long time. Then he sets the blue plate down, and does not lift it again, and for the first time in three years Halder Wick sits down at his own table. "They\'re at choir," he says, quite clearly. "Thursday. Ada\'s let out their cloaks." He folds his hands. He waits for them the way a man waits who knows they are coming.'; } },
-        { t: 'Not yet.', f: () => '...the blue one is Ada\'s...' },
+      return { text: '"...the boys will be in directly... sit, sit, there\'s four..." You have Bryony\'s letter, and two name-tapes in red thread from the Cloister cloaks: TOM WICK. WAT WICK.', choices: [
+        { t: 'Lay the boys\' name-tapes beside their plates.', f: (g) => { f.halder_rest = true; f.halder_done = true; questXp(80); for (const e of G.ents) if (e.id === 'halder') e.loop = false; journal('side', 'A Table for Four: I laid Tom and Wat Wick\'s name-tapes from the Cloister cloaks beside their plates on Halder\'s table. He stopped setting it. He sat down.'); return 'You lay the two red-thread tapes beside the two small plates. Halder stops with the blue plate in his hands. He looks at the tapes for a long time. Then he sets the blue plate down, and does not lift it again, and for the first time in three years Halder Wick sits down at his own table. "They\'re at choir," he says, quite clearly. "Thursday. Bryony\'s let out their cloaks." He folds his hands. He waits for them the way a man waits who knows they are coming.'; } },
+        { t: 'Not yet.', f: () => '...the blue one is Bryony\'s...' },
       ] };
     }
     return hq(g);

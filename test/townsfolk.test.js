@@ -283,8 +283,9 @@ async function boot(browser) {
       const frame = on => { GFX.townsfolkLife = on; for (const e of G.ents) { if (e.kind === 'npc') { e._tfWk = 0; e._tfTalk = 0; e._tfNear = 0; } } const T = 77.3; for (const e of G.ents) if (e.sprite && !e.hidden && e.kind === 'npc') { animCreature(e, 0.016, T - 0.016); animCreature(e, 0.016, T); } return hash(); };
       Engine.cam.x = 5.5; Engine.cam.y = 6.0; Engine.cam.dir = -Math.PI / 2; Engine.cam.pitch = 0;
       for (const e of G.ents) if (e.kind === 'npc') { e._tfWk = 1; }
-      const onH = frame(true), offH = frame(false), offH2 = (GFX.reduceMotion = true, frame(true)); GFX.reduceMotion = false;
-      check(offH === offH2, 'townsfolkLife off == reduced motion on: the original frame');
+      // reduced motion also calms the original idle motion (js/access.js), so compare it with the module off under the same setting
+      const onH = frame(true), offH = frame(false), offH2 = (GFX.reduceMotion = true, frame(true)), offH3 = frame(false); GFX.reduceMotion = false;
+      check(offH3 === offH2, 'townsfolkLife off == reduced motion on: the original frame');
       check(onH !== offH, 'and with it on the barman is drawn mid-motion (frames differ)');
       GFX.townsfolkLife = true;
       r.fails = fails; return r;
