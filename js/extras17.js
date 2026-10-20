@@ -11,6 +11,10 @@
 //                                        inside an isolated session (its own G; the Book One save is never touched)
 //   EXTRAS17.inExtra()                — the id of the running extra, or null
 //   EXTRAS17.finish(result)           — end the extra and return to the Extras menu (result is shown on its card)
+//   Phase 18 (team DAILY), one additive option: register({ ..., hidden: true }) — a standalone run that shares this
+//   isolation but is not an extra after Book One: it is not listed in the Extras menu, needs no unlock (its own
+//   unlocked() still applies), its banner and tags show only its title (no "An extra — after Book One"), and leaving it
+//   returns to the bare title screen instead of the Extras menu. Without the option nothing changes.
 //
 // ---------------------------------------------------------------------------------------------------------------
 // HOW AN EXTRA IS ISOLATED (the Book One save is never touched)
@@ -153,7 +157,7 @@
   function idCode(id) { let h = 7; for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 999983; return h + 1; }
   const opened = () => st.done === 1 || st.early === 1;
   function playable(x) {
-    if (!opened()) return false;
+    if (!x.hidden && !opened()) return false;
     if (typeof x.unlocked === 'function') { try { return x.unlocked() !== false; } catch (e) { warnOnce('unlocked', e); return false; } }
     return true;
   }
@@ -259,7 +263,7 @@
     G.state = 'title'; G.keys = {};
     try { show('#title'); } catch (e) { /* ignore */ }
     try { Audio_.setScene('title'); } catch (e) { /* ignore */ }
-    try { renderExtras(failed ? { failed: c.id } : null); } catch (e) { warnOnce('menu', e); }
+    if (!c.x.hidden) { try { renderExtras(failed ? { failed: c.id } : null); } catch (e) { warnOnce('menu', e); } }
     return true;
   }
   function finish(result) { if (!cur) return false; return leave(result === undefined ? '' : result, false); }
@@ -310,7 +314,7 @@
       host.appendChild(b);
     }
     b.textContent = '';
-    if (on && cur) { b.appendChild(document.createTextNode(TX.banner)); b.appendChild(el('b', null, titleOf(cur.x))); b.hidden = false; }
+    if (on && cur) { if (!cur.x.hidden) b.appendChild(document.createTextNode(TX.banner)); b.appendChild(el('b', null, titleOf(cur.x))); b.hidden = false; }
     else b.hidden = true;
   }
 
@@ -364,8 +368,9 @@
       row.appendChild(btn('x17-early', TX.early, () => { st.early = 1; save(); renderExtras(); }, true));
       p.appendChild(row);
     }
-    if (!reg.length) p.appendChild(el('p', { class: 'muted', id: 'x17-none' }, TX.none));
-    for (const xx of reg) p.appendChild(card(xx, opt));
+    const shown = reg.filter((r) => !r.hidden);
+    if (!shown.length) p.appendChild(el('p', { class: 'muted', id: 'x17-none' }, TX.none));
+    for (const xx of shown) p.appendChild(card(xx, opt));
     if (!st.done) checker(p);
     const row = el('div', { class: 'btns' });
     row.appendChild(btn('x17-back', TX.back, () => { closeModal(); }, true));
@@ -457,7 +462,8 @@
   // "An extra — after Book One · <title>" as separate text nodes, so each translates on its own
   function tagEl(id) {
     const t = el('div', id ? { class: 'x17-tag', id } : { class: 'x17-tag' });
-    t.appendChild(el('span', null, TX.banner)); t.appendChild(document.createTextNode(' · ')); t.appendChild(el('span', null, titleOf(cur.x)));
+    if (!cur.x.hidden) { t.appendChild(el('span', null, TX.banner)); t.appendChild(document.createTextNode(' · ')); }
+    t.appendChild(el('span', null, titleOf(cur.x)));
     return t;
   }
   function summary(d) { try { return slotSummary(d); } catch (e) { return TX.saveH; } }
