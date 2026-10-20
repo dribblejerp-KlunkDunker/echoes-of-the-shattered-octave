@@ -141,6 +141,7 @@ const HELPERS = () => {
       const lighterOnly = (a, b) => { const idx = S.diff(a, b); let bad = 0, wrongMat = 0; for (const i of idx) { if (S.sum(b, i) < S.sum(a, i)) bad++; if (b.mbuf[i] !== 1 || ((i / b.w) | 0) >= b.horizon) wrongMat++; } return { n: idx.length, bad, wrongMat }; };
       let [a, b] = cmp(() => S.stage('oakhaven', 23.5, 20.5, -1.57, 0.97, 9, {}));
       o.eve = lighterOnly(a, b);
+      { let mx = 0, lowRow = 1e9; for (const i of S.diff(a, b)) { mx = Math.max(mx, S.sum(b, i) - S.sum(a, i)); lowRow = Math.min(lowRow, (b.horizon - ((i / b.w) | 0)) / b.horizon); } o.eve.maxRise = mx; o.eve.lowest = (b.horizon - Math.max(...S.diff(a, b).map(i => (i / b.w) | 0))) / b.horizon; }
       [a, b] = cmp(() => S.stage('oakhaven', 23.5, 20.5, -1.57, 0.5, 9, {})); o.dayDiff = S.diff(a, b).length;
       [a, b] = cmp(() => S.stage('oakhaven', 23.5, 20.5, -1.57, 0.97, 4, {})); o.plainNight = S.diff(a, b).length;
       [a, b] = cmp(() => S.stage('cloister', 9.5, 13.3, -1.57, 0.97, 9, {})); o.indoors = S.diff(a, b).length;
@@ -165,6 +166,7 @@ const HELPERS = () => {
       S.frame(['aurora'], 5); o.stats = { kind: SKIES14.aurora.state.stats.kind, px: SKIES14.aurora.state.stats.px };
       return o;
     });
+    ok(fr.eve.maxRise < 200 && fr.eve.lowest >= 0.34, `aurora look: translucent (no pixel gains more than ${fr.eve.maxRise} of 765), and nothing lower than ${(fr.eve.lowest * 100).toFixed(0)}% of the way up the sky`);
     ok(fr.eve.n > 800 && fr.eve.bad === 0 && fr.eve.wrongMat === 0, `aurora frames: on the Rite eve it adds light (${fr.eve.n} px), only lighter, only on sky pixels above the horizon`);
     ok(fr.dayDiff === 0 && fr.plainNight === 0 && fr.indoors === 0, 'aurora frames: no change by day, on an ordinary night, or indoors');
     ok(fr.weather.sClear > 0 && fr.weather.sCloud < fr.weather.sClear * 0.6 && fr.weather.sStorm === 0 && fr.weather.sHaze < fr.weather.sClear * 0.5, `aurora frames: cloud and haze thin it, a storm removes it (${Math.round(fr.weather.sClear)} / ${Math.round(fr.weather.sCloud)} / ${fr.weather.sStorm} / ${Math.round(fr.weather.sHaze)})`);

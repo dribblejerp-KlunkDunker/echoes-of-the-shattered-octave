@@ -1,8 +1,10 @@
 // ============================================================
 //  skies14 — Phase 14 (a world that shows the story): three pieces of sky and water.
 //
-//  1. OCTAVE LIGHTS (switch "Octave lights", GFX.aurora). Slow curtains of muted colour in the night sky, one hue per
-//     Anchor note (Growth, Heat, Mass, Time, Light, Velocity, Memory, Decay), rippling along the horizon.
+//  1. OCTAVE LIGHTS (switch "Octave lights", GFX.aurora). Thin translucent ribbons of muted colour high in the night sky,
+//     one hue per Anchor note (Growth, Heat, Mass, Time, Light, Velocity, Memory, Decay) blending along each ribbon, folding
+//     and drifting slowly, with a soft bright lower fringe, vertical rays and a long fade upward. Never below about a third of
+//     the way up the sky and only on true sky pixels, so the hills and skyline are never covered.
 //     [PROPOSED] meaning: the province's Signatures made visible when the Relay is strained; nobody in the Reach has a
 //     word for it, and the hunters say not to look at it for long. A sky hook (order 12, after the moon at 5 and the
 //     stars at 10, before the panorama at 20, so ridges and trees stand in front); it only adds light to sky pixels and
@@ -97,7 +99,7 @@ const SKIES14 = (() => {
     { name: 'Memory', hz: 741, rgb: [154, 112, 200] },
     { name: 'Decay', hz: 852, rgb: [124, 114, 134] },
   ];
-  const AMP_STORY = 0.85, AMP_RARE = 0.36, RARE_P = 0.1, RITE_EVE = 9;
+  const AMP_STORY = 0.52, AMP_RARE = 0.24, RARE_P = 0.1, RITE_EVE = 9;
   const KINDS = {
     rite: { notes: [0, 4, 2], amp: AMP_STORY },
     greening: { notes: [0, 7, 6], amp: AMP_STORY },
@@ -121,20 +123,27 @@ const SKIES14 = (() => {
     return null;
   }
 
-  // the vertical profile of a curtain, bright lower edge falling away to nothing at the top, tabulated once
-  const PROF_N = 96, PROF = new Float32Array(PROF_N + 1);
-  for (let i = 0; i <= PROF_N; i++) { const u = i / PROF_N; PROF[i] = (u < 0.07 ? u / 0.07 : 1) * Math.pow(1 - u, 1.7); }
-  const AUR = { ang: new Float32Array(0), key: '', curt: [], stats: { px: 0, kind: null, amp: 0, ms: 0 } };
-  // curtains: fixed per (night, kind) so the sky does not jump when the plan is re-read
+  // The vertical profile of a ribbon across s = (height - lower edge) / thickness: a soft bright fringe below the edge
+  // (a gaussian, no hard line) and a long fade upward. Tabulated once over s = -1.2 .. 3.
+  const PROF_N = 256, PROF_LO = -1.2, PROF_HI = 3, PROF = new Float32Array(PROF_N + 1);
+  for (let i = 0; i <= PROF_N; i++) { const q = PROF_LO + (PROF_HI - PROF_LO) * i / PROF_N; PROF[i] = q < 0 ? Math.exp(-Math.pow(q * 3.1, 2)) : Math.exp(-q * 1.7) * (1 - 0.25 * Math.min(1, q)); }
+  const PROF_K = PROF_N / (PROF_HI - PROF_LO);
+  // 4x4 ordered dither for the alpha, so the soft gradients do not band
+  const BAYER = new Float32Array([0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + 0.5) / 16 - 0.5));
+  // the aurora lives high: its lowest part sits at this fraction of the sky above the horizon, and it is faded out below FLOOR
+  const FLOOR_LO = 0.36, FLOOR_HI = 0.5;
+  const AUR = { ang: new Float32Array(0), key: '', curt: [], stats: { px: 0, kind: null, amp: 0, ms: 0, lowest: 1 } };
+  // ribbons: long horizontal bands that fold along their length; colour blends from one note to the next along the ribbon.
+  // Fixed per (night, kind) so the sky does not jump when the plan is re-read. Integer frequencies, so the sky wraps cleanly.
   function curtainsFor(plan) {
     const out = [], n = plan.notes.length;
     for (let j = 0; j < n; j++) {
       const s = plan.night * 7 + j * 13 + 3;
       out.push({
-        c: NOTES[plan.notes[j % plan.notes.length]].rgb,
-        ph: hash01(s, 1) * TAU, base: 0.1 + 0.3 * hash01(s, 2), ext: 0.3 + 0.25 * hash01(s, 3),
+        c1: NOTES[plan.notes[j]].rgb, c2: NOTES[plan.notes[(j + 1) % n]].rgb,
+        ph: hash01(s, 1) * TAU, base: 0.46 + 0.07 * j + 0.06 * hash01(s, 2), ext: 0.19 + 0.09 * hash01(s, 3),
         f1: 1 + ((hash01(s, 4) * 2) | 0), f2: 3 + ((hash01(s, 5) * 3) | 0), sp: 0.5 + hash01(s, 6) * 0.8, dir: hash01(s, 7) < 0.5 ? -1 : 1,
-        cover: 0.5 + 0.5 * hash01(s, 8),
+        mix: 1 + ((hash01(s, 8) * 2) | 0),
       });
     }
     return out;
@@ -165,36 +174,47 @@ const SKIES14 = (() => {
     if (AUR.ang.length !== w) AUR.ang = new Float32Array(w);
     for (let x = 0; x < w; x++) { const cx = 2 * x / w - 1; AUR.ang[x] = Math.atan2(dirY + planeY * cx, dirX + planeX * cx); }
     const H = horizon, curt = AUR.curt;
-    let n = 0;
+    let n = 0, lowest = 1;
     for (let j = 0; j < curt.length; j++) {
-      const C = curt[j], cr = C.c[0] * vis, cg = C.c[1] * vis, cb = C.c[2] * vis;
+      const C = curt[j];
       for (let x = 0; x < w; x++) {
         const th = AUR.ang[x];
-        // where this curtain hangs along the horizon, a wave that travels along it, and vertical streaks
-        const cov = smooth(1 - C.cover - 0.1, 1.05 - C.cover * 0.3, 0.5 + 0.5 * Math.sin(th * C.f1 + C.ph));
-        if (cov < 0.02) continue;
-        const wave = 0.62 + 0.38 * Math.sin(th * 3 - T * 0.21 * C.sp * C.dir + C.ph * 1.7);
-        const ray = 0.58 + 0.28 * Math.sin(th * 71 + C.ph + T * 0.33 * C.sp) + 0.14 * Math.sin(th * 137 - T * 0.2 + j);
-        const shim = still ? 1 : 1 + 0.1 * Math.sin(T * 0.85 + th * 19 + C.ph);
-        const amp = cov * wave * ray * shim; if (amp < 0.02) continue;
-        const base = C.base + 0.05 * Math.sin(th * C.f2 + T * 0.09 * C.sp + C.ph) + 0.025 * Math.sin(th * 9 - T * 0.06 + j * 2);
-        const ext = C.ext * (0.8 + 0.3 * Math.sin(th * 5 + C.ph * 2 + T * 0.05));
-        const yb = (H - base * H) | 0, rows = Math.max(3, (ext * H) | 0), yt = Math.max(0, yb - rows);
+        // the fold: the lower edge rides a sum of slow waves along the ribbon, thickness breathes with another
+        const e = C.base + 0.07 * Math.sin(th * C.f1 + C.ph + T * 0.045 * C.sp * C.dir) + 0.035 * Math.sin(th * C.f2 - T * 0.07 * C.sp + C.ph * 1.3) + 0.012 * Math.sin(th * 11 + T * 0.1 * C.sp);
+        const ext = C.ext * (0.85 + 0.3 * Math.sin(th * 4 + C.ph * 2 - T * 0.05));
+        // how much of the ribbon is lit here: it thins to nothing at the ends of its run and travels along it
+        const run = 0.5 + 0.5 * Math.sin(th * (C.f1 + 1) + C.ph * 0.7 - T * 0.03 * C.dir), wave = 0.55 + 0.45 * Math.sin(th * 3 - T * 0.2 * C.sp * C.dir + C.ph);
+        const gate = run * run * (3 - 2 * run) * wave; if (gate < 0.03) continue;
+        // vertical rays: slow striations that grow with height, shimmering a little
+        const ray = 0.5 + 0.5 * Math.sin(th * 58 + C.ph + T * 0.11 * C.sp), ray2 = 0.5 + 0.5 * Math.sin(th * 127 - T * 0.07 + j);
+        const shim = still ? 0 : 0.09 * Math.sin(T * 0.8 + th * 17 + C.ph);
+        const m = 0.5 + 0.5 * Math.sin(th * C.mix + C.ph);         // colour along the ribbon
+        const cr = lerp(C.c1[0], C.c2[0], m), cg = lerp(C.c1[1], C.c2[1], m), cb = lerp(C.c1[2], C.c2[2], m);
+        // the ribbon spans heights e - 1.2 ext .. e + 3 ext (fractions of the sky above the horizon)
+        const yb = (H - (e + PROF_LO * ext) * H) | 0, yt = Math.max(0, (H - (e + PROF_HI * ext) * H) | 0);
         for (let y = yt; y <= yb && y < H; y++) {
-          const o = y * w + x; if (mbuf[o] !== 1) continue;
-          const u = (yb - y) / rows;                          // 0 at the bright lower edge, 1 at the faded top
-          const a = amp * PROF[(u * PROF_N) | 0];
+          const el = (H - y) / H;
+          // never low in the sky: fade out between FLOOR_LO and FLOOR_HI of the way up
+          const fl = el <= FLOOR_LO ? 0 : el >= FLOOR_HI ? 1 : (el - FLOOR_LO) / (FLOOR_HI - FLOOR_LO);
+          if (fl <= 0) continue;
+          const sIdx = ((el - e) / ext - PROF_LO) * PROF_K; if (sIdx < 0 || sIdx > PROF_N) continue;
+          const sq = (el - e) / ext, prof = PROF[sIdx | 0];
+          const rays = 1 + (sq > 0 ? (ray * 0.55 + ray2 * 0.2 - 0.375) * Math.min(1, sq * 1.4) : 0) * 1.1;
+          let a = vis * gate * prof * rays * (1 + shim) * (fl * fl * (3 - 2 * fl));
+          a += BAYER[(x & 3) + ((y & 3) << 2)] * 0.012 * (a > 0.02 ? 1 : 0);
           if (a < 0.01) continue;
+          const o = y * w + x; if (mbuf[o] !== 1) continue;           // true sky only: terrain, walls and anything near stay as drawn
           const px = fb[o], pr = px & 255, pg = (px >> 8) & 255, pb = (px >> 16) & 255;
           // cloud and moon glow are brighter than the dark sky: the light yields to them, so it sits behind
           const lum = (pr + pg + pb) / 3, allow = clamp(1 - (lum - 30) / 110, 0, 1);
           const k = a * allow; if (k < 0.008) continue;
           const r = pr + cr * k, g = pg + cg * k, b = pb + cb * k;
           fb[o] = (255 << 24) | ((b > 255 ? 255 : b) << 16) | ((g > 255 ? 255 : g) << 8) | (r > 255 ? 255 : r);
-          n++;
+          n++; if (el < lowest) lowest = el;
         }
       }
     }
+    AUR.stats.lowest = lowest;
     AUR.stats.px = n; AUR.stats.kind = plan.kind; AUR.stats.amp = vis;
     AUR.stats.ms = (typeof performance !== 'undefined' ? performance.now() : 0) - t0;
   }
