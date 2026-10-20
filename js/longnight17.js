@@ -1041,11 +1041,24 @@ const LONGNIGHT17 = (function () {
 
   // ---------------------------------------------------------------- the vault's own sound (what the Hush takes, and gives back)
   const AM = { ctx: null, drone: null, hum: null, wind: null, dripT: 0, ok: false };
+  function dropAmb() {
+    const ctx = AM.ctx, srcs = AM.srcs || [], outs = AM.outs || [], gains = (AM.drone || []).concat(AM.hum || []).map((n) => n.g).concat(AM.wind ? [AM.wind] : []);
+    AM.ok = false; AM.ctx = null; AM.srcs = null; AM.outs = null;
+    try {
+      const t = ctx.currentTime;
+      for (const g of gains) { g.gain.cancelScheduledValues(t); g.gain.setTargetAtTime(0, t, 0.3); }
+      for (const o of srcs) o.stop(t + 1.6);
+      setTimeout(() => { for (const n of outs) { try { n.disconnect(); } catch (e) { /* gone */ } } }, 1800);
+    } catch (e) { /* closed context */ }
+  }
   function ambTick(dt) {
     const A = typeof Audio_ !== 'undefined' ? Audio_ : null;
     if (!A || !A.ctx || !A.sfxBus) return;
     const ctx = A.ctx;
-    if (!AM.ctx || AM.ctx !== ctx) {
+    // outside the night (every other map in the game) the bed is not built, or is faded out and stopped: no sources run and
+    // nothing is automated per frame; it is built again when a night begins
+    if (!(live() && !!R.active && !R.over)) { if (AM.ok) dropAmb(); return; }
+    if (!AM.ok || AM.ctx !== ctx) {
       try {
         AM.ctx = ctx;
         const mk = (type, f, g0) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = type; o.frequency.value = f; g.gain.value = 0; o.connect(g); return { o, g }; };
@@ -1058,6 +1071,7 @@ const LONGNIGHT17 = (function () {
         const ns = ctx.createBufferSource(); ns.buffer = buf; ns.loop = true;
         const wl = ctx.createBiquadFilter(); wl.type = 'lowpass'; wl.frequency.value = 380; const wg = ctx.createGain(); wg.gain.value = 0;
         ns.connect(wl); wl.connect(wg); wg.connect(A.sfxBus); ns.start(); AM.wind = wg;
+        AM.srcs = AM.drone.concat(AM.hum).map((n) => n.o).concat([ns]); AM.outs = [lp, wg];
         AM.ok = true;
       } catch (e) { AM.ok = false; return; }
     }

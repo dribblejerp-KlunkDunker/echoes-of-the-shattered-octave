@@ -1587,12 +1587,23 @@ const CANTABILE17 = (function () {
     const sg = ctx.createGain(); sg.gain.value = 0;
     const sl = ctx.createOscillator(); sl.frequency.value = 0.11; const slg = ctx.createGain(); slg.gain.value = 0.35; sl.connect(slg); slg.connect(sg.gain);
     src.connect(lp); lp.connect(sg); sg.connect(root); src.start(); sl.start();
-    AU.surf = { g: sg, lp };
+    AU.surf = { g: sg, lp }; AU.srcs = [o1, o2, o3, lfo, src, sl];
+  }
+  // off the harbour's maps (or muted) the bed is faded out and its sources stopped: nothing of it runs, and nothing is
+  // automated per frame, anywhere else in the game; it is built again on the way back in
+  function dropAudio() {
+    const root = AU.root, srcs = AU.srcs || [], ctx = AU.ctx; AU.root = null; AU.drone = null; AU.surf = null; AU.srcs = null;
+    try {
+      const t = ctx.currentTime; root.gain.cancelScheduledValues(t); root.gain.setTargetAtTime(0, t, 0.2);
+      for (const o of srcs) o.stop(t + 1.2);
+      setTimeout(() => { try { root.disconnect(); } catch (e) { /* gone */ } }, 1400);
+    } catch (e) { /* closed context */ }
   }
   function ambience(dt) {
-    if (!audioOk()) { if (AU.root) { try { AU.root.gain.setTargetAtTime(0, AU.ctx.currentTime, 0.2); } catch (e) { /* closed */ } } return; }
+    const inM = inMine(G.mapId);
+    if (!audioOk() || !inM) { if (AU.root) dropAudio(); return; }
     if (!AU.root || AU.ctx !== Audio_.ctx) { try { buildAudio(); } catch (e) { AU.root = null; return; } }
-    const t = AU.ctx.currentTime, inM = inMine(G.mapId), out = outdoors();
+    const t = AU.ctx.currentTime, out = outdoors();
     const hush = T.count > 0 ? 0 : 1;                                       // the harbour counts: its own noises stop
     try {
       AU.root.gain.setTargetAtTime(inM ? 1 : 0, t, 0.3);
