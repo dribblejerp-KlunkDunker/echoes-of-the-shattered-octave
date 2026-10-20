@@ -333,7 +333,7 @@ const NIGHT13 = (function () {
   function finishDuck() {
     if (!duckState) return;
     const d = duckState; duckState = null; clearTimeout(d.timer);
-    try { const g = Audio_.sfxBus.gain, t = Audio_.ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(d.prev, t); } catch (e) { /* none */ }
+    try { const g = Audio_.sfxBus.gain, t = Audio_.ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(d.prev, t); g.value = d.prev; } catch (e) { /* none */ }   // .value too, so the level reads back at once
     if (stats.duck) stats.duck.restored = true;
   }
   // a thrum where a bell should be: two sub-bass sines a beat apart, a slow swell in, a long way out; never a strike
