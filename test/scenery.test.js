@@ -35,7 +35,9 @@ const SHOTS = process.env.SHOT_DIR || '/tmp/claude-0/-home-claude/9fd8ad51-4634-
       const go = (id, x, y, dir) => { loadMap(id, { x, y, dir }); G.state = 'play'; G.fadeT = 0; G.player.hp = G.player.hpMax; G.vel.x = 0; G.vel.y = 0; };
       const quiet = () => { for (const id in G.maps) for (const e of G.maps[id].entities) if (e.kind === 'enemy' || e.kind === 'npc') e.hidden = true; };
       const sig = (list) => list.map(e => e.sprite + '@' + e.x + ',' + e.y).join('|');
-      const DEFAULTS = () => { for (const k of GFX.FX) GFX[k] = k !== 'crtCurve'; GFX.preset = 'medium'; GFX.changed(); };
+      // cinema14's god rays and ground fog drift with ANIM.T, so any update() between two frames moves them; this
+      // suite compares frames across updates, so those two stay off here (cinema14.test.js covers them)
+      const DEFAULTS = () => { for (const k of GFX.FX) GFX[k] = k !== 'crtCurve' && k !== 'cineLight' && k !== 'cineFog'; GFX.preset = 'medium'; GFX.changed(); };
       G.tod = 0.45;
 
       // --- props and flora exist on the named maps ----------------------------
