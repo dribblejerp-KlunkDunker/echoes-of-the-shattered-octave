@@ -3,11 +3,43 @@
 // ============================================================
 'use strict';
 const Audio_ = (() => {
+  let muffler = null, muffleAmt = 0;
+  // 0 = clear, 1 = heavily muffled (about 450 Hz); eases so it never clicks
+  function muffle(a) {
+    a = Math.max(0, Math.min(1, +a || 0)); if (Math.abs(a - muffleAmt) < 0.01 && a !== 0) return; muffleAmt = a;
+    if (!ctx || !muffler) return;
+    const f = 20000 * Math.pow(450 / 20000, a);
+    try { muffler.frequency.setTargetAtTime(f, ctx.currentTime, 0.08); } catch (e) { muffler.frequency.value = f; }
+  }
+  // A sustained voice for continuous cues (Kaelen's Root-note hum, a ringing bell's tail): hum(level, freq, id)
+  // fades one named voice toward level (0..1) instead of starting a new note every frame. level 0 lets it die away.
+  const hums = {};
+  function hum(level, freq, id) {
+    id = id || 'hum'; level = Math.max(0, Math.min(1, +level || 0));
+    if (!ctx || !sfxBus) return;
+    let h = hums[id];
+    if (!h) {
+      if (level <= 0) return;
+      const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = freq || 174;
+      const o2 = ctx.createOscillator(); o2.type = 'sine'; o2.frequency.value = (freq || 174) * 2.003;
+      const g2 = ctx.createGain(); g2.gain.value = 0.18;
+      const g = ctx.createGain(); g.gain.value = 0.0001;
+      o.connect(g); o2.connect(g2).connect(g); g.connect(sfxBus); o.start(); o2.start();
+      h = hums[id] = { o, o2, g, level: 0 };
+    }
+    if (freq) { h.o.frequency.setTargetAtTime(freq, ctx.currentTime, 0.1); h.o2.frequency.setTargetAtTime(freq * 2.003, ctx.currentTime, 0.1); }
+    if (Math.abs(level - h.level) < 0.005) return;
+    h.level = level;
+    h.g.gain.setTargetAtTime(muted ? 0.0001 : Math.max(0.0001, level * 0.06), ctx.currentTime, 0.25);
+  }
   let ctx = null, master = null, droneGain = null, wind = null, windGain = null, muted = false, lampOsc = null, lampGain = null, sfxBus = null, echoSend = null, echoDelay = null, echoTone = null, echoFb = null;
   function init() {
     if (ctx) return;
     ctx = new (window.AudioContext || window.webkitAudioContext)();
-    master = ctx.createGain(); master.gain.value = 0.55; master.connect(ctx.destination);
+    master = ctx.createGain(); master.gain.value = 0.55;
+    // a low-pass on everything, opened wide; muffle() closes it for deafness and the Hush
+    muffler = ctx.createBiquadFilter(); muffler.type = 'lowpass'; muffler.frequency.value = 20000; muffler.Q.value = 0.5;
+    master.connect(muffler); muffler.connect(ctx.destination);
     // sfx bus with a reverb-ish echo send (caves and cathedrals ring)
     sfxBus = ctx.createGain(); sfxBus.gain.value = 1; sfxBus.connect(master);
     echoSend = ctx.createGain(); echoSend.gain.value = 0.06;
@@ -190,5 +222,5 @@ const Audio_ = (() => {
     return { request, preload, tick, debug, seek, get enabled() { return enabled; }, set enabled(v) { enabled = !!v; }, get current() { return want; }, get unlocked() { return unlocked; } };
   })();
 
-  return { init, resume, setScene, sfx, toggleMute, music, get ready() { return !!ctx; }, get muted() { return muted; } };
+  return { init, resume, setScene, sfx, toggleMute, music, muffle, get muffled() { return muffleAmt; }, hum, get hums() { const o = {}; for (const k in hums) o[k] = hums[k].level; return o; }, get ready() { return !!ctx; }, get muted() { return muted; } };
 })();

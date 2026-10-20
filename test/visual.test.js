@@ -59,7 +59,12 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       }
       check(hashes.size === 4, 'four distinct non-front drawings');
       check(PROCTOR_VIEWS.size <= 24, 'bounded directional cache');
+      // with procedural directional views off, other species still fall back to their front art;
+      // with them on (js/directions.js), a hound seen from behind gets its own drawn back view
+      const dirOn = typeof GFX !== 'undefined' ? GFX.directions : undefined;
+      if (typeof GFX !== 'undefined') GFX.directions = false;
       check(animDirectionalSprite({ ...e, sprite: 'hound', animSprite: null }).sprite === Engine.sprites.hound, 'other species fallback');
+      if (typeof GFX !== 'undefined') { GFX.directions = true; check(animDirectionalSprite({ ...e, sprite: 'hound', animSprite: null }).sprite !== Engine.sprites.hound, 'other species get a procedural back view'); GFX.directions = dirOn; }
       Object.assign(Engine.cam, cam);
       const p = G.player;
       p.inv.push({ id: 'a_plate', n: 1 }, { id: 'a_kite', n: 1 });
@@ -168,9 +173,12 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       const count = Object.keys(ENEMIES).length;
       const next = id === 'clearing' ? 'oakhaven' : 'clearing';
       loadMap(next);
-      check(!map.entities.some(e => e.transient), 'departure clears all old-area corpses/effects');
+      // scenery props and grass (js/scenery.js, js/flora.js) and other decorations their modules re-create on
+      // every visit (marked _decor: chimneys, torches, stand-ins) are transient by design and are not corpses
+      const effect = e => e.transient && !e._scn && !e._flora && !e._decor;
+      check(!map.entities.some(effect), 'departure clears all old-area corpses/effects');
       loadMap(id, cam);
-      check(!G.ents.some(e => e.transient), 'revisit does not resurrect corpses');
+      check(!G.ents.some(effect), 'revisit does not resurrect corpses');
       restoreGame(JSON.parse(JSON.stringify(saved)));
       check(G.ents.some(e => e.kind === 'enemy' && e.dead && e.name === 'Regression guard'), 'save/load preserves killed enemy');
       check(!G.ents.some(e => e.deathArt || e.corpse), 'save/load does not serialize corpse art');
@@ -670,7 +678,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       check(body.hidden && body.stashedIn, 'concealed remains prepared for departure cleanup');
       G.state = 'play'; openBody(); const stale = document.querySelector('#body-drag');
       loadMap('tavern'); stale.click(); check(!G.dragBody, 'stale body action cannot start dragging in another map');
-      check(!map.entities.some(e => e.corpse || e.transient), 'departure removes exposed or concealed corpses');
+      check(!map.entities.some(e => e.corpse || (e.transient && !e._scn && !e._flora && !e._decor)), 'departure removes exposed or concealed corpses');
       const legacy = JSON.parse(JSON.stringify(bodyBaseline));
       for (const id of ['oakhaven', 'quarry', 'cloister']) legacy.maps[id].ents.pop();
       restoreGame(legacy); G.state = 'panel';

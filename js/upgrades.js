@@ -1063,7 +1063,7 @@ function applyVisualSettings() {
   if (vEl && UPG.pixelScale) {
     const w = UPG.pixelScale === 2 ? 640 : 320;
     const h = UPG.pixelScale === 2 ? 400 : 200;
-    if (vEl.width !== 320) { vEl.width = 320; vEl.height = 200; } // internal raycaster stays 320x200
+    // the canvas size belongs to the engine now (Engine.setScale renders the view at 1x or 2x)
     vEl.style.filter = UPG.crt ? 'contrast(1.08) brightness(1.04)' : '';
   }
 }
@@ -1405,7 +1405,6 @@ const LANDMARKS = {
     { a: -Math.PI / 2, aw: 2.6, h: 0.30, p: 1.5, ridge: 0.45, seed: 1.3, far: 0.85, cap: [152, 158, 178], capH: 0.26, c: [40, 42, 58] }, // the Grey Teeth, north beyond the Hedge
     { a: 2.1, aw: 0.9, h: 0.26, p: 1.35, ridge: 0.35, seed: 5.7, far: 0.15, c: [46, 44, 52] },                                             // chalk cliff shoulder over the water-meadow
     { a: -2.2, aw: 1.1, h: 0.17, p: 1.1, ridge: 0.6, seed: 3.1, far: 0.5, c: [38, 40, 50] },                                               // downs to the east
-    { a: -0.55, aw: 0.16, h: 0.24, p: 2.2, far: 0.35, c: [36, 30, 46] },                                                                   // the Chapel spire-line
     { a: 0.3, aw: 0.6, h: 0.24, p: 1.7, ridge: 0.8, seed: 2.3, far: 0.3, c: [34, 28, 44] },                                                                     // the quarry head
     { a: 2.6, aw: 0.7, h: 0.16, p: 1.1, far: 0.45, c: [26, 30, 36] },
   ],
@@ -1424,10 +1423,12 @@ const LANDMARKS = {
   deepwoods: [
     { a: -1.2, aw: 1.1, h: 0.26, p: 1.3, ridge: 0.5, seed: 7.3, far: 0.75, cap: [130, 140, 162], capH: 0.24, c: [34, 36, 50] },
     { a: 0, aw: 1.8, h: 0.10, p: 0.9, ridge: 0.5, seed: 3.7, far: 0.3, c: [30, 32, 40] },
-    { a: -1.55, aw: 0.28, h: 0.32, p: 2.0, far: 0.3, c: [40, 34, 56] },
     { a: 1.6, aw: 0.6, h: 0.16, p: 1.3, far: 0.5, c: [32, 32, 42] },
   ],
 };
+// The Chapel's spire-line over Oakhaven and the Mausoleum's tower over the
+// Deep Woods used to be painted silhouettes at a fixed bearing. They are real
+// blocks now (see shapeOakhaven / addReliefWorld), seen from wherever you stand.
 
 // -- ground surface under the player (footstep synthesis) -----------
 function stepSurface() {
@@ -1586,7 +1587,8 @@ function lesson(id, text) {
       ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
     } else if (wtr === 'rain') {
       ctx.strokeStyle = 'rgba(170,182,205,0.28)'; ctx.lineWidth = 1; ctx.beginPath();
-      for (let i = 0; i < 60; i++) {
+      const nRain = Math.round(60 * (typeof GFX !== 'undefined' ? GFX.particles : 1));
+      for (let i = 0; i < nRain; i++) {
         const x = ((i * 53.7 + now * 240) % (w + 40)) - 20;
         const y = ((i * 97.3 + now * 500) % (h + 40)) - 20;
         ctx.moveTo(x, y); ctx.lineTo(x - 3, y + 9);
@@ -1595,7 +1597,8 @@ function lesson(id, text) {
       ctx.fillStyle = 'rgba(120,130,160,0.08)'; ctx.fillRect(0, 0, w, h);
     } else if (wtr === 'snow') {
       ctx.fillStyle = 'rgba(225,230,240,0.7)';
-      for (let i = 0; i < 55; i++) {
+      const nSnow = Math.round(55 * (typeof GFX !== 'undefined' ? GFX.particles : 1));
+      for (let i = 0; i < nSnow; i++) {
         const x = ((i * 61.9 + Math.sin(now * 0.8 + i) * 12 + now * 14) % (w + 16)) - 8;
         const y = ((i * 88.1 + now * (26 + (i % 5) * 7)) % (h + 16)) - 8;
         ctx.fillRect(x, y, i % 3 ? 1 : 2, i % 3 ? 1 : 2);
@@ -1815,7 +1818,7 @@ function lesson(id, text) {
   buildOakhaven = function (g) { const m = _buildOakhaven(g); syncHouseDoor(m); return m; };
 
   const _buildAllMaps = buildAllMaps;
-  buildAllMaps = function () { const maps = _buildAllMaps(); addWorldExtras(maps); addLawWorld(maps); syncCatacombsPuzzles(); return maps; };
+  buildAllMaps = function () { const maps = _buildAllMaps(); addWorldExtras(maps); addLawWorld(maps); addReliefWorld(maps); syncCatacombsPuzzles(); return maps; };
 
   const _stepSfx = Audio_.sfx.step;
   Audio_.sfx.step = (surface) => _stepSfx(surface || stepSurface());

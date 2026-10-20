@@ -38,7 +38,7 @@ function msg(text, cls, ttl) {
   setTimeout(() => el.classList.add('fade'), ttl || 5200); setTimeout(() => el.remove(), (ttl || 5200) + 700);
 }
 function journal(cat, text) { G.journal.unshift({ cat, text, day: G.day }); msg('Your logbook has been updated.', 'warn', 2500); Audio_.sfx.ui(); }
-function openModal(html, name) { G.panelToken = (G.panelToken || 0) + 1; $('#modal-panel').innerHTML = html; show('#modal'); G.openPanel = name; G.keys = {}; }
+function openModal(html, name) { try { releaseMouse(); } catch (e) { /* not ready yet */ } G.panelToken = (G.panelToken || 0) + 1; $('#modal-panel').innerHTML = html; show('#modal'); G.openPanel = name; G.keys = {}; }
 function closeModal() { hide('#modal'); G.openPanel = null; }
 function fx(cls, ms) { const f = $('#fx'); f.className = cls; clearTimeout(f._t); f._t = setTimeout(() => { if (f.className === cls) f.className = ''; }, ms || 200); }
 
@@ -108,7 +108,7 @@ function startGame() {
   show('#intro'); const it = $('#intro-text'); it.innerHTML = '';
   INTRO.forEach((line, i) => { const pEl = document.createElement('p'); pEl.textContent = line; pEl.style.animationDelay = (i * 1.1) + 's'; it.appendChild(pEl); });
   G.state = 'intro';
-  const go = () => { if (G.state !== 'intro') return; Audio_.music.preload(['combat', 'town']); hide('#intro'); loadMap('oakhaven'); G.state = 'play'; Audio_.setScene('town'); msg('Nullday. Dusk. Oakhaven, inside the Hedge.', 'warn', 6000); msg('Press H for help at any time.', '', 7000); };
+  const go = () => { if (G.state !== 'intro') return; Audio_.music.preload(['combat', 'town']); hide('#intro'); loadMap('oakhaven'); G.state = 'play'; Audio_.setScene('town'); msg('Nullday. Dusk. Oakhaven, inside the Hedge.', 'warn', 6000); msg('Press H for help at any time.', '', 7000); if (!G.touchMode && G.opts.captureMouse) msg('Click the view to capture the mouse; Esc gives it back. Alt+Enter: full screen.', '', 9000); };
   $('#btn-intro-skip').onclick = (ev) => { ev.stopPropagation(); go(); };
   $('#intro').onclick = go;
 }
@@ -158,8 +158,8 @@ function transfer(portal) {
 // eye rides half a unit above them. Flat maps keep feet at 0, exactly as before.
 function settleFeet() {
   const c = Engine.cam, p = G.player;
-  const feet = G.map.lvls ? G.map.lvlAt(c.x, c.y) : 0;
-  if (p) { p.feet = feet; p.fallV = 0; p.fallFrom = null; }
+  const feet = (G.map.lvls || G.map.smooth) ? G.map.groundAt(c.x, c.y) : 0;
+  if (p) { p.feet = feet; p.fallV = 0; p.fallFrom = null; p.tumble = false; }
   c.z = feet + 0.5;
 }
 
@@ -167,9 +167,13 @@ function settleFeet() {
 function solidAt(x, y, self) {
   const m = G.map; const r = 0.24;
   // a rise taller than a step is a cliff face, not floor you can walk onto
-  if (m.lvls) {
-    const feet = self ? (typeof self.feet === 'number' ? self.feet : m.lvlAt(self.x, self.y)) : (G.player && typeof G.player.feet === 'number' ? G.player.feet : 0);
-    if (m.lvlAt(x, y) - feet > STEP_UP) return true;
+  if (m.lvls || m.smooth) {
+    const feet = self ? (typeof self.feet === 'number' ? self.feet : m.groundAt(self.x, self.y)) : (G.player && typeof G.player.feet === 'number' ? G.player.feet : 0);
+    const g = m.groundAt(x, y);
+    if (g - feet > STEP_UP) return true;
+    // a slope steeper than a walker can climb is a cliff face going up;
+    // going down it is allowed, and that is how you tumble off a crag
+    if (m.smooth && g > feet + 0.02 && m.gradeAt(x, y) > MAX_GRADE) return true;
   }
   for (const [dx, dy] of [[-r, -r], [r, -r], [-r, r], [r, r]]) if (m.isBlocked((x + dx) | 0, (y + dy) | 0)) return true;
   if (self && dist2(x, y, Engine.cam.x, Engine.cam.y) < 0.4) return true;
@@ -204,9 +208,28 @@ function moveWithSlide(o, dx, dy, self) {
   if (!solidAt(o.x, o.y + dy, self)) { o.y += dy; moved = true; }
   return moved;
 }
+// Feet height of an entity or the player on raised and sloped ground (0 on flat maps).
+function feetOf(e) {
+  const m = G.map; if (!m || (!m.lvls && !m.smooth)) return 0;
+  if (e === G.player || e === Engine.cam) return G.player && typeof G.player.feet === 'number' ? G.player.feet : m.groundAt(Engine.cam.x, Engine.cam.y);
+  return m.groundAt(e.x, e.y);
+}
+// Melee needs both fighters on roughly the same level: nobody swings a sword up a 1.8 gallery.
+const MELEE_RISE = 0.7;
 function los(ax, ay, bx, by) {
   const d = Math.sqrt(dist2(ax, ay, bx, by)); const n = Math.ceil(d / 0.2); const sx = (bx - ax) / n, sy = (by - ay) / n;
-  let x = ax, y = ay; for (let i = 0; i < n; i++) { x += sx; y += sy; if (G.map.isSolidCell(x | 0, y | 0)) return false; } return true;
+  const m = G.map, raised = !!(m.lvls || m.smooth);
+  // eye heights at both ends: a knee-high wall or railing below both of them does not block sight
+  const eyeLo = raised ? Math.min(m.groundAt(ax, ay), m.groundAt(bx, by)) + 0.5 : 0.5;
+  let x = ax, y = ay;
+  for (let i = 0; i < n; i++) {
+    x += sx; y += sy;
+    if (!m.isSolidCell(x | 0, y | 0)) continue;
+    const c = m.get(x | 0, y | 0);
+    if (c && !c.door && c.top != null && c.top < eyeLo - 0.05) continue;
+    return false;
+  }
+  return true;
 }
 
 // ---------------------------------------------------------------- noise / the Narrow
@@ -483,7 +506,9 @@ function enemyUpdate(e, dt) {
     if (d.mimic || d.summon || d.horn || d.grapnel || d.dirge || d.wilds) enemyExtra(e, dt, dist, canSee);
     const glassFear = d.cacophony && !d.fearless && ((p.glassed && G.glassLock <= 0) || G.rootWard > 0);
     if (glassFear) { if (dist < 3.5) { moveWithSlide(e, -dx / dist * d.speed * dt, -dy / dist * d.speed * dt, e); } return; }
-    if (dist > d.reach) {
+    // a foe on a gallery above or a pit below cannot be struck: close in (pathing finds the stair) instead
+    const outOfLevel = Math.abs(feetOf(e) - feetOf(p)) > MELEE_RISE;
+    if (dist > d.reach || outOfLevel) {
       // telegraph for golem
       let sp = d.speed; if (e.type === 'golem' && e.cool > 0) sp *= 0.3; if (e.slowed) sp *= 0.6;
       const nx = dx / dist, ny = dy / dist;
@@ -623,6 +648,7 @@ function attack(dirLabel) {
     if ((e.kind !== 'enemy' && !(lawActive() && e.kind === 'npc' && !e.companion && e.id !== 'cat')) || e.dead || e.hidden) continue;
     const dx = e.x - c.x, dy = e.y - c.y, d = Math.sqrt(dx * dx + dy * dy);
     if (d > w.reach + (e.radius || 0.3)) continue;
+    if (!w.ranged && Math.abs(feetOf(e) - feetOf(p)) > MELEE_RISE) continue;   // out of reach above or below
     const ang = Math.abs(normAng(Math.atan2(dy, dx) - c.dir));
     const cone = w.ranged ? 0.14 + 0.25 / Math.max(1, d) : 0.55;
     if (ang > cone) continue;
@@ -1405,7 +1431,7 @@ function finishBore() {
 }
 
 // ---------------------------------------------------------------- events & triggers
-function showEvent(title, html, choices) {
+function showEvent(title, html, choices) { try { releaseMouse(); } catch (e) { /* not ready yet */ }
   G.state = 'event'; const p = $('#event-panel');
   p.innerHTML = `<h2>${title}</h2><p>${html}</p><div class="list" style="margin-top:1cqh">${choices.map((c, i) => `<button class="dfbtn" data-i="${i}">${c.t}</button>`).join('')}</div>`;
   show('#event');
@@ -1700,7 +1726,7 @@ function renderInventory() {
 }
 function renderCharacter() {
   const p = G.player; const stage = p.glass >= 100 ? 'Heartglass' : p.glass >= 40 ? 'Set' : p.glass >= 15 ? 'Frost' : p.glass > 0 ? 'Ringing' : 'Unglassed';
-  openModal(`<h2>${p.name}</h2><button class="dfbtn small close" id="x">Close</button><div class="row"><div class="col" style="flex:0 0 18cqw"><img src="img/face_${p.face}.jpg" style="width:16cqw;height:16cqw;border:2px solid #0b0806"><p class="muted">${p.cls.name}<br>Level ${p.level} · ${p.xp} xp<br>${p.cls.hz}</p></div>
+  openModal(`<h2>${p.name}</h2><button class="dfbtn small close" id="x">Close</button><div class="row"><div class="col" style="flex:0 0 18cqw"><img src="img/face_${[1, 2, 3, 4, 5, 6].includes(p.face) ? p.face : 1}.jpg" style="width:16cqw;height:16cqw;border:2px solid #0b0806"><p class="muted">${p.cls.name}<br>Level ${p.level} · ${p.xp} xp<br>${p.cls.hz}</p></div>
   <div class="col"><div class="attrs">${ATTRS.map(a => `<div><span>${a}</span><b>${p.attrs[a]}</b></div>`).join('')}</div>
   <h3>Vitals</h3><div>Health ${Math.ceil(p.hp)} / ${p.hpMax}</div><div class="bar-h"><i style="width:${100 * p.hp / p.hpMax}%;background:var(--red)"></i></div>
   <div>Fatigue ${Math.round(p.fat)} / ${p.fatMax}</div><div class="bar-h"><i style="width:${100 * p.fat / p.fatMax}%;background:var(--green)"></i></div>
@@ -1716,7 +1742,8 @@ function renderCharacter() {
 }
 function renderLog() {
   const main = G.journal.filter(j => j.cat === 'main'), side = G.journal.filter(j => j.cat === 'side');
-  const fmt = (j) => `<p><span class="muted">${DAYS[j.day % 8]} —</span> ${j.text}</p>`;
+  // journal text is plain prose: strip angle brackets here too, not only when a save is loaded
+  const fmt = (j) => `<p><span class="muted">${DAYS[(j.day | 0) % 8] || DAYS[0]} —</span> ${String(j.text == null ? '' : j.text).replace(/[<>]/g, '')}</p>`;
   openModal(`<h2>Logbook</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">${DAYS[G.day % 8]}, autumn, 419 SR · ${timeName()}</p><h3>The Rite</h3>${main.map(fmt).join('')}<h3>Other matters</h3>${side.map(fmt).join('') || '<p class="muted">Nothing yet.</p>'}`, 'log');
   $('#x').onclick = () => { closeModal(); G.state = 'play'; };
 }
@@ -1792,8 +1819,13 @@ function renderMap() {
     if (!m.visited[y * m.w + x]) continue;
     const c = m.cells[y * m.w + x];
     const fl = m.floorCells ? m.floorCells[y * m.w + x] : 0;
-    cx.fillStyle = c ? (c.door ? '#d9a441' : (c.tex === 't_hedge' ? '#2f4a22' : '#7a6a58')) : (fl === 2 ? '#2f7a64' : fl === 1 ? '#4a3e30' : '#2a2219');
+    const gz = (m.lvls || m.smooth) ? m.groundAt(x + 0.5, y + 0.5) : 0;
+    const low = c && !c.door && c.top != null && c.top < gz + 0.9, tall = c && !c.door && c.top != null && c.top > gz + 1.3;
+    cx.fillStyle = c ? (c.door ? '#d9a441' : low ? '#a89878' : tall ? '#4e4236' : (c.tex === 't_hedge' ? '#2f4a22' : '#7a6a58')) : (fl === 2 ? '#2f7a64' : fl === 1 ? '#4a3e30' : '#2a2219');
     cx.fillRect(x * cw, y * cw, cw, cw);
+    // raised and sloped ground: lighter the higher it stands, hatched where too steep to climb
+    if (!c && gz > 0.05) { cx.fillStyle = `rgba(232,214,160,${Math.min(0.42, gz * 0.16).toFixed(3)})`; cx.fillRect(x * cw, y * cw, cw, cw); }
+    if (!c && m.smooth && m.gradeAt(x + 0.5, y + 0.5) > MAX_GRADE) { cx.fillStyle = '#7a3a28'; cx.fillRect(x * cw, y * cw + 1, cw, 1); cx.fillRect(x * cw, y * cw + 3, cw, 1); }
   }
   for (const e of G.ents) { if (e.hidden || e.dead) continue; if (!m.visited[(e.y | 0) * m.w + (e.x | 0)]) continue; cx.fillStyle = e.kind === 'npc' ? '#6fa0e0' : e.kind === 'enemy' ? '#d04030' : e.kind === 'item' ? '#e0d060' : null; if (cx.fillStyle && e.kind !== 'deco') cx.fillRect(e.x * cw - 1, e.y * cw - 1, 3, 3); }
   if (G.mapId === 'oakhaven') { cx.font = '7px "Alegreya SC", serif'; cx.textAlign = 'center'; cx.fillStyle = '#f0d890'; for (const [lbl, [px, py]] of Object.entries({ 'Gate': [23.5, 3], 'Boar': [29.5, 16.6], 'Greenhall': [30.5, 8.4], 'Lyra': [21.5, 31.6], 'Rooke': [17.5, 14.4], 'Mast': [36.5, 18.4], 'Market': [52.5, 15.2], 'Mill': [62, 8.6], 'Chapel': [49, 6.8], 'Tannery': [15.5, 59.4], 'Flume': [36, 50.4], 'Culvert': [23.5, 60.6], 'Orchard': [56, 31] })) { const i = ((py | 0) * m.w + (px | 0)); if (m.visited[i]) cx.fillText(lbl, px * cw, py * cw); } cx.textAlign = 'left'; }
@@ -1809,7 +1841,7 @@ function renderHelp() {
 const canvas = $('#view');
 canvas.style.touchAction = 'none';
 // control options (held for this session)
-G.opts = { mouseLook: true, sens: 5, invertY: false, alwaysRun: false, touch: 'auto' };
+G.opts = { mouseLook: true, sens: 5, invertY: false, alwaysRun: false, touch: 'auto', captureMouse: true };
 function saveOpts() { /* options live in memory for the session */ }
 const sensK = () => 0.35 + clamp(G.opts.sens, 1, 10) * 0.13;
 function canvasPos(ev) { const r = canvas.getBoundingClientRect(); return { x: (ev.clientX - r.left) / r.width * VW, y: (ev.clientY - r.top) / r.height * VH }; }
@@ -1831,6 +1863,26 @@ function swingLabel(dx, dy, th) { const len = Math.hypot(dx, dy); if (len <= th)
 // The preview frame can't capture the mouse, so this works with the cursor free (and right-drag works too).
 const freeLook = () => G.opts.mouseLook && !G.touchMode;
 let edgeTurn = 0;
+// Captured mouse (Pointer Lock): one click on the view captures the mouse, so looking keeps working however far it
+// moves and it can never wander off the window. Esc (or opening any panel) gives it back.
+const mouseLocked = () => typeof document !== 'undefined' && document.pointerLockElement === canvas;
+function captureMouse() {
+  if (!canvas.requestPointerLock || mouseLocked()) return;
+  try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch (e) { /* not allowed here: free look still works */ }
+}
+function releaseMouse() { if (mouseLocked() && document.exitPointerLock) { try { document.exitPointerLock(); } catch (e) { /* ignore */ } } }
+document.addEventListener('pointerlockchange', () => { edgeTurn = 0; G.mouse.down = false; G.mouse.rdown = false; $('#game').classList.toggle('mouse-locked', mouseLocked()); });
+setInterval(() => { if (mouseLocked() && (G.state !== 'play' || G.openPanel || !G.opts.captureMouse)) releaseMouse(); }, 150);
+// Full screen for the whole page (the game fits the screen it is given); Alt+Enter toggles it too.
+const isFullscreen = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+function toggleFullscreen() {
+  try {
+    if (isFullscreen()) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); return; }
+    const el = document.documentElement, req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (req) { const r = req.call(el); if (r && r.catch) r.catch(() => msg('Full screen is not available here.', 'warn', 3000)); }
+  } catch (e) { msg('Full screen is not available here.', 'warn', 3000); }
+}
+window.addEventListener('keydown', (ev) => { if (ev.altKey && ev.key === 'Enter') { ev.preventDefault(); toggleFullscreen(); } });
 canvas.addEventListener('mouseleave', () => { edgeTurn = 0; });
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 canvas.addEventListener('mousedown', (ev) => {
@@ -1838,7 +1890,10 @@ canvas.addEventListener('mousedown', (ev) => {
   if (G.state !== 'play' || G.touchMode) return;
   const p = canvasPos(ev);
   if (ev.button === 2 || ev.button === 1) { G.mouse.rdown = true; ev.preventDefault(); return; }
-  if (p.y >= VIEW_H) { hudClick(p.x, p.y); return; }
+  const locked = mouseLocked();
+  if (!locked && p.y >= VIEW_H) { hudClick(p.x, p.y); return; }
+  // the first click on the view only captures the mouse (no swing), so capturing never costs you a blow
+  if (!locked && ev.button === 0 && freeLook() && G.opts.captureMouse && canvas.requestPointerLock) { captureMouse(); return; }
   G.mouse.down = true; G.mouse.sx = p.x; G.mouse.sy = p.y; G.mouse.ax = 0; G.mouse.ay = 0; G.mouse.t = performance.now();
 });
 window.addEventListener('mouseup', (ev) => {
@@ -1846,7 +1901,8 @@ window.addEventListener('mouseup', (ev) => {
   if (!G.mouse.down) return; G.mouse.down = false;
   if (G.state !== 'play') return;
   let dx, dy, th;
-  { const p = canvasPos(ev); dx = p.x - G.mouse.sx; dy = p.y - G.mouse.sy; th = 12; }
+  if (mouseLocked()) { const r = canvas.getBoundingClientRect(); dx = G.mouse.ax * VW / Math.max(1, r.width); dy = G.mouse.ay * VH / Math.max(1, r.height); th = 12; }
+  else { const p = canvasPos(ev); dx = p.x - G.mouse.sx; dy = p.y - G.mouse.sy; th = 12; }
   const label = swingLabel(dx, dy, th);
   if (G.hintKind && label === 'thrust') { interact(); return; }
   attack(label);
@@ -1857,6 +1913,11 @@ window.addEventListener('mousemove', (ev) => {
   const mx = ev.movementX || 0, my = ev.movementY || 0;
   const inView = p.y < VIEW_H && p.x >= 0 && p.x <= VW && p.y >= 0;
   const spike = Math.abs(mx) > 300 || Math.abs(my) > 300; // ignore the odd jump (window refocus, cursor warp)
+  if (mouseLocked()) {
+    edgeTurn = 0; if (spike) return;
+    if (G.mouse.down) { G.mouse.ax += mx; G.mouse.ay += my; return; }   // holding the button: the movement is the swing
+    look(mx, G.mouse.rdown ? my * 1.25 : my * 0.5); return;
+  }
   if (G.mouse.rdown) { if (!spike) look(mx * 1.25, my * 1.25); edgeTurn = 0; return; }
   if (!freeLook() || G.mouse.down || !inView) { edgeTurn = 0; return; } // holding the left button: the drag becomes the swing, as in 1996; over the HUD: leave the view alone
   if (!spike) look(mx, my * 0.5);
@@ -2081,21 +2142,31 @@ function update(dt) {
   if (mag <= 0.05 && Math.hypot(vel.x, vel.y) < 0.03) { vel.x = 0; vel.y = 0; }
   if (vel.x || vel.y) { const r = playerMove(c, vel.x * dt, vel.y * dt); if (r.bx) vel.x = 0; if (r.by) vel.y = 0; }
   // --- elevation: climb steps and ramps, fall off ledges ------------------
-  const ground = G.map.lvls ? G.map.lvlAt(c.x, c.y) : 0;
+  const ground = (G.map.lvls || G.map.smooth) ? G.map.groundAt(c.x, c.y) : 0;
   if (typeof p.feet !== 'number') p.feet = ground;
   if (ground > p.feet + 0.001) {
-    p.feet = Math.min(ground, p.feet + 3.2 * dt); p.fallV = 0; p.fallFrom = null;
+    // a slope carries you with it; a stair eases the eye up
+    p.feet = ground - p.feet < 0.12 ? ground : Math.min(ground, p.feet + 3.2 * dt); p.fallV = 0; p.fallFrom = null;
+  } else if (ground < p.feet - 0.001 && p.fallFrom == null && G.map.smooth && G.map.smooth[(c.y | 0) * G.map.w + (c.x | 0)] && p.feet - ground < SNAP_DOWN && G.map.gradeAt(c.x, c.y) <= MAX_GRADE) {
+    p.feet = ground;   // walking down a hillside, not falling off it
   } else if (ground < p.feet - 0.001) {
     if (p.fallFrom == null) { p.fallFrom = p.feet; p.fallV = 0; }
     p.fallV = (p.fallV || 0) + 7 * dt;
     p.feet -= p.fallV * dt;
-    if (p.feet <= ground) {
-      const drop = p.fallFrom - ground;
+    // coming down over a rock face (not off a sheer edge) is a tumble
+    if (G.map.smooth && G.map.gradeAt(c.x, c.y) > MAX_GRADE) p.tumble = true;
+    if (p.feet <= ground && G.map.smooth && G.map.gradeAt(c.x, c.y) > MAX_GRADE) {
+      // still on a face too steep to stand on: you tumble down it, and the
+      // whole way down counts when you come to rest on ground you can stand on
+      p.feet = ground; p.fallV = Math.min(p.fallV, 2.5); p.tumble = true;
+    } else if (p.feet <= ground) {
+      const drop = p.fallFrom - ground, tumbled = !!p.tumble; p.tumble = false;
       p.feet = ground; p.fallV = 0; p.fallFrom = null;
       if (drop > FALL_SAFE) {
-        const dmg = Math.max(1, Math.round((drop - FALL_SAFE) * 26));
+        // a sheer drop hits hard; tumbling down a rock face is bruising, not a plunge
+        const dmg = Math.max(1, Math.round((drop - FALL_SAFE) * (tumbled ? 12 : 26)));
         p.hp -= dmg; G.hurtT = 0.25; fx('hurt', 200); Audio_.sfx.hurt();
-        msg('You come down hard off the edge \u2014 ' + dmg + ' damage.', 'bad', 2800);
+        msg(tumbled ? 'You tumble down the rock face \u2014 ' + dmg + ' damage.' : 'You come down hard off the edge \u2014 ' + dmg + ' damage.', 'bad', 2800);
         if (p.hp <= 0) { die('the fall'); return; }
       } else if (drop > 0.25) Audio_.sfx.step('stone');
     }
@@ -2196,7 +2267,8 @@ function drawHUD() {
     if (G.glassLock > 0 && w.type === 'glass') { ctx.fillStyle = 'rgba(80,200,220,0.25)'; ctx.fillRect(bx + ax, VIEW_H - ih + 24 + ay, iw, ih); }
   }
   // crosshair
-  ctx.fillStyle = 'rgba(255,240,200,0.7)'; ctx.fillRect(VW / 2 - 1, VIEW_H / 2 + Engine.cam.pitch - 1, 2, 2);
+  // the crosshair is the centre of the view: a pitched look aims up or down with it
+  ctx.fillStyle = 'rgba(255,240,200,0.7)'; ctx.fillRect(VW / 2 - 1, VIEW_H / 2 - 1, 2, 2);
   // hurt / hush vignette are CSS; damage flash on canvas edge
   // bar
   ctx.fillStyle = '#2a2018'; ctx.fillRect(0, y0, VW, VH - y0);
@@ -2485,6 +2557,8 @@ function renderControls() {
   const html = `<h2>Controls</h2><button class="dfbtn small close" id="x">Close</button>
   <div class="ctl-grid">
     <span>Free look <small class="muted">move the mouse over the view to look · rest it at a side edge to keep turning · when off, hold the right button and drag</small></span><button class="dfbtn small" id="c-ml">${onoff(o.mouseLook)}</button>
+    <span>Capture mouse <small class="muted">click the view to capture it, so it never wanders off the window · Esc gives it back</small></span><button class="dfbtn small" id="c-cap">${onoff(o.captureMouse)}</button>
+    <span>Full screen <small class="muted">Alt+Enter</small></span><button class="dfbtn small" id="c-fs">${isFullscreen() ? 'On' : 'Off'}</button>
     <span>Look sensitivity</span><span class="ctl-step"><button class="dfbtn small" id="c-sdn">−</button><b>${o.sens}</b><button class="dfbtn small" id="c-sup">+</button></span>
     <span>Invert up and down look</span><button class="dfbtn small" id="c-inv">${onoff(o.invertY)}</button>
     <span>Always run <small class="muted">Shift walks instead · Caps Lock toggles</small></span><button class="dfbtn small" id="c-run">${onoff(o.alwaysRun)}</button>
@@ -2496,6 +2570,8 @@ function renderControls() {
   $('#x').onclick = () => { closeModal(); G.state = 'play'; };
   $('#c-back').onclick = () => renderMenu();
   $('#c-ml').onclick = () => { o.mouseLook = !o.mouseLook; re(); };
+  $('#c-cap').onclick = () => { o.captureMouse = !o.captureMouse; re(); };
+  $('#c-fs').onclick = () => { toggleFullscreen(); setTimeout(() => { if (G.openPanel === 'controls') re(); }, 300); };
   $('#c-sdn').onclick = () => { o.sens = Math.max(1, o.sens - 1); re(); };
   $('#c-sup').onclick = () => { o.sens = Math.min(10, o.sens + 1); re(); };
   $('#c-inv').onclick = () => { o.invertY = !o.invertY; re(); };
@@ -2551,7 +2627,7 @@ window.render_game_to_text = () => {
 // ---------------------------------------------------------------- boot
 (async function boot() {
   await Engine.loadAll((f) => { $('#load-fill').style.width = (f * 100) + '%'; });
-  try { await Promise.all(['8px "Alegreya SC"', '8px "Alegreya"', '700 20px "Cinzel"'].map(f => document.fonts.load(f))); await document.fonts.ready; } catch (e) { }
+  try { await Promise.all(['8px "Alegreya SC"', '8px "Alegreya"', '700 20px "Cinzel"', '20px "UnifrakturMaguntia"'].map(f => document.fonts.load(f))); await document.fonts.ready; } catch (e) { }
   hide('#loading'); G.state = 'title';
   $('#btn-new').onclick = () => { Audio_.init(); Audio_.resume(); hide('#title'); show('#create'); CREATE.step = 0; renderCreate(); G.state = 'create'; };
   $('#btn-help').onclick = () => { $('#modal-panel').innerHTML = `<h2>How to play</h2><button class="dfbtn small close" id="x">Close</button><pre class="help">${HELP_TEXT}</pre>`; show('#modal'); $('#x').onclick = closeModal; };
