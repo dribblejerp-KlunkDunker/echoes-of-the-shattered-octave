@@ -52,6 +52,8 @@ const CEILINGS = (() => {
     const v = Math.max(0, Math.min(0.999, t)) * (pal.length - 1), i = v | 0;
     return pal[(v - i) > dith(x, y) ? Math.min(pal.length - 1, i + 1) : i];
   }
+  // the same steps without the dither: ceilings are seen at grazing angles, where a fine checker turns to shimmer
+  function band(pal, t) { return pal[Math.max(0, Math.min(pal.length - 1, Math.floor(Math.max(0, Math.min(0.999, t)) * pal.length)))]; }
   const hex = (s) => px(parseInt(s.slice(1, 3), 16), parseInt(s.slice(3, 5), 16), parseInt(s.slice(5, 7), 16));
   const pal = (...a) => a.map(hex);
 
@@ -69,7 +71,7 @@ const CEILINGS = (() => {
       if (y >= B0 && y <= B1) {
         // body: lit along the top face, darker toward the underside
         const k = 1 - (y - B0) / (B1 - B0);
-        c = ramp(OAK, 0.32 + 0.38 * k, x, y);
+        c = band(OAK, 0.32 + 0.38 * k);
         if (y === B0 || y === B1) c = OAK[0];                 // outline
         else if (y === B0 + 1) c = OAK[5];                     // arris catching the lamp
         else if (y === B0 + 2) c = OAK[4];
@@ -78,7 +80,7 @@ const CEILINGS = (() => {
         // plaster: soot darkens it near the beam (both sides), dithered in bands
         const dist = y < B0 ? B0 - y : y - B1;
         const soot = Math.max(0, 1 - dist / 14);
-        c = ramp(PL, 0.92 - soot * 0.75 + (hash(x >> 3, y >> 3, 33) - 0.5) * 0.12, x, y);
+        c = band(PL, 0.92 - soot * 0.75 + (hash(x >> 3, y >> 3, 33) - 0.5) * 0.12);
         if (dist === 1) c = PL[0];                             // the beam's cast shadow line
       }
       d[y * T + x] = c;
@@ -101,7 +103,7 @@ const CEILINGS = (() => {
   function paintVault() {
     const d = new Uint32Array(T * T), C = 31.5;
     const LIL = pal('#3e2c4e', '#523c66', '#68507e', '#7e6694', '#9580a8', '#ab98bc');   // fresco, deep to lit
-    const RIB = pal('#4a4448', '#6e676a', '#948c8c', '#b6aea8', '#d2cac0');               // dressed stone
+    const RIB = pal('#3e383c', '#5e585a', '#7c7676', '#9a928c', '#b2aaa0');               // dressed stone
     const GOLD = pal('#5c3e14', '#8e6424', '#c09034', '#e8c060', '#fff0b0');
     const PLASTER = hex('#bcae98');
     for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {
@@ -114,12 +116,12 @@ const CEILINGS = (() => {
         const onDiag = diag < 2.2, sgn = onDiag ? ((dx > 0) === (dy > 0) ? (dx - dy) : (dx + dy)) : 0;
         let t = onDiag ? 0.62 + (sgn < 0 ? 0.25 : -0.1) : (x < 2 || y < 2 ? 0.8 : 0.35);
         if (onDiag && diag > 1.6) t = 0.15; if (!onDiag && edge === 1 && (x >= 62 || y >= 62)) t = 0.1;
-        c = ramp(RIB, t, x, y);
+        c = band(RIB, t);
         if (!onDiag && edge === 0) c = RIB[1];
       } else {
         // the panel curves down into its ribs: lit in the middle, dark at the springing
         const toRib = Math.min(diag, edge * 1.1);
-        c = ramp(LIL, 0.2 + Math.min(1, toRib / 13) * 0.7, x, y);
+        c = band(LIL, 0.2 + Math.min(1, toRib / 13) * 0.7);
         if (toRib < 3) c = LIL[0];
       }
       d[y * T + x] = c;

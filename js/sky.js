@@ -4,6 +4,7 @@
 //  so everything draws before the LANDMARKS ridges, the terrain and the walls
 //  and only ever touches pixels the renderer marked as sky (F.mbuf === 1).
 //  Switches: GFX.stars, GFX.panoramas, GFX.flyovers (all false = the old sky).
+//  Phase 20: the panoramas (with the LANDMARKS ridges baked in) and the flyover ship are hand-built pixel art.
 // ============================================================
 'use strict';
 

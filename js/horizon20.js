@@ -361,7 +361,8 @@ const HORIZON20 = (() => {
     m.deco('sign', 9.4, 33.5, { radius: 0.2, scale: 0.75, label: TX.pond });
     for (const [x, y] of [[14.5, 18.5], [21.5, 8.5], [8.5, 27.5]]) m.deco('p20_stone', x, y, { radius: 0.22, scale: 0.55, label: TX.stone });
     // thorn on the slopes, leaning away from the west wind; a few oaks where the woods come up to the north wall
-    const THORN = [[6, 11], [10, 5.5], [26.5, 15], [33.5, 19], [40.5, 15], [38.5, 5.5], [4.5, 18.5], [23.5, 29.5], [30.5, 34.5], [14.5, 34.2], [19.5, 26.5], [34.5, 25.5], [41, 27.5], [3.5, 26.5], [21.5, 3.5], [12.5, 15.5]];
+    const THORN = [[6, 11], [10, 5.5], [26.5, 15], [33.5, 19], [40.5, 15], [38.5, 5.5], [4.5, 18.5], [23.5, 29.5], [30.5, 34.5], [14.5, 34.2], [19.5, 26.5], [34.5, 25.5], [41, 27.5], [3.5, 26.5], [21.5, 3.5], [12.5, 15.5],
+      [7.5, 15.5], [2.6, 12.5], [15.5, 6.5], [24.5, 10.5], [29.5, 17.5], [36.5, 20.5], [40.5, 33.5], [33.5, 35.5], [18.5, 35.0], [11.5, 34.6], [2.8, 35.0], [26.5, 24.5], [16.5, 23.5], [6.5, 21.5]];
     THORN.forEach(([x, y], i) => m.deco('p20_thorn', x, y, { radius: 0.3, scale: 0.9 + ((i * 37) % 5) * 0.08, label: 'A hawthorn, combed flat by the wind.' }));
     for (const [x, y] of [[3.5, 2.6], [8.5, 2.4], [13.5, 2.8], [27.5, 2.5], [41.2, 2.6], [41.5, 8.5]]) m.deco('oak', x, y, { radius: 0.45, scale: 1.7 });
     m.baseCount = m.entities.length;
@@ -663,7 +664,11 @@ const HORIZON20 = (() => {
       buildAllMaps = function () {
         const maps = _b.apply(this, arguments);
         try {
-          if (maps.clearing && !maps[DOWNS]) { const yc = downsGateRow(maps.clearing); hookClearing(maps.clearing, yc); maps[DOWNS] = buildDowns(yc); }
+          if (maps.clearing && !maps[DOWNS]) {
+            const yc = downsGateRow(maps.clearing); hookClearing(maps.clearing, yc); maps[DOWNS] = buildDowns(yc);
+            // flora.js placed its grass before this map existed: give the Downs theirs (transient, after baseCount)
+            if (typeof FLORA !== 'undefined' && FLORA.place) FLORA.place({ [DOWNS]: maps[DOWNS] });
+          }
         } catch (e) { warnOnce('downs', e); }
         return maps;
       };
