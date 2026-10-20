@@ -90,7 +90,6 @@ const VOICES = (() => {
     p16f_wife: { f0: 210, fs: 1.1, style: 'human' },       // the cutter's wife on the raft
     p16h_vause: { f0: 184, fs: 1.07, style: 'human' },      // Sergeant Vause: professional, clipped
     p16k_pennick: { f0: 104, fs: 0.94, style: 'human' },    // the Kestrel's engineer: dry, pessimistic
-    p16k_mags: { f0: 198, fs: 1.06, style: 'human' },       // the Kestrel's lookout (unnamed): plain, short, eye to the glass
     townsman:  { f0: 122, fs: 0.97, style: 'human' },
     townswoman:{ f0: 202, fs: 1.08, style: 'human' },
     sable:     { f0: 208, fs: 1.1,  style: 'human' },

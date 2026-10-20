@@ -224,7 +224,7 @@ async function boot(browser, viewport, opts) {
     check(fx.stoveCold && fx.stoveLit === 'p15_cook' && fx.coldGone, 'the cold stove becomes a lit stove with hearth15 "Cook something"');
     check(fx.ambDelta === 0.1 && fx.restSix === 6, 'lamps: passage ambient +0.10 and a rest of 6 hours');
     check(fx.min0 === 100 && fx.minE === 85 && fx.minE3 === 5 && fx.minE2 === 5, 'envelope: map-table journeys take exactly 85% of the time, in 5-minute steps (100 -> ' + fx.minE + ', 7 -> ' + fx.minE2 + ')');
-    check(fx.risk0 === 1 && Math.abs(fx.riskC - 0.85) < 1e-9 && Math.abs(fx.riskM - 0.65) < 1e-9 && Math.abs(fx.riskMC - 0.5525) < 1e-9, 'ambush chance: chart room x0.85, the lookout x0.65, together x0.5525');
+    check(fx.risk0 === 1 && Math.abs(fx.riskC - 0.85) < 1e-9 && Math.abs(fx.riskM - 0.65) < 1e-9 && Math.abs(fx.riskMC - 0.5525) < 1e-9, 'ambush chance: chart room x0.85, Mags x0.65, together x0.5525');
 
     // the wrapped travel functions, from the ship and from the ground
     const tv = await ev(() => {
@@ -258,7 +258,7 @@ async function boot(browser, viewport, opts) {
       reset(); delete G.flags.part3; out.pre = K.recruitCheck('mags').why;
       return out;
     });
-    check(cr.mAbsentGold.why === 'gold' && cr.mOk.ok && cr.mHire.ok && cr.mPaid === 30 && cr.mDone === 'done', 'the lookout: needs 30 sovereigns, pays exactly 30, cannot be hired twice');
+    check(cr.mAbsentGold.why === 'gold' && cr.mOk.ok && cr.mHire.ok && cr.mPaid === 30 && cr.mDone === 'done', 'Mags: needs 30 sovereigns, pays exactly 30, cannot be hired twice');
     check(cr.pEarly === 'early' && cr.pEnv === 'envelope' && cr.pOk && cr.pHired, 'the engineer: needs the patched tank and the envelope');
     check(cr.cost === 28 && cr.cost2 === 56 && cr.costMats === '[["v_mesh",1],["shard",1]]', 'the engineer: gold costs exactly x0.80 (rail 35 -> ' + cr.cost + ', chart 70 -> ' + cr.cost2 + '), materials unchanged');
     check(cr.nAbsent === 'absent' && cr.nStove === 'stove' && cr.nOk, 'Nell: aboard only if Pim is safe, asks for the stove');
@@ -279,25 +279,31 @@ async function boot(browser, viewport, opts) {
     check(dly.loaf.join() === '1,0,1', 'Nell gives one Hearth Bread per game day (' + dly.loaf.join() + ')');
     check(dly.mend.join() === '55,55,90', 'Hob adds exactly 35 condition once per game day (' + dly.mend.join() + ')');
 
-    // ---------------------------------------------------------------- the lookout: unnamed, not deaf, answers from any side
+    // ---------------------------------------------------------------- Mags: signs, only when she can see your face
     const mg = await ev(() => {
       const K = KESTREL16, out = {}; G.flags.part3 = true; G.flags.p16k_crew = 1; K.board();
       const e = G.ents.find((o) => o._p16k === 'crew_mags'); out.has = !!e;
       const c = Engine.cam; e.facing = 0;
-      out.noSight = typeof K.magsSees === 'undefined' && !('SIGHT' in K.B);
-      const L = K.TX.crew.mags, P = K.TX.crew.pennick;
-      out.names = [L.name, L.label, P.name, P.label];
-      // nobody aboard is named Mags or Pennick, nobody signs or reads lips (author's ruling: unnamed crew, titles not names)
-      out.unnamed = K.TEXTS.filter((t) => /\b(Mags|Pennick|Tennant)\b/.test(t) || /\[signs\]|read lips|lip-read|\bdeaf\b/i.test(t));
-      // talking from behind opens the conversation like anyone else's
-      e.facing = 0; c.x = e.x - 2; c.y = e.y; talk(e); out.stateAfter = G.state;
-      try { closeModal(); } catch (err) { /* none */ } try { hide('#event'); } catch (err) { /* ok */ } G.state = 'play';
+      c.x = e.x + 3; c.y = e.y; out.front = K.magsSees(e);
+      c.x = e.x - 3; out.behind = K.magsSees(e);
+      c.x = e.x + 9; out.far = K.magsSees(e);
+      e.facing = Math.PI; c.x = e.x - 3; out.turned = K.magsSees(e);
+      // she feels the deck and turns round after four seconds within 3.4 cells
+      e.facing = 0; c.x = e.x - 2; c.y = e.y; K.T.turnT = 0; for (let i = 0; i < 30; i++) K.tick(0.2); out.turnedAfter = K.magsSees(e);
+      out.lines = KESTREL16.TX.crew.mags.d.every((t) => /^<i>/.test(t) || /signs|sign/i.test(t));
+      out.sign = /<i>/.test(KESTREL16.TX.crew.mags.d[0]);
+      // the engineer is unnamed (author's ruling 2026-10-20: Pennick is a Book Two person); Mags speaks as well as signs (js/data.js mags_dw)
+      out.eng = [KESTREL16.TX.crew.pennick.name, KESTREL16.TX.crew.pennick.label]; out.noPennick = KESTREL16.TEXTS.filter((t) => /Pennick/.test(t)).length;
+      out.speaks = /answers aloud/.test(KESTREL16.TX.crew.mags.intro);
+      // talking from behind: she does not answer
+      e.facing = 0; c.x = e.x - 2; c.y = e.y; K.T.sayAt = -1e9; talk(e); out.stateAfter = G.state;
       return out;
     });
-    check(mg.has && mg.noSight, 'the lookout stands at the bow rail; there is no sight cone and no lip-reading mechanic');
-    check(mg.names.join('|') === "The Kestrel's lookout|The lookout, at the bow rail, with a glass to her eye|The Kestrel's engineer|The engineer, at the tanks", 'the lookout and the engineer go by their titles: ' + mg.names.join(' / '));
-    check(mg.unnamed.length === 0, 'no registered string names Mags or Pennick, or has anyone sign or read lips (' + mg.unnamed.length + ')');
-    check(mg.stateAfter !== 'play', 'talking to the lookout from behind opens a conversation (' + mg.stateAfter + ')');
+    check(mg.has && mg.front === true && mg.behind === false && mg.far === false && mg.turned === true, 'Mags answers only when she faces you within range (front ' + mg.front + ', behind ' + mg.behind + ', far ' + mg.far + ')');
+    check(mg.turnedAfter === true, 'after four seconds close behind her she feels the deck and turns round');
+    check(mg.sign && mg.lines, 'her daily lines are italic and carry a sign note');
+    check(mg.eng.join('|') === "The Kestrel's engineer|The engineer, at the tanks" && mg.noPennick === 0 && mg.speaks, 'the engineer goes by his title, no string names Pennick, and Mags answers aloud as she signs');
+    check(mg.stateAfter === 'play', 'talking to her from behind opens no conversation');
 
     // ---------------------------------------------------------------- save and load aboard
     const sv = await ev(async () => {
