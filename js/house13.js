@@ -635,8 +635,8 @@ const HOUSE13 = (function () {
   }
   const scares = () => {
     try {
-      if (typeof NERVES13 !== 'undefined' && NERVES13 && typeof NERVES13.scaresAllowed === 'function') {
-        const v = NERVES13.scaresAllowed();
+      if (typeof window !== 'undefined' && window.NERVES13 && typeof window.NERVES13.scaresAllowed === 'function') {
+        const v = window.NERVES13.scaresAllowed();
         return (v === true || String(v).toLowerCase() === 'full') ? 'full' : 'gentle';
       }
     } catch (e) { /* default */ }
