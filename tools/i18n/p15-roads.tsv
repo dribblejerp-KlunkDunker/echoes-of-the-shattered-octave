@@ -1,0 +1,81 @@
+# Phase 15, team ROADS: english<TAB>french. Roadside encounters on world-map journeys, and "Where is...?" map marks.
+You put it on your map: {0}.	Vous le portez sur votre carte : {0}.
+You have found {0}. The mark comes off your map.	Vous avez trouvé {0}. La marque s'efface de votre carte.
+Asked after:	Demandé :
+{0} — about {1} paces {2}	{0} — à environ {1} pas vers {2}
+{0} — you are standing at it	{0} — vous y êtes
+{0} — not on this map	{0} — pas sur cette carte
+Your map has as many chalk crosses as it will hold. The oldest comes off.	Votre carte porte autant de croix à la craie qu'elle peut en tenir. La plus ancienne s'efface.
+east	l'est
+south-east	le sud-est
+south	le sud
+south-west	le sud-ouest
+west	l'ouest
+north-west	le nord-ouest
+north	le nord
+north-east	le nord-est
+A cart on the road	Une charrette sur la route
+A mile short of {0} there is a cart across the ruts with its near wheel split to the hub, and a carter sitting on the bank with his hat in his hands. The load is {1}.	À un mille de {0}, une charrette barre les ornières, la roue de ce côté fendue jusqu'au moyeu, et un charretier assis sur le talus, son chapeau entre les mains. Le chargement : {1}.
+hay, roped badly	du foin, mal cordé
+Consortium crates, lilac light leaking out of the straw, and an Office chalk-mark on every lid	des caisses du Consortium, une lumière lilas filtrant de la paille, et une marque à la craie de l'Office sur chaque couvercle
+Put your shoulder to the axle.	Mettre l'épaule sous l'essieu.
+You lift, he turns the wheel on, and the two of you get the pin home. He gives you what is in his pocket and tells you which lane the outriders use.	Vous soulevez, il remet la roue, et à deux vous enfoncez la goupille. Il vous donne ce qu'il a en poche et vous dit quelle ruelle empruntent les éclaireurs.
+The axle comes up an inch and goes down again, and takes the skin off your palms. The carter says a kind thing about trying, which is worse.	L'essieu monte d'un pouce, redescend, et vous emporte la peau des paumes. Le charretier dit une parole aimable sur le fait d'avoir essayé, ce qui est pire.
+Walk on.	Passer son chemin.
+You walk on. He does not ask.	Vous passez votre chemin. Il ne demande rien.
+Cut the lashings and take a crate.	Couper les cordages et prendre une caisse.
+You cut three ropes, take the lightest crate and are a field away before he has his hat back on. The chalk-mark on the lid is a number, and the number is now yours.	Vous coupez trois cordes, prenez la caisse la plus légère et vous êtes à un champ de là avant qu'il ait remis son chapeau. La marque à la craie sur le couvercle est un numéro, et le numéro est désormais le vôtre.
+The road: a carter with a split wheel, a mile short of the gate. The Office chalks a number on every crate it sends down the Greenroot road, and the carters are not told what the numbers mean.	La route : un charretier à la roue fendue, à un mille de la porte. L'Office inscrit à la craie un numéro sur chaque caisse qu'il envoie par la route de la Racine-verte, et on ne dit pas aux charretiers ce que les numéros signifient.
+People on the road	Des gens sur la route
+Four of them, coming the other way with what they could carry: a handcart, a birdcage with nothing in it, and a boy asleep on the bundles. They stop when they see you, the way people do when stopping is cheaper than explaining.	Ils sont quatre, en sens inverse, avec ce qu'ils ont pu porter : une charrette à bras, une cage à oiseaux vide, et un garçon endormi sur les ballots. Ils s'arrêtent en vous voyant, comme on s'arrête quand s'arrêter coûte moins cher que d'expliquer.
+Give them something to eat.	Leur donner de quoi manger.
+You hand over what you have. The woman divides it four ways in front of you, so you can see it is done fairly, and gives the last share to the boy.	Vous donnez ce que vous avez. La femme partage en quatre devant vous, pour que vous voyiez que c'est fait justement, et donne la dernière part au garçon.
+Give them five sovereigns.	Leur donner cinq souverains.
+She takes the coin, counts it, and puts it somewhere in the cart you do not see. "We will say it was found," she says. "If anyone asks."	Elle prend la monnaie, la compte, et la range dans la charrette à un endroit que vous ne voyez pas. « Nous dirons qu'elle a été trouvée », dit-elle. « Si l'on demande. »
+Ask what they saw.	Demander ce qu'ils ont vu.
+Nod, and go on.	Saluer d'un signe de tête et continuer.
+You nod. They stand aside for you, which is the wrong way round, and nobody says so.	Vous saluez d'un signe de tête. Ils s'écartent pour vous laisser passer, ce qui est à l'envers, et personne ne le dit.
+"Nothing worth a story. A notice on our own door and a man in grey to read it to us, in case we could not."	« Rien qui vaille un récit. Un avis sur notre propre porte et un homme en gris pour nous le lire, au cas où nous n'aurions pas su. »
+"They have the Greenroot road. Posts at the mile-stones and a folder at every post. We came over the fields."	« Ils tiennent la route de la Racine-verte. Des postes aux bornes et un dossier à chaque poste. Nous sommes passés par les champs. »
+"They have the square at Oakhaven now and the chapel steps with it. They read to us on Stasisdays. We did not stay for the blessing."	« Ils tiennent la place d'Oakhaven maintenant, et les marches de la chapelle avec. Ils nous font la lecture les Stasedis. Nous ne sommes pas restés pour la bénédiction. »
+"The quarry head, the road out past the Hedge, all of it. They are not even quick about it. That is the part I cannot get used to."	« La tête de carrière, la route au-delà de la Haie, tout. Ils ne sont même pas rapides. C'est à cela que je n'arrive pas à m'habituer. »
+"The drowned road is theirs. You can hear the lanterns on the water before you see them, and the lanterns are not ours."	« La route noyée est à eux. On entend les lanternes sur l'eau avant de les voir, et les lanternes ne sont pas des nôtres. »
+"The Mausoleum road. They have put a post where the willows start, and the willows do not like it."	« La route du Mausolée. Ils ont planté un poste là où commencent les saules, et les saules n'aiment pas cela. »
+The road: people off the Greenroot road with a handcart and an empty birdcage, going the other way. The Office posts a notice on the door and sends a man in grey to read it aloud, in case you cannot.	La route : des gens venus de la route de la Racine-verte, une charrette à bras et une cage à oiseaux vide, allant en sens inverse. L'Office affiche un avis sur la porte et envoie un homme en gris pour le lire à voix haute, au cas où vous ne sauriez pas.
+A Synod checkpoint	Un poste de contrôle du Synode
+A pole across the road on two trestles, a brazier, a clerk with a folder and two proctors who have been standing in one place long enough to have opinions about it. The folder is open at a page of names.	Une perche en travers de la route sur deux tréteaux, un brasero, un commis avec un dossier et deux Procureurs qui sont restés au même endroit assez longtemps pour en avoir un avis. Le dossier est ouvert à une page de noms.
+Show your hands and answer the questions.	Montrer ses mains et répondre aux questions.
+You answer. The clerk writes down more than you said and less than he heard, turns the pole up, and does not look at you again.	Vous répondez. Le commis note plus que vous n'avez dit et moins qu'il n'a entendu, relève la perche, et ne vous regarde plus.
+You have no coin for the toll, so the clerk writes your name in the folder instead, slowly, and asks you to spell it. The pole goes up. The page stays.	Vous n'avez pas la monnaie du péage, alors le commis inscrit votre nom au dossier à la place, lentement, et vous demande de l'épeler. La perche se relève. La page reste.
+Pay the toll ({0} sovereigns).	Payer le péage ({0} souverains).
+You pay. The clerk gives you a chalked tally you will never need again, and the proctors lift the pole without being asked.	Vous payez. Le commis vous remet un bon à la craie dont vous n'aurez plus jamais besoin, et les Procureurs relèvent la perche sans qu'on le leur demande.
+Show the clerk's robes.	Montrer la robe de commis.
+The clerk looks at the robes, looks at his folder, and decides that a colleague is a colleague. The pole goes up early. One of the proctors salutes, which is the worst part of it.	Le commis regarde la robe, regarde son dossier, et décide qu'un collègue est un collègue. La perche se relève en avance. L'un des Procureurs salue, ce qui est le plus pénible.
+Go round through the fields (three quarters of an hour).	Passer par les champs (trois quarts d'heure).
+You go round by the headlands and the wet corner, and come out beyond the pole with your boots ruined and your name nowhere.	Vous contournez par les tournières et le coin détrempé, et ressortez au-delà de la perche, les bottes perdues et le nom nulle part.
+Walk through.	Passer outre.
+You walk at the pole and the proctors let you, because the folder is slower than a fight and keeps longer. The clerk writes without hurrying. Somebody will be along.	Vous marchez droit sur la perche et les Procureurs vous laissent faire, parce que le dossier est plus lent qu'une bagarre et se garde plus longtemps. Le commis écrit sans se presser. Quelqu'un viendra.
+The road: a Synod checkpoint on a road the Office now holds — a pole, a brazier and a page of names. They prefer the page to the fight; the page keeps.	La route : un poste de contrôle du Synode sur une route que l'Office tient désormais — une perche, un brasero et une page de noms. Ils préfèrent la page à la bagarre ; la page se garde.
+Outriders have your description from a checkpoint folder. The roads are worse for it until it goes stale.	Des éclaireurs ont votre signalement, tiré d'un dossier de poste de contrôle. Les routes en sont plus mauvaises jusqu'à ce que cela se périme.
+A milestone	Une borne
+A milestone, leaning, with the Synod's mileage cut into the face of it and something chalked under that in a small square hand.	Une borne, penchée, avec le mille du Synode gravé en façade et, dessous, quelque chose à la craie d'une petite main carrée.
+Read the chalk.	Lire la craie.
+"Nine from the gate. Four of us went down this road in Sheafmonth and three came back. Chalk is not a grave but it is what we have."	« Neuf depuis la porte. Nous sommes partis à quatre sur cette route au mois de la Gerbe et trois sont revenus. La craie n'est pas une tombe, mais c'est ce que nous avons. »
+"Keep left of the ford after rain. Keep quiet past the thorn. Keep your reeds up, whatever the folder says."	« Tenez la gauche du gué après la pluie. Tenez-vous coi après les épines. Gardez vos roseaux accrochés, quoi que dise le dossier. »
+"They counted the oaks on this mile. We have counted the posts. It is the same number. Make of that what you like."	« Ils ont compté les chênes sur ce mille. Nous avons compté les postes. C'est le même nombre. Faites-en ce que vous voulez. »
+"If you are reading this and you are from the Office: we know you read it. We chalk it again."	« Si vous lisez ceci et que vous êtes de l'Office : nous savons que vous le lisez. Nous le réécrivons à la craie. »
+Leave it be.	Laisser cela.
+The road: the Reach keeps its own record in chalk on the milestones, rewrites it when it is wiped, and signs nothing.	La route : les Confins tiennent leur propre registre à la craie sur les bornes, le réécrivent quand on l'efface, et ne signent rien.
+A packman	Un colporteur
+A man with a frame on his back and a dog that has no intention of coming any closer. He walks the Reach roads because the Office has not got round to licensing walking. Road prices, he says, which means his prices.	Un homme avec un bât sur le dos et un chien qui n'a aucune intention d'approcher davantage. Il fait les routes des Confins parce que l'Office n'a pas encore songé à licencier la marche. Prix de la route, dit-il, c'est-à-dire ses prix.
+A tonic, {0} sovereigns.	Un tonique, {0} souverains.
+Glass shot, {0} sovereigns.	Du plomb de verre, {0} souverains.
+Oiled honey, {0} sovereigns.	Du miel huilé, {0} souverains.
+Nothing today.	Rien aujourd'hui.
+He hands it over, the dog watches you do it, and the whole transaction is over in eleven seconds.	Il vous le tend, le chien vous regarde faire, et toute la transaction est réglée en onze secondes.
+You have not the coin, and he has heard that one before.	Vous n'avez pas la monnaie, et celle-là, il l'a déjà entendue.
+He is walking before you have finished saying it.	Il est déjà en marche avant que vous ayez fini de le dire.
+Roadside events	Événements de route
+carts, people on the move, checkpoints, milestones and a packman on world-map journeys	charrettes, gens en chemin, postes de contrôle, bornes et un colporteur lors des voyages sur la carte du monde
+"Where is" map marks	Marques « Où est »
+asking after a place puts a chalk cross on your automap	demander où se trouve un lieu pose une croix à la craie sur votre carte automatique
