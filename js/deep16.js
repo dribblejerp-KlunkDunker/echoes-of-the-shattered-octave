@@ -3,7 +3,9 @@
 //
 //  After the Greening (part3 and later) a stair goes on down under the deep pool at the south-west of the Sunken Court
 //  [PROPOSED]. Below is the Synod's "restorative administration" as it was left: a notice hall, a filing hall, the clerks'
-//  room, a stair down past the 409 water mark, a relief convoy's depot, a register office and a room of things nobody
+//  room, a stair down past the painted water marks, the depot of the relief convoy of 416 (the year of the Silencing; the
+//  relief that came to the Grove afterwards and was taken over by the restorative administration; author's ruling
+//  2026-10-20: no 409, no flood relief), a register office and a room of things nobody
 //  came back for [PROPOSED, all of it]. The Unstrung are alive above; down here there is only what was left. Few foes,
 //  and those far back. The dread is light, silence, and what the records say.
 //
@@ -129,7 +131,7 @@ const DEEP16 = (function () {
       notices: S('A hall of notices. The paper has gone soft and stayed on the boards. The ink has not run. Office ink does not.'),
       filing: S('The filing hall. Drawers to the vault, and every drawer labelled in the same square hand.'),
       clerks: S('The clerks\' room. Four desks, four chairs, a coat over the back of each chair, buttoned.'),
-      stair: S('The stair goes down into the dark, past a line painted on the wall: WATER, 409.'),
+      stair: S('The stair goes down into the dark, past lines painted on the wall one above another, each a hand higher than the last: WATER. WATER. WATER. Nobody painted the next one.'),
       depot: S('The depot. Handcarts in a row, loaded, their shafts down, as if the horses had only been led round to the front.'),
       office: S('A small office with a stove in it. The stove door is shut. A register lies open on the desk.'),
       returns: S('RETURNS. UNCLAIMED. Shelves of shoes, in pairs, tied together by the laces.'),
@@ -160,7 +162,7 @@ const DEEP16 = (function () {
       a: S('NOTICE. Residents of the Loop Quarters are not to be addressed by name. Names are recorded at intake and need not be repeated. Repetition is not conversation. Restorative Administration, Whisper-Grove Station.'),
       b: S('RELIEF ISSUE. Bread: one loaf per household per Memoryday. Households are counted by the places set at table. Where a place is set for an absent member, the place is not counted.'),
       c: S('STAFF. Clerks who find they have said a sentence twice are to stop work, record the sentence, and report to the station desk. This is not a disciplinary matter.'),
-      board: S('STORES BOARD, in three hands. Painted: CONVOY OF 409. FLOOD RELIEF. In chalk, neat: Stores reassigned to Restorative Administration. In chalk, lower, larger: No further issue. Workers unable to continue.'),
+      board: S('STORES BOARD, in three hands. Painted: RELIEF CONVOY, 416. WHISPER-GROVE. In chalk, neat: Stores reassigned to Restorative Administration. In chalk, lower, larger: No further issue. Workers unable to continue.'),
     },
     docs: {
       ledgerTitle: S('Ledger: Lantern Row, page four'),
@@ -168,7 +170,7 @@ const DEEP16 = (function () {
       daybookTitle: S('Daybook, station desk'),
       daybookBody: S('Memoryday. Issue completed, Lantern Row. Clerk Abelard reports a sentence. Sentence recorded.<br>Dawnday. Clerk Abelard reports a sentence. The same sentence. Recorded again.<br>Nullday. The desk is short two clerks. Coats to stay on the chairs, in case the clerks wish to collect them.'),
       lastTitle: S('A relief worker\'s last page'),
-      lastBody: S('In pencil, in a hand that gets larger toward the end:<br><br><i>Issued bread on Lantern Row. Bettrys at No. 9 asked me where Wren\'s cloak was. I said, on the peg. She asked again, the same words. I said, on the peg.<br><br>I have been writing the names into the register at night, so that they are somewhere. The Office has numbers. A number is somewhere, but it is not a place you can go.<br><br>Today I said a sentence twice at the desk and did not notice until Hesk told me. I have put the register on the desk where it will be found. Whoever reads this: they are not numbers. Read them out.<br><br>M. Orly, relief.</i>'),
+      lastBody: S('In pencil, in a hand that gets larger toward the end:<br><br><i>Issued bread on Lantern Row. Bettrys at No. 11 asked me where Wren\'s cloak was. I said, on the peg. She asked again, the same words. I said, on the peg.<br><br>I have been writing the names into the register at night, so that they are somewhere. The Office has numbers. A number is somewhere, but it is not a place you can go.<br><br>Today I said a sentence twice at the desk and did not notice until Hesk told me. I have put the register on the desk where it will be found. Whoever reads this: they are not numbers. Read them out.<br><br>M. Orly, relief.</i>'),
       close: S('Close it'),
     },
     reg: {
