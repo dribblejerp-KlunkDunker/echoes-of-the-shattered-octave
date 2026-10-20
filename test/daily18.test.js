@@ -334,6 +334,7 @@ const AUDIT = () => {
         slot: JSON.stringify(SLOTS[0]), auto: JSON.stringify(UPG.autosaveSlot), when: UPG.autosaveWhen, flags: JSON.stringify(G.flags), map: G.mapId, cam: [Engine.cam.x, Engine.cam.y, Engine.cam.dir],
         same: G.player === __book.player && G.flags === __book.flags && G.maps === __book.maps && G.map === __book.map && G.journal === __book.journal && SLOTS[0] === __book.slot0 && UPG.autosaveSlot === __book.auto,
         noD18: !Object.keys(G.maps).some((k) => /^d18_/.test(k)), ls: localStorage.getItem('octave.daily18.v1'),
+        ghost: typeof GHOST18 !== 'undefined' ? { on: GHOST18.enabled(), best: GHOST18.best('daily:20261020'), st: GHOST18.state() } : null,
       };
     });
     const P = after.res && after.res.parts;
@@ -341,6 +342,8 @@ const AUDIT = () => {
     check(P && P.w === 2 && P.f === 3 && P.n === 2 && P.e === 1 && P.t === 312 && P.h === 7 && after.res.score === after.rescore, 'the result: climbed out, floor 3, 2 kills (1 elite), 312 s, 7 hurt ' + JSON.stringify(P) + ' = ' + (after.res && after.res.score));
     check(after.card && after.code === after.res.code && after.check && after.check.score === after.res.score && after.best && after.runs === 1 && new RegExp(String(after.res.score)).test(after.bestToday), 'the result card shows the breakdown, the share code (which checks out), "a new best"; the table has the run');
     check(/"runs":\[\{"k":"20261020"/.test(after.ls || '') && !/<|>/.test(after.ls), 'the run is stored locally (validated fields only)');
+    if (after.ghost && after.ghost.on) check(after.ghost.best && after.ghost.best.win === true && after.ghost.best.score === after.res.score && after.ghost.st.recording === null && after.ghost.st.playing === null, 'with Ghost replays on, the run was recorded and kept as the day\'s best ghost (' + JSON.stringify(after.ghost.best && { win: after.ghost.best.win, score: after.ghost.best.score, secs: after.ghost.best.secs }) + ')');
+    else console.log('     (ghosts off or GHOST18 absent: ghost wiring not checked)');
     if (SHOTS) await pg.screenshot({ path: SHOTS + '/d18-result.png' });
     check(after.slot === bookAt.slot && after.auto === bookAt.auto && after.when === bookAt.when, 'the Book One session slot and autosave are byte-identical after the run');
     check(after.flags === bookAt.flags && after.same && after.map === bookAt.map && after.cam.join() === bookAt.cam.join() && after.noD18, 'the live Book One session is the same objects as before; no daily map leaks into it');

@@ -712,9 +712,23 @@ const DAILY18 = (function () {
     hud(true);
     const title = isPractice(key) ? TX.practiceTitle : TX.title;
     showEvent(title, isoOf(key) + '<br><br>' + TX.introBody + '<br><br>' + TX.introKit, [
-      { t: TX.introGo, f: () => { try { msg(TX.startMsg, 'warn', 6000); } catch (e) { /* cue only */ } } },
+      { t: TX.introGo, f: () => { try { msg(TX.startMsg, 'warn', 6000); } catch (e) { /* cue only */ } ghostStart(); } },
       { t: TX.introLeave, f: () => { R.t = 0; endRun(0, true); } },
     ]);
+  }
+  // ghost replays (js/ghost18.js, optional, inert when Ghosts are off): record every run from the first step and race
+  // the best one kept for the same key. The ghost never touches the run.
+  const ghostKey = (k) => 'daily:' + k;
+  const G18 = () => (typeof GHOST18 !== 'undefined' && GHOST18 && GHOST18.enabled && GHOST18.enabled() ? GHOST18 : null);
+  function ghostStart() {
+    try { const g = G18(); if (!g || !R) return; const k = ghostKey(R.key); if (g.best && g.best(k) && g.play) g.play(k); if (g.record) g.record(k); } catch (e) { warnOnce('ghost', e); }
+  }
+  function ghostEnd(how, score) {
+    try {
+      const g = G18(); if (!g) return;
+      if (g.stopPlay) g.stopPlay();
+      if (how == null) { if (g.abort) g.abort(); } else if (g.stop) g.stop({ win: how === 2, score });
+    } catch (e) { warnOnce('ghost', e); }
   }
   function trackHp() {
     const p = G.player; if (!p) return;
@@ -738,6 +752,7 @@ const DAILY18 = (function () {
     const res = { key: R.key, parts, score: run.s, code: makeCode(R.key, parts), best: false, silent: !!silent };
     if (!silent) res.best = record(run);
     lastResult = silent ? null : res;
+    ghostEnd(silent ? null : how, run.s);
     hud(false);
     if (silent) { leaveRun(res); return res; }
     const title = how === 2 ? TX.resCleared : how === 1 ? TX.resFell : TX.resLeft;
