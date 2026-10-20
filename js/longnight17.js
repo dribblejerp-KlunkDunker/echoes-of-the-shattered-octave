@@ -111,6 +111,7 @@ const LONGNIGHT17 = (function () {
   const LAMPS = [[10.2, 12.5], [23.8, 12.5], [10.2, 17.5], [23.8, 17.5], [14.4, 21.7], [19.6, 21.7]];
   const KEEPER_AT = [[11.7, 11.5], [22.3, 11.5], [11.0, 18.6]];
   const OIL_AT = [24.9, 19.1];
+  const BENCHES = [[8.0, 11.0], [26.0, 11.0], [7.6, 19.0], [26.4, 19.0], [12.5, 7.6], [21.5, 7.6]];   // POLISH17
   const MOUTH = { W: [2.6, 15.0], E: [31.4, 15.0], S: [17.0, 27.0] };
   const MOUTH_NAME = { W: 'west', E: 'east', S: 'south' };
   const GAL_W = 34, GAL_H = 30;
@@ -391,6 +392,47 @@ const LONGNIGHT17 = (function () {
       const k = 0.88 + n * 0.08 + g * 0.04;
       return [206 * k, 216 * k, 232 * k];
     });
+    // ---- the gallery's stone (POLISH17). Flat-shaded pixel shapes rather than per-texel noise, because the rail is seen from
+    // half a pace and a wall from a pace or two: magnified, these stay crisp blocks and carved lines instead of a smear.
+    // On this relief map a face's texture is anchored at its top, so the rail (0.46 high) shows the top 29 rows only.
+    const mark = (x, y, gx, gy, kind) => {                                    // an incised keepers' mark: true where the cut is
+      const u = x - gx, v = y - gy;
+      if (kind === 0) return (u >= 0 && u < 11 && v >= 0 && v < 9) && ((u % 3 === 0 && u < 10) || (v === 4 && u < 11));   // a tally: four strokes and the fifth across
+      if (kind === 1) return (Math.abs(u - 1) <= 1 && Math.abs(v - 1) <= 1) || (Math.abs(u - 9) <= 1 && Math.abs(v - 6) <= 1) || (u > 1 && u < 9 && Math.abs(v - (1 + (u - 1) * 5 / 8)) < 0.7);   // two notes, a falling fifth
+      return (u >= 0 && u < 9 && (v === 0 || v === 8) && u % 2 === 0) || ((u === 0 || u === 8) && v >= 0 && v <= 8);          // a keeper's square
+    };
+    const stone = (x, y, row, seed, base) => {
+      const off = (row % 2) * 16, bx = (x + off) % 32, id = hsh(row, ((x + off) / 32) | 0, seed);
+      let k = 0.82 + 0.26 * id;
+      if (((x * 7 + y * 13 + row * 5) % 23) === 0) k *= 0.88;                // a few chisel pocks, not noise
+      return { k, joint: bx === 0 };
+    };
+    make('ln17_wall', (x, y) => {
+      const row = (y / 21.34) | 0, by = y - ((row * 21.34) | 0), st = stone(x, y, row, 301);
+      let k = st.k; if (st.joint || by === 0) k = 0.42; else if (by === 1) k *= 1.14; else if (by > 18) k *= 0.82;
+      return [58 * k, 54 * k, 47 * k];
+    });
+    make('ln17_wall2', (x, y) => {
+      const row = (y / 21.34) | 0, by = y - ((row * 21.34) | 0), st = stone(x, y, row, 311);
+      let k = st.k; if (st.joint || by === 0) k = 0.42; else if (by === 1) k *= 1.14; else if (by > 18) k *= 0.82;
+      let c = [58 * k, 54 * k, 47 * k];
+      if (row === 1 && (mark(x, y, 6, 27, 0) || mark(x, y, 38, 26, 1))) c = [26, 24, 21];
+      else if (row === 1 && (mark(x, y - 1, 6, 27, 0) || mark(x, y - 1, 38, 26, 1))) c = [86, 80, 70];   // the lit lower lip of the cut
+      return c;
+    });
+    // the rail round the pit: a pale worn coping, a frieze of keepers' marks under it, a dark foot
+    make('ln17_rail', (x, y) => {
+      if (y < 6) { const k = y === 0 ? 1.18 : y === 5 ? 0.78 : 1 - 0.03 * y + 0.06 * hsh(x >> 3, 0, 321); return [118 * k, 110 * k, 96 * k]; }
+      if (y < 8) return [34, 31, 27];
+      if (y >= 26) return [30, 28, 25];
+      const bx = x % 32, k = 0.86 + 0.18 * hsh((x / 32) | 0, 1, 322);
+      if (bx === 0) return [36, 33, 29];
+      const kind = ((x / 32) | 0) % 3;
+      if (mark(bx, y, 11, 12, kind)) return [30, 27, 23];
+      if (mark(bx, y - 1, 11, 12, kind)) return [104, 96, 84];
+      return [72 * k, 67 * k, 58 * k];
+    });
+    make('ln17_coping', (x, y) => { const k = 0.9 + 0.14 * hsh(x >> 4, y >> 4, 331) + ((x + y) % 29 === 0 ? -0.12 : 0); return [112 * k, 104 * k, 92 * k]; });
     // the mouth of the stair: dark, with the edges of steps going down into it
     make('ln17_stairhole', (x, y) => {
       const d = Math.abs(x - 32) / 32, step = (y % 11) / 11;
@@ -437,14 +479,22 @@ const LONGNIGHT17 = (function () {
     addSprite('ln17_root_grey', 96, 176, (x, w, h) => paintRoot(x, w, h, 2), { hs: 1, cx: 0.5, dy: 0 });
     glowMask('ln17_root', (r, g, b) => g > 200 && g > r + 20 && g > b + 40);
     glowMask('ln17_root_dim', (r, g, b) => g > 140 && g > r + 10 && g > b + 40);
-    // the Keeper's Stone: a low flat stone, worn at five places where knees have rested
-    addSprite('ln17_stone', 64, 40, (x) => {
-      E_(x, 32, 34, 28, 5, 'rgba(0,0,0,0.4)');
-      x.beginPath(); x.moveTo(6, 32); x.quadraticCurveTo(4, 14, 16, 12); x.lineTo(48, 12); x.quadraticCurveTo(60, 14, 58, 32); x.closePath();
-      x.fillStyle = VG(x, 12, 34, '#6a665c', '#35322c'); x.fill();
-      E_(x, 32, 14, 24, 4, '#7c786c');
-      for (let i = 0; i < 5; i++) { E_(x, 14 + i * 9, 21 + (i % 2), 3.2, 2, '#2a2824'); E_(x, 14 + i * 9, 20 + (i % 2), 2.2, 1.2, '#4a463c'); }
-      L_(x, 10, 30, 54, 30, 'rgba(0,0,0,0.25)', 1);
+    // the Keeper's Stone: a low flat stone, worn at five places where knees have rested (POLISH17: larger, its face carved
+    // with the five notes of the lullaby falling a fifth, its top pale with use, so it reads across the dark)
+    addSprite('ln17_stone', 80, 48, (x) => {
+      E_(x, 40, 43, 36, 5, 'rgba(0,0,0,0.45)');
+      R_(x, 6, 16, 68, 26, '#4e4a42'); R_(x, 6, 16, 68, 3, '#8a8474'); R_(x, 6, 38, 68, 4, '#2c2a26'); R_(x, 6, 16, 2, 26, '#625e54'); R_(x, 72, 16, 2, 26, '#36332e');
+      R_(x, 8, 10, 64, 6, '#9a9482'); R_(x, 8, 10, 64, 1, '#b4ae9a');                                           // the top, worn pale
+      for (let i = 0; i < 5; i++) { R_(x, 13 + i * 12, 11, 7, 3, '#5a564c'); R_(x, 14 + i * 12, 12, 5, 1, '#3e3b34'); }   // five places worn by knees
+      const notes = [[18, 21], [28, 23], [38, 25], [48, 30], [58, 33]];                                          // the lullaby, falling a fifth
+      for (const [nx, ny] of notes) { R_(x, nx - 2, ny, 5, 4, '#26241f'); R_(x, nx - 2, ny + 4, 5, 1, '#7a7466'); R_(x, nx + 2, ny - 5, 1, 6, '#26241f'); }
+      L_(x, 12, 36, 68, 36, 'rgba(20,18,15,0.6)', 1);
+    });
+    // a keepers' bench: a plank on two stone blocks, worn
+    addSprite('ln17_bench', 64, 32, (x) => {
+      E_(x, 32, 29, 28, 3, 'rgba(0,0,0,0.4)');
+      R_(x, 8, 16, 10, 13, '#4a463e'); R_(x, 46, 16, 10, 13, '#4a463e'); R_(x, 8, 16, 10, 2, '#6a655a'); R_(x, 46, 16, 10, 2, '#6a655a');
+      R_(x, 2, 10, 60, 6, '#6a5236'); R_(x, 2, 10, 60, 2, '#8a6c48'); R_(x, 2, 15, 60, 1, '#3a2a1a');
     });
     // the oil niche: a rack of brass flasks in a stone frame
     addSprite('ln17_oil', 48, 56, (x) => {
@@ -568,9 +618,9 @@ const LONGNIGHT17 = (function () {
   const walkable = (m, x, y) => x >= 0 && y >= 0 && x < m.w && y < m.h && !m.isSolidCell(x, y) && !(m.floorCells && m.floorCells[y * m.w + x] === 2);
 
   function buildGallery() {
-    const m = new GameMap(GAL, TX.galleryName, GAL_W, GAL_H, { floor: 't_flag', floorTextures: ['t_flag', 't_cobble', 'ln17_depth'], ceil: 't_glassrock', fogDist: 13, ambient: 0.085, fogColor: [6, 10, 8], music: 'root', danger: 0, spawn: { x: 17.5, y: 6.6, dir: Math.PI / 2 } });
+    const m = new GameMap(GAL, TX.galleryName, GAL_W, GAL_H, { floor: 't_flag', floorTextures: ['t_flag', 't_cobble', 'ln17_depth'], ceil: 'c_rock', fogDist: 15, ambient: 0.13, fogColor: [6, 10, 8], music: 'root', danger: 0, spawn: { x: 17.5, y: 6.6, dir: Math.PI / 2 } });
     m.ceilZ = 2.6;
-    for (let y = 0; y < GAL_H; y++) for (let x = 0; x < GAL_W; x++) m.set(x, y, WALL(hsh(x, y, 3) < 0.22 ? 't_stone' : 't_glassrock'));
+    for (let y = 0; y < GAL_H; y++) for (let x = 0; x < GAL_W; x++) m.set(x, y, WALL(hsh(x, y, 3) < 0.3 ? 'ln17_wall2' : 'ln17_wall'));   // POLISH17: dressed stone, the keepers' marks cut in it
     // the hall: an ellipse around the Root
     for (let y = 0; y < GAL_H; y++) for (let x = 0; x < GAL_W; x++) {
       const ex = (x + 0.5 - C.x) / 12.6, ey = (y + 0.5 - C.y) / 10.6;
@@ -585,13 +635,15 @@ const LONGNIGHT17 = (function () {
     for (let y = 0; y < GAL_H; y++) for (let x = 0; x < GAL_W; x++) {
       const d = hyp(x + 0.5 - C.x, y + 0.5 - C.y);
       if (d < 3.3) { m.set(x, y, null); m.setFloor(x, y, 2); }
-      else if (d < 4.4 && walkable(m, x, y)) m.block(x, y, 't_stone', 0.46);
+      else if (d < 4.4 && walkable(m, x, y)) m.block(x, y, 'ln17_rail', 0.46, { capTex: 'ln17_coping' });
     }
     m.set(17, 0, DOOR({ tex: 'ln17_stairhole', portal: { map: ORCH, x: 14.5, y: 8.4, dir: Math.PI / 2, ln17up: true }, label: TX.gallery.up }));
     // ---- props
-    LAMPS.forEach((p, i) => m.deco('lamp', p[0], p[1], { solid: true, radius: 0.22, scale: 0.9, glow: 0.9, label: TX.gallery.lamp, use: 'p17n_lamp', _lampIdx: i }));
+    LAMPS.forEach((p, i) => m.deco('lamp', p[0], p[1], { solid: true, radius: 0.22, scale: 1.0, glow: 0.9, label: TX.gallery.lamp, use: 'p17n_lamp', _lampIdx: i }));
     m.deco('ln17_root', C.x, C.y + 0.2, { solid: false, radius: 0.1, scale: 3.3, glow: 0.5, lightCol: [30, 60, 20], label: TX.gallery.root, use: 'p17n_root', yOff: 0 });
-    m.deco('ln17_stone', STONE.x, STONE.y, { solid: false, radius: 0.5, scale: 0.8, label: TX.gallery.stoneSing, use: 'p17n_stone' });
+    m.deco('ln17_stone', STONE.x, STONE.y, { solid: false, radius: 0.5, scale: 1.05, glow: 0.32, label: TX.gallery.stoneSing, use: 'p17n_stone' });
+    // POLISH17: the keepers' benches round the outer wall, facing the Root (not solid: nothing in the hall's ways changes)
+    for (const [x, y] of BENCHES) m.deco('ln17_bench', x, y, { solid: false, radius: 0.3, scale: 0.62, nopick: true });
     m.deco('ln17_oil', OIL_AT[0], OIL_AT[1], { solid: true, radius: 0.35, scale: 0.8, label: TX.gallery.oil, use: 'p17n_oil' });
     m.deco('ln17_rubble', 3.6, 15.0, { solid: false, scale: 1.0, label: TX.gallery.rubble });
     m.deco('ln17_rubble', 30.4, 15.0, { solid: false, scale: 1.0, label: TX.gallery.rubble });
