@@ -183,6 +183,8 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[ ]` Phones as they are: no separate phone mode (owner's call: the graphics are light enough). The guest uses the game's existing touch controls and presets; the phase only checks that joining and playing work in a phone browser.
 - Owner's decisions: can the guest also host from a phone (performance)? Should the guest be able to make story choices on their turn? (Defaults: host on a computer; host decides.)
 
+**Phase 17 — beyond Book One** (delivered as marked extras; items marked (P17); see the Phase 17 verification)
+
 **Phase 16 — new ground** (delivered; items marked (P16); see the Phase 16 verification)
 
 **Phase 15 — the province moves** (delivered; items marked (P15); see the Phase 15 verification)
@@ -247,11 +249,20 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 
 **New areas and content**
 - `[x]` The Chlorophyll Flume side area (P16) · `[x]` An underwater dungeon beneath Whisper-Grove (P16) · `[x]` Heists: the Chapel's Held Letters (the Synod's house in the Reach) and the Consortium's Depot Three (P16)
-- `[ ]` The Long Night survival event · `[ ]` A trip to Port Cantabile · `[ ]` A Book Two prologue after the ending · `[x]` The Kestrel as an upgradable home base with crew (P16)
+- `[x]` The Long Night survival event (P17, an extra) · `[x]` A trip to Port Cantabile (P17, an extra) · `[x]` A prologue after the ending (P17: "The River Gate", Book Four's return to Oakhaven; see the Phase 17 verification) · `[x]` The Kestrel as an upgradable home base with crew (P16)
 
 **Technical**
 - `[~]` A sharper renderer with the pixel look kept (P14: the Ultra and Cinematic presets, view distance to 4x with sky-matched haze and far LOD; a WebGL renderer remains for a later phase — see the Project doc "Echoes of the Shattered Octave: Graphics Upgrade and View-Distance Roadmap") · `[ ]` Installable offline app from GitHub Pages · `[ ]` Daily challenge dungeon · `[ ]` Ghost replays of boss runs
 - `[ ]` Messages left for other players (needs a small server) · `[ ]` Online leaderboards (needs a server) · `[x]` Performance overlay (frame rate, memory) (P11)
+
+### Phase 17 "Beyond Book One" verification
+- **How it was built.** Four parallel teams (extras, prologue, cantabile, longnight), the Extras framework merged first so the others built on the real API, then a graphics-polish team over the three extras, then integration on phase17-beyond. Everything is set after Book One and reached only from the Extras menu.
+- **Extras (js/extras17.js).** An Extras button on the title screen; a one-time spoiler notice (Book One's ending and the later books); unlocked by either Book One ending, by loading a finished save, or "open them anyway". Each extra runs in an isolated session: the Book One game is set aside by reference and given back untouched (tested byte-identical); the extra keeps one save of its own; save codes and downloads are off inside an extra; a banner says "An extra — after Book One". WINTER17: snow on the ground and wall tops, falling snow, cold grade and breath (off in Original and Low).
+- **Prologue (js/prologue17.js): "The River Gate".** Rootday the nineteenth of Frostmonth 419 (Book Four, Part One, ch. 4): Lyra up the Greenroot road at dusk, stones set on the graves, the voice outside the Hedge ("Lyra-love") and NOBODY on the slate, Oakhaven as a wood with the houses in the crowns and the leaves down, Dorran Sedge at the river gate. No combat; Lyra has no voice, holds a lantern and her slate. Named "The River Gate", not "Book Two — prologue", because any Oakhaven scene earlier than Book Four would contradict the books.
+- **Cantabile (js/cantabile17.js): "A trip to Port Cantabile".** Ashfall 419, before the Burning: the cliff harbour on the Phase 2 height system, the Long Mole and the Mole-bell, the Salt Stair's six landings with lamps lit landing by landing at dusk, the counting-house sealed at the top, the Harbour Office, the chandler, the Cay with its grave bells. Errands: the dues paid at the slack key (read the hour from the reef's pitch), the valve, Marrin Tace's vox-bottle, the salvage crate.
+- **Long Night (js/longnight17.js): "The Long Night".** The Longest Night under the orchard: ten hours of a held-pitch lullaby against escalating waves, lamps to trim and refill, three young Cantors to keep out of the dark, sounds going missing as the tune falls; falls instead of death; dawn on 1 Stillmonth wins; a local best-times table. No Organum, no Vaelen.
+- **Integration fixes.** snapshotGame() now returns a copy (before, flags, journal, ledger and the player's arrays were live references, so a saved slot changed with later play); the extras17 test accepts the shipped extras; split-markup French fragments; a short sword in hand in Cantabile and the Long Night.
+- **Tests.** New suites extras17, prologue17, cantabile17, longnight17; the full run's results are in the Phase 17 PR.
 
 ### Phase 16 "New ground" verification
 - **How it was built.** Four parallel teams (flume, deep, heist, kestrel), then a graphics-polish team over all four areas, then integration on phase16-ground. Every area is optional side content: nothing blocks or reorders Book One.
