@@ -51,7 +51,8 @@ const SIDE_ON = ['briarsprite', 'fretcrawler', 'hound'];
       for (const name of MINE) {
         const views = new Set();
         for (const p of poses) {
-          const srcF = Engine.sprites[name + p]; check(srcF, name + p + ' source frame');
+          // (the hound's strike is painted head-on; its other angles are drawn from the wind-up's profile frame)
+          const srcF = Engine.sprites[name + (name === 'hound' && p === '_a2' ? '_a1' : p)]; check(srcF, name + p + ' source frame');
           for (let v = 1; v <= 4; v++) {
             const s = DIRECTIONS.view(name, v, p);
             check(s && s.data instanceof Uint32Array && s.data.length === s.w * s.h && s.data.some(q => q >>> 24), name + p + ' view ' + v + ' drawn');

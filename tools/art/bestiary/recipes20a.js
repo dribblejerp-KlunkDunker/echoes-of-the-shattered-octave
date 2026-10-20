@@ -1217,7 +1217,7 @@ BEAST20A.SPECIES.hound = (() => {
       P.grain([[A - 18, 28], [A + 18, 28], [A + 22, 46], [A - 22, 46]], B.tones(N, [[120, 40], [130, 60], [100, 50], [140, 45]]), 2, 31);
       const rump = []; for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2; rump.push([A + Math.cos(a) * 31 + (Math.sin(a * 5) * 2), 72 + Math.sin(a) * 44]); }
       P.layer(Q => Q.tex(N, 62, 36, 40, 48, rump), 0.62, 1.12, 0.7, 0.42);
-      const leg = B.piece(N, 22, 106, 40, 42);
+      const leg = B.piece(N, 22, 106, 40, 42, [[31, 106], [53, 106], [60, 148], [24, 148], [26, 126]]);
       P.g.drawImage(leg, A - 44 - st * 2, 116 + Math.max(0, st) * 2);
       P.g.save(); P.g.translate(A + 44 + st * 2, 116 + Math.max(0, -st) * 2); P.g.scale(-1, 1); P.g.drawImage(leg, 0, 0); P.g.restore();
       // the ridge of bristles along the spine, seen end-on
@@ -1228,8 +1228,9 @@ BEAST20A.SPECIES.hound = (() => {
   const recipe = (v, p) => {
     if (v === 0) return Engine.sprites[N + '_a2'];          // head-on it is the painting of the lunge
     if (v === 4) return rear(p);
-    const r = rig(p);
-    return B.lathed(N + p, r, v, (P, ox, psi) => {
+    // the strike is painted head-on; turned away from you it is the crouching snap of the wind-up
+    const q = p === '_a2' ? '_a1' : p, r = rig(q);
+    return B.lathed(N + q, r, v, (P, ox, psi) => {
       // head-on and three-quarter: the pale eyes and the white of the teeth
       if (psi > 0.3) {
         const e = B.at(N, 182, 70, 1.25), tooth = B.at(N, 190, 95, 1.2), dk = B.at(N, 190, 90, 0.4);
