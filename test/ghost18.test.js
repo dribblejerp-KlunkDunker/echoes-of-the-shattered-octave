@@ -354,6 +354,50 @@ async function boot(browser, vp) {
     assert.equal(rm.hostile, 0, 'a hand-edited store drops everything that fails the import checks'); assert(rm.memory, 'with storage blocked the ghost lives in memory');
     console.log('PASS accessibility and hostile storage: Reduce motion shortens the fade, no pulse or flicker, a corrupt store is dropped, blocked storage keeps the session ghost');
 
+    // ================================================================= 9b. the figure reads as a person, at an NPC's size
+    const body = await page.evaluate(() => {
+      const runs = (f, y) => { let n = 0, inR = false; for (let x = 0; x < f.w; x++) { const on = (f.data[y * f.w + x] >>> 24) > 0; if (on && !inR) n++; inR = on; } return n; };
+      const rows = (d, w, h) => { let t = h, b = -1; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if ((d[y * w + x] >>> 24) > 100) { if (t === h) t = y; b = y; } return [t, b]; };
+      const luma = (p) => 0.3 * (p & 255) + 0.59 * ((p >>> 8) & 255) + 0.11 * ((p >>> 16) & 255);
+      const out = { looks: [] };
+      const looks = [{ cls: 0, face: 1, wpn: 1, arm: 0 }, { cls: 2, face: 3, wpn: 7, arm: 1 | 16 }, { cls: 5, face: 6, wpn: 6, arm: 2 << 2 }, { cls: 1, face: 2, wpn: 0, arm: 4 }];
+      for (const L of looks) {
+        const f = GHOST18.figureFrame(0, 0, 0, 0, L), w = f.w, h = f.h, [t, b] = rows(f.data, w, h), H = b - t + 1;
+        // the widest row above the hips, the arms-and-body row at the hands, the legs row at the knees
+        let wide = 0; for (let y = t; y < t + H * 0.5; y++) { let x0 = w, x1 = -1; for (let x = 0; x < w; x++) if (f.data[y * w + x]) { x0 = Math.min(x0, x); x1 = x; } wide = Math.max(wide, x1 - x0 + 1); }
+        const handRow = Math.round(t + H * 0.5), kneeRow = Math.round(t + H * 0.8);
+        let armSplit = 0; for (let y = handRow - 4; y <= handRow + 4; y++) armSplit = Math.max(armSplit, runs(f, y));
+        let legSplit = 0; for (let y = kneeRow - 3; y <= kneeRow + 3; y++) legSplit = Math.max(legSplit, runs(f, y));
+        // the rim (outermost ring) is brighter than the body inside it, and the whole is a pale blue
+        let rimL = 0, rimN = 0, inL = 0, inN = 0, rS = 0, bS = 0;
+        for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+          const p = f.data[y * w + x]; if (!p) continue; rS += p & 255; bS += (p >>> 16) & 255;
+          const edge = !f.data[y * w + x - 1] || !f.data[y * w + x + 1] || !(f.data[(y - 1) * w + x]) || !(f.data[(y + 1) * w + x]);
+          if (edge) { rimL += luma(p); rimN++; } else { inL += luma(p); inN++; }
+        }
+        out.looks.push({ L, H: H / h, aspect: w / h, wide: wide / H, armSplit, legSplit, rim: rimL / rimN, inner: inL / inN, blue: bS > rS, robe: L.cls === 1 });
+      }
+      // an NPC sprite of scale 1 fills its frame height the same way (Old Harrow)
+      const sp = Engine.sprites.harrow; const [nt, nb] = rows(sp.data, sp.w, sp.h); out.npcH = (nb - nt + 1) / sp.h * (sp.hs || 1);
+      // walking: the legs part in profile; the painter is a pure function (same pixels twice)
+      const wf = GHOST18.figureFrame(2, 1, 0, 0, looks[0]); let lw = 0; const [wt, wb] = rows(wf.data, wf.w, wf.h); for (let y = Math.round(wt + (wb - wt) * 0.85); y <= wb - 2; y++) lw = Math.max(lw, runs(wf, y)); out.walkLegs = lw;
+      const a = GHOST18.paintFigure(1, 2, 3, 2, looks[1]), b2 = GHOST18.paintFigure(1, 2, 3, 2, looks[1]); out.pure = a.length === b2.length && a.every((v, i) => v === b2[i]);
+      out.cached = GHOST18.figureFrame(1, 2, 3, 2, looks[1]) === GHOST18.figureFrame(1, 2, 3, 2, looks[1]);
+      return out;
+    });
+    for (const k of body.looks) {
+      assert(Math.abs(k.H - body.npcH) < 0.08, 'the figure stands as tall in its frame as an NPC sprite: ' + k.H.toFixed(2) + ' vs ' + body.npcH.toFixed(2));
+      assert(k.aspect > 0.33 && k.aspect < 0.55, 'frame aspect like the NPC sprites: ' + k.aspect.toFixed(2));
+      assert(k.wide > 0.26, 'shoulders and arms span over a quarter of the height (not a post): ' + k.wide.toFixed(2) + ' ' + JSON.stringify(k.L));
+      assert(k.armSplit >= 3, 'front view: the arms hang clear of the body (' + k.armSplit + ' runs at the hands) ' + JSON.stringify(k.L));
+      if (!k.robe) assert(k.legSplit >= 2, 'front view: two legs apart at the knees ' + JSON.stringify(k.L));
+      assert(k.rim > k.inner, 'a brighter rim round the figure: ' + k.rim.toFixed(0) + ' > ' + k.inner.toFixed(0));
+      assert(k.blue, 'a pale-blue tint');
+    }
+    assert(body.walkLegs >= 2, 'walking in profile the legs are apart: ' + body.walkLegs);
+    assert(body.pure && body.cached, 'the painter is pure and its frames are cached');
+    console.log('PASS figure shape: NPC-height (' + body.looks[0].H.toFixed(2) + ' vs ' + body.npcH.toFixed(2) + '), shoulders ' + body.looks.map((k) => k.wide.toFixed(2)).join('/') + ' of height, arms clear, legs apart, brighter rim, pale blue, pure and cached');
+
     // ================================================================= 10. screenshots, cost
     await reset();
     const ready = await page.evaluate(() => { __fight('wearer', { steps: 500 }); return !!GHOST18.best('boss:wearer'); });

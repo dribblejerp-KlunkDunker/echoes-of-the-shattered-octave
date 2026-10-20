@@ -600,213 +600,251 @@ const GHOST18 = (function () {
   }
 
   // ================================================================ THE FIGURE (procedural stand-in art)
-  // A pale figure in the player's likeness on a 24x60 grid, painted as flat tones from the pose, shaded, outlined and
-  // faded at the hem, then cached as a Uint32 sprite. 5 views (front .. back, mirrored for the left side) x locomotion
-  // x action; the painter is a pure function of its arguments (no random).
-  const FW = 24, FH = 60, FOOT = 58;
-  const TONE = { OUT: 1, DEEP: 2, SHADE: 3, BASE: 4, LIGHT: 5, ACC: 6, ACCS: 7, DARK: 8, GLINT: 9, HAIR: 10, HAIRS: 11, SKIN: 12, SKINS: 13 };
-  // class accents (pale hues so the figure stays a ghost): blade amber, cantor lilac, corsair sea, archivist green, penitent ash, quarry ochre
+  // A translucent echo in the player's likeness: a pale-blue figure of real human build (shoulders, arms held clear of the
+  // body, legs apart in stride, a head with hood, hair, cap or helm) painted on a 40x96 grid whose height is one tile, the
+  // same height a standing NPC sprite takes. Body parts are painted in depth order as flat tones with an ink line where a
+  // nearer part crosses a farther one, shaded from the upper left, and ringed with a slightly brighter rim so the shape
+  // holds against fog and grass. 5 views (front .. back, mirrored for the left side) x locomotion x action; the painter is
+  // a pure function of its arguments (no random) and its frames are cached.
+  const FW = 40, FH = 96, K = 1.6, CX = 20, FOOT = 93;   // K: pixels per body unit (a body is about 57 units tall)
+  const TONE = { OUT: 1, DEEP: 2, SHADE: 3, BASE: 4, LIGHT: 5, ACC: 6, ACCS: 7, DARK: 8, GLINT: 9, HAIR: 10, HAIRS: 11, SKIN: 12, SKINS: 13, INK: 14, ACCL: 15, HAIRL: 16 };
+  // class accents, folded well toward the ghost's blue: blade amber, cantor lilac, corsair sea, archivist green, penitent ash, quarry ochre
   const CLS_ACC = [[238, 214, 150], [208, 192, 240], [160, 226, 216], [190, 232, 182], [206, 208, 216], [232, 200, 150]];
   const HAIR_FACE = { 1: [92, 100, 118], 2: [240, 178, 150], 3: [226, 232, 240], 4: [60, 68, 92], 5: [0, 0, 0], 6: [244, 248, 255] };
   const mix = (a, b, t) => [Math.round(a[0] + (b[0] - a[0]) * t), Math.round(a[1] + (b[1] - a[1]) * t), Math.round(a[2] + (b[2] - a[2]) * t)];
+  const GH_BASE = [178, 206, 236];
   function palette(look) {
-    const acc = CLS_ACC[look.cls] || [198, 220, 240], hair = HAIR_FACE[look.face] || [200, 210, 224];
+    const acc = mix(CLS_ACC[look.cls] || [198, 220, 240], GH_BASE, 0.6), hair = mix(HAIR_FACE[look.face] || [200, 210, 224], GH_BASE, 0.5);
     const p = [];
-    p[TONE.OUT] = [30, 48, 76, 235]; p[TONE.DEEP] = [92, 118, 152, 205]; p[TONE.SHADE] = [142, 174, 208, 195]; p[TONE.BASE] = [194, 220, 240, 190];
-    p[TONE.LIGHT] = [238, 247, 255, 205]; p[TONE.ACC] = [...mix(acc, [236, 246, 255], 0.25), 200]; p[TONE.ACCS] = [...mix(acc, [96, 120, 156], 0.55), 205];
-    p[TONE.DARK] = [28, 40, 66, 245]; p[TONE.GLINT] = [255, 255, 255, 235];
-    p[TONE.HAIR] = [...mix(hair, [236, 246, 255], 0.35), 205]; p[TONE.HAIRS] = [...mix(hair, [60, 82, 120], 0.35), 210];
-    p[TONE.SKIN] = [232, 240, 248, 200]; p[TONE.SKINS] = [176, 198, 222, 195];
+    p[TONE.OUT] = [222, 240, 255, 236];                       // the rim: a little brighter than anything inside it
+    p[TONE.INK] = [64, 92, 136, 215];                          // where a nearer part crosses a farther one
+    p[TONE.DEEP] = [92, 122, 166, 200]; p[TONE.SHADE] = [140, 172, 212, 178]; p[TONE.BASE] = [180, 208, 238, 166]; p[TONE.LIGHT] = [214, 234, 255, 178];
+    p[TONE.ACC] = [...acc, 170]; p[TONE.ACCS] = [...mix(acc, [84, 112, 156], 0.42), 182]; p[TONE.ACCL] = [...mix(acc, [236, 246, 255], 0.4), 176];
+    p[TONE.DARK] = [36, 52, 86, 230]; p[TONE.GLINT] = [248, 252, 255, 230];
+    p[TONE.HAIR] = [...hair, 178]; p[TONE.HAIRS] = [...mix(hair, [72, 98, 140], 0.4), 188]; p[TONE.HAIRL] = [...mix(hair, [236, 246, 255], 0.4), 180];
+    p[TONE.SKIN] = [222, 236, 252, 182]; p[TONE.SKINS] = [168, 194, 226, 180];
     return p;
   }
+  // light (upper left) and shade (lower right) of each body tone; the others (blades, ink, eyes) are left as painted
+  const LIT = { [TONE.BASE]: TONE.LIGHT, [TONE.SHADE]: TONE.BASE, [TONE.ACC]: TONE.ACCL, [TONE.ACCS]: TONE.ACC, [TONE.HAIR]: TONE.HAIRL, [TONE.HAIRS]: TONE.HAIR, [TONE.SKIN]: TONE.SKIN, [TONE.SKINS]: TONE.SKIN };
+  const SHD = { [TONE.BASE]: TONE.SHADE, [TONE.SHADE]: TONE.DEEP, [TONE.ACC]: TONE.ACCS, [TONE.ACCS]: TONE.DEEP, [TONE.ACCL]: TONE.ACC, [TONE.HAIR]: TONE.HAIRS, [TONE.HAIRL]: TONE.HAIR, [TONE.SKIN]: TONE.SKINS, [TONE.LIGHT]: TONE.BASE };
   function paintFigure(b, loco, act, ap, look) {   // ap: the action phase 0-3
-    const c = new Uint8Array(FW * FH);
-    const put = (x, y, v) => { x = Math.round(x); y = Math.round(y); if (x >= 0 && x < FW && y >= 0 && y < FH) c[y * FW + x] = v; };
-    const psi = b * Math.PI / 4, u = Math.cos(psi), sn = Math.sin(psi), au = Math.abs(u);
-    const P = (f, r, z) => [12 + f * sn + r * (-u), FOOT - z + 0.3 * (f * u + r * sn)];
-    const rowSpan = (y, x0, x1, v) => { for (let x = Math.round(x0); x <= Math.round(x1); x++) put(x, y, v); };
+    const N = FW * FH, c = new Uint8Array(N), id = new Uint16Array(N);
+    let pid = 0;
+    const put = (x, y, v) => { x = Math.round(x); y = Math.round(y); if (x >= 0 && x < FW && y >= 0 && y < FH) { c[y * FW + x] = v; id[y * FW + x] = pid; } };
+    const psi = b * Math.PI / 4, u = Math.cos(psi), sn = Math.sin(psi), au = Math.abs(u), as = Math.abs(sn);
+    // body units (forward, right, up) to grid pixels; nearer the camera sits a little lower (a slight top-down view)
+    const P = (f, r, z) => [CX + K * (f * sn - r * u), FOOT - K * (z - 0.3 * (f * u + r * sn))];
+    const dep = (f, r) => f * u + r * sn;                       // toward the camera
+    const span = (y, x0, x1, v) => { for (let x = Math.round(x0); x <= Math.round(x1); x++) put(x, y, v); };
     const ell = (cx, cy, rx, ry, v) => { for (let y = Math.floor(cy - ry); y <= Math.ceil(cy + ry); y++) for (let x = Math.floor(cx - rx); x <= Math.ceil(cx + rx); x++) { const dx = (x - cx) / (rx + 0.01), dy = (y - cy) / (ry + 0.01); if (dx * dx + dy * dy <= 1) put(x, y, v); } };
+    // a tapered capsule between two points (pixels), radii in body units
+    const limb = (a, bb, r0, r1, v) => {
+      const R0 = r0 * K, R1 = r1 * K, x0 = Math.floor(Math.min(a[0], bb[0]) - Math.max(R0, R1) - 1), x1 = Math.ceil(Math.max(a[0], bb[0]) + Math.max(R0, R1) + 1);
+      const y0 = Math.floor(Math.min(a[1], bb[1]) - Math.max(R0, R1) - 1), y1 = Math.ceil(Math.max(a[1], bb[1]) + Math.max(R0, R1) + 1);
+      const vx = bb[0] - a[0], vy = bb[1] - a[1], L2 = vx * vx + vy * vy || 1;
+      for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+        const t = clamp(((x - a[0]) * vx + (y - a[1]) * vy) / L2, 0, 1), dx = x - (a[0] + vx * t), dy = y - (a[1] + vy * t), R = R0 + (R1 - R0) * t;
+        if (dx * dx + dy * dy <= R * R + 0.15) put(x, y, v);
+      }
+    };
     const stamp = (x, y, w, v) => { const h = Math.floor(w / 2); for (let j = 0; j < w; j++) for (let i = 0; i < w; i++) put(x - h + i, y - h + j, v); };
     const line = (x0, y0, x1, y1, w, v) => { const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) * 1.5)); for (let k = 0; k <= n; k++) { const t = k / n; stamp(Math.round(x0 + (x1 - x0) * t), Math.round(y0 + (y1 - y0) * t), w, v); } };
+    // a body section: rows from z0 up to z1 with a half-width (front, side) that is a function of z
+    const section = (z0, z1, fAt, hwAt, toneAt) => {
+      for (let z = z0; z <= z1 + 1e-6; z += 0.3) {
+        const c0 = P(fAt(z), 0, z), h = hwAt(z), hw = h[0] * au + h[1] * as;
+        span(Math.round(c0[1]), c0[0] - hw * K, c0[0] + hw * K, toneAt(z));
+      }
+    };
     const arm = look.arm, headK = arm & 3, bodyK = (arm >> 2) & 3, shield = !!(arm & 16), gloves = !!(arm & 32);
     const robe = look.cls === 1 || look.cls === 3 || look.cls === 4;
     const plate = bodyK === 2, glassOff = look.cls === 0, W = look.wpn;
     const lean = act === 8 ? -2.4 : 0, up = act === 7 ? 1.2 : 0;
-    // locomotion: stride sign, arm swing
-    const st = loco === 0 ? 0 : (loco === 1 ? 1 : -1) * 3.2;
-    const face = look.face, hooded = face === 1 || face === 4 || headK === 2;
+    const st = loco === 0 ? 0 : loco === 1 ? 1 : -1;           // which leg leads
+    const face = look.face, hooded = face === 1 || face === 4 || headK === 2, helm = headK === 3, cap = headK === 1;
 
-    // -- cloak behind (front/side/3-4 views) -------------------------------------------------------
-    const cloak = () => {
-      for (let z = (robe ? 10 : 20); z <= 43; z += 1) {
-        const k = (43 - z) / 31, hwR = 4.6 + 1.6 * k, hd = 2.8 + 1.0 * k, c0 = P(-1.6 - k * 0.8 + lean * (z / 43), 0, z);
-        const hw = hwR * au + hd * Math.abs(sn), y = c0[1];
-        rowSpan(y, c0[0] - hw, c0[0] + hw, TONE.ACCS); put(c0[0] - hw, y, TONE.ACC);
-      }
-    };
-    if (u >= -0.2) cloak();
-    // -- legs ---------------------------------------------------------------------------------------
-    const legs = () => {
-      for (const side of [-1, 1]) {
-        const lf = side * st * (loco === 2 ? -1 : 1) * 0.5 + (loco === 0 ? 0 : 0);
-        const h = P(0 + lean * 0.4, side * 2.3, 27), ft = P(lf * 1.2, side * 2.3, loco === 0 ? 1.5 : (lf > 0 ? 1.5 : 3.2));
-        line(h[0], h[1], ft[0], ft[1], 3, plate ? TONE.SHADE : TONE.DEEP);
-        const bt = P(lf * 1.2, side * 2.3, 1.2); const bf = P(lf * 1.2 + 1.8, side * 2.3, 1.2);
-        rowSpan(bt[1] - 1, Math.min(bt[0], bf[0]) - 1, Math.max(bt[0], bf[0]) + 1, TONE.DARK); rowSpan(bt[1], Math.min(bt[0], bf[0]) - 1, Math.max(bt[0], bf[0]) + 1, TONE.DARK);
-      }
-    };
-    // the arm that is not the weapon arm (far side), then the torso
-    const hand = (x, y, v) => { stamp(x, y, 2, v); };
-    const armLine = (sh, hd, glass) => {
-      line(sh[0], sh[1], hd[0], hd[1], 3, glass ? TONE.ACC : plate ? TONE.SHADE : TONE.BASE);
-      if (glass) { line(sh[0] + (hd[0] - sh[0]) * 0.45, sh[1] + (hd[1] - sh[1]) * 0.45, hd[0], hd[1], 1, TONE.GLINT); }
-      else { line(sh[0] + (hd[0] - sh[0]) * 0.8, sh[1] + (hd[1] - sh[1]) * 0.8, hd[0], hd[1], 3, gloves ? TONE.DEEP : TONE.BASE); }
-      hand(hd[0], hd[1], glass ? TONE.LIGHT : gloves ? TONE.DEEP : TONE.SKIN);
-    };
-    // poses: off-hand and weapon hand positions in the ghost's frame (forward, right, up)
-    const swing = loco === 0 ? 0 : (loco === 1 ? -1.6 : 1.6);
-    let offH = [0.6 - swing, -5.8, 28.5], wH = [0.8 + swing, 5.8, 28.5], wV = [0.3, 0.05, 0.95], blockSh = false;
+    // -- poses: hand positions in the ghost's frame (forward, right, up) --------------------------------------------
+    const swing = st * 2.6;
+    let offH = [(st ? 0.4 : 1.4) + swing, -9.6, 25.5], wH = [(st ? 0.4 : -0.4) - swing, 9.6, 25.5], wV = (W === 4 || W === 5 || W === 6) ? [0.35, 0.1, 0.93] : [0.5, 0.12, -0.86], blockSh = false;   // at rest a blade hangs point-down, a haft stands
     const KF = { // [hand0, dir0, hand1, dir1]
-      1: [[0.4, 7.5, 45], [0.2, 0.9, 0.7], [3.0, -1.5, 34], [0.7, -0.8, -0.3]],
-      2: [[0.5, 1.5, 45], [0.4, -0.8, 0.8], [3.0, 8.5, 34], [0.6, 0.9, -0.3]],
-      3: [[0.2, 5.5, 54], [0.1, 0, 1], [3.0, 3.5, 36], [0.95, 0, -0.45]],
-      4: [[2.2, 4.5, 27], [0.9, 0, -0.5], [1.5, 4.5, 48], [0.3, 0, 1]],
-      5: [[0.2, 5.5, 37], [1, 0, 0.1], [4.6, 3.5, 37.5], [1, 0, 0.05]],
+      1: [[0.4, 8.4, 46], [0.2, 0.9, 0.7], [3.0, -1.7, 35], [0.7, -0.8, -0.3]],
+      2: [[0.5, 1.7, 46], [0.4, -0.8, 0.8], [3.0, 9.5, 35], [0.6, 0.9, -0.3]],
+      3: [[0.2, 6.2, 55], [0.1, 0, 1], [3.4, 3.9, 37], [0.95, 0, -0.45]],
+      4: [[2.4, 5.0, 28], [0.9, 0, -0.5], [1.7, 5.0, 49], [0.3, 0, 1]],
+      5: [[0.2, 6.2, 38], [1, 0, 0.1], [5.2, 3.9, 38.5], [1, 0, 0.05]],
     };
-    const ph = ap | 0;                       // action phase 0 wind-up, 1 swing, 2 strike, 3 follow-through
-    let arcA = null, arcB = null;
+    const ph = ap | 0;                                         // action phase 0 wind-up, 1 swing, 2 strike, 3 follow-through
+    let arcA = null;
     if (act >= 1 && act <= 5) {
       const k = KF[act], t = [0, 0.5, 1, 1.12][ph];
       wH = [0, 1, 2].map((i) => k[0][i] + (k[2][i] - k[0][i]) * t); wV = [0, 1, 2].map((i) => k[1][i] + (k[3][i] - k[1][i]) * t);
-      if (ph === 1 || ph === 2) { arcA = k; }
-      offH = [0.2, -5.4, 30];
-    } else if (act === 6) { wH = [ph === 2 ? 3.6 : 4.6, 3.2, 41]; wV = [1, 0, 0.02]; offH = [3.6, -1.2, 40]; }
-    else if (act === 7) { wH = [1.4, 7.2, 51 + up]; wV = [0, 0.4, 1]; offH = [1.4, -7.2, 51 + up]; }
-    else if (act === 8) { wH = [-1.5, 7.4, 36]; wV = [-0.4, 0.3, 0.7]; offH = [-1.5, -7.4, 36]; }
-    else if (act === 9) { wH = [3.6, 2.6, 38]; wV = [0.15, 0, 1]; offH = [3.4, -2.8, 36]; blockSh = shield; }
-    const shoulderW = P(lean * 0.4, 5.2, 42 + (act === 7 ? 0 : 0)), shoulderO = P(lean * 0.4, -5.2, 42);
-    const wp = (h) => P(h[0] + lean * 0.3, h[1], h[2]);
-    // order: the far arm is the off arm unless it is behind the torso
-    const drawOffArm = () => {
-      const o = wp(offH);
-      armLine(shoulderO, o, glassOff);
-      if (shield || blockSh) { const s = P(offH[0] + 1.2, offH[1] - 0.5, offH[2] + (blockSh ? 3 : 0)); ell(s[0], s[1], 2.8 * (0.45 + 0.55 * au) + 1.4 * Math.abs(sn), 4.4, TONE.SHADE); ell(s[0], s[1], 1.6, 3, TONE.LIGHT); put(s[0], s[1], TONE.ACC); }
+      if (ph === 1 || ph === 2) arcA = k;
+      offH = [1.2, -8.2, 30];
+    } else if (act === 6) { wH = [ph === 2 ? 4.2 : 5.2, 3.6, 42]; wV = [1, 0, 0.02]; offH = [4.2, -1.4, 41]; }
+    else if (act === 7) { wH = [1.4, 8.6, 53 + up]; wV = [0, 0.4, 1]; offH = [1.4, -8.6, 53 + up]; }
+    else if (act === 8) { wH = [-1.5, 9.2, 37]; wV = [-0.4, 0.3, 0.7]; offH = [-1.5, -9.2, 37]; }
+    else if (act === 9) { wH = [4.0, 3.0, 39]; wV = [0.15, 0, 1]; offH = [3.8, -3.2, 37]; blockSh = shield; }
+    const SH = 6.4, SZ = 43;                                   // shoulder joints: half-width and height
+    const shW = [lean * 0.4, SH, SZ], shO = [lean * 0.4, -SH, SZ];
+
+    // -- parts ------------------------------------------------------------------------------------------------------
+    const legTone = plate ? TONE.SHADE : TONE.SHADE, bootTone = TONE.DEEP;
+    const leg = (side) => {
+      // side +1 the right leg. Standing: feet a little apart. Walking: one leg leads, the trailing heel lifts.
+      const lead = st * side, ff = st ? lead * 3.4 : side * 0.9, fr = side * (st ? 2.7 : 3.3);   // standing: a slight stagger so a profile shows both legs
+      const hip = [lean * 0.4, side * 2.5, 27.5], ank = [ff, fr, st && lead < 0 ? 2.6 : 1.6];
+      const knee = [(hip[0] + ank[0]) / 2 + (st ? 1.0 : 0.3) + (lead < 0 ? 0.6 : 0), side * (st ? 2.6 : 2.9), 14.5];
+      limb(P(...hip), P(...knee), 2.25, 1.75, legTone);
+      limb(P(...knee), P(...ank), 1.75, 1.3, legTone);
+      const toe = [ank[0] + 2.5, ank[1], st && lead < 0 ? 0.7 : 0.6], heel = [ank[0] - 0.6, ank[1], st && lead < 0 ? 2.4 : 0.6];
+      limb(P(...heel), P(...toe), 1.15, 1.0, bootTone);
+      limb(P(ank[0], ank[1], ank[2] + 1.6), P(...ank), 1.45, 1.4, bootTone);
     };
-    const drawWeaponArm = () => {
-      const h = wp(wH), glassW = W === 9;
-      armLine(shoulderW, h, glassW);
-      // weapon
+    const handDot = (h, tone) => { const p = P(...h); ell(p[0], p[1], 1.25 * K, 1.25 * K, tone); };
+    const armPart = (sh, hand, sleeve, glass) => {
+      const side = Math.sign(sh[1]) || 1, mid = [(sh[0] + hand[0]) / 2, (sh[1] + hand[1]) / 2, (sh[2] + hand[2]) / 2];
+      const reach = Math.hypot(hand[0] - sh[0], hand[1] - sh[1], hand[2] - sh[2]), bend = clamp((19 - reach) * 0.25, 0, 2.2);
+      const elbow = [mid[0] - bend * 0.6, mid[1] + side * bend * 0.5, mid[2] - bend * 0.4];
+      const tone = glass ? TONE.ACC : sleeve;
+      limb(P(...sh), P(...elbow), 1.8, 1.45, tone);
+      limb(P(...elbow), P(...hand), 1.45, 1.2, gloves ? TONE.DEEP : tone);
+      if (glass) { const a = P(...elbow), h = P(...hand); line(a[0], a[1], h[0], h[1], 1, TONE.GLINT); }
+    };
+    const sleeve = plate ? TONE.SHADE : robe ? TONE.ACC : TONE.BASE;
+    const wpt = (h) => [h[0] + lean * 0.3, h[1], h[2]];
+    const offArm = () => {
+      const h = wpt(offH);
+      armPart(shO, h, sleeve, glassOff);
+      handDot(h, glassOff ? TONE.LIGHT : gloves ? TONE.DEEP : TONE.SKIN);
+      if (shield || blockSh) { const s = P(offH[0] + 1.3, offH[1] - 0.6, offH[2] + (blockSh ? 3 : 0)); ell(s[0], s[1], (3.0 * (0.45 + 0.55 * au) + 1.5 * as) * K, 4.6 * K, TONE.SHADE); ell(s[0], s[1], (1.7 * (0.45 + 0.55 * au) + 0.8 * as) * K, 3.0 * K, TONE.LIGHT); stamp(s[0], s[1], 2, TONE.ACC); }
+    };
+    const weapon = () => {
+      const h = P(...wpt(wH));
       const L = { 1: 14, 2: 8, 3: 19, 4: 13, 5: 11, 6: 27, 7: 6, 8: 8, 9: 9, 0: 0 }[W] || 12;
       const tip = P(wH[0] + wV[0] * L + lean * 0.3, wH[1] + wV[1] * L, wH[2] + wV[2] * L);
-      if (W === 7) { line(h[0], h[1], h[0] + (tip[0] - h[0]) * 0.8, h[1] + (tip[1] - h[1]) * 0.8, 2, TONE.DEEP); stamp(h[0], h[1] + 1, 2, TONE.DARK); if (act === 6 && ph !== 3) { stamp(tip[0] + 1, tip[1], 3, TONE.LIGHT); } }
-      else if (W === 8) { line(h[0] - 1, h[1], tip[0], tip[1], 2, TONE.DEEP); const pp = P(wH[0] + wV[0] * 5, wH[1] + wV[1] * 5 + 4, wH[2] + wV[2] * 5), qq = P(wH[0] + wV[0] * 5, wH[1] + wV[1] * 5 - 4, wH[2] + wV[2] * 5); line(pp[0], pp[1], qq[0], qq[1], 1, TONE.GLINT); }
-      else if (W === 9) { line(h[0], h[1], tip[0], tip[1], 2, TONE.ACC); line(h[0], h[1], tip[0], tip[1], 1, TONE.GLINT); }
+      if (W === 7) { line(h[0], h[1], h[0] + (tip[0] - h[0]) * 0.8, h[1] + (tip[1] - h[1]) * 0.8, 3, TONE.DEEP); stamp(h[0], h[1] + 2, 3, TONE.DARK); if (act === 6 && ph !== 3) stamp(tip[0] + 1, tip[1], 4, TONE.LIGHT); }
+      else if (W === 8) { line(h[0] - 1, h[1], tip[0], tip[1], 3, TONE.DEEP); const pp = P(wH[0] + wV[0] * 5, wH[1] + wV[1] * 5 + 4, wH[2] + wV[2] * 5), qq = P(wH[0] + wV[0] * 5, wH[1] + wV[1] * 5 - 4, wH[2] + wV[2] * 5); line(pp[0], pp[1], qq[0], qq[1], 2, TONE.LIGHT); }
+      else if (W === 9) { line(h[0], h[1], tip[0], tip[1], 3, TONE.ACC); line(h[0], h[1], tip[0], tip[1], 1, TONE.GLINT); }
       else if (W !== 0) {
         const haft = W === 4 || W === 5 || W === 6;
-        line(h[0], h[1], tip[0], tip[1], W === 6 ? 1 : haft ? 2 : 1, haft ? TONE.DEEP : TONE.GLINT);
-        if (!haft) { const g0 = P(wH[0] + wV[0] * 2.5, wH[1] + wV[1] * 2.5 + 2, wH[2] + wV[2] * 2.5), g1 = P(wH[0] + wV[0] * 2.5, wH[1] + wV[1] * 2.5 - 2, wH[2] + wV[2] * 2.5); line(g0[0], g0[1], g1[0], g1[1], 1, TONE.ACCS); }
-        if (W === 4) ell(tip[0], tip[1] + 0.5, 2.6, 2.4, TONE.GLINT);
-        if (W === 5) ell(tip[0], tip[1], 2.4, 2.4, TONE.LIGHT);
-        if (W === 6) { stamp(tip[0], tip[1], 2, TONE.GLINT); }
+        if (haft) line(h[0], h[1], tip[0], tip[1], 2, TONE.DEEP);
+        else { line(h[0], h[1], tip[0], tip[1], 3, TONE.LIGHT); line(h[0], h[1], tip[0], tip[1], 1, TONE.GLINT); }
+        if (!haft) { const g0 = P(wH[0] + wV[0] * 2.5, wH[1] + wV[1] * 2.5 + 2.4, wH[2] + wV[2] * 2.5), g1 = P(wH[0] + wV[0] * 2.5, wH[1] + wV[1] * 2.5 - 2.4, wH[2] + wV[2] * 2.5); line(g0[0], g0[1], g1[0], g1[1], 2, TONE.DEEP); }
+        if (W === 4) { ell(tip[0], tip[1] + 1, 2.6 * K, 2.4 * K, TONE.LIGHT); ell(tip[0] - 1, tip[1] + 1, 1.4 * K, 1.4 * K, TONE.GLINT); }
+        if (W === 5) { ell(tip[0], tip[1], 2.4 * K, 2.4 * K, TONE.SHADE); ell(tip[0] - 1, tip[1] - 1, 1.2 * K, 1.2 * K, TONE.LIGHT); }
+        if (W === 6) stamp(tip[0], tip[1], 3, TONE.GLINT);
       }
-      return tip;
     };
-    // slash trail: a few pale pixels along the swept path (not under Reduce motion's stillness? it is a pose, so it stays)
-    const drawArc = () => {
+    const weaponArm = () => {
+      const h = wpt(wH), glassW = W === 9;
+      armPart(shW, h, sleeve, glassW);
+      pid++; weapon(); pid++;
+      handDot(h, glassW ? TONE.LIGHT : gloves ? TONE.DEEP : TONE.SKIN);
+    };
+    const drawArc = () => {                                    // a few pale pixels along the swept path
       if (!arcA) return;
       const k = arcA, L = { 1: 14, 2: 8, 3: 19, 4: 13, 5: 11, 6: 22, 7: 0, 8: 0, 9: 0, 0: 6 }[W] || 12, n = ph === 1 ? 4 : 7;
+      if (act === 5) { const a0 = P(wH[0] + 2, wH[1], wH[2]), a1 = P(wH[0] + 7, wH[1], wH[2]); line(a0[0] + 1, a0[1], a1[0] + 2, a1[1], 1, TONE.GLINT); return; }
       for (let i = 0; i <= n; i++) {
         const t = i / 7, h = [0, 1, 2].map((q) => k[0][q] + (k[2][q] - k[0][q]) * t), v = [0, 1, 2].map((q) => k[1][q] + (k[3][q] - k[1][q]) * t);
-        const pt = P(h[0] + v[0] * L, h[1] + v[1] * L, h[2] + v[2] * L); if (act === 5) continue;
-        put(pt[0], pt[1], i % 2 ? TONE.LIGHT : TONE.GLINT);
+        const pt = P(h[0] + v[0] * L, h[1] + v[1] * L, h[2] + v[2] * L);
+        stamp(pt[0], pt[1], 2, i % 2 ? TONE.LIGHT : TONE.GLINT);
       }
-      if (act === 5) { const a0 = P(wH[0] + 2, wH[1], wH[2]), a1 = P(wH[0] + 7, wH[1], wH[2]); line(a0[0] + 1, a0[1], a1[0] + 2, a1[1], 1, TONE.GLINT); }
     };
-
-    // -- torso / robe -------------------------------------------------------------------------------
+    const cloak = () => {                                      // a short cape behind the back, to the backs of the knees
+      const z0 = robe ? 12 : 17;
+      section(z0, 44.5, (z) => -2.6 - (44 - z) * 0.03 + lean * (z / 44), (z) => { const k = (44.5 - z) / (44.5 - z0); return [4.9 + 1.4 * k, 1.2]; }, (z) => (z < z0 + 2 ? TONE.ACCS : TONE.ACC));
+    };
     const torso = () => {
-      const bendTop = lean;
-      for (let z = 26; z <= 43; z++) {
-        const k = (z - 26) / 17, hwR = 3.8 + 1.6 * k, hd = 2.6 - 0.2 * k, c0 = P(bendTop * (z - 26) / 17, 0, z), hw = hwR * au + hd * Math.abs(sn);
-        const tone = plate && (z % 4 === 0) ? TONE.SHADE : plate ? TONE.LIGHT : TONE.BASE;
-        rowSpan(c0[1], c0[0] - hw, c0[0] + hw, robe && !plate ? TONE.ACC : tone);
-        if (z >= 41 && !robe && !plate) rowSpan(c0[1], c0[0] - hw, c0[0] + hw, TONE.ACC);   // a mantle over the shoulders
-      }
-      // belt
-      for (const z of [26, 27]) { const k = 0, c0 = P(0, 0, z), hw = 3.8 * au + 2.6 * Math.abs(sn); rowSpan(c0[1], c0[0] - hw, c0[0] + hw, z === 26 ? TONE.DARK : TONE.ACCS); }
-      if (u > 0.3) { const bk = P(2.6, 0, 26.5); put(bk[0], bk[1], TONE.GLINT); }
+      const fAt = (z) => lean * (z - 26) / 17;
+      // chest to hips: broad at the shoulders, in at the waist
+      const hwR = (z) => (z >= 43 ? 6.5 - (z - 43) * 0.55 : z >= 36 ? 5.5 + (z - 36) * 0.143 : z >= 30 ? 4.5 + (z - 30) * 0.167 : 4.7 - (z - 26) * 0.05);
+      const hdR = (z) => (z >= 36 ? 3.8 : 3.3);
+      const body = plate ? TONE.LIGHT : robe ? TONE.ACC : TONE.BASE;
+      section(26, 45, fAt, (z) => [hwR(z), hdR(z)], (z) => (plate && Math.round(z * 2) % 7 === 0 ? TONE.SHADE : (!robe && !plate && z >= 41.5) ? TONE.ACC : body));
       if (robe) {
-        // skirt / hem to the feet
-        for (let z = 25; z >= 4; z--) {
-          const k = (26 - z) / 22, hwR = 3.8 + 3.0 * k, hd = 2.6 + 1.8 * k, c0 = P(0 + (loco ? Math.sin(z * 0.6) * 0.4 : 0), 0, z), hw = hwR * au + hd * Math.abs(sn);
-          rowSpan(c0[1], c0[0] - hw, c0[0] + hw, plate ? (z % 4 ? TONE.SHADE : TONE.DEEP) : (z > 20 ? TONE.ACC : TONE.ACCS));
-        }
+        // a skirt that flares to the shins; the stride swings the hem
+        section(5.5, 26, (z) => (st ? st * (26 - z) * 0.05 : 0), (z) => { const k = (26 - z) / 20.5; return [4.7 + 2.9 * k, 3.0 + 1.6 * k]; }, (z) => (plate ? (Math.round(z) % 4 ? TONE.SHADE : TONE.DEEP) : z < 7 ? TONE.ACCS : TONE.ACC));
+        if (au > 0.3) { const a = P(0.5, 0, 24), bt = P(0.5 + st * 1, 0, 7); line(a[0], a[1], bt[0], bt[1], 1, TONE.ACCS); }
+      } else {
+        // a short coat hem over the tops of the thighs
+        section(21, 26, fAt, (z) => [4.9 + (26 - z) * 0.08, 3.1], () => (plate ? TONE.SHADE : TONE.BASE));
       }
-    };
-    // -- head ---------------------------------------------------------------------------------------
-    const head = () => {
-      const cz = 50 + up * 0.6, hc = P(0.4 + lean * 0.5, 0, cz);
-      const hx = hc[0], hy = hc[1], rxF = 3.5 * au + 3.2 * Math.abs(sn);
+      // belt and buckle
+      section(25.6, 27, () => 0, () => [4.75, 3.0], (z) => (z < 26.3 ? TONE.DARK : TONE.ACCS));
+      if (u > 0.3) { const bk = P(3.2, 0, 26.3); put(bk[0], bk[1], TONE.LIGHT); }
       // neck
-      const nk = P(lean * 0.45, 0, 45); rowSpan(nk[1], nk[0] - 1, nk[0] + 1, TONE.SKINS); rowSpan(nk[1] + 1, nk[0] - 1, nk[0] + 1, TONE.SKINS);
-      if (face === 5) { const g = P(lean * 0.45, 0, 43.5); rowSpan(g[1], g[0] - (3.4 * au + 2.4 * Math.abs(sn)), g[0] + (3.4 * au + 2.4 * Math.abs(sn)), TONE.SHADE); rowSpan(g[1] + 1, g[0] - (3.8 * au + 2.6 * Math.abs(sn)), g[0] + (3.8 * au + 2.6 * Math.abs(sn)), TONE.LIGHT); }
-      const helm = headK === 3, cap = headK === 1;
+      limb(P(lean * 0.45, 0, 44.5), P(lean * 0.45, 0, 47.5), 1.35, 1.35, TONE.SKINS);
+      if (face === 5) section(43.5, 45, () => lean * 0.45, () => [4.0, 2.8], (z) => (z < 44.2 ? TONE.SHADE : TONE.LIGHT));
+    };
+    const head = () => {
+      const cz = 51.3 + up * 0.6, hc = P(0.3 + lean * 0.5, 0, cz), hx = hc[0], hy = hc[1];
+      const rx = 3.3 * au + 3.6 * as, ry = 4.2;
       if (hooded && !helm) {
-        // hood: a cowl round the head with the face in the opening; falls to the shoulders behind
-        ell(hx - sn * 0.6, hy + 0.5, rxF + 1.9, 6.4, face === 4 ? TONE.ACCS : TONE.ACC);
-        ell(hx - sn * 0.6, hy - 3.4, rxF + 0.6, 3.4, TONE.ACCS);
-        for (let z = 44; z <= 47; z++) { const c0 = P(-1.2, 0, z), hw = (5.2 + (z - 44) * 0.3) * au + 3.6 * Math.abs(sn); rowSpan(c0[1], c0[0] - hw, c0[0] + hw, TONE.ACC); }
+        // the cowl: round the head, the face in its opening, falling onto the shoulders
+        const ht = face === 4 ? TONE.ACCS : TONE.ACC;
+        section(43.5, 47.5, () => -0.8, (z) => [5.8 - (z - 43.5) * 0.5, 3.8], () => ht);
+        ell(hx - sn * 0.9 * K, hy - 0.6 * K, (rx + 1.5) * K, (ry + 1.6) * K, ht);
+        if (u > -0.35) { const fc = P(1.5 + lean * 0.5, 0, cz - 0.8), frx = Math.max(1.6, 2.7 * au + 1.7 * as) * K; ell(fc[0] + sn * 0.5 * K, fc[1], frx + 0.45 * K, 3.9 * K, TONE.ACCS); ell(fc[0] + sn * 0.7 * K, fc[1] + 0.3 * K, frx, 3.4 * K, TONE.SKIN); }
       } else if (!helm) {
-        // hair
-        if (face === 5) { /* bald */ }
-        else {
-          ell(hx - sn * 0.5, hy - 0.4, rxF + 0.8, 5.4, TONE.HAIR);
-          if (face === 3) { /* the cap hides most of the hair */ }
+        if (face !== 5) {
+          if (u < -0.2 && (face === 2 || face === 6)) section(37.5, 50, () => -1.2, (z) => [3.6 + (50 - z) * 0.03, 2.4], () => TONE.HAIR);
+          ell(hx - sn * 0.5 * K, hy - 0.5 * K, (rx + 0.6) * K, (ry + 0.6) * K, TONE.HAIR);
+        } else ell(hx, hy, rx * K, ry * K, TONE.SKIN);
+        if (u > -0.35) { const fc = P(1.4 + lean * 0.5, 0, cz - 0.9); ell(fc[0] + sn * 0.5 * K, fc[1] + 0.2 * K, Math.max(1.7, 2.9 * au + 2.5 * as) * K, 3.6 * K, TONE.SKIN); }
+      } else ell(hx, hy, rx * K, ry * K, TONE.SKIN);
+      // the face (not seen from behind)
+      if (u > -0.35) {
+        if (u > 0.25) { for (const s of [-1, 1]) { const e = P(3.0, s * 1.35, cz - 0.4); put(e[0], e[1], TONE.DARK); } }
+        else { const e = P(3.1, 1.4, cz - 0.4); put(e[0] + (sn > 0 ? 1.5 : -1.5), e[1], TONE.DARK); }
+        if (act === 7 || act === 8) { const m = P(3.2, 0, cz - 2.8); put(m[0], m[1], TONE.DARK); put(m[0] + (u > 0.25 ? 1 : sn > 0 ? 1 : -1), m[1], TONE.DARK); }
+        if (face === 5) { const s0 = P(3.0, 1.8, cz + 0.8), s1 = P(3.0, 2.4, cz - 2.0); line(s0[0], s0[1], s1[0], s1[1], 1, TONE.SKINS); }
+        if (face === 3) { const bd = P(1.8 + lean * 0.5, 0, cz - 3.4); ell(bd[0] + sn * 0.8 * K, bd[1], Math.max(1.6, 2.6 * au + 1.8 * as) * K, 2.2 * K, TONE.LIGHT); }
+      }
+      if ((face === 2 || face === 6) && !hooded && !helm && u > -0.2) {
+        for (const side of [-1, 1]) {
+          if (as > 0.9 && side * sn < 0) continue;              // in profile only the near lock shows
+          const a = P(-0.4, side * (3.6 * au + 0.6), cz - 1), z2 = P(-0.6 + lean * 0.3, side * (4.3 * au + 0.8), face === 2 ? 34 : 38);
+          limb(a, z2, 1.1, 0.8, TONE.HAIR);
         }
       }
-      // face (not seen from behind)
-      if (u > -0.35 && !(helm && false)) {
-        const fc = P(1.4 + lean * 0.5, 0, cz - 0.9), fx = fc[0], fy = fc[1], fr = 3.1 * au + 3.0 * Math.abs(sn);
-        ell(fx, fy, Math.max(1.8, fr), 4.0, TONE.SKIN);
-        for (let y = Math.round(fy - 3); y <= Math.round(fy + 4); y++) put(Math.round(fx + Math.max(1.8, fr) - 0.4), y, TONE.SKINS);
-        if (u > 0.25) { const e0 = P(3.2, -1.6, cz - 0.5), e1 = P(3.2, 1.6, cz - 0.5); put(e0[0], e0[1], TONE.DARK); put(e1[0], e1[1], TONE.DARK); }
-        else { const e0 = P(3.4, 1.3, cz - 0.5); put(e0[0] + (sn > 0 ? 1 : 0), e0[1], TONE.DARK); put(e0[0] + (sn > 0 ? 1 : 0), e0[1] + 0, TONE.DARK); }
-        if (act === 7 || act === 8) { const m = P(3.4, 0, cz - 3.2); put(m[0] + (u > 0.25 ? 0 : 1), m[1], TONE.DARK); put(m[0] + (u > 0.25 ? 1 : 1), m[1], TONE.DARK); }
-        if (face === 5) { const s0 = P(3.2, 2.0, cz + 0.6), s1 = P(3.2, 2.6, cz - 2.0); line(s0[0], s0[1], s1[0], s1[1], 1, TONE.SKINS); }
-        if (face === 3) { ell(fx + sn * 0.6, fy + 3.4, Math.max(2.0, fr * 0.95), 2.6, TONE.LIGHT); }
-      }
-      if (face === 2 && !hooded && !helm) { for (const side of [-1, 1]) { const a = P(-0.4, side * 4.1, cz - 1), z2 = P(-0.4 + lean * 0.3, side * 4.3, 31); line(a[0], a[1], z2[0], z2[1], 2, TONE.HAIR); put(z2[0], z2[1] + 1, TONE.ACC); } }
-      if (face === 6 && !hooded && !helm) { for (const side of [-1, 1]) { const a = P(-0.2, side * 3.9, cz - 1), z2 = P(-0.6 + lean * 0.3, side * 4.4, 35); line(a[0], a[1], z2[0], z2[1], 2, TONE.HAIR); } }
-      if (face === 4 && !hooded) { ell(hx, hy - 0.4, rxF + 0.8, 5.2, TONE.HAIRS); }
       if (cap || (face === 3 && !helm && !hooded)) {
-        const cc = P(0, 0, cz + 3.2); ell(cc[0] - sn * 0.4, cc[1], rxF + 1.0, 2.6, face === 3 ? TONE.DEEP : TONE.SHADE);
-        const br = P(2.4, 0, cz + 1.6), bw = (3.6 * au + 4.2 * Math.abs(sn)); rowSpan(br[1], br[0] - bw, br[0] + bw + (sn > 0 ? 1.2 : 0), TONE.DARK);
-        if (face === 3 && u > 0.3) put(cc[0], cc[1], TONE.GLINT);
+        const cc = P(0, 0, cz + 2.8); ell(cc[0] - sn * 0.4 * K, cc[1], (rx + 0.8) * K, 2.6 * K, face === 3 ? TONE.DEEP : TONE.SHADE);
+        const br = P(2.2, 0, cz + 0.9), bw = (3.8 * au + 4.4 * as) * K; span(Math.round(br[1]), br[0] - bw, br[0] + bw + (sn > 0 ? 2 : 0), TONE.DARK); span(Math.round(br[1]) + 1, br[0] - bw + 1, br[0] + bw + (sn > 0 ? 1 : 0), TONE.DARK);
+        if (face === 3 && u > 0.3) stamp(cc[0], cc[1] - 1, 2, TONE.GLINT);
       }
       if (helm) {
-        const hm = P(0, 0, cz + 1.6); ell(hm[0] - sn * 0.3, hm[1], rxF + 1.5, 5.0, TONE.SHADE); ell(hm[0] - sn * 0.5 - 1, hm[1] - 1.5, rxF - 0.2, 3, TONE.LIGHT);
-        const br = P(0.8, 0, cz - 1.8), bw = 5.6 * au + 4.8 * Math.abs(sn); rowSpan(br[1], br[0] - bw, br[0] + bw, TONE.DEEP);
-        if (u > 0.3) { const nasal = P(3.4, 0, cz - 1); for (let i = 0; i < 4; i++) put(nasal[0], nasal[1] + i, TONE.SHADE); }
+        const hm = P(0, 0, cz + 1.4); ell(hm[0] - sn * 0.3 * K, hm[1], (rx + 1.2) * K, 4.6 * K, TONE.SHADE); ell(hm[0] - sn * 0.5 * K - 2, hm[1] - 2.5, (rx - 0.4) * K, 2.8 * K, TONE.LIGHT);
+        const br = P(0.8, 0, cz - 1.9), bw = (5.4 * au + 4.8 * as) * K; span(Math.round(br[1]), br[0] - bw, br[0] + bw, TONE.DEEP); span(Math.round(br[1]) + 1, br[0] - bw, br[0] + bw, TONE.DEEP);
+        if (u > -0.35) { for (const s of (u > 0.25 ? [-1, 1] : [1])) { const e = P(3.0, s * 1.35, cz - 2.9); put(e[0] + (u > 0.25 ? 0 : sn > 0 ? 1.5 : -1.5), e[1], TONE.DARK); } }
+        if (u > 0.3) { const nasal = P(3.4, 0, cz - 1.6); for (let i = 0; i < 5; i++) put(nasal[0], nasal[1] + i, TONE.SHADE); }
       }
     };
-    // -- compose in depth order -----------------------------------------------------------------------
-    const front = u > 0.1;
-    legs();
-    if (front) { drawOffArm(); torso(); head(); } else { torso(); head(); drawOffArm(); }
-    if (u < -0.2) cloak();
-    // song: the notes above the head (a fixed two-pixel pattern: a sung note, a little higher)
-    const tip = drawWeaponArm(); drawArc();
-    if (act === 7) { const n0 = P(0, 0, 58); const nx = Math.round(n0[0] + 6), ny = Math.max(1, Math.round(n0[1] - 2)); put(nx, ny + 2, TONE.LIGHT); put(nx + 1, ny + 2, TONE.LIGHT); put(nx + 1, ny + 1, TONE.LIGHT); put(nx + 1, ny, TONE.LIGHT); put(nx + 2, ny, TONE.GLINT); }
-    void tip;
-    // -- shading from the upper left, then outline ---------------------------------------------------
+
+    // -- compose in depth order (farthest first) ---------------------------------------------------------------------
+    const parts = [];
+    if (u < 0.8) parts.push([u < -0.2 ? 2 : -3, cloak]);
+    parts.push([-1.5 + 0.08 * dep(st * 3.4, -2.8), () => leg(-1)], [-1.5 + 0.08 * dep(-st * 3.4, 2.8), () => leg(1)]);
+    parts.push([0, torso], [u < -0.2 ? 2.5 : 0.5, head]);
+    parts.push([0.4 * dep(offH[0] - 0.4, -SH), offArm], [0.4 * dep(wH[0] - 0.4, SH) + 0.01, () => { weaponArm(); pid++; drawArc(); }]);
+    parts.sort((p1, p2) => p1[0] - p2[0]);
+    for (const p of parts) { pid++; p[1](); }
+    pid++;
+    // song: the notes above the head (a fixed pattern: a sung note, a little higher)
+    if (act === 7) { const n0 = P(0, 0, 57); const nx = Math.round(n0[0] + 8), ny = Math.max(1, Math.round(n0[1])); for (const [dx, dy] of [[0, 3], [1, 3], [0, 4], [1, 4], [1, 2], [1, 1], [1, 0], [2, 0], [3, 1]]) put(nx + dx, ny + dy, dy === 0 || dx === 3 ? TONE.GLINT : TONE.LIGHT); }
+
+    // -- ink where a nearer part crosses a farther one; shading from the upper left; then the rim ---------------------
     const at = (x, y) => (x < 0 || y < 0 || x >= FW || y >= FH ? 0 : c[y * FW + x]);
+    const idAt = (x, y) => (x < 0 || y < 0 || x >= FW || y >= FH ? 0 : id[y * FW + x]);
     const sh = new Uint8Array(c);
     for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) {
-      const v = c[y * FW + x];
-      if (v === TONE.BASE) { if (!at(x - 1, y) || !at(x, y - 1)) sh[y * FW + x] = TONE.LIGHT; else if (!at(x + 1, y) || !at(x, y + 1)) sh[y * FW + x] = TONE.SHADE; }
-      else if (v === TONE.ACC) { if (!at(x + 1, y) || !at(x, y + 1)) sh[y * FW + x] = TONE.ACCS; }
-      else if (v === TONE.SKIN) { if (!at(x + 1, y)) sh[y * FW + x] = TONE.SKINS; }
-      else if (v === TONE.HAIR) { if (!at(x + 1, y) || !at(x, y + 1)) sh[y * FW + x] = TONE.HAIRS; }
+      const i = y * FW + x, v = c[i]; if (!v || (LIT[v] == null && SHD[v] == null)) continue;
+      const me = id[i];
+      const lower = (xx, yy) => { const o = idAt(xx, yy); return o && o < me && at(xx, yy); };
+      if (lower(x - 1, y) || lower(x + 1, y) || lower(x, y - 1) || lower(x, y + 1)) { sh[i] = TONE.INK; continue; }
+      if ((!at(x - 1, y) || !at(x, y - 1)) && LIT[v] != null) sh[i] = LIT[v];
+      else if ((!at(x + 1, y) || !at(x, y + 1) || !at(x + 2, y)) && SHD[v] != null) sh[i] = SHD[v];
     }
     const out = new Uint8Array(sh);
     for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) {
@@ -824,12 +862,15 @@ const GHOST18 = (function () {
     for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) {
       const t = tones[y * FW + x]; if (!t) continue;
       const q = pal[t]; if (!q) continue;
-      // the hem dissolves into the air: alpha falls over the lowest rows
-      const fade = y > 47 ? clamp(1 - (y - 47) / 12, 0, 1) : 1;
+      // the feet thin into the ground a little (never away: a figure without feet reads as a post)
+      const fade = y > FOOT - 9 ? clamp(1 - 0.45 * (y - (FOOT - 9)) / 10, 0.55, 1) : 1;
       const a = Math.round(q[3] * fade); if (a < 8) continue;
       data[y * FW + x] = ((a << 24) | (q[2] << 16) | (q[1] << 8) | q[0]) >>> 0;
     }
-    f = { w: FW, h: FH, data };
+    // each column's painted rows, so the draw loop never walks the empty air above and below the figure
+    const top = new Int16Array(FW).fill(FH), bot = new Int16Array(FW).fill(-1);
+    for (let x = 0; x < FW; x++) for (let y = 0; y < FH; y++) if (data[y * FW + x]) { if (top[x] === FH) top[x] = y; bot[x] = y; }
+    f = { w: FW, h: FH, data, top, bot };
     if (figCache.size > 360) figCache.delete(figCache.keys().next().value);
     figCache.set(k, f);
     return f;
@@ -879,8 +920,10 @@ const GHOST18 = (function () {
     let drawn = 0;
     for (let x = xs; x <= xe; x++) {
       let tx = (((x - dsX) * tw) / sprW) | 0; if (tx < 0 || tx >= tw) continue; if (mirror) tx = tw - 1 - tx;
-      let o = ys * w + x;
-      for (let y = ys; y <= ye; y++, o += w) {
+      const t0 = fr.top ? fr.top[tx] : 0, t1 = fr.bot ? fr.bot[tx] : th - 1; if (t1 < t0) continue;
+      const y0 = Math.max(ys, dsY + ((t0 * sprH / th) | 0) - 1), y1 = Math.min(ye, dsY + Math.ceil((t1 + 1) * sprH / th));
+      let o = y0 * w + x;
+      for (let y = y0; y <= y1; y++, o += w) {
         if (dbuf[o] < trY - 0.02) continue;                          // a wall or body in front
         const ty = (((y - dsY) * th) / sprH) | 0;
         const px = data[ty * tw + tx]; if (!px) continue;
