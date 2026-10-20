@@ -1059,6 +1059,7 @@ const LONGNIGHT17 = (function () {
     const _s = Audio_.sfx.step;
     if (typeof _s !== 'function') return;
     Audio_.sfx.step = function () { try { if (R && live() && R.missing.steps) return; } catch (e) { /* normal */ } return _s.apply(this, arguments); };
+    for (const k of ['_orig', '_test', '_p13h', '_p16d']) if (k in _s) Object.defineProperty(Audio_.sfx.step, k, { configurable: true, enumerable: true, get: () => _s[k], set: (v) => { _s[k] = v; } });   // pass inner wrappers' hooks through (house13 keeps its spy on ._orig)
     Audio_.sfx.__ln17 = true;
   }
   const LAYERS = ['drip', 'breath', 'wind', 'steps'];

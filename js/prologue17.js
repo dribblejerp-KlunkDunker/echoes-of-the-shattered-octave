@@ -1128,6 +1128,7 @@ const PROLOGUE17 = (function () {
       if (typeof Audio_ !== 'undefined' && Audio_.sfx && typeof Audio_.sfx.step === 'function') {
         const _s = Audio_.sfx.step;
         Audio_.sfx.step = function () { if (here() && G.mapId === 'p17p_wood') return; return _s.apply(this, arguments); };
+        for (const k of ['_orig', '_test', '_p13h', '_p16d']) if (k in _s) Object.defineProperty(Audio_.sfx.step, k, { configurable: true, enumerable: true, get: () => _s[k], set: (v) => { _s[k] = v; } });   // pass inner wrappers' hooks through (house13 keeps its spy on ._orig)
       }
     } catch (er) { /* audio optional */ }
   }

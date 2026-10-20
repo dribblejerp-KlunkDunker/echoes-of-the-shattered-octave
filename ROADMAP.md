@@ -172,8 +172,13 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 | 17 — Beyond Book One | extras | Book Two prologue; Port Cantabile trip and the Long Night (both after Book One in canon: presented as marked extras) |
 | 18 — Technical | engine and online | Sharper renderer; installable offline app; daily challenge dungeon; ghost replays; messages and leaderboards (need a small server: owner's decision) |
 | 19 — Together | two-player co-op | Play Book One with a second player in the same world: one hosts on a computer, the other joins from a phone with a short code; peer-to-peer (no game server of our own) |
+| 20 — The painted world | art and landmarks | Hand-painted art for every procedural stand-in (enemy angles, NPCs, panoramas, props); the horizon country finished and walkable; the Chapel seen beyond the Hedge; a visible Chapel bell |
 
 Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
+
+**Phase 20 — The painted world** (planned; owner's request, October 2026: work on the hand-painted art when the chance is opportune, and finish the horizon and landmarks)
+- `[ ]` Hand-painted art replacing every procedural stand-in, starting from the Proctor pilot's standard: the other species' five views, NPCs, the area panoramas, the Kestrel flyover, props.
+- `[ ]` The horizon country finished: walkable hills and cliffs beyond the maps' walls where the story allows, the Chapel seen from beyond the Hedge, a visible Chapel bell (the story keeps the frame empty until it rings).
 
 **Phase 19 — Together** (planned; owner's request, October 2026: "me and my brother", the brother most likely on a phone)
 - `[ ]` Join with a code: the host opens "Play together" and gets a short code; the guest types it (or scans a QR code) on a phone. Peer-to-peer over WebRTC, matched by the free PeerJS broker; a copy-and-paste fallback that needs no broker at all. No game server of our own, no accounts.
