@@ -221,7 +221,7 @@ const BEAST20A = (() => {
     }
   }
   function view(name, v, pose) {
-    const recipe = SPECIES[name]; if (!recipe || !v || v < 1 || v > 4) return null;
+    const recipe = SPECIES[name]; if (!recipe || v == null || v < (recipe.front0 ? 0 : 1) || v > 4) return null;
     let p = pose || ''; if (!POSES.includes(p)) p = '';
     if (!Engine.sprites[name] || (p && !Engine.sprites[name + p])) return null;
     const key = name + '|' + v + '|' + p, hit = cache.get(key);
@@ -475,7 +475,8 @@ const BEAST20A = (() => {
         if (cfg.front) cfg.front(P, S, p);
       });
       const back = backOf(front.c, P => { if (cfg.back) cfg.back(P, S, p); });
-      const props = (S.props || []).map(q => {
+      const props = (S.props || []).concat(cfg.props ? cfg.props(S) : []).map(q => {
+        if (q.canvas) return Object.assign({}, q, { X: q.X });
         const r = q.r, c = piece(name, r[0], r[1], r[2], r[3], q.mask);
         return Object.assign({}, q, { canvas: c, rx: r[0], y: r[1], ax: q.ax == null ? q.X - r[0] : q.ax, X: q.X - S.A });
       });
@@ -523,12 +524,84 @@ const BEAST20A = (() => {
     const cx = Math.round((f[0][0] + f[1][0]) / 2); if (seamCol) P.line(seamCol, cx, y0 - (tip || 10), cx, y1);
   }
 
+  // ---------------------------------------------------------------- the lathe
+  // For creatures painted in profile (a hound, a crawler, a sprite): every
+  // column of the profile is a cross-section of the body, an ellipse as tall as
+  // the column and rig.thick(x, y-run) wide. Turning the creature by psi (0 =
+  // profile facing right, +pi/2 = head on, -pi/2 = from behind) lays those
+  // solid sections out in depth; the nearest wins. Legs (runs below legY) are
+  // doubled, a near pair and a far pair, rig.legZ apart.
+  function lathe(rig, psi, outW, ox) {
+    const F = rig.front, w = F.width, h = F.height, fd = F.getContext('2d').getImageData(0, 0, w, h).data;
+    const out = new Uint8ClampedArray(outW * h * 4), zb = new Float32Array(outW * h).fill(-1e9);
+    const cp = Math.cos(psi), sp = Math.sin(psi), A = rig.axis;
+    const lx0 = -0.5, lz0 = 0.86, rel = rig.relight == null ? 0.5 : rig.relight;
+    const put = (px, y, d, si, k) => {
+      if (px < 0 || px >= outW || y < 0 || y >= h) return;
+      const o = y * outW + px; if (d <= zb[o]) return;
+      zb[o] = d; out[o * 4] = Math.min(255, fd[si] * k); out[o * 4 + 1] = Math.min(255, fd[si + 1] * k); out[o * 4 + 2] = Math.min(255, fd[si + 2] * k); out[o * 4 + 3] = 255;
+    };
+    for (let x = 0; x < w; x++) {
+      // vertical runs in this column
+      const runs = []; let s = -1;
+      for (let y = 0; y <= h; y++) {
+        const on = y < h && fd[(y * w + x) * 4 + 3] > 100;
+        if (on && s < 0) s = y; else if (!on && s >= 0) { runs.push([s, y - 1]); s = -1; }
+      }
+      const X = x - A;
+      // a run that reaches below the belly line splits there: body above, legs below
+      if (rig.legY != null) for (let i = runs.length - 1; i >= 0; i--) { const [a0, b0] = runs[i]; if (a0 < rig.legY && b0 >= rig.legY) runs.splice(i, 1, [a0, rig.legY - 1], [rig.legY, b0]); }
+      for (const [yt, yb] of runs) {
+        const leg = rig.legY != null && yt >= rig.legY;
+        const ry = (yb - yt + 1) / 2, yc = (yt + yb + 1) / 2;
+        const rz = Math.max(1, leg ? (rig.legR || 2.5) : rig.thick(x, yt, yb));
+        const zs = leg ? [rig.legZ || 8, -(rig.legZ || 8)] : [0];
+        for (const zLeg of zs) {
+          for (let y = yt; y <= yb; y++) {
+            // legs part from the body gradually, so the flank runs into them unbroken
+            const z0 = leg ? zLeg * Math.min(1, (y - yt + 1) / 14) : zLeg;
+            const v = (y + 0.5 - yc) / ry, half = rz * Math.sqrt(Math.max(0, 1 - v * v));
+            const si = (y * w + x) * 4;
+            for (let z = -half; z <= half; z += 0.5) {
+              const Z = z0 + z;
+              const px = Math.round(ox + X * cp - Z * sp - 0.5), d = X * sp + Z * cp;
+              // surface normal of the section at this point, turned with the creature
+              const nyz = Math.abs(half) > 0.01 ? z / Math.max(half, 0.5) : 0, nz = nyz * Math.sqrt(1 - Math.min(1, v * v));
+              const nx = -nz * sp, nd = nz * cp;
+              const k = Math.max(0.5, 1 + rel * ((nx * lx0 + nd * lz0) - (Math.abs(nz) * lz0)));
+              put(px, y, d, si, zLeg < 0 ? k * 0.85 : k);
+            }
+          }
+        }
+      }
+    }
+    const c = document.createElement('canvas'); c.width = outW; c.height = h;
+    c.getContext('2d').putImageData(new ImageData(out, outW, h), 0, 0);
+    return c;
+  }
+  const PSI = [Math.PI / 2, Math.PI / 4, 0, -Math.PI / 4, -Math.PI / 2];
+  // a profile creature's view v (0 head-on ... 4 from behind), finished by hand
+  function lathed(name, rig, v, fin) {
+    const F = rig.front, w = F.width, h = F.height, outW = w * 2 + 20, ox = w + 10;
+    const psi = (rig.psi || PSI)[v];
+    const P0 = painter(outW, h);
+    if (v === 2 && rig.sideIsArt) P0.g.drawImage(F, ox - rig.axis, 0);       // the side view is the painting itself
+    else P0.g.drawImage(lathe(rig, psi, outW, ox), 0, 0);
+    if (fin) fin(P0, ox, psi);
+    const cr = cropTo(P0.c, 1), P = painter(cr.w, h);
+    P.g.drawImage(P0.c, -cr.x0, 0);
+    return finish(P, Engine.sprites[name], 1, (ox - cr.x0) / cr.w);
+  }
+
   return {
+    lathe, lathed, PSI,
     mir, hoodBack, tones, hoodOver,
     turned, rigged, band,
     turn, layerOf, backOf, piece, cropTo, VIEW_ANGLE, finish,
     view, make, painter, at, css, hash, stride, sideLight, srcCanvas, SPECIES, POSES,
     has: name => !!SPECIES[name], species: () => Object.keys(SPECIES).sort(),
+    // species painted in profile also get a head-on drawing for view 0
+    front0: name => !!(SPECIES[name] && SPECIES[name].front0),
     clear() { cache.clear(); bytes = 0; }, budgetBytes: () => bytes, cap: CAP,
   };
 })();
@@ -1079,6 +1152,232 @@ BEAST20A.SPECIES.horn = (() => {
   });
 })();
 
+// ---------------------------------------------------------------- the Brood-Mother
+// A great lilac egg-sac netted with pale veins, the brood's red mouths
+// crowding its lower front, a hooked stalk on top, eight jointed legs in a
+// ring. The sac turns (the mouths go round to the side, the back is bare
+// veined skin); the ring of legs reads the same from every side, so it stays
+// a ring, a little narrower edge-on. Source: broodmother (115x170).
+BEAST20A.SPECIES.broodmother = (() => {
+  const B = BEAST20A, N = 'broodmother';
+  const sac = (cx, y0, s) => [[cx, y0], [cx + 9, y0 + 8], [cx + 23, y0 + 30], [cx + 31, y0 + 55], [cx + 29, y0 + 90], [cx + 21, y0 + 110], [cx + 11, y0 + 125 * s], [cx - 11, y0 + 125 * s], [cx - 21, y0 + 110], [cx - 29, y0 + 90], [cx - 31, y0 + 55], [cx - 23, y0 + 30], [cx - 9, y0 + 8]];
+  const pods = (cx, y0) => [[cx - 24, y0 + 55], [cx + 24, y0 + 55], [cx + 26, y0 + 92], [cx + 14, y0 + 124], [cx - 14, y0 + 124], [cx - 26, y0 + 92]];
+  function pose(A, y0, o) {
+    const body = sac(A, y0, 1);
+    return Object.assign({ A, pods: pods(A, y0), keep: body, depth: [[999, 1.0]], body: null }, o || {});
+  }
+  return B.rigged(N, {
+    angles: [0, Math.PI / 4, Math.PI * 0.42, Math.PI * 0.75, Math.PI],
+    poses: { '': pose(57, 0), _w1: pose(56, 0), _w2: pose(56, 0), _a1: pose(57, 4), _a2: pose(59, 0) },
+    front(P, S, p) {
+      // the legs come off as one ring-shaped card; only the sac turns
+      const legs = B.painter(P.w, P.h); legs.g.drawImage(P.c, 0, 0); legs.erase(S.keep);
+      P.g.save(); P.g.globalCompositeOperation = 'destination-in'; P.poly('#000', S.keep); P.g.restore();
+      S._legs = legs.c;
+    },
+    back(P, S) {
+      // no mouths behind: bare veined sac, carried down from the shoulders of it
+      const m = B.mir(P.w, S.pods); P.heal(m, 0, -36);
+      P.heal([[m[0][0] + 2, m[0][1] + 34], [m[1][0] - 2, m[0][1] + 34], [m[2][0], m[2][1]], [m[3][0], m[3][1] + 2], [m[4][0], m[4][1] + 2], [m[5][0], m[5][1]]], 0, -34);
+      P.light(() => 0.84);
+    },
+    props(S) { return [{ canvas: S._legs, rx: 0, y: 0, ax: S.A, X: 0, Z: -2, minK: 0.86 }]; },
+  });
+})();
+
+// ---------------------------------------------------------------- the Cacophony Hound
+// A wolf-shape of grey static and bristling smoke, ears back, mouth all
+// teeth, pale eyes, a tail like torn cloud. It is painted in profile, so the
+// side view is the painting, and the other angles come off the lathe: the
+// body is round in section, the legs a near pair and a far pair; head-on and
+// from behind the eyes and the teeth are put back by hand. Source: hound (208x160).
+BEAST20A.SPECIES.hound = (() => {
+  const B = BEAST20A, N = 'hound';
+  const RIG = {
+    '': { A: 112, legY: 108, eye: [182, 70], jaw: [196, 100], tail: 45, neck: 160 },
+    _w1: { A: 112, legY: 100, eye: [176, 62], jaw: [188, 88], tail: 45, neck: 155 },
+    _w2: { A: 95, legY: 100, eye: [150, 62], jaw: [166, 90], tail: 35, neck: 135 },
+    _a1: { A: 100, legY: 105, eye: [150, 72], jaw: [160, 108], tail: 30, neck: 128 },
+    _a2: { A: 95, legY: 120, eye: [100, 90], jaw: [110, 125], tail: 30, neck: 75 },
+  };
+  function rig(p) {
+    const R = RIG[p] || RIG[''], fr = Engine.sprites[N + p];
+    const F = B.painter(fr.w, fr.h); F.g.drawImage(B.srcCanvas(N + p), 0, 0);
+    // the tail is a flat plume, the neck and head narrower than the barrel of the chest
+    return { front: F.c, axis: R.A, legY: R.legY, legZ: 10, legR: 4, sideIsArt: true,
+      thick: (x, yt, yb) => (x < R.tail ? 4 : Math.min(x > R.neck ? 11 : 19, (yb - yt + 1) / 2 * 0.6)), R };
+  }
+  // From behind, drawn by hand from the painting's own parts: the ears over
+  // the crown, the barrel of the rump, both hind legs, the tail hanging down.
+  function rear(p) {
+    const st = B.stride(p), W = 104, H = 160, A = 52;
+    return B.make(N, W, H, P => {
+      const ear = B.piece(N, 148, 18, 24, 32);
+      P.g.drawImage(ear, A - 30, 6); P.g.save(); P.g.translate(A + 30, 6); P.g.scale(-1, 1); P.g.drawImage(ear, 0, 0); P.g.restore();
+      P.grain([[A - 18, 28], [A + 18, 28], [A + 22, 46], [A - 22, 46]], B.tones(N, [[120, 40], [130, 60], [100, 50], [140, 45]]), 2, 31);
+      const rump = []; for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2; rump.push([A + Math.cos(a) * 31 + (Math.sin(a * 5) * 2), 72 + Math.sin(a) * 44]); }
+      P.layer(Q => Q.tex(N, 62, 36, 40, 48, rump), 0.62, 1.12, 0.7, 0.42);
+      const leg = B.piece(N, 22, 106, 40, 42);
+      P.g.drawImage(leg, A - 44 - st * 2, 116 + Math.max(0, st) * 2);
+      P.g.save(); P.g.translate(A + 44 + st * 2, 116 + Math.max(0, -st) * 2); P.g.scale(-1, 1); P.g.drawImage(leg, 0, 0); P.g.restore();
+      // the ridge of bristles along the spine, seen end-on
+      P.cut(N, 92, 14, 40, 22, A - 20, 22, { mul: 1.0 });
+      P.cut(N, 0, 40, 56, 92, A, 40, { rot: -0.47, px: 52, py: 50 });
+    }, { cx: A / W, light: () => 0.86 });
+  }
+  const recipe = (v, p) => {
+    if (v === 0) return Engine.sprites[N + '_a2'];          // head-on it is the painting of the lunge
+    if (v === 4) return rear(p);
+    const r = rig(p);
+    return B.lathed(N, r, v, (P, ox, psi) => {
+      // head-on and three-quarter: the pale eyes and the white of the teeth
+      if (psi > 0.3) {
+        const e = B.at(N, 182, 70, 1.25), tooth = B.at(N, 190, 95, 1.2), dk = B.at(N, 190, 90, 0.4);
+        const hx = ox + (r.R.eye[0] - r.axis) * Math.cos(psi), sep = psi > 1.2 ? 9 : 6;
+        for (const sx of psi > 1.2 ? [-1, 1] : [1]) { P.rect(dk, hx + sx * sep - 2, r.R.eye[1] - 1, 4, 3); P.rect(e, hx + sx * sep - 1, r.R.eye[1], 2, 1); }
+        if (psi > 1.2) { const jx = ox + (r.R.jaw[0] - r.axis) * Math.cos(psi); P.rect(dk, jx - 7, r.R.jaw[1] - 4, 14, 6); for (let i = -6; i <= 6; i += 2) P.line(tooth, jx + i, r.R.jaw[1] - 4, jx + i, r.R.jaw[1] - 1 - (i & 2 ? 1 : 0)); }
+      }
+    });
+  };
+  recipe.rig = rig;
+  recipe.front0 = true;
+  return recipe;
+})();
+
+// ---------------------------------------------------------------- the small painted ones
+// The Briar-sprite (js/flume16.js) and the Fret-crawler (js/parish.js) are
+// drawn in code, side-on. Here each is drawn again for every angle, by the
+// same hand and with the same strokes, colours and proportions as the
+// originals, but laid out in the round: head, legs and body placed for the
+// angle and painted back to front. View 0 is a true head-on drawing.
+BEAST20A.SPECIES.briarsprite = (() => {
+  const B = BEAST20A, N = 'briarsprite';
+  const E = (x, cx, cy, rx, ry, fill, rot) => { x.beginPath(); x.ellipse(cx, cy, Math.max(0.1, rx), Math.max(0.1, ry), rot || 0, 0, Math.PI * 2); x.fillStyle = fill; x.fill(); };
+  const L = (x, x0, y0, x1, y1, col, lw) => { x.beginPath(); x.moveTo(x0, y0); x.lineTo(x1, y1); x.strokeStyle = col; x.lineWidth = lw || 1; x.stroke(); };
+  const VG = (x, y0, y1, a, b) => { const g = x.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, a); g.addColorStop(1, b); return g; };
+  const rng = seed => () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  function paint(x, pose, psi) {
+    const bob = pose === '_w1' ? -2 : pose === '_w2' ? 2 : 0;
+    const lunge = pose === '_a2' ? 10 : pose === '_a1' ? -4 : 0, rear = pose === '_a1' ? -7 : pose === '_a2' ? 4 : 0;
+    const leg = pose === '_w1' ? 4 : pose === '_w2' ? -4 : 0;
+    const c = Math.cos(psi), sn = Math.sin(psi), ac = Math.abs(c), as = Math.abs(sn);
+    const r = rng(41);
+    const bx = 36, by = 42 + bob + rear * 0.3;
+    E(x, 36, 62, 26 * ac + 15 * as, 3.6, 'rgba(0,0,0,0.35)');
+    // the head sits forward of the knot: where it lands depends on the angle
+    const fwd = 16 + lunge * 0.6, hx = bx + fwd * c, hy = 36 + bob + rear, hd = fwd * sn;
+    const legs = [[-12, 1], [-4, -1], [6, 1], [14, -1]].flatMap(([lx, sg]) => [[lx, sg, 7], [lx, sg, -7]].slice(0, 1).concat([[lx, -sg, sg > 0 ? -7 : 7]])).slice(0, 4);
+    const LEGS = [[-12, 7, 1], [-12, -7, -1], [10, 7, -1], [10, -7, 1]];
+    const legAt = ([lx, lz, sg]) => ({ x: bx + lx * c - lz * sn, d: lx * sn + lz * c, sg });
+    const drawLeg = q => { const ox = leg * q.sg; L(x, q.x, 50 + bob, q.x + ox * ac - 3 * c, 62, '#3a2e18', 2.4); L(x, q.x + ox * ac - 3 * c, 62, q.x + ox * ac + 2 * c, 63, '#2a2010', 2.4); };
+    const ls = LEGS.map(legAt).sort((a, b) => a.d - b.d);
+    for (const q of ls) if (q.d < 0) drawLeg(q);
+    const head = () => {
+      E(x, hx, hy, 10 * (0.75 + 0.25 * ac), 8, VG(x, hy - 8, hy + 8, '#5a6a30', '#2a3218'));
+      for (let i = 0; i < 6; i++) L(x, hx - 6 + i * 2.4, hy - 6, hx - 7 + i * 3, hy - 12 - (i % 2) * 3, '#cfc8a0', 1.2);
+      if (sn > -0.35) {
+        const ex0 = 3 * c, sep = 3.4 + 0.8 * as;
+        for (const ex of [-sep, sep]) { E(x, hx + ex0 + ex, hy - 1, 3.2, 3.2, 'rgba(170,255,190,0.5)'); E(x, hx + ex0 + ex, hy - 1, 1.8, 1.8, '#e8fff0'); }
+        const gape = pose === '_a2' ? 5 : pose === '_a1' ? 3 : 1, mx = hx + 7 * c;
+        E(x, mx, hy + 4, 4, gape, '#120c08');
+        for (let i = 0; i < 4; i++) L(x, mx - 3 + i * 1.6, hy + 3, mx - 2.6 + i * 1.6, hy + 4 + gape, '#e8e0c0', 0.9);
+      }
+    };
+    if (hd < 0) head();
+    // body: the knot of bramble, as long as it is seen
+    const brx = Math.hypot(20 * c, 15 * sn), bcx = bx + lunge * 0.4 * c;
+    E(x, bcx, by, brx, 14, VG(x, 28, 56, '#4a5a28', '#222a14'));
+    for (let i = 0; i < 26; i++) {
+      const a = r() * Math.PI * 2, d = 6 + r() * 14, px = bcx + Math.cos(a) * d * brx / 20, py = by + Math.sin(a) * d * 0.7;
+      const l1 = 5 + r() * 6, l2 = 5 + r() * 6;
+      L(x, px, py, px + Math.cos(a) * l1 * brx / 20, py + Math.sin(a) * l2, i % 3 ? '#cfc8a0' : '#6a8a38', 1.2);
+    }
+    for (let i = 0; i < 14; i++) E(x, bcx - brx * 0.7 + r() * brx * 1.5, by - 8 + r() * 18, 3 + r() * 2.6, 2 + r() * 2, `rgb(${50 + (r() * 24 | 0)},${100 + (r() * 60 | 0)},${44 + (r() * 20 | 0)})`, r());
+    for (const q of ls) if (q.d >= 0) drawLeg(q);
+    if (hd >= 0) head();
+  }
+  const ANG = [Math.PI / 2, Math.PI / 4, 0, -Math.PI / 4, -Math.PI / 2];
+  const recipe = (v, p) => {
+    const sp = Engine.sprites[N + p] || Engine.sprites[N];
+    const P = B.painter(sp.w, sp.h); P.g.imageSmoothingEnabled = false;
+    if (v === 2) P.g.drawImage(B.srcCanvas(N + p), 0, 0); else paint(P.g, p, ANG[v]);
+    if (v >= 3) P.light(() => 0.86);
+    return B.finish(P, sp, 1, 0.5);
+  };
+  recipe.front0 = true;
+  return recipe;
+})();
+
+BEAST20A.SPECIES.fretcrawler = (() => {
+  const B = BEAST20A, N = 'fretcrawler';
+  const E = (x, cx, cy, rx, ry, fill, rot) => { x.beginPath(); x.ellipse(cx, cy, Math.max(0.1, rx), Math.max(0.1, ry), rot || 0, 0, Math.PI * 2); x.fillStyle = fill; x.fill(); };
+  const L = (x, x0, y0, x1, y1, col, lw) => { x.beginPath(); x.moveTo(x0, y0); x.lineTo(x1, y1); x.strokeStyle = col; x.lineWidth = lw || 1; x.stroke(); };
+  const VG = (x, y0, y1, a, b) => { const g = x.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, a); g.addColorStop(1, b); return g; };
+  function paint(x, pose, psi) {
+    const step = pose === '_w1' ? 4 : pose === '_w2' ? -4 : 0, up = pose === '_a1' ? -8 : pose === '_a2' ? 2 : 0, stretch = pose === '_a2' ? 10 : 0, claw = pose === '_a2' ? 13 : pose === '_a1' ? 9 : 5;
+    const c = Math.cos(psi), sn = Math.sin(psi), ac = Math.abs(c), as = Math.abs(sn);
+    const len = 52 + stretch * 0.4, wid = 22, cx = 72 - stretch * 0.2 * c, cy = 46 + up * 0.4;
+    E(x, 72, 62, 58 * ac + 26 * as, 5, 'rgba(0,0,0,0.35)');
+    // six legs, three a side, splayed out from under the shell
+    const LEGS = []; for (let i = 0; i < 3; i++) for (const s of [-1, 1]) LEGS.push({ L: -18 + i * 18, s, i });
+    const legLine = q => {
+      const k = (q.i % 2 ? -1 : 1) * step * q.s, bxl = q.L, bz = q.s * 9, fxl = q.L + k, fz = q.s * 26;
+      const px = (l, z) => cx + l * c - z * sn;
+      x.strokeStyle = '#4a463e'; x.lineWidth = 2.6;
+      x.beginPath(); x.moveTo(px(bxl, bz), cy + (depthOf(q) > 0 ? 8 : 0)); x.lineTo(px(bxl + k * 0.6, q.s * 18), cy + 4 - (pose === '_a1' && q.i === 2 ? 10 : 0)); x.lineTo(px(fxl, fz), cy + 16); x.stroke();
+    };
+    const depthOf = q => q.L * sn + q.s * 18 * c;
+    const legs = LEGS.slice().sort((a, b) => depthOf(a) - depthOf(b));
+    for (const q of legs) if (depthOf(q) < 0) legLine(q);
+    const hd = (len - 6 + stretch * 0.6) * sn, hx = cx + (46 + stretch * 0.6) * c, hy = 46 + up;
+    const head = () => {
+      E(x, hx, hy, 9 * (0.8 + 0.2 * ac), 7, '#bdb7a4');
+      if (sn > -0.4) {
+        // the pincers, opening towards whatever it faces
+        x.strokeStyle = '#d8d2bc'; x.lineWidth = 2.2;
+        const spread = 4 + 6 * as;
+        if (as > 0.6) {
+          // coming at you: the two hooks open to either side under the head
+          for (const sg of [1, -1]) { x.beginPath(); x.moveTo(hx + sg * 3, hy + 3); x.quadraticCurveTo(hx + sg * (8 + claw * 0.5), hy + 4, hx + sg * (4 + claw * 0.3), hy + 8 + claw * 0.4); x.stroke(); }
+        } else for (const sg of [1, -1]) {
+          const ex = hx + 4 * c + sg * (as > 0.5 ? spread * 0.5 : 0), ey = hy + (sg > 0 ? 2 : -3);
+          x.beginPath(); x.moveTo(ex, ey);
+          x.quadraticCurveTo(ex + (10 + claw * 0.4) * c + sg * spread * sn * 0.6, ey + sg * (6 + claw * 0.4), ex + (6 + claw) * c + sg * spread * as, ey + sg * (6 + claw * 0.4));
+          x.stroke();
+        }
+        if (as > 0.6) { E(x, hx - 3, hy - 1, 1.6, 1.6, '#201c14'); E(x, hx + 3, hy - 1, 1.6, 1.6, '#201c14'); } else E(x, hx + 2 * c, hy - 1, 1.6, 1.6, '#201c14');
+      }
+    };
+    if (hd < 0) head();
+    // the shell: long in profile, a low dome end-on; the frets run across it
+    const rx = Math.hypot(len * c, wid * sn);
+    x.beginPath(); x.ellipse(cx, cy, rx, 17, 0, 0, Math.PI * 2); x.fillStyle = VG(x, 30, 62, '#7a7468', '#403c34'); x.fill();
+    x.beginPath(); x.ellipse(cx, cy - 2, rx - 4, 12, 0, 0, Math.PI * 2); x.fillStyle = 'rgba(160,154,140,0.35)'; x.fill();
+    if (ac > 0.3) {
+      for (let i = -8; i <= 8; i++) {
+        const fx = cx + i * 5.4 * c * (len / 52), hh = 12 * Math.sqrt(Math.max(0, 1 - (i / 9.6) * (i / 9.6)));
+        L(x, fx, cy - 2 - hh, fx + 3 * sn, cy - 2 + hh + 3, i % 2 ? 'rgba(210,204,186,0.5)' : 'rgba(50,46,38,0.55)', 1.2);
+      }
+    } else {
+      // end-on, the nearest ridges are arches over the dome
+      for (let i = 0; i < 4; i++) { x.beginPath(); x.ellipse(cx, cy + 2, rx - 3 - i * 4, 13 - i * 2.6, 0, Math.PI, Math.PI * 2); x.strokeStyle = i % 2 ? 'rgba(210,204,186,0.5)' : 'rgba(50,46,38,0.55)'; x.lineWidth = 1.2; x.stroke(); }
+    }
+    L(x, cx - rx + 4, cy - 2, cx + rx - 4, cy - 2, 'rgba(40,36,30,0.5)', 1);
+    for (const q of legs) if (depthOf(q) >= 0) legLine(q);
+    if (hd >= 0) head();
+  }
+  const ANG = [Math.PI / 2, Math.PI / 4, 0, -Math.PI / 4, -Math.PI / 2];
+  const recipe = (v, p) => {
+    const sp = Engine.sprites[N + p] || Engine.sprites[N];
+    const P = B.painter(sp.w, sp.h);
+    if (v === 2) P.g.drawImage(B.srcCanvas(N + p), 0, 0); else paint(P.g, p, ANG[v]);
+    if (v >= 3) P.light(() => 0.86);
+    return B.finish(P, sp, 1, 0.5);
+  };
+  recipe.front0 = true;
+  return recipe;
+})();
+
 // Plug in: the hand-built views answer first for their species; everything else
 // (the Proctor pilot, BEASTB's species, the stand-ins) falls through unchanged.
 (() => {
@@ -1088,6 +1387,19 @@ BEAST20A.SPECIES.horn = (() => {
       if (GFX.p20_beastA && v >= 1 && v <= 4 && BEAST20A.has(name)) { const s = BEAST20A.view(name, v, pose); if (s) return s; }
     } catch (err) { /* fall back to the stand-in */ }
     return _view.apply(this, arguments);
+  };
+  // View 0 (coming straight at you) for creatures painted side-on: directions.js
+  // leaves view 0 to the engine, so the profile species answer it here.
+  const _dir = animDirectionalSprite;
+  animDirectionalSprite = function (e) {
+    const r = _dir(e);
+    try {
+      if (!GFX.p20_beastA || !GFX.directions || !e || e.kind !== 'enemy' || e.deathArt || !BEAST20A.front0(e.sprite)) return r;
+      const angle = animViewAngle(e); if (angle.view !== 0) return r;
+      const pose = e.animSprite ? e.animSprite.slice(e.sprite.length) : '';
+      const s = BEAST20A.view(e.sprite, 0, pose);
+      return s ? { sprite: s, flip: angle.flip } : r;
+    } catch (err) { return r; }
   };
   const _species = DIRECTIONS.species;
   DIRECTIONS.species = function () {
