@@ -99,7 +99,9 @@ const save = (name, dataUrl) => fs.writeFileSync(path.join(SHOTS, name), Buffer.
             check(sp && sp.w > 0 && sp.h > 0 && sp.data.length === sp.w * sp.h && sp.data.some(p => p >>> 24), name + pose + ' view ' + v + ' exists');
           }
         }
-        if (s.symmetric) {
+        // Phase 20: a hand-built species (s.hand: js/bestiary20a.js / bestiary20b.js) has real views even where
+        // directions.js would have kept a single drawing (the listening-horn turns its bell)
+        if (s.symmetric && !s.hand) {
           for (let v = 1; v <= 4; v++) check(DIRECTIONS.view(name, v, '') === front, name + ' keeps its single drawing in view ' + v);
           const idle = hash(front), w1 = hash(Engine.sprites[name + '_w1']), a2 = hash(Engine.sprites[name + '_a2']);
           check(idle !== w1 && idle !== a2, name + ' action frames differ from idle');
@@ -134,7 +136,9 @@ const save = (name, dataUrl) => fs.writeFileSync(path.join(SHOTS, name), Buffer.
       const at = (e, octant) => { Engine.cam.x = Math.cos(octant * Math.PI / 4) * 3; Engine.cam.y = Math.sin(octant * Math.PI / 4) * 3; return animDirectionalSprite(e); };
       for (const name of ['golem', 'hound', 'weaver', 'wearer', 'drowned']) {
         const e = { kind: 'enemy', sprite: name, x: 0, y: 0, facing: 0 };
-        const seen = at(e, 0); check(seen.sprite === Engine.sprites[name] && seen.flip === false, name + ' faces front at octant 0');
+        // Phase 20: creatures painted side-on (the hound) show a head-on drawing at octant 0
+        const front0 = typeof BESTIARY20A !== 'undefined' && BESTIARY20A.front0(name) ? BESTIARY20A.view(name, 0, '') : Engine.sprites[name];
+        const seen = at(e, 0); check(seen.sprite === front0 && seen.flip === false, name + ' faces front at octant 0');
         const views = [seen.sprite];
         for (let o = 1; o <= 3; o++) {
           const a = at(e, o), b = at(e, 8 - o);
@@ -178,7 +182,9 @@ const save = (name, dataUrl) => fs.writeFileSync(path.join(SHOTS, name), Buffer.
       }
       const used = DIRECTIONS.budgetBytes();
       check(requested > DIRECTIONS.cap, 'the probe asked for more than the budget (' + requested + ')');
-      check(used > 0 && used <= DIRECTIONS.cap && DIRECTIONS.cap <= 4 * 1024 * 1024, 'cache stays inside 4 MB (' + used + ' bytes)');
+      // Phase 20: when every species that turns is hand-built, the stand-in cache is simply never used
+      const allHand = species.every(s => s.hand || s.symmetric || s.pilot || (typeof BEASTB !== 'undefined' && BEASTB.SPECIES[s.sprite]));
+      check((used > 0 || allHand) && used <= DIRECTIONS.cap && DIRECTIONS.cap <= 4 * 1024 * 1024, 'cache stays inside 4 MB (' + used + ' bytes)');
       check(hash(DIRECTIONS.view('golem', 2, '')) === probeHash, 'an evicted view regenerates identically');
       out.cacheBytes = used; out.requestedBytes = requested;
       // a repeated request is a cache hit: the very same object
