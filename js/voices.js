@@ -105,6 +105,10 @@ const VOICES = (() => {
     herald:    { f0: 130, fs: 0.96, style: 'brass' },    // a herald's carrying voice
     mourner:   { f0: 176, fs: 1.04, style: 'breathy' },
     wren:      { f0: 258, fs: 1.18, style: 'human' },
+    // Phase 17, team LONGNIGHT: the three Cantors of the Long Night [PROPOSED]
+    p17n_marl: { f0: 88, fs: 0.9, style: 'human' },       // Marl Dunning, bass: low, slow, unhurried
+    p17n_tansy: { f0: 226, fs: 1.12, style: 'human' },    // Tansy Quill, alto apprentice: thin, young
+    p17n_jory: { f0: 116, fs: 0.96, style: 'human' },     // Jory Fenn, lamplighter: plain
   };
 
   // ---- the enemy families ---------------------------------------------------------------------------
@@ -124,6 +128,9 @@ const VOICES = (() => {
     requiem:     { f0: 98,  fs: 0.9,  style: 'multi' },
     quiet:       { style: 'silent' },
     hushmoth:    { style: 'silent' },
+    p17n_hollow: { f0: 138, fs: 1.0, style: 'breathy' },   // Phase 17 LONGNIGHT: a Hollow walking toward a held voice
+    p17n_hound:  { f0: 150, fs: 0.9, style: 'beast' },
+    p17n_moth:   { style: 'silent' },
     tongueless:  { style: 'silent' },                      // no tongue, no sound
     hushwarden:  { style: 'silent' },                      // the game marks it mute
     aegis:       { f0: 66,  fs: 0.8,  style: 'chord' },
