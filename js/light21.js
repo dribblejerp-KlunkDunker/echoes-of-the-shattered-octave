@@ -714,7 +714,7 @@ void main() {
     vec3 cc = mix(shadeC, litC, lit2) + uL21Glow * pow(dsun, 8.0) * 0.6 * (1.0 - ld);   // silver lining toward the sun
     cc += vec3(0.85, 0.88, 1.0) * uL21Sky2.z * 0.9;                                       // lightning inside the cloud
     float al = clamp(ld + hd * (1.0 - ld), 0.0, 1.0) * horizonFade;
-    al = al < 0.1 ? 0.0 : al < 0.35 ? (bay(pix) < al * 2.4 ? 0.7 : 0.0) : floor(al * 3.0 + 0.5) / 3.0;   // solid bands inside, a dithered rim
+    al = al < 0.2 ? 0.0 : al < 0.3 ? (bay(pix) < (al - 0.2) * 10.0 ? 0.6 : 0.0) : floor(al * 3.0 + 0.5) / 3.0;   // solid bands inside, a one-step dithered rim
     c = mix(c, cc, al);
     occl = 1.0 - al;
     glowFlag *= occl;
