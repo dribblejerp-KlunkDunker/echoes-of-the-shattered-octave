@@ -709,17 +709,18 @@ const BODY21 = (() => {
   function updateLight(dt) {
     let tgt = [1, 1, 1];
     if (set.light) {
-      if ((LT.n++ % 6) === 0) { try { LT.lamp = lampsAt(Engine.cam.x, Engine.cam.y); } catch (e) { LT.lamp = [0, 0, 0]; } }
+      if ((LT.n++ % 6) === 0 || dt === 0) { try { LT.lamp = lampsAt(Engine.cam.x, Engine.cam.y); } catch (e) { LT.lamp = [0, 0, 0]; } }
       const base = LT.outdoor ? clamp(LT.frameLight, 0, 1) : 1;
       tgt = [0, 1, 2].map((c) => clamp(base + (LT.lamp[c] || 0) / 255 * 1.4, LT.FLOOR, 1));
     }
-    const a = Math.min(1, dt * 5);
-    for (let c = 0; c < 3; c++) LT.k[c] += (tgt[c] - LT.k[c]) * a;
+    // no smoothing over time: the light depends only on where you stand and the hour (so two frames of the same moment are
+    // the same picture); the steps of 1/16 with the hysteresis below keep it from flickering
+    for (let c = 0; c < 3; c++) LT.k[c] = tgt[c];
     // the applied level moves in steps of 1/16 and only when the light has really moved (hysteresis): a re-tint is a
     // canvas recomposite per picture, so it happens a few times as you walk past a lamp, not every frame
     const cur = LT.key.split(',').map((v) => +v / 32);
     const far = LT.k.some((v, c) => Math.abs(v - cur[c]) > 0.07) || (LT.k.every((v, c) => Math.abs(v - tgt[c]) < 0.01) && tgt.some((v, c) => Math.abs(v - cur[c]) > 0.02));
-    if (far) LT.key = LT.k.map((v) => Math.round(v * 16) * 2).join(',');
+    if (far || dt === 0) LT.key = LT.k.map((v) => Math.round(v * 16) * 2).join(',');
   }
   const tintCache = new WeakMap();
   function lit(cv, em) {
@@ -744,9 +745,9 @@ const BODY21 = (() => {
     const c = Engine.cam; let inst = 0;
     if (WS.map === G.mapId && WS.x != null) { const d = Math.hypot(c.x - WS.x, c.y - WS.y); if (d < 1 && dt > 0) { WS.stride += d; inst = d / dt; } }
     WS.x = c.x; WS.y = c.y; WS.map = G.mapId;
-    WS.speed += (inst - WS.speed) * Math.min(1, dt * 8);
+    WS.speed += (inst - WS.speed) * (dt === 0 ? 1 : Math.min(1, dt * 8));
     const guard = typeof UPG !== 'undefined' && UPG && UPG.blocking && G.state === 'play' ? 1 : 0;
-    WS.gk += (guard - WS.gk) * (reduced() ? 1 : Math.min(1, dt * 16));
+    WS.gk += (guard - WS.gk) * (reduced() || dt === 0 ? 1 : Math.min(1, dt * 16));
     updateLight(dt);
     return dt;
   }
@@ -768,7 +769,8 @@ const BODY21 = (() => {
   const VWv = () => (typeof VW === 'number' ? VW : 320), VHv = () => (typeof VIEW_H === 'number' ? VIEW_H : 150);
   const fph = () => (typeof FPHANDS === 'object' && FPHANDS && FPHANDS.st) ? FPHANDS.st : null;
   const bobNow = (ph) => (Engine.cam.bob || 0) + (G.attack && G.attack.t > 0 ? 0 : Math.sin(performance.now() / 900 + (ph || 0)) * 1.4);
-  function pitchMax() { try { if (typeof R3D21 === 'object' && R3D21 && typeof R3D21.pitchLimit === 'function') { const v = R3D21.pitchLimit(); if (v > 0) return v; } } catch (e) { /* default */ } return 40; }
+  // the widest look in rows the renderer allows (R3D.camera.limit() is an angle; the Original preset keeps 40 rows)
+  function pitchMax() { try { if (typeof R3D === 'object' && R3D && R3D.camera) { const v = R3D.FX * Math.tan(R3D.camera.limit()); if (v > 0) return v; } } catch (e) { /* default */ } return 40; }
   function hiddenBody() {
     if (G.state !== 'play' || G.dead || G.openPanel) return true;
     const f = fph(); if (f && f.climb > 0) return true;
@@ -900,7 +902,7 @@ const BODY21 = (() => {
     return { wid, list };
   }
 
-  const LIFT = 20;
+  const LIFT = 30;
   const _drawHUD = drawHUD;
   drawHUD = function () {
     if (!on() || !G.player || typeof Engine === 'undefined' || !Engine.images) return _drawHUD.apply(this, arguments);
