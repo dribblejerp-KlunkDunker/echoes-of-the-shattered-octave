@@ -134,12 +134,14 @@ const SPRITES21 = (() => {
     return at ? [lru, at] : null;
   }
   // level 0 copy (alpha quantised, emissive marked) and the two smaller levels (the raycaster's spriteMip rule)
-  function level0(sp, W, H) {
+  function level0(sp, W, H, keep) {
     const out = new Uint32Array(W * H), src = sp.data, emit = sp.emit, w = sp.w, h = sp.h;
     for (let y = 0; y < h; y++) {
       const so = y * w, oo = y * W;
       for (let x = 0; x < w; x++) {
         const p = src[so + x];
+        // a translucent figure (the ghost) keeps its own alpha: its soft rim is part of the painting
+        if (keep) { if ((p >>> 24) > 4) out[oo + x] = p >>> 0; continue; }
         if ((p >>> 24) <= ALPHA_CUT) continue;
         out[oo + x] = ((p & 0xffffff) | ((emit && emit[so + x] ? EMIT_A : 255) << 24)) >>> 0;
       }
@@ -158,9 +160,9 @@ const SPRITES21 = (() => {
     }
     return d;
   }
-  function upload(pg, x, y, sp) {
+  function upload(pg, x, y, sp, keep) {
     const W = pad(sp.w) + AL, H = pad(sp.h) + AL;           // the gutter is uploaded too: a recycled page is cleaned
-    const l0 = level0(sp, W, H), l1 = down(l0, W, H), l2 = down(l1, W >> 1, H >> 1);
+    const l0 = level0(sp, W, H, keep), l1 = down(l0, W, H), l2 = down(l1, W >> 1, H >> 1);
     gl.bindTexture(gl.TEXTURE_2D, pg.tex);
     gl.texSubImage2D(gl.TEXTURE_2D, 0, x, y, W, H, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(l0.buffer));
     gl.texSubImage2D(gl.TEXTURE_2D, 1, x >> 1, y >> 1, W >> 1, H >> 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(l1.buffer));
@@ -168,9 +170,10 @@ const SPRITES21 = (() => {
     st.uploads++; st.uploadPx += W * H;
   }
   // where a sprite lives in the atlas, uploading it if it is new or changed; null if it cannot be placed
-  function entryFor(sp) {
+  function entryFor(sp, keep) {
+    keep = !!keep;
     let en = entries.get(sp);
-    if (en && en.data === sp.data && en.emit === (sp.emit || null) && en.gen === en.pg.gen) { en.pg.used = frameNo; return en; }
+    if (en && en.data === sp.data && en.emit === (sp.emit || null) && en.keep === keep && en.gen === en.pg.gen) { en.pg.used = frameNo; return en; }
     if (!(sp.data instanceof Uint32Array) || !(sp.w > 0) || !(sp.h > 0) || sp.data.length < sp.w * sp.h) return null;
     const W = pad(sp.w) + AL, H = pad(sp.h) + AL;
     if (W > PAGE || H > PAGE) return null;
@@ -179,8 +182,8 @@ const SPRITES21 = (() => {
     const ua = gl.getParameter(gl.UNPACK_ALIGNMENT), at = gl.getParameter(gl.ACTIVE_TEXTURE);
     gl.activeTexture(gl.TEXTURE0 + U_ATLAS);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false); gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
-    try { upload(pg, x, y, sp); } finally { gl.pixelStorei(gl.UNPACK_ALIGNMENT, ua); gl.activeTexture(at); }
-    en = { data: sp.data, emit: sp.emit || null, pg, gen: pg.gen, u0: x / PAGE, v0: y / PAGE, u1: (x + sp.w) / PAGE, v1: (y + sp.h) / PAGE };
+    try { upload(pg, x, y, sp, keep); } finally { gl.pixelStorei(gl.UNPACK_ALIGNMENT, ua); gl.activeTexture(at); }
+    en = { data: sp.data, emit: sp.emit || null, keep, pg, gen: pg.gen, u0: x / PAGE, v0: y / PAGE, u1: (x + sp.w) / PAGE, v1: (y + sp.h) / PAGE };
     entries.set(sp, en); pg.used = frameNo;
     return en;
   }
@@ -197,7 +200,7 @@ layout(location=0) in vec2 a_c;
 layout(location=1) in vec4 i_p;   // x, y, base z, world width
 layout(location=2) in vec4 i_s;   // world height, anchor (0..1 from the drawn left edge), skew, depth pull
 layout(location=3) in vec4 i_uv;  // u0 v0 u1 v1 (u swapped when flipped)
-layout(location=4) in vec4 i_k;   // light factor f, hurt, alpha, flags (1 flash, 2 translucent, 4 unlit, 8 glow entity)
+layout(location=4) in vec4 i_k;   // light factor f, hurt, alpha, flags (1 flash, 2 translucent, 4 unlit, 8 glowing entity, 16 own alpha)
 layout(location=5) in vec4 i_l;   // point light rgb (0..1), glow floor for emissive texels
 uniform mat4 u_vp; uniform vec3 u_eye; uniform vec2 u_right; uniform float u_tilt;
 out vec2 v_uv; out vec4 v_k; out vec4 v_l; out vec3 v_w;
@@ -244,11 +247,13 @@ ${shade}
 const float BY[16] = float[16](0., 8., 2., 10., 12., 4., 14., 6., 3., 11., 1., 9., 15., 7., 13., 5.);
 void main() {
   vec4 t = texture(u_atlas, v_uv);
-  if (t.a < 0.25) discard;
   float al = v_k.z; int flags = int(v_k.w + 0.5);
+  bool raw = (flags & 16) != 0;                     // a figure that keeps its own alpha (the ghost)
+  if (t.a < (raw ? 0.02 : 0.25)) discard;
+  if (raw) al *= t.a;
   bool trans = (flags & 2) != 0;
   if (!trans && al < 0.999) { ivec2 q = ivec2(floor(gl_FragCoord.xy / u_px)) & 3; if (BY[q.y * 4 + q.x] >= al * 16.0) discard; }
-  float emis = t.a < 0.9 ? 1.0 : 0.0;
+  float emis = (!raw && t.a < 0.9) ? 1.0 : 0.0;
   vec3 c = t.rgb;
   float hk = v_k.y * 0.45;
   if (hk > 0.0) c = vec3(c.r + (1.0 - c.r) * hk, c.g * (1.0 - hk), c.b * (1.0 - hk));
@@ -579,7 +584,9 @@ void main() {
       if (e.elite) { lr += 28; lg += 20; }
       const cx0 = sp.cx == null ? 0.5 : sp.cx, flip = !!r.flip;
       const anchor = flip ? -(1 - cx0) - 1e-6 : cx0;            // negative = flipped (u swapped), the anchor mirrored
-      const flags = e.flash ? 1 : 0;
+      // a glowing thing (lamp, fire, glass, a singing companion) is marked so bloom can find it (aux material 8)
+      const glowEnt = e.glow > 0.3 || e.animGlow > 0.3 || !!e.glassLamp || !!SHARD[e.item];
+      const flags = (e.flash ? 1 : 0) | (glowEnt ? 8 : 0);
       const pull = Math.min(0.3, wW * 0.5);
       pushBillboard(en, e.x, e.y, z0, wW, wH, anchor, (e.animSkew || 0) * aspectK, pull, f, e.animHurt || 0, alpha >= 1 ? 1 : alpha, flags, lr / 255, lg / 255, lb / 255, Math.max(f, 0.95));
       // the screen rect every overlay reads (logical 320x150), as the raycaster left it
@@ -605,12 +612,12 @@ void main() {
       const dx = s.x - V.eye[0], dy = s.y - V.eye[1], d = Math.hypot(dx, dy);
       const al = GHOST18.ghostAlpha(d, fogDist, pb.vis); if (al < 0.02) return;
       const fm = GHOST18.frameFor(pb.g.look, s, V.dir); if (!fm || !fm.fr) return;
-      const fr = fm.fr, en = entryFor(fr); if (!en) return;
+      const fr = fm.fr, en = entryFor(fr, true); if (!en) return;
       const wH = 1, wW = fr.w / fr.h * (V.spriteAspect || 1), z0 = groundAt(s.x, s.y);
       if (offscreen(s.x, s.y, z0, z0 + wH, wW)) return;
       // the ghost painter's colours are the figure's own: no fog, no light (ghost18 draws them straight)
       const inst = new Float32Array(BB_FLOATS), flip = !!fm.mirror;
-      inst.set([s.x, s.y, z0, wW, wH, 0.5, 0, Math.min(0.3, wW * 0.5), flip ? en.u1 : en.u0, en.v0, flip ? en.u0 : en.u1, en.v1, 1, 0, al, 6, 0, 0, 0, 1]);
+      inst.set([s.x, s.y, z0, wW, wH, 0.5, 0, Math.min(0.3, wW * 0.5), flip ? en.u1 : en.u0, en.v0, flip ? en.u0 : en.u1, en.v1, 1, 0, al, 22, 0, 0, 0, 1]);
       figures.push({ en, inst, d2: d * d, raw: true });
       st.figures++;
     } catch (e) { warnOnce('ghost', e); }
