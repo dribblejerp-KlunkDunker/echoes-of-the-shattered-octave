@@ -1243,7 +1243,10 @@ void main() {
   function lbBuild(look, legs, F, R) {
     const c = Engine.cam, M = ((c.z == null ? 0.5 : c.z) * R.ZK - R.groundGL(c.x, c.y)) / 1.6 || (0.5 * R.ZK / 1.6);
     const fx = Math.cos(c.dir), fy = Math.sin(c.dir), rx = -fy, ry = fx, g0 = R.groundGL(c.x, c.y);
-    const B = (p) => [c.x + (fx * p[0] + rx * p[1]) * M, c.y + (fy * p[0] + ry * p[1]) * M, g0 + p[2] * M];
+    // the view is a narrow 34 degrees tall, so the body leans a little forward of a true stance as the look goes down
+    // (most at about 60 degrees, where a wide human eye would already see the boots), and settles back looking straight down
+    const dn = -(F.pitchA || 0) * 180 / Math.PI, lean = 0.03 + 0.2 * Math.exp(-Math.pow((dn - 62) / 13, 2));
+    const B = (p) => [c.x + (fx * (p[0] + lean) + rx * p[1]) * M, c.y + (fy * (p[0] + lean) + ry * p[1]) * M, g0 + p[2] * M];
     const groundAt = (p) => { const w = B(p); return (R.groundGL(w[0], w[1]) - g0) / M; };   // floor height under a body point, metres
     const V = [], I = [];
     const vert = (p, n, u, v, tile, ao) => { const w = B(p); V.push(w[0], w[1], w[2], fx * n[0] + rx * n[1], fy * n[0] + ry * n[1], n[2], u, v, tile, ao == null ? 1 : ao); return V.length / 10 - 1; };
@@ -1317,7 +1320,7 @@ void main() {
       tube(R6.map(([x, a, b, z]) => ({ c: FP(x, 0.008), a: a + 0.006, b: 0.008, side })), T_.sole, 8, { capStart: true, capEnd: true, side });
     }
     // ---- the hips, the hem and the lower chest
-    const sway = moving ? Math.sin(ph) * 0.015 : 0, hemFwd = (legsD[0].fwd + legsD[1].fwd) / 2 * 0.25;
+    const sway = moving ? Math.sin(ph) * 0.015 : 0, hemFwd = (legsD[0].fwd + legsD[1].fwd) / 2 * (0.25 + 0.5 * clamp(lenH, 0, 1));
     if (shape === 'cuirass') {
       for (let r = 0; r < 3; r++) { const z0 = 1.0 - r * 0.075; tube([{ c: [-0.05, sway, z0], a: 0.19 + r * 0.012, b: 0.13 + r * 0.01 }, { c: [-0.04 + r * 0.01, sway, z0 - 0.1], a: 0.21 + r * 0.014, b: 0.15 + r * 0.012, ao: 0.8 }], T_.skirt, 16); }
       tube([{ c: [-0.05, 0, 0.98], a: 0.15, b: 0.11 }, { c: [-0.05, 0, 0.8], a: 0.16, b: 0.12 }], T_.trouser, 12);
