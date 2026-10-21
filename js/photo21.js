@@ -45,6 +45,7 @@ const PHOTO21 = (() => {
     } catch (e) { warnOnce('grades', e); }
     return OWN;
   }
+  const HELP = 'Free camera · W A S D fly · R F up and down · arrows or drag look · Q E tilt · P saves a screenshot · Esc leaves';
   const S = { free: true, dof: false, filter: 'none', vignette: false, pitchRows: null, start: null, saves: 0, last: null, bar: null };
   try { const o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (o && typeof o === 'object') { if (typeof o.free === 'boolean') S.free = o.free; if (typeof o.vignette === 'boolean') S.vignette = o.vignette; if (typeof o.filter === 'string') S.filter = o.filter; } } catch (e) { /* none */ }
   const saveCfg = () => { try { localStorage.setItem(KEY, JSON.stringify({ free: S.free, vignette: S.vignette, filter: S.filter })); } catch (e) { /* none */ } };
@@ -244,7 +245,7 @@ const PHOTO21 = (() => {
     injectStyle();
     // playtools' own key, button and Options row call its closure; this wrapper sees the state change instead
     let wasOn = false;
-    const onEnter = () => { const c = Engine.cam; S.start = { x: c.x, y: c.y }; S.pitchRows = c.pitch; S.dof = false; ensureBar(); preview(); const d = document.getElementById('p21-dof'); if (d) { d.textContent = 'Depth of field: Off'; d.classList.remove('sel'); d.setAttribute('aria-pressed', 'false'); } };
+    const onEnter = () => { const c = Engine.cam; S.start = { x: c.x, y: c.y }; S.pitchRows = c.pitch; S.dof = false; ensureBar(); preview(); if (S.free) say(HELP); const d = document.getElementById('p21-dof'); if (d) { d.textContent = 'Depth of field: Off'; d.classList.remove('sel'); d.setAttribute('aria-pressed', 'false'); } };
     const onLeave = () => { S.start = null; S.pitchRows = null; drag = null; const game = document.getElementById('game'); if (game) { game.style.removeProperty('--p21-photo-filter'); game.classList.remove('p21-photo-vig'); } };
     if (typeof update === 'function') {
       const _update = update;
