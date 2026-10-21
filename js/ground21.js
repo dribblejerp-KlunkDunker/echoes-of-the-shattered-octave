@@ -32,9 +32,9 @@ const GROUND21 = (() => {
     if (GFX.FX && !GFX.FX.includes(FLAG)) GFX.FX.push(FLAG);
   }
   // the fade band, in screen pixels per base texel
-  const config = { lo: 2.5, hi: 3.5, perFrame: 2, worker: true };
+  const config = { lo: 2.5, hi: 3.5, perFrame: 2, worker: true, cache: true };
 
-  const st = { made: 0, genMs: 0, uploads: 0, slots: 0, cap: 0, pending: 0, errors: 0, worker: null, workerFailed: false, ctx: 0, lastFrameMs: 0, idxDirty: false, mipDirty: false, chunkSet: false };
+  const st = { made: 0, cacheHits: 0, genMs: 0, uploads: 0, slots: 0, cap: 0, pending: 0, errors: 0, worker: null, workerFailed: false, ctx: 0, lastFrameMs: 0, idxDirty: false, mipDirty: false, chunkSet: false };
 
   // ---------------------------------------------------------------------------------------------- settings
   let stored = null, mineChanging = false;
@@ -73,8 +73,57 @@ const GROUND21 = (() => {
     let e = store.get(name);
     if (!e) { e = { sum: 0, data: null, want: 0, slot: -1, up: -1, family: '' }; store.set(name, e); }
     const s = texSum(d);
-    if (e.sum !== s && e.want !== s) { e.want = s; queue.push({ name, sum: s, base: new Uint8Array(new Uint8Array(d.buffer, d.byteOffset, d.length * 4)) }); pump(); }
+    if (e.sum !== s && e.want !== s) {
+      e.want = s;
+      const job = { name, sum: s, base: new Uint8Array(new Uint8Array(d.buffer, d.byteOffset, d.length * 4)) };
+      cacheGet(name, s).then((data) => { if (data) done({ name, sum: s, data: data.buffer, family: '', cached: true }); else { queue.push(job); pump(); } });
+    }
     return e;
+  }
+  // ---- a per-device cache (IndexedDB) of drawn textures, as palette indices (~64 KB each), keyed by the art code's own
+  // hash, the name and the base's checksum: a later visit shows the detail at once, and any change to the art or to a base
+  // texture (a winter swap) misses the cache and draws afresh. Best effort: no storage, no cache.
+  const ART_SIG = ART && ART.source ? (ART.hashStr(ART.source) >>> 0).toString(36) : '0';
+  let dbP = null;
+  function db() {
+    if (dbP) return dbP;
+    dbP = new Promise((res) => {
+      try {
+        if (typeof indexedDB === 'undefined') return res(null);
+        const rq = indexedDB.open('octave-ground21', 1);
+        rq.onupgradeneeded = () => { try { rq.result.createObjectStore('tex'); } catch (e) { /* exists */ } };
+        rq.onsuccess = () => res(rq.result); rq.onerror = () => res(null); rq.onblocked = () => res(null);
+      } catch (e) { res(null); }
+    });
+    return dbP;
+  }
+  const ckey = (name, sum) => ART_SIG + '|' + name + '|' + sum;
+  function cacheGet(name, sum) {
+    if (!config.cache) return Promise.resolve(null);
+    return db().then((d) => new Promise((res) => {
+      if (!d) return res(null);
+      try {
+        const rq = d.transaction('tex', 'readonly').objectStore('tex').get(ckey(name, sum));
+        rq.onsuccess = () => {
+          const v = rq.result; if (!v || !v.idx || !v.pal) return res(null);
+          const idx = new Uint8Array(v.idx), pal = new Uint8Array(v.pal), out = new Uint8Array(M * M * 4);
+          if (idx.length !== M * M) return res(null);
+          for (let i = 0; i < M * M; i++) { const k = idx[i] * 3; out[i * 4] = pal[k]; out[i * 4 + 1] = pal[k + 1]; out[i * 4 + 2] = pal[k + 2]; out[i * 4 + 3] = 255; }
+          st.cacheHits++; res(out);
+        };
+        rq.onerror = () => res(null);
+      } catch (e) { res(null); }
+    })).catch(() => null);
+  }
+  function cachePut(name, sum, data) {
+    if (!config.cache) return;
+    const map = new Map(), idx = new Uint8Array(M * M), pal = [];
+    for (let i = 0; i < M * M; i++) {
+      const k = (data[i * 4] << 16) | (data[i * 4 + 1] << 8) | data[i * 4 + 2];
+      let v = map.get(k); if (v === undefined) { v = pal.length / 3; if (v > 255) return; map.set(k, v); pal.push(k >> 16, (k >> 8) & 255, k & 255); }
+      idx[i] = v;
+    }
+    db().then((d) => { if (!d) return; try { d.transaction('tex', 'readwrite').objectStore('tex').put({ idx: idx.buffer, pal: new Uint8Array(pal).buffer }, ckey(name, sum)); } catch (e) { /* full or blocked */ } }).catch(() => {});
   }
   // generation: a Web Worker built from the art factory's own source (no extra file to fetch); the main thread, one
   // texture per idle slot, where workers are missing
@@ -120,7 +169,7 @@ const GROUND21 = (() => {
     if (m.error) { st.errors++; warnOnce('make ' + m.name, m.error); if (e.want === m.sum) e.want = 0; return; }
     if (e.want !== m.sum) return;               // a newer base is on its way
     e.sum = m.sum; e.want = 0; e.data = new Uint8Array(m.data); e.family = m.family; e.err = m.err; e.up = -1;
-    st.made++; st.genMs += m.ms || 0;
+    if (!m.cached) { st.made++; st.genMs += m.ms || 0; cachePut(m.name, m.sum, e.data); }
   }
   function pending() { let n = 0; for (const e of store.values()) if (e.want) n++; return n; }
 
