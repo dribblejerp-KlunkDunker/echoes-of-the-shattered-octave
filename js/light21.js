@@ -163,7 +163,7 @@ const LIGHT21 = (() => {
     const sunCol = keyAt(tod, 5), direct = (1 - cloud * 0.78) * (1 - dark * 0.7);
     if (day > 0.02) {
       P.sun = dir3(sunA, Math.max(0.035, sunEl));
-      const k = day * 0.78 * direct;
+      const k = day * 0.98 * direct;
       P.sunC = [sunCol[0] * k, sunCol[1] * k, sunCol[2] * k];
     } else {
       P.sun = dir3(sunA + Math.PI, moonEl);
@@ -188,7 +188,8 @@ const LIGHT21 = (() => {
     P.glow = [glow[0] * P.sunVis, glow[1] * P.sunVis, glow[2] * P.sunVis];
     // ambient: the sky's light from above and a warmer, darker bounce from the ground; overcast spreads the sun into it
     const spread = 1 + cloud * 0.45 + haze * 0.3;
-    P.ambS = [amb[0] * spread * dk + fl * 0.4, amb[1] * spread * dk + fl * 0.4, amb[2] * spread * (1 - dark * 0.45) + fl * 0.45];
+    const ak = 1 - 0.16 * day * (1 - cloud);   // a clear day's light is mostly the sun's: deeper shade
+    P.ambS = [amb[0] * spread * dk * ak + fl * 0.4, amb[1] * spread * dk * ak + fl * 0.4, amb[2] * spread * (1 - dark * 0.45) * ak + fl * 0.45];
     P.ambG = [P.ambS[0] * 0.62 + sunCol[0] * day * 0.06, P.ambS[1] * 0.55 + sunCol[1] * day * 0.05, P.ambS[2] * 0.48];
     // the scale of everything: the engine's own light level keeps the two renderers equally bright on average
     // fog: the height fog (mist, Cinematic ground fog, soft fog) and its height above the feet
@@ -435,8 +436,8 @@ vec3 r3dShade(R3DSurf s) {
   if (s.emissive > 0.5) c = max(c, s.albedo * 1.25);
   if (outdoor) {
     // the air toward that direction: the sky just above the horizon there, held toward the map's own haze colour
-    vec3 fc = mix(uFogPx.rgb, l21Air(vd) * 0.88, 0.5) * mix(1.0, uLit.x, 0.25);
-    fogK = pow(fogK, 1.35);
+    vec3 fc = mix(uFogPx.rgb, l21Air(vd) * 0.84, 0.42) * mix(1.0, uLit.x, 0.25);
+    fogK = pow(fogK, 1.5);
     // height fog: thick near the ground, thin above the eye; grows with distance
     float hz = s.pos.z - (eye.z - 0.5 * uRight.w);
     float hfog = uL21Fog.y * exp(-max(0.0, hz) / max(0.01, uL21Fog.z)) * (1.0 - exp(-dist * 0.12));
