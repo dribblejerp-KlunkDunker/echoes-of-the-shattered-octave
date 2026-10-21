@@ -23,7 +23,7 @@
 //      the view (they use e._screen, which this module fills exactly as the raycaster did, in the logical 320x150
 //      space: x0, x1, y0, y1, dist, z), so HUD bars, name tags, hints, flourishes and labels follow every body.
 //  Textures: ONE atlas family, pages of 1024x1024 RGBA8 (allocated as needed, at most 8), every sprite placed on a
-//  4-pixel grid with a 4-pixel transparent gutter so its own 3-level mip chain (built here with the raycaster's
+//  8-pixel grid with an 8-pixel transparent gutter so its own 4-level mip chain (built here with the raycaster's
 //  spriteMip rule: a 2x2 block is solid when two of its pixels are) never bleeds into a neighbour. Sampling is
 //  nearest-texel with nearest mip: pixel art stays crisp close up and does not sparkle far away (the GPU's version of
 //  the raycaster's "sprite LOD"). Emissive pixels are stored with alpha 200 instead of 255 (both pass the test), so
@@ -71,7 +71,7 @@
 
 const SPRITES21 = (() => {
   const VWL = 320, VHL = 150;                   // the logical view every overlay works in
-  const PAGE = 1024, MAX_PAGES = 8, AL = 4, LEVELS = 3;
+  const PAGE = 1024, MAX_PAGES = 8, AL = 8, LEVELS = 4;   // 8-pixel grid: four clean mip levels
   const BB_FLOATS = 20;                         // floats per billboard instance
   const PT_FLOATS = 16;                         // floats per particle instance
   const DC_FLOATS = 12;                         // floats per decal vertex
@@ -113,7 +113,7 @@ const SPRITES21 = (() => {
     return pg;
   }
   function resetPage(pg) { pg.shelves.length = 0; pg.top = 0; pg.gen = ++atlasGen; st.evictions++; }
-  // shelf packing on the 4-pixel grid: the best-fitting shelf by height, else a new shelf
+  // shelf packing on the 8-pixel grid: the best-fitting shelf by height, else a new shelf
   function placeIn(pg, w, h) {
     let best = null;
     for (const s of pg.shelves) if (s.h >= h && PAGE - s.x >= w && (!best || s.h < best.h)) best = s;
@@ -148,8 +148,17 @@ const SPRITES21 = (() => {
     }
     return out;
   }
-  function down(src, W, H) {
+  function down(src, W, H, keep) {
     const w = W >> 1, h = H >> 1, d = new Uint32Array(w * h);
+    if (keep) {
+      // a painted alpha (the ghost) is averaged like any soft image: colour weighted by alpha, alpha by the block
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        let r = 0, g = 0, b = 0, a = 0;
+        for (let j = 0; j < 2; j++) for (let i = 0; i < 2; i++) { const p = src[(y * 2 + j) * W + x * 2 + i], pa = p >>> 24; r += (p & 255) * pa; g += ((p >>> 8) & 255) * pa; b += ((p >>> 16) & 255) * pa; a += pa; }
+        if (a) d[y * w + x] = ((((a / 4) | 0) << 24) | (((b / a) | 0) << 16) | (((g / a) | 0) << 8) | ((r / a) | 0)) >>> 0;
+      }
+      return d;
+    }
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
       let r = 0, g = 0, b = 0, n = 0, em = 0;
       for (let j = 0; j < 2; j++) for (let i = 0; i < 2; i++) {
@@ -162,11 +171,12 @@ const SPRITES21 = (() => {
   }
   function upload(pg, x, y, sp, keep) {
     const W = pad(sp.w) + AL, H = pad(sp.h) + AL;           // the gutter is uploaded too: a recycled page is cleaned
-    const l0 = level0(sp, W, H, keep), l1 = down(l0, W, H), l2 = down(l1, W >> 1, H >> 1);
+    let lv = level0(sp, W, H, keep), lw = W, lh = H;
     gl.bindTexture(gl.TEXTURE_2D, pg.tex);
-    gl.texSubImage2D(gl.TEXTURE_2D, 0, x, y, W, H, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(l0.buffer));
-    gl.texSubImage2D(gl.TEXTURE_2D, 1, x >> 1, y >> 1, W >> 1, H >> 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(l1.buffer));
-    gl.texSubImage2D(gl.TEXTURE_2D, 2, x >> 2, y >> 2, W >> 2, H >> 2, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(l2.buffer));
+    for (let L = 0; L < LEVELS; L++) {
+      if (L) { lv = down(lv, lw, lh, keep); lw >>= 1; lh >>= 1; }
+      gl.texSubImage2D(gl.TEXTURE_2D, L, x >> L, y >> L, lw, lh, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(lv.buffer));
+    }
     st.uploads++; st.uploadPx += W * H;
   }
   // where a sprite lives in the atlas, uploading it if it is new or changed; null if it cannot be placed
