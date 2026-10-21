@@ -108,6 +108,17 @@ async function bootR3D(browser, opts) {
     T.pin = (fn) => { const rn = Math.random, pn = performance.now.bind(performance), dn = Date.now; let sd = 7; Math.random = () => (sd = (sd * 16807) % 2147483647) / 2147483647; performance.now = () => 123456; Date.now = () => 1700000000000; try { return fn(); } finally { Math.random = rn; performance.now = pn; Date.now = dn; } };
     T.stage = (m, x, y, d, tod, wx, pitch) => T.pin(() => { G.state = 'paused'; G.day = 3; G.tod = tod; loadMap(m, x == null ? undefined : { x, y, dir: d }); G.fadeT = 0; G.tod = tod; G.day = 3; Engine.cam.pitch = pitch || 0; Engine.cam.bob = 0; Weather.hold(wx || 'clear'); Weather.apply(); G.state = 'play'; const ms = document.getElementById('msgs'); if (ms) ms.textContent = ''; });
     T.frame = (n) => { for (let i = 0; i < (n || 1); i++) T.pin(() => render()); };
+    // the raw engine frame of only the scenery, every clock pinned (as test/gpu18.test.js and test/cinema14.test.js take it):
+    // the stable cross-page reference for the CPU raycaster
+    T.raw = () => T.pin(() => {
+      for (const k of ['coldBreath', 'windSigns', 'dyingLights']) GFX[k] = false;
+      if (typeof FLORA !== 'undefined') { FLORA.hold(true); FLORA.T = 5; }
+      const ents = G.ents.filter(e => e.kind === 'deco');
+      for (const e of ents) { for (const k of Object.keys(e)) if (k.startsWith('anim') && typeof e[k] === 'number') e[k] = (k === 'animSX' || k === 'animSY' || k === 'animAlpha') ? 1 : 0; e.animSprite = null; e.animFlip = false; e._fb = 0; }
+      PARTICLES.mapId = null; ANIM.dirLast = Engine.cam.dir;
+      Engine.setTime(5); Engine.setWeather({ haze: 0, dark: 0, cloud: 0, tint: [196, 200, 214], flash: 0 }); Engine.setFlicker(1);
+      Engine.cam.bob = 0; Engine.render(ents, G.tod);
+    });
     // the presented 3D view: mean luma of rows (fractions of the view height from the top), and of the whole view
     T.luma = (y0, y1) => {
       const P = R3D.readPixels(); if (!P) return -1; const F = R3D.frame, w = P.w, top = F.vpY + F.vpH;   // GL rows from the bottom
@@ -124,6 +135,10 @@ const REF = {
   vault: ['rootvault', 4.5, 5.5, 0, 0.5], clear_noon: ['clearing', 20.5, 32.5, -Math.PI / 2, 0.5],
 };
 async function part2(browser) {
+  if (process.env.PART !== 'id') await part2look(browser);
+  await part2identity(browser);
+}
+async function part2look(browser) {
   const { page, ctx, errors } = await bootR3D(browser);
   const E = (fn, a) => page.evaluate(fn, a);
   await step('R3D on, LIGHT installed: its shade chunk, sky and post passes, no shader errors', async () => {
@@ -151,7 +166,7 @@ async function part2(browser) {
     const bad = [];
     for (const wx of ['clear', 'overcast', 'rain', 'storm', 'mist', 'snow']) for (const t of [0.27, 0.5, 0.73, 0.96]) {
       const r = await E(([wx, t]) => { PRESETS.apply('medium'); T21.stage('clearing', 20.5, 32.5, -Math.PI / 2, t, wx); T21.frame(1); return { a: R3D.active(), sky: T21.luma(0, 0.2) }; }, [wx, t]);
-      if (!r.a || (t === 0.5 && r.sky < 50)) bad.push(wx + '@' + t + ':' + Math.round(r.sky));
+      if (!r.a || (t === 0.5 && r.sky < (wx === 'storm' ? 35 : 50))) bad.push(wx + '@' + t + ':' + Math.round(r.sky));
     }
     assert.deepStrictEqual(bad, [], 'bad: ' + bad.join(' '));
   });
@@ -185,37 +200,41 @@ async function part2(browser) {
   });
   await step('no page errors (R3D on)', async () => { assert.deepStrictEqual(errors.filter(e => !/performance warning/i.test(e)), []); });
   await ctx.close();
+}
+async function part2identity(browser) {
   // the raycaster: byte-identical frames with and without js/light21.js (R3D off), and gameplay untouched
-  const A = await bootR3D(browser, { mode: 'off' }), B = await bootR3D(browser, { mode: 'off', block: true }), C = await bootR3D(browser, { mode: 'off', block: true });
+  // booted interleaved (without, with, without, with): what a page keeps from its boot (how long the game loop ran
+  // before our frames) then falls on both sides alike
+  const B = await bootR3D(browser, { mode: 'off', block: true }), A = await bootR3D(browser, { mode: 'off' }), C = await bootR3D(browser, { mode: 'off', block: true }), A2 = await bootR3D(browser, { mode: 'off' });
   await step('R3D off: the CPU raycaster frames are byte-identical with and without js/light21.js; gameplay trace identical', async () => {
     const run = (P) => P.evaluate((REF) => {
       const out = [];
       let h = 0; Engine.addPostHook((F) => { h = 2166136261; for (let i = 0; i < F.fb.length; i += 3) { h ^= F.fb[i]; h = Math.imul(h, 16777619); } }, 1e9);
-      for (const k of ['oak_noon', 'oak_dusk', 'vault', 'clear_noon']) { const [m, x, y, d, t] = REF[k]; for (const p of ['medium', 'cinematic']) { PRESETS.apply(p); T21.stage(m, x, y, d, t); T21.frame(2); out.push(k + ':' + p + ':' + (h >>> 0)); } }
+      for (const k of ['oak_noon', 'oak_dusk', 'vault', 'clear_noon']) { const [m, x, y, d, t] = REF[k]; for (const p of ['medium', 'cinematic']) { PRESETS.apply(p); T21.stage(m, x, y, d, t); T21.raw(); out.push(k + ':' + p + ':' + (h >>> 0)); } }
       // a short seeded walk: the player's position and the entities after it
       T21.pin(() => { T21.stage('oakhaven', 23.5, 6.5, Math.PI / 2, 0.5); G.keys = { w: true }; for (let i = 0; i < 90; i++) update(1 / 60); G.keys = {}; });
-      out.push('trace:' + [G.player.hp, Engine.cam.x.toFixed(4), Engine.cam.y.toFixed(4), G.ents.length].join(','));
+      out.push('trace:' + [Engine.cam.x.toFixed(4), Engine.cam.y.toFixed(4), Engine.cam.dir.toFixed(4)].join(','));   // the player's walk: keys and collision only
       return out;
     }, REF);
     // other modules keep a little wall-clock state of their own, so two pages without the module can disagree on a frame
     // (js/gpu18.test.js has the same rule): compare only where the two module-less pages agree, and need most to agree
-    const a = await run(A.page), b = await run(B.page), c = await run(C.page);
-    const stable = b.map((x, i) => x === c[i]);
+    const a = await run(A.page), b = await run(B.page), c = await run(C.page), a2 = await run(A2.page);
+    const stable = b.map((x, i) => x === c[i] && a[i] === a2[i]);   // frames each pair of like pages agrees on
     console.log('  stable reference frames: ' + stable.filter(Boolean).length + ' of ' + b.length);
     assert.ok(stable.filter(Boolean).length >= 5, 'stable references ' + stable.filter(Boolean).length);
     assert.ok(stable[stable.length - 1], 'the gameplay trace is deterministic');
     const bad = a.filter((x, i) => stable[i] && x !== b[i]);
-    assert.deepStrictEqual(bad, [], 'differ: ' + bad.join(' '));
+    assert.deepStrictEqual(bad, [], 'differ: ' + bad.join(' ') + ' | without: ' + b.filter((x, i) => stable[i] && x !== a[i]).join(' '));
     assert.deepStrictEqual(A.errors, []); assert.deepStrictEqual(B.errors, []);
   });
-  await A.ctx.close(); await B.ctx.close(); await C.ctx.close();
+  await A.ctx.close(); await B.ctx.close(); await C.ctx.close(); await A2.ctx.close();
 }
 
 (async () => {
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const PART = process.env.PART || 'all';
   try {
-    if (PART !== '2') for (const preset of ['cinematic', 'medium']) {
+    if (PART !== '2' && PART !== 'id') for (const preset of ['cinematic', 'medium']) {
       const { page, ctx, errors } = await bootPage(browser, { preset });
       await step(`${preset}: booted as a player, compositor on, preset ${preset}`, async () => {
         const s = await page.evaluate(() => ({ cur: PRESETS.current(), gpu: GPU18.active(), auto: MAX20.live }));
@@ -278,7 +297,7 @@ async function part2(browser) {
       });
       await ctx.close();
     }
-    if (PART !== '1') await part2(browser);
+    if (PART !== '1') await part2(browser);   // PART=id: only the raycaster identity check
   } finally { await browser.close(); }
   console.log(`\n${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);

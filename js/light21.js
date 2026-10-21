@@ -34,12 +34,20 @@
 //       them), the per-area, per-hour colour grade of js/post.js (the same table), Cinematic's grade (js/cinema14.js
 //       numbers), a subtle vignette, the Deep's underwater tint, ordered dither against banding.
 //
-//  CPU post hooks (FI.fb passes) under R3D: ported here — post.js grade and bloom, cinema14 grade/vignette/light/fog,
-//  sky.js stars/panoramas, skies14 aurora, calendar11 moon phase, engine sky/sun/moon/clouds, deep16 underwater tint (a
-//  tint, not its full view). Left CPU-only (not drawn under R3D): sky.js Kestrel flyover, synod15 eclipse disc (its
-//  darkening still arrives through the weather light), skies14 caustics, air11 heat haze/glare/breath, post.js mist
-//  bands and reflections (replaced by the height fog and the water shader), festivals12 lantern glows, winter17 frost,
-//  flume16/heist16 overlays, look10 marks (SPRITES), ghost18 (SPRITES/CARD). See LIGHT21.ported.
+//  Also: 'l21-shadows' (order 5) renders js/sprites21.js's casters (SPRITES21.drawCasters) into a sun/moon-view depth map
+//  so figures, beasts and props cast shadows on the ground and walls; lamp halos (the raycaster's glow round each lamp, now
+//  hidden by walls in front); rain and snow in the scene (behind walls, turning with the view), replacing the flat 2D
+//  weather overlay under R3D; water mirroring what stands above it (screen space, as js/water.js does).
+//
+//  CPU post hooks (FI.fb passes) under R3D, from R3D.cpuHooks()'s LIGHT rows: PORTED here — engine sky/clouds/sun/moon,
+//  calendar11 moon phase, sky.js stars, panoramas (LANDMARKS ridges baked in) and the Kestrel flyover, skies14 aurora,
+//  synod15 eclipse disc, post.js soft fog and mist (height fog), water.js reflections, air11 sun shafts, post.js bloom,
+//  post.js grade, cinema14 haze/ground fog/bloom/rays/grade/vignette, deep16 underwater (a tint), extras17 winter
+//  (snow cover, grade, snowfall), hunters13 grey wave, dread.js shadow figure, lighting.js dark interiors (the indoor
+//  distance-to-dark and lamp pools are the shade chunk's), motion10 lantern glow (the lantern is a point light: pool and
+//  halo). NOT PORTED (CPU only, flagged): horizon20 far country and belfry art, props14 glass shimmer and mirrors,
+//  greening14 stages/veins/glass spread, skies14 caustics, flume16 glow, air11 heat haze and glass glare, dread.js
+//  hound silhouette (a world sprite: SPRITES). See LIGHT21.ported.
 //
 //  Switches (existing GFX flags, so the Options rows and presets keep meaning): bloom or cineLight -> bloom;
 //  sunShafts or cineLight -> shafts; grade -> the area grade; cineGrade -> Cinematic grade and vignette; mist, softFog,
@@ -64,8 +72,8 @@ const LIGHT21 = (() => {
   const flag = (k) => typeof GFX !== 'undefined' && GFX[k] === true;
   const stats = { frames: 0, ms: 0, sky: 0, post: 0, shadows: false, clouds: 0, panoLayers: 0, bloom: false, shafts: false, grade: false, installed: false, failed: '' };
   const ported = {
-    ported: ['post.js grade', 'post.js bloom', 'cinema14 grade + vignette', 'cinema14 light (bloom, rays)', 'cinema14 ground fog', 'sky.js stars', 'sky.js panoramas (+ LANDMARKS ridges)', 'skies14 aurora', 'calendar11 moon phase', 'engine sky, clouds, sun and moon', 'deep16 underwater (tint)', 'water (reflections)'],
-    cpuOnly: ['sky.js Kestrel flyover', 'synod15 eclipse disc (the dimming still comes through the weather light)', 'skies14 caustics', 'air11 heat haze, glare, breath', 'post.js mist bands', 'festivals12 lantern glows', 'extras17 winter17 frost', 'flume16 / heist16 overlays'],
+    ported: ['engine sky, clouds, sun and moon', 'calendar11 moon phase', 'sky.js stars', 'sky.js panoramas (+ LANDMARKS ridges)', 'sky.js Kestrel flyover', 'skies14 aurora', 'synod15 eclipse disc', 'post.js soft fog + mist (height fog)', 'water.js reflections', 'air11 sun shafts', 'post.js bloom', 'post.js grade', 'cinema14 haze, ground fog, bloom, rays, grade, vignette', 'deep16 underwater (tint)', 'extras17 winter (snow cover, grade, snowfall)', 'hunters13 grey wave', 'dread.js shadow figure', 'lighting.js dark interiors', 'motion10 lantern glow'],
+    cpuOnly: ['horizon20 far country beyond the walls', 'horizon20 belfry art', 'props14 glass shimmer and mirrors', 'greening14 stages, root veins, glass spread', 'skies14 caustics', 'flume16 glow', 'air11 heat haze and glass glare', 'dread.js hound silhouette (a world sprite: SPRITES)'],
   };
   // ------------------------------------------------------------------------------------------------ photo mode grades
   // For js/photo21.js (team CARD): [{ id, label, css }], CSS filter strings photo mode lays over the picture. The first is
@@ -294,7 +302,8 @@ float l21FigShadow(vec3 p) {
   occ += texture(uL21SMap, uv + vec2(0.5, -0.5) * t).r < d - 0.002 ? 1.0 : 0.0;
   occ += texture(uL21SMap, uv + vec2(-0.5, 0.5) * t).r < d - 0.002 ? 1.0 : 0.0;
   occ += texture(uL21SMap, uv + vec2(0.5, 0.5) * t).r < d - 0.002 ? 1.0 : 0.0;
-  return 1.0 - occ * 0.25 * 0.85;
+  vec4 sp = uViewProj * vec4(p, 1.0); float ex = sp.w > 0.0 ? abs(sp.x / sp.w) : 2.0;
+  return 1.0 - occ * 0.25 * 0.85 * (1.0 - smoothstep(0.7, 1.0, ex));   // no pop where a caster leaves the screen
 }
 // CORE's lamp sum, kept under its own name for any program that calls it
 vec3 r3dPointLight(vec2 p) {
@@ -433,7 +442,7 @@ vec3 r3dShade(R3DSurf s) {
     c = mix(c, refl, k);
     if (outdoor) c += uL21SunC.rgb * pow(max(0.0, dot(r, uL21Sun.xyz)), 160.0) * 3.0;   // the sun's glitter (blooms)
   }
-  if (s.emissive > 0.5) c = max(c, s.albedo * 1.25);
+  if (s.emissive > 0.5) c = max(c, s.albedo * 1.12);
   if (outdoor) {
     // the air toward that direction: the sky just above the horizon there, held toward the map's own haze colour
     vec3 fc = mix(uFogPx.rgb, l21Air(vd) * 0.84, 0.42) * mix(1.0, uLit.x, 0.25);
@@ -665,7 +674,7 @@ void main() {
     float lit2 = clamp(0.6 + (lo - lo2) * 4.0, 0.0, 1.0);
     float horizonFade = smoothstep(0.0, 0.12, dir.z);
     float dsun = max(0.0, dot(dir, sd));
-    vec3 shadeC = mix(uL21Hor, uL21Zen, 0.5) * mix(0.62, 0.35, uL21Cl.z);
+    vec3 shadeC = mix(uL21Hor, uL21Zen, 0.45) * mix(0.72, 0.5, uL21Cl.z);
     vec3 litC = mix(uL21Hor * 1.08, uL21Glow * 0.9 + uL21Hor * 0.4, clamp(dot(uL21Glow, vec3(0.4)), 0.0, 1.0));
     vec3 cc = mix(shadeC, litC, lit2) + uL21Glow * pow(dsun, 8.0) * 0.6 * (1.0 - ld);   // silver lining toward the sun
     cc += vec3(0.85, 0.88, 1.0) * uL21Sky2.z * 0.9;                                       // lightning inside the cloud
@@ -723,7 +732,10 @@ void main() {
     float m = floor(a.r * 255.0 + 0.5);
     float em = max(a.g, m == 8.0 ? 1.0 : 0.0);
     vec3 e = max(c - vec3(uK.x), vec3(0.0)) * uK.z;                 // what is above 1.0 (the sun, glitter, glows)
-    s += e + c * em * uK.y * smoothstep(0.2, 0.7, dot(c, vec3(0.33)));
+    // emissives bloom in their own colour: the hue of the pixel, its strength capped, so glass glows cyan, not white
+    float l = max(c.r, max(c.g, c.b));
+    vec3 hue = c / max(l, 1e-3);
+    s += min(e, vec3(0.8)) + hue * min(l * em * uK.y * smoothstep(0.42, 0.95, l), 0.55);
   }
   oOut = vec4(s * 0.25, 1.0);
 }`;
@@ -765,6 +777,7 @@ uniform vec3 uShaftC;
 uniform vec4 uWx2;   // x rain, y snow, z time, w wind
 uniform float uWinG;   // WINTER17's cold grade (0..1)
 uniform vec3 uWxC;   // the colour of falling rain and snow (the air's light)
+uniform sampler2D uAuxT; uniform float uSSR;   // the material target; water reflections on (GFX.reflections)
 uniform vec4 uDread;   // the Dread's shadow at the edge of sight (js/dread.js): x centre (uv), y top (uv from the top), z height (uv), w strength
 uniform sampler2D uDepth; uniform vec4 uHalo[16]; uniform vec4 uHaloC[16]; uniform int uHaloN; uniform float uAspect;
 in vec2 vNdc; out vec4 oOut;
@@ -832,12 +845,32 @@ float dread(vec2 uv) {
   float fadeB = t > 0.82 ? 1.0 - (t - 0.82) / 0.18 : 1.0;
   return uDread.w * fadeB * min(1.0, (1.0 - dx / half_) * 2.4);
 }
+// water mirrors what stands above its waterline in the same column (as js/water.js does on the CPU): march up the screen
+// to the first pixel that is not water, and read as far above it as this pixel is below; the ripples bend it a little
+vec3 waterRefl(vec2 uv, float mat, inout float k) {
+  float st = 2.0 / 150.0, yb = -1.0;
+  for (int i = 1; i <= 48; i++) {
+    float y = uv.y + float(i) * st; if (y >= 1.0) break;
+    float m = floor(texture(uAuxT, vec2(uv.x, y)).r * 255.0 + 0.5);
+    if (m != 2.0 && m != 3.0) { yb = y; break; }
+  }
+  if (yb < 0.0) { k = 0.0; return vec3(0.0); }
+  for (int j = 0; j < 2; j++) { float y = yb - st * 0.5; float m = floor(texture(uAuxT, vec2(uv.x, y)).r * 255.0 + 0.5); if (m != 2.0 && m != 3.0) yb = y; st *= 0.5; }
+  float yr = yb + (yb - uv.y);
+  float wob = sin(uv.y * 420.0 + uEye.w * 3.1) * 0.0025 + sin(uv.y * 170.0 - uEye.w * 1.7) * 0.0015;
+  k = (mat == 2.0 ? 0.8 : 0.58) * (1.0 - smoothstep(0.85, 1.0, yr)) * clamp((yb - uv.y) * 12.0, 0.0, 1.0);
+  return texture(uScene, vec2(uv.x + wob, min(yr, 0.998))).rgb * vec3(0.78, 0.88, 0.92);
+}
 void main() {
   vec2 uv = vNdc * 0.5 + 0.5;
   vec3 c = texture(uScene, uv).rgb * uC3.y;
-  if (uC3.z > 0.5) c += texture(uBloom, uv).rgb * uC1.x;
+  if (uSSR > 0.5) {
+    float mat = floor(texture(uAuxT, uv).r * 255.0 + 0.5);
+    if (mat == 2.0 || mat == 3.0) { float k = 0.0; vec3 r = waterRefl(uv, mat, k); c = mix(c, r, k * 0.75); }
+  }
+  if (uC3.z > 0.5) { vec3 b = texture(uBloom, uv).rgb * uC1.x; c += b * clamp(1.0 - c * 0.7, 0.15, 1.0); }
   if (uC3.w > 0.5) c += texture(uShaft, uv).rgb * uShaftC * uC1.y;
-  if (uHaloN > 0) c += halos(uv);
+  if (uHaloN > 0) { vec3 hl = halos(uv); c += hl * clamp(1.0 - c * 0.8, 0.1, 1.0); }
   if (uWx2.x + uWx2.y > 0.01) { float zs = r3dLinearDepth(texture(uDepth, uv).r); float w = weather(uv, zs); c = mix(c, uWxC, w); }
   if (uC3.x > 0.5) { float l = dot(c, vec3(0.3, 0.59, 0.11)); c = mix(c, vec3(0.1, 0.32, 0.36) * (0.4 + l * 1.4), 0.55); }
   if (uDread.w > 0.0) c = mix(c, vec3(8.0, 6.0, 14.0) / 255.0, dread(uv));
@@ -1097,7 +1130,7 @@ void main() {
     list.sort((a, b) => b.str / b.d - a.str / a.d);
     for (const h of list) {
       if (n >= 16) break;
-      const r = Math.min(0.25, 0.34 * Math.min(2.2, h.L.r || 2) / h.d * 0.5) , k = 0.75 * night / (1 + h.d * 0.08);
+      const r = Math.min(0.18, 0.26 * Math.min(2.2, h.L.r || 2) / h.d * 0.5), k = 0.55 * night / (1 + h.d * 0.08);
       haloP.set([h.u, h.v, r, h.d], n * 4); haloC.set([(h.L.cr || 0) / 255 * k, (h.L.cg || 0) / 255 * k, (h.L.cb || 0) / 255 * k, 0], n * 4);
       n++;
     }
@@ -1122,9 +1155,9 @@ void main() {
         gl.uniform2f(p.u.uTexel, 1 / sc.w, 1 / sc.h); gl.uniform4f(p.u.uK, 1.0, flag('cineLight') ? 2.0 : 1.6, 0.8, 0);
         tri(gl);
         p = R3D.use(pr.down);
-        for (const [a, b] of [['h1', 'q1'], ['q1', 'e1'], ['e1', 'x1']]) { into(gl, S.rt[b]); tex(gl, 6, S.rt[a].tex, p, 'uSrc'); gl.uniform2f(p.u.uTexel, 1 / S.rt[a].w, 1 / S.rt[a].h); tri(gl); }
+        for (const [a, b] of [['h1', 'q1'], ['q1', 'e1']]) { into(gl, S.rt[b]); tex(gl, 6, S.rt[a].tex, p, 'uSrc'); gl.uniform2f(p.u.uTexel, 1 / S.rt[a].w, 1 / S.rt[a].h); tri(gl); }
         p = R3D.use(pr.up);
-        for (const [src, add, dst] of [['x1', 'e1', 'e2'], ['e2', 'q1', 'q2'], ['q2', 'h1', 'h2']]) {
+        for (const [src, add, dst] of [['e1', 'q1', 'q2'], ['q2', 'h1', 'h2']]) {
           into(gl, S.rt[dst]); tex(gl, 6, S.rt[src].tex, p, 'uSrc'); tex(gl, 7, S.rt[add].tex, p, 'uAdd');
           gl.uniform2f(p.u.uTexel, 1 / S.rt[src].w, 1 / S.rt[src].h); gl.uniform1f(p.u.uMix, 1.0); tri(gl);
         }
@@ -1146,11 +1179,13 @@ void main() {
       tex(gl, 6, sc.color, p, 'uScene'); tex(gl, 7, bloomOn ? S.rt.h2.tex : S.rt.h1.tex, p, 'uBloom'); tex(gl, 8, S.rt.s2.tex, p, 'uShaft'); tex(gl, 9, S.lutTex, p, 'uLut');
       const cine = flag('cineGrade') && !(typeof document !== 'undefined' && document.documentElement.classList.contains('ac-hc'));
       const CG = typeof CINEMA14 !== 'undefined' && CINEMA14.T && CINEMA14.T.grade ? CINEMA14.T.grade : { sat: 1.12, con: 1.08 };
-      gl.uniform4f(p.u.uC1, flag('cineLight') ? 1.25 : 1.0, 0.32 * P.sunVis, gradeOn ? 1 : 0, gradeSat * 1.06);
+      gl.uniform4f(p.u.uC1, flag('cineLight') ? 0.95 : 0.75, 0.32 * P.sunVis, gradeOn ? 1 : 0, gradeSat * 1.06);
       gl.uniform4f(p.u.uC2, cine ? 1 : 0, CG.con, CG.sat, cine ? 0.2 : 0.08);
       gl.uniform4f(p.u.uC3, P.underwater, 1.0, bloomOn ? 1 : 0, shaftOn ? 1 : 0);
       const hn = halosFor(F);
       tex(gl, 10, sc.depthTex, p, 'uDepth');
+      tex(gl, 11, sc.aux, p, 'uAuxT');
+      if (p.u.uSSR) gl.uniform1f(p.u.uSSR, flag('reflections') ? 1 : 0);
       if (p.u.uHaloN) gl.uniform1i(p.u.uHaloN, hn);
       if (hn && p.u.uHalo) { gl.uniform4fv(p.u.uHalo, haloP); gl.uniform4fv(p.u.uHaloC, haloC); }
       if (p.u.uAspect) gl.uniform1f(p.u.uAspect, sc.w / Math.max(1, sc.h));
