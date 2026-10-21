@@ -61,6 +61,7 @@ async function boot(ctx, opts) {
       const r = await Q(() => {
         const out = {};
         out.api = ['lookOf', 'cleanGear', 'lookFromCompact', 'sig', 'paint', 'partnerFrame', 'ghostFrame', 'gear'].every((k) => typeof CARD21[k] === 'function');
+        { const q = CARD21.queenEmblem(2); out.api = out.api && q.w === CARD21.QUEEN.w * 2 && q.h === CARD21.QUEEN.h * 2 && q.data.some((v) => v) && CARD21.QUEEN.rows.every((r) => r.length === CARD21.QUEEN.w); }
         const p = G.player, keep = JSON.stringify({ armor: p.armor, weapons: p.weapons, weapon: p.weapon, face: p.face });
         p.armor = { head: '__proto__', body: 'a_kite', hands: '<img src=x onerror=alert(1)>', feet: 'a_greaves', shield: 'constructor' };
         p.weapons = ['toString', 'axe']; p.weapon = 0; p.face = '"><script>';

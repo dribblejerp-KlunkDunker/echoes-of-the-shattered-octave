@@ -224,6 +224,48 @@ const CARD21 = (() => {
     return { kind: 'blade', len: clamp((W.reach || 1.3) * 10, 5, 22), wid: 1, blade, guard: 'cross', grip: 'leather', pommel: 'iron', two: !!W.twoHanded };
   }
 
+  // ================================================================ THE DEAD QUEEN (the Synod Kite Shield's emblem, shared)
+  // A crowned ivory head in profile, facing right (forehead, nose, lips, chin, neck, a bust), after FOLK's Synod Kite Shield
+  // icon (js/icons.js PIX.a_kite). One small bitmap for every painter of the shield: the card, the partner and ghost, and
+  // BODY's first-person shield. Cells: '.' the red field (transparent here), g crown gold, G crown jewel shade, i ivory,
+  // s ivory shade (hair, the back of the head, the neck), k the eye and the parted lips. [PROPOSED] the exact drawing.
+  const QUEEN = Object.freeze({ w: 16, h: 23, rows: Object.freeze([
+    '....g..g..g.....',
+    '....gggggggg....',
+    '....gGgGgGgG....',
+    '....gggggggg....',
+    '....siiiiii.....',
+    '...siiiiiiii....',
+    '...siiiiiiiii...',
+    '..ssiiiiiiiii...',
+    '..ssiiiiiissi...',
+    '..sssiiiiiikii..',
+    '..sssiiiiiiiiii.',
+    '..sssiiiiiiiisii',
+    '...ssiiiiiiiii..',
+    '...ssiiiiiiiii..',
+    '...ssiiiiiiik...',
+    '...ssiiiiiiiii..',
+    '.....siiiiiii...',
+    '......sisssi....',
+    '......ssii......',
+    '......ssii......',
+    '......ssii......',
+    '...siiiiiiiiii..',
+    '..siiiiiiiiiiii.',
+  ]),
+    pal: Object.freeze({ g: [214, 170, 80], G: [150, 104, 40], i: [226, 214, 186], s: [170, 152, 124], k: [50, 36, 40] }) });
+  const queenCell = (cx, cy) => (cx < 0 || cy < 0 || cx >= QUEEN.w || cy >= QUEEN.h ? '.' : QUEEN.rows[cy][cx]);
+  // the emblem as pixels: { w, h, data: Uint32Array (ABGR, transparent field), cells } at an integer scale (default 1)
+  const queenCache = new Map();
+  function queenEmblem(scale, pal) {
+    const k = Math.max(1, Math.min(16, scale | 0 || 1)), P = Object.assign({}, QUEEN.pal, pal || {}), key = k + JSON.stringify(pal || 0);
+    if (queenCache.has(key)) return queenCache.get(key);
+    const w = QUEEN.w * k, h = QUEEN.h * k, data = new Uint32Array(w * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const c = queenCell((x / k) | 0, (y / k) | 0), col = P[c]; if (col) data[y * w + x] = ((255 << 24) | (col[2] << 16) | (col[1] << 8) | col[0]) >>> 0; }
+    const out = { w, h, data, cells: QUEEN }; queenCache.set(key, out); return out;
+  }
+
   // ================================================================ THE LOOK (validated catalog ids only)
   const CLS_IDS = ['blade', 'cantor', 'corsair', 'archivist', 'penitent', 'quarry'];
   const SLOTS = ['head', 'body', 'hands', 'feet', 'shield'];
@@ -567,8 +609,10 @@ const CARD21 = (() => {
     // standing or walking in the world, a two-hander is carried in the weapon hand at the side (a haft upright, a blade
     // or a crossbow pointing down), so the figure's arms stay clear of its body at a distance, as the ghost painter did
     if (twoGrip) offH = twoGrip;
+    // in the world a kite shield is carried before the body (a sprite one tile wide must hold all of it)
+    if (!disp && act <= 5 && L.shield && !L.stowed && !twoGrip && offH[1] < -7.6) offH = [offH[0] + 0.8, -6.8, offH[2] + (act ? 0 : 2)];
     const wpt = (h) => [h[0] + lean * 0.3, h[1], h[2] + lift * 0.5];
-    P.wH = wpt(wH); P.wV = wV; P.offH = wpt(offH); P.offV = offV; P.block = block; P.twoGrip = !!twoGrip;
+    P.wH = wpt(wH); P.wV = wV; P.offH = wpt(offH); P.offV = offV; P.block = block; P.twoGrip = !!twoGrip; P.display = disp;
     // elbows: two-bone reach with the elbow pushed out and back
     const elbow = (sh, hand, side) => {
       const v = [hand[0] - sh[0], hand[1] - sh[1], hand[2] - sh[2]], d = Math.hypot(v[0], v[1], v[2]);
@@ -988,18 +1032,25 @@ const CARD21 = (() => {
       }
     };
     // a shield: centre c, facing n (unit), up u
-    const shieldShape = (S, c, n, upv, onBack) => {
+    const shieldShape = (S, c, n, upv, onBack, arm) => {
       const v = norm(cross(upv, n)), U2 = norm(cross(n, v));
       if (S.kind === 'kite') {
         const h = S.h || 15, top = h * 0.36, wTop = S.wTop || 4.7;
         const inside = (a, b) => { if (a > top || a < top - h) return false; const t = (top - a) / h; const half = t < 0.28 ? wTop * (0.9 + 0.1 * Math.sin(t / 0.28 * Math.PI / 2)) : wTop * Math.pow(Math.max(0, 1 - (t - 0.28) / 0.72), 0.85); return Math.abs(b) < half - (a > top - 0.6 ? (a - (top - 0.6)) * 0.0 : 0); };
         const rimW = 0.55;
-        const rimM = M('kiterim', S.rim || C.brass, 'metal', { spec: 1.1 }), faceM = M('kiteface', S.col, 'paint', { emblem: S.emblem || [214, 206, 188], kite: { top, h, wTop } });
+        // v runs across the shield; seen from the front of the figure, the queen faces the viewer's right
+        const face = v[1] >= 0 ? -1 : 1;   // fixed on the shield (painted once), so it does not flip as the figure turns
+        const rimM = M('kiterim', S.rim || C.brass, 'metal', { spec: 1.1 }), faceM = M('kiteface:' + face, S.col, 'paint', { emblem: S.emblem || [214, 206, 188], kite: { top, h, wTop, face } });
         const backM = M('kiteback', [92, 66, 44], 'wood');   // the back is bare boards: the painted queen is on the front only
         slab(X, c, U2, v, n, 0.45, [top - h - 0.2, top + 0.2, -wTop - 0.2, wTop + 0.2], (a, b) => inside(a, b), faceM, (a, b) => [a * 0.0, b * 0.05], backM);
         next();
         slab(X, add(c, n, 0.12), U2, v, n, 0.45, [top - h - 0.2, top + 0.2, -wTop - 0.2, wTop + 0.2], (a, b) => inside(a, b) && !(inside(a + rimW, b) && inside(a - rimW, b) && inside(a, b + rimW) && inside(a, b - rimW)), rimM, (a, b) => [0, b * 0.05]);
-        if (!onBack) { next(); sphere(X, add(c, n, -0.9), 0.6, M('strap', [60, 40, 26], 'leather')); }
+        if (!onBack && arm) {
+          // the enarmes: two leather straps from the forearm to the shield's back (seen from behind and the side)
+          next();
+          const sm = M('strap', [70, 46, 28], 'leather');
+          for (const t of [0.25, 0.9]) { const p0 = lerp3(arm[0], arm[1], t), d = (c[0] - p0[0]) * n[0] + (c[1] - p0[1]) * n[1] + (c[2] - p0[2]) * n[2] - 0.45 - 0.45; if (d > 0.2) capsule(X, p0, add(p0, n, d), 0.42, 0.42, sm); }
+        }
       } else {
         const r = S.r || 3.1;
         const faceM = M('bucklerface', S.face || [96, 70, 48], 'wood', S.band ? { band: S.band } : null), rimM = M('bucklerrim', S.col || C.steel, 'metal', { spec: 1.2 });
@@ -1014,9 +1065,17 @@ const CARD21 = (() => {
       const fore = norm([P.offH[0] - P.elL[0], P.offH[1] - P.elL[1], P.offH[2] - P.elL[2]]);
       let n, c, upv;
       if (shield.kind === 'kite') {
-        n = P.block ? norm([1, 0.15, 0.05]) : norm([0.95, -0.32, 0.05]);
-        c = add(lerp3(P.elL, P.offH, 0.55), n, 1.25);
+        // held on its straps: the face stands clear in front of the whole forearm and hand (so the hand never shows
+        // through the painted face); on the card it is turned about 36 degrees aside so the armour shows
+        n = P.block ? norm([1, 0.15, 0.05]) : norm([0.8, -0.59, 0.05]);   // also in the world: a sprite one tile wide keeps the whole shield
+        const mid = lerp3(P.elL, P.offH, 0.55);
+        let lift = 0; for (const q of [P.elL, P.offH]) lift = Math.max(lift, (q[0] - mid[0]) * n[0] + (q[1] - mid[1]) * n[1] + (q[2] - mid[2]) * n[2]);
+        const gap = lift + 2.1;
+        c = add(mid, n, gap);
+        if (!P.block) { const o2 = P.display ? [-0.6, 0.6, 0] : [0, 3.4, 0], k = o2[0] * n[0] + o2[1] * n[1]; c = add(c, [o2[0] - n[0] * k, o2[1] - n[1] * k, 0]); }   // kept inside the frame, never nearer the arm
         upv = P.block ? [0, 0, 1] : norm(add([0, 0, 1], fore, 0.15));
+        shieldShape(shield, c, n, upv, false, [P.elL, P.offH, gap]);
+        return;
       } else {
         n = P.block ? [1, 0, 0] : norm([0.9, -0.42, 0.1]);
         c = add(P.offH, n, 1.1);
@@ -1171,14 +1230,13 @@ const CARD21 = (() => {
       }
       if (!colour) {
         if (kind === 'paint' && Mt.kite) {
-          // the Synod's dead queen, painted pale on the kite: a face in a circle, a crown over it
-          const kt = Mt.kite, sc = (kt.wTop || 4.7) / 4.7, cy = kt.top - kt.h * 0.36;
-          const a = (tu - cy) / sc + cy, b = tv / sc;   // the emblem scales with the shield
-          const dq = Math.hypot(a - cy, b);
-          if (dq < 2.0) rp = ramp(Mt.emblem, 'cloth');
-          if (dq < 2.0 && ((Math.abs(a - cy - 0.3) < 0.3 && Math.abs(Math.abs(b) - 0.75) < 0.3) || (Math.abs(a - cy + 0.9) < 0.18 && Math.abs(b) < 0.6))) rp = ramp([60, 50, 56], 'cloth');
-          if (Math.abs(a - cy - 2.8) < 0.7 && Math.abs(b) < 1.6 && (a - cy - 2.8 < 0.15 || Math.abs(b) % 0.8 < 0.38)) rp = ramp(C.brass, 'metal');
-          if (dq > 2.0 && dq < 2.4) rp = ramp(mixc(Mt.col, [20, 20, 30], 0.4), 'cloth');
+          // the Synod's dead queen (QUEEN, the shared bitmap): a crowned ivory head in profile on the red field
+          const kt = Mt.kite, cell = (kt.wTop || 4.7) * 1.1 / QUEEN.w, ac = kt.top - kt.h * 0.3;
+          const cx = Math.floor((tv * kt.face) / cell + QUEEN.w / 2), cyy = Math.floor((ac - tu) / cell + QUEEN.h / 2);
+          const c = queenCell(cx, cyy);
+          if (c === 'i' || c === 's') { rp = ramp(Mt.emblem, 'cloth'); if (c === 's') v -= 0.22; }
+          else if (c === 'g' || c === 'G') { rp = ramp(C.brass, 'metal'); if (c === 'G') v -= 0.3; else v += 0.08; }
+          else if (c === 'k') rp = ramp([60, 44, 46], 'cloth');
         }
         if (kind === 'skin' && fc.scar && X.headC && Math.abs(tv - X.headC[2] - 1.8) < 1.8 && tu < -1.5 && tu > -2.6) v -= 0.18;
         if (kind === 'skin' && fc.streak && X.headC && tv - X.headC[2] < 0 && tv - X.headC[2] > -2.2 && tu > 1.2 && tu < 2.1) rp = ramp(C.glass, 'glass');
@@ -1685,7 +1743,7 @@ const CARD21 = (() => {
   return {
     LOCAL, gear, armorLook, weaponLook, lookOf, cleanGear, lookFromCompact, sig, remember, paint, ramp, pose, SIZES, stats: () => stats,
     on, cfg, KEY, onChange: (fn) => subs.push(fn), cacheSize: () => cache.size, clearCache: () => cache.clear(),
-    partnerFrame, ghostFrame, lookFor, idle, request, peek, prewarm, POSES, SLICE, traceOn: () => (trace = []), traceGet: () => trace, pending: () => waiting.map((w) => w.key + " p" + w.pri), paintAll, turn, setOn, appendRows, ui, VIEW_NAMES, drawCard,
+    QUEEN, queenEmblem, partnerFrame, ghostFrame, lookFor, idle, request, peek, prewarm, POSES, SLICE, traceOn: () => (trace = []), traceGet: () => trace, pending: () => waiting.map((w) => w.key + " p" + w.pri), paintAll, turn, setOn, appendRows, ui, VIEW_NAMES, drawCard,
     _internal: { makeCtx, build, shade, portraits, paintJob, norm0 },
   };
 })();
