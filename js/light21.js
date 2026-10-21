@@ -154,12 +154,14 @@ const LIGHT21 = (() => {
     const tod = F.tod == null ? 0.5 : F.tod;
     // the engine's sun and moon geometry (render(): sunA, elev); elevations as the angle the disc is drawn at
     const sunA = (tod - 0.25) * TAU, elev = Math.cos((tod - 0.5) * TAU);
-    const sunEl = 2 * Math.atan(0.36 * elev);               // twice the angle the raycaster draws the disc at: noon about 38 degrees, dusk a few
+    // the bodies' real arcs (Phase 21's free look reaches the zenith): the sun rises in the east, stands about 66 degrees up at
+    // noon and sets in the west; the moon keeps the opposite arc through the night. Light comes from the body itself.
+    const sunEl = Math.asin(clamp(elev, -1, 1)) * 0.74;
     // the discs stand where the raycaster draws them (so both renderers show the sun and moon in the same place, in view
     // at eye level); the light comes from twice that height, so noon shadows are not dusk-long
-    P.sunD = dir3(sunA, Math.atan(0.36 * elev));
-    const moonEl = 2 * Math.atan(0.36 * Math.max(0.18, Math.min(0.8, -elev)));
-    P.moonD = dir3(sunA + Math.PI, elev < 0.02 ? Math.atan(0.36 * Math.max(0.18, Math.min(0.8, -elev))) : -0.3);
+    P.sunD = dir3(sunA, sunEl);
+    const moonEl = Math.max(0.12, Math.asin(clamp(-elev, -1, 1)) * 0.74);
+    P.moonD = dir3(sunA + Math.PI, elev < 0.02 ? moonEl : -0.3);
     const day = smooth(-0.06, 0.2, elev), night = 1 - smooth(-0.2, 0.05, elev);
     P.night = night;
     const cloud = clamp(wx.cloud || 0, 0, 1), dark = clamp(wx.dark || 0, 0, 1), haze = clamp(wx.haze || 0, 0, 1);
@@ -614,10 +616,18 @@ void main() {
   float up = clamp(dir.z, 0.0, 1.0);
   // stars: one logical pixel each on an angle grid, twinkling, faint toward the horizon
   if (uL21Sky2.x > 0.01 && dir.z > 0.02) {
-    vec2 cell = floor(vec2(az * ${FX.toFixed(3)} / max(0.2, sqrt(1.0 - dir.z * dir.z)) * 0.5, asin(dir.z) * ${FX.toFixed(3)}));
+    vec3 g3 = floor(dir * ${(FX * 0.5).toFixed(3)});
+    vec2 cell = vec2(g3.x * 1.31 + g3.z * 7.7, g3.y * 1.73 - g3.z * 3.1);
     float h = h21(cell * 0.137 + 3.7);
-    if (h > 0.9935) {
-      float m = (h - 0.9935) / 0.0065; m = 0.25 + 0.75 * m * m * m;
+    // the Chord [PROPOSED]: a pale band of star-dust across the night, the way the Reach's old songs say the eight notes lie
+    vec3 bandN = normalize(vec3(0.35, 0.82, 0.45));
+    float band = exp(-pow(dot(dir, bandN), 2.0) / 0.018);
+    float dust = n21(vec2(atan(dir.y, dir.x) * 9.0, dir.z * 14.0)) * 0.6 + n21(vec2(atan(dir.y, dir.x) * 31.0, dir.z * 45.0)) * 0.4;
+    float allowB = clamp(1.0 - (dot(c, vec3(0.33)) - 0.06) / 0.3, 0.0, 1.0);
+    c += vec3(0.42, 0.44, 0.62) * band * smoothstep(0.35, 0.8, dust) * 0.16 * uL21Sky2.x * allowB * clamp(dir.z * 5.0, 0.0, 1.0);
+    float thr = 0.9935 - band * 0.006;
+    if (h > thr) {
+      float m = (h - thr) / (1.0 - thr); m = 0.25 + 0.75 * m * m * m;
       float tw = 0.75 + 0.25 * sin(uL21T.x * (1.3 + 3.0 * h21(cell + 1.3)) + h * 40.0);
       vec3 sc = h21(cell + 7.7) < 0.6 ? vec3(0.92, 0.95, 1.0) : h21(cell + 2.1) < 0.6 ? vec3(0.68, 0.78, 1.0) : vec3(1.0, 0.85, 0.65);
       float allow = clamp(1.0 - (dot(c, vec3(0.33)) - 0.08) / 0.35, 0.0, 1.0);
@@ -625,16 +635,17 @@ void main() {
     }
   }
   // the Octave lights: thin ribbons high in the night sky, one hue per note along each ribbon, rays, a soft lower fringe
-  if (uL21Sky2.y > 0.01 && te > 0.25) {
+  float elA = asin(clamp(dir.z, -1.0, 1.0));
+  if (uL21Sky2.y > 0.01 && elA > 0.2) {
     for (int k = 0; k < 2; k++) {
       float fk = float(k);
-      float base = 0.62 + 0.22 * fk + 0.12 * sin(az * (2.0 + fk) + uL21T.x * 0.05 + fk * 2.0) + 0.06 * n21(vec2(az * 6.0 + uL21T.x * 0.08, fk * 5.0));
-      float s = (te - base) / 0.35;
+      float base = 0.5 + 0.32 * fk + 0.14 * sin(az * (2.0 + fk) + uL21T.x * 0.05 + fk * 2.0) + 0.07 * n21(vec2(az * 6.0 + uL21T.x * 0.08, fk * 5.0));
+      float s = (elA - base) / 0.3;
       float prof = s < 0.0 ? exp(-pow(s * 3.1, 2.0)) : exp(-s * 1.7);
       float rays = 0.65 + 0.35 * n21(vec2(az * 60.0 + fk * 13.0, uL21T.x * 0.3));
       float u = fract(az / 6.2831853 * 3.0 + fk * 0.37 + uL21T.x * 0.004) * 3.0;
       vec3 hue = u < 1.0 ? mix(uL21Aur[0], uL21Aur[1], u) : u < 2.0 ? mix(uL21Aur[1], uL21Aur[2], u - 1.0) : mix(uL21Aur[2], uL21Aur[0], u - 2.0);
-      float al = prof * rays * uL21Sky2.y * 0.55 * smoothstep(0.25, 0.5, te);
+      float al = prof * rays * uL21Sky2.y * 0.55 * smoothstep(0.2, 0.42, elA);
       al = floor(al * 6.0 + bay(pix)) / 6.0;
       c += hue * al * (1.0 - clamp(dot(c, vec3(0.33)) * 1.5, 0.0, 0.8));
     }
@@ -700,7 +711,7 @@ void main() {
     vec2 p = dir.xy / (dir.z + 0.08);
     // high streaks
     float hi = fbm(vec2(p.x * 0.35, p.y * 1.2) + wnd * 0.6 + 31.0);
-    float hd = smoothstep(0.98 - cov * 0.5, 1.2 - cov * 0.5, hi) * 0.45;
+    float hd = smoothstep(0.66 - cov * 0.2, 0.9 - cov * 0.2, hi) * (0.32 + 0.25 * cov);   // high streaks, some in every sky
     // low heaps (two samples: the second toward the sun gives their lit side)
     vec2 lp2 = p * 0.42 + wnd;
     float lo = fbm(lp2), lo2 = fbm(lp2 + sd.xy * 0.18);
