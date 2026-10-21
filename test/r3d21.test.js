@@ -116,6 +116,36 @@ const HELPERS = () => {
       assert.ok(!r.missing, 'rows missing'); assert.strictEqual(r.off, false); assert.strictEqual(r.on, true);
       assert.strictEqual(r.c0, 80); assert.strictEqual(r.c1, 45);
     });
+    await step('free look: mouse, touch drag and the gamepad right stick pitch past the old 40 rows under R3D; the comfort cap holds 45 degrees', async () => {
+      const r = await page.evaluate(() => {
+        S.stage('oakhaven', 23.5, 20.5, -1.57, 0.5); S.frame(); G.state = 'play';
+        const deg = () => Math.round(R3D.camera.angle() * 180 / Math.PI);
+        const out = {};
+        // mouse: look() as the game calls it (vertical input halved by the game)
+        for (let i = 0; i < 60; i++) look(0, 40 * 0.5);
+        out.mouseDown = deg(); Engine.cam.pitch = 0;
+        // touch: a drag on the right half of the view
+        const v = document.getElementById('view'), r0 = v.getBoundingClientRect();
+        const ev = (type, x, y) => v.dispatchEvent(new PointerEvent(type, { pointerType: 'touch', pointerId: 7, clientX: x, clientY: y, bubbles: true, cancelable: true }));
+        const x0 = r0.left + r0.width * 0.75, y0 = r0.top + r0.height * 0.2;
+        ev('pointerdown', x0, y0); for (let i = 1; i <= 20; i++) ev('pointermove', x0, y0 - i * 12); ev('pointerup', x0, y0 - 240);
+        out.touchUp = deg(); Engine.cam.pitch = 0;
+        // gamepad: right stick down (axes[3] > 0 looks down, as the stick convention)
+        const pads = [{ connected: true, axes: [0, 0, 0, 0.9], buttons: [] }];
+        const gp = navigator.getGamepads; navigator.getGamepads = () => pads;
+        for (let i = 0; i < 12; i++) R3D._padTick(1000 + i * 100);
+        navigator.getGamepads = gp;
+        out.padDown = deg();
+        // comfort cap
+        R3D.st.cap = 45; for (let i = 0; i < 80; i++) look(0, 40); out.capped = deg(); R3D.st.cap = 80; Engine.cam.pitch = 0;
+        out.old = Math.round(Math.atan(40 / R3D.FX) * 180 / Math.PI);
+        return out;
+      });
+      assert.ok(r.mouseDown <= -60, 'mouse ' + JSON.stringify(r));
+      assert.ok(r.touchUp >= 30, 'touch ' + JSON.stringify(r));
+      assert.ok(r.padDown <= -30, 'pad ' + JSON.stringify(r));
+      assert.strictEqual(r.capped, -45, 'cap ' + JSON.stringify(r));
+    });
     await step('no page errors (switching)', async () => { assert.deepStrictEqual(errors, []); });
     await page.close();
   }
