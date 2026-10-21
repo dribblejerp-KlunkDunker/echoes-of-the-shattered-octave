@@ -22,7 +22,7 @@ const PHOTO21 = (() => {
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
   const warned = {};
   const warnOnce = (k, e) => { if (warned[k]) return; warned[k] = true; console.warn('photo21 ' + k, e); };
-  const B = { RADIUS: 12, SPEED: 2.6, RISE: 0.9, Z_MIN: 0.12, Z_CPU: 0.92, Z_R3D: 2.6, LOOK_KEY: 1.0 };
+  const B = { RADIUS: 12, SPEED: 2.6, RISE: 0.9, Z_MIN: 0.12, Z_CPU: 0.92, Z_R3D: 2.6, LOOK_KEY: 0.9 };   // LOOK_KEY: radians a second
   // the filters (CSS filter strings: the same string previews the view and bakes the picture)
   const OWN = [
     { id: 'none', label: 'None', css: '' },
@@ -87,7 +87,11 @@ const PHOTO21 = (() => {
     if (nz <= 1.15 && G.map && G.map.isBlocked(Math.floor(c.x), Math.floor(c.y))) return;
     c.z = nz;
   }
+  // the look is turned in angle space (R3D's: pitch rows = FX * tan(angle)), so it moves evenly up to the limit
+  const FXv = () => (typeof R3D === 'object' && R3D && R3D.FX) || 160 / 0.66;
+  const toA = (rows) => Math.atan(rows / FXv()), toRows = (a) => FXv() * Math.tan(a);
   function setPitch(rows) { const L = pitchLimit(); S.pitchRows = clamp(rows, -L, L); Engine.cam.pitch = S.pitchRows; }
+  function turnPitch(da) { const cur = S.pitchRows == null ? Engine.cam.pitch : S.pitchRows, A = toA(pitchLimit()); setPitch(toRows(clamp(toA(cur) + da, -A, A))); }
   const MOVE_KEYS = ['w', 'a', 's', 'd', 'r', 'f', 'arrowup', 'arrowdown'];
   function step(dt, keys) {
     let fwd = 0, str = 0, up = 0, pit = 0;
@@ -95,17 +99,17 @@ const PHOTO21 = (() => {
     if (keys.r) up += 1; if (keys.f) up -= 1; if (keys.arrowup) pit += 1; if (keys.arrowdown) pit -= 1;
     if (fwd || str) fly(clamp(fwd, -1, 1) * B.SPEED * dt, clamp(str, -1, 1) * B.SPEED * dt);
     if (up) rise(up * B.RISE * dt);
-    if (pit) setPitch((S.pitchRows == null ? Engine.cam.pitch : S.pitchRows) + pit * pitchLimit() * B.LOOK_KEY * dt);
+    if (pit) turnPitch(pit * B.LOOK_KEY * dt);
   }
   // a drag looks up and down past the Phase 7 limit (this listener runs after playtools' own, so its value stands)
   let drag = null;
   function onPointer(ev) {
     if (!photoOn() || !S.free) return;
     const cv = Engine.canvas;
-    if (ev.type === 'pointerdown') { if (ev.target !== cv && !(ev.target && ev.target.id === 'r3d21-gl')) return; drag = { y: ev.clientY, p: S.pitchRows == null ? Engine.cam.pitch : S.pitchRows }; }
+    if (ev.type === 'pointerdown') { if (ev.target !== cv && !(ev.target && ev.target.id === 'r3d21-gl')) return; drag = { y: ev.clientY, a: toA(S.pitchRows == null ? Engine.cam.pitch : S.pitchRows) }; }
     else if (ev.type === 'pointermove' && drag) {
       const r = cv.getBoundingClientRect(), dy = (ev.clientY - drag.y) / Math.max(1, r.height); drag.y = ev.clientY;
-      drag.p -= dy * pitchLimit() * 1.6; setPitch(drag.p);
+      const A = toA(pitchLimit()); drag.a = clamp(drag.a - dy * 2.2, -A, A); setPitch(toRows(drag.a));
     } else if (ev.type === 'pointerup' || ev.type === 'pointercancel') drag = null;
   }
 
@@ -126,7 +130,9 @@ const PHOTO21 = (() => {
   // render once (the world is held), then copy the view out of whichever canvas shows it
   function grab() {
     if (typeof ANIM !== 'undefined') ANIM.dt = 0;
-    Engine.render(G.ents, G.tod);
+    // R3D draws only inside the game's own render() (its frame is handed over there), and its canvas keeps the picture
+    // only until the browser presents it: render through the game, then copy at once, in the same task
+    if (r3dOn() && typeof render === 'function') render(); else Engine.render(G.ents, G.tod);
     const src = sourceCanvas(), D = deviceSize();
     const out = document.createElement('canvas'); out.width = D.w; out.height = D.h;
     const cx = out.getContext('2d'); cx.imageSmoothingEnabled = false;

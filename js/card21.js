@@ -229,7 +229,8 @@ const CARD21 = (() => {
   const weaponOk = (id) => typeof id === 'string' && id.length < 40 && typeof WEAPONS === 'object' && has(WEAPONS, id);
   function offHand(p) {
     try {
-      if (typeof ARMS12 !== 'object' || !ARMS12.S || !ARMS12.S.dual || !ARMS12.offId || !G || G.player !== p) return null;
+      if (typeof ARMS12 !== 'object' || !ARMS12.offId || !G || G.player !== p) return null;
+      if (typeof ARMS12.dualActive === 'function' ? !ARMS12.dualActive() : !(ARMS12.S && ARMS12.S.dual)) return null;
       const id = ARMS12.offId(); return weaponOk(id) && id !== (p.weapons || [])[p.weapon] ? id : null;
     } catch (e) { return null; }
   }
@@ -240,7 +241,7 @@ const CARD21 = (() => {
     const cid = p.cls && typeof p.cls === 'object' ? p.cls.id : p.cls;
     const ci = CLS_IDS.indexOf(cid); L.ci = ci >= 0 ? ci : 0; L.cls = CLS_IDS[L.ci];
     L.face = [1, 2, 3, 4, 5, 6].includes(p.face) ? p.face : 1;
-    const glassed = !!(p.glassed || (p.cls && p.cls.glass) || cid === 'blade');
+    const glassed = !!p.glassed;   // as js/gearlook21.js reads it (the Dissonant Blade's left arm)
     L.glass = glassed ? clamp(Math.round(Number.isFinite(p.glass) ? p.glass : 0), 0, 100) : -1;
     const ar = p.armor && typeof p.armor === 'object' ? p.armor : {};
     for (const s of SLOTS) L[s] = armorOk(ar[s], s) ? ar[s] : null;

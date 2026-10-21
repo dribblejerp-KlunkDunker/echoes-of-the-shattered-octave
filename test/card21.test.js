@@ -25,6 +25,7 @@ async function boot(ctx, opts) {
   page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
   page.on('console', (m) => { const t = m.text(); if (m.type() === 'error' && !(opts.block && /ERR_FAILED/.test(t))) errors.push('console: ' + t); if (m.type() === 'warning' && /card21|photo21/.test(t)) errors.push('console: ' + t); });
   if (opts.block) await page.route('**/js/card21.js*', (r) => r.abort());
+  if (opts.r3d) await page.addInitScript(() => { window.__r3d21 = { automation: true, force: true }; });
   await page.addInitScript(() => { let s = 424242; Math.random = () => (s = (s * 16807) % 2147483647) / 2147483647; });
   await page.goto(BASE + '/?nosw=1');
   await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && G.state === 'title');
@@ -247,7 +248,7 @@ async function boot(ctx, opts) {
         const noir = PHOTO21.finish(PHOTO21.grab()); PHOTO21.S.filter = 'none'; PHOTO21.S.dof = false;
         const px = (c) => c.getContext('2d').getImageData(c.width >> 1, c.height >> 2, 1, 1).data;
         const a = px(noir); out.grey = Math.abs(a[0] - a[1]) <= 3 && Math.abs(a[1] - a[2]) <= 3; const b = px(plain); out.colour = !(b[0] === b[1] && b[1] === b[2]);
-        window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape', key: 'Escape' })); update(1 / 60); render();
+        window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape', key: 'Escape' })); render();
         out.left = G.state === 'play' && !PLAYTOOLS.photo.on;
         out.cam = ['x', 'y', 'z', 'dir', 'pitch'].every((k) => Engine.cam[k] === cam0[k]);
         const snap1 = (() => { const o = JSON.parse(JSON.stringify(snapshotGame())); delete o.when; delete o.flags.p7t_rms; return JSON.stringify(o); })();
@@ -279,6 +280,35 @@ async function boot(ctx, opts) {
       });
       console.log('  cost ms', JSON.stringify(r));
       assert.ok(r.cached < 1, 'a cached frame is free');
+    });
+
+    await step('photo mode under R3D (forced on, SwiftShader): the look reaches the renderer\'s limit and Save screenshot copies R3D\'s own picture', async () => {
+      const R = await boot(ctx, { r3d: true }); pages.push(R);
+      const rp = R.page;
+      const r = await rp.evaluate(async () => {
+        window.requestAnimationFrame = () => 0;
+        if (typeof R3D === 'undefined') return { skip: 'no r3d21.js' };
+        R3D.setMode('on');
+        loadMap('oakhaven', { x: 29.5, y: 20.5, dir: -Math.PI / 2 }); G.state = 'play'; G.fadeT = 0; G.keys = {}; render();
+        if (!R3D.active()) return { skip: 'R3D not active here' };
+        const cam0 = Object.assign({}, Engine.cam);
+        PLAYTOOLS.enter(); update(1 / 60); render();
+        G.keys.arrowup = true; for (let i = 0; i < 40; i++) update(1 / 30); G.keys.arrowup = false;
+        const ang = Math.atan(Engine.cam.pitch / R3D.FX), lim = R3D.camera.limit();
+        G.keys.arrowdown = true; for (let i = 0; i < 20; i++) update(1 / 30); G.keys.arrowdown = false;
+        const shot = PHOTO21.grab(), d = shot.getContext('2d').getImageData(0, 0, shot.width, shot.height).data;
+        let lit = 0; for (let i = 0; i < d.length; i += 4 * 97) if (d[i] + d[i + 1] + d[i + 2] > 40) lit++;
+        const blob = await PHOTO21.screenshot();
+        window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape', key: 'Escape' })); render();
+        return { active: true, ang, lim, lit, n: d.length / 4 / 97, png: !!(blob && blob.type === 'image/png'), restored: ['x', 'y', 'z', 'dir', 'pitch'].every((k) => Engine.cam[k] === cam0[k]) };
+      });
+      if (r.skip) { console.log('  (skipped: ' + r.skip + ')'); return; }
+      assert.ok(r.ang > 0.6, 'the look climbs well past the old 9 degrees (' + (r.ang * 57.3).toFixed(1) + ' deg, limit ' + (r.lim * 57.3).toFixed(1) + ')');
+      assert.ok(r.ang <= r.lim + 1e-6, 'and stops at the limit');
+      assert.ok(r.lit > r.n * 0.3, 'the screenshot holds R3D\'s picture, not a blank canvas (' + r.lit + ' / ' + r.n + ')');
+      assert.ok(r.png && r.restored, 'a PNG; leaving restores the camera');
+      if (SHOTS) await rp.screenshot({ path: path.join(SHOTS, 'card21-photo-r3d.png') });
+      assert.deepEqual(R.errors.filter((e) => !/WebGL|GPU stall|swiftshader|GroupMarker/i.test(e)), [], 'no page errors under R3D');
     });
 
     assert.deepEqual(A.errors, [], 'no page errors');
