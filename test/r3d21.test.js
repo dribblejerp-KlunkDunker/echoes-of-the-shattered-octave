@@ -236,6 +236,18 @@ const HELPERS = () => {
     await page.close();
   }
 
+  // ---------------------------------------------------------------- frame cost (reported; SwiftShader is not a GPU)
+  {
+    const { page, errors } = await bootPage(browser, {});
+    const m = await page.evaluate(() => R3D.measure({ scenes: [{ id: 'oakhaven', map: 'oakhaven', x: 23.5, y: 20.5, dir: -1.57, tod: 0.73 }, { id: 'tavern', map: 'tavern', x: 8.5, y: 10.5, dir: -1.57, tod: 0.85 }], presets: ['medium', 'cinematic'], frames: 6, runs: 1 }));
+    console.log('  frame cost, ms per game frame with 12 enemies (' + m.renderer + ', ' + m.size + '): ' + JSON.stringify({ oakhaven: m.oakhaven, tavern: m.tavern }));
+    await step('frame cost measured for R3D and the CPU path in Medium and Cinematic (numbers reported, not judged on SwiftShader)', async () => {
+      for (const sc of ['oakhaven', 'tavern']) for (const k of ['medium/cpu', 'medium/r3d', 'cinematic/cpu', 'cinematic/r3d']) assert.ok(m[sc][k] > 0 && m[sc][k] < 1e4, sc + ' ' + k + ' ' + m[sc][k]);
+    });
+    await step('no page errors (frame cost)', async () => { assert.deepStrictEqual(errors, []); });
+    await page.close();
+  }
+
   // ---------------------------------------------------------------- picking parity
   {
     const { page, errors } = await bootPage(browser, {});
