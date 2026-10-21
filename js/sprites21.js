@@ -35,29 +35,30 @@
 //  one to three), one dynamic mesh for every decal (one draw call), one instance buffer for every translucent particle
 //  (two calls: alpha and additive) and one call per translucent figure (the ghost).
 //
-//  CONTRACT (for CORE's js/r3d21.js and for tests; stable):
-//    SPRITES21.attach(gl)              build GL objects on this context (called again after a lost context; idempotent)
+//  CONTRACT (CORE's js/r3d21.js calls it: see its section 4; stable):
+//    SPRITES21.attach(gl)              build GL objects on this context (R3D calls it once per context; idempotent)
 //    SPRITES21.detach()                forget the GL objects (context lost)
 //    SPRITES21.frame(ents, view)       once per frame, before drawing: picks every sprite, fills e._screen, steps the
-//                                      simulations whose post hooks do not run under R3D (smoke, fight marks)
-//    SPRITES21.drawOpaque(view)        the alpha-tested billboards (depth write on)
-//    SPRITES21.drawDecals(view)        shadows and marks (after the opaque world and sprites, before translucents)
-//    SPRITES21.drawTranslucent(view)   particles, ghost, halos (depth test, no depth write)
-//    view = { vp: Float32Array(16) column-major, MAP SPACE (x east, y south, z up; the map's own units) -> clip;
-//             eye: [x, y, z]; dir (yaw, radians, the raycaster's cam.dir); pitch (radians, + = up, optional);
-//             fogDist; outdoor; fog: [r, g, b] 0..1 (the raycaster's tint target, per unit of light); light (outdoor daylight 0..1.x, the
-//             raycaster's light_); ambient; flick; lights: the raycaster-format point lights [{x,y,r,cr,cg,cb,vis..}]
-//             (optional); px: device pixels per logical pixel (dither size, optional); spriteAspect (world width per
-//             unit of art aspect, 1 for a true-aspect camera, optional); shade: optional LIGHT hook (below) }
-//    GL state on return from each draw: VAO null, blend off, depth test on, depthMask true, cull face off.
-//    LIGHT hook: if view.shade = { glsl, bind(gl, program) } is given, the billboard and particle shaders include
-//    `glsl`, which must define  vec3 l21Shade(vec3 albedo, vec3 wpos, vec3 n, float emissive, float f, vec3 pl)
-//    (albedo 0..1 sRGB-ish texel; wpos map space; n the billboard normal, toward the eye; emissive 0/1; f the
-//    raycaster's fog/light factor and pl its point-light add, for a hook that wants them) and does fog itself; bind()
-//    sets its uniforms. Without it the raycaster's own formulas are used (tint/shade with fog and point lights).
-//    SPRITES21.dev                     a parity view used by the tests and for screenshots before CORE is in: the CPU
-//                                      frame with its sprites removed, drawn under these GL sprites with the
-//                                      raycaster's own projection and depth (see dev.on()).
+//                                      bookkeeping of modules whose post hooks do not run under R3D (smoke, fight marks,
+//                                      footprints, parry sparks)
+//    SPRITES21.drawOpaque(view)        the alpha-tested billboards (depth write on)      — R3D pass 'sprites' (30)
+//    SPRITES21.drawDecals(view)        shadows, marks, footprints (depth test, no write) — R3D pass 'sprites' (30)
+//    SPRITES21.drawTranslucent(view)   particles, ghost, halos (depth test, no write)    — R3D pass 'transparent' (50)
+//    view = R3D's F.sview: { vp: Float32Array(16) column-major, MAP SPACE (x, y cells, z game units, z up) -> clip;
+//             eye [x, y, z]; dir (yaw); pitch (radians); fogDist; outdoor; fog [r, g, b] 0..1 (the raycaster's tint
+//             target per unit of light); light; ambient; flick; lights (the engine's point lights with wall masks); px
+//             (render px per logical px: dither and pixel-noise size); spriteAspect = ZK (a raycaster sprite h tall is
+//             h * sp.w / sp.h * ZK map units wide); ZK; optional: tilt (0..1, default 0.5: how far a thing seen steeply
+//             from above leans back toward the eye; the parity view uses 0), map, animT, wx {haze, cloud}, farLod2 }.
+//    Shading: on R3D's context the billboard program is built with R3D.program() and the 'common' + 'shade' chunks,
+//    each texel is shaded by r3dShade() as a kind-1 R3DSurf (albedo, GL position, normal toward the eye, the raycaster's
+//    fog/light factor fi and point-light add ladd, emissive), so whatever LIGHT puts in the 'shade' chunk lights every
+//    sprite. Outputs: oColor and oAux (material 6, 8 for emissive texels and glowing entities; emissive in g);
+//    blended passes leave aux untouched. Texture units 6 (atlas page) and 7 (mark masks); 0-5 are CORE's.
+//    GL state on return from each draw: VAO null, blend off, depth test on, depthMask true, cull face off, unit 0.
+//    SPRITES21.dev                     a parity view for tests and screenshots without R3D: the CPU frame with its
+//                                      sprites hidden, drawn under these GL sprites with the raycaster's own
+//                                      projection and depth (see dev.on()).
 //  Nothing here changes gameplay: it reads entities, writes only e._screen (exactly what the raycaster wrote) and the
 //  module's own fields (_s21*), consumes no game random numbers, and saves nothing. Original preset / no WebGL2 / the
 //  "3D renderer" switch off = CORE does not call it, and the raycaster draws as before.
@@ -930,6 +931,24 @@ void main() {
     }
   }
 
+  // ---------------------------------------------------------------- the Kestrel's mooring rope (js/smalllife.js)
+  // smalllife's mast and hull numbers (MAST, SHIP there): the rope runs from the mast top to the bow cone
+  const KMAST = { x: 37, y: 20, top: 2.8 }, KSHIP = { scale: 1.7, half: 1.85 };
+  function collectRope() {
+    if (typeof SMALLLIFE === 'undefined' || !SMALLLIFE.ship || !SMALLLIFE.ship.e || !V.outdoor || typeof SMALLLIFE.isMoored !== 'function' || !SMALLLIFE.isMoored()) return;
+    const p = SMALLLIFE.shipPose(V.animT || 0); if (!p) return;
+    const M = SMALLLIFE.MAST || KMAST, SH = SMALLLIFE.SHIP || KSHIP;
+    const ax = M.x, ay = M.y, az = groundAt(ax, ay) + M.top - 0.05;
+    const bx = p.x + Math.cos(p.h) * SH.half * 0.97, by = p.y + Math.sin(p.h) * SH.half * 0.97, bz = groundAt(bx, by) + p.lift + SH.scale * 0.43;
+    const len = Math.hypot(bx - ax, by - ay, bz - az); if (!(len > 0.1)) return;
+    if ((ax - V.eye[0]) * (ax - V.eye[0]) + (ay - V.eye[1]) * (ay - V.eye[1]) > fogDist * fogDist * 1.5) return;
+    const n = Math.max(4, Math.min(60, Math.round(len * 14)));
+    for (let i = 0; i <= n; i++) {
+      const u = i / n, sag = Math.sin(u * Math.PI) * 0.06 * len / 4;
+      pushParticle(false, ax + (bx - ax) * u, ay + (by - ay) * u, az + (bz - az) * u - sag, 0, 0.012, 0.012, 1, 0, 150 / 255, 138 / 255, 108 / 255, 0.75, 0, false);
+    }
+  }
+
   // ================================================================ the frame
   function frame(ents, view) {
     const t0 = now();
@@ -951,6 +970,7 @@ void main() {
     try { collectTelegraphs(ents); collectGlimmer(ents); } catch (e) { warnOnce('telegraphs', e); }
     try { collectBreath(ents); collectRings(ents); } catch (e) { warnOnce('breath', e); }
     try { collectLanterns(); collectSparks(); } catch (e) { warnOnce('motion10', e); }
+    try { collectRope(); } catch (e) { warnOnce('rope', e); }
     st.particles = nPT + nPTadd;
     // billboards grouped by atlas page: one draw call per page
     runs.length = 0;

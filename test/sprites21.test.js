@@ -20,6 +20,7 @@ async function boot(browser, opts) {
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => { if (m.type() === 'error' || (m.type() === 'warning' && /sprites21/.test(m.text()))) errors.push('console: ' + m.text()); });
   await page.addInitScript(() => { let s = 424242; Math.random = () => (s = (s * 16807) % 2147483647) / 2147483647; });
+  if (opts.r3d) await page.addInitScript(() => { window.__r3d21 = { automation: true }; });
   if (opts.block) await page.route(process.env.S21_SAME ? /nothing-matches-this/ : /sprites21\.js/, (r) => r.abort());
   await page.goto(URL_ + '/?nosw=1', { timeout: 180000 });
   await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && G.state === 'title', null, { timeout: 180000 });
@@ -176,13 +177,48 @@ async function boot(browser, opts) {
       __stage('oakhaven', 23.5, 8.5, Math.PI / 2, 0.73); PRESETS.apply('cinematic'); SPRITES21.dev.on();
       for (let i = 0; i < 12; i++) { const e = hydrate({ kind: 'enemy', type: ['proctor', 'hound', 'legionnaire'][i % 3], x: 21 + (i % 4) * 1.2, y: 11 + Math.floor(i / 4) * 1.3 }); e.facing = i; G.ents.push(e); }
       for (let i = 0; i < 5; i++) __fr();
-      const ms = []; for (let i = 0; i < 30; i++) { __fr(); ms.push(SPRITES21.stats.ms.frame); }
+      const ms = []; for (let i = 0; i < 30; i++) { Engine.cam.bob = 0; render(); ms.push(SPRITES21.stats.ms.frame); }
       ms.sort((a, b) => a - b);
       return { median: ms[15], n: SPRITES21.count, calls: SPRITES21.count.runs };
     });
     assert.ok(perf.median < 6, 'CPU collect too slow: ' + perf.median);
     console.log(`PASS cost: ${perf.n.billboards} billboards, ${perf.n.decalVerts} decal vertices, ${perf.n.particles} particles in ${perf.n.runs} atlas run(s); CPU collect median ${perf.median.toFixed(2)} ms (SwiftShader host; GPU time not measurable here)`);
     if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'sprites21-parity.png') });
+
+    // ---------------------------------------------------------------- under CORE's R3D
+    if (typeof process.env.S21_NO_R3D === 'undefined') {
+      const R = await boot(browser, { r3d: true });
+      const r3 = await R.page.evaluate((SC) => {
+        if (typeof R3D === 'undefined') return { none: true };
+        const out = { views: 0, n: 0, worst: 0, missing: 0, attached: false, drawn: 0 };
+        for (const sc of SC) {
+          R3D.setMode('off'); __stage(...sc); Engine.cam.pitch = 0; __fr();
+          const cpu = new Map(); for (const e of G.ents) if (e._screen && (e.kind === 'npc' || e.kind === 'enemy')) cpu.set(e, { ...e._screen });
+          R3D.setMode('on'); __fr(); __fr();
+          if (!R3D.active()) continue;
+          out.views++; out.attached = SPRITES21.gl === R3D.frame.gl; out.drawn += SPRITES21.count.billboards;
+          for (const [e, a] of cpu) {
+            const b = e._screen; if (!b) { if (a.z > 0.3 && a.y1 > 0 && a.x1 > 0 && a.x0 < 320) out.missing++; continue; }
+            out.n++; out.worst = Math.max(out.worst, Math.abs(a.x0 - b.x0), Math.abs(a.x1 - b.x1), Math.abs(a.y0 - b.y0), Math.abs(a.y1 - b.y1));
+          }
+        }
+        // a free-look frame: looking 50 degrees down and 60 up draws without errors, rects follow the true camera
+        R3D.camera.setAngle(-50 * Math.PI / 180); __fr(); out.down = SPRITES21.count.billboards + SPRITES21.count.decalVerts;
+        R3D.camera.setAngle(60 * Math.PI / 180); __fr(); out.up = SPRITES21.count.billboards;
+        R3D.camera.setAngle(0); out.warned = Object.keys(SPRITES21.stats.warned);
+        return out;
+      }, SC);
+      if (r3.none) console.log('SKIP R3D: js/r3d21.js not loaded');
+      else {
+        assert.ok(r3.views >= 5, 'R3D did not draw: ' + JSON.stringify(r3));
+        assert.ok(r3.attached && r3.drawn > 0, 'sprites21 not attached to R3D');
+        assert.equal(r3.missing, 0); assert.ok(r3.worst <= 3.01, 'R3D rect off by ' + r3.worst);   // the raycaster truncates rows/columns of large near figures
+        assert.deepEqual(r3.warned, []);
+        assert.deepEqual(R.errors, []);
+        console.log(`PASS R3D: attached to CORE's context; ${r3.n} figure rects in ${r3.views} reference views within ${r3.worst.toFixed(2)} px of the raycaster's at pitch 0; looking 50 down and 60 up draws cleanly`);
+      }
+      await R.page.close();
+    }
 
     assert.deepEqual(errors, []);
     console.log('PASS no page errors');
