@@ -564,7 +564,7 @@ const BODY21 = (() => {
     const k = look.key + '|' + phase; let a = legCache.get(k); if (a) return a;
     const G2 = GL(), Wd = 300, Ht = 300, P = pix(Wd, Ht), cx = 150;
     const body = look.body, feet = look.feet, coat = look.calling.coat;
-    const trouser = mixc(mulc(coat, 0.72), [62, 56, 50], 0.5);
+    const trouser = mixc(mulc(coat, 0.95), [96, 88, 76], 0.4);
     const tro = part(P, { R: rampOf(trouser), pat: PATTERN.weave, round: 12, z: 1, grad: (x, y) => 0.88 + y / 300 * 0.2 });
     const bootR = rampOf(feet.shape === 'greaves' ? feet.col.trim : feet.col);
     const boot = part(P, { R: bootR, pat: patOf(feet.pattern === 'studs' ? 'grain' : feet.pattern === 'plates' ? 'none' : feet.pattern), round: 9, z: 3, sheen: feet.material === 'leather' ? 0.45 : feet.material === 'iron' ? 1 : 0.1 });
@@ -699,7 +699,7 @@ const BODY21 = (() => {
   }
   const tintCache = new WeakMap();
   function lit(cv, em) {
-    if (!cv) return cv;
+    if (!cv || REC) return cv;           // under R3D the scene's shading lights the body
     if (LT.key === '32,32,32') return cv;
     let e = tintCache.get(cv); if (e && e.key === LT.key) return e.cv;
     const out = e ? e.cv : mkCanvas(cv.width, cv.height), x = out.getContext('2d');
@@ -728,6 +728,19 @@ const BODY21 = (() => {
   }
 
   // ================================================================ 11. DRAWING
+  // Under R3D the body is not painted on the HUD canvas: every picture is RECORDED (its four corners in logical 320x150
+  // pixels, from the canvas transform it would have been drawn with) and the R3D 'body' pass draws the list in the scene,
+  // lit by the scene's shading and graded by its post chain. REC is that recording (null on the raycaster path).
+  let REC = null;
+  function put2(ctx, img, dx, dy, dw, dh, em) {
+    if (REC) {
+      const L = REC.inv.multiply(ctx.getTransform());
+      const p = (x, y) => { const q = L.transformPoint({ x, y }); return [q.x, q.y]; };
+      REC.list.push({ img, em: em || null, pts: [p(dx, dy), p(dx + dw, dy), p(dx + dw, dy + dh), p(dx, dy + dh)] });
+      return;
+    }
+    ctx.drawImage(img, dx, dy, dw, dh);
+  }
   const VWv = () => (typeof VW === 'number' ? VW : 320), VHv = () => (typeof VIEW_H === 'number' ? VIEW_H : 150);
   const fph = () => (typeof FPHANDS === 'object' && FPHANDS && FPHANDS.st) ? FPHANDS.st : null;
   const bobNow = (ph) => (Engine.cam.bob || 0) + (G.attack && G.attack.t > 0 ? 0 : Math.sin(performance.now() / 900 + (ph || 0)) * 1.4);
@@ -751,14 +764,15 @@ const BODY21 = (() => {
     const pm = pitchMax(), pitch = Engine.cam.pitch || 0;
     const k = clamp((-pitch - 0.2 * Math.min(pm, 40)) / (0.8 * Math.min(pm, 40)), 0, 1); if (k <= 0) return null;
     const kk = k * k * (3 - 2 * k);
-    const toeY = VHv() + 6 - kk * 74 - Math.max(0, -pitch - 40) * 0.9 + (Engine.cam.bob || 0) * 1.2;
+    const toeY = Math.max(0, VHv() + 6 - kk * 74 - Math.max(0, -pitch - 40) * 0.9) + (Engine.cam.bob || 0) * 1.2;
     return { k: kk, toeY };
   }
   function drawLegs(ctx, look) {
     if (!set.feet || hiddenBody()) return false;
-    const pose = legsPose(); if (!pose) return false;
     const moving = WS.speed > 0.45 && !reduced();
     const frame = moving ? Math.floor(((WS.stride / 1.5) % 1) * 8) & 7 : -1;
+    if (REC) { const art = legArt(look, frame); if (art) { REC.legs = art; stats.drawn.feet++; } return !!art; }   // true 3D: a quad at your feet (R3D pass)
+    const pose = legsPose(); if (!pose) return false;
     const art = legArt(look, frame); if (!art) return false;
     const LS = 0.62, x0 = VWv() / 2 - 150 * LS, y0 = pose.toeY - 12;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
@@ -770,6 +784,7 @@ const BODY21 = (() => {
     return true;
   }
   function headPose() {
+    if (REC) { let a = 0; try { a = R3D.camera.angle(); } catch (e) { a = 0; } const k = clamp((a - 0.14) / 0.36, 0, 1); return k > 0 ? { k: k * k * (3 - 2 * k) } : null; }
     const pm = pitchMax(), pitch = Engine.cam.pitch || 0;
     const k = clamp((pitch - 0.25 * Math.min(pm, 40)) / (0.75 * Math.min(pm, 40)), 0, 1); if (k <= 0) return null;
     return { k: k * k * (3 - 2 * k) };
@@ -779,7 +794,7 @@ const BODY21 = (() => {
     const p = headPose(); if (!p) return false;
     const a = headArt(look); if (!a) return false;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
-    ctx.drawImage(lit(a.canvas), 0, -45 + p.k * 45 + (Engine.cam.bob || 0) * 0.6, VWv(), 45);
+    put2(ctx, lit(a.canvas), 0, -45 + p.k * 45 + (Engine.cam.bob || 0) * 0.6, VWv(), 45);
     ctx.restore(); stats.drawn.head = (stats.drawn.head || 0) + 1;
     return true;
   }
@@ -798,7 +813,7 @@ const BODY21 = (() => {
   function drawOffArm(ctx, look, ax, ay, glassHand) {
     const a = offArmArt(look, glassHand); if (!a) return;
     const ex = ax - 46, ey = VHv() + 60, ang = Math.atan2(-(ex - ax), ey - ay);   // the arm runs from the hand down-left out of the view
-    ctx.save(); ctx.translate(ax, ay); ctx.rotate(ang); ctx.drawImage(lit(a.canvas, a.emis), -10, -4, 20, 72); ctx.restore();
+    ctx.save(); ctx.translate(ax, ay); ctx.rotate(ang); put2(ctx, lit(a.canvas, a.emis), -10, -4, 20, 72, a.emis); ctx.restore();
   }
   function drawShield(ctx, look) {
     if (!look.shield || look.shieldStowed || hiddenBody()) return false;
@@ -807,7 +822,7 @@ const BODY21 = (() => {
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
     drawOffArm(ctx, look, p.x - 2, p.y + (art.kind === 'kite' ? 4 : 2), false);
     ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.scale(p.s * (art.kind === 'kite' ? 0.86 : 0.92), p.s);
-    ctx.drawImage(lit(art.canvas), -art.hx, -art.hy);
+    put2(ctx, lit(art.canvas), -art.hx, -art.hy, art.w, art.h);
     ctx.restore();
     stats.drawn.shield++;
     return true;
@@ -821,7 +836,7 @@ const BODY21 = (() => {
     const iw = img.width * 0.34, ih = img.height * 0.34;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
     ctx.translate(16 + iw * 0.5, VHv() + 30 + bobNow(1.7) * 1.5 + drop + WS.gk * 30); ctx.rotate(0.5); ctx.scale(-1, 1);
-    ctx.drawImage(img, -iw * 0.5, -ih + 12, iw, ih);
+    put2(ctx, img, -iw * 0.5, -ih + 12, iw, ih, img);
     ctx.restore();
     stats.drawn.glassIdle++;
     return true;
@@ -843,9 +858,10 @@ const BODY21 = (() => {
           if (!drawShield(this, look)) drawGlassIdle(this, look, wid);
         } catch (e) { warnOnce('off arm', e); } finally { this.drawImage = hook; this.restore(); }
       }
-      if (b.ext) { orig.call(this, lit(b.ext.canvas), dx + b.ext.ox * sx, dy + b.ext.oy * sy, b.ext.w * sx, b.ext.h * sy); stats.drawn.ext++; }
-      orig.call(this, img, dx, dy, dw, dh); stats.drawn.arms++;
-      for (const o of b.over) { orig.call(this, lit(o.canvas, o.emis), dx + o.ox * sx, dy + o.oy * sy, o.w * sx, o.h * sy); stats.drawn.extra++; }
+      const dr = (c, x, y, w, h, em) => { if (REC) { const keep = this.drawImage; this.drawImage = orig; try { put2(this, c, x, y, w, h, em); } finally { this.drawImage = keep; } } else orig.call(this, c, x, y, w, h); };
+      if (b.ext) { dr(lit(b.ext.canvas), dx + b.ext.ox * sx, dy + b.ext.oy * sy, b.ext.w * sx, b.ext.h * sy); stats.drawn.ext++; }
+      dr(img, dx, dy, dw, dh, b.emis); stats.drawn.arms++;
+      for (const o of b.over) { dr(lit(o.canvas, o.emis), dx + o.ox * sx, dy + o.oy * sy, o.w * sx, o.h * sy, o.emis); stats.drawn.extra++; }
       return undefined;
     };
     return { hook, st };
@@ -866,6 +882,7 @@ const BODY21 = (() => {
     if (!on() || !G.player || typeof Engine === 'undefined' || !Engine.images) return _drawHUD.apply(this, arguments);
     const t0 = performance.now(), ctx = Engine.ctx;
     let look = null, swaps = [], hookSt = null, had = false, prev = null;
+    REC = r3dOn() ? { inv: ctx.getTransform().inverse(), list: [], legs: null } : null;
     try {
       look = GL().of(G.player);
       frameState();
@@ -897,9 +914,123 @@ const BODY21 = (() => {
       // nothing drew a weapon picture this frame (the weapon is away): the shield still rides the arm
       if (look && hookSt && !hookSt.offDone && G.state === 'play') { ctx.save(); if (!drawShield(ctx, look)) drawGlassIdle(ctx, look, ''); ctx.restore(); }
     } catch (e) { warnOnce('late shield', e); }
+    if (REC) { R3B.last = REC; REC = null; } else R3B.last = null;
     const ms = performance.now() - t0; stats.lastMs = ms; stats.maxMs = Math.max(stats.maxMs * 0.995, ms); stats.frames++;
     return r;
   };
+
+  // ================================================================ 11b. R3D: THE BODY IN THE 3D SCENE (pass 'body', order 40)
+  // CONTRACT use (js/r3d21.js): R3D.addPass({ name: 'body', order: 40 }), R3D.program() with the common + shade chunks
+  // (R3DSurf kind 2 = body: the raycaster's ambient, flicker and point lights at the player, or LIGHT's shading once it
+  // replaces the chunk), R3D.bindScene(), MRT outputs oColor / oAux (material 6 sprite, emissive in g). What it draws:
+  //   * the legs picture as a quad in the world: from the toes on the ground ahead of you to the hips under the eye,
+  //     facing up and back toward the eye, with soft contact shadows; depth-tested like any geometry, so it is seen
+  //     exactly when the true camera looks down, and a wall you are pressed against still hides it;
+  //   * every first-person picture recorded by drawHUD (arms, sleeves, second hand, shield, off arm, the resting glass
+  //     hand, the helm's brim) as screen quads in its own depth range (in front of the world, no depth write), drawn the
+  //     frame after they were posed (one frame of latency on a camera-locked picture).
+  // If the pass cannot compile or R3D is not showing, the raycaster path above paints the same pictures on the HUD canvas.
+  const R3B = { last: null, prog: null, failed: false, gl: null, vao: null, vbo: null, tex: new Map(), drawn: 0, quads: 0, legs: 0, err: '' };
+  function r3dOn() {
+    try { return typeof R3D === 'object' && R3D && !R3B.failed && !!R3B.prog && R3D.shown() && !!R3D.getPass('body'); } catch (e) { return false; }
+  }
+  const BODY_VS = `
+layout(location = 0) in vec4 aPos;   // xyz world (GL) or (ndc.xy, 0) ; w unused
+layout(location = 1) in vec3 aUv;    // uv, mode (0 screen, 1 world, 2 shadow)
+out vec2 vUv; out vec3 vPos; flat out float vMode;
+void main() {
+  vUv = aUv.xy; vMode = aUv.z;
+  if (aUv.z > 0.5) { vPos = aPos.xyz; gl_Position = uViewProj * vec4(aPos.xyz, 1.0); }
+  else { vPos = uEye.xyz + vec3(uFwdH.xy * 0.3, -0.12); gl_Position = vec4(aPos.xy, -1.0, 1.0); }
+}`;
+  const BODY_FS = `
+uniform sampler2D uImg; uniform sampler2D uEm; uniform float uHasEm;
+in vec2 vUv; in vec3 vPos; flat in float vMode;
+layout(location = 0) out vec4 oColor; layout(location = 1) out vec4 oAux;
+void main() {
+  vec4 c = texture(uImg, vUv);
+  if (vMode > 1.5) { float a = c.a * 0.9; if (a < 0.01) discard; oColor = vec4(0.0, 0.0, 0.0, a); oAux = vec4(5.0 / 255.0, 0.0, 0.0, a); return; }
+  if (c.a < 0.5) discard;
+  float e = uHasEm > 0.5 ? step(0.5, texture(uEm, vUv).a) : 0.0;
+  R3DSurf s; s.albedo = c.rgb; s.pos = vPos; s.nrm = vec3(-uFwdH.xy, 0.0); s.side = 1.0; s.mat = 6.0; s.emissive = e; s.fi = 1.0; s.ladd = vec3(0.0); s.kind = 2;
+  vec3 col = r3dShade(s);
+  col = mix(col, c.rgb, e);
+  oColor = vec4(col, 1.0); oAux = vec4(6.0 / 255.0, e, 0.0, 1.0);
+}`;
+  function texOf(g, cv) {
+    let t = R3B.tex.get(cv);
+    if (t) { R3B.tex.delete(cv); R3B.tex.set(cv, t); return t; }   // LRU order
+    t = g.createTexture(); g.bindTexture(g.TEXTURE_2D, t);
+    g.pixelStorei(g.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false); g.pixelStorei(g.UNPACK_FLIP_Y_WEBGL, false);
+    g.texImage2D(g.TEXTURE_2D, 0, g.RGBA, g.RGBA, g.UNSIGNED_BYTE, cv);
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.NEAREST); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.NEAREST);
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE);
+    R3B.tex.set(cv, t);
+    if (R3B.tex.size > 64) { const k = R3B.tex.keys().next().value; g.deleteTexture(R3B.tex.get(k)); R3B.tex.delete(k); }
+    return t;
+  }
+  const quadBuf = new Float32Array(4 * 7);
+  function quad(g, pts, mode, img, em) {
+    // pts: 4 corners (TL, TR, BR, BL) as [x, y, z] (world) or [ndcX, ndcY, 0]
+    const uv = [[0, 0], [1, 0], [1, 1], [0, 1]], order = [0, 1, 3, 2];
+    for (let i = 0; i < 4; i++) { const k = order[i], o = i * 7; quadBuf[o] = pts[k][0]; quadBuf[o + 1] = pts[k][1]; quadBuf[o + 2] = pts[k][2]; quadBuf[o + 3] = 1; quadBuf[o + 4] = uv[k][0]; quadBuf[o + 5] = uv[k][1]; quadBuf[o + 6] = mode; }
+    g.activeTexture(g.TEXTURE6); g.bindTexture(g.TEXTURE_2D, texOf(g, img));
+    if (em) { g.activeTexture(g.TEXTURE7); g.bindTexture(g.TEXTURE_2D, texOf(g, em)); }
+    g.uniform1f(R3B.prog.u.uHasEm, em ? 1 : 0);
+    g.bindBuffer(g.ARRAY_BUFFER, R3B.vbo); g.bufferData(g.ARRAY_BUFFER, quadBuf, g.STREAM_DRAW);
+    g.drawArrays(g.TRIANGLE_STRIP, 0, 4); R3B.quads++;
+  }
+  const bodyPass = {
+    name: 'body', order: 40,
+    init(g, R) {
+      R3B.gl = g; R3B.tex.clear(); R3B.failed = false;
+      try {
+        R3B.prog = R.program(BODY_VS, BODY_FS, { chunks: ['common', 'shade'] });
+        if (!R3B.prog || !R3B.prog.p) throw new Error('no program');
+      } catch (e) { R3B.failed = true; R3B.err = String(e && e.message || e).slice(0, 200); warnOnce('r3d program', e); return; }
+      R3B.vao = g.createVertexArray(); R3B.vbo = g.createBuffer();
+      g.bindVertexArray(R3B.vao); g.bindBuffer(g.ARRAY_BUFFER, R3B.vbo);
+      g.enableVertexAttribArray(0); g.vertexAttribPointer(0, 4, g.FLOAT, false, 28, 0);
+      g.enableVertexAttribArray(1); g.vertexAttribPointer(1, 3, g.FLOAT, false, 28, 16);
+      g.bindVertexArray(null);
+    },
+    dispose(g) { for (const t of R3B.tex.values()) g.deleteTexture(t); R3B.tex.clear(); },
+    enabled() { return on() && !R3B.failed && !!R3B.last; },
+    draw(g, F, R) {
+      const rec = R3B.last; if (!rec || R3B.failed || !R3B.prog || !R3B.prog.p) return;
+      R.bindScene(g, F); R.use(R3B.prog);
+      g.uniform1i(R3B.prog.u.uImg, 6); g.uniform1i(R3B.prog.u.uEm, 7);
+      g.bindVertexArray(R3B.vao); g.disable(g.CULL_FACE);
+      // legs: a quad in the world, toes on the ground ahead, hips under the eye
+      if (rec.legs && set.feet) {
+        const c = Engine.cam, fx = Math.cos(c.dir), fy = Math.sin(c.dir), rx = -fy, ry = fx, gz = (c.z || 0.5) - 0.5;
+        const W2 = 0.19, toe = 0.36, hip = -0.14, toG = (x, y, z) => R.toGL ? R.toGL(x, y, z) : [x, y, z * R.ZK];
+        const P = (fwd, side, z) => toG(c.x + fx * fwd + rx * side, c.y + fy * fwd + ry * side, z);
+        g.enable(g.DEPTH_TEST); g.depthFunc(g.LEQUAL);
+        // contact shadows under the feet (blended, no depth write)
+        g.depthMask(false); g.enable(g.BLEND); g.blendFunc(g.SRC_ALPHA, g.ONE_MINUS_SRC_ALPHA);
+        const sh = footShadow();
+        for (const f of rec.legs.feet) { const fw = toe - (f.y / 300) * (toe - hip), sd = (f.x - 150) / 300 * 2 * W2; quad(g, [P(fw + 0.06, sd - 0.05, gz + 0.004), P(fw + 0.06, sd + 0.05, gz + 0.004), P(fw - 0.04, sd + 0.05, gz + 0.004), P(fw - 0.04, sd - 0.05, gz + 0.004)], 2, sh); }
+        g.disable(g.BLEND); g.depthMask(true);
+        quad(g, [P(toe, -W2, gz + 0.02), P(toe, W2, gz + 0.02), P(hip, W2, gz + 0.27), P(hip, -W2, gz + 0.27)], 1, rec.legs.canvas);
+        R3B.legs++;
+      }
+      // first-person pictures: screen quads in front of everything, no depth write
+      g.disable(g.DEPTH_TEST); g.depthMask(false);
+      for (const it of rec.list) {
+        const pts = it.pts.map((q) => [q[0] / 160 - 1, 1 - q[1] / 75, 0]);
+        quad(g, pts, 0, it.img, it.em);
+      }
+      g.depthMask(true); g.enable(g.DEPTH_TEST);
+      g.bindVertexArray(null);
+      R3B.drawn++;
+    },
+  };
+  function wireR3D() {
+    if (typeof R3D !== 'object' || !R3D || typeof R3D.addPass !== 'function') return false;
+    try { R3D.addPass(bodyPass); return true; } catch (e) { warnOnce('r3d addPass', e); return false; }
+  }
+  wireR3D();
 
   // ================================================================ 12. OPTIONS (Graphics & access)
   const ROWS = [
@@ -928,6 +1059,6 @@ const BODY21 = (() => {
 
   function clearCaches() { headCache.clear(); buildCache.clear(); shieldCache.clear(); armCache.clear(); legCache.clear(); }
   return { set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
-    look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
+    R3B, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;
