@@ -46,7 +46,10 @@
 //    pattern   'none' | 'quilt' | 'mail' | 'rivets' | 'plates' | 'weave' | 'studs' | 'stole' | 'grain'
 //    len       body only: hem height as a fraction of leg length below the hip (0 = at the hip, 1 = to the ankle)
 //    sleeve    body only: { material, col, cuff } what the forearm shows; bracer: true when a bracer/vambrace covers it
-//    face      shield only: { field, figure, rim, boss } the painted face colours; radius/height in hand-widths
+//    face      shield only: { field, figure, rim, boss } the painted face colours
+//    size      shield only, in hand-widths (1 hand-width ~ 9 cm): buckler `radius` (half its diameter: 1.67 = a 30 cm
+//              buckler, "fist-sized"); kite `width` x `height` (6.7 x 10 = about 60 x 90 cm); `cm` gives the same in
+//              centimetres { w, h } for both (the buckler's w = h = its diameter)
 //  WEAPONS entry: { id, name, kind, grip, material, len, col: { blade, edge, grip, guard, head }, img, notes }
 //    kind      'fists' | 'glassarm' | 'sword' | 'longsword' | 'greatsword' | 'knife' | 'dirk' | 'throwing' | 'axe' | 'mace' |
 //              'hammer' | 'maul' | 'spear' | 'glaive' | 'pistol' | 'crossbow'
@@ -141,9 +144,9 @@ const GEARLOOK21 = (() => {
     a_hobnails: F({ id: 'a_hobnails', slot: 'feet', material: 'leather', shape: 'hobnails', pattern: 'studs', col: C([76, 54, 38], [50, 34, 22], [112, 82, 58], null, [176, 176, 168]), notes: 'mid-calf boots, iron studs round the sole (trim)' }),
     a_greaves: F({ id: 'a_greaves', slot: 'feet', material: 'iron', shape: 'greaves', pattern: 'plates', col: C([132, 142, 150], [80, 88, 100], [196, 204, 208], [40, 44, 54], [62, 44, 32]), notes: 'shin-plates over knee-high riding boots (trim = the boot leather)' }),
     // shields
-    a_buckler: F({ id: 'a_buckler', slot: 'shield', material: 'iron', shape: 'buckler', pattern: 'none', col: IRON, radius: 2.6,
+    a_buckler: F({ id: 'a_buckler', slot: 'shield', material: 'iron', shape: 'buckler', pattern: 'none', col: IRON, radius: 1.67, cm: F({ w: 30, h: 30 }),
       face: F({ field: [118, 96, 72], figure: [150, 62, 48], rim: [104, 112, 120], boss: [176, 184, 188] }), notes: 'a fist-sized round deck shield: iron rim and boss on a leather-faced board, a corsair\'s red band [PROPOSED]' }),
-    a_kite: F({ id: 'a_kite', slot: 'shield', material: 'wood', shape: 'kite', pattern: 'none', col: C([94, 60, 50], [62, 38, 32], [130, 88, 72]), width: 5.5, height: 9,
+    a_kite: F({ id: 'a_kite', slot: 'shield', material: 'wood', shape: 'kite', pattern: 'none', col: C([94, 60, 50], [62, 38, 32], [130, 88, 72]), width: 6.7, height: 10, cm: F({ w: 60, h: 90 }),
       face: F({ field: [94, 60, 50], figure: [210, 196, 166], rim: [176, 150, 98], boss: [200, 164, 80] }), notes: 'long and heavy, painted with the Synod\'s dead queen: a pale crowned figure on an oxblood field [PROPOSED: the colours]' }),
   });
   // empty slots

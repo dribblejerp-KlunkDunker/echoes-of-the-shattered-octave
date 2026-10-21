@@ -149,8 +149,10 @@ const CARD21 = (() => {
     if (e.slot === 'feet') { o.top = kind === 'soft' ? 6 : kind === 'hobnail' ? 10 : kind === 'greaves' ? 15 : (o.top || 9); if (kind === 'greaves' && e.col.trim) o.boot = e.col.trim; if (kind === 'hobnail') o.studs = true; }
     if (e.slot === 'shield') {
       const f = e.face || {};
-      if (kind === 'buckler') { o.r = clamp((e.radius || 1.4) * HW * 0.6, 2.8, 5); o.face = f.field || o.face; o.band = f.figure || null; o.col = f.rim || col; o.boss = f.boss || null; }
-      else { o.h = clamp((e.height || 6) * HW * 0.78, 14, 24); o.wTop = clamp((e.width || 4) * HW * 0.4, 4.5, 7.5); o.col = f.field || col; o.emblem = f.figure || o.emblem; o.rim = f.rim || o.rim; o.boss = f.boss || null; }
+      // sizes as the shared table gives them (cm when present: one body unit is about 3 cm), no clamps of our own
+      const CM = 1 / 3, cm = e.cm && Number.isFinite(e.cm.w) && Number.isFinite(e.cm.h) ? e.cm : null;
+      if (kind === 'buckler') { o.r = cm ? cm.w / 2 * CM : (e.radius || 1.4) * HW; o.face = f.field || o.face; o.band = f.figure || null; o.col = f.rim || col; o.boss = f.boss || null; }
+      else { o.h = cm ? cm.h * CM : (e.height || 6) * HW; o.wTop = cm ? cm.w / 2 * CM : (e.width || 4) * HW / 2; o.col = f.field || col; o.emblem = f.figure || o.emblem; o.rim = f.rim || o.rim; o.boss = f.boss || null; }
     }
     return o;
   }
@@ -341,7 +343,13 @@ const CARD21 = (() => {
     if (d <= X.z[i]) return;
     X.z[i] = d; X.m[i] = m; X.part[i] = X.pid; X.nx[i] = nx; X.ny[i] = ny; X.nz[i] = nz; X.tu[i] = tu; X.tv[i] = tv;
   }
+  // Paints can run in slices (js/card21.js's scheduler): while X.q is set, each primitive queues small pieces of work
+  // (a sphere, a few rows of a section or slab) instead of drawing, each remembering its part id.
   function sphere(X, c, rad, m, tu0, tv0, axisV) {
+    if (X.q) { const pid = X.pid; X.q.push(() => { X.pid = pid; sphereNow(X, c, rad, m, tu0, tv0, axisV); }); return; }
+    sphereNow(X, c, rad, m, tu0, tv0, axisV);
+  }
+  function sphereNow(X, c, rad, m, tu0, tv0, axisV) {
     const [sx, sy, sd] = proj(X, c), R = rad * X.K; if (R < 0.35) return;
     const x0 = Math.max(0, Math.floor(sx - R)), x1 = Math.min(X.W - 1, Math.ceil(sx + R)), y0 = Math.max(0, Math.floor(sy - R)), y1 = Math.min(X.H - 1, Math.ceil(sy + R));
     const D = sd * X.K;
@@ -372,9 +380,14 @@ const CARD21 = (() => {
   // stacked ellipses from z0 to z1: centre c(z) = [f, r], half-width a(z) along r, half-depth b(z) along f.
   // opt.back: only the back half (f < centre) exists (a cloak); opt.arc: the half-angle (radians) of the front opening
   function section(X, z0, z1, cfn, afn, bfn, m, opt) {
+    if (!X.q) { sectionNow(X, z0, z1, cfn, afn, bfn, m, opt, 0, Infinity); return; }
+    const pid = X.pid, n = Math.ceil((z1 - z0) / (0.5 / X.K)) + 1;
+    for (let k = 0; k < n; k += 24) { const k0 = k, k1 = k + 23; X.q.push(() => { X.pid = pid; sectionNow(X, z0, z1, cfn, afn, bfn, m, opt, k0, k1); }); }
+  }
+  function sectionNow(X, z0, z1, cfn, afn, bfn, m, opt, k0, k1) {
     opt = opt || {};
     const dz = 0.5 / X.K, K = X.K, u = X.u, sn = X.sn;
-    for (let z = z0; z <= z1 + 1e-6; z += dz) {
+    for (let k = k0, z = z0 + k0 * dz; k <= k1 && z <= z1 + 1e-6; k++, z = z0 + k * dz) {
       const c = cfn(z), a = afn(z), b = bfn(z); if (a <= 0.02 || b <= 0.02) continue;
       const da = (afn(Math.min(z1, z + 0.25)) - afn(Math.max(z0, z - 0.25))) / 0.5, db = (bfn(Math.min(z1, z + 0.25)) - bfn(Math.max(z0, z - 0.25))) / 0.5;
       const [scx, scy, sd] = proj(X, [c[0], c[1], z]);
@@ -416,11 +429,17 @@ const CARD21 = (() => {
   // a flat shape with thickness: centre C, in-plane axes U (length) and V (width), normal W, half-thickness T;
   // mask(u, v) says what is inside; ext = [u0, u1, v0, v1]; bulge(u, v) -> [dh/du, dh/dv] tilts the face (domes)
   function slab(X, Cc, U, V, Wn, T, ext, mask, m, bulge) {
+    if (!X.q) { slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, 0, X.H - 1); return; }
+    const pid = X.pid;
+    for (let ya = 0; ya < X.H; ya += 16) { const yb = ya + 15; X.q.push(() => { X.pid = pid; slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, ya, yb); }); }
+  }
+  function slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, ya, yb) {
     const pts = [];
     for (const uu of [ext[0], ext[1]]) for (const vv of [ext[2], ext[3]]) for (const ww of [-T, T]) pts.push(proj(X, [Cc[0] + U[0] * uu + V[0] * vv + Wn[0] * ww, Cc[1] + U[1] * uu + V[1] * vv + Wn[1] * ww, Cc[2] + U[2] * uu + V[2] * vv + Wn[2] * ww]));
     let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
     for (const p of pts) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }
-    x0 = Math.max(0, Math.floor(x0) - 1); x1 = Math.min(X.W - 1, Math.ceil(x1) + 1); y0 = Math.max(0, Math.floor(y0) - 1); y1 = Math.min(X.H - 1, Math.ceil(y1) + 1);
+    x0 = Math.max(0, Math.floor(x0) - 1); x1 = Math.min(X.W - 1, Math.ceil(x1) + 1); y0 = Math.max(ya, 0, Math.floor(y0) - 1); y1 = Math.min(yb, X.H - 1, Math.ceil(y1) + 1);
+    if (y1 < y0) return;
     const K = X.K, dir = [X.u, X.sn, TILT], dW = dir[0] * Wn[0] + dir[1] * Wn[1] + dir[2] * Wn[2];
     const s = dW >= 0 ? 1 : -1, adW = Math.abs(dW);
     const nW = vview(X, [Wn[0] * s, Wn[1] * s, Wn[2] * s]), vU = vview(X, U), vV = vview(X, V);
@@ -720,10 +739,13 @@ const CARD21 = (() => {
       const RX = 3.65, RD = 3.85, RZ = 4.75;
       const prof = (z) => { const t = (z - cz) / RZ; if (t <= -1 || t >= 1) return 0; return Math.sqrt(1 - t * t) * (t < -0.25 ? 1 - (-0.25 - t) * 0.38 : 1); };
       const faceM = M('face', fc.skin, 'face', { face: L.face });
-      section(X, cz - RZ, cz + RZ, (z) => [hc[0] + (z < cz - 1 ? (cz - 1 - z) * 0.06 : 0), 0], (z) => RX * prof(z), (z) => RD * prof(z), faceM);
-      // ears and nose
-      if (!(head && (head.full || head.kind === 'hood'))) { next(); for (const s of [1, -1]) sphere(X, [hc[0] - 0.35, s * (RX - 0.1), cz - 0.4], 0.75, mSkin); }
-      next(); capsule(X, [hc[0] + RD - 0.7, 0, cz - 0.2], [hc[0] + RD - 0.05, 0, cz - 1.3], 0.34, 0.42, faceM);
+      const closed = !!(head && head.full);   // a closed helm: no face, no skin from any side (only its dark sight-slit)
+      if (!closed) {
+        section(X, cz - RZ, cz + RZ, (z) => [hc[0] + (z < cz - 1 ? (cz - 1 - z) * 0.06 : 0), 0], (z) => RX * prof(z), (z) => RD * prof(z), faceM);
+        // ears and nose
+        if (!(head && head.kind === 'hood')) { next(); for (const s of [1, -1]) sphere(X, [hc[0] - 0.35, s * (RX - 0.1), cz - 0.4], 0.75, mSkin); }
+        next(); capsule(X, [hc[0] + RD - 0.7, 0, cz - 0.2], [hc[0] + RD - 0.05, 0, cz - 1.3], 0.34, 0.42, faceM);
+      }
       const hair = fc.hair ? M('hair', fc.hair, 'hair') : null;
       const wear = head ? head.kind : fc.wear || null;
       const hidden = head && head.full;
@@ -783,11 +805,10 @@ const CARD21 = (() => {
         next(); sphere(X, [hc[0] - 0.2, 0, cz + RZ + 1.35], 0.55, km);
       } else if (wear === 'bellhelm') {
         next();
-        const bm = M('bellhelm', head.col, 'metal', { spec: 1.3 });
+        const bm = M('bellhelm', head.col, 'metal', { spec: 1.3, slit: cz + 0.2 });
         // the whole head in a bell: crown, waist, flared lip at the jaw; a dark sight-slit; a crown ring
         const bp = (z) => { const t = (z - (cz - 5.4)) / 11.2; return t < 0.12 ? 4.55 - t * 3 : t < 0.7 ? 4.2 - (t - 0.12) * 0.7 : 3.8 * Math.sqrt(Math.max(0, 1 - ((t - 0.7) / 0.32) ** 2)) + 0.05; };
         section(X, cz - 5.4, cz + 5.7, (z) => [hc[0] - 0.1, 0], (z) => bp(z), (z) => bp(z) * 1.04, bm);
-        next(); slab(X, [hc[0] + 3.98, 0, cz + 0.2], [0, 1, 0], [0, 0, 1], [1, 0, 0], 0.22, [-2.6, 2.6, -0.5, 0.5], (a, b) => Math.abs(a) < 2.5 - Math.abs(b) * 0.6 && Math.abs(b) < 0.42, M('slit', [14, 10, 10], 'dark'));
         next(); section(X, cz + 3.3, cz + 3.9, (z) => [hc[0] - 0.1, 0], (z) => bp(cz + 3.6) + 0.2, (z) => bp(cz + 3.6) * 1.04 + 0.2, mBrass);
         next(); sphere(X, [hc[0] - 0.1, 0, cz + 6.0], 0.65, mBrass);
       }
@@ -1037,7 +1058,8 @@ const CARD21 = (() => {
       im.src = 'img/face_' + n + '.jpg';
     } catch (e) { warnOnce('portrait', e); }
   }
-  function shade(X, L, o) {
+  // the shading pass as a job of rows (occlusion, colour, ink, outline), so a paint can stop between rows
+  function shadeJob(X, L) {
     const { W, H } = X, N = W * H, out = new Uint32Array(N), idx = new Int8Array(N).fill(-1);
     const fc = (gear().faces && gear().faces[L.face]) || LOCAL.faces[L.face];
     const por = portraits[L.face]; X.porRef = porRefs[L.face];
@@ -1046,7 +1068,7 @@ const CARD21 = (() => {
     const ao = new Float32Array(N);
     const R1 = Math.max(2, Math.round(K * 0.55)), R2 = Math.max(3, Math.round(K * 1.2));
     const OFF = [[R1, 0], [-R1, 0], [0, R1], [0, -R1], [R2, R2], [-R2, R2], [R2, -R2], [-R2, -R2], [R2, 0], [-R2, 0], [0, R2], [0, -R2]];
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const aoRow = (y) => { for (let x = 0; x < W; x++) {
       const i = y * W + x; if (!X.m[i]) continue;
       const d = X.z[i]; let occ = 0;
       for (const [dx, dy] of OFF) {
@@ -1055,8 +1077,8 @@ const CARD21 = (() => {
         const dd = X.z[j] - d; if (dd > 0.4 * K) occ += Math.min(1, dd / (3 * K));
       }
       ao[i] = occ / OFF.length;
-    }
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    } };
+    const colRow = (y) => { for (let x = 0; x < W; x++) {
       const i = y * W + x, mi = X.m[i]; if (!mi) continue;
       const Mt = X.mats[mi]; if (!Mt) continue;
       let nx = X.nx[i], ny = X.ny[i], nz = X.nz[i];
@@ -1142,7 +1164,8 @@ const CARD21 = (() => {
       if (!colour) {
         if (kind === 'paint' && Mt.kite) {
           // the Synod's dead queen, painted pale on the kite: a face in a circle, a crown over it
-          const a = tu, b = tv, kt = Mt.kite, cy = kt.top - kt.h * 0.36;
+          const kt = Mt.kite, sc = (kt.wTop || 4.7) / 4.7, cy = kt.top - kt.h * 0.36;
+          const a = (tu - cy) / sc + cy, b = tv / sc;   // the emblem scales with the shield
           const dq = Math.hypot(a - cy, b);
           if (dq < 2.0) rp = ramp(Mt.emblem, 'cloth');
           if (dq < 2.0 && ((Math.abs(a - cy - 0.3) < 0.3 && Math.abs(Math.abs(b) - 0.75) < 0.3) || (Math.abs(a - cy + 0.9) < 0.18 && Math.abs(b) < 0.6))) rp = ramp([60, 50, 56], 'cloth');
@@ -1152,6 +1175,10 @@ const CARD21 = (() => {
         if (kind === 'skin' && fc.scar && X.headC && Math.abs(tv - X.headC[2] - 1.8) < 1.8 && tu < -1.5 && tu > -2.6) v -= 0.18;
         if (kind === 'skin' && fc.streak && X.headC && tv - X.headC[2] < 0 && tv - X.headC[2] > -2.2 && tu > 1.2 && tu < 2.1) rp = ramp(C.glass, 'glass');
         if (kind === 'dark') rp = ramp([26, 20, 20], 'cloth');
+        if (Mt.slit != null) {
+          const wn0 = nx * X.sn + nz * X.u, wn1 = -nx * X.u + nz * X.sn, lon = Math.atan2(wn1, wn0);
+          if (Math.abs(lon) < 0.62 && Math.abs(tv - Mt.slit) < 0.45 - Math.abs(lon) * 0.3) { rp = ramp([26, 20, 20], 'cloth'); v = 0.1; }
+        }
         if (kind === 'wood' && Mt.band && Math.abs(tv) < 0.55) rp = ramp(Mt.band, 'cloth');
         // glass glows: it never sinks into the dark tones
         if (Mt.glow) v = v * (1 - Mt.glow * 0.5) + Mt.glow * 0.7;
@@ -1173,55 +1200,140 @@ const CARD21 = (() => {
         }
       } else idx[i] = 4;
       out[i] = ((255 << 24) | (colour[2] << 16) | (colour[1] << 8) | colour[0]) >>> 0;
-    }
+    } };
     // ink: where a nearer part crosses a farther one, the farther pixel darkens (a hand-drawn line, not a black one)
     const ink = new Uint8Array(N);
     const jump = K * 0.9;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const inkRow = (y) => { for (let x = 0; x < W; x++) {
       const i = y * W + x; if (!X.m[i]) continue;
       for (const j of [x + 1 < W ? i + 1 : -1, y + 1 < H ? i + W : -1, x > 0 ? i - 1 : -1, y > 0 ? i - W : -1]) {
         if (j < 0 || !X.m[j]) continue;
         if (X.part[j] !== X.part[i] && X.z[j] - X.z[i] > jump) { ink[i] = 1; break; }
       }
-    }
-    for (let i = 0; i < N; i++) if (ink[i]) { const Mt = X.mats[X.m[i]]; const c = Mt.ramp[Math.max(0, Math.min(idx[i] < 0 ? 1 : idx[i] - 3, 1))]; out[i] = ((255 << 24) | (c[2] << 16) | (c[1] << 8) | c[0]) >>> 0; }
+    } };
+    const inkApply = () => { for (let i = 0; i < N; i++) if (ink[i]) { const Mt = X.mats[X.m[i]]; const c = Mt.ramp[Math.max(0, Math.min(idx[i] < 0 ? 1 : idx[i] - 3, 1))]; out[i] = ((255 << 24) | (c[2] << 16) | (c[1] << 8) | c[0]) >>> 0; } };
     // the outline: the darkest tone of the part it rings, darker still (a coloured "sel-out", not flat black)
-    const res = new Uint32Array(out);
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    let res = null;
+    const outRow = (y) => { for (let x = 0; x < W; x++) {
       const i = y * W + x; if (X.m[i]) continue;
       let best = -1, bz = -1e9;
       for (const j of [x + 1 < W ? i + 1 : -1, y + 1 < H ? i + W : -1, x > 0 ? i - 1 : -1, y > 0 ? i - W : -1]) if (j >= 0 && X.m[j] && X.z[j] > bz) { bz = X.z[j]; best = j; }
       if (best < 0) continue;
       const c = X.mats[X.m[best]].ramp[0], k = 0.62;
       res[i] = ((255 << 24) | ((c[2] * k) << 16) | ((c[1] * k) << 8) | (c[0] * k)) >>> 0;
-    }
-    return res;
+    } };
+    const rows = [aoRow, colRow, inkRow, outRow];
+    const job = { done: false, result: null, stage: 0, y: 0 };
+    job.step = (deadline) => {
+      while (!job.done) {
+        if (job.stage === 3 && job.y === 0 && !res) { inkApply(); res = new Uint32Array(out); }
+        rows[job.stage](job.y);
+        if (++job.y >= H) { job.y = 0; job.stage++; if (job.stage > 3) { job.done = true; job.result = res; break; } }
+        if ((job.y & 3) === 0 && now() > deadline) return false;
+      }
+      return true;
+    };
+    return job;
   }
+  function shade(X, L) { const j = shadeJob(X, L); j.step(Infinity); return j.result; }
+  const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
 
-  // ================================================================ PAINT (cached)
-  const cache = new Map();
-  let stats = { paints: 0, ms: 0, last: 0 };
-  function paint(L, o) {
+  // ================================================================ PAINT (cached; whole, or in slices)
+  // Card frames and world frames (partner, ghost) have separate caches so the many co-op poses never push the card out.
+  const cache = new Map(), wcache = new Map();
+  const CACHE_MAX = { card: 48, world: 420 };
+  let stats = { paints: 0, ms: 0, last: 0, worst: 0, sliceWorst: 0, slices: 0, asyncDone: 0 };
+  function norm0(L, o) {
     o = o || {};
-    const size = SIZES[o.size] ? o.size : 'card', S = SIZES[size];
+    const size = SIZES[o.size] ? o.size : 'card';
     const view = ((o.view | 0) % 8 + 8) % 8;
     const br = Math.round(clamp(o.breath || 0, 0, 1) * 4) / 4;
-    const key = [size, view, o.act | 0, o.ph | 0, o.loco | 0, br, o.display ? 1 : 0, sig(L), por(L)].join(';');
-    let f = cache.get(key); if (f) { cache.delete(key); cache.set(key, f); return f; }
-    const t0 = typeof performance !== 'undefined' ? performance.now() : 0;
-    loadPortrait(L.face);
-    const X = makeCtx(S.W, S.H, S.K, view * Math.PI / 4, S.FOOT); X.smooth = size !== 'card';
-    const P = build(X, L, { act: o.act, ph: o.ph, loco: o.loco, breath: br, display: !!o.display });
-    X.headC = P.head;
-    const data = shade(X, L, o);
-    let top = S.H, bot = -1, left = S.W, right = -1;
-    for (let y = 0; y < S.H; y++) for (let x = 0; x < S.W; x++) if (data[y * S.W + x]) { if (y < top) top = y; if (y > bot) bot = y; if (x < left) left = x; if (x > right) right = x; }
-    f = { w: S.W, h: S.H, data, top, bot, left, right, foot: S.FOOT, K: S.K };
-    cache.set(key, f); while (cache.size > 160) cache.delete(cache.keys().next().value);
-    const ms = (typeof performance !== 'undefined' ? performance.now() : 0) - t0;
-    stats.paints++; stats.ms += ms; stats.last = ms;
-    return f;
+    const act = clamp(o.act | 0, 0, 9), loco = clamp(o.loco | 0, 0, 2);
+    // only the strikes (1-5) change with their phase; the shot only at its phase 2; the rest are one picture
+    const ph = act >= 1 && act <= 5 ? clamp(o.ph | 0, 0, 3) : act === 6 && (o.ph | 0) === 2 ? 2 : 0;
+    const key = [size, view, act, ph, loco, br, o.display ? 1 : 0, sig(L), por(L)].join(';');
+    return { size, view, br, key, act, ph, loco, display: !!o.display };
   }
+  const cacheOf = (size) => (size === 'card' ? cache : wcache);
+  function remember3(n, f) { const c = cacheOf(n.size); c.set(n.key, f); while (c.size > (n.size === 'card' ? CACHE_MAX.card : CACHE_MAX.world)) c.delete(c.keys().next().value); }
+  // a paint as a job: build (queue the primitives), draw them, shade, finish; step(deadline) works until the deadline
+  function paintJob(L, n) {
+    const S = SIZES[n.size];
+    loadPortrait(L.face);
+    const X = makeCtx(S.W, S.H, S.K, n.view * Math.PI / 4, S.FOOT); X.smooth = n.size !== 'card';
+    X.q = [];
+    const P = build(X, L, { act: n.act, ph: n.ph, loco: n.loco, breath: n.br, display: n.display });
+    X.headC = P.head;
+    const q = X.q; X.q = null;
+    let qi = 0, sh = null;
+    const job = { n, L, done: false, frame: null, ms: 0 };
+    job.step = (deadline) => {
+      const t0 = now();
+      while (qi < q.length) { q[qi++](); if ((qi & 3) === 0 && now() > deadline) { job.ms += now() - t0; return false; } }
+      if (!sh) sh = shadeJob(X, L);
+      if (!sh.step(deadline)) { job.ms += now() - t0; return false; }
+      const data = sh.result;
+      let top = S.H, bot = -1, left = S.W, right = -1;
+      for (let y = 0; y < S.H; y++) for (let x = 0; x < S.W; x++) if (data[y * S.W + x]) { if (y < top) top = y; if (y > bot) bot = y; if (x < left) left = x; if (x > right) right = x; }
+      job.frame = { w: S.W, h: S.H, data, top, bot, left, right, foot: S.FOOT, K: S.K, key: n.key };
+      remember3(n, job.frame);
+      job.done = true; job.ms += now() - t0;
+      stats.paints++; stats.ms += job.ms; stats.last = job.ms;
+      return true;
+    };
+    return job;
+  }
+  function peek(L, o) { const n = norm0(L, o), c = cacheOf(n.size), f = c.get(n.key); if (f) { c.delete(n.key); c.set(n.key, f); } return f || null; }
+  // the whole paint now (what the card's tests and the old synchronous callers get)
+  function paint(L, o) {
+    const n = norm0(L, o), hit = cacheOf(n.size).get(n.key);
+    if (hit) { cacheOf(n.size).delete(n.key); cacheOf(n.size).set(n.key, hit); return hit; }
+    let j = jobs.get(n.key);
+    if (!j || !j.step) j = paintJob(L, n);
+    jobs.delete(n.key);   // a queued request for it is answered from the cache on the scheduler's next slice
+    const t0 = now(); j.step(Infinity); const ms = now() - t0;
+    if (ms > stats.worst) stats.worst = ms;
+    return j.frame;
+  }
+  // ---- the scheduler: paints in slices of at most SLICE ms, highest priority first, between the browser's frames
+  const SLICE = 8;
+  const jobs = new Map();             // key -> job (waiting or running)
+  const waiting = [];                 // [{ key, pri, seq, cb: [] }]
+  let seq = 0, timer = 0, idleWaiters = [];
+  function request(L, o, pri, cb) {
+    const n = norm0(L, o), hit = cacheOf(n.size).get(n.key);
+    if (hit) { if (cb) cb(hit); return null; }
+    let w = waiting.find((x) => x.key === n.key);
+    if (!w) { w = { key: n.key, size: n.size, pri: pri || 0, seq: ++seq, cb: [] }; waiting.push(w); jobs.set(n.key, { lazy: true, L, n }); }
+    else if ((pri || 0) > w.pri) w.pri = pri;
+    if (cb) w.cb.push(cb);
+    kick();
+    return n.key;
+  }
+  // between slices the page yields (a message-channel task: input and the browser's frames go first, but no 4 ms
+  // timer clamp wastes the gaps), so the paints keep moving even while the game draws every frame
+  let chan = null;
+  try { if (typeof MessageChannel === 'function') { chan = new MessageChannel(); chan.port1.onmessage = () => tick(); } } catch (e) { chan = null; }
+  function later() { timer = 1; if (chan) chan.port2.postMessage(0); else setTimeout(tick, 0); }
+  function kick() { if (!timer && waiting.length) { try { later(); } catch (e) { timer = 0; } } }
+  function tick() {
+    timer = 0;
+    const t0 = now(), deadline = t0 + SLICE;
+    while (waiting.length && now() < deadline) {
+      waiting.sort((a, b) => b.pri - a.pri || a.seq - b.seq);
+      const w = waiting[0];
+      let j = jobs.get(w.key);
+      const hit = cacheOf(w.size).get(w.key) || null;
+      if (hit || !j) { waiting.shift(); jobs.delete(w.key); for (const cb of w.cb) { try { cb(hit); } catch (e) { warnOnce('cb', e); } } continue; }
+      if (j.lazy) { j = paintJob(j.L, j.n); jobs.set(w.key, j); }
+      if (j.step(deadline)) { waiting.shift(); jobs.delete(w.key); stats.asyncDone++; for (const cb of w.cb) { try { cb(j.frame); } catch (e) { warnOnce('cb', e); } } }
+    }
+    const used = now() - t0; stats.slices++; if (used > stats.sliceWorst) stats.sliceWorst = used;
+    if (waiting.length) { try { later(); } catch (e) { timer = 0; } }
+    else { const w = idleWaiters; idleWaiters = []; for (const fn of w) { try { fn(); } catch (e) { /* ignore */ } } }
+  }
+  // a promise that settles when every queued paint is done (tests; the card's swap)
+  function idle() { return new Promise((res) => { if (!waiting.length) res(); else idleWaiters.push(res); }); }
   const por = (L) => (portraits[L.face] ? 'p' + portraitGen : 'n');
 
   // change listeners (the card repaints when a portrait arrives)
@@ -1244,16 +1356,46 @@ const CARD21 = (() => {
     if (k) { lookMemo.set(k, L); if (lookMemo.size > 64) lookMemo.delete(lookMemo.keys().next().value); }
     return L;
   }
-  function partnerFrame(b, loco, act, ph, look) {
-    const f = paint(lookFor(look), { size: 'partner', view: clamp(b | 0, 0, 4), loco, act, ph });
-    return { w: f.w, h: f.h, data: f.data, top: f.top, bot: f.bot, left: f.left, right: f.right };
+  // every pose a fight needs, most likely first: standing and walking in each view, then block, the strikes, hurt, the
+  // shot, the song; strikes in all four phases
+  const POSES = (() => {
+    const o = [];
+    for (let b = 0; b <= 4; b++) for (let l = 0; l <= 2; l++) o.push([b, l, 0, 0]);
+    for (const act of [9, 1, 2, 3, 8, 4, 5, 6, 7]) for (let b = 0; b <= 4; b++) for (const ph of (act <= 5 ? [0, 1, 2, 3] : act === 6 ? [0, 2] : [0])) o.push([b, 0, act, ph]);
+    return o;
+  })();
+  const warmed = new Set();
+  // paint every pose of this look ahead, in slices of at most SLICE ms (once per look and size)
+  function prewarm(size, L, look) {
+    const k = size + '|' + sig(L) + '|' + por(L); if (warmed.has(k)) return; warmed.add(k);
+    if (warmed.size > 24) warmed.delete(warmed.values().next().value);
+    for (const [b, loco, act, ph] of POSES) request(L, { size, view: b, loco, act, ph }, 1, size === 'ghost' ? (f) => { if (f) ghostConvert(f); } : null);
+  }
+  function worldFrame(size, b, loco, act, ph, look, opt) {
+    const L = lookFor(look), o = { size, view: clamp(b | 0, 0, 4), loco, act, ph };
+    if (on()) prewarm(size, L, look);
+    if (!opt || opt.now !== false) return { f: paint(L, o), exact: true };
+    const f = peek(L, o); if (f) return { f, exact: true };
+    request(L, o, 5);   // the pose that is wanted now goes before the rest of the prewarm
+    for (const alt of [{ loco: 0 }, { act: 0, ph: 0 }, { loco: 0, act: 0, ph: 0 }, { view: 0, loco: 0, act: 0, ph: 0 }]) { const g = peek(L, Object.assign({}, o, alt)); if (g) return { f: g, exact: false }; }
+    return null;
+  }
+  // opt.now === false: never paint on the spot; returns the pose (exact: true), the nearest painted one (exact: false)
+  // or null while nothing of this look is painted yet; the missing pose is painted in slices
+  function partnerFrame(b, loco, act, ph, look, opt) {
+    const r = worldFrame('partner', b, loco, act, ph, look, opt); if (!r) return null;
+    const f = r.f;
+    return { w: f.w, h: f.h, data: f.data, top: f.top, bot: f.bot, left: f.left, right: f.right, key: f.key, exact: r.exact };
   }
   const ghostCache = new Map();
   const GH_DARK = [64, 92, 136], GH_LIGHT = [226, 242, 255];
-  function ghostFrame(b, loco, act, ph, look) {
-    const L = lookFor(look), key = [b, loco, act, ph, sig(L), por(L)].join(';');
-    let g = ghostCache.get(key); if (g) return g;
-    const f = paint(L, { size: 'ghost', view: clamp(b | 0, 0, 4), loco, act, ph });
+  function ghostFrame(b, loco, act, ph, look, opt) {
+    const r = worldFrame('ghost', b, loco, act, ph, look, opt); if (!r) return null;
+    const g = ghostConvert(r.f);
+    return r.exact ? g : Object.assign({}, g, { exact: false });
+  }
+  function ghostConvert(f) {
+    let g = ghostCache.get(f.key); if (g) return g;
     const { w, h } = f, src = f.data, data = new Uint32Array(w * h);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
       const i = y * w + x, p = src[i]; if (!p) continue;
@@ -1270,8 +1412,8 @@ const CARD21 = (() => {
     }
     const top = new Int16Array(w).fill(h), bot = new Int16Array(w).fill(-1);
     for (let x = 0; x < w; x++) for (let y = 0; y < h; y++) if (data[y * w + x]) { if (top[x] === h) top[x] = y; bot[x] = y; }
-    g = { w, h, data, top, bot };
-    ghostCache.set(key, g); while (ghostCache.size > 200) ghostCache.delete(ghostCache.keys().next().value);
+    g = { w, h, data, top, bot, key: f.key, exact: true };
+    ghostCache.set(f.key, g); while (ghostCache.size > 420) ghostCache.delete(ghostCache.keys().next().value);
     return g;
   }
   // the ghost painter's look gains the full gear (ignored by its codes, which stay compact), so the co-op partner and
@@ -1288,16 +1430,12 @@ const CARD21 = (() => {
   }
   // a co-op figure seen for the first time costs a few dozen milliseconds per pose: paint the standing and walking
   // poses of every view ahead, one per idle slice, as soon as a partner (or, on the guest, the host) is in the world
-  let warmSig = '';
   function prewarmCoop() {
     let look = null;
     try { if (typeof PARTNER19 === 'object' && PARTNER19 && PARTNER19.active && PARTNER19.active() && PARTNER19.S) look = PARTNER19.S.look; } catch (e) { look = null; }
     try { if (!look && typeof SYNC19 === 'object' && SYNC19 && SYNC19.hostLook) look = SYNC19.hostLook(); } catch (e) { look = null; }
     if (!look || !on()) return;
-    const L = lookFor(look), sg = sig(L); if (sg === warmSig) return; warmSig = sg;
-    const todo = []; for (let b = 0; b <= 4; b++) for (let loco = 0; loco <= 2; loco++) todo.push([b, loco]);
-    const next = () => { const t = todo.shift(); if (!t || warmSig !== sg) return; try { partnerFrame(t[0], t[1], 0, 0, look); } catch (e) { return; } setTimeout(next, 30); };
-    setTimeout(next, 30);
+    prewarm('partner', lookFor(look), look);
   }
   // the player whose likeness is "mine" (not a co-op partner standing in for G.player for a moment)
   const homePlayer = () => {
@@ -1338,16 +1476,34 @@ const CARD21 = (() => {
     return cv;
   }
   const scratch = { cv: null };
+  // draws the frame if it is painted; otherwise asks the scheduler for it (in slices, so the panel never freezes) and
+  // meanwhile shows the nearest painted frame of this look, or leaves the old doll showing; true when exact
   function drawCard(cv, L, view, breath) {
-    const cx = cv.getContext('2d'); if (!cx) return;
-    const f = paint(L, { size: 'card', view, breath, display: true });
+    const cx = cv.getContext('2d'); if (!cx) return true;
+    const o = { size: 'card', view, breath, display: true };
+    let f = peek(L, o), exact = !!f;
+    if (!f) {
+      request(L, Object.assign({}, o, { breath: 0 }), 9, () => paintAll(true));
+      if (breath) request(L, o, 4, () => paintAll(true));
+      f = peek(L, Object.assign({}, o, { breath: 0 }));
+      if (!f) {
+        // nothing of this look yet: keep what is on the canvas; a fresh canvas outside the doll's svg gets the backdrop
+        if (!cv._c21f && !cv.closest('svg')) { cx.imageSmoothingEnabled = false; cx.drawImage(backdrop(L), 0, 0); }
+        return false;
+      }
+    }
     if (!scratch.cv) { scratch.cv = document.createElement('canvas'); scratch.cv.width = f.w; scratch.cv.height = f.h; }
     const sc = scratch.cv.getContext('2d');
     sc.putImageData(new ImageData(new Uint8ClampedArray(f.data.buffer.slice(0)), f.w, f.h), 0, 0);
     cx.imageSmoothingEnabled = false;
     cx.drawImage(backdrop(L), 0, 0);
     cx.drawImage(scratch.cv, 0, 0);
+    cv._c21f = f; cv._c21view = view;
     cv.dataset.c21sig = sig(L) + '#' + view;
+    const svg = cv.closest('svg'); if (svg) svg.classList.add('c21-ready');
+    // the breaths of this view, painted ahead at a low priority
+    if (exact && !breath) for (const b2 of [0.25, 0.5, 0.75, 1]) request(L, Object.assign({}, o, { breath: b2 }), 2);
+    return exact;
   }
   function breathNow(t) { return reduce() ? 0 : 0.5 - 0.5 * Math.cos(t / 1000 * Math.PI * 2 / 3.8); }
   function paintAll(force) {
@@ -1360,8 +1516,10 @@ const CARD21 = (() => {
       const v = ui.view;
       const want = s + '#' + v + '#' + br;
       if (!force && cv.dataset.c21want === want) continue;
-      cv.dataset.c21want = want;
-      try { drawCard(cv, L, v, br); } catch (e) { warnOnce('draw', e); }
+      let ok = true;
+      try { ok = drawCard(cv, L, v, br); } catch (e) { warnOnce('draw', e); }
+      // not painted yet: try again when the scheduler answers (its callback repaints)
+      cv.dataset.c21want = ok ? want : '';
       const lab = cv.closest('.c21-wrap') && cv.closest('.c21-wrap').querySelector('.c21-view');
       if (lab && lab.textContent !== VIEW_NAMES[v]) lab.textContent = VIEW_NAMES[v];
     }
@@ -1403,7 +1561,11 @@ const CARD21 = (() => {
         if (su && /^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(su)) badges += '<image class="c21-badge" href="' + su + '" x="' + (S0.W - 34) + '" y="' + (S0.H - 36) + '" width="30" height="30"' + (L.stowed ? ' opacity=".45"' : '') + '/>';
       }
     } catch (e) { warnOnce('badges', e); }
-    const svg = '<svg class="c21-svg" viewBox="0 0 ' + S0.W + ' ' + S0.H + '" role="img" aria-label="Equipment paper doll">' + t[0]
+    // the Phase 5 doll stays underneath (its own markup, built from the catalog), so the panel shows a figure at once;
+    // the painted card covers it the moment its first frame is ready
+    let under = '';
+    try { const inner = html.slice(html.indexOf('>', a) + 1, b).replace(/<title>[^<]*<\/title>/, ''); under = '<g class="c21-under" transform="translate(4 ' + Math.round((S0.H - 196) / 2 + 40) + ') scale(.94)">' + inner + '</g>'; } catch (e) { under = ''; }
+    const svg = '<svg class="c21-svg" viewBox="0 0 ' + S0.W + ' ' + S0.H + '" role="img" aria-label="Equipment paper doll">' + t[0] + under
       + '<foreignObject x="0" y="0" width="' + S0.W + '" height="' + S0.H + '">' + CANVAS + '</foreignObject>' + badges + '</svg>';
     return html.slice(0, a).replace('class="paper-doll"', 'class="paper-doll c21-wrap"') + svg + CTL + html.slice(b + 6);
   }
@@ -1422,6 +1584,7 @@ const CARD21 = (() => {
 .paper-doll.c21-wrap svg.c21-svg { width: auto; height: 46cqh; max-height: none; max-width: 100%; aspect-ratio: ${S0.W} / ${S0.H}; }
 .c21-wrap canvas.c21-cv { display: block; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; cursor: grab; touch-action: pan-y; }
 .c21-wrap svg image.c21-badge { filter: drop-shadow(0 0 2px #000); }
+.c21-wrap svg.c21-ready .c21-under { display: none; }
 .c21-ctl { display: flex; align-items: center; justify-content: center; gap: .8cqw; margin: .5cqh 0; }
 .c21-ctl .c21-view { min-width: 11cqw; font-family: var(--font-sc, serif); font-size: 1.6cqw; color: var(--parch-dim, #b9a888); text-align: center; }
 .c21-ctl .dfbtn.small { padding: .2cqh 1cqw; min-width: 0; }
@@ -1496,7 +1659,7 @@ const CARD21 = (() => {
   return {
     LOCAL, gear, armorLook, weaponLook, lookOf, cleanGear, lookFromCompact, sig, remember, paint, ramp, pose, SIZES, stats: () => stats,
     on, cfg, KEY, onChange: (fn) => subs.push(fn), cacheSize: () => cache.size, clearCache: () => cache.clear(),
-    partnerFrame, ghostFrame, lookFor, paintAll, turn, setOn, appendRows, ui, VIEW_NAMES, drawCard,
+    partnerFrame, ghostFrame, lookFor, idle, request, peek, prewarm, POSES, SLICE, pending: () => waiting.map((w) => w.key + " p" + w.pri), paintAll, turn, setOn, appendRows, ui, VIEW_NAMES, drawCard,
     _internal: { makeCtx, build, shade, portraits },
   };
 })();

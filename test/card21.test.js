@@ -125,42 +125,72 @@ async function boot(ctx, opts) {
       assert.ok(r.stowed > 200, 'a stowed shield shows on the back');
     });
 
-    await step('the inventory card: title, heading and caption kept; the painted figure; equipping repaints at once; rotate turns it', async () => {
-      const r = await Q(() => {
+    await step('the inventory card: the old doll shows at once, the painted figure swaps in from slices; equipping and rotating repaint it', async () => {
+      const px = () => Q(() => { const c = document.querySelector('#modal-panel .paper-doll svg canvas.c21-cv'); const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let h = 2166136261; for (let i = 0; i < d.length; i += 4) { h ^= d[i] | (d[i + 1] << 8) | (d[i + 2] << 16); h = Math.imul(h, 16777619); } return h >>> 0; });
+      const r0 = await Q(() => {
         const p = G.player;
         for (const id of ['a_plate', 'a_kite', 'a_bellhelm', 'a_gauntlets', 'a_greaves', 'a_jerkin']) if (!G.has(id)) p.inv.push({ id, n: 1 });
         p.armor = {}; p.weapons = ['sword', 'spear']; p.weapon = 0; G.state = 'panel';
-        renderInventory();
-        const pn = document.querySelector('#modal-panel'), cv = pn.querySelector('.paper-doll svg canvas.c21-cv');
-        const px = (c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let h = 2166136261; for (let i = 0; i < d.length; i += 4) { h ^= d[i] | (d[i + 1] << 8) | (d[i + 2] << 16); h = Math.imul(h, 16777619); } return h >>> 0; };
-        const out = { canvas: !!cv, title: pn.querySelectorAll('.paper-doll svg title').length, heading: pn.querySelector('.paper-doll').innerText.includes('THE TRAVELLER') };
-        const h0 = px(cv);
-        equipArmor('a_plate');
-        out.equipNow = px(pn.querySelector('canvas.c21-cv')) !== h0;
-        const h1 = px(pn.querySelector('canvas.c21-cv'));
-        pn.querySelector('[data-c21rot="1"]').click();
-        out.rotated = px(pn.querySelector('canvas.c21-cv')) !== h1 && pn.querySelector('.c21-view').textContent === 'Front right';
-        pn.querySelector('[data-c21rot="-1"]').click();
-        out.back = pn.querySelector('.c21-view').textContent === 'Front';
-        // the game's own buttons still work and still repaint
-        pn.querySelector('[data-w="1"]').click();
-        out.stowed = document.querySelector('.paper-doll figcaption').textContent.includes('shield stowed') || !p.armor.shield;
-        const h2 = px(document.querySelector('canvas.c21-cv'));
+        GFX.card21 = false; let t0 = performance.now(); renderInventory(); const base = performance.now() - t0; GFX.card21 = true;
+        CARD21.clearCache();
+        t0 = performance.now(); renderInventory(); const ms = performance.now() - t0;
+        const pn = document.querySelector('#modal-panel');
+        return { ms, base, canvas: !!pn.querySelector('.paper-doll svg canvas.c21-cv'), under: !!pn.querySelector('.paper-doll svg .c21-under'), ready: pn.querySelector('.paper-doll svg').classList.contains('c21-ready'), title: pn.querySelectorAll('.paper-doll svg title').length, heading: pn.querySelector('.paper-doll').innerText.includes('THE TRAVELLER') };
+      });
+      assert.ok(r0.canvas && r0.under, 'the figure canvas over the old doll'); assert.equal(r0.title, 1, 'one svg title'); assert.ok(r0.heading);
+      // the painted figure is not waited for: opening costs about what the plain inventory costs (this box is shared and
+      // loaded, so compare against the panel with the card off, opened just before)
+      assert.ok(!r0.ready && r0.ms < r0.base + 60, 'opening cold does not wait for the paint (' + r0.ms.toFixed(1) + ' ms vs ' + r0.base.toFixed(1) + ' ms without the card)');
+      await Q(() => CARD21.idle());
+      assert.ok(await Q(() => document.querySelector('.paper-doll svg').classList.contains('c21-ready')), 'the painted figure swaps in');
+      const h0 = await px();
+      await Q(() => equipArmor('a_plate')); await Q(() => CARD21.idle());
+      const h1 = await px();
+      assert.notEqual(h1, h0, 'equipping repaints the card');
+      await Q(() => document.querySelector('#modal-panel [data-c21rot="1"]').click()); await Q(() => CARD21.idle());
+      const h2 = await px();
+      assert.ok(h2 !== h1 && (await Q(() => document.querySelector('.c21-view').textContent)) === 'Front right', 'the rotate buttons turn the figure');
+      await Q(() => document.querySelector('#modal-panel [data-c21rot="-1"]').click());
+      const r = await Q(async () => {
+        const out = { back: document.querySelector('.c21-view').textContent === 'Front' };
+        document.querySelector('[data-w="1"]').click();
+        out.stowed = document.querySelector('.paper-doll figcaption').textContent.includes('shield stowed') || !G.player.armor.shield;
         document.querySelector('[data-off="body"]').click();
-        out.offRepaints = px(document.querySelector('canvas.c21-cv')) !== h2 && document.querySelector('.paper-doll svg title').textContent.includes('Body: none');
+        await CARD21.idle();
+        out.off = document.querySelector('.paper-doll svg title').textContent.includes('Body: none') && G.player.armor.body == null;
         out.badges = document.querySelectorAll('.paper-doll svg image.c21-badge').length;
+        out.worstSlice = CARD21.stats().sliceWorst;
         return out;
       });
-      assert.ok(r.canvas, 'the figure canvas is in the doll'); assert.equal(r.title, 1, 'one svg title'); assert.ok(r.heading);
-      assert.ok(r.equipNow, 'equipping repaints the card at once');
-      assert.ok(r.rotated && r.back, 'the rotate buttons turn the figure');
-      assert.ok(r.offRepaints, 'Off still removes armour and the card follows');
-      assert.ok(r.badges >= 1, 'the readied weapon icon rides along');
+      assert.ok(r.back, 'and back'); assert.ok(r.off, 'Off still removes armour'); assert.ok(r.badges >= 1, 'the readied weapon icon rides along');
       if (SHOTS) await page.locator('.paper-doll').screenshot({ path: path.join(SHOTS, 'card21-doll.png') });
     });
 
+    await step('closed helms: no face or skin shows from any of the eight views (card, partner, ghost sizes); a hood hides the face from behind', async () => {
+      const r = await Q(() => {
+        const I = CARD21._internal, bad = [];
+        const count = (L, size, view) => {
+          const S = CARD21.SIZES[size], X = I.makeCtx(S.W, S.H, S.K, view * Math.PI / 4, S.FOOT);
+          I.build(X, L, { display: size === 'card' });
+          const yNeck = Math.floor(S.FOOT - S.K * 47.8); let skin = 0, face = 0;
+          for (let y = 0; y < yNeck; y++) for (let x = 0; x < S.W; x++) { const m = X.m[y * S.W + x]; if (!m) continue; const k = X.mats[m].kind; if (k === 'skin') skin++; else if (k === 'face') face++; }
+          return { skin, face };
+        };
+        for (const face of [1, 2, 3, 4, 5, 6]) for (const size of ['card', 'partner', 'ghost']) for (let v = 0; v < 8; v++) {
+          for (const head of Object.keys(ARMOR).filter((id) => ARMOR[id].slot === 'head')) {
+            const L = CARD21.cleanGear({ ci: 2, face, head, weapon: 'sword', body: 'a_chain' }), c = count(L, size, v), e = CARD21.armorLook(head);
+            if (e && e.full && (c.skin || c.face)) bad.push(head + ' face ' + face + ' ' + size + ' view ' + v + ': ' + JSON.stringify(c));
+            if (e && e.kind === 'hood' && v >= 3 && v <= 5 && c.face) bad.push(head + ' face ' + face + ' ' + size + ' view ' + v + ' shows the face from behind');
+          }
+        }
+        return bad;
+      });
+      assert.deepEqual(r, [], r.slice(0, 6).join('; '));
+    });
+
     await step('the Character panel shows the figure with the portrait; both panels fit 640x400 without horizontal overflow', async () => {
-      const r = await Q(() => { closeModal(); G.state = 'panel'; renderCharacter(); const c = document.querySelector('#modal-panel .c21-char canvas.c21-cv'); const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let lit = 0; for (let i = 0; i < d.length; i += 16) if (d[i] + d[i + 1] + d[i + 2] > 120) lit++; return { fig: !!c, face: !!document.querySelector('#modal-panel .c21-char img.c21-face'), lit }; });
+      await Q(() => { closeModal(); G.state = 'panel'; renderCharacter(); return CARD21.idle(); });
+      const r = await Q(() => { const c = document.querySelector('#modal-panel .c21-char canvas.c21-cv'); const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let lit = 0; for (let i = 0; i < d.length; i += 16) if (d[i] + d[i + 1] + d[i + 2] > 120) lit++; return { fig: !!c, face: !!document.querySelector('#modal-panel .c21-char img.c21-face'), lit }; });
       assert.ok(r.fig && r.face, 'figure and portrait'); assert.ok(r.lit > 300, 'the figure is painted (' + r.lit + ')');
       if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'card21-character.png') });
       await page.setViewportSize({ width: 640, height: 400 });
@@ -197,7 +227,7 @@ async function boot(ctx, opts) {
         const j = PARTNER19.join(card, { seed: 7 }); out.joined = !!(j && j.ok);
         const look = PARTNER19.S.look;
         out.gear = !!(look && look.gear && look.gear.body === 'a_chain' && look.gear.weapon === 'axe' && look.gear.head === 'a_kettle');
-        const fr = PARTNER19.frameOf(0, 0, 0, 0, look), mine = CARD21.partnerFrame(0, 0, 0, 0, look);
+        const mine = CARD21.partnerFrame(0, 0, 0, 0, look), fr = PARTNER19.frameOf(0, 0, 0, 0, look);   // painted now, then the partner's own call finds it
         out.partnerIsCard = fr.w === 80 && fr.h === 192 && fr.data.length === mine.data.length && fr.data.every((v, i) => v === mine.data[i]);
         out.sprite = !!Engine.sprites[fr.name];
         // the host's own figure and memory are never the partner's
@@ -210,7 +240,7 @@ async function boot(ctx, opts) {
         const bare = { cls: compact.cls, face: compact.face, wpn: compact.wpn, arm: compact.arm };   // as decoded from a ghost code
         const gL = CARD21.lookFromCompact(bare);
         out.remembered = gL.body === 'a_plate' && gL.weapon === 'longsword';
-        const gf = GHOST18.figureFrame(0, 0, 0, 0, bare), cf = CARD21.ghostFrame(0, 0, 0, 0, bare);
+        const cf = CARD21.ghostFrame(0, 0, 0, 0, bare), gf = GHOST18.figureFrame(0, 0, 0, 0, bare);
         out.ghostIsCard = gf.w === 80 && gf.data.every((v, i) => v === cf.data[i]) && gf.top.length === 80;
         let pale = 0, n = 0; for (const v of gf.data) if (v) { n++; const a = v >>> 24, b = (v >>> 16) & 255, r2 = v & 255; if (a < 250 && b >= r2) pale++; }
         out.pale = n > 1500 && pale / n > 0.8;

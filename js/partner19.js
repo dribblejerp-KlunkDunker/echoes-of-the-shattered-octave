@@ -800,23 +800,36 @@ const PARTNER19 = (function () {
   function frameOf(b, loco, act, ph, look) {
     const k = [b, loco, act, ph, look.cls, look.face, look.wpn, look.arm, c21key(look)].join(',');
     let f = figCache.get(k); if (f) return f;
-    if (card21()) { try { f = CARD21.partnerFrame(b, loco, act, ph, look); f = { w: f.w, h: f.h, data: f.data, top: f.top, bot: f.bot, left: f.left, right: f.right }; return remember(k, register(f, 1, (AH - 1 - f.bot) / AH)); } catch (e) { warnOnce('card21', e); } }
+    // never paint a new pose on the spot (a phone would stall): CARD21 paints it in slices and meanwhile offers the
+    // nearest pose it has; with none yet, the Phase 19 figure below stands in (kept under its own key)
+    let kOld = k;
+    if (card21()) {
+      try {
+        const r = CARD21.partnerFrame(b, loco, act, ph, look, { now: false });
+        if (r) { const kk = r.exact ? k : 'near|' + r.key; const g = figCache.get(kk); if (g) return g; f = { w: r.w, h: r.h, data: r.data, top: r.top, bot: r.bot, left: r.left, right: r.right }; return remember(kk, register(f, 1, (AH - 1 - f.bot) / AH)); }
+      } catch (e) { warnOnce('card21', e); }
+      kOld = 'fb|' + [b, loco, act, ph, look.cls, look.face, look.wpn, look.arm].join(',');
+      f = figCache.get(kOld); if (f) return f;
+    }
     const lk = Object.assign({}, look, { snug: true });
     const t = GHOST18.paintFigure(b, loco, act, ph, lk);
     const m = look.wpn ? weaponMask(t, GHOST18.paintFigure(b, loco, act, ph, Object.assign({}, lk, { wpn: 0 }))) : null;
     f = colourFrame(t, m, look, FW, FH);
     // the painter's feet stand 3 rows above its bottom edge: set the sprite down onto the ground
-    return remember(k, register(f, 1, (AH - 1 - f.bot) / AH));
+    return remember(kOld, register(f, 1, (AH - 1 - f.bot) / AH));
   }
   // lying on the ground: the side view turned a quarter (head to the right)
   function downFrame(look) {
     const k = 'down,' + [look.cls, look.face, look.wpn, look.arm, c21key(look)].join(',');
     let f = figCache.get(k); if (f) return f;
     const rot = (src) => { const r = new Uint8Array(FW * FH); for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) r[x * FH + (FH - 1 - y)] = src[y * FW + x]; return r; };
-    if (card21()) {
+    let kOld = k;
+    const s2 = card21() ? (() => { try { return CARD21.partnerFrame(2, 0, 0, 0, look, { now: false }); } catch (e) { return null; } })() : null;
+    if (card21() && (!s2 || !s2.exact)) { kOld = 'fb|' + k; f = figCache.get(kOld); if (f) return f; }
+    if (s2 && s2.exact) {
       try {
         // the card's side view laid down: a quarter turn, head to the right
-        const s2 = CARD21.partnerFrame(2, 0, 0, 0, look), d = new Uint32Array(s2.w * s2.h);
+        const d = new Uint32Array(s2.w * s2.h);
         for (let y = 0; y < s2.h; y++) for (let x = 0; x < s2.w; x++) d[x * s2.h + (s2.h - 1 - y)] = s2.data[y * s2.w + x];
         f = { w: s2.h, h: s2.w, data: d, top: 0, bot: 0, left: 0, right: 0 };
         let top = f.h, bot = -1; for (let y = 0; y < f.h; y++) for (let x = 0; x < f.w; x++) if (d[y * f.w + x]) { if (y < top) top = y; bot = y; }
@@ -829,7 +842,7 @@ const PARTNER19 = (function () {
     const m = look.wpn ? weaponMask(t, GHOST18.paintFigure(2, 0, 0, 0, Object.assign({}, look, { wpn: 0 }))) : null;
     f = colourFrame(rot(t), m ? rot(m) : null, look, FH, FW);
     const hs = FW / FH;
-    return remember(k, register(f, hs, (f.h - 1 - f.bot) / f.h * hs));
+    return remember(kOld, register(f, hs, (f.h - 1 - f.bot) / f.h * hs));
   }
   // a figure to draw: a plain object the engine's sprite pass reads (never in G.ents, never picked)
   const FIG = { partner: { kind: 'npc', p19fig: 'guest', nopick: true, transient: true, scale: 1, x: 0, y: 0 }, host: { kind: 'npc', p19fig: 'host', nopick: true, transient: true, scale: 1, x: 0, y: 0 } };
