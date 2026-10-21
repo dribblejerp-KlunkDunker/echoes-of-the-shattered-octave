@@ -79,7 +79,7 @@ const SPRITES21 = (() => {
   const EMIT_A = 200;                           // alpha that marks an emissive texel
   const st = {
     frames: 0, sprites: 0, culled: 0, uploads: 0, uploadPx: 0, evictions: 0, pages: 0, calls: 0, decals: 0, particles: 0,
-    figures: 0, ms: { frame: 0, opaque: 0, decals: 0, translucent: 0 }, missed: 0, warned: {},
+    figures: 0, ms: { frame: 0, chooser: 0, own: 0, opaque: 0, decals: 0, translucent: 0, parts: {} }, missed: 0, warned: {},
   };
   const warnOnce = (k, e) => { if (st.warned[k]) return; st.warned[k] = true; console.warn('sprites21 ' + k, e); };
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
@@ -468,7 +468,7 @@ void main() {
   const ptDist = []; let ptOrder = new Uint32Array(256);
   let V = null;                                   // the view of this frame
   let fogDist = 12, rightX = 0, rightY = 1, fwdX = 1, fwdY = 0;
-  let mapNow = null, animT = 0, wxNow = null;
+  let mapNow = null, animT = 0, wxNow = null, chooseMs = 0;
   function growBB() { const n = new Float32Array(BB.length * 2); n.set(BB); BB = n; BBS = new Float32Array(BB.length); order = new Uint32Array(BB.length / BB_FLOATS); }
   function growPT(add) { if (add) { const n = new Float32Array(PTadd.length * 2); n.set(PTadd); PTadd = n; } else { const n = new Float32Array(PT.length * 2); n.set(PT); PT = n; ptOrder = new Uint32Array(PT.length / PT_FLOATS); } }
   function growDC() { const n = new Float32Array(DC.length * 2); n.set(DC); DC = n; }
@@ -559,7 +559,10 @@ void main() {
       const dx = e.x - ex, dy = e.y - ey, d2 = dx * dx + dy * dy;
       if (d2 > lim2) { st.culled++; continue; }
       let r;
-      try { r = chooser ? chooser(e) : { sprite: (e.animSprite && sprites[e.animSprite]) || sprites[e.sprite], flip: !!e.animFlip }; } catch (err) { warnOnce('chooser', err); continue; }
+      // the game's own sprite chooser (directional views, flinch and flame frames are made there, on demand): the raycaster
+      // calls it exactly once per drawn sprite too, so its cost is not this module's; it is timed apart
+      const c0 = now();
+      try { r = chooser ? chooser(e) : { sprite: (e.animSprite && sprites[e.animSprite]) || sprites[e.sprite], flip: !!e.animFlip }; } catch (err) { warnOnce('chooser', err); continue; } finally { chooseMs += now() - c0; }
       const sp = r && r.sprite; if (!sp) continue;
       const alpha = e.animAlpha == null ? 1 : e.animAlpha;
       if (alpha <= 0.02) continue;
@@ -977,11 +980,82 @@ void main() {
     }
   }
 
+  // ---------------------------------------------------------------- the quarry cave-in (js/gates.js): dust and stones
+  function collectCave() {
+    if (typeof GATES === 'undefined' || !GATES.cave || !mapNow) return;
+    const cave = GATES.cave, puffs = typeof GATES.puffs === 'function' ? GATES.puffs() : [];
+    if (cave.phase === 'idle' && !puffs.length) return;
+    const sc = Math.max(0, GFX.particles === undefined ? 1 : GFX.particles); if (sc <= 0) return;
+    const calm = !!GFX.reduceMotion, hash = GATES.hash, light = V.outdoor ? (V.light == null ? 1 : V.light) : 1;
+    const tone = (x, y, base) => { const f = Math.max(0.35, lightF(Math.hypot(x - V.eye[0], y - V.eye[1]))) * light; return [base[0] * f / 255, base[1] * f / 255, base[2] * f / 255]; };
+    const DUST = [172, 162, 146], ROCK = [96, 90, 84], G_ACC = 10.2, WARN = GATES.WARN || 2.4, SETTLE = GATES.SETTLE || 1.8, RUBBLE_H = GATES.RUBBLE_H || 0.45;
+    const dust = (x, y, z, rad, a) => { if (a <= 0.01) return; const c = tone(x, y, DUST); pushParticle(false, x, y, z, 0, rad, rad, 0, (x * 7 + y * 13) % 61, c[0], c[1], c[2], Math.min(1, a * 0.6), 0, false); };
+    const speck = (x, y, z, size) => { const c = tone(x, y, ROCK); pushParticle(false, x, y, z, 0, size, size, 1, 0, c[0], c[1], c[2], 1, 0, false); };
+    if (cave.phase !== 'idle' && cave.map === mapNow && cave.pl) {
+      const cells = cave.pl.cells, ceil = cave.pl.ceil, t = cave.t;
+      if (cave.phase === 'warn') {
+        const ramp = Math.min(1, t / 0.8);
+        for (let k = 0; k < cells.length; k++) {
+          const cx = cells[k][0], cy = cells[k][1], gr = cells[k][2];
+          if (calm) { dust(cx + 0.5, cy + 0.5, gr + 0.6, 0.9, 0.5 * ramp); continue; }
+          const N = Math.round(6 * sc * ramp);
+          for (let j = 0; j < N; j++) { const id = k * 64 + j, per = 0.8 + hash(id * 3 + 1) * 0.8, u = ((t / per) + hash(id * 3 + 2)) % 1; speck(cx + hash(id * 3 + 3), cy + hash(id * 3 + 4), ceil - u * (ceil - gr), 0.006); }
+          const M = Math.round(2 * sc);
+          for (let j = 0; j < M; j++) {
+            const id = k * 64 + 40 + j, t0 = 0.25 + hash(id * 5 + 1) * (WARN - 1.0), tau = t - t0; if (tau < 0) continue;
+            const px = cx + 0.15 + hash(id * 5 + 2) * 0.7, py = cy + 0.15 + hash(id * 5 + 3) * 0.7, top = gr + RUBBLE_H * 0.4, z = ceil - 0.5 * G_ACC * tau * tau, land = Math.sqrt(2 * (ceil - top) / G_ACC);
+            if (z > top) speck(px, py, z, 0.014);
+            else dust(px, py, top + 0.1, 0.12 + Math.min(0.4, (tau - land) * 0.6), Math.max(0, 0.7 - (tau - land) * 0.9));
+          }
+        }
+      } else {
+        const p = Math.min(1, t / SETTLE);
+        for (let k = 0; k < cells.length; k++) dust(cells[k][0] + 0.5, cells[k][1] + 0.5, cells[k][2] + 0.5 + p * 0.4, 0.55 + p * 0.55, (1 - p) * (calm ? 0.55 : 0.85));
+      }
+    }
+    for (let i = 0; i < puffs.length; i++) { const p = puffs[i]; if (p.map !== mapNow) continue; const u = p.t / p.life; dust(p.x, p.y, p.z + u * 0.3, p.r * (0.5 + u * 0.8), (1 - u) * (calm ? 0.5 : 0.8)); }
+  }
+
+  // ---------------------------------------------------------------- Kaelen's blade on the whetstone (js/companions.js)
+  function collectWhet(ents) {
+    if (!GFX.companionLife || GFX.noFlash || GFX.reduceMotion) return;
+    const pk = GFX.particles == null ? 1 : GFX.particles; if (pk <= 0.05) return;
+    const ax = camAxes(V);
+    for (let i = 0; i < ents.length; i++) {
+      const e = ents[i]; if (!e || e.hidden || e.dead || e.sprite !== 'kaelen' || !e._cSharp) continue;
+      const sp = Engine.sprites[e.animSprite || e.sprite]; if (!sp) continue;
+      const k = clamp(e._cSharpK == null ? 0 : e._cSharpK, 0, 1), sc = e.scale || 1, wH = sc * (sp.hs || 1), wW = wH * sp.w / sp.h * (V.spriteAspect || 1);
+      const d = Math.max(0.3, (e.x - V.eye[0]) * fwdX + (e.y - V.eye[1]) * fwdY), px = d / VHL;     // world units per logical pixel there
+      const bx = e.x + rightX * 0.24 * wW, by = e.y + rightY * 0.24 * wW, bz = groundAt(e.x, e.y) + 0.48 * wH;
+      const n = Math.max(1, Math.round(3 * pk));
+      for (let j = 0; j < n; j++) {
+        const ang = -0.6 - j * 0.7 + (e._cStroke || 0) * 0.5, r = (1 + k * 3.2) * (0.6 + 0.3 * j);
+        const sx = Math.cos(ang) * r * px, sy = (Math.sin(ang) * r + k * k * 2) * px;
+        pushParticle(true, bx + ax.r[0] * sx - ax.u[0] * sy, by + ax.r[1] * sx - ax.u[1] * sy, bz - ax.u[2] * sy, 0.2, 0.5 * px, 0.5 * px, 1, 0, 1, 214 / 255, 130 / 255, 0.9 * (1 - k * 0.6), 0, false);
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------- the co-op name tags (js/partner19.js)
+  // partner19 places its name tags from what its post hook measured in the CPU depth buffer; under R3D that hook does not
+  // run, so the figures' screen rects stand in (the head is the top of the rect)
+  function measureCoop() {
+    if (typeof PARTNER19 === 'undefined' || !PARTNER19.FIG || !PARTNER19.S || !PARTNER19.S.stats) return;
+    const FIG = PARTNER19.FIG, S = PARTNER19.S;
+    for (const o of [FIG.partner, FIG.host]) {
+      if (!o) continue;
+      const s = o.drawing && o._screen;
+      const scr = s ? { x: (s.x0 + s.x1) / 2 / VWL, y: s.y0, w: (s.x1 - s.x0) / VWL, dist: s.dist } : null;
+      const n = s ? Math.round((s.x1 - s.x0) * (s.y1 - s.y0) * 0.45) : 0;
+      if (o === FIG.partner) { S.stats.drawn = n; S.screen = scr; } else { FIG.host.drawn = n; FIG.host.screen = scr; }
+    }
+  }
+
   // ================================================================ the frame
   function frame(ents, view) {
     const t0 = now();
     V = view; frameNo++; st.frames++;
-    nBB = 0; nPT = 0; nPTadd = 0; nDC = 0; nDCmul = 0; figures.length = 0;
+    nBB = 0; nPT = 0; nPTadd = 0; nDC = 0; nDCmul = 0; figures.length = 0; chooseMs = 0;
     st.sprites = st.culled = st.decals = st.figures = 0;
     mapNow = view.map || (typeof G !== 'undefined' ? G.map : null);
     // the engine's animation clock (R3D hands its frame in view.F.time; the parity view passes animT)
@@ -991,17 +1065,30 @@ void main() {
     const dir = isNum(view.dir) ? view.dir : Engine.cam.dir;
     fwdX = Math.cos(dir); fwdY = Math.sin(dir); rightX = -fwdY; rightY = fwdX;
     if (!gl || !ents) { st.ms.frame = now() - t0; return; }
+    // each step is timed (st.ms.parts): the bookkeeping steps run what the modules' own post hooks would have run
+    const P_ = st.ms.parts; let tp = now();
+    const lap = (k) => { const t = now(); P_[k] = t - tp; tp = t; };
     try { collectEntities(ents); } catch (e) { warnOnce('entities', e); }
+    lap('entities');
     try { collectGhost(); } catch (e) { warnOnce('ghost', e); }
     let water = [];
-    try { collectGround(ents); water = collectPrints() || []; } catch (e) { warnOnce('ground', e); }
+    try { collectGround(ents); } catch (e) { warnOnce('ground', e); }
+    lap('ground');
+    try { water = collectPrints() || []; } catch (e) { warnOnce('prints', e); }
     nDCmul = nDC;
     try { collectWaterPrints(water); } catch (e) { warnOnce('water prints', e); }
-    try { if (!view.cpuHooks) stepSmoke(); collectSmoke(); } catch (e) { warnOnce('smoke', e); }
+    lap('prints');
+    try { if (!view.cpuHooks) stepSmoke(); } catch (e) { warnOnce('smoke', e); }
+    lap('smokeSim');
+    try { collectSmoke(); } catch (e) { warnOnce('smoke', e); }
     try { collectTelegraphs(ents); collectGlimmer(ents); } catch (e) { warnOnce('telegraphs', e); }
     try { collectBreath(ents); collectRings(ents); } catch (e) { warnOnce('breath', e); }
     try { collectLanterns(); collectSparks(); } catch (e) { warnOnce('motion10', e); }
     try { collectRope(); } catch (e) { warnOnce('rope', e); }
+    try { collectCave(); } catch (e) { warnOnce('cave', e); }
+    try { collectWhet(ents); } catch (e) { warnOnce('whet', e); }
+    if (!view.cpuHooks) { try { measureCoop(); } catch (e) { warnOnce('coop', e); } }
+    lap('effects');
     st.particles = nPT + nPTadd;
     // billboards grouped by atlas page: one draw call per page
     runs.length = 0;
@@ -1024,7 +1111,8 @@ void main() {
       if (!PTA || PTA.length < PT.length) PTA = new Float32Array(PT.length);
       for (let k = 0; k < nPT; k++) PTA.set(PT.subarray(ord[k] * PT_FLOATS, ord[k] * PT_FLOATS + PT_FLOATS), k * PT_FLOATS);
     } else { if (!PTA || PTA.length < PT.length) PTA = new Float32Array(PT.length); if (nPT) PTA.set(PT.subarray(0, PT_FLOATS)); }
-    st.ms.frame = now() - t0;
+    lap('sort');
+    st.ms.frame = now() - t0; st.ms.chooser = chooseMs; st.ms.own = st.ms.frame - chooseMs;
   }
 
   // ================================================================ drawing
