@@ -768,7 +768,9 @@ const BODY21 = (() => {
   }
   const VWv = () => (typeof VW === 'number' ? VW : 320), VHv = () => (typeof VIEW_H === 'number' ? VIEW_H : 150);
   const fph = () => (typeof FPHANDS === 'object' && FPHANDS && FPHANDS.st) ? FPHANDS.st : null;
-  const bobNow = (ph) => (Engine.cam.bob || 0) + (G.attack && G.attack.t > 0 ? 0 : Math.sin(performance.now() / 900 + (ph || 0)) * 1.4);
+  // the off arm's idle sway, in half-pixel steps (a picture that moves by a hundredth of a pixel between two frames would
+  // flip a scatter of nearest-sampled pixels; in steps it moves all at once)
+  const bobNow = (ph) => Math.round(((Engine.cam.bob || 0) + (G.attack && G.attack.t > 0 ? 0 : Math.sin(performance.now() / 900 + (ph || 0)) * 1.4)) * 2) / 2;
   // the widest look in rows the renderer allows (R3D.camera.limit() is an angle; the Original preset keeps 40 rows)
   function pitchMax() { try { if (typeof R3D === 'object' && R3D && R3D.camera) { const v = R3D.FX * Math.tan(R3D.camera.limit()); if (v > 0) return v; } } catch (e) { /* default */ } return 40; }
   function hiddenBody() {
@@ -929,7 +931,9 @@ const BODY21 = (() => {
     // the arm comes up into view: every weapon picture (and its trail, its off hand, its holster drop) is drawn LIFT
     // pixels higher, by lending the draw a lower head-bob for its duration (they all add cam.bob x 1.5)
     const bob0 = Engine.cam.bob;
-    if (look) Engine.cam.bob = (bob0 || 0) - LIFT / 1.5;
+    // not for the bare hands and Songs: the casting pose has its own rise and its glow its own place
+    const handsUp = !!(G.song && G.song.t > 0) || G.songFx > 0 || (() => { try { return currentWeapon().img === 'fp_hands'; } catch (e) { return false; } })();
+    if (look && !handsUp) Engine.cam.bob = (bob0 || 0) - LIFT / 1.5;
     let r;
     try { r = _drawHUD.apply(this, arguments); } finally {
       Engine.cam.bob = bob0;
