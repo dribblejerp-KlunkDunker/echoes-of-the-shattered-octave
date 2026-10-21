@@ -204,7 +204,7 @@ const LIGHT21 = (() => {
     const hf = (flag('mist') || flag('softFog') ? 0.16 : 0) + (flag('cineFog') ? 0.22 : 0) + (WX() === 'mist' ? 0.35 : 0) + haze * 0.6;
     P.fog = [1, F.outdoor ? hf : hf * 0.4, 0.22 * ZK, P.maxH];
     P.shadowOn = !!(F.outdoor && flag('p21_shadows') && hgt.ok && (P.sunC[0] + P.sunC[1] + P.sunC[2]) > 0.01);
-    P.pt = [1.9, 0.62 * ZK, 1, flag('reflections') ? 1 : 0];
+    P.pt = [1.9 + 0.6 * night, 0.62 * ZK, 1, flag('reflections') ? 1 : 0];   // lamps carry the night
     P.t = [F.now || 0, F.time || 0, 0, 1];
     // clouds: cover from the weather; wind from Weather.wind
     const wind = typeof Weather !== 'undefined' ? (Weather.wind || 0.2) : 0.2;
@@ -359,6 +359,25 @@ float l21Shadow(vec3 p, vec3 L) {
   }
   return clamp(sh, 0.0, 1.0);
 }
+// ambient occlusion from the map's heights: the ground darkens where it meets a wall, a wall darkens toward its foot;
+// read on the texel grid like the rest of the light, so corners get a stepped pixel-art shade
+float l21AO(vec3 p, vec3 n) {
+  if (uL21Sun.w < -0.5) return 1.0;
+  ivec2 c = ivec2(floor(p.xy)); vec2 f = p.xy - floor(p.xy);
+  if (c.x < 0 || c.y < 0 || float(c.x) >= uMap.x || float(c.y) >= uMap.y) return 1.0;
+  float ao = 0.0;
+  if (n.z > 0.5) {
+    float z = p.z + 0.12;
+    if (c.x > 0 && texelFetch(uL21H, c + ivec2(-1, 0), 0).r > z) ao += pow(max(0.0, 1.0 - f.x / 0.45), 2.0);
+    if (float(c.x) < uMap.x - 1.0 && texelFetch(uL21H, c + ivec2(1, 0), 0).r > z) ao += pow(max(0.0, 1.0 - (1.0 - f.x) / 0.45), 2.0);
+    if (c.y > 0 && texelFetch(uL21H, c + ivec2(0, -1), 0).r > z) ao += pow(max(0.0, 1.0 - f.y / 0.45), 2.0);
+    if (float(c.y) < uMap.y - 1.0 && texelFetch(uL21H, c + ivec2(0, 1), 0).r > z) ao += pow(max(0.0, 1.0 - (1.0 - f.y) / 0.45), 2.0);
+  } else if (n.z < 0.3) {
+    ivec2 o = ivec2(floor(p.xy + n.xy * 0.5));
+    if (o.x >= 0 && o.y >= 0 && float(o.x) < uMap.x && float(o.y) < uMap.y) { float g = texelFetch(uL21H, o, 0).r; ao = 1.0 - smoothstep(0.0, 0.32, p.z - g); }
+  }
+  return 1.0 - 0.42 * clamp(ao, 0.0, 1.0);
+}
 // the game's point lights per pixel: each at a lamp's height, its reach and colour as the engine has them, N.L
 vec3 l21Points(vec3 p, vec3 n, float wrap) {
   int cnt = int(uView2.w); if (cnt <= 0) return vec3(0.0);
@@ -407,7 +426,7 @@ vec3 r3dShade(R3DSurf s) {
   vec3 c;
   float fogK;
   if (outdoor) {
-    vec3 amb = mix(uL21AmbG, uL21AmbS, n.z * 0.5 + 0.5);
+    vec3 amb = mix(uL21AmbG, uL21AmbS, n.z * 0.5 + 0.5) * (s.kind == 0 ? l21AO(lp, n) : 1.0);
     float ndl = dot(n, uL21Sun.xyz);
     if (s.kind != 0) ndl = 0.35 + 0.65 * max(ndl, dot(normalize(vec3(-uFwdH.xy, 0.4)), uL21Sun.xyz));
     vec3 direct = vec3(0.0);
@@ -428,7 +447,7 @@ vec3 r3dShade(R3DSurf s) {
   } else {
     // indoors: the raycaster's distance-to-dark (readability), the lamps on top
     float f = s.kind == 1 ? s.fi : clamp(1.0 - dist * uFog.w, 0.0, 1.0);
-    if (s.kind != 1) { f = uLit.y + (1.0 - uLit.y) * f; f *= s.side; f *= uLit.z; }
+    if (s.kind != 1) { f = uLit.y + (1.0 - uLit.y) * f; f *= s.side; f *= uLit.z; f *= l21AO(lp, n); }
     vec3 pts = l21Points(lp + n * 0.02, n, s.kind == 0 ? 0.2 : 0.6) * uL21P.x;
     if (spr) pts = max(pts, s.ladd);
     c = s.albedo * (f * 0.86 + pts * 1.15) + pts * 0.06;
@@ -671,7 +690,7 @@ void main() {
     vec2 lp2 = p * 0.42 + wnd;
     float lo = fbm(lp2), lo2 = fbm(lp2 + sd.xy * 0.18);
     float ld = smoothstep(1.0 - cov * 0.82, 1.15 - cov * 0.6, lo + 0.25 * cov);
-    float lit2 = clamp(0.6 + (lo - lo2) * 4.0, 0.0, 1.0);
+    float lit2 = floor(clamp(0.6 + (lo - lo2) * 4.0, 0.0, 1.0) * 3.0 + 0.5) / 3.0;   // lit and shaded faces in bands
     float horizonFade = smoothstep(0.0, 0.12, dir.z);
     float dsun = max(0.0, dot(dir, sd));
     vec3 shadeC = mix(uL21Hor, uL21Zen, 0.45) * mix(0.72, 0.5, uL21Cl.z);
@@ -679,7 +698,7 @@ void main() {
     vec3 cc = mix(shadeC, litC, lit2) + uL21Glow * pow(dsun, 8.0) * 0.6 * (1.0 - ld);   // silver lining toward the sun
     cc += vec3(0.85, 0.88, 1.0) * uL21Sky2.z * 0.9;                                       // lightning inside the cloud
     float al = clamp(ld + hd * (1.0 - ld), 0.0, 1.0) * horizonFade;
-    al = al < 0.12 ? 0.0 : floor(al * 5.0 + bay(pix)) / 5.0;                              // pixel-art steps, dithered; no lone specks
+    al = al < 0.14 ? 0.0 : floor(al * 4.0 + 0.5) / 4.0;                                   // pixel-art bands, no dither
     c = mix(c, cc, al);
     occl = 1.0 - al;
     glowFlag *= occl;

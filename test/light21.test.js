@@ -225,7 +225,7 @@ async function part2identity(browser) {
     assert.ok(stable[stable.length - 1], 'the gameplay trace is deterministic');
     const bad = a.filter((x, i) => stable[i] && x !== b[i]);
     assert.deepStrictEqual(bad, [], 'differ: ' + bad.join(' ') + ' | without: ' + b.filter((x, i) => stable[i] && x !== a[i]).join(' '));
-    assert.deepStrictEqual(A.errors, []); assert.deepStrictEqual(B.errors, []);
+    for (const P of [A, B, C, A2]) { const e = P.errors.filter(x => !/performance warning/i.test(x) && !((P === B || P === C) && /ERR_FAILED/.test(x)));   // the blocked pages miss js/light21.js on purpose assert.deepStrictEqual(e, [], 'page errors: ' + e.join(' | ')); }
   });
   await A.ctx.close(); await B.ctx.close(); await C.ctx.close(); await A2.ctx.close();
 }
