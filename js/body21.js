@@ -933,7 +933,14 @@ const BODY21 = (() => {
     const bob0 = Engine.cam.bob;
     // not for the bare hands and Songs: the casting pose has its own rise and its glow its own place
     const handsUp = !!(G.song && G.song.t > 0) || G.songFx > 0 || (() => { try { return currentWeapon().img === 'fp_hands'; } catch (e) { return false; } })();
-    if (look && !handsUp) Engine.cam.bob = (bob0 || 0) - LIFT / 1.5;
+    if (look) {
+      // the lift, and the weapon's idle sway put on a half-pixel grid (drawHUD draws at cam.bob + sway, times 1.5): a
+      // picture sliding by hundredths of a pixel flips a scatter of nearest-sampled pixels every frame; on the grid it
+      // steps as a whole, and two frames of the same moment are the same picture
+      const sway = G.attack && G.attack.t > 0 ? 0 : Math.sin(performance.now() / 900) * 1.4;
+      const want = ((bob0 || 0) - (handsUp ? 0 : LIFT / 1.5) + sway) * 1.5;
+      Engine.cam.bob = Math.round(want * 2) / 2 / 1.5 - sway;
+    }
     let r;
     try { r = _drawHUD.apply(this, arguments); } finally {
       Engine.cam.bob = bob0;
@@ -1034,7 +1041,7 @@ void main() {
       // legs: a quad in the world, toes on the ground ahead, hips under the eye
       if (rec.legs && set.feet) {
         const c = Engine.cam, fx = Math.cos(c.dir), fy = Math.sin(c.dir), rx = -fy, ry = fx, gz = (c.z || 0.5) - 0.5;
-        const W2 = 0.19, toe = 0.36, hip = -0.14, toG = (x, y, z) => R.toGL ? R.toGL(x, y, z) : [x, y, z * R.ZK];
+        const W2 = 0.15, toe = 0.4, hip = -0.06, toG = (x, y, z) => R.toGL ? R.toGL(x, y, z) : [x, y, z * R.ZK];
         const P = (fwd, side, z) => toG(c.x + fx * fwd + rx * side, c.y + fy * fwd + ry * side, z);
         g.enable(g.DEPTH_TEST); g.depthFunc(g.LEQUAL);
         // contact shadows under the feet (blended, no depth write)
@@ -1042,7 +1049,7 @@ void main() {
         const sh = footShadow();
         for (const f of rec.legs.feet) { const fw = toe - (f.y / 300) * (toe - hip), sd = (f.x - 150) / 300 * 2 * W2; quad(g, [P(fw + 0.06, sd - 0.05, gz + 0.004), P(fw + 0.06, sd + 0.05, gz + 0.004), P(fw - 0.04, sd + 0.05, gz + 0.004), P(fw - 0.04, sd - 0.05, gz + 0.004)], 2, sh); }
         g.disable(g.BLEND); g.depthMask(true);
-        quad(g, [P(toe, -W2, gz + 0.02), P(toe, W2, gz + 0.02), P(hip, W2, gz + 0.27), P(hip, -W2, gz + 0.27)], 1, rec.legs.canvas);
+        quad(g, [P(toe, -W2, gz + 0.02), P(toe, W2, gz + 0.02), P(hip, W2, gz + 0.24), P(hip, -W2, gz + 0.24)], 1, rec.legs.canvas);
         R3B.legs++;
       }
       // first-person pictures: screen quads in front of everything, no depth write

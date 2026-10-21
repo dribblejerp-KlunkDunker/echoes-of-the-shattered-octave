@@ -240,8 +240,11 @@ const HELPERS = () => {
         __stage('clearing', 12.5, 11.5, -Math.PI / 2); G.tod = 0.5; PRESETS.apply('medium');
         __gear({ w: 'sword', armor: { body: 'a_plate', hands: 'a_gauntlets', shield: 'a_kite', feet: 'a_greaves', head: 'a_kettle' } });
         Engine.cam.pitch = -36; for (let i = 0; i < 10; i++) drawHUD();
-        const t = (fn) => { const t0 = performance.now(); for (let i = 0; i < 120; i++) fn(); return (performance.now() - t0) / 120; };
-        const on = t(() => drawHUD()); BODY21.setSwitch('on', false); const off = t(() => drawHUD()); BODY21.setSwitch('on', true);
+        // a shared, loaded build machine: alternate the two, several rounds, and keep each one's best round
+        const t = (fn) => { const t0 = performance.now(); for (let i = 0; i < 40; i++) fn(); return (performance.now() - t0) / 40; };
+        let on = 1e9, off = 1e9;
+        for (let k = 0; k < 6; k++) { BODY21.setSwitch('on', true); on = Math.min(on, t(() => drawHUD())); BODY21.setSwitch('on', false); off = Math.min(off, t(() => drawHUD())); }
+        BODY21.setSwitch('on', true);
         Engine.cam.pitch = 0;
         return { on, off, extra: on - off };
       });
@@ -270,10 +273,10 @@ const HELPERS = () => {
         // fp-feel's deafness and Hush under R3D: pass 'feel' (order 89) drains the colour like the CPU hook
         R3D.camera.setAngle(0);
         const sat = () => { const px = R3D.readPixels(); let s = 0, n = 0; for (let i = 0; i < px.data.length; i += 4 * 97) { const r = px.data[i], g = px.data[i + 1], b = px.data[i + 2]; s += Math.max(r, g, b) - Math.min(r, g, b); n++; } return s / n; };
-        const fs = FEEL.state, d0 = fs.deaf, h0 = fs.hush, deafT0 = fs.deafT;
+        const fs = FEEL.state, deaf0 = fs.deaf, hush0 = fs.hush;
         render(); out.satBefore = sat();
         const f0 = BODY21.FX3.drawn; fs.hush = 0.9; fs.deaf = 0.8; const tk = FEEL.tick; FEEL.tick = () => {};
-        try { render(); out.satAfter = sat(); } finally { FEEL.tick = tk; fs.hush = h0; fs.deaf = d0; }
+        try { render(); out.satAfter = sat(); } finally { FEEL.tick = tk; fs.hush = hush0; fs.deaf = deaf0; }
         out.feel = BODY21.FX3.drawn - f0; out.feelOrder = (R3D.passes().find((p) => p.name === 'feel') || {}).order;
         R3D.setMode('off'); R3D.camera.setAngle(0); for (let i = 0; i < 2; i++) render();
         out.offRec = BODY21.r3dOn(); const a0 = BODY21.stats.drawn.shield; render(); out.offShield = BODY21.stats.drawn.shield - a0;
