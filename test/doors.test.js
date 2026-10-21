@@ -354,8 +354,11 @@ const HELPERS = () => {
     // ---------------------------------------------------------------- 6. levers
     const lever = await page.evaluate(() => {
       const ok = (c, t) => { if (!c) throw new Error(t); }, r = {};
+      // Phase 20 draws the Chapel's bell-frame (horizon20 'belfryArt', on in every preset); the lever under it is what this tests
+      const bf = GFX.belfryArt; if (typeof HORIZON20 !== 'undefined') { GFX.belfryArt = false; GFX.changed(); }
       let pl = null; for (const k in G.maps) { const f = G.maps[k].entities.find(x => x.sprite === 'lever' && x.use === 'plinth'); if (f) { pl = [k, f]; break; } }
       ok(pl, 'the bell-frame lever exists'); loadMap(pl[0], { x: pl[1].x, y: pl[1].y + 1.2, dir: 0 }); T.freeze();
+      if (typeof HORIZON20 !== 'undefined') { GFX.belfryArt = false; GFX.changed(); }   // a visit re-applies the preset
       const lv = G.ents.find(x => x.sprite === 'lever' && x.use === 'plinth');
       Object.assign(Engine.cam, { x: lv.x, y: lv.y + 1.2, dir: -Math.PI / 2 });
       const fr = Doors.leverFrames('lever'); ok(fr && fr.length === Doors.FRAMES, 'lever frames built');
@@ -377,6 +380,7 @@ const HELPERS = () => {
       const lv2 = G.ents.find(x => x.sprite === 'lever' && !x.use);
       Object.assign(Engine.cam, { x: lv2.x - 1.0, y: lv2.y, dir: 0 }); Engine.render(G.ents, G.tod); interact(); Doors.advance(0.2); Engine.render(G.ents, G.tod);
       r.chained = lv2.animSprite; ok(/^lever~pull[1-7]$/.test(lv2.animSprite), 'a chained lever pulls too (' + lv2.animSprite + ')');
+      if (typeof HORIZON20 !== 'undefined') { GFX.belfryArt = bf; GFX.changed(); }
       return r;
     });
     console.log('PASS levers pull: ' + lever.names.filter((n, i, a) => i === 0 || n !== a[i - 1]).join(' '));
