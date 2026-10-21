@@ -346,12 +346,18 @@ const CARD21 = (() => {
   // Paints can run in slices (js/card21.js's scheduler): while X.q is set, each primitive queues small pieces of work
   // (a sphere, a few rows of a section or slab) instead of drawing, each remembering its part id.
   function sphere(X, c, rad, m, tu0, tv0, axisV) {
-    if (X.q) { const pid = X.pid; X.q.push(() => { X.pid = pid; sphereNow(X, c, rad, m, tu0, tv0, axisV); }); return; }
-    sphereNow(X, c, rad, m, tu0, tv0, axisV);
+    if (X.q) {
+      const pid = X.pid, R = rad * X.K;
+      if (R <= 5) { X.q.push(() => { X.pid = pid; sphereNow(X, c, rad, m, tu0, tv0, axisV, -1e9, 1e9); }); return; }
+      const sy = proj(X, c)[1];
+      for (let ya = Math.floor(sy - R); ya <= sy + R; ya += 5) { const yb = ya + 4; X.q.push(() => { X.pid = pid; sphereNow(X, c, rad, m, tu0, tv0, axisV, ya, yb); }); }
+      return;
+    }
+    sphereNow(X, c, rad, m, tu0, tv0, axisV, -1e9, 1e9);
   }
-  function sphereNow(X, c, rad, m, tu0, tv0, axisV) {
+  function sphereNow(X, c, rad, m, tu0, tv0, axisV, ya, yb) {
     const [sx, sy, sd] = proj(X, c), R = rad * X.K; if (R < 0.35) return;
-    const x0 = Math.max(0, Math.floor(sx - R)), x1 = Math.min(X.W - 1, Math.ceil(sx + R)), y0 = Math.max(0, Math.floor(sy - R)), y1 = Math.min(X.H - 1, Math.ceil(sy + R));
+    const x0 = Math.max(0, Math.floor(sx - R)), x1 = Math.min(X.W - 1, Math.ceil(sx + R)), y0 = Math.max(0, ya, Math.floor(sy - R)), y1 = Math.min(X.H - 1, yb, Math.ceil(sy + R));
     const D = sd * X.K;
     for (let y = y0; y <= y1; y++) {
       const dy = (y + 0.5 - sy) / R;
@@ -382,7 +388,7 @@ const CARD21 = (() => {
   function section(X, z0, z1, cfn, afn, bfn, m, opt) {
     if (!X.q) { sectionNow(X, z0, z1, cfn, afn, bfn, m, opt, 0, Infinity); return; }
     const pid = X.pid, n = Math.ceil((z1 - z0) / (0.5 / X.K)) + 1;
-    for (let k = 0; k < n; k += 24) { const k0 = k, k1 = k + 23; X.q.push(() => { X.pid = pid; sectionNow(X, z0, z1, cfn, afn, bfn, m, opt, k0, k1); }); }
+    for (let k = 0; k < n; k += 4) { const k0 = k, k1 = k + 3; X.q.push(() => { X.pid = pid; sectionNow(X, z0, z1, cfn, afn, bfn, m, opt, k0, k1); }); }
   }
   function sectionNow(X, z0, z1, cfn, afn, bfn, m, opt, k0, k1) {
     opt = opt || {};
@@ -431,7 +437,7 @@ const CARD21 = (() => {
   function slab(X, Cc, U, V, Wn, T, ext, mask, m, bulge) {
     if (!X.q) { slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, 0, X.H - 1); return; }
     const pid = X.pid;
-    for (let ya = 0; ya < X.H; ya += 16) { const yb = ya + 15; X.q.push(() => { X.pid = pid; slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, ya, yb); }); }
+    for (let ya = 0; ya < X.H; ya += 4) { const yb = ya + 3; X.q.push(() => { X.pid = pid; slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, ya, yb); }); }
   }
   function slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, ya, yb) {
     const pts = [];
@@ -1227,9 +1233,9 @@ const CARD21 = (() => {
     job.step = (deadline) => {
       while (!job.done) {
         if (job.stage === 3 && job.y === 0 && !res) { inkApply(); res = new Uint32Array(out); }
-        rows[job.stage](job.y);
+        const ti = trace ? now() : 0; rows[job.stage](job.y); if (trace && now() - ti > 6) trace.push(['row', job.stage, job.y, +(now() - ti).toFixed(1)]);
         if (++job.y >= H) { job.y = 0; job.stage++; if (job.stage > 3) { job.done = true; job.result = res; break; } }
-        if ((job.y & 3) === 0 && now() > deadline) return false;
+        if (now() > deadline) return false;
       }
       return true;
     };
@@ -1269,7 +1275,7 @@ const CARD21 = (() => {
     const job = { n, L, done: false, frame: null, ms: 0 };
     job.step = (deadline) => {
       const t0 = now();
-      while (qi < q.length) { q[qi++](); if ((qi & 3) === 0 && now() > deadline) { job.ms += now() - t0; return false; } }
+      while (qi < q.length) { const ti = now(); q[qi++](); const te = now(); if (trace && te - ti > 6) trace.push(['item', qi - 1, +(te - ti).toFixed(1)]); if (te > deadline) { job.ms += te - t0; return false; } }
       if (!sh) sh = shadeJob(X, L);
       if (!sh.step(deadline)) { job.ms += now() - t0; return false; }
       const data = sh.result;
@@ -1297,12 +1303,13 @@ const CARD21 = (() => {
   }
   // ---- the scheduler: paints in slices of at most SLICE ms, highest priority first, between the browser's frames
   const SLICE = 8;
+  let trace = null;   // tests and measurements: CARD21.traceOn() records any piece of work over 6 ms
   const jobs = new Map();             // key -> job (waiting or running)
   const waiting = [];                 // [{ key, pri, seq, cb: [] }]
   let seq = 0, timer = 0, idleWaiters = [];
   function request(L, o, pri, cb) {
     const n = norm0(L, o), hit = cacheOf(n.size).get(n.key);
-    if (hit) { if (cb) cb(hit); return null; }
+    if (hit) return null;   // already painted: the caller reads it with peek() (no callback, so no re-entry)
     let w = waiting.find((x) => x.key === n.key);
     if (!w) { w = { key: n.key, size: n.size, pri: pri || 0, seq: ++seq, cb: [] }; waiting.push(w); jobs.set(n.key, { lazy: true, L, n }); }
     else if ((pri || 0) > w.pri) w.pri = pri;
@@ -1318,7 +1325,7 @@ const CARD21 = (() => {
   function kick() { if (!timer && waiting.length) { try { later(); } catch (e) { timer = 0; } } }
   function tick() {
     timer = 0;
-    const t0 = now(), deadline = t0 + SLICE;
+    const t0 = now(), deadline = t0 + SLICE - 3;
     while (waiting.length && now() < deadline) {
       waiting.sort((a, b) => b.pri - a.pri || a.seq - b.seq);
       const w = waiting[0];
@@ -1329,6 +1336,7 @@ const CARD21 = (() => {
       if (j.step(deadline)) { waiting.shift(); jobs.delete(w.key); stats.asyncDone++; for (const cb of w.cb) { try { cb(j.frame); } catch (e) { warnOnce('cb', e); } } }
     }
     const used = now() - t0; stats.slices++; if (used > stats.sliceWorst) stats.sliceWorst = used;
+    if (trace) { (stats.sliceLog || (stats.sliceLog = [])).push(used); if (stats.sliceLog.length > 4000) stats.sliceLog.shift(); }
     if (waiting.length) { try { later(); } catch (e) { timer = 0; } }
     else { const w = idleWaiters; idleWaiters = []; for (const fn of w) { try { fn(); } catch (e) { /* ignore */ } } }
   }
@@ -1483,8 +1491,9 @@ const CARD21 = (() => {
     const o = { size: 'card', view, breath, display: true };
     let f = peek(L, o), exact = !!f;
     if (!f) {
-      request(L, Object.assign({}, o, { breath: 0 }), 9, () => paintAll(true));
-      if (breath) request(L, o, 4, () => paintAll(true));
+      const later = () => setTimeout(() => paintAll(true), 0);   // repaint after the scheduler's slice, not inside it
+      request(L, Object.assign({}, o, { breath: 0 }), 9, later);
+      if (breath) request(L, o, 4, later);
       f = peek(L, Object.assign({}, o, { breath: 0 }));
       if (!f) {
         // nothing of this look yet: keep what is on the canvas; a fresh canvas outside the doll's svg gets the backdrop
@@ -1659,8 +1668,8 @@ const CARD21 = (() => {
   return {
     LOCAL, gear, armorLook, weaponLook, lookOf, cleanGear, lookFromCompact, sig, remember, paint, ramp, pose, SIZES, stats: () => stats,
     on, cfg, KEY, onChange: (fn) => subs.push(fn), cacheSize: () => cache.size, clearCache: () => cache.clear(),
-    partnerFrame, ghostFrame, lookFor, idle, request, peek, prewarm, POSES, SLICE, pending: () => waiting.map((w) => w.key + " p" + w.pri), paintAll, turn, setOn, appendRows, ui, VIEW_NAMES, drawCard,
-    _internal: { makeCtx, build, shade, portraits },
+    partnerFrame, ghostFrame, lookFor, idle, request, peek, prewarm, POSES, SLICE, traceOn: () => (trace = []), traceGet: () => trace, pending: () => waiting.map((w) => w.key + " p" + w.pri), paintAll, turn, setOn, appendRows, ui, VIEW_NAMES, drawCard,
+    _internal: { makeCtx, build, shade, portraits, paintJob, norm0 },
   };
 })();
 if (typeof window !== 'undefined') window.CARD21 = CARD21;

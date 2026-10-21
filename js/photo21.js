@@ -38,7 +38,9 @@ const PHOTO21 = (() => {
       if (typeof LIGHT21 === 'object' && LIGHT21 && typeof LIGHT21.photoGrades === 'function') {
         const g = LIGHT21.photoGrades();
         if (Array.isArray(g) && g.length) {
-          const ok = g.filter((x) => x && typeof x.id === 'string' && typeof x.label === 'string' && typeof x.css === 'string' && /^[a-z0-9().,%\s-]*$/i.test(x.css)).slice(0, 12);
+          // LIGHT's contract: [{ id, label, css }], css a plain CSS filter string ('l21-here' first: the grade of this map
+          // and hour, then one per area grade, then the screenshot looks); anything else is dropped
+          const ok = g.filter((x) => x && typeof x.id === 'string' && x.id.length < 40 && typeof x.label === 'string' && x.label.length < 60 && typeof x.css === 'string' && x.css.length < 300 && /^[a-z0-9().,%#\s-]*$/i.test(x.css) && !/url\s*\(/i.test(x.css)).slice(0, 40);
           if (ok.length) return [OWN[0]].concat(ok.filter((x) => x.id !== 'none'));
         }
       }
@@ -211,6 +213,12 @@ const PHOTO21 = (() => {
 
   // ---------------------------------------------------------------- the bar (extra row under playtools' own)
   function say(t) { try { const st = document.querySelector('#p7-photo-bar .p7-status'); if (st) st.textContent = t; } catch (e) { /* none */ } }
+  // LIGHT's grades are asked for again each time photo mode opens ('l21-here' follows the map and hour); a stored
+  // choice that no longer exists falls back to None
+  function refreshFilter() {
+    const F = filters(); if (!F.some((x) => x.id === S.filter)) S.filter = 'none';
+    const b = document.getElementById('p21-filter'); if (b) b.textContent = 'Filter: ' + (F.find((x) => x.id === S.filter) || F[0]).label;
+  }
   function preview() {
     const css = filterCss(), game = document.getElementById('game'); if (!game) return;
     game.style.setProperty('--p21-photo-filter', css || 'none');
@@ -245,7 +253,7 @@ const PHOTO21 = (() => {
     injectStyle();
     // playtools' own key, button and Options row call its closure; this wrapper sees the state change instead
     let wasOn = false;
-    const onEnter = () => { const c = Engine.cam; S.start = { x: c.x, y: c.y }; S.pitchRows = c.pitch; S.dof = false; ensureBar(); preview(); if (S.free) say(HELP); const d = document.getElementById('p21-dof'); if (d) { d.textContent = 'Depth of field: Off'; d.classList.remove('sel'); d.setAttribute('aria-pressed', 'false'); } };
+    const onEnter = () => { const c = Engine.cam; S.start = { x: c.x, y: c.y }; S.pitchRows = c.pitch; S.dof = false; ensureBar(); refreshFilter(); preview(); if (S.free) say(HELP); const d = document.getElementById('p21-dof'); if (d) { d.textContent = 'Depth of field: Off'; d.classList.remove('sel'); d.setAttribute('aria-pressed', 'false'); } };
     const onLeave = () => { S.start = null; S.pitchRows = null; drag = null; const game = document.getElementById('game'); if (game) { game.style.removeProperty('--p21-photo-filter'); game.classList.remove('p21-photo-vig'); } };
     if (typeof update === 'function') {
       const _update = update;

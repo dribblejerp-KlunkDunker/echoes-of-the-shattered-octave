@@ -297,6 +297,30 @@ async function boot(ctx, opts) {
       assert.ok(r.left && r.cam && r.world && r.filterGone, 'leaving restores the camera, the world and the view: ' + JSON.stringify(r));
     });
 
+    await step('photo filters follow LIGHT21.photoGrades() when it is there (asked again each time photo mode opens), hostile entries dropped; without it, the own seven', async () => {
+      const r = await Q(() => {
+        const own = PHOTO21.filters().map((f) => f.id);
+        let here = 'sepia(0.1)';
+        window.LIGHT21 = { photoGrades: () => [{ id: 'l21-here', label: 'Here and now', css: here }, { id: 'l21-oakhaven', label: 'Oakhaven', css: 'saturate(1.1) contrast(1.05)' }, { id: 'evil', label: 'x', css: 'url(#x)' }, { id: 'l21-bw', label: 'Black and white', css: 'grayscale(1)' }] };
+        loadMap('oakhaven', { x: 29.5, y: 20.5, dir: -Math.PI / 2 }); G.state = 'play'; G.fadeT = 0; render();
+        PLAYTOOLS.enter(); update(1 / 60); render();
+        const ids = PHOTO21.filters().map((f) => f.id);
+        document.getElementById('p21-filter').click();
+        const label = document.getElementById('p21-filter').textContent, css1 = document.getElementById('game').style.getPropertyValue('--p21-photo-filter');
+        window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape', key: 'Escape' })); render();
+        here = 'sepia(0.5)'; PLAYTOOLS.enter(); update(1 / 60); render();
+        const again = PHOTO21.filters()[1].css;
+        window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape', key: 'Escape' })); render();
+        delete window.LIGHT21; PHOTO21.S.filter = 'none';
+        return { own, ids, label, css1, again, after: PHOTO21.filters().map((f) => f.id).join() === own.join() };
+      });
+      assert.deepEqual(r.own, ['none', 'warm', 'cold', 'vivid', 'print', 'noir', 'hush']);
+      assert.deepEqual(r.ids, ['none', 'l21-here', 'l21-oakhaven', 'l21-bw'], 'LIGHT\'s grades, the hostile one dropped');
+      assert.equal(r.label, 'Filter: Here and now'); assert.equal(r.css1.trim(), 'sepia(0.1)');
+      assert.equal(r.again, 'sepia(0.5)', 'asked again when photo mode opens');
+      assert.ok(r.after, 'back to the own seven without LIGHT21');
+    });
+
     await step('cost: painting a card view, a partner frame and a ghost frame', async () => {
       const r = await Q(() => {
         CARD21.clearCache();
