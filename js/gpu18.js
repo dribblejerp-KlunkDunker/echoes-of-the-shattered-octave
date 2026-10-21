@@ -85,6 +85,17 @@ const GPU18 = (() => {
   }
   // whether the compositor should be showing now
   function wanted() { return !!(GFX.gpuCompositor && st.available && !st.lost && !st.failed && gl && !originalish()); }
+  // Phase 21: an external renderer (js/r3d21.js, R3D) draws the 3D view on its own canvas and borrows only the HUD layer.
+  // While it holds the claim the HUD layer shows (Engine.ctx = the device-resolution HUD canvas), this module's GL canvas
+  // is hidden and it presents nothing; the compositor's own switch is left exactly as the player set it.
+  let ext = null;
+  const showing = () => !!ext || wanted();
+  function claimHud(owner) {
+    ext = owner || null;
+    try { const game = typeof document !== 'undefined' ? document.getElementById('game') : null; if (game) game.classList.toggle('gpu18-ext', !!ext); } catch (e) { /* fine */ }
+    sizeDirty = true; makeLayers(); sync();
+    return !!(ext && st.shown);
+  }
 
   // ---------------------------------------------------------------------------------------------------- GL setup
   let glCanvas = null, hudCanvas = null, hudCtx = null, gl = null, viewCtx = null;
@@ -101,7 +112,8 @@ const GPU18 = (() => {
       s.textContent = '#gpu18-gl,#gpu18-hud{position:absolute;inset:0;width:100%;height:100%;display:none;pointer-events:none;image-rendering:auto}' +
         '#game.gpu18-on #gpu18-gl,#game.gpu18-on #gpu18-hud{display:block}' +
         '#gpu18-gl.unwrite,#gpu18-hud.unwrite{filter:saturate(0.2) contrast(0.9)}' +
-        '#game.gpu18-on #cine14-veil{display:none!important}';   // the cinema grade and vignette run in the shader instead
+        '#game.gpu18-on #cine14-veil{display:none!important}' +   // the cinema grade and vignette run in the shader instead
+        '#game.gpu18-ext #gpu18-gl{display:none!important}';     // Phase 21: R3D draws the view, only the HUD layer shows
       document.head.appendChild(s);
     }
     glCanvas = document.createElement('canvas'); glCanvas.id = 'gpu18-gl'; glCanvas.setAttribute('aria-hidden', 'true');
@@ -830,7 +842,7 @@ void main(){
 
   // ---------------------------------------------------------------------------------------------------- on / off
   function sync() {
-    const want = wanted();
+    const want = showing();
     const game = typeof document !== 'undefined' ? document.getElementById('game') : null;
     if (want && !st.shown) {
       if (!viewCtx) viewCtx = Engine.ctx;
@@ -864,9 +876,10 @@ void main(){
     render = function () {
       // a context lost since the last frame: this frame goes to the canvas at once (the event follows later)
       if (gl && !st.lost && st.shown && gl.isContextLost()) { st.lost = true; resources = false; }
-      if (st.shown !== wanted()) sync();
+      if (st.shown !== showing()) sync();
       if (!st.shown || typeof G === 'undefined' || !G.map) return _render.apply(this, arguments);
       if (sizeDirty) fitLayers();
+      if (ext) { try { beginHud(); } catch (e) { warnOnce('hud', e); } return _render.apply(this, arguments); }   // R3D presents the view
       job.ready = false; job.grade = flagOn('grade') && typeof POST !== 'undefined'; job.cine = cineWanted(); job.bloom = typeof POST !== 'undefined' && bloomMoves(); bl.on = false;
       try { beginHud(); } catch (e) { fail(e); return _render.apply(this, arguments); }
       st.presenting = true;
@@ -947,7 +960,8 @@ void main(){
   try { boot(); } catch (e) { warnOnce('boot', e); }
 
   return {
-    KEY, st, stats: st.stats, setEnabled, sync, readFrame, gradeOne, present, checkSoon, CHECK,
+    KEY, st, stats: st.stats, setEnabled, sync, readFrame, gradeOne, present, checkSoon, CHECK, claimHud, hudClaim: () => ext,
+    probeGL: (force) => probe(!!force),
     active: () => st.shown, available: () => st.available === true, software: () => st.software, renderer: () => st.renderer,
     wanted, layers: () => ({ gl: glCanvas, hud: hudCanvas, hudCtx, viewCtx }), gl: () => gl,
     get profile() { return st.profile; }, set profile(v) { st.profile = !!v; },
