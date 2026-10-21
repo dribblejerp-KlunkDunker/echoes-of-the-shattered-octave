@@ -508,7 +508,7 @@ const CARD21 = (() => {
       P[side > 0 ? 'legR' : 'legL'] = { hip, knee, ank, toe, heel };
     }
     // hands: the weapon hand (right) and the off hand (left)
-    const armR = 9.0;
+    const armR = disp ? 9.0 : 10.2;   // in the world the arms hang clear of the body and cloak (readable at a distance)
     const swing = st * 2.6;
     let wH = [(st ? 0.4 : -0.4) - swing, armR, 25.5], wV = (kind === 'axe' || kind === 'mace' || kind === 'hammer' || kind === 'fork' || kind === 'glaive' || kind === 'maul') ? [0.35, 0.1, 0.93] : [0.5, 0.12, -0.86];
     let offH = [(st ? 0.4 : 1.4) + swing, -armR, 25.5], offV = [0.5, -0.12, -0.86], block = false, twoGrip = null;
@@ -537,10 +537,8 @@ const CARD21 = (() => {
     else if (act === 7) { wH = [1.4, 8.6, 53 + up]; wV = [0, 0.4, 1]; offH = [1.4, -8.6, 53 + up]; }
     else if (act === 8) { wH = [-1.5, 9.2, 37]; wV = norm([-0.4, 0.3, 0.7]); offH = [-1.5, -9.2, 37]; }
     else if (act === 9) { wH = [4.0, 3.0, 39]; wV = [0.15, 0, 1]; offH = [3.8, -3.2, 37]; block = true; }
-    else if (two && (kind === 'fork' || kind === 'glaive' || kind === 'maul' || kind === 'blade')) {
-      // walking or standing in the world with a two-hander: carried at the slope, both hands on it
-      wH = [2.2, 6.4, 29]; wV = norm([0.25, -0.45, 0.86]); twoGrip = add(wH, wV, -4.5);
-    } else if (kind === 'crossbow') { wH = [2.6, 5.6, 28]; wV = norm([0.5, -0.8, 0.3]); twoGrip = [5.6, -0.6, 31]; }
+    // standing or walking in the world, a two-hander is carried in the weapon hand at the side (a haft upright, a blade
+    // or a crossbow pointing down), so the figure's arms stay clear of its body at a distance, as the ghost painter did
     if (twoGrip) offH = twoGrip;
     const wpt = (h) => [h[0] + lean * 0.3, h[1], h[2] + lift * 0.5];
     P.wH = wpt(wH); P.wV = wV; P.offH = wpt(offH); P.offV = offV; P.block = block; P.twoGrip = !!twoGrip;
@@ -638,7 +636,7 @@ const CARD21 = (() => {
       const robeLong = robeCalling || (body && (body.kind === 'coat' || body.kind === 'robe'));
       const z0 = robeLong ? 9 : 15;
       const sw = (z) => (P.st ? P.st * (44 - z) * 0.035 : 0);
-      section(X, z0, 45.5 + br * 0.3, (z) => [-3.6 - (45 - z) * 0.035 + P.lean * (z / 44) + sw(z) * 0.2, 0], (z) => 6.5 + (45 - z) * 0.07 - (z > 43 ? (z - 43) * 0.6 : 0), (z) => 1.6 + (45 - z) * 0.03, mCloak, { back: true, inner: mCloakIn });
+      section(X, z0, 45.5 + br * 0.3, (z) => [-3.6 - (45 - z) * 0.035 + P.lean * (z / 44) + sw(z) * 0.2, 0], (z) => (o.display ? 6.5 + (45 - z) * 0.07 : 5.4 + (45 - z) * 0.03) - (z > 43 ? (z - 43) * 0.6 : 0), (z) => 1.6 + (45 - z) * 0.03, mCloak, { back: true, inner: mCloakIn });
     };
     const slung = () => {
       if (!shield || !L.stowed) return;
@@ -1160,6 +1158,11 @@ const CARD21 = (() => {
         const ti = clamp(Math.round(t), 0, N_TONE - 1);
         idx[i] = ti;
         colour = rp[ti];
+        if (X.smooth) {
+          // the small world figures blend between tones (no dither): a sprite one tile tall reads better soft
+          const tt = clamp(v * 0.94, 0, 1.199) * (N_TONE - 1) / 1.2 * 1.2, t0 = clamp(Math.floor(tt), 0, N_TONE - 1), t1 = Math.min(N_TONE - 1, t0 + 1), fr = clamp(tt - t0, 0, 1);
+          const c0 = rp[t0], c1 = rp[t1]; colour = [Math.round(c0[0] + (c1[0] - c0[0]) * fr), Math.round(c0[1] + (c1[1] - c0[1]) * fr), Math.round(c0[2] + (c1[2] - c0[2]) * fr)];
+        }
         if (faceMix) {
           // the portrait's own colours, scaled so its cheeks match this tone of the skin ramp
           const pc = faceMix[0], ref = X.porRef || 120, tl = 0.3 * colour[0] + 0.59 * colour[1] + 0.11 * colour[2];
@@ -1206,7 +1209,7 @@ const CARD21 = (() => {
     let f = cache.get(key); if (f) { cache.delete(key); cache.set(key, f); return f; }
     const t0 = typeof performance !== 'undefined' ? performance.now() : 0;
     loadPortrait(L.face);
-    const X = makeCtx(S.W, S.H, S.K, view * Math.PI / 4, S.FOOT);
+    const X = makeCtx(S.W, S.H, S.K, view * Math.PI / 4, S.FOOT); X.smooth = size !== 'card';
     const P = build(X, L, { act: o.act, ph: o.ph, loco: o.loco, breath: br, display: !!o.display });
     X.headC = P.head;
     const data = shade(X, L, o);
@@ -1271,6 +1274,19 @@ const CARD21 = (() => {
       return r;
     };
     ln.c21 = true; GHOST18.lookNow = ln;
+  }
+  // a co-op figure seen for the first time costs a few dozen milliseconds per pose: paint the standing and walking
+  // poses of every view ahead, one per idle slice, as soon as a partner (or, on the guest, the host) is in the world
+  let warmSig = '';
+  function prewarmCoop() {
+    let look = null;
+    try { if (typeof PARTNER19 === 'object' && PARTNER19 && PARTNER19.active && PARTNER19.active() && PARTNER19.S) look = PARTNER19.S.look; } catch (e) { look = null; }
+    try { if (!look && typeof SYNC19 === 'object' && SYNC19 && SYNC19.hostLook) look = SYNC19.hostLook(); } catch (e) { look = null; }
+    if (!look || !on()) return;
+    const L = lookFor(look), sg = sig(L); if (sg === warmSig) return; warmSig = sg;
+    const todo = []; for (let b = 0; b <= 4; b++) for (let loco = 0; loco <= 2; loco++) todo.push([b, loco]);
+    const next = () => { const t = todo.shift(); if (!t || warmSig !== sg) return; try { partnerFrame(t[0], t[1], 0, 0, look); } catch (e) { return; } setTimeout(next, 30); };
+    setTimeout(next, 30);
   }
   // the player whose likeness is "mine" (not a co-op partner standing in for G.player for a moment)
   const homePlayer = () => {
@@ -1461,7 +1477,7 @@ const CARD21 = (() => {
       renderAccessibilityMenu = function () { const r = _acc.apply(this, arguments); try { appendRows(); } catch (e) { warnOnce('rows', e); } return r; };
     }
     subs.push(() => { try { if (document.querySelector('canvas.c21-cv')) paintAll(true); } catch (e) { /* ignore */ } });
-    try { setInterval(rememberMine, 5000); } catch (e) { /* none */ }
+    try { setInterval(() => { rememberMine(); prewarmCoop(); }, 5000); } catch (e) { /* none */ }
     try { if (typeof GFX !== 'undefined' && GFX.onChange) GFX.onChange(() => { if (cfg.override !== null && GFX.card21 !== cfg.override && GFX.preset !== 'plain') GFX.card21 = cfg.override; }); } catch (e) { /* ignore */ }
   }
   try { if (typeof document !== 'undefined') install(); } catch (e) { warnOnce('install', e); }
