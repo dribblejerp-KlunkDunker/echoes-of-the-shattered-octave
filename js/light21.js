@@ -210,7 +210,7 @@ const LIGHT21 = (() => {
     P.t = [F.now || 0, F.time || 0, 0, 1];
     // clouds: cover from the weather; wind from Weather.wind
     const wind = typeof Weather !== 'undefined' ? (Weather.wind || 0.2) : 0.2;
-    P.cl = [clamp(0.3 + cloud * 0.85, 0, 1), wind, dark, flag('p21_clouds') ? 1 : 0];
+    P.cl = [clamp(0.4 + cloud * 0.76, 0, 1), wind, dark, flag('p21_clouds') ? 1 : 0];
     // stars: night, thinned by cloud and haze; aurora from js/skies14.js's plan for tonight
     P.sky2 = [flag('stars') || (typeof GFX !== 'undefined' && GFX.stars === undefined) ? night * clamp(1 - cloud * 1.3, 0, 1) * clamp(1 - haze * 3, 0, 1) * (1 - fl) : 0, 0, fl, F.pxK || 1];
     try {
@@ -710,10 +710,10 @@ void main() {
     vec2 wnd = vec2(cos(0.6), sin(0.6)) * (0.004 + 0.02 * uL21Cl.y) * tt;
     vec2 p = dir.xy / (dir.z + 0.08);
     // high streaks
-    float hi = fbm(vec2(p.x * 0.35, p.y * 1.2) + wnd * 0.6 + 31.0);
+    float hi = fbm(vec2(p.x * 0.9, p.y * 2.6) + wnd * 0.6 + 31.0);
     float hd = smoothstep(0.66 - cov * 0.2, 0.9 - cov * 0.2, hi) * (0.32 + 0.25 * cov);   // high streaks, some in every sky
     // low heaps (two samples: the second toward the sun gives their lit side)
-    vec2 lp2 = p * 0.42 + wnd;
+    vec2 lp2 = p * 1.25 + wnd;
     float lo = fbm(lp2), lo2 = fbm(lp2 + sd.xy * 0.18);
     float ld = smoothstep(1.0 - cov * 0.82, 1.15 - cov * 0.6, lo + 0.25 * cov);
     float det = fbm(lp2 * 3.1 + 7.0);
@@ -878,7 +878,8 @@ float weather(vec2 uv, float zScene) {
       }
     }
   }
-  return a;
+  // looking up into the fall, the streaks would cross the sky sideways: they thin out as the view tips up
+  return a * (1.0 - 0.8 * smoothstep(0.55, 1.05, uFwd.w));
 }
 // js/dread.js's figure, the same outline in screen space: head, neck, shoulders, a body that fades at the feet
 float dread(vec2 uv) {
@@ -1143,7 +1144,7 @@ void main() {
     const cx = m[0] * x + m[4] * y + m[8] * z, cy = m[1] * x + m[5] * y + m[9] * z, cw = m[3] * x + m[7] * y + m[11] * z;
     if (cw <= 0.0001) return false;
     sunUV[0] = (cx / cw) * 0.5 + 0.5; sunUV[1] = (cy / cw) * 0.5 + 0.5;
-    return sunUV[0] > -0.6 && sunUV[0] < 1.6 && sunUV[1] > -0.6 && sunUV[1] < 1.6;
+    return sunUV[0] > -0.1 && sunUV[0] < 1.1 && sunUV[1] > -0.05 && sunUV[1] < 1.1;   // shafts only from a sun in (or just at the edge of) the view
   }
   function ensurePost(gl, w, h) {
     if (S.w === w && S.h === h && S.rt.h1) return;
