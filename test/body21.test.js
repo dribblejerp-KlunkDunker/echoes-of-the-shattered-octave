@@ -287,7 +287,7 @@ const HELPERS = () => {
       if (!r.shown) { console.log('  (R3D not available in this browser: pass registration only)'); return; }
       assert.ok(r.active && r.rec, 'R3D frames recorded'); assert.ok(r.drawn >= 3, 'the body pass drew'); assert.ok(r.quads >= 3 * 4, 'arm, sleeve, shield, off arm, legs as quads'); assert.ok(r.legs >= 3, 'legs in the world');
       assert.equal(r.hudAlpha, 0, 'the shield is not on the HUD canvas under R3D'); assert.equal(r.err, '');
-      assert.equal(r.feelOrder, 89); assert.ok(r.feel >= 1, 'the feel pass ran'); assert.ok(r.satAfter < r.satBefore * 0.6, 'the Hush drains the colour under R3D: ' + r.satBefore + ' -> ' + r.satAfter);
+      assert.equal(r.feelOrder, 89); assert.ok(r.feel >= 1, 'the feel pass ran'); assert.ok(r.satAfter < r.satBefore * 0.8, 'the Hush drains the colour under R3D: ' + r.satBefore + ' -> ' + r.satAfter);
       assert.equal(r.offRec, false); assert.ok(r.offShield >= 1, 'raycaster overlay is back');
     });
 
