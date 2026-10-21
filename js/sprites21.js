@@ -767,8 +767,7 @@ void main() {
     if (dt > 0.1) dt = 0.1;
     if (dt > 0) { try { FIRESMOKE.tick(dt, T); } catch (e) { warnOnce('smoke', e); } }
   }
-  // firesmoke keeps each puff's radius, strength and warmth private; its emitters are told apart by their lifetimes
-  // (chimney 4.6-6.6 s, fire 2.4-3.4 s, small flame 1.7-2.4 s; steam is its own kind), so their table values are used
+  // firesmoke's puffs, drawn with its own formula (colour by light and fog, warmth, the fade in and out)
   function collectSmoke() {
     if (typeof FIRESMOKE === 'undefined' || !FIRESMOKE.count) return;
     const outdoor = !!V.outdoor, light = V.light == null ? 1 : V.light, amb = V.ambient || 0, fg0 = V.fog || [0, 0, 0], fog = [fg0[0] * 255, fg0[1] * 255, fg0[2] * 255];
@@ -786,8 +785,11 @@ void main() {
         pushParticle(false, p.x, p.y, p.z, 0.02, 0.016, 0.022, 1, seed, Math.min(1, r), Math.min(1, g), Math.min(1, b), a, 0, false);
         return;
       }
+      // each puff's own radius, strength and warmth (FIRESMOKE.each exposes them); an older firesmoke without them falls back
+      // to its emitters' table values, told apart by lifetime (chimney 4.6-6.6 s, fire 2.4-3.4 s, small flame 1.7-2.4 s)
       let r0, r1, a0, warm;
-      if (p.kind === 1) { r0 = 0.05; r1 = 0.24; a0 = 0.55; warm = 0; }
+      if (p.r1 != null) { r0 = p.r0; r1 = p.r1; a0 = p.a; warm = p.warm || 0; }
+      else if (p.kind === 1) { r0 = 0.05; r1 = 0.24; a0 = 0.55; warm = 0; }
       else if (p.life >= 4.2) { r0 = 0.1; r1 = 0.67; a0 = 0.62; warm = 0; }
       else if (p.life >= 2.4) { r0 = 0.05; r1 = 0.31; a0 = 0.41; warm = 1; }
       else { r0 = 0.04; r1 = 0.125; a0 = 0.5; warm = 1; }
@@ -800,7 +802,7 @@ void main() {
       if (outdoor) { cr = (br * f + fog[0] * (1 - f)) * light; cg = (bg * f + fog[1] * (1 - f)) * light; cb = (bb * f + fog[2] * (1 - f)) * light; }
       else { const v = amb + (1 - amb) * f * 0.7; cr = br * v; cg = bg * v; cb = bb * v; }
       const wm = warm * (1 - t) * (1 - t); if (wm > 0.01) { cr += 120 * wm; cg += 58 * wm; cb += 12 * wm; }
-      pushParticle(false, p.x, p.y, p.z, 0, rw, rw, 0, (seed * 7) % 61, Math.min(1, cr / 255), Math.min(1, cg / 255), Math.min(1, cb / 255), A, 0, false);
+      pushParticle(false, p.x, p.y, p.z, 0, rw, rw, 0, p.seed != null ? p.seed : (seed * 7) % 61, Math.min(1, cr / 255), Math.min(1, cg / 255), Math.min(1, cb / 255), A, 0, false);
     });
   }
 
@@ -871,6 +873,8 @@ void main() {
   }
 
   // ---------------------------------------------------------------- cold breath (js/air11.js)
+  // copied from js/air11.js (not exported there): LOW_HEAD (mouth height on low-headed beasts), PUFF 1.15 s (a puff's life),
+  // the breathing periods 1.5 / 3.3 s; its per-entity phase is a private WeakMap, so a position hash stands in
   const LOW_HEAD = { hound: 0.46, cat: 0.5, weaverling: 0.3 };
   function collectBreath(ents) {
     if (typeof AIR11 === 'undefined' || !GFX.coldBreath || !AIR11.breath || !mapNow) return;
@@ -934,6 +938,7 @@ void main() {
       one(h.lx, h.ly, lz, scale, c.g, [h.hx, h.hy, hz]);
     }
     for (let i = 0; i < LAN.drops.length; i++) {
+      // copied from js/motion10.js (not exported there): DROP_LIFE 45 s, GUTTER 1.8 s and gutterK()'s ember tail
       const dr = LAN.drops[i]; if (dr.age > 45) continue;
       if ((dr.x - V.eye[0]) * (dr.x - V.eye[0]) + (dr.y - V.eye[1]) * (dr.y - V.eye[1]) > 225) continue;
       const GUT = 1.8, f = clamp(1 - dr.age / GUT, 0, 1), g = dr.age < GUT ? f * f * 0.8 : dr.age < GUT + 2.5 ? 0.12 * (1 - (dr.age - GUT) / 2.5) : 0;
@@ -986,6 +991,7 @@ void main() {
 
   // ---------------------------------------------------------------- the Kestrel's mooring rope (js/smalllife.js)
   // smalllife's mast and hull numbers (MAST, SHIP there): the rope runs from the mast top to the bow cone
+  // fallbacks copied from js/smalllife.js (MAST, SHIP), used only if SMALLLIFE does not export them
   const KMAST = { x: 37, y: 20, top: 2.8 }, KSHIP = { scale: 1.7, half: 1.85 };
   function collectRope() {
     if (typeof SMALLLIFE === 'undefined' || !SMALLLIFE.ship || !SMALLLIFE.ship.e || !V.outdoor || typeof SMALLLIFE.isMoored !== 'function' || !SMALLLIFE.isMoored()) return;
@@ -1010,6 +1016,7 @@ void main() {
     const sc = Math.max(0, GFX.particles === undefined ? 1 : GFX.particles); if (sc <= 0) return;
     const calm = !!GFX.reduceMotion, hash = GATES.hash, light = V.outdoor ? (V.light == null ? 1 : V.light) : 1;
     const tone = (x, y, base) => { const f = Math.max(0.35, lightF(Math.hypot(x - V.eye[0], y - V.eye[1]))) * light; return [base[0] * f / 255, base[1] * f / 255, base[2] * f / 255]; };
+    // copied from js/gates.js (not exported there): DUST, ROCK colours and G_ACC; WARN, SETTLE, RUBBLE_H come from GATES
     const DUST = [172, 162, 146], ROCK = [96, 90, 84], G_ACC = 10.2, WARN = GATES.WARN || 2.4, SETTLE = GATES.SETTLE || 1.8, RUBBLE_H = GATES.RUBBLE_H || 0.45;
     const dust = (x, y, z, rad, a) => { if (a <= 0.01) return; const c = tone(x, y, DUST); pushParticle(false, x, y, z, 0, rad, rad, 0, (x * 7 + y * 13) % 61, c[0], c[1], c[2], Math.min(1, a * 0.6), 0, false); };
     const speck = (x, y, z, size) => { const c = tone(x, y, ROCK); pushParticle(false, x, y, z, 0, size, size, 1, 0, c[0], c[1], c[2], 1, 0, false); };
