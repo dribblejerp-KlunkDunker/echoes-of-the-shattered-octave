@@ -147,7 +147,7 @@ const SYNC19 = (function () {
     MSG_MAX: 200,
     SMOOTH: 10,           // the guest's reconciliation error decays at this rate (1/s)
     SNAP_DIST: 2,         // a correction bigger than this (tiles) is a jump, not a slide
-    WB_WAIT: 8000,        // ms a leaving guest waits for the host's write-back
+    WB_WAIT: 15000,       // ms a leaving guest waits for the host's write-back
     PAUSE_MAX: 60000,     // ms the host keeps a dropped partner paused before sending it home
     NEAR: 14,             // tiles: entities further from the guest than this are compared every other snapshot
     STRIKE_MS: 420,       // an enemy's blow shows this long on the guest (anim.js's lunge)
@@ -680,7 +680,17 @@ const SYNC19 = (function () {
     if (p.card != null && jsonLen(p.card) > 8192) return reject('hello-card');
     hostStart(from, p.card);
   }
-  function onBye(p, from) { if (H.gs && H.gs.peer === from) hostEnd('bye'); }
+  function onBye(p, from) {
+    if (H.gs && H.gs.peer === from) { hostEnd('bye'); return; }
+    // a bye that arrives while the session is paused after a drop (the guest's link came back and it chose to leave
+    // before its hello): the partner still goes home with what it earned
+    if (!H.gs && H.pausedAt && role() === 'host') {
+      const P = partner(); if (!P || typeof P.active !== 'function' || !P.active()) return;
+      let wb = null; try { wb = P.leave('bye'); } catch (e) { wb = null; }
+      if (wb && !partnerWired()) send('sync.wb', { wb }, true);
+      H.pausedAt = 0; emit('leave', { side: 'host', peer: from, why: 'bye' });
+    }
+  }
   function hostTick() {
     const t0 = now();
     if (role() !== 'host' || peerCount() === 0) { hostEnd('dropped'); return; }
@@ -1357,7 +1367,8 @@ const SYNC19 = (function () {
 
   // ---------------------------------------------------------------- listen
   on('sync.hello', onHello); on('sync.in', onIn); on('sync.act', onAct); on('sync.bye', onBye);
-  on('net:lost', () => { if (H.gs) hostEnd('dropped'); });
+  on('net:lost', () => { if (H.gs) hostEnd('dropped'); if (C.leaving) C.byeSent = false; });   // a leaving guest says goodbye again once the link is back
+  on('net:back', () => { if (C.leaving) C.byeSent = false; });
   on('net:closed', () => { if (H.gs) hostEnd('closed'); if (C.on) finishLeave('lost', undefined); });
   on('sync.wb', onWb);
   on('p19p:wb', (p, from) => { if (C.on && C.entered && from === C.peer) finishLeave(C.leaving ? 'left' : 'ended', undefined, true); }); on('sync.refused', onRefused); on('sync.story', onStory);
