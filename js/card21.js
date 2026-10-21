@@ -799,6 +799,7 @@ const CARD21 = (() => {
       }
       const hair = fc.hair ? M('hair', fc.hair, 'hair') : null;
       const wear = head ? head.kind : fc.wear || null;
+      X.brim = wear === 'kettle' || wear === 'cap' || wear === 'captain' || wear === 'hood';
       const hidden = head && head.full;
       // hair under and around everything but a full helm
       if (hair && !hidden) {
@@ -819,7 +820,7 @@ const CARD21 = (() => {
             sphere(X, add(b, [0, 0, -0.6]), 0.55, M('braidtie', [70, 44, 28], 'leather'));
           }
         }
-        if ((fc.style === 'fringe' || fc.style === 'long') && wear !== 'hood') {
+        if ((fc.style === 'fringe' || fc.style === 'long') && !head && wear !== 'hood') {   // a fringe only under the bare sky (never through a helm)
           next();
           section(X, cz + 1.4, cz + 3.4, (z) => [hc[0] + 0.55, 0], (z) => RX * 0.95, (z) => RD * 0.92, hair, { back: false });
         }
@@ -827,7 +828,7 @@ const CARD21 = (() => {
       if (fc.beard && !hidden) {
         next();
         const bm = M('beard', fc.beard, 'hair');
-        section(X, cz - RZ - 1.6, cz - 0.6, (z) => [hc[0] + 0.75 + (cz - z) * 0.08, 0], (z) => (RX + 0.2) * (z > cz - 2.2 ? 1 : 1 - (cz - 2.2 - z) * 0.17), (z) => (RD - 0.35) * (z > cz - 2.2 ? 1 : 1 - (cz - 2.2 - z) * 0.12), bm, { arc: 0.85 });
+        section(X, cz - RZ - 1.6, cz - 0.6, (z) => [hc[0] + 0.75 + (cz - z) * 0.08, 0], (z) => (RX + 0.2) * (z > cz - 2.2 ? 1 : 1 - (cz - 2.2 - z) * 0.17), (z) => (RD - 0.35) * (z > cz - 2.2 ? 1 : 1 - (cz - 2.2 - z) * 0.12), bm, { arc: X.smooth ? 0 : 0.85 });
       }
       // headwear
       if (wear === 'hood') {
@@ -1204,6 +1205,7 @@ const CARD21 = (() => {
       v += tex;
       // specular highlight on metal and glass
       if (Mt.spec) { const hh = Math.max(0, nx * HX + ny * HY + nz * HZ); v += Math.pow(hh, kind === 'mail' ? 10 : 22) * 0.75 * Mt.spec; }
+      if (X.smooth && (kind === 'face' || kind === 'skin')) { v = Math.min(v, 0.78); if (X.brim && X.headC && tv - X.headC[2] > 0.6 && tv - X.headC[2] < 3.2) v -= 0.16; }
       let colour = null, rp = Mt.ramp;
       // the face: the portrait chosen at creation, brought to this skin ramp's brightness and lit like the rest
       let faceMix = null;
@@ -1213,18 +1215,21 @@ const CARD21 = (() => {
         const lon = Math.atan2(wn[1], wn[0]), zz = tv - hc[2];
         const wgt = clamp((1.05 - Math.abs(lon)) / 0.3, 0, 1) * clamp((3.4 - zz) / 0.6, 0, 1) * clamp((zz + 4.9) / 0.6, 0, 1);
         if (wgt > 0) {
-          if (por) {
+          if (por && !X.smooth) {
             const eyeZ = 0.15, chinZ = -4.15;
             const py = fc.eyeY + (eyeZ - zz) / (eyeZ - chinZ) * (fc.chinY - fc.eyeY);
             const px = 64 + Math.sin(lon) / Math.sin(1.0) * 21;
             const sx = clamp(Math.round(px), 0, 127), sy = clamp(Math.round(py), 0, 127), q = (sy * 128 + sx) * 4;
             faceMix = [[por[q], por[q + 1], por[q + 2]], wgt];
           } else {
-            const ax = Math.sin(lon) * 3.6;
-            const eye = Math.abs(zz - 0.1) < 0.42 && Math.abs(Math.abs(ax) - 1.25) < 0.42;
-            const brow = Math.abs(zz - 0.85) < 0.3 && Math.abs(Math.abs(ax) - 1.25) < 0.7;
-            const mouth = Math.abs(zz + 2.55) < 0.25 && Math.abs(ax) < 0.85;
-            if (eye) colour = [30, 24, 26]; else if (brow) colour = fc.hair ? mixc(fc.hair, [30, 24, 20], 0.4) : rp[2]; else if (mouth) colour = [120, 66, 58];
+            // the world figures (partner, ghost) and the face before its portrait loads: built from the skin ramp, not
+            // sampled (a portrait's warm light turns into hot blobs at sprite size): dark eyes, brows in the hair's
+            // colour, a mouth one shade down; features at least a pixel wide whatever the size
+            const ax = Math.sin(lon) * 3.6, px = 1 / X.K;
+            const eye = Math.abs(zz - 0.1) < Math.max(0.42, 0.75 * px) && Math.abs(Math.abs(ax) - 1.25) < Math.max(0.42, 0.85 * px);
+            const brow = Math.abs(zz - 0.95) < Math.max(0.3, 0.6 * px) && Math.abs(Math.abs(ax) - 1.25) < 0.75;
+            const mouth = Math.abs(zz + 2.55) < Math.max(0.25, 0.6 * px) && Math.abs(ax) < 0.85;
+            if (eye) colour = [34, 26, 28]; else if (brow) colour = fc.hair ? mixc(fc.hair, [30, 24, 20], 0.45) : rp[1]; else if (mouth) colour = rp[1];
           }
         }
       }
@@ -1259,10 +1264,14 @@ const CARD21 = (() => {
         }
         if (faceMix) {
           // the portrait's own colours, scaled so its cheeks match this tone of the skin ramp
-          const pc = faceMix[0], ref = X.porRef || 120, tl = 0.3 * colour[0] + 0.59 * colour[1] + 0.11 * colour[2];
-          const k = tl / ref, w = faceMix[1];
-          const Q = (c, base) => clamp(Math.round((base + (c * k - base) * w) / 10) * 10, 0, 255);
-          colour = [Q(pc[0], colour[0]), Q(pc[1], colour[1]), Q(pc[2], colour[2])];
+          // the portrait's detail (its brightness) carried on this skin ramp's own colour, with only a third of the
+          // portrait's hue: its warm studio light must not turn into hot orange patches; highlights are capped
+          const pc = faceMix[0], ref = X.porRef || 120, base = colour, tl = 0.3 * base[0] + 0.59 * base[1] + 0.11 * base[2];
+          const pl = 0.3 * pc[0] + 0.59 * pc[1] + 0.11 * pc[2], k = tl / ref, w = faceMix[1];
+          const r = Math.min(1.12, Math.max(0.25, pl / ref));
+          const mixq = (c, b0) => { const lumC = b0 * r, hueC = c * k; return lumC * 0.68 + hueC * 0.32; };
+          const Q = (c, b0) => clamp(Math.round((b0 + (Math.min(mixq(c, b0), b0 * 1.15 + 6) - b0) * w) / 8) * 8, 0, 255);
+          colour = [Q(pc[0], base[0]), Q(pc[1], base[1]), Q(pc[2], base[2])];
         }
       } else idx[i] = 4;
       out[i] = ((255 << 24) | (colour[2] << 16) | (colour[1] << 8) | colour[0]) >>> 0;

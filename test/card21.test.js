@@ -355,13 +355,26 @@ async function boot(ctx, opts) {
         let lit = 0; for (let i = 0; i < d.length; i += 4 * 97) if (d[i] + d[i + 1] + d[i + 2] > 40) lit++;
         const blob = await PHOTO21.screenshot();
         window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape', key: 'Escape' })); render();
-        return { active: true, ang, lim, lit, n: d.length / 4 / 97, png: !!(blob && blob.type === 'image/png'), restored: ['x', 'y', 'z', 'dir', 'pitch'].every((k) => Engine.cam[k] === cam0[k]) };
+        // the co-op partner in R3D: its sprite carries no emissive mask, so no pixel of it (the face included) is marked
+        // for LIGHT's bloom (the aux channel's material is never Engine.MAT.glow)
+        const card = { v: 1, token: 'Tok3nAbcd1234XYZ', name: 'Brother', cls: 'quarry', face: 5, level: 4, xp: 10, attrs: Object.assign({}, CLASSES.find((c) => c.id === 'quarry').attrs), weapons: ['axe'], weapon: 0, armor: { head: 'a_kettle', body: 'a_jerkin' }, pellets: 0, bolts: 0, glass: 0 };
+        PARTNER19.join(card, { seed: 2 }); CARD21.partnerFrame(0, 0, 0, 0, PARTNER19.S.look);
+        const S2 = PARTNER19.S, c2 = Engine.cam; S2.x = c2.x + Math.cos(c2.dir) * 1.6; S2.y = c2.y + Math.sin(c2.dir) * 1.6; S2.dir = c2.dir + Math.PI; S2.feet = 0;
+        render(); render(); render();
+        const fig = PARTNER19.FIG.partner, sc = fig._screen, spr = Engine.sprites[fig.sprite];
+        let glow = 0, seen = 0;
+        if (sc) for (let y = Math.max(0, sc.y0 | 0); y < Math.min(150, sc.y1); y++) for (let x = Math.max(0, sc.x0 | 0); x < Math.min(320, sc.x1); x++) { const m = R3D.materialAt(x, y); if (m === 6) seen++; if (m === (Engine.MAT ? Engine.MAT.glow : 8)) glow++; }
+        const partner = { emit: !!(spr && spr.emit), seen, glow, screen: !!sc };
+        PARTNER19.leave('silent');
+        return { active: true, partner, ang, lim, lit, n: d.length / 4 / 97, png: !!(blob && blob.type === 'image/png'), restored: ['x', 'y', 'z', 'dir', 'pitch'].every((k) => Engine.cam[k] === cam0[k]) };
       });
       if (r.skip) { console.log('  (skipped: ' + r.skip + ')'); return; }
       assert.ok(r.ang > 0.6, 'the look climbs well past the old 9 degrees (' + (r.ang * 57.3).toFixed(1) + ' deg, limit ' + (r.lim * 57.3).toFixed(1) + ')');
       assert.ok(r.ang <= r.lim + 1e-6, 'and stops at the limit');
       assert.ok(r.lit > r.n * 0.3, 'the screenshot holds R3D\'s picture, not a blank canvas (' + r.lit + ' / ' + r.n + ')');
       assert.ok(r.png && r.restored, 'a PNG; leaving restores the camera');
+      assert.ok(!r.partner.emit && r.partner.glow === 0, 'the partner is never marked emissive: ' + JSON.stringify(r.partner));
+      console.log('  partner under R3D: ' + JSON.stringify(r.partner));
       if (SHOTS) await rp.screenshot({ path: path.join(SHOTS, 'card21-photo-r3d.png') });
       assert.deepEqual(R.errors.filter((e) => !/WebGL|GPU stall|swiftshader|GroupMarker/i.test(e)), [], 'no page errors under R3D');
     });
