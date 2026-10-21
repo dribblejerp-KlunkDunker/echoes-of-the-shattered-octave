@@ -121,15 +121,79 @@ const CARD21 = (() => {
       6: { skin: [226, 192, 174], hair: [198, 202, 208], style: 'long', streak: true, eyeY: 45, chinY: 80 },
     },
   };
-  // BODY's shared table, when loaded, is the source of truth; fields it lacks fall back to the local entry
+  // BODY's shared table (js/gearlook21.js, GEARLOOK21) is the source of truth for what each piece IS (shape, material,
+  // colours, lengths); this painter's own table only adds how to BUILD it (hem heights in body units, poses). Shared
+  // entries are translated into the local shape once and cached; anything the shared table lacks falls back to LOCAL.
+  const HW = 3;   // one hand-width (about 9 cm) in body units (a body is about 57 units, 175 cm)
+  const SH_KIND = { cap: 'cap', hood: 'hood', kettle: 'kettle', bellhelm: 'bellhelm', robe: 'robe', gambeson: 'gambeson', jerkin: 'jerkin', longcoat: 'coat', brigandine: 'brig', hauberk: 'mail', cuirass: 'plate', shirt: null,
+    gloves: 'gloves', gauntlets: 'gauntlets', softboots: 'soft', hobnails: 'hobnail', greaves: 'greaves', shoes: null, buckler: 'buckler', kite: 'kite' };
+  const MAT_KIND = { leather: 'leather', hushwool: 'wool', iron: 'metal', bellbronze: 'metal', steel: 'metal', oilcloth: 'oil', quilt: 'quilt', canvas: 'canvas', mail: 'mail', felt: 'felt', wood: 'wood', linen: 'cloth', skin: 'skin', glass: 'glass' };
+  const WK_KIND = { fists: 'fists', glassarm: 'glassarm', sword: 'blade', longsword: 'blade', greatsword: 'blade', knife: 'blade', dirk: 'blade', throwing: 'blade', axe: 'axe', mace: 'mace', hammer: 'hammer', maul: 'maul', spear: 'fork', glaive: 'glaive', pistol: 'pistol', crossbow: 'crossbow' };
+  let adapted = null, adaptedFrom = null;
+  function adaptArmor(e, loc) {
+    const kind = SH_KIND[e.shape]; if (!kind) return loc || null;
+    const col = e.col && e.col.base ? e.col.base : (loc && loc.col) || C.linen;
+    const o = Object.assign({}, loc || {}, { slot: e.slot, kind, mat: MAT_KIND[e.material] || (loc && loc.mat) || 'cloth', col, shared: true });
+    if (e.col && e.col.trim) o.trim = e.col.trim;
+    if (e.slot === 'body') {
+      if (Number.isFinite(e.len)) o.hem = clamp(27.5 - e.len * 25.5, 2.5, 26);
+      const sl = e.sleeve || null;
+      if (sl) {
+        o.sleeveMat = MAT_KIND[sl.material] || 'cloth'; o.sleeveCol = sl.col || col; o.rolled = !!sl.rolled; o.cuff = sl.cuff || null;
+        o.sleeves = sl.wide ? 'wide' : kind === 'plate' ? 'pauldron' : 'long';
+        if (sl.bracer) o.bracer = { col: sl.plated ? col : kind === 'jerkin' ? col : (e.col.shade || col), mat: sl.plated ? 'metal' : MAT_KIND[e.material] === 'metal' ? 'metal' : 'leather' };
+      }
+      if (kind === 'mail' && o.bulk == null) o.bulk = 0.3;
+    }
+    if (e.slot === 'hands' && e.col && e.col.trim) o.palm = e.col.trim;
+    if (e.slot === 'feet') { o.top = kind === 'soft' ? 6 : kind === 'hobnail' ? 10 : kind === 'greaves' ? 15 : (o.top || 9); if (kind === 'greaves' && e.col.trim) o.boot = e.col.trim; if (kind === 'hobnail') o.studs = true; }
+    if (e.slot === 'shield') {
+      const f = e.face || {};
+      if (kind === 'buckler') { o.r = clamp((e.radius || 1.4) * HW * 0.6, 2.8, 5); o.face = f.field || o.face; o.band = f.figure || null; o.col = f.rim || col; o.boss = f.boss || null; }
+      else { o.h = clamp((e.height || 6) * HW * 0.78, 14, 24); o.wTop = clamp((e.width || 4) * HW * 0.4, 4.5, 7.5); o.col = f.field || col; o.emblem = f.figure || o.emblem; o.rim = f.rim || o.rim; o.boss = f.boss || null; }
+    }
+    return o;
+  }
+  function adaptWeapon(e, loc) {
+    const kind = WK_KIND[e.kind] || 'blade', c = e.col || {};
+    const o = Object.assign({}, loc || {}, { kind, shared: true, id: e.id });
+    const total = (e.len || 8) * HW;
+    if (kind === 'blade') {
+      o.len = clamp(total * 0.76, 5, 30); o.wid = e.kind === 'greatsword' ? 1.3 : e.kind === 'longsword' ? 1.05 : e.kind === 'sword' ? 1.0 : 0.72;
+      o.gripLen = e.kind === 'greatsword' ? 6 : e.kind === 'longsword' ? 4.4 : total > 14 ? 3.4 : 2.4;
+      o.two = e.grip === 'two';
+      if (e.kind === 'dirk') o.guard = 'basket'; else if (e.kind === 'knife' || e.kind === 'throwing') o.guard = o.guard || 'none'; else if (!o.guard) o.guard = 'cross';
+      if (e.material === 'glass') o.blade = (c.edge && c.edge[0] > c.edge[2]) ? 'glass' : (o.blade === 'lilac' ? 'lilac' : 'glass');
+    } else if (kind === 'fork' || kind === 'glaive') o.len = clamp(total, 20, 34);
+    else if (kind === 'maul' || kind === 'axe' || kind === 'mace' || kind === 'hammer') o.len = clamp(total * 0.85, 10, 24);
+    else if (kind === 'crossbow') o.len = clamp(total * 0.5, 9, 14);
+    else if (kind === 'pistol') o.len = clamp(total * 0.5, 6, 9);
+    o.cols = { blade: c.blade || null, edge: c.edge || null, grip: c.grip || null, guard: c.guard || null, head: c.head || c.blade || null };
+    o.two = o.two || e.grip === 'two';
+    return o;
+  }
   function gear() {
-    try { if (typeof GEARLOOK21 === 'object' && GEARLOOK21 && GEARLOOK21.armor && GEARLOOK21.weapons) return GEARLOOK21; } catch (e) { /* not loaded */ }
-    return LOCAL;
+    let S = null;
+    try { if (typeof GEARLOOK21 === 'object' && GEARLOOK21 && GEARLOOK21.ARMOR && GEARLOOK21.WEAPONS) S = GEARLOOK21; } catch (e) { S = null; }
+    if (!S) return LOCAL;
+    if (adapted && adaptedFrom === S) return adapted;
+    const A = { v: 1, shared: true, armor: {}, weapons: {}, calling: {}, faces: {} };
+    try {
+      for (const id of Object.keys(S.ARMOR)) { const o = adaptArmor(S.ARMOR[id], LOCAL.armor[id]); if (o) A.armor[id] = o; }
+      for (const id of Object.keys(S.WEAPONS)) A.weapons[id] = adaptWeapon(S.WEAPONS[id], LOCAL.weapons[id]);
+      for (const id of Object.keys(LOCAL.calling)) { const c = S.CALLINGS && S.CALLINGS[id]; A.calling[id] = Object.assign({}, LOCAL.calling[id], c ? { coat: c.coat, cloak: c.accent } : {}); }
+      for (const n of [1, 2, 3, 4, 5, 6]) {
+        const f = S.FACES && S.FACES[n], lf = LOCAL.faces[n];
+        A.faces[n] = Object.assign({}, lf, f ? { skin: f.skin, hair: lf.hair ? f.hair : null } : {});
+      }
+      if (S.GLASS && S.GLASS.base) A.glass = S.GLASS.base;
+    } catch (e) { warnOnce('shared table', e); return LOCAL; }
+    adapted = A; adaptedFrom = S;
+    return A;
   }
   function gearEntry(kind, id) {
     const T = gear(), L = LOCAL[kind] || {};
     const a = T[kind] && has(T[kind], id) ? T[kind][id] : null, b = has(L, id) ? L[id] : null;
-    if (a && b && a !== b) return Object.assign({}, b, a);
     return a || b;
   }
   // an armour id with no table entry: guessed from its slot and name, as the Phase 5 doll did
@@ -429,7 +493,7 @@ const CARD21 = (() => {
     const P = { st, lean, up, br, act, ph };
     // shoulders, neck and head rise a little with each breath
     const lift = br * 0.32;
-    P.shR = [lean * 0.4, 6.5 + br * 0.08, 43 + lift]; P.shL = [lean * 0.4, -6.5 - br * 0.08, 43 + lift];
+    P.shR = [lean * 0.4, 6.0 + br * 0.08, 42.4 + lift]; P.shL = [lean * 0.4, -6.0 - br * 0.08, 42.4 + lift];
     P.head = [0.3 + lean * 0.5, 0, 51.4 + up * 0.6 + lift * 0.8];
     P.hipR = [lean * 0.4 * 0.3, 2.6, 27.5]; P.hipL = [lean * 0.4 * 0.3, -2.6, 27.5];
     // legs: standing a little apart (a slight stagger shows both legs in profile); walking, one leads
@@ -495,7 +559,7 @@ const CARD21 = (() => {
   }
 
   // ================================================================ THE FIGURE (layers from the look)
-  const SIZES = { card: { W: 176, H: 352, K: 5.2, FOOT: 336 }, partner: { W: 80, H: 192, K: 2.95, FOOT: 186 }, ghost: { W: 80, H: 192, K: 2.95, FOOT: 186 } };
+  const SIZES = { card: { W: 176, H: 352, K: 5.2, FOOT: 336 }, partner: { W: 80, H: 192, K: 3.2, FOOT: 188 }, ghost: { W: 80, H: 192, K: 3.2, FOOT: 188 } };
   function build(X, L, o) {
     const T = gear(), cal = (T.calling && T.calling[L.cls]) || LOCAL.calling[L.cls] || LOCAL.calling.blade;
     const fc = (T.faces && T.faces[L.face]) || LOCAL.faces[L.face] || LOCAL.faces[1];
@@ -517,7 +581,7 @@ const CARD21 = (() => {
     const mBelt = M('belt', [62, 40, 26], 'leather');
     const mBrass = M('brass', C.brass, 'metal', { spec: 1 });
     const glassOn = L.glass >= 0;
-    const mGlass = M('glass', C.glass, 'glass', { spec: 1.2, glow: 0.35 + clamp(L.glass, 0, 100) / 400 });
+    const mGlass = M('glass', T.glass || C.glass, 'glass', { spec: 1.2, glow: 0.35 + clamp(L.glass, 0, 100) / 400 });
     const bodyMat = (b) => {
       if (!b) return robeCalling ? M('robe', cal.coat, 'cloth', { fold: 1.2 }) : mCoat;
       const k = b.mat === 'metal' ? 'metal' : b.mat === 'mail' ? 'mail' : b.mat === 'quilt' ? 'quilt' : b.mat === 'leather' ? 'leather' : b.mat === 'canvas' ? 'canvas' : b.mat === 'oil' ? 'oil' : b.mat === 'wool' ? 'wool' : 'cloth';
@@ -536,6 +600,15 @@ const CARD21 = (() => {
     } else if (cal.coatKind === 'longcoat' || robeCalling) { upperM = robeCalling ? M('robe', cal.coat, 'cloth', { fold: 1.2 }) : mCoat; foreM = upperM; }
     else if (cal.coatKind === 'jerkin') { upperM = mShirt; foreM = mShirt; }
     if (cal.rolled && foreM === mShirt) foreM = mSkin;
+    // the shared table says exactly what the sleeves are (material, colour, rolled up, a bracer over the forearm)
+    let bracerM = null;
+    if (body && body.sleeveMat) {
+      const sk = body.sleeveMat;
+      const sm = sk === body.mat && sk !== 'cloth' ? mBody : M('sleeve:' + sk, body.sleeveCol || body.col, sk === 'metal' ? 'metal' : sk, { spec: sk === 'mail' ? 0.6 : sk === 'metal' ? 1.1 : 0, fold: sk === 'cloth' || sk === 'wool' ? 0.6 : 0 });
+      upperM = body.kind === 'plate' ? (mUnderMail || sm) : sm; foreM = body.rolled ? mSkin : sm;
+      if (body.kind === 'jerkin' && !robeCalling) upperM = sm;
+      if (body.bracer) bracerM = M('bracer:' + body.kind, body.bracer.col, body.bracer.mat === 'metal' ? 'metal' : 'leather', { spec: body.bracer.mat === 'metal' ? 1.1 : 0.2 });
+    }
     const handM = hands ? M('hands:' + hands.kind, hands.col, hands.mat === 'mail' ? 'mail' : 'leather', { spec: hands.mat === 'mail' ? 0.6 : 0 }) : mSkin;
     // ---- feet and legs
     const bootTop = feet ? (feet.top || 9) : 5.5;
@@ -737,6 +810,7 @@ const CARD21 = (() => {
       // gloves and gauntlets: a cuff, and the hand
       next();
       const hm = gHand ? mGlass : handM;
+      if (bracerM && !gFore) { capsule(X, lerp3(el, wrist, 0.18), lerp3(el, wrist, 0.92), 1.92, 1.55, bracerM); next(); }
       if (hands && !gHand) { capsule(X, lerp3(el, hd, 0.6), wrist, hands.kind === 'gauntlets' ? 1.62 : 1.42, hands.kind === 'gauntlets' ? 1.72 : 1.45, handM); }
       handBall(hd, hm, true);
       if (glassArm) {
@@ -770,8 +844,11 @@ const CARD21 = (() => {
       next();
       const k = Wl.kind;
       if (k === 'fists' || k === 'glassarm') return;
+      const cols = Wl.cols || {};
+      const colMat = (key, fallback, glassy) => cols[key] ? M('wc:' + key + ':' + (Wl.id || k), cols[key], glassy ? 'glass' : key === 'grip' ? 'leather' : 'metal', glassy ? { spec: 1.4, glow: 0.4 } : { spec: key === 'grip' ? 0.2 : 1.25 }) : fallback;
       if (k === 'blade') {
-        const bm = metalMat(Wl.blade), gm = woodMat(Wl.grip || 'leather'), pm = Wl.pommel === 'none' ? null : Wl.pommel === 'ivory' ? woodMat('ivory') : metalMat(Wl.pommel || 'iron');
+        const glassy = Wl.blade === 'glass' || Wl.blade === 'lilac';
+        const bm = colMat('blade', metalMat(Wl.blade), glassy), gm = colMat('grip', woodMat(Wl.grip || 'leather')), pm = Wl.pommel === 'none' ? null : Wl.pommel === 'ivory' ? woodMat('ivory') : colMat('guard', metalMat(Wl.pommel || 'iron'));
         const gl = Wl.gripLen || (Wl.len > 9 ? 3.4 : 2.4);
         const back = add(g, d, -gl * 0.55), guardP = add(g, d, gl * 0.45 + 0.1);
         capsule(X, back, guardP, 0.5, 0.48, gm);
@@ -781,7 +858,7 @@ const CARD21 = (() => {
           next();
           const gw = Wl.guard === 'wide' ? 3.0 : Wl.guard === 'ring' ? 1.9 : Wl.guard === 'basket' ? 1.3 : 2.3;
           if (Wl.guard === 'basket') sphere(X, add(guardP, d, -0.6), 1.25, metalMat('iron'));
-          else capsule(X, add(guardP, v, -gw), add(guardP, v, gw), 0.36, 0.36, Wl.guard === 'ring' ? mBrass : metalMat('iron'));
+          else capsule(X, add(guardP, v, -gw), add(guardP, v, gw), 0.36, 0.36, Wl.guard === 'ring' ? mBrass : colMat('guard', metalMat('iron')));
           if (Wl.guard === 'ring') { sphere(X, add(guardP, v, -gw), 0.5, mBrass); sphere(X, add(guardP, v, gw), 0.5, mBrass); }
         }
         next();
@@ -793,7 +870,7 @@ const CARD21 = (() => {
         return;
       }
       if (k === 'axe' || k === 'mace' || k === 'hammer') {
-        const hm = woodMat(Wl.haft || 'wood'), mm = metalMat(Wl.head || 'steel');
+        const hm = colMat('grip', woodMat(Wl.haft || 'wood')), mm = colMat('head', metalMat(Wl.head || 'steel'));
         const len = Wl.len, base = add(g, d, -2.4), top = add(g, d, len - 2.4);
         capsule(X, base, top, 0.5, 0.45, hm);
         const [v, w] = flatAxes(d);
@@ -826,7 +903,7 @@ const CARD21 = (() => {
         return;
       }
       if (k === 'fork' || k === 'glaive') {
-        const hm = woodMat(Wl.haft || 'ash'), mm = metalMat(Wl.head || 'bronze');
+        const hm = colMat('grip', woodMat(Wl.haft || 'ash')), mm = colMat('head', metalMat(Wl.head || 'bronze'));
         const len = Wl.len, base = add(g, d, -(len * 0.36)), top = add(g, d, len * 0.64);
         capsule(X, base, top, 0.48, 0.42, hm);
         next(); capsule(X, add(base, d, -0.4), add(base, d, 0.6), 0.55, 0.55, mBrass);
@@ -845,7 +922,7 @@ const CARD21 = (() => {
         return;
       }
       if (k === 'maul') {
-        const hm = woodMat(Wl.haft || 'wood'), mm = metalMat(Wl.head || 'iron');
+        const hm = colMat('grip', woodMat(Wl.haft || 'wood')), mm = colMat('head', metalMat(Wl.head || 'iron'));
         const len = Wl.len, back = add(g, d, -1.6), headC = add(g, d, len - 1.6);
         capsule(X, back, headC, 0.55, 0.5, hm);
         const [v] = flatAxes(d);
@@ -857,7 +934,7 @@ const CARD21 = (() => {
         return;
       }
       if (k === 'pistol') {
-        const wm = woodMat(Wl.body || 'wood'), mm = metalMat(Wl.metal || 'brass');
+        const wm = colMat('grip', woodMat(Wl.body || 'wood')), mm = colMat('guard', metalMat(Wl.metal || 'brass'));
         const [v] = flatAxes(d);
         // the grip in the hand, the barrel along d from above the hand
         const gripTop = add(g, [0, 0, 0.6]);
@@ -868,7 +945,7 @@ const CARD21 = (() => {
         return;
       }
       if (k === 'crossbow') {
-        const wm = woodMat(Wl.body || 'wood'), mm = metalMat(Wl.metal || 'iron');
+        const wm = colMat('grip', woodMat(Wl.body || 'wood')), mm = colMat('blade', metalMat(Wl.metal || 'iron'));
         const len = Wl.len, back = add(g, d, -2.6), front = add(g, d, len - 2.6);
         capsule(X, back, front, 0.75, 0.62, wm);
         const [v, w] = flatAxes(d);
@@ -886,7 +963,7 @@ const CARD21 = (() => {
     const shieldShape = (S, c, n, upv, onBack) => {
       const v = norm(cross(upv, n)), U2 = norm(cross(n, v));
       if (S.kind === 'kite') {
-        const h = S.h || 15, top = h * 0.36, wTop = 4.7;
+        const h = S.h || 15, top = h * 0.36, wTop = S.wTop || 4.7;
         const inside = (a, b) => { if (a > top || a < top - h) return false; const t = (top - a) / h; const half = t < 0.28 ? wTop * (0.9 + 0.1 * Math.sin(t / 0.28 * Math.PI / 2)) : wTop * Math.pow(Math.max(0, 1 - (t - 0.28) / 0.72), 0.85); return Math.abs(b) < half - (a > top - 0.6 ? (a - (top - 0.6)) * 0.0 : 0); };
         const rimW = 0.55;
         const rimM = M('kiterim', S.rim || C.brass, 'metal', { spec: 1.1 }), faceM = M('kiteface', S.col, 'paint', { emblem: S.emblem || [214, 206, 188], kite: { top, h, wTop } });
@@ -896,10 +973,10 @@ const CARD21 = (() => {
         if (!onBack) { next(); sphere(X, add(c, n, -0.9), 0.6, M('strap', [60, 40, 26], 'leather')); }
       } else {
         const r = S.r || 3.1;
-        const faceM = M('bucklerface', S.face || [96, 70, 48], 'wood'), rimM = M('bucklerrim', S.col || C.steel, 'metal', { spec: 1.2 });
+        const faceM = M('bucklerface', S.face || [96, 70, 48], 'wood', S.band ? { band: S.band } : null), rimM = M('bucklerrim', S.col || C.steel, 'metal', { spec: 1.2 });
         slab(X, c, U2, v, n, 0.32, [-r, r, -r, r], (a, b) => a * a + b * b < r * r, faceM, (a, b) => [a * 0.12, b * 0.12]);
         next(); slab(X, add(c, n, 0.08), U2, v, n, 0.34, [-r, r, -r, r], (a, b) => { const q = a * a + b * b; return q < r * r && q > (r - 0.65) * (r - 0.65); }, rimM, (a, b) => [a * 0.15, b * 0.15]);
-        next(); sphere(X, add(c, n, 0.45), 1.15, rimM);
+        next(); sphere(X, add(c, n, 0.45), r * 0.34, S.boss ? M('bucklerboss', S.boss, 'metal', { spec: 1.3 }) : rimM);
       }
     };
     const shieldOnArm = () => {
@@ -1075,6 +1152,7 @@ const CARD21 = (() => {
         if (kind === 'skin' && fc.scar && X.headC && Math.abs(tv - X.headC[2] - 1.8) < 1.8 && tu < -1.5 && tu > -2.6) v -= 0.18;
         if (kind === 'skin' && fc.streak && X.headC && tv - X.headC[2] < 0 && tv - X.headC[2] > -2.2 && tu > 1.2 && tu < 2.1) rp = ramp(C.glass, 'glass');
         if (kind === 'dark') rp = ramp([26, 20, 20], 'cloth');
+        if (kind === 'wood' && Mt.band && Math.abs(tv) < 0.55) rp = ramp(Mt.band, 'cloth');
         // glass glows: it never sinks into the dark tones
         if (Mt.glow) v = v * (1 - Mt.glow * 0.5) + Mt.glow * 0.7;
         const t = clamp(v * 0.94 + BAYER[(y & 3) * 4 + (x & 3)] * (kind === 'metal' || kind === 'mail' || kind === 'glass' ? 0.05 : 0.11), 0, 1.199) * (N_TONE - 1) / 1.2 * 1.2;
@@ -1188,13 +1266,19 @@ const CARD21 = (() => {
     const _ln = GHOST18.lookNow;
     const ln = function () {
       const r = _ln.apply(this, arguments);
-      try { if (r && typeof r === 'object' && typeof G !== 'undefined' && G.player) { const L = lookOf(G.player); r.gear = L; if (G.player === homePlayer()) remember(r, L); } } catch (e) { warnOnce('lookNow', e); }
+      try { if (r && typeof r === 'object' && typeof G !== 'undefined' && G.player) { const L = lookOf(G.player); r.gear = L; if (G.player === homePlayer()) remember({ cls: r.cls, face: r.face, wpn: r.wpn, arm: r.arm }, L); } } catch (e) { warnOnce('lookNow', e); }
       return r;
     };
     ln.c21 = true; GHOST18.lookNow = ln;
   }
   // the player whose likeness is "mine" (not a co-op partner standing in for G.player for a moment)
-  const homePlayer = () => (typeof G !== 'undefined' ? G.player : null);
+  const homePlayer = () => {
+    if (typeof G === 'undefined' || !G.player) return null;
+    try { if (typeof PARTNER19 === 'object' && PARTNER19 && PARTNER19.S && PARTNER19.S.pp === G.player) return null; } catch (e) { /* none */ }
+    return G.player;
+  };
+  // remember what the compact ghost look of my current kit stands for (so my ghosts wear it after a reload)
+  function rememberMine() { try { if (typeof GHOST18 === 'object' && GHOST18 && GHOST18.lookNow && homePlayer()) GHOST18.lookNow(); } catch (e) { /* none */ } }
 
   // ================================================================ THE CARD (DOM)
   const VIEW_NAMES = ['Front', 'Front right', 'Right side', 'Back right', 'Back', 'Back left', 'Left side', 'Front left'];
@@ -1353,7 +1437,7 @@ const CARD21 = (() => {
       const _inv = renderInventory;
       renderInventory = function () {
         const r = _inv.apply(this, arguments);
-        try { if (on()) { const pn = document.querySelector('#modal-panel'); if (pn) wire(pn); startLoop(); } } catch (e) { warnOnce('inv', e); }
+        try { if (on()) { const pn = document.querySelector('#modal-panel'); if (pn) wire(pn); startLoop(); rememberMine(); } } catch (e) { warnOnce('inv', e); }
         return r;
       };
     }
@@ -1376,6 +1460,7 @@ const CARD21 = (() => {
       renderAccessibilityMenu = function () { const r = _acc.apply(this, arguments); try { appendRows(); } catch (e) { warnOnce('rows', e); } return r; };
     }
     subs.push(() => { try { if (document.querySelector('canvas.c21-cv')) paintAll(true); } catch (e) { /* ignore */ } });
+    try { setInterval(rememberMine, 5000); } catch (e) { /* none */ }
     try { if (typeof GFX !== 'undefined' && GFX.onChange) GFX.onChange(() => { if (cfg.override !== null && GFX.card21 !== cfg.override && GFX.preset !== 'plain') GFX.card21 = cfg.override; }); } catch (e) { /* ignore */ }
   }
   try { if (typeof document !== 'undefined') install(); } catch (e) { warnOnce('install', e); }

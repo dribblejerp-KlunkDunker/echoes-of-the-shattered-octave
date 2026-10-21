@@ -774,7 +774,10 @@ const SYNC19 = (function () {
     if (!l || typeof l !== 'object') return null;
     const { cls, face, wpn, arm } = l;
     if (![cls, face, wpn, arm].every(isInt) || cls < 0 || cls > 15 || face < 1 || face > 6 || wpn < 0 || wpn > 15 || arm < 0 || arm > 63) return null;
-    return { cls, face, wpn, arm };
+    const out = { cls, face, wpn, arm };
+    // Phase 21: the host's real gear (catalog ids only, validated again here) so the guest sees the host's kit
+    try { if (l.gear && typeof CARD21 === 'object' && CARD21 && CARD21.cleanGear) { const g = CARD21.cleanGear(l.gear); if (g) out.gear = g; } } catch (e) { /* compact look only */ }
+    return out;
   }
   function knownMap(id) { return typeof id === 'string' && id.length <= 48 && G.maps && Object.prototype.hasOwnProperty.call(G.maps, id) && G.maps[id] && G.maps[id].w; }
   function onWelcome(p, from) {

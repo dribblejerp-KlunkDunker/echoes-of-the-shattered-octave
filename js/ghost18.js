@@ -857,8 +857,11 @@ const GHOST18 = (function () {
   const figCache = new Map();
   // a frame as { w, h, data: Uint32Array (ABGR), hs, cx }
   function figureFrame(b, loco, act, ap, look) {
-    const k = [b, loco, act, ap, look.cls, look.face, look.wpn, look.arm].join(',');
+    // Phase 21: the ghost is the character card's likeness made pale (CARD21), when that module is loaded and on
+    const c21 = typeof CARD21 === 'object' && CARD21 && CARD21.on && CARD21.on() && typeof CARD21.ghostFrame === 'function';
+    const k = [b, loco, act, ap, look.cls, look.face, look.wpn, look.arm, c21 ? 'c21:' + CARD21.sig(CARD21.lookFor(look)) : ''].join(',');
     let f = figCache.get(k); if (f) return f;
+    if (c21) { try { f = CARD21.ghostFrame(b, loco, act, ap, look); if (figCache.size > 360) figCache.delete(figCache.keys().next().value); figCache.set(k, f); return f; } catch (e) { /* the Phase 18 painter below */ } }
     const tones = paintFigure(b, loco, act, ap, look), pal = palette(look), data = new Uint32Array(FW * FH);
     for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) {
       const t = tones[y * FW + x]; if (!t) continue;
