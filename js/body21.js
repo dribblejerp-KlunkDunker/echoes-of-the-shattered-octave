@@ -1280,6 +1280,7 @@ void main() {
       if (opts.capStart) capAt(0, opts.capTile); if (opts.capEnd) capAt(n - 1, opts.capTile);
     }
     const body = look.body, feet = look.feet, shape = body.bare ? 'shirt' : body.shape, lenH = body.len == null ? 0.1 : body.len;
+    const hemZ0 = shape === 'cuirass' ? 0.75 : lerp(0.84, 0.06, clamp(lenH, 0, 1));   // legs above a long hem are never drawn
     // ---- the gait
     const moving = legs.moving, ph = legs.phase, S = legs.run ? 0.24 : 0.17;
     const legOf = (side) => {
@@ -1306,9 +1307,11 @@ void main() {
       const K = add(add(H, sc(u, aa)), sc(kdir, hh));
       L.H = H; L.K = K; L.A = A;
       // thigh and shin (trousers)
-      tube([{ c: H, a: 0.085, b: 0.085 }, { c: add(H, sc(sub(K, H), 0.5)), a: 0.072, b: 0.07 }, { c: K, a: 0.058, b: 0.058 }], T_.trouser, 10);
       const shin = (k) => add(K, sc(sub(A, K), k));
-      tube([{ c: K, a: 0.058, b: 0.058 }, { c: shin(0.35), a: 0.055, b: 0.06 }, { c: shin(0.8), a: 0.042, b: 0.042 }, { c: A, a: 0.038, b: 0.04 }], T_.trouser, 10);
+      if (K[2] < hemZ0 - 0.02 || lenH < 0.6) tube([{ c: H, a: 0.085, b: 0.085 }, { c: add(H, sc(sub(K, H), 0.5)), a: 0.072, b: 0.07 }, { c: K, a: 0.058, b: 0.058 }], T_.trouser, 10);
+      // under a long hem the shin starts just above the hem line
+      const k0 = lenH >= 0.6 && K[2] > hemZ0 ? clamp((K[2] - (hemZ0 + 0.04)) / Math.max(0.01, K[2] - A[2]), 0, 0.95) : 0;
+      tube([{ c: shin(k0), a: 0.058 - k0 * 0.012, b: 0.058 - k0 * 0.01 }, { c: shin(k0 + (1 - k0) * 0.35), a: 0.055, b: 0.06 }, { c: shin(k0 + (1 - k0) * 0.8), a: 0.042, b: 0.042 }, { c: A, a: 0.038, b: 0.04 }], T_.trouser, 10);
       // the boot's shaft over the shin (greaves: a plate and a knee cop)
       const topK = { shoes: 0.08, softboots: 0.3, hobnails: 0.55, greaves: 0.95 }[feet.shape] || 0.08;
       if (feet.shape !== 'shoes') tube([{ c: shin(1), a: 0.052, b: 0.056 }, { c: shin(Math.max(0, 1 - topK * 0.5)), a: 0.058, b: 0.064 }, { c: shin(Math.max(0, 1 - topK)), a: 0.066, b: 0.07, ao: 0.85 }], feet.shape === 'greaves' ? T_.plate : T_.shaft, 10);
@@ -1325,7 +1328,7 @@ void main() {
     // ---- the hips, the hem and the lower chest
     const sway = moving ? Math.sin(ph) * 0.015 : 0, hemFwd = (legsD[0].fwd + legsD[1].fwd) / 2 * (0.25 + 0.85 * clamp(lenH, 0, 1));
     if (shape === 'cuirass') {
-      for (let r = 0; r < 3; r++) { const z0 = 1.0 - r * 0.075; tube([{ c: [-0.05, sway, z0], a: 0.19 + r * 0.012, b: 0.13 + r * 0.01 }, { c: [-0.04 + r * 0.01, sway, z0 - 0.1], a: 0.21 + r * 0.014, b: 0.15 + r * 0.012, ao: 0.8 }], T_.skirt, 16); }
+      for (let r = 0; r < 2; r++) { const z0 = 1.0 - r * 0.08; tube([{ c: [-0.08, sway, z0], a: 0.175 + r * 0.01, b: 0.12 + r * 0.008 }, { c: [-0.07 + r * 0.01, sway, z0 - 0.1], a: 0.19 + r * 0.012, b: 0.135 + r * 0.01, ao: 0.78 }], T_.skirt, 16); }
       tube([{ c: [-0.05, 0, 0.98], a: 0.15, b: 0.11 }, { c: [-0.05, 0, 0.8], a: 0.16, b: 0.12 }], T_.trouser, 12);
     } else {
       const hemZ = lerp(0.84, 0.06, clamp(lenH, 0, 1)), flare = clamp(lenH, 0, 1);
