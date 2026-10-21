@@ -45,7 +45,7 @@
 //    SPRITES21.drawTranslucent(view)   particles, ghost, halos (depth test, no depth write)
 //    view = { vp: Float32Array(16) column-major, MAP SPACE (x east, y south, z up; the map's own units) -> clip;
 //             eye: [x, y, z]; dir (yaw, radians, the raycaster's cam.dir); pitch (radians, + = up, optional);
-//             fogDist; outdoor; fog: [r, g, b] 0..255 (the far colour); light (outdoor daylight 0..1.x, the
+//             fogDist; outdoor; fog: [r, g, b] 0..1 (the raycaster's tint target, per unit of light); light (outdoor daylight 0..1.x, the
 //             raycaster's light_); ambient; flick; lights: the raycaster-format point lights [{x,y,r,cr,cg,cb,vis..}]
 //             (optional); px: device pixels per logical pixel (dither size, optional); spriteAspect (world width per
 //             unit of art aspect, 1 for a true-aspect camera, optional); shade: optional LIGHT hook (below) }
@@ -94,7 +94,8 @@ const SPRITES21 = (() => {
   const entries = new WeakMap();                 // sprite object -> { data, emit, pg, gen, u0, v0, u1, v1 }
   let frameNo = 0;
   function newPage() {
-    const tex = gl.createTexture();
+    const tex = gl.createTexture(), at = gl.getParameter(gl.ACTIVE_TEXTURE);
+    gl.activeTexture(gl.TEXTURE0 + U_ATLAS);
     gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.texStorage2D(gl.TEXTURE_2D, LEVELS, gl.RGBA8, PAGE, PAGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
@@ -102,6 +103,7 @@ const SPRITES21 = (() => {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAX_LEVEL, LEVELS - 1);
+    gl.activeTexture(at);
     const pg = { tex, shelves: [], top: 0, gen: ++atlasGen, used: 0, idx: pages.length };
     pages.push(pg); st.pages = pages.length;
     return pg;
@@ -170,31 +172,44 @@ const SPRITES21 = (() => {
     if (W > PAGE || H > PAGE) return null;
     const got = alloc(W, H); if (!got) { st.missed++; return null; }
     const [pg, [x, y]] = got;
+    const ua = gl.getParameter(gl.UNPACK_ALIGNMENT), at = gl.getParameter(gl.ACTIVE_TEXTURE);
+    gl.activeTexture(gl.TEXTURE0 + U_ATLAS);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false); gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
-    upload(pg, x, y, sp);
+    try { upload(pg, x, y, sp); } finally { gl.pixelStorei(gl.UNPACK_ALIGNMENT, ua); gl.activeTexture(at); }
     en = { data: sp.data, emit: sp.emit || null, pg, gen: pg.gen, u0: x / PAGE, v0: y / PAGE, u1: (x + sp.w) / PAGE, v1: (y + sp.h) / PAGE };
     entries.set(sp, en); pg.used = frameNo;
     return en;
   }
 
   // ================================================================ shaders
-  const BB_VS = `#version 300 es
-precision highp float;
+  // Bodies without a header: on R3D's context the billboard program is made with R3D.program (CORE's header: the frame
+  // and light uniform blocks, the 'common' and 'shade' chunks), so LIGHT's lighting reaches every sprite through
+  // r3dShade() as a kind-1 surface; elsewhere (the parity view) the same bodies get a plain header and the raycaster's
+  // formula. Every fragment shader writes R3D's two targets: colour, and aux (material id / 255, emissive); a blended
+  // pass writes an aux value its blend leaves unchanged.
+  const HEAD_S = '#version 300 es\nprecision highp float;\n';
+  const BB_VS = `
 layout(location=0) in vec2 a_c;
 layout(location=1) in vec4 i_p;   // x, y, base z, world width
 layout(location=2) in vec4 i_s;   // world height, anchor (0..1 from the drawn left edge), skew, depth pull
 layout(location=3) in vec4 i_uv;  // u0 v0 u1 v1 (u swapped when flipped)
-layout(location=4) in vec4 i_k;   // light factor f, hurt, alpha, flags (1 flash, 2 translucent)
+layout(location=4) in vec4 i_k;   // light factor f, hurt, alpha, flags (1 flash, 2 translucent, 4 unlit, 8 glow entity)
 layout(location=5) in vec4 i_l;   // point light rgb (0..1), glow floor for emissive texels
-uniform mat4 u_vp; uniform vec3 u_eye; uniform vec2 u_right;
+uniform mat4 u_vp; uniform vec3 u_eye; uniform vec2 u_right; uniform float u_tilt;
 out vec2 v_uv; out vec4 v_k; out vec4 v_l; out vec3 v_w;
 void main() {
   float lat = (a_c.x - i_s.y) * i_p.w + i_s.z * i_s.x * a_c.y;
-  vec3 P = vec3(i_p.xy + u_right * lat, i_p.z + i_s.x * a_c.y);
-  vec4 c = u_vp * vec4(P, 1.0);
-  // depth of the body's own vertical axis at this height, pulled toward the eye: the raycaster's occlusion rule
   vec2 te = u_eye.xy - i_p.xy; float L = length(te);
-  vec3 A = vec3(i_p.xy + (L > 1e-4 ? te / L : vec2(0.0)) * min(i_s.w, L * 0.5), P.z);
+  vec2 toEye = L > 1e-4 ? te / L : vec2(0.0);
+  // free look: a thing seen steeply from above (an item on the floor, a rat at your feet) leans its top away from the eye
+  // by part of the angle, so it is not seen edge-on; level views (and the parity view: u_tilt 0) keep it upright
+  float elev = atan(u_eye.z - (i_p.z + i_s.x * 0.5), max(L, 1e-3));
+  float tilt = u_tilt * clamp(elev - 0.2, 0.0, 1.2);
+  float hz = i_s.x * a_c.y;
+  vec3 P = vec3(i_p.xy + u_right * lat - toEye * (hz * sin(tilt)), i_p.z + hz * cos(tilt));
+  vec4 c = u_vp * vec4(P, 1.0);
+  // depth of the body's own (leaning) axis at this height, pulled toward the eye: the raycaster's occlusion rule
+  vec3 A = vec3(i_p.xy - toEye * (hz * sin(tilt)) + toEye * min(i_s.w, L * 0.5), P.z);
   vec4 ca = u_vp * vec4(A, 1.0);
   if (ca.w > 1e-3) c.z = clamp(ca.z / ca.w, -1.0, 1.0) * c.w;
   gl_Position = c;
@@ -203,23 +218,31 @@ void main() {
 }`;
   const SHADE_FALLBACK = `
 uniform vec3 u_fog; uniform float u_light; uniform float u_outdoor;
-vec3 l21Shade(vec3 c, vec3 wpos, vec3 n, float emis, float f, vec3 pl) {
-  // the raycaster's tint() outdoors (blend to the fog colour, then the daylight) and shade() indoors
-  vec3 o = u_outdoor > 0.5 ? (c * f + u_fog * (1.0 - f)) * u_light + pl : c * f + pl;
+vec3 s21Shade(vec3 c, vec3 wpos, vec3 n, float emis, float f, vec3 pl) {
+  // the raycaster's tint() outdoors (blend to the fog colour, then the daylight) and shade() indoors;
+  // a texel that gives its own light is not dimmed by the hour (the raycaster's bloom made up for that)
+  float day = emis > 0.5 ? max(u_light, f) : u_light;
+  vec3 o = u_outdoor > 0.5 ? (c * f + u_fog * (1.0 - f)) * day + pl : c * f + pl;
   return min(o, vec3(1.0));
 }`;
-  const BB_FS = (shade) => `#version 300 es
-precision highp float;
-uniform sampler2D u_atlas; uniform float u_px; uniform vec3 u_eye; uniform float u_mode;
+  const SHADE_R3D = `
+uniform float u_zk;
+vec3 s21Shade(vec3 c, vec3 wpos, vec3 n, float emis, float f, vec3 pl) {
+  R3DSurf s; s.albedo = c; s.pos = vec3(wpos.xy, wpos.z * u_zk); s.nrm = n; s.side = 1.0; s.mat = 6.0;
+  s.emissive = emis; s.fi = f; s.ladd = pl; s.kind = 1;
+  return r3dShade(s);
+}`;
+  const BB_FS = (shade) => `
+uniform sampler2D u_atlas; uniform float u_px; uniform vec3 u_eye;
 in vec2 v_uv; in vec4 v_k; in vec4 v_l; in vec3 v_w;
-out vec4 o;
+layout(location=0) out vec4 oColor; layout(location=1) out vec4 oAux;
 ${shade}
 const float BY[16] = float[16](0., 8., 2., 10., 12., 4., 14., 6., 3., 11., 1., 9., 15., 7., 13., 5.);
 void main() {
   vec4 t = texture(u_atlas, v_uv);
   if (t.a < 0.25) discard;
-  float al = v_k.z, flags = v_k.w;
-  bool trans = mod(floor(flags / 2.0), 2.0) > 0.5;
+  float al = v_k.z; int flags = int(v_k.w + 0.5);
+  bool trans = (flags & 2) != 0;
   if (!trans && al < 0.999) { ivec2 q = ivec2(floor(gl_FragCoord.xy / u_px)) & 3; if (BY[q.y * 4 + q.x] >= al * 16.0) discard; }
   float emis = t.a < 0.9 ? 1.0 : 0.0;
   vec3 c = t.rgb;
@@ -227,22 +250,22 @@ void main() {
   if (hk > 0.0) c = vec3(c.r + (1.0 - c.r) * hk, c.g * (1.0 - hk), c.b * (1.0 - hk));
   float f = emis > 0.5 ? max(v_k.x, v_l.w) : v_k.x;
   vec3 n = vec3(normalize(u_eye.xy - v_w.xy + vec2(1e-5)), 0.0);
-  vec3 col = l21Shade(c, v_w, n, emis, f, v_l.rgb);
-  if (mod(flags, 2.0) > 0.5) col = vec3(1.0, 230.0 / 255.0, 200.0 / 255.0);
-  o = trans ? vec4(col * al, al) : vec4(col, 1.0);
+  vec3 col = (flags & 4) != 0 ? c : s21Shade(c, v_w, n, emis, f, v_l.rgb);
+  if ((flags & 1) != 0) col = vec3(1.0, 230.0 / 255.0, 200.0 / 255.0);
+  if (trans) { oColor = vec4(col * al, al); oAux = vec4(0.0); return; }
+  oColor = vec4(col, 1.0);
+  oAux = vec4(((emis > 0.5 || (flags & 8) != 0) ? 8.0 : 6.0) / 255.0, emis, 0.0, 1.0);
 }`;
-  // decals: soft shadow discs (0) and look10 marks (1); output is a multiplier (blend ZERO, SRC_COLOR)
-  const DC_VS = `#version 300 es
-precision highp float;
+  // decals: soft shadow discs (0), look10 / air11 marks (1, multiply) and pale water prints (2, additive)
+  const DC_VS = `
 layout(location=0) in vec3 a_p; layout(location=1) in vec2 a_uv; layout(location=2) in vec4 a_k; layout(location=3) in vec3 a_m;
 uniform mat4 u_vp;
 out vec2 v_uv; out vec4 v_k; out vec3 v_m;
 void main() { gl_Position = u_vp * vec4(a_p, 1.0); v_uv = a_uv; v_k = a_k; v_m = a_m; }`;
-  const DC_FS = `#version 300 es
-precision highp float;
+  const DC_FS = `
 uniform sampler2D u_masks; uniform float u_maskN;
 in vec2 v_uv; in vec4 v_k; in vec3 v_m;
-out vec4 o;
+layout(location=0) out vec4 oColor; layout(location=1) out vec4 oAux;
 void main() {
   if (abs(v_uv.x) > 1.0 || abs(v_uv.y) > 1.0) discard;
   float a;
@@ -250,19 +273,19 @@ void main() {
     float q = dot(v_uv, v_uv); if (q >= 1.0) discard;
     a = v_k.z * pow(1.0 - q, v_k.w);
     // the sun is what a shadow takes away: red goes first, blue least (look10)
-    o = vec4(1.0 - a, 1.0 - a * 0.97, 1.0 - a * 0.875, 1.0);
+    oColor = vec4(1.0 - a, 1.0 - a * 0.97, 1.0 - a * 0.875, 1.0); oAux = vec4(1.0);
   } else {
     // the raycaster samples the 32x32 mask with a floor(): nearest texel, no smoothing (pixel art)
     vec2 m = floor((v_uv + 1.0) * 15.5) + 0.5;
     float cov = texture(u_masks, vec2(m.x / 32.0, (v_k.y * 32.0 + m.y) / (32.0 * u_maskN))).r;
     a = cov * v_k.z; if (a <= 0.003) discard;
-    o = vec4(vec3(1.0) - a + a * v_m, 1.0);
+    if (v_k.x < 1.5) { oColor = vec4(vec3(1.0) - a + a * v_m, 1.0); oAux = vec4(1.0); }
+    else { oColor = vec4(v_m * a, 0.0); oAux = vec4(0.0); }
   }
 }`;
-  // particles: camera-facing quads. kind 0 soft noisy disc (smoke, steam, mist), 1 solid square (droplet, glint),
-  // 2 ring (telegraph entrance), 3 soft additive ellipse (halos, glimmer)
-  const PT_VS = `#version 300 es
-precision highp float;
+  // particles: quads facing the eye, upright, or flat on the ground. kind 0 soft noisy disc (smoke, steam, mist),
+  // 1 solid square (droplet, spark, thread), 2 ring (entrance, song), 3 soft ellipse (halos, glimmer, breath)
+  const PT_VS = `
 layout(location=0) in vec2 a_c;
 layout(location=1) in vec4 i_p;   // x, y, z (centre), pull toward the eye
 layout(location=2) in vec4 i_r;   // half width, half height (world), kind, seed
@@ -272,7 +295,6 @@ uniform mat4 u_vp; uniform vec3 u_eye; uniform vec3 u_r3; uniform vec3 u_u3;
 out vec2 v_q; out vec4 v_c; out vec4 v_r; out vec4 v_x;
 void main() {
   vec2 q = a_c * 2.0 - 1.0;
-  // orientation: 0 faces the eye, 1 upright (turns about z only), 2 lies flat on the ground
   vec3 rt = i_x.y > 1.5 ? vec3(1.0, 0.0, 0.0) : u_r3;
   vec3 up = i_x.y > 1.5 ? vec3(0.0, 1.0, 0.0) : i_x.y > 0.5 ? vec3(0.0, 0.0, 1.0) : u_u3;
   vec3 P = i_p.xyz + rt * q.x * i_r.x + up * q.y * i_r.y;
@@ -281,11 +303,10 @@ void main() {
   gl_Position = u_vp * vec4(P, 1.0);
   v_q = q; v_c = i_c; v_r = i_r; v_x = i_x;
 }`;
-  const PT_FS = `#version 300 es
-precision highp float;
+  const PT_FS = `
 uniform float u_px;
 in vec2 v_q; in vec4 v_c; in vec4 v_r; in vec4 v_x;
-out vec4 o;
+layout(location=0) out vec4 oColor; layout(location=1) out vec4 oAux;
 float h21(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
 void main() {
   float d2 = dot(v_q, v_q), a = v_c.a, k = v_r.z;
@@ -303,7 +324,7 @@ void main() {
     float u = 1.0 - d2; a *= u * u;
   }
   if (a <= 0.002) discard;
-  o = vec4(v_c.rgb * a, a);
+  oColor = vec4(v_c.rgb * a, a); oAux = vec4(0.0);
 }`;
   // the parity view: CPU frame plus its depth, converted to this projection
   const DV_VS = `#version 300 es
@@ -322,7 +343,7 @@ void main() {
 
   function compile(vs, fs, name) {
     const mk = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { const log = gl.getShaderInfoLog(s); gl.deleteShader(s); throw new Error(name + ' shader: ' + log); } return s; };
-    const p = gl.createProgram(), v = mk(gl.VERTEX_SHADER, vs), f = mk(gl.FRAGMENT_SHADER, fs);
+    const p = gl.createProgram(), v = mk(gl.VERTEX_SHADER, HEAD_S + vs), f = mk(gl.FRAGMENT_SHADER, HEAD_S + fs);
     gl.attachShader(p, v); gl.attachShader(p, f); gl.linkProgram(p);
     gl.deleteShader(v); gl.deleteShader(f);
     if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(name + ' link: ' + gl.getProgramInfoLog(p));
@@ -330,13 +351,19 @@ void main() {
     for (let i = 0; i < n; i++) { const info = gl.getActiveUniform(p, i); u[info.name.replace(/\[0\]$/, '')] = gl.getUniformLocation(p, info.name); }
     return { p, u };
   }
-  // billboard programs are made per LIGHT hook (its GLSL text), cached by that text
-  const bbProgs = new Map();
-  function bbProgram(shade) {
-    const key = shade && shade.glsl ? shade.glsl : '';
-    let pr = bbProgs.get(key);
-    if (!pr) { pr = compile(BB_VS, BB_FS(key || SHADE_FALLBACK), 'billboard'); pr.light = !!key; bbProgs.set(key, pr); }
-    return pr;
+  // R3D's API when this context is R3D's own (its programs, chunks and frame uniforms apply here)
+  function r3dOf(context) {
+    try { if (typeof R3D !== 'undefined' && R3D && R3D.frame && R3D.frame.gl === context && typeof R3D.program === 'function') return R3D; } catch (e) { /* none */ }
+    return null;
+  }
+  let R3 = null;
+  // the billboard program: through R3D.program (LIGHT's shade chunk) on R3D's context, else the raycaster's formula
+  let bbProg = null;
+  function bbProgram() {
+    if (bbProg) return bbProg;
+    if (R3) { const P = R3.program(BB_VS, BB_FS(SHADE_R3D), { chunks: ['common', 'shade'] }); bbProg = { R: P, light: true, get p() { return P.p; }, get u() { return P.u; } }; }
+    else { bbProg = compile(BB_VS, BB_FS(SHADE_FALLBACK), 'billboard'); bbProg.light = false; }
+    return bbProg;
   }
 
   // ================================================================ GL objects
@@ -351,7 +378,7 @@ void main() {
   }
   function attach(context) {
     if (gl === context && P.dc) return true;
-    gl = context; bbProgs.clear(); pages.length = 0; st.pages = 0;
+    gl = context; bbProg = null; R3 = r3dOf(context); pages.length = 0; st.pages = 0;
     try {
       B.quad = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, B.quad); gl.bufferData(gl.ARRAY_BUFFER, QUAD, gl.STATIC_DRAW);
       B.bb = vaoInstanced(5, BB_FLOATS);
@@ -362,29 +389,37 @@ void main() {
         gl.enableVertexAttribArray(2); gl.vertexAttribPointer(2, 4, gl.FLOAT, false, S, 20);
         gl.enableVertexAttribArray(3); gl.vertexAttribPointer(3, 3, gl.FLOAT, false, S, 36);
         gl.bindVertexArray(null); B.dc = { vao, buf, cap: 0 }; }
-      bbProgram(null);
+      bbProgram();
       P.dc = compile(DC_VS, DC_FS, 'decal');
       P.pt = compile(PT_VS, PT_FS, 'particle');
       buildMasks();
       return true;
     } catch (e) { warnOnce('attach', e); gl = null; P.dc = null; return false; }
   }
-  function detach() { gl = null; P.dc = P.pt = null; bbProgs.clear(); pages.length = 0; st.pages = 0; maskTex = null; dev.lost(); }
+  function detach() { gl = null; P.dc = P.pt = null; bbProg = null; R3 = null; pages.length = 0; st.pages = 0; maskTex = null; dev.lost(); }
   // look10's mark masks (32x32 coverage each) stacked in one R8 texture
   function buildMasks() {
     maskTex = null; maskCount = 0; maskIndex = null;
     if (typeof LOOK10 === 'undefined' || !LOOK10.KINDS) return;
     const list = [], idx = {};
     for (const k of Object.keys(LOOK10.KINDS)) { idx[k] = list.length; for (const m of LOOK10.KINDS[k].masks) list.push(m); }
+    // air11's footprint masks are 16x16: each texel becomes a 2x2 block of a 32x32 slot (the same nearest look)
+    if (typeof AIR11 !== 'undefined' && AIR11.prints && AIR11.prints.masks) {
+      idx._prints = list.length;
+      for (const m of AIR11.prints.masks) { const big = new Uint8Array(1024); for (let y = 0; y < 32; y++) for (let x = 0; x < 32; x++) big[y * 32 + x] = m[(y >> 1) * 16 + (x >> 1)]; list.push(big); }
+    }
     if (!list.length) return;
     const data = new Uint8Array(32 * 32 * list.length);
     list.forEach((m, i) => data.set(m.subarray(0, 1024), i * 1024));
+    const ua = gl.getParameter(gl.UNPACK_ALIGNMENT), at = gl.getParameter(gl.ACTIVE_TEXTURE);
+    gl.activeTexture(gl.TEXTURE0 + U_MASKS);
     maskTex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, maskTex);
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, 32, 32 * list.length, 0, gl.RED, gl.UNSIGNED_BYTE, data);
-    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, ua);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.activeTexture(at);
     maskCount = list.length; maskIndex = idx;
   }
   function upload1(b, arr, n) {
@@ -402,7 +437,7 @@ void main() {
   const figures = [];                             // translucent textured figures: {en, inst Float32Array, d}
   let PT = new Float32Array(PT_FLOATS * 256), nPT = 0, PTA = null;   // alpha particles, additive particles
   let PTadd = new Float32Array(PT_FLOATS * 64), nPTadd = 0;
-  let DC = new Float32Array(DC_FLOATS * 4096), nDC = 0;
+  let DC = new Float32Array(DC_FLOATS * 4096), nDC = 0, nDCmul = 0;
   const ptDist = []; let ptOrder = new Uint32Array(256);
   let V = null;                                   // the view of this frame
   let fogDist = 12, rightX = 0, rightY = 1, fwdX = 1, fwdY = 0;
@@ -553,7 +588,7 @@ void main() {
       if (offscreen(s.x, s.y, z0, z0 + wH, wW)) return;
       // the ghost painter's colours are the figure's own: no fog, no light (ghost18 draws them straight)
       const inst = new Float32Array(BB_FLOATS), flip = !!fm.mirror;
-      inst.set([s.x, s.y, z0, wW, wH, 0.5, 0, Math.min(0.3, wW * 0.5), flip ? en.u1 : en.u0, en.v0, flip ? en.u0 : en.u1, en.v1, 1, 0, al, 2, 0, 0, 0, 1]);
+      inst.set([s.x, s.y, z0, wW, wH, 0.5, 0, Math.min(0.3, wW * 0.5), flip ? en.u1 : en.u0, en.v0, flip ? en.u0 : en.u1, en.v1, 1, 0, al, 6, 0, 0, 0, 1]);
       figures.push({ en, inst, d2: d * d, raw: true });
       st.figures++;
     } catch (e) { warnOnce('ghost', e); }
@@ -682,7 +717,7 @@ void main() {
   // (chimney 4.6-6.6 s, fire 2.4-3.4 s, small flame 1.7-2.4 s; steam is its own kind), so their table values are used
   function collectSmoke() {
     if (typeof FIRESMOKE === 'undefined' || !FIRESMOKE.count) return;
-    const outdoor = !!V.outdoor, light = V.light == null ? 1 : V.light, amb = V.ambient || 0, fog = V.fog || [0, 0, 0];
+    const outdoor = !!V.outdoor, light = V.light == null ? 1 : V.light, amb = V.ambient || 0, fg0 = V.fog || [0, 0, 0], fog = [fg0[0] * 255, fg0[1] * 255, fg0[2] * 255];
     const fogD = Math.max(4, fogDist), noFlash = !!GFX.noFlash, eye = V.eye;
     let seed = 0;
     FIRESMOKE.each((p) => {
@@ -747,7 +782,7 @@ void main() {
     }
   }
   function collectGlimmer(ents) {
-    if (typeof GFX === 'undefined' || !ents || GFX.smallLife === false) return;
+    if (typeof GFX === 'undefined' || !ents || !GFX.shardGlint) return;
     const T = V.animT || 0;
     for (let i = 0; i < ents.length; i++) {
       const e = ents[i]; if (!e || e.item !== 'shard' || e.hidden || e.dead || !e._screen) continue;
@@ -756,11 +791,150 @@ void main() {
     }
   }
 
+  // ---------------------------------------------------------------- footprints (js/air11.js)
+  function collectPrints() {
+    if (typeof AIR11 === 'undefined' || !GFX.footprints || !maskIndex || maskIndex._prints == null || !mapNow) return [];
+    // air11's step scan and clock live in its post hook: run it on a frame of nothing
+    if (!V.cpuHooks) { try { AIR11.drawPrints(nullFrame()); } catch (e) { warnOnce('prints', e); } }
+    const list = AIR11.prints.list, life = (AIR11.config && AIR11.config.footprints.life) || 60, T = AIR11.prints.now, water = [];
+    const relief = !!(mapNow.lvls || mapNow.smooth || mapNow.verts);
+    for (let i = 0; i < list.length; i++) {
+      const p = list[i]; if (!p.on) continue;
+      const age = T - p.born; if (age >= life || age < -1) continue;
+      const k = Math.pow(1 - clamp(age, 0, life) / life, 1.15); if (k < 0.02) continue;
+      const dx = p.x - V.eye[0], dy = p.y - V.eye[1]; if (dx * dx + dy * dy > Math.pow(Math.min(14, fogDist * 1.1), 2)) continue;
+      const ez = relief ? groundAt(p.x, p.y) : 0;
+      if (offscreen(p.x, p.y, ez - 0.1, ez + 0.1, p.r * 1.5)) continue;
+      if (p.kind === 2) { water.push(p, k, ez); continue; }
+      // a dark damp press in the mud (air11 also lightens a lip around it; a multiply cannot, so the press alone)
+      decal(p.x, p.y, ez, p.r, -p.s, p.c, relief ? 0.5 : 9, 1, maskIndex._prints + p.paw * 2, 0.5 * k, 1, MUD);
+    }
+    return water;
+  }
+  const MUD = [0.0, 0.06, 0.18], SHINE = [0.24, 0.27, 0.30];
+  function collectWaterPrints(water) {
+    for (let i = 0; i < water.length; i += 3) { const p = water[i]; decal(p.x, p.y, water[i + 2], p.r, -p.s, p.c, 9, 2, maskIndex._prints + 1 + p.paw * 2, 0.62 * water[i + 1], 1, SHINE); }
+  }
+
+  // ---------------------------------------------------------------- cold breath (js/air11.js)
+  const LOW_HEAD = { hound: 0.46, cat: 0.5, weaverling: 0.3 };
+  function collectBreath(ents) {
+    if (typeof AIR11 === 'undefined' || !GFX.coldBreath || !AIR11.breath || !mapNow) return;
+    const cold = AIR11.breath.coldness(mapNow, typeof G !== 'undefined' ? G.tod : 0.5); if (cold <= 0.05) return;
+    const T = V.animT || 0, still = !!GFX.reduceMotion, range = (AIR11.config && AIR11.config.breath.range) || 7.5, maxN = (AIR11.config && AIR11.config.breath.maxBreathers) || 5;
+    const cand = [];
+    for (let i = 0; i < ents.length; i++) { const e = ents[i]; if (!e || !e._screen || !AIR11.breath.breathes(e)) continue; const d = e._screen.dist; if (d > range || d < 0.6) continue; if ((e.animAlpha == null ? 1 : e.animAlpha) < 0.5) continue; cand.push(e); }
+    cand.sort((a, b) => a._screen.dist - b._screen.dist);
+    for (let n = 0; n < cand.length && n < maxN; n++) {
+      const e = cand[n], d = e._screen.dist;
+      const period = (e.kind === 'enemy' && e.state && e.state !== 'idle' && e.state !== 'passive') ? 1.5 : 3.3;
+      const seed = ((e.x * 12.9898 + e.y * 78.233) % 3.7 + 3.7) % 3.7;
+      const life = ((((T + seed) / period) % 1 + 1) % 1) * period; if (life > 1.15) continue;
+      const sp = Engine.sprites[e.animSprite || e.sprite], scale = e.scale || 1, hs = sp ? (sp.hs || 1) : 1, head = LOW_HEAD[e.sprite] || LOW_HEAD[e.type] || 0.86;
+      const heading = isNum(e.facing) ? e.facing : (isNum(e.dir) ? e.dir : 0), fx = Math.cos(heading), fy = Math.sin(heading);
+      for (let k = 0; k < 2; k++) {
+        const tau = life / 1.15 - k * 0.2; if (tau <= 0) continue;
+        const fwd = 0.12 * scale + 0.25 * tau * (still ? 0 : 1);
+        const pz = groundAt(e.x, e.y) + head * scale * hs + 0.13 * tau * (still ? 0 : 1) + (e.yOff || 0);
+        const r = (0.04 + 0.085 * tau) * 1.15;
+        const a = (k ? 0.7 : 1) * 0.5 * cold * (1 - tau) * (1 - tau) * Math.min(1, tau * 7 + 0.3) * clamp(1 - d / (range + 1), 0.25, 1);
+        if (a > 0.01) pushParticle(false, e.x + fx * fwd, e.y + fy * fwd, pz, 0.12, r, r, 3, 0, 226 / 255, 234 / 255, 246 / 255, a, 0, false);
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------- guard lanterns and parry sparks (js/motion10.js)
+  let lanternSp = null;
+  function lanternSprite() {
+    if (lanternSp) return lanternSp;
+    // procedural stand-in: motion10's cage lantern as 7x10 pixel art (cap, iron frame, warm glass; the glass is emissive)
+    const w = 7, h = 10, data = new Uint32Array(w * h), emit = new Uint8Array(w * h);
+    const px = (r, g, b) => ((255 << 24) | (b << 16) | (g << 8) | r) >>> 0;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = y * w + x;
+      if (y === 0) { if (x >= 2 && x <= 4) data[i] = px(40, 30, 20); continue; }
+      if (y === 1 || y === h - 1 || x === 0 || x === w - 1) { data[i] = px(52, 38, 22); continue; }
+      const core = 1 - Math.abs(x - 3) / 3 * 0.5 - (y / h) * 0.25;
+      data[i] = px(Math.min(255, 140 + 115 * core) | 0, Math.min(255, 90 + 115 * core) | 0, Math.min(255, 40 + 60 * core) | 0); emit[i] = 1;
+    }
+    lanternSp = { w, h, data, emit, hs: 1, cx: 0.5, dy: 0 };
+    return lanternSp;
+  }
+  function collectLanterns() {
+    if (typeof MOTION10 === 'undefined' || !MOTION10.lanterns || !MOTION10.on || !MOTION10.on.lanterns()) return;
+    const LAN = MOTION10.lanterns.state; if (!LAN || !(LAN.lit.length || LAN.drops.length)) return;
+    const en = entryFor(lanternSprite()); if (!en) return;
+    const one = (lx, ly, ztop, scale, s, hand) => {
+      s = clamp(s, 0, 1.3);
+      const wH = 0.12 * scale, wW = 0.085 * scale, z0 = ztop - wH;
+      pushBillboard(en, lx, ly, z0, wW, wH, 0.5, 0, 0.4, Math.min(1, lightF(Math.hypot(lx - V.eye[0], ly - V.eye[1])) + 0.2), 0, 1, 0, 0, 0, 0, Math.min(1, 0.55 + 0.45 * s));
+      const hr = 0.13 * scale * (0.7 + 0.3 * s);
+      pushParticle(true, lx, ly, z0 + wH * 0.5, 0.42, hr, hr, 3, 0, 120 / 255 * 0.32 * s * 3.5, 70 / 255 * 0.32 * s * 3.5, 18 / 255 * 0.32 * s * 3.5, 1, 0, false);
+      if (hand) { const hz = hand[2]; pushParticle(false, (hand[0] + lx) / 2, (hand[1] + ly) / 2, (hz + ztop) / 2, 0.4, 0.006 * scale, Math.max(0.01, (hz - ztop) / 2), 1, 0, 40 / 255, 30 / 255, 22 / 255, 0.9, 0, true); }
+    };
+    for (let i = 0; i < LAN.lit.length; i++) {
+      const c = LAN.lit[i], h = c.hand; if (!h || c.g == null) continue;
+      const e = c.e, scale = e.scale || 1, sp = Engine.sprites[e.sprite], hs = (sp && sp.hs) || 1;
+      if ((h.hx - V.eye[0]) * (h.hx - V.eye[0]) + (h.hy - V.eye[1]) * (h.hy - V.eye[1]) > 225) continue;
+      const hz = groundAt(h.hx, h.hy) + 0.4 * scale * hs, lz = groundAt(h.lx, h.ly) + 0.4 * scale * hs - 0.11 * scale;
+      one(h.lx, h.ly, lz, scale, c.g, [h.hx, h.hy, hz]);
+    }
+    for (let i = 0; i < LAN.drops.length; i++) {
+      const dr = LAN.drops[i]; if (dr.age > 45) continue;
+      if ((dr.x - V.eye[0]) * (dr.x - V.eye[0]) + (dr.y - V.eye[1]) * (dr.y - V.eye[1]) > 225) continue;
+      const GUT = 1.8, f = clamp(1 - dr.age / GUT, 0, 1), g = dr.age < GUT ? f * f * 0.8 : dr.age < GUT + 2.5 ? 0.12 * (1 - (dr.age - GUT) / 2.5) : 0;
+      one(dr.x, dr.y, groundAt(dr.x, dr.y) + 0.04 + 0.1, 0.8, g, null);
+    }
+  }
+  function collectSparks() {
+    if (typeof MOTION10 === 'undefined' || !MOTION10.parry) return;
+    const SPK = MOTION10.parry.state, MATS = MOTION10.parry.MATS; if (!SPK || !SPK.list.length) return;
+    const dt = V.cpuHooks ? 0 : (SPK.dt || 0.016), ax = camAxes(V);
+    for (let bi = SPK.list.length - 1; bi >= 0; bi--) {
+      const b = SPK.list[bi];
+      // motion10's post hook ages and retires the bursts; under R3D it does not run, so it is done here
+      if (dt) b.age += dt;
+      const M = MATS[b.mat]; if (!M) continue;
+      const z = groundAt(b.x, b.y) + b.z, dx = b.x - V.eye[0], dy = b.y - V.eye[1], d = Math.max(0.2, (dx * fwdX + dy * fwdY) * 0.9);
+      const k = d / VHL;                                 // world units per logical pixel at the burst
+      let alive = 0;
+      if (b.star && b.age < 0.09 && !GFX.noFlash) { const L = (6 + 7 * (1 - b.age / 0.09)) * k; pushParticle(true, b.x, b.y, z, 0.05, L, L * 0.7, 3, 0, 1, 0.98, 0.92, 0.9, 0, false); }
+      for (const p of b.parts) {
+        const t = b.age; if (t >= p.life) continue; alive++;
+        const f = t / p.life, col = f < 0.35 ? M.col[0] : f < 0.7 ? M.col[1] : M.col[2], a = (1 - f * f) * b.dim * (M.dull ? 0.8 : 1);
+        for (let q = 0; q < 3; q++) {
+          const tt = Math.max(0, t - 0.025 * q), sx = p.vx * tt, sy = p.vy * tt + 75 * tt * tt;
+          const wx = b.x + ax.r[0] * sx * k - ax.u[0] * sy * k, wy = b.y + ax.r[1] * sx * k - ax.u[1] * sy * k, wz = z - ax.u[2] * sy * k;
+          pushParticle(q === 0 && !M.dull && !GFX.noFlash, wx, wy, wz, 0.05, 0.5 * k, 0.5 * k, 1, 0, col[0] / 255, col[1] / 255, col[2] / 255, a * (1 - q * 0.3), 0, false);
+        }
+      }
+      if (!V.cpuHooks && !alive && b.age > 0.1) SPK.list.splice(bi, 1);
+    }
+  }
+
+  // ---------------------------------------------------------------- Lyra's song rings (js/companions.js)
+  function collectRings(ents) {
+    if (typeof GFX === 'undefined' || !GFX.companionLife || !ents || (GFX.particles != null && GFX.particles <= 0)) return;
+    const calmed = !!GFX.reduceMotion, noF = !!GFX.noFlash;
+    for (let i = 0; i < ents.length; i++) {
+      const e = ents[i];
+      if (!e || e.hidden || e.dead || !e.companion || e.sprite !== 'lyra' || !e._cRings || !e._cRings.length) continue;
+      const dx = e.x - V.eye[0], dy = e.y - V.eye[1]; if (dx * dx + dy * dy > 144) continue;
+      const z = groundAt(e.x, e.y) + 0.55 * (e.scale || 1) + (e.yOff || 0) - (e.animLift || 0);
+      const ring = (age, strength) => {
+        const k = age / 1.9, r = 0.28 + 0.8 * (1 - (1 - k) * (1 - k)), fade = (1 - k) * (1 - k) * strength; if (fade < 0.02) return;
+        // a thin ring around her chest, facing the viewer, at her own depth
+        pushParticle(false, e.x, e.y, z, 0.1, r, r * 0.82, 2, 0, noF ? 0.55 : 205 / 255, noF ? 0.62 : 238 / 255, noF ? 0.6 : 232 / 255, 0.5 * Math.min(1, fade + 0.2), 0.06, false);
+      };
+      if (calmed) ring(0.55, 0.45); else for (let j = 0; j < e._cRings.length; j++) ring(e._cRings[j], noF ? 0.8 : 1);
+    }
+  }
+
   // ================================================================ the frame
   function frame(ents, view) {
     const t0 = now();
     V = view; frameNo++; st.frames++;
-    nBB = 0; nPT = 0; nPTadd = 0; nDC = 0; figures.length = 0;
+    nBB = 0; nPT = 0; nPTadd = 0; nDC = 0; nDCmul = 0; figures.length = 0;
     st.sprites = st.culled = st.decals = st.figures = 0;
     mapNow = view.map || (typeof G !== 'undefined' ? G.map : null);
     fogDist = view.fogDist || 12;
@@ -769,9 +943,14 @@ void main() {
     if (!gl || !ents) { st.ms.frame = now() - t0; return; }
     try { collectEntities(ents); } catch (e) { warnOnce('entities', e); }
     try { collectGhost(); } catch (e) { warnOnce('ghost', e); }
-    try { collectGround(ents); } catch (e) { warnOnce('ground', e); }
+    let water = [];
+    try { collectGround(ents); water = collectPrints() || []; } catch (e) { warnOnce('ground', e); }
+    nDCmul = nDC;
+    try { collectWaterPrints(water); } catch (e) { warnOnce('water prints', e); }
     try { if (!view.cpuHooks) stepSmoke(); collectSmoke(); } catch (e) { warnOnce('smoke', e); }
     try { collectTelegraphs(ents); collectGlimmer(ents); } catch (e) { warnOnce('telegraphs', e); }
+    try { collectBreath(ents); collectRings(ents); } catch (e) { warnOnce('breath', e); }
+    try { collectLanterns(); collectSparks(); } catch (e) { warnOnce('motion10', e); }
     st.particles = nPT + nPTadd;
     // billboards grouped by atlas page: one draw call per page
     runs.length = 0;
@@ -798,31 +977,33 @@ void main() {
   }
 
   // ================================================================ drawing
-  function stdState() { gl.bindVertexArray(null); gl.disable(gl.BLEND); gl.enable(gl.DEPTH_TEST); gl.depthMask(true); gl.disable(gl.CULL_FACE); }
+  function stdState() { gl.bindVertexArray(null); gl.disable(gl.BLEND); gl.enable(gl.DEPTH_TEST); gl.depthMask(true); gl.disable(gl.CULL_FACE); gl.activeTexture(gl.TEXTURE0); }
+  const U_ATLAS = 6, U_MASKS = 7;                 // texture units: R3D keeps 0-5 for its own passes
   function bindBB(pr, view) {
-    gl.useProgram(pr.p);
+    if (pr.R && R3) R3.use(pr.R); else gl.useProgram(pr.p);
     gl.uniformMatrix4fv(pr.u.u_vp, false, view.vp);
     gl.uniform3f(pr.u.u_eye, view.eye[0], view.eye[1], view.eye[2]);
     gl.uniform2f(pr.u.u_right, rightX, rightY);
+    gl.uniform1f(pr.u.u_tilt, view.tilt == null ? 0.5 : +view.tilt);
     gl.uniform1f(pr.u.u_px, Math.max(1, view.px || 1));
-    gl.uniform1i(pr.u.u_atlas, 0);
+    gl.uniform1i(pr.u.u_atlas, U_ATLAS);
     if (!pr.light) {
       const fog = view.fog || [0, 0, 0];
-      gl.uniform3f(pr.u.u_fog, fog[0] / 255, fog[1] / 255, fog[2] / 255);
+      gl.uniform3f(pr.u.u_fog, fog[0], fog[1], fog[2]);
       gl.uniform1f(pr.u.u_light, view.light == null ? 1 : view.light);
       gl.uniform1f(pr.u.u_outdoor, view.outdoor ? 1 : 0);
-    } else if (view.shade && typeof view.shade.bind === 'function') { try { view.shade.bind(gl, pr.p); } catch (e) { warnOnce('shade.bind', e); } }
+    } else if (pr.u.u_zk) gl.uniform1f(pr.u.u_zk, view.ZK || view.spriteAspect || 1);
   }
   function drawOpaque(view) {
     if (!gl || !nBB) return;
     const t0 = now();
     try {
-      const pr = bbProgram(view.shade);
+      const pr = bbProgram();
       bindBB(pr, view);
       gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.depthMask(true); gl.disable(gl.BLEND); gl.disable(gl.CULL_FACE);
       gl.bindVertexArray(B.bb.vao);
       upload1(B.bb, BBS, nBB * BB_FLOATS);
-      gl.activeTexture(gl.TEXTURE0);
+      gl.activeTexture(gl.TEXTURE0 + U_ATLAS);
       for (const r of runs) {
         gl.bindTexture(gl.TEXTURE_2D, r.pg.tex);
         // instance attributes start at this run's first instance
@@ -839,14 +1020,15 @@ void main() {
     try {
       gl.useProgram(P.dc.p);
       gl.uniformMatrix4fv(P.dc.u.u_vp, false, view.vp);
-      gl.uniform1i(P.dc.u.u_masks, 1); gl.uniform1f(P.dc.u.u_maskN, Math.max(1, maskCount));
-      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, maskTex); gl.activeTexture(gl.TEXTURE0);
+      gl.uniform1i(P.dc.u.u_masks, U_MASKS); gl.uniform1f(P.dc.u.u_maskN, Math.max(1, maskCount));
+      gl.activeTexture(gl.TEXTURE0 + U_MASKS); gl.bindTexture(gl.TEXTURE_2D, maskTex);
       gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.depthMask(false);
       gl.enable(gl.POLYGON_OFFSET_FILL); gl.polygonOffset(-1, -2);
       gl.enable(gl.BLEND); gl.blendFunc(gl.ZERO, gl.SRC_COLOR);
       gl.bindVertexArray(B.dc.vao);
       upload1(B.dc, DC, nDC * DC_FLOATS);
-      gl.drawArrays(gl.TRIANGLES, 0, nDC); st.calls++;
+      if (nDCmul) { gl.drawArrays(gl.TRIANGLES, 0, nDCmul); st.calls++; }
+      if (nDC > nDCmul) { gl.blendFunc(gl.ONE, gl.ONE); gl.drawArrays(gl.TRIANGLES, nDCmul, nDC - nDCmul); st.calls++; }
       gl.disable(gl.POLYGON_OFFSET_FILL);
     } catch (e) { warnOnce('drawDecals', e); }
     stdState(); st.ms.decals = now() - t0;
@@ -855,7 +1037,9 @@ void main() {
     // the camera's right and up in map space (pitch tilts up toward the view direction)
     const dir = isNum(view.dir) ? view.dir : Engine.cam.dir, p = isNum(view.pitch) ? view.pitch : 0;
     const cp = Math.cos(p), sp = Math.sin(p);
-    return { r: [-Math.sin(dir), Math.cos(dir), 0], u: [-Math.cos(dir) * sp, -Math.sin(dir) * sp, cp] };
+    // map space carries z in game units (GL height / ZK): a vector that is unit length in GL has its z divided by ZK
+    const zk = view.ZK || view.spriteAspect || 1;
+    return { r: [-Math.sin(dir), Math.cos(dir), 0], u: [-Math.cos(dir) * sp, -Math.sin(dir) * sp, cp / zk] };
   }
   function drawTranslucent(view) {
     if (!gl) return;
@@ -864,10 +1048,9 @@ void main() {
       gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.depthMask(false); gl.enable(gl.BLEND); gl.disable(gl.CULL_FACE);
       // figures (the ghost) first: they are few and sit among the particles
       if (figures.length) {
-        const pr = bbProgram(null); bindBB(pr, view);
-        gl.uniform1f(pr.u.u_outdoor, 0); gl.uniform1f(pr.u.u_light, 1);
+        const pr = bbProgram(); bindBB(pr, view);
         gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-        gl.bindVertexArray(B.bb.vao); gl.activeTexture(gl.TEXTURE0);
+        gl.bindVertexArray(B.bb.vao); gl.activeTexture(gl.TEXTURE0 + U_ATLAS);
         for (const f of figures) {
           upload1(B.bb, f.inst, BB_FLOATS);
           gl.bindTexture(gl.TEXTURE_2D, f.en.pg.tex);
@@ -967,8 +1150,8 @@ void main() {
       // the frame's sky and fog values, as the sprites would have been shaded
       const view = {
         vp: matrix(F), eye: [F.cam.x, F.cam.y, F.cam.z], dir: Math.atan2(F.dirY, F.dirX), pitch: 0, fogDist: F.fogDist, outdoor: F.outdoor,
-        fog: [F.fogR, F.fogG, F.fogB], light: F.light, ambient: F.ambient || 0, flick: 1, lights: F.ptLights, px: D.canvas.width / F.w,
-        spriteAspect: VHL * 0.66 * 2 / VWL, map: F.map, animT: F.animT, wx: F.wx, cpuHooks: true,
+        fog: [F.fogR / 255, F.fogG / 255, F.fogB / 255], light: F.light, ambient: F.ambient || 0, flick: 1, lights: F.ptLights, px: D.canvas.width / F.w,
+        spriteAspect: VHL * 0.66 * 2 / VWL, ZK: VHL * 0.66 * 2 / VWL, map: F.map, animT: F.animT, wx: F.wx, cpuHooks: true, tilt: 0,
         farLod2: F.far ? 4 * Math.pow(Engine.farInfo().baseFog || 12, 2) : 0,
       };
       D.last = view;
