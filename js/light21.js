@@ -204,7 +204,7 @@ const LIGHT21 = (() => {
     const hf = (flag('mist') || flag('softFog') ? 0.16 : 0) + (flag('cineFog') ? 0.22 : 0) + (WX() === 'mist' ? 0.35 : 0) + haze * 0.6;
     P.fog = [1, F.outdoor ? hf : hf * 0.4, 0.22 * ZK, P.maxH];
     P.shadowOn = !!(F.outdoor && flag('p21_shadows') && hgt.ok && (P.sunC[0] + P.sunC[1] + P.sunC[2]) > 0.01);
-    P.pt = [1.9 + 0.6 * night, 0.62 * ZK, 1, flag('reflections') ? 1 : 0];   // lamps carry the night
+    P.pt = [1.9 + 0.6 * night, 0.62 * ZK, flag('darkInteriors') ? 2 : 1, flag('reflections') ? 1 : 0];   // lamps carry the night
     P.t = [F.now || 0, F.time || 0, 0, 1];
     // clouds: cover from the weather; wind from Weather.wind
     const wind = typeof Weather !== 'undefined' ? (Weather.wind || 0.2) : 0.2;
@@ -378,6 +378,20 @@ float l21AO(vec3 p, vec3 n) {
   }
   return 1.0 - 0.42 * clamp(ao, 0.0, 1.0);
 }
+// js/lighting.js's dark interiors: indoors, what no lamp reaches sinks toward 45 % (lamps count by their strength)
+float l21Dark(vec3 p) {
+  int cnt = int(uView2.w); float sum = 0.0;
+  ivec2 c = ivec2(floor(p.xy)); uint bits = 0u;
+  if (cnt > 0 && c.x >= 0 && c.y >= 0 && float(c.x) < uMap.x && float(c.y) < uMap.y) bits = texelFetch(uLVis, c, 0).r;
+  for (int i = 0; i < 32; i++) {
+    if (i >= cnt || bits == 0u) break;
+    if ((bits & (1u << uint(i))) == 0u) continue;
+    vec2 d = p.xy - uLP[i].xy; float d2 = dot(d, d); if (d2 >= uLP[i].z) continue;
+    float str = min(1.0, (uLC[i].r + uLC[i].g + uLC[i].b) * 2.55);
+    sum += (1.0 - d2 / uLP[i].z) * str * 1.35;
+  }
+  return 0.45 + 0.55 * min(sum, 1.0);
+}
 // the game's point lights per pixel: each at a lamp's height, its reach and colour as the engine has them, N.L
 vec3 l21Points(vec3 p, vec3 n, float wrap) {
   int cnt = int(uView2.w); if (cnt <= 0) return vec3(0.0);
@@ -451,6 +465,7 @@ vec3 r3dShade(R3DSurf s) {
     vec3 pts = l21Points(lp + n * 0.02, n, s.kind == 0 ? 0.2 : 0.6) * uL21P.x;
     if (spr) pts = max(pts, s.ladd);
     c = s.albedo * (f * 0.86 + pts * 1.15) + pts * 0.06;
+    if (uL21P.z > 1.5 && s.emissive < 0.5) c *= l21Dark(lp);
     fogK = 0.0;
   }
   if (water && uL21P.w > 0.5) {
@@ -690,7 +705,8 @@ void main() {
     vec2 lp2 = p * 0.42 + wnd;
     float lo = fbm(lp2), lo2 = fbm(lp2 + sd.xy * 0.18);
     float ld = smoothstep(1.0 - cov * 0.82, 1.15 - cov * 0.6, lo + 0.25 * cov);
-    float lit2 = floor(clamp(0.6 + (lo - lo2) * 4.0, 0.0, 1.0) * 3.0 + 0.5) / 3.0;   // lit and shaded faces in bands
+    float det = fbm(lp2 * 3.1 + 7.0);
+    float lit2 = floor(clamp(0.55 + (lo - lo2) * 4.5 + (det - 0.5) * 0.6 - (1.0 - ld) * 0.25, 0.0, 1.0) * 4.0 + bay(pix) * 0.6) / 4.0;   // lit and shaded faces in bands
     float horizonFade = smoothstep(0.0, 0.12, dir.z);
     float dsun = max(0.0, dot(dir, sd));
     vec3 shadeC = mix(uL21Hor, uL21Zen, 0.45) * mix(0.72, 0.5, uL21Cl.z);
@@ -698,7 +714,7 @@ void main() {
     vec3 cc = mix(shadeC, litC, lit2) + uL21Glow * pow(dsun, 8.0) * 0.6 * (1.0 - ld);   // silver lining toward the sun
     cc += vec3(0.85, 0.88, 1.0) * uL21Sky2.z * 0.9;                                       // lightning inside the cloud
     float al = clamp(ld + hd * (1.0 - ld), 0.0, 1.0) * horizonFade;
-    al = al < 0.14 ? 0.0 : floor(al * 4.0 + 0.5) / 4.0;                                   // pixel-art bands, no dither
+    al = al < 0.1 ? 0.0 : al < 0.35 ? (bay(pix) < al * 2.4 ? 0.7 : 0.0) : floor(al * 3.0 + 0.5) / 3.0;   // solid bands inside, a dithered rim
     c = mix(c, cc, al);
     occl = 1.0 - al;
     glowFlag *= occl;
