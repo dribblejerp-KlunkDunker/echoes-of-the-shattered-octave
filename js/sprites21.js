@@ -203,7 +203,7 @@ layout(location=3) in vec4 i_uv;  // u0 v0 u1 v1 (u swapped when flipped)
 layout(location=4) in vec4 i_k;   // light factor f, hurt, alpha, flags (1 flash, 2 translucent, 4 unlit, 8 glowing entity, 16 own alpha)
 layout(location=5) in vec4 i_l;   // point light rgb (0..1), glow floor for emissive texels
 uniform mat4 u_vp; uniform vec3 u_eye; uniform vec2 u_right; uniform float u_tilt;
-out vec2 v_uv; out vec4 v_k; out vec4 v_l; out vec3 v_w;
+out vec2 v_uv; out vec4 v_k; out vec4 v_l; out vec3 v_w; out float v_h;
 void main() {
   float lat = (a_c.x - i_s.y) * i_p.w + i_s.z * i_s.x * a_c.y;
   vec2 te = u_eye.xy - i_p.xy; float L = length(te);
@@ -221,7 +221,7 @@ void main() {
   if (ca.w > 1e-3) c.z = clamp(ca.z / ca.w, -1.0, 1.0) * c.w;
   gl_Position = c;
   v_uv = vec2(mix(i_uv.x, i_uv.z, a_c.x), mix(i_uv.w, i_uv.y, a_c.y));
-  v_k = i_k; v_l = i_l; v_w = P;
+  v_k = i_k; v_l = i_l; v_w = P; v_h = 1.0 - a_c.y;
 }`;
   const SHADE_FALLBACK = `
 uniform vec3 u_fog; uniform float u_light; uniform float u_outdoor;
@@ -241,13 +241,14 @@ vec3 s21Shade(vec3 c, vec3 wpos, vec3 n, float emis, float f, vec3 pl) {
 }`;
   const BB_FS = (shade) => `
 uniform sampler2D u_atlas; uniform float u_px; uniform vec3 u_eye;
-in vec2 v_uv; in vec4 v_k; in vec4 v_l; in vec3 v_w;
+in vec2 v_uv; in vec4 v_k; in vec4 v_l; in vec3 v_w; in float v_h;
 layout(location=0) out vec4 oColor; layout(location=1) out vec4 oAux;
 ${shade}
 const float BY[16] = float[16](0., 8., 2., 10., 12., 4., 14., 6., 3., 11., 1., 9., 15., 7., 13., 5.);
 void main() {
   vec4 t = texture(u_atlas, v_uv);
-  float al = v_k.z; int flags = int(v_k.w + 0.5);
+  // flags in the whole part; a spectral body's travelling ribbon position (0 top .. 1 feet) in the fraction
+  float al = v_k.z; int flags = int(floor(v_k.w + 1e-4)); float band = fract(v_k.w + 1e-4);
   bool raw = (flags & 16) != 0;                     // a figure that keeps its own alpha (the ghost)
   if (t.a < (raw ? 0.02 : 0.25)) discard;
   if (raw) al *= t.a;
@@ -260,6 +261,8 @@ void main() {
   float f = emis > 0.5 ? max(v_k.x, v_l.w) : v_k.x;
   vec3 n = vec3(normalize(u_eye.xy - v_w.xy + vec2(1e-5)), 0.0);
   vec3 col = (flags & 4) != 0 ? c : s21Shade(c, v_w, n, emis, f, v_l.rgb);
+  // air11's see-through kinds: a faint cool wash over the body and a brighter ribbon travelling up it
+  if ((flags & 32) != 0) { bool onBand = (flags & 64) == 0 && abs(v_h - band) < 0.012; col = mix(col, vec3(150.0, 190.0, 235.0) / 255.0, onBand ? 0.34 : 0.1); }
   if ((flags & 1) != 0) col = vec3(1.0, 230.0 / 255.0, 200.0 / 255.0);
   if (trans) { oColor = vec4(col * al, al); oAux = vec4(0.0); return; }
   oColor = vec4(col, 1.0);
@@ -524,6 +527,12 @@ void main() {
   }
 
   const SHARD = { shard: 1, core: 1 };
+  // air11's see-through spectral kinds (the Quiet, Dirges, the Drowned, the Hollow mourners): their alpha comes through the
+  // entity (air11 wraps Engine.render); the wash and ribbon its post hook painted are drawn here
+  function spectral(e) {
+    if (!GFX.seeThrough || typeof AIR11 === 'undefined' || !AIR11.ghost || !AIR11.ghost.kinds || (e.kind !== 'enemy' && e.kind !== 'npc')) return false;
+    return !!AIR11.ghost.kinds[e.sprite];
+  }
   function pushBillboard(en, x, y, z0, wW, wH, cx, skew, pull, f, hurt, alpha, flags, lr, lg, lb, glowFloor) {
     if ((nBB + 1) * BB_FLOATS > BB.length) growBB();
     const o = nBB * BB_FLOATS, flip = cx < 0;
@@ -589,7 +598,8 @@ void main() {
       const anchor = flip ? -(1 - cx0) - 1e-6 : cx0;            // negative = flipped (u swapped), the anchor mirrored
       // a glowing thing (lamp, fire, glass, a singing companion) is marked so bloom can find it (aux material 8)
       const glowEnt = e.glow > 0.3 || e.animGlow > 0.3 || !!e.glassLamp || !!SHARD[e.item];
-      const flags = (e.flash ? 1 : 0) | (glowEnt ? 8 : 0);
+      let flags = (e.flash ? 1 : 0) | (glowEnt ? 8 : 0);
+      if (spectral(e)) flags += 32 + (GFX.reduceMotion ? 64 : 0) + Math.min(0.999, (((animT * 0.32 + (e.x + e.y) * 0.37) % 1) + 1) % 1);
       const pull = Math.min(0.3, wW * 0.5);
       pushBillboard(en, e.x, e.y, z0, wW, wH, anchor, (e.animSkew || 0) * aspectK, pull, f, e.animHurt || 0, alpha >= 1 ? 1 : alpha, flags, lr / 255, lg / 255, lb / 255, Math.max(f, 0.95));
       // the screen rect every overlay reads (logical 320x150), as the raycaster left it
