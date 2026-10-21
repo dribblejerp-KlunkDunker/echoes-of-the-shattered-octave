@@ -275,10 +275,11 @@ const CARD21 = (() => {
   const REM_KEY = 'octave.card21.looks';
   try { const o = JSON.parse(localStorage.getItem(REM_KEY) || 'null'); if (o && typeof o === 'object') for (const k of Object.keys(o).slice(0, 48)) { const g = cleanGear(o[k]); if (g && /^\d+,\d+,\d+,\d+$/.test(k)) remembered.set(k, g); } } catch (e) { /* none */ }
   const compactKey = (c) => [c.cls | 0, c.face | 0, c.wpn | 0, c.arm | 0].join(',');
+  let bumpRem = () => {};
   function remember(c, L) {
     try {
       const k = compactKey(c), old = remembered.get(k); if (old && sig(old) === sig(L)) return;
-      remembered.delete(k); remembered.set(k, L); while (remembered.size > 48) remembered.delete(remembered.keys().next().value);
+      remembered.delete(k); remembered.set(k, L); while (remembered.size > 48) remembered.delete(remembered.keys().next().value); bumpRem();
       const o = {}; for (const [kk, v] of remembered) o[kk] = v; localStorage.setItem(REM_KEY, JSON.stringify(o));
     } catch (e) { /* storage blocked: fine */ }
   }
@@ -1232,7 +1233,17 @@ const CARD21 = (() => {
   // js/partner19.js: a solid figure, 80 x 192, one tile tall like a standing townsperson; drawn by the engine's sprite
   // pass so the scene's light and fog apply. js/ghost18.js: the same figure made pale and translucent, with each column's
   // painted rows (top/bot) so its draw loop skips the air. Both take the ghost painter's (b, loco, act, ph, look).
-  const lookFor = (look) => (look && look.v === 1 && look.weapon ? cleanGear(look) : lookFromCompact(look));
+  // the figure painters ask for the same look every frame: the validated LOOK is memoised per input
+  const lookMemo = new Map(); let remGen = 0; bumpRem = () => { remGen++; };
+  function lookFor(look) {
+    if (!look || typeof look !== 'object') return lookOf(null);
+    let k;
+    try { k = remGen + '|' + (look.v === 1 && look.weapon ? 'L' + sig(look) : compactKey(look) + (look.gear ? '|' + (typeof look.gear === 'object' ? sig(look.gear) : '') : '')); } catch (e) { k = null; }
+    if (k && lookMemo.has(k)) return lookMemo.get(k);
+    const L = look.v === 1 && look.weapon ? cleanGear(look) : lookFromCompact(look);
+    if (k) { lookMemo.set(k, L); if (lookMemo.size > 64) lookMemo.delete(lookMemo.keys().next().value); }
+    return L;
+  }
   function partnerFrame(b, loco, act, ph, look) {
     const f = paint(lookFor(look), { size: 'partner', view: clamp(b | 0, 0, 4), loco, act, ph });
     return { w: f.w, h: f.h, data: f.data, top: f.top, bot: f.bot, left: f.left, right: f.right };
