@@ -505,6 +505,23 @@ const BODY21 = (() => {
       x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(an) * L, py + Math.sin(an) * L); x.stroke();
     }
   }
+  // The dead queen of the Synod Kite Shield. Source: js/card21.js (team CARD), CARD21.QUEEN / CARD21.queenEmblem(): one
+  // emblem for the first-person shield, the character card, the co-op partner and the item icon. This copy is the fallback
+  // for a build without card21.js; when CARD21 is loaded its table is used. '.' is the field (transparent).
+  const QUEEN_FALLBACK = Object.freeze({ w: 16, h: 23, rows: Object.freeze([
+    '....g..g..g.....', '....gggggggg....', '....gGgGgGgG....', '....gggggggg....', '....siiiiii.....', '...siiiiiiii....',
+    '...siiiiiiiii...', '..ssiiiiiiiii...', '..ssiiiiiissi...', '..sssiiiiiikii..', '..sssiiiiiiiiii.', '..sssiiiiiiiisii',
+    '...ssiiiiiiiii..', '...ssiiiiiiiii..', '...ssiiiiiiik...', '...ssiiiiiiiii..', '.....siiiiiii...', '......sisssi....',
+    '......ssii......', '......ssii......', '......ssii......', '...siiiiiiiiii..', '..siiiiiiiiiiii.']),
+    pal: Object.freeze({ g: [214, 170, 80], G: [150, 104, 40], i: [226, 214, 186], s: [170, 152, 124], k: [50, 36, 40] }) });
+  const queenCache = new Map();
+  function queenCanvas(k) {
+    if (queenCache.has(k)) return queenCache.get(k);
+    let Q = QUEEN_FALLBACK; try { if (typeof CARD21 === 'object' && CARD21 && CARD21.QUEEN && Array.isArray(CARD21.QUEEN.rows)) Q = CARD21.QUEEN; } catch (e) { Q = QUEEN_FALLBACK; }
+    const cv = mkCanvas(Q.w * k, Q.h * k), x = cv.getContext('2d');
+    for (let y = 0; y < Q.h; y++) for (let xx = 0; xx < Q.w; xx++) { const ch = Q.rows[y][xx], c = Q.pal[ch]; if (!c) continue; x.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`; x.fillRect(xx * k, y * k, k, k); }
+    queenCache.set(k, cv); return cv;
+  }
   function shieldArt(look) {
     const sh = look.shield; if (!sh) return null;
     const k = sh.id + '|' + look.key; let a = shieldCache.get(k); if (a) return a;
@@ -517,25 +534,16 @@ const BODY21 = (() => {
       for (let i = 1; i <= 14; i++) { const t = i / 14; outline.push([107 - Math.pow(t, 1.7) * 51, 14 + t * 147]); }
       for (let i = 1; i < 14; i++) { const t = 1 - i / 14; outline.push([5 + Math.pow(t, 1.7) * 51, 14 + t * 147]); }
       const inset = (k2) => outline.map(([x, y]) => [cx + (x - cx) * k2, 14 + (y - 14) * (1 - (1 - k2) * 0.75) + (1 - k2) * 20]);
-      const brass = [176, 140, 74], red = [134, 34, 30], ivory = [228, 214, 182], gold = [214, 170, 70];
+      const brass = [176, 140, 74], red = [134, 34, 30];
       const rim = part(P, { R: rampOf(brass), sheen: 1.3, round: 5, z: 1 });
       const bevel = part(P, { R: rampOf(mulc(brass, 0.7)), sheen: 0.6, round: 2, z: 1.5 });
       const field = part(P, { R: rampOf(red), round: 46, z: 2, sheen: 0.35, pat: (x, y) => (hash2(x >> 1, y >> 1, 11) < 0.06 ? 0.86 : 1) * (1 + (hash2(x >> 2, y >> 2, 12) - 0.5) * 0.08) });
-      const head = part(P, { R: rampOf(ivory), round: 7, z: 3, sheen: 0.4 });
-      const crown = part(P, { R: rampOf(gold), sheen: 1.5, round: 2, z: 4 });
-      const ink = part(P, { R: rampOf([70, 40, 30]), round: 1, z: 5, flat: 0.7, noOutline: true });
-      const plinth = part(P, { R: rampOf(brass), sheen: 1, round: 2, z: 3.5 });
       poly(P, outline, rim); poly(P, inset(0.92), bevel); poly(P, inset(0.86), field);
-      // the profile, facing right: skull, brow, nose, lips, chin, the neck to a cut bust on a brass plinth
-      const hp = [[38, 64], [38, 52], [43, 43], [52, 38], [62, 38], [69, 43], [72, 51], [72, 57], [74, 60], [80, 67], [74, 69], [76, 72], [74, 74], [75, 77], [72, 82], [66, 86], [64, 92], [66, 98], [72, 106], [40, 106], [46, 96], [46, 88], [41, 78]];
-      poly(P, hp, head);
-      poly(P, [[42, 45], [44, 31], [49, 39], [55, 28], [61, 38], [66, 30], [71, 44], [70, 49], [42, 50]], crown);
-      poly(P, [[36, 106], [76, 106], [74, 111], [38, 111]], plinth);
-      cap(P, 67.5, 59, 69.5, 59, 0.9, 0.9, ink);                 // the closed eye
-      cap(P, 55, 62, 56, 67, 1.6, 1.6, ink);                      // the ear
-      cap(P, 72, 73, 74.5, 73, 0.6, 0.6, ink);                    // the mouth
       const r = render(P, { emis: false });
       const x = r.canvas.getContext('2d');
+      // the emblem: the same dead queen as the card, the partner and the icon (CARD21.QUEEN from js/card21.js), at 3x,
+      // about 1.1x the half-width wide, its centre near 0.3x the height below the top
+      const em = queenCanvas(3); x.imageSmoothingEnabled = false; x.drawImage(em, Math.round(cx - em.width / 2), Math.round(H2 * 0.3 + 8 - em.height / 2));
       // rivets round the rim, each with a glint
       for (let i = 0; i < 14; i++) { const t = i / 14; const q = outline[Math.floor(t * outline.length)]; const qx = cx + (q[0] - cx) * 0.96, qy = 14 + (q[1] - 14) * 0.985 + 1; x.fillStyle = 'rgb(92,66,30)'; x.fillRect(qx - 1, qy - 1, 3, 3); x.fillStyle = 'rgb(250,228,160)'; x.fillRect(qx - 1, qy - 1, 1, 1); }
       scuff(r.canvas, 70, 21, (px, py) => py > 12 && py < 150 && Math.abs(px - cx) < 46 * (1 - Math.max(0, py - 60) / 110));
