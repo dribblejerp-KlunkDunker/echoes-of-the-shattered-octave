@@ -434,12 +434,13 @@ const CARD21 = (() => {
   }
   // a flat shape with thickness: centre C, in-plane axes U (length) and V (width), normal W, half-thickness T;
   // mask(u, v) says what is inside; ext = [u0, u1, v0, v1]; bulge(u, v) -> [dh/du, dh/dv] tilts the face (domes)
-  function slab(X, Cc, U, V, Wn, T, ext, mask, m, bulge) {
-    if (!X.q) { slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, 0, X.H - 1); return; }
+  // mBack (optional): the material of the face that points away from Wn (a shield's plain back)
+  function slab(X, Cc, U, V, Wn, T, ext, mask, m, bulge, mBack) {
+    if (!X.q) { slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, 0, X.H - 1, mBack); return; }
     const pid = X.pid;
-    for (let ya = 0; ya < X.H; ya += 4) { const yb = ya + 3; X.q.push(() => { X.pid = pid; slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, ya, yb); }); }
+    for (let ya = 0; ya < X.H; ya += 4) { const yb = ya + 3; X.q.push(() => { X.pid = pid; slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, ya, yb, mBack); }); }
   }
-  function slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, ya, yb) {
+  function slabNow(X, Cc, U, V, Wn, T, ext, mask, m, bulge, ya, yb, mBack) {
     const pts = [];
     for (const uu of [ext[0], ext[1]]) for (const vv of [ext[2], ext[3]]) for (const ww of [-T, T]) pts.push(proj(X, [Cc[0] + U[0] * uu + V[0] * vv + Wn[0] * ww, Cc[1] + U[1] * uu + V[1] * vv + Wn[1] * ww, Cc[2] + U[2] * uu + V[2] * vv + Wn[2] * ww]));
     let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
@@ -481,7 +482,7 @@ const CARD21 = (() => {
           if (bulge) { const g = bulge(uu, vv); n0 -= (vU[0] * g[0] + vV[0] * g[1]) * s; n1 -= (vU[1] * g[0] + vV[1] * g[1]) * s; n2 -= (vU[2] * g[0] + vV[2] * g[1]) * s; }
         }
         const nl = Math.hypot(n0, n1, n2) || 1;
-        write(X, y * X.W + x, D * K, n0 / nl, n1 / nl, n2 / nl, m, uu, vv);
+        write(X, y * X.W + x, D * K, n0 / nl, n1 / nl, n2 / nl, !rim && s < 0 && mBack ? mBack : m, uu, vv);
       }
     }
   }
@@ -994,16 +995,17 @@ const CARD21 = (() => {
         const inside = (a, b) => { if (a > top || a < top - h) return false; const t = (top - a) / h; const half = t < 0.28 ? wTop * (0.9 + 0.1 * Math.sin(t / 0.28 * Math.PI / 2)) : wTop * Math.pow(Math.max(0, 1 - (t - 0.28) / 0.72), 0.85); return Math.abs(b) < half - (a > top - 0.6 ? (a - (top - 0.6)) * 0.0 : 0); };
         const rimW = 0.55;
         const rimM = M('kiterim', S.rim || C.brass, 'metal', { spec: 1.1 }), faceM = M('kiteface', S.col, 'paint', { emblem: S.emblem || [214, 206, 188], kite: { top, h, wTop } });
-        slab(X, c, U2, v, n, 0.45, [top - h - 0.2, top + 0.2, -wTop - 0.2, wTop + 0.2], (a, b) => inside(a, b), faceM, (a, b) => [a * 0.0, b * 0.05]);
+        const backM = M('kiteback', [92, 66, 44], 'wood');   // the back is bare boards: the painted queen is on the front only
+        slab(X, c, U2, v, n, 0.45, [top - h - 0.2, top + 0.2, -wTop - 0.2, wTop + 0.2], (a, b) => inside(a, b), faceM, (a, b) => [a * 0.0, b * 0.05], backM);
         next();
         slab(X, add(c, n, 0.12), U2, v, n, 0.45, [top - h - 0.2, top + 0.2, -wTop - 0.2, wTop + 0.2], (a, b) => inside(a, b) && !(inside(a + rimW, b) && inside(a - rimW, b) && inside(a, b + rimW) && inside(a, b - rimW)), rimM, (a, b) => [0, b * 0.05]);
         if (!onBack) { next(); sphere(X, add(c, n, -0.9), 0.6, M('strap', [60, 40, 26], 'leather')); }
       } else {
         const r = S.r || 3.1;
         const faceM = M('bucklerface', S.face || [96, 70, 48], 'wood', S.band ? { band: S.band } : null), rimM = M('bucklerrim', S.col || C.steel, 'metal', { spec: 1.2 });
-        slab(X, c, U2, v, n, 0.32, [-r, r, -r, r], (a, b) => a * a + b * b < r * r, faceM, (a, b) => [a * 0.12, b * 0.12]);
+        slab(X, c, U2, v, n, 0.32, [-r, r, -r, r], (a, b) => a * a + b * b < r * r, faceM, (a, b) => [a * 0.12, b * 0.12], M('bucklerback', [84, 60, 40], 'wood'));
         next(); slab(X, add(c, n, 0.08), U2, v, n, 0.34, [-r, r, -r, r], (a, b) => { const q = a * a + b * b; return q < r * r && q > (r - 0.65) * (r - 0.65); }, rimM, (a, b) => [a * 0.15, b * 0.15]);
-        next(); sphere(X, add(c, n, 0.45), r * 0.34, S.boss ? M('bucklerboss', S.boss, 'metal', { spec: 1.3 }) : rimM);
+        next(); sphere(X, add(c, n, r * 0.26 - 0.25), r * 0.26, S.boss ? M('bucklerboss', S.boss, 'metal', { spec: 1.3 }) : rimM);
       }
     };
     const shieldOnArm = () => {
@@ -1183,7 +1185,7 @@ const CARD21 = (() => {
         if (kind === 'dark') rp = ramp([26, 20, 20], 'cloth');
         if (Mt.slit != null) {
           const wn0 = nx * X.sn + nz * X.u, wn1 = -nx * X.u + nz * X.sn, lon = Math.atan2(wn1, wn0);
-          if (Math.abs(lon) < 0.62 && Math.abs(tv - Mt.slit) < 0.45 - Math.abs(lon) * 0.3) { rp = ramp([26, 20, 20], 'cloth'); v = 0.1; }
+          if (nz > 0.45 && Math.abs(lon) < 0.62 && Math.abs(tv - Mt.slit) < 0.45 - Math.abs(lon) * 0.3) { rp = ramp([26, 20, 20], 'cloth'); v = 0.1; }
         }
         if (kind === 'wood' && Mt.band && Math.abs(tv) < 0.55) rp = ramp(Mt.band, 'cloth');
         // glass glows: it never sinks into the dark tones
