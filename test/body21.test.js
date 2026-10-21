@@ -262,18 +262,20 @@ const HELPERS = () => {
         if (!out.shown) return out;
         __stage('clearing', 12.5, 11.5, -Math.PI / 2); G.tod = 0.5;
         // first, on a fresh page and with no shield (nothing with a glow map drawn yet), the arm and sword draw even when
-        // the glow-map unit was left holding the scene's depth texture (a pass that reads the scene depth leaves it there;
-        // it is the body pass's own depth target, so sampling it is a feedback loop and WebGL refuses the draw)
+        // the glow-map unit was left holding an integer texture (R3D's light-visibility map is uploaded on whichever
+        // unit is active, often 7, and a sampler2D on an integer texture makes WebGL refuse the draw)
         { __gear({ w: 'sword', armor: { body: 'a_gambeson' } }); FPHANDS.st.shown = 'sword'; FPHANDS.st.lower = 0;
-          const g = BODY21.R3B.gl, T = R3D.frame && R3D.frame.targets && R3D.frame.targets.scene;
-          BODY21.R3B.check = true; out.armLog = [];
+          const g = BODY21.R3B.gl, bad = g.createTexture(); g.activeTexture(g.TEXTURE7); g.bindTexture(g.TEXTURE_2D, bad);
+          g.texImage2D(g.TEXTURE_2D, 0, g.R32UI, 1, 1, 0, g.RED_INTEGER, g.UNSIGNED_INT, new Uint32Array(1));
+          g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.NEAREST); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.NEAREST);   // complete, so it is validated
+          BODY21.R3B.check = true; BODY21.R3B.foreign = 0; out.armLog = [];
           try {
             for (let i = 0; i < 4; i++) {
-              if (T && T.depthTex) { g.activeTexture(g.TEXTURE7); g.bindTexture(g.TEXTURE_2D, T.depthTex); }
-              const d0 = BODY21.R3B.drawn; render(); if (BODY21.R3B.drawn > d0) out.armLog.push(BODY21.R3B.glErr);
+              g.activeTexture(g.TEXTURE7); g.bindTexture(g.TEXTURE_2D, bad);
+              const d0 = BODY21.R3B.drawn; render(); if (BODY21.R3B.drawn > d0) out.armLog.push(BODY21.R3B.glErr); (out.armList = out.armList || []).push(BODY21.R3B.last ? BODY21.R3B.last.list.length : -1);
             }
-          } finally { BODY21.R3B.check = false; }
-          out.armErrs = out.armLog.filter((e) => e !== 0).length; out.armDraws = out.armLog.length; }
+          } finally { BODY21.R3B.check = false; g.activeTexture(g.TEXTURE7); g.bindTexture(g.TEXTURE_2D, null); g.deleteTexture(bad); }
+          out.armErrs = out.armLog.filter((e) => e !== 0).length + BODY21.R3B.foreign; out.armForeign = BODY21.R3B.foreign; out.armDraws = out.armLog.length; }
         __gear({ w: 'sword', armor: { body: 'a_chain', hands: 'a_gauntlets', shield: 'a_kite', feet: 'a_greaves', head: 'a_kettle' } });
         R3D.camera.setAngle(-50 * Math.PI / 180);
         const d0 = BODY21.R3B.drawn, q0 = BODY21.R3B.quads, l0 = BODY21.R3B.legs;
@@ -319,7 +321,7 @@ const HELPERS = () => {
       assert.equal(r.hudAlpha, 0, 'the shield is not on the HUD canvas under R3D'); assert.equal(r.err, '');
       assert.equal(r.meshUniq, r.meshN, 'every boot pair and body armour builds its own lower body: ' + JSON.stringify(r.mesh)); assert.equal(r.gait, 3, 'the gait moves the legs');
       assert.ok(r.soleGap >= -1e-4 && r.soleGap < 0.01, 'the soles stand on the floor: ' + r.soleGap); assert.ok(r.tris > 200, 'a real mesh: ' + r.tris + ' triangles');
-      assert.ok(r.armDraws >= 2, 'the body pass drew with no shield'); assert.equal(r.armErrs, 0, 'with no shield, and the scene depth left on the glow-map unit, every first-person picture still draws (no GL error in the body pass): ' + JSON.stringify(r.armLog));
+      assert.ok(r.armDraws >= 2, 'the body pass drew with no shield'); assert.equal(r.armErrs, 0, 'with no shield, and an integer texture left on the glow-map unit, every picture draws with its own textures on both units (no GL error, nothing foreign bound): ' + JSON.stringify(r.armLog));
       assert.ok(r.songAdd >= 1, 'the Song light on the hands is recorded for the scene: ' + r.songAdd); assert.equal(r.songHud, 0, 'and nothing of it is left on the HUD canvas over the hands');
       assert.equal(r.feelOrder, 89); assert.ok(r.feel >= 1, 'the feel pass ran'); assert.ok(r.satAfter < r.satBefore * 0.8, 'the Hush drains the colour under R3D: ' + r.satBefore + ' -> ' + r.satAfter);
       assert.equal(r.offRec, false); assert.ok(r.offShield >= 1, 'raycaster overlay is back');

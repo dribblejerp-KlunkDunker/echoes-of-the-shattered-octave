@@ -1033,7 +1033,7 @@ const BODY21 = (() => {
   //     hand, the helm's brim) as screen quads in its own depth range (in front of the world, no depth write), drawn the
   //     frame after they were posed (one frame of latency on a camera-locked picture).
   // If the pass cannot compile or R3D is not showing, the raycaster path above paints the same pictures on the HUD canvas.
-  const R3B = { check: false, glErr: 0, last: null, prog: null, failed: false, gl: null, vao: null, vbo: null, tex: new Map(), drawn: 0, quads: 0, legs: 0, err: '' };
+  const R3B = { check: false, glErr: 0, foreign: 0, last: null, prog: null, failed: false, gl: null, vao: null, vbo: null, tex: new Map(), drawn: 0, quads: 0, legs: 0, err: '' };
   function r3dOn() {
     try { return typeof R3D === 'object' && R3D && !R3B.failed && !!R3B.prog && R3D.shown() && !!R3D.getPass('body'); } catch (e) { return false; }
   }
@@ -1083,8 +1083,9 @@ void main() {
     // unit 7 always holds a plain 2D texture: with no glow map it gets the picture itself (uHasEm says it is unused).
     // Left alone it may still hold another pass's texture of a kind uEm cannot sample, and then the draw fails
     // silently (this hid every first-person picture until something with a glow map, a shield, had been drawn)
-    g.activeTexture(g.TEXTURE7); if (em) g.bindTexture(g.TEXTURE_2D, texOf(g, em));
+    g.activeTexture(g.TEXTURE7); g.bindTexture(g.TEXTURE_2D, em ? texOf(g, em) : ti);
     g.uniform1f(R3B.prog.u.uHasEm, em ? 1 : 0);
+    if (R3B.check) { const b7 = g.getParameter(g.TEXTURE_BINDING_2D); let mine = false; for (const t of R3B.tex.values()) if (t === b7) mine = true; if (!mine) R3B.foreign++; }   // tests only
     g.bindBuffer(g.ARRAY_BUFFER, R3B.vbo); g.bufferData(g.ARRAY_BUFFER, quadBuf, g.STREAM_DRAW);
     g.drawArrays(g.TRIANGLE_STRIP, 0, 4); R3B.quads++;
   }
