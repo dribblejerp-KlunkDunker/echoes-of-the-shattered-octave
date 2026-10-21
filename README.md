@@ -2,7 +2,9 @@
 
 A first-person dark-fantasy RPG for the browser, made in the style of *The Elder Scrolls II: Daggerfall*. It is built on the *Echoes of the Shattered Octave* series bible.
 
-**[Play it in your browser](https://shattered-octavebook1.pplx.app)** (also on [GitHub Pages](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/))
+**[Play it in your browser](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/)** — the up-to-date game on GitHub Pages, published automatically from `main`. It installs as an app and plays offline, and "Play together" on the title screen lets a second player join from a phone.
+
+> The older copy at shattered-octavebook1.pplx.app is out of date and is not updated any more; use the link above.
 
 ![Title screen](screenshots/title.jpg)
 
@@ -380,7 +382,7 @@ The game's fonts are bundled in `fonts/`, so captures render in the intended typ
 
 ### Host it on GitHub Pages
 
-Go to **Settings → Pages**. Set **Source** to "Deploy from a branch", then pick `main` and `/ (root)`. This repository is already published at [dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/). On a fork, it will be live at `https://<your-username>.github.io/echoes-of-the-shattered-octave/`.
+Go to **Settings → Pages** and set **Source** to "GitHub Actions". The workflow in `.github/workflows/pages.yml` publishes the game on every push to `main` (it checks the offline file list first; after changing game files, run `node tools/pwa/precache.js`). This repository is published at [dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/).
 
 ## Controls
 
