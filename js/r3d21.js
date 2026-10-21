@@ -103,6 +103,8 @@
 //                ambient, side shading 0.8, indoor flicker, the point lights with their wall masks (capped as on the CPU).
 //                LIGHT replaces it (clustered lights, sun/moon, shadows, height fog...).
 //       'common': helpers every program gets (r3dLinearDepth(z), r3dBayer(ivec2)).
+//       'landmarks': vec4 r3dLandmarks(float azimuth, float tanElevation) — the engine's horizon ridges (LANDMARKS) for
+//                this map and hour, rgb + coverage; include it (opts.chunks) in a sky program and CORE sets its uniforms.
 //     R3DFrame (std140): mat4 uViewProj, uView, uProj, uInvViewProj; vec4 uEye (xyz eye GL, w engine animT);
 //       uFwd (xyz forward, w pitch angle); uRight (xyz, w ZK); uUp (xyz, w render px per logical px); uFwdH (xy horizontal
 //       forward, z near, w far); uFog (rgb fog colour 0..1 per unit of light, w 1/fogDist); uFogPx (rgb displayed fog/haze,
@@ -315,8 +317,64 @@ vec3 r3dShade(R3DSurf s) {
   return min(c, vec3(1.0));
 }
 `, opts: null },
+    // the engine's distant landmarks (horizon ridges, LANDMARKS in js/upgrades.js), as a function of azimuth and
+    // tan(elevation): rgb + coverage. CORE sets the uniforms per frame for any program that includes this chunk.
+    landmarks: { src: `
+uniform vec4 uLm0[16]; uniform vec4 uLm1[16]; uniform vec4 uLm2[16]; uniform vec4 uLm3[16]; uniform int uLmN; uniform vec4 uLmK;
+vec4 r3dLandmarks(float az, float te) {
+  vec4 o = vec4(0.0);
+  for (int i = 0; i < 16; i++) {
+    if (i >= uLmN) break;
+    vec4 a = uLm0[i];
+    float da = mod(az - a.x + 3.14159265, 6.28318531) - 3.14159265; float t = abs(da) / a.y;
+    if (t >= 1.0) continue;
+    vec4 b = uLm1[i];
+    float prof = pow(1.0 - t, a.w);
+    if (b.x != 0.0) prof *= 1.0 + b.x * sin(t * 11.0 + b.y * 2.7) * 0.5;
+    float ttop = a.z * 150.0 * max(0.0, prof) / ${FX.toFixed(6)};
+    if (te > ttop) continue;
+    float v = ttop > 0.0 ? te / ttop : 0.0;
+    float mx = min(0.95, 0.30 + 0.5 * t * t + 0.25 * v + b.z * 0.55);
+    vec3 sil = uLm2[i].rgb;
+    if (uLm2[i].w > 0.5 && v > 1.0 - b.w) { float k = min(1.0, (v - (1.0 - b.w)) / max(0.08, b.w)); sil = mix(sil, uLm3[i].rgb, k); }
+    o = vec4((sil * (1.0 - mx) + uFog.rgb * uLmK.y * mx) * uLmK.x, 1.0);
+  }
+  return o;
+}
+`, opts: { uniforms: (g, pr, f) => landmarkUniforms(g, pr, f) } },
   };
   const CHUNK_ORDER = ['common', 'shade'];
+  // landmark uniforms (map's ridges, the hour's light)
+  const lmBuf = [new Float32Array(64), new Float32Array(64), new Float32Array(64), new Float32Array(64)];
+  // js/sky.js hands the engine an empty list for a map whose ridges it bakes into its panorama: R3D keeps the originals
+  const LM_SEEN = {};
+  function snapLandmarks() { try { if (typeof LANDMARKS !== 'undefined') for (const k in LANDMARKS) if (Array.isArray(LANDMARKS[k]) && LANDMARKS[k].length) LM_SEEN[k] = LANDMARKS[k]; } catch (e) { /* none */ } }
+  function landmarksOf(id) {
+    if (typeof LANDMARKS === 'undefined') return null;
+    const l = LANDMARKS[id];
+    if (Array.isArray(l) && l.length) { LM_SEEN[id] = l; return l; }
+    if (LM_SEEN[id]) return LM_SEEN[id];
+    if (l) return l;   // a map whose list is really empty
+    const d = LANDMARKS._default; if (Array.isArray(d) && d.length) { LM_SEEN._default = d; return d; }
+    return LM_SEEN._default || null;
+  }
+  function landmarkUniforms(g, pr, f) {
+    if (!pr.u.uLmN) return;
+    let lms = null;
+    try { if (f.outdoor && f.map) lms = landmarksOf(f.map.id); } catch (e) { lms = null; }
+    const n = lms ? Math.min(16, lms.length) : 0;
+    for (let i = 0; i < n; i++) {
+      const lm = lms[i], c = lm.c || [30, 26, 42], cap = lm.cap;
+      lmBuf[0].set([lm.a, lm.aw, lm.h, lm.p || 1.6], i * 4);
+      lmBuf[1].set([lm.ridge || 0, lm.seed || 0, lm.far || 0, cap ? (lm.capH || 0.3) : 0], i * 4);
+      lmBuf[2].set([c[0] / 255, c[1] / 255, c[2] / 255, cap ? 1 : 0], i * 4);
+      lmBuf[3].set(cap ? [cap[0] / 255, cap[1] / 255, cap[2] / 255, 0] : [0, 0, 0, 0], i * 4);
+    }
+    g.uniform1i(pr.u.uLmN, n);
+    if (n) { g.uniform4fv(pr.u.uLm0, lmBuf[0]); g.uniform4fv(pr.u.uLm1, lmBuf[1]); g.uniform4fv(pr.u.uLm2, lmBuf[2]); g.uniform4fv(pr.u.uLm3, lmBuf[3]); }
+    const env = f.env || {}, dayM = 0.32 + 0.68 * (env.skyDay == null ? 1 : env.skyDay);
+    g.uniform4f(pr.u.uLmK, dayM, env.far ? (env.light || 1) / dayM : 1, 0, 0);
+  }
   const programs = [];   // every program made by program(): { vs, fs, opts, p, u, chunks }
   function compileProgram(vsSrc, fsSrc, useChunks) {
     const mk = (type, src) => {
@@ -396,8 +454,10 @@ vec3 r3dShade(R3DSurf s) {
     atlas.reset();
     mesh.reset();
     targets.reset();
-    // recompile every program (a restored context lost them all)
+    // recompile every program (a restored context lost them all); CORE's own are made on the first context
     for (const P of programs) { const c = compileProgram(P.vs, P.fs, P.chunks); P.p = c.p; P.u = c.u; }
+    if (!P.world) corePrograms();
+    sprInit();
     for (const p of passList) { if (p.init) { try { p.init(gl, api); } catch (e) { warnOnce('pass init ' + p.name, e); } } }
     readback.reset();
     s21gl = null;
@@ -1077,6 +1137,7 @@ void main() {
     if (dd <= 1.0) aa = max(aa, 0.9 - dd * 0.2);
     c += uSunCol * aa;
   }
+  vec4 lm = r3dLandmarks(az, te); if (lm.a > 0.5) c = lm.rgb;
   oColor = vec4(min(c, vec3(1.0)), 1.0); oAux = vec4(1.0 / 255.0, 0.0, 0.0, 1.0);
 }`;
 
@@ -1168,7 +1229,7 @@ void main() {
     P.worldB = program(WORLD_VS, WORLD_FS('bias'), {});
     P.depth = program(WORLD_VS, DEPTH_FS(''), { chunks: ['common'] });
     P.depthB = program(WORLD_VS, DEPTH_FS('bias'), { chunks: ['common'] });
-    P.sky = program(TRI_VS, SKY_FS, { chunks: ['common'] });
+    P.sky = program(TRI_VS, SKY_FS, { chunks: ['common', 'landmarks'] });
     P.sprite = program(SPRITE_VS, SPRITE_FS, {});
     P.copy = program(TRI_VS, COPY_FS, { chunks: ['common'] });
     P.read = program(TRI_VS, READ_FS, { chunks: ['common'] });
@@ -2052,23 +2113,14 @@ void main() {
   };
   function boot() {
     load();
+    snapLandmarks();
+    for (const p of [skyPass, prePass, worldPass, spritePass, translucentPass, postPass]) if (!getPass(p.name)) passList.push(p);
+    sortPasses();
     makeCanvas();
     if (st.mode !== 'off') probe(st.mode === 'on' || (automation && opts0.automation && opts0.force));
-    if (gl) {
-      corePrograms(); sprInit();
-      for (const p of [skyPass, prePass, worldPass, spritePass, translucentPass, postPass]) passList.push(p);
-      sortPasses();
-    } else {
-      // programs and passes are made the moment a context exists
-      const _probe = probe;
-      api.probe = function (force) { const had = !!gl; const r = _probe(force); if (r && !had) { corePrograms(); sprInit(); for (const p of [skyPass, prePass, worldPass, spritePass, translucentPass, postPass]) if (!getPass(p.name)) passList.push(p); sortPasses(); } return r; };
-    }
     wire();
     sync();
   }
-  // setMode/probe go through api.probe so a late context still gets CORE's passes
-  const probeOrig = probe;
-  probe = function (force) { return api.probe === probe ? probeOrig(force) : api.probe(force); };   // eslint-disable-line no-func-assign
   try { boot(); } catch (e) { warnOnce('boot', e); }
   return api;
 })();
