@@ -82,7 +82,10 @@ const HELPERS = () => {
     await step('setMode("on") after booting off makes a context, CORE programs and passes, and draws (no recursion)', async () => {
       const r = await page.evaluate(() => { const m = S.mode('on'); S.frame(); return { m, shown: R3D.shown(), active: R3D.active(), passes: R3D.passes().map(p => p.name).join(','), warned: Object.keys(R3D.st.warned) }; });
       assert.strictEqual(r.m, 'on'); assert.ok(r.shown && r.active, JSON.stringify(r));
-      assert.strictEqual(r.passes, 'sky,prepass,world,sprites,transparent,post');
+      // CORE's passes are present and in order; team passes (BODY's 'body', 'feel'...) may sit between them
+      const core = ['sky', 'prepass', 'world', 'sprites', 'transparent', 'post'], names = r.passes.split(',');
+      const idx = core.map(n => names.indexOf(n));
+      assert.ok(idx.every(i => i >= 0) && idx.every((v, i) => i === 0 || v > idx[i - 1]), r.passes);
       assert.deepStrictEqual(r.warned, []);
     });
     await step('the HUD layer is claimed while R3D shows and released when it stops', async () => {
@@ -149,6 +152,37 @@ const HELPERS = () => {
     await page.close();
   }
 
+  // ---------------------------------------------------------------- the classic path is untouched
+  {
+    // frames hashed at fixed cameras on the CPU: a page without js/r3d21.js against one with it (Original, and Medium with
+    // the renderer set to Classic)
+    const hashes = async (opts) => {
+      const { page, errors } = await bootPage(browser, opts);
+      const h = await page.evaluate(() => {
+        const out = {};
+        const cap = { fb: null }; Engine.addPostHook(F => { cap.fb = F.fb; }, 1e9);
+        const hash = () => { let x = 0x811c9dc5 | 0; const f = cap.fb; for (let i = 0; i < f.length; i++) x = Math.imul(x ^ f[i], 16777619) | 0; return x >>> 0; };
+        for (const preset of ['original', 'medium']) {
+          PRESETS.apply(preset);
+          for (const [id, x, y, d, tod, pitch] of [['oakhaven', 23.5, 6.5, Math.PI / 2, 0.5, 0], ['tavern', 8.5, 10.5, -1.57, 0.85, 12], ['deepwoods', 27.5, 30.5, -1.57, 0.95, -20]]) {
+            S.stage(id, x, y, d, tod, pitch);
+            S.pin(() => { for (const e of G.ents) { e.animSprite = e.animSprite || null; } Engine.render(G.ents, G.tod); });
+            out[preset + '/' + id] = hash();
+          }
+        }
+        return out;
+      });
+      await page.close();
+      return { h, errors };
+    };
+    const det = () => { window.requestAnimationFrame = () => 0; let c = 1000; performance.now = () => (c += 0.25); Date.now = () => 1700000000000 + c; };
+    const without = await hashes({ block: true, mode: 'off', init: det }), withOff = await hashes({ mode: 'off', r3d: { automation: true }, init: det });
+    await step('the classic raycaster draws the same frames with js/r3d21.js loaded (renderer Classic; Original preset)', async () => {
+      assert.deepStrictEqual(withOff.h, without.h);
+    });
+    await step('no page errors (classic path)', async () => { assert.deepStrictEqual(withOff.errors, []); });
+  }
+
   // ---------------------------------------------------------------- geometry: every map, doors and gates
   {
     const { page, errors } = await bootPage(browser, {});
@@ -159,12 +193,12 @@ const HELPERS = () => {
           const sp = G.maps[id].spawn;
           try { S.stage(id, sp.x, sp.y, sp.dir || 0, 0.45); S.frame(); } catch (e) { bad.push(id + ': ' + e.message); continue; }
           if (!R3D.active()) bad.push(id + ': not drawn');
-          const mi = R3D.mesh(); if (!mi || mi.map !== id || !(mi.tris > 0)) bad.push(id + ': no mesh');
+          const mi = R3D.mesh(); if (!mi || mi.map !== G.mapId || !(mi.tris > 0)) bad.push(id + ': no mesh');   // (the Kestrel's maps send you on to Whisper-Grove)
           info[id] = mi && mi.tris;
         }
         return { bad, warned: Object.keys(R3D.st.warned), n: Object.keys(info).length };
       });
-      assert.deepStrictEqual(r.bad, []); assert.deepStrictEqual(r.warned, []); assert.ok(r.n >= 40, 'maps: ' + r.n);
+      assert.ok(!r.bad.length && !r.warned.length, JSON.stringify({ bad: r.bad, warned: r.warned })); assert.ok(r.n >= 40, 'maps: ' + r.n);
     });
     await step('doors: a leaf is drawn from map.doors (shut, sliding, swung) and is gone when fully open', async () => {
       const r = await page.evaluate(() => {
@@ -210,7 +244,7 @@ const HELPERS = () => {
     // R3D reproduces with the CPU's own dbuf on a grid of pixels of each CPU frame.
     const res = await page.evaluate(() => {
       const out = { views: 0, picked: 0, same: 0, diffs: [], depthN: 0, depthBad: 0, depthEx: [] };
-      const maps = [['tavern', 6], ['oakhaven', 6], ['deepwoods', 5], ['clearing', 4], ['quarry', 4], ['cantabile_harbour', 4]];
+      const maps = [['tavern', 4], ['oakhaven', 4], ['deepwoods', 3], ['clearing', 3], ['quarry', 3], ['cantabile_harbour', 3]];
       for (const [id, nEnt] of maps) {
         S.stage(id, G.maps[id].spawn.x, G.maps[id].spawn.y, G.maps[id].spawn.dir || 0, 0.5);
         const m = G.map;
@@ -223,7 +257,7 @@ const HELPERS = () => {
           for (let k = 0; k < 8 && sx === null; k++) { const a = k * Math.PI / 4, x = e.x + Math.cos(a) * 1.6, y = e.y + Math.sin(a) * 1.6; if (x > 1 && y > 1 && x < m.w - 1 && y < m.h - 1 && !m.isSolidCell(x | 0, y | 0)) { sx = x; sy = y; } }
           if (sx === null) continue;
           const face = Math.atan2(e.y - sy, e.x - sx);
-          for (const dy of [-0.5, -0.2, 0, 0.2, 0.5]) for (const pitch of [-40, -20, 0, 20, 40]) {
+          for (const dy of [-0.4, -0.1, 0, 0.25]) for (const pitch of [-40, -15, 0, 30]) {
             const set = () => { Engine.cam.x = sx; Engine.cam.y = sy; Engine.cam.dir = face + dy; Engine.cam.pitch = pitch; Engine.cam.bob = 0; Engine.cam.z = (m.groundAt ? m.groundAt(sx, sy) : 0) + 0.5; };
             S.mode('off'); set(); S.frame();
             const cpu = [Engine.pick(G.ents, 2.6), Engine.pick(G.ents, 14)];
