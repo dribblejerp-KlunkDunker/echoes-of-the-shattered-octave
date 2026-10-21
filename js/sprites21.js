@@ -442,7 +442,7 @@ void main() {
   const ptDist = []; let ptOrder = new Uint32Array(256);
   let V = null;                                   // the view of this frame
   let fogDist = 12, rightX = 0, rightY = 1, fwdX = 1, fwdY = 0;
-  let mapNow = null;
+  let mapNow = null, animT = 0, wxNow = null;
   function growBB() { const n = new Float32Array(BB.length * 2); n.set(BB); BB = n; BBS = new Float32Array(BB.length); order = new Uint32Array(BB.length / BB_FLOATS); }
   function growPT(add) { if (add) { const n = new Float32Array(PTadd.length * 2); n.set(PTadd); PTadd = n; } else { const n = new Float32Array(PT.length * 2); n.set(PT); PT = n; ptOrder = new Uint32Array(PT.length / PT_FLOATS); } }
   function growDC() { const n = new Float32Array(DC.length * 2); n.set(DC); DC = n; }
@@ -645,9 +645,9 @@ void main() {
   // a frame of nothing: lets a module's post hook do its per-frame bookkeeping (it draws nothing into a 0x0 frame)
   function nullFrame() {
     const F = NULLF; F.cam = Engine.cam; F.map = mapNow; F.outdoor = !!V.outdoor; F.light = V.light == null ? 1 : V.light; F.fogDist = fogDist;
-    F.animT = V.animT || 0; F.dirX = Math.cos(V.dir); F.dirY = Math.sin(V.dir); F.planeX = -F.dirY * 0.66; F.planeY = F.dirX * 0.66;
+    F.animT = animT; F.dirX = Math.cos(V.dir); F.dirY = Math.sin(V.dir); F.planeX = -F.dirY * 0.66; F.planeY = F.dirX * 0.66;
     F.gAt = (x, y) => groundAt(x, y); F.relief = !!(mapNow && (mapNow.lvls || mapNow.verts || mapNow.relief));
-    if (V.wx) F.wx = V.wx;
+    if (wxNow) F.wx = wxNow;
     return F;
   }
   function collectGround(ents) {
@@ -671,7 +671,7 @@ void main() {
       }
     }
     if (GFX.groundShadows && ents) {
-      const c = LOOK10.config.shadow, wx = V.wx || { haze: 0, cloud: 0 };
+      const c = LOOK10.config.shadow, wx = wxNow || { haze: 0, cloud: 0 };
       const sunK = V.outdoor ? c.base + c.sun * Math.min(1, clamp(V.light == null ? 1 : V.light, 0.2, 1.2)) : c.indoor;
       const wxK = (1 - 0.55 * clamp((wx.haze || 0) / 0.6, 0, 1)) * (1 - 0.3 * (wx.cloud || 0));
       const fogD = Math.max(4, fogDist);
@@ -707,7 +707,7 @@ void main() {
     if (!on) { if (FIRESMOKE.count) FIRESMOKE.reset(); fs.lastT = null; return; }
     if (typeof G === 'undefined' || !G || G.state === 'title' || !mapNow) return;
     if (fs.map !== mapNow) { fs.map = mapNow; FIRESMOKE.reset(); fs.lastT = null; }
-    const T = V.animT || 0;
+    const T = animT;
     let dt = fs.lastT == null ? 0 : T - fs.lastT;
     if (!(dt >= 0) || dt > 0.5) { if (dt > 0.5 || dt < -0.01) FIRESMOKE.reset(); dt = 0; }
     fs.lastT = T;
@@ -784,7 +784,7 @@ void main() {
   }
   function collectGlimmer(ents) {
     if (typeof GFX === 'undefined' || !ents || !GFX.shardGlint) return;
-    const T = V.animT || 0;
+    const T = animT;
     for (let i = 0; i < ents.length; i++) {
       const e = ents[i]; if (!e || e.item !== 'shard' || e.hidden || e.dead || !e._screen) continue;
       const z = groundAt(e.x, e.y) + 0.12, pulse = 0.5 + 0.5 * Math.sin(T * 2.2 + e.x * 1.7 + e.y);
@@ -822,7 +822,7 @@ void main() {
   function collectBreath(ents) {
     if (typeof AIR11 === 'undefined' || !GFX.coldBreath || !AIR11.breath || !mapNow) return;
     const cold = AIR11.breath.coldness(mapNow, typeof G !== 'undefined' ? G.tod : 0.5); if (cold <= 0.05) return;
-    const T = V.animT || 0, still = !!GFX.reduceMotion, range = (AIR11.config && AIR11.config.breath.range) || 7.5, maxN = (AIR11.config && AIR11.config.breath.maxBreathers) || 5;
+    const T = animT, still = !!GFX.reduceMotion, range = (AIR11.config && AIR11.config.breath.range) || 7.5, maxN = (AIR11.config && AIR11.config.breath.maxBreathers) || 5;
     const cand = [];
     for (let i = 0; i < ents.length; i++) { const e = ents[i]; if (!e || !e._screen || !AIR11.breath.breathes(e)) continue; const d = e._screen.dist; if (d > range || d < 0.6) continue; if ((e.animAlpha == null ? 1 : e.animAlpha) < 0.5) continue; cand.push(e); }
     cand.sort((a, b) => a._screen.dist - b._screen.dist);
@@ -936,7 +936,7 @@ void main() {
   const KMAST = { x: 37, y: 20, top: 2.8 }, KSHIP = { scale: 1.7, half: 1.85 };
   function collectRope() {
     if (typeof SMALLLIFE === 'undefined' || !SMALLLIFE.ship || !SMALLLIFE.ship.e || !V.outdoor || typeof SMALLLIFE.isMoored !== 'function' || !SMALLLIFE.isMoored()) return;
-    const p = SMALLLIFE.shipPose(V.animT || 0); if (!p) return;
+    const p = SMALLLIFE.shipPose(animT); if (!p) return;
     const M = SMALLLIFE.MAST || KMAST, SH = SMALLLIFE.SHIP || KSHIP;
     const ax = M.x, ay = M.y, az = groundAt(ax, ay) + M.top - 0.05;
     const bx = p.x + Math.cos(p.h) * SH.half * 0.97, by = p.y + Math.sin(p.h) * SH.half * 0.97, bz = groundAt(bx, by) + p.lift + SH.scale * 0.43;
@@ -956,6 +956,9 @@ void main() {
     nBB = 0; nPT = 0; nPTadd = 0; nDC = 0; nDCmul = 0; figures.length = 0;
     st.sprites = st.culled = st.decals = st.figures = 0;
     mapNow = view.map || (typeof G !== 'undefined' ? G.map : null);
+    // the engine's animation clock (R3D hands its frame in view.F.time; the parity view passes animT)
+    animT = isNum(view.animT) ? view.animT : view.F && isNum(view.F.time) ? view.F.time : (typeof ANIM !== 'undefined' && isNum(ANIM.T) ? ANIM.T : 0);
+    wxNow = view.wx || (view.F && view.F.env && view.F.env.wx) || null;
     fogDist = view.fogDist || 12;
     const dir = isNum(view.dir) ? view.dir : Engine.cam.dir;
     fwdX = Math.cos(dir); fwdY = Math.sin(dir); rightX = -fwdY; rightY = fwdX;

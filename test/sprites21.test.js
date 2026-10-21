@@ -177,12 +177,14 @@ async function boot(browser, opts) {
       __stage('oakhaven', 23.5, 8.5, Math.PI / 2, 0.73); PRESETS.apply('cinematic'); SPRITES21.dev.on();
       for (let i = 0; i < 12; i++) { const e = hydrate({ kind: 'enemy', type: ['proctor', 'hound', 'legionnaire'][i % 3], x: 21 + (i % 4) * 1.2, y: 11 + Math.floor(i / 4) * 1.3 }); e.facing = i; G.ents.push(e); }
       for (let i = 0; i < 5; i++) __fr();
+      const up0 = SPRITES21.stats.uploads;
       const ms = []; for (let i = 0; i < 30; i++) { Engine.cam.bob = 0; render(); ms.push(SPRITES21.stats.ms.frame); }
       ms.sort((a, b) => a - b);
-      return { median: ms[15], n: SPRITES21.count, calls: SPRITES21.count.runs };
+      return { median: ms[15], n: SPRITES21.count, calls: SPRITES21.count.runs, uploads: SPRITES21.stats.uploads - up0 };
     });
     assert.ok(perf.median < 6, 'CPU collect too slow: ' + perf.median);
-    console.log(`PASS cost: ${perf.n.billboards} billboards, ${perf.n.decalVerts} decal vertices, ${perf.n.particles} particles in ${perf.n.runs} atlas run(s); CPU collect median ${perf.median.toFixed(2)} ms (SwiftShader host; GPU time not measurable here)`);
+    assert.ok(perf.uploads <= 40, 'atlas churn: ' + perf.uploads + ' uploads in 30 steady frames');
+    console.log(`PASS cost: ${perf.n.billboards} billboards, ${perf.n.decalVerts} decal vertices, ${perf.n.particles} particles in ${perf.n.runs} atlas run(s); CPU collect median ${perf.median.toFixed(2)} ms, ${perf.uploads} atlas uploads in 30 frames of animation (SwiftShader host; GPU time not measurable here)`);
     if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'sprites21-parity.png') });
 
     // ---------------------------------------------------------------- under CORE's R3D
