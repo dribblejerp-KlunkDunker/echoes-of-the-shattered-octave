@@ -475,7 +475,8 @@ const BODY21 = (() => {
     const P = pix(x1 - x0, y1 - y0), cx = sec.x - x0, cy = sec.y - y0, ax = ex - x0, ay = ey - y0;
     const u = [Math.cos(sec.ang), Math.sin(sec.ang)], v = [-u[1], u[0]];          // u: down the haft; v: across it
     const fa = Math.atan2(ay - cy, ax - cx), f = [Math.cos(fa), Math.sin(fa)];     // toward the elbow
-    const sleeve = part(P, { R: A.S.R, pat: A.S.pat, round: 9, z: 1 });
+    const cloth = (look.body.sleeve || {}).material !== 'mail';
+    const sleeve = part(P, { R: A.S.R, pat: cloth ? (x, y) => A.S.pat(x, y) * FOLDS(x, y) : A.S.pat, round: 11, z: 1 });
     const z0 = A.S.zones[0];
     const cuff = z0 ? part(P, { R: z0.glass ? A.glassR : z0.skin ? A.skinR : z0.R, pat: z0.pat || PATTERN.none, sheen: z0.sheen || (z0.glass ? 1 : 0), round: 7, z: 2, emis: !!z0.glass }) : 0;
     const handR = A.H.R, hp = A.H.pat, hs = A.H.glass ? 1 : (look.hands.shape === 'gauntlets' ? 0.8 : 0.2);
@@ -494,63 +495,99 @@ const BODY21 = (() => {
 
   // ================================================================ 7. THE SHIELD AND THE OFF ARM
   const shieldCache = new Map();
+  // scuffs and nicks on a painted face: short strokes, darker and lighter, seeded per shield (never random per frame)
+  function scuff(cv, n, seed, inside) {
+    const x = cv.getContext('2d');
+    for (let i = 0; i < n; i++) {
+      const px = hash2(i, 1, seed) * cv.width, py = hash2(i, 2, seed) * cv.height; if (inside && !inside(px, py)) continue;
+      const an = hash2(i, 3, seed) * Math.PI, L = 3 + hash2(i, 4, seed) * 9, dk = hash2(i, 5, seed) < 0.6;
+      x.strokeStyle = dk ? 'rgba(24,14,10,0.42)' : 'rgba(255,236,200,0.22)'; x.lineWidth = 1;
+      x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(an) * L, py + Math.sin(an) * L); x.stroke();
+    }
+  }
   function shieldArt(look) {
     const sh = look.shield; if (!sh) return null;
     const k = sh.id + '|' + look.key; let a = shieldCache.get(k); if (a) return a;
     const F = sh.face;
     if (sh.shape === 'kite') {
+      // the Synod's dead queen, as the item icon and the character card show her: a crowned ivory head in profile on a
+      // red field, in a bevelled brass rim; convex, scuffed, the light catching the rim and the crown
       const W2 = 112, H2 = 164, P = pix(W2, H2), cx = W2 / 2;
-      const outline = []; for (let i = 0; i <= 12; i++) { const t = i / 12; outline.push([6 + t * 100, 14 - Math.sin(t * Math.PI) * 10]); }
-      for (let i = 1; i <= 14; i++) { const t = i / 14; outline.push([106 - Math.pow(t, 1.7) * 50, 14 + t * 146 - (1 - t) * t * 0]); }
-      for (let i = 1; i < 14; i++) { const t = 1 - i / 14; outline.push([6 + Math.pow(t, 1.7) * 50, 14 + t * 146]); }
-      const inset = outline.map(([x, y]) => [cx + (x - cx) * 0.88, 14 + (y - 14) * 0.94 + 4]);
-      const rim = part(P, { R: rampOf(F.rim), sheen: 0.9, round: 4, z: 1 });
-      const field = part(P, { R: rampOf(F.field), round: 40, z: 2, pat: (x, y) => (hash2(x >> 1, y >> 1, 7) < 0.05 ? 0.78 : hash2(x, y, 3) < 0.02 ? 1.2 : 1) });
-      const fig = part(P, { R: rampOf(F.figure), round: 5, z: 3 });
-      const crown = part(P, { R: rampOf(F.boss), sheen: 1, round: 2, z: 4 });
-      const dark = part(P, { R: rampOf([60, 40, 40]), round: 2, z: 5, flat: 0.8 });
-      poly(P, outline, rim); poly(P, inset, field);
-      // the dead queen: a pale crowned figure, hands folded, a long gown [PROPOSED]
-      ell(P, cx, 48, 7.5, 9, fig);
-      poly(P, [[cx - 8, 60], [cx + 8, 60], [cx + 13, 72], [cx + 17, 116], [cx + 22, 126], [cx - 22, 126], [cx - 17, 116], [cx - 13, 72]], fig);
-      poly(P, [[cx - 9, 40], [cx - 9, 31], [cx - 5, 36], [cx, 28], [cx + 5, 36], [cx + 9, 31], [cx + 9, 40]], crown);
-      ell(P, cx, 82, 6, 4, crown);
-      cap(P, cx - 3, 46, cx - 3, 47, 1, 1, dark); cap(P, cx + 3, 46, cx + 3, 47, 1, 1, dark);   // closed eyes
-      cap(P, cx, 92, cx, 122, 0.8, 0.8, dark);
+      const outline = []; for (let i = 0; i <= 12; i++) { const t = i / 12; outline.push([5 + t * 102, 14 - Math.sin(t * Math.PI) * 11]); }
+      for (let i = 1; i <= 14; i++) { const t = i / 14; outline.push([107 - Math.pow(t, 1.7) * 51, 14 + t * 147]); }
+      for (let i = 1; i < 14; i++) { const t = 1 - i / 14; outline.push([5 + Math.pow(t, 1.7) * 51, 14 + t * 147]); }
+      const inset = (k2) => outline.map(([x, y]) => [cx + (x - cx) * k2, 14 + (y - 14) * (1 - (1 - k2) * 0.75) + (1 - k2) * 20]);
+      const brass = [176, 140, 74], red = [134, 34, 30], ivory = [228, 214, 182], gold = [214, 170, 70];
+      const rim = part(P, { R: rampOf(brass), sheen: 1.3, round: 5, z: 1 });
+      const bevel = part(P, { R: rampOf(mulc(brass, 0.7)), sheen: 0.6, round: 2, z: 1.5 });
+      const field = part(P, { R: rampOf(red), round: 46, z: 2, sheen: 0.35, pat: (x, y) => (hash2(x >> 1, y >> 1, 11) < 0.06 ? 0.86 : 1) * (1 + (hash2(x >> 2, y >> 2, 12) - 0.5) * 0.08) });
+      const head = part(P, { R: rampOf(ivory), round: 7, z: 3, sheen: 0.4 });
+      const crown = part(P, { R: rampOf(gold), sheen: 1.5, round: 2, z: 4 });
+      const ink = part(P, { R: rampOf([70, 40, 30]), round: 1, z: 5, flat: 0.7, noOutline: true });
+      const plinth = part(P, { R: rampOf(brass), sheen: 1, round: 2, z: 3.5 });
+      poly(P, outline, rim); poly(P, inset(0.92), bevel); poly(P, inset(0.86), field);
+      // the profile, facing right: skull, brow, nose, lips, chin, the neck to a cut bust on a brass plinth
+      const hp = [[38, 64], [38, 52], [43, 43], [52, 38], [62, 38], [69, 43], [72, 51], [72, 57], [74, 60], [80, 67], [74, 69], [76, 72], [74, 74], [75, 77], [72, 82], [66, 86], [64, 92], [66, 98], [72, 106], [40, 106], [46, 96], [46, 88], [41, 78]];
+      poly(P, hp, head);
+      poly(P, [[42, 45], [44, 31], [49, 39], [55, 28], [61, 38], [66, 30], [71, 44], [70, 49], [42, 50]], crown);
+      poly(P, [[36, 106], [76, 106], [74, 111], [38, 111]], plinth);
+      cap(P, 67.5, 59, 69.5, 59, 0.9, 0.9, ink);                 // the closed eye
+      cap(P, 55, 62, 56, 67, 1.6, 1.6, ink);                      // the ear
+      cap(P, 72, 73, 74.5, 73, 0.6, 0.6, ink);                    // the mouth
       const r = render(P, { emis: false });
-      // rivets round the rim
-      const x = r.canvas.getContext('2d'); x.fillStyle = 'rgb(236,220,170)';
-      for (const [px, py] of [[16, 14], [56, 6], [96, 14], [100, 60], [12, 60], [80, 112], [32, 112]]) x.fillRect(px, py, 2, 2);
-      a = { canvas: r.canvas, w: W2, h: H2, hx: cx, hy: 70, kind: 'kite' };
+      const x = r.canvas.getContext('2d');
+      // rivets round the rim, each with a glint
+      for (let i = 0; i < 14; i++) { const t = i / 14; const q = outline[Math.floor(t * outline.length)]; const qx = cx + (q[0] - cx) * 0.96, qy = 14 + (q[1] - 14) * 0.985 + 1; x.fillStyle = 'rgb(92,66,30)'; x.fillRect(qx - 1, qy - 1, 3, 3); x.fillStyle = 'rgb(250,228,160)'; x.fillRect(qx - 1, qy - 1, 1, 1); }
+      scuff(r.canvas, 70, 21, (px, py) => py > 12 && py < 150 && Math.abs(px - cx) < 46 * (1 - Math.max(0, py - 60) / 110));
+      a = { canvas: r.canvas, w: W2, h: H2, hx: cx, hy: 70, kind: 'kite', gripX: 92, gripY: 78 };
     } else {
       const W2 = 76, H2 = 76, P = pix(W2, H2), c = 38;
-      const rim = part(P, { R: rampOf(F.rim), sheen: 0.9, round: 4, z: 1 });
-      const field = part(P, { R: rampOf(F.field), round: 30, z: 2, pat: PATTERN.grain });
+      const rim = part(P, { R: rampOf(F.rim), sheen: 1.2, round: 5, z: 1 });
+      const field = part(P, { R: rampOf(F.field), round: 30, z: 2, pat: PATTERN.grain, sheen: 0.3 });
       const band = part(P, { R: rampOf(F.figure), round: 3, z: 3 });
       const field2 = part(P, { R: rampOf(F.field), round: 12, z: 4, pat: PATTERN.grain });
-      const boss = part(P, { R: rampOf(F.boss), sheen: 1.2, round: 9, z: 5 });
-      ell(P, c, c, 36, 36, rim); ell(P, c, c, 30, 30, field); ell(P, c, c, 22, 22, band); ell(P, c, c, 18, 18, field2); ell(P, c, c, 10, 10, boss);
+      const boss = part(P, { R: rampOf(F.boss), sheen: 1.8, round: 10, z: 5 });
+      ell(P, c, c, 36, 36, rim); ell(P, c, c, 30, 30, field); ell(P, c, c, 22, 22, band); ell(P, c, c, 18, 18, field2); ell(P, c, c, 11, 11, boss);
       const r = render(P);
-      const x = r.canvas.getContext('2d'); x.fillStyle = 'rgb(224,226,222)';
-      for (let i = 0; i < 8; i++) { const an = i * Math.PI / 4 + 0.39; x.fillRect(Math.round(c + Math.cos(an) * 33) - 1, Math.round(c + Math.sin(an) * 33) - 1, 2, 2); }
-      a = { canvas: r.canvas, w: W2, h: H2, hx: c, hy: c, kind: 'buckler' };
+      const x = r.canvas.getContext('2d');
+      for (let i = 0; i < 8; i++) { const an = i * Math.PI / 4 + 0.39, qx = Math.round(c + Math.cos(an) * 33), qy = Math.round(c + Math.sin(an) * 33); x.fillStyle = 'rgb(70,74,80)'; x.fillRect(qx - 1, qy - 1, 3, 3); x.fillStyle = 'rgb(236,238,232)'; x.fillRect(qx - 1, qy - 1, 1, 1); }
+      scuff(r.canvas, 40, 33, (px, py) => Math.hypot(px - c, py - c) < 34);
+      a = { canvas: r.canvas, w: W2, h: H2, hx: c, hy: c, kind: 'buckler', gripX: 66, gripY: 46 };
     }
     shieldCache.set(k, a); if (shieldCache.size > 12) shieldCache.delete(shieldCache.keys().next().value);
     return a;
   }
-  // the off forearm, sleeve and all, painted pointing up from its elbow (bottom) to its wrist (top)
+  // the off forearm, painted pointing up from the elbow (bottom) to the wrist (top): a tapered sleeve with folds (cloth),
+  // rings (mail) or a vambrace (plate), its cuff, the wrist, and the back of the hand; `fingers` is a second picture of
+  // four curled fingers and a thumb, drawn OVER the shield's rim or a haft so the hand visibly grips it
   const armCache = new Map();
+  const FOLDS = (x, y) => { const t = (y + x * 0.45) / 13; const s2 = Math.sin(t * Math.PI * 2); return (1 + 0.12 * s2) * (s2 > 0.9 ? 0.72 : 1); };
   function offArmArt(look, glassHand) {
     const k = look.key + '|' + (glassHand ? 'g' : 'n'); let a = armCache.get(k); if (a) return a;
-    const A = armSpec(look, 'left'), P = pix(48, 170);
-    const sleeve = part(P, { R: A.S.R, pat: A.S.pat, round: 10, z: 1 });
-    cap(P, 24, 22, 24, 170, 15, 20, sleeve);
-    const z0 = A.S.zones[0];
-    if (z0) { const cf = part(P, { R: z0.glass ? A.glassR : z0.skin ? A.skinR : z0.R, pat: z0.pat || PATTERN.none, sheen: z0.sheen || (z0.glass ? 1 : 0), round: 8, z: 2, emis: !!z0.glass }); cap(P, 24, 10, 24, 10 + z0.d * 1.4, 14, 15, cf); }
-    const hand = part(P, { R: A.H.R, pat: A.H.pat, round: 8, z: 3, sheen: A.H.glass ? 1 : 0.2, emis: A.H.glass });
-    ell(P, 24, 10, 13, 10, hand);
+    const A = armSpec(look, 'left'), W = 56, H = 190, P = pix(W, H), cx = W / 2;
+    const sl = look.body.sleeve || {}, cloth = !(sl.material === 'mail');
+    const sleeve = part(P, { R: A.S.R, pat: cloth ? (x, y) => A.S.pat(x, y) * FOLDS(x, y) : A.S.pat, round: 12, z: 1, grad: (x, y) => 0.92 + y / H * 0.14 });
+    cap(P, cx, 40, cx + 2, H + 6, 14, 21, sleeve);                       // forearm: narrow at the wrist, full at the elbow
+    for (const zz of A.S.zones) {                                        // cuff, bracer, vambrace, rolled sleeve, glass
+      const R = zz.glass ? A.glassR : zz.skin ? A.skinR : zz.R; if (!R) continue;
+      const pz = part(P, { R, pat: zz.pat || (zz.glass ? PATTERN.facets : PATTERN.none), sheen: zz.sheen ? 1.2 : zz.glass ? 1 : 0.2, round: 8, z: 2 + (zz.d || 0) / 100, emis: !!zz.glass });
+      const len = Math.min(70, (zz.d || 6) * 1.6);
+      cap(P, cx, 38, cx + 1, 38 + len, zz.skin ? 13 : 15.5, zz.skin ? 14.5 : 17, pz);
+      if (zz.line) { const ln = part(P, { R: rampOf(mulc(R[3], 0.8)), round: 2, z: 2.6, sheen: 0.8 }); cap(P, cx - 16, 38 + len, cx + 17, 38 + len - 3, 1.6, 1.6, ln); }
+    }
+    const H_ = A.H;
+    const hand = part(P, { R: H_.R, pat: H_.pat, round: 8, z: 3, sheen: H_.glass ? 1.1 : look.hands.shape === 'gauntlets' ? 0.8 : 0.25, emis: H_.glass });
+    cap(P, cx, 40, cx - 1, 26, 11.5, 12, hand);                          // the wrist
+    ell(P, cx - 1, 18, 15, 13, hand);                                    // the back of the hand
+    if (look.hands.shape === 'gauntlets' && !H_.glass) { const gc = part(P, { R: rampOf(GL().ARMOR.a_kettle.col), pat: PATTERN.plates, sheen: 1.2, round: 5, z: 2.9 }); cap(P, cx, 46, cx, 34, 14, 15.5, gc); }
     const r = render(P, { emis: true });
-    a = { canvas: r.canvas, emis: r.emis, w: 48, h: 170 };
+    // the gripping fingers: knuckles in a row, curled over, a thumb
+    const Q = pix(40, 30), fg = part(Q, { R: H_.R, pat: H_.pat, round: 4, z: 1, sheen: H_.glass ? 1.1 : 0.3, emis: H_.glass });
+    const th = part(Q, { R: H_.R, pat: H_.pat, round: 4, z: 2, sheen: H_.glass ? 1.1 : 0.3, emis: H_.glass });
+    for (let i = 0; i < 4; i++) ell(Q, 9 + i * 7.2, 12 + Math.abs(i - 1.5) * 1.2, 4.6, 7.5, fg, 0.1);
+    cap(Q, 34, 22, 26, 25, 3.6, 3.2, th);
+    const rq = render(Q, { emis: true });
+    a = { canvas: r.canvas, emis: r.emis, w: W, h: H, fingers: rq.canvas, fingersEm: rq.emis };
     armCache.set(k, a); if (armCache.size > 12) armCache.delete(armCache.keys().next().value);
     return a;
   }
@@ -649,21 +686,21 @@ const BODY21 = (() => {
   function headArt(look) {
     const hd = look.head; if (!hd || hd.bare) return null;
     const k = hd.id + '|' + look.key; let a = headCache.get(k); if (a) return a;
-    const W2 = 640, H2 = 90, P = pix(W2, H2), R = rampOf(hd.col), cx = 320;
-    if (hd.shape === 'kettle') {
-      const brim = part(P, { R, sheen: 1, round: 10, z: 1, pat: PATTERN.none, grad: (x, y) => 0.7 + y / 90 * 0.5 });
-      const pts = []; for (let i = 0; i <= 32; i++) { const x = i / 32 * W2; pts.push([x, 26 + 34 * Math.sin(i / 32 * Math.PI)]); } pts.push([W2, 0], [0, 0]);
-      poly(P, pts, brim);
-      const r = render(P); const x = r.canvas.getContext('2d'); x.fillStyle = 'rgb(214,220,224)';
-      for (let i = 2; i < 31; i += 4) { const px = i / 32 * W2, py = 26 + 34 * Math.sin(i / 32 * Math.PI) - 7; x.fillRect(px - 1, py - 1, 3, 3); }
+    const W2 = 640, H2 = 64, P = pix(W2, H2), R = rampOf(hd.col), cx = 320;
+    // a brim seen from beneath: an arc in perspective, lowest at the centre of sight and running up out of the corners;
+    // its underside in shadow, its edge catching the light, rivets along it; only the top ~12 px of the view
+    const arc = (x, low) => low * (1 - Math.pow((x - cx) / 400, 2));
+    if (hd.shape === 'kettle' || hd.shape === 'bellhelm') {
+      const bell = hd.shape === 'bellhelm', low = bell ? 22 : 26;
+      const under = part(P, { R, round: 10, z: 1, pat: (x, y) => (1 + (hash2(x >> 1, y >> 1, 5) - 0.5) * 0.12), grad: (x, y) => 0.5 + Math.min(1, y / Math.max(1, arc(x, low))) * 0.5 });
+      const edge = part(P, { R: bell ? rampOf(hd.col.trim) : R, sheen: 1.3, round: 2, z: 2 });
+      const pts = []; for (let i = 0; i <= 40; i++) { const x = i / 40 * W2; pts.push([x, arc(x, low)]); } pts.push([W2, 0], [0, 0]);
+      poly(P, pts, under);
+      for (let i = 0; i < 40; i++) { const x0 = i / 40 * W2, x1 = (i + 1) / 40 * W2; cap(P, x0, arc(x0, low) - 1.5, x1, arc(x1, low) - 1.5, bell ? 2.4 : 1.8, bell ? 2.4 : 1.8, edge); }
+      const r = render(P); const x = r.canvas.getContext('2d');
+      if (!bell) for (let i = 1; i < 16; i++) { const px = i / 16 * W2, py = arc(px, low) - 6; if (py < 2) continue; x.fillStyle = 'rgb(44,48,56)'; x.fillRect(px - 1, py - 1, 3, 3); x.fillStyle = 'rgb(214,220,224)'; x.fillRect(px - 1, py - 1, 1, 1); }
+      scuff(r.canvas, 30, 41, (px, py) => py < arc(px, low) - 3);
       a = { canvas: r.canvas };
-    } else if (hd.shape === 'bellhelm') {
-      const rim = part(P, { R, sheen: 1.1, round: 8, z: 1, grad: (x, y) => 0.65 + y / 90 * 0.55 });
-      const lip = part(P, { R: rampOf(hd.col.trim), round: 3, z: 2, sheen: 0.6 });
-      const pts = []; for (let i = 0; i <= 32; i++) { const x = i / 32 * W2; pts.push([x, 40 + 22 * Math.pow(Math.abs(i / 16 - 1), 2.2) * -1 + 22]); } pts.push([W2, 0], [0, 0]);
-      poly(P, pts, rim);
-      for (let i = 0; i < 32; i++) { const x0 = i / 32 * W2, x1 = (i + 1) / 32 * W2, y0 = 62 - 22 * Math.pow(Math.abs(i / 16 - 1), 2.2), y1 = 62 - 22 * Math.pow(Math.abs((i + 1) / 16 - 1), 2.2); cap(P, x0, y0 - 3, x1, y1 - 3, 2.6, 2.6, lip); }
-      a = { canvas: render(P).canvas };
     } else if (hd.shape === 'hood') {
       const wool = part(P, { R, pat: PATTERN.weave, round: 14, z: 1, grad: (x, y) => 0.6 + y / 90 * 0.5 });
       for (const side of [-1, 1]) { const pts = [[cx + side * 320, 0], [cx + side * 320, 90], [cx + side * 270, 60], [cx + side * 200, 28], [cx + side * 120, 10], [cx, 4], [cx, 0]]; poly(P, pts, wool); }
@@ -792,7 +829,9 @@ const BODY21 = (() => {
     const pm = pitchMax(), pitch = Engine.cam.pitch || 0;
     const k = clamp((-pitch - 0.2 * Math.min(pm, 40)) / (0.8 * Math.min(pm, 40)), 0, 1); if (k <= 0) return null;
     const kk = k * k * (3 - 2 * k);
-    const toeY = Math.max(0, VHv() + 6 - kk * 74 - Math.max(0, -pitch - 40) * 0.9) + (Engine.cam.bob || 0) * 1.2;
+    // the raycaster cannot turn the camera down, only shear the view: the lower body comes in foreshortened from the bottom
+    // edge (boot toes, then the hem), never as long legs lying on the floor ahead
+    const toeY = VHv() + 4 - kk * 66 - Math.min(14, Math.max(0, -pitch - 40) * 0.2) + (Engine.cam.bob || 0) * 1.2;
     return { k: kk, toeY };
   }
   function drawLegs(ctx, look) {
@@ -802,11 +841,11 @@ const BODY21 = (() => {
     if (REC) { REC.legs = { look, moving, phase: (G.bobPhase || 0) / 2, run: WS.speed > 2.2 }; stats.drawn.feet++; return true; }   // true 3D: meshes (R3D pass, 11c)
     const pose = legsPose(); if (!pose) return false;
     const art = legArt(look, frame); if (!art) return false;
-    const LS = 0.62, x0 = VWv() / 2 - 150 * LS, y0 = pose.toeY - 12;
+    const LS = 0.62, FY = 0.36, x0 = VWv() / 2 - 150 * LS, y0 = pose.toeY - 20 * LS * FY;   // FY: the foreshortening
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
     const sh = footShadow();
-    for (const f of art.feet) ctx.drawImage(sh, x0 + f.x * LS - 19 * f.s, y0 + (f.y - 30) * LS, 38 * f.s, 30);
-    ctx.drawImage(lit(art.canvas), x0, y0, 300 * LS, 300 * LS);
+    for (const f of art.feet) ctx.drawImage(sh, x0 + f.x * LS - 19 * f.s, y0 + (f.y - 40) * LS * FY, 38 * f.s, 14);
+    ctx.drawImage(lit(art.canvas), x0, y0, 300 * LS, 300 * LS * FY);
     ctx.restore();
     stats.drawn.feet++;
     return true;
@@ -822,7 +861,7 @@ const BODY21 = (() => {
     const p = headPose(); if (!p) return false;
     const a = headArt(look); if (!a) return false;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
-    put2(ctx, lit(a.canvas), 0, -45 + p.k * 45 + (Engine.cam.bob || 0) * 0.6, VWv(), 45);
+    put2(ctx, lit(a.canvas), 0, -32 + p.k * 32 + (Engine.cam.bob || 0) * 0.6, VWv(), 32);
     ctx.restore(); stats.drawn.head = (stats.drawn.head || 0) + 1;
     return true;
   }
@@ -838,19 +877,27 @@ const BODY21 = (() => {
     const f = fph(), drop = f ? (f.lower > 0 ? f.lower * f.lower * (3 - 2 * f.lower) * 110 : 0) : 0;
     return { x: m(0), y: m(1) + bobNow(1.7) * 1.5 + drop, s: m(2), r: m(3), gk, bk };
   }
+  // the forearm from the hand down-left out of the view (drawn under the shield)
   function drawOffArm(ctx, look, ax, ay, glassHand) {
-    const a = offArmArt(look, glassHand); if (!a) return;
-    const ex = ax - 46, ey = VHv() + 60, ang = Math.atan2(-(ex - ax), ey - ay);   // the arm runs from the hand down-left out of the view
-    ctx.save(); ctx.translate(ax, ay); ctx.rotate(ang); put2(ctx, lit(a.canvas, a.emis), -10, -4, 20, 72, a.emis); ctx.restore();
+    const a = offArmArt(look, glassHand); if (!a) return null;
+    const ex = ax - 40, ey = VHv() + 70, ang = Math.atan2(-(ex - ax), ey - ay);
+    ctx.save(); ctx.translate(ax, ay); ctx.rotate(ang); put2(ctx, lit(a.canvas, a.emis), -14, -9, 28, 95, a.emis); ctx.restore();
+    return a;
   }
   function drawShield(ctx, look) {
     if (!look.shield || look.shieldStowed || hiddenBody()) return false;
     const art = shieldArt(look); if (!art) return false;
-    const p = shieldPose(art);
+    const p = shieldPose(art), sx = p.s * (art.kind === 'kite' ? 0.86 : 0.92), sy = p.s;
+    // where the hand holds it: the strap behind the right edge of the face (on the screen, toward the centre)
+    const gx = p.x + ((art.gripX - art.hx) * Math.cos(p.r) - (art.gripY - art.hy) * Math.sin(p.r)) * sx;
+    const gy = p.y + ((art.gripX - art.hx) * Math.sin(p.r) + (art.gripY - art.hy) * Math.cos(p.r)) * sy;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
-    drawOffArm(ctx, look, p.x - 2, p.y + (art.kind === 'kite' ? 4 : 2), false);
-    ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.scale(p.s * (art.kind === 'kite' ? 0.86 : 0.92), p.s);
+    const arm = drawOffArm(ctx, look, gx + 3, gy + 6, false);
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.scale(sx, sy);
     put2(ctx, lit(art.canvas), -art.hx, -art.hy, art.w, art.h);
+    ctx.restore();
+    // the fingers curl over the rim
+    if (arm) { ctx.save(); ctx.translate(gx, gy); ctx.rotate(p.r - 0.15); put2(ctx, lit(arm.fingers, arm.fingersEm), -6, -8, 20, 15, arm.fingersEm); ctx.restore(); }
     ctx.restore();
     stats.drawn.shield++;
     return true;
@@ -859,12 +906,15 @@ const BODY21 = (() => {
   function drawGlassIdle(ctx, look, wid) {
     if (!look.glassArm || hiddenBody() || look.shield && !look.shieldStowed || look.offhand || look.twoHanded) return false;
     if (wid === 'glass' || wid === 'hands' || G.song.t > 0 || G.songFx > 0) return false;
-    const img = Engine.images.fp_glass; if (!img || !img.width) return false;
-    const f = fph(), drop = f && f.lower > 0 ? f.lower * 90 : 0;
-    const iw = img.width * 0.34, ih = img.height * 0.34;
+    // the glass forearm with its continuation, mirrored, running out of the bottom-left of the view: never a loose fist
+    const b = build('fp_glass', look, 'glass', 'left'); if (!b) return false;
+    const img = b.main, f = fph(), drop = f && f.lower > 0 ? f.lower * 90 : 0;
+    const k = 0.4, iw = img.width * k, ih = img.height * k;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
-    ctx.translate(16 + iw * 0.5, VHv() + 30 + bobNow(1.7) * 1.5 + drop + WS.gk * 30); ctx.rotate(0.5); ctx.scale(-1, 1);
-    put2(ctx, img, -iw * 0.5, -ih + 12, iw, ih, img);
+    ctx.translate(20 + iw * 0.5, VHv() + 34 + bobNow(1.7) * 1.5 + drop + WS.gk * 30); ctx.rotate(0.42); ctx.scale(-1, 1);
+    const ox = -iw * 0.5, oy = -ih + 12;
+    if (b.ext) put2(ctx, b.ext.canvas, ox + b.ext.ox * k, oy + b.ext.oy * k, b.ext.w * k, b.ext.h * k, b.ext.canvas);
+    put2(ctx, img, ox, oy, iw, ih, img);
     ctx.restore();
     stats.drawn.glassIdle++;
     return true;
@@ -1179,7 +1229,7 @@ void main() {
     tiles.forEach(([col, pat, noise, folds], k) => {
       const Rm = rampOf(col), P = patOf(pat);
       for (let y = 0; y < TILE; y++) for (let xx = 0; xx < TILE; xx++) {
-        let t = 1.0 * P(xx * 2, y * 2) * (1 + (hash2(xx, y, k) - 0.5) * 0.14 * noise);
+        let t = (1 + (P(xx * 2, y * 2) - 1) * 0.6) * (1 + (hash2(xx, y, k) - 0.5) * 0.14 * noise);
         if (folds) t *= 1 + 0.09 * Math.sin((xx / TILE) * Math.PI * 4 + Math.sin(y / TILE * Math.PI * 2) * 0.8);
         if (k === T_.belt && (y < 2 || y > TILE - 3)) t *= 0.6;
         const c = onRamp(Rm, t), q = (y * TILE * NT + k * TILE + xx) * 4;
@@ -1225,18 +1275,18 @@ void main() {
     }
     const body = look.body, feet = look.feet, shape = body.bare ? 'shirt' : body.shape, lenH = body.len == null ? 0.1 : body.len;
     // ---- the gait
-    const moving = legs.moving, ph = legs.phase, S = legs.run ? 0.28 : 0.2;
+    const moving = legs.moving, ph = legs.phase, S = legs.run ? 0.24 : 0.17;
     const legOf = (side) => {
       const p = moving ? (((ph / (Math.PI * 2)) + (side > 0 ? 0.5 : 0)) % 1 + 1) % 1 : 0;
       let fwd, lift = 0, pitch = 0;
-      if (!moving) { fwd = 0.2 + (side > 0 ? 0.03 : -0.02); }
-      else if (p < 0.6) { const k = p / 0.6; fwd = 0.2 + S * (1 - 2 * k); pitch = k > 0.75 ? -(k - 0.75) * 1.2 : 0; }
-      else { const k = (p - 0.6) / 0.4; fwd = 0.2 - S + 2 * S * (k * k * (3 - 2 * k)); lift = Math.sin(k * Math.PI) * (legs.run ? 0.15 : 0.1); pitch = (1 - k) * 0.25 - 0.05; }
+      if (!moving) { fwd = 0.16 + (side > 0 ? 0.03 : -0.02); }
+      else if (p < 0.6) { const k = p / 0.6; fwd = 0.16 + S * (1 - 2 * k); pitch = k > 0.75 ? -(k - 0.75) * 1.2 : 0; }
+      else { const k = (p - 0.6) / 0.4; fwd = 0.16 - S + 2 * S * (k * k * (3 - 2 * k)); lift = Math.sin(k * Math.PI) * (legs.run ? 0.15 : 0.1); pitch = (1 - k) * 0.25 - 0.05; }
       const sideY = side * (0.11 + (moving ? 0 : 0.01)), toeOut = side * 0.12;
       const gz = groundAt([fwd, sideY, 0]);
       return { side, fwd, lift, pitch, sideY, toeOut, gz };
     };
-    const hipZ = 0.93, hipX = 0.0, L1 = 0.45, L2 = 0.44;
+    const hipZ = 0.93, hipX = -0.03, L1 = 0.45, L2 = 0.44;
     const legsD = [-1, 1].map(legOf);
     // the hips ride a little lower and sway with the step
     const bobZ = moving ? -0.025 * Math.abs(Math.sin(ph)) : 0;
@@ -1269,24 +1319,23 @@ void main() {
     // ---- the hips, the hem and the lower chest
     const sway = moving ? Math.sin(ph) * 0.015 : 0, hemFwd = (legsD[0].fwd + legsD[1].fwd) / 2 * 0.25;
     if (shape === 'cuirass') {
-      for (let r = 0; r < 3; r++) { const z0 = 1.0 - r * 0.075; tube([{ c: [0.0, sway, z0], a: 0.2 + r * 0.012, b: 0.15 + r * 0.01 }, { c: [0.01 + r * 0.01, sway, z0 - 0.1], a: 0.22 + r * 0.014, b: 0.17 + r * 0.012, ao: 0.8 }], T_.skirt, 16); }
-      tube([{ c: [0, 0, 0.98], a: 0.15, b: 0.12 }, { c: [0, 0, 0.8], a: 0.17, b: 0.13 }], T_.trouser, 12);
+      for (let r = 0; r < 3; r++) { const z0 = 1.0 - r * 0.075; tube([{ c: [-0.05, sway, z0], a: 0.19 + r * 0.012, b: 0.13 + r * 0.01 }, { c: [-0.04 + r * 0.01, sway, z0 - 0.1], a: 0.21 + r * 0.014, b: 0.15 + r * 0.012, ao: 0.8 }], T_.skirt, 16); }
+      tube([{ c: [-0.05, 0, 0.98], a: 0.15, b: 0.11 }, { c: [-0.05, 0, 0.8], a: 0.16, b: 0.12 }], T_.trouser, 12);
     } else {
       const hemZ = lerp(0.84, 0.06, clamp(lenH, 0, 1)), flare = clamp(lenH, 0, 1);
       const rings = [];
-      for (let i = 0; i <= 6; i++) { const k = i / 6, z = lerp(1.02, hemZ, k), a = 0.175 + flare * 0.16 * k * k + 0.02 * k, b = 0.13 + flare * 0.1 * k * k + 0.015 * k; rings.push({ c: [0.0 + hemFwd * k + sway * k, sway * 0.5 * k, z], a, b, ao: i === 6 ? 0.82 : 1 }); }
+      for (let i = 0; i <= 6; i++) { const k = i / 6, z = lerp(1.02, hemZ, k), a = 0.165 + flare * 0.12 * k * k + 0.015 * k, b = 0.115 + flare * 0.08 * k * k + 0.012 * k; rings.push({ c: [-0.05 + hemFwd * k + sway * k, sway * 0.5 * k, z], a, b, ao: i === 6 ? 0.82 : 1 }); }
       tube(rings, T_.skirt, 16);
-      if (body.pattern === 'stole') for (const sd of [-1, 1]) tube([{ c: [0.13, sd * 0.06, 1.3], a: 0.03, b: 0.008, side: [0, 1, 0] }, { c: [0.14 + hemFwd * 0.5, sd * 0.06, hemZ + 0.1], a: 0.03, b: 0.008, side: [0, 1, 0] }], T_.trim, 4);
     }
     if (shape !== 'robe') {
-      tube([{ c: [0, 0, 1.0], a: 0.185, b: 0.14 }, { c: [0, 0, 1.06], a: 0.185, b: 0.14 }], T_.belt, 16);
+      tube([{ c: [-0.05, 0, 1.0], a: 0.175, b: 0.125 }, { c: [-0.05, 0, 1.06], a: 0.175, b: 0.125 }], T_.belt, 16);
       // the buckle at the front
-      const bx = 0.142, w = 0.035, h = 0.03, n0 = [1, 0, 0];
+      const bx = 0.077, w = 0.035, h = 0.03, n0 = [1, 0, 0];
       const a = vert([bx, -w, 1.03 - h], n0, 0, 0, T_.brass), b = vert([bx, w, 1.03 - h], n0, 1, 0, T_.brass), cc = vert([bx, w, 1.03 + h], n0, 1, 1, T_.brass), dd = vert([bx, -w, 1.03 + h], n0, 0, 1, T_.brass);
       I.push(a, b, cc, a, cc, dd);
     }
     // the lower chest, rising behind the eye; its top is the chest you see looking straight down
-    tube([{ c: [-0.04, 0, 1.05], a: 0.18, b: 0.135 }, { c: [-0.07, 0, 1.22], a: 0.19, b: 0.13 }, { c: [-0.1, 0, 1.34], a: 0.2, b: 0.12, ao: 0.9 }], T_.torso, 16, { capEnd: true });
+    tube([{ c: [-0.07, 0, 1.05], a: 0.17, b: 0.12 }, { c: [-0.11, 0, 1.2], a: 0.18, b: 0.115 }, { c: [-0.15, 0, 1.3], a: 0.19, b: 0.11, ao: 0.9 }], T_.torso, 16, { capEnd: true });
     return { V: new Float32Array(V), I: new Uint32Array(I), feet: legsD.map((L) => B([L.A[0] + 0.07, L.A[1], L.gz + 0.003])) , M };
   }
   function drawLowerBody(g, F, R, legs) {
