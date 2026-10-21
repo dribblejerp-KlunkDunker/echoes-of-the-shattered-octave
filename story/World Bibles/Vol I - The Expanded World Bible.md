@@ -3,6 +3,8 @@
 
 *Companion volume to the Master Reference Report and the Master Narrative & Scripture. Everything here is built outward from established canon; nothing established is overwritten. Where this document proposes a fix to an existing inconsistency, it is marked **[CONTINUITY].***
 
+*Revision note (2026-10-20): dates aligned with the game — the Silencing is 416 (Book One is Harvestmonth 419, so three years on, not eighteen), and relief convoys ran to Whisper-Grove from 416. Measure-dating, struck by Vol VII's Appendix, is given here as plain years throughout.*
+
 ---
 
 # PART I — THE DEEP COSMOLOGY
@@ -129,6 +131,8 @@ Entire districts of Whisper-Grove are marked with chalk circles around clean flo
 
 ## 1.9 Death, Echo, and the Release
 
+*Revision note (2026-10-20): dates aligned with the game — the Silencing is 416.*
+
 A soul, in Aethelgard's physics, is a **sustained note with no instrument** — a pattern that has learned to hold itself. Death is not the end of the note. Death is the end of the *resonator*.
 
 - **The Sustain.** Life. The body holds the note.
@@ -136,7 +140,7 @@ A soul, in Aethelgard's physics, is a **sustained note with no instrument** — 
 - **The Echo.** Where the Anchor of Memory still functions, decaying notes are *archived* — caught in the Weeping Canopy of Whisper-Grove and held. This is what the old faith called heaven and what Sable's order calls *the stacks*.
 - **The Release.** Full dissolution into the 852 Hz null-chord. Peace, or annihilation, depending on whom you ask. The Orthodoxy says peace. The Veil says there is no difference and that the distinction is a courtesy extended to the bereaved.
 
-**Since the Silencing of Memory, the Echo no longer catches.** Nobody who has died in the last seven years has been archived. They decay in the open air, slowly, audibly, in the places where they fell — which is why battlefields in the present day **hum**, and why the hum gets quieter each year, and why veterans return to old fields specifically to listen to friends go faint.
+**Since the Silencing of Memory, the Echo no longer catches.** Nobody who has died in the last three years has been archived. They decay in the open air, slowly, audibly, in the places where they fell — which is why battlefields in the present day **hum**, and why the hum gets quieter each year, and why veterans return to old fields specifically to listen to friends go faint.
 
 > *This is the most important piece of horror in the setting and should be used sparingly and devastatingly. A character revisiting a hum that has become too faint to identify is a scene that should be earned, not spent early.*
 
@@ -144,31 +148,33 @@ A soul, in Aethelgard's physics, is a **sustained note with no instrument** — 
 
 # PART II — HISTORY: THE RECKONING OF CYCLES
 
+*Revision note (2026-10-20): dates aligned with the game — the Silencing is 416.* *(§2.1's Cycle-and-Measure reckoning is superseded by Vol VII's Appendix; dates below are plain years.)*
+
 ## 2.1 The Calendar
 
 Time is counted in **Cycles** (a full turn of all eight Anchors through their tuning drift — nominally 1,000 years) and **Measures** (a year). A year is eight months of 45 days, named for the Anchors: *Root, Hearth, Keystone, Dial, Empyrean, Drift, Canopy, Maw*. The month of Maw has no festivals and no weddings; it is the rest at the end of the bar.
 
 The day is divided into **eight bells**, struck by the nearest carillon. In silenced provinces the bells still ring because the Synod pays men to ring them, and this is officially described as *continuity of service*.
 
-**Present day of Book One: Measure 419, Third Cycle.**
+**Present day of Book One: Harvestmonth, 419.**
 
 ## 2.2 Timeline
 
-| Measure | Event |
+| Year | Event |
 |---|---|
 | — | **The Long Tuning.** The Architects drive eight spires. The Octave is sounded. No record survives of how long this took or what was here before. |
 | 1 | **The Compact of Stone.** First human civilization reaches the spires and is not destroyed. The Choral Orthodoxy is founded to maintain, not to worship — a distinction lost within three hundred years. |
 | 1–10,000 | **The Age of the Perfect Octave.** Reality holds. This is not a golden age; it is a *stable* one. Wars, plagues, and cruelty occur normally. The floor simply stays a floor. |
 | 10,000 | **The Reckoning Reset.** The Orthodoxy declares the First Cycle complete. Counting restarts. Historians of the Veil consider this a deliberate erasure and are correct. |
-| ~Measure 280 (3rd Cycle) | **The Lodestone Prosperity.** Fortis discovers that anchor-adjacent ore can be worked into machines that run on *sympathy* rather than fuel. The acoustic logic gate is invented. Automata follow within forty years. |
+| ~280 (3rd Cycle) | **The Lodestone Prosperity.** Fortis discovers that anchor-adjacent ore can be worked into machines that run on *sympathy* rather than fuel. The acoustic logic gate is invented. Automata follow within forty years. |
 | 318 | **The Hollow Sermon.** A Null-Watch garrison chaplain, name expunged, preaches that the eighth Anchor is not a law but a *mercy*, and that the world's suffering is a sustain that ought to be released. Executed. His text survives. It will become the founding document of the Hollow Chorus. |
 | 340 | **First Siphon.** An Iron Synod engineering team proves that Aether-Glass can be bled from a spire without the spire immediately failing. The report's final line — *"degradation is non-linear and should be modelled before scaling"* — is struck from the published version. |
 | 341–400 | **The Siphon Boom.** Steam-arcana. Skyships. Synthetic legionnaires. Revived monarchs. A sixty-year period of staggering prosperity and miraculous medicine that every surviving character remembers fondly and feels guilty about remembering fondly. |
 | 388 | **The Rite of Pure Unison.** High Patriarch Oren Calloway decrees that the sun's seven-harmonic chord is "inefficient." Forty singers of the Sky Choirs have their vocal cords bound with copper wire and are made to hold a single pitch for three hundred sunrises. The light turns cannibal. Thirty-six die. Four fall. The **Corrupted Seraph** is one of the four. |
-| 401 | **The Silencing of Memory.** The Whisper-Grove anchor is drained past recovery to fuel Grade V rendering. A nation forgets itself overnight. 74,000 names recorded in Sable's catalog; 74,000 people who cannot read it. |
 | 405 | **The Valley of Velocity fails.** Partial. Kinetic law becomes probabilistic. The Archipelago does not fall but begins to *stutter*. |
 | 412 | **The First Fracture / the Great Foundry Rupture.** Chief Resonant Engineer **Kaelen Vance**, Badge 408-A, attempts to stabilize the Dawning Spire during an over-pressured draw. The Foundry ruptures. His left arm is pulverized and seeded with Living Glass. Survival probability recorded at two percent. The Dissonant Cascade begins; Resonance Kinetic Charge enters the world as a usable force. |
 | 413–418 | **The Siphon Wars.** Not one war — a slow continental dismemberment. Provinces are taken for their pitch, not their land. Seven of eight Anchors are muted, degraded, or captured. |
+| 416 | **The Silencing of Memory.** The Whisper-Grove anchor is drained past recovery to fuel Grade V rendering. A nation forgets itself overnight. 74,000 names recorded in Sable's catalog; 74,000 people who cannot read it. |
 | 419 | **Book One.** The Oakhaven sub-vault breach. Seven notes muted. The final chord trembling. |
 
 ## 2.3 **[CONTINUITY]** The Relay Network — fixing the Oakhaven/Light problem
@@ -220,7 +226,7 @@ This keeps every line of existing dialogue intact and explains why the party can
 
 **The horror here.** The Rite of Pure Unison was not stopped. It was **scaled**. In the under-choirs beneath the Sun-Altar there are now four hundred bound singers, rotated in shifts, held at one pitch to keep the mirrors coherent. They are fed through tubes. They are replaced when their throats fail. The Synod recruits from orphanages in the silenced provinces, because the Unstrung do not have names to put on a complaint.
 
-**The secret.** The sun's chord is down to five harmonics from seven. Two are simply gone. The Patriarchy's own astronomers have calculated the date at which coherent light becomes impossible and have been forbidden to publish the figure. **Measure 426.** Seven years.
+**The secret.** The sun's chord is down to five harmonics from seven. Two are simply gone. The Patriarchy's own astronomers have calculated the date at which coherent light becomes impossible and have been forbidden to publish the figure. **426.** Seven years.
 
 ---
 
@@ -292,7 +298,7 @@ In sealed rooms, clocks run backwards. The Bazaar's lower vaults are full of sea
 
 **Food.** Fish, lime, rum, hardtack, and *reef-pearl* — a tonal shellfish that must be eaten within a minute of opening or it goes atonal and poisonous.
 
-**The horror here.** Kinetic law is probabilistic now. A raindrop takes three days to fall; a sword stroke goes supersonic without warning and takes the swordsman's arm off at the shoulder from the recoil. The sea has begun **forgetting surface tension in patches** — Vane's frigate dissolved into blue jelly in Measure 418 and forty-eight hands survived only because he cut a towing hawser and left his first mate to sink. Children in Cantabile are taught never to run on open deck, because a running stride is where velocity most likes to misbehave.
+**The horror here.** Kinetic law is probabilistic now. A raindrop takes three days to fall; a sword stroke goes supersonic without warning and takes the swordsman's arm off at the shoulder from the recoil. The sea has begun **forgetting surface tension in patches** — Vane's frigate dissolved into blue jelly in 418 and forty-eight hands survived only because he cut a towing hawser and left his first mate to sink. Children in Cantabile are taught never to run on open deck, because a running stride is where velocity most likes to misbehave.
 
 **The secret.** **The tonal sea-trenches are not natural.** They are *bore holes* — the Synod has been siphoning the Velocity Anchor from beneath the seabed for eleven years, and the trench that swallowed Vesper was Siphon Site 9. Vane has never known this. The day he learns it is a scene that should be written with care.
 
@@ -300,21 +306,23 @@ In sealed rooms, clocks run backwards. The Bazaar's lower vaults are full of sea
 
 ## III.7 — THE SPECTRAL WOODS *(Memory & Entropy • 741 Hz • Capital: Whisper-Grove)*
 
+*Revision note (2026-10-20): dates aligned with the game — the Silencing is 416.*
+
 **The land.** A twilight forest of silver weeping willows standing in phosphorescent reflecting pools. The Weeping Canopy — the Anchor itself — is grown into the forest rather than built on it, a spire of fused wood and crystal a kilometer high. Lilac mist at ground level, always.
 
-**Government.** None. There has been no functioning government in Whisper-Grove since Measure 401 because there is no one who remembers being appointed.
+**Government.** None. There has been no functioning government in Whisper-Grove since 416 because there is no one who remembers being appointed.
 
 **Economy.** None. Salvage, by outsiders. The marble plazas are looted monthly by crews who have learned not to speak near the residents.
 
 **Culture.** *Gone.* This is the setting's central atrocity and should be written as such.
 
-**The horror here.** Seventy-four thousand people are still alive in Whisper-Grove. They do not know their names, their kin, their trades, or what happened. They **loop** — a woman repeats the last four words she said before the Silencing, forever, to a husband she does not recognise who is repeating his own four words back. They eat when food is put in front of them. They do not age correctly. They have been doing this for eighteen years.
+**The horror here.** Seventy-four thousand people are still alive in Whisper-Grove. They do not know their names, their kin, their trades, or what happened. They **loop** — a woman repeats the last four words she said before the Silencing, forever, to a husband she does not recognise who is repeating his own four words back. They eat when food is put in front of them. They do not age correctly. They have been doing this for three years.
 
-Relief convoys stopped in 409 because the workers could not continue. The present policy is **containment**: the Synod maintains a cordon and describes the province as "under restorative administration."
+Relief convoys ran to the Grove from 416 until the workers could not continue; the stores were reassigned to the Synod's restorative administration. The present policy is **containment**: the Synod maintains a cordon and describes the province as "under restorative administration."
 
-Worse, quietly: the loops are **shortening**. A phrase that was nine words in 403 is four words now. Sable has transcribed the decay curve. At the current rate the last Unstrung will fall silent in Measure 431, and nobody knows whether silence means death or something worse, and Sable has written in the margin of folio 2,207: *"I will be here to find out. That is the entire point of me."*
+Worse, quietly: the loops are **shortening**. A phrase that was nine words in 416 is four words now. Sable has transcribed the decay curve. At the current rate the last Unstrung will fall silent in 421, and nobody knows whether silence means death or something worse, and Sable has written in the margin of folio 2,207: *"I will be here to find out. That is the entire point of me."*
 
-**The secret.** The Echo stacks are still full. Every soul archived before 401 is still *in* the Canopy, held, unreleased, and — because the Anchor is silenced rather than destroyed — **aware**. Ten thousand years of the dead, conscious, in the dark, unable to decay. The Mausoleum of Chords is not a tomb. It is a *holding cell*, and the labyrinth's silencing effect is the only thing keeping the stacks from being audible to the living.
+**The secret.** The Echo stacks are still full. Every soul archived before 416 is still *in* the Canopy, held, unreleased, and — because the Anchor is silenced rather than destroyed — **aware**. Ten thousand years of the dead, conscious, in the dark, unable to decay. The Mausoleum of Chords is not a tomb. It is a *holding cell*, and the labyrinth's silencing effect is the only thing keeping the stacks from being audible to the living.
 
 ---
 
@@ -373,7 +381,9 @@ This single fact reorganizes the entire society:
 
 ## 4.5 The Eight Feasts
 
-One per month. Root (planting, loud), Hearth (forge-lighting), Keystone (the Weighing, Fortis's oath-renewal), Dial (contract day — every term in the province expires and is renegotiated at once), Empyrean (dawn service, compulsory), Drift (the Corsair gathering and the Great Race), Canopy (the remembering of the dead — *not celebrated since 401*), and Maw, which has no feast.
+*Revision note (2026-10-20): dates aligned with the game — the Silencing is 416.*
+
+One per month. Root (planting, loud), Hearth (forge-lighting), Keystone (the Weighing, Fortis's oath-renewal), Dial (contract day — every term in the province expires and is renegotiated at once), Empyrean (dawn service, compulsory), Drift (the Corsair gathering and the Great Race), Canopy (the remembering of the dead — *not celebrated since 416*), and Maw, which has no feast.
 
 ---
 
@@ -402,7 +412,9 @@ The old faith. Maintainers turned worshippers turned irrelevant. Broken at the R
 
 ## 5.3 The Silent Veil
 
-Sable's order. Archivists sworn to record the death of civilizations so that history cannot be rewritten. They do not intervene. **That is the oath, and the oath is the horror.** A Veil scribe stood in Whisper-Grove in Measure 401 and wrote down what was happening while it happened.
+*Revision note (2026-10-20): dates aligned with the game — the Silencing is 416.*
+
+Sable's order. Archivists sworn to record the death of civilizations so that history cannot be rewritten. They do not intervene. **That is the oath, and the oath is the horror.** A Veil scribe stood in Whisper-Grove in 416 and wrote down what was happening while it happened.
 
 Sable broke with them — stole the Great Tome, severed her access key, walked into the mist. She is the last, and the Veil is hunting the Tome, not her.
 
@@ -556,7 +568,7 @@ He has worked out — correctly — that the Octave is an open chord, that an op
 
 ## 9.3 Threads Left Open for Later Books
 
-1. The sun's chord is down to five harmonics. **Measure 426.** Seven years. The Patriarchy knows.
+1. The sun's chord is down to five harmonics. **426.** Seven years. The Patriarchy knows.
 2. The Maw advances four meters a year and is moving *toward Light.*
 3. The Echo stacks are full, conscious, and shortening.
 4. Something buried under the Reach's oldest grove was transmitting before the Synod existed.

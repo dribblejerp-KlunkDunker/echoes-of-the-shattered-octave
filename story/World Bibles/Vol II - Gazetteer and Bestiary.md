@@ -349,14 +349,14 @@ Polyglot, rhythmic, profane, shanty-inflected. Greeting: *"What's she singing?"*
 **Sound:** the loops. Human voices, hundreds of them, each repeating three to nine words, overlapping, forever, at conversational volume. Under it, water dripping into reflecting pools. **No birds.**
 **Light:** permanent twilight, lilac, phosphorescent pools underlighting the willows from below so every face is lit from the chin.
 **Smell:** wet silver bark, still water, dust, and — in the plazas — nothing at all, which visitors find worse.
-**Texture:** everything is cold and damp and soft with eighteen years of undisturbed moss.
+**Texture:** everything is cold and damp and soft with three years of undisturbed moss.
 
 ### Settlements
 
 **WHISPER-GROVE** *(capital, pop. ~74,000 Unstrung)*
-Sunken marble plazas, lilac mist, a kilometre-high spire of fused wood and crystal. No government since 401. No economy. Looting crews come monthly and have learned not to speak.
+Sunken marble plazas, lilac mist, a kilometre-high spire of fused wood and crystal. No government since 416. No economy. Looting crews come monthly and have learned not to speak.
 - **The Catalogue Plaza** — where Sable sits with the Bound Ledger. Vignette's setting.
-- **The Loop Quarters** — residential. People are *in their homes*. Doors are open. Meals are on tables, eighteen years old.
+- **The Loop Quarters** — residential. People are *in their homes*. Doors are open. Meals are on tables, three years old.
 - **The Cordon** — Synod containment. "Restorative administration." Four checkpoints, no one admitted, no one leaving because no one thinks to.
 
 **CLOISTER OF THE LOST CHOIR** *(860, 490)* — Pre-Silencing monastery. The only building in the realm that was *evacuated in time*, because one sub-prior believed the warning. Thirty-one people. They are elsewhere now and none of them have recovered.
@@ -367,10 +367,10 @@ Sunken marble plazas, lilac mist, a kilometre-high spire of fused wood and cryst
 
 **The Unstrung have no names. They are designated by their loop.** This is how relief workers referred to them, and then how the Synod's forms referred to them, and now it is simply how it is done.
 
-- **"—and I'll fetch the other one"** *(f, apparent 40s)* — Stands in a doorway. Has said this for eighteen years. In 403 it was nine words.
-- **"Mira, the kettle"** *(m, apparent 60s)* — The only loop in the Grove containing a name. Relief workers in 405 tried to find Mira. They did not.
+- **"—and I'll fetch the other one"** *(f, apparent 40s)* — Stands in a doorway. Has said this for three years. In 416 it was nine words.
+- **"Mira, the kettle"** *(m, apparent 60s)* — The only loop in the Grove containing a name. Relief workers in 416 tried to find Mira. They did not.
 - **"Four, and then we go"** *(child, apparent 9)* — Has not aged. Aging requires memory of having been younger.
-- **Sub-Prior Edrin Calloway** *(m, 50s)* — Evacuated the Cloister. Distant kin to the High Patriarch, which is why his warning reached him. Has spent eighteen years trying to atone for saving thirty-one people and not seventy-four thousand.
+- **Sub-Prior Edrin Calloway** *(m, 50s)* — Evacuated the Cloister. Distant kin to the High Patriarch, which is why his warning reached him. Has spent three years trying to atone for saving thirty-one people and not seventy-four thousand.
 - **Cordon-Captain Reyes** *(m, 40s, Synod)* — Commands containment. Rotates his troops every three weeks because longer and they stop eating. Files honest reports. They are not read.
 
 ### Local Powers
@@ -387,14 +387,14 @@ None. The **Synod Cordon**, the **looting crews**, and the **Silent Veil** — w
 | 6 | **The Choir-That-Eats.** Distant, beautiful singing, approaching. See Bestiary. |
 
 ### Dialect
-*There is no living dialect.* The loops preserve pre-401 Grove speech: formal, warm, full of diminutives, a language of people who liked each other. Reading a transcript of the loops is reading a town's last ordinary afternoon.
+*There is no living dialect.* The loops preserve pre-416 Grove speech: formal, warm, full of diminutives, a language of people who liked each other. Reading a transcript of the loops is reading a town's last ordinary afternoon.
 
 ### Scene Hooks
-1. Sable reads the shortening curve aloud. Measure 431. Twelve years.
+1. Sable reads the shortening curve aloud. 421. Two years.
 2. A party member's name goes missing from another party member's mouth.
 3. The Cloister survivors. Thirty-one people who got out and cannot be glad.
 4. The looters are selling bone-chime. One of the chimes answers to a name someone in the party knows.
-5. Reyes offers the party his unread reports. All eighteen years of them.
+5. Reyes offers the party his unread reports. All three years of them.
 
 ---
 
@@ -487,7 +487,7 @@ Compulsively verbose. Greeting: *"Keep talking."* Farewell: *"Keep talking."* A 
 **THE FADING** — Not entities. *Places.* Battlefields where the unarchived dead decay audibly. The hum gets fainter each year. Veterans return specifically to listen, and the realm's worst grief is a man who goes back and cannot pick his friend out of the hum any more.
 *No combat. No resolution. Only the scene.*
 
-**MOURN-ECHOES** — Spectral Woods. A fallen ally leaves a Retribution Echo for four seconds that keeps fighting. In the Woods this effect has gone chronic: some echoes have been fighting for eighteen years, in the mist, against nothing, and will attack anyone who enters their engagement.
+**MOURN-ECHOES** — Spectral Woods. A fallen ally leaves a Retribution Echo for four seconds that keeps fighting. In the Woods this effect has gone chronic: some echoes have been fighting for three years, in the mist, against nothing, and will attack anyone who enters their engagement.
 *Resolve:* tell them the battle is over. They have to believe you.
 
 **BONE-CHIME SPIRITS** — Not natural. *Manufactured.* A dead person's Signature bound into carved bone. The most reliable way to speak to the dead that currently exists, which is why the trade thrives in a province full of corpses. The chime answers questions. It answers *honestly.* It also, after about forty hours of use, begins asking questions back.
@@ -553,7 +553,7 @@ Compulsively verbose. Greeting: *"Keep talking."* Farewell: *"Keep talking."* A 
 
 **CHRONOS DRAKE** *(Hourglass Erg, 6,800 HP)* — Freezes cooldowns in 4 hexes; rewinds its own wounds by 40%. Does not age. Has been killed eleven times by eleven different parties and is currently alive, and the Collegium has stopped issuing bounties.
 
-**PHANTOM WEAVER** *(Whisper Catacombs, 7,200 HP)* — Tethers transfer 50% of incoming damage to the party. It is weaving something. Eighteen years of work. Sable has seen a corner of the pattern and has written that it is **a catalogue**, and that the names in it are correct, and that some of them belong to people who are not dead yet.
+**PHANTOM WEAVER** *(Whisper Catacombs, 7,200 HP)* — Tethers transfer 50% of incoming damage to the party. It is weaving something. Three years of work. Sable has seen a corner of the pattern and has written that it is **a catalogue**, and that the names in it are correct, and that some of them belong to people who are not dead yet.
 
 ---
 
@@ -584,7 +584,7 @@ A fast reference for which revelation belongs in which book.
 | Grade V glass / what legionnaires are | Book One, late | Turns the Synod from oppressor to atrocity |
 | The Under-Choirs | Book Two | Needs Seraphina and Ignatius both present |
 | Siphon Site 9 / Vesper's trench | Book Two or Three | Only when Vane can survive knowing |
-| The shortening loops / Measure 431 | Book Two | Gives the Woods a clock |
+| The shortening loops / 421 | Book Two | Gives the Woods a clock |
 | The Chord-row is conscious | Book Three | Must land before Vaelen's motive |
 | Vaelen's daughter | Book Four, very late | The argument, not the twist |
 | The Ninth Anchor doctrine | Book Four / final act | It is the ending's mechanism |
