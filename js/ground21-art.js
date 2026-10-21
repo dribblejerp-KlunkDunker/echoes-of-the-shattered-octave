@@ -62,24 +62,25 @@ function ground21ArtFactory() {
     return out;
   }
   const lumOf = (r, g, b) => 0.299 * r + 0.587 * g + 0.114 * b;
+  const DIR4 = [[1, 0], [0, 1], [1, 1], [1, -1]];
 
   // ---------------------------------------------------------------------------------------------- families
   // mat: the default material of a face; st: the texture has structure (mortar, seams, outlines) to follow;
   // moss: moss in the joints (0..1); cracks: hairline cracks per tile; bevel: edge width in px; ov: overlays.
   const FAM = {
-    cobble: { mat: 'stone', st: true, moss: 0.55, cracks: 16, chips: 26, bevel: 2, pits: 0.010 },
-    flag: { mat: 'stone', st: true, moss: 0.30, cracks: 22, chips: 34, bevel: 1, pits: 0.008 },
-    masonry: { mat: 'stone', st: true, moss: 0.14, cracks: 12, chips: 26, bevel: 1, pits: 0.010 },
-    brick: { mat: 'brick', st: true, moss: 0.10, cracks: 6, chips: 30, bevel: 1, pits: 0.022 },
-    marble: { mat: 'marble', st: true, moss: 0, cracks: 3, chips: 8, bevel: 1, pits: 0.002, veins: true },
-    rock: { mat: 'rock', st: true, moss: 0.12, cracks: 14, chips: 10, bevel: 1, pits: 0.012, facets: true },
-    wood: { mat: 'wood', st: true, moss: 0, cracks: 0, chips: 0, bevel: 1, nails: true, knots: 3 },
-    bark: { mat: 'wood', st: true, moss: 0.10, cracks: 0, chips: 0, bevel: 1, knots: 1, heavy: true },
-    mixed: { mat: 'auto', st: true, moss: 0, cracks: 4, chips: 6, bevel: 1, knots: 1, nails: true },
-    plaster: { mat: 'plaster', st: true, moss: 0, cracks: 10, chips: 12, bevel: 1, pits: 0.004 },
-    paint: { mat: 'plaster', st: true, moss: 0, cracks: 3, chips: 2, bevel: 1, pits: 0.001, soft: true },
-    metal: { mat: 'metal', st: true, moss: 0, cracks: 0, chips: 0, bevel: 1, rivets: true },
-    roof: { mat: 'roof', st: true, moss: 0.35, cracks: 4, chips: 18, bevel: 1, pits: 0.008 },
+    cobble: { mat: 'stone', st: true, moss: 0.55, cracks: 16, chips: 26, bevel: 2, pits: 0.010, joint: 0.32, valley: 1 },
+    flag: { mat: 'stone', st: true, moss: 0.30, cracks: 22, chips: 34, bevel: 1, pits: 0.008, minJoint: 60, emboss: 0.09, faceVote: 1.9, joint: 0.15, warp: 0.3 },
+    masonry: { mat: 'stone', st: true, moss: 0.14, cracks: 12, chips: 26, bevel: 1, pits: 0.010, minJoint: 40, emboss: 0.11, faceVote: 1.9, joint: 0.17, warp: 0.16 },
+    brick: { mat: 'brick', st: true, moss: 0.10, cracks: 6, chips: 30, bevel: 1, pits: 0.022, minJoint: 40, joint: 0.2, warp: 0.12 },
+    marble: { mat: 'marble', st: true, moss: 0, cracks: 3, chips: 8, bevel: 1, pits: 0.002, veins: true, minJoint: 60, emboss: 0.07, faceVote: 2.0, joint: 0.12, warp: 0.18 },
+    rock: { mat: 'rock', st: true, moss: 0.12, cracks: 14, chips: 10, bevel: 1, pits: 0.012, facets: true, joint: 0.16, valley: 1.3 },
+    wood: { mat: 'wood', st: true, moss: 0, cracks: 0, chips: 0, bevel: 1, nails: true, knots: 3, minJoint: 40, emboss: 0.09, joint: 0.14, warp: 0.12, faceVote: 1.2 },
+    bark: { mat: 'wood', st: true, moss: 0.10, cracks: 0, chips: 0, bevel: 1, knots: 1, heavy: true, joint: 0.12 },
+    mixed: { mat: 'auto', st: true, moss: 0, cracks: 4, chips: 6, bevel: 1, knots: 1, nails: true, minJoint: 40, emboss: 0.09, joint: 0.05, warp: 0.04, faceVote: 0.95, clean: true },
+    plaster: { mat: 'plaster', st: true, moss: 0, cracks: 10, chips: 12, bevel: 1, pits: 0.004, minJoint: 60, emboss: 0.07, faceVote: 1.9, joint: 0.05, warp: 0.1, clean: true },
+    paint: { mat: 'plaster', st: true, moss: 0, cracks: 3, chips: 2, bevel: 1, pits: 0.001, soft: true, minJoint: 60, emboss: 0.06, joint: 0.05, warp: 0.05, faceVote: 0.95, clean: true },
+    metal: { mat: 'metal', st: true, moss: 0, cracks: 0, chips: 0, bevel: 1, rivets: true, joint: 0.1, warp: 0.08, faceVote: 1.0, clean: true },
+    roof: { mat: 'roof', st: true, moss: 0.35, cracks: 4, chips: 18, bevel: 1, pits: 0.008, minJoint: 30, joint: 0.2, warp: 0.16 },
     grass: { mat: 'grass', st: false, tufts: 1500, clover: 22, emboss: 0.05 },
     turf: { mat: 'grass', st: false, tufts: 1100, clover: 14, emboss: 0.05 },
     leaf: { mat: 'leaf', st: false, leaves: 900, emboss: 0.08 },
@@ -133,6 +134,16 @@ function ground21ArtFactory() {
       let n = 0; for (let j = -1; j <= 1; j++) for (let k2 = -1; k2 <= 1; k2++) if ((j || k2) && g[wrapN(y + j) * N + wrapN(x + k2)] >= 0.5) n++;
       if (n < 2) g[i] *= 0.35;
     }
+    // joint score: darkness against the local light (d), averaged along short runs in four directions, so a mortar line
+    // or a seam (dark all along) scores high and a dark speck (dark alone) does not
+    const dk = new Float32Array(NN), line = new Float32Array(NN);
+    for (let i = 0; i < NN; i++) dk[i] = med[i] - L[i];
+    const DIRS = [[1, 0], [0, 1], [1, 1], [1, -1]];
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      let best = -1e9;
+      for (const [ax, ay] of DIRS) { let sm = 0; for (let t = -2; t <= 2; t++) sm += dk[wrapN(y + ay * t) * N + wrapN(x + ax * t)]; if (sm > best) best = sm; }
+      line[y * N + x] = 0.5 * dk[y * N + x] + 0.5 * best / 5;
+    }
     // grain direction: the axis along which neighbours differ least
     let dx = 0, dy = 0;
     for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { const i = y * N + x; dx += Math.abs(L[i] - L[y * N + wrapN(x + 1)]); dy += Math.abs(L[i] - L[wrapN(y + 1) * N + x]); }
@@ -144,7 +155,7 @@ function ground21ArtFactory() {
       for (let j = -1; j <= 1; j++) for (let k2 = -1; k2 <= 1; k2++) { const q = wrapN(y + j) * N + wrapN(x + k2); if ((g[q] >= 0.5) !== cl) continue; s += L[q]; s2 += L[q] * L[q]; n++; }
       sig[i] = Math.sqrt(Math.max(0, s2 / n - (s / n) * (s / n)));
     }
-    return { R, G, B, L, A, g, med, sig, grainX: dx < dy * 0.92, grainY: dy < dx * 0.92 };
+    return { R, G, B, L, A, g, med, sig, dk, line, grainX: dx < dy * 0.92, grainY: dy < dx * 0.92 };
   }
 
   // ---------------------------------------------------------------------------------------------- palette
@@ -226,6 +237,32 @@ function ground21ArtFactory() {
     opt = opt || {};
     const an = analyse(base);
     const famName = opt.family || familyOf(name, an), F = FAM[famName] || FAM.masonry;
+    // joints: the family's share of texels with the highest joint score (and darker than their light at all)
+    if (F.st) {
+      const sorted0 = Float32Array.from(an.line).sort(), thr = Math.max(2, sorted0[Math.floor((1 - (F.joint || 0.14)) * (NN - 1))]);
+      for (let i = 0; i < NN; i++) an.g[i] = an.line[i] >= thr && an.dk[i] > 1 ? 1 : 0;
+      // bridge gaps of one or two texels along a row, a column or a diagonal: a mortar line is drawn unbroken
+      for (let pass = 0; pass < 2; pass++) {
+        const add = [];
+        for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+          const i = y * N + x; if (an.g[i]) continue;
+          const at = (dx, dy) => an.g[wrapN(y + dy) * N + wrapN(x + dx)];
+          let hit = false;
+          for (const [ax, ay] of DIR4) {
+            const a1 = at(-ax, -ay), b1 = at(ax, ay), a2 = at(-2 * ax, -2 * ay), b2 = at(2 * ax, 2 * ay);
+            if ((a1 && b1) || (a1 && b2 && an.line[i] > 0) || (a2 && b1 && an.line[i] > 0)) { hit = true; break; }
+          }
+          if (hit && an.dk[i] > -4) add.push(i);
+        }
+        for (const i of add) an.g[i] = 1;
+      }
+      // lone joint texels are speckle
+      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+        const i = y * N + x; if (!an.g[i]) continue;
+        let n = 0; for (let j = -1; j <= 1; j++) for (let k2 = -1; k2 <= 1; k2++) if ((j || k2) && an.g[wrapN(y + j) * N + wrapN(x + k2)]) n++;
+        if (n < 1) an.g[i] = 0;
+      }
+    }
     const seed = hashStr(name) ^ 0x9e3779b9;
     const rand = rng(seed);
     // accents: moss, iron, clover, root (all muted, read against the texture's palette)
@@ -249,23 +286,19 @@ function ground21ArtFactory() {
     const CL = pal.clusters, KC = CL.length;
     const tcl = new Uint8Array(NN);
     for (let t = 0; t < NN; t++) { let best = 0, bd = 1e12; for (let k = 0; k < KC; k++) { const c = CL[k], d = (an.R[t] - c[0]) ** 2 * 2 + (an.G[t] - c[1]) ** 2 * 4 + (an.B[t] - c[2]) ** 2 * 3; if (d < bd) { bd = d; best = k; } } tcl[t] = best; }
-    const cls = new Uint8Array(MM), Hs = new Float32Array(MM), src = new Int32Array(MM), wc = new Float32Array(KC), touched = new Uint8Array(16);
+    const cls = new Uint8Array(MM), Hs = new Float32Array(MM), src = new Int32Array(MM), wc = new Float32Array(KC), touched = new Uint8Array(64);
     const W = F.warp != null ? F.warp : F.st ? 0.36 : 0.62;
     const VR = F.st ? 0.82 : 0.95;   // vote radius (texels): small enough that a one-texel line or speck keeps its core
     for (let y = 0; y < M; y++) for (let x = 0; x < M; x++) {
       const p = y * M + x;
       const u = (x + 0.5) / K + (warpX[p] - 0.5) * 2 * W, v = (y + 0.5) / K + (warpY[p] - 0.5) * 2 * W;
       const fu = u - 0.5, fv = v - 0.5, iu = Math.floor(fu), iv = Math.floor(fv);
-      let hs = 0, ws = 0, nt = 0;
+      let hs = 0, ws = 0;
       for (let j = -1; j <= 2; j++) for (let i = -1; i <= 2; i++) {
-        const ti = ((iv + j) & 63) * N + ((iu + i) & 63), dx = Math.abs(fu - (iu + i)), dy = Math.abs(fv - (iv + j));
-        const ax = 1 - dx / VR, ay = 1 - dy / VR;
-        if (ax > 0 && ay > 0) { const k = tcl[ti]; if (wc[k] === 0) touched[nt++] = k; wc[k] += ax * ay; }
-        const bx = 1 - dx / 1.5, by = 1 - dy / 1.5; if (bx > 0 && by > 0) { hs += an.L[ti] * bx * by; ws += bx * by; }
+        const ti = ((iv + j) & 63) * N + ((iu + i) & 63), bx = 1 - Math.abs(fu - (iu + i)) / 1.5, by = 1 - Math.abs(fv - (iv + j)) / 1.5;
+        if (bx > 0 && by > 0) { hs += an.L[ti] * bx * by; ws += bx * by; }
       }
-      let best = 0, bw0 = -1;
-      for (let q = 0; q < nt; q++) { const k = touched[q], w = wc[k] + h2(x, y, seed + k) * 0.06; wc[k] = 0; if (w > bw0 || (w === bw0 && k < best)) { bw0 = w; best = k; } }
-      cls[p] = best; Hs[p] = hs / ws; src[p] = wrapN(Math.floor(v)) * N + wrapN(Math.floor(u));
+      Hs[p] = hs / ws; src[p] = wrapN(Math.floor(v)) * N + wrapN(Math.floor(u));
     }
     // --- 2. joints: valleys of the height (darker than the 21 px neighbourhood) joined with the base's dark grooves,
     // specks removed; then the faces between them (stones, planks, bricks), wrapped, with their unwrapped extent
@@ -284,7 +317,7 @@ function ground21ArtFactory() {
         const iu = Math.floor(fu), iv = Math.floor(fv), tu = fu - iu, tv = fv - iv;
         const a = an.g[wrapN(iv) * N + wrapN(iu)], b = an.g[wrapN(iv) * N + wrapN(iu + 1)], c = an.g[wrapN(iv + 1) * N + wrapN(iu)], d = an.g[wrapN(iv + 1) * N + wrapN(iu + 1)];
         const gs = (a + (b - a) * tu) * (1 - tv) + (c + (d - c) * tu) * tv;
-        const valley = Hs[p] < Hb[p] - Math.max(3, 0.075 * Hb[p]) + (rough[p] - 0.5) * 4;
+        const valley = !!F.valley && Hs[p] < Hb[p] - Math.max(3, 0.075 * Hb[p]) * F.valley + (rough[p] - 0.5) * 4;
         mask[p] = (gs > 0.52 + (rough[p] - 0.5) * 0.34 || valley) ? 1 : 0;
       }
       // drop joint specks smaller than 14 px (they are speckle on a stone, not mortar)
@@ -294,8 +327,28 @@ function ground21ArtFactory() {
         let h = 0, t = 0; qq[t++] = s0; seenJ[s0] = 1;
         while (h < t) { const p = qq[h++], x = p % M, y = (p / M) | 0;
           for (let d = 0; d < 4; d++) { const q = d === 0 ? y * M + ((x + 1) & 255) : d === 1 ? y * M + ((x + 255) & 255) : d === 2 ? ((y + 1) & 255) * M + x : ((y + 255) & 255) * M + x; if (mask[q] && !seenJ[q]) { seenJ[q] = 1; qq[t++] = q; } } }
-        if (t < 14) for (let i = 0; i < t; i++) mask[qq[i]] = 0;
+        if (t < (F.minJoint || 14)) for (let i = 0; i < t; i++) mask[qq[i]] = 0;
       }
+    }
+    // the class vote: joints keep a tight radius (one-texel lines survive); faces vote wider over face texels only, so a
+    // stone or plank reads as a few flat clusters, the way a pixel artist paints one, not as the base's texel noise
+    const VRF = F.st ? (F.faceVote || 1.45) : VR;
+    for (let y = 0; y < M; y++) for (let x = 0; x < M; x++) {
+      const p = y * M + x, jm = mask[p] === 1, R0 = jm ? VR : VRF, reach = Math.ceil(R0);
+      const u = (x + 0.5) / K + (warpX[p] - 0.5) * 2 * W, v = (y + 0.5) / K + (warpY[p] - 0.5) * 2 * W;
+      const fu = u - 0.5, fv = v - 0.5, iu = Math.floor(fu), iv = Math.floor(fv);
+      let nt = 0;
+      for (let pass = 0; pass < 2 && nt === 0; pass++) {
+        for (let j = 1 - reach; j <= reach; j++) for (let i = 1 - reach; i <= reach; i++) {
+          const ti = ((iv + j) & 63) * N + ((iu + i) & 63);
+          if (pass === 0 && F.st && !jm && an.g[ti] >= 0.5) continue;     // a face votes with face texels
+          const ax = 1 - Math.abs(fu - (iu + i)) / R0, ay = 1 - Math.abs(fv - (iv + j)) / R0;
+          if (ax > 0 && ay > 0) { const k = tcl[ti]; if (wc[k] === 0) touched[nt++] = k; wc[k] += ax * ay; }
+        }
+      }
+      let best = 0, bw0 = -1;
+      for (let q = 0; q < nt; q++) { const k = touched[q], w = wc[k] + h2(x, y, seed + k) * 0.06; wc[k] = 0; if (w > bw0 || (w === bw0 && k < best)) { bw0 = w; best = k; } }
+      cls[p] = best;
     }
     const lab = new Int32Array(MM).fill(-1), comps = [];
     const qx = new Int32Array(MM), qy = new Int32Array(MM), ux = new Int32Array(MM), uy = new Int32Array(MM);
@@ -338,6 +391,13 @@ function ground21ArtFactory() {
       while (h < t) { const p = qq[h++], d = jd[p]; if (d >= 6) continue; const x = p % M, y = (p / M) | 0;
         for (let e = 0; e < 4; e++) { const q = e === 0 ? y * M + ((x + 1) & 255) : e === 1 ? y * M + ((x + 255) & 255) : e === 2 ? ((y + 1) & 255) * M + x : ((y + 255) & 255) * M + x; if (jd[q] === 255) { jd[q] = d + 1; qq[t++] = q; } } } }
 
+    // distance (px, capped at 6) from each face pixel to the nearest joint
+    const fdist = new Uint8Array(MM).fill(255);
+    { const qq = new Int32Array(MM); let h = 0, t = 0;
+      for (let p = 0; p < MM; p++) if (mask[p]) { fdist[p] = 0; qq[t++] = p; }
+      while (h < t) { const p = qq[h++], d = fdist[p]; if (d >= 6) continue; const x = p & 255, y = p >> 8;
+        for (let e = 0; e < 4; e++) { const q = e === 0 ? y * M + ((x + 1) & 255) : e === 1 ? y * M + ((x + 255) & 255) : e === 2 ? ((y + 1) & 255) * M + x : ((y + 255) & 255) * M + x; if (fdist[q] === 255) { fdist[q] = d + 1; qq[t++] = q; } } } }
+    const jdFace = (x, y) => fdist[(y & 255) * M + (x & 255)];
     // --- 3. paint in ramp steps: light from the upper left on every rise of the height (emboss, in whole steps), bevels
     // on the faces, shadowed joints, then each material's grain; every pixel is a colour of the palette
     const O = new Float32Array(MM * 3), LV = new Int8Array(MM);
@@ -355,7 +415,10 @@ function ground21ArtFactory() {
       const p = y * M + x;
       let lv = 0;
       const gd = Gd[p];
-      lv += gd > lit2 ? 2 : gd > lit1 ? 1 : gd < sh2 ? -2 : gd < sh1 ? -1 : 0;
+      // inside a face (away from its joints) only strong rises shade, by one step: no craters from texel noise
+      const inFace = F.st && !mask[p] && jdFace(x, y) > 3;
+      if (inFace) lv += gd > lit2 * 1.4 ? 1 : gd < sh2 * 1.4 ? -1 : 0;
+      else lv += gd > lit2 ? 2 : gd > lit1 ? 1 : gd < sh2 ? -2 : gd < sh1 ? -1 : 0;
       const hn = h2(x, y, seed);
       let k = 1;
       if (mask[p]) {
@@ -390,8 +453,7 @@ function ground21ArtFactory() {
           if (h2(gX ? 0 : ring, gX ? ring : 0, seed + 3) < 0.16) lv -= 1;                       // dark late-wood lines
           if (F.heavy && hn < 0.05) lv -= 1;
         } else if (mat === 'plaster') {
-          if (hn < 0.03) lv -= 1; else if (hn > 0.985) lv += 1;
-          k *= 1 + (mott[p] - 0.5) * (F.soft ? 0.05 : 0.09);
+          if (hn < 0.005) lv -= 1; else if (hn > 0.997) lv += 1;
           if (F.pits && hn < F.pits) lv -= 1;
         } else if (mat === 'metal') {
           const gq = c.grainX ? along[p] : alongY[p];
@@ -426,9 +488,9 @@ function ground21ArtFactory() {
       for (let y = 0; y < M; y++) for (let x = 0; x < M; x++) {
         const p = y * M + x; if (mask[p]) continue;
         const ph = (x * kx + y * ky) / M + vw[p] * 3.2, t = Math.abs(ph - Math.floor(ph) - 0.5);
-        if (t < 0.012) mul(x, y, 0.8); else if (t < 0.02 && h2(x, y, seed + 5) < 0.5) mul(x, y, 0.9);
+        if (t < 0.011) mul(x, y, 0.86); else if (t < 0.02 && h2(x, y, seed + 5) < 0.4) mul(x, y, 0.93);
         const ph2 = (x * (kx + 3) - y * ky) / M + vw[p] * 2.1, t2 = Math.abs(ph2 - Math.floor(ph2) - 0.5);
-        if (t2 < 0.006) mul(x, y, 0.88);
+        if (t2 < 0.006) mul(x, y, 0.93);
       }
     }
     // hairline cracks from the joints into the faces
@@ -671,6 +733,13 @@ function ground21ArtFactory() {
     };
     const doQuant = () => { for (let p = 0; p < MM; p++) Q[p] = quant(O[p * 3] + 0.5 | 0, O[p * 3 + 1] + 0.5 | 0, O[p * 3 + 2] + 0.5 | 0); };
     doQuant();
+    if (F.clean) {
+      // clean, flat art (beams, plaster, panels): a pixel unlike all four neighbours that agree with each other is noise
+      for (let p = 0; p < MM; p++) {
+        const x = p & 255, y = p >> 8, a = Q[y * M + ((x + 1) & 255)];
+        if (a !== Q[p] && a === Q[y * M + ((x + 255) & 255)] && a === Q[((y + 1) & 255) * M + x] && a === Q[((y + 255) & 255) * M + x]) { Q[p] = a; const c = P[a]; O[p * 3] = c[0]; O[p * 3 + 1] = c[1]; O[p * 3 + 2] = c[2]; }
+      }
+    }
     let err = blockErr(), rounds = 0;
     // smooth rounds first (a bilinear field between block centres: no block edges), then exact per-block steps
     for (; rounds < 7 && err > 1.2; rounds++) {
@@ -711,19 +780,22 @@ function ground21ArtFactory() {
         for (let j = 0; j < 16; j++) for (let i = 0; i < 16; i++) {
           const x = bx * 16 + i, y = by * 16 + j, p = y * M + x, a = Q[p];
           const opts = [Q[y * M + wrap(x + 1)], Q[y * M + wrap(x - 1)], Q[wrap(y + 1) * M + x], Q[wrap(y - 1) * M + x], step[a * 2], step[a * 2 + 1]];
-          for (let k = 0; k < 6; k++) { const b = opts[k]; if (b < 0 || b === a) continue; let dup = false; for (let q = 0; q < k; q++) if (opts[q] === b) dup = true; if (dup) continue; cand[nc * 2] = j * 16 + i; cand[nc * 2 + 1] = b; nc++; }
+          for (let k = 0; k < 6; k++) { const b = opts[k]; if (b < 0 || b === a) continue; let dup = false; for (let q = 0; q < k; q++) if (opts[q] === b) dup = true; if (dup) continue; cand[nc * 2] = (j * 16 + i) | (k >= 4 ? 256 : 0); cand[nc * 2 + 1] = b; nc++; }
         }
         for (let it = 0; it < 256; it++) {
           const cur = er * er + eg * eg + eb * eb; if (cur <= 3 * 64 * 64) break;
+          // boundary moves first (an edge shifts by a pixel); a lone shade step only when no edge move helps
           let best = -1, bv = cur;
-          for (let c = 0; c < nc; c++) {
-            const li = cand[c * 2]; if (done[li]) continue;
-            const p = (by * 16 + (li >> 4)) * M + bx * 16 + (li & 15), A = P[Q[p]], B = P[cand[c * 2 + 1]];
-            const r = er - (B[0] - A[0]), g = eg - (B[1] - A[1]), b = eb - (B[2] - A[2]), v = r * r + g * g + b * b;
-            if (v < bv) { bv = v; best = c; }
+          for (let pass = 0; pass < 2 && best < 0; pass++) {
+            for (let c = 0; c < nc; c++) {
+              const raw = cand[c * 2], li = raw & 255; if (done[li] || ((raw >> 8) !== pass)) continue;
+              const p = (by * 16 + (li >> 4)) * M + bx * 16 + (li & 15), A = P[Q[p]], B = P[cand[c * 2 + 1]];
+              const r = er - (B[0] - A[0]), g = eg - (B[1] - A[1]), b = eb - (B[2] - A[2]), v = r * r + g * g + b * b;
+              if (v < bv) { bv = v; best = c; }
+            }
           }
           if (best < 0) break;
-          const li = cand[best * 2], p = (by * 16 + (li >> 4)) * M + bx * 16 + (li & 15), A = P[Q[p]], B = P[cand[best * 2 + 1]];
+          const li = cand[best * 2] & 255, p = (by * 16 + (li >> 4)) * M + bx * 16 + (li & 15), A = P[Q[p]], B = P[cand[best * 2 + 1]];
           er -= B[0] - A[0]; eg -= B[1] - A[1]; eb -= B[2] - A[2]; Q[p] = cand[best * 2 + 1]; done[li] = 1;
         }
       }
@@ -733,7 +805,7 @@ function ground21ArtFactory() {
     const out = new Uint8Array(MM * 4);
     const used = new Set();
     for (let p = 0; p < MM; p++) { const c = P[Q[p]]; out[p * 4] = c[0]; out[p * 4 + 1] = c[1]; out[p * 4 + 2] = c[2]; out[p * 4 + 3] = 255; used.add(Q[p]); }
-    return { data: out, family: famName, err, rounds, colors: used.size, palette: P.length };
+    return { data: out, family: famName, err, rounds, colors: used.size, palette: P.length, debug: opt.debug ? { mask, cls, g: an.g } : null };
   }
 
   // ---------------------------------------------------------------------------------------------- checks (tests, tools)
