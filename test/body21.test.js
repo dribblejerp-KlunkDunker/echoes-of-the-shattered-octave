@@ -267,6 +267,14 @@ const HELPERS = () => {
         // nothing of the body on the HUD layer: the HUD canvas pixels at the shield's rest place are transparent
         const hud = Engine.ctx.canvas, x = hud.getContext('2d'); const sx = Math.round(hud.width * 48 / 320), sy = Math.round(hud.height * 115 / 200);
         out.hudAlpha = x.getImageData(sx, sy, 1, 1).data[3];
+        // fp-feel's deafness and Hush under R3D: pass 'feel' (order 89) drains the colour like the CPU hook
+        R3D.camera.setAngle(0);
+        const sat = () => { const px = R3D.readPixels(); let s = 0, n = 0; for (let i = 0; i < px.data.length; i += 4 * 97) { const r = px.data[i], g = px.data[i + 1], b = px.data[i + 2]; s += Math.max(r, g, b) - Math.min(r, g, b); n++; } return s / n; };
+        const fs = FEEL.state, d0 = fs.deaf, h0 = fs.hush, deafT0 = fs.deafT;
+        render(); out.satBefore = sat();
+        const f0 = BODY21.FX3.drawn; fs.hush = 0.9; fs.deaf = 0.8; const tk = FEEL.tick; FEEL.tick = () => {};
+        try { render(); out.satAfter = sat(); } finally { FEEL.tick = tk; fs.hush = h0; fs.deaf = d0; }
+        out.feel = BODY21.FX3.drawn - f0; out.feelOrder = (R3D.passes().find((p) => p.name === 'feel') || {}).order;
         R3D.setMode('off'); R3D.camera.setAngle(0); for (let i = 0; i < 2; i++) render();
         out.offRec = BODY21.r3dOn(); const a0 = BODY21.stats.drawn.shield; render(); out.offShield = BODY21.stats.drawn.shield - a0;
         return out;
@@ -276,6 +284,7 @@ const HELPERS = () => {
       if (!r.shown) { console.log('  (R3D not available in this browser: pass registration only)'); return; }
       assert.ok(r.active && r.rec, 'R3D frames recorded'); assert.ok(r.drawn >= 3, 'the body pass drew'); assert.ok(r.quads >= 3 * 4, 'arm, sleeve, shield, off arm, legs as quads'); assert.ok(r.legs >= 3, 'legs in the world');
       assert.equal(r.hudAlpha, 0, 'the shield is not on the HUD canvas under R3D'); assert.equal(r.err, '');
+      assert.equal(r.feelOrder, 89); assert.ok(r.feel >= 1, 'the feel pass ran'); assert.ok(r.satAfter < r.satBefore * 0.6, 'the Hush drains the colour under R3D: ' + r.satBefore + ' -> ' + r.satAfter);
       assert.equal(r.offRec, false); assert.ok(r.offShield >= 1, 'raycaster overlay is back');
     });
 

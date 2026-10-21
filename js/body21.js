@@ -1056,9 +1056,83 @@ void main() {
       R3B.drawn++;
     },
   };
+  // ---- js/fp-feel.js's screen effects under R3D (R3D.cpuHooks() gives them to BODY): the CPU post hook (order 100) does
+  // not run under R3D, so the same three looks run here as pass 'feel' (order 89, after the scene is resolved and before
+  // LIGHT's post): the small ROLL of a gentle head-bob (a vertical shear about the centre column, whole rows), DEAFNESS
+  // (a soft horizontal blur, two passes when strong, and a steady dim grey rim — nothing brightens, nothing pulses) and
+  // the HUSH (the view drains toward grey and dims a little). Same formulas as fp-feel's post(), read from FEEL.state.
+  const FEEL_VS = `
+out vec2 vUv;
+void main() { vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2)); vUv = p; gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0); }`;
+  const FEEL_FS = `
+uniform sampler2D uSrc; uniform vec4 uFx;   // x roll slope, y deafness 0..1, z hush 0..1
+in vec2 vUv;
+layout(location = 0) out vec4 oColor;
+vec3 at(vec2 uv) { return texture(uSrc, uv).rgb; }
+void main() {
+  vec2 sz = vec2(textureSize(uSrc, 0)), px = 1.0 / sz;
+  vec2 uv = vUv;
+  if (abs(uFx.x) > 0.0) { float dy = floor((uv.x * sz.x - sz.x * 0.5) * uFx.x + 0.5); uv.y = clamp(uv.y + dy * px.y, 0.5 * px.y, 1.0 - 0.5 * px.y); }
+  vec3 c = at(uv);
+  if (uFx.z > 0.02) {
+    float keep = 1.0 - uFx.z * 0.85, dim = 1.0 - uFx.z * 0.08;
+    float l = dot(c, vec3(77.0, 150.0, 29.0) / 256.0);
+    c = (vec3(l) + (c - vec3(l)) * keep) * dim;
+  }
+  if (uFx.y > 0.02) {
+    float a = uFx.y;
+    vec3 l1 = at(uv - vec2(px.x, 0.0)), r1 = at(uv + vec2(px.x, 0.0));
+    vec3 bl = 0.25 * l1 + 0.25 * r1 + 0.5 * c;
+    if (a > 0.66) { vec3 l2 = at(uv - vec2(2.0 * px.x, 0.0)), r2 = at(uv + vec2(2.0 * px.x, 0.0)); bl = (l2 + 4.0 * l1 + 6.0 * c + 4.0 * r1 + r2) / 16.0; }
+    c = a > 0.4 ? bl : mix(c, bl, 0.5);
+    vec2 d = (vUv - 0.5) * 2.0; float e = d.x * d.x * 0.5 + d.y * d.y * 0.5;
+    if (e >= 0.45) { float k = min(1.0, (e - 0.45) / 0.55) * a * 0.4; c = mix(c, vec3(36.0, 38.0, 40.0) / 255.0, k); }
+  }
+  oColor = vec4(c, 1.0);
+}`;
+  const FX3 = { prog: null, failed: false, tex: null, fb: null, w: 0, h: 0, fmt: 0, drawn: 0 };
+  function feelState() { try { return typeof FEEL === 'object' && FEEL && FEEL.state ? FEEL.state : null; } catch (e) { return null; } }
+  const feelPass = {
+    name: 'feel', order: 89,
+    init(g, R) {
+      FX3.tex = null; FX3.fb = null; FX3.w = FX3.h = 0; FX3.failed = false;
+      try { FX3.prog = R.program(FEEL_VS, FEEL_FS, { chunks: ['common'] }); if (!FX3.prog || !FX3.prog.p) throw new Error('no program'); } catch (e) { FX3.failed = true; warnOnce('feel program', e); }
+    },
+    dispose(g) { if (FX3.tex) g.deleteTexture(FX3.tex); if (FX3.fb) g.deleteFramebuffer(FX3.fb); FX3.tex = FX3.fb = null; },
+    enabled() { const f = feelState(); return !FX3.failed && !!f && (Math.abs(f.rollDeg) > 0.02 || f.deaf > 0.02 || f.hush > 0.02); },
+    draw(g, F, R) {
+      const f = feelState(); if (FX3.failed || !FX3.prog || !f) return;
+      if (!(Math.abs(f.rollDeg) > 0.02 || f.deaf > 0.02 || f.hush > 0.02)) return;
+      const s = R.resolveScene ? R.resolveScene(g, F) : F.targets.scene; if (!s) return;
+      const fmt = s.hdr ? g.RGBA16F : g.RGBA8;
+      if (!FX3.tex || FX3.w !== s.w || FX3.h !== s.h || FX3.fmt !== fmt) {
+        if (FX3.tex) g.deleteTexture(FX3.tex); if (FX3.fb) g.deleteFramebuffer(FX3.fb);
+        FX3.tex = g.createTexture(); g.bindTexture(g.TEXTURE_2D, FX3.tex);
+        g.texStorage2D(g.TEXTURE_2D, 1, fmt, s.w, s.h);
+        g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.NEAREST); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.NEAREST);
+        g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE);
+        FX3.fb = g.createFramebuffer(); g.bindFramebuffer(g.FRAMEBUFFER, FX3.fb); g.framebufferTexture2D(g.FRAMEBUFFER, g.COLOR_ATTACHMENT0, g.TEXTURE_2D, FX3.tex, 0);
+        FX3.w = s.w; FX3.h = s.h; FX3.fmt = fmt;
+      }
+      // copy the scene's colour aside, then draw the effect back into the (resolved) scene colour only
+      g.bindFramebuffer(g.READ_FRAMEBUFFER, s.fb); g.readBuffer(g.COLOR_ATTACHMENT0);
+      g.bindFramebuffer(g.DRAW_FRAMEBUFFER, FX3.fb); g.drawBuffers([g.COLOR_ATTACHMENT0]);
+      g.blitFramebuffer(0, 0, s.w, s.h, 0, 0, s.w, s.h, g.COLOR_BUFFER_BIT, g.NEAREST);
+      g.bindFramebuffer(g.READ_FRAMEBUFFER, null);
+      g.bindFramebuffer(g.FRAMEBUFFER, s.fb); g.viewport(0, 0, s.w, s.h); g.drawBuffers([g.COLOR_ATTACHMENT0, g.NONE]);
+      g.disable(g.DEPTH_TEST); g.depthMask(false); g.disable(g.BLEND); g.disable(g.CULL_FACE);
+      R.use(FX3.prog);
+      g.activeTexture(g.TEXTURE6); g.bindTexture(g.TEXTURE_2D, FX3.tex); g.uniform1i(FX3.prog.u.uSrc, 6);
+      // CPU: rows shifted per logical column at the CPU frame's width; here per render pixel, so the same tilt
+      g.uniform4f(FX3.prog.u.uFx, Math.abs(f.rollDeg) > 0.02 ? Math.tan(f.rollDeg * Math.PI / 180) : 0, f.deaf > 0.02 ? f.deaf : 0, f.hush > 0.02 ? f.hush : 0, 0);
+      g.drawArrays(g.TRIANGLES, 0, 3);
+      g.drawBuffers([g.COLOR_ATTACHMENT0, g.COLOR_ATTACHMENT1]); g.depthMask(true); g.enable(g.DEPTH_TEST);
+      FX3.drawn++;
+    },
+  };
   function wireR3D() {
     if (typeof R3D !== 'object' || !R3D || typeof R3D.addPass !== 'function') return false;
-    try { R3D.addPass(bodyPass); return true; } catch (e) { warnOnce('r3d addPass', e); return false; }
+    try { R3D.addPass(bodyPass); R3D.addPass(feelPass); return true; } catch (e) { warnOnce('r3d addPass', e); return false; }
   }
   wireR3D();
 
@@ -1089,6 +1163,6 @@ void main() {
 
   function clearCaches() { headCache.clear(); buildCache.clear(); shieldCache.clear(); armCache.clear(); legCache.clear(); }
   return { set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
-    R3B, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
+    R3B, FX3, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;
