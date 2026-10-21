@@ -686,16 +686,40 @@ const BODY21 = (() => {
   // floored so arms and boots stay readable on the darkest night. Glass is emissive and keeps its own light.
   const LT = { k: [1, 1, 1], key: '32,32,32', frameLight: 1, outdoor: false, lamp: [0, 0, 0], n: 0, FLOOR: 0.42 };
   try { Engine.addPostHook((F) => { LT.frameLight = typeof F.light === 'number' ? F.light : 1; LT.outdoor = !!(G.map && G.map.outdoor); }, 1e9); } catch (e) { warnOnce('posthook', e); }
+  // the lamps near you, the engine's own light kinds and colours (js/engine.js gatherLights) without the wall masks:
+  // cheap enough for every frame's budget, read every sixth frame
+  function lampsAt(x, y) {
+    const out = [0, 0, 0], ents = G.ents || [];
+    for (let i = 0; i < ents.length; i++) {
+      const e = ents[i]; if (!e || e.hidden || e.dead) continue;
+      const dx = e.x - x, dy = e.y - y, d2 = dx * dx + dy * dy; if (d2 > 36) continue;
+      const sp = e.sprite; let r = 0, c = null;
+      if (sp === 'kaelen' || e.item === 'shard' || e.item === 'core' || e.glassLamp) { r = sp === 'kaelen' ? 3.2 : 2.5; c = [18, 66, 58]; }
+      else if (sp === 'lamp' && (e.glow === undefined || e.glow > 0.05)) { r = 4.5; c = [58, 38, 12]; }
+      else if (sp === 'campfire' || sp === 'hearth') { r = 5.8; c = [78, 40, 10]; }
+      else if (sp === 'basin' || sp === 'loom' || sp === 'web' || sp === 'cocoon') { r = 4.2; c = [34, 24, 64]; }
+      else if (sp === 'cores' || sp === 'coil' || e.type === 'aegis' || e.lightCol) { r = 4; c = e.lightCol || [20, 58, 48]; }
+      if (!c || d2 >= r * r) continue;
+      const k = 1 - d2 / (r * r), kk = k * k;
+      out[0] += c[0] * kk; out[1] += c[1] * kk; out[2] += c[2] * kk;
+    }
+    try { if (typeof UPG === 'object' && UPG && UPG.lantern) { out[0] += 46; out[1] += 30; out[2] += 10; } } catch (e) { /* no lantern */ }
+    return out.map((v) => Math.min(90, v));
+  }
   function updateLight(dt) {
     let tgt = [1, 1, 1];
     if (set.light) {
-      if ((LT.n++ % 6) === 0) { try { const l = Engine.lightAt(G.ents, Engine.cam.x, Engine.cam.y); if (l) LT.lamp = l; } catch (e) { LT.lamp = [0, 0, 0]; } }
+      if ((LT.n++ % 6) === 0) { try { LT.lamp = lampsAt(Engine.cam.x, Engine.cam.y); } catch (e) { LT.lamp = [0, 0, 0]; } }
       const base = LT.outdoor ? clamp(LT.frameLight, 0, 1) : 1;
       tgt = [0, 1, 2].map((c) => clamp(base + (LT.lamp[c] || 0) / 255 * 1.4, LT.FLOOR, 1));
     }
     const a = Math.min(1, dt * 5);
     for (let c = 0; c < 3; c++) LT.k[c] += (tgt[c] - LT.k[c]) * a;
-    LT.key = LT.k.map((v) => Math.round(v * 32)).join(',');
+    // the applied level moves in steps of 1/16 and only when the light has really moved (hysteresis): a re-tint is a
+    // canvas recomposite per picture, so it happens a few times as you walk past a lamp, not every frame
+    const cur = LT.key.split(',').map((v) => +v / 32);
+    const far = LT.k.some((v, c) => Math.abs(v - cur[c]) > 0.07) || (LT.k.every((v, c) => Math.abs(v - tgt[c]) < 0.01) && tgt.some((v, c) => Math.abs(v - cur[c]) > 0.02));
+    if (far) LT.key = LT.k.map((v) => Math.round(v * 16) * 2).join(',');
   }
   const tintCache = new WeakMap();
   function lit(cv, em) {

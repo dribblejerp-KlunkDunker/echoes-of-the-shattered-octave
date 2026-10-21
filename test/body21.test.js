@@ -21,6 +21,7 @@ async function boot(ctx, opts) {
     if (m.type() === 'error' && !(opts.block && /ERR_FAILED|body21|gearlook21/.test(t))) errors.push('console: ' + t);
     if (m.type() === 'warning' && /body21|gearlook21/.test(t)) errors.push('console: ' + t);
   });
+  if (opts.r3d) await page.addInitScript(() => { window.__r3d21 = { automation: true }; });
   if (opts.block) await page.route(/js\/(body21|gearlook21)\.js/, (r) => r.abort());
   await page.addInitScript(() => { let s = 424242; Math.random = () => (s = (s * 16807) % 2147483647) / 2147483647; });
   await page.goto(URL_);
@@ -215,7 +216,11 @@ const HELPERS = () => {
       if (off && typeof BODY21 === 'object') BODY21.setSwitch('on', false);
       for (const k of ['coldBreath', 'windSigns', 'dyingLights']) GFX[k] = false;
       Engine.setTime(5); Engine.cam.bob = 0; Engine.cam.pitch = -30;
-      __seed(1); render(); __seed(1); render();
+      __seed(1); render();
+      // the world frame carries particle state between pages; the body is drawn by drawHUD, so the comparison is the
+      // whole HUD pass (weapon, arms, shield, legs, bar, text) drawn over a black view with every clock pinned
+      const ctx = Engine.ctx; ctx.save(); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 320, 200); ctx.restore();
+      __seed(1); drawHUD();
       const h = __hashCanvas(Engine.ctx.canvas);
       if (off && typeof BODY21 === 'object') BODY21.setSwitch('on', true);
       return h;
@@ -223,9 +228,9 @@ const HELPERS = () => {
 
     await step('Original preset: the frame (world + HUD) is the original game\'s, pixel for pixel; with the switch off in Medium too', async () => {
       const ao = await frameOf(A, 'original'), bo = await frameOf(Bp, 'original'), co = await frameOf(Cp, 'original');
-      if (bo === co) assert.equal(ao, bo, 'Original frame identical to the blocked page'); else console.log('  (reference unstable between two blocked pages; Original not compared)');
+      assert.equal(bo, co, 'the reference is stable'); assert.equal(ao, bo, 'Original frame identical to the blocked page');
       const am = await frameOf(A, 'medium', true), bm = await frameOf(Bp, 'medium'), cm = await frameOf(Cp, 'medium');
-      if (bm === cm) assert.equal(am, bm, 'switch off = blocked page'); else console.log('  (reference unstable; switch-off not compared)');
+      assert.equal(bm, cm, 'the reference is stable'); assert.equal(am, bm, 'switch off = blocked page');
       const on = await frameOf(A, 'medium');
       assert.notEqual(on, bm, 'with the body on the frame differs');
     });
@@ -242,6 +247,36 @@ const HELPERS = () => {
       });
       console.log('  drawHUD ms: body on ' + r.on.toFixed(3) + ', off ' + r.off.toFixed(3) + ', extra ' + r.extra.toFixed(3));
       assert.ok(r.extra < 2.5, 'extra per frame ' + r.extra);
+    });
+
+    await step('R3D: the body pass is registered at order 40; under R3D the pictures go into the 3D scene (screen quads + a world quad for the legs), nothing is painted on the HUD canvas, and switching R3D off brings the raycaster overlay back', async () => {
+      const Rp = await boot(await browser.newContext({ viewport: { width: 960, height: 600 }, hasTouch: true }), { r3d: true }); pages.push(Rp);
+      const r = await Rp.page.evaluate(async () => {
+        const out = { has: typeof R3D === 'object' };
+        if (!out.has) return out;
+        R3D.setMode('on'); out.shown = R3D.shown();
+        out.pass = (R3D.passes().find((p) => p.name === 'body') || {}).order;
+        if (!out.shown) return out;
+        __stage('clearing', 12.5, 11.5, -Math.PI / 2); G.tod = 0.5;
+        __gear({ w: 'sword', armor: { body: 'a_chain', hands: 'a_gauntlets', shield: 'a_kite', feet: 'a_greaves', head: 'a_kettle' } });
+        R3D.camera.setAngle(-50 * Math.PI / 180);
+        const d0 = BODY21.R3B.drawn, q0 = BODY21.R3B.quads, l0 = BODY21.R3B.legs;
+        for (let i = 0; i < 4; i++) render();
+        out.drawn = BODY21.R3B.drawn - d0; out.quads = BODY21.R3B.quads - q0; out.legs = BODY21.R3B.legs - l0; out.rec = BODY21.r3dOn(); out.err = BODY21.R3B.err;
+        out.active = R3D.active();
+        // nothing of the body on the HUD layer: the HUD canvas pixels at the shield's rest place are transparent
+        const hud = Engine.ctx.canvas, x = hud.getContext('2d'); const sx = Math.round(hud.width * 48 / 320), sy = Math.round(hud.height * 115 / 200);
+        out.hudAlpha = x.getImageData(sx, sy, 1, 1).data[3];
+        R3D.setMode('off'); R3D.camera.setAngle(0); for (let i = 0; i < 2; i++) render();
+        out.offRec = BODY21.r3dOn(); const a0 = BODY21.stats.drawn.shield; render(); out.offShield = BODY21.stats.drawn.shield - a0;
+        return out;
+      });
+      console.log('  r3d: ' + JSON.stringify(r));
+      assert.ok(r.has); assert.equal(r.pass, 40);
+      if (!r.shown) { console.log('  (R3D not available in this browser: pass registration only)'); return; }
+      assert.ok(r.active && r.rec, 'R3D frames recorded'); assert.ok(r.drawn >= 3, 'the body pass drew'); assert.ok(r.quads >= 3 * 4, 'arm, sleeve, shield, off arm, legs as quads'); assert.ok(r.legs >= 3, 'legs in the world');
+      assert.equal(r.hudAlpha, 0, 'the shield is not on the HUD canvas under R3D'); assert.equal(r.err, '');
+      assert.equal(r.offRec, false); assert.ok(r.offShield >= 1, 'raycaster overlay is back');
     });
 
     await step('no page errors on any page', async () => {
