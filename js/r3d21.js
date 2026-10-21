@@ -26,7 +26,7 @@
 //     The look angle is R3D.camera.angle() = atan(pitch / FX) with FX = 160 / 0.66 = 242.42 (logical px focal length);
 //     R3D.camera.setAngle(a) writes pitch = FX * tan(a). The game's look() is wrapped: free look runs in angle space
 //     (both renderers), clamped to +-R3D.camera.limit() — about 80 degrees under R3D (the Options "Look range" comfort
-//     choice caps it at 45), the widest the CPU raycaster can show without breaking when it draws (its y-shear),
+//     choice caps it at 45), 110 rows (about 24 degrees) when the CPU raycaster draws (its y-shear; checked to 150),
 //     and exactly the old +-40 rows in the Original preset. The crosshair is the view centre, which is the camera's
 //     forward ray. Gamepad right stick vertical and touch drag pitch the camera too.
 //     Per frame, F.view / F.proj / F.viewProj / F.invViewProj (Float32Array(16), column-major), F.eye, F.fwd, F.right, F.up
@@ -56,7 +56,9 @@
 //       The entity pass is a provider: R3D.sprites.setProvider(fn(F, ents, submit)) replaces CORE's default (which draws
 //       every entity the way the CPU does: directional views, anim fields, glow, flash, hurt, elite light, emissive
 //       masks). R3D.sprites.defaultProvider(F, ents, submit) stays callable, so a provider can wrap it. Sprite pixels go
-//       into an atlas (TEXTURE_2D_ARRAY, 1024x1024 pages, nearest); a sprite whose .data is replaced re-uploads itself;
+//       into an atlas (TEXTURE_2D_ARRAY, 1024x1024 pages, nearest, 4 mip levels made with the engine's own sprite-mip rule
+//       so distant sprites don't sparkle; alpha 0 / 255 / 128 = transparent / opaque / emissive); a sprite whose .data is
+//       replaced re-uploads itself;
 //       call R3D.sprites.dirty(sp) after editing .data in place. Instance shading goes through the 'shade' chunk (kind 1).
 //       js/sprites21.js: when a global SPRITES21 with frame() exists (and no provider is set), it replaces CORE's batch:
 //       R3D calls SPRITES21.attach(gl) per context, SPRITES21.frame(ents, F.sview) per frame with the engine's final list,
@@ -83,7 +85,9 @@
 //     float, else RGBA8; CORE writes display-referred 0..1, LIGHT may write linear HDR), color1 = aux RGBA8 (r = material
 //     id / 255 as Engine.MAT, g = emissive 0..1, b = free, a = 1), depth = DEPTH24 (sampleable: F.targets.scene.depthTex).
 //     Shaders made with R3D.program() declare the two outputs as oColor / oAux. F.targets.scene.{fb,color,aux,depthTex}.
-//     R3D.bindScene(gl, F) binds the scene target with its viewport.
+//     R3D.bindScene(gl, F) binds the scene target with its viewport. With antialiasing (4x on High and above, hardware
+//     only) passes draw into a multisampled twin; F.targets.scene.{color,aux,depthTex} are valid from order 90 on (R3D
+//     resolves before the first pass at 90); a pass below 90 that samples them calls R3D.resolveScene(gl, F) first.
 //
 //  6. PICKING AND READ-BACK. R3D.pick(ents, maxDist) is Engine.pick under R3D (Engine.pick is wrapped): it evaluates the
 //     raycaster's own rule (the crosshair column, the centre row and the eye row, the +-4 px window, relief occlusion) on
@@ -521,7 +525,8 @@ vec4 r3dLandmarks(float az, float te) {
   // Sprites live in pages of one TEXTURE_2D_ARRAY (1024 x 1024, nearest, no mips), shelf-packed with a 1 px gap.
   // Alpha: 0 transparent (the CPU's alpha <= 100), 255 opaque, 128 opaque and emissive (the sprite's emit mask).
   const atlas = (() => {
-    const PAGE = 1024;
+    const PAGE = 1024, LV = 4, AL = 8;   // 4 levels; regions sit on an 8-texel grid with an 8-texel gap, so each level
+    // of a sprite is its own block (level L of a region at (x, y) lives at (x >> L, y >> L)) and nothing bleeds
     const A = { tex: null, pages: 0, shelves: [], map: new WeakMap(), list: [], uploads: 0, full: false };
     A.reset = function () { A.tex = null; A.pages = 0; A.shelves = []; A.map = new WeakMap(); A.list = []; };
     function grow(n) {
@@ -529,8 +534,10 @@ vec4 r3dLandmarks(float az, float te) {
       n = Math.min(n, max);
       if (n <= A.pages && A.tex) return false;
       const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D_ARRAY, t);
-      gl.texStorage3D(gl.TEXTURE_2D_ARRAY, 1, gl.RGBA8, PAGE, PAGE, n);
-      gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MAG_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texStorage3D(gl.TEXTURE_2D_ARRAY, LV, gl.RGBA8, PAGE, PAGE, n);
+      // nearest texels, the level picked by distance: a far sprite shows its smaller copy instead of sparkling
+      gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MAG_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MAX_LEVEL, LV - 1);
       gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       if (A.tex) gl.deleteTexture(A.tex);
       A.tex = t;
@@ -540,8 +547,9 @@ vec4 r3dLandmarks(float az, float te) {
       for (const e of old) if (e.sp) { upload(e); A.list.push(e); }
       return true;
     }
+    const up8 = (v) => (v + AL - 1) & ~(AL - 1);
     function place(w, h) {
-      const W = w + 1, H = h + 1;
+      const W = up8(w) + AL, H = up8(h) + AL;
       for (let p = 0; p < A.pages; p++) {
         const sh = A.shelves[p];
         let y = 0;
@@ -550,20 +558,38 @@ vec4 r3dLandmarks(float az, float te) {
       }
       return null;
     }
-    const scratch = { buf: new Uint8Array(0) };
-    function pixels(sp) {
-      const n = sp.w * sp.h * 4; if (scratch.buf.length < n) scratch.buf = new Uint8Array(n);
-      const out = scratch.buf, d = sp.data, emit = sp.emit;
+    // level 0 in RGBA bytes: alpha 0 transparent (CPU alpha <= 100), 255 opaque, 128 opaque and emissive
+    function level0(sp) {
+      const n = sp.w * sp.h * 4, out = new Uint8Array(n), d = sp.data, emit = sp.emit;
       for (let i = 0, o = 0; i < d.length; i++, o += 4) {
         const px = d[i], a = px >>> 24;
-        if (a <= 100) { out[o] = out[o + 1] = out[o + 2] = out[o + 3] = 0; continue; }
+        if (a <= 100) continue;
         out[o] = px & 255; out[o + 1] = (px >>> 8) & 255; out[o + 2] = (px >>> 16) & 255; out[o + 3] = emit && emit[i] ? 128 : 255;
       }
-      return out.subarray(0, n);
+      return out;
+    }
+    // the engine's sprite mip rule (spriteMip): a 2x2 block keeps the mean colour of its solid pixels and is solid when at
+    // least two of them are, so thin shapes thin out rather than sparkle; emissive when most of its solid pixels are
+    function down(src, w, h) {
+      const W = Math.max(1, (w + 1) >> 1), H = Math.max(1, (h + 1) >> 1), out = new Uint8Array(W * H * 4);
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        let r = 0, g = 0, b = 0, n = 0, em = 0;
+        for (let j = 0; j < 2; j++) for (let i = 0; i < 2; i++) {
+          const sx = x * 2 + i, sy = y * 2 + j; if (sx >= w || sy >= h) continue;
+          const o = (sy * w + sx) * 4; if (!src[o + 3]) continue;
+          r += src[o]; g += src[o + 1]; b += src[o + 2]; n++; if (src[o + 3] === 128) em++;
+        }
+        if (n >= 2) { const o = (y * W + x) * 4; out[o] = r / n; out[o + 1] = g / n; out[o + 2] = b / n; out[o + 3] = em * 2 > n ? 128 : 255; }
+      }
+      return { data: out, w: W, h: H };
     }
     function upload(e) {
       gl.bindTexture(gl.TEXTURE_2D_ARRAY, A.tex);
-      gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, e.x, e.y, e.p, e.w, e.h, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels(e.sp));
+      let lv = { data: level0(e.sp), w: e.w, h: e.h };
+      for (let L = 0; L < LV; L++) {
+        if (L) lv = down(lv.data, lv.w, lv.h);
+        gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, L, e.x >> L, e.y >> L, e.p, lv.w, lv.h, 1, gl.RGBA, gl.UNSIGNED_BYTE, lv.data);
+      }
       e.src = e.sp.data; e.emitSrc = e.sp.emit || null; A.uploads++; stats.uploads++;
     }
     // the atlas entry of a sprite (uploads on first use or when its pixels were replaced)
@@ -577,7 +603,7 @@ vec4 r3dLandmarks(float az, float te) {
         if (e) return e;
       }
       if (!A.tex) grow(2);
-      if (sp.w > PAGE - 1 || sp.h > PAGE - 1) return null;
+      if (sp.w > PAGE - 2 * AL || sp.h > PAGE - 2 * AL) return null;
       let r = place(sp.w, sp.h);
       if (!r) { if (A.pages >= 64) { if (!A.full) { A.full = true; warnOnce('atlas full', new Error('sprite atlas full')); } return null; } grow(A.pages * 2); r = place(sp.w, sp.h); if (!r) return null; }
       e = { sp, p: r.p, x: r.x, y: r.y, w: sp.w, h: sp.h, src: null, emitSrc: null, dirty: false };
@@ -586,7 +612,7 @@ vec4 r3dLandmarks(float az, float te) {
       return e;
     };
     A.dirty = function (sp) { const e = A.map.get(sp); if (e) e.dirty = true; };
-    A.PAGE = PAGE;
+    A.PAGE = PAGE; A.LEVELS = LV;
     return A;
   })();
 
@@ -601,9 +627,10 @@ vec4 r3dLandmarks(float az, float te) {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       return t;
     }
-    TG.ensure = function (w, h) {
-      if (TG.scene && w === TG.w && h === TG.h) return false;
-      if (TG.scene) { const s = TG.scene; gl.deleteFramebuffer(s.fb); gl.deleteTexture(s.color); gl.deleteTexture(s.aux); gl.deleteTexture(s.depthTex); }
+    TG.ensure = function (w, h, samples) {
+      samples = samples | 0;
+      if (TG.scene && w === TG.w && h === TG.h && samples === TG.samples) return false;
+      if (TG.scene) { const s = TG.scene; gl.deleteFramebuffer(s.fb); gl.deleteTexture(s.color); gl.deleteTexture(s.aux); gl.deleteTexture(s.depthTex); if (s.ms) { gl.deleteFramebuffer(s.ms.fb); for (const r of s.ms.rb) gl.deleteRenderbuffer(r); } }
       const color = tex2d(st.floatRT ? gl.RGBA16F : gl.RGBA8, w, h, gl.RGBA, st.floatRT ? gl.HALF_FLOAT : gl.UNSIGNED_BYTE, gl.LINEAR);
       const aux = tex2d(gl.RGBA8, w, h, gl.RGBA, gl.UNSIGNED_BYTE);
       const depthTex = tex2d(gl.DEPTH_COMPONENT24, w, h, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT);
@@ -615,15 +642,45 @@ vec4 r3dLandmarks(float az, float te) {
       const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       if (status !== gl.FRAMEBUFFER_COMPLETE) throw new Error('scene target incomplete: 0x' + status.toString(16));
-      TG.scene = { fb, color, aux, depthTex, w, h, hdr: st.floatRT };
-      TG.w = w; TG.h = h; F.targets.scene = TG.scene;
+      // multisampled twin (antialiased edges, the pixel art stays nearest): passes draw into it, resolve() blits it down
+      let ms = null;
+      if (samples > 1) {
+        try {
+          const mfb = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, mfb);
+          const rb = [st.floatRT ? gl.RGBA16F : gl.RGBA8, gl.RGBA8, gl.DEPTH_COMPONENT24].map((fmt, i) => {
+            const r = gl.createRenderbuffer(); gl.bindRenderbuffer(gl.RENDERBUFFER, r); gl.renderbufferStorageMultisample(gl.RENDERBUFFER, samples, fmt, w, h);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, i === 2 ? gl.DEPTH_ATTACHMENT : gl.COLOR_ATTACHMENT0 + i, gl.RENDERBUFFER, r); return r;
+          });
+          gl.drawBuffers([gl.COLOR_ATTACHMENT0, gl.COLOR_ATTACHMENT1]);
+          if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE) ms = { fb: mfb, rb, samples }; else { gl.deleteFramebuffer(mfb); for (const r of rb) gl.deleteRenderbuffer(r); }
+          gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        } catch (e) { ms = null; warnOnce('msaa', e); }
+      }
+      TG.scene = { fb, color, aux, depthTex, w, h, hdr: st.floatRT, ms, resolved: true };
+      TG.w = w; TG.h = h; TG.samples = samples; F.targets.scene = TG.scene; st.msaa = ms ? samples : 0;
       for (const p of passList) if (p.resize) { try { p.resize(w, h, F); } catch (e) { warnOnce('pass resize ' + p.name, e); } }
       return true;
     };
     TG.tex2d = tex2d;
     return TG;
   })();
-  function bindScene(g, f) { const s = (f || F).targets.scene; g.bindFramebuffer(g.FRAMEBUFFER, s.fb); g.viewport(0, 0, s.w, s.h); return s; }
+  function bindScene(g, f) { const s = (f || F).targets.scene; g.bindFramebuffer(g.FRAMEBUFFER, s.ms ? s.ms.fb : s.fb); g.viewport(0, 0, s.w, s.h); if (s.ms) s.resolved = false; return s; }
+  // with antialiasing on, copy the multisampled scene into the sampleable textures (colour, aux, depth); R3D does it before
+  // the post pass (order 90); a pass below 90 that samples the scene textures calls it first
+  function resolveScene(g, f) {
+    const s = (f || F).targets.scene; if (!s || !s.ms || s.resolved) return s;
+    g.bindFramebuffer(g.READ_FRAMEBUFFER, s.ms.fb); g.bindFramebuffer(g.DRAW_FRAMEBUFFER, s.fb);
+    for (let i = 0; i < 2; i++) {
+      g.readBuffer(g.COLOR_ATTACHMENT0 + i);
+      g.drawBuffers(i === 0 ? [g.COLOR_ATTACHMENT0, g.NONE] : [g.NONE, g.COLOR_ATTACHMENT1]);
+      g.blitFramebuffer(0, 0, s.w, s.h, 0, 0, s.w, s.h, g.COLOR_BUFFER_BIT, g.NEAREST);
+    }
+    g.blitFramebuffer(0, 0, s.w, s.h, 0, 0, s.w, s.h, g.DEPTH_BUFFER_BIT, g.NEAREST);
+    g.drawBuffers([g.COLOR_ATTACHMENT0, g.COLOR_ATTACHMENT1]); g.readBuffer(g.COLOR_ATTACHMENT0);
+    g.bindFramebuffer(g.READ_FRAMEBUFFER, null); g.bindFramebuffer(g.DRAW_FRAMEBUFFER, null);
+    s.resolved = true;
+    return s;
+  }
   function bindOutput(g, f) { f = f || F; g.bindFramebuffer(g.FRAMEBUFFER, null); g.viewport(0, f.vpY, f.devW, f.vpH); }
 
   // ---------------------------------------------------------------------------------------------------- the world mesh
@@ -914,16 +971,17 @@ vec4 r3dLandmarks(float az, float te) {
       let g = null;
       if (gates && open > 0) { try { g = GATES.gateInfo(c, m.cells, W, cx, cy); } catch (e) { g = null; } }
       if (g && g.or) {
-        if (!(open > 0.001)) { /* drawn shut below as a leaf */ }
-        else {
+        // the engine draws nothing for an opening gate (Doors.swing answers "miss"); gates.js draws the lattice once it is
+        // past 0.001 open
+        if (open > 0.001) {
           const bb = GATES.barBottom(open), Lb = worldTex('gates_bars');
           if (Lb >= 0) {
             const p = g.or === 1 ? 'x' : 'y';
             gateQuad(B, cx, cy, p, base + bb, top, base + bb + 1, Lb);
             if (c.portal) darkBacking(B, cx, cy, p, base, top, cam);
           }
-          continue;
         }
+        continue;
       }
       // a swung leaf (js/doors.js): hinge on one edge, turned open*90 degrees, clipped to the cell
       let swung = false;
@@ -1644,6 +1702,19 @@ void main() {
       list.push({ e, sp, dsX, dsY, sprW, sprH, deY, trY, flip, skew, alpha });
     }
   }
+  // Gameplay reads whether an entity is on screen (upgrades.js spawnHitParticles draws its 8 random sparks only when
+  // e._screen is set, and that is the game's Math.random). So under R3D an entity has e._screen exactly when the CPU frame
+  // would have given it one; the rect itself is R3D's projection (for overlays) or, when R3D's is clipped, the CPU's.
+  // Only views the CPU cannot show (pitch past its range) keep R3D's own answer.
+  function reconcileScreens(ents) {
+    const wide = Math.abs(F.pitchA) > Math.atan(CPU_ROWS / FX) + 1e-9;
+    for (let i = 0; i < ents.length; i++) {
+      const e = ents[i]; if (!e) continue;
+      const p = e._pickScr && e._pickScr.gen === VCAM.gen ? e._pickScr : null;
+      if (p && !e._screen) e._screen = { x0: p.x0, x1: p.x1, y0: p.y0, y1: p.y1, dist: p.dist, z: p.z };
+      else if (!p && e._screen && !wide) e._screen = null;
+    }
+  }
   // the depth the CPU frame would hold at render pixel (px, ry): relief maps only (flat maps never test occlusion)
   function vdepth(px, ry) {
     let best = reliefDepth(px, ry);
@@ -1849,6 +1920,14 @@ void main() {
     F.devW = W; F.devH = H; F.vpH = Math.round(H * LOG_H / 200); F.vpY = H - F.vpH;
     sizeDirty = false;
   }
+  // antialiasing: 4x on High and above (scale 2 presets) on hardware; never on a software rasteriser
+  function msaaWanted() {
+    if (opts0.msaa != null) return opts0.msaa | 0;
+    if (st.software) return 0;
+    const s = typeof GFX !== 'undefined' ? GFX.scale : 1;
+    const max = gl.getParameter(gl.MAX_SAMPLES) || 0;
+    return s >= 2 ? Math.min(4, max) : 0;
+  }
   function resScale() {
     if (opts0.resScale) return clamp(+opts0.resScale || 1, 0.25, 1);
     const s = typeof GFX !== 'undefined' ? GFX.scale : 1;
@@ -1866,7 +1945,7 @@ void main() {
     F.relief = !!m.relief;
     st.resScale = resScale();
     const w = Math.max(64, Math.round(F.devW * st.resScale)), h = Math.max(32, Math.round(F.vpH * st.resScale));
-    targets.ensure(w, h);
+    targets.ensure(w, h, msaaWanted());
     F.w = w; F.h = h; F.pxK = w / LOG_W;
     frameCamera(F.cam, env);
     frameTextures(env);
@@ -1885,6 +1964,7 @@ void main() {
     const S2 = s21attach();
     if (S2 && !spr.provider) { try { S2.frame(ents, F.sview); } catch (e) { warnOnce('sprites21 frame', e); } }
     else { try { (spr.provider || defaultProvider)(F, ents, submit); } catch (e) { warnOnce('sprite provider', e); } }
+    reconcileScreens(ents);
     // timer query (when the browser has one)
     let q = null;
     if (st.timer && !gpuQ.pending) { q = gl.createQuery(); gl.beginQuery(st.timer.TIME_ELAPSED_EXT, q); }
@@ -1893,10 +1973,13 @@ void main() {
     bindScene(gl, F);
     gl.depthMask(true); gl.colorMask(true, true, true, true);
     gl.clearBufferfv(gl.COLOR, 0, [0, 0, 0, 1]); gl.clearBufferfv(gl.COLOR, 1, [0, 0, 0, 1]); gl.clearBufferfi(gl.DEPTH_STENCIL, 0, 1, 0);
+    let resolved = false;
     for (const p of passList) {
       if (p.enabled && !p.enabled(F)) continue;
+      if (!resolved && (p.order || 0) >= 90) { resolveScene(gl, F); resolved = true; }
       try { p.draw(gl, F, api); } catch (e) { warnOnce('pass ' + p.name, e); if (p.name === 'post' || p.name === 'world') throw e; }
     }
+    if (!resolved) resolveScene(gl, F);
     try { readback.render(F); } catch (e) { warnOnce('readback', e); }
     emit('after', F);
     if (q) { gl.endQuery(st.timer.TIME_ELAPSED_EXT); gpuQ.pending = q; }
@@ -1936,6 +2019,7 @@ void main() {
       try { GPU18.claimHud(api); } catch (e) { warnOnce('claim', e); }
       if (game) game.classList.add('r3d21-on');
       emit('toggle', true);
+      try { netStart(); } catch (e) { /* fine */ }
     } else if (!want && st.shown) {
       st.shown = false;
       try { if (GPU18.hudClaim && GPU18.hudClaim() === api) GPU18.claimHud(null); } catch (e) { warnOnce('release', e); }
@@ -1995,7 +2079,8 @@ void main() {
     limit() { if (originalish()) return Math.atan(OLD_PITCH / FX); return st.shown ? (st.cap * Math.PI / 180) : Math.atan(CPU_ROWS / FX); },
     FX, ZK,
   };
-  const CPU_ROWS = 75;   // the CPU raycaster's widest look: the horizon reaches the top or bottom edge of the view
+  const CPU_ROWS = 110;  // the CPU raycaster's widest look (24 degrees): checked to +-150 rows with no breakage (floor casting,
+  // sky rows, sun, landmarks, relief walk); past ~110 the y-shear only fills the view with floor or sky
   const RATE = 0.0032;   // radians of pitch per unit of look input (the same as yaw; the game halves vertical mouse input)
   function clampPitchForRenderer() {
     if (typeof Engine === 'undefined') return;
@@ -2081,11 +2166,112 @@ void main() {
     return true;
   }
 
-  // ---- the CPU hooks R3D does not run, for the report and the teams (name -> order)
-  function cpuHooks() {
-    const out = { note: 'Engine sky/post hooks are closures; listed from their modules (see the report). Under R3D none of them run.' };
+  // ---- R3D's own net, for when js/max20.js is not measuring (a Medium pick, a phone): an auto R3D whose median frame
+  // over 4 s of play is slower than 30 fps goes back to the raycaster; 20 s of smooth play settles the choice.
+  const NET = { samples: [], playS: 0, lastT: 0, on: false, skip: 1, windows: [] };
+  const netLive = !automation || opts0.automation === true;
+  function netWanted() {
+    if (!netLive || st.mode !== 'auto' || st.settled || !st.shown) return false;
+    try { if (typeof MAX20 !== 'undefined' && MAX20.measuring && MAX20.measuring()) return false; } catch (e) { /* fine */ }
+    return true;
+  }
+  function netFeed(ms) {
+    if (!netWanted()) return false;
+    if (!(ms > 0) || ms > 1000) return true;
+    if (NET.skip > 0) { NET.skip -= ms / 1000; return true; }
+    NET.samples.push(ms); NET.playS += ms / 1000;
+    let win = 0; for (const x of NET.samples) win += x / 1000;
+    if (win < 4) return true;
+    const a = NET.samples.slice().sort((x, y) => x - y), med = a[a.length >> 1];
+    NET.windows.push(Math.round(med * 10) / 10); NET.samples.length = 0;
+    if (med > 1000 / 30) {
+      netStep();
+      try { if (typeof msg === 'function') msg('Graphics eased to the classic renderer to keep the game smooth — Options to change', 'warn', 6500); } catch (e) { /* fine */ }
+      return false;
+    }
+    if (NET.playS >= 20) { st.settled = true; save(); return false; }
+    return true;
+  }
+  function netTick(t) {
+    if (!netWanted()) { NET.on = false; return; }
+    requestAnimationFrame(netTick);
+    const dt = NET.lastT ? t - NET.lastT : 0; NET.lastT = t;
+    if (typeof G === 'undefined' || G.state !== 'play' || !G.map || (G.fadeT || 0) > 0) return;
+    try { if (document.hidden) return; } catch (e) { /* fine */ }
+    netFeed(dt);
+  }
+  function netStart() { if (NET.on || !netWanted() || typeof requestAnimationFrame !== 'function') return; NET.on = true; NET.lastT = 0; NET.skip = 1; requestAnimationFrame(netTick); }
+
+  // ---- frame cost: median ms per game frame (render(): the 3D view and the HUD) with 12 enemies in view, R3D vs the CPU
+  // raycaster, at the given presets. gl.finish() closes each R3D frame so the GPU's share is counted (on a software
+  // rasteriser that is CPU time too). Puts the game back as it found it.
+  function measure(o) {
+    o = o || {};
+    const scenes = o.scenes || [{ id: 'oakhaven', map: 'oakhaven', x: 23.5, y: 20.5, dir: -1.57, tod: 0.73 }, { id: 'tavern', map: 'tavern', x: 8.5, y: 10.5, dir: -1.57, tod: 0.85 }, { id: 'deepwoods', map: 'deepwoods', x: 27.5, y: 30.5, dir: -1.57, tod: 0.95 }];
+    const presets = o.presets || ['medium', 'cinematic'], frames = o.frames || 20, runs = o.runs || 3;
+    const keep = { map: G.mapId, x: Engine.cam.x, y: Engine.cam.y, dir: Engine.cam.dir, state: G.state, tod: G.tod, mode: st.mode, preset: GFX.preset };
+    const med = (a) => { const b = a.slice().sort((x, y) => x - y), m = b.length >> 1; return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2; };
+    const out = {};
+    try {
+      for (const sc of scenes) {
+        G.state = 'paused'; loadMap(sc.map, { x: sc.x, y: sc.y, dir: sc.dir }); G.state = 'play'; G.fadeT = 0; G.tod = sc.tod;
+        const crowd = [];
+        for (let i = 0; i < 12; i++) {
+          const ang = sc.dir + (i - 5.5) * 0.11, d = 3 + (i % 6) * 1.6;
+          const e = hydrate({ kind: 'enemy', type: ['hound', 'proctor', 'quiet', 'legionnaire'][i % 4], x: sc.x + Math.cos(ang) * d, y: sc.y + Math.sin(ang) * d });
+          e.state = 'passive'; crowd.push(e); G.ents.push(e);
+        }
+        const t = {};
+        for (const pr of presets) for (const m of ['off', 'on']) t[pr + '/' + (m === 'on' ? 'r3d' : 'cpu')] = [];
+        for (let r = 0; r < runs; r++) for (const pr of presets) for (const m of ['off', 'on']) {
+          PRESETS.apply(pr); setMode(m, { noSave: true });
+          for (let i = 0; i < 3; i++) render();
+          if (gl) gl.finish();
+          const t0 = now();
+          for (let i = 0; i < frames; i++) { render(); if (m === 'on' && gl) gl.finish(); }
+          t[pr + '/' + (m === 'on' ? 'r3d' : 'cpu')].push((now() - t0) / frames);
+        }
+        for (const e of crowd) { const i = G.ents.indexOf(e); if (i >= 0) G.ents.splice(i, 1); }
+        out[sc.id] = {}; for (const k in t) out[sc.id][k] = Math.round(med(t[k]) * 100) / 100;
+      }
+    } finally {
+      setMode(keep.mode, { noSave: true }); if (PRESETS.table[keep.preset]) PRESETS.apply(keep.preset);
+      G.state = 'paused'; loadMap(keep.map, { x: keep.x, y: keep.y, dir: keep.dir }); G.state = keep.state; G.tod = keep.tod;
+    }
+    out.renderer = st.renderer; out.software = st.software; out.size = F.w + 'x' + F.h;
     return out;
   }
+
+  // ---- the CPU hooks R3D does not run, for the report and the teams (name -> order)
+  // [module, kind, order, what it does, status under R3D]. 'core' = R3D draws it (CORE), 'light'/'sprites'/'body' = the team
+  // that ports it, 'cpu-only' = not drawn under R3D (yet).
+  const HOOKS = [
+    ['engine', 'core', 0, 'walls, floors, ceilings, risers, caps, decals, detail, water, far-mode haze and distance average', 'core'],
+    ['engine', 'core', 0, 'sprites (directional views, anim fields, glow, flash, hurt, elite light, emissive masks)', 'core (SPRITES21 replaces)'],
+    ['engine', 'core', 0, 'sky rows, clouds, sun and moon, landmark ridges', 'core (LIGHT replaces the sky pass)'],
+    ['doors.js', 'engine', 0, 'swinging door leaves (Doors.swing)', 'core'],
+    ['gates.js', 'post', -8, 'lifting portcullis lattice, portal backing', 'core'], ['gates.js', 'post', -8, 'cave-in dust and falling stone', 'sprites'],
+    ['calendar11.js', 'sky', 5, 'moon phases', 'light'], ['sky.js', 'sky', 10, 'stars', 'light'], ['sky.js', 'sky', 20, 'painted panoramas', 'light'],
+    ['sky.js', 'sky', 30, 'Drift-Kestrel flyover', 'light'], ['skies14.js', 'sky', 12, 'aurora', 'light'], ['synod15.js', 'sky', 14, 'eclipse', 'light'],
+    ['horizon20.js', 'post', -9.6, 'far country beyond the walls', 'light'], ['horizon20.js', 'post', -9.5, 'belfry bell', 'light'],
+    ['props14.js', 'post', -7, 'glass shimmer', 'light'], ['props14.js', 'post', -4, 'mirrors', 'light'],
+    ['lighting.js', 'post', -5, 'dark interiors (light falloff, lamp pools)', 'light'], ['motion10.js', 'post', -4, 'lantern glow', 'light'],
+    ['look10.js', 'post', 4, 'ground shadows and fight marks', 'sprites'], ['air11.js', 'post', 5, 'footprints', 'sprites'],
+    ['greening14.js', 'post', 5, 'Greening stages, root veins, glass spread', 'light'], ['extras17.js', 'post', 6, 'winter ground (snow)', 'light'],
+    ['extras17.js', 'post', 7, 'winter roofs', 'light'], ['firesmoke.js', 'post', 8, 'chimney smoke and torch fire', 'sprites'],
+    ['post.js', 'post', 10, 'soft fog', 'light'], ['post.js', 'post', 20, 'mist', 'light'], ['water.js', 'post', 25, 'water reflections and ripples', 'light'],
+    ['hunters13.js', 'post', 26, 'grey wave', 'light'], ['skies14.js', 'post', 26, 'caustic light', 'light'], ['companions.js', 'post', 26, "Kaelen's glass hum glow", 'sprites'],
+    ['flume16.js', 'post', 27, 'flume glow', 'light'], ['air11.js', 'post', 28, 'sun shafts', 'light'], ['post.js', 'post', 30, 'bloom', 'light'],
+    ['air11.js', 'post', 35, 'heat haze', 'light'], ['air11.js', 'post', 36, 'glass glare', 'light'], ['air11.js', 'post', 38, 'cold breath', 'sprites'],
+    ['extras17.js', 'post', 39, 'snowflakes', 'light'], ['post.js', 'post', 40, 'colour grade', 'light'], ['air11.js', 'post', 41, 'see-through ghosts', 'sprites'],
+    ['extras17.js', 'post', 42, 'winter grade', 'light'], ['ghost18.js', 'post', 0, 'ghost replays', 'sprites'], ['sync19.js', 'post', 0, 'co-op figures (guest side)', 'sprites'],
+    ['partner19.js', 'post', 0, 'partner figure measure', 'sprites'], ['motion10.js', 'post', 45, 'sparks', 'sprites'], ['smalllife.js', 'post', 0, 'rope and shard glimmer', 'sprites'],
+    ['telegraphs.js', 'post', 0, 'attack telegraphs', 'sprites'], ['deep16.js', 'post', 50, 'underwater view (the Deep)', 'light'],
+    ['cinema14.js', 'post', 95, 'Cinematic haze, ground fog, emissive bloom, god rays, grade, vignette', 'light'],
+    ['fp-feel.js', 'post', 100, 'hit/deafen screen effects', 'body'], ['dread.js', 'post', 110, 'Dread phantom and vignette', 'light'],
+    ['air11.js', 'post', -50, 'clock (state only)', 'cpu-only (harmless: presentation clock)'], ['extras17.js', 'post', -60, 'winter breath sync (state)', 'cpu-only (presentation)'],
+  ];
+  function cpuHooks() { return HOOKS.map(([module, kind, order, what, status]) => ({ module, kind, order, what, status })); }
 
   // ---------------------------------------------------------------------------------------------------- boot
   const api = {
@@ -2093,7 +2279,7 @@ void main() {
     // state
     active: () => st.shown && st.drew, shown: () => st.shown, available: () => st.available === true, mode: () => st.mode, setMode, sync, probe,
     // passes and shaders
-    addPass, removePass, getPass, passes: () => passList.map(p => ({ name: p.name, order: p.order })), program, use, setChunk, chunk, bindScene, bindOutput,
+    addPass, removePass, getPass, passes: () => passList.map(p => ({ name: p.name, order: p.order })), program, use, setChunk, chunk, bindScene, bindOutput, resolveScene,
     gl: () => gl, worldTex, textureDirty, invalidate,
     // sprites
     sprites: { submit, setProvider, defaultProvider, dirty: (sp) => atlas.dirty(sp), atlas: () => ({ tex: atlas.tex, pages: atlas.pages, page: atlas.PAGE }), entry: (sp) => atlas.get(sp), count: () => spr.n },
@@ -2102,7 +2288,7 @@ void main() {
     // hooks
     on, off,
     // tools and tests
-    netStep, cpuHooks, mesh: () => mesh.info, vframe: () => VCAM, reliefDepth, vdepth, buildMesh: () => { mesh.dirty = true; },
+    netStep, netFeed, net: NET, cpuHooks, measure, dynamicTris: () => mesh.dcount / 3, mesh: () => mesh.info, vframe: () => VCAM, reliefDepth, vdepth, buildMesh: () => { mesh.dirty = true; },
     readPixels() {
       if (!gl || !canvas) return null;
       const w = canvas.width, h = canvas.height, out = new Uint8Array(w * h * 4);
