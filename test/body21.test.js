@@ -261,6 +261,19 @@ const HELPERS = () => {
         out.pass = (R3D.passes().find((p) => p.name === 'body') || {}).order;
         if (!out.shown) return out;
         __stage('clearing', 12.5, 11.5, -Math.PI / 2); G.tod = 0.5;
+        // first, on a fresh page and with no shield (nothing with a glow map drawn yet), the arm and sword draw even when
+        // the glow-map unit was left holding the scene's depth texture (a pass that reads the scene depth leaves it there;
+        // it is the body pass's own depth target, so sampling it is a feedback loop and WebGL refuses the draw)
+        { __gear({ w: 'sword', armor: { body: 'a_gambeson' } }); FPHANDS.st.shown = 'sword'; FPHANDS.st.lower = 0;
+          const g = BODY21.R3B.gl, T = R3D.frame && R3D.frame.targets && R3D.frame.targets.scene;
+          BODY21.R3B.check = true; out.armLog = [];
+          try {
+            for (let i = 0; i < 4; i++) {
+              if (T && T.depthTex) { g.activeTexture(g.TEXTURE7); g.bindTexture(g.TEXTURE_2D, T.depthTex); }
+              const d0 = BODY21.R3B.drawn; render(); if (BODY21.R3B.drawn > d0) out.armLog.push(BODY21.R3B.glErr);
+            }
+          } finally { BODY21.R3B.check = false; }
+          out.armErrs = out.armLog.filter((e) => e !== 0).length; out.armDraws = out.armLog.length; }
         __gear({ w: 'sword', armor: { body: 'a_chain', hands: 'a_gauntlets', shield: 'a_kite', feet: 'a_greaves', head: 'a_kettle' } });
         R3D.camera.setAngle(-50 * Math.PI / 180);
         const d0 = BODY21.R3B.drawn, q0 = BODY21.R3B.quads, l0 = BODY21.R3B.legs;
@@ -281,8 +294,14 @@ const HELPERS = () => {
         out.meshUniq = new Set(Object.values(mesh)).size; out.meshN = Object.keys(mesh).length; out.mesh = mesh; out.gait = new Set([hashV(st), hashV(w1), hashV(w2)]).size;
         let zmin = 1e9; for (let i = 2; i < st.V.length; i += 10) zmin = Math.min(zmin, st.V[i]);
         out.soleGap = zmin - R3D.groundGL(Engine.cam.x, Engine.cam.y); out.tris = BODY21.LB.tris; p.armor = keep;
-        // fp-feel's deafness and Hush under R3D: pass 'feel' (order 89) drains the colour like the CPU hook
+        // a Song's light on the hands (fp-hands paints it 'lighter') is added in the scene with the hands, not left on the HUD
         R3D.camera.setAngle(0);
+        { const fs0 = Object.assign({}, FPHANDS.st), sg = G.song.t, P0 = G.player, ar0 = Object.assign({}, P0.armor), wp0 = P0.weapon; __gear({ w: 'hands', armor: { body: 'a_gambeson', hands: 'a_gloves' } });
+          FPHANDS.st.shown = 'hands'; FPHANDS.st.lower = 0; FPHANDS.st.cast = 0.4; FPHANDS.st.castCol = [255, 60, 40]; FPHANDS.st.castPower = 0.9; G.song.t = 0.35;
+          try { for (let i = 0; i < 2; i++) render(); const L = BODY21.R3B.last; out.songAdd = L ? L.list.filter((it) => it.add > 0).length : -1;
+            const hud = Engine.ctx.canvas, x = hud.getContext('2d'); let mx = 0; for (let k = 0; k < 9; k++) mx = Math.max(mx, x.getImageData(Math.round(hud.width * (120 + k * 10) / 320), Math.round(hud.height * 110 / 200), 1, 1).data[3]); out.songHud = mx;
+          } finally { Object.assign(FPHANDS.st, fs0); G.song.t = sg; P0.armor = ar0; P0.weapon = wp0; } }
+        // fp-feel's deafness and Hush under R3D: pass 'feel' (order 89) drains the colour like the CPU hook
         const sat = () => { const px = R3D.readPixels(); let s = 0, n = 0; for (let i = 0; i < px.data.length; i += 4 * 97) { const r = px.data[i], g = px.data[i + 1], b = px.data[i + 2]; s += Math.max(r, g, b) - Math.min(r, g, b); n++; } return s / n; };
         const fs = FEEL.state, deaf0 = fs.deaf, hush0 = fs.hush;
         render(); out.satBefore = sat();
@@ -300,6 +319,8 @@ const HELPERS = () => {
       assert.equal(r.hudAlpha, 0, 'the shield is not on the HUD canvas under R3D'); assert.equal(r.err, '');
       assert.equal(r.meshUniq, r.meshN, 'every boot pair and body armour builds its own lower body: ' + JSON.stringify(r.mesh)); assert.equal(r.gait, 3, 'the gait moves the legs');
       assert.ok(r.soleGap >= -1e-4 && r.soleGap < 0.01, 'the soles stand on the floor: ' + r.soleGap); assert.ok(r.tris > 200, 'a real mesh: ' + r.tris + ' triangles');
+      assert.ok(r.armDraws >= 2, 'the body pass drew with no shield'); assert.equal(r.armErrs, 0, 'with no shield, and the scene depth left on the glow-map unit, every first-person picture still draws (no GL error in the body pass): ' + JSON.stringify(r.armLog));
+      assert.ok(r.songAdd >= 1, 'the Song light on the hands is recorded for the scene: ' + r.songAdd); assert.equal(r.songHud, 0, 'and nothing of it is left on the HUD canvas over the hands');
       assert.equal(r.feelOrder, 89); assert.ok(r.feel >= 1, 'the feel pass ran'); assert.ok(r.satAfter < r.satBefore * 0.8, 'the Hush drains the colour under R3D: ' + r.satBefore + ' -> ' + r.satAfter);
       assert.equal(r.offRec, false); assert.ok(r.offShield >= 1, 'raycaster overlay is back');
     });

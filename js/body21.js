@@ -802,16 +802,17 @@ const BODY21 = (() => {
   // pixels, from the canvas transform it would have been drawn with) and the R3D 'body' pass draws the list in the scene,
   // lit by the scene's shading and graded by its post chain. REC is that recording (null on the raycaster path).
   let REC = null;
-  function put2(ctx, img, dx, dy, dw, dh, em) {
+  function put2(ctx, img, dx, dy, dw, dh, em, add) {
     if (REC) {
       const L = REC.inv.multiply(ctx.getTransform());
       const p = (x, y) => { const q = L.transformPoint({ x, y }); return [q.x, q.y]; };
-      REC.list.push({ img, em: em || null, pts: [p(dx, dy), p(dx + dw, dy), p(dx + dw, dy + dh), p(dx, dy + dh)] });
+      REC.list.push({ img, em: em || null, add: add || 0, pts: [p(dx, dy), p(dx + dw, dy), p(dx + dw, dy + dh), p(dx, dy + dh)] });
       return;
     }
     ctx.drawImage(img, dx, dy, dw, dh);
   }
   const VWv = () => (typeof VW === 'number' ? VW : 320), VHv = () => (typeof VIEW_H === 'number' ? VIEW_H : 150);
+  const castLit = () => { const f = fph(); return !!(f && f.cast > 0); };
   const fph = () => (typeof FPHANDS === 'object' && FPHANDS && FPHANDS.st) ? FPHANDS.st : null;
   // the off arm's idle sway, in half-pixel steps (a picture that moves by a hundredth of a pixel between two frames would
   // flip a scatter of nearest-sampled pixels; in steps it moves all at once)
@@ -935,6 +936,13 @@ const BODY21 = (() => {
     const st = { offDone: false };
     const hook = function (img) {
       const b = img && OWNED.get(img);
+      // under R3D the hands are in the scene, so the Song light fp-hands adds over them ('lighter': the tinted hands and
+      // the halo between them) is recorded too and added there; painted on the empty HUD canvas it would cover them
+      if (!b && REC && arguments.length === 5 && this.globalCompositeOperation === 'lighter' && castLit()) {
+        const keep = this.drawImage; this.drawImage = orig;
+        try { put2(this, img, arguments[1], arguments[2], arguments[3], arguments[4], null, this.globalAlpha); } finally { this.drawImage = keep; }
+        return undefined;
+      }
       if (!b || arguments.length !== 5) return orig.apply(this, arguments);
       const dx = arguments[1], dy = arguments[2], dw = arguments[3], dh = arguments[4], sx = dw / img.width, sy = dh / img.height;
       if (!st.offDone && b.side === 'right') {
@@ -1025,7 +1033,7 @@ const BODY21 = (() => {
   //     hand, the helm's brim) as screen quads in its own depth range (in front of the world, no depth write), drawn the
   //     frame after they were posed (one frame of latency on a camera-locked picture).
   // If the pass cannot compile or R3D is not showing, the raycaster path above paints the same pictures on the HUD canvas.
-  const R3B = { last: null, prog: null, failed: false, gl: null, vao: null, vbo: null, tex: new Map(), drawn: 0, quads: 0, legs: 0, err: '' };
+  const R3B = { check: false, glErr: 0, last: null, prog: null, failed: false, gl: null, vao: null, vbo: null, tex: new Map(), drawn: 0, quads: 0, legs: 0, err: '' };
   function r3dOn() {
     try { return typeof R3D === 'object' && R3D && !R3B.failed && !!R3B.prog && R3D.shown() && !!R3D.getPass('body'); } catch (e) { return false; }
   }
@@ -1035,15 +1043,17 @@ layout(location = 1) in vec3 aUv;    // uv, mode (0 screen, 1 world, 2 shadow)
 out vec2 vUv; out vec3 vPos; flat out float vMode;
 void main() {
   vUv = aUv.xy; vMode = aUv.z;
-  if (aUv.z > 0.5) { vPos = aPos.xyz; gl_Position = uViewProj * vec4(aPos.xyz, 1.0); }
+  if (aUv.z > 0.5 && aUv.z < 2.5) { vPos = aPos.xyz; gl_Position = uViewProj * vec4(aPos.xyz, 1.0); }
   else { vPos = uEye.xyz + vec3(uFwdH.xy * 0.3, -0.12); gl_Position = vec4(aPos.xy, -1.0, 1.0); }
 }`;
   const BODY_FS = `
-uniform sampler2D uImg; uniform sampler2D uEm; uniform float uHasEm;
+uniform sampler2D uImg; uniform sampler2D uEm; uniform float uHasEm; uniform float uAdd;
 in vec2 vUv; in vec3 vPos; flat in float vMode;
 layout(location = 0) out vec4 oColor; layout(location = 1) out vec4 oAux;
 void main() {
   vec4 c = texture(uImg, vUv);
+  // 3: a Song's light on the hands (fp-hands draws it 'lighter'): added on top, unlit, the material left as it is
+  if (vMode > 2.5) { oColor = vec4(c.rgb * c.a * uAdd, 0.0); oAux = vec4(0.0); return; }
   if (vMode > 1.5) { float a = c.a * 0.9; if (a < 0.01) discard; oColor = vec4(0.0, 0.0, 0.0, a); oAux = vec4(5.0 / 255.0, 0.0, 0.0, a); return; }
   if (c.a < 0.5) discard;
   float e = uHasEm > 0.5 ? step(0.5, texture(uEm, vUv).a) : 0.0;
@@ -1069,8 +1079,11 @@ void main() {
     // pts: 4 corners (TL, TR, BR, BL) as [x, y, z] (world) or [ndcX, ndcY, 0]
     const uv = [[0, 0], [1, 0], [1, 1], [0, 1]], order = [0, 1, 3, 2];
     for (let i = 0; i < 4; i++) { const k = order[i], o = i * 7; quadBuf[o] = pts[k][0]; quadBuf[o + 1] = pts[k][1]; quadBuf[o + 2] = pts[k][2]; quadBuf[o + 3] = 1; quadBuf[o + 4] = uv[k][0]; quadBuf[o + 5] = uv[k][1]; quadBuf[o + 6] = mode; }
-    g.activeTexture(g.TEXTURE6); g.bindTexture(g.TEXTURE_2D, texOf(g, img));
-    if (em) { g.activeTexture(g.TEXTURE7); g.bindTexture(g.TEXTURE_2D, texOf(g, em)); }
+    const ti = texOf(g, img); g.activeTexture(g.TEXTURE6); g.bindTexture(g.TEXTURE_2D, ti);
+    // unit 7 always holds a plain 2D texture: with no glow map it gets the picture itself (uHasEm says it is unused).
+    // Left alone it may still hold another pass's texture of a kind uEm cannot sample, and then the draw fails
+    // silently (this hid every first-person picture until something with a glow map, a shield, had been drawn)
+    g.activeTexture(g.TEXTURE7); if (em) g.bindTexture(g.TEXTURE_2D, texOf(g, em));
     g.uniform1f(R3B.prog.u.uHasEm, em ? 1 : 0);
     g.bindBuffer(g.ARRAY_BUFFER, R3B.vbo); g.bufferData(g.ARRAY_BUFFER, quadBuf, g.STREAM_DRAW);
     g.drawArrays(g.TRIANGLE_STRIP, 0, 4); R3B.quads++;
@@ -1103,10 +1116,13 @@ void main() {
       }
       // first-person pictures: screen quads in front of everything, no depth write
       g.disable(g.DEPTH_TEST); g.depthMask(false);
+      if (R3B.check) while (g.getError() !== g.NO_ERROR) { /* tests only: start clean */ }
       for (const it of rec.list) {
         const pts = it.pts.map((q) => [q[0] / 160 - 1, 1 - q[1] / 75, 0]);
-        quad(g, pts, 0, it.img, it.em);
+        if (it.add) { g.enable(g.BLEND); g.blendFunc(g.ONE, g.ONE); g.uniform1f(R3B.prog.u.uAdd, it.add); quad(g, pts, 3, it.img, null); g.disable(g.BLEND); }
+        else quad(g, pts, 0, it.img, it.em);
       }
+      if (R3B.check) R3B.glErr = g.getError();   // tests only (a sync stall): did every picture draw?
       g.depthMask(true); g.enable(g.DEPTH_TEST);
       g.bindVertexArray(null);
       R3B.drawn++;
