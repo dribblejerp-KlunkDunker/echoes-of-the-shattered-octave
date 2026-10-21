@@ -726,6 +726,7 @@ void main() {
       const sunK = V.outdoor ? c.base + c.sun * Math.min(1, clamp(V.light == null ? 1 : V.light, 0.2, 1.2)) : c.indoor;
       const wxK = (1 - 0.55 * clamp((wx.haze || 0) / 0.6, 0, 1)) * (1 - 0.3 * (wx.cloud || 0));
       const fogD = Math.max(4, fogDist);
+      const sunShadows = !!(V.outdoor && typeof LIGHT21 !== 'undefined' && LIGHT21 && LIGHT21.P && LIGHT21.P.shadowOn);
       for (let i = 0; i < ents.length; i++) {
         const e = ents[i]; if (!e || !e.sprite || e.hidden) continue;
         const sk = LOOK10.shadowOf(e); if (!sk) continue;
@@ -743,7 +744,8 @@ void main() {
         if (V.lights && V.lights.length) { const L = lightAt(V.lights, e.x, e.y); lum += (L[0] + L[1] + L[2]) * 0.6; }
         const soft = 1 - clamp(lum / 120, 0, 1);
         const rr = r * (1 + 0.3 * soft);
-        const k = sunK * wxK * fade * sk * alpha * (0.4 + 0.6 * (1 - soft * 0.75)) * 0.9;
+        // where LIGHT casts real sun/moon shadows from these figures, the disc is only the soft contact under the feet
+        const k = sunK * wxK * fade * sk * alpha * (0.4 + 0.6 * (1 - soft * 0.75)) * 0.9 * (sunShadows ? 0.6 : 1);
         decal(e.x, e.y, ez, rr, 1, 0, relief ? 0.3 : 9, 0, 0, k, soft > 0.5 ? 2.3 : 1.25, null);
       }
     }
