@@ -364,7 +364,10 @@ async function boot(ctx, opts) {
         const fig = PARTNER19.FIG.partner, sc = fig._screen, spr = Engine.sprites[fig.sprite];
         let glow = 0, seen = 0;
         if (sc) for (let y = Math.max(0, sc.y0 | 0); y < Math.min(150, sc.y1); y++) for (let x = Math.max(0, sc.x0 | 0); x < Math.min(320, sc.x1); x++) { const m = R3D.materialAt(x, y); if (m === 6) seen++; if (m === (Engine.MAT ? Engine.MAT.glow : 8)) glow++; }
-        const partner = { emit: !!(spr && spr.emit), seen, glow, screen: !!sc };
+        // R3D marks a sprite pixel emissive only through the sprite's emit mask (js/r3d21.js atlas upload): none of the
+        // partner's sprites carries one (materialAt is also sampled, though SwiftShader's read-back may give nothing)
+        const anyEmit = Object.keys(Engine.sprites).filter((k) => /^p19fig_/.test(k)).some((k) => !!Engine.sprites[k].emit);
+        const partner = { emit: !!(spr && spr.emit) || anyEmit, sprites: Object.keys(Engine.sprites).filter((k) => /^p19fig_/.test(k)).length, seen, glow, screen: !!sc };
         PARTNER19.leave('silent');
         return { active: true, partner, ang, lim, lit, n: d.length / 4 / 97, png: !!(blob && blob.type === 'image/png'), restored: ['x', 'y', 'z', 'dir', 'pitch'].every((k) => Engine.cam[k] === cam0[k]) };
       });
