@@ -43,12 +43,16 @@ const SKY = (() => {
   // A fixed field: each star owns a bearing and an elevation, so it turns with
   // the view like the real thing. Projected per star (no per-pixel work).
   const NSTAR = 760;
-  const st = { cx: new Float32Array(NSTAR), sy: new Float32Array(NSTAR), el: new Float32Array(NSTAR), mag: new Float32Array(NSTAR), ph: new Float32Array(NSTAR), sp: new Float32Array(NSTAR), r: new Uint8Array(NSTAR), g: new Uint8Array(NSTAR), b: new Uint8Array(NSTAR) };
+  // Phase 21: the look reaches higher (110 rows up on the raycaster), so a second field fills the sky above the first
+  // one's top (1.21 half-heights) up to 2.8; built from its own seed after the first, so the old field is unchanged
+  const NHI = 560, NALL = NSTAR + NHI;
+  const st = { cx: new Float32Array(NALL), sy: new Float32Array(NALL), el: new Float32Array(NALL), mag: new Float32Array(NALL), ph: new Float32Array(NALL), sp: new Float32Array(NALL), r: new Uint8Array(NALL), g: new Uint8Array(NALL), b: new Uint8Array(NALL) };
   (function buildStars() {
-    const r = mulberry(0x57A25);
-    for (let i = 0; i < NSTAR; i++) {
+    let r = mulberry(0x57A25);
+    for (let i = 0; i < NALL; i++) {
+      if (i === NSTAR) r = mulberry(0x57A26);
       const th = r() * TAU; st.cx[i] = Math.cos(th); st.sy[i] = Math.sin(th);
-      st.el[i] = 0.03 + Math.pow(r(), 0.85) * 1.18;           // fractions of half the view height above the horizon
+      st.el[i] = i < NSTAR ? 0.03 + Math.pow(r(), 0.85) * 1.18 : 1.21 + r() * 1.6;   // fractions of half the view height above the horizon
       const m = r(); st.mag[i] = 0.22 + 0.78 * m * m * m;     // most are faint, a few are bright
       st.ph[i] = r() * TAU; st.sp[i] = 1.2 + r() * 3.4;
       const tint = r();                                       // cold white, blue, or a warm ember
@@ -68,7 +72,7 @@ const SKY = (() => {
     const p = Math.hypot(F.planeX, F.planeY), halfH = h * 0.5, t = F.animT;
     const extent = h * 0.1;           // stars dim into the horizon haze
     let n = 0;
-    for (let i = 0; i < NSTAR; i++) {
+    for (let i = 0; i < NALL; i++) {
       const c = st.cx[i], s = st.sy[i];
       const fwd = c * dirX + s * dirY; if (fwd < 0.15) continue;
       const camX = (-c * dirY + s * dirX) / (fwd * p);
@@ -405,7 +409,9 @@ const SKY = (() => {
         }
       }
     }
-    const yEnd = Math.min(horizon, h - 1);
+    // art rows count up from the horizon itself; looking far up (Phase 21's wider look) it can sit below the frame, and the
+    // rows that fall below the frame are simply not drawn (for a horizon inside the frame this is the old rule exactly)
+    const yEnd = horizon;
     let n = 0;
     for (let li = 0; li < NL; li++) {
       const L = layers[li], art = L.art, top = L.top, lb = li * NSLOT;
@@ -416,7 +422,7 @@ const SKY = (() => {
           const q = ((lb + s) * AH + row) * 3, col = (255 << 24) | (lut[q + 2] << 16) | (lut[q + 1] << 8) | lut[q];
           const yb = yEnd - row * S;   // this art row's S screen rows, counted up from the horizon
           for (let k = 0; k < S; k++) {
-            const y = yb - k; if (y < 0) break;
+            const y = yb - k; if (y < 0) break; if (y >= h) continue;
             const o = y * w + x; if (mbuf[o] !== 1) continue;
             fb[o] = col; n++;
           }
@@ -547,6 +553,7 @@ const SKY = (() => {
       return Object.assign({}, forced);
     },
     flightAt,
+    ship: { art: SHIP_ART, pal: SHIP_PAL },   // Phase 21 (js/light21.js draws her on the 3D renderer's sky dome)
     state() { return Object.assign({}, last); },
     panorama,
     hooks: { stars: drawStars, panoramas: drawPanorama, flyovers: drawFlyover },   // so a test can time each on its own

@@ -106,7 +106,7 @@ async function bootR3D(browser, opts) {
     window.requestAnimationFrame = () => 0;
     const T = window.T21 = {};
     T.pin = (fn) => { const rn = Math.random, pn = performance.now.bind(performance), dn = Date.now; let sd = 7; Math.random = () => (sd = (sd * 16807) % 2147483647) / 2147483647; performance.now = () => 123456; Date.now = () => 1700000000000; try { return fn(); } finally { Math.random = rn; performance.now = pn; Date.now = dn; } };
-    T.stage = (m, x, y, d, tod, wx, pitch) => T.pin(() => { G.state = 'paused'; G.day = 3; G.tod = tod; loadMap(m, x == null ? undefined : { x, y, dir: d }); G.fadeT = 0; G.tod = tod; G.day = 3; Engine.cam.pitch = pitch || 0; Engine.cam.bob = 0; Weather.hold(wx || 'clear'); G.state = 'play'; const ms = document.getElementById('msgs'); if (ms) ms.textContent = ''; });
+    T.stage = (m, x, y, d, tod, wx, pitch) => T.pin(() => { G.state = 'paused'; G.day = 3; G.tod = tod; loadMap(m, x == null ? undefined : { x, y, dir: d }); G.fadeT = 0; G.tod = tod; G.day = 3; Engine.cam.pitch = pitch || 0; Engine.cam.bob = 0; Weather.hold(wx || 'clear'); Weather.apply(); G.state = 'play'; const ms = document.getElementById('msgs'); if (ms) ms.textContent = ''; });
     T.frame = (n) => { for (let i = 0; i < (n || 1); i++) T.pin(() => render()); };
     // the presented 3D view: mean luma of rows (fractions of the view height from the top), and of the whole view
     T.luma = (y0, y1) => {
@@ -153,7 +153,7 @@ async function part2(browser) {
       const r = await E(([wx, t]) => { PRESETS.apply('medium'); T21.stage('clearing', 20.5, 32.5, -Math.PI / 2, t, wx); T21.frame(1); return { a: R3D.active(), sky: T21.luma(0, 0.2) }; }, [wx, t]);
       if (!r.a || (t === 0.5 && r.sky < 50)) bad.push(wx + '@' + t + ':' + Math.round(r.sky));
     }
-    assert.deepStrictEqual(bad, []);
+    assert.deepStrictEqual(bad, [], 'bad: ' + bad.join(' '));
   });
   await step('shadows: GFX.p21_shadows darkens the ground in the shade of the walls (outdoors, by day)', async () => {
     const r = await E(() => {
@@ -194,7 +194,7 @@ async function part2(browser) {
       return out;
     }, REF);
     const a = await run(A.page), b = await run(B.page);
-    assert.deepStrictEqual(a, b);
+    assert.deepStrictEqual(a, b, 'differ: ' + a.filter((x, i) => x !== b[i]).join(' ') + ' vs ' + b.filter((x, i) => x !== a[i]).join(' '));
     assert.deepStrictEqual(A.errors, []); assert.deepStrictEqual(B.errors, []);
   });
   await A.ctx.close(); await B.ctx.close();
