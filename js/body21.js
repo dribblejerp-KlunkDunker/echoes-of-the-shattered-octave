@@ -799,7 +799,7 @@ const BODY21 = (() => {
     if (!set.feet || hiddenBody()) return false;
     const moving = WS.speed > 0.45 && !reduced();
     const frame = moving ? Math.floor(((WS.stride / 1.5) % 1) * 8) & 7 : -1;
-    if (REC) { const art = legArt(look, frame); if (art) { REC.legs = art; stats.drawn.feet++; } return !!art; }   // true 3D: a quad at your feet (R3D pass)
+    if (REC) { REC.legs = { look, moving, phase: (G.bobPhase || 0) / 2, run: WS.speed > 2.2 }; stats.drawn.feet++; return true; }   // true 3D: meshes (R3D pass, 11c)
     const pose = legsPose(); if (!pose) return false;
     const art = legArt(look, frame); if (!art) return false;
     const LS = 0.62, x0 = VWv() / 2 - 150 * LS, y0 = pose.toeY - 12;
@@ -1020,7 +1020,7 @@ void main() {
   const bodyPass = {
     name: 'body', order: 40,
     init(g, R) {
-      R3B.gl = g; R3B.tex.clear(); R3B.failed = false;
+      R3B.gl = g; R3B.tex.clear(); R3B.failed = false; LB.prog = null; LB.failed = false; LB.atl.clear();
       try {
         R3B.prog = R.program(BODY_VS, BODY_FS, { chunks: ['common', 'shade'] });
         if (!R3B.prog || !R3B.prog.p) throw new Error('no program');
@@ -1038,19 +1038,10 @@ void main() {
       R.bindScene(g, F); R.use(R3B.prog);
       g.uniform1i(R3B.prog.u.uImg, 6); g.uniform1i(R3B.prog.u.uEm, 7);
       g.bindVertexArray(R3B.vao); g.disable(g.CULL_FACE);
-      // legs: a quad in the world, toes on the ground ahead, hips under the eye
+      // the lower body: low-poly meshes in the world (11c), depth-tested, with contact shadows under the boots
       if (rec.legs && set.feet) {
-        const c = Engine.cam, fx = Math.cos(c.dir), fy = Math.sin(c.dir), rx = -fy, ry = fx, gz = (c.z || 0.5) - 0.5;
-        const W2 = 0.15, toe = 0.4, hip = -0.06, toG = (x, y, z) => R.toGL ? R.toGL(x, y, z) : [x, y, z * R.ZK];
-        const P = (fwd, side, z) => toG(c.x + fx * fwd + rx * side, c.y + fy * fwd + ry * side, z);
-        g.enable(g.DEPTH_TEST); g.depthFunc(g.LEQUAL);
-        // contact shadows under the feet (blended, no depth write)
-        g.depthMask(false); g.enable(g.BLEND); g.blendFunc(g.SRC_ALPHA, g.ONE_MINUS_SRC_ALPHA);
-        const sh = footShadow();
-        for (const f of rec.legs.feet) { const fw = toe - (f.y / 300) * (toe - hip), sd = (f.x - 150) / 300 * 2 * W2; quad(g, [P(fw + 0.06, sd - 0.05, gz + 0.004), P(fw + 0.06, sd + 0.05, gz + 0.004), P(fw - 0.04, sd + 0.05, gz + 0.004), P(fw - 0.04, sd - 0.05, gz + 0.004)], 2, sh); }
-        g.disable(g.BLEND); g.depthMask(true);
-        quad(g, [P(toe, -W2, gz + 0.02), P(toe, W2, gz + 0.02), P(hip, W2, gz + 0.24), P(hip, -W2, gz + 0.24)], 1, rec.legs.canvas);
-        R3B.legs++;
+        try { if (drawLowerBody(g, F, R, rec.legs)) R3B.legs++; } catch (e) { warnOnce('lower body', e); }
+        R.bindScene(g, F); R.use(R3B.prog); g.uniform1i(R3B.prog.u.uImg, 6); g.uniform1i(R3B.prog.u.uEm, 7); g.bindVertexArray(R3B.vao); g.disable(g.CULL_FACE);
       }
       // first-person pictures: screen quads in front of everything, no depth write
       g.disable(g.DEPTH_TEST); g.depthMask(false);
@@ -1137,6 +1128,209 @@ void main() {
       FX3.drawn++;
     },
   };
+  // ================================================================ 11c. R3D: THE LOWER BODY AS MESHES
+  // A low-poly body built every frame in GL space from the player's place and gear: the lower chest and belt, the
+  // armour's hem as a hanging skirt (robe, coats, mail, gambeson, jerkin, shirt) or the cuirass's tassets, thighs, knees,
+  // shins, the boots' shafts (greaves with knee cops) and the boots themselves (heel, instep, ball, toe), each a tapered
+  // ring tube. Sizes in metres (eye 1.6 m above the ground = R3D's eye height, so M GL units per metre). Placement: the
+  // hips under the eye, the chest just behind it, the feet a little ahead (the view is narrow, 34 degrees tall, so the
+  // stance sits a touch forward of a real one: toes show from about 60 degrees down, the belt and chest at 80). Walking:
+  // the game's own step clock (G.bobPhase) drives a gait: a foot plants and slides back, then swings forward lifting;
+  // knees come from two-bone IK (they bend forward); every foot stands on the floor under it (groundGL), so stairs and
+  // slopes never swallow a boot. Textures: one 32-texel tile per material from GEARLOOK21's colours and patterns,
+  // nearest-filtered at 96 texels a metre; shaded by R3D's 'shade' chunk (kind 2) after a soft key light baked from
+  // the normal (LIGHT's chunk will light it for real).
+  const LBV = `
+layout(location = 0) in vec3 aPos; layout(location = 1) in vec3 aNrm; layout(location = 2) in vec4 aUv;
+out vec3 vPos; out vec3 vNrm; out vec4 vUv;
+void main() { vPos = aPos; vNrm = aNrm; vUv = aUv; gl_Position = uViewProj * vec4(aPos, 1.0); }`;
+  const LBF = `
+uniform sampler2D uAtl; uniform float uTiles;
+in vec3 vPos; in vec3 vNrm; in vec4 vUv;
+layout(location = 0) out vec4 oColor; layout(location = 1) out vec4 oAux;
+void main() {
+  vec2 uv = vec2((vUv.z + fract(vUv.x)) / uTiles, fract(vUv.y));
+  vec4 c = texture(uAtl, uv);
+  vec3 n = normalize(vNrm); if (!gl_FrontFacing) n = -n;
+  float key = clamp(dot(n, normalize(vec3(-0.35, 0.3, 0.88))), 0.0, 1.0);
+  vec3 alb = c.rgb * (0.58 + 0.5 * key) * vUv.w;
+  R3DSurf s; s.albedo = alb; s.pos = vPos; s.nrm = n; s.side = 1.0; s.mat = 6.0; s.emissive = 0.0; s.fi = 1.0; s.ladd = vec3(0.0); s.kind = 2;
+  oColor = vec4(r3dShade(s), 1.0); oAux = vec4(6.0 / 255.0, 0.0, 0.0, 1.0);
+}`;
+  const LB = { prog: null, failed: false, vao: null, vbo: null, ibo: null, atl: new Map(), tris: 0, err: '' };
+  const TILE = 32, NT = 10, TPM = 96;   // texels a tile, tiles in an atlas, texels a metre
+  const T_ = { trouser: 0, boot: 1, shaft: 2, plate: 3, skirt: 4, belt: 5, brass: 6, torso: 7, sole: 8, trim: 9 };
+  function lbAtlas(look) {
+    const G2 = GL(), body = look.body, feet = look.feet, coat = look.calling.coat;
+    const cv = mkCanvas(TILE * NT, TILE), x = cv.getContext('2d'), id = x.createImageData(TILE * NT, TILE), d = id.data;
+    const trouser = mixc(mulc(coat, 0.95), [96, 88, 76], 0.4);
+    const tiles = [
+      [trouser, 'weave', 0.9, true],
+      [feet.shape === 'greaves' ? feet.col.trim : feet.col, feet.shape === 'hobnails' ? 'studs' : feet.material === 'felt' ? 'none' : 'grain', 0.6, false],
+      [feet.shape === 'greaves' ? feet.col.trim : feet.col, 'grain', 0.6, false],
+      [feet.shape === 'greaves' ? feet.col : G2.ARMOR.a_kettle.col, 'plates', 0.2, false],
+      [body.col || coat, body.pattern === 'quilt' ? 'quilt' : body.material === 'mail' ? 'mail' : body.pattern === 'rivets' ? 'rivets' : body.pattern === 'plates' ? 'plates' : 'weave', 0.9, body.material !== 'mail' && body.material !== 'bellbronze'],
+      [[62, 44, 32], 'grain', 0.4, false],
+      [[190, 160, 96], 'none', 0.2, false],
+      [body.col || coat, body.material === 'mail' ? 'mail' : body.pattern === 'quilt' ? 'quilt' : body.pattern === 'plates' ? 'plates' : 'weave', 0.7, body.material !== 'mail' && body.material !== 'bellbronze'],
+      [[44, 34, 28], 'none', 0.3, false],
+      [(body.col && body.col.trim) || [200, 198, 184], 'none', 0.3, false],
+    ];
+    tiles.forEach(([col, pat, noise, folds], k) => {
+      const Rm = rampOf(col), P = patOf(pat);
+      for (let y = 0; y < TILE; y++) for (let xx = 0; xx < TILE; xx++) {
+        let t = 1.0 * P(xx * 2, y * 2) * (1 + (hash2(xx, y, k) - 0.5) * 0.14 * noise);
+        if (folds) t *= 1 + 0.09 * Math.sin((xx / TILE) * Math.PI * 4 + Math.sin(y / TILE * Math.PI * 2) * 0.8);
+        if (k === T_.belt && (y < 2 || y > TILE - 3)) t *= 0.6;
+        const c = onRamp(Rm, t), q = (y * TILE * NT + k * TILE + xx) * 4;
+        d[q] = c[0]; d[q + 1] = c[1]; d[q + 2] = c[2]; d[q + 3] = 255;
+      }
+    });
+    x.putImageData(id, 0, 0);
+    return cv;
+  }
+  // mesh assembly: rings of points around a centre line; body space (x forward, y right, z up, metres) -> GL by B()
+  function lbBuild(look, legs, F, R) {
+    const c = Engine.cam, M = ((c.z == null ? 0.5 : c.z) * R.ZK - R.groundGL(c.x, c.y)) / 1.6 || (0.5 * R.ZK / 1.6);
+    const fx = Math.cos(c.dir), fy = Math.sin(c.dir), rx = -fy, ry = fx, g0 = R.groundGL(c.x, c.y);
+    const B = (p) => [c.x + (fx * p[0] + rx * p[1]) * M, c.y + (fy * p[0] + ry * p[1]) * M, g0 + p[2] * M];
+    const groundAt = (p) => { const w = B(p); return (R.groundGL(w[0], w[1]) - g0) / M; };   // floor height under a body point, metres
+    const V = [], I = [];
+    const vert = (p, n, u, v, tile, ao) => { const w = B(p); V.push(w[0], w[1], w[2], fx * n[0] + rx * n[1], fy * n[0] + ry * n[1], n[2], u, v, tile, ao == null ? 1 : ao); return V.length / 10 - 1; };
+    const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]], add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]], sc = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+    const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2], len = (a) => Math.hypot(a[0], a[1], a[2]), nrm = (a) => sc(a, 1 / (len(a) || 1));
+    const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+    // rings: [{ c: centre, a: half-width along `side`, b: half-depth, side?: a preferred side axis }], open or capped
+    function tube(rings, tile, seg, opts) {
+      opts = opts || {};
+      const base = V.length / 10, n = rings.length; let vacc = 0;
+      for (let i = 0; i < n; i++) {
+        const r = rings[i], prev = rings[Math.max(0, i - 1)].c, next = rings[Math.min(n - 1, i + 1)].c;
+        const t = nrm(sub(next, prev));
+        const pref = r.side || opts.side || [0, 1, 0];
+        let sd = sub(pref, sc(t, dot(pref, t))); if (len(sd) < 1e-4) sd = [1, 0, 0]; sd = nrm(sd);
+        const fw = cross(sd, t);
+        if (i) vacc += len(sub(r.c, rings[i - 1].c));
+        for (let k = 0; k <= seg; k++) {
+          const th = k / seg * Math.PI * 2, co = Math.cos(th), si = Math.sin(th);
+          const p = add(r.c, add(sc(sd, r.a * co), sc(fw, r.b * si)));
+          const nn = nrm(add(sc(sd, co / Math.max(0.01, r.a)), sc(fw, si / Math.max(0.01, r.b))));
+          const circ = Math.PI * (r.a + r.b);
+          vert(p, nn, k / seg * circ * TPM / TILE, vacc * TPM / TILE, r.tile != null ? r.tile : tile, r.ao);
+        }
+      }
+      for (let i = 0; i < n - 1; i++) for (let k = 0; k < seg; k++) { const a = base + i * (seg + 1) + k, b = a + seg + 1; I.push(a, b, a + 1, a + 1, b, b + 1); }
+      const capAt = (i, tl) => { const r = rings[i], ctr = vert(r.c, nrm(sub(rings[i].c, rings[i === 0 ? 1 : n - 2].c)), 0.5, 0.5, tl != null ? tl : tile, r.ao); const b0 = base + i * (seg + 1); for (let k = 0; k < seg; k++) I.push(ctr, b0 + k, b0 + k + 1); };
+      if (opts.capStart) capAt(0, opts.capTile); if (opts.capEnd) capAt(n - 1, opts.capTile);
+    }
+    const body = look.body, feet = look.feet, shape = body.bare ? 'shirt' : body.shape, lenH = body.len == null ? 0.1 : body.len;
+    // ---- the gait
+    const moving = legs.moving, ph = legs.phase, S = legs.run ? 0.28 : 0.2;
+    const legOf = (side) => {
+      const p = moving ? (((ph / (Math.PI * 2)) + (side > 0 ? 0.5 : 0)) % 1 + 1) % 1 : 0;
+      let fwd, lift = 0, pitch = 0;
+      if (!moving) { fwd = 0.2 + (side > 0 ? 0.03 : -0.02); }
+      else if (p < 0.6) { const k = p / 0.6; fwd = 0.2 + S * (1 - 2 * k); pitch = k > 0.75 ? -(k - 0.75) * 1.2 : 0; }
+      else { const k = (p - 0.6) / 0.4; fwd = 0.2 - S + 2 * S * (k * k * (3 - 2 * k)); lift = Math.sin(k * Math.PI) * (legs.run ? 0.15 : 0.1); pitch = (1 - k) * 0.25 - 0.05; }
+      const sideY = side * (0.11 + (moving ? 0 : 0.01)), toeOut = side * 0.12;
+      const gz = groundAt([fwd, sideY, 0]);
+      return { side, fwd, lift, pitch, sideY, toeOut, gz };
+    };
+    const hipZ = 0.93, hipX = 0.0, L1 = 0.45, L2 = 0.44;
+    const legsD = [-1, 1].map(legOf);
+    // the hips ride a little lower and sway with the step
+    const bobZ = moving ? -0.025 * Math.abs(Math.sin(ph)) : 0;
+    for (const L of legsD) {
+      const H = [hipX, L.side * 0.095, hipZ + bobZ];
+      let A = [L.fwd, L.sideY, Math.max(L.gz, -0.5) + 0.09 + L.lift];
+      const dv = sub(A, H); let dd = len(dv); const maxL = L1 + L2 - 0.002;
+      if (dd > maxL) { A = add(H, sc(nrm(dv), maxL)); dd = maxL; }
+      const u = nrm(sub(A, H)), aa = (L1 * L1 - L2 * L2 + dd * dd) / (2 * dd), hh = Math.sqrt(Math.max(0, L1 * L1 - aa * aa));
+      let kdir = sub([1, 0, 0], sc(u, u[0])); kdir = nrm(kdir);
+      const K = add(add(H, sc(u, aa)), sc(kdir, hh));
+      L.H = H; L.K = K; L.A = A;
+      // thigh and shin (trousers)
+      tube([{ c: H, a: 0.085, b: 0.085 }, { c: add(H, sc(sub(K, H), 0.5)), a: 0.072, b: 0.07 }, { c: K, a: 0.058, b: 0.058 }], T_.trouser, 10);
+      const shin = (k) => add(K, sc(sub(A, K), k));
+      tube([{ c: K, a: 0.058, b: 0.058 }, { c: shin(0.35), a: 0.055, b: 0.06 }, { c: shin(0.8), a: 0.042, b: 0.042 }, { c: A, a: 0.038, b: 0.04 }], T_.trouser, 10);
+      // the boot's shaft over the shin (greaves: a plate and a knee cop)
+      const topK = { shoes: 0.08, softboots: 0.3, hobnails: 0.55, greaves: 0.95 }[feet.shape] || 0.08;
+      if (feet.shape !== 'shoes') tube([{ c: shin(1), a: 0.052, b: 0.056 }, { c: shin(Math.max(0, 1 - topK * 0.5)), a: 0.058, b: 0.064 }, { c: shin(Math.max(0, 1 - topK)), a: 0.066, b: 0.07, ao: 0.85 }], feet.shape === 'greaves' ? T_.plate : T_.shaft, 10);
+      if (feet.shape === 'greaves') tube([{ c: add(K, [0.03, 0, 0.03]), a: 0.05, b: 0.04 }, { c: add(K, [0.06, 0, 0]), a: 0.06, b: 0.045 }, { c: add(K, [0.035, 0, -0.035]), a: 0.05, b: 0.04 }], T_.plate, 8, { capStart: true, capEnd: true });
+      // the boot: a foot frame at the ankle, turned out a little, toe pitched by the gait
+      const yaw = L.toeOut, fdir = [Math.cos(yaw) * Math.cos(L.pitch), Math.sin(yaw) * Math.cos(L.pitch), Math.sin(L.pitch)];
+      const side = nrm(cross([0, 0, 1], fdir)), up = nrm(cross(fdir, side));
+      const FP = (x, z) => add([A[0], A[1], A[2] - 0.09], add(sc(fdir, x), sc(up, z)));
+      const bt = T_.boot, R6 = [[-0.075, 0.03, 0.035, 0.045], [-0.04, 0.042, 0.05, 0.06], [0.03, 0.046, 0.042, 0.05], [0.12, 0.05, 0.034, 0.04], [0.19, 0.04, 0.026, 0.032], [0.225, 0.02, 0.014, 0.025]];
+      tube(R6.map(([x, a, b, z]) => ({ c: FP(x, z), a, b: b, side: side })), bt, 10, { capStart: true, capEnd: true, side });
+      // the sole: a darker slab under the boot, a hair above the floor
+      tube(R6.map(([x, a, b, z]) => ({ c: FP(x, 0.008), a: a + 0.006, b: 0.008, side })), T_.sole, 8, { capStart: true, capEnd: true, side });
+    }
+    // ---- the hips, the hem and the lower chest
+    const sway = moving ? Math.sin(ph) * 0.015 : 0, hemFwd = (legsD[0].fwd + legsD[1].fwd) / 2 * 0.25;
+    if (shape === 'cuirass') {
+      for (let r = 0; r < 3; r++) { const z0 = 1.0 - r * 0.075; tube([{ c: [0.0, sway, z0], a: 0.2 + r * 0.012, b: 0.15 + r * 0.01 }, { c: [0.01 + r * 0.01, sway, z0 - 0.1], a: 0.22 + r * 0.014, b: 0.17 + r * 0.012, ao: 0.8 }], T_.skirt, 16); }
+      tube([{ c: [0, 0, 0.98], a: 0.15, b: 0.12 }, { c: [0, 0, 0.8], a: 0.17, b: 0.13 }], T_.trouser, 12);
+    } else {
+      const hemZ = lerp(0.84, 0.06, clamp(lenH, 0, 1)), flare = clamp(lenH, 0, 1);
+      const rings = [];
+      for (let i = 0; i <= 6; i++) { const k = i / 6, z = lerp(1.02, hemZ, k), a = 0.175 + flare * 0.16 * k * k + 0.02 * k, b = 0.13 + flare * 0.1 * k * k + 0.015 * k; rings.push({ c: [0.0 + hemFwd * k + sway * k, sway * 0.5 * k, z], a, b, ao: i === 6 ? 0.82 : 1 }); }
+      tube(rings, T_.skirt, 16);
+      if (body.pattern === 'stole') for (const sd of [-1, 1]) tube([{ c: [0.13, sd * 0.06, 1.3], a: 0.03, b: 0.008, side: [0, 1, 0] }, { c: [0.14 + hemFwd * 0.5, sd * 0.06, hemZ + 0.1], a: 0.03, b: 0.008, side: [0, 1, 0] }], T_.trim, 4);
+    }
+    if (shape !== 'robe') {
+      tube([{ c: [0, 0, 1.0], a: 0.185, b: 0.14 }, { c: [0, 0, 1.06], a: 0.185, b: 0.14 }], T_.belt, 16);
+      // the buckle at the front
+      const bx = 0.142, w = 0.035, h = 0.03, n0 = [1, 0, 0];
+      const a = vert([bx, -w, 1.03 - h], n0, 0, 0, T_.brass), b = vert([bx, w, 1.03 - h], n0, 1, 0, T_.brass), cc = vert([bx, w, 1.03 + h], n0, 1, 1, T_.brass), dd = vert([bx, -w, 1.03 + h], n0, 0, 1, T_.brass);
+      I.push(a, b, cc, a, cc, dd);
+    }
+    // the lower chest, rising behind the eye; its top is the chest you see looking straight down
+    tube([{ c: [-0.04, 0, 1.05], a: 0.18, b: 0.135 }, { c: [-0.07, 0, 1.22], a: 0.19, b: 0.13 }, { c: [-0.1, 0, 1.34], a: 0.2, b: 0.12, ao: 0.9 }], T_.torso, 16, { capEnd: true });
+    return { V: new Float32Array(V), I: new Uint32Array(I), feet: legsD.map((L) => B([L.A[0] + 0.07, L.A[1], L.gz + 0.003])) , M };
+  }
+  function drawLowerBody(g, F, R, legs) {
+    if (LB.failed) return false;
+    if (!LB.prog) {
+      try { LB.prog = R.program(LBV, LBF, { chunks: ['common', 'shade'] }); if (!LB.prog || !LB.prog.p) throw new Error('no program'); }
+      catch (e) { LB.failed = true; LB.err = String(e && e.message || e).slice(0, 200); warnOnce('lower body program', e); return false; }
+      LB.vao = g.createVertexArray(); LB.vbo = g.createBuffer(); LB.ibo = g.createBuffer();
+      g.bindVertexArray(LB.vao); g.bindBuffer(g.ARRAY_BUFFER, LB.vbo); g.bindBuffer(g.ELEMENT_ARRAY_BUFFER, LB.ibo);
+      g.enableVertexAttribArray(0); g.vertexAttribPointer(0, 3, g.FLOAT, false, 40, 0);
+      g.enableVertexAttribArray(1); g.vertexAttribPointer(1, 3, g.FLOAT, false, 40, 12);
+      g.enableVertexAttribArray(2); g.vertexAttribPointer(2, 4, g.FLOAT, false, 40, 24);
+      g.bindVertexArray(null);
+    }
+    const look = legs.look, m = lbBuild(look, legs, F, R);
+    let at = LB.atl.get(look.key);
+    if (!at) {
+      const cv = lbAtlas(look); at = g.createTexture(); g.bindTexture(g.TEXTURE_2D, at);
+      g.pixelStorei(g.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false); g.pixelStorei(g.UNPACK_FLIP_Y_WEBGL, false);
+      g.texImage2D(g.TEXTURE_2D, 0, g.RGBA, g.RGBA, g.UNSIGNED_BYTE, cv);
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.NEAREST); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.NEAREST);
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE);
+      LB.atl.set(look.key, at);
+      if (LB.atl.size > 8) { const k0 = LB.atl.keys().next().value; g.deleteTexture(LB.atl.get(k0)); LB.atl.delete(k0); }
+    }
+    // contact shadows first (the existing blob, blended on the floor)
+    R.bindScene(g, F); R.use(R3B.prog); g.uniform1i(R3B.prog.u.uImg, 6); g.uniform1i(R3B.prog.u.uEm, 7); g.bindVertexArray(R3B.vao);
+    g.enable(g.DEPTH_TEST); g.depthFunc(g.LEQUAL); g.depthMask(false); g.enable(g.BLEND); g.blendFunc(g.SRC_ALPHA, g.ONE_MINUS_SRC_ALPHA);
+    const c = Engine.cam, fx = Math.cos(c.dir), fy = Math.sin(c.dir), rx = -fy, ry = fx, sh = footShadow(), hs = 0.16 * m.M, hw = 0.07 * m.M;
+    for (const p of m.feet) quad(g, [[p[0] + fx * hs - rx * hw, p[1] + fy * hs - ry * hw, p[2]], [p[0] + fx * hs + rx * hw, p[1] + fy * hs + ry * hw, p[2]], [p[0] - fx * hs + rx * hw, p[1] - fy * hs + ry * hw, p[2]], [p[0] - fx * hs - rx * hw, p[1] - fy * hs - ry * hw, p[2]]], 2, sh);
+    g.disable(g.BLEND); g.depthMask(true);
+    // the body
+    R.use(LB.prog);
+    g.activeTexture(g.TEXTURE6); g.bindTexture(g.TEXTURE_2D, at); g.uniform1i(LB.prog.u.uAtl, 6); g.uniform1f(LB.prog.u.uTiles, NT);
+    g.bindVertexArray(LB.vao);
+    g.bindBuffer(g.ARRAY_BUFFER, LB.vbo); g.bufferData(g.ARRAY_BUFFER, m.V, g.STREAM_DRAW);
+    g.bindBuffer(g.ELEMENT_ARRAY_BUFFER, LB.ibo); g.bufferData(g.ELEMENT_ARRAY_BUFFER, m.I, g.STREAM_DRAW);
+    g.disable(g.CULL_FACE); g.enable(g.DEPTH_TEST); g.depthFunc(g.LEQUAL); g.depthMask(true);
+    g.drawElements(g.TRIANGLES, m.I.length, g.UNSIGNED_INT, 0);
+    g.bindVertexArray(null);
+    LB.tris = m.I.length / 3;
+    return true;
+  }
+
   function wireR3D() {
     if (typeof R3D !== 'object' || !R3D || typeof R3D.addPass !== 'function') return false;
     try { R3D.addPass(bodyPass); R3D.addPass(feelPass); return true; } catch (e) { warnOnce('r3d addPass', e); return false; }
@@ -1170,6 +1364,6 @@ void main() {
 
   function clearCaches() { headCache.clear(); buildCache.clear(); shieldCache.clear(); armCache.clear(); legCache.clear(); }
   return { set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
-    R3B, FX3, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
+    R3B, FX3, LB, lbBuild, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;
