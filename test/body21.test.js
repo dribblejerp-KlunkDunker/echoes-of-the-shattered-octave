@@ -272,13 +272,13 @@ const HELPERS = () => {
         out.hudAlpha = x.getImageData(sx, sy, 1, 1).data[3];
         // the lower body is a mesh: every boot pair and body armour builds a different one, the gait moves it, the soles
         // stand on the floor (never under it)
-        const hashV = (m) => { let h = 2166136261; for (let i = 0; i < m.V.length; i += 3) { h ^= Math.round(m.V[i] * 1e4); h = Math.imul(h, 16777619); } return (h >>> 0) + ':' + m.I.length; };
+        const hashV = (m) => { let h = 2166136261; for (let i = 0; i < m.V.length; i++) { h ^= Math.round(m.V[i] * 1e4); h = Math.imul(h, 16777619); } return (h >>> 0) + ":" + m.I.length; };
         const p = G.player, keep = Object.assign({}, p.armor), F3 = R3D.frame, mesh = {};
         for (const f of [null, 'a_softboots', 'a_hobnails', 'a_greaves']) { p.armor = { body: 'a_jerkin' }; if (f) p.armor.feet = f; mesh['feet:' + f] = hashV(BODY21.lbBuild(GEARLOOK21.of(p), { moving: false, phase: 0 }, F3, R3D)); }
         for (const b of [null, 'a_synodrobe', 'a_gambeson', 'a_jerkin', 'a_hushcoat', 'a_brig', 'a_chain', 'a_plate']) { p.armor = { feet: 'a_hobnails' }; if (b) p.armor.body = b; mesh['body:' + b] = hashV(BODY21.lbBuild(GEARLOOK21.of(p), { moving: false, phase: 0 }, F3, R3D)); }
         p.armor = { feet: 'a_hobnails', body: 'a_jerkin' }; const L = GEARLOOK21.of(p);
         const st = BODY21.lbBuild(L, { moving: false, phase: 0 }, F3, R3D), w1 = BODY21.lbBuild(L, { moving: true, phase: 1 }, F3, R3D), w2 = BODY21.lbBuild(L, { moving: true, phase: 3.5 }, F3, R3D);
-        out.meshUniq = new Set(Object.values(mesh)).size; out.meshN = Object.keys(mesh).length; out.gait = new Set([hashV(st), hashV(w1), hashV(w2)]).size;
+        out.meshUniq = new Set(Object.values(mesh)).size; out.meshN = Object.keys(mesh).length; out.mesh = mesh; out.gait = new Set([hashV(st), hashV(w1), hashV(w2)]).size;
         let zmin = 1e9; for (let i = 2; i < st.V.length; i += 10) zmin = Math.min(zmin, st.V[i]);
         out.soleGap = zmin - R3D.groundGL(Engine.cam.x, Engine.cam.y); out.tris = BODY21.LB.tris; p.armor = keep;
         // fp-feel's deafness and Hush under R3D: pass 'feel' (order 89) drains the colour like the CPU hook
@@ -298,7 +298,7 @@ const HELPERS = () => {
       if (!r.shown) { console.log('  (R3D not available in this browser: pass registration only)'); return; }
       assert.ok(r.active && r.rec, 'R3D frames recorded'); assert.ok(r.drawn >= 3, 'the body pass drew'); assert.ok(r.quads >= 3 * 4, 'arm, sleeve, shield, off arm, legs as quads'); assert.ok(r.legs >= 3, 'legs in the world');
       assert.equal(r.hudAlpha, 0, 'the shield is not on the HUD canvas under R3D'); assert.equal(r.err, '');
-      assert.equal(r.meshUniq, r.meshN, 'every boot pair and body armour builds its own lower body'); assert.equal(r.gait, 3, 'the gait moves the legs');
+      assert.equal(r.meshUniq, r.meshN, 'every boot pair and body armour builds its own lower body: ' + JSON.stringify(r.mesh)); assert.equal(r.gait, 3, 'the gait moves the legs');
       assert.ok(r.soleGap >= -1e-4 && r.soleGap < 0.01, 'the soles stand on the floor: ' + r.soleGap); assert.ok(r.tris > 200, 'a real mesh: ' + r.tris + ' triangles');
       assert.equal(r.feelOrder, 89); assert.ok(r.feel >= 1, 'the feel pass ran'); assert.ok(r.satAfter < r.satBefore * 0.8, 'the Hush drains the colour under R3D: ' + r.satBefore + ' -> ' + r.satAfter);
       assert.equal(r.offRec, false); assert.ok(r.offShield >= 1, 'raycaster overlay is back');
