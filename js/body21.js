@@ -1245,8 +1245,11 @@ void main() {
     const fx = Math.cos(c.dir), fy = Math.sin(c.dir), rx = -fy, ry = fx, g0 = R.groundGL(c.x, c.y);
     // the view is a narrow 34 degrees tall, so the body leans a little forward of a true stance as the look goes down
     // (most at about 60 degrees, where a wide human eye would already see the boots), and settles back looking straight down
-    const dn = -(F.pitchA || 0) * 180 / Math.PI, lean = 0.03 + 0.2 * Math.exp(-Math.pow((dn - 62) / 13, 2));
-    const B = (p) => [c.x + (fx * (p[0] + lean) + rx * p[1]) * M, c.y + (fy * (p[0] + lean) + ry * p[1]) * M, g0 + p[2] * M];
+    // (most at about 60 degrees, where a wide human eye would already see the boots): the feet carry the full lean, the
+    // hips almost none, the chest none, so it reads as a stance with the feet a little ahead, never a body sliding about
+    const dn = -(F.pitchA || 0) * 180 / Math.PI, lean = 0.02 + 0.2 * Math.exp(-Math.pow((dn - 62) / 13, 2));
+    const L_ = (p) => p[0] + lean * clamp(1 - p[2] / 1.0, 0, 1);
+    const B = (p) => { const x = L_(p); return [c.x + (fx * x + rx * p[1]) * M, c.y + (fy * x + ry * p[1]) * M, g0 + p[2] * M]; };
     const groundAt = (p) => { const w = B(p); return (R.groundGL(w[0], w[1]) - g0) / M; };   // floor height under a body point, metres
     const V = [], I = [];
     const vert = (p, n, u, v, tile, ao) => { const w = B(p); V.push(w[0], w[1], w[2], fx * n[0] + rx * n[1], fy * n[0] + ry * n[1], n[2], u, v, tile, ao == null ? 1 : ao); return V.length / 10 - 1; };
@@ -1327,18 +1330,18 @@ void main() {
     } else {
       const hemZ = lerp(0.84, 0.06, clamp(lenH, 0, 1)), flare = clamp(lenH, 0, 1);
       const rings = [];
-      for (let i = 0; i <= 6; i++) { const k = i / 6, z = lerp(1.02, hemZ, k), a = 0.165 + flare * 0.12 * k * k + 0.015 * k, b = 0.115 + flare * 0.08 * k * k + 0.012 * k; rings.push({ c: [-0.05 + hemFwd * k + sway * k, sway * 0.5 * k, z], a, b, ao: i === 6 ? 0.82 : 1 }); }
+      for (let i = 0; i <= 6; i++) { const k = i / 6, z = lerp(1.02, hemZ, k), a = 0.165 + flare * 0.12 * k * k + 0.015 * k, b = 0.115 + flare * 0.08 * k * k + 0.012 * k; rings.push({ c: [-0.08 + hemFwd * k + sway * k, sway * 0.5 * k, z], a, b, ao: i === 6 ? 0.82 : 1 }); }
       tube(rings, T_.skirt, 16);
     }
     if (shape !== 'robe') {
-      tube([{ c: [-0.05, 0, 1.0], a: 0.175, b: 0.125 }, { c: [-0.05, 0, 1.06], a: 0.175, b: 0.125 }], T_.belt, 16);
+      tube([{ c: [-0.08, 0, 1.0], a: 0.175, b: 0.125 }, { c: [-0.08, 0, 1.06], a: 0.175, b: 0.125 }], T_.belt, 16);
       // the buckle at the front
-      const bx = 0.077, w = 0.035, h = 0.03, n0 = [1, 0, 0];
+      const bx = 0.047, w = 0.035, h = 0.03, n0 = [1, 0, 0];
       const a = vert([bx, -w, 1.03 - h], n0, 0, 0, T_.brass), b = vert([bx, w, 1.03 - h], n0, 1, 0, T_.brass), cc = vert([bx, w, 1.03 + h], n0, 1, 1, T_.brass), dd = vert([bx, -w, 1.03 + h], n0, 0, 1, T_.brass);
       I.push(a, b, cc, a, cc, dd);
     }
     // the lower chest, rising behind the eye; its top is the chest you see looking straight down
-    tube([{ c: [-0.07, 0, 1.05], a: 0.17, b: 0.12 }, { c: [-0.11, 0, 1.2], a: 0.18, b: 0.115 }, { c: [-0.15, 0, 1.3], a: 0.19, b: 0.11, ao: 0.9 }], T_.torso, 16, { capEnd: true });
+    tube([{ c: [-0.1, 0, 1.05], a: 0.17, b: 0.12 }, { c: [-0.15, 0, 1.18], a: 0.18, b: 0.11, ao: 0.85 }], T_.torso, 16);
     return { V: new Float32Array(V), I: new Uint32Array(I), feet: legsD.map((L) => B([L.A[0] + 0.07, L.A[1], L.gz + 0.003])) , M };
   }
   function drawLowerBody(g, F, R, legs) {
