@@ -275,7 +275,7 @@ const HELPERS = () => {
         const hashV = (m) => { let h = 2166136261; for (let i = 0; i < m.V.length; i++) { h ^= Math.round(m.V[i] * 1e4); h = Math.imul(h, 16777619); } return (h >>> 0) + ":" + m.I.length; };
         const p = G.player, keep = Object.assign({}, p.armor), F3 = R3D.frame, mesh = {};
         for (const f of [null, 'a_softboots', 'a_hobnails', 'a_greaves']) { p.armor = { body: 'a_gambeson' }; if (f) p.armor.feet = f; mesh['feet:' + f] = hashV(BODY21.lbBuild(GEARLOOK21.of(p), { moving: false, phase: 0 }, F3, R3D)); }
-        for (const b of [null, 'a_synodrobe', 'a_gambeson', 'a_jerkin', 'a_hushcoat', 'a_brig', 'a_chain', 'a_plate']) { p.armor = { feet: 'a_hobnails' }; if (b) p.armor.body = b; mesh['body:' + b] = hashV(BODY21.lbBuild(GEARLOOK21.of(p), { moving: false, phase: 0 }, F3, R3D)); }
+        for (const b of [null, 'a_synodrobe', 'a_jerkin', 'a_hushcoat', 'a_brig', 'a_chain', 'a_plate']) {   // (gambeson + hobnails is the feet loop's) p.armor = { feet: 'a_hobnails' }; if (b) p.armor.body = b; mesh['body:' + b] = hashV(BODY21.lbBuild(GEARLOOK21.of(p), { moving: false, phase: 0 }, F3, R3D)); }
         p.armor = { feet: 'a_hobnails', body: 'a_jerkin' }; const L = GEARLOOK21.of(p);
         const st = BODY21.lbBuild(L, { moving: false, phase: 0 }, F3, R3D), w1 = BODY21.lbBuild(L, { moving: true, phase: 1 }, F3, R3D), w2 = BODY21.lbBuild(L, { moving: true, phase: 3.5 }, F3, R3D);
         out.meshUniq = new Set(Object.values(mesh)).size; out.meshN = Object.keys(mesh).length; out.mesh = mesh; out.gait = new Set([hashV(st), hashV(w1), hashV(w2)]).size;
