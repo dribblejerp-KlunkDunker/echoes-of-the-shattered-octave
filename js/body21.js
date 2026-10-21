@@ -20,6 +20,8 @@
 //    * LEGS AND BOOTS when you look down: boots per pair (shoes, felt soft boots, hobnails with their studs, iron greaves
 //      over riding boots), trousers in the calling's colours, and the body armour's hem over them (the robe to the ankles,
 //      the Hush-cloth coat to the calf, mail to the knee, the cuirass's tassets, a jerkin's skirt). They step with your walk.
+//    * WHAT IS ON YOUR HEAD when you look up: the kettle helm's riveted brim, the bell-helm's rim and verdigris lip
+//      over the eye slit, the Hush-cloth hood's edges, the leather cap's stitched seam come down across the top of sight.
 //    * LIGHT ON THE BODY: arms, shield and legs take the scene's light at your feet (night outdoors, lamps and hearths
 //      close by), never darker than readable; glass stays bright (it gives its own light).
 //
@@ -640,6 +642,44 @@ const BODY21 = (() => {
     return a;
   }
 
+  // ================================================================ 8b. WHAT YOU WEAR ON YOUR HEAD (seen when you look up)
+  // The brim of a kettle helm, the bell-helm's rim over the eye slit, the hood's edge, the leather cap's seam: each comes
+  // down from the top of the view as the look goes up, the way a brim crosses the top of your sight. 640 x 90 (2x).
+  const headCache = new Map();
+  function headArt(look) {
+    const hd = look.head; if (!hd || hd.bare) return null;
+    const k = hd.id + '|' + look.key; let a = headCache.get(k); if (a) return a;
+    const W2 = 640, H2 = 90, P = pix(W2, H2), R = rampOf(hd.col), cx = 320;
+    if (hd.shape === 'kettle') {
+      const brim = part(P, { R, sheen: 1, round: 10, z: 1, pat: PATTERN.none, grad: (x, y) => 0.7 + y / 90 * 0.5 });
+      const pts = []; for (let i = 0; i <= 32; i++) { const x = i / 32 * W2; pts.push([x, 26 + 34 * Math.sin(i / 32 * Math.PI)]); } pts.push([W2, 0], [0, 0]);
+      poly(P, pts, brim);
+      const r = render(P); const x = r.canvas.getContext('2d'); x.fillStyle = 'rgb(214,220,224)';
+      for (let i = 2; i < 31; i += 4) { const px = i / 32 * W2, py = 26 + 34 * Math.sin(i / 32 * Math.PI) - 7; x.fillRect(px - 1, py - 1, 3, 3); }
+      a = { canvas: r.canvas };
+    } else if (hd.shape === 'bellhelm') {
+      const rim = part(P, { R, sheen: 1.1, round: 8, z: 1, grad: (x, y) => 0.65 + y / 90 * 0.55 });
+      const lip = part(P, { R: rampOf(hd.col.trim), round: 3, z: 2, sheen: 0.6 });
+      const pts = []; for (let i = 0; i <= 32; i++) { const x = i / 32 * W2; pts.push([x, 40 + 22 * Math.pow(Math.abs(i / 16 - 1), 2.2) * -1 + 22]); } pts.push([W2, 0], [0, 0]);
+      poly(P, pts, rim);
+      for (let i = 0; i < 32; i++) { const x0 = i / 32 * W2, x1 = (i + 1) / 32 * W2, y0 = 62 - 22 * Math.pow(Math.abs(i / 16 - 1), 2.2), y1 = 62 - 22 * Math.pow(Math.abs((i + 1) / 16 - 1), 2.2); cap(P, x0, y0 - 3, x1, y1 - 3, 2.6, 2.6, lip); }
+      a = { canvas: render(P).canvas };
+    } else if (hd.shape === 'hood') {
+      const wool = part(P, { R, pat: PATTERN.weave, round: 14, z: 1, grad: (x, y) => 0.6 + y / 90 * 0.5 });
+      for (const side of [-1, 1]) { const pts = [[cx + side * 320, 0], [cx + side * 320, 90], [cx + side * 270, 60], [cx + side * 200, 28], [cx + side * 120, 10], [cx, 4], [cx, 0]]; poly(P, pts, wool); }
+      a = { canvas: render(P).canvas };
+    } else {   // cap
+      const leather = part(P, { R, pat: PATTERN.grain, round: 6, z: 1, sheen: 0.4, grad: (x, y) => 0.7 + y / 90 * 0.4 });
+      const pts = []; for (let i = 0; i <= 32; i++) { const x = i / 32 * W2; pts.push([x, 10 + 14 * Math.sin(i / 32 * Math.PI)]); } pts.push([W2, 0], [0, 0]);
+      poly(P, pts, leather);
+      const r = render(P); const x = r.canvas.getContext('2d'); x.fillStyle = 'rgba(40,24,14,0.9)';
+      for (let i = 1; i < 64; i += 2) { const px = i / 64 * W2; x.fillRect(px, 6 + 14 * Math.sin(i / 64 * Math.PI), 4, 1); }
+      a = { canvas: r.canvas };
+    }
+    headCache.set(k, a); if (headCache.size > 8) headCache.delete(headCache.keys().next().value);
+    return a;
+  }
+
   // ================================================================ 9. LIGHT ON THE BODY
   // The engine lights a sprite beside you with the map's light (outdoors: the hour and the weather, F.light) plus the
   // lamps around it; the body takes the same, read from the last frame's post hook and Engine.lightAt, smoothed, and
@@ -729,6 +769,20 @@ const BODY21 = (() => {
     stats.drawn.feet++;
     return true;
   }
+  function headPose() {
+    const pm = pitchMax(), pitch = Engine.cam.pitch || 0;
+    const k = clamp((pitch - 0.25 * Math.min(pm, 40)) / (0.75 * Math.min(pm, 40)), 0, 1); if (k <= 0) return null;
+    return { k: k * k * (3 - 2 * k) };
+  }
+  function drawHead(ctx, look) {
+    if (hiddenBody() || !look.head || look.head.bare) return false;
+    const p = headPose(); if (!p) return false;
+    const a = headArt(look); if (!a) return false;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
+    ctx.drawImage(lit(a.canvas), 0, -45 + p.k * 45 + (Engine.cam.bob || 0) * 0.6, VWv(), 45);
+    ctx.restore(); stats.drawn.head = (stats.drawn.head || 0) + 1;
+    return true;
+  }
   function shieldPose(art) {
     const kite = art.kind === 'kite';
     const rest = kite ? [48, 124, 0.5, -0.12] : [44, 126, 0.5, -0.1];
@@ -816,6 +870,7 @@ const BODY21 = (() => {
       look = GL().of(G.player);
       frameState();
       drawLegs(ctx, look);
+      drawHead(ctx, look);
       const vw = visibleWeapons(look);
       for (const [img, wid, side] of vw.list) {
         if (!Engine.images[img] || swaps.some((s) => s[0] === img)) continue;
@@ -871,8 +926,8 @@ const BODY21 = (() => {
     renderAccessibilityMenu = function () { const r = _acc.apply(this, arguments); try { appendRows(); } catch (e) { warnOnce('rows', e); } return r; };
   }
 
-  function clearCaches() { buildCache.clear(); shieldCache.clear(); armCache.clear(); legCache.clear(); }
-  return { set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, shieldPose, armSpec, clearCaches, hemY,
+  function clearCaches() { headCache.clear(); buildCache.clear(); shieldCache.clear(); armCache.clear(); legCache.clear(); }
+  return { set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
     look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;
