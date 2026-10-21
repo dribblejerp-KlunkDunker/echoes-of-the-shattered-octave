@@ -44,6 +44,9 @@
 //    SPRITES21.drawOpaque(view)        the alpha-tested billboards (depth write on)      — R3D pass 'sprites' (30)
 //    SPRITES21.drawDecals(view)        shadows, marks, footprints (depth test, no write) — R3D pass 'sprites' (30)
 //    SPRITES21.drawTranslucent(view)   particles, ghost, halos (depth test, no write)    — R3D pass 'transparent' (50)
+//    SPRITES21.drawCasters(cview)      for LIGHT's shadow maps: this frame's billboards, depth only, each card turned
+//                                      square to the light. cview = { vp (light view-proj, map space, z game units),
+//                                      dir [dx, dy] (the light's horizontal direction) }
 //    view = R3D's F.sview: { vp: Float32Array(16) column-major, MAP SPACE (x, y cells, z game units, z up) -> clip;
 //             eye [x, y, z]; dir (yaw); pitch (radians); fogDist; outdoor; fog [r, g, b] 0..1 (the raycaster's tint
 //             target per unit of light); light; ambient; flick; lights (the engine's point lights with wall masks); px
@@ -327,6 +330,23 @@ void main() {
   if (a <= 0.002) discard;
   oColor = vec4(v_c.rgb * a, a); oAux = vec4(0.0);
 }`;
+  // shadow casters: the same billboards seen from a light (LIGHT's shadow maps). Each card turns to face the light, so a
+  // figure throws its whole silhouette whatever the camera does; depth only, alpha-tested at the raycaster's threshold
+  const SC_VS = `
+layout(location=0) in vec2 a_c;
+layout(location=1) in vec4 i_p; layout(location=2) in vec4 i_s; layout(location=3) in vec4 i_uv; layout(location=4) in vec4 i_k;
+uniform mat4 u_vp; uniform vec2 u_right;
+out vec2 v_uv; out float v_a;
+void main() {
+  float lat = (a_c.x - i_s.y) * i_p.w + i_s.z * i_s.x * a_c.y;
+  vec3 P = vec3(i_p.xy + u_right * lat, i_p.z + i_s.x * a_c.y);
+  gl_Position = u_vp * vec4(P, 1.0);
+  v_uv = vec2(mix(i_uv.x, i_uv.z, a_c.x), mix(i_uv.w, i_uv.y, a_c.y)); v_a = i_k.z;
+}`;
+  const SC_FS = `
+uniform sampler2D u_atlas;
+in vec2 v_uv; in float v_a;
+void main() { if (texture(u_atlas, v_uv).a < 0.25 || v_a < 0.5) discard; }`;
   // the parity view: CPU frame plus its depth, converted to this projection
   const DV_VS = `#version 300 es
 layout(location=0) in vec2 a_c; out vec2 v_t;
@@ -393,6 +413,7 @@ void main() {
       bbProgram();
       P.dc = compile(DC_VS, DC_FS, 'decal');
       P.pt = compile(PT_VS, PT_FS, 'particle');
+      P.sc = compile(SC_VS, SC_FS, 'casters');
       buildMasks();
       return true;
     } catch (e) { warnOnce('attach', e); gl = null; P.dc = null; return false; }
@@ -1017,6 +1038,30 @@ void main() {
       gl.uniform1f(pr.u.u_outdoor, view.outdoor ? 1 : 0);
     } else if (pr.u.u_zk) gl.uniform1f(pr.u.u_zk, view.ZK || view.spriteAspect || 1);
   }
+  // LIGHT's shadow pass: draw this frame's billboards depth-only into whatever framebuffer is bound.
+  // cview = { vp: light view-projection, map space (z game units) -> clip; dir: [dx, dy] the light's horizontal direction
+  // (any length; the cards turn square to it) }. Only things this frame drew are casters (off-screen bodies cast none).
+  function drawCasters(cview) {
+    if (!gl || !nBB || !P.sc || !cview || !cview.vp) return;
+    try {
+      const d = cview.dir || [1, 0], L = Math.hypot(d[0], d[1]) || 1;
+      gl.useProgram(P.sc.p);
+      gl.uniformMatrix4fv(P.sc.u.u_vp, false, cview.vp);
+      gl.uniform2f(P.sc.u.u_right, -d[1] / L, d[0] / L);
+      gl.uniform1i(P.sc.u.u_atlas, U_ATLAS);
+      gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.depthMask(true); gl.disable(gl.BLEND); gl.disable(gl.CULL_FACE);
+      gl.bindVertexArray(B.bb.vao);
+      upload1(B.bb, BBS, nBB * BB_FLOATS);
+      gl.activeTexture(gl.TEXTURE0 + U_ATLAS);
+      for (const r of runs) {
+        gl.bindTexture(gl.TEXTURE_2D, r.pg.tex);
+        for (let i = 0; i < 5; i++) gl.vertexAttribPointer(1 + i, 4, gl.FLOAT, false, BB_FLOATS * 4, r.start * BB_FLOATS * 4 + i * 16);
+        gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, r.count); st.calls++;
+      }
+      for (let i = 0; i < 5; i++) gl.vertexAttribPointer(1 + i, 4, gl.FLOAT, false, BB_FLOATS * 4, i * 16);
+    } catch (e) { warnOnce('drawCasters', e); }
+    stdState();
+  }
   function drawOpaque(view) {
     if (!gl || !nBB) return;
     const t0 = now();
@@ -1203,7 +1248,7 @@ void main() {
   })();
 
   return {
-    attach, detach, frame, drawOpaque, drawDecals, drawTranslucent, dev, stats: st,
+    attach, detach, frame, drawOpaque, drawDecals, drawTranslucent, drawCasters, dev, stats: st,
     entryFor: (sp) => (gl ? entryFor(sp) : null), project: (x, y, z) => (V && project(x, y, z) > 0 ? { x: PJ[0], y: PJ[1], w: PJ[2] } : null),
     get pages() { return pages.length; }, get count() { return { billboards: nBB, particles: nPT + nPTadd, decalVerts: nDC, figures: figures.length, runs: runs.length }; },
     get gl() { return gl; },

@@ -148,13 +148,21 @@ async function boot(browser, opts) {
       GFX.groundShadows = false; __fr(); r.shadowsOff = SPRITES21.stats.decals; GFX.groundShadows = true;
       LOOK10.marks.add('blood', Engine.cam.x + Math.cos(Engine.cam.dir) * 2, Engine.cam.y + Math.sin(Engine.cam.dir) * 2, 0.3); __fr(); r.marksOn = SPRITES21.stats.decals;
       GFX.fightMarks = false; __fr(); r.marksOff = SPRITES21.stats.decals; GFX.fightMarks = true;
-      // a ghost replay figure: drawn translucent when one is playing
-      r.ghost = typeof GHOST18 === 'object';
+      // LIGHT's shadow maps: the billboards draw depth-only into a depth-only framebuffer without a GL error
+      __fr();
+      const g = SPRITES21.gl; g.getError();
+      const fbo = g.createFramebuffer(), dt = g.createTexture(); g.bindTexture(g.TEXTURE_2D, dt); g.texStorage2D(g.TEXTURE_2D, 1, g.DEPTH_COMPONENT24, 256, 256);
+      g.bindFramebuffer(g.FRAMEBUFFER, fbo); g.framebufferTexture2D(g.FRAMEBUFFER, g.DEPTH_ATTACHMENT, g.TEXTURE_2D, dt, 0); g.drawBuffers([g.NONE]); g.readBuffer(g.NONE);
+      g.viewport(0, 0, 256, 256); g.clear(g.DEPTH_BUFFER_BIT);
+      const c0 = SPRITES21.stats.calls; SPRITES21.drawCasters({ vp: SPRITES21.dev.view.vp, dir: [0.6, 0.8] });
+      r.casterCalls = SPRITES21.stats.calls - c0; r.casterErr = g.getError(); r.fboOk = g.checkFramebufferStatus(g.FRAMEBUFFER) === g.FRAMEBUFFER_COMPLETE;
+      g.bindFramebuffer(g.FRAMEBUFFER, null); g.deleteFramebuffer(fbo); g.deleteTexture(dt);
       return r;
     });
     assert.ok(sw.shadowsOn > sw.shadowsOff, 'shadows switch');
     assert.ok(sw.marksOn > sw.marksOff, 'marks switch');
-    console.log(`PASS switches: contact shadows (${sw.shadowsOn} decals on, ${sw.shadowsOff} off) and fight marks follow GFX.groundShadows / GFX.fightMarks`);
+    assert.ok(sw.fboOk && sw.casterCalls >= 1 && sw.casterErr === 0, 'shadow casters: ' + JSON.stringify(sw));
+    console.log(`PASS switches: contact shadows (${sw.shadowsOn} decals on, ${sw.shadowsOff} off) and fight marks follow GFX.groundShadows / GFX.fightMarks; shadow casters draw depth-only for LIGHT (${sw.casterCalls} call(s), no GL error)`);
 
     // ---------------------------------------------------------------- gameplay untouched
     // the module's whole effect on the game is e._screen (which the raycaster writes too): entity state, the player and
