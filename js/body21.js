@@ -1323,14 +1323,14 @@ void main() {
       tube(R6.map(([x, a, b, z]) => ({ c: FP(x, 0.008), a: a + 0.006, b: 0.008, side })), T_.sole, 8, { capStart: true, capEnd: true, side });
     }
     // ---- the hips, the hem and the lower chest
-    const sway = moving ? Math.sin(ph) * 0.015 : 0, hemFwd = (legsD[0].fwd + legsD[1].fwd) / 2 * (0.25 + 0.5 * clamp(lenH, 0, 1));
+    const sway = moving ? Math.sin(ph) * 0.015 : 0, hemFwd = (legsD[0].fwd + legsD[1].fwd) / 2 * (0.25 + 0.85 * clamp(lenH, 0, 1));
     if (shape === 'cuirass') {
       for (let r = 0; r < 3; r++) { const z0 = 1.0 - r * 0.075; tube([{ c: [-0.05, sway, z0], a: 0.19 + r * 0.012, b: 0.13 + r * 0.01 }, { c: [-0.04 + r * 0.01, sway, z0 - 0.1], a: 0.21 + r * 0.014, b: 0.15 + r * 0.012, ao: 0.8 }], T_.skirt, 16); }
       tube([{ c: [-0.05, 0, 0.98], a: 0.15, b: 0.11 }, { c: [-0.05, 0, 0.8], a: 0.16, b: 0.12 }], T_.trouser, 12);
     } else {
       const hemZ = lerp(0.84, 0.06, clamp(lenH, 0, 1)), flare = clamp(lenH, 0, 1);
       const rings = [];
-      for (let i = 0; i <= 6; i++) { const k = i / 6, z = lerp(1.02, hemZ, k), a = 0.165 + flare * 0.12 * k * k + 0.015 * k, b = 0.115 + flare * 0.08 * k * k + 0.012 * k; rings.push({ c: [-0.08 + hemFwd * k + sway * k, sway * 0.5 * k, z], a, b, ao: i === 6 ? 0.82 : 1 }); }
+      for (let i = 0; i <= 6; i++) { const k = i / 6, z = lerp(1.02, hemZ, k), a = 0.165 + flare * 0.15 * k * k + 0.015 * k, b = 0.115 + flare * 0.17 * k * k + 0.012 * k; rings.push({ c: [-0.08 + hemFwd * k + sway * k, sway * 0.5 * k, z], a, b, ao: i === 6 ? 0.82 : 1 }); }
       tube(rings, T_.skirt, 16);
     }
     if (shape !== 'robe') {
