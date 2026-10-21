@@ -23,6 +23,7 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
 async function bootPage(browser, opts) {
   opts = opts || {};
   const page = await browser.newPage({ viewport: opts.viewport || { width: 1280, height: 800 } });
+  page.setDefaultTimeout(300000);   // a loaded build machine can take minutes to boot a page
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if ((m.type() === 'error' && !(opts.block && /ERR_FAILED|gpu18/.test(m.text()))) || (m.type() === 'warning' && /gpu18|render hook/.test(m.text()))) errors.push('console: ' + m.text()); });
@@ -65,6 +66,9 @@ const HELPERS = () => {
   S.stage = (sc) => S.pin(() => {
     const [map, x, y, dir, tod, flags] = sc;
     G.state = 'paused'; for (const k of Object.keys(G.flags)) delete G.flags[k]; Object.assign(G.flags, flags || {});
+    // the day and hour are set BEFORE the map loads as well: what a map puts out when it loads (js/festivals12.js's
+    // bunting and lanterns, by the day and hour) must not depend on where the page's clock had got to
+    G.day = 3; G.tod = tod;
     loadMap(map, { x, y, dir }); G.fadeT = 0; G.tod = tod; G.day = 3;
     Engine.cam.pitch = 0; Engine.cam.bob = 0; Weather.hold('clear'); GFX.reduceMotion = false; GFX.noFlash = false;
   });
@@ -131,7 +135,7 @@ const HELPERS = () => {
 
 (async () => {
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
-  let A = null, B = null, C = null;
+  let A = null, B = null, C = null, D = null;
   try {
     A = await bootPage(browser);
     const pg = A.page, Q = (fn, arg) => pg.evaluate(fn, arg);
@@ -317,6 +321,10 @@ const HELPERS = () => {
     });
 
     // ------------------------------------------------------------------------------------------------ identity
+    // three FRESH pages with the same history: one with the module, two without. The page that ran the steps above has
+    // rendered hundreds of frames, and modules that keep per-frame state of their own (a torch's flicker, js/festivals12's
+    // decorations) would make it differ from a fresh page for reasons that have nothing to do with this module.
+    D = await bootPage(browser, {});
     B = await bootPage(browser, { block: true });
     C = await bootPage(browser, { block: true });
     await step('Original preset untouched: with the switch on, Original shows no compositor and its frames (and the view canvas) are byte-identical to a page without js/gpu18.js; so are Medium and Cinematic with the switch off', async () => {
@@ -349,7 +357,7 @@ const HELPERS = () => {
       // a loaded machine): compare only where they agree, retrying up to three times for enough stable references
       let a, b, c, stable;
       for (let attempt = 0; attempt < 3; attempt++) {
-        a = await run(pg, true); b = await run(B.page, false); c = await run(C.page, false);
+        a = await run(D.page, true); b = await run(B.page, false); c = await run(C.page, false);
         stable = b.map((x, i) => x === c[i]);
         if (stable.filter(Boolean).length >= 7) break;
       }
@@ -369,7 +377,7 @@ const HELPERS = () => {
     });
 
     fs.writeFileSync(path.join(SHOT_DIR, 'gpu18-compare.json'), JSON.stringify({ info, cmp: cmpOut }, null, 1));
-    await step('no page errors', async () => { assert.deepEqual(A.errors, []); assert.deepEqual(B.errors, []); assert.deepEqual(C.errors, []); });
+    await step('no page errors', async () => { assert.deepEqual(A.errors, []); assert.deepEqual(B.errors, []); assert.deepEqual(C.errors, []); assert.deepEqual(D.errors, []); });
   } catch (e) {
     failed++; console.log('FAIL harness: ' + (e && e.stack || e));
   } finally {
