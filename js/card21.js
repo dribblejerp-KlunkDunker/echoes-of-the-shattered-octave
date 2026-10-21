@@ -722,7 +722,7 @@ const CARD21 = (() => {
       const faceM = M('face', fc.skin, 'face', { face: L.face });
       section(X, cz - RZ, cz + RZ, (z) => [hc[0] + (z < cz - 1 ? (cz - 1 - z) * 0.06 : 0), 0], (z) => RX * prof(z), (z) => RD * prof(z), faceM);
       // ears and nose
-      next(); for (const s of [1, -1]) sphere(X, [hc[0] - 0.35, s * (RX - 0.1), cz - 0.4], 0.75, mSkin);
+      if (!(head && (head.full || head.kind === 'hood'))) { next(); for (const s of [1, -1]) sphere(X, [hc[0] - 0.35, s * (RX - 0.1), cz - 0.4], 0.75, mSkin); }
       next(); capsule(X, [hc[0] + RD - 0.7, 0, cz - 0.2], [hc[0] + RD - 0.05, 0, cz - 1.3], 0.34, 0.42, faceM);
       const hair = fc.hair ? M('hair', fc.hair, 'hair') : null;
       const wear = head ? head.kind : fc.wear || null;
@@ -787,7 +787,7 @@ const CARD21 = (() => {
         // the whole head in a bell: crown, waist, flared lip at the jaw; a dark sight-slit; a crown ring
         const bp = (z) => { const t = (z - (cz - 5.4)) / 11.2; return t < 0.12 ? 4.55 - t * 3 : t < 0.7 ? 4.2 - (t - 0.12) * 0.7 : 3.8 * Math.sqrt(Math.max(0, 1 - ((t - 0.7) / 0.32) ** 2)) + 0.05; };
         section(X, cz - 5.4, cz + 5.7, (z) => [hc[0] - 0.1, 0], (z) => bp(z), (z) => bp(z) * 1.04, bm);
-        next(); slab(X, [hc[0] + 4.05, 0, cz + 0.2], [0, 1, 0], [0, 0, 1], [1, 0, 0], 0.4, [-2.6, 2.6, -0.5, 0.5], (a, b) => Math.abs(a) < 2.5 - Math.abs(b) * 0.6 && Math.abs(b) < 0.42, M('slit', [14, 10, 10], 'dark'));
+        next(); slab(X, [hc[0] + 3.98, 0, cz + 0.2], [0, 1, 0], [0, 0, 1], [1, 0, 0], 0.22, [-2.6, 2.6, -0.5, 0.5], (a, b) => Math.abs(a) < 2.5 - Math.abs(b) * 0.6 && Math.abs(b) < 0.42, M('slit', [14, 10, 10], 'dark'));
         next(); section(X, cz + 3.3, cz + 3.9, (z) => [hc[0] - 0.1, 0], (z) => bp(cz + 3.6) + 0.2, (z) => bp(cz + 3.6) * 1.04 + 0.2, mBrass);
         next(); sphere(X, [hc[0] - 0.1, 0, cz + 6.0], 0.65, mBrass);
       }
