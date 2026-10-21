@@ -1323,11 +1323,26 @@ const CARD21 = (() => {
   // timer clamp wastes the gaps), so the paints keep moving even while the game draws every frame
   let chan = null;
   try { if (typeof MessageChannel === 'function') { chan = new MessageChannel(); chan.port1.onmessage = () => tick(); } } catch (e) { chan = null; }
-  function later() { timer = 1; if (chan) chan.port2.postMessage(0); else setTimeout(tick, 0); }
-  function kick() { if (!timer && waiting.length) { try { later(); } catch (e) { timer = 0; } } }
-  function tick() {
+  // wanted-now paints (the card, a pose on screen) go on at once; the pre-paint (priority 2 or less) only in the
+  // browser's idle time, so it never competes with the game's own frames
+  const ric = typeof requestIdleCallback === 'function' ? requestIdleCallback : null;
+  function later() {
+    timer = 1;
+    let top = 0; for (const w of waiting) if (w.pri > top) top = w.pri;
+    if (top <= 2) { timer = 2; if (ric) ric((d) => tick(d), { timeout: 1000 }); else setTimeout(tick, 40); return; }
+    if (chan) chan.port2.postMessage(0); else setTimeout(tick, 0);
+  }
+  // timer: 0 none, 1 a slice is coming now, 2 only an idle-time slice is coming (a wanted-now paint must not wait for it)
+  function kick() {
+    if (!waiting.length) return;
+    let top = 0; for (const w of waiting) if (w.pri > top) top = w.pri;
+    if (!timer || (timer === 2 && top > 2)) { try { later(); } catch (e) { timer = 0; } }
+  }
+  function tick(idleDeadline) {
     timer = 0;
-    const t0 = now(), deadline = t0 + SLICE - 3;
+    const t0 = now();
+    let deadline = t0 + SLICE - 3;
+    if (idleDeadline && typeof idleDeadline.timeRemaining === 'function' && !idleDeadline.didTimeout) deadline = t0 + Math.max(1, Math.min(SLICE - 3, idleDeadline.timeRemaining() - 1));
     while (waiting.length && now() < deadline) {
       waiting.sort((a, b) => b.pri - a.pri || a.seq - b.seq);
       const w = waiting[0];
