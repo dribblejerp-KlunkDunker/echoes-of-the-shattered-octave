@@ -147,7 +147,7 @@ const SYNC19 = (function () {
     MSG_MAX: 200,
     SMOOTH: 10,           // the guest's reconciliation error decays at this rate (1/s)
     SNAP_DIST: 2,         // a correction bigger than this (tiles) is a jump, not a slide
-    WB_WAIT: 3000,        // ms a leaving guest waits for the host's write-back
+    WB_WAIT: 8000,        // ms a leaving guest waits for the host's write-back
     PAUSE_MAX: 60000,     // ms the host keeps a dropped partner paused before sending it home
     NEAR: 14,             // tiles: entities further from the guest than this are compared every other snapshot
     STRIKE_MS: 420,       // an enemy's blow shows this long on the guest (anim.js's lunge)
@@ -263,6 +263,7 @@ const SYNC19 = (function () {
   }
   function role() { const t = T; if (!t || typeof t.role !== 'function') return null; try { return t.role(); } catch (e) { return null; } }
   // someone is on the other end right now (NET19.connected(); a transport without it: any peer listed)
+  function relinking() { try { const t = T; return !!(t && typeof t.stats === 'function' && t.role && t.role() === 'guest' && t.stats().state === 'lost'); } catch (e) { return false; } }
   function peerCount() {
     const t = T; if (!t) return 0;
     try { if (typeof t.connected === 'function') return t.connected() ? 1 : 0; } catch (e) { return 0; }
@@ -774,7 +775,10 @@ const SYNC19 = (function () {
     if (!l || typeof l !== 'object') return null;
     const { cls, face, wpn, arm } = l;
     if (![cls, face, wpn, arm].every(isInt) || cls < 0 || cls > 15 || face < 1 || face > 6 || wpn < 0 || wpn > 15 || arm < 0 || arm > 63) return null;
-    return { cls, face, wpn, arm };
+    const out = { cls, face, wpn, arm };
+    // Phase 21: the host's real gear (catalog ids only, validated again here) so the guest sees the host's kit
+    try { if (l.gear && typeof CARD21 === 'object' && CARD21 && CARD21.cleanGear) { const g = CARD21.cleanGear(l.gear); if (g) out.gear = g; } } catch (e) { /* compact look only */ }
+    return out;
   }
   function knownMap(id) { return typeof id === 'string' && id.length <= 48 && G.maps && Object.prototype.hasOwnProperty.call(G.maps, id) && G.maps[id] && G.maps[id].w; }
   function onWelcome(p, from) {
@@ -1075,6 +1079,7 @@ const SYNC19 = (function () {
     G.hintKind = usable && h._screen && h._screen.dist <= USE_RANGE ? h.kind : '';
     if (hint !== G.hint) { G.hint = hint; const el = document.getElementById('hint'); if (el) el.textContent = hint; }
     const tl = now();
+    if (C.leaving && !C.byeSent && peerCount() > 0) C.byeSent = !!send('sync.bye', {}, true);
     if (C.leaving && tl - C.leaving > B.WB_WAIT) { finishLeave('left', undefined); return; }
     if (tl - C.lastSnapAt > B.LOST_MS) { finishLeave('lost', undefined); return; }
     if (tl - C.lastSnapAt > 3000 && tl - C.helloAt > B.HELLO_MS && peerCount() > 0) { C.helloAt = tl; send('sync.hello', { v: B.V }, true); }   // the host lost us: ask again
@@ -1083,7 +1088,8 @@ const SYNC19 = (function () {
   // leaving: ask the host for the write-back (what the guest earned) and go home when it comes, or after B.WB_WAIT
   function leave(why) {
     if (!C.on) return;
-    if (why === 'left' && C.entered && peerCount() > 0 && !C.leaving) { C.leaving = now(); send('sync.bye', {}, true); return; }
+    // a link that is only reconnecting (a phone on mobile data) still gets the bye once it is back, inside B.WB_WAIT
+    if (why === 'left' && C.entered && !C.leaving && (peerCount() > 0 || relinking())) { C.leaving = now(); C.byeSent = peerCount() > 0 && !!send('sync.bye', {}, true); return; }
     finishLeave(why, undefined);
   }
   function onWb(p, from) {
@@ -1095,7 +1101,7 @@ const SYNC19 = (function () {
     if (!C.on) return;
     const s = C.stash, c = Engine.cam;
     if (why !== 'lost' && !C.leaving) send('sync.bye', {}, true);
-    C.leaving = 0;
+    C.leaving = 0; C.byeSent = false;
     C.on = false; C.stash = null; C.ents.clear(); C.moving.clear(); C.ring.clear(); C.applied.clear(); C.pending = []; C.hostBuf = [];
     // PARTNER already took the guest home (its handler ran first): its isolated session is gone, nothing to put back
     let gone = false; try { gone = C.entered && typeof EXTRAS17 === 'object' && EXTRAS17.inExtra && EXTRAS17.inExtra() !== 'p19coop'; } catch (e) { gone = false; }

@@ -32,6 +32,20 @@
 //  Default: on only where WebGL2 is hardware accelerated (a software rasteriser such as SwiftShader would be slower than
 //  the CPU path); the player's choice is remembered in localStorage 'octave.gpu18.v1'.
 //  Nothing here touches saves, RNG, gameplay or story. Procedural: no assets are loaded.
+//
+//  Phase 21 hotfix ("the sky was not loading properly", owner, desktop Chrome on a real GPU: the sky just black):
+//    - SELF-CHECK. The compositor now proves on the device that what it shows matches the frame the raycaster made. A few
+//      frames after it turns on (and after every resize, scale or preset change, then about once a minute) it reads back
+//      the composited view and a handful of presented pixels and compares them with the CPU frame: where the CPU frame is
+//      clearly lit (the sky above all) the GPU picture must not be black. Two failed checks in a row turn the compositor off
+//      for the session (the canvas path, the picture the game always had) with one console warning; st.check has the
+//      numbers. A driver that mis-renders the composite can no longer leave the player with a black sky.
+//    - LOST CONTEXT. A context lost between frames used to read as a failed present and latched the compositor off for the
+//      session (and the canvas showed the lost, cleared drawing buffer until the event arrived). Now a lost context hands
+//      that very frame to the canvas path and the compositor comes back on webglcontextrestored.
+//    - DRAWING BUFFER. The view is placed with gl.drawingBufferWidth/Height (a browser may give a smaller buffer than the
+//      canvas size it was asked for, e.g. at a high page zoom on a large screen), so the top of the view (the sky) is never
+//      pushed off the buffer.
 // ============================================================
 'use strict';
 
@@ -51,6 +65,7 @@ const GPU18 = (() => {
     choice: null,         // the player's stored choice: null (auto) / true / false
     profile: false,
     stats: { frames: 0, inner: 0, upload: 0, cpuLight: 0, gl: 0, lastPasses: null },
+    check: { runs: 0, bad: 0, streak: 0, last: null, failedBy: '' },   // the on-device self-check (see the header)
     warned: {},
   };
   const warnOnce = (k, e) => { if (st.warned[k]) return; st.warned[k] = true; console.warn('gpu18 ' + k, e); };
@@ -70,6 +85,17 @@ const GPU18 = (() => {
   }
   // whether the compositor should be showing now
   function wanted() { return !!(GFX.gpuCompositor && st.available && !st.lost && !st.failed && gl && !originalish()); }
+  // Phase 21: an external renderer (js/r3d21.js, R3D) draws the 3D view on its own canvas and borrows only the HUD layer.
+  // While it holds the claim the HUD layer shows (Engine.ctx = the device-resolution HUD canvas), this module's GL canvas
+  // is hidden and it presents nothing; the compositor's own switch is left exactly as the player set it.
+  let ext = null;
+  const showing = () => !!ext || wanted();
+  function claimHud(owner) {
+    ext = owner || null;
+    try { const game = typeof document !== 'undefined' ? document.getElementById('game') : null; if (game) game.classList.toggle('gpu18-ext', !!ext); } catch (e) { /* fine */ }
+    sizeDirty = true; makeLayers(); sync();
+    return !!(ext && st.shown);
+  }
 
   // ---------------------------------------------------------------------------------------------------- GL setup
   let glCanvas = null, hudCanvas = null, hudCtx = null, gl = null, viewCtx = null;
@@ -86,7 +112,8 @@ const GPU18 = (() => {
       s.textContent = '#gpu18-gl,#gpu18-hud{position:absolute;inset:0;width:100%;height:100%;display:none;pointer-events:none;image-rendering:auto}' +
         '#game.gpu18-on #gpu18-gl,#game.gpu18-on #gpu18-hud{display:block}' +
         '#gpu18-gl.unwrite,#gpu18-hud.unwrite{filter:saturate(0.2) contrast(0.9)}' +
-        '#game.gpu18-on #cine14-veil{display:none!important}';   // the cinema grade and vignette run in the shader instead
+        '#game.gpu18-on #cine14-veil{display:none!important}' +   // the cinema grade and vignette run in the shader instead
+        '#game.gpu18-ext #gpu18-gl{display:none!important}';     // Phase 21: R3D draws the view, only the HUD layer shows
       document.head.appendChild(s);
     }
     glCanvas = document.createElement('canvas'); glCanvas.id = 'gpu18-gl'; glCanvas.setAttribute('aria-hidden', 'true');
@@ -94,7 +121,7 @@ const GPU18 = (() => {
     view.insertAdjacentElement('afterend', glCanvas);
     glCanvas.insertAdjacentElement('afterend', hudCanvas);
     glCanvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); st.lost = true; resources = false; try { sync(); } catch (err) { warnOnce('lost', err); } }, false);
-    glCanvas.addEventListener('webglcontextrestored', () => { st.lost = false; try { initGL(); sync(); } catch (err) { warnOnce('restore', err); } }, false);
+    glCanvas.addEventListener('webglcontextrestored', () => { st.lost = false; try { initGL(); checkSoon(); sync(); } catch (err) { warnOnce('restore', err); } }, false);
     // the game's "unwriting" desaturation is a CSS class on #view: mirror it onto the layer that now shows the view
     try { new MutationObserver(() => { const u = view.classList.contains('unwrite'); glCanvas.classList.toggle('unwrite', u); hudCanvas.classList.toggle('unwrite', u); }).observe(view, { attributes: true, attributeFilter: ['class'] }); } catch (e) { /* old browser */ }
     viewCtx = Engine.ctx;
@@ -307,7 +334,7 @@ void main(){
     for (const k of ['comp', 'b1', 'b2', 'light', 'row', 'tab']) if (T[k]) { gl.deleteTexture(T[k]); delete T[k]; }
     for (const k of ['fbs', 'ms', 'ds']) if (T[k]) { for (const t of T[k]) gl.deleteTexture(t); delete T[k]; }
     for (const k of Object.keys(FB)) { gl.deleteFramebuffer(FB[k]); delete FB[k]; }
-    texW = w; texH = h;
+    texW = w; texH = h; checkSoon();
     // the per-frame inputs come in pairs, used in turn: a frame's upload never waits for the previous frame's draw
     T.fbs = [0, 1].map(() => itex(gl.RGBA8UI, w, h, gl.RGBA_INTEGER, gl.UNSIGNED_BYTE, null));
     T.ms = [0, 1].map(() => itex(gl.R8UI, w, h, gl.RED_INTEGER, gl.UNSIGNED_BYTE, null));
@@ -746,11 +773,13 @@ void main(){
     draw();
     // present to the device-resolution canvas: the 3D view is the top VIEW_H / VH of it; the HUD layer covers the rest
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.viewport(0, 0, devW, devH); gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT);
-    const h3 = Math.round(devH * VIEW_H / VH);
-    gl.viewport(0, devH - h3, devW, h3);
+    const DW = gl.drawingBufferWidth || devW, DH = gl.drawingBufferHeight || devH;   // may be smaller than asked for
+    gl.viewport(0, 0, DW, DH); gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT);
+    const h3 = Math.round(DH * VIEW_H / VH);
+    gl.viewport(0, DH - h3, DW, h3);
     gl.useProgram(P.present.p); bind(P.present, 'uImg', 0, T.comp);
-    gl.uniform2f(P.present.u.uSrc, w, h); gl.uniform4f(P.present.u.uVP, 0, devH - h3, devW, h3);
+    gl.uniform2f(P.present.u.uSrc, w, h); gl.uniform4f(P.present.u.uVP, 0, DH - h3, DW, h3);
+    pres.DW = DW; pres.DH = DH; pres.h3 = h3;
     const smoothUp = typeof PRESETS !== 'undefined' && PRESETS.upscale && PRESETS.upscale.mode === 'smooth';
     gl.uniform1i(P.present.u.uSmooth, smoothUp ? 1 : 0);
     draw();
@@ -760,13 +789,64 @@ void main(){
     return true;
   }
 
+  // ---------------------------------------------------------------------------------------------------- self-check
+  // Right after a present (same task, so the drawing buffer is still there): read the composited view back, and a few
+  // presented pixels, and compare with the CPU frame the raycaster made. The GPU applies the grade, so colours differ a
+  // little; what must never happen is a black picture where the CPU frame is plainly lit.
+  const pres = { DW: 0, DH: 0, h3: 0 };
+  const CHECK = { first: 3, again: [30, 150], every: 3600, darkL: 12, litL: 40, badShare: 0.6, minN: 24 };
+  let checkBase = 0, checkAt = CHECK.first, checkIdx = 0, compBuf = null, presBuf = new Uint8Array(4);
+  function checkSoon() { checkBase = st.stats.frames; checkAt = checkBase + CHECK.first; checkIdx = 0; }
+  const lumaPx = (p) => ((p & 255) * 77 + ((p >> 8) & 255) * 150 + ((p >> 16) & 255) * 29) >> 8;
+  function selfCheck() {
+    const f = st.stats.frames;
+    if (f < checkAt || !gl || !resources) return;
+    checkAt = checkIdx < CHECK.again.length ? Math.max(f + 1, checkBase + CHECK.again[checkIdx++]) : f + CHECK.every;
+    const w = texW, h = texH, fb = job.fb, mb = job.mbuf; if (!fb || !w || fb.length < w * h) return;
+    if (!compBuf || compBuf.length !== w * h * 4) compBuf = new Uint8Array(w * h * 4);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, FB.comp);
+    gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, compBuf);
+    // a sparse grid; sky pixels (material 1) are what the owner saw go black, so they are judged on their own too
+    let n = 0, bad = 0, sn = 0, sbad = 0;
+    const sx = Math.max(1, (w / 40) | 0), sy = Math.max(1, (h / 24) | 0);
+    for (let y = (sy >> 1); y < h; y += sy) for (let x = (sx >> 1); x < w; x += sx) {
+      const i = y * w + x, cl = lumaPx(fb[i]); if (cl < CHECK.litL) continue;
+      const o = i * 4, gl2 = (compBuf[o] * 77 + compBuf[o + 1] * 150 + compBuf[o + 2] * 29) >> 8;
+      n++; if (gl2 < CHECK.darkL) bad++;
+      if (mb && mb[i] === 1) { sn++; if (gl2 < CHECK.darkL) sbad++; }
+    }
+    // what was actually presented: the middle row of the view, five points, against the composite they came from
+    let pn = 0, pbad = 0;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    if (pres.DW && pres.h3) {
+      for (let k = 1; k <= 5; k++) {
+        const ry = (h * 0.3) | 0, rx = ((w * k) / 6) | 0, o = (ry * w + rx) * 4;
+        const cl = (compBuf[o] * 77 + compBuf[o + 1] * 150 + compBuf[o + 2] * 29) >> 8; if (cl < CHECK.litL) continue;
+        const dx = Math.min(pres.DW - 1, Math.floor((rx + 0.5) * pres.DW / w)), dy = pres.DH - pres.h3 + Math.min(pres.h3 - 1, Math.floor((h - 1 - ry + 0.5) * pres.h3 / h));
+        gl.readPixels(dx, dy, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, presBuf);
+        pn++; if (((presBuf[0] * 77 + presBuf[1] * 150 + presBuf[2] * 29) >> 8) < CHECK.darkL) pbad++;
+      }
+    }
+    const err = gl.getError();
+    const verdict = (n >= CHECK.minN && bad / n >= CHECK.badShare) || (sn >= CHECK.minN && sbad / sn >= CHECK.badShare) || (pn >= 3 && pbad / pn >= CHECK.badShare);
+    const c = st.check; c.runs++;
+    c.last = { frame: f, n, bad, sky: sn, skyBad: sbad, presented: pn, presentedBad: pbad, glError: err, ok: !verdict };
+    if (!verdict) { c.streak = 0; return; }
+    c.bad++; c.streak++;
+    checkAt = f + 2;   // look again straight away: one odd frame is not a verdict
+    if (c.streak >= 2) {
+      c.failedBy = 'black picture where the frame is lit (sky ' + sbad + '/' + sn + ', all ' + bad + '/' + n + ', presented ' + pbad + '/' + pn + ', gl error ' + err + ')';
+      fail(new Error('self-check: ' + c.failedBy));
+    }
+  }
+
   // ---------------------------------------------------------------------------------------------------- on / off
   function sync() {
-    const want = wanted();
+    const want = showing();
     const game = typeof document !== 'undefined' ? document.getElementById('game') : null;
     if (want && !st.shown) {
       if (!viewCtx) viewCtx = Engine.ctx;
-      Engine.ctx = hudCtx; st.shown = true; sizeDirty = true;
+      Engine.ctx = hudCtx; st.shown = true; sizeDirty = true; checkSoon();
       if (game) game.classList.add('gpu18-on');
     } else if (!want && st.shown) {
       Engine.ctx = viewCtx; st.shown = false;
@@ -794,16 +874,23 @@ void main(){
     if (typeof render !== 'function') return;
     const _render = render;
     render = function () {
-      if (st.shown !== wanted()) sync();
+      // a context lost since the last frame: this frame goes to the canvas at once (the event follows later)
+      if (gl && !st.lost && st.shown && gl.isContextLost()) { st.lost = true; resources = false; }
+      if (st.shown !== showing()) sync();
       if (!st.shown || typeof G === 'undefined' || !G.map) return _render.apply(this, arguments);
       if (sizeDirty) fitLayers();
+      if (ext) { try { beginHud(); } catch (e) { warnOnce('hud', e); } return _render.apply(this, arguments); }   // R3D presents the view
       job.ready = false; job.grade = flagOn('grade') && typeof POST !== 'undefined'; job.cine = cineWanted(); job.bloom = typeof POST !== 'undefined' && bloomMoves(); bl.on = false;
       try { beginHud(); } catch (e) { fail(e); return _render.apply(this, arguments); }
       st.presenting = true;
       let r; const t0 = st.profile ? now() : 0;
       try { r = _render.apply(this, arguments); } finally { st.presenting = false; if (hid) hid = null; }
       if (st.profile) st.stats.inner += now() - t0;
-      try { if (!present() && job.ready) fail(new Error('present failed')); } catch (e) { fail(e); }
+      try {
+        if (present()) selfCheck();
+        else if (job.ready && !(gl && gl.isContextLost())) fail(new Error('present failed'));
+        else if (gl && gl.isContextLost()) { st.lost = true; resources = false; sync(); }
+      } catch (e) { if (gl && gl.isContextLost()) { st.lost = true; resources = false; sync(); } else fail(e); }
       return r;
     };
   }
@@ -863,7 +950,7 @@ void main(){
     if (st.choice === false) { GFX.gpuCompositor = false; probeLater(false); }
     else if (st.choice === true) { probe(true); GFX.gpuCompositor = !!st.available; }
     else { probe(false); GFX.gpuCompositor = !!(st.available && !st.software); }   // auto: hardware only
-    if (typeof GFX !== 'undefined' && GFX.onChange) GFX.onChange(() => { try { sync(); } catch (e) { warnOnce('sync', e); } });
+    if (typeof GFX !== 'undefined' && GFX.onChange) GFX.onChange(() => { try { checkSoon(); sync(); } catch (e) { warnOnce('sync', e); } });
     sync();
   }
   // whether WebGL2 exists at all, for the Options row, without keeping a context
@@ -873,7 +960,8 @@ void main(){
   try { boot(); } catch (e) { warnOnce('boot', e); }
 
   return {
-    KEY, st, stats: st.stats, setEnabled, sync, readFrame, gradeOne, present,
+    KEY, st, stats: st.stats, setEnabled, sync, readFrame, gradeOne, present, claimHud, hudClaim: () => ext, checkSoon, CHECK,
+    probeGL: (force) => probe(!!force),
     active: () => st.shown, available: () => st.available === true, software: () => st.software, renderer: () => st.renderer,
     wanted, layers: () => ({ gl: glCanvas, hud: hudCanvas, hudCtx, viewCtx }), gl: () => gl,
     get profile() { return st.profile; }, set profile(v) { st.profile = !!v; },

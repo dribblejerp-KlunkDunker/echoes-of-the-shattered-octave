@@ -80,13 +80,14 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       // --- GFX.plain() after any preset is the original look ---
       loadMap('tavern', { x: 8.5, y: 10.5, dir: -Math.PI / 2 }); G.state = 'play'; G.fadeT = 0;
       const hash = () => { Engine.render(G.ents, G.tod); let h = 0; const d = Engine.ctx.getImageData(0, 0, 320, 150).data; for (let i = 0; i < d.length; i += 4) h = (Math.imul(h, 31) + d[i] + (d[i + 1] << 8) + (d[i + 2] << 16)) | 0; return h; };
-      PRESETS.apply('original'); const base = hash();
+      // Phase 20 MAX: the Original preset keeps the hand-built art on, so plain() (everything off) has its own reference frame
+      PRESETS.apply('original'); const base = hash(); GFX.plain(); Engine.setScale(1); const plainBase = hash(); PRESETS.apply('original');
       for (const name of ['low', 'high', 'medium']) {
         PRESETS.apply(name); GFX.plain();
         // plain() keeps the render resolution (a display choice); everything else is original
         check(Engine.getScale() === GFX.scale, 'GFX.plain() after ' + name + ' keeps the chosen resolution');
         Engine.setScale(1);
-        check(hash() === base, 'GFX.plain() after ' + name + ' gives the original frame (view distance and particles reset)');
+        check(hash() === plainBase, 'GFX.plain() after ' + name + ' gives the plain frame (view distance and particles reset)');
         PRESETS.apply('original');
         check(Engine.getScale() === 1 && Engine.canvas.width === 320 && hash() === base, "PRESETS.apply('original') after " + name + ' restores everything, 1x included');
       }

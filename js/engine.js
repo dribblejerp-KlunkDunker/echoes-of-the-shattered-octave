@@ -323,6 +323,25 @@ const Engine = (() => {
   }
   buildSky(0.3);
 
+  // ---- Phase 21: the external renderer hook ---------------------------
+  // setRenderOverride(fn): fn(entities, timeOfDay, opts, env) runs inside render() once the sky rows, the point lights and
+  // the fog/haze of the frame are worked out; returning true skips every CPU pass after that (walls, floors, sprites, sky
+  // and post hooks, putImageData). Anything else, or a throw, renders the frame on the CPU as always. env is reused.
+  let override = null;
+  function setRenderOverride(fn) { override = typeof fn === 'function' ? fn : null; }
+  const ENV = { wx: {} };
+  function envOf(fogPx, tod, kEff) {
+    const E = ENV;
+    E.w = RW; E.h = RH; E.S = S; E.map = map; E.outdoor = !!map.outdoor; E.tod = tod; E.animT = animT;
+    E.fogR = fogR; E.fogG = fogG; E.fogB = fogB; E.fogPx = fogPx; E.fogDist = fogDist; E.baseFog = baseFog; E.kEff = kEff;
+    E.light = light_; E.ambient = ambient; E.flick = lightFlicker; E.skyDay = skyDay; E.ambientDark = ambientDark;
+    E.far = far; E.farHaze = farHaze; E.farA0 = farA0; E.farA1 = farA1; E.farLod2 = farLod2; E.farLightLim = farLightLim;
+    E.skyR = skyR; E.skyG = skyG; E.skyB = skyB; E.cloud = cloud; E.ptLights = ptLights;
+    E.wx.haze = wxHaze; E.wx.dark = wxDark; E.wx.flash = wxFlash; E.wx.cloud = wxCloud; E.wx.tr = wxTR; E.wx.tg = wxTG; E.wx.tb = wxTB;
+    E.detail = detail; E.detailDist = detailDist; E.surfBias = SURF_BIAS; E.fogK = fogK; E.ambK = ambK;
+    return E;
+  }
+
   // ---- main render ---------------------------------------------------
   const sprList = [], sprNear = [];
   let animT = 0;
@@ -398,6 +417,13 @@ const Engine = (() => {
       return heightMap ? heightMap[i] : 0;
     };
     if (!far) fogPx = rgb(fogR, fogG, fogB);
+    // Phase 21 (js/r3d21.js): a true 3D renderer may draw this frame instead of the CPU passes below. It gets the frame's
+    // sky rows, lights (with their wall masks) and fog exactly as worked out above, so both renderers share one look.
+    if (override) {
+      let done = false;
+      try { done = override(entities, timeOfDay, opts, envOf(fogPx, timeOfDay, kEff)) === true; } catch (err) { if (!override.warned) { override.warned = true; console.warn('render override failed', err); } done = false; }
+      if (done) return;
+    }
     const ceilZ = map.ceilZ || 1;                     // absolute ceiling height (interiors)
     const ceilMap = map.ceilCells, ceilTexList = map.ceilTextures ? map.ceilTextures.map(n => textures[n]) : null;
     const decals = map.decals || null;                // cell index -> decal texture name
@@ -1033,5 +1059,6 @@ const Engine = (() => {
   // the coloured light the given entities cast on a world point (walls shadow it)
   function lightAt(entities, wx, wy) { if (!map) return [0, 0, 0]; gatherLights(entities, {}); return sampleLight(wx, wy); }
   return { canvas, ctx, cam, textures, sprites, images, loadAll, render, setMap, scanRelief, setWeather, pick, pickWall, setFlicker, setTime, depthAt, materialAt, rgb, VW, VH, VIEW_H,
-    setScale, getScale, farInfo, lightAt, addSkyHook, addPostHook, addTexture, addSprite, setEmissive, setDetail, setLook, MAT };
+    setScale, getScale, farInfo, lightAt, addSkyHook, addPostHook, addTexture, addSprite, setEmissive, setDetail, setLook, MAT,
+    setRenderOverride, sampleLight, FOV, SURF_BIAS };
 })();
