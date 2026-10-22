@@ -275,7 +275,7 @@ async function boot(ctx, opts) {
         const dv = new DataView(await blob.arrayBuffer()), D = PHOTO21.deviceSize();
         out.png = blob.type === 'image/png'; out.dim = [dv.getUint32(16), dv.getUint32(20)]; out.want = [D.w, D.h];
         // a filter and the depth of field bake into the picture
-        const plain = PHOTO21.finish(PHOTO21.grab()); PHOTO21.S.filter = 'noir'; PHOTO21.S.dof = true;
+        const plain = PHOTO21.finish(PHOTO21.grab()); PHOTO21.S.filter = (PHOTO21.filters().find((f) => /grayscale\(1\)/.test(f.css)) || { id: 'noir' }).id; PHOTO21.S.dof = true;   // LIGHT21's grades replace the own seven when present
         const noir = PHOTO21.finish(PHOTO21.grab()); PHOTO21.S.filter = 'none'; PHOTO21.S.dof = false;
         const px = (c) => c.getContext('2d').getImageData(c.width >> 1, c.height >> 2, 1, 1).data;
         const a = px(noir); out.grey = Math.abs(a[0] - a[1]) <= 3 && Math.abs(a[1] - a[2]) <= 3; const b = px(plain); out.colour = !(b[0] === b[1] && b[1] === b[2]);
@@ -300,9 +300,13 @@ async function boot(ctx, opts) {
 
     await step('photo filters follow LIGHT21.photoGrades() when it is there (asked again each time photo mode opens), hostile entries dropped; without it, the own seven', async () => {
       const r = await Q(() => {
+        // light21.js, when loaded, is a lexical const: its photoGrades is swapped for this step instead of the object
+        const realL = typeof LIGHT21 === 'object' && LIGHT21 ? LIGHT21 : null, realPG = realL && realL.photoGrades;
+        const setPG = (fn) => { if (realL) realL.photoGrades = fn; else if (fn) window.LIGHT21 = { photoGrades: fn }; else delete window.LIGHT21; };
+        setPG(undefined);
         const own = PHOTO21.filters().map((f) => f.id);
         let here = 'sepia(0.1)';
-        window.LIGHT21 = { photoGrades: () => [{ id: 'l21-here', label: 'Here and now', css: here }, { id: 'l21-oakhaven', label: 'Oakhaven', css: 'saturate(1.1) contrast(1.05)' }, { id: 'evil', label: 'x', css: 'url(#x)' }, { id: 'l21-bw', label: 'Black and white', css: 'grayscale(1)' }] };
+        setPG(() => [{ id: 'l21-here', label: 'Here and now', css: here }, { id: 'l21-oakhaven', label: 'Oakhaven', css: 'saturate(1.1) contrast(1.05)' }, { id: 'evil', label: 'x', css: 'url(#x)' }, { id: 'l21-bw', label: 'Black and white', css: 'grayscale(1)' }]);
         loadMap('oakhaven', { x: 29.5, y: 20.5, dir: -Math.PI / 2 }); G.state = 'play'; G.fadeT = 0; render();
         PLAYTOOLS.enter(); update(1 / 60); render();
         const ids = PHOTO21.filters().map((f) => f.id);
@@ -312,8 +316,10 @@ async function boot(ctx, opts) {
         here = 'sepia(0.5)'; PLAYTOOLS.enter(); update(1 / 60); render();
         const again = PHOTO21.filters()[1].css;
         window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape', key: 'Escape' })); render();
-        delete window.LIGHT21; PHOTO21.S.filter = 'none';
-        return { own, ids, label, css1, again, after: PHOTO21.filters().map((f) => f.id).join() === own.join() };
+        setPG(undefined); PHOTO21.S.filter = 'none';
+        const after = PHOTO21.filters().map((f) => f.id).join() === own.join();
+        if (realL) realL.photoGrades = realPG;
+        return { own, ids, label, css1, again, after };
       });
       assert.deepEqual(r.own, ['none', 'warm', 'cold', 'vivid', 'print', 'noir', 'hush']);
       assert.deepEqual(r.ids, ['none', 'l21-here', 'l21-oakhaven', 'l21-bw'], 'LIGHT\'s grades, the hostile one dropped');
