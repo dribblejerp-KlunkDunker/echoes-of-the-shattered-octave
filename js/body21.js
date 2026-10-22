@@ -167,6 +167,39 @@ const BODY21 = (() => {
       if (warm) { cls[i] = K.WOOD; continue; }
       cls[i] = K.OTHER;
     }
+    // the painted Song-light's soft rim (pale pixels touching it) goes with it, or a pale fringe outlines the hole
+    if (M.skin) for (let pass = 0; pass < 2; pass++) {
+      const grow = [];
+      for (let y = 1; y < h - 1; y++) for (let xx = 1; xx < w - 1; xx++) {
+        const i = y * w + xx; if (cls[i] === K.GLOW || !cls[i]) continue;
+        if (!(cls[i - 1] === K.GLOW || cls[i + 1] === K.GLOW || cls[i - w] === K.GLOW || cls[i + w] === K.GLOW)) continue;
+        const o = i * 4, [hu, sa, va] = hsv(d[o], d[o + 1], d[o + 2]);
+        if (va > 0.62 && sa < 0.62 && hu > 18 && hu < 75) grow.push(i);
+      }
+      for (const i of grow) cls[i] = K.GLOW;
+    }
+    const fillL = [];
+    if (M.skin) {
+      // light enclosed by the hand (no way out to the empty background through more light) was painted over the palm:
+      // it becomes palm in shadow, not a hole; stray specks of hand colour floating off the hands go
+      const out = new Uint8Array(N), st = [];
+      for (let i = 0; i < N; i++) if (!cls[i]) { out[i] = 1; st.push(i); }
+      while (st.length) {
+        const i = st.pop(), xx = i % w;
+        for (const j of [xx ? i - 1 : -1, xx < w - 1 ? i + 1 : -1, i - w, i + w]) if (j >= 0 && j < N && !out[j] && cls[j] === K.GLOW) { out[j] = 1; st.push(j); }
+      }
+      for (let i = 0; i < N; i++) if (cls[i] === K.GLOW && !out[i]) { cls[i] = K.HAND; fillL.push(i); }
+      const seen = new Uint8Array(N);
+      for (let i0 = 0; i0 < N; i0++) {
+        if (seen[i0] || !cls[i0] || cls[i0] === K.GLOW) continue;
+        const comp = [i0]; seen[i0] = 1;
+        for (let n = 0; n < comp.length; n++) {
+          const i = comp[n], xx = i % w;
+          for (const j of [xx ? i - 1 : -1, xx < w - 1 ? i + 1 : -1, i - w, i + w]) if (j >= 0 && j < N && !seen[j] && cls[j] && cls[j] !== K.GLOW) { seen[j] = 1; comp.push(j); }
+        }
+        if (comp.length < 12) for (const i of comp) cls[i] = K.GLOW;
+      }
+    }
     // ink takes the class of most of its neighbours, so outlines recolour with what they outline
     const ink = new Uint8Array(N);
     for (let y = 1; y < h - 1; y++) for (let xx = 1; xx < w - 1; xx++) {
@@ -182,9 +215,10 @@ const BODY21 = (() => {
       const v = []; for (let i = 0; i < N; i++) if (cls[i] === k) v.push(L[i]);
       v.sort((a, b) => a - b); ref[k] = v.length ? v[(v.length * 0.6) | 0] || 0.3 : 0.3;
     }
+    for (const i of fillL) L[i] = ref[K.HAND];
     // distance (pixels) of each sleeve pixel from the hand, and of each hand pixel from the sleeve: cuffs and bracers
     const dHand = chamfer(cls, w, h, K.HAND), dSleeve = chamfer(cls, w, h, K.SLEEVE);
-    s = { key, w, h, src, cls, ink, L, ref, dHand, dSleeve, left, M };
+    s = { key, w, h, src, cls, ink, L, ref, dHand, dSleeve, left, M, fill: fillL };
     segCache.set(key, s);
     return s;
   }
@@ -386,11 +420,32 @@ const BODY21 = (() => {
         else if (z) col = onRamp(z.R, t * z.pat(x, y) * (d > z.d - 2 ? 0.6 : 1));
         else col = onRamp(AA.H.R, t * AA.H.pat(x, y));
       } else if (k === K.GLASS) { emis = true; }
+      else if (k === K.GLOW) {
+        // the bare-hands picture has cream Song-light painted between the fingers: on skin and gloves it reads as burnt
+        // holes, at rest too. It goes; a Song's light is fp-hands' coloured halo between the hands and its tint over them
+        o[q + 3] = 0; continue;
+      }
       else if (k === K.METAL || k === K.WOOD || k === K.BRASS) {
         const r = weaponTone(wid, key, x, y, k, t, s); if (r) { col = r.c; emis = !!r.emis; }
       }
       if (col) { o[q] = col[0]; o[q + 1] = col[1]; o[q + 2] = col[2]; }
       if (emis) { e[q] = o[q]; e[q + 1] = o[q + 1]; e[q + 2] = o[q + 2]; e[q + 3] = o[q + 3]; anyEmis = true; }
+    }
+    if (s.fill && s.fill.length) {
+      // palm under the painted light: grown in from the recoloured skin around it, so it matches whatever the hand wears
+      const todo = new Set(s.fill);
+      for (let pass = 0; pass < 24 && todo.size; pass++) {
+        const done = [];
+        for (const i of todo) {
+          const xx = i % w; let r = 0, g = 0, bb = 0, n = 0;
+          for (const j of [xx ? i - 1 : -1, xx < w - 1 ? i + 1 : -1, i - w, i + w, xx ? i - w - 1 : -1, xx < w - 1 ? i - w + 1 : -1, xx ? i + w - 1 : -1, xx < w - 1 ? i + w + 1 : -1]) {
+            if (j < 0 || j >= w * h || todo.has(j) || o[j * 4 + 3] < 128 || (cls[j] !== K.HAND && cls[j] !== K.INK)) continue;
+            r += o[j * 4]; g += o[j * 4 + 1]; bb += o[j * 4 + 2]; n++;
+          }
+          if (n) done.push([i, r / n, g / n, bb / n]);
+        }
+        for (const [i, r, g, bb] of done) { o[i * 4] = r; o[i * 4 + 1] = g; o[i * 4 + 2] = bb; o[i * 4 + 3] = 255; todo.delete(i); }
+      }
     }
     const main = mkCanvas(w, h), mx = main.getContext('2d');
     mx.putImageData(out, 0, 0);
