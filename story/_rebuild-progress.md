@@ -72,9 +72,38 @@ Preserve every line and blank line exactly.
 
 ### Added beyond the checklist
 
-`claude/Game - Phase 10 New In-Game Text (for review).md` exists in the Project but postdates
-this note and was not on the list above. It is committed to
-`Game Layer/Phase 10 - New In-Game Text.md` so nothing is lost. Flagged for sleeves to confirm.
+The Project kept growing after this note was written. Everything below postdates the 16-doc
+list and has been pulled verbatim and pushed, so nothing is lost. All of it is flagged for
+sleeves to confirm.
+
+Second pass — ALL DONE (22 Oct 2026):
+
+- [x] `claude/Game - Phase 10 New In-Game Text (for review).md` → `Game Layer/Phase 10 - New In-Game Text.md`
+- [x] `claude/Game - Phase 11 New In-Game Text (for review).md` → `Game Layer/Phase 11 - New In-Game Text.md`
+- [x] `claude/Game - Phase 12 New In-Game Text (for review).md` → `Game Layer/Phase 12 - New In-Game Text.md`
+- [x] `claude/Game - Phase 13 New In-Game Text (for review).md` → `Game Layer/Phase 13 - New In-Game Text.md`
+- [x] `claude/Game - Phase 14 New In-Game Text (for review).md` → `Game Layer/Phase 14 - New In-Game Text.md`
+- [x] `claude/Game - Phase 15 New In-Game Text (for review).md` → `Game Layer/Phase 15 - New In-Game Text.md`
+- [x] `claude/Game - Phase 16 New In-Game Text (for review).md` → `Game Layer/Phase 16 - New In-Game Text.md`
+- [x] `claude/Game - Phase 17 New In-Game Text (for review).md` → `Game Layer/Phase 17 - New In-Game Text.md`
+- [x] `claude/Game - Phase 18 New In-Game Text (for review).md` → `Game Layer/Phase 18 - New In-Game Text.md`
+- [x] `claude/Game - Phase 19 New In-Game Text (for review).md` → `Game Layer/Phase 19 - New In-Game Text.md`
+- [x] `claude/Game - Phase 20 New In-Game Text (for review).md` → `Game Layer/Phase 20 - New In-Game Text.md`
+- [x] `claude/Game - Phase 21 New In-Game Text (for review).md` → `Game Layer/Phase 21 - New In-Game Text.md`
+- [x] `claude/World Bible Vol VII Addendum - Festivals of the Reach.md` → `World Bibles/Vol VII (b) - Addendum - Festivals of the Reach.md`
+- [x] `Echoes of the Shattered Octave: Graphics Upgrade and View-Distance Roadmap.md` → `Game Layer/Graphics Upgrade and View-Distance Roadmap.md`
+
+Two notes for whoever picks this up next:
+
+- The Graphics Roadmap is the one Project doc with **no `claude/` prefix** — it sits at the
+  Project root. Use the exact path above or `project_read` will miss it.
+- The Vol VII addendum is named `Vol VII (b) - ...` to match the existing
+  `Vol III (b) - Errata and Rulings.md` convention: a `(b)` suffix means a companion piece to
+  the volume of the same number, not a second volume.
+
+The phase docs now run 6, 9, 10–21 with no gaps apart from 7 and 8, which have never existed
+in the Project. If a Phase 22 appears, it goes to `Game Layer/Phase 22 - New In-Game Text.md`
+and gets a line here.
 
 ## Then: the zip for sleeves
 
