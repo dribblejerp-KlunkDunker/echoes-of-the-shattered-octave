@@ -1283,9 +1283,13 @@ void main() {
   vec4 c = texture(uAtl, uv);
   vec3 n = normalize(vNrm); if (!gl_FrontFacing) n = -n;
   float key = clamp(dot(n, normalize(vec3(-0.35, 0.3, 0.88))), 0.0, 1.0);
-  vec3 alb = c.rgb * (0.58 + 0.5 * key) * vUv.w;
+  vec3 alb = c.rgb * (0.48 + 0.68 * key) * vUv.w;
   R3DSurf s; s.albedo = alb; s.pos = vPos; s.nrm = n; s.side = 1.0; s.mat = 6.0; s.emissive = 0.0; s.fi = 1.0; s.ladd = vec3(0.0); s.kind = 2;
-  oColor = vec4(r3dShade(s), 1.0); oAux = vec4(6.0 / 255.0, 0.0, 0.0, 1.0);
+  vec3 col = r3dShade(s);
+  // edges turned from the eye (folds, a hem, the side of a thigh) pick up a little sky, so forms read even at night
+  float rim = pow(1.0 - abs(dot(n, normalize(uEye.xyz - vPos))), 2.0);
+  col += alb * rim * (0.12 + 0.5 * max(n.z, 0.0) * 0.25) + c.rgb * rim * 0.08;
+  oColor = vec4(col, 1.0); oAux = vec4(6.0 / 255.0, 0.0, 0.0, 1.0);
 }`;
   const LB = { prog: null, failed: false, vao: null, vbo: null, ibo: null, atl: new Map(), tris: 0, err: '' };
   const TILE = 32, NT = 10, TPM = 96;   // texels a tile, tiles in an atlas, texels a metre
@@ -1293,7 +1297,7 @@ void main() {
   function lbAtlas(look) {
     const G2 = GL(), body = look.body, feet = look.feet, coat = look.calling.coat;
     const cv = mkCanvas(TILE * NT, TILE), x = cv.getContext('2d'), id = x.createImageData(TILE * NT, TILE), d = id.data;
-    const trouser = mixc(mulc(coat, 0.95), [96, 88, 76], 0.4);
+    const trouser = mixc(mulc(coat, 1.05), [128, 118, 100], 0.5);
     const tiles = [
       [trouser, 'weave', 0.9, true],
       [feet.shape === 'greaves' ? feet.col.trim : feet.col, feet.shape === 'hobnails' ? 'studs' : feet.material === 'felt' ? 'none' : 'grain', 0.6, false],
@@ -1310,7 +1314,7 @@ void main() {
       const Rm = rampOf(col), P = patOf(pat);
       for (let y = 0; y < TILE; y++) for (let xx = 0; xx < TILE; xx++) {
         let t = (1 + (P(xx * 2, y * 2) - 1) * 0.6) * (1 + (hash2(xx, y, k) - 0.5) * 0.14 * noise);
-        if (folds) t *= 1 + 0.09 * Math.sin((xx / TILE) * Math.PI * 4 + Math.sin(y / TILE * Math.PI * 2) * 0.8);
+        if (folds) t *= 1 + 0.16 * Math.sin((xx / TILE) * Math.PI * 4 + Math.sin(y / TILE * Math.PI * 2) * 0.8);
         if (k === T_.belt && (y < 2 || y > TILE - 3)) t *= 0.6;
         const c = onRamp(Rm, t), q = (y * TILE * NT + k * TILE + xx) * 4;
         d[q] = c[0]; d[q + 1] = c[1]; d[q + 2] = c[2]; d[q + 3] = 255;
@@ -1327,7 +1331,9 @@ void main() {
     // (most at about 60 degrees, where a wide human eye would already see the boots), and settles back looking straight down
     // (most at about 60 degrees, where a wide human eye would already see the boots): the feet carry the full lean, the
     // hips almost none, the chest none, so it reads as a stance with the feet a little ahead, never a body sliding about
-    const dn = -(F.pitchA || 0) * 180 / Math.PI, lean = 0.02 + 0.2 * Math.exp(-Math.pow((dn - 62) / 13, 2));
+    const dn = -(F.pitchA || 0) * 180 / Math.PI, steep = clamp((dn - 60) / 20, 0, 1);
+    // and past 60 degrees the feet keep going a little ahead, so the boot toes always show beyond the knees
+    const lean = 0.02 + 0.2 * Math.exp(-Math.pow((dn - 62) / 13, 2)) + (legs.moving ? 0.1 : 0.16) * steep * steep * (3 - 2 * steep);
     const L_ = (p) => p[0] + lean * clamp(1 - p[2] / 1.0, 0, 1);
     const B = (p) => { const x = L_(p); return [c.x + (fx * x + rx * p[1]) * M, c.y + (fy * x + ry * p[1]) * M, g0 + p[2] * M]; };
     const groundAt = (p) => { const w = B(p); return (R.groundGL(w[0], w[1]) - g0) / M; };   // floor height under a body point, metres
@@ -1349,10 +1355,14 @@ void main() {
         if (i) vacc += len(sub(r.c, rings[i - 1].c));
         for (let k = 0; k <= seg; k++) {
           const th = k / seg * Math.PI * 2, co = Math.cos(th), si = Math.sin(th);
-          const p = add(r.c, add(sc(sd, r.a * co), sc(fw, r.b * si)));
-          const nn = nrm(add(sc(sd, co / Math.max(0.01, r.a)), sc(fw, si / Math.max(0.01, r.b))));
+          // pleats (r.pl): the ring's radius ripples, the normal swings with it and the troughs darken
+          const pl = r.pl || 0, wv = pl ? Math.sin(th * 9 + 0.6) : 0, ks = 1 + pl * wv;
+          const p = add(r.c, add(sc(sd, r.a * co * ks), sc(fw, r.b * si * ks)));
+          let nn = nrm(add(sc(sd, co / Math.max(0.01, r.a)), sc(fw, si / Math.max(0.01, r.b))));
+          if (pl) nn = nrm(add(nn, sc(add(sc(sd, -si), sc(fw, co)), -pl * 9 * Math.cos(th * 9 + 0.6) * 0.5)));
+          const aoP = pl ? 1 - Math.min(0.4, pl * 5) * (0.5 - 0.5 * wv) : 1;
           const circ = Math.PI * (r.a + r.b);
-          vert(p, nn, k / seg * circ * TPM / TILE, vacc * TPM / TILE, r.tile != null ? r.tile : tile, r.ao);
+          vert(p, nn, k / seg * circ * TPM / TILE, vacc * TPM / TILE, r.tile != null ? r.tile : tile, (r.ao == null ? 1 : r.ao) * aoP);
         }
       }
       for (let i = 0; i < n - 1; i++) for (let k = 0; k < seg; k++) { const a = base + i * (seg + 1) + k, b = a + seg + 1; I.push(a, b, a + 1, a + 1, b, b + 1); }
@@ -1373,7 +1383,7 @@ void main() {
       const gz = groundAt([fwd, sideY, 0]);
       return { side, fwd, lift, pitch, sideY, toeOut, gz };
     };
-    const hipZ = 0.93, hipX = -0.03, L1 = 0.45, L2 = 0.44;
+    const hipZ = 0.93, hipX = -0.08, L1 = 0.45, L2 = 0.44;   // hips a hand behind the eye line
     const legsD = [-1, 1].map(legOf);
     // the hips ride a little lower and sway with the step
     const bobZ = moving ? -0.025 * Math.abs(Math.sin(ph)) : 0;
@@ -1408,23 +1418,25 @@ void main() {
     // ---- the hips, the hem and the lower chest
     const sway = moving ? Math.sin(ph) * 0.015 : 0, hemFwd = (legsD[0].fwd + legsD[1].fwd) / 2 * (0.25 + 0.85 * clamp(lenH, 0, 1));
     if (shape === 'cuirass') {
-      for (let r = 0; r < 2; r++) { const z0 = 1.0 - r * 0.08; tube([{ c: [-0.08, sway, z0], a: 0.175 + r * 0.01, b: 0.12 + r * 0.008 }, { c: [-0.07 + r * 0.01, sway, z0 - 0.1], a: 0.19 + r * 0.012, b: 0.135 + r * 0.01, ao: 0.78 }], T_.skirt, 16); }
-      tube([{ c: [-0.05, 0, 0.98], a: 0.15, b: 0.11 }, { c: [-0.05, 0, 0.8], a: 0.16, b: 0.12 }], T_.trouser, 12);
+      for (let r = 0; r < 2; r++) { const z0 = 1.0 - r * 0.08; tube([{ c: [-0.12, sway, z0], a: 0.165 + r * 0.01, b: 0.11 + r * 0.008 }, { c: [-0.11 + r * 0.01, sway, z0 - 0.1], a: 0.18 + r * 0.012, b: 0.125 + r * 0.01, ao: 0.78 }], T_.skirt, 16); }
+      tube([{ c: [-0.1, 0, 0.98], a: 0.145, b: 0.1 }, { c: [-0.1, 0, 0.8], a: 0.155, b: 0.11 }], T_.trouser, 12);
     } else {
       const hemZ = lerp(0.84, 0.06, clamp(lenH, 0, 1)), flare = clamp(lenH, 0, 1);
       const rings = [];
-      for (let i = 0; i <= 6; i++) { const k = i / 6, z = lerp(1.02, hemZ, k), a = 0.165 + flare * 0.15 * k * k + 0.015 * k, b = 0.115 + flare * 0.17 * k * k + 0.012 * k; rings.push({ c: [-0.08 + hemFwd * k + sway * k, sway * 0.5 * k, z], a, b, ao: i === 6 ? 0.82 : 1 }); }
-      tube(rings, T_.skirt, 16);
+      for (let i = 0; i <= 6; i++) { const k = i / 6, z = lerp(1.02, hemZ, k), a = 0.16 + flare * 0.15 * k * k + 0.015 * k, b = 0.105 + flare * 0.17 * k * k + 0.012 * k; rings.push({ c: [-0.12 + hemFwd * k + sway * k, sway * 0.5 * k, z], a, b, ao: i === 6 ? 0.82 : 1, pl: (0.012 + 0.05 * flare) * k }); }
+      tube(rings, T_.skirt, 36);
+      // a long hem ends in a turned edge of the trim colour that catches what light there is
+      if (lenH >= 0.45) { const r6 = rings[6]; tube([{ c: add(r6.c, [0, 0, 0.045]), a: r6.a - 0.004, b: r6.b - 0.004 }, { c: add(r6.c, [0, 0, 0.005]), a: r6.a + 0.006, b: r6.b + 0.006 }, { c: r6.c, a: r6.a + 0.004, b: r6.b + 0.004, ao: 0.8 }], T_.trim, 16); }
     }
     if (shape !== 'robe') {
-      tube([{ c: [-0.08, 0, 1.0], a: 0.175, b: 0.125 }, { c: [-0.08, 0, 1.06], a: 0.175, b: 0.125 }], T_.belt, 16);
+      tube([{ c: [-0.12, 0, 1.0], a: 0.165, b: 0.112 }, { c: [-0.12, 0, 1.06], a: 0.165, b: 0.112 }], T_.belt, 16);
       // the buckle at the front
-      const bx = 0.047, w = 0.035, h = 0.03, n0 = [1, 0, 0];
+      const bx = -0.006, w = 0.035, h = 0.03, n0 = [1, 0, 0];
       const a = vert([bx, -w, 1.03 - h], n0, 0, 0, T_.brass), b = vert([bx, w, 1.03 - h], n0, 1, 0, T_.brass), cc = vert([bx, w, 1.03 + h], n0, 1, 1, T_.brass), dd = vert([bx, -w, 1.03 + h], n0, 0, 1, T_.brass);
       I.push(a, b, cc, a, cc, dd);
     }
     // the lower chest, rising behind the eye; its top is the chest you see looking straight down
-    tube([{ c: [-0.1, 0, 1.05], a: 0.17, b: 0.12 }, { c: [-0.15, 0, 1.18], a: 0.18, b: 0.11, ao: 0.85 }], T_.torso, 16);
+    tube([{ c: [-0.15, 0, 1.05], a: 0.155, b: 0.1 }, { c: [-0.19, 0, 1.13], a: 0.16, b: 0.09, ao: 0.85 }], T_.torso, 16);
     return { V: new Float32Array(V), I: new Uint32Array(I), feet: legsD.map((L) => B([L.A[0] + 0.07, L.A[1], L.gz + 0.003])) , M };
   }
   function drawLowerBody(g, F, R, legs) {
