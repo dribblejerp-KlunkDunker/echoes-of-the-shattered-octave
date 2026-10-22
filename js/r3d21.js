@@ -1421,6 +1421,7 @@ void main() {
     if (lvisW !== m.w || lvisH !== m.h || !T.lvis) {
       if (T.lvis) gl.deleteTexture(T.lvis);
       lvisW = m.w; lvisH = m.h; lvisBuf = new Uint32Array(m.w * m.h);
+      gl.activeTexture(gl.TEXTURE2);   // the light map's own unit: an integer texture left on another unit breaks sampler2D draws there
       T.lvis = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, T.lvis);
       gl.texStorage2D(gl.TEXTURE_2D, 1, gl.R32UI, m.w, m.h);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -1438,7 +1439,7 @@ void main() {
         for (let ty = Math.max(0, (L.y | 0) - R); ty <= Math.min(m.h - 1, (L.y | 0) + R); ty++) for (let tx = Math.max(0, (L.x | 0) - R); tx <= Math.min(m.w - 1, (L.x | 0) + R); tx++) lvisBuf[ty * m.w + tx] |= bit;
       }
     }
-    gl.bindTexture(gl.TEXTURE_2D, T.lvis); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, m.w, m.h, gl.RED_INTEGER, gl.UNSIGNED_INT, lvisBuf);
+    gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, T.lvis); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, m.w, m.h, gl.RED_INTEGER, gl.UNSIGNED_INT, lvisBuf);
     gl.bindBuffer(gl.UNIFORM_BUFFER, uboL); gl.bufferSubData(gl.UNIFORM_BUFFER, 0, b); gl.bindBuffer(gl.UNIFORM_BUFFER, null);
     return n;
   }
