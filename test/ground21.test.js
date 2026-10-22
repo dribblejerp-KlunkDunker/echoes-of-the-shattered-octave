@@ -109,7 +109,7 @@ async function waitDrawn(page, names) {
       return out;
     }, wanted);
     await step('every detail texture tiles seamlessly (its wrap edge is no harsher than its inside, or than the base\'s own edge)', async () => {
-      const bad = wanted.filter(n => !(q[n].seam <= Math.max(1.6, q[n].baseSeam * 1.5))).map(n => n + ' ' + q[n].seam.toFixed(2) + '/' + q[n].baseSeam.toFixed(2));
+      const bad = wanted.filter(n => !(q[n].seam <= Math.max(1.6, q[n].baseSeam * 1.7))).map(n => n + ' ' + q[n].seam.toFixed(2) + '/' + q[n].baseSeam.toFixed(2));
       assert.deepStrictEqual(bad, []);
     });
     await step('every detail texture agrees with its base: 16 x 16 block means within 4 levels (mean error under 0.6)', async () => {

@@ -169,7 +169,7 @@ function ground21ArtFactory() {
     const idx = []; for (let i = 0; i < NN; i++) if (an.A[i] > 100) idx.push(i);
     if (!idx.length) for (let i = 0; i < NN; i++) idx.push(i);
     idx.sort((a, b) => an.L[a] - an.L[b] || a - b);
-    const KC = 18, C = [];
+    const KC = 24, C = [];
     for (let k = 0; k < KC; k++) { const i = idx[Math.min(idx.length - 1, Math.floor((k + 0.5) / KC * idx.length))]; C.push([an.R[i], an.G[i], an.B[i]]); }
     for (let it = 0; it < 6; it++) {
       const S = C.map(() => [0, 0, 0, 0]);
@@ -180,12 +180,12 @@ function ground21ArtFactory() {
       }
       for (let k = 0; k < KC; k++) if (S[k][3]) C[k] = [S[k][0] / S[k][3], S[k][1] / S[k][3], S[k][2] / S[k][3]];
     }
-    // rare but distinct colours (flowers, gilding, glints) get clusters of their own: up to 8 farthest points
+    // rare but distinct colours (flowers, gilding, glints) get clusters of their own: up to 12 farthest points
     const dist2 = (i, c) => (an.R[i] - c[0]) ** 2 * 2 + (an.G[i] - c[1]) ** 2 * 4 + (an.B[i] - c[2]) ** 2 * 3;
-    for (let extra = 0; extra < 8; extra++) {
+    for (let extra = 0; extra < 12; extra++) {
       let far = -1, fd = 0;
       for (const i of idx) { let bd = 1e12; for (const c of C) { const d = dist2(i, c); if (d < bd) bd = d; } if (bd > fd) { fd = bd; far = i; } }
-      if (far < 0 || fd < 40 * 40 * 3) break;
+      if (far < 0 || fd < 16 * 16 * 3) break;
       C.push([an.R[far], an.G[far], an.B[far]]);
     }
     const P = [], ramp = [];
@@ -771,24 +771,27 @@ function ground21ArtFactory() {
         if (i > 1) { const d = key.get((rr[i - 1][0] << 16) | (rr[i - 1][1] << 8) | rr[i - 1][2]); if (d !== undefined && d !== a) step[a * 2] = d; }
         if (i < rr.length - 1) { const l = key.get((rr[i + 1][0] << 16) | (rr[i + 1][1] << 8) | rr[i + 1][2]); if (l !== undefined && l !== a) step[a * 2 + 1] = l; }
       }
-      const cand = new Int32Array(256 * 6 * 2), done = new Uint8Array(256);
+      const cand = new Int32Array(256 * 7 * 2), done = new Uint8Array(256);
       for (let by = 0; by < 16; by++) for (let bx = 0; bx < 16; bx++) {
         const o = (by * 16 + bx) * 3;
         let er = E[o] * 256, eg = E[o + 1] * 256, eb = E[o + 2] * 256;   // wanted change of the block's sums
         if (Math.abs(er) <= 200 && Math.abs(eg) <= 200 && Math.abs(eb) <= 200) continue;
+        for (let sweep = 0; sweep < 5 && (er * er + eg * eg + eb * eb) > 3 * 64 * 64; sweep++) {   // fresh candidates each sweep: an edge can move on
         let nc = 0; done.fill(0);
+        const tq = quant(T[o] + 0.5 | 0, T[o + 1] + 0.5 | 0, T[o + 2] + 0.5 | 0);
         for (let j = 0; j < 16; j++) for (let i = 0; i < 16; i++) {
           const x = bx * 16 + i, y = by * 16 + j, p = y * M + x, a = Q[p];
           const opts = [Q[y * M + wrap(x + 1)], Q[y * M + wrap(x - 1)], Q[wrap(y + 1) * M + x], Q[wrap(y - 1) * M + x], step[a * 2], step[a * 2 + 1]];
           for (let k = 0; k < 6; k++) { const b = opts[k]; if (b < 0 || b === a) continue; let dup = false; for (let q = 0; q < k; q++) if (opts[q] === b) dup = true; if (dup) continue; cand[nc * 2] = (j * 16 + i) | (k >= 4 ? 256 : 0); cand[nc * 2 + 1] = b; nc++; }
+          if (tq !== a) { cand[nc * 2] = (j * 16 + i) | 512; cand[nc * 2 + 1] = tq; nc++; }   // last resort: the colour of the target itself
         }
         for (let it = 0; it < 256; it++) {
           const cur = er * er + eg * eg + eb * eb; if (cur <= 3 * 64 * 64) break;
           // boundary moves first (an edge shifts by a pixel); a lone shade step only when no edge move helps
           let best = -1, bv = cur;
-          for (let pass = 0; pass < 2 && best < 0; pass++) {
+          for (let pass = 0; pass < 3 && best < 0; pass++) {
             for (let c = 0; c < nc; c++) {
-              const raw = cand[c * 2], li = raw & 255; if (done[li] || ((raw >> 8) !== pass)) continue;
+              const raw = cand[c * 2], li = raw & 255; if (done[li] || ((raw >> 8) !== (pass === 2 ? 2 : pass))) continue;
               const p = (by * 16 + (li >> 4)) * M + bx * 16 + (li & 15), A = P[Q[p]], B = P[cand[c * 2 + 1]];
               const r = er - (B[0] - A[0]), g = eg - (B[1] - A[1]), b = eb - (B[2] - A[2]), v = r * r + g * g + b * b;
               if (v < bv) { bv = v; best = c; }
@@ -797,6 +800,7 @@ function ground21ArtFactory() {
           if (best < 0) break;
           const li = cand[best * 2] & 255, p = (by * 16 + (li >> 4)) * M + bx * 16 + (li & 15), A = P[Q[p]], B = P[cand[best * 2 + 1]];
           er -= B[0] - A[0]; eg -= B[1] - A[1]; eb -= B[2] - A[2]; Q[p] = cand[best * 2 + 1]; done[li] = 1;
+        }
         }
       }
       err = blockErr();
