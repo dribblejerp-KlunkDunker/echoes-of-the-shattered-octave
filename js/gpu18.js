@@ -960,7 +960,7 @@ void main(){
   try { boot(); } catch (e) { warnOnce('boot', e); }
 
   return {
-    KEY, st, stats: st.stats, setEnabled, sync, readFrame, gradeOne, present, checkSoon, CHECK, claimHud, hudClaim: () => ext,
+    KEY, st, stats: st.stats, setEnabled, sync, readFrame, gradeOne, present, claimHud, hudClaim: () => ext, checkSoon, CHECK,
     probeGL: (force) => probe(!!force),
     active: () => st.shown, available: () => st.available === true, software: () => st.software, renderer: () => st.renderer,
     wanted, layers: () => ({ gl: glCanvas, hud: hudCanvas, hudCtx, viewCtx }), gl: () => gl,
