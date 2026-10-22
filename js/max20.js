@@ -17,7 +17,8 @@
 //     ~20 s of play the frame interval is measured (requestAnimationFrame, play state only, the tab visible, pauses
 //     over 1 s and the first second after a preset change or map load skipped). Every 4 s of play, if the median
 //     frame is over 33.3 ms (below 30 fps), the preset steps down one (Cinematic -> Ultra -> High -> Medium) with a
-//     one-line notice. Once 20 s of play pass at a preset whose last window was smooth (or Medium is reached) the
+//     one-line notice (Phase 21: if the true 3D renderer R3D is on by auto choice, the first step turns it off instead and
+//     keeps the preset; js/r3d21.js). Once 20 s of play pass at a preset whose last window was smooth (or Medium is reached) the
 //     choice is SETTLED and stored, so it is not measured again on later launches.
 //  3. THE PLAYER'S CHOICE: any button in Options -> Graphics & access that changes a graphics setting (a preset,
 //     resolution, view distance, particles, or any effect switch) records the result as the player's own choice
@@ -199,6 +200,15 @@ const MAX20 = (() => {
   const measuring = () => live && !S.user && !S.settled && !!S.auto && STEPS.indexOf(S.auto) >= 0 && S.auto !== 'medium';
   function settle(why) { S.settled = true; stats.reason += '; settled ' + S.auto + ' (' + why + ')'; save(); }
   function stepDown(med) {
+    // Phase 21: an automatic true-3D renderer (js/r3d21.js) goes back to the classic raycaster before the preset drops
+    try {
+      if (typeof R3D !== 'undefined' && R3D && typeof R3D.netStep === 'function' && R3D.netStep()) {
+        stats.steps.push({ from: S.auto, to: S.auto, renderer: 'classic', medianMs: Math.round(med * 10) / 10 });
+        stats.presetS = 0; stats.skipS = SKIP_S; stats.samples.length = 0;
+        notice('Graphics eased to the classic renderer to keep the game smooth — Options to change');
+        return;
+      }
+    } catch (e) { /* no R3D */ }
     const i = STEPS.indexOf(S.auto), from = S.auto;
     const next = STEPS[Math.min(STEPS.length - 1, i + 1)];
     stats.steps.push({ from, to: next, medianMs: Math.round(med * 10) / 10 });

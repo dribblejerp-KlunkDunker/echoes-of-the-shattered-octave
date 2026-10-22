@@ -569,7 +569,7 @@ const FIRESMOKE = (() => {
     get count() { return n; },
     countKind(k) { let c = 0; for (let i = 0; i < n; i++) if (kind_[i] === k) c++; return c; },
     // read-only view of the live particles, for tests
-    each(fn) { for (let i = 0; i < n; i++) fn({ kind: kind_[i], x: px_[i], y: py_[i], z: pz_[i], age: age_[i], life: life_[i] }); },
+    each(fn) { for (let i = 0; i < n; i++) fn({ kind: kind_[i], x: px_[i], y: py_[i], z: pz_[i], age: age_[i], life: life_[i], r0: r0_[i], r1: r1_[i], a: a_[i], warm: warm_[i], seed: seed_[i] }); },
     tick(dt, T) { lastMap = G.map; setWind(T == null ? 0 : T); spawnPass(dt, T == null ? 0 : T); simulate(dt); },
     draw,
     cost() { return stats; },
