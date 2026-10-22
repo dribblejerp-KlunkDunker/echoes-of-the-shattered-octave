@@ -1175,7 +1175,7 @@ void main() {
       if (R3B.check) while (g.getError() !== g.NO_ERROR) { /* tests only: start clean */ }
       for (const it of rec.list) {
         const pts = it.pts.map((q) => [q[0] / 160 - 1, 1 - q[1] / 75, 0]);
-        if (it.add) { g.enable(g.BLEND); g.blendFunc(g.ONE, g.ONE); g.uniform1f(R3B.prog.u.uAdd, it.add); quad(g, pts, 3, it.img, null); g.disable(g.BLEND); }
+        if (it.add) { g.enable(g.BLEND); g.blendFunc(g.ONE, g.ONE); g.uniform1f(R3B.prog.u.uAdd, it.add * 0.6); quad(g, pts, 3, it.img, null); g.disable(g.BLEND); }   // softer than on the HUD: the scene's grade and bloom brighten it again (a glow over the skin, not a coat of paint)
         else quad(g, pts, 0, it.img, it.em);
       }
       if (R3B.check) R3B.glErr = g.getError();   // tests only (a sync stall): did every picture draw?
