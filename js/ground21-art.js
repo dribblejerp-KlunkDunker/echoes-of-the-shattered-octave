@@ -84,10 +84,10 @@ function ground21ArtFactory() {
     grass: { mat: 'grass', st: false, tufts: 1500, clover: 22, emboss: 0.05 },
     turf: { mat: 'grass', st: false, tufts: 1100, clover: 14, emboss: 0.05 },
     leaf: { mat: 'leaf', st: false, leaves: 900, emboss: 0.08 },
-    dirt: { mat: 'dirt', st: false, pebbles: 150, roots: 9, sprigs: 50, emboss: 0.08 },
+    dirt: { mat: 'dirt', st: false, pebbles: 150, roots: 9, sprigs: 50, emboss: 0.08, leaves: 420, warp: 0.75 },
     track: { mat: 'dirt', st: false, pebbles: 160, roots: 3, tufts: 260, emboss: 0.08 },
     sand: { mat: 'sand', st: false, ripples: true, pebbles: 16, emboss: 0.05 },
-    snow: { mat: 'snow', st: false, ripples: true, sparkle: true, emboss: 0.05 },
+    snow: { mat: 'snow', st: false, ripples: true, sparkle: true, emboss: 0.002, warp: 0.4 },
     chalk: { mat: 'plaster', st: false, ripples: false, pebbles: 20, speck: true, emboss: 0.06 },
   };
   // Every floor, ground, wall and ceiling texture of the 44 maps (and the extras' maps) has a family here.
@@ -462,7 +462,7 @@ function ground21ArtFactory() {
           if (hn < 0.07) lv -= 1; else if (hn > 0.95) lv += 1;
           k *= 1 + (mott[p] - 0.5) * 0.1;
         } else if (mat === 'sand' || mat === 'snow') {
-          if (hn < 0.03) lv -= 1; else if (hn > 0.98) lv += 1;
+          if (hn < (mat === 'snow' ? 0.006 : 0.03)) lv -= 1; else if (hn > 0.98) lv += 1;
           k *= 1 + (mott[p] - 0.5) * 0.04;
         }
         if (F.speck && hn > 0.992) lv -= 2;
@@ -710,7 +710,7 @@ function ground21ArtFactory() {
       const kx = 1 + Math.floor(rand() * 2), ky = 9 + Math.floor(rand() * 4);
       for (let y = 0; y < M; y++) for (let x = 0; x < M; x++) {
         const p = y * M + x; const ph = (x * kx + y * ky) / M + rw[p] * 2.5; const t = ph - Math.floor(ph);
-        if (t < 0.06) mul(x, y, F.sparkle ? 1.04 : 1.07); else if (t > 0.5 && t < 0.56) mul(x, y, F.sparkle ? 0.95 : 0.9);
+        if (t < 0.05) mul(x, y, F.sparkle ? 1.03 : 1.07); else if (!F.sparkle && t > 0.5 && t < 0.56) mul(x, y, 0.9);   // snow: crests only, no troughs
       }
     }
     if (F.sparkle) for (let n = 0; n < 160; n++) { const x = Math.floor(rand() * M), y = Math.floor(rand() * M); mul(x, y, 1.12); }

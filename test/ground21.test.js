@@ -145,13 +145,13 @@ async function waitDrawn(page, names) {
       assert.ok(Math.abs(r.onM - r.offM) < 6, 'mean colour moved looking down: ' + r.offM.toFixed(1) + ' -> ' + r.onM.toFixed(1));
       assert.ok(Math.abs(r.lvOn - r.lvOff) < 3, 'mean colour moved looking level: ' + r.lvOff.toFixed(1) + ' -> ' + r.lvOn.toFixed(1));
     });
-    await step('picks and the depth/material read-back are the same with the detail on and off', async () => {
+    await step('picks and the depth/material read-back are the same with the detail and ground cover on and off', async () => {
       const r = await page.evaluate(() => {
         const out = [];
         for (const on of [false, true]) {
           GFX.p21_ground = on; const res = [];
-          for (const [yaw, deg] of [[-1.57, 0], [-1.2, -30], [0.4, -60], [2.0, 20]]) {
-            S.stage('oakhaven', 23.5, 20.5, yaw, 0.5); R3D.camera.setAngle(deg * Math.PI / 180); S.frame(); S.frame();
+          for (const [map, x, y, yaw, deg] of [['oakhaven', 23.5, 20.5, -1.57, 0], ['oakhaven', 23.5, 20.5, -1.2, -30], ['oakhaven', 23.5, 20.5, 0.4, -60], ['oakhaven', 23.5, 20.5, 2.0, 20], ['deepwoods', 27.5, 30.5, -1.57, -30], ['deepwoods', 27.5, 30.5, 0.6, -10]]) {
+            S.stage(map, x, y, yaw, 0.5); R3D.camera.setAngle(deg * Math.PI / 180); S.frame(); S.frame();
             const p = Engine.pick(G.ents, 6); res.push([p ? (p.id || p.type || p.name || 'ent') : null, R3D.depthAt(160, 75).toFixed(3), R3D.materialAt(160, 120), R3D.materialAt(40, 140)]);
           }
           out.push(JSON.stringify(res));
@@ -175,13 +175,31 @@ async function waitDrawn(page, names) {
       assert.deepStrictEqual([r.t0, r.t1, r.off, r.on], ['On', 'Off', false, true]);
       assert.deepStrictEqual(r.pre, { original: false, low: true, medium: true, high: true, ultra: true, cinematic: true });
     });
+    await step('ground cover: tufts, pebbles and leaves near the player outdoors, the same every build; its own row; off in Original', async () => {
+      const r = await page.evaluate(() => {
+        PRESETS.apply('medium'); GFX.p21_ground = true; GFX.p21_groundCover = true;
+        S.stage('deepwoods', 27.5, 30.5, -1.57, 0.5); R3D.camera.setAngle(-30 * Math.PI / 180); S.frame();
+        const n1 = GROUND21.cover.n, a = Array.from(GROUND21.cover.buf.subarray(0, n1 * 12)).map(v => v.toFixed(4)).join(',');
+        GROUND21.cover.cellKey = ''; S.frame();
+        const b = Array.from(GROUND21.cover.buf.subarray(0, GROUND21.cover.n * 12)).map(v => v.toFixed(4)).join(',');
+        const h1 = S.hash(); GFX.p21_groundCover = false; S.frame(); const h0 = S.hash(); GFX.p21_groundCover = true;
+        S.stage('tavern', 8.5, 10.5, -1.57, 0.85); S.frame(); const indoorOn = R3D.passes().some(p => p.name === 'p21_cover');
+        renderAccessibilityMenu(); const btn = document.getElementById('p21-cover'); const t0 = btn && btn.textContent; if (btn) btn.click(); const off = GFX.p21_groundCover; if (btn) btn.click(); const on = GFX.p21_groundCover; closeModal(); G.state = 'play';
+        PRESETS.apply('original'); const orig = GFX.p21_groundCover; PRESETS.apply('medium');
+        return { n1, same: a === b, changed: h1 !== h0, indoorOn, t0, off, on, orig };
+      });
+      assert.ok(r.n1 > 20, 'only ' + r.n1 + ' instances'); assert.ok(r.same, 'not deterministic'); assert.ok(r.changed, 'cover drew nothing');
+      assert.ok(r.indoorOn, 'pass not registered');
+      assert.deepStrictEqual([r.t0, r.off, r.on, r.orig], ['On', false, true, false]);
+    });
     await step('frame cost with the detail on and off (reported; SwiftShader, not judged)', async () => {
       const r = await page.evaluate(() => {
-        const t = (on, deg) => { GFX.p21_ground = on; S.stage('oakhaven', 23.5, 20.5, -1.57, 0.5); R3D.camera.setAngle(deg * Math.PI / 180); S.frame(); const a = performance.now(); for (let i = 0; i < 6; i++) render(); return (performance.now() - a) / 6; };
+        const t = (on, deg, map) => { GFX.p21_ground = on; if (map) S.stage(map, 27.5, 30.5, -1.57, 0.5); else S.stage('oakhaven', 23.5, 20.5, -1.57, 0.5); R3D.camera.setAngle(deg * Math.PI / 180); S.frame(); const a = performance.now(); for (let i = 0; i < 6; i++) render(); return (performance.now() - a) / 6; };
         const out = {};
-        for (const preset of ['medium', 'cinematic']) { PRESETS.apply(preset); for (const deg of [0, -75]) { const off = t(false, deg), on = t(true, deg), off2 = t(false, deg), on2 = t(true, deg); out[preset + '/' + deg] = { off: +((off + off2) / 2).toFixed(1), on: +((on + on2) / 2).toFixed(1) }; } }
+        for (const preset of ['medium', 'cinematic']) { PRESETS.apply(preset); for (const deg of [0, -75]) { const off = t(false, deg), on = t(true, deg), off2 = t(false, deg), on2 = t(true, deg); out[preset + '/oakhaven/' + deg] = { off: +((off + off2) / 2).toFixed(1), on: +((on + on2) / 2).toFixed(1) }; } }
+        PRESETS.apply('medium'); { const off = t(false, -30, 'deepwoods'), on = t(true, -30, 'deepwoods'), off2 = t(false, -30, 'deepwoods'), on2 = t(true, -30, 'deepwoods'); out['medium/deepwoods+cover/-30'] = { off: +((off + off2) / 2).toFixed(1), on: +((on + on2) / 2).toFixed(1) }; }
         PRESETS.apply('medium'); GFX.p21_ground = true;
-        return { out, st: { slots: GROUND21.st.slots, uploads: GROUND21.st.uploads, made: GROUND21.st.made, genMsAvg: Math.round(GROUND21.st.genMs / Math.max(1, GROUND21.st.made)) } };
+        return { out, st: { coverN: GROUND21.cover.n, coverMs: +GROUND21.cover.ms.toFixed(2), slots: GROUND21.st.slots, uploads: GROUND21.st.uploads, made: GROUND21.st.made, genMsAvg: Math.round(GROUND21.st.genMs / Math.max(1, GROUND21.st.made)) } };
       });
       console.log('  frame cost, ms per frame (1280x800, R3D on SwiftShader): ' + JSON.stringify(r.out) + '; ' + JSON.stringify(r.st));
       for (const k in r.out) assert.ok(r.out[k].on > 0 && r.out[k].off > 0, k);
