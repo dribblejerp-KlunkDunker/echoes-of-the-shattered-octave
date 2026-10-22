@@ -33,7 +33,7 @@ async function bootPage(browser, opts) {
   await page.addInitScript(([mode]) => { window.__r3d21 = { automation: true, force: true }; try { localStorage.setItem('octave.r3d21.v1', JSON.stringify({ mode, cap: 80 })); } catch (e) { /* none */ } }, [mode]);
   await page.addInitScript(() => { let s = 424242; Math.random = () => (s = (s * 16807) % 2147483647) / 2147483647; });
   await page.goto(URL + '/?nosw=1', { timeout: 600000, waitUntil: 'domcontentloaded' });
-  await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && G.state === 'title', null, { timeout: 600000 });
+  await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && G.state === 'title', null, { timeout: 600000, polling: 500 });   // interval polling: a page may stub requestAnimationFrame
   await page.locator('#btn-new').click(); await page.locator('#cname').fill('Ground Tester');
   await page.locator('#c-next').click(); await page.locator('.classlist button').first().click();
   await page.locator('#c-next').click(); await page.locator('#c-next').click();
@@ -242,7 +242,8 @@ async function waitDrawn(page, names) {
       const pick = (o) => Object.fromEntries(Object.entries(o).filter(([k]) => k.startsWith('r3d/')));
       assert.deepStrictEqual(pick(withG.h), pick(without.h));
     });
-    await step('no page errors (identity)', async () => { assert.deepStrictEqual(withG.errors.concat(without.errors), []); });
+    // the blocked page logs its two aborted script loads (net::ERR_FAILED); anything else is an error
+    await step('no page errors (identity)', async () => { assert.deepStrictEqual(withG.errors.concat(without.errors.filter(e => !/ERR_FAILED/.test(e))), []); });
   }
   await browser.close();
 
