@@ -54,6 +54,19 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 20: the painted world
+
+| | |
+|---|---|
+| ![Five views of five enemies](screenshots/p20-bestiary.jpg) | ![Pressman Mallow seen from five angles in Oakhaven](screenshots/p20-oakhaven.jpg) |
+| Hand-built views for 25 of the 27 species, here the Outrider-Captain, Steam Golem, Deacon, Pressman Mallow and the Requiem: front, front-side, side, back-side and back. | The same views in the world: five Pressman Mallows, each at a different angle, in Oakhaven in the Cinematic look. |
+| ![The Chapel's open belfry seen over the Hedge, and its empty bell-frame inside](screenshots/p20-belfry.jpg) | ![The beacon on the Watch Downs](screenshots/p20-downs.jpg) |
+| The Chapel's open belfry over the Hedge, and the bell-frame inside, hooks empty: the story never puts a bell back, so none is drawn. | Beyond the clearing's thorn, the Watch Downs: walkable chalk hills with a beacon on the Long Down; from the knoll, Oakhaven is seen past the Hedge. |
+| ![Repainted item icons](screenshots/p20-icons.jpg) | ![Mood portraits for Lyra, Vane and Hetty](screenshots/p20-portraits.jpg) |
+| Item icons redrawn as pixel art: every item, weapon and armour has its own. | Mood portraits are now edits of each face (brows, lids, mouth): neutral, angry, sad, afraid, wry. |
+
+Also: pixel-art panoramas, a hand-drawn Drift-Kestrel flyover, rebuilt ceilings, new frames for Kaelen and Lyra when hurt, and pixel-art crows, rats and cat. The new art is on in every preset, Original included, and a new player's game starts on the highest preset their device can run (Cinematic on a desktop with hardware graphics, Medium on a phone), stepping down by itself if it runs slowly. Not finished yet: the full-screen paintings (area cards, death pictures, endings, logbook sketches), the Hush-Moths and the Cacophony Swarm, and the NPC sprites.
+
 ### Phase 19: together (two-player co-op)
 
 | | |
