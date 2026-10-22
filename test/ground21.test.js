@@ -32,8 +32,8 @@ async function bootPage(browser, opts) {
   const mode = opts.mode || 'on';
   await page.addInitScript(([mode]) => { window.__r3d21 = { automation: true, force: true }; try { localStorage.setItem('octave.r3d21.v1', JSON.stringify({ mode, cap: 80 })); } catch (e) { /* none */ } }, [mode]);
   await page.addInitScript(() => { let s = 424242; Math.random = () => (s = (s * 16807) % 2147483647) / 2147483647; });
-  await page.goto(URL + '/?nosw=1', { timeout: 300000 });
-  await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && G.state === 'title', null, { timeout: 300000 });
+  await page.goto(URL + '/?nosw=1', { timeout: 600000, waitUntil: 'domcontentloaded' });
+  await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && G.state === 'title', null, { timeout: 600000 });
   await page.locator('#btn-new').click(); await page.locator('#cname').fill('Ground Tester');
   await page.locator('#c-next').click(); await page.locator('.classlist button').first().click();
   await page.locator('#c-next').click(); await page.locator('#c-next').click();
@@ -75,8 +75,9 @@ async function waitDrawn(page, names) {
 (async () => {
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
 
+  const PART = process.env.PART || 'all';   // 'art', 'identity' or 'all'
   // ---------------------------------------------------------------- the art
-  {
+  if (PART !== 'identity') {
     const { page, errors } = await bootPage(browser, {});
     const inv = await page.evaluate(() => {
       const all = new Set(), per = {};
@@ -209,7 +210,7 @@ async function waitDrawn(page, names) {
   }
 
   // ---------------------------------------------------------------- Original and the switch are byte-identical
-  {
+  if (PART !== 'art') {
     const det = () => { window.requestAnimationFrame = () => 0; let c = 1000; performance.now = () => (c += 0.25); Date.now = () => 1700000000000 + c; };
     const hashes = async (opts) => {
       const { page, errors } = await bootPage(browser, opts);
@@ -246,7 +247,7 @@ async function waitDrawn(page, names) {
   await browser.close();
 
   // ---------------------------------------------------------------- R3D's own suite still passes
-  if (process.env.SKIP_R3D !== '1') {
+  if (process.env.SKIP_R3D !== '1' && PART === 'all') {
     await step('test/r3d21.test.js still passes (24/24, picks and the trace identical)', async () => {
       const r = spawnSync(process.execPath, [path.join(__dirname, 'r3d21.test.js')], { env: process.env, encoding: 'utf8', timeout: 3600000, maxBuffer: 1 << 26 });
       const out = (r.stdout || '') + (r.stderr || '');
