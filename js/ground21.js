@@ -298,7 +298,7 @@ vec4 r3dGround(vec4 c, vec2 uv, float layer, float mat, vec2 gdx, vec2 gdy) {
     if (GFX[COVER_FLAG] === undefined) GFX[COVER_FLAG] = true;
     if (GFX.FX && !GFX.FX.includes(COVER_FLAG)) GFX.FX.push(COVER_FLAG);
   }
-  const COVER = { radius: 7.5, perCell: { grass: 5, turf: 4, track: 3, dirt: 3, leaf: 0 }, n: 0, cellKey: '', vao: null, vbo: null, tex: null, prog: null, buf: new Float32Array(4096 * 12), ms: 0, ctx: -1 };
+  const COVER = { radius: 7.5, perCell: { grass: 9, turf: 7, track: 4, dirt: 4, leaf: 0 }, n: 0, cellKey: '', vao: null, vbo: null, tex: null, prog: null, buf: new Float32Array(4096 * 12), ms: 0, ctx: -1 };
   const CV = 16, CV_LAYERS = 8;   // 16 x 16 sprites: 0-2 tufts, 3-4 pebbles, 5-6 leaves, 7 clover
   function coverArt() {
     // procedural stand-in pixel art in grey values (the floor's colour tints it in the shader); alpha 0/255
@@ -404,7 +404,12 @@ void main() {
           let kind = 0, layer = 0, w = 0.13, h = 0.1, sway = 0.006, tr = tint[0], tg = tint[1], tb = tint[2];
           if (fam === 'grass' || fam === 'turf') {
             if (pick < 0.08) { kind = 1; layer = 7; w = h = 0.07; tr *= 0.8; tg *= 1.15; tb *= 0.75; }        // clover
-            else { layer = Math.floor(pick * 3) % 3; w = 0.12 + 0.06 * h3(cx, cy + i, seed + 4); h = 0.07 + 0.06 * h3(cy, cx + i, seed + 5); tr *= 0.95; tg *= 1.1; tb *= 0.85; }
+            else {
+              layer = Math.floor(pick * 3) % 3; w = 0.12 + 0.06 * h3(cx, cy + i, seed + 4); h = 0.07 + 0.06 * h3(cy, cx + i, seed + 5);
+              // each tuft its own green: some fresher, some sun-dried, a few darker in their own shade
+              const v = 0.82 + 0.34 * h3(cx + i, cy, seed + 8), dry = h3(cy + i, cx, seed + 9);
+              tr *= v * (0.88 + 0.24 * dry); tg *= v * 1.12; tb *= v * (0.8 - 0.1 * dry);
+            }
           } else if (woods && pick < 0.55) {                                                                   // fallen leaves
             kind = 1; layer = 5 + (pick < 0.28 ? 0 : 1); w = h = 0.09 + 0.04 * pick; tr = 0.5 + 0.25 * pick; tg = 0.36 + 0.1 * pick; tb = 0.16; sway = 0;
           } else if (fam === 'track' && pick < 0.45) {

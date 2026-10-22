@@ -81,8 +81,8 @@ function ground21ArtFactory() {
     paint: { mat: 'plaster', st: true, moss: 0, cracks: 3, chips: 2, bevel: 1, pits: 0.001, soft: true, minJoint: 60, emboss: 0.06, joint: 0.05, warp: 0.05, faceVote: 0.95, clean: true },
     metal: { mat: 'metal', st: true, moss: 0, cracks: 0, chips: 0, bevel: 1, rivets: true, joint: 0.1, warp: 0.08, faceVote: 1.0, clean: true },
     roof: { mat: 'roof', st: true, moss: 0.35, cracks: 4, chips: 18, bevel: 1, pits: 0.008, minJoint: 30, joint: 0.2, warp: 0.16 },
-    grass: { mat: 'grass', st: false, tufts: 1500, clover: 22, emboss: 0.05 },
-    turf: { mat: 'grass', st: false, tufts: 1100, clover: 14, emboss: 0.05 },
+    grass: { mat: 'grass', st: false, tufts: 950, clover: 22, emboss: 0.05, warp: 0.8 },
+    turf: { mat: 'grass', st: false, tufts: 800, clover: 14, emboss: 0.05, warp: 0.8 },
     leaf: { mat: 'leaf', st: false, leaves: 900, emboss: 0.08 },
     dirt: { mat: 'dirt', st: false, pebbles: 150, roots: 9, sprigs: 50, emboss: 0.08, leaves: 420, warp: 0.75 },
     track: { mat: 'dirt', st: false, pebbles: 160, roots: 3, tufts: 260, emboss: 0.08 },
@@ -604,7 +604,7 @@ function ground21ArtFactory() {
       let fx = x, fy = y; const r0 = cls[wrap(y) * M + wrap(x)];
       for (let s = 0; s < len; s++) {
         const t = len > 1 ? s / (len - 1) : 1;
-        const lv = Math.round(-2 + t * (3 + k0));
+        const lv = Math.round(-3 + t * (5 + k0));
         const c = pal.ramp[r0][4 + clamp(lv, -3, 3)];
         const X = Math.round(fx), Y = Math.round(fy);
         put(X, Y, c[0], c[1], c[2]);
@@ -622,7 +622,7 @@ function ground21ArtFactory() {
         const dir = rand() * 8 | 0, nb = 3 + (rand() * 4 | 0);
         for (let b = 0; b < nb; b++) {
           const ang = (dir + ((b % 3) - 1) + 8) & 7;
-          blade(x + (b & 1), y, ang, 4 + (rand() * 6 | 0), rand() < 0.35 ? 1 : 0);
+          blade(x + (b & 1), y, ang, 5 + (rand() * 7 | 0), rand() < 0.35 ? 1 : 0);
         }
         const rc = rampAt(x, y, -3); put(x, y, rc[0], rc[1], rc[2]);
       }
