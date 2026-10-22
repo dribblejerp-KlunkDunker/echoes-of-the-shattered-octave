@@ -321,6 +321,8 @@ const CARD21 = (() => {
   const compactKey = (c) => [c.cls | 0, c.face | 0, c.wpn | 0, c.arm | 0].join(',');
   let bumpRem = () => {};
   function remember(c, L) {
+    // an extra (prologue, Cantabile, the Long Night…) plays someone else and stores nothing of its own
+    try { if (typeof EXTRAS17 === 'object' && EXTRAS17 && EXTRAS17.inExtra && EXTRAS17.inExtra()) return; } catch (e) { /* none */ }
     try {
       const k = compactKey(c), old = remembered.get(k); if (old && sig(old) === sig(L)) return;
       remembered.delete(k); remembered.set(k, L); while (remembered.size > 48) remembered.delete(remembered.keys().next().value); bumpRem();
