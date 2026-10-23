@@ -107,6 +107,9 @@
 //                ambient, side shading 0.8, indoor flicker, the point lights with their wall masks (capped as on the CPU).
 //                LIGHT replaces it (clustered lights, sun/moon, shadows, height fog...).
 //       'common': helpers every program gets (r3dLinearDepth(z), r3dBayer(ivec2)).
+//       'ground': vec4 r3dGround(c, uv, layer, mat, dFdx(uv), dFdy(uv)) — the world shader passes each base texel through it
+//                (after the alpha test, before decals) and fades the old wall-detail noise by (1 - gGroundK). CORE's is a no-op;
+//                js/ground21.js (team GROUND) replaces it with the close-up detail textures (texture units 8 and 9).
 //       'landmarks': vec4 r3dLandmarks(float azimuth, float tanElevation) — the engine's horizon ridges (LANDMARKS) for
 //                this map and hour, rgb + coverage; include it (opts.chunks) in a sky program and CORE sets its uniforms.
 //     R3DFrame (std140): mat4 uViewProj, uView, uProj, uInvViewProj; vec4 uEye (xyz eye GL, w engine animT);
@@ -321,6 +324,13 @@ vec3 r3dShade(R3DSurf s) {
   return min(c, vec3(1.0));
 }
 `, opts: null },
+    // close-up detail (js/ground21.js replaces it): the base texel colour c of world layer `layer` at uv, with the uv
+    // derivatives (no dFdx here: chunks compile into vertex shaders too). Sets gGroundK (0..1, how much detail replaced the
+    // base) so the old wall-detail noise fades out where it does. CORE's version changes nothing.
+    ground: { src: `
+float gGroundK = 0.0;
+vec4 r3dGround(vec4 c, vec2 uv, float layer, float mat, vec2 gdx, vec2 gdy) { gGroundK = 0.0; return c; }
+`, opts: null },
     // the engine's distant landmarks (horizon ridges, LANDMARKS in js/upgrades.js), as a function of azimuth and
     // tan(elevation): rgb + coverage. CORE sets the uniforms per frame for any program that includes this chunk.
     landmarks: { src: `
@@ -347,7 +357,7 @@ vec4 r3dLandmarks(float az, float te) {
 }
 `, opts: { uniforms: (g, pr, f) => landmarkUniforms(g, pr, f) } },
   };
-  const CHUNK_ORDER = ['common', 'shade'];
+  const CHUNK_ORDER = ['common', 'shade', 'ground'];
   // landmark uniforms (map's ridges, the hour's light)
   const lmBuf = [new Float32Array(64), new Float32Array(64), new Float32Array(64), new Float32Array(64)];
   // js/sky.js hands the engine an empty list for a map whose ridges it bakes into its panorama: R3D keeps the originals
@@ -1120,7 +1130,7 @@ layout(location=0) out vec4 oColor; layout(location=1) out vec4 oAux;
 void main() {
   float layer = vTex.x, mat = vTex.z, side = vTex.w;
   bool alphaTest = side > 5.0; if (alphaTest) side -= 10.0;
-  vec2 uv = vUV;
+  vec2 uv = vUV, gdx = dFdx(vUV), gdy = dFdy(vUV);
   vec4 c;
   if (mat == 2.0 || mat == 3.0) {
     // the CPU's water: rows scroll, columns wave, in whole texels
@@ -1134,12 +1144,13 @@ void main() {
     c = textureGrad(uTex, vec3(uv2, layer), dFdx(uv), dFdy(uv));
   } else c = texture(uTex, vec3(uv, layer));
   if (alphaTest && c.a < 0.394) discard;
+  c = r3dGround(c, uv, layer, mat, gdx, gdy);
   if (vTex.y >= 0.0) { vec4 dc = texture(uTex, vec3(uv, vTex.y)); if (dc.a > 0.394) c = dc; }
   float d = max(0.0, dot(vPos.xy - uEye.xy, uFwdH.xy));
   // far mode: distant surfaces fade into their texture's average colour (the 1x1 level), as on the CPU
   if (uSky.z > 0.5 && d > uFar.x) { float k = clamp((d - uFar.x) / max(1e-3, uFar.y - uFar.x), 0.0, 1.0); k = k * k * (3.0 - 2.0 * k); c.rgb = mix(c.rgb, textureLod(uTex, vec3(0.5, 0.5, layer), 6.0).rgb, k); }
   // close-range wall detail, as on the CPU (64x64 greyscale at twice the texel frequency)
-  if (uDetailOn == 1 && mat == 4.0 && d < uMap.z) { float dd = texture(uDetail, fract(uv) * 2.0).r; c.rgb *= 1.0 + (dd - 0.5) * 0.45 * (1.0 - d / uMap.z); }
+  if (uDetailOn == 1 && mat == 4.0 && d < uMap.z) { float dd = texture(uDetail, fract(uv) * 2.0).r; c.rgb *= 1.0 + (dd - 0.5) * 0.45 * (1.0 - d / uMap.z) * (1.0 - gGroundK); }
   R3DSurf s; s.albedo = c.rgb; s.pos = vPos; s.nrm = normalize(vNrm); s.side = side; s.mat = mat; s.emissive = 0.0; s.fi = 1.0; s.ladd = vec3(0.0); s.kind = 0;
   oColor = vec4(r3dShade(s), 1.0);
   oAux = vec4(mat / 255.0, 0.0, 0.0, 1.0);
