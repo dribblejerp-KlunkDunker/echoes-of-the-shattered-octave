@@ -6,6 +6,10 @@ they came from the Project; this file is what was decided about them. Item numbe
 
 Where a ruling here and a phase doc disagree, the ruling wins.
 
+**Two rounds.** sleeves ruled on the items first. Afterwards sleeves asked Claude to settle what was
+still open ("make the decisions here"). Those later decisions are marked **Decided (delegated)**, so
+they can be told apart from sleeves' own rulings, and sleeves can overturn any of them.
+
 ---
 
 ## Two rulings that grow the game
@@ -18,8 +22,25 @@ invented features stand as canon: the Long Down and its beacon cairn, Hedge Knol
 sheepfold, the dew-pond, the boundary stones, the hawthorns, and the finger-post that reads
 SHEEP-WALK.
 
-**Still open:** where the sheep went. It was not ruled on. Leave "There are no sheep" unexplained
-until it is; do not answer it in a new map or a new line.
+**Decided (delegated): the sheep went into the Hedge's wool and never came back up.** The answer
+follows canon nearly all the way:
+
+- The Hedge was planted in the autumn of 417, "with fleece packed into the gaps between the roots,
+  raw wool from every sheep in the Reach" (Book Four, Part One).
+- The town planted it by hand: "Thorn in the trench, a man's height of packed wool either side …
+  The carders came out in their aprons and worked all night" (Phase 6 in-game text).
+- Salt mutton is the Reach's staple (Vol I; Phase 6). The Carders' mill has stood idle since its
+  engine stopped, with fleece "carded and never collected" (Phase 9 in-game text).
+
+The new part: the Downs flocks were driven down off the hills to be shorn for the Hedge and were
+kept inside it. Over the two years Oakhaven lived shut in, they were eaten. Nobody has walked the
+sheep-walk since, which is why the fold was "kept mended for a long time, and then stopped".
+Nothing took them, neither the Hush nor anyone else.
+
+In the game, no line says this yet. "There are no sheep" stays unexplained on the Downs; the answer
+is what any later text must agree with. The region's first inhabited place is a good spot for a
+player to learn it, from a shepherd's family or from Nell at the Carders' mill. That line is to be
+written and reviewed like any other.
 
 ### The panorama becomes reachable (Phase 20, item 6)
 
@@ -40,8 +61,39 @@ because the Hedge beyond them is a story boundary: "the country there is shown �
 walkable." Making the panorama reachable reverses that rule. It does not lift the story gate. Any
 new route to these places has to respect the Hedge. Two ways to do that: reach them from the Downs,
 which are already outside the Hedge, or open them only after the point in the story where the
-Hedge is passed. The route is not decided yet. Whichever team builds it should bring a proposal
-before writing any maps.
+Hedge is passed.
+
+### The route (Decided, delegated)
+
+**The Hedge stays a story boundary. Everything beyond it is reached from outside it, never from
+Oakhaven.** These rules apply to every new place:
+
+1. **Nothing new joins Oakhaven.** Its walls stay walls, as `js/horizon20.js` already says.
+2. **A new place joins only the map it is seen from**, or a new map beside it, and only one the
+   player can already reach at that point in the story. It never joins two maps that are not
+   already joined. The Watch Downs were built on this rule: "It joins nothing but the clearing, so
+   it cannot lead around a story gate."
+3. **Every new map passes the Downs' checks:** `HORIZON20.reach()` finds no softlock and no fall
+   that hurts, and with the switches off the frames stay byte-identical.
+4. **A painted landmark that becomes a real place stands on the skyline at its real bearing**,
+   the way Oakhaven already does when seen from the clearing.
+
+Where each one goes. The bearings come from the panorama recipes in `js/sky.js`, where 0 is east
+and π/2 is south.
+
+| Landmark | Painted on | Reached from | Order |
+|---|---|---|---|
+| Farmsteads, barns, orchards | Oakhaven's skyline | The Watch Downs region. It is chalk downland too, so these become its country. | 1 |
+| Snapped iron pylon | The clearing's skyline, south-south-west (2.07) | The Watch Downs region, going south from the Downs, west of Oakhaven | 1 |
+| Standing-stone ring | The clearing's skyline, east (0.11) | Off the Greenroot road, which already leaves the clearing by the east hedge | 2 |
+| Greenroot's chapel spire | Oakhaven's skyline, north-east | **Already reachable.** Greenroot is a map (`js/parish.js`), three miles east by the road. | done |
+| Broken tower stump | The Deep Woods' skyline | The Deep Woods only | 3 |
+| Broken colonnade, marble spires | Whisper-Grove's skyline | Whisper-Grove only | 3 |
+
+**What the new country holds.** Unlike the first Downs map, the region is not walking-only. New
+maps may have people, items, enemies and quests. The existing Downs map keeps danger 0, as its
+tests require: it is the quiet way in. What the pylon, the ring and the stump were is up to whoever
+builds each place. Mark it [PROPOSED] and send it for review like each phase's in-game text.
 
 ---
 
@@ -116,20 +168,44 @@ draws the town out to 3.2 fog lengths, which on the Downs at Medium is about 70 
 **Medium**, Oakhaven's roofs show from the beacon (about 1,100 px) but **the belfry is not drawn
 at all** (0 px). On High, Ultra and Cinematic it is drawn (66–72 px).
 
-This is not a story problem and nothing was changed. It is a small mismatch between a line and a
-preset. Either let the far view reach a little further on the Downs, or accept that on Medium the
-belfry is too far to make out. It is the renderer team's call. Note that the regional work above
-will add more long sight-lines like this one.
+**Decided (delegated): the view reaches the tower; the text is not changed.** The far town is
+now drawn at least 84 units out (`FAR_MIN` in `js/horizon20.js`), enough for the whole Long Down
+summit. On Medium the belfry now shows from the beacon (0 → 9 px), and High and up are unchanged.
+The far hook's cost on Medium from the beacon goes from 0.9 to 1.0 ms. This is in
+[PR #45](https://github.com/dribblejerp-KlunkDunker/echoes-of-the-shattered-octave/pull/45), which
+is open and awaiting merge.
 
 ---
 
-## Not ruled on: housekeeping
+## Housekeeping (Decided, delegated)
 
-These were flagged in Phase 20 §2 but are fixes, not canon, and no change was asked for. They stay
-open:
+All of these are in [PR #45](https://github.com/dribblejerp-KlunkDunker/echoes-of-the-shattered-octave/pull/45),
+which is open and awaiting merge.
 
-- The notice "Graphics eased to … to keep the game smooth — Options to change"
-  (`js/max20.js`) has no French. English-only, or write the line.
-- `TX.wall` in `js/horizon20.js` is defined but never shown, and has no French. It is safe to delete.
-- The "Chapel belfry" Options hint starts with a lower-case "the", while "Country beyond walls"
-  starts with a capital.
+- **The eased-graphics notice gets French.** "Graphics eased to {0} to keep the game smooth —
+  Options to change" becomes "Graphismes ramenés au préréglage {0} pour garder le jeu fluide —
+  Options pour changer" (new file `tools/i18n/p20-max.tsv`). The catalogue already translates the
+  preset names: Ultra, Élevé, Moyen.
+- **`TX.wall` is deleted.**
+- **The "Chapel belfry" hint stays lower-case.** The suggestion to capitalise it was wrong.
+  Lower-case is the house style for Options hints ("beams through the canopy …", "a shimmer over
+  fires …"). "Country beyond walls" starts with a capital only because its hint opens with
+  "Oakhaven".
+
+### Found while deciding: Phase 21's French was never merged
+
+The Phase 21 doc says "French for all of it is in tools/i18n/p21-*.tsv", and the files are there,
+but they were never merged into `locales/story/fr.json`: 4 of 72 lines were in. French players saw
+English for the 3D renderer rows, the body rows, the character card and photo mode. PR #45 merges
+them: 63 entries and 2 patterns added, no existing French changed. Three lines are deliberately
+left out, because the catalogue gives each English string one French string across the whole game:
+
+| English | Kept | Phase 21 wanted | Why |
+|---|---|---|---|
+| On | Activé | Oui | every switch in Options |
+| Off | Désactivé | Non | every switch in Options |
+| Back | Retour | Dos | every Back button |
+
+The one cost: in French, the character card's back view reads "Retour" until it gets a label of
+its own. The screenshot line used `{w}`/`{h}`, which the translator never matches; it is now a
+`{0}`/`{1}` pattern.
