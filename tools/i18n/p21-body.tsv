@@ -5,5 +5,7 @@ Feet when looking down	Pieds en regardant vers le bas
 legs, boots and the hem of your armour	jambes, bottes et le bas de votre armure
 Light on the body	Lumière sur le corps
 arms and boots take the light where you stand	bras et bottes prennent la lumière de l’endroit où vous êtes
-On	Oui
-Off	Non
+# not merged: the catalogue keys French by the English alone, game-wide, and "On" is already "Activé" on every switch in Options
+# On	Oui
+# not merged: the catalogue keys French by the English alone, game-wide, and "Off" is already "Désactivé" on every switch in Options
+# Off	Non
