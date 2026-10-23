@@ -11,8 +11,9 @@ Markdown here is the source of truth. PDFs and a packaged archive are generated 
 - **World Bibles/** — the canon. The Series Bible is the single document every chapter is
   written against; the numbered volumes expand it (gazetteer and bestiary, errata and rulings,
   the Hush and the Organum, the winter gazetteer, the Rift and the press, the calendar).
-- **Game Layer/** — the Game Design Document for the Book One prototype, and the in-game text
-  written for each build phase.
+- **Game Layer/** — the Game Design Document for the Book One prototype, the in-game text
+  written for each build phase, the graphics roadmap, and the author's rulings on what each
+  phase proposed (`Phase 20-21 - Author Rulings.md`).
 - **Source Material/** — the original notes supplied at the start of the project, unedited.
   Where these and a world bible disagree, these are ground truth.
 
