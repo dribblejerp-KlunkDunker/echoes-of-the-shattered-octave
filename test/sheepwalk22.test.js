@@ -191,8 +191,16 @@ const URL = (process.env.PREVIEW_URL || 'http://127.0.0.1:3000') + '/index.html?
       for (let i = 0; i < 4; i++) useDeco(pile);
       const nF = (G.player.inv.find((s) => s.id === 'p22_furze') || { n: 0 }).n;
       check(nF === 3, 'three faggots, and no more (' + nF + ')');
+      G.tod = 0.5; const flock0 = G.ents.filter((e) => e._p22 === 'sheep');
       useDeco(knap); useDeco(C.entities.find((e) => e.use === 'p22_beacon' && e.beacon === 2));
       check(G.flags.p22w_b1 === 1 && G.flags.p22w_b2 === 1, 'Hob\'s Knap and Ewe Barrow lit');
+      const flock1 = G.ents.filter((e) => e._p22 === 'sheep');
+      check(flock0.length > 0 && flock1.length === flock0.length && flock1.every((e, i) => e === flock0[i]), 'lighting a fire leaves the flock where it is (no rebuild)');
+      check(!knap.lightCol, 'a fire lit at noon throws no light at noon');
+      G.tod = 0.92; for (let i = 0; i < 80; i++) { G.state = 'play'; update(1 / 30); }
+      check(knap.lightCol && C.entities.find((e) => e.use === 'p22_beacon' && e.beacon === 2).lightCol, 'and lights the hill when night comes, without leaving the map');
+      G.tod = 0.5; for (let i = 0; i < 80; i++) { G.state = 'play'; update(1 / 30); }
+      check(!knap.lightCol, 'and is only smoke again by day');
       go(S.DOWNS, 18.5, 14, 0);
       const cairn = G.ents.find((e) => e.sprite === 'p20_cairn');
       check(cairn && cairn.use === 'p22_beacon', 'the Long Down cairn can be lit once the quest is under way');
