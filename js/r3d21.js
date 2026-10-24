@@ -762,6 +762,20 @@ vec4 r3dLandmarks(float az, float te) {
       return relief ? cellGround(m, cx, cy, fx, fy) : 0;
     };
     let tris = 0;
+    // slope normals: each corner's gradient is the mean of the bilinear gradients of the open slope cells that share it,
+    // and a sub-quad vertex blends its cell's four corners, so the shading runs on across cell edges (taken from inside
+    // each cell alone, a steep slope shaded as a stack of bands, one per row of cells)
+    const SM = m.smooth, VV = m.verts, W1 = W + 1, cg = (relief && SM && VV) ? new Float32Array(W1 * (H + 1) * 2) : null;
+    if (cg) for (let vy = 0; vy <= H; vy++) for (let vx = 0; vx <= W; vx++) {
+      let gx = 0, gy = 0, n = 0;
+      for (let k = 0; k < 4; k++) {
+        const cx2 = vx - 1 + (k & 1), cy2 = vy - 1 + (k >> 1);
+        if (cx2 < 0 || cy2 < 0 || cx2 >= W || cy2 >= H || !SM[cy2 * W + cx2] || isBlock(grid[cy2 * W + cx2])) continue;
+        const v0 = cy2 * W1 + cx2, fx = vx - cx2, fy = vy - cy2;
+        gx += VV[v0 + fy * W1 + 1] - VV[v0 + fy * W1]; gy += VV[v0 + W1 + fx] - VV[v0 + fx]; n++;
+      }
+      const o = (vy * W1 + vx) * 2; cg[o] = n ? gx / n : 0; cg[o + 1] = n ? gy / n : 0;
+    }
     // ---- ground and caps
     for (let cy = 0; cy < H; cy++) for (let cx = 0; cx < W; cx++) {
       const ci = cy * W + cx, c = grid[ci];
@@ -778,12 +792,12 @@ vec4 r3dLandmarks(float az, float te) {
       }
       const name = texOfFloor(cx, cy), L = tex(name), mat = matOf(name);
       if (relief && m.smooth && m.smooth[ci]) {
-        // a slope: 2x2 sub-quads on the bilinear surface, normals from its gradient
-        const idx = [];
+        // a slope: 2x2 sub-quads on the bilinear surface, normals blended from the shared corner gradients
+        const idx = [], o00 = (cy * W1 + cx) * 2, o10 = o00 + 2, o01 = o00 + W1 * 2, o11 = o01 + 2;
         for (let j = 0; j <= 2; j++) for (let i = 0; i <= 2; i++) {
           const fx = i / 2, fy = j / 2, z = cellGround(m, cx, cy, fx, fy);
-          const e = 0.02, gx = (cellGround(m, cx, cy, Math.min(1, fx + e), fy) - cellGround(m, cx, cy, Math.max(0, fx - e), fy)) / ((Math.min(1, fx + e) - Math.max(0, fx - e)) || 1);
-          const gy = (cellGround(m, cx, cy, fx, Math.min(1, fy + e)) - cellGround(m, cx, cy, fx, Math.max(0, fy - e))) / ((Math.min(1, fy + e) - Math.max(0, fy - e)) || 1);
+          const gx = (cg[o00] * (1 - fx) + cg[o10] * fx) * (1 - fy) + (cg[o01] * (1 - fx) + cg[o11] * fx) * fy;
+          const gy = (cg[o00 + 1] * (1 - fx) + cg[o10 + 1] * fx) * (1 - fy) + (cg[o01 + 1] * (1 - fx) + cg[o11 + 1] * fx) * fy;
           const nx = -gx * ZK, ny = -gy * ZK, nl = Math.hypot(nx, ny, 1);
           idx.push(B.vert(cx + fx, cy + fy, z, cx + fx, cy + fy, L, -1, mat, 1, nx / nl, ny / nl, 1 / nl));
         }
