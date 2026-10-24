@@ -339,6 +339,10 @@ vec3 l21SkyCol(vec3 d) {
   c += uL21Glow * (pow(sd, 5.0) * 0.32 + pow(sd, 40.0) * 0.5) * (1.0 - clamp(e, 0.0, 1.0) * 0.6);
   return c;
 }
+// a cell's height; open slope cells are stored 10000 low (their lowest corner, flagged), so ground that only goes on
+// rising is never taken for a wall
+float l21Hgt(ivec2 c) { float v = texelFetch(uL21H, c, 0).r; return v < -5000.0 ? v + 10000.0 : v; }
+bool l21Occ(ivec2 c, float z) { float v = texelFetch(uL21H, c, 0).r; return v >= -5000.0 && v > z; }
 // the sun's ray marched through the map's cell heights: 1 lit, 0 in shadow, a penumbra by how narrowly it clears
 float l21Shadow(vec3 p, vec3 L) {
   if (uL21Sun.w < 0.5 || L.z <= 0.0) return 1.0;
@@ -354,7 +358,7 @@ float l21Shadow(vec3 p, vec3 L) {
     if (c.x < 0 || c.y < 0 || float(c.x) >= uMap.x || float(c.y) >= uMap.y) break;
     float z = p.z + rise * t;
     if (z > uL21Fog.w) break;
-    float h = texelFetch(uL21H, c, 0).r;
+    float h = l21Hgt(c);
     float clear = z - h;
     if (clear < 0.0) return 0.0;
     sh = min(sh, clear / (t * uL21SunC.w + 0.02));
@@ -370,13 +374,13 @@ float l21AO(vec3 p, vec3 n) {
   float ao = 0.0;
   if (n.z > 0.5) {
     float z = p.z + 0.12;
-    if (c.x > 0 && texelFetch(uL21H, c + ivec2(-1, 0), 0).r > z) ao += pow(max(0.0, 1.0 - f.x / 0.45), 2.0);
-    if (float(c.x) < uMap.x - 1.0 && texelFetch(uL21H, c + ivec2(1, 0), 0).r > z) ao += pow(max(0.0, 1.0 - (1.0 - f.x) / 0.45), 2.0);
-    if (c.y > 0 && texelFetch(uL21H, c + ivec2(0, -1), 0).r > z) ao += pow(max(0.0, 1.0 - f.y / 0.45), 2.0);
-    if (float(c.y) < uMap.y - 1.0 && texelFetch(uL21H, c + ivec2(0, 1), 0).r > z) ao += pow(max(0.0, 1.0 - (1.0 - f.y) / 0.45), 2.0);
+    if (c.x > 0 && l21Occ(c + ivec2(-1, 0), z)) ao += pow(max(0.0, 1.0 - f.x / 0.45), 2.0);
+    if (float(c.x) < uMap.x - 1.0 && l21Occ(c + ivec2(1, 0), z)) ao += pow(max(0.0, 1.0 - (1.0 - f.x) / 0.45), 2.0);
+    if (c.y > 0 && l21Occ(c + ivec2(0, -1), z)) ao += pow(max(0.0, 1.0 - f.y / 0.45), 2.0);
+    if (float(c.y) < uMap.y - 1.0 && l21Occ(c + ivec2(0, 1), z)) ao += pow(max(0.0, 1.0 - (1.0 - f.y) / 0.45), 2.0);
   } else if (n.z < 0.3) {
     ivec2 o = ivec2(floor(p.xy + n.xy * 0.5));
-    if (o.x >= 0 && o.y >= 0 && float(o.x) < uMap.x && float(o.y) < uMap.y) { float g = texelFetch(uL21H, o, 0).r; ao = 1.0 - smoothstep(0.0, 0.32, p.z - g); }
+    if (o.x >= 0 && o.y >= 0 && float(o.x) < uMap.x && float(o.y) < uMap.y) { float g = l21Hgt(o); ao = 1.0 - smoothstep(0.0, 0.32, p.z - g); }
   }
   return 1.0 - 0.42 * clamp(ao, 0.0, 1.0);
 }
@@ -534,9 +538,13 @@ vec3 r3dShade(R3DSurf s) {
     for (let cy = 0; cy < H; cy++) for (let cx = 0; cx < W; cx++) {
       const i = cy * W + cx, c = grid[i];
       let z;
+      let slope = false;
       if (c && !c.door) z = relief ? (c.top != null ? c.top : Math.max(groundC(cx, cy) + 1, wTop0)) : (c.top != null ? c.top : 1);
+      else if (relief && m.smooth && m.smooth[i] && m.verts) { const W1 = W + 1, v = cy * W1 + cx, V = m.verts; z = Math.min(V[v], V[v + 1], V[v + W1], V[v + W1 + 1]); slope = true; }
       else z = groundC(cx, cy);
       d[i] = z * ZK; if (d[i] > maxH) maxH = d[i];
+      // a slope cell: its lowest corner, flagged 10000 low (see l21Hgt): a ray or a corner never meets it as a wall
+      if (slope) d[i] -= 10000;
     }
     if (!hgt.tex || hgt.w !== W || hgt.h !== H) {
       if (hgt.tex) gl.deleteTexture(hgt.tex);

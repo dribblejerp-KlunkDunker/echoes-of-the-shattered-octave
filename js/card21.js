@@ -69,6 +69,10 @@ const CARD21 = (() => {
       a_gambeson: { slot: 'body', kind: 'gambeson', mat: 'quilt', col: C.linen, hem: 19, sleeves: 'long', bulk: 0.55 },
       a_jerkin: { slot: 'body', kind: 'jerkin', mat: 'leather', col: C.leather, hem: 22.5, sleeves: 'none', bulk: 0.3 },
       a_hushcoat: { slot: 'body', kind: 'coat', mat: 'wool', col: C.hush, hem: 6, sleeves: 'long', collar: true, bulk: 0.35 },
+      a_p22_shroud: { slot: 'body', kind: 'coat', mat: 'wool', col: [106, 102, 94], hem: 4, sleeves: 'long', collar: true, bulk: 0.45 },   // Phase 22b
+      a_p22_barrowhelm: { slot: 'head', kind: 'kettle', mat: 'metal', col: C.bronze },   // Phase 22b
+      a_p22_droverboots: { slot: 'feet', kind: 'hobnail', mat: 'leather', col: [60, 44, 30], top: 12 },   // Phase 22b
+      a_p22_mantle: { slot: 'body', kind: 'coat', mat: 'wool', col: [206, 198, 174], hem: 12, sleeves: 'long', collar: true, bulk: 0.4 },   // Phase 22: Farrant fleece
       a_brig: { slot: 'body', kind: 'brig', mat: 'canvas', col: C.canvas, trim: C.brass, hem: 22, sleeves: 'none', bulk: 0.5 },
       a_chain: { slot: 'body', kind: 'mail', mat: 'mail', col: C.steel, hem: 19.5, sleeves: 'elbow', bulk: 0.3 },
       a_plate: { slot: 'body', kind: 'plate', mat: 'metal', col: C.bronze, under: 'mail', hem: 21, sleeves: 'pauldron', bulk: 0.7 },
@@ -89,6 +93,9 @@ const CARD21 = (() => {
       knife: { kind: 'blade', len: 6, wid: 0.75, blade: 'steel', guard: 'none', grip: 'wood', pommel: 'none' },
       throwknife: { kind: 'blade', len: 5.5, wid: 0.7, blade: 'steel', guard: 'none', grip: 'leather', pommel: 'ring', spare: 3 },
       sable_dagger: { kind: 'blade', len: 7, wid: 0.6, blade: 'lilac', guard: 'none', grip: 'ivory', pommel: 'ivory' },
+      p22_crook: { kind: 'glaive', len: 30, head: 'bronze', haft: 'ash', two: true },   // Phase 22b
+      p22_shears: { kind: 'blade', len: 6, wid: 0.8, blade: 'steel', guard: 'none', grip: 'wood', pommel: 'ring' },
+      p22_leafblade: { kind: 'blade', len: 14, wid: 1.15, blade: 'bronze', guard: 'none', grip: 'wood', pommel: 'brass' },
       p12_dirk: { kind: 'blade', len: 7.5, wid: 0.8, blade: 'steel', guard: 'basket', grip: 'leather', pommel: 'iron' },
       p12_glassblade: { kind: 'blade', len: 22, wid: 1.25, blade: 'glass', guard: 'wide', grip: 'leather', pommel: 'brass', gripLen: 6, two: true },
       axe: { kind: 'axe', len: 14, head: 'steel', haft: 'wood', beard: true, spike: true },

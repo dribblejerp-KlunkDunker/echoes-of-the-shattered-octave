@@ -173,8 +173,21 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 | 18 — Technical | engine and online | Sharper renderer; installable offline app; daily challenge dungeon; ghost replays; messages and leaderboards (need a small server: owner's decision) |
 | 19 — Together | two-player co-op | Play Book One with a second player in the same world: one hosts on a computer, the other joins from a phone with a short code; peer-to-peer (no game server of our own) |
 | 20 — The painted world | art and landmarks | Hand-painted art for every procedural stand-in (enemy angles, NPCs, panoramas, props); the horizon country finished and walkable; the Chapel seen beyond the Hedge; a visible Chapel bell |
+| 22 — The Sheep-Walk | a new region | Wethercombe and the Bellwether, sheep and mutton, the Chalk Ram, the fold-fires; the Hanger wood, the Woolwight night hunt, Ewe Barrow and the Old Fleece; lusher flora with fantasy species; camp and fish anywhere |
 
 Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
+
+**Phase 22 — The Sheep-Walk** (delivered as Phase 22a and 22b; owner's request, October 2026: a whole new region "packed with fun things to do", sheep and mutton on every menu, deadly dungeons, new loot, weapons, armour and quests, a night hunter dressed as sheep, lusher flora with fantasy species, camp and fish anywhere. All new text is [PROPOSED]: see story/Game Layer/Phase 22 - New In-Game Text.md)
+- `[x]` Wethercombe (P22a): a chalk combe south of the Watch Downs, reached by a new stile. The Bellwether inn, the Farrants' farm and fold, orchards, the snapped Consortium pylon on Pylon Hill. Sheep that wander, graze and bleat.
+- `[x]` Quests (P22a): Strays (five ewes home to the fold), The Scouring (the Chalk Ram, six stakes), Three Fires (the fold-fires), The Iron Hum (the pylon's singing wire and its hounds).
+- `[x]` Mutton (P22a): salt mutton, broth, chops, pie, hotpot and a roast leg at Hetty's, Brenna Loft's, the provisioner, Vane, Sloe's chandlery, the Bellwether and the Farrants.
+- `[x]` Flora (P22a): beech, ash, yew, hawthorn, elder; banks, hedges, walls, meadows and woods thick with undergrowth; fantasy species: bell-ash (chimes in the wind), glass-thorn and lantern-bell (glow at night), whistle-grass, echo-poppy.
+- `[x]` The Hanger (P22b): a thick beech wood behind Wethercombe (some 600 trees: close thickets, open glades, and rides lined with trunks), the Woolwight's nest, the wool-tree, a charcoal-burners' ring.
+- `[x]` The Woolwight (P22b): a night hunter in stolen fleeces that bleats in the woods. It comes only at night on the region's open maps, spawns out of sight, keeps out of firelight, answers with decoy bleats and leaves at dawn. Lambkins; the Old Fleece (boss).
+- `[x]` Ewe Barrow (P22b): a trapped long barrow under the sarsen, opened when the Ram is white and the fires burn. Grave goods (torc, amber, lunula), new weapons (shepherd's crook, barrow shears, leaf-blade) and armour (barrow helm, the Old Fleece's shroud, drover's boots).
+- `[x]` Quests (P22b): Bleating in the Wood and The Lambing at Night.
+- `[x]` Camp and fish anywhere (P22b): a camp kit pitches a fire and bedroll on any open outdoor map (not in town): sleep, roast, cook, strike. A line fishes any water within a cast: trout, perch, a glass eel at night, the odd boot.
+- Owner's decisions: see the "Questions for sleeves" in the Phase 22 text document.
 
 **Phase 20 — The painted world** (planned; owner's request, October 2026: work on the hand-painted art when the chance is opportune, and finish the horizon and landmarks)
 - `[ ]` Hand-painted art replacing every procedural stand-in, starting from the Proctor pilot's standard: the other species' five views, NPCs, the area panoramas, the Kestrel flyover, props.

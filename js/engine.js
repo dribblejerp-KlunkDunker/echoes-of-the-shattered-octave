@@ -714,7 +714,7 @@ const Engine = (() => {
       const sideTex = map.sideTex || null;     // per-cell riser texture names
       const maxTop = map.maxTop != null ? map.maxTop : 2;
       const ditherOn = !!opts.dither;
-      const texOfFloor = (cx, cy) => { if (floorMap) { const idx = floorMap[cy * mw + cx]; if (idx) return floorTexList[idx]; } return floorTexDefault; };
+      const texOfFloor = (cx, cy) => { if (floorMap) { const idx = floorMap[cy * mw + cx]; if (idx && floorTexList[idx]) return floorTexList[idx]; } return floorTexDefault; };
       const sideOf = (cx, cy) => { const n = sideTex && sideTex[cy * mw + cx]; return (n && textures[n]) || texOfFloor(cx, cy); };
       const stoneTex = textures.t_stone;
       let lcr = 0, lcg = 0, lcb = 0;

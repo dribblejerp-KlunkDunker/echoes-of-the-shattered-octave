@@ -380,6 +380,19 @@ const BODY21 = (() => {
         return null;
       case 'p12_bellglaive':
         return null;   // the fork is replaced by a painted blade (extras)
+      // Phase 22b (js/hanger22.js): the Farrants' crook (an ash staff, a horn head), barrow shears, a bronze leaf blade
+      case 'p22_crook':
+        if (k === K.METAL || k === K.BRASS) return { c: onRamp(rp(C.head), t * 1.04) };
+        if (k === K.WOOD) return { c: onRamp(rp(C.grip), t * PATTERN.grain(x, y)) };
+        return null;
+      case 'p22_shears':
+        if (k === K.METAL) return { c: onRamp(rp(C.blade), t * 0.94) };
+        if (k === K.WOOD) return { c: onRamp(rp(C.grip), t) };
+        return null;
+      case 'p22_leafblade':
+        if (k === K.METAL) return { c: onRamp(rp(y < (M.guard ? M.guard[0] : 120) ? C.blade : C.guard), t) };
+        if (k === K.WOOD) return { c: onRamp(rp(C.grip), t * 0.95) };
+        return null;
       default: return null;
     }
   }

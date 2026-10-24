@@ -119,6 +119,7 @@ const GEARLOOK21 = (() => {
     // head
     a_cap: F({ id: 'a_cap', slot: 'head', material: 'leather', shape: 'cap', pattern: 'grain', col: C([118, 80, 50], [80, 52, 32], [156, 112, 74]), notes: 'boiled leather skullcap, stitched seam over the crown' }),
     a_hood: F({ id: 'a_hood', slot: 'head', material: 'hushwool', shape: 'hood', pattern: 'weave', col: C([58, 82, 76], [36, 54, 50], [86, 112, 102]), notes: 'packed-wool hood falling onto the shoulders' }),
+    a_p22_barrowhelm: F({ id: 'a_p22_barrowhelm', slot: 'head', material: 'bellbronze', shape: 'kettle', pattern: 'none', col: BRONZE, notes: 'a barrow-warden\'s bronze cap with cheek-guards, green with age [PROPOSED] (Phase 22b)' }),
     a_kettle: F({ id: 'a_kettle', slot: 'head', material: 'iron', shape: 'kettle', pattern: 'rivets', col: IRON, notes: 'broad-brimmed infantry helm' }),
     a_bellhelm: F({ id: 'a_bellhelm', slot: 'head', material: 'bellbronze', shape: 'bellhelm', pattern: 'none', col: BRONZE, notes: 'a Legion bell-helm, hollowed: bell dome, eye slit, a verdigris lip [PROPOSED]' }),
     // body
@@ -130,6 +131,10 @@ const GEARLOOK21 = (() => {
       sleeve: F({ material: 'linen', col: [176, 160, 132], cuff: [128, 84, 54], bracer: true, rolled: true }), notes: 'oiled leather, sleeveless over a linen shirt; leather bracers' }),
     a_hushcoat: F({ id: 'a_hushcoat', slot: 'body', material: 'hushwool', shape: 'longcoat', pattern: 'weave', len: 0.8, col: C([54, 78, 72], [34, 50, 48], [82, 108, 98]),
       sleeve: F({ material: 'hushwool', col: [54, 78, 72], cuff: [34, 50, 48] }), notes: 'long coat of the Hedge wool, to the calf' }),
+    a_p22_shroud: F({ id: 'a_p22_shroud', slot: 'body', material: 'hushwool', shape: 'longcoat', pattern: 'weave', len: 0.9, col: C([106, 102, 94], [70, 66, 60], [140, 136, 126]),
+      sleeve: F({ material: 'hushwool', col: [106, 102, 94], cuff: [70, 66, 60] }), notes: 'Hedge-wool torn from the Old Fleece, earth-grey, to the ankle [PROPOSED] (Phase 22b)' }),
+    a_p22_mantle: F({ id: 'a_p22_mantle', slot: 'body', material: 'hushwool', shape: 'longcoat', pattern: 'weave', len: 0.6, col: C([206, 198, 174], [150, 142, 120], [232, 226, 206]),
+      sleeve: F({ material: 'hushwool', col: [206, 198, 174], cuff: [150, 142, 120] }), notes: 'felted Farrant fleece, the colour of the chalk, to the knee [PROPOSED] (Phase 22)' }),
     a_brig: F({ id: 'a_brig', slot: 'body', material: 'canvas', shape: 'brigandine', pattern: 'rivets', len: 0.25, col: C([104, 92, 70], [70, 60, 44], [140, 126, 96], null, [196, 164, 92]),
       sleeve: F({ material: 'canvas', col: [104, 92, 70], cuff: [196, 164, 92], bracer: true }), notes: 'company canvas over riveted plates, brass rivets (trim), a stencilled serial [PROPOSED]' }),
     a_chain: F({ id: 'a_chain', slot: 'body', material: 'mail', shape: 'hauberk', pattern: 'mail', len: 0.5, col: MAIL,
@@ -140,6 +145,7 @@ const GEARLOOK21 = (() => {
     a_gloves: F({ id: 'a_gloves', slot: 'hands', material: 'leather', shape: 'gloves', pattern: 'grain', col: C([112, 74, 46], [74, 46, 28], [150, 106, 70]), notes: 'work gloves, a cuff over the wrist' }),
     a_gauntlets: F({ id: 'a_gauntlets', slot: 'hands', material: 'mail', shape: 'gauntlets', pattern: 'mail', col: C([140, 148, 152], [84, 92, 102], [204, 208, 208], [40, 44, 52], [100, 70, 46]), notes: 'mail backs on leather palms (trim = the palm leather), a flared cuff' }),
     // feet
+    a_p22_droverboots: F({ id: 'a_p22_droverboots', slot: 'feet', material: 'leather', shape: 'hobnails', pattern: 'grain', col: C([70, 50, 34], [46, 32, 20], [104, 78, 54]), notes: 'long greased drove-road boots [PROPOSED] (Phase 22b)' }),
     a_softboots: F({ id: 'a_softboots', slot: 'feet', material: 'felt', shape: 'softboots', pattern: 'none', col: C([96, 82, 66], [64, 54, 42], [130, 114, 92]), notes: 'felt-soled, ankle-high, wrapped with a thong' }),
     a_hobnails: F({ id: 'a_hobnails', slot: 'feet', material: 'leather', shape: 'hobnails', pattern: 'studs', col: C([76, 54, 38], [50, 34, 22], [112, 82, 58], null, [176, 176, 168]), notes: 'mid-calf boots, iron studs round the sole (trim)' }),
     a_greaves: F({ id: 'a_greaves', slot: 'feet', material: 'iron', shape: 'greaves', pattern: 'plates', col: C([132, 142, 150], [80, 88, 100], [196, 204, 208], [40, 44, 54], [62, 44, 32]), notes: 'shin-plates over knee-high riding boots (trim = the boot leather)' }),
@@ -181,6 +187,9 @@ const GEARLOOK21 = (() => {
     p12_greatmaul: W('p12_greatmaul', 'maul', 'two', 'iron', 16, { blade: [106, 110, 116], edge: [170, 176, 180], grip: [150, 120, 84], head: [106, 110, 116], guard: [88, 90, 92] }, 'fp_maul', 'a quarry sledge, lead-weighted, an ash haft as long as a man'),
     p12_glassblade: W('p12_glassblade', 'greatsword', 'two', 'glass', 14, { blade: [150, 214, 222], edge: [214, 250, 248], grip: [58, 46, 40], guard: [130, 134, 140] }, 'fp_longsword', 'a corsair\'s two-handed blade, the edge ground from salvaged Aether-Glass'),
     p12_bellglaive: W('p12_bellglaive', 'glaive', 'two', 'bellbronze', 22, { blade: [180, 146, 76], edge: [232, 206, 134], grip: [120, 88, 56], head: [180, 146, 76] }, 'fp_spear', 'a curved bell-bronze blade on a six-foot shaft'),
+    p22_crook: W('p22_crook', 'spear', 'two', 'wood', 22, { blade: [206, 190, 150], edge: [234, 222, 190], grip: [124, 92, 58], head: [206, 190, 150] }, 'fp_spear', 'an ash crook with a horn head [PROPOSED] (Phase 22b)'),
+    p22_shears: W('p22_shears', 'knife', 'one', 'steel', 3.5, { blade: [170, 176, 180], edge: [226, 230, 232], grip: [110, 80, 50], guard: [110, 80, 50] }, 'fp_knife', 'sheep-shears, the bow filed sharp [PROPOSED] (Phase 22b)'),
+    p22_leafblade: W('p22_leafblade', 'sword', 'one', 'bellbronze', 8, { blade: [186, 150, 80], edge: [236, 210, 140], grip: [90, 64, 40], guard: [160, 124, 60] }, 'fp_sword', 'a leaf-shaped bronze sword from a barrow grave [PROPOSED] (Phase 22b)'),
     p12_dirk: W('p12_dirk', 'dirk', 'one', 'steel', 4, { blade: [164, 170, 176], edge: [224, 228, 230], grip: [80, 56, 36], guard: [126, 118, 104] }, 'fp_knife', 'a stiff dirk with a basket hilt (guard)'),
   });
   const NEUTRAL_W = (id) => F(Object.assign({}, WEP.sword, { id, notes: 'unknown weapon: drawn as a sword' }));

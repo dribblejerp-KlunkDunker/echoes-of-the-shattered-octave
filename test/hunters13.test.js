@@ -34,7 +34,7 @@ async function boot(browser, opts) {
       if (window.KIT12) KIT12.endAll();
       if (window.HUNTERS13) HUNTERS13.resetState();
       loadMap(map || 'clearing', { x: x == null ? 15.5 : x, y: y == null ? 26.5 : y, dir: dir == null ? 0 : dir });
-      G.state = 'play'; G.fadeT = 0; G.tod = 0.5; Engine.setWeather({}); PARTICLES.list.length = 0; G.keys = {}; G.vel.x = G.vel.y = 0;
+      G.state = 'play'; G.fadeT = 0; G.tod = 0.5; Engine.setWeather({}); if (window.Weather && Weather.set) Weather.set('clear', 4);   // the live weather would rescale hearing every frame (rain: 0.6) PARTICLES.list.length = 0; G.keys = {}; G.vel.x = G.vel.y = 0;
       for (let i = G.ents.length - 1; i >= 0; i--) if (G.ents[i].kind === 'enemy' || G.ents[i].transient) G.ents.splice(i, 1);
       G.dead = false; G.player.hp = G.player.hpMax; G.noise = 1; G.murmurT = 0; G.whistleT = 0; G.stillT = 0; G.mutedT = 0; G.rootWard = 0; G.glassLock = 0; G.player.glassed = false;
       try { hide('#death'); hide('#event'); const ev = document.querySelector('#event'); if (ev) ev.classList.remove('hd-on'); } catch (e) { /* no overlay */ }

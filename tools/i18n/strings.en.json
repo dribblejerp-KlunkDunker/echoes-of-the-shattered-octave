@@ -31185,5 +31185,1842 @@
   "where": [
    "reading.js:164"
   ]
+ },
+ "29zwyhzyzok": {
+  "en": "A Consortium tally-book from the pylon's iron box. Column after column of one number, a pitch, logged every hour; then, in 417, one line: LINE DEAD BOTH ENDS. HEDGE.",
+  "where": [
+   "sheepwalk22.js:204"
+  ]
+ },
+ "4onpz3fvp0": {
+  "en": "A Hank of Hedge-Wool, Marked",
+  "where": [
+   "hanger22.js:140"
+  ]
+ },
+ "ksuw71o1sa": {
+  "en": "A Rust Coast ewe, dark-faced, in a fleece the colour of old cream.",
+  "where": [
+   "sheepwalk22.js:112"
+  ]
+ },
+ "1nmox3zqyj3": {
+  "en": "A ball of wet wool on twig legs, the size of a lamb. It bleats, very small, and bites.",
+  "where": [
+   "hanger22.js:169"
+  ]
+ },
+ "hod78uruh5": {
+  "en": "A beacon of chalk and flint round an iron basket. The furze in it is dry.",
+  "where": [
+   "sheepwalk22.js:104"
+  ]
+ },
+ "l9c4a2ymqr": {
+  "en": "A beacon-keeper's brass tinder-box, the lid worn smooth by a thumb.",
+  "where": [
+   "sheepwalk22.js:203"
+  ]
+ },
+ "2fq8wn40iwz": {
+  "en": "A bedroll, a tinder-box and a bundle of furze, strapped together. Use it on open ground to pitch a camp where you stand: a fire to cook at and keep the dark off, and a bed. One camp at a time.",
+  "where": [
+   "hanger22.js:146"
+  ]
+ },
+ "4fvd1zegil": {
+  "en": "A beech hung all over with tufts of grey wool, as if a flock had been dragged through it. There is no flock. There has not been a flock.",
+  "where": [
+   "hanger22.js:68"
+  ]
+ },
+ "2fwwdjh8b5z": {
+  "en": "A beech stump with a hollow in it, the kind children hide things in.",
+  "where": [
+   "hanger22.js:71"
+  ]
+ },
+ "1a4fysjzzvz": {
+  "en": "A beech, smooth and grey as a seal, the first leaves turning.",
+  "where": [
+   "sheepwalk22.js:97"
+  ]
+ },
+ "fqgymuxqis": {
+  "en": "A bell-ash. Its seed-keys are bronze, and in any wind at all the tree rings, very small, like a shop door a long way off.",
+  "where": [
+   "sheepwalk22.js:91"
+  ]
+ },
+ "b16sjn4fml": {
+  "en": "A bench somebody carried all the way up here. The whole of Wethercombe is under you: the fold, the orchard, the brook, and across the valley the Ram.",
+  "where": [
+   "sheepwalk22.js:98"
+  ]
+ },
+ "1tya2aqbyef": {
+  "en": "A bleat, close, and then the same bleat from the other side of you.",
+  "where": [
+   "hanger22.js:75"
+  ]
+ },
+ "7aceftiv9f": {
+  "en": "A bound bundle of dry gorse for a beacon.",
+  "where": [
+   "sheepwalk22.js:202"
+  ]
+ },
+ "1jj8s7nrdks": {
+  "en": "A boy's woollen cap, wet through, from the Woolwight's nest.",
+  "where": [
+   "hanger22.js:145"
+  ]
+ },
+ "xb5zp39bsk": {
+  "en": "A bronze cap with cheek-guards, green with age, from the barrow. Whoever wore it guarded the door from the inside.",
+  "where": [
+   "hanger22.js:163"
+  ]
+ },
+ "27qlqsc3m9f": {
+  "en": "A button carved from a ram's horn, from the scouring of the Ram. For luck.",
+  "where": [
+   "sheepwalk22.js:205"
+  ]
+ },
+ "rvwho3thsz": {
+  "en": "A chalk-stream trout, speckled red. Restores 4 health and 8 fatigue raw; better roasted at a camp.",
+  "where": [
+   "hanger22.js:148"
+  ]
+ },
+ "lkicsbdxfr": {
+  "en": "A charcoal burners' ring, cold for years: a black circle in the leaf-litter, a turf hut fallen in, a rake with no teeth.",
+  "where": [
+   "hanger22.js:69"
+  ]
+ },
+ "1xzwdvi67rn": {
+  "en": "A cloak of Hedge-wool torn from the Old Fleece. It drinks every sound you make. It smells of the ground.",
+  "where": [
+   "hanger22.js:164"
+  ]
+ },
+ "8c49w3jy5l": {
+  "en": "A crescent collar of beaten bronze, green at the edges.",
+  "where": [
+   "hanger22.js:144"
+  ]
+ },
+ "2bzpa0b3450": {
+  "en": "A crock of clear broth with barley at the bottom. Restores 12 voice, 6 health and 15 fatigue.",
+  "where": [
+   "sheepwalk22.js:196"
+  ]
+ },
+ "kt79vuwlfi": {
+  "en": "A ewe bleats in the dark, a long way off.",
+  "where": [
+   "hanger22.js:75"
+  ]
+ },
+ "232dr65fo2e": {
+  "en": "A ewe on her own, a long way from the others. Her ear is notched with the Farrants' mark.",
+  "where": [
+   "sheepwalk22.js:115"
+  ]
+ },
+ "cf8rr5n22z": {
+  "en": "A finger-post at the foot of the drove-road: WETHERCOMBE. The other arm points south, and someone has painted over its word. Under the paint you can still read PYLON.",
+  "where": [
+   "sheepwalk22.js:73"
+  ]
+ },
+ "27gmc8akpbx": {
+  "en": "A finger-post with one arm left: THE WATCH DOWNS. Under it someone has cut, small, SHEEP-WALK. There are Farrant ewes on it again, and the turf is short because of them.",
+  "where": [
+   "sheepwalk22.js:110"
+  ]
+ },
+ "2bbczwa62x5": {
+  "en": "A gap in the dry-stone wall.",
+  "where": [
+   "sheepwalk22.js:100"
+  ]
+ },
+ "2b5rehc4y47": {
+  "en": "A gap in the hedge, and the dark of a beech wood beyond it: the Hanger",
+  "where": [
+   "hanger22.js:61"
+  ]
+ },
+ "1pt03193ypt": {
+  "en": "A glass-thorn: a hawthorn whose haws have set as beads of Light-glass. Each one holds a point of light, day or night.",
+  "where": [
+   "sheepwalk22.js:92"
+  ]
+ },
+ "wgyktc3g7g": {
+  "en": "A hand-line on a cork, hooks in the cork. Use it near any water to cast: stand still, and strike (Use) when it bites.",
+  "where": [
+   "hanger22.js:147"
+  ]
+ },
+ "fziwabja78": {
+  "en": "A hank of grey wool from under the Hedge's roots, earth and thorn in it. Shepherds will know the marks.",
+  "where": [
+   "hanger22.js:139"
+  ]
+ },
+ "170ikxhbz0q": {
+  "en": "A hawthorn, red with haws.",
+  "where": [
+   "sheepwalk22.js:97"
+  ]
+ },
+ "1eyz6oxh3r7": {
+  "en": "A haystack, roped down against the wind.",
+  "where": [
+   "sheepwalk22.js:80"
+  ]
+ },
+ "1vgc40sehn8": {
+  "en": "A heap of grey fleeces taller than a man, stitched with thorn, three sheep's heads set in it at the wrong heights. It bleats like a ewe that has lost her lamb. It will not come into firelight.",
+  "where": [
+   "hanger22.js:168"
+  ]
+ },
+ "bsqezlz1ji": {
+  "en": "A lamb. It looks at you as if you might be its mother, and decides not.",
+  "where": [
+   "sheepwalk22.js:113"
+  ]
+ },
+ "11ktut8qjpz": {
+  "en": "A lantern on a stake, for the orchard at night.",
+  "where": [
+   "sheepwalk22.js:88"
+  ]
+ },
+ "2ahcsmc2y6x": {
+  "en": "A leaf-shaped bronze sword from a grave in Ewe Barrow. It rings when it strikes, like a small bell: the Cacophony does not like it.",
+  "where": [
+   "hanger22.js:160"
+  ]
+ },
+ "h9j44xpl4y": {
+  "en": "A nest the size of a cart, of grey wool: fleece after fleece, matted, pulled long, snagged with Hedge-thorn. It is not sheep's wool off a sheep. It is wool that has been in the ground.",
+  "where": [
+   "hanger22.js:66"
+  ]
+ },
+ "1rbbg7hq00g": {
+  "en": "A pair of spring-steel sheep-shears, the bow filed sharp, from the barrow's antechamber. Quick and close.",
+  "where": [
+   "hanger22.js:159"
+  ]
+ },
+ "2c5bf8hwqw": {
+  "en": "A pool in the beech roots, black as tea. Something long and faintly lit turns over in it, and goes down.",
+  "where": [
+   "hanger22.js:70"
+  ]
+ },
+ "1iylxi1f0ks": {
+  "en": "A raised pie of chopped mutton and onion in a hot-water crust. Restores 16 health and 25 fatigue.",
+  "where": [
+   "sheepwalk22.js:198"
+  ]
+ },
+ "1j1qae6aqxz": {
+  "en": "A red apple off the Bellwether's orchard. Restores 3 health and 10 fatigue.",
+  "where": [
+   "sheepwalk22.js:201"
+  ]
+ },
+ "1joth99u0o": {
+  "en": "A sheep-bell on a rotten strap, with the clapper wrapped in wool so it never rings.",
+  "where": [
+   "hanger22.js:141"
+  ]
+ },
+ "24sv5jvof55": {
+  "en": "A shepherd's cottage, shut up. The thatch has a hole you could put a ewe through.",
+  "where": [
+   "sheepwalk22.js:77"
+  ]
+ },
+ "14oasmsnq3x": {
+  "en": "A shepherd's crook of ash with a horn head, three generations of Farrants worn into the grip. Long reach; the hook staggers what it catches.",
+  "where": [
+   "hanger22.js:158"
+  ]
+ },
+ "20j03ro71v0": {
+  "en": "A shepherd's hut on iron wheels, its door open to the wind. A bed-shelf, a broken lantern, a tally-stick with notches up to forty and then no more.",
+  "where": [
+   "sheepwalk22.js:102"
+  ]
+ },
+ "14vlq2m3l6r": {
+  "en": "A slab of mutton in a salt crust, the Reach's staple. Restores 8 health and 15 fatigue.",
+  "where": [
+   "sheepwalk22.js:195"
+  ]
+ },
+ "1e8gfa7f1cl": {
+  "en": "A slice off the leg with rosemary and the drippings, and bread to wipe the plate. Restores 30 health, 10 voice and 40 fatigue.",
+  "where": [
+   "sheepwalk22.js:200"
+  ]
+ },
+ "27qkv5fsinc": {
+  "en": "A stile in the thorn, and a drove-road down into Wethercombe",
+  "where": [
+   "sheepwalk22.js:69"
+  ]
+ },
+ "2s70nchbjo": {
+  "en": "A striped perch, all spines. Restores 3 health and 8 fatigue raw; better roasted at a camp.",
+  "where": [
+   "hanger22.js:149"
+  ]
+ },
+ "1gyjxbama5j": {
+  "en": "A survey stake with a rag on it, driven into the turf over the chalk.",
+  "where": [
+   "sheepwalk22.js:107"
+  ]
+ },
+ "rf1smhwfh7": {
+  "en": "A surveyor's tent, the canvas stamped with a Consortium serial. The stakes are rusted in. A folding stool lies on its side where somebody got up in a hurry.",
+  "where": [
+   "sheepwalk22.js:103"
+  ]
+ },
+ "r3nr0z55ey": {
+  "en": "A thing that wears wool and bleats. Aye. My grandfather called it the Woolwight and said it was a story for keeping boys in at night. It walks the Downs when the fires are out. Light them and it keeps off the light. Find where it lies up, by daylight, in the Hanger, and bring me proof.",
+  "where": [
+   "hanger22.js:95"
+  ]
+ },
+ "dmxi2ebxqi": {
+  "en": "A thistle, its head gone purple.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "w0uy48e1mf": {
+  "en": "A twisted neck-ring of pale gold, from a grave older than the Reach.",
+  "where": [
+   "hanger22.js:142"
+  ]
+ },
+ "hl67w7d551": {
+  "en": "A woodpile of furze faggots, cut for the beacons.",
+  "where": [
+   "sheepwalk22.js:89"
+  ]
+ },
+ "24xsn1nu9vv": {
+  "en": "A wool-cart with one wheel off, the bed still grey with lanolin.",
+  "where": [
+   "sheepwalk22.js:81"
+  ]
+ },
+ "zo4uv61kyp": {
+  "en": "A yew, older than the barrow it guards, or nearly.",
+  "where": [
+   "sheepwalk22.js:97"
+  ]
+ },
+ "25hrymfsin8": {
+  "en": "Absalom Rudd gave me his tinder-box to light the fold-fires: the Long Down on the Watch Downs, Hob's Knap above the orchard, and Ewe Barrow on the west ridge. A furze faggot for each, from the woodpile by the Farrants' barn.",
+  "where": [
+   "sheepwalk22.js:213"
+  ]
+ },
+ "ng10ggqv08": {
+  "en": "Absalom Rudd, the old beacon-keeper",
+  "where": [
+   "sheepwalk22.js:159"
+  ]
+ },
+ "23za3u9amqn": {
+  "en": "Absalom's Tinder-box",
+  "where": [
+   "sheepwalk22.js:203"
+  ]
+ },
+ "fzmq41ov3x": {
+  "en": "All five of Tamar Farrant's ewes are home in the fold at Wethercombe.",
+  "where": [
+   "sheepwalk22.js:210"
+  ]
+ },
+ "ucgn8xa9sz": {
+  "en": "All of them home. — Here. My mother's mantle, Farrant wool, felted. It hushes you the way the Hedge-cloth does, and it is warmer. And take some mutton: I will not pretend I do not sell it. A flock that is not eaten is a flock nobody keeps.",
+  "where": [
+   "sheepwalk22.js:131"
+  ]
+ },
+ "f7nhjt8jb1": {
+  "en": "Amber beads on a gut string. There is a fly in one of them, older than anything.",
+  "where": [
+   "hanger22.js:143"
+  ]
+ },
+ "jhx67gwk81": {
+  "en": "An apple tree, heavy with fruit. Somebody has been propping the low branches.",
+  "where": [
+   "sheepwalk22.js:85"
+  ]
+ },
+ "1ixxgepg9gc": {
+  "en": "An ash, last into leaf and first out of it.",
+  "where": [
+   "sheepwalk22.js:97"
+  ]
+ },
+ "16yjc5mbc9r": {
+  "en": "An eel you can see through, lit faintly from inside, caught after dark. Restores 10 voice raw; roasted, more.",
+  "where": [
+   "hanger22.js:150"
+  ]
+ },
+ "m1mb2qulcx": {
+  "en": "An elder bush, black with berries.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "ip6897yb8k": {
+  "en": "An hour, and the chalk under the turf comes up white as a plate. Down in the valley, a part of the Ram you could not see this morning is there.",
+  "where": [
+   "sheepwalk22.js:191"
+  ]
+ },
+ "ziqhlg36aw": {
+  "en": "Barrow-Bronze Leaf Blade",
+  "where": [
+   "hanger22.js:160"
+  ]
+ },
+ "1qppey85qr8": {
+  "en": "Barrow-Gold Torc",
+  "where": [
+   "hanger22.js:142"
+  ]
+ },
+ "5j0vlr8md0": {
+  "en": "Barrow-Warden's Helm",
+  "where": [
+   "hanger22.js:163"
+  ]
+ },
+ "d30h43xtnp": {
+  "en": "Bleating, close. Too low for a ewe.",
+  "where": [
+   "hanger22.js:76"
+  ]
+ },
+ "15oqd05iihw": {
+  "en": "Bleating, down by the wood. It stops when you listen.",
+  "where": [
+   "hanger22.js:75"
+  ]
+ },
+ "qi3v6dpizp": {
+  "en": "Bleating, nights, down by the Hanger. Tamar counts hers every morning and they are all there. Absalom says it is the Hedge-wool walking. Absalom is old. Go and look, by daylight, if you are going to.",
+  "where": [
+   "hanger22.js:82"
+  ]
+ },
+ "190hsknn9kc": {
+  "en": "Bracken, turning gold at the tips.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "qqqrfm1drm": {
+  "en": "Bronze Lunula",
+  "where": [
+   "hanger22.js:144"
+  ]
+ },
+ "1qvaqznmaxf": {
+  "en": "Brown Trout",
+  "where": [
+   "hanger22.js:148"
+  ]
+ },
+ "tnohz39hrf": {
+  "en": "Camp-Roast Chops",
+  "where": [
+   "hanger22.js:155"
+  ]
+ },
+ "1ukjpbbtj1a": {
+  "en": "Cook with what you carry",
+  "where": [
+   "hanger22.js:116"
+  ]
+ },
+ "q81nn08pkx": {
+  "en": "Cow parsley, white as lace and taller than it looks.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "a4v1bx8txc": {
+  "en": "Cut the singing wire.",
+  "where": [
+   "sheepwalk22.js:182"
+  ]
+ },
+ "1zmy0xvu2en": {
+  "en": "Daylight, at the end of the passage",
+  "where": [
+   "hanger22.js:63"
+  ]
+ },
+ "1jz2qmpdfue": {
+  "en": "Drover's Boots",
+  "where": [
+   "hanger22.js:165"
+  ]
+ },
+ "alvy6sj03t": {
+  "en": "Drover's Camp Kit",
+  "where": [
+   "hanger22.js:146"
+  ]
+ },
+ "2evwqggma5v": {
+  "en": "Drover's Fishing Line",
+  "where": [
+   "hanger22.js:147"
+  ]
+ },
+ "283joinufp2": {
+  "en": "Drowned Boot",
+  "where": [
+   "hanger22.js:151"
+  ]
+ },
+ "beqzytpm0x": {
+  "en": "Eat it by the fire.",
+  "where": [
+   "sheepwalk22.js:156"
+  ]
+ },
+ "1tc3tk4re6q": {
+  "en": "Echo-poppies. Shepherds say they remember the last thing said near them. Nobody says anything near them.",
+  "where": [
+   "sheepwalk22.js:95"
+  ]
+ },
+ "15i3rleg9vl": {
+  "en": "Every night, now. Three fires. The sheep come down to them.",
+  "where": [
+   "sheepwalk22.js:166"
+  ]
+ },
+ "1vl4rztd4vg": {
+  "en": "Every sheep in the Reach went into the Hedge. They sheared them for the wool the town packed into the roots, and they drove the Downs flocks in behind the thorn after. Two years shut in. We ate them. Ours too. I fed my children my father's ewes, one a month, and I would do it again. Nothing took them. We did.",
+  "where": [
+   "sheepwalk22.js:127"
+  ]
+ },
+ "zpvm9vwj6h": {
+  "en": "Ewe Barrow",
+  "where": [
+   "hanger22.js:60",
+   "sheepwalk22.js:835"
+  ]
+ },
+ "1tfdl4ew4ya": {
+  "en": "Ewe Barrow. The shepherds buried somebody in there before there were shepherds. When the Ram is white and the fires burn, the barrow gives back. That is the rhyme. I never knew what it gave.",
+  "where": [
+   "hanger22.js:96"
+  ]
+ },
+ "vazss3l9io": {
+  "en": "Ewe Barrow: a long mound older than any name for it. Its door is a slab of grey sarsen, set in the chalk and not meant to move. Someone has laid a sprig of thyme on the sill.",
+  "where": [
+   "sheepwalk22.js:101"
+  ]
+ },
+ "23vhuw3p51": {
+  "en": "Ewe Barrow: a long mound older than any name for it. Its door is a slab of grey sarsen, set in the chalk and not meant to move. Someone has laid a sprig of thyme on the sill. Absalom says: when the Ram is white and the fires burn, the barrow gives back.",
+  "where": [
+   "hanger22.js:64"
+  ]
+ },
+ "9ruqdpqk68": {
+  "en": "Farrant Fleece Mantle",
+  "where": [
+   "sheepwalk22.js:206"
+  ]
+ },
+ "1zhl14br6ry": {
+  "en": "Farrant's Crook",
+  "where": [
+   "hanger22.js:158"
+  ]
+ },
+ "139wxtcmis": {
+  "en": "Farrant. We had the sheep-walk off the Downs for six generations. I am the seventh, and I am starting again.",
+  "where": [
+   "sheepwalk22.js:124"
+  ]
+ },
+ "lrlwlsk98p": {
+  "en": "Fat and smoke and the dark all round.",
+  "where": [
+   "hanger22.js:155"
+  ]
+ },
+ "nk1bj22u0v": {
+  "en": "Felted Farrant wool, the colour of the chalk. Hushes your footsteps like the Hedge-cloth, and is warmer.",
+  "where": [
+   "sheepwalk22.js:206"
+  ]
+ },
+ "1gch49qqysn": {
+  "en": "Ferns, curled tight at the tips.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "rzt46w1wwn": {
+  "en": "Find him. Please. He went toward the Hanger.",
+  "where": [
+   "hanger22.js:87"
+  ]
+ },
+ "1z1ddpojih5": {
+  "en": "Fish the water",
+  "where": [
+   "hanger22.js:117"
+  ]
+ },
+ "f3sc3xiddh": {
+  "en": "Fleece-wool and mutton, both off this hill.",
+  "where": [
+   "sheepwalk22.js:133"
+  ]
+ },
+ "ycbe2h7zyu": {
+  "en": "Foxgloves.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "2dk6gn0xj3u": {
+  "en": "From the Woolwight's nest, with an old raddle mark still in it. Tamar or Absalom will know what it is.",
+  "where": [
+   "hanger22.js:140"
+  ]
+ },
+ "ej9e2cwsgr": {
+  "en": "Furze Faggot",
+  "where": [
+   "sheepwalk22.js:202"
+  ]
+ },
+ "yfk9drhr0v": {
+  "en": "Gideon Thrale of the Bellwether",
+  "where": [
+   "sheepwalk22.js:149"
+  ]
+ },
+ "1yytcm1pzf7": {
+  "en": "Gideon at the Bellwether hears bleating at night by the Hanger, and Tamar's ewes are all in. Absalom calls it the Woolwight. He wants proof of where it lies up.",
+  "where": [
+   "hanger22.js:100"
+  ]
+ },
+ "1mkfpqs8qpe": {
+  "en": "Glass-Eel",
+  "where": [
+   "hanger22.js:150"
+  ]
+ },
+ "ohyqh67chb": {
+  "en": "Glass-eel off the fire, still faintly lit. Restores 25 voice and 10 health.",
+  "where": [
+   "hanger22.js:154"
+  ]
+ },
+ "kpmkf59rle": {
+  "en": "Gone. Whatever it was spat the hook.",
+  "where": [
+   "hanger22.js:132"
+  ]
+ },
+ "1bnbzcylwio": {
+  "en": "Harebell, scabious and wild thyme. The chalk is never too poor for these.",
+  "where": [
+   "sheepwalk22.js:99"
+  ]
+ },
+ "125ieda0h2d": {
+  "en": "Harebells.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "vcpxnhf4m4": {
+  "en": "Have you seen the Ram? You can't, he's gone green.",
+  "where": [
+   "sheepwalk22.js:140"
+  ]
+ },
+ "2ci0n782qbe": {
+  "en": "He's not going anywhere now.",
+  "where": [
+   "sheepwalk22.js:146"
+  ]
+ },
+ "19yazlst009": {
+  "en": "He's white! He's all white! Mam! — Gran said you give the scourer a ram's-horn button for luck. I only have one. It's yours.",
+  "where": [
+   "sheepwalk22.js:145"
+  ]
+ },
+ "12h24ntcjej": {
+  "en": "Hedge-Wool",
+  "where": [
+   "hanger22.js:139"
+  ]
+ },
+ "18a8lvyc8z2": {
+  "en": "Hedge-Wool Shroud",
+  "where": [
+   "hanger22.js:164"
+  ]
+ },
+ "245ml4eq01l": {
+  "en": "Here. My father's camp kit, and his line. If you're going to be out at night, you'll want a fire you can carry. It won't come into firelight. Nothing that wears wool likes fire.",
+  "where": [
+   "hanger22.js:85"
+  ]
+ },
+ "39apxknuhk": {
+  "en": "Hob's Knap",
+  "where": [
+   "sheepwalk22.js:834"
+  ]
+ },
+ "13ldsc5edfe": {
+  "en": "Hot broth, fat on the top. Your throat unknots.",
+  "where": [
+   "sheepwalk22.js:196"
+  ]
+ },
+ "zegu6dtewt": {
+  "en": "Hot trout, and the skin crisp. You eat it with your fingers.",
+  "where": [
+   "hanger22.js:152"
+  ]
+ },
+ "2ve7vhro6g": {
+  "en": "I cut the singing wire on the pylon above Wethercombe. It was a Consortium tally-line, and it was still calling the hounds.",
+  "where": [
+   "sheepwalk22.js:215"
+  ]
+ },
+ "dhck3vxiif": {
+  "en": "I found Kit in the last chamber of Ewe Barrow, behind the Old Fleece, and brought him out.",
+  "where": [
+   "hanger22.js:104"
+  ]
+ },
+ "163w1mrgfzk": {
+  "en": "I found the Woolwight's nest in the Hanger: Hedge-wool, pulled from under the Hedge's roots. I took a hank of it for Absalom and Tamar.",
+  "where": [
+   "hanger22.js:101"
+  ]
+ },
+ "2c1wpcva54s": {
+  "en": "I opened an inn on a road nobody walks. Say something I have not already said to myself.",
+  "where": [
+   "sheepwalk22.js:152"
+  ]
+ },
+ "5r0xdhdy4b": {
+  "en": "I scoured the Chalk Ram above Wethercombe. You can see him from the whole valley.",
+  "where": [
+   "sheepwalk22.js:212"
+  ]
+ },
+ "a2fhd7dmxh": {
+  "en": "I'm going home. I'm going to watch the fold and not the hill. I mean it this time.",
+  "where": [
+   "hanger22.js:92"
+  ]
+ },
+ "pv1jyts27j": {
+  "en": "I'm not scared of hounds. I'm not.",
+  "where": [
+   "sheepwalk22.js:141"
+  ]
+ },
+ "14mi6mnefxa": {
+  "en": "If you have come to tell me the hill is not safe, I know. The sheep do not.",
+  "where": [
+   "sheepwalk22.js:125"
+  ]
+ },
+ "1xemcjphd6l": {
+  "en": "It comes apart: wool, and wool, and Hedge-thorn, and nothing in the middle.",
+  "where": [
+   "hanger22.js:79"
+  ]
+ },
+ "177b3t84245": {
+  "en": "It tastes of cold light, and your throat loosens.",
+  "where": [
+   "hanger22.js:150"
+  ]
+ },
+ "ffky0h1ikx": {
+  "en": "It will not come into the firelight. It stands just past it, and bleats.",
+  "where": [
+   "hanger22.js:77"
+  ]
+ },
+ "236snwhmri2": {
+  "en": "Kit Farrant",
+  "where": [
+   "hanger22.js:460"
+  ]
+ },
+ "1es28cgd290": {
+  "en": "Kit Farrant asked me to scour the Chalk Ram on the west side of Wethercombe: six stakes, an hour's work at each, until the figure is white again.",
+  "where": [
+   "sheepwalk22.js:211"
+  ]
+ },
+ "15j4ekp7ouk": {
+  "en": "Kit Farrant went out after a bleat in the night and has not come back. Tamar thinks he went toward the Hanger.",
+  "where": [
+   "hanger22.js:103"
+  ]
+ },
+ "tobgfty2fs": {
+  "en": "Kit Farrant's Cap",
+  "where": [
+   "hanger22.js:145"
+  ]
+ },
+ "19zoskhfies": {
+  "en": "Kit Farrant's cap, in the nest, wet through. Tracks lead away from the nest toward Wethercombe. Toward Ewe Barrow.",
+  "where": [
+   "hanger22.js:98"
+  ]
+ },
+ "k8bi4xbk": {
+  "en": "Kit Farrant, at the fold",
+  "where": [
+   "sheepwalk22.js:138"
+  ]
+ },
+ "gd5vgeb5xk": {
+  "en": "Kit is home at the fold. Tamar gave me the Farrants' crook.",
+  "where": [
+   "hanger22.js:105"
+  ]
+ },
+ "1l7dzk8thdk": {
+  "en": "Kit's cap was in the Woolwight's nest in the Hanger. Its tracks go back toward Ewe Barrow. The sarsen has moved.",
+  "where": [
+   "hanger22.js:99"
+  ]
+ },
+ "2m265ieoe9": {
+  "en": "Kit's gone. He went out to the fold last night at dark and the hurdle's open and he's gone. He said he heard a ewe crying in the wood. Ours were all in. He went anyway. Please.",
+  "where": [
+   "hanger22.js:86"
+  ]
+ },
+ "6ygdlxqtlv": {
+  "en": "Kit. Kit. — You brought him back. Out of the barrow? Out of — No. Don't tell me. Take this. It was my father's crook and his father's; it has pulled ewes out of drifts and hounds off lambs. I'd rather it went with someone who brings children home.",
+  "where": [
+   "hanger22.js:88"
+  ]
+ },
+ "1ean5udu5bz": {
+  "en": "Lambkin",
+  "where": [
+   "hanger22.js:169"
+  ]
+ },
+ "e3yglv0q80": {
+  "en": "Lanolin on your hand, and the smell of wet wool.",
+  "where": [
+   "sheepwalk22.js:118"
+  ]
+ },
+ "18aum4hd7jp": {
+  "en": "Lantern-bells. After dark they give off a pale blue light, enough to read a ledger by, if the ledger is small.",
+  "where": [
+   "sheepwalk22.js:93"
+  ]
+ },
+ "1gozafiml6k": {
+  "en": "Leave it humming.",
+  "where": [
+   "sheepwalk22.js:183"
+  ]
+ },
+ "1s0x54ahnep": {
+  "en": "Long Down",
+  "where": [
+   "sheepwalk22.js:833"
+  ]
+ },
+ "1dsgjc89jdi": {
+  "en": "Long Down to the north, over the Downs; Hob's Knap east, above the orchard; Ewe Barrow west, on the old mound. You can see all three from the Knap, if your eyes are better than mine.",
+  "where": [
+   "sheepwalk22.js:167"
+  ]
+ },
+ "1854ttovqsu": {
+  "en": "Long grass, wet at the roots.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "28ngshhumh1": {
+  "en": "Long greased boots for a drove-road: quiet in wet grass and thorn-proof.",
+  "where": [
+   "hanger22.js:165"
+  ]
+ },
+ "235yzlznav": {
+  "en": "Mam says I'm to watch the fold and not the hill. I watch the hill.",
+  "where": [
+   "sheepwalk22.js:139"
+  ]
+ },
+ "1xrlk2p3jv8": {
+  "en": "Mind the gate, love. It is the only thing between them and the whole of the Reach.",
+  "where": [
+   "sheepwalk22.js:123"
+  ]
+ },
+ "imvba5icoc": {
+  "en": "Mind your teeth on the bone.",
+  "where": [
+   "sheepwalk22.js:135"
+  ]
+ },
+ "15dhgp7s5jq": {
+  "en": "Mind, it's hot.",
+  "where": [
+   "sheepwalk22.js:218"
+  ]
+ },
+ "117muqjn03d": {
+  "en": "Mutton Broth",
+  "where": [
+   "sheepwalk22.js:196"
+  ]
+ },
+ "1geey3ui590": {
+  "en": "Mutton Chops",
+  "where": [
+   "sheepwalk22.js:197"
+  ]
+ },
+ "rhyavf7on": {
+  "en": "Mutton Pie",
+  "where": [
+   "sheepwalk22.js:198"
+  ]
+ },
+ "1em7fnamnez": {
+  "en": "Mutton and Barley Hotpot",
+  "where": [
+   "sheepwalk22.js:199"
+  ]
+ },
+ "8dixi6fp3l": {
+  "en": "Mutton chops done black over a camp fire. Restores 22 health and 30 fatigue.",
+  "where": [
+   "hanger22.js:155"
+  ]
+ },
+ "2g7v3zin7ha": {
+  "en": "Mutton six ways, and cider, and apples off the orchard. The roast is for people who have walked a long way.",
+  "where": [
+   "sheepwalk22.js:154"
+  ]
+ },
+ "350qujaxml": {
+  "en": "Mutton, barley and onions under sliced potatoes, baked all afternoon. Restores 20 health, 6 voice and 30 fatigue.",
+  "where": [
+   "sheepwalk22.js:199"
+  ]
+ },
+ "1lu6pmw8anl": {
+  "en": "Nettles. They know where the muck is.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "1lvrxoejtd3": {
+  "en": "Not here. Find a clear bit of ground, out of the town.",
+  "where": [
+   "hanger22.js:109"
+  ]
+ },
+ "27vrrf5lkd0": {
+  "en": "Off this hill, that.",
+  "where": [
+   "sheepwalk22.js:135"
+  ]
+ },
+ "1ijrdd6vue0": {
+  "en": "Out to the yard",
+  "where": [
+   "sheepwalk22.js:72"
+  ]
+ },
+ "20yjbj0c9zb": {
+  "en": "Perch",
+  "where": [
+   "hanger22.js:149"
+  ]
+ },
+ "1egbcl7ioia": {
+  "en": "Perch off the fire, the spines pulled. Restores 14 health and 25 fatigue.",
+  "where": [
+   "hanger22.js:153"
+  ]
+ },
+ "1q4g9hd1o90": {
+  "en": "Put it back, friend. I cannot give it away; I tried, and it went badly.",
+  "where": [
+   "sheepwalk22.js:155"
+  ]
+ },
+ "4ehp51jaif": {
+  "en": "Ram's-horn Button",
+  "where": [
+   "sheepwalk22.js:205"
+  ]
+ },
+ "dts9ygy3z7": {
+  "en": "Raw perch, and spines.",
+  "where": [
+   "hanger22.js:149"
+  ]
+ },
+ "1vfnfr3m7ln": {
+  "en": "Raw trout. It is not what you wanted.",
+  "where": [
+   "hanger22.js:148"
+  ]
+ },
+ "1cy3xxpcq5p": {
+  "en": "Reedmace, the brown heads gone soft.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "dco1iawlwl": {
+  "en": "Roast Glass-Eel",
+  "where": [
+   "hanger22.js:154"
+  ]
+ },
+ "1e6qzdlydxw": {
+  "en": "Roast Leg of Mutton",
+  "where": [
+   "sheepwalk22.js:200"
+  ]
+ },
+ "1j1sbva1nbd": {
+  "en": "Roast Perch",
+  "where": [
+   "hanger22.js:153"
+  ]
+ },
+ "1vvwl2wa290": {
+  "en": "Roast Trout",
+  "where": [
+   "hanger22.js:152"
+  ]
+ },
+ "9dy1g4shrt": {
+  "en": "Roast what you caught",
+  "where": [
+   "hanger22.js:115"
+  ]
+ },
+ "1df6xnpmh1c": {
+  "en": "Rooms are a sovereign. Supper is whatever Tamar can spare, and she can spare more than she lets on.",
+  "where": [
+   "sheepwalk22.js:151"
+  ]
+ },
+ "l0xnx1nf3i": {
+  "en": "Rosemary and fat and smoke. For a minute the Reach is a kind place.",
+  "where": [
+   "sheepwalk22.js:200"
+  ]
+ },
+ "15hdqucwetp": {
+  "en": "Salt Mutton",
+  "where": [
+   "sheepwalk22.js:195"
+  ]
+ },
+ "2axmosgaf58": {
+  "en": "Salt, and more salt, and somewhere under it mutton. You drink twice what you meant to.",
+  "where": [
+   "sheepwalk22.js:195"
+  ]
+ },
+ "1voft02qyu5": {
+  "en": "Scabious and clover.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "2exo1ybxpvo": {
+  "en": "Scour this part (an hour).",
+  "where": [
+   "sheepwalk22.js:189"
+  ]
+ },
+ "c98na43bmo": {
+  "en": "Sharp, cold, and all the way to the core.",
+  "where": [
+   "sheepwalk22.js:201"
+  ]
+ },
+ "edh07nsk2f": {
+  "en": "She looks at you, and then at the hill, and falls in behind you.",
+  "where": [
+   "sheepwalk22.js:116"
+  ]
+ },
+ "xlrcjmb1n8": {
+  "en": "She stamps a foot at you, and then lets you.",
+  "where": [
+   "sheepwalk22.js:118"
+  ]
+ },
+ "2akainu5lgo": {
+  "en": "Shearing Blades",
+  "where": [
+   "hanger22.js:159"
+  ]
+ },
+ "yqn6oij7ck": {
+  "en": "Sit down to it.",
+  "where": [
+   "sheepwalk22.js:218"
+  ]
+ },
+ "f53yqo214d": {
+  "en": "Sit down, sit down. My knees have been asking after company.",
+  "where": [
+   "sheepwalk22.js:160"
+  ]
+ },
+ "uhdj6nq188": {
+  "en": "Sit where the light is. The fire is mutton-fat and it smokes, but it is warm.",
+  "where": [
+   "sheepwalk22.js:150"
+  ]
+ },
+ "1fybo84gi9l": {
+  "en": "Sleep by the fire (eight hours)",
+  "where": [
+   "hanger22.js:114"
+  ]
+ },
+ "24cli8d5elu": {
+  "en": "Somebody's boot, full of water and a crayfish. The crayfish has gone.",
+  "where": [
+   "hanger22.js:151"
+  ]
+ },
+ "1acwne2as8p": {
+  "en": "Something big moves in the dark, and bleats.",
+  "where": [
+   "hanger22.js:76"
+  ]
+ },
+ "qxzyxw4pte": {
+  "en": "Something hunts the Watch Downs and Wethercombe by night: a heap of grey wool with sheep's heads, that bleats. It will not come into firelight.",
+  "where": [
+   "hanger22.js:80"
+  ]
+ },
+ "1f1wqn4ldh5": {
+  "en": "Somewhere out in the dark, a ewe bleats: a long, broken bleat, like one that has lost her lamb. There are no ewes out tonight.",
+  "where": [
+   "hanger22.js:74"
+  ]
+ },
+ "16hidjj1xxh": {
+  "en": "Station Six Tally-book",
+  "where": [
+   "sheepwalk22.js:204"
+  ]
+ },
+ "1db7726vqn": {
+  "en": "Stepping stones across the brook.",
+  "where": [
+   "sheepwalk22.js:84"
+  ]
+ },
+ "6zl6111hfx": {
+  "en": "Straw bee-skeps on a bench. The bees came back before the people did.",
+  "where": [
+   "sheepwalk22.js:79"
+  ]
+ },
+ "2a5jhceqytc": {
+  "en": "Strike camp",
+  "where": [
+   "hanger22.js:118"
+  ]
+ },
+ "268ztd19y46": {
+  "en": "String of Amber Beads",
+  "where": [
+   "hanger22.js:143"
+  ]
+ },
+ "1wtaii40zqg": {
+  "en": "Supper's mutton, because supper is always mutton. Salt, broth, pie or the hotpot, and the roast on a good day.",
+  "where": [
+   "sheepwalk22.js:218"
+  ]
+ },
+ "18chzx4uy1p": {
+  "en": "Sweet white perch. Mind the bones.",
+  "where": [
+   "hanger22.js:153"
+  ]
+ },
+ "eujgm7o70r": {
+  "en": "Talk louder. No. Do not. Talk the way you were.",
+  "where": [
+   "sheepwalk22.js:162"
+  ]
+ },
+ "12bnpsqufsu": {
+  "en": "Tall grass gone to seed.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "1i7ods57f3f": {
+  "en": "Tamar Farrant has brought a flock back up to Wethercombe. Five of her ewes are out: on the Watch Downs, in the combe, and one under the pylon. They will follow anyone calm. I said I would bring them home to the fold.",
+  "where": [
+   "sheepwalk22.js:209"
+  ]
+ },
+ "kgzlln4vs0": {
+  "en": "Tamar Farrant told me what became of the Downs flocks: shorn for the Hedge's wool, driven inside it, and eaten in the two shut years. Nothing took them. The town did.",
+  "where": [
+   "sheepwalk22.js:216"
+  ]
+ },
+ "193hcehxord": {
+  "en": "Tamar Farrant, shepherd",
+  "where": [
+   "sheepwalk22.js:122"
+  ]
+ },
+ "27nvujr6pok": {
+  "en": "Tamar knew the wool: Hedge-wool, packed in 417, her mother's mark on it. The Woolwight has been pulling the Hedge apart from underneath. Nothing took the sheep. Something took the wool.",
+  "where": [
+   "hanger22.js:102"
+  ]
+ },
+ "1yygik4urcb": {
+  "en": "Tamar's, that. Tell her it was good.",
+  "where": [
+   "sheepwalk22.js:156"
+  ]
+ },
+ "2ew0zn94mnk": {
+  "en": "That is not enough for a chop, love.",
+  "where": [
+   "sheepwalk22.js:134"
+  ]
+ },
+ "y5xkqswkgp": {
+  "en": "That is the five. That is all of them.",
+  "where": [
+   "sheepwalk22.js:130"
+  ]
+ },
+ "hcof8u8why": {
+  "en": "That's not a supper's worth, love.",
+  "where": [
+   "sheepwalk22.js:218"
+  ]
+ },
+ "2dauq2euxgg": {
+  "en": "That's not wool off a sheep. That's Hedge-wool, packed under the roots in 417: you can see the earth in it, and the thorn. My mother's mark is on that hank. It's been pulling the Hedge apart from underneath, a fleece at a time, and wearing it. Nothing took our sheep. Something took the wool.",
+  "where": [
+   "hanger22.js:84"
+  ]
+ },
+ "1ideyjzddv": {
+  "en": "The Bellwether",
+  "where": [
+   "sheepwalk22.js:68"
+  ]
+ },
+ "1gmb97ze463": {
+  "en": "The Bellwether was the drovers' house. Eight hundred sheep a fair-day went past that door. I had it from my uncle and shut it with my own hands the night the Hedge closed, and I opened it again the week Tamar came back up.",
+  "where": [
+   "sheepwalk22.js:153"
+  ]
+ },
+ "1er4msftbx2": {
+  "en": "The Bellwether. A ram on the board, with a bell at his throat. The paint is new and the board is old.",
+  "where": [
+   "sheepwalk22.js:74"
+  ]
+ },
+ "p1biflgnc0": {
+  "en": "The Bellwether: a drovers' inn, its door open",
+  "where": [
+   "sheepwalk22.js:71"
+  ]
+ },
+ "25uldv99th9": {
+  "en": "The Chalk Ram",
+  "where": [
+   "sheepwalk22.js:187"
+  ]
+ },
+ "132bdv6p0xj": {
+  "en": "The Farrants' door. A note is pinned to it: AT THE FOLD.",
+  "where": [
+   "sheepwalk22.js:75"
+  ]
+ },
+ "2fxhfumztol": {
+  "en": "The Hanger",
+  "where": [
+   "hanger22.js:59"
+  ]
+ },
+ "1zaibp1k4vi": {
+  "en": "The Iron Hum",
+  "where": [
+   "sheepwalk22.js:180"
+  ]
+ },
+ "1pm816ybt9u": {
+  "en": "The Old Fleece",
+  "where": [
+   "hanger22.js:170"
+  ]
+ },
+ "13xf8yr3w6e": {
+  "en": "The Old Fleece is down. Its bell rolls across the floor of the chamber and stops, and for the first time it rings.",
+  "where": [
+   "hanger22.js:106"
+  ]
+ },
+ "1h0datdm02c": {
+  "en": "The Ram on the hill. He's gone green, all over, you can hardly see him. Gran said he has to be scoured every seven years or he walks off the hill and takes the flock with him. It's been ten. There's six stakes up there where the old men marked him. Will you do it? I'd do it but Mam says I'm to watch the fold.",
+  "where": [
+   "sheepwalk22.js:142"
+  ]
+ },
+ "5jlx8k5bi8": {
+  "en": "The Wether brook, cold off the chalk. You can see every stone on its bed.",
+  "where": [
+   "sheepwalk22.js:82"
+  ]
+ },
+ "1xjn5ps8k42": {
+  "en": "The Wether spring. It comes out of the chalk as clear as glass and goes over a lip of flint in a little fall.",
+  "where": [
+   "sheepwalk22.js:83"
+  ]
+ },
+ "i88nbhhmi": {
+  "en": "The barn door is barred from inside. Through the crack: hay to the roof beams, and the smell of a winter that never came.",
+  "where": [
+   "sheepwalk22.js:76"
+  ]
+ },
+ "2cbh3tscnp4": {
+  "en": "The beacon is burning. You can feel it on your face from here.",
+  "where": [
+   "sheepwalk22.js:173"
+  ]
+ },
+ "1y7u4z6mdhn": {
+  "en": "The beacon is laid and lit and burning low in daylight. It will show when the dark comes.",
+  "where": [
+   "sheepwalk22.js:174"
+  ]
+ },
+ "hrxy5y7xuy": {
+  "en": "The beacon wants a furze faggot and a light. There is a woodpile by the barn.",
+  "where": [
+   "sheepwalk22.js:170"
+  ]
+ },
+ "1g307kjb83f": {
+  "en": "The bleating goes back into the wood, and the birds start.",
+  "where": [
+   "hanger22.js:78"
+  ]
+ },
+ "wlxi0ef9x7": {
+  "en": "The combe well. Somebody has scrubbed the bucket and hung it back on the hook.",
+  "where": [
+   "sheepwalk22.js:78"
+  ]
+ },
+ "1xtmgb8i9nr": {
+  "en": "The crust is lard and the filling is pepper and the whole of it is warm.",
+  "where": [
+   "sheepwalk22.js:198"
+  ]
+ },
+ "1yhufqqlvea": {
+  "en": "The ewe sees the fold and trots the last of it, bleating. Somebody in the flock answers.",
+  "where": [
+   "sheepwalk22.js:117"
+  ]
+ },
+ "1qq40hi9jz1": {
+  "en": "The ewes will not come indoors. They wait outside.",
+  "where": [
+   "sheepwalk22.js:119"
+  ]
+ },
+ "ui5dbb3b2t": {
+  "en": "The fire is going. The bedroll is laid. Out past the light the night does what it does.",
+  "where": [
+   "hanger22.js:113"
+  ]
+ },
+ "1n595dv352f": {
+  "en": "The fleece is warm a finger deep, and cold on the top.",
+  "where": [
+   "sheepwalk22.js:118"
+  ]
+ },
+ "q8f4xgh3zp": {
+  "en": "The flock is back on the Downs, the turf is going short, and the Ram is white. My father would not know what to say. Neither do I.",
+  "where": [
+   "sheepwalk22.js:132"
+  ]
+ },
+ "klihdvs2b9": {
+  "en": "The fold-fires. Not war fires, whatever the Synod told you: shepherds' fires. At the back-end of the year you lit the Long Down, Hob's Knap and Ewe Barrow, and every flock on the hills came down to the light. Nobody has lit them since the wool went into the Hedge. My legs will not do the hills. Here is my tinder-box. Furze faggots from the woodpile by the barn, one to a beacon. Light them, and the sheep-walk is open again. Everybody will see it.",
+  "where": [
+   "sheepwalk22.js:163"
+  ]
+ },
+ "14jz7hc4l6m": {
+  "en": "The furze takes with a roar. The beacon burns, and out on the hills the dark has a point in it.",
+  "where": [
+   "sheepwalk22.js:172"
+  ]
+ },
+ "moesq8g57z": {
+  "en": "The gap in the hedge, back to Wethercombe",
+  "where": [
+   "hanger22.js:62"
+  ]
+ },
+ "i9xbomjrup": {
+  "en": "The last of the turf comes away. You stand up and look down the hill and he is there, the whole of him: nose, horn, chest, back, haunch and tail, white on the green, the way he was cut before anyone wrote anything down.",
+  "where": [
+   "sheepwalk22.js:192"
+  ]
+ },
+ "dyf2jue4xq": {
+  "en": "The line is in. Stand still.",
+  "where": [
+   "hanger22.js:130"
+  ]
+ },
+ "298b05qp9zm": {
+  "en": "The line jumps! Strike now (Use).",
+  "where": [
+   "hanger22.js:131"
+  ]
+ },
+ "bw1lwb1gc": {
+  "en": "The nest. The wool is warm on the inside. Whatever lies here was here this morning.",
+  "where": [
+   "hanger22.js:67"
+  ]
+ },
+ "1p2kuwsr0wi": {
+  "en": "The oldest of them, the size of a cart, fleeces to the roof, a bell at its throat with the clapper wrapped in wool. It has been under the barrow a long time.",
+  "where": [
+   "hanger22.js:170"
+  ]
+ },
+ "43mvcynged": {
+  "en": "The pylon hums. It is not the wind. A wire runs from its broken top down to an iron box at its foot, and the wire sings.",
+  "where": [
+   "sheepwalk22.js:105"
+  ]
+ },
+ "25r6z2o96t2": {
+  "en": "The pylon is iron lattice, snapped two-thirds of the way up, the top hanging off like a broken wing. From the break a single wire runs down to an iron box at the foot, and the wire is singing: one note, steady, under hearing almost, a hum you feel in your back teeth. A brass plate on the box: CONSORTIUM OF BORES — WESTERN TALLY LINE — STATION 6. Cut it, and the hounds lose their lodestone.",
+  "where": [
+   "sheepwalk22.js:181"
+  ]
+ },
+ "73y3b9k2n7": {
+  "en": "The pylon stands silent, the singing wire hanging in two pieces. Rust, and wind, and nothing else.",
+  "where": [
+   "sheepwalk22.js:106"
+  ]
+ },
+ "zjpnuapvvl": {
+  "en": "The sarsen has moved. It stands a hand's breadth off the door, the way a door stands when somebody inside has opened it. Cold air comes out, and the smell of wet wool.",
+  "where": [
+   "hanger22.js:65"
+  ]
+ },
+ "1yiu6l51aom": {
+  "en": "The stake marks a part of the figure. The turf has crept over the chalk here, a finger deep. Scouring it clean is an hour on your knees with a spade and a stiff brush.",
+  "where": [
+   "sheepwalk22.js:188"
+  ]
+ },
+ "v7neov9m06": {
+  "en": "The stile, back up onto the Watch Downs",
+  "where": [
+   "sheepwalk22.js:70"
+  ]
+ },
+ "19xi834vzdo": {
+  "en": "The three fold-fires are lit. They will burn on the Downs and over Wethercombe every night now.",
+  "where": [
+   "sheepwalk22.js:214"
+  ]
+ },
+ "yqxpnf6ds5": {
+  "en": "The tup, with a bell at his throat: the bellwether. Where he goes, the flock goes.",
+  "where": [
+   "sheepwalk22.js:114"
+  ]
+ },
+ "kad4woznoa": {
+  "en": "The wire parts with a crack and the note stops. Out on the hill the hounds' silence is a different silence. In the iron box, under a tin lid, someone left a tally-book.",
+  "where": [
+   "sheepwalk22.js:184"
+  ]
+ },
+ "29m0pkjkbjb": {
+  "en": "The wire sings, and something under the pylon answers it. The hounds are still here. Deal with them first.",
+  "where": [
+   "sheepwalk22.js:179"
+  ]
+ },
+ "10i6x6g2ywg": {
+  "en": "There is no room to pitch a camp just there.",
+  "where": [
+   "hanger22.js:110"
+  ]
+ },
+ "7klg5506pg": {
+  "en": "There is no water near enough to cast into.",
+  "where": [
+   "hanger22.js:128"
+  ]
+ },
+ "28cgtc0vej3": {
+  "en": "There. Eat it slowly; it's the last till Driftday.",
+  "where": [
+   "sheepwalk22.js:218"
+  ]
+ },
+ "1hct1ye3dff": {
+  "en": "There. Somebody ought to enjoy something.",
+  "where": [
+   "sheepwalk22.js:156"
+  ]
+ },
+ "ri9oh3s3bu": {
+  "en": "Three fires on three hills. I lit them forty back-ends running. Then the Hedge.",
+  "where": [
+   "sheepwalk22.js:161"
+  ]
+ },
+ "xgkuibzpn3": {
+  "en": "Three fires. Look at that. Look at that. — That is a beacon-keeper's purse; there is nobody else to give it to. They will burn every night now. I will see to it, from this chair, by telling Kit.",
+  "where": [
+   "sheepwalk22.js:165"
+  ]
+ },
+ "29kcfiw47lm": {
+  "en": "Too much noise. Nothing will bite.",
+  "where": [
+   "hanger22.js:134"
+  ]
+ },
+ "mqwouddnbq": {
+  "en": "Tracks in the leaf-mould: a lot of small hooves, close together, all going the same way. They come from one set of feet.",
+  "where": [
+   "hanger22.js:72"
+  ]
+ },
+ "ljuwhr8cah": {
+  "en": "Trout off the fire. Restores 18 health and 25 fatigue.",
+  "where": [
+   "hanger22.js:152"
+  ]
+ },
+ "1s5kodrvtm7": {
+  "en": "Two chops off the griddle, black at the edges. Restores 14 health and 20 fatigue.",
+  "where": [
+   "sheepwalk22.js:197"
+  ]
+ },
+ "mcuy0oje3e": {
+  "en": "Wethercombe",
+  "where": [
+   "sheepwalk22.js:67"
+  ]
+ },
+ "v69rwxwys1": {
+  "en": "Wethercombe Apple",
+  "where": [
+   "sheepwalk22.js:201"
+  ]
+ },
+ "tvio1nn5nu": {
+  "en": "Wethercombe was the sheep-walk's door: the fold, the fair, the Bellwether for the drovers. When the Hedge went up we all went in. I am the first back. Gideon came after me, because somebody has to feed me.",
+  "where": [
+   "sheepwalk22.js:128"
+  ]
+ },
+ "19kukheauba": {
+  "en": "Whistle-grass, hollow and silver. In a wind the slope hums with it.",
+  "where": [
+   "sheepwalk22.js:94"
+  ]
+ },
+ "2a6r2dk1l53": {
+  "en": "White chalk, scoured clean. From here it is only a white patch. From the valley it is the Ram.",
+  "where": [
+   "sheepwalk22.js:108"
+  ]
+ },
+ "b37sjhax5y": {
+  "en": "Wild thyme and a few vetch.",
+  "where": [
+   "sheepwalk22.js:530"
+  ]
+ },
+ "dei2d5kqja": {
+  "en": "Wool, and wet earth, and a bell that does not ring.",
+  "where": [
+   "hanger22.js:76"
+  ]
+ },
+ "1gh7fu5ar46": {
+  "en": "Woolwight",
+  "where": [
+   "hanger22.js:168"
+  ]
+ },
+ "1ynyd3fk12f": {
+  "en": "Woolwight's Bell",
+  "where": [
+   "hanger22.js:141"
+  ]
+ },
+ "1g0i1gwfl5m": {
+  "en": "You are carrying all the furze you need.",
+  "where": [
+   "sheepwalk22.js:176"
+  ]
+ },
+ "2916gn1ydxl": {
+  "en": "You came over the Downs? Then you saw no sheep. There were none to see. — Eleven Rust Coast ewes and a tup, Captain Vane brought me up in his hold from Cantabile, and charged me for the smell. Two nights back a hound came down the combe and ran them. Six came home. Five are out on the hill, on the Downs, under the pylon, and I cannot leave the rest to fetch them. They will follow anyone who is calm. Will you?",
+  "where": [
+   "sheepwalk22.js:126"
+  ]
+ },
+ "imo4mwsm9j": {
+  "en": "You came. It was making a noise like a lamb. Like a lamb that needed me. And then it was big. It's still in there. Is it still in there?",
+  "where": [
+   "hanger22.js:91"
+  ]
+ },
+ "18g4wbyfr6b": {
+  "en": "You cast and let the line settle. Stand still, and keep quiet.",
+  "where": [
+   "hanger22.js:129"
+  ]
+ },
+ "1lez9x0jezr": {
+  "en": "You clear a ring, lay the furze and the bedroll, and strike a light. The fire takes. It is yours for as long as you want it.",
+  "where": [
+   "hanger22.js:111"
+  ]
+ },
+ "1tgxuh8d83w": {
+  "en": "You eat it out of the dish with a spoon, and then with the heel of the bread.",
+  "where": [
+   "sheepwalk22.js:199"
+  ]
+ },
+ "1cfisomqi7v": {
+  "en": "You eat them with your fingers. Nobody here will say anything.",
+  "where": [
+   "sheepwalk22.js:197"
+  ]
+ },
+ "1l27y7inn93": {
+  "en": "You have furze, but nothing to light it with. Absalom Rudd at the Bellwether keeps a tinder-box.",
+  "where": [
+   "sheepwalk22.js:171"
+  ]
+ },
+ "ep30ukkh94": {
+  "en": "You have had this tree's best apple today. Leave the rest for the wasps.",
+  "where": [
+   "sheepwalk22.js:86"
+  ]
+ },
+ "1pkudld6ykc": {
+  "en": "You have nothing to roast. A fish, or mutton chops, would do.",
+  "where": [
+   "hanger22.js:124"
+  ]
+ },
+ "1d1biq4u2pa": {
+  "en": "You kick the fire out, roll the bedroll and shoulder the kit.",
+  "where": [
+   "hanger22.js:122"
+  ]
+ },
+ "wo8mmlsc0g": {
+  "en": "You land {0}.",
+  "where": [
+   "hanger22.js:136"
+  ],
+  "pattern": true
+ },
+ "28vj4z1aifm": {
+  "en": "You need open country and sky to pitch a camp.",
+  "where": [
+   "hanger22.js:108"
+  ]
+ },
+ "9e3irzhe4e": {
+  "en": "You pick a red Wethercombe apple, cold and sharp.",
+  "where": [
+   "sheepwalk22.js:87"
+  ]
+ },
+ "1bbpjcfoeg0": {
+  "en": "You pull a furze faggot off the woodpile. It is dry, and it prickles through your gloves.",
+  "where": [
+   "sheepwalk22.js:175"
+  ]
+ },
+ "1hd9iqnbxfu": {
+  "en": "You roast {0} on a green stick and eat it off the stick.",
+  "where": [
+   "hanger22.js:123"
+  ],
+  "pattern": true
+ },
+ "25d7xyjcpfu": {
+  "en": "You rub the ewe's poll. She leans into it and goes on chewing.",
+  "where": [
+   "sheepwalk22.js:118"
+  ]
+ },
+ "50j4x47om5": {
+  "en": "You scared it off.",
+  "where": [
+   "hanger22.js:135"
+  ]
+ },
+ "1pg11u1ocl2": {
+  "en": "You sleep by the fire and wake with the dew on the bedroll and the fire down to ash. Nothing came.",
+  "where": [
+   "hanger22.js:121"
+  ]
+ },
+ "lvdaosru2o": {
+  "en": "You sleep by the fire. Once in the night you wake, and something is standing out past the light, bleating, and does not come in. In the morning there are hoof-prints round the fire in a ring, and none inside it.",
+  "where": [
+   "hanger22.js:120"
+  ]
+ },
+ "1cb50pn1pr4": {
+  "en": "You strike the old camp and pitch a new one here.",
+  "where": [
+   "hanger22.js:125"
+  ]
+ },
+ "e13a6ahr0o": {
+  "en": "You walk off and the line comes out of the water.",
+  "where": [
+   "hanger22.js:133"
+  ]
+ },
+ "o4hkg4hfjc": {
+  "en": "Your camp",
+  "where": [
+   "hanger22.js:112"
+  ]
+ },
+ "1tf65r4sq5x": {
+  "en": "Your throat feels like a struck bell.",
+  "where": [
+   "hanger22.js:154"
+  ]
+ },
+ "1x04xl3yk7v": {
+  "en": "quest {0}",
+  "where": [
+   "hanger22.js:476"
+  ],
+  "pattern": true
+ },
+ "1seqwf10bjd": {
+  "en": "{0} of the five home. They are out on the Downs and in the combe, mostly where the grass is sweetest or the danger is worst. One went south, under the pylon.",
+  "where": [
+   "sheepwalk22.js:129"
+  ],
+  "pattern": true
+ },
+ "1ps1uo4hddz": {
+  "en": "{0} of the three. I can see them from the window, you know. I sit and look.",
+  "where": [
+   "sheepwalk22.js:164"
+  ],
+  "pattern": true
+ },
+ "1n8ldhwqgnt": {
+  "en": "{0} stakes scoured. I can see his {1} from here!",
+  "where": [
+   "sheepwalk22.js:143"
+  ],
+  "pattern": true
  }
 }

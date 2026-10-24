@@ -107,7 +107,9 @@ async function boot(browser, block) {
       const D = G.maps[HORIZON20.DOWNS], cl = G.maps.clearing;
       check(D && D.outdoor && D.danger === 0 && D.lvls && D.smooth, 'the Downs are an outdoor height-mapped map with danger 0');
       const portals = []; for (let i = 0; i < D.cells.length; i++) { const c = D.cells[i]; if (c && c.portal) portals.push(c.portal.map); }
-      check(portals.length === 1 && portals[0] === 'clearing', 'the Downs have one way out, to the clearing (' + portals.join(',') + ')');
+      // Phase 22 (js/sheepwalk22.js, the Author Rulings' region) adds one stile, south to Wethercombe; nothing else
+      const ways = typeof SHEEPWALK22 !== 'undefined' ? ['clearing', SHEEPWALK22.COMBE] : ['clearing'];
+      check(portals.length === ways.length && ways.every((w) => portals.includes(w)), 'the Downs\' ways out are ' + ways.join(' and ') + ' (' + portals.join(',') + ')');
       for (let x = 0; x < D.w; x++) for (const y of [0, D.h - 1]) check(D.get(x, y), 'the Downs are walled at ' + x + ',' + y);
       for (let y = 0; y < D.h; y++) for (const x of [0, D.w - 1]) check(D.get(x, y), 'the Downs are walled at ' + x + ',' + y);
       check(!D.entities.some((e) => e.kind === 'enemy' || e.kind === 'item' || e.kind === 'npc' || e.use), 'no enemies, items, people or usable props up there: walking and looking only');
@@ -231,7 +233,7 @@ async function boot(browser, block) {
       return out;
     });
     console.log('PASS art: sprites, textures, belfry art and emissive lamp present and sized');
-    console.log('PASS the Downs: one way out (the clearing), walled, no enemies/items/people; BFS ' + JSON.stringify(r.bfs) + '; the Scar out of reach, the summit in reach, every sign and stone walkable to');
+    console.log('PASS the Downs: out to the clearing (and Wethercombe, Phase 22) only, walled, no enemies/items/people; BFS ' + JSON.stringify(r.bfs) + '; the Scar out of reach, the summit in reach, every sign and stone walkable to');
     console.log('PASS walked through the hurdle, up to the beacon (' + JSON.stringify(r.summit) + '; flags other modules recorded on the way: ' + JSON.stringify(r.flagsChanged) + ') and back down to the clearing with no damage and no flag changed; a save on the hill restores there');
     console.log('PASS country beyond the walls: ' + JSON.stringify(r.far) + ' px, only where nothing nearer was drawn; nothing when looking away');
     console.log('PASS belfry: ' + JSON.stringify(r.belfry) + '; the lamp only with rite_ready and only from the square side; no bell; the Chapel frame drawn (lamp variant with rite_ready), stand-in back when off, entity unchanged, hostile flag harmless');

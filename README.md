@@ -54,6 +54,25 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 22: the Sheep-Walk (a new region, south of the Watch Downs)
+
+| | |
+|---|---|
+| ![The Chalk Ram at sunset](screenshots/p22-chalk-ram.jpg) | ![Wethercombe in the morning](screenshots/p22-wethercombe.jpg) |
+| The Chalk Ram, a hill figure on Wethercombe's west scarp. Scour it white again, stake by stake. | Wethercombe from Hob's Knap: farmsteads, orchards, the Bellwether inn, and the snapped pylon on the skyline. |
+| ![Tamar Farrant at the fold](screenshots/p22-fold.jpg) | ![A fold-fire burning on Hob's Knap](screenshots/p22-fold-fire.jpg) |
+| Sheep are back. Bring Tamar's five stray ewes home; they follow anyone calm. | Light the three fold-fires. They burn every night after that. |
+| ![A brook bank thick with reeds, flowers and an autumn tree](screenshots/p22-lush.jpg) | ![The Hanger at night, glass-thorn and lantern-bells glowing](screenshots/p22-hanger-night.jpg) |
+| Lush where it should be: banks, hedges, field walls and woods. New trees (bell-ash, glass-thorn) and flowers (lantern-bell, echo-poppy, whistle-grass). | The Hanger at night: the glass-thorn and lantern-bells glow, and something bleats among the beeches. |
+| ![A Woolwight](screenshots/p22-woolwight.jpg) | ![The Old Fleece in Ewe Barrow](screenshots/p22-old-fleece.jpg) |
+| The Woolwight: stolen fleeces stitched over something that is not a sheep. It hunts you at night, keeps out of firelight and leaves at dawn. | Ewe Barrow, a trapped long barrow under the sarsen. In the last chamber: the Old Fleece. |
+| ![The Hanger by day, beeches lining the ride in from the gap](screenshots/p22-hanger.jpg) | |
+| The Hanger by day: over six hundred trees, thickets you cannot push through, and rides cut between them. | |
+| ![Lambkins and grave goods in a barrow chamber](screenshots/p22-barrow.jpg) | ![A camp pitched by the brook at night](screenshots/p22-camp.jpg) |
+| Lambkins guard the grave goods: a torc, amber, a gold lunula, a barrow helm and a leaf-blade. | Pitch camp anywhere outdoors with the camp kit: sleep, roast, cook, and fish any water within a cast. |
+
+Mutton is on the menu at every inn and food seller: salt mutton, broth, chops, pie, hotpot and a roast leg. Two quest chains (Bleating in the Wood, The Lambing at Night) lead from the Bellwether and the Farrants' fold into the Hanger and down into the barrow. The new gear is a shepherd's crook, barrow shears and a leaf-blade, and for armour the barrow helm, the Old Fleece's shroud and drover's boots.
+
 ### Phase 19: together (two-player co-op)
 
 | | |

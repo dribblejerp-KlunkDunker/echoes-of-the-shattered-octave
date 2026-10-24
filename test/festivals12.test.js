@@ -99,7 +99,7 @@ const flagSig = (page) => page.evaluate(() => JSON.stringify(Object.keys(G.flags
     check(!k.includes('table') && !k.includes('baker') && k.includes('gate'), 'the table and baker are a daytime thing; the sheaf stays at night');
     await setClock(pg, 3, 0.45);
     const shop = await pg.evaluate(() => { const b = G.map.entities.find(e => e.id === 'p12_baker'); const n = NPCS.p12_baker; G.player.gold = 100; return { has: !!b, sells: n.shop.map(s => s.item), cons: ['p12_hearth_bread', 'p12_cider', 'p12_moot_curd', 'p12_flume_eel'].map(i => itemCat(i)) }; });
-    check(shop.has && shop.sells.join() === 'p12_hearth_bread,p12_cider,p12_moot_curd', 'the baker sells hearth bread, cider and moot-curd');
+    check(shop.has && shop.sells.slice(0, 3).join() === 'p12_hearth_bread,p12_cider,p12_moot_curd', 'the baker sells hearth bread, cider and moot-curd (first; Phase 22 adds her mutton pies after them)');
     // eating: small buffs
     const food = await pg.evaluate(() => { const o = {}; const p = G.player; ['p12_hearth_bread', 'p12_cider', 'p12_moot_curd', 'p12_flume_eel'].forEach(id => { p.hp = 5; p.voice = 3; p.fat = 5; G.give(id); const before = [p.hp, p.voice, p.fat, G.count(id)]; const slot = p.inv.find(s => s.id === id); useItem(slot); o[id] = [p.hp - before[0], p.voice - before[1], p.fat - before[2], before[3] - G.count(id)]; }); return o; });
     check(food.p12_hearth_bread[0] === 12 && food.p12_hearth_bread[3] === 1 && food.p12_cider[1] === 10 && food.p12_moot_curd[0] === 6 && food.p12_flume_eel[0] === 14, 'the food items heal what their text says and are used up: ' + JSON.stringify(food));
