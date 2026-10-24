@@ -1084,13 +1084,14 @@ const SHEEPWALK22 = (function () {
     const burning = fireStage() >= 1;
     BEACONS.forEach((b, i) => {
       if (b.map !== m.id) return;
-      if (m.id === COMBE) { const e = m.entities.find((q) => q && q.beacon === i && !q._p22); if (e) { e.sprite = lit(i) ? 'p22_beacon_lit' : 'p22_beacon'; e.lightCol = lit(i) && (night() || hour() > 17.5) ? [110, 60, 16] : undefined; } }
+      if (m.id === COMBE) { const e = m.entities.find((q) => q && q.beacon === i && !q._p22); if (e) { e.sprite = lit(i) ? 'p22_beacon_lit' : 'p22_beacon'; } }
       if (m.id === DOWNS) {
         const cairn = m.entities.find((q) => q && q.sprite === 'p20_cairn');
         if (cairn) { cairn.use = burning ? 'p22_beacon' : cairn.use; if (burning) cairn.beacon = 0; }
-        if (lit(i)) m.entities.push({ kind: 'deco', sprite: 'p22_beacon_lit', x: b.x, y: b.y + 0.15, solid: false, radius: 0.2, scale: 1.0, transient: true, nopick: true, _p22: 'fire', lightCol: night() || hour() > 17.5 ? [110, 60, 16] : undefined });
+        if (lit(i)) m.entities.push({ kind: 'deco', sprite: 'p22_beacon_lit', x: b.x, y: b.y + 0.15, solid: false, radius: 0.2, scale: 1.0, transient: true, nopick: true, _p22: 'fire' });
       }
     });
+    fireLight(m);
     stats.fires = litCount();
   }
   function syncDownsSign(m) {
@@ -1102,6 +1103,23 @@ const SHEEPWALK22 = (function () {
   function syncPylon(m) { if (!m || m.id !== COMBE) return; const e = m.entities.find((q) => q && q.use === 'p22_pylon'); if (e) { e.sprite = silenced() ? 'p22_pylon_cut' : 'p22_pylon'; e.label = silenced() ? TX.pylonQuiet : TX.pylonHum; } }
   function syncStakes(m) { if (!m || m.id !== COMBE) return; for (const e of m.entities) if (e && e.use === 'p22_scour') { const done = scoured(e.stake); e.sprite = done ? 'p22_stake_done' : 'p22_stake'; e.label = done ? TX.ramDone : TX.ramHint; } }
   function syncSheep() { if (hasG() && G.map && (G.mapId === COMBE || G.mapId === DOWNS || G.mapId === INN)) syncMap(G.map); }
+  // after a stake, a fire or the wire: refresh only what they change, so the flock and the ewes at your heels stay put
+  function syncQuest() {
+    if (!hasG() || !G.map) return; const m = G.map;
+    if (m.id === COMBE) { syncRam(m); syncPylon(m); syncStakes(m); }
+    if (m.id === DOWNS) syncDownsSign(m);
+    if (m.id === COMBE || m.id === DOWNS) { for (let i = m.entities.length - 1; i >= 0; i--) if (m.entities[i] && m.entities[i]._p22 === 'fire') m.entities.splice(i, 1); addFires(m); }
+  }
+  // a lit fire throws light from dusk to dawn, whenever it was lit (checked every couple of seconds, not only on load)
+  const FIRE_COL = [110, 60, 16];
+  function fireLight(m) {
+    if (!m || (m.id !== COMBE && m.id !== DOWNS)) return;
+    const dark = night() || hour() > 17.5;
+    for (const e of m.entities) {
+      if (!e) continue;
+      if (e._p22 === 'fire' || (e.beacon != null && !e._p22 && m.id === COMBE)) e.lightCol = dark && (e._p22 === 'fire' || lit(e.beacon)) ? FIRE_COL : undefined;
+    }
+  }
   function syncMap(m) {
     if (!m || (m.id !== COMBE && m.id !== DOWNS && m.id !== INN)) return;
     clearTransient(m);
@@ -1138,12 +1156,12 @@ const SHEEPWALK22 = (function () {
     const id = G.mapId;
     if (id !== COMBE && id !== DOWNS) { humStop(); return; }
     stats.ticks++;
+    T.lightT = (T.lightT || 0) - dt; if (T.lightT <= 0) { T.lightT = 2; fireLight(G.map); }
     const c = Engine.cam, rx = -Math.sin(c.dir), ry = Math.cos(c.dir);
     for (const e of G.ents) {
       if (!e || e._p22 !== 'sheep' || e.hidden) continue;
       e._t -= dt;
       if (e.follow != null) {
-        // keep a pace or two behind, in a loose line
         // keep a pace or two behind; near the fold they see it and go in on their own, through the gate
         const slot = T.followers.indexOf(e), atFold = id === COMBE && Math.hypot(c.x - FOLD.cx, c.y - FOLD.cy) < 6;
         const inGate = e.y > FOLD.y0 - 0.2, tgt = atFold ? (inGate ? { x: FOLD.cx + (slot % 3 - 1) * 0.8, y: FOLD.cy + 0.4 } : { x: FOLD.cx, y: FOLD.y0 + 0.5 }) : behind(1.3 + slot * 0.75, slot % 2 ? 0.45 : -0.45);
@@ -1201,7 +1219,7 @@ const SHEEPWALK22 = (function () {
     const k = T.followers.indexOf(e); if (k >= 0) T.followers.splice(k, 1);
     bleat(e, 1); msg(TX.sheep.home, 'good', 4000);
     try { G.player.gold += 5; } catch (x) { /* none */ }
-    if (homeCount() >= EWES) msg(fmt(TX.tamar.progress, EWES), 'warn', 4000);
+    if (homeCount() >= EWES) msg(TX.tamar.thanks, 'good', 4000);
   }
 
   // ---------------------------------------------------------------- sound: a bleat (two formants and a wobble) and the pylon's hum
@@ -1285,7 +1303,7 @@ const SHEEPWALK22 = (function () {
     G.take('p22_furze'); setFlag('b' + i, 1);
     msg(TX.fire.lit, 'good', 5000);
     try { Audio_.sfx.door(); } catch (x) { /* silent */ }
-    syncSheep();
+    syncQuest();
     return true;
   }
   function scour(e) {
@@ -1295,7 +1313,7 @@ const SHEEPWALK22 = (function () {
       { t: TX.scour.go, f: () => {
         try { passHours(1); } catch (x) { /* time stands */ }
         setFlag('s' + i, 1); if (ramStage() === 0) setFlag('ram', 1, 2);
-        syncSheep();
+        syncQuest();
         msg(scourCount() >= STAKES ? TX.scour.all : TX.scour.did, 'good', 6000);
       } },
       { t: TX.scour.leave },
@@ -1310,7 +1328,7 @@ const SHEEPWALK22 = (function () {
       { t: TX.pylon.cut, f: () => {
         setFlag('hum', 1); humStop();
         try { if (!G.has('p22_tally')) G.give('p22_tally'); G.give('shard'); G.player.gold += 20; } catch (x) { /* none */ }
-        msg(TX.pylon.done, 'good', 6000); journal('side', TX.journal.pylon); syncSheep();
+        msg(TX.pylon.done, 'good', 6000); journal('side', TX.journal.pylon); syncQuest();
       } },
       { t: TX.pylon.leave },
     ]);

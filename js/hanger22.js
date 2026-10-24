@@ -270,11 +270,10 @@ const HANGER22 = (function () {
     }
     // the heap: matted fleeces, cream going grey going brown at the hem where it drags; a ridge of thorn down its back
     const cx = w / 2 + sway + lunge, top = h * 0.1 + rear + 6;
-    const body = (yy) => yy;
     P(x, [[w * 0.12 + sway, legTop + 4], [w * 0.16 + sway, top + 34], [cx - 14, top + 6], [cx + 6, top], [cx + 22, top + 10], [w * 0.86 + sway, top + 38], [w * 0.9 + sway, legTop + 4]], '#8a8274');
     for (let i = 0; i < 70; i++) {
       const t = r(), px = w * 0.14 + r() * w * 0.72 + sway, py = top + 6 + t * (legTop - top - 4), shade = t < 0.35 ? ['#d6cfbd', '#c8c0ac', '#e2dccb'] : t < 0.7 ? ['#aaa290', '#9c9482', '#b8b09c'] : ['#7a6e5c', '#6a5e4c', '#5a4e3e'];
-      E(x, px, body(py), (5 + r() * 6) * k, (4 + r() * 4) * k, shade[(r() * 3) | 0]);
+      E(x, px, py, (5 + r() * 6) * k, (4 + r() * 4) * k, shade[(r() * 3) | 0]);
       if (r() < 0.5) { x.strokeStyle = 'rgba(70,60,48,0.55)'; x.lineWidth = 1; x.beginPath(); x.arc(px, py, 2.4 * k, r() * 3, r() * 3 + 3.5); x.stroke(); }   // curls
     }
     for (let i = 0; i < 18; i++) { const px = cx - 18 + r() * 40, py = top + 2 + r() * 20; L(x, px, py, px + (r() - 0.5) * 6, py - 4 - r() * 5, '#2a2018', 1.2); }   // thorn
@@ -582,9 +581,12 @@ const HANGER22 = (function () {
     // the way to the gap and to the barrow's door stays clear of trees
     for (let i = cm.entities.length - 1; i >= 0; i--) { const e = cm.entities[i]; if (TREE_RE.test(e.sprite || '') && !e.use && (Math.hypot(e.x - GAP_COMBE[0] - 0.5, e.y - GAP_COMBE[1]) < 2.4 || Math.hypot(e.x - SARSEN[0] - 1.9, e.y - SARSEN[1] + 1.5) < 1.6)) cm.entities.splice(i, 1); }
     const s = cm.entities.find((e) => e.sprite === 'p22_sarsen'); if (s) s.use = 'p22_sarsen';
-    cm.baseCount = cm.entities.length;
     fellPockets(cm, SW ? SW.STILE[0] : 34, 1);
+    // flora.js has already laid the combe's grass (transient, and only when Grass is on): the saved, positional part of
+    // the list is everything before it, so the tufts go back after the count
+    const tufts = []; for (let i = cm.entities.length - 1; i >= 0; i--) if (cm.entities[i] && cm.entities[i]._flora) tufts.unshift(cm.entities.splice(i, 1)[0]);
     cm.baseCount = cm.entities.length;
+    for (const t of tufts) cm.entities.push(t);
   }
 
   // ================================================================ quests
@@ -704,12 +706,14 @@ const HANGER22 = (function () {
   }
   function huntTick(dt) {
     const max = G.map && G.map.outdoor ? (HUNT_MAX[G.mapId] || 0) : 0;
+    if (!max) return;   // hunters live only on the hunt maps (transient: they never follow you off them)
     const list = hunters(), c = Engine.cam;
     stats.hunters = list.length;
     for (const e of list) if (e.dead && !e._p22said) { e._p22said = true; say(TX.hunt.kill, 'good', 4000); }
     const live = list.filter((e) => !e.dead);
-    if (!max) return;
-    const lights = lightsHere();
+    H.lightT = (H.lightT || 0) - dt;
+    if (H.lightT <= 0 || !H.lights) { H.lights = lightsHere(); H.lightT = 0.5; }
+    const lights = H.lights;
     if (night()) {
       H.dawnSaid = false;
       H.spawnT -= dt;
@@ -782,17 +786,18 @@ const HANGER22 = (function () {
   }
   function strikeCamp() { const id = campHere(); delete G.flags.p22c_map; delete G.flags.p22c_x; delete G.flags.p22c_y; if (id && G.maps[id]) syncCamp(G.maps[id]); say(TX.camp.struck, '', 3500); }
   function campMenu(fire, origUse) {
-    const raw = ROAST.find(([r]) => G.has(r));
     const ch = [{ t: TX.camp.rest, f: () => restAtCamp() }];
     ch.push({ t: TX.camp.roast, f: () => { const r = ROAST.find(([q]) => G.has(q)); if (!r) { say(TX.camp.nothing); return; } G.take(r[0]); G.give(r[1]); say(fmt(TX.camp.roasted, ITEMS[r[0]].name.toLowerCase()), 'good', 4000); } });
     if (origUse) ch.push({ t: TX.camp.cook, f: () => { try { origUse(fire); } catch (e) { warnOnce('cook', e); } } });
     if (G.has('p22_line') && waterNear()) ch.push({ t: TX.camp.fish, f: () => startFish() });
     ch.push({ t: TX.camp.strike, f: () => strikeCamp() });
     ch.push({ t: TX.camp.leave });
-    void raw;
     showEvent(TX.camp.menu, TX.camp.menuBody, ch);
   }
   function restAtCamp() {
+    // the same rules as the game's own rest (js/game.js renderRest): not while something hunts you, not on a clock
+    if (G.escapeTimer > 0 || G.boreHold > 0) { say('There is no time to rest. Not now.', 'bad', 2500); return; }
+    if (G.ents.some((e) => e.kind === 'enemy' && !e.dead && !e.hidden && e.state === 'chase' && Math.hypot(e.x - Engine.cam.x, e.y - Engine.cam.y) < 12)) { say('You cannot rest with enemies nearby.', 'bad', 2500); return; }
     const p = G.player, region = !!HUNT_MAX[G.mapId], wasNight = night();
     try { passHours(8); } catch (e) { /* time stands */ }
     p.hp = p.hpMax; p.voice = p.voiceMax; p.fat = p.fatMax;
@@ -850,7 +855,7 @@ const HANGER22 = (function () {
   function syncMap(id) {
     const m = G.maps[id]; if (!m) return;
     for (const mid of [COMBE, DOWNS, HANGER]) { const mm = G.maps[mid]; if (mm) for (let i = mm.entities.length - 1; i >= 0; i--) if (mm.entities[i] && mm.entities[i]._p22h === 'hunt') mm.entities.splice(i, 1); }
-    H.spawnT = 4 + prand() * 6; H.fish.st = 'idle';
+    H.spawnT = 4 + prand() * 6; H.fish.st = 'idle'; H.lights = null;
     if (id === COMBE) syncSarsen(m);
     if (id === HANGER && SW && SW.addLush) { const before = m.entities.length; SW.addLush(m, hangerZone, 1700, 5152); stats.lush = Math.max(stats.lush, m.entities.length - before); }
     syncKit();
