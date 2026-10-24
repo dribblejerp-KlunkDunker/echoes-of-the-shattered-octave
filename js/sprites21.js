@@ -611,7 +611,15 @@ void main() {
       let flags = (e.flash ? 1 : 0) | (glowEnt ? 8 : 0);
       if (spectral(e)) flags += 32 + (GFX.reduceMotion ? 64 : 0) + Math.min(0.999, (((animT * 0.32 + (e.x + e.y) * 0.37) % 1) + 1) % 1);
       const pull = Math.min(0.3, wW * 0.5);
-      pushBillboard(en, e.x, e.y, z0, wW, wH, anchor, (e.animSkew || 0) * aspectK, pull, f, e.animHurt || 0, alpha >= 1 ? 1 : alpha, flags, lr / 255, lg / 255, lb / 255, Math.max(f, 0.95));
+      // Phase 23 (js/figures23.js): a character with a jointed 3D figure is drawn by that module's pass instead; it gets
+      // what the billboard would have had (position, light, flags), and the screen rect below stays the picture's
+      const fig = typeof FIGURES23 === 'object' && FIGURES23 && FIGURES23.wants ? FIGURES23 : null;
+      let byFigure = false;
+      try { byFigure = !!(fig && fig.wants(e)); } catch (err) { warnOnce('figures23', err); }
+      if (byFigure) {
+        const yo = e.yOff || 0;
+        fig.submit(e, { x: e.x, y: e.y, z0: floor - yo + (yo < 0 ? (e.animLift || 0) : 0), unit, f, lr: lr / 255, lg: lg / 255, lb: lb / 255, alpha: alpha >= 1 ? 1 : alpha, flags: flags & 9, hurt: e.animHurt || 0, glowFloor: Math.max(f, 0.95) });
+      } else pushBillboard(en, e.x, e.y, z0, wW, wH, anchor, (e.animSkew || 0) * aspectK, pull, f, e.animHurt || 0, alpha >= 1 ? 1 : alpha, flags, lr / 255, lg / 255, lb / 255, Math.max(f, 0.95));
       // the screen rect every overlay reads (logical 320x150), as the raycaster left it
       const lat0 = -(flip ? 1 - cx0 : cx0) * wW, lat1 = lat0 + wW;
       let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9, okc = 0;
