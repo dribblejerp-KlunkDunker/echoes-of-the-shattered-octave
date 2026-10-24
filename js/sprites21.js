@@ -615,7 +615,8 @@ void main() {
       // what the billboard would have had (position, light, flags), and the screen rect below stays the picture's
       const fig = typeof FIGURES23 === 'object' && FIGURES23 && FIGURES23.wants ? FIGURES23 : null;
       let byFigure = false;
-      try { byFigure = !!(fig && fig.wants(e)); } catch (err) { warnOnce('figures23', err); }
+      // R3D's own frame only (the parity view has no figure pass)
+      try { byFigure = !!(fig && V && V.R3D && !V.cpuHooks && fig.wants(e)); } catch (err) { warnOnce('figures23', err); }
       if (byFigure) {
         const yo = e.yOff || 0;
         fig.submit(e, { x: e.x, y: e.y, z0: floor - yo + (yo < 0 ? (e.animLift || 0) : 0), unit, f, lr: lr / 255, lg: lg / 255, lb: lb / 255, alpha: alpha >= 1 ? 1 : alpha, flags: flags & 9, hurt: e.animHurt || 0, glowFloor: Math.max(f, 0.95) });

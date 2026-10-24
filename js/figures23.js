@@ -1004,8 +1004,14 @@ void main() {
     const data = new Uint32Array(img.data.buffer.slice(0));
     // canvas drawing smooths alpha at the cut edges: make every texel fully opaque or clear, as sprites are
     for (let i = 0; i < data.length; i++) { const a = data[i] >>> 24; data[i] = a > 110 ? (data[i] | 0xff000000) >>> 0 : 0; }
-    const vs = rig.vs, hs = (vs.hs || 1) * H / rig.H, cx0 = vs.cx == null ? 0.5 : vs.cx;
-    sp = { w: W, h: H, data, hs, cx: (cx0 * rig.W + MARGIN_S) / W, dy: vs.dy || 0, f23: true };
+    // trim to the picture's own box, grown only where a limb or a weapon really leaves it: at rest the frame's screen
+    // rect is exactly the picture's (name tags, health bars and picking stay where they were)
+    let x0 = MARGIN_S, x1 = MARGIN_S + rig.W - 1, y0 = MARGIN_T;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (data[y * W + x]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; }
+    const w2 = x1 - x0 + 1, h2 = H - y0, out = new Uint32Array(w2 * h2);
+    for (let y = 0; y < h2; y++) out.set(data.subarray((y + y0) * W + x0, (y + y0) * W + x0 + w2), y * w2);
+    const vs = rig.vs, hs = (vs.hs || 1) * h2 / rig.H, cx0 = vs.cx == null ? 0.5 : vs.cx;
+    sp = { w: w2, h: h2, data: out, hs, cx: (cx0 * rig.W + MARGIN_S - x0) / w2, dy: vs.dy || 0, f23: true };
     frames.set(key, sp); st.puppetFrames++;
     if (frames.size > FRAME_CAP) frames.delete(frames.keys().next().value);
     return sp;
