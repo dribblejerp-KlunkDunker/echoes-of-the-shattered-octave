@@ -420,7 +420,7 @@
 ## What is new, in short [PROPOSED]
 
 - **The Hanger**, a beech wood on the steep ground behind Wethercombe, reached by a gap in the combe's south hedge. Fog, the charcoal-burners' ring, a still pool, the wool-tree hung with fleece, and the Woolwight's nest.
-- **The Woolwight**: stolen fleeces stitched over something that is not a sheep. It bleats in the woods at night, comes only after dark on the region's open maps (Wethercombe, the Downs, the Hanger), keeps out of firelight, and is gone by dawn. It is never saved. **Lambkins** are its small ones. **The Old Fleece** is the oldest, and waits in Ewe Barrow.
+- **The Woolwight**: stolen fleeces stitched over something that is not a sheep. It bleats in the woods at night, comes only after dark on the region's open maps (Wethercombe, the Downs, the Hanger), keeps out of firelight, and is gone by dawn. When it attacks, the wool splits and a skinless bull's skull bursts out on a neck of raw meat, jaw wide open (owner's request). It is never saved. **Lambkins** are its small ones. **The Old Fleece** is the oldest, and waits in Ewe Barrow.
 - **Ewe Barrow** opens at last: the sarsen moves when the Chalk Ram is white again and the three fold-fires burn. Inside: traps, lantern-bells for the only light, grave goods (a torc, amber, a gold lunula), the barrow helm, the leaf-blade and the barrow shears, and in the last chamber the Old Fleece and Kit Farrant.
 - **Bleating in the Wood** (Gideon Thrale → Absalom Rudd → the nest → Tamar): find what is taking the hedge-wool. Tamar pays with the camp kit and a fishing line.
 - **The Lambing at Night** (Tamar): Kit goes missing; his cap is in the nest; his tracks go to the barrow. Bring him home; Tamar gives you her grandfather's crook.
@@ -505,7 +505,7 @@
 | Key | Text |
 |---|---|
 | `foes.woolwight.name` | Woolwight |
-| `foes.woolwight.desc` | A heap of grey fleeces taller than a man, stitched with thorn, three sheep's heads set in it at the wrong heights. It bleats like a ewe that has lost her lamb. It will not come into firelight. |
+| `foes.woolwight.desc` | A heap of grey fleeces taller than a man, stitched with thorn, three sheep's heads set in it at the wrong heights. It bleats like a ewe that has lost her lamb. It will not come into firelight. When it comes at you, the wool splits, and out of it, on a neck of raw meat, comes a bull's skull with the skin gone and the jaw hanging open. |
 | `foes.lambkin.name` | Lambkin |
 | `foes.lambkin.desc` | A ball of wet wool on twig legs, the size of a lamb. It bleats, very small, and bites. |
 | `foes.oldfleece.name` | The Old Fleece |

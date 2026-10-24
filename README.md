@@ -64,8 +64,8 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | Sheep are back. Bring Tamar's five stray ewes home; they follow anyone calm. | Light the three fold-fires. They burn every night after that. |
 | ![A brook bank thick with reeds, flowers and an autumn tree](screenshots/p22-lush.jpg) | ![The Hanger at night, glass-thorn and lantern-bells glowing](screenshots/p22-hanger-night.jpg) |
 | Lush where it should be: banks, hedges, field walls and woods. New trees (bell-ash, glass-thorn) and flowers (lantern-bell, echo-poppy, whistle-grass). | The Hanger at night: the glass-thorn and lantern-bells glow, and something bleats among the beeches. |
-| ![A Woolwight](screenshots/p22-woolwight.jpg) | ![The Old Fleece in Ewe Barrow](screenshots/p22-old-fleece.jpg) |
-| The Woolwight: stolen fleeces stitched over something that is not a sheep. It hunts you at night, keeps out of firelight and leaves at dawn. | Ewe Barrow, a trapped long barrow under the sarsen. In the last chamber: the Old Fleece. |
+| ![A Woolwight attacking, the bull skull out of the wool](screenshots/p22-woolwight.jpg) | ![The Old Fleece in Ewe Barrow](screenshots/p22-old-fleece.jpg) |
+| The Woolwight: stolen fleeces stitched over something that is not a sheep. When it attacks, a skinless bull's skull bursts out of the wool, jaw wide. It hunts you at night, keeps out of firelight and leaves at dawn. | Ewe Barrow, a trapped long barrow under the sarsen. In the last chamber: the Old Fleece. |
 | ![The Hanger by day, beeches lining the ride in from the gap](screenshots/p22-hanger.jpg) | |
 | The Hanger by day: over six hundred trees, thickets you cannot push through, and rides cut between them. | |
 | ![Lambkins and grave goods in a barrow chamber](screenshots/p22-barrow.jpg) | ![A camp pitched by the brook at night](screenshots/p22-camp.jpg) |

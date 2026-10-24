@@ -165,7 +165,7 @@ const HANGER22 = (function () {
       boots: { name: S('Drover\'s Boots'), desc: S('Long greased boots for a drove-road: quiet in wet grass and thorn-proof.') },
     },
     foes: {
-      woolwight: { name: S('Woolwight'), desc: S('A heap of grey fleeces taller than a man, stitched with thorn, three sheep\'s heads set in it at the wrong heights. It bleats like a ewe that has lost her lamb. It will not come into firelight.') },
+      woolwight: { name: S('Woolwight'), desc: S('A heap of grey fleeces taller than a man, stitched with thorn, three sheep\'s heads set in it at the wrong heights. It bleats like a ewe that has lost her lamb. It will not come into firelight. When it comes at you, the wool splits, and out of it, on a neck of raw meat, comes a bull\'s skull with the skin gone and the jaw hanging open.') },
       lambkin: { name: S('Lambkin'), desc: S('A ball of wet wool on twig legs, the size of a lamb. It bleats, very small, and bites.') },
       oldfleece: { name: S('The Old Fleece'), desc: S('The oldest of them, the size of a cart, fleeces to the roof, a bell at its throat with the clapper wrapped in wool. It has been under the barrow a long time.') },
     },
@@ -194,6 +194,70 @@ const HANGER22 = (function () {
     R(x, -4 * k, -1 * k, 2 * k, 1.6 * k, eyes ? '#e8f0d8' : '#1a1410'); R(x, -1 * k, -1.6 * k, 1.6 * k, 1.4 * k, eyes ? '#e8f0d8' : '#1a1410');
     x.restore();
   }
+  // what is under the wool: a bull's skull with the skin gone, on a neck of raw meat. `out` 0..1 is how far it has
+  // burst from the heap (0.45 when it rears: horns and brow through a split in the wool; 1 when it lunges: all of it,
+  // the jaw dropped wide). Seen from the front, because it only shows itself when it comes at you.
+  function bullSkull(x, cx, cy, k, out, rr) {
+    const open = out >= 1 ? 1 : 0, s = k * (0.7 + 0.5 * out);
+    const PO = (pts, fill) => { P(x, pts, fill); x.strokeStyle = '#1a0e08'; x.lineWidth = 1.3; x.stroke(); };   // outlined, to read at a distance
+    // the wound in the heap: torn fleece lips round a wet red hole
+    E(x, cx, cy + 6 * s, 24 * s, 18 * s, '#2a0a08');
+    E(x, cx, cy + 6 * s, 20 * s, 14 * s, '#5a1410');
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2, px = cx + Math.cos(a) * 23 * s, py = cy + 6 * s + Math.sin(a) * 17 * s;
+      E(x, px, py, (5 + rr() * 3) * s, (3 + rr() * 2) * s, ['#b8b09c', '#9c9482', '#c8c0ac'][(rr() * 3) | 0], a);   // the torn lips
+      L(x, px, py, cx + Math.cos(a) * 15 * s, cy + 6 * s + Math.sin(a) * 10 * s, '#8a2018', 1.4);                  // flesh strings
+    }
+    if (out < 0.5) {
+      // rearing: only the brow and the horns through the split, and two lit eyes in the dark
+      x.save(); x.beginPath(); x.ellipse(cx, cy + 6 * s, 20 * s, 14 * s, 0, 0, Math.PI * 2); x.clip();
+      E(x, cx, cy + 2 * s, 11 * s, 9 * s, '#d4c7a8'); E(x, cx, cy + 6 * s, 12 * s, 5 * s, '#a4282a');
+      E(x, cx - 5 * s, cy + 3 * s, 3 * s, 2.4 * s, '#140606'); E(x, cx + 5 * s, cy + 3 * s, 3 * s, 2.4 * s, '#140606');
+      R(x, cx - 5.6 * s, cy + 2.4 * s, 1.6 * s, 1.4 * s, '#f0f6e4'); R(x, cx + 4.2 * s, cy + 2.4 * s, 1.6 * s, 1.4 * s, '#f0f6e4');
+      x.restore();
+      for (const sd of [-1, 1]) {   // horn tips, pushing up through the wool
+        x.beginPath(); x.moveTo(cx + sd * 9 * s, cy - 1 * s); x.quadraticCurveTo(cx + sd * 24 * s, cy - 8 * s, cx + sd * 27 * s, cy - 27 * s);
+        x.quadraticCurveTo(cx + sd * 18 * s, cy - 10 * s, cx + sd * 4 * s, cy + 3 * s); x.closePath();
+        x.fillStyle = VG(x, cy - 27 * s, cy, '#1e1610', '#8a7a5a'); x.fill(); x.strokeStyle = '#120a06'; x.lineWidth = 1.3; x.stroke();
+      }
+      return;
+    }
+    // lunging: the neck, raw and striated, out of the hole
+    P(x, [[cx - 13 * s, cy + 16 * s], [cx - 9 * s, cy - 4 * s], [cx + 9 * s, cy - 4 * s], [cx + 13 * s, cy + 16 * s]], '#8a1c16');
+    for (let i = -3; i <= 3; i++) L(x, cx + i * 3 * s, cy + 16 * s, cx + i * 2.2 * s, cy - 4 * s, i % 2 ? '#c03a2c' : '#5a0e0a', 1.4);
+    // the horns: thick at the poll, sweeping out and up, black at the tips
+    for (const sd of [-1, 1]) {
+      x.beginPath(); x.moveTo(cx + sd * 10 * s, cy - 19 * s);
+      x.quadraticCurveTo(cx + sd * 34 * s, cy - 22 * s, cx + sd * 36 * s, cy - 42 * s);
+      x.quadraticCurveTo(cx + sd * 26 * s, cy - 22 * s, cx + sd * 8 * s, cy - 8 * s); x.closePath();
+      x.fillStyle = VG(x, cy - 42 * s, cy - 8 * s, '#16100a', '#a89470'); x.fill(); x.strokeStyle = '#120a06'; x.lineWidth = 1.4; x.stroke();
+      L(x, cx + sd * 14 * s, cy - 15 * s, cx + sd * 30 * s, cy - 24 * s, 'rgba(90,70,50,0.6)', 1);   // ridges
+    }
+    // the cranium: a broad poll, the face narrowing to a long muzzle, bone with the meat half off it
+    PO([[cx - 13 * s, cy - 18 * s], [cx + 13 * s, cy - 18 * s], [cx + 11 * s, cy - 2 * s], [cx + 6 * s, cy + 14 * s], [cx + 4 * s, cy + 24 * s], [cx - 4 * s, cy + 24 * s], [cx - 6 * s, cy + 14 * s], [cx - 11 * s, cy - 2 * s]], '#cfc1a0');
+    P(x, [[cx + 4 * s, cy - 16 * s], [cx + 13 * s, cy - 18 * s], [cx + 11 * s, cy - 2 * s], [cx + 6 * s, cy + 14 * s], [cx + 4 * s, cy + 24 * s], [cx + 2 * s, cy + 6 * s]], 'rgba(60,40,24,0.35)');   // the shadowed side
+    E(x, cx, cy - 15 * s, 13 * s, 4 * s, '#e0d4b4');                                   // the poll
+    P(x, [[cx - 11 * s, cy - 4 * s], [cx - 6 * s, cy + 12 * s], [cx - 9 * s, cy + 8 * s], [cx - 13 * s, cy - 6 * s]], '#a42a22');   // meat clinging to the cheeks
+    P(x, [[cx + 11 * s, cy - 4 * s], [cx + 6 * s, cy + 12 * s], [cx + 9 * s, cy + 8 * s], [cx + 13 * s, cy - 6 * s]], '#a42a22');
+    L(x, cx, cy - 16 * s, cx, cy + 20 * s, 'rgba(110,90,64,0.55)', 1.2);                 // the suture
+    // the sockets, deep, with a coal in each
+    for (const sd of [-1, 1]) { E(x, cx + sd * 7 * s, cy - 6 * s, 4.4 * s, 3.6 * s, '#120404', sd * 0.3); R(x, cx + sd * 7 * s - 1.2 * s, cy - 7 * s, 2.4 * s, 2 * s, '#f0f6e4'); }
+    E(x, cx - 2.2 * s, cy + 20 * s, 1.4 * s, 2.4 * s, '#1a0a06'); E(x, cx + 2.2 * s, cy + 20 * s, 1.4 * s, 2.4 * s, '#1a0a06');   // the nasal holes
+    // the maw: the jaw dropped wide, a red throat, teeth top and bottom, sinew strung between
+    const jy = cy + 24 * s, drop = 16 * s * open;
+    E(x, cx, jy + drop * 0.5, 9 * s, drop * 0.55 + 2 * s, '#3a0606');
+    E(x, cx, jy + drop * 0.6, 5 * s, drop * 0.35 + 1, '#7a1410');
+    PO([[cx - 9 * s, jy + drop], [cx + 9 * s, jy + drop], [cx + 6 * s, jy + drop + 8 * s], [cx - 6 * s, jy + drop + 8 * s]], '#bfb090');   // the lower jaw
+    P(x, [[cx - 9 * s, jy + drop], [cx - 6 * s, jy + drop + 8 * s], [cx - 12 * s, jy + drop - 2 * s]], '#a42a22');
+    P(x, [[cx + 9 * s, jy + drop], [cx + 6 * s, jy + drop + 8 * s], [cx + 12 * s, jy + drop - 2 * s]], '#a42a22');
+    for (let i = 0; i < 6; i++) {
+      const tx = cx - 6.5 * s + i * 2.6 * s;
+      P(x, [[tx, jy - 1], [tx + 2 * s, jy - 1], [tx + 1 * s, jy + 3.6 * s]], '#ece0c0');                 // upper teeth
+      P(x, [[tx, jy + drop + 1], [tx + 2 * s, jy + drop + 1], [tx + 1 * s, jy + drop - 3.2 * s]], '#ece0c0');   // lower teeth
+    }
+    for (const sd of [-1, 1]) L(x, cx + sd * 7 * s, jy, cx + sd * 6 * s, jy + drop, '#b03024', 1.2);   // sinew
+    L(x, cx - 3 * s, jy + 2, cx - 1 * s, jy + drop - 1, 'rgba(200,190,170,0.7)', 0.8);                 // a string of spit
+  }
   // the Woolwight in five poses: '', _w1, _w2 (the heap shifts on its legs), _a1 (rears), _a2 (lunges)
   function paintWoolwight(x, w, h, pose, big) {
     const r = seeded(big ? 515 : 313), k = big ? 1.25 : 1, sway = pose === '_w1' ? -3 : pose === '_w2' ? 3 : 0, rear = pose === '_a1' ? -12 : pose === '_a2' ? 3 : 0, lunge = pose === '_a2' ? -9 : 0;
@@ -216,11 +280,14 @@ const HANGER22 = (function () {
     for (let i = 0; i < 18; i++) { const px = cx - 18 + r() * 40, py = top + 2 + r() * 20; L(x, px, py, px + (r() - 0.5) * 6, py - 4 - r() * 5, '#2a2018', 1.2); }   // thorn
     for (let i = 0; i < 12; i++) { const px = w * 0.16 + r() * w * 0.68 + sway; L(x, px, legTop - 2, px + (r() - 0.5) * 3, legTop + 6 + r() * 8, '#6a5e4c', 2); }   // the dragging hem
     // the heads: sheep's skulls with the wool still on them, at the wrong heights, eyes lit in two of them
-    head(x, cx - 18 * k, top + 12 + (pose === '_a1' ? -6 : 0), 1.35 * k, -0.25 + (pose === '_a2' ? 0.45 : 0), true);
+    const attack = pose === '_a1' || pose === '_a2';
+    if (!attack) head(x, cx - 18 * k, top + 12, 1.35 * k, -0.25, true);
     head(x, w * 0.78 + sway, top + 34, 1.05 * k, 0.6, false);
     head(x, w * 0.28 + sway, legTop - 12, 0.95 * k, 2.7, true);
     // the bell on its strap, the clapper wrapped in wool
     L(x, cx - 6, top + 22, cx - 4, top + 36, '#3a2a1a', 2); E(x, cx - 4, top + 40, 4.4 * k, 5.4 * k, '#8a7038'); E(x, cx - 4, top + 41, 3 * k, 3.6 * k, '#cfc6b2');
+    // when it comes at you, what wears the wool shows itself: the skinned bull's skull, out through the fleece and the flesh
+    if (attack) bullSkull(x, cx - 2 * k, top + (pose === '_a2' ? 50 : 32) * k, k, pose === '_a2' ? 1 : 0.45, seeded(big ? 616 : 414));
   }
   function paintLambkin(x, w, h, pose) {
     const r = seeded(717), hop = pose === '_w1' ? -3 : pose === '_w2' ? -1 : 0, bite = pose === '_a2' ? -4 : 0;
