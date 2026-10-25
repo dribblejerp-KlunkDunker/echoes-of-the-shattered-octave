@@ -1338,7 +1338,7 @@ void main() {
   }
   // mesh assembly: rings of points around a centre line; body space (x forward, y right, z up, metres) -> GL by B()
   function lbBuild(look, legs, F, R) {
-    const c = Engine.cam, M = ((c.z == null ? 0.5 : c.z) * R.ZK - R.groundGL(c.x, c.y)) / 1.6 || (0.5 * R.ZK / 1.6);
+    const c = Engine.cam, M = ((c.z == null ? 0.88 : c.z) * R.ZK - R.groundGL(c.x, c.y)) / 1.6 || (0.88 * R.ZK / 1.6);
     const fx = Math.cos(c.dir), fy = Math.sin(c.dir), rx = -fy, ry = fx, g0 = R.groundGL(c.x, c.y);
     // the view is a narrow 34 degrees tall, so the body leans a little forward of a true stance as the look goes down
     // (most at about 60 degrees, where a wide human eye would already see the boots), and settles back looking straight down

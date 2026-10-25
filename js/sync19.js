@@ -1059,7 +1059,7 @@ const SYNC19 = (function () {
     const a = C.acc / B.STEP, decay = Math.exp(-B.SMOOTH * dt);
     C.err.x *= decay; C.err.y *= decay;
     c.x = C.prev.x + (C.st.x - C.prev.x) * a + C.err.x; c.y = C.prev.y + (C.st.y - C.prev.y) * a + C.err.y;
-    c.z = C.st.feet + 0.5; if (G.player) G.player.feet = C.st.feet;
+    c.z = C.st.feet + 0.88; if (G.player) G.player.feet = C.st.feet;
     G.vel.x = C.st.vx; G.vel.y = C.st.vy;
     const sp = Math.hypot(C.st.vx, C.st.vy);
     if (sp > 0.1) { G.bobPhase += dt * 9 * Math.min(1, sp / base); c.bob = Math.sin(G.bobPhase) * 2 * Math.min(1, sp / base); if (G.time - G.lastStep > 0.45 * base / Math.max(0.5, sp)) { G.lastStep = G.time; try { Audio_.sfx.step(); } catch (e) { /* no audio yet */ } } }

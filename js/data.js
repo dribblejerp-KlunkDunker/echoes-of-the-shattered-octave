@@ -329,7 +329,7 @@ const RUMOURS = [
 // Each NPC: name, sprite, portrait, greet (by tone), knowledge tier, topic overrides, quest hooks.
 const NPCS = {
   harrow: {
-    name: 'Old Harrow, gate-warden', sprite: 'harrow', portrait: 'harrow', tier: 'low',
+    name: 'Old Harrow, gate-warden', sprite: 'harrow', portrait: 'harrow', tier: 'low', scale: 0.93,
     greet: { polite: 'Keep your voice down, friend, and welcome to what\'s left of Oakhaven.', normal: 'Gate\'s shut after dusk. Keep it low.', blunt: 'You shout like that again and I\'ll put you out through the thorn myself.' },
     topics: { 'The Hedge': 'I\'ve stood this gate eleven years. Last night it whistled a tune only the Cantor and the Carder boy know. Whistled it exactly right.' },
     quest: (g) => {
@@ -388,7 +388,7 @@ const NPCS = {
     },
   },
   hetty: {
-    name: 'Hetty Bram of the Boar & Dulcimer', sprite: 'hetty', portrait: 'hetty', tier: 'low',
+    name: 'Hetty Bram of the Boar & Dulcimer', sprite: 'hetty', portrait: 'hetty', tier: 'low', scale: 0.95,
     greet: { polite: 'Sit anywhere that isn\'t broken. Small beer or smaller. We do not sing in here, not since Davin.', normal: 'Beer\'s a copper. Rooms are a sovereign. Singing is free and it will get you killed.', blunt: 'I\'ve put bigger men than you out of here for raising their voice. Sit.' },
     topics: { 'The Drift-Kestrel': 'Her captain drinks in the corner and laughs too loud at nothing. His crates for the garrison are in my cellar. Last night I went down for a cask and I swear to you one of them said a name.' },
     quest: (g) => {
@@ -437,19 +437,19 @@ const NPCS = {
     quest: (g) => null,
   },
   vosk: {
-    name: 'Factor Adela Vosk, Consortium of Bores', sprite: 'vosk', portrait: 'vosk', tier: 'high',
+    name: 'Factor Adela Vosk, Consortium of Bores', sprite: 'vosk', portrait: 'vosk', tier: 'high', scale: 1.03,
     greet: { polite: 'Pitch has a colour, through these lenses. Yours is an unremarkable brown. State your business.', normal: 'The Consortium pays this town\'s bread. Remember that before you speak.', blunt: 'I have Legionnaires. You have a voice. One of those is replaceable.' },
     topics: { 'The Rite': 'Stage Nine. Source: Cantor, local, one. Collar: standard. Wire: standard. It is a procedure, not a sacrifice. The Church likes the robes; we like the yield.', 'The Root': 'A resource. It will yield without limit if correctly relieved. That is the Arbiterium\'s phrasing, not mine, and I confess I do not entirely follow it.' },
     quest: (g) => null,
   },
   aldric: {
-    name: 'Governor Aldric Vance', sprite: 'aldric', portrait: 'aldric', tier: 'high',
+    name: 'Governor Aldric Vance', sprite: 'aldric', portrait: 'aldric', tier: 'high', scale: 1.06,
     greet: { polite: 'The seal of Queen Maelis bids you welcome. Her signature on the decrees is famously steady for a woman dead a hundred and forty years.', normal: 'Yes? Be brief. I have the Factor at one shoulder and the Church at the other.', blunt: 'You sold them, my son says. I fed them, I say. Which of us do you think is lying?' },
     topics: { 'Governor Vance': 'In the Cascade famine I had a town and no bread. The Consortium had bread and wanted a hole. I made the arithmetic. I have been making it ever since.', 'Kaelen Vance': 'My son thinks penance is a thing you do alone, in a hut, in the smoke. It is not. It is a thing you do in a room full of people who need feeding.' },
     quest: (g) => null,
   },
   tobiah: {
-    name: 'Junior Engineer Tobiah Marsh', sprite: 'tobiah', portrait: 'tobiah', tier: 'high',
+    name: 'Junior Engineer Tobiah Marsh', sprite: 'tobiah', portrait: 'tobiah', tier: 'high', scale: 0.94,
     greet: { polite: 'Night shift. Keep it under the pumps and the bells won\'t turn. Are you — are you with him? With Engineer Vance?', normal: 'Nobody comes down here who isn\'t on the roster. Which you aren\'t.', blunt: 'Quiet! The Legionnaire in Depot Three walks when it hears boots.' },
     topics: { 'The Quarry': 'I learned the Vance Sequence at fourteen. I asked its author to sign my copy. He did. Then he looked at it for a long time and told me to keep the charts somewhere the Factor would not look.' },
     quest: (g) => {
@@ -458,14 +458,14 @@ const NPCS = {
     },
   },
   bettany: {
-    name: 'Bettany, midwife and tonic-maker', sprite: 'bettany', portrait: 'bettany', tier: 'low',
+    name: 'Bettany, midwife and tonic-maker', sprite: 'bettany', portrait: 'bettany', tier: 'low', scale: 0.92,
     greet: { polite: 'Softly, love. What ails? I have tonic, I have honey for the throat, and I have shot, which I do not approve of and sell anyway.', normal: 'Tonic\'s five. Honey\'s four. Shot\'s three the three. Keep your voice down while you count.', blunt: 'I hummed half this town into the world. I will not be barked at in my own stall.' },
     topics: { 'Oakhaven': 'I have hummed forty-one births through a clay jar so the hounds would not hear the mother. Forty-one. I keep the count on the stall-post, under the cloth.', 'The Rite': 'They walked her past my stall this morning in white. I put a jar of honey in her hand. The proctor took it off her before the corner.' },
     shop: [{ item: 'tonic', price: 5 }, { item: 'honey', price: 4 }, { item: 'pellets', price: 3 }],
     quest: () => null,
   },
   tam: {
-    name: 'Old Tam, the night-hummer', sprite: 'tam', portrait: 'tam', tier: 'low',
+    name: 'Old Tam, the night-hummer', sprite: 'tam', portrait: 'tam', tier: 'low', scale: 0.9,
     greet: { polite: 'Sit if you like. She comes on the water about this time. You will hear her if you keep still.', normal: 'Hm. You are standing where I listen.', blunt: 'Lower your voice. She will not come if you shout.' },
     topics: { 'The Flume': 'My Essa went in at the sluice in the Cascade year. The water took her the way it takes everything. Three nights ago it brought her voice back up the Flume, singing The Miller\'s Daughter, which is ours. Mine and hers.', 'The Hedge': 'Everyone says never answer it. I know what they say. I say she gets the second verse right, and the Hedge could not know the second verse.' },
     quest: (g) => {
@@ -479,7 +479,7 @@ const NPCS = {
     },
   },
   hob: {
-    name: 'Hob Wendle, tanner', sprite: 'hob', portrait: 'hob', tier: 'low',
+    name: 'Hob Wendle, tanner', sprite: 'hob', portrait: 'hob', tier: 'low', scale: 1.08,
     greet: { polite: 'Evening. Mind the vats; the lime does not care who you are.', normal: 'Tannery\'s shut. Nobody wants leather off a town that is turning to wood.', blunt: 'I have buried two apprentices this year. Try me.' },
     topics: { 'The Hedge': 'The twins went down the culvert after their dog. Driftday last. I set a lamp in their window of a night. The key to the grate is on the nail inside; I have not had the stomach to turn it.', 'Oakhaven': 'A tannery is the one trade that gets quieter the harder you work it. Should have been safe. Should have been.' },
     quest: (g) => {
@@ -926,7 +926,7 @@ const CAMP = {
     },
   },
   tobiah_dw: {
-    name: 'Tobiah Marsh, second engineer', sprite: 'tobiah', portrait: 'tobiah', tier: 'high',
+    name: 'Tobiah Marsh, second engineer', sprite: 'tobiah', portrait: 'tobiah', tier: 'high', scale: 0.94,
     greet: { polite: 'Don\'t touch that. Or that. That one you can touch, it\'s already broken.', normal: 'Number-two tank. Look at it. I could weep. I nearly have.', blunt: 'I\'m an engine man in a forest. Say something useful or hold this.' },
     topics: { 'The Drift-Kestrel': 'Three bolts of silk to close the hole and a relief valve to stop her bursting the patch the first time Vane gets clever. Then hops. Forty miles, down, cool the tank, forty miles. It\'ll be like crossing a river on stepping-stones, if the stones were on fire.' },
     quest: (g) => {

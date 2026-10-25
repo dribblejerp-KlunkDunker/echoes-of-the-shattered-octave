@@ -253,7 +253,7 @@ const HELPERS = () => {
     check(sw.shriekNoise === 0 && /nothing comes out of it but silver/.test(sw.shriekMsg), 'a Drowned Hollow\'s shriek makes no sound under water');
     check(sw.muffUnder >= Bv.MUFFLE - 0.01 && Math.abs(sw.muffAir - Bv.MUFFLE_AIR) < 0.02 && sw.muffLand < 0.01, 'the master low-pass: ' + sw.muffUnder.toFixed(2) + ' under water, ' + sw.muffAir.toFixed(2) + ' in a pocket, restored to ' + sw.muffLand.toFixed(2) + ' above');
     check(Math.abs(sw.duck - Bv.MUSIC_DUCK) < 1e-6 && sw.duckAir === 1 && sw.duckLand === 1 && sw.req, 'the recorded music is ducked to ' + Bv.MUSIC_DUCK + ' under water only');
-    check(sw.hudLand === true && Math.abs(sw.z - 0.5) < 0.01, 'back on land: no meter, the eye back at its height');
+    check(sw.hudLand === true && Math.abs(sw.z - 0.88) < 0.01, 'back on land: no meter, the eye back at its height');
 
     // ---------------------------------------------------------------- the under-water view
     await ev(HELPERS);
@@ -328,7 +328,7 @@ const HELPERS = () => {
     check(sv.r.map === 'p16d_lower' && Math.abs(sv.r.x - sv.r.px) < 1e-6 && Math.abs(sv.r.y - sv.r.py) < 1e-6 && sv.r.surf && sv.r.z >= 3.12 && Math.abs(sv.r.breath - sv.r.max) < 0.5 && sv.r.hp, 'a save made under water loads at the last pocket of air breathed, head up, breath full', sv.r);
     check(sv.h.keys.join() === 'p16d_j' || sv.h.keys.every((k) => ['p16d_j', 'p16d_dives', 'p16d_seen', 'p16d_air', 'p16d_reg'].includes(k)) && !sv.h.keys.includes('p16d_evil'), 'hostile p16d_ values are dropped (' + sv.h.keys.join() + ')');
     check(sv.h.map === 'p16d_lower' && sv.h.surf && Math.abs(sv.h.x - 3.5) < 1e-6 && !sv.evil, 'a hostile save still lands safely in Well Three, and nothing from it reaches the page');
-    check(sv.old.map === 'whispergrove' && Math.abs(sv.old.z - 0.5) < 0.01 && sv.old.hud, 'an old save without p16d_ flags loads unchanged');
+    check(sv.old.map === 'whispergrove' && Math.abs(sv.old.z - 0.88) < 0.01 && sv.old.hud, 'an old save without p16d_ flags loads unchanged');
 
     // ---------------------------------------------------------------- the ways out
     const ex = await ev(() => {
@@ -342,7 +342,7 @@ const HELPERS = () => {
       __under(10.5, 18.5, 0, 1.6); DEEP16.cfg.on = false; __run(30, { ' ': true }); out.swimOff = DEEP16.swimming() && DEEP16.T.z > 1.6; DEEP16.cfg.on = true;
       return out;
     });
-    check(ex.A.map === 'whispergrove' && !ex.A.blocked && ex.F.map === 'whispergrove' && !ex.F.blocked && Math.abs(ex.F.z - 0.5) < 0.01 && ex.F.muff < 0.01, 'both ropes take you up into the Court, onto free ground, sound restored');
+    check(ex.A.map === 'whispergrove' && !ex.A.blocked && ex.F.map === 'whispergrove' && !ex.F.blocked && Math.abs(ex.F.z - 0.88) < 0.01 && ex.F.muff < 0.01, 'both ropes take you up into the Court, onto free ground, sound restored');
     check(ex.swimOff, 'turning the content switch off while below never strands you: you still swim');
 
     // ---------------------------------------------------------------- options

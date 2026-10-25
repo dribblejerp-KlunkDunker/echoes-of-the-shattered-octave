@@ -171,6 +171,7 @@ function startGame() {
 
 // ---------------------------------------------------------------- maps
 function hydrate(e) {
+  varyNpcHeight(e);
   if (e._h) return e; e._h = true;
   if (e.kind === 'enemy') {
     const d = ENEMIES[e.type]; e.def = d; e.hp = d.hp; e.hpMax = d.hp; e.sprite = d.sprite; e.scale = d.scale || 1; e.yOff = d.yOff || 0; e.state = e.passive ? 'passive' : 'idle'; e.solid = true; e.radius = 0.35;
@@ -211,12 +212,13 @@ function transfer(portal) {
 
 // ---------------------------------------------------------------- elevation
 // The player's feet rest on the floor of whatever cell they are in, and the
-// eye rides half a unit above them. Flat maps keep feet at 0, exactly as before.
+// eye rides 0.88 above them: the standing eye of a one-tile person (the crown
+// sits at 0.98). Flat maps keep feet at 0, exactly as before.
 function settleFeet() {
   const c = Engine.cam, p = G.player;
   const feet = (G.map.lvls || G.map.smooth) ? G.map.groundAt(c.x, c.y) : 0;
   if (p) { p.feet = feet; p.fallV = 0; p.fallFrom = null; p.tumble = false; }
-  c.z = feet + 0.5;
+  c.z = feet + 0.88;
 }
 
 // ---------------------------------------------------------------- collision
@@ -276,7 +278,7 @@ function los(ax, ay, bx, by) {
   const d = Math.sqrt(dist2(ax, ay, bx, by)); const n = Math.ceil(d / 0.2); const sx = (bx - ax) / n, sy = (by - ay) / n;
   const m = G.map, raised = !!(m.lvls || m.smooth);
   // eye heights at both ends: a knee-high wall or railing below both of them does not block sight
-  const eyeLo = raised ? Math.min(m.groundAt(ax, ay), m.groundAt(bx, by)) + 0.5 : 0.5;
+  const eyeLo = raised ? Math.min(m.groundAt(ax, ay), m.groundAt(bx, by)) + 0.88 : 0.88;   // the standing eye
   let x = ax, y = ay;
   for (let i = 0; i < n; i++) {
     x += sx; y += sy;
@@ -2228,7 +2230,7 @@ function update(dt) {
       } else if (drop > 0.25) Audio_.sfx.step('stone');
     }
   }
-  c.z = p.feet + 0.5;
+  c.z = p.feet + 0.88;
   // keyboard turning eases in and out
   let tin = clamp(edgeTurn * 0.9, -1, 1); if (k.q || k.arrowleft) tin -= 1; if (k.arrowright) tin += 1; tin = clamp(tin, -1, 1);
   G.turnV += (tin * 2.4 - G.turnV) * (1 - Math.exp(-(tin ? 11 : 18) * dt));
@@ -2263,6 +2265,7 @@ function update(dt) {
   if (G.dragBody && moving) addNoise(dt * 1.5);
   // entities
   for (const e of G.ents) {
+    varyNpcHeight(e);
     if (e.kind === 'enemy') enemyUpdate(e, dt);
     else if ((e.kind === 'npc' && e.wander) || (e.kind === 'deco' && e.wander)) {
       e.wanderT -= dt; if (e.wanderT <= 0) { e.wanderT = rnd(2, 6); e.dir = rnd(0, 6.28); e.moving = Math.random() < 0.6; }

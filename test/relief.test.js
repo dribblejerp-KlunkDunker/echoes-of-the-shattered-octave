@@ -42,20 +42,20 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       go('tavern', 8.5, 10.5, 0);
       check(G.map.relief === false, 'interiors without relief keep the flat renderer');
       go('oakhaven', 23.5, 20.5, -1.57);
-      check(G.player.feet === 0 && Engine.cam.z === 0.5, 'Oakhaven streets stay at the old eye height');
+      check(G.player.feet === 0 && Engine.cam.z === 0.88, 'Oakhaven streets stand at the new eye height');
 
       // --- per-pixel depth: the tower stands above the roofs --------------
       go('oakhaven', 44.5, 13.5, -1.2);
       render();
       // column through the tower: something solid well above the eaves
       let towerCol = -1;
-      for (let x = 0; x < 320 && towerCol < 0; x++) { const d = Engine.depthAt(x, 20); if (d < 1e8) towerCol = x; }
+      for (let x = 0; x < 320 && towerCol < 0; x++) { const d = Engine.depthAt(x, 30); if (d < 1e8) towerCol = x; }   // row 30 is the sky band at the standing eye (0.88): the tower alone reaches it, the roofs begin at row 54
       check(towerCol >= 0, 'the bell-tower reaches high into the sky band');
       const towerCells = [[48, 5], [49, 5], [48, 6], [49, 6]];
       const keep = towerCells.map(([x, y]) => G.map.get(x, y).top);
       towerCells.forEach(([x, y]) => { G.map.get(x, y).top = 1.35; });
       render();
-      check(Engine.depthAt(towerCol, 20) >= 1e8, 'without the tower that pixel is sky');
+      check(Engine.depthAt(towerCol, 30) >= 1e8, 'without the tower that pixel is sky');
       towerCells.forEach(([x, y], i) => { G.map.get(x, y).top = keep[i]; });
       out.towerCol = towerCol;
 
@@ -123,7 +123,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       check(!fell, 'walking up a slope never counts as falling');
       check(maxGap < 0.13, 'your feet follow the hillside (largest gap ' + maxGap.toFixed(3) + ')');
       check(rises > 20, 'the eye climbs continuously, not in steps');
-      check(Math.abs(Engine.cam.z - (G.player.feet + 0.5)) < 1e-6, 'the eye rides half a unit above the slope');
+      check(Math.abs(Engine.cam.z - (G.player.feet + 0.88)) < 1e-6, 'the eye rides 0.88 above the slope');
       // and down the far side without falling
       go('deepwoods', 47.0, 11.5, 0); fell = false;
       for (let i = 0; i < 60; i++) { G.keys = { w: true }; update(0.033); if (G.player.fallFrom != null && G.player.feet - dw.groundAt(Engine.cam.x, Engine.cam.y) > 0.3) fell = true; }

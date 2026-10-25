@@ -219,7 +219,7 @@ const R3D = (() => {
   // ---------------------------------------------------------------------------------------------------- the frame
   const F = {
     gl: null, w: 0, h: 0, devW: 0, devH: 0, vpY: 0, vpH: 0, pxK: 1,
-    cam: { x: 0, y: 0, z: 0.5, dir: 0, pitch: 0, bob: 0 }, pitchA: 0,
+    cam: { x: 0, y: 0, z: 0.88, dir: 0, pitch: 0, bob: 0 }, pitchA: 0,
     eye: new Float32Array(3), fwd: new Float32Array(3), right: new Float32Array(3), up: new Float32Array(3), fwdH: new Float32Array(2),
     view: mat4(), proj: mat4(), viewProj: mat4(), invViewProj: mat4(), near: 0.02, far: 200,
     map: null, outdoor: false, tod: 0.5, time: 0, now: 0, dt: 0.016, env: null, ents: null, opts: null,
@@ -1475,7 +1475,7 @@ void main() {
     const th = Math.atan(pitch / FX);
     F.pitchA = th;
     const cd = Math.cos(d), sd = Math.sin(d), ct = Math.cos(th), stt = Math.sin(th);
-    const E = F.eye; E[0] = cam.x; E[1] = cam.y; E[2] = (cam.z == null ? 0.5 : cam.z) * ZK;
+    const E = F.eye; E[0] = cam.x; E[1] = cam.y; E[2] = (cam.z == null ? 0.88 : cam.z) * ZK;
     const Fw = F.fwd; Fw[0] = ct * cd; Fw[1] = ct * sd; Fw[2] = stt;
     const R = F.right; R[0] = -sd; R[1] = cd; R[2] = 0;
     const U = F.up; U[0] = -stt * cd; U[1] = -stt * sd; U[2] = ct;
@@ -1669,9 +1669,9 @@ void main() {
   // The CPU's pick rule, evaluated on a virtual raycaster frame of the camera R3D last drew (y-shear by cam.pitch rows):
   // each entity gets the rect the CPU would have given it (e._pickScr, at the engine's render scale, with its integer
   // truncations), and on relief maps the occlusion test asks the CPU's own column walk what depth the pixel would hold.
-  const VCAM = { x: 0, y: 0, z: 0.5, dir: 0, pitch: 0, bob: 0, S: 1, fogDist: 12, relief: false, map: null, list: [], gen: 0 };
+  const VCAM = { x: 0, y: 0, z: 0.88, dir: 0, pitch: 0, bob: 0, S: 1, fogDist: 12, relief: false, map: null, list: [], gen: 0 };
   function vframe(cam, env, ents) {
-    VCAM.x = cam.x; VCAM.y = cam.y; VCAM.z = cam.z == null ? 0.5 : cam.z; VCAM.dir = cam.dir; VCAM.pitch = cam.pitch || 0; VCAM.bob = cam.bob || 0;
+    VCAM.x = cam.x; VCAM.y = cam.y; VCAM.z = cam.z == null ? 0.88 : cam.z; VCAM.dir = cam.dir; VCAM.pitch = cam.pitch || 0; VCAM.bob = cam.bob || 0;
     const S = env.S || 1; VCAM.S = S; VCAM.fogDist = env.fogDist; VCAM.map = F.map; VCAM.gen++;
     VCAM.relief = !!(F.map.relief || F.map.lvls || F.map.verts);
     const w = 320 * S, h = 150 * S;
@@ -1853,13 +1853,16 @@ void main() {
   function pick(entities, maxDist) {
     let best = null, bd = 1e9;
     const S = VCAM.S, RW = 320 * S, RH = 150 * S;
-    const cx = 160, aim = 75, eye = 75 + VCAM.pitch;
+    const cx = 160, aim = 75, horizon = 75 + VCAM.pitch, camZ = Engine.cam.z;
     for (const e of entities) {
       const s = e._pickScr; if (!s || s.gen !== VCAM.gen || e.hidden || e.nopick) continue;
       if (s.dist > maxDist) continue;
       if (!(cx >= s.x0 - 4 && cx <= s.x1 + 4)) continue;
+      // hand level (z 0.5) at this entity’s distance: level play picks as it
+      // always has, though the standing eye is taller than the hands that reach
+      const level = horizon + (150 / Math.max(0.25, s.dist)) * (camZ - 0.5);
       let ok = false;
-      for (const cy of aim === eye ? [aim] : [aim, eye]) {
+      for (const cy of aim === level ? [aim] : [aim, level]) {
         if (!(cy >= s.y0 && cy <= s.y1 + 6)) continue;
         if (VCAM.relief && s.z) {
           const ry = (Math.max(s.y0, Math.min(s.y1, cy)) * S) | 0, px = Math.max(0, Math.min(RW - 1, (cx * S) | 0));
@@ -1956,7 +1959,7 @@ void main() {
     const m = env.map;
     F.map = m; F.env = env; F.ents = ents; F.opts = opts; F.outdoor = env.outdoor; F.tod = tod; F.time = env.animT; F.S = env.S;
     F.now = t0 / 1000; F.dt = lastNow ? clamp(F.now - lastNow, 0, 0.1) : 0.016; lastNow = F.now;
-    const c = Engine.cam; F.cam.x = c.x; F.cam.y = c.y; F.cam.z = c.z == null ? 0.5 : c.z; F.cam.dir = c.dir; F.cam.pitch = c.pitch || 0; F.cam.bob = c.bob || 0;
+    const c = Engine.cam; F.cam.x = c.x; F.cam.y = c.y; F.cam.z = c.z == null ? 0.88 : c.z; F.cam.dir = c.dir; F.cam.pitch = c.pitch || 0; F.cam.bob = c.bob || 0;
     F.relief = !!m.relief;
     st.resScale = resScale();
     const w = Math.max(64, Math.round(F.devW * st.resScale)), h = Math.max(32, Math.round(F.vpH * st.resScale));

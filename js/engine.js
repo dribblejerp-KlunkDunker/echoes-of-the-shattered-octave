@@ -264,9 +264,10 @@ const Engine = (() => {
   }
 
   // ---- renderer state -------------------------------------------------
-  // z is the eye height above the world baseline. Flat maps keep it at 0.5;
+  // z is the eye height above the world baseline. Flat maps keep it at 0.88
+  // (the standing eye: people are one tile tall and see from just under the crown);
   // game.js lifts it as the player climbs stands on raised ground.
-  const cam = { x: 2, y: 2, dir: 0, pitch: 0, bob: 0, z: 0.5 };
+  const cam = { x: 2, y: 2, dir: 0, pitch: 0, bob: 0, z: 0.88 };
   let map = null;        // current map object (grid, w, h, cells)
   let fogDist = 12, fogR = 0, fogG = 0, fogB = 0, lightFlicker = 1, ambient = 0;
   let ambientDark = 1;   // night factor
@@ -284,7 +285,7 @@ const Engine = (() => {
     return any;
   }
   let ambientBase = 0;
-  function setMap(m) { scanRelief(m); map = m; cam.z = 0.5; ambientBase = ambient = m.ambient || 0; const fc = m.fogColor || [0, 0, 0]; baseR = fc[0]; baseG = fc[1]; baseB = fc[2]; baseFog = m.fogDist || 12; fogDist = baseFog; fogR = baseR; fogG = baseG; fogB = baseB; }
+  function setMap(m) { scanRelief(m); map = m; cam.z = 0.88; ambientBase = ambient = m.ambient || 0; const fc = m.fogColor || [0, 0, 0]; baseR = fc[0]; baseG = fc[1]; baseB = fc[2]; baseFog = m.fogDist || 12; fogDist = baseFog; fogR = baseR; fogG = baseG; fogB = baseB; }
 
   // ---- sky -----------------------------------------------------------
   let skyR = new Float32Array(RH), skyG = new Float32Array(RH), skyB = new Float32Array(RH);
@@ -997,18 +998,22 @@ const Engine = (() => {
   }
 
   // Which entity is under the crosshair and within reach. The crosshair is
-  // the centre of the view, which is where a pitched look aims; eye level (the
-  // horizon row) still counts too, so level play picks exactly as it always
-  // has. On relief maps the pixel must not be hidden behind a crest or wall.
+  // the centre of the view, which is where a pitched look aims; hand level (the
+  // reach band around z 0.5) still counts too, so level play picks exactly as
+  // it always has — the standing eye is taller than the hands that reach. On
+  // relief maps the pixel must not be hidden behind a crest or wall.
   function pick(entities, maxDist) {
     let best = null, bd = 1e9;
-    const cx = VW / 2, aim = VIEW_H / 2, eye = VIEW_H / 2 + cam.pitch;
+    const cx = VW / 2, aim = VIEW_H / 2, horizon = VIEW_H / 2 + cam.pitch;
     for (const e of entities) {
       const s = e._screen; if (!s || e.hidden || e.nopick) continue;
       if (s.dist > maxDist) continue;
       if (!(cx >= s.x0 - 4 && cx <= s.x1 + 4)) continue;
+      // where z 0.5 projects at this entity's distance: the old eye level, and
+      // still the height hands work at
+      const level = horizon + (VIEW_H / Math.max(0.25, s.dist)) * (cam.z - 0.5);
       let ok = false;
-      for (const cy of aim === eye ? [aim] : [aim, eye]) {
+      for (const cy of aim === level ? [aim] : [aim, level]) {
         if (!(cy >= s.y0 && cy <= s.y1 + 6)) continue;
         if (lastRelief && s.z) {
           const ry = (Math.max(s.y0, Math.min(s.y1, cy)) * S) | 0, px = Math.max(0, Math.min(RW - 1, (cx * S) | 0));

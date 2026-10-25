@@ -331,7 +331,7 @@ const LOOK10 = (() => {
     const inv = 1 / (F.planeX * F.dirY - F.dirX * F.planeY);
     const trX = inv * (F.dirY * sx - F.dirX * sy), trY = inv * (-F.planeY * sx + F.planeX * sy);
     if (trY < 0.2 || trY > F.fogDist * 1.4) return false;
-    const dz = F.relief ? cam.z - ez : 0.5;
+    const dz = F.relief ? cam.z - ez : cam.z;   // flat ground sits at 0
     if (dz < 0.05) return false;
     const w = F.w, h = F.h, tn = Math.max(0.12, trY - r * 1.1), tf = trY + r * 1.1;
     const yHi = F.horizon + h * dz / tn, yLo = F.horizon + h * dz / tf;
@@ -419,7 +419,7 @@ const LOOK10 = (() => {
       const d = bTrY, fade = clamp(c.fadeFar - d / fogD, 0, 1); if (fade <= 0.02) continue;
       // brightness of the ground just in front of its feet: dark rooms get a softer, weaker shadow
       let lum = 110;
-      { const fy = clamp(Math.round(F.horizon + h * (relief ? cam.z - ez : 0.5) / d) + 2 * S, 0, h - 1), inv = 1 / (F.planeX * F.dirY - F.dirX * F.planeY), sx = e.x - camx, sy = e.y - camy;
+      { const fy = clamp(Math.round(F.horizon + h * (relief ? cam.z - ez : cam.z) / d) + 2 * S, 0, h - 1), inv = 1 / (F.planeX * F.dirY - F.dirX * F.planeY), sx = e.x - camx, sy = e.y - camy;
         const fx = clamp(Math.round((w / 2) * (1 + inv * (F.dirY * sx - F.dirX * sy) / d)), 0, w - 1), px0 = fb[fy * w + fx];
         if (mbuf[fy * w + fx] === 5) lum = ((px0 & 255) * 77 + ((px0 >> 8) & 255) * 150 + ((px0 >> 16) & 255) * 29) >> 8; }
       const soft = 1 - clamp(lum / 70, 0, 1);               // 0 on lit ground, 1 in the dark

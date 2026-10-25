@@ -471,11 +471,11 @@ const HELPERS = () => {
         PARTNER19.S.pp.hp = 1; PARTNER19.S.hurtT = 0;
         // put the partner down the way an enemy would
         const e = __spawn('legionnaire', 13.6, 12.3, true); e.p19t = 'guest'; e.p19r = 99; let n = 0; while (!PARTNER19.S.down && n++ < 300) { __seed(3000 + n); update(1 / 30); }
-        e.hidden = true; Engine.cam.x = 13.0; Engine.cam.y = 14.6; __run(30); render();
+        e.hidden = true; Engine.cam.x = PARTNER19.S.x - 0.5; Engine.cam.y = PARTNER19.S.y + 1.05; Engine.cam.pitch = -35; __run(30); render();   // beside the fallen partner (in revive reach) and looking down: at the standing eye the lying figure sits below a level frame
         return { down: PARTNER19.S.down, prog: PARTNER19.S.revive, drawn: PARTNER19.stats.drawn };
       });
       await shot(page, 'p19p-downed-revive.png');
-      const hostDown = await Q(() => { PRESETS.apply('medium'); PARTNER19.S.down = false; PARTNER19.S.pp.hp = 30; G.player.hp = 1; damagePlayer(5, 'A Carillon Legionnaire'); __put(12.5, 13.6, Math.PI / 2); __run(20); render(); return PARTNER19.S.hostDown; });
+      const hostDown = await Q(() => { PRESETS.apply('medium'); Engine.cam.pitch = 0; PARTNER19.S.down = false; PARTNER19.S.pp.hp = 30; G.player.hp = 1; damagePlayer(5, 'A Carillon Legionnaire'); __put(12.5, 13.6, Math.PI / 2); __run(20); render(); return PARTNER19.S.hostDown; });
       await shot(page, 'p19p-host-down-medium.png');
       await Q(() => { PARTNER19.leave('silent'); PRESETS.apply('medium'); });
       assert.ok(m > 200 && c > 200 && fight > 100, [m, c, fight].join(' '));
