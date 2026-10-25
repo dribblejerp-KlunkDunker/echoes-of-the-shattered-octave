@@ -11,6 +11,8 @@ const CLASSES = [
   {
     id: 'blade', name: 'Dissonant Blade', hz: '174 Hz',
     desc: 'A former bore-engineer whose left arm set to Aether-Glass in the Fracture. The glass drinks what it breaks, and the tideline climbs for it. Hounds will not touch you. Neither, for long, will anyone else.',
+    bio: 'The morning the Light let go, you were on the Dawning floor with a hand on the bulkhead wheel. You held it while the glass came through, and you were still holding it when your left arm set. The Synod gave you a medal you have never worn and a word, consecrated, that you have never used. The hounds treat you as one of their own; the town does not. You burn charcoal outside the Hedge and count the mornings the glass has climbed.',
+    summary: 'Front-line fighter and living tuning fork. High Strength and Endurance, an innate glass arm that breaks the Cacophony, and a short song-list. Close the distance, keep the noise down, and let the tideline pay for every victory.',
     attrs: { Strength: 60, Intelligence: 55, Willpower: 50, Agility: 45, Endurance: 60, Personality: 35, Speed: 45, Luck: 40 },
     hp: 30, voice: 10, glass: true, weapons: ['sword', 'glass'], songs: ['murmur'], pellets: 4,
     skills: 'Long Blade, Glasswork, Engineering',
@@ -18,6 +20,8 @@ const CLASSES = [
   {
     id: 'cantor', name: 'Cantor', hz: '174 Hz',
     desc: 'You sing the births, fevers and burials of orchard country, always inside the Narrow. Your tending notes are older than the Church knows. You have never picked up a sword and you will not start now.',
+    bio: 'The orchard cantors taught you to hold a note under your breath, where the hounds cannot hear it and the Silence cannot find it. You learned the old fourth line from a woman who died before the Synod took the bells, and you have sung it at every burial since, quietly, as a private heresy. You have never carried a blade. When people ask what you do, you say you keep the door open between the living and the rest.',
+    summary: 'Singer, healer and crowd-quieter. High Willpower and Personality, the deepest song-list and the most Voice, but little health. Stay behind the blade, mend what is broken, and spend your voice where it changes the room.',
     attrs: { Strength: 35, Intelligence: 55, Willpower: 70, Agility: 45, Endurance: 45, Personality: 65, Speed: 45, Luck: 45 },
     hp: 20, voice: 40, glass: false, weapons: ['hands', 'pistol'], songs: ['murmur', 'tending', 'fifth', 'root'], pellets: 9,
     skills: 'Law-song, Mending, Etiquette',
@@ -25,6 +29,8 @@ const CLASSES = [
   {
     id: 'corsair', name: 'Corsair', hz: '639 Hz',
     desc: 'Rust Coast, by way of the air. You count, you judge rope and angles, and you carry glass shot that costs a sovereign a pellet. You laugh loudest when you are most afraid.',
+    bio: 'You have signed on with seven crews and left six of them in ports you cannot pronounce. You count because counting is the only prayer that has ever answered you: casks, cartridges, shares, the seconds between a rope parting and a man noticing. The glass shot in your pouch is worth more than the clothes you stand in. You have never once let a stranger see you afraid, and that is the only discipline you keep.',
+    summary: 'Skirmisher and gunhand. High Agility and Speed, a short sword and a pistol, and the largest pouch of glass shot of any calling. Hit first, move often, and never let anything corner you in a corridor.',
     attrs: { Strength: 50, Intelligence: 45, Willpower: 40, Agility: 65, Endurance: 50, Personality: 55, Speed: 60, Luck: 55 },
     hp: 25, voice: 12, glass: false, weapons: ['sword', 'pistol'], songs: ['murmur'], pellets: 12,
     skills: 'Short Blade, Firearms, Streetwise',
@@ -32,6 +38,8 @@ const CLASSES = [
   {
     id: 'archivist', name: 'Archivist of the Veil', hz: '741 Hz',
     desc: 'A conscripted scribe of the Office of the Catalogue who walked into the mist with a Ledger. You know what the glass cores are. You can read a Legionnaire\'s name off its bell. Every name you keep costs you a little of yourself.',
+    bio: 'The Office took you young, gave you a clean coat and a desk with a lock, and taught you to copy a name without reading it. You read them anyway. The first was a woman of sixty-one, entered as a unit, whose hand you recognised from a letter in your mother\'s kitchen. You have been keeping a second Ledger ever since, in a hand the Office cannot read, and every entry costs you a piece of the name you were born with.',
+    summary: 'Lore-keeper and debuffer. The highest Intelligence, three glass fragments at the start, and songs that name what is hunting you. Fragile in a stand-up fight, invaluable before one: read the room before it reads you.',
     attrs: { Strength: 35, Intelligence: 75, Willpower: 60, Agility: 45, Endurance: 40, Personality: 50, Speed: 45, Luck: 50 },
     hp: 18, voice: 30, glass: false, weapons: ['hands', 'pistol'], songs: ['murmur', 'tending', 'name'], pellets: 7,
     skills: 'Ledger-craft, Lore, Resonance',
@@ -39,6 +47,8 @@ const CLASSES = [
   {
     id: 'penitent', name: 'Flambeau Penitent', hz: '285 Hz',
     desc: 'You carried a censer for the Church until the day the light turned. You still half-believe you were right. Your faith is fire, and both are guttering.',
+    bio: 'You were the one who carried the fire, not the one who decided where it went. That was the comfort, and you took it for eleven years. Then a Rite went wrong in a way the Church still denies, and you stood in the ash with a child\'s shoe in your hand and the Pure Note still ringing in your teeth. You keep the ash in a jar. You have not decided whether it is a relic or a confession, and you suspect it is both.',
+    summary: 'Armoured zealot and glass-fire caster. Strong Willpower and Endurance, a bell-bronze mace that rings against the Cacophony, and Doctrine to hold a party together. Slow and loud, but hard to put down.',
     attrs: { Strength: 55, Intelligence: 50, Willpower: 65, Agility: 40, Endurance: 55, Personality: 45, Speed: 40, Luck: 35 },
     hp: 26, voice: 25, glass: false, weapons: ['sword', 'hands'], songs: ['murmur', 'fifth'], pellets: 3,
     skills: 'Blunt Weapon, Doctrine, Glass-fire',
@@ -46,6 +56,8 @@ const CLASSES = [
   {
     id: 'quarry', name: 'Quarry-Hand', hz: '396 Hz',
     desc: 'Night shift at the Oakhaven works. You have heard the Root breathe through the pump-house floor and you have seen what the Grafters bring up in sacks. Strong back, short list of friends.',
+    bio: 'The works run three shifts, and you have worked all of them. You know the sound the pump makes when the Root is awake, the smell of a gallery that is about to settle, and which of the foremen will send you down anyway. You have carried two friends up the ladder and left one below because there was no time. The foreman wrote it down as a fall. You have not written it down at all.',
+    summary: 'The tank. The highest Strength and Endurance and the biggest health pool, with a sword and a head for climbing. No pistol, few pellets and almost no songs: solve it with muscle and let the singers handle the rest.',
     attrs: { Strength: 70, Intelligence: 40, Willpower: 45, Agility: 50, Endurance: 70, Personality: 40, Speed: 50, Luck: 40 },
     hp: 36, voice: 8, glass: false, weapons: ['sword'], songs: ['murmur'], pellets: 2,
     skills: 'Axe, Climbing, Endurance',
@@ -77,6 +89,30 @@ const BIOGRAPHY = [
       { t: 'The bells. Every bell in the Reach went for bore-teeth.', mod: { Personality: 5 }, flag: 'bio_bells' },
     ],
   },
+];
+
+
+// ---- faces offered at character creation ---------------------------------
+// A face is a history, not a class: any calling can wear any of them.
+const CREATION_FACES = [
+  { n: 1, name: 'The Hooded Return', sketch: 'You came back through the North Gate with your hood up and your name worn thin. The gate-warden looked twice and let you pass; he has learned not to ask what the road takes.' },
+  { n: 2, name: 'The Braided Vow', sketch: 'Red braids, a leather collar, and a jaw set against bad news. You were raised in the orchard rows, where a promise is kept quietly and a raised voice is a debt to the whole town.' },
+  { n: 3, name: 'The Old Salt', sketch: 'A captain\'s cap gone grey at the brim and a beard full of weather. You have brought ships home through worse than this, and you have buried the ones who did not make it.' },
+  { n: 4, name: 'The Veil-Sworn', sketch: 'A clerk\'s brooch at the throat and a hood that has outlived its order. You keep other people\'s names in a book, and you have started keeping your own somewhere safer.' },
+  { n: 5, name: 'The Iron-Collared', sketch: 'A gorget of cast iron and tattoos that mark every gallery you have crawled out of. The quarry keeps its own; you left before it could finish the claim.' },
+  { n: 6, name: 'The Frost-Marked', sketch: 'Silver hair, a pale seam under one eye, and a voice kept low out of habit. The glass touched you once and let you go. You have not decided whether that was mercy.' },
+];
+
+// ---- the world, for a traveller new to the Reach ------------------------
+const CREATION_LORE = [
+  { title: 'The Reach', text: 'Orchard country in the west of Aethelgard: iron-bark oaks, the green river called the Chlorophyll Flume, and Oakhaven, the market town inside the Hedge. Autumn, 419 SR. The Synod\'s Regency governs in the name of a queen dead a hundred and forty years. Since 417 the Consortium has been milking the Growth Anchor\'s root from the Oakhaven quarry, and the law has been going soft.' },
+  { title: 'The Fracture', text: 'On the last morning of 412 SR the Iron Synod drove its bores into the Spire of Dawning and the Light let go. The glass flood took the Spire floor, the lower city, and everyone who could not reach a bulkhead. What survived is a Regency, a Church that calls the disaster a harvest, and a generation that measures its age from the morning the sky rang.' },
+  { title: 'The Octave', text: 'Eight Spires pin the world, each singing one law: Growth, Light, Heat, Mass, Time, Velocity, Memory and Decay. Together they are the Octave, and the whole of it is the Organum. The Reach is Growth, 174 Hz; its oaks ring like bronze and its glass runs green-gold. When a Spire is siphoned, its law slips, and the land around it begins to forget itself.' },
+  { title: 'The Narrow', text: 'Mortals live in the band between two hungers. Too loud, and the Cacophony hears; too still, and the Hush notices. So people murmur, keep reed-whistles in every room, and pay night-hummers to sit at crossings until dawn. The rule is taught to children as a skipping rhyme: too loud brings the hounds, too still brings the Hush.' },
+  { title: 'Aether-Glass', text: 'Crystallized song, bled out of a Spire and set. The Synod burns it, builds with it, and fires it from pistols as shot. A limb that takes it in calcifies and begins to ring; the glass drinks what it breaks, and the tideline climbs toward the heart. Glass remembers what is pressed into it, which is why the Office stores stolen names in it.' },
+  { title: 'The Iron Synod', text: 'The Choir-Church of the Pure Note preaches unison as holiness and calls every second note sin. Its Inquisition, the Flambeaux, burns the off-pitch. Its Consortium factors run the bores and the air-freight. Its Office of the Catalogue keeps the registers. And its Glass Court signs the decrees: nine dead monarchs, revived with glass hearts, who do as they are told.' },
+  { title: 'The Office of the Catalogue', text: 'Once the Silent Veil, an independent order of archivists, now the Synod\'s registry of everything that can be owned. Registrar-General Pellam Quist runs the harvest-houses, where people are Unnamed and their voices pressed into glass. The Office\'s clerks believe every name is a unit. Some of them are right, and some of them are sorry.' },
+  { title: 'The Free Captains', text: 'Air-crews of the Rust Coast, bound by shares and no flag. They run glass, grain, letters and people between the ports, and they do not ask what a crate is worth to the Synod. Captain Vane\'s Drift-Kestrel is one of theirs, though the Catalogue holds the paper on her. A captain\'s word is good until the weather turns; after that, it is a story.' },
 ];
 
 // ---- weapons & songs ---------------------------------------------------

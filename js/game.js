@@ -43,27 +43,49 @@ function closeModal() { hide('#modal'); G.openPanel = null; }
 function fx(cls, ms) { const f = $('#fx'); f.className = cls; clearTimeout(f._t); f._t = setTimeout(() => { if (f.className === cls) f.className = ''; }, ms || 200); }
 
 // ---------------------------------------------------------------- character creation
-const CREATE = { step: 0, name: '', cls: null, face: 1, bio: [], mods: {} };
+const CREATE = { step: 0, name: '', cls: null, face: 1, bio: [], mods: {}, loreFrom: 0 };
+const FACE_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI'];
+function loreButton() { return '<button class="dfbtn small" id="c-lore">The world in 419 SR</button>'; }
+function openLore() { if (CREATE.step === 0) { const n = $('#cname'); if (n) CREATE.name = cleanName(n.value); } CREATE.loreFrom = CREATE.step >= 0 ? CREATE.step : 0; CREATE.step = -1; renderCreate(); $('#create-panel').scrollTop = 0; }
 function renderCreate() {
   const p = $('#create-panel'); const s = CREATE.step;
+  const wireLore = () => { const b = $('#c-lore'); if (b) b.onclick = openLore; };
+  if (s === -1) {
+    p.innerHTML = `<h2>The world in 419 SR</h2><button class="dfbtn small close" id="c-lore-top">Back</button><p class="muted">Autumn, 419 SR. The Reach is orchard country, and Oakhaven is a town inside a wall of thorn. Here is what a traveller is expected to know.</p>
+    <div class="lorelist">${CREATION_LORE.map(e => `<section><h3>${e.title}</h3><p>${e.text}</p></section>`).join('')}</div>
+    <div class="btns"><button class="dfbtn" id="c-lore-back">Back to creation</button></div>`;
+    const leaveLore = () => { CREATE.step = CREATE.loreFrom >= 0 ? CREATE.loreFrom : 0; renderCreate(); };
+    $('#c-lore-back').onclick = leaveLore;
+    $('#c-lore-top').onclick = leaveLore;
+    return;
+  }
   if (s === 0) {
     p.innerHTML = `<h2>Who are you, in the Narrow?</h2><p class="muted">Every soul in the Reach keeps its name close. The Catalogue would like to know yours.</p>
     <p><input id="cname" type="text" maxlength="24" placeholder="Your name" value="${CREATE.name}"></p>
-    <div class="btns"><button class="dfbtn" id="c-next">Continue</button><button class="dfbtn" id="c-back">Back to title</button></div>`;
+    <div class="btns"><button class="dfbtn" id="c-next">Continue</button>${loreButton()}<button class="dfbtn" id="c-back">Back to title</button></div>`;
     $('#cname').focus();
     $('#c-next').onclick = () => { CREATE.name = cleanName($('#cname').value); CREATE.step = 1; renderCreate(); };
     $('#c-back').onclick = () => { hide('#create'); show('#title'); };
     $('#cname').onkeydown = (e) => { if (e.key === 'Enter') $('#c-next').click(); e.stopPropagation(); };
+    wireLore();
   } else if (s === 1) {
-    p.innerHTML = `<h2>Choose your calling</h2><div class="classlist">${CLASSES.map((c, i) => `<button class="dfbtn ${CREATE.cls === i ? 'sel' : ''}" data-i="${i}">${c.name}<small>${c.hz} · ${c.skills}</small></button>`).join('')}</div>
-    <div id="cdesc" style="margin-top:1cqh;min-height:9cqh"></div><div class="btns"><button class="dfbtn" id="c-next" ${CREATE.cls == null ? 'disabled' : ''}>Continue</button><button class="dfbtn" id="c-back">Back</button></div>`;
-    const descr = () => { if (CREATE.cls == null) { $('#cdesc').innerHTML = '<p class="muted">Pick a calling to read of it.</p>'; return; } const c = CLASSES[CREATE.cls]; $('#cdesc').innerHTML = `<p class="q">${c.desc}</p><p class="muted">Health ${c.hp} · Voice ${c.voice} · Glass shot ×${c.pellets} · Songs: ${c.songs.map(s => SONGS[s].name).join(', ')}</p>`; };
+    p.innerHTML = `<h2>Choose your calling</h2><div class="classpick"><div class="classlist">${CLASSES.map((c, i) => `<button class="dfbtn ${CREATE.cls === i ? 'sel' : ''}" data-i="${i}">${c.name}<small>${c.hz} · ${c.skills}</small></button>`).join('')}</div>
+    <div id="cdesc" class="classdesc"></div></div><div class="btns classbtns"><button class="dfbtn" id="c-next" ${CREATE.cls == null ? 'disabled' : ''}>Continue</button><button class="dfbtn" id="c-back">Back</button></div>`;
+    const descr = () => {
+      if (CREATE.cls == null) { $('#cdesc').innerHTML = '<p class="muted">Pick a calling to read of it.</p><div class="classlore">' + loreButton() + '</div>'; return; }
+      const c = CLASSES[CREATE.cls];
+      $('#cdesc').innerHTML = `<div class="classdetail"><div><h3>Biography</h3><p>${c.bio}</p></div><div><h3>Summary</h3><p>${c.summary}</p><p class="muted">Health ${c.hp} · Voice ${c.voice} · Glass shot ×${c.pellets} · Songs: ${c.songs.map(s => SONGS[s].name).join(', ')}<br>Skills: ${c.skills}</p></div></div><div class="classlore">${loreButton()}</div>`;
+    };
     descr();
     p.querySelectorAll('.classlist button').forEach(b => b.onclick = () => { CREATE.cls = +b.dataset.i; renderCreate(); Audio_.sfx.ui(); });
     $('#c-next').onclick = () => { CREATE.step = 2; renderCreate(); };
     $('#c-back').onclick = () => { CREATE.step = 0; renderCreate(); };
+    wireLore();
   } else if (s === 2) {
-    p.innerHTML = `<h2>Choose your face</h2><div class="faces">${[1, 2, 3, 4, 5, 6].map(i => `<img src="img/face_${i}.jpg" data-i="${i}" class="${CREATE.face === i ? 'sel' : ''}" alt="face ${i}">`).join('')}</div>
+    const f = CREATION_FACES[CREATE.face - 1] || CREATION_FACES[0];
+    p.innerHTML = `<h2>Choose your face</h2><p class="muted">A face is a history. Any calling can wear any of them.</p>
+    <div class="faces">${CREATION_FACES.map(f => `<img src="img/face_${f.n}.jpg" data-i="${f.n}" class="${CREATE.face === f.n ? 'sel' : ''}" alt="${f.name}" title="${f.name}">`).join('')}</div>
+    <div id="cfacebio" class="facebio"><p class="fb-name">Face ${FACE_NUMERALS[f.n - 1]} · ${f.name}</p><p>${f.sketch}</p></div>
     <div class="btns"><button class="dfbtn" id="c-next">Continue</button><button class="dfbtn" id="c-back">Back</button></div>`;
     p.querySelectorAll('.faces img').forEach(im => im.onclick = () => { CREATE.face = +im.dataset.i; renderCreate(); Audio_.sfx.ui(); });
     $('#c-next').onclick = () => { CREATE.step = 3; CREATE.bio = []; renderCreate(); };
@@ -74,10 +96,12 @@ function renderCreate() {
     p.querySelectorAll('.list button').forEach(b => b.onclick = () => { CREATE.bio.push(+b.dataset.i); Audio_.sfx.ui(); if (CREATE.bio.length >= BIOGRAPHY.length) { CREATE.step = 4; } renderCreate(); });
   } else {
     const c = CLASSES[CREATE.cls]; const attrs = Object.assign({}, c.attrs);
+    const f = CREATION_FACES[CREATE.face - 1] || CREATION_FACES[0];
     for (let i = 0; i < CREATE.bio.length; i++) { const a = BIOGRAPHY[i].a[CREATE.bio[i]]; for (const k in a.mod) attrs[k] += a.mod[k]; }
-    p.innerHTML = `<h2>${CREATE.name}, ${c.name}</h2><div class="row"><div class="col"><img src="img/face_${CREATE.face}.jpg" style="width:16cqw;height:16cqw;border:2px solid #0b0806"><p class="muted">${c.hz} · Level 1</p></div>
+    p.innerHTML = `<h2>${CREATE.name}, ${c.name}</h2><div class="row"><div class="col"><img src="img/face_${CREATE.face}.jpg" style="width:16cqw;height:16cqw;border:2px solid #0b0806" alt="${f.name}"><p class="muted">${c.hz} · Level 1</p><p class="muted">${f.name}</p></div>
     <div class="col"><div class="attrs">${ATTRS.map(a => `<div><span>${a}</span><b>${attrs[a]}</b></div>`).join('')}</div>
-    <p style="margin-top:1cqh">Health <b style="color:var(--gold)">${c.hp + Math.floor(attrs.Endurance / 10)}</b> · Voice <b style="color:var(--gold)">${c.voice + Math.floor(attrs.Willpower / 10)}</b> · Fatigue <b style="color:var(--gold)">${attrs.Strength + attrs.Endurance}</b></p></div></div>
+    <p style="margin-top:1cqh">Health <b style="color:var(--gold)">${c.hp + Math.floor(attrs.Endurance / 10)}</b> · Voice <b style="color:var(--gold)">${c.voice + Math.floor(attrs.Willpower / 10)}</b> · Fatigue <b style="color:var(--gold)">${attrs.Strength + attrs.Endurance}</b></p>
+    <p class="muted">${c.summary}</p></div></div>
     <div class="btns"><button class="dfbtn" id="c-go">Go up the Greenroot road</button><button class="dfbtn" id="c-back">Back</button></div>`;
     $('#c-go').onclick = () => { CREATE.attrs = attrs; startGame(); };
     $('#c-back').onclick = () => { CREATE.step = 3; CREATE.bio = []; renderCreate(); };

@@ -33022,5 +33022,264 @@
    "sheepwalk22.js:143"
   ],
   "pattern": true
+ },
+ "aqwbs03so": {
+  "en": "The morning the Light let go, you were on the Dawning floor with a hand on the bulkhead wheel. You held it while the glass came through, and you were still holding it when your left arm set. The Synod gave you a medal you have never worn and a word, consecrated, that you have never used. The hounds treat you as one of their own; the town does not. You burn charcoal outside the Hedge and count the mornings the glass has climbed.",
+  "where": [
+   "data.js:14"
+  ]
+ },
+ "txj2395hw4": {
+  "en": "Front-line fighter and living tuning fork. High Strength and Endurance, an innate glass arm that breaks the Cacophony, and a short song-list. Close the distance, keep the noise down, and let the tideline pay for every victory.",
+  "where": [
+   "data.js:15"
+  ]
+ },
+ "1zxvcql5rx9": {
+  "en": "The orchard cantors taught you to hold a note under your breath, where the hounds cannot hear it and the Silence cannot find it. You learned the old fourth line from a woman who died before the Synod took the bells, and you have sung it at every burial since, quietly, as a private heresy. You have never carried a blade. When people ask what you do, you say you keep the door open between the living and the rest.",
+  "where": [
+   "data.js:23"
+  ]
+ },
+ "xc7pv2dd7q": {
+  "en": "Singer, healer and crowd-quieter. High Willpower and Personality, the deepest song-list and the most Voice, but little health. Stay behind the blade, mend what is broken, and spend your voice where it changes the room.",
+  "where": [
+   "data.js:24"
+  ]
+ },
+ "2479fwukheb": {
+  "en": "You have signed on with seven crews and left six of them in ports you cannot pronounce. You count because counting is the only prayer that has ever answered you: casks, cartridges, shares, the seconds between a rope parting and a man noticing. The glass shot in your pouch is worth more than the clothes you stand in. You have never once let a stranger see you afraid, and that is the only discipline you keep.",
+  "where": [
+   "data.js:32"
+  ]
+ },
+ "oufmryx6jt": {
+  "en": "Skirmisher and gunhand. High Agility and Speed, a short sword and a pistol, and the largest pouch of glass shot of any calling. Hit first, move often, and never let anything corner you in a corridor.",
+  "where": [
+   "data.js:33"
+  ]
+ },
+ "1me3pfc5u3u": {
+  "en": "Lore-keeper and debuffer. The highest Intelligence, three glass fragments at the start, and songs that name what is hunting you. Fragile in a stand-up fight, invaluable before one: read the room before it reads you.",
+  "where": [
+   "data.js:42"
+  ]
+ },
+ "axrc3kzu6w": {
+  "en": "Armoured zealot and glass-fire caster. Strong Willpower and Endurance, a bell-bronze mace that rings against the Cacophony, and Doctrine to hold a party together. Slow and loud, but hard to put down.",
+  "where": [
+   "data.js:51"
+  ]
+ },
+ "3hfjigjund": {
+  "en": "The works run three shifts, and you have worked all of them. You know the sound the pump makes when the Root is awake, the smell of a gallery that is about to settle, and which of the foremen will send you down anyway. You have carried two friends up the ladder and left one below because there was no time. The foreman wrote it down as a fall. You have not written it down at all.",
+  "where": [
+   "data.js:59"
+  ]
+ },
+ "tppv2y9r9f": {
+  "en": "The tank. The highest Strength and Endurance and the biggest health pool, with a sword and a head for climbing. No pistol, few pellets and almost no songs: solve it with muscle and let the singers handle the rest.",
+  "where": [
+   "data.js:60"
+  ]
+ },
+ "jy4y8625lm": {
+  "en": "The Hooded Return",
+  "where": [
+   "data.js:98"
+  ]
+ },
+ "xbyqd4m69q": {
+  "en": "You came back through the North Gate with your hood up and your name worn thin. The gate-warden looked twice and let you pass; he has learned not to ask what the road takes.",
+  "where": [
+   "data.js:98"
+  ]
+ },
+ "wetiklfqrn": {
+  "en": "The Braided Vow",
+  "where": [
+   "data.js:99"
+  ]
+ },
+ "1qpoqnhmnzg": {
+  "en": "Red braids, a leather collar, and a jaw set against bad news. You were raised in the orchard rows, where a promise is kept quietly and a raised voice is a debt to the whole town.",
+  "where": [
+   "data.js:99"
+  ]
+ },
+ "t7g0ell9w": {
+  "en": "The Old Salt",
+  "where": [
+   "data.js:100"
+  ]
+ },
+ "1wjhpdbczlo": {
+  "en": "The Veil-Sworn",
+  "where": [
+   "data.js:101"
+  ]
+ },
+ "1g7fs0yvmdo": {
+  "en": "The Iron-Collared",
+  "where": [
+   "data.js:102"
+  ]
+ },
+ "151ym374wz9": {
+  "en": "A gorget of cast iron and tattoos that mark every gallery you have crawled out of. The quarry keeps its own; you left before it could finish the claim.",
+  "where": [
+   "data.js:102"
+  ]
+ },
+ "pj7bm1hc5y": {
+  "en": "The Frost-Marked",
+  "where": [
+   "data.js:103"
+  ]
+ },
+ "9y5801jok6": {
+  "en": "Silver hair, a pale seam under one eye, and a voice kept low out of habit. The glass touched you once and let you go. You have not decided whether that was mercy.",
+  "where": [
+   "data.js:103"
+  ]
+ },
+ "wiehdfe3b6": {
+  "en": "The Reach",
+  "where": [
+   "data.js:108"
+  ]
+ },
+ "1uyl3nbs2km": {
+  "en": "The Fracture",
+  "where": [
+   "data.js:109"
+  ]
+ },
+ "aganq5wy4a": {
+  "en": "On the last morning of 412 SR the Iron Synod drove its bores into the Spire of Dawning and the Light let go. The glass flood took the Spire floor, the lower city, and everyone who could not reach a bulkhead. What survived is a Regency, a Church that calls the disaster a harvest, and a generation that measures its age from the morning the sky rang.",
+  "where": [
+   "data.js:109"
+  ]
+ },
+ "iz1s6kbiy1": {
+  "en": "The Octave",
+  "where": [
+   "data.js:110"
+  ]
+ },
+ "1k5gcqrigvy": {
+  "en": "Eight Spires pin the world, each singing one law: Growth, Light, Heat, Mass, Time, Velocity, Memory and Decay. Together they are the Octave, and the whole of it is the Organum. The Reach is Growth, 174 Hz; its oaks ring like bronze and its glass runs green-gold. When a Spire is siphoned, its law slips, and the land around it begins to forget itself.",
+  "where": [
+   "data.js:110"
+  ]
+ },
+ "2as6difcpg0": {
+  "en": "Mortals live in the band between two hungers. Too loud, and the Cacophony hears; too still, and the Hush notices. So people murmur, keep reed-whistles in every room, and pay night-hummers to sit at crossings until dawn. The rule is taught to children as a skipping rhyme: too loud brings the hounds, too still brings the Hush.",
+  "where": [
+   "data.js:111"
+  ]
+ },
+ "1ayhxkhec5f": {
+  "en": "Crystallized song, bled out of a Spire and set. The Synod burns it, builds with it, and fires it from pistols as shot. A limb that takes it in calcifies and begins to ring; the glass drinks what it breaks, and the tideline climbs toward the heart. Glass remembers what is pressed into it, which is why the Office stores stolen names in it.",
+  "where": [
+   "data.js:112"
+  ]
+ },
+ "1a69kc0ltkh": {
+  "en": "The Choir-Church of the Pure Note preaches unison as holiness and calls every second note sin. Its Inquisition, the Flambeaux, burns the off-pitch. Its Consortium factors run the bores and the air-freight. Its Office of the Catalogue keeps the registers. And its Glass Court signs the decrees: nine dead monarchs, revived with glass hearts, who do as they are told.",
+  "where": [
+   "data.js:113"
+  ]
+ },
+ "24ys2mg7ak1": {
+  "en": "The world in 419 SR",
+  "where": [
+   "game.js:48"
+  ]
+ },
+ "xckmbqp301": {
+  "en": "Autumn, 419 SR. The Reach is orchard country, and Oakhaven is a town inside a wall of thorn. Here is what a traveller is expected to know.",
+  "where": [
+   "game.js:54"
+  ]
+ },
+ "gv9877he8t": {
+  "en": "Back to creation",
+  "where": [
+   "game.js:56"
+  ]
+ },
+ "2230xcdwwnf": {
+  "en": "Biography",
+  "where": [
+   "game.js:75"
+  ]
+ },
+ "8mbfwr4zdb": {
+  "en": "Summary",
+  "where": [
+   "game.js:75"
+  ]
+ },
+ "5ohui91sst": {
+  "en": "A face is a history. Any calling can wear any of them.",
+  "where": [
+   "game.js:84"
+  ]
+ },
+ "1cdp41ye7kz": {
+  "en": "The Office took you young, gave you a clean coat and a desk with a lock, and taught you to copy a name without reading it. You read them anyway. The first was a woman of sixty-one, entered as a unit, whose hand you recognised from a letter in your mother's kitchen. You have been keeping a second Ledger ever since, in a hand the Office cannot read, and every entry costs you a piece of the name you were born with.",
+  "where": [
+   "data.js:41"
+  ]
+ },
+ "2cj0e3lo1cp": {
+  "en": "You were the one who carried the fire, not the one who decided where it went. That was the comfort, and you took it for eleven years. Then a Rite went wrong in a way the Church still denies, and you stood in the ash with a child's shoe in your hand and the Pure Note still ringing in your teeth. You keep the ash in a jar. You have not decided whether it is a relic or a confession, and you suspect it is both.",
+  "where": [
+   "data.js:50"
+  ]
+ },
+ "7qytxzlt4v": {
+  "en": "A captain's cap gone grey at the brim and a beard full of weather. You have brought ships home through worse than this, and you have buried the ones who did not make it.",
+  "where": [
+   "data.js:100"
+  ]
+ },
+ "271d4zr9z8c": {
+  "en": "A clerk's brooch at the throat and a hood that has outlived its order. You keep other people's names in a book, and you have started keeping your own somewhere safer.",
+  "where": [
+   "data.js:101"
+  ]
+ },
+ "11satjxrc74": {
+  "en": "Orchard country in the west of Aethelgard: iron-bark oaks, the green river called the Chlorophyll Flume, and Oakhaven, the market town inside the Hedge. Autumn, 419 SR. The Synod's Regency governs in the name of a queen dead a hundred and forty years. Since 417 the Consortium has been milking the Growth Anchor's root from the Oakhaven quarry, and the law has been going soft.",
+  "where": [
+   "data.js:108"
+  ]
+ },
+ "nvkqi9jxbc": {
+  "en": "Once the Silent Veil, an independent order of archivists, now the Synod's registry of everything that can be owned. Registrar-General Pellam Quist runs the harvest-houses, where people are Unnamed and their voices pressed into glass. The Office's clerks believe every name is a unit. Some of them are right, and some of them are sorry.",
+  "where": [
+   "data.js:114"
+  ]
+ },
+ "w1qiv8ppmf": {
+  "en": "Air-crews of the Rust Coast, bound by shares and no flag. They run glass, grain, letters and people between the ports, and they do not ask what a crate is worth to the Synod. Captain Vane's Drift-Kestrel is one of theirs, though the Catalogue holds the paper on her. A captain's word is good until the weather turns; after that, it is a story.",
+  "where": [
+   "data.js:115"
+  ]
+ },
+ "1af2iy4w25f": {
+  "en": "Face {0} · {1}",
+  "where": [
+   "game.js:86"
+  ],
+  "pattern": true
+ },
+ "2xr7822cy7": {
+  "en": "Skills:",
+  "where": [
+   "game.js:77"
+  ]
  }
 }
