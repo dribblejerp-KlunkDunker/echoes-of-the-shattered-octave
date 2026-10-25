@@ -1,0 +1,44 @@
+name: Book feature tests
+
+on:
+  pull_request:
+    paths:
+      - 'js/books.js'
+      - 'js/game.js'
+      - 'test/books.test.js'
+      - 'index.html'
+      - 'sw.js'
+      - '.github/workflows/books-tests.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'js/books.js'
+      - 'js/game.js'
+      - 'test/books.test.js'
+      - 'index.html'
+      - 'sw.js'
+      - '.github/workflows/books-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  books-tests:
+    name: Book reading, trade, saves and offline cache
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Check book and inventory syntax
+        run: |
+          node --check js/books.js
+          node --check js/game.js
+      - name: Verify reading, purchases, placement and saves
+        run: node test/books.test.js
+      - name: Run save-security regressions
+        run: node test/security.test.js
+      - name: Verify offline cache manifest
+        run: node tools/pwa/precache.js --check
