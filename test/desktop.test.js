@@ -87,7 +87,7 @@ assert(/node_modules/.test(gi) && /dist/.test(gi), 'desktop/.gitignore covers no
 // Workflow
 assert(/tags:\s*\[?'v\*'/.test(wf) && /workflow_dispatch/.test(wf), 'workflow: tag push + manual dispatch');
 for (const r of ['windows-latest', 'macos-latest', 'ubuntu-latest']) assert(wf.includes('runner: ' + r), 'workflow matrix: ' + r);
-assert(/upload-artifact@v4/.test(wf), 'workflow uploads artifacts');
+assert(/upload-artifact@v6\.0\.0/.test(wf), 'workflow uploads artifacts with the Node 24 action runtime');
 assert(/secrets\.WIN_CSC_LINK/.test(wf) && /secrets\.MAC_CSC_LINK/.test(wf) && /APPLE_TEAM_ID/.test(wf), 'workflow signing steps gated on secrets');
 assert(/CSC_IDENTITY_AUTO_DISCOVERY/.test(wf) && !/secrets\.[A-Z_]+\s*(==|!=)\s*'[^']+'/.test(wf), 'unsigned build works with no secrets');
 assert(/permissions:\s*\n\s*contents: read/.test(wf), 'workflow default permissions read-only');
