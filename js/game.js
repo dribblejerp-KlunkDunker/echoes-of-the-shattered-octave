@@ -942,7 +942,11 @@ function renderArrest() {
   // A refusal keeps its line across the re-render; a fresh confrontation starts clean.
   if (G.openPanel !== 'arrest') ARREST_NOTE = '';
   const valid = () => G.panelToken === token && G.openPanel === 'arrest' && G.state === 'panel' && G.map === map && !G.dead && crimeState().bounty > 0 && !crimeState().custody;
-  const bribe = bribeTerms(law), threat = threatTerms(law);
+  const watch = G.ents.find(e => e.lawGuard && !e.dead && !e.hidden);
+  const phase1Bribe = window.OctaveBribesThreats && window.OctaveBribesThreats.getBribeQuote(G, watch);
+  const phase1Threat = window.OctaveBribesThreats && window.OctaveBribesThreats.getThreatOdds(G, watch);
+  const bribe = phase1Bribe ? { cost: phase1Bribe.cost, chance: phase1Bribe.odds } : bribeTerms(law);
+  const threat = phase1Threat ? { chance: phase1Threat.odds, grace: phase1Threat.grace } : threatTerms(law);
   const canBribe = Number.isFinite(G.player.gold) && G.player.gold >= bribe.cost;
   G.state = 'panel';
   openModal(`<h2>The Oakhaven watch</h2><p>The watch has your description. Outstanding fine: <b>${law.bounty} sovereigns</b>.</p><p class="muted">Pay exactly the fine, or enter the watch-house for a six-hour sentence. Non-quest gear is held in evidence until release or recovery; quest possessions remain safe. Refusing leaves the bounty outstanding.</p>
@@ -980,9 +984,11 @@ function renderArrest() {
       for (const e of G.ents) if (e.lawGuard && !e.dead && !e.hidden) { delete e.investigation; e.state = 'idle'; }
       closeModal(); G.state = 'play'; Audio_.sfx.ui();
       msg(`You set your hand on the hilt and let him measure you. He takes a step back and reaches for the whistle anyway: ${terms.grace} seconds before the next patrol.`, 'warn', 7000);
+      return true;
     } else {
       ARREST_NOTE = '“Threaten me, then.” The whistle is already at his lips.';
       reportCrime('threatening a constable', 20); renderArrest();
+      return false;
     }
   };
   $('#crime-flee').onclick = () => { if (valid()) { G.lawGrace = 5; closeModal(); G.state = 'play'; } };
