@@ -43,10 +43,29 @@ function closeModal() { hide('#modal'); G.openPanel = null; }
 function fx(cls, ms) { const f = $('#fx'); f.className = cls; clearTimeout(f._t); f._t = setTimeout(() => { if (f.className === cls) f.className = ''; }, ms || 200); }
 
 // ---------------------------------------------------------------- character creation
-const CREATE = { step: 0, name: '', cls: null, face: 1, bio: [], mods: {}, loreFrom: 0 };
-const FACE_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI'];
+const CREATE = { step: 0, name: '', auto: '', cls: null, face: 1, bio: [], mods: {}, loreFrom: 0 };
 function loreButton() { return '<button class="dfbtn small" id="c-lore">The world in 419 SR</button>'; }
 function openLore() { if (CREATE.step === 0) { const n = $('#cname'); if (n) CREATE.name = cleanName(n.value); } CREATE.loreFrom = CREATE.step >= 0 ? CREATE.step : 0; CREATE.step = -1; renderCreate(); $('#create-panel').scrollTop = 0; }
+// The traveller whole: the character card (js/card21.js) paints the chosen face in the calling's kit, head to boots.
+// The portrait stays underneath for the simple card (Options > Graphics & access) or any page without the painter.
+// head gear stays off the creation figure: a hood or a kettle helm would hide the very face being chosen
+function creationArmor() { const armor = {}, c = CLASSES[CREATE.cls == null ? 0 : CREATE.cls]; for (const id of (CLASS_KIT[c.id] || [])) { const a = ARMOR[id]; if (a && a.slot && a.slot !== 'head') armor[a.slot] = id; } return armor; }
+function creationLook() { const c = CLASSES[CREATE.cls == null ? 0 : CREATE.cls], i = Math.max(0, c.weapons.findIndex(w => w !== 'hands')); return { cls: c.id, face: CREATE.face, glassed: !!c.glass, glass: c.glass ? 42 : 0, armor: creationArmor(), weapons: c.weapons.slice(), weapon: i, attrs: {} }; }
+function paintCreateFigure(root) {
+  const wraps = (root || document).querySelectorAll ? (root || document).querySelectorAll('.fbfig') : [];
+  for (const wrap of wraps) {
+    const cv = wrap.querySelector('canvas'); if (!cv) continue;
+    let ok = false;
+    try {
+      if (typeof CARD21 === 'object' && CARD21 && typeof CARD21.lookOf === 'function' && typeof CARD21.on === 'function' && CARD21.on()) {
+        const L = CARD21.lookOf(creationLook());
+        if (typeof CARD21.paint === 'function') CARD21.paint(L, { size: 'card', view: 0, display: true, breath: 0 });   // the whole paint, at once: the panel is about to be read
+        if (typeof CARD21.drawCard === 'function') ok = CARD21.drawCard(cv, L, 0, 0) !== false;
+      }
+    } catch (e) { ok = false; }
+    wrap.classList.toggle('fig-ok', ok);
+  }
+}
 function renderCreate() {
   const p = $('#create-panel'); const s = CREATE.step;
   const wireLore = () => { const b = $('#c-lore'); if (b) b.onclick = openLore; };
@@ -60,6 +79,9 @@ function renderCreate() {
     return;
   }
   if (s === 0) {
+    // the likeness is a person with a name already: start from it, and let the traveller write over it
+    const start = CREATION_FACES[CREATE.face - 1] || CREATION_FACES[0];
+    if (!CREATE.name) { CREATE.name = start.name; CREATE.auto = start.name; }
     p.innerHTML = `<h2>Who are you, in the Narrow?</h2><p class="muted">Every soul in the Reach keeps its name close. The Catalogue would like to know yours.</p>
     <p><input id="cname" type="text" maxlength="24" placeholder="Your name" value="${CREATE.name}"></p>
     <div class="btns"><button class="dfbtn" id="c-next">Continue</button>${loreButton()}<button class="dfbtn" id="c-back">Back to title</button></div>`;
@@ -83,10 +105,19 @@ function renderCreate() {
     wireLore();
   } else if (s === 2) {
     const f = CREATION_FACES[CREATE.face - 1] || CREATION_FACES[0];
-    p.innerHTML = `<h2>Choose your face</h2><p class="muted">A face is a history. Any calling can wear any of them.</p>
+    // the name follows the likeness while it is still the one the likeness gave: a written name is kept
+    if (!CREATE.name || CREATE.name === 'Nameless' || CREATE.name === CREATE.auto) CREATE.name = f.name;
+    CREATE.auto = f.name;
+    p.innerHTML = `<h2>Choose your likeness</h2><p class="muted">The Catalogue keeps a traveller whole, boots to face.</p>
     <div class="faces">${CREATION_FACES.map(f => `<img src="img/face_${f.n}.jpg" data-i="${f.n}" class="${CREATE.face === f.n ? 'sel' : ''}" alt="${f.name}" title="${f.name}">`).join('')}</div>
-    <div id="cfacebio" class="facebio"><p class="fb-name">Face ${FACE_NUMERALS[f.n - 1]} · ${f.name}</p><p>${f.sketch}</p></div>
-    <div class="btns"><button class="dfbtn" id="c-next">Continue</button><button class="dfbtn" id="c-back">Back</button></div>`;
+    <div id="cfacebio" class="facebody">
+      <div class="fbfig"><div class="fb-frame"><img src="img/face_${f.n}.jpg" alt="${f.name}"><canvas class="fb-canvas" width="176" height="352" role="img" aria-label="${f.name}, full figure"></canvas></div><p class="fb-name">${f.name}</p></div>
+      <div class="fbtext"><p class="fb-sketch">${f.sketch}</p>
+        <dl class="fb-facts">${f.facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}<div class="wide"><dt>Says</dt><dd class="fb-says">${f.says}</dd></div></dl>
+        <h3>History</h3><p>${f.history}</p><p>${f.detail}</p></div>
+    </div>
+    <div class="btns stick"><button class="dfbtn" id="c-next">Continue</button><button class="dfbtn" id="c-back">Back</button></div>`;
+    paintCreateFigure(p);
     p.querySelectorAll('.faces img').forEach(im => im.onclick = () => { CREATE.face = +im.dataset.i; renderCreate(); Audio_.sfx.ui(); });
     $('#c-next').onclick = () => { CREATE.step = 3; CREATE.bio = []; renderCreate(); };
     $('#c-back').onclick = () => { CREATE.step = 1; renderCreate(); };
@@ -98,11 +129,12 @@ function renderCreate() {
     const c = CLASSES[CREATE.cls]; const attrs = Object.assign({}, c.attrs);
     const f = CREATION_FACES[CREATE.face - 1] || CREATION_FACES[0];
     for (let i = 0; i < CREATE.bio.length; i++) { const a = BIOGRAPHY[i].a[CREATE.bio[i]]; for (const k in a.mod) attrs[k] += a.mod[k]; }
-    p.innerHTML = `<h2>${CREATE.name}, ${c.name}</h2><div class="row"><div class="col"><img src="img/face_${CREATE.face}.jpg" style="width:16cqw;height:16cqw;border:2px solid #0b0806" alt="${f.name}"><p class="muted">${c.hz} · Level 1</p><p class="muted">${f.name}</p></div>
+    p.innerHTML = `<h2>${CREATE.name}, ${c.name}</h2><div class="row"><div class="col"><div class="fbfig tight"><div class="fb-frame"><img src="img/face_${CREATE.face}.jpg" alt="${f.name}"><canvas class="fb-canvas" width="176" height="352" role="img" aria-label="${f.name}, full figure"></canvas></div><p class="fb-name">${f.name}</p></div><p class="muted">${c.hz} · Level 1</p></div>
     <div class="col"><div class="attrs">${ATTRS.map(a => `<div><span>${a}</span><b>${attrs[a]}</b></div>`).join('')}</div>
     <p style="margin-top:1cqh">Health <b style="color:var(--gold)">${c.hp + Math.floor(attrs.Endurance / 10)}</b> · Voice <b style="color:var(--gold)">${c.voice + Math.floor(attrs.Willpower / 10)}</b> · Fatigue <b style="color:var(--gold)">${attrs.Strength + attrs.Endurance}</b></p>
     <p class="muted">${c.summary}</p></div></div>
     <div class="btns"><button class="dfbtn" id="c-go">Go up the Greenroot road</button><button class="dfbtn" id="c-back">Back</button></div>`;
+    paintCreateFigure(p);
     $('#c-go').onclick = () => { CREATE.attrs = attrs; startGame(); };
     $('#c-back').onclick = () => { CREATE.step = 3; CREATE.bio = []; renderCreate(); };
   }
