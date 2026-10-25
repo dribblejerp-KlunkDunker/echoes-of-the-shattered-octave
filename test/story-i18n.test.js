@@ -132,7 +132,7 @@ async function boot(browser, viewport) {
     await reset();
     const crawl = await ev(() => {
       const miss = []; const seen = new Set();
-      const names = ['ITEMS', 'WEAPONS', 'ARMOR', 'ENEMIES', 'NPCS', 'SONGS', 'CLASSES', 'BACKGROUNDS', 'BIOGRAPHY', 'TOPICS', 'RUMOURS', 'COMPANIONS', 'HELP_TEXT', 'LORE_BOOKS', 'ENCHANTMENTS', 'PERK_LIST', 'FACTIONS'];
+      const names = ['ITEMS', 'WEAPONS', 'ARMOR', 'ENEMIES', 'NPCS', 'SONGS', 'CLASSES', 'CREATION_FACES', 'CREATION_LORE', 'BACKGROUNDS', 'BIOGRAPHY', 'TOPICS', 'RUMOURS', 'COMPANIONS', 'HELP_TEXT', 'LORE_BOOKS', 'ENCHANTMENTS', 'PERK_LIST', 'FACTIONS'];
       const walk = (v, d) => {
         if (d > 6 || v == null) return;
         if (typeof v === 'string') {

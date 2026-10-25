@@ -377,7 +377,7 @@ const PARTNER19 = (function () {
     const c = Engine.cam, sx = c.x, sy = c.y, sz = c.z, sp = G.player, mr = Math.random;
     const keep = {}; for (const k in G) { if (typeof G[k] === 'number' && k !== 'time' && k !== 'noise' && k !== 'tod' && k !== 'day') keep[k] = G[k]; }
     CTX.swapped = true; S.stats.swapped++;
-    c.x = S.x; c.y = S.y; c.z = S.feet + 0.5; G.player = S.pp; Math.random = S.rng;
+    c.x = S.x; c.y = S.y; c.z = S.feet + 0.88; G.player = S.pp; Math.random = S.rng;
     try { return fn(); } finally {
       CTX.swapped = false; c.x = sx; c.y = sy; c.z = sz; G.player = sp; Math.random = mr;
       for (const k in keep) G[k] = keep[k];

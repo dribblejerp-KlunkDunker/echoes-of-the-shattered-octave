@@ -237,8 +237,16 @@ const STORY_I18N = (function () {
     node.nodeValue = out;                   // text only: catalogue values are never parsed as markup
     textRec.set(node, { en: cur, shown: out, n });
   }
+  // attributes are display sinks on every element: form controls and canvases have no translatable
+  // text, and their title/aria-label/alt/placeholder is the only user-visible copy they carry
+  function skipAttr(el) {
+    for (let n = el; n && n.nodeType === 1; n = n.parentNode) {
+      if (n.getAttribute && n.getAttribute('data-i18n') === 'off') return true;
+    }
+    return false;
+  }
   function xlateAttr(el, a) {
-    if (!el.getAttribute || skip(el)) return;
+    if (!el.getAttribute || skipAttr(el)) return;
     const cur = el.getAttribute(a); if (cur == null) return;
     const recs = attrRec.get(el) || {}, rec = recs[a];
     if (rec && cur === rec.shown) { if (loc === 'en') { el.setAttribute(a, rec.en); delete recs[a]; } return; }
@@ -251,7 +259,9 @@ const STORY_I18N = (function () {
   function walk(root) {
     if (!root) return;
     if (root.nodeType === 3) { xlateText(root); return; }
-    if (root.nodeType !== 1 || skip(root)) return;
+    if (root.nodeType !== 1) return;
+    for (const a of ATTR_LIST) { if (root.hasAttribute && root.hasAttribute(a)) xlateAttr(root, a); }
+    if (skip(root)) return;
     const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     let n; while ((n = w.nextNode())) xlateText(n);
     for (const a of ATTR_LIST) { if (root.hasAttribute && root.hasAttribute(a)) xlateAttr(root, a); }

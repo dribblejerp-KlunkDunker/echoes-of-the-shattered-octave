@@ -8,6 +8,29 @@ function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; le
 const WALL = (tex) => ({ tex });
 const DOOR = (opts) => Object.assign({ tex: 't_door', door: true }, opts || {});
 
+// ---- people height ---------------------------------------------------------
+// The player's own figure is one tile tall ("one tile tall like a standing
+// townsperson"), and the folk of the world stand around that measure: most within
+// a hand's width of it, a few notably taller or shorter. Children and animals
+// carry their own scale in NPCS and are never touched here; so do the named cast
+// whose stature is part of who they are. The playable likenesses, the party and
+// the co-op figures keep exactly one tile - they ARE the measure. The height is
+// hashed from the body's id and place (never Math.random: the shared stream
+// stays as the settlers keep it), so a person keeps their stature across saves
+// and on both sides of a co-op session.
+const HERO_SPRITES = { kaelen: 1, lyra: 1, vane: 1, sable: 1, rooke: 1, mags: 1 };
+function varyNpcHeight(e) {
+  if (!e || e.kind !== 'npc' || e._hgt) return e;
+  e._hgt = 1;
+  if (e.companion || e.p19fig || e.p17pComp || HERO_SPRITES[e.sprite]) return e;
+  if (e.scale != null && e.scale !== 1) return e;        // authored: children, animals, the named cast
+  const s = (e.id || e.sprite || '') + '|' + (+e.x || 0).toFixed(2) + ',' + (+e.y || 0).toFixed(2);
+  let h = 0x811c9dc5 | 0;
+  for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
+  e.scale = 0.92 + (((h >>> 0) % 1024) / 1024) * 0.16;
+  return e;
+}
+
 class GameMap {
   constructor(id, name, w, h, opts) {
     this.id = id; this.name = name; this.w = w; this.h = h;
@@ -20,7 +43,7 @@ class GameMap {
     this.siphoned = !!opts.siphoned; this.danger = opts.danger || 0; this.music = opts.music || 'town';
     this.visited = new Uint8Array(w * h);
     this.triggers = [];
-    // Floor elevation, one height per cell, in world units (eye height = 0.5).
+    // Floor elevation, one height per cell, in world units (eye height = 0.88).
     // Null on flat maps so they keep the fast render path untouched.
     this.lvls = null;
     // Sloped ground: heights at cell corners ((w+1) x (h+1)) and a mask of the

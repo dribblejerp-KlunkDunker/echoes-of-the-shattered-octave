@@ -141,7 +141,7 @@ const HELPERS = () => {
         if (L < 5 && !C(x + L, y) && !C(x + L + 1, y)) spot = { x, y, L };   // open, a run of tall wall, open again
       }
       o.spot = spot;
-      loadMap('oakhaven', { x: spot.x - 1.5, y: spot.y + 0.5, dir: 0 }); G.state = 'play'; G.fadeT = 0; G.tod = 0.5;
+      loadMap('oakhaven', { x: spot.x - 2.5, y: spot.y + 0.5, dir: 0 }); G.state = 'play'; G.fadeT = 0; G.tod = 0.5;   // far enough back that the ground at the hound's feet is on screen from the standing eye (0.88)
       const cmp = (ent) => { const a = S.frame([ent], []), b = S.frame([ent], ['groundShadows']); return { f: b, idx: S.diff(a, b), spr: b.mbuf.reduce((n, v) => n + (v === 6 ? 1 : 0), 0) }; };
       const hid = cmp(S.mk('hound', spot.x + spot.L + 0.5, spot.y + 0.5)); o.behind = { shadow: hid.idx.length, sprite: hid.spr };
       const front = cmp(S.mk('hound', spot.x - 0.9, spot.y + 0.5)); o.front = { shadow: front.idx.length, sprite: front.spr };
@@ -184,8 +184,8 @@ const HELPERS = () => {
       for (const i of idx) { const [wx, wy, t] = S.world(b, i), y = (i / b.w) | 0; const zp = b.cam.z - (y - b.horizon) * t / b.h; worstZ = Math.max(worstZ, Math.abs(zp - gAt(wx, wy, wx | 0, wy | 0))); worstD = Math.max(worstD, Math.hypot(wx - golem.x, wy - golem.y)); }
       o.golem.worstZ = +worstZ.toFixed(3); o.golem.worstD = +worstD.toFixed(2);
       o.golem.slopeHere = +(Math.abs(gAt(golem.x + 0.4, golem.y, (golem.x + 0.4) | 0, golem.y | 0) - gAt(golem.x - 0.4, golem.y, (golem.x - 0.4) | 0, golem.y | 0))).toFixed(2);
-      // the hound over the crest: the slope in front of the camera hides it entirely
-      const hound = S.mk('hound', best.x + 0.5, best.y + 0.5);
+      // the hound behind the crest: the slope in front of the camera hides its feet, one tile further back so the standing eye cannot see over
+      const hound = S.mk('hound', best.x + 1.5, best.y + 0.5);
       const a2 = S.frame([hound], []), b2 = S.frame([hound], ['groundShadows']);
       o.crest = { shadow: S.diff(a2, b2).length, sprite: b2.mbuf.reduce((n, v) => n + (v === 6 ? 1 : 0), 0) };
       // the same kind of hound on open ground in view casts one

@@ -273,7 +273,9 @@ const waitReady = (page) => page.waitForFunction(() => window.PWA18 && PWA18.sta
       const past = await fetch(p, { headers: { Range: 'bytes=999999999-' } }).then((r) => ({ s: r.status })).catch(() => ({ err: true }));
       out.past = past;
       out.uncachedMedia = await fetch(q, { headers: { Range: 'bytes=0-9' } }).then((r) => ({ s: r.status })).catch(() => ({ err: true }));
-      out.script = await fetch('js/game.js?v=34').then((r) => r.ok).catch(() => false);
+      // the real script URL the page shipped with (its ?v= cache-buster moves with the build; hard-coding one rots)
+      const gsrc = [...document.querySelectorAll('script')].map((s) => s.getAttribute('src')).find((s) => s && /^js\/game\.js(\?|$)/.test(s)) || 'js/game.js';
+      out.script = await fetch(gsrc).then((r) => r.ok).catch(() => false);
       out.unknown = await fetch('js/not-a-file.js').then((r) => r.status).catch(() => 'error');
       return out;
     }, [m0, m1]);

@@ -43,28 +43,81 @@ function closeModal() { hide('#modal'); G.openPanel = null; }
 function fx(cls, ms) { const f = $('#fx'); f.className = cls; clearTimeout(f._t); f._t = setTimeout(() => { if (f.className === cls) f.className = ''; }, ms || 200); }
 
 // ---------------------------------------------------------------- character creation
-const CREATE = { step: 0, name: '', cls: null, face: 1, bio: [], mods: {} };
+const CREATE = { step: 0, name: '', auto: '', cls: null, face: 1, bio: [], mods: {}, loreFrom: 0 };
+function loreButton() { return '<button class="dfbtn small" id="c-lore">The world in 419 SR</button>'; }
+function openLore() { if (CREATE.step === 0) { const n = $('#cname'); if (n) CREATE.name = cleanName(n.value); } CREATE.loreFrom = CREATE.step >= 0 ? CREATE.step : 0; CREATE.step = -1; renderCreate(); $('#create-panel').scrollTop = 0; }
+// The traveller whole: the character card (js/card21.js) paints the chosen face in the calling's kit, head to boots.
+// The portrait stays underneath for the simple card (Options > Graphics & access) or any page without the painter.
+// head gear stays off the creation figure: a hood or a kettle helm would hide the very face being chosen
+function creationArmor() { const armor = {}, c = CLASSES[CREATE.cls == null ? 0 : CREATE.cls]; for (const id of (CLASS_KIT[c.id] || [])) { const a = ARMOR[id]; if (a && a.slot && a.slot !== 'head') armor[a.slot] = id; } return armor; }
+function creationLook() { const c = CLASSES[CREATE.cls == null ? 0 : CREATE.cls], i = Math.max(0, c.weapons.findIndex(w => w !== 'hands')); return { cls: c.id, face: CREATE.face, glassed: !!c.glass, glass: c.glass ? 42 : 0, armor: creationArmor(), weapons: c.weapons.slice(), weapon: i, attrs: {} }; }
+function paintCreateFigure(root) {
+  const wraps = (root || document).querySelectorAll ? (root || document).querySelectorAll('.fbfig') : [];
+  for (const wrap of wraps) {
+    const cv = wrap.querySelector('canvas'); if (!cv) continue;
+    let ok = false;
+    try {
+      if (typeof CARD21 === 'object' && CARD21 && typeof CARD21.lookOf === 'function' && typeof CARD21.on === 'function' && CARD21.on()) {
+        const L = CARD21.lookOf(creationLook());
+        if (typeof CARD21.paint === 'function') CARD21.paint(L, { size: 'card', view: 0, display: true, breath: 0 });   // the whole paint, at once: the panel is about to be read
+        if (typeof CARD21.drawCard === 'function') ok = CARD21.drawCard(cv, L, 0, 0) !== false;
+      }
+    } catch (e) { ok = false; }
+    wrap.classList.toggle('fig-ok', ok);
+  }
+}
 function renderCreate() {
   const p = $('#create-panel'); const s = CREATE.step;
+  const wireLore = () => { const b = $('#c-lore'); if (b) b.onclick = openLore; };
+  if (s === -1) {
+    p.innerHTML = `<h2>The world in 419 SR</h2><button class="dfbtn small close" id="c-lore-top">Back</button><p class="muted">Autumn, 419 SR. The Reach is orchard country, and Oakhaven is a town inside a wall of thorn. Here is what a traveller is expected to know.</p>
+    <div class="lorelist">${CREATION_LORE.map(e => `<section><h3>${e.title}</h3><p>${e.text}</p></section>`).join('')}</div>
+    <div class="btns"><button class="dfbtn" id="c-lore-back">Back to creation</button></div>`;
+    const leaveLore = () => { CREATE.step = CREATE.loreFrom >= 0 ? CREATE.loreFrom : 0; renderCreate(); };
+    $('#c-lore-back').onclick = leaveLore;
+    $('#c-lore-top').onclick = leaveLore;
+    return;
+  }
   if (s === 0) {
+    // the likeness is a person with a name already: start from it, and let the traveller write over it
+    const start = CREATION_FACES[CREATE.face - 1] || CREATION_FACES[0];
+    if (!CREATE.name) { CREATE.name = start.name; CREATE.auto = start.name; }
     p.innerHTML = `<h2>Who are you, in the Narrow?</h2><p class="muted">Every soul in the Reach keeps its name close. The Catalogue would like to know yours.</p>
     <p><input id="cname" type="text" maxlength="24" placeholder="Your name" value="${CREATE.name}"></p>
-    <div class="btns"><button class="dfbtn" id="c-next">Continue</button><button class="dfbtn" id="c-back">Back to title</button></div>`;
+    <div class="btns"><button class="dfbtn" id="c-next">Continue</button>${loreButton()}<button class="dfbtn" id="c-back">Back to title</button></div>`;
     $('#cname').focus();
     $('#c-next').onclick = () => { CREATE.name = cleanName($('#cname').value); CREATE.step = 1; renderCreate(); };
     $('#c-back').onclick = () => { hide('#create'); show('#title'); };
     $('#cname').onkeydown = (e) => { if (e.key === 'Enter') $('#c-next').click(); e.stopPropagation(); };
+    wireLore();
   } else if (s === 1) {
-    p.innerHTML = `<h2>Choose your calling</h2><div class="classlist">${CLASSES.map((c, i) => `<button class="dfbtn ${CREATE.cls === i ? 'sel' : ''}" data-i="${i}">${c.name}<small>${c.hz} · ${c.skills}</small></button>`).join('')}</div>
-    <div id="cdesc" style="margin-top:1cqh;min-height:9cqh"></div><div class="btns"><button class="dfbtn" id="c-next" ${CREATE.cls == null ? 'disabled' : ''}>Continue</button><button class="dfbtn" id="c-back">Back</button></div>`;
-    const descr = () => { if (CREATE.cls == null) { $('#cdesc').innerHTML = '<p class="muted">Pick a calling to read of it.</p>'; return; } const c = CLASSES[CREATE.cls]; $('#cdesc').innerHTML = `<p class="q">${c.desc}</p><p class="muted">Health ${c.hp} · Voice ${c.voice} · Glass shot ×${c.pellets} · Songs: ${c.songs.map(s => SONGS[s].name).join(', ')}</p>`; };
+    p.innerHTML = `<h2>Choose your calling</h2><div class="classpick"><div class="classlist">${CLASSES.map((c, i) => `<button class="dfbtn ${CREATE.cls === i ? 'sel' : ''}" data-i="${i}">${c.name}<small>${c.hz} · ${c.skills}</small></button>`).join('')}</div>
+    <div id="cdesc" class="classdesc"></div></div><div class="btns classbtns"><button class="dfbtn" id="c-next" ${CREATE.cls == null ? 'disabled' : ''}>Continue</button><button class="dfbtn" id="c-back">Back</button></div>`;
+    const descr = () => {
+      if (CREATE.cls == null) { $('#cdesc').innerHTML = '<p class="muted">Pick a calling to read of it.</p><div class="classlore">' + loreButton() + '</div>'; return; }
+      const c = CLASSES[CREATE.cls];
+      $('#cdesc').innerHTML = `<div class="classdetail"><div><h3>Biography</h3><p>${c.bio}</p></div><div><h3>Summary</h3><p>${c.summary}</p><p class="muted">Health ${c.hp} · Voice ${c.voice} · Glass shot ×${c.pellets} · Songs: ${c.songs.map(s => SONGS[s].name).join(', ')}<br>Skills: ${c.skills}</p></div></div><div class="classlore">${loreButton()}</div>`;
+    };
     descr();
     p.querySelectorAll('.classlist button').forEach(b => b.onclick = () => { CREATE.cls = +b.dataset.i; renderCreate(); Audio_.sfx.ui(); });
     $('#c-next').onclick = () => { CREATE.step = 2; renderCreate(); };
     $('#c-back').onclick = () => { CREATE.step = 0; renderCreate(); };
+    wireLore();
   } else if (s === 2) {
-    p.innerHTML = `<h2>Choose your face</h2><div class="faces">${[1, 2, 3, 4, 5, 6].map(i => `<img src="img/face_${i}.jpg" data-i="${i}" class="${CREATE.face === i ? 'sel' : ''}" alt="face ${i}">`).join('')}</div>
-    <div class="btns"><button class="dfbtn" id="c-next">Continue</button><button class="dfbtn" id="c-back">Back</button></div>`;
+    const f = CREATION_FACES[CREATE.face - 1] || CREATION_FACES[0];
+    // the name follows the likeness while it is still the one the likeness gave: a written name is kept
+    if (!CREATE.name || CREATE.name === 'Nameless' || CREATE.name === CREATE.auto) CREATE.name = f.name;
+    CREATE.auto = f.name;
+    p.innerHTML = `<h2>Choose your likeness</h2><p class="muted">The Catalogue keeps a traveller whole, boots to face.</p>
+    <div class="faces">${CREATION_FACES.map(f => `<img src="img/face_${f.n}.jpg" data-i="${f.n}" class="${CREATE.face === f.n ? 'sel' : ''}" alt="${f.name}" title="${f.name}">`).join('')}</div>
+    <div id="cfacebio" class="facebody">
+      <div class="fbfig"><div class="fb-frame"><img src="img/face_${f.n}.jpg" alt="${f.name}"><canvas class="fb-canvas" width="176" height="352" role="img" aria-label="${f.name}, full figure"></canvas></div><p class="fb-name">${f.name}</p></div>
+      <div class="fbtext"><p class="fb-sketch">${f.sketch}</p>
+        <dl class="fb-facts">${f.facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}<div class="wide"><dt>Says</dt><dd class="fb-says">${f.says}</dd></div></dl>
+        <h3>History</h3><p>${f.history}</p><p>${f.detail}</p></div>
+    </div>
+    <div class="btns stick"><button class="dfbtn" id="c-next">Continue</button><button class="dfbtn" id="c-back">Back</button></div>`;
+    paintCreateFigure(p);
     p.querySelectorAll('.faces img').forEach(im => im.onclick = () => { CREATE.face = +im.dataset.i; renderCreate(); Audio_.sfx.ui(); });
     $('#c-next').onclick = () => { CREATE.step = 3; CREATE.bio = []; renderCreate(); };
     $('#c-back').onclick = () => { CREATE.step = 1; renderCreate(); };
@@ -74,11 +127,14 @@ function renderCreate() {
     p.querySelectorAll('.list button').forEach(b => b.onclick = () => { CREATE.bio.push(+b.dataset.i); Audio_.sfx.ui(); if (CREATE.bio.length >= BIOGRAPHY.length) { CREATE.step = 4; } renderCreate(); });
   } else {
     const c = CLASSES[CREATE.cls]; const attrs = Object.assign({}, c.attrs);
+    const f = CREATION_FACES[CREATE.face - 1] || CREATION_FACES[0];
     for (let i = 0; i < CREATE.bio.length; i++) { const a = BIOGRAPHY[i].a[CREATE.bio[i]]; for (const k in a.mod) attrs[k] += a.mod[k]; }
-    p.innerHTML = `<h2>${CREATE.name}, ${c.name}</h2><div class="row"><div class="col"><img src="img/face_${CREATE.face}.jpg" style="width:16cqw;height:16cqw;border:2px solid #0b0806"><p class="muted">${c.hz} · Level 1</p></div>
+    p.innerHTML = `<h2>${CREATE.name}, ${c.name}</h2><div class="row"><div class="col"><div class="fbfig tight"><div class="fb-frame"><img src="img/face_${CREATE.face}.jpg" alt="${f.name}"><canvas class="fb-canvas" width="176" height="352" role="img" aria-label="${f.name}, full figure"></canvas></div><p class="fb-name">${f.name}</p></div><p class="muted">${c.hz} · Level 1</p></div>
     <div class="col"><div class="attrs">${ATTRS.map(a => `<div><span>${a}</span><b>${attrs[a]}</b></div>`).join('')}</div>
-    <p style="margin-top:1cqh">Health <b style="color:var(--gold)">${c.hp + Math.floor(attrs.Endurance / 10)}</b> · Voice <b style="color:var(--gold)">${c.voice + Math.floor(attrs.Willpower / 10)}</b> · Fatigue <b style="color:var(--gold)">${attrs.Strength + attrs.Endurance}</b></p></div></div>
+    <p style="margin-top:1cqh">Health <b style="color:var(--gold)">${c.hp + Math.floor(attrs.Endurance / 10)}</b> · Voice <b style="color:var(--gold)">${c.voice + Math.floor(attrs.Willpower / 10)}</b> · Fatigue <b style="color:var(--gold)">${attrs.Strength + attrs.Endurance}</b></p>
+    <p class="muted">${c.summary}</p></div></div>
     <div class="btns"><button class="dfbtn" id="c-go">Go up the Greenroot road</button><button class="dfbtn" id="c-back">Back</button></div>`;
+    paintCreateFigure(p);
     $('#c-go').onclick = () => { CREATE.attrs = attrs; startGame(); };
     $('#c-back').onclick = () => { CREATE.step = 3; CREATE.bio = []; renderCreate(); };
   }
@@ -115,6 +171,7 @@ function startGame() {
 
 // ---------------------------------------------------------------- maps
 function hydrate(e) {
+  varyNpcHeight(e);
   if (e._h) return e; e._h = true;
   if (e.kind === 'enemy') {
     const d = ENEMIES[e.type]; e.def = d; e.hp = d.hp; e.hpMax = d.hp; e.sprite = d.sprite; e.scale = d.scale || 1; e.yOff = d.yOff || 0; e.state = e.passive ? 'passive' : 'idle'; e.solid = true; e.radius = 0.35;
@@ -155,12 +212,13 @@ function transfer(portal) {
 
 // ---------------------------------------------------------------- elevation
 // The player's feet rest on the floor of whatever cell they are in, and the
-// eye rides half a unit above them. Flat maps keep feet at 0, exactly as before.
+// eye rides 0.88 above them: the standing eye of a one-tile person (the crown
+// sits at 0.98). Flat maps keep feet at 0, exactly as before.
 function settleFeet() {
   const c = Engine.cam, p = G.player;
   const feet = (G.map.lvls || G.map.smooth) ? G.map.groundAt(c.x, c.y) : 0;
   if (p) { p.feet = feet; p.fallV = 0; p.fallFrom = null; p.tumble = false; }
-  c.z = feet + 0.5;
+  c.z = feet + 0.88;
 }
 
 // ---------------------------------------------------------------- collision
@@ -220,7 +278,7 @@ function los(ax, ay, bx, by) {
   const d = Math.sqrt(dist2(ax, ay, bx, by)); const n = Math.ceil(d / 0.2); const sx = (bx - ax) / n, sy = (by - ay) / n;
   const m = G.map, raised = !!(m.lvls || m.smooth);
   // eye heights at both ends: a knee-high wall or railing below both of them does not block sight
-  const eyeLo = raised ? Math.min(m.groundAt(ax, ay), m.groundAt(bx, by)) + 0.5 : 0.5;
+  const eyeLo = raised ? Math.min(m.groundAt(ax, ay), m.groundAt(bx, by)) + 0.88 : 0.88;   // the standing eye
   let x = ax, y = ay;
   for (let i = 0; i < n; i++) {
     x += sx; y += sy;
@@ -2172,7 +2230,7 @@ function update(dt) {
       } else if (drop > 0.25) Audio_.sfx.step('stone');
     }
   }
-  c.z = p.feet + 0.5;
+  c.z = p.feet + 0.88;
   // keyboard turning eases in and out
   let tin = clamp(edgeTurn * 0.9, -1, 1); if (k.q || k.arrowleft) tin -= 1; if (k.arrowright) tin += 1; tin = clamp(tin, -1, 1);
   G.turnV += (tin * 2.4 - G.turnV) * (1 - Math.exp(-(tin ? 11 : 18) * dt));
@@ -2207,6 +2265,7 @@ function update(dt) {
   if (G.dragBody && moving) addNoise(dt * 1.5);
   // entities
   for (const e of G.ents) {
+    varyNpcHeight(e);
     if (e.kind === 'enemy') enemyUpdate(e, dt);
     else if ((e.kind === 'npc' && e.wander) || (e.kind === 'deco' && e.wander)) {
       e.wanderT -= dt; if (e.wanderT <= 0) { e.wanderT = rnd(2, 6); e.dir = rnd(0, 6.28); e.moving = Math.random() < 0.6; }

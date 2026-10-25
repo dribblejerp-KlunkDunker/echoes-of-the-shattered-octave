@@ -1158,7 +1158,7 @@ const MODS = (() => {
       Engine.setMap(m);
       const s = m.spawn, base = s.dir;
       for (let i = 0; i < 4; i++) {
-        Engine.cam.x = s.x; Engine.cam.y = s.y; Engine.cam.dir = base + i * Math.PI / 2; Engine.cam.pitch = 0; Engine.cam.z = 0.5; Engine.cam.bob = 0;
+        Engine.cam.x = s.x; Engine.cam.y = s.y; Engine.cam.dir = base + i * Math.PI / 2; Engine.cam.pitch = 0; Engine.cam.z = 0.88; Engine.cam.bob = 0;
         Engine.render(m.entities, 0.5);
         const c = el('canvas', { 'aria-label': 'Preview, looking ' + ['ahead', 'right', 'behind', 'left'][i] }); const vh = (typeof VIEW_H === 'number' ? VIEW_H : Engine.VIEW_H) || Engine.canvas.height; c.width = Engine.canvas.width; c.height = vh;
         c.getContext('2d').drawImage(Engine.canvas, 0, 0, Engine.canvas.width, vh, 0, 0, Engine.canvas.width, vh); host.appendChild(c);

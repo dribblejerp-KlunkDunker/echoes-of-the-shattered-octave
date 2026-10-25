@@ -138,12 +138,20 @@ const HELPERS = () => {
         const out = { opens: {} };
         for (const open of [0, 0.25, 0.5, 0.75, 1]) {
           const info = T.look(mapId, mx, my, open, dist);
+          const shot = T.shot();                      // the real frame, scenery and all
+          // The analytic model covers the leaf alone, and sprites legitimately occlude it:
+          // with the standing eye at 0.88 the horizon row now passes through hanging decor
+          // (Oakhaven’s reed lintel) and townsfolk. Measure the leaf with sprites hidden;
+          // the kept shot above is still the honest frame.
+          for (const e of G.ents) e.hidden = true;
+          Engine.render(G.ents, G.tod);
           const st = T.columns(info, mx, my);
           const cx = Engine.cam.x, cy = Engine.cam.y;
           // the sample columns in the middle of the screen, for the "blocks the view" / "passes through" checks
           const mid = Engine.depthAt(160, 75), planeDepth = info.or === 1 ? Math.abs(mx + 0.5 - cx) : Math.abs(my + 0.5 - cy);
+          for (const e of G.ents) e.hidden = false;
           out.opens[open] = Object.assign(st, { mid, planeDepth, or: info.or, hg: info.d._hg, sw: info.d._sw });
-          out.opens[open].shot = T.shot();
+          out.opens[open].shot = shot;
         }
         return out;
       }, [mapId, mx, my, dist]);

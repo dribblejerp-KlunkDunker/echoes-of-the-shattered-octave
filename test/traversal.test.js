@@ -177,7 +177,7 @@ const QUARRY_ENTITIES = [
       check(near(G.player.feet, 1.8) && Engine.cam.x > 9, 'the stair carries you to the gallery (feet ' + G.player.feet + ', x ' + Engine.cam.x.toFixed(2) + ')');
       for (const h of [0.3, 0.6, 0.9, 1.2, 1.5, 1.8]) check(feetSeq.some(f => Math.abs(f - h) < 1e-6), 'the feet rest on the ' + h + ' tread');
       check(maxJump < 0.37, 'no tread is taller than a step (' + maxJump.toFixed(3) + ')');
-      check(near(Engine.cam.z, 2.3) && G.map.ceilZ - Engine.cam.z > 0.9 && G.map.ceilZ > 1, 'the eye rides at 2.3 under a ceiling of ' + G.map.ceilZ);
+      check(near(Engine.cam.z, 2.68) && G.map.ceilZ - Engine.cam.z > 0.5 && G.map.ceilZ > 1, 'the eye rides at 2.68 under a ceiling of ' + G.map.ceilZ);   // 1.8 + the standing eye (0.88); the taller head keeps 0.5+ under the same ceiling
       check(stepSurface() === 'wood' || true, 'footing sampled');
       out.stair = { treads: new Set(feetSeq).size, maxJump: +maxJump.toFixed(3) };
 
@@ -219,7 +219,7 @@ const QUARRY_ENTITIES = [
       const bsave = JSON.parse(JSON.stringify(snapshotGame()));
       go('oakhaven', 23.5, 20.5, 0);
       restoreGame(bsave); G.state = 'play';
-      check(G.mapId === 'belfry' && near(G.player.feet, 1.8) && Math.abs(Engine.cam.z - 2.3) < 1e-6, 'a save on the gallery restores your feet at gallery height');
+      check(G.mapId === 'belfry' && near(G.player.feet, 1.8) && Math.abs(Engine.cam.z - 2.68) < 1e-6, 'a save on the gallery restores your feet at gallery height');
       check(same(sig(G.map).slice(0, 11), window.__golden.belfry), 'entities keep their indexes through a save');
 
       // ================= the Quarry depot ==================================

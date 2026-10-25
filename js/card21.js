@@ -1540,6 +1540,7 @@ const CARD21 = (() => {
   const homePlayer = () => {
     if (typeof G === 'undefined' || !G.player) return null;
     try { if (typeof PARTNER19 === 'object' && PARTNER19 && PARTNER19.S && PARTNER19.S.pp === G.player) return null; } catch (e) { /* none */ }
+    try { if (typeof EXTRAS17 === 'object' && EXTRAS17 && typeof EXTRAS17.inExtra === 'function' && EXTRAS17.inExtra()) return null; } catch (e) { /* none */ }   // an extra's own hero is not "me"; the extra stores nothing
     return G.player;
   };
   // remember what the compact ghost look of my current kit stands for (so my ghosts wear it after a reload)
