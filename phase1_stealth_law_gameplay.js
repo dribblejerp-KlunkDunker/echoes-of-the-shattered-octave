@@ -9,6 +9,8 @@
 (function () {
   'use strict';
 
+  if (window.OctavePhase1Native) { window.OctaveDisguise = window.OctavePhase1Native.disguise; return; }
+
   const DISGUISE_ITEM_ID = 'synod_robe';
   const DISGUISE_CATALOG_ENTRY = Object.freeze({
     id: DISGUISE_ITEM_ID,
@@ -112,6 +114,8 @@
  * ============================================================================ */
 (function () {
   'use strict';
+
+  if (window.OctavePhase1Native) { window.OctaveCrimePrison = window.OctavePhase1Native.crime; return; }
 
   const THEFT_BOUNTY = 20;
   const ASSAULT_BOUNTY = 40;
@@ -629,6 +633,8 @@
 (function () {
   'use strict';
 
+  if (window.OctavePhase1Native) { window.OctaveBribesThreats = window.OctavePhase1Native.social; return; }
+
   const BRIBE_BASE_COST = 15;
   const STORY_BOSS_EXCLUSIONS = new Set([
     'deacon_of_the_unrung_bell',
@@ -790,6 +796,8 @@
  * ============================================================================ */
 (function () {
   'use strict';
+
+  if (window.OctavePhase1Native) { window.OctaveTravelSurvivalHardcore = window.OctavePhase1Native.travel; return; }
 
   const HORSE_RENTAL_COST = 25;
   const HORSE_RENTAL_HOURS = 72;

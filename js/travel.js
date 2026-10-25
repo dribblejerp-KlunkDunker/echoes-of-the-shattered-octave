@@ -148,7 +148,8 @@ function travelMinutes(d) {
   const dx = (d.fx - h[0]) * (ar >= 1 ? 1 : ar), dy = (d.fy - h[1]) * (ar >= 1 ? 1 / ar : 1);
   let mins = Math.max(10, Math.hypot(dx, dy) * R.across);
   if (TRAVEL.pace === 'cautious') mins *= 1.35;
-  if (horseActive()) mins *= HORSE.speed;
+  if (window.OctaveTravelSurvivalHardcore) mins = window.OctaveTravelSurvivalHardcore.computeTravelModifiers(G, mins / 60, 0, 'reckless').hours * 60;
+  else if (horseActive()) mins *= HORSE.speed;
   // Foul weather is slower going, and the horse does not like it either.
   if (typeof Weather !== 'undefined') mins *= Weather.travelFactor();
   return Math.round(mins / 5) * 5;
@@ -346,10 +347,14 @@ function travelGo(d) {
   const block = travelBlocked(); if (block) { travelConfirm(d); return; }
   const mins = travelMinutes(d), risk = travelRisk(d, mins), pace = TRAVEL.pace, p = G.player;
   const mounted = horseActive();
+  const fatigueCost = window.OctaveTravelSurvivalHardcore
+    ? window.OctaveTravelSurvivalHardcore.computeTravelModifiers(G, 0, p.fatMax * 0.2, 'reckless').fatigueCost
+    : p.fatMax * (mounted ? 0.08 : 0.2);
   travelClose();
-  passHours(mins / 60);
+  if (window.OctaveTravelSurvivalHardcore) window.OctaveTravelSurvivalHardcore.advanceJourneyNeeds(G, mins / 60);
+  else passHours(mins / 60);
   if (pace === 'cautious') p.fat = Math.min(fatCap(), p.fat + p.fatMax * 0.25);
-  else p.fat = Math.max(0, p.fat - p.fatMax * (mounted ? 0.08 : 0.2));
+  else p.fat = Math.max(0, p.fat - fatigueCost);
   loadMap(d.map, { x: d.x, y: d.y, dir: d.dir });
   G.noise = pace === 'cautious' ? 0.8 : 2.4; G.stillT = 0;
   msg(`You travel ${pace === 'cautious' ? 'cautiously' : 'recklessly'} for ${travelFmt(mins)} and come to ${d.name}${mounted ? (horseActive() ? ', the mare blowing' : ', leading the mare the last mile') : ''}. It is ${timeName()}.`, '', 5000);

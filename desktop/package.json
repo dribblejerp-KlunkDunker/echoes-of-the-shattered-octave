@@ -35,6 +35,7 @@
         "filter": [
           "index.html",
           "manifest.webmanifest",
+          "phase1_stealth_law_gameplay.js",
           "assets/**/*",
           "css/**/*",
           "js/**/*",
