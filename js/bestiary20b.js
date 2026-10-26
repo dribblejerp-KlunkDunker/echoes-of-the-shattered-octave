@@ -1264,6 +1264,8 @@ const BEASTB = (() => {
       drawAlong(C, S.cut.halberd, th, axT, hand, up ? { f: -0.3, l: 0.55, up: 0.75 } : { f: 0.85, l: 0.05, up: -0.35 }, { dz: x.front + 6, id: 40 });
     },
   });
+  // the rig kit, for species rigged elsewhere (js/people25.js: the Proctor, the companions, the townsfolk)
+  BEASTB.rig = { humanoid, arm, stride, hangArm, boots, bipedPose, headMap };
 })();
 
 // ================================================================ the hook

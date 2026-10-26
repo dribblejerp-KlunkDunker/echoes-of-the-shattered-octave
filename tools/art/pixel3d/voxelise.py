@@ -22,7 +22,8 @@ import lib
 from lib import ROOT, HERE, POSES
 
 # the four sides the game shows (the owner, October 2026: front, left side, back, right side; the 45-degree views of an
-# extrusion look square), keyed by the engine's octant so the runtime can ask by it: 0 front, 2 one side, 4 back, 6 the other
+# extrusion look square), keyed by the engine's octant so the runtime can ask by it: 0 front, 2 one side, 4 back, 6 the other.
+# A side-on painting (none left here; the hound is drawn by js/bestiary20a.js) would bake only 90 and 270.
 VIEWS = [0, 90, 180, 270]
 OCTANT = {0: 0, 90: 2, 180: 4, 270: 6}
 
@@ -31,11 +32,12 @@ RUNTIME = os.path.join(ROOT, 'js', 'pixel3d.js')
 
 # name -> how to extrude it. side: painted side-on (the painting's x axis is the creature's length, nose to the
 # right). k: depth as a share of each section's width. prop: one view. file: a painting on disk instead of assets.js.
-PEOPLE = ['flambeau', 'hetty', 'rooke', 'sable', 'townsman', 'townswoman', 'vane', 'pim', 'vosk', 'harrow', 'tobiah', 'orla', 'aldric',
+# the bestiary and the five rigged people (js/bestiary20a.js, js/bestiary20b.js, js/people25.js) have hand-built views
+# and are not extruded; the hollow is the one biped without a rig
+PEOPLE = ['flambeau', 'hetty', 'rooke', 'sable', 'vane', 'pim', 'vosk', 'harrow', 'tobiah', 'orla', 'aldric',
           'bettany', 'tam', 'hob', 'nell', 'quist', 'halder', 'cutter', 'sexton', 'herald', 'mags', 'mourner', 'wren', 'burlsick']
-BIPEDS = ['proctor', 'legionnaire', 'tongueless', 'wearer', 'drowned', 'pressman', 'dirge', 'marine', 'warden', 'requiem', 'deacon', 'outrider',
-          'hushwarden', 'captain', 'aegis', 'golem', 'weaver', 'kaelen', 'lyra', 'hollow']
-SIDE_ON = ['hound']   # the weaverlings are painted head-on like everyone else
+BIPEDS = ['hollow']
+SIDE_ON = []
 PROPS = {   # name -> k: round things fully, boxy ones most of the way, flat ones a little
     'crates': 0.8, 'chest': 0.8, 'table': 0.8, 'bed': 0.8, 'loom': 0.7, 'press': 0.8, 'tomb': 0.8, 'grave': 0.5, 'hearth': 0.7, 'chair': 0.8,
     'bore': 0.8, 'gear': 0.6, 'lever': 0.5, 'coil': 0.9, 'cloaks': 0.5, 'cocoon': 0.9, 'lifttank': 0.9, 'kestrel': 0.7, 'bones': 0.5, 'loot': 0.9,
@@ -43,12 +45,8 @@ PROPS = {   # name -> k: round things fully, boxy ones most of the way, flat one
     'shelf': 0.5, 'bones': 0.5,
 }
 SPECIES = {}
-for n in BIPEDS: SPECIES[n] = dict(k=0.62)
+for n in BIPEDS: SPECIES[n] = dict(k=0.5)
 for n in PEOPLE: SPECIES[n] = dict(k=0.6)
-SPECIES['hollow'] = dict(k=0.5)
-SPECIES['hound'] = dict(side=True, k=0.62, front_poses=['_a2'])   # the lunge is painted head-on
-SPECIES['weaverling'] = dict(k=0.7)
-SPECIES['broodmother'] = dict(k=0.7)
 for n, k in PROPS.items(): SPECIES[n] = dict(prop=True, k=k)
 SPECIES['p_barrel'] = dict(prop=True, k=1.0, file='img/painted20/p_barrel.png')
 SPECIES['p_crate'] = dict(prop=True, k=0.9, file='img/painted20/p_crate.png')
