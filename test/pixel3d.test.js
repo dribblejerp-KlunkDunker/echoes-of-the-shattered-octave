@@ -1,8 +1,9 @@
 // PREVIEW_URL=http://127.0.0.1:4074 PLAYWRIGHT_MODULE=/path/to/playwright node test/pixel3d.test.js
 // The pixel-3D set (js/pixel3d.js, img/pixel3d/, tools/art/pixel3d/):
-//  - every baked atlas loads; each creature has five views in five poses, each prop one view; cells are sized in
-//    world units (hs), anchored (cx) and stand on their feet (dy small);
-//  - an entity whose sprite has a model draws the model's cell for its bearing and pose (the five views by octant,
+//  - every baked atlas loads; each creature has five views (three for the hound, painted side-on, whose head-on and
+//    back views stay with the painted art) in five poses, each prop one view; cells are sized in world units (hs),
+//    anchored (cx) and stand on their feet (dy small);
+//  - an entity whose sprite has a model draws the model's cell for its bearing and pose (the views by octant,
 //    mirrored past the back), a prop's sprite is swapped under its name; an entity without a model is untouched;
 //  - off (and the Original preset), frames are byte-identical to a build without the module; no page errors.
 'use strict';
@@ -61,11 +62,13 @@ async function boot(browser, block) {
     const r = await A.page.evaluate(() => {
       const check = (ok, text) => { if (!ok) throw new Error(text); };
       const out = { models: PIXEL3D.models(), cells: 0 };
-      check(out.models.length >= 4 && out.models.includes('hound') && out.models.includes('proctor') && out.models.includes('p_barrel'), 'the pilot models are baked (' + out.models.join(' ') + ')');
+      check(out.models.length >= 60 && ['hound', 'proctor', 'townsman', 'weaverling', 'p_barrel', 'chest'].every((n) => out.models.includes(n)), 'the bestiary, the people and the props are baked (' + out.models.length + ': ' + out.models.join(' ') + ')');
       for (const n of out.models) {
         const a = PIXEL3D.ATLAS[n], views = a.k === 'creature' ? [0, 1, 2, 3, 4] : [0], poses = a.k === 'creature' ? PIXEL3D.POSES : [''];
         for (const v of views) for (const p of poses) {
-          const s = PIXEL3D.view(n, v, p); check(s && s.w > 4 && s.h > 4 && s.data.length === s.w * s.h, n + ' ' + v + p + ' cell');
+          const s = PIXEL3D.view(n, v, p);
+          if (!s) { check(v === 0 || v === 4, n + ' ' + v + p + ' cell'); continue; }   // side-on: head-on and back stay painted
+          check(s.w > 4 && s.h > 4 && s.data.length === s.w * s.h, n + ' ' + v + p + ' cell');
           check(s.hs > 0.2 && s.hs < 2.5 && s.cx > 0.1 && s.cx < 0.9 && Math.abs(s.dy) < 0.2, n + ' ' + v + p + ' metadata hs ' + s.hs + ' cx ' + s.cx + ' dy ' + s.dy);
           check(s.data.some((q) => (q >>> 24) === 255) && s.data.some((q) => (q >>> 24) === 0), n + ' ' + v + p + ' has a silhouette');
           out.cells++;
@@ -78,13 +81,19 @@ async function boot(browser, block) {
       // --- the directional chain ---
       PRESETS.apply('medium'); GFX.pixel3d = true; GFX.changed();
       go('clearing', 20.5, 22.5, Math.PI / 2);
-      const e = put('hound', 20.5, 26.5, 0, '_w1');
+      const e = put('proctor', 20.5, 26.5, 0, '_w1');
       const seen = new Set();
-      for (let k = 0; k < 8; k++) { e.facing = k * Math.PI / 4; const d = animDirectionalSprite(e); check(d.sprite && d.sprite.pixel3d, 'a hound facing ' + k + ' draws a model cell'); seen.add((d.flip ? 'F' : '') + d.sprite.w + 'x' + d.sprite.h); }
-      check(seen.size >= 4, 'turning the hound shows several views (' + [...seen].join(' ') + ')');
-      e.animSprite = 'hound_a2'; const a2 = animDirectionalSprite(e); e.animSprite = null; const idle = animDirectionalSprite(e);
+      for (let k = 0; k < 8; k++) { e.facing = k * Math.PI / 4; const d = animDirectionalSprite(e); check(d.sprite && d.sprite.pixel3d, 'a proctor facing ' + k + ' draws a model cell'); seen.add((d.flip ? 'F' : '') + d.sprite.w + 'x' + d.sprite.h); }
+      check(seen.size >= 4, 'turning the proctor shows several views (' + [...seen].join(' ') + ')');
+      e.animSprite = 'proctor_a2'; const a2 = animDirectionalSprite(e); e.animSprite = null; const idle = animDirectionalSprite(e);
       check(a2.sprite !== idle.sprite, 'the strike pose is its own cell');
-      const n = put('townsman', 21.5, 26.5, 0, null); check(!animDirectionalSprite(n).sprite.pixel3d, 'a sprite without a model is untouched');
+      // a species painted side-on: the three turned views are model cells, head-on and back the painted art
+      const h = put('hound', 20.5, 26.5, 0, null); let hm = 0, hp = 0;
+      for (let k = 0; k < 8; k++) { h.facing = k * Math.PI / 4; const d = animDirectionalSprite(h); check(d.sprite, 'a hound facing ' + k + ' draws'); if (d.sprite.pixel3d) hm++; else hp++; }
+      check(hm >= 4 && hp >= 2, 'the hound turns through model cells (' + hm + ') and keeps its painted head-on and back views (' + hp + ')');
+      h.animSprite = 'hound_a2'; let lunge = 0; for (let k = 0; k < 8; k++) { h.facing = k * Math.PI / 4; if (animDirectionalSprite(h).sprite.pixel3d) lunge++; }
+      check(lunge === 8, 'the lunge, painted head-on, turns through all eight (' + lunge + ')');
+      const n = put('cat', 21.5, 26.5, 0, null); check(!animDirectionalSprite(n).sprite.pixel3d, 'a sprite without a model is untouched');
       check(Engine.sprites.p_barrel.pixel3d && Engine.sprites.p_crate.pixel3d, 'the props are swapped under their names');
       // --- off: the painted art is back ---
       GFX.pixel3d = false; GFX.changed();

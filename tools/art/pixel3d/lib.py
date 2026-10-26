@@ -1,13 +1,14 @@
-"""Pixel-3D: scripted low-poly models rendered by Blender (the bpy module) into the game's five-view pixel sprites.
+"""Pixel-3D: the Blender (bpy module) side of the bake shared by voxelise.py: scene, camera, lighting, render, quantise, atlas.
 
-The look: every creature, person and prop is a real 3D model, built here from primitives, lit by one sun and a flat
-ambient, rendered small (PX_PER_UNIT pixels to the world unit) from the five bearings the engine uses (front,
+The look: every creature, person and prop is the painting itself given depth (see voxelise.py), lit by one sun and a
+flat ambient, rendered at PX_PER_UNIT pixels to the world unit from the five bearings the engine uses (front,
 front-side, side, back-side, back; the engine mirrors the other three), in every pose the engine animates (idle, two
-walk steps, wind-up, strike), and then quantised: the shading of each material is cut to a few flat bands and the
-silhouette gets a one-pixel dark rim. The result is pixel art that turns, lit the same from every side.
+walk steps, wind-up, strike), and then quantised: the shading is cut to a few bands so each face keeps its painted
+colour, and the silhouette can get a one-pixel dark rim. The result is pixel art that turns, lit the same from every side.
+The Figure class below builds models from primitives; it is kept for props that have no painting yet.
 
   pip install bpy           (Blender as a Python module; no display, no GPU: the Workbench and Cycles engines both run)
-  python3 tools/art/pixel3d/bake.py [model ...]
+  python3 tools/art/pixel3d/voxelise.py [name ...] [--preview]
 
 Conventions. The model stands on z = 0 at the origin and FACES -Y (toward view 0's camera). World units are the game's
 (a doorway is 1 unit high; a person about 1.0). A part is a primitive under a per-figure root; poses rotate or move

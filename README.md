@@ -54,12 +54,12 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
-### Phase 25 (pilot): the pixel-3D set
+### Phase 25: the pixel-3D set
 
 | | |
 |---|---|
-| ![Pixel-3D hounds, Catalogue Proctors, a barrel and a crate in the meadow, turned every way](screenshots/p25-pixel3d.jpg) | ![Close: a hound, a lunging hound and a Proctor as pixel-3D models](screenshots/p25-pixel3d-close.jpg) |
-| The owner's new direction: every creature, person and prop as **pixelated 3D**. Each is a real low-poly model, scripted from primitives and rendered by Blender to the five bearings and five poses the engine already animates, 80 pixels to the world unit, the shading cut to flat bands with a one-pixel rim. The models turn as you walk round them and are lit the same from every side. | The pilot: the Cacophony Hound, the Catalogue Proctor, the barrel and the crate. One switch (Options → Graphics & access, Pixel-3D models); off gives the painted sprites back byte for byte. The rest of the bestiary, the people and the props follow the same pipeline (`tools/art/pixel3d/`). |
+| ![Pixel-3D: the painted hounds, Proctors, Legionnaires, townsfolk and props in the meadow, turned every way](screenshots/p25-pixel3d.jpg) | ![The hound and a walking Proctor through the eight facings: the painted views above, the pixel-3D cells below](screenshots/p25-pixel3d-close.jpg) |
+| The owner's direction: every creature, person and prop as **pixelated 3D**, and *the same pixelated graphics as before*. So the model is the painting. Each painted sprite is extruded into a voxel model, pixel for pixel, with depth that follows its silhouette, and Blender renders it at the painting's own density from the five bearings and in the five poses the engine already animates. Seen head-on it is the painting you know; turned, it is the same painting with real depth, lit by one sun from every side. | The whole bestiary, the people and the scenery props are baked (82 models); every walk and strike painting turns too, where the painted set had one view and stand-ins. The hound, painted side-on, keeps its hand-built head-on and back views. One switch (Options → Graphics & access, Pixel-3D models); off gives the flat sprites back byte for byte. The pipeline is `tools/art/pixel3d/voxelise.py`. |
 
 ### Phase 20b: the painted world, finished
 

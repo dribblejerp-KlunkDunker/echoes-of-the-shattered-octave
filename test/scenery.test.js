@@ -37,7 +37,7 @@ const SHOTS = process.env.SHOT_DIR || '/tmp/claude-0/-home-claude/9fd8ad51-4634-
       const sig = (list) => list.map(e => e.sprite + '@' + e.x + ',' + e.y).join('|');
       // cinema14's god rays and ground fog drift with ANIM.T, so any update() between two frames moves them; this
       // suite compares frames across updates, so those two stay off here (cinema14.test.js covers them)
-      const DEFAULTS = () => { for (const k of GFX.FX) GFX[k] = k !== 'crtCurve' && k !== 'cineLight' && k !== 'cineFog'; GFX.preset = 'medium'; GFX.changed(); };
+      const DEFAULTS = () => { for (const k of GFX.FX) GFX[k] = k !== 'crtCurve' && k !== 'cineLight' && k !== 'cineFog' && k !== 'pixel3d'; GFX.preset = 'medium'; GFX.changed(); };   // pixel3d stays off: it swaps props as its atlases load, and the frame comparisons here need the painted props
       G.tod = 0.45;
 
       // --- props and flora exist on the named maps ----------------------------
@@ -181,10 +181,11 @@ const SHOTS = process.env.SHOT_DIR || '/tmp/claude-0/-home-claude/9fd8ad51-4634-
       const realNow = performance.now.bind(performance); performance.now = () => 123456;
       // and so do anim.js's drifting leaves and motes, which are drawn over every frame
       const partSaved = Object.assign({}, PART_STYLE); for (const k in PART_STYLE) delete PART_STYLE[k];
-      const tod0 = G.tod, solidProp = G.map._scn.find(e => e.solid), grabFrame = () => { G.tod = tod0; Engine.render(G.ents, G.tod); return Engine.ctx.getImageData(0, 0, 320, 150).data; };
+      const tod0 = G.tod, solidProp = G.map._scn.find(e => e.solid), grabFrame = () => { G.tod = tod0; Engine.cam.bob = 0; Engine.render(G.ents, G.tod); return Engine.ctx.getImageData(0, 0, 320, 150).data; };
       const diffPx = (a, b) => { let n = 0; for (let i = 0; i < a.length; i += 4) if (a[i] !== b[i] || a[i + 1] !== b[i + 1] || a[i + 2] !== b[i + 2]) n++; return n; };
       check(G.map._scn.every(e => !e.hidden) && G.map._flora.every(e => !e.hidden || e._lod), 'props and flora are shown by default (tufts beyond sight are culled)');
       check(solidAt(solidProp.x, solidProp.y, null), 'a solid prop collides');
+      if (typeof GFX.pixel3d !== 'undefined') { GFX.pixel3d = false; GFX.changed(); update(0.01); }   // the painted props for every frame compared below (DEFAULTS keeps it off too)
       const frameOn = grabFrame();
       GFX.scenery = false; update(0.01);
       check(G.map._scn.every(e => e.hidden && !G.ents.includes(e)) && G.map._flora.every(e => !e.hidden || e._lod), 'GFX.scenery false hides the props and takes them out of the entity list');
