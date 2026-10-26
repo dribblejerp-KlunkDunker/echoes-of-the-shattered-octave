@@ -144,8 +144,8 @@ Phase 25 (js/pixel3d.js, Options → Pixel-3D models): one atlas per extruded mo
 | Files | Replaces | Source | Licence | Status |
 |---|---|---|---|---|
 | hollow | the painted sprite's every view and pose while the switch is on | the painting, extruded and rendered | game source | done |
-| the people (19: flambeau, vane, pim, vosk, harrow, tobiah, orla, aldric, bettany, tam, quist, halder, cutter, sexton, herald, mags, mourner, wren, burlsick) | the painted NPC sprites while the switch is on | the same | game source | done |
-| (no file) proctor, kaelen, lyra, townsman, townswoman, hetty, rooke, sable, hob, nell | rigged at run time from their paintings by js/people25.js, like the bestiary | the paintings, cut and turned in code | game source | done |
+| orla, cutter | the enthroned Orla and the wrecked Cutter, not people shapes | the same | game source | done |
+| (no file) proctor, kaelen, lyra, townsman, townswoman, hetty, rooke, sable, hob, nell, flambeau, vane, pim, vosk, harrow, tobiah, aldric, bettany, tam, quist, halder, sexton, herald, mags, mourner, wren, burlsick | rigged at run time from their paintings by js/people25.js, like the bestiary | the paintings, cut and turned in code | game source | done |
 | the props (crates, chest, table, bed, loom, press, tomb, grave, hearth, chair, bore, gear, lever, coil, cloaks, cocoon, lifttank, kestrel, bones, loot, lamp, pump, bigbell, cores, basin, sign, hymnboard, grate, web, ladder, shelf, p_barrel, p_crate) | the scenery props | the same | game source | done |
 
 ## Images (img/)

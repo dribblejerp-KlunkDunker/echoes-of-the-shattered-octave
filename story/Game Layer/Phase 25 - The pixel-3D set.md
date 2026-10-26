@@ -14,15 +14,15 @@ One atlas per model, the cell table in `js/pixel3d.js`; the runtime swaps the ce
 
 ## Painted side views for the main species
 
-After the four-side bake the owner asked for painted side views for the main species. The bestiary already had them: Phase 20's teams cut each enemy's own painting, turned it on a rig and re-lit it (`js/bestiary20a.js`, `js/bestiary20b.js`), and from the side those beat any extrusion, so the pixel-3D set now shows them, snapped to the four sides, and bakes nothing for the bestiary. The Catalogue Proctor (which had only its pilot stand-ins), Kaelen, Lyra, the townsman and the townswoman are rigged the same way in `js/people25.js` with the humanoid kit: the body and head as stacks of sections whose width is the painted silhouette and whose depth is authored per band; the staff, arms, jug, hands and boots cut out of the painting and re-hung in 3D; the back painted from the figure's own cloth (a hood's back, a cap, a shirt, the dress behind the apron). The Proctor's attack is the painted one: the staff raised overhead in both hands, then brought down. The second batch, the innkeepers and quest-givers the player talks to most (Hetty with her tankard, Rooke with his scraping blade, Sable with her ledger, Hob, Nell with her folded arms), is rigged the same way. The extrusion stays for the other named people (idle only, they have no other frames) and the props.
+After the four-side bake the owner asked for painted side views for the main species. The bestiary already had them: Phase 20's teams cut each enemy's own painting, turned it on a rig and re-lit it (`js/bestiary20a.js`, `js/bestiary20b.js`), and from the side those beat any extrusion, so the pixel-3D set now shows them, snapped to the four sides, and bakes nothing for the bestiary. The Catalogue Proctor (which had only its pilot stand-ins), Kaelen, Lyra, the townsman and the townswoman are rigged the same way in `js/people25.js` with the humanoid kit: the body and head as stacks of sections whose width is the painted silhouette and whose depth is authored per band; the staff, arms, jug, hands and boots cut out of the painting and re-hung in 3D; the back painted from the figure's own cloth (a hood's back, a cap, a shirt, the dress behind the apron). The Proctor's attack is the painted one: the staff raised overhead in both hands, then brought down. The second batch, the innkeepers and quest-givers the player talks to most (Hetty with her tankard, Rooke with his scraping blade, Sable with her ledger, Hob, Nell with her folded arms), is rigged the same way. The rest of the named cast follows in batches (Flambeau with his censer, Vane, Pim, Vosk with his ledger, Harrow with lantern and staff; Tobiah, Aldric, Bettany with her herbs, Tam on his cane; Quist, Halder with his tray, the Sexton on his shovel, the Herald with his proclamation; Mags with her rope and sling, the Mourner with her lilies, Wren, Burlsick with his twigs): 27 rigs in all. Orla, enthroned among her roots, and the Cutter, a wreck, are not people shapes and stay extruded with the props.
 
 ## What is baked
 
 | Set | Count | Notes |
 |---|---|---|
 | the bestiary | 0 | its Phase 20 hand-built views, snapped to four sides |
-| rigged people | 10 (no atlas) | the Proctor, Kaelen, Lyra, the townsman, the townswoman, Hetty, Rooke, Sable, Hob, Nell: built at run time |
-| the people | 20 | the other named NPCs and the Hollow |
+| rigged people | 27 (no atlas) | the Proctor, Kaelen, Lyra, the townsman, the townswoman, Hetty, Rooke, Sable, Hob, Nell, Flambeau, Vane, Pim, Vosk, Harrow, Tobiah, Aldric, Bettany, Tam, Quist, Halder, Sexton, Herald, Mags, the Mourner, Wren, Burlsick: built at run time |
+| the people | 3 | Orla, the Cutter and the Hollow |
 | props | 33 | chests, beds, looms, presses, tombs, lamps, bells, signs, ladders, the barrel and crate of Phase 20b; one view each |
 
 Kept painted on purpose: the trees (Phase 20b's painted variants), the swarms, the moth, A Quiet (an absence with smoke), the cat, the fire, decals, ground and skies, and the first-person hands and weapons, which never turn.
@@ -35,4 +35,4 @@ One Options row: **Pixel-3D models** — *creatures, people and props as the pai
 
 1. The depth: people and bipeds are extruded to 0.6 of their width, round props fully. Thicker or thinner?
 2. The back of a figure is the mirrored front, darkened; a hood or a cloak reads well, a face less so. Worth painting true backs for the named people later?
-3. Which people to rig next: the rest of the named cast, or stop here and leave them extruded?
+3. The whole named cast is rigged. The Hollow (a hooded nobody) could take a rig too; Orla and the Cutter are not people shapes and stay as they are.
