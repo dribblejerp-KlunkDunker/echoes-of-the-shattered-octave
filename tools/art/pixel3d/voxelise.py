@@ -32,10 +32,10 @@ RUNTIME = os.path.join(ROOT, 'js', 'pixel3d.js')
 
 # name -> how to extrude it. side: painted side-on (the painting's x axis is the creature's length, nose to the
 # right). k: depth as a share of each section's width. prop: one view. file: a painting on disk instead of assets.js.
-# the bestiary and the five rigged people (js/bestiary20a.js, js/bestiary20b.js, js/people25.js) have hand-built views
+# the bestiary and the ten rigged people (js/bestiary20a.js, js/bestiary20b.js, js/people25.js) have hand-built views
 # and are not extruded; the hollow is the one biped without a rig
-PEOPLE = ['flambeau', 'hetty', 'rooke', 'sable', 'vane', 'pim', 'vosk', 'harrow', 'tobiah', 'orla', 'aldric',
-          'bettany', 'tam', 'hob', 'nell', 'quist', 'halder', 'cutter', 'sexton', 'herald', 'mags', 'mourner', 'wren', 'burlsick']
+PEOPLE = ['flambeau', 'vane', 'pim', 'vosk', 'harrow', 'tobiah', 'orla', 'aldric',
+          'bettany', 'tam', 'quist', 'halder', 'cutter', 'sexton', 'herald', 'mags', 'mourner', 'wren', 'burlsick']
 BIPEDS = ['hollow']
 SIDE_ON = []
 PROPS = {   # name -> k: round things fully, boxy ones most of the way, flat ones a little

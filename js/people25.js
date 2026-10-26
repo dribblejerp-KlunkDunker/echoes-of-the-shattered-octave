@@ -4,7 +4,8 @@
 //  The owner, October 2026: painted side views for the main species. The bestiary already had them
 //  (js/bestiary20a.js, js/bestiary20b.js: every enemy's own painting cut, turned on a rig and re-lit);
 //  the Catalogue Proctor (kept on its pilot stand-ins), the companions and the townsfolk did not. This
-//  file rigs them the same way, with js/bestiary20b.js's humanoid kit: the body and head as stacks of
+//  file rigs them, and then the innkeepers and quest-givers the player talks to most (Hetty, Rooke, Sable, Hob,
+//  Nell), the same way, with js/bestiary20b.js's humanoid kit: the body and head as stacks of
 //  sections whose width is the painted silhouette and whose depth is authored per band, the arms,
 //  staff, jug and boots cut out of the painting and re-hung in 3D, the back painted from the figure's
 //  own cloth. js/pixel3d.js asks BEASTB.view(name, 2 or 4, pose) for these names and shows the result
@@ -178,6 +179,155 @@
       const { C, S, th, axT, P, v } = x, shY = x.row(40), sw = (P.swing || 0) * 6;
       hangArm(C, S.cut.armL, th, axT, P, v, -18, shY, sw, 21);
       drawCut(C, S.cut.jug, th, axT, 10, 14, x.row(40), 0, { dz: x.front + 3, mirror: x.back, shade: x.back ? 0.85 : 1, id: 32 });
+    },
+  });
+  // ---------------------------------------------------------------- Hetty
+  // The innkeeper: grey hair in a bun, a white blouse and brown bodice, an apron over a long skirt, a
+  // tankard in the right hand, the left hand on the hip.
+  SP.hetty = humanoid({
+    W: 130, axT: 62, knee: 112, hip: 100,
+    patches: { cloth: [26, 132, 16, 16], apron: [28, 90, 14, 20], sleeve: [12, 44, 8, 12], hair: [34, 1, 10, 6] },
+    sil: [[[26, 0], [52, 0], [60, 32], [70, 60], [68, 100], [72, 148], [8, 148], [12, 100], [10, 60], [18, 32]]],
+    lift: [
+      { poly: [[[0, 34], [30, 34], [30, 74], [0, 74]]], axis: 30.5 },
+      { poly: [[[50, 34], [78, 34], [78, 82], [56, 82], [52, 60]]], axis: 50.5 },
+    ],
+    body: { mask: [[[0, 30], [78, 30], [78, 150], [0, 150]]], depth: (y, al) => al * 0.62, fwd: y => (y > 120 ? 1 : 0) },
+    head: { mask: [[[20, 0], [58, 0], [60, 30], [18, 30]]], depth: (y, al) => al * 1.0, fwd: y => (y < 8 ? -2 : 0) },
+    cuts: {
+      armR: [[[[0, 34], [30, 34], [30, 74], [0, 74]]], [16, 38]],
+      armL: [[[[50, 34], [78, 34], [78, 82], [56, 82], [52, 60]]], [58, 38]],
+      bootR: [[[[20, 148], [41, 148], [41, 160], [20, 160]]], [30, 149]],
+      bootL: [[[[41, 148], [62, 148], [62, 160], [41, 160]]], [51, 149]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -10, 10, 149, 5); },
+    back(B, S) {
+      paintOut(B, [[[24, 0], [56, 0], [58, 30], [22, 30]]], S.pt.hair, { grain: 0.3, smooth: 40 });
+      paintOut(B, [[[16, 56], [62, 56], [62, 136], [16, 136]]], S.pt.cloth, { grain: 0.6, smooth: 90, from: [[[0, 120], [78, 120], [78, 150], [0, 150]]] });   // the apron is front only: the skirt's cloth
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(38);
+      hangArm(C, S.cut.armR, th, axT, P, v, -24, shY, 0, 21);   // the tankard stays with the bodice: it is painted on
+      hangArm(C, S.cut.armL, th, axT, P, v, 24, shY, 0, 22);
+    },
+  });
+
+  // ---------------------------------------------------------------- Rooke
+  // The tanner: a shaven head and grey beard, a long leather apron over a brown coat, a scraping
+  // blade hanging from the right hand.
+  SP.rooke = humanoid({
+    W: 104, axT: 50, knee: 112, hip: 100,
+    patches: { cloth: [22, 80, 14, 24], sleeve: [6, 50, 8, 16], scalp: [24, 2, 8, 8] },
+    sil: [[[18, 0], [40, 0], [46, 28], [48, 100], [48, 146], [12, 146], [12, 100], [13, 28]]],
+    lift: [
+      { poly: [[[0, 30], [16, 30], [16, 100], [0, 100]]], axis: 16.5 },
+      { poly: [[[2, 84], [24, 84], [24, 130], [2, 130]]], axis: 24.5 },
+      { poly: [[[44, 30], [59, 30], [59, 100], [44, 100]]], axis: 43.5 },
+    ],
+    body: { mask: [[[0, 26], [59, 26], [59, 148], [0, 148]]], depth: (y, al) => al * 0.6, fwd: y => (y > 120 ? 1 : 0) },
+    head: { mask: [[[14, 0], [44, 0], [46, 26], [12, 26]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      armR: [[[[0, 30], [16, 30], [16, 84], [0, 84]]], [8, 34]],
+      blade: [[[[2, 84], [24, 84], [24, 130], [2, 130]]], [12, 86], null, [0, 40]],
+      armL: [[[[44, 30], [59, 30], [59, 100], [44, 100]]], [52, 34]],
+      bootR: [[[[14, 146], [31, 146], [31, 160], [14, 160]]], [22, 147]],
+      bootL: [[[[31, 146], [48, 146], [48, 160], [31, 160]]], [40, 147]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -9, 9, 147); },
+    back(B, S) {
+      paintOut(B, [[[18, 0], [42, 0], [44, 26], [16, 26]]], S.pt.scalp, { grain: 0.2, smooth: 40 });
+      paintOut(B, [[[20, 30], [40, 30], [40, 124], [20, 124]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(34);
+      hangArm(C, S.cut.armR, th, axT, P, v, -19, shY, 0, 21);
+      drawAlong(C, S.cut.blade, th, axT, { f: 8, l: -20, y: x.row(86) }, { f: 0.05, l: 0, up: -1 }, { dz: x.front + 4, id: 40 });
+      hangArm(C, S.cut.armL, th, axT, P, v, 19, shY, 0, 22);
+    },
+  });
+
+  // ---------------------------------------------------------------- Sable
+  // The archivist: a dark bob, a black robe with a cowl, a ledger held up in the left hand.
+  SP.sable = humanoid({
+    W: 120, axT: 56, knee: 112, hip: 96,
+    patches: { cloth: [26, 110, 14, 24], hair: [28, 6, 8, 8], sleeve: [10, 50, 8, 16] },
+    sil: [[[24, 0], [46, 0], [52, 30], [58, 60], [58, 100], [62, 148], [12, 148], [14, 100], [14, 60], [20, 30]]],
+    lift: [
+      { poly: [[[0, 30], [26, 30], [26, 100], [0, 100]]], axis: 26.5 },
+      { poly: [[[44, 18], [78, 18], [78, 70], [50, 70], [46, 50]]], axis: 45.5 },
+    ],
+    body: { mask: [[[0, 28], [78, 28], [78, 150], [0, 150]]], depth: (y, al) => al * 0.62, fwd: y => (y > 120 ? 1 : 0) },
+    head: { mask: [[[18, 0], [52, 0], [54, 28], [16, 28]]], depth: (y, al) => al * 1.0, fwd: y => (y < 10 ? -2 : 0) },
+    cuts: {
+      armR: [[[[0, 30], [26, 30], [26, 100], [0, 100]]], [16, 34]],
+      book: [[[[44, 18], [78, 18], [78, 70], [50, 70], [46, 50]]], [52, 24]],
+      bootR: [[[[22, 146], [38, 146], [38, 160], [22, 160]]], [30, 147]],
+      bootL: [[[[38, 146], [54, 146], [54, 160], [38, 160]]], [46, 147]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -8, 8, 147, 5); },
+    back(B, S) {
+      paintOut(B, [[[22, 0], [48, 0], [50, 28], [20, 28]]], S.pt.hair, { grain: 0.3, smooth: 40 });
+      paintOut(B, [[[28, 30], [46, 30], [46, 124], [28, 124]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x;
+      hangArm(C, S.cut.armR, th, axT, P, v, -20, x.row(34), 0, 21);
+      drawCut(C, S.cut.book, th, axT, 10, 18, x.row(24), 0, { dz: x.front + 4, mirror: x.back, shade: x.back ? 0.85 : 1, id: 32 });
+    },
+  });
+
+  // ---------------------------------------------------------------- Hob
+  // The smith: a shaven head, bare arms, a leather apron over a dark shirt, boots.
+  SP.hob = humanoid({
+    W: 108, axT: 52, knee: 112, hip: 100,
+    patches: { cloth: [22, 80, 14, 24], sleeve: [6, 50, 8, 16], scalp: [26, 2, 8, 8] },
+    sil: [[[20, 0], [44, 0], [48, 24], [50, 100], [50, 146], [12, 146], [12, 100], [14, 24]]],
+    lift: [
+      { poly: [[[0, 24], [16, 24], [16, 100], [0, 100]]], axis: 16.5 },
+      { poly: [[[46, 24], [63, 24], [63, 100], [46, 100]]], axis: 45.5 },
+    ],
+    body: { mask: [[[0, 22], [63, 22], [63, 148], [0, 148]]], depth: (y, al) => al * 0.62, fwd: y => (y > 120 ? 1 : 0) },
+    head: { mask: [[[16, 0], [48, 0], [48, 22], [16, 22]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      armR: [[[[0, 24], [16, 24], [16, 100], [0, 100]]], [8, 30]],
+      armL: [[[[46, 24], [63, 24], [63, 100], [46, 100]]], [55, 30]],
+      bootR: [[[[12, 146], [31, 146], [31, 160], [12, 160]]], [21, 147]],
+      bootL: [[[[31, 146], [52, 146], [52, 160], [31, 160]]], [42, 147]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -10, 10, 147); },
+    back(B, S) {
+      paintOut(B, [[[20, 0], [44, 0], [46, 22], [18, 22]]], S.pt.scalp, { grain: 0.2, smooth: 40 });
+      paintOut(B, [[[18, 26], [46, 26], [46, 124], [18, 124]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(30);
+      hangArm(C, S.cut.armR, th, axT, P, v, -20, shY, 0, 21);
+      hangArm(C, S.cut.armL, th, axT, P, v, 20, shY, 0, 22);
+    },
+  });
+
+  // ---------------------------------------------------------------- Nell
+  // The maid: a white cap, a grey dress with an apron, the arms folded across the chest.
+  SP.nell = humanoid({
+    W: 96, axT: 46, knee: 112, hip: 100,
+    patches: { cloth: [16, 120, 12, 20], apron: [18, 90, 10, 20], cap: [20, 4, 8, 8], sleeve: [8, 44, 6, 12] },
+    sil: [[[14, 0], [36, 0], [42, 30], [44, 60], [42, 100], [46, 150], [4, 150], [8, 100], [6, 60], [8, 30]]],
+    lift: [{ poly: [[[6, 36], [44, 36], [44, 64], [6, 64]]], tol: 70 }],
+    body: { mask: [[[0, 30], [50, 30], [50, 150], [0, 150]]], depth: (y, al) => al * 0.62, fwd: y => (y > 120 ? 1 : 0) },
+    head: { mask: [[[8, 0], [42, 0], [42, 30], [8, 30]]], depth: (y, al) => al * 1.0, fwd: y => (y < 8 ? -2 : 0) },
+    cuts: {
+      arms: [[[[6, 36], [44, 36], [44, 64], [6, 64]]], [25, 38]],
+      bootR: [[[[10, 150], [25, 150], [25, 160], [10, 160]]], [18, 151]],
+      bootL: [[[[25, 150], [40, 150], [40, 160], [25, 160]]], [32, 151]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -7, 7, 151, 5); },
+    back(B, S) {
+      paintOut(B, [[[10, 0], [40, 0], [40, 30], [10, 30]]], S.pt.cap, { grain: 0.2, smooth: 40 });
+      paintOut(B, [[[12, 66], [38, 66], [40, 150], [10, 150]]], S.pt.cloth, { grain: 0.25, smooth: 90 });   // the apron is front only
+    },
+    dress(x) {
+      const { C, S, th, axT } = x;
+      drawCut(C, S.cut.arms, th, axT, 7, 0, x.row(38), 0, { kx: 0.3 + 0.7 * Math.abs(x.cs), dz: x.front + 3, mirror: x.back, shade: x.back ? 0.85 : 1, id: 30 });
     },
   });
 })();
