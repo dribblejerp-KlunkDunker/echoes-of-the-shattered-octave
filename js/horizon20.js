@@ -566,13 +566,15 @@ const HORIZON20 = (() => {
   function farHook(F) {
     stats.farPx = 0; stats.groundPx = 0;
     if (!F.outdoor || !F.map || !on('farCountry')) return;
-    const off = OFF[F.map.id]; if (!off) return;
+    // Phase 20b: every outdoor height-mapped map gets the far ground beyond its edge; the town past the Hedge only
+    // where the map's frame is tied to Oakhaven's (OFF)
+    const off = OFF[F.map.id]; if (!off && !F.relief) return;
     const t0 = performance.now();
     if (own.length !== F.w * F.h) own = new Float32Array(F.w * F.h);
     own.fill(1e9);
     rays(F);
     if (F.relief) stats.groundPx = farGround(F);
-    const oak = hasG() ? G.maps.oakhaven : null;
+    const oak = hasG() && off ? G.maps.oakhaven : null;
     if (oak) stats.farPx = farTown(F, oak, off);
     stats.farMs = performance.now() - t0;
   }

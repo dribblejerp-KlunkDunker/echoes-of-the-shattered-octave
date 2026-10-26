@@ -54,6 +54,17 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 20b: the painted world, finished
+
+| | |
+|---|---|
+| ![Oakhaven's market: painted barrels, crates and a hand-cart before house fronts of close studding and brick](screenshots/p20b-market.jpg) | ![The meadow outside the Hedge: clover, straw and trodden earth from cell to cell, an oak in a second colour, painted grass](screenshots/p20b-meadow.jpg) |
+| The market: the barrel, the crate and the hand-cart are paintings now, and the houses behind them wear close studding, brick nogging or a braced frame, one front per building. | The meadow outside the Hedge: the ground changes from cell to cell (clover in the hollows, straw on the flats, earth where feet have worn it), and the oaks come in three colours, half of them turned about. |
+| ![Wethercombe: the far ground runs on beyond the map's edge to the ridges](screenshots/p20b-combe.jpg) | ![Whisper-Grove: a painted broken statue and reeds in the Sunken Court](screenshots/p20b-grove.jpg) |
+| Wethercombe from Hob's Knap: fields and hedgerows run on past the map's edge to the ridges, on every outdoor map with hills now. | The Sunken Court: the broken statue and the reeds are paintings too. |
+
+The ground, the house fronts and the stone courses are painted at load from the game's own tiles, so the colour the panoramas and the far country use is kept. The painted pieces (barrel, crate, carts, statue, bones, grass, reeds, notices, moss) replace the drawn stand-ins under their own names; the rest still draw. Four switches in Options (Graphics & access): Painted ground, Painted walls, Tree variety, Painted pieces. Off, or on the Original preset, the frames are the old ones byte for byte.
+
 ### Phase 24: the opening
 
 | | |

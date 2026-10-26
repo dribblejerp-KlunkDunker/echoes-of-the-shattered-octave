@@ -1438,7 +1438,7 @@ function stepSurface() {
   const tex = (m.floorTextures ? m.floorTextures[m.floorCells[iy * m.w + ix]] : null) || m.floor || '';
   if (tex === 't_water' || tex === 't_shallows') return 'water';
   if (tex === 't_wood') return 'wood';
-  if (tex === 't_grass' || tex === 't_moss' || tex === 't_hedge') return 'grass';
+  if (tex.startsWith('t_grass') || tex.startsWith('t_moss') || tex === 't_hedge') return 'grass';   // painted20's variants keep the family name
   return 'stone';
 }
 

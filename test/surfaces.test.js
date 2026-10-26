@@ -118,7 +118,7 @@ const SHOT_DIR = process.env.SHOT_DIR || path.join(os.tmpdir(), 'surfaces-shots'
         const n = oh._decalsAll[k], x = k % oh.w, y = (k / oh.w) | 0;
         if (/poster|synod/.test(n)) {
           paper++;
-          check(['t_house', 't_wood', 't_marble', 't_stone'].includes(oh.cells[k].tex), 'paper sits on a building wall');
+          check(['t_house', 't_wood', 't_marble', 't_stone'].includes(oh.cells[k]._p20bTex0 || oh.cells[k].tex), 'paper sits on a building wall');   // (js/painted20.js may have given the wall a painted front; the original is kept on the cell)
           check([[0, -1], [1, 0], [0, 1], [-1, 0]].some(([dx, dy]) => oh.get(x + dx, y + dy) === null && cob(x + dx, y + dy)), 'a poster or notice cell touches a cobble floor cell (' + x + ',' + y + ')');
           if (/synod/.test(n) && x >= 24 && x <= 54 && y <= 12) nearSynod++;
         }
