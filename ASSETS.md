@@ -133,7 +133,7 @@ Phase 20b (js/painted20.js, Options → Painted pieces): paintings swapped in un
 
 | Files | Replaces | Source | Licence | Status |
 |---|---|---|---|---|
-| p_barrel, p_crate, p_cart, p_cart_broken, p_statue_broken, p_bones_small | scenery props (js/scenery.js) | Canva AI image generation, keyed by tools/art/painted20/key.py | Per Canva's terms for AI-generated content on the owner's account | generated |
+| p_barrel, p_barrel_open, p_barrel_side, p_crate, p_cart, p_cart_broken, p_statue_broken, p_bones_small | scenery props (js/scenery.js); each keeps its stand-in's dithered contact shadow | Canva AI image generation, keyed by tools/art/painted20/key.py | Per Canva's terms for AI-generated content on the owner's account | generated |
 | p_grass1, p_grass2, p_reed1 | grass tufts and reeds (js/flora.js) | the same | the same | generated |
 | d_poster1, d_synod1, d_moss1 | a wall notice, a Synod notice, a moss patch (js/decals.js) | the same | the same | generated |
 

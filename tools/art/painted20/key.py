@@ -17,6 +17,15 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..', '..'))
 OUT = os.path.join(ROOT, 'img', 'painted20')
+# the drawn stand-ins' dithered contact shadows (js/scenery.js paint() opts.shadow: cx, cy, rx, ry). A painted prop keeps
+# its stand-in's shadow: the piece is fitted so its base stands on row cy, and the same checkerboard is laid under it.
+# Without it the lighting module's soft shadow falls a little in front of the base and the painted props seem to hover.
+SHADOW = {
+    'p_barrel': (24, 60, 22, 4), 'p_barrel_open': (24, 60, 22, 4), 'p_barrel_side': (34, 44, 30, 3), 'p_crate': (28, 53, 25, 3),
+    'p_cart': (50, 73, 40, 3), 'p_cart_broken': (50, 73, 44, 3), 'p_statue_broken': (28, 97, 26, 3),
+    'p_statue_broken2': (36, 61, 34, 3), 'p_statue_head': (18, 29, 15, 2.5), 'p_bones_small': (30, 22, 28, 3),
+}
+SHADOW_RGB = (16, 14, 11)   # pixel3d/voxelise.py keeps pixels of exactly this colour flat
 # name, source, target (w, h), options: pad (transparent rows kept under the piece), key strength
 PIECES = [
     ('p_barrel', 'barrel.png', (48, 64), {}),
@@ -32,6 +41,9 @@ PIECES = [
     ('d_synod1', 'synod.png', (64, 64), {'margin': 3}),
     ('d_moss1', 'moss.png', (64, 64), {'margin': 1}),
     ('p_bones_small', 'bones.png', (60, 26), {'anchor': 'bottom'}),
+    # the Phase 20 roadmap's remaining drawn stand-ins, painted the same way (October 2026)
+    ('p_barrel_open', 'barrel_open.png', (48, 64), {'anchor': 'bottom', 'margin': 2}),
+    ('p_barrel_side', 'barrel_side.png', (72, 48), {'anchor': 'bottom', 'margin': 2}),
 ]
 
 
@@ -54,17 +66,19 @@ def finish(img, size, opts):
     bbox = img.split()[3].point(lambda v: 255 if v > 90 else 0).getbbox()
     if bbox: img = img.crop(bbox)
     if opts.get('flip'): img = img.transpose(Image.FLIP_LEFT_RIGHT)
+    sh_ = opts.get('shadow')
     if opts.get('fill'):
         out = img.resize((w, h), Image.BOX)
     else:
         sw, sh = img.size
         mg = opts.get('margin', 0)
-        k = min((w - 2 * mg) / sw, (h - 2 * mg) / sh)
+        mgb = (h - 1 - int(sh_[1])) if sh_ else mg   # with a shadow, the base stands on its row
+        k = min((w - 2 * mg) / sw, (h - mg - mgb) / sh)
         tw, th = max(1, round(sw * k)), max(1, round(sh * k))
         small = img.resize((tw, th), Image.BOX)
         out = Image.new('RGBA', (w, h), (0, 0, 0, 0))
         ox = (w - tw) // 2
-        oy = h - th - mg if opts.get('anchor') == 'bottom' else (h - th) // 2
+        oy = h - th - mgb if (opts.get('anchor') == 'bottom' or sh_) else (h - th) // 2
         out.paste(small, (ox, oy))
     a = np.asarray(out).astype(np.int32)
     rgb, al = a[..., :3], a[..., 3]
@@ -73,7 +87,13 @@ def finish(img, size, opts):
     rgb = (rgb // 6) * 6 + 3
     rim = solid & ~(np.roll(solid, 1, 0) & np.roll(solid, -1, 0) & np.roll(solid, 1, 1) & np.roll(solid, -1, 1))
     rgb = np.where(rim[..., None], rgb * 0.62, rgb)
-    final = np.dstack([np.clip(rgb, 0, 255), np.where(solid, 255, 0)]).astype(np.uint8)
+    rgb = np.clip(rgb, 0, 255); alpha = np.where(solid, 255, 0)
+    if sh_:
+        cx, cy, rx, ry = sh_
+        yy, xx = np.mgrid[0:h, 0:w]
+        ring = (((xx - cx) / rx) ** 2 + ((yy - cy) / ry) ** 2 <= 1) & ~solid & (((xx + yy) & 1) == 0)
+        rgb = np.where(ring[..., None], np.array(SHADOW_RGB), rgb); alpha = np.where(ring, 255, alpha)
+    final = np.dstack([rgb, alpha]).astype(np.uint8)
     return Image.fromarray(final, 'RGBA')
 
 
@@ -81,6 +101,7 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     sheet = []
     for name, src, size, opts in PIECES:
+        if name in SHADOW: opts = dict(opts, shadow=SHADOW[name])
         img = finish(key(Image.open(os.path.join(HERE, 'src', src))), size, opts)
         img.save(os.path.join(OUT, name + '.png'))
         sheet.append(img)

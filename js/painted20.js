@@ -397,6 +397,7 @@ const PAINTED20 = (() => {
     p_barrel: 'img/painted20/p_barrel.png', p_cart: 'img/painted20/p_cart.png', p_grass1: 'img/painted20/p_grass1.png', p_grass2: 'img/painted20/p_grass2.png', p_reed1: 'img/painted20/p_reed1.png',
     p_crate: 'img/painted20/p_crate.png', p_statue_broken: 'img/painted20/p_statue_broken.png', p_bones_small: 'img/painted20/p_bones_small.png', p_cart_broken: 'img/painted20/p_cart_broken.png',
     d_poster1: 'img/painted20/d_poster1.png', d_synod1: 'img/painted20/d_synod1.png', d_moss1: 'img/painted20/d_moss1.png',
+    p_barrel_open: 'img/painted20/p_barrel_open.png', p_barrel_side: 'img/painted20/p_barrel_side.png',
   };
   const pieces = {};   // name -> { data, w, h, orig }
   let piecesLoading = false;
