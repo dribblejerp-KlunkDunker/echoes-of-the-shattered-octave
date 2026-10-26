@@ -34132,5 +34132,23 @@
    "game.js:132"
   ],
   "pattern": true
+ },
+ "ofwv6a1w8s": {
+  "en": "Opening cinematic",
+  "where": [
+   "cinematic24.js"
+  ]
+ },
+ "1dzln58a4gy": {
+  "en": "the flight over the Reach before a new game",
+  "where": [
+   "cinematic24.js"
+  ]
+ },
+ "17z1sj5fh1i": {
+  "en": "Watch the opening again",
+  "where": [
+   "cinematic24.js"
+  ]
  }
 }

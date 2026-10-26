@@ -54,6 +54,17 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 24: the opening
+
+| | |
+|---|---|
+| ![The sun on the ridge over Wethercombe, the first shot](screenshots/p24-wethercombe.jpg) | ![The Synod column coming up the Greenroot road under glass-fire](screenshots/p24-column.jpg) |
+| A new game opens on a flight through the Reach: the sun on the ridge over Wethercombe, the Hedge at dusk, the woods at night. | The Church comes up the road behind you: the Flambeau, the Herald and the Proctors, censers burning blue, the Pure Note under the music. |
+| ![Hounds coming into a hush-lamp's light in the Deep Woods](screenshots/p24-hounds.jpg) | ![The title card](screenshots/p24-title.jpg) |
+| Too loud brings the hounds; too still, and the picture drains to the Hush. | Black, the title, and then the North Gate: the last shot is the first frame of play. |
+
+The six paragraphs the game always opened with are now the captions. Skip with Esc, Enter, a click or the button; turn it off in Options (Graphics & access) to get the old scrolling text back, or watch it again from there inside a game.
+
 ### Phase 22: the Sheep-Walk (a new region, south of the Watch Downs)
 
 | | |
