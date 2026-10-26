@@ -780,6 +780,7 @@ function crimeState() {
   const p = G.player;
   const raw = p.crime && typeof p.crime === 'object' ? p.crime : {};
   for (const key of ['bounty', 'thefts', 'assaults', 'escapes', 'jailHours']) raw[key] = lawNumber(raw[key], key === 'jailHours' ? 99999 : 9999);
+  raw.resisting = raw.resisting === true && raw.bounty > 0;   // refused arrest: the watch comes with cudgels, not a panel
   p.crime = raw; return raw;
 }
 // Only whitelisted item/weapon IDs and bounded numeric counts enter saved escrow.
@@ -821,6 +822,7 @@ function assaultCivilian(e) {
   const law = crimeState(); law.assaults = Math.min(9999, law.assaults + 1);
   reportCrime('an assault', 40);
   e.facing = Math.atan2(Engine.cam.y - e.y, Engine.cam.x - e.x);
+  if (e.lawGuard && law.resisting) { e.stun = 1.2; msg('The constable reels back, then comes on again.', 'warn', 3000); return; }
   msg('They recoil and call the watch. The blow is nonlethal; their story and services remain available.', 'warn', 4500);
 }
 function confiscateGear() {
@@ -850,7 +852,7 @@ function returnEvidence() {
 }
 function enterPrison() {
   const law = crimeState(); if (!lawActive() || law.custody || !law.bounty) return;
-  confiscateGear(); crimeState().custody = { remaining: 6 };
+  confiscateGear(); crimeState().custody = { remaining: 6 }; crimeState().resisting = false;
   delete G.flags[PRISON_CELL_KEY]; delete G.flags[EVIDENCE_KEY];
   const m = G.maps.watchhouse; for (const d of Object.values(m.doors)) d.open = d.target = 0;
   closeModal(); G.state = 'play'; loadMap('watchhouse'); G.lawGrace = 0;
@@ -980,9 +982,8 @@ function renderArrest() {
     if (!valid()) return;
     const terms = threatTerms();
     if (Math.random() * 100 < terms.chance) {
-      G.lawGrace = terms.grace;
       for (const e of G.ents) if (e.lawGuard && !e.dead && !e.hidden) { delete e.investigation; e.state = 'idle'; }
-      closeModal(); G.state = 'play'; Audio_.sfx.ui();
+      resistArrest(null, terms.grace, true); Audio_.sfx.ui();
       msg(`You set your hand on the hilt and let him measure you. He takes a step back and reaches for the whistle anyway: ${terms.grace} seconds before the next patrol.`, 'warn', 7000);
       return true;
     } else {
@@ -991,19 +992,51 @@ function renderArrest() {
       return false;
     }
   };
-  $('#crime-flee').onclick = () => { if (valid()) { G.lawGrace = 5; closeModal(); G.state = 'play'; } };
+  $('#crime-flee').onclick = () => { if (valid()) resistArrest('You break away. Behind you the whistle shrills: the watch will take you by force now.'); };
+}
+// Refusing arrest (running, or a threat that only buys a head start) is resisting: the charge goes on the warrant and
+// every constable who sees you from then on closes in and strikes, until you pay, serve, or give yourself up by
+// speaking to one. Beaten down, you are not killed: you wake in the watch-house.
+const RESIST_SPEED = 3.4, RESIST_REACH = 1.35, RESIST_COOL = 1.4, RESIST_DMG = [5, 9];
+function resistArrest(note, grace = 2, quiet = false) {
+  const law = crimeState(); if (!law.bounty) return;
+  if (!law.resisting) { law.resisting = true; if (!quiet) reportCrime('resisting arrest', 20); }
+  G.lawGrace = grace; closeModal(); G.state = 'play';
+  if (note) msg(note, 'bad', 6000);
+  msg('Constables who see you will attack. Speak to one to give yourself up.', 'warn', 6000);
+}
+function constableStrike(e) {
+  const p = G.player, dmg = rndi(RESIST_DMG[0], RESIST_DMG[1]) + Math.floor(G.player.level / 3);
+  e.lawCool = RESIST_COOL; e.atkT = 0.3; e._strike = 0.25;
+  try { Audio_.sfx.swing(); Audio_.sfx.hit(); } catch (err) { /* silent */ }
+  if (p.hp - dmg <= Math.max(1, Math.ceil(p.hpMax * 0.15))) {
+    // the watch takes you alive
+    p.hp = Math.max(1, Math.ceil(p.hpMax * 0.15)); G.hurtT = 0.4; fx('hurt', 400);
+    msg('A cudgel takes your legs and the cobbles come up to meet you. You wake in the watch-house.', 'bad', 7000);
+    enterPrison(); return;
+  }
+  damagePlayer(dmg, e.name || 'The constable');
 }
 function tickLaw(dt) {
   G.lawGrace = Math.max(0, (G.lawGrace || 0) - dt);
   if (!lawActive() || crimeState().custody) return;
-  const c = Engine.cam, wanted = crimeState().bounty > 0;
+  const c = Engine.cam, wanted = crimeState().bounty > 0, resisting = wanted && crimeState().resisting;
   for (const e of G.ents) {
-    if (!e.lawGuard || e.hidden || e.dead || e.stun > 0) continue;
+    if (!e.lawGuard || e.hidden || e.dead) continue;
+    if (e.lawCool > 0) e.lawCool -= dt;
+    if (e._strike > 0) e._strike -= dt;
+    if (e.stun > 0) { e.stun -= dt; e.flash = (e.stun % 0.3) < 0.1; continue; } else e.flash = false;
     const dx = c.x - e.x, dy = c.y - e.y, distance = Math.hypot(dx, dy);
     if (!wanted) { if (e.investigation?.source === 'crime') { delete e.investigation; e.state = 'idle'; } updateInvestigation(e, dt); continue; }
     if (distance > 14 || !los(e.x, e.y, c.x, c.y)) { updateInvestigation(e, dt); continue; }
     e.investigation = { x: c.x, y: c.y, left: 10, source: 'crime' }; e.state = 'investigate';
     e.facing = Math.atan2(dy, dx);
+    if (resisting) {
+      // no more talk: run you down and strike
+      if (distance > RESIST_REACH * 0.8) moveWithSlide(e, dx / distance * RESIST_SPEED * dt, dy / distance * RESIST_SPEED * dt, e);
+      if (distance < RESIST_REACH && !G.lawGrace && !(e.lawCool > 0) && G.state === 'play') { constableStrike(e); if (crimeState().custody) return; }
+      continue;
+    }
     if (distance < 1.8 && !G.lawGrace) { renderArrest(); return; }
     if (distance > 1.2) moveWithSlide(e, dx / distance * 1.6 * dt, dy / distance * 1.6 * dt, e);
   }

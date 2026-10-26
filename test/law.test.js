@@ -49,7 +49,25 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       G.state = 'play'; G.lawGrace = 0; tickLaw(0);
       check(G.openPanel === 'arrest', 'interior guard makes arrest');
       document.querySelector('#crime-flee').click();
-      check(crimeState().bounty === 20 && G.lawGrace === 5, 'refusal grace inside town business');
+      check(crimeState().bounty === 40 && crimeState().resisting === true && G.lawGrace === 2 && !G.openPanel && G.state === 'play', 'refusing arrest is resisting: +20 and a two-second start');
+      // resisting: the constable no longer asks; he closes and strikes, on a cooldown
+      const hp0 = G.player.hp = G.player.hpMax; tickLaw(0.1);
+      check(G.player.hp === hp0 && !G.openPanel, 'no blow inside the head start');
+      G.lawGrace = 0; guard.lawCool = 0; tickLaw(0.1);
+      check(G.player.hp < hp0 && !G.openPanel && G.state === 'play', 'then a cudgel, not the arrest panel');
+      const hp1 = G.player.hp; tickLaw(0.1); check(G.player.hp === hp1, 'one blow per cooldown');
+      // fighting back staggers him (and is still an assault on the warrant)
+      G.time += 5; assaultCivilian(guard); guard.lawCool = 0;
+      check(guard.stun > 0 && crimeState().bounty === 80, 'a blow on the constable staggers him and adds the assault');
+      tickLaw(0.1); check(G.player.hp === hp1, 'a staggered constable cannot strike');
+      guard.stun = 0;
+      // he runs you down faster than a walk
+      Object.assign(guard, { x: 8.5, y: 8.5 }); Object.assign(Engine.cam, { x: 8.5, y: 5.5 }); guard.lawCool = 1;
+      const d0 = Math.hypot(guard.x - 8.5, guard.y - 5.5); tickLaw(0.25);
+      check(d0 - Math.hypot(guard.x - 8.5, guard.y - 5.5) > 0.7, 'he closes at a run (' + (d0 - Math.hypot(guard.x - 8.5, guard.y - 5.5)).toFixed(2) + ')');
+      // beaten down: taken alive to the watch-house, never killed
+      Object.assign(guard, { x: 8.5, y: 6.5 }); guard.lawCool = 0; G.player.hp = 3; tickLaw(0.1);
+      check(!G.dead && G.player.hp >= 1 && crimeState().custody && G.mapId === 'watchhouse' && crimeState().resisting === false, 'beaten down, you wake in the watch-house, not dead');
       resetLaw();
       // Deterministic real weapon targeting: visible civilian, then same target behind a wall.
       const npc = G.ents.find(e => e.id === 'bettany');
@@ -77,10 +95,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       tickLaw(0.1); check(lawGuard.investigation.x === seen.x && lawGuard.investigation.y === seen.y, 'search cannot track offender through occlusion');
       G.map.set(23, 25, null);
       G.player.gold = 100; renderArrest(); const stalePay = document.querySelector('#crime-pay').onclick;
-      document.querySelector('#crime-flee').click(); stalePay(); check(crimeState().bounty === 40 && G.player.gold === 100, 'stale fine callback inert');
-      renderArrest(); stalePay(); check(crimeState().bounty === 40, 'previous arrest callback cannot act on a newer panel');
+      document.querySelector('#crime-flee').click(); stalePay(); check(crimeState().bounty === 60 && G.player.gold === 100, 'stale fine callback inert (running added resisting)');
+      renderArrest(); stalePay(); check(crimeState().bounty === 60, 'previous arrest callback cannot act on a newer panel');
       document.querySelector('#crime-pay').click();
-      check(crimeState().bounty === 0 && G.player.gold === 60 && G.ents.filter(e => e.wantedPoster).every(e => e.hidden), 'exact payment withdraws notices immediately');
+      check(crimeState().bounty === 0 && G.player.gold === 40 && !crimeState().resisting && G.ents.filter(e => e.wantedPoster).every(e => e.hidden), 'exact payment withdraws notices immediately (and ends the resisting)');
       resetLaw(); loadMap('clearing'); assaultCivilian(G.ents.find(e => e.id === 'kaelen')); check(crimeState().bounty === 0, 'no Oakhaven jurisdiction outside town');
       resetLaw(); G.flags.greening = true; assaultCivilian(G.ents.find(e => e.id === 'bettany')); check(crimeState().bounty === 0, 'story crisis has no law arrests');
       resetLaw();
