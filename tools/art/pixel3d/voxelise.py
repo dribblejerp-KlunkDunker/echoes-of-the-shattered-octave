@@ -49,6 +49,8 @@ for n in PEOPLE: SPECIES[n] = dict(k=0.6)
 for n, k in PROPS.items(): SPECIES[n] = dict(prop=True, k=k)
 SPECIES['p_barrel'] = dict(prop=True, k=1.0, file='img/painted20/p_barrel.png')
 SPECIES['p_crate'] = dict(prop=True, k=0.9, file='img/painted20/p_crate.png')
+SPECIES['p_barrel_open'] = dict(prop=True, k=1.0, file='img/painted20/p_barrel_open.png')
+SPECIES['p_barrel_side'] = dict(prop=True, k=0.45, file='img/painted20/p_barrel_side.png')   # lying down: its rows run along the staves, so a shallow section
 # kept painted: the swarms and the moth (symmetric blobs), A Quiet (an absence with smoke), the cat, the fire, footprints, the trees
 BACK = 0.9           # the back faces: the mirrored painting, this much darker (the sun does the rest)
 SIDE = 0.88          # the voxel faces to the left and right
@@ -129,6 +131,9 @@ def build_mesh(name, img, meta, spec):
     the model's extents and its pixels per unit."""
     a = np.asarray(img); H, W = a.shape[:2]
     solid = a[..., 3] > 100
+    # a painted prop's dithered contact shadow (tools/art/painted20/key.py SHADOW_RGB) stays flat on the front plane
+    flat = solid & (a[..., 0] == 16) & (a[..., 1] == 14) & (a[..., 2] == 11)
+    solid = solid & ~flat
     hs = float(meta.get('hs', 1.0)); cx = float(meta.get('cx', 0.5))
     side = bool(spec.get('side')); k = spec.get('k', 0.6)
     depth = occupancy(solid, k, side)
@@ -138,6 +143,8 @@ def build_mesh(name, img, meta, spec):
         for x in range(W):
             if solid[y, x]:
                 d = depth[y, x]; occ[y, x, D - d:D + d + 1] = True
+            elif flat[y, x]:
+                occ[y, x, D] = True
     s = hs / H                                   # world units per voxel
     px_per_unit = H / hs
     rgb = a[..., :3].astype(np.float32)

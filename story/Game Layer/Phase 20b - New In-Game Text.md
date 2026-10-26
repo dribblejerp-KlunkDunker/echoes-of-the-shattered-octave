@@ -38,3 +38,12 @@ FR: Sol peint / herbe et mousse qui changent d’une case à l’autre : trèfle
 1. Brick nogging: right for Oakhaven, or timber-and-plaster only?
 2. The painted pieces come from Canva's image generator (the same source as five of the area cards). Go on with it for the rest of the stand-ins (the open and side barrels, the second statue, the stone head, the cracks and scorch), or keep those drawn?
 3. The Chapel bell stays undrawn, as the story keeps the frame empty. Phase 20's roadmap line asked for "a visible Chapel bell"; it is closed as *not until the story rings one*.
+
+## Going on with the stand-ins (October 2026)
+
+Sleeves answered question 2: start painting the rest. Canva's image generator is the one painting source this cloud session can reach (the local model in tools/art/paint.py cannot be downloaded here, and Canva's full-size downloads are blocked, so it hands back 200-pixel pictures: enough for props and wall marks, not for full-screen cards). Its quota allows about three pictures at a time, so the remaining pieces come in small batches.
+
+- **Painted so far:** the open barrel and the barrel on its side (tools/art/painted20/src/barrel_open.png, barrel_side.png), given depth like the other painted props (js/pixel3d.js).
+- **Contact shadows:** every painted prop now keeps its drawn stand-in's dithered contact shadow (tools/art/painted20/key.py SHADOW). Without it the lighting module's soft shadow fell a little in front of the base and the Phase 20b props seemed to hover. No new text.
+- **Wall marks by Blender:** the two other mosses, both cracks and both scorch marks are rendered by Blender (the `bpy` module) from procedural materials (tools/art/decals/marks.py) at 256 pixels and brought down to the game's 64 with the same finish as the painted pieces; soft edges become an ordered dither like the drawn stand-ins'. Sleeves chose Blender for these; texture-like marks are what procedural materials do well.
+- **Still to paint (Canva):** the second statue, the stone head, the third grass tuft, the second reed, two posters and the second Synod notice.
