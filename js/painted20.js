@@ -419,9 +419,11 @@ const PAINTED20 = (() => {
     }
   }
   function syncPieces() {
-    const want = on('p20_pieces');
     for (const name in pieces) {
-      const p = pieces[name]; if (p.applied === want) continue;
+      const p = pieces[name];
+      // a prop the pixel-3D set draws (js/pixel3d.js, when it is on and loaded) is left to it: the model wins over the painting
+      if (typeof PIXEL3D !== 'undefined' && PIXEL3D.covers && PIXEL3D.covers(name)) continue;
+      const want = on('p20_pieces'); if (p.applied === want) continue;
       try {
         if (name.startsWith('d_')) {
           if (p.w !== TEX || p.h !== TEX) continue;

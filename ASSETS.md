@@ -137,6 +137,15 @@ Phase 20b (js/painted20.js, Options → Painted pieces): paintings swapped in un
 | p_grass1, p_grass2, p_reed1 | grass tufts and reeds (js/flora.js) | the same | the same | generated |
 | d_poster1, d_synod1, d_moss1 | a wall notice, a Synod notice, a moss patch (js/decals.js) | the same | the same | generated |
 
+## Pixel-3D set (img/pixel3d/)
+
+Phase 25 pilot (js/pixel3d.js, Options → Pixel-3D models): one atlas per model, five bearings in five poses for a creature, one view for a prop. The models are scripted primitives (tools/art/pixel3d/models.py), rendered by Blender's bpy module (tools/art/pixel3d/bake.py) at 80 pixels to the world unit; the game's own work, no outside asset.
+
+| Files | Replaces | Source | Licence | Status |
+|---|---|---|---|---|
+| hound, proctor | the painted sprites' every view and pose while the switch is on | scripted models, Blender render | game source | pilot |
+| p_barrel, p_crate | the scenery props | the same | game source | pilot |
+
 ## Images (img/)
 
 None of these has a recorded author, tool or licence in the repository. How they were produced is **unverified**.

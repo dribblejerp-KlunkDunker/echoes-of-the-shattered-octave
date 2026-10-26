@@ -89,7 +89,7 @@ const FLAGS = ['p20_ground', 'p20_walls', 'p20_trees', 'p20_pieces'];
     const r = await A.page.evaluate((FLAGS) => {
       const check = (ok, text) => { if (!ok) throw new Error(text); };
       const out = {};
-      PRESETS.apply('medium'); for (const k of FLAGS) GFX[k] = true; GFX.changed();
+      PRESETS.apply('medium'); for (const k of FLAGS) GFX[k] = true; if (typeof GFX.pixel3d !== 'undefined') GFX.pixel3d = false; GFX.changed();   // (the pixel-3D set would take the barrel and crate)
       // --- the tiles ---
       const names = Object.keys(PAINTED20.TILES);
       check(names.length === 11 && PAINTED20.stats.tiles === 11, 'eleven tiles painted');

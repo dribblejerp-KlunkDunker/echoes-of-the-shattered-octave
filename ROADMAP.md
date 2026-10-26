@@ -174,9 +174,18 @@ Added from the owner's list. Statuses come from a check against the code: `[x]` 
 | 19 — Together | two-player co-op | Play Book One with a second player in the same world: one hosts on a computer, the other joins from a phone with a short code; peer-to-peer (no game server of our own) |
 | 20 — The painted world | art and landmarks | Hand-painted art for every procedural stand-in (enemy angles, NPCs, panoramas, props); the horizon country finished and walkable; the Chapel seen beyond the Hedge; a visible Chapel bell. Phase 20b: painted ground, walls, tree variety and painted pieces |
 | 22 — The Sheep-Walk | a new region | Wethercombe and the Bellwether, sheep and mutton, the Chalk Ram, the fold-fires; the Hanger wood, the Woolwight night hunt, Ewe Barrow and the Old Fleece; lusher flora with fantasy species; camp and fish anywhere |
+| 25 — The pixel-3D set | every creature, person and prop as a low-poly model rendered to pixels | The pilot (hound, Proctor, barrel, crate) and the pipeline; the bestiary, the people, the props to follow |
 | 24 — The opening | a cinematic before the first step | The six intro paragraphs as captions under a flight through the game's own maps: Wethercombe at sunset, the Hedge, the hounds, the Synod column under glass-fire, Oakhaven at dusk, the title, the North Gate |
 
 Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the crop, not the calendar, so they fit Harvestmonth without moving any Vol VII date (Project doc "World Bible Vol VII Addendum - Festivals of the Reach"). Approved by the author (October 2026); built in Phase 12 as its own team: the Last Sheaf (harvest home, forbidden by the Rite and held in secret), the Rite dressed as a false festival, the Eel-Run on the Flume, the Drowned Lanterns in Whisper-Grove.
+
+**Phase 25 — The pixel-3D set** (pilot delivered; owner's request, October 2026: "everything, every asset, character, monster etc to be pixelated 3D", "everything that makes sense to be 3D")
+- `[x]` The pipeline (P25, `tools/art/pixel3d/`): models scripted from primitives (`models.py`), rendered by Blender's `bpy` module (`bake.py`) to the engine's five bearings in five poses at 80 px to the world unit, quantised to flat shade bands with a one-pixel rim, packed into one atlas per model with the cell table in `js/pixel3d.js`. One switch, Pixel-3D models; off is byte-identical to the painted art (`test/pixel3d.test.js`).
+- `[x]` The pilot models: the Cacophony Hound, the Catalogue Proctor, the barrel, the crate.
+- `[ ]` The bestiary: the other 24 species, each a model with its own walk and attack (the Proctor's five painted views and the Phase 20 hand-built views stay as the fallback).
+- `[ ]` The people: townsfolk, named NPCs and the companions (one model each, five bearings; their idle gestures and work loops re-posed on the model).
+- `[ ]` Props and flora: the scenery props, the trees, the lamps and signs; the first-person hands and weapons are the one thing that stays painted (they never turn).
+- Owner's decisions: the pixel size (80 to the unit, chunkier than the paintings' 160: keep, or finer?); flat bands without cast shadows (the clean cel look) or with them; the order of the batches above.
 
 **Phase 24 — The opening** (delivered; owner's request, October 2026: "an Elder Scrolls Oblivion level of awesome cinematic scene" before the game starts)
 - `[x]` The sequence (P24, `js/cinematic24.js`): a catechism over black, then seven shots through the real maps in the player's own renderer and preset, the INTRO lines as captions, letterbox bars, a title card, and an end on the North Gate that is the first frame of play. Nothing in the world is changed by it.
