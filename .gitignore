@@ -4,3 +4,4 @@ node_modules/
 .env
 .env.*
 !.env.example
+tools/art/pixel3d/.render/

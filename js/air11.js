@@ -605,8 +605,8 @@ const AIR11 = (() => {
     const name = idx && map.floorTextures ? map.floorTextures[idx] : map.floor;
     if (name === 't_shallows') return 2;
     if (!map.outdoor) return 0;
-    if (name === 't_moss') return 1;                 // the marsh moss of the clearing and the Deep Woods
-    if (name === 't_grass' && wetGround()) return 1; // grass goes to mud in the rain
+    if (name.startsWith('t_moss')) return 1;                 // the marsh moss of the clearing and the Deep Woods (and painted20's variants)
+    if (name.startsWith('t_grass') && wetGround()) return 1; // grass goes to mud in the rain
     return 0;
   }
   function addPrint(map, x, y, heading, r, paw) {

@@ -54,6 +54,24 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 25: the pixel-3D set
+
+| | |
+|---|---|
+| ![Pixel-3D: the painted hounds, Proctors, Legionnaires, townsfolk and props in the meadow, seen from every side](screenshots/p25-pixel3d.jpg) | ![The hound and a walking Proctor from the four sides: the painted views above, the pixel-3D cells below](screenshots/p25-pixel3d-close.jpg) |
+| The owner's direction: every creature, person and prop as **pixelated 3D**, and *the same pixelated graphics as before*. So the model is the painting. Each painted sprite is extruded into a voxel model, pixel for pixel, with depth that follows its silhouette, and Blender renders it at the painting's own density from its four sides (front, left, back, right) in the five poses the engine already animates. Seen head-on it is the painting you know; from behind, its mirror; from the side, the same painting with real depth, lit by one sun. | The whole bestiary, the people and the scenery props are baked (82 models); every walk and strike painting turns too, where the painted set had one view and stand-ins. The hound, painted side-on, shows its painting and its mirror as its sides and keeps its hand-built head-on and back views. One switch (Options → Graphics & access, Pixel-3D models); off gives the flat sprites back byte for byte. The pipeline is `tools/art/pixel3d/voxelise.py`. |
+
+### Phase 20b: the painted world, finished
+
+| | |
+|---|---|
+| ![Oakhaven's market: painted barrels, crates and a hand-cart before house fronts of close studding and brick](screenshots/p20b-market.jpg) | ![The meadow outside the Hedge: clover, straw and trodden earth from cell to cell, an oak in a second colour, painted grass](screenshots/p20b-meadow.jpg) |
+| The market: the barrel, the crate and the hand-cart are paintings now, and the houses behind them wear close studding, brick nogging or a braced frame, one front per building. | The meadow outside the Hedge: the ground changes from cell to cell (clover in the hollows, straw on the flats, earth where feet have worn it), and the oaks come in three colours, half of them turned about. |
+| ![Wethercombe: the far ground runs on beyond the map's edge to the ridges](screenshots/p20b-combe.jpg) | ![Whisper-Grove: a painted broken statue and reeds in the Sunken Court](screenshots/p20b-grove.jpg) |
+| Wethercombe from Hob's Knap: fields and hedgerows run on past the map's edge to the ridges, on every outdoor map with hills now. | The Sunken Court: the broken statue and the reeds are paintings too. |
+
+The ground, the house fronts and the stone courses are painted at load from the game's own tiles, so the colour the panoramas and the far country use is kept. The painted pieces (barrel, crate, carts, statue, bones, grass, reeds, notices, moss) replace the drawn stand-ins under their own names; the rest still draw. Four switches in Options (Graphics & access): Painted ground, Painted walls, Tree variety, Painted pieces. Off, or on the Original preset, the frames are the old ones byte for byte.
+
 ### Phase 24: the opening
 
 | | |

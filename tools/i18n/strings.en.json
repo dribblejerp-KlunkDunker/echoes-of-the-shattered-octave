@@ -34210,5 +34210,65 @@
   "where": [
    "cinematic24.js"
   ]
+ },
+ "1jzbbmmignv": {
+  "en": "Painted ground",
+  "where": [
+   "painted20.js"
+  ]
+ },
+ "1i2dq8jlv1e": {
+  "en": "grass and moss that change from cell to cell: clover, dry straw, trodden earth",
+  "where": [
+   "painted20.js"
+  ]
+ },
+ "bcgt54ahpc": {
+  "en": "Painted walls",
+  "where": [
+   "painted20.js"
+  ]
+ },
+ "1cxkpqkxs78": {
+  "en": "house fronts and stone courses that differ from one building to the next",
+  "where": [
+   "painted20.js"
+  ]
+ },
+ "mjgvtbtn83": {
+  "en": "Tree variety",
+  "where": [
+   "painted20.js"
+  ]
+ },
+ "ijr3bhu7os": {
+  "en": "oaks in three colours and willows in two, some turned about",
+  "where": [
+   "painted20.js"
+  ]
+ },
+ "e29p5qbcud": {
+  "en": "Painted pieces",
+  "where": [
+   "painted20.js"
+  ]
+ },
+ "2anzjbszt61": {
+  "en": "painted barrels, carts, grass and notices in place of the drawn stand-ins",
+  "where": [
+   "painted20.js"
+  ]
+ },
+ "qj9q2j9fyl": {
+  "en": "Pixel-3D models",
+  "where": [
+   "pixel3d.js"
+  ]
+ },
+ "z68w29tv9x": {
+  "en": "creatures, people and props as the paintings given depth: pixel models that turn, lit the same from every side",
+  "where": [
+   "pixel3d.js"
+  ]
  }
 }
