@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pixel-3D from the paintings: every painted sprite extruded into a voxel model and rendered from the five bearings.
+"""Pixel-3D from the paintings: every painted sprite extruded into a voxel model and rendered from its four sides.
 
   python3 tools/art/pixel3d/voxelise.py [name ...] [--preview] [--json FILE]
   python3 tools/art/pixel3d/voxelise.py --merge a.json b.json ...
@@ -8,8 +8,8 @@ The owner: keep the same pixelated graphics, just make them 3D. So the model IS 
 painted front (or side, for the creatures painted side-on) becomes a column of voxels whose depth follows the
 silhouette (every solid run of pixels on a row is treated as an elliptical section, depth = K x its width), the front
 faces carry the painting pixel for pixel, the back faces its mirror a shade darker, the sides the rim colours. Rendered
-at the painting's own density (its rows per world unit), the front view is the painting; turned, it is the same
-painting with real depth, lit by the same sun from every side. Walk and attack frames are extruded from their own
+at the painting's own density (its rows per world unit), the front view is the painting, the back its mirror, and the
+two sides the same painting with real depth, lit by the same sun. Walk and attack frames are extruded from their own
 paintings, so every pose turns. Props the same way, one view. The cell tables go into js/pixel3d.js between its @@ATLAS marks.
 """
 import os, sys, json, re, hashlib, math, base64, io
@@ -19,7 +19,12 @@ from PIL import Image
 import bpy
 from mathutils import Vector, Euler
 import lib
-from lib import ROOT, HERE, VIEWS, POSES
+from lib import ROOT, HERE, POSES
+
+# the four sides the game shows (the owner, October 2026: front, left side, back, right side; the 45-degree views of an
+# extrusion look square), keyed by the engine's octant so the runtime can ask by it: 0 front, 2 one side, 4 back, 6 the other
+VIEWS = [0, 90, 180, 270]
+OCTANT = {0: 0, 90: 2, 180: 4, 270: 6}
 
 OUT = os.path.join(ROOT, 'img', 'pixel3d')
 RUNTIME = os.path.join(ROOT, 'js', 'pixel3d.js')
@@ -195,21 +200,20 @@ def build_mesh(name, img, meta, spec):
 def bake(name, spec, previews):
     poses = [''] if spec.get('prop') else POSES
     # a side-on painting has no face to show head-on or from behind: those two views stay with the hand-built art
-    # (js/bestiary20a.js), and only the three turned views come from the extrusion
+    # (js/bestiary20a.js), and only its two sides come from the extrusion (the painting and its mirror, lit)
     cells = []
     for pose in poses:
         pf = painting(name, pose, spec)
         if pf is None: pf = painting(name, '', spec)   # a pose without its own painting keeps the idle one
         img, meta = pf
         side = bool(spec.get('side')) and pose not in spec.get('front_poses', [])
-        views = [0] if spec.get('prop') else ([45, 90, 135] if side else VIEWS)
+        views = [0] if spec.get('prop') else ([90, 270] if side else VIEWS)
         pspec = dict(spec, side=side)
         for vi, bearing in enumerate(views):
             lib.reset('BLENDER_WORKBENCH')
             sh = bpy.context.scene.display.shading; sh.color_type = 'VERTEX'
             ob, lo, hi, ppu, nf = build_mesh(name, img, meta, pspec)
-            # a side-on creature turns the other way round, so that its 45-degree view brings the head near on the same
-            # side the painted art does and its side view keeps the nose to the right
+            # a side-on creature turns the other way round, so that its side view keeps the nose on the side the painted art does
             ob.rotation_euler = Euler((0, 0, math.radians(-bearing if side else bearing)), 'XYZ')
             lib.PX_PER_UNIT = ppu
             span = max(hi[0] - lo[0], hi[1] - lo[1]) * 1.05 + 4 / ppu
@@ -222,7 +226,7 @@ def bake(name, spec, previews):
             c = lib.crop(out, orow, ocol, pad=0)
             if not c: raise SystemExit('empty render ' + path)
             sp, hs, cx, dy = c
-            key = '%d|%s' % (VIEWS.index(bearing), pose)
+            key = '%d|%s' % (OCTANT[bearing], pose)
             cells.append((key, sp, (hs, cx, dy))); previews.append((name + key, sp))
             print('  %s %s view %d: %dx%d (%d faces) hs %.3f cx %.3f dy %.3f' % (name, pose or 'idle', vi, sp.size[0], sp.size[1], nf, hs, cx, dy), flush=True)
     table, sheet = lib.atlas(cells, os.path.join(OUT, name + '.png'))

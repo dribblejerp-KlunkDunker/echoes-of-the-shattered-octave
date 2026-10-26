@@ -139,12 +139,12 @@ Phase 20b (js/painted20.js, Options → Painted pieces): paintings swapped in un
 
 ## Pixel-3D set (img/pixel3d/)
 
-Phase 25 (js/pixel3d.js, Options → Pixel-3D models): one atlas per model, five bearings in five poses for a creature (three bearings for the hound, painted side-on), one view for a prop. The models are the painted sprites themselves, extruded into voxels and rendered by Blender's bpy module at the painting's own density (tools/art/pixel3d/voxelise.py); the game's own work, no outside asset.
+Phase 25 (js/pixel3d.js, Options → Pixel-3D models): one atlas per model, four sides in five poses for a creature (two sides for the hound, painted side-on), one view for a prop. The models are the painted sprites themselves, extruded into voxels and rendered by Blender's bpy module at the painting's own density (tools/art/pixel3d/voxelise.py); the game's own work, no outside asset.
 
 | Files | Replaces | Source | Licence | Status |
 |---|---|---|---|---|
 | the bestiary (proctor, legionnaire, tongueless, wearer, drowned, pressman, dirge, marine, warden, requiem, deacon, outrider, hushwarden, captain, aegis, golem, weaver, weaverling, broodmother, kaelen, lyra, hollow) | the painted sprites' every view and pose while the switch is on | the paintings, extruded and rendered | game source | done |
-| hound | the turned views (front-side, side, back-side); head-on and back stay with js/bestiary20a.js | the same | game source | done |
+| hound | the two sides; head-on and back stay with js/bestiary20a.js | the same | game source | done |
 | the people (26: flambeau, hetty, rooke, sable, townsman, townswoman, vane, pim, vosk, harrow, tobiah, orla, aldric, bettany, tam, hob, nell, quist, halder, cutter, sexton, herald, mags, mourner, wren, burlsick) | the painted NPC sprites while the switch is on | the same | game source | done |
 | the props (crates, chest, table, bed, loom, press, tomb, grave, hearth, chair, bore, gear, lever, coil, cloaks, cocoon, lifttank, kestrel, bones, loot, lamp, pump, bigbell, cores, basin, sign, hymnboard, grate, web, ladder, shelf, p_barrel, p_crate) | the scenery props | the same | game source | done |
 

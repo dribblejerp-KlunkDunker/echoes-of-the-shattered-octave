@@ -1,8 +1,8 @@
 """Pixel-3D: the Blender (bpy module) side of the bake shared by voxelise.py: scene, camera, lighting, render, quantise, atlas.
 
 The look: every creature, person and prop is the painting itself given depth (see voxelise.py), lit by one sun and a
-flat ambient, rendered at PX_PER_UNIT pixels to the world unit from the five bearings the engine uses (front,
-front-side, side, back-side, back; the engine mirrors the other three), in every pose the engine animates (idle, two
+flat ambient, rendered at PX_PER_UNIT pixels to the world unit from its four sides (front, left, back, right; see
+voxelise.py, which owns the list), in every pose the engine animates (idle, two
 walk steps, wind-up, strike), and then quantised: the shading is cut to a few bands so each face keeps its painted
 colour, and the silhouette can get a one-pixel dark rim. The result is pixel art that turns, lit the same from every side.
 The Figure class below builds models from primitives; it is kept for props that have no painting yet.
@@ -23,7 +23,7 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..', '..'))
 PX_PER_UNIT = 80                 # sprite pixels per world unit: a person is 80 rows tall (the paintings use 160; this is the chunkier look)
-VIEWS = [0, 45, 90, 135, 180]    # camera bearing from the model's front, degrees; view index = position in this list
+VIEWS = [0, 90, 180, 270]        # camera bearing from the model's front, degrees (voxelise.py keys the cells by the engine's octant)
 POSES = ['', '_w1', '_w2', '_a1', '_a2']
 PITCH = 9.0                      # the camera looks down this much: tops of heads and shoulders show, as in the paintings
 SHADE_BANDS = (0.56, 0.76, 0.94, 1.1, 1.24)   # a material's colour is drawn in these few multiples of itself (cel bands)
