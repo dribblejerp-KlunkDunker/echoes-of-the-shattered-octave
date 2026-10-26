@@ -12,12 +12,17 @@ The Cacophony Hound is painted side-on and has no face to show head-on or from b
 
 One atlas per model, the cell table in `js/pixel3d.js`; the runtime swaps the cell in for an entity's bearing and pose (or a prop's sprite under its name) when the switch is on. Nothing in saves, flags or the RNG changes; off, the flat sprites draw byte for byte as before.
 
+## Painted side views for the main species
+
+After the four-side bake the owner asked for painted side views for the main species. The bestiary already had them: Phase 20's teams cut each enemy's own painting, turned it on a rig and re-lit it (`js/bestiary20a.js`, `js/bestiary20b.js`), and from the side those beat any extrusion, so the pixel-3D set now shows them, snapped to the four sides, and bakes nothing for the bestiary. The Catalogue Proctor (which had only its pilot stand-ins), Kaelen, Lyra, the townsman and the townswoman are rigged the same way in `js/people25.js` with the humanoid kit: the body and head as stacks of sections whose width is the painted silhouette and whose depth is authored per band; the staff, arms, jug, hands and boots cut out of the painting and re-hung in 3D; the back painted from the figure's own cloth (a hood's back, a cap, a shirt, the dress behind the apron). The Proctor's attack is the painted one: the staff raised overhead in both hands, then brought down. The extrusion stays for the other named people (idle only, they have no other frames) and the props.
+
 ## What is baked
 
 | Set | Count | Notes |
 |---|---|---|
-| the bestiary | 23 | every enemy with a painted sprite; the hound hybrid as above |
-| the people | 26 | townsfolk, every named NPC, the companions |
+| the bestiary | 0 | its Phase 20 hand-built views, snapped to four sides |
+| rigged people | 5 (no atlas) | the Proctor, Kaelen, Lyra, the townsman, the townswoman: built at run time |
+| the people | 25 | the other named NPCs and the Hollow |
 | props | 33 | chests, beds, looms, presses, tombs, lamps, bells, signs, ladders, the barrel and crate of Phase 20b; one view each |
 
 Kept painted on purpose: the trees (Phase 20b's painted variants), the swarms, the moth, A Quiet (an absence with smoke), the cat, the fire, decals, ground and skies, and the first-person hands and weapons, which never turn.
@@ -30,4 +35,4 @@ One Options row: **Pixel-3D models** — *creatures, people and props as the pai
 
 1. The depth: people and bipeds are extruded to 0.6 of their width, round props fully. Thicker or thinner?
 2. The back of a figure is the mirrored front, darkened; a hood or a cloak reads well, a face less so. Worth painting true backs for the named people later?
-3. The hound's sides are its painting; its head-on and back are the hand-built views. Keep, or paint a head-on hound so it can be extruded whole?
+3. Which people to rig next: the innkeepers and the named quest-givers the player talks to most (Hetty, Rooke, Sable, Hob, Nell) are the natural second batch.

@@ -139,13 +139,13 @@ Phase 20b (js/painted20.js, Options → Painted pieces): paintings swapped in un
 
 ## Pixel-3D set (img/pixel3d/)
 
-Phase 25 (js/pixel3d.js, Options → Pixel-3D models): one atlas per model, four sides in five poses for a creature (two sides for the hound, painted side-on), one view for a prop. The models are the painted sprites themselves, extruded into voxels and rendered by Blender's bpy module at the painting's own density (tools/art/pixel3d/voxelise.py); the game's own work, no outside asset.
+Phase 25 (js/pixel3d.js, Options → Pixel-3D models): one atlas per extruded model, four sides in five poses for a creature, one view for a prop. The models are the painted sprites themselves, extruded into voxels and rendered by Blender's bpy module at the painting's own density (tools/art/pixel3d/voxelise.py); the game's own work, no outside asset. The bestiary and the rigged people (js/people25.js) ship no atlas: their views are built at run time from their paintings, as in Phase 20.
 
 | Files | Replaces | Source | Licence | Status |
 |---|---|---|---|---|
-| the bestiary (proctor, legionnaire, tongueless, wearer, drowned, pressman, dirge, marine, warden, requiem, deacon, outrider, hushwarden, captain, aegis, golem, weaver, weaverling, broodmother, kaelen, lyra, hollow) | the painted sprites' every view and pose while the switch is on | the paintings, extruded and rendered | game source | done |
-| hound | the two sides; head-on and back stay with js/bestiary20a.js | the same | game source | done |
-| the people (26: flambeau, hetty, rooke, sable, townsman, townswoman, vane, pim, vosk, harrow, tobiah, orla, aldric, bettany, tam, hob, nell, quist, halder, cutter, sexton, herald, mags, mourner, wren, burlsick) | the painted NPC sprites while the switch is on | the same | game source | done |
+| hollow | the painted sprite's every view and pose while the switch is on | the painting, extruded and rendered | game source | done |
+| the people (24: flambeau, hetty, rooke, sable, vane, pim, vosk, harrow, tobiah, orla, aldric, bettany, tam, hob, nell, quist, halder, cutter, sexton, herald, mags, mourner, wren, burlsick) | the painted NPC sprites while the switch is on | the same | game source | done |
+| (no file) proctor, kaelen, lyra, townsman, townswoman | rigged at run time from their paintings by js/people25.js, like the bestiary | the paintings, cut and turned in code | game source | done |
 | the props (crates, chest, table, bed, loom, press, tomb, grave, hearth, chair, bore, gear, lever, coil, cloaks, cocoon, lifttank, kestrel, bones, loot, lamp, pump, bigbell, cores, basin, sign, hymnboard, grate, web, ladder, shelf, p_barrel, p_crate) | the scenery props | the same | game source | done |
 
 ## Images (img/)
