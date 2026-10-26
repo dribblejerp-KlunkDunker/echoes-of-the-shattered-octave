@@ -212,7 +212,15 @@ async function part2identity(browser) {
       let h = 0; Engine.addPostHook((F) => { h = 2166136261; for (let i = 0; i < F.fb.length; i += 3) { h ^= F.fb[i]; h = Math.imul(h, 16777619); } }, 1e9);
       for (const k of ['oak_noon', 'oak_dusk', 'vault', 'clear_noon']) { const [m, x, y, d, t] = REF[k]; for (const p of ['medium', 'cinematic']) { PRESETS.apply(p); T21.stage(m, x, y, d, t); T21.raw(); out.push(k + ':' + p + ':' + (h >>> 0)); } }
       // a short seeded walk: the player's position and the entities after it
-      T21.pin(() => { T21.stage('oakhaven', 23.5, 6.5, Math.PI / 2, 0.5); G.keys = { w: true }; for (let i = 0; i < 90; i++) update(1 / 60); G.keys = {}; });
+      T21.pin(() => {
+        T21.stage('oakhaven', 23.5, 6.5, Math.PI / 2, 0.5);
+        // the pin freezes the wall clocks; these are the game's own (per-boot state that would otherwise ride into the walk)
+        G.time = 4242; G.vel.x = 0; G.vel.y = 0; G.turnV = 0; G.bobPhase = 0; G.player.fat = G.player.fatMax;
+        // and the walkers: the walk is keys and collision only — no townsfellow may jostle the player here (their schedules keep per-boot clocks of their own)
+        const quiet = () => { for (const e of G.ents) { e.wanderT = 1e9; e.moving = false; e.solid = false; } };
+        quiet();
+        G.keys = { w: true }; for (let i = 0; i < 90; i++) { update(1 / 60); quiet(); } G.keys = {};
+      });
       out.push('trace:' + [Engine.cam.x.toFixed(4), Engine.cam.y.toFixed(4), Engine.cam.dir.toFixed(4)].join(','));   // the player's walk: keys and collision only
       return out;
     }, REF);

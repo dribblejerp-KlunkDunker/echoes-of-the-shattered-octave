@@ -35,7 +35,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       check(Math.abs(m.lvlAt(24, 19) - 0.9) < 1e-6, 'the top step is one rise below the hilltop');
       check(Math.abs(m.lvlAt(23, 19) - 0.6) < 1e-6 && Math.abs(m.lvlAt(22, 19) - 0.3) < 1e-6, 'the stair rises in walkable steps');
       check(!m.isBlocked(25, 18) && !m.isBlocked(30, 20), 'the cliff edge is open ground, not a wall cell');
-      check(G.player.feet === 0 && Engine.cam.z === 0.5, 'you start at eye height on the meadow');
+      check(G.player.feet === 0 && Engine.cam.z === 0.88, 'you start at eye height on the meadow');
       // --- a 1.2 rise is a cliff: you cannot walk up it -------------------
       loadMap('clearing', { x: 24.4, y: 17.5, dir: 0 });
       check(solidAt(25.4, 17.5, null), 'the cliff face blocks a walker at the bottom');
@@ -45,7 +45,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       loadMap('clearing', { x: 21.2, y: 19.5, dir: 0 });
       hold(90);
       check(Math.abs(G.player.feet - 1.2) < 1e-6, 'walking the steps brings the feet up to the hilltop');
-      check(Math.abs(Engine.cam.z - 1.7) < 1e-6, 'the eye rides half a unit above raised ground');
+      check(Math.abs(Engine.cam.z - 2.08) < 1e-6, 'the eye rides 0.88 above raised ground');
       check(Engine.cam.x > 25.5, 'the walk ends on top of the hill');
       // --- and you can walk off the edge ---------------------------------
       loadMap('clearing', { x: 30.6, y: 17.5, dir: 0 });
@@ -55,7 +55,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       for (let i = 0; i < 150; i++) { G.keys = { w: true }; update(0.033); if (G.player.feet < 0.01) { fell = true; break; } }
       G.keys = {};
       check(fell, 'walking off the edge drops you to the meadow');
-      check(G.player.feet === 0 && Engine.cam.z === 0.5, 'the fall settles your feet on the lower ground');
+      check(G.player.feet === 0 && Engine.cam.z === 0.88, 'the fall settles your feet on the lower ground');
       check(G.player.hp < topHp, 'a 1.2 drop costs health');
       check(Math.round(topHp - G.player.hp) === 8, 'fall damage scales with the drop');
       check(/hard off the edge/.test(document.querySelector('#msgs').textContent), 'the landing is reported');
@@ -70,7 +70,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       render();
       const topSign = G.ents.find(e => e.sprite === 'sign' && Math.abs(e.x - 28.5) < 0.1);
       check(topSign && topSign._screen, 'the hilltop signpost is drawn');
-      check(topSign._screen.y1 < 130, 'a sprite on the hill stands on the hill, not on the meadow below');
+      check(topSign._screen.y1 < 180, 'a sprite on the hill stands on the hill, not on the meadow below');
       // --- the cliff is drawn from the height field, not from a decal -----
       loadMap('clearing', { x: 20.4, y: 19.5, dir: 0 });
       G.fadeT = 0;   // the load fade would paint the frame black
@@ -86,12 +86,12 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       loadMap('clearing', { x: 28.5, y: 18.5, dir: 0 });
       const hillSave = JSON.parse(JSON.stringify(snapshotGame()));
       restoreGame(hillSave); G.state = 'play';
-      check(Math.abs(G.player.feet - 1.2) < 1e-6 && Math.abs(Engine.cam.z - 1.7) < 1e-6, 'a save on the hill restores you standing on it');
+      check(Math.abs(G.player.feet - 1.2) < 1e-6 && Math.abs(Engine.cam.z - 2.08) < 1e-6, 'a save on the hill restores you standing on it');
       // --- maps without heights are untouched -----------------------------
       loadMap('oakhaven', { x: 23.5, y: 5.5, dir: Math.PI / 2 });
       check(G.map.lvls === null, 'Oakhaven keeps no height field');
       hold(20);
-      check(G.player.feet === 0 && Engine.cam.z === 0.5, 'flat maps keep the old eye height and walk');
+      check(G.player.feet === 0 && Engine.cam.z === 0.88, 'flat maps keep the standing eye height and walk');
       return { hill: 1.2, steps: [0.3, 0.6, 0.9], fallDamage: 8, changed };
     });
     console.log('PASS walkable elevation: heights, stairs, cliffs, falls, sprites and saves', rules);

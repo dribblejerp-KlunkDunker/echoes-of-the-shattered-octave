@@ -149,17 +149,17 @@ const HELPERS = () => {
         others.forEach(k => { if (k in GFX) GFX[k] = false; });
         const m = G.map, d = m.doors[23], out = [];
         const F = { cam: Engine.cam };
-        for (const o of [0.2, 0.5, 0.7, 0.85]) {
+        for (const o of [0.15, 0.35, 0.55, 0.7]) {
           d.open = d.target = o; Engine.render(G.ents.filter(e => !e._decor), G.tod);
           // find the lowest row in the centre columns that is lighter than the dark backing (an upright of the lattice)
           const W = Engine.VW, data = Engine.ctx.getImageData(0, 0, W, Engine.VIEW_H).data;
           let lowest = -1, highest = 1e9;
           for (let x = (W * 0.42) | 0; x < (W * 0.58) | 0; x++) for (let y = 0; y < Engine.VIEW_H; y++) {
             const i = (y * W + x) * 4, lum = data[i] + data[i + 1] + data[i + 2];
-            if (lum > 60 && y > 52 && y < 100) { if (y > lowest) lowest = y; if (y < highest) highest = y; }
+            if (lum > 60 && y > 52 && y < 116) { if (y > lowest) lowest = y; if (y < highest) highest = y; }
           }
           // expected: screen row of z = bottom, 0.9 away from the camera (cell plane 0.5 into cell at y=0 from y=3.5 -> 3.0)
-          const t = 3.0, h = Engine.VIEW_H, horizon = (h >> 1), expect = horizon + (h / t) * (0.5 - GATES.barBottom(o));
+          const t = 3.0, h = Engine.VIEW_H, horizon = (h >> 1), expect = horizon + (h / t) * (0.88 - GATES.barBottom(o));
           out.push({ o, lowest, expect: Math.round(expect), highest });
         }
         d.open = d.target = 0; others.forEach((k, i) => { if (k in GFX) GFX[k] = keepFx[i]; });

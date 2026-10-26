@@ -151,9 +151,12 @@ const TRACE = () => {
           if (window.__rlog) { s.rlog = window.__rlog; window.__rlog = null; }
           // frames: particles and idle motion carry state from each page's own real-time history, so they are off here
           GFX.particles = 0; GFX.reduceMotion = true; if (GFX.changed) GFX.changed();
+          if (typeof ANIM !== 'undefined') { ANIM.T = 5; ANIM.last = 123456; ANIM.dirLast = Engine.cam.dir; }   // the animators' own clocks too (as test/light21.test.js and test/firesmoke.test.js pin them)
+          if (typeof FLORA !== 'undefined') { FLORA.hold(true); FLORA.T = 5; }
           s.frames = {};
-          for (const id of ['mill', 'greenhall', 'underhedge']) { __freeze(123456); loadMap(id, G.maps[id].spawn); G.fadeT = 0; __thaw(); s.frames[id] = __frame(); }
-          PRESETS.apply('original'); s.frames.original = __frame(); PRESETS.apply('medium');
+          // seed the stream as well as the clock: the staged scenes are off from each page's own history too
+          for (const id of ['mill', 'greenhall', 'underhedge']) { __seed(123456); __freeze(123456); loadMap(id, G.maps[id].spawn); G.fadeT = 0; __thaw(); s.frames[id] = __frame(); }
+          __seed(123456); PRESETS.apply('original'); s.frames.original = __frame(); PRESETS.apply('medium');
           s.frame = Object.values(s.frames).join('.');
           return s;
         }));
@@ -442,7 +445,8 @@ const TRACE = () => {
       ok(g.save === ownBefore, 'the guest\'s own save is byte-identical before joining and after leaving (' + ownBefore.length + ' bytes)');
       await host.page.waitForFunction(() => !SYNC19.active(), null, { timeout: 3000 });
       ok(true, 'the host is told and carries on alone');
-      ok(await guest.page.evaluate(() => NET19.role() === null), 'leaving ends the guest\'s NET19 session too');
+      await guest.page.waitForFunction(() => NET19.role() === null, null, { timeout: 3000 });   // the transport session ends on the 50 ms deferral in finishLeave
+      ok(true, 'leaving ends the guest\'s NET19 session too');
     }
     allErrors.push(...host.errors, ...guest.errors);
     await guest.ctx.close();

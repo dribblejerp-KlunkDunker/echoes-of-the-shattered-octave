@@ -537,7 +537,7 @@ const RIGGING = (function () {
     const t = Math.min(1, q.t / q.dur), s = t * t * (3 - 2 * t);
     c.x = q.sx + (q.ex - q.sx) * s; c.y = q.sy + (q.ey - q.sy) * s;
     p.feet = q.sz + (q.ez - q.sz) * s + 0.35 * Math.sin(Math.PI * t);
-    c.z = p.feet + 0.5;
+    c.z = p.feet + 0.88;
     G.vel.x = 0; G.vel.y = 0; p.fallV = 0; p.fallFrom = null; p.tumble = false;
     if (t >= 1) {
       c.x = q.ex; c.y = q.ey; p.feet = q.ez; c.z = q.ez + 0.5;

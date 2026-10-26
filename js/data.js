@@ -11,6 +11,8 @@ const CLASSES = [
   {
     id: 'blade', name: 'Dissonant Blade', hz: '174 Hz',
     desc: 'A former bore-engineer whose left arm set to Aether-Glass in the Fracture. The glass drinks what it breaks, and the tideline climbs for it. Hounds will not touch you. Neither, for long, will anyone else.',
+    bio: 'The morning the Light let go, you were on the Dawning floor with a hand on the bulkhead wheel. You held it while the glass came through, and you were still holding it when your left arm set. The Synod gave you a medal you have never worn and a word, consecrated, that you have never used. The hounds treat you as one of their own; the town does not. You burn charcoal outside the Hedge and count the mornings the glass has climbed.',
+    summary: 'Front-line fighter and living tuning fork. High Strength and Endurance, an innate glass arm that breaks the Cacophony, and a short song-list. Close the distance, keep the noise down, and let the tideline pay for every victory.',
     attrs: { Strength: 60, Intelligence: 55, Willpower: 50, Agility: 45, Endurance: 60, Personality: 35, Speed: 45, Luck: 40 },
     hp: 30, voice: 10, glass: true, weapons: ['sword', 'glass'], songs: ['murmur'], pellets: 4,
     skills: 'Long Blade, Glasswork, Engineering',
@@ -18,6 +20,8 @@ const CLASSES = [
   {
     id: 'cantor', name: 'Cantor', hz: '174 Hz',
     desc: 'You sing the births, fevers and burials of orchard country, always inside the Narrow. Your tending notes are older than the Church knows. You have never picked up a sword and you will not start now.',
+    bio: 'The orchard cantors taught you to hold a note under your breath, where the hounds cannot hear it and the Silence cannot find it. You learned the old fourth line from a woman who died before the Synod took the bells, and you have sung it at every burial since, quietly, as a private heresy. You have never carried a blade. When people ask what you do, you say you keep the door open between the living and the rest.',
+    summary: 'Singer, healer and crowd-quieter. High Willpower and Personality, the deepest song-list and the most Voice, but little health. Stay behind the blade, mend what is broken, and spend your voice where it changes the room.',
     attrs: { Strength: 35, Intelligence: 55, Willpower: 70, Agility: 45, Endurance: 45, Personality: 65, Speed: 45, Luck: 45 },
     hp: 20, voice: 40, glass: false, weapons: ['hands', 'pistol'], songs: ['murmur', 'tending', 'fifth', 'root'], pellets: 9,
     skills: 'Law-song, Mending, Etiquette',
@@ -25,6 +29,8 @@ const CLASSES = [
   {
     id: 'corsair', name: 'Corsair', hz: '639 Hz',
     desc: 'Rust Coast, by way of the air. You count, you judge rope and angles, and you carry glass shot that costs a sovereign a pellet. You laugh loudest when you are most afraid.',
+    bio: 'You have signed on with seven crews and left six of them in ports you cannot pronounce. You count because counting is the only prayer that has ever answered you: casks, cartridges, shares, the seconds between a rope parting and a man noticing. The glass shot in your pouch is worth more than the clothes you stand in. You have never once let a stranger see you afraid, and that is the only discipline you keep.',
+    summary: 'Skirmisher and gunhand. High Agility and Speed, a short sword and a pistol, and the largest pouch of glass shot of any calling. Hit first, move often, and never let anything corner you in a corridor.',
     attrs: { Strength: 50, Intelligence: 45, Willpower: 40, Agility: 65, Endurance: 50, Personality: 55, Speed: 60, Luck: 55 },
     hp: 25, voice: 12, glass: false, weapons: ['sword', 'pistol'], songs: ['murmur'], pellets: 12,
     skills: 'Short Blade, Firearms, Streetwise',
@@ -32,6 +38,8 @@ const CLASSES = [
   {
     id: 'archivist', name: 'Archivist of the Veil', hz: '741 Hz',
     desc: 'A conscripted scribe of the Office of the Catalogue who walked into the mist with a Ledger. You know what the glass cores are. You can read a Legionnaire\'s name off its bell. Every name you keep costs you a little of yourself.',
+    bio: 'The Office took you young, gave you a clean coat and a desk with a lock, and taught you to copy a name without reading it. You read them anyway. The first was a woman of sixty-one, entered as a unit, whose hand you recognised from a letter in your mother\'s kitchen. You have been keeping a second Ledger ever since, in a hand the Office cannot read, and every entry costs you a piece of the name you were born with.',
+    summary: 'Lore-keeper and debuffer. The highest Intelligence, three glass fragments at the start, and songs that name what is hunting you. Fragile in a stand-up fight, invaluable before one: read the room before it reads you.',
     attrs: { Strength: 35, Intelligence: 75, Willpower: 60, Agility: 45, Endurance: 40, Personality: 50, Speed: 45, Luck: 50 },
     hp: 18, voice: 30, glass: false, weapons: ['hands', 'pistol'], songs: ['murmur', 'tending', 'name'], pellets: 7,
     skills: 'Ledger-craft, Lore, Resonance',
@@ -39,6 +47,8 @@ const CLASSES = [
   {
     id: 'penitent', name: 'Flambeau Penitent', hz: '285 Hz',
     desc: 'You carried a censer for the Church until the day the light turned. You still half-believe you were right. Your faith is fire, and both are guttering.',
+    bio: 'You were the one who carried the fire, not the one who decided where it went. That was the comfort, and you took it for eleven years. Then a Rite went wrong in a way the Church still denies, and you stood in the ash with a child\'s shoe in your hand and the Pure Note still ringing in your teeth. You keep the ash in a jar. You have not decided whether it is a relic or a confession, and you suspect it is both.',
+    summary: 'Armoured zealot and glass-fire caster. Strong Willpower and Endurance, a bell-bronze mace that rings against the Cacophony, and Doctrine to hold a party together. Slow and loud, but hard to put down.',
     attrs: { Strength: 55, Intelligence: 50, Willpower: 65, Agility: 40, Endurance: 55, Personality: 45, Speed: 40, Luck: 35 },
     hp: 26, voice: 25, glass: false, weapons: ['sword', 'hands'], songs: ['murmur', 'fifth'], pellets: 3,
     skills: 'Blunt Weapon, Doctrine, Glass-fire',
@@ -46,6 +56,8 @@ const CLASSES = [
   {
     id: 'quarry', name: 'Quarry-Hand', hz: '396 Hz',
     desc: 'Night shift at the Oakhaven works. You have heard the Root breathe through the pump-house floor and you have seen what the Grafters bring up in sacks. Strong back, short list of friends.',
+    bio: 'The works run three shifts, and you have worked all of them. You know the sound the pump makes when the Root is awake, the smell of a gallery that is about to settle, and which of the foremen will send you down anyway. You have carried two friends up the ladder and left one below because there was no time. The foreman wrote it down as a fall. You have not written it down at all.',
+    summary: 'The tank. The highest Strength and Endurance and the biggest health pool, with a sword and a head for climbing. No pistol, few pellets and almost no songs: solve it with muscle and let the singers handle the rest.',
     attrs: { Strength: 70, Intelligence: 40, Willpower: 45, Agility: 50, Endurance: 70, Personality: 40, Speed: 50, Luck: 40 },
     hp: 36, voice: 8, glass: false, weapons: ['sword'], songs: ['murmur'], pellets: 2,
     skills: 'Axe, Climbing, Endurance',
@@ -77,6 +89,60 @@ const BIOGRAPHY = [
       { t: 'The bells. Every bell in the Reach went for bore-teeth.', mod: { Personality: 5 }, flag: 'bio_bells' },
     ],
   },
+];
+
+
+// ---- faces offered at character creation ---------------------------------
+// A face is a history, not a class: any calling can wear any of them.
+const CREATION_FACES = [
+  { n: 1, name: "Kaelen Vance",
+    sketch: "The Governor's son, and Lyra Ashgrove's shadow since you were both nine. You left the Reach at seventeen to learn how to fix a note, and came home with an arm of glass and no words about it.",
+    history: "You were born in the Governor's house above the square, to a father who signs the town's bread and a name that was spoken for before you could hold a pen. Lyra taught you the Root note at nine, standing on a chair with your tongue between your teeth, and you have never once held it since without hearing hers underneath. At seventeen the Conservatory of Bores took you, and the work was honest and it paid: calibration tables, bores, a wrong note made right for anybody who could sign the bill. You were the best of your year at it. Then came the morning the sky rang, and you came home up the Greenroot road with a glass arm and a habit of silence, and the town has learned not to ask what the seven years cost.",
+    detail: "You live in a hut north of the North Gate, outside the Hedge, where the hounds do not come and the glass goes quiet on the hound-bed. You keep a chalk list on a beam and pay it down a name a day, and you have never explained the list to anybody. What you carry out of the gate: a caliper, a stub of chalk, and a hand you have learned to turn palm up when someone wants to look.",
+    facts: [["Years", "About thirty-six"], ["Born", "The Governor's house, above the square"], ["Trade", "Calibration. Bores and tuning tables, for the Conservatory, then the Consortium."], ["Mark", "A left arm of Aether-Glass to the elbow, and a habit of turning it palm up."], ["Ties", "Lyra Ashgrove, who taught you the Root note. A father who still signs the town's bread."], ["Wants", "To know what the glass is for, and to be owed nothing by anybody."]],
+    says: "I don't build things anymore. I just know how they break. What do you want broken?" },
+  { n: 2, name: "Lyra Ashgrove",
+    sketch: "Cantor of Oakhaven. You cut the town's reeds fresh every dusk, keep its lamps lit, and teach every child in the parish their first note — and you have never made a promise in a voice you would not use to keep it.",
+    history: "Your father was Cantor before you, and he set the long cane in your hands before you could hold your head up: you blew across it until the note stopped being a noise and became a place. You tuned the First Reed over the door standing on a chair, and you have cut reeds fresh every dusk since, because a cut reed dies in a day and a day is exactly long enough for the thing you meant to say. When the stole came to you it came with the lamps, the crossings, the names of every child in the parish and the rhyme they are taught here: too loud brings the hounds, too still brings the Hush. You have kept a house on Cooper's Row with a green door, buried your father in the Cantors' ground, and learned that a town can be held together by people humming under their breath.",
+    detail: "You keep the First Reed over the door, a slate for the days the voice will not carry, and a list of every child who has ever been yours to teach. What you carry out of the gate: the slate, a fresh reed, and enough lamp-oil for the crossings where the hummers are too old or too few.",
+    facts: [["Years", "About thirty-six"], ["Born", "Cooper's Row, Oakhaven. The house with the green door."], ["Trade", "Cantor. Reeds, lamps, and other people's children."], ["Mark", "A fresh-cut reed in the sleeve, and a voice that goes quiet when it is angry."], ["Ties", "Kaelen Vance, your shadow at nine. Every child in the parish, and their mothers."], ["Wants", "A fifth that holds, and a town that does not have to hum to stay alive."]],
+    says: "A martyr is just a musician who gave up before the coda. I would rather not be either." },
+  { n: 3, name: "Captain Vane",
+    sketch: "Rust Coast corsair, master of the Drift-Kestrel. You have held a hawser in one hand and an axe in the other, and you have never once explained whose money bought your ship.",
+    history: "You went to sea out of Port Cantabile with a borrowed coat and no name worth inheriting, and you had a deck under you before you had a beard. In 414 the Wave-Cutter went into a tonal trench with her tow, and forty-eight men came home because of what you did with the axe at the hawser, and one did not. You do not talk about the Wave-Cutter. You bought the Drift-Kestrel the year after with money you would rather not discuss, from people you would rather not name, because she was the only thing for sale that did not ask what you were running from. Since then: eleven Consortium consignments under your name, twelve crates a run, and two years of being very carefully not curious about what is inside them. It is a skill.",
+    detail: "You keep a cabin you rarely sleep in, a vox-bottle on a chain you have never unstopped, and a crew that would follow you into a trench. What you carry out of the gate: the bottle, a captain's whistle, and a manifest with two columns in it — the one you show the factor, and the one you keep.",
+    facts: [["Years", "About forty-five"], ["Born", "A fish stair below the mast-yard, Port Cantabile"], ["Trade", "Air-crew. Master of the Drift-Kestrel, eleven Consortium consignments."], ["Mark", "A cap gone grey at the brim, and a voice that carries over wind without trying."], ["Ties", "A factor who signs your paper. A crew that counts the crates you do not ask about."], ["Wants", "One manifest with nothing left off it, and a horizon with no paperwork on it."]],
+    says: "Every sailor dies, friend. The trick is to be somewhere else when it happens." },
+  { n: 4, name: "Sable",
+    sketch: "Archivist of the Veil. You wrote the forms the Office still files people under, and you have been reading them back, one name at a time, ever since.",
+    history: "The Veil took you young and taught you the one thing it teaches: a civilisation does not need saving, it needs recording, and the recording must be exact. You copied registers for eleven years and read them for four, and you were good enough that the Office asked you to make its paperwork efficient, and you did, and the efficiency is the part you carry. When the Synod absorbed the order you did not resign, because resignations are recorded and recorded people are found. You walked out at the change of the watch with a satchel of names that had never been entered, and a pen, and you have been entering them somewhere else ever since, in a hand the Office cannot read.",
+    detail: "You carry the satchel, a stub of chalk, and a pen you cut yourself. You dictate your own punctuation when you are being careful; people remember a list. You do not write your own name down anywhere. What you carry out of the gate: the satchel, the pen, and no name you would spend on a stranger.",
+    facts: [["Years", "About fifty"], ["Born", "Nowhere you will name. The Veil took you young."], ["Trade", "Registry. Eleven years of forms copied, four of them read."], ["Mark", "A Veil pen at the throat, ink on the second finger, and a voice that punctuates itself."], ["Ties", "Registrar-General Quist, who poured the second cup. The Office, which still files your forms."], ["Wants", "Every name the Office entered to be read back aloud, once."]],
+    says: "I am a list, not a cure. Say what you came to say." },
+  { n: 5, name: "Anselm Rooke",
+    sketch: "Surgeon-Grafter. The Synod sends the saws and you hold them, and you stop the moment the patient asks you to — which is the whole of your quarrel with the Church.",
+    history: "You were raised in a barber-surgeon's room off the tanners' lane, where the oakum and the clean linen smelled the same, and you learned early that a saw is only as good as the hand that stops. The Grafters' hall took you for the cutting: you were steady, you did not flinch, and you wrote down what you had done. Twenty years of it since — sap-limbs, glass burns, and the fever years, when you went down a lane at dawn and chalked the doors that would not open again. The Synod sends its saws to your surgery because you are the best in the Reach; you hold them because somebody has to who will stop when the patient asks. The Inquisitor has asked twice for your list of sap-marks. You have been slow to find it.",
+    detail: "You keep a surgery off the tanners' lane, a needle in the lapel, and a record of every door you have ever chalked, because somebody should. What you carry out of the gate: the needle, a roll of clean linen, and a bottle of Bettany's — hers are for healing and yours are for cutting, and you do not mix them.",
+    facts: [["Years", "Past sixty"], ["Born", "Above the tanners' lane, in a barber-surgeon's room"], ["Trade", "Grafting and cutting. Saws for the Synod, hands for the town."], ["Mark", "A sap-mark on the wrist, chalk dust in the cuffs, a needle in the lapel."], ["Ties", "A mother behind the tannery whose floor you cannot cross. An Inquisitor waiting for a list."], ["Wants", "To keep the list in your own hands and the saws out of the Inquisitor's."]],
+    says: "I have cut more limbs than any butcher in the Reach and done every one with care. Sit. I will not chalk your door today." },
+  { n: 6, name: "Mags Tennant",
+    sketch: "First mate of the Drift-Kestrel. You keep the ship's numbers in your head and the crew's pay in your hands, and you have never needed a voice to be heard in a headwind.",
+    history: "You were raised in a boat-shed below the mast-yard at Port Cantabile, the youngest of a stevedore's family, and you learned the dock-crews' hand-speech before you learned to read, because a rope does not wait for a sentence. Twelve years on the quay after that: cargo counted on, counted off, and a tally in your head that never once agreed with the manifest the Consortium brought down. Vane took you on as boatswain and then as first mate because you were the only hand he had met who would tell him a hold was heavy before the lift did. Two years now of running crates with your name on the paper and no questions in it, and you have been keeping the count anyway, in a book the captain does not look at.",
+    detail: "You sign when the wind is up and speak when it drops, and you read a man's lips across a deck. What you carry out of the gate: a marlinspike, a tally-book with two columns in it, and a collarbone that aches before weather.",
+    facts: [["Years", "About forty"], ["Born", "A boat-shed below the mast-yard, Port Cantabile"], ["Trade", "Dock-crew, then air-crew. First mate of the Drift-Kestrel."], ["Mark", "Hands that sign before they speak, and a manifest you can read upside down."], ["Ties", "Captain Vane, who signs your pay. The dock-crews, who taught you the hand-speech."], ["Wants", "A crew that counts its own crates, and a captain who asks."]],
+    says: "Slower. I read lips, not minds." },
+];
+
+// ---- the world, for a traveller new to the Reach ------------------------
+const CREATION_LORE = [
+  { title: 'The Reach', text: 'Orchard country in the west of Aethelgard: iron-bark oaks, the green river called the Chlorophyll Flume, and Oakhaven, the market town inside the Hedge. Autumn, 419 SR. The Synod\'s Regency governs in the name of a queen dead a hundred and forty years. Since 417 the Consortium has been milking the Growth Anchor\'s root from the Oakhaven quarry, and the law has been going soft.' },
+  { title: 'The Fracture', text: 'On the last morning of 412 SR the Iron Synod drove its bores into the Spire of Dawning and the Light let go. The glass flood took the Spire floor, the lower city, and everyone who could not reach a bulkhead. What survived is a Regency, a Church that calls the disaster a harvest, and a generation that measures its age from the morning the sky rang.' },
+  { title: 'The Octave', text: 'Eight Spires pin the world, each singing one law: Growth, Light, Heat, Mass, Time, Velocity, Memory and Decay. Together they are the Octave, and the whole of it is the Organum. The Reach is Growth, 174 Hz; its oaks ring like bronze and its glass runs green-gold. When a Spire is siphoned, its law slips, and the land around it begins to forget itself.' },
+  { title: 'The Narrow', text: 'Mortals live in the band between two hungers. Too loud, and the Cacophony hears; too still, and the Hush notices. So people murmur, keep reed-whistles in every room, and pay night-hummers to sit at crossings until dawn. The rule is taught to children as a skipping rhyme: too loud brings the hounds, too still brings the Hush.' },
+  { title: 'Aether-Glass', text: 'Crystallized song, bled out of a Spire and set. The Synod burns it, builds with it, and fires it from pistols as shot. A limb that takes it in calcifies and begins to ring; the glass drinks what it breaks, and the tideline climbs toward the heart. Glass remembers what is pressed into it, which is why the Office stores stolen names in it.' },
+  { title: 'The Iron Synod', text: 'The Choir-Church of the Pure Note preaches unison as holiness and calls every second note sin. Its Inquisition, the Flambeaux, burns the off-pitch. Its Consortium factors run the bores and the air-freight. Its Office of the Catalogue keeps the registers. And its Glass Court signs the decrees: nine dead monarchs, revived with glass hearts, who do as they are told.' },
+  { title: 'The Office of the Catalogue', text: 'Once the Silent Veil, an independent order of archivists, now the Synod\'s registry of everything that can be owned. Registrar-General Pellam Quist runs the harvest-houses, where people are Unnamed and their voices pressed into glass. The Office\'s clerks believe every name is a unit. Some of them are right, and some of them are sorry.' },
+  { title: 'The Free Captains', text: 'Air-crews of the Rust Coast, bound by shares and no flag. They run glass, grain, letters and people between the ports, and they do not ask what a crate is worth to the Synod. Captain Vane\'s Drift-Kestrel is one of theirs, though the Catalogue holds the paper on her. A captain\'s word is good until the weather turns; after that, it is a story.' },
 ];
 
 // ---- weapons & songs ---------------------------------------------------
@@ -263,7 +329,7 @@ const RUMOURS = [
 // Each NPC: name, sprite, portrait, greet (by tone), knowledge tier, topic overrides, quest hooks.
 const NPCS = {
   harrow: {
-    name: 'Old Harrow, gate-warden', sprite: 'harrow', portrait: 'harrow', tier: 'low',
+    name: 'Old Harrow, gate-warden', sprite: 'harrow', portrait: 'harrow', tier: 'low', scale: 0.93,
     greet: { polite: 'Keep your voice down, friend, and welcome to what\'s left of Oakhaven.', normal: 'Gate\'s shut after dusk. Keep it low.', blunt: 'You shout like that again and I\'ll put you out through the thorn myself.' },
     topics: { 'The Hedge': 'I\'ve stood this gate eleven years. Last night it whistled a tune only the Cantor and the Carder boy know. Whistled it exactly right.' },
     quest: (g) => {
@@ -322,7 +388,7 @@ const NPCS = {
     },
   },
   hetty: {
-    name: 'Hetty Bram of the Boar & Dulcimer', sprite: 'hetty', portrait: 'hetty', tier: 'low',
+    name: 'Hetty Bram of the Boar & Dulcimer', sprite: 'hetty', portrait: 'hetty', tier: 'low', scale: 0.95,
     greet: { polite: 'Sit anywhere that isn\'t broken. Small beer or smaller. We do not sing in here, not since Davin.', normal: 'Beer\'s a copper. Rooms are a sovereign. Singing is free and it will get you killed.', blunt: 'I\'ve put bigger men than you out of here for raising their voice. Sit.' },
     topics: { 'The Drift-Kestrel': 'Her captain drinks in the corner and laughs too loud at nothing. His crates for the garrison are in my cellar. Last night I went down for a cask and I swear to you one of them said a name.' },
     quest: (g) => {
@@ -371,19 +437,19 @@ const NPCS = {
     quest: (g) => null,
   },
   vosk: {
-    name: 'Factor Adela Vosk, Consortium of Bores', sprite: 'vosk', portrait: 'vosk', tier: 'high',
+    name: 'Factor Adela Vosk, Consortium of Bores', sprite: 'vosk', portrait: 'vosk', tier: 'high', scale: 1.03,
     greet: { polite: 'Pitch has a colour, through these lenses. Yours is an unremarkable brown. State your business.', normal: 'The Consortium pays this town\'s bread. Remember that before you speak.', blunt: 'I have Legionnaires. You have a voice. One of those is replaceable.' },
     topics: { 'The Rite': 'Stage Nine. Source: Cantor, local, one. Collar: standard. Wire: standard. It is a procedure, not a sacrifice. The Church likes the robes; we like the yield.', 'The Root': 'A resource. It will yield without limit if correctly relieved. That is the Arbiterium\'s phrasing, not mine, and I confess I do not entirely follow it.' },
     quest: (g) => null,
   },
   aldric: {
-    name: 'Governor Aldric Vance', sprite: 'aldric', portrait: 'aldric', tier: 'high',
+    name: 'Governor Aldric Vance', sprite: 'aldric', portrait: 'aldric', tier: 'high', scale: 1.06,
     greet: { polite: 'The seal of Queen Maelis bids you welcome. Her signature on the decrees is famously steady for a woman dead a hundred and forty years.', normal: 'Yes? Be brief. I have the Factor at one shoulder and the Church at the other.', blunt: 'You sold them, my son says. I fed them, I say. Which of us do you think is lying?' },
     topics: { 'Governor Vance': 'In the Cascade famine I had a town and no bread. The Consortium had bread and wanted a hole. I made the arithmetic. I have been making it ever since.', 'Kaelen Vance': 'My son thinks penance is a thing you do alone, in a hut, in the smoke. It is not. It is a thing you do in a room full of people who need feeding.' },
     quest: (g) => null,
   },
   tobiah: {
-    name: 'Junior Engineer Tobiah Marsh', sprite: 'tobiah', portrait: 'tobiah', tier: 'high',
+    name: 'Junior Engineer Tobiah Marsh', sprite: 'tobiah', portrait: 'tobiah', tier: 'high', scale: 0.94,
     greet: { polite: 'Night shift. Keep it under the pumps and the bells won\'t turn. Are you — are you with him? With Engineer Vance?', normal: 'Nobody comes down here who isn\'t on the roster. Which you aren\'t.', blunt: 'Quiet! The Legionnaire in Depot Three walks when it hears boots.' },
     topics: { 'The Quarry': 'I learned the Vance Sequence at fourteen. I asked its author to sign my copy. He did. Then he looked at it for a long time and told me to keep the charts somewhere the Factor would not look.' },
     quest: (g) => {
@@ -392,14 +458,14 @@ const NPCS = {
     },
   },
   bettany: {
-    name: 'Bettany, midwife and tonic-maker', sprite: 'bettany', portrait: 'bettany', tier: 'low',
+    name: 'Bettany, midwife and tonic-maker', sprite: 'bettany', portrait: 'bettany', tier: 'low', scale: 0.92,
     greet: { polite: 'Softly, love. What ails? I have tonic, I have honey for the throat, and I have shot, which I do not approve of and sell anyway.', normal: 'Tonic\'s five. Honey\'s four. Shot\'s three the three. Keep your voice down while you count.', blunt: 'I hummed half this town into the world. I will not be barked at in my own stall.' },
     topics: { 'Oakhaven': 'I have hummed forty-one births through a clay jar so the hounds would not hear the mother. Forty-one. I keep the count on the stall-post, under the cloth.', 'The Rite': 'They walked her past my stall this morning in white. I put a jar of honey in her hand. The proctor took it off her before the corner.' },
     shop: [{ item: 'tonic', price: 5 }, { item: 'honey', price: 4 }, { item: 'pellets', price: 3 }],
     quest: () => null,
   },
   tam: {
-    name: 'Old Tam, the night-hummer', sprite: 'tam', portrait: 'tam', tier: 'low',
+    name: 'Old Tam, the night-hummer', sprite: 'tam', portrait: 'tam', tier: 'low', scale: 0.9,
     greet: { polite: 'Sit if you like. She comes on the water about this time. You will hear her if you keep still.', normal: 'Hm. You are standing where I listen.', blunt: 'Lower your voice. She will not come if you shout.' },
     topics: { 'The Flume': 'My Essa went in at the sluice in the Cascade year. The water took her the way it takes everything. Three nights ago it brought her voice back up the Flume, singing The Miller\'s Daughter, which is ours. Mine and hers.', 'The Hedge': 'Everyone says never answer it. I know what they say. I say she gets the second verse right, and the Hedge could not know the second verse.' },
     quest: (g) => {
@@ -413,7 +479,7 @@ const NPCS = {
     },
   },
   hob: {
-    name: 'Hob Wendle, tanner', sprite: 'hob', portrait: 'hob', tier: 'low',
+    name: 'Hob Wendle, tanner', sprite: 'hob', portrait: 'hob', tier: 'low', scale: 1.08,
     greet: { polite: 'Evening. Mind the vats; the lime does not care who you are.', normal: 'Tannery\'s shut. Nobody wants leather off a town that is turning to wood.', blunt: 'I have buried two apprentices this year. Try me.' },
     topics: { 'The Hedge': 'The twins went down the culvert after their dog. Driftday last. I set a lamp in their window of a night. The key to the grate is on the nail inside; I have not had the stomach to turn it.', 'Oakhaven': 'A tannery is the one trade that gets quieter the harder you work it. Should have been safe. Should have been.' },
     quest: (g) => {
@@ -860,7 +926,7 @@ const CAMP = {
     },
   },
   tobiah_dw: {
-    name: 'Tobiah Marsh, second engineer', sprite: 'tobiah', portrait: 'tobiah', tier: 'high',
+    name: 'Tobiah Marsh, second engineer', sprite: 'tobiah', portrait: 'tobiah', tier: 'high', scale: 0.94,
     greet: { polite: 'Don\'t touch that. Or that. That one you can touch, it\'s already broken.', normal: 'Number-two tank. Look at it. I could weep. I nearly have.', blunt: 'I\'m an engine man in a forest. Say something useful or hold this.' },
     topics: { 'The Drift-Kestrel': 'Three bolts of silk to close the hole and a relief valve to stop her bursting the patch the first time Vane gets clever. Then hops. Forty miles, down, cool the tank, forty miles. It\'ll be like crossing a river on stepping-stones, if the stones were on fire.' },
     quest: (g) => {

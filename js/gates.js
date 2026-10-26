@@ -43,7 +43,7 @@ if (GFX.FX && !GFX.FX.includes('gateAnims')) GFX.FX.push('gateAnims');
 const GATES = (() => {
   const TEX = 64;
   const THRESH = 0.7;          // maps.js isSolidCell: a door is passable once open > 0.7
-  const HEAD_TOP = 0.6;        // eye height 0.5 plus the crown of the head
+  const HEAD_TOP = 0.98;       // eye height 0.88 plus the crown of the head
   const FLAG = 'gates_quarry_cavein';
   const WARN = 2.4, SETTLE = 1.8, GRACE = 1.2, RUBBLE_H = 0.45, MAX_RUBBLE = 9;
   const abgr = (r, g, b, a) => ((a === undefined ? 255 : a) << 24) | (b << 16) | (g << 8) | r;
