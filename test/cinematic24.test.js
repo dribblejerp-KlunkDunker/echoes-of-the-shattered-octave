@@ -50,8 +50,12 @@ const snap = (page) => page.evaluate(() => ({
   gameCls: document.getElementById('game').className, held: typeof Weather !== 'undefined' ? Weather.held : null, wstate: typeof Weather !== 'undefined' ? Weather.state : null,
   leftovers: Object.values(G.maps).reduce((n, m) => n + m.entities.filter((e) => e && e._cine).length, 0),
   introPs: document.querySelectorAll('#intro-text p').length,
+  black: !!document.querySelector('#cine24.black'), who: (document.querySelector('#cine24 .who.on') || {}).textContent || '',
+  music: typeof Audio_ !== 'undefined' && Audio_.music ? Audio_.music.current : null, ducked: CINEMATIC24.ducked(),
+  voiceLast: typeof VOICE_ACT !== 'undefined' && VOICE_ACT.state ? VOICE_ACT.state.last : null,
 }));
 const untilDone = (page, ms) => page.waitForFunction(() => !CINEMATIC24.running(), null, { timeout: ms || 60000 });
+
 
 (async () => {
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
@@ -60,36 +64,47 @@ const untilDone = (page, ms) => page.waitForFunction(() => !CINEMATIC24.running(
     {
       const { page, errors } = await boot(browser, { r3d: true });
       await newGame(page, 1);
+      await page.waitForTimeout(1200);
       const a = await snap(page);
       await page.evaluate(() => { CINEMATIC24.speed = 6; });
       assert.equal(a.on, true, 'the cinematic runs after creation'); assert.equal(a.state, 'intro', 'in the intro state');
       assert.equal(a.introCine, true, 'the intro screen hosts it'); assert.equal(a.skipText, 'Skip', 'the button says Skip');
-      assert.equal(a.ui && a.bars, true, 'bars up'); assert.match(a.cap, /four hundred and nineteenth/, 'the first caption is the first intro line');
-      assert.equal(a.map, 'p22_combe', 'the first shot is Wethercombe'); assert.ok(a.gameCls.includes('cine24'), 'the HUD is hidden');
+      assert.equal(a.ui && a.black, true, 'the prelude is black'); assert.equal(a.bars, false, 'no bars over black');
+      assert.equal(a.shot, 0, 'in the prelude'); assert.equal(a.cap, 'What is holiness?', 'the catechism\'s question'); assert.equal(a.who, 'Ignatius Crane', 'and who asks it');
+      assert.equal(a.music, 'opening', 'the director asks for the opening piece'); assert.equal(a.ducked, true, 'ducked under the line');
+      assert.ok(a.gameCls.includes('cine24'), 'the HUD is hidden');
       assert.equal(a.held, true, 'the sky is held'); assert.equal(a.wstate, 'clear', 'and clear');
-      // the column shot stages its figures, and the card comes
-      await page.waitForFunction(() => CINEMATIC24.shot() === 3, null, { timeout: 30000 });
-      await page.waitForTimeout(400);
-      const c = await snap(page);
-      assert.equal(c.map, 'greenroot', 'the fourth shot is Greenroot'); assert.ok(c.staged >= 12, 'the Synod column is staged (' + c.staged + ')');
-      assert.match(c.cap, /glass-fire/, 'its caption');
-      await page.waitForFunction(() => CINEMATIC24.shot() === 5, null, { timeout: 30000 });
-      await page.waitForTimeout(700);
-      const d = await snap(page);
-      assert.equal(d.card, true, 'the title card shows'); assert.equal(d.staged, 0, 'the column is gone before the card');
-      await untilDone(page, 40000); await page.waitForTimeout(600);
+      await untilDone(page, 60000); await page.waitForTimeout(600);
+      await page.waitForFunction(() => Audio_.music.current !== 'opening', null, { timeout: 10000 });   // the director's next frame
       const e = await snap(page);
+      // what the cues did, shot by shot, from the module's own trace (headless frames are too slow to catch them live)
+      const log = await page.evaluate(() => CINEMATIC24.trace());
+      const at = (shot, re) => log.find((x) => x.shot === shot && re.test(x.cap));
+      assert.equal(log.filter((x) => x.id !== 'card').length, 12, 'twelve cues fired');
+      const b = at(1, /four hundred and nineteenth/);
+      assert.ok(b, 'the narrator\'s caption in the combe is the first intro line'); assert.equal(b.map, 'p22_combe', 'the second shot is Wethercombe'); assert.equal(b.who, '', 'no name over the narrator');
+      assert.equal(b.id, 'narrator.open.0', 'the narrator\'s recorded line');
+      const c = at(4, /glass-fire/);
+      assert.ok(c, 'the column\'s caption'); assert.equal(c.map, 'greenroot', 'the fifth shot is Greenroot'); assert.ok(c.staged >= 12, 'the Synod column is staged (' + c.staged + ')');
+      const c2 = at(4, /^One note\. One law\. One hand\.$/);
+      assert.ok(c2, 'Ignatius speaks over the column'); assert.equal(c2.who, 'ignatius', 'named'); assert.equal(c2.id, 'ignatius.open.onenote', 'his recorded line');
+      const d = log.find((x) => x.shot === 6 && x.id === 'card');
+      assert.ok(d, 'the title card shows'); assert.equal(d.staged, 0, 'the column is gone before the card');
+      const g = at(7, /Keep your voice in your chest/);
+      assert.ok(g, 'Harrow\'s second line at the gate'); assert.equal(g.map, 'oakhaven', 'the last shot is the gate'); assert.equal(g.who, 'harrow', 'Harrow speaks');
+      assert.ok(at(7, /Greenroot road/), 'and his first'); assert.equal(e.voiceLast, 'harrow.open.1', 'the last recorded line played was his');
       assert.equal(e.state, 'play', 'play after the opening'); assert.equal(e.map, 'oakhaven', 'in Oakhaven');
       assert.deepEqual(e.cam.slice(0, 3), [23.5, 3.5, 1.571], 'at the North Gate spawn, facing the town');
       assert.ok(Math.abs(e.tod - 0.74) < 0.01, 'the clock is back at dusk (' + e.tod.toFixed(3) + ')');
       assert.equal(e.leftovers, 0, 'nothing staged is left in any map'); assert.equal(e.ui, false, 'the overlay is gone');
       assert.equal(e.introCine, false, 'the intro screen is itself again'); assert.equal(e.skipText, 'Continue', 'and its button');
       assert.ok(!e.gameCls.includes('cine24'), 'the HUD is back'); assert.equal(e.held, false, 'the sky is let go');
-      assert.equal(e.stats.finished, 1, 'finished once'); assert.equal(e.stats.shots, 7, 'seven shots'); assert.equal(e.stats.errors, 0, 'no internal errors');
+      assert.equal(e.stats.finished, 1, 'finished once'); assert.equal(e.stats.shots, 8, 'eight shots'); assert.equal(e.stats.errors, 0, 'no internal errors');
+      assert.equal(e.stats.lines, 12, 'twelve recorded lines were played'); assert.notEqual(e.music, 'opening', 'the director is its own again (' + e.music + ')');
       const msgs = await page.evaluate(() => document.querySelector('#msgs').textContent);
       assert.match(msgs, /Nullday/, 'the game\'s own first message follows');
       assert.deepEqual(errors, [], 'page errors: ' + errors.join(' | '));
-      pass('the whole opening, R3D: seven shots, the column, the card, and play at the gate');
+      pass('the whole opening, R3D: eight shots, the catechism, the narrator, the column, the card, Harrow, and play at the gate');
       await page.close();
     }
     // ---------------------------------------------------------------- skipping: the button, a click, Escape; and a replay
@@ -107,7 +122,7 @@ const untilDone = (page, ms) => page.waitForFunction(() => !CINEMATIC24.running(
       const ok = await page.evaluate(() => CINEMATIC24.replay());
       assert.equal(ok, true, 'replay starts'); await page.waitForTimeout(500);
       s = await snap(page);
-      assert.equal(s.on && s.state === 'intro', true, 'replaying in the intro state'); assert.equal(s.map, 'p22_combe', 'from the first shot');
+      assert.equal(s.on && s.state === 'intro', true, 'replaying in the intro state'); assert.equal(s.shot === 0 && s.black, true, 'from the prelude');
       await page.keyboard.press('Escape'); await page.waitForTimeout(500);
       s = await snap(page);
       assert.equal(s.on, false, 'Escape skips the replay'); assert.equal(s.state, 'play', 'back in play');
@@ -146,16 +161,17 @@ const untilDone = (page, ms) => page.waitForFunction(() => !CINEMATIC24.running(
       pass('setting off gives the old intro; the Options rows toggle and persist');
       await page.close();
     }
-    // ---------------------------------------------------------------- Reduce motion, and the CPU raycaster, at 8x
+    // ---------------------------------------------------------------- Reduce motion, and the CPU raycaster, at 3x
     for (const o of [{ r3d: true, reduce: true, name: 'Reduce motion' }, { r3d: false, name: 'CPU raycaster (no R3D)' }]) {
       const { page, errors } = await boot(browser, o);
-      await newGame(page, 8);
-      await page.waitForTimeout(600);
+      await newGame(page, 3);
+      await page.waitForFunction(() => CINEMATIC24.shot() >= 1, null, { timeout: 30000 });   // past the prelude: a map is up
+      await page.waitForTimeout(300);
       const a = await snap(page);
       assert.equal(a.on, true, 'runs');
       if (!o.r3d) assert.equal(a.cam[3], a.cam[3] && +(await page.evaluate(() => (G.map.groundAt ? G.map.groundAt(Engine.cam.x, Engine.cam.y) : 0) + 0.88)).toFixed(2), 'eye height on the raycaster');
       if (o.reduce) { const b = await snap(page); assert.deepEqual(b.cam.slice(0, 2), a.cam.slice(0, 2), 'the camera holds still under Reduce motion'); }
-      await untilDone(page, 40000); await page.waitForTimeout(500);
+      await untilDone(page, 80000); await page.waitForTimeout(500);
       const e = await snap(page);
       assert.equal(e.state, 'play', 'play after'); assert.equal(e.map, 'oakhaven', 'in Oakhaven'); assert.equal(e.leftovers, 0, 'nothing left'); assert.equal(e.stats.errors, 0, 'no internal errors');
       assert.deepEqual(errors, [], 'page errors: ' + errors.join(' | '));

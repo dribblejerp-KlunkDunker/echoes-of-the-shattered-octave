@@ -2,13 +2,16 @@
 //  cinematic24 — Phase 24 "The opening": a scripted camera sequence before the first step.
 //
 //  The game used to open on six paragraphs of text scrolling over black (INTRO, js/data.js). The same six lines now
-//  run as captions under a camera that flies through the game's own maps, in the player's own renderer and preset:
+//  run as captions, spoken by a narrator, under a camera that flies through the game's own maps, in the player's own
+//  renderer and preset; an original score runs under the whole sequence and the people in it speak:
+//    0  (black) the catechism of the Pure Note: Ignatius Crane asks, the congregation answers, over a low F and a bell
 //    1  "It is autumn, 419 SR. Seven years ago the Light let go."      Wethercombe from Hob's Knap, the sun on the ridge, a descent
 //    2  "You have come up the Greenroot road to Oakhaven ... a hedge" the road outside the Hedge at dusk, the town behind it
 //    3  "Too loud brings the hounds. Too still brings the Hush."      the Deep Woods at night: hounds; then the picture drains
 //    4  "The Church is coming up the road behind you ..."             the Synod column marching through Greenroot under glass-fire
 //    5  "Nobody has rung a bell in Oakhaven ..."                       a crane over the main street at dusk to the empty bell-tower
-//    6  (black) the title card; then "Keep your voice in your chest." fading up on the North Gate: the first frame of play
+//    6  (black) the title card, the full ensemble on the name motif
+//    7  the North Gate, the first frame of play: Old Harrow speaks the two lines that end the old intro's thought
 //  Nothing in the world is changed by it: every figure it stages is transient and removed, the maps are the real maps,
 //  the clock is put back to the dusk the game starts at, and the sequence ends on loadMap('oakhaven') exactly as the
 //  old intro did. Skip at any time: Esc, Enter, Space, a click, the Skip button (the old intro's own handlers, so the
@@ -18,8 +21,12 @@
 //  The camera: R3D (js/r3d21.js) can look from above the walls, so the crane shots climb; on the CPU raycaster the same
 //  shots run at eye height. Pitch goes through R3D.camera.setAngle, which clamps per renderer. The HUD is not drawn
 //  (drawHUD is a no-op while it runs) and the fade, bars, captions and card are DOM over the view.
-//  Music: the title cue keeps playing (musicDirector requests it in the intro state; with the Extended score that is the
-//  main theme's first stage). The Pure Note under shot 4 and the hounds in shot 3 are the game's own sfx.
+//  Sound: music/opening.mp3 (tools/music/pieces/opening.py, cut to these shots: the cue sheet there is the SHOTS table
+//  here) is requested through musicDirector for as long as the sequence runs, from the start, and ducked under speech;
+//  the title cue comes back when it ends. The lines are the recorded voices (voices/script.json, ids narrator.open.*,
+//  ignatius.open.*, chorus_congregation.open.*, harrow.open.*) through VOICE_ACT.playLine, when the Voices setting is
+//  Voiced; the captions show whatever the setting. Shot lengths are fixed (the score is written to them), each a little
+//  longer than its lines. The Pure Note under shot 5 and the hounds in shot 3 are the game's own sfx on top.
 //  State: localStorage 'octave.cine24.v1' { play: 0|1 }. No saved fields, no flags, no Math.random.
 // ============================================================
 'use strict';
@@ -36,7 +43,7 @@ const CINEMATIC24 = (function () {
   const reduced = () => !!(typeof GFX !== 'undefined' && GFX.reduceMotion);
   const noFlash = () => !!(typeof GFX !== 'undefined' && GFX.noFlash);
   const r3dOn = () => { try { return typeof R3D !== 'undefined' && R3D.active(); } catch (e) { return false; } };
-  const stats = { played: 0, skipped: 0, finished: 0, shots: 0, errors: 0 };
+  const stats = { played: 0, skipped: 0, finished: 0, shots: 0, lines: 0, errors: 0 };
 
   // ---------------------------------------------------------------- the setting
   const set = { play: true };
@@ -46,21 +53,35 @@ const CINEMATIC24 = (function () {
   // ---------------------------------------------------------------- the shots
   // cam: x, y, dir (radians), pitch (radians, down is negative), h (eye height above the ground: R3D only; the CPU
   // raycaster keeps 0.88). from/to are eased over dur seconds (held at `from` under Reduce motion). cap is the INTRO line.
+  // lines: { at (seconds into the shot), id (voices/script.json), who (the speaker's name over the caption; none for the
+  // narrator), cap (INTRO index) or t (the words) }. A line's caption shows when it starts and goes with the cut.
+  // Durations: the shot outlasts its last line by a breath; the score (tools/music/pieces/opening.py) is cut to them.
   const TOD = { gold: 0.715, dusk: 0.73, lateDusk: 0.76, night: 0.95 };   // the sun on the ridge; the Hedge at dusk; lamps lit; the woods at night
+  const WHO = { ignatius: 'Ignatius Crane', chorus_congregation: 'The congregation', harrow: 'Old Harrow' };
   const SHOTS = [
-    { id: 'combe', map: 'p22_combe', tod: TOD.gold, dur: 8.5, cap: 0,
+    { id: 'prelude', black: true, dur: 13.0, lines: [
+      { at: 1.2, id: 'ignatius.open.catechism.0', who: 'ignatius', t: 'What is holiness?' },
+      { at: 3.8, id: 'chorus_congregation.open.catechism.0', who: 'chorus_congregation', t: 'One note, held without end.' },
+      { at: 7.3, id: 'ignatius.open.catechism.1', who: 'ignatius', t: 'What is sin?' },
+      { at: 9.6, id: 'chorus_congregation.open.catechism.1', who: 'chorus_congregation', t: 'The second note.' }] },
+    { id: 'combe', map: 'p22_combe', tod: TOD.gold, dur: 10.0, lines: [{ at: 1.5, id: 'narrator.open.0', cap: 0 }],
       from: { x: 54.8, y: 18.3, dir: 3.1, pitch: 0.0, h: 1.7 }, to: { x: 52.8, y: 18.1, dir: 3.07, pitch: -0.05, h: 0.95 } },
-    { id: 'hedge', map: 'clearing', tod: TOD.dusk, dur: 9.5, cap: 1,
+    { id: 'hedge', map: 'clearing', tod: TOD.dusk, dur: 14.0, lines: [{ at: 1.2, id: 'narrator.open.1', cap: 1 }],
       from: { x: 20.5, y: 16.5, dir: Math.PI / 2, pitch: 0.0, h: 1.05 }, to: { x: 20.5, y: 31.2, dir: Math.PI / 2, pitch: 0.02, h: 0.92 } },
-    { id: 'hounds', map: 'deepwoods', tod: TOD.night, dur: 9, cap: 2, hush: 0.62,
+    { id: 'hounds', map: 'deepwoods', tod: TOD.night, dur: 9.5, hush: 0.62, lines: [{ at: 1.5, id: 'narrator.open.2', cap: 2 }],
       from: { x: 27.5, y: 37.0, dir: -Math.PI / 2, pitch: 0, h: 0.88 }, to: { x: 27.5, y: 35.4, dir: -Math.PI / 2, pitch: 0, h: 0.88 }, stage: 'hounds' },
-    { id: 'church', map: 'greenroot', tod: TOD.lateDusk, dur: 11.5, cap: 3,
+    { id: 'church', map: 'greenroot', tod: TOD.lateDusk, dur: 19.0, lines: [{ at: 1.2, id: 'narrator.open.3', cap: 3 },
+      { at: 14.4, id: 'ignatius.open.onenote', who: 'ignatius', t: 'One note. One law. One hand.' }],
       from: { x: 4.8, y: 13.5, dir: 0.02, pitch: 0.0, h: 0.95 }, to: { x: 2.6, y: 13.5, dir: -0.02, pitch: 0.0, h: 0.95 }, stage: 'column' },
-    { id: 'town', map: 'oakhaven', tod: TOD.lateDusk, dur: 10.5, cap: 4,
+    { id: 'town', map: 'oakhaven', tod: TOD.lateDusk, dur: 12.0, lines: [{ at: 1.2, id: 'narrator.open.4', cap: 4 }],
       from: { x: 10.5, y: 23.5, dir: 0.0, pitch: 0.06, h: 0.95 }, to: { x: 18.5, y: 23.5, dir: -0.08, pitch: 0.0, h: 0.95 } },
     { id: 'card', card: true, dur: 6.0 },
-    { id: 'gate', map: 'oakhaven', tod: 0.74, dur: 4.0, cap: 5, spawn: true, from: null, to: null },
+    { id: 'gate', map: 'oakhaven', tod: 0.74, dur: 13.8, spawn: true, from: null, to: null, lines: [
+      { at: 1.2, id: 'harrow.open.0', who: 'harrow', t: 'You came up the Greenroot road? Then you heard what\'s behind you, singing.' },
+      { at: 6.6, id: 'harrow.open.1', who: 'harrow', t: 'Keep your voice in your chest, friend. And welcome to what\'s left of Oakhaven.' }] },
   ];
+  const MUSIC = 'opening';   // music/opening.mp3; TRACKS in js/audio.js
+  const DUCK = 0.6;          // the score under a line
   const FADE = 1.1;   // seconds, each cut
 
   // ---------------------------------------------------------------- the DOM
@@ -73,6 +94,9 @@ const CINEMATIC24 = (function () {
 #cine24 .fade.clear { opacity: 0; } #cine24 .fade.snap { transition: none; }
 #cine24 .cap { position: absolute; left: 50%; bottom: 13.5cqh; transform: translateX(-50%); width: 72cqw; text-align: center; font-size: min(2.5cqw, 3cqh); line-height: 1.45; color: var(--parch, #e8dcc0); text-shadow: 0 0 3px #000, 0 1px 0 #000, 1px 0 0 #000, 0 0 14px rgba(0,0,0,.9); opacity: 0; transition: opacity 700ms ease; }
 #cine24 .cap.on { opacity: 1; }
+#cine24 .who { position: absolute; left: 50%; bottom: 20.5cqh; transform: translateX(-50%); font-family: var(--font-sc, serif); font-size: min(1.9cqw, 2.3cqh); letter-spacing: .14em; color: var(--gold, #d4a24a); text-shadow: 0 0 3px #000, 0 1px 0 #000, 0 0 12px rgba(0,0,0,.9); opacity: 0; transition: opacity 700ms ease; }
+#cine24 .who.on { opacity: 1; }
+#cine24.black .cap { bottom: 44cqh; font-style: italic; } #cine24.black .who { bottom: 52cqh; }
 #cine24 .card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.4s ease; background: #000; }
 #cine24 .card.on { opacity: 1; }
 #cine24 .card svg { width: 8cqw; height: 8cqw; color: var(--gold, #d4a24a); margin-bottom: 1.4cqh; }
@@ -100,13 +124,14 @@ html.ac-rm #cine24 .bar, html.ac-rm #cine24 .fade, html.ac-rm #cine24 .cap, html
     const bot = document.createElement('div'); bot.className = 'bar bot';
     const fade = document.createElement('div'); fade.className = 'fade';
     const cap = document.createElement('p'); cap.className = 'cap';
+    const who = document.createElement('p'); who.className = 'who';
     const card = document.createElement('div'); card.className = 'card';
     card.innerHTML = SIGIL;   // a constant: the title screen's own sigil
     const h1 = document.createElement('h1'); const t = $q('#title .title-inner h1'); h1.textContent = t ? Array.from(t.childNodes).map((n) => n.textContent.trim()).filter(Boolean).join(' ') : 'Echoes of the Shattered Octave';
     const sub = document.createElement('p'); sub.className = 'sub'; const s = $q('#title .title-inner .sub'); sub.textContent = s ? s.textContent : 'Book One · The Silenced Province';
     card.append(h1, sub);
-    root.append(fade, top, bot, cap, card); game.appendChild(root);
-    return { root, top, bot, fade, cap, card, game };
+    root.append(fade, top, bot, who, cap, card); game.appendChild(root);
+    return { root, top, bot, fade, cap, who, card, game };
   }
 
   // ---------------------------------------------------------------- staging: figures that exist only for the shot
@@ -164,13 +189,33 @@ html.ac-rm #cine24 .bar, html.ac-rm #cine24 .fade, html.ac-rm #cine24 .cap, html
   function mix(a, b, t) { return { x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t), dir: lerp(a.dir, b.dir, t), pitch: lerp(a.pitch, b.pitch, t), h: lerp(a.h, b.h, t) }; }
 
   // ---------------------------------------------------------------- the run
-  const S = { on: false, t: 0, t0: 0, speed: 1, shot: -1, raf: 0, last: 0, saved: null, handlers: null, phase: '', drawHUD: null };
+  const S = { on: false, t: 0, t0: 0, speed: 1, shot: -1, raf: 0, last: 0, saved: null, handlers: null, phase: '', drawHUD: null, fired: 0, duckUntil: 0, trace: [] };
   function capText(i) { const L = typeof INTRO !== 'undefined' && Array.isArray(INTRO) ? INTRO : []; return L[i] || ''; }
+  // the recorded line, if the manifest has it and the Voices setting allows recorded lines; returns its length
+  const voiced = () => typeof VOICE_ACT !== 'undefined' && !!VOICE_ACT.LINES && (typeof VOICES === 'undefined' || ['acted', 'spoken'].includes(VOICES.mode));
+  function speak(ln) {
+    const l = voiced() ? VOICE_ACT.LINES[ln.id] : null;
+    if (!l) return 0;
+    try { const d = VOICE_ACT.playLine(Object.assign({ id: ln.id }, l), { interrupt: true }); if (d) stats.lines++; return d; } catch (e) { warnOnce('line', e); return 0; }
+  }
+  function hushVoice() { try { const c = typeof VOICE_ACT !== 'undefined' && VOICE_ACT.state ? VOICE_ACT.state.current : null; if (c) { c.stop(); VOICE_ACT.state.current = null; } } catch (e) { /* already ended */ } }
+  function fireLine(ln) {
+    ui.cap.textContent = ln.cap != null ? capText(ln.cap) : ln.t || ''; ui.cap.classList.add('on');
+    ui.who.textContent = ln.who ? WHO[ln.who] || ln.who : ''; ui.who.classList.toggle('on', !!ln.who);
+    const l = typeof VOICE_ACT !== 'undefined' && VOICE_ACT.LINES ? VOICE_ACT.LINES[ln.id] : null;
+    const d = speak(ln) || (l && l.d) || 3;
+    S.duckUntil = S.t + d + 0.3;
+    note(ln.id, ln.who || '');
+  }
+  // what happened when, for the tests and the console (the last 64 cues): shot, second, line id, caption, map, figures
+  function note(id, who) { if (S.trace.length >= 64) S.trace.shift(); S.trace.push({ shot: S.shot, t: +S.t.toFixed(2), id, who, cap: ui.cap.textContent, map: hasG() ? G.mapId : null, staged: R.ents.length }); }
   function setShot(i) {
-    const sh = SHOTS[i]; S.shot = i; S.t = 0; S.t0 = performance.now(); S.phase = 'in'; stats.shots++;
-    ui.card.classList.toggle('on', !!sh.card);
+    const sh = SHOTS[i]; S.shot = i; S.t = 0; S.t0 = performance.now(); S.phase = 'in'; S.fired = 0; S.duckUntil = 0; stats.shots++;
+    ui.card.classList.toggle('on', !!sh.card); ui.root.classList.toggle('black', !!sh.black);
     ui.game.classList.remove('hush');
-    if (sh.card) { ui.cap.classList.remove('on'); ui.root.classList.remove('bars'); return; }
+    ui.cap.classList.remove('on'); ui.who.classList.remove('on');
+    if (sh.card) { ui.root.classList.remove('bars'); return; }
+    if (sh.black) { ui.root.classList.remove('bars'); ui.fade.classList.remove('clear'); return; }   // the fade stays down: a voice in the dark
     ui.root.classList.add('bars');
     const m = G.maps[sh.map]; if (!m) { next(); return; }
     unstage();
@@ -182,7 +227,6 @@ html.ac-rm #cine24 .bar, html.ac-rm #cine24 .fade, html.ac-rm #cine24 .cap, html
     if (sh.stage === 'column') stageColumn(m);
     if (sh.stage === 'hounds') stageHounds(m);
     if (!sh.spawn) camTo(m, sh.from);
-    ui.cap.textContent = capText(sh.cap); ui.cap.classList.add('on');
     ui.fade.classList.add('clear');
   }
   function next() {
@@ -198,16 +242,20 @@ html.ac-rm #cine24 .bar, html.ac-rm #cine24 .fade, html.ac-rm #cine24 .cap, html
     S.t = Math.max(0, (now - S.t0) / 1000) * S.speed;   // the clock, not the frame: the sequence lasts the same on any machine
     const m = G.maps[sh.map];
     try {
+      const L = sh.lines || [];
+      while (S.fired < L.length && S.t >= L[S.fired].at) fireLine(L[S.fired++]);
       if (sh.card) {
-        if (S.t > 0.5 && S.phase === 'in') { ui.card.classList.add('on'); S.phase = 'hold'; }
+        if (S.t > 0.5 && S.phase === 'in') { ui.card.classList.add('on'); S.phase = 'hold'; note('card', ''); }
         if (S.t > sh.dur - 1.4 && S.phase === 'hold') { ui.card.classList.remove('on'); S.phase = 'out'; }
+      } else if (sh.black) {
+        if (S.t > sh.dur - 1.0 && S.phase !== 'out') { S.phase = 'out'; ui.cap.classList.remove('on'); ui.who.classList.remove('on'); }
       } else if (m) {
         const k = reduced() ? 0 : ease(S.t / sh.dur);
         if (!sh.spawn) camTo(m, mix(sh.from, sh.to, k));
         if (sh.stage === 'column') tickColumn(S.t);
         if (sh.stage === 'hounds') tickHounds(S.t);
         if (sh.hush != null) ui.game.classList.toggle('hush', S.t > sh.dur * sh.hush);
-        if (S.t > sh.dur - FADE && S.phase !== 'out') { S.phase = 'out'; ui.fade.classList.remove('clear'); ui.cap.classList.remove('on'); }
+        if (S.t > sh.dur - FADE && S.phase !== 'out') { S.phase = 'out'; ui.fade.classList.remove('clear'); ui.cap.classList.remove('on'); ui.who.classList.remove('on'); }
       }
     } catch (e) { stats.errors++; warnOnce('tick', e); }
     if (S.t >= sh.dur) next();
@@ -224,7 +272,8 @@ html.ac-rm #cine24 .bar, html.ac-rm #cine24 .fade, html.ac-rm #cine24 .cap, html
     const btn = $q('#btn-intro-skip'); if (btn) btn.textContent = 'Skip';
     S.drawHUD = typeof drawHUD === 'function' ? drawHUD : null;
     if (S.drawHUD) drawHUD = function () { /* no HUD under the cinematic */ };
-    S.shot = -1; S.last = performance.now();
+    S.shot = -1; S.last = performance.now(); S.duckUntil = 0; S.trace = [];
+    try { if (typeof Audio_ !== 'undefined' && Audio_.music) { Audio_.music.preload([MUSIC]); Audio_.music.seek(MUSIC, 0); } } catch (e) { warnOnce('music', e); }
     setShot(0);
     S.raf = requestAnimationFrame(tick);
     return true;
@@ -234,6 +283,7 @@ html.ac-rm #cine24 .bar, html.ac-rm #cine24 .fade, html.ac-rm #cine24 .cap, html
     if (!S.on) return;
     S.on = false; cancelAnimationFrame(S.raf);
     if (skipped) stats.skipped++; else stats.finished++;
+    hushVoice();
     try { unstage(); } catch (e) { warnOnce('unstage', e); }
     if (S.drawHUD) { drawHUD = S.drawHUD; S.drawHUD = null; }
     if (S.saved) { G.tod = S.saved.tod; try { const w = S.saved.weather; if (w && typeof Weather !== 'undefined' && Weather.hold) { Weather.hold(w.state); Weather.release(); } } catch (e) { warnOnce('weather', e); } }
@@ -269,6 +319,14 @@ html.ac-rm #cine24 .bar, html.ac-rm #cine24 .fade, html.ac-rm #cine24 .cap, html
       const _acc = renderAccessibilityMenu;
       renderAccessibilityMenu = function () { const r = _acc.apply(this, arguments); try { appendRows(); } catch (e) { warnOnce('rows', e); } return r; };
     }
+    // the score: while the sequence runs, the director asks for the opening piece and nothing else, lower under a line
+    if (typeof musicDirector === 'function') {
+      const _md = musicDirector;
+      musicDirector = function (dt) {
+        if (S.on && typeof Audio_ !== 'undefined' && Audio_.music) return Audio_.music.request(MUSIC, S.t < S.duckUntil ? DUCK : 1);
+        return _md.apply(this, arguments);
+      };
+    }
   }
   // Options -> Graphics & access: the switch, and a replay from inside a game
   function appendRows() {
@@ -301,6 +359,6 @@ html.ac-rm #cine24 .bar, html.ac-rm #cine24 .fade, html.ac-rm #cine24 .cap, html
   }
   wire();
 
-  return { KEY, SHOTS, FADE, set, stats, start, end, replay, save, restore, running: () => S.on, shot: () => S.shot, time: () => S.t, staged: () => R.ents.length, injectStyle, get speed() { return S.speed; }, set speed(v) { S.speed = Math.max(0.1, +v || 1); } };
+  return { KEY, SHOTS, FADE, MUSIC, DUCK, WHO, set, stats, start, end, replay, save, restore, running: () => S.on, shot: () => S.shot, time: () => S.t, staged: () => R.ents.length, ducked: () => S.on && S.t < S.duckUntil, trace: () => S.trace.slice(), injectStyle, get speed() { return S.speed; }, set speed(v) { S.speed = Math.max(0.1, +v || 1); } };
 })();
 if (typeof window !== 'undefined') window.CINEMATIC24 = CINEMATIC24;

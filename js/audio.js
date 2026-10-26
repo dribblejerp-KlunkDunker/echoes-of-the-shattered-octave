@@ -179,6 +179,7 @@ const Audio_ = (() => {
     title: { gap: [4, 6] }, town: { gap: [18, 40] }, wild: { gap: [20, 45] }, dungeon: { gap: [14, 30] },
     tavern: { gap: [6, 12] }, ending: { gap: [5, 8] }, grove: { gap: [16, 34] }, coda: { gap: [16, 34] },
     combat: { loop: 128 * 60 / 128 }, greening: { loop: 128 * 60 / 140 },
+    opening: { gap: [2, 2] },   // the opening cinematic's own piece (js/cinematic24.js): asked for while it runs, from the top each time
   };
   const music = (() => {
     const els = {}; let want = null, wantVol = 1, wantRate = 1, enabled = true, unlocked = false;

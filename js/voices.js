@@ -421,6 +421,7 @@ const VOICES = (() => {
     ] },
     { title: 'Music (music/)', rows: [
       ['Title, Town, Tavern, Wild, Dungeon, Grove, Coda, Combat, Greening, Ending', 'Score for this game, described in the README and audio.js as original orchestral cues; composer and rendering tool not recorded: unverified', 'Licence: unverified', MUSIC_FILES],
+      ['The opening (music/opening.mp3)', 'The opening cinematic\'s score, composed for this game in tools/music/pieces/opening.py and rendered like the Extended score', 'Composition: game source; FluidR3 GM soundfont: MIT', ['opening.mp3']],
       ['Extended score (music/extended/, 22 pieces)', 'Composed for this game in tools/music/ and rendered with FluidSynth using the FluidR3 GM soundfont (Frank Wen); reverb with pedalboard', 'Compositions: game source; FluidR3 GM soundfont: MIT', []],
       ['Paintings (img/painted/)', 'Loading cards, death and ending pictures, logbook sketches: generated with Canva AI (five area cards) and locally with DreamShaper 8 LCM (tools/art/paint.py)', 'Canva: per the owner\'s Canva terms; DreamShaper: CreativeML OpenRAIL-M', []],
     ] },
