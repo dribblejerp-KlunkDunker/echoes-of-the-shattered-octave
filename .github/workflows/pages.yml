@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v5.1.0
       - uses: actions/setup-node@v5.0.0
         with:
-          node-version: 20
+          node-version: 22
       # derive the offline file lists from index.html and the asset folders, then copy exactly the served files
       - name: Write the service worker's lists and stage the site
         run: node tools/pwa/precache.js --stage _site
