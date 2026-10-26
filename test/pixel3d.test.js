@@ -63,7 +63,7 @@ async function boot(browser, block) {
     const r = await A.page.evaluate(() => {
       const check = (ok, text) => { if (!ok) throw new Error(text); };
       const out = { models: PIXEL3D.models(), cells: 0 };
-      check(out.models.length >= 45 && ['vane', 'hollow', 'halder', 'p_barrel', 'chest'].every((n) => out.models.includes(n)) && !['hound', 'proctor', 'townsman', 'legionnaire', 'hetty', 'hob'].some((n) => out.models.includes(n)), 'the unrigged people and the props are baked, the bestiary and the rigged people are not (' + out.models.length + ': ' + out.models.join(' ') + ')');
+      check(out.models.length >= 34 && ['orla', 'hollow', 'cutter', 'p_barrel', 'chest'].every((n) => out.models.includes(n)) && !['hound', 'proctor', 'townsman', 'legionnaire', 'hetty', 'hob', 'vane', 'harrow', 'tam', 'aldric', 'quist', 'herald', 'mags', 'wren'].some((n) => out.models.includes(n)), 'the unrigged people and the props are baked, the bestiary and the rigged people are not (' + out.models.length + ': ' + out.models.join(' ') + ')');
       for (const n of out.models) {
         const a = PIXEL3D.ATLAS[n], views = a.k === 'creature' ? [0, 2, 4, 6] : [0], poses = a.k === 'creature' ? PIXEL3D.POSES : [''];
         for (const v of views) for (const p of poses) {
@@ -75,8 +75,8 @@ async function boot(browser, block) {
         }
       }
       // a creature's height in world units stays near the painted sprite's (the def's scale is applied on top)
-      const h0 = PIXEL3D.view('vane', 2, '').hs, p0 = PIXEL3D.view('hollow', 0, '').hs;
-      const hh = Engine.sprites.vane.hs || 1, ph = Engine.sprites.hollow.hs || 1;
+      const h0 = PIXEL3D.view('orla', 2, '').hs, p0 = PIXEL3D.view('hollow', 0, '').hs;
+      const hh = Engine.sprites.orla.hs || 1, ph = Engine.sprites.hollow.hs || 1;
       check(Math.abs(h0 - hh) < 0.25 && Math.abs(p0 - ph) < 0.25, 'model heights near the paintings (' + h0 + ' vs ' + hh + ', ' + p0 + ' vs ' + ph + ')');
       // --- the directional chain ---
       PRESETS.apply('medium'); GFX.pixel3d = true; GFX.changed();
@@ -93,7 +93,7 @@ async function boot(browser, block) {
       check(prModel === 0 && prs.size === 4, 'the proctor turns through its rigged sides and back, not the extrusion (' + [...prs].join(' ') + ')');
       const tw = put('townswoman', 21.5, 27.5, 0, null); tw.facing = Math.PI; const twd = animDirectionalSprite(tw);
       check(twd.sprite && !twd.sprite.pixel3d && twd.sprite.w !== Engine.sprites.townswoman.w, 'a townswoman seen from the side draws her rigged side view');
-      for (const n of ['hetty', 'rooke', 'sable', 'hob', 'nell']) { const q = put(n, 21.5, 27.5, 0, null); q.facing = Math.PI; const d = animDirectionalSprite(q); check(d.sprite && !d.sprite.pixel3d && d.sprite.w !== Engine.sprites[n].w, n + ' seen from the side draws a rigged side view'); }
+      for (const n of ['hetty', 'rooke', 'sable', 'hob', 'nell', 'flambeau', 'vane', 'pim', 'vosk', 'harrow', 'tobiah', 'aldric', 'bettany', 'tam', 'quist', 'halder', 'sexton', 'herald', 'mags', 'mourner', 'wren', 'burlsick']) { const q = put(n, 21.5, 27.5, 0, null); q.facing = Math.PI; const d = animDirectionalSprite(q); check(d.sprite && !d.sprite.pixel3d && d.sprite.w !== Engine.sprites[n].w, n + ' seen from the side draws a rigged side view'); }
       // the bestiary keeps its Phase 20 hand-built views, snapped to four sides: a hound shows four drawings over eight facings
       const h = { kind: 'enemy', sprite: 'hound', x: 20.5, y: 26.5, scale: 0.8, facing: 0, animSprite: null };   // not in the map: no AI runs on it
       const hs = new Set(); let hm = 0;

@@ -330,4 +330,467 @@
       drawCut(C, S.cut.arms, th, axT, 7, 0, x.row(38), 0, { kx: 0.3 + 0.7 * Math.abs(x.cs), dz: x.front + 3, mirror: x.back, shade: x.back ? 0.85 : 1, id: 30 });
     },
   });
+  // ---------------------------------------------------------------- Flambeau
+  // The priest: a tall mitre, white and gold vestments, a burning censer swinging from the right hand.
+  SP.flambeau = humanoid({
+    W: 120, axT: 56, knee: 112, hip: 96,
+    patches: { cloth: [30, 120, 14, 20], mitre: [36, 10, 8, 10], sleeve: [12, 48, 8, 14] },
+    sil: [[[30, 0], [56, 0], [58, 40], [62, 60], [60, 100], [64, 150], [14, 150], [18, 100], [16, 60], [26, 40]]],
+    lift: [
+      { poly: [[[0, 40], [32, 40], [32, 80], [26, 80], [26, 128], [0, 128]]], axis: 32.5 },
+      { poly: [[[50, 40], [71, 40], [71, 88], [50, 88]]], axis: 49.5 },
+    ],
+    body: { mask: [[[0, 40], [71, 40], [71, 150], [0, 150]]], depth: (y, al) => al * 0.62, fwd: y => (y > 120 ? 1 : 0) },
+    head: { mask: [[[24, 0], [62, 0], [62, 40], [24, 40]]], depth: (y, al) => al * 1.0, fwd: y => (y < 30 ? -1 : 0) },
+    cuts: {
+      armR: [[[[0, 40], [32, 40], [32, 80], [0, 80]]], [18, 44]],
+      censer: [[[[0, 78], [28, 78], [28, 128], [0, 128]]], [14, 80], null, [0, 40]],
+      armL: [[[[50, 40], [71, 40], [71, 88], [50, 88]]], [58, 44]],
+      bootR: [[[[20, 150], [36, 150], [36, 160], [20, 160]]], [28, 151]],
+      bootL: [[[[36, 150], [52, 150], [52, 160], [36, 160]]], [44, 151]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -8, 8, 151, 4); },
+    back(B, S) {
+      paintOut(B, [[[30, 44], [46, 44], [46, 124], [30, 124]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(44);
+      hangArm(C, S.cut.armR, th, axT, P, v, -22, shY, 0, 21);
+      drawAlong(C, S.cut.censer, th, axT, { f: 10, l: -22, y: x.row(80) }, { f: 0.05, l: 0, up: -1 }, { dz: x.front + 4, id: 40 });
+      hangArm(C, S.cut.armL, th, axT, P, v, 22, shY, 0, 22);
+    },
+  });
+
+  // ---------------------------------------------------------------- Vane
+  // The privateer: tousled hair, a blue coat with gold facings, a red sash, tall boots.
+  SP.vane = humanoid({
+    W: 110, axT: 52, knee: 112, hip: 96,
+    patches: { cloth: [22, 90, 12, 20], hair: [26, 4, 8, 8], sleeve: [6, 60, 8, 16] },
+    sil: [[[20, 0], [44, 0], [50, 28], [50, 100], [50, 136], [14, 136], [14, 100], [14, 28]]],
+    lift: [
+      { poly: [[[0, 28], [18, 28], [18, 106], [0, 106]]], axis: 18.5 },
+      { poly: [[[46, 28], [65, 28], [65, 102], [46, 102]]], axis: 45.5 },
+    ],
+    body: { mask: [[[0, 26], [65, 26], [65, 138], [0, 138]]], depth: (y, al) => al * 0.6, fwd: () => 0 },
+    head: { mask: [[[16, 0], [48, 0], [48, 26], [16, 26]]], depth: (y, al) => al * 1.0, fwd: y => (y < 8 ? -2 : 0) },
+    cuts: {
+      armR: [[[[0, 28], [18, 28], [18, 106], [0, 106]]], [9, 34]],
+      armL: [[[[46, 28], [65, 28], [65, 102], [46, 102]]], [55, 34]],
+      legR: [[[[10, 134], [33, 134], [33, 160], [10, 160]]], [21, 136]],
+      legL: [[[[33, 134], [56, 134], [56, 160], [33, 160]]], [44, 136]],
+    },
+    legs(x) { stride(x, x.S.cut.legR, x.S.cut.legL, -9, 9, 136, 6); },
+    back(B, S) {
+      paintOut(B, [[[18, 0], [46, 0], [48, 26], [16, 26]]], S.pt.hair, { grain: 0.3, smooth: 40 });
+      paintOut(B, [[[20, 30], [46, 30], [46, 130], [20, 130]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(34);
+      hangArm(C, S.cut.armR, th, axT, P, v, -20, shY, 0, 21);
+      hangArm(C, S.cut.armL, th, axT, P, v, 20, shY, 0, 22);
+    },
+  });
+
+  // ---------------------------------------------------------------- Pim
+  // The boy: a mop of hair, a ragged shirt and waistcoat, the hands clasped at the chest.
+  SP.pim = humanoid({
+    W: 72, axT: 34, knee: 84, hip: 72,
+    patches: { cloth: [14, 70, 10, 16], hair: [14, 2, 8, 8], sleeve: [4, 40, 6, 12] },
+    sil: [[[12, 0], [28, 0], [32, 24], [34, 60], [32, 100], [34, 112], [6, 112], [8, 100], [6, 60], [8, 24]]],
+    lift: [{ poly: [[[12, 30], [28, 30], [28, 50], [12, 50]]], tol: 70 }],
+    body: { mask: [[[0, 24], [39, 24], [39, 112], [0, 112]]], depth: (y, al) => al * 0.62, fwd: y => (y > 90 ? 1 : 0) },
+    head: { mask: [[[6, 0], [34, 0], [34, 24], [6, 24]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      hands: [[[[12, 30], [28, 30], [28, 50], [12, 50]]], [20, 32]],
+      bootR: [[[[4, 108], [19, 108], [19, 120], [4, 120]]], [12, 109]],
+      bootL: [[[[19, 108], [34, 108], [34, 120], [19, 120]]], [26, 109]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -6, 6, 109, 4); },
+    back(B, S) {
+      paintOut(B, [[[8, 0], [32, 0], [32, 24], [8, 24]]], S.pt.hair, { grain: 0.3, smooth: 40 });
+    },
+    dress(x) {
+      const { C, S, th, axT } = x;
+      drawCut(C, S.cut.hands, th, axT, 6, 0, x.row(32), 0, { kx: 0.3 + 0.7 * Math.abs(x.cs), dz: x.front + 3, mirror: x.back, shade: x.back ? 0.85 : 1, id: 30 });
+    },
+  });
+
+  // ---------------------------------------------------------------- Vosk
+  // The clerk: a cap, spectacles, a long dark coat, a ledger clasped to the chest.
+  SP.vosk = humanoid({
+    W: 90, axT: 44, knee: 112, hip: 96,
+    patches: { cloth: [20, 100, 10, 20], cap: [20, 2, 8, 8], sleeve: [6, 50, 6, 14] },
+    sil: [[[14, 0], [36, 0], [42, 28], [44, 60], [44, 100], [44, 132], [6, 132], [6, 100], [6, 60], [8, 28]]],
+    lift: [{ poly: [[[4, 36], [30, 36], [30, 72], [4, 72]]], axis: 30.5 }],
+    body: { mask: [[[0, 26], [50, 26], [50, 134], [0, 134]]], depth: (y, al) => al * 0.6, fwd: () => 0 },
+    head: { mask: [[[10, 0], [40, 0], [40, 26], [10, 26]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      book: [[[[4, 36], [30, 36], [30, 72], [4, 72]]], [16, 40]],
+      legR: [[[[6, 130], [25, 130], [25, 160], [6, 160]]], [15, 132]],
+      legL: [[[[25, 130], [44, 130], [44, 160], [25, 160]]], [34, 132]],
+    },
+    legs(x) { stride(x, x.S.cut.legR, x.S.cut.legL, -8, 8, 132, 6); },
+    back(B, S) {
+      paintOut(B, [[[12, 0], [38, 0], [38, 26], [12, 26]]], S.pt.cap, { grain: 0.2, smooth: 40 });
+      paintOut(B, [[[14, 30], [36, 30], [36, 128], [14, 128]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT } = x;
+      drawCut(C, S.cut.book, th, axT, 10, -10, x.row(40), 0, { dz: x.front + 4, mirror: x.back, shade: x.back ? 0.85 : 1, id: 32 });
+    },
+  });
+
+  // ---------------------------------------------------------------- Harrow
+  // The hermit: a deep hood and a white beard, a ragged cloak, a lantern in the right hand, a gnarled
+  // staff in the left.
+  SP.harrow = humanoid({
+    W: 130, axT: 62, knee: 112, hip: 96,
+    patches: { cloth: [30, 110, 14, 20], hood: [32, 6, 8, 8], sleeve: [14, 56, 8, 14] },
+    sil: [[[26, 0], [56, 0], [62, 40], [66, 70], [64, 100], [66, 150], [14, 150], [16, 100], [14, 70], [20, 40]]],
+    lift: [
+      { poly: [[[0, 48], [26, 48], [26, 116], [0, 116]]], axis: 26.5 },
+      { poly: [[[62, 0], [80, 0], [80, 150], [62, 150]]], axis: 61.5 },
+    ],
+    body: { mask: [[[0, 40], [80, 40], [80, 150], [0, 150]]], depth: (y, al) => al * 0.64, fwd: y => (y > 120 ? 1 : 0) },
+    head: { mask: [[[20, 0], [62, 0], [62, 40], [20, 40]]], depth: (y, al) => al * 1.0, fwd: y => (y < 10 ? -3 : 0) },
+    cuts: {
+      lantern: [[[[0, 48], [26, 48], [26, 116], [0, 116]]], [12, 52]],
+      staff: [[[[64, 0], [80, 0], [80, 150], [64, 150]]], [72, 50], null, [0, -50]],
+      hand: [[[[62, 40], [80, 40], [80, 60], [62, 60]]], [70, 48]],
+      bootR: [[[[20, 148], [40, 148], [40, 160], [20, 160]]], [30, 149]],
+      bootL: [[[[40, 148], [60, 148], [60, 160], [40, 160]]], [50, 149]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -9, 9, 149, 5); },
+    back(B, S) {
+      paintOut(B, [[[26, 4], [56, 4], [60, 40], [22, 40]]], S.pt.hood, { grain: 0.15, smooth: 60 });
+      paintOut(B, [[[30, 44], [52, 44], [52, 130], [30, 130]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x;
+      hangArm(C, S.cut.lantern, th, axT, P, v, -24, x.row(52), 0, 21);
+      const hand = { f: 18, l: 24, y: x.row(50) };
+      arm(x, { f: 4, l: 22, y: x.row(44) }, hand, { pt: 'sleeve', w0: 12, w1: 10, w2: 9, bend: -2, id: 34, hand: S.cut.hand });
+      drawAlong(C, S.cut.staff, th, axT, hand, { f: 0, l: 0, up: 1 }, { dz: x.front + 12, id: 40 });
+    },
+  });
+  // ---------------------------------------------------------------- Tobiah
+  // The mechanic: goggles pushed up on his hair, a dark work jacket, a rolled drawing under the left arm.
+  SP.tobiah = humanoid({
+    W: 100, axT: 48, knee: 112, hip: 100,
+    patches: { cloth: [22, 80, 12, 20], hair: [24, 2, 8, 8], sleeve: [6, 50, 8, 16] },
+    sil: [[[18, 0], [40, 0], [46, 28], [46, 100], [46, 146], [12, 146], [12, 100], [14, 28]]],
+    lift: [
+      { poly: [[[0, 30], [16, 30], [16, 104], [0, 104]]], axis: 16.5 },
+      { poly: [[[38, 28], [57, 28], [57, 104], [38, 104]]], axis: 37.5 },
+    ],
+    body: { mask: [[[0, 26], [57, 26], [57, 148], [0, 148]]], depth: (y, al) => al * 0.6, fwd: () => 0 },
+    head: { mask: [[[14, 0], [44, 0], [46, 26], [12, 26]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      armR: [[[[0, 30], [16, 30], [16, 104], [0, 104]]], [8, 34]],
+      armL: [[[[38, 28], [57, 28], [57, 104], [38, 104]]], [48, 34]],
+      bootR: [[[[10, 146], [30, 146], [30, 160], [10, 160]]], [20, 147]],
+      bootL: [[[[30, 146], [50, 146], [50, 160], [30, 160]]], [40, 147]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -9, 9, 147); },
+    back(B, S) {
+      paintOut(B, [[[16, 0], [42, 0], [44, 26], [14, 26]]], S.pt.hair, { grain: 0.3, smooth: 40 });
+      paintOut(B, [[[18, 30], [40, 30], [40, 110], [18, 110]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x, shY = x.row(34);
+      hangArm(C, S.cut.armR, th, axT, P, v, -19, shY, 0, 21);
+      hangArm(C, S.cut.armL, th, axT, P, v, 19, shY, 0, 22);
+    },
+  });
+
+  // ---------------------------------------------------------------- Aldric
+  // The alderman: grey hair, a green robe with a chain of office, the hands clasped at the belly.
+  SP.aldric = humanoid({
+    W: 100, axT: 48, knee: 112, hip: 100,
+    patches: { cloth: [20, 90, 12, 20], hair: [22, 2, 8, 8], sleeve: [6, 60, 8, 16] },
+    sil: [[[16, 0], [40, 0], [48, 30], [52, 60], [50, 100], [48, 140], [8, 140], [6, 100], [4, 60], [8, 30]]],
+    lift: [{ poly: [[[18, 62], [38, 62], [38, 86], [18, 86]]], tol: 70 }],
+    body: { mask: [[[0, 26], [56, 26], [56, 142], [0, 142]]], depth: (y, al) => al * 0.62, fwd: () => 0 },
+    head: { mask: [[[12, 0], [44, 0], [44, 26], [12, 26]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      hands: [[[[18, 62], [38, 62], [38, 86], [18, 86]]], [28, 64]],
+      legR: [[[[10, 138], [29, 138], [29, 160], [10, 160]]], [19, 140]],
+      legL: [[[[29, 138], [48, 138], [48, 160], [29, 160]]], [38, 140]],
+    },
+    legs(x) { stride(x, x.S.cut.legR, x.S.cut.legL, -8, 8, 140, 6); },
+    back(B, S) {
+      paintOut(B, [[[14, 0], [42, 0], [42, 26], [14, 26]]], S.pt.hair, { grain: 0.3, smooth: 40 });
+      paintOut(B, [[[16, 28], [40, 28], [40, 130], [16, 130]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT } = x;
+      drawCut(C, S.cut.hands, th, axT, 6, 0, x.row(64), 0, { kx: 0.3 + 0.7 * Math.abs(x.cs), dz: x.front + 3, mirror: x.back, shade: x.back ? 0.85 : 1, id: 30 });
+    },
+  });
+
+  // ---------------------------------------------------------------- Bettany
+  // The herbalist: a headscarf, a green dress with an apron, a bundle of dried herbs in the right hand.
+  SP.bettany = humanoid({
+    W: 104, axT: 50, knee: 112, hip: 100,
+    patches: { cloth: [16, 120, 12, 20], apron: [22, 90, 10, 20], scarf: [22, 4, 8, 8], sleeve: [6, 50, 6, 14] },
+    sil: [[[16, 0], [40, 0], [46, 30], [48, 60], [46, 100], [50, 150], [6, 150], [8, 100], [8, 60], [12, 30]]],
+    lift: [
+      { poly: [[[0, 22], [28, 22], [28, 72], [0, 72]]], axis: 28.5 },
+      { poly: [[[42, 30], [58, 30], [58, 104], [42, 104]]], axis: 41.5 },
+    ],
+    body: { mask: [[[0, 28], [58, 28], [58, 150], [0, 150]]], depth: (y, al) => al * 0.62, fwd: y => (y > 120 ? 1 : 0) },
+    head: { mask: [[[12, 0], [44, 0], [44, 28], [12, 28]]], depth: (y, al) => al * 1.0, fwd: y => (y < 8 ? -2 : 0) },
+    cuts: {
+      herbs: [[[[0, 22], [28, 22], [28, 72], [0, 72]]], [16, 30]],
+      armL: [[[[42, 30], [58, 30], [58, 104], [42, 104]]], [50, 34]],
+      bootR: [[[[12, 150], [27, 150], [27, 160], [12, 160]]], [19, 151]],
+      bootL: [[[[27, 150], [42, 150], [42, 160], [27, 160]]], [34, 151]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -7, 7, 151, 5); },
+    back(B, S) {
+      paintOut(B, [[[14, 0], [42, 0], [42, 28], [14, 28]]], S.pt.scarf, { grain: 0.2, smooth: 40 });
+      paintOut(B, [[[12, 68], [44, 68], [46, 150], [10, 150]]], S.pt.cloth, { grain: 0.6, smooth: 90, from: [[[0, 112], [58, 112], [58, 150], [0, 150]]] });   // the apron is front only
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x;
+      hangArm(C, S.cut.herbs, th, axT, P, v, -20, x.row(30), 0, 21);
+      hangArm(C, S.cut.armL, th, axT, P, v, 20, x.row(34), 0, 22);
+    },
+  });
+
+  // ---------------------------------------------------------------- Tam
+  // The old shepherd: white hair and a scarf, a long brown coat, both hands resting on a cane.
+  SP.tam = humanoid({
+    W: 100, axT: 48, knee: 112, hip: 100,
+    patches: { cloth: [20, 100, 12, 20], hair: [20, 2, 8, 8], sleeve: [6, 60, 8, 16] },
+    sil: [[[14, 0], [40, 0], [48, 30], [52, 60], [52, 100], [50, 150], [6, 150], [4, 100], [4, 60], [8, 30]]],
+    lift: [
+      { poly: [[[16, 52], [40, 52], [40, 80], [16, 80]]], tol: 70 },
+      { poly: [[[24, 80], [34, 80], [34, 160], [24, 160]]], tol: 70 },
+    ],
+    body: { mask: [[[0, 28], [56, 28], [56, 150], [0, 150]]], depth: (y, al) => al * 0.62, fwd: y => (y > 120 ? 1 : 0) },
+    head: { mask: [[[10, 0], [44, 0], [44, 28], [10, 28]]], depth: (y, al) => al * 1.0, fwd: y => (y < 8 ? -2 : 0) },
+    cuts: {
+      hands: [[[[16, 52], [40, 52], [40, 80], [16, 80]]], [28, 56]],
+      cane: [[[[24, 78], [34, 78], [34, 160], [24, 160]]], [29, 80], null, [0, 60]],
+      bootR: [[[[12, 150], [28, 150], [28, 160], [12, 160]]], [20, 151]],
+      bootL: [[[[28, 150], [44, 150], [44, 160], [28, 160]]], [36, 151]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -6, 6, 151, 4); },
+    back(B, S) {
+      paintOut(B, [[[12, 0], [42, 0], [42, 28], [12, 28]]], S.pt.hair, { grain: 0.3, smooth: 40 });
+      paintOut(B, [[[16, 32], [40, 32], [40, 140], [16, 140]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT } = x;
+      drawCut(C, S.cut.hands, th, axT, 12, 0, x.row(56), 0, { kx: 0.3 + 0.7 * Math.abs(x.cs), dz: x.front + 6, mirror: x.back, shade: x.back ? 0.85 : 1, id: 30 });
+      drawAlong(C, S.cut.cane, th, axT, { f: 12, l: 0, y: x.row(80) }, { f: 0.02, l: 0, up: -1 }, { dz: x.front + 6, id: 40 });
+    },
+  });
+  // ---------------------------------------------------------------- Quist
+  // The scholar: a bald crown and long side hair, a long dark coat, a book clasped to the chest.
+  SP.quist = humanoid({
+    W: 92, axT: 44, knee: 112, hip: 100,
+    patches: { cloth: [18, 100, 12, 20], scalp: [22, 2, 8, 8], sleeve: [4, 60, 6, 14] },
+    sil: [[[16, 0], [36, 0], [44, 30], [48, 60], [48, 100], [48, 150], [4, 150], [4, 100], [4, 60], [8, 30]]],
+    lift: [{ poly: [[[16, 36], [44, 36], [44, 74], [16, 74]]], tol: 70 }],
+    body: { mask: [[[0, 28], [51, 28], [51, 150], [0, 150]]], depth: (y, al) => al * 0.6, fwd: y => (y > 120 ? 1 : 0) },
+    head: { mask: [[[12, 0], [40, 0], [40, 28], [12, 28]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      book: [[[[16, 36], [44, 36], [44, 74], [16, 74]]], [30, 40]],
+      bootR: [[[[8, 150], [25, 150], [25, 160], [8, 160]]], [16, 151]],
+      bootL: [[[[25, 150], [44, 150], [44, 160], [25, 160]]], [34, 151]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -6, 6, 151, 4); },
+    back(B, S) {
+      paintOut(B, [[[14, 0], [38, 0], [38, 28], [14, 28]]], S.pt.scalp, { grain: 0.2, smooth: 40 });
+      paintOut(B, [[[14, 32], [36, 32], [36, 140], [14, 140]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT } = x;
+      drawCut(C, S.cut.book, th, axT, 10, 4, x.row(40), 0, { kx: 0.4 + 0.6 * Math.abs(x.cs), dz: x.front + 4, mirror: x.back, shade: x.back ? 0.85 : 1, id: 32 });
+    },
+  });
+
+  // ---------------------------------------------------------------- Halder
+  // The pot-man: a gaunt old man in a shirt and waistcoat, a tray of bowls carried in both hands.
+  SP.halder = humanoid({
+    W: 90, axT: 44, knee: 110, hip: 100,
+    patches: { cloth: [18, 90, 10, 16], scalp: [20, 2, 8, 8], sleeve: [4, 40, 6, 12] },
+    sil: [[[18, 0], [34, 0], [40, 28], [44, 60], [42, 100], [40, 144], [8, 144], [6, 100], [6, 60], [10, 28]]],
+    lift: [{ poly: [[[6, 54], [46, 54], [46, 82], [6, 82]]], tol: 70 }],
+    body: { mask: [[[0, 26], [50, 26], [50, 146], [0, 146]]], depth: (y, al) => al * 0.6, fwd: () => 0 },
+    head: { mask: [[[12, 0], [38, 0], [38, 26], [12, 26]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      tray: [[[[6, 54], [46, 54], [46, 82], [6, 82]]], [26, 58]],
+      bootR: [[[[8, 144], [25, 144], [25, 160], [8, 160]]], [16, 145]],
+      bootL: [[[[25, 144], [42, 144], [42, 160], [25, 160]]], [34, 145]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -7, 7, 145, 5); },
+    back(B, S) {
+      paintOut(B, [[[14, 0], [36, 0], [36, 26], [14, 26]]], S.pt.scalp, { grain: 0.2, smooth: 40 });
+      paintOut(B, [[[14, 30], [36, 30], [36, 120], [14, 120]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT } = x;
+      drawCut(C, S.cut.tray, th, axT, 14, 0, x.row(58), 0, { kx: 0.3 + 0.7 * Math.abs(x.cs), dz: x.front + 5, mirror: x.back, shade: x.back ? 0.85 : 1, id: 32 });
+    },
+  });
+
+  // ---------------------------------------------------------------- Sexton
+  // The gravedigger: a ragged hood and coat, both hands resting on a long-handled shovel.
+  SP.sexton = humanoid({
+    W: 90, axT: 44, knee: 112, hip: 100,
+    patches: { cloth: [14, 90, 10, 16], hood: [20, 2, 8, 8], sleeve: [4, 50, 6, 14] },
+    sil: [[[14, 0], [34, 0], [42, 26], [44, 60], [42, 100], [42, 150], [6, 150], [4, 100], [4, 60], [8, 26]]],
+    lift: [
+      { poly: [[[14, 60], [34, 60], [34, 80], [14, 80]]], tol: 70 },
+      { poly: [[[14, 80], [34, 80], [34, 160], [14, 160]]], tol: 70 },
+    ],
+    body: { mask: [[[0, 24], [48, 24], [48, 150], [0, 150]]], depth: (y, al) => al * 0.6, fwd: y => (y > 120 ? 1 : 0) },
+    head: { mask: [[[10, 0], [40, 0], [40, 24], [10, 24]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      hands: [[[[14, 60], [34, 60], [34, 80], [14, 80]]], [24, 64]],
+      shovel: [[[[14, 78], [34, 78], [34, 160], [14, 160]]], [24, 80], null, [0, 60]],
+      bootR: [[[[6, 146], [23, 146], [23, 160], [6, 160]]], [14, 147]],
+      bootL: [[[[23, 146], [42, 146], [42, 160], [23, 160]]], [32, 147]],
+    },
+    legs(x) { stride(x, x.S.cut.bootR, x.S.cut.bootL, -6, 6, 147, 4); },
+    back(B, S) {
+      paintOut(B, [[[14, 2], [34, 2], [38, 24], [10, 24]]], S.pt.hood, { grain: 0.15, smooth: 60 });
+      paintOut(B, [[[12, 28], [36, 28], [36, 140], [12, 140]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT } = x;
+      drawCut(C, S.cut.hands, th, axT, 12, 0, x.row(64), 0, { kx: 0.3 + 0.7 * Math.abs(x.cs), dz: x.front + 6, mirror: x.back, shade: x.back ? 0.85 : 1, id: 30 });
+      drawAlong(C, S.cut.shovel, th, axT, { f: 12, l: 0, y: x.row(80) }, { f: 0.02, l: 0, up: -1 }, { dz: x.front + 6, id: 40 });
+    },
+  });
+
+  // ---------------------------------------------------------------- Herald
+  // The town herald: a brown coat under a white and gold tabard, a proclamation held open in both hands.
+  SP.herald = humanoid({
+    W: 104, axT: 50, knee: 112, hip: 100,
+    patches: { cloth: [6, 70, 8, 16], tabard: [26, 100, 10, 16], hair: [26, 2, 8, 8], sleeve: [8, 50, 8, 14] },
+    sil: [[[22, 0], [40, 0], [50, 28], [56, 60], [54, 100], [52, 140], [8, 140], [6, 100], [6, 60], [12, 28]]],
+    lift: [{ poly: [[[14, 40], [50, 40], [50, 100], [14, 100]]], pt: 'tabard', tol: 70 }],
+    body: { mask: [[[0, 26], [61, 26], [61, 142], [0, 142]]], depth: (y, al) => al * 0.62, fwd: () => 0 },
+    head: { mask: [[[16, 0], [46, 0], [46, 26], [16, 26]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      scroll: [[[[14, 40], [50, 40], [50, 100], [14, 100]]], [32, 44]],
+      legR: [[[[8, 138], [30, 138], [30, 160], [8, 160]]], [19, 140]],
+      legL: [[[[30, 138], [52, 138], [52, 160], [30, 160]]], [41, 140]],
+    },
+    legs(x) { stride(x, x.S.cut.legR, x.S.cut.legL, -8, 8, 140, 6); },
+    back(B, S) {
+      paintOut(B, [[[18, 0], [44, 0], [44, 26], [18, 26]]], S.pt.hair, { grain: 0.3, smooth: 40 });
+    },
+    dress(x) {
+      const { C, S, th, axT } = x;
+      drawCut(C, S.cut.scroll, th, axT, 12, 0, x.row(44), 0, { kx: 0.3 + 0.7 * Math.abs(x.cs), dz: x.front + 4, mirror: x.back, shade: x.back ? 0.85 : 1, id: 32 });
+    },
+  });
+  // ---------------------------------------------------------------- Mags
+  // The boatwright: grey hair in a bun, a blue coat, one arm in a sling, a coil of rope over the
+  // other shoulder.
+  SP.mags = humanoid({
+    W: 120, axT: 56, knee: 112, hip: 96,
+    patches: { cloth: [18, 100, 12, 20], hair: [28, 2, 8, 8], sleeve: [8, 60, 8, 16] },
+    sil: [[[24, 0], [48, 0], [56, 30], [60, 60], [58, 100], [58, 130], [14, 130], [14, 100], [12, 60], [18, 30]]],
+    lift: [
+      { poly: [[[0, 26], [26, 26], [26, 100], [0, 100]]], axis: 26.5 },
+      { poly: [[[56, 30], [70, 30], [70, 100], [56, 100]]], axis: 55.5 },
+    ],
+    body: { mask: [[[0, 26], [70, 26], [70, 132], [0, 132]]], depth: (y, al) => al * 0.62, fwd: () => 0 },
+    head: { mask: [[[20, 0], [52, 0], [52, 26], [20, 26]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      rope: [[[[0, 26], [26, 26], [26, 100], [0, 100]]], [14, 32]],
+      armR: [[[[56, 30], [70, 30], [70, 100], [56, 100]]], [62, 34]],
+      legR: [[[[16, 128], [36, 128], [36, 160], [16, 160]]], [26, 130]],
+      legL: [[[[38, 128], [60, 128], [60, 160], [38, 160]]], [49, 130]],
+    },
+    legs(x) { stride(x, x.S.cut.legR, x.S.cut.legL, -9, 9, 130, 6); },
+    back(B, S) {
+      paintOut(B, [[[22, 0], [50, 0], [52, 26], [20, 26]]], S.pt.hair, { grain: 0.3, smooth: 40 });
+      paintOut(B, [[[26, 30], [50, 30], [50, 126], [26, 126]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x;
+      hangArm(C, S.cut.rope, th, axT, P, v, -22, x.row(32), 0, 21);
+      hangArm(C, S.cut.armR, th, axT, P, v, 22, x.row(34), 0, 22);
+    },
+  });
+
+  // ---------------------------------------------------------------- the Mourner
+  // A veiled figure in dark rags, white lilies held at the chest, barefoot.
+  SP.mourner = humanoid({
+    W: 90, axT: 44, knee: 112, hip: 100,
+    patches: { cloth: [16, 100, 12, 20], veil: [20, 2, 8, 8], sleeve: [6, 60, 6, 14] },
+    sil: [[[14, 0], [36, 0], [42, 30], [44, 60], [44, 100], [42, 150], [6, 150], [4, 100], [4, 60], [8, 30]]],
+    lift: [{ poly: [[[22, 28], [46, 28], [46, 62], [22, 62]]], axis: 21.5 }],
+    body: { mask: [[[0, 28], [49, 28], [49, 152], [0, 152]]], smooth: 2, depth: (y, al) => al * 0.6, fwd: () => 0 },
+    head: { mask: [[[10, 0], [40, 0], [40, 28], [10, 28]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      flowers: [[[[22, 28], [46, 28], [46, 62], [22, 62]]], [32, 32]],
+    },
+    back(B, S) {
+      paintOut(B, [[[12, 2], [38, 2], [40, 28], [10, 28]]], S.pt.veil, { grain: 0.2, smooth: 50 });
+      paintOut(B, [[[14, 32], [36, 32], [36, 140], [14, 140]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT } = x;
+      drawCut(C, S.cut.flowers, th, axT, 8, 8, x.row(32), 0, { kx: 0.5 + 0.5 * Math.abs(x.cs), dz: x.front + 4, mirror: x.back, shade: x.back ? 0.85 : 1, id: 32 });
+    },
+  });
+
+  // ---------------------------------------------------------------- Wren
+  // The girl: a crown of flowers in long red hair, a grey dress, the hands clasped, barefoot.
+  SP.wren = humanoid({
+    W: 60, axT: 28, knee: 80, hip: 70,
+    patches: { cloth: [10, 70, 8, 14], hair: [8, 10, 6, 8], sleeve: [4, 40, 5, 10] },
+    sil: [[[8, 0], [24, 0], [28, 20], [30, 50], [28, 90], [28, 106], [4, 106], [4, 90], [2, 50], [4, 20]]],
+    lift: [{ poly: [[[10, 46], [22, 46], [22, 60], [10, 60]]], tol: 70 }],
+    body: { mask: [[[0, 20], [32, 20], [32, 106], [0, 106]]], depth: (y, al) => al * 0.6, fwd: () => 0 },
+    head: { mask: [[[4, 0], [28, 0], [28, 20], [4, 20]]], depth: (y, al) => al * 1.0, fwd: y => (y < 4 ? -1 : 0) },
+    cuts: {
+      hands: [[[[10, 46], [22, 46], [22, 60], [10, 60]]], [16, 48]],
+    },
+    back(B, S) {
+      paintOut(B, [[[6, 0], [26, 0], [26, 20], [6, 20]]], S.pt.hair, { grain: 0.3, smooth: 40 });
+    },
+    dress(x) {
+      const { C, S, th, axT } = x;
+      drawCut(C, S.cut.hands, th, axT, 5, 0, x.row(48), 0, { kx: 0.3 + 0.7 * Math.abs(x.cs), dz: x.front + 2, mirror: x.back, shade: x.back ? 0.85 : 1, id: 30 });
+    },
+  });
+
+  // ---------------------------------------------------------------- Burlsick
+  // The burl-sick man: twigs growing from both arms, a waistcoat over a shirt, trousers and boots.
+  SP.burlsick = humanoid({
+    W: 130, axT: 62, knee: 112, hip: 100,
+    patches: { cloth: [28, 90, 12, 16], hair: [30, 2, 8, 8], sleeve: [10, 50, 8, 16] },
+    sil: [[[24, 0], [48, 0], [54, 26], [56, 100], [54, 130], [18, 130], [16, 100], [18, 26]]],
+    lift: [
+      { poly: [[[0, 16], [20, 16], [20, 104], [0, 104]]], axis: 20.5 },
+      { poly: [[[54, 16], [76, 16], [76, 104], [54, 104]]], axis: 53.5 },
+    ],
+    body: { mask: [[[0, 24], [76, 24], [76, 132], [0, 132]]], depth: (y, al) => al * 0.6, fwd: () => 0 },
+    head: { mask: [[[22, 0], [52, 0], [52, 24], [22, 24]]], depth: (y, al) => al * 1.0, fwd: y => (y < 6 ? -2 : 0) },
+    cuts: {
+      armR: [[[[0, 16], [20, 16], [20, 104], [0, 104]]], [10, 30]],
+      armL: [[[[54, 16], [76, 16], [76, 104], [54, 104]]], [64, 30]],
+      legR: [[[[18, 128], [38, 128], [38, 160], [18, 160]]], [28, 130]],
+      legL: [[[[38, 128], [58, 128], [58, 160], [38, 160]]], [48, 130]],
+    },
+    legs(x) { stride(x, x.S.cut.legR, x.S.cut.legL, -9, 9, 130, 6); },
+    back(B, S) {
+      paintOut(B, [[[24, 0], [50, 0], [52, 24], [22, 24]]], S.pt.hair, { grain: 0.3, smooth: 40 });
+      paintOut(B, [[[26, 28], [50, 28], [50, 124], [26, 124]]], S.pt.cloth, { vertical: true, like: S.pt.cloth.mean, tol: 60, grain: 0.5 });
+    },
+    dress(x) {
+      const { C, S, th, axT, P, v } = x;
+      hangArm(C, S.cut.armR, th, axT, P, v, -22, x.row(30), 0, 21);
+      hangArm(C, S.cut.armL, th, axT, P, v, 22, x.row(30), 0, 22);
+    },
+  });
 })();
