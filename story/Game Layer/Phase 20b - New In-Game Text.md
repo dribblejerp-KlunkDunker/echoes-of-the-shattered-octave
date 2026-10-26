@@ -45,4 +45,5 @@ Sleeves answered question 2: start painting the rest. Canva's image generator is
 
 - **Painted so far:** the open barrel and the barrel on its side (tools/art/painted20/src/barrel_open.png, barrel_side.png), given depth like the other painted props (js/pixel3d.js).
 - **Contact shadows:** every painted prop now keeps its drawn stand-in's dithered contact shadow (tools/art/painted20/key.py SHADOW). Without it the lighting module's soft shadow fell a little in front of the base and the Phase 20b props seemed to hover. No new text.
-- **Still to paint:** the second statue, the stone head, the third grass tuft, the second reed, two mosses, two cracks, two scorch marks, two posters and the second Synod notice.
+- **Wall marks by Blender:** the two other mosses, both cracks and both scorch marks are rendered by Blender (the `bpy` module) from procedural materials (tools/art/decals/marks.py) at 256 pixels and brought down to the game's 64 with the same finish as the painted pieces; soft edges become an ordered dither like the drawn stand-ins'. Sleeves chose Blender for these; texture-like marks are what procedural materials do well.
+- **Still to paint (Canva):** the second statue, the stone head, the third grass tuft, the second reed, two posters and the second Synod notice.
