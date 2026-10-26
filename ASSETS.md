@@ -51,6 +51,7 @@ Ten MP3 cues streamed by `Audio_.music` (js/audio.js). The README calls the scor
 | `title.mp3` | title screen | 2419 KB | not recorded (README: original score) | unverified | unverified |
 | `town.mp3` | Oakhaven streets | 1928 KB | not recorded (README: original score) | unverified | unverified |
 | `wild.mp3` | wilderness and the Reach | 2766 KB | not recorded (README: original score) | unverified | unverified |
+| `opening.mp3` | the opening cinematic (Phase 24) | 1423 KB | composed in `tools/music/pieces/opening.py`, rendered with FluidSynth + FluidR3 GM (see CREDITS.md) | original; soundfont MIT | verified |
 
 If a General MIDI soundfont was used to render these, its licence also applies to the audio. Check this before any release.
 

@@ -34,6 +34,8 @@ CAST = {
     'nell':       dict(voice='bf_lily',    speed=1.0,  pitch=1,  lang='en-gb', fx=['room']),
     'ignatius':   dict(voice='bm_fable',   speed=0.9,  pitch=-2, lang='en-gb', fx=['chapel']),
     'townsman':   dict(voice='am_adam',    speed=0.94, pitch=-1, lang='en-us', fx=['outdoors']),
+    # ---- the opening cinematic's narrator: an older man, grave and unhurried, in a great room
+    'narrator':   dict(voice='bm_daniel',  speed=0.84, pitch=-3, lang='en-gb', fx=['hall']),
     'townswoman': dict(voice='af_sarah',   speed=0.96, pitch=0,  lang='en-us', fx=['outdoors']),
     # ---- the travellers
     'sable':      dict(voice='af_nicole',  speed=0.9,  pitch=-1, lang='en-us', fx=['room']),

@@ -2318,6 +2318,114 @@
    "source": "PROPOSED",
    "voiceOf": "pressman",
    "delivery": "slow, heavy, flat Office dialect, a clerk who does second pressings, bored, thick with felt and brass, failing, almost kind"
+  },
+  {
+   "id": "ignatius.open.catechism.0",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "What is holiness?",
+   "source": "cinematic24.js SHOTS (the Catechism of the Pure Note: Book One, Prologue epigraph); the opening cinematic",
+   "voiceOf": "ignatius",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "chorus_congregation.open.catechism.0",
+   "speaker": "chorus_congregation",
+   "kind": "narration",
+   "text": "One note, held without end.",
+   "source": "cinematic24.js SHOTS (the Catechism of the Pure Note: Book One, Prologue epigraph); the opening cinematic",
+   "voiceOf": "chorus_congregation",
+   "delivery": "formal"
+  },
+  {
+   "id": "ignatius.open.catechism.1",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "What is sin?",
+   "source": "cinematic24.js SHOTS (the Catechism of the Pure Note: Book One, Prologue epigraph); the opening cinematic",
+   "voiceOf": "ignatius",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "chorus_congregation.open.catechism.1",
+   "speaker": "chorus_congregation",
+   "kind": "narration",
+   "text": "The second note.",
+   "source": "cinematic24.js SHOTS (the Catechism of the Pure Note: Book One, Prologue epigraph); the opening cinematic",
+   "voiceOf": "chorus_congregation",
+   "delivery": "formal"
+  },
+  {
+   "id": "narrator.open.0",
+   "speaker": "narrator",
+   "kind": "narration",
+   "text": "It is autumn, in the four hundred and nineteenth year of the Synod Reckoning. Seven years ago the Light let go.",
+   "source": "data.js INTRO[0]; cinematic24.js SHOTS",
+   "voiceOf": "narrator",
+   "delivery": "grave, unhurried"
+  },
+  {
+   "id": "narrator.open.1",
+   "speaker": "narrator",
+   "kind": "narration",
+   "text": "You have come up the Greenroot road to Oakhaven, capital of the Resonant Reach, a town that lives inside a hedge three men deep of thorn and packed wool, planted to swallow its own sounds.",
+   "source": "data.js INTRO[1]; cinematic24.js SHOTS",
+   "voiceOf": "narrator",
+   "delivery": "grave, unhurried"
+  },
+  {
+   "id": "narrator.open.2",
+   "speaker": "narrator",
+   "kind": "narration",
+   "text": "Too loud brings the hounds. Too still brings the Hush. Every child here can skip to the rhyme.",
+   "source": "data.js INTRO[2]; cinematic24.js SHOTS",
+   "voiceOf": "narrator",
+   "delivery": "grave, unhurried"
+  },
+  {
+   "id": "narrator.open.3",
+   "speaker": "narrator",
+   "kind": "narration",
+   "text": "The Church is coming up the road behind you, singing under glass-fire. In nine days it will hold its Pure Note over this town, and a Cantor will be walked down a shaft in white to sing a god to sleep.",
+   "source": "data.js INTRO[3]; cinematic24.js SHOTS",
+   "voiceOf": "narrator",
+   "delivery": "grave, unhurried"
+  },
+  {
+   "id": "narrator.open.4",
+   "speaker": "narrator",
+   "kind": "narration",
+   "text": "Nobody has rung a bell in Oakhaven since the Synod took them all for bore-teeth. Tonight is Nullday, the old rest-day, the day people fear.",
+   "source": "data.js INTRO[4]; cinematic24.js SHOTS",
+   "voiceOf": "narrator",
+   "delivery": "grave, unhurried"
+  },
+  {
+   "id": "ignatius.open.onenote",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "One note. One law. One hand.",
+   "source": "cinematic24.js SHOTS (Book One, Prologue: Ignatius at the three hundredth sunrise); over the Synod column",
+   "voiceOf": "ignatius",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "harrow.open.0",
+   "speaker": "harrow",
+   "kind": "narration",
+   "text": "You came up the Greenroot road? Then you heard what's behind you, singing.",
+   "source": "[PROPOSED] cinematic24.js SHOTS: the gate-warden at the North Gate, the opening cinematic",
+   "voiceOf": "harrow",
+   "delivery": "low, dry"
+  },
+  {
+   "id": "harrow.open.1",
+   "speaker": "harrow",
+   "kind": "narration",
+   "text": "Keep your voice in your chest, friend. And welcome to what's left of Oakhaven.",
+   "source": "[PROPOSED] cinematic24.js SHOTS: the gate-warden at the North Gate, the opening cinematic",
+   "voiceOf": "harrow",
+   "delivery": "low"
   }
  ],
  "skipped": [

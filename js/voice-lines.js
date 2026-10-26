@@ -244,6 +244,22 @@ const VOICE_LINES = {
 "t": "OC-742 stopped reporting. I am reconciling that.",
 "voiceOf": "captain"
 },
+"chorus_congregation.open.catechism.0": {
+"d": 2.93,
+"kind": "narration",
+"speaker": "chorus_congregation",
+"src": "voices/chorus_congregation/chorus_congregation.open.catechism.0.mp3",
+"t": "One note, held without end.",
+"voiceOf": "chorus_congregation"
+},
+"chorus_congregation.open.catechism.1": {
+"d": 2.26,
+"kind": "narration",
+"speaker": "chorus_congregation",
+"src": "voices/chorus_congregation/chorus_congregation.open.catechism.1.mp3",
+"t": "The second note.",
+"voiceOf": "chorus_congregation"
+},
 "core.death.annet-sowerby": {
 "d": 4.32,
 "kind": "death",
@@ -481,6 +497,22 @@ const VOICE_LINES = {
 "t": "Keep your voice down, friend, and welcome to what's left of Oakhaven.",
 "voiceOf": "harrow"
 },
+"harrow.open.0": {
+"d": 4.63,
+"kind": "narration",
+"speaker": "harrow",
+"src": "voices/harrow/harrow.open.0.mp3",
+"t": "You came up the Greenroot road? Then you heard what's behind you, singing.",
+"voiceOf": "harrow"
+},
+"harrow.open.1": {
+"d": 5.78,
+"kind": "narration",
+"speaker": "harrow",
+"src": "voices/harrow/harrow.open.1.mp3",
+"t": "Keep your voice in your chest, friend. And welcome to what's left of Oakhaven.",
+"voiceOf": "harrow"
+},
 "hetty.greet.blunt": {
 "d": 4.08,
 "kind": "greet",
@@ -551,6 +583,30 @@ const VOICE_LINES = {
 "speaker": "ignatius",
 "src": "voices/ignatius/ignatius.greet.polite.mp3",
 "t": "The Note is held. You may speak under it. Quietly, and in tune.",
+"voiceOf": "ignatius"
+},
+"ignatius.open.catechism.0": {
+"d": 2.09,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.open.catechism.0.mp3",
+"t": "What is holiness?",
+"voiceOf": "ignatius"
+},
+"ignatius.open.catechism.1": {
+"d": 1.8,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.open.catechism.1.mp3",
+"t": "What is sin?",
+"voiceOf": "ignatius"
+},
+"ignatius.open.onenote": {
+"d": 3.07,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.open.onenote.mp3",
+"t": "One note. One law. One hand.",
 "voiceOf": "ignatius"
 },
 "kaelen.companion.boss0": {
@@ -1249,6 +1305,46 @@ const VOICE_LINES = {
 "src": "voices/mourner/mourner.greet.polite.mp3",
 "t": "Lilies for the Cantor. Lilies.",
 "voiceOf": "mourner"
+},
+"narrator.open.0": {
+"d": 7.08,
+"kind": "narration",
+"speaker": "narrator",
+"src": "voices/narrator/narrator.open.0.mp3",
+"t": "It is autumn, in the four hundred and nineteenth year of the Synod Reckoning. Seven years ago the Light let go.",
+"voiceOf": "narrator"
+},
+"narrator.open.1": {
+"d": 11.33,
+"kind": "narration",
+"speaker": "narrator",
+"src": "voices/narrator/narrator.open.1.mp3",
+"t": "You have come up the Greenroot road to Oakhaven, capital of the Resonant Reach, a town that lives inside a hedge three men deep of thorn and packed wool, planted to swallow its own sounds.",
+"voiceOf": "narrator"
+},
+"narrator.open.2": {
+"d": 6.26,
+"kind": "narration",
+"speaker": "narrator",
+"src": "voices/narrator/narrator.open.2.mp3",
+"t": "Too loud brings the hounds. Too still brings the Hush. Every child here can skip to the rhyme.",
+"voiceOf": "narrator"
+},
+"narrator.open.3": {
+"d": 12.29,
+"kind": "narration",
+"speaker": "narrator",
+"src": "voices/narrator/narrator.open.3.mp3",
+"t": "The Church is coming up the road behind you, singing under glass-fire. In nine days it will hold its Pure Note over this town, and a Cantor will be walked down a shaft in white to sing a god to sleep.",
+"voiceOf": "narrator"
+},
+"narrator.open.4": {
+"d": 9.07,
+"kind": "narration",
+"speaker": "narrator",
+"src": "voices/narrator/narrator.open.4.mp3",
+"t": "Nobody has rung a bell in Oakhaven since the Synod took them all for bore-teeth. Tonight is Nullday, the old rest-day, the day people fear.",
+"voiceOf": "narrator"
 },
 "nell.greet.blunt": {
 "d": 1.68,

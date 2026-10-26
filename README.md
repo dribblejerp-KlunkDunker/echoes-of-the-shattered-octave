@@ -54,6 +54,17 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Phase 24: the opening
+
+| | |
+|---|---|
+| ![The sun on the ridge over Wethercombe, the first shot](screenshots/p24-wethercombe.jpg) | ![The Synod column coming up the Greenroot road under glass-fire](screenshots/p24-column.jpg) |
+| A new game opens in the dark on the Catechism of the Pure Note, then a flight through the Reach: the sun on the ridge over Wethercombe, the Hedge at dusk, the woods at night. | The Church comes up the road behind you: the Flambeau, the Herald and the Proctors, censers burning blue; Ignatius Crane speaks over the column and the score answers with the Pure Note. |
+| ![Hounds coming into a hush-lamp's light in the Deep Woods](screenshots/p24-hounds.jpg) | ![The title card](screenshots/p24-title.jpg) |
+| Too loud brings the hounds; too still, and the picture drains to the Hush. | Black, the title on the full orchestra, and then the North Gate, where Old Harrow greets you: the last shot is the first frame of play. |
+
+The six paragraphs the game always opened with are read by a narrator, with an original score (`music/opening.mp3`) written to the shots and the lines. Skip with Esc, Enter, a click or the button; turn it off in Options (Graphics & access) to get the old scrolling text back, or watch it again from there inside a game. The Voices setting governs the spoken lines; the captions always show.
+
 ### Phase 22: the Sheep-Walk (a new region, south of the Watch Downs)
 
 | | |

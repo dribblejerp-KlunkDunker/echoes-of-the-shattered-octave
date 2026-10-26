@@ -58,6 +58,8 @@ const URL = (process.env.PREVIEW_URL || 'http://127.0.0.1:3000') + '/index.html?
       const portals = (m) => { const out = []; for (const c of m.cells) if (c && c.portal) out.push(c.portal.map); return out; };
       check(W && W.outdoor && W.danger === 2 && B && !B.outdoor && B.danger === 3, 'the Hanger (outdoors, danger 2) and Ewe Barrow (a dungeon, danger 3)');
       check(JSON.stringify(portals(W)) === JSON.stringify([H.COMBE]), 'the Hanger joins Wethercombe only');
+      const firstTuft = C.entities.findIndex((e) => e && e._flora);
+      check(firstTuft < 0 || firstTuft >= C.baseCount, 'Wethercombe\'s saved entities stop before the grass (baseCount ' + C.baseCount + ', first tuft ' + firstTuft + ')');
       check(JSON.stringify(portals(B)) === JSON.stringify([H.COMBE]), 'the barrow\'s one door leads back to Wethercombe');
       check(portals(C).filter((p) => p === H.HANGER).length === 1, 'Wethercombe has one gap to the Hanger');
       for (const id in G.maps) if (id !== H.COMBE && id !== H.HANGER && id !== H.BARROW) check(!portals(G.maps[id]).some((p) => p === H.HANGER || p === H.BARROW), 'nothing else leads to the new maps (' + id + ')');
@@ -180,6 +182,11 @@ const URL = (process.env.PREVIEW_URL || 'http://127.0.0.1:3000') + '/index.html?
       go('p20_downs', 5.5, 32.3, 0); H.pitchCamp();
       check(G.flags.p22c_map === 'p20_downs' && G.ents.some((e) => e._p22c === 'fire' && e.use === 'campfire'), 'a camp on the Downs, by the dew-pond');
       const fire = G.ents.find((e) => e._p22c === 'fire');
+      // no sleeping it off mid-fight: a hound on your heels and the bed refuses, as the game's own rest does
+      const hound = hydrate({ kind: 'enemy', type: 'hound', x: Engine.cam.x + 4, y: Engine.cam.y, transient: true }); hound.state = 'chase'; G.ents.push(hound);
+      G.player.hp = 10; useDeco(fire); choose(0);
+      check(G.player.hp === 10, 'no sleep by the fire with a hound on your heels');
+      G.ents.splice(G.ents.indexOf(hound), 1); G.state = 'play';
       // the camp menu: sleep
       G.player.hp = 10; const day = G.day; useDeco(fire);
       check(/Your camp/.test(document.querySelector('#event-panel h2').textContent), 'the camp menu opens');
