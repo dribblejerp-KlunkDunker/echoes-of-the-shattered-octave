@@ -26,8 +26,10 @@
 //      One's ending. No numbers on screen.
 //
 //  Nothing here draws on the game's random stream. Planted lamps, dead patches, the lure, the lamplighter and the
-//  night-hummers are transient: never saved, so no saved entity index moves. The only saved state is a few flags
-//  (n28_*), which an old save simply lacks.
+//  night-hummers are transient: never saved, so no saved entity index moves, and they are cleared before any map loads so
+//  what runs on load sees the map as built. The only saved state is a few flags (n28_c_* for choices already counted,
+//  n28_learn_* for lessons), which an old save simply lacks. The tick rides inside updateNarrow (the game's own update),
+//  and on a co-op guest it does nothing: the host runs the world.
 // ============================================================
 'use strict';
 
@@ -50,7 +52,7 @@ const NARROW28 = (function () {
     lureSecs: 10, lureR: 16,
     quietLanternR: 10,
     dusk: 17.6, lampHours: 1.4, dawn: 7, hummersFrom: 19, deadFrom: 1, deadTo: 5,
-    hiStanding: 25, loStanding: -10,
+    hiStanding: 40, loStanding: -15,   // a new game already stands at 10-25 with the Hedge: being "one of ours" is earned
   };
 
   const TX = {
@@ -168,6 +170,8 @@ const NARROW28 = (function () {
   const live = (e) => e && !e.dead && !e.hidden;
   const ents = () => (hasG() && Array.isArray(G.ents) ? G.ents : []);
   let T = 0;   // seconds of play
+  const said = {};   // once-a-day lines already said, by key and day (memory only: a reload may say one again)
+  const sayDaily = (k, t, cls, ms) => { const key = k + ':' + G.day; if (said[key]) return; said[key] = true; say(t, cls, ms); };
 
   // ================================================================ 1. hush-lamps
   const planted = [];   // { e, map, left }
@@ -205,7 +209,7 @@ const NARROW28 = (function () {
   }
   function witness() {
     const c = cam(), r2 = BAL.witnessR * BAL.witnessR;
-    return ents().find((e) => e.kind === 'npc' && !e.companion && live(e) && !(e.stun > 0) && !e._n28night &&
+    return ents().find((e) => e.kind === 'npc' && !e.companion && live(e) && !(e.stun > 0) &&
       d2(e.x, e.y, c.x, c.y) < r2 && los(e.x, e.y, c.x, c.y) &&
       (e.lawGuard || Math.abs(normAng(Math.atan2(c.y - e.y, c.x - e.x) - (Number.isFinite(e.facing) ? e.facing : e.dir || 0))) < Math.PI * 0.65)) || null;
   }
@@ -213,6 +217,7 @@ const NARROW28 = (function () {
   function tickLaw() {
     if (typeof lawActive !== 'function' || !lawActive() || here() === 'tavern') return;
     if (!(G.noise >= BAL.breach) || inFight()) return;
+    try { const cs = crimeState(); if (cs.custody || cs.resisting) return; } catch (e) { /* no law state */ }
     if (T - law.lastAt < BAL.graceSecs) { law.lastAt = T; return; }
     const w = witness(); if (!w) return;
     law.lastAt = T;
@@ -226,7 +231,6 @@ const NARROW28 = (function () {
     law.warned = true; law.warnedAt = h;
     const nm = npcName(w);
     say(nm ? fmt(TX.wardNamed, nm) : (w.sprite === 'townswoman' || w.id === 'townswoman' ? TX.wardShe : TX.wardHe), 'warn', 6000);
-    try { w.facing = Math.atan2(cam().y - w.y, cam().x - w.x); } catch (e) { /* cosmetic */ }
   }
 
   // ================================================================ 3. songs learned from people
@@ -380,6 +384,15 @@ const NARROW28 = (function () {
     return (m._n28path = out);
   }
   function setLit(e, on) { e._n28off = !on; e.glow = on ? e._n28g : 0; }
+  // which of Oakhaven's lamps are lit follows the clock alone: by day none, at dusk those the lamplighter has reached
+  function refreshLamps(m) {
+    if (!m || m.id !== 'oakhaven' || !Array.isArray(m.entities)) return;
+    const path = lampPath(m); if (!path.length) return;
+    if (gone()) { for (const p of path) setLit(p.e, true); return; }
+    const h = hour(), total = path[path.length - 1].at;
+    if (h >= BAL.dusk && h < BAL.dusk + BAL.lampHours) { const s = (h - BAL.dusk) / BAL.lampHours * total; for (const p of path) setLit(p.e, p.at <= s); }
+    else { const night = h >= BAL.dusk + BAL.lampHours || h < BAL.dawn; for (const p of path) setLit(p.e, night); }
+  }
   function placeNight(m, id, x, y, sprite, facing, extra) {
     let e = m.entities.find((o) => o && o._n28night === id);
     if (!e) {
@@ -397,27 +410,23 @@ const NARROW28 = (function () {
     const path = lampPath(m); if (!path.length) return;
     const h = hour(), total = path[path.length - 1].at;
     const lighting = h >= BAL.dusk && h < BAL.dusk + BAL.lampHours;
-    const night = h >= BAL.dusk + BAL.lampHours || h < BAL.dawn;
+    refreshLamps(m);
     if (lighting) {
       const s = (h - BAL.dusk) / BAL.lampHours * total;
       let i = 0; while (i + 1 < path.length && path[i + 1].at <= s) i++;
-      for (let k = 0; k < path.length; k++) setLit(path[k].e, path[k].at <= s);
       const a = path[i], b = path[Math.min(path.length - 1, i + 1)], seg = Math.max(0.001, b.at - a.at), u = Math.max(0, Math.min(1, (s - a.at) / seg));
       const x = a.e.x + (b.e.x - a.e.x) * u, y = a.e.y + (b.e.y - a.e.y) * u, fc = Math.atan2(b.e.y - a.e.y, b.e.x - a.e.x);
       const L = placeNight(m, 'lamp', x, y, 'townsman', fc, { npc: LAMPLIGHTER.id });
       L.x = x + 0.45; L.y = y + 0.45; L.facing = fc;
-      if (F().n28_lh !== G.day) { G.flags.n28_lh = G.day; say(TX.listening, 'voice', 6500); }
-    } else {
-      for (const p of path) setLit(p.e, night);
-      dropNight(m, 'lamp');
-    }
+      sayDaily('lh', TX.listening, 'voice', 6500);
+    } else dropNight(m, 'lamp');
     const hum = h >= BAL.hummersFrom || h < BAL.dawn;
     CROSSINGS.forEach(([x, y, sp], k) => { if (hum) placeNight(m, 'h' + k, x, y, sp, Math.PI / 2, { npc: HUMMER.id }); else dropNight(m, 'h' + k); });
     if (hum) {
       const c = cam();
-      if (F().n28_hum !== G.day && CROSSINGS.some(([x, y]) => d2(x, y, c.x, c.y) < 9)) { G.flags.n28_hum = G.day; say(TX.hummer, '', 5500); }
+      if (CROSSINGS.some(([x, y]) => d2(x, y, c.x, c.y) < 9)) sayDaily('hum', TX.hummer, '', 5500);
     }
-    if (h >= BAL.deadFrom && h < BAL.deadTo && F().n28_dead !== G.day) { G.flags.n28_dead = G.day; say(TX.deadHour, 'voice', 7000); }
+    if (h >= BAL.deadFrom && h < BAL.deadTo) sayDaily('dead', TX.deadHour, 'voice', 7000);
   }
   function defineNightNpcs() {
     if (typeof NPCS === 'undefined') return;
@@ -447,7 +456,7 @@ const NARROW28 = (function () {
   function priceMult() {
     const fac = factionHere(); if (!fac) return 1;
     const v = standing(fac);
-    return v >= 40 ? 0.85 : v >= BAL.hiStanding ? 0.92 : v <= -35 ? 1.25 : v <= BAL.loStanding ? 1.1 : 1;
+    return v >= 60 ? 0.85 : v >= BAL.hiStanding ? 0.92 : v <= -40 ? 1.25 : v <= BAL.loStanding ? 1.1 : 1;
   }
   function endingLines() {
     const t = tier('hedge');
@@ -455,8 +464,10 @@ const NARROW28 = (function () {
   }
 
   // ================================================================ the tick
+  // a co-op guest mirrors the host's world: the host runs all of this, and the guest only shows it
+  const guest = () => { try { return typeof SYNC19 !== 'undefined' && !!SYNC19.isGuest(); } catch (e) { return false; } };
   function tick(dt) {
-    if (!hasG() || G.state !== 'play') return;
+    if (!hasG() || G.state !== 'play' || guest()) return;
     T += dt;
     // planted lamps
     for (const p of planted.slice()) { p.left -= dt; if (p.left <= 0) dropPlanted(p, false); }
@@ -479,10 +490,6 @@ const NARROW28 = (function () {
   // ================================================================ wiring
   function wire() {
     defineNightNpcs();
-    if (typeof update === 'function') {
-      const _u = update;
-      update = function (dt) { const r = _u.apply(this, arguments); try { tick(Number(dt) || 0); } catch (e) { warnOnce('tick', e); } return r; };
-    }
     if (typeof updateNarrow === 'function') {
       const _un = updateNarrow;
       updateNarrow = function (dt) {
@@ -504,6 +511,8 @@ const NARROW28 = (function () {
             if (!afraid) { afraid = true; say(TX.fear, 'warn', 4000); }
           } else afraid = false;
         } catch (e) { warnOnce('narrow', e); }
+        // the module's own tick rides here, inside the game's update (a module that restores an older update keeps it)
+        try { tick(Number(dt) || 0); } catch (e) { warnOnce('tick', e); }
         return r;
       };
     }
@@ -603,11 +612,17 @@ const NARROW28 = (function () {
       const _bp = buyPrice;
       buyPrice = function () { const v = _bp.apply(this, arguments); try { const k = priceMult(); return k === 1 ? v : Math.max(1, Math.round(v * k)); } catch (e) { return v; } };
     }
+    if (typeof Engine !== 'undefined' && typeof Engine.render === 'function') {
+      const _r = Engine.render;
+      Engine.render = function () { try { if (hasG() && G.map.id === 'oakhaven') refreshLamps(G.map); } catch (e) { warnOnce('lamps', e); } return _r.apply(this, arguments); };
+    }
     for (const fn of ['loadMap', 'restoreGame', 'startGame']) {
       if (typeof window[fn] !== 'function') continue;
       const _f = window[fn];
       window[fn] = function () {
         if (fn !== 'loadMap') reset(); else { for (const p of planted.slice()) dropPlanted(p, true); lure = null; }
+        // a map always loads as built: the night's figures are put back by the tick, never seen by what runs on load
+        try { if (hasG() && G.maps) for (const id in G.maps) { const m = G.maps[id]; if (m && Array.isArray(m.entities)) for (let i = m.entities.length - 1; i >= 0; i--) if (m.entities[i] && m.entities[i]._n28night) m.entities.splice(i, 1); } } catch (e) { /* no maps yet */ }
         return _f.apply(this, arguments);
       };
     }
@@ -617,7 +632,7 @@ const NARROW28 = (function () {
   return {
     BAL, TX, LESSONS, MILLER, CHOICES, TEXTS,
     lampNear, plantLamp, witness, lessonFor, startLesson, singMiller, regroup, rout, onFifth, inPatch, playerInPatch,
-    lampPath, tickNight, priceMult, standing, tier, endingLines, reset,
+    lampPath, refreshLamps, tickNight, priceMult, standing, tier, endingLines, reset,
     get planted() { return planted; }, get patches() { return patches; }, get lure() { return lure; }, get law() { return law; },
   };
 })();

@@ -72,11 +72,12 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     // ---- 2. the Narrow as law inside the Hedge
     const law = await page.evaluate(() => {
       T.go('oakhaven', 23.5, 16.5, 0); G.tod = 0.5; T.quiet(); crimeState().bounty = 0; window.__msgs.length = 0;
-      const c = Engine.cam; const w = { kind: 'npc', id: 'townswoman', sprite: 'townswoman', x: c.x + 3, y: c.y, facing: Math.PI, solid: false, radius: 0.3 }; w._h = true; w.homeX = w.x; w.homeY = w.y; w.wanderT = 1e9; w.dir = Math.PI; G.ents.push(w);
+      const c = Engine.cam; const w = { kind: 'npc', id: 'n28_hummer', sprite: 'townswoman',   // an id no town routine moves or hides
+         x: c.x + 3, y: c.y, facing: Math.PI, solid: false, radius: 0.3 }; w._h = true; w.homeX = w.x; w.homeY = w.y; w.wanderT = 1e9; w.dir = Math.PI; G.ents.push(w);
       NARROW28.reset(); T.step(30);
       G.noise = 8; T.step(1); const warned = T.heard(/ward-sign/) && crimeState().bounty === 0;
       T.step(1); const once = window.__msgs.filter((t) => /ward-sign/.test(t)).length === 1;
-      G.noise = 1; T.step(240);
+      G.noise = 1; T.step(240); T.quiet();
       G.noise = 8; T.step(1); const fined = crimeState().bounty === NARROW28.BAL.breachFine && T.heard(/Twice now/);
       G.ents.splice(G.ents.indexOf(w), 1); G.noise = 1; T.step(240);
       window.__msgs.length = 0; G.noise = 8; T.step(1); const noWitness = !T.heard(/ward-sign/);
@@ -160,7 +161,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       castSong('fifth');
       out.routed = hs.every((h) => h._n28rout > 0);
       const d0 = Math.hypot(L.x - c.x, L.y - c.y); T.step(220); out.away = Math.hypot(L.x - c.x, L.y - c.y) - d0;
-      out.lone = (() => { for (const h of hs) { h.dead = h.hidden = true; } const solo = T.foe('hound', c.x + 5, c.y + 5); NARROW28.regroup(); return !solo._n28lead && !solo._n28pack; })();
+      out.lone = (() => { T.quiet(); const solo = T.foe('hound', c.x + 5, c.y + 5); NARROW28.regroup(); return !solo._n28lead && !solo._n28pack; })();
       return out;
     });
     check(pack.leaders === 1 && pack.members === 2 && pack.bigger && pack.lone, 'hounds near one another run as a pack behind one larger leader; a lone hound has none');
@@ -195,7 +196,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       G.tod = 12 / 24; T.step(1); out.noon = [lit(), who('lamp'), who('h')];
       G.tod = 18.3 / 24; T.step(1); out.dusk = [lit(), who('lamp'), who('h')];
       G.tod = 20 / 24; T.step(1); out.night = [lit(), who('lamp'), who('h'), lamps().length];
-      delete G.flags.n28_dead; window.__msgs.length = 0; G.tod = 1.5 / 24; T.step(1); out.call = T.heard(/all's well, all's quiet, keep to the Narrow/);
+      G.day = (G.day || 0) + 1; window.__msgs.length = 0; G.tod = 1.5 / 24; T.step(1); out.call = T.heard(/all's well, all's quiet, keep to the Narrow/);
       T.step(2); out.once = window.__msgs.filter((t) => /all's well/.test(t)).length === 1;
       out.saved = !JSON.stringify(snapshotGame().maps.oakhaven || {}).includes('_n28night');
       G.tod = 0.5; T.step(1);
@@ -213,7 +214,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       Object.assign(G.flags, { tam_told: true, tam_sat: true, pim_safe: true, pim_tended: true });
       T.go('oakhaven', 23.5, 6.5, Math.PI / 2); G.tod = 0.5; T.step(2); const fed = p.factions.hedge; T.step(5); const once = p.factions.hedge === fed;
       p.factions.hedge = 10; const neutral = buyPrice(NPCS.bettany, { item: 'tonic', price: 5 });
-      p.factions.hedge = 40; const friend = buyPrice(NPCS.bettany, { item: 'tonic', price: 5 });
+      p.factions.hedge = 60; const friend = buyPrice(NPCS.bettany, { item: 'tonic', price: 5 });
       p.factions.hedge = -40; const foe = buyPrice(NPCS.bettany, { item: 'tonic', price: 5 });
       p.factions.hedge = 40; const harrow = G.ents.find((e) => e.id === 'harrow'); talk(harrow); const hi = DLG.log.some((l) => /People speak well of you/.test(l.t)); closeModal(); G.state = 'play';
       p.factions.hedge = 10; talk(harrow); const plain = !DLG.log.some((l) => /People speak well|The Hedge talks/.test(l.t)); closeModal(); G.state = 'play';
