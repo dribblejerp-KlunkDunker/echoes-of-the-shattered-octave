@@ -351,6 +351,13 @@ The ground and the skyline now have real height. These are captured the same way
 
 ## Features
 
+- The Library of the Reach: 65 books written from inside the world. They span histories, lives and letters, folk tales, ghost stories, romance, verse and a harvest play, herbals and handbooks, sermons, law and seditious broadsheets, and travellers' accounts of the wider continent. Walk into four libraries:
+  - the Conservatory Reading Room in Oakhaven, where Cantor-Master Ilse Brennan answers on her slate;
+  - Odile Quayle's smugglers' book room at Stillwater Landing;
+  - the Moot-house of Whisper-Grove, where a Hollow still shelves the town's books by size, not by name;
+  - the Veil's own scriptorium, up a stair in the Mausoleum.
+
+  Buy books from Bastien Corvo, Odile and Vane, and find others in houses, camps and dungeons. Three keepers want their lost books back: Ilse teaches the tending breath, Odile gives a friend's price, and the names on the Whisper-Grove flyleaves go into your Ledger. Every book you read stays in the logbook's "Your Library", to read again anywhere.
 - Sound, access and tools: sounds come from where they happen and are muffled through walls; rain, willow wind and thunder follow the weather; every speaking character and boss has recorded lines (greetings, barks, the mimics' borrowed voices), and every other creature its own grunt. Options add an Extended score, an Accessibility block with captions and high contrast, a language choice, photo mode, a speedrun timer, a statistics page and data-only mod dungeons with a built-in editor. A desktop build (Windows, macOS, Linux) is configured in desktop/.
 - Raycast 3D world with chunky Daggerfall-style textures, sprites and a first-person weapon view.
 - Six character templates, plus attributes, skills and level-ups.

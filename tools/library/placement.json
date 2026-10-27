@@ -130,9 +130,8 @@
   "shelf": "world"
  },
  "lib_d_tank_and_envelope": {
-  "how": "shop",
-  "at": "lib_odile",
-  "price": 3
+  "how": "pile",
+  "at": "p16k_kestrel_below"
  },
  "lib_f_fairweather_companion": {
   "how": "shop",

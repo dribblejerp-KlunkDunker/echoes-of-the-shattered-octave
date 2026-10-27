@@ -156,7 +156,11 @@ Gate: books reviewed against canon and against each other; library tests green; 
   - Ilse's lost books earn the tending breath.
   - Odile's wet crate earns a friend's price.
   - The Moot-house's named books put their owners' names in your Ledger.
-- [~] **The first wave of books.** 56 are placed so far (about 54,500 words, English drafts), across history, lives and letters, tales and verse, craft and the natural world, faith, law and the press, and the wider world. Still to come: the Whisper-Grove and Veil books for the Moot-house and the scriptorium, and the cross-book canon review.
+- [x] **The first wave of books: 65** (about 63,400 words, English drafts).
+  - Genres: history, lives and letters, tales and verse, craft and the natural world, faith, law and the press, the wider world, and the books of Whisper-Grove and the Veil.
+  - Each writer checked against canon, then one reviewer checked all 65 against each other.
+  - The owner's open questions and the weaker books are in `story/Game Layer/Library of the Reach - Notes for the Owner.md`.
+- [ ] **The owner rules on the library's open questions** (that file), then a pass revises the weaker books. The two lamplighter books share a device.
 - [ ] **A second wave of books.** More lives of canon minor figures, a Cantabile broadsheet run, children's books, and a book for each festival. Grow toward 100 without padding; every book needs a voice and an ending.
 - [ ] **Books that carry story.** See `story/Game Layer/Story Brainstorm - Book One in play.md` §3: books that set up the set-pieces below, such as Hymn 9's words and the eight pump-men.
 - [ ] **Art:** a painted Ilse Brennan (she uses the generic townswoman today), painted book and pile sprites, and painted library interiors.
