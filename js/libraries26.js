@@ -245,7 +245,8 @@ const LIBRARIES = (function () {
     // furniture: reading tables with books open on them, or sloped desks, lamps, stoves
     const pileOn = (x, y) => m.deco('bookpile', x, y, { solid: false, radius: 0.1, scale: 0.32, yOff: -0.38, label: 'Books, open where someone left off' });
     if (libId === 'lib_scriptorium') {
-      for (let x = 4; x < W - 3; x += 3) { m.deco('table', x + 0.5, 3.3, { radius: 0.4, scale: 0.6, label: 'A sloped desk. The ink has dried in the well.' }); m.deco('table', x + 0.5, 5.6, { radius: 0.4, scale: 0.6, label: 'A sloped desk, a sheet still pinned to it, blank.' }); }
+      const north = []; for (let x = 4; x < W - 3; x += 3) north.push(x);
+      north.forEach((x, i) => { const third = i === north.length - 3; m.deco('table', x + 0.5, 3.3, { radius: 0.4, scale: 0.6, label: third ? 'The third desk from the east end, on the north side. Someone sat here for years.' : 'A sloped desk. The ink has dried in the well.' }); m.deco('table', x + 0.5, 5.6, { radius: 0.4, scale: 0.6, label: 'A sloped desk, a sheet still pinned to it, blank.' }); });
       m.deco('hearth', 2.2, H - 2.0, { radius: 0.3, scale: 0.8, glow: 0.05, label: 'The west stove, cold' });
       m.deco('hearth', W - 2.2, H - 2.0, { radius: 0.3, scale: 0.8, glow: 0.05, label: 'The east stove. The duty-scribe lit this one first.' });
       pileOn(7.5, 3.3); pileOn(10.5, 5.6);
@@ -287,17 +288,11 @@ const LIBRARIES = (function () {
     const s = L.SHELVES.find(x => x.key === e.shelfKey);
     L.menu(s ? s.name : 'Books', SHELF_TEXT[libId] || 'A shelf of books.', L.onShelf(libId, e.shelfKey));
   }
-  const FILLER = {
-    lib_conservatory: 'Sheet music and tuning tables, foxed with damp',
-    lib_bonded: 'Unsorted paper, waiting for a buyer',
-    lib_moot: 'The town\u2019s minutes, bound by the year',
-    lib_scriptorium: 'Registers of names, shelved by year, too faded to read',
-  };
   const SHELF_TEXT = {
     lib_conservatory: 'Each spine is labelled in Ilse’s square hand. A card on the shelf: READ HERE. TAKE NOTHING. THE REEDS ARE COUNTING.',
     lib_bonded: 'Books that came upstream inside something else. Some still smell of tea.',
     lib_moot: 'Shelved by size, not by name. Some of the flyleaves have names on them. Some have had them cut out.',
-    lib_scriptorium: 'The Veil’s books, on the first floor, east end. The dust on them is old and undisturbed.',
+    lib_scriptorium: 'The Office took the vellum to the Organum. What is left is what it did not want: the scribes’ own books, shelved in the gaps.',
   };
 
   // ---------------------------------------------------------------- wiring
