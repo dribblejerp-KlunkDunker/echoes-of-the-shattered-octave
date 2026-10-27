@@ -61,6 +61,10 @@ Gate: each change checked against the Series Bible and Book One; French entries 
   - The noticeboard's public proctor bounty (upgrades.js:851).
   - Mutton on every menu in a starving town.
 - [ ] **Near-collisions:** Pellam Dree and Pellam Quist; Wenna Marl and Abbess Wenna; Annet Sorrel and Annet Sowerby.
+- [ ] **Found by the library writers:**
+  - Tomas has been "thinking about it since August", a real-world month (Phase 9 quest text). Use Vol VII's months.
+  - A letter in grove.js addresses "the Cloister of the Lost Choir" before 416, though canon says nobody remembers its old name.
+  - Book One's own "Leaffall" dates are not in Vol VII's calendar; the owner should rule on them.
 - [ ] **Reedcraft's "wind-reeds" become Flume-reeds** (reedcraft.js:54). Real wind-reeds died in 412.
 
 ### R3 — The Narrow comes home: make existing systems matter
@@ -139,6 +143,59 @@ Gate: the owner signs off.
 - [ ] **Saves:** saves from earlier builds still load.
 - [ ] **Store copy written only from verified features,** with screenshots taken from the real build.
 - [ ] **Credits and licences re-checked:** CREDITS.md and ASSETS.md.
+
+### R8 — The Library of the Reach
+Gate: books reviewed against canon and against each other; library tests green; screenshots of each library.
+- [x] **Four libraries you can walk into** (`js/libraries26.js`), each with painted bookshelf walls:
+  - the Conservatory Reading Room in Oakhaven, kept by Ilse Brennan;
+  - the Bonded Store at Stillwater, Odile Quayle's smugglers' book room;
+  - the Moot-house in Whisper-Grove, where a Hollow still shelves the town's books;
+  - the Scriptorium of the Silent Veil, in the Mausoleum.
+- [x] **Every way to come by a book** (`js/library26.js`): on a library shelf, in a pile where its readers live, for sale (Bastien Corvo, Odile, Vane), lying in the world, as a quest item, or as a gift. The logbook's "Your Library" rereads every book anywhere.
+- [x] **Three keepers' quests:**
+  - Ilse's lost books earn the tending breath.
+  - Odile's wet crate earns a friend's price.
+  - The Moot-house's named books put their owners' names in your Ledger.
+- [~] **The first wave of books.** 56 are placed so far (about 54,500 words, English drafts), across history, lives and letters, tales and verse, craft and the natural world, faith, law and the press, and the wider world. Still to come: the Whisper-Grove and Veil books for the Moot-house and the scriptorium, and the cross-book canon review.
+- [ ] **A second wave of books.** More lives of canon minor figures, a Cantabile broadsheet run, children's books, and a book for each festival. Grow toward 100 without padding; every book needs a voice and an ending.
+- [ ] **Books that carry story.** See `story/Game Layer/Story Brainstorm - Book One in play.md` §3: books that set up the set-pieces below, such as Hymn 9's words and the eight pump-men.
+- [ ] **Art:** a painted Ilse Brennan (she uses the generic townswoman today), painted book and pile sprites, and painted library interiors.
+- [ ] **French for the books themselves.** The library's frame is translated; the books are English drafts until the owner signs them off.
+
+### R9 — Book One in play: the novel's set-pieces
+Source: `story/Game Layer/Story Brainstorm - Book One in play.md`, which has a chapter-by-chapter gap list with manuscript lines, a ranked table of 25 ideas, 13 choices with consequences, 24 contradictions, and 7 open questions for the owner.
+
+The game has the novel's plot but few of its set-pieces. Turn told beats into played ones, mostly by replacing fetch steps rather than adding new ones. The main story would grow from about 3–4.5 h to about 5–7 h, all of it novel scenes.
+
+Gate: each scene is playable start to finish, closes cleanly, and changes lines, never fails quests, when missed.
+- [ ] **Prerequisite: let the nine days happen while you are there.** Canon days become scheduled set-pieces (Brainstorm §3.1). Missing one changes lines, never fails a quest.
+- [ ] **1. The Greening, walked** (ch. 11). Sing a corridor through the drowning town, sing Orla down in her tree, and hold the sealed North Gate while the Hedge calls in the voices you let it learn. L.
+- [ ] **2. Grab the Line, played** (ch. 12). The winch, the hound on the rope, the count to ten. M–L.
+- [ ] **3. The Rite, from procession to pumps** (ch. 9–10). The town hums 174 under 528, the needle, "SING IT DOWN", and Aldric's count. L.
+- [ ] **4. The water-meadow** (ch. 6). The whistle duel, and Tam walking out singing. L.
+- [ ] **5. Hearthday at the Boar & Dulcimer** (ch. 4). Davin's song, ten counted seconds. M.
+- [ ] **6. Voice at the Door** (ch. 20). A don't-answer endurance scene that replaces the porch fight. M.
+- [ ] **7. The forty-one nights.** Lyra's arc, and the canon spine of her unbuilt companion quest. M.
+- [ ] **8. Ash in the Hold** (ch. 13). A playable night aboard the Kestrel between Parts Two and Three. M.
+- [ ] **9. The Wearer at the ring of lamps** (ch. 23), offered as the canon finale. M.
+- [ ] **10–25: the rest of the ranked table.** Includes:
+  - Tamsin Reed and "Tell Mam";
+  - "Read you three";
+  - the Legionnaire audit;
+  - the Church comes up the road;
+  - Cargo night;
+  - Aldric's, Orla's and Tobiah's arcs;
+  - the eight men at the pumps;
+  - the cutter chase;
+  - the Grafters' round;
+  - the Prologue and Echo I as extras.
+- [ ] **The brainstorm's 24 further contradictions,** folded into R2's canon sweep. Biggest:
+  - the crates are in Hetty's cellar, not the Kestrel's hold;
+  - Bettis Renn is a man in the game;
+  - Hob survives;
+  - the Wearer is fought three times.
+- [ ] **The owner rules on the open questions first:** whether Sable stays in the Reach, and whether the canon days may run while you are in Oakhaven.
+- **Model note:** set-pieces 1, 2, 3 and 4 are the most design-heavy. They are worth building with the strongest model available.
 
 **Avoid as bloat:**
 - More minigames, generic systems, new regions, currencies or crafting trees.
