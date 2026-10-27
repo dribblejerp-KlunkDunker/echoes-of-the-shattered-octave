@@ -191,3 +191,46 @@ The Source Material drafts disagree with the game in several places. The Series 
 
 - **How the pamphlets read in play.** Whether players treat them as live clues, and whether three sovereigns feels right, needs a real playtest.
 - **Coverage.** The novels were searched for each name and term and read around every hit. They were not read end to end.
+
+---
+
+## Resolution (27 October 2026)
+
+The owner asked for the serial to be brought into canon. Every finding above is resolved in `js/books.js`, `test/books.test.js`, `locales/story/fr.json` and `tools/i18n/p26-books.tsv`. The prose of both installments is kept; only names, terms and a few lines change.
+
+**The ruling that settles most findings.** The serial is now a **Cantabile broadsheet tale of the Caldera**. It was printed on Broadsheet Row and carried up the river through Stillwater, the canon route for broadsheets. The frame line reads: "Printed on Broadsheet Row, Port Cantabile · installment N of 2. A tale of the Caldera; the names are changed."
+
+- A works collapse belongs in Cinderhold's industrial tiers, not in the Reach (Vol I, lines 229–231).
+- That keeps the tale out of Oakhaven's institutions, the Narrow and Hush lore.
+- It answers who printed it (finding 11) and makes the echoes deliberate. The free press telling true things as fiction fits canon's Row: "all libellous, one occasionally correct."
+- The tale names no real Furnace House, so no real House gains an invented collapse. Canon already has Tier Three's dead at the Thermal Margin.
+
+| # | Finding | Resolution |
+|---|---|---|
+| 1 | Silver pieces | Now "nineteen sovereigns"; the gatekeeper is offered "a sovereign". |
+| 2 | Moor / Hennet Moor | The husband is now **Matthis Kessler**. The player-facing name is "the Cantabile serial" or "broadsheet serial". Internal ids keep `moor_*` so saves still load. |
+| 3 | Jory / Jory Quill; dispatch | Jory is now Matthis. "Dispatch number" is now **docket number** throughout, and "I don't keep dispatches" is now "dockets". |
+| 4 | Pell | The pedlar is now **Bastien Corvo**, an Archipelago-style name per Vol II App. C. |
+| 5 | Equipment / reweigh echo | Kept as a deliberate echo, now plainly a foreign tale. The game already lets the player hear cores in Hetty's cellar on day one, so this foreshadows rather than spoils. |
+| 6 | The door beneath the house | Kept. No Hush rule is broken, and it is a tale from elsewhere. |
+| 7 | Price | Now **1 sovereign** a part, the smallest coin the game has. |
+| 8 | Aldren | Now **Wendel**, Hessa's father. |
+| 9 | Varek, the adjudicator | Now **Justiciar R.**, an initial only, matching the Office custom of initials. |
+| 10 | Lyra's shelf | Now **the Cantor's lending shelf**. It is removed once the Rite starts and Lyra's house is sealed, and the pedlar's lines change with it. |
+| 11 | Who prints it | Broadsheet Row, by way of Stillwater. The pedlar has a "Broadsheet Row" topic, and the Stillwater lockkeeper reads what he carries. |
+| 12 | Institutions | They now belong to a Caldera works. "Eastern works" is now "the lower works", "factory yards" is now "works yards", and "East road" is now "Rim road". |
+| 13 | No Narrow | Cinderhold's own sound replaces it. "The Great Beat kept its four counts… She only spoke between the falls", and the gatekeeper "waited out a hammer-fall". |
+| 14 | Hessa / Hetty | Hessa is kept. The name fits Cinderhold's Germanic naming, and with the tale abroad she no longer shares a town with Hetty. |
+| 15 | Transcript format | Now "SUBJECT: …" and "JUSTICIAR R.: …", and Esser broke form by writing the account out in full. |
+| 16 | Hetty's capitals | Now "PAID FOR. TAKE ONE OF EACH. LEAVE THE CANTOR HER COPIES." |
+| 17 | Hauler | Now "a carter". |
+| 18 | Serial name | Now "the Cantabile serial". |
+| 19 | Opens mid-story | Each installment opens with a short italic preface. |
+| 20 | Tobin's page sprite | The pamphlets have their own broadsheet sprite and inventory icon. |
+| 21 | Twin townsmen | The pedlar wears the wharf's river coat (`p16f_cutter`), falling back to the townsman. |
+| 22 | Who split the wood | Part 1 now shows "a woman at the woodpile with her back to the road". |
+| 23 | Gate logging | Now "logged in and out". |
+| 24 | The scrap | "Esser wrote it twice: once on his copy, and once on a scrap for the traveler." |
+| 25 | Timing | The wagon left "the day after the collapse". |
+
+**French.** The serial had shipped with no French, which also kept the story-translation test red on `main`. Every line it shows is now translated, including both installments, and that test passes again.

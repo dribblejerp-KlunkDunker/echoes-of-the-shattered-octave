@@ -60,7 +60,13 @@ for (const v of B.volumes) {
   assert(!JSON.stringify(T.LOOT).includes(v.id));
   assert(!JSON.stringify(T.CACHE).includes(v.id));
 }
-console.log('PASS chapter, continuation, reader registration, no random loot');
+// Canon review (story/Game Layer/Review - The Moor serial.md): no colliding names, no silver coin, no parish frame.
+const allText = B.volumes.map(v => v.text + ' ' + (v.preface || '')).join(' ') + JSON.stringify(T.NPCS.moor_bookseller.greet.polite + T.NPCS.moor_bookseller.greet.normal + T.NPCS.moor_bookseller.greet.blunt + T.NPCS.moor_bookseller.name);
+for (const banned of ['Moor', 'Jory', 'Varek', 'Aldren', 'Pell', 'silver', 'dispatch number', 'eastern works', 'adjudicator', 'parish'])
+  assert(!allText.includes(banned), 'serial still says ' + banned);
+assert(B.volumes[0].text.includes('nineteen sovereigns'));
+assert(B.volumes.every(v => v.price === 1 && T.ITEMS[v.id].sprite === 'broadsheet'));
+console.log('PASS chapter, continuation, reader registration, no random loot, canon names and coin');
 
 const G = T.G;
 G.player = { name: 'Reader', cls: T.CLASSES[0], hp: 30, hpMax: 30, voice: 10, voiceMax: 10,
@@ -116,7 +122,7 @@ T.DLG.npc = T.NPCS.moor_bookseller; T.DLG.log = []; T.DLG.choices = null;
 buyButtons = B.volumes.map((v, i) => ({ dataset: { buy: String(i) } }));
 T.renderDialogue('buy');
 buyButtons[0].onclick(); buyButtons[1].onclick();
-assert.equal(G.player.gold, 14);
+assert.equal(G.player.gold, 18);
 assert.equal(G.count('book_things_taken_home'), 2);
 assert.equal(G.count('book_gate_book'), 2);
 G.player.gold = 0; buyButtons[0].onclick();
@@ -140,3 +146,11 @@ legacy.player.inv = [];
 T.restoreGame(legacy);
 assert.equal(B.collect(B.volumes[0].id), true, 'old saves without book flags remain playable');
 console.log('PASS save/restore, no duplicated donations after load, legacy saves, unknown IDs');
+
+// The Rite seals Lyra's house (game.js): the Cantor's shelf goes with it, and the pedlar stops sending people there.
+G.flags.rite_started = true;
+B.place(G.maps.lyra_house, 'lyra_house');
+assert.equal(G.maps.lyra_house.entities.filter(e => e.moorPlacement).length, 0, 'shelf gone once the house is sealed');
+assert(!T.NPCS.moor_bookseller.greet.polite.includes('Cantor'));
+assert(T.NPCS.moor_bookseller.topics.Oakhaven.includes('went with her house'));
+console.log('PASS the Cantor’s shelf closes with her house');

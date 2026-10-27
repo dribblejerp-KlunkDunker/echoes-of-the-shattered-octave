@@ -1,4 +1,6 @@
-// The Moor serial: the supplied chapter is preserved below; The Gate Book is a proposed continuation.
+// A Cantabile broadsheet serial (internally still MOOR_BOOKS / moor_* for save compatibility): a tale of the Caldera,
+// printed on Broadsheet Row and carried up the river through Stillwater Landing. The supplied chapter is kept, with
+// names and terms brought into canon (story/Game Layer/Review - The Moor serial.md); The Gate Book continues it.
 // Published fiction, not live quest evidence. Esser's papers never become saleable items.
 // Copies and read markers use G.flags; carried pamphlets use the existing inventory/save schema.
 'use strict';
@@ -6,7 +8,8 @@
 const MOOR_BOOKS = (function () {
   const volumes = [
     {
-      id: 'book_things_taken_home', title: 'The Things Taken Home', part: 1, price: 3,
+      id: 'book_things_taken_home', title: 'The Things Taken Home', part: 1, price: 1,
+      preface: 'When the lower works fell in, it took the street above it. Hessa lost her house and her father in one morning, and her husband was carried into the works infirmary. The traveler has been back into the ruin for her, and has brought out a box.',
       text: `Hessa read the back of the portrait twice.
 
 The first time, she smiled.
@@ -33,6 +36,8 @@ She laid her palm over the little wooden bird.
 
 “I don’t know what to do with all this.”
 
+Below the shelter, the Great Beat kept its four counts. She had stopped hearing it years ago. She only spoke between the falls.
+
 Outside the shelter, someone was splitting firewood. Every few strokes, the axe caught and had to be worked free.
 
 Hessa listened until it struck cleanly again.
@@ -43,7 +48,7 @@ The visitor came before she had finished.
 
 A young man stood in the doorway with his cap held against his stomach.
 
-His coat was ordinary. His boots were not. They were the square-toed kind issued to clerks who had to cross factory yards.
+His coat was ordinary. His boots were not. They were the square-toed kind issued to clerks who had to cross works yards.
 
 Hessa saw them before she saw his face.
 
@@ -79,7 +84,7 @@ He took a folded sheet from inside his coat and held it out.
 
 Hessa did not take it.
 
-“My name is Esser,” he said. “I recorded an examination at the eastern works.”
+“My name is Esser,” he said. “I recorded an examination at the lower works.”
 
 She looked at the sheet.
 
@@ -109,7 +114,7 @@ The traveler caught it before she stepped on it.
 
 Hessa walked past him into the doorway.
 
-There was no cart outside. No one waiting beyond the fence. Only two children carrying kindling and an old woman shaking a blanket.
+There was no cart outside. No one waiting beyond the fence. Only two children carrying kindling, and a woman at the woodpile with her back to the road.
 
 She looked behind the shelter.
 
@@ -127,19 +132,19 @@ She took it from him.
 
 It was not the official report.
 
-The handwriting was cramped, with words inserted above the lines.
+The handwriting was cramped, with words inserted above the lines. The form allowed one line for the subject’s account. Esser had written his out in full.
 
 Hessa read standing up.
 
 Halfway down the page, she sat.
 
-MOOR: Tell her I am alive.
+SUBJECT: Tell her I am alive.
 
-VAREK: Sign the statement, and I can recommend that she be informed.
+JUSTICIAR R.: Sign the statement, and I can recommend that she be informed.
 
 She moved her finger beneath the next exchange.
 
-MOOR: Put his name in. Then tell her where I am.
+SUBJECT: Put his name in. Then tell her where I am.
 
 “Whose name?”
 
@@ -227,11 +232,11 @@ She looked toward the traveler, as though one of them must have misunderstood a 
 
 Esser described the engineer entering the room. The questions about the latch, the paint, the direction the door might open.
 
-“The adjudicator had questions written for him?”
+“The Justiciar had questions written for him?”
 
 “Yes.”
 
-“Before Jory described it?”
+“Before Matthis described it?”
 
 “Some. Not all.”
 
@@ -247,7 +252,7 @@ Esser nodded.
 
 “Where did they take my husband?”
 
-“There was an escort from the assessment office. I copied the dispatch number.”
+“There was an escort from the assessment office. I copied the docket number.”
 
 “Can you follow it?”
 
@@ -257,7 +262,7 @@ The traveler spoke.
 
 “Would it appear anywhere else?”
 
-“At the gate,” Esser said. “The wagons are logged when they leave.”
+“At the gate,” Esser said. “The wagons are logged in and out.”
 
 “Who keeps that book?”
 
@@ -266,6 +271,8 @@ The traveler spoke.
 Hessa pulled the paper toward her.
 
 “Write the number.”
+
+Esser wrote it twice: once on his copy, and once on a scrap for the traveler.
 
 It was nearly dark when Esser left.
 
@@ -281,11 +288,11 @@ Not to demand a prisoner.
 
 To ask about transport.
 
-A dispatch number, a gate entry, a road. Enough to begin.
+A docket number, a gate entry, a road. Enough to begin.
 
 Hessa stayed at the table after the door closed.
 
-She took the nineteen silver pieces from the box and counted them.
+She took the nineteen sovereigns from the box and counted them.
 
 Then she separated six.
 
@@ -309,29 +316,30 @@ The traveler adjusted it.
 
 From where Hessa sat, she could now see her mother without lifting her head.
 
-She took Aldren’s letter and unfolded the part about the handcart.
+She took Wendel’s letter and unfolded the part about the handcart.
 
 Her father had asked her to leave him if she had to.
 
-Jory had refused to say he had gone back for belongings.
+Matthis had refused to say he had gone back for belongings.
 
 She sat with both papers before her, trying not to make a promise to either of them that she could not keep.
 
 At last, she turned over Esser’s copy and wrote in the empty space:
 
-Jory Moor.
+Matthis Kessler.
 
-Alive when taken from the eastern works.
+Alive when taken from the lower works.
 
 Find the gate book.
 
-Then she added the dispatch number beneath it.
+Then she added the docket number beneath it.
 
 For the first time since the collapse, there was somewhere to go.`
     },
     {
-      id: 'book_gate_book', title: 'The Gate Book', part: 2, price: 3,
-      // [PROPOSED] Original continuation. The missing dispatch number remains unspecified.
+      id: 'book_gate_book', title: 'The Gate Book', part: 2, price: 1,
+      preface: 'The day after the collapse, a wagon left the lower works under escort. The traveler takes the docket number to the works gate.',
+      // [PROPOSED] Original continuation. The docket number itself stays unspecified.
       text: `The gatekeeper had put his supper on the book.
 
 He moved the bowl when the traveler asked about a wagon, but left the spoon across the page.
@@ -340,17 +348,17 @@ He moved the bowl when the traveler asked about a wagon, but left the spoon acro
 
 The traveler showed him the number on a separate scrap. Esser’s copy was still at the shelter.
 
-“From the eastern works.”
+“From the lower works.”
 
 “When?”
 
-“The day of the collapse.”
+“The day after the collapse.”
 
 The gatekeeper looked at the number again.
 
 “You’ll want the other book.”
 
-He finished what was in his spoon before he stood.
+He finished what was in his spoon, and waited out a hammer-fall, before he stood.
 
 The other book was on a low shelf behind his chair. Its cover had split at the hinge. He lifted it with both hands and set it down clear of the bowl.
 
@@ -412,7 +420,7 @@ He looked at the window.
 
 The keeper bent over the book.
 
-“East road. Lower weighing house.”
+“Rim road. Lower weighing house.”
 
 “Is that an assessment office?”
 
@@ -422,7 +430,7 @@ The keeper bent over the book.
 
 “After that isn’t my gate.”
 
-The traveler copied the entry. At the foot of the page, someone had added a time and the words HOLD FOR REWEIGH. The keeper said that meant the weight on the dispatch had not agreed with the wagon.
+The traveler copied the entry. At the foot of the page, someone had added a time and the words HOLD FOR REWEIGH. The keeper said that meant the weight on the docket had not agreed with the wagon.
 
 “Does that happen often?”
 
@@ -434,7 +442,7 @@ The traveler copied the entry. At the foot of the page, someone had added a time
 
 He closed the book before the traveler could ask anything else.
 
-At the door, the traveler offered him a silver piece for the trouble.
+At the door, the traveler offered him a sovereign for the trouble.
 
 He drew his hand away.
 
@@ -452,7 +460,7 @@ The lower weighing house was a mile beyond the last cottages. The traveler reach
 
 She took a rag from the cart and listened to the number.
 
-“I don’t keep dispatches.”
+“I don’t keep dockets.”
 
 “The gate sent it here. Equipment for assessment.”
 
@@ -542,7 +550,7 @@ She listened without reaching for either paper. When the traveler put all six co
 
 Hessa read the north turning aloud, then the old survey house. She fetched the stub of pencil from beside the bed.
 
-Under the dispatch number, she wrote: A man with bandaged hands. Lower weighing house. Speaking.
+Under the docket number, she wrote: A man with bandaged hands. Lower weighing house. Speaking.
 
 Then: Ask the washing driver.
 
@@ -572,27 +580,60 @@ When she sat again, she turned the portrait slightly so there would be room for 
 
   const byId = id => volumes.find(v => v.id === id);
   const escape = text => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  const html = v => '<p><i>The Moor serial · installment ' + v.part + '. A printed tale, not a current parish case.</i></p>' + v.text.split('\n\n').map(p => '<p>' + escape(p) + '</p>').join('');
+  const html = v => '<p><i>Printed on Broadsheet Row, Port Cantabile · installment ' + v.part + ' of 2. A tale of the Caldera; the names are changed.</i></p>'
+    + (v.preface ? '<p><i>' + escape(v.preface) + '</i></p>' : '') + v.text.split('\n\n').map(p => '<p>' + escape(p) + '</p>').join('');
 
   for (const v of volumes) {
-    ITEMS[v.id] = { name: v.title, sprite: 'tobin_page', use: 'moor_book', value: v.price,
-      desc: 'The Moor serial, installment ' + v.part + ' of 2. A stitched story pamphlet. Read from your inventory; reading does not consume it.' };
-    READING.SOURCES[v.title] = { style: 'paper', kind: 'Serial tale · ' + v.part + ' of 2' };
+    ITEMS[v.id] = { name: v.title, sprite: 'broadsheet', use: 'moor_book', value: v.price,
+      desc: 'A Cantabile broadsheet serial, installment ' + v.part + ' of 2: a tale of the Caldera, stitched into a pamphlet. Read from your inventory; reading does not consume it.' };
+    READING.SOURCES[v.title] = { style: 'paper', kind: 'Broadsheet serial · ' + v.part + ' of 2' };
   }
 
+  // The Cantor's shelf is only there while Lyra keeps her house: the Rite seals it (game.js, 'lyra_taken_seen').
+  const shelfOpen = () => !(typeof G !== 'undefined' && G.flags && G.flags.rite_started);
   NPCS.moor_bookseller = {
-    name: 'Iven Pell, traveling pamphlet seller', sprite: 'townsman', portrait: 'townsman', tier: 'low',
+    name: 'Bastien Corvo, pedlar of Cantabile broadsheets', sprite: 'townsman', portrait: 'townsman', tier: 'low',
     greet: {
-      polite: 'Dry pages, if you would like something to read. The Moor tale comes in two parts. Three sovereigns a part, or ask Lyra for the parish lending copies.',
-      normal: 'I carry the Moor serial. Both parts, stitched. Hetty keeps a donated bundle by the east table if coin is short.',
-      blunt: 'Paper tears more easily than people think. So do manners. Three sovereigns a part.'
+      get polite() { return 'Dry pages, if you would like something to read. A Cantabile serial in two parts, a tale out of the Caldera. A sovereign a part' + (shelfOpen() ? ', or read the Cantor’s lending copies for nothing.' : '.'); },
+      normal: 'Two parts, stitched, up the river from Broadsheet Row. Hetty keeps a paid-for bundle by the east table if coin is short.',
+      blunt: 'Paper tears more easily than people think. So do manners. A sovereign a part, and keep it inside your coat.'
     },
-    topics: { Oakhaven: 'Lyra keeps the little parish lending library at her house. You can read both parts there without buying them. The bundle here was paid for by a hauler: one of each for whoever wants to take them home.' },
+    topics: {
+      get Oakhaven() { return (shelfOpen() ? 'The Cantor keeps lending copies on a shelf at her house. You can read both parts there without buying them. ' : 'The Cantor’s copies went with her house, I hear. ') + 'The bundle here was paid for by a carter: one of each for whoever wants to take them home.'; },
+      'Broadsheet Row': 'Four papers on the Row, all libellous, one occasionally correct. This is none of the four. It is a tale, the names are changed, and that is the only reason it came up the river past Stillwater. The lockkeeper there reads everything I carry, and sells what he reads.'
+    },
     shop: volumes.map(v => ({ item: v.id, price: v.price })),
-    shopTalk: { hello: 'The Things Taken Home first; The Gate Book follows it. These are printed tales, not warrants or notices of missing people.',
-      broke: 'Keep your supper money. Try the donated bundle, or read the parish copies at Lyra’s.',
+    shopTalk: { hello: 'The Things Taken Home first; The Gate Book follows it. Tales, not news. Nobody in them lives in the Reach.',
+      broke: 'Keep your supper money. Try the paid-for bundle by the east table.',
       thanks: ['Keep it out of the rain.', 'The stitching will hold if you do not pull it flat.'], buys: ['consumable'] }
   };
+
+  // A folded broadsheet, masthead and columns: its own look, so it is never mistaken for Tobin's pages on the floor.
+  function paintBroadsheet() {
+    if (typeof Engine !== 'undefined' && Engine.addSprite && !(Engine.sprites && Engine.sprites.broadsheet)) {
+      const w = 24, h = 24, d = new Uint32Array(w * h);
+      const px = (x, y, r, g, b) => { d[y * w + x] = (255 << 24) | (b << 16) | (g << 8) | r; };
+      for (let y = 8; y < 21; y++) for (let x = 3; x < 21; x++) {
+        const edge = y === 8 || y === 20 || x === 3 || x === 20, fold = x === 12;
+        const t = 214 - (y - 8) * 2 - (x > 12 ? 10 : 0);
+        px(x, y, edge ? 140 : fold ? t - 40 : t, edge ? 132 : fold ? t - 42 : t - 6, edge ? 112 : fold ? t - 50 : t - 22);
+      }
+      for (let x = 5; x < 19; x++) if (x !== 12) px(x, 10, 40, 36, 32);                      // the masthead
+      for (let y = 12; y < 19; y += 2) for (const [a, b] of [[5, 11], [13, 19]]) for (let x = a; x < b - ((y >> 1) % 3 === 0 ? 2 : 0); x++) px(x, y, 92, 86, 76);
+      Engine.addSprite('broadsheet', { w, h, data: d, hs: 1, cx: 0.5, dy: 0 });
+    }
+    if (typeof ICONS !== 'undefined' && ICONS.PIX && ICONS.C_PX) {
+      const icon = d => {
+        d.layer(ICONS.C_PX.paper).poly([3, 5, 21, 5, 21, 20, 3, 20]);
+        const ink = d.layer('#2a2620', { shade: 'flat', sep: false }); ink.rect(5, 7, 14, 2);
+        const col = d.layer('#5c564c', { shade: 'flat', sep: false });
+        for (let y = 11; y < 19; y += 2) { col.rect(5, y, 6, 1); col.rect(13, y, 6 - (y % 4 === 1 ? 2 : 0), 1); }
+        d.layer('#8a8070', { shade: 'flat', sep: false }).rect(12, 10, 1, 9);
+      };
+      for (const v of volumes) if (!ICONS.PIX[v.id]) ICONS.PIX[v.id] = icon;
+    }
+  }
+  paintBroadsheet();
 
   function read(id) {
     const v = byId(id);
@@ -618,9 +659,9 @@ When she sat again, she turned the portrait slightly so there would be room for 
       if (G.flags['moor_taken:' + v.id] !== true) choices.push({ t: 'Take a donated copy: ' + v.title, f: () => collect(v.id) });
     }
     choices.push({ t: 'Leave the books.', f: null });
-    showEvent(takeHome ? 'The donated pamphlets' : 'The parish lending library', takeHome
-      ? 'Two stitched installments of the Moor serial lie in a dry wrapper beside the east table. A note in Hetty’s hand: <i>Paid for. Take one of each if you want them. Leave the library its copies.</i>'
-      : 'A small shelf in Lyra’s house holds the parish lending collection, kept separate from her own papers. Both installments of the Moor serial have cloth bookmarks. These copies stay here; you may read them without charge.', choices);
+    showEvent(takeHome ? 'The donated pamphlets' : 'The Cantor’s shelf', takeHome
+      ? 'Two stitched installments of the Cantabile serial lie in a dry wrapper beside the east table. A note in Hetty’s square capitals: <i>PAID FOR. TAKE ONE OF EACH. LEAVE THE CANTOR HER COPIES.</i>'
+      : 'A small shelf in Lyra’s house holds the copies the Cantor lends, kept apart from her own papers. Both parts of the Cantabile serial have cloth bookmarks. These copies stay here; you may read them without charge.', choices);
   }
 
   // Runtime additions only: append after load, never insert into saved base-entity indexes.
@@ -628,10 +669,13 @@ When she sat again, she turned the portrait slightly so there would be room for 
     if (!map || !Array.isArray(map.entities)) return;
     const add = e => { if (!map.entities.some(x => x.moorPlacement === e.moorPlacement)) map.add(hydrate(Object.assign({ transient: true, _decor: true }, e))); };
     if (id === 'tavern') {
-      add({ kind: 'npc', id: 'moor_bookseller', sprite: 'townsman', x: 14, y: 3.5, scale: 1, solid: true, radius: 0.35, facing: Math.PI, moorPlacement: 'seller' });
-      add({ kind: 'deco', sprite: 'tobin_page', x: 11.5, y: 5.2, scale: 0.35, solid: false, use: 'moor_donations', label: 'Donated Moor serial pamphlets — read or take home', moorPlacement: 'donations' });
+      // the wharf's river coat (flume16.js) when it has been made, so he is not the patron at the next table twice over
+      const coat = typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites.p16f_cutter ? 'p16f_cutter' : 'townsman';
+      add({ kind: 'npc', id: 'moor_bookseller', sprite: coat, x: 14, y: 3.5, scale: 1, solid: true, radius: 0.35, facing: Math.PI, moorPlacement: 'seller' });
+      add({ kind: 'deco', sprite: 'broadsheet', x: 11.5, y: 5.2, scale: 0.35, solid: false, use: 'moor_donations', label: 'Donated broadsheet pamphlets — read or take home', moorPlacement: 'donations' });
     }
-    if (id === 'lyra_house') add({ kind: 'deco', sprite: 'shelf', x: 1.5, y: 1.5, scale: 0.85, solid: true, radius: 0.25, use: 'moor_library', label: 'Parish lending library — the Moor serial (read here)', moorPlacement: 'library' });
+    if (id === 'lyra_house' && shelfOpen()) add({ kind: 'deco', sprite: 'shelf', x: 1.5, y: 1.5, scale: 0.85, solid: true, radius: 0.25, use: 'moor_library', label: 'The Cantor’s lending shelf — read here', moorPlacement: 'library' });
+    if (id === 'lyra_house' && !shelfOpen()) for (let i = map.entities.length - 1; i >= 0; i--) if (map.entities[i].moorPlacement === 'library') map.entities.splice(i, 1);
   }
 
   const load = loadMap;
