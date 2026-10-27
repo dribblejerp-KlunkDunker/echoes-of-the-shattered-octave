@@ -4,6 +4,152 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 
 ---
 
+## Release road: Book One, ready to sell (from 27 October 2026)
+
+This is the authoritative order of work before the game goes on sale. It comes from `story/Game Layer/Release Readiness - length, areas and enrichment.md`, which has the evidence and file references for every line. `[ ]` means not started, `[~]` partial, `[x]` done and verified. Each milestone ships as its own tested PR or PRs, and each must pass its gate before the next starts.
+
+**Where the game stands.**
+- **Length (estimated from the code, not played):** main story 3–4.5 h, with all side quests 14–20 h, completionist 19–27 h.
+- **Maps:** 41 in the main game, 9 in the extras.
+- **Areas:** about 6 more fit inside Book One's region, 8 at most.
+
+### R1 — Release blockers: bugs and promises
+Gate: every fix has a regression test; the full test suite passes; a playthrough of Parts 2→3→4 hits none of these.
+- [ ] **Story-breaking route.**
+  - In Parts 3 and 4, the Whisper-Grove and Deep Woods noticeboards offer "Enter Your House on Cooper's Row". Its door leads to Oakhaven, where the mast replays the Part Two ending (upgrades.js:856, 1256–1262; game.js:1555–1564).
+  - Hide the house after Part 3 starts, and guard the mast trigger.
+- [ ] **Point-of-no-return warning.**
+  - A one-time confirmation before the shaft sets `rite_started` (game.js:209), listing the Oakhaven quests still open.
+  - Part 3's mast ladder already does this (grove.js:180–190).
+- [ ] **Close the six Sheep-Walk and Hanger quests** at the Greening, with closing logbook lines (sheepwalk22.js:780–809, 1331; hanger22.js:605–682).
+- [ ] **Log optional quests as side quests,** not main: Lanterns in the Mist, Ignatius, the grey folder, Kaelen telling Lyra (wilds.js:109, 117, 133; data.js:509, 684, 980; grove.js:242).
+- [ ] **Year 417:** the board says the cairn is "near the culvert", but it stands at the west edge of the clearing (upgrades.js:855, 1250).
+- [ ] **The Red Cloak dead-ends** when Sable isn't travelling with you (data.js:1001–1003).
+- [ ] **Small things:**
+  - "the Boar & Bell" should be "the Boar & Dulcimer" (game.js:696).
+  - Remove the duplicate Harrow branch (data.js:338).
+  - Give the six write-only flags a consequence, or remove them: `halder_told`, `herald_answered`, `aegis_how`, `hymn_read`, `party_plan`, `cat_met`.
+  - Warn before the Last Sheaf and the Eel-Run can be missed.
+- [ ] **Documents match the game.**
+  - The README's strongbox count is 26, not 13.
+  - The domain roadmap below now marks what isn't built; build those features or keep them off the store page.
+
+### R2 — Canon sweep
+Gate: each change checked against the Series Bible and Book One; French entries updated; story-i18n test green.
+- [ ] **The Boar & Dulcimer keeps its own rules** (NO SINGING, NO DICE):
+  - The evening set becomes a Narrow performance with silent applause.
+  - The dice game moves to the cellar.
+  - Files: tavern11.js; Book One ch. 4.
+- [ ] **The Legionnaires' dying names** use invented names only. Drop Joss Carder, Emory Wain, Wren Halloway, Annet Sowerby and Merret Salt (data.js:231).
+- [ ] **The Cloister's name-tapes** follow canon's list in ch. 20: Orry, Ben Dray, A. SOWERBY and the others. Drop Elsie Fenn (data.js:637).
+- [ ] **The lore books:**
+  - "On the Eight Anchors": wrong Hz and Anchors (upgrades.js:715).
+  - The Veil's absorption: c. 300 SR (upgrades.js:727).
+  - The 417 register: the Pellow child, in spring (upgrades.js:719).
+  - Use the canon skipping rhyme (upgrades.js:732).
+- [ ] **Tobin's journal pages 10–12** are dated after he was taken (tobin.js:109–124).
+- [ ] **Tobin's Tuning-Blade cairn becomes his lyre by the stile.** Add his seven oiled reed-pipes in Lyra's house (upgrades.js:1311–1319; ch. 1).
+- [ ] **The heist's quarry lease is Aldric's signature,** not Mossbrook's (heist16.js:309, 401).
+- [ ] **Ignatius gives once and does not run a shop;** the stock moves to the sexton (data.js:606–610).
+- [ ] **The Mausoleum is the old house of the Silent Veil,** not a tomb of "Cantors of Memory" (data.js:893).
+- [ ] **The Tanner twins:** reconcile them with "sung into the ground side by side", and rename them off Joss (data.js:322, 484).
+- [ ] **The Hall of Carriage is at the Organum** (Sable's party chat).
+- [ ] **Lyra does not sing before her voice returns** (party.js:17, 187). See R3's voiceless kit.
+- [ ] **Smaller fixes:**
+  - The Hedge's hound-bed line (companion-talk.js:215).
+  - Tobin quoting Lyra's line (companion-talk.js:266).
+  - The noticeboard's public proctor bounty (upgrades.js:851).
+  - Mutton on every menu in a starving town.
+- [ ] **Near-collisions:** Pellam Dree and Pellam Quist; Wenna Marl and Abbess Wenna; Annet Sorrel and Annet Sowerby.
+- [ ] **Reedcraft's "wind-reeds" become Flume-reeds** (reedcraft.js:54). Real wind-reeds died in 412.
+
+### R3 — The Narrow comes home: make existing systems matter
+Gate: tests per system; a recorded playtest note that Oakhaven feels tense but fair.
+- [ ] **Hush-lamps hold off the Hush.** A lamp's radius stops the stillness timer, and a hush-whistle plants a temporary lamp outdoors (game.js:304; maps.js:329).
+- [ ] **The Narrow as law inside the Hedge.**
+  - Loud noise gets the ward-sign and a hush from witnesses.
+  - A repeat is a "breach of the Narrow" fine through `reportCrime`.
+- [ ] **Songs learned from people.**
+  - Lyra: the Root note.
+  - Tam: "The Miller's Daughter".
+  - Bettany or Ilse: the tending breath.
+  - Tobin's notebook: the falling fifth.
+  - Built on ledger15 training and Hold the Pitch.
+- [ ] **Lyra's voiceless kit before `lyra_voice`.** Whistle the falling fifth to stun or aim; the tending breath gives a small heal.
+- [ ] **Hound packs with a leader.** A falling fifth on the leader routs the pack.
+- [ ] **Three canon combat rules:**
+  - Fear raises your noise below 30% health.
+  - Quiets go to a lit lantern.
+  - A hound's burst leaves a dead patch where nothing carries.
+- [ ] **The dusk Listening Hour.** Lamplighters, night-hummers at the crossings, and the dead-hour call.
+- [ ] **Faction standing (canon's Concordance)** fed by choices already made. It moves only prices, a line from Harrow and from Hetty, and one ending line. No numbers on screen.
+
+### R4 — Fill the thin places
+Gate: every listed map has people, something to use, and a reason to be there; screenshots of each.
+- [ ] **The Watch Downs:** currently empty. People and props, danger stays 0 (Author Rulings 93–95).
+- [ ] **Wethercombe and the Bellwether:** 4 people. Farmsteads open, the inn usable, and the "no sheep" line given a speaker.
+- [ ] **The Flume Road:** no people. Ennis Crowle the beekeeper, tied to Telling the Bees.
+- [ ] **The tannery:** no people. Opens onto the Hollow (R5).
+- [ ] **The Low Rings and Stillwater Landing:** people and trade fit for a "smugglers' town".
+- [ ] **Oakhaven's barred doors:** 21 of 34. Open the baker's and chandler's interiors, which the roadmap claims but whose doors are still barred.
+- [ ] **Small Oakhaven life:**
+  - The iron-oaks chime in the wind.
+  - The morning sapling with a hand-saw beside it.
+  - The baker's wife punching dough down all night.
+  - The sexton salting graves.
+  - The daily tanker-wagon.
+  - Dogs howling at noon.
+- [ ] **Named NPCs keep daily routines,** not just the 6 generic townsfolk.
+
+### R5 — New areas inside Book One (6 planned, 8 at most)
+Gate: each joins a map that is already reachable, keeps the Hedge rule, closes cleanly at the Greening or the Kestrel's departure, and has French and tests.
+- [ ] 1. **The Hollow,** behind the tannery. The burl-sick ward, the Grafters' visit, Lissa Merrow.
+- [ ] 2. **The Carders' house and root-cellar.** The design doc's Hush-Mite tutorial; Pim and Nell.
+- [ ] 3. **The Moot-house in Whisper-Grove.** Sable's gallery.
+- [ ] 4. **The Bell Yard and Ashlane,** one map. Halder Wick's and Ivo Renn's homes; names for the Ledger.
+- [ ] 5. **The Governor's house.** The aired room; Aldric's hidden roots.
+- [ ] 6. **The standing-stone ring.** Next in line per the Author Rulings; its contents marked [PROPOSED].
+- [ ] 7. *(optional)* **The Reedside Conservatory and reed orchard,** with Ilse Brennan. The old stair stays sealed.
+- [ ] 8. *(optional, highest risk)* **The Deep Grove.**
+
+### R6 — Lore and quests, chosen by playtest
+Gate: owner picks from this list after the R1–R4 playtest; nothing here is required to sell.
+- [ ] **Book One's 24 unused epigraphs placed as documents in the world.** For example: the Grafting Office handbook, K. Vance on calibration, Catalogue Circular 12, the crates' bill of lading, the Warrant of Purification, the Rubric of the Rite.
+- [ ] **The Madder birth on day 0,** using Hold the Pitch.
+- [ ] **Lissa Merrow; Ilse Brennan** as the voiceless song-teacher.
+- [ ] **NPCs notice your calling:** Vosk, Ignatius, Vane, Bettany, Tobiah.
+- [ ] **Pay the ledger off:** names on the Kestrel's deck-beam, candles at Canopy, real dates in ledger rows.
+- [ ] **An Echo card if you answered the Hedge.** Hew Callan remembers. Vane's long gun and his pistols.
+- [ ] **A "Listen" verb for the glassed calling.** "Who holds the line tonight?" at the Part Four camp.
+- [ ] **Let the nine days count.** The Grafters on Rootday and the Church on Dawnday, missable without failing anything.
+- [ ] **Recurring voices you can't see,** a gentle version on by default. Hounds circling the camp fire.
+- [ ] **The Pure Note drone from `rite_ready`.** Famine graves.
+- [ ] **Dialect and feast talk:** off-reed, growing, Candlefast, rumours of the Weighing. One residue encounter answered by tone.
+
+### R7 — Release preparation
+Gate: the owner signs off.
+- [ ] **A full human playtest on real hardware,** in English and French. Feel, pacing, difficulty, loudness and timing can't be judged headless.
+- [ ] **Finish the remaining drawn stand-ins:**
+  - The second statue and the stone head.
+  - The third grass tuft and the second reed.
+  - Posters two and three.
+  - The second Synod notice.
+
+  A Canva batch is scheduled. Optional afterwards: 128-pixel textures, which only show on High and above.
+- [ ] **Performance check** on a low-end laptop and a phone.
+- [ ] **Saves:** saves from earlier builds still load.
+- [ ] **Store copy written only from verified features,** with screenshots taken from the real build.
+- [ ] **Credits and licences re-checked:** CREDITS.md and ASSETS.md.
+
+**Avoid as bloat:**
+- More minigames, generic systems, new regions, currencies or crafting trees.
+- Companions beyond canon.
+- Faction numbers on screen.
+- Hard timers that fail quests.
+- Book Two content outside the extras.
+
+---
+
 ## Next expansion: art, animation, simulation and tools
 
 The checklist below is the authoritative scope for the new request. The older completed checklists later in this document describe the previous baseline, **not** completion of these enhanced versions. `[~]` means a partial implementation or pilot; `[x]` requires implementation and verification. No production republish is included.
@@ -702,23 +848,23 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[x]` **Potion Brewing (Alchemy)**: Brew tonics, voice-draughts, hush-oils, and glass-salves from foraged herbs at campfires or alchemy tables.
 
 ### 5. Quests & Story
-- `[x]` **Series Bible Side Quests**:
+- `[~]` **Series Bible Side Quests** (The Year 417 is built; the other two are not):
   - *The Year 417 (Tobin's Disappearance)*: Trace Tobin Ashgrove's last night at the Hedge and recover his tuning-fork and journal.
-  - *The First Glass (Light-Glass Origins)*: Uncover the Dawning Choir specimen in the Root-vault.
-  - *The Root Note*: Help the night-hummer and Cantor preserve the true 174 Hz cadence before the Rite.
+  - *The First Glass (Light-Glass Origins)*: Uncover the Dawning Choir specimen in the Root-vault. **Not built (checked October 2026).**
+  - *The Root Note*: Help the night-hummer and Cantor preserve the true 174 Hz cadence before the Rite. **Not built as a quest (checked October 2026); see Release road R3, songs learned from people.**
 - `[x]` **Consequential Choices**: Spare or kill bosses, side with factions, and unlock or close off faction quests and endings.
-- `[x]` **Lyra's Personal Companion Quest**: *The Calling-Song's Coda* — recover Tobin's slate and help Lyra reconcile her father's sacrifice.
-- `[x]` **Kaelen's Personal Companion Quest**: *Line Ninety-Four* — examine the Dawning bore-shard and ease or harden the tideline in his glass arm.
+- `[ ]` **Lyra's Personal Companion Quest** (not built, checked October 2026): *The Calling-Song's Coda* — recover Tobin's slate and help Lyra reconcile her father's sacrifice.
+- `[~]` **Kaelen's Personal Companion Quest** (partial: the calibration returns, the grey folder and telling Lyra exist as story beats; the bore-shard and tideline choice do not): *Line Ninety-Four* — examine the Dawning bore-shard and ease or harden the tideline in his glass arm.
 - `[x]` **Bounty Boards & Repeatable Guild Quests**: Town and camp noticeboards offering randomised hunts, courier runs, and name-recoveries.
 - `[x]` **Journal Quest Maps & Toggleable Markers**: View objective locations on the automap/world map, with a toggle to play pure 1996 no-marker style.
 
 ### 6. Companions
-- `[x]` **Companion Approval**: Kaelen, Lyra, and Sable react to your mercy, ruthlessness, and Ledger choices; high approval unlocks personal perks and combo attacks, while very low approval can make them return to camp.
+- `[~]` **Companion Approval** (partial: approval is tracked and banked from talk, but nothing reads it yet; no perks, combos or leaving): Kaelen, Lyra, and Sable react to your mercy, ruthlessness, and Ledger choices; high approval unlocks personal perks and combo attacks, while very low approval can make them return to camp.
 - `[x]` **Party Banter**: Contextual exchanges between Kaelen, Lyra, and Sable as you travel.
-- `[x]` **Companion Gear Slots**: Equip your active companion with a weapon, body armour, and trinket.
-- `[x]` **More Companions from the Series Bible**: Recruit **Sable** (Archivist of the Veil — reads names to stun/unwrite enemies) and **The Calmed Aegis** (in Part Four) alongside Kaelen and Lyra.
+- `[ ]` **Companion Gear Slots** (not built, checked October 2026): Equip your active companion with a weapon, body armour, and trinket.
+- `[~]` **More Companions from the Series Bible**: Recruit **Sable** (Archivist of the Veil — reads names to stun/unwrite enemies) and **The Calmed Aegis** (in Part Four) alongside Kaelen and Lyra. **Sable is recruitable; the Calmed Aegis as a companion is not built (checked October 2026).**
 - `[x]` **Camp Scenes on Rest**: Optional fireside conversations when resting with a companion.
-- `[x]` **Companion Combo Abilities**: Trigger *Resonant Coda* (Lyra's song supercharges Kaelen's glass arm or your weapon for a devastating harmonic strike).
+- `[ ]` **Companion Combo Abilities** (not built, checked October 2026): Trigger *Resonant Coda* (Lyra's song supercharges Kaelen's glass arm or your weapon for a devastating harmonic strike).
 
 ### 7. Audio
 - `[x]` **Surface-Aware Footsteps**: Distinct procedural acoustics for stone/cobble, wood planks, grass/moss, and shallow/deep water.
