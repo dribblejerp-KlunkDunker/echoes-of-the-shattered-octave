@@ -260,15 +260,6 @@ const VOICE_LINES = {
 "t": "The second note.",
 "voiceOf": "chorus_congregation"
 },
-"core.death.annet-sowerby": {
-"d": 4.32,
-"kind": "death",
-"speaker": "core_voice",
-"src": "voices/core_voice/core.death.annet-sowerby.mp3",
-"t": "Annet Sowerby",
-"voiceOf": "core_voice",
-"when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
-},
 "core.death.benet-owler": {
 "d": 4.2,
 "kind": "death",
@@ -284,6 +275,15 @@ const VOICE_LINES = {
 "speaker": "core_voice",
 "src": "voices/core_voice/core.death.bosun-teller.mp3",
 "t": "Bosun Teller",
+"voiceOf": "core_voice",
+"when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
+},
+"core.death.bryn-pryor": {
+"d": 4.08,
+"kind": "death",
+"speaker": "core_voice",
+"src": "voices/core_voice/core.death.bryn-pryor.mp3",
+"t": "Bryn Pryor",
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
 },
@@ -332,12 +332,21 @@ const VOICE_LINES = {
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
 },
-"core.death.emory-wain": {
-"d": 4.13,
+"core.death.elspet-rowe": {
+"d": 4.32,
 "kind": "death",
 "speaker": "core_voice",
-"src": "voices/core_voice/core.death.emory-wain.mp3",
-"t": "Emory Wain",
+"src": "voices/core_voice/core.death.elspet-rowe.mp3",
+"t": "Elspet Rowe",
+"voiceOf": "core_voice",
+"when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
+},
+"core.death.gethin-coote": {
+"d": 3.96,
+"kind": "death",
+"speaker": "core_voice",
+"src": "voices/core_voice/core.death.gethin-coote.mp3",
+"t": "Gethin Coote",
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
 },
@@ -359,12 +368,12 @@ const VOICE_LINES = {
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
 },
-"core.death.joss-carder": {
-"d": 4.03,
+"core.death.linus-harte": {
+"d": 3.96,
 "kind": "death",
 "speaker": "core_voice",
-"src": "voices/core_voice/core.death.joss-carder.mp3",
-"t": "Joss Carder",
+"src": "voices/core_voice/core.death.linus-harte.mp3",
+"t": "Linus Harte",
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
 },
@@ -377,21 +386,21 @@ const VOICE_LINES = {
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
 },
-"core.death.merret-salt": {
-"d": 4.03,
-"kind": "death",
-"speaker": "core_voice",
-"src": "voices/core_voice/core.death.merret-salt.mp3",
-"t": "Merret Salt",
-"voiceOf": "core_voice",
-"when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
-},
 "core.death.mirren-salk": {
 "d": 4.54,
 "kind": "death",
 "speaker": "core_voice",
 "src": "voices/core_voice/core.death.mirren-salk.mp3",
 "t": "Mirren Salk",
+"voiceOf": "core_voice",
+"when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
+},
+"core.death.osric-dacre": {
+"d": 5.09,
+"kind": "death",
+"speaker": "core_voice",
+"src": "voices/core_voice/core.death.osric-dacre.mp3",
+"t": "Osric Dacre",
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
 },
@@ -437,15 +446,6 @@ const VOICE_LINES = {
 "speaker": "core_voice",
 "src": "voices/core_voice/core.death.tamsin-reed.mp3",
 "t": "Tamsin Reed",
-"voiceOf": "core_voice",
-"when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
-},
-"core.death.wren-halloway": {
-"d": 4.32,
-"kind": "death",
-"speaker": "core_voice",
-"src": "voices/core_voice/core.death.wren-halloway.mp3",
-"t": "Wren Halloway",
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
 },
@@ -991,11 +991,11 @@ const VOICE_LINES = {
 "when": "flags.lyra_voice"
 },
 "lyra.companion.chat0": {
-"d": 6.14,
+"d": 7.82,
 "kind": "companion",
 "speaker": "lyra_ruined",
 "src": "voices/lyra_ruined/lyra.companion.chat0.mp3",
-"t": "My father used to say a martyr is just a musician who gave up before the coda.",
+"t": "I told my father once that a martyr is just a musician who gave up before the coda. He wrote it down.",
 "voiceOf": "lyra_ruined",
 "when": "flags.lyra_voice"
 },
@@ -1126,11 +1126,11 @@ const VOICE_LINES = {
 "when": "flags.lyra_voice"
 },
 "lyra.companion.map_mausoleum": {
-"d": 7.03,
+"d": 7.49,
 "kind": "companion",
 "speaker": "lyra_ruined",
 "src": "voices/lyra_ruined/lyra.companion.map_mausoleum.mp3",
-"t": "The Cantors of Memory. I learned their names when I was small. I never thought I'd walk on them.",
+"t": "The House of the Veil. The scribes kept everyone's names in here. I never thought I'd walk on theirs.",
 "voiceOf": "lyra_ruined",
 "when": "flags.lyra_voice"
 },

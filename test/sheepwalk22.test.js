@@ -241,23 +241,26 @@ const URL = (process.env.PREVIEW_URL || 'http://127.0.0.1:3000') + '/index.html?
       const S = SHEEPWALK22;
       for (const id in S.MENUS) { const n = NPCS[id]; check(n && Array.isArray(n.shop) && S.MENUS[id].every((it) => n.shop.some((s) => s.item === it)), id + ' sells ' + S.MENUS[id].join(', ')); }
       const lard = CALENDAR11.VENDORS.find((v) => v.key === 'larder');
-      check(['p22_salt_mutton', 'p22_mutton_pie', 'p22_mutton_chops'].every((d) => lard.pool.includes(d)), 'the market provisioner\'s board carries mutton');
+      check(lard.pool.includes('p22_salt_mutton') && !lard.pool.includes('p22_mutton_pie') && !lard.pool.includes('p22_mutton_chops'), 'Oakhaven\'s market has salt mutton only: its flocks were eaten (R2)');
+      check(!NPCS.p12_baker || !NPCS.p12_baker.shop || !NPCS.p12_baker.shop.some((s) => s && /mutton/.test(s.item)), 'the baker bakes no mutton pies in a starving town');
       check(S.MUTTON.length === 6 && S.MUTTON.every((id) => ITEMS[id] && ITEMS[id].use === 'p22_food' && ITEMS[id].value > 0 && /Mutton|mutton/.test(ITEMS[id].name)), 'six mutton dishes');
       check(S.MUTTON.every((id) => typeof ICONS === 'undefined' || !ICONS.TABLE || ICONS.TABLE[id]), 'each has an icon');
     });
     await results('mutton on every list');
-    // buy the hotpot from Hetty through the real dialogue, then eat it
+    // buy salt mutton from Hetty through the real dialogue (all the Boar has: R2), then eat it
     await page.evaluate(() => { go('tavern', 8.5, 9.5, -Math.PI / 2); G.player.gold = 100; G.player.needs = true; G.player.hunger = 20; G.player.hp = 5; G.state = 'play'; talk(G.ents.find((e) => e.id === 'hetty')); });
     await page.locator('#d-buy').click();
-    const row = page.locator('[data-buy]').filter({ hasText: 'Mutton and Barley Hotpot' });
-    assert.equal(await row.count(), 1, 'Hetty lists the hotpot');
+    const row = page.locator('[data-buy]').filter({ hasText: 'Salt Mutton' });
+    assert.equal(await row.count(), 1, 'Hetty lists salt mutton');
+    assert.equal(await page.locator('[data-buy]').filter({ hasText: 'Mutton and Barley Hotpot' }).count(), 0, 'and no hotpot: the town ate its flocks');
     await row.click();
     await page.evaluate(() => {
-      const slot = G.player.inv.find((s) => s.id === 'p22_mutton_hotpot');
+      const slot = G.player.inv.find((s) => s.id === 'p22_salt_mutton');
       check(slot && G.player.gold < 100, 'bought from Hetty');
       closeModal(); G.state = 'play';
-      const hp0 = G.player.hp, h0 = G.player.hunger; useItem(slot);
-      check(G.player.hp === Math.min(G.player.hpMax, hp0 + 20) && G.player.hunger === h0 + 45 && !G.player.inv.some((s) => s.id === 'p22_mutton_hotpot'), 'eaten: health and hunger back (' + G.player.hp + ', ' + G.player.hunger + ')');
+      const hp0 = G.player.hp, h0 = G.player.hunger, n0 = slot.n || 1; useItem(slot);
+      const left = (G.player.inv.find((s) => s.id === 'p22_salt_mutton') || { n: 0 }).n || 0;
+      check(G.player.hp === Math.min(G.player.hpMax, hp0 + 8) && G.player.hunger === h0 + 30 && left === n0 - 1, 'eaten: health and hunger back (' + G.player.hp + ', ' + G.player.hunger + ', ' + n0 + ' to ' + left + ')');
       G.player.needs = false;
     });
     await results('bought from Hetty and eaten');

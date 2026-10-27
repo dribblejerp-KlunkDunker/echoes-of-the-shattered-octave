@@ -28,7 +28,7 @@ const LOGMAP = (function () {
   const SUBJECTS = {
     gate: 'The North Gate', rite: 'The Rite of Hearthday', coil: 'The reverse-phase coil', bore: 'The quarry bore',
     greening: 'The Root Greening', hedge: 'The Hedge', crates: 'The corsair\'s crates', boots: 'Davin\'s boots',
-    twins: 'The Tanner twins\' coats', tam: 'The voice on the Flume', pim: 'Pim\'s rooted hands', bells: 'The bells',
+    twins: 'The Wendle twins\' coats', tam: 'The voice on the Flume', pim: 'Pim\'s rooted hands', bells: 'The bells',
     sable: 'Sable and the Bound Ledger', pumps: 'The pumps at Depot Two', names: 'A page of names',
     press: 'The Office hand-press', kestrel: 'The Drift-Kestrel', tank: 'The Kestrel\'s lift-tank',
     cutterlog: 'The cutter\'s log', sunken: 'The Sunken Court', lamps: 'The dry lamps', pools: 'The reflecting pools',
@@ -37,14 +37,14 @@ const LOGMAP = (function () {
     vox: 'The vox-bottles', tobin: 'Tobin Ashgrove\'s Tuning-Blade', deed: 'The deed to Cooper\'s Row',
     brood: 'The Brood-Mother\'s web', vesper: 'Vane\'s axe and the tow-line', herald: 'The Synod herald',
     folder: 'The grey Arbiterium folder', footprints: 'Scorched footprints on a plank', quill: 'A quill and inkwell',
-    reed: 'A cut wind-reed and a reed-knife', timber: 'A felled iron-bough log, chalk-marked', skep: 'A straw bee-skep',
+    reed: 'A cut Flume-reed and a reed-knife', timber: 'A felled iron-bough log, chalk-marked', skep: 'A straw bee-skep',
   };
   // Ordered: the first match wins, so specific storylines come before broad ones. Every journal()
   // string in the codebase is checked against this by test/logmap.test.js. 'quill' is the
   // deliberate generic for anything unforeseen (a future entry, an edited save).
   const PATTERNS = [
     // Phase 9: reed-craft and the Oakhaven side quests (js/reedcraft.js, js/sidequests.js)
-    ['reed', /my first reed|wind-reed|joram pellow|ada pellow/], ['timber', /reeds-miner tomas|iron-bough|^tomas /], ['skep', /skeps?\b|telling the bees/],
+    ['reed', /my first reed|wind-reed|flume-reed|joram pellow|ada pellow/], ['timber', /reeds-miner tomas|iron-bough|^tomas /], ['skep', /skeps?\b|telling the bees/],
     ['kestrel', /^part four/], ['sunken', /^part three/], ['tank', /^the lift-tank/],
     ['vox', /^four hundred and thirty-two/], ['brood', /^the brood-mother/], ['herald', /synod herald/],
     ['footprints', /scorched footprints/], ['hush', /hush-lamp shrine|^the hush-gift|^hand-cant/],
@@ -53,7 +53,7 @@ const LOGMAP = (function () {
     ['deed', /deed to 4 cooper/],
     ['folder', /^coda: kaelen|grey arbiterium folder|calibration|tuning room/], ['mausoleum', /^coda:/],
     ['pumps', /hew callan/], ['aegis', /aegis|hymn 9|^the red cloak/], ['table', /table for four|halder/],
-    ['lamps', /lamplighter|dry lamps/], ['pools', /reflecting pools/], ['tapes', /name-tapes from ten/],
+    ['lamps', /lamplighter|dry lamps/], ['pools', /reflecting pools/], ['tapes', /name-tapes from (ten|the choir)/],
     ['sunken', /^the office came out/], ['press', /^the pressman's round|hand-press|bettis renn/],
     ['names', /^the missing count/], ['weaver', /\bweaver\b/], ['sable', /sable/],
     ['sunken', /sunken court|whisper-grove|malting/],

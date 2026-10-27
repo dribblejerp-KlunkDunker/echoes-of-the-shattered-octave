@@ -199,6 +199,21 @@ const TOBIN = (function () {
       map.entities.push(entityFor(p));
     }
   }
+  // Tobin's seven reed-pipes on their pegs in Lyra's house (Book One ch. 1): "the last reeds in the Reach that had not
+  // turned. She oiled them every month, because he always had." Transient like the pages (never saved), always there.
+  const PIPES = { map: 'lyra_house', x: 2.7, y: 1.45 };
+  const PIPES_TITLE = 'Tobin\'s reed-pipes';
+  const PIPES_TEXT = 'Seven reed-pipes on their pegs above the chest, the last reeds in the Reach that have not turned. Someone oils them every month, because he always did. They have not been played in two years.';
+  const PIPES_TAKEN = 'The oil on them is fresh. She did it before they came for her.';
+  function ensurePipes(map) {
+    if (!map || map.id !== PIPES.map || !Array.isArray(map.entities)) return;
+    if (map.entities.some(e => e && e.tobinPipes)) return;
+    map.entities.push({ kind: 'deco', sprite: 'p9p_reedcase', x: PIPES.x, y: PIPES.y, scale: 0.5, radius: 0.15, solid: false, transient: true, tobinPipes: true, use: 'tobin_pipes', label: PIPES_TITLE });
+  }
+  function showPipes() {
+    const taken = typeof G !== 'undefined' && G.flags && G.flags.rite_started === true;
+    showEvent(PIPES_TITLE, PIPES_TEXT + (taken ? ' ' + PIPES_TAKEN : ''), [{ t: 'Leave them on their pegs.', f: null }]);
+  }
   function syncAll() {
     if (typeof G === 'undefined' || !G.maps) return;
     for (const id in G.maps) { const m = G.maps[id]; if (m === G.map || !on()) ensure(m); }
@@ -295,11 +310,18 @@ const TOBIN = (function () {
     if (typeof loadMap === 'function') {
       const _loadMap = loadMap;
       loadMap = function (id) {
-        try { if (typeof G !== 'undefined' && G.maps && G.maps[id]) ensure(G.maps[id]); } catch (err) { console.warn('tobin: placement failed', err); }
+        try { if (typeof G !== 'undefined' && G.maps && G.maps[id]) { ensure(G.maps[id]); ensurePipes(G.maps[id]); } } catch (err) { console.warn('tobin: placement failed', err); }
         const r = _loadMap.apply(this, arguments);
         // anim.js clears the current map's transient entities when a map is re-entered (a load onto the same map)
-        try { ensure(G.map); } catch (err) { /* never break a map change */ }
+        try { ensure(G.map); ensurePipes(G.map); } catch (err) { /* never break a map change */ }
         return r;
+      };
+    }
+    if (typeof useDeco === 'function') {
+      const _useDeco = useDeco;
+      useDeco = function (e) {
+        if (e && e.tobinPipes) { try { showPipes(); } catch (err) { console.warn('tobin: pipes failed', err); } return; }
+        return _useDeco.apply(this, arguments);
       };
     }
     if (typeof renderLog === 'function') {
@@ -320,5 +342,5 @@ const TOBIN = (function () {
     }
   }
 
-  return { PAGES, N, REWARD, DONE_TITLE, DONE_TEXT, titleOf, has, count, found, ensure, syncAll, collect, complete, decorateLog, bodyHTML, flagName: FLAG };
+  return { PIPES, ensurePipes, PAGES, N, REWARD, DONE_TITLE, DONE_TEXT, titleOf, has, count, found, ensure, syncAll, collect, complete, decorateLog, bodyHTML, flagName: FLAG };
 })();

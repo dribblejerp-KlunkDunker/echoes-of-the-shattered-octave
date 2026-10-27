@@ -364,7 +364,7 @@ const KESTREL16 = (function () {
         d: [
           S('Every hide I cure aboard smells of the Reach. I leave the hatch open. It is not for the smell.'),
           S('I put a lamp in a window every night. There is no window. I put it anyway.'),
-          S('Joss would have asked what everything was for. Wyn would have asked who it belonged to.'),
+          S('Ned would have asked what everything was for. Wyn would have asked who it belonged to.'),
           S('Leather does not care what it is holding. That is most of the appeal.'),
         ],
       },

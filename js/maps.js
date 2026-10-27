@@ -266,7 +266,7 @@ function buildOakhaven(greening) {
     { x: 58, y: 39, w: 6, h: 4, tex: 't_house', door: [60, 39], barred: true, label: 'The Sowerbys\' — empty' },
     // --- south district: Tannery Row and the Flume ---
     { x: 12, y: 57, w: 7, h: 4, tex: 't_wood', door: [15, 57], portal: { map: 'tannery', x: 7.5, y: 2.0, dir: Math.PI / 2 }, label: 'The tannery' },
-    { x: 4, y: 57, w: 5, h: 4, tex: 't_house', door: [6, 57], barred: true, label: 'The Tanner twins\' house — empty' },
+    { x: 4, y: 57, w: 5, h: 4, tex: 't_house', door: [6, 57], barred: true, label: 'The Wendle twins\' house — empty' },
     { x: 27, y: 57, w: 6, h: 4, tex: 't_house', door: [29, 57], barred: true, label: 'Old Tam\'s' },
     { x: 40, y: 57, w: 5, h: 4, tex: 't_wood', door: [42, 57], barred: true, label: 'A hay-barn' },
     { x: 4, y: 45, w: 4, h: 3, tex: 't_wood', door: [7, 46], barred: true, label: 'The fulling-shed' },
@@ -729,7 +729,7 @@ function buildUnderhedge() {
     m.enemy('mites', bh.cx - 1, bh.cy + 1); m.item('tonic', bh.x + 0.6, bh.y + bh.h - 0.7);
   }
   const th = m.named.throat; if (th) {
-    m.add({ kind: 'npc', id: 'hollow', name: 'A Hollow in the throat', sprite: 'hollow', x: th.cx + 0.5, y: th.cy + 0.5, solid: true, radius: 0.3, loop: true, lines: ['...Joss?... Joss, the lamp...', '...it\'s only the Hedge talking... only the Hedge...'] });
+    m.add({ kind: 'npc', id: 'hollow', name: 'A Hollow in the throat', sprite: 'hollow', x: th.cx + 0.5, y: th.cy + 0.5, solid: true, radius: 0.3, loop: true, lines: ['...Ned?... Ned, the lamp...', '...it\'s only the Hedge talking... only the Hedge...'] });
     m.item('bottle', th.cx + 0.5, th.y + th.h - 0.7); m.enemy('mites', th.cx + 0.5, th.y + 0.8);
   }
   for (const r of m.rooms) {
@@ -1105,7 +1105,7 @@ function buildMausoleum() {
   m.deco('bones', 33.0, 19.0, { radius: 0.3, scale: 0.6 }); m.deco('coil', 35.6, 24.4, { radius: 0.3, scale: 0.7, label: 'The bell-rope, cut, coiled on the floor' });
   m.enemy('warden', 34.0, 22.0); m.enemy('mites', 36.4, 19.6); m.enemy('dirge', 31.0, 25.0);
   // the choir
-  m.deco('tomb', 19.5, 3.4, { radius: 0.6, scale: 1.2, glow: 0.35, label: 'The tomb of the First Cantor of Memory. It is humming.' });
+  m.deco('tomb', 19.5, 3.4, { radius: 0.6, scale: 1.2, glow: 0.35, label: 'The tomb of the Veil\'s first scribe. It is humming.' });
   [[14.0, 7.0], [25.0, 7.0]].forEach(([x, y]) => m.deco('hymnboard', x, y, { radius: 0.3, scale: 0.8, label: 'A board of funeral offices, a hundred names long' }));
   m.npc('lyra_dw', 14.6, 11.0, { facing: -Math.PI / 2, requires: 'coda_go' });
   m.item('tonic', 2.6, 23.6); m.item('pellets', 37.2, 25.6); m.item('honey', 26.6, 2.6); m.item('w_mace', 12.8, 2.8);

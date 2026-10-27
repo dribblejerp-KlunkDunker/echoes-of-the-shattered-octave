@@ -6,8 +6,8 @@
 //        flume_road     The Flume Road: a path climbing beside the grown-wood channel (the height system: the path
 //                       rises 2.4, the channel rises 3.6, so the water ends up above your head). The Wash is a cutting
 //                       where the aqueduct over-pumps (the surge). A hollow pier under the Wash, opened by a rumour.
-//        flume_landing  Stillwater Landing, the lower lock: a smugglers' wharf. Pellam Dree the lockkeeper sells the same
-//                       news to six parties; Madge Tallow fences at a bad rate; Orrin Haft's raft is chained behind the lock.
+//        flume_landing  Stillwater Landing, the lower lock: a smugglers' wharf. Tobit Dree the lockkeeper sells the same
+//                       news to six parties; Madge Tallow fences at a bad rate; Barnaby Haft's raft is chained behind the lock.
 //        flume_lowrings The Low Rings: Oakhaven's flooded lower quarter. Roofs and upper floors out of green water.
 //    * THE SURGE. A clock runs while you are in these maps: quiet, then a telegraph (the Flume's held vowel climbs a fifth
 //      and a rumble builds), then the surge (a wall of green fills the Wash; standing in it walks you back down the road and
@@ -18,8 +18,8 @@
 //      not track armour condition, so each hit instead makes a small bleed (UPG.status.bleed, ticked here, never lethal)
 //      and steals fatigue. Mire-drones (parish.js) in the Low Rings; hounds on the road. RINGING TIMBER: a blow near
 //      grown wood rings like a bell: noise, and every hound within hearing turns to investigate.
-//    * THE LOCK OF STILLWATER (side quest): Orrin Haft, a Timber Compact cutter, has forty iron-bough logs on a raft behind
-//      the chained lower lock. Open the lock-wheel (lockpicking), or sing the Root note at it, or buy the key from Pellam.
+//    * THE LOCK OF STILLWATER (side quest): Barnaby Haft, a Timber Compact cutter, has forty iron-bough logs on a raft behind
+//      the chained lower lock. Open the lock-wheel (lockpicking), or sing the Root note at it, or buy the key from Tobit.
 //    * ACCESS: a door in Oakhaven's east Hedge beside the Flume's exit (a world-map waypoint too). After the Greening the
 //      door is a hedge and the waypoints go; an open quest writes one closing journal line. Nothing blocks the main quest.
 //
@@ -153,11 +153,11 @@ const FLUME16 = (function () {
       barrels: S('Barrels, hoops new, lids nailed. Whatever is in them sloshes quietly and is not water.'),
     },
     pellam: {
-      name: S('Pellam Dree, lockkeeper'),
+      name: S('Tobit Dree, lockkeeper'),
       polite: S('Lock dues in advance, friend. Or a coin for the news. Or both. Everyone does both.'),
       normal: S('You have the look of someone who wants to know something. It is twelve sovereigns, or the tide, whichever turns first.'),
       blunt: S('Quietly. The basin carries.'),
-      intro: S('Pellam Dree, lockkeeper. Before you ask: yes, I will sell you what I know, and yes, I sold the same this week to the Church\'s man, the Compact\'s, a woman from Cantabile with a very small hat, the Reeve\'s clerk, a Bores factor and a boy who did not say who he worked for. Six of you. It is not a secret if six people have it. It is a service.'),
+      intro: S('Tobit Dree, lockkeeper. Before you ask: yes, I will sell you what I know, and yes, I sold the same this week to the Church\'s man, the Compact\'s, a woman from Cantabile with a very small hat, the Reeve\'s clerk, a Bores factor and a boy who did not say who he worked for. Six of you. It is not a secret if six people have it. It is a service.'),
       again: S('Back again. Is it news you want, or only my company? Company is dearer.'),
       buy: S('Buy the news. Twelve sovereigns.'),
       who: S('Who are the six?'),
@@ -167,7 +167,7 @@ const FLUME16 = (function () {
       whoText: S('The Church, the Compact, the Reeve-Moot, the quarry, a Cantabile broadsheet, and whoever is paying this week. Each of them believes they are the sixth. That is how I keep the lock oiled.'),
       broke: S('Twelve, I said, and I do not do credit. Credit is how a man ends up in the basin.'),
       tip: S('The third pier on the Flume road, the one in the Wash, is hollow. There is a knot in its south face that you would swear was a knot. Turn it. It opens at both ends, and the tunnel goes under the Wash, so the water never sees you. A man I will not name left something in the middle that he would like back, which is why he is not going himself. That is true. I only lie to the ones who haggle.'),
-      tipJournal: S('Pellam Dree, the lockkeeper at Stillwater, sold me news for twelve sovereigns: the third pier in the Wash cutting is hollow. A knot in its south face turns, it opens at both ends, and the tunnel runs under the surge. Something is hidden in the middle.'),
+      tipJournal: S('Tobit Dree, the lockkeeper at Stillwater, sold me news for twelve sovereigns: the third pier in the Wash cutting is hollow. A knot in its south face turns, it opens at both ends, and the tunnel runs under the surge. Something is hidden in the middle.'),
       had: S('You have the only true thing I sell. The rest is for the other five.'),
       keyText: S('The key went to a factor from the quarry in the spring. Twenty-five sovereigns and I find another one. I have a drawer of them. Do not ask about the drawer.'),
       keyDone: S('A brass key, warm from his pocket. "The wheel will take it," he says, "and I will say I never saw you, and that will be true."'),
@@ -183,22 +183,22 @@ const FLUME16 = (function () {
       thanks: [S('Gone.'), S('I never saw it.'), S('That did not happen.')],
     },
     orrin: {
-      name: S('Orrin Haft, Timber Compact cutter'),
+      name: S('Barnaby Haft, Timber Compact cutter'),
       polite: S('Does it ring? No. Nothing rings on this wharf, that is the trouble.'),
       normal: S('Forty logs and a chained lock.'),
       blunt: S('If you are not here about the wheel, you are in the way of the wheel.'),
-      intro: S('Does it ring? No. Nothing rings on this wharf, that is the trouble. Orrin Haft, Timber Compact, cutter. Forty iron-bough logs on that raft, cut and chalked for Fortis, and the lower lock is chained. The keeper says the key went to a factor in the spring. He says it the way he says everything. I have the Compact\'s wages to show by the end of the month, and the Compact is not in a patient mood. Open the wheel for me and I will not forget it.'),
+      intro: S('Does it ring? No. Nothing rings on this wharf, that is the trouble. Barnaby Haft, Timber Compact, cutter. Forty iron-bough logs on that raft, cut and chalked for Fortis, and the lower lock is chained. The keeper says the key went to a factor in the spring. He says it the way he says everything. I have the Compact\'s wages to show by the end of the month, and the Compact is not in a patient mood. Open the wheel for me and I will not forget it.'),
       yes: S('I will see to the lock.'),
       no: S('Not my trouble.'),
-      accept: S('True enough. The wheel is on the post by the gate. Pick it, or buy a key off Pellam if you like paying twice. Or, and he drops his voice, sing it the root. Grown wood remembers one note. Not loud.'),
+      accept: S('True enough. The wheel is on the post by the gate. Pick it, or buy a key off Tobit if you like paying twice. Or, and he drops his voice, sing it the root. Grown wood remembers one note. Not loud.'),
       declined: S('He nods, slowly, as at weather. "The lock does not mind waiting. I do."'),
       waiting: S('Is it open? No. Then I am still a man with forty logs and a debt.'),
       openFirst: S('The gate is open. Was that you? Then say it was.'),
       itWas: S('It was.'),
       done: S('He lays his hand flat on the gate as it swings, the way you touch a horse. "Sap and splinters," he says, softly. "It went." The raft comes off its chocks with no sound at all. "Take this. The Compact does not pay, so I do."'),
       after: S('The raft is in Fortis by now, or it is not. Either way, it is out of my hands, and the logs did not ring once.'),
-      journalOffer: S('Orrin Haft, a Timber Compact cutter at Stillwater Landing, has a raft of iron-bough chained behind the lower lock. The wheel will take a pick, or the Root note sung at it, or a key from Pellam Dree.'),
-      journalDone: S('The lower lock at Stillwater is open and Orrin Haft\'s raft has gone out on the Flume with forty logs. He paid me what the Compact would not.'),
+      journalOffer: S('Barnaby Haft, a Timber Compact cutter at Stillwater Landing, has a raft of iron-bough chained behind the lower lock. The wheel will take a pick, or the Root note sung at it, or a key from Tobit Dree.'),
+      journalDone: S('The lower lock at Stillwater is open and Barnaby Haft\'s raft has gone out on the Flume with forty logs. He paid me what the Compact would not.'),
       closed: S('Whatever raft went down the Flume, the Greening shut the Hedge behind it. I never learned where it fetched up.'),
       reward: S('You receive 40 sovereigns and two jars of honey.'),
     },
@@ -427,7 +427,7 @@ const FLUME16 = (function () {
       R(x, 23, 74, 10, 8, '#c9a45a'); R(x, 23, 74, 10, 2, '#e8cc86'); x.beginPath(); x.arc(28, 74, 4.4, Math.PI, 0); x.strokeStyle = '#c9a45a'; x.lineWidth = 2; x.stroke();
       R(x, 10, 14, 4, 3, '#4a8a5a'); R(x, 44, 46, 5, 3, '#4a8a5a');
     });
-    // Orrin's raft: forty-odd iron-bough logs, chalked, lashed
+    // Barnaby's raft: forty-odd iron-bough logs, chalked, lashed
     addSprite('p16f_raft', 136, 56, (x) => {
       E(x, 68, 50, 62, 4, 'rgba(10,40,30,0.5)');
       const r = rng(31);
@@ -1008,7 +1008,7 @@ const FLUME16 = (function () {
     T.bleedHud = s.bleed;
   }
 
-  // ---------------------------------------------------------------- people: Pellam, Madge, Orrin, the hand, the raft-wife
+  // ---------------------------------------------------------------- people: Tobit, Madge, Barnaby, the hand, the raft-wife
   const addG = (n) => { try { G.gold(n); } catch (e) { G.player.gold = (Number(G.player.gold) || 0) + n; } };
   const gold = () => Number(G.player && G.player.gold) || 0;
   const spend = (n) => { G.player.gold = Math.max(0, gold() - n); };

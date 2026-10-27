@@ -1,11 +1,13 @@
 // ============================================================
 //  tavern11 — Phase 11 (feedback and feel): the Boar & Dulcimer's pastimes, and the cat of Whisper-Grove.
 //
-//  1. BONES. Garrow Finch, a quarry hauler, sits at the west table of the Boar (before the Greening).
+//  1. BONES. Garrow Finch, a quarry hauler, sits in the Boar's cellar (before the Greening): the board upstairs
+//     says NO DICE (Book One ch. 4), so the bones are played below, among the crates, where a rattle does not carry.
 //     "Play Bones" in his dialogue opens a dice game: closest to fourteen, up to four dice, push your luck.
 //     Stakes 1-20 sovereigns, a net loss cap per day, never below 0 gold. The dice come from a private
 //     seeded stream (mulberry32 of the day and a games counter): the game's combat rolls are never drawn.
-//  2. THE EVENING SET. Carrying an instrument or a reed, Hetty's dialogue offers "Play for the room" from
+//  2. THE EVENING SET. A Narrow performance (the board says NO SINGING): played at a hand's width, and the room
+//     applauds without a sound. Carrying an instrument or a reed, Hetty's dialogue offers "Play for the room" from
 //     17:00 until midnight, once per evening: ~46 s of notes on four lanes, paying sovereigns and a little
 //     Hedge standing by accuracy. Reduce motion slows the tune; "Performance timing" adds a wider window or
 //     an auto-timing mode (right lane, roughly right moment).
@@ -64,13 +66,13 @@ const TAVERN = (function () {
     },
     garrow: {
       name: 'Garrow Finch',
-      greetPolite: 'Garrow Finch nudges a stool out with his boot. "Evening. A throw of bones, if you have a coin to lose?"',
-      greetNormal: 'Garrow Finch, a quarry hauler off shift, rattles his cup. "Bones? One to twenty sovereigns. Nobody here ever got rich, and nobody has had to leave."',
-      greetBlunt: '"Bones, or move along," says Garrow, and rattles the cup.',
+      greetPolite: 'Garrow Finch, on a crate in the cellar, nudges a stool out with his boot. "Hetty\'s board says no dice, and Hetty\'s board is upstairs. A throw of bones, if you have a coin to lose?"',
+      greetNormal: 'Garrow Finch, a quarry hauler off shift, shakes his cup inside his coat so it will not rattle. "Bones? One to twenty sovereigns. Nobody down here ever got rich, and nobody has had to leave."',
+      greetBlunt: '"Bones, or back up the stair," says Garrow, and shakes the cup inside his coat.',
       button: 'Play Bones',
       cap: 'Garrow slides the cup away. "Enough for one day. Come back when it has turned over."',
       broke: 'You have nothing to put on the table.',
-      closedJournal: 'Garrow\'s bones, Hetty\'s taproom, the stool by the fire: all of it is on the wrong side of the Greening now. I still catch myself counting to fourteen.',
+      closedJournal: 'Garrow\'s bones in the cellar, Hetty\'s taproom, the playing at a hand\'s width: all of it is on the wrong side of the Greening now. I still catch myself counting to fourteen.',
     },
     bones: {
       title: 'Bones',
@@ -99,16 +101,16 @@ const TAVERN = (function () {
       early: 'Play for the room (the Boar fills in the evening)',
       done: 'Play for the room (you have played tonight)',
       title: 'The Boar\'s Reel',
-      intro: 'You take out your instrument, and the Boar goes quiet in the ordinary way: the way a room does before someone tries.',
+      intro: 'You take out your instrument and play for the room the Narrow way, a hand\'s width loud, the tune carried by the fingers and not the breath. The Boar goes quiet in the ordinary way: the way a room does before someone tries.',
       hint: 'Notes fall to the line. Press the lane as each one lands.',
       keys: 'A S W D or the arrow keys · pad: X A Y B, Back puts it away · or tap a lane · Esc puts it away',
       alt: 'Four lanes of falling notes and a line to meet them on.',
       listen: 'Ready…', go: 'Play', stop: 'Put it away',
       lanes: ['Left', 'Down', 'Up', 'Right'],
-      none: 'A few polite coughs. Hetty collects the glasses.',
-      low: 'Kind applause, mostly for the effort. Someone puts two coins in the hat.',
-      mid: 'The room claps along on the last verse. Hetty sets a cup by your elbow.',
-      high: 'They stamp the last bars out on the boards. Even Hetty stops wiping the same glass.',
+      none: 'Nobody looks up. Hetty collects the glasses.',
+      low: 'A few people touch two fingers to the table, which is how the Boar applauds now. Someone puts two coins in the hat.',
+      mid: 'Half the room taps the last verse out on the tables with one finger, without a sound. Hetty sets a cup by your elbow.',
+      high: 'On the last bars the whole room lifts its hands and shakes them in the air, the silent applause, and nobody makes a sound. Even Hetty stops wiping the same glass.',
       pay: 'You collect {0} sovereigns from the hat.',
       nopay: 'The hat stays empty.',
       rep: 'The Hedge folk will remember it kindly.',
@@ -899,7 +901,7 @@ const TAVERN = (function () {
   // ================================================================ placement of Garrow, Hetty's button, the Greening
   // game.js hydrate() draws two numbers from Math.random for an NPC; we must not move the game's rolls, so set the same fields by hand
   function settle11(e) { e._h = true; e.homeX = e.x; e.homeY = e.y; e.wanderT = 0; e.dir = 0; }
-  const GARROW = { x: 3.4, y: 7.5, facing: 0 };
+  const GARROW = { x: 5.4, y: 10.5, facing: Math.PI };   // the cellar, east of the crates, clear of the cellar door's cell
   function registerNpc() {
     if (typeof NPCS === 'undefined' || NPCS.p11_dicer) return;
     NPCS.p11_dicer = {

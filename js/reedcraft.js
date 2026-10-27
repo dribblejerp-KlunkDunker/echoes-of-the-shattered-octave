@@ -1,9 +1,9 @@
 // ============================================================
-//  reedcraft — Phase 9: cutting and tuning wind-reeds.
+//  reedcraft — Phase 9: cutting and tuning Flume-reeds.
 //
 //  One reusable pitch minigame, "Hold the Pitch" (REEDS.holdPitch), and a small craft built on it:
 //    * reed beds by the Flume crossing (Oakhaven) and on the damp ground of the clearing: E cuts one
-//      wind-reed (p9_windreed), quietly, three a bed a day; the beds come again with the next game day;
+//      Flume-reed (p9_windreed), quietly, three a bed a day; the beds come again with the next game day;
 //    * a cut reed lives one game day. We keep NO per-item stamp: two small integer flags
 //      (p9r_cutday, p9r_cuth) say when the newest reed in the bundle was cut, and every held raw reed
 //      shares that moment. A day later they turn into p9_dryreed (worthless; burn them);
@@ -50,7 +50,7 @@ const REEDS = (function () {
   // Icons: p9_windreed and p9_dryreed are herbs (js/icons.js draws a reed herb for unknown herbs); the
   // others take the category fallbacks (consumable potion shape / key scroll).
   [ // [PROPOSED] every item description below
-    [RAW, { name: 'Wind-Reed', sprite: 'loot', herb: true, use: 'p9_reeds', value: 0, desc: 'Cut green from a bed by the water. It holds any pitch you give it, and it is dead by this time tomorrow.' }],
+    [RAW, { name: 'Flume-Reed', sprite: 'loot', herb: true, use: 'p9_reeds', value: 0, desc: 'Cut green from a bed by the Flume. It holds any pitch you give it, and it is dead by this time tomorrow. Not the old wind-reed, which went to sugar-glass in 412; but it will do.' }],
     [DRY, { name: 'Dry Reed', sprite: 'loot', use: 'p9_dry', value: 0, desc: 'Pale, brittle, and worth nothing. It will not hold a pitch. It will burn.' }],
     [ROOT, { name: 'Root-Note Reed', sprite: 'loot', use: 'p9_root', value: 4, desc: 'A reed tuned to 174. Sound it against your breastbone and you stand a little straighter in the Narrow. One breath of use.' }],
     [LURE, { name: 'Lure Reed', sprite: 'loot', use: 'distraction', value: 2, desc: 'A thin, high reed. Thrown (O opens the throw panel), it lies where it lands and sounds one note a long while. Idle listeners go to look.' }],
@@ -99,7 +99,7 @@ const REEDS = (function () {
       if (cutAt() == null) { stampCut(); return 0; }      // reeds with no stamp (an odd save) count as cut now
       if (hoursLeft() > 0) return 0;
       removeAll(RAW); G.give(DRY, n);
-      if (G.state === 'play') sayMsg(n === 1 ? 'Your wind-reed has gone pale and brittle.' : 'Your wind-reeds have gone pale and brittle.', 'warn', 3500);
+      if (G.state === 'play') sayMsg(n === 1 ? 'Your Flume-reed has gone pale and brittle.' : 'Your Flume-reeds have gone pale and brittle.', 'warn', 3500);
       return n;
     } catch (e) { console.warn('reed sync failed', e); return 0; }
   }
@@ -116,7 +116,7 @@ const REEDS = (function () {
   function bedLabel(i) {
     const left = PER_BED - bedCut(i);
     if (left <= 0) return 'The reed bed is cut to the stubble. It will come again tomorrow.';
-    return left === PER_BED ? 'A bed of wind-reed, green and quiet in the wet. E cuts one.' : `A bed of wind-reed. ${left} still standing today.`;
+    return left === PER_BED ? 'A bed of Flume-reed, green and quiet in the wet. E cuts one.' : `A bed of Flume-reed. ${left} still standing today.`;
   }
   function refreshBeds() {
     if (!G.maps) return;
@@ -144,7 +144,7 @@ const REEDS = (function () {
       if (m._p9beds.some(e => e.p9bed === i)) return;
       // transient: never saved, rebuilt with the maps (a Greened Oakhaven is rebuilt without them)
       // _decor: a gatherable bed is game content (like a notice board), not a graphics effect the plain preset may drop
-      const e = m.deco('p_reed2', x, y, { solid: false, radius: 0.45, scale: 1.15, use: 'p9_reedbed', p9bed: i, transient: true, _decor: true, label: 'A bed of wind-reed, green and quiet in the wet. E cuts one.' });
+      const e = m.deco('p_reed2', x, y, { solid: false, radius: 0.45, scale: 1.15, use: 'p9_reedbed', p9bed: i, transient: true, _decor: true, label: 'A bed of Flume-reed, green and quiet in the wet. E cuts one.' });
       m._p9beds.push(e);
     });
   }
@@ -166,7 +166,7 @@ const REEDS = (function () {
     setFlag('p9r_seen', 1);
     G.give(RAW, 1);
     try { Audio_.sfx.pickup(); } catch (err) { /* silent */ }
-    sayMsg(PER_BED - bedCut(i) > 0 ? 'You cut a wind-reed low, at the joint. The bed hardly notices.' : 'You cut the last wind-reed. The bed will come again tomorrow.', 'good', 3000);
+    sayMsg(PER_BED - bedCut(i) > 0 ? 'You cut a Flume-reed low, at the joint. The bed hardly notices.' : 'You cut the last Flume-reed. The bed will come again tomorrow.', 'good', 3000);
     refreshBeds();
   }
 
@@ -492,7 +492,7 @@ const REEDS = (function () {
   async function craft(id) {
     const r = RECIPES.find(x => x.id === id); if (!r || crafting || cur) return null;
     sync();
-    if (held(RAW) < r.need) { sayMsg('You need ' + r.need + ' fresh wind-reed' + (r.need > 1 ? 's' : '') + ' for that.', 'warn', 2600); return null; }
+    if (held(RAW) < r.need) { sayMsg('You need ' + r.need + ' fresh Flume-reed' + (r.need > 1 ? 's' : '') + ' for that.', 'warn', 2600); return null; }
     crafting = true;
     try {
       soundNoise();
@@ -517,13 +517,13 @@ const REEDS = (function () {
   }
 
   // For the QUESTS team: tune a reed to one person's pitch. Resolves true on success (one fresh
-  // wind-reed is used up) and false on a failed or abandoned tuning. It grants nothing itself.
+  // Flume-reed is used up) and false on a failed or abandoned tuning. It grants nothing itself.
   async function tuneFirstReed(opts) {
     opts = opts && typeof opts === 'object' ? opts : {};
     if (crafting || cur) return false;
     const name = clean(opts.name, 32), hz = num(opts.hz, 60, 1500, REF);
     sync();
-    if (held(RAW) < 1) { sayMsg('You have no fresh wind-reed to tune.', 'warn', 2800); return false; }
+    if (held(RAW) < 1) { sayMsg('You have no fresh Flume-reed to tune.', 'warn', 2800); return false; }
     crafting = true;
     try {
       soundNoise();
@@ -602,14 +602,14 @@ const REEDS = (function () {
     G.state = 'panel';
     const rows = RECIPES.map((r) => {
       const ok = raw >= r.need;
-      return `<button class="dfbtn small" data-reed="${r.id}" ${ok ? '' : 'disabled'}><b>${r.name}</b> (Wind-Reed ×${r.need})<br><small class="muted">${r.desc}</small></button>`;
+      return `<button class="dfbtn small" data-reed="${r.id}" ${ok ? '' : 'disabled'}><b>${r.name}</b> (Flume-Reed ×${r.need})<br><small class="muted">${r.desc}</small></button>`;
     }).join('');
     openModal(`<h2>Reeds</h2><button class="dfbtn small close" id="x">Close</button>
       <p class="muted" id="p9r-state"></p>
       <div class="list">${rows}</div>
       <p class="muted" id="p9r-skill"></p>
       <div class="btns">${dry ? '<button class="dfbtn small" id="p9r-burn">Burn the dry reeds</button>' : ''}<button class="dfbtn small" id="p9r-back">${from === 'craft' ? 'Back to the forge' : from === 'rest' ? 'Back to rest' : from === 'inv' ? 'Back to inventory' : 'Done'}</button></div>`, 'reeds');
-    document.getElementById('p9r-state').textContent = `Fresh wind-reed ×${raw}${raw ? ` · they keep about ${Math.max(1, Math.ceil(hoursLeft()))} more hours` : ''} · Dry reed ×${dry}`;
+    document.getElementById('p9r-state').textContent = `Fresh Flume-reed ×${raw}${raw ? ` · they keep about ${Math.max(1, Math.ceil(hoursLeft()))} more hours` : ''} · Dry reed ×${dry}`;
     document.getElementById('p9r-skill').textContent = `Tunings so far: ${n} · the band is ±${Math.round(bandFor(n) / 2)} cents${set.assist ? ' (assist on)' : ''}.`;
     const leave = () => { closeModal(); G.state = 'play'; };
     document.getElementById('x').onclick = leave;
@@ -677,7 +677,7 @@ const REEDS = (function () {
           if (on() && G.openPanel === 'rest' && list && held(RAW) > 0 && fires() && !document.getElementById('p9r-rest')) {
             const b = document.createElement('button'); b.className = 'dfbtn'; b.id = 'p9r-rest'; b.type = 'button';
             b.appendChild(document.createTextNode('Tune a reed by the fire '));
-            const sm = document.createElement('small'); sm.className = 'muted'; sm.textContent = '— while the wind-reed is still green.'; b.appendChild(sm);
+            const sm = document.createElement('small'); sm.className = 'muted'; sm.textContent = '— while the Flume-reed is still green.'; b.appendChild(sm);
             b.onclick = () => openPanel('rest'); list.appendChild(b);
           }
         } catch (e) { console.warn('rest reeds failed', e); }
@@ -784,7 +784,7 @@ const REEDS = (function () {
       bOn.textContent = set.on ? 'On' : 'Off'; bAs.textContent = set.assist ? 'On' : 'Off';
       for (const [b, v] of [[bOn, set.on], [bAs, set.assist]]) { b.setAttribute('aria-pressed', v ? 'true' : 'false'); b.classList.toggle('sel', v); }
     }
-    grid.appendChild(row('Reed beds', 'wind-reed to cut, the Reeds button at the forge, the lure in the throw menu'));
+    grid.appendChild(row('Reed beds', 'Flume-reed to cut, the Reeds button at the forge, the lure in the throw menu'));
     grid.appendChild(bOn);
     grid.appendChild(row('Hold the Pitch assist', 'a wider band to follow'));
     grid.appendChild(bAs);

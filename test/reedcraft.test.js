@@ -363,7 +363,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       REEDS.set.on = false; G.state = 'panel'; renderCrafting(); out.tabOff = !!document.getElementById('p9r-tab');
       return out;
     });
-    assert(/Reeds \(3\)/.test(ui.tab) && ui.panel === 'reeds' && /Fresh wind-reed ×3/.test(ui.text) && /Dry reed ×2/.test(ui.text), 'forge has a Reeds tab: ' + ui.tab);
+    assert(/Reeds \(3\)/.test(ui.tab) && ui.panel === 'reeds' && /Fresh Flume-reed ×3/.test(ui.text) && /Dry reed ×2/.test(ui.text), 'forge has a Reeds tab: ' + ui.tab);
     assert(ui.session && ui.back === 'reeds' && ui.lures === 2 && ui.rawLeft === 2, 'tuning from the panel returns to the panel: ' + JSON.stringify(ui));
     assert(ui.burnt === 0 && ui.toForge === 'craft', 'burn dry reeds; back goes to the forge');
     assert(ui.restNoFire === false && ui.restFire === true && ui.restPanel === 'reeds' && ui.restBack === 'rest', 'R-rest by a fire offers tuning');

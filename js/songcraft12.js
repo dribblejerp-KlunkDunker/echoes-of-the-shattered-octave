@@ -53,7 +53,7 @@ const SONGCRAFT = (function () {
     ['tam', { item: 'p12_flute', price: 14 }],            // Old Tam, of the Hedge-weavers: alder flutes in hush-cloth
     ['vane', { item: 'p12_gurdy', price: 38 }],           // Captain Vane: a wheel-fiddle off the Kestrel
     ['bettany', { item: 'p12_fork', price: 12 }],         // Bettany: an iron fork from a Cantor's widow
-    ['ignatius', { item: 'p12_rod', price: 30 }],         // Ignatius the smith: bell-bronze ground to 174
+    ['orrin', { item: 'p12_rod', price: 30 }],            // Orrin Pale the sexton: bronze from the chapel's cracked old treble (R2)
   ];
 
   // ---------------------------------------------------------------- text ([PROPOSED] all of it; also in tools/i18n/p12-songcraft.tsv)
@@ -63,7 +63,7 @@ const SONGCRAFT = (function () {
       p12_flute: ['Alder Flute', 'Bored alder, packed in hush-cloth by the Hedge-weavers. Equipped, Songs make far less noise, and the Falling Fifth carries a little further down a narrow line ahead.'],
       p12_gurdy: ['Hurdy-Gurdy, the wheel-fiddle', 'A corsair\'s wheel-fiddle with a drone string that never stops. Equipped, timed effects hold much longer. Songs are louder, and the drone calls hounds for a while after.'],
       p12_fork: ['Iron Tuning Fork', 'Bettany had it from a Cantor\'s widow. Held (J), it hums near what is kept hidden: resonant stone, strongboxes, Light-glass, loose pages. The nearer, the higher it sings.'],
-      p12_rod: ['Resonance Rod', 'A rod of bell-bronze, ground at the forge to 174. Held loose (J), it dips toward what is rooted below. Do not stand on what it finds.'],
+      p12_rod: ['Resonance Rod', 'A rod of bronze from the chapel\'s cracked old treble, ground at the forge to 174. Held loose (J), it dips toward what is rooted below. Do not stand on what it finds.'],
     },
     equip: { p12_lute: 'You take up the lute.', p12_flute: 'You take up the flute.', p12_gurdy: 'You settle the wheel-fiddle across your knees.' },
     unequip: 'You put the instrument away.',

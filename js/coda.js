@@ -175,7 +175,7 @@ function codaUse(e) {
   }
   if (e.use === 'cutter') { codaCutter(e); return true; }
   if (e.use === 'tower_bell') { codaBell(e); return true; }
-  if (e.use === 'maus_inscription') { showEvent('Over the inner door', '<i>Here lie the Cantors of Memory, each in the stone of the note they kept. Sing them down as you would sing them home: from the highest, to the lowest. Then the choir will open, and you may say goodbye.</i>', [{ t: 'Step back.', f: null }]); return true; }
+  if (e.use === 'maus_inscription') { showEvent('Over the inner door', '<i>Here lie the scribes of the Silent Veil, each in the stone of the note they kept. Sing them down as you would sing them home: from the highest, to the lowest. Then the choir will open, and you may say goodbye.</i>', [{ t: 'Step back.', f: null }]); return true; }
   if (e.use === 'tomb') { codaTomb(e); return true; }
   if (e.use === 'maus_register') {
     if (f.register_taken) { msg('The sexton\'s desk, with a gap on it where the register lay.', '', 3000); return true; }
@@ -225,7 +225,7 @@ function codaTomb(e) {
     if (f.tomb_seq.length === 4) {
       f.tombs_rung = true; questXp(60);
       setTimeout(() => { Audio_.sfx.bell(); msg('From the north, through the bronze door, four small bells answer in the same order, high to low. The felt falls out of them. The choir door is open.', 'good', 7000); }, 900);
-      journal('main', 'Coda: I rang the four Cantors\' tombs in the Mausoleum of Chords from the highest note to the lowest, and the bronze choir door opened.');
+      journal('main', 'Coda: I rang the four scribes\' tombs in the Mausoleum of Chords from the highest note to the lowest, and the bronze choir door opened.');
     }
   } else {
     f.tomb_seq = [];

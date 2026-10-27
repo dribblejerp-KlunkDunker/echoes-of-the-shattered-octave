@@ -2,7 +2,7 @@
 //  house13 — Phase 13 "The Hush comes closer", team HOUSE: "The Kept House".
 //
 //  A haunted-house side quest in Oakhaven. Nobody in it is a monster. A house has kept something half-finished.
-//    * WHO: Wenna Marl, a neighbour (new person, standing in the lane outside the shut house in the north-west corner,
+//    * WHO: Bethan Marl, a neighbour (new person, standing in the lane outside the shut house in the north-west corner,
 //      the one the map calls "A shuttered house"). She keeps the key and will not use it.
 //    * WHAT [PROPOSED, all of it]: the Tarrows (Gil the reed-cutter, Maud, Linnet who is eight, and Gil's mother Nan)
 //      went out on the last cart before the gate was barred. Nan could not be moved and was dying. The family was
@@ -97,7 +97,7 @@ const HOUSE13 = (function () {
       four: S('Four First Reeds over the Tarrows\' door. They stir when the wind comes through the Hedge, like every reed in the lane. None of them sounds. None of them has to.'),
     },
     wenna: {
-      name: S('Wenna Marl, neighbour to the Tarrows'),
+      name: S('Bethan Marl, neighbour to the Tarrows'),
       greet: {
         polite: S('Softly, if you would. I stand out here because I cannot sit in there.'),
         normal: S('Does it ring? Not next door, it does not. Keep your voice down.'),
@@ -144,7 +144,7 @@ const HOUSE13 = (function () {
       body: S('You unfold the shawl on the bed-straw. A reed, long and old, cut and slotted a lifetime ago, on a cord worn pale. A tag on the cord, in a small unsteady hand: <i>NAN TARROW</i>. Taken down off the door by the one it was tuned to, wrapped, and put where nobody would hang it beside the children\'s. It is the only thing in the house that is sounding. You cannot hear it. You can feel your breastbone answer.'),
       hold: S('Hold her note'),
       leave: S('Leave it for now'),
-      journal: S('In the back room of the Tarrows\' house, wrapped in a shawl, I found a First Reed with a tag on its cord: NAN TARROW. She took it down off the door herself. The tuning fork would not leave it alone. Wenna Marl says anyone who stays to the end can hold her note.'),
+      journal: S('In the back room of the Tarrows\' house, wrapped in a shawl, I found a First Reed with a tag on its cord: NAN TARROW. She took it down off the door herself. The tuning fork would not leave it alone. Bethan Marl says anyone who stays to the end can hold her note.'),
     },
     hold: {
       title: S('Hold Nan Tarrow\'s note'),
@@ -160,7 +160,7 @@ const HOUSE13 = (function () {
       title: S('The eighth count'),
       body: S('The count stopped at seven because the cart was at the door. The Hedge keeps what it is given, and it was never given the eighth. You stand where a child would stand, and you do not say it, because we do not say it now. You keep your mouth shut and you think it, as plain as a bell. <i>Eight.</i><br><br>The room lets out its breath. Somewhere in the walls a kettle comes off the boil without ever having reached it.'),
       btn: S('Eight.'),
-      reward: S('Wenna presses ten sovereigns on you, and Linnet\'s counting-beads, which were on the cot. The Hedge, you feel, has noted it.'),
+      reward: S('Bethan presses ten sovereigns on you, and Linnet\'s counting-beads, which were on the cot. The Hedge, you feel, has noted it.'),
     },
     fork: {
       seen: S('The fork shivers against your palm and will not settle. Something in here is being kept.'),
@@ -191,11 +191,11 @@ const HOUSE13 = (function () {
       note: S('[A low note, held]'),
     },
     j: {
-      offer: S('Wenna Marl, who lives beside the shut house in the north-west corner of Oakhaven, says the Tarrows\' First Reeds have stopped moving and the house keeps noises: a kettle that never boils, a child\'s counting that stops at seven. She gave me the key. Nobody is hurt. Something is being kept.'),
-      done: S('The Tarrows\' house is quiet. I gave its nursery the eighth count and the Hedge took it. Wenna Marl says her own kettle boils again.'),
+      offer: S('Bethan Marl, who lives beside the shut house in the north-west corner of Oakhaven, says the Tarrows\' First Reeds have stopped moving and the house keeps noises: a kettle that never boils, a child\'s counting that stops at seven. She gave me the key. Nobody is hurt. Something is being kept.'),
+      done: S('The Tarrows\' house is quiet. I gave its nursery the eighth count and the Hedge took it. Bethan Marl says her own kettle boils again.'),
       closed: S('Oakhaven is gone under the oaks. The Tarrows\' house stands with its door shut and its reeds hanging still. I did not finish with it.'),
     },
-    rumour: S('The lane by the north-west corner is quiet again, they say. Not Hedge-quiet; house-quiet. Wenna Marl\'s kettle boils, and she cried a little when it did.'),
+    rumour: S('The lane by the north-west corner is quiet again, they say. Not Hedge-quiet; house-quiet. Bethan Marl\'s kettle boils, and she cried a little when it did.'),
     rumourNote: S('You gave the Tarrows\' nursery its eighth count'),
   };
 
@@ -387,7 +387,7 @@ const HOUSE13 = (function () {
     return true;
   }
 
-  // ---------------------------------------------------------------- Wenna and the quest
+  // ---------------------------------------------------------------- Bethan and the quest
   const NPC_DEFS = {
     p13h_wenna: { name: TX.wenna.name, sprite: 'townswoman', portrait: 'townswoman', tier: 'low', greet: TX.wenna.greet, topics: TX.wenna.topics, quest: wennaQuest },
   };

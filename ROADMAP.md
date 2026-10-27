@@ -38,34 +38,35 @@ Done in code, October 2026: one check per item in `test/r1release27.test.js`. Th
 
 ### R2 — Canon sweep
 Gate: each change checked against the Series Bible and Book One; French entries updated; story-i18n test green.
-- [ ] **The Boar & Dulcimer keeps its own rules** (NO SINGING, NO DICE):
+Done in code, October 2026: one check per item in `test/r2canon27.test.js`; French in `tools/i18n/p27-r2.tsv` and the modules' own lists.
+- [x] **The Boar & Dulcimer keeps its own rules** (NO SINGING, NO DICE):
   - The evening set becomes a Narrow performance with silent applause.
   - The dice game moves to the cellar.
   - Files: tavern11.js; Book One ch. 4.
-- [ ] **The Legionnaires' dying names** use invented names only. Drop Joss Carder, Emory Wain, Wren Halloway, Annet Sowerby and Merret Salt (data.js:231).
-- [ ] **The Cloister's name-tapes** follow canon's list in ch. 20: Orry, Ben Dray, A. SOWERBY and the others. Drop Elsie Fenn (data.js:637).
-- [ ] **The lore books:**
-  - "On the Eight Anchors": wrong Hz and Anchors (upgrades.js:715).
+- [x] **The Legionnaires' dying names** use invented names only. Drop Joss Carder, Emory Wain, Wren Halloway, Annet Sowerby and Merret Salt (data.js:231). Now Gethin Coote, Osric Dacre, Linus Harte, Bryn Pryor and Elspet Rowe, voiced like the rest.
+- [x] **The Cloister's name-tapes** follow canon's list in ch. 20: Orry, Ben Dray, A. SOWERBY and the others. Drop Elsie Fenn (data.js:637). Nine tapes, Tom Wick the ninth; the tenth collar is Wat's, let out by Bryony, which Halder's Table for Four now uses.
+- [x] **The lore books:**
+  - [x] "On the Eight Anchors": wrong Hz and Anchors (upgrades.js:715). Canon's eight; the line about the Chorister's blood is gone.
   - [x] The Veil's absorption: c. 300 SR (upgrades.js:727). Done, and softened to a hint.
   - [x] The 417 register: the Pellow child, in spring (upgrades.js:719). Done (owner's rulings, PR #63).
-  - Use the canon skipping rhyme (upgrades.js:732).
+  - [x] Use the canon skipping rhyme (upgrades.js:732).
 - [x] **Tobin's journal pages 10–12** are dated after he was taken (tobin.js:109–124). Done: the journal now ends at the Pellows' table, spring 417 (PR #63).
-- [ ] **Tobin's Tuning-Blade cairn becomes his lyre by the stile.** Add his seven oiled reed-pipes in Lyra's house (upgrades.js:1311–1319; ch. 1).
-- [ ] **The heist's quarry lease is Aldric's signature,** not Mossbrook's (heist16.js:309, 401).
-- [ ] **Ignatius gives once and does not run a shop;** the stock moves to the sexton (data.js:606–610).
-- [ ] **The Mausoleum is the old house of the Silent Veil,** not a tomb of "Cantors of Memory" (data.js:893).
-- [ ] **The Tanner twins:** reconcile them with "sung into the ground side by side", and rename them off Joss (data.js:322, 484).
-- [ ] **The Hall of Carriage is at the Organum** (Sable's party chat).
-- [ ] **Lyra does not sing before her voice returns** (party.js:17, 187). See R3's voiceless kit.
-- [ ] **Smaller fixes:**
+- [x] **Tobin's Tuning-Blade cairn becomes his lyre by the stile.** Add his seven oiled reed-pipes in Lyra's house (upgrades.js:1311–1319; ch. 1). The cairn is where they buried his lyre; the blade lies under a flat stone at its foot, where he left it on his way up (his last page). The pipes hang in Lyra's house.
+- [x] **The heist's quarry lease is Aldric's signature,** not Mossbrook's (heist16.js:309, 401). Mossbrook witnessed it, so his reasons to burn it stand.
+- [x] **Ignatius gives once and does not run a shop;** the stock moves to the sexton (data.js:606–610). Orrin Pale, Oakhaven's living sexton (canon has one, unnamed), stands in the chapel (js/chapel27.js) with the stock and the dowsing rod.
+- [x] **The Mausoleum is the old house of the Silent Veil,** not a tomb of "Cantors of Memory" (data.js:893). Its four tombs are Veil scribes now; Lyra's line is re-voiced.
+- [x] **The Tanner twins:** reconcile them with "sung into the ground side by side", and rename them off Joss (data.js:322, 484). The culvert pair are the Wendle twins, Ned and Wyn; canon's Tanner boys, sung down after the bore head, get a rumour of their own.
+- [x] **The Hall of Carriage is at the Organum** (Sable's party chat).
+- [x] **Lyra does not sing before her voice returns** (party.js:17, 187). See R3's voiceless kit. Her ability is the Whistled Fifth until `lyra_voice`.
+- [x] **Smaller fixes:**
   - The Hedge's hound-bed line (companion-talk.js:215).
   - Tobin quoting Lyra's line (companion-talk.js:266).
   - The noticeboard's public proctor bounty (upgrades.js:851).
-  - Mutton on every menu in a starving town.
-- [ ] **Near-collisions:** Pellam Dree and Pellam Quist; Wenna Marl and Abbess Wenna; Annet Sorrel and Annet Sowerby.
-- [ ] **Found by the library writers:**
+  - Mutton on every menu in a starving town. Oakhaven sells only dear salt mutton off Vane's boat; Wethercombe and the Coast keep the rest.
+- [x] **Near-collisions:** Pellam Dree and Pellam Quist; Wenna Marl and Abbess Wenna; Annet Sorrel and Annet Sowerby. Now Tobit Dree, Bethan Marl, Aveline Sorrel; and Orrin Haft became Barnaby Haft, beside Orrin Pale the sexton.
+- [x] **Found by the library writers:**
   - [x] Tomas has been "thinking about it since August", a real-world month (Phase 9 quest text). He now says Firstfruit.
-  - A letter in grove.js addresses "the Cloister of the Lost Choir" before 416, though canon says nobody remembers its old name.
+  - [x] A letter in grove.js addresses "the Cloister of the Lost Choir" before 416, though canon says nobody remembers its old name. Now "at the Cloister".
   - [x] Book One's own "Leaffall" dates are not in Vol VII's calendar. The game's text uses only Vol VII's months, so it agrees with both. Leaffall stays in the manuscript.
 - [x] **The owner's canon rulings (October 2026).** Where the manuscript and an in-game book or journal disagree, the manuscript wins. Where a volume and an in-game book disagree, the volume wins. A book that comes close to a spoiler stays, unless it makes the twist too easy to guess. Applied:
   - **Tobin** was taken in the spring of 417 at the Pellow farm, before the Hedge. His journal now ends that night at the Pellows' table. His register, the cairn slate, the inquiry's logbook lines and the prologue's "voice" line follow the manuscript. The "Wearer" and the culvert are gone from them.
@@ -73,7 +74,7 @@ Gate: each change checked against the Series Bible and Book One; French entries 
   - **The Hedge** went in the summer of 417 ("two summers ago"), after Tobin, and the Consortium paid for it.
   - **Skyships** carry a Fortis-cut lodestone core (Vol I) and drift-glass lift-tanks (the manuscript). The library's three skyship books now name both.
   - **The Greenroot Cantor** is Mabyn Verrow. Ilse Brennan is canon (Book Four).
-- [ ] **Reedcraft's "wind-reeds" become Flume-reeds** (reedcraft.js:54). Real wind-reeds died in 412.
+- [x] **Reedcraft's "wind-reeds" become Flume-reeds** (reedcraft.js:54). Real wind-reeds died in 412.
 
 ### R3 — The Narrow comes home: make existing systems matter
 Gate: tests per system; a recorded playtest note that Oakhaven feels tense but fair.

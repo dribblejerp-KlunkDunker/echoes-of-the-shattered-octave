@@ -18,7 +18,7 @@
 //     room, p16h_depot3), open from the night bell (22:00) to the morning one (06:00). Factor Vosk's ledgers: "Reconciliation
 //     has not finished". The bore bites for 8 s in every 22 and covers sound; two guards, a clerk who can be paid, and a
 //     safe (3 tumblers again, or the sledge). Take: the roster ledger (the persons without a roster number) and the lease
-//     copy (Mossbrook's name, 404). Give them to Sergeant Vause, the Compact steward or Reeve Mossbrook.
+//     copy (Aldric's signature, 414, as Book One has it; Reeve Mossbrook witnessed it). Give them to Sergeant Vause, the Compact steward or Reeve Mossbrook.
 //
 //  BOTH: plan -> in -> take -> out; a heist page in the logbook that fills as you learn things; quiet / bribe-or-disguise /
 //  loud (and the sermon window for the Chapel). Being seen = the existing law (reportCrime, the arrest panel, the watch-house)
@@ -306,7 +306,7 @@ const HEIST16 = (function () {
       giveRoster: S('Give the roster ledger to the steward'),
       giveLease: S('Give the lease copy to the steward'),
       rs: S('He reads it by the light of a pipe. Eleven names, then thirty, then more. He turns to the last page and shuts the book very carefully, as one shuts a door on a sleeping child. "Right," he says, and gives you thirty sovereigns from the Compact\'s strike fund, and the Compact does not cut tomorrow.'),
-      ls: S('He reads the name at the foot twice, to be sure of it. "Alder Mossbrook, for the Reeve-Moot, four hundred and four." He folds it as small as it will go. "I shall read this at the moot, aloud, in a voice that carries. The Reeve may have thought we could not read."'),
+      ls: S('He reads the names at the foot twice, to be sure of them. "Aldric Vance, Governor, four hundred and fourteen. Witnessed: Alder Mossbrook, for the Reeve-Moot." He folds it as small as it will go. "I shall read this at the moot, aloud, in a voice that carries. The Reeve may have thought we could not read."'),
       done: S('"They are saying it in the lanes," he says. "Not what it is. That someone has read it. That is the beginning, and it is enough."'),
       closed: S('"The quarry has what it has. We have gone on cutting, because there is nothing else to do. Does it ring? Not for us."'),
     },
@@ -330,7 +330,7 @@ const HEIST16 = (function () {
       },
       notice: S('He is a big, careful man with a pen he keeps turning in his fingers. "A lease is a thing a man signs at one time, for reasons good at that time," he says, to nobody. "I signed a lease. In four hundred and four. For the Reach. It would not be well for it to be read as anything but that."'),
       give: S('Give the lease copy to the Reeve'),
-      lm: S('He reads his own name, in his own hand, and puts the paper in the fire without taking his eyes from it. "A kindness," he says. "I shall not forget it." The purse that comes across the table is sixty sovereigns heavy, and it does not feel clean. Behind you, the moot is waiting for its Reeve.'),
+      lm: S('He reads his own name, under the Governor\'s, in his own hand, and puts the paper in the fire without taking his eyes from it. "A kindness," he says. "I shall not forget it." The purse that comes across the table is sixty sovereigns heavy, and it does not feel clean. Behind you, the moot is waiting for its Reeve.'),
       done: S('"The Reach is better with some things unread," he says. "You will not see me at the Compact\'s fires." He does not meet your eye.'),
       closed: S('"The Reach has other Reeves now. I have the paperwork."'),
     },
@@ -392,13 +392,13 @@ const HEIST16 = (function () {
       leave: S('Leave it'),
       took: S('The roster ledger, as heavy as a child. A copy of the lease, the name at the foot clear as a bell. You put them inside your coat, flat, and the purse after.'),
       cash: S('Fifty sovereigns of the Consortium\'s, in the Consortium\'s string.'),
-      journal: S('I took the roster ledger and the lease copy from Vosk\'s safe: the persons without a roster number, in the Factor\'s own hand, and the lease Reeve Mossbrook signed in four hundred and four.'),
+      journal: S('I took the roster ledger and the lease copy from Vosk\'s safe: the persons without a roster number, in the Factor\'s own hand, and the lease the Governor signed in four hundred and fourteen, with Reeve Mossbrook\'s name under his as witness.'),
     },
     items: {
       roster: S('Depot Three roster ledger'),
       rosterDesc: S('A tall ledger bound in grey cloth: the quarry roster, with eleven columns of names against which the Consortium has entered no number. The last column is headed RECONCILED. It is blank.'),
       lease: S('Quarry lease, copy'),
-      leaseDesc: S('A lease for the Oakhaven quarry, a copy, in the Consortium\'s clerk\'s hand: the Reach grants the Consortium of Bores the Root for twenty years. At the foot, in a large careful hand: Alder Mossbrook, for the Reeve-Moot, 404.'),
+      leaseDesc: S('A lease for the Oakhaven quarry, a copy, in the Consortium\'s clerk\'s hand: the Consortium of Bores takes the quarry, the shaft, and such resonances as lie beneath, for bread at a fixed price, for nine years. At the foot, in a large careful hand: Aldric Vance, Governor, 414. Under it, witnessed: Alder Mossbrook, for the Reeve-Moot.'),
       read: S('You turn the pages. It does not take long to understand them, and it takes a good deal longer to stop.'),
       carry: S('Find the person who should have it: the steward in the clearing, Sergeant Vause at the Quarry Gate, or the Reeve at the Greenhall.'),
     },
@@ -406,7 +406,7 @@ const HEIST16 = (function () {
       desk: S('A clerk\'s desk, neatly kept. Pens in a row, a blotter, a bell-pull for the Factor. The blotter has the day\'s sums on it, mirror-writing in grey.'),
       desks: S('Desks in rows, each with its stool pushed in. Reconciliation worksheets under paperweights: columns of figures, and at the foot of each, in the same hand, "carried as present, paid as absent".'),
       tally: S('A chalk wall-tally of the bore\'s bites, hundreds of strokes in fives. Beside it, in a different chalk, a column of names with a stroke beside each. The strokes outnumber the names by about a third.'),
-      unnumbered: S('A chalk list on the wall of the ledger room, headed THE UNNUMBERED: names and no numbers, in a clerk\'s round hand. Annet Sorrel. Pol Wick. Gerrit Hale. Ruth Marren. They go down the wall and round the corner. Some have been struck out, and written in again.'),
+      unnumbered: S('A chalk list on the wall of the ledger room, headed THE UNNUMBERED: names and no numbers, in a clerk\'s round hand. Aveline Sorrel. Pol Wick. Gerrit Hale. Ruth Marren. They go down the wall and round the corner. Some have been struck out, and written in again.'),
       reconcile: S('A bench of reconciling tools: a stamp, a pad, a spike for paper, a scale for weighing the figures. The stamp says CARRIED AS PRESENT.'),
       bore: S('The bore\'s shaft: a great iron throat going down into the dark. It turns, and it bites, and the floor hums. It is not tuned to anything you could name.'),
       pumps: S('Pumps, pipes and a gauge that has not moved in a month. The needle is bent where somebody tapped it.'),

@@ -212,8 +212,8 @@ const COMPANION_TALK = (function () {
         { t: `"What does the Root keep?"`, k: 'curious', a: 1, r: `"A lullaby, and the loss of the tune, over and over. I laid my hand on it once. It turned toward me. It is tired, and it does not know how to ask."` },
         // [PROPOSED] the glass hand can read a person's Signature (LORE_P6: Kaelen's glass hand "Listens"; Signature reading)
         { t: `"Can you hear me?"`, k: 'quiet', a: 2, u: 'chat', r: `He closes his eyes. "A low, steady note, a little sharp when you are lying. Don't take that as an accusation. Everyone is a little sharp."` },
-        // [PROPOSED] the hound-bed near his hut as the one place the glass goes quiet
-        { t: `"Does it ever go quiet?"`, k: 'kind', a: 1, r: `"On the hound-bed, outside my hut. A day without one voice in the glass. I used to walk out and stand there, just to remember what my own head sounded like."` },
+        // a hound's bed (Book One ch. 2): no sound carries in one for a day, and each was closer to his door than the last
+        { t: `"Does it ever go quiet?"`, k: 'kind', a: 1, r: `"Once. There was a hound's bed twenty paces from my door, and I stood in it before I fetched the barrow. No sound carries in one for a day. For about a minute the glass was quiet. Then I thought about what had been lying there, and I went and fetched the barrow."` },
       ],
     }),
   });
@@ -263,7 +263,7 @@ const COMPANION_TALK = (function () {
     id: 'l_tobin', who: 'lyra', bit: 9, title: `Tobin`,
     req: () => gf('part3') || gf('part4'),
     root: () => ({
-      s: `He called me lark. He said a martyr is just a musician who gave up before the coda. Then a child in the lane went still, and he raised his voice above the Narrow to call her back, and she lived.`,
+      s: `He called me lark. I told him once, when I was twelve, that a martyr is just a musician who gave up before the coda, and he laughed and wrote it down. Then a child at the Pellow farm went still, and he raised his voice above the Narrow to call her back, and she lived.`,
       m: 'sad',
       o: [
         { t: `"I'm sorry."`, k: 'kind', a: 2, n: TOBIN_B, r: `Don't be sorry. Be accurate. He called a child home and she came. Write that down first.` },
