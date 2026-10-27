@@ -54,6 +54,21 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Release road R4: the thin places, filled
+
+Every place that was thin now has people, something to use and a reason to be there.
+- **Oakhaven:** the baker's and the chandler's open. Agnes Tull, the baker's wife, punches the dough down every hour of the night and sells bread; Ambrose Vettle sells hush-whistles and bandages. Bettany, Hob and Old Tam keep a day place and a night place.
+- **Small Oakhaven life:** the iron-oaks chime when the wind is up; a sapling comes up through the cobbles on Cooper's Row every morning with a hand-saw beside it; the sexton salts the chapel paths at dawn; the tanker-wagon comes through once a day between two Legionnaires; dogs howl at noon.
+- **The Watch Downs** (still danger 0): Abel Sedge cuts turf by the fold and says the sign's "There are no sheep" out loud; the dew-pond gives a drink once a day.
+- **Wethercombe:** the farmhouse (Mother Hurst at the hearth), the barn (Jem Cotter the shearer, barred in against the woolwight) and a shut-up cottage open; the Bellwether rents a room and keeps a slate of tabs.
+- **The Flume Road:** Ennis Crowle keeps her skeps; what she says follows Bettany's Telling the Bees.
+- **The tannery:** two hands at the vats, and the back door onto the Hollow (shut for now).
+- **The Low Rings and Stillwater Landing:** a punt-poler and a salvager in the Rings; a smuggler and a broadsheet-seller on the quay, with a board of Cantabile broadsheets.
+
+| ![The baker's at night](screenshots/p29-bakery.jpg) | ![Abel Sedge on the Watch Downs](screenshots/p29-downs.jpg) |
+|---|---|
+| ![Ennis Crowle on the Flume Road](screenshots/p29-road.jpg) | ![The tanker-wagon in Oakhaven](screenshots/p29-oakhaven-tanker.jpg) |
+
 ### Release road R3: the Narrow comes home
 
 Book One's rule, *too loud brings the hounds, too still brings the Hush*, now runs in Oakhaven and the systems that were already there.

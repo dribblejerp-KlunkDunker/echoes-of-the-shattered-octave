@@ -60,10 +60,11 @@ const URL = (process.env.PREVIEW_URL || 'http://127.0.0.1:3000') + '/index.html?
       check(I && !I.outdoor, 'the Bellwether is an interior');
       const portals = (m) => { const out = []; for (const c of m.cells) if (c && c.portal) out.push(c.portal.map); return out; };
       const hanger = typeof HANGER22 !== 'undefined' ? [HANGER22.HANGER, HANGER22.BARROW] : [];   // Phase 22b adds the gap into the Hanger
-      check(JSON.stringify(portals(C).sort()) === JSON.stringify([S.DOWNS, S.INN].concat(hanger.slice(0, 1)).sort()), 'Wethercombe joins the Downs, its inn and the Hanger only (' + portals(C) + ')');
+      const r4 = typeof THIN29 !== 'undefined' ? [THIN29.MAPS.farm, THIN29.MAPS.barn, THIN29.MAPS.cottage] : [];   // R4 opens the farmsteads
+      check(JSON.stringify(portals(C).sort()) === JSON.stringify([S.DOWNS, S.INN].concat(hanger.slice(0, 1), r4).sort()), 'Wethercombe joins the Downs, its inn, the Hanger and its farmsteads only (' + portals(C) + ')');
       check(JSON.stringify(portals(I)) === JSON.stringify([S.COMBE]), 'the inn joins Wethercombe only');
       check(portals(D).filter((p) => p === S.COMBE).length === 1, 'the Downs have one stile to Wethercombe');
-      for (const id in G.maps) if (id !== S.DOWNS && id !== S.COMBE && id !== S.INN && hanger.indexOf(id) < 0) check(!portals(G.maps[id]).some((p) => p === S.COMBE || p === S.INN), 'nothing else leads to the new maps (' + id + ')');
+      for (const id in G.maps) if (id !== S.DOWNS && id !== S.COMBE && id !== S.INN && hanger.indexOf(id) < 0 && r4.indexOf(id) < 0) check(!portals(G.maps[id]).some((p) => p === S.COMBE || p === S.INN), 'nothing else leads to the new maps (' + id + ')');
       check(!portals(G.maps.oakhaven).includes(S.COMBE) && D.danger === 0, 'nothing new joins Oakhaven, and the Downs keep danger 0');
       for (let x = 0; x < C.w; x++) for (const y of [0, C.h - 1]) check(C.get(x, y), 'Wethercombe is walled at ' + x + ',' + y);
       for (let y = 0; y < C.h; y++) for (const x of [0, C.w - 1]) check(C.get(x, y), 'Wethercombe is walled at ' + x + ',' + y);

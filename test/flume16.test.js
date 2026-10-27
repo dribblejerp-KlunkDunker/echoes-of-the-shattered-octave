@@ -588,7 +588,8 @@ const HELPERS = () => {
         for (const k of Object.keys(G.flags)) delete G.flags[k]; G.maps.flume_landing = buildAllMaps().flume_landing; T.go('oakhaven', 20, 20, 0);
         restoreGame(snap); G.state = 'play'; T.step(5);
         const m = G.maps.flume_landing;
-        o.back = { map: G.mapId, flags: [G.flags.p16f_lock, G.flags.p16f_q, G.flags.p16f_done, G.flags.p16f_tip, G.flags.p16f_seen].join(','), gate: m.get(28, 19) === null && m.get(28, 20) === null, raft: m.entities.find(e => e.p16fRaft).hidden === true, base: m.baseCount === m.entities.length, pos: Math.hypot(Engine.cam.x - 20.5, Engine.cam.y - 12.5) < 0.6 };
+        o.back = { map: G.mapId, flags: [G.flags.p16f_lock, G.flags.p16f_q, G.flags.p16f_done, G.flags.p16f_tip, G.flags.p16f_seen].join(','), gate: m.get(28, 19) === null && m.get(28, 20) === null, raft: m.entities.find(e => e.p16fRaft).hidden === true, base: m.entities.length >= m.baseCount && m.entities.slice(m.baseCount).every(e => e.transient),   // other modules' people (R4) stand past baseCount, never saved
+         pos: Math.hypot(Engine.cam.x - 20.5, Engine.cam.y - 12.5) < 0.6 };
         // in the Wash during a surge: nothing of the water is saved; it comes back quiet (other modules' transient
         // entities, such as library26's found book on the road, may sit past baseCount: never saved, never a wave)
         T.reset(); T.go('flume_road', 30.5, 12.5, 0); T.quiet(); T.phase('surge', 5); T.step(3);

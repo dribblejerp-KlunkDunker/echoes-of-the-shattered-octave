@@ -98,21 +98,21 @@ Gate: tests per system (`test/r3narrow28.test.js`, `js/narrow28.js`); a recorded
 - [x] **Faction standing (canon's Concordance)** fed by choices already made. It moves only prices, a line from Harrow and from Hetty, and one ending line. No numbers on screen.
 
 ### R4 — Fill the thin places
-Gate: every listed map has people, something to use, and a reason to be there; screenshots of each.
-- [ ] **The Watch Downs:** currently empty. People and props, danger stays 0 (Author Rulings 93–95).
-- [ ] **Wethercombe and the Bellwether:** 4 people. Farmsteads open, the inn usable, and the "no sheep" line given a speaker.
-- [ ] **The Flume Road:** no people. Ennis Crowle the beekeeper, tied to Telling the Bees.
-- [ ] **The tannery:** no people. Opens onto the Hollow (R5).
-- [ ] **The Low Rings and Stillwater Landing:** people and trade fit for a "smugglers' town".
-- [ ] **Oakhaven's barred doors:** 21 of 34. Open the baker's and chandler's interiors, which the roadmap claims but whose doors are still barred.
-- [ ] **Small Oakhaven life:**
+Gate: every listed map has people, something to use, and a reason to be there; screenshots of each (`test/r4thin29.test.js`, `js/thin29.js`, `screenshots/p29-*.jpg`).
+- [x] **The Watch Downs:** currently empty. People and props, danger stays 0 (Author Rulings 93–95).
+- [x] **Wethercombe and the Bellwether:** 4 people. Farmsteads open, the inn usable, and the "no sheep" line given a speaker.
+- [x] **The Flume Road:** no people. Ennis Crowle the beekeeper, tied to Telling the Bees.
+- [x] **The tannery:** no people. Opens onto the Hollow (R5).
+- [x] **The Low Rings and Stillwater Landing:** people and trade fit for a "smugglers' town".
+- [x] **Oakhaven's barred doors:** 21 of 34. Open the baker's and chandler's interiors, which the roadmap claims but whose doors are still barred.
+- [x] **Small Oakhaven life:**
   - The iron-oaks chime in the wind.
   - The morning sapling with a hand-saw beside it.
   - The baker's wife punching dough down all night.
   - The sexton salting graves.
   - The daily tanker-wagon.
   - Dogs howling at noon.
-- [ ] **Named NPCs keep daily routines,** not just the 6 generic townsfolk.
+- [x] **Named NPCs keep daily routines,** not just the 6 generic townsfolk.
 
 ### R5 — New areas inside Book One (6 planned, 8 at most)
 Gate: each joins a map that is already reachable, keeps the Hedge rule, closes cleanly at the Greening or the Kestrel's departure, and has French and tests.
