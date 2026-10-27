@@ -65,10 +65,11 @@ const ok = (m) => console.log('PASS ' + m);
       res.wantShop = LIBRARY.BOOKS.filter(b => b.how === 'shop').length;
       res.vaneShop = (NPCS.vane.shop || []).filter(s => LIBRARY.isBook(s.item)).length;
       // found books and flyleaves
-      const fb = LIBRARY.BOOKS.find(b => b.how === 'quest' && b.quest === 'shelver');
+      const fb = LIBRARY.BOOKS.find(b => b.how === 'quest' && b.quest === 'shelver') || LIBRARY.BOOKS.find(b => b.how === 'found' && b.at !== 'lib_scriptorium');
       loadMap(fb.at); const ent = G.map.entities.find(e => e.libFound && e.item === fb.id);
       res.foundPlaced = !!ent; if (ent) pickUp(ent); res.picked = G.has(fb.id) && !G.map.entities.includes(ent);
-      const before = G.ledger.length; useItem(G.player.inv.find(s => s.id === fb.id)); res.ledger = G.ledger.length - before;
+      const before = G.ledger.length; useItem(G.player.inv.find(s => s.id === fb.id)); res.ledger = G.ledger.length - before; res.wantLedger = (fb.flyleaf || []).length;
+      renderLog(); res.logSection = !!document.querySelector('#lib-log'); closeModal(); G.state = 'play';
       loadMap(fb.at); res.notRespawned = !G.map.entities.some(e => e.libFound && e.item === fb.id);
       return res;
     });
@@ -76,8 +77,9 @@ const ok = (m) => console.log('PASS ' + m);
     assert(walk.started && walk.done && walk.tending && walk.gift && walk.returned, JSON.stringify(walk));
     assert.equal(walk.odileShop + walk.corvoShop + walk.vaneShop, walk.wantShop, 'every shop book is on sale');
     assert(walk.foundPlaced && walk.picked && walk.notRespawned, 'found book');
-    assert(walk.ledger >= 1, 'flyleaf names go into the Ledger');
-    ok('shelves read; Ilse\'s quest returns the books, teaches the tending breath and gives her book; shops sell; found books pick up once; flyleaf names reach the Ledger');
+    assert.equal(walk.ledger, walk.wantLedger, 'flyleaf names go into the Ledger');
+    assert(walk.logSection, 'the logbook offers your library');
+    ok('shelves read; Ilse\'s quest returns the books and teaches the tending breath; shops sell; found books pick up once; flyleaf names reach the Ledger; the logbook offers the library');
 
     // ---- every pile and found book in the real game: on open floor, off doors and solids
     const spots = await page.evaluate(() => {

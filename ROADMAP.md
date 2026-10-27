@@ -130,7 +130,6 @@ Gate: owner picks from this list after the R1–R4 playtest; nothing here is req
 Gate: the owner signs off.
 - [ ] **A full human playtest on real hardware,** in English and French. Feel, pacing, difficulty, loudness and timing can't be judged headless.
 - [ ] **Finish the remaining drawn stand-ins:**
-  - The second statue and the stone head.
   - The third grass tuft and the second reed.
   - Posters two and three.
   - The second Synod notice.
@@ -359,7 +358,7 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[x]` Painted ground (P20b): four grass tiles and two mosses painted at load from each map's own tile, laid cell by cell (clover in the hollows, straw on the flats, trodden earth by roads and doors) on every grass and moss map.
 - `[x]` Painted walls (P20b): three more house fronts and two more stone courses; one face per building or run of wall.
 - `[x]` Tree variety (P20b): the oak in three colours, the willow in two, half of them turned about, by where they stand.
-- `[x]` Painted pieces (P20b): paintings for the barrel, crate, hand-cart, broken cart, broken statue, bones, two grass tufts, a reed, a wall notice, a Synod notice and a moss patch (img/painted20/, from Canva's image generator, keyed by tools/art/painted20/key.py). The open and side barrels followed (October 2026). The mosses, cracks and scorch marks followed, rendered by Blender (tools/art/decals/marks.py). Still drawn stand-ins: the second statue, the stone head, the third tuft, the second reed, the other two posters and the second Synod notice; NPCs keep their one painted view (they face you, as in Daggerfall).
+- `[x]` Painted pieces (P20b): paintings for the barrel, crate, hand-cart, broken cart, broken statue, bones, two grass tufts, a reed, a wall notice, a Synod notice and a moss patch (img/painted20/, from Canva's image generator, keyed by tools/art/painted20/key.py). The open and side barrels followed (October 2026). The mosses, cracks and scorch marks followed, rendered by Blender (tools/art/decals/marks.py). The second statue and the stone head were painted in October 2026. Still drawn stand-ins: the third tuft, the second reed, the other two posters and the second Synod notice; NPCs keep their one painted view (they face you, as in Daggerfall).
 - `[x]` The horizon country (P20 HORIZON, P22, P20b): the Watch Downs and Wethercombe are walkable country beyond the walls; Oakhaven is drawn past the Hedge from the clearing and the Downs; the far ground beyond a map's edge now runs on every outdoor height-mapped map (P20b). The Chapel bell stays undrawn: the story keeps the frame empty until it rings (the belfry and the empty frame are drawn, P20).
 - Owner's decisions: brick nogging on one Oakhaven house in three, keep or cut? Go on with Canva's image generator for the remaining drawn stand-ins, or keep those drawn? (Phase 20b text document.)
 

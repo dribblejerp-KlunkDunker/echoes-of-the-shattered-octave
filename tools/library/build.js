@@ -44,7 +44,6 @@ function load() {
     if (seen.has(b.id)) errors.push(at + 'duplicate id'); seen.add(b.id);
     if (titles.has(b.title)) errors.push(at + 'duplicate title'); titles.add(b.title);
     if (b.genre && !GENRES.includes(String(b.genre).toLowerCase())) errors.push(at + 'unknown genre ' + b.genre);
-    if (b.where && !MAPS.includes(b.where)) errors.push(at + 'unknown map ' + b.where);
     if (b.style && !STYLES.includes(b.style)) errors.push(at + 'unknown style ' + b.style);
     if (!Array.isArray(b.text) || !b.text.length || b.text.some(p => typeof p !== 'string' || !p.trim())) { errors.push(at + 'text must be non-empty paragraphs'); continue; }
     if (b.text.some(p => /<\/?[a-z][^>]*>/i.test(p))) errors.push(at + 'HTML in text');

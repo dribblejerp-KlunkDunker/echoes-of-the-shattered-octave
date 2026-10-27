@@ -73,7 +73,7 @@ const G = T.G;
 G.player = { name: 'Reader', cls: { name: 'x' }, hp: 30, hpMax: 30, voice: 10, voiceMax: 10, fat: 100, fatMax: 100, inv: [], weapons: ['sword'], weapon: 0,
   armor: {}, attrs: { Personality: 50, Strength: 50 }, skills: {}, songs: ['murmur'], gold: 20, level: 1, xp: 0, kills: 0, pellets: 0, bolts: 0 };
 G.flags = {}; G.journal = []; G.ledger = []; G.maps = T.buildAllMaps();
-const shelved = [...new Set(B.map(b => b.where))];
+const shelved = [...new Set(B.filter(b => b.how === 'pile').map(b => b.at))];
 for (const id of shelved) {
   const m = G.maps[id];
   if (!m) continue;   // built by later modules (flume, greenroot, sheepwalk, kestrel, heist): the browser test checks those
@@ -87,13 +87,14 @@ for (const id of shelved) {
   assert(!m.entities.some(o => o !== p && (o.x - p.x) ** 2 + (o.y - p.y) ** 2 < 0.8 ** 2), 'pile on top of something on ' + id);
 }
 for (const [id, m] of Object.entries(G.maps)) if (!shelved.includes(id)) { L.place(m, id); assert(!m.entities.some(e => e.libPile), 'no pile on ' + id); }
-console.log('PASS placement: one non-solid pile on each of ' + shelved.filter(id => G.maps[id]).length + ' maps, off doors and furniture, idempotent');
+console.log('PASS placement: one non-solid pile on each of ' + shelved.filter(id => G.maps[id]).length + ' pile maps built here, off doors and furniture, idempotent');
 
 // ---- reading: from the pile, marks it read once, consumes nothing; the logbook library lists it; saves keep it
-T.loadMap('tavern');
+const pileMap = shelved.find(id => G.maps[id]);
+T.loadMap(pileMap);
 const pile = G.map.entities.find(e => e.libPile);
 if (pile) {
-  const inv = JSON.stringify(G.player.inv), here = L.booksAt('tavern');
+  const inv = JSON.stringify(G.player.inv), here = L.booksAt(pileMap);
   T.useDeco(pile);
   assert.equal(sandbox.lastEvent.title, 'Books');
   assert.equal(sandbox.lastEvent.choices.length, here.length + 1);
