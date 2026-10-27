@@ -87,7 +87,7 @@ const ok = (m) => console.log('PASS ' + m);
     assert.equal(once.back, false); assert.equal(once.extras, 0); assert.equal(once.baseSaved, 0);
     assert.equal(once.flag, true); assert.equal(once.still, false);
     ok('a collected page never respawns over map changes, save and load; pages are never written into the save');
-    const chapelP = await page.evaluate(() => { loadMap('chapel'); return G.ents.some(x => x.tobinPage === 3); });
+    const chapelP = await page.evaluate(() => { loadMap('chapel'); const n = TOBIN.PAGES.find(p => p.map === 'chapel').n; return G.ents.some(x => x.tobinPage === n); });
     assert(chapelP, 'other pages are still waiting after a load');
 
     // ---- order and numbering in the logbook
@@ -98,7 +98,7 @@ const ok = (m) => console.log('PASS ' + m);
       return { h: sec.querySelector('h3').textContent, items: [...sec.querySelectorAll('[role=listitem]')].map(x => x.textContent), first: document.querySelector('#modal-panel').firstElementChild.tagName + ' ' + [...document.querySelectorAll('#modal-panel h3')].map(h => h.textContent).join('|') };
     });
     assert.equal(log.h, 'Tobin\'s Journal (3/12)');
-    assert.equal(log.items.length, 12); assert.equal(log.items[1], '2. The long cane'); assert.equal(log.items[4], '5. Such resonances as lie beneath'); assert.equal(log.items[8], '9. The lullaby'); assert.equal(log.items[0], '1. (not found)');
+    assert.equal(log.items.length, 12); assert.equal(log.items[1], '2. The long cane'); assert.equal(log.items[4], '5. Such resonances as lie beneath'); assert.equal(log.items[8], '9. A congregation of hounds'); assert.equal(log.items[0], '1. (not found)');
     assert(log.first.indexOf('Tobin') < log.first.indexOf('The Rite'), 'section sits above the entries: ' + log.first);
     if (SHOTS) { await page.waitForTimeout(300); await page.screenshot({ path: SHOTS + '/logbook-3of12.png' }); }
     await page.locator('[data-tobin-page="5"]').click();

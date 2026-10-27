@@ -20,7 +20,7 @@
 //     depth and material buffers stay as they were, so later passes treat these pixels as the far air they stand in.
 //  3. THE CHAPEL BELL (switch "Chapel belfry", GFX.belfryArt). The Chapel's bell-tower gets its open belfry stage: two
 //     round-headed openings a face, and through them the oak bell-frame with its hooks EMPTY. The story keeps it empty:
-//     the four bells were "taken for bore-teeth, 412 SR" (the frame's chalk, js/game.js), Tobin's register says the great
+//     the four bells were "taken for bore-teeth, 417 SR" (the frame's chalk, js/game.js), Tobin's register says the great
 //     bell came down and did not ring, the Book One manuscript says the Synod requisitioned every bell in the Reach and
 //     that at the Greening "the whole town rang like a struck carillon, and there was not one bell in it", and no flag
 //     anywhere in the game puts a bell back or rings one. So no bell is ever drawn. The one change the story makes to the

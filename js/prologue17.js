@@ -149,7 +149,7 @@ const PROLOGUE17 = (function () {
       listen: S('Listen.'),
       still: S('Do not turn round.'),
       l1: S('Low. Warm. A little hoarse, the way it always was at the end of the day, from singing in the orchards. A man\'s voice. Your father\'s, as it was before they took him.'),
-      l2: S('The Hedge was planted to swallow sound. Everything Oakhaven said for two years went into the thorn and was kept there: every word, every cry, every song. And your father lived inside it for the last weeks before they took him, in the autumn it was planted, saying your name every evening at the supper table.'),
+      l2: S('The Hedge was planted to swallow sound. Everything Oakhaven said for two years went into the thorn and was kept there: every word, every cry, every song. Your father never stood inside it. They took him at the Pellow farm in the spring, before there was any thorn. But a week later the voice began at the edge of the fields, and when there was a Hedge it came to the Hedge, and it has said your name there every evening since.'),
       q2: S('"Lyra-love. Come round where I can see you."'),
       whoTitle: S('Who is that?'),
       w1: S('Seraphina comes up beside you in the snow, and stops. Behind you, the Aegis\'s knee grinds.'),

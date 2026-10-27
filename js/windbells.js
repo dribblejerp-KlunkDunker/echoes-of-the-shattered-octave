@@ -21,7 +21,7 @@
 //  after the builds (same pattern as scenery.js), so saves and entity indexes never shift.
 //
 //  The Chapel of the Carillon gets no visible bell on purpose: its four bells were "taken
-//  for bore-teeth, 412 SR" (the frame's chalk, data.js townsfolk), no flag ever puts one
+//  for bore-teeth, 417 SR" (the frame's chalk, data.js townsfolk), no flag ever puts one
 //  back, and the town's whole mood is that nobody has rung a bell since.
 // ============================================================
 'use strict';
