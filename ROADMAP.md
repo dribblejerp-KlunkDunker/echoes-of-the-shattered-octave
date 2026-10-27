@@ -141,12 +141,12 @@ Gate: owner picks from this list after the R1–R4 playtest; nothing here is req
 ### R7 — Release preparation
 Gate: the owner signs off.
 - [ ] **A full human playtest on real hardware,** in English and French. Feel, pacing, difficulty, loudness and timing can't be judged headless.
-- [ ] **Finish the remaining drawn stand-ins:**
+- [x] **Finish the remaining drawn stand-ins:**
   - The third grass tuft and the second reed.
   - Posters two and three.
   - The second Synod notice.
 
-  A Canva batch is scheduled. Optional afterwards: 128-pixel textures, which only show on High and above.
+  Painted with Canva and keyed, October 2026. Optional afterwards: 128-pixel textures, which only show on High and above.
 - [ ] **Performance check** on a low-end laptop and a phone.
 - [ ] **Saves:** saves from earlier builds still load.
 - [ ] **Store copy written only from verified features,** with screenshots taken from the real build.
