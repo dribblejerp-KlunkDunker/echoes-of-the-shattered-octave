@@ -106,15 +106,15 @@ function wildsDispatch() {
   if (f.dispatch_read) return;
   f.dispatch_read = true;
   showEvent('The Arbiter\'s dispatch', 'Heavy paper, folded twice, the seal a tuning-fork in grey wax.<br><br><i>From the column of the Dread Arbiter, the Tramway.<br>To OC-742, or any officer finding this.<br><br>Report. The Arbiter will not divert the column for a cutter. Find the DK and keep listening. Note every name the archivist reads. The Cantor is not to be harmed.<br><br>— A.V.</i><br><br>Not to be harmed. Not "taken". Not "silenced". Somebody on the Tramway wants Lyra Ashgrove alive and singing, and is prepared to wait.', [{ t: 'Fold it away.', f: null }]);
-  journal('main', 'Lanterns in the Mist: the Arbiter\'s dispatch, signed A.V., says the column will not divert for a cutter; whoever finds the Kestrel is to keep listening and note every name Sable reads. The Cantor is not to be harmed. Lyra should know. So should Kaelen.');
+  journal('side', 'Lanterns in the Mist: the Arbiter\'s dispatch, signed A.V., says the column will not divert for a cutter; whoever finds the Kestrel is to keep listening and note every name Sable reads. The Cantor is not to be harmed. Lyra should know. So should Kaelen.');
 }
 
 // ---------------------------------------------------------------- the search party
 function wildsPartyCome(trail) {
   const f = G.flags;
-  f.party_come = true; if (trail) f.party_plan = 'trail';
+  f.party_come = true;
   wildsReveal('party_come');
-  journal('main', trail
+  journal('side', trail
     ? 'Lanterns in the Mist: an Office search party from the Arbiter\'s column is on the north-east cart-track: Outrider-Captain Hal Brennick, outriders with crossbows and hushwardens with felted bells. Vane gave me the listening-horn\'s wax cylinder. Set it going in the heart of the weaverling nests, south-west, and the Office will follow its own ears.'
     : 'Lanterns in the Mist: an Office search party from the Arbiter\'s column is on the north-east cart-track: Outrider-Captain Hal Brennick, outriders with crossbows and hushwardens with felted bells. Kill the captain and his lantern, and the column loses its eyes.');
 }
@@ -130,7 +130,7 @@ function wildsTrail(e) {
       wildsReveal('party_webbed');
       for (const o of G.maps.deepwoods.entities) if (o.until === 'party_webbed') o.hidden = true;
       msg('An hour later the lanterns come down off the track and into the south-west, following your voices, very carefully, very quietly. Then the webs start shaking. Then nothing.', 'good', 9000);
-      journal('main', 'Lanterns in the Mist: the search party followed the horn\'s recording into the weaverling nests. The brood took them all, captain and lantern and all. Brennick is wound in silk at the edge of the nests, and there may still be something in his coat.');
+      journal('side', 'Lanterns in the Mist: the search party followed the horn\'s recording into the weaverling nests. The brood took them all, captain and lantern and all. Brennick is wound in silk at the edge of the nests, and there may still be something in his coat.');
     } },
   ]);
 }

@@ -11,7 +11,7 @@ its sprite size with box filtering, lightly posterised to the game's painted-pix
 the procedural props have (scenery.js paint(), outline 0.58).
 """
 import os, sys
-from PIL import Image, ImageFilter
+from PIL import Image, ImageEnhance, ImageFilter
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -46,6 +46,12 @@ PIECES = [
     ('p_barrel_side', 'barrel_side.png', (72, 48), {'anchor': 'bottom', 'margin': 2}),
     ('p_statue_broken2', 'statue2.png', (72, 64), {'anchor': 'bottom'}),
     ('p_statue_head', 'statue_head.png', (36, 32), {'anchor': 'bottom', 'margin': 2}),
+    # the last of them: the third tuft, the second reed, posters two and three, the second Synod notice
+    ('p_grass3', 'grass3.png', (40, 34), {'anchor': 'bottom', 'tone': (0.62, 0.7)}),   # an autumn tuft, toned to sit with the other two
+    ('p_reed2', 'reeds2.png', (28, 96), {'anchor': 'bottom'}),
+    ('d_poster2', 'notice2.png', (64, 64), {'margin': 3}),
+    ('d_poster3', 'notice3.png', (64, 64), {'margin': 3}),
+    ('d_synod2', 'synod2.png', (64, 64), {'margin': 3}),
 ]
 
 
@@ -68,6 +74,10 @@ def finish(img, size, opts):
     bbox = img.split()[3].point(lambda v: 255 if v > 90 else 0).getbbox()
     if bbox: img = img.crop(bbox)
     if opts.get('flip'): img = img.transpose(Image.FLIP_LEFT_RIGHT)
+    if opts.get('tone'):   # (brightness, saturation): bring a bright painting down to its neighbours' key
+        a = img.split()[3]; rgb = img.convert('RGB')
+        rgb = ImageEnhance.Color(ImageEnhance.Brightness(rgb).enhance(opts['tone'][0])).enhance(opts['tone'][1])
+        img = rgb.convert('RGBA'); img.putalpha(a)
     sh_ = opts.get('shadow')
     if opts.get('fill'):
         out = img.resize((w, h), Image.BOX)

@@ -46,7 +46,7 @@ The rules:
 
 **Also fixed:** two Cantors called Ilse. Ilse Brennan is canon (Book Four), so the Greenroot Cantor (Phase 9, [PROPOSED]) is now Mabyn Verrow.
 
-**Softened at your call:** the lore book "The Folding of the Silent Veil (415 SR)" (upgrades.js, bk_veil) used to state the harvest as fact: names removed from living debtors to make orderly workers, at 741 Hz, with memories surrendered as bond. It is now a dry Office memorandum. The Veil is folded into the Office, and its vellum goes to the Organum. The Registrar-General finds the order's ways of recording a name "have uses beyond the keeping of the dead". The objecting scribes are sent to field ledgers and "not to be told what the ledgers are for". That is a suspicion, not an answer.
+**Softened at your call:** the lore book "The Folding of the Silent Veil" (upgrades.js, bk_veil) used to state the harvest as fact: names removed from living debtors to make orderly workers, at 741 Hz, with memories surrendered as bond. It is now a dry Office memorandum, dated c. 300 SR by the Series Bible's timeline. The Veil is folded into the Synod as the Office of the Catalogue; its House stays open under the Office's seal. The Registrar-General finds the order's ways of recording a name "have uses beyond the keeping of the dead". The objecting scribes are sent to field ledgers and "not to be told what the ledgers are for". That is a suspicion, not an answer.
 
 ## Weaker books (for a later pass)
 - **The Lamplighter's Second Note and A Year of Nights** share a device: an Oakhaven lamplighter courting with a two-note lamp reed. One should change.

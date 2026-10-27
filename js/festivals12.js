@@ -202,6 +202,7 @@ const FESTIVALS12 = (function () {
     },
     eel: {
       entry: S('Lanterns have come out along the Flume, low to the water, one every few paces. The eels are going down tonight, and everyone who owns a trap is on the bank. Nobody is talking. The eels can hear.'),
+      warn: S('Tonight is the Eel-Run. After dusk the Flume bank fills with lanterns and nobody speaks. It is one night only.'),
       stake: S('A paper lantern on a stake, low over the water. The eels go down toward the light.'),
       trap: S('A wicker eel-trap, weighted with a stone and set in the shallows.'),
       float: S('A paper lantern afloat on the Flume, going down with the eels.'),
@@ -257,7 +258,7 @@ const FESTIVALS12 = (function () {
   const cleanTxt = (s, n) => String(s == null ? '' : s).replace(/[<>&"`\\]/g, '').replace(/\s+/g, ' ').trim().slice(0, n || 40);
 
   // ---------------------------------------------------------------- flags: small validated integers
-  const FLAGS = { p12f_q: [0, 3], p12f_ask: [0, 1], p12f_try: [0, 100000], p12f_hung: [0, 1], p12f_seen: [0, 1], p12f_eel: [0, B.EEL_CAP], p12f_dl: [0, 100000], p12f_dls: [0, 99] };
+  const FLAGS = { p12f_q: [0, 3], p12f_ask: [0, 1], p12f_try: [0, 100000], p12f_hung: [0, 1], p12f_seen: [0, 1], p12f_eel: [0, B.EEL_CAP], p12f_dl: [0, 100000], p12f_dls: [0, 99], p12f_eelw: [0, 1] };
   function fint(k) {
     const r = FLAGS[k], v = flags()[k];
     return (typeof v === 'number' && Number.isInteger(v) && v >= r[0] && v <= r[1]) ? v : r[0];
@@ -1116,6 +1117,12 @@ const FESTIVALS12 = (function () {
     state.humT -= dt;
     if (state.humT <= 0) { state.humT = B.HUM_EVERY; if (humSong(0.032)) { if (!state.said.hum) { state.said.hum = true; say(TX.sheaf.hum, 'voice', 9000); } } }
   }
+  // The Eel-Run is one night: say so once, on its day, before dusk (R1: it could be missed without notice)
+  function tickEelWarn() {
+    if (fint('p12f_eelw') || gone(flags()) || phase() === 'rite' || phase() === 'off') return;
+    if (dayNow() !== B.EEL_DAY || todNow() < 0.25 || todNow() >= B.NIGHT_FROM) return;
+    fset('p12f_eelw', 1); try { msg(TX.eel.warn, 'warn', 7000); } catch (e) { /* no HUD */ }
+  }
   function tickClosure() {
     const f = flags();
     if (!(f.greening || f.escaped || f.part3)) return;
@@ -1133,7 +1140,7 @@ const FESTIVALS12 = (function () {
     if (!cfg.on) { if (state.had) { state.had = false; for (const id in (G.maps || {})) { try { removeAll(G.maps[id]); } catch (e) { /* ignore */ } } } return; }
     state.had = true;
     state.accT += dt;
-    if (state.accT >= 0.5) { state.accT = 0; tickClosure(); tickGrove(); tickScatter(); syncCurrent(); }
+    if (state.accT >= 0.5) { state.accT = 0; tickClosure(); tickEelWarn(); tickGrove(); tickScatter(); syncCurrent(); }
     if (G.state !== 'play') return;
     tickFish(dt); tickDrift(dt); tickPatrol(dt); censerSmoke(dt); tickSermon(dt); tickHum(dt);
   }
@@ -1220,7 +1227,7 @@ const FESTIVALS12 = (function () {
     phaseOf, phase, isDeadHour, isEelNight, isLanternNight, eelNight, lanternNight, crewOn, riteOn, questOpen, cutDone,
     ensureMap, syncCurrent, removeAll, specsFor, sayEntry, folkLine, sanitizeFlags, fint, fset,
     newCut, openCut, onCutResult, finishCut, get cutUi() { return cutUi; },
-    quietFish, tickFish, haul, state, eat, hangFigure, harrowQuest, dunnaQuest,
+    quietFish, tickFish, tickEelWarn, haul, state, eat, hangFigure, harrowQuest, dunnaQuest,
     lanternNames, setLantern, openLanterns, get lanternUi() { return lanternUi; }, cleanTxt,
     humSong, note, tick, startPatrol, tickPatrol, tickDrift, censerSmoke,
   };

@@ -89,7 +89,7 @@ function aegisWake() {
   }
   Audio_.sfx.press();
   msg('The Aegis stands up out of its alcove. Nine feet. DEFEND THE SINGERS, stencilled. Its torso-plates part, and something inside it begins to hum a chord.', 'bad', 8000);
-  setTimeout(() => msg(f.sable_joined ? 'From the doorway, very quietly, Sable says: "The board. Look at the board."' : 'Behind it, on the board by the risers, someone chalked HYMN 9 three years ago and nobody ever rubbed it out.', 'voice', 7000), 3200);
+  setTimeout(() => msg(f.sable_joined ? 'From the doorway, very quietly, Sable says: "The board. Look at the board."' : f.hymn_read ? 'HYMN 9. You read it on the board by the risers on your way in, and you have not forgotten it.' : 'Behind it, on the board by the risers, someone chalked HYMN 9 three years ago and nobody ever rubbed it out.', 'voice', 7000), 3200);
   if (!f.aegis_journal) { f.aegis_journal = true; journal('main', 'The Aegis Sentinel of the Cloister stood up out of its alcove: DEFEND THE SINGERS. It is iron and bell-bronze; blades do little. The hymn board behind the risers still reads HYMN 9.'); }
 }
 function chordBlast(e) {
@@ -194,7 +194,8 @@ function wgLadder() {
 // ---------------------------------------------------------------- people who are not quite people
 function talkCat() {
   const L = ['The cat looks at you, and then at the water, and decides the water is more interesting.', 'The cat does not care.', 'The cat permits you to scratch behind its ears, for exactly as long as it permits it, and not one breath longer.', 'The cat is not a Hollow. It remembers everything that happened here, and none of it impressed it.', 'The cat yawns at the Office of the Catalogue.'];
-  G.flags.cat_met = true; msg(L[rndi(0, L.length - 1)], '', 4500);
+  const first = !G.flags.cat_met; G.flags.cat_met = true;
+  msg(first ? 'The cat in the Sunken Court looks at you as if you are late, and then forgives you, slowly.' : L[rndi(0, L.length - 1)], '', 4500);
 }
 function talkLamplighter(e) {
   const f = G.flags;
@@ -239,7 +240,7 @@ function wgPickUp(e) {
   if (e.item === 'returns') journal('side', 'In the Malting\'s Tuning Room: Kaelen\'s own calibration returns from the Dawning, with his initials against line ninety-four. The Office keeps everything, including the Consortium\'s cross-files.');
   if (e.item === 'redcloak') msg('A child\'s red choir cloak. There is no name-tape in the collar. You fold it, the way you would fold something for someone.', 'voice', 6000);
   if (e.item === 'folder') {
-    journal('main', 'Under Kaelen\'s returns in the Tuning Room: a grey Arbiterium folder dated eight months before the Fracture. "The object of Stage 9 is not extraction. An Anchor will yield without limit if it believes it has been relieved." And a note: Engineer V. is not to be told, because his ear is more accurate when his conscience is not engaged.');
+    journal('side', 'Under Kaelen\'s returns in the Tuning Room: a grey Arbiterium folder dated eight months before the Fracture. "The object of Stage 9 is not extraction. An Anchor will yield without limit if it believes it has been relieved." And a note: Engineer V. is not to be told, because his ear is more accurate when his conscience is not engaged.');
     showEvent('The grey folder', 'Arbiterium grey, dated eight months before the Fracture. <i>The object of Stage 9 is not extraction. An Anchor will yield without limit if it believes it has been relieved.</i> And, in a different hand: <i>Engineer V. is not to be told. His ear is more accurate when his conscience is not engaged.</i>' + (G.player.glassed ? '<br><br>Then, very close, out of the glass in your own arm, a voice that is not yours: <i>"Two pieces of one Spire are one thing in two places. I keep a list too."</i> And nothing more.' : ''), [{ t: 'Put it in your shirt.', f: null }]);
   }
 }
