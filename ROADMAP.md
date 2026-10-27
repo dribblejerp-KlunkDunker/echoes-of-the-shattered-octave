@@ -61,6 +61,10 @@ Gate: each change checked against the Series Bible and Book One; French entries 
   - The noticeboard's public proctor bounty (upgrades.js:851).
   - Mutton on every menu in a starving town.
 - [ ] **Near-collisions:** Pellam Dree and Pellam Quist; Wenna Marl and Abbess Wenna; Annet Sorrel and Annet Sowerby.
+- [ ] **Found by the library writers:**
+  - Tomas has been "thinking about it since August", a real-world month (Phase 9 quest text). Use Vol VII's months.
+  - A letter in grove.js addresses "the Cloister of the Lost Choir" before 416, though canon says nobody remembers its old name.
+  - Book One's own "Leaffall" dates are not in Vol VII's calendar; the owner should rule on them.
 - [ ] **Reedcraft's "wind-reeds" become Flume-reeds** (reedcraft.js:54). Real wind-reeds died in 412.
 
 ### R3 — The Narrow comes home: make existing systems matter
@@ -130,7 +134,6 @@ Gate: owner picks from this list after the R1–R4 playtest; nothing here is req
 Gate: the owner signs off.
 - [ ] **A full human playtest on real hardware,** in English and French. Feel, pacing, difficulty, loudness and timing can't be judged headless.
 - [ ] **Finish the remaining drawn stand-ins:**
-  - The second statue and the stone head.
   - The third grass tuft and the second reed.
   - Posters two and three.
   - The second Synod notice.
@@ -140,6 +143,63 @@ Gate: the owner signs off.
 - [ ] **Saves:** saves from earlier builds still load.
 - [ ] **Store copy written only from verified features,** with screenshots taken from the real build.
 - [ ] **Credits and licences re-checked:** CREDITS.md and ASSETS.md.
+
+### R8 — The Library of the Reach
+Gate: books reviewed against canon and against each other; library tests green; screenshots of each library.
+- [x] **Four libraries you can walk into** (`js/libraries26.js`), each with painted bookshelf walls:
+  - the Conservatory Reading Room in Oakhaven, kept by Ilse Brennan;
+  - the Bonded Store at Stillwater, Odile Quayle's smugglers' book room;
+  - the Moot-house in Whisper-Grove, where a Hollow still shelves the town's books;
+  - the Scriptorium of the Silent Veil, in the Mausoleum.
+- [x] **Every way to come by a book** (`js/library26.js`): on a library shelf, in a pile where its readers live, for sale (Bastien Corvo, Odile, Vane), lying in the world, as a quest item, or as a gift. The logbook's "Your Library" rereads every book anywhere.
+- [x] **Three keepers' quests:**
+  - Ilse's lost books earn the tending breath.
+  - Odile's wet crate earns a friend's price.
+  - The Moot-house's named books put their owners' names in your Ledger.
+- [x] **The first wave of books: 65** (about 63,400 words, English drafts).
+  - Genres: history, lives and letters, tales and verse, craft and the natural world, faith, law and the press, the wider world, and the books of Whisper-Grove and the Veil.
+  - Each writer checked against canon, then one reviewer checked all 65 against each other.
+  - The owner's open questions and the weaker books are in `story/Game Layer/Library of the Reach - Notes for the Owner.md`.
+- [ ] **The owner rules on the library's open questions** (that file), then a pass revises the weaker books. The two lamplighter books share a device.
+- [ ] **A second wave of books.** More lives of canon minor figures, a Cantabile broadsheet run, children's books, and a book for each festival. Grow toward 100 without padding; every book needs a voice and an ending.
+- [ ] **Books that carry story.** See `story/Game Layer/Story Brainstorm - Book One in play.md` §3: books that set up the set-pieces below, such as Hymn 9's words and the eight pump-men.
+- [ ] **Art:** a painted Ilse Brennan (she uses the generic townswoman today), painted book and pile sprites, and painted library interiors.
+- [ ] **French for the books themselves.** The library's frame is translated; the books are English drafts until the owner signs them off.
+
+### R9 — Book One in play: the novel's set-pieces
+Source: `story/Game Layer/Story Brainstorm - Book One in play.md`, which has a chapter-by-chapter gap list with manuscript lines, a ranked table of 25 ideas, 13 choices with consequences, 24 contradictions, and 7 open questions for the owner.
+
+The game has the novel's plot but few of its set-pieces. Turn told beats into played ones, mostly by replacing fetch steps rather than adding new ones. The main story would grow from about 3–4.5 h to about 5–7 h, all of it novel scenes.
+
+Gate: each scene is playable start to finish, closes cleanly, and changes lines, never fails quests, when missed.
+- [ ] **Prerequisite: let the nine days happen while you are there.** Canon days become scheduled set-pieces (Brainstorm §3.1). Missing one changes lines, never fails a quest.
+- [ ] **1. The Greening, walked** (ch. 11). Sing a corridor through the drowning town, sing Orla down in her tree, and hold the sealed North Gate while the Hedge calls in the voices you let it learn. L.
+- [ ] **2. Grab the Line, played** (ch. 12). The winch, the hound on the rope, the count to ten. M–L.
+- [ ] **3. The Rite, from procession to pumps** (ch. 9–10). The town hums 174 under 528, the needle, "SING IT DOWN", and Aldric's count. L.
+- [ ] **4. The water-meadow** (ch. 6). The whistle duel, and Tam walking out singing. L.
+- [ ] **5. Hearthday at the Boar & Dulcimer** (ch. 4). Davin's song, ten counted seconds. M.
+- [ ] **6. Voice at the Door** (ch. 20). A don't-answer endurance scene that replaces the porch fight. M.
+- [ ] **7. The forty-one nights.** Lyra's arc, and the canon spine of her unbuilt companion quest. M.
+- [ ] **8. Ash in the Hold** (ch. 13). A playable night aboard the Kestrel between Parts Two and Three. M.
+- [ ] **9. The Wearer at the ring of lamps** (ch. 23), offered as the canon finale. M.
+- [ ] **10–25: the rest of the ranked table.** Includes:
+  - Tamsin Reed and "Tell Mam";
+  - "Read you three";
+  - the Legionnaire audit;
+  - the Church comes up the road;
+  - Cargo night;
+  - Aldric's, Orla's and Tobiah's arcs;
+  - the eight men at the pumps;
+  - the cutter chase;
+  - the Grafters' round;
+  - the Prologue and Echo I as extras.
+- [ ] **The brainstorm's 24 further contradictions,** folded into R2's canon sweep. Biggest:
+  - the crates are in Hetty's cellar, not the Kestrel's hold;
+  - Bettis Renn is a man in the game;
+  - Hob survives;
+  - the Wearer is fought three times.
+- [ ] **The owner rules on the open questions first:** whether Sable stays in the Reach, and whether the canon days may run while you are in Oakhaven.
+- **Model note:** set-pieces 1, 2, 3 and 4 are the most design-heavy. They are worth building with the strongest model available.
 
 **Avoid as bloat:**
 - More minigames, generic systems, new regions, currencies or crafting trees.
@@ -194,7 +254,7 @@ Every phase must retain the security regression tests and save/load behavior. Re
 - [x] Ground-hugging mist and darkness: weather mist plus permanent area mist in Whisper-Grove, the Deep Woods, the catacombs, the Mausoleum, the belfry and the clearing at night (`js/post.js`); torch-driven interiors — rooms are dark away from their lamps and hearths, and the lantern (U) lights the floor around you indoors and outdoors at night (`js/lighting.js`, `GFX.darkInteriors`).
 - [~] Higher-detail close-up wall artwork with asset-resolution and memory budgets: a close-range grain (stone grit and wood fibre) modulates walls within 2.5 units (`Engine.setDetail`), and every generated texture is counted against a 512 KB budget (256 KB used, pinned by `test/surfaces.test.js`). **Hand-made close-up art and resolution tiers pending.**
 - [~] Moss, cracks, scorch marks, posters and Synod notices as seeded wall detail layers: twelve decals placed deterministically per map: posters and Synod notices on Oakhaven walls by the cobbles (more by the Chapel and Greenhall), moss outdoors and in damp places, scorch in the quarry and dungeons, cracks in stone interiors (`js/decals.js`, `GFX.decals`). Phase 20b painted a wall notice, a Synod notice and a moss patch (`img/painted20/`); the other two mosses, both cracks and both scorch marks are rendered by Blender from procedural materials (`tools/art/decals/marks.py`, October 2026). **Still drawn stand-ins: the other two posters and the second Synod notice.**
-- [~] More barrels, crates, carts, broken statues, graves and bones, placed without blocking routes: props in Oakhaven, the clearing, the quarry, the Deep Woods, Whisper-Grove and the catacombs, each accepted only if a flood fill still reaches every door, portal, NPC, item and usable object, kept 1.6 from doors and off the roads (`js/scenery.js`). Transient: never saved, rebuilt on load. Phase 20b painted the barrel, crate, hand-cart, broken cart, broken statue and bones, the open and side barrels followed in October 2026, and every painted prop now keeps its stand-in's dithered contact shadow so it stands on the ground; Phase 25 gives the props depth. **Still drawn stand-ins: the second statue and the stone head.**
+- [x] More barrels, crates, carts, broken statues, graves and bones, placed without blocking routes: props in Oakhaven, the clearing, the quarry, the Deep Woods, Whisper-Grove and the catacombs, each accepted only if a flood fill still reaches every door, portal, NPC, item and usable object, kept 1.6 from doors and off the roads (`js/scenery.js`). Transient: never saved, rebuilt on load. Phase 20b painted the barrel, crate, hand-cart, broken cart, broken statue and bones, the open and side barrels followed in October 2026, and every painted prop now keeps its stand-in's dithered contact shadow so it stands on the ground; Phase 25 gives the props depth; the second statue and the fallen stone head were painted in October 2026, so no drawn prop stand-ins remain.
 - [~] Swaying, player-reactive grass and reeds: up to 120 tufts per outdoor map, reeds along banks and shallows, swaying with the weather's wind and bending away from you (more when running) (`js/flora.js`, `GFX.grass`). Phase 20b painted two grass tufts and a reed. **Still drawn stand-ins: the third tuft and the second reed.**
 - [x] Geographic landmark placement: the Mausoleum's tower is real geometry on a rise, seen across the Deep Woods from wherever you stand, and the Oakhaven Chapel has a real bell-tower over the town. Phase 20 draws Oakhaven, Chapel and all, past the Hedge from the clearing and the Watch Downs (`js/horizon20.js`).
 - [~] Modern look baseline: a 2x internal render resolution (640x300) with sharp or smooth upscaling, softer depth-graded fog, bloom on lamps, glass and fire, and per-area, per-hour colour grades are done (`Engine.setScale`, `js/post.js`, `js/presets.js`). **Higher-detail wall artwork at close range is a procedural stand-in (see above).**
@@ -359,7 +419,7 @@ Festivals: kept, as a second layer under the Eight Feasts. Festivals follow the 
 - `[x]` Painted ground (P20b): four grass tiles and two mosses painted at load from each map's own tile, laid cell by cell (clover in the hollows, straw on the flats, trodden earth by roads and doors) on every grass and moss map.
 - `[x]` Painted walls (P20b): three more house fronts and two more stone courses; one face per building or run of wall.
 - `[x]` Tree variety (P20b): the oak in three colours, the willow in two, half of them turned about, by where they stand.
-- `[x]` Painted pieces (P20b): paintings for the barrel, crate, hand-cart, broken cart, broken statue, bones, two grass tufts, a reed, a wall notice, a Synod notice and a moss patch (img/painted20/, from Canva's image generator, keyed by tools/art/painted20/key.py). The open and side barrels followed (October 2026). The mosses, cracks and scorch marks followed, rendered by Blender (tools/art/decals/marks.py). Still drawn stand-ins: the second statue, the stone head, the third tuft, the second reed, the other two posters and the second Synod notice; NPCs keep their one painted view (they face you, as in Daggerfall).
+- `[x]` Painted pieces (P20b): paintings for the barrel, crate, hand-cart, broken cart, broken statue, bones, two grass tufts, a reed, a wall notice, a Synod notice and a moss patch (img/painted20/, from Canva's image generator, keyed by tools/art/painted20/key.py). The open and side barrels followed (October 2026). The mosses, cracks and scorch marks followed, rendered by Blender (tools/art/decals/marks.py). The second statue and the stone head were painted in October 2026. Still drawn stand-ins: the third tuft, the second reed, the other two posters and the second Synod notice; NPCs keep their one painted view (they face you, as in Daggerfall).
 - `[x]` The horizon country (P20 HORIZON, P22, P20b): the Watch Downs and Wethercombe are walkable country beyond the walls; Oakhaven is drawn past the Hedge from the clearing and the Downs; the far ground beyond a map's edge now runs on every outdoor height-mapped map (P20b). The Chapel bell stays undrawn: the story keeps the frame empty until it rings (the belfry and the empty frame are drawn, P20).
 - Owner's decisions: brick nogging on one Oakhaven house in three, keep or cut? Go on with Canva's image generator for the remaining drawn stand-ins, or keep those drawn? (Phase 20b text document.)
 
