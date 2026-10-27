@@ -223,11 +223,12 @@ const LIBRARY = (function () {
   // ---------------------------------------------------------------- your library (logbook)
   function decorateLog() {
     const panel = typeof document !== 'undefined' && document.getElementById('modal-panel');
-    if (!panel || panel.querySelector('#lib-log') || !BOOKS.length) return;
+    // the section appears once the first book is read, so a new game's logbook starts with its quests
+    if (!panel || panel.querySelector('#lib-log') || !BOOKS.length || !count()) return;
     const sec = document.createElement('section'); sec.id = 'lib-log'; sec.className = 'lib-log';
     const h = document.createElement('h3'); h.textContent = 'Your Library (' + count() + '/' + BOOKS.length + ')'; sec.appendChild(h);
     const p = document.createElement('p'); p.className = 'muted';
-    p.textContent = count() ? 'Every book you have read, to read again anywhere.' : 'Books are shelved in houses, halls and camps across the province. Read one and it is yours to reread.';
+    p.textContent = 'Every book you have read, to read again anywhere.';
     sec.appendChild(p);
     const b = document.createElement('button'); b.className = 'dfbtn small'; b.type = 'button'; b.id = 'lib-open'; b.textContent = 'Open your library';
     b.onclick = () => renderLibrary(); sec.appendChild(b);

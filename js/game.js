@@ -199,13 +199,33 @@ function loadMap(id, pos) {
   if (id === 'catacombs') syncCatacombsPuzzles();
   G.fadeT = 0.5;
 }
+// The point of no return (R1): going down the shaft starts the Rite, closes the heists and, with the Greening, Oakhaven.
+// Only threads the player has begun and not finished are listed; nothing here changes a flag.
+function riteOpenThreads() {
+  const f = G.flags, left = [];
+  if (f.tam_met && !f.tam_told && !f.tam_left) left.push('Old Tam is still waiting for an honest answer by the Flume.');
+  if (f.twins_found && !f.twins_named) left.push('The Wendle twins are not yet in your ledger.');
+  if (typeof G.has === 'function' && G.has('boots') && !f.boots_delivered) left.push('Orla Hale\'s boots are still in your pack.');
+  if (f.crates_heard && !f.vane_told) left.push('Vane does not know what is in Hetty\'s crates.');
+  if (f.p12f_q === 1) left.push('The Last Sheaf is still to be cut in the dead hour.');
+  return left;
+}
+function riteWarning(portal) {
+  const left = riteOpenThreads();
+  showEvent('The shaft', 'The cage hangs over the dark, and the Pure Note comes up out of it. This is the Rite. Oakhaven will not be the same after tonight: the heists close, and when the Greening comes, the town goes with it.' + (left.length ? '<br><br>Still open:<br>' + left.join('<br>') : ''), [
+    { t: 'Go down.', f: () => { G.riteOk = true; transfer(portal); } },
+    { t: 'Not yet.', f: null },
+  ]);
+}
 function transfer(portal) {
   if (G.mapId === 'watchhouse' && portal.map === 'oakhaven') { leaveWatchhouse(); return; }
   let pos = null; const target = G.maps[portal.map];
   if (portal.useSpawn === 'shaft' && target.shaftReturn) pos = target.shaftReturn;
   else if (portal.useSpawn === 'shaft' && target.named && target.named.shaft) { const s = target.named.shaft; pos = { x: s.cx + 0.5, y: s.cy + 1.2, dir: Math.PI / 2 }; }
   else if (portal.useSpawn) pos = target.spawn; else pos = { x: portal.x, y: portal.y, dir: portal.dir };
-  // the Rite begins when you take the shaft down with the pass
+  // the Rite begins when you take the shaft down with the pass: say so first, once per attempt, and list what is still open
+  if (portal.map === 'rootvault' && !G.flags.rite_started && !G.riteOk && typeof showEvent === 'function') { riteWarning(portal); return; }
+  G.riteOk = false;
   if (portal.map === 'rootvault' && !G.flags.rite_started) { G.flags.rite_started = true; G.day = 10; G.tod = 0.42; journal('main', 'Hearthday. The Church holds the Pure Note over Oakhaven; the town hums the Root note under it, too quietly to punish. They have walked Lyra down in white. I go down by the shaft with the coil.'); }
   loadMap(portal.map, pos);
 }
@@ -693,7 +713,7 @@ function attack(dirLabel) {
   const p = G.player; const w = currentWeapon(); if (G.attack.t > 0 || G.song.t > 0) return;
   if (w.type === 'glass' && G.glassLock > 0) { msg('Your glass arm is locked rigid, ringing flat.', 'bad', 1500); return; }
   if (w.ammo) {
-    const k = w.ammo; if (!((p[k] || 0) > 0)) { msg(k === 'bolts' ? 'No bolts. Captain Vane sells them at the Boar & Bell.' : 'No glass shot. A sovereign a pellet, and you have none loaded.', 'bad'); return; }
+    const k = w.ammo; if (!((p[k] || 0) > 0)) { msg(k === 'bolts' ? 'No bolts. Captain Vane sells them at the Boar & Dulcimer.' : 'No glass shot. A sovereign a pellet, and you have none loaded.', 'bad'); return; }
     p[k]--; if (k === 'bolts') Audio_.sfx.bow(); else Audio_.sfx.shot();
   }
   else Audio_.sfx.swing();
@@ -1552,6 +1572,7 @@ function checkTriggers() {
       ]);
     }
     if (t.id === 'mast') {
+      if (G.flags.part3 || G.flags.part4) continue;   // Part Two's ending happens once; later parts never replay it
       if (!G.flags.greening) { if (!t.said) { t.said = true; msg('The Drift-Kestrel hangs from the mast, her lift-tanks murmuring. Six feet of rope coil on the deck. Nobody is aboard who will talk to you yet.', '', 6000); } continue; }
       if (G.flags.hedge_answered && !G.flags.wearer_spawned) {
         G.flags.wearer_spawned = true; Audio_.sfx.voice();

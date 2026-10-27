@@ -103,6 +103,10 @@ const HANGER22 = (function () {
     lostJournal: S('Kit Farrant went out after a bleat in the night and has not come back. Tamar thinks he went toward the Hanger.'),
     foundJournal: S('I found Kit in the last chamber of Ewe Barrow, behind the Old Fleece, and brought him out.'),
     homeJournal: S('Kit is home at the fold. Tamar gave me the Farrants\' crook.'),
+    huntClosed: S('As far as I know the Woolwight still hunts the Downs by night. I left it there when we left the Reach.'),
+    woolClosed: S('I never brought Tamar the Woolwight\'s wool. Whatever it was pulling out from under the Hedge, the Hedge is behind us now.'),
+    kitFoundClosed: S('I brought Kit out of Ewe Barrow, but we left the Reach before I could tell Tamar. I hope he found the fold by himself.'),
+    kitLostClosed: S('Kit Farrant was still out when we left the Reach. I did not find him in time.'),
     boss: S('The Old Fleece is down. Its bell rolls across the floor of the chamber and stops, and for the first time it rings.'),
     camp: {
       notOutdoors: S('You need open country and sky to pitch a camp.'),
@@ -596,6 +600,16 @@ const HANGER22 = (function () {
     p22_kitlost: { name: S('Kit Farrant'), sprite: 'p22_kit', portrait: 'pim', tier: 'low', scale: 0.74,
       greet: { polite: TX.kit.lost, normal: TX.kit.lost, blunt: TX.kit.lost }, topics: {}, quest: () => kitLostQuest() },
   };
+  // Leaving the Reach closes the three that are begun and unfinished, once each (R1).
+  const leftReach = () => hasG() && !!(G.flags.greening || G.flags.escaped || G.flags.part3 || G.flags.part4);
+  function closeAtLeaving() {
+    if (!leftReach()) return;
+    const w = flag('wool', 3), k = flag('kit', 5);
+    const close = (key, line) => { if (flag(key)) return; setFlag(key, 1); journal('side', line); };
+    if (flag('heard') && !flag('boss') && k < 4) close('hunt_closed', TX.huntClosed);
+    if (w >= 1 && w < 3) close('wool_closed', TX.woolClosed);
+    if (k >= 2 && k < 5) close('kit_closed', k === 4 ? TX.kitFoundClosed : TX.kitLostClosed);
+  }
   function kitLostQuest() {
     const k = kitStage();
     if (k >= 1 && k <= 3) {
@@ -892,7 +906,7 @@ const HANGER22 = (function () {
     }
     if (typeof loadMap === 'function') {
       const _l = loadMap;
-      loadMap = function (id) { const r = _l.apply(this, arguments); try { syncMap(id); } catch (e) { warnOnce('load', e); } return r; };
+      loadMap = function (id) { const r = _l.apply(this, arguments); try { closeAtLeaving(); } catch (e) { warnOnce('close', e); } try { syncMap(id); } catch (e) { warnOnce('load', e); } return r; };
     }
     if (typeof update === 'function') {
       const _u = update;
@@ -927,7 +941,7 @@ const HANGER22 = (function () {
   }
   wire();
 
-  return { COMBE, HANGER, BARROW, GAP_COMBE, GAP_HANGER, NEST, SARSEN, TX, TEXTS: LIST, stats, H, ENEMY_DEFS, WEAPON_DEFS, ARMOR_DEFS, FOOD, ROAST,
+  return { closeAtLeaving, COMBE, HANGER, BARROW, GAP_COMBE, GAP_HANGER, NEST, SARSEN, TX, TEXTS: LIST, stats, H, ENEMY_DEFS, WEAPON_DEFS, ARMOR_DEFS, FOOD, ROAST,
     barrowOpen, woolStage, kitStage, pitchCamp, strikeCamp, startFish, haul, waterNear, hunters, spawnHunter, lightsHere, syncMap, buildHanger, buildBarrow };
 })();
 if (typeof window !== 'undefined') window.HANGER22 = HANGER22;

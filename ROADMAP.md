@@ -15,23 +15,25 @@ This is the authoritative order of work before the game goes on sale. It comes f
 
 ### R1 — Release blockers: bugs and promises
 Gate: every fix has a regression test; the full test suite passes; a playthrough of Parts 2→3→4 hits none of these.
-- [ ] **Story-breaking route.**
+Done in code, October 2026: one check per item in `test/r1release27.test.js`. The playthrough of Parts 2→3→4 is still owed.
+- [x] **Story-breaking route.**
   - In Parts 3 and 4, the Whisper-Grove and Deep Woods noticeboards offer "Enter Your House on Cooper's Row". Its door leads to Oakhaven, where the mast replays the Part Two ending (upgrades.js:856, 1256–1262; game.js:1555–1564).
-  - Hide the house after Part 3 starts, and guard the mast trigger.
-- [ ] **Point-of-no-return warning.**
+  - Hide the house after Part 3 starts, and guard the mast trigger. Done: the board shows the house "left behind in Oakhaven", and the mast never replays Part Two in Parts 3 and 4.
+- [x] **Point-of-no-return warning.**
   - A one-time confirmation before the shaft sets `rite_started` (game.js:209), listing the Oakhaven quests still open.
   - Part 3's mast ladder already does this (grove.js:180–190).
-- [ ] **Close the six Sheep-Walk and Hanger quests** at the Greening, with closing logbook lines (sheepwalk22.js:780–809, 1331; hanger22.js:605–682).
-- [ ] **Log optional quests as side quests,** not main: Lanterns in the Mist, Ignatius, the grey folder, Kaelen telling Lyra (wilds.js:109, 117, 133; data.js:509, 684, 980; grove.js:242).
-- [ ] **Year 417:** the board says the cairn is "near the culvert", but it stands at the west edge of the clearing (upgrades.js:855, 1250).
-- [ ] **The Red Cloak dead-ends** when Sable isn't travelling with you (data.js:1001–1003).
-- [ ] **Small things:**
+  - Done: "The shaft" asks first, and lists Tam, the twins, Orla's boots, Hetty's crates and the Last Sheaf when they are begun and unfinished.
+- [x] **Close the six Sheep-Walk and Hanger quests** at the Greening, with closing logbook lines (sheepwalk22.js:780–809, 1331; hanger22.js:605–682).
+- [x] **Log optional quests as side quests,** not main: Lanterns in the Mist, Ignatius, the grey folder, Kaelen telling Lyra (wilds.js:109, 117, 133; data.js:509, 684, 980; grove.js:242).
+- [x] **Year 417:** the board says the cairn is "near the culvert", but it stands at the west edge of the clearing (upgrades.js:855, 1250). It now says "under the western oaks".
+- [x] **The Red Cloak dead-ends** when Sable isn't travelling with you (data.js:1001–1003). Without her you can sit with the Aegis, and the thread ends.
+- [x] **Small things:**
   - "the Boar & Bell" should be "the Boar & Dulcimer" (game.js:696).
   - Remove the duplicate Harrow branch (data.js:338).
-  - Give the six write-only flags a consequence, or remove them: `halder_told`, `herald_answered`, `aegis_how`, `hymn_read`, `party_plan`, `cat_met`.
-  - Warn before the Last Sheaf and the Eel-Run can be missed.
-- [ ] **Documents match the game.**
-  - The README's strongbox count is 26, not 13.
+  - Give the six write-only flags a consequence, or remove them: `halder_told`, `herald_answered`, `aegis_how`, `hymn_read`, `party_plan`, `cat_met`. Five now change a line or guard a scene; `party_plan` duplicated `party_come` and is gone.
+  - Warn before the Last Sheaf and the Eel-Run can be missed. The Eel-Run is announced on its day; an uncut Last Sheaf is named at the shaft.
+- [x] **Documents match the game.**
+  - The README's strongbox count is 32 now (Greenroot and the Flume added six since the audit), and a test keeps it honest.
   - The domain roadmap below now marks what isn't built; build those features or keep them off the store page.
 
 ### R2 — Canon sweep
@@ -44,10 +46,10 @@ Gate: each change checked against the Series Bible and Book One; French entries 
 - [ ] **The Cloister's name-tapes** follow canon's list in ch. 20: Orry, Ben Dray, A. SOWERBY and the others. Drop Elsie Fenn (data.js:637).
 - [ ] **The lore books:**
   - "On the Eight Anchors": wrong Hz and Anchors (upgrades.js:715).
-  - The Veil's absorption: c. 300 SR (upgrades.js:727).
-  - The 417 register: the Pellow child, in spring (upgrades.js:719).
+  - [x] The Veil's absorption: c. 300 SR (upgrades.js:727). Done, and softened to a hint.
+  - [x] The 417 register: the Pellow child, in spring (upgrades.js:719). Done (owner's rulings, PR #63).
   - Use the canon skipping rhyme (upgrades.js:732).
-- [ ] **Tobin's journal pages 10–12** are dated after he was taken (tobin.js:109–124).
+- [x] **Tobin's journal pages 10–12** are dated after he was taken (tobin.js:109–124). Done: the journal now ends at the Pellows' table, spring 417 (PR #63).
 - [ ] **Tobin's Tuning-Blade cairn becomes his lyre by the stile.** Add his seven oiled reed-pipes in Lyra's house (upgrades.js:1311–1319; ch. 1).
 - [ ] **The heist's quarry lease is Aldric's signature,** not Mossbrook's (heist16.js:309, 401).
 - [ ] **Ignatius gives once and does not run a shop;** the stock moves to the sexton (data.js:606–610).
@@ -166,7 +168,8 @@ Gate: books reviewed against canon and against each other; library tests green; 
   - Genres: history, lives and letters, tales and verse, craft and the natural world, faith, law and the press, the wider world, and the books of Whisper-Grove and the Veil.
   - Each writer checked against canon, then one reviewer checked all 65 against each other.
   - The owner's open questions and the weaker books are in `story/Game Layer/Library of the Reach - Notes for the Owner.md`.
-- [ ] **The owner rules on the library's open questions** (that file), then a pass revises the weaker books. The two lamplighter books share a device.
+- [x] **The owner rules on the library's open questions.** Ruled and applied, October 2026 (PR #63).
+- [ ] **A pass revises the weaker books** listed in the owner notes. The two lamplighter books share a device.
 - [ ] **A second wave of books.** More lives of canon minor figures, a Cantabile broadsheet run, children's books, and a book for each festival. Grow toward 100 without padding; every book needs a voice and an ending.
 - [ ] **Books that carry story.** See `story/Game Layer/Story Brainstorm - Book One in play.md` §3: books that set up the set-pieces below, such as Hymn 9's words and the eight pump-men.
 - [ ] **Art:** a painted Ilse Brennan (she uses the generic townswoman today), painted book and pile sprites, and painted library interiors.

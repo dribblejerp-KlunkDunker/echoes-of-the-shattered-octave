@@ -406,7 +406,7 @@ The ground and the skyline now have real height. These are captured the same way
 - Synod disguises: buy Clerk Robes from Hob and wear them to fool distant ordinary Proctors and Legionnaires. Close visible inspection builds suspicion; retreat before it fills. Witnessed suspicious acts expose you for that area across saves. Monsters, bosses, combat, body searches, story locks and bounty arrests are unaffected. Y / touch Cover / controller Back shows status and wear/remove actions.
 - Body handling: face settled physical remains and press G to drag, drop or conceal them in marked shrouded recesses in Oakhaven, the Quarry and the Cloister. Dragging halves walking speed and prevents sprinting. Visible remains raise a one-time patrol alarm; a constable witnessing a drag adds a bounty. Bodies and alarms last for the current area visit only; loot and saved enemy deaths remain independent.
 - Throwable distractions: new travellers carry three stones and two empty bottles; more can be found in Oakhaven. Impacts attract idle guards and ordinary enemies, with shorter hearing through walls. Visible wanted players and active combat take priority. These empty bottles are not story Vox-Bottles.
-- Loot tables for enemies and 13 strongboxes hidden around the world.
+- Loot tables for enemies and 32 strongboxes hidden around the world.
 - An original orchestral score, including a Whisper-Grove theme built on Hymn 9, with a music director that changes the music as the situation changes.
 - Save slots for the session, save codes and save files.
 - Keyboard, mouse and touch controls.

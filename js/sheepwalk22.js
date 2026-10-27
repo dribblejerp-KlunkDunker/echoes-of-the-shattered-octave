@@ -212,6 +212,9 @@ const SHEEPWALK22 = (function () {
       ramDone: S('I scoured the Chalk Ram above Wethercombe. You can see him from the whole valley.'),
       fires: S('Absalom Rudd gave me his tinder-box to light the fold-fires: the Long Down on the Watch Downs, Hob\'s Knap above the orchard, and Ewe Barrow on the west ridge. A furze faggot for each, from the woodpile by the Farrants\' barn.'),
       firesDone: S('The three fold-fires are lit. They will burn on the Downs and over Wethercombe every night now.'),
+      flockClosed: S('We left the Reach before all of Tamar Farrant\'s ewes were home. I hope the ones still out on the Downs keep to the high grass.'),
+      ramClosed: S('The Chalk Ram above Wethercombe is only half scoured. Nobody will finish him now.'),
+      firesClosed: S('We left the Reach before all of Absalom Rudd\'s fold-fires were lit. He will light the rest himself, if he is still there to.'),
       pylon: S('I cut the singing wire on the pylon above Wethercombe. It was a Consortium tally-line, and it was still calling the hounds.'),
       truth: S('Tamar Farrant told me what became of the Downs flocks: shorn for the Hedge\'s wool, driven inside it, and eaten in the two shut years. Nothing took them. The town did.'),
     },
@@ -775,6 +778,15 @@ const SHEEPWALK22 = (function () {
   const silenced = () => flag('hum') === 1;
   const following = (i) => flockStage() >= 1 && found(i) && !home(i);
 
+  // Leaving the Reach (the Greening, the escape or Part Three) closes any of the three that is begun and unfinished, once (R1).
+  const leftReach = () => hasG() && !!(G.flags.greening || G.flags.escaped || G.flags.part3 || G.flags.part4);
+  function closeAtLeaving() {
+    if (!leftReach()) return;
+    for (const [k, line] of [['flock', TX.journal.flockClosed], ['ram', TX.journal.ramClosed], ['fires', TX.journal.firesClosed]]) {
+      if (flag(k, 2) !== 1 || flag(k + '_closed')) continue;
+      setFlag(k + '_closed', 1); journal('side', line);
+    }
+  }
   function tamarQuest(g) {
     const n = homeCount(), st = flockStage();
     if (!flag('truth')) { setFlag('truth', 1); journal('side', TX.journal.truth); }
@@ -1368,6 +1380,7 @@ const SHEEPWALK22 = (function () {
       const _l = loadMap;
       loadMap = function (id) {
         const r = _l.apply(this, arguments);
+        try { closeAtLeaving(); } catch (e) { warnOnce('close', e); }
         try { humStop(); if (id === COMBE || id === DOWNS || id === INN) { paintPeople(); syncMap(G.maps[id]); } } catch (e) { warnOnce('load', e); }
         return r;
       };
@@ -1390,7 +1403,7 @@ const SHEEPWALK22 = (function () {
   return {
     DOWNS, COMBE, INN, OFF, STILE, STILE_DOWNS, PYLON, FOLD, BEACONS, STRAYS, TREES, RAM, STAKE_AT, MENUS, DISH, MUTTON, TX, TEXTS: LIST, stats,
     ITEM_DEFS, NPC_DEFS, buildCombe, buildInn, syncMap, ramCells, homeCount, scourCount, litCount, flockStage, ramStage, fireStage, silenced,
-    bleat, T, addLush, LUSH,
+    bleat, T, addLush, LUSH, closeAtLeaving,
   };
 })();
 if (typeof window !== 'undefined') window.SHEEPWALK22 = SHEEPWALK22;

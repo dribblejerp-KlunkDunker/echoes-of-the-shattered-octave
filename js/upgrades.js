@@ -724,8 +724,8 @@ const LORE_BOOKS = [
     body: '<i>Surgeon-Grafter\'s Manual, Fortis printing:</i><br><br>Raw Aether-Glass is set song. When it enters living tissue it does not poison; it tunes. Stage One is <b>Ringing</b> (tinnitus at 174 or 528 Hz). Stage Two is <b>Frost</b> (translucent veining; Cacophony hounds refuse to bite). Stage Three is <b>Set</b> (the limb is glass to the bone; strikes ring like bronze). Stage Four is <b>Heartglass</b>: the subject stands very still, forever, humming the Chorister\'s lullaby, alive and aware.',
   },
   {
-    id: 'bk_veil', title: 'The Folding of the Silent Veil (415 SR)',
-    body: '<i>Private memorandum, Office of the Catalogue:</i><br><br>The Order of the Silent Veil is folded into the Office as of Thawmonth. Its House in the Woods is to be surveyed, and its vellum carried to the Organum archive. The Registrar-General has taken a close interest in the order\'s methods of recording a name, and is satisfied that they have uses beyond the keeping of the dead.<br><br>The scribes who objected have been reassigned to field ledgers in the Woods. They are not to be told what the ledgers are for. Their objections are filed.',
+    id: 'bk_veil', title: 'The Folding of the Silent Veil (c. 300 SR)',
+    body: '<i>Private memorandum, Office of the Catalogue, copied fair:</i><br><br>The Order of the Silent Veil is folded into the Synod as the Office of the Catalogue. Its House in the Woods stays open under the Office\'s seal, and its scribes keep their desks. The Registrar-General has taken a close interest in the order\'s methods of recording a name, and is satisfied that they have uses beyond the keeping of the dead.<br><br>The scribes who objected have been reassigned to field ledgers in the Woods. They are not to be told what the ledgers are for. Their objections are filed.',
   },
   {
     id: 'bk_narrow', title: 'Rhymes of the Hedge-Nursery',
@@ -843,6 +843,9 @@ function renderHouseChest() {
   });
 }
 
+// The house is in Oakhaven, and Oakhaven is behind you once the Greening comes or Part Three begins: the house's
+// only door opens onto it, and its mast would replay the Part Two ending (R1).
+function houseLeft() { const f = G.flags; return !!(f.greening || f.escaped || f.part3 || f.part4); }
 function renderBountyBoard() {
   const f = G.flags, p = G.player; ensurePlayerUpgrades(p);
   const b1 = f.bounty_1_done ? 'Completed' : `${(p.kills || 0)} / 4 slain`;
@@ -852,8 +855,8 @@ function renderBountyBoard() {
   <div class="list">
     <button class="dfbtn" id="bb-b1" ${f.bounty_1_done ? 'disabled' : ''}><b>Writ of Clearing: Cull the Pack</b> — Slay 4 beasts or proctors (${b1}) · Reward: 35 sov & +10 Hedge Standing</button>
     <button class="dfbtn" id="bb-b2" ${f.bounty_2_done ? 'disabled' : ''}><b>Scribe's Commission: Three Surrendered Names</b> — Record 3 names in your Ledger (${b2}) · Reward: 45 sov & Light-Glass Shard</button>
-    <button class="dfbtn" id="bb-tobin" ${f.tobin_417_done ? 'disabled' : ''}><b>417 Investigation: Cantor Tobin's Last Stand</b> — ${f.tobin_417_started ? 'Inspect the memorial cairn outside the Hedge near the culvert' : 'Take up the search for Tobin Ashgrove\'s tuning-blade (417 SR)'}</button>
-    <button class="dfbtn" id="bb-house" ${f.house_bought ? '' : (p.gold < 60 ? 'disabled' : '')}><b>${f.house_bought ? 'Enter Your House on Cooper\'s Row' : 'Deed of Sale: Cooper\'s Row House (60 sovereigns)'}</b> — Safe bed, storage chest, and tempering hearth</button>
+    <button class="dfbtn" id="bb-tobin" ${f.tobin_417_done ? 'disabled' : ''}><b>417 Investigation: Cantor Tobin's Last Stand</b> — ${f.tobin_417_started ? 'Inspect the memorial cairn under the western oaks, outside the Hedge' : 'Take up the search for Tobin Ashgrove\'s tuning-blade (417 SR)'}</button>
+    ${houseLeft() ? `<button class="dfbtn" id="bb-house" disabled><b>Your House on Cooper\'s Row</b> — Left behind in Oakhaven</button>` : `<button class="dfbtn" id="bb-house" ${f.house_bought ? '' : (p.gold < 60 ? 'disabled' : '')}><b>${f.house_bought ? 'Enter Your House on Cooper\'s Row' : 'Deed of Sale: Cooper\'s Row House (60 sovereigns)'}</b> — Safe bed, storage chest, and tempering hearth</button>`}
     <button class="dfbtn" id="bb-proc"><b>Descend into the Procedural Root-Vaults (Depth ${(G.procDepth || 0) + 1})</b> — Generated catacombs with keys, levers, resonant walls & rare loot</button>
     <button class="dfbtn" id="bb-arena"><b>Enter the Trial of the Narrow (Arena Pit)</b> — Test your mettle against waves of enemies for unique weapons & titles</button>
   </div>`;
@@ -886,6 +889,7 @@ function renderBountyBoard() {
     }
   };
   $('#bb-house').onclick = () => {
+    if (houseLeft()) return;
     if (!f.house_bought) {
       if (p.gold < 60) return;
       p.gold -= 60; f.house_bought = true;
