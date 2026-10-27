@@ -77,25 +77,25 @@ Done in code, October 2026: one check per item in `test/r2canon27.test.js`; Fren
 - [x] **Reedcraft's "wind-reeds" become Flume-reeds** (reedcraft.js:54). Real wind-reeds died in 412.
 
 ### R3 — The Narrow comes home: make existing systems matter
-Gate: tests per system; a recorded playtest note that Oakhaven feels tense but fair.
-- [ ] **Hush-lamps hold off the Hush.** A lamp's radius stops the stillness timer, and a hush-whistle plants a temporary lamp outdoors (game.js:304; maps.js:329).
-- [ ] **The Narrow as law inside the Hedge.**
+Gate: tests per system (`test/r3narrow28.test.js`, `js/narrow28.js`); a recorded playtest note that Oakhaven feels tense but fair (**still owed: the owner's playtest**).
+- [x] **Hush-lamps hold off the Hush.** A lamp's radius stops the stillness timer, and a hush-whistle plants a temporary lamp outdoors (game.js:304; maps.js:329).
+- [x] **The Narrow as law inside the Hedge.**
   - Loud noise gets the ward-sign and a hush from witnesses.
   - A repeat is a "breach of the Narrow" fine through `reportCrime`.
-- [ ] **Songs learned from people.**
+- [x] **Songs learned from people.**
   - Lyra: the Root note.
   - Tam: "The Miller's Daughter".
   - Bettany or Ilse: the tending breath.
   - Tobin's notebook: the falling fifth.
   - Built on ledger15 training and Hold the Pitch.
-- [ ] **Lyra's voiceless kit before `lyra_voice`.** Whistle the falling fifth to stun or aim; the tending breath gives a small heal.
-- [ ] **Hound packs with a leader.** A falling fifth on the leader routs the pack.
-- [ ] **Three canon combat rules:**
+- [x] **Lyra's voiceless kit before `lyra_voice`.** Whistle the falling fifth to stun or aim; the tending breath gives a small heal.
+- [x] **Hound packs with a leader.** A falling fifth on the leader routs the pack.
+- [x] **Three canon combat rules:**
   - Fear raises your noise below 30% health.
   - Quiets go to a lit lantern.
   - A hound's burst leaves a dead patch where nothing carries.
-- [ ] **The dusk Listening Hour.** Lamplighters, night-hummers at the crossings, and the dead-hour call.
-- [ ] **Faction standing (canon's Concordance)** fed by choices already made. It moves only prices, a line from Harrow and from Hetty, and one ending line. No numbers on screen.
+- [x] **The dusk Listening Hour.** Lamplighters, night-hummers at the crossings, and the dead-hour call.
+- [x] **Faction standing (canon's Concordance)** fed by choices already made. It moves only prices, a line from Harrow and from Hetty, and one ending line. No numbers on screen.
 
 ### R4 — Fill the thin places
 Gate: every listed map has people, something to use, and a reason to be there; screenshots of each.

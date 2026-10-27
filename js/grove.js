@@ -389,7 +389,7 @@ function bookOneEnd() {
   else if (f.mallow_dead) L.push('Pressman Mallow is dead in the water of the west quarter. Three ticks in his round-book are still blank.');
   if (f.halder_rest) L.push(f.halder_dead ? 'Halder Wick\'s table is set for four, with two name-tapes beside the small plates. Nobody sits at it.' : 'Halder Wick sits at his own table now. He is waiting for the boys to come home from choir, the way a man waits who knows they are coming.');
   const box = $('#ending-text'), ps = box.querySelectorAll('p'), anchor = ps[ps.length - 3];
-  L.push(...codaEndingLines(), ...wildsEndingLines());
+  L.push(...codaEndingLines(), ...wildsEndingLines(), ...(typeof NARROW28 !== 'undefined' ? NARROW28.endingLines() : []));   // R3: one line from your standing in the Hedge
   if (!L.length && !f.part4) return;
   for (const l of L) { const pEl = document.createElement('p'); pEl.innerHTML = l; box.insertBefore(pEl, anchor || null); }
   if (f.part4) for (const pEl of [...box.querySelectorAll('p')]) if (/^(Eleven hundred pounds|Mid-chase)/.test(pEl.textContent) || (f.cloak_given && /^Sable tells the Aegis what she knows/.test(pEl.textContent))) pEl.remove();

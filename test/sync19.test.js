@@ -418,7 +418,8 @@ const TRACE = () => {
       const gq = await guest.page.evaluate(() => { const C = SYNC19._internal.C; return { q: C.lastQ, ep: C.ep, n0: G.ents.length }; });
       await host.page.evaluate((g) => {
         const D = (t, p, r) => NET19.send(t, p, { reliable: r !== false });
-        D('sync.snap', { q: g.q + 2, b: g.q, ep: g.ep, t: performance.now(), tod: 0, day: 0, e: ['100500,400,400,4,-1,0,0,2,<img src=x onerror="window.__pwned=1">', '100501,400,400,4,-1,0,0,0,constructor', 'x,1,2'], rm: '', d: '-1:1,5:7' });
+        D('sync.snap', { q: Math.max(g.q, SYNC19._internal.H.q) + 2, b: g.q, ep: g.ep,   // ahead of the host's own stream, with ids no host hands out: a host world that moves (R3's lamplighter) keeps sending and numbering
+           t: performance.now(), tod: 0, day: 0, e: ['9999500,400,400,4,-1,0,0,2,<img src=x onerror="window.__pwned=1">', '9999501,400,400,4,-1,0,0,0,constructor', 'x,1,2'], rm: '', d: '-1:1,5:7' });
         D('sync.msg', { t: '<img src=x onerror="window.__pwned=1">Hello', c: 'evil' });
         D('sync.flags', { f: JSON.parse('{"__proto__": {"polluted": 1}, "x": true}') });
         D('sync.flags', { f: { ok_flag: true, obj: { a: 1 }, '<b>': true } });

@@ -54,6 +54,18 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Release road R3: the Narrow comes home
+
+Book One's rule, *too loud brings the hounds, too still brings the Hush*, now runs in Oakhaven and the systems that were already there.
+- **Hush-lamps** hold the Hush off: a lit lamp stops the stillness timer underground, and a hush-whistle blown outdoors or underground is planted on its stake and pipes on as a lamp for a minute.
+- **The Narrow is law inside the Hedge.** Make a loud noise where someone can see you and you get the ward-sign. Do it again soon after and the watch fines you for a breach of the Narrow.
+- **Songs are learned from people,** through Hold the Pitch: Lyra teaches the Root note, Bettany the tending breath (for coin), and Old Tam "The Miller's Daughter" once you have told him the truth about the Flume. Page two of Tobin's notebook teaches the falling fifth at his reed-pipes. "The Miller's Daughter" is a new Song: loud, and every hound in hearing goes to where you sang it.
+- **Hounds hunt in packs** behind a larger leader. A falling fifth that stops the leader, yours or Lyra's, routs the pack.
+- **Lyra before her voice returns** whistles the fifth, and she can aim it at the one you are looking at; her heal is the smaller tending breath.
+- **Three canon combat rules:** below 30% health your breath is loud; a Quiet goes to a lit lantern; where a hound bursts, nothing carries for a while.
+- **The Listening Hour.** At dusk a lamplighter lights Oakhaven's hush-lamps one by one (they are dark by day), night-hummers keep three crossings till dawn, and at the dead hour the shift changes with "all's well, all's quiet, keep to the Narrow".
+- **Standing (the Concordance)** is fed by choices you already make: Tam, Pim, Sable, the bottles and the heists. It moves shop prices, a line from Harrow and from Hetty, and one line of the ending. No numbers on screen.
+
 ### Phase 25: the pixel-3D set
 
 | | |

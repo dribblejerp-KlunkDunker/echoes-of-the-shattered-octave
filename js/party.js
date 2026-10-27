@@ -184,9 +184,14 @@ function partyAbility() {
     if (G.mutedT > 0 || G.ents.some(o => o.kind === 'enemy' && !o.dead && !o.hidden && o.def.quiet && dist2(o.x, o.y, e.x, e.y) < 16)) { msg('Lyra opens her mouth and nothing comes out. Not here.', 'bad', 2000); return; }
     const sung = !!G.flags.lyra_voice;
     P.cd = COMPANIONS.lyra.ability.cd; addNoise(sung ? 3.6 : 3.0); Audio_.sfx.fifth();
-    let n = 0;
-    for (const o of G.ents) if (o.kind === 'enemy' && !o.dead && !o.hidden && o.def.cacophony && dist2(o.x, o.y, e.x, e.y) < 196) { o.stun = Math.max(o.stun || 0, sung ? 3.5 : 2.5); n++; }
-    msg(sung ? (n ? `Lyra sings the calling-song, all of it, the turn and the falling fifth. ${n === 1 ? 'The Cacophony stops' : 'Every Cacophony in hearing stops'} to listen.` : 'Lyra sings the calling-song into the dark, and nothing out there is listening.') : (n ? `Lyra cannot sing it, so she whistles it through two fingers: the turn and the falling fifth. ${n === 1 ? 'The Cacophony stops' : 'Every Cacophony in hearing stops'} to listen.` : 'Lyra whistles the falling fifth into the dark, and nothing out there is listening.'), n ? 'good' : '', 3500);
+    let n = 0; const stopped = [];
+    // before her voice returns she whistles it, and a whistle can be aimed: the one you are looking at stops longest (R3)
+    let aim = null;
+    if (!sung) { const c = Engine.cam; let bd = 144; for (const o of G.ents) { if (o.kind !== 'enemy' || o.dead || o.hidden || !o.def.cacophony) continue; const d = dist2(o.x, o.y, c.x, c.y); if (d >= bd || Math.abs(normAng(Math.atan2(o.y - c.y, o.x - c.x) - c.dir)) > 0.3 || !los(c.x, c.y, o.x, o.y)) continue; bd = d; aim = o; } }
+    for (const o of G.ents) if (o.kind === 'enemy' && !o.dead && !o.hidden && o.def.cacophony && (o === aim || dist2(o.x, o.y, e.x, e.y) < 196)) { o.stun = Math.max(o.stun || 0, sung ? 3.5 : aim ? (o === aim ? 4 : 1.5) : 2.5); n++; stopped.push(o); }
+    if (typeof NARROW28 !== 'undefined') NARROW28.onFifth(aim ? [aim] : stopped);
+    if (aim) msg('Lyra whistles the falling fifth through two fingers, straight at the one you are looking at. It stops dead; the rest falter.', 'good', 3500);
+    else msg(sung ? (n ? `Lyra sings the calling-song, all of it, the turn and the falling fifth. ${n === 1 ? 'The Cacophony stops' : 'Every Cacophony in hearing stops'} to listen.` : 'Lyra sings the calling-song into the dark, and nothing out there is listening.') : (n ? `Lyra cannot sing it, so she whistles it through two fingers: the turn and the falling fifth. ${n === 1 ? 'The Cacophony stops' : 'Every Cacophony in hearing stops'} to listen.` : 'Lyra whistles the falling fifth into the dark, and nothing out there is listening.'), n ? 'good' : '', 3500);
   }
   partyHud();
 }
@@ -271,7 +276,12 @@ function partyTick(dt) {
   if (P.id === 'lyra' && P.order !== 'quiet' && p.hp < p.hpMax * 0.45 && !G.dead) {
     e.healT = (e.healT || 0) - dt;
     const silenced = G.mutedT > 0 || G.ents.some(o => o.kind === 'enemy' && !o.dead && !o.hidden && o.def.quiet && dist2(o.x, o.y, e.x, e.y) < 16);
-    if (e.healT <= 0 && !silenced && dPlayer < 6) { e.healT = 18; p.hp = Math.min(p.hpMax, p.hp + Math.max(14, Math.round(p.hpMax * 0.22))); addNoise(1.8); Audio_.sfx.song(174, 1.2); fx('song', 500); if (!P.said['lyra:hurt']) partyBark('hurt'); else msg('Lyra sings the tending note under her breath. Something knits.', 'good', 2500); }
+    if (e.healT <= 0 && !silenced && dPlayer < 6) {
+      e.healT = 18; fx('song', 500);
+      if (G.flags.lyra_voice) { p.hp = Math.min(p.hpMax, p.hp + Math.max(14, Math.round(p.hpMax * 0.22))); addNoise(1.8); Audio_.sfx.song(174, 1.2); if (!P.said['lyra:hurt']) partyBark('hurt'); else msg('Lyra sings the tending note under her breath. Something knits.', 'good', 2500); }
+      // no voice yet: the tending breath, smaller (R3)
+      else { p.hp = Math.min(p.hpMax, p.hp + Math.max(8, Math.round(p.hpMax * 0.12))); addNoise(0.9); Audio_.sfx.song(174, 0.6); msg('Lyra breathes the tending note close to your ear: no voice in it, only breath. Something knits, a little.', 'good', 3000); }
+    }
   }
   if (P.id === 'kaelen' && p.hp < p.hpMax * 0.35) partyBark('hurt');
   // taking hits: anything chasing that is closer to them than to you
