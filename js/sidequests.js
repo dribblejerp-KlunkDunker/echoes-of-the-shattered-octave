@@ -174,7 +174,7 @@ const SIDEQ = (() => {
       jOffer: S('Reeds-Miner Tomas is one load short for the Synod\'s quota day. The iron-bough he wants is chalked at the north-east end of the clearing, a stone\'s throw from where the hounds sleep, and it rings like a bell when struck. Wool from the mill on the blade, a gust of wind, or a thrown stone to draw the hounds off. Then carry the log to his wagon, and do not run.'),
       jCalledOff: S('The iron-bough rang and a hound came up. Tomas called it off with two falling notes. He says to leave the wood a day to forget the hour.'),
       jFelled: S('The iron-bough is down. The log lies at the foot of the stump, and it has to be carried to Tomas\'s wagon without running, or it will knock against everything I own.'),
-      jDone: S('Tomas has his last load. He paid me out of a sock that hums, and said I could think what I liked of him; he has been thinking it since August. The timber goes to shore the headframe.'),
+      jDone: S('Tomas has his last load. He paid me out of a sock that hums, and said I could think what I liked of him; he has been thinking it since Firstfruit. The timber goes to shore the headframe.'),
       jClosed: S('Oakhaven is gone under the oaks; Tomas\'s wagon went down the road, and the iron-bough, felled or standing, is somebody else\'s quota now.'),
       wagon: S('Tomas\'s timber wagon. The boards hum under your hand.'),
       treeFresh: S('An iron-bough, chalked by Tomas. Strike it and it rings like a bell.'),

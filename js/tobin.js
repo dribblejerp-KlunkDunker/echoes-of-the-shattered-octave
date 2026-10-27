@@ -1,9 +1,10 @@
 // ============================================================
 //  tobin — Phase 6 (story reactivity): the twelve pages of Cantor Tobin Ashgrove's journal.
 //
-//  Tobin was Oakhaven's Cantor, Lyra's father, taken in 417 when the Hedge was planted. The game already holds
-//  his Parish Register (autumn 417), his Tuning-Blade and the slate under the cairn. This module scatters twelve
-//  loose pages of an older, quieter book, spring 412 to the autumn of 417, as findable items:
+//  Tobin was Oakhaven's Cantor, Lyra's father, taken in the spring of 417 at the Pellow farm, before the Hedge was planted
+//  (Book One's manuscript). The game already holds his Parish Register (spring 417), his Tuning-Blade and the slate
+//  under the cairn. This module scatters twelve loose pages of an older, quieter book, spring 412 to the spring of
+//  417, as findable items:
 //    * each page is a transient item entity appended to its map when the map is entered (never saved, never
 //      solid, never in a doorway), so saved entity indexes never shift and a page never respawns;
 //    * collecting one sets G.flags.p6t_page_<n> = true (the only saved state) and opens the page as a held
@@ -30,8 +31,9 @@ const TOBIN = (function () {
   // map/x/y: where the loose sheet lies (floor cells checked by test/tobin.test.js). found: the one line shown on pickup.
   // Voice: a Cantor's - tending notes, dry humour as armour, short concrete sentences, the Hush only ever reported.
   // [PROPOSED] throughout: the dates, the people around him and the small events are inventions that stay inside
-  // the game's facts (bells taken 412, Cascade famine, Essa lost at the sluice, the lease, the blade of 415, the
-  // first silences, the bore in 417, the Hedge planted after the first hounds, the register, the cairn).
+  // the game's facts (Cascade famine, Essa lost at the sluice, the lease, the blade of 415, the first silences, the
+  // hounds at the orchards, the bells taken for the bore's teeth and the bore in 417, the register, the cairn). Per
+  // the manuscript he is taken at the Pellow farm in the spring of 417: the Hedge is only an idea in these pages.
   // [PROPOSED] why the pages lie where they do is never explained; the found-lines only say where a sheet was tucked.
   const PAGES = [
     { n: 1, map: 'greenhall', x: 1.6, y: 5.0, head: 'The east rows', date: 'Rootday, early spring, 412 SR',
@@ -51,14 +53,13 @@ const TOBIN = (function () {
         `She holds the cane too tight. So did I, at her age. I told her so, and she said she had noticed whose daughter she was.`,
         `Tonight she tuned the First Reed above our own door, standing on the chair with her tongue between her teeth, while the wind came up the lane and the whole house hummed under her. It is a good house. It sounds like somebody lives in it.`,
         `Called her lark at supper. She pretended to mind.`] },
-    { n: 3, map: 'chapel', x: 1.6, y: 9.4, head: 'The bells', date: 'Hearthday, Ashfall, 412 SR',
-      found: 'A page lies between two hymn-leaves on the chapel floor, grey with dust.',
+    { n: 3, map: 'underhedge', x: 7.5, y: 24.5, head: 'The sluice-gate', date: 'Hearthday, Ashfall, 412 SR',
+      found: 'A page is caught in the roots at the foot of the wool wall, damp and soft as cloth.',
       text: [
-        `They took the bells down this week. The Choir-Church sent a column, a cart, and a young man with a very clean voice, who said it was a blessing and that the Pure Note had need of the bronze. I said the Carillon had need of the bronze. He said the Carillon would be remembered. I have buried enough people to know what that sentence means.`,
-        `It took six men and a block to bring the great bell down. It did not ring as it came. I think it was the one time in two hundred years it was not asked to.`,
+        `The Choir-Church sent a young man up the south road with a very clean voice, to tell us in the chapel that the Light had let go of the world because one voice had shouted at it. He did not say whose. He said the Pure Note would be our comfort. I have buried enough people to know what that sentence means.`,
         `The grain from the south has stopped. We are told the Cascade was nobody's fault. The Governor says to keep faith and ration.`,
         `Sang Essa down at the sluice-gate on Massday, there being nothing else to put in the ground. Tam asked for The Miller's Daughter, both verses. I gave him both. The water was very loud.`,
-        `The chapel is quiet now. I keep humming into it, to see whether it will give me anything back.`] },
+        `Went into the chapel after, and stood under the bells, and listened to them not ringing. They will ring for Essa on Rootday. Somebody ought to.`] },
     { n: 4, map: 'mill', x: 2.5, y: 9.5, head: 'Gradients', date: 'Dawnday, Frostmonth, 413 SR',
       found: 'A sheet is stuck behind a loose board near the mill wall, stiff with damp.',
       text: [
@@ -79,10 +80,10 @@ const TOBIN = (function () {
       found: 'A sheet, ringed by the base of a cup, is tucked behind the tavern shelf.',
       text: [
         `The smith has finished the blade. I did not ask for it. The Greenhall voted it, all but Bettany, who said a Cantor with a sword was a pair of shears in a sermon. She is right. I took it anyway.`,
-        `It is long and plain, bell-bronze (from which bell, I do not ask), ground until it rings at one-seven-four when struck. Not loud. It rings the way a held breath rings. I tapped it on the tavern step and every glass on the counter shivered in sympathy, and the potboy dropped a tray.`,
+        `It is long and plain, bell-bronze from the cracked treble that has stood in the chapel porch since my grandfather's day, ground until it rings at one-seven-four when struck. Not loud. It rings the way a held breath rings. I tapped it on the tavern step and every glass on the counter shivered in sympathy, and the potboy dropped a tray.`,
         `The idea is that it can cut a tuning where a voice cannot reach: a note thrown at a thing, instead of sung to it. I have no intention of using it. I have put it behind the door with the garden hooks, where it hums to the hooks.`,
         `Lyra picked it up this evening and held it correctly at once, which I do not love. I took it back. She said it was too heavy for a first fifth anyway. She was right about that as well.`] },
-    { n: 7, map: 'orla_house', x: 1.6, y: 4.6, head: 'A place where a sound should be', date: 'Rootday, Frostmonth, 416 SR',
+    { n: 7, map: 'orla_house', x: 1.6, y: 4.6, head: 'A place where a sound should be', date: 'Rootday, Firstfruit, 416 SR',
       found: 'A page is tucked down the side of the settle, the ink a little smudged.',
       text: [
         `Three doors on Cooper's Row, and their First Reeds do not sound. I went along the lane with my ear turned, door by door. The wind was up. The reeds hung straight as if painted on, and there was nothing wrong with any of them. I took one down and blew across it, and it spoke perfectly well. I hung it back, and in the wind it was silent.`,
@@ -98,7 +99,22 @@ const TOBIN = (function () {
         `That is a thing I will not tell Lyra. I have written it here instead, where a page can hold what a person should not have to.`,
         `I asked him where he was going. He said he had not decided. He only knew that he did not want to be where it was quiet.`,
         `Gave him bread and the root-note's blessing, and watched him go down the road, humming.`] },
-    { n: 9, map: 'rootvault', x: 36.4, y: 8.6, head: 'The lullaby', date: 'Memoryday, spring, 417 SR',
+    { n: 9, map: 'mausoleum', x: 4.4, y: 22.6, head: 'A congregation of hounds', date: 'Hearthday, Stillmonth, 417 SR',
+      found: 'A sheet lies among the scriptorium papers, older than the paper around it.',
+      text: [
+        `The hounds came to the orchards on Massday night. Not into the town: to the edge of the east rows, where they sat. Eleven, in a row, heads on one side, like a congregation. They did not howl. They listened.`,
+        `Harrow says it was the evening bell that brought them. We have stopped ringing it. Now they wait for whatever else we do that sounds like one: the kettle, the cartwheel, the milkmaid's second verse.`,
+        `I called the Cantors of the three nearest parishes to the Greenhall. Two came. The third sent a note that said only: We have stopped being able to send.`,
+        `It was a carder from the mill who said it. Not a wall: a stopper. Wrap the town in what eats sound, the way you pad a cradle against a draught. Pack the thorn with wool, and plant the thorn deep. A hedge three men deep that swallows what we make, so the hounds hear nothing and have nothing to come for.`,
+        `It is a coward's plan. It is also the only one anyone has offered. I wrote "yes" in the register and did not feel any better.`] },
+    { n: 10, map: 'chapel', x: 1.6, y: 9.4, head: 'The bells', date: 'Massday, Thawmonth, 417 SR',
+      found: 'A page lies between two hymn-leaves on the chapel floor, grey with dust.',
+      text: [
+        `They took the bells down this week, for the bore. The Synod's order came up with the Consortium's cart and a young man of the Church with a very clean voice, who said it was a blessing, and that the bore had need of the bronze for its teeth. The Chapel's six, the clock-bell off the Greenhall, the little bells in the reed-rows. Nobody argued much. Everybody knows now what a bell brings.`,
+        `It took six men and a block to bring the great bell down. It did not ring as it came. I think it was the one time in two hundred years it was not asked to.`,
+        `I said the Carillon had need of the bronze. He said the Carillon would be remembered. I did not tell him what that sentence means when a Cantor says it. He will find out.`,
+        `The chapel is quiet now. I keep humming into it, to see whether it will give me anything back.`] },
+    { n: 11, map: 'rootvault', x: 36.4, y: 8.6, head: 'The lullaby', date: 'Memoryday, Seedmonth, 417 SR',
       found: 'A sheet is jammed under the foot of a pump-housing, its edge printed with green.',
       text: [
         `They have begun to sink the bore. I went down the quarry shaft in the first week, against advice and a Consortium clerk, because a Cantor ought to hear what is done in his parish.`,
@@ -106,28 +122,14 @@ const TOBIN = (function () {
         `The engineers say it is "within tolerance." I asked, whose? A young man with a ledger said the question was outside his remit. He was not unkind. He had been shown how not to be.`,
         `I sang the root note to the wall, softly, to tell it that somebody had heard. The wall hummed back. Then the drill started, and I climbed out into daylight and was ill in the quarry road.`,
         `I do not think we have long.`] },
-    { n: 10, map: 'mausoleum', x: 4.4, y: 22.6, head: 'A congregation of hounds', date: 'Hearthday, high summer, 417 SR',
-      found: 'A sheet lies among the scriptorium papers, older than the paper around it.',
-      text: [
-        `The first hounds came on Massday night. Not into the town: to the edge of the orchards, where they sat. Eleven, in a row, heads on one side, like a congregation. They did not howl. They listened.`,
-        `Harrow says they wait for the evening bell, and we have no bell, so they wait for whatever else we do that sounds like one: the kettle, the cartwheel, the milkmaid's second verse.`,
-        `I called the Cantors of the three nearest parishes to the Greenhall. Two came. The third sent a note that said only: We have stopped being able to send.`,
-        `It was a carder from the mill who said it. Not a wall: a stopper. Wrap the town in what eats sound, the way you pad a cradle against a draught. Pack the thorn with wool, and plant the thorn deep. A hedge three men deep that swallows what we make, so the hounds hear nothing and have nothing to come for.`,
-        `It is a coward's plan. It is also the only one anyone has offered. I wrote "yes" in the register and did not feel any better.`] },
-    { n: 11, map: 'underhedge', x: 7.5, y: 24.5, head: 'Wool and thorn', date: 'Nullday, late summer, 417 SR',
-      found: 'A page is caught in the roots at the foot of the wool wall, damp and soft as cloth.',
-      text: [
-        `We planted the Hedge. Four hundred hands, and the Governor's two, which blistered. Thorn in the trench, a man's height of packed wool either side, then thorn again, then wool. The carders came out in their aprons and worked all night by lamp. Nell sang the work-song until morning and nobody asked her to be quiet.`,
-        `It is a strange thing, to build a wall that swallows your own noise. When the last row went in, the whole town stood on the rise and called out together, just to hear it. The sound went into the Hedge like a stone into a pond. There was no echo at all. It was the most terrible thing I have ever heard, and the crowd cheered, and I cheered, and then we were all very quiet, because we could be.`,
-        `Lyra kept her hand on the wool a long while. "It's listening," she said. I said it was packed wool. She said, "I know," and kept her hand there.`,
-        `The gate is shut at dusk. Harrow keeps the key. We are safe, they say, as a candle is safe in a jar.`] },
-    { n: 12, map: 'clearing', x: 8.6, y: 21.4, head: 'For Lyra', date: 'Driftday, autumn, 417 SR',
+    { n: 12, map: 'clearing', x: 8.6, y: 21.4, head: 'For Lyra', date: 'Driftday, Lambmonth, 417 SR',
       found: 'A last sheet is pinned flat under a stone at the edge of the western oaks.',
       text: [
         `For Lyra, if the register is lost and this is not.`,
-        `The Madder child was warm this morning. I have put that in the register. This is what I did not put there.`,
-        `Something outside the thorn whistled my own fifth back to me tonight. It had my breath exactly, down to the catch on the turn. It was not unkind. I thought you should know that before it learns yours.`,
-        `If it comes for me, I will not let it come to the house. I have chosen the south road and the culvert, and a place under the oaks to put the blade down, since a Cantor who dies holding a sword has mistaken his vocation.`,
+        `I am writing at the Pellows' kitchen table. Their youngest has the marsh-fever, and it has gone the wrong way: not burning, cooling. She is quieter every hour. I have sung to her all night in the Narrow, the way I taught you, and she keeps slipping.`,
+        `I have put in the register what I mean to do, if it comes to it. This is what I did not put there.`,
+        `If it comes to it, I will sing her back at full voice: the Root, and then the calling-song, loud enough to go through the walls. They will hear it from the quarry to the Flume. So I will go out by the kitchen door, and keep singing across the yard, so that they follow the song and not the child.`,
+        `I left the blade under the oaks on my way up, since a Cantor who goes to a sickbed holding a sword has mistaken his vocation.`,
         `You will be angry. Good. Keep it in your chest, where it keeps, and save your voice for the living.`,
         `Does it ring? It rings, lark. True enough.`,
         `T.`] },
@@ -136,7 +138,7 @@ const TOBIN = (function () {
   // The closing sheet: what the player reads on gathering all twelve (a held document of its own).
   const DONE_TITLE = 'Tobin\'s Journal, bound';
   const DONE_TEXT = [
-    `You square the twelve pages against your knee, spring to autumn, and they sit together as if they had never been apart. They are not a book. They have no spine, and the hand wavers in the last four. But it is one hand, from the pear-grafts to the oaks, and it never once asks to be pitied.`,
+    `You square the twelve pages against your knee, spring to spring, and they sit together as if they had never been apart. They are not a book. They have no spine, and the hand wavers in the last four. But it is one hand, from the pear-grafts to the oaks, and it never once asks to be pitied.`,
     `You find you have read it as a stranger reads a stranger's letters, and that it is not working. He keeps turning into somebody you know.`,
     `Somewhere in the Reach a reed hangs over a door and does not sound. Somewhere a man set all of this down so that someone would know how the town was built, and by whom, and that he was afraid, and went anyway.`,
     `You tie the pages with a strip of your own sleeve. Does it ring? True enough.`,
@@ -146,7 +148,7 @@ const TOBIN = (function () {
   // ---------------------------------------------------------------- items and the held-document titles
   if (typeof ITEMS !== 'undefined') {
     ITEMS.tobin_page = { name: 'A page in a Cantor\'s hand', sprite: 'tobin_page', desc: 'A loose sheet of close, careful writing. Take it up and read.', key: true };
-    ITEMS.tobin_journal = { name: 'Tobin\'s Journal', sprite: 'tobin_page', desc: 'Twelve loose pages in Cantor Tobin Ashgrove\'s hand, spring 412 to autumn 417, tied with a strip of sleeve.', key: true };
+    ITEMS.tobin_journal = { name: 'Tobin\'s Journal', sprite: 'tobin_page', desc: 'Twelve loose pages in Cantor Tobin Ashgrove\'s hand, spring 412 to spring 417, tied with a strip of sleeve.', key: true };
   }
   const titleOf = (n) => 'Tobin\'s Journal, page ' + n;
   if (typeof READING !== 'undefined' && READING.SOURCES) {

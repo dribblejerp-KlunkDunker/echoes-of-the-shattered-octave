@@ -20,27 +20,33 @@ October 2026. The game has 65 in-world books (about 63,400 words), all English d
    - **Shelves:** the Conservatory (Oakhaven), the Bonded Store (Stillwater), the Moot-house (Whisper-Grove) and the Veil's scriptorium (the Mausoleum).
    - **Elsewhere:** piles where readers live, three vendors, books lying in the world, the keepers' quest books, and one gift.
 
-## Questions that need your ruling
-Book One's manuscript and the other sources disagree on these. The books are written around them, so nothing breaks, but a ruling would let later books be exact.
-1. **When Tobin was taken.** The manuscript says spring 417, at the Pellow farm, before the Hedge. js/tobin.js says autumn 417, after it. The library leans on neither.
-2. **When the bells were taken.** tobin.js p. 3 says Ashfall 412; the manuscript says the first year of the quarry (417). Every library book now says 417.
-3. **When the Hedge was planted.** The manuscript says "two summers ago"; the journal says late summer; Book Four says autumn 417.
-4. **Bell-hours in the Veil's House.** Vol V's "second bell" against Vol VII §5's striking of bell-hours. The Veil books keep the House's own bell.
-5. **What lifts skyships.** Vol I says a lodestone core; the manuscript says drift-glass. The books follow the manuscript.
-6. **Candles facing in at Canopy.** The Whisper-Grove books treat this as an old custom; Vol VII (b) reads as if it began after 416.
-7. **Hounds in the Reach before 417.** Some books have hounds in the Reach from 413; the journal calls the 417 hounds the "first". The books read "first" as the first at the orchard edge.
-8. **Veil scribes' names.** The books use ink and pigment designations that pass from holder to holder (Umber, Bistre, Woad, Orpiment, Ochre, Gall) [PROPOSED].
-9. **Calendar names.** Book One's "Leaffall" is not in Vol VII. The books avoid it, and Tomas's quest text still says "August" (see the roadmap's R2).
-10. **Pre-Unnaming names in the Spectral Woods.** Vol II says "no living names". The Grove books read that as describing the Hollows after 416, and give the townsfolk plain names.
-11. **The Eight Keepers.** The fable comes close to the Compact; cut the Owl's line "We were told that somebody would" if it says too much.
-12. **Hints at the harvest.** The midwife's day-book (Office clerks asking for "the voice" of each child) and the Grove histories (the Canopy keeps the dead) stay at suspicion. Please confirm they are within what the player may suspect.
-13. **New lives for canon minor figures.**
-    - Tomas as a former "reeds-miner", and his mare Dumpling.
-    - Orrin Pale as sexton in 412.
-    - Garra Thorne writing a schoolbook.
-    - Ennis Crowle, Dorran Sedge and Absalom Rudd as authors.
+## The owner's rulings (October 2026), and what changed
+The rules:
+- **Manuscript against an in-game book or journal:** the manuscript wins.
+- **A volume against an in-game book:** the volume stands, and the book changes to match.
+- **A book that comes close to a spoiler:** it stays, unless it makes the twist too easy to guess.
+- **New lives for minor canon figures:** all fine.
 
-    All are marked [PROPOSED].
+1. **When Tobin was taken.** Spring 417, at the Pellow farm, before the Hedge (the manuscript). Changed to match:
+   - Tobin's journal (js/tobin.js) now ends that night at the Pellows' kitchen table. The pages were re-dated and re-ordered: the bells move to 417 and the hounds to Stillmonth 417. The page about planting the Hedge is gone, and the chapel's 412 page keeps its bells.
+   - His register (upgrades.js), the cairn slate, the inquiry's logbook lines and the prologue's line about the voice follow the manuscript. The "Wearer", the North Gate and the culvert are gone from them, and the Madder child is the Pellow child.
+   - In the library, The Wool Wall and Off the Slate now say spring. The Greenroot letter answering Tobin is set in winter.
+2. **When the bells were taken.** 417, "the first year of the quarry", for the bore's teeth (the manuscript). The chapel's chalk, the townsfolk line about the Church and Tobin's pages now say 417. The blade of 415 is ground from an old cracked treble.
+3. **When the Hedge was planted.** The summer of 417, "two summers ago", paid for by the Consortium (the manuscript). A First History of Oakhaven now says summer, and The Wool Wall says Tobin did not live to see it. Book Four's "autumn" is left for that book.
+4. **Bell-hours in the Veil's House.** Vol V's "second bell" is the House's own bell. Vol VII §5 retires only the old eight carillon bell-hours, so the two volumes agree and the Veil books stand.
+5. **What lifts skyships.** Both: a Fortis-cut lodestone core that cancels the mass (Vol I) and drift-glass lift-tanks that give the lift (the manuscript). Going Up, The Tank and the Envelope and Fairweather's Companion now name both.
+6. **Candles facing in at Canopy.** Vol VII and VII (b): Canopy is old and has not been held since 416. Every Grove book that keeps it is dated 416 or earlier, so all stand.
+7. **Hounds in the Reach before 417.** The manuscript has every hound between the quarry and the Flume hearing Tobin in the spring of 417, and everyone knowing by then that bells brought them. Hounds in the wider Reach before 417 stand. Tobin's "first hounds" became the hounds at the orchards, at the turn of 417, and so did The Wool Wall's.
+8. **Veil scribes' names.** No volume names them, and Sable already fits the pattern. The ink and pigment designations stand [PROPOSED].
+9. **Calendar names.** Tomas now says Firstfruit, not August. The game's text uses only Vol VII's months, and Leaffall stays in the manuscript.
+10. **Pre-Unnaming names in the Spectral Woods.** Vol II's "no living names" stands. The Grove books name only people before 416 (the manuscript names them too, and the Ledger holds those names). The Moot-house's shelver is unnamed.
+11. **The Eight Keepers.** Too easy: the Owl's promise pointed straight at the Compact, so "We were told that somebody would" is cut. The fable keeps its Sparrow.
+12. **Hints at the harvest.** They stay. The midwife's clerks ask for "the voice" and do not say why. "The Canopy keeps the dead" is a Grove saying, and Vol V and Tobin's own pages already say it. Note: the older lore book bk_veil (upgrades.js, "The Folding of the Silent Veil") states the Catalogue's harvest of names as fact. It needs your call (see below).
+13. **New lives for minor canon figures.** All fine.
+
+**Also fixed:** two Cantors called Ilse. Ilse Brennan is canon (Book Four), so the Greenroot Cantor (Phase 9, [PROPOSED]) is now Mabyn Verrow.
+
+**Needs your call:** the lore book "The Folding of the Silent Veil (415 SR)" (upgrades.js, bk_veil) is a Catalogue memorandum. It says outright that the Office removes names from living debtors to make orderly workers. That is the harvest stated as fact, not a hint. Under your rule it should be softened or found only late in the game. It was not changed here.
 
 ## Weaker books (for a later pass)
 - **The Lamplighter's Second Note and A Year of Nights** share a device: an Oakhaven lamplighter courting with a two-note lamp reed. One should change.

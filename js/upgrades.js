@@ -717,7 +717,7 @@ const LORE_BOOKS = [
   },
   {
     id: 'bk_417', title: 'Parish Register: The Year 417 & Cantor Tobin',
-    body: '<i>In the hand of Cantor Tobin Ashgrove, autumn 417 SR:</i><br><br>The Madder child went too still in the night and the Hush had her by the ankles. A murmur was not enough. I went to the North Gate and sang the calling-song at full voice—the turn and the falling fifth—so the thing in the dark would look at me instead of the cradle.<br><br>The child is warm this morning. Something outside the thorn just whistled my own fifth back to me. If it comes for me, I will walk south toward the culvert so the house is further away. Tell Lyra a martyr is just a musician who gave up before the coda.',
+    body: '<i>In the hand of Cantor Tobin Ashgrove, spring 417 SR:</i><br><br>The Pellow child is going too still in her cot, and the Hush has her by the ankles. A murmur is not enough. If she slips further I will sing the calling-song at full voice—the turn and the falling fifth—and the hounds will hear it from the quarry to the Flume.<br><br>So I will go out by the kitchen door and keep singing across the yard, that they look at me and not at the cradle. If this is the last line in my hand, the child was worth it. Tell Lyra a martyr is just a musician who gave up before the coda.',
   },
   {
     id: 'bk_glass', title: 'Treatise on Aether-Glass & the Four Stages',
@@ -877,7 +877,7 @@ function renderBountyBoard() {
   $('#bb-tobin').onclick = () => {
     if (!f.tobin_417_started) {
       f.tobin_417_started = true;
-      journal('side', 'The Year 417: I took up the inquiry into Cantor Tobin Ashgrove\'s disappearance in 417. He walked outside the Hedge to draw a mimic away from a fevered child. His tuning-blade may still lie near the western oaks outside the Hedge.');
+      journal('side', 'The Year 417: I took up the inquiry into Cantor Tobin Ashgrove\'s disappearance in 417. At the Pellow farm, out past where the Hedge runs now, he sang a fevered child back at full voice and walked out into the yard so the hounds would follow him and not the house. His tuning-blade may still lie near the western oaks outside the Hedge.');
       msg('Logbook updated: Search the western trees outside the Hedge for Tobin\'s cairn.', 'good', 4000);
       renderBountyBoard();
     } else {
@@ -1314,8 +1314,8 @@ function renderKeyRebindMenu() {
       if (!G.player.weapons.includes('tobin_blade')) G.player.weapons.push('tobin_blade');
       questXp(90); Audio_.sfx.fifth();
       earnTitle('Heir of 417');
-      journal('side', 'The Year 417: At the moss cairn outside the Hedge I found Cantor Tobin Ashgrove\'s Tuning-Blade, still humming at 174 Hz where he laid it down before leading the Wearer south.');
-      showEvent('The Cairn of 417', 'Under a flat stone marked <b>T.A. · 417</b> lies an oilskin bundle. Inside is a long blade of bell-bronze ground to ring at 174 Hz, and a slate with one line scratched on it:<br><br><i>If Lyra finds this: I walked south toward the culvert so the house would be further away. Keep your voice in your chest, lark.</i><br><br><b>(You ready Tobin\'s Tuning-Blade!)</b>', [{ t: 'Take up the blade.', f: null }]);
+      journal('side', 'The Year 417: At the moss cairn outside the Hedge I found Cantor Tobin Ashgrove\'s Tuning-Blade, still humming at 174 Hz where he laid it down on his way up to the Pellow farm.');
+      showEvent('The Cairn of 417', 'Under a flat stone marked <b>T.A. · 417</b> lies an oilskin bundle. Inside is a long blade of bell-bronze ground to ring at 174 Hz, and a slate with one line scratched on it:<br><br><i>If Lyra finds this: I am going up to the Pellows\'. Their girl is cooling. If I have to sing, I will go out into the yard, so the house is further away. Keep your voice in your chest, lark.</i><br><br><b>(You ready Tobin\'s Tuning-Blade!)</b>', [{ t: 'Take up the blade.', f: null }]);
       return;
     }
     if (e.use === 'proc_lever') {

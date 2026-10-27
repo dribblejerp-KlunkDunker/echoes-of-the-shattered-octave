@@ -62,9 +62,15 @@ Gate: each change checked against the Series Bible and Book One; French entries 
   - Mutton on every menu in a starving town.
 - [ ] **Near-collisions:** Pellam Dree and Pellam Quist; Wenna Marl and Abbess Wenna; Annet Sorrel and Annet Sowerby.
 - [ ] **Found by the library writers:**
-  - Tomas has been "thinking about it since August", a real-world month (Phase 9 quest text). Use Vol VII's months.
+  - [x] Tomas has been "thinking about it since August", a real-world month (Phase 9 quest text). He now says Firstfruit.
   - A letter in grove.js addresses "the Cloister of the Lost Choir" before 416, though canon says nobody remembers its old name.
-  - Book One's own "Leaffall" dates are not in Vol VII's calendar; the owner should rule on them.
+  - [x] Book One's own "Leaffall" dates are not in Vol VII's calendar. The game's text uses only Vol VII's months, so it agrees with both. Leaffall stays in the manuscript.
+- [x] **The owner's canon rulings (October 2026).** Where the manuscript and an in-game book or journal disagree, the manuscript wins. Where a volume and an in-game book disagree, the volume wins. A book that comes close to a spoiler stays, unless it makes the twist too easy to guess. Applied:
+  - **Tobin** was taken in the spring of 417 at the Pellow farm, before the Hedge. His journal now ends that night at the Pellows' table. His register, the cairn slate, the inquiry's logbook lines and the prologue's "voice" line follow the manuscript. The "Wearer" and the culvert are gone from them.
+  - **The bells** were taken in 417, "the first year of the quarry", for the bore's teeth: the chapel's chalk, the townsfolk line and Tobin's pages.
+  - **The Hedge** went in the summer of 417 ("two summers ago"), after Tobin, and the Consortium paid for it.
+  - **Skyships** carry a Fortis-cut lodestone core (Vol I) and drift-glass lift-tanks (the manuscript). The library's three skyship books now name both.
+  - **The Greenroot Cantor** is Mabyn Verrow. Ilse Brennan is canon (Book Four).
 - [ ] **Reedcraft's "wind-reeds" become Flume-reeds** (reedcraft.js:54). Real wind-reeds died in 412.
 
 ### R3 — The Narrow comes home: make existing systems matter

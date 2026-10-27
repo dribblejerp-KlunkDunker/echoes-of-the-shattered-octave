@@ -254,9 +254,9 @@ const PARISH = (function () {
   // ---------------------------------------------------------------- catalogue: items, enemies, topics, voices
   // All of it constant text. Everything marked [PROPOSED] is mine; see TEXT.md.
   const ITEM_DEFS = {
-    // the quest object: the Cantor's register [PROPOSED name: Ilse Verrow, Cantor of Greenroot]
+    // the quest object: the Cantor's register [PROPOSED name: Mabyn Verrow, Cantor of Greenroot; Ilse Brennan is canon (Book Four)]
     p9_greenroot_register: { name: 'The Greenroot Register', sprite: 'p9p_regbook', key: true,
-      desc: 'Cantor Ilse Verrow\'s parish register, a slim book strapped shut. The last entries are in a careful hand, and the last line stops. Somebody should have it who will read it through.' },
+      desc: 'Cantor Mabyn Verrow\'s parish register, a slim book strapped shut. The last entries are in a careful hand, and the last line stops. Somebody should have it who will read it through.' },
     // the unique modest reward: Songs cost a little less to sing while it is in your pack
     p9_verrow_reedcase: { name: 'Verrow\'s Tuning-Reed Case', sprite: 'p9p_reedcase', key: true,
       desc: 'A flat leather case of spare reeds, each tuned against a Cantor\'s own breastbone and long dead, as cut reeds are. It has a way of settling the breath. While you carry it, every Song costs you about a quarter less voice.' },
@@ -300,7 +300,7 @@ const PARISH = (function () {
   }
 
   // ---------------------------------------------------------------- the three maps
-  // Greenroot's text lives here, in constants. Names are [PROPOSED]: Ilse Verrow (the Cantor), the Pell house.
+  // Greenroot's text lives here, in constants. Names are [PROPOSED]: Mabyn Verrow (the Cantor), the Pell house.
   const DOORS = {
     // each cottage door carries what the room behind it says, by absence
     a: 'Through the crack of the shutter: a table laid for four. Four bowls, four spoons, a loaf gone hard as a roof-tile. All four chairs are pulled out, the way you pull them out when you mean to sit.',
@@ -534,11 +534,11 @@ const PARISH = (function () {
 
   // ---------------------------------------------------------------- the quest: text (all constants)
   const REGISTER_TITLE = 'The Greenroot Register';
-  // [PROPOSED] the Cantor's name (Ilse Verrow), the Pell family, the counting of reeds. Dates are bare years and Anchor-named days.
+  // [PROPOSED] the Cantor's name (Mabyn Verrow), the Pell family, the counting of reeds. Dates are bare years and Anchor-named days.
   const REGISTER_PAGES = [
-    'Greenroot. The register of the parish, kept by Ilse Verrow, Cantor, in her own hand. Seven houses and thirty-one souls.',
+    'Greenroot. The register of the parish, kept by Mabyn Verrow, Cantor, in her own hand. Seven houses and thirty-one souls.',
     'Hearthday, 417. Counted the reeds in the wind at dusk, as I do each week: seven houses, seven reeds, every one sounding. Thirty-one at supper on the green. Hesper Pell, eighty-one, said the grace and held it past the end, as she does, and we all waited for her.',
-    'Massday, 417. A letter from Tobin Ashgrove at Oakhaven. The Cantors of the three nearest parishes are to come to the Greenhall. I will go when the hay is in. The hounds have begun to sit on the Flume bank in the evenings. They do nothing. They sit.',
+    'Massday, 417. A letter from Tobin Ashgrove at Oakhaven. The Cantors of the three nearest parishes are to come to the Greenhall. I will go when the road is open. The hounds have begun to sit on the Flume bank in the evenings. They do nothing. They sit.',
     'Nullday, 417. I answered Tobin. I wrote it three times. The pen worked and the ink went on, and each time the page would carry only the one line. I have sent that. It says: We have stopped being able to send.',
     'Driftday. The Joss reed did not sound. I took it down and blew across it and it spoke perfectly well. I hung it back up. In the wind it was silent. Six.',
     'Memoryday. Four. Ansa Pell\'s kettle was boiling and she could not hear it. We both stood and watched it.',
@@ -558,7 +558,7 @@ const PARISH = (function () {
   const CLOSED_LINE = 'Gone. The Greening came up through that road the night the oaks began to ring, and nobody is going down it now. Leave it with the others.';
   const J_ROAD = 'Harrow says an old cart-road leaves the clearing by the east hedge and runs to a parish called Greenroot, off the Flume. Nobody has gone down it since the summer the third Cantor sent her note.';
   const J_ARRIVE = 'Greenroot. Tables laid, doors shut, kettles cold, and nobody. The chapel stands on the knoll to the east, barred from the inside. There is a stair into the earth by the charnel house.';
-  const J_REG = 'I have the Greenroot register. Cantor Ilse Verrow\'s last line stops in the middle of a sentence. It should go to someone who will read it to the end: Ignatius, who would have the Church file it, or Lyra, who would keep it with Tobin\'s pages.';
+  const J_REG = 'I have the Greenroot register. Cantor Mabyn Verrow\'s last line stops in the middle of a sentence. It should go to someone who will read it to the end: Ignatius, who would have the Church file it, or Lyra, who would keep it with Tobin\'s pages.';
   const J_FILED = 'I gave the Greenroot register to Ignatius Crane. He read it standing, all of it, and then he said it would be filed. I do not know what it will be filed under.';
   const J_KEPT = 'I gave the Greenroot register to Lyra. She read the names aloud, quietly, to the end, and put it with Tobin\'s pages. She said a book that is read to the end is not lost.';
   const M_LEVER_GATE = 'A counterweight drops somewhere above, with a long iron sound. The reed gate in the ossuary hall has gone up.';
@@ -580,7 +580,7 @@ const PARISH = (function () {
   const TOPIC_REG = 'The Greenroot register';
   TOPIC_DEFS[TOPIC_REG] = {
     low: 'A parish book from Greenroot. I do not know what it says. If it is a register, someone should read it to the end.',
-    high: 'The Greenroot register. If it is Ilse Verrow\'s, then it is the only account there is. Hand it to someone who will read it through.',
+    high: 'The Greenroot register. If it is Mabyn Verrow\'s, then it is the only account there is. Hand it to someone who will read it through.',
   };
   const PARISH_REPLY = {
     harrow_road: { low: TOPIC_DEFS[TOPIC_ROAD].low, high: TOPIC_DEFS[TOPIC_ROAD].high },
@@ -596,9 +596,9 @@ const PARISH = (function () {
       hold: 'Then keep it a little longer. It will not get lighter.',
     },
     lyra: {
-      text: 'That book. Where did you find it? Greenroot. Ilse Verrow. We were girls in the same Conservatory, she sat behind me. May I? Please. I would like to have it read, by someone, properly.',
+      text: 'That book. Where did you find it? Greenroot. Mabyn Verrow. We were girls in the same Conservatory, she sat behind me. May I? Please. I would like to have it read, by someone, properly.',
       yes: 'Give it to her to keep.', no: 'Not yet.',
-      done: 'She reads the names aloud, softly, one by one, to the very end, and when she reaches the line that stops she does not stop. She says the rest of it into the room, as if it were Ilse\'s. Then she puts the book with Tobin\'s pages. "A book that is read to the end is not lost," she says. "Thank you. Here. For the road."',
+      done: 'She reads the names aloud, softly, one by one, to the very end, and when she reaches the line that stops she does not stop. She says the rest of it into the room, as if it were Mabyn\'s. Then she puts the book with Tobin\'s pages. "A book that is read to the end is not lost," she says. "Thank you. Here. For the road."',
       hold: 'Of course. When you are ready. It is not going anywhere. It is the one thing in this story that is not.',
     },
   };
