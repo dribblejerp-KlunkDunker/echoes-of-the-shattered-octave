@@ -1008,7 +1008,7 @@ function renderCodexModal(tab) {
       ${Object.entries(FACTIONS).map(([k, f]) => {
         const val = p.factions[k] || 0;
         const rank = val >= 40 ? 'Revered Ally' : val >= 15 ? 'Trusted Friend' : val <= -40 ? 'Hunted Enemy' : val <= -15 ? 'Suspect' : 'Neutral';
-        return `<div class="slot" style="display:block;margin-bottom:.5cqh"><b style="color:var(--gold)">${f.name}</b> — <b>${rank} (${val >= 0 ? '+' : ''}${val})</b><br><small class="muted">${f.desc}</small></div>`;
+        return `<div class="slot" style="display:block;margin-bottom:.5cqh"><b style="color:var(--gold)">${f.name}</b> — <b>${rank}</b><br><small class="muted">${f.desc}</small></div>`;
       }).join('')}
       <h3>Reputation Titles (Click to wear)</h3>
       <div class="btns">${p.titles.map(t => `<button class="dfbtn small ${p.activeTitle === t ? 'sel' : ''}" data-title="${t}">${t}</button>`).join('')}</div>
