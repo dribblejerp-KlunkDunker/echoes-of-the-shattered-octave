@@ -725,7 +725,7 @@ const LORE_BOOKS = [
   },
   {
     id: 'bk_veil', title: 'The Folding of the Silent Veil (415 SR)',
-    body: '<i>Private memorandum, Office of the Catalogue:</i><br><br>Where the old Veil scribes kept the names of the dead so they would not be lost, the Registrar-General has observed that a name removed from a living debtor produces an orderly worker. Eight seconds of contact at 741 Hz suffices. The scribes who objected have been reassigned to field ledgers; each surrendered three personal memories as bond.',
+    body: '<i>Private memorandum, Office of the Catalogue:</i><br><br>The Order of the Silent Veil is folded into the Office as of Thawmonth. Its House in the Woods is to be surveyed, and its vellum carried to the Organum archive. The Registrar-General has taken a close interest in the order\'s methods of recording a name, and is satisfied that they have uses beyond the keeping of the dead.<br><br>The scribes who objected have been reassigned to field ledgers in the Woods. They are not to be told what the ledgers are for. Their objections are filed.',
   },
   {
     id: 'bk_narrow', title: 'Rhymes of the Hedge-Nursery',

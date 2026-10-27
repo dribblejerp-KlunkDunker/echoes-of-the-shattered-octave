@@ -41,12 +41,12 @@ The rules:
 9. **Calendar names.** Tomas now says Firstfruit, not August. The game's text uses only Vol VII's months, and Leaffall stays in the manuscript.
 10. **Pre-Unnaming names in the Spectral Woods.** Vol II's "no living names" stands. The Grove books name only people before 416 (the manuscript names them too, and the Ledger holds those names). The Moot-house's shelver is unnamed.
 11. **The Eight Keepers.** Too easy: the Owl's promise pointed straight at the Compact, so "We were told that somebody would" is cut. The fable keeps its Sparrow.
-12. **Hints at the harvest.** They stay. The midwife's clerks ask for "the voice" and do not say why. "The Canopy keeps the dead" is a Grove saying, and Vol V and Tobin's own pages already say it. Note: the older lore book bk_veil (upgrades.js, "The Folding of the Silent Veil") states the Catalogue's harvest of names as fact. It needs your call (see below).
+12. **Hints at the harvest.** They stay. The midwife's clerks ask for "the voice" and do not say why. "The Canopy keeps the dead" is a Grove saying, and Vol V and Tobin's own pages already say it. The older lore book bk_veil said more than that, and has been softened (below).
 13. **New lives for minor canon figures.** All fine.
 
 **Also fixed:** two Cantors called Ilse. Ilse Brennan is canon (Book Four), so the Greenroot Cantor (Phase 9, [PROPOSED]) is now Mabyn Verrow.
 
-**Needs your call:** the lore book "The Folding of the Silent Veil (415 SR)" (upgrades.js, bk_veil) is a Catalogue memorandum. It says outright that the Office removes names from living debtors to make orderly workers. That is the harvest stated as fact, not a hint. Under your rule it should be softened or found only late in the game. It was not changed here.
+**Softened at your call:** the lore book "The Folding of the Silent Veil (415 SR)" (upgrades.js, bk_veil) used to state the harvest as fact: names removed from living debtors to make orderly workers, at 741 Hz, with memories surrendered as bond. It is now a dry Office memorandum. The Veil is folded into the Office, and its vellum goes to the Organum. The Registrar-General finds the order's ways of recording a name "have uses beyond the keeping of the dead". The objecting scribes are sent to field ledgers and "not to be told what the ledgers are for". That is a suspicion, not an answer.
 
 ## Weaker books (for a later pass)
 - **The Lamplighter's Second Note and A Year of Nights** share a device: an Oakhaven lamplighter courting with a two-note lamp reed. One should change.
