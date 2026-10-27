@@ -122,7 +122,7 @@ const LIBRARY = (function () {
     for (const b of BOOKS) {
       if (!OWNED.includes(b.how) || ITEMS[b.id]) continue;
       ITEMS[b.id] = { name: b.title, sprite: 'lib_book', use: 'lib_book', value: Math.max(1, b.price || 2), key: b.how === 'quest' || undefined,
-        desc: genreName(b.genre) + ', by ' + b.author + '. ' + (b.summary || '') + ' Read it from your pack; reading does not use it up.' };
+        desc: genreName(b.genre) + ' — ' + b.author + '. ' + (b.summary || '') + ' Read it from your pack; reading does not use it up.' };
     }
     for (const b of BOOKS) {
       if (b.how !== 'shop' || typeof NPCS === 'undefined' || !NPCS[b.at]) continue;
@@ -187,7 +187,7 @@ const LIBRARY = (function () {
   function take(e) {
     const f = flags(); if (f) f['libgot:' + e.item] = true;
     try { if (typeof G !== 'undefined' && G.give) G.give(e.item); } catch (err) { /* ignore */ }
-    try { if (typeof msg === 'function') msg('You pick up a book: ' + BY_ID[e.item].title + '.', 'good', 3500); } catch (err) { /* ignore */ }
+    try { if (typeof msg === 'function') msg('You pick up a book: ' + BY_ID[e.item].title, 'good', 3500); } catch (err) { /* ignore */ }
     try { if (typeof Audio_ !== 'undefined' && Audio_.sfx && Audio_.sfx.pickup) Audio_.sfx.pickup(); } catch (err) { /* optional */ }
     try { if (G.map && Array.isArray(G.map.entities)) { const i = G.map.entities.indexOf(e); if (i >= 0) G.map.entities.splice(i, 1); } } catch (err) { /* ignore */ }
   }

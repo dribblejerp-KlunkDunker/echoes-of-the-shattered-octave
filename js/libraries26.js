@@ -229,7 +229,7 @@ const LIBRARIES = (function () {
     const m = new GameMap(libId, R.name, W, H, { floor: R.floor, ceil: R.ceil, fogDist: 16, ambient: R.ambient, fogColor: [0, 0, 0], music: 'inside', spawn });
     m.border(R.shelves || R.wall);
     for (let x = 0; x < W; x++) m.set(x, H - 1, WALL(R.wall));
-    m.set(dx, H - 1, DOOR({ portal: { map: R.host, x: R.out.x, y: R.out.y, dir: R.out.dir }, label: 'Out' }));
+    m.set(dx, H - 1, DOOR({ portal: { map: R.host, x: R.out.x, y: R.out.y, dir: R.out.dir }, label: 'Way out' }));
     // shelves shoulder to shoulder along the north, west and east walls: the book shelves first, then the room's own
     const spots = [];
     for (let x = 1; x < W - 1; x++) spots.push([x + 0.5, 1.3]);
@@ -306,7 +306,7 @@ const LIBRARIES = (function () {
     for (const b of L.BOOKS) if (b.how === 'shop' && b.at === 'lib_odile' && !NPCS.lib_odile.shop.some(s => s.item === b.id)) NPCS.lib_odile.shop.push({ item: b.id, price: b.price || 2 });
   }
   if (typeof ITEMS !== 'undefined') for (const b of L.BOOKS) if (b.how === 'gift' && !ITEMS[b.id]) {
-    ITEMS[b.id] = { name: b.title, sprite: 'lib_book', use: 'lib_book', value: 1, key: true, desc: L.genreName(b.genre) + ', by ' + b.author + '. ' + (b.summary || '') + ' Read it from your pack; reading does not use it up.' };
+    ITEMS[b.id] = { name: b.title, sprite: 'lib_book', use: 'lib_book', value: 1, key: true, desc: L.genreName(b.genre) + ' — ' + b.author + '. ' + (b.summary || '') + ' Read it from your pack; reading does not use it up.' };
   }
   if (typeof buildAllMaps === 'function') {
     const _build = buildAllMaps;
