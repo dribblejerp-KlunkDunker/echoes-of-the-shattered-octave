@@ -44,6 +44,8 @@ PIECES = [
     # the Phase 20 roadmap's remaining drawn stand-ins, painted the same way (October 2026)
     ('p_barrel_open', 'barrel_open.png', (48, 64), {'anchor': 'bottom', 'margin': 2}),
     ('p_barrel_side', 'barrel_side.png', (72, 48), {'anchor': 'bottom', 'margin': 2}),
+    ('p_statue_broken2', 'statue2.png', (72, 64), {'anchor': 'bottom'}),
+    ('p_statue_head', 'statue_head.png', (36, 32), {'anchor': 'bottom', 'margin': 2}),
 ]
 
 
