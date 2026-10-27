@@ -69,7 +69,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
 
     // ---- the thin maps: people, something to use, a reason
     const places = [
-      ['p20_downs', 26.2, 33.6, -Math.PI / 2, 0.45, ['p29_abel']],
+      ['p20_downs', 29.2, 31.4, Math.PI / 2, 0.45, ['p29_abel']],
       ['p22_bellwether', null, null, 0, 0.6, ['p22_gideon']],
       ['p22_combe', 36.0, 19.0, Math.PI / 2, 0.45, ['p22_tamar']],
       ['p29_farmhouse', 6.5, 4.4, Math.PI, 0.5, ['p29_hurst']],

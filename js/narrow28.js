@@ -316,7 +316,6 @@ const NARROW28 = (function () {
   }
 
   // ================================================================ 4/5. hound packs and the rout; Lyra's whistle calls in here
-  let packT = 0;
   function setLeader(e, on) {
     if (on && !e._n28lead) { e._n28lead = true; e._n28s0 = e.scale || 1; e.scale = e._n28s0 * BAL.leaderScale; }
     else if (!on && e._n28lead) { e._n28lead = false; if (e._n28s0) e.scale = e._n28s0; }
@@ -477,7 +476,8 @@ const NARROW28 = (function () {
     // the lure
     if (lure) { lure.left -= dt; if (lure.left <= 0) { const was = lure; lure = null; for (const e of ents()) if (e._n28lure) { e._n28lure = false; if (was.map === here()) { e.homeX = e.x; e.homeY = e.y; } } if (was.map === here()) say(TX.lureEnd, '', 3500); } }
     // packs
-    packT -= dt; if (packT <= 0) { packT = 0.5; try { regroup(); } catch (e) { warnOnce('packs', e); } }
+    // every frame (a handful of hounds): a timer here would make when a pack wakes depend on how long the page ran
+    try { regroup(); } catch (e) { warnOnce('packs', e); }
     try { tickLaw(); } catch (e) { warnOnce('law', e); }
     try { tickNight(); } catch (e) { warnOnce('night', e); }
     try { tickChoices(); } catch (e) { warnOnce('choices', e); }

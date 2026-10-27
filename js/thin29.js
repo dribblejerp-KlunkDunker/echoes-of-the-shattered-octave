@@ -300,8 +300,8 @@ const THIN29 = (function () {
   // per-map placements: [key, when(h) or null, make(m)]
   const PLACE = {
     [DOWNS]: [
-      ['abel', null, (m) => { const [x, y] = at(m, 26.2, 30.2); return person('p29_abel', x, y, Math.PI / 2)(); }],
-      ['turf', null, (m) => { const [x, y] = at(m, 24.6, 30.0); return thing('p29_turf', x, y, { solid: true, radius: 0.35, scale: 0.8, label: TX.turf, use: 'p29_look', look: TX.turfLook })(); }],
+      ['abel', null, (m) => { const [x, y] = at(m, 29.2, 34.6); return person('p29_abel', x, y, -Math.PI / 2)(); }],   // east of the fold, off the walkers' line
+      ['turf', null, (m) => { const [x, y] = at(m, 30.6, 35.0); return thing('p29_turf', x, y, { solid: true, radius: 0.35, scale: 0.8, label: TX.turf, use: 'p29_look', look: TX.turfLook })(); }],
       ['pond', null, (m) => thing('sign', 10.2, 34.2, { scale: 0.01, radius: 0.6, label: TX.pond, use: 'p29_pond' })()],
     ],
     [INN]: [
@@ -441,6 +441,18 @@ const THIN29 = (function () {
   function wire() {
     paint();
     if (typeof NPCS !== 'undefined') for (const k in P) if (!NPCS[k]) NPCS[k] = P[k];
+    // their voices (js/voices.js): pitch, throat, style, from who they are
+    try {
+      if (typeof VOICES !== 'undefined' && VOICES.PEOPLE) Object.assign(VOICES.PEOPLE, Object.assign({
+        p29_agnes: { f0: 204, fs: 1.04, style: 'human' }, p29_ambrose: { f0: 122, fs: 0.95, style: 'human' },
+        p29_hurst: { f0: 176, fs: 1.0, style: 'human' }, p29_jem: { f0: 112, fs: 0.94, style: 'human' },
+        p29_abel: { f0: 104, fs: 0.92, style: 'human' }, p29_ennis: { f0: 196, fs: 1.02, style: 'human' },
+        p29_sim: { f0: 128, fs: 0.96, style: 'human' }, p29_moll: { f0: 212, fs: 1.06, style: 'human' },
+        p29_gil: { f0: 118, fs: 0.95, style: 'human' }, p29_ysolde: { f0: 186, fs: 1.02, style: 'human' },
+        p29_corvin: { f0: 110, fs: 0.93, style: 'human' }, p29_prue: { f0: 220, fs: 1.08, style: 'human' },
+        p29_sexton: { f0: 100, fs: 0.91, style: 'human' },
+      }, VOICES.PEOPLE));
+    } catch (e) { /* default voices */ }
     if (typeof buildAllMaps === 'function') {
       const _b = buildAllMaps;
       buildAllMaps = function () { const maps = _b.apply(this, arguments); try { buildRooms(maps); } catch (e) { warnOnce('build', e); } return maps; };
