@@ -228,7 +228,8 @@ const ENEMIES = {
     desc: 'A hole in the world. Glass shot cannot ring inside it. Iron can.' },
 };
 
-const NAMES_POOL = ['Tamsin Reed', 'Corwin Aye', 'Mirren Salk', 'Joss Carder', 'Emory Wain', 'Wren Halloway', 'Annet Sowerby', 'Merret Salt',
+// the dying names: invented people only. Nobody canon puts elsewhere (in a crate, a cloister tape, a story) can speak from a core (R2).
+const NAMES_POOL = ['Tamsin Reed', 'Corwin Aye', 'Mirren Salk', 'Gethin Coote', 'Osric Dacre', 'Linus Harte', 'Bryn Pryor', 'Elspet Rowe',
   'Dunstan Pell', 'Ivo Marrick', 'Sefa Lund', 'Ottilie Crane', 'Benet Owler', 'Maud Tanner', 'Ro Fenwick', 'Caddoc Vey', 'Elin Thorsby', 'Perrin Lusk'];
 
 // ---- items -------------------------------------------------------------
@@ -306,7 +307,7 @@ const RUMOURS = [
   'Hob Wendle on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.',
   'Captain Vane will sell you anything off the Kestrel that isn\'t nailed down. Crossbows. Axes. Opinions.',
   'The Factor keeps Consortium brigandine and a steam-maul in Greenhall. At Consortium prices, naturally.',
-  'Brother Ignatius sells bell-bronze. The Flambeaux melt cracked bells into maces. It rings when it lands, they say.',
+  'Orrin Pale the sexton sells what the old watch left in the crypt. Ask him quietly; he is used to quiet.',
   'Old Tam has a coat of the Hedge\'s own wool. You walk in it like a held breath. He doesn\'t sell it to just anyone.',
   'Pim Carder put out roots on Rootday. Bettany hummed him through it. The Grafters have not been told. Do not tell them.',
   'Old Harrow swears the Hedge whistled the falling fifth last night. Exactly right. Nobody taught it that.',
@@ -319,7 +320,8 @@ const RUMOURS = [
   'Keep your voice in your chest. Keep your lamp lit. Do not go to the Hedge at the dead hour, whatever it says, whoever it sounds like.',
   'Tam the night-hummer listens to his dead wife at the Flume crossing. We all know. None of us has the heart to tell him what she is.',
   'Bettany at the market stall takes coin for tonic but she would rather take eggs. Nobody has eggs. The hens went quiet first.',
-  'The Tanner twins went down the culvert after their dog on Driftday last. Hob Wendle still sets a lamp in their window. He keeps the culvert key on a nail.',
+  'The Wendle twins went down the culvert after their dog on Driftday last. Hob Wendle still sets a lamp in their window. He keeps the culvert key on a nail.',
+  'The Cantor sang the Tanner boys into the ground side by side, after the bore head went on the platform. Marten and Old Coyle with them. She has not been the same since.',
   'Nell Carder has not let the boy out of the mill since the Grafters posted the inspection. She says he has a cough. It is not a cough.',
   'Red was redder when I was a girl. Summers were warmer. Everyone over thirty says so. The young ones think we are mad.',
   'The dead are buried with bound jaws and a stone on the tongue so they cannot ring. We have not rung a bell in this town since the Synod took them.',
@@ -482,7 +484,7 @@ const NPCS = {
     greet: { polite: 'Evening. Mind the vats; the lime does not care who you are.', normal: 'Tannery\'s shut. Nobody wants leather off a town that is turning to wood.', blunt: 'I have buried two apprentices this year. Try me.' },
     topics: { 'The Hedge': 'The twins went down the culvert after their dog. Driftday last. I set a lamp in their window of a night. The key to the grate is on the nail inside; I have not had the stomach to turn it.', 'Oakhaven': 'A tannery is the one trade that gets quieter the harder you work it. Should have been safe. Should have been.' },
     quest: (g) => {
-      if (g.flags.twins_found && !g.flags.hob_told) { g.flags.hob_told = true; g.gold(10); return { text: 'You went down. You — their coats. Folded. They folded their coats.' + (g.flags.twins_named ? ' And you wrote them in your book, Joss and Wyn, so they are somewhere. Here. It is all I have on me. Take it, and do not argue with a tanner.' : ' Take this. Take it. I cannot go down there, and now I do not have to.'), journal: ['side', 'I told Hob Wendle what I found under the culvert. He paid me, which I did not ask for, and put out the lamp in the twins\' window.'] }; }
+      if (g.flags.twins_found && !g.flags.hob_told) { g.flags.hob_told = true; g.gold(10); return { text: 'You went down. You — their coats. Folded. They folded their coats.' + (g.flags.twins_named ? ' And you wrote them in your book, Ned and Wyn, so they are somewhere. Here. It is all I have on me. Take it, and do not argue with a tanner.' : ' Take this. Take it. I cannot go down there, and now I do not have to.'), journal: ['side', 'I told Hob Wendle what I found under the culvert. He paid me, which I did not ask for, and put out the lamp in the twins\' window.'] }; }
       return null;
     },
   },
@@ -505,6 +507,7 @@ const NPCS = {
     greet: { polite: 'The Note is held. You may speak under it. Quietly, and in tune.', normal: 'This chapel had bells once. The Synod took them for bore-teeth, and it was right to. A bell is a voice with nobody inside it.', blunt: 'I have burned men for less than that tone. I am tired, and the Note is long, and you will not try me again.' },
     topics: { 'The Church': 'Seven years I have held that it let go because one voice shouted. Vance\'s voice. The engineer says it let go because we held. I have thought about his answer every night since he gave it. I do not know yet which of us I would rather be right.', 'The Rite': 'The warrant is read. The Pure Note is held over Oakhaven day and night until the casing. The Hollow in the quarry is to be burned at the hour of the Rite. The Cantor is in the Church\'s protection, which is a phrase I chose myself, and I meant it, and it is a cell.', 'Kaelen Vance': 'He has a glass arm that sings with the Note whether he wills it or not. I envied him that, for a moment, before I remembered what it is doing to him.' },
     quest: (g) => {
+      if (g.flags.ignatius_met && !g.flags.ignatius_gave) { g.flags.ignatius_gave = true; g.give('pellets'); return { text: 'He puts three pellets of glass shot in your hand without looking at them. "The Church does not keep a shop. It gives, once. Do not come back for more."' }; }
       if (!g.flags.ignatius_met) { g.flags.ignatius_met = true; return { text: 'You are the one who goes in and out of the quarry with the engineer\'s charts in your shirt. Do not look at your shirt. I do not want the charts. I want you to know that I know, and that I have chosen, for reasons I will give to my god and not to you, to hold the Note and look at the ceiling.', journal: ['side', 'The Flambeau, Ignatius Crane, knows about the charts and has chosen not to act. The Church holds the Pure Note over the town until the Rite.'] }; }
       return null;
     },
@@ -602,11 +605,17 @@ Object.assign(NPCS.tam, {
   markup: 1.0,
   shopTalk: { hello: 'Essa\'s mother wove for the Hedge. I kept her coats. You can have one if you can keep still in it.', broke: 'Not enough. It is all right. Sit and listen a while instead.', thanks: ['Walk soft in it.', 'She would have liked that you had it.', 'Hm.'], buys: ['valuable'] },
 });
-Object.assign(NPCS.ignatius, {
+// The Church does not keep a shop, and no bell in the Reach escaped the Synod (Book One ch. 1): the chapel's stock is
+// the sexton's (R2). Canon has an Oakhaven sexton (ch. 4, ch. 15) but no name; Orrin Pale is the library's [PROPOSED].
+// js/chapel27.js stands him in the chapel; Ignatius gives once instead (his quest, above).
+NPCS.orrin = {
+  name: 'Orrin Pale, sexton', sprite: 'townsman', portrait: 'townsman', tier: 'low',
+  greet: { polite: 'Evening. If it is about a burial, I keep the book. If it is about anything else, I keep my voice down.', normal: 'Salt for the paths, a spade for the rest. What do you need?', blunt: 'He looks you up and down the way a sexton measures.' },
+  topics: {}, quest: () => null,
   shop: [{ item: 'w_mace' }, { item: 'w_spear' }, { item: 'a_bellhelm' }, { item: 'tonic', price: 5 }],
-  markup: 1.15,
-  shopTalk: { hello: 'Bell-bronze, from bells the Synod did not take. It rings true when it lands. The Cacophony cannot bear a true note. Neither, some nights, can I.', broke: 'The Note is not for sale cheaply.', thanks: ['Hold it in tune.', 'Strike once, cleanly.', 'Go under the Note.'], buys: ['weapon', 'valuable'] },
-});
+  markup: 1.1,
+  shopTalk: { hello: 'What the old watch left in the crypt, and what the dead have no more use for. The Synod took the bells. It did not think to take the rest.', broke: 'Not enough. The dead can wait; I am afraid I cannot.', thanks: ['Mind the salt on the paths.', 'Use it quietly.', 'I will write it in the book.'], buys: ['weapon', 'valuable'] },
+};
 
 // =============================================================================
 //  PART THREE — THE FORGETTING: Whisper-Grove, the Cloister of the Lost Choir, the Malting
@@ -633,7 +642,10 @@ const PLACES_WG = {
   'The Malting (the Office\'s harvest-house)': [31.0, 5.5], 'Halder Wick\'s table': [32.5, 22.5],
 };
 
-const CLOISTER_NAMES = ['Tibb Marlowe', 'Elsie Fenn', 'Oswin Carrow', 'Pell Ashby', 'Hester Quill', 'Rowan Tillet', 'Mab Corrie', 'Ned Sallow', 'Ivy Penhallow', 'Jory Weld'];
+// The Cloister's name-tapes, as Lyra reads them in Book One ch. 20: M. ORRY, BEN DRAY, A. SOWERBY, Halloran, two Veskes,
+// a Marchant, a Tipp, and a ninth; the tenth collar has only the holes where its tape was. The ninth is Tom Wick and the
+// tapeless tenth is his brother Wat's, whose cloak Bryony let out (her letter). The Veskes' initials are [PROPOSED].
+const CLOISTER_NAMES = ['M. Orry', 'Ben Dray', 'A. Sowerby', 'Halloran', 'E. Veske', 'R. Veske', 'Marchant', 'Tipp', 'Tom Wick'];
 
 // how many of her three fragments Sable still holds
 function sableFragments(g) { const f = g.flags; return 3 - (f.sable_returned ? 1 : 0) - (f.bettis_awake ? 1 : 0); }
@@ -794,7 +806,6 @@ Object.assign(ITEMS, {
   thread: { name: 'The Weaver\'s Last Thread', sprite: 'loot', desc: 'One lilac thread from the shroud, wound on a finger-bone. It hums in a voice you nearly know. (+10 maximum voice. Hounds hear you a little further.)', key: true },
   adaletter: { name: 'Bryony Wick\'s Letter', sprite: 'loot', desc: 'To the Precentor of the Cloister, from Bryony Wick: Tom and Wat are to sing on Thursday; she has let out their cloaks; please mind Wat on the risers, he leans.', key: true },
 });
-CLOISTER_NAMES[0] = 'Tom Wick'; CLOISTER_NAMES[7] = 'Wat Wick';
 const FREED_NAMES = ['Corra Bell', 'Simeon Rusk', 'Pip Lawler', 'Agnes Moy', 'Harl Teague'];
 const ROUND_NAMES = ['Edda Thorne', 'Baz Kettle', 'Lise Marrow', 'Old Peg Hollis', 'Tobias Venn', 'Mary Quarrie', 'Fen Abbot', 'Isolde Crake'];
 Object.assign(PLACES_WG, { 'The Sunken Stair (the Catacombs)': [8.5, 20.5], 'The Wick house': [37.5, 15.5] });
@@ -854,8 +865,8 @@ Object.assign(PLACES_WG, { 'The Sunken Stair (the Catacombs)': [8.5, 20.5], 'The
   NPCS.halder.quest = (g) => {
     const f = g.flags;
     if (g.has('adaletter') && f.cloak_names && !f.halder_rest) {
-      return { text: '"...the boys will be in directly... sit, sit, there\'s four..." You have Bryony\'s letter, and two name-tapes in red thread from the Cloister cloaks: TOM WICK. WAT WICK.', choices: [
-        { t: 'Lay the boys\' name-tapes beside their plates.', f: (g) => { f.halder_rest = true; f.halder_done = true; questXp(80); for (const e of G.ents) if (e.id === 'halder') e.loop = false; journal('side', 'A Table for Four: I laid Tom and Wat Wick\'s name-tapes from the Cloister cloaks beside their plates on Halder\'s table. He stopped setting it. He sat down.'); return 'You lay the two red-thread tapes beside the two small plates. Halder stops with the blue plate in his hands. He looks at the tapes for a long time. Then he sets the blue plate down, and does not lift it again, and for the first time in three years Halder Wick sits down at his own table. "They\'re at choir," he says, quite clearly. "Thursday. Bryony\'s let out their cloaks." He folds his hands. He waits for them the way a man waits who knows they are coming.'; } },
+      return { text: '"...the boys will be in directly... sit, sit, there\'s four..." You have Bryony\'s letter, Tom\'s name-tape in red thread from the Cloister cloaks, TOM WICK, and the let-out collar with only the holes where Wat\'s tape was.', choices: [
+        { t: 'Lay Tom\'s tape and Wat\'s collar beside their plates.', f: (g) => { f.halder_rest = true; f.halder_done = true; questXp(80); for (const e of G.ents) if (e.id === 'halder') e.loop = false; journal('side', 'A Table for Four: I laid Tom Wick\'s name-tape and Wat\'s let-out collar from the Cloister cloaks beside their plates on Halder\'s table. He stopped setting it. He sat down.'); return 'You lay the red-thread tape and the empty collar beside the two small plates. Halder stops with the blue plate in his hands. He looks at them for a long time. Then he sets the blue plate down, and does not lift it again, and for the first time in three years Halder Wick sits down at his own table. "They\'re at choir," he says, quite clearly. "Thursday. Bryony\'s let out their cloaks." He folds his hands. He waits for them the way a man waits who knows they are coming.'; } },
         { t: 'Not yet.', f: () => '...the blue one is Bryony\'s...' },
       ] };
     }
@@ -889,11 +900,12 @@ Object.assign(ITEMS, {
   holdkey: { name: 'The Cutter\'s Hold Key', sprite: 'loot', desc: 'An iron key on a bosun\'s lanyard. TELLER — HOLD — 432.', key: true },
   register: { name: 'The Mausoleum Register', sprite: 'loot', desc: 'The sexton\'s register of interments, in a careful hand that gets less careful toward the end. The last entry is dated the night the Anchor went quiet.', key: true },
 });
-TOPICS['The Mausoleum of Chords'] = { low: 'Where the Cantors of Memory are buried, in tuned stone. They say the tombs still ring if you knock.', high: 'Every Cantor of the Memory Anchor is interred there, each in a tomb tuned to the note they kept. It is the only building in the Spectral Woods built to be listened to.' };
+TOPICS['The Mausoleum of Chords'] = { low: 'The Synod\'s maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock.', high: 'The Mausoleum of Chords is the Synod\'s survey name for the House of the Silent Veil, where the Veil\'s scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept.' };
 TOPICS['The Office cutter'] = { low: 'The grey ship that hunted us by sound. It came down east of here with a tree through its bow.', high: 'An Office patrol cutter with a listening-horn on the bow and four hundred and thirty-two voices in its hold. Vane put the willow-crown through her. She came down in the woods to the east.' };
 TOPIC_KEYS.push('The Mausoleum of Chords', 'The Office cutter');
 const PLACES_DW = { 'The Kestrel (the crash)': [27.5, 42.5], 'The Mausoleum of Chords': [27.5, 10.5], 'The Office cutter': [45.5, 24.5], 'The weaver nests': [9.5, 40.5], 'The sexton\'s yard': [10.5, 16.5], 'The hush-lamp shrine': [45.5, 45.5] };
-const TOMB_NOTES = [['Cantor Aubrey Hale', 639], ['Cantor Isel Marrow', 852], ['Cantor Wenna Lisk', 528], ['Cantor Orrin Pell', 741]];
+// the House's own dead: Veil scribes, by the designations they held (the library's [PROPOSED] ink and pigment names)
+const TOMB_NOTES = [['Scribe Verdigris', 639], ['Scribe Lampblack', 852], ['Scribe Vermilion', 528], ['Scribe Sepia', 741]];
 const CODA_VOICES_WEARER = [
   () => '"Lark," it says, in Tobin Ashgrove\'s voice. "Lark, come in now, the house is warm."',
   () => '"Line ninety-four," it says, in Kaelen\'s voice, very tired. "I initialled it. I was sure for three seconds."',

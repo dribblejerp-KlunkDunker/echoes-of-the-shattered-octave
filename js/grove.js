@@ -153,7 +153,7 @@ function wgUse1(e) {
   if (e.use === 'cloaks') {
     if (!f.cloak_names) {
       f.cloak_names = true; CLOISTER_NAMES.forEach(n => G.ledger.push({ name: n, where: 'the Cloister of the Lost Choir', day: G.day })); questXp(40);
-      showEvent('Eleven small cloaks', 'You take the cloaks down off the pegs one at a time. Undyed grey wool, a child\'s size, and in every collar a name-tape stitched in red thread by somebody\'s mother: <i>' + CLOISTER_NAMES.join(', ') + '.</i> Ten names, eleven pegs. The eleventh cloak is red, and has no tape, and hangs on the peg nearest the alcove. There is one shoe on the floor, and you leave it where it is.', [{ t: 'Write the ten names in your ledger.', f: () => { msg('Ten names, in the ledger. The eleventh peg, you leave.', 'good', 4000); journal('side', 'I took the name-tapes from ten children\'s choir cloaks in the Cloister of the Lost Choir and wrote them in my ledger. Eleven pegs; the eleventh cloak is red and has no name in it.'); } }]);
+      showEvent('Ten small cloaks', 'You take the cloaks down off the pegs one at a time. Undyed grey wool, a child\'s size, and in the collars name-tapes stitched in red thread by somebody\'s mother: <i>' + CLOISTER_NAMES.join(', ') + '.</i> Nine names. The tenth collar has only the holes where its tape was; that cloak has been let out at the seams. Ten cloaks, eleven pegs: the red one, on the peg nearest the alcove, has no tape. There is one shoe on the floor, and you leave it where it is.', [{ t: 'Write the nine names in your ledger.', f: () => { msg('Nine names, in the ledger. The empty collar and the eleventh peg, you leave.', 'good', 4000); journal('side', 'I took the name-tapes from the choir cloaks in the Cloister of the Lost Choir and wrote them in my ledger: nine names, and a tenth collar with only the holes where its tape had been. Eleven pegs; the red cloak has no name in it.'); } }]);
     } else msg('Eleven pegs, ten empty collars, one shoe on the floor.', '', 4000);
     return true;
   }
@@ -257,7 +257,7 @@ function bookOneEnd1() {
   else if (f.aegis_calmed) L.push('In the Cloister of the Lost Choir an automaton kneels by eleven empty pegs, chiming the alto line of Hymn 9 to nobody. You left it with its risers. Sable does not ask you why.');
   else if (f.aegis_destroyed) L.push(`WG-41,005 is in your ledger: the boy inside the Aegis, who said his number three times as the bronze went still. ${G.has('redcloak') ? 'The red cloak is folded in your pack. You have not decided whose it is.' : 'The red cloak is still on its peg.'}`);
   else L.push('The Aegis still stands in its alcove in the Cloister, guarding eleven empty places. Nobody sang to it.');
-  if (f.cloak_names) L.push(`Ten children of the Cloister choir are in your ledger by the name-tapes in their collars: ${CLOISTER_NAMES.slice(0, 2).join(', ')}, and eight more. The eleventh peg had no tape.`);
+  if (f.cloak_names) L.push(`Nine children of the Cloister choir are in your ledger by the name-tapes in their collars: ${CLOISTER_NAMES.slice(0, 2).join(', ')}, and seven more. The tenth collar had only the holes where its tape had been, and the red cloak had none.`);
   if (f.bettis_put_back) L.push('Bettis Renn remembered all three years and begged to be put back, and you put him back. Sable paid a fragment for that, and she will never be able to say which one.');
   else if (f.bettis_kept_awake) L.push('Bettis Renn is awake on a clean bench in the Malting, remembering three years of being walked in a loop. He begged to be put back. You would not. You are not sure, either way, who that was for.');
   else L.push('On a bench in the Malting a Hollow is still saying "name, please" in somebody else\'s voice.');
@@ -355,7 +355,7 @@ function wgUse(e) {
     if (!G.has('adaletter') && !f.adaletter_read) {
       f.adaletter_read = true; G.give('adaletter');
       journal('side', 'A Table for Four: in the Wick house, a letter from Bryony Wick to the Cloister: her sons Tom and Wat were to sing on the Thursday. Halder is setting their plates. Their cloaks may still be on the Cloister pegs.' + (f.cloak_names ? ' I already have their name-tapes.' : ''));
-      showEvent('Bryony Wick\'s letter', '<i>To the Precentor, the Cloister of the Lost Choir. Tom and Wat are to sing Thursday; I have let out their cloaks, which they have grown out of again, the pair of them. Please mind Wat on the risers, he leans. Halder will fetch them after. Supper is at seven and he will set it at six, he always does. — Bryony Wick.</i><br><br>It was never sent. It is dated the day the Anchor went quiet.', [{ t: 'Fold it into your pack.', f: null }]);
+      showEvent('Bryony Wick\'s letter', '<i>To the Precentor, at the Cloister. Tom and Wat are to sing Thursday; I have let out their cloaks, which they have grown out of again, the pair of them. Please mind Wat on the risers, he leans. Halder will fetch them after. Supper is at seven and he will set it at six, he always does. — Bryony Wick.</i><br><br>It was never sent. It is dated the day the Anchor went quiet.', [{ t: 'Fold it into your pack.', f: null }]);
     } else msg('An empty dresser. You have Bryony\'s letter.', '', 3000);
     return true;
   }

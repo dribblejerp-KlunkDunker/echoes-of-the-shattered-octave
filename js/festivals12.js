@@ -988,7 +988,7 @@ const FESTIVALS12 = (function () {
     { name: 'Tobin Ashgrove', when: (f) => !!(f.tobin_417_done || f.lyra_met) },
     { name: 'Joram Pellow', when: (f) => f.p9q_pellow_done === true || (typeof f.p9q_pellow === 'number' && f.p9q_pellow >= 1) },
     { name: 'Essa, who was Tam\'s', when: (f) => !!f.tam_met },
-    { name: 'Joss Wendle', when: (f) => !!(f.twins_found || f.twins_named) },
+    { name: 'Ned Wendle', when: (f) => !!(f.twins_found || f.twins_named) },
     { name: 'Wyn Wendle', when: (f) => !!(f.twins_found || f.twins_named) },
     { name: 'Davin Hale', when: (f) => !!f.rooke_boots },
     { name: 'Halder Wick', when: (f) => !!f.halder_dead },

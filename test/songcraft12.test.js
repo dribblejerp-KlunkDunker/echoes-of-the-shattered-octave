@@ -346,7 +346,7 @@ const fits = (page) => page.evaluate(() => {
     await page.locator('#p12s-opt-rod').scrollIntoViewIfNeeded();
     await page.locator('#p12s-opt-rod').click();
     assert.equal(await page.evaluate(() => SONGCRAFT.set.rod), false, 'the rod switch turns off');
-    assert.equal(await page.evaluate(() => NPCS.ignatius.shop.some(e => e.item === 'p12_rod')), false, '... and the stock goes');
+    assert.equal(await page.evaluate(() => NPCS.orrin.shop.some(e => e.item === 'p12_rod')), false, '... and the stock goes');
     await page.locator('#p12s-opt-rod').click();
     assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('octave.songcraft12.v1')).rod), true, 'persisted');
     await shot(page, 'options-1280.png');

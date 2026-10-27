@@ -82,7 +82,7 @@ async function boot(browser, viewport, opts) {
     check(mp.doorsLocked === 0 && mp.exit.door && !mp.exit.locked && mp.exit.portal === 'oakhaven' && mp.land && mp.spawnFree && mp.base, 'no inner door is locked; the street door is never locked and lands in free ground; static entities are the baseCount');
     check(mp.exits.every((n) => n >= 2), 'every room has two ways out (' + mp.exits.join() + ')');
 
-    // ---------------------------------------------------------------- Wenna and the door: before the quest
+    // ---------------------------------------------------------------- Bethan and the door: before the quest
     const pre = await ev(() => {
       __go('oakhaven', 7.7, 11.2, -Math.PI / 2);
       const out = {}; const oh = G.maps.oakhaven, c = oh.get(6, 7);
@@ -94,7 +94,7 @@ async function boot(browser, viewport, opts) {
       out.givers = LOGMAP.QUEST_GIVERS.includes('p13h_wenna');
       return out;
     });
-    check(pre.wenna && pre.lintel && pre.sprites && pre.givers, 'Wenna and the door-reeds stand in the lane; her sprites are painted; the map marks her as a giver');
+    check(pre.wenna && pre.lintel && pre.sprites && pre.givers, 'Bethan and the door-reeds stand in the lane; her sprites are painted; the map marks her as a giver');
     check(pre.door.locked === 'p13h_open' && !pre.keyOpen && /shut, not barred/.test(pre.door.msg) && /three First Reeds|Three First Reeds/.test(pre.lintelLabel) && pre.lintelSprite === 'p13h_lintel3', 'before the key: the door is shut with its own line, three reeds and a bare nail');
 
     // pressing E at the shut door does not open it
@@ -111,11 +111,11 @@ async function boot(browser, viewport, opts) {
       talk(e); out.again = DLG.log[0].t; out.againChoices = DLG.choices.length; closeModal(); G.state = 'play';
       return out;
     });
-    check(dec.state === 'dialogue' && /three reeds and a bare nail/.test(dec.log[0]) && dec.choices.length === 2, 'talking to Wenna opens the dialogue with the offer and two choices');
+    check(dec.state === 'dialogue' && /three reeds and a bare nail/.test(dec.log[0]) && dec.choices.length === 2, 'talking to Bethan opens the dialogue with the offer and two choices');
     check(dec.q === 0 && dec.flags.join() === 'p13h_ask' && /No\. No, I would not either/.test(dec.reply) && /You again/.test(dec.again) && dec.againChoices === 2, 'declining is clean: only p13h_ask is written; she asks again, differently');
     // topics
     const top = await ev(() => { const n = NPCS.p13h_wenna; return Object.keys(n.topics).map((k) => [k, n.topics[k].length > 30]); });
-    check(top.length === 4 && top.every((t) => t[1]), 'Wenna has four topics (the Tarrows, the First Reed, the Hedge, the Last Note)');
+    check(top.length === 4 && top.every((t) => t[1]), 'Bethan has four topics (the Tarrows, the First Reed, the Hedge, the Last Note)');
 
     // accept
     const acc = await ev(() => {
@@ -362,7 +362,7 @@ async function boot(browser, viewport, opts) {
     check(fin.title === 'The eighth count' && fin.btn === 'Eight.' && fin.done && fin.gold === 10 && fin.beads && fin.j === 1 && /eighth count/.test(fin.jt), 'the eighth count finishes it: 10 sovereigns, the beads, one journal line');
     check(fin.rep === 5, 'Hedge standing rises by 5, once, through changeRep (' + fin.rep + ')');
     check(fin.again === false && fin.gold2 === fin.gold, 'finishing twice pays nothing twice');
-    check(fin.quiet && fin.pos === 0 && fin.bundleGone && fin.lintel === 'p13h_lintel4' && /Quiet\. Not the Hedge/.test(fin.wennaDone), 'afterwards the house is quiet, the props rest, the fourth reed hangs, and Wenna says so');
+    check(fin.quiet && fin.pos === 0 && fin.bundleGone && fin.lintel === 'p13h_lintel4' && /Quiet\. Not the Hedge/.test(fin.wennaDone), 'afterwards the house is quiet, the props rest, the fourth reed hangs, and Bethan says so');
     const quietNow = await ev(async () => {
       const H = HOUSE13, out = {}; let calls = 0; Audio_.sfx.step._orig = () => { calls++; }; Audio_.sfx.step._test = true;
       __go('p13h_tarrow', 3.5, 5.0, 0); H.T.room = 3; H.T.count = null;
@@ -459,7 +459,7 @@ async function boot(browser, viewport, opts) {
       return out;
     });
     check(green.untouched[0] === 0 && green.untouched[1] === 0, 'the Greening with the quest never begun writes nothing');
-    check(green.closed && green.lines === 1 && /gone under the oaks/.test(green.line) && !green.wenna && !green.lintel && green.door[0] === '__never' && /A shuttered house/.test(green.door[1]) && !green.givers && !green.active && green.quest === null, 'the Greening with the quest open: one journal line, once; Wenna and the reeds go; the door is barred as before');
+    check(green.closed && green.lines === 1 && /gone under the oaks/.test(green.line) && !green.wenna && !green.lintel && green.door[0] === '__never' && /A shuttered house/.test(green.door[1]) && !green.givers && !green.active && green.quest === null, 'the Greening with the quest open: one journal line, once; Bethan and the reeds go; the door is barred as before');
     check(green.doneLeft[0] === false && green.doneLeft[1] === 0, 'a finished quest is not closed or re-journalled by the Greening');
 
     // ---------------------------------------------------------------- switch off = the town as before
@@ -508,7 +508,7 @@ async function boot(browser, viewport, opts) {
       reset(); out.buttons = 0;
       return out;
     });
-    check(inp.key === 'dialogue', 'keyboard: E at Wenna opens her dialogue');
+    check(inp.key === 'dialogue', 'keyboard: E at Bethan opens her dialogue');
     check(!inp.hasTouch || inp.touch === 'dialogue', 'touch: the Use button opens it too');
     check(inp.pad0 === 'play' && inp.pad === 'dialogue', 'controller: button A opens it too');
     const btns = await ev(() => {
@@ -560,7 +560,7 @@ async function boot(browser, viewport, opts) {
       renderAccessibilityMenu(); const g = document.querySelector('#modal-panel .ctl-grid'); out.opts = !!document.getElementById('h13-house-opt') && g.scrollWidth <= g.clientWidth + 1; closeModal(); G.state = 'play';
       return out;
     });
-    check(compact.dlg.inside && !compact.dlg.over && compact.btnsVisible, '640x400: Wenna\'s dialogue fits with every button visible');
+    check(compact.dlg.inside && !compact.dlg.over && compact.btnsVisible, '640x400: Bethan\'s dialogue fits with every button visible');
     check(compact.ev.inside && compact.evFits, '640x400: the shawl event fits');
     check(compact.opts, '640x400: the Options row fits the grid');
     await cp.evaluate(() => { __go('p13h_tarrow', 9.0, 11.6, -1.0); Object.values(G.map.doors).forEach((d) => { d.open = d.target = 1; }); });

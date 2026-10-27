@@ -713,11 +713,11 @@ function checkResonantWall(freq) {
 const LORE_BOOKS = [
   {
     id: 'bk_octave', title: 'On the Eight Anchors of the Long Octave',
-    body: '<i>From the Conservatory of Bores, 389 SR:</i><br><br>Eight Spires pin the continent to the world: Growth in the Reach (174 Hz), Flame in the Caldera (285 Hz), Iron in the Peaks (396 Hz), the Sun at the Dawning Heights (528 Hz), Drift on the Tempest Coast (639 Hz), Memory in the Spectral Woods (741 Hz), the Silica Erg in the Dunes (852 Hz), and the Keynote beneath the Organum where the eight roots meet.<br><br>A Spire is only stone and bronze. What lives inside it is a Chorister, and what the Consortium drills is its blood.',
+    body: '<i>From the Conservatory of Bores, 389 SR:</i><br><br>Eight Anchors pin the continent to the world, each with its own law and its own note: Growth in the Reach (174 Hz), Heat in the Caldera (285 Hz), Mass in the Iron Peaks (396 Hz), Time in the Shifting Dunes (417 Hz), Light at the Dawning Heights (528 Hz), Velocity on the Tempest Coast (639 Hz), Memory in the Spectral Woods (741 Hz), and Decay at the Gate (852 Hz), which keeps the rest between the notes.<br><br>An Anchor is only stone and bronze where it breaks the ground. What lives under it is a Chorister, and the Conservatory does not advise drilling into a thing that sings.',
   },
   {
     id: 'bk_417', title: 'Parish Register: The Year 417 & Cantor Tobin',
-    body: '<i>In the hand of Cantor Tobin Ashgrove, spring 417 SR:</i><br><br>The Pellow child is going too still in her cot, and the Hush has her by the ankles. A murmur is not enough. If she slips further I will sing the calling-song at full voice—the turn and the falling fifth—and the hounds will hear it from the quarry to the Flume.<br><br>So I will go out by the kitchen door and keep singing across the yard, that they look at me and not at the cradle. If this is the last line in my hand, the child was worth it. Tell Lyra a martyr is just a musician who gave up before the coda.',
+    body: '<i>In the hand of Cantor Tobin Ashgrove, spring 417 SR:</i><br><br>The Pellow child is going too still in her cot, and the Hush has her by the ankles. A murmur is not enough. If she slips further I will sing the calling-song at full voice—the turn and the falling fifth—and the hounds will hear it from the quarry to the Flume.<br><br>So I will go out by the kitchen door and keep singing across the yard, that they look at me and not at the cradle. If this is the last line in my hand, the child was worth it. Tell Lyra she was right: a martyr is just a musician who gave up before the coda. I am not giving up. I am finishing the piece.',
   },
   {
     id: 'bk_glass', title: 'Treatise on Aether-Glass & the Four Stages',
@@ -729,7 +729,7 @@ const LORE_BOOKS = [
   },
   {
     id: 'bk_narrow', title: 'Rhymes of the Hedge-Nursery',
-    body: '<i>Too loud brings the hounds,<br>Too still brings the Hush;<br>Keep your voice in your ribs,<br>Keep your foot off the brush.<br>If your mother calls out<br>From the thorn after ten—<br>Bolt the shutter, blow the reed,<br>Do not answer her then.</i>',
+    body: '<i>Voice at the hedge, voice at the door,<br>answer it once and you\'ll answer no more.<br>Too loud brings the hounds, too still brings the Hush,<br>so murmur, my lamb, in the Narrow. Hush.</i><br><br>Oakhaven skipping rhyme, as the children of the Hedge-nursery skip it, two ends of a rope and nobody counting aloud.',
   },
 ];
 
@@ -853,7 +853,7 @@ function renderBountyBoard() {
   const html = `<h2>Parish & Guild Noticeboard</h2><button class="dfbtn small close" id="x">Close</button>
   <p class="muted">Posted writs, guild bounties, and entrances to the deep vaults.</p>
   <div class="list">
-    <button class="dfbtn" id="bb-b1" ${f.bounty_1_done ? 'disabled' : ''}><b>Writ of Clearing: Cull the Pack</b> — Slay 4 beasts or proctors (${b1}) · Reward: 35 sov & +10 Hedge Standing</button>
+    <button class="dfbtn" id="bb-b1" ${f.bounty_1_done ? 'disabled' : ''}><b>Writ of Clearing: Cull the Pack</b> — Clear 4 beasts off the roads (${b1}) · Reward: 35 sov & +10 Hedge Standing</button>
     <button class="dfbtn" id="bb-b2" ${f.bounty_2_done ? 'disabled' : ''}><b>Scribe's Commission: Three Surrendered Names</b> — Record 3 names in your Ledger (${b2}) · Reward: 45 sov & Light-Glass Shard</button>
     <button class="dfbtn" id="bb-tobin" ${f.tobin_417_done ? 'disabled' : ''}><b>417 Investigation: Cantor Tobin's Last Stand</b> — ${f.tobin_417_started ? 'Inspect the memorial cairn under the western oaks, outside the Hedge' : 'Take up the search for Tobin Ashgrove\'s tuning-blade (417 SR)'}</button>
     ${houseLeft() ? `<button class="dfbtn" id="bb-house" disabled><b>Your House on Cooper\'s Row</b> — Left behind in Oakhaven</button>` : `<button class="dfbtn" id="bb-house" ${f.house_bought ? '' : (p.gold < 60 ? 'disabled' : '')}><b>${f.house_bought ? 'Enter Your House on Cooper\'s Row' : 'Deed of Sale: Cooper\'s Row House (60 sovereigns)'}</b> — Safe bed, storage chest, and tempering hearth</button>`}
@@ -867,7 +867,7 @@ function renderBountyBoard() {
       f.bounty_1_done = true; G.gold(35); changeRep('hedge', 10); questXp(50); Audio_.sfx.pickup();
       msg('You claim 35 sovereigns for clearing the roads.', 'good', 3500);
       renderBountyBoard();
-    } else msg('Slay at least 4 enemies first, then return to claim the bounty.', 'warn', 2500);
+    } else msg('Clear at least 4 beasts off the roads first, then come back for the writ.', 'warn', 2500);
   };
   $('#bb-b2').onclick = () => {
     if (G.ledger.length >= 3 && !f.bounty_2_done) {
@@ -949,7 +949,7 @@ if (typeof PARTY_BARKS !== 'undefined') {
     'Every ledger page holds forty names. When I was fourteen, a crooked line meant ruling the whole sheet again.',
     'Kaelen keeps looking at my ink-bottle as if it were a gauge. We are both people who counted for the Synod.',
     'Lyra asked me whether a name read aloud still belongs to the person. I told her it belongs to whoever answers.',
-    'If we reach Port Cantabile, the Hall of Carriage will have a clerk at the pier. I know his handwriting.',
+    'If we ever reach the Organum, the Hall of Carriage keeps a clerk on the third floor. I know his handwriting.',
   ];
   PARTY_BOSS.sable = [
     'Sable writes a single line in the margin of the Ledger and shuts the clasp. "Filed."',
@@ -1253,7 +1253,7 @@ function renderKeyRebindMenu() {
     }
     if (maps.clearing) {
       const cl = maps.clearing;
-      cl.deco('grave', 7.5, 22.5, { radius: 0.35, scale: 0.85, use: 'tobin_cairn', label: 'A moss-grown cairn from 417 SR: T. ASHGROVE' });
+      cl.deco('grave', 7.5, 22.5, { radius: 0.35, scale: 0.85, use: 'tobin_cairn', label: 'A moss-grown cairn by the old stile: T. ASHGROVE, 417. They buried his lyre here.' });
       cl.item('herb_willow', 14.5, 12.5); cl.item('herb_moss', 31.5, 20.5);
     }
     if (maps.whispergrove) {
@@ -1318,8 +1318,8 @@ function renderKeyRebindMenu() {
       if (!G.player.weapons.includes('tobin_blade')) G.player.weapons.push('tobin_blade');
       questXp(90); Audio_.sfx.fifth();
       earnTitle('Heir of 417');
-      journal('side', 'The Year 417: At the moss cairn outside the Hedge I found Cantor Tobin Ashgrove\'s Tuning-Blade, still humming at 174 Hz where he laid it down on his way up to the Pellow farm.');
-      showEvent('The Cairn of 417', 'Under a flat stone marked <b>T.A. · 417</b> lies an oilskin bundle. Inside is a long blade of bell-bronze ground to ring at 174 Hz, and a slate with one line scratched on it:<br><br><i>If Lyra finds this: I am going up to the Pellows\'. Their girl is cooling. If I have to sing, I will go out into the yard, so the house is further away. Keep your voice in your chest, lark.</i><br><br><b>(You ready Tobin\'s Tuning-Blade!)</b>', [{ t: 'Take up the blade.', f: null }]);
+      journal('side', 'The Year 417: The moss cairn by the old stile is where Oakhaven buried Cantor Tobin Ashgrove\'s lyre, the only thing of him they found. Under a flat stone at its foot I found his Tuning-Blade, still humming at 174 Hz where he laid it down on his way up to the Pellow farm.');
+      showEvent('The Cairn of 417', 'The cairn stands by the old stile, where they found his lyre in the morning. It was all there was to bury. At its foot, under a flat stone the cairn\'s builders never lifted, lies an oilskin bundle. Inside is a long blade of bell-bronze ground to ring at 174 Hz, and a slate with one line scratched on it:<br><br><i>If Lyra finds this: I am going up to the Pellows\'. Their girl is cooling. If I have to sing, I will go out into the yard, so the house is further away. Keep your voice in your chest, lark.</i><br><br><b>(You ready Tobin\'s Tuning-Blade!)</b>', [{ t: 'Take up the blade.', f: null }]);
       return;
     }
     if (e.use === 'proc_lever') {

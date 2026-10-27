@@ -110,7 +110,7 @@ async function boot(browser, viewport) {
     // ------------------------------------------------------------------ a book page (reading.js)
     await reset();
     const book = await ev(async () => { readLoreBook(0); await new Promise(r => setTimeout(r, 120)); const s = document.querySelector('.hd-sheet'); return { text: s.innerText, ui: [...document.querySelectorAll('.hd-bar button, .hd-foot button, .hd-sheet button')].map(b => b.textContent + '|' + (b.getAttribute('aria-label') || '')).join(' ; ') }; });
-    assert(/Huit Flèches clouent le continent/.test(book.text), 'the book page is French: ' + book.text.slice(0, 200));
+    assert(/Huit Ancres clouent le continent/.test(book.text), 'the book page is French: ' + book.text.slice(0, 200));
     assert(/Page 1 sur 2/.test(book.text), 'the page counter is French');
     await page.screenshot({ path: path.join(SHOTS, 'fr-reading-1280.png') });
     pass('reading.js book page in French');

@@ -11,13 +11,9 @@ Auto-timing	Minutage auto
 On	Activé
 Off	Désactivé
 Garrow Finch	Garrow Finch
-Garrow Finch nudges a stool out with his boot. "Evening. A throw of bones, if you have a coin to lose?"	Garrow Finch pousse un tabouret du bout de sa botte. "Bonsoir. Un lancer d'os, si vous avez une pièce à perdre ?"
-Garrow Finch, a quarry hauler off shift, rattles his cup. "Bones? One to twenty sovereigns. Nobody here ever got rich, and nobody has had to leave."	Garrow Finch, charretier de la carrière sorti de son poste, secoue son gobelet. "Des os ? De un à vingt souverains. Personne ici n'a jamais fait fortune, et personne n'a dû partir."
-"Bones, or move along," says Garrow, and rattles the cup.	"Des os, ou circulez", dit Garrow, et il secoue le gobelet.
 Play Bones	Jouer aux Os
 Garrow slides the cup away. "Enough for one day. Come back when it has turned over."	Garrow écarte le gobelet. "Ça suffit pour aujourd'hui. Revenez quand la journée aura tourné."
 You have nothing to put on the table.	Vous n'avez rien à poser sur la table.
-Garrow's bones, Hetty's taproom, the stool by the fire: all of it is on the wrong side of the Greening now. I still catch myself counting to fourteen.	Les os de Garrow, la salle de Hetty, le tabouret près du feu : tout cela est du mauvais côté du Reverdissement, désormais. Il m'arrive encore de compter jusqu'à quatorze.
 Bones	Os
 Closest to fourteen wins. Take dice one at a time, up to four; go over fourteen and you bust. Garrow takes a die on eleven or less. Ties go to the table. Exactly fourteen pays double. Two ones on your first throw is a Quiet: the cup is void.	Le plus proche de quatorze l'emporte. Prenez les dés un à un, jusqu'à quatre ; au-delà de quatorze, vous sautez. Garrow prend un dé à onze ou moins. Les égalités vont à la table. Quatorze pile paie double. Deux as au premier lancer, c'est un Calme : le gobelet est nul.
 Stake	Mise
@@ -49,7 +45,6 @@ Play for the room	Jouer pour la salle
 Play for the room (the Boar fills in the evening)	Jouer pour la salle (le Sanglier se remplit le soir)
 Play for the room (you have played tonight)	Jouer pour la salle (vous avez déjà joué ce soir)
 The Boar's Reel	La Gigue du Sanglier
-You take out your instrument, and the Boar goes quiet in the ordinary way: the way a room does before someone tries.	Vous sortez votre instrument, et le Sanglier se tait de la façon ordinaire : celle d'une salle avant que quelqu'un essaie.
 Notes fall to the line. Press the lane as each one lands.	Les notes tombent vers la ligne. Appuyez sur la voie quand chacune arrive.
 A S W D or the arrow keys · pad: X A Y B, Back puts it away · or tap a lane · Esc puts it away	A S W D ou les flèches · manette : X A Y B, Retour range l'instrument · ou touchez une voie · Échap range l'instrument
 Four lanes of falling notes and a line to meet them on.	Quatre voies de notes qui tombent et une ligne pour les rencontrer.
@@ -60,10 +55,6 @@ Left	Gauche
 Down	Bas
 Up	Haut
 Right	Droite
-A few polite coughs. Hetty collects the glasses.	Quelques toux polies. Hetty ramasse les verres.
-Kind applause, mostly for the effort. Someone puts two coins in the hat.	Des applaudissements aimables, surtout pour l'effort. Quelqu'un met deux pièces dans le chapeau.
-The room claps along on the last verse. Hetty sets a cup by your elbow.	La salle bat la mesure sur le dernier couplet. Hetty pose une chope près de votre coude.
-They stamp the last bars out on the boards. Even Hetty stops wiping the same glass.	Ils frappent les dernières mesures sur les planches. Même Hetty cesse d'essuyer le même verre.
 You collect {0} sovereigns from the hat.	Vous ramassez {0} souverains dans le chapeau.
 The hat stays empty.	Le chapeau reste vide.
 The Hedge folk will remember it kindly.	Les gens de la Haie s'en souviendront avec bonté.
@@ -96,3 +87,12 @@ ahead of you	devant vous
 off to your right	sur votre droite
 behind you	derrière vous
 off to your left	sur votre gauche
+Garrow Finch, on a crate in the cellar, nudges a stool out with his boot. "Hetty's board says no dice, and Hetty's board is upstairs. A throw of bones, if you have a coin to lose?"	Garrow Finch, sur une caisse dans la cave, pousse un tabouret du bout de sa botte. "Le tableau de Hetty dit pas de dés, et le tableau de Hetty est en haut. Un lancer d'os, si vous avez une pièce à perdre ?"
+Garrow Finch, a quarry hauler off shift, shakes his cup inside his coat so it will not rattle. "Bones? One to twenty sovereigns. Nobody down here ever got rich, and nobody has had to leave."	Garrow Finch, charretier de la carrière sorti de son poste, secoue son gobelet sous son manteau pour qu'il ne claque pas. "Des os ? De un à vingt souverains. Personne ici en bas n'a jamais fait fortune, et personne n'a dû partir."
+"Bones, or back up the stair," says Garrow, and shakes the cup inside his coat.	"Des os, ou remontez l'escalier", dit Garrow, et il secoue le gobelet sous son manteau.
+Garrow's bones in the cellar, Hetty's taproom, the playing at a hand's width: all of it is on the wrong side of the Greening now. I still catch myself counting to fourteen.	Les os de Garrow dans la cave, la salle de Hetty, la musique à une largeur de main : tout cela est du mauvais côté du Verdissement, désormais. Il m'arrive encore de compter jusqu'à quatorze.
+You take out your instrument and play for the room the Narrow way, a hand's width loud, the tune carried by the fingers and not the breath. The Boar goes quiet in the ordinary way: the way a room does before someone tries.	Vous sortez votre instrument et jouez pour la salle à la manière de l'Étroit, à une largeur de main, l'air porté par les doigts et non par le souffle. Le Sanglier se tait de la façon ordinaire : celle d'une salle avant que quelqu'un essaie.
+Nobody looks up. Hetty collects the glasses.	Personne ne lève les yeux. Hetty ramasse les verres.
+A few people touch two fingers to the table, which is how the Boar applauds now. Someone puts two coins in the hat.	Quelques-uns posent deux doigts sur la table, c'est ainsi que le Sanglier applaudit désormais. Quelqu'un met deux pièces dans le chapeau.
+Half the room taps the last verse out on the tables with one finger, without a sound. Hetty sets a cup by your elbow.	La moitié de la salle bat le dernier couplet d'un doigt sur les tables, sans un bruit. Hetty pose une tasse près de votre coude.
+On the last bars the whole room lifts its hands and shakes them in the air, the silent applause, and nobody makes a sound. Even Hetty stops wiping the same glass.	Sur les dernières mesures, toute la salle lève les mains et les agite en l'air, les applaudissements muets, et personne ne fait un bruit. Même Hetty cesse d'essuyer le même verre.

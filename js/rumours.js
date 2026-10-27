@@ -119,8 +119,8 @@ const STORYRUM = (() => {
     'The culvert key is off its nail at Hob Wendle\'s. First time in a month. Somebody has gone down, and nobody has said so.');
   add('d_twins_found', 'deed', 'any', 42, { req: ['twins_found'], not: ['hob_told'], note: 'You found the twins\' coats under the culvert' },
     'A stranger has been down the Tannery culvert and come back up. Hob\'s lamp is still in the window, and Hob is standing at it, not looking.');
-  add('d_twins_named', 'deed', 'any', 43, { req: ['twins_named'], not: ['greening'], note: 'You wrote Joss and Wyn in your ledger' },
-    'Somebody has written the Tanner twins down, Joss and Wyn, whole names, somewhere that is not the Office\'s ledger. I do not know where that is. I would like to.');
+  add('d_twins_named', 'deed', 'any', 43, { req: ['twins_named'], not: ['greening'], note: 'You wrote Ned and Wyn in your ledger' },
+    'Somebody has written the Wendle twins down, Ned and Wyn, whole names, somewhere that is not the Office\'s ledger. I do not know where that is. I would like to.');
   add('d_hob_told', 'deed', 'any', 44, { req: ['hob_told'], not: ['greening'], note: 'You told Hob what you found' },
     'Hob Wendle has put out the lamp in his window. All of Tannery Row saw it go dark, and none of us said a word.');
   add('d_boots', 'deed', 'any', 46, { req: ['rooke_boots'], not: ['boots_delivered'], note: 'Rooke gave you Davin\'s boots' },

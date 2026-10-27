@@ -14,7 +14,8 @@ const COMPANIONS = {
   },
   lyra: {
     name: 'Lyra Ashgrove', sprite: 'lyra', portrait: 'lyra', camp: 'lyra_dw', hp: 40, noise: 2.0,
-    ability: { name: 'Calling-Song', cd: 35 },
+    // canon: "Lyra cannot sing" until her voice comes back (lyra_voice); before that she whistles the falling fifth (R2)
+    ability: { get name() { return (typeof G !== 'undefined' && G.flags && G.flags.lyra_voice) ? 'Calling-Song' : 'Whistled Fifth'; }, cd: 35 },
     join: '"I\'ll hum," she says. "Under the breath, the way the night-hummers do at the crossings. The Hush won\'t get near you while I\'m humming. I can\'t do anything about the hounds."',
     leave: 'Lyra goes back to the fire, humming.',
   },
@@ -43,7 +44,7 @@ const PARTY_BARKS = {
     selfhurt: 'I\'m fine. The arm\'s ringing, that\'s all. Give me a minute.',
   },
   lyra: {
-    'map:mausoleum': 'The Cantors of Memory. I learned their names when I was small. I never thought I\'d walk on them.',
+    'map:mausoleum': 'The House of the Veil. The scribes kept everyone\'s names in here. I never thought I\'d walk on theirs.',
     'map:belfry': 'Nobody has rung for the dead out here in three years. You can hear it in the woods. They\'re waiting.',
     dirge: 'That\'s the office for the dead, sung wrong. Every third line missing. It makes my teeth ache.',
     quiet: 'I can\'t sing near it. Nothing can. Don\'t let it get between us.',
@@ -70,7 +71,7 @@ const PARTY_CHAT = {
     'Hounds won\'t come near the glass. Neither will most people. It\'s restful.',
   ],
   lyra: [
-    'My father used to say a martyr is just a musician who gave up before the coda.',
+    'I told my father once that a martyr is just a musician who gave up before the coda. He wrote it down.',
     'Feet on the moss, not the twigs. Breathe through your nose. There. That\'s the Narrow. You\'re good at it.',
     'I remember the name of everyone I have sung into the ground. It\'s the only thing I\'m vain about.',
     'Kaelen hums when the arm is bad. He thinks I don\'t know. I\'m the one who taught him that note.',
@@ -181,10 +182,11 @@ function partyAbility() {
     msg(`Kaelen's glass arm comes down on ${theName(best.def.name, false)} like a struck bell. Everything near it reels.`, 'good', 3000);
   } else {
     if (G.mutedT > 0 || G.ents.some(o => o.kind === 'enemy' && !o.dead && !o.hidden && o.def.quiet && dist2(o.x, o.y, e.x, e.y) < 16)) { msg('Lyra opens her mouth and nothing comes out. Not here.', 'bad', 2000); return; }
-    P.cd = COMPANIONS.lyra.ability.cd; addNoise(3.6); Audio_.sfx.fifth();
+    const sung = !!G.flags.lyra_voice;
+    P.cd = COMPANIONS.lyra.ability.cd; addNoise(sung ? 3.6 : 3.0); Audio_.sfx.fifth();
     let n = 0;
-    for (const o of G.ents) if (o.kind === 'enemy' && !o.dead && !o.hidden && o.def.cacophony && dist2(o.x, o.y, e.x, e.y) < 196) { o.stun = Math.max(o.stun || 0, 3.5); n++; }
-    msg(n ? `Lyra sings the calling-song, all of it, the turn and the falling fifth. ${n === 1 ? 'The Cacophony stops' : 'Every Cacophony in hearing stops'} to listen.` : 'Lyra sings the calling-song into the dark, and nothing out there is listening.', n ? 'good' : '', 3500);
+    for (const o of G.ents) if (o.kind === 'enemy' && !o.dead && !o.hidden && o.def.cacophony && dist2(o.x, o.y, e.x, e.y) < 196) { o.stun = Math.max(o.stun || 0, sung ? 3.5 : 2.5); n++; }
+    msg(sung ? (n ? `Lyra sings the calling-song, all of it, the turn and the falling fifth. ${n === 1 ? 'The Cacophony stops' : 'Every Cacophony in hearing stops'} to listen.` : 'Lyra sings the calling-song into the dark, and nothing out there is listening.') : (n ? `Lyra cannot sing it, so she whistles it through two fingers: the turn and the falling fifth. ${n === 1 ? 'The Cacophony stops' : 'Every Cacophony in hearing stops'} to listen.` : 'Lyra whistles the falling fifth into the dark, and nothing out there is listening.'), n ? 'good' : '', 3500);
   }
   partyHud();
 }

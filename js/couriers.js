@@ -140,7 +140,7 @@ const COURIERS = (function () {
       when: (f) => f.hob_told, alive: (f) => oakhavenOpen(f), npc: ['hob'],
       text: (f) => f.twins_named ? P(
         'Wendle, tanner. I do not write; I am writing.',
-        'You put Joss and Wyn in your book. I asked the Cantor whether a name in a stranger\'s book counts, and she said that is what a book is for. I did not know what to do with that, so I took the lamp out of the window the night you told me, and stood in the dark shop with the vats ticking. The window is dark now. I find I can look at it.',
+        'You put Ned and Wyn in your book. I asked the Cantor whether a name in a stranger\'s book counts, and she said that is what a book is for. I did not know what to do with that, so I took the lamp out of the window the night you told me, and stood in the dark shop with the vats ticking. The window is dark now. I find I can look at it.',
         'Leather is quieter than people. I should have known that, in my trade.',
         'There is a jerkin on the second hook that fits you better than what you are wearing. It is not a gift. Come and pay for it, and mind the lime.') + SIG('H. Wendle')
         : P(

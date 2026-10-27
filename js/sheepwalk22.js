@@ -218,7 +218,7 @@ const SHEEPWALK22 = (function () {
       pylon: S('I cut the singing wire on the pylon above Wethercombe. It was a Consortium tally-line, and it was still calling the hounds.'),
       truth: S('Tamar Farrant told me what became of the Downs flocks: shorn for the Hedge\'s wool, driven inside it, and eaten in the two shut years. Nothing took them. The town did.'),
     },
-    hetty: { hello: S('Supper\'s mutton, because supper is always mutton. Salt, broth, pie or the hotpot, and the roast on a good day.'), broke: S('That\'s not a supper\'s worth, love.'), thanks: [S('Sit down to it.'), S('Mind, it\'s hot.'), S('There. Eat it slowly; it\'s the last till Driftday.')] },
+    hetty: { hello: S('Salt mutton, off Captain Vane\'s boat, and dear. The flocks went two winters ago; it is that or broth, love.'), broke: S('That\'s not a supper\'s worth, love.'), thanks: [S('Sit down to it.'), S('Mind, it\'s hot.'), S('There. Eat it slowly; it\'s the last till Driftday.')] },
   };
   const fmt = (s, ...a) => String(s).replace(/\{(\d)\}/g, (m, i) => a[+i] !== undefined ? a[+i] : m);
 
@@ -712,8 +712,9 @@ const SHEEPWALK22 = (function () {
   // ---------------------------------------------------------------- mutton at every inn and food-seller
   // Each list is appended to (never replaced), once, and only with what that seller would plausibly stock.
   const MENUS = {
-    hetty: [DISH.salt, DISH.broth, DISH.pie, DISH.hotpot, DISH.roast],             // the Boar & Dulcimer: an inn's supper
-    p12_baker: [DISH.pie, DISH.salt],                                               // a baker's raised pies
+    // Oakhaven ate its flocks in the two shut years (R2): the Boar has only salt mutton, dear, off Vane's boat;
+    // the fresh dishes are Wethercombe's, where Tamar's new flock is, and the Coast's
+    hetty: [DISH.salt],
     vane: [DISH.salt, DISH.broth],                                                  // ship's stores (shared with vane_wg)
     vane_wg: [DISH.salt, DISH.broth],
     p17c_sloe: [DISH.salt, DISH.broth],                                             // a chandler provisions boats
@@ -721,7 +722,7 @@ const SHEEPWALK22 = (function () {
     p22_tamar: [DISH.salt, DISH.chops, 'p22_furze'],
   };
   // the market provisioner's rotating board (js/calendar11.js VENDORS 'larder'): three dishes join its pool
-  const LARDER_ADD = [DISH.salt, DISH.pie, DISH.chops];
+  const LARDER_ADD = [DISH.salt];
   function installMenus() {
     if (typeof NPCS === 'undefined' || typeof ITEMS === 'undefined') return;
     for (const id in MENUS) {

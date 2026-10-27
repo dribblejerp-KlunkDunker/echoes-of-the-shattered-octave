@@ -55,7 +55,7 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
     ok(distinct, 'every branch reads differently from the others');
     ok(await ev(() => /moved|did not move/.test(COURIERS.LETTERS.find(l => l.id === 'tam').text({ tam_told: true, tam_sat: true })) && /whole song/.test(COURIERS.LETTERS.find(l => l.id === 'tam').text({ tam_told: true })) && /coward/.test(COURIERS.LETTERS.find(l => l.id === 'tam').text({ tam_left: true }))), 'Tam: sat / told / left branches carry their own lines');
     ok(await ev(() => /tended|hummed it different/i.test(COURIERS.LETTERS.find(l => l.id === 'pim').text({ pim_tended: true })) && /the jar/.test(COURIERS.LETTERS.find(l => l.id === 'pim').text({}))), 'Pim: tended vs honey branch');
-    ok(await ev(() => /Joss and Wyn/.test(COURIERS.LETTERS.find(l => l.id === 'hob').text({ twins_named: true })) && !/Joss and Wyn/.test(COURIERS.LETTERS.find(l => l.id === 'hob').text({}))), 'Hob: names the twins only if the player wrote them down');
+    ok(await ev(() => /Ned and Wyn/.test(COURIERS.LETTERS.find(l => l.id === 'hob').text({ twins_named: true })) && !/Ned and Wyn/.test(COURIERS.LETTERS.find(l => l.id === 'hob').text({}))), 'Hob: names the twins only if the player wrote them down');
     ok(await ev(() => /where you sat/.test(COURIERS.LETTERS.find(l => l.id === 'halder').text({ halder_sat: true })) && !/where you sat/.test(COURIERS.LETTERS.find(l => l.id === 'halder').text({}))), 'Halder: remembers who sat in the fourth chair');
 
     // ---- delivery rule: nothing without the deed; deed alone does nothing until a delivery moment
@@ -203,7 +203,7 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
     await ev(() => { closeModal(); G.state = 'play'; });
     // with held documents off the letter is the normal panel and still reads
     await ev(() => { GFX.heldDocs = false; COURIERS.openLetter(COURIERS.LETTERS.find(l => l.id === 'hob'), false); });
-    ok(await ev(() => !document.querySelector('.hd-sheet') && /Joss and Wyn/.test(document.querySelector('#event-panel').textContent)), 'with held documents off the letter opens in the ordinary panel');
+    ok(await ev(() => !document.querySelector('.hd-sheet') && /Ned and Wyn/.test(document.querySelector('#event-panel').textContent)), 'with held documents off the letter opens in the ordinary panel');
     await ev(() => { hide('#event'); G.state = 'play'; GFX.heldDocs = true; });
     // every letter opens without errors
     const opened = await ev(() => { const out = []; for (const L of COURIERS.LETTERS) { COURIERS.openLetter(L, false); out.push(!!document.querySelector('.hd-sheet') && document.querySelector('.hd-title').textContent === L.title); READING.choose(0); } G.state = 'play'; return out; });
