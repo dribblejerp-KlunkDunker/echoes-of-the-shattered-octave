@@ -1561,7 +1561,7 @@ function checkTriggers() {
     if (dist2(c.x, c.y, t.x, t.y) > t.r * t.r) { t.inside = false; continue; }
     if (t.inside) continue; t.inside = true;
     if (wildsTrigger(t) || codaTrigger(t) || wgTrigger(t)) continue;
-    if (t.id === 'hound_bed' && !t.done) { t.done = true; msg('A hound\'s bed. Twenty paces across, and no sound carries over it for a day. Your own footsteps arrive by bone.', 'warn', 6000); }
+    if (t.id === 'hound_bed' && !t.done) { t.done = true; msg('A hound\'s bed: a patch of ground a little longer than a big dog, where the dew has not formed. No sound carries over it for a day. Your own footsteps arrive by bone.', 'warn', 6000); }
     if (t.id === 'hedge_voice' && !t.done) {
       t.done = true; Audio_.sfx.voice();
       const who = G.flags.bio_brother ? 'your brother\'s' : (G.flags.bio_coast ? 'a first mate you once left in the water' : 'someone you buried');
