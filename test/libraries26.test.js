@@ -71,15 +71,28 @@ const ok = (m) => console.log('PASS ' + m);
       const before = G.ledger.length; useItem(G.player.inv.find(s => s.id === fb.id)); res.ledger = G.ledger.length - before; res.wantLedger = (fb.flyleaf || []).length;
       renderLog(); res.logSection = !!document.querySelector('#lib-log'); closeModal(); G.state = 'play';
       loadMap(fb.at); res.notRespawned = !G.map.entities.some(e => e.libFound && e.item === fb.id);
+      // the Moot-house: reading a named book opened the quest; bring them all back and the shelver gives his book
+      res.shelverOpen = !!G.flags.libq_shelver;
+      const sb = LIBRARY.BOOKS.filter(b => b.how === 'quest' && b.quest === 'shelver');
+      for (const b of sb) if (!G.has(b.id)) G.give(b.id);
+      const r2 = NPCS.lib_shelver.quest(G);
+      res.shelverDone = !!G.flags.libq_shelver_done && sb.every(b => G.flags['libret:' + b.id]);
+      res.shelverGift = LIBRARY.BOOKS.filter(b => b.how === 'gift' && b.quest === 'shelver').every(b => G.has(b.id));
+      // Odile: the crate, then a friend's price
+      G.flags.libq_odile = true;
+      for (const b of LIBRARY.BOOKS.filter(b => b.how === 'quest' && b.quest === 'odile')) G.give(b.id);
+      NPCS.lib_odile.quest(G); res.odileDone = !!G.flags.libq_odile_done && NPCS.lib_odile.markup < 1;
       return res;
     });
     assert(walk.menu >= 2 && walk.read === 1, 'shelf menu and reading');
     assert(walk.started && walk.done && walk.tending && walk.gift && walk.returned, JSON.stringify(walk));
     assert.equal(walk.odileShop + walk.corvoShop + walk.vaneShop, walk.wantShop, 'every shop book is on sale');
     assert(walk.foundPlaced && walk.picked && walk.notRespawned, 'found book');
+    assert(walk.shelverOpen && walk.shelverDone && walk.shelverGift, 'the Moot-house quest: ' + JSON.stringify(walk));
+    assert(walk.odileDone, 'Odile\'s crate');
     assert.equal(walk.ledger, walk.wantLedger, 'flyleaf names go into the Ledger');
     assert(walk.logSection, 'the logbook offers your library');
-    ok('shelves read; Ilse\'s quest returns the books and teaches the tending breath; shops sell; found books pick up once; flyleaf names reach the Ledger; the logbook offers the library');
+    ok('shelves read; Ilse\'s quest teaches the tending breath, Odile\'s crate earns a friend\'s price, the Moot-house quest opens from a flyleaf and ends in the shelver\'s gift; shops sell; found books pick up once; flyleaf names reach the Ledger; the logbook offers the library');
 
     // ---- every pile and found book in the real game: on open floor, off doors and solids
     const spots = await page.evaluate(() => {

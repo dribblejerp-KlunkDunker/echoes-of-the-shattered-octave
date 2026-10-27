@@ -56,7 +56,7 @@ function load() {
   for (const b of books) {
     const p = place[b.id] || { how: 'pile', at: b.where };
     const at = 'placement ' + b.id + ': ';
-    Object.assign(b, { how: p.how, at: p.at, shelf: p.shelf, price: p.price, quest: p.quest, flyleaf: p.flyleaf });
+    Object.assign(b, { how: p.how, at: p.at, shelf: p.shelf, price: p.price, quest: p.quest, flyleaf: p.flyleaf || b.flyleaf });
     if (p.how === 'gift') b.at = { ilse: 'lib_conservatory', odile: 'lib_bonded', shelver: 'lib_moot' }[p.quest];
     if (p.how === 'shelf') { if (!LIBS.includes(p.at)) errors.push(at + 'unknown library ' + p.at); if (!SHELF_KEYS.includes(p.shelf)) errors.push(at + 'unknown shelf ' + p.shelf); }
     else if (p.how === 'pile') { if (!MAPS.includes(p.at)) errors.push(at + 'unknown map ' + p.at); }
@@ -65,7 +65,7 @@ function load() {
     else if (p.how === 'quest') { if (!FOUND_MAPS.includes(p.at)) errors.push(at + 'unknown map ' + p.at); if (!QUESTS.includes(p.quest)) errors.push(at + 'unknown quest ' + p.quest); }
     else if (p.how === 'gift') { if (!QUESTS.includes(p.quest)) errors.push(at + 'unknown quest ' + p.quest); }
     else errors.push(at + 'unknown how ' + p.how);
-    if (p.flyleaf && (!Array.isArray(p.flyleaf) || p.flyleaf.some(n => typeof n !== 'string' || !n.trim()))) errors.push(at + 'flyleaf must be names');
+    if (b.flyleaf && (!Array.isArray(b.flyleaf) || b.flyleaf.some(n => typeof n !== 'string' || !n.trim()))) errors.push(at + 'flyleaf must be names');
   }
   return { books, errors };
 }
