@@ -589,13 +589,14 @@ const HELPERS = () => {
         restoreGame(snap); G.state = 'play'; T.step(5);
         const m = G.maps.flume_landing;
         o.back = { map: G.mapId, flags: [G.flags.p16f_lock, G.flags.p16f_q, G.flags.p16f_done, G.flags.p16f_tip, G.flags.p16f_seen].join(','), gate: m.get(28, 19) === null && m.get(28, 20) === null, raft: m.entities.find(e => e.p16fRaft).hidden === true, base: m.baseCount === m.entities.length, pos: Math.hypot(Engine.cam.x - 20.5, Engine.cam.y - 12.5) < 0.6 };
-        // in the Wash during a surge: nothing of the water is saved; it comes back quiet
+        // in the Wash during a surge: nothing of the water is saved; it comes back quiet (other modules' transient
+        // entities, such as library26's found book on the road, may sit past baseCount: never saved, never a wave)
         T.reset(); T.go('flume_road', 30.5, 12.5, 0); T.quiet(); T.phase('surge', 5); T.step(3);
         const snap2 = JSON.parse(JSON.stringify(snapshotGame()));
         o.snapWaves = JSON.stringify(snap2).indexOf('p16f_wave') < 0;
         restoreGame(snap2); G.state = 'play'; T.step(3);
         const rm = G.maps.flume_road;
-        o.surge = { map: G.mapId, phase: FLUME16.T.phase, waves: FLUME16.T.waves.length, ents: rm.entities.length === rm.baseCount, wet: rm.floorCells[12 * rm.w + 30] };
+        o.surge = { map: G.mapId, phase: FLUME16.T.phase, waves: FLUME16.T.waves.length, ents: rm.entities.length >= rm.baseCount && rm.entities.slice(rm.baseCount).every(e => e.transient && !e._p16f), wet: rm.floorCells[12 * rm.w + 30] };
         // an old save with none of this
         const old = JSON.parse(JSON.stringify(snap)); for (const id of FLUME16.MAPS) delete old.maps[id]; for (const k of Object.keys(old.flags)) if (k.startsWith('p16f_')) delete old.flags[k];
         old.mapId = 'oakhaven'; old.cam = { x: 66.5, y: 51.5, dir: 0 }; restoreGame(old); G.state = 'play';
