@@ -677,6 +677,13 @@ Object.assign(NPCS, {
       if (!f.lyra_wg_met) { f.lyra_wg_met = true; s = 'YOU SAID DO IT.'; }
       else if (f.halder_dead && !f.lyra_halder) { f.lyra_halder = true; s = 'HE WAS SETTING A TABLE.'; }
       else if (f.aegis_calmed && !f.lyra_aegis) { f.lyra_aegis = true; s = 'IT KNOWS THE ALTO LINE. WHO TAUGHT IT THE ALTO LINE.'; }
+      else if (f.porch_survived && !f.lyra_porch) {
+        f.lyra_porch = true;
+        return { text: 'She has her chalk in her fist and the slate is already written: <b>IT FOLLOWED US. I HEARD IT FROM HERE. DAD\'S VOICE.</b> She rubs it out with her sleeve. <b>WHAT DID IT SAY TO YOU?</b>', choices: [
+          { t: '"Kaelen\'s confession. All of it, in his voice. Ask him."', f: (g) => { f.porch_told_lyra = true; questXp(30); journal('main', 'I told Lyra what the thing at the porch said: Kaelen\'s confession, in his voice. She wrote ASK HIM and then rubbed it out, and did not go and ask him.'); return 'She writes <b>ASK HIM</b> and looks at it for a long time, and then rubs it out, because the moment it exists in chalk it will exist. She does not go and ask him. Not yet.'; } },
+          { t: '"Nothing I understood. It\'s gone now."', f: () => { f.porch_lied = true; return 'She watches your mouth while you say it, and then she writes <b>IT\'S GONE NOW</b> on the slate, as if that were what you had said, and keeps it there.'; } },
+        ] };
+      }
       else s = SLATES[rndi(0, SLATES.length - 1)];
       return { text: `She writes on her slate with a stub of chalk and turns it to you: <b>${s}</b>` };
     },
@@ -975,7 +982,7 @@ const CAMP = {
     topics: { 'The Mausoleum of Chords': 'Tuned stone. Every Cantor of the Memory Anchor, each in a tomb that rings the note they kept. Ring them in the order you would sing them home, high to low, and the choir opens. I know because I read the specification. I read all the specifications.' },
     quest: (g) => {
       const f = g.flags;
-      if (f.lyra_voice || f.kaelen_dw_done) return { text: f.kaelen_told_now ? 'I told her everything. Out loud. She said she would have forgiven me on Rootday, and cannot now. It is the kindest thing anyone has said to me in two years, because it is true.' : 'She knows. She has known since the Cloister porch. I am the last person to find out what I am.' };
+      if (f.lyra_voice || f.kaelen_dw_done) return { text: f.kaelen_told_now ? 'I told her everything. Out loud. She said she would have forgiven me on Rootday, and cannot now. It is the kindest thing anyone has said to me in two years, because it is true.' : f.porch_told_lyra ? 'She knows. She has known since the Cloister porch. I am the last person to find out what I am.' : 'She does not know. Nobody has told her, and the one thing that could have cannot read.' };
       return { text: 'She needs her voice for the coda, and she has not got it, and I know why. It is sitting on something I have not said.' + (g.has('folder') ? ' And you have the grey folder.' : ''), choices: [
         { t: '"Tell her. Everything. Out loud."', f: (g) => { f.kaelen_dw_done = true; f.kaelen_told_now = true; f.lyra_voice = true; questXp(80); journal('side', 'Coda: Kaelen told Lyra everything at the fire, out loud — the calibration, line ninety-four, the grey folder, and that his first feeling on reading it was relief. Her voice came back at the worst possible moment, and the first thing she did with it was tell him she would have forgiven him on Rootday, and cannot now.'); return 'He goes across the fire and sits down in front of her, and tells her: the calibration, line ninety-four, the girl bleeding into her collar on the ninth morning, the three seconds he spent being sure' + (g.has('folder') || f.folder_given ? ', the grey folder he was going to burn, and that his first feeling on reading it was relief' : '') + '. It takes a long time. When he stops, Lyra opens her mouth, and her voice comes back at the worst possible moment. "I would have forgiven you on Rootday," she says. It is a ruin of a voice, and it is hers. "I can\'t now. You let me pick you up without saying how heavy you were." Then she takes the glass hand, not the easy one.'; } },
         { t: '"Not yet."', f: () => '"No," he says. "Not yet. That is what I always say."' },

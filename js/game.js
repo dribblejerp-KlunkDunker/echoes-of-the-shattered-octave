@@ -637,7 +637,7 @@ function killEnemy(e, byGlass) {
   if (e.type === 'weaver' || e.type === 'pressman') wgBossDown(e);
   if (e.type === 'bosun' || e.type === 'horn' || e.type === 'requiem' || e.type === 'wearer_coda' || e.type === 'broodmother') codaBossDown(e);
   if (e.def.wildsBoss) wildsBossDown(e);
-  if (e.type === 'wearer') { G.flags.wearer_dead = true; if (G.mapId === 'whispergrove') G.flags.wearer_porch_dead = true; }
+  if (e.type === 'wearer') G.flags.wearer_dead = true;
   if (e.onDeath) e.onDeath();
   checkLevel();
 }
@@ -1575,14 +1575,14 @@ function checkTriggers() {
     if (t.id === 'mast') {
       if (G.flags.part3 || G.flags.part4) continue;   // Part Two's ending happens once; later parts never replay it
       if (!G.flags.greening) { if (!t.said) { t.said = true; msg('The Drift-Kestrel hangs from the mast, her lift-tanks murmuring. Six feet of rope coil on the deck. Nobody is aboard who will talk to you yet.', '', 6000); } continue; }
-      if (G.flags.hedge_answered && !G.flags.wearer_spawned) {
-        G.flags.wearer_spawned = true; Audio_.sfx.voice();
-        let wx = c.x, wy = c.y; for (const [dd, da] of [[3, 0], [2.5, 0.6], [2.5, -0.6], [2, 1.2], [2, -1.2], [1.6, 3.14], [1.4, 0]]) { const tx = c.x + Math.cos(c.dir + da) * dd, ty = c.y + Math.sin(c.dir + da) * dd; if (!solidAt(tx, ty) && !solidAt(tx + 0.2, ty + 0.2) && !solidAt(tx - 0.2, ty - 0.2)) { wx = tx; wy = ty; break; } }
-        const e = hydrate({ kind: 'enemy', type: 'wearer', x: wx, y: wy }); e.state = 'chase'; e.onDeath = () => { G.flags.wearer_dead = true; msg('It bursts, and everything it ever ate comes out at once, ending with a voice getting louder as they took him, so the house would be further away.', 'voice', 9000); setTimeout(ending, 2500); }; G.ents.push(e);
-        msg('Between you and the rope, something that sounds exactly like you says: "Grab the line." It followed your voice here.', 'bad', 8000);
+      // the thing that learned your voice at the Hedge does not come where people are (Book One ch. 23); it sends the hounds in your voice
+      if (G.flags.hedge_answered && !G.flags.mast_voice) {
+        G.flags.mast_voice = true; Audio_.sfx.voice(); addNoise(4);
+        for (let i = 0; i < 3; i++) spawnHound();
+        msg('From the thorn behind the mast, something that sounds exactly like you says: "Grab the line." It followed your voice here, and it will not come into the light where the town is. The hounds will.', 'bad', 8000);
         continue;
       }
-      if (G.flags.hedge_answered && !G.flags.wearer_dead) continue;
+      if (G.flags.hedge_answered && G.ents.some(o => o.kind === 'enemy' && o.type === 'hound' && !o.dead && !o.hidden && dist2(o.x, o.y, c.x, c.y) < 144)) continue;
       ending();
     }
   }
