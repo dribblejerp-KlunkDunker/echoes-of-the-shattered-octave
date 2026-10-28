@@ -111,7 +111,9 @@ const COURIERS = (function () {
         f.pim_tended
           ? 'You hummed it different from Lyra. Lyra goes up at the end. You go down. I watched your mouth the whole time and the roots went back under like worms from a lamp. Mam says it is rude to say what a stranger\'s hum goes like, so I am writing it, not saying it.'
           : 'You are the one who got the jar. Lyra hummed it and it tickled, and the roots went back under like worms from a lamp. Mam held the jar so tight her knuckles went white. I did not say anything about her knuckles.',
-        'The Hedge whistled my whistle again. I did not go. I counted to forty first, and then to forty again, and then it stopped.',
+        f.pim_lured
+          ? 'The Hedge whistled my whistle again. I did not go this time. I counted to forty first, and then to forty again, and then it stopped.'
+          : 'Lyra taught me a whistle that only me and her know. I am not to write it down, so I have drawn it: two notes, down.',
         'I pulled this from the Flume bank. It is sweet reed. It is for your voice. Do not eat it near the water.') + SIG('Pim'),
       gift: () => ({ item: 'herb_reed', line: 'a sprig of sweet reed' }),
     },
