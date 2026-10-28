@@ -96,13 +96,30 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(/Nobody searches the supervising engineer/.test(js) && !/searches me at the casing/.test(js), 'Kaelen\'s coil goes in your bag by choice: nobody searches the supervising engineer\'s toolbag');
     check(!/Corwin Aye' \}\)/.test(js) && !/blue jug on the sill/.test(js), 'the quarry barracks Legionnaire is not Corwin Aye; the pump Hollow does not borrow the blue jug');
 
+    // ---- the talking crates are in the Kestrel's hold, not Hetty's cellar (ch. 4, 8)
+    const crates = await page.evaluate(() => {
+      const out = {}, f = G.flags;
+      const tav = G.maps.tavern.entities.filter((e) => e.use === 'crates');
+      const oak = G.maps.oakhaven.entities.filter((e) => e.use === 'crates');
+      out.where = tav.length === 0 && oak.length === 1 && /mast-ladder/.test(oak[0].label);
+      out.hetty = /ship\'s hold, at the mast/.test(NPCS.hetty.topics['The Drift-Kestrel']);
+      delete f.hetty_crates; const q = NPCS.hetty.quest(G); out.ask = /mast-ladder/.test(q.text) && /hold/.test(q.journal[1]);
+      window.__ev.length = 0; delete f.crates_heard; useDeco(oak[0]);
+      const ev = window.__ev[0]; out.event = !!ev && ev.t === 'The crates in the hold' && /twelve crates, lashed/.test(ev.b) && /Annet Sowerby/.test(ev.b);
+      out.ledger = G.ledger.some((r) => r.name === 'Annet Sowerby' && r.where === 'the Kestrel\'s hold');
+      f.greening = true; window.__ev.length = 0; window.__msgs.length = 0; useDeco(oak[0]); out.gone = window.__ev.length === 0 && window.__msgs.some((t) => /Not now/.test(t)); delete f.greening;
+      return out;
+    });
+    check(crates.where && crates.hetty && crates.ask, 'the crates are in the Kestrel\'s hold at the mast; Hetty hears them taking his supper up the mast-ladder');
+    check(crates.event && crates.ledger && crates.gone, 'you listen at them from the mast-ladder; the names go in the ledger "from the Kestrel\'s hold"; after the Greening the ladder is not for climbing');
+
     // ---- French for every new line
-    const tsv = src('tools/i18n/p32-canon.tsv').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
+    const tsv = ['tools/i18n/p32-canon.tsv', 'tools/i18n/p33-crates.tsv'].map(src).join('\n').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
     const fr = JSON.parse(src('locales/story/fr.json'));
     const { hash, norm } = require(path.join(ROOT, 'tools/i18n/lib'));
     const pats = new Set((fr.p || []).map((p) => p[0]));
     const missing = tsv.filter(([en]) => !(fr.s[hash(norm(en))] || pats.has(norm(en))));
-    check(tsv.length >= 60 && tsv.every((r) => r.length === 2) && !missing.length, 'every changed line has its French (' + missing.length + ' missing)');
+    check(tsv.length >= 78 && tsv.every((r) => r.length === 2) && !missing.length, 'every changed line has its French (' + missing.length + ' missing)');
 
     check(errors.length === 0, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   } finally { await browser.close(); }

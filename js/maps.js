@@ -297,7 +297,7 @@ function buildOakhaven(greening) {
   }
   // Mooring mast (east): a wooden pylon with crates
   m.rect(36, 19, 37, 20, 't_wood');
-  m.deco('crates', 35.5, 21.5); m.deco('sign', 38.5, 21.5, { radius: 0.2 });
+  m.deco('crates', 35.5, 21.5); m.deco('ladder', 38.5, 21.5, { radius: 0.2, scale: 1.6, use: 'crates', label: 'The Drift-Kestrel\'s mast-ladder, up to her hold' });   // the corsair's cargo is in his own hold (Book One ch. 4, 8)
   m.trigger(36.5, 22.5, 2.2, 'mast');
   // Tannery culvert through the south hedge — the Wearer's spot, and the way down to the Under-hedge
   m.set(23, H - 2, DOOR({ portal: { map: 'underhedge', useSpawn: true }, label: 'The tannery culvert', locked: 'culvert_open', lockMsg: 'A grate over the culvert, rusted shut. Somebody with a tanner\'s key could open it.' }));
@@ -369,7 +369,7 @@ function buildInteriors() {
     m.npc('townsman', 10.5, 3.5, { facing: 0 });
     // cellar
     m.rect(1, 9, 5, 9, 't_wood'); m.set(6, 10, WALL('t_wood')); m.set(3, 9, DOOR({ label: 'Cellar door' }));
-    m.add({ kind: 'deco', sprite: 'cores', x: 2.0, y: 10.4, solid: true, radius: 0.3, scale: 0.6, use: 'crates', label: 'Twelve crates for the quarry garrison' });
+    m.add({ kind: 'deco', sprite: 'crates', x: 2.0, y: 10.4, solid: true, radius: 0.3, scale: 0.6, label: 'Casks of small beer' });
     m.add({ kind: 'deco', sprite: 'crates', x: 4.4, y: 10.5, solid: true, radius: 0.3, scale: 0.7 });
   });
   maps.lyra_house = interior('lyra_house', 'Lyra Ashgrove\'s house', 12, 9, 't_house', { x: 6, y: 8, sx: 6.5, sy: 6.5, sdir: -Math.PI / 2, ox: 21.5, oy: 29.5, odir: -Math.PI / 2 }, (m) => {
