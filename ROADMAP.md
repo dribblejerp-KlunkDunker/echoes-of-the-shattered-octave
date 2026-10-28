@@ -6,7 +6,7 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 
 ## Release road: Book One, ready to sell (from 27 October 2026)
 
-This is the authoritative order of work before the game goes on sale. It comes from `story/Game Layer/Release Readiness - length, areas and enrichment.md`, which has the evidence and file references for every line. `[ ]` means not started, `[~]` partial, `[x]` done and verified. Each milestone ships as its own tested PR or PRs, and each must pass its gate before the next starts.
+This is the authoritative order of work before the game goes on sale. What only a person can check (feel, timing, how a place reads) is listed per milestone in `PLAYTEST.md`. It comes from `story/Game Layer/Release Readiness - length, areas and enrichment.md`, which has the evidence and file references for every line. `[ ]` means not started, `[~]` partial, `[x]` done and verified. Each milestone ships as its own tested PR or PRs, and each must pass its gate before the next starts.
 
 **Where the game stands.**
 - **Length (estimated from the code, not played):** main story 3–4.5 h, with all side quests 14–20 h, completionist 19–27 h.
