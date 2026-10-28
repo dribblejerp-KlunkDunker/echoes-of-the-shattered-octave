@@ -118,8 +118,8 @@ Gate: every listed map has people, something to use, and a reason to be there; s
 Gate: each joins a map that is already reachable, keeps the Hedge rule, closes cleanly at the Greening or the Kestrel's departure, and has French and tests.
 - [x] 1. **The Hollow,** behind the tannery. The burl-sick ward, the Grafters' visit, Lissa Merrow. (`js/hollow30.js`, `test/r5hollow30.test.js`; the quest "The List" is [PROPOSED].)
 - [x] 2. **The Carders' house and root-cellar.** The design doc's Hush-Mite tutorial; Pim and Nell. (Same module; "Keep him out of the damp" is [PROPOSED].)
-- [ ] 3. **The Moot-house in Whisper-Grove.** Sable's gallery.
-- [ ] 4. **The Bell Yard and Ashlane,** one map. Halder Wick's and Ivo Renn's homes; names for the Ledger.
+- [x] 3. **The Moot-house in Whisper-Grove.** Sable's gallery. (`js/grove31.js`, `test/r5grove31.test.js`: the gallery and muniment store, and the cellar with Corwin Aye's barrel.)
+- [x] 4. **The Bell Yard and Ashlane,** one map. Halder Wick's and Ivo Renn's homes; names for the Ledger. (Same module; "The Bell Yard Roll" is [PROPOSED]; the twice-taken man and the Veil's three rules are Book One ch. 14.)
 - [ ] 5. **The Governor's house.** The aired room; Aldric's hidden roots.
 - [ ] 6. **The standing-stone ring.** Next in line per the Author Rulings; its contents marked [PROPOSED].
 - [ ] 7. *(optional)* **The Reedside Conservatory and reed orchard,** with Ilse Brennan. The old stair stays sealed.

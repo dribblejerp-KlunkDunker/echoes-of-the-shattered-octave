@@ -30,7 +30,7 @@ const ok = (m) => console.log('PASS ' + m);
         const m = G.maps[id], host = G.maps[R.host];
         const hd = host && host.get(R.door[0], R.door[1]);
         const shelves = m ? m.entities.filter(e => e.use === 'lib_shelf') : [];
-        const exit = m ? Object.keys(m.doors).map(k => m.cells[k]).find(c => c && c.portal) : null;
+        const exit = m ? Object.keys(m.doors).map(k => m.cells[k]).filter(c => c && c.portal).sort((a, b) => (b.portal.map === R.host) - (a.portal.map === R.host))[0] : null;   // the way out (other modules may add stairs)
         const shelved = LIBRARY.BOOKS.filter(b => b.how === 'shelf' && b.at === id).length;
         const shown = shelves.reduce((n, e) => n + (e.shelfKey === 'returns' ? 0 : LIBRARY.onShelf(id, e.shelfKey).length), 0);
         const outside = host && !host.isSolidCell(Math.floor(R.out.x), Math.floor(R.out.y));
