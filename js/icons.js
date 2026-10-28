@@ -1771,7 +1771,7 @@ const ICONS = (function () {
     d.layer(C.ash, { shiny: 1 }).ell(12, 19.5, 3.4, 1.4);
     d.mark('#ffffff', 9, 8, 9, 9, 10, 7).mark('#b8b0c8', 15, 14, 14, 16);
   };
-  PIX.p15_t_bosun = d => {   // Teller's Lanyard: a brass tag, TELLER, HOLD, 432
+  PIX.p15_t_bosun = d => {   // Teller's Lanyard: a brass tag, TELLER, HOLD, and 432 scratched on the back
     d.layer(C.leather, { shade: 'flat' }).path([5, 3, 4, 8, 6, 12, 10, 14]).path([18, 3, 19, 8, 15, 13, 12, 14]);
     d.layer(C.brass, { shiny: 1 }).rect(8, 14, 8, 7).px(11, 13, 12, 13);
     d.mark('#6a4a10', 10, 16, 11, 16, 13, 16, 10, 18, 12, 18, 14, 18);

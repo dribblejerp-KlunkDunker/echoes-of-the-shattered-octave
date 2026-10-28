@@ -46,7 +46,7 @@ const LOGMAP = (function () {
     // Phase 9: reed-craft and the Oakhaven side quests (js/reedcraft.js, js/sidequests.js)
     ['reed', /my first reed|wind-reed|flume-reed|joram pellow|ada pellow/], ['timber', /reeds-miner tomas|iron-bough|^tomas /], ['skep', /skeps?\b|telling the bees/],
     ['kestrel', /^part four/], ['sunken', /^part three/], ['tank', /^the lift-tank/],
-    ['vox', /^four hundred and thirty-two/], ['brood', /^the brood-mother/], ['herald', /synod herald/],
+    ['vox', /^teller's hold|^four hundred and thirty-two/], ['brood', /^the brood-mother/], ['herald', /synod herald/],
     ['footprints', /scorched footprints/], ['hush', /hush-lamp shrine|^the hush-gift|^hand-cant/],
     ['grave', /sexton/], ['bells', /^the tower bell|chapel's bells/], ['cutterlog', /^the cutter's log/],
     ['vesper', /^vesper:/], ['lantern', /^lanterns in the mist/], ['tobin', /^the year 417/],

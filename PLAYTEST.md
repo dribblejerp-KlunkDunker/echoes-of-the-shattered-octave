@@ -30,10 +30,13 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 - [ ] **Hob Wendle** is now the book's field-hand: he sits on his step in the Hollow (across from Lissa), with three toes gone to wood before Rootday and taken by Rooke after. Part Three opens with him rooting into the Kestrel's deck. Does the scene in the Part Three card land?
 - [ ] **The tanner is now Abner Fenning** (a name I chose; tell me if you'd like another), and the twins are Ned and Wyn Fenning. His quest, shop, letter and place aboard the Kestrel are unchanged.
 
+- [ ] **The Office cutter** (Part Four) is now the book's courier-cutter, too light to carry anything but paper and proctors. It hunts the murmur of the 432 cores in the Kestrel's own hold. Bosun Teller's tag has his count of your hold scratched on the back. The cutter's hold has only an evidence chest of twelve seized vox-bottles. The keep-or-free choice is unchanged, but smaller. Does it still feel worth doing?
+- **Recorded voices:** Teller's barks ("Count stands at four hundred thirty-two", "Consignment Nineteen") now refer to the Kestrel's cores, so they are kept as they are.
+
 **Still to match the book (next PRs, each its own):**
 1. ~~The talking crates move from Hetty's cellar to the Kestrel's hold.~~ Done.
 2. ~~Hob Wendle is a field-hand who roots into the deck and dies aboard; the tanner becomes someone else.~~ Done.
-3. The Office cutter's hold: the 432 are the Kestrel's cores, not the cutter's vox-bottles.
+3. ~~The Office cutter's hold: the 432 are the Kestrel's cores, not the cutter's vox-bottles.~~ Done.
 4. The Wearer is met once, at the end; earlier meetings become a voice in the fog.
 5. The coda moves to the clearing and the ring of lamps.
 6. The canon days: Davin's death on Hearthday, the culvert lure on Massday, Lyra taken into the Church's protection on Dawnday.

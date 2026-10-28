@@ -442,12 +442,12 @@ const COMPANION_TALK = (function () {
     id: 'v_cutter', who: 'vane', bit: 24, title: `The cutter's hold`,
     req: () => gf('part4') && gf('dw_vane_met'),
     root: () => ({
-      s: `"Four hundred and thirty-two, in felt sleeves. I heard them all the way down when she went into the willows. Nobody tells you a voice in a bottle keeps its tone. Some of them were singing."`,
+      s: `"A courier-cutter. Couldn't carry a cat. She never needed to see us; she had our hold on the horn the whole way. Four hundred and thirty-two people talking in their sleep. We're a bell, and I've been ringing it for two years." He jerks his chin east. "Her own hold murmurs too. Smaller."`,
       m: 'afraid',
       o: [
         { t: `"What should we do with them?"`, k: 'steady', if: () => !gf('bottles_done'), r: `"Open them where nothing else is listening. Or don't. I won't tell you which. I've been wrong about doors before."` },
         { t: `"It's done now."`, k: 'quiet', if: () => gf('bottles_done'), r: `"It's done. I counted the quiet after. It's a different sort of count."` },
-        { t: `"You heard them singing?"`, k: 'curious', r: `"One tune, four hundred ways. I didn't know the tune. I hum it when I'm not watching myself."` },
+        { t: `"Smaller?"`, k: 'curious', r: `"A dozen bottles. Seized; the Office takes them off the Rust Coast boats. One of them was singing when she went into the willows. I didn't know the tune. I hum it when I'm not watching myself."` },
         { t: `"Don't hum it."`, k: 'blunt', r: `"Ha. Sap and splinters, you sound like the Cantor." He hums it anyway, one bar, and stops.` },
       ],
     }),
