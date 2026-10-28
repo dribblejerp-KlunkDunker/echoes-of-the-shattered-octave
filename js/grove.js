@@ -66,13 +66,7 @@ function wgTrigger1(t) {
     return true;
   }
   if (t.id === 'wearer_porch') {
-    if (f.aegis_done && !f.wearer_dead && !f.wearer_porch) {
-      f.wearer_porch = true; Audio_.sfx.voice();
-      let wx = c.x, wy = c.y;
-      for (const [dd, da] of [[3, 0], [2.5, 0.6], [2.5, -0.6], [2, 1.2], [2, -1.2], [1.6, 3.14]]) { const tx = c.x + Math.cos(c.dir + da) * dd, ty = c.y + Math.sin(c.dir + da) * dd; if (!solidAt(tx, ty) && !solidAt(tx + 0.2, ty) && !solidAt(tx, ty + 0.2)) { wx = tx; wy = ty; break; } }
-      const e = hydrate({ kind: 'enemy', type: 'wearer', x: wx, y: wy }); e.state = 'chase'; G.ents.push(e);
-      msg('At the Cloister porch something comes out of the willows wearing Tobin Ashgrove, and tells you, in Kaelen\'s exact voice, the whole confession: the calibration, line ninety-four, the girl bleeding into her collar on the ninth morning. It only knows what was said aloud in its hearing. Every word of it came out of Kaelen\'s own mouth, alone, in an empty hut.', 'bad', 12000);
-    }
+    if (f.aegis_done && !f.wearer_porch) porchVoice();
     return true;
   }
   if (t.id === 'aegis_wake') { if (!f.aegis_awake && !f.aegis_done) aegisWake(); return true; }
@@ -81,6 +75,48 @@ function wgTrigger1(t) {
     return true;
   }
   return false;
+}
+
+// ---------------------------------------------------------------- Voice at the Door (Book One ch. 20)
+// The Wearer is never fought here. It stands in the fog past the porch and talks, in every voice it has learned, and
+// then sings; the Aegis inside cannot hold DEFEND THE SINGERS against a singer in the fog unless somebody holds the door.
+function porchVoice() {
+  const f = G.flags, p = G.player, first = p.name.split(' ')[0];
+  f.wearer_porch = true; Audio_.sfx.voice();
+  const spawnPack = () => { for (let i = 0; i < 3; i++) spawnHound(); };
+  const finish = () => {
+    f.porch_survived = true; questXp(60);
+    journal('main', 'Voice at the Door: at the Cloister porch the thing that wore Tobin Ashgrove stood in the fog and would not come in. It gave me Kaelen\'s whole confession in his own voice: the calibration, line ninety-four, the girl on the ninth morning, the three seconds. It cannot read. It only knows what was said aloud in its hearing.' + (f.porch_held ? ' I held the doorway against the Aegis while it sang Hymn 9 in Lyra\'s voice.' : f.porch_aside ? ' I stepped aside, and the Aegis went out into the fog after a singer that was not there.' : '') + ' Lyra should know. So should Kaelen.');
+    setTimeout(() => msg('As you go down the Cloister road the fog on your left says, in Kaelen\'s voice, so quietly you are nearly sure nobody else could have heard it: "Ask him, lark. He\'ll tell you. He\'s been waiting seven years for somebody to make him."', 'voice', 9000), 2500);
+    if (f.porch_answered) setTimeout(spawnPack, 1500);
+  };
+  const step4 = () => {
+    showEvent('Seven times', 'It sings the hymn seven times.<br><br>Then it sings "Apples in the Rain", off-key on the fourth bar, in Tobin Ashgrove\'s voice. Then the harvest home, all the lines, in Davin Hale\'s. Then it does the thing nothing could have braced you for: the sound of a seven-year-old boy whistling a falling fifth, badly, with too much air in it, the way Pim did it on his own doorstep in the sunshine.' + (f.porch_answered ? `<br><br>Then, last, it says "${first}" in your own voice, from about the height of your shoulder, and laughs, warmly.` : '') + '<br><br>You do not make a sound. You do not move. And after a long time there is nothing in the fog but fog.', [
+      { t: 'Breathe.', f: finish },
+    ]);
+  };
+  const hold = () => { f.porch_held = true; questXp(40); showEvent('The doorway', 'You put yourself in the doorway with your back to the thing that wants you and your arms out wide across the frame.<br><br>The Aegis stops. It stops with its leading foot eighteen inches from you and its head bowed under the lintel, and you watch a machine try to hold two instructions at once. The chest louvres lift an inch and close. The tick in its chest goes very fast, and settles. The lilac light moves from your face to the fog and back to your face.<br><br><i>"Hold us in the little light,"</i> sings the fog, <i>"until the morning comes."</i><br><br>You keep your arms across the door.', [{ t: 'Keep them there.', f: step4 }]); };
+  const aside = () => { f.porch_aside = true; showEvent('The orchard', 'You step out of its way. Nine feet of bronze goes past you into the fog at a walk, DEFEND THE SINGERS, toward a singer that is forty feet off and then sixty and then nowhere, and the hymn stops at once, because it will not come where people are.<br><br>The Aegis stands in the orchard for a long time, facing nothing, with its chest open. When it comes back in it does not look at you, and it goes down on one knee by the risers and does not get up.', [{ t: 'Wait for it.', f: step4 }]); };
+  const step3 = () => {
+    const ch = [];
+    if (f.aegis_calmed) { ch.push({ t: 'Stand in the doorway, arms across the frame, between the Aegis and the fog.', f: hold }); ch.push({ t: 'Step aside, and let it go to the singer.', f: aside }); }
+    else ch.push({ t: 'Stand in the doorway and do not answer.', f: () => { f.porch_held = true; step4(); } });
+    showEvent('Hold us in the little light', '<i>"Hold us in the little light,"</i> it sings.<br><br>In Lyra\'s voice. The Cloister\'s hymn, from out in the fog, forty feet off: HYMN 9, off the board by the risers, played back perfectly in Lyra Ashgrove\'s whole unbroken voice by something that heard it once.' + (f.aegis_calmed ? '<br><br>Behind you, inside, the Aegis comes off its mark by the risers. Nine feet of bronze, the floorboards flexing under it, DEFEND THE SINGERS stencilled across its chest, and a singer outside in the fog.' : '<br><br>Behind you the empty risers wait, eleven places, for a choir that is not coming.'), ch);
+  };
+  const slate = () => { f.porch_slate = true; showEvent('IS IT TRUE?', 'You take a child\'s slate off the end of the risers and write it in letters six inches high, and carry it to the door, and hold it up into the fog with both hands.<br><br><b>IS IT TRUE?</b><br><br>The fog says nothing. You shove it out past the door-frame into the white, into the air where the voice is.<br><br><i>"Lark,"</i> it says, gently, <i>"I can\'t read."</i><br><br><i>"I only know what people say out loud. That\'s all there\'s ever been. Your da said your name out loud in a yard in the spring; the old fellow sang in a meadow; your engineer talks to an empty room every night of the world. So say it out loud. Ask me anything you like, and I\'ll tell you. Nobody\'s listening but me."</i>', [
+    { t: 'Say nothing.', f: step3 },
+    { t: `Answer it. "Is it true?"`, f: () => { f.porch_answered = true; addNoise(4); showEvent('Learned', `<i>"Is it true,"</i> it says back, in your voice, exactly, the way you said it, and then your name, <i>"${first}"</i>, warmly, the way someone says a name they mean to keep.<br><br>Something has learned you. Out in the orchard, three jitters lift their heads.`, [{ t: 'Hold the door.', f: step3 }]); } },
+  ]); };
+  const step2 = () => {
+    showEvent('"Lyra."', '<i>"Lyra, I need to tell you something and I\'m not going to be able to say it to your face."</i><br><br>Kaelen\'s voice. Not an approximation. It has had years with him: a man who talks to an empty room because nobody hears.<br><br><i>"I calibrated the bore at the Dawning Spire. I signed for the collars. Line ninety-four. Forty collars, forty spools of wire, forty needles, between the lamp oil and the scaffold clips, and I didn\'t read it. On the ninth morning the girl on the top tier was bleeding into her collar, and she looked at me, and I went back up the gantry. Three seconds. At the end it asked a question, and I had about six seconds, and I used three of them being sure. That\'s what happened to the sky, lark. That\'s why it\'s grey. That\'s me."</i><br><br>It is talking to someone who is not here. It cannot tell. Everything it says, it says because somebody said it out loud, alone, where it could hear.', [
+      { t: 'Hold up a child\'s slate from the risers: IS IT TRUE?', f: slate },
+      { t: 'Say nothing. Never answer a voice you cannot see.', f: step3 },
+      { t: 'Answer it.', f: () => { f.porch_answered = true; addNoise(4); showEvent('Learned', `It stops talking at once, and listens, with an attention you can feel on your skin like a hand. Then it says your name, <i>"${first}"</i>, in your own voice, warmly, the way someone says a name they mean to keep.<br><br>Something has learned you. Out in the orchard, three jitters lift their heads.`, [{ t: 'Hold the door.', f: step3 }]); } },
+    ]);
+  };
+  showEvent('"Lark."', 'The porch door stands open on a wall of fog. There is nothing in the doorway. The jitter is out past it somewhere, in the white, shifting.<br><br><i>"Lark,"</i> says the fog. <i>"I know you\'re in there. I can hear you breathing."</i><br><br>Tobin Ashgrove\'s voice: warm, a little hoarse, patient. It is calling someone who is not here.<br><br><i>"Your friend in the hat was very kind to me,"</i> it says, in Old Tam\'s cracked tenor, companionably. <i>"Walked right out into the meadow for you, he did. Didn\'t make the high note."</i>' + (f.hedge_answered ? `<br><br>Then, in your own voice, from the Hedge at the dead hour: <i>"I\'m here."</i>` : ''), [
+    { t: 'Do not turn. Do not answer.', f: step2 },
+  ]);
 }
 
 // ---------------------------------------------------------------- the Aegis Sentinel
@@ -271,7 +307,7 @@ function bookOneEnd1() {
   else if (f.halder_safe) L.push(`Halder Wick is still setting his table for four in the Sunken Court. The proctors never reached him.${f.halder_sat ? ' The blue plate is in front of the fourth chair, where you sat.' : ''}`);
   if (f.lamps_lit) L.push('In the Sunken Court the lamps are lit for the first time in three years, and the lamplighter stands under the last of them with his pole, and does not light it again.');
   if (f.pools_all) L.push(`You looked into all four reflecting pools and carried four strangers' memories out of Whisper-Grove${f.sable_returned ? '. One of them, you are nearly sure, was Sable\'s' : ''}.`);
-  if (f.wearer_porch_dead) L.push('At the Cloister porch the thing that wore Tobin Ashgrove told you Kaelen\'s whole confession in his own voice, and you burst it. Everything it ever ate came out at once, ending with Tobin getting louder as they took him, so the house would be further away.');
+  if (f.porch_survived) L.push(`At the Cloister porch the thing that wore Tobin Ashgrove stood in the fog and would not come in, and gave you Kaelen\'s whole confession in his own voice. ${f.porch_held ? 'You held the doorway against the Aegis while it sang Hymn 9 in Lyra\'s voice.' : f.porch_aside ? 'You stepped aside, and the Aegis went out into the fog after nothing.' : 'You did not answer it.'}${f.porch_answered ? ' You answered it once, and it has your voice now.' : ''}${f.porch_told_lyra ? ' You told Lyra what it said.' : ' Lyra does not know what it said.'}`);
   L.push(`Sable has ${fr} fragment${fr === 1 ? '' : 's'} left. She recites ${fr === 1 ? 'it' : 'them'} nightly, so that she will know which one goes. The missing ones do not feel like gaps, she says. They feel like shelves.`);
   if (p.glassed) L.push(`Your tideline is ${p.glass >= 70 ? 'past the collarbone, three inches from the throat' : 'four and a half fingers from the shoulder'}. ${p.glass >= 70 ? 'Six weeks, at the current rate.' : 'Eight weeks of slack, perhaps.'}`);
   L.push('A herald walks nine miles alone to read the writ aloud, because the form requires it: all of you declared Dissonant, the Dread Arbiter nine days out on the Tramway, and grace offered once. Lyra answers him herself. <i>Tell him the Cantor says we heard the question too.</i> The ship needs a whole lift-tank, and there is one coast where you can get one.');

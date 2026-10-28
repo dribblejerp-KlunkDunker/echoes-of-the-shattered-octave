@@ -199,13 +199,50 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(halder.dresser && !/tape|collar/i.test(halder.quest), 'the Wick house answers nothing, and no name-tape lays Halder to rest: "There is no one left to ask."');
     check(!/Bryony|Tom Wick|\bWat\b/.test(['js/grove.js', 'js/couriers.js', 'js/maps.js', 'js/dreams.js'].map(src).join('\n')) && !/Tom Wick|halder_rest = true/.test(src('js/data.js')), 'nothing in the game names who Halder is expecting');
 
+    // ---- One Wearer (ch. 20, 23): the mast is a voice and a hound pack; the Cloister porch is Voice at the Door, not a fight
+    const wearer = await page.evaluate(() => {
+      const out = {}, f = G.flags;
+      // the Oakhaven mast, after the Greening, with the Hedge answered
+      loadMap('oakhaven'); G.state = 'play';
+      const t = G.map.triggers.find((o) => o.id === 'mast'); Engine.cam.x = t.x; Engine.cam.y = t.y; t.inside = false;
+      Object.assign(f, { greening: true, hedge_answered: true }); delete f.mast_voice; delete f.part3; delete f.part4;
+      window.__ended = 0; const _end = window.ending; window.ending = () => { window.__ended++; };
+      const hounds0 = G.ents.filter((o) => o.kind === 'enemy' && o.type === 'hound' && !o.dead).length;
+      window.__msgs.length = 0; checkTriggers();
+      out.mast = f.mast_voice && !G.ents.some((o) => o.kind === 'enemy' && o.type === 'wearer') && G.ents.filter((o) => o.kind === 'enemy' && o.type === 'hound' && !o.dead).length === hounds0 + 3 && window.__msgs.some((m) => /"Grab the line\." It followed your voice here/.test(m)) && window.__ended === 0;
+      for (const o of G.ents) if (o.kind === 'enemy' && o.type === 'hound') o.dead = true;
+      t.inside = false; checkTriggers(); out.mastEnd = window.__ended === 1;
+      window.ending = _end; delete f.greening; delete f.hedge_answered;
+      // the porch
+      loadMap('whispergrove'); G.state = 'play';
+      Object.assign(f, { part3: true, aegis_done: true, aegis_calmed: true }); for (const k of ['wearer_porch', 'porch_survived', 'porch_held', 'porch_aside', 'porch_slate', 'porch_answered', 'porch_told_lyra', 'lyra_porch']) delete f[k];
+      const before = G.ents.length; window.__ev.length = 0; wgTrigger({ id: 'wearer_porch', x: 19.5, y: 10.4, r: 2 });
+      const titles = [];
+      const step = (pick) => { const ev = window.__ev[window.__ev.length - 1]; titles.push(ev.t); const c = ev.c.find((o) => pick.test(o.t)); if (c && c.f) c.f(); return !!c; };
+      out.chain = step(/Do not turn/) && step(/Hold up a child's slate/) && step(/^Say nothing/) && step(/Stand in the doorway, arms across/) && step(/Keep them there/) && step(/Breathe/);
+      out.titles = titles.join(' | ');
+      out.porch = f.wearer_porch && f.porch_survived && f.porch_held && f.porch_slate && !f.porch_answered && G.ents.length === before && !G.ents.some((o) => o.kind === 'enemy' && o.type === 'wearer') && G.journal.some((j) => /^Voice at the Door: .*would not come in/.test(j.text) && /held the doorway/.test(j.text));
+      // Lyra at the landing, and Kaelen at the fire
+      f.lyra_wg_met = true; f.lyra_aegis = true; f.round_hook = true; const q = NPCS.lyra_wg.quest(G);
+      out.lyraAsk = !!q.choices && /IT FOLLOWED US/.test(q.text) && q.choices.length === 2; out.q = q.text.slice(0, 90);
+      if (q.choices) q.choices[0].f(G); out.told = !!f.porch_told_lyra;
+      f.kaelen_dw_done = true; f.kaelen_log = true; out.kaelenKnows = /She knows\. She has known since the Cloister porch/.test(NPCS.kaelen_dw.quest(G).text);
+      f.porch_told_lyra = false; out.kaelenNot = /She does not know/.test(NPCS.kaelen_dw.quest(G).text);
+      delete f.kaelen_dw_done;
+      return out;
+    });
+    check(wearer.mast && wearer.mastEnd, 'at the mast the thing that learned your voice sends hounds and will not come into the light; the Kestrel lifts once they are dead');
+    check(wearer.chain && wearer.porch, 'at the Cloister porch the Wearer talks and sings in the fog and is not fought: the slate, the doorway, seven hymns (' + wearer.titles + ')');
+    check(wearer.lyraAsk && wearer.told && wearer.kaelenKnows && wearer.kaelenNot, 'Lyra asks what it said; telling her is why Kaelen says she has known since the porch (' + JSON.stringify([wearer.lyraAsk, wearer.told, wearer.kaelenKnows, wearer.kaelenNot, wearer.q]) + ')');
+    check(!/type: 'wearer'/.test(src('js/game.js') + src('js/grove.js')), 'nothing spawns a Wearer before the coda');
+
     // ---- French for every new line
-    const tsv = ['tools/i18n/p32-canon.tsv', 'tools/i18n/p33-crates.tsv', 'tools/i18n/p34-hob.tsv', 'tools/i18n/p35-cutter.tsv', 'tools/i18n/p36-days.tsv', 'tools/i18n/p37-halder.tsv'].map(src).join('\n').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
+    const tsv = ['tools/i18n/p32-canon.tsv', 'tools/i18n/p33-crates.tsv', 'tools/i18n/p34-hob.tsv', 'tools/i18n/p35-cutter.tsv', 'tools/i18n/p36-days.tsv', 'tools/i18n/p37-halder.tsv', 'tools/i18n/p38-wearer.tsv'].map(src).join('\n').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
     const fr = JSON.parse(src('locales/story/fr.json'));
     const { hash, norm } = require(path.join(ROOT, 'tools/i18n/lib'));
     const pats = new Set((fr.p || []).map((p) => p[0]));
     const missing = tsv.filter(([en]) => !(fr.s[hash(norm(en))] || pats.has(norm(en))));
-    check(tsv.length >= 150 && tsv.every((r) => r.length === 2) && !missing.length, 'every changed line has its French (' + missing.length + ' missing)');
+    check(tsv.length >= 230 && tsv.every((r) => r.length === 2) && !missing.length, 'every changed line has its French (' + missing.length + ' missing)');
 
     check(errors.length === 0, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   } finally { await browser.close(); }
