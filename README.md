@@ -54,6 +54,19 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Release road R5a: the Hollow and the Carders' house
+
+Two new areas inside Oakhaven, each joined to a map you can already reach.
+- **The Hollow,** through the tannery's back door: the lanes where the town keeps its burl-sick, 31 households behind barred doors, all humming. Doors past cutting carry the sap-mark, a green circle with a line struck through it. Lissa Merrow, eleven, sits on the step of the red-shutter house with her own tin cup. On Rootday mornings the Grafters' wagon comes in on felt-wrapped wheels, with a brazier, three masked Grafters and a Legionnaire.
+- **"The List":** Rooke's ward-book is chained at the well-head, and the Inquisitor wants it. Two doors are pencilled, not chalked. Hum the tending note through each (or leave honey), then write "Recheck next month" against them.
+- **The Carders' house,** behind the blue door on the north row: Pim's pallet pulled away from the wall, a hush-lamp in the window, and Lyra's chalk note. Its root-cellar is a short lesson in the Hush and the hush-mites.
+- **"Keep him out of the damp":** once Pim is safe, Nell asks for the cellar to be cleared and a hot brick put in his pallet.
+- At the Greening the Hollow goes under bramble and the blue door is barred again; quests left open close with a logbook line.
+
+| ![The Hollow's cross lane](screenshots/p30-hollow.jpg) | ![Lissa Merrow on her step](screenshots/p30-lissa.jpg) |
+|---|---|
+| ![The Grafters on Rootday](screenshots/p30-rootday.jpg) | ![The Carders' house](screenshots/p30-carders.jpg) |
+
 ### Release road R4: the thin places, filled
 
 Every place that was thin now has people, something to use and a reason to be there.
@@ -62,7 +75,7 @@ Every place that was thin now has people, something to use and a reason to be th
 - **The Watch Downs** (still danger 0): Abel Sedge cuts turf by the fold and says the sign's "There are no sheep" out loud; the dew-pond gives a drink once a day.
 - **Wethercombe:** the farmhouse (Mother Hurst at the hearth), the barn (Jem Cotter the shearer, barred in against the woolwight) and a shut-up cottage open; the Bellwether rents a room and keeps a slate of tabs.
 - **The Flume Road:** Ennis Crowle keeps her skeps; what she says follows Bettany's Telling the Bees.
-- **The tannery:** two hands at the vats, and the back door onto the Hollow (shut for now).
+- **The tannery:** two hands at the vats, and the back door onto the Hollow (open since R5a).
 - **The Low Rings and Stillwater Landing:** a punt-poler and a salvager in the Rings; a smuggler and a broadsheet-seller on the quay, with a board of Cantabile broadsheets.
 
 | ![The baker's at night](screenshots/p29-bakery.jpg) | ![Abel Sedge on the Watch Downs](screenshots/p29-downs.jpg) |

@@ -10,8 +10,23 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
   - The Watch Downs are west of the clearing.
   - Wethercombe is past the Downs stile.
   - The Flume Road runs from Oakhaven's east Hedge door.
+  - The Hollow is through the tannery's back door; the Carders' house is the blue door on the north row.
 
 ---
+
+## R5a: the Hollow and the Carders' house (built 28 Oct)
+**How to get there:** the Hollow is through the back door of the tannery (Tannery Row, south of the Flume). The Carders' house is the blue door on the north row, between the Greenhall and the granary.
+- [ ] **The Hollow's mood.** Every door barred and humming. Does it feel like a ward people are hiding in, or just empty lanes? It may want more people sitting out.
+- [ ] **The sap-marks** (green circle, line through it) beside most doors, and two pencilled circles. Can you spot them without being told?
+- [ ] **Lissa Merrow** on the step of the red-shutter house. She uses a stand-in drawing (a small townswoman), standing, not sitting. Is that good enough for now, or does she need her own sprite (bandaged arms, tin cup)?
+- [ ] **Rootday morning** (8:00 to 14:00; Rootday is the day after Nullday): the felt-wheeled wagon, a brazier, three masked Grafters and a Legionnaire. The Grafters use Rooke's drawing. Do they read as Grafters?
+- [ ] **"The List":** read Rooke's book at the well-head, hum the tending note through the two pencilled doors (8 voice each; honey works too), then write "Recheck next month" in the book. Clear enough what to do?
+- [ ] **The Carders' house:** the blue door, the pallet in the middle of the floor, the lamp in the window, Lyra's chalk note on the chimney.
+- [ ] **The root-cellar:** is it too dark? Do the three mites feel like a fair first fight? Does the message about the Hush and the hush-lamp come at the right moment?
+- [ ] **"Keep him out of the damp":** after Pim is safe, talk to Nell at the mill. Clear the cellar, take a hot brick from the hearth, put it in the pallet, go back to Nell.
+- [ ] **The Narrow law** reaches the Hollow and the Carders' house. Is a ward-sign or a fine there fair?
+
+**Notes:**
 
 ## R4: the thin places (merged 27 Oct, PR #68)
 - [ ] **The baker's** (the north row, near the North Gate). Agnes Tull at the trough at night. Is her bread priced right?
@@ -27,7 +42,7 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 - [ ] **The Watch Downs:** Abel Sedge by the fold says "There are no sheep". Drink from the dew-pond (once a day).
 - [ ] **Wethercombe:** the farmhouse (Mother Hurst), the barn (Jem Cotter) and the cottage open. At the Bellwether, rent the room upstairs (3) and read the slate of tabs.
 - [ ] **The Flume Road:** Ennis Crowle and her skeps. Talk to her before, during and after Bettany's Telling the Bees.
-- [ ] **The tannery:** two hands at the vats. The back door to the Hollow is shut for now.
+- [ ] **The tannery:** two hands at the vats. The back door now leads to the Hollow (R5a).
 - [ ] **The Low Rings and Stillwater Landing:** the punt-poler, the salvager, the smuggler, the broadsheet-seller and the board. Does the Landing feel like a "smugglers' town"?
 
 **Notes:**
@@ -91,4 +106,4 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 ---
 
 ## What the automated tests cover
-Every milestone has its own test (`test/r1release27`, `r2canon27`, `r3narrow28`, `r4thin29`), and the whole suite is run serially against main before each merge. Some tests already fail on main and are not caused by these milestones: air11, arms12, bestiary20a, creatures, folk14, folk20, height-combat, presets, pwa18, roads15, sidequests, skies14, visual, together19. They are worth a separate clean-up pass.
+Every milestone has its own test (`test/r1release27`, `r2canon27`, `r3narrow28`, `r4thin29`, `r5hollow30`), and the whole suite is run serially against main before each merge. Some tests already fail on main and are not caused by these milestones: air11, arms12, bestiary20a, creatures, folk14, folk20, height-combat, presets, pwa18, roads15, sidequests, skies14, visual, together19. They are worth a separate clean-up pass.
