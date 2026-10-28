@@ -128,8 +128,8 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(ennis.before && ennis.during && ennis.after && ennis.gift, 'Ennis Crowle\'s words follow Telling the Bees, and she gives a jar once the bees are home');
 
     // ---- the tannery's back door onto the Hollow
-    const tan = await page.evaluate(() => { const c = G.maps.tannery.get(11, 9); return !!(c && c.door && c.locked === '__never' && /Hollow/.test(c.lockMsg)); });
-    check(tan, 'the tannery has its back door onto the Hollow, shut until the Hollow is built (R5)');
+    const tan = await page.evaluate(() => { const c = G.maps.tannery.get(11, 9); return !!(c && c.door && ((c.portal && c.portal.map === 'p30_hollow') || (c.locked === '__never' && /Hollow/.test(c.lockMsg)))); });
+    check(tan, 'the tannery has its back door onto the Hollow (open once R5 builds the Hollow)');
 
     // ---- small Oakhaven life
     const life = await page.evaluate(() => {

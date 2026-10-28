@@ -116,8 +116,8 @@ Gate: every listed map has people, something to use, and a reason to be there; s
 
 ### R5 — New areas inside Book One (6 planned, 8 at most)
 Gate: each joins a map that is already reachable, keeps the Hedge rule, closes cleanly at the Greening or the Kestrel's departure, and has French and tests.
-- [ ] 1. **The Hollow,** behind the tannery. The burl-sick ward, the Grafters' visit, Lissa Merrow.
-- [ ] 2. **The Carders' house and root-cellar.** The design doc's Hush-Mite tutorial; Pim and Nell.
+- [x] 1. **The Hollow,** behind the tannery. The burl-sick ward, the Grafters' visit, Lissa Merrow. (`js/hollow30.js`, `test/r5hollow30.test.js`; the quest "The List" is [PROPOSED].)
+- [x] 2. **The Carders' house and root-cellar.** The design doc's Hush-Mite tutorial; Pim and Nell. (Same module; "Keep him out of the damp" is [PROPOSED].)
 - [ ] 3. **The Moot-house in Whisper-Grove.** Sable's gallery.
 - [ ] 4. **The Bell Yard and Ashlane,** one map. Halder Wick's and Ivo Renn's homes; names for the Ledger.
 - [ ] 5. **The Governor's house.** The aired room; Aldric's hidden roots.
@@ -129,7 +129,7 @@ Gate: each joins a map that is already reachable, keeps the Hedge rule, closes c
 Gate: owner picks from this list after the R1–R4 playtest; nothing here is required to sell.
 - [ ] **Book One's 24 unused epigraphs placed as documents in the world.** For example: the Grafting Office handbook, K. Vance on calibration, Catalogue Circular 12, the crates' bill of lading, the Warrant of Purification, the Rubric of the Rite.
 - [ ] **The Madder birth on day 0,** using Hold the Pitch.
-- [ ] **Lissa Merrow; Ilse Brennan** as the voiceless song-teacher.
+- [ ] **Ilse Brennan** as the voiceless song-teacher. (Lissa Merrow is in the Hollow since R5a.)
 - [ ] **NPCs notice your calling:** Vosk, Ignatius, Vane, Bettany, Tobiah.
 - [ ] **Pay the ledger off:** names on the Kestrel's deck-beam, candles at Canopy, real dates in ledger rows.
 - [ ] **An Echo card if you answered the Hedge.** Hew Callan remembers. Vane's long gun and his pistols.
