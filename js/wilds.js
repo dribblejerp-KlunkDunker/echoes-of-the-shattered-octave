@@ -184,11 +184,11 @@ function wildsTalk(e) {
   if (!f.gift_quiets) { wildsGiftEvent(); return true; }
   if (G.ents.some(q => q.giftQ && !q.dead && !q.hidden)) { msg('She will not stop singing. Behind you, the air is going thin.', 'warn', 3000); return true; }
   if (!f.gift_peace && !f.deacon_dead) { wildsDeacon(); return true; }
-  showEvent('The child', 'She stops singing at last, all at once, and looks at you, and then at the empty willows. "Is it over?" she says, much too loud, and then remembers, and whispers it. "Is it over? Mam said if I sang nicely the Quiet would come and be kind to me." Her name, she tells you, is Wren.', [{ t: '"It\'s over. Come and meet a Cantor."', f: () => {
+  showEvent('The child', 'She stops singing at last, all at once, and looks at you, and then at the empty willows. "Is it over?" she says, much too loud, and then remembers, and whispers it. "Is it over? Mam said if I sang nicely the Quiet would come and be kind to me." Her name, she tells you, is Linnet.', [{ t: '"It\'s over. Come and meet a Cantor."', f: () => {
     f.wren_saved = true; f.wren_gone = true; questXp(80);
     e.hidden = true; wildsReveal('wren_saved');
-    msg('Wren holds your sleeve all the way back to the fire, and does not sing once, and you can see how hard that is.', 'good', 6000);
-    journal('side', 'The Hush-Gift: the child is called Wren. She is at the camp fire now, and Lyra is teaching her the skipping-rhyme: too loud brings the hounds, too still brings the Hush.');
+    msg('Linnet holds your sleeve all the way back to the fire, and does not sing once, and you can see how hard that is.', 'good', 6000);
+    journal('side', 'The Hush-Gift: the child is called Linnet. She is at the camp fire now, and Lyra is teaching her the skipping-rhyme: too loud brings the hounds, too still brings the Hush.');
   } }]);
   return true;
 }
@@ -239,8 +239,8 @@ function wildsTrigger(t) {
 function wildsEndingLines() {
   const f = G.flags, L = [];
   if (f.wren_saved) L.push(f.gift_peace
-    ? 'You answered the Deacon of the Unrung Bell in Mags\'s hand-cant, and he gave you his clapperless bell and walked away. Wren sings by the fire now, too loud, and Lyra lets her.'
-    : 'The Deacon of the Unrung Bell died without a sound, which is what he wanted. Wren sings by the fire now, too loud, and Lyra lets her.');
+    ? 'You answered the Deacon of the Unrung Bell in Mags\'s hand-cant, and he gave you his clapperless bell and walked away. Linnet sings by the fire now, too loud, and Lyra lets her.'
+    : 'The Deacon of the Unrung Bell died without a sound, which is what he wanted. Linnet sings by the fire now, too loud, and Lyra lets her.');
   else if (f.wren_taken) L.push('The Quiets reached the light in the north-west before you did. The Quiet Faith\'s gift was taken, and you never learned her name.');
   if (f.party_trail) L.push('The Arbiter\'s search party followed the listening-horn\'s recording of your own voices into the weaverling nests, and did not come out. Outrider-Captain Hal Brennick is still there, wound in silk.');
   else if (f.party_fought) L.push('Outrider-Captain Hal Brennick died on the north-east cart-track with his lantern in the moss.');

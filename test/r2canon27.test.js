@@ -50,7 +50,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
 
     // ---- names: invented dying names, canon's tapes, the Veil's tomb names, near-collisions
     const names = await page.evaluate(() => ({ pool: NAMES_POOL.slice(), tapes: CLOISTER_NAMES.slice(), tombs: TOMB_NOTES.map((t) => t[0]) }));
-    check(!names.pool.some((n) => ['Joss Carder', 'Emory Wain', 'Wren Halloway', 'Annet Sowerby', 'Merret Salt'].includes(n)) && names.pool.length === 18, 'the Legionnaires\' dying names are invented people only');
+    check(!names.pool.some((n) => ['Joss Carder', 'Emory Wain', 'Wren Halloway', 'Annet Sowerby', 'Merret Salt'].includes(n)) && !names.pool.some((n) => ['Tamsin Reed', 'Corwin Aye', 'Mirren Salk'].includes(n)) && names.pool.length === 15, 'the Legionnaires\' dying names are invented people only (Tamsin Reed is Depot Three\'s alone; Corwin Aye and Mirren Salk are in the Kestrel\'s crates)');
     const voices = JSON.parse(src('voices/script.json')).lines.find((l) => l.id === 'core.death').names;
     check(names.pool.every((n) => voices.includes(n) && fs.existsSync(path.join(ROOT, 'voices/core_voice/core.death.' + n.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.mp3'))), 'every dying name has its recording');
     check(['M. Orry', 'Ben Dray', 'A. Sowerby', 'Halloran', 'Marchant', 'Tipp', 'Tom Wick'].every((n) => names.tapes.includes(n)) && names.tapes.length === 9 && !names.tapes.includes('Elsie Fenn'), 'the Cloister\'s nine tapes are canon\'s (ch. 20), and the tenth collar is Wat\'s, let out');

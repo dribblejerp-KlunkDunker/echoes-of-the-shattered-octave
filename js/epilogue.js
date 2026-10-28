@@ -111,7 +111,7 @@ const EPILOGUE = (function () {
   ];
   const B1_LYRA_SUFFIX = [
     { id: 'lb_s_tend', when: (f) => own(f, 'p6e_tend_l'), text: 'When you were bleeding in the moss she sang the tending note low and laid a hand flat over the wound. "Don\'t thank me for the healing," she said. "Thank me when we\'re all home." You are not home. You thanked her anyway.' },
-    { id: 'lb_s_wren', when: (f) => gf(f, 'wren_saved'), text: 'Wren sits at her elbow and sings the skipping-rhyme too loud, and Lyra lets her. Somebody has to be taught what the Reach was.' },
+    { id: 'lb_s_wren', when: (f) => gf(f, 'wren_saved'), text: 'Linnet sits at her elbow and sings the skipping-rhyme too loud, and Lyra lets her. Somebody has to be taught what the Reach was.' },
     { id: 'lb_s_taken', when: (f) => gf(f, 'wren_taken'), text: 'She asked once about the girl in the north-west, and you told her. She nodded, and did not ask again, and hummed the skipping-rhyme for the rest of the night the way you hum for the ones you are not allowed to name.' },
     { id: 'lb_s_down', when: (f) => own(f, 'p6e_down_l'), text: 'She went down in the moss once and you got her back to the fire. She laughs about it now. It is the wrong kind of laugh.' },
     { id: 'lb_s_ride', when: (f) => own(f, 'p6e_ride_l'), text: 'You walked the Deep Woods with her. When the Hush came near she hummed, and it came no nearer. She has never asked you to thank her for it.' },

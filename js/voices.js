@@ -114,7 +114,7 @@ const VOICES = (() => {
     aegis:     { f0: 70,  fs: 0.8,  style: 'chord' },    // the Sentinel sings its alto line
     cat:       { f0: 560, fs: 1.3,  style: 'cat' },
     lamplighter:{ f0: 128, fs: 1.0, style: 'breathy' },  // a Hollow
-    bettis:    { f0: 150, fs: 1.0,  style: 'breathy' },  // a Hollow, until woken
+    bettis:    { f0: 198, fs: 1.05, style: 'breathy' },  // Bettis Renn, Ivo's wife: a Hollow, until woken
     hollow:    { f0: 140, fs: 1.0,  style: 'breathy' },  // any Hollow talking to no one
     mags:      { f0: 190, fs: 1.07, style: 'human' },
     sexton:    { f0: 92,  fs: 0.91, style: 'human' },

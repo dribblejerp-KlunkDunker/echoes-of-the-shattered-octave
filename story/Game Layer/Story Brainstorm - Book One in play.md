@@ -1224,6 +1224,8 @@ This is a sketch, not a plan. The aim is "richer, not longer for its own sake". 
 
 ## 5. Where the game contradicts the novel (not already in the Release Readiness doc)
 
+> **Owner's ruling, 28 Oct 2026:** match every one of these to the book. Fixed in the canon pass (`test/canon32.test.js`): #2, #3, #9, #10, #11, #13, #15, #16, #17, #18 (the hush-gift child is now Linnet), #19 and #20. The structural ones (#1, #4, #5, #6, #7, #8, #12, #14, #21) follow as their own pieces of work; PLAYTEST.md keeps the list.
+
 Release Readiness §2 already covers these, so they are not repeated: the Boar's rules, the Legionnaire dying names, the Cloister name-tapes (but see item 21), the lore books, Tobin's pages and cairn, the lease, Ignatius's shop, the Mausoleum's identity, the Tanner twins, the Hall of Carriage, mutton, the proctor bounty, Lyra singing early, the near-collisions, and wind-reeds.
 
 | # | The game | Canon | Suggested fix |

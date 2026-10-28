@@ -346,8 +346,8 @@ const COMPANION_TALK = (function () {
         { t: `"What have you paid so far?"`, k: 'curious', a: 1, r: { frag: {
           none: `"Entry: nothing yet. I have three things, and I recite them every night, so that I know which one goes."`,
           scribe: `"Entry: the smell of the scriptorium. Lampblack and oak-gall. I am told it was good. I no longer know what that means."`,
-          bettis: `"Entry: one thing, for a man on a bench. I could not name it afterwards. I am most careful about that. I record that I cannot name it."`,
-          both: `"Entry: the scriptorium, and one thing more, for a man on a bench, which I cannot name. One left. I recite it every hour."`,
+          bettis: `"Entry: one thing, for Bettis Renn, in the Malting. I could not name it afterwards. I am most careful about that. I record that I cannot name it."`,
+          both: `"Entry: the scriptorium, and one thing more, for Bettis Renn, which I cannot name. One left. I recite it every hour."`,
         } } },
         { t: `"Is it worth it?"`, k: 'blunt', a: 0, r: `"Entry: the question is asked. The answer is a weight, not a sentence. It is worth it to the one it is spent on. It is not worth it to the one who spends."` },
         { t: `"Let me carry it a while."`, k: 'kind', a: 2, r: `She considers it with the whole of her face. "No. But you may hold the lantern. That is a trust."` },

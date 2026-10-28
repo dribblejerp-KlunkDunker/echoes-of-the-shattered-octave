@@ -174,7 +174,7 @@ const DREAMS = (function () {
     { id: 'lp_shr', trig: 'lamp', use: 'shrine', maps: ['deepwoods'], title: 'The keeper', place: 'The Deep Woods',
       lines: ['An old voice, to the lamp, as to a dog: "There you are. There you are."', 'A knife trimming a wick. A cough.', '"Somebody will come by. Somebody always does. I keep it for them." And later, to no one: "All right. I\'ll leave it burning."'] },
     { id: 'co_qr', trig: 'core', maps: ['quarry'], title: 'The name it was made from', place: 'The Oakhaven Quarry',
-      lines: ['Inside the bell, a voice, patient as a clerk: "{name}."', '"{first}. I mend pumps. The blue jug is on the shelf by the door."', '"If anyone asks, I am not late. I am on my way."'] },
+      lines: ['Inside the bell, a voice, patient as a clerk: "{name}."', '"{first}. I mend pumps. The good spanner is on the shelf by the door."', '"If anyone asks, I am not late. I am on my way."'] },
     { id: 'co_mal', trig: 'core', maps: ['malting'], title: 'Assigned', place: 'The Malting',
       lines: ['"{name}," says the glass, as though reading it off a label. "Assigned. Graded. Reconciled."', 'Then, in a smaller register, a good deal younger: "{first}. Please. It is {first}."'] },
     { id: 'co_any', trig: 'core', maps: null, title: 'That one is mine', place: 'Wherever a bell still rings',

@@ -1446,7 +1446,7 @@ function interact() {
     if (e.kind === 'npc') { talk(e); return; }
     if (e.kind === 'item') { pickUp(e); return; }
     if (e.kind === 'deco' && e.use) { useDeco(e); return; }
-    if (e.kind === 'enemy') { if (e.def.core) msg(`Stand close, and you can hear someone murmuring inside the bell: "...${e.name ? e.name.split(' ')[0].toLowerCase() : 'home'}... the blue jug... "`, 'voice'); else msg(e.def.desc, ''); return; }
+    if (e.kind === 'enemy') { if (e.def.core) msg(`Stand close, and you can hear someone murmuring inside the bell: "${coreMurmur(e)}"`, 'voice'); else msg(e.def.desc, ''); return; }
     if (e.kind === 'deco') { msg(decoLabel(e), '', 2500); return; }
   }
   // proximity fallback: items and usable things just in front of you
@@ -1545,7 +1545,7 @@ function finishBore() {
   G.maps.oakhaven = buildOakhaven(true);
   if (G.mapId === 'oakhaven') { const c = Engine.cam; loadMap('oakhaven', { x: c.x, y: c.y, dir: c.dir }); }
   G.escapeTimer = 300;
-  showEvent('The Greening', 'The bit snaps. You hear it go, a sound like a bell dropped down a well.<br><br>Then, from a speaking-tube on the wall, the Governor\'s voice, counting down a purge: <i>"...three. Two. For Oakhaven."</i> The reservoir dumps forty thousand gallons into an open wound. The Root drinks it. And screams. And cracks. And begins to grow.<br><br>Leaves are coming up the shaft behind you. The oaks in the town above are doubling and ringing. The Drift-Kestrel is at the mooring mast, and she takes children first, four to a line.', [{ t: 'Get out', f: () => { journal('main', 'The bit is snapped and the Root is Greening. Oakhaven is going under in an hour. I must climb — the shaft, the headframe, the North Gate — and reach the mooring mast on the east side of the square before the oaks close over it.'); msg('GET OUT. Up the shaft, up the headframe, through the gate, to the mooring mast.', 'bad', 9000); } }]);
+  showEvent('The Greening', 'The bit snaps. You hear it go, a sound like a bell dropped down a well.<br><br>Then, from a speaking-tube on the wall, the Governor\'s voice, small and tinny from four hundred feet above: <i>"Sixty seconds on the reservoir gates. Anyone below, get to the cage."</i> And then, not raised, because it has not risen in years: <i>"Get to the cage. I\'m counting. Forty-one. Forty."</i> The reservoir dumps forty thousand gallons into an open wound. The Root drinks it. And screams. And cracks. And begins to grow.<br><br>Leaves are coming up the shaft behind you. The oaks in the town above are doubling and ringing. The Drift-Kestrel is at the mooring mast, and she takes children first, four to a line.', [{ t: 'Get out', f: () => { journal('main', 'The bit is snapped and the Root is Greening. Oakhaven is going under in an hour. I must climb — the shaft, the headframe, the North Gate — and reach the mooring mast on the east side of the square before the oaks close over it.'); msg('GET OUT. Up the shaft, up the headframe, through the gate, to the mooring mast.', 'bad', 9000); } }]);
 }
 
 // ---------------------------------------------------------------- events & triggers
@@ -1659,6 +1659,22 @@ $('#btn-again').onclick = () => { hide('#ending'); show('#title'); G.state = 'ti
 
 // ---------------------------------------------------------------- dialogue
 const DLG = { npc: null, tone: 'normal', log: [] };
+// What a bell murmurs: its own last things, never another core's. The blue jug is Tamsin Reed's (Book One ch. 2, 5).
+const CORE_MURMURS = [
+  '...{first}... home by dark, I said I would be home by dark...',
+  '...{first}... the key is under the step, under the step...',
+  '...{first}... did somebody feed the hens... somebody feed the hens...',
+  '...{first}... it is my turn at the well, it is my turn...',
+  '...{first}... tell them I was not late, I was on my way...',
+  '...{first}... the good knife is in the drawer, not the other...',
+];
+function coreMurmur(e) {
+  const name = e && e.name ? String(e.name) : '';
+  if (name === 'Tamsin Reed') return '...the blue jug, Mam. Not the white. The blue one...';
+  const first = name ? name.split(' ')[0].toLowerCase() : 'home';
+  let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) | 0;
+  return CORE_MURMURS[Math.abs(h) % CORE_MURMURS.length].replace('{first}', first);
+}
 function talk(e) {
   if (canPickpocket(e)) e.facing = Math.atan2(Engine.cam.y - e.y, Engine.cam.x - e.x);
   if (e.lawGuard && lawActive() && crimeState().bounty) { renderArrest(); return; }

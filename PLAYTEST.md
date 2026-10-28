@@ -14,9 +14,32 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
-## R5b: the Moot-house, the Bell Yard and Ashlane (built 28 Oct)
+## The canon pass: matching the book (built 28 Oct)
+**Your ruling:** "Bettis Renn should be Ivo's wife just as in the book. Match any inconsistency to match the book." This pass makes the text-level fixes. The bigger structural ones are listed below as next.
+- [ ] **Bettis Renn** (Part Three, the Malting's press room): a Hollow woman with a basket, making the gesture of putting a coat over her arm. With Sable, she is put back exactly as in chapter 18: the entry read aloud, the screaming, "put it back". Keep her awake and she is carried to the Kestrel, to Ivo in the third stack. Does the scene land?
+- [ ] **Quist's three questions** are now Form 9's: name, age, trade.
+- [ ] **Old Tam's Essa** died of the pox forty years ago and called him Tammy (ask him about the Flume).
+- [ ] **The bells** each murmur their own last things; only Tamsin Reed at Depot Three asks for the blue jug.
+- [ ] **The Greening:** Aldric's countdown is "Sixty seconds… Forty-one. Forty."
+- [ ] **Small text:** the herald's hands shake; Sable counts twenty-six souls at the Deep Woods camp; Sable reads Emory Wain's name in the ambush; Ignatius's warrant burns the Hollow behind the tannery; the Madder girl is born on Nullday; Kaelen explains the coil as a choice.
+- [ ] **The hush-gift child is now Linnet** (the Bible already has a Wren). Does the name sit right?
+- **Recorded voices:** Sable's Deep Woods greeting and Bettis's old "Name, please" no longer match their recordings, so they fall back to the synthesised voice until re-recorded.
+
+**Still to match the book (next PRs, each its own):**
+1. The talking crates move from Hetty's cellar to the Kestrel's hold.
+2. Hob Wendle is a field-hand who roots into the deck and dies aboard; the tanner becomes someone else.
+3. The Office cutter's hold: the 432 are the Kestrel's cores, not the cutter's vox-bottles.
+4. The Wearer is met once, at the end; earlier meetings become a voice in the fog.
+5. The coda moves to the clearing and the ring of lamps.
+6. The canon days: Davin's death on Hearthday, the culvert lure on Massday, Lyra taken into the Church's protection on Dawnday.
+7. Halder Wick's table goes back to unanswered ("I do not know who he was expecting. There is no one left to ask."), and the Cloister's ninth tape is no longer his son's.
+8. Sable stays in Whisper-Grove until the Kestrel comes (the biggest change: her Reach scenes in Parts One and Two go).
+
+**Notes:**
+
+## R5b: the Moot-house, the Bell Yard and Ashlane (merged 28 Oct, PR #72)
 **How to get there:** Part Three, in Whisper-Grove. The Moot-house is the library on the east side of the Sunken Court; its new stairs are at the back of the hall, left and right. The Bell Yard is through an archway in the west wall of the Sunken Court, about halfway down.
-**A canon question for you:** Book One makes Bettis Renn Ivo's wife (38, "she asked to go second"), but the game's Malting has a man called Bettis Renn on the bench. Ivo's house only names Ivo for now. Which should win?
+**Canon ruling (yours, 28 Oct):** Bettis Renn is Ivo's wife, as in the book. See "The canon pass" above.
 - [ ] **The Moot-house gallery:** three windows over the plaza, Sable's desk in the muniment store at the east end, and her practice sheet. Does it feel like her room?
 - [ ] **The cellar:** Corwin Aye's barrel. Is it findable among the others?
 - [ ] **The Bell Yard and Ashlane:** two long stone streets. They may feel too plain. Should there be more to see (washing, signs, the cat)?

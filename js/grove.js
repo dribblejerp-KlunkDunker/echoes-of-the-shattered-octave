@@ -33,7 +33,7 @@ function wgTick(dt) {
   // Sable stops a proctor dead by reading him his own surrendered name
   if (!f.sable_aboard && !f.wg_sable_read && f.wg_ambush_t < 31) {
     const t = amb.find(e => !e.dead && !e.hidden);
-    if (t) { f.wg_sable_read = true; killEnemy(t, false); msg(`At the fountain Sable stands, opens the Ledger, and reads a proctor his own name — "${t.name || 'Ansel Grey'}" — the one he surrendered when he took the oilcloth. He stops dead in the water, like a man who has walked into a door.`, 'voice', 8000); }
+    if (t) { f.wg_sable_read = true; t.name = 'Emory Wain'; killEnemy(t, false); msg('Sable is on her hands and knees in the water with blood coming out of her nose, and the Ledger hangs open above her, and she reads: "Emory Wain. Twenty-six. Of Cooper\'s Rise in the Iron Peaks. Your mother was Hanne. You had a sister called Ivy." The proctor stops, an absolute hitch in a machine, like a man who has walked into a door.', 'voice', 9000); }
   }
   // Halder Wick walks his loop straight through the middle of it
   if (!f.halder_dead && f.wg_ambush_t <= 0) {
@@ -182,7 +182,7 @@ function wgLadder() {
   if (!f.press_taken) { msg(f.wg_plan ? 'Vane leans over the rail a hundred feet up: "Not without the press! The Malting, on the Cloister road!"' : 'Vane leans over the rail a hundred feet up: "Not yet! Find the scribe!"', 'warn', 5000); return; }
   const left = [];
   if (!f.aegis_done) left.push('the Aegis still stands in the Cloister');
-  if (!f.bettis_awake && G.maps.malting) left.push('the Hollow on the bench in the Malting is still saying "name, please"');
+  if (!f.bettis_awake && G.maps.malting) left.push('in the Malting a Hollow woman is still putting a coat over her arm that is not there');
   if (!f.lamps_lit) left.push('the lamps of the Sunken Court are still dry');
   if (!G.has('folder') && !f.folder_given) left.push('something in the Malting\'s Tuning Room has not been read');
   showEvent('The mast-ladder', 'A hundred feet of rope up into the lilac mist, and the Kestrel\'s keel above it, lift-tanks murmuring. Vane is shouting something about weight.' + (left.length ? '<br><br>Behind you, ' + left.join('; ') + '.' : '') + '<br><br><span class="muted">Climbing leaves Whisper-Grove behind for good.</span>', [
@@ -217,19 +217,19 @@ function talkLamplighter(e) {
 }
 function talkBettis(e) {
   const f = G.flags;
-  if (f.bettis_put_back) { msg('"...name, please... name, please..." He is very peaceful about it.', 'voice', 5000); return; }
-  if (f.bettis_kept_awake) { msg('Bettis Renn sits on his bench by the press with his face in his hands, remembering. Every so often he says a date.', 'voice', 6000); return; }
-  if (!f.sable_joined) { msg('A Hollow on a bench by the press, his hands on his knees, says "...name, please... name, please..." in somebody else\'s intonation. The tag on his wrist reads BETTIS RENN — PRESSED TWICE.', 'voice', 7000); return; }
+  if (f.bettis_put_back) { msg('She sets the coat that is not there over her arm, and lifts it, and sets it down again. She is very peaceful about it.', 'voice', 5000); return; }
+  if (f.bettis_kept_awake) { msg('They have carried Bettis Renn to the Kestrel.', 'voice', 4000); return; }
+  if (!f.sable_joined) { msg('A Hollow woman in a Whisper-Grove apron three years filthy stands by the press with a basket at her feet. Her hands keep making one small gesture, setting something down and picking it up again. The tag on her wrist reads WG-40,102.', 'voice', 7000); return; }
   const fr = sableFragments(G);
-  showEvent('A Hollow on the bench', `A man of about forty sits by the press with his hands on his knees, saying "...name, please... name, please..." in the Registrar's own intonation. The tag on his wrist reads BETTIS RENN — PRESSED TWICE. Sable looks at it for a long time. "Second pressing," she says. "They did it to find out whether I had spoken to him. I had." She has ${fr} fragment${fr === 1 ? '' : 's'} left. "I can reverse it," she says. "Nobody in the Office ever has. Nobody ever put one back."`, [
-    { t: 'Ask her to reverse it. (It will cost her a fragment.)', f: () => {
+  showEvent('A Hollow with a basket', `A woman of about forty stands by the press in a Whisper-Grove apron three years filthy, a basket at her feet, and her hands make one small gesture over and over: setting something down and picking it up again, the gesture of a woman putting a coat over her arm. The tag on her wrist reads WG-40,102. Sable knows it before she reads it. "Bettis Renn," she says. "Forty thousand one hundred and two. Her core is in the long-term rack, because her husband's was requisitioned and the pair were broken up, and the Office does not like to break a pair." She has ${fr} fragment${fr === 1 ? '' : 's'} left. "The press took it. The press can return it. Nobody in the Office ever has. Nobody ever put one back."`, [
+    { t: 'Ask her to put Bettis back. (It will cost her a fragment.)', f: () => {
       f.bettis_awake = true; e.name = 'Bettis Renn'; questXp(60);
-      showEvent('Bettis Renn', 'She kneels by the bench and reads the name to him out of the Ledger, and something leaves her that she will never be able to identify. Bettis Renn looks up. And you learn what the Office never learned, because the Office never put one back: <b>the Hollow was awake the whole time.</b> He remembers all three years. Every loop. Every "name, please." He takes your sleeve in both hands. "Put me back," he says. "Please. You have a press. Put me back."', [
-        { t: 'Put him back.', f: () => { f.bettis_put_back = true; e.name = 'A Hollow on the bench'; journal('side', 'Sable reversed Bettis Renn\'s pressing in the Malting, and it cost her a fragment. He had been awake the whole time, for three years, and he begged to be put back. I put him back.'); msg('Ninety seconds. Three questions. Eight seconds of seven forty-one. He looks relieved at six. Sable writes it down.', 'voice', 8000); } },
-        { t: '"No. I am sorry. Sit with me until it passes."', f: () => { f.bettis_kept_awake = true; journal('side', 'Sable reversed Bettis Renn\'s pressing in the Malting, and it cost her a fragment. He had been awake the whole time, for three years, and he begged to be put back. I would not do it.'); msg('You sit with him on the clean bench. It does not pass. After a while he stops asking, which is not the same thing.', 'bad', 8000); } },
+      showEvent('Bettis Renn', 'They sit her on the stool. Sable seats the core and reads the entry out of the Ledger in the flat clear voice of a woman reading a will: <i>Entry forty thousand, one hundred and two. Bettis Renn. Thirty-eight. Wife of Ivo Renn, cooper, of Ashlane. Taken on the fourth day of the harvest, in the sixth hour. She asked to go second.</i> She strikes the lever, and something leaves her that she will never be able to identify. And then Bettis Renn begins to scream. <b>The Hollow was awake the whole time.</b> She remembers all three years: the queue, the benches, the kind clerk, the eight seconds, and every day since, the baskets and the rain and the standing. She comes off the stool at Sable with her nails, and the words in among the screaming are <i>put it back, put it back, put it back.</i> Sable holds her on the floor and says into her hair, "I\'m sorry. I\'m here. Bettis. Your husband is on a ship four miles from here, he is in the third stack, he is whole."', [
+        { t: 'Put her back.', f: () => { f.bettis_put_back = true; e.name = 'A Hollow with a basket'; journal('side', 'Sable put Bettis Renn back in the Malting, and it cost her a fragment. She had been awake the whole time, for three years, and she begged to be put back. I put her back.'); msg('Ninety seconds. Three questions. Eight seconds of seven forty-one. She looks relieved at six. Sable writes it down.', 'voice', 8000); } },
+        { t: '"No. I am sorry. We will hold you until it passes."', f: () => { f.bettis_kept_awake = true; e.hidden = true; journal('side', 'Sable put Bettis Renn back in the Malting, and it cost her a fragment. She had been awake the whole time, for three years, and she begged to be put back. I would not do it. We carried her to the Kestrel, to her husband in the third stack.'); msg('It does not pass. In the end you carry her to the Kestrel in a canvas sling, screaming, to the hold where her husband is in the third stack.', 'bad', 8000); } },
       ]);
     } },
-    { t: 'Leave him on his bench.', f: null },
+    { t: 'Leave her with her basket.', f: null },
   ]);
 }
 
@@ -258,9 +258,9 @@ function bookOneEnd1() {
   else if (f.aegis_destroyed) L.push(`WG-41,005 is in your ledger: the boy inside the Aegis, who said his number three times as the bronze went still. ${G.has('redcloak') ? 'The red cloak is folded in your pack. You have not decided whose it is.' : 'The red cloak is still on its peg.'}`);
   else L.push('The Aegis still stands in its alcove in the Cloister, guarding eleven empty places. Nobody sang to it.');
   if (f.cloak_names) L.push(`Nine children of the Cloister choir are in your ledger by the name-tapes in their collars: ${CLOISTER_NAMES.slice(0, 2).join(', ')}, and seven more. The tenth collar had only the holes where its tape had been, and the red cloak had none.`);
-  if (f.bettis_put_back) L.push('Bettis Renn remembered all three years and begged to be put back, and you put him back. Sable paid a fragment for that, and she will never be able to say which one.');
-  else if (f.bettis_kept_awake) L.push('Bettis Renn is awake on a clean bench in the Malting, remembering three years of being walked in a loop. He begged to be put back. You would not. You are not sure, either way, who that was for.');
-  else L.push('On a bench in the Malting a Hollow is still saying "name, please" in somebody else\'s voice.');
+  if (f.bettis_put_back) L.push('Bettis Renn remembered all three years and begged to be put back, and you put her back. Sable paid a fragment for that, and she will never be able to say which one.');
+  else if (f.bettis_kept_awake) L.push('Bettis Renn is in the Kestrel\'s hold beside the third stack, where her husband is. She has stopped screaming and started something quieter and worse. She begged to be put back. You would not. You are not sure, either way, who that was for.');
+  else L.push('In the Malting a Hollow woman still sets down a coat that is not there, and picks it up again.');
   if (f.folder_given) L.push('Kaelen tells Lyra everything out loud, including the grey folder, and that his first feeling on reading it was relief, and that he decided he was not entitled to it. Her voice comes back at the worst possible moment, and the first thing she does with it is tell him she would have forgiven him on Rootday, and cannot now.');
   else if (G.has('folder')) L.push('The grey Arbiterium folder is in your shirt. <i>Engineer V. is not to be told.</i> He has not been told. That is your decision now, and it weighs exactly as much as paper.');
   if (G.has('returns')) L.push('Kaelen\'s calibration returns travel in the hold beside the press. The only record that he ever tried to stop it is the Inquisitor\'s charge against him.');

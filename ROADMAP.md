@@ -205,7 +205,7 @@ Gate: each scene is playable start to finish, closes cleanly, and changes lines,
   - the Prologue and Echo I as extras.
 - [ ] **The brainstorm's 24 further contradictions,** folded into R2's canon sweep. Biggest:
   - the crates are in Hetty's cellar, not the Kestrel's hold;
-  - Bettis Renn is a man in the game;
+  - ~~Bettis Renn is a man in the game~~ (fixed: the canon pass, `test/canon32.test.js`);
   - Hob survives;
   - the Wearer is fought three times.
 - [ ] **The owner rules on the open questions first:** whether Sable stays in the Reach, and whether the canon days may run while you are in Oakhaven.
