@@ -522,33 +522,34 @@ const NPCS = {
     greet: { polite: 'Blessings of the Narrow on you. Softly, now.', normal: 'Yes? Quietly.', blunt: 'Hush! The children.' },
     topics: {}, quest: () => null, rumour: true,
   },
-  sable: {
-    name: 'Sable, Archivist of the Veil', sprite: 'sable', portrait: 'sable', tier: 'high',
-    greet: { polite: "Entry: a stranger, polite, at the wrong end of the continent. Sit. Not there. That is where the proctors will come from.", normal: "I am a list, not a cure. Say what you came to say.", blunt: "Precision, please. I record everything, including the tone." },
+  // Umber [PROPOSED]: the Veil runaway in the mist outside the Hedge. Book One keeps Sable in Whisper-Grove until the Kestrel comes.
+  umber: {
+    name: 'Umber, a runaway of the Veil', sprite: 'sable', portrait: 'townswoman', tier: 'high',
+    greet: { polite: "Entry: a stranger, polite, at the wrong end of the continent. Sit. Not there. That is where the proctors will come from.", normal: "I am a day-book, not a cure. Say what you came to say.", blunt: "Precision, please. I was trained to record everything, including the tone." },
     topics: {
-      'The Catalogue': "I did not merely sign the catalogue. I designed the harvest schedule. I made it efficient. That is what I was good at.",
+      'The Catalogue': "I copied the harvest schedule fair, fourteen times, in a straight hand. Sable designed it. I only made it legible. That is what I was good at.",
       'The Hush': "Entry: the Hush does not take names. It takes the people and leaves the names lying about, like coats. The Catalogue only learned to pick them up.",
-      'Kaelen Vance': "I have read his calibration records. Two percent survival at Stage Nine. He wrote that number himself, in a very steady hand, and then he went and lived outside a hedge.",
-      'The Drift-Kestrel': "I hold the manifests for every core that captain has carried. Eleven consignments. I know the total. He does not want to. One day I will read it to him, one name at a time.",
-      'The Rite': "Stage Nine of the Vance Sequence. I filed it. The Cantor goes down in white because I wrote 'in white' on the form, so that she would not be mistaken for staff.",
-      'The scribe in the mist': "Entry: the subject asks the subject about the subject. Sable is a Veil designation. My own name is one of the three things I have left, and I do not spend it on strangers.",
+      'Kaelen Vance': "I have seen his calibration records; Sable kept them. Two percent survival at Stage Nine, in a very steady hand. He lives outside a hedge now, and I am told the hounds will not touch him.",
+      'The Drift-Kestrel': "Eleven consignments to Whisper-Grove. The archivist there holds the manifests and knows the total. I copied the totals and did not add them up. One day she will read it to him, one name at a time.",
+      'The Rite': "Stage Nine of the Vance Sequence. Sable filed it. I ruled the lines on the form. 'In white' is in her hand, so that the Cantor would not be mistaken for staff.",
+      'The scribe in the mist': "Umber is a Veil designation, as Sable is. She is the last archivist of the Silent Veil, and she is in Whisper-Grove, reading names to the drowned, twenty a night. I was her junior. I could not stay and read with her, and I could not leave either, so I am here, which is neither.",
       'Aether-Glass': "Crystallized song. A voice, bled out and set. I can read the name off a core the way you would read a label off a jar. That is what the Veil trained me for.",
     },
     quest: (g) => {
       const f = g.flags, n = g.ledger.length;
       if (!f.sable_met) {
         f.sable_met = true;
-        const tuned = g.player.cls.id === 'archivist' ? " Seven forty-one. You are Veil-tuned. Then you know what this book costs, and I will not have to explain it twice." : '';
-        return { text: "Entry: a stranger, standing in the mist outside the Hedge, at night, which is the one thing every child in Oakhaven is told not to do. I am Sable. The book is the Bound Ledger, and it is stolen, and the two grey men in the trees behind you are the Office of the Catalogue, come to take it back." + tuned + " Listen. Every Carillon Legionnaire dies saying a name. That name is a person, folded into a bell. If nobody writes it down, it is gone. Bring me names. Three, to begin with. Kill the Legion if you must; read the crates if you can. Then come back, and I will show you what the book can do, and what it charges.", journal: ['side', "Sable, the last Archivist of the Veil, is hiding in the mist outside the Hedge with the stolen Bound Ledger. Two Catalogue Proctors are hunting her. She asked me to bring her names — three to begin with. Legionnaires speak them when they fall."] };
+        const tuned = g.player.cls.id === 'archivist' ? " Seven forty-one. You are Veil-tuned. Then you know what these pages cost, and I will not have to explain it twice." : '';
+        return { text: "Entry: a stranger, standing in the mist outside the Hedge, at night, which is the one thing every child in Oakhaven is told not to do. I am Umber. These are the Loose Leaves: the Veil's day-pages, which I carried out of the scriptorium under my coat when the Office came for the Bound Ledger and found that Sable had it already. The two grey men in the trees behind you are the Office of the Catalogue, come to take them back." + tuned + " Listen. Every Carillon Legionnaire dies saying a name. That name is a person, folded into a bell. If nobody writes it down, it is gone. Bring me names. Three, to begin with. Kill the Legion if you must; read the crates if you can. Then come back, and I will show you what the leaves can do, and what they charge.", journal: ['side', "Umber, a runaway of the Silent Veil, is hiding in the mist outside the Hedge with the Veil's Loose Leaves. Two Catalogue Proctors are hunting her. She asked me to bring her names — three to begin with. Legionnaires speak them when they die; the crates in the Kestrel's hold murmur them."] };
       }
       if (f.sable_done) return null;
       if (n < 3) return { text: n === 0 ? "Entry: the stranger returns with no names. That is all right. It is not a test you can fail by being slow, only by stopping. The Legion walk the quarry. The crates in the corsair's hold talk, if you put your ear to them." : `Entry: the stranger returns with ${n} name${n === 1 ? '' : 's'}. ${g.ledger.map(l => l.name).join(', ')}. Written. Three, I said. Bring me ${3 - n} more.` };
       const first = g.ledger.slice(0, 3).map(l => l.name).join(', ');
-      return { text: `Read them to me. ...${first}${n > 3 ? `, and ${n - 3} more` : ''}. Written, and witnessed. Now the other half. There is a Hollow at the pumps in the quarry, saying something about Mags and Dawnday. I took his name myself, in the spring of 416. It is on page nine thousand and six. I can read it back to him, and he will be a man again, for as long as he lasts. But the Ledger keeps names only at a price. For every name I give back, I give up an equal weight of myself. I have three things left: my mother's hands braiding my hair, the smell of the Veil's scriptorium, and my own name. Tell me what to do. I would rather it were not me who decided.`,
+      return { text: `Read them to me. ...${first}${n > 3 ? `, and ${n - 3} more` : ''}. Written, and witnessed. Now the other half. There is a Hollow at the pumps in the quarry, saying something about Mags and Dawnday. I copied his page at the Depot Two intake in the spring of 416; it is leaf nine thousand and six. I can read it back to him, and he will be a man again, for as long as he lasts. But the Veil's leaves keep names only at a price, the same as the Ledger does. For every name I give back, I give up an equal weight of myself. I have three things left: the taste of the Veil's bread, the scriptorium bell at matins, and my own name. Tell me what to do. I would rather it were not me who decided.`,
         choices: [
           { t: 'Give him his name back. Whatever it costs.', f: (g) => sableReturn(g, false) },
-          { t: 'You designed the harvest. You owe him more than a page.', f: (g) => sableReturn(g, true) },
-          { t: 'Keep what is left of you. The names will keep.', f: (g) => { g.flags.sable_done = true; g.flags.sable_kept = true; questXp(40); journal('side', "I told Sable to keep her three fragments. She closed the Bound Ledger on the names I brought her. The Hollow at the pumps is still counting."); return "\"Entry,\" she says. \"The stranger asked me to keep myself. I am recording that you asked.\" She closes the Ledger on your names, all of them, carefully, the way you would close a door on a sleeping room. \"I do not know if that was kindness. I will think about it for a long time. Thank you. Go softly.\""; } },
+          { t: 'You copied the harvest fair. You owe him more than a page.', f: (g) => sableReturn(g, true) },
+          { t: 'Keep what is left of you. The names will keep.', f: (g) => { g.flags.sable_done = true; g.flags.sable_kept = true; questXp(40); journal('side', "I told Umber to keep her three fragments. She closed the Veil's leaves on the names I brought her. The Hollow at the pumps is still counting."); return "\"Entry,\" she says. \"The stranger asked me to keep myself. I am recording that you asked.\" She closes the leaves on your names, all of them, carefully, the way you would close a door on a sleeping room. \"I do not know if that was kindness. I will think about it for a long time. Thank you. Go softly.\""; } },
         ] };
     },
   },
@@ -648,7 +649,19 @@ const PLACES_WG = {
 const CLOISTER_NAMES = ['M. Orry', 'Ben Dray', 'A. Sowerby', 'Halloran', 'E. Veske', 'R. Veske', 'Marchant', 'Tipp', 'C. Linley'];
 
 // how many of her three fragments Sable still holds
-function sableFragments(g) { const f = g.flags; return 3 - (f.sable_returned ? 1 : 0) - (f.bettis_awake ? 1 : 0); }
+// Sable's three fragments (Book One ch. 14, 22): she spends one in the Malting, for Bettis Renn. Umber, in the Reach, has her own.
+function sableFragments(g) { const f = g.flags; return 3 - (f.bettis_awake ? 1 : 0); }
+function umberFragments(g) { const f = g.flags; return 3 - (f.sable_returned ? 1 : 0); }
+// Sable's topics as the archivist of the Veil (Whisper-Grove)
+const SABLE_TOPICS = {
+  'The Catalogue': "I did not merely sign the catalogue. I designed the harvest schedule. I made it efficient. That is what I was good at.",
+  'The Hush': "Entry: the Hush does not take names. It takes the people and leaves the names lying about, like coats. The Catalogue only learned to pick them up.",
+  'Kaelen Vance': "I have read his calibration records. Two percent survival at Stage Nine. He wrote that number himself, in a very steady hand, and then he went and lived outside a hedge.",
+  'The Drift-Kestrel': "I hold the manifests for every core that captain has carried. Eleven consignments. I know the total. He does not want to. One day I will read it to him, one name at a time.",
+  'The Rite': "Stage Nine of the Vance Sequence. I filed it. The Cantor goes down in white because I wrote 'in white' on the form, so that she would not be mistaken for staff.",
+  'The scribe in the mist': "Entry: the subject asks the subject about the subject. Sable is a Veil designation. My own name is one of the three things I have left, and I do not spend it on strangers.",
+  'Aether-Glass': "Crystallized song. A voice, bled out and set. I can read the name off a core the way you would read a label off a jar. That is what the Veil trained me for.",
+};
 
 const SLATES = ['ARE THE HOLLOWS HUNGRY?', 'DO THEY KNOW THEY ARE WALKING?', 'THE CAT IS NOT A HOLLOW. I ASKED IT.', 'THE WATER IS WARM. WHY IS THE WATER WARM.', 'I CAN HEAR THE HYMN. I CANNOT SING IT.'];
 
@@ -710,7 +723,7 @@ Object.assign(NPCS, {
   sable_wg: {
     name: 'Sable, Archivist of the Veil', sprite: 'sable', portrait: 'sable', tier: 'high',
     greet: { polite: 'Entry: the stranger is polite in a drowned city. Noted.', normal: 'I am a list, not a cure.', blunt: 'Precision, please. I record everything, including the tone.' },
-    topics: Object.assign({}, NPCS.sable.topics, {
+    topics: Object.assign({}, SABLE_TOPICS, {
       'Whisper-Grove': 'Two hundred and six Hollows in the Sunken Court. I read twenty names a night. Ten years and two hundred and twenty days to finish, and then you start again, because by then the first ones have stopped answering to them.',
     }),
     quest: (g) => {
@@ -719,11 +732,6 @@ Object.assign(NPCS, {
         if (!f.aegis_done) return { text: 'The Cloister first. North, past the willows, up the dry steps. I stood in that doorway and counted the children in while they sang Hymn 9. I never counted them out. Something in there still guards the risers. When it stands up, do not run. Look at the board.' };
         if (!f.press_taken) return { text: `The Malting, on the Cloister road, north-east, past the Cloister. I wrote the intake pamphlet. Benches, a water butt, a man who takes your coat at the door so you will not hesitate at the threshold. The presses are at the back. I have ${fr} fragment${fr === 1 ? '' : 's'} left. I am telling you so that you will know what I can spend.` };
         return { text: 'Up the ladder. Entry: the stranger took a press out of an Office harvest-house with an archivist and a choir automaton. I am recording that we were not quick enough to be proud of.' };
-      }
-      if (f.sable_aboard) {
-        f.sable_joined = true; f.wg_plan = true; questXp(40);
-        journal('main', 'Sable has a plan, and she says it is arithmetic and not hope: the Cloister of the Lost Choir first, north of the Sunken Court, where something guards the risers; then the Office\'s harvest-house, the Malting, on the Cloister road, to take a press.');
-        return { text: 'Entry: Whisper-Grove, at dusk, again. I did not think I would see it from the outside of a crate. — I came for arithmetic. One thousand three hundred and forty-two, against my fragments. The ship can reach the harvest-house on the Cloister road, where the presses are; your engineer wants one, and I want the Office to have one fewer. But the Cloister first. There is something in it I left there.' };
       }
       if (f.wg_ambush && !f.wg_ambush_over) return { text: 'Not now. Behind you. Grey oilcloth, silver mesh. Listen for the felt.' };
       if (!f.wg_ambush_over) {

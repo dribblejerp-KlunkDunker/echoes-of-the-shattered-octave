@@ -339,7 +339,7 @@ const COMPANION_TALK = (function () {
   // ---- Sable ("Entry:" voice) ---------------------------------------------------------------------------------------
   topic({
     id: 's_ledger', who: 'sable', bit: 16, title: `The Bound Ledger`,
-    req: () => gf('sable_met') || gf('sable_wg_met') || gf('sable_with') || gf('sable_joined'),
+    req: () => gf('sable_wg_met') || gf('sable_with') || gf('sable_joined'),
     root: () => ({
       s: `"Entry: the Bound Ledger keeps a name only at a price, weight for weight. I carry it open so that I never forget it is a debt."`,
       o: [
@@ -357,7 +357,7 @@ const COMPANION_TALK = (function () {
 
   topic({
     id: 's_veil', who: 'sable', bit: 17, title: `The Veil`,
-    req: () => gf('sable_met') || gf('sable_wg_met'),
+    req: () => gf('sable_wg_met') || gf('sable_with') || gf('sable_joined'),
     root: () => ({
       s: `"Entry: the Veil records the death of civilisations. We do not hold it back. We do not hurry it. We write what was said, and by whom, and on which day."`,
       o: [
@@ -370,7 +370,7 @@ const COMPANION_TALK = (function () {
 
   topic({
     id: 's_schedule', who: 'sable', bit: 18, title: `The schedule`,
-    req: () => gf('sable_met') || gf('sable_wg_met'),
+    req: () => gf('sable_wg_met') || gf('sable_with') || gf('sable_joined'),
     root: () => ({
       s: `"Entry: I did not merely sign the Catalogue. I designed the harvest schedule, and I made it efficient. I wrote 'in white' on the Stage Nine form, so the Cantor would not be mistaken for staff. I was proud of the handwriting."`,
       m: 'sad',
@@ -543,11 +543,8 @@ const COMPANION_TALK = (function () {
   };
 
   // ---------------------------------------------------------------- context, availability
-  // what Sable has spent: the same two flags sableFragments() in data.js counts
-  function fragKey() {
-    const a = gf('sable_returned'), b = gf('bettis_awake');
-    return a && b ? 'both' : a ? 'scribe' : b ? 'bettis' : 'none';
-  }
+  // what Sable has spent: the one flag sableFragments() in data.js counts (the Reach's return was Umber's, not hers)
+  function fragKey() { return gf('bettis_awake') ? 'bettis' : 'none'; }
   function ctxOf(who, src) {
     return {
       who, src, lyra: lyraState(who === 'lyra' ? (src || 'lyra') : 'lyra_dw'),

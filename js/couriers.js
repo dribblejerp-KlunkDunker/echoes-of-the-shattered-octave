@@ -203,25 +203,25 @@ const COURIERS = (function () {
       gift: (f) => f.hew_home ? { gold: 4, line: 'four sovereigns' } : null,
     },
     {
-      id: 'sable_ret', from: 'Sable', note: 'a letter, filed', title: 'Letter from Sable',
+      id: 'sable_ret', from: 'Umber', note: 'a letter, filed', title: 'Letter from Umber',
       when: (f) => f.sable_returned, alive: (f) => oakhavenOpen(f), npc: [],
       text: (f) => P(
         'Entry: a letter, which is not an entry, and which I do not know how to file.',
-        'Hew Callan has been told the year. He took it the way a man takes a blow he saw coming, and then he asked for a pen. I have two things left in the inventory: my mother\'s hands in my hair, and a name. The smell of the scriptorium is gone. I am asked whether that is a loss. It is a shelf.',
+        'Hew Callan has been told the year. He took it the way a man takes a blow he saw coming, and then he asked for a pen. I have two things left in the inventory: the taste of the Veil\'s bread, and a name. The bell is gone. I am asked whether that is a loss. It is a shelf.',
         f.sable_accused
-          ? 'You said I owed him more than a page. I recorded it. I record also that you were right, and that I would have said it myself, in the spring of 416, if I had been the sort of person who said things.'
+          ? 'You said I owed him more than a page. I recorded it. I record also that you were right, and that Sable would have said it herself, in the spring of 416, if she had been the sort of person who said things, and that I only ruled the lines.'
           : 'You said whatever it cost, and I note that you did not ask what the cost was. It is an unusual courtesy. It cost what it cost. I am not sorry.',
-        'Go softly.') + SIG('Sable'),
+        'Go softly.') + SIG('Umber'),
       gift: () => null,
     },
     {
-      id: 'sable_kept', from: 'Sable', note: 'three things, kept', title: 'Letter from Sable (kept)',
+      id: 'sable_kept', from: 'Umber', note: 'three things, kept', title: 'Letter from Umber (kept)',
       when: (f) => f.sable_kept, alive: (f) => oakhavenOpen(f), npc: [],
       text: () => P(
         'Entry: the stranger asked me to keep myself. I kept.',
-        'I have three things: my mother\'s hands braiding my hair; the smell of the scriptorium; my own name. I say them at night so that I know which is which. They are all still where I put them. It is possible that I am the only person in the Reach who can say so.',
-        'The Hollow at the pumps is still counting. I can hear it from the hedge when the wind is right. Page nine thousand and six sits unread. You asked me not to spend, and I have not, and every night I hear him, and I write that down too.',
-        'I am not yet certain it was right. I record that I am not yet certain, because the Ledger prefers an honest hole to a tidy page.') + SIG('Sable'),
+        'I have three things: the taste of the Veil\'s bread; the scriptorium bell at matins; my own name. I say them at night so that I know which is which. They are all still where I put them. It is possible that I am the only person in the Reach who can say so.',
+        'The Hollow at the pumps is still counting. I can hear it from the hedge when the wind is right. Leaf nine thousand and six sits unread. You asked me not to spend, and I have not, and every night I hear him, and I write that down too.',
+        'I am not yet certain it was right. I record that I am not yet certain, because the Veil\'s leaves prefer an honest hole to a tidy page.') + SIG('Umber'),
       gift: () => null,
     },
     {

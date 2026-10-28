@@ -52,6 +52,8 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 - [ ] **Afterwards:** "Say something." / "No." Does the "sits down" card land? Next morning she is back at the fire.
 - [ ] **The Mausoleum choir** now waits until the Wearer is dead, then offers the Requiem (the older thing singing every office) with the tomb puzzle as before.
 
+- [ ] **Sable stays in Whisper-Grove** (the book's biggest structural point: she never leaves until the Kestrel comes). The scribe in the mist outside the Hedge is now **Umber, a runaway of the Veil** [PROPOSED]: Sable's junior, with the Veil's Loose Leaves instead of the Bound Ledger. Her quest is the same (three names, then Hew Callan at the cost of one of her own three fragments: the scriptorium bell), her letters are hers, and she does not come up the rope. Sable is first met at the fountain in the Sunken Court, as in chapter 14, and spends one fragment, for Bettis. Umber uses Sable's coat sprite with the goodwife's portrait for now: does she need her own face? The alternative is to cut the Reach scribe entirely; say if you'd rather.
+
 **Still to match the book (next PRs, each its own):**
 1. ~~The talking crates move from Hetty's cellar to the Kestrel's hold.~~ Done.
 2. ~~Hob Wendle is a field-hand who roots into the deck and dies aboard; the tanner becomes someone else.~~ Done.
@@ -60,7 +62,7 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 5. ~~The coda moves to the clearing and the ring of lamps.~~ Done.
 6. ~~The canon days: Davin's death on Hearthday, the culvert lure on Massday, Lyra taken into the Church's protection on Dawnday.~~ Done.
 7. ~~Halder Wick's table goes back to unanswered ("I do not know who he was expecting. There is no one left to ask."), and the Cloister's ninth tape is no longer his son's.~~ Done.
-8. Sable stays in Whisper-Grove until the Kestrel comes (the biggest change: her Reach scenes in Parts One and Two go).
+8. ~~Sable stays in Whisper-Grove until the Kestrel comes (the biggest change: her Reach scenes in Parts One and Two go).~~ Done: the Reach scribe is Umber.
 
 **Notes:**
 
