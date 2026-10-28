@@ -8,7 +8,7 @@
 //      comes up through the cobbles on Cooper's Row each morning, a hand-saw beside it; the baker's thumping carries at
 //      night; the sexton salts the chapel paths at dawn; the tanker-wagon comes through once a day with a Legionnaire
 //      escort; dogs howl at noon (Series Bible: since the Cascade, "dogs howl at noon").
-//    * NAMED ROUTINES. Bettany, Hob and Old Tam keep a day place and a night place in Oakhaven. They are moved, never
+//    * NAMED ROUTINES. Bettany, Abner and Old Tam keep a day place and a night place in Oakhaven. They are moved, never
 //      hidden (every quest-giver stays talkable), and never while you are talking to them or close by.
 //    * THE WATCH DOWNS (danger stays 0, Author Rulings 93-95): Abel Sedge [PROPOSED], a turf-cutter by the fold, says the
 //      sign's "There are no sheep" out loud; a turf stack and the dew-pond (a drink, once a day).
@@ -130,7 +130,7 @@ const THIN29 = (function () {
       shop: [{ item: 'honey' }],
       greet: { polite: S('Softly by the skeps, if you would. They take a voice to heart.'), normal: S('Honey\'s four. The bees do the work; I only tell them things.'), blunt: S('Not so loud. You will put them off their comb.') } },
     p29_sim: { name: S('Sim Fletch, tannery hand'), sprite: 'townsman', portrait: 'townsman', tier: 'low', topics: {}, quest: () => null,
-      greet: { polite: S('Hob is outside. He likes the air. I like the work; it stops you hearing the Hollow through the wall.'), normal: S('Lime, then the beam, then the vats. Same as always. The hides are thinner this year, and nobody will say why.'), blunt: S('Mind the vats. They do not care whose hand goes in.') } },
+      greet: { polite: S('Abner is outside. He likes the air. I like the work; it stops you hearing the Hollow through the wall.'), normal: S('Lime, then the beam, then the vats. Same as always. The hides are thinner this year, and nobody will say why.'), blunt: S('Mind the vats. They do not care whose hand goes in.') } },
     p29_moll: { name: S('Moll Fletch, tannery hand'), sprite: 'townswoman', portrait: 'townswoman', tier: 'low', topics: {}, quest: () => null,
       greet: { polite: S('That door goes through to the Hollow. Rooke keeps it shut. We hear them in there at night, humming.'), normal: S('Eighty-four in the Hollow, Rooke says, and more since. We send the scraps through for their fires.'), blunt: S('No, you cannot go through. Ask Rooke.') } },
     p29_gil: { name: S('Gil Wade, punt-poler'), sprite: 'p16f_dockman', portrait: 'townsman', tier: 'low', topics: {}, quest: () => null,

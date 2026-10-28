@@ -136,18 +136,18 @@ const COURIERS = (function () {
       gift: (f) => f.tam_sat ? { item: 'whistle', line: 'a hush-whistle' } : (f.tam_told ? { item: 'herb_reed', line: 'a sprig of reed-pith' } : null),
     },
     {
-      id: 'hob', from: 'Hob Wendle', note: 'the lamp in the window', title: 'Letter from Hob Wendle',
+      id: 'hob', from: 'Abner Fenning', note: 'the lamp in the window', title: 'Letter from Abner Fenning',
       when: (f) => f.hob_told, alive: (f) => oakhavenOpen(f), npc: ['hob'],
       text: (f) => f.twins_named ? P(
-        'Wendle, tanner. I do not write; I am writing.',
+        'Fenning, tanner. I do not write; I am writing.',
         'You put Ned and Wyn in your book. I asked the Cantor whether a name in a stranger\'s book counts, and she said that is what a book is for. I did not know what to do with that, so I took the lamp out of the window the night you told me, and stood in the dark shop with the vats ticking. The window is dark now. I find I can look at it.',
         'Leather is quieter than people. I should have known that, in my trade.',
-        'There is a jerkin on the second hook that fits you better than what you are wearing. It is not a gift. Come and pay for it, and mind the lime.') + SIG('H. Wendle')
+        'There is a jerkin on the second hook that fits you better than what you are wearing. It is not a gift. Come and pay for it, and mind the lime.') + SIG('A. Fenning')
         : P(
-        'Wendle, tanner. I do not write; I am writing.',
+        'Fenning, tanner. I do not write; I am writing.',
         'You went down where I could not, and came up, and told me. I have not asked what you left. I hear you did not write them in any book. I am not angry. I should not have either; I should have wanted no page to look at.',
         'The lamp is out of the window. I stand with my hand on the nail where the key hung. The nail is empty. I keep my hand there anyway.',
-        'Leather is quieter than people. I should have known that, in my trade. Mind the lime if you come.') + SIG('H. Wendle'),
+        'Leather is quieter than people. I should have known that, in my trade. Mind the lime if you come.') + SIG('A. Fenning'),
       gift: () => null,
     },
     {

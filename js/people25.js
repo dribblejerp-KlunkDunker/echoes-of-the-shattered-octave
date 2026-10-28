@@ -4,7 +4,7 @@
 //  The owner, October 2026: painted side views for the main species. The bestiary already had them
 //  (js/bestiary20a.js, js/bestiary20b.js: every enemy's own painting cut, turned on a rig and re-lit);
 //  the Catalogue Proctor (kept on its pilot stand-ins), the companions and the townsfolk did not. This
-//  file rigs them, and then the innkeepers and quest-givers the player talks to most (Hetty, Rooke, Sable, Hob,
+//  file rigs them, and then the innkeepers and quest-givers the player talks to most (Hetty, Rooke, Sable, Abner,
 //  Nell), the same way, with js/bestiary20b.js's humanoid kit: the body and head as stacks of
 //  sections whose width is the painted silhouette and whose depth is authored per band, the arms,
 //  staff, jug and boots cut out of the painting and re-hung in 3D, the back painted from the figure's
@@ -276,7 +276,7 @@
     },
   });
 
-  // ---------------------------------------------------------------- Hob
+  // ---------------------------------------------------------------- Abner
   // The smith: a shaven head, bare arms, a leather apron over a dark shirt, boots.
   SP.hob = humanoid({
     W: 108, axT: 52, knee: 112, hip: 100,

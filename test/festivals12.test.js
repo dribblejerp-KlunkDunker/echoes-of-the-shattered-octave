@@ -316,7 +316,7 @@ const flagSig = (page) => page.evaluate(() => JSON.stringify(Object.keys(G.flags
     check(dl.dl === 13 && dl.night, 'the first night in the Grove after the Greening is the lantern night (p12f_dl = day + 1)');
     check(dl.ents.includes('basket') && dl.ents.filter(x => x.startsWith('wfloat')).length >= 12, 'the basket and the lanterns on the lit water are placed');
     const names = await pg.evaluate(() => FESTIVALS12.lanternNames());
-    check(names.includes('Essa, who was Tam\'s') && names.includes('Ned Wendle') && names.includes('Marra Venn'), 'names come from flags and the ledger: ' + JSON.stringify(names));
+    check(names.includes('Essa, who was Tam\'s') && names.includes('Ned Fenning') && names.includes('Marra Venn'), 'names come from flags and the ledger: ' + JSON.stringify(names));
     check(names.filter(n => n === 'Marra Venn').length === 1 && names.every(n => n.length <= 40 && !/[<>&"`\\]/.test(n)) && !names.includes('A'.repeat(55)), 'names are de-duplicated, capped and stripped of markup characters');
     await pg.evaluate(() => { Engine.cam.x = 22.5; Engine.cam.y = 40.6; G.state = 'play'; const b = G.map.entities.find(e => e._p12f === 'basket'); useDeco(b); });
     await pg.waitForTimeout(150);

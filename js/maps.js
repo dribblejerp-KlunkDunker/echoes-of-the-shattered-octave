@@ -266,7 +266,7 @@ function buildOakhaven(greening) {
     { x: 58, y: 39, w: 6, h: 4, tex: 't_house', door: [60, 39], barred: true, label: 'The Sowerbys\' — empty' },
     // --- south district: Tannery Row and the Flume ---
     { x: 12, y: 57, w: 7, h: 4, tex: 't_wood', door: [15, 57], portal: { map: 'tannery', x: 7.5, y: 2.0, dir: Math.PI / 2 }, label: 'The tannery' },
-    { x: 4, y: 57, w: 5, h: 4, tex: 't_house', door: [6, 57], barred: true, label: 'The Wendle twins\' house — empty' },
+    { x: 4, y: 57, w: 5, h: 4, tex: 't_house', door: [6, 57], barred: true, label: 'The Fenning twins\' house — empty' },
     { x: 27, y: 57, w: 6, h: 4, tex: 't_house', door: [29, 57], barred: true, label: 'Old Tam\'s' },
     { x: 40, y: 57, w: 5, h: 4, tex: 't_wood', door: [42, 57], barred: true, label: 'A hay-barn' },
     { x: 4, y: 45, w: 4, h: 3, tex: 't_wood', door: [7, 46], barred: true, label: 'The fulling-shed' },
@@ -274,7 +274,7 @@ function buildOakhaven(greening) {
     { x: 26, y: 30, w: 6, h: 4, tex: 't_house', door: [28, 30], barred: true, label: 'Bettany\'s' },
     { x: 40, y: 14, w: 3, h: 6, tex: 't_house', door: [40, 16], barred: true, label: 'A shuttered house' },
     { x: 40, y: 27, w: 3, h: 6, tex: 't_wood', door: [40, 29], barred: true, label: 'The chandler\'s' },
-    { x: 4, y: 38, w: 5, h: 4, tex: 't_house', door: [8, 40], barred: true, label: 'Hob Wendle\'s' },
+    { x: 4, y: 38, w: 5, h: 4, tex: 't_house', door: [8, 40], barred: true, label: 'Abner Fenning\'s' },
     { x: 38, y: 38, w: 5, h: 4, tex: 't_house', door: [38, 40], barred: true, label: 'A shuttered house' },
   ];
   for (const b of buildings) {

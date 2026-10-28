@@ -18,7 +18,7 @@ const PHASE1_NATIVE = (function () {
     isWearingSynodRobe: game => live(game) && native.wearingDisguise(),
     isEligibleSynodInspector: e => !!e && native.synodInspector(e),
     shouldSuppressEnemySightAggro: (game, e) => live(game) && native.disguiseProtects(e),
-    // Native robes are sold by Hob. Do not inject legacy pickups at unverified coordinates.
+    // Native robes are sold by Abner. Do not inject legacy pickups at unverified coordinates.
     appendDisguisePickupsForMap: () => 0,
     getTransientState: () => ({ mapId: G.mapId, suspicion: (G.coverSuspicion || 0) / 3 * 100,
       compromised: disguiseExposed(), panelOpen: G.openPanel === 'disguise' })

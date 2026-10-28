@@ -44,7 +44,7 @@
 //             standing within 3.4 cells she feels the deck move and turns round.
 //    engineer (unnamed, pessimist)     tank_patched and the envelope fitted          gold cost of every upgrade x0.80; builds the new tank
 //    Nell     (the mill; only if pim_safe) the stove is fitted                         once a game day, one Hearth Bread
-//    Hob      (the tanner; only if twins_named, i.e. he climbed) the lanterns fitted   once a game day, +35 condition to the readied weapon
+//    Abner      (the tanner; only if twins_named, i.e. he climbed) the lanterns fitted   once a game day, +35 condition to the readied weapon
 //    (Pim Carder, with his mother, sits in the bunk room when pim_safe: the existing NPC, no effect.) Nobody who dies in the
 //    story is ever aboard, and nobody here is story-bound: no flag the main quest reads is set or read for gating anything but
 //    tank_patched, pim_safe, twins_named, part3, part4, coda_done (all set by the story, never by this module).
@@ -79,7 +79,7 @@ const KESTREL16 = (function () {
     DISCOUNT: 0.20,        // the engineer: the gold cost of every upgrade x 0.80 (all base prices are multiples of 5, so exact)
     REST_HOURS: 8, LAMP_HOURS: 6,
     LENS: 30,              // what Mags asks for a new glass
-    MEND: 35,              // Hob: +35 condition to the readied weapon, once a game day (the whetstone's number)
+    MEND: 35,              // Abner: +35 condition to the readied weapon, once a game day (the whetstone's number)
     LOAF: 1,               // Nell: one Hearth Bread, once a game day
     HOP_HOURS: 4,          // flying the Kestrel between the two moorings
     CHASE: 14,             // a hostile this close and chasing: nobody climbs a rope with that behind them
@@ -343,8 +343,8 @@ const KESTREL16 = (function () {
         ],
       },
       hob: {
-        name: S('Hob Wendle, tanner'),
-        label: S('Hob Wendle, on a sack of hides'),
+        name: S('Abner Fenning, tanner'),
+        label: S('Abner Fenning, on a sack of hides'),
         greetP: S('Evening. Mind the vats. There are no vats, but mind them.'),
         greetN: S('A tannery is the one trade that gets quieter the harder you work it. A ship is the other way about.'),
         greetB: S('I have buried two apprentices this year. Try me.'),
@@ -355,8 +355,8 @@ const KESTREL16 = (function () {
         give: S('Give him the bench in the hold.'),
         later: S('Not yet.'),
         done: S('He sets a lantern on the bench, in a window that is not there, and turns it so the light goes the right way. "Bring me what is worn. I will see to the edge."'),
-        doneMsg: S('Hob has the bench in the hold: once a game day he will put an edge back on your readied weapon (+35 condition).'),
-        j: S('Hob Wendle has the bench in the Kestrel\'s hold. Once a day he will see to the edge of whatever I carry.'),
+        doneMsg: S('Abner has the bench in the hold: once a game day he will put an edge back on your readied weapon (+35 condition).'),
+        j: S('Abner Fenning has the bench in the Kestrel\'s hold. Once a day he will see to the edge of whatever I carry.'),
         mend: S('Ask him to see to your weapon.'),
         mendGot: S('He takes it, turns it once in the lantern light, draws it twice along a strip of hide and hands it back. It is as good as it has been.'),
         mendNone: S('"It has had its turn today," he says. "Come back when the day has."'),
@@ -395,7 +395,7 @@ const KESTREL16 = (function () {
   //   p16k_seen  0-63    beats seen: 0 aboard, 1 vane, 2 mags, 3 the engineer, 4 nell, 5 hob
   //   p16k_moor  0-2     0 as the story left her (Whisper-Grove in Part Three, the Deep Woods in Part Four), 1 the Court, 2 the camp
   //   p16k_visits 0-9999 times you have climbed aboard
-  //   p16k_loaf / p16k_mend  the game day + 1 on which Nell's loaf / Hob's edge were last given (0 never)
+  //   p16k_loaf / p16k_mend  the game day + 1 on which Nell's loaf / Abner's edge were last given (0 never)
   //   p16k_rp0..5 0-12   which trophy (1-12) hangs on rail peg n, 0 bare
   const FLAGS = { p16k_up: [0, 127], p16k_crew: [0, 15], p16k_seen: [0, 63], p16k_moor: [0, 2], p16k_visits: [0, 9999], p16k_loaf: [0, 99999], p16k_mend: [0, 99999], p16k_rest: [0, 9999] };
   for (let i = 0; i < 6; i++) FLAGS['p16k_rp' + i] = [0, 12];

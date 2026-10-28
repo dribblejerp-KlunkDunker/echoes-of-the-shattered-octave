@@ -1394,7 +1394,7 @@ const ICONS = (function () {
     d.layer(C.leather).rrect(-1.8, 6, 3.6, 5);
     d.layer(C.bell, { shiny: 1 }).rell(0, -13, 2, 2);
   };
-  PIX.p12_lute = d => {   // Lute: Hob Wendle strings these with his own gut
+  PIX.p12_lute = d => {   // Lute: Abner Fenning strings these with his own gut
     d.tilt(12, 12, 1);
     d.layer(C.ash, { shiny: 1 }).rell(0, 4, 6, 7);
     d.layer(C.dwood).rrect(-1.3, -12, 2.6, 11);
