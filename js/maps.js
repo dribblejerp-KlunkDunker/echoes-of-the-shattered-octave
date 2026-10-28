@@ -1117,6 +1117,10 @@ function buildMausoleum() {
 function extendDeepWoods(m) {
   // the Brood-Mother, at the heart of the nests
   m.enemy('broodmother', 10.2, 45.8);
+  // the ring of lamps in the clearing north of the camp (Book One ch. 23; js/coda.js RING): six lamps, Lyra past the last one
+  for (let i = 0; i < RING.lamps; i++) { const [x, y] = ringPos(i); m.deco('lamp', x, y, { radius: 0.12, scale: 0.7, glow: 0.6, requires: 'ring_set', ringLamp: true, label: 'A hush-lamp from the camp, set at the edge of the trees' }); }
+  m.npc('lyra_dw', RING.bx, RING.by, { facing: -Math.PI / 2, requires: 'ring_go', ringLyra: true });
+  m.trigger(RING.cx, RING.cy, 2.2, 'ring');
   // Hollow mourners walking the yard to the Mausoleum door and back, waiting for the bell
   const route = [[12.6, 17.6], [16.4, 15.6], [20.2, 14.2], [24.6, 13.8], [27.5, 13.7]];
   const rests = [[6.5, 13.9], [8.9, 16.5], [11.3, 13.9], [13.7, 19.1]];

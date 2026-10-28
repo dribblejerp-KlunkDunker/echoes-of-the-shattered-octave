@@ -189,6 +189,7 @@ function loadMap(id, pos) {
   syncWantedPosters();
   const m = G.maps[id]; G.map = m; G.mapId = id; G.ents = m.entities; m.entities.forEach(hydrate);
   for (const e of m.entities) { if (e.requires && !e.dead) e.hidden = !G.flags[e.requires]; if (e.until && G.flags[e.until]) e.hidden = true; if (e.drylamp) e.glow = G.flags.lamps_lit ? 0.65 : 0; if (e.id === 'halder' && G.flags.halder_rest) e.loop = false; }
+  if (id === 'deepwoods' && typeof ringSync === 'function') { if (G.flags.coda_done && G.flags.ring_go && !G.flags.ring_fight) G.flags.ring_back = true; ringSync(); }
   Engine.setMap(m);
   const p = pos || m.spawn; Engine.cam.x = p.x; Engine.cam.y = p.y; Engine.cam.dir = p.dir || 0; Engine.cam.pitch = 0;
   settleFeet();

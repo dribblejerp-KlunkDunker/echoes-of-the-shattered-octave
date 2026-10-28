@@ -52,6 +52,7 @@ const LOGMAP = (function () {
     ['vesper', /^vesper:/], ['lantern', /^lanterns in the mist/], ['tobin', /^the year 417/],
     ['deed', /deed to 4 cooper/],
     ['folder', /^coda: kaelen|grey arbiterium folder|calibration|tuning room/], ['mausoleum', /^coda:/],
+    ['mausoleum', /^the requiem:|^in the choir of the mausoleum/], ['aegis', /the thing at the porch|voice at the door/],
     ['pumps', /hew callan/], ['aegis', /aegis|hymn 9|^the red cloak/], ['table', /table for four|halder/],
     ['lamps', /lamplighter|dry lamps/], ['pools', /reflecting pools/], ['tapes', /name-tapes from (ten|the choir)/],
     ['sunken', /^the office came out/], ['press', /^the pressman's round|hand-press|bettis renn/],

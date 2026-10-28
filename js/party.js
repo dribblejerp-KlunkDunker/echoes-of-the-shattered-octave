@@ -105,7 +105,7 @@ function partyCampNpcs() {
   // the camp NPC stands in for whoever is not with you
   for (const id in G.maps) for (const e of G.maps[id].entities) {
     if (e.id === 'kaelen_dw') e.hidden = G.party && G.party.id === 'kaelen';
-    if (e.id === 'lyra_dw' && id === 'deepwoods') e.hidden = !!G.flags.coda_go || (G.party && G.party.id === 'lyra');
+    if (e.id === 'lyra_dw' && id === 'deepwoods') e.hidden = (typeof ringLyraHidden === 'function' ? ringLyraHidden(e) : !!G.flags.coda_go) || (G.party && G.party.id === 'lyra');
   }
 }
 function partySpawn() {
