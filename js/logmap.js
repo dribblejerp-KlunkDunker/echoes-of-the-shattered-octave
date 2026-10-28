@@ -56,7 +56,7 @@ const LOGMAP = (function () {
     ['pumps', /hew callan/], ['aegis', /aegis|hymn 9|^the red cloak/], ['table', /table for four|halder/],
     ['lamps', /lamplighter|dry lamps/], ['pools', /reflecting pools/], ['tapes', /name-tapes from (ten|the choir)/],
     ['sunken', /^the office came out/], ['press', /^the pressman's round|hand-press|bettis renn/],
-    ['names', /^the missing count/], ['weaver', /\bweaver\b/], ['sable', /sable/],
+    ['names', /^the missing count/], ['weaver', /\bweaver\b/], ['sable', /sable|umber/],
     ['sunken', /sunken court|whisper-grove|malting/],
     ['crates', /hetty|corsair|glass cores|crates|skyship captain/],
     ['rite', /consortium pass|^lyra asked me|hearthday|ignatius|the rite/],

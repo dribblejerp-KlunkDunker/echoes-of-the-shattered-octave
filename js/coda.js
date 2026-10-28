@@ -17,7 +17,7 @@ function startPart4() {
   const f = G.flags;
   if (f.part4) return;
   hide('#event'); hide('#death'); closeModal();
-  f.part4 = true; f.sable_with = !!(f.sable_joined || f.sable_aboard);
+  f.part4 = true; f.sable_with = !!f.sable_joined;
   if (f.folder_given) f.lyra_voice = true;   // Kaelen already told her everything, back in the Malting
   G.day += 1; G.tod = 0.8; G.escapeTimer = 0; G.dead = false;
   const L = [];

@@ -323,7 +323,7 @@ const GROVE31 = (function () {
     const f = F(), done = !!f.p31_n_aye;
     showEvent(TX.barrel, TX.barrelLook, done ? [{ t: TX.leave, f: null }] : [{ t: TX.write, f: () => writeName('aye') }, { t: TX.leave, f: null }]);
   }
-  function useDesk() { const f = F(); showEvent(TX.desk, f.sable_aboard || f.sable_joined ? TX.deskGone : TX.deskLook, [{ t: TX.leave, f: null }]); }
+  function useDesk() { const f = F(); showEvent(TX.desk, f.sable_joined ? TX.deskGone : TX.deskLook, [{ t: TX.leave, f: null }]); }
   // Sable hears about the twice-taken man once, through her own dialogue (her quest function itself is left as it was)
   const sableReady = (f) => f.p31_twice && !f.p31_rules && !gone() && !(f.wg_ambush && !f.wg_ambush_over);
   function sableRules(g) {

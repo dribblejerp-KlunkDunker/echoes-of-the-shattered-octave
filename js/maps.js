@@ -765,7 +765,7 @@ function buildAllMaps() {
   placeCaches(maps.rootvault, 4104, [2, 3, 3]);
   if (maps.chapel) placeCaches(maps.chapel, 4105, [1]);
   // Sable's camp in the mist, east of Kaelen's hut, with the Office's proctors on her trail (added last so older saves still line up)
-  { const c = maps.clearing; c.npc('sable', 34.5, 18.5, { facing: Math.PI }); c.deco('lamp', 35.3, 19.3, { radius: 0.15, scale: 0.8, glow: 0.45 }); c.enemy('proctor', 30.5, 16.5); c.enemy('proctor', 32.5, 24.5); }
+  { const c = maps.clearing; c.npc('umber', 34.5, 18.5, { facing: Math.PI }); c.deco('lamp', 35.3, 19.3, { radius: 0.15, scale: 0.8, glow: 0.45 }); c.enemy('proctor', 30.5, 16.5); c.enemy('proctor', 32.5, 24.5); }
   // Part Three: Whisper-Grove (new maps, so they can be laid out freely)
   maps.whispergrove = buildWhisperGrove(); maps.cloister = buildCloister(); maps.malting = buildMalting();
   placeCaches(maps.whispergrove, 4201, [2, 2, 3]); placeCaches(maps.malting, 4203, [2, 3]);

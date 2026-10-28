@@ -141,11 +141,11 @@ const STORYRUM = (() => {
     'Tam is back on his stone, and the water brings his Essa up at dusk, and he sings the second verse with her. Nobody tells him anything now.');
   add('d_tam_sat', 'deed', 'any', 58, { req: ['tam_sat'], not: ['greening'], note: 'You sat with Tam in silence' },
     'Someone sat with Old Tam at the crossing and never said a word, and he got up and went home. I cannot decide if that is the kindest thing I have heard or the cleverest.');
-  add('d_sable_met', 'deed', 'any', 45, { req: ['sable_met'], not: ['sable_done'], note: 'You met Sable outside the Hedge' },
+  add('d_sable_met', 'deed', 'any', 45, { req: ['sable_met'], not: ['sable_done'], note: 'You met Umber, the Veil runaway, outside the Hedge' },
     'There is a woman out east past the Governor\'s son\'s hut, writing in a book by a hush-lamp. She asks strangers for three names. The grey men at the gate want her very badly.');
-  add('d_sable_kept', 'deed', 'any', 60, { req: ['sable_kept'], not: ['greening'], note: 'You told Sable to keep what is left of her' },
+  add('d_sable_kept', 'deed', 'any', 60, { req: ['sable_kept'], not: ['greening'], note: 'You told Umber to keep what is left of her' },
     'The scribe out past the Hedge is keeping what is left of herself, they say, and writing down who told her to. I have decided that is a good thing. I will tell you if I change my mind.');
-  add('d_sable_returned', 'deed', 'any', 60, { req: ['sable_returned'], not: ['greening'], note: 'Sable read a Hollow its name back [PROPOSED wording]' },
+  add('d_sable_returned', 'deed', 'any', 60, { req: ['sable_returned'], not: ['greening'], note: 'Umber read a Hollow its name back [PROPOSED wording]' },
     'A Hollow at the quarry pumps said its own name aloud. Hew Callan. The ones either side stopped their loops to listen, they say, as if someone had said something rude.');
   add('d_ignatius', 'deed', 'any', 47, { req: ['ignatius_met'], not: ['greening'], note: 'Ignatius Crane spoke to you in the Chapel' },
     'Brother Ignatius has taken to preaching at the rafters. Folk say he has seen a thing and decided not to have seen it. The Note is held regardless.');

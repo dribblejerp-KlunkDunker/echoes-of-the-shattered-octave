@@ -109,6 +109,7 @@ const VOICES = (() => {
     townsman:  { f0: 122, fs: 0.97, style: 'human' },
     townswoman:{ f0: 202, fs: 1.08, style: 'human' },
     sable:     { f0: 208, fs: 1.1,  style: 'human' },
+    umber:     { f0: 232, fs: 1.06, style: 'human' },
     halder:    { f0: 102, fs: 0.93, style: 'human' },
     quist:     { f0: 126, fs: 0.97, style: 'human' },
     aegis:     { f0: 70,  fs: 0.8,  style: 'chord' },    // the Sentinel sings its alto line

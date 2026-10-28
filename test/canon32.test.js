@@ -293,13 +293,38 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(ring.back && ring.requiemAsk && ring.choir && ring.requiem && ring.ending, 'next morning she is back at the fire; the Mausoleum choir keeps the Requiem for afterwards (' + JSON.stringify([ring.back, ring.requiemAsk, ring.choir, ring.requiem, ring.ending]) + ')');
     check(ring.byYou && ring.byYouFight && ring.byYouOut && ring.kaelen, 'without her voice you stand past the last lamp and sing, and Kaelen strikes');
 
+    // ---- Sable stays in Whisper-Grove (ch. 14, 16); the Reach's scribe is Umber, a Veil runaway [PROPOSED]
+    const umber = await page.evaluate(() => {
+      const out = {}, f = G.flags;
+      for (const k of ['sable_met', 'sable_done', 'sable_returned', 'sable_kept', 'sable_accused', 'sable_aboard', 'sable_joined', 'sable_with', 'bettis_awake', 'hew_thanked']) delete f[k];
+      out.npc = !!NPCS.umber && !NPCS.sable && NPCS.umber.portrait !== NPCS.sable_wg.portrait && /runaway of the Veil/.test(NPCS.umber.name) && /Sable is a Veil designation/.test(NPCS.sable_wg.topics['The scribe in the mist']) && /Sable designed it/.test(NPCS.umber.topics['The Catalogue']);
+      out.clearing = G.maps.clearing.entities.some((e) => e.kind === 'npc' && e.id === 'umber') && !G.maps.clearing.entities.some((e) => e.kind === 'npc' && e.id === 'sable');
+      // three names, then Hew Callan's, at the cost of Umber's bell; Sable's own fragments are untouched
+      let q = NPCS.umber.quest(G); out.first = /I am Umber/.test(q.text) && /Loose Leaves/.test(q.text) && f.sable_met;
+      const n0 = G.ledger.length; G.ledger.push({ name: 'A', where: 'x', day: 0 }, { name: 'B', where: 'x', day: 0 }, { name: 'C', where: 'x', day: 0 });
+      q = NPCS.umber.quest(G); out.ask = !!q.choices && /scriptorium bell at matins/.test(q.text) && q.choices.length === 3;
+      const r = q.choices[0].f(G);
+      out.hew = f.sable_returned && f.sable_done && /A bell/.test(r) && umberFragments(G) === 2 && sableFragments(G) === 3 && G.maps.quarry.entities.some((e) => e.restore === 'hew' && e.name === 'Hew Callan, pump-man') && G.journal.some((j) => /^Umber read a name back out of the Veil's Loose Leaves/.test(j.text));
+      f.bettis_awake = true; out.frag = sableFragments(G) === 2 && umberFragments(G) === 2; delete f.bettis_awake;
+      G.ledger.length = n0;
+      // the Kestrel: Umber stays; Sable is at the fountain, never aboard
+      f.greening = true; const st = G.state; G.state = 'play'; ending(); const L = document.getElementById('ending-text').textContent; hide('#ending'); G.state = st;
+      out.ending = /Umber does not come to the rope/.test(L) && !/Sable comes up the rope/.test(L) && /runaway of the Veil in the mist said the order's last archivist/.test(L);
+      delete f.greening; delete f.escaped;
+      return out;
+    });
+    check(umber.npc && umber.clearing, 'the scribe in the mist outside the Hedge is Umber, a runaway of the Veil, not Sable');
+    check(umber.first && umber.ask && umber.hew && umber.frag, 'Umber reads Hew Callan his name from the Veil\'s leaves at the cost of her bell; Sable\'s three fragments are her own');
+    check(umber.ending, 'Umber stays in the Reach when the Kestrel lifts; the course is set for the archivist in the drowned city');
+    check(!/sable_aboard = true/.test(src('js/grove.js')) && !/f\.sable_aboard \?/.test(src('js/grove.js')) && !/f\.sable_aboard\)/.test(src('js/data.js')), 'Sable never comes up the rope: nothing sets sable_aboard');
+
     // ---- French for every new line
-    const tsv = ['tools/i18n/p32-canon.tsv', 'tools/i18n/p33-crates.tsv', 'tools/i18n/p34-hob.tsv', 'tools/i18n/p35-cutter.tsv', 'tools/i18n/p36-days.tsv', 'tools/i18n/p37-halder.tsv', 'tools/i18n/p38-wearer.tsv', 'tools/i18n/p39-lamps.tsv'].map(src).join('\n').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
+    const tsv = ['tools/i18n/p32-canon.tsv', 'tools/i18n/p33-crates.tsv', 'tools/i18n/p34-hob.tsv', 'tools/i18n/p35-cutter.tsv', 'tools/i18n/p36-days.tsv', 'tools/i18n/p37-halder.tsv', 'tools/i18n/p38-wearer.tsv', 'tools/i18n/p39-lamps.tsv', 'tools/i18n/p40-umber.tsv'].map(src).join('\n').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
     const fr = JSON.parse(src('locales/story/fr.json'));
     const { hash, norm } = require(path.join(ROOT, 'tools/i18n/lib'));
     const pats = new Set((fr.p || []).map((p) => p[0]));
     const missing = tsv.filter(([en]) => !(fr.s[hash(norm(en))] || pats.has(norm(en))));
-    check(tsv.length >= 360 && tsv.every((r) => r.length === 2) && !missing.length, 'every changed line has its French (' + missing.length + ' missing)');
+    check(tsv.length >= 390 && tsv.every((r) => r.length === 2) && !missing.length, 'every changed line has its French (' + missing.length + ' missing)');
 
     check(errors.length === 0, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   } finally { await browser.close(); }

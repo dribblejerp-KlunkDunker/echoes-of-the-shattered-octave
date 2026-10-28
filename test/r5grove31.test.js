@@ -83,9 +83,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       const out = {}, f = G.flags;
       T.go('p31_gallery', null, null, 0, 0.8); T.step(1);
       out.windows = G.ents.filter((e) => e.sprite === 'p31_window' && /oilcloth/.test(e.look)).length === 3;
-      f.sable_aboard = false; f.sable_joined = false;
+      f.sable_joined = false;
       let ev = T.use(G.ents.find((e) => e.use === 'p31_desk')); out.desk = /ten years and two hundred and twenty days/.test(ev.b) && /begin again/.test(ev.b);
-      f.sable_aboard = true; ev = T.use(G.ents.find((e) => e.use === 'p31_desk')); out.deskGone = /cleared/.test(ev.b); f.sable_aboard = false;
+      f.sable_joined = true; ev = T.use(G.ents.find((e) => e.use === 'p31_desk')); out.deskGone = /cleared/.test(ev.b); f.sable_joined = false;
       out.sheet = G.ents.some((e) => /scriptorium\. scriptorium/.test(e.look || ''));
       out.free = !solidAt(Engine.cam.x, Engine.cam.y);
       T.go('p31_cellar', null, null, 0, 0.8); T.step(1);

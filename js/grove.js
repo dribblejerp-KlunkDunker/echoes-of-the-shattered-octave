@@ -8,7 +8,7 @@
 function startPart3() {
   const f = G.flags, p = G.player;
   hide('#ending'); hide('#death'); closeModal();
-  f.part3 = true; if (f.sable_returned || f.sable_kept) f.sable_aboard = true;
+  f.part3 = true;
   G.day += 3; G.tod = 0.74; G.escapeTimer = 0; G.boreHold = 0; G.dead = false; G.noise = 2;
   p.hp = p.hpMax; p.voice = p.voiceMax; p.fat = p.fatMax;
   loadMap('whispergrove');
@@ -18,12 +18,12 @@ function startPart3() {
   L.push('At the fourth hour the foredeck goes green. Hob Wendle, field-hand, forty, three toes short, is sitting against the deckhouse with a blanket over his knees, perfectly awake, and what is left of his feet has gone down into the good dry oak of Vane\'s deck. "I kept \'em dry," he says. "Like she told me." And then: "I\'m sorry about your ship, Captain." Lyra has nothing to hum with; she holds his hand. Old Bettany gives him the long drops and hums the tending note over him, badly, in the Narrow, for as long as it takes. They put him over the side with four planks and five feet of beam, because there is nothing else to be done with a thing that would grow wherever it was put down. Vane says the words.');
   if (!G.ledger.some((r) => r && r.name === 'Hob Wendle')) G.ledger.push({ name: 'Hob Wendle', where: 'the Kestrel\'s deck', day: G.day });
   L.push(f.vane_told ? 'In the hold Captain Vane gives his confession, because you made him hear what was in it: thirteen hundred crates in two years, and a file at the Office that calls him reliable.' : 'Captain Vane will not go down into his own hold. On the second night Kaelen makes him say the number aloud, and he does, and then he goes up and changes course.');
-  L.push(f.sable_aboard ? 'He sets the course for Whisper-Grove, because the scribe who came up the rope with the Bound Ledger asked him to, in the voice of someone reading a form aloud.' : 'He sets the course for Whisper-Grove, and the scribe the Reach says can read a Hollow its name.');
+  L.push(f.sable_met ? 'He sets the course for Whisper-Grove, because his crates were consigned there, and because a runaway of the Veil in the mist outside the Hedge said her order\'s last archivist is still in the drowned city, reading names to the Hollows.' : 'He sets the course for Whisper-Grove, because his crates were consigned there, and because the Reach says a Veil scribe in the drowned city can read a Hollow its name.');
   if (G.has('charts')) L.push('Kaelen reads Tobiah\'s charts by the binnacle lamp, and the margin of Revision Seven twice. That night he starts a list of names on a deck-beam, and understands that everyone who ever kept one before him was the Catalogue.');
   else L.push('That night Kaelen starts a list of names on a deck-beam, and understands that everyone who ever kept one before him was the Catalogue.');
   L.push('On the third day the Spectral Woods come up out of the mist: silver willows, phosphorescent pools, lilac air. Under them is a marble city that never fell down, sunk a foot under its own lit water. Whisper-Grove, at dusk. The Kestrel holds at mast-height over the south landing and lets down a hundred feet of ladder.');
   showEvent('Part Three — The Forgetting', L.join('<br><br>'), [{ t: 'Climb down into the water.', f: () => {
-    journal('main', 'Part Three: The Forgetting. The Kestrel has put down over Whisper-Grove, the drowned capital of the Spectral Woods, where seventy-four thousand people forgot themselves in one night in 416. ' + (f.sable_aboard ? 'Sable came with us. She wants the Office\'s harvest-house on the Cloister road. Talk to her at the landing.' : 'Find the Veil scribe the Reach talks about: she will be in the Sunken Court, north up the causeway, where the names are thickest.'));
+    journal('main', 'Part Three: The Forgetting. The Kestrel has put down over Whisper-Grove, the drowned capital of the Spectral Woods, where seventy-four thousand people forgot themselves in one night in 416. Find the Veil scribe: she will be in the Sunken Court, north up the causeway, where the names are thickest.');
     msg('A foot of warm, lit water. The Hollows walk their loops through it, and do not look up.', 'voice', 7000);
   } }]);
 }
@@ -34,7 +34,7 @@ function wgTick(dt) {
   f.wg_ambush_t = (f.wg_ambush_t || 0) - dt;
   const amb = G.ents.filter(e => e.ambush);
   // Sable stops a proctor dead by reading him his own surrendered name
-  if (!f.sable_aboard && !f.wg_sable_read && f.wg_ambush_t < 31) {
+  if (!f.wg_sable_read && f.wg_ambush_t < 31) {
     const t = amb.find(e => !e.dead && !e.hidden);
     if (t) { f.wg_sable_read = true; t.name = 'Emory Wain'; killEnemy(t, false); msg('Sable is on her hands and knees in the water with blood coming out of her nose, and the Ledger hangs open above her, and she reads: "Emory Wain. Twenty-six. Of Cooper\'s Rise in the Iron Peaks. Your mother was Hanne. You had a sister called Ivy." The proctor stops, an absolute hitch in a machine, like a man who has walked into a door.', 'voice', 9000); }
   }
@@ -48,7 +48,7 @@ function wgTick(dt) {
   if (amb.length && amb.every(e => e.dead)) {
     f.wg_ambush_over = true; questXp(30);
     if (!f.halder_dead) { f.halder_safe = true; msg('The last proctor goes down in the water. Behind you, untouched, Halder Wick sets the blue plate down at his table, lifts it, and sets it again.', 'good', 7000); }
-    journal('main', 'The Office came out of the mist in the Sunken Court: grey oilcloth, silver mesh, hand-presses tuned to 741. ' + (f.sable_aboard ? 'They are dead in the water; a fourth got away north with the Kestrel\'s registry.' : 'Sable read one of them his own surrendered name, and he stopped like a clock. A fourth got away north with the Kestrel\'s registry. I should talk to her again.'));
+    journal('main', 'The Office came out of the mist in the Sunken Court: grey oilcloth, silver mesh, hand-presses tuned to 741. Sable read one of them his own surrendered name, and he stopped like a clock. A fourth got away north with the Kestrel\'s registry. I should talk to her again.');
   }
 }
 
@@ -165,11 +165,11 @@ const POOLS = [
   'A man on the steps of this court, in the year 416, waiting for someone who is late, checking a pocket-watch. Then a single long note, everywhere at once. He forgets what he was waiting for. He goes on waiting. He is waiting still; you passed him on the way in.',
   'A boy in a grey choir cloak, singing Hymn 9 off the board and looking sideways at the girl in red beside him, who has the alto line and is getting it wrong on purpose to make him laugh. In the doorway a young woman in a Veil coat is counting them. Eleven.',
 ];
-const POOL_SABLE = 'Cold stone, ink, beeswax and old vellum: the smell of the Veil\'s scriptorium at the hour before matins, and the scratch of forty nibs. It is not your memory. It is not anyone\'s any longer. It is floating here because a woman paid it out of herself to give a pump-man his name.';
+const POOL_SABLE = 'A small cracked bell, rung at the hour before matins over fourteen desks, and the scratch of forty nibs stopping to listen to it. It is not your memory. It is not anyone\'s any longer. It is floating here because a runaway of the Veil, in the mist outside Oakhaven\'s Hedge, paid it out of herself to give a pump-man his name.';
 const POOL_QUIST = 'Rows of desks under a high window. A girl of fourteen in a Veil coat, ruling a page, and a tall clerk standing over her: "Again. Straighter. A crooked line is a lie about the next one." She does it again. It is very straight.';
 function wgUse1(e) {
   const f = G.flags, p = G.player;
-  if (e.use === 'fountain') { msg(f.sable_joined || f.sable_aboard ? 'The fountain of the Sunken Court, brimming with lit water. Sable read twenty names a night here, for nobody.' : 'The fountain of the Sunken Court, brimming with lit water. Somebody has worn a seat in its rim.', '', 5000); return true; }
+  if (e.use === 'fountain') { msg(f.sable_joined ? 'The fountain of the Sunken Court, brimming with lit water. Sable read twenty names a night here, for nobody.' : 'The fountain of the Sunken Court, brimming with lit water. Somebody has worn a seat in its rim.', '', 5000); return true; }
   if (e.use === 'pool') {
     const i = e.pool, txt = i === 3 ? (f.sable_returned ? POOL_SABLE : POOL_QUIST) : POOLS[i];
     f['pool_' + i] = true;
@@ -306,7 +306,7 @@ function bookOneEnd1() {
   if (f.halder_dead) L.push('Halder Wick was killed walking his loop through the middle of the fight in the Sunken Court, with the blue plate in his hand.');
   else if (f.halder_safe) L.push(`Halder Wick is still setting his table for four in the Sunken Court. The proctors never reached him.${f.halder_sat ? ' The blue plate is in front of the fourth chair, where you sat.' : ''}`);
   if (f.lamps_lit) L.push('In the Sunken Court the lamps are lit for the first time in three years, and the lamplighter stands under the last of them with his pole, and does not light it again.');
-  if (f.pools_all) L.push(`You looked into all four reflecting pools and carried four strangers' memories out of Whisper-Grove${f.sable_returned ? '. One of them, you are nearly sure, was Sable\'s' : ''}.`);
+  if (f.pools_all) L.push(`You looked into all four reflecting pools and carried four strangers' memories out of Whisper-Grove${f.sable_returned ? '. One of them, you are nearly sure, was the runaway\'s' : ''}.`);
   if (f.porch_survived) L.push(`At the Cloister porch the thing that wore Tobin Ashgrove stood in the fog and would not come in, and gave you Kaelen\'s whole confession in his own voice. ${f.porch_held ? 'You held the doorway against the Aegis while it sang Hymn 9 in Lyra\'s voice.' : f.porch_aside ? 'You stepped aside, and the Aegis went out into the fog after nothing.' : 'You did not answer it.'}${f.porch_answered ? ' You answered it once, and it has your voice now.' : ''}${f.porch_told_lyra ? ' You told Lyra what it said.' : ' Lyra does not know what it said.'}`);
   L.push(`Sable has ${fr} fragment${fr === 1 ? '' : 's'} left. She recites ${fr === 1 ? 'it' : 'them'} nightly, so that she will know which one goes. The missing ones do not feel like gaps, she says. They feel like shelves.`);
   if (p.glassed) L.push(`Your tideline is ${p.glass >= 70 ? 'past the collarbone, three inches from the throat' : 'four and a half fingers from the shoulder'}. ${p.glass >= 70 ? 'Six weeks, at the current rate.' : 'Eight weeks of slack, perhaps.'}`);
