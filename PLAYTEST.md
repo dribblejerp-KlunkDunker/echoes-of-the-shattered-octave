@@ -14,6 +14,20 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## R5b: the Moot-house, the Bell Yard and Ashlane (built 28 Oct)
+**How to get there:** Part Three, in Whisper-Grove. The Moot-house is the library on the east side of the Sunken Court; its new stairs are at the back of the hall, left and right. The Bell Yard is through an archway in the west wall of the Sunken Court, about halfway down.
+**A canon question for you:** Book One makes Bettis Renn Ivo's wife (38, "she asked to go second"), but the game's Malting has a man called Bettis Renn on the bench. Ivo's house only names Ivo for now. Which should win?
+- [ ] **The Moot-house gallery:** three windows over the plaza, Sable's desk in the muniment store at the east end, and her practice sheet. Does it feel like her room?
+- [ ] **The cellar:** Corwin Aye's barrel. Is it findable among the others?
+- [ ] **The Bell Yard and Ashlane:** two long stone streets. They may feel too plain. Should there be more to see (washing, signs, the cat)?
+- [ ] **Proctors** walk the Bell Yard and Ashlane. Too many, too few, or about right for this point in Part Three?
+- [ ] **"The Bell Yard Roll":** read the seven name-boards (they're small, beside the doors) and write each name into your ledger. Are the boards easy enough to find?
+- [ ] **The twice-taken man** in Ashlane uses a simple stand-in drawing (a seated figure). Good enough for now?
+- [ ] **Sable's three rules:** after you find him, talk to Sable. Does the scene land?
+- [ ] **Halder Wick's and Ivo Renn's houses:** the table laid for four, the two bowls. Too quiet, or right?
+
+**Notes:**
+
 ## R5a: the Hollow and the Carders' house (merged 28 Oct, PR #70)
 **How to get there:** the Hollow is through the back door of the tannery (Tannery Row, south of the Flume). The Carders' house is the blue door on the north row, between the Greenhall and the granary.
 - [ ] **The Hollow's mood.** Every door barred and humming. Does it feel like a ward people are hiding in, or just empty lanes? It may want more people sitting out.
@@ -106,4 +120,4 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 ---
 
 ## What the automated tests cover
-Every milestone has its own test (`test/r1release27`, `r2canon27`, `r3narrow28`, `r4thin29`, `r5hollow30`), and the whole suite is run serially against main before each merge. Some tests already fail on main and are not caused by these milestones: air11, arms12, bestiary20a, creatures, folk14, folk20, height-combat, presets, pwa18, roads15, sidequests, skies14, sprites21, visual, together19. They are worth a separate clean-up pass.
+Every milestone has its own test (`test/r1release27`, `r2canon27`, `r3narrow28`, `r4thin29`, `r5hollow30`, `r5grove31`), and the whole suite is run serially against main before each merge. Some tests already fail on main and are not caused by these milestones: air11, arms12, bestiary20a, creatures, folk14, folk20, height-combat, presets, pwa18, roads15, sidequests, skies14, sprites21, visual, together19. They are worth a separate clean-up pass.

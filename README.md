@@ -54,6 +54,19 @@ More: [before and after for each Phase 2 effect](screenshots/p2-features.jpg) ·
 | ![A Null-Watch line-talk transcript](screenshots/p6-rift.jpg) | ![Margin notes on the continent map](screenshots/p6-map-margin.jpg) |
 | Documents on the library shelves hint at the Rift, the Organum and the Iron Peaks. | The continent map notes what lies beyond the Reach. |
 
+### Release road R5b: the Moot-house, the Bell Yard and Ashlane
+
+Two more areas in Whisper-Grove, both reached from places you can already get to.
+- **The Moot-house** gains a stair up to its **gallery**, where Sable first saw a proctor watching the plaza for an hour, and to the muniment store where she keeps her desk: the sum of twenty names a night, and a practice sheet with one word written over and over. A stair goes down to the **cellar**, where Corwin Aye's barrel "has not leaked in nineteen years".
+- **The Bell Yard and Ashlane,** through an archway off the Sunken Court: swept streets, latched shutters, a window-box of dead flowers, lamps with no oil, carts with their shafts up, Hollows keeping their small tasks, and proctors walking it. Halder Wick's house has a table laid for four. Ivo Renn's has two bowls set out for supper.
+- **"The Bell Yard Roll":** seven doors carry name-boards. Write each household into your ledger.
+- **"Do not comfort yourself in the margin":** in Ashlane a man sits against a wall doing nothing at all, pressed a second time. Tell Sable, and she shows you his entry and the Veil's three rules.
+- Both quests close with a logbook line when the Kestrel leaves Whisper-Grove.
+
+| ![The Bell Yard](screenshots/p31-bellyard.jpg) | ![The twice-taken man in Ashlane](screenshots/p31-twice.jpg) |
+|---|---|
+| ![The Moot-house gallery](screenshots/p31-gallery.jpg) | ![Halder Wick's house](screenshots/p31-wick.jpg) |
+
 ### Release road R5a: the Hollow and the Carders' house
 
 Two new areas inside Oakhaven, each joined to a map you can already reach.
