@@ -27,9 +27,12 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 - [ ] **The talking crates** are now in the Kestrel's hold. Hetty asks you to go up the mast-ladder at the mooring mast (east of the square) and listen. Does the ladder read as climbable, and does the scene work without going aboard?
 
+- [ ] **Hob Wendle** is now the book's field-hand: he sits on his step in the Hollow (across from Lissa), with three toes gone to wood before Rootday and taken by Rooke after. Part Three opens with him rooting into the Kestrel's deck. Does the scene in the Part Three card land?
+- [ ] **The tanner is now Abner Fenning** (a name I chose; tell me if you'd like another), and the twins are Ned and Wyn Fenning. His quest, shop, letter and place aboard the Kestrel are unchanged.
+
 **Still to match the book (next PRs, each its own):**
 1. ~~The talking crates move from Hetty's cellar to the Kestrel's hold.~~ Done.
-2. Hob Wendle is a field-hand who roots into the deck and dies aboard; the tanner becomes someone else.
+2. ~~Hob Wendle is a field-hand who roots into the deck and dies aboard; the tanner becomes someone else.~~ Done.
 3. The Office cutter's hold: the 432 are the Kestrel's cores, not the cutter's vox-bottles.
 4. The Wearer is met once, at the end; earlier meetings become a voice in the fog.
 5. The coda moves to the clearing and the ring of lamps.

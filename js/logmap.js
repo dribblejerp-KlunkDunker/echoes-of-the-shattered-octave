@@ -28,7 +28,7 @@ const LOGMAP = (function () {
   const SUBJECTS = {
     gate: 'The North Gate', rite: 'The Rite of Hearthday', coil: 'The reverse-phase coil', bore: 'The quarry bore',
     greening: 'The Root Greening', hedge: 'The Hedge', crates: 'The corsair\'s crates', boots: 'Davin\'s boots',
-    twins: 'The Wendle twins\' coats', tam: 'The voice on the Flume', pim: 'Pim\'s rooted hands', bells: 'The bells',
+    twins: 'The Fenning twins\' coats', tam: 'The voice on the Flume', pim: 'Pim\'s rooted hands', bells: 'The bells',
     sable: 'Sable and the Bound Ledger', pumps: 'The pumps at Depot Two', names: 'A page of names',
     press: 'The Office hand-press', kestrel: 'The Drift-Kestrel', tank: 'The Kestrel\'s lift-tank',
     cutterlog: 'The cutter\'s log', sunken: 'The Sunken Court', lamps: 'The dry lamps', pools: 'The reflecting pools',

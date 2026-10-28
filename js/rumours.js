@@ -116,13 +116,13 @@ const STORYRUM = (() => {
   add('d_plinth', 'deed', 'any', 28, { req: ['plinth_read'], not: ['greening'], note: 'You read the chalk on the empty bell-frame' },
     'Somebody has read the chalk on the empty bell-frame. They rang in E, it says. The old women have started saying it under their breath, like a grace, and asking who taught the Hedge to whistle.');
   add('d_culvert_key', 'deed', 'any', 38, { req: ['culvert_open'], not: ['twins_found'], note: 'You took the culvert key' },
-    'The culvert key is off its nail at Hob Wendle\'s. First time in a month. Somebody has gone down, and nobody has said so.');
+    'The culvert key is off its nail at Abner Fenning\'s. First time in a month. Somebody has gone down, and nobody has said so.');
   add('d_twins_found', 'deed', 'any', 42, { req: ['twins_found'], not: ['hob_told'], note: 'You found the twins\' coats under the culvert' },
-    'A stranger has been down the Tannery culvert and come back up. Hob\'s lamp is still in the window, and Hob is standing at it, not looking.');
+    'A stranger has been down the Tannery culvert and come back up. Abner\'s lamp is still in the window, and Abner is standing at it, not looking.');
   add('d_twins_named', 'deed', 'any', 43, { req: ['twins_named'], not: ['greening'], note: 'You wrote Ned and Wyn in your ledger' },
-    'Somebody has written the Wendle twins down, Ned and Wyn, whole names, somewhere that is not the Office\'s ledger. I do not know where that is. I would like to.');
-  add('d_hob_told', 'deed', 'any', 44, { req: ['hob_told'], not: ['greening'], note: 'You told Hob what you found' },
-    'Hob Wendle has put out the lamp in his window. All of Tannery Row saw it go dark, and none of us said a word.');
+    'Somebody has written the Fenning twins down, Ned and Wyn, whole names, somewhere that is not the Office\'s ledger. I do not know where that is. I would like to.');
+  add('d_hob_told', 'deed', 'any', 44, { req: ['hob_told'], not: ['greening'], note: 'You told Abner what you found' },
+    'Abner Fenning has put out the lamp in his window. All of Tannery Row saw it go dark, and none of us said a word.');
   add('d_boots', 'deed', 'any', 46, { req: ['rooke_boots'], not: ['boots_delivered'], note: 'Rooke gave you Davin\'s boots' },
     'Rooke handed a stranger a pair of boots to carry across town. In this town that is the nearest thing to a confession we have.');
   add('d_boots_done', 'deed', 'any', 48, { req: ['boots_delivered'], not: ['greening'], note: 'You gave Orla Hale the boots' },

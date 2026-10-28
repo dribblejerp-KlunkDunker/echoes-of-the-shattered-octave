@@ -180,7 +180,7 @@ const ARMOR = {
   a_bellhelm: { name: 'Carillon Bell-Helm', slot: 'head', ar: 5, noise: 0.6, value: 45, desc: 'A Legion helm, hollowed out. It still hums a name you don\'t know.' },
   a_synodrobe: { name: 'Synod Clerk Robes', slot: 'body', ar: 1, noise: 0, value: 32, desc: 'Grey oilcloth and a silver registry stole. Wear to pass distant Proctors and Legionnaires; close inspection and witnessed suspicious acts expose you for this area. Y opens cover status. Not a pass through story seals or the town watch.' },
   a_gambeson: { name: 'Quilted Gambeson', slot: 'body', ar: 3, noise: 0, value: 14, desc: 'Layers of linen and wool. Quiet, warm, and better than nothing.' },
-  a_jerkin: { name: 'Tanner\'s Leather Jerkin', slot: 'body', ar: 5, noise: 0.1, value: 24, desc: 'Hob Wendle\'s work. Oiled so it doesn\'t creak.' },
+  a_jerkin: { name: 'Tanner\'s Leather Jerkin', slot: 'body', ar: 5, noise: 0.1, value: 24, desc: 'Abner Fenning\'s work. Oiled so it doesn\'t creak.' },
   a_hushcoat: { name: 'Hush-Cloth Coat', slot: 'body', ar: 3, noise: -0.6, value: 42, desc: 'A long coat of the Hedge\'s own wool. You move inside it like a held breath. Too quiet in siphoned country.' },
   a_brig: { name: 'Consortium Brigandine', slot: 'body', ar: 8, noise: 0.5, value: 58, desc: 'Riveted plates under company canvas, stamped with a Consortium serial.' },
   a_chain: { name: 'Synod Chainmail', slot: 'body', ar: 10, noise: 1.0, value: 75, desc: 'Arsenal mail. It shushes and chinks with every step.' },
@@ -304,7 +304,7 @@ const PLACES = {
 const RUMOURS = [
   'The grey men at the gate are proctors from the Catalogue. They are looking for a woman with a book. She is outside the Hedge, east of Kaelen\'s hut. Do not tell them I said so.',
   'There\'s a scribe in the mist reading names off the dead Legion. They say she can give a Hollow its name back. They say it costs her something.',
-  'Hob Wendle on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.',
+  'Abner Fenning on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.',
   'Captain Vane will sell you anything off the Kestrel that isn\'t nailed down. Crossbows. Axes. Opinions.',
   'The Factor keeps Consortium brigandine and a steam-maul in Greenhall. At Consortium prices, naturally.',
   'Orrin Pale the sexton sells what the old watch left in the crypt. Ask him quietly; he is used to quiet.',
@@ -320,7 +320,7 @@ const RUMOURS = [
   'Keep your voice in your chest. Keep your lamp lit. Do not go to the Hedge at the dead hour, whatever it says, whoever it sounds like.',
   'Tam the night-hummer listens to his dead wife at the Flume crossing. We all know. None of us has the heart to tell him what she is.',
   'Bettany at the market stall takes coin for tonic but she would rather take eggs. Nobody has eggs. The hens went quiet first.',
-  'The Wendle twins went down the culvert after their dog on Driftday last. Hob Wendle still sets a lamp in their window. He keeps the culvert key on a nail.',
+  'The Fenning twins went down the culvert after their dog on Driftday last. Abner Fenning still sets a lamp in their window. He keeps the culvert key on a nail.',
   'The Cantor sang the Tanner boys into the ground side by side, after the bore head went on the platform. Marten and Old Coyle with them. She has not been the same since.',
   'Nell Carder has not let the boy out of the mill since the Grafters posted the inspection. She says he has a cough. It is not a cough.',
   'Red was redder when I was a girl. Summers were warmer. Everyone over thirty says so. The young ones think we are mad.',
@@ -480,11 +480,11 @@ const NPCS = {
     },
   },
   hob: {
-    name: 'Hob Wendle, tanner', sprite: 'hob', portrait: 'hob', tier: 'low', scale: 1.08,
+    name: 'Abner Fenning, tanner', sprite: 'hob', portrait: 'hob', tier: 'low', scale: 1.08,
     greet: { polite: 'Evening. Mind the vats; the lime does not care who you are.', normal: 'Tannery\'s shut. Nobody wants leather off a town that is turning to wood.', blunt: 'I have buried two apprentices this year. Try me.' },
     topics: { 'The Hedge': 'The twins went down the culvert after their dog. Driftday last. I set a lamp in their window of a night. The key to the grate is on the nail inside; I have not had the stomach to turn it.', 'Oakhaven': 'A tannery is the one trade that gets quieter the harder you work it. Should have been safe. Should have been.' },
     quest: (g) => {
-      if (g.flags.twins_found && !g.flags.hob_told) { g.flags.hob_told = true; g.gold(10); return { text: 'You went down. You — their coats. Folded. They folded their coats.' + (g.flags.twins_named ? ' And you wrote them in your book, Ned and Wyn, so they are somewhere. Here. It is all I have on me. Take it, and do not argue with a tanner.' : ' Take this. Take it. I cannot go down there, and now I do not have to.'), journal: ['side', 'I told Hob Wendle what I found under the culvert. He paid me, which I did not ask for, and put out the lamp in the twins\' window.'] }; }
+      if (g.flags.twins_found && !g.flags.hob_told) { g.flags.hob_told = true; g.gold(10); return { text: 'You went down. You — their coats. Folded. They folded their coats.' + (g.flags.twins_named ? ' And you wrote them in your book, Ned and Wyn, so they are somewhere. Here. It is all I have on me. Take it, and do not argue with a tanner.' : ' Take this. Take it. I cannot go down there, and now I do not have to.'), journal: ['side', 'I told Abner Fenning what I found under the culvert. He paid me, which I did not ask for, and put out the lamp in the twins\' window.'] }; }
       return null;
     },
   },
@@ -569,13 +569,13 @@ LOOK  click the view to capture the mouse, then just move it (Esc gives it back)
 ATTACK  left-click to thrust · hold the button and move the mouse to slash or chop · wheel or 1-4 changes weapon · Tab opens song-book
 USE / TALK  E or Space · or click when the name under the crosshair is bright (dim means step closer)
 PICKPOCKET  Oakhaven adults: face them within arm’s reach and press P to inspect · approach from behind, quietly · Enter attempts theft, Escape leaves · touch Purse / controller Y inspects, A attempts, B leaves · caught or witnessed theft adds bounty
-DISGUISE  Buy Synod Clerk Robes from Hob and Wear in Inventory · Y / touch Cover / controller Back opens status and wear/remove · distant Proctors/Legionnaires accept robes; close inspection fills suspicion in 3s; move away before exposure · noise 4+ speeds inspection; witnessed hostile acts break cover per area, saved · combat, monsters, bosses, alarms and bounty arrests still apply
+DISGUISE  Buy Synod Clerk Robes from Abner and Wear in Inventory · Y / touch Cover / controller Back opens status and wear/remove · distant Proctors/Legionnaires accept robes; close inspection fills suspicion in 3s; move away before exposure · noise 4+ speeds inspection; witnessed hostile acts break cover per area, saved · combat, monsters, bosses, alarms and bounty arrests still apply
 BODIES  Face settled physical remains: G / touch Body / controller left-stick click · Enter/A drags or drops, H/X conceals at a shrouded recess, Escape/B leaves · dragging slows you; visible remains raise one patrol alarm; witnessed dragging adds a watch bounty · remains last for this area visit, not through saves
 DISTRACTIONS  O / touch Throw / controller right-stick click opens throws · 1 or A stone, 2 or X empty bottle, Escape or B cancels · aim first; walls stop throws; active combat and bosses cannot be lured
 SONGS  F1-F5 cast the song in that slot · N to murmur (keeps the Hush off)
 PANELS  I inventory · C character · L logbook · M map · T world map and travel · R rest · K ledger · Esc closes
 GEAR  I inventory: Wear / Off armour · AR blunts blows, but heavy armour is loud · 1–9 ready weapons · bronze rings the Cacophony, bolts bite the Quiet
-TRADE  talk to merchants (Hob, Vane, Vosk, Tam, Ignatius) and choose Buy… or Sell… · strongboxes and the fallen carry loot
+TRADE  talk to merchants (Abner, Vane, Vosk, Tam, Ignatius) and choose Buy… or Sell… · strongboxes and the fallen carry loot
 SAVE  Esc (or the SAVE button) opens Options: save to a session slot, copy a save code, or change Controls
 SOUND  V sound on/off · B music on/off
 TOUCH  left thumb is a stick, right thumb drags to look, tap to use or strike · swipe across STRIKE to slash

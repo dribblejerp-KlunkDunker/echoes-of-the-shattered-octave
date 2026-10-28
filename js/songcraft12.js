@@ -49,7 +49,7 @@ const SONGCRAFT = (function () {
   const ITEM = { fork: 'p12_fork', rod: 'p12_rod', silver: 'v_fork' };
   // Where each item comes from (existing merchants, stock added here). [PROPOSED]
   const STOCK = [
-    ['hob', { item: 'p12_lute', price: 24 }],            // Hob Wendle the tanner strings lutes with his own gut
+    ['hob', { item: 'p12_lute', price: 24 }],            // Abner Fenning the tanner strings lutes with his own gut
     ['tam', { item: 'p12_flute', price: 14 }],            // Old Tam, of the Hedge-weavers: alder flutes in hush-cloth
     ['vane', { item: 'p12_gurdy', price: 38 }],           // Captain Vane: a wheel-fiddle off the Kestrel
     ['bettany', { item: 'p12_fork', price: 12 }],         // Bettany: an iron fork from a Cantor's widow
@@ -59,7 +59,7 @@ const SONGCRAFT = (function () {
   // ---------------------------------------------------------------- text ([PROPOSED] all of it; also in tools/i18n/p12-songcraft.tsv)
   const TX = {
     items: {
-      p12_lute: ['Lute', 'Hob Wendle strings these with his own gut, and sells one now and then to people who ask nicely. Equipped, Songs cost a quarter less voice and their timed effects do not last as long.'],
+      p12_lute: ['Lute', 'Abner Fenning strings these with his own gut, and sells one now and then to people who ask nicely. Equipped, Songs cost a quarter less voice and their timed effects do not last as long.'],
       p12_flute: ['Alder Flute', 'Bored alder, packed in hush-cloth by the Hedge-weavers. Equipped, Songs make far less noise, and the Falling Fifth carries a little further down a narrow line ahead.'],
       p12_gurdy: ['Hurdy-Gurdy, the wheel-fiddle', 'A corsair\'s wheel-fiddle with a drone string that never stops. Equipped, timed effects hold much longer. Songs are louder, and the drone calls hounds for a while after.'],
       p12_fork: ['Iron Tuning Fork', 'Bettany had it from a Cantor\'s widow. Held (J), it hums near what is kept hidden: resonant stone, strongboxes, Light-glass, loose pages. The nearer, the higher it sings.'],

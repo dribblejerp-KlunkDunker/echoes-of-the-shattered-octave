@@ -5,7 +5,7 @@
 //                       nudges the anim* fields after the original ran: hand/arm
 //                       emphasis and head turns while talking, a glance at a player
 //                       who comes close, and work loops for the tavern barman (Hetty),
-//                       the tanner (Hob) and the mill hands (Nell, Pim). It never
+//                       the tanner (Abner) and the mill hands (Nell, Pim). It never
 //                       moves an entity or writes facing (witness cones read it).
 //    GFX.routines       (default true) WHO STANDS WHERE BY HOUR. A handful of generic
 //                       Oakhaven townsfolk (id townsman/townswoman, no quest, no law
@@ -172,7 +172,7 @@ const TOWNSFOLK = (() => {
       if (t < 6) { const e = smooth(t / 0.6) * smooth((6 - t) / 0.6); o.skew += 0.04 * Math.sin(T * 5.5) * e * k; o.sx += 0.012 * Math.sin(T * 5.5 + 1) * e * k; o.sy -= 0.012 * e * k; }
       else if (t >= 9 && t < 12) { const w = smooth((t - 9) / 0.6) * smooth((12 - t) / 0.6); o.sy -= 0.035 * w * k; o.skew += 0.03 * w * k; o.lift -= 0.004 * w * k; }
     } },
-    // Hob the tanner: three hard strokes over the beam, then a breath
+    // Abner the tanner: three hard strokes over the beam, then a breath
     'oakhaven|hob': { from: 6, to: 20, fn(T, s, k) {
       const t = (T + s) % 5;
       if (t < 3.2) { const e = smooth(t / 0.4) * smooth((3.2 - t) / 0.4), st = Math.sin(T * 7.5); o.skew += 0.05 * st * e * k; o.sy -= (0.03 + 0.012 * st) * e * k; o.lift -= 0.006 * (0.5 + 0.5 * st) * e * k; o.sx += 0.008 * st * e * k; }

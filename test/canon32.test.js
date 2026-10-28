@@ -113,8 +113,22 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(crates.where && crates.hetty && crates.ask, 'the crates are in the Kestrel\'s hold at the mast; Hetty hears them taking his supper up the mast-ladder');
     check(crates.event && crates.ledger && crates.gone, 'you listen at them from the mast-ladder; the names go in the ledger "from the Kestrel\'s hold"; after the Greening the ladder is not for climbing');
 
+    // ---- Hob Wendle is the book's field-hand of the Hollow, who roots into the Kestrel's deck; the tanner is someone else
+    const hob = await page.evaluate(() => {
+      const out = {}, f = G.flags;
+      out.tanner = NPCS.hob.name === 'Abner Fenning, tanner' && !/Hob|Wendle/.test(JSON.stringify(NPCS.hob));
+      out.hollow = G.maps.p30_hollow.entities.some((e) => e.kind === 'npc' && e.id === 'p30_hob') && /field-hand/.test(NPCS.p30_hob.name);
+      const d0 = G.day; G.day = 0; delete f.p30_hob_before; const b = NPCS.p30_hob.quest(G); G.day = 2; delete f.p30_hob_after; const a2 = NPCS.p30_hob.quest(G); G.day = d0;
+      out.toes = /gone to wood/.test(b.text) && /Rootday/.test(b.text) && /took them clean on Rootday/.test(a2.text);
+      return out;
+    });
+    const groveSrc = src('js/grove.js');
+    check(hob.tanner && hob.hollow && hob.toes, 'Hob Wendle is a field-hand on his step in the Hollow whose three toes Rooke takes on Rootday; the tanner is Abner Fenning');
+    check(/I\\'m sorry about your ship, Captain/.test(groveSrc) && /Hob Wendle/.test(groveSrc), 'Part Three opens with Hob rooting into the Kestrel\'s deck, as in ch. 13');
+    check(!/Hob Wendle|Wendle twins|Ned Wendle|\bHob\b(?!\\?'s Knap)/.test(['js/data.js', 'js/game.js', 'js/kestrel16.js', 'js/couriers.js', 'js/rumours.js', 'js/thin29.js'].map(src).join('\n').replace(/Hob Wendle, field-hand/g, '')), 'nothing else calls the tanner Hob, or his twins Wendle');
+
     // ---- French for every new line
-    const tsv = ['tools/i18n/p32-canon.tsv', 'tools/i18n/p33-crates.tsv'].map(src).join('\n').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
+    const tsv = ['tools/i18n/p32-canon.tsv', 'tools/i18n/p33-crates.tsv', 'tools/i18n/p34-hob.tsv'].map(src).join('\n').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
     const fr = JSON.parse(src('locales/story/fr.json'));
     const { hash, norm } = require(path.join(ROOT, 'tools/i18n/lib'));
     const pats = new Set((fr.p || []).map((p) => p[0]));

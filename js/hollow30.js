@@ -145,6 +145,20 @@ const HOLLOW30 = (function () {
     after: S('Rooke came by with his book and stood at the Pells\' door a long time, and then he wrote something small and went on. He did not chalk them. Did you know he hums when he writes? Everybody in the Hollow hums.'),
     rootday: S('Do not look at them. If you look at them they look back, and then they write you down.'),
   };
+  // Hob Wendle, field-hand, forty (Book One ch. 3): his roots came out through his feet in the summer; on Rootday Rooke
+  // takes three toes that have gone to wood, and he walks afterwards, as Rooke promised. He dies aboard the Kestrel (ch. 13).
+  P.p30_hob = { name: S('Hob Wendle, field-hand'), sprite: 'townsman', portrait: 'townsman', tier: 'low', scale: 1.08, topics: {}, quest: null,
+    greet: { polite: S('Mind the step. I would get up, only it is a business, getting up, on these.'), normal: S('Field-hand. Was. You cannot follow a plough on roots.'), blunt: S('Keep \'em dry, she says. I keep \'em dry.') } };
+  const HOB = {
+    before: S('Hob Wendle. Field-hand, or I was. The roots came out through the soles of my feet in the summer, and I walked on them for weeks and never knew, only I left white threads in the dust of every lane. Three toes have gone to wood. Rooke comes round on Rootday with the saw and the brown bottle. He says I will walk after. He has not lied to me yet.'),
+    after: S('Rooke took them clean on Rootday, three toes, with the hush-saw and the sap-iron. The drops take your voice, not the hurt; I could not make a sound. The Cantor held my head. I walk, like he promised. Keep \'em warm and dry, she told me after. I keep \'em dry.'),
+  };
+  P.p30_hob.quest = (g) => {
+    const f = g.flags, k = (Number(g.day) || 0) >= 1 ? 'after' : 'before';
+    if (f['p30_hob_' + k]) return null;
+    f['p30_hob_' + k] = true;
+    return { text: HOB[k] };
+  };
   P.p30_lissa.quest = (g) => {
     const f = g.flags;
     if (!f.p30_lissa_met) { f.p30_lissa_met = true; return { text: LISSA.first }; }
@@ -249,6 +263,7 @@ const HOLLOW30 = (function () {
     // the red-shutter house, and Lissa on its step
     for (const dx of [-0.85, 0.85]) m.deco('p30_shutter', RED_DOOR[0] + 0.5 + dx, RED_DOOR[1] - 0.12, { solid: false, scale: 0.75, radius: 0.1, label: TX.shutters });
     m.npc('p30_lissa', RED_DOOR[0] + 0.5, RED_DOOR[1] - 0.6, { facing: -Math.PI / 2, scale: 0.68 });
+    m.npc('p30_hob', 7.5, 9.45, { facing: Math.PI / 2, scale: 1.08 });   // on his own step, across the lane from Lissa
     // the burl-sick on their steps and the bench
     look(m, 'burlsick', 3.5, 9.45, TX.burl, TX.burlLook0, { solid: true, scale: 0.9, radius: 0.3 });
     look(m, 'burlsick', 26.5, 12.5, TX.burl, TX.burlLook1, { solid: true, scale: 0.85, radius: 0.3 });
@@ -457,7 +472,7 @@ const HOLLOW30 = (function () {
   function wire() {
     paint();
     if (typeof NPCS !== 'undefined') for (const k in P) if (!NPCS[k]) NPCS[k] = P[k];
-    try { if (typeof VOICES !== 'undefined' && VOICES.PEOPLE) Object.assign(VOICES.PEOPLE, Object.assign({ p30_lissa: { f0: 262, fs: 1.14, style: 'human' } }, VOICES.PEOPLE)); } catch (e) { /* default voices */ }
+    try { if (typeof VOICES !== 'undefined' && VOICES.PEOPLE) Object.assign(VOICES.PEOPLE, Object.assign({ p30_lissa: { f0: 262, fs: 1.14, style: 'human' }, p30_hob: { f0: 108, fs: 0.93, style: 'human' } }, VOICES.PEOPLE)); } catch (e) { /* default voices */ }
     if (typeof buildAllMaps === 'function') {
       const _b = buildAllMaps;
       buildAllMaps = function () { const maps = _b.apply(this, arguments); try { buildMaps(maps); } catch (e) { warnOnce('build', e); } return maps; };
@@ -499,7 +514,7 @@ const HOLLOW30 = (function () {
   try { wire(); } catch (e) { console.warn('hollow30 failed to wire', e); }
 
   return {
-    TX, P, NELL, LISSA, MAPS, HDOORS, CARDERS_DOOR, TANNERY_DOOR, GRAFTERS, VISIT, TEXTS,
+    TX, P, NELL, LISSA, HOB, MAPS, HDOORS, CARDERS_DOOR, TANNERY_DOOR, GRAFTERS, VISIT, TEXTS,
     syncMap, syncTannery, useOwn, nellAsks, mitesCleared, grafting, pencilled, closeAtLeaving,
     get out() { return OUT; },
   };
