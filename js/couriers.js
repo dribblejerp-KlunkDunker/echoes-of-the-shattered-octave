@@ -256,10 +256,10 @@ const COURIERS = (function () {
       id: 'bettis', from: 'Bettis Renn', note: 'the days, in order', title: 'Letter from Bettis Renn',
       when: (f) => f.bettis_kept_awake && !f.bettis_put_back, alive: (f) => roadOpen(f), npc: ['bettis'],
       text: () => P(
-        'Name, please. That is how I began every day for three years, and it is how I began this letter, and I crossed it out. My name is Bettis Renn. I am writing it so that it is somewhere.',
-        'You sat with me on the bench and it did not pass, and then it did not pass for several days. This is the true report: I do not forgive you for refusing me, and I am glad you sat. I cannot make those into one thing. I have stopped trying. That is a relief.',
+        'Name, age, trade. That is what the kind clerk asked, and I answered, and then I asked to go second. I began this letter with my name and crossed it out, and wrote it again. My name is Bettis Renn. I am writing it so that it is somewhere.',
+        'You held me on the floor and it did not pass, and then it did not pass for several days. This is the true report: I do not forgive you for refusing me, and I am glad you held on. I cannot make those into one thing. I have stopped trying. That is a relief.',
         'I am writing the days down in order, from the first. It is slow. I have reached the second winter. It helps in the way a rail helps on a stair.',
-        'There is a press at the back of the Malting. I keep my back to it. I eat when someone brings bread. Someone does.') + SIG('Bettis Renn'),
+        'Ivo is in the third stack. I sit with my back against it. I eat when someone brings bread. Someone does.') + SIG('Bettis Renn'),
       gift: () => null,
     },
     {

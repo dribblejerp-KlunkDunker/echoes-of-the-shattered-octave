@@ -229,7 +229,7 @@ const ENEMIES = {
 };
 
 // the dying names: invented people only. Nobody canon puts elsewhere (in a crate, a cloister tape, a story) can speak from a core (R2).
-const NAMES_POOL = ['Tamsin Reed', 'Corwin Aye', 'Mirren Salk', 'Gethin Coote', 'Osric Dacre', 'Linus Harte', 'Bryn Pryor', 'Elspet Rowe',
+const NAMES_POOL = ['Gethin Coote', 'Osric Dacre', 'Linus Harte', 'Bryn Pryor', 'Elspet Rowe',
   'Dunstan Pell', 'Ivo Marrick', 'Sefa Lund', 'Ottilie Crane', 'Benet Owler', 'Maud Tanner', 'Ro Fenwick', 'Caddoc Vey', 'Elin Thorsby', 'Perrin Lusk'];
 
 // ---- items -------------------------------------------------------------
@@ -380,7 +380,7 @@ const NPCS = {
       }
       if (g.has('coil') && !g.flags.coil_done) {
         g.flags.coil_done = true; g.flags.rite_ready = true; g.give('pass');
-        let t = 'You got it out past the bell. Good. Keep the coil; it goes down in your bag, not mine — the Factor searches me at the casing. Here: the Consortium\'s pass. It opens the shaft gate from the quarry to the Root-vault. On Hearthday, when the Church is holding its note, go down and seat it in the lock while they are all looking at Lyra. I will be the hand at the wire.';
+        let t = 'You got it out past the bell. Good. Keep the coil; it goes down in your bag, not mine. Nobody searches the supervising engineer\'s toolbag, they say, but the Factor watched me at Depot Three, and I would rather she had nothing to find. Here: the Consortium\'s pass. It opens the shaft gate from the quarry to the Root-vault. On Hearthday, when the Church is holding its note, go down and seat it in the lock while they are all looking at Lyra. I will be the hand at the wire.';
         if (g.has('charts')) t += ' And the charts. Revision Seven, with the margin. On failure of the hold, slippage is to be absorbed by the source. You understand what that means? She is not the steadying hand. She is the fuse.';
         return { text: t, journal: ['main', 'Kaelen gave me the Consortium pass. On Hearthday I must take the shaft from the Quarry to the Root-vault and seat the coil in the bore\'s lock during the Rite. Lyra will sing against the bore; Kaelen will be the hand at the wire.'] };
       }
@@ -468,7 +468,7 @@ const NPCS = {
   tam: {
     name: 'Old Tam, the night-hummer', sprite: 'tam', portrait: 'tam', tier: 'low', scale: 0.9,
     greet: { polite: 'Sit if you like. She comes on the water about this time. You will hear her if you keep still.', normal: 'Hm. You are standing where I listen.', blunt: 'Lower your voice. She will not come if you shout.' },
-    topics: { 'The Flume': 'My Essa went in at the sluice in the Cascade year. The water took her the way it takes everything. Three nights ago it brought her voice back up the Flume, singing The Miller\'s Daughter, which is ours. Mine and hers.', 'The Hedge': 'Everyone says never answer it. I know what they say. I say she gets the second verse right, and the Hedge could not know the second verse.' },
+    topics: { 'The Flume': 'My Essa. Forty years dead, near enough; the pox took her the year the old king went into the glass. She used to call me Tammy. Nobody else ever did, before or since. And now something out past the thorn calls me Tammy, three or four nights in the eight, and three nights ago it came up the Flume in her voice, singing The Miller\'s Daughter, which is ours. Mine and hers.', 'The Hedge': 'Everyone says never answer it. I know what they say. I say she gets the second verse right, and the Hedge could not know the second verse.' },
     quest: (g) => {
       if (g.flags.tam_told || g.flags.tam_left) return null;
       { const first = !g.flags.tam_met; g.flags.tam_met = true; return { text: first ? 'You have a listening face. Good. Then listen, and tell me honest: when she sings up the Flume of a night, is it her? Rooke says it is not. Lyra will not say. You are a stranger; you have no reason to be kind to me. Is it her?' : 'He has not moved from the stone. "Well? You heard her too. Is it her?"', journal: ['side', 'Old Tam listens to his dead wife\'s voice on the Flume at the crossing. He asked me, a stranger, to tell him honestly whether it is her.'],
@@ -505,7 +505,7 @@ const NPCS = {
   ignatius: {
     name: 'Ignatius Crane, Flambeau of the Pure Note', sprite: 'flambeau', portrait: 'flambeau', tier: 'high',
     greet: { polite: 'The Note is held. You may speak under it. Quietly, and in tune.', normal: 'This chapel had bells once. The Synod took them for bore-teeth, and it was right to. A bell is a voice with nobody inside it.', blunt: 'I have burned men for less than that tone. I am tired, and the Note is long, and you will not try me again.' },
-    topics: { 'The Church': 'Seven years I have held that it let go because one voice shouted. Vance\'s voice. The engineer says it let go because we held. I have thought about his answer every night since he gave it. I do not know yet which of us I would rather be right.', 'The Rite': 'The warrant is read. The Pure Note is held over Oakhaven day and night until the casing. The Hollow in the quarry is to be burned at the hour of the Rite. The Cantor is in the Church\'s protection, which is a phrase I chose myself, and I meant it, and it is a cell.', 'Kaelen Vance': 'He has a glass arm that sings with the Note whether he wills it or not. I envied him that, for a moment, before I remembered what it is doing to him.' },
+    topics: { 'The Church': 'Seven years I have held that it let go because one voice shouted. Vance\'s voice. The engineer says it let go because we held. I have thought about his answer every night since he gave it. I do not know yet which of us I would rather be right.', 'The Rite': 'The warrant is read. The Pure Note is held over Oakhaven day and night until the casing. The Hollow behind the tannery is to be burned at the hour of the Rite. The Cantor is in the Church\'s protection, which is a phrase I chose myself, and I meant it, and it is a cell.', 'Kaelen Vance': 'He has a glass arm that sings with the Note whether he wills it or not. I envied him that, for a moment, before I remembered what it is doing to him.' },
     quest: (g) => {
       if (g.flags.ignatius_met && !g.flags.ignatius_gave) { g.flags.ignatius_gave = true; g.give('pellets'); return { text: 'He puts three pellets of glass shot in your hand without looking at them. "The Church does not keep a shop. It gives, once. Do not come back for more."' }; }
       if (!g.flags.ignatius_met) { g.flags.ignatius_met = true; return { text: 'You are the one who goes in and out of the quarry with the engineer\'s charts in your shirt. Do not look at your shirt. I do not want the charts. I want you to know that I know, and that I have chosen, for reasons I will give to my god and not to you, to hold the Note and look at the ceiling.', journal: ['side', 'The Flambeau, Ignatius Crane, knows about the charts and has chosen not to act. The Church holds the Pure Note over the town until the Rite.'] }; }
@@ -756,7 +756,7 @@ Object.assign(NPCS, {
     quest: (g) => {
       const f = g.flags, ch = [];
       if (f.press_taken && !f.quist_press) { f.quist_press = true; return { text: 'Take it, then. There are forty more in the store, and the form will say it was requisitioned, and it will be true, because I will sign it. — Tell her I asked after her. Tell her I kept her desk.' }; }
-      if (!f.quist_shown) ch.push({ t: 'Show me a pressing.', f: (g) => { f.quist_shown = true; return 'He takes off his spectacles to polish them. "Ninety seconds. Three questions: your name, the name of a person you love, and whether you would like to rest. Then eight seconds of seven forty-one, under the felt. Most of them look relieved at six. I have never once seen one look frightened afterward. That is not nothing, whatever she has told you."'; } });
+      if (!f.quist_shown) ch.push({ t: 'Show me a pressing.', f: (g) => { f.quist_shown = true; return 'He takes off his spectacles to polish them. "Ninety seconds. Form 9: three questions and no more. Name. Age. Trade. Further speech is not recorded, as it lengthens the queue. Then eight seconds of seven forty-one, under the felt. Most of them look relieved at six. I have never once seen one look frightened afterward. That is not nothing, whatever she has told you."'; } });
       if (!f.quist_alt) ch.push({ t: 'Did you ever once write down an alternative?', f: (g) => { f.quist_alt = true; questXp(15); return 'He considers the question, which is the worst thing he could do with it. "We wrote down everything," he says. "Every name, every coat, every shoe left on every floor. Nobody wrote down an alternative." He puts his spectacles back on. "Nobody was ever asked for one."'; } });
       if (f.sable_joined && !f.quist_sable) ch.push({ t: 'Sable sends her regards.', f: (g) => { f.quist_sable = true; return '"Does she." For the first time he looks old. "She stood in the Cloister door and counted them in. Eleven. She did not count them out; that was not on the form." He pours hot water into a second cup, and sets it at the empty place across the desk, and leaves it there.'; } });
       if (!ch.length) return null;
@@ -779,7 +779,7 @@ Object.assign(NPCS, {
   },
   cat: { name: 'A cat', sprite: 'cat', portrait: 'townsman', tier: 'low', scale: 0.38, greet: { polite: 'The cat does not care.', normal: 'The cat does not care.', blunt: 'The cat does not care.' }, topics: {}, quest: () => null },
   lamplighter: { name: 'The lamplighter', sprite: 'hollow', portrait: 'townsman', tier: 'low', greet: { polite: '...the lamps are late tonight...', normal: '...the lamps are late tonight...', blunt: '...the lamps are late tonight...' }, topics: {}, quest: () => null },
-  bettis: { get name() { return G.flags.bettis_awake ? 'Bettis Renn' : 'A Hollow on the bench'; }, sprite: 'hollow', portrait: 'townsman', tier: 'low', greet: { polite: '...name, please...', normal: '...name, please...', blunt: '...name, please...' }, topics: {}, quest: () => null },
+  bettis: { get name() { return G.flags.bettis_awake ? 'Bettis Renn' : 'A Hollow with a basket'; }, sprite: 'hollow', portrait: 'townswoman', tier: 'low', greet: { polite: '...I will go second...', normal: '...I will go second...', blunt: '...I will go second...' }, topics: {}, quest: () => null },
 });
 Object.assign(NPCS.vane_wg, { shop: NPCS.vane.shop, markup: NPCS.vane.markup || 1.1, shopTalk: { hello: 'Same stock, higher prices. We are a long way from anywhere that sells bolts.', broke: 'Credit\'s the Office\'s game. Not mine.', thanks: ['Keep it dry. Everything here is wet.', 'Done. Don\'t tell the scribe what I charged.', 'There. Now get off my ladder.'], buys: ['armor', 'weapon', 'valuable'] } });
 
@@ -995,7 +995,7 @@ const CAMP = {
   },
   sable_dw: {
     name: 'Sable, Archivist of the Veil', sprite: 'sable', portrait: 'sable', tier: 'high',
-    greet: { polite: 'Entry: the Deep Woods. One wreck, eleven souls, a press, and me.', normal: 'Two things left in the inventory, and the third does not feel like a gap. It feels like a shelf.', blunt: 'I am counting. Wait.' },
+    greet: { polite: 'Entry: the Deep Woods. One wreck, twenty-six souls, a press, and me.', normal: 'Two things left in the inventory, and the third does not feel like a gap. It feels like a shelf.', blunt: 'I am counting. Wait.' },
     topics: { 'The Office cutter': 'Four hundred and thirty-two. That is a bottling consignment, not a patrol. They were carrying voices, stoppered, to the Hall of Carriage. If you open that hold, do not unstopper them in the dark. Quiets come through an open bottle like water through a sluice.' },
     quest: (g) => {
       const f = g.flags;
@@ -1041,7 +1041,7 @@ const CAMP = {
   },
   herald: {
     name: 'A Synod herald', sprite: 'herald', portrait: 'herald', tier: 'high',
-    greet: { polite: 'He has walked nine miles alone, and he is going to read it aloud, because the form requires it.', normal: 'He unrolls the writ. His hands are perfectly steady.', blunt: 'He waits for you to finish, and then he unrolls the writ.' },
+    greet: { polite: 'He has walked nine miles alone, and he is going to read it aloud, because the form requires it.', normal: 'He unrolls the writ. His hands shake the entire time, and he does not let it get into his reading.', blunt: 'He waits for you to finish, and then he unrolls the writ.' },
     topics: {},
     quest: () => { codaHerald(); return { text: 'He clears his throat, and begins.' }; },
   },
@@ -1134,13 +1134,13 @@ NPCS.wren = {
   quest: () => ({ text: 'She does not stop singing.' }),
 };
 NPCS.wren_dw = {
-  name: 'Wren', sprite: 'wren', portrait: 'wren', tier: 'low', scale: 0.72,
+  name: 'Linnet', sprite: 'wren', portrait: 'wren', tier: 'low', scale: 0.72,
   greet: { polite: '"Hello," she says, very loudly, and then, remembering, much more quietly: "hello."', normal: '"Hello," she says, very loudly, and then, remembering, much more quietly: "hello."', blunt: 'She looks at you, and at your weapon, and decides you are all right.' },
   topics: {
     'The Quiet Faith': '"They don\'t talk. Mam said that\'s holy. Mam said if I sang nice the Quiet would come and be kind to me." She thinks about it. "It wasn\'t going to be kind, was it."',
     'Lyra Ashgrove': '"She\'s teaching me the skipping one. Too loud brings the hounds, too still brings the Hush." She hops, twice, very softly. "You have to be in the middle. That\'s called the Narrow."',
   },
-  quest: (g) => ({ text: g.flags.coda_done ? 'Wren is sitting by the fire, humming the skipping-rhyme under her breath, exactly in the middle of the Narrow. "Lyra says I can be a Cantor," she says. "If there are any Cantors left."' : 'Wren is sitting by the fire, as close to Lyra as she can get without being in her lap. "She says I sing too loud," she whispers. "She says that\'s a good problem."' }),
+  quest: (g) => ({ text: g.flags.coda_done ? 'Linnet is sitting by the fire, humming the skipping-rhyme under her breath, exactly in the middle of the Narrow. "Lyra says I can be a Cantor," she says. "If there are any Cantors left."' : 'Linnet is sitting by the fire, as close to Lyra as she can get without being in her lap. "She says I sing too loud," she whispers. "She says that\'s a good problem."' }),
 };
 TOPICS['The Quiet Faith'] = { low: 'Them in the woods who cut their tongues out. Don\'t look at them.', high: 'A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be "already quiet", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else.' };
 TOPIC_KEYS.push('The Quiet Faith');

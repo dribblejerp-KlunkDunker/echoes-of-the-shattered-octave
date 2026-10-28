@@ -183,7 +183,7 @@ async function boot() {
 
     // compact 640x400: no horizontal overflow, entries readable
     await page.evaluate(() => {
-      closeModal(); G.state = 'play'; const t = ['Harrow has unbarred the North Gate for me.', 'The Tower Bell: Amos Fell says nobody has rung the great bell in the Mausoleum\'s tower since Nan was buried.', 'Surgeon-Grafter Rooke gave me Davin Hale\'s boots to carry to his mother Orla, who is rooted into her chair in the house behind the tannery.', 'Part Four: Coda. The Kestrel came down in the Deep Woods of the Spectral Woods, by the Mausoleum of Chords, with her number-two lift-tank holed.', 'The Hush-Gift: the child is called Wren. She is at the camp fire now, and Lyra is teaching her the skipping-rhyme.', 'Sable, the last Archivist of the Veil, is hiding in the mist outside the Hedge with the stolen Bound Ledger.'];
+      closeModal(); G.state = 'play'; const t = ['Harrow has unbarred the North Gate for me.', 'The Tower Bell: Amos Fell says nobody has rung the great bell in the Mausoleum\'s tower since Nan was buried.', 'Surgeon-Grafter Rooke gave me Davin Hale\'s boots to carry to his mother Orla, who is rooted into her chair in the house behind the tannery.', 'Part Four: Coda. The Kestrel came down in the Deep Woods of the Spectral Woods, by the Mausoleum of Chords, with her number-two lift-tank holed.', 'The Hush-Gift: the child is called Linnet. She is at the camp fire now, and Lyra is teaching her the skipping-rhyme.', 'Sable, the last Archivist of the Veil, is hiding in the mist outside the Hedge with the stolen Bound Ledger.'];
       G.journal = t.map((x, i) => ({ cat: i % 2 ? 'side' : 'main', text: x, day: i }));
     });
     for (const [w, h, tag] of [[1280, 800, ''], [640, 400, '-compact']]) {

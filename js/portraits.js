@@ -40,7 +40,7 @@ const PORTRAITS = (function () {
     kaelen: 'Kaelen', lyra: 'Lyra', vane: 'Vane', hetty: 'Hetty', sable: 'Sable',
     aldric: 'Aldric', halder: 'Halder', harrow: 'Harrow', rooke: 'Rooke', vosk: 'Vosk',
     tobiah: 'Tobiah', mags: 'Mags', quist: 'Quist', flambeau: 'Flambeau', orla: 'Orla',
-    pim: 'Pim', wren: 'Wren', herald: 'The Synod herald', tam: 'Tam', nell: 'Nell',
+    pim: 'Pim', wren: 'Linnet', herald: 'The Synod herald', tam: 'Tam', nell: 'Nell',
   };
   const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 

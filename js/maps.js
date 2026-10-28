@@ -634,7 +634,7 @@ function buildQuarry() {
   if (ph) {
     m.deco('pump', ph.x + 1.0, ph.y + 1.0, { radius: 0.4 }); m.deco('pump', ph.x + ph.w - 1.0, ph.y + 1.0, { radius: 0.4 }); m.deco('pump', ph.x + 1.0, ph.y + ph.h - 1.0, { radius: 0.4 });
     m.add({ kind: 'npc', id: 'hollow', name: 'A Hollow', sprite: 'hollow', x: ph.cx + 0.5, y: ph.cy + 0.5, solid: true, radius: 0.3, loop: true, restore: 'hew', lines: ['...pressure nominal... pressure nominal...', '...told Mags I\'d be home by Dawnday...'] });
-    m.add({ kind: 'npc', id: 'hollow', name: 'A Hollow', sprite: 'hollow', x: ph.cx - 1.5, y: ph.cy + 1.5, solid: true, radius: 0.3, loop: true, lines: ['...blue jug on the sill... blue jug...', '...number four... number four... number four...'] });
+    m.add({ kind: 'npc', id: 'hollow', name: 'A Hollow', sprite: 'hollow', x: ph.cx - 1.5, y: ph.cy + 1.5, solid: true, radius: 0.3, loop: true, lines: ['...the pump on the third level... the third level...', '...number four... number four... number four...'] });
     m.npc('tobiah', ph.x + ph.w - 1.5, ph.cy + 0.5, { facing: Math.PI });
     m.deco('lamp', ph.cx + 0.5, ph.y + ph.h - 0.6, { radius: 0.12, scale: 0.7, glow: 0.6 });
   }
@@ -652,7 +652,7 @@ function buildQuarry() {
     m.deco('lever', sh.x + 0.5, sh.cy + 0.5, { radius: 0.3, scale: 0.8 }); m.deco('lamp', sh.x + sh.w - 0.6, sh.cy + 0.5, { radius: 0.12, scale: 0.7, glow: 0.6 });
   }
   const st = m.named.store; if (st) { m.item('tonic', st.cx + 0.5, st.cy + 0.5); m.item('honey', st.x + 0.6, st.y + 0.6); m.deco('crates', st.x + st.w - 0.6, st.y + st.h - 0.6, { radius: 0.35 }); m.enemy('mites', st.cx + 1.5, st.cy + 0.5); }
-  const br = m.named.barracks; if (br) { m.enemy('legionnaire', br.cx + 0.5, br.cy + 0.5, { name: 'Corwin Aye' }); m.deco('bed', br.x + 0.8, br.y + 0.8, { radius: 0.4, scale: 0.6 }); m.deco('bed', br.x + br.w - 0.8, br.y + 0.8, { radius: 0.4, scale: 0.6 }); m.item('sovereigns', br.cx + 0.5, br.y + br.h - 0.6); }
+  const br = m.named.barracks; if (br) { m.enemy('legionnaire', br.cx + 0.5, br.cy + 0.5, { name: 'Gethin Coote' }); m.deco('bed', br.x + 0.8, br.y + 0.8, { radius: 0.4, scale: 0.6 }); m.deco('bed', br.x + br.w - 0.8, br.y + 0.8, { radius: 0.4, scale: 0.6 }); m.item('sovereigns', br.cx + 0.5, br.y + br.h - 0.6); }
   // filler encounters
   for (const r of m.rooms) {
     if (r === e || r.name) continue;
@@ -925,7 +925,7 @@ function buildMalting() {
   m.npc('quist', 25.5, 4.2, { facing: Math.PI });
   m.deco('press', 25.0, 15.0, { radius: 0.5, scale: 0.95, use: 'press', label: 'An Office hand-press, tuned to 741' });
   m.deco('chair', 23.0, 19.2, { radius: 0.2, scale: 0.55 });
-  m.npc('bettis', 23.0, 18.3, { facing: -Math.PI / 2 });
+  m.npc('bettis', 23.0, 18.3, { facing: -Math.PI / 2, until: 'bettis_kept_awake' });   // carried to the Kestrel once she is kept awake (Book One ch. 18, 21)
   m.enemy('proctor', 26.8, 12.0, { room: 'press' }); m.enemy('proctor', 27.2, 18.6, { room: 'press' });
   m.deco('lamp', 22.0, 11.0, { radius: 0.12, scale: 0.7, glow: 0.55 });
   // the Tuning Room

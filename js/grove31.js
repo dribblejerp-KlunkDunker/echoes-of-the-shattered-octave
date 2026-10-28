@@ -14,8 +14,7 @@
 //    * "DO NOT COMFORT YOURSELF IN THE MARGIN" (ch. 14): the twice-taken man sits against a wall in Ashlane doing nothing
 //      at all. Tell Sable you found him, and she gives you her margin entry and the Veil's three rules.
 //
-//  Canon note for the owner: Book One makes Bettis Renn Ivo's wife (38, "she asked to go second"); the game's Malting has
-//  a man called Bettis Renn on the bench. The Renn house here names only Ivo, and the conflict is left for a ruling.
+//  Bettis Renn is Ivo's wife, as in Book One (38, "she asked to go second"); she is the woman Sable puts back in the Malting.
 //  The new maps are always built (a save may stand in one); nothing draws on the random stream. Both quests close with a
 //  logbook line when the Kestrel leaves Whisper-Grove (Part Four).
 // ============================================================
@@ -90,7 +89,7 @@ const GROVE31 = (function () {
     hearthCold: S('A cold hearth'),
     pot: S('A pot on the hook, gone to dust. Whatever it was, it was meant for when they came in.'),
     bowls: S('Two bowls on the table'),
-    bowlsLook: S('Two bowls and two spoons, set out for supper and never used, and a crock of salt between them. They were taken within the hour of each other, on the fourth day. He asked whether he would be permitted to keep his hands. He was told that he would.'),
+    bowlsLook: S('Two bowls and two spoons, set out for supper and never used, and a crock of salt between them. Ivo and Bettis Renn were taken within the hour of each other, on the fourth day. He asked whether he would be permitted to keep his hands. He was told that he would. She asked to go second.'),
     staves: S('A cooper\'s staves and hoops'),
     stavesLook: S('Oak staves in a rack, shaved and bent, waiting to be raised into a barrel; an adze, a croze, a sun-plane, and a leather apron on a nail with I.R. burned into the strap.'),
     // the twice-taken man and Sable
