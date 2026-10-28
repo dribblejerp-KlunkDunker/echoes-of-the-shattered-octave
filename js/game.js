@@ -206,7 +206,7 @@ function riteOpenThreads() {
   if (f.tam_met && !f.tam_told && !f.tam_left) left.push('Old Tam is still waiting for an honest answer by the Flume.');
   if (f.twins_found && !f.twins_named) left.push('The Wendle twins are not yet in your ledger.');
   if (typeof G.has === 'function' && G.has('boots') && !f.boots_delivered) left.push('Orla Hale\'s boots are still in your pack.');
-  if (f.crates_heard && !f.vane_told) left.push('Vane does not know what is in Hetty\'s crates.');
+  if (f.crates_heard && !f.vane_told) left.push('Vane has not been made to hear what is in his own hold.');
   if (f.p12f_q === 1) left.push('The Last Sheaf is still to be cut in the dead hour.');
   return left;
 }
@@ -1510,8 +1510,9 @@ function useDeco(e) {
   if (e.trapType) { inspectTrap(e); return; }
   if (wildsUse(e) || codaUse(e) || wgUse(e)) return;
   if (e.use === 'crates') {
-    if (!G.flags.crates_heard) { G.flags.crates_heard = true; ['Annet Sowerby', 'Corwin Aye', 'Mirren Salk'].forEach(n => G.ledger.push({ name: n, where: 'Hetty\'s cellar', day: G.day })); }
-    showEvent('The crates in the cellar', 'You put your ear to the wood. Thirty-six lilac spheres, you would guess by the weight, each in its straw. For a long moment nothing. Then, very small, through the side of the crate: <i>"Is somebody there? I\'m Annet. Annet Sowerby. I\'m six. What\'s your name?"</i><br><br>You do not answer. You have learned that much. From further in, two more voices, each saying only a name, over and over, the way a person says a thing they are afraid of losing: Corwin Aye. Mirren Salk.', [{ t: 'Step away from the crates', f: () => { if (G.flags.crates_logged) return; G.flags.crates_logged = true; journal('side', 'The corsair\'s crates in Hetty\'s cellar hold glass cores. One of them is a six-year-old called Annet Sowerby. I wrote the names in my ledger.'); } }]);
+    if (G.flags.greening || G.flags.part3 || G.flags.part4) { msg('The mast-ladder sways over the square. Not now.', '', 3000); return; }
+    if (!G.flags.crates_heard) { G.flags.crates_heard = true; ['Annet Sowerby', 'Corwin Aye', 'Mirren Salk'].forEach(n => G.ledger.push({ name: n, where: 'the Kestrel\'s hold', day: G.day })); }
+    showEvent('The crates in the hold', 'You go up the mast-ladder and down through the open hatch into the Kestrel\'s hold: twelve crates, lashed, stencilled for the quarry garrison. You put your ear to the wood. Thirty-six lilac spheres, you would guess by the weight, each in its straw. For a long moment nothing. Then, very small, through the side of the crate: <i>"Is somebody there? I\'m Annet. Annet Sowerby. I\'m six. What\'s your name?"</i><br><br>You do not answer. You have learned that much. From further in, two more voices, each saying only a name, over and over, the way a person says a thing they are afraid of losing: Corwin Aye. Mirren Salk.', [{ t: 'Step away from the crates', f: () => { if (G.flags.crates_logged) return; G.flags.crates_logged = true; journal('side', 'The crates in the corsair\'s hold are full of glass cores. One of them is a six-year-old called Annet Sowerby. I wrote the names in my ledger.'); } }]);
     Audio_.sfx.voice();
   } else if (e.use === 'plinth') {
     showEvent('The empty bell-frame', 'An oak frame built for four bells, and four hooks, and nothing on them. Somebody has chalked on the crossbeam, in a careful hand: <i>TAKEN FOR BORE-TEETH, 417 SR. THEY RANG IN E.</i> Under it, smaller and newer: <i>the Hedge can whistle. who taught it.</i>' + (G.flags.rite_ready ? '<br><br>The Flambeau\'s people have hung a glass-fire lamp where the tenor bell was. It is singing one note, very quietly, and your teeth ache with it.' : ''), [{ t: 'Step back', f: () => { if (!G.flags.plinth_read) { G.flags.plinth_read = true; journal('side', 'The chapel\'s bells were taken for bore-teeth in 417. They rang in E. Somebody has asked, in chalk, who taught the Hedge to whistle.'); } } }]);

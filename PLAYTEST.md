@@ -25,8 +25,10 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 - [ ] **The hush-gift child is now Linnet** (the Bible already has a Wren). Does the name sit right?
 - **Recorded voices:** Sable's Deep Woods greeting and Bettis's old "Name, please" no longer match their recordings, so they fall back to the synthesised voice until re-recorded.
 
+- [ ] **The talking crates** are now in the Kestrel's hold. Hetty asks you to go up the mast-ladder at the mooring mast (east of the square) and listen. Does the ladder read as climbable, and does the scene work without going aboard?
+
 **Still to match the book (next PRs, each its own):**
-1. The talking crates move from Hetty's cellar to the Kestrel's hold.
+1. ~~The talking crates move from Hetty's cellar to the Kestrel's hold.~~ Done.
 2. Hob Wendle is a field-hand who roots into the deck and dies aboard; the tanner becomes someone else.
 3. The Office cutter's hold: the 432 are the Kestrel's cores, not the cutter's vox-bottles.
 4. The Wearer is met once, at the end; earlier meetings become a voice in the fog.

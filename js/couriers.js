@@ -151,14 +151,14 @@ const COURIERS = (function () {
       gift: () => null,
     },
     {
-      id: 'hetty', from: 'Hetty Bram', note: 'the cellar', title: 'Letter from Hetty Bram',
+      id: 'hetty', from: 'Hetty Bram', note: 'the mast-ladder', title: 'Letter from Hetty Bram',
       when: (f) => f.hetty_paid, alive: (f) => oakhavenOpen(f), npc: ['hetty'],
       text: (f) => P(
         'Hetty Bram, of the Boar & Dulcimer, to the one with the steady head.',
-        'I said I wanted to be told I was an old woman hearing things. You did not tell me. I have decided to be grateful. The cellar is still full, and I go down for the casks with a lamp and my fingers in my ears like a girl.',
+        'I said I wanted to be told I was an old woman hearing things. You did not tell me. I have decided to be grateful. His hold is still full, and I send his supper up the mast-ladder with my fingers in my ears like a girl.',
         f.vane_told
           ? 'The corsair came in the day after you spoke to him and did not laugh at anything. He sat in his corner and drank small beer, which tells you all you need. Whatever you said to him, he heard it.'
-          : 'The corsair is still in his corner and still laughs too loud at nothing. You have not got to him yet. The names go on in my cellar, and I am the only one in this house who hears both.',
+          : 'The corsair is still in his corner and still laughs too loud at nothing. You have not got to him yet. The names go on in his hold, and I am the only one in this house who hears both.',
         'Singing is free and it will get you killed. I mean to go on saying it. I send one of Bettany\'s tonics, for my nerves; I find I have the nerves still and none of the need.') + SIG('H. B.'),
       gift: () => ({ item: 'tonic', line: 'a tonic' }),
     },

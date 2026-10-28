@@ -98,11 +98,11 @@ const STORYRUM = (() => {
   add('d_done', 'deed', 'any', 102, { req: ['book_one_done'], note: 'Book One is finished' },
     'There is talk on the barges of a skyship with a willow crown and a holed tank, down in the Deep Woods, and of an Office cutter nobody can account for. The Office has the cutter down as redeployed. [PROPOSED]');
 
-  // ---- Hetty's cellar and the Kestrel
+  // ---- Hetty, the mast-ladder and the Kestrel's hold
   add('d_hetty_wait', 'deed', 'hetty', 22, { req: ['hetty_crates'], not: ['crates_heard'], note: 'Hetty asked you to listen at the crates; you have not' },
-    'The cellar has been quiet all day. I went down twice and put my ear to the wood and it was only wood. That is worse.');
+    'His hold has been quiet all day. I took his supper up twice and put my ear to the hatch and it was only wood. That is worse.');
   add('d_hetty_wait_p', 'deed', 'patron', 22, { req: ['hetty_crates'], not: ['crates_heard'], note: 'Hetty asked you to listen at the crates' },
-    'Hetty keeps going down to her cellar to listen at the corsair\'s crates, and coming up with her face shut. Do not ask her. I asked her.');
+    'Hetty keeps taking the corsair\'s supper up the mast-ladder herself, and coming down with her face shut. Do not ask her. I asked her.');
   add('d_crates_heard', 'deed', 'patron', 34, { req: ['crates_heard'], not: ['vane_told'], note: 'You have heard the crates (and Vane has not been told)' },
     'Something is said to be in the corsair\'s crates that Hetty will not name. She has stopped letting anyone carry a cask down there but herself.');
   add('d_hetty_paid', 'deed', 'hetty', 36, { req: ['hetty_paid'], not: ['vane_told'], note: 'Hetty paid you for the crates; Vane has not yet heard them' },
