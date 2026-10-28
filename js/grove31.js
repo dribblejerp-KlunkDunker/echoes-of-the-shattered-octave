@@ -363,6 +363,13 @@ const GROVE31 = (function () {
   function wire() {
     paint();
     if (typeof NPCS !== 'undefined') for (const k in P) if (!NPCS[k]) NPCS[k] = P[k];
+    // their voices (js/voices.js): Hollows breathe their lines; the twice-taken man has none left, but the table needs a row
+    try {
+      if (typeof VOICES !== 'undefined' && VOICES.PEOPLE) Object.assign(VOICES.PEOPLE, Object.assign({
+        p31_twice: { f0: 120, fs: 0.96, style: 'breathy' }, p31_sweeper: { f0: 176, fs: 1.04, style: 'breathy' },
+        p31_jugs: { f0: 190, fs: 1.06, style: 'breathy' }, p31_shutters: { f0: 132, fs: 0.98, style: 'breathy' },
+      }, VOICES.PEOPLE));
+    } catch (e) { /* default voices */ }
     if (typeof buildAllMaps === 'function') {
       const _b = buildAllMaps;
       buildAllMaps = function () { const maps = _b.apply(this, arguments); try { buildMaps(maps); } catch (e) { warnOnce('build', e); } return maps; };
