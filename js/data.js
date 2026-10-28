@@ -966,14 +966,25 @@ const CAMP = {
     topics: { 'The Mausoleum of Chords': 'She writes: MY FATHER\'S OFFICE IS IN THE BOOK THERE. THEY BURIED THE TUNE WITH THE CANTORS.' },
     quest: (g) => {
       const f = g.flags, voice = f.lyra_voice;
-      if (f.coda_done) return { text: voice ? '"I sang it," she says, in her own ruined voice. "All eight bars. I didn\'t think there was that much of it left."' : 'She writes: <b>YOU SANG IT. THANK YOU.</b> And underneath, smaller: <b>I WILL GET IT BACK.</b>' };
+      if (f.coda_done) {
+        if (f.requiem_done) return { text: voice ? '"The House is quiet," she says, in her own ruined voice. "It\'s only a building now. I didn\'t think there was that much of it left in me."' : 'She writes: <b>THE HOUSE IS QUIET. THANK YOU.</b> And underneath, smaller: <b>I WILL GET IT BACK.</b>' };
+        if (!f.lyra_requiem) { f.lyra_requiem = true; journal('side', 'The Requiem: Lyra says something older than the Wearer is singing her father\'s office in the choir of the Mausoleum of Chords, in a hundred voices: every office ever sung there. The two-voice coda ends it. Kaelen says the tombs in the hall open the choir, rung high to low.'); return { text: voice ? '"There\'s still something in the Mausoleum singing his office," she says. "Not the Wearer. Something older. It has every office ever sung there, and it has his now." She looks north. "The coda ends them too. It is two voices. When you\'re ready."' : 'She writes fast: <b>SOMETHING IN THE MAUSOLEUM IS STILL SINGING MY FATHER\'S OFFICE.</b> She rubs it out. <b>NOT THE WEARER. SOMETHING OLDER. IT HAS EVERY OFFICE EVER SUNG THERE.</b> Then: <b>THE CODA ENDS THEM. IT IS TWO VOICES. I WILL NEED YOU TO HOLD IT OFF ME.</b>' }; }
+        return { text: voice ? '"North," she says. "When you\'re ready. It\'s only a building."' : 'She writes: <b>NORTH. WHEN YOU ARE READY. HOLD IT OFF ME.</b>' };
+      }
       if (!f.lyra_dw_met) {
         f.lyra_dw_met = true;
-        journal('main', 'Coda: ' + (f.wearer_dead ? 'Lyra says something in the Mausoleum of Chords, north of the crash, is singing her father\'s funeral office in a hundred voices.' : 'Lyra says the Wearer followed us out of Whisper-Grove. It is in the Mausoleum of Chords, north of the crash, singing her father\'s funeral office in his voice.') + ' She means to go in and finish it, with the two-voice coda. She cannot hold it off and sing at the same time. Someone has to hold the line.');
-        return { text: f.wearer_dead ? 'She writes fast: <b>SOMETHING IN THE MAUSOLEUM IS SINGING MY FATHER\'S FUNERAL OFFICE.</b> She rubs it out. <b>NOT THE WEARER. YOU KILLED THE WEARER. SOMETHING OLDER. IT HAS EVERY OFFICE EVER SUNG THERE.</b> Then: <b>THE CODA ENDS THEM. IT IS TWO VOICES. I WILL NEED YOU TO HOLD IT OFF ME.</b>' : 'She writes, and her hand is shaking: <b>IT FOLLOWED US.</b> She points north. <b>THE MAUSOLEUM. IT IS SINGING DAD\'S OFFICE IN DAD\'S VOICE.</b> She rubs it out. <b>THE CODA ENDS IT. TWO VOICES. HOLD IT OFF ME WHILE I SING.</b>' };
+        journal('main', 'Coda: Lyra says the Wearer followed us out of Whisper-Grove. It is out there in the woods, singing her father\'s funeral office in his voice, and she means to kill it tonight: a ring of lamps at the edge of the clearing, and the office sung at full voice, alone, so that it comes. ' + (voice ? 'Talk to her when you are ready.' : 'She has no voice to sing it with. Kaelen knows why.'));
+        return { text: 'She writes, and her hand is shaking: <b>IT FOLLOWED US.</b> She points north, into the trees. <b>I CAN HEAR IT. IT IS SINGING DAD\'S OFFICE OUT THERE IN DAD\'S VOICE.</b> She rubs it out. <b>IT WON\'T COME WHERE PEOPLE ARE. IT WANTS ME ALONE. SO I AM GOING TO BE ALONE, AT THE EDGE OF THE TREES, INSIDE A RING OF LAMPS, AND SING IT THE WHOLE OFFICE. AND YOU GET ONE STRIKE.</b>' + (voice ? '' : ' Then, smaller: <b>I NEED MY VOICE.</b>') };
       }
-      if (!voice) return { text: 'She writes: <b>I HAVE NO VOICE. I KNOW.</b> She looks at Kaelen across the fire, and then back at you. <b>SOMETHING IS SITTING ON IT.</b>' };
-      return { text: '"North," she says. Her voice is a ruin and it is hers. "When you\'re ready."' };
+      if (f.ring_set) return { text: voice && !f.coda_by_you ? '"The lamps are set. I\'ll be past the last one, between the willows. Come when you\'re standing inside the ring, and not before. And stay inside it, whatever it says in whose voice."' : f.coda_by_you ? 'She writes: <b>THE LAMPS ARE SET. STAND PAST THE LAST ONE, BETWEEN THE WILLOWS, AND SING. DO NOT STOP. DO NOT STEP OFF IT.</b>' : 'She writes: <b>THE LAMPS ARE SET. STAND INSIDE THEM. I WILL BE PAST THE LAST ONE.</b>' };
+      if (!voice) return { text: 'She writes: <b>I HAVE NO VOICE. I KNOW.</b> She looks at Kaelen across the fire, and then back at you. <b>SOMETHING IS SITTING ON IT.</b> Then: <b>IT IS TWO VOICES. YOU KNOW THE TUNE. I TAUGHT THE WHOLE REACH THE TUNE.</b>', choices: [
+        { t: 'Sing it yourself: stand past the last lamp tonight. (Your voice drains while you hold it)', f: (g) => { f.coda_by_you = true; return ringPlan(g); } },
+        { t: 'Not yet. Her voice first.', f: () => 'She nods, once, and looks at Kaelen across the fire, and does not write anything.' },
+      ] };
+      return { text: '"And I\'m going to kill it tonight," she says, in her own ruined voice. "A ring of lamps at the edge of the trees. I\'ll be outside the last one. You\'ll be inside them, and so will Kaelen, and you get one strike, when it\'s inside the lamps and not before."', choices: [
+        { t: 'Set the ring of lamps tonight.', f: (g) => { f.coda_by_you = false; return ringPlan(g); } },
+        { t: 'Not tonight.', f: () => '"Tonight," she says. "Or next week, when I\'m asleep. I know which I\'d rather."' },
+      ] };
     },
   },
   kaelen_dw: {

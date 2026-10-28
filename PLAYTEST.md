@@ -47,12 +47,17 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 - [ ] **Voice at the Door** (Part Three, leaving the Cloister after the Aegis). It stands in the fog and will not come in: Tobin, Old Tam, then Kaelen's whole confession in his voice. Hold up a slate (IS IT TRUE?), answer it (it learns you; hounds), or say nothing. Then it sings Hymn 9 in Lyra's voice and the calmed Aegis comes to the door: stand in the doorway or step aside. Then seven hymns and Pim's whistle. Does the scene hold as text cards, or does it want the Aegis to visibly move?
 - [ ] **Lyra afterwards** asks what it said to you. Telling her is what makes Kaelen say, in Part Four, that she has known since the porch.
 
+- [ ] **The ring of lamps** (Part Four, the coda). Lyra at the fire: once she has her voice (Kaelen tells her), she plans it; the camp's lamps go up in a ring in the clearing north of the fire, and the clock goes to the second hour. Walk into the ring. She stands past the last lamp and sings the office; the Wearer comes in from the dark, circling, in Tobin's voice, then Lyra's, then yours if it learned you. Stay inside the lamps. Strike only after "I know it's a two-voice part", when it is four feet from her; too early and it goes away (set the lamps again next night). If you do not strike within about twelve seconds, Kaelen does. Is the window readable? Is the approach frightening enough, or does it need the voices spoken?
+- [ ] **Without her voice** you can be the one past the last lamp (your voice drains); then Kaelen strikes.
+- [ ] **Afterwards:** "Say something." / "No." Does the "sits down" card land? Next morning she is back at the fire.
+- [ ] **The Mausoleum choir** now waits until the Wearer is dead, then offers the Requiem (the older thing singing every office) with the tomb puzzle as before.
+
 **Still to match the book (next PRs, each its own):**
 1. ~~The talking crates move from Hetty's cellar to the Kestrel's hold.~~ Done.
 2. ~~Hob Wendle is a field-hand who roots into the deck and dies aboard; the tanner becomes someone else.~~ Done.
 3. ~~The Office cutter's hold: the 432 are the Kestrel's cores, not the cutter's vox-bottles.~~ Done.
 4. ~~The Wearer is met once, at the end; earlier meetings become a voice in the fog.~~ Done (the kill moves to the ring of lamps in 5).
-5. The coda moves to the clearing and the ring of lamps.
+5. ~~The coda moves to the clearing and the ring of lamps.~~ Done.
 6. ~~The canon days: Davin's death on Hearthday, the culvert lure on Massday, Lyra taken into the Church's protection on Dawnday.~~ Done.
 7. ~~Halder Wick's table goes back to unanswered ("I do not know who he was expecting. There is no one left to ask."), and the Cloister's ninth tape is no longer his son's.~~ Done.
 8. Sable stays in Whisper-Grove until the Kestrel comes (the biggest change: her Reach scenes in Parts One and Two go).
