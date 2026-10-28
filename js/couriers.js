@@ -241,11 +241,11 @@ const COURIERS = (function () {
     },
     {
       id: 'halder', from: 'Halder Wick', note: 'four plates', title: 'Letter from Halder Wick',
-      when: (f) => f.halder_rest && !f.halder_dead, alive: (f) => roadOpen(f) && !f.halder_dead, npc: ['halder'],
+      when: (f) => (f.halder_sat || f.halder_rest) && !f.halder_dead, alive: (f) => roadOpen(f) && !f.halder_dead, npc: ['halder'],
       text: (f) => P(
-        '...four plates. The blue one is Bryony\'s...',
+        '...four plates. The blue one goes there...',
         'To the one at the door. I have not the word for you. The one at the door.',
-        'The boys will be in directly. They are at choir. It is Thursday. Bryony has let out their cloaks.',
+        'They will be in directly. I have set it for six. It is always ready at six.',
         'There are four chairs. I have sat down in one. The water is warm.',
         f.halder_sat
           ? 'The blue plate is in front of the fourth chair, where you sat. I have not lifted it. I have not lifted it.'

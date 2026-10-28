@@ -40,6 +40,9 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
   - **Lyra in the Church's protection:** two Legionnaires inside her door. She can't speak and answers on her slate. Do the guards block the doorway? Does the slate read well in her dialogue?
 - **Recorded voices:** Hetty's polite greeting before Hearthday evening is new text, so it uses the synthesised voice.
 
+- [ ] **Halder Wick's table is unanswered again** (Part Three, the Sunken Court). He murmurs about four plates and "they will be in directly", but he names nobody. The Wick house off the Sunken Court has a bare dresser instead of Bryony's letter, and your logbook ends on Sable's line: "I do not know who he was expecting. There is no one left to ask." You can still sit in the fourth chair, or tell him they are not coming. Does the scene still land without a way to put him to rest?
+- [ ] **The Cloister's ninth name-tape** is now C. Linley (the book does not name the ninth; the name is mine). None of the choir children is a Wick.
+
 **Still to match the book (next PRs, each its own):**
 1. ~~The talking crates move from Hetty's cellar to the Kestrel's hold.~~ Done.
 2. ~~Hob Wendle is a field-hand who roots into the deck and dies aboard; the tanner becomes someone else.~~ Done.
@@ -47,7 +50,7 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 4. The Wearer is met once, at the end; earlier meetings become a voice in the fog.
 5. The coda moves to the clearing and the ring of lamps.
 6. ~~The canon days: Davin's death on Hearthday, the culvert lure on Massday, Lyra taken into the Church's protection on Dawnday.~~ Done.
-7. Halder Wick's table goes back to unanswered ("I do not know who he was expecting. There is no one left to ask."), and the Cloister's ninth tape is no longer his son's.
+7. ~~Halder Wick's table goes back to unanswered ("I do not know who he was expecting. There is no one left to ask."), and the Cloister's ninth tape is no longer his son's.~~ Done.
 8. Sable stays in Whisper-Grove until the Kestrel comes (the biggest change: her Reach scenes in Parts One and Two go).
 
 **Notes:**

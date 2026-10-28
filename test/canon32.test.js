@@ -182,13 +182,30 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(!days.d4.church && days.d5.church && days.d5.herald && days.d5.journal && days.chapel, 'the Church comes at sunrise on Dawnday, the warrant is read, and Ignatius is in the chapel');
     check(/in the rubric/.test(days.lyra[0]) && /CAN'T TALK|NOT HERE|very fortunate/.test(days.lyra.join(' ')) && days.guards === 2 && days.base, 'Lyra is in the Church\'s protection: two Legionnaires at her door, and she answers on a slate (' + JSON.stringify(days.lyra.slice(0, 2)) + ')');
 
+    // ---- Halder Wick's table is unanswered (ch. 15, l. 4435), and nobody on the Cloister pegs is a Wick
+    const halder = await page.evaluate(() => {
+      const out = {}, f = G.flags;
+      for (const k of ['halder_done', 'halder_sat', 'halder_told', 'halder_rest', 'halder_dead', 'wick_dresser']) delete f[k];
+      out.greet = JSON.stringify(NPCS.halder.greet) + NPCS.halder.quest(G).text;
+      loadMap('wickhouse'); G.state = 'play';
+      window.__ev.length = 0; const before = G.has('adaletter');
+      useDeco(G.ents.find((o) => o.use === 'wick_letter'));
+      const ev = window.__ev[0];
+      out.dresser = !!ev && /nothing in this house says/.test(ev.b) && !before && !G.has('adaletter') && G.journal.some((j) => /I do not know who he was expecting\. There is no one left to ask\./.test(j.text));
+      f.cloak_names = true; out.quest = NPCS.halder.quest(G).choices.map((c) => c.t).join(' | ');
+      return out;
+    });
+    check(!/Bryony|the boys/.test(halder.greet) && /four/.test(halder.greet), 'Halder\'s murmurs name nobody');
+    check(halder.dresser && !/tape|collar/i.test(halder.quest), 'the Wick house answers nothing, and no name-tape lays Halder to rest: "There is no one left to ask."');
+    check(!/Bryony|Tom Wick|\bWat\b/.test(['js/grove.js', 'js/couriers.js', 'js/maps.js', 'js/dreams.js'].map(src).join('\n')) && !/Tom Wick|halder_rest = true/.test(src('js/data.js')), 'nothing in the game names who Halder is expecting');
+
     // ---- French for every new line
-    const tsv = ['tools/i18n/p32-canon.tsv', 'tools/i18n/p33-crates.tsv', 'tools/i18n/p34-hob.tsv', 'tools/i18n/p35-cutter.tsv', 'tools/i18n/p36-days.tsv'].map(src).join('\n').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
+    const tsv = ['tools/i18n/p32-canon.tsv', 'tools/i18n/p33-crates.tsv', 'tools/i18n/p34-hob.tsv', 'tools/i18n/p35-cutter.tsv', 'tools/i18n/p36-days.tsv', 'tools/i18n/p37-halder.tsv'].map(src).join('\n').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
     const fr = JSON.parse(src('locales/story/fr.json'));
     const { hash, norm } = require(path.join(ROOT, 'tools/i18n/lib'));
     const pats = new Set((fr.p || []).map((p) => p[0]));
     const missing = tsv.filter(([en]) => !(fr.s[hash(norm(en))] || pats.has(norm(en))));
-    check(tsv.length >= 130 && tsv.every((r) => r.length === 2) && !missing.length, 'every changed line has its French (' + missing.length + ' missing)');
+    check(tsv.length >= 150 && tsv.every((r) => r.length === 2) && !missing.length, 'every changed line has its French (' + missing.length + ' missing)');
 
     check(errors.length === 0, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   } finally { await browser.close(); }
