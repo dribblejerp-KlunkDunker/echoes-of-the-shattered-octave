@@ -14,7 +14,7 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
-## R5a: the Hollow and the Carders' house (built 28 Oct)
+## R5a: the Hollow and the Carders' house (merged 28 Oct, PR #70)
 **How to get there:** the Hollow is through the back door of the tannery (Tannery Row, south of the Flume). The Carders' house is the blue door on the north row, between the Greenhall and the granary.
 - [ ] **The Hollow's mood.** Every door barred and humming. Does it feel like a ward people are hiding in, or just empty lanes? It may want more people sitting out.
 - [ ] **The sap-marks** (green circle, line through it) beside most doors, and two pencilled circles. Can you spot them without being told?
@@ -106,4 +106,4 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 ---
 
 ## What the automated tests cover
-Every milestone has its own test (`test/r1release27`, `r2canon27`, `r3narrow28`, `r4thin29`, `r5hollow30`), and the whole suite is run serially against main before each merge. Some tests already fail on main and are not caused by these milestones: air11, arms12, bestiary20a, creatures, folk14, folk20, height-combat, presets, pwa18, roads15, sidequests, skies14, visual, together19. They are worth a separate clean-up pass.
+Every milestone has its own test (`test/r1release27`, `r2canon27`, `r3narrow28`, `r4thin29`, `r5hollow30`), and the whole suite is run serially against main before each merge. Some tests already fail on main and are not caused by these milestones: air11, arms12, bestiary20a, creatures, folk14, folk20, height-combat, presets, pwa18, roads15, sidequests, skies14, sprites21, visual, together19. They are worth a separate clean-up pass.
