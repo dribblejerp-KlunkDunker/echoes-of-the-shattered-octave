@@ -403,10 +403,10 @@ function buildInteriors() {
     m.deco('lamp', 1.5, 2.5, { radius: 0.12, scale: 0.7, glow: 0.6 }); m.deco('lamp', 11.5, 2.5, { radius: 0.12, scale: 0.7, glow: 0.6 }); m.deco('lamp', 11.5, 10.5, { radius: 0.12, scale: 0.7, glow: 0.5 });
     m.deco('shelf', 1.4, 7.5, { radius: 0.2, scale: 0.9 });
     m.npc('townswoman', 3.5, 5.5, { facing: -Math.PI / 2 });
-    // the Church, once it has come up the Greenroot road
-    m.npc('ignatius', 6.5, 3.6, { facing: Math.PI / 2, requires: 'rite_ready' });
-    m.enemy('legionnaire', 4.5, 2.5, { passive: true, facing: Math.PI / 2, requires: 'rite_ready', name: 'Hal Ransome' });
-    m.enemy('legionnaire', 8.5, 2.5, { passive: true, facing: Math.PI / 2, requires: 'rite_ready', name: 'Edda Quill' });
+    // the Church, once it has come up the Greenroot road (Dawnday, or sooner once the coil is done: js/days35.js)
+    m.npc('ignatius', 6.5, 3.6, { facing: Math.PI / 2, requires: 'church_come' });
+    m.enemy('legionnaire', 4.5, 2.5, { passive: true, facing: Math.PI / 2, requires: 'church_come', name: 'Hal Ransome' });
+    m.enemy('legionnaire', 8.5, 2.5, { passive: true, facing: Math.PI / 2, requires: 'church_come', name: 'Edda Quill' });
   });
   maps.tannery = interior('tannery', 'The tannery', 15, 10, 't_wood', { x: 7, y: 0, sx: 7.5, sy: 2.0, sdir: Math.PI / 2, ox: 15.5, oy: 56.5, odir: -Math.PI / 2 }, (m) => {
     for (const x of [2.5, 5.5, 9.5, 12.5]) m.deco('pump', x, 7.0, { radius: 0.45, scale: 0.9, label: 'A tanning vat' });

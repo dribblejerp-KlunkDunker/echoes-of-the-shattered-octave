@@ -225,8 +225,10 @@ const STORYRUM = (() => {
   amb('a_lamps', 'any', 'Keep a hush-lamp lit on every sill. A room that goes quiet is a door left open. My mother taught me that, and the Hedge taught her.');
   amb('a_oaks', 'any', 'The oaks ring like bronze when the wind moves them. I loved that sound once. Sap and splinters, I would give a month\'s wages for one plain tree.');
   amb('a_colour', 'patron', 'Red was redder when I was a girl, and summers were warmer. Everyone over thirty says so. The young ones think we are mad.');
-  amb('a_hetty_sing', 'hetty', 'Singing is free in here and it will get you killed. That is not a rumour, that is the house rule. It has been since Davin.');
-  amb('a_hetty_beer', 'hetty', 'I have never lost a patron to a hound. Only to a song, and a song is not a thing I serve.');
+  // Hetty's rule has Davin's name on it only once he has died, on Hearthday evening (days35)
+  add('a_hetty_sing', 'ambient', 'hetty', 0, { req: ['davin_gone'], note: 'Town colour, once Davin has died' }, 'Singing is free in here and it will get you killed. That is not a rumour, that is the house rule. It has been since Davin.');
+  add('a_hetty_beer', 'ambient', 'hetty', 0, { req: ['davin_gone'], note: 'Town colour, once Davin has died' }, 'I have never lost a patron to a hound. Only to a song, and a song is not a thing I serve.');
+  add('a_hetty_rule', 'ambient', 'hetty', 0, { not: ['davin_gone'], note: 'Town colour, before Davin dies' }, 'Singing is free in here and it will get you killed. That is not a rumour, that is the house rule, and it is on the board by the door.');
 
   // ------------------------------------------------------------ choosing
   const ELIGIBLE_WHO = (who, speaker) => who === 'any' || who === speaker;

@@ -33,13 +33,20 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 - [ ] **The Office cutter** (Part Four) is now the book's courier-cutter, too light to carry anything but paper and proctors. It hunts the murmur of the 432 cores in the Kestrel's own hold. Bosun Teller's tag has his count of your hold scratched on the back. The cutter's hold has only an evidence chest of twelve seized vox-bottles. The keep-or-free choice is unchanged, but smaller. Does it still feel worth doing?
 - **Recorded voices:** Teller's barks ("Count stands at four hundred thirty-two", "Consignment Nineteen") now refer to the Kestrel's cores, so they are kept as they are.
 
+- [ ] **The canon days.** Day 0 is Nullday; Rest moves the clock.
+  - **Davin Hale dies at the Boar on Hearthday evening** (day 2, from 20:00). Before that, Hetty's house rule has no name on it, Orla asks you to send her Davin home, and nobody gossips about him. Rooke has Davin's boots for you from Massday morning (day 3).
+  - **Pim's whistle:** Lyra teaches it to him on Hearthday afternoon. At the Listening Hour on Massday (day 3, from 19:00) the Hedge whistles it from the culvert, and he goes; Lyra brings him back. Ask Pim about the Hedge before and after.
+  - **The Church comes at sunrise on Dawnday** (day 5, 06:00), or sooner if Kaelen's coil is done first. You get the herald's warrant wherever you are. Ignatius is then in the chapel.
+  - **Lyra in the Church's protection:** two Legionnaires inside her door. She can't speak and answers on her slate. Do the guards block the doorway? Does the slate read well in her dialogue?
+- **Recorded voices:** Hetty's polite greeting before Hearthday evening is new text, so it uses the synthesised voice.
+
 **Still to match the book (next PRs, each its own):**
 1. ~~The talking crates move from Hetty's cellar to the Kestrel's hold.~~ Done.
 2. ~~Hob Wendle is a field-hand who roots into the deck and dies aboard; the tanner becomes someone else.~~ Done.
 3. ~~The Office cutter's hold: the 432 are the Kestrel's cores, not the cutter's vox-bottles.~~ Done.
 4. The Wearer is met once, at the end; earlier meetings become a voice in the fog.
 5. The coda moves to the clearing and the ring of lamps.
-6. The canon days: Davin's death on Hearthday, the culvert lure on Massday, Lyra taken into the Church's protection on Dawnday.
+6. ~~The canon days: Davin's death on Hearthday, the culvert lure on Massday, Lyra taken into the Church's protection on Dawnday.~~ Done.
 7. Halder Wick's table goes back to unanswered ("I do not know who he was expecting. There is no one left to ask."), and the Cloister's ninth tape is no longer his son's.
 8. Sable stays in Whisper-Grove until the Kestrel comes (the biggest change: her Reach scenes in Parts One and Two go).
 
