@@ -127,13 +127,35 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(/I\\'m sorry about your ship, Captain/.test(groveSrc) && /Hob Wendle/.test(groveSrc), 'Part Three opens with Hob rooting into the Kestrel\'s deck, as in ch. 13');
     check(!/Hob Wendle|Wendle twins|Ned Wendle|\bHob\b(?!\\?'s Knap)/.test(['js/data.js', 'js/game.js', 'js/kestrel16.js', 'js/couriers.js', 'js/rumours.js', 'js/thin29.js'].map(src).join('\n').replace(/Hob Wendle, field-hand/g, '')), 'nothing else calls the tanner Hob, or his twins Wendle');
 
+    // ---- The Office cutter is a courier that hunts the murmur of the Kestrel's own 432 cores (ch. 21); its hold holds a few seized bottles
+    const cutter = await page.evaluate(() => {
+      const out = {}, f = G.flags;
+      f.part4 = true; loadMap('deepwoods'); G.state = 'play';
+      for (const o of G.ents) if (o.kind === 'enemy') { o.dead = true; o.hidden = true; }
+      window.__msgs.length = 0; codaBossDown({ type: 'bosun' });
+      out.bosun = G.has('holdkey') && window.__msgs.some((t) => /TELLER — HOLD\./.test(t) && /count of the Kestrel's hold, taken by ear/.test(t)) && G.journal.some((j) => /^Teller's Hold: /.test(j.text)) && LOGMAP.sketchFor("Teller's Hold: I killed Bosun Teller") === 'vox';
+      window.__ev.length = 0; codaHold();
+      const ev = window.__ev[0];
+      out.hold = !!ev && /twelve stoppered vox-bottles/.test(ev.b) && /No cargo/.test(ev.b) && !/CONSIGNMENT 19|432/.test(ev.b);
+      const n = G.ledger.length; ev.c[0].f();
+      out.kept = f.bottles_kept && G.ledger.length === n + 1 && G.ledger[n].name === 'Twelve voices in seized vox-bottles';
+      out.ending = codaEndingLines().some((l) => /^Twelve seized vox-bottles ride in the Kestrel's hold beside the four hundred and thirty-two/.test(l));
+      window.__ev.length = 0; delete f.log_read; codaLog();
+      out.log = /CARGO: none/.test(window.__ev[0].b) && /Bosun counts DK's hold at 432 by ear/.test(window.__ev[0].b);
+      out.vane = /our hold she was listening to/.test(NPCS.vane_dw ? NPCS.vane_dw.topics['The Office cutter'] : JSON.stringify(NPCS)) && /courier-cutter/.test(TOPICS['The Office cutter'].high);
+      return out;
+    });
+    const cutterSrc = ['js/coda.js', 'js/data.js', 'js/grove.js', 'js/companion-talk.js', 'js/hearth15.js'].map(src).join('\n');
+    check(cutter.bosun && cutter.hold && cutter.kept && cutter.ending && cutter.log && cutter.vane, 'the cutter hunts the Kestrel\'s own 432 by ear, and its hold holds only twelve seized vox-bottles (' + JSON.stringify(cutter) + ')');
+    check(!/four hundred and thirty-two (voices|vox-bottles)|CONSIGNMENT 19 — 432|bottling consignment|432 units/i.test(cutterSrc), 'nothing gives the cutter a hold of 432 voices any more');
+
     // ---- French for every new line
-    const tsv = ['tools/i18n/p32-canon.tsv', 'tools/i18n/p33-crates.tsv', 'tools/i18n/p34-hob.tsv'].map(src).join('\n').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
+    const tsv = ['tools/i18n/p32-canon.tsv', 'tools/i18n/p33-crates.tsv', 'tools/i18n/p34-hob.tsv', 'tools/i18n/p35-cutter.tsv'].map(src).join('\n').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
     const fr = JSON.parse(src('locales/story/fr.json'));
     const { hash, norm } = require(path.join(ROOT, 'tools/i18n/lib'));
     const pats = new Set((fr.p || []).map((p) => p[0]));
     const missing = tsv.filter(([en]) => !(fr.s[hash(norm(en))] || pats.has(norm(en))));
-    check(tsv.length >= 78 && tsv.every((r) => r.length === 2) && !missing.length, 'every changed line has its French (' + missing.length + ' missing)');
+    check(tsv.length >= 110 && tsv.every((r) => r.length === 2) && !missing.length, 'every changed line has its French (' + missing.length + ' missing)');
 
     check(errors.length === 0, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   } finally { await browser.close(); }

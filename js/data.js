@@ -897,11 +897,11 @@ Object.assign(ITEMS, {
   w_tollhammer: { name: WEAPONS.tollhammer.name, sprite: 'gear', weapon: 'tollhammer', value: 70, desc: WEAPONS.tollhammer.desc },
   liftsilk: { name: 'Lift-Silk (bolt)', sprite: 'loot', desc: 'A bolt of weaverling silk, light as breath and close as skin. It holds lift-gas better than anything in a chandler\'s.', key: true },
   valve: { name: 'Brass Relief Valve', sprite: 'gear', desc: 'An Office-pattern relief valve off the cutter\'s lift-tank, stamped OK-CATALOGUE. Tobiah will want it.', key: true },
-  holdkey: { name: 'The Cutter\'s Hold Key', sprite: 'loot', desc: 'An iron key on a bosun\'s lanyard. TELLER — HOLD — 432.', key: true },
+  holdkey: { name: 'The Cutter\'s Hold Key', sprite: 'loot', desc: 'An iron key on a bosun\'s lanyard. TELLER — HOLD, and on the back, scratched with a pin: 432.', key: true },
   register: { name: 'The Mausoleum Register', sprite: 'loot', desc: 'The sexton\'s register of interments, in a careful hand that gets less careful toward the end. The last entry is dated the night the Anchor went quiet.', key: true },
 });
 TOPICS['The Mausoleum of Chords'] = { low: 'The Synod\'s maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock.', high: 'The Mausoleum of Chords is the Synod\'s survey name for the House of the Silent Veil, where the Veil\'s scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept.' };
-TOPICS['The Office cutter'] = { low: 'The grey ship that hunted us by sound. It came down east of here with a tree through its bow.', high: 'An Office patrol cutter with a listening-horn on the bow and four hundred and thirty-two voices in its hold. Vane put the willow-crown through her. She came down in the woods to the east.' };
+TOPICS['The Office cutter'] = { low: 'The grey ship that hunted us by sound. It came down east of here with a tree through its bow.', high: 'An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east.' };
 TOPIC_KEYS.push('The Mausoleum of Chords', 'The Office cutter');
 const PLACES_DW = { 'The Kestrel (the crash)': [27.5, 42.5], 'The Mausoleum of Chords': [27.5, 10.5], 'The Office cutter': [45.5, 24.5], 'The weaver nests': [9.5, 40.5], 'The sexton\'s yard': [10.5, 16.5], 'The hush-lamp shrine': [45.5, 45.5] };
 // the House's own dead: Veil scribes, by the designations they held (the library's [PROPOSED] ink and pigment names)
@@ -925,7 +925,7 @@ const CAMP = {
     greet: { polite: 'Ten heartbeats. I counted. This time I didn\'t cut.', normal: 'She\'s on her side in the willows with a hole in her number-two tank you could post a sheep through. We are not leaving by air today.', blunt: 'Don\'t. I know. I put a tree through an Office cutter. It seemed like the thing to do.' },
     topics: {
       'The Drift-Kestrel': 'She\'ll fly. Forty-mile hops, if Tobiah can close the tank and stop the seam weeping. Further than that, she needs a whole new lift-tank, and there\'s only one coast that sells them without asking whose ship it is.',
-      'The Office cutter': 'She went down east of here with the willow-crown in her bow. Her listening-horn will still be working; those things outlive their crews. And her hold, four hundred and thirty-two voices. I heard them all the way down.',
+      'The Office cutter': 'She went down east of here with the willow-crown in her bow. Her listening-horn will still be working; those things outlive their crews. It was our hold she was listening to. Four hundred and thirty-two, murmuring. We\'re a bell. I\'ve been ringing it for two years.',
       'The Mausoleum of Chords': 'North. Big marble thing in a ring of graves. The Cantor wants to go there. I\'m not going to be the man who tells the Cantor no.',
     },
     quest: (g) => {
@@ -996,11 +996,11 @@ const CAMP = {
   sable_dw: {
     name: 'Sable, Archivist of the Veil', sprite: 'sable', portrait: 'sable', tier: 'high',
     greet: { polite: 'Entry: the Deep Woods. One wreck, twenty-six souls, a press, and me.', normal: 'Two things left in the inventory, and the third does not feel like a gap. It feels like a shelf.', blunt: 'I am counting. Wait.' },
-    topics: { 'The Office cutter': 'Four hundred and thirty-two. That is a bottling consignment, not a patrol. They were carrying voices, stoppered, to the Hall of Carriage. If you open that hold, do not unstopper them in the dark. Quiets come through an open bottle like water through a sluice.' },
+    topics: { 'The Office cutter': 'A courier-cutter cannot carry anything heavier than paper and proctors. She was not carrying; she was listening, to four hundred and thirty-two cores murmuring in our hold. If there is anything under her hatch it is evidence: the Office seizes vox-bottles off the Rust Coast boats. If you open that hold, do not unstopper them in the dark. Quiets come through an open bottle like water through a sluice.' },
     quest: (g) => {
       const f = g.flags;
-      if (f.bottles_done && !f.sable_bottles) { f.sable_bottles = true; return { text: f.bottles_kept ? 'Four hundred and thirty-two vox-bottles in the hold of a ship that cannot lift a cat. Tobiah has stopped speaking to you. I have started a list. I will need a larger book.' : 'You unstoppered them. I heard it from here: four hundred and thirty-two people saying one sentence each, and then the woods were very quiet, and then something else was. I have written down the ones I heard.' }; }
-      if (!f.sable_dw_met) { f.sable_dw_met = true; return { text: 'The Office cutter will have a bottling consignment aboard: four hundred and thirty-two, if I read the hull-chalk right as it went past. Voices. Stoppered. I filled in the forms for bottling consignments for six years. The bosun keeps the hold key round his neck; it is in the regulations, and I wrote the regulations.' }; }
+      if (f.bottles_done && !f.sable_bottles) { f.sable_bottles = true; return { text: f.bottles_kept ? 'Twelve seized vox-bottles in the hold of a ship that cannot lift a cat, beside four hundred and thirty-two cores. Tobiah has stopped speaking to you. I have started a list. I will need a larger book.' : 'You unstoppered them. I heard it from here: twelve people saying one sentence each, and then the woods were very quiet, and then something else was. I have written down the ones I heard.' }; }
+      if (!f.sable_dw_met) { f.sable_dw_met = true; return { text: 'The Office cutter was a courier: four hard little tanks and nothing in her hold but forms. She found us by the murmur of our own crates. If there is anything under her hatch, it will be seized goods held for the Hall of Carriage; I filled in those forms for six years. The bosun keeps the hold key round his neck. It is in the regulations, and I wrote the regulations.' }; }
       return null;
     },
   },
@@ -1061,7 +1061,7 @@ NPCS.mourner = {
 TOPICS['Vesper'] = { low: 'Never heard the name.', high: 'The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived.' };
 TOPIC_KEYS.push('Vesper');
 Object.assign(ITEMS, {
-  cutterlog: { name: 'The Cutter\'s Log', sprite: 'loot', desc: 'OC-742\'s log, in an Office hand. TASKED: follow DK by sound from Oakhaven. REPORT TO: the Arbiter\'s column, Tramway, ninth day. CARGO: Consignment 19, Hall of Carriage. The last line is not finished.', key: true },
+  cutterlog: { name: 'The Cutter\'s Log', sprite: 'loot', desc: 'OC-742\'s log, in an Office hand. TASKED: follow DK by sound from Oakhaven. REPORT TO: the Arbiter\'s column, Tramway, ninth day. CARGO: none; held, 12 seized vox-bottles. The bosun\'s count of DK\'s hold: 432. The last line is not finished.', key: true },
 });
 PLACES_DW['The bell-tower (in the Mausoleum)'] = [27.5, 10.5];
 (() => {
