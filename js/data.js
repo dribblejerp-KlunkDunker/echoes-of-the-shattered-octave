@@ -643,9 +643,9 @@ const PLACES_WG = {
 };
 
 // The Cloister's name-tapes, as Lyra reads them in Book One ch. 20: M. ORRY, BEN DRAY, A. SOWERBY, Halloran, two Veskes,
-// a Marchant, a Tipp, and a ninth; the tenth collar has only the holes where its tape was. The ninth is Tom Wick and the
-// tapeless tenth is his brother Wat's, whose cloak Bryony let out (her letter). The Veskes' initials are [PROPOSED].
-const CLOISTER_NAMES = ['M. Orry', 'Ben Dray', 'A. Sowerby', 'Halloran', 'E. Veske', 'R. Veske', 'Marchant', 'Tipp', 'Tom Wick'];
+// a Marchant, a Tipp, and a ninth; the tenth collar has only the holes where its tape was. The book does not name the
+// ninth; C. Linley and the Veskes' initials are [PROPOSED]. Nobody on the pegs is Halder Wick's (canon pass, 28 Oct).
+const CLOISTER_NAMES = ['M. Orry', 'Ben Dray', 'A. Sowerby', 'Halloran', 'E. Veske', 'R. Veske', 'Marchant', 'Tipp', 'C. Linley'];
 
 // how many of her three fragments Sable still holds
 function sableFragments(g) { const f = g.flags; return 3 - (f.sable_returned ? 1 : 0) - (f.bettis_awake ? 1 : 0); }
@@ -733,14 +733,14 @@ Object.assign(NPCS, {
   },
   halder: {
     name: 'Halder Wick', sprite: 'halder', portrait: 'halder', tier: 'low',
-    greet: { polite: '...four plates. The blue one is Bryony\'s...', normal: '...the boys will be in directly...', blunt: '...sit, sit, there\'s four...' },
+    greet: { polite: '...four plates. The blue one goes there...', normal: '...they will be in directly...', blunt: '...sit, sit, there\'s four...' },
     topics: {},
     quest: (g) => {
       const f = g.flags;
-      if (f.halder_done) return { text: f.halder_sat ? 'He sets the blue plate in front of you, again, very carefully, and pats it once, as though you are someone he has been expecting.' : f.halder_told ? 'He sets four plates. When he comes to the blue one he stops, the way he stopped when you told him, and holds it a moment before he puts it down. "...the boys will be in directly..."' : '...four plates... the blue one is Bryony\'s... the boys will be in directly...' };
-      return { text: 'A thin old man in a waistcoat, wet to the knee, is setting a table that stands in a foot of lit water. Four plates. He sets them, and lifts them, and sets them again. "...the blue one is Bryony\'s... the boys will be in directly... sit, sit, there\'s four..." He has been doing this for three years.', choices: [
+      if (f.halder_done) return { text: f.halder_sat ? 'He sets the blue plate in front of you, again, very carefully, and pats it once, as though you are someone he has been expecting.' : f.halder_told ? 'He sets four plates. When he comes to the blue one he stops, the way he stopped when you told him, and holds it a moment before he puts it down. "...they will be in directly..."' : '...four plates... the blue one goes there... they will be in directly...' };
+      return { text: 'A thin old man in a waistcoat, wet to the knee, is setting a table that stands in a foot of lit water. Four plates. He sets them, and lifts them, and sets them again. "...the blue one goes there... they will be in directly... sit, sit, there\'s four..." He has been doing this for three years.', choices: [
         { t: 'Sit down in the fourth chair.', f: (g) => { f.halder_done = true; f.halder_sat = true; questXp(25); journal('side', 'I sat at Halder Wick\'s table in the Sunken Court, in the fourth chair. He set the blue plate in front of me. I did not know what else to do.'); return 'You sit. The water is warm. He sets the blue plate in front of you, very carefully, and pats it once, and for the length of a breath his face is the face of a man whose family has come home. Then he lifts the plate and sets it again.'; } },
-        { t: '"They are not coming, Halder."', f: (g) => { f.halder_done = true; f.halder_told = true; questXp(10); return 'He stops with the blue plate in his hands. He looks at you, or at the place where your voice came from. "...the boys will be in directly," he says, kindly, as if you are the one who has forgotten, and sets it down.'; } },
+        { t: '"They are not coming, Halder."', f: (g) => { f.halder_done = true; f.halder_told = true; questXp(10); return 'He stops with the blue plate in his hands. He looks at you, or at the place where your voice came from. "...they will be in directly," he says, kindly, as if you are the one who has forgotten, and sets it down.'; } },
         { t: 'Leave him to his table.', f: () => 'You leave him setting it. Behind you, plate by plate, he begins again.' },
       ] };
     },
@@ -860,17 +860,6 @@ Object.assign(PLACES_WG, { 'The Sunken Stair (the Catacombs)': [8.5, 20.5], 'The
       ] };
     }
     return qq(g);
-  };
-  const hq = NPCS.halder.quest;
-  NPCS.halder.quest = (g) => {
-    const f = g.flags;
-    if (g.has('adaletter') && f.cloak_names && !f.halder_rest) {
-      return { text: '"...the boys will be in directly... sit, sit, there\'s four..." You have Bryony\'s letter, Tom\'s name-tape in red thread from the Cloister cloaks, TOM WICK, and the let-out collar with only the holes where Wat\'s tape was.', choices: [
-        { t: 'Lay Tom\'s tape and Wat\'s collar beside their plates.', f: (g) => { f.halder_rest = true; f.halder_done = true; questXp(80); for (const e of G.ents) if (e.id === 'halder') e.loop = false; journal('side', 'A Table for Four: I laid Tom Wick\'s name-tape and Wat\'s let-out collar from the Cloister cloaks beside their plates on Halder\'s table. He stopped setting it. He sat down.'); return 'You lay the red-thread tape and the empty collar beside the two small plates. Halder stops with the blue plate in his hands. He looks at them for a long time. Then he sets the blue plate down, and does not lift it again, and for the first time in three years Halder Wick sits down at his own table. "They\'re at choir," he says, quite clearly. "Thursday. Bryony\'s let out their cloaks." He folds his hands. He waits for them the way a man waits who knows they are coming.'; } },
-        { t: 'Not yet.', f: () => '...the blue one is Bryony\'s...' },
-      ] };
-    }
-    return hq(g);
   };
 })();
 

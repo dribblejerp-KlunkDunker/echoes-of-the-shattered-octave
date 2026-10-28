@@ -144,7 +144,7 @@ const DREAMS = (function () {
   // Legionnaire's given name, letters only.
   const ECHO_LIST = [
     { id: 'sh_wg', trig: 'shard', maps: ['whispergrove'], title: 'The count-in', place: 'Whisper-Grove, the Sunken Court',
-      lines: ['"...and a one, and a two. Lean left, Wat. Left."', 'Thirty voices find the key together, the way water finds its level.', 'Then one long note, underneath all of it, that is not in the hymn.'] },
+      lines: ['"...and a one, and a two. Lean left, Ben. Left."', 'Thirty voices find the key together, the way water finds its level.', 'Then one long note, underneath all of it, that is not in the hymn.'] },
     { id: 'sh_dw', trig: 'shard', maps: ['deepwoods'], title: 'Nose up', place: 'The Deep Woods',
       lines: ['"Nose up. Hold her nose up, hold her, hold her&mdash;"', '"Tank two is going."', 'A woman\'s voice, very level: "Everyone stays on the line."'] },
     { id: 'sh_oak', trig: 'shard', maps: ['oakhaven'], title: 'Three deep', place: 'Oakhaven',

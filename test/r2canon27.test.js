@@ -53,7 +53,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(!names.pool.some((n) => ['Joss Carder', 'Emory Wain', 'Wren Halloway', 'Annet Sowerby', 'Merret Salt'].includes(n)) && !names.pool.some((n) => ['Tamsin Reed', 'Corwin Aye', 'Mirren Salk'].includes(n)) && names.pool.length === 15, 'the Legionnaires\' dying names are invented people only (Tamsin Reed is Depot Three\'s alone; Corwin Aye and Mirren Salk are in the Kestrel\'s crates)');
     const voices = JSON.parse(src('voices/script.json')).lines.find((l) => l.id === 'core.death').names;
     check(names.pool.every((n) => voices.includes(n) && fs.existsSync(path.join(ROOT, 'voices/core_voice/core.death.' + n.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.mp3'))), 'every dying name has its recording');
-    check(['M. Orry', 'Ben Dray', 'A. Sowerby', 'Halloran', 'Marchant', 'Tipp', 'Tom Wick'].every((n) => names.tapes.includes(n)) && names.tapes.length === 9 && !names.tapes.includes('Elsie Fenn'), 'the Cloister\'s nine tapes are canon\'s (ch. 20), and the tenth collar is Wat\'s, let out');
+    check(['M. Orry', 'Ben Dray', 'A. Sowerby', 'Halloran', 'Marchant', 'Tipp'].every((n) => names.tapes.includes(n)) && names.tapes.length === 9 && !names.tapes.includes('Elsie Fenn') && !names.tapes.some((n) => /Wick/.test(n)), 'the Cloister\'s nine tapes are canon\'s (ch. 20), and none of them is a Wick');
     check(names.tombs.every((n) => /^Scribe /.test(n)), 'the Mausoleum\'s tombs are the Veil\'s scribes, not "Cantors of Memory"');
     const js = allJs();
     check(!/Cantors? of Memory/.test(js) && /House of the Silent Veil/.test(js), 'nothing calls it a tomb of the Cantors of Memory; it is the House of the Silent Veil');
@@ -105,7 +105,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const menus = await page.evaluate(() => ({ hetty: (NPCS.hetty.shop || []).map((s) => s.item).filter((i) => /mutton/.test(i)), gideon: (NPCS.p22_gideon.shop || []).filter((s) => /mutton/.test(s.item)).length }));
     check(menus.hetty.join() === 'p22_salt_mutton' && menus.gideon >= 4, 'Oakhaven sells only dear salt mutton; Wethercombe\'s inn has the flock\'s dishes');
     check(/If we ever reach the Organum, the Hall of Carriage/.test(src('js/upgrades.js')) && !/Port Cantabile, the Hall of Carriage/.test(src('js/upgrades.js')), 'the Hall of Carriage is at the Organum');
-    check(/To the Precentor, at the Cloister\./.test(src('js/grove.js')), 'Bryony\'s pre-416 letter does not call it the Cloister of the Lost Choir');
+    check(!/Cloister of the Lost Choir[^']*Thursday/.test(src('js/grove.js')), 'nothing in Whisper-Grove from before 416 calls it the Cloister of the Lost Choir');
     check(!/wind-reed/i.test(src('js/reedcraft.js').replace('Not the old wind-reed', '')) && /Flume-Reed/.test(src('js/reedcraft.js')), 'reedcraft cuts Flume-reeds; the wind-reeds turned in 412');
 
     check(errors.length === 0, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));

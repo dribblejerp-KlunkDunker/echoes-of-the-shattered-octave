@@ -829,7 +829,7 @@ function buildWhisperGrove() {
   [[18.5, 16.5], [30.5, 16.5], [18.5, 28.5], [30.5, 28.5]].forEach(([x, y], i) => m.deco('basin', x, y, { radius: 0.55, scale: 0.8, glow: 0.5, use: 'pool', pool: i, label: 'A reflecting pool' }));
   for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2 + Math.PI / 8; m.deco('lamp', cx + Math.cos(a) * 9.2, cy + Math.sin(a) * 9.2, { radius: 0.15, scale: 0.95, glow: 0, drylamp: true, label: 'A dry lamp. The wick has been lit a thousand times, and there is no oil.' }); }
   // Halder Wick's table for four
-  m.deco('table', 32.5, 22.5, { radius: 0.55, scale: 0.7, label: 'A table for four, set in a foot of water. The blue plate is Bryony\'s.' });
+  m.deco('table', 32.5, 22.5, { radius: 0.55, scale: 0.7, label: 'A table for four, set in a foot of water. One of the plates is blue.' });
   m.deco('chair', 31.6, 21.7, { radius: 0.2, scale: 0.55 }); m.deco('chair', 33.4, 23.3, { radius: 0.2, scale: 0.55 }); m.deco('chair', 31.6, 23.3, { radius: 0.2, scale: 0.55 });
   // the Hollows walking their loops
   const spots = [[20.5, 19.0], [28.5, 19.5], [21.0, 26.0], [27.5, 26.0], [16.5, 22.5], [26.5, 15.5], [22.0, 29.5], [29.5, 13.5], [14.5, 27.5], [34.5, 27.5], [17.5, 12.5], [12.5, 17.0]];
@@ -844,7 +844,7 @@ function buildWhisperGrove() {
   m.npc('sable_wg', 26.2, 42.0, { facing: Math.PI, requires: 'sable_aboard' });
   m.npc('sable_wg', cx, cy + 1.7, { facing: Math.PI / 2, until: 'sable_aboard' });
   m.deco('lamp', cx + 1.0, cy + 2.2, { radius: 0.12, scale: 0.7, glow: 0.5 });
-  m.npc('halder', 33.6, 21.6, { facing: Math.PI, loop: true, until: 'halder_dead', lines: ['...the blue one is Bryony\'s...', '...four plates... four...'] });
+  m.npc('halder', 33.6, 21.6, { facing: Math.PI, loop: true, until: 'halder_dead', lines: ['...the blue one goes there...', '...four plates... four...'] });
   m.npc('lamplighter', 20.5, 21.5, { loop: true, lines: ['...the lamps are late tonight...'] });
   m.npc('cat', 27.5, 31.5, { wander: true, radius: 0.2, solid: false });
   // willows, never on the paths
@@ -996,12 +996,12 @@ function buildWickHouse() {
   m.border('t_greymarble');
   for (let y = 1; y <= 6; y++) for (let x = 1; x <= 8; x++) m.setFloor(x, y, 1);
   m.set(0, 4, DOOR({ portal: { map: 'whispergrove', x: 37.4, y: 15.5, dir: Math.PI }, label: 'Out to the Sunken Court' }));
-  m.deco('bed', 7.5, 1.6, { radius: 0.4, scale: 0.55, label: 'A small bed. Two pillows. The boys shared.' });
+  m.deco('bed', 7.5, 1.6, { radius: 0.4, scale: 0.55, label: 'A small bed. Two pillows.' });
   m.deco('bed', 7.5, 6.3, { radius: 0.4, scale: 0.6, label: 'A larger bed, made, the cover turned down on one side only.' });
   m.deco('hearth', 4.5, 1.2, { radius: 0.3, scale: 0.8, glow: 0.3, label: 'A cold hearth. The kettle is on it, full of lit water.' });
   m.deco('shelf', 1.4, 1.6, { radius: 0.2, scale: 0.9 });
-  m.deco('chair', 4.0, 5.6, { radius: 0.2, scale: 0.5, label: 'A child\'s chair with WAT carved into the back, crookedly' });
-  m.deco('sign', 3.0, 6.6, { radius: 0.2, scale: 0.6, use: 'wick_letter', label: 'A letter on the dresser, in a woman\'s hand' });
+  m.deco('chair', 4.0, 5.6, { radius: 0.2, scale: 0.5, label: 'A child\'s chair, its back mended twice by a good joiner' });
+  m.deco('sign', 3.0, 6.6, { radius: 0.2, scale: 0.6, use: 'wick_letter', label: 'The dresser, bare' });
   m.deco('lamp', 8.6, 4.0, { radius: 0.12, scale: 0.6, glow: 0.4 });
   return m;
 }

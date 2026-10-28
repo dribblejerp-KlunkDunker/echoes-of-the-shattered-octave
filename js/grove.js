@@ -156,7 +156,7 @@ function wgUse1(e) {
   if (e.use === 'cloaks') {
     if (!f.cloak_names) {
       f.cloak_names = true; CLOISTER_NAMES.forEach(n => G.ledger.push({ name: n, where: 'the Cloister of the Lost Choir', day: G.day })); questXp(40);
-      showEvent('Ten small cloaks', 'You take the cloaks down off the pegs one at a time. Undyed grey wool, a child\'s size, and in the collars name-tapes stitched in red thread by somebody\'s mother: <i>' + CLOISTER_NAMES.join(', ') + '.</i> Nine names. The tenth collar has only the holes where its tape was; that cloak has been let out at the seams. Ten cloaks, eleven pegs: the red one, on the peg nearest the alcove, has no tape. There is one shoe on the floor, and you leave it where it is.', [{ t: 'Write the nine names in your ledger.', f: () => { msg('Nine names, in the ledger. The empty collar and the eleventh peg, you leave.', 'good', 4000); journal('side', 'I took the name-tapes from the choir cloaks in the Cloister of the Lost Choir and wrote them in my ledger: nine names, and a tenth collar with only the holes where its tape had been. Eleven pegs; the red cloak has no name in it.'); } }]);
+      showEvent('Ten small cloaks', 'You take the cloaks down off the pegs one at a time. Undyed grey wool, a child\'s size, and in the collars name-tapes stitched in red thread by somebody\'s mother: <i>' + CLOISTER_NAMES.join(', ') + '.</i> Nine names. The tenth collar has only the holes where its tape was. Ten cloaks, eleven pegs: the red one, on the peg nearest the alcove, has no tape. There is one shoe on the floor, and you leave it where it is.', [{ t: 'Write the nine names in your ledger.', f: () => { msg('Nine names, in the ledger. The empty collar and the eleventh peg, you leave.', 'good', 4000); journal('side', 'I took the name-tapes from the choir cloaks in the Cloister of the Lost Choir and wrote them in my ledger: nine names, and a tenth collar with only the holes where its tape had been. Eleven pegs; the red cloak has no name in it.'); } }]);
     } else msg('Eleven pegs, ten empty collars, one shoe on the floor.', '', 4000);
     return true;
   }
@@ -301,7 +301,7 @@ function enemyHitFx(e, d) {
 }
 const WEAVER_VOICES = [
   (p) => `"${p.name.split(' ')[0]}... ${p.name.split(' ')[0]}, come in now, the water's warm..." — in your own mother's voice.`,
-  () => '"...the blue one is Bryony\'s... the boys will be in directly..." — in Halder Wick\'s voice.',
+  () => '"...the blue one goes there... they will be in directly..." — in Halder Wick\'s voice.',
   () => 'It sings the calling-song, beautifully, in Lyra Ashgrove\'s voice. The voice she does not have any more.',
   () => '"I am a list, not a cure," it says, in Sable\'s voice, and laughs in eleven children\'s.',
   () => '"Hymn nine, page forty... all rise... all rise..." — in two hundred voices, all slightly out of time.',
@@ -355,19 +355,17 @@ function wgUse(e) {
     return true;
   }
   if (e.use === 'wick_letter') {
-    if (!G.has('adaletter') && !f.adaletter_read) {
-      f.adaletter_read = true; G.give('adaletter');
-      journal('side', 'A Table for Four: in the Wick house, a letter from Bryony Wick to the Cloister: her sons Tom and Wat were to sing on the Thursday. Halder is setting their plates. Their cloaks may still be on the Cloister pegs.' + (f.cloak_names ? ' I already have their name-tapes.' : ''));
-      showEvent('Bryony Wick\'s letter', '<i>To the Precentor, at the Cloister. Tom and Wat are to sing Thursday; I have let out their cloaks, which they have grown out of again, the pair of them. Please mind Wat on the risers, he leans. Halder will fetch them after. Supper is at seven and he will set it at six, he always does. — Bryony Wick.</i><br><br>It was never sent. It is dated the day the Anchor went quiet.', [{ t: 'Fold it into your pack.', f: null }]);
-    } else msg('An empty dresser. You have Bryony\'s letter.', '', 3000);
+    // Book One ch. 15: "He set a table for four every evening for three years. I do not know who he was expecting.
+    // There is no one left to ask." The house keeps the question; nothing in it answers.
+    if (!f.wick_dresser) {
+      f.wick_dresser = true;
+      journal('side', 'A Table for Four: Halder Wick\'s house has four chairs, two beds and nothing with a name on it. I do not know who he was expecting. There is no one left to ask.');
+      showEvent('The dresser', 'A joiner\'s dresser, well made, and bare. No letters, no slates, no names chalked by the door, no Thursday marked on anything. Four chairs, two beds, one of them small. Whoever the other three plates are for, nothing in this house says, and the only man who knows is setting the table.', [{ t: 'Close the drawers.', f: null }]);
+    } else msg('A bare dresser. Nothing in this house has a name on it.', '', 3000);
     return true;
   }
   if (e.use === 'wick_table') {
-    if (f.halder_dead && G.has('adaletter') && f.cloak_names && !f.halder_rest) {
-      f.halder_rest = true; questXp(50);
-      journal('side', 'A Table for Four: Halder Wick is dead, but I laid Tom and Wat\'s name-tapes beside their plates at his table anyway, and the blue plate in front of Bryony\'s chair.');
-      msg('You lay the two red-thread tapes beside the two small plates, and set the blue one in front of Bryony\'s chair, the way he would have. The table is set for four. Nobody comes. That was never the point.', 'voice', 8000);
-    } else msg(f.halder_rest ? 'A table for four, set, in a foot of lit water. Two name-tapes beside the small plates.' : 'A table for four, set in a foot of water. The blue plate is Bryony\'s.', '', 4000);
+    msg(f.halder_dead ? 'A table for four, set in a foot of lit water. Nobody sits at it.' : 'A table for four, set in a foot of water. One of the plates is blue.', '', 4000);
     return true;
   }
   return wgUse1(e);
@@ -390,7 +388,7 @@ function bookOneEnd() {
   if (f.round_sable) L.push('Pressman Mallow\'s round is in the Bound Ledger now, eight names, copied out in Sable\'s straight hand.');
   else if (f.round_struck) L.push('Pressman Mallow\'s round was struck off the register in Quist\'s hand. Eight Hollows in the west quarter are on no list at all.');
   else if (f.mallow_dead) L.push('Pressman Mallow is dead in the water of the west quarter. Three ticks in his round-book are still blank.');
-  if (f.halder_rest) L.push(f.halder_dead ? 'Halder Wick\'s table is set for four, with two name-tapes beside the small plates. Nobody sits at it.' : 'Halder Wick sits at his own table now. He is waiting for the boys to come home from choir, the way a man waits who knows they are coming.');
+  if (f.halder_rest) L.push(f.halder_dead ? 'Halder Wick\'s table is set for four in the Sunken Court. Nobody sits at it.' : 'Halder Wick sits at his own table now, facing the door, waiting for whoever he set it for.');
   const box = $('#ending-text'), ps = box.querySelectorAll('p'), anchor = ps[ps.length - 3];
   L.push(...codaEndingLines(), ...wildsEndingLines(), ...(typeof NARROW28 !== 'undefined' ? NARROW28.endingLines() : []));   // R3: one line from your standing in the Hedge
   if (!L.length && !f.part4) return;
