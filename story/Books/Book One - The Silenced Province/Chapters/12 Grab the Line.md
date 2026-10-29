@@ -225,7 +225,7 @@ He shut his mouth and went aft and stood at the wheel and set a course north-eas
 
 There was six feet of rope hanging from the winch drum, cut clean, swinging.
 
-Nobody coiled it. It hung there for four days.
+Nobody coiled it. It hung there for six days.
 
 ---
 ---

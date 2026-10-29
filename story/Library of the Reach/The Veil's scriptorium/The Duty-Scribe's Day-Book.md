@@ -8,7 +8,7 @@ The day-book of the scriptorium, kept by the duty-scribe of the week, who lights
 
 First day. Lit the east stove at the second bell. Damp in the flue; it smoked until the third. Fourteen at the desks. Names entered: forty-one, all from the Grove, none disputed. Old Gall's hand is going; I have moved him nearer the window. The pool is high.
 
-Second day. Stove lit at the second bell, drew well. Sixteen at the desks. Names entered: thirty-eight. A carter from the Office brought a letter with a seal I did not know and waited in the yard for an answer. The Prior read it in the kitchen and put it in the stove, which I note only because it was my stove.
+Second day. Stove lit at the second bell, drew well. Fourteen at the desks, and two copying at the stove. Names entered: thirty-eight. A carter from the Office brought a letter with a seal I did not know and waited in the yard for an answer. The Prior read it in the kitchen and put it in the stove, which I note only because it was my stove.
 
 Third day. Stove lit. Twelve at the desks; four sent down to the stacks to listen, as the roster says, and they came up quiet, as they always do. Names entered: thirty. The third desk from the east, north side, finished the Fenmark register a day early and asked for more. I gave her the Mossbank strays. She is the quickest hand we have had since I was young, and she knows it, and she is right to.
 

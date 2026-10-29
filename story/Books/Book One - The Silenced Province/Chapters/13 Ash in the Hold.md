@@ -5,7 +5,7 @@
 >
 > — K. Vance, *On the Calibration of Resonant Bores*
 
-*Aboard the* Drift-Kestrel*, north-east over the Reach. Hearthday night into Rootday.*
+*Aboard the* Drift-Kestrel*, north-east over the Reach. Hearthday night into Massday.*
 
 ---
 
@@ -169,7 +169,7 @@ The boy had his charts under his arm. He had been up all night; they all had; bu
 
 Kaelen turned around.
 
-"I was sitting on the rail calling the pitch to you," the boy said. "You asked me for a spanner. And you took the plate off the drum and you put something in the phase port, and forty seconds later the lock threw." He was not shouting. His voice was shaking very slightly, in a way he was working hard to control, and that was worse. "Marten and Old Coyle and the Tanner twins died of slippage, sir. In the spring. I helped carry them up. And you put slippage into that machine on purpose, with two hundred men in the quarry and a Cantor ten feet from the collar."
+"I was sitting on the rail calling the pitch to you," the boy said. "You asked me for a spanner. And you took the plate off the drum and you put something in the phase port, and forty seconds later the lock threw." He was not shouting. His voice was shaking very slightly, in a way he was working hard to control, and that was worse. "Marten and Old Coyle and the Tanner twins died of slippage, sir. In the summer. I helped carry them up. And you put slippage into that machine on purpose, with two hundred men in the quarry and a Cantor ten feet from the collar."
 
 "Yes," said Kaelen.
 

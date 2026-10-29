@@ -46,7 +46,7 @@ She stood with one hand still on the rung and looked down the length of the hold
 
 She went along the stacks reading the stencils. Then she knelt at the third crate, the open one, and looked at the tags on their strings without touching a single sphere, and read them out under her breath the way a woman reads a shelf of preserves in her own larder.
 
-"Forty-one thousand and four. Ivo Renn, forty-one, cooper, of Ashlane; his wife is at the bottom of this row, they were taken within the hour. Forty-one thousand and nine, Ketter Dell, nineteen, fuller's apprentice, who said he was twenty. Forty-one thousand and twelve. Forty-one thousand and thirteen — those are the Aldritch brothers, they came in holding hands and the clerk had to write the second one's details twice because the ink ran." Her voice did not change at all. "Forty thousand nine hundred and ninety-one. That is Mirren Salk, twenty-six, wheelwright's widow. She was carrying her husband's coat and they let her keep it as far as the door."
+"Forty thousand, one hundred and one, in the next stack: Ivo Renn, forty-one, cooper, of Ashlane; his wife was taken within the hour, and the Office kept her. Forty-one thousand and nine, Ketter Dell, nineteen, fuller's apprentice, who said he was twenty. Forty-one thousand and twelve. Forty-one thousand and thirteen — those are the Aldritch brothers, they came in holding hands and the clerk had to write the second one's details twice because the ink ran." Her voice did not change at all. "Forty thousand nine hundred and ninety-one. That is Mirren Salk, twenty-six, wheelwright's widow. She was carrying her husband's coat and they let her keep it as far as the door."
 
 "You've got the book open," said Vane. His voice came out wrong. "You're reading it off the book."
 
@@ -70,7 +70,7 @@ He had known the question was coming since the mast-ladder. He had known it, if 
 
 The murmur went on around them in the straw.
 
-"Eleven consignments between Greenleaf of 417 and Ashfall of this year," she said. "Twelve crates, then sixteen, then twenty-four and twenty-four and twenty-four and twenty-four; the carriage office increased your load after the fourth run because you had not complained about the noise. There is a note to that effect in the file. It says: *carrier OK-114 is reliable and does not ask questions.*"
+"Eleven consignments between Greenleaf of 417 and Leaffall of this year," she said. "Twelve crates, then sixteen, then twenty-four and twenty-four and twenty-four and twenty-four; the carriage office increased your load after the fourth run because you had not complained about the noise. There is a note to that effect in the file. It says: *carrier OK-114 is reliable and does not ask questions.*"
 
 Vane put his hand out and found a crate and sat down on it.
 
@@ -96,7 +96,7 @@ The Bound Ledger came round in front of her and opened itself, and she did not l
 
 Vane did not move.
 
-"Entry forty thousand, six hundred and ten. Mirren Salk. Twenty-six. Wheelwright's widow, of the Bell Yard, four months a widow when the drills came. Taken on the ninth day. She was carrying her husband's coat over her arm and she asked whether she might keep it, and the clerk said that she might, and it was taken off her at the door of the pressing room and put in a bin with eleven hundred other coats." Sable's voice stayed perfectly flat. "She is in the stack behind you. Fourth consignment."
+"Entry forty thousand, nine hundred and ninety-one. Mirren Salk. Twenty-six. Wheelwright's widow, of the Bell Yard, four months a widow when the drills came. Taken on the ninth day. She was carrying her husband's coat over her arm and she asked whether she might keep it, and the clerk said that she might, and it was taken off her at the door of the pressing room and put in a bin with eleven hundred other coats." Sable's voice stayed perfectly flat. "She is in the stack behind you. Fourth consignment."
 
 The lantern hissed.
 

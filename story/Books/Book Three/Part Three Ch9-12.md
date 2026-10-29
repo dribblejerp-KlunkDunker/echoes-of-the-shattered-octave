@@ -1046,7 +1046,7 @@ It shrank. It was smaller than a seated woman now. Smaller than a dog. It strugg
 
 It did not die.
 
-Lyra knelt on the edge of the canvas with her whole weight in the icy water and understood, with a cold slow certainty, that it was not enough. On the Rust Coast they had broken out a seacock and let the January sea into a hold, the whole harbour. Here they had a water-butt. Sixty gallons. And the water was already spreading out across the deck, thinning, running off between the planks and over the side into the Rift. Losing its cold. And under the canvas the thing had stopped shrinking.
+Lyra knelt on the edge of the canvas with her whole weight in the icy water and understood, with a cold slow certainty, that it was not enough. On the Rust Coast they had broken out a seacock and let the Ashfall sea into a hold, the whole harbour. Here they had a water-butt. Sixty gallons. And the water was already spreading out across the deck, thinning, running off between the planks and over the side into the Rift. Losing its cold. And under the canvas the thing had stopped shrinking.
 
 It began to grow.
 

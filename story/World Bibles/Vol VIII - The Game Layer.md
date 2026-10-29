@@ -2388,6 +2388,75 @@ Between the books and the bible, the manuscript, the rulings or the game. Most s
 - The hard winter's seventeen dead match MS ch.2's arithmetic.
 - No book describes the Hush directly.
 
+### Found in the books check (E)
+
+The books check of 29 October 2026 read all 65 library books, the Moor serial and every drafted chapter of Books One to Four against the bibles, the rulings and the canon pass. Its full report, with every passage quoted, is kept in `story/Game Layer/Review - Books check 29 Oct 2026.md`. No library book touches any canon-pass fact, and every Vol III (b) erratum was already in Books Two to Four.
+
+#### Fixed on 29 October 2026
+
+These followed a ruling, a bible rule, or the book against itself where only one reading fits. The text before each fix is kept here.
+
+Library books (`tools/library/books/`, rebuilt into the game):
+
+- **L1 · The Bellwether Book.** "417, back-end. Shut tonight." → "417, high summer. Shut tonight." The Hedge was planted in summer 417 (Book One; Library ruling 3).
+- **L2 · Songs of the Long Mole.** "The trench opened under it in '13" → "In the Screaming Year the shelf gave way under it in a single afternoon" Book Two ch. 4: Wendmere slid into the sea in the Screaming Year.
+- **L3 · The Plaza and the Canopy.** "not leaked in fourteen years" → "not leaked in eleven years" Book One ch. 16: nineteen years in 419, so eleven in 411.
+- **L4 · The Narrow Larder.** "The sheaf is up on the Hedge-gate as I write this" → "The last stand is still uncut in the north field as I write this" In 419 the last stand is never cut; the sheaf goes up only when it is.
+- **L5 · The Narrow Larder.** "the autumn the Hedge went in" → "the autumn after the Hedge went in" The Hedge went in in summer 417.
+- **L6 · The Fires on the Ground.** "Essa Brindle, who went into the Flume at the sluice-gate" → "Avis Brindle, who went into the Flume at the sluice-gate" The canon pass removed the version of Tam's wife Essa who went in at the sluice; the game still calls Tam's wife Essa.
+- **L7 · The Duty-Scribe's Day-Book.** "Sixteen at the desks." → "Fourteen at the desks, and two copying at the stove." The scriptorium had fourteen desks (Book One; What Is Written).
+- **L8 · Letters from the Gatehouse.** "in the first year of the works, for the bore," → "in the first year of the bore, for the bore's teeth," Ruling 2: the bells went in 417, "the first year of the quarry"; the works began in 415.
+- **L9 · The Undertow.** "You planted it yourselves in a night," → "You planted it yourselves, by hand, in a few days and nights," The Wool Wall: the planting took days.
+- **L10 · What Is Written.** "I have had it fifty-one years and I do not miss the other." → "… I do not miss the other. When I lay the pen down it will go back in the cupboard for the next novice, as it came to me." Three scribes are called Umber; the line makes it plain the designation passes on.
+
+Novels (Book One fixes are made in the full manuscript and in its chapter file):
+
+- **E1 · Book One, l.5630.** "He has been running since the Valley of Velocity went, which was five years ago," → "He has been running since a Velocity flare caught him, which was five years ago," Vol III (b): the Valley broke in 398; the five years are Jory's own (Series Bible, The Twelve).
+- **E2 · Book One, l.5068.** "with her husband's coat over her arm on a Tuesday in 416," → "with her husband's coat over her arm on an ordinary morning in 416," Series Bible Part I: no weekdays; the octave-week.
+- **E2 · Book One, l.6391.** "almost always small, and almost always a Tuesday." → "almost always small, and almost always a Hearthday." Series Bible Part I: no weekdays.
+- **E2 · Book Two, Part One Ch1-3, l.155.** "it was the January water of the Rust Coast" → "it was the Ashfall water of the Rust Coast" Series Bible Part I and Vol VII: no real-world months; the chapter is dated 4 Ashfall.
+- **E2 · Book Three, Part Three Ch9-12, l.1049.** "let the January sea into a hold" → "let the Ashfall sea into a hold" Series Bible Part I and Vol VII: no real-world months.
+- **N2 · Book One, l.3810.** "Nobody coiled it. It hung there for four days." → "Nobody coiled it. It hung there for six days." Ch. 21 is six days after the Rite (Hearthday to Nullday).
+- **N2 · Book One, l.5652.** "which nobody had coiled in five days." → "which nobody had coiled in six days." As above.
+- **N3 · Book One, l.3822.** "Hearthday night into Rootday." → "Hearthday night into Massday." Rootday comes before Hearthday in the octave-week; the chapter covers one night and the next day.
+- **N4 · Book One, l.6361.** "faint, four days and a hundred miles behind them" → "faint, a week and a hundred miles behind them" Ch. 24 is the Rootday seven days after the Rite.
+- **N4 · Book One, l.6365.** "He had been pushing the thought away for four days," → "He had been pushing the thought away for a week," As above.
+- **N5 · Book One, l.6174.** "Four at the Malting, after a Steam Golem and a boiler's worth of working noise." → "Four at the casing, after a Steam Golem and a boiler's worth of working noise." The Golems and the boiler were at the casing (ch. 10).
+- **N6 · Book One, l.4510.** "Forty-one thousand and four. Ivo Renn, forty-one, cooper, of Ashlane; his wife is at the bottom of this row, they were taken within the hour." → "Forty thousand, one hundred and one, in the next stack: Ivo Renn, forty-one, cooper, of Ashlane; his wife was taken within the hour, and the Office kept her." Ch. 14 gives Ivo entry 40,101; ch. 18 has Bettis kept in the Malting and Ivo "in the third stack". The owner's ruling of 28 Oct: Bettis is Ivo's wife, as in the book.
+- **N7 · Book One, l.4560.** "Entry forty thousand, six hundred and ten. Mirren Salk. Twenty-six." → "Entry forty thousand, nine hundred and ninety-one. Mirren Salk. Twenty-six." Mirren Salk had two entry numbers; 40,991 is the one read off her tag.
+- **N8 · Book One, l.2700.** "He lifted another: WG-41,005. Another: WG-41,006." → "He lifted another: WG-41,006. Another: WG-41,007." WG-41,005 is the Aegis's core (ch. 17; Book Two ch. 14; the Series Bible), so it cannot also be in the crate.
+- **N9 · Book One, l.3986.** "died of slippage, sir. In the spring." → "died of slippage, sir. In the summer." Ch. 1 has Lyra sing the Tanner twins down "at the end of summer".
+- **N13 · Book One, l.5358.** "for seven years listening to a man who talked to an empty room" → "for two years listening to a man who talked to an empty room" Chs 23 and 24 and the Series Bible: two years.
+- **N14 · Book One, l.5862.** "I can read the first letter of the surname and it is either a W or an M and I have never been able to decide, and the given name is one syllable and might be anything," → "I can read the first letter of the given name and it is either a W or an M and I have never been able to decide, and it is one syllable and might be anything, and the surname is under the blot," He is Wren Halloway (Book Two ch. 14); ch. 17 has the surname as the illegible part.
+- **N15 · Book One, l.6198.** "at the Organum, the fourth day of Leaffall, 419." → "at the Organum, the seventeenth day of Leaffall, 419." The writ names Sable (who joins on Day 17) and the registry that escaped on Day 16; Leaffall n = Day n.
+- **N15 · Book One, l.4199.** "Greenleaf 417 and Ashfall 419" → "Greenleaf 417 and Leaffall 419" Written on 16 Leaffall; Ashfall comes after Book One (Book Two opens on 4 Ashfall).
+- **N15 · Book One, l.4534.** "Greenleaf of 417 and Ashfall of this year" → "Greenleaf of 417 and Leaffall of this year" As above.
+- **N19 · Book Two, Part One Ch4-7, l.901.** "the woman had screamed for six days afterward" → "the woman had screamed until nightfall" Book One ch. 22: Bettis "had stopped screaming an hour ago" the same night.
+- **N20 · Book Two, Part Two Ch8-14, l.164.** "the last wind-reed out of the orchards of the Reach. Her father had cut it in the spring of 412," → "one of the last wind-reeds out of the orchards of the Reach. Her father had cut it in the spring of 412," Book One ch. 1: Tobin's seven pipes on the pegs are "the last reeds in the Reach that had not turned".
+- **N20 · Book Two, Part Two Ch8-14, l.164.** "never once played it, because it was the last one," → "never once played it, because it was the last he ever cut," As above.
+- **N21 · Book Four, Part One Ch1-4, l.1719.** "And Ada Pellow, who was seventy, and a widow," → "And Ada Pellow, who was fifty-one, and a widow," Book One ch. 11: "She was fifty-one years old."
+- **N23 · Book Four, Part One Ch1-4, l.2187.** "He had been Governor of Oakhaven for twenty years," → "He had been Governor of Oakhaven for thirty years," Book One ch. 12: "he had been a Governor for thirty years".
+- **N24 · Book Four, Part One Ch1-4, l.118.** "He was nineteen, and he had been nineteen the whole time Kaelen had known him" → "He was twenty-four, and he had been twenty-four the whole time Kaelen had known him" Book One ch. 13: Tobiah is twenty-four.
+- **N24 · Book Four, Part One Ch1-4, l.534.** "Tobiah Marsh, nineteen, with a gaff-wound" → "Tobiah Marsh, twenty-four, with a gaff-wound" As above.
+
+Series Bible, v1.4: Sable is forty-one (Book One ch. 22: "I am forty-one years old with a broken arm and two things left in my head"); her voice line and the Aegis's bonds lose the last of the old "girl, entry 41,112"; the cut rope hangs six days; a new list, *Book One details on record*; the "Chord" naming question goes to Open Decisions. The replaced lines are in its appendix. (Part II's cast entries above still quote the bible as it stood before v1.4.)
+
+#### Still open, for the owner
+
+- **N1 · Book One, the rope's last load.** Ch. 12 drops Lissa and Tobiah from the last load, yet both are aboard in ch. 13. The check suggests moving them into "the last four before the last" and giving the last load two unnamed carters. It rewrites a scene, and Brainstorm §5 #22 is unruled.
+- **N10 · Book One, the Grafters' round.** "the second Rootday of every month" (l.328), yet the round in ch. 3 falls on the first Rootday. Either make it "every second Rootday" or move the round. The game has them every Rootday, so the game follows whatever is chosen.
+- **N11 · Book One, Sable's arithmetic.** 74,611 entries at twenty a night is 3,731 nights: on Vol VII's 360-day year, ten years and 131 days, not "two hundred and twenty days", and the first pass ends about 426, not "fourteen years" on. The Series Bible repeats the book's figure.
+- **N12 · Book One, the consignments.** Twelve, sixteen, then twenty-four crates a run, Vane's "twelve crates to a load, eleven loads", and the total of 1,342 cores at thirty-six to a crate cannot all be true; ch. 13 also has "thirteen hundred-odd crates' worth" and Book Four "thirteen hundred and forty-two of them" (crates). The author must choose: keep 1,342 and shrink the early runs, or keep the crate counts and raise the total. The game (`js/grove.js`) follows the bible's "thirteen hundred crates".
+- **N16 · Book One, spelling.** Book One spells American ("color", "harbor", "Harbor-Queen"); Books Two to Four spell British ("Harbour-Queen"). Standardise if wanted.
+- **N17 · Book Two, the Madder baby's age.** "nineteen days old" on 4 Ashfall, yet she was born on Book One's Day 1, at least twenty-eight days before. Also in Book Two ch. 4 ("twenty-three days old" on 8 Ashfall), Book Four ("a nineteen-day-old daughter") and the Series Bible. The exact figure depends on the Book One calendar mapping, which is not ruled.
+- **N18 · Book Two, when Lyra was taken.** "since Dawnday of the last week of Harvestmonth"; Book One has it on Day 6, which on the working mapping is 11 Harvestmonth. Fix with the calendar ruling.
+- **E3 / N22 · Book Four, the Hedge's season and Tobin.** Book Four ch. 4 has the Hedge planted by the Synod's engineers in autumn 417 with Tobin taken that autumn; Book One and rulings 1 and 3 have spring for Tobin and summer for the Hedge, planted by the town. Deferred by the owner ("Book Four's 'autumn' is left for that book"). Suggested wording is in the report.
+- **N25 · Book Four, Oakhaven's square.** Book Four puts the Moot-hall and the Root-shaft in the square; Book One has the Greenhall and the well-house there and the shaft at the quarry. The author must choose where the Grove's ring stands.
+- **Time drift (low).** Books Two and Three say "six weeks", "three weeks" and "two months" for spans of sixteen to thirty days on Vol VII's eight-day weeks. Suggested: "a month", "two weeks", "for a month", "two months ago".
+- **Naming hazards.** Three Hespers (the prologue singer, Annet's mother, the Cay's orphan-house keeper); Annet's father Tam Sowerby beside Old Tam; Hob Tennery beside Hob Wendle; the Cloister tape "Halloran" beside Halloway; four Orrins (the sexton Orrin Pale, Orrin Hale, the Boy-King Orrin); three Umbers (see L10).
+- **L11 · when the eels ran in 419.** *The Year of Nights*, *Rudd's Almanac* and the game's Eel-Run on 12 Harvestmonth do not quite agree. No canon conflict.
+- **Game against book, spotted in passing.** Davin's boots: Book One has Hetty bring them to Lyra; `js/days35.js` has Rooke hold them from Massday. Bettis's age: the game says thirty-eight; she is forty-one when restored. "Thirteen hundred crates" in `js/grove.js` (see N12).
+
 ## Part VI — Open questions for the owner
 
 Questions the phase documents asked, or the compilations raised, that nobody has answered yet.

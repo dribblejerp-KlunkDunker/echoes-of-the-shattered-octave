@@ -115,7 +115,7 @@ He knew that. He watched her go down the stair. He did not go after her. Not bec
 
 The *Equity* went up off her stake on the plain at the third hour with Tobiah at the tanks and Kaelen at the wheel. Neither of them was a pilot. They flew her north-east toward the Titan's Spine the way two engineers fly anything: by the book, carefully, arguing about the trim.
 
-Tobiah did most of the arguing. He was nineteen, and he had been nineteen the whole time Kaelen had known him, a long-faced boy with ink on his fingers and a gaff-wound under his ribs that still opened when he laughed. He had learned the Vance Sequence at fourteen and asked its author to sign his copy in a quarry office in Oakhaven three months ago. He had taken Pennick's tanks over the Valley with his side bleeding, and had not let go of the valve all night. He talked to the tanks the way Pennick had. *There's my girl. Don't rush her.* And he talked to Kaelen, all the way across the plain, about lift and ballast and the shocking state of the *Equity*'s number two cell, as if nothing had happened.
+Tobiah did most of the arguing. He was twenty-four, and he had been twenty-four the whole time Kaelen had known him, a long-faced boy with ink on his fingers and a gaff-wound under his ribs that still opened when he laughed. He had learned the Vance Sequence at fourteen and asked its author to sign his copy in a quarry office in Oakhaven three months ago. He had taken Pennick's tanks over the Valley with his side bleeding, and had not let go of the valve all night. He talked to the tanks the way Pennick had. *There's my girl. Don't rush her.* And he talked to Kaelen, all the way across the plain, about lift and ballast and the shocking state of the *Equity*'s number two cell, as if nothing had happened.
 
 Kaelen knew he was doing it on purpose. He had watched Two-Eleven do it at the parapet for Vane. Laying a blanket of talk over a thing so that the thing would not have to be looked at.
 
@@ -531,7 +531,7 @@ He opened his mouth to answer.
 
 Something hit him from behind.
 
-Not hard. A boy's weight. Tobiah Marsh, nineteen, with a gaff-wound under his ribs that opened when he laughed. He came across the pearl-dark floor of the Keystone chamber and threw both arms round Kaelen from behind, round his chest, round the bare blazing glass of his arm, and *held on*.
+Not hard. A boy's weight. Tobiah Marsh, twenty-four, with a gaff-wound under his ribs that opened when he laughed. He came across the pearl-dark floor of the Keystone chamber and threw both arms round Kaelen from behind, round his chest, round the bare blazing glass of his arm, and *held on*.
 
 Kaelen felt the glass burn him. He heard Tobiah gasp. He heard the wound under Tobiah's ribs tear; he felt it, through his back, a wet warmth spreading. Tobiah did not let go. He dug his heels into the floor and pulled, backward, toward the doorway, with all the weight of a long-faced boy who had never been heavy in his life.
 
@@ -1716,7 +1716,7 @@ They would have to go round, to the river gate. She knew the way.
 
 She did not go round. She stood in the road in front of the North Gate in the dusk with the snow falling on her, and looked at it.
 
-This was where Ada Pellow had gone in. On the day of the Greening, with the town going under the oaks behind them and sixty people in the square whom Lyra had walked there with a corridor of song. The Hedge had spoken. Out of the thorn. In the voices of Oakhaven's dead, every one it had ever swallowed. *Come through. Come home. There's a way through, love, come through.* And Ada Pellow, who was seventy, and a widow, and had buried her husband with a stone on his tongue in 418, had heard a voice in the thorn and answered it.
+This was where Ada Pellow had gone in. On the day of the Greening, with the town going under the oaks behind them and sixty people in the square whom Lyra had walked there with a corridor of song. The Hedge had spoken. Out of the thorn. In the voices of Oakhaven's dead, every one it had ever swallowed. *Come through. Come home. There's a way through, love, come through.* And Ada Pellow, who was fifty-one, and a widow, and had buried her husband with a stone on his tongue in 418, had heard a voice in the thorn and answered it.
 
 It had been Tobin Ashgrove's voice. Lyra's father's.
 
@@ -2184,7 +2184,7 @@ She held up the slate. He read it. His eyes went along the lines, slowly, and st
 
 *25 NO.*
 
-She watched his face in the bark. She did not know what it was going to do. She thought he might be angry. He had been Governor of Oakhaven for twenty years, and he had made the ring, and he had told her what they would want.
+She watched his face in the bark. She did not know what it was going to do. She thought he might be angry. He had been Governor of Oakhaven for thirty years, and he had made the ring, and he had told her what they would want.
 
 The eyes filled again.
 

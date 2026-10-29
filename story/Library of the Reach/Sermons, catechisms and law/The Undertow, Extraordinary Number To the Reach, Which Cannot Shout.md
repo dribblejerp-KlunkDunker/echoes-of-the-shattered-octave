@@ -14,7 +14,7 @@ You were hungry after the Screaming Year, and a company came up your road with f
 
 They took your bells. Every bell in the Reach, for 'the public works'. Ask what a bell is for at the bottom of a bore. We asked an engineer. He drank what we bought him and said 'teeth', and would say no more, and was gone before the second glass.
 
-They gave you a Hedge instead. Thorn and wool, three men deep, to swallow your sounds. You planted it yourselves in a night, and we hear it was the bravest piece of work done in that province in a hundred years. Now ask which side of it the works are on, and which side of it you are.
+They gave you a Hedge instead. Thorn and wool, three men deep, to swallow your sounds. You planted it yourselves, by hand, in a few days and nights, and we hear it was the bravest piece of work done in that province in a hundred years. Now ask which side of it the works are on, and which side of it you are.
 
 THE BELL-HELMS. There is a garrison of Carillon Legionnaires at your quarry gate. Stand close to one, if you can bear to, and listen. Every soldier who has served beside them has heard it: somebody is murmuring inside the helm. We do not say whose voice. We do not know. We say only that crates come up this coast marked 'components', very carefully packed, and go inland by air; and that a man who loaded them for two seasons at Driftwood Cay told us in the Lantern Yard that they talk in their sleep. Then he stopped coming to the Lantern Yard. His wife does not know where he is either.
 

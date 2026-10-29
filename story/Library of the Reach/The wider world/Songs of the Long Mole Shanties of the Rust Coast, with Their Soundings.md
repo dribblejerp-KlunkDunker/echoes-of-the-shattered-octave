@@ -80,7 +80,7 @@ A note for landsmen. A quiet goes to the light. That is why no Coast man takes a
 
 V. WENDMERE RINGS THREE
 
-This is the newest song in the book and the one I sing myself. Wendmere was a fishing town south of the Cay. The trench opened under it in '13 and it went down whole, tower and all, and since that first winter its bell has rung under the water, out past the Cay, three strokes and a silence, three strokes and a silence, every night of the year. Nobody has rowed out to see what rings it. The opinion of the Coast is that a bell which rings the drowned to sleep is doing a service, and that you do not go poking at a service. The Lantern Yard learned to sleep by it within the month. The wet-nurses made this to its count, and there is hardly a child in the lower town who has gone to sleep without it.
+This is the newest song in the book and the one I sing myself. Wendmere was a fishing town south of the Cay. In the Screaming Year the shelf gave way under it in a single afternoon and it went down whole, tower and all, and since that first winter its bell has rung under the water, out past the Cay, three strokes and a silence, three strokes and a silence, every night of the year. Nobody has rowed out to see what rings it. The opinion of the Coast is that a bell which rings the drowned to sleep is doing a service, and that you do not go poking at a service. The Lantern Yard learned to sleep by it within the month. The wet-nurses made this to its count, and there is hardly a child in the lower town who has gone to sleep without it.
 
 Hush now, hush, and listen to me,
 out past the Cay, Wendmere rings three.

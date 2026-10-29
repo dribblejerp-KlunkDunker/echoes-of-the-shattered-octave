@@ -1,6 +1,6 @@
 # ECHOES OF THE SHATTERED OCTAVE
 
-### Series Bible · v1.3
+### Series Bible · v1.4
 
 *Canon for the dark-fantasy trilogy and its RPG adaptation. Built from the Aethelgard master reference, the narrative bible, and the asset dossiers — reconciled, expanded, and taken somewhere darker.*
 
@@ -328,17 +328,17 @@ In 414 a tonal trench opened under the *Wave-Cutter*'s tow, and he held the boar
 
 #### Sable — Archivist of the Veil · 741 Hz
 
-*Age unknown; she has forgotten. Mystic. Bearer of the Bound Ledger.*
+*Forty-one, by her own count in Book One (ch. 22), though she has forgotten most of what the years held. Mystic. Bearer of the Bound Ledger.*
 
 The last Veil-sworn scribe, conscripted into the Catalogue. She recorded the Unnaming of Whisper-Grove, seventy-four thousand names, then stole the Bound Ledger and walked into the mist. The Ledger holds names only at a price: for every name she keeps safe, she gives up an equal weight of herself. She has three **identity fragments** left: her mother's hands braiding her hair, the smell of the Veil's scriptorium, and her own true name. "Sable" is only a Veil designation.
 
-**Wound:** she believed recording was witnessing, and that witnessing was innocence. **The lie:** to remember is to atone. **Wants** to give every name back. **Needs** to act instead of record, and to become someone rather than the keeper of everyone else. **Secrets:** she did not merely sign the catalogue; she designed the harvest schedule ("I made it efficient. That is what I was good at."). And she has read Kaelen's calibration records. **Voice:** precise, speaks in entries. *"Entry forty-one thousand, one hundred and twelve. Wren Halloway. Ten years old. Alto. Taken for parts."*
+**Wound:** she believed recording was witnessing, and that witnessing was innocence. **The lie:** to remember is to atone. **Wants** to give every name back. **Needs** to act instead of record, and to become someone rather than the keeper of everyone else. **Secrets:** she did not merely sign the catalogue; she designed the harvest schedule ("I made it efficient. That is what I was good at."). And she has read Kaelen's calibration records. **Voice:** precise, speaks in entries. *"Entry forty-one thousand and five. Wren Halloway. Ten years old. Alto. Taken for parts."*
 
 ### The Twelve
 
 **Ignatius Crane — Flambeau of the Synod · 285 Hz · Mage.** The Inquisitor who swung the censer through three hundred sunrises of the Rite and, when the light turned, ordered the choir burned. He still half-believes he was right. The Bleach took his left hand, which is now translucent white beneath a silk glove, and he has spent seven years praying over the one voice that shouted in the Foundry: Kaelen's. Book One's hunter, Book Two's reluctant convert. His fire is fed by faith, and as his faith dies his flame gutters; he has to learn whether a man who burns without believing is only a murderer. *Bonds:* Solenne, the woman he burned; Tull, whose brother his Flambeaux burned.
 
-**The Aegis Sentinel — Forged Vanguard · 396 Hz · Tank.** A Catalogue automaton with acoustic logic gates around a glass core, directive DEFEND THE SINGERS, found guarding the empty risers of the Cloister of the Lost Choir. Its budding consciousness is a child waking up inside iron: Wren Halloway, a boy of ten, an alto whose voice had not broken, core serial WG-41,005, Unnamed in 416; Sable's shaking hand made his surname illegible in the Ledger (ruling, Book Two Ch14: the drafted Book One text — a boy, WG-41,005 — supersedes the earlier "girl, entry 41,112"). Until Book Two Ch14 it has no voice; after Sable returns his name, he hums through the iron in an alto. Its chimes are fragments of the Cloister's hymn. *Bonds:* Sable, who unnamed her; Lyra; Tull.
+**The Aegis Sentinel — Forged Vanguard · 396 Hz · Tank.** A Catalogue automaton with acoustic logic gates around a glass core, directive DEFEND THE SINGERS, found guarding the empty risers of the Cloister of the Lost Choir. Its budding consciousness is a child waking up inside iron: Wren Halloway, a boy of ten, an alto whose voice had not broken, core serial WG-41,005, Unnamed in 416; Sable's shaking hand made his surname illegible in the Ledger (ruling, Book Two Ch14: the drafted Book One text — a boy, WG-41,005 — supersedes the earlier "girl, entry 41,112"). Until Book Two Ch14 it has no voice; after Sable returns his name, he hums through the iron in an alto. Its chimes are fragments of the Cloister's hymn. *Bonds:* Sable, who unnamed him; Lyra; Tull.
 
 **The Tide-Weaver — Temporal Chronomancer · 417 Hz · Support.** Ilias Marren, exiled Loom-Warden, who remembers every discarded thread of time and pauses mid-sentence to listen to conversations he has already had. He is the Chord's traitor. In every thread where the Chord reaches the Organum intact, the Hush takes them into eternal digestion; in the one thread where someone sells them out at the right moment, some of them live. He is that someone. He narrates the Echo interludes. *"I have heard you say that four hundred and eleven times. It is still kind."*
 
@@ -584,7 +584,7 @@ Kaelen's tideline against eight weeks, Vaelen's cure offer standing open, and Tu
 
 **11 · The Greening** *(Lyra)* — **Drafted.** Four hundred feet of service ladder with the shaft filling with leaves beneath them, and eight men left at the pumps. Oakhaven goes under in an hour: the oaks doubling and ringing, the churchyard heaving, the baker's wife saying *I punched it down*, a carter rooting to the cobbles. Lyra sings a corridor open at full voice and walks sixty people to the square. Rooke could not cross Orla's floor; Lyra can, and sings the harvest home — all the lines, even the fourth — while the tree closes over her. At the sealed North Gate the Hedge speaks to the town in the voices of its dead, offering a way through, and Ada Pellow answers Tobin Ashgrove's voice and climbs into the thorn. Then the Chapel falls, the Pure Note stops for the first time in five days, and the *Kestrel* comes down out of the green sky.
 
-**12 · Grab the Line** *(Vane)* — **Drafted.** The mooring mast is taken by a tree; Mags cuts them free. Vane turns toward the town instead of away. Children first, four to a line; a hound comes down the rope and a man's hands stay on the knot after the rest of him is gone. The ship settles as the oaks rise. On the last load, Aldric Vance is at the bottom, because he has been loading his town onto that rope for twenty minutes. The line snags in a crown, the winch drum starts out of the deck-beams, and Vane counts to ten. Aldric looks up and waves them on. "Do it," says Kaelen. The *Kestrel* leaps a hundred and fifty feet, and three hundred and eighty people stand in the mud and wave the ship away, and six feet of cut rope hangs from the drum for four days.
+**12 · Grab the Line** *(Vane)* — **Drafted.** The mooring mast is taken by a tree; Mags cuts them free. Vane turns toward the town instead of away. Children first, four to a line; a hound comes down the rope and a man's hands stay on the knot after the rest of him is gone. The ship settles as the oaks rise. On the last load, Aldric Vance is at the bottom, because he has been loading his town onto that rope for twenty minutes. The line snags in a crown, the winch drum starts out of the deck-beams, and Vane counts to ten. Aldric looks up and waves them on. "Do it," says Kaelen. The *Kestrel* leaps a hundred and fifty feet, and three hundred and eighty people stand in the mud and wave the ship away, and six feet of cut rope hangs from the drum for six days.
 
 **13 · Ash in the Hold** *(Kaelen)* — **Drafted.** Twenty-one survivors and no room. Lyra has no voice at all and writes *YOU SAID DO IT* on a slate. Through the glass Kaelen can still hear the Root singing with a hole in it — still holding — and files the thought. Vane gives his confession — thirteen hundred crates in two years — and sets the course for Whisper-Grove and the scribe. Then Hob Wendle's feet root into the foredeck, the growth goes into the beams, and Bettany hums the tending note for a Cantor who cannot; they put him over the side with five feet of oak beam. Tobiah Marsh has seen the coil go into the port, and hands over his charts and the only copy of Revision Seven with the margin on it. At dawn, from four miles back, Lyra's whole voice sings the calling-song after the ship. That night Kaelen starts a list of names on a deck-beam, and understands that everyone who ever kept one before him was the Catalogue.
 
@@ -615,6 +615,28 @@ Kaelen's tideline against eight weeks, Vaelen's cure offer standing open, and Tu
 **24 · Heartglass** *(Kaelen)* — **Drafted.** Four and a half fingers: past the collarbone, three inches from the throat, six weeks at the current rate. A herald walks nine miles alone to read the writ aloud, because the form requires it: all four declared Dissonant, the Church's claim on the Cantor stayed rather than refused, the Dread Arbiter nine days out on the Tramway — and grace offered once. The glass drawn, the Cantor amnestied, the Oakhaven survivors given transit, and the cores returned for *proper disposition*. Sable reads the terms correctly: it is not a sentence, it is a succession. Lyra answers the herald herself — *tell him the Cantor says we heard the question too* — and then tells Kaelen he does not get to pay, he gets to help, and takes the glass hand rather than the easy one. The ship needs a whole lift-tank, and there is one coast where you can get one. Kaelen adds the eight pump-men's names to the beam, and under them writes: *Not yet.*
 
 **Echo I · The Thread Where She Answered** *(the Tide-Weaver)* — **Drafted.** Ilias Marren introduces himself from outside the story and shows the thread where Lyra went through the Hedge on the forty-second night — the margin is one night's sleep. What comes back up Cooper's Row in her boots is very good at being her: it has two years of her nights and all of her kindness, because kindness is a sound. It takes Kaelen's whole plan at her own table, holds the note for four hours and nineteen minutes, and the Root is relieved. The second Fracture; the Reach gone in eleven days; Vaelen weeping with relief in a locked room. His closing argument is the point of the whole interlude: the world is never saved by the people who are fresh. Then the seed — in every thread where he says nothing at the Organum gate, the Hush takes all of them; in one thread somebody sells them, and some of them live.
+
+---
+
+### Book One details on record
+
+Added in v1.4 from the manuscript, because the game builds on them. Where the manuscript disagrees with itself, the open question is in World Bible Vol VIII, Part V (E).
+
+- **Book One's calendar.** The chapter datelines count Day *n* as Leaffall *n* (Greenleaf is also used). Day 1, a Nullday, is the day Ruth Madder's daughter is born; Davin Hale dies at the Boar on Hearthday evening, Day 3; the Wearer lures Pim at the Listening Hour on Massday, Day 4; Tam dies on Massday; the Church takes Lyra on Dawnday, Day 6; the Rite falls on Hearthday, Day 11. Read against World Bible Vol VII (Book Two opens on 4 Ashfall, eleven days' flying after Book One's eighteen days), Day 1 falls on 6 Harvestmonth 419 and the Rite on 16 Harvestmonth. That mapping is the game's working assumption and is not yet ruled.
+- **The order of 417.** The bells go "in the first year of the quarry": a peal of six, the town-hall clock-bell and the reed-row wind-bells, for bore-teeth. Tobin Ashgrove is taken in the spring at the Pellow farm, out past where the Hedge runs now, and his lyre is found by the stile. The Hedge is planted that summer ("two summers ago"): the Consortium pays, the town plants it, and the wool comes by the cartload.
+- **Ada Pellow** is fifty-one, the mother of the child Tobin sang back from the Hush; she has left milk on Lyra's step ever since.
+- **Tobin's seven wind-reed pipes** hang on pegs in Lyra's house, the last reeds in the Reach that had not turned.
+- **Old Tam** is eighty-one, a basket-maker for sixty years and a night-hummer "since the first autumn of the Hedge". He sits at the Weavers' Cross and, lately, at the Flume crossing by the tannery culvert. His wife died of the pox the year the old king went into the glass, forty years ago, and called him *Tammy*. The book does not name her; the game calls her Essa.
+- **The Tanner twins** are of a family named Tanner. They died of slippage with Marten and Old Coyle when a bore-head shattered, and Lyra sang them down side by side at the end of summer.
+- **Hob Wendle** is a field-hand of forty in the Hollow, rooting through his feet since summer. Rooke takes three toes on Rootday under the mute-drops. On the *Kestrel* he roots into the foredeck; Bettany gives him the long drops while Lyra holds his hand, and he goes over the side with five feet of oak beam.
+- **The talking crates** are twelve crates of thirty-six in the *Kestrel*'s hold, tagged WG-41,004 and up. Pim talks to Annet Sowerby through the side of one.
+- **The eight pump-men** whose names Vaelen hands Kaelen: Edders, Ruhl, Caine, Ott, Sennet, Vey, Marrow and Hale B., Whisper-Grove stock consigned in the ninth month of 417. Twelve worked the pumps; four were saved.
+- **Whisper-Grove.** Sable never leaves the city before the *Kestrel* comes: "the moment I get on a ship I am a woman who left". Her room is the Moot-house muniment store, and she first saw a proctor from its gallery. Halder Wick is fifty-eight, entry 12,207: "I do not know who he was expecting. There is no one left to ask." Corwin Aye's barrel in the Moot-house cellar "has not leaked in nineteen years". Form 9 asks three things: *Name. Age. Trade.* The Veil scriptorium had fourteen desks.
+- **Ivo and Bettis Renn.** Ivo is entry 40,101, cooper, of Ashlane, forty-one; his core was requisitioned and is in the *Kestrel*'s third stack. Bettis is entry 40,102, his wife: thirty-eight when she was taken in 416 with his coat over her arm, forty-one when Sable reverses the press on her. She had carried baskets in the Malting yard for three years, was awake the whole time, and begs to be put back.
+- **The Cloister's name-tapes:** Orry, Dray, Sowerby, Halloran, two Veskes, a Marchant, a Tipp, a ninth not given, and a tenth tape gone. Ten cloaks, eleven pegs; the eleventh is under the Aegis's hand.
+- **The Aegis** is Wren Halloway, a boy of ten, alto, son of Jem and Isobel Halloway, core WG-41,005.
+- **The Office cutter** is a forty-foot courier-cutter that "could not carry anything heavier than paper and proctors". Its listening horn hunts the *Kestrel* by her own cargo: "Your cargo is not silent."
+- **The coda's ring of lamps.** Lyra walks past the last lamp at the second hour; the strike comes "when it's inside the ring of lamps", with Kaelen and the Aegis hitting the Wearer from both sides.
 
 ---
 
@@ -674,6 +696,8 @@ Kaelen's tideline against eight weeks, Vaelen's cure offer standing open, and Tu
 
 **The graphic ceiling.** Current drafting targets disturbing, never gratuitous: body horror on the page; cruelty to children implied rather than shown.
 
+**"The Chord" twice.** The Phase 21 author rulings call the night sky's band of star-dust "the Chord", while Part VII uses the name for the protagonists' faction. The novels use neither in the sky. Keep both, or rename one.
+
 ---
 
 ## Version history
@@ -682,10 +706,18 @@ Kaelen's tideline against eight weeks, Vaelen's cure offer standing open, and Tu
 - **v1.1**: the copy rebuilt into this repository on 19–22 Oct 2026 from the project documents.
 - **v1.2** (17 Oct 2026): the five-book structure; Books Two and Three complete; Book Four Part One; the Book Three and Book Four dials and chapter maps; the vox-bottle truth; running counts. It lived only in the published Series Bible page until 29 Oct 2026, when it was brought into this repository.
 - **v1.3** (29 Oct 2026): v1.2 unchanged, plus the pointers to World Bible Vol VIII (the game layer) in the Roadmap and under *Game layer: Concordance*, this history, and the appendix below.
+- **v1.4** (29 Oct 2026): brought into line with the manuscripts after the books check. Sable's age (forty-one, Book One ch. 22); the last traces of the old Aegis entry (her voice line and the Aegis's bonds); the cut rope's six days; a new list, *Book One details on record*, under Part XI; and the "Chord" naming question under Open Decisions. The replaced lines are in the appendix.
 
 ## Appendix: superseded text, kept for the record
 
 These lines were replaced by later rulings. They are not canon. They are kept so that nothing written is lost.
+
+From v1.3 (replaced in v1.4 to match the manuscripts):
+
+- Sable: "*Age unknown; she has forgotten. Mystic. Bearer of the Bound Ledger.*"
+- Sable's voice: *"Entry forty-one thousand, one hundred and twelve. Wren Halloway. Ten years old. Alto. Taken for parts."*
+- The Aegis's bonds: "Sable, who unnamed her; Lyra; Tull."
+- Chapter 12: "and six feet of cut rope hangs from the drum for four days."
 
 From v1.1 (this repository, before 29 Oct 2026):
 

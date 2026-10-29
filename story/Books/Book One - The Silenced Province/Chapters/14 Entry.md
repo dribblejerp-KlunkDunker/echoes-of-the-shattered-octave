@@ -125,7 +125,7 @@ Then she went up to the room she had made for herself in the Moot-house muniment
 
 She wrote:
 
-*Entry. Memoryday, the sixteenth of Leaffall, 419. At dusk, a skyship over the Weeping Plaza, flying no colors, riding light, down by the head, carrying an estimated twenty to thirty persons on deck. Registry OK-114, twice painted over. Carriage attested by this hand on eleven occasions between Greenleaf 417 and Ashfall 419: total consignment one thousand three hundred and forty-two cores.*
+*Entry. Memoryday, the sixteenth of Leaffall, 419. At dusk, a skyship over the Weeping Plaza, flying no colors, riding light, down by the head, carrying an estimated twenty to thirty persons on deck. Registry OK-114, twice painted over. Carriage attested by this hand on eleven occasions between Greenleaf 417 and Leaffall 419: total consignment one thousand three hundred and forty-two cores.*
 
 *The hold is occupied.*
 

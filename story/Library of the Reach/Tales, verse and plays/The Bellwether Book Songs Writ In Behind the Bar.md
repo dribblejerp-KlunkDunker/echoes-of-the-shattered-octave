@@ -66,7 +66,7 @@ My nephew Gideon has the house from Reed-Hanging. My chest will not do the stair
 
 416, high summer. Nobody went up to scour the Ram. Next year, we said. G. T.
 
-417, back-end. Shut tonight. The wool has gone down to Oakhaven for the Hedge, and the flocks with it, and we are all to go in behind it: Tamar and all the Farrants, the fold, me. The road is empty. I sang the Drove-Road on the doorstep, low, the way Uncle said, to nobody.
+417, high summer. Shut tonight. The wool has gone down to Oakhaven for the Hedge, and the flocks with it, and we are all to go in behind it: Tamar and all the Farrants, the fold, me. The road is empty. I sang the Drove-Road on the doorstep, low, the way Uncle said, to nobody.
 
 I am leaving the book on the bar for whoever opens the door next. If it is me, I will know the songs. If it is not, learn the low one first.
 

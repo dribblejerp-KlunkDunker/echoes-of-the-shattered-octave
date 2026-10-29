@@ -75,7 +75,7 @@ Then: "*Lyra.*"
 
 And that one was Kaelen.
 
-Not an approximation. Not the way it had taken Davin Hale's voice in the tavern, a half-beat behind and a quarter-tone flat. It had had five days with him. It had stood in the clearing outside a charcoal-burner's hut for seven years listening to a man who talked to an empty room because nobody heard, and it had learned him the way it had learned her: completely, from the inside, with the rasp at the bottom and the Reach in the vowels and the particular flat way he said a thing he had decided not to feel anything about.
+Not an approximation. Not the way it had taken Davin Hale's voice in the tavern, a half-beat behind and a quarter-tone flat. It had had five days with him. It had stood in the clearing outside a charcoal-burner's hut for two years listening to a man who talked to an empty room because nobody heard, and it had learned him the way it had learned her: completely, from the inside, with the rasp at the bottom and the Reach in the vowels and the particular flat way he said a thing he had decided not to feel anything about.
 
 "*Lyra, I need to tell you something and I'm not going to be able to say it to your face.*"
 

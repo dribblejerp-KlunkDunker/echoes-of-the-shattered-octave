@@ -152,7 +152,7 @@ She took Teague by the arm and put the point of the boat-hook in his hands again
 
 He broke out the seacock with the butt of the hook.
 
-The sea came into the hold of the *Bitter Nancy* in a column as thick as a man's leg, and it was the January water of the Rust Coast at six in the morning, which is cold enough to stop a heart, and none of them could hear a drop of it.
+The sea came into the hold of the *Bitter Nancy* in a column as thick as a man's leg, and it was the Ashfall water of the Rust Coast at six in the morning, which is cold enough to stop a heart, and none of them could hear a drop of it.
 
 The quiet came off Colm.
 

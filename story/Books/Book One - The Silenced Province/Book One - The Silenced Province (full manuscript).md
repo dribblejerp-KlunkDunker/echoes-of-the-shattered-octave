@@ -2697,7 +2697,7 @@ He lifted one out.
 
 It was cold, and lighter than it looked, and there was a fog inside it that moved a little when he turned it, like breath on a window. The tag was written in a fine clerk's hand, the kind of hand they teach at a Catalogue desk: **WG-41,004.**
 
-He put it down. He lifted another: **WG-41,005.** Another: **WG-41,006.**
+He put it down. He lifted another: **WG-41,006.** Another: **WG-41,007.**
 
 WG. Whisper-Grove.
 
@@ -3807,7 +3807,7 @@ He shut his mouth and went aft and stood at the wheel and set a course north-eas
 
 There was six feet of rope hanging from the winch drum, cut clean, swinging.
 
-Nobody coiled it. It hung there for four days.
+Nobody coiled it. It hung there for six days.
 
 ---
 ---
@@ -3819,7 +3819,7 @@ Nobody coiled it. It hung there for four days.
 >
 > — K. Vance, *On the Calibration of Resonant Bores*
 
-*Aboard the* Drift-Kestrel*, north-east over the Reach. Hearthday night into Rootday.*
+*Aboard the* Drift-Kestrel*, north-east over the Reach. Hearthday night into Massday.*
 
 ---
 
@@ -3983,7 +3983,7 @@ The boy had his charts under his arm. He had been up all night; they all had; bu
 
 Kaelen turned around.
 
-"I was sitting on the rail calling the pitch to you," the boy said. "You asked me for a spanner. And you took the plate off the drum and you put something in the phase port, and forty seconds later the lock threw." He was not shouting. His voice was shaking very slightly, in a way he was working hard to control, and that was worse. "Marten and Old Coyle and the Tanner twins died of slippage, sir. In the spring. I helped carry them up. And you put slippage into that machine on purpose, with two hundred men in the quarry and a Cantor ten feet from the collar."
+"I was sitting on the rail calling the pitch to you," the boy said. "You asked me for a spanner. And you took the plate off the drum and you put something in the phase port, and forty seconds later the lock threw." He was not shouting. His voice was shaking very slightly, in a way he was working hard to control, and that was worse. "Marten and Old Coyle and the Tanner twins died of slippage, sir. In the summer. I helped carry them up. And you put slippage into that machine on purpose, with two hundred men in the quarry and a Cantor ten feet from the collar."
 
 "Yes," said Kaelen.
 
@@ -4196,7 +4196,7 @@ Then she went up to the room she had made for herself in the Moot-house muniment
 
 She wrote:
 
-*Entry. Memoryday, the sixteenth of Leaffall, 419. At dusk, a skyship over the Weeping Plaza, flying no colors, riding light, down by the head, carrying an estimated twenty to thirty persons on deck. Registry OK-114, twice painted over. Carriage attested by this hand on eleven occasions between Greenleaf 417 and Ashfall 419: total consignment one thousand three hundred and forty-two cores.*
+*Entry. Memoryday, the sixteenth of Leaffall, 419. At dusk, a skyship over the Weeping Plaza, flying no colors, riding light, down by the head, carrying an estimated twenty to thirty persons on deck. Registry OK-114, twice painted over. Carriage attested by this hand on eleven occasions between Greenleaf 417 and Leaffall 419: total consignment one thousand three hundred and forty-two cores.*
 
 *The hold is occupied.*
 
@@ -4507,7 +4507,7 @@ She stood with one hand still on the rung and looked down the length of the hold
 
 She went along the stacks reading the stencils. Then she knelt at the third crate, the open one, and looked at the tags on their strings without touching a single sphere, and read them out under her breath the way a woman reads a shelf of preserves in her own larder.
 
-"Forty-one thousand and four. Ivo Renn, forty-one, cooper, of Ashlane; his wife is at the bottom of this row, they were taken within the hour. Forty-one thousand and nine, Ketter Dell, nineteen, fuller's apprentice, who said he was twenty. Forty-one thousand and twelve. Forty-one thousand and thirteen — those are the Aldritch brothers, they came in holding hands and the clerk had to write the second one's details twice because the ink ran." Her voice did not change at all. "Forty thousand nine hundred and ninety-one. That is Mirren Salk, twenty-six, wheelwright's widow. She was carrying her husband's coat and they let her keep it as far as the door."
+"Forty thousand, one hundred and one, in the next stack: Ivo Renn, forty-one, cooper, of Ashlane; his wife was taken within the hour, and the Office kept her. Forty-one thousand and nine, Ketter Dell, nineteen, fuller's apprentice, who said he was twenty. Forty-one thousand and twelve. Forty-one thousand and thirteen — those are the Aldritch brothers, they came in holding hands and the clerk had to write the second one's details twice because the ink ran." Her voice did not change at all. "Forty thousand nine hundred and ninety-one. That is Mirren Salk, twenty-six, wheelwright's widow. She was carrying her husband's coat and they let her keep it as far as the door."
 
 "You've got the book open," said Vane. His voice came out wrong. "You're reading it off the book."
 
@@ -4531,7 +4531,7 @@ He had known the question was coming since the mast-ladder. He had known it, if 
 
 The murmur went on around them in the straw.
 
-"Eleven consignments between Greenleaf of 417 and Ashfall of this year," she said. "Twelve crates, then sixteen, then twenty-four and twenty-four and twenty-four and twenty-four; the carriage office increased your load after the fourth run because you had not complained about the noise. There is a note to that effect in the file. It says: *carrier OK-114 is reliable and does not ask questions.*"
+"Eleven consignments between Greenleaf of 417 and Leaffall of this year," she said. "Twelve crates, then sixteen, then twenty-four and twenty-four and twenty-four and twenty-four; the carriage office increased your load after the fourth run because you had not complained about the noise. There is a note to that effect in the file. It says: *carrier OK-114 is reliable and does not ask questions.*"
 
 Vane put his hand out and found a crate and sat down on it.
 
@@ -4557,7 +4557,7 @@ The Bound Ledger came round in front of her and opened itself, and she did not l
 
 Vane did not move.
 
-"Entry forty thousand, six hundred and ten. Mirren Salk. Twenty-six. Wheelwright's widow, of the Bell Yard, four months a widow when the drills came. Taken on the ninth day. She was carrying her husband's coat over her arm and she asked whether she might keep it, and the clerk said that she might, and it was taken off her at the door of the pressing room and put in a bin with eleven hundred other coats." Sable's voice stayed perfectly flat. "She is in the stack behind you. Fourth consignment."
+"Entry forty thousand, nine hundred and ninety-one. Mirren Salk. Twenty-six. Wheelwright's widow, of the Bell Yard, four months a widow when the drills came. Taken on the ninth day. She was carrying her husband's coat over her arm and she asked whether she might keep it, and the clerk said that she might, and it was taken off her at the door of the pressing room and put in a bin with eleven hundred other coats." Sable's voice stayed perfectly flat. "She is in the stack behind you. Fourth consignment."
 
 The lantern hissed.
 
@@ -5065,7 +5065,7 @@ Nobody had thought about the screaming.
 
 Sable had thought about the moment of recognition; she had allowed herself, walking up the Cloister road in the dark, perhaps four seconds of imagining a woman's eyes coming back on and a hand going up to a mouth. She had not thought past it, because nobody in the history of the Office had ever had to.
 
-Bettis Renn came back into her own head at the age of forty-one, having been six feet from her own front door with her husband's coat over her arm on a Tuesday in 416, and being now in a whitewashed room with a drain in the floor and a fork on her chest and three years missing — and not missing at all, because the whole of it was in there: the queue, and the benches, and the kind clerk who had told her what would be asked, and the eight seconds, and then every single day since. The basket-carrying. The rain. The standing.
+Bettis Renn came back into her own head at the age of forty-one, having been six feet from her own front door with her husband's coat over her arm on an ordinary morning in 416, and being now in a whitewashed room with a drain in the floor and a fork on her chest and three years missing — and not missing at all, because the whole of it was in there: the queue, and the benches, and the kind clerk who had told her what would be asked, and the eight seconds, and then every single day since. The basket-carrying. The rain. The standing.
 
 That is the thing nobody in the Office had understood, because the Office had never put one back. The Hollow is not asleep. The Hollow is a person with the top lifted off, and underneath, the rest of her goes on standing in the rain for three years and cannot say so.
 
@@ -5355,7 +5355,7 @@ Then: "*Lyra.*"
 
 And that one was Kaelen.
 
-Not an approximation. Not the way it had taken Davin Hale's voice in the tavern, a half-beat behind and a quarter-tone flat. It had had five days with him. It had stood in the clearing outside a charcoal-burner's hut for seven years listening to a man who talked to an empty room because nobody heard, and it had learned him the way it had learned her: completely, from the inside, with the rasp at the bottom and the Reach in the vowels and the particular flat way he said a thing he had decided not to feel anything about.
+Not an approximation. Not the way it had taken Davin Hale's voice in the tavern, a half-beat behind and a quarter-tone flat. It had had five days with him. It had stood in the clearing outside a charcoal-burner's hut for two years listening to a man who talked to an empty room because nobody heard, and it had learned him the way it had learned her: completely, from the inside, with the rasp at the bottom and the Reach in the vowels and the particular flat way he said a thing he had decided not to feel anything about.
 
 "*Lyra, I need to tell you something and I'm not going to be able to say it to your face.*"
 
@@ -5627,7 +5627,7 @@ The lamps came back. The tanks came down an octave and stayed sour.
 
 "What," said Pennick, carefully, "was that."
 
-"That was a courier," said Sable. She had come up out of the hatch at the noise and was standing at the rail looking east with the Ledger hanging open beside her. "Arbiterium seal, black ribbon. That is a standing writ, which means it must be delivered into a named hand and read aloud and witnessed." She paused. "He has been running since the Valley of Velocity went, which was five years ago, and he has not delivered it."
+"That was a courier," said Sable. She had come up out of the hatch at the noise and was standing at the rail looking east with the Ledger hanging open beside her. "Arbiterium seal, black ribbon. That is a standing writ, which means it must be delivered into a named hand and read aloud and witnessed." She paused. "He has been running since a Velocity flare caught him, which was five years ago, and he has not delivered it."
 
 "How do you know that?"
 
@@ -5649,7 +5649,7 @@ Sable looked at it for a while in the last of the light.
 
 "Everything here is dangerous, Captain. That one is only sad."
 
-They got Pennick's leg bound and Bettis dosed and the children fed, and Mags went up the envelope with a needle in her teeth and one working arm, and Vane walked his ruined deck in the dark: four feet of rail gone, two scorched footprints, a hole in the deckhouse the size and shape of a man, a cracked knee-strut on a nine-foot automaton that was standing at the bow facing the way they had come, and six feet of cut rope still hanging from the winch drum, which nobody had coiled in five days.
+They got Pennick's leg bound and Bettis dosed and the children fed, and Mags went up the envelope with a needle in her teeth and one working arm, and Vane walked his ruined deck in the dark: four feet of rail gone, two scorched footprints, a hole in the deckhouse the size and shape of a man, a cracked knee-strut on a nine-foot automaton that was standing at the bow facing the way they had come, and six feet of cut rope still hanging from the winch drum, which nobody had coiled in six days.
 
 He stood at the stern for a long time looking back toward the Cloister road.
 
@@ -5859,7 +5859,7 @@ Tick. Tick-tick. Steady.
 
 She made herself say the rest of it standing up straight.
 
-"By the eleventh day my hand had begun to shake. I have looked at your entry perhaps four hundred times in three years. I can read the number. I can read *alto*. I can read the first letter of the surname and it is either a W or an M and I have never been able to decide, and the given name is one syllable and might be anything, and there is no one left in the city who could tell me, because I catalogued all of them."
+"By the eleventh day my hand had begun to shake. I have looked at your entry perhaps four hundred times in three years. I can read the number. I can read *alto*. I can read the first letter of the given name and it is either a W or an M and I have never been able to decide, and it is one syllable and might be anything, and the surname is under the blot, and there is no one left in the city who could tell me, because I catalogued all of them."
 
 The lilac point behind the grille did not move.
 
@@ -6171,7 +6171,7 @@ Four fingers and a half.
 
 He measured it sitting on the keel-block in the grey light with the string and the knots, and then he measured it again because the first answer was wrong, and the second answer was the same.
 
-At midsummer it had been one finger from the point of the shoulder. On Rootday, in his father's hall, two and a half. On Massday, after he drank a Legionnaire's bell in a depot at the quarry, three. Four at the Malting, after a Steam Golem and a boiler's worth of working noise. And now four and a half, because last night he had put his fist through a thing that had eaten five people and two years of sound, and the glass had taken all of it, and he had felt it go in like a man drinking in a doorway.
+At midsummer it had been one finger from the point of the shoulder. On Rootday, in his father's hall, two and a half. On Massday, after he drank a Legionnaire's bell in a depot at the quarry, three. Four at the casing, after a Steam Golem and a boiler's worth of working noise. And now four and a half, because last night he had put his fist through a thing that had eaten five people and two years of sound, and the glass had taken all of it, and he had felt it go in like a man drinking in a doorway.
 
 Four and a half fingers from the point of the shoulder puts the tideline past the collarbone, across the top of the chest, and three inches from the notch of the throat.
 
@@ -6195,7 +6195,7 @@ He was about twenty-five, and he had walked nine miles through the Spectral Wood
 
 He stood in the middle of the clearing in a white herald's tabard with the scales on the breast, holding a staff with a white rag knotted to it, with a nine-foot Office automaton eleven feet away and a skyship crew around him in a loose and extremely unfriendly ring, and he read from a sealed sheet with a black ribbon in a clear carrying voice, and his hands shook the entire time and he did not let it get into his reading, and Kaelen found that he respected him enormously.
 
-"*By the Arbiterium of the Iron Synod, under the hand of the Supreme Arbiter, at the Organum, the fourth day of Leaffall, 419.*
+"*By the Arbiterium of the Iron Synod, under the hand of the Supreme Arbiter, at the Organum, the seventeenth day of Leaffall, 419.*
 
 "*Be it known: the persons styled Kaelen Vance, late Chief Resonant Engineer, badge four-oh-eight-A; Lyra Ashgrove, Cantor, of Oakhaven; the carrier styled Vane, of registry OK-114; and the scribe styled Sable, formerly of the Office of the Catalogue — are declared Dissonant. Their goods are forfeit. Their testimony is void in any court of the Synod. The Church of the Pure Note has entered a claim upon the Cantor, which claim the Arbiterium has stayed, for now.*"
 
@@ -6358,11 +6358,11 @@ That night Kaelen went down into the hold with a lantern and a nub of charcoal a
 
 He had added the eight from the carriage file, which had been exactly where Vaelen said it would be, and he had thought about that for a long time afterward and had still written them down.
 
-He sat with his back against the third crate with the murmur going on around him, four hundred and thirty-two people talking in their sleep, and through the glass — faint, four days and a hundred miles behind them, with a hole in it, still going — he could hear the Chorister of Growth losing the tune of a five-note lullaby and starting again from the beginning.
+He sat with his back against the third crate with the murmur going on around him, four hundred and thirty-two people talking in their sleep, and through the glass — faint, a week and a hundred miles behind them, with a hole in it, still going — he could hear the Chorister of Growth losing the tune of a five-note lullaby and starting again from the beginning.
 
 *Somebody has to hold it.*
 
-He had been pushing the thought away for four days, the way you push a dog off a bed.
+He had been pushing the thought away for a week, the way you push a dog off a bed.
 
 He stopped pushing it, and looked at it, and found it looking back.
 
@@ -6388,7 +6388,7 @@ My name is Ilias Marren and I was a Warden of the Loom at the Sandglass Bazaar u
 
 I am going to show you a thread that was not taken.
 
-Understand what that means before you go any further. This did not happen. It also did not *un*happen; nothing does. Every road not taken is still standing out there in the dark with the lamps lit and people walking up and down it, and the only difference between that road and this one is that you are on this one, and the thing that decides which road you are on is almost always small, and almost always a Tuesday.
+Understand what that means before you go any further. This did not happen. It also did not *un*happen; nothing does. Every road not taken is still standing out there in the dark with the lamps lit and people walking up and down it, and the only difference between that road and this one is that you are on this one, and the thing that decides which road you are on is almost always small, and almost always a Hearthday.
 
 In the thread you have just read, Lyra Ashgrove went out to the cooperage wall on the forty-first night, and sat on her stone, and told a monster about a child's hands.
 

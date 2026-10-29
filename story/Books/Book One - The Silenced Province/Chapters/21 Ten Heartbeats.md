@@ -147,7 +147,7 @@ The lamps came back. The tanks came down an octave and stayed sour.
 
 "What," said Pennick, carefully, "was that."
 
-"That was a courier," said Sable. She had come up out of the hatch at the noise and was standing at the rail looking east with the Ledger hanging open beside her. "Arbiterium seal, black ribbon. That is a standing writ, which means it must be delivered into a named hand and read aloud and witnessed." She paused. "He has been running since the Valley of Velocity went, which was five years ago, and he has not delivered it."
+"That was a courier," said Sable. She had come up out of the hatch at the noise and was standing at the rail looking east with the Ledger hanging open beside her. "Arbiterium seal, black ribbon. That is a standing writ, which means it must be delivered into a named hand and read aloud and witnessed." She paused. "He has been running since a Velocity flare caught him, which was five years ago, and he has not delivered it."
 
 "How do you know that?"
 
@@ -169,7 +169,7 @@ Sable looked at it for a while in the last of the light.
 
 "Everything here is dangerous, Captain. That one is only sad."
 
-They got Pennick's leg bound and Bettis dosed and the children fed, and Mags went up the envelope with a needle in her teeth and one working arm, and Vane walked his ruined deck in the dark: four feet of rail gone, two scorched footprints, a hole in the deckhouse the size and shape of a man, a cracked knee-strut on a nine-foot automaton that was standing at the bow facing the way they had come, and six feet of cut rope still hanging from the winch drum, which nobody had coiled in five days.
+They got Pennick's leg bound and Bettis dosed and the children fed, and Mags went up the envelope with a needle in her teeth and one working arm, and Vane walked his ruined deck in the dark: four feet of rail gone, two scorched footprints, a hole in the deckhouse the size and shape of a man, a cracked knee-strut on a nine-foot automaton that was standing at the bow facing the way they had come, and six feet of cut rope still hanging from the winch drum, which nobody had coiled in six days.
 
 He stood at the stern for a long time looking back toward the Cloister road.
 

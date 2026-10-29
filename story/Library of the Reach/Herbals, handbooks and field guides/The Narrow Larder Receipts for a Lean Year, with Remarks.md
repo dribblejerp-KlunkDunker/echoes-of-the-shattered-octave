@@ -20,11 +20,11 @@ WHAT WE EAT NOW.
 
 Bread. Since the quarry, bread wants to rise and does not know when to stop. Punch it down. Punch it down again. Never leave dough to prove overnight. I have seen a loaf come up out of its crock and across a table like a sleeping cat, and the woman next door had to take her oven door off with a crowbar. Bake in a lidded crock with a stone on the lid, and listen. Good bread is quiet. Bread that creaks is not done growing.
 
-Flour. The fields regrow overnight now, which sounds like a mercy until you taste the third cutting. First-cut flour is for bread, second for porridge, and the third for the paste you hang wallpaper with. Keep the Last Sheaf's flour for the hearth bread and nothing else. The sheaf is up on the Hedge-gate as I write this, so you know the time of year, and they are saying the Church will want it put off. We shall see.
+Flour. The fields regrow overnight now, which sounds like a mercy until you taste the third cutting. First-cut flour is for bread, second for porridge, and the third for the paste you hang wallpaper with. Keep the Last Sheaf's flour for the hearth bread and nothing else. The last stand is still uncut in the north field as I write this, so you know the time of year, and they are saying the Church will want it put off. We shall see.
 
 Mutton. There is none. The flocks went into the Hedge for their wool, and then they went into us, one a month, and I cooked a good many of them myself, and I am not sorry. If anyone in this town sells you mutton pie, ask him whose. If he says it is lamb, ask him whose lamb.
 
-Eggs. There are none. The hens went quiet first, the autumn the Hedge went in. I will not say more than that, and what was left of them went in the pot. To bind a pie without egg: a spoon of honey and a spoon of flour, beaten with a little cider. To glaze it: milk, if you can get milk that has not turned, which you cannot, so do not glaze it. Nobody in Oakhaven has looked at a shiny pie in two years and we are none the worse for it.
+Eggs. There are none. The hens went quiet first, the autumn after the Hedge went in. I will not say more than that, and what was left of them went in the pot. To bind a pie without egg: a spoon of honey and a spoon of flour, beaten with a little cider. To glaze it: milk, if you can get milk that has not turned, which you cannot, so do not glaze it. Nobody in Oakhaven has looked at a shiny pie in two years and we are none the worse for it.
 
 Bettany's tonic, which she gives for weakness, is honey, raw egg and willow-bark. When you ask her where the egg comes from she looks at you as if you had asked her where babies come from, and she of all women should know.
 
