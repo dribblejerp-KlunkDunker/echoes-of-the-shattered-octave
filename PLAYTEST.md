@@ -14,6 +14,19 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## The README and the phone link (built 29 Oct)
+**Your ask:** "Re make the repo page with updated screenshots, gifs and an updated play in browser button as well as mobile link." The repo page now opens with the title screen, a Play in your browser button and a Play on your phone button, four loops, a phone section with a QR code, and fresh stills. The old phase-by-phase pictures moved to docs/gallery.md and the full feature list to docs/features.md.
+- [ ] **Scan the QR code** on the repo page with a real phone. It should open the game with `?touch=1` at the end of the address. (The code was checked module by module against the URL, but not with a camera.)
+- [ ] **The phone link on a real phone** (iPhone and Android if you can): the thumb stick and the Songs, Run, Throw, Use and Strike buttons should be there as soon as play begins, with no "click to capture the mouse" line.
+- [ ] **Held upright,** the phone shows "Turn your phone sideways for a bigger view." under the game. Turn it sideways and the line goes.
+- [ ] **The Strike button** sits over the compass on a short, wide phone (it shows in the phone picture). Is it in the way of reading the compass?
+- [ ] **Add to Home Screen,** then open it from the home screen: does it open without the browser bars and keep the touch controls?
+- [ ] **The repo page itself,** in GitHub's light and dark themes and on a phone: do the buttons look right, and do the loops load quickly enough? They are about 1 to 3 MB each.
+
+**Notes:**
+
+---
+
 ## The canon pass: matching the book (built 28 Oct)
 **Your ruling:** "Bettis Renn should be Ivo's wife just as in the book. Match any inconsistency to match the book." This pass makes the text-level fixes. The bigger structural ones are listed below as next.
 - [ ] **Bettis Renn** (Part Three, the Malting's press room): a Hollow woman with a basket, making the gesture of putting a coat over her arm. With Sable, she is put back exactly as in chapter 18: the entry read aloud, the screaming, "put it back". Keep her awake and she is carried to the Kestrel, to Ivo in the third stack. Does the scene land?
