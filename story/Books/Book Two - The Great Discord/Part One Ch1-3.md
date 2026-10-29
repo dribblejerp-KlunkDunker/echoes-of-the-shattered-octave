@@ -462,7 +462,7 @@ Kaelen's first thought, which arrived with the clarity of a dropped tool, was: *
 
 He could not swing his arm.
 
-It had taken him nineteen days and four fights to learn what Book One had cost him in ribs: the glass is nine inches longer than a man's arm ought to be and weighs most of a hundredweight at the end of the reach, and in a street or a vault it is the single most dangerous thing in the room, and in a corridor it is a wall you happen to be carrying. There was the cliff on his left and a cable rail on his right and three feet of green wet stone between, and the swing he had put through a Legionnaire's bell and a Steam Golem's knee would, here, hit rock.
+It had taken him nineteen days and four fights to learn what Oakhaven had cost him in ribs: the glass is nine inches longer than a man's arm ought to be and weighs most of a hundredweight at the end of the reach, and in a street or a vault it is the single most dangerous thing in the room, and in a corridor it is a wall you happen to be carrying. There was the cliff on his left and a cable rail on his right and three feet of green wet stone between, and the swing he had put through a Legionnaire's bell and a Steam Golem's knee would, here, hit rock.
 
 So he did not swing it.
 
