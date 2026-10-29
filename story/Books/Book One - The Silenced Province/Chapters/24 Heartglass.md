@@ -13,7 +13,7 @@ Four fingers and a half.
 
 He measured it sitting on the keel-block in the grey light with the string and the knots, and then he measured it again because the first answer was wrong, and the second answer was the same.
 
-At midsummer it had been one finger from the point of the shoulder. On Rootday, in his father's hall, two and a half. On Massday, after he drank a Legionnaire's bell in a depot at the quarry, three. Four at the Malting, after a Steam Golem and a boiler's worth of working noise. And now four and a half, because last night he had put his fist through a thing that had eaten five people and two years of sound, and the glass had taken all of it, and he had felt it go in like a man drinking in a doorway.
+At midsummer it had been one finger from the point of the shoulder. On Rootday, in his father's hall, two and a half. On Massday, after he drank a Legionnaire's bell in a depot at the quarry, three. Four at the casing, after a Steam Golem and a boiler's worth of working noise. And now four and a half, because last night he had put his fist through a thing that had eaten five people and two years of sound, and the glass had taken all of it, and he had felt it go in like a man drinking in a doorway.
 
 Four and a half fingers from the point of the shoulder puts the tideline past the collarbone, across the top of the chest, and three inches from the notch of the throat.
 
@@ -37,7 +37,7 @@ He was about twenty-five, and he had walked nine miles through the Spectral Wood
 
 He stood in the middle of the clearing in a white herald's tabard with the scales on the breast, holding a staff with a white rag knotted to it, with a nine-foot Office automaton eleven feet away and a skyship crew around him in a loose and extremely unfriendly ring, and he read from a sealed sheet with a black ribbon in a clear carrying voice, and his hands shook the entire time and he did not let it get into his reading, and Kaelen found that he respected him enormously.
 
-"*By the Arbiterium of the Iron Synod, under the hand of the Supreme Arbiter, at the Organum, the fourth day of Leaffall, 419.*
+"*By the Arbiterium of the Iron Synod, under the hand of the Supreme Arbiter, at the Organum, the seventeenth day of Leaffall, 419.*
 
 "*Be it known: the persons styled Kaelen Vance, late Chief Resonant Engineer, badge four-oh-eight-A; Lyra Ashgrove, Cantor, of Oakhaven; the carrier styled Vane, of registry OK-114; and the scribe styled Sable, formerly of the Office of the Catalogue — are declared Dissonant. Their goods are forfeit. Their testimony is void in any court of the Synod. The Church of the Pure Note has entered a claim upon the Cantor, which claim the Arbiterium has stayed, for now.*"
 
@@ -200,11 +200,11 @@ That night Kaelen went down into the hold with a lantern and a nub of charcoal a
 
 He had added the eight from the carriage file, which had been exactly where Vaelen said it would be, and he had thought about that for a long time afterward and had still written them down.
 
-He sat with his back against the third crate with the murmur going on around him, four hundred and thirty-two people talking in their sleep, and through the glass — faint, four days and a hundred miles behind them, with a hole in it, still going — he could hear the Chorister of Growth losing the tune of a five-note lullaby and starting again from the beginning.
+He sat with his back against the third crate with the murmur going on around him, four hundred and thirty-two people talking in their sleep, and through the glass — faint, a week and a hundred miles behind them, with a hole in it, still going — he could hear the Chorister of Growth losing the tune of a five-note lullaby and starting again from the beginning.
 
 *Somebody has to hold it.*
 
-He had been pushing the thought away for four days, the way you push a dog off a bed.
+He had been pushing the thought away for a week, the way you push a dog off a bed.
 
 He stopped pushing it, and looked at it, and found it looking back.
 

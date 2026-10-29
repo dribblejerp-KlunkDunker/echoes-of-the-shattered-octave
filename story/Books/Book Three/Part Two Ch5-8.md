@@ -1016,6 +1016,8 @@ The three troopers walked behind her. Nineteen, a grey woman of fifty with a sca
 
 Mags walked beside Orrin. She had her carbine in her good hand and her strapped arm across her chest, and her eyes on the small man's mouth.
 
+The sorters at the long table did not look up as they passed. The woman with her grey hair under the cap held a core to her ear and listened and chalked it *C*. The young man at the end turned the crank of the brass mill, humming.
+
 They stopped ten yards from the stool.
 
 The Registrar-General of the Office of the Catalogue looked up at them with his soft pink face. Seraphina saw that his eyes behind the spectacles were pale blue, and very tired, and very kind.

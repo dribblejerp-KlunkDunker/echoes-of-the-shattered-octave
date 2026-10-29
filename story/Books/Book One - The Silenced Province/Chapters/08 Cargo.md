@@ -137,7 +137,7 @@ He lifted one out.
 
 It was cold, and lighter than it looked, and there was a fog inside it that moved a little when he turned it, like breath on a window. The tag was written in a fine clerk's hand, the kind of hand they teach at a Catalogue desk: **WG-41,004.**
 
-He put it down. He lifted another: **WG-41,005.** Another: **WG-41,006.**
+He put it down. He lifted another: **WG-41,006.** Another: **WG-41,007.**
 
 WG. Whisper-Grove.
 

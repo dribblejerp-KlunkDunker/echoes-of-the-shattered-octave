@@ -182,16 +182,16 @@ Source: `story/Game Layer/Story Brainstorm - Book One in play.md`, which has a c
 The game has the novel's plot but few of its set-pieces. Turn told beats into played ones, mostly by replacing fetch steps rather than adding new ones. The main story would grow from about 3–4.5 h to about 5–7 h, all of it novel scenes.
 
 Gate: each scene is playable start to finish, closes cleanly, and changes lines, never fails quests, when missed.
-- [ ] **Prerequisite: let the nine days happen while you are there.** Canon days become scheduled set-pieces (Brainstorm §3.1). Missing one changes lines, never fails a quest.
+- [x] **Prerequisite: let the nine days happen while you are there.** Canon days become scheduled set-pieces (Brainstorm §3.1). Missing one changes lines, never fails a quest. **Partly done in the canon pass (28 Oct):** the nine days now run in the book's order, with Davin on Hearthday, Pim's lure on Massday and the Church on Dawnday (`js/days35.js`). Making each one a played set-piece is still open.
 - [ ] **1. The Greening, walked** (ch. 11). Sing a corridor through the drowning town, sing Orla down in her tree, and hold the sealed North Gate while the Hedge calls in the voices you let it learn. L.
 - [ ] **2. Grab the Line, played** (ch. 12). The winch, the hound on the rope, the count to ten. M–L.
 - [ ] **3. The Rite, from procession to pumps** (ch. 9–10). The town hums 174 under 528, the needle, "SING IT DOWN", and Aldric's count. L.
 - [ ] **4. The water-meadow** (ch. 6). The whistle duel, and Tam walking out singing. L.
 - [ ] **5. Hearthday at the Boar & Dulcimer** (ch. 4). Davin's song, ten counted seconds. M.
-- [ ] **6. Voice at the Door** (ch. 20). A don't-answer endurance scene that replaces the porch fight. M.
+- [x] **6. Voice at the Door** (ch. 20). A don't-answer endurance scene that replaces the porch fight. M. **Done in the canon pass (PR #79):** the porch is a chain of cards, Hymn 9 in Lyra's voice, the calmed Aegis at the door, seven hymns and Pim's whistle.
 - [ ] **7. The forty-one nights.** Lyra's arc, and the canon spine of her unbuilt companion quest. M.
 - [ ] **8. Ash in the Hold** (ch. 13). A playable night aboard the Kestrel between Parts Two and Three. M.
-- [ ] **9. The Wearer at the ring of lamps** (ch. 23), offered as the canon finale. M.
+- [x] **9. The Wearer at the ring of lamps** (ch. 23), offered as the canon finale. M. **Done in the canon pass (PR #80):** the coda is the ring of lamps in the clearing; the Mausoleum choir keeps the Requiem as its own fight.
 - [ ] **10–25: the rest of the ranked table.** Includes:
   - Tamsin Reed and "Tell Mam";
   - "Read you three";
@@ -203,12 +203,12 @@ Gate: each scene is playable start to finish, closes cleanly, and changes lines,
   - the cutter chase;
   - the Grafters' round;
   - the Prologue and Echo I as extras.
-- [ ] **The brainstorm's 24 further contradictions,** folded into R2's canon sweep. Biggest:
-  - the crates are in Hetty's cellar, not the Kestrel's hold;
+- [ ] **The brainstorm's 24 further contradictions,** folded into R2's canon sweep. Biggest: **The four named ones are fixed (canon pass, 28 Oct, PRs #73–#81):** the crates are in the Kestrel's hold; Bettis Renn is Ivo's wife; Hob Wendle dies aboard and the tanner is Abner Fenning; the Wearer is met once. The rest of the 24 stay open; the list is in the Story Brainstorm §5.
+  - ~~the crates are in Hetty's cellar, not the Kestrel's hold~~ (fixed: PR #74);
   - ~~Bettis Renn is a man in the game~~ (fixed: the canon pass, `test/canon32.test.js`);
-  - Hob survives;
-  - the Wearer is fought three times.
-- [ ] **The owner rules on the open questions first:** whether Sable stays in the Reach, and whether the canon days may run while you are in Oakhaven.
+  - ~~Hob survives~~ (fixed: PR #75);
+  - ~~the Wearer is fought three times~~ (fixed: PRs #79 and #80).
+- [x] **The owner rules on the open questions first:** whether Sable stays in the Reach, and whether the canon days may run while you are in Oakhaven. **Ruled 28 Oct:** "Match any inconsistency to match the book." Sable stays in Whisper-Grove until the Kestrel comes (PR #81); the Reach's scribe is Umber, [PROPOSED]. The canon days run in order.
 - **Model note:** set-pieces 1, 2, 3 and 4 are the most design-heavy. They are worth building with the strongest model available.
 
 **Avoid as bloat:**

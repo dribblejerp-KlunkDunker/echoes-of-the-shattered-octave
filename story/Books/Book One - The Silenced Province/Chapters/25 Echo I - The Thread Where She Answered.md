@@ -13,7 +13,7 @@ My name is Ilias Marren and I was a Warden of the Loom at the Sandglass Bazaar u
 
 I am going to show you a thread that was not taken.
 
-Understand what that means before you go any further. This did not happen. It also did not *un*happen; nothing does. Every road not taken is still standing out there in the dark with the lamps lit and people walking up and down it, and the only difference between that road and this one is that you are on this one, and the thing that decides which road you are on is almost always small, and almost always a Tuesday.
+Understand what that means before you go any further. This did not happen. It also did not *un*happen; nothing does. Every road not taken is still standing out there in the dark with the lamps lit and people walking up and down it, and the only difference between that road and this one is that you are on this one, and the thing that decides which road you are on is almost always small, and almost always a Hearthday.
 
 In the thread you have just read, Lyra Ashgrove went out to the cooperage wall on the forty-first night, and sat on her stone, and told a monster about a child's hands.
 

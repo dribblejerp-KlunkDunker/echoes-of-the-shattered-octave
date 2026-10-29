@@ -215,7 +215,7 @@ Nobody had thought about the screaming.
 
 Sable had thought about the moment of recognition; she had allowed herself, walking up the Cloister road in the dark, perhaps four seconds of imagining a woman's eyes coming back on and a hand going up to a mouth. She had not thought past it, because nobody in the history of the Office had ever had to.
 
-Bettis Renn came back into her own head at the age of forty-one, having been six feet from her own front door with her husband's coat over her arm on a Tuesday in 416, and being now in a whitewashed room with a drain in the floor and a fork on her chest and three years missing — and not missing at all, because the whole of it was in there: the queue, and the benches, and the kind clerk who had told her what would be asked, and the eight seconds, and then every single day since. The basket-carrying. The rain. The standing.
+Bettis Renn came back into her own head at the age of forty-one, having been six feet from her own front door with her husband's coat over her arm on an ordinary morning in 416, and being now in a whitewashed room with a drain in the floor and a fork on her chest and three years missing — and not missing at all, because the whole of it was in there: the queue, and the benches, and the kind clerk who had told her what would be asked, and the eight seconds, and then every single day since. The basket-carrying. The rain. The standing.
 
 That is the thing nobody in the Office had understood, because the Office had never put one back. The Hollow is not asleep. The Hollow is a person with the top lifted off, and underneath, the rest of her goes on standing in the rain for three years and cannot say so.
 

@@ -161,7 +161,7 @@ Oona looked at her. They had met before, Lyra remembered. Eleven weeks ago, in t
 
 Lyra put her hand on it before she could stop herself.
 
-It was in the little leather case on her belt with her tuning key: the last wind-reed out of the orchards of the Reach. Her father had cut it in the spring of 412, the season before the reeds turned to sugar-glass and blew away, and given it to her to tune by, and she had carried it for seven years and never once played it, because it was the last one, and because the note it gave was his.
+It was in the little leather case on her belt with her tuning key: one of the last wind-reeds out of the orchards of the Reach. Her father had cut it in the spring of 412, the season before the reeds turned to sugar-glass and blew away, and given it to her to tune by, and she had carried it for seven years and never once played it, because it was the last he ever cut, and because the note it gave was his.
 
 She took it out and held it in her palm. It was a pale gold, a hand long, no thicker than a straw.
 

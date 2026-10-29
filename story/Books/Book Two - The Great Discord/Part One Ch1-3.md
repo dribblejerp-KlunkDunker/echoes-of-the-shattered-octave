@@ -152,7 +152,7 @@ She took Teague by the arm and put the point of the boat-hook in his hands again
 
 He broke out the seacock with the butt of the hook.
 
-The sea came into the hold of the *Bitter Nancy* in a column as thick as a man's leg, and it was the January water of the Rust Coast at six in the morning, which is cold enough to stop a heart, and none of them could hear a drop of it.
+The sea came into the hold of the *Bitter Nancy* in a column as thick as a man's leg, and it was the Ashfall water of the Rust Coast at six in the morning, which is cold enough to stop a heart, and none of them could hear a drop of it.
 
 The quiet came off Colm.
 
@@ -462,7 +462,7 @@ Kaelen's first thought, which arrived with the clarity of a dropped tool, was: *
 
 He could not swing his arm.
 
-It had taken him nineteen days and four fights to learn what Book One had cost him in ribs: the glass is nine inches longer than a man's arm ought to be and weighs most of a hundredweight at the end of the reach, and in a street or a vault it is the single most dangerous thing in the room, and in a corridor it is a wall you happen to be carrying. There was the cliff on his left and a cable rail on his right and three feet of green wet stone between, and the swing he had put through a Legionnaire's bell and a Steam Golem's knee would, here, hit rock.
+It had taken him nineteen days and four fights to learn what Oakhaven had cost him in ribs: the glass is nine inches longer than a man's arm ought to be and weighs most of a hundredweight at the end of the reach, and in a street or a vault it is the single most dangerous thing in the room, and in a corridor it is a wall you happen to be carrying. There was the cliff on his left and a cable rail on his right and three feet of green wet stone between, and the swing he had put through a Legionnaire's bell and a Steam Golem's knee would, here, hit rock.
 
 So he did not swing it.
 

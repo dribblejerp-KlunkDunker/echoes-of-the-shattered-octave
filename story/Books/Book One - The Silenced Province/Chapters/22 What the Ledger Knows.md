@@ -197,7 +197,7 @@ Tick. Tick-tick. Steady.
 
 She made herself say the rest of it standing up straight.
 
-"By the eleventh day my hand had begun to shake. I have looked at your entry perhaps four hundred times in three years. I can read the number. I can read *alto*. I can read the first letter of the surname and it is either a W or an M and I have never been able to decide, and the given name is one syllable and might be anything, and there is no one left in the city who could tell me, because I catalogued all of them."
+"By the eleventh day my hand had begun to shake. I have looked at your entry perhaps four hundred times in three years. I can read the number. I can read *alto*. I can read the first letter of the given name and it is either a W or an M and I have never been able to decide, and it is one syllable and might be anything, and the surname is under the blot, and there is no one left in the city who could tell me, because I catalogued all of them."
 
 The lilac point behind the grille did not move.
 

@@ -211,7 +211,7 @@ The owner asked for the serial to be brought into canon. Every finding above is 
 | 2 | Moor / Hennet Moor | The husband is now **Matthis Kessler**. The player-facing name is "the Cantabile serial" or "broadsheet serial". Internal ids keep `moor_*` so saves still load. |
 | 3 | Jory / Jory Quill; dispatch | Jory is now Matthis. "Dispatch number" is now **docket number** throughout, and "I don't keep dispatches" is now "dockets". |
 | 4 | Pell | The pedlar is now **Bastien Corvo**, an Archipelago-style name per Vol II App. C. |
-| 5 | Equipment / reweigh echo | Kept as a deliberate echo, now plainly a foreign tale. The game already lets the player hear cores in Hetty's cellar on day one, so this foreshadows rather than spoils. |
+| 5 | Equipment / reweigh echo | Kept as a deliberate echo, now plainly a foreign tale. The game already lets the player hear cores in Hetty's cellar on day one, so this foreshadows rather than spoils. *(Update, 29 Oct: since the canon pass the talking crates are in the Drift-Kestrel's hold, as in the book, and the player hears them there on day one. The reasoning stands.)* |
 | 6 | The door beneath the house | Kept. No Hush rule is broken, and it is a tale from elsewhere. |
 | 7 | Price | Now **1 sovereign** a part, the smallest coin the game has. |
 | 8 | Aldren | Now **Wendel**, Hessa's father. |
