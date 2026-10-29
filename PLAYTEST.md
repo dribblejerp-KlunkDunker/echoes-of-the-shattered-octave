@@ -22,6 +22,7 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 - [ ] **The Strike button** sits over the compass on a short, wide phone (it shows in the phone picture). Is it in the way of reading the compass?
 - [ ] **Add to Home Screen,** then open it from the home screen: does it open without the browser bars and keep the touch controls?
 - [ ] **The repo page itself,** in GitHub's light and dark themes and on a phone: do the buttons look right, and do the loops load quickly enough? They are about 1 to 3 MB each.
+- [ ] **Play together on two real devices** (added 29 Oct with the co-op loop): the loop on the repo page was recorded with two browsers on one machine, relayed locally. Host on a computer, join from a phone with the code, and check that each sees the other and the fight feels shared.
 
 **Notes:**
 

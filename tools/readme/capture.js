@@ -15,6 +15,28 @@ const ROOT = path.join(__dirname, '..', '..');
 const OUT = process.env.OUT || path.join(ROOT, 'screenshots', 'readme');
 const URL0 = (process.env.PREVIEW_URL || 'http://127.0.0.1:8000').replace(/\/$/, '');
 const ONLY = new Set(process.argv.slice(2));
+// the co-op loop's link between two browser contexts: copied from test/sync19.test.js (NET19's injected transport)
+const RELAY = `(() => {
+  const links = new Map(); let onLinkFn = null, waiting = null, n = 0;
+  const mk = (id) => { const l = { unreliable: false, open: true, onmessage: null, onclose: null };
+    l.send = (s, r) => { if (!l.open) return false; window.__p19send(JSON.stringify({ k: 'm', id, d: s, r: r !== false })); return true; };
+    l.close = () => { if (!l.open) return; l.open = false; window.__p19send(JSON.stringify({ k: 'x', id })); setTimeout(() => { if (l.onclose) l.onclose(); }, 0); };
+    links.set(id, l); return l; };
+  window.__p19deliver = (str) => {
+    const m = JSON.parse(str);
+    if (m.k === 'knock' && onLinkFn) { const l = mk(m.id); window.__p19send(JSON.stringify({ k: 'accept', id: m.id })); onLinkFn(l); }
+    else if (m.k === 'accept' && waiting && waiting.id === m.id) { const w = waiting; waiting = null; w.res(mk(m.id)); }
+    else if (m.k === 'm') { const l = links.get(m.id); if (l && l.open && l.onmessage) l.onmessage(m.d, m.r); }
+    else if (m.k === 'x') { const l = links.get(m.id); if (l && l.open) { l.open = false; if (l.onclose) l.onclose(); } }
+  };
+  window.__relayT = () => ({
+    name: 'relay',
+    listen(code, onLink) { onLinkFn = onLink; return Promise.resolve({ code }); },
+    // (an unanswered knock fails after 1.5 s: NET19 only retries a reconnect once the last attempt has settled)
+    connect(code) { return new Promise((res, rej) => { const id = 'L' + (++n) + '-' + Date.now(); waiting = { id, res }; window.__p19send(JSON.stringify({ k: 'knock', id })); setTimeout(() => { if (waiting && waiting.id === id) { waiting = null; const e = new Error('no answer'); e.code = 'timeout'; rej(e); } }, 1500); }); },
+    close() { onLinkFn = null; for (const l of links.values()) l.close(); },
+  });
+})();`;
 const want = (n) => !ONLY.size || ONLY.has(n);
 
 async function ready(page) {
@@ -32,6 +54,7 @@ async function newGame(page, how) {
   await hit('#c-go'); await hit('#btn-intro-skip');
   await page.waitForFunction(() => G.state === 'play');
   await page.evaluate(() => {
+    window.__hp0 = [G.player.hp, G.player.hpMax];   // the traveller's real health, for the character sheet
     window.R = {
       clean() {
         for (const s of ['#msgs']) { const n = document.querySelector(s); if (n) n.innerHTML = ''; }
@@ -122,6 +145,72 @@ async function gif(page, name, { frames, fps, width, each, clip, colors }) {
       fs.rmSync(tmp, { recursive: true, force: true }); console.log('still area-cards');
     }
 
+    // ---- maps: the automap of what you have walked, the Reach travel map and the continent
+    if (want('automap')) {
+      await page.evaluate(() => {
+        R.go('oakhaven', 29.5, 19.5, Math.PI, 0.72);
+        const m = G.map, pts = Object.values(PLACE_POS);   // the streets between Oakhaven's places, as if walked
+        for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) if (pts.some(([px, py]) => Math.hypot(px - x, py - y) < 9)) m.visited[y * m.w + x] = 1;
+        G.state = 'panel'; renderMap();
+      });
+      await still(page, 'automap'); await page.evaluate(() => closeModal());
+    }
+    if (want('worldmap')) { await page.evaluate(() => { R.go('oakhaven', 29.5, 19.5, Math.PI, 0.72); travelOpen(); }); await page.waitForTimeout(900); await still(page, 'worldmap'); }
+    if (want('continent')) { await page.evaluate(() => { R.go('oakhaven', 29.5, 19.5, Math.PI, 0.72); travelOpen(); TRAVEL.view = 'continent'; travelRender(); }); await page.waitForTimeout(900); await still(page, 'continent'); await page.evaluate(() => closeModal()); }
+
+    // ---- mechanics
+    if (want('songbook')) {
+      await page.evaluate(() => { R.go('clearing', 20.5, 26, -Math.PI / 2, 0.76); for (const id of ['murmur', 'tending', 'fifth', 'root']) if (!G.player.songs.includes(id)) G.player.songs.push(id); G.state = 'panel'; renderSongs(); });
+      await still(page, 'songbook'); await page.evaluate(() => closeModal());
+    }
+    if (want('character')) { await page.evaluate(() => { R.go('oakhaven', 29.5, 19.5, Math.PI, 0.72); G.player.hpMax = window.__hp0[1]; G.player.hp = window.__hp0[1]; G.state = 'panel'; renderCharacter(); }); await still(page, 'character'); await page.evaluate(() => closeModal()); }
+    if (want('pickpocket')) {   // staged as test/screenshots.js does
+      await page.evaluate(() => {
+        R.go('oakhaven', 23.5, 22.25, Math.PI / 2, 0.6);
+        const e = G.ents.find((o) => o.id === 'bettany'); Object.assign(e, { x: 23.5, y: 23.5, facing: Math.PI / 2, hidden: false });
+        G.player.skills.Stealth = 35; openPickpocket();
+      });
+      await still(page, 'pickpocket'); await page.evaluate(() => closeModal());
+    }
+    if (want('disguise')) {
+      await page.evaluate(() => { R.go('quarry', G.maps.quarry.spawn.x, G.maps.quarry.spawn.y, G.maps.quarry.spawn.dir || 0, 0.6); window.__body = G.player.armor.body || null; G.give('a_synodrobe'); equipArmor('a_synodrobe'); R.clean(); openDisguise(); });
+      await still(page, 'disguise');
+      await page.evaluate(() => { closeModal(); G.player.armor.body = window.__body; });   // the robes come off again for the later scenes
+    }
+    if (want('watch')) {
+      await page.evaluate(() => {
+        R.go('oakhaven', 23.5, 17.5, -Math.PI / 2, 0.6);
+        const guard = G.ents.find((o) => o.lawGuard); Object.assign(guard, { x: 23.5, y: 15.4, hidden: false });
+        G.player.gold = 100; crimeState().bounty = 40; renderArrest();
+      });
+      await still(page, 'watch');
+      await page.evaluate(() => { closeModal(); crimeState().bounty = 0; try { syncWantedPosters(); } catch (e) { /* none */ } });
+    }
+    if (want('storm')) {
+      await page.evaluate(() => { R.go('oakhaven', 23.5, 22.5, -Math.PI / 2, 0.5); Weather.hold('storm'); Weather.tick(1 / 60); });
+      await gif(page, 'storm', { frames: 40, fps: 12, width: 560, colors: 96, each: (i) => { G.keys = {}; Weather.tick(1 / 12); Engine.cam.dir = -Math.PI / 2 + i * 0.006; } });
+      await page.evaluate(() => { Weather.hold('clear'); Weather.tick(1 / 60); });
+    }
+
+    // ---- the party: Kaelen fights beside you in the Deep Woods, then uses his Dissonant Blade (X)
+    if (want('party')) {
+      await page.evaluate(() => {
+        Object.assign(G.flags, { part4: true });
+        R.go('deepwoods', 27.5, 33, -Math.PI / 2, 0.74);
+        partyJoin('kaelen'); partyOrder('follow');
+        const k = partyEnt(); const c = Engine.cam; k.x = c.x - 1.1; k.y = c.y - 1.6; G.party.x = k.x; G.party.y = k.y;
+        window.__foes = [[-0.6, -5.2], [0.9, -5.8]].map(([dx, dy]) => { const e = hydrate({ kind: 'enemy', type: 'legionnaire', x: c.x + dx, y: c.y + dy }); e.state = 'chase'; e.hp = 30; G.ents.push(e); return e; });
+        window.advanceTime(1200); R.clean();
+      });
+      await gif(page, 'party', { frames: 72, fps: 12, width: 560, each: (i) => {
+        G.keys = {}; const c = Engine.cam, live = window.__foes.filter((e) => !e.dead);
+        if (live.length) { const tx = live.reduce((a, e) => a + e.x, 0) / live.length, ty = live.reduce((a, e) => a + e.y, 0) / live.length; c.dir += (Math.atan2(ty - c.y, tx - c.x) - c.dir) * 0.3; }
+        const near = live.find((e) => Math.hypot(e.x - c.x, e.y - c.y) < 1.6); if (near && i % 8 === 0) attack(['slash right', 'slash left', 'chop down'][(i / 8) % 3]);
+        if (i === 30) partyAbility();
+      } });
+      await page.evaluate(() => { partyDismiss(true); delete G.flags.part4; });
+    }
+
     // ---- loops
     // Oakhaven's square at sunset: walking towards the low sun, the chimneys smoking
     if (want('oakhaven-walk')) {
@@ -209,6 +298,53 @@ async function gif(page, name, { frames, fps, width, each, clip, colors }) {
         console.log('gif phone', (fs.statSync(path.join(OUT, 'phone.gif')).size / 1e6).toFixed(2) + ' MB'); console.log('still phone');
       }
       await pctx.close();
+    }
+
+    // ---------------------------------------------------------------- two players: a host on a desktop, a guest on a phone
+    // The real NET19 + SYNC19 carry the session; only the link is this script's (NET19's injected-transport hook, the same
+    // relay test/sync19.test.js uses), so nothing touches the PeerJS broker or the internet. Both games run in real time,
+    // and each frame is the two screens side by side: the host on the left, the guest's phone on the right.
+    if (want('coop')) {
+      const relay = { pages: {}, from(name, str) { const p = this.pages[name === 'host' ? 'guest' : 'host']; if (p) p.evaluate((m) => window.__p19deliver && window.__p19deliver(m), str).catch(() => { }); } };
+      const NETCFG = { heartbeatMs: 300, lostMs: 1500, reconnectMs: 400, giveUpMs: 60000, joinTimeoutMs: 15000, iceServers: [] };
+      const openSide = async (name, opts) => {
+        const c = await browser.newContext(opts); await c.addInitScript(RELAY);
+        const pg = await c.newPage(); pg.on('pageerror', (e) => errors.push(name + ': ' + e.message));
+        await pg.exposeBinding('__p19send', (src, str) => relay.from(name, str));
+        await pg.goto(URL0 + '/'); await ready(pg); await pg.evaluate((cfg) => NET19.configure(cfg), NETCFG);
+        relay.pages[name] = pg; return { c, pg };
+      };
+      const host = await openSide('host', { viewport: { width: 960, height: 600 } });
+      const guest = await openSide('guest', { ...devices['Pixel 7'], viewport: { width: 915, height: 412 }, deviceScaleFactor: 1 });
+      await newGame(host.pg, 'dom'); await newGame(guest.pg, 'tap');
+      await host.pg.evaluate(() => { R.go('clearing', 20.5, 26, -Math.PI / 2, 0.69); for (const id in G.maps) for (const e of G.maps[id].entities) if (e.kind === 'enemy') e.hidden = true; G.player.name = 'Wren'; });
+      await guest.pg.evaluate(() => { G.player.name = 'Corin'; });
+      const code = await host.pg.evaluate(async () => (await NET19.host({ transport: __relayT(), name: 'Wren' })).code);
+      await guest.pg.evaluate(async (c) => { await NET19.join(c, { transport: __relayT(), name: 'Corin' }); }, code);
+      await guest.pg.waitForFunction(() => SYNC19.isGuest() && SYNC19.stats().recon > 3, null, { timeout: 15000 });
+      // the guest arrives a few paces in front of the host, facing them; the host turns to keep the guest in view
+      await host.pg.evaluate(() => { SYNC19.placeGuest(20.5, 21.2, Math.PI / 2); });
+      await guest.pg.waitForTimeout(800);
+      for (const pg of [host.pg, guest.pg]) await pg.evaluate(() => { window.turn = (a) => Math.atan2(Math.sin(a), Math.cos(a)); R.clean(); });   // the shorter way round
+      await guest.pg.evaluate(() => { Engine.cam.dir = Math.PI / 2; });
+      const dir = path.join(OUT, '.frames-coop'); fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
+      const N = 36, t0 = Date.now();
+      await guest.pg.keyboard.down('w');
+      for (let i = 0; i < N; i++) {
+        if (i === 2) { await guest.pg.keyboard.up('w'); await guest.pg.keyboard.down('d'); }   // facing the host while strafing: the guest circles them
+                        await host.pg.evaluate(() => { const g = SYNC19.guestState(); if (g) { const c = Engine.cam; c.dir += turn(Math.atan2(g.y - c.y, g.x - c.x) - c.dir) * 0.5; } R.clean(); });
+        await guest.pg.evaluate(() => { const h = SYNC19.figures().find((f) => f.who === 'host'); if (h) { const c = Engine.cam; c.dir += turn(Math.atan2(h.y - c.y, h.x - c.x) - c.dir) * 0.6; } R.clean(); });
+        const n = String(i).padStart(4, '0');
+        await Promise.all([host.pg.screenshot({ path: path.join(dir, 'h' + n + '.png') }), guest.pg.screenshot({ path: path.join(dir, 'g' + n + '.png') })]);
+      }
+      await guest.pg.keyboard.up('d');
+      const fps = Math.max(4, Math.min(12, Math.round(N / ((Date.now() - t0) / 1000))));
+      const vf = `[1:v]crop=659:412:128:0,scale=-2:270:flags=lanczos,pad=iw+14:270:14:0:color=0x0d0907[g];[0:v]scale=-2:270:flags=lanczos[h2];[h2][g]hstack=inputs=2,split[a][b];[a]palettegen=max_colors=96:stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle`;
+      execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(fps), '-i', path.join(dir, 'h%04d.png'), '-framerate', String(fps), '-i', path.join(dir, 'g%04d.png'), '-filter_complex', vf, '-loop', '0', path.join(OUT, 'coop.gif')]);
+      fs.rmSync(dir, { recursive: true, force: true });
+      console.log('gif coop', (fs.statSync(path.join(OUT, 'coop.gif')).size / 1e6).toFixed(2) + ' MB at ' + fps + ' fps, code ' + code);
+      await guest.pg.evaluate(() => NET19.leave()).catch(() => { });
+      await host.c.close(); await guest.c.close();
     }
 
     // ---------------------------------------------------------------- the README's buttons and QR card, in the game's own fonts

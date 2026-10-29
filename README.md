@@ -39,6 +39,18 @@ Explore Oakhaven and the land past the Hedge, then sail the Drift-Kestrel to Whi
 </tr>
 </table>
 
+## Play together, or bring a companion
+
+<p align="center"><img src="screenshots/readme/coop.gif" alt="Two players outside the Hedge: on the left the host on a desktop turns to follow Corin; on the right the guest's phone, with touch controls, keeps Wren in view as Corin circles" width="880"></p>
+
+**Play together.** A second player joins your world with a six-letter code, from another computer or a phone. Each sees the other's traveller and name, and you fight, share experience and travel together. Above, left: the host on a desktop. Right: the guest on a phone.
+
+To play together, both players press **Play together** on the title screen: one hosts and reads out the code, the other types it in. The guest brings their own traveller, and what they earn goes home with them.
+
+<p align="center"><img src="screenshots/readme/party.gif" alt="Kaelen fights two Legionnaires beside you in the Deep Woods and stuns one with his Dissonant Blade" width="560"></p>
+
+**The party.** In Part Four, Kaelen or Lyra travels with you. G gives orders (follow, wait, keep quiet) and X uses their ability: here Kaelen's Dissonant Blade stuns a Legionnaire.
+
 ## Play on your phone
 
 <table>
@@ -78,6 +90,51 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 <p align="center"><img src="screenshots/readme/area-cards.jpg" alt="Painted cards for Outside the Hedge, Whisper-Grove, Stillwater Landing and Greenroot" width="880"></p>
 <p align="center"><i>A painted card for each area as you arrive.</i></p>
+
+## Maps
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/readme/automap.jpg" alt="The automap of Oakhaven, drawn where you have walked, with stamps for doors, quest givers, shops and danger"></td>
+<td width="50%"><img src="screenshots/readme/worldmap.jpg" alt="The Resonant Reach travel map with gold marks for every known place"></td>
+</tr>
+<tr>
+<td>The automap (M) draws what you have walked and stamps doors, quest givers, shops, danger, bosses and traps.</td>
+<td>The world map (T): click a gold mark to travel. Journeys take time, and the road can be dangerous at night.</td>
+</tr>
+</table>
+
+<p align="center"><img src="screenshots/readme/continent.jpg" alt="The Long Octave, the continent map of eight realms, with the Resonant Reach and the Spectral Woods marked" width="640"></p>
+<p align="center"><i>The Long Octave: the eight realms around the Organum. Book One is the Reach and the Spectral Woods.</i></p>
+
+## Mechanics
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/readme/character.jpg" alt="The character sheet: attributes, vitals, the glassing gauge and the traveller's record"></td>
+<td width="50%"><img src="screenshots/readme/songbook.jpg" alt="The song-book: Murmur, Tending Note, Falling Fifth and Root Note, with their voice costs"></td>
+</tr>
+<tr>
+<td>Eight attributes, skills and level-ups. Your glass arm creeps as you use it.</td>
+<td>Songs cost voice, and every one makes noise. F1 to F4 cast them.</td>
+</tr>
+<tr>
+<td><img src="screenshots/readme/pickpocket.jpg" alt="A hand near the purse: the odds of lifting Bettany's purse unseen from behind"></td>
+<td><img src="screenshots/readme/disguise.jpg" alt="The borrowed registry: Synod Clerk Robes cover you from distant patrols"></td>
+</tr>
+<tr>
+<td>Pick pockets from behind, with the odds shown before you try.</td>
+<td>Synod Clerk Robes fool distant patrols. Up close they look harder.</td>
+</tr>
+<tr>
+<td><img src="screenshots/readme/watch.jpg" alt="The Oakhaven watch: pay the fine, go to the watch-house, bribe the constable or lean on him"></td>
+<td><img src="screenshots/readme/storm.gif" alt="A storm over Oakhaven: driving rain and a gale"></td>
+</tr>
+<tr>
+<td>Break the law and the watch comes: pay, serve the sentence, bribe, threaten or run.</td>
+<td>Weather walks the world clock. A storm hides you from sight and makes the road slow and loud.</td>
+</tr>
+</table>
 
 ## The story and the interface
 
