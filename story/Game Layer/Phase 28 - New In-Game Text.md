@@ -4,7 +4,9 @@
 
 ## What is new, in short
 
-_(summary pending)_
+R3 made Book One's rule, "too loud brings the hounds, too still brings the Hush", into law and systems. Inside the Hedge, witnesses answer loudness with the ward-sign, and a second breach is "a breach of the Narrow", fined. Hush-lamps keep the Hush off, and a hush-whistle can be staked in the ground to pipe as a lamp for a minute. Songs are learned from people: Lyra (the Root note), Bettany (the tending breath, for eighteen), Old Tam (The Miller's Daughter, a new loud lure song) and Tobin's reed-pipes (the falling fifth). The Listening Hour came to Oakhaven with Godwin Pettigrew the lamplighter, night-hummers at three crossings and the dead-hour call "all's well, all's quiet, keep to the Narrow". It also added hound packs with a leader, the canon combat rules (fear is loud, Quiets go to lanterns, a burst hound leaves a dead patch), and the Concordance as unseen faction standing.
+
+*Built 27 Oct; commits 95ed37b, 0fd82c2; PR #67.*
 
 ## Every line
 

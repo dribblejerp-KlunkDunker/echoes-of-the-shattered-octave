@@ -4,7 +4,9 @@
 
 ## What is new, in short
 
-_(summary pending)_
+Character creation gained a lore panel, "The world in 419 SR", with eight short entries a newcomer is expected to know: the Reach, the Fracture, the Octave, the Narrow, Aether-Glass, the Iron Synod, the Office of the Catalogue and the Free Captains. Each of the six callings (Dissonant Blade, Cantor, Corsair, Archivist of the Veil, Flambeau Penitent, Quarry-Hand) got a Biography and a Summary. The six invented face archetypes (The Hooded Return, The Braided Vow, The Old Salt, The Veil-Sworn, The Iron-Collared, The Frost-Marked) were then replaced by six Book One characters as playable likenesses: Kaelen Vance, Lyra Ashgrove, Captain Vane, Sable, Anselm Rooke and Mags Tennant. Each has a history, what they carry out of the gate, a six-fact dossier (Years, Born, Trade, Mark, Ties, Wants) and a line in their own voice. Several dossier facts contradict the Series Bible (ages, Mags's rank, Rooke's history, Sable's oath; see "Contradictions still standing").
+
+*Built 25 Oct; commits 1649039, 13e6220.*
 
 ## Every line
 

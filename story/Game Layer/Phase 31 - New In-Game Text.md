@@ -4,7 +4,9 @@
 
 ## What is new, in short
 
-_(summary pending)_
+R5b opened the Moot-house gallery in Whisper-Grove, where Sable first saw a proctor, and her desk in the muniment store with the sum 74,611 names at twenty a night. It also opened the cellar with Corwin Aye's barrel, which has not leaked in nineteen years. An archway off the Sunken Court leads to the Bell Yard and Ashlane: swept streets, three years of dead flowers in a window-box, dry lamps, carts with their shafts up, Hollows at their tasks and proctors walking. Halder Wick's house (the table for four) and Ivo Renn's (two bowls) are open. The quest "The Bell Yard Roll" [PROPOSED] puts seven households in your ledger from their name-boards, and "Do not comfort yourself in the margin" takes you to the twice-taken man and Sable's statement of the Veil's three rules (ch. 14).
+
+*Built 28 Oct; commits 865a07a, 6d0b217; PR #72.*
 
 ## Every line
 

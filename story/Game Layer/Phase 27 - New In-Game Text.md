@@ -4,7 +4,13 @@
 
 ## What is new, in short
 
-_(summary pending)_
+**R1, the release blockers.** R1 fixed story-breaking routes and broken promises rather than adding lore. The Cooper's Row house is now "left behind in Oakhaven" once Part Three begins, and a warning at the shaft ("This is the Rite. Oakhaven will not be the same after tonight") lists the threads still open. The six Sheep-Walk and Hanger quests now close with logbook lines when the Reach is left, naming Tamar Farrant's ewes, the half-scoured Chalk Ram, Absalom Rudd's fold-fires, the Woolwight and Kit Farrant. The Red Cloak can now end without Sable, by sitting with the Aegis while it chimes the alto line. The lore book "The Folding of the Silent Veil" is dated c. 300 SR, as in the Series Bible, and only hints at the Catalogue's use of names.
+
+*Built 26–27 Oct; commit dd2c3bf, PR #64; recorded in the Phase 27 text record.*
+
+**R2, the canon sweep.** R2 matched the game to Book One and the Series Bible line by line, and applied the owner's rulings on the library's thirteen questions. Tobin was taken in the spring of 417 at the Pellow farm, before the Hedge; the bells went in 417 for the bore's teeth; the Hedge went in that summer; the Greenroot Cantor became Mabyn Verrow. The Boar & Dulcimer now keeps its own rules (silent applause; Garrow Finch's dice moved to the cellar), the Legionnaires die saying invented names, the Cloister's name-tapes follow ch. 20, the Mausoleum is the House of the Silent Veil with four Veil scribes in its tombs, the quarry lease is Aldric's (414, witnessed by Mossbrook), and Tobin's lyre lies under a cairn by the old stile with his seven reed-pipes in Lyra's house. Orrin Pale became Oakhaven's sexton and took over Ignatius's stock. Near-collisions were renamed: Tobit Dree, Bethan Marl, Aveline Sorrel, Barnaby Haft, and the culvert twins Ned and Wyn.
+
+*Built 27 Oct; commits d73de90, 052a6a6, 7ccd72e, 6e03ed0; PR #63, #65.*
 
 ## Every line
 

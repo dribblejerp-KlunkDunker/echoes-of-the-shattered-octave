@@ -4,7 +4,9 @@
 
 ## What is new, in short
 
-_(summary pending)_
+R5a built the Hollow, Book One's burl-sick lanes behind the tannery: thirty-one households and eighty-four souls behind barred, humming doors, with sap-marks, a well-head and Rooke's chained ward-book. Lissa Merrow sits on the red-shutter step with her tin cup, and on Rootday mornings the Grafters' felt-wheeled wagon comes in with a brazier, three masked Grafters and a Legionnaire. The quest "The List" [PROPOSED] lets you hum the tending note through the two pencilled doors (the Pells and the Ashbys) and write "Recheck next month" against them. The Carders' house behind the blue door opened, with Lyra's chalk note and a siphoned root-cellar that teaches the Hush and the hush-mites, and Nell's quest "Keep him out of the damp" [PROPOSED]. The canon pass later added Hob Wendle on his step here.
+
+*Built 28 Oct; commit 9a9cd1a; PR #70.*
 
 ## Every line
 

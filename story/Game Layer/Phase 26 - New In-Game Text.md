@@ -4,7 +4,9 @@
 
 ## What is new, in short
 
-_(summary pending)_
+The Library of the Reach: 65 books written from inside the world, about 64,000 words, in four libraries and in houses, camps and dungeons. The Conservatory Reading Room in Oakhaven is kept by Cantor-Master Ilse Brennan, who answers on her slate. Odile Quayle keeps a smugglers' book room, the Bonded Store, at Stillwater Landing. In the Moot-house of Whisper-Grove a Hollow still shelves the town's books by size, and the Veil's own scriptorium is up a stair in the Mausoleum. Books are sold by Bastien Corvo, Odile and Vane, and three keepers want their lost books back. The earlier Moor serial was brought into canon as the Cantabile broadsheet serial, a tale of the Caldera printed on Broadsheet Row. The owner ruled on the library's thirteen canon questions on 27 Oct (recorded in `Library of the Reach - Notes for the Owner.md` and applied in Phase 27). The full texts are in `story/Library of the Reach/`; what the books add to canon is in World Bible Vol VIII.
+
+*Built 26–27 Oct 2026.*
 
 ## Every line
 

@@ -4,7 +4,17 @@
 
 ## What is new, in short
 
-_(summary pending)_
+The owner ruled: *"Bettis Renn should be Ivo's wife just as in the book. Match any inconsistency to match the book."* Phase 32 made the text-level fixes from the brainstorm's §5: Bettis Renn, Form 9, Tam's Essa, the Hollow's place, each bell's own last words, Aldric's count, the herald's hands, twenty-six souls, Emory Wain, the Madder birth on Nullday, Kaelen's coil, and the hush-gift child renamed Linnet. Phases 33 to 40 made the structural changes, one each:
+- the talking crates are in the Kestrel's hold;
+- Hob Wendle is the Hollow's field-hand who dies aboard, and the tanner becomes Abner Fenning [PROPOSED];
+- the Office cutter is a courier hunting the Kestrel's own 432 cores;
+- the nine days run in order (Davin on Hearthday, Pim's lure on Massday, the Church on Dawnday);
+- Halder Wick's table goes unanswered;
+- the Wearer is met once;
+- the coda is the ring of lamps;
+- Sable stays in Whisper-Grove, and the scribe in the Reach's mist is Umber [PROPOSED].
+
+*Built 28 Oct; commits ad72340, f4db2f7, d9fc079, c9e83b8, 12ae249, e25b999, 4c17766, f6e24bb, 90e2680, 3c9b261.*
 
 ## Every line
 

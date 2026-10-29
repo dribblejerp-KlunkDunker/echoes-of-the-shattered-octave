@@ -4,7 +4,9 @@
 
 ## What is new, in short
 
-_(summary pending)_
+R4 filled empty maps with people, things to use and reasons to be there. Oakhaven's baker's (Agnes Tull) and chandler's (Ambrose Vettle) opened, and the town gained life by the clock: the iron-oaks chiming in wind, a sapling through the cobbles each morning, the baker's thumping at night, the sexton salting the chapel paths at dawn, a daily tanker-wagon under Legionnaire escort, and dogs howling at noon. The Watch Downs got Abel Sedge the turf-cutter and a dew-pond; Wethercombe's farmhouse (Mother Hurst), barn (Jem Cotter) and shut-up cottage opened, and the Bellwether a room and a slate of tabs. The Flume Road got Ennis Crowle the beekeeper (canon in Vol V), the tannery two hands (Sim and Moll Fletch) and a barred back door to the Hollow, and the Low Rings and Stillwater Landing a punt-poler, a salvager, a smuggler and a broadsheet-seller.
+
+*Built 27 Oct; commits d3b92b1, c02e937; PR #68.*
 
 ## Every line
 
