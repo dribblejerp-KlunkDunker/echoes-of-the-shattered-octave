@@ -713,7 +713,7 @@ function checkResonantWall(freq) {
 const LORE_BOOKS = [
   {
     id: 'bk_octave', title: 'On the Eight Anchors of the Long Octave',
-    body: '<i>From the Conservatory of Bores, 389 SR:</i><br><br>Eight Anchors pin the continent to the world, each with its own law and its own note: Growth in the Reach (174 Hz), Heat in the Caldera (285 Hz), Mass in the Iron Peaks (396 Hz), Time in the Shifting Dunes (417 Hz), Light at the Dawning Heights (528 Hz), Velocity on the Tempest Coast (639 Hz), Memory in the Spectral Woods (741 Hz), and Decay at the Gate (852 Hz), which keeps the rest between the notes.<br><br>An Anchor is only stone and bronze where it breaks the ground. What lives under it is a Chorister, and the Conservatory does not advise drilling into a thing that sings.',
+    body: '<i>From the Conservatory of Bores, 389 SR:</i><br><br>Eight Anchors pin the continent to the world, each with its own law and its own note: Growth in the Reach (174 Hz), Heat in the Caldera (285 Hz), Mass in the Iron Peaks (396 Hz), Time in the Shifting Dunes (417 Hz), Light at the Dawning Heights (528 Hz), Velocity in the Tempest Archipelago (639 Hz), Memory in the Spectral Woods (741 Hz), and Decay at the Gate (852 Hz), which keeps the rest between the notes.<br><br>An Anchor is only stone and bronze where it breaks the ground. What lives under it is a Chorister, and the Conservatory does not advise drilling into a thing that sings.',
   },
   {
     id: 'bk_417', title: 'Parish Register: The Year 417 & Cantor Tobin',

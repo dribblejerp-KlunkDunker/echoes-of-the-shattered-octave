@@ -33,7 +33,7 @@
 //    tank     140 + 6 Scrap + 4 Mesh + 2 Shard + 2 Governor-Gear   the two-mooring hop (needs the engineer, envelope, tank_patched)   a third, burnished tank
 //  Materials are never out of reach: the chandler's locker in the hold sells Scrap 12, Mesh 18, Gear 30, Shard 55.
 //
-//  THE CREW [PROPOSED for Book One; the game's own text wins]. Mags Tennant (first mate) and Tobiah Marsh (second engineer) are
+//  THE CREW [PROPOSED for Book One; the game's own text wins]. Mags Tennant (bosun) and Tobiah Marsh (second engineer) are
 //  already in the game (js/data.js mags_dw: she stopped hearing, reads lips, speaks aloud and knows hand-cant). The engineer
 //  is UNNAMED (author's ruling 2026-10-20: Pennick is a Book Two person; titles, not names; the internal id stays 'pennick'
 //  for saves): the FIRST engineer Tobiah is second to, who has been below the whole time. Nobody is
@@ -267,7 +267,7 @@ const KESTREL16 = (function () {
     crew: {
       leaveSightNo: S('She is watching the mist, and the mist is not going to tell her you are there. She cannot hear you. Walk round in front of her, where she can see your face.'),
       mags: {
-        name: S('Mags Tennant, first mate'),
+        name: S('Mags Tennant, bosun'),
         label: S('Mags Tennant, at the bow rail, watching'),
         labelSeen: S('Mags Tennant, watching your mouth'),
         greetP: SG('Slow, please. Face me.'),
@@ -287,7 +287,7 @@ const KESTREL16 = (function () {
         d: [
           SG('Weather is turning. I can see it in the way Vane stops talking.'),
           SG('Do not shout up the ladder. Wave. I would rather see you than be told.'),
-          SG('Tobiah talks to the tanks. The engineer talks to nobody and the tanks listen. I do not know which is better.'),
+          SG('The engineer talks to the tanks. Tobiah talks to the engineer, and the tanks listen to both. I do not know which is better.'),
           SG('You move like someone who is tired of being heard. Good. So is the ship.'),
           SG('The children asked me for the sign for up. It took an afternoon. They use it for everything.'),
           SG('If you see my back, step round. I am not rude. I am deaf. Those are different problems.'),

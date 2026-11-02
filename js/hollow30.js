@@ -5,7 +5,7 @@
 //      eighty-four souls, no ward and no warden: Rooke goes house to house with his book. Doors that are past cutting carry
 //      the sap-mark, a green circle with a line struck through it. Lissa Merrow, eleven, bandaged to the elbows, sits on the
 //      step of the red-shutter house with her tin cup. On Rootday mornings the Grafters' wagon comes in, its wheels wrapped
-//      in white felt, with a brazier, three masked Grafters and a Legionnaire. At the Greening the Hollow goes under bramble.
+//      with its harness in felt, a brazier, three masked Grafters and a Legionnaire. At the Greening the Hollow goes under bramble.
 //      Its way in is the tannery's back door (R4 left it barred).
 //    * "THE LIST" [PROPOSED: the quest; the book, the marks and the Inquisitor's want of the list are canon]. Rooke's
 //      ward-book is chained at the well-head. Two doors are pencilled, not chalked: early, could go back. Hum the tending
@@ -91,12 +91,12 @@ const HOLLOW30 = (function () {
     bench: S('A bench by the well'),
     // the Grafters' visit
     wagon: S('The Grafters\' wagon'),
-    wagonLook: S('A wagon with its wheels wrapped in white felt so that it makes no sound on the cobbles. A brazier rides on the tail, and under a sheet, laid out in rows, the saws.'),
+    wagonLook: S('A long white wagon behind two grey horses, their harness wrapped in felt so that nothing jingles and their hooves booted in leather. A brazier of banked coals rides in an iron cage on the bed, and under oilcloth, laid out in rows, the saws.'),
     grafter: S('A masked Grafter'),
-    grafterLook: S('A Grafter in a white felt mask, an apron over the Office grey, a book open in one hand. The mask has no mouth.'),
+    grafterLook: S('A Grafter in white: a long apron of white leather over a white smock, gloves to the elbow, and a mask of stiffened leather with round glass eyepieces and a lattice of wire over the mouth, so that the breathing comes through as a soft hiss. A book is open in one hand.'),
     legion: S('A Legionnaire, standing off'),
     brazier: S('The Grafters\' brazier'),
-    rootday: S('It is Rootday. The Grafters\' wagon is in the Hollow, its wheels wrapped in white felt, a brazier smoking on its tail. Three masked Grafters go from door to door with the book, and a Legionnaire stands off at the end of the lane. Every house has stopped humming.'),
+    rootday: S('It is Rootday. The Grafters\' white wagon is in the Hollow, the horses\' harness wrapped in felt, a brazier smoking in its cage. Three masked Grafters go from door to door with the book, and a Legionnaire stands off at the end of the lane. Every house has stopped humming.'),
     // the Carders' house
     hearth: S('The hearth'),
     hearthLook: S('The fire is banked low, the way you leave it for a house that is coming back. A row of bricks warms along the hearth-back.'),

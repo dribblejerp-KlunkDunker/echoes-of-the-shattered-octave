@@ -114,14 +114,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       G.day = 1; T.go('p30_hollow', 13.5, 4.5, Math.PI / 2, 9 / 24); T.step(2);
       out.on = ['wagon', 'brazier', 'g0', 'g1', 'g2', 'leg'].every((k) => G.ents.some((o) => o._p30 === k && o.transient));
       out.grafters = G.ents.filter((o) => o._p30 && /^g\d$/.test(o._p30)).length === 3;
-      out.seen = T.heard(/Grafters' wagon is in the Hollow/);
+      out.seen = T.heard(/Grafters' white wagon is in the Hollow/);
       out.saved = !JSON.stringify(snapshotGame().maps.p30_hollow || {}).includes('_p30');
       out.lissa = /look at them/.test((NPCS.p30_lissa.quest(G) || {}).text || '');
       G.tod = 15 / 24; T.step(1); out.afternoon = !G.ents.some((o) => o._p30);
       G.day = 2; G.tod = 9 / 24; T.step(1); out.hearthday = !G.ents.some((o) => o._p30);
       return out;
     });
-    check(graft.on && graft.grafters && graft.seen, 'on Rootday morning the felt-wheeled wagon, its brazier, three masked Grafters and a Legionnaire come into the Hollow');
+    check(graft.on && graft.grafters && graft.seen, 'on Rootday morning the white wagon in felted harness, its brazier, three masked Grafters and a Legionnaire come into the Hollow');
     check(graft.saved && graft.afternoon && graft.hearthday && graft.lissa, 'they are gone by afternoon and on other days, never saved; Lissa tells you not to look at them');
     await shot('p30-rootday', () => { G.day = 1; T.go('p30_hollow', 13.0, 12.2, Math.PI / 2 - 0.35, 9 / 24); T.step(2); });
 

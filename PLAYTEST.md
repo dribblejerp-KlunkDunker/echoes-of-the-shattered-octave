@@ -14,6 +14,19 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## Game text follows the book (built 2 Nov)
+
+Reading checks only; the tests confirm every line is in place and has its French.
+
+- **The held letters at the Chapel.** Kaelen's letter is now from his father, signed *A. V.* (his mother died when he was twelve, Book One ch. 5). Pim's is from his gran at the Landing (his father Joss died two winters ago, ch. 1). Do both still land as small kindnesses, and does Kaelen's reaction read right?
+- **Vosk is she.** Ines Tarn's line about the Factor's safe.
+- **The quarry lease.** Reeve Mossbrook now says he put his name under a lease in 414, matching the document in Vosk's safe; the moot rumour says the same.
+- **Port Cantabile's Harbour office** is kept by Kerrow, "since Teague went into the Nancy's hold". Colm Teague dies on 4 Ashfall in Book Two.
+- **Mags is the bosun,** on the Kestrel, in the dossier and on her name label. Her line about the tanks now gives the tanks to the engineer, as the book does.
+- **The Grafters' wagon** in the Hollow on Rootday: a long white wagon, felted harness and booted hooves; the Grafters in white leather with glass eyepieces and a wire lattice over the mouth (ch. 3). Check the sprites still match the words; the art was drawn for the old text.
+- **The character dossiers** (Phase 23): Kaelen 34 with a pale-cyan Light-glass arm, Lyra 33, Vane 41 with the Kestrel bought in 417, Sable 41 and a keeper of the Bound Ledger who never left Whisper-Grove, Rooke fifty or near it and four years out of the Organum, Mags the bosun. Read them in English and French.
+- **Lore:** the Octave card now puts the Organum where the eight roots meet, and the Conservatory's primer says the Tempest Archipelago.
+
 ## The README and the phone link (built 29 Oct)
 **Your ask:** "Re make the repo page with updated screenshots, gifs and an updated play in browser button as well as mobile link." The repo page now opens with the title screen, a Play in your browser button and a Play on your phone button, four loops, a phone section with a QR code, and fresh stills. The old phase-by-phase pictures moved to docs/gallery.md and the full feature list to docs/features.md.
 - [ ] **Scan the QR code** on the repo page with a real phone. It should open the game with `?touch=1` at the end of the address. (The code was checked module by module against the URL, but not with a camera.)

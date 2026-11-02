@@ -2441,6 +2441,10 @@ Novels (Book One fixes are made in the full manuscript and in its chapter file):
 
 Series Bible, v1.4: Sable is forty-one (Book One ch. 22: "I am forty-one years old with a broken arm and two things left in my head"); her voice line and the Aegis's bonds lose the last of the old "girl, entry 41,112"; the cut rope hangs six days; a new list, *Book One details on record*; the "Chord" naming question goes to Open Decisions. The replaced lines are in its appendix. (Part II's cast entries above still quote the bible as it stood before v1.4.)
 
+#### Game text brought into line on 2 November 2026
+
+Under the owner's ruling of 28 October ("Match any inconsistency to match the book"), these Part V items were fixed in the game, with French (`tools/i18n/p42-book.tsv`): B3 and D3 (Mags is the bosun); B5 (the engineer, not Tobiah, talks to the tanks; the engineer stays unnamed per the 20 October ruling); B6 (Kaelen's held letter is from his father); B7 (Pim's is from his gran); B8 (Vosk is she); B10 (Mossbrook witnessed the 414 lease); B15 (Kerrow keeps the Harbour book since Teague died in the Nancy's hold); D2 (the Grafters' wagon and kit as in ch. 3; the timing waits on N10); D3 (the Phase 23 dossiers' ages, Light-glass, the Kestrel in 417, Sable's Ledger and Whisper-Grove, Rooke from the Organum); D12 (the Organum); D13 (the Tempest Archipelago). Still open in the game: D1 (the Carders' door), D4 ("in one night", which the Series Bible's "overnight" supports), B23 (the Borrowed Collar trophy), B24 (which lift-tank), Davin's boots, and the name collisions.
+
 #### Still open, for the owner
 
 - **N1 · Book One, the rope's last load.** Ch. 12 drops Lissa and Tobiah from the last load, yet both are aboard in ch. 13. The check suggests moving them into "the last four before the last" and giving the last load two unnamed carters. It rewrites a scene, and Brainstorm §5 #22 is unruled.

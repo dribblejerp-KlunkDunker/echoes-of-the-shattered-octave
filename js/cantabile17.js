@@ -17,7 +17,7 @@
 //                       that climbs 1.8, six landings at 0.4 + 1.8 n, so the top is 11.2 above the quay), with a landing at the
 //                       head of each flight and a lantern on a hook. At the top, a yard of wet flags and the counting-house
 //                       (square stone, slate roof, iron shutters, a brass sun-disc over the door): CLOSED, a door like any other.
-//    cantabile_office   the Harbour office (Teague, the board, the Articles)
+//    cantabile_office   the Harbour office (Kerrow, the board, the Articles)
 //    cantabile_chandler the chandler on the third landing (diving-helm in the window that was new in his grandfather's time)
 //    cantabile_widow    a room cut into the rock on the fourth landing (the widow with the bottle she has not opened in 3 years)
 //    cantabile_cay      Driftwood Cay: the burying-ground, children in earth, a small bell on an iron hook at every grave
@@ -196,14 +196,14 @@ const CANTABILE17 = (function () {
     },
     office: {
       arrive: S('The Harbour office. A pine box under the desk, a rack of gaffs, and a board on the wall with a great deal of chalk on it.'),
-      journal: S('The Harbour office, at the foot of the Long Mole. Teague keeps the book. The dues are paid to the Harbour-Queen herself, on the Mole-head, at the slack: and the slack is the key before the turning. The board on the wall says so.'),
+      journal: S('The Harbour office, at the foot of the Long Mole. Kerrow keeps the book, since Teague went into the Nancy\'s hold. The dues are paid to the Harbour-Queen herself, on the Mole-head, at the slack: and the slack is the key before the turning. The board on the wall says so.'),
       boardTitle: S('The Harbour\'s board'),
       board: S('THE REEF\'S KEYS, WINTER, SINCE THE FRACTURE.<br>The reef changes key with the tide. She sings six keys up from the low one, E, F-sharp, G, A, B, C, one to the tide-hour, and drops back to E at the turn. The Harbour keeps its business by the key.<br><br>MOORING DUES: six sovereigns a hull, a day, paid into the Harbour-Queen\'s own hand AT THE SLACK. The slack is the key before the turning. NOT THROUGH THE OFFICE. NOT BEFORE. NOT AFTER.<br><br>By order of the Harbour.'),
       boardLabel: S('A board on the wall, chalked over many times. THE REEF\'S KEYS, and MOORING DUES.'),
       articlesTitle: S('The Articles, as read at noon'),
       articles: S('<i>Article the Ninth.</i> Any vessel making the harbour under no hand shall be boarded by the Harbour\'s people and no other, and what is found aboard her belongs to the Harbour.<br><br><i>Article the Twelfth.</i> Nothing is to be lifted off a vessel lying on the Harbour\'s bench. The Harbour does not forbid theft; the Harbour forbids theft from the Harbour\'s own pocket, which is a different crime and carries the drop.<br><br><i>Article the Sixteenth.</i> What lies below the tide-mark belongs to whoever brings it up. The Harbour takes a fifth. The sea takes what it likes, and no court on this coast will hear a complaint against it.<br><br><i>Article the Twenty-first</i> [PROPOSED]. No bottle may be opened within the harbour.'),
       articlesLabel: S('The Articles of the Free Captains, painted white on black board, in numbered lines. They are read aloud at noon, in a flat voice, and enforced from the derrick.'),
-      box: S('A pine box under the desk, two feet by one, with a lock on it. Teague says the key stays with the Harbour-Queen, and that it has been used four times in nineteen years.'),
+      box: S('A pine box under the desk, two feet by one, with a lock on it. Kerrow says the key stays with the Harbour-Queen, and that it has been used four times in nineteen years.'),
       gaffs: S('A rack of gaffs and long hooks and lanterns, hung ready by size. The Harbour boards a thing that comes in under no hand, and it does not do it with its bare hands.'),
       out: S('Out to the Lantern Yard'),
       vox: S('A high shelf of vox-bottles, wax-sealed, each with a salvage tag and a chalk number. Found in the harbour, held for the Harbour, and never opened.'),   // [PROPOSED] POLISH17
@@ -243,7 +243,7 @@ const CANTABILE17 = (function () {
     },
     // ---- people
     teague: {
-      name: S('Teague, Harbour office'),
+      name: S('Kerrow, Harbour office'),
       polite: S('Harbour office. Dues, bench and bell, in that order, and the bell is not mine to ring.'),
       normal: S('Harbour office. If it is dues, it is not me. If it is not dues, it is still not me.'),
       blunt: S('Be quick. The tide will not wait, and neither will the Harbour-Queen.'),
@@ -254,7 +254,7 @@ const CANTABILE17 = (function () {
       qWhere: S('Where do I find the Harbour-Queen?'),
       aWhere: S('On the Mole-head, by the bell. Nineteen years of mornings, and most afternoons. Do not stand under the derrick. Everyone does it once.'),
       qArticles: S('Read me the Articles.'),
-      aArticles: S('Teague reads them in the voice you would use for a tide-table. The Ninth, the Twelfth, the Sixteenth and the Twenty-first. When he is done he says, in exactly the same voice, "That is all of them that anyone is likely to ask about."'),
+      aArticles: S('Kerrow reads them in the voice you would use for a tide-table. The Ninth, the Twelfth, the Sixteenth and the Twenty-first. When he is done he says, in exactly the same voice, "That is all of them that anyone is likely to ask about."'),
       qBell: S('What does the bell mean?'),
       aBell: S('One stroke for every soul that goes into the water. Then nobody speaks, so the harbour can count. That is the whole grammar, there is no other. If you hear it, somebody has had the worst day of their year, and you do not ask whose.'),
       qShort: S('I am short of the dues.'),
@@ -1239,7 +1239,7 @@ const CANTABILE17 = (function () {
   }
   const bye = (t, r) => ({ t, f: () => r || null, end: true });
 
-  // ---- Teague, the Harbour office
+  // ---- Kerrow, the Harbour office (Colm Teague dies in the Nancy's hold on 4 Ashfall, Book Two ch. 1)
   function teagueQuest() {
     if (!inMine(G.mapId)) return null;
     const P = TX.teague, first = !(fint('met') & 1);
