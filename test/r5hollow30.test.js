@@ -57,13 +57,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       await page.screenshot({ path: path.join(SHOTS, name + '.png') });
     };
 
-    // ---- the ways in: the tannery's back door and the blue door on the north row, both from maps already reachable
+    // ---- the ways in: the tannery's back door, and the Carders' blue door halfway down the Hollow's lane (MS ch. 6, 11)
     const ways = await page.evaluate(() => {
       const H = HOLLOW30, out = {};
       out.tannery = T.portalAt('tannery', H.TANNERY_DOOR[0], H.TANNERY_DOOR[1]);
-      out.carders = T.portalAt('oakhaven', H.CARDERS_DOOR[0], H.CARDERS_DOOR[1]);
-      out.blue = G.maps.oakhaven.get(H.CARDERS_DOOR[0], H.CARDERS_DOOR[1]).tex === 't_p30_bluedoor' && !!Engine.textures.t_p30_bluedoor;
-      out.back = T.portalAt('p30_hollow', 13, 0) === 'tannery' && T.portalAt('p30_carders', 3, 6) === 'oakhaven' && T.portalAt('p30_carders', 6, 3) === 'p30_cellar' && T.portalAt('p30_cellar', 0, 3) === 'p30_carders';
+      out.carders = T.portalAt('p30_hollow', H.CARDERS_DOOR[0], H.CARDERS_DOOR[1]);
+      out.oakBarred = !G.maps.oakhaven.get(37, 7).portal;   // the old north-row door stays a shuttered house
+      out.blue = G.maps.p30_hollow.get(H.CARDERS_DOOR[0], H.CARDERS_DOOR[1]).tex === 't_p30_bluedoor' && !!Engine.textures.t_p30_bluedoor;
+      out.back = T.portalAt('p30_hollow', 13, 0) === 'tannery' && T.portalAt('p30_carders', 3, 6) === 'p30_hollow' && T.portalAt('p30_carders', 6, 3) === 'p30_cellar' && T.portalAt('p30_cellar', 0, 3) === 'p30_carders';
       // every portal lands on open ground
       const lands = [];
       for (const id of ['p30_hollow', 'p30_carders', 'p30_cellar', 'tannery', 'oakhaven']) {
@@ -75,7 +76,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       out.danger = G.maps.p30_hollow.danger === 0 && G.maps.p30_cellar.danger === 0 && G.maps.p30_cellar.siphoned === true;
       return out;
     });
-    check(ways.tannery === 'p30_hollow' && ways.carders === 'p30_carders' && ways.blue && ways.back, 'the tannery\'s back door opens on the Hollow, and the blue door on the north row on the Carders\' house; each leads back');
+    check(ways.tannery === 'p30_hollow' && ways.carders === 'p30_carders' && ways.blue && ways.back && ways.oakBarred, 'the tannery\'s back door opens on the Hollow, and the blue door halfway down its lane on the Carders\' house; each leads back, and the north row has no Carders\' door');
     check(ways.allLand, 'every new doorway lands on open ground (' + JSON.stringify(ways.lands) + ')');
     check(ways.law && ways.danger, 'the Hedge rule holds: the Narrow law reaches the Hollow and the house, nothing hunts there, and the cellar is siphoned');
 

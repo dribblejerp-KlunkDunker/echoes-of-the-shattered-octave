@@ -25,6 +25,7 @@ Reading checks only; the tests confirm every line is in place and has its French
 - **Mags is the bosun,** on the Kestrel, in the dossier and on her name label. Her line about the tanks now gives the tanks to the engineer, as the book does.
 - **The Grafters' wagon** in the Hollow on Rootday: a long white wagon, felted harness and booted hooves; the Grafters in white leather with glass eyepieces and a wire lattice over the mouth (ch. 3). The wagon is now painted to match (5 Nov): white, two grey horses in felted harness with booted hooves, the brazier caged on its bed and the saws under oilcloth. Check it reads at a distance and up close, and that the horses look grey rather than tan in the morning light.
 - **The character dossiers** (Phase 23): Kaelen 34 with a pale-cyan Light-glass arm, Lyra 33, Vane 41 with the Kestrel bought in 417, Sable 41 and a keeper of the Bound Ledger who never left Whisper-Grove, Rooke fifty or near it and four years out of the Organum, Mags the bosun. Read them in English and French.
+- **The Carders' house** (5 Nov) is now behind the blue door halfway down the Hollow's lane from the tannery (Book One ch. 6, 11), not on Oakhaven's north row; that north-row house is shuttered. Walk Nell's errand from the mill to the door and check the way reads.
 - **Lore:** the Octave card now puts the Organum where the eight roots meet, and the Conservatory's primer says the Tempest Archipelago.
 
 ## The README and the phone link (built 29 Oct)

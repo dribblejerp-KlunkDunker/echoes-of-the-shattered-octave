@@ -11,7 +11,8 @@
 //      ward-book is chained at the well-head. Two doors are pencilled, not chalked: early, could go back. Hum the tending
 //      note through each door (or leave honey for the throat of whoever hums inside), then write "Recheck next month"
 //      against them, so they are not on the Grafters' Rootday list.
-//    * THE CARDERS' HOUSE behind the blue door on the north row (Oakhaven's barred door at 37,7): the pallet pulled away
+//    * THE CARDERS' HOUSE behind the blue door halfway down the Hollow's lane (MS ch. 6, 11: "halfway down the lane behind
+//      the tannery"; it goes under bramble at the Greening with the rest of the Hollow): the pallet pulled away
 //      from the wall, a hush-lamp in the window, Lyra's chalk note, and a stair to the root-cellar. The cellar is the
 //      design document's Hush-Mite tutorial (GDD:125, [PROPOSED] in Book One's terms): siphoned, damp, three mites, and a
 //      hush-lamp at the stair foot.
@@ -40,7 +41,7 @@ const HOLLOW30 = (function () {
   const rootday = () => ((Number(G.day) || 0) % 8 + 8) % 8 === 1;   // DAYS[1]
 
   const MAPS = { hollow: 'p30_hollow', carders: 'p30_carders', cellar: 'p30_cellar' };
-  const CARDERS_DOOR = [37, 7];          // Oakhaven: the Carders' house on the north row
+  const CARDERS_DOOR = [16, 4];          // the Hollow: the Carders' blue door, halfway down the lane from the tannery
   const TANNERY_DOOR = [11, 9];          // the tannery's back wall
   const HOLLOW_GATE = [13, 0];           // the Hollow's way back in to the tannery
   const GRAFTERS = { from: 8, to: 14 };  // Rootday morning
@@ -128,8 +129,8 @@ const HOLLOW30 = (function () {
 
   // ---- Nell's second asking (her first is The Oiled Honey, data.js; this one starts only once Pim is safe)
   const NELL = {
-    offer: S('You got him through it. Now the house. We cannot keep him at the mill, it is all draughts and Grafters walking past the door. Ours is on the north row, the blue door. Rooke said to keep him out of the damp, and the damp in that house comes up out of the root-cellar with the humming. Mites. I cannot go down there with my chest. Clear the cellar, and put a hot brick in his pallet so it is dry when we bring him home.'),
-    progress: S('The cellar, and the brick in his pallet. The blue door on the north row. Lyra left a lamp in the window, so it is not gone still.'),
+    offer: S('You got him through it. Now the house. We cannot keep him at the mill, it is all draughts and Grafters walking past the door. Ours is behind the tannery, halfway down the Hollow lane: the blue door. Rooke said to keep him out of the damp, and the damp in that house comes up out of the root-cellar with the humming. Mites. I cannot go down there with my chest. Clear the cellar, and put a hot brick in his pallet so it is dry when we bring him home.'),
+    progress: S('The cellar, and the brick in his pallet. The blue door, halfway down the Hollow lane behind the tannery. Lyra left a lamp in the window, so it is not gone still.'),
     mitesLeft: S('The brick is in, but I can hear the cellar from here. The mites are still down there.'),
     brickLeft: S('The cellar is quiet, you say? Then the brick. There are bricks on the hearth-back. Wrap one; it is too hot to hold.'),
     done: S('Dry? And warm? Then we go home tonight, and he sleeps in his own bed, in the middle of the floor where Rooke said. Take this. It is not enough. Nothing is ever enough.'),
@@ -283,7 +284,7 @@ const HOLLOW30 = (function () {
   // the Hollow's doors: [x, y, face (the lane side: 's', 'n', 'e', 'w'), mark: 'sap' | 'pencil' | null, pencil index]
   const HDOORS = [
     [3, 8, 's', 'sap'], [7, 8, 's', null], [10, 8, 's', 'sap'], [11, 4, 'e', 'sap'],
-    [18, 8, 's', 'sap'], [22, 8, 's', 'pencil', 0], [26, 8, 's', 'sap'], [16, 4, 'w', null],
+    [18, 8, 's', 'sap'], [22, 8, 's', 'pencil', 0], [26, 8, 's', 'sap'],
     [3, 13, 'n', 'sap'], [7, 13, 'n', null], [10, 13, 'n', 'sap'], [11, 17, 'e', 'sap'],
     [23, 13, 'n', 'pencil', 1], [26, 13, 'n', 'sap'], [21, 17, 'w', 'sap'],
   ];
@@ -319,6 +320,8 @@ const HOLLOW30 = (function () {
       if (mark === 'sap') look(m, 'p30_sapmark', sx, sy, TX.marked, TX.markLook, { solid: false, scale: 0.8, radius: 0.1 });
       if (mark === 'pencil') m.deco('p30_pencil', sx, sy, { solid: false, scale: 0.8, radius: 0.3, label: TX.pencil, use: 'p30_door', door: pi });
     });
+    // the Carders' blue door, on the lane (it faces west)
+    m.set(CARDERS_DOOR[0], CARDERS_DOOR[1], DOOR({ tex: 't_p30_bluedoor', portal: { map: MAPS.carders, x: 3.5, y: 5.0, dir: -Math.PI / 2 }, label: TX.cardersDoor }));
     // the red-shutter house, and Lissa on its step
     for (const dx of [-0.85, 0.85]) m.deco('p30_shutter', RED_DOOR[0] + 0.5 + dx, RED_DOOR[1] - 0.12, { solid: false, scale: 0.75, radius: 0.1, label: TX.shutters });
     m.npc('p30_lissa', RED_DOOR[0] + 0.5, RED_DOOR[1] - 0.6, { facing: -Math.PI / 2, scale: 0.68 });
@@ -340,7 +343,7 @@ const HOLLOW30 = (function () {
   function buildCarders(out) {
     const m = new GameMap(MAPS.carders, TX.carders, 7, 7, { floor: 't_wood', ceil: 't_wood', fogDist: 16, ambient: 0.28, fogColor: [0, 0, 0], music: 'inside', spawn: { x: 3.5, y: 5.0, dir: -Math.PI / 2 } });
     m.border('t_house');
-    m.set(3, 6, DOOR({ tex: 't_p30_bluedoor', portal: { map: 'oakhaven', x: out.x, y: out.y, dir: out.dir }, label: TX.toLane }));
+    m.set(3, 6, DOOR({ tex: 't_p30_bluedoor', portal: { map: MAPS.hollow, x: out.x, y: out.y, dir: out.dir }, label: TX.toLane }));
     m.set(6, 3, DOOR({ portal: { map: MAPS.cellar, x: 1.5, y: 3.5, dir: 0 }, label: TX.stairDown }));
     m.deco('hearth', 1.5, 1.4, { radius: 0.4, scale: 0.9, glow: 0.7, label: TX.hearth, use: 'p30_hearth' });
     look(m, 'sign', 2.6, 1.2, TX.note, TX.noteLook, { solid: false, scale: 0.5, radius: 0.15 });
@@ -365,14 +368,13 @@ const HOLLOW30 = (function () {
     return m;
   }
   function buildMaps(maps) {
-    const oak = maps.oakhaven, tan = maps.tannery;
+    const tan = maps.tannery;
     OUT.tannery = tan ? outside(tan, TANNERY_DOOR[0], TANNERY_DOOR[1]) : { x: 11.5, y: 8.5, dir: -Math.PI / 2 };
-    OUT.carders = oak ? outside(oak, CARDERS_DOOR[0], CARDERS_DOOR[1]) : { x: 37.5, y: 8.5, dir: Math.PI / 2 };
+    OUT.carders = { x: CARDERS_DOOR[0] - 0.5, y: CARDERS_DOOR[1] + 0.5, dir: Math.PI };   // out onto the lane, facing away from the door
     if (!maps[MAPS.hollow]) maps[MAPS.hollow] = buildHollow(OUT.tannery);
     if (!maps[MAPS.carders]) maps[MAPS.carders] = buildCarders(OUT.carders);
     if (!maps[MAPS.cellar]) maps[MAPS.cellar] = buildCellar();
     syncTannery(tan);
-    syncOakDoor(oak);
   }
   // the tannery's back door: into the Hollow, or onto bramble once the town has gone
   function syncTannery(tan) {
@@ -384,12 +386,7 @@ const HOLLOW30 = (function () {
       tan.set(x, y, DOOR({ portal: { map: MAPS.hollow, x: sp.x, y: sp.y, dir: sp.dir }, label: TX.hollowDoor }));
     }
   }
-  function syncOakDoor(oak) {
-    if (!oak || oak.id !== 'oakhaven' || gone()) return;
-    const [x, y] = CARDERS_DOOR, c = oak.get(x, y);
-    if (!c || !c.door) return;
-    oak.set(x, y, DOOR({ tex: 't_p30_bluedoor', portal: { map: MAPS.carders, x: 3.5, y: 5.0, dir: -Math.PI / 2 }, label: TX.cardersDoor }));
-  }
+
 
   // ================================================================ the Grafters' visit (Rootday morning; transient)
   const grafting = () => hasG() && rootday() && hour() >= GRAFTERS.from && hour() < GRAFTERS.to && !gone();
@@ -535,10 +532,6 @@ const HOLLOW30 = (function () {
     if (typeof buildAllMaps === 'function') {
       const _b = buildAllMaps;
       buildAllMaps = function () { const maps = _b.apply(this, arguments); try { buildMaps(maps); } catch (e) { warnOnce('build', e); } return maps; };
-    }
-    if (typeof buildOakhaven === 'function') {
-      const _bo = buildOakhaven;
-      buildOakhaven = function () { const m = _bo.apply(this, arguments); try { syncOakDoor(m); } catch (e) { warnOnce('door', e); } return m; };
     }
     if (typeof LAW_MAPS !== 'undefined') { LAW_MAPS.add(MAPS.hollow); LAW_MAPS.add(MAPS.carders); }
     if (typeof useDeco === 'function') {
