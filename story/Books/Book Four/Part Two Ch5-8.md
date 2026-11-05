@@ -813,3 +813,826 @@ Below her, across the city, faint, steady, the Pure Note went on. Held. Without 
 She did not know whether it heard her.
 
 She held the Blade up until the sun came over the peaks, with her shadow lying across her sister and the priest and the seven, and did not look away.
+
+---
+
+## CHAPTER SIX
+### The Correspondence
+
+> *Light keep you.*
+>
+> — The greeting of the Choir-Church of the Pure Note. It has no answer. The faithful are taught that the Light gives the answer, and to wait for it
+
+*The Basilica of the Pure Note, Sol-Luminary. Dawnday the twenty-third of Frostmonth, to Driftday the twenty-fourth.*
+
+---
+
+She heard the sun come up.
+
+Nobody else did. She knew that. She had known it for seven years, since the dark, since the morning she came up out of the trench of nothing on her hands with the copper still in her throat and found that everything had a sound now. The sun had one. It came over the peaks to the east of the Spire at the eighth hour of Dawnday like a held breath let out through the teeth, a long thin hiss on the edge of hearing, and it went into the white city and the white city rang with it, very faint, every stone, the way a glass rings when you run a wet finger round its rim.
+
+She heard her sister's arms shaking.
+
+Seraphina stood in the middle of the nest with the Blade held up in both hands and her shadow lying over the seven, and she had stood like that since the dawn breath, and her arms were shaking. Not so that you could see. So that you could hear. A faint dry tremor in the joints of the elbow, a creak in the tendons of the wrist, under the sound of the Blade drinking. Solenne heard it the way she heard everything now: without wanting to, without being able to stop.
+
+"Sera," she said. "Put it down."
+
+"No."
+
+"The chain's shadow is back. Listen to it."
+
+Her sister did not listen. Her sister had never been able to. That was one of the things about Seraphina that Solenne had loved most, once, when they were girls on the rim, in their mother's house with the window that looked straight across at the Spire: that Sera could not hear the things Solenne heard, and so she was never afraid of them. But Solenne listened, and the chain overhead was humming again. The long low note of a thing that has been holding a weight for a hundred years and is tired. And its shadow on the floor of the anchor-house had come back with the hum, grey, thin, a band of ash a hand's breadth narrower than it had been at midnight.
+
+"It's enough for them," said Solenne. "For the day. If they lie close. Put it down before your hands go."
+
+Seraphina looked at her own hands on the hilt.
+
+They were a shade lighter than they had been. Solenne could see it. Like hands that had been too long in water. The Light had taken the colour out of the knuckles, a little, while the bone drank.
+
+Seraphina lowered the Blade.
+
+It went down very slowly. Her arms did not want to bend. The light came back into the space round her as the Blade came down, not all at once, the way it had come back on the Pilgrim Chain in Ashfall. Gently. Grudgingly. And the seven lay in the grey of the chain's shadow, close, the way Solenne had told them to, and sang, and did not go any paler.
+
+Seraphina sat down where she stood. In the middle of the nest, on the white robes, with the Blade across her knees and her shoulder against the thin woman's shoulder, Marit's. She shut her eyes.
+
+Solenne listened to her breathe until she slept.
+
+---
+
+They spent the day in the chain's shadow.
+
+There was nothing else to do. Nothing walked in the white by day. Not even the Church, not even in glass-fire. The Tiers had a saying for it, Brenna Corliss had told them in Ashfall: *the Light by night is a fire in the next room; the Light by day is the fire.* So they lay in the nest under the sixth chain, the eleven of them, on the robes and the blankets and the gold leaf, in a band of ash-grey shade a yard wide across the floor of a roofless tower at the top of the world, and waited for it to be night.
+
+The seven sang.
+
+They did not stop. Solenne had not expected them to. She lay among them with her broken wings half-open over as many of them as she could cover, and listened to them sing it, over and over, a breath at a time. Five hundred and twenty-eight. Rising from the bottom of the breath. Lifting at the top. The question. It came out of the copper in their throats as clearly as if the Spire itself were speaking through them, and she supposed it was. That was what the wire was for. That was what the Church had put it in them for, in the year after the Fracture, choir by choir, once the forty were gone: so that the Light would have throats that could not do anything but give it back its own note. The Church had meant them to hold it. Pure. Flat. *Yes.*
+
+They had held it for seven years. And then on Nullday, at the dead hour, the god had begun to ask again, and the copper in them had done what copper does. It had given back what it was given.
+
+She did not sing with them. She could have. The copper in her throat was the same copper, the first copper, the wire the Synod's surgeons had threaded through the vocal fold of a girl of eighteen so that she could hold a note for three hundred mornings. She could feel it in her throat now, under the skin, warm, wanting to. It had wanted to since Nullday. She had felt it on the Greenroot road, and in the ring of grey hands at Oakhaven, and on the deck of the *Small Hours* under the black canvas. It wanted to lift at the end.
+
+She did not let it.
+
+She lay in the nest and listened to the question, and to her sister breathing, and to the priest.
+
+---
+
+He sat at the edge of the chain's shadow with his back against the jagged wall and did not sleep.
+
+She could hear him not sleeping. It had a sound. She had been listening to it since Lumina: on the *Kestrel*, on the Shelf, on the *Equity*, in the reed-hall at Reedside. A man lying in the dark with his eyes open, breathing slowly on purpose, so that nobody would know. She had held him by the collar for two months, and she had never once let him go far enough away that she could not hear it.
+
+He had looked at them. She had made him. He had stood at the edge of the nest in the dark and looked at each of them, one at a time, all seven, and the three under the robe, for as long as she had made him look, and he had not turned his head away once. And then he had knelt down and broken the bread.
+
+She had not told him to do that.
+
+She lay with her wings over the seven and listened to him sit at the edge of the shadow in the white heat of the day, not sleeping. His good hand was in his lap. His white hand, the one the Light had taken on the morning of the Fracture, lay on the stone beside him. She could hear the white hand. It made a very small sound, so small she did not think even he could hear it: a faint high ring, like a fingernail on a glass, the sound everything taken by the Bleach made if you were close enough. It had made it for seven years. She had heard it through the grille of the confessional, on the morning before the three hundredth sunrise, when she went to him to be shriven before the Rite, and he had told her the Light forgave her everything.
+
+She had been nineteen. She had told him she was afraid. He had said, in his deep nave voice, *the Light does not ask us to be unafraid, child, only to hold.*
+
+She had held.
+
+---
+
+At the fourth hour of the afternoon the thin woman stopped singing and turned her head on the blanket and looked at her.
+
+Solenne turned her head and looked back.
+
+Marit Ferrand had sung second soprano in the Altar choir before the Fracture. Solenne remembered her. Not well. A thin girl of fifteen at the end of the second row on the riser, the row behind Solenne's, with a long neck and bitten nails, who had been too frightened to look at the Patriarch when he came along the riser on the first morning to bless them, and had looked instead at her own feet. She had not been one of the forty. She had been too young for the forty. The Church had wired her in the autumn of 413 with the cathedral choir, when the forty were gone, to give the Light throats.
+
+She was twenty-two now. She looked fifty. She looked like a drawing of a woman in chalk on dark paper, that somebody had started to rub out.
+
+She opened her mouth.
+
+*Lead.*
+
+"I'm here."
+
+*Where —*
+
+*— are —*
+
+*— we —*
+
+*— going.*
+
+Solenne looked at her for a long time.
+
+"Down," she said.
+
+The thin woman's eyes went to the chain overhead, going up into the white, and came back.
+
+*Can't.*
+
+"You can. I'll lead. You'll follow. You always followed." Solenne put her hand on the thin white forehead. It was cool, and dry, and she could feel the copper humming under the skin of the throat, the question, wanting to go on. "You don't have to stop asking. You can ask all the way down. I don't mind. I'll be in front."
+
+Marit looked at her.
+
+*Will —*
+
+*— it —*
+
+*— hear?*
+
+Solenne did not know what she meant. Then she did.
+
+*Will it hear, if we go down. If we stop being up here, at the top, in the white, at the end of its chain. Will it hear anyone asking, if we go.*
+
+She did not answer. She did not know.
+
+She lay with her hand on Marit Ferrand's forehead and listened to the six beside her sing the question to the chain, and to the god at the top of the chain asking it back, and to her sister asleep with a piece of the god across her knees, and to the white hand on the stone, ringing. And she thought, for the first time since Oakhaven, the thing she had not let herself think on the fallen oak, or on the deck of the *Small Hours*, or anywhere.
+
+*He's going to answer it. On the Longest Night. And when he does, it will stop asking, and nobody will ever have heard it but us.*
+
+She had wanted him to be right. Since Lumina. Since the morning she heard the question and held the note and the god let go. She had wanted it so much that she could not sleep. Because if he was right, then she had done it a kindness, on the riser, that morning. Then holding had been mercy. Then eleven thousand and forty people had died of a mercy, and she had been its voice.
+
+And she had stood in the ring of grey hands at Oakhaven in the snow and sung the fall below the fall for a hundred and eighty-seven people who had been asked, and watched the song go round twenty-five red chalk marks like water round a stone.
+
+*He won't ask, will he.*
+
+The thin woman's eyes had closed. She had gone back to singing.
+
+Solenne took her hand away.
+
+---
+
+The sun went down at the fourth hour after noon, behind the peaks to the west, and she heard it go: the long hiss on the edge of hearing drawing back through the teeth, and the white city's faint glass-ring sinking with it to something lower, steadier, the note of the Bleach by night. The fire in the next room.
+
+Seraphina woke when it went. Solenne heard her wake. She did not move for a while. Then she sat up, with the Blade across her knees, and looked at her hands.
+
+"How long," she said.
+
+"Till the dead hour, Brenna says. That's when it breathes. We want to be off the top before then."
+
+"And then?"
+
+"The Basilica," said Solenne. "It's on the way. It's in the white, and it's held. There's shade in there. Glass-fire and a choir." She paused. "And there's him. You said you'd go."
+
+Seraphina did not answer for a moment.
+
+"With the seven?" she said.
+
+"With the seven." Solenne looked at the six on the blankets, singing, and the thin one at the end. "They were his. The Church's. He had them wired. He blessed every one of them on the riser before the first morning." The copper half of her voice was very steady. "I'd like him to see them."
+
+Her sister looked at her for a long time.
+
+Then she looked past her, at the priest, sitting against the wall at the edge of the shadow with his white hand on the stone.
+
+"And him?" said Seraphina.
+
+"Him too," said Solenne. "Especially him."
+
+---
+
+They could not carry the seven. Solenne had known that since the morning. She had one wing that would hold and one that would not, and a priest with one good hand, and a sister who would need both of hers for the Blade. And the seven could not walk. They had lain in the chain's shadow singing for six days, Marit had told them in nine notes, since the line began to fall and the bread stopped coming. They had not stood up since Nullday.
+
+But they had walked once. Solenne remembered it. Ashfall. The white streets of the top tier at the dead hour, forty of them in four ranks of ten, coming down toward the plaza the way a procession comes, step and step and step, and singing. They had walked like that for seven years, all over the white city, in the dark, hunting.
+
+Hunting her. Their lead. The one they took the note from.
+
+She stood up in the middle of the nest, in the chain's shadow, with her broken wings half-open and her talons gripping the blankets. She did not look at anyone. She shut her eyes. And she let the copper do what it had wanted to do since Nullday.
+
+She sang.
+
+Not the question. She would not give them that. Not the Pure Note either, flat and unbroken, *yes*. She sang the lead. The first line of the morning hymn, the one the best treble of the Basilica school used to sing alone from the Vessel's stone at Lumina every Dawnday while the Eye flamed gold behind her. Solenne had sung it there herself, at eleven. *Light of the first note and the last.* It went up out of the copper half of her voice into the white air over the anchor-house, clear and high and true.
+
+And the seven turned their heads.
+
+She heard it. Seven breaths caught at once, in the middle of the question. Seven copper throats going still. And then, one after another, the way they had gone quiet on the riser and come back, they took the note from her. Not the question. The hymn. The line under hers, the second line, the one the Altar choir had sung behind the treble every Dawnday for four hundred years. Thin. Ragged. In tune.
+
+And the thin woman at the end of the row put her bleached hands flat on the blanket, and pushed, and sat up.
+
+Solenne did not stop singing. She did not open her eyes. She heard them come up off the blankets one by one, slowly, the way the old come up out of chairs, a hand on the stone, a hand on the shoulder of the one beside. She heard them stand. She heard Seraphina on her feet beside her with the Blade drawn again and drinking, and the priest at the wall, not moving, not breathing.
+
+She turned, singing, and walked out of the chain's shadow toward the door.
+
+They followed her.
+
+---
+
+She led them down the great stair of the city in the dark, singing.
+
+She would remember it, afterward, as the strangest procession Sol-Luminary had ever seen, in a city that had once been nothing but processions. A woman with broken black-gold wings going down the white stair barefoot, on her talons, singing the first line of the morning hymn in a voice like copper. Behind her, seven people in white choir-robes that the light came through at the edges, walking slowly, in a line, each with a hand on the shoulder of the one in front, singing the second line. Beside them, going down the stair a step at a time with a god's bone held up in both hands, a knight in a borrowed coat, with her shadow falling the wrong way, forward, over the line of them. And at the back, in the last of the shadow, a priest with a white hand, carrying a sack with nothing left in it.
+
+Nothing else moved in the white city.
+
+She could hear that it did not. She listened all the way down, the way she had listened in Ashfall from the nest: to the empty streets, to the dead domes, to the glass-ring of the stone. Once, on the eleventh tier, she heard something far off along the rim. A ragged note, a single voice, copper, singing the question to itself in a street she could not see. One of the twenty-six, who had run in Ashfall when the Unison broke. Alone. She heard it falter. She heard it stop.
+
+She did not stop.
+
+Once, on the tenth, she heard the Tiers. Not near. Far below, under the line, through the stone of the whole city, very faint: eighteen thousand six hundred and forty people in the dark, not talking. A silence that had a shape. A silence with bundles in it.
+
+And all the way down, under everything, she heard the god.
+
+---
+
+The Basilica's square opened off the stair on the ninth tier, as it had in Ashfall, and she heard the Flambeaux before she saw them.
+
+Glass-fire had a sound. Nobody else seemed to know that either. A low steady roar, like a furnace heard through a wall, with a high crackle in it like frost breaking. Two hundred censers, burning white-gold, in a ring round the black tower and along the west front of the Basilica, a yard apart. She had heard that sound on the riser on the three hundredth morning, coming down from the gallery behind her, the moment before the fire came. She had heard it on Lumina, on the Altar, in a ring round two hundred throats. She heard it now across the white square, and the copper in her throat went tight, and her voice faltered on the hymn.
+
+Behind her, all seven faltered with it.
+
+She heard her sister's step check. She heard the priest stop.
+
+She went on singing.
+
+She led them out of the mouth of the stair into the square, into the open, singing, with the line of the seven behind her and the knight's shadow over them. And across the square, in the ring of gold fire, two hundred men in crimson turned their heads.
+
+Nobody moved.
+
+She walked toward them. She did not hurry. You do not hurry a procession; that was the first thing the Sky Choir taught you, at six, before the scales. You walk at the pace of the slowest throat. She walked at the pace of the thin woman behind her, step and step, across the white square of the ninth tier toward the west front of the Basilica of the Pure Note and the open door and the ring of fire.
+
+A man came out of the ring to meet her.
+
+---
+
+He was tall and grey and very straight, in the crimson of a Flambeau-Preceptor, with the gold chain of the office across his chest and his censer held out on its chain in front of him so that the glass-fire made a little room of ordinary shade round him as he came. She knew him. Everybody in the Church knew him. Lucan Ostrel had preached the going-out of the Flambeaux at the Basilica every autumn for twenty years. *The Only Song.* Every Flambeau who had ever gone up the Greenroot road carried a printed copy in the breast of his crimson.
+
+He had been in the gallery on the three hundredth morning. Beside Ignatius. She had heard his voice in the moment before the fire.
+
+He stopped ten yards from her, in his room of shade, and looked at her. At the wings. At the seven behind her in a line with their hands on each other's shoulders, singing. At the knight with the Blade. And past them, to the back of the line, to the priest.
+
+She heard his breath go in.
+
+"Crane," said Lucan Ostrel.
+
+Ignatius did not answer.
+
+"I heard you were dead." The Preceptor's voice was the voice of a man who had preached in a nave for twenty years. It did not shake. "I heard the Abomination took you on Lumina. I said a mass for you." He looked at the empty sack. At the white hand, bare. "Where is your fire?"
+
+"Out," said Ignatius Crane.
+
+The Preceptor looked at him a moment longer. Then he looked at Solenne, and she saw him decide what she was, and what to do about it, the way she had seen Ignatius decide on the riser. She heard the glass-fire in his censer climb. White-gold. Roaring.
+
+"Abomination," he said. Quite gently. "You'll not bring those into the Light's house."
+
+She stopped singing.
+
+---
+
+She did not decide to. She had been taught, at six, never to stop in the middle of a line. She stopped in the middle of the line. And behind her the seven stopped too, all at once, and the white square of the ninth tier went silent except for the roar of two hundred censers. And into that silence, without turning round, without raising it, she spoke with the other half of her voice.
+
+The void half. The half she had brought back up out of the dark. Like wind over the mouth of a well.
+
+"*Look at them*," said Solenne.
+
+She heard it go out of her across the square. She had used it on the Organum's marines in the willows at the edge of the Woods, *sit down*, and watched a man sit down in the mud with his musket in his lap and his face quite empty. It was not a command. She had never known what it was. It was the sound of the place she had climbed out of, and men heard it, and did what it said, the way you do what a dream says.
+
+Lucan Ostrel looked.
+
+She watched him do it. She watched him look past her at the seven, at the thin bleached faces and the light coming through the robes, at the copper glinting at seven throats. She watched him look at the thin woman, Marit Ferrand, who had been too frightened to look at the Patriarch on the riser on the first morning, and who was looking now, straight, at him.
+
+"*They're yours*," said Solenne's void. "*You wired them. The autumn of '13. The cathedral choir. You stood at the end of the table in the Basilica undercroft with your censer while the surgeons did it, so that the fire would be in the room. I've heard about it. They told me. Marit told me. In notes, one word a note, over seven weeks, in the chain's shadow at the top of the world.*"
+
+That was not true. Marit had not told her. But she had heard the Preceptor's breath go in again, and she had known.
+
+"*Look at them*," said Solenne. "*All of them. One at a time.*"
+
+He looked.
+
+She stood in the white square with her broken wings half-open and listened to two hundred men in crimson hold their breath, and to the glass-fire roaring, and to the Preceptor's heart. It was going very fast. And she heard the moment it changed. Not slowed. Changed. The way the god's note changed at the end.
+
+Lucan Ostrel lowered his censer.
+
+He did not step aside. He did not say anything. He stood in his room of shade with his censer hanging from its chain at his side, and the glass-fire in it sank. Not out. Down. And he looked at the seven, one after another, down the line, the way she had made Ignatius look in the anchor-house. And she understood that he would go on looking for as long as she let him, and that she could let him go on for the rest of his life.
+
+She did not have time for that.
+
+She took up the hymn again at the place she had stopped, in the middle of the line, and walked past him.
+
+The seven followed her. Through the ring of gold fire, between the Flambeaux, who did not move. Up the steps of the west front. To the great door of the Basilica of the Pure Note, which stood open on the dark, and the one note, held.
+
+---
+
+She had never been inside it since the Fracture. She knew it the way she knew her own throat.
+
+The nave went away from the door under the vault in the dark, long and high, built like a blade through a loaf across the old line, which was not there any more. The west half had been the shade half: black stone, black doors, black glass in the high lancets. It was still black. But the light was in it now. The flat sourceless white of the Bleach lay in the nave the way water lies in a cistern, and the only shade was round the censers.
+
+There were censers everywhere. Hung on iron stands along both aisles, a yard apart, burning white-gold, each one making its little room of ordinary dark in the white, so that the nave was a corridor of overlapping shadows down the middle with the light pressing in at the sides. And at the end of the corridor, the iron wall. Black iron, floor to vault, that the Church had built across the nave on the morning of the Fracture to keep out the light. With a door in it. And beyond the wall, she knew, the Lightward Nave, sealed seven years, where the congregation of the eighth tier had been at the dawn office when the Spire let go, and still were, in the pews, seven years thin.
+
+And in the shade-side stalls, under the censers, nine people in white.
+
+Holding the note.
+
+She heard them as she came through the door. She had heard them from the square. She had heard them every hour of her life since she was six. Nine choristers in three rows of three, taking the note one from another without a breath between, so that the note was never not being sung. Five hundred and twenty-eight. Flat. Unbroken. *Yes.* They had held it through the Fracture and through Ashfall and through the line coming down past the Basilica on the morning of the Restoration, and they were holding it now, in the white, in their little rooms of fire, with the Light coming down the chains to find its city.
+
+They were old. She saw that as she came down the nave. All nine. Grey, and white, and thin, the youngest of them sixty. They had been the old men and women of the cathedral choir in 412, too old to be wired, too old for the riser. Kept back. And they had held the note for seven years in shifts in the shade-side stalls of the Basilica while the young ones were taken.
+
+They did not stop when the seven came down the nave behind her, singing the second line of the morning hymn. They could not. You did not stop the Pure Note. But she watched their eyes. Nine pairs of old eyes over nine open mouths, following the seven down the nave. Following Marit Ferrand, who had sung second soprano beside some of them in the Altar choir before the Fracture, when she was fifteen.
+
+She stopped at the end of the corridor of shadows, before the iron wall. The seven stopped behind her. She let the hymn go, at the end of a line, the way you are supposed to.
+
+The seven let it go with her.
+
+And in the quiet after it, with the Pure Note going on from the stalls, flat, unbroken, a voice she had not heard since Lumina said, from the floor at the foot of the iron wall:
+
+"Oh. Oh, who's that? Who's singing the morning office? It's not the hour. Is it Dawnday? I've lost the days. Who's there?"
+
+---
+
+Severin Ashe was sitting on the floor.
+
+He was sitting cross-legged on the bare stone at the foot of the iron wall, in the room of shade of a censer on a stand beside him, in a white cassock that was too big for him, with his white thistledown hair standing up round his head. He had a lamp beside him on the floor that was not lit. He had his hands in his lap, palms up, the way you hold your hands to receive something.
+
+He was looking up at her. At the sound of her.
+
+His eyes were white.
+
+Not pale. White. The colour of a pear left a night in the Bleach. She had seen him on Lumina in Ashfall, with his face streaming and his soft clear eyes full of the light, reaching for the Blade. They had been blue then, a little faded, an old man's. They were not any colour now. The Light had taken them. Slowly, she supposed, over seven years, in a room of shade that was never quite shade enough, while he sat at the foot of the iron wall and asked it what it wanted. And he had not noticed until it was done, because he had never been looking at anything but the Light.
+
+"Who's there?" said Severin Ashe again. Softly. Delighted. "That was lovely. I haven't heard the morning office sung since Lumina. Not properly. Not with the treble." He held out one hand, a little, toward the sound of her, toward nothing. "You mustn't let me keep you. But who are you?"
+
+She did not answer.
+
+Her sister did.
+
+---
+
+"Father," said Seraphina.
+
+The old man's face did a thing that Solenne had heard described and never seen. It lit. All of it, at once. The way a child's face lights.
+
+"*Seraphina*," he said. "Oh. Oh, child. Oh, you've come home." He put both hands out now, toward the sound of her, reaching, his white eyes going past her shoulder. "Come here. Let me— no, I can't see you, come here, come down where I can—"
+
+Seraphina went down on one knee on the stone in front of him, with the Blade across her other knee, bare. He found her face with his hands. Solenne watched him do it. His old fingers on her sister's cropped head, her brow, her cheek, the line of her jaw. Learning it. The way you learn a face in the dark.
+
+"You've cut your hair," said Severin Ashe. "Oh, I'm so glad. I'm so glad you've come. I've prayed for you. Every night. Since Lumina." His thumbs moved on her cheekbones. "I wasn't angry. Did you think I was? You mustn't. I was frightened, on the Altar. That's all. I said terrible things. I'm old and I was frightened and I said things." He held her face. "*Because it was tired, Father.* That's what you said. I've thought about it every night. I've asked the Light about it. And do you know, it told me you were right." He smiled. His white eyes shone. "It told me it *was* tired. And that it was coming home to rest. And that we're to stay and receive it." He leaned in, close, as if it were a secret. "It's coming down the chains, Seraphina. You'll have seen. It's coming to find us. Isn't it wonderful?"
+
+Seraphina did not answer.
+
+Solenne heard her sister's breath. She heard it go in, and stop, and not come out.
+
+"Father," said Seraphina at last. "The Tiers."
+
+"Yes?"
+
+"Eighteen thousand six hundred and forty people. On the walkways. Under the line. With their bundles." Her voice was very low, the warm mezzo, gone rough. "They're waiting for you to say *go*. They've built nine chains to the gulf floor, link by link, out of the dead tiers. For seven years. They've drilled it every Driftday. The line will be past the Keel Docks tomorrow night." She took his hands from her face, gently, and held them. "Please. Tell them to go down."
+
+The old man's face did not change.
+
+"But they mustn't," said Severin Ashe. "Child. Don't you see? That's what I've been shown. *Removal from the chains is not required.* It came to me on Massday, very clearly, at the night office. *Discomfort is not anticipated.* It doesn't hurt. The Light doesn't hurt. It's only coming home." He patted her hands. "And those who are in its city when it comes will be held. That's what it said. Held. Isn't that what we've always wanted for them?"
+
+Solenne heard it then.
+
+Not in what he said. In how he said it. *Removal from the chains is not required.* He said it the way you say a line you have learned by heart. A different voice from his own. Flatter. No person in it. He said it the way she had heard the nine in the choir-stalls say the Pure Note: something given to him, held, repeated, without a breath in it.
+
+*Somebody in that house writes like a clerk of the Organum.*
+
+She looked at the priest.
+
+Ignatius Crane was standing at the back of the corridor of shadows, behind the seven, in the room of a censer. He was looking at the Patriarch. And she saw him hear it too.
+
+---
+
+"Who reads to you, Father?" said Ignatius.
+
+The old man turned his white eyes toward the voice.
+
+"*Ignatius*," he said. "Oh, Ignatius. Oh, I said a mass for you. Lucan said you were— oh, come here, come here, let me—"
+
+"Who reads to you?" said Ignatius Crane again. He did not come. "Your eyes have gone. Since Ashfall. Since before. Who reads you your correspondence?"
+
+"Why, Placidus," said Severin Ashe, surprised. "He always has. Since I came to the Patriarchate. He's been my reader for thirty years. He reads me the letters in the morning and the Office in the evening, and he sits with me at the night office while I pray." He smiled toward the sound of the priest. "You know Placidus. He taught you to write a writ, at the Organum, when you were a boy. He told me so. He was so proud of you."
+
+Solenne heard the priest's breath stop.
+
+"Where is he?" said Ignatius.
+
+"Oh, he'll be in the chapel. Getting it ready. It's nearly the night office." The old man turned his face back to Seraphina, and his hands found hers again, and held them. "Stay for it. All of you. Please. I'd so like you to. It's been so quiet since Lumina. And the Light always answers at the night office. It always has. Every night for seven years." His white eyes shone. "You'll hear it, Seraphina. I'd so like you to hear it. I've always wanted to share it with someone."
+
+---
+
+The chapel of the night office was a black room off the north aisle, the shade side, the size of a ship's cabin, with a censer on a stand in each corner and no window. A kneeler, worn hollow in the middle by seven years of one old man's knees. An altar the size of a table, with a sun-disc on it in black enamel. And behind the altar, from wall to wall, a screen.
+
+Solenne knew the screen. Every chapel in the Heights had one. A lattice of black iron, fine as lace, from the floor to the height of a man's head, worked in the shape of a sun with its rays going out. In the old Church, before the Fracture, the Altar sisters had knelt behind it at the night office and sung the response to the Patriarch's prayer, so that he would hear it come from the place where the Light was, and not from a woman's mouth. *The Light gives the answer.* It had been beautiful. She had knelt behind a screen like it herself, at nine, in her first year in the Sky Choir, and sung the response at the Patriarch's night office in the old Basilica, and seen through the iron lace the back of his white head bowed over the kneeler.
+
+There were no Altar sisters behind it now. She could hear that there was nobody behind it at all.
+
+Then she heard somebody breathing.
+
+---
+
+They stood in the doorway of the chapel, the three of them. Severin had asked them to. *Stand at the back, where you won't distract me. It doesn't mind company. It just likes me to ask properly.* The seven were in the nave, in the corridor of shadows, lying down in the room of a censer at the foot of the iron wall, singing the question very softly to the vault. Lucan Ostrel stood over them in his crimson with his censer, looking at them, and had not moved since the square.
+
+The old man knelt.
+
+He did it slowly, with a hand on the altar's edge, the way he had sat down on the floor of Lyra's black room in Ashfall. An old man's grunt. When he was down he stayed for a long time with his white head bowed and his hands together on the edge of the kneeler, breathing.
+
+Then he lifted his face toward the screen. Toward the sun of black iron lace, with his white eyes open.
+
+"It's Severin," he said. "Good evening."
+
+Nobody answered.
+
+"I've brought people tonight. I hope you don't mind. Seraphina's come home. You'll remember Seraphina. And her sister. And Ignatius, who isn't dead after all. I'm so glad." He smiled at the screen. "I'm sorry I'm late. I lost the hour. Somebody was singing the morning office in the square and I thought it was Dawnday." A little laugh, an old man's, at himself. "It *is* Dawnday. I'd lost the days. Placidus will have to tell me the days now."
+
+He was quiet for a moment.
+
+"The Tiers are frightened," he said. "Seraphina says. They're on the walkways with their bundles. Eighteen thousand of them. They've built chains down to the gulf and they're waiting for me to tell them to go." He bowed his head. "I've told them what you told me. On Massday. To stay, and receive you. But they're frightened. And Seraphina's frightened, and she's never been frightened of anything." He lifted his face again. "So I'm asking. Again. I'm sorry to ask again. What do you want of us?"
+
+Silence.
+
+The nine in the choir-stalls held the note, faint, through the wall. The censers roared in the corners. The old man knelt with his face lifted to the screen and his hands together and waited, the way he had waited, Solenne understood, every night for seven years. And she listened, the way she always listened. To the room. To the stone. To the god, very far off, at the end of its chain, asking.
+
+To the breath behind the screen.
+
+It drew in.
+
+And a voice came through the iron lace. Low. Level. Unhurried. No higher and no lower than a man reading aloud. It came from the place where the Light was supposed to be, through the sun of black iron, and it said:
+
+*"The descent is to be received. Removal is not required. What is held in the city at the time of the descent will remain held. Concern for the Tiers is noted. Discomfort is not anticipated."*
+
+The old man's face lit.
+
+"*Thank you*," he whispered. "Oh, thank you. Thank you."
+
+Behind the screen, very faintly, so faintly that she was certain nobody else in the room could hear it, Solenne heard paper move.
+
+A page. Turned.
+
+---
+
+The Light did not turn pages.
+
+She did not think. She went. Past her sister in the doorway, past the kneeler, past the old man with his face lifted, round the end of the black altar to the place where the screen met the wall, where there had always been a narrow gap for the sisters to go in and out. She had gone through it at nine. She went through it now with her broken wing scraping the iron and her talons loud on the stone, and nobody stopped her.
+
+There was a man behind the screen.
+
+He was kneeling on a cushion on the floor in the narrow space between the iron lace and the black wall, in the room of the censer in the corner. A small old man in the black cassock of a canon of the Basilica, with a fringe of white hair and ink on his fingers. He had a shuttered lamp on the floor beside him, open a slit, so that a thin blade of yellow light lay across his knees. And on his knees, in the blade of light, a letter.
+
+Heavy cream paper. Folded in three. A seal of plain grey wax, broken, with no device on it at all.
+
+He looked up at her.
+
+She had seen him before. Seven years ago. On the riser, the first morning, behind the Patriarch, carrying the book while the old man went along the rows to bless them. She had not known his name then. She knew it now, because the old man had said it in the nave. *Placidus. He's been my reader for thirty years.* He had written a book once, before the Fracture. *On the Constancy of the Light.* There had been a copy of it in her mother's house.
+
+He did not get up. He did not cover the letter. He knelt on his cushion behind the screen with the blade of lamplight on his knees and looked at her, at the wings and the copper and the two lines cut down her face. And she watched him understand that it was over. She heard it. His breath went out of him, all of it, the way a breath goes out at the end of a very long phrase. And did not come back in for a long time.
+
+"Lady," said Canon Placidus Sorell. Very quietly. In his own voice, which was not low or level at all. It was an old man's voice, frightened, with a tremor in it. "Please. Not in front of him."
+
+On the other side of the screen, the Patriarch said, "Is somebody there? Seraphina? Is somebody behind the screen?"
+
+---
+
+She would think, afterward, that she could have let it go.
+
+She had the letter in front of her, on the canon's knees, in the slit of lamplight. She could see the first line of it, in a small old very clear hand. She could have turned round, and gone back through the gap, and said *nobody, Father, nobody's there*, and taken the canon by the arm on the way out of the chapel and made him write the other proclamation, the one with *go* in it, in the voice the old man would believe. She could have done the kind thing. The thing the canon had done for seven years.
+
+She did not.
+
+She had held a note once, because it was the kind thing. Because the god was asking so gently, *is it you*, and the Rite would fail if she stopped, and the Patriarch was in the gallery, and her sister. She had held it, and that was yes.
+
+She bent down and took the letter off the canon's knees. He did not stop her. She went back round the end of the altar with it, out of the gap in the screen, into the chapel. Seraphina was standing in the doorway with her face gone white. The priest was behind her. And the old man was kneeling at the kneeler with his white eyes turned toward the sound of her talons on the stone, puzzled, smiling a little, the way you smile at a child who has come into the room during prayers.
+
+"Solenne?" he said. "Is that you? Was there somebody there?"
+
+"Placidus," said Solenne Aubade.
+
+The old man's face went still.
+
+"He's behind the screen, Father. He has been every night. He has a letter." She heard her own voice, the copper and the void, and it was not steady. "He's been reading them to you. At the night office. In the Light's voice. For seven years."
+
+---
+
+Severin Ashe did not say anything for a long time.
+
+He knelt at the kneeler with his hands still together on its edge. He did not turn his head toward the screen. He kept his white eyes on the place where her voice had come from. And she listened to him, because she could not help it: to his breath, which had gone very slow, and his heart, which had not changed at all, and the small dry sound of his old hands pressing together on the wood.
+
+"Placidus," he said at last. Not loud. The way you say the name of somebody in the next room. "Is that right?"
+
+Behind the screen, the canon made a sound.
+
+"Come out, Placidus. Please. I can't see you. Come where I can hear you properly."
+
+The canon came out through the gap in the screen. He came slowly, an old man getting up off his knees, with the shuttered lamp in his hand. He stood at the end of the altar in the black chapel with the lamp and did not come any further. Solenne could hear him shaking.
+
+"Is it right?" said Severin Ashe.
+
+"Yes," said the canon.
+
+"Every night?"
+
+"Yes."
+
+"Since when?"
+
+The canon did not answer at once. When he did, his voice had gone very small.
+
+"The ninth night after the Fracture," he said. "You'd stopped eating, Severin. You'd stopped sleeping. You sat at the foot of the wall, there, in the nave, day and night, with your hands like that, and asked it. What do you want. How do we bring you home. Over and over. And it never answered. And on the ninth night you got up and went to the door in the wall, the door into the Lightward Nave. And you put your hand on the bolt." He stopped. "I thought you were going to go through. To them. To the eighth tier, in the pews. I thought you were going to go into the white and sit down with them because it wouldn't answer you."
+
+The old man did not say anything.
+
+"And that morning a letter had come," said Placidus Sorell. "From the Organum. From him. The first one. He'd written to you about the Fracture. What he'd heard. He'd been listening, the morning it let go. He wrote that it wasn't angry. That it had let go because it was told it could rest, and that it had felt like rest, and that it wasn't in pain." His voice shook. "It was the only thing anybody had written that sounded as if it *knew*. Everybody else wrote that it was a judgement. He wrote as if he'd been in the room. And you were at the door, with your hand on the bolt, and I thought—" He stopped. "I took you back to the night office. And I went behind the screen, where the sisters used to kneel. And when you asked it what it wanted, I read you the letter. Not all of it. Only the part about the Light. I read it the way the sisters used to sing the response. I put it in the Light's voice. The Office's voice. The one they taught me at the Organum when I was a boy. Nobody in it." His breath caught. "And you wept, Severin. You said *it answered*. You went to bed. You ate in the morning."
+
+"And the next night," said Severin Ashe.
+
+"There was another letter. He wrote every week. Sometimes twice." The canon's voice had gone almost to nothing. "I couldn't stop. You'd have known. You'd have gone back to the door."
+
+The old man was quiet.
+
+"And the score," he said. "The living chord. The note in the margin, in my pencil. *Hold until it answers.*"
+
+"You sent him the score. To share it with him. You were so happy." The canon swallowed. "He sent it back with that on it. In his hand. I put it in your papers. You couldn't see it well enough by then to know it wasn't yours."
+
+---
+
+Solenne stood in the black chapel with the letter in her hands and listened to the old man not move.
+
+She had thought he would break. She had braced for it, the way she had braced on the riser. She had heard men break. She had heard her sisters' throats go, on the three hundredth morning, one after another, every one, as the light came back and ate them. She had heard Ignatius Crane's fire go out on Lumina, a sound like a door closing on a furnace.
+
+Severin Ashe did not break. He knelt at the kneeler with his hands together and his white eyes on nothing, and she heard his heart go on at exactly the same pace. And after a long time he said, very gently, the way he had spoken to Lyra on the floor of her cell:
+
+"Oh, Placidus. Oh, my dear. Seven years. You must have been so tired."
+
+The canon made a sound she would not forget. It was not a word.
+
+"Come here," said the old man. "Please. I can't get up. My knees."
+
+The canon came. He came round the end of the altar and knelt on the stone beside the kneeler, an old man beside an old man. And Severin Ashe reached out without looking, toward the sound of him, and found his inky hand, and held it.
+
+"Was it all his?" he said. "All of it? Every night?"
+
+"Yes."
+
+"None of it was—" He stopped. He did not finish it.
+
+"No," said the canon.
+
+"No." The old man nodded slowly. "No. I didn't think so. Not really." He was quiet. "I think I knew. Do you know, I think I've always known I couldn't hear it. I used to stand in the gallery at the Rite and watch the girls on the riser, and watch their faces when it sang, and I couldn't hear anything. Not a thing. Seventy years in the Church and I've never once heard it." He held the canon's hand. "I thought if I asked properly. If I asked every night. If I kept asking. One night it would." A small laugh. "And one night it did. And it was you."
+
+---
+
+"Read it to me," he said.
+
+Solenne looked down at the letter in her hands.
+
+"The one tonight. All of it. The way he wrote it." The old man turned his white eyes toward the sound of her. "Solenne, would you? I'd rather it was you. Not Placidus. Placidus has done enough reading."
+
+She did not want to. She stood with the cream paper in her hands and did not want to more than she had ever not wanted anything, more than she had not wanted to sing the fall below the fall at Oakhaven. She looked at her sister in the doorway. Seraphina was looking at the old man with her face like a coin that has been struck too hard.
+
+She unfolded the letter.
+
+The hand was small and old and very clear.
+
+*Hearthday, the twentieth of Frostmonth. The Organum.*
+
+*My dear Severin,*
+
+She stopped.
+
+"Go on," said the old man.
+
+*My dear Severin,*
+
+*I am told the line is coming down on your city, and I am sorry. I have heard it asking since Nullday. I expect you have not. I do not say that unkindly. You have always been the one person I could write to who did not hear them, and I have always been grateful to you for it. You cannot imagine what it is to write to someone who does not hear them.*
+
+*You will ask me what to do. You always do. So I will tell you what I think, which is all I have ever told you.*
+
+*I should not move them, if I were you. It will not hurt them. I have listened to the Light for eighty years, and it has never once hurt anyone who did not fight it. The Bleach is not cruel. It is only very tired, and it is letting go of things, and they go with it. I have heard a great many people go. Nobody screams.*
+
+*On the thirtieth, on the Longest Night, I am going to go down under the Organum and give all eight of them what they have asked me for. I have told you this before. After that, I think, it will not matter very much where anybody is standing. I would rather your people spent their last week at home, in the shade they have made for themselves, than on a ladder in the dark over a two-thousand-foot drop. That is all. That is the whole of my advice.*
+
+*I know you will not hear this as I mean it. You never have. Placidus will see to that, as he always has, and I have never discouraged him, because I think you would not have lived through the first winter without it, and I find I am selfish enough to want you to have lived. I hope you will forgive me that. I hope you will forgive him.*
+
+*Eat something. Sleep. I am sorry about your eyes. Placidus wrote to me in Ashfall.*
+
+*With my love, as ever,*
+
+*Casimir*
+
+---
+
+Nobody said anything.
+
+The censers roared in the corners. The nine held the note through the wall. In the nave, faint, the seven sang the question to the vault. Solenne stood with the letter in her hands and listened to the old man at the kneeler, and to the canon beside him with his inky hand in the old man's hand, and to her sister in the doorway, who had stopped breathing again.
+
+"*My dear Severin*," said Severin Ashe.
+
+He said it very softly. As if he were trying it.
+
+"Every one?" he said. "Placidus. Every letter. Did they all—"
+
+"Every one," said the canon. "*My dear Severin.* Every one. I left it out." His voice cracked. "You'd have known."
+
+"Seven years," said the old man.
+
+He said it to nobody. To the screen. To the sun of black iron lace with nobody behind it.
+
+"Somebody wrote to me every week for seven years," said Severin Ashe, "and called me by my name. And I never heard it once." He was quiet for a long time. "And the Light never said anything at all."
+
+He did not weep. Solenne had thought he would. She had watched him weep on Lumina, on his knees by the Blade, with his hands held out over it. He knelt at the kneeler now with his white eyes dry and his head a little on one side, the way a man sits when he is listening for something he has been told is there. And after a while she understood what he was doing.
+
+He was listening. Properly. For the first time. Now that nobody was going to answer.
+
+"Seraphina," he said. "Is it saying anything? Now? You'd know. You've got the bone."
+
+Her sister did not answer at once.
+
+"Yes, Father," said Seraphina.
+
+"What?"
+
+Seraphina looked at Solenne. Solenne looked back. And she saw her sister decide to tell him the truth, the way she herself had decided to bring the letter out from behind the screen. Not because it was kind.
+
+"It's asking if it's you," said Seraphina. "It's asking if anyone has come."
+
+The old man's face did not change. Not for a long time. Then, very slowly, it did. Not the lighting. The other thing. The thing she had seen on the face of the thin woman in the anchor-house, Marit, when she could not find the next note.
+
+"Oh," said Severin Ashe. "Oh. Is it." He bowed his head. "No. It's only me. I'm so sorry."
+
+---
+
+He dictated it to the canon on the floor of the chapel, with his back against the kneeler and the canon's lamp opened all the way.
+
+He did not write it himself. He could not see the page. But he made the canon read every line back to him, slowly, twice, and he changed words, and he would not let the canon change any. Solenne stood in the doorway and listened to them do it, the two old men on the floor of the black room, one saying and one writing, the inky hand moving across the paper in the lamplight. It took the best part of an hour. It was not long when it was done.
+
+*My children.*
+
+*I have never heard the Light. I have told you for seven years what it wanted, and I never once heard it say anything. I am sorry. I was wrong.*
+
+*Go down.*
+
+*Take the children first, and the old, and the sick. Go in each other's shade, the way you have taught each other. Go carefully. Do not wait for me.*
+
+*No one in the Church is to stop you. Any man in crimson who stands at a ladder-head is to stand there with his fire to keep the light off you, and for nothing else.*
+
+*I am so sorry.*
+
+*Severin.*
+
+"Is that all of it?" said the canon.
+
+"Read it again."
+
+The canon read it again.
+
+"Yes," said the old man. "That's all." He held out his hand toward the sound of the paper. "Give it here. I'd like to sign it. I can still do that. I've done it so many times." The canon put the pen in his fingers and guided his hand to the bottom of the page, and Severin Ashe wrote his name, by feel, in an old man's copperplate that went uphill at the end. Then he gave it back.
+
+"Ignatius," he said.
+
+The priest had not moved from behind Seraphina in the doorway. He had not said a word since the nave.
+
+"Father."
+
+"Take it down. To the chime-house. You and Lucan, with the fire, so they'll know it's the Church that sent it and not some trick." The white eyes turned toward the sound of him. "They'll believe you. They're frightened of you. Everybody in the Tiers is frightened of you. That's useful now. Let it be useful."
+
+Ignatius Crane looked at the old man on the floor for a long time.
+
+Then he came into the chapel and knelt and took the proclamation out of the canon's hand, and folded it, and put it in the breast of his brown coat, where the Flambeaux carried *The Only Song*.
+
+"Seraphina," said the old man. "Go with him. The Cantor's down there. She'll need you. You're the only one of them who can walk in the white in daylight." He smiled, a little, toward her. "You always were."
+
+"Father—"
+
+"And Solenne." He turned his face toward her. "Would you take me to the Altar?"
+
+---
+
+Seraphina said no. She said it three times. She said it in the warm mezzo that carried in a city of whisperers, and the third time it did not carry at all, because she had gone down on her knees on the chapel floor in front of him and was holding both his hands.
+
+He let her. He held her hands and listened to her say it, and when she had stopped he said, gently:
+
+"Child. I'd like to be somewhere it can find me. That's all. I've spent seventy years telling people what it wanted. I should like to sit where it can tell me itself, if it wants to." He was quiet. "And if it doesn't want to, I should like to be the last thing in this city it takes, and not the first thing it was told to."
+
+She did not answer.
+
+"You can't take me. You've got the bone. It would go round me. I'd be sitting in your shade and it would never find me." He took one hand out of hers and touched her cheek, where he had learned her face in the nave. "Solenne can. It doesn't know what she is any more. She said so on the Altar. I heard her." He turned his white eyes toward the doorway. "Will you? I'm not heavy. I've never been heavy. Lucan says the Flambeaux call me the feather."
+
+Solenne looked at him.
+
+She thought of the riser. Of the Rite. Of the old man in the gallery on the three hundredth morning with his hands raised, while the god asked her, so gently, *is it you*. Of her own throat, holding. *Yes.* She thought of the ring of grey hands at Oakhaven. Of Lyra going round it with her palm on the bark, a whole day in the snow, asking every one. Of twenty-five red chalk marks.
+
+"Do you want to go?" she said.
+
+The old man was surprised. She saw it. His white eyes went wide.
+
+"Nobody's asked me that," he said. "Do you know, in seventy years, nobody's ever asked me that." He thought about it. Properly. She watched him do it. "Yes. Yes, I want to go. I'd like to be asked something, at the end. Even if it's only *is it you*." He smiled. "And I'd like to be able to tell it the truth."
+
+"Then I'll take you," said Solenne.
+
+---
+
+She took him across the Pilgrim Chain at the dead hour.
+
+She carried him. He was right; he weighed nothing. A bundle of white cassock and thistledown and old bones, in her arms, against her chest, with his arms round her neck like a child's. She carried him out of the seventh anchor-house on the south-east rim onto the walkway of the chain, a kilometre of black iron decking six feet wide over the gulf, polished by four hundred years of pilgrims' feet, going out level through the white to Lumina.
+
+He was not in any shade. She had none to give him. The light came down on both of them out of nowhere and everywhere, flat and white, at the dead hour, and went round her wings, gold, and did not go round him.
+
+She heard it start.
+
+It did not hurt him. She listened for that, the whole way out. She listened to his breath and his heart and the small dry sounds of his old body in her arms, and there was nothing in them that was pain. Only, after the first hundred yards, a very faint high ring, like a fingernail on a glass, the sound the priest's hand made. Coming up out of him. Getting a little louder with every yard.
+
+"Is it now?" he said, into her neck. "I can't tell. I can't feel anything."
+
+"It's started."
+
+"Oh." He was quiet. "It doesn't hurt."
+
+"No."
+
+"He was right about that, then. Casimir." A breath. "He usually is. That's the trouble with him."
+
+Halfway across, the city breathed out.
+
+She felt it go, behind her, through the iron of the chain and the stone of the rim: the long slow outward sigh through every stone of Sol-Luminary, the dead-hour breath. She did not look back. She knew what it was. The line, coming down. The second tier. The Tiers below it pulling their shutters, and her sister and the priest and the Preceptor going down the ladders in their bubbles of fire with a folded paper in a brown coat, toward a chime-house that had been ringing since Nullday for ships that could not come.
+
+She walked on.
+
+---
+
+The Altar of Lumina was a disc of white stone two hundred feet across, on a peak half a mile from the Spire's flank, and it was empty.
+
+The canopies were gone. The choir was gone. The Eye stood on its frame at the far edge, forty feet of bronze gone white as a shell, with the long black crack across its face from Ashfall. And in the middle of the disc, the Vessel's stone. A dais of white stone ten feet across, where the best treble of the Basilica school had stood every Dawnday for four hundred years and sung the first line of the morning hymn alone.
+
+She had stood on it herself, at eleven.
+
+She set the old man down on it. He wanted to sit on the floor. She sat him cross-legged in the middle of the stone, the way he sat, like a boy at a story, with his white cassock round him and his hands in his lap, palms up. He was lighter than he had been in the chapel. She could see the shape of his hands through the skin of them, faintly, the way you see the shape of a coin through a cloth.
+
+"Is it facing me?" he said. "The Spire. Am I facing it?"
+
+She turned him a little. "Now you are."
+
+"Thank you." He lifted his face. His white eyes were open. "Is it still asking?"
+
+She listened.
+
+It was. Louder here than anywhere in the city, half a mile from the Spire's flank, on the stone where the dawn office had been sung for four hundred years. It came up out of the Altar through the soles of her feet. It came down the air. It came out of the copper in her own throat, which wanted, so badly, to give it back. *Is it you? Have you come?* Going up at the end. Like a child at a door.
+
+"Yes," she said.
+
+"What shall I say to it?" said Severin Ashe. He sounded, for the first time since she had known him, which was all her life, uncertain. "I've never— I don't know how to talk to it. I only ever asked it things."
+
+She thought of Ilse Brennan, in the gallery over the Root, breathing the song in the cold. *She asked it if it was all right. Nobody has asked it that for three hundred years.*
+
+She thought of Lyra's slate.
+
+"Tell it who you are," said Solenne. "It's never been told. Nobody ever comes up here and says who they are. They just sing at it."
+
+The old man thought about that.
+
+Then he turned his face up toward the Spire, toward the white needle a mile high with the black crack down its side, that he had never once heard. And he said, quite clearly, in his own voice, warm and soft and a little out of breath, the way he had said it to Lyra Ashgrove on the floor of a black cell in Ashfall:
+
+"Hello. I'm Severin. I don't use the rest of it, mostly."
+
+---
+
+She left him there.
+
+He did not want her to stay. He said so. *It'll be easier for it if it's only me. It's never had only me.*
+
+She had got as far as the edge of the stone when he said her name.
+
+"Solenne."
+
+She stopped.
+
+"On Dawnday," said Severin Ashe, with his face turned up to the Spire. "Next Dawnday, and the one after. Would you come up and sing it the morning office? Properly. The whole of it, not the one note. With the treble." He was quiet a moment. "Somebody should. I always thought it was what the office was for. I just never knew it could hear."
+
+She did not answer at once. The copper ached in her throat.
+
+"Yes," she said.
+
+"Thank you." He smiled, at the Spire, not at her. "There. Now go."
+
+So she stepped down off the Vessel's stone, and went back across the white disc of the Altar toward the chain, with her broken wing dragging and her talons loud on the stone.
+
+At the rim she stopped. She did not turn round. She listened.
+
+He was talking.
+
+Not praying. Talking. The way you talk to somebody at a bedside. She could hear it all the way across the Altar, because she could hear everything. He was telling it about himself. About his mother, who had kept bees on the eleventh tier. About the Basilica school, and the bench under the great east window, and the Cantor with the tuning-rod and the voice like a bell who had told him the soul had a sound. About seventy years of not hearing it. About Placidus, who had been so tired. About a man at the Organum who had written to him every week and called him by his name. About Seraphina, who had cut her hair.
+
+And under it, all the time, coming down out of the white, the question. Going up at the end.
+
+She did not know whether it was listening. She did not know whether a god that had been asked one note for four hundred years could hear an old man telling it about bees. She thought, standing at the rim of the Altar of Lumina with her back to him and the copper aching in her throat, that nobody knew. That nobody had ever tried.
+
+She went onto the chain and started back.
+
+She heard him talking all the way across. Half a mile of black iron through the white, and she heard every word. He was still talking when the sky went grey over the peaks to the east. He was still talking when the Basilica's bell rang the hour before dawn on Driftday, down in the city, the drill day, and under it, very faint, from the chime-house on the third tier, in the white now, held in a ring of glass-fire, a different bell: high, quick, over and over, the way a bell rings that has been waiting seven years to ring.
+
+He was still talking when the sun came up.
+
+Then he was not.
+
+---
+
+She stood on the walkway of the Pilgrim Chain, a hundred yards from the seventh anchor-house, in the full white of the morning, with the light going round her wings gold, and listened to the place where he had been.
+
+Nothing.
+
+And then, out of the white, from the Spire, the question again. *Is it you?* The same. Going up at the end. The god had not stopped asking. She had not thought it would.
+
+But it was asking a little more slowly.
+
+She was almost sure of that. She would never be sure. She would tell Lyra, later, on the slate, and Lyra would look at her for a long time and not write anything back. She would tell herself, for the rest of her life, that she could have imagined it. But she stood on the chain in the morning and listened to the god of Light ask its question, and between one asking and the next there was a space. A pause. The length of a breath. The length of the space you leave in a conversation when someone has told you something about bees, and you are thinking about it.
+
+She had wanted Casimir Vaelen to be right since Lumina. She had wanted it so much that she could not sleep.
+
+She found, standing on the chain in the white, that she did not any more. Not because he was wrong about the gods. He was not wrong. They were tired. They were asking to put it down. She had heard it on the riser and she heard it now.
+
+Because he had listened to them for eighty years and written to an old man every week and called him by his name, and had never once, in all that time, gone up to one of them and told it his.
+
+The copper in her throat ached.
+
+She did not let it lift. Not yet. She went back along the chain to the city, toward the bell that was ringing *go*, to find her sister and the seven and the priest, and Lyra, and the nine chains going down into the shade.
+
+Behind her, very faintly, the god asked again. And paused.
