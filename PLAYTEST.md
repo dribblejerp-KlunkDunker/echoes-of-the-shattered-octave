@@ -23,7 +23,7 @@ Reading checks only; the tests confirm every line is in place and has its French
 - **The quarry lease.** Reeve Mossbrook now says he put his name under a lease in 414, matching the document in Vosk's safe; the moot rumour says the same.
 - **Port Cantabile's Harbour office** is kept by Kerrow, "since Teague went into the Nancy's hold". Colm Teague dies on 4 Ashfall in Book Two.
 - **Mags is the bosun,** on the Kestrel, in the dossier and on her name label. Her line about the tanks now gives the tanks to the engineer, as the book does.
-- **The Grafters' wagon** in the Hollow on Rootday: a long white wagon, felted harness and booted hooves; the Grafters in white leather with glass eyepieces and a wire lattice over the mouth (ch. 3). Check the sprites still match the words; the art was drawn for the old text.
+- **The Grafters' wagon** in the Hollow on Rootday: a long white wagon, felted harness and booted hooves; the Grafters in white leather with glass eyepieces and a wire lattice over the mouth (ch. 3). The wagon is now painted to match (5 Nov): white, two grey horses in felted harness with booted hooves, the brazier caged on its bed and the saws under oilcloth. Check it reads at a distance and up close, and that the horses look grey rather than tan in the morning light.
 - **The character dossiers** (Phase 23): Kaelen 34 with a pale-cyan Light-glass arm, Lyra 33, Vane 41 with the Kestrel bought in 417, Sable 41 and a keeper of the Bound Ledger who never left Whisper-Grove, Rooke fifty or near it and four years out of the Organum, Mags the bosun. Read them in English and French.
 - **Lore:** the Octave card now puts the Organum where the eight roots meet, and the Conservatory's primer says the Tempest Archipelago.
 
