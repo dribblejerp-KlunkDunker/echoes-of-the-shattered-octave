@@ -1622,3 +1622,604 @@ The copper in her throat ached.
 She did not let it lift. Not yet. She went back along the chain to the city, toward the bell that was ringing *go*, to find her sister and the seven and the priest, and Lyra, and the nine chains going down into the shade.
 
 Behind her, very faintly, the god asked again. And paused.
+
+---
+
+## CHAPTER SEVEN
+### The Fall-Chains
+
+> *Hand, foot, hand. Breathe on the foot. If the one above you stops, put your hand on their boot and hum. If the one below you stops, wait.*
+>
+> — The fall-chain drill, taught on Driftdays since 413 to every child in the Umbral Tiers tall enough to reach the first rung
+
+*The Keel Docks and the gulf, Sol-Luminary. Driftday the twenty-fourth of Frostmonth, to Memoryday the twenty-fifth.*
+
+---
+
+The bell did not stop.
+
+Lyra had heard bells in her life. Every Cantor of the Reach had. The Chapel bell in the square at Oakhaven, the hour-bell at Reedside, the funeral bell, the fire bell, the little brass hand-bell the midwives rang at a door to say *come quickly*. She had never heard a bell like the one that began to ring in the chime-house on the third tier in the hour before dawn on Driftday. High, and quick, and thin, the same two notes over and over, the way a child says the same two words when it has been waiting a long time to say them and is afraid that if it stops someone will tell it to be quiet.
+
+*Go. Go. Go. Go.*
+
+She was on the iron gallery at the tip of the city, under the Keel Docks, with the nine chains going down beside her into the grey. She had been there since midnight. She had not slept. Brenna Corliss was beside her on an upturned crate with the slate on her knees and the white half of her face turned to the stone, and when the bell began Brenna did not move for a long time. She sat with her big hands flat on the slate and listened to it.
+
+"That's the Church," she said at last. "That's not us. We'd not ring it that fast."
+
+Lyra looked at her.
+
+"It's the priest," said Brenna. "Your priest. He's up there in the chime-house in the white with a ring of fire round him, ringing it himself." She shut her good eye. "Seven years I've waited to hear that. I thought it'd be me ringing it."
+
+---
+
+It came down the ladders a quarter of an hour later. Not the priest. A paper.
+
+A Flambeau brought it. A young man, red-haired, in crimson, with his censer burning white-gold on its chain, coming down the last ladder from the second tier to the Keel Docks in his little room of shade. Every face on every walkway turned to follow him. Lyra watched the Tiers watch him. She watched the woman with the baby, on the walkway over the cradles, pull the baby's head into her shadow and not his.
+
+He came along the gallery to Brenna Corliss and held out the paper. His hand was shaking.
+
+"From the High Patriarch," he said. "By the Preceptor's order. It's to be read at every ladder-head." He swallowed. "I've read it at eleven. I was told to bring it to the woman with the slate."
+
+Brenna took it. She read it with her good eye, holding it close, in the slit of her lamp. Lyra watched her face. It did not do anything at all. She read it twice. Then she held it out to Lyra.
+
+*My children.*
+
+*I have never heard the Light.*
+
+Lyra read it. All of it, to the end, to the name at the bottom in an old man's copperplate that went uphill. *Severin.*
+
+She had sat on a cot in a black cell in Ashfall and looked down at that old man on the floor at her feet with his legs crossed like a boy at a story, and thought: *he has never once in his life heard a god*. She had thought it with pity, and with something harder underneath the pity, something she was not proud of. She held his paper now on the iron gallery at the bottom of the world and read *I have never heard the Light* in his own words, and the thing underneath the pity was gone, and she did not know what had come up in its place.
+
+She gave it back to Brenna.
+
+"Well," said Brenna Corliss. She folded the paper and put it inside her coat. She stood up off the crate. She was a big woman and she stood up slowly. "Well. There it is." She turned to the nine chains, and the iron eyes in the stone, and the men and women standing by each one in black with their hands on the rope. She lifted her slate over her head.
+
+She did not shout. Nobody in the Tiers had shouted in seven years.
+
+"*Go*," said Brenna Corliss.
+
+---
+
+It was the most beautiful thing Lyra had ever seen.
+
+She would try, afterward, to tell it. She would try on the slate for Kaelen, in the dark, at the Organum, and find there was not chalk enough in the world. She would try to Sable, who would write it down, every figure, and read it back to her, and it would be right, and it would not be it. She would think about it for the rest of her life, in the reed-hall, with children, and she would never once be able to say what it had been like to stand on the iron gallery at the tip of a city in the hour before dawn and watch nineteen thousand people who had spent seven years learning to do one thing do it.
+
+They were good at it. That was all. They were so good at it.
+
+The first went down chain one before the word was out of Brenna's mouth. A man and a girl. The man went first, onto the rope rungs knotted to the black iron, facing the chain, his boots finding the rungs below without looking. The girl went after him. Nine, perhaps. Ten. A bundle on her back tied up in black cloth. She went onto the chain above him, her boots three rungs over his head, and they went down. *Hand, foot, hand.* Lyra watched them go. The girl's lips were moving. *Breathe on the foot.*
+
+Then a woman after the girl. Then a boy. Then an old man. Three rungs apart. Never closer, never further. On chain one, and chain two, and chain three, all nine, at once, so that in the time it took Lyra to breathe in and out there were people on every chain, going down into the grey under the city in a line, each one's boots three rungs above the next one's head, like beads on nine black strings.
+
+Nobody spoke.
+
+There was a sound. She would remember the sound most of all. Not voices. Hands. Eighteen thousand pairs of hands, over the morning, on tarred hemp. A soft dry steady whisper, like rain on a roof, coming up the nine chains out of the grey. And under it, breath. All of them breathing on the foot, as they had been taught, every Driftday since 413, so that the whole of the gulf under the city breathed in and out, slowly, on the same count, like one great animal asleep.
+
+---
+
+There was a ladder-master at every eye. Lyra watched them work. She had never seen anyone work like that, not even Vane at the wheel in the shadow, not even Kaelen with a bore-frame.
+
+At chain one, Brenna's own, a broad old man with a cropped grey beard stood at the iron eye with his hand on the first link and a lump of white chalk in the other, and he touched each person on the shoulder as they went onto the chain. Not a push. A touch. *Now.* And as he touched them he made a mark on the black stone beside the eye. Four strokes and a bar. Four strokes and a bar. And when a family came, he held them back with his hand, gently, not looking at them, until the line on the chain had opened by exactly three rungs. And then touched the first. *Now.* And the next. *Now.* The children between the grown ones, always. Never two children together. Never a child at the end of a family, where nobody would be below to put a hand on its boot.
+
+At chain four a woman did it with a stick. At chain seven, a boy of perhaps sixteen, who had been nine when the line first came down, who had learned it as a game. He stood at the eye with his hand up, fingers spread, and closed them one at a time as each person went on, *one, two, three, four, five*, and then opened them again. He did not make a mistake all morning.
+
+And down the walkways from the second tier, and the first, and the ladders from the hanging houses, the Tiers came. In lines. Each in the shade of the one ahead. Each with their bundle. Not hurrying. You do not hurry the ones in front. To the gallery, and onto it, and along it to the eye where the ladder-master would touch them. Nine lines, coming down out of the dark of the Umbral Tiers like nine streams down a hill, and at the end of each, an iron eye, and a touch, and a chain.
+
+Brenna Corliss walked up and down the gallery behind the ladder-masters with her slate. She did not tell anybody anything. She did not need to. She stopped at each eye and looked at the chalk marks on the stone and wrote a figure on her slate, and went on to the next.
+
+Lyra stood by chain five and watched. She had nothing to do. She had thought, in the chandlery, when Seraphina put her hand over the slate, that there would be something for her to do. That somebody at the top of the chains would need to make eighteen thousand people move in time without saying a word.
+
+They did not need her. They had never needed anybody. They had been doing it every Driftday for seven years.
+
+---
+
+The old and the sick went to the ships.
+
+That was drilled too. Lyra watched it from the gallery: the cradles of the Keel Docks swinging over their heads, and the hulls lashed beyond them, and the Tiers' men passing the old down into them on lines. A woman with no legs in a basket. An old man rolled in a black blanket like a parcel. A girl with a bound face and a fever, carried by her brother. Hap Tolland stood at the rail of the *Small Hours* with his veil down and took them in, one after another, and counted them under his breath, and said nothing.
+
+At the sixth hour the first ship let go.
+
+It was the coal-barge, the one the *Small Hours* had come in alongside. Her master cast off from the cradle in the dark, and she dropped. Not fell. Dropped, on purpose, the way Hap Tolland had dropped coming in, straight down through the grey under the city with her bag half-vented, two hundred feet, four hundred, so that she would stay in the shade, and then caught herself on the tanks and turned north-west, low, toward the pass at the head of the gulf, with three hundred people in her hold and on her deck and lashed to her rails.
+
+Nobody on the gallery watched her go. They were watching the chains.
+
+The barge with the six balloons went next, the one that had no business in the air, with the Aegis in it. Lyra had put it there herself at midnight. It could not go down a chain. Nine feet of iron, the knee grinding, the back plates thin as paper since Ashfall. It had stood on the gallery when she showed it the chains and looked down them with its helm bowed and the rosy light in its slot, and she had felt it understand. It had let them lower it into the barge on a sling of four hawsers from the cradle above. It had stood in the barge's well among sixty Tiers children, the smallest ones, too small to climb, and the children had looked up at it, and it had looked down at them.
+
+As the barge let go, Lyra heard it begin to hum.
+
+Not the tending note. Not the alto line. A thing she had never heard it hum before, and knew. A lullaby. Five notes, and a turn. Ilse's. The Root's. She had whistled it once at the edge of the Woods and once at the shaft-head in blood, and the boy in the iron had heard it both times.
+
+The barge went down into the grey with sixty children in its well and nine feet of iron in the middle of them, humming the oldest song in the world, too loud, the way children sing when they are not sure yet. And she heard the children go quiet. One by one. The way children do.
+
+---
+
+Seraphina came down at the seventh hour with the seven.
+
+Lyra heard them before she saw them. Everybody did. The whole gallery heard it, and turned. Down the last ladder from the first tier, slowly, out of the dark of the hanging houses: a line of seven people in white robes with their hands on each other's shoulders, singing. One note. Rising. Lifting at the end. And beside them, with a borrowed coat over her shirt and a god's bone held up in both hands, Seraphina Aubade. She had gone back up for them from the chime-house, after the priest began to ring, and brought them down from the ninth tier through the white in her shadow, on the stair and the ladders, a tier at a time, through the dead hour, when the line came down past the second. Solenne was on the Pilgrim Chain with an old man in her arms. So Seraphina had sung them the lead of the morning hymn herself, in her own voice, the way she had sung it at six on a bench under the great east window, and they had got up off the floor of the nave and followed her.
+
+The Tiers on the gallery stood back from them.
+
+Not afraid. Lyra saw that. The Tiers did not step back the way the woman with the baby had pulled it out of the priest's shadow. They stood back the way you stand back for a procession. They had left bread on the line for these seven for seven weeks. They had drawn them, on scraps of paper, with crayons. A black shape with wings. Seven white ones.
+
+Seraphina brought them along the gallery to Lyra and stopped.
+
+Her face was the colour of the paper in Brenna's coat. Her hands on the Blade were lighter than they had been in the chandlery, Lyra could see it, a shade, like hands that had been in water too long. She had not slept. She had stood in the anchor-house through a dawn breath and carried the seven down the great stair and stood in a chapel and watched an old man find out that he had never once been spoken to.
+
+She looked at Lyra.
+
+"Solenne took him to the Altar," she said. "At the dead hour. He asked her to."
+
+Lyra did not move.
+
+"He's going to sit on the Vessel's stone," said Seraphina, "and tell it who he is." Her voice was the warm low mezzo, and it was in rags. "He said nobody ever had."
+
+Lyra looked at her for a long time.
+
+Then she took the slate from round her neck. She turned it to the back, the clean side, and wrote. And held it up.
+
+*SHE ASKED HIM?*
+
+Seraphina read it.
+
+"Yes," she said. "She asked him. *Do you want to go.*" She shut her eyes. "He said nobody had ever asked him that either."
+
+---
+
+They could not get the seven down a chain. Lyra had known that. She had thought about it all night, on the gallery, in the dark. Seven people who had not stood up from the floor of a tower for six days until Solenne sang them up, who could walk now only because they were following a note. Two thousand and eleven feet of rope rungs on iron, hand, foot, hand, three rungs apart.
+
+The ships were full.
+
+She looked at the cradles. At the hulls lashed beyond them. She counted, the way Vane would have. Eleven cradles, and the forty hulls, and every one of them taking the old and the sick and the small in a line off the gallery, and the line of the old and the sick and the small was not getting shorter.
+
+She turned to Brenna Corliss. She did not have to write it. Brenna had seen the seven come along the gallery. She was looking at them with her good eye.
+
+"No," said Brenna. "I've no room. I've four hundred on that list still and not a plank to put them on."
+
+Lyra held her eye.
+
+Brenna looked at her a long time. Then at the seven. Then at the slate in her own hands, the figures on it.
+
+"*Light*," said Brenna Corliss, very quietly, the word nobody in the Tiers said any more. And turned and shouted, not loud, in the murmur of the Narrow, along the gallery to the cradles. "*Hap!*"
+
+Hap Tolland put his veiled head over the rail of the *Small Hours*.
+
+"You've a winch on the forward cradle," said Brenna Corliss. "For the coal. You'll lower these seven on it. In a sling. All the way."
+
+"That's two thousand feet, Brenna. On a coal-winch. It'll take—"
+
+"I know what it'll take," said Brenna. "Do it."
+
+---
+
+Lyra did not see the priest go down. She would learn afterward how it was done. Seraphina told her, on the scree, in the night, and Ignatius did not.
+
+He had come down from the chime-house at the sixth hour, with Lucan Ostrel and forty Flambeaux in a ring of fire, leaving the rest of the second chapter to hold the bell and the ladder-heads. And at the foot of the last ladder, on the Keel Docks, he had stopped. He had stood there, in his brown coat with the white hand bare, and looked down through the gratings of the docks at the nine chains going down into the grey.
+
+And he had said to Ostrel, in his nave voice: *Who is at the bottom?*
+
+Nobody, Ostrel said. They were all coming down from the top.
+
+*You can drill the chains,* the priest had said. *You can't drill the bottom. Brenna Corliss said so to the Knight on Stasisday. You only get to do the bottom once. Who is at the bottom?*
+
+And Ostrel had not had an answer.
+
+So the priest had gone down. First. Ahead of everybody, on chain nine, at the far end of the gallery, at the sixth hour, before the first of the Tiers had reached the scree. And behind him on chain nine, three rungs apart, forty Flambeaux in crimson with their censers on their backs, unlit, going down two thousand feet of rope into the grey in a line. And lowered after them, on a line from the coal-winch of a Church tender with its sun-disc painted out, in bundles of twenty, wrapped in black oilcloth, every processional canopy in the undercroft of the Basilica of the Pure Note.
+
+Two hundred and four of them. Black silk, on frames of light ash, each with four poles. The canopies the Church had carried two hundred choristers under up the Pilgrim Chain in Ashfall, at night, in a procession like a line of black mushrooms. The canopies it had carried up the chain every Dawnday for four hundred years, to the Altar, to the Vessel's stone.
+
+*I have moved a procession of two hundred through the white at the dead hour,* Ignatius Crane had said to the Preceptor, at the foot of the ladder. *Under moving shade. Without losing a throat. I have done it twice a year for twelve years, Lucan, and you have stood beside me and watched me do it. That is the only thing I was ever good at that did not burn anybody.*
+
+*Give me the canopies.*
+
+---
+
+The dawn came at the seventh hour, and with it the breath.
+
+She felt it before she knew what it was. She was standing at the eye of chain five, beside the ladder-master, a thin dark woman with a stick, watching the line of the Tiers go down. Three rungs apart. Hand, foot, hand. And under her feet, through the iron of the gallery and the stone of the city's tip, she felt something go out.
+
+Like a sigh. Long. Slow. Through every stone of the city at once, the way the Root-vault had sighed under her hand when the Root let go of Aldric Vance. Outward. Down.
+
+She looked up.
+
+She could not see the line from the gallery. There was too much city in the way: the Keel Docks overhead, the cradles, the hanging houses of the first tier. But she saw the light change. The grey of the shade under the city, the deep winter shade they had been standing in all night, went a shade paler. As if somebody had opened a door a long way off. And kept going paler. Grey, and then the grey of ash, and then something lighter than ash.
+
+The shade was thinning.
+
+She had seen it on the slate. Seraphina had written it for her at midnight, in the chandlery: *THE CHAIN'S SHADOW WENT. IN THE DAWN BREATH. IT DOES NOT ONLY COME DOWN THE CITY. IT COMES INTO THE SHADE.* She had read it and understood it and not understood it at all. She understood it now. She stood on the iron gallery at the tip of the city and watched the shade under Sol-Luminary go pale round nine chains with six thousand people on them.
+
+And she heard the hands change.
+
+---
+
+The soft dry whisper of eighteen thousand hands on tarred hemp, coming up out of the grey like rain. It did not stop. It changed. It slowed. She heard it slow the way you hear a heart slow, in a birthing room, when something is going wrong and nobody has said so yet. Hand. And a pause. Foot. And a longer pause.
+
+And the breath under it, the whole gulf breathing in and out on the same count, came apart.
+
+She went to the edge of the gallery and looked down chain five.
+
+The line of the Tiers went down it into the paling grey, three rungs apart, as far as she could see. They had stopped. Not all. Many. She saw them stop. A man forty feet down, with his face against the chain, and his hands on the rope, not moving. A girl below him. A woman below her. Stopped. Not frozen. Not afraid. She knew what fear looked like on a rope; she had seen it on the Salt Stair. This was not fear.
+
+The woman forty feet down turned her face away from the chain and looked out, into the grey. Lyra saw her face. It was the face she had seen on the Shelf on people walking into the quiet. On Bridie Cole in the chair. On the Sounders, Kaelen had said, going down into the stone. It went soft.
+
+*Not pain. Ease. A soft white loosening, as if all the colour in her were a held breath.*
+
+The woman's hands opened on the rope.
+
+She did not fall at once. She leaned back. Slowly. Away from the chain, into the grey, with her hands open, the way you lean back into warm water. Her boots were still on the rung. And the girl above her, nine, ten, with her bundle on her back, put her hand down on the woman's shoulder, the way she had been taught. *If the one below you stops, wait.* And the woman's boots came off the rung.
+
+She went down into the grey without a sound.
+
+The girl's hand stayed where the woman's shoulder had been. Open. Lyra saw it. Small, and open, on nothing. And then the girl looked at her own hand, and her face began to go soft too.
+
+---
+
+Lyra did not decide anything. She would think, afterward, that there had not been time to decide. There had been a girl's open hand on chain five, forty feet down, going soft, and six thousand people on nine chains in a shade going white, and a breath coming out of the city that would not stop.
+
+She had no voice.
+
+She had a slate, and chalk, and her hands. She had a burned hand bound in linen and a good hand at her throat where the torn place was. She had blood at the back of her tongue if she whistled, and she had whistled the oldest song in the world at a shaft-head in the snow, and Ilse Brennan's hand had come down on her shoulder to stop her and she had not stopped. She could whistle again. She could whistle until there was nothing left to tear. One thin breathy whistle, at the top of two thousand feet of chain, in a gulf, over the sigh of a city.
+
+Nobody would hear it past the first twenty feet.
+
+She put her hand in her coat.
+
+She had carried it against her chest since Oakhaven, in the inside pocket of Hetty Bram's coat, next to the slate with the words for Kaelen. The last wind-reed in the Reach. A hand long, cut and bored and polished with handling. Pale gold, sugar-glass, clear as amber, with a single hole near one end. *The breath is the instrument. The reed is only so you know where to start.* She had been told to take it to the Organum. To find whatever god she could reach on the Longest Night and give it the note, so that it would know where to begin.
+
+She had not been told what the note was for. Not exactly. Ilse had not needed to say.
+
+On Lumina, in Ashfall, under two hundred throats holding the Pure Note at a god that was coming home to answer them, she had sung one note. Low, under theirs. A hundred and seventy-four. The tending note of the Reach. The song for a growing thing, which tells it it is held and can go on. She had sung it a hair under the Church's note so that the two of them made something that was not unison. The second note. *Go back to sleep.* And the white tide had stopped in the middle of the gulf and gone back.
+
+The Tiers had been humming it since. Seraphina said. Under their breath, in the dark, the two notes. A child had been humming it on the walkway on Stasisday when they came up the ladders, and been hushed.
+
+She took the reed out of her coat and put it to her lips.
+
+---
+
+It was very quiet. That was what she would remember. Not loud at all. A thin clear pale gold sound, a hundred and seventy-four, true, out of a reed a hand long, into the grey under a city of white stone, over the sigh. It was the quietest thing she had ever done. It went out from her across the gallery and down chain five, and she saw it reach the ladder-master beside her, the thin dark woman with the stick.
+
+The woman turned her head.
+
+Lyra looked at her. Over the reed. And took her good hand from the reed and lifted it, the way she had lifted it at the shaft-head in the snow over a ring of grey hands. And pointed. At the woman's mouth.
+
+*You. This note.*
+
+The ladder-master looked at her for a long moment.
+
+Then she shut her eyes and hummed it.
+
+Low. Under her breath. A hundred and seventy-four. And the man beside her at the eye of chain six, waiting to be touched, heard it, and hummed it. And the boy at chain seven, sixteen, who had been nine when the line first came down, with his hand up and his fingers spread. He hummed it, and kept counting, *one, two, three*, closing his fingers, and humming. And the woman behind the man at chain six, and the child at her skirts.
+
+Lyra blew the reed again. Once. Softly.
+
+She did not have to blow it a third time.
+
+---
+
+It went down the chains.
+
+She watched it go. She stood at the edge of the iron gallery at the tip of the city with the reed in her fist and watched it go down nine chains into the grey, from mouth to mouth, the way a fire goes down a fuse. Every one of them taking it from the one above. Not loud. You did not sing out loud in the Tiers. Under the breath. On the foot. *Hand, foot, hand. Breathe on the foot.* And on every breath out, the note. A hundred and seventy-four. Going down. The man forty feet down chain five, with his face against the iron, heard it from the boots above him, and his lips moved. The girl with her open hand heard it.
+
+The girl's hand closed on the rope.
+
+Lyra saw it. She would see it for the rest of her life. A girl's small open hand, on nothing, on a chain over two thousand feet of grey, closing, slowly, on tarred hemp. Holding on.
+
+And the whole gulf under the city began to hum.
+
+Six thousand people on nine chains in a line two thousand feet long, every one of them humming the same note under the breath, on the same count, the way they had breathed. It came up out of the grey to her through the iron of the gallery and the soles of her boots and the bones of her hand on the rail. Low. Steady. Not the Church's note, flat and held. The other one. The one under it. The tending note, that you hum into a child's back to tell it that it is held. Nobody had taught it to them. Nobody had had to. They had heard it once, from a torn voice on an altar in the white, and kept it for seven weeks in the dark under their breath.
+
+And on the gallery, at the eyes of the nine chains, and on the walkways and the ladders of the first and second tier coming down in their nine long lines, the twelve thousand who had not yet gone down took it from the six thousand who had. Under the breath. On the foot.
+
+The whole of what was left of Sol-Luminary, humming the second note.
+
+And somewhere very far above them, on the ninth tier, faint, in the white, the nine in the choir-stalls holding the first one.
+
+The breath went out of the city. Long. Slow. Through every stone.
+
+And stopped.
+
+---
+
+She felt it stop. She did not know whether it had stopped because of them. She would never know. She would tell Kaelen, at the Organum, on the slate, and he would look at it for a long time and say, in his two-note voice, that he could not tell either. That he had felt it through the glass, four hundred miles off, on the deck of the *Equity*. That it had been a shorter breath than the one before, and a shorter one than the one before that, on Dawnday. And that he did not know whether it was the note, or only that the Light was getting tired of breathing.
+
+She stood on the gallery and watched the grey under the city stop going pale. It did not go back. It did not get darker. It stopped. A pale grey, like ash, like the chain's shadow in the anchor-house that Seraphina had written about. Thinner than it had been at midnight. Enough.
+
+The hands on the rope began to move again. Hand, foot, hand. The soft dry whisper of rain on a roof.
+
+The humming did not stop. Nobody stopped it. It went on all day.
+
+---
+
+The ladder-masters counted the dead at noon. Brenna Corliss walked the gallery with her slate and stopped at each eye and asked, in the murmur, and wrote.
+
+Chain one, nine. Chain two, fourteen. Chain three, six. Chain four, twenty-two: a whole family, near the top, who had leaned back into the grey together, holding hands, the ladder-master said, as if they had agreed it. Chain five, eleven. The woman forty feet down. Chain six, seventeen. Chain seven, eight. The boy at the eye said eight and closed his fist and did not open it again for some time. Chain eight, nineteen. Chain nine, four.
+
+A hundred and ten.
+
+Brenna wrote it at the bottom of the slate, under the long columns of figures, and drew a line under it. And then, under the line, in her big square hand, she wrote something else, and showed it to Lyra.
+
+*Nullday, the seventh: 12.*
+
+*Rootday, the sixth: 19.*
+
+*Hearthday, the fifth: 26.*
+
+*Stasisday, the fourth: 40. Asleep, most.*
+
+*Dawnday, the third: 31.*
+
+*Driftday, dead hr, the second: 9.*
+
+She had been counting since Nullday. Every breath. Every tier. Every walkway where somebody had not woken, or would not go, or had gone back for something.
+
+*No one knows what the shade will do in the next breath,* she wrote. *Nor do I. Get them off the chain by dusk.*
+
+---
+
+Solenne came back at the third hour after noon.
+
+Lyra heard about it before she saw it, the way everybody in the Tiers heard everything: as a change in the silence. A ripple along the walkways of the first tier, the ones still waiting, a turning of heads. And then she came down the last ladder onto the Keel Docks, out of the white, barefoot, on her talons, with her broken wing dragging and her arms empty.
+
+The Tiers stood back for her. Further than they had for the seven.
+
+She came along the gallery to Lyra. She stopped. She looked at the reed in Lyra's fist, and at Lyra's mouth, and at the chains, humming.
+
+"I heard it," said Solenne. "On the Pilgrim Chain. From half a mile off. The whole city." The copper half of her voice was very quiet. "It's still in the stone. Can you feel it? I can feel it in the soles of my feet."
+
+Lyra nodded.
+
+She wanted to ask. She did not have to.
+
+"He's gone," said Solenne. "At sunrise. On the Vessel's stone, facing it, talking." She looked down at the chains. "It didn't hurt him. He said so. He said Casimir was right about that, and that he usually is, and that that was the trouble with him."
+
+Lyra took the slate and turned it to the back and wrote. She did not know what she was going to write until she had written it.
+
+*WHAT DID HE SAY TO IT.*
+
+Solenne read it. She read it for a long time.
+
+"His name," she said. "First. Then everything else." She was quiet. "His mother kept bees. Did you know that? On the eleventh tier. Before the Fracture. He told it about the bees."
+
+Lyra did not write anything.
+
+"It's asking more slowly," said Solenne Aubade. "Since. I think. There's a space in it now." She looked at Lyra. "I don't know. I don't know if I'm making it up. You'd know. You hear them through your hands."
+
+Lyra looked at her. She did not hear the Light through her hands. She was not glassed. She had heard the Root, through Aldric Vance's bark and into the iron. She had never heard the Light.
+
+She put the reed back in her coat.
+
+Then she put her good hand flat on the iron of the gallery rail, the way she would have put it on bark, and was still, and listened.
+
+She heard the chains humming. A hundred and seventy-four, from twelve thousand throats, under the breath. She heard the hands on the rope. She heard, very far off, through the iron and the stone of the city and the kilometre of chain going up to the Spire, a sound she had never heard in her life and knew at once, the way you know your mother's voice in a crowd. Five hundred and twenty-eight. Tired. Rising. Lifting at the end.
+
+And then a space. A breath long.
+
+And then the question again.
+
+She took her hand off the rail.
+
+*I DONT KNOW,* she wrote. *I THINK SO.*
+
+Solenne read it, and nodded, and did not say anything else.
+
+---
+
+She went down chain five at the fourth hour after noon, when the line on the gallery had shortened to the last of the first tier.
+
+Brenna sent her. Brenna stood at the eye with the slate and said, in the murmur, *Cantor, you're no use to me up here now, they've got your note, go and be some use at the bottom*, and put a big hand on her shoulder. Not a push. A touch. *Now.*
+
+Lyra went onto the chain.
+
+She had climbed ladders all her life. Orchard ladders, the long ones you lean into the crown of an iron-bark oak at harvest; the rope ladder of the *Kestrel*; the iron rungs of the Shelf. She had never been on anything like it. Two thousand and eleven feet of black iron link, each a forearm long, with rope rungs knotted to it on either side, swinging, very slightly, all the time, with the weight of the people on it. Her burned hand would not close properly on the hemp. She held with the good one and hooked the burned wrist through each rung, and went down. *Hand, foot, hand.* Three rungs below the boots of a man she did not know. Three rungs above the head of a girl she did not know. Humming.
+
+She hummed it too. She found she could. Not a voice. Breath through the torn place, on the out-breath, the shape of a note without the note. It did not hurt. It was the first sound she had made in two months that did not hurt.
+
+She went down through the grey under the city for an hour and a half. She did not look up and she did not look down. She looked at the black iron in front of her face and the rope in her good hand, and breathed on the foot, and hummed. Above her, the soles of a man's boots. Below her, the top of a girl's head, with a black cloth bundle on her back and a red ribbon in her hair. Every link of the chain had been broken out of a dead grating or a stair-rail on the dead tiers at night by somebody who had leaned out too far, and welded, and hung, one a night, for seven years.
+
+She thought, about half-way down, that she was climbing down the inside of somebody's arithmetic. Brenna's husband's. A link a night.
+
+Then she thought about nothing at all, for a long time, except the next rung.
+
+---
+
+The scree at the bottom of the gulf was grey and loose and very cold, and it was full of people.
+
+They came off the foot of the nine chains onto it in their lines and did not stop. That was drilled too. You came off the last rung and you walked. Somebody was there to touch your shoulder and point. North-west, up the long slope of the gulf floor, across the scree, toward the head of the gulf where the peaks parted in a notch against the sky. The pass. Three miles off. And you walked toward it in the shade.
+
+The shade was the city's.
+
+She saw it as she came off the chain. She turned on the scree and looked back and up, and there it was, two thousand feet over her head: the underside of Sol-Luminary, the tip of the inverted cone, black against the white sky, with the nine fall-chains hanging down out of it like threads from the bottom of a spool. And beyond it, behind it, the Spire. And between the Spire and the gulf, the city hung in the light like a wasps' nest under an eave, and threw a shadow.
+
+A long dark wedge of shade, lying away from the Spire across the scree and up the gulf toward the pass. Swinging, very slowly, as the sun went round. Narrowing toward the city like a funnel. Outside it, the scree lay in the light, and the light was wrong. Overexposed, edgeless. Not the full white of the city, not yet. But she could see a pale stone at the edge of the shade going paler while she watched.
+
+And in the wedge, the procession.
+
+---
+
+It went up the gulf floor from the foot of the chains to the notch of the pass, three miles, in a line. A line ten people wide and as long as the gulf, walking. Each in the shade of the one ahead. The line bent as the wedge bent. It curved up the scree to keep to the middle of the shade, the way a river keeps to the bottom of a valley. And along both edges of it, all the way up the gulf, like a hedge, like a row of black trees on either side of a road: the canopies.
+
+Two hundred and four of them. Black silk on frames of light ash, each one carried on four poles by four people. Flambeaux in crimson, and Tiers men in black, and Tiers women, and here and there a child, too small, holding one corner of a pole with both hands. They walked at the edges of the procession, on the side of the wedge where the shade was narrowing. And when the edge of the wedge swung in over the column, as it did, slowly, all afternoon, the canopies were there. The people under the edge of the shade walked under black silk instead, and did not stop walking, and the canopies moved with them, and the edge of the wedge went over the canopies, and the light lay on the black silk and could not get through.
+
+She stood at the foot of chain five and looked at it for a long time.
+
+She had seen the Church's processions. She had seen two hundred choristers go up the Pilgrim Chain to Lumina in the night under these same canopies, in Ashfall, like a line of black mushrooms going up into the white, to make her sing. She had thought it was the most terrible thing she had ever seen.
+
+It was the same thing.
+
+---
+
+She found the priest at the swing.
+
+That was what they called it, the place where the wedge narrowed most: a mile up the gulf, where the scree rose to a shoulder of grey rock and the shade had to come over the shoulder to reach the pass. In the late afternoon, as the sun went round to the west, the wedge narrowed there to the width of a street. And the procession, ten wide, had to narrow with it, to four, to three. And the canopies had to come in over it from both sides like hands closing.
+
+Ignatius Crane was standing on the shoulder of rock in the middle of the swing, in his brown coat, with his white hand bare, and he was conducting.
+
+He did not know that was what he was doing. She saw that at once. He would have called it something else. Marshalling. Ordering a procession. He stood on the rock with the people going past him on either side under the black silk, and he watched the edge of the shade, and he lifted his good hand, and four canopies on the left came in a yard. He turned his head, and lifted his hand again, and the column narrowed by one. He did not speak. He did not need to. The canopy-bearers watched his hand the way the ladder-masters had watched the chain.
+
+And his face—
+
+She had seen Ignatius Crane's face in the white room at Oakhaven, with the censer, when she was flattened onto a hundred and seventy-four with a wire in a fold of her skin. She had seen it in the doorway of her cell in Ashfall, with the fire guttering. She had seen it in the reed-hall at Reedside in Hetty Bram's apron, with a spoon, saying nothing. She had never seen it like this.
+
+It was lit.
+
+Not with fire. There was no fire in him; there had not been since Lumina. With the other thing. The thing she had seen in old men in the orchard choir on the Longest Night, when the tune was going well and everyone was on the note. He was good at it. He was so good at it. He had moved processions through the white for twelve years and he knew exactly what he was doing and he was doing it perfectly, and eighteen thousand people were walking past him under black silk out of a city that was being eaten by the light, and not one of them was going pale.
+
+He was happy.
+
+She stood at the foot of the shoulder of rock with her burned hand inside Hetty Bram's coat and watched him be happy, and felt something she did not have a name for. She thought of eleven thousand and forty. She thought of the riser at the Foundry, and the Hollow behind the tannery at Oakhaven, and the glass-fire coming up the Greenroot road. She thought of Solenne on the fallen oak. *I want you to look at them.*
+
+He saw her. He looked down at her from the rock, and his face did not stop being what it was. He did not try to hide it. He did not apologise for it.
+
+He lifted his good hand, and four canopies on the right came in a yard.
+
+She went on up the gulf in the shade, and did not look back.
+
+---
+
+The sun went down at the fourth hour after noon behind the peaks to the west, and the wedge did not vanish. It changed. The sun's half of the light went out of it, and the city's shadow lay on the gulf floor from the Spire's light alone: longer, fainter, steadier, not swinging any more. The fire in the next room. The procession went on walking in it, and the canopies at its edges went on walking with it, and nobody went pale.
+
+Seventeen had gone at the bottom. Lyra heard it from a Tiers woman with a corner of a canopy-pole. A family who had stepped out of the line on the shoulder of rock at the swing, in the narrowest part, a yard, to let a canopy past, and stood a breath too long in the edge of the light, and sat down on the scree, all five of them, with their faces gone soft. Six more at the swing, after them, in the press. And six more, here and there along the three miles, alone. And the canopies had gone round them, the woman said, because there was nothing else to do, and the column had not stopped.
+
+*If the one below you stops, wait.* There was nothing in the drill for the bottom. Brenna had said so. *You only get to do the bottom once.*
+
+She reached the pass at the second hour of the night.
+
+It was a notch in the peaks at the head of the gulf, a saddle of rock and old snow between two white shoulders, and beyond it the long valley going down north and west toward the foothills, out of the white, into the ordinary dark. The *Small Hours* was there, moored to the rocks with her bag half-vented, and the coal-barge, and a dozen others, and the barge with the six balloons. She saw the Aegis standing in its well with sixty children asleep round its feet in black blankets, with its helm bowed and the rosy light in its slot, humming. And on the saddle, the Tiers, coming up out of the gulf in their long line under the last canopies, ten wide, and going over.
+
+And at the top of the saddle, under a canopy of his own that he had set up there himself on four poles wedged in the rocks, Ignatius Crane. Counting.
+
+He touched each person on the shoulder as they went past him. The way the ladder-masters had. *Now.* And made a mark on a board on his knee with a lump of chalk from the Basilica's vestry. Four strokes and a bar.
+
+She did not go to him. She went down off the saddle onto the north side of the pass, into the ordinary dark, and found a rock, and sat on it, and turned round, and looked back at the city.
+
+---
+
+From the pass you could see all of it.
+
+The whole of Sol-Luminary hung over the gulf on its nine chains, a mile off, against the white, the way she had seen it from the deck of the *Small Hours* on Stasisday. The Spire behind it, a mile high, with the black crack down its side. And the city white. All of it. Every tier, every dome, every hanging house, from the rim at the top to the first tier at the bottom. White. Glowing very faintly, in the night, from nowhere, the way the Bleach glowed at the dead hour. Except at the very bottom.
+
+At the very bottom, the tip of the cone, the Keel Docks, a small black point. And hanging from it, nine threads.
+
+She could not see people on them from here. It was too far, and too dark. But she knew there were. Not many now. The last. The ladder-masters, who would go last on their own chains, and the people who had been asleep, or had gone back for something, or had not believed the old man's paper until they heard the bell had not stopped. And Brenna Corliss. Who had said, on the gallery, at noon, with her slate: *I'll go last. On one. My husband did the first forty feet. I'll do them last.*
+
+The *Small Hours*'s master came and stood beside her rock with his veil down.
+
+"She'll be off," said Hap Tolland. "She's never been late for anything." He did not sound as if he believed it. "There's an hour to the dead hour. She's an hour to come down. She's done it in fifty minutes on a drill."
+
+Lyra did not answer. She had no slate free. Both her hands were round her knees.
+
+"She sent the harbourmaster down an hour since," said Hap Tolland. "On nine. I took her off the scree myself. She told me to tell you." He was quiet for a moment. "Brenna said to tell the Cantor she was right about the reed."
+
+---
+
+The dead hour came, and the city breathed out.
+
+She felt it from the pass. She would not have thought you could, a mile off, through rock. She felt it through the rock under her and through the soles of her boots: the long slow sigh going out through every stone of Sol-Luminary, outward, down. And on the saddle above her, at the top of the pass, under the canopies, eighteen thousand people who had come out of that stone felt it too. She heard them. Not a sound. A stillness. Every one of them stopping, at once, wherever they were, to feel the city they had lived under for seven years breathe out without them.
+
+And somebody, on the saddle, began to hum.
+
+A hundred and seventy-four. Under the breath. And the people round them took it up, and the people round them, the way it had gone down the chains in the morning, until the whole long line of the Tiers on the saddle of the pass was humming the tending note into the dark over the gulf, toward the city, toward the threads hanging from the bottom of it.
+
+She watched the Keel Docks go white.
+
+It came down the tip of the cone like a tide coming up a beach, but the wrong way, downward. The last black point of the city at the very bottom. She watched it go. Grey. Pale. White, glowing faintly in the night, like everything else. The cradles, the iron baskets, swinging empty. The hanging houses of the first tier. The iron gallery at the tip of the city where she had stood at dawn with the reed. All white. The whole of Sol-Luminary, from rim to tip, every stone of it, white on its nine chains in the night.
+
+And under it, the fall-chains.
+
+They did not go white. Iron did not, quickly. She saw them hanging down out of the white tip of the city into the gulf, nine black threads, clear against the glow. And she saw the light go down them. Not into them. Round them. The white came down out of the city into the air of the gulf round the chains, the way the line had come down the city's flank, slowly, the breath going out. A tier's height of it. Two. Down the nine black threads into the grey.
+
+And on chain one, two hundred feet below the tip, where the light was coming down, a small dark shape.
+
+---
+
+She could not have seen it. That was what she would think afterward. A mile off, at night, two thousand feet up, a person on a chain. She could not have seen it. But the light was round it now, white, glowing, and the shape was dark against the light, and she saw it.
+
+It was climbing down.
+
+Hand, foot, hand. Slowly. She could not see the hands. She could see the shape move on the chain, down, a rung at a time. Breathing on the foot. In the white. And the white coming down round it faster than it climbed.
+
+On the saddle, the humming went on. Low. Steady. A hundred and seventy-four, from eighteen thousand throats, toward the city.
+
+The shape stopped.
+
+Lyra stood up.
+
+She did not know she had. She was standing on the rock on the north side of the pass with her good hand out, toward the city, a mile off, the way you put your hand out toward somebody on the far side of a river. Hap Tolland was beside her. She heard him make a sound under his veil.
+
+The shape on chain one was not moving. It had stopped two hundred feet below the white tip of the city, in the white, with the light round it. And as Lyra watched, it did something. A small movement. Something at its neck. Something taken off, over its head, and held out, away from the chain, into the air.
+
+And let go.
+
+She did not see it fall. It was too far. She would find it in the morning, on the scree at the foot of chain one, when the light had gone back up into the city and you could walk under it again. A slate. Broken into nine pieces on the grey stones, in a scatter, with a cord through a hole in one corner. Covered on both sides in figures, in a big square hand. Columns of them. Every eye, every chain, every breath since Nullday. Most of it broken. Enough of it left.
+
+She watched the shape on the chain.
+
+It was paler. She could see that, even from the pass. The dark of it going grey against the white. Going lighter. The way the gull had gone, in Ashfall, that Vane had told them about on the *Kestrel*: paler, and then thin at the edges, so that you could see the light through it. She watched the light come through it. She watched a woman on a chain become a shape of a woman with the white showing through, two hundred feet below a city, hand on the rope.
+
+She did not go soft. Lyra would not have been able to see if she had, a mile off. But she would tell herself, for the rest of her life, that she had seen it, that she had seen it from the pass, and that Brenna Corliss's face had not gone soft. That she had stopped on the chain with her hand on the rope in the white and looked down the gulf toward the pass, toward the humming, with her one good eye and her milk-white one, and that her face had been exactly what it had been on the gallery at noon with the slate. Counting.
+
+And then, very gently, like ash off a fire, there was nothing on chain one at all.
+
+The chain swung, a little. Lighter.
+
+---
+
+Nobody on the saddle stopped humming.
+
+Lyra stood on the rock with her hand out toward the city, and did not take it back, and the Tiers on the saddle hummed the tending note into the dark. And under it, from very far off, from the white city across the gulf, a mile away, she heard something stop.
+
+She had heard it every hour since Stasisday. Since the *Small Hours* came up the valley under the Spire in the snow. Since Ashfall. Faint, steady, from the ninth tier, from the black tower that had gone white, from the shade-side stalls of the Basilica of the Pure Note: one note. Five hundred and twenty-eight. Flat. Unbroken. Held without a breath in it since the morning of the Fracture, by nine old people in white who had been too old for the riser, and an old canon with ink on his fingers who had sat down in the stalls beside them when the Flambeaux took the censers down to the ladder-heads, and had not been seen again.
+
+It stopped.
+
+Not at the end of a phrase. In the middle of the note. The way Lyra's own voice had stopped on Lumina, in the middle of the second note, when there was no more of it.
+
+The Light had been held for seven years. Every hour, every breath, by somebody. Since the morning of the Fracture.
+
+Nobody was holding it now.
+
+And down the gulf, out of the white, from the Spire, with nobody singing at it for the first time since the Church was the Church, came the question.
+
+She heard it. She would always say she had heard it, and that she was not glassed, and had no ear for gods, and heard it anyway, the way you hear your own name said in another room. *Is it you? Have you come?* Rising. Going up at the end. Like a child at a door. And then the space after it, a breath long. The space an old man had left in it on the Vessel's stone that morning, telling it about bees.
+
+And then the question again.
+
+---
+
+At dawn on Memoryday the priest brought her the board.
+
+He came down off the saddle in his brown coat with the white hand bare and the board under his arm, and stood in front of her rock, and held it out. He did not say anything. He had not said anything to her since the reed-hall at Reedside. He held out the board, and she took it.
+
+Four strokes and a bar. Four strokes and a bar. Rows and rows of them, in chalk, the whole board, both sides, in a hand that had copied writs at the Organum when it was a boy. And at the bottom, a figure, and a line under it.
+
+She looked at it for a long time.
+
+Then she took her own slate from round her neck, and turned it, as she always did now, to the back. The front still said what it had said since Oakhaven, against her chest. *TELL HIM HE WAS AFRAID EVERY DAY. TELL HIM HE WAVED.* She wrote on the back, in the square capitals, slowly, with the chalk breaking.
+
+*18,640 ON NULLDAY.*
+
+*18,081 AT THE PASS.*
+
+She looked at it. Then she found one of the nine pieces of Brenna Corliss's slate in her coat, where she had put it on the scree at first light. The biggest piece. The one with the bottom of the last column on it, in the big square hand, and the figure under the line. She held it up beside her own.
+
+*OFF THE CHAINS AND IN THE SHIPS: 18,098.*
+
+The numbers were not the same. They were seventeen apart.
+
+She knew which seventeen. A family of five on a shoulder of grey rock, who had stepped out of the line a yard to let a canopy past. Six more behind them in the press. Six along three miles of scree, alone. Brenna had counted every soul who went onto a chain and every soul who went into a ship, and every one who let go in the dawn breath, and she had not been able to count the bottom. Nobody could. You only got to do the bottom once.
+
+She wrote under the figures, smaller:
+
+*NOT ALL OF THEM.*
+
+And under that, after a long time, smaller still, because it was the only other thing she had learned in Sol-Luminary that Kaelen did not already know:
+
+*THEY WERE SO GOOD AT IT.*
+
+She hung the slate back round her neck.
+
+Behind her, on the saddle of the pass, the Tiers were going down into the ordinary dark on the north side, in their lines, each in the shade of the one ahead, though there was no need now. They did it anyway. They would do it, she thought, for the rest of their lives. And in front of her, across the gulf, in the first grey of Memoryday, the whole of Sol-Luminary hung white on its nine chains from the flank of a cracked Spire, with nine black threads hanging empty from the bottom of it, swinging, very slightly, in the wind.
+
+The sun came up over the peaks to the east.
+
+It was paler than it had been yesterday. She was almost sure of that. Everyone on the pass was. Nobody said so. In the Tiers you did not say a thing like that. You looked at the person beside you, and they looked back, and you both knew.
+
+And you walked on in their shade.
