@@ -196,6 +196,65 @@ const HOLLOW30 = (function () {
       for (let x = 6; x < 18; x++) px(x, 19, 92, 58, 34);
       for (let y = 4; y < 13; y++) if (y % 2) px(16 + ((y >> 1) % 2), y, 120, 124, 130);
     });
+    // the Grafters' wagon (Book One ch. 3): a long white wagon behind two grey horses, harness wrapped in felt, hooves booted
+    // in leather; a brazier of banked coals in an iron cage on the bed, the saws under oilcloth. Side view, painted on a canvas.
+    if (typeof document !== 'undefined' && !(Engine.sprites && Engine.sprites.p30_wagon)) {
+      const W = 200, H = 72, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const c = cv.getContext('2d');
+      const ell = (x, y, rx, ry, col, a) => { c.fillStyle = col; c.beginPath(); c.ellipse(x, y, rx, ry, a || 0, 0, Math.PI * 2); c.fill(); };
+      const horse = (ox, oy, body, shade, light, mane) => {
+        for (const [lx, back] of [[ox + 30, 1], [ox + 64, 1], [ox + 36, 0], [ox + 70, 0]]) {   // legs, far pair first
+          c.fillStyle = back ? shade : body; c.fillRect(lx, oy + 42, 5, 17);
+          c.fillStyle = '#3a2618'; c.fillRect(lx - 1, oy + 57, 7, 6);                          // leather boots
+          c.fillStyle = '#24170e'; c.fillRect(lx - 1, oy + 62, 7, 1);
+        }
+        ell(ox + 52, oy + 36, 26, 11, body);                                                    // barrel
+        ell(ox + 52, oy + 40, 22, 6, shade);
+        ell(ox + 70, oy + 34, 11, 10, body);                                                    // quarters
+        c.fillStyle = mane; c.beginPath(); c.moveTo(ox + 80, oy + 30); c.quadraticCurveTo(ox + 88, oy + 40, ox + 84, oy + 54); c.lineTo(ox + 80, oy + 52); c.quadraticCurveTo(ox + 82, oy + 40, ox + 77, oy + 33); c.fill();   // tail
+        c.fillStyle = body; c.beginPath(); c.moveTo(ox + 30, oy + 30); c.lineTo(ox + 18, oy + 12); c.lineTo(ox + 26, oy + 9); c.lineTo(ox + 40, oy + 28); c.fill();   // neck
+        ell(ox + 14, oy + 15, 10, 5, body, 0.5);                                                // head
+        ell(ox + 8, oy + 19, 4, 3, shade);                                                      // muzzle
+        c.fillStyle = body; c.fillRect(ox + 20, oy + 4, 3, 5); c.fillRect(ox + 24, oy + 5, 3, 5);   // ears
+        c.fillStyle = mane; for (let k = 0; k < 6; k++) c.fillRect(ox + 22 + k * 2.6, oy + 8 + k * 3.4, 4, 4);   // mane
+        c.fillStyle = '#141414'; c.fillRect(ox + 13, oy + 13, 2, 2);                            // eye
+        c.fillStyle = light; for (let k = 0; k < 7; k++) ell(ox + 40 + (k * 7) % 30, oy + 31 + (k % 3) * 3, 2.2, 1.6, light);   // dapples
+        // harness wrapped in felt: collar, saddle-pad, breeching and the trace to the shaft
+        c.strokeStyle = '#e4ddcc'; c.lineWidth = 4; c.beginPath(); c.ellipse(ox + 33, oy + 25, 5, 9, -0.5, 0, Math.PI * 2); c.stroke();
+        c.fillStyle = '#ece6d6'; c.fillRect(ox + 46, oy + 24, 10, 6);
+        c.strokeStyle = '#d8d0bc'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(ox + 36, oy + 30); c.lineTo(ox + 76, oy + 36); c.stroke();
+        c.beginPath(); c.moveTo(ox + 78, oy + 30); c.quadraticCurveTo(ox + 82, oy + 40, ox + 76, oy + 44); c.stroke();
+      };
+      horse(6, 0, '#727c88', '#565e68', '#8e98a4', '#40444c');      // the far horse, half a step ahead and in shade
+      horse(0, 4, '#8c96a2', '#68707c', '#b0bac6', '#4c5058');      // the near horse
+      // shafts from the wagon to the collars
+      c.strokeStyle = '#d8d2c2'; c.lineWidth = 3; c.beginPath(); c.moveTo(94, 42); c.lineTo(36, 33); c.stroke();
+      // the wagon: a long white box on a dark undercarriage
+      c.fillStyle = '#2e2a26'; c.fillRect(94, 44, 102, 5);
+      c.fillStyle = '#e8e4da'; c.fillRect(92, 26, 106, 18);
+      c.fillStyle = '#cfcabd'; c.fillRect(92, 40, 106, 4);
+      c.fillStyle = '#f4f1ea'; c.fillRect(92, 26, 106, 2);
+      c.fillStyle = '#bcb6a8'; for (const x of [92, 118, 144, 170, 196]) c.fillRect(x, 26, 2, 18);   // stakes
+      // the saws laid under oilcloth, roped down
+      c.fillStyle = '#3c4440'; c.beginPath(); c.moveTo(100, 26); c.quadraticCurveTo(128, 12, 158, 26); c.fill();
+      c.fillStyle = '#4c5650'; c.beginPath(); c.moveTo(108, 24); c.quadraticCurveTo(128, 15, 150, 24); c.fill();
+      c.strokeStyle = '#8a7a5a'; c.lineWidth = 1.2; for (const x of [114, 128, 142]) { c.beginPath(); c.moveTo(x, 26); c.lineTo(x + 2, 17); c.stroke(); }
+      // the brazier: banked coals in an iron cage at the tail
+      c.fillStyle = '#ff8a2a'; c.fillRect(170, 16, 18, 8);
+      c.fillStyle = '#ffd36a'; c.fillRect(174, 18, 4, 3); c.fillRect(181, 19, 3, 2);
+      c.fillStyle = '#b04812'; c.fillRect(170, 22, 18, 3);
+      c.strokeStyle = '#1e1e20'; c.lineWidth = 1.5; c.strokeRect(169, 12, 20, 14);
+      for (const x of [173, 177, 181, 185]) { c.beginPath(); c.moveTo(x, 12); c.lineTo(x, 26); c.stroke(); }
+      c.fillStyle = '#8c8a86'; for (const [x, y] of [[176, 9], [180, 6], [178, 3], [183, 1]]) c.fillRect(x, y, 3, 2);   // smoke
+      // wheels, rims bound in felt so they say nothing on the cobbles
+      for (const x of [112, 180]) {
+        ell(x, 56, 13, 13, '#d6d0c0'); ell(x, 56, 10, 10, '#3a3430'); ell(x, 56, 3, 3, '#d6d0c0');
+        c.strokeStyle = '#d6d0c0'; c.lineWidth = 1.6; for (let a = 0; a < 6; a++) { c.beginPath(); c.moveTo(x, 56); c.lineTo(x + Math.cos(a * 1.047) * 10, 56 + Math.sin(a * 1.047) * 10); c.stroke(); }
+      }
+      const id = c.getImageData(0, 0, W, H), u8 = id.data;
+      for (let i = 0; i < W * H; i++) { const o = i * 4; u8[o + 3] = u8[o + 3] < 100 ? 0 : 255; }
+      Engine.addSprite('p30_wagon', { w: W, h: H, data: new Uint32Array(id.data.buffer), hs: 1, cx: 0.5, dy: 0 });
+    }
     if (Engine.addTexture && Engine.textures && !Engine.textures.t_p30_bluedoor) {
       const d = new Uint32Array(64 * 64);
       for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
@@ -343,8 +402,8 @@ const HOLLOW30 = (function () {
   function drop(m, k) { for (let i = m.entities.length - 1; i >= 0; i--) if (m.entities[i] && m.entities[i]._p30 === k) m.entities.splice(i, 1); }
   const thing = (sprite, x, y, o) => () => Object.assign({ kind: 'deco', sprite, x, y, solid: true, radius: 0.3, scale: 1.0 }, o || {});
   const VISIT = [
-    ['wagon', thing('p9_wagon', 13.6, 17.6, { scale: 0.95, radius: 0.5, label: TX.wagon, use: 'p30_look', look: TX.wagonLook })],
-    ['brazier', thing('brazier', 16.8, 14.0, { scale: 0.62, radius: 0.25, glow: 0.75, lightCol: [62, 31, 8], label: TX.brazier })],
+    // the brazier rides on the wagon's bed in its cage (ch. 3), so the wagon carries its light
+    ['wagon', thing('p30_wagon', 13.6, 17.6, { scale: 1.1, radius: 0.8, lightCol: [62, 31, 8], label: TX.wagon, use: 'p30_look', look: TX.wagonLook })],
     ['g0', thing('rooke', 21.6, 9.9, { label: TX.grafter, use: 'p30_look', look: TX.grafterLook, facing: -Math.PI / 2 })],
     ['g1', thing('rooke', 9.2, 11.8, { label: TX.grafter, use: 'p30_look', look: TX.grafterLook, facing: Math.PI / 2 })],
     ['g2', thing('rooke', 17.6, 15.2, { label: TX.grafter, use: 'p30_look', look: TX.grafterLook, facing: 0 })],
