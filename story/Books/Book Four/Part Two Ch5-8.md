@@ -1579,21 +1579,7 @@ She left him there.
 
 He did not want her to stay. He said so. *It'll be easier for it if it's only me. It's never had only me.*
 
-She had got as far as the edge of the stone when he said her name.
-
-"Solenne."
-
-She stopped.
-
-"On Dawnday," said Severin Ashe, with his face turned up to the Spire. "Next Dawnday, and the one after. Would you come up and sing it the morning office? Properly. The whole of it, not the one note. With the treble." He was quiet a moment. "Somebody should. I always thought it was what the office was for. I just never knew it could hear."
-
-She did not answer at once. The copper ached in her throat.
-
-"Yes," she said.
-
-"Thank you." He smiled, at the Spire, not at her. "There. Now go."
-
-So she stepped down off the Vessel's stone, and went back across the white disc of the Altar toward the chain, with her broken wing dragging and her talons loud on the stone.
+So she stood up, and stepped down off the Vessel's stone, and went back across the white disc of the Altar toward the chain, with her broken wing dragging and her talons loud on the stone.
 
 At the rim she stopped. She did not turn round. She listened.
 
