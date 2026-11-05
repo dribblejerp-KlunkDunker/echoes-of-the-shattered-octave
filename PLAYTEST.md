@@ -14,6 +14,21 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## The Rite, from procession to pumps (built 5 Nov; ROADMAP R9 item 3)
+
+Book One ch. 9–10 as a played scene. The tests drive every stage headlessly; what they cannot judge is how it feels at a walking pace, how loud it is, and whether the words land on screen. To reach it quickly: a save with the coil taken to Kaelen (`coil_done`), or from the console set `G.flags.coil_done = G.flags.church_come = true` and go to Lyra's door on Cooper's Row.
+
+- **The door.** The point of no return has moved from the shaft gate to Lyra's door: the column forms there, and the card lists what is still open. Does "Not yet." feel like a real pause, and does the shaft gate's "sealed until the Rite" line read right if you try it first?
+- **The procession.** Walk with the column up the main road to the headframe. It waits if you fall more than a few houses behind; is that wait felt as the Legionnaire looking back, or as a bug? Press N to hum with the town and watch the kerbs; cast a loud Song twice and let a Legionnaire walk you to the back. The Pure Note is a 528 tone every 2.4 s: too much? Too little? The kerb figures are solid; can you still pass them on the road?
+- **The vault.** Three cards, then the needle: a gauge at the foot of the view says BLOCKED or HE CAN SEE THE NEEDLE. Is it clear where to stand? The Inquisitor paces, so you shuffle. Twelve seconds (eight if you were marched). Try both: block it, and stand aside, and read the two needle cards.
+- **The Hold.** Kaelen goes to the drum; the gauge says ON YOU / ON THE DRUM. Humming (N) within a few paces of the Factor keeps her lenses on you; eight bolts take forty-one seconds that way, three minutes if she looks at him. Tobiah calls the pitch every ten seconds. Is standing and humming for forty seconds tense or dull? The second gauge, THE ROOT IS LISTENING, is mood only.
+- **Sing it down.** The falling fifth is a Hold the Pitch (174 to 116 and back, nine seconds). With a torn voice (seen at the needle, or lenses lost) the band is narrower. Read both result cards.
+- **The Golems.** Two come, two stand at the rail; keep one off the stool. "Enough." comes when both fall or when the Hold clock runs out. Check the stopped Golems look stopped, not asleep.
+- **Sixty seconds.** Aldric counts from the tube (41, 40, 30, 20, 10, 5, 2). Lyra takes four by the wrist; the cage goes up once at about thirty seconds with Tobiah and the sisters. A hand on a pump-man's wrist (use him) holds for three seconds and buys a name; step away and the handle takes him back. The eight who are left are Edders, Ruhl, Caine, Ott, Sennet, Vey, Marrow and Hale B. (the ring and the scar). Is three seconds the right price? Is it clear you cannot save them, only name them?
+- **The pour.** Forty thousand gallons, the crack, the green. If you are still on the platform you lose a third of your health and the card says so. Then the Greening escape as before (five minutes, the service ladder, the headframe, the gate, the mast). The journal names how many you took off the handles.
+- **Lines that have no recorded voice yet:** everything new here is text only; "I. Am. Fortunate." and Aldric's numbers would be worth recording (tools/voices).
+- **Custody (before the Rite):** Lyra now writes the palm message for Rooke on your hand; take his hands in his surgery. `rooke_drops` is set for the Greening walk to use later.
+
 ## Game text follows the book (built 2 Nov)
 
 Reading checks only; the tests confirm every line is in place and has its French.
