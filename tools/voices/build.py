@@ -97,6 +97,10 @@ def treat(x, fx):
         elif name == 'chorus':
             x = mixlen((x, 0.7), (delayed(pitch(x, -0.3), 0.019), 0.45), (delayed(pitch(x, 0.35), 0.033), 0.4), (delayed(pitch(x, -12), 0.011), 0.25))
             x = pb(x, Chorus(rate_hz=0.6, depth=0.3, mix=0.35))
+        elif name == 'note':   # a voice flattened onto one held pitch (arg Hz): the line rides a tone that follows its own loudness
+            hz = float(arg or 174.0); t = np.arange(len(x)) / SR
+            env = np.convolve(np.abs(x), np.ones(480, np.float32) / 480, mode='same')
+            x = 0.9 * x + 0.55 * env * np.sin(2 * np.pi * hz * t).astype(np.float32) * (np.abs(x).max() / max(1e-6, env.max()))
         elif name == 'stack':  x = mixlen((x, 0.75), (pitch(x, -7), 0.5), (pitch(x, -12), 0.45))
         elif name == 'room':     x = reverb(x, 0.22, 0.12)
         elif name == 'wood':     x = reverb(x, 0.45, 0.14)
@@ -132,7 +136,13 @@ def render(model_dir, line):
         c = cast_of(voice_of if voice_of in CAST else 'mourner')
     else:
         c = cast_of(voice_of)
-        x = speak(model_dir, text, c['voice'], c['speed'] * deliv.get('speed', 1.0), c['lang'])
+        sp = lambda t: speak(model_dir, t, c['voice'], c['speed'] * deliv.get('speed', 1.0), c['lang'])
+        if line.get('beats'):                                      # each word its own breath, held apart ("I. Am. Fortunate.")
+            gap = np.zeros(int(SR * float(line['beats'])), np.float32)
+            words = [w for w in re.split(r'(?<=\.)\s+', text) if w]
+            x = np.concatenate([np.concatenate([sp(w), gap]) for w in words[:-1]] + [sp(words[-1])])
+        else:
+            x = sp(text)
         x = pitch(x, c.get('pitch', 0))
     fx = list(c.get('fx', []))
     if deliv.get('whisper') and not any((f[0] if isinstance(f, tuple) else f) == 'whisper' for f in fx): fx.insert(0, ('whisper', deliv['whisper']))
@@ -142,7 +152,7 @@ def render(model_dir, line):
 
 def key_of(line):
     sp, vo = line['speaker'], line.get('voiceOf') or line['speaker']
-    blob = json.dumps([line['text'], line.get('say'), line.get('delivery'), repr(cast_of(sp)), repr(cast_of(vo)), DELIVERY, 3], sort_keys=True)
+    blob = json.dumps([line['text'], line.get('say'), line.get('delivery'), repr(cast_of(sp)), repr(cast_of(vo)), DELIVERY, 3] + ([line['beats']] if line.get('beats') else []), sort_keys=True)
     return hashlib.sha1(blob.encode()).hexdigest()[:16]
 
 def write_mp3(x, path):

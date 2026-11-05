@@ -160,6 +160,7 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 ## What's in Book One
 
 - **Four parts of the book.** Oakhaven inside the Hedge, the Greening and the escape on the Drift-Kestrel, Whisper-Grove and its catacombs, and the coda in the Deep Woods and the Mausoleum of Chords. The main story, "The Rite", runs alongside side quests.
+- **The Rite, played** (Book One ch. 9–10). Walk with the column under the Pure Note while the town hums the Root note; stand in the Inquisitor's eyeline at the needle; keep the Factor's lenses on you while Kaelen undoes eight bolts; sing the falling fifth with Lyra; and spend Aldric's sixty seconds on the names of the men at the pumps.
 - **The Narrow.** Noise brings the hounds and silence brings the Hush. Sneak, wear a Synod disguise, pick pockets, hide bodies and throw distractions, under Oakhaven's law and its watch-house gaol.
 - **Combat** with directional mouse swings, parries and blocks. Swords, axes, maces, spears, a steam-maul, a glass-shot pistol and a crossbow; armour across five slots.
 - **Songs,** a magic system built on the Octave, cast with both hands raised.

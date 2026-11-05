@@ -34,6 +34,11 @@ CAST = {
     'nell':       dict(voice='bf_lily',    speed=1.0,  pitch=1,  lang='en-gb', fx=['room']),
     'ignatius':   dict(voice='bm_fable',   speed=0.9,  pitch=-2, lang='en-gb', fx=['chapel']),
     'townsman':   dict(voice='am_adam',    speed=0.94, pitch=-1, lang='en-us', fx=['outdoors']),
+    # ---- the Rite (js/rite43.js): the Church's sisters, the Governor down a speaking-tube, the men at the pumps
+    'sister':     dict(voice='bf_emma',    speed=0.9,  pitch=0,  lang='en-gb', fx=['hall']),
+    'aldric_tube':dict(voice='bm_george',  speed=0.92, pitch=-2, lang='en-gb', fx=['radio', 'wood']),
+    'pumpman':    dict(voice='bm_lewis',   speed=0.86, pitch=-2, lang='en-gb', fx=[('whisper', 0.55), 'hall']),
+    'lyra_fortunate': dict(voice='af_heart', speed=0.72, pitch=-1, lang='en-us', fx=[('note', 174.0), 'gravel', 'hall']),
     # ---- the opening cinematic's narrator: an older man, grave and unhurried, in a great room
     'narrator':   dict(voice='bm_daniel',  speed=0.84, pitch=-3, lang='en-gb', fx=['hall']),
     'townswoman': dict(voice='af_sarah',   speed=0.96, pitch=0,  lang='en-us', fx=['outdoors']),
