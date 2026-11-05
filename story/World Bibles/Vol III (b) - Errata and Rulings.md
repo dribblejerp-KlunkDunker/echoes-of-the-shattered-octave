@@ -8,7 +8,7 @@
   - Line, stated once, late: *"You have listened to them for eighty years, and you have never once sung back."*
 - **Five-book structure** per Vol III. Book Two ends at Chapter 14.
 - **Book Three dial:** darker, more action, more dread, more death and destruction. Standing rules hold:
-  - no death without an heir;
+  - no death without an heir *(lifted by the author, 5 Nov 2026: a death no longer needs an heir; see Series Bible Part X)*;
   - damage persists;
   - harm to children is never rendered in detail;
   - the Hush rules apply.
