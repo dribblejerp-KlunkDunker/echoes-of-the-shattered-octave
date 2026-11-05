@@ -2426,6 +2426,386 @@
    "source": "[PROPOSED] cinematic24.js SHOTS: the gate-warden at the North Gate, the opening cinematic",
    "voiceOf": "harrow",
    "delivery": "low"
+  },
+  {
+   "id": "tobiah.rite.honour",
+   "speaker": "tobiah",
+   "kind": "narration",
+   "text": "It's an honour to meet you, ma'am. Truly. I'm Tobiah Marsh. My mother used to take me to hear the Sky Choir.",
+   "source": "rite43.js TX.frame (Book One ch. 9–10)",
+   "voiceOf": "tobiah",
+   "delivery": "low, shy, eager"
+  },
+  {
+   "id": "tobiah.rite.hurt",
+   "speaker": "tobiah",
+   "kind": "narration",
+   "text": "They say it doesn't hurt very much. After the first part.",
+   "source": "rite43.js TX.frame (Book One ch. 9–10)",
+   "voiceOf": "tobiah",
+   "delivery": "low, kind, unsure"
+  },
+  {
+   "id": "sister.rite.daughter",
+   "speaker": "sister",
+   "kind": "narration",
+   "text": "Daughter. Daughter, the instrument.",
+   "source": "rite43.js TX.pumps (Book One ch. 9–10)",
+   "voiceOf": "sister",
+   "delivery": "low, gentle, reproving"
+  },
+  {
+   "id": "vosk.rite.interesting",
+   "speaker": "vosk",
+   "kind": "narration",
+   "text": "Interesting. Did you see that, Inquisitor?",
+   "source": "rite43.js TX.pumps (Book One ch. 9–10)",
+   "voiceOf": "vosk",
+   "delivery": "cool, precise"
+  },
+  {
+   "id": "ignatius.rite.gracious",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "I saw a Cantor be gracious to a tool. An error, but a small one. Bring her to the casing.",
+   "source": "rite43.js TX.pumps (Book One ch. 9–10)",
+   "voiceOf": "ignatius",
+   "delivery": "low, formal"
+  },
+  {
+   "id": "ignatius.rite.rubric",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "Holy daughter. You are the hand that steadies the patient. You hold the Light still, that it may be relieved of its excess. Blessed is the single note. Blessed is the throat that holds it. Blessed is the hand that keeps the throat.",
+   "source": "rite43.js TX.lullaby (Book One ch. 9–10)",
+   "voiceOf": "ignatius",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "ignatius.rite.engineer",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "Engineer.",
+   "source": "rite43.js TX.lullaby (Book One ch. 9–10)",
+   "voiceOf": "ignatius",
+   "delivery": "low, formal"
+  },
+  {
+   "id": "ignatius.rite.closer",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "Closer, Engineer. I must be able to see.",
+   "source": "rite43.js TX.needleHint (Book One ch. 9–10)",
+   "voiceOf": "ignatius",
+   "delivery": "low, formal"
+  },
+  {
+   "id": "ignatius.rite.blood",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "Blood. Good. It should bleed a little at the seating. The Foundry girls used to bleed for days.",
+   "source": "rite43.js TX.needleGood (Book One ch. 9–10)",
+   "voiceOf": "ignatius",
+   "delivery": "low, calm"
+  },
+  {
+   "id": "ignatius.rite.notch",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself. I have seated forty of these.",
+   "source": "rite43.js TX.needleSeen (Book One ch. 9–10)",
+   "voiceOf": "ignatius",
+   "delivery": "low, quite gently"
+  },
+  {
+   "id": "ignatius.rite.speak",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "Speak, daughter.",
+   "source": "rite43.js TX.needleGood (Book One ch. 9–10)",
+   "voiceOf": "ignatius",
+   "delivery": "low, formal"
+  },
+  {
+   "id": "lyra_fortunate.rite.fortunate",
+   "speaker": "lyra_fortunate",
+   "kind": "narration",
+   "text": "I. Am. Fortunate.",
+   "source": "rite43.js TX.needleGood (Book One ch. 9–10)",
+   "voiceOf": "lyra_fortunate",
+   "delivery": "flat, every word on one pitch, 174, not a hair off",
+   "beats": 0.55
+  },
+  {
+   "id": "ignatius.rite.sheis",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "She is.",
+   "source": "rite43.js TX.needleGood (Book One ch. 9–10)",
+   "voiceOf": "ignatius",
+   "delivery": "low, satisfied"
+  },
+  {
+   "id": "tobiah.rite.span",
+   "speaker": "tobiah",
+   "kind": "narration",
+   "text": "Head at one span! One span and holding!",
+   "source": "rite43.js TX.hold (Book One ch. 9–10)",
+   "voiceOf": "tobiah",
+   "delivery": "shout, over machinery"
+  },
+  {
+   "id": "tobiah.rite.matching",
+   "speaker": "tobiah",
+   "kind": "narration",
+   "text": "Pitch coming up. It's, gods, look at it, it's matching.",
+   "source": "rite43.js TX.hold (Book One ch. 9–10)",
+   "voiceOf": "tobiah",
+   "delivery": "awed, rising"
+  },
+  {
+   "id": "vosk.rite.markit",
+   "speaker": "vosk",
+   "kind": "narration",
+   "text": "Mark it.",
+   "source": "rite43.js TX.hold (Book One ch. 9–10)",
+   "voiceOf": "vosk",
+   "delivery": "cool, precise"
+  },
+  {
+   "id": "kaelen.rite.slippage",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Slippage on the lock. I can hear it.",
+   "source": "rite43.js TX.hold (Book One ch. 9–10)",
+   "voiceOf": "kaelen",
+   "delivery": "low, flat"
+  },
+  {
+   "id": "kaelen.rite.spanner",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Spanner. Tobiah, sit on the rail there and call the pitch to me every ten seconds.",
+   "source": "rite43.js TX.hold (Book One ch. 9–10)",
+   "voiceOf": "kaelen",
+   "delivery": "low, level"
+  },
+  {
+   "id": "tobiah.rite.call1",
+   "speaker": "tobiah",
+   "kind": "narration",
+   "text": "Pitch, one-seventy-four. Holding.",
+   "source": "rite43.js TX.pitchCall (Book One ch. 9–10)",
+   "voiceOf": "tobiah",
+   "delivery": "loud, over machinery"
+  },
+  {
+   "id": "tobiah.rite.call2",
+   "speaker": "tobiah",
+   "kind": "narration",
+   "text": "One-seventy-four. It's matching her, sir. It's, it's coming up to meet her.",
+   "source": "rite43.js TX.pitchCall2 (Book One ch. 9–10)",
+   "voiceOf": "tobiah",
+   "delivery": "loud, uneasy"
+  },
+  {
+   "id": "vosk.rite.plate",
+   "speaker": "vosk",
+   "kind": "narration",
+   "text": "Engineer Vance. What are you doing at that plate?",
+   "source": "rite43.js TX.voskTurns (Book One ch. 9–10)",
+   "voiceOf": "vosk",
+   "delivery": "cool, precise"
+  },
+  {
+   "id": "vosk.rite.stepaway",
+   "speaker": "vosk",
+   "kind": "narration",
+   "text": "Engineer Vance, step away from the drum.",
+   "source": "rite43.js TX.boltsLost (Book One ch. 9–10)",
+   "voiceOf": "vosk",
+   "delivery": "cool, precise, through a speaking-trumpet"
+  },
+  {
+   "id": "tobiah.rite.whatsthat",
+   "speaker": "tobiah",
+   "kind": "narration",
+   "text": "Sir, what's that?",
+   "source": "rite43.js TX.lock (Book One ch. 9–10)",
+   "voiceOf": "tobiah",
+   "delivery": "anxious"
+  },
+  {
+   "id": "kaelen.rite.holdon",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "You'll want to hold onto something.",
+   "source": "rite43.js TX.lock (Book One ch. 9–10)",
+   "voiceOf": "kaelen",
+   "delivery": "low, flat"
+  },
+  {
+   "id": "ignatius.rite.holdnote",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "The hold! Hold the note! Daughter, hold the note!",
+   "source": "rite43.js TX.lock (Book One ch. 9–10)",
+   "voiceOf": "ignatius",
+   "delivery": "shout, desperate"
+  },
+  {
+   "id": "kaelen.rite.singitdown",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Lyra! Sing it down!",
+   "source": "rite43.js TX.lock (Book One ch. 9–10)",
+   "voiceOf": "kaelen",
+   "delivery": "shout"
+  },
+  {
+   "id": "vosk.rite.enough",
+   "speaker": "vosk",
+   "kind": "narration",
+   "text": "Enough. Engineer, I would very much like to know what you thought you were",
+   "source": "rite43.js TX.enough (Book One ch. 9–10)",
+   "voiceOf": "vosk",
+   "delivery": "cool, cut off"
+  },
+  {
+   "id": "aldric_tube.rite.seal",
+   "speaker": "aldric_tube",
+   "kind": "narration",
+   "text": "Sealing the vault. Governor's authority, under the works charter. Factor, I'm sorry. The bleed-back's coming up the shaft, and it's coming fast, and there's four hundred feet of men above it. Sixty seconds on the reservoir gates. Anyone below, get to the cage.",
+   "source": "rite43.js TX.tube (Book One ch. 9–10)",
+   "voiceOf": "aldric_tube",
+   "delivery": "tired, level, down a speaking-tube"
+  },
+  {
+   "id": "kaelen.rite.da",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Da.",
+   "source": "rite43.js TX.tube (Book One ch. 9–10)",
+   "voiceOf": "kaelen",
+   "delivery": "low"
+  },
+  {
+   "id": "aldric_tube.rite.kaelen",
+   "speaker": "aldric_tube",
+   "kind": "narration",
+   "text": "Kaelen.",
+   "source": "rite43.js TX.tube (Book One ch. 9–10)",
+   "voiceOf": "aldric_tube",
+   "delivery": "low, stopped"
+  },
+  {
+   "id": "kaelen.rite.dontrun",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Don't run the purge. The Root's wounded. If you dump forty thousand gallons of raw glass into an open casing, it will not seal, it will",
+   "source": "rite43.js TX.tube (Book One ch. 9–10)",
+   "voiceOf": "kaelen",
+   "delivery": "urgent, low"
+  },
+  {
+   "id": "aldric_tube.rite.iknow",
+   "speaker": "aldric_tube",
+   "kind": "narration",
+   "text": "I know what it will do. I've got Tam's widow's grandson on the day shift on the third terrace, and I have to choose between a hole and a town. Get to the cage, boy. I'm counting.",
+   "source": "rite43.js TX.tube (Book One ch. 9–10)",
+   "voiceOf": "aldric_tube",
+   "delivery": "tired, level"
+  },
+  {
+   "id": "aldric_tube.rite.c41",
+   "speaker": "aldric_tube",
+   "kind": "narration",
+   "text": "Forty-one. Forty.",
+   "source": "rite43.js TX.tube (Book One ch. 9–10)",
+   "voiceOf": "aldric_tube",
+   "delivery": "low, even, counting"
+  },
+  {
+   "id": "aldric_tube.rite.c30",
+   "speaker": "aldric_tube",
+   "kind": "narration",
+   "text": "Thirty.",
+   "source": "rite43.js TX.aldric30 (Book One ch. 9–10)",
+   "voiceOf": "aldric_tube",
+   "delivery": "low, even, counting"
+  },
+  {
+   "id": "aldric_tube.rite.c20",
+   "speaker": "aldric_tube",
+   "kind": "narration",
+   "text": "Twenty. Get to the cage, boy.",
+   "source": "rite43.js TX.aldric20 (Book One ch. 9–10)",
+   "voiceOf": "aldric_tube",
+   "delivery": "low, even, counting"
+  },
+  {
+   "id": "aldric_tube.rite.c10",
+   "speaker": "aldric_tube",
+   "kind": "narration",
+   "text": "Ten.",
+   "source": "rite43.js TX.aldric10 (Book One ch. 9–10)",
+   "voiceOf": "aldric_tube",
+   "delivery": "low, even, counting"
+  },
+  {
+   "id": "aldric_tube.rite.c5",
+   "speaker": "aldric_tube",
+   "kind": "narration",
+   "text": "Five. Four.",
+   "source": "rite43.js TX.aldric5 (Book One ch. 9–10)",
+   "voiceOf": "aldric_tube",
+   "delivery": "low, even, counting"
+  },
+  {
+   "id": "aldric_tube.rite.c2",
+   "speaker": "aldric_tube",
+   "kind": "narration",
+   "text": "Two. One.",
+   "source": "rite43.js TX.aldric2 (Book One ch. 9–10)",
+   "voiceOf": "aldric_tube",
+   "delivery": "low, even, counting"
+  },
+  {
+   "id": "lyra_ruined.rite.pumps",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "The pumps.",
+   "source": "rite43.js TX.tube (Book One ch. 9–10)",
+   "voiceOf": "lyra_ruined",
+   "delivery": "what is left of her voice"
+  },
+  {
+   "id": "kaelen.rite.up",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Up. Up.",
+   "source": "rite43.js TX.pour (Book One ch. 9–10)",
+   "voiceOf": "kaelen",
+   "delivery": "urgent"
+  },
+  {
+   "id": "pumpman.rite.name",
+   "speaker": "pumpman",
+   "kind": "narration",
+   "text": "{name}",
+   "names": [
+    "Edders",
+    "Ruhl",
+    "Caine",
+    "Ott",
+    "Sennet",
+    "Vey",
+    "Marrow",
+    "Hale B."
+   ],
+   "source": "rite43.js LEFT (Book One ch. 19, 24: the eight pump-men)",
+   "voiceOf": "pumpman",
+   "delivery": "hollow-fragment, a breath of a man"
   }
  ],
  "skipped": [
@@ -2810,6 +3190,22 @@
   "wg41005": {
    "name": "WG-41,005, a boy of the Cloister choir",
    "who": "The boy inside the Aegis; small, plain, saying his intake number."
+  },
+  "sister": {
+   "name": "A Church sister",
+   "who": "One of the two kind women of the Church who keep Lyra in custody (ch. 9): grey with gold at the collar, gentle, believing."
+  },
+  "aldric_tube": {
+   "name": "Governor Aldric Vance, down the speaking-tube",
+   "who": "Aldric heard four hundred feet up a brass tube (ch. 10): small and tinny, tired, level, counting."
+  },
+  "pumpman": {
+   "name": "A man at the pumps",
+   "who": "A Hollow at the Root-vault pumps, given back his name for the length of a breath (Book One ch. 10; the eight left)."
+  },
+  "lyra_fortunate": {
+   "name": "Lyra Ashgrove, \"I. Am. Fortunate.\"",
+   "who": "Lyra with the wire in her throat, saying the rubric's words flattened onto 174 (ch. 10)."
   }
  }
 }

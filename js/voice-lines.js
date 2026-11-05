@@ -84,6 +84,78 @@ const VOICE_LINES = {
 "t": "The seal of Queen Maelis bids you welcome. Her signature on the decrees is famously steady for a woman dead a hundred and forty years.",
 "voiceOf": "aldric"
 },
+"aldric_tube.rite.c10": {
+"d": 1.06,
+"kind": "narration",
+"speaker": "aldric_tube",
+"src": "voices/aldric_tube/aldric_tube.rite.c10.mp3",
+"t": "Ten.",
+"voiceOf": "aldric_tube"
+},
+"aldric_tube.rite.c2": {
+"d": 1.37,
+"kind": "narration",
+"speaker": "aldric_tube",
+"src": "voices/aldric_tube/aldric_tube.rite.c2.mp3",
+"t": "Two. One.",
+"voiceOf": "aldric_tube"
+},
+"aldric_tube.rite.c20": {
+"d": 2.76,
+"kind": "narration",
+"speaker": "aldric_tube",
+"src": "voices/aldric_tube/aldric_tube.rite.c20.mp3",
+"t": "Twenty. Get to the cage, boy.",
+"voiceOf": "aldric_tube"
+},
+"aldric_tube.rite.c30": {
+"d": 1.18,
+"kind": "narration",
+"speaker": "aldric_tube",
+"src": "voices/aldric_tube/aldric_tube.rite.c30.mp3",
+"t": "Thirty.",
+"voiceOf": "aldric_tube"
+},
+"aldric_tube.rite.c41": {
+"d": 1.99,
+"kind": "narration",
+"speaker": "aldric_tube",
+"src": "voices/aldric_tube/aldric_tube.rite.c41.mp3",
+"t": "Forty-one. Forty.",
+"voiceOf": "aldric_tube"
+},
+"aldric_tube.rite.c5": {
+"d": 1.56,
+"kind": "narration",
+"speaker": "aldric_tube",
+"src": "voices/aldric_tube/aldric_tube.rite.c5.mp3",
+"t": "Five. Four.",
+"voiceOf": "aldric_tube"
+},
+"aldric_tube.rite.iknow": {
+"d": 13.46,
+"kind": "narration",
+"speaker": "aldric_tube",
+"src": "voices/aldric_tube/aldric_tube.rite.iknow.mp3",
+"t": "I know what it will do. I've got Tam's widow's grandson on the day shift on the third terrace, and I have to choose between a hole and a town. Get to the cage, boy. I'm counting.",
+"voiceOf": "aldric_tube"
+},
+"aldric_tube.rite.kaelen": {
+"d": 1.15,
+"kind": "narration",
+"speaker": "aldric_tube",
+"src": "voices/aldric_tube/aldric_tube.rite.kaelen.mp3",
+"t": "Kaelen.",
+"voiceOf": "aldric_tube"
+},
+"aldric_tube.rite.seal": {
+"d": 18.96,
+"kind": "narration",
+"speaker": "aldric_tube",
+"src": "voices/aldric_tube/aldric_tube.rite.seal.mp3",
+"t": "Sealing the vault. Governor's authority, under the works charter. Factor, I'm sorry. The bleed-back's coming up the shaft, and it's coming fast, and there's four hundred feet of men above it. Sixty seconds on the reservoir gates. Anyone below, get to the cage.",
+"voiceOf": "aldric_tube"
+},
 "bettany.greet.blunt": {
 "d": 4.49,
 "kind": "greet",
@@ -609,6 +681,78 @@ const VOICE_LINES = {
 "t": "One note. One law. One hand.",
 "voiceOf": "ignatius"
 },
+"ignatius.rite.blood": {
+"d": 5.86,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.rite.blood.mp3",
+"t": "Blood. Good. It should bleed a little at the seating. The Foundry girls used to bleed for days.",
+"voiceOf": "ignatius"
+},
+"ignatius.rite.closer": {
+"d": 3.48,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.rite.closer.mp3",
+"t": "Closer, Engineer. I must be able to see.",
+"voiceOf": "ignatius"
+},
+"ignatius.rite.engineer": {
+"d": 1.75,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.rite.engineer.mp3",
+"t": "Engineer.",
+"voiceOf": "ignatius"
+},
+"ignatius.rite.gracious": {
+"d": 6.19,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.rite.gracious.mp3",
+"t": "I saw a Cantor be gracious to a tool. An error, but a small one. Bring her to the casing.",
+"voiceOf": "ignatius"
+},
+"ignatius.rite.holdnote": {
+"d": 3.58,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.rite.holdnote.mp3",
+"t": "The hold! Hold the note! Daughter, hold the note!",
+"voiceOf": "ignatius"
+},
+"ignatius.rite.notch": {
+"d": 7.92,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.rite.notch.mp3",
+"t": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself. I have seated forty of these.",
+"voiceOf": "ignatius"
+},
+"ignatius.rite.rubric": {
+"d": 12.72,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.rite.rubric.mp3",
+"t": "Holy daughter. You are the hand that steadies the patient. You hold the Light still, that it may be relieved of its excess. Blessed is the single note. Blessed is the throat that holds it. Blessed is the hand that keeps the throat.",
+"voiceOf": "ignatius"
+},
+"ignatius.rite.sheis": {
+"d": 1.94,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.rite.sheis.mp3",
+"t": "She is.",
+"voiceOf": "ignatius"
+},
+"ignatius.rite.speak": {
+"d": 2.23,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.rite.speak.mp3",
+"t": "Speak, daughter.",
+"voiceOf": "ignatius"
+},
 "kaelen.companion.boss0": {
 "d": 2.78,
 "kind": "companion",
@@ -866,6 +1010,62 @@ const VOICE_LINES = {
 "speaker": "kaelen",
 "src": "voices/kaelen/kaelen.greet.polite.mp3",
 "t": "Mind the bed, twenty paces off the door. No sound carries over it for a day. Say what you came to say.",
+"voiceOf": "kaelen"
+},
+"kaelen.rite.da": {
+"d": 0.77,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.rite.da.mp3",
+"t": "Da.",
+"voiceOf": "kaelen"
+},
+"kaelen.rite.dontrun": {
+"d": 9.46,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.rite.dontrun.mp3",
+"t": "Don't run the purge. The Root's wounded. If you dump forty thousand gallons of raw glass into an open casing, it will not seal, it will",
+"voiceOf": "kaelen"
+},
+"kaelen.rite.holdon": {
+"d": 1.82,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.rite.holdon.mp3",
+"t": "You'll want to hold onto something.",
+"voiceOf": "kaelen"
+},
+"kaelen.rite.singitdown": {
+"d": 1.32,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.rite.singitdown.mp3",
+"t": "Lyra! Sing it down!",
+"voiceOf": "kaelen"
+},
+"kaelen.rite.slippage": {
+"d": 2.35,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.rite.slippage.mp3",
+"t": "Slippage on the lock. I can hear it.",
+"voiceOf": "kaelen"
+},
+"kaelen.rite.spanner": {
+"d": 5.28,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.rite.spanner.mp3",
+"t": "Spanner. Tobiah, sit on the rail there and call the pitch to me every ten seconds.",
+"voiceOf": "kaelen"
+},
+"kaelen.rite.up": {
+"d": 0.94,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.rite.up.mp3",
+"t": "Up. Up.",
 "voiceOf": "kaelen"
 },
 "kaelen_dw.greet.blunt": {
@@ -1242,6 +1442,22 @@ const VOICE_LINES = {
 "voiceOf": "lyra",
 "when": "!(flags.lyra_wg_met || flags.lyra_dw_met)   // from voices.js lyraState(): after Whisper-Grove she is silent until flags.lyra_voice, then speaks as lyra_ruined"
 },
+"lyra_fortunate.rite.fortunate": {
+"d": 4.44,
+"kind": "narration",
+"speaker": "lyra_fortunate",
+"src": "voices/lyra_fortunate/lyra_fortunate.rite.fortunate.mp3",
+"t": "I. Am. Fortunate.",
+"voiceOf": "lyra_fortunate"
+},
+"lyra_ruined.rite.pumps": {
+"d": 1.01,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra_ruined.rite.pumps.mp3",
+"t": "The pumps.",
+"voiceOf": "lyra_ruined"
+},
 "mags_dw.greet.normal": {
 "d": 2.02,
 "kind": "greet",
@@ -1554,6 +1770,70 @@ const VOICE_LINES = {
 "t": "Irregular. Entry amended.",
 "voiceOf": "proctor"
 },
+"pumpman.rite.name.caine": {
+"d": 1.2,
+"kind": "narration",
+"speaker": "pumpman",
+"src": "voices/pumpman/pumpman.rite.name.caine.mp3",
+"t": "Caine",
+"voiceOf": "pumpman"
+},
+"pumpman.rite.name.edders": {
+"d": 1.1,
+"kind": "narration",
+"speaker": "pumpman",
+"src": "voices/pumpman/pumpman.rite.name.edders.mp3",
+"t": "Edders",
+"voiceOf": "pumpman"
+},
+"pumpman.rite.name.hale-b": {
+"d": 1.49,
+"kind": "narration",
+"speaker": "pumpman",
+"src": "voices/pumpman/pumpman.rite.name.hale-b.mp3",
+"t": "Hale B.",
+"voiceOf": "pumpman"
+},
+"pumpman.rite.name.marrow": {
+"d": 1.27,
+"kind": "narration",
+"speaker": "pumpman",
+"src": "voices/pumpman/pumpman.rite.name.marrow.mp3",
+"t": "Marrow",
+"voiceOf": "pumpman"
+},
+"pumpman.rite.name.ott": {
+"d": 1.08,
+"kind": "narration",
+"speaker": "pumpman",
+"src": "voices/pumpman/pumpman.rite.name.ott.mp3",
+"t": "Ott",
+"voiceOf": "pumpman"
+},
+"pumpman.rite.name.ruhl": {
+"d": 1.1,
+"kind": "narration",
+"speaker": "pumpman",
+"src": "voices/pumpman/pumpman.rite.name.ruhl.mp3",
+"t": "Ruhl",
+"voiceOf": "pumpman"
+},
+"pumpman.rite.name.sennet": {
+"d": 1.1,
+"kind": "narration",
+"speaker": "pumpman",
+"src": "voices/pumpman/pumpman.rite.name.sennet.mp3",
+"t": "Sennet",
+"voiceOf": "pumpman"
+},
+"pumpman.rite.name.vey": {
+"d": 1.1,
+"kind": "narration",
+"speaker": "pumpman",
+"src": "voices/pumpman/pumpman.rite.name.vey.mp3",
+"t": "Vey",
+"voiceOf": "pumpman"
+},
 "quist.greet.blunt": {
 "d": 4.3,
 "kind": "greet",
@@ -1714,6 +1994,14 @@ const VOICE_LINES = {
 "t": "One more before the light goes. One more.",
 "voiceOf": "sexton"
 },
+"sister.rite.daughter": {
+"d": 2.3,
+"kind": "narration",
+"speaker": "sister",
+"src": "voices/sister/sister.rite.daughter.mp3",
+"t": "Daughter. Daughter, the instrument.",
+"voiceOf": "sister"
+},
 "tam.greet.blunt": {
 "d": 4.03,
 "kind": "greet",
@@ -1760,6 +2048,62 @@ const VOICE_LINES = {
 "speaker": "tobiah",
 "src": "voices/tobiah/tobiah.greet.polite.mp3",
 "t": "Night shift. Keep it under the pumps and the bells won't turn. Are you \u2014 are you with him? With Engineer Vance?",
+"voiceOf": "tobiah"
+},
+"tobiah.rite.call1": {
+"d": 2.64,
+"kind": "narration",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.rite.call1.mp3",
+"t": "Pitch, one-seventy-four. Holding.",
+"voiceOf": "tobiah"
+},
+"tobiah.rite.call2": {
+"d": 4.08,
+"kind": "narration",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.rite.call2.mp3",
+"t": "One-seventy-four. It's matching her, sir. It's, it's coming up to meet her.",
+"voiceOf": "tobiah"
+},
+"tobiah.rite.honour": {
+"d": 6.55,
+"kind": "narration",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.rite.honour.mp3",
+"t": "It's an honour to meet you, ma'am. Truly. I'm Tobiah Marsh. My mother used to take me to hear the Sky Choir.",
+"voiceOf": "tobiah"
+},
+"tobiah.rite.hurt": {
+"d": 3.65,
+"kind": "narration",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.rite.hurt.mp3",
+"t": "They say it doesn't hurt very much. After the first part.",
+"voiceOf": "tobiah"
+},
+"tobiah.rite.matching": {
+"d": 3.48,
+"kind": "narration",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.rite.matching.mp3",
+"t": "Pitch coming up. It's, gods, look at it, it's matching.",
+"voiceOf": "tobiah"
+},
+"tobiah.rite.span": {
+"d": 2.86,
+"kind": "narration",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.rite.span.mp3",
+"t": "Head at one span! One span and holding!",
+"voiceOf": "tobiah"
+},
+"tobiah.rite.whatsthat": {
+"d": 1.32,
+"kind": "narration",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.rite.whatsthat.mp3",
+"t": "Sir, what's that?",
 "voiceOf": "tobiah"
 },
 "tobiah_dw.greet.blunt": {
@@ -1928,6 +2272,46 @@ const VOICE_LINES = {
 "speaker": "vosk",
 "src": "voices/vosk/vosk.greet.polite.mp3",
 "t": "Pitch has a colour, through these lenses. Yours is an unremarkable brown. State your business.",
+"voiceOf": "vosk"
+},
+"vosk.rite.enough": {
+"d": 3.72,
+"kind": "narration",
+"speaker": "vosk",
+"src": "voices/vosk/vosk.rite.enough.mp3",
+"t": "Enough. Engineer, I would very much like to know what you thought you were",
+"voiceOf": "vosk"
+},
+"vosk.rite.interesting": {
+"d": 2.47,
+"kind": "narration",
+"speaker": "vosk",
+"src": "voices/vosk/vosk.rite.interesting.mp3",
+"t": "Interesting. Did you see that, Inquisitor?",
+"voiceOf": "vosk"
+},
+"vosk.rite.markit": {
+"d": 1.01,
+"kind": "narration",
+"speaker": "vosk",
+"src": "voices/vosk/vosk.rite.markit.mp3",
+"t": "Mark it.",
+"voiceOf": "vosk"
+},
+"vosk.rite.plate": {
+"d": 2.9,
+"kind": "narration",
+"speaker": "vosk",
+"src": "voices/vosk/vosk.rite.plate.mp3",
+"t": "Engineer Vance. What are you doing at that plate?",
+"voiceOf": "vosk"
+},
+"vosk.rite.stepaway": {
+"d": 2.5,
+"kind": "narration",
+"speaker": "vosk",
+"src": "voices/vosk/vosk.rite.stepaway.mp3",
+"t": "Engineer Vance, step away from the drum.",
 "voiceOf": "vosk"
 },
 "wearer.coda.0": {

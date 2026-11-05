@@ -51,6 +51,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       };
       const f = G.flags; f.lyra_met = f.need_gate = f.gate_open = f.kaelen_met = f.tobiah_met = true; f.coil_done = f.rite_ready = f.church_come = true; f.hob_told = true;
       G.give('pass'); G.give('coil');
+      window.__vo = []; VOICE_ACT.playLine = (l) => { window.__vo.push(l.id); return 0.01; };   // record the voices, play nothing
     });
 
     // ---- before the Rite: the gate is sealed, Lyra's and Kaelen's lines point at her door, the palm message for Rooke
@@ -285,6 +286,26 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       return out;
     });
     check(saved.snapStage && saved.transientOut && saved.restored && saved.once, 'a save mid-Hold keeps the stage; the figures are not saved, and are staged again, once, on restore');
+
+    // ---- the voices: every card and spoken message plays its recorded lines, in the book's order
+    const vo = await page.evaluate(async () => {
+      const out = {}, heard = new Set(window.__vo), wait = (ms) => new Promise((r) => setTimeout(r, ms));
+      const all = Object.values(RITE43.VO).flat().concat(RITE43.LEFT.map((n) => 'pumpman.rite.name.' + RITE43.slug(n)));
+      out.missing = all.filter((id) => !VOICE_ACT.LINES[id]);
+      out.unheard = ['tobiah.rite.honour', 'sister.rite.daughter', 'ignatius.rite.rubric', 'ignatius.rite.closer', 'ignatius.rite.blood', 'ignatius.rite.notch', 'tobiah.rite.span',
+        'tobiah.rite.call1', 'tobiah.rite.call2', 'vosk.rite.plate', 'vosk.rite.stepaway', 'tobiah.rite.whatsthat', 'vosk.rite.enough', 'aldric_tube.rite.seal',
+        'aldric_tube.rite.c41', 'aldric_tube.rite.c30', 'aldric_tube.rite.c20', 'aldric_tube.rite.c10', 'aldric_tube.rite.c5', 'aldric_tube.rite.c2', 'kaelen.rite.up',
+        'pumpman.rite.name.hale-b'].filter((id) => !heard.has(id));
+      out.names = [...heard].filter((id) => id.startsWith('pumpman.rite.name.')).length;
+      window.__vo.length = 0; RITE43.seq(RITE43.VO.needleGood); await wait(1700); out.order = window.__vo.join(',');
+      window.__vo.length = 0; RITE43.seq(RITE43.VO.tube); await wait(100); RITE43.hush(); await wait(900); out.hushed = window.__vo.length;
+      const m = VOICES.mode; VOICES.setMode('off'); window.__vo.length = 0; RITE43.seq(RITE43.VO.frame); out.off = window.__vo.length; VOICES.setMode(m);
+      out.fortunate = (VOICE_ACT.LINES['lyra_fortunate.rite.fortunate'] || {}).d || 0;
+      return out;
+    });
+    check(vo.missing.length === 0 && vo.unheard.length === 0 && vo.names >= 3, 'the Rite is voiced: every card and spoken message plays its recorded lines (' + (vo.missing.concat(vo.unheard).slice(0, 3).join(', ') || 'all heard') + '); the pump-men say their names');
+    check(vo.order === 'ignatius.rite.blood,ignatius.rite.speak,lyra_fortunate.rite.fortunate,ignatius.rite.sheis' && vo.fortunate > 3, '"Speak, daughter." "I. Am. Fortunate." (three words held apart) "She is." in the book\'s order');
+    check(vo.hushed === 1 && vo.off === 0, 'a choice hushes the lines still to come; with the Voices off nothing plays');
 
     // ---- French for every line
     const fr = JSON.parse(src('locales/story/fr.json'));

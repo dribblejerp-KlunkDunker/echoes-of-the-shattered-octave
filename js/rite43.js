@@ -38,10 +38,34 @@ const RITE43 = (function () {
   const guest = () => { try { return typeof SYNC19 !== 'undefined' && !!SYNC19.isGuest(); } catch (e) { return false; } };
   const dist = (ax, ay, bx, by) => Math.hypot(ax - bx, ay - by);
   const px = () => Engine.cam.x, py = () => Engine.cam.y;
-  const say = (t, cls, ms) => { try { msg(String(t).replace(/<\/?i>/g, ''), cls || '', ms || 5200); } catch (e) { /* cosmetic */ } };
+  const say = (t, cls, ms) => { try { msg(String(t).replace(/<\/?i>/g, ''), cls || '', ms || 5200); } catch (e) { /* cosmetic */ } const ids = MSG_VO && MSG_VO.get(t); if (ids) seq(ids); };
   const loud = () => { G.stillT = 0; if (G.noise < 3) G.noise = 3; };
   const voice = (t, ms) => say(t, 'voice', ms || 6500);
-  const card = (title, body, choices) => { try { showEvent(title, body, choices); } catch (e) { warnOnce('card', e); } };
+  const card = (title, body, choices) => {
+    const hushed = (choices || []).map((c) => Object.assign({}, c, { f: function () { hush(); return c.f && c.f.apply(this, arguments); } }));
+    try { showEvent(title, body, hushed); } catch (e) { warnOnce('card', e); }
+    const v = CARD_VO && CARD_VO.find(([t]) => String(body).startsWith(t)); if (v) seq(v[1]);
+  };
+  // the voices (voices/script.json, rendered by tools/voices/build.py): narration is not auto-played by onMsg, so the
+  // Rite plays its own, one line after another; a newer card or message cuts the one before, and a choice hushes it.
+  let MSG_VO = null, CARD_VO = null, voTok = 0;
+  const voiced = () => typeof VOICE_ACT !== 'undefined' && !!VOICE_ACT.LINES && (typeof VOICES === 'undefined' || ['acted', 'spoken'].includes(VOICES.mode));
+  function hush() { voTok++; try { const c = VOICE_ACT.state && VOICE_ACT.state.current; if (c) { c.stop(); VOICE_ACT.state.current = null; } } catch (e) { /* nothing playing */ } }
+  function seq(ids) {
+    if (!voiced()) return;
+    const tok = ++voTok; let i = 0;
+    const next = () => {
+      while (tok === voTok && i < ids.length) {
+        const id = ids[i++], l = VOICE_ACT.LINES[id];
+        if (!l) continue;
+        let d = 0; try { d = VOICE_ACT.playLine(Object.assign({ id }, l), { interrupt: true }) || 0; } catch (e) { warnOnce('line', e); }
+        if (d > 0 && i < ids.length) setTimeout(next, (d + 0.3) * 1000);
+        return;
+      }
+    };
+    next();
+  }
+  const slug = (n) => String(n).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   const R = { walkT: 0, doorCool: 0, bolt: 0, watched: 0, q: 0, seen: 0, needle: 0, count: 0, unhook: null, drone: 0, slow: false, kaelenAt: null };
 
   // ================================================================ the words
@@ -214,6 +238,27 @@ const RITE43 = (function () {
     kaelenAfter: S('Give me the coil. It goes down in my toolbag, not yours: nobody searches the supervising engineer\'s toolbag. Keep the pass; it gets you past the bell-helms at her door and onto the terrace. On Hearthday walk with the column, and when I go to the drum, give them something else to look at. Eight bolts. Forty seconds, if they don\'t watch me.'),
     kaelenRepeat: S('Hearthday. Be at her door when the column forms. Below, I will be at the stool with the needle, and my hands will be shaking, and that is all right. When I go to the drum, keep their eyes on you.'),
   };
+  const VO = {   // TX key -> the recorded lines it holds, in the order the book has them
+    frame: ['tobiah.rite.honour', 'tobiah.rite.hurt'],
+    pumps: ['sister.rite.daughter', 'vosk.rite.interesting', 'ignatius.rite.gracious'],
+    lullaby: ['ignatius.rite.rubric', 'ignatius.rite.engineer'],
+    needleGood: ['ignatius.rite.blood', 'ignatius.rite.speak', 'lyra_fortunate.rite.fortunate', 'ignatius.rite.sheis'],
+    needleSeen: ['ignatius.rite.notch', 'ignatius.rite.speak', 'lyra_fortunate.rite.fortunate', 'ignatius.rite.sheis'],
+    hold: ['tobiah.rite.span', 'ignatius.open.onenote', 'tobiah.rite.matching', 'vosk.rite.markit', 'kaelen.rite.slippage', 'kaelen.rite.spanner'],
+    lock: ['tobiah.rite.whatsthat', 'kaelen.rite.holdon', 'ignatius.rite.holdnote', 'kaelen.rite.singitdown'],
+    golems: ['vosk.rite.stepaway'],
+    enough: ['vosk.rite.enough'],
+    tube: ['aldric_tube.rite.seal', 'kaelen.rite.da', 'aldric_tube.rite.kaelen', 'kaelen.rite.dontrun', 'aldric_tube.rite.iknow', 'aldric_tube.rite.c41', 'lyra_ruined.rite.pumps'],
+    pour: ['kaelen.rite.up'],
+    needleHint: ['ignatius.rite.closer'],
+    pitchCall: ['tobiah.rite.call1'], pitchCall2: ['tobiah.rite.call2'],
+    voskTurns: ['vosk.rite.plate'], boltsLost: ['vosk.rite.stepaway'],
+    aldric41: ['aldric_tube.rite.c41'], aldric30: ['aldric_tube.rite.c30'], aldric20: ['aldric_tube.rite.c20'],
+    aldric10: ['aldric_tube.rite.c10'], aldric5: ['aldric_tube.rite.c5'], aldric2: ['aldric_tube.rite.c2'],
+  };
+  const MSGS = ['needleHint', 'pitchCall', 'pitchCall2', 'voskTurns', 'boltsLost', 'aldric41', 'aldric30', 'aldric20', 'aldric10', 'aldric5', 'aldric2'];
+  MSG_VO = new Map(MSGS.map((k) => [TX[k], VO[k]]));
+  CARD_VO = Object.keys(VO).filter((k) => !MSGS.includes(k)).map((k) => [TX[k], VO[k]]);
   const fmt = (t, ...a) => String(t).replace(/\{(\d+)\}/g, (m, i) => a[+i] != null ? a[+i] : m);
 
   const LEFT = ['Edders', 'Ruhl', 'Caine', 'Ott', 'Sennet', 'Vey', 'Marrow', 'Hale B.'];   // the eight left (Book One ch. 19, 24)
@@ -514,6 +559,7 @@ const RITE43 = (function () {
     if (!names.includes(e._name)) { names.push(e._name); G.ledger.push({ name: e._name, where: TX.ledgerWhere, day: G.day }); }
     f.r43_names = names.length;
     say(fmt(e._pump === 7 ? TX.unhookLast : TX.unhookName, e._name), 'voice', 7000);
+    seq(['pumpman.rite.name.' + slug(e._name)]);
   }
   function usePump(e) {
     if (stage() !== 6) { say(TX.lookPumpHooked, '', 4000); return true; }
@@ -681,7 +727,7 @@ const RITE43 = (function () {
   }
   try { wire(); } catch (e) { console.warn('rite43 failed to wire', e); }
 
-  return { TX, TEXTS, R, V, LEFT, DOOR, PATH, COLUMN, KERB, stage, ready, begin, startNeedle, singDown, enough, pour, stageVault, stageColumn, blocked, layout, usePump, onSong, tick, pathAt, pathLen,
+  return { TX, TEXTS, VO, seq, hush, slug, R, V, LEFT, DOOR, PATH, COLUMN, KERB, stage, ready, begin, startNeedle, singDown, enough, pour, stageVault, stageColumn, blocked, layout, usePump, onSong, tick, pathAt, pathLen,
     consts: { NEEDLE_SECS, NEEDLE_SEEN, BOLT_SECS, WATCH_LIMIT, COUNT, UNHOOK_SECS } };
 })();
 if (typeof window !== 'undefined') window.RITE43 = RITE43;
