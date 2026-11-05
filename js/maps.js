@@ -250,7 +250,7 @@ function buildOakhaven(greening) {
     // non-enterable houses
     { x: 4, y: 4, w: 5, h: 4, tex: 't_house', door: [6, 7], barred: true, label: 'A shuttered house' },
     { x: 12, y: 4, w: 5, h: 4, tex: 't_house', door: [14, 7], barred: true, label: 'The baker\'s' },
-    { x: 36, y: 4, w: 3, h: 4, tex: 't_house', door: [37, 7], barred: true, label: 'The Carders\' house' },
+    { x: 36, y: 4, w: 3, h: 4, tex: 't_house', door: [37, 7], barred: true, label: 'A shuttered house' },   // the Carders live behind the tannery (MS ch. 6; js/hollow30.js)
     { x: 40, y: 4, w: 4, h: 5, tex: 't_wood', door: [40, 6], barred: true, label: 'A granary' },
     { x: 4, y: 14, w: 3, h: 6, tex: 't_wood', door: [6, 16], barred: true, label: 'A cooper\'s shed' },
     { x: 4, y: 27, w: 3, h: 6, tex: 't_house', door: [6, 29], barred: true, label: 'The Madders\' house' },
