@@ -2806,6 +2806,217 @@
    "source": "rite43.js LEFT (Book One ch. 19, 24: the eight pump-men)",
    "voiceOf": "pumpman",
    "delivery": "hollow-fragment, a breath of a man"
+  },
+  {
+   "id": "tobiah.green.road",
+   "speaker": "tobiah",
+   "kind": "narration",
+   "text": "The road's still open! It's going over the fields. The road's still...",
+   "source": "greening44.js TX.quarry (Book One ch. 11)",
+   "delivery": "shout"
+  },
+  {
+   "id": "lyra_ruined.green.gate",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "The gate. Kael, the gate.",
+   "source": "greening44.js TX.town (Book One ch. 11)"
+  },
+  {
+   "id": "kaelen.green.isee",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "I see it.",
+   "source": "greening44.js TX.town (Book One ch. 11)",
+   "delivery": "low"
+  },
+  {
+   "id": "townswoman.green.punched",
+   "speaker": "townswoman",
+   "kind": "narration",
+   "text": "I punched it down, I punched it down, I punched it down.",
+   "source": "greening44.js TX.bakery (Book One ch. 11)",
+   "delivery": "tired"
+  },
+  {
+   "id": "lyra_ruined.green.behind",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Behind me! In a line! Hands on the shoulder in front! Behind me!",
+   "source": "greening44.js TX.well (Book One ch. 11)",
+   "delivery": "shout"
+  },
+  {
+   "id": "lyra_ruined.green.orla",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Orla.",
+   "source": "greening44.js TX.square (Book One ch. 11)"
+  },
+  {
+   "id": "rooke.green.couldnot",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "I could not get near her. The floor's gone. The whole floor of that house is roots up to my knees and moving, and I am fifty-two years old and I could not get across it with a bag in my hand. I tried twice.",
+   "source": "greening44.js TX.square (Book One ch. 11)",
+   "delivery": "tired"
+  },
+  {
+   "id": "rooke.green.go",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "Take it. I'll hold the line here. Go on, girl. Go.",
+   "source": "greening44.js TX.square (Book One ch. 11)"
+  },
+  {
+   "id": "orla.green.late",
+   "speaker": "orla",
+   "kind": "narration",
+   "text": "You're late, lovey.",
+   "source": "greening44.js TX.orla (Book One ch. 11)"
+  },
+  {
+   "id": "lyra_ruined.green.hurt",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Does it hurt.",
+   "source": "greening44.js TX.orla2 (Book One ch. 11)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "orla.green.held",
+   "speaker": "orla",
+   "kind": "narration",
+   "text": "No. I told you. It's like being held. It's very green, isn't it. I can hear it growing. I can hear the whole Reach growing. Isn't that a sound.",
+   "source": "greening44.js TX.orla2 (Book One ch. 11)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "orla.green.now",
+   "speaker": "orla",
+   "kind": "narration",
+   "text": "Now, girl. Now. All the lines.",
+   "source": "greening44.js TX.orla2 (Book One ch. 11)"
+  },
+  {
+   "id": "kaelen.green.line",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Lyra. Lyra. The line's moving. Rooke's got them to the square and the square's going. The gate.",
+   "source": "greening44.js TX.orlaHounds (Book One ch. 11)"
+  },
+  {
+   "id": "lyra_ruined.green.closed",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "The gate's closed.",
+   "source": "greening44.js TX.orlaHounds (Book One ch. 11)"
+  },
+  {
+   "id": "kaelen.green.open",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Then we open it.",
+   "source": "greening44.js TX.orlaHounds (Book One ch. 11)",
+   "delivery": "low"
+  },
+  {
+   "id": "wearer.green.lark",
+   "speaker": "wearer",
+   "kind": "narration",
+   "text": "Lark.",
+   "source": "greening44.js TX.hedgeLark (Book One ch. 11)",
+   "voiceOf": "tobin",
+   "delivery": "murmur"
+  },
+  {
+   "id": "wearer.green.lark2",
+   "speaker": "wearer",
+   "kind": "narration",
+   "text": "Lark, there's a way through down here. I can see it from this side. Come along the thorn to me, lark, and bring them with you.",
+   "source": "greening44.js TX.hedgeLark2 (Book One ch. 11)",
+   "voiceOf": "tobin",
+   "delivery": "murmur"
+  },
+  {
+   "id": "wearer.green.tam",
+   "speaker": "wearer",
+   "kind": "narration",
+   "text": "Tammy, there's a gap here. Bring the little ones first.",
+   "source": "greening44.js TX.hedgeTam (Book One ch. 11)",
+   "voiceOf": "tam"
+  },
+  {
+   "id": "wearer.green.lyra",
+   "speaker": "wearer",
+   "kind": "narration",
+   "text": "This way. This way. Follow me. I know the way out.",
+   "source": "greening44.js TX.hedgeLyra (Book One ch. 11)",
+   "voiceOf": "lyra"
+  },
+  {
+   "id": "wearer.green.davin",
+   "speaker": "wearer",
+   "kind": "narration",
+   "text": "The last sheaf's in, and the barley's high.",
+   "source": "greening44.js TX.hedgeDavin (Book One ch. 11)",
+   "voiceOf": "davin",
+   "delivery": "whisper"
+  },
+  {
+   "id": "lyra_ruined.green.dont",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Don't answer it!",
+   "source": "greening44.js TX.dont (Book One ch. 11)",
+   "delivery": "shout"
+  },
+  {
+   "id": "lyra_ruined.green.dont2",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Don't answer it! It isn't them! It was never them! Whatever it says, whatever voice, don't answer, don't go to it, don't let go of each other!",
+   "source": "greening44.js TX.dont (Book One ch. 11)",
+   "delivery": "shout"
+  },
+  {
+   "id": "ada.green.tobin",
+   "speaker": "ada",
+   "kind": "narration",
+   "text": "Tobin?",
+   "source": "greening44.js TX.ada (Book One ch. 11)"
+  },
+  {
+   "id": "ada.green.isthatyou",
+   "speaker": "ada",
+   "kind": "narration",
+   "text": "Tobin Ashgrove, is that you?",
+   "source": "greening44.js TX.ada (Book One ch. 11)"
+  },
+  {
+   "id": "wearer.green.helloada",
+   "speaker": "wearer",
+   "kind": "narration",
+   "text": "Hello, Ada.",
+   "source": "greening44.js TX.ada (Book One ch. 11)",
+   "voiceOf": "tobin",
+   "delivery": "murmur"
+  },
+  {
+   "id": "wearer.green.easy",
+   "speaker": "wearer",
+   "kind": "narration",
+   "text": "Oh, it's easy, come on. It's easy from this side.",
+   "source": "greening44.js TX.adaAfter (Book One ch. 11)",
+   "voiceOf": "ada"
+  },
+  {
+   "id": "kaelen.green.lookup",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Lyra. Look up.",
+   "source": "greening44.js TX.chapel (Book One ch. 11)",
+   "delivery": "low"
   }
  ],
  "skipped": [
@@ -3206,6 +3417,14 @@
   "lyra_fortunate": {
    "name": "Lyra Ashgrove, \"I. Am. Fortunate.\"",
    "who": "Lyra with the wire in her throat, saying the rubric's words flattened onto 174 (ch. 10)."
+  },
+  "davin": {
+   "name": "Davin Hale",
+   "who": "Orla Hale's grandson, who sang the harvest home and could never hold the fourth line; heard only in the Hedge's mouth at the North Gate (ch. 11)."
+  },
+  "ada": {
+   "name": "Ada Pellow",
+   "who": "Mistress Pellow of Cooper's Row, fifty-one, who put new milk on Lyra's step every week; an ordinary, perfectly steady voice (ch. 11)."
   }
  }
 }
