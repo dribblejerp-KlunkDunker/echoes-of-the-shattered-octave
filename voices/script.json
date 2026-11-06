@@ -3017,6 +3017,207 @@
    "text": "Lyra. Look up.",
    "source": "greening44.js TX.chapel (Book One ch. 11)",
    "delivery": "low"
+  },
+  {
+   "id": "vane.rope.arms",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Arms! One with arms, for the drum!",
+   "source": "rope45.js TX.line (Book One ch. 12)",
+   "delivery": "shout"
+  },
+  {
+   "id": "vane.rope.four",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Four.",
+   "source": "rope45.js TX.four (Book One ch. 12)"
+  },
+  {
+   "id": "vane.rope.eight",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Eight.",
+   "source": "rope45.js TX.eight (Book One ch. 12)"
+  },
+  {
+   "id": "vane.rope.eleven",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Eleven.",
+   "source": "rope45.js TX.eleven (Book One ch. 12)"
+  },
+  {
+   "id": "engineer.rope.captain",
+   "speaker": "engineer",
+   "kind": "narration",
+   "text": "Captain...",
+   "source": "rope45.js TX.captain (Book One ch. 12)"
+  },
+  {
+   "id": "vane.rope.icancount",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "I can count.",
+   "source": "rope45.js TX.captain (Book One ch. 12)",
+   "delivery": "low"
+  },
+  {
+   "id": "vane.rope.fifteen",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Thirteen. Fifteen.",
+   "source": "rope45.js TX.fifteen (Book One ch. 12)"
+  },
+  {
+   "id": "vane.rope.up",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Up. Mags, up, get them...",
+   "source": "rope45.js TX.vaneUp (Book One ch. 12)",
+   "delivery": "shout"
+  },
+  {
+   "id": "kaelen.rope.getthemup",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Get them up!",
+   "source": "rope45.js TX.kaelenStruck (Book One ch. 12)",
+   "delivery": "shout"
+  },
+  {
+   "id": "engineer.rope.down",
+   "speaker": "engineer",
+   "kind": "narration",
+   "text": "Captain, we are at twenty-one souls and the crates and we are going down. Not slow. Look at the trees. Look at the trees, Captain...",
+   "source": "rope45.js TX.threeUp (Book One ch. 12)"
+  },
+  {
+   "id": "kaelen.rope.iknow",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "I know. I know. They're coming.",
+   "source": "rope45.js TX.lyraDeck (Book One ch. 12)",
+   "delivery": "low"
+  },
+  {
+   "id": "aldric.rope.you",
+   "speaker": "aldric",
+   "kind": "narration",
+   "text": "You. Up with her. Keep her on the knot.",
+   "source": "rope45.js TX.lyraFoot (Book One ch. 12)",
+   "delivery": "low"
+  },
+  {
+   "id": "vane.rope.takeup",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Take her up.",
+   "source": "rope45.js TX.lastLoad (Book One ch. 12)"
+  },
+  {
+   "id": "engineer.rope.drum",
+   "speaker": "engineer",
+   "kind": "narration",
+   "text": "The drum, Captain, the drum's coming out of the deck...",
+   "source": "rope45.js TX.drumOut (Book One ch. 12)",
+   "delivery": "shout"
+  },
+  {
+   "id": "vane.rope.n1",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "One.",
+   "source": "rope45.js TX.c1 (Book One ch. 12)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "vane.rope.n2",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Two.",
+   "source": "rope45.js TX.c2 (Book One ch. 12)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "vane.rope.n3",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Three.",
+   "source": "rope45.js TX.c3 (Book One ch. 12)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "vane.rope.n4",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Four.",
+   "source": "rope45.js TX.c4 (Book One ch. 12)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "vane.rope.n5",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Five.",
+   "source": "rope45.js TX.c5 (Book One ch. 12)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "vane.rope.n6",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Six.",
+   "source": "rope45.js TX.c6 (Book One ch. 12)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "vane.rope.n7",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Seven.",
+   "source": "rope45.js TX.c7 (Book One ch. 12)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "vane.rope.n8",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Eight.",
+   "source": "rope45.js TX.c8 (Book One ch. 12)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "vane.rope.n9",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Nine.",
+   "source": "rope45.js TX.c9 (Book One ch. 12)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "vane.rope.n10",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Ten.",
+   "source": "rope45.js TX.c10 (Book One ch. 12)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "kaelen.rope.doit",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Do it.",
+   "source": "rope45.js TX.c9 (Book One ch. 12)",
+   "delivery": "low"
+  },
+  {
+   "id": "weaver.rope.echo",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "I have watched you choose this four hundred and eleven times.",
+   "source": "rope45.js TX.echo (Book One ch. 12)",
+   "delivery": "murmur"
   }
  ],
  "skipped": [
@@ -3425,6 +3626,10 @@
   "ada": {
    "name": "Ada Pellow",
    "who": "Mistress Pellow of Cooper's Row, fifty-one, who put new milk on Lyra's step every week; an ordinary, perfectly steady voice (ch. 11)."
+  },
+  "engineer": {
+   "name": "The Kestrel's engineer",
+   "who": "The Drift-Kestrel's first engineer, unnamed in Book One by the author's ruling; frightened, precise, doing ballast sums out loud (ch. 12)."
   }
  }
 }

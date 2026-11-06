@@ -98,6 +98,13 @@ const VOICE_LINES = {
 "t": "The seal of Queen Maelis bids you welcome. Her signature on the decrees is famously steady for a woman dead a hundred and forty years.",
 "voiceOf": "aldric"
 },
+"aldric.rope.you": {
+"d": 3.17,
+"kind": "narration",
+"speaker": "aldric",
+"src": "voices/aldric/aldric.rope.you.mp3",
+"t": "You. Up with her. Keep her on the knot."
+},
 "aldric_tube.rite.c10": {
 "d": 1.06,
 "kind": "narration",
@@ -534,6 +541,27 @@ const VOICE_LINES = {
 "t": "Tamsin Reed",
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
+},
+"engineer.rope.captain": {
+"d": 0.82,
+"kind": "narration",
+"speaker": "engineer",
+"src": "voices/engineer/engineer.rope.captain.mp3",
+"t": "Captain..."
+},
+"engineer.rope.down": {
+"d": 8.23,
+"kind": "narration",
+"speaker": "engineer",
+"src": "voices/engineer/engineer.rope.down.mp3",
+"t": "Captain, we are at twenty-one souls and the crates and we are going down. Not slow. Look at the trees. Look at the trees, Captain..."
+},
+"engineer.rope.drum": {
+"d": 2.98,
+"kind": "narration",
+"speaker": "engineer",
+"src": "voices/engineer/engineer.rope.drum.mp3",
+"t": "The drum, Captain, the drum's coming out of the deck..."
 },
 "halder.greet.blunt": {
 "d": 2.33,
@@ -1109,6 +1137,27 @@ const VOICE_LINES = {
 "src": "voices/kaelen/kaelen.rite.up.mp3",
 "t": "Up. Up.",
 "voiceOf": "kaelen"
+},
+"kaelen.rope.doit": {
+"d": 0.82,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.rope.doit.mp3",
+"t": "Do it."
+},
+"kaelen.rope.getthemup": {
+"d": 0.91,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.rope.getthemup.mp3",
+"t": "Get them up!"
+},
+"kaelen.rope.iknow": {
+"d": 1.7,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.rope.iknow.mp3",
+"t": "I know. I know. They're coming."
 },
 "kaelen_dw.greet.blunt": {
 "d": 0.98,
@@ -2342,6 +2391,132 @@ const VOICE_LINES = {
 "t": "Every sailor dies, friend. The trick is to be somewhere else when it happens. Sit; I'm buying, because I'm frightened.",
 "voiceOf": "vane"
 },
+"vane.rope.arms": {
+"d": 1.63,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.arms.mp3",
+"t": "Arms! One with arms, for the drum!"
+},
+"vane.rope.eight": {
+"d": 0.6,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.eight.mp3",
+"t": "Eight."
+},
+"vane.rope.eleven": {
+"d": 0.72,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.eleven.mp3",
+"t": "Eleven."
+},
+"vane.rope.fifteen": {
+"d": 1.22,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.fifteen.mp3",
+"t": "Thirteen. Fifteen."
+},
+"vane.rope.four": {
+"d": 0.65,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.four.mp3",
+"t": "Four."
+},
+"vane.rope.icancount": {
+"d": 0.94,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.icancount.mp3",
+"t": "I can count."
+},
+"vane.rope.n1": {
+"d": 0.65,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.n1.mp3",
+"t": "One."
+},
+"vane.rope.n10": {
+"d": 0.67,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.n10.mp3",
+"t": "Ten."
+},
+"vane.rope.n2": {
+"d": 0.7,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.n2.mp3",
+"t": "Two."
+},
+"vane.rope.n3": {
+"d": 0.67,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.n3.mp3",
+"t": "Three."
+},
+"vane.rope.n4": {
+"d": 0.67,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.n4.mp3",
+"t": "Four."
+},
+"vane.rope.n5": {
+"d": 0.72,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.n5.mp3",
+"t": "Five."
+},
+"vane.rope.n6": {
+"d": 0.7,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.n6.mp3",
+"t": "Six."
+},
+"vane.rope.n7": {
+"d": 0.77,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.n7.mp3",
+"t": "Seven."
+},
+"vane.rope.n8": {
+"d": 0.65,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.n8.mp3",
+"t": "Eight."
+},
+"vane.rope.n9": {
+"d": 0.74,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.n9.mp3",
+"t": "Nine."
+},
+"vane.rope.takeup": {
+"d": 0.86,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.takeup.mp3",
+"t": "Take her up."
+},
+"vane.rope.up": {
+"d": 1.2,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.rope.up.mp3",
+"t": "Up. Mags, up, get them..."
+},
 "vane_dw.greet.blunt": {
 "d": 4.27,
 "kind": "greet",
@@ -2545,6 +2720,13 @@ const VOICE_LINES = {
 "src": "voices/wearer/wearer.green.tam.mp3",
 "t": "Tammy, there's a gap here. Bring the little ones first.",
 "voiceOf": "tam"
+},
+"weaver.rope.echo": {
+"d": 3.48,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.rope.echo.mp3",
+"t": "I have watched you choose this four hundred and eleven times."
 },
 "weaver.voice.0": {
 "d": 2.23,

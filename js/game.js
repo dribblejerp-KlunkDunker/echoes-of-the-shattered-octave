@@ -1634,8 +1634,12 @@ function ending() {
   if (G.state === 'ending') return; G.state = 'ending'; G.runs = (G.runs || 0) + 1; G.flags.escaped = true; G.escapeTimer = 0; G.boreHold = 0; G.dead = false; hide('#death'); hide('#event'); closeModal();
   const p = G.player, f = G.flags; const names = G.ledger.length;
   const lines = [];
-  lines.push(`The mooring mast is taken by a tree. Mags cuts you free. Vane turns the Kestrel toward the town instead of away, and the children come up the rope four to a line${f.vane_told ? ', because you made him hear what was in his hold, and a man who has heard it does not fly away from children' : ''}.`);
-  lines.push(`On the last load the Governor is at the bottom, because he has been loading his town onto that rope for twenty minutes. The line snags in a crown. Vane counts to ten. Aldric Vance looks up and waves you on. "Do it," says Kaelen. Six feet of cut rope will hang from the drum for four days.`);
+  const rope = typeof ROPE45 !== 'undefined' ? (() => { try { return ROPE45.endLines(); } catch (e) { return []; } })() : [];
+  if (rope.length) lines.push(...rope);
+  else {
+    lines.push(`The mooring mast is taken by a tree. Mags cuts you free. Vane turns the Kestrel toward the town instead of away, and the children come up the rope four to a line${f.vane_told ? ', because you made him hear what was in his hold, and a man who has heard it does not fly away from children' : ''}.`);
+    lines.push(`On the last load the Governor is at the bottom, because he has been loading his town onto that rope for twenty minutes. The line snags in a crown. Vane counts to ten. Aldric Vance looks up and waves you on. "Do it," says Kaelen. Six feet of cut rope will hang from the drum for four days.`);
+  }
   if (f.hedge_answered) lines.push(`Behind you, where the thing that wore your voice burst, there is a patch of ground where no sound will carry for a day. You will hear your own name in the wrong mouth for the rest of your life, and you will know it is your fault, and you will be right.`);
   else if (f.hedge_silent && !((f.g44 | 0) >= 5 && (f.g44_gate | 0) >= 3)) lines.push(`At the Hedge, as the ship lifts, something speaks to the town in the voices of its dead and offers a way through. You said nothing when it spoke to you. You wonder, every night after, who answered.`);
   if (f.pim_safe) lines.push(`The Carders came up the rope first, because a boy whose hands have been hummed clean once already knows how to hold a line${f.pim_tended ? ', and because he asked for the stranger who did it different from Lyra, and would not go up until you nodded' : ''}. Nell Carder has his coat pockets full of mill-flour. It is the only Oakhaven anyone will carry away.`);

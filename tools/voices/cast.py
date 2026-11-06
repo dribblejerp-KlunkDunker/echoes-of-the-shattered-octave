@@ -38,6 +38,7 @@ CAST = {
     'sister':     dict(voice='bf_emma',    speed=0.9,  pitch=0,  lang='en-gb', fx=['hall']),
     'aldric_tube':dict(voice='bm_george',  speed=0.92, pitch=-2, lang='en-gb', fx=['radio', 'wood']),
     'pumpman':    dict(voice='bm_lewis',   speed=0.86, pitch=-2, lang='en-gb', fx=[('whisper', 0.55), 'hall']),
+    'engineer':   dict(voice='am_michael', speed=1.04, pitch=1,  lang='en-us', fx=['wood']),
     'davin':      dict(voice='bm_george',  speed=0.9,  pitch=0,  lang='en-gb', fx=['room']),
     'ada':        dict(voice='bf_isabella', speed=0.92, pitch=-1, lang='en-gb', fx=['outdoors']),
     'lyra_fortunate': dict(voice='af_heart', speed=0.72, pitch=-1, lang='en-us', fx=[('note', 174.0), 'gravel', 'hall']),

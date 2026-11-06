@@ -163,7 +163,8 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       n = 0; while ((f.g44_gate | 0) < 4 && n < 100) { T.step(1, 0.1); n++; }
       const ch = T.last(); out.chapel = /The Note stops/.test(ch.t) && /Drift-Kestrel/.test(ch.b) && f.g44_note_stopped;
       out.mute = !Audio_.master || Audio_.master.gain.value >= 0;
-      ch.c[0].f(); out.ending = G.state === 'ending' && !document.querySelector('#ending').classList.contains('hidden');
+      ch.c[0].f(); out.rope = typeof ROPE45 === 'undefined' || (ROPE45.stage() === 1 && /The line/.test(T.last().t)); if (typeof ROPE45 !== 'undefined') ROPE45.finish();
+      out.ending = out.rope && G.state === 'ending' && !document.querySelector('#ending').classList.contains('hidden');
       const txt = document.querySelector('#ending-text').textContent;
       out.endOrla = /with you on the Root under her/.test(txt) && !/Lyra sang Orla Hale down proper/.test(txt);
       out.endAda = /you shouted it with her/.test(txt) && /taken from the tail/.test(txt);

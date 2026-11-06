@@ -14,6 +14,18 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## Grab the Line, played (built 6 Nov; ROADMAP R9 item 2)
+
+Book One ch. 12 from the mud of the North Gate to the cut, straight after the Greening. The tests drive both branches, the jitter both ways, the Echo and a save at the drum. What they cannot judge is the rhythm, the count's pacing and whether looking matters. To reach it quickly: play the Greening through, or from the console set `G.flags.greening = true; G.flags.g44 = 5; G.escapeTimer = 300; G.maps.oakhaven = buildOakhaven(true)`, go to the North Gate, and call `ROPE45.begin()`.
+
+- **The line.** One card, then a choice: up to the drum, or stay at the foot with the Governor. Is it clear that both are fine?
+- **The drum.** Use the drum when the white marker crosses the gold window. Three good hauls to a load; off the beat is a third of a haul; Mags hauls slowly on her own so nobody is ever stuck. Does it feel like hauling or like a quick-time event? Is the beat (1.25 s) too fast or too slow? Does the SETTLING bar add tension?
+- **At the foot of the line.** Use the next person in the queue. Aldric loads them anyway. Is it clear you are helping, not required?
+- **Eighteen.** The jitter comes over the rail by the drum. You have eight seconds before Kaelen does it for you. Is it a fair fight in that space?
+- **The count.** Ten beats, 1.7 s each, and the only input is where you look and whether you hold on to the drum. Try holding the drum: the screen should go grey for the Echo and come back at nine. Is 1.7 s per beat right? Does the whispered count land?
+- **After.** The deck's coiled rope becomes six feet of cut rope at the drum, and stays that way in Part Three.
+- **The last load** follows the books check's fix (Lissa and Tobiah go up with Lyra). It still needs the author's ruling.
+
 ## The Greening, walked (built 6 Nov; ROADMAP R9 item 1)
 
 Book One ch. 11 as a played scene, from the winch-house to the Kestrel. The tests drive every stage headlessly, both branches at the square and all three answers at the gate. What they cannot judge is pacing, crowding on the narrow road, and whether the line reads as sixty people. To reach it quickly: play the Rite through, or from the console set `G.flags.greening = true; G.escapeTimer = 300; G.maps.oakhaven = buildOakhaven(true)` and go to the quarry.
