@@ -431,9 +431,19 @@ const ROPE45 = (function () {
       else if (s === 5) tickCount(dt);
     } catch (e) { warnOnce('tick' + s, e); }
   }
+  // the deck over a drowning town, not the ship's usual mist: green fog for the scene, the ship's own after it
+  const GREEN_FOG = [72, 96, 64], GREEN_AMB = 0.5;
+  function tint(m, on) {
+    if (!m || m.id !== DECK) return;
+    if (on && !m._r45fog) { m._r45fog = { c: m.fogColor, a: m.ambient }; m.fogColor = GREEN_FOG.slice(); m.ambient = GREEN_AMB; }
+    else if (!on && m._r45fog) { m.fogColor = m._r45fog.c; m.ambient = m._r45fog.a; m._r45fog = null; }
+    else return;
+    try { if (G.map === m && Engine.setMap) Engine.setMap(m); } catch (e) { /* cosmetic */ }
+  }
   function onLoad() {
     if (!hasG()) return;
     const m = G.map, s = stage();
+    if (m && m.id === DECK) tint(m, aboard());
     if (m && m.id === DECK && aboard()) stageDeck(m);
     if (m && m.id === DECK && s >= 7) for (const e of m.entities) if (e && e.sprite === 'p16k_rope') e.label = TX.ropeLabel;
     if (m && m.id === 'oakhaven' && s === 1) stageFoot(m);
