@@ -34,7 +34,7 @@ The full feature list. The [README](../README.md) has the short version, the pic
 
 - Dialogue in the Daggerfall manner, with tone choices (Polite / Normal / Blunt), topics and directions.
 - Songs: a magic system built on the Octave.
-- Quests: the main story, "The Rite" (its climax is the novel's: the procession, the needle, the Hold, the falling fifth, the Golems, Aldric's sixty seconds at the pumps), plus side quests. In one of them, Sable, the last Archivist of the Veil, asks you to gather names for the Bound Ledger. Reading a name back restores a Hollow, but it costs her a piece of herself, and your choice changes the ending.
+- Quests: the main story, "The Rite" (its climax is the novel's: the procession, the needle, the Hold, the falling fifth, the Golems, Aldric's sixty seconds at the pumps; then the Greening, walked: the corridor, Orla's tree and the North Gate), plus side quests. In one of them, Sable, the last Archivist of the Veil, asks you to gather names for the Bound Ledger. Reading a name back restores a Hollow, but it costs her a piece of herself, and your choice changes the ending.
 - Armour across five slots. Armour Rating softens hits, and heavy armour makes noise.
 - Weapons including swords, axe, mace, spear, steam-maul, glass-shot pistol and crossbow. Bronze, bolts and blunt weapons each work best against certain enemies.
 - Merchants who buy and sell. Prices shift with your Personality.

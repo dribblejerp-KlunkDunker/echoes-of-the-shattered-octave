@@ -604,7 +604,7 @@ const GREEN44 = (function () {
     if (s === 1) { ctx.fillStyle = '#7fe060'; ctx.fillText(TX.hudLanes, 160, Y); }
     else if (s === 2) { ctx.fillStyle = R.inGreen ? '#ff6a40' : '#7fe060'; ctx.fillText(R.inGreen ? TX.hudGreen : TX.hudCircle + ' · ' + lineN() * 5 + ' ' + TX.hudInLine + ((f.g44_lost | 0) ? ' · ' + f.g44_lost * 5 + ' ' + TX.hudLost : ''), 160, Y); }
     else if (s === 4 && f.g44_hold && !R.holdDone) { ctx.fillStyle = '#d9a441'; ctx.fillText(TX.hudSquare + ' · ' + Math.max(0, Math.ceil(R.hold)), 160, Y); }
-    else if (s === 5) { ctx.fillStyle = f.g44_shout === 'shout' && R.after < 0 && (f.g44_gate | 0) === 2 ? '#ff6a40' : '#9aa0b0'; ctx.fillText(f.g44_shout === 'shout' && R.after < 0 && (f.g44_gate | 0) === 2 ? TX.hudShout : TX.hudGate, 160, Y); }
+    else if (s === 5) { ctx.fillStyle = f.g44_shout === 'shout' && R.after < 0 && (f.g44_gate | 0) === 2 ? '#ff6a40' : '#e8ecf4'; ctx.fillText(f.g44_shout === 'shout' && R.after < 0 && (f.g44_gate | 0) === 2 ? TX.hudShout : TX.hudGate, 160, Y); }
     ctx.restore();
   }
   function tick(dt) {

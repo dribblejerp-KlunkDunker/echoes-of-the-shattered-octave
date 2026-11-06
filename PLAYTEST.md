@@ -14,6 +14,18 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## The Greening, walked (built 6 Nov; ROADMAP R9 item 1)
+
+Book One ch. 11 as a played scene, from the winch-house to the Kestrel. The tests drive every stage headlessly, both branches at the square and all three answers at the gate. What they cannot judge is pacing, crowding on the narrow road, and whether the line reads as sixty people. To reach it quickly: play the Rite through, or from the console set `G.flags.greening = true; G.escapeTimer = 300; G.maps.oakhaven = buildOakhaven(true)` and go to the quarry.
+
+- **The quarry and the town.** Two cards, then the gate seals behind you. Is the seal clear, or does it feel like a bug when you turn back?
+- **The lanes.** Follow Lyra and Kaelen south down the main road. The four pieces arrive as messages in the book's order. The baker's wife and the carter stand where you can look at them. Does the walk feel like a walk through a disaster, or like an escort?
+- **The corridor.** Lyra's circle walks north from the well-head at a slow pace with the line behind her. Use the people in doorways to bring them in. Three hounds come for the tail. Wander off and the green drains your health. The line moves at about 0.75 cells a second: too slow? The clock stands still while you are with the line. Does that remove all tension?
+- **The square.** Choose. With Lyra, follow her to Orla's door and go in. The harvest home is two Holds of the Pitch, and the fourth line has the narrowest band in the game. Is it fair? Is the second voice (only if you cut the Last Sheaf) clearly better than humming the Root? Holding the square is forty seconds of hounds at the line: dull or tense?
+- **The North Gate.** The crowd stands in the mud. The Hedge's voices come about five seconds apart, then the DON'T ANSWER IT card. Try all three answers. If you shout, three hounds come to the crowd. When the Note stops, every sound should drop out for two beats. Check it does on a real sound card, and that it comes back.
+- **The voices.** 27 new lines. The Hedge's are the Wearer wearing Tobin, Tam, Lyra, Davin and Ada. Davin's harvest home is spoken softly, not sung. Do the Hedge voices sound like the people, or like the Wearer?
+- **The end card** now tells the walk as you played it: Orla, the line and its losses, the gate.
+
 ## The Rite, from procession to pumps (built 5 Nov; ROADMAP R9 item 3)
 
 Book One ch. 9–10 as a played scene. The tests drive every stage headlessly; what they cannot judge is how it feels at a walking pace, how loud it is, and whether the words land on screen. To reach it quickly: a save with the coil taken to Kaelen (`coil_done`), or from the console set `G.flags.coil_done = G.flags.church_come = true` and go to Lyra's door on Cooper's Row.
