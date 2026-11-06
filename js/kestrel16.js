@@ -1230,6 +1230,7 @@ const KESTREL16 = (function () {
   // ---------------------------------------------------------------- per-frame (cheap): hum, Mags turning, closing
   function tick(dt) {
     if (!hasG() || !aboard()) { if (T.hum) stopSounds(); return; }
+    if (typeof ROPE45 !== 'undefined' && ROPE45.aboard()) return;   // Grab the Line is played on this deck before Part Three
     if (!cfg.on) { leaveShip(); return; }
     if (!shipExists()) { leaveShip(); return; }
     const lvl = humLevel();
@@ -1278,7 +1279,8 @@ const KESTREL16 = (function () {
         try {
           sanitize();
           if (id === DECK && G.maps && G.maps[DECK]) G.maps[DECK].music = mooring() === 'deepwoods' ? 'coda' : 'grove';
-          if (MAPS.indexOf(id) >= 0 && (!cfg.on || !shipExists())) { const L = landing(); id = L.map; pos = { x: L.x, y: L.y, dir: L.dir }; }   // switch off or a hostile save: you are on the ground
+          if (MAPS.indexOf(id) >= 0 && !(typeof ROPE45 !== 'undefined' && ROPE45.aboard()) && (!cfg.on || !shipExists())) {   // Grab the Line (js/rope45.js) is played on this deck before Part Three
+          const L = landing(); id = L.map; pos = { x: L.x, y: L.y, dir: L.dir }; }   // switch off or a hostile save: you are on the ground
         } catch (e) { warnOnce('pre', e); }
         const r = _lm.call(this, id, pos);
         try { onLoad(id); if (MAPS.indexOf(id) < 0) stopSounds(); } catch (e) { warnOnce('loadMap', e); }

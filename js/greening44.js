@@ -570,7 +570,7 @@ const GREEN44 = (function () {
     // the Pure Note stops: every sound drops out for two beats
     try { const mg = Audio_.master, ctx = Audio_.ctx; if (mg && ctx) { const v = mg.gain.value, t = ctx.currentTime; mg.gain.cancelScheduledValues(t); mg.gain.setValueAtTime(v, t); mg.gain.linearRampToValueAtTime(0, t + 0.08); mg.gain.setValueAtTime(0, t + 2.1); mg.gain.linearRampToValueAtTime(v, t + 2.6); } } catch (e) { warnOnce('note', e); }
     journal('main', TX.jGate);
-    card(TX.chapelTitle, TX.chapel, [{ t: TX.chapelGo, f: () => { setStage(6); try { ending(); } catch (e) { warnOnce('ending', e); } } }]);
+    card(TX.chapelTitle, TX.chapel, [{ t: TX.chapelGo, f: () => { if (typeof ROPE45 !== 'undefined' && ROPE45.stage() === 0) { try { ROPE45.begin(); return; } catch (e) { warnOnce('rope', e); } } setStage(6); try { ending(); } catch (e) { warnOnce('ending', e); } } }]);
   }
 
   // ================================================================ the end card's lines (game.js ending())
