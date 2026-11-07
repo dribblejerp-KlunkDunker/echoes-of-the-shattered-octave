@@ -153,7 +153,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const days = await page.evaluate(() => {
       const out = {}, f = G.flags;
       for (const k of ['davin_gone', 'pim_lured', 'church_come', 'rite_ready', 'rite_started', 'rooke_boots']) delete f[k];
-      const talkTo = (id, map, quiet) => { loadMap(map); G.state = 'play'; const e = G.ents.find((o) => o.id === id), q = NPCS[id].quest; if (quiet) NPCS[id].quest = () => null; try { talk(e); } finally { NPCS[id].quest = q; } const log = DLG.log.map((l) => l.t); closeModal(); G.state = 'play'; return log; };
+      const talkTo = (id, map, quiet) => { loadMap(map); G.state = 'play'; const e = G.ents.find((o) => o.id === id), q = NPCS[id].quest; if (quiet) NPCS[id].quest = () => null; try { const n0 = window.__ev.length; talk(e); const ev = window.__ev[window.__ev.length - 1]; if (window.__ev.length > n0 && ev && ev.t === 'A bell in earshot') { const c = ev.c.find((o) => /slate/.test(o.t)); if (c) c.f(); } } finally { NPCS[id].quest = q; } /* js/audit54.js: a bell in earshot asks first */ const log = DLG.log.map((l) => l.t); closeModal(); G.state = 'play'; return log; };
       const topicOf = (id, key) => { DLG.npc = NPCS[id]; DLG.log = []; askTopic(key); return DLG.log.map((l) => l.t).join(' '); };
       DLG.tone = 'polite'; G.day = 0; G.tod = 0.8; DAYS35.sync();
       out.d0 = { hetty: talkTo('hetty', 'tavern', true), rooke: talkTo('rooke', 'surgery'), boots: G.has('boots'), rumour: RUMOURS.some((r) => /^Davin Hale/.test(r)) };
@@ -165,7 +165,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       out.lured = !!f.pim_lured && /I went/.test(DAYS35.TX.pimLured);
       G.day = 4; G.tod = 0.5; window.__msgs.length = 0; DAYS35.sync();
       out.d4 = { church: !!f.church_come };
-      G.day = 5; G.tod = 7 / 24; DAYS35.sync();
+      G.day = 5; G.tod = 8 / 24; DAYS35.sync();   // after the hour js/church55.js holds it for
       out.d5 = { church: !!f.church_come, herald: window.__msgs.some((t) => /^At sunrise the Church comes up the Greenroot road/.test(t) && /Lyra Ashgrove, kept in the Church's protection/.test(t)), journal: G.journal.some((j) => /^The Church came up the Greenroot road/.test(j.text)) };
       loadMap('chapel'); G.state = 'play';
       out.chapel = G.ents.some((o) => o.id === 'ignatius' && !o.hidden);
@@ -180,7 +180,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(days.d2.gone && !days.d2.boots && days.d3.boots && /Davin Hale\'s boots/.test(days.d3.rooke.join(' ')) && !days.d3.lured, 'Davin dies on Hearthday evening; Rooke gives his boots from Massday morning');
     check(days.lured && /f\.pim_lured/.test(couriersSrc), 'Pim is lured at the Listening Hour on Massday, and he goes; Lyra brings him back');
     check(!days.d4.church && days.d5.church && days.d5.herald && days.d5.journal && days.chapel, 'the Church comes at sunrise on Dawnday, the warrant is read, and Ignatius is in the chapel');
-    check(/in the rubric/.test(days.lyra[0]) && /CAN'T TALK|NOT HERE|very fortunate/.test(days.lyra.join(' ')) && days.guards === 2 && days.base, 'Lyra is in the Church\'s protection: two Legionnaires at her door, and she answers on a slate (' + JSON.stringify(days.lyra.slice(0, 2)) + ')');
+    check(days.lyra.some((l) => /in the rubric/.test(l)) && /CAN'T TALK|NOT HERE|very fortunate/.test(days.lyra.join(' ')) && days.guards === 2 && days.base, 'Lyra is in the Church\'s protection: two Legionnaires at her door, and she answers on a slate (' + JSON.stringify(days.lyra.slice(0, 2)) + ')');
 
     // ---- Halder Wick's table is unanswered (ch. 15, l. 4435), and nobody on the Cloister pegs is a Wick
     const halder = await page.evaluate(() => {
