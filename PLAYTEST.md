@@ -18,6 +18,15 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## The lived-in world, wave 1: Oakhaven's people (built 7 Nov; ROADMAP R10 W1)
+
+Walk Oakhaven at different hours: early morning (6–8), mid-morning, noon (the bench by the square), afternoon, dusk (19:00, when they go in), the evening (the Boar's door, the window-lamps), and the dead hour (only the watch). Use REST to jump; everyone snaps to where the new hour puts them. Talk to anyone in the street.
+
+- **Busy or crowded?** About 20 people are out by day. Does the square feel alive without feeling like a fair? Is anyone in the way?
+- **Whispers.** Overheard lines come every 11 seconds or so at most, from whoever is nearest. Too many? Too few?
+- **The walks.** They take real routes round the houses. Does anyone look stuck, or walk oddly (into a fence, a crate, a tree)?
+- **The jobs.** Selling, sweeping, hammering, picking, scrubbing, hanging washing, raking, playing. Can you tell what each person is doing from how they move?
+- **At home time** they walk to their door and vanish. Does it read as going in?
 ## The Reedside Conservatory (built 7 Nov; ROADMAP R5 #7)
 
 In Oakhaven, the Conservatory Reading Room (Ilse Brennan's library, south of the chapel). The new door is in its east wall. Through the reed-hall to the reed orchard. Parts One and Two.

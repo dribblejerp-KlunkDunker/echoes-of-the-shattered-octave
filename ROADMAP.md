@@ -222,6 +222,20 @@ Gate: each scene is playable start to finish, closes cleanly, and changes lines,
 
 ---
 
+### R10 — The lived-in world (from 7 Nov 2026)
+The owner's ask (7 Nov): every cave, dungeon, house, building, open place, town and city should look lived in and full of life, with people going about their days and nights: buying, selling, chatting, exploring, building, decorating, improving. Ruled the same day: people walk routes by the hour; towns first, then interiors, then the wilds; they say short lines, all with French; one wave at a time, alternating with one roadmap item.
+
+The engine is `js/life60.js`. A place hands it a roster (`LIFE60.add(mapId, roster, {gone})`); each person has stops by the hour and a job at each stop you can see (sell, sweep, carry, hammer, reach, pick, scrub, knead, hang, sit, watch, play, rake, chat). Between stops they walk a real route round anything solid. At home time they walk to their door and go in. You can talk to them (a greeting and one question of their own) and overhear them as you pass. They are transient (never saved), snap to the hour when time jumps, count as witnesses, and are switched off by `GFX.life = false`. The people and their lines are [PROPOSED]; they have roles, not names, so nothing collides with canon.
+
+Gate for each wave: every stop is open ground and reachable; every hour of the day is covered; nobody walks through a wall; the streets empty at night as canon says; nothing is saved; nobody is there once the story empties the place; every line has French; the place's existing scenes still pass.
+- [x] **W1. Oakhaven** (7 Nov, `js/life60-oakhaven.js`, `test/life60.test.js`). 27 people under the Hush, so every overheard line is a whisper: Tull's boy selling loaves in the square, the dyer's wife at her vats and her washing line, a washerwoman, Vettle's wife at the chandler's and a goodwife of Cooper's Row gossiping in the square, a carpenter mending the shuttered house's shutters, a thatcher hanging harvest garlands on the Greenhall and the Boar, orchard hands picking and pressing, the wool-factor's man carrying bales, a fuller, a hay-carter, a cooper's journeyman, a water-carrier, an old man on a bench, a girl selling reed-baskets, a farmer's wife bringing eggs from the clearing, a woman from the Hollow, three children playing Hush; in the evening two drinkers at the Boar's door and Vettle's lad trimming the window-lamps; at night the North Gate watch, a watchman walking the inner bank, and a young mother walking a baby that will not settle. All gone after the Greening.
+- [ ] **W2. Whisper-Grove.** The harvest-houses, the Moot, the press, the market; the Grove's own night.
+- [ ] **W3. Port Cantabile.** The harbour and the cay: dockers, sail-menders, fishwives, the custom-house.
+- [ ] **W4. The small places.** The Flume landing, the Lowrings, the Bell Yard, the Hollow, the clearing.
+- [ ] **W5. Interiors.** People at work inside the houses, shops, the Boar, the chapel, the Greenhall; more things on shelves and tables everywhere.
+- [ ] **W6. The wilds, caves, crypts and dungeons.** Travellers on the roads, scavengers, surveyors, the remains of people who lived there. Each one checked against the books first.
+- [ ] **Afterwards: the week.** Market days, Nullday's quiet, festival days from World Bible Vol VII, so each day of the week looks a little different.
+
 ## Next expansion: art, animation, simulation and tools
 
 The checklist below is the authoritative scope for the new request. The older completed checklists later in this document describe the previous baseline, **not** completion of these enhanced versions. `[~]` means a partial implementation or pilot; `[x]` requires implementation and verification. No production republish is included.
