@@ -11,9 +11,22 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
   - Wethercombe is past the Downs stile.
   - The Flume Road runs from Oakhaven's east Hedge door.
   - The Hollow is through the tannery's back door; the Carders' house is the blue door halfway down its lane.
+  - Lyra's stone is behind the old cooperage, against the east Hedge.
   - The Governor's house is the north-row door beside the Greenhall. The standing-stones are through the second gap in the clearing's east hedge.
 
 ---
+
+## Ash in the Hold, played (built 7 Nov; ROADMAP R9 item 8)
+
+Book One ch. 13. Finish Part Two and press "Begin Part Three": the night aboard is offered first. The tests drive both ways of starting, every beat, both Vanes, the seams found and missed, both Tobiahs, the beam with and without the coat, and saves in the hold and during the seams. What they cannot judge:
+
+- **Is the night long enough to feel?** Nothing forces you to the hospital or Hetty; the hold or the bedroll moves you on to the fourth hour. Does it need a nudge?
+- **The seams.** Five green seams, 140 seconds, a timer on screen. Are they findable on the dark deck without being obvious?
+- **Hob's card.** It is the book's scene nearly whole. Too long to read in one go?
+
+## The forty-one nights (built 7 Nov; ROADMAP R9 item 7)
+
+Book One ch. 1 and 3. The stone is behind the old cooperage, against the east Hedge (north-east of Old Tam's bench). Be within six paces of it at the dead hour after the first evening (game day 1, before 05:00), and again the next night. Questions: is anyone going to be there at 2 a.m. on the first night without being told? Should a rumour or a dream point at it? Is "tell Kaelen" worth having when it only changes lines?
 
 ## The water-meadow, played (built 6 Nov; ROADMAP R9 item 4)
 
