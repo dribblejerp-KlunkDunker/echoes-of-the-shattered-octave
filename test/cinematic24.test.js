@@ -161,6 +161,39 @@ const untilDone = (page, ms) => page.waitForFunction(() => !CINEMATIC24.running(
       pass('setting off gives the old intro; the Options rows toggle and persist');
       await page.close();
     }
+    // ---------------------------------------------------------------- the mix, and the column on the road
+    {
+      const { page, errors } = await boot(browser, { r3d: true });
+      const mix = await page.evaluate(() => {
+        const C = CINEMATIC24, out = { bed: C.BED, envLen: C.ENV.length, rows: [] };
+        let t0 = 0;
+        for (const sh of C.SHOTS) {
+          for (const ln of sh.lines || []) {
+            const l = VOICE_ACT.LINES[ln.id], d = (l && l.d) || 3, mt = t0 + ln.at, v = C.LINE_DB[ln.id];
+            let m = -60; for (let i = Math.floor(mt - 0.5); i <= Math.ceil(mt + d + 1); i++) if (C.ENV[i] != null) m = Math.max(m, C.ENV[i]);
+            const g = Math.min(C.DUCK, Math.max(0.05, Math.pow(10, (v - m - 12 + 2.5) / 20)));
+            // the score through its <audio> at 0.62 x g, the voice through the sfx bus at 1.5 x master 0.55
+            out.rows.push({ id: ln.id, has: v != null && !!l, under: (v - 1.67) - (m - 4.15 + 20 * Math.log10(g)) });
+          }
+          t0 += sh.dur;
+        }
+        return out;
+      });
+      assert.ok(mix.bed < 1, 'the score sits below full between lines (' + mix.bed + ')');
+      assert.ok(Math.abs(mix.envLen - 105) <= 2, 'the loudness map covers the whole score (' + mix.envLen + ' s)');
+      for (const r of mix.rows) { assert.ok(r.has, 'loudness and length known for ' + r.id); assert.ok(r.under >= 10, r.id + ': the score is at least 10 dB under the voice (' + r.under.toFixed(1) + ')'); }
+      await newGame(page, 6);
+      await page.waitForFunction(() => CINEMATIC24.shot() === 4, null, { timeout: 60000 });
+      await page.evaluate(() => { CINEMATIC24.speed = 1.5; window.__bad = []; window.__n = 0; window.__iv = setInterval(() => { if (CINEMATIC24.shot() !== 4) return; for (const e of G.map.entities) if (/^(proctor|herald|flambeau|p12_censer)$/.test(e.sprite || '') && !e.hidden) { window.__n++; const c = G.map.get(Math.floor(e.x), Math.floor(e.y)); if (c || e.y < 13.15 || e.y > 14.85) window.__bad.push(e.sprite + '@' + e.x.toFixed(1) + ',' + e.y.toFixed(1)); } }, 100); });
+      await page.waitForFunction(() => CINEMATIC24.shot() >= 5, null, { timeout: 60000 });
+      const col = await page.evaluate(() => { clearInterval(window.__iv); return { n: window.__n, bad: window.__bad.slice(0, 5), cam: CINEMATIC24.SHOTS[4].from.y }; });
+      assert.ok(col.n > 100, 'the column was sampled (' + col.n + ')');
+      assert.deepEqual(col.bad, [], 'every figure of the column that is drawn keeps to the cobbles, none inside a wall');
+      assert.equal(col.cam, 14, 'the camera stands on the road\'s middle line');
+      assert.deepEqual(errors, [], 'no page errors');
+      await page.close();
+      pass('the score sits under every voiced line; the Synod column walks the middle of the road');
+    }
     // ---------------------------------------------------------------- Reduce motion, and the CPU raycaster, at 3x
     for (const o of [{ r3d: true, reduce: true, name: 'Reduce motion' }, { r3d: false, name: 'CPU raycaster (no R3D)' }]) {
       const { page, errors } = await boot(browser, o);
