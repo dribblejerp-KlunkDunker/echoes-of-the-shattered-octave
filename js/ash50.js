@@ -218,6 +218,22 @@ const ASH50 = (function () {
       d[y * 64 + x] = (255 << 24) | ((b | 0) << 16) | ((g | 0) << 8) | (r | 0);
     }
     Engine.addTexture('p50_reach', d);
+    // the hold's overhead: the underside of the deck planks, tarred seams between them, one squared deck-beam across
+    const h = new Uint32Array(64 * 64);
+    const OAK = [[30, 20, 13], [42, 28, 17], [54, 37, 23], [66, 46, 29], [80, 57, 36], [96, 70, 44]];
+    const put = (x, y, c) => { h[y * 64 + x] = (255 << 24) | (c[2] << 16) | (c[1] << 8) | c[0]; };
+    for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+      const row = y & 7, plank = y >> 3, n = ((x * 7 + plank * 31 + ((x >> 3) * 13)) % 11) / 11;
+      let k = 2 + (n > 0.62 ? 1 : 0) - (row === 6 ? 1 : 0) + (plank % 3 === 1 ? -1 : 0);
+      if (row === 7) k = 0;                                                         // the tarred seam
+      if (x >= 26 && x <= 37) {                                                      // the beam, lamp-lit along one arris
+        k = x === 26 || x === 37 ? 0 : x === 27 ? 5 : x === 28 ? 4 : x >= 35 ? 1 : 3 - (((y * 5 + x) % 13) === 0 ? 1 : 0);
+      } else if ((x === 25 || x === 38) && row !== 7) k = Math.max(0, k - 2);        // the beam's shadow on the planks
+      put(x, y, OAK[Math.max(0, Math.min(5, k))]);
+    }
+    for (let p = 0; p < 8; p++) for (const tx of [30, 33]) { put(tx, p * 8 + 3, OAK[0]); put(tx + 1, p * 8 + 3, OAK[1]); }   // treenails into the beam
+    for (let p = 0; p < 8; p++) put((p * 23 + 9) % 24, p * 8 + 4, OAK[0]);                  // a nail-head per plank
+    Engine.addTexture('p50_deckhead', h);
   }
 
   // ================================================================ the maps (new: always built). Ship-local layout as js/kestrel16.js
@@ -261,6 +277,8 @@ const ASH50 = (function () {
   function buildHold() {
     const m = new GameMap(HOLD, TX.holdName, 14, 8, { floor: 'p16k_deck', ceil: 't_wood', fogDist: 12, fogColor: [0, 0, 0], ambient: 0.16, music: 'inside', danger: 0, spawn: { x: HOLD_AT.arrive[0], y: HOLD_AT.arrive[1], dir: PI } });
     m.border('t_wood');
+    // overhead is the deck, not a town ceiling: claim the per-cell ceiling before js/ceilings.js gives it plaster and beams
+    m.ceilTextures = ['t_wood', 'p50_deckhead']; m._ceilCellsAll = new Uint8Array(m.w * m.h).fill(1); m._ceilAssigned = true;
     for (const [x, y, s] of [[1.6, 1.6, 0.85], [2.6, 1.5, 0.8], [3.6, 1.6, 0.85], [1.6, 3.0, 0.8], [1.5, 4.4, 0.85], [1.6, 5.8, 0.8], [2.8, 6.2, 0.85], [4.2, 6.3, 0.8], [7.6, 1.5, 0.85], [8.8, 1.6, 0.8], [8.4, 6.3, 0.85], [3.2, 3.6, 0.8]]) m.deco('crates', x, y, { radius: 0.4, scale: s });
     m.deco('crates', ...HOLD_AT.crate, { radius: 0.42, scale: 0.85, use: 'p50_crate', label: TX.crate });
     m.deco('p50_beam', ...HOLD_AT.beam, { solid: false, scale: 1.0, radius: 0.1, yOff: -0.35, use: 'p50_beam', label: TX.beam });
