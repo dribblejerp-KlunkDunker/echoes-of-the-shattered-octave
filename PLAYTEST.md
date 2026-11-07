@@ -13,6 +13,7 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
   - The Hollow is through the tannery's back door; the Carders' house is the blue door halfway down its lane.
   - Lyra's stone is behind the old cooperage, against the east Hedge.
   - Depot Three is in the quarry (down the headframe ladder in the clearing). The slag-slope is its back wall.
+  - The Conservatory's reed-hall and orchard are through the east wall of the Conservatory Reading Room.
   - The Governor's house is the north-row door beside the Greenhall. The standing-stones are through the second gap in the clearing's east hedge.
 
 ---
@@ -26,6 +27,13 @@ Walk Oakhaven at different hours: early morning (6–8), mid-morning, noon (the 
 - **The walks.** They take real routes round the houses. Does anyone look stuck, or walk oddly (into a fence, a crate, a tree)?
 - **The jobs.** Selling, sweeping, hammering, picking, scrubbing, hanging washing, raking, playing. Can you tell what each person is doing from how they move?
 - **At home time** they walk to their door and vanish. Does it read as going in?
+## The Reedside Conservatory (built 7 Nov; ROADMAP R5 #7)
+
+In Oakhaven, the Conservatory Reading Room (Ilse Brennan's library, south of the chapel). The new door is in its east wall. Through the reed-hall to the reed orchard. Parts One and Two.
+
+- **Does it feel like a school?** Forty students, down from four hundred: four figures and a lot of empty pews. Too empty, or the point?
+- **The youngest student's tending note** is a Hold the Pitch at 174. Is it clear that you are singing it with her?
+- **The orchard** is mostly to look at: the hollow, the tally-board, the flagstone. Is there enough to do there?
 
 Notes:
 

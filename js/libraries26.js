@@ -251,7 +251,7 @@ const LIBRARIES = (function () {
       m.deco('hearth', W - 2.2, H - 2.0, { radius: 0.3, scale: 0.8, glow: 0.05, label: 'The east stove. The duty-scribe lit this one first.' });
       pileOn(7.5, 3.3); pileOn(10.5, 5.6);
     } else if (libId === 'lib_moot') {
-      for (let y = 4; y < H - 3; y += 2) { m.deco('bench', W / 2 - 2, y + 0.5, { radius: 0.35, scale: 0.7, label: 'A bench. The town sat here to decide things.' }); m.deco('bench', W / 2 + 2, y + 0.5, { radius: 0.35, scale: 0.7, label: 'A bench, its cushion gone grey.' }); }
+      for (let y = 4; y < H - 3; y += 2) { m.deco('p9p_pew', W / 2 - 2, y + 0.5, { radius: 0.35, scale: 0.7, label: 'A bench. The town sat here to decide things.' }); m.deco('p9p_pew', W / 2 + 2, y + 0.5, { radius: 0.35, scale: 0.7, label: 'A bench, its cushion gone grey.' }); }
       m.deco('lamp', 3.5, H - 2.5, { radius: 0.12, scale: 0.7, glow: 0, label: 'A dry lamp' });
       m.deco('lamp', W - 3.5, H - 2.5, { radius: 0.12, scale: 0.7, glow: 0, label: 'A dry lamp' });
       pileOn(W / 2 - 2, 4.5);
