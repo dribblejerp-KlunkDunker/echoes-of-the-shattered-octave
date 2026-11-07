@@ -10,9 +10,35 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
   - The Watch Downs are west of the clearing.
   - Wethercombe is past the Downs stile.
   - The Flume Road runs from Oakhaven's east Hedge door.
-  - The Hollow is through the tannery's back door; the Carders' house is the blue door on the north row.
+  - The Hollow is through the tannery's back door; the Carders' house is the blue door halfway down its lane.
+  - The Governor's house is the north-row door beside the Greenhall. The standing-stones are through the second gap in the clearing's east hedge.
 
 ---
+
+## The water-meadow, played (built 6 Nov; ROADMAP R9 item 4)
+
+Book One ch. 6. Be in the town's low corner (Oakhaven, the tannery or the Hollow) on Massday as 19:00 comes; REST to Massday evening, then walk to the Hollow. The tests drive both crossings, the duel with good and cracked whistles, the run, Tam's walk and a save in the meadow. What they cannot judge:
+
+- **Is the meadow readable at dusk?** Pim and the shape at the trees should be visible from the culvert. The light is the game's own dusk; the shape glows faintly.
+- **The whistle duel.** Three Hold the Pitch rounds of the falling fifth, an octave up. Does watching it learn (a sixth, a wide fifth, exactly right) land?
+- **The run.** About nine seconds of hounds before Tam comes out. Too long, too short? It is meant to be survivable, not won.
+- **Tam's walk.** The hounds veer past you to him. Does it read as him choosing it?
+
+## Hearthday at the Boar & Dulcimer, played (built 6 Nov; ROADMAP R9 item 5)
+
+Book One ch. 4. Be in the Boar on Hearthday (day 2) as 20:00 comes; Davin is by the hearth from noon, Kaelen and Lyra from seven. The tests drive every choice, both ways of drawing the hounds, a save mid-fight and missing it. What they cannot judge:
+
+- **The count.** Ten beats at 1.15 s; "try to stop him" with Strength or Personality 55+ holds it back about two beats. Is the count tense or slow?
+- **The fight.** Five hounds through the gaps; Vane and Kaelen take three on a fixed clock, and two are left when the card asks who will be the loudest thing. Is there enough to do with a sword before the card?
+- **The aftermath card.** It is long. Is it worth reading in full?
+
+## The standing-stones (built 6 Nov; ROADMAP R5 #6)
+
+The second gap in the clearing's east hedge, north of the Greenroot road's. Use the hollow at the foot of the tallest stone, then hold a note at each stone sunwise. Questions: is "sunwise from the Root" clear without a map? Are the hounds a threat to the count, or just noise? Are five-second holds at seven pitches (174 to 741 Hz) too much in a row?
+
+## The Governor's house (built 6 Nov; ROADMAP R5 #5)
+
+The north-row door beside the Greenhall, Parts One and Two only. Upstairs first, then talk to Aldric in the Greenhall, then the coat goes to the hut's step in the clearing. Questions: does the house feel lived in by one man? Is the coat errand findable without the logbook? The dressing-table is the reveal; does it land before or after the novel's "Da. Your hair."?
 
 ## Grab the Line, played (built 6 Nov; ROADMAP R9 item 2)
 
