@@ -10,9 +10,48 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
   - The Watch Downs are west of the clearing.
   - Wethercombe is past the Downs stile.
   - The Flume Road runs from Oakhaven's east Hedge door.
-  - The Hollow is through the tannery's back door; the Carders' house is the blue door on the north row.
+  - The Hollow is through the tannery's back door; the Carders' house is the blue door halfway down its lane.
+  - Lyra's stone is behind the old cooperage, against the east Hedge.
+  - The Governor's house is the north-row door beside the Greenhall. The standing-stones are through the second gap in the clearing's east hedge.
 
 ---
+
+## Ash in the Hold, played (built 7 Nov; ROADMAP R9 item 8)
+
+Book One ch. 13. Finish Part Two and press "Begin Part Three": the night aboard is offered first. The tests drive both ways of starting, every beat, both Vanes, the seams found and missed, both Tobiahs, the beam with and without the coat, and saves in the hold and during the seams. What they cannot judge:
+
+- **Is the night long enough to feel?** Nothing forces you to the hospital or Hetty; the hold or the bedroll moves you on to the fourth hour. Does it need a nudge?
+- **The seams.** Five green seams, 140 seconds, a timer on screen. Are they findable on the dark deck without being obvious?
+- **Hob's card.** It is the book's scene nearly whole. Too long to read in one go?
+
+## The forty-one nights (built 7 Nov; ROADMAP R9 item 7)
+
+Book One ch. 1 and 3. The stone is behind the old cooperage, against the east Hedge (north-east of Old Tam's bench). Be within six paces of it at the dead hour after the first evening (game day 1, before 05:00), and again the next night. Questions: is anyone going to be there at 2 a.m. on the first night without being told? Should a rumour or a dream point at it? Is "tell Kaelen" worth having when it only changes lines?
+
+## The water-meadow, played (built 6 Nov; ROADMAP R9 item 4)
+
+Book One ch. 6. Be in the town's low corner (Oakhaven, the tannery or the Hollow) on Massday as 19:00 comes; REST to Massday evening, then walk to the Hollow. The tests drive both crossings, the duel with good and cracked whistles, the run, Tam's walk and a save in the meadow. What they cannot judge:
+
+- **Is the meadow readable at dusk?** Pim and the shape at the trees should be visible from the culvert. The light is the game's own dusk; the shape glows faintly.
+- **The whistle duel.** Three Hold the Pitch rounds of the falling fifth, an octave up. Does watching it learn (a sixth, a wide fifth, exactly right) land?
+- **The run.** About nine seconds of hounds before Tam comes out. Too long, too short? It is meant to be survivable, not won.
+- **Tam's walk.** The hounds veer past you to him. Does it read as him choosing it?
+
+## Hearthday at the Boar & Dulcimer, played (built 6 Nov; ROADMAP R9 item 5)
+
+Book One ch. 4. Be in the Boar on Hearthday (day 2) as 20:00 comes; Davin is by the hearth from noon, Kaelen and Lyra from seven. The tests drive every choice, both ways of drawing the hounds, a save mid-fight and missing it. What they cannot judge:
+
+- **The count.** Ten beats at 1.15 s; "try to stop him" with Strength or Personality 55+ holds it back about two beats. Is the count tense or slow?
+- **The fight.** Five hounds through the gaps; Vane and Kaelen take three on a fixed clock, and two are left when the card asks who will be the loudest thing. Is there enough to do with a sword before the card?
+- **The aftermath card.** It is long. Is it worth reading in full?
+
+## The standing-stones (built 6 Nov; ROADMAP R5 #6)
+
+The second gap in the clearing's east hedge, north of the Greenroot road's. Use the hollow at the foot of the tallest stone, then hold a note at each stone sunwise. Questions: is "sunwise from the Root" clear without a map? Are the hounds a threat to the count, or just noise? Are five-second holds at seven pitches (174 to 741 Hz) too much in a row?
+
+## The Governor's house (built 6 Nov; ROADMAP R5 #5)
+
+The north-row door beside the Greenhall, Parts One and Two only. Upstairs first, then talk to Aldric in the Greenhall, then the coat goes to the hut's step in the clearing. Questions: does the house feel lived in by one man? Is the coat errand findable without the logbook? The dressing-table is the reveal; does it land before or after the novel's "Da. Your hair."?
 
 ## Grab the Line, played (built 6 Nov; ROADMAP R9 item 2)
 
