@@ -196,10 +196,12 @@ Gate: each scene is playable start to finish, closes cleanly, and changes lines,
 - [x] **11. Manifest: "Read you three" and "filed"** (ch. 16). S. Done (7 Nov, `js/manifest53.js`): once Sable has joined, the first time down into the Kestrel's hold: the tags from memory, one thousand three hundred and forty-two, carrier OK-114; Corwin Aye, Mirren Salk, Annet Sowerby; "You are not lost. You are filed." "No, love. It's the clerk."
 - [x] **12. The slate and the bells: the Legionnaire audit** (ch. 5, 7). M. Done (7 Nov, `js/audit54.js`), all [PROPOSED]: with a Legionnaire in earshot, talking with Kaelen, Lyra, Tobiah or Vane in Part One asks first: say it aloud, write it on the slate, or not here. What the bells hear (that, a fight or a body at Depot Three, a voice at the gate) comes back at the Factor's morning walk: her prices up 15% each, a second guard at Depot Three, and a head start for her eye at the Rite (`js/rite43.js`). Nothing fails.
 - [x] **13. The Church comes up the road** (ch. 7). S–M. Done (7 Nov, `js/church55.js`): in Oakhaven at sunrise on Dawnday, the gatehouse with Harrow; the column through the North Gate and down to the square (the Inquisitor and the censer, the choir four abreast, Flambeaux); a noise is seen and heard; the book's warrant; two Legionnaires to Lyra; the choir into the chapel, and the Pure Note over the town until the Rite; the well-house: "It let go because they held" (the glassed are asked what the Church calls them). `js/days35.js` holds its message for that hour and keeps it if you miss it.
-- [ ] **14–25: the rest of the ranked table.** Includes:
-  - Cargo night;
-  - Aldric's, Orla's and Tobiah's arcs;
-  - the eight men at the pumps;
+- [x] **14. Cargo night** (ch. 8). M. Done (7 Nov, `js/cargo56.js`): the Kestrel's mast-ladder on Driftday night: Stall the Clerk ([PROPOSED] as play: three rounds of talk while Mags counts twenty; twice wrong and Vane takes over), the child's boot by the third crate, twelve, "They do carry on, don't they", the harvest-house at Whisper-Grove; at the dead hour Pim at the third crate, WG-41,004, the engineer's six and eighteen, "Annet. You're going home." (Vane, or you); the long gun over Depot Three's slag-slope in the dark. The engineer is unnamed (Pennick is a Book Two person).
+- [x] **18. Tobiah's arc, the rest of it** (ch. 5). S. Done (7 Nov, `js/tobiah57.js`): the signed book (a Blade is asked to sign it, the wrong man; an archivist is asked whether the Office keeps everything [PROPOSED]); the Stage Nine kit after the Church comes, "Do you think she knows yet, sir?". The dawn on the Kestrel was already in `js/ash50.js`.
+- [x] **19. The eight men at the pumps** (ch. 19, 24). S. Done (7 Nov, `js/pumps58.js`): the Arbiter's voice in the Malting's archive, through your glass or Kaelen's, "third shelf, grey spine"; the carriage page, ticks beside the names you said at the Rite [PROPOSED], all eight into the ledger.
+- [ ] **15–17, 20–25: the rest of the ranked table.** Includes:
+  - the Malting's front door and the queue;
+  - Aldric's and Orla's arcs (much of Aldric's is in the Governor's house, R5 #5);
   - the cutter chase;
   - the Grafters' round;
   - the Prologue and Echo I as extras.

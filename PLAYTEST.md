@@ -17,6 +17,16 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## Cargo night, Tobiah's book, the eight men at the pumps (built 7 Nov; ROADMAP R9 items 14, 18, 19)
+
+Cargo night: use the Kestrel's mast-ladder in Oakhaven (east, by the crates) on Driftday (game day 6) after 19:00, and again at the dead hour after (before 05:00). The long gun goes over the slag-slope at Depot Three's back wall. Tobiah: talk to him on the pump floor in the quarry, first as a Blade or an archivist, and again after Dawnday. The pumps: in Part Three, go down the archive steps in the Malting (the door in the clerks' hall).
+
+- **Stall the Clerk.** Three rounds, a topic a round. Is it obvious which topic turns his eye to the bow, or too obvious?
+- **Two visits to one ladder** on one night. Will players think to climb it twice?
+- **The archive voice** fires as you come down the steps. Is it clear where the grey-spined box is (the right-hand wall, between the shelves)?
+
+Notes:
+
 ## The Church comes up the road, played (built 7 Nov; ROADMAP R9 item 13)
 
 Book One ch. 7. Be in Oakhaven (the streets, not a house) between 06:00 and 07:30 on Dawnday, game day 5; REST to Dawnday morning first. The tests drive the gatehouse and staying where you are, a noise while the column passes, the warrant, the well-house with and without the glassed calling, arriving within the hour, and missing it. What they cannot judge:
