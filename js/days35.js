@@ -61,7 +61,9 @@ const DAYS35 = (function () {
     const f = G.flags;
     if (!f.davin_gone && after(...WHEN.davin)) f.davin_gone = true;
     if (!f.pim_lured && after(...WHEN.lure)) f.pim_lured = true;
-    if (!f.church_come && (f.rite_ready || f.rite_started || after(...WHEN.church))) {
+    // js/church55.js holds this for the hour in which you can still be there for it
+    const held = () => { try { return typeof CHURCH55 !== 'undefined' && CHURCH55.holds(); } catch (e) { return false; } };
+    if (!f.church_come && (f.rite_ready || f.rite_started || after(...WHEN.church)) && !held()) {
       f.church_come = true;
       if (!f.rite_started && !f.greening && !f.escaped && !guest()) {
         say(f.rite_ready && !after(...WHEN.church) ? TX.churchNow : TX.church, 'warn', 12000);

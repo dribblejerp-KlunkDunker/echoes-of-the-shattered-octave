@@ -12,9 +12,40 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
   - The Flume Road runs from Oakhaven's east Hedge door.
   - The Hollow is through the tannery's back door; the Carders' house is the blue door halfway down its lane.
   - Lyra's stone is behind the old cooperage, against the east Hedge.
+  - Depot Three is in the quarry (down the headframe ladder in the clearing). The slag-slope is its back wall.
   - The Governor's house is the north-row door beside the Greenhall. The standing-stones are through the second gap in the clearing's east hedge.
 
 ---
+
+## The Church comes up the road, played (built 7 Nov; ROADMAP R9 item 13)
+
+Book One ch. 7. Be in Oakhaven (the streets, not a house) between 06:00 and 07:30 on Dawnday, game day 5; REST to Dawnday morning first. The tests drive the gatehouse and staying where you are, a noise while the column passes, the warrant, the well-house with and without the glassed calling, arriving within the hour, and missing it. What they cannot judge:
+
+- **Does the column read as thirty voices?** It stages sixteen of the choir, six Flambeaux, the herald and the Inquisitor. From the gatehouse the road is short: is it visible enough before it turns into the square?
+- **The Pure Note over the town.** It hums faintly whenever you are in the streets, from now until the Rite. Too quiet to notice, or too much after an hour?
+- **The well-house.** Kaelen and the Inquisitor stand at the east side of the square until 08:00. Will a player find them?
+
+Notes:
+
+## Tamsin Reed and "Tell Mam" (built 7 Nov; ROADMAP R9 item 10)
+
+Book One ch. 5 and 7. The Legionnaire with the reed grille guards Depot Three in the quarry. Come within three paces. The glassed calling can take it by the bell; an archivist can read it its name; anyone can fight it. The head of the slag-slope is at the depot's back wall (G to send a body over). Then: the next morning, Kaelen's hut; the Factor in the Greenhall; in Part Three, Sable in Whisper-Grove with the cracked core, and the woman at the window on the Bell Yard. The tests drive every choice. What they cannot judge:
+
+- **Dragging her to the slag-slope.** The body system was built for patrols. Is it clear that the slope is where she goes?
+- **The dawn at Kaelen's hut** only happens the first morning after (05:00 to 09:00). Is that too narrow?
+- **The Bell Yard ending.** Three choices, all quiet. Does saying her name land?
+
+Notes:
+
+## The slate and the bells (built 7 Nov; ROADMAP R9 item 12) and Manifest (R9 item 11)
+
+The slate: in Part One, talk to Kaelen, Lyra, Tobiah or Vane with a Legionnaire within seven paces and in sight (Lyra's door guards count, from Dawnday). The Factor's morning walk is 06:00 to 09:00 on a later day, in Oakhaven, the clearing, the quarry or the Greenhall. Manifest: once Sable has joined in Whisper-Grove, go down into the Kestrel's hold.
+
+- **Is the bell card annoying?** It asks once per person per day. Lyra's guards stand in her house, so every visit to her in custody asks. Too often?
+- **Is writing on the slate too free?** It costs ten minutes and nothing else. Should saying it aloud give something writing does not?
+- **Manifest** is five cards of the book's text with one choice. Is it too much reading in one sitting, or right for this scene?
+
+Notes:
 
 ## Ash in the Hold, played (built 7 Nov; ROADMAP R9 item 8)
 

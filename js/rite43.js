@@ -481,7 +481,9 @@ const RITE43 = (function () {
     R.needle -= dt;
     if (R.needle <= 0) {
       const seen = R.seen >= NEEDLE_SEEN; F().r43_seen = seen; if (seen) F().lyra_voice_worse = true;
-      setStage(4); R.bolt = 0; R.watched = 0; R.q = 0; R.kaelenAt = 'drum';
+      setStage(4); R.bolt = 0; R.q = 0; R.kaelenAt = 'drum';
+      // what the Factor's bells told her before Hearthday: her eye is partly on the collar walk already (js/audit54.js)
+      R.watched = 0; try { if (typeof AUDIT54 !== 'undefined') R.watched = Math.max(0, Number(AUDIT54.ritePenalty()) || 0); } catch (e) { R.watched = 0; }
       card(TX.needleTitle, seen ? TX.needleSeen : TX.needleGood, [{ t: TX.needleGo, f: () => card(TX.holdTitle, TX.hold, [{ t: TX.holdGo, f: () => { stageVault(G.map); say(TX.holdHint, 'warn', 8000); } }]) }]);
     }
   }
