@@ -18,6 +18,17 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## Orla's harvest home (built 8 Nov; ROADMAP R9 item 17)
+
+Bring Davin's boots to Orla Hale in the Hollow (after Hearthday night), then speak to her again. Come back on each of the next three days for a line of The Last Sheaf. Try one lesson with the shutters open. Then, at the Greening, go with Lyra to Orla's tree.
+
+- **"Was he any good?"** Does each answer feel right?
+- **The lessons.** One a day: too slow? The fourth line is meant to be hard. Is it hard enough, or too hard?
+- **The open shutters.** Is the Hedge singing the line back to you enough of a warning?
+- **The Song itself.** Sing it somewhere dangerous. Do the hounds come?
+
+Notes:
+
 ## The lived-in world, wave 3: Port Cantabile's harbour (built 8 Nov; ROADMAP R10 W3)
 
 Start "A trip to Port Cantabile" from the Extras menu. Walk the Lantern Yard and the Long Mole through the day; be at the Harbour office at noon, and on the Yard at dusk.
