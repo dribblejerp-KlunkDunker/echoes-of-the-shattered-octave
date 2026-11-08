@@ -64,10 +64,17 @@ const frCheck = async (page, file, mod, label) => {
       const y = G.maps.p61_yard; out.front = y.get(27, 9).portal.map === 'malting' && y.get(27, 14).portal.map === 'malting' && y.get(0, 9).portal.map === 'whispergrove';
       T.yard(); out.people = LIFE60.people(G.map).filter((e) => !e.hidden).length;
       out.board = G.ents.some((e) => e.sprite === 'sign' && /RELIEF STATION — REACH DISPLACED/.test(e.p61Look || ''));
+      const b = T.who('bettis'); out.yardBettis = b && !b.hidden && b.sprite === 'hollow' && NPCS.p60_q_bettis.name === 'A Hollow with a basket';
+      const x0 = b.x; let far = 0; for (let i = 0; i < 80; i++) { T.run(0.1); far = Math.max(far, Math.abs(b.x - x0)); } out.carries = far > 2;
+      // a save that never saw the yard: Bettis is by the press, as before
+      const save = JSON.parse(JSON.stringify(window.__base)); restoreGame(save); G.flags.part3 = true; loadMap('malting'); T.run(0.2);
+      out.legacy = !G.ents.find((e) => e.id === 'bettis').hidden;
       return out;
     });
     check(r.wg && r.mw && r.mf && r.front, 'the Cloister road door and the Malting\'s west door open on the queue-yard; the yard has the front door and the freight door at the kiln end');
     check(r.people >= 20 && r.board, 'under the shelter, the queue (' + r.people + ') and the board: RELIEF STATION — REACH DISPLACED');
+    check(r.yardBettis && r.carries, 'Bettis Renn is in the yard, a Hollow carrying baskets (Book One ch. 18)');
+    check(r.legacy, 'a save that never saw the yard still finds Bettis by the press');
 
     // ---- the first sight and the plan
     r = await page.evaluate(() => {
@@ -86,17 +93,23 @@ const frCheck = async (page, file, mod, label) => {
       out.hall = T.last().t === 'The clerks\' hall' && /vinegar/.test(T.last().b) && /You look <i>dreadful<\/i>/.test(T.last().b);
       T.pick(/Go on/); out.desk = /It is not a trap. It is a desk/.test(T.last().b) && /Would you show me a pressing/.test(T.last().b);
       T.pick(/Go with them/); out.press = /Is it long, sir\? Only they said there's food after/.test(T.last().b) && G.ledger.some((l) => l.name === 'Ansel Hay');
-      T.pick(/Go on/); out.seen = /Put one back/.test(T.last().b); T.pick(/Stay with her/);
-      out.where = G.mapId === 'malting' && G.map.entities.filter((e) => e.room === 'press' && !e.dead).length === 0;
-      T.run(0.5); out.drawn = T.hallProctors().every((e) => e.passive && e.state === 'passive');
+      T.pick(/Go on/); out.seen = /Put one back/.test(T.last().b) && /carrying baskets on my way in/.test(T.last().b) && /Go on, then, my dear/.test(T.last().b) && /They bring Bettis Renn in from the yard/.test(T.last().b);
+      T.pick(/Stay with her/); T.run(0.5);
+      const staff = G.ents.filter((e) => e.kind === 'enemy' && e._p61watch && !e.dead);
+      out.where = G.mapId === 'malting' && staff.length === 2 && staff.every((e) => e.passive && e.state === 'passive');
+      const q = G.ents.find((e) => e.id === 'quist'), b = G.ents.find((e) => e.id === 'bettis');
+      out.quist = q && q.x > 21 && q.y > 10; out.bettis = b && !b.hidden && G.flags.p61_bettis_in === 1;
+      out.drawn = T.hallProctors().every((e) => e.passive && e.state === 'passive');
       const press = G.ents.find((e) => e.use === 'press'); useDeco(press); out.card = T.last().t === 'An Office hand-press'; T.pick(/Unbolt/);
-      T.run(0.5); out.wake = G.flags.press_taken && T.hallProctors().every((e) => !e.passive && e.state !== 'passive');
+      T.run(0.5); out.wake = G.flags.press_taken && T.hallProctors().every((e) => !e.passive && e.state !== 'passive') && staff.every((e) => !e.passive && e.state === 'chase');
+      out.quistHome = Math.abs(q.x - 25.5) < 0.1 && Math.abs(q.y - 4.2) < 0.1;
       return out;
     });
     check(r.hall && r.desk, 'in at the front: the clerks\' hall, the vinegar, Quist\'s desk, "Would you show me a pressing?"');
-    check(r.press && r.seen, 'Pressing Room I: Ansel Hay, eight seconds of 741 (into the ledger), and "Put one back"');
-    check(r.where && r.drawn, 'you end in the press room with her: the staff walked him out, and the hall is looking at Sable');
-    check(r.card && r.wake, 'take the press, and the bell wakes the hall');
+    check(r.press && r.seen, 'Pressing Room I: Ansel Hay, eight seconds of 741 (into the ledger); "Put one back"; Quist: "Go on, then, my dear"; they bring Bettis in from the yard');
+    check(r.where && r.quist && r.bettis, 'you end in the press room with her: the two staff are back and watching, Quist is there, and Bettis Renn has been brought in');
+    check(r.drawn, 'the hall is looking at Sable');
+    check(r.card && r.wake && r.quistHome, 'take the press, and the bell wakes the hall and the staff; Quist goes back to his office');
 
     // ---- (b) the kiln end
     r = await page.evaluate(() => {
@@ -105,10 +118,12 @@ const frCheck = async (page, file, mod, label) => {
       out.at = G.mapId === 'malting' && Math.abs(Engine.cam.x - 28.2) < 0.6 && Math.abs(Engine.cam.y - 15.5) < 0.6;
       out.guarded = G.map.entities.filter((e) => e.room === 'press' && !e.dead).length === 2;
       T.run(0.3); out.drawn = T.hallProctors().every((e) => e.passive);
+      const b = G.ents.find((e) => e.id === 'bettis'); out.bettis = b && !b.hidden && window.__msgs.some((m) => /Sable has asked for her/.test(m));
       return out;
     });
     check(r.card && r.at, 'the kiln end: Mags in the freight doorway, and in you go by the freight door');
     check(r.guarded && r.drawn, 'the press room is still guarded; the hall is looking at Sable');
+    check(r.bettis, 'in the press room, they bring Bettis Renn in from the yard: Sable has asked for her');
 
     // ---- (c) the queue
     r = await page.evaluate(() => {

@@ -77,10 +77,14 @@ const MALTING61 = (function () {
     desk: S('He does not threaten her. He sits on the edge of a desk and talks to her for eleven minutes in a soft reasonable voice, and does not once raise it: relief work, the transit warrant, the Legions\' cores that burn out at eleven a month per garrison.<br><br>"You never once wrote down an alternative, my dear. You wrote down the queue."<br><br>"There is a desk free at the second window. You may have it back this afternoon. Nobody will ask you to attend a pressing; I know you never could. I am aware that it sounds like a trap. It is not a trap. It is a desk."<br><br>Sable looks at the door at the far end, with the brass plate that says PRESSING ROOM I.<br><br>"Registrar-General," she says. "Would you show me a pressing?"'),
     withThem: S('Go with them.'),
     pressTitle: S('Pressing Room I'),
-    pressAnsel: S('The old malt-store: whitewashed, clean, a drain in the floor, a smell of hot brass. On the stool, a man of about thirty in a Reach smock, with his hands on his knees.<br><br>"Name." "Ansel Hay." "Age." "Thirty-two." "Trade." "Ah — I did the sluices. On the Flume." He swallows. "Is it long, sir? Only they said there\'s food after."<br><br>"There\'s food after," agrees the clerk. "Deep breath, and hold it." And strikes the lever.<br><br>Seven hundred and forty-one hertz. Eight seconds: surprise; a kind of straining, as though he were trying to remember something urgently; and at four, five, six, he begins to look <i>relieved</i>. At seven he stops looking like anybody.<br><br>They walk him out through the far door into the yard, where he will be given food, because a Hollow eats if the food is put where its loop goes. About a minute and a half. She costed it at ninety seconds in the pamphlet.'),
-    pressOther: S('The old malt-store: whitewashed, clean, a drain in the floor, a smell of hot brass. On the stool is somebody from the end of the queue, a carter in a smock, and the clerk asks the three questions kindly, and strikes the lever.<br><br>Seven hundred and forty-one hertz. Eight seconds. They walk the carter out through the far door into the yard, where there is food after.<br><br>Ansel Hay is not on the stool. Ansel Hay is in the orchard.'),
+    pressAnsel: S('The old malt-store: whitewashed, clean, a drain in the floor, a smell of hot brass. On the stool, a man of about thirty in a Reach smock, with his hands on his knees.<br><br>"Name." "Ansel Hay." "Age." "Thirty-two." "Trade." "Ah — I did the sluices. On the Flume." He swallows. "Is it long, sir? Only they said there\'s food after."<br><br>"There\'s food after," agrees the clerk. "Deep breath, and hold it." And strikes the lever.<br><br>Seven hundred and forty-one hertz. Eight seconds: surprise; a kind of straining, as though he were trying to remember something urgently; and at four, five, six, he begins to look <i>relieved</i>. At seven he stops looking like anybody.<br><br>"Gently now," says the clerk to the second man, and they take him by the elbows and walk him out through the far door into the yard, where he will be given food, because a Hollow eats if the food is put where its loop goes. About a minute and a half. She costed it at ninety seconds in the pamphlet.'),
+    pressOther: S('The old malt-store: whitewashed, clean, a drain in the floor, a smell of hot brass. On the stool is somebody from the end of the queue, a carter in a smock, and the clerk asks the three questions kindly, and strikes the lever.<br><br>Seven hundred and forty-one hertz. Eight seconds. "Gently now," says the clerk to the second man, and they walk the carter out through the far door into the yard, where there is food after.<br><br>Ansel Hay is not on the stool. Ansel Hay is in the orchard.'),
     seenTitle: S('"You have seen it"'),
-    seen: S('"Now," says Pellam Quist, at her shoulder, not unkindly. "You have seen it."<br><br>"Put one back," says Sable.<br><br>She is already walking to the shelves along the west wall, where the day\'s cores stand in their racks with their tags. "Bettis Renn. Forty thousand one hundred and two. She is in this building."'),
+    seen: S('"Now," says Pellam Quist, at her shoulder, not unkindly. "You have seen it."<br><br>"Put one back," says Sable.<br><br>"I beg your—"<br><br>"The press took it. The press can return it." She is already walking to the shelves along the west wall, where the day\'s cores stand in their racks with their tags. "Bettis Renn. Forty thousand one hundred and two. She is in the yard of this building. I saw her carrying baskets on my way in." She finds it: WG-40,102, in a clerk\'s hand, on a string.<br><br>Quist looks at her for a long moment over the half-moon spectacles. "You have never seen it done the other way," he says.<br><br>"No."<br><br>"No," he agrees, softly. "Nor has anyone else alive. Go on, then, my dear. I have wanted to know for thirty years, and I was never going to be the one who tried it."<br><br>They bring Bettis Renn in from the yard.'),
+    // Bettis in the yard; brought in to the press room
+    bettisName: S('A Hollow with a basket'),
+    bettisYard: S('A woman of about forty in a Whisper-Grove apron three years filthy, carrying a basket from one end of the yard to the other. When she sets it down her hands go on making one small gesture: setting something down, and picking it up again.'),
+    bettisIn: S('Two of the Malting\'s staff come in from the yard with a Hollow woman between them, a basket still on her arm. Sable has asked for her. "Bettis Renn," somebody says, reading the tag. "Forty thousand one hundred and two."'),
     stay: S('Stay with her.'),
     // (b) the kiln end
     kilnTitle: S('The kiln end'),
@@ -222,6 +226,9 @@ const MALTING61 = (function () {
     R.push({ key: 'q_clerk', name: TX.clerkName, sprite: 'p61_clerk', home: [12.6, 9.45], exit: [26.3, 9.5],
       day: [{ from: 0, to: 24, job: 'carry', at: [12.6, 9.45], to2: [25.6, 9.45] }], greet: TX.clerkGreet, barks: TX.clerkBarks,
       away: () => !!F().p61_noticed });
+    R.push({ key: 'q_bettis', name: TX.bettisName, sprite: 'hollow', home: [21.4, 13.9], exit: [26.3, 14.5],
+      day: [{ from: 0, to: 24, job: 'carry', at: [21.4, 13.9], to2: [25.4, 15.6] }], greet: TX.bettisYard, barks: [],
+      away: () => bettisIn() });
     R.push({ key: 'q_ticket', name: TX.ticketName, sprite: 'p61_clerk', home: [25.6, 12.1], day: [{ from: 0, to: 24, job: 'sell', at: [25.6, 12.1], face: -PI / 2 }], greet: TX.ticketGreet, barks: [TX.ticketBark] });
     return R;
   }
@@ -258,11 +265,32 @@ const MALTING61 = (function () {
   }
 
   // ================================================================ the Malting, as Sable leaves it
+  // Book One ch. 18: Bettis Renn is "in the yard of this building ... carrying baskets" until they bring her in.
+  // Saves that never saw the yard keep her where she always was, by the press.
+  const bettisDone = () => { const f = F(); return !!(f.bettis_awake || f.bettis_kept_awake || f.bettis_put_back); };
+  const bettisIn = () => { const f = F(); return !!(f.p61_bettis_in || bettisDone() || f.press_taken); };
+  function bringBettis(quiet) {
+    const f = F(); if (bettisIn()) return; f.p61_bettis_in = 1;
+    if (!quiet) say(TX.bettisIn, 'voice', 7000);
+  }
+  const pressStaff = (e) => e && e.kind === 'enemy' && (e.room === 'press' || e._p61watch);
   const hallProctor = (e) => e && e.kind === 'enemy' && e.type === 'proctor' && !e.room && !e.requires && e.x >= 10 && e.x <= 19.9 && e.y < 15;
   function syncMalting() {
     if (!hasG() || G.mapId !== 'malting' || !G.map) return;
     const f = F(), drawn = !!f.p61 && !f.p61_noticed && !f.malting_alarm;
+    const story = !!(f.part3 && f.wg_plan && f.p61_seen) && !f.press_taken;
+    // went in without choosing a half: the plan happened anyway, and Sable walked in the front
+    if (story && !f.p61) f.p61 = 2;
+    // in the press room (by any door) once Sable is in the building: they bring Bettis Renn in from the yard
+    if (story && f.p61 && !bettisIn() && Engine.cam.x >= 21 && Engine.cam.x < 29 && Engine.cam.y >= 10) bringBettis(false);
+    const watch = f.p61 === 1 && !f.malting_alarm && !f.press_taken;   // (a): the staff are back, watching; Quist is with her
     for (const e of G.ents) {
+      if (e && e.id === 'bettis' && e.kind === 'npc') e.hidden = (f.p61_seen && !bettisIn()) || !!f.bettis_kept_awake;
+      if (e && e.id === 'quist' && e.kind === 'npc') { if (watch && !e._p61moved) { e._p61home = [e.x, e.y]; e.x = 24.6; e.y = 16.2; e._p61moved = true; } else if (!watch && e._p61moved) { e.x = e._p61home[0]; e.y = e._p61home[1]; e._p61moved = false; } }
+      if (pressStaff(e) && !e.dead && e._p61watch) {
+        if (watch) { e.passive = true; e.state = 'passive'; }
+        else { e.passive = false; e.state = 'chase'; e.alertT = 6; e._p61watch = false; e.room = 'press'; }
+      }
       if (hallProctor(e) && !e.dead) {
         if (drawn) { e.passive = true; e.state = 'passive'; e._p61drawn = true; }
         else if (e._p61drawn) { e.passive = false; e.state = 'chase'; e.alertT = 6; e._p61drawn = false; }
@@ -271,9 +299,13 @@ const MALTING61 = (function () {
       if (f.p61_noticed && !f.press_taken && e && e.kind === 'enemy' && e.requires === 'malting_alarm' && !e.dead && !e._p61up) { e.hidden = false; e.state = 'chase'; e.alertT = 6; e._p61up = true; }
     }
   }
-  // (a) the two staff walk the pressed man out through the far door: the press room is empty but for the press
-  function staffOut() {
-    try { for (const e of G.maps.malting.entities) if (e && e.kind === 'enemy' && e.room === 'press' && !e.dead) { e.dead = true; e.hidden = true; e.solid = false; e._p61out = true; } } catch (e) { warnOnce('staff', e); }
+  // (a) Book One ch. 18: the two staff walk the pressed man out through the far door into the yard, and come back with
+  // Bettis Renn; Quist stays. They stand and watch while Quist is there (not guarding the press: the bell wakes them)
+  function staffWatch() {
+    try {
+      for (const e of G.maps.malting.entities) if (e && e.kind === 'enemy' && e.room === 'press' && !e.dead) { e._p61watch = true; e.room = 'press_watch'; e.passive = true; e.state = 'passive'; }
+    } catch (e) { warnOnce('staff', e); }
+    bringBettis(true);
   }
 
   // ================================================================ the scenes
@@ -315,7 +347,7 @@ const MALTING61 = (function () {
     if (ansel) { F().p61_ansel = 1; try { if (!G.ledger.some((l) => l && l.name === 'Ansel Hay')) G.ledger.push({ name: 'Ansel Hay', where: 'the Malting, Pressing Room I', day: G.day }); } catch (e) { warnOnce('ledger', e); } }
     try { journal('main', ansel ? TX.jFront : TX.jFrontOther); } catch (e) { /* none */ }
     showEvent(TX.pressTitle, ansel ? TX.pressAnsel : TX.pressOther, [{ t: TX.goOn, f: () => showEvent(TX.seenTitle, TX.seen, [{ t: TX.stay, f: () => {
-      staffOut();
+      staffWatch();
       try { loadMap('malting', { x: 22.6, y: 16.5, dir: PI / 2 }); G.state = 'play'; } catch (e) { warnOnce('front', e); }
     } }]) }]);
   }
@@ -362,6 +394,6 @@ const MALTING61 = (function () {
   }
   try { wire(); } catch (e) { console.warn('malting61 failed to wire', e); }
 
-  return { TX, TEXTS, Q, YARD, seats, roster, buildYard, syncDoors, syncMalting, enterYard, planCard, front, kiln, queueHalf, tellOne, notice, toldCount, NOTICE };
+  return { TX, TEXTS, Q, YARD, bettisIn, bringBettis, seats, roster, buildYard, syncDoors, syncMalting, enterYard, planCard, front, kiln, queueHalf, tellOne, notice, toldCount, NOTICE };
 })();
 if (typeof window !== 'undefined') window.MALTING61 = MALTING61;
