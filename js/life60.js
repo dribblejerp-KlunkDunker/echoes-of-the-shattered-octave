@@ -35,7 +35,7 @@ const LIFE60 = (function () {
 
   const PLACES = {};        // mapId -> { roster, opts }
   const SPEED = 1.05;       // cells a second, walking
-  const BARK_NEAR = 3.6, BARK_GAP = 11, BARK_OWN = 45;
+  const BARK_NEAR = 3.6, BARK_GAP = 11, BARK_OWN = 45, ARRIVE_QUIET = 5;
   const TX = { topicWork: S('What are you doing?'), topicPlace: S('How are things here?') };
 
   // ================================================================ a private random stream (the game's rolls stay untouched)
@@ -189,6 +189,7 @@ const LIFE60 = (function () {
   // put everyone where the hour puts them
   function snap(m) {
     const P = PLACES[m.id]; if (!P) return;
+    lastBark = Math.max(lastBark, clock - BARK_GAP + ARRIVE_QUIET);   // nobody speaks the instant you arrive or wake
     const h = hour();
     for (const e of people(m)) {
       const p = P.byKey[e._life]; if (!p) continue;

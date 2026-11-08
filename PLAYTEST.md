@@ -18,6 +18,16 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## The lived-in world, wave 2: Whisper-Grove's Hollows (built 8 Nov; ROADMAP R10 W2)
+
+Walk Whisper-Grove by day, at dusk (18:00, when they drift into the Sunken Court) and at night. Look for the book's three: the woman in the wool coat walking between the third pillar and the basin; the two men at the corner of the colonnade (north of the court, by the Malting); the young man washing a plate by the south-west pool.
+
+- **Do they read as Hollows?** Slow, repeating, not looking at you.
+- **The dusk drift.** Do they reach the court in a believable way, like leaves, not like a march?
+- **The Office feeder.** He appears with his cart at dawn and dusk. Too much? Too little?
+
+Notes:
+
 ## The Malting's front door and the queue (built 7 Nov; ROADMAP R9 item 15)
 
 In Part Three, once Sable has joined, go through the Malting door on Whisper-Grove's Cloister road: it now opens on the queue-yard. Pick a half from Vane's plan. To try the queue, choose "Stay under the shelter" and talk to the people on the benches.

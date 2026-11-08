@@ -130,7 +130,7 @@ const frCheck = async (page, file, mod, label) => {
       G.flags.greening = true; T.oak(10); out.gone = LIFE60.people(G.map).length === 0 && !G.ents.some((e) => e._lifeProp);
       delete G.flags.greening; T.oak(10); out.back = LIFE60.people(G.map).length > 20;
       GFX.life = false; T.oak(10); out.off = LIFE60.people(G.map).length === 0; GFX.life = true; T.oak(10); out.on = LIFE60.people(G.map).length > 20;
-      loadMap('whispergrove'); out.otherMap = LIFE60.people(G.map).length === 0;
+      loadMap('greenhall'); out.otherMap = LIFE60.people(G.map).length === 0 && !LIFE60.people(G.map).some((e) => /^p60_(tullboy|dyer|carpenter)$/.test(e.id));
       return out;
     });
     check(r.unsaved, 'nothing of theirs goes into a save');
