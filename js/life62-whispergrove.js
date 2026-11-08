@@ -36,6 +36,7 @@ const LIFE62_WG = (function () {
       LIFE60.variant('hollow', 'p62_hollow_a', 30, 0.55, 0.92);    // a good brown wool
       LIFE60.variant('hollow', 'p62_hollow_b', 205, 0.45, 0.9);    // a faded blue
       LIFE60.variant('hollow', 'p62_hollow_c', 95, 0.35, 0.85);    // green, furred at the shoulders
+      if (Engine.sprites.townsman) LIFE60.variant('townsman', 'p61_clerk', 220, 0.22, 0.6);   // the feeder wears Office grey
     } catch (e) { /* the plain Hollow will do */ }
   }
 
@@ -129,12 +130,12 @@ const LIFE62_WG = (function () {
       barks: [S('The Office feeder, setting down a loaf: "There. And there. And there."')] },
   ];
 
-  try { paint(); if (typeof LIFE60 !== 'undefined') LIFE60.add('whispergrove', R, { gone: () => false }); } catch (e) { console.warn('life62-whispergrove failed to register', e); }
+  try { if (typeof LIFE60 !== 'undefined') LIFE60.add('whispergrove', R, { gone: () => false }); } catch (e) { console.warn('life62-whispergrove failed to register', e); }
   // the variants can only be painted once the Hollow sprite exists: paint again whenever the city is staged
   try {
     if (typeof window !== 'undefined' && typeof window.loadMap === 'function') {
       const _l = window.loadMap;
-      window.loadMap = function () { try { paint(); } catch (e) { /* plain */ } return _l.apply(this, arguments); };
+      window.loadMap = function (id) { try { if (id === 'whispergrove') paint(); } catch (e) { /* plain */ } return _l.apply(this, arguments); };   // only for the city: see js/malting61.js on the texture atlas
     }
   } catch (e) { /* none */ }
   return { TEXTS, ROSTER: R, paint };
