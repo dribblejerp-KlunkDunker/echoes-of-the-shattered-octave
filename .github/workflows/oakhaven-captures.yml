@@ -1,0 +1,66 @@
+name: Oakhaven gate captures
+on:
+  push:
+    branches: [graphics/oakhaven-benchmark]
+    paths:
+      - '.github/workflows/oakhaven-captures.yml'
+      - 'tools/capture-oakhaven-gate.cjs'
+      - 'js/**'
+      - 'index.html'
+      - 'test/oakhaven-gate-frame.unit.test.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: oakhaven-captures-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  capture:
+    if: github.ref == 'refs/heads/graphics/oakhaven-benchmark'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: 22
+      - name: Prepare output and run unit checks
+        run: |
+          mkdir -p artifacts/oakhaven-gate
+          node --check js/oakhaven-gate-frame.js
+          node --check tools/capture-oakhaven-gate.cjs
+          node test/oakhaven-gate-frame.unit.test.cjs > artifacts/oakhaven-gate/unit-results.txt 2>&1
+      - name: Install isolated browser tooling
+        run: |
+          npm install --prefix "$RUNNER_TEMP/oak-browser" --no-package-lock playwright
+          node "$RUNNER_TEMP/oak-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Capture actual Oakhaven scene
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/oak-browser/node_modules/playwright
+          PREVIEW_URL: http://127.0.0.1:8000
+          SHOT_DIR: artifacts/oakhaven-gate
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 > artifacts/oakhaven-gate/server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent "$PREVIEW_URL/index.html" > /dev/null; then break; fi
+            sleep 1
+          done
+          curl --fail --silent "$PREVIEW_URL/index.html" > /dev/null
+          node tools/capture-oakhaven-gate.cjs
+      - name: Upload captures and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: oakhaven-gate-${{ github.sha }}
+          path: artifacts/oakhaven-gate/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Write review reminder
+        if: always()
+        run: |
+          echo '## Oakhaven capture checkpoint' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Download the capture artifact. A green job means automated checks passed; visual quality, walking clearance, portal/save behavior and hardware performance are not accepted automatically.' >> "$GITHUB_STEP_SUMMARY"
