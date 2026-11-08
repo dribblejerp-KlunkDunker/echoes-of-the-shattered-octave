@@ -18,6 +18,16 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## The lived-in world, wave 3: Port Cantabile's harbour (built 8 Nov; ROADMAP R10 W3)
+
+Start "A trip to Port Cantabile" from the Extras menu. Walk the Lantern Yard and the Long Mole through the day; be at the Harbour office at noon, and on the Yard at dusk.
+
+- **The Yard and the Mole.** Do they feel busy? Is anyone in your way on the Mole?
+- **The Mole-bell.** When it rings, everyone should stand still and say nothing until the harbour has counted. Does that land?
+- **Hesper's children.** Too many? Too loud?
+
+Notes:
+
 ## Aldric's arc: the Greenhall on Rootday, and the signing (built 8 Nov; ROADMAP R9 item 16)
 
 On a new game, meet Kaelen on the first day (Nullday). On Rootday from eight in the morning, go into the Greenhall: you come in behind him. Try staying when the Factor goes, and on another run, going out with her. Then on Driftday at dusk (17:00 to 20:00), go into the Greenhall again for the signing.
