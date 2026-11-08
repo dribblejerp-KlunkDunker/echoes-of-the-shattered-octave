@@ -111,7 +111,8 @@ const LIFE60 = (function () {
   function grid(m) {
     if (grids[m.id] && grids[m.id].m === m) return grids[m.id].g;
     const g = new Uint8Array(m.w * m.h);
-    for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) { const c = m.get(x, y); g[y * m.w + x] = c ? 1 : 0; }
+    const P = PLACES[m.id], walk = P && P.opts && P.opts.walk;   // a place can say which ground its people keep to (a quay, not the sea)
+    for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) { const c = m.get(x, y); g[y * m.w + x] = c ? 1 : (walk && !walk(m, x, y) ? 1 : 0); }
     for (const e of m.entities || []) {
       if (!e || e.transient || e.kind !== 'deco' || e.solid === false || !(e.radius >= 0.3)) continue;
       const x = Math.floor(e.x), y = Math.floor(e.y); if (x >= 0 && y >= 0 && x < m.w && y < m.h) g[y * m.w + x] = 1;
@@ -309,6 +310,7 @@ const LIFE60 = (function () {
   // ================================================================ tick and wiring
   function paused() {
     try { if (typeof CHURCH55 !== 'undefined' && CHURCH55.stage() === 1 && G.mapId === 'oakhaven') return true; } catch (e) { /* none */ }
+    try { const P = PLACES[G.mapId]; if (P && P.opts && P.opts.pause && P.opts.pause()) return true; } catch (e) { /* none */ }
     return false;
   }
   function tick(dt) {
