@@ -15,10 +15,10 @@
 - **Working the queue.** Kept: sleeves loves the minigame.
 - **Sable's closing line.** Kept.
 
-## Still open
+- **Oakhaven's people in the queue** (the dyer's wife, the hay-carter, Vettle's wife, the young mother and others), four days after the Greening. Approved.
+- **By the kiln end or from the queue**, the staff bring Bettis in from the yard when you reach the press room, because Sable has asked for her. Approved.
 
-1. Oakhaven's people in the queue (the dyer's wife, the hay-carter, Vettle's wife, the young mother and others), four days after the Greening. [PROPOSED]
-2. If you go in by the kiln end or from the queue, the staff bring Bettis in from the yard when you reach the press room, because Sable has asked for her. The book only shows the front half. [PROPOSED]
+Nothing in this phase is still open.
 
 ## Every line
 
