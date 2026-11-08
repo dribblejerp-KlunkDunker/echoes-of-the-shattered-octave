@@ -230,6 +230,9 @@ const LIFE60 = (function () {
       if (stepAlong(e, dt)) e.hidden = true;
       return;
     }
+    if (e._leaving) {   // back again (a place can send someone away for a while: a visit, a shift): out of the way they went
+      e._leaving = false; e._fast = 1; e._stop = null; e._path = null; e.hidden = false; e.x = p.exit[0]; e.y = p.exit[1];
+    }
     const s = stopAt(p, h);
     if (s !== e._stop) {   // a new stop: come out of the door if at home, and set off
       const was = e._stop; e._stop = s; e._leg = 0;
