@@ -72,6 +72,7 @@ const frCheck = async (page, file, mod, label) => {
       out.fail = G.flags.p65_lesson === 2 && window.__msgs.some((m) => /It took me a year/.test(m)) && /One line a day/.test(T.q().text) && window.__pitch.width < 80;
       G.day = 7; window.__score = 0.8; T.choose(T.q(), /Learn the next line/); await new Promise((r) => setTimeout(r, 30)); T.pick(/Close the shutters/); await new Promise((r) => setTimeout(r, 30));
       out.held = G.flags.p65_lesson === 3 && G.player.songs.includes('sheaf') && G.flags.g44_knows_sheaf === true && /it's good to know there's two/.test(T.last().b);
+      { const b = T.last().b, all = ORLA65.TEXTS.join('|'); out.words = /though the spring come late/.test(b) && /for the sheaf's gone home/.test(b) && /That last one's for going down to/.test(b) && /creak: <i>then it's over the hill where the stubble runs gold/.test(all) && /<i>and hold it, and hold it, till the sheaf's in the fold/.test(all); }
       out.after = !T.q() || !/Learn the next line/.test(JSON.stringify(T.q()));
       // the Song
       const snap = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(snap); out.saved = G.player.songs.includes('sheaf') && !!SONGS.sheaf;
@@ -86,6 +87,7 @@ const frCheck = async (page, file, mod, label) => {
     check(r.l2, 'sing with the shutters open and the Hedge sings the line back to you');
     check(r.l3offer && r.fail, 'the fourth line: the narrowest band; it slips, "It took me a year", and not again today');
     check(r.held, 'hold it, and you have all of The Last Sheaf: the Song, and the Greening\'s second voice');
+    check(r.words, 'the whole song: the third and fourth lines in the lessons, and the two verses after (ruled 8 Nov: write the rest)');
     check(r.after && r.saved && r.sung, 'the Song is kept in a save and sung at full voice');
 
     r = await page.evaluate(() => {

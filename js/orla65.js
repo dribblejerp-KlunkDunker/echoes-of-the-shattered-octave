@@ -52,13 +52,13 @@ const ORLA65 = (function () {
     l1Hint: S('Up a little, down a little, and home. Low, so it stays in the room.'),
     l1Done: S('"There. That\'s the start of it. Davin had the start of it at four years old." She shuts her eyes. "Tomorrow, the third line."'),
     l2Title: S('The harvest home: the third line'),
-    l2Offer: S('"The third line goes up where you don\'t expect it, like a field going over a hill." She sings it under her breath, and the roots in the floor creak.'),
+    l2Offer: S('"The third line goes up where you don\'t expect it, like a field going over a hill." She sings it under her breath, and the roots in the floor creak: <i>then it\'s over the hill where the stubble runs gold.</i>'),
     l2Hint: S('It goes over the hill. Follow it up, and bring it back down.'),
     l2Done: S('"You\'ve a better ear than my boy had." She says it quite steadily. "Tomorrow, the fourth. Nobody gets the fourth the first time."'),
     l3Title: S('The harvest home: the fourth line'),
-    l3Offer: S('"The fourth line. Davin couldn\'t hold it. His da couldn\'t either." She breathes in, and the barley-rustle under it is louder than it was. "It goes up, and it stays up, and you don\'t let it go till the sheaf\'s in. Hold it."'),
+    l3Offer: S('"The fourth line. Davin couldn\'t hold it. His da couldn\'t either." She breathes in, and the barley-rustle under it is louder than it was: <i>and hold it, and hold it, till the sheaf\'s in the fold.</i> "It goes up, and it stays up, and you don\'t let it go till the sheaf\'s in. Hold it."'),
     l3Hint: S('The line Davin could never hold. Up, and stay up.'),
-    l3Done: S('You hold it. Not well, and not for long, but you hold it, and Orla Hale shuts her eyes and listens the way she listened on the risers of fifty harvest homes.<br><br>"There," she says. "Now somebody\'s got all of it. Even the fourth." A rustling breath. "Lyra will sing me down. But it\'s good to know there\'s two."'),
+    l3Done: S('You hold it. Not well, and not for long, but you hold it, and Orla Hale shuts her eyes and listens the way she listened on the risers of fifty harvest homes.<br><br>"There," she says. "Now somebody\'s got all of it. Even the fourth. The rest is the same tune, twice more, and you have the tune." She gives you the words with her eyes shut, a line at a time, under her breath:<br><br><i>Oh, the bread\'s on the hearth and the cider\'s poured,<br>and the old ones are sat at the head of the board;<br>then we plait her and hang her up high on the gate,<br>and leave her, and leave her, though the spring come late.</i><br><br><i>Oh, the rest grows back by the break of day,<br>but the last sheaf\'s cut, and she\'s let to stay;<br>then it\'s over the hill, and it\'s down to the stone,<br>and let go, let go, for the sheaf\'s gone home.</i><br><br>"That last one\'s for going down to," she says. A rustling breath. "Lyra will sing me down. But it\'s good to know there\'s two."'),
     fail: S('"No, no. Again," says Orla. "Breathe from under. Come back tomorrow and we\'ll have it."'),
     failFourth: S('It slips off the top, the way it slipped off Davin\'s. Orla does not laugh this time. "Tomorrow," she says. "It took me a year."'),
     loud: S('Out past the Hedge, something stops, and listens, and begins to sing the line back to you, a half-beat behind.'),
@@ -69,8 +69,8 @@ const ORLA65 = (function () {
     sang: S('You sing the harvest home at full voice, all the lines, even the fourth. It carries. Somewhere past the walls, something turns its head.'),
     jTold: S('Orla asked me whether Davin was any good. "Never could hold the fourth line. His da couldn\'t either." She wants somebody to have all of the harvest home.'),
     jL1: S('Orla Hale taught me the first two lines of the harvest home, from her chair. <i>Oh, the last sheaf\'s in and the barley\'s high.</i>'),
-    jL2: S('Orla taught me the third line of the harvest home, the one that goes over the hill.'),
-    jL3: S('Orla taught me the fourth line, the one Davin could never hold. I have all of The Last Sheaf now. "Lyra will sing me down. But it\'s good to know there\'s two."'),
+    jL2: S('Orla taught me the third line of the harvest home, the one that goes over the hill. <i>Then it\'s over the hill where the stubble runs gold.</i>'),
+    jL3: S('Orla taught me the fourth line, the one Davin could never hold, and the two verses after it. I have all of The Last Sheaf now. "Lyra will sing me down. But it\'s good to know there\'s two."<br><br><i>Oh, the bread\'s on the hearth and the cider\'s poured,<br>and the old ones are sat at the head of the board;<br>then we plait her and hang her up high on the gate,<br>and leave her, and leave her, though the spring come late.</i><br><br><i>Oh, the rest grows back by the break of day,<br>but the last sheaf\'s cut, and she\'s let to stay;<br>then it\'s over the hill, and it\'s down to the stone,<br>and let go, let go, for the sheaf\'s gone home.</i>'),
   };
 
   // ---- the Song: before any save is restored (ensurePlayerUpgrades filters the player's songs against SONGS)

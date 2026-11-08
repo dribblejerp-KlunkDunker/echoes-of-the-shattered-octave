@@ -8,11 +8,51 @@
 - **The lessons** [PROPOSED]. She teaches you The Last Sheaf, one line a day, from the chair, in the voice like a rusty gate. First come the first two lines (the only words the book gives), then the third, then the fourth, which has the narrowest band. Close the shutters and stuff the cracks first, or sing with them open and hear the Hedge sing the line back.
 - **The Song.** The Last Sheaf is a new Song: loud, and the hounds come for it [PROPOSED stats]. Knowing it gives you the second voice with Lyra at Orla's tree in the Greening, as cutting the Last Sheaf with Harrow already did.
 
-## Questions for sleeves
+## The song (ruled 8 Nov 2026: "write the rest of the song")
 
-1. Orla teaching the player the harvest home, one line a day. [PROPOSED]
-2. The song's other lines are never written out. Only the book's first two lines appear, and the rest are taught as tune. Should we write the remaining lines (at least six), or leave them unwritten?
-3. The Song's stats: cost 12 voice, very loud, and a hound may come in dangerous places.
+Lines 1 and 2 are from the book. Lines 3 to 12 are [PROPOSED]. Line 3 is the one that "goes over the hill"; line 4 is the held one, "you don't let it go till the sheaf's in"; and in the last verse the held line lets go, because it is the verse for singing someone down.
+
+> *Oh, the last sheaf's in and the barley's high,*
+> *and the swallows are low in the harvest sky;*
+> *then it's over the hill where the stubble runs gold,*
+> *and hold it, and hold it, till the sheaf's in the fold.*
+>
+> *Oh, the bread's on the hearth and the cider's poured,*
+> *and the old ones are sat at the head of the board;*
+> *then we plait her and hang her up high on the gate,*
+> *and leave her, and leave her, though the spring come late.*
+>
+> *Oh, the rest grows back by the break of day,*
+> *but the last sheaf's cut, and she's let to stay;*
+> *then it's over the hill, and it's down to the stone,*
+> *and let go, let go, for the sheaf's gone home.*
+
+French:
+
+> *Oh, la dernière gerbe est rentrée et l'orge est haute,*
+> *et les hirondelles volent bas dans le ciel de la moisson ;*
+> *puis c'est par-dessus la colline, où le chaume est d'or,*
+> *et tiens-la, et tiens-la, jusqu'à ce que la gerbe soit rentrée.*
+>
+> *Oh, le pain est dans l'âtre et le cidre est versé,*
+> *et les anciens sont assis au haut bout de la table ;*
+> *puis on la tresse et on la pend tout en haut du portail,*
+> *et laisse-la, et laisse-la, même si le printemps tarde.*
+>
+> *Oh, le reste repousse avant le point du jour,*
+> *mais la dernière gerbe est coupée, et on la laisse rester ;*
+> *puis c'est par-dessus la colline, et jusqu'à la pierre,*
+> *et lâche, lâche, car la gerbe est rentrée chez elle.*
+
+The verses follow the Festivals addendum: bread from the new flour and cider; the sheaf plaited and hung over the gate until spring; the rest of the grain growing back by morning, and the last sheaf the one that is allowed to stay cut.
+
+Where the words appear: line 3 in the third-line lesson, line 4 in the fourth-line lesson, verses 2 and 3 on the card when you hold the fourth line, and all of it in the logbook.
+
+## Rulings (8 Nov 2026)
+
+- **Write the rest of the song:** done, above.
+- **The Song's stats** (cost 12 voice, very loud, a hound may come in dangerous places): approved.
+- **Orla teaching you:** not in the book (see the answer in chat). In the book, Davin sang the harvest home, Orla taught him and his father for forty years, and Lyra promises to sing her down with all the lines. The lessons are [PROPOSED] and stay in until you say otherwise.
 
 ## Every line
 
