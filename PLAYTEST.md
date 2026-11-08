@@ -18,6 +18,24 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## The lived-in world, wave 4: the small places (built 8 Nov; ROADMAP R10 W4)
+
+Visit each of these in the morning, and again at dusk or after dark:
+- **Stillwater Landing**: go down the Flume Road from Oakhaven's east Hedge door. After ten at night, watch the quay from the lane.
+- **The Low Rings**: through the gangway at the west end of the Landing. Go by day.
+- **The Bell Yard and Ashlane**: through the archway off the west side of Whisper-Grove's Sunken Court. Be there at six in the evening.
+- **The Hollow**: through the tannery's back door. Go on an ordinary morning, then on Rootday morning, when the Grafters' wagon is in.
+- **The clearing**: out through the North Gate. Be at the gate at first light, and again just before dusk.
+
+What to look for:
+- **The Landing after dark.** The lookout at the lane head and the two men with crates. Is the smuggling clear enough without being said?
+- **The Low Rings.** Only three people, near the gangway, and gone by four. Does it still feel like a dangerous place?
+- **The Bell Yard at dusk.** Six loops go out under the archway to the Sunken Court. Do they read as Hollows rather than people?
+- **The Hollow on Rootday.** Everyone goes indoors while the wagon is in. Do you notice the lanes empty?
+- **The clearing's shift.** The quarry hands come in at the gate at dawn and go back out before dusk. Are they in the way on the path?
+
+Notes:
+
 ## Orla's harvest home (built 8 Nov; ROADMAP R9 item 17)
 
 Bring Davin's boots to Orla Hale in the Hollow (after Hearthday night), then speak to her again. Come back on each of the next three days for a line of The Last Sheaf. Try one lesson with the shutters open. Then, at the Greening, go with Lyra to Orla's tree.
