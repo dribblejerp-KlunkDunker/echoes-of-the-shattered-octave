@@ -18,6 +18,17 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## The Malting's front door and the queue (built 7 Nov; ROADMAP R9 item 15)
+
+In Part Three, once Sable has joined, go through the Malting door on Whisper-Grove's Cloister road: it now opens on the queue-yard. Pick a half from Vane's plan. To try the queue, choose "Stay under the shelter" and talk to the people on the benches.
+
+- **The first sight.** Does the queue land, coming out of the fog of the orchard? Do you recognise Oakhaven's people?
+- **In at the front.** Four cards, ending with you in the press room beside Sable. Too long? Too short?
+- **Working the queue.** Four people gone, or one told while the clerk is close, and the bell rings. Is the clerk easy enough to see coming down the aisle? Is four the right number?
+- **Sable's line afterwards.** Does it read as earned?
+
+Notes:
+
 ## The lived-in world, wave 1: Oakhaven's people (built 7 Nov; ROADMAP R10 W1)
 
 Walk Oakhaven at different hours: early morning (6–8), mid-morning, noon (the bench by the square), afternoon, dusk (19:00, when they go in), the evening (the Boar's door, the window-lamps), and the dead hour (only the watch). Use REST to jump; everyone snaps to where the new hour puts them. Talk to anyone in the street.

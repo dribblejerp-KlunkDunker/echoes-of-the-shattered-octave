@@ -163,12 +163,13 @@ const LIFE60 = (function () {
     // the NPCS entry names the base figure (townsman / townswoman), so voices and anything else keyed on it still find it;
     // the walker itself wears the recoloured cloth
     const base = /^p60_man/.test(p.sprite) ? 'townsman' : /^p60_wom/.test(p.sprite) ? 'townswoman' : p.sprite;
-    return { name: p.name, sprite: base, portrait: p.portrait || (/wom|child/.test(p.sprite) ? 'townswoman' : 'townsman'), tier: 'low', greet: { polite: greet, normal: greet, blunt: greet }, topics, quest: () => null, rumour: true, _life: true };
+    return { name: p.name, sprite: base, portrait: p.portrait || (/wom|child/.test(p.sprite) ? 'townswoman' : 'townsman'), tier: 'low', greet: { polite: greet, normal: greet, blunt: greet }, topics, quest: p.quest || (() => null), rumour: !p.quest, _life: true };
   }
   function fits(m, p) {
     const pts = [p.home]; for (const st of p.day) { if (st.at) pts.push(st.at); if (st.to2) pts.push(st.to2); }
     return pts.every((q) => q[0] >= 0 && q[1] >= 0 && q[0] < m.w && q[1] < m.h && open(m, q[0], q[1]));
   }
+  const gone = (p) => { try { return !!(p.away && p.exit && p.away()); } catch (e) { return false; } };
   function people(m) { return (m && m.entities || []).filter((e) => e && e._life); }
   function stage(m) {
     if (!m || !PLACES[m.id] || !Array.isArray(m.entities)) return;
@@ -191,6 +192,7 @@ const LIFE60 = (function () {
     const h = hour();
     for (const e of people(m)) {
       const p = P.byKey[e._life]; if (!p) continue;
+      if (gone(p)) { e.hidden = true; e._leaving = true; continue; }
       const s = stopAt(p, h), at = spot(p, s);
       e._stop = s; e._path = null; e._wait = rnd() * 3; e._leg = 0;
       e.x = at[0] + (s.job === 'home' ? 0 : (rnd() - 0.5) * 0.2); e.y = at[1] + (s.job === 'home' ? 0 : (rnd() - 0.5) * 0.2);
@@ -220,6 +222,12 @@ const LIFE60 = (function () {
   }
   function tickPerson(m, P, e, h, dt) {
     const p = P.byKey[e._life]; if (!p) return;
+    if (gone(p)) {   // they have left (a place can send someone away for good): walk to the way out, then nobody
+      if (e.hidden) return;
+      if (!e._leaving) { e._leaving = true; e._stop = null; go(m, e, p.exit[0], p.exit[1]); e._fast = 1.15; }
+      if (stepAlong(e, dt)) e.hidden = true;
+      return;
+    }
     const s = stopAt(p, h);
     if (s !== e._stop) {   // a new stop: come out of the door if at home, and set off
       const was = e._stop; e._stop = s; e._leg = 0;
@@ -250,7 +258,7 @@ const LIFE60 = (function () {
     const now = T0(); if (now - lastBark < BARK_GAP) return;
     const c = Engine.cam; let best = null, bd = BARK_NEAR;
     for (const e of people(m)) {
-      if (e.hidden || e._going) continue;
+      if (e.hidden || e._going || e._leaving) continue;
       const p = P.byKey[e._life]; if (!p || !p.barks || !p.barks.length) continue;
       if (now - (e._bark || -1e9) < BARK_OWN) continue;
       const d = Math.hypot(e.x - c.x, e.y - c.y); if (d < bd) { bd = d; best = e; }
@@ -351,6 +359,6 @@ const LIFE60 = (function () {
   }
   try { wire(); } catch (e) { console.warn('life60 failed to wire', e); }
 
-  return { TX, TEXTS, PLACES, JOBS, add, stage, snap, people, path, grid, stopAt, spot, tick, hour };
+  return { TX, TEXTS, PLACES, JOBS, add, stage, snap, people, path, grid, stopAt, spot, tick, hour, variant };
 })();
 if (typeof window !== 'undefined') window.LIFE60 = LIFE60;
