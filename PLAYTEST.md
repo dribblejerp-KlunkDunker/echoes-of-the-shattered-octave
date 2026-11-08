@@ -18,6 +18,16 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## Aldric's arc: the Greenhall on Rootday, and the signing (built 8 Nov; ROADMAP R9 item 16)
+
+On a new game, meet Kaelen on the first day (Nullday). On Rootday from eight in the morning, go into the Greenhall: you come in behind him. Try staying when the Factor goes, and on another run, going out with her. Then on Driftday at dusk (17:00 to 20:00), go into the Greenhall again for the signing.
+
+- **The Rootday scenes.** They are five cards of the book's words. Too long to read in the game?
+- **Aldric afterwards.** Speak to him after the brandy: does his line about Marrit and the key lead you up to the house?
+- **The signing.** Is the timing too easy to miss?
+
+Notes:
+
 ## The lived-in world, wave 2: Whisper-Grove's Hollows (built 8 Nov; ROADMAP R10 W2)
 
 Walk Whisper-Grove by day, at dusk (18:00, when they drift into the Sunken Court) and at night. Look for the book's three: the woman in the wool coat walking between the third pillar and the basin; the two men at the corner of the colonnade (north of the court, by the Malting); the young man washing a plate by the south-west pool.

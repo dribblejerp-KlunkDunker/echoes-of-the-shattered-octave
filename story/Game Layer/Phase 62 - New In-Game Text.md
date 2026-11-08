@@ -9,10 +9,12 @@
 - **The Office feeder** [PROPOSED], the only living person on the streets: a clerk with a cart at dawn and dusk, putting bread where the loops go (canon: "they feed themselves if food's put where their loop goes. The Office kept four thousand of them alive for two years").
 - The plaza's twenty standing Hollows, Halder Wick's table and the lamplighter are unchanged.
 
-## Questions for sleeves
+## Rulings (8 Nov 2026)
 
-1. The thirteen invented loops: keep, change or cut any?
-2. The Office feeder at dawn and dusk.
+- **The thirteen loops:** keep them all.
+- **The Office feeder at dawn and dusk:** keep.
+
+Nothing in this phase is still open.
 
 ## Every line
 

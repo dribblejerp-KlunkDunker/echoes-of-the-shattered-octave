@@ -372,13 +372,16 @@ const MALTING61 = (function () {
   function onLoad() {
     if (!hasG()) return;
     try { if (G.maps) syncDoors(G.maps); } catch (e) { warnOnce('doors', e); }
-    paint();
+    // the clerk's colours are made only where a clerk walks: a new sprite part-way through a session would move the
+    // others in the texture atlas and change every other map's pixels
+    if (G.mapId === YARD || G.mapId === 'whispergrove') paint();
     if (G.mapId === 'malting') syncMalting();
     if (G.mapId === YARD && lastMap !== YARD) { emptyT = 0; pendingHeard = false; try { if (!guest()) enterYard(); } catch (e) { warnOnce('enter', e); } }
     lastMap = G.mapId;
   }
   function wire() {
-    paint();
+    // no sprites are made here: one made at script load lands in the texture atlas ahead of the game's own and moves
+    // them (frames elsewhere change); they are made when the yard or the city is first loaded
     if (typeof buildAllMaps === 'function') {
       const _b = buildAllMaps;
       buildAllMaps = function () { const maps = _b.apply(this, arguments); try { buildMaps(maps); } catch (e) { warnOnce('build', e); } return maps; };
