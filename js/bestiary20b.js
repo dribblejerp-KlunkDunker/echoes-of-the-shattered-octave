@@ -1271,11 +1271,15 @@ const BEASTB = (() => {
 // ================================================================ the hook
 // DIRECTIONS.view is the one place a five-angle view is chosen (directions.js wraps the engine's
 // sprite chooser through it). Our species answer here; everyone else falls through untouched.
+// "Ours" is the bestiary rigged above, taken now: js/people25.js later adds the Proctor, the companions and
+// the townsfolk to SPECIES for js/pixel3d.js, which asks BEASTB.view for them itself; they must not take
+// over DIRECTIONS.view, where the Proctor's hand-drawn pilot views (js/anim.js) stay authoritative.
 (() => {
   if (typeof DIRECTIONS === 'undefined') return;
+  const OURS = new Set(Object.keys(BEASTB.SPECIES));
   const _view = DIRECTIONS.view;
   DIRECTIONS.view = function (name, v, pose) {
-    if (GFX.p20_beastb && BEASTB.SPECIES[name] && v >= 1 && v <= 4) {
+    if (GFX.p20_beastb && OURS.has(name) && v >= 1 && v <= 4) {
       try { const s = BEASTB.view(name, v, pose || ''); if (s) return s; } catch (err) { if (!BEASTB._warned) { BEASTB._warned = true; console.warn('bestiary20b', err); } }
     }
     return _view.apply(this, arguments);

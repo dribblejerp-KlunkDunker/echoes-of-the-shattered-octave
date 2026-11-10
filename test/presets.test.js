@@ -111,7 +111,9 @@ fs.mkdirSync(SHOTS, { recursive: true });
         // reference: the engine as it was before this phase, via GFX.plain() at the shipped scale and look
         Engine.setScale(1); Engine.setLook({ fogK: 1 });
         for (const k in orig) PART_STYLE[k].n = origN[k];
-        GFX.plain(); for (const k of (PRESETS.art || []).concat(PRESETS.allButLow || [])) if (GFX.FX.includes(k)) GFX[k] = true; GFX.changed(); go(id, x, y, dir);   // Phase 20 MAX: Original = no effects, art on
+        // Phase 20 MAX: Original = no effects, art on. Art is the preset table's own list plus every flag a module adds to
+        // GFX.ART (Phase 20b's painted ground, walls, trees and pieces, Phase 25's pixel-3D set, the Phase 21 card)
+        GFX.plain(); for (const k of (PRESETS.art || []).concat(GFX.ART || [], PRESETS.allButLow || [])) if (GFX.FX.includes(k)) GFX[k] = true; GFX.changed(); go(id, x, y, dir);
         frame();   // warm-up: the first frame in a place settles sky and cached art
         const ref = frame();
         // the long way round: high, then low, then original

@@ -21,7 +21,10 @@
 //     town (a connected run of house cells) draws one front for the whole building; stone varies by the cell.
 //  3. TREE VARIETY (switch "Tree variety", GFX.p20_trees). The painted oak comes in three colours now (its own rust,
 //     a green-gold and a dark copper, recoloured leaf by leaf from the one painting) and the willow in two, and about
-//     half of them are turned about, chosen by where each tree stands. Nothing moves: the same deco, the same place.
+//     half of them are turned about, chosen by where each tree stands. Nothing moves: the same deco, the same place,
+//     the same sprite name. The colour is drawn through e.animSprite (the engine's draw-this-frame-instead field), so
+//     everything that knows a tree by e.sprite still does: the chalked oak of js/sidequests.js, the sway of js/anim.js,
+//     the Greening's oak roots (js/greening14.js), the "Iron-bark oak" hint.
 //  4. PAINTED PIECES (switch "Painted pieces", GFX.p20_pieces). Real paintings for the scenery, the flora and the wall
 //     notices, in place of the canvas-drawn stand-ins of js/scenery.js, js/flora.js and js/decals.js: the files in
 //     img/painted20/ (see tools/art/painted20/key.py and CREDITS.md). Each is swapped in under the stand-in's own
@@ -380,14 +383,18 @@ const PAINTED20 = (() => {
     for (const e of m.entities) {
       if (!e || e.kind !== 'deco' || !TREE_VARIANTS[e.sprite] || e.transient) continue;
       const vs = TREE_VARIANTS[e.sprite], h = hash2(Math.round(e.x * 4), Math.round(e.y * 4), seed);
-      list.push({ e, sprite0: e.sprite, flip0: !!e.animFlip, sprite: vs[(h * vs.length) | 0], flip: hash2(Math.round(e.y * 4), Math.round(e.x * 4), seed ^ 77) < 0.5 });
+      list.push({ e, sprite0: e.sprite, flip0: !!e.animFlip, anim0: e.animSprite, sprite: vs[(h * vs.length) | 0], flip: hash2(Math.round(e.y * 4), Math.round(e.x * 4), seed ^ 77) < 0.5 });
     }
     return list.length ? { list, n: list.length, applied: false } : null;
   }
   function applyTrees(m, want) {
     const P = m._p20b && m._p20b.trees; if (!P) return;
     if (want === P.applied) return;
-    for (const t of P.list) { if (want) { t.e.sprite = t.sprite; t.e.animFlip = t.flip; } else { t.e.sprite = t.sprite0; t.e.animFlip = t.flip0; } }
+    // e.sprite is never renamed (other modules find their trees by it): the variant is only what is drawn
+    for (const t of P.list) {
+      if (want) { if (t.sprite !== t.sprite0) t.e.animSprite = t.sprite; t.e.animFlip = t.flip; }
+      else { if (t.anim0 === undefined) delete t.e.animSprite; else t.e.animSprite = t.anim0; t.e.animFlip = t.flip0; }
+    }
     P.applied = want;
   }
 

@@ -167,6 +167,8 @@ const STONES47 = (function () {
     if (!cl || cl.id !== CLEARING || cl.w !== 40 || cl.h !== 36) return;
     const c = cl.get(GAP[0], GAP[1]);
     if (!c || !c.portal || c.portal.map !== MAP) cl.set(GAP[0], GAP[1], DOOR({ tex: 't_hedge', portal: { map: MAP, x: 1.6, y: 15.5, dir: 0 }, label: TX.toStones }));
+    // js/decals.js marks walls, never doors: the hedge cell that became the gap loses any mark it was given
+    if (cl._decalsAll) delete cl._decalsAll[GAP[1] * cl.w + GAP[0]];
   }
   function buildMaps(maps) {
     if (!maps[MAP]) maps[MAP] = buildStones();

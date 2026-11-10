@@ -324,7 +324,16 @@ const GOVERNOR46 = (function () {
     paint();
     if (typeof NPCS !== 'undefined') for (const k in P) if (!NPCS[k]) NPCS[k] = P[k];
     if (typeof ITEMS !== 'undefined') for (const k in ITEM_DEFS) if (!ITEMS[k]) ITEMS[k] = Object.assign({}, ITEM_DEFS[k]);
-    try { if (typeof VOICES !== 'undefined' && VOICES.PEOPLE) Object.assign(VOICES.PEOPLE, Object.assign({ p46_marrit: { f0: 200, fs: 1.02, style: 'plain' } }, VOICES.PEOPLE)); } catch (e) { /* default voices */ }
+    // its Phase 20 pixel icon (js/icons.js's PIX kit): the coat folded square, a fold across it and one horn button
+    if (typeof ICONS !== 'undefined' && ICONS.PIX && ICONS.C_PX && !Object.prototype.hasOwnProperty.call(ICONS.PIX, COAT)) {
+      ICONS.PIX[COAT] = (d) => {
+        d.layer('#46495c', { shiny: 1 }).rect(4, 7, 16, 12);                              // the wool, folded
+        d.layer('#323444', { shade: 'flat', sep: false }).rect(4, 12, 16, 1).rect(11, 7, 1, 5);   // the fold and the back seam
+        d.layer('#46495c').poly([4, 7, 8, 4, 16, 4, 20, 7]);                               // the collar
+        d.mark('#a8966a', 15, 9, 15, 15);                                                  // horn buttons
+      };
+    }
+    try { if (typeof VOICES !== 'undefined' && VOICES.PEOPLE) Object.assign(VOICES.PEOPLE, Object.assign({ p46_marrit: { f0: 200, fs: 1.02, style: 'human' } }, VOICES.PEOPLE)); } catch (e) { /* default voices */ }
     if (typeof buildAllMaps === 'function') {
       const _b = buildAllMaps;
       buildAllMaps = function () { const maps = _b.apply(this, arguments); try { buildMaps(maps); } catch (e) { warnOnce('build', e); } return maps; };

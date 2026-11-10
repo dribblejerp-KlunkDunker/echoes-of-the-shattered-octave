@@ -623,14 +623,16 @@ When she sat again, she turned the portrait slightly so there would be room for 
       Engine.addSprite('broadsheet', { w, h, data: d, hs: 1, cx: 0.5, dy: 0 });
     }
     if (typeof ICONS !== 'undefined' && ICONS.PIX && ICONS.C_PX) {
-      const icon = d => {
+      // one per part: the part's number (I, II) in red ink at the head of the sheet, so the two parts are told apart
+      const icon = part => d => {
         d.layer(ICONS.C_PX.paper).poly([3, 5, 21, 5, 21, 20, 3, 20]);
-        const ink = d.layer('#2a2620', { shade: 'flat', sep: false }); ink.rect(5, 7, 14, 2);
+        const ink = d.layer('#2a2620', { shade: 'flat', sep: false }); ink.rect(5, 7, 14 - 2 * part, 2);
         const col = d.layer('#5c564c', { shade: 'flat', sep: false });
         for (let y = 11; y < 19; y += 2) { col.rect(5, y, 6, 1); col.rect(13, y, 6 - (y % 4 === 1 ? 2 : 0), 1); }
         d.layer('#8a8070', { shade: 'flat', sep: false }).rect(12, 10, 1, 9);
+        const no = d.layer('#8c2a24', { shade: 'flat', sep: false }); for (let i = 0; i < part; i++) no.rect(18 - 2 * i, 6, 1, 3);
       };
-      for (const v of volumes) if (!ICONS.PIX[v.id]) ICONS.PIX[v.id] = icon;
+      for (const v of volumes) if (!ICONS.PIX[v.id]) ICONS.PIX[v.id] = icon(Math.max(1, Math.min(3, v.part | 0)));
     }
   }
   paintBroadsheet();

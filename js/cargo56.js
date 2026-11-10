@@ -30,6 +30,7 @@ const CARGO56 = (function () {
   const warned = {};
   const warnOnce = (k, e) => { if (!warned[k]) { warned[k] = true; console.warn('cargo56: ' + k + ' failed', e); } };
   const guest = () => { try { return typeof SYNC19 !== 'undefined' && !!SYNC19.isGuest(); } catch (e) { return false; } };
+  const inExtra = () => { try { if (typeof EXTRAS17 !== 'undefined' && EXTRAS17.inExtra()) return true; } catch (e) { /* none */ } return false; };
   const partOne = () => hasG() && !F().greening && !F().part3 && !F().part4 && !F().escaped;
 
   const DRIFT = 6, CLERK_FROM = 19, DEAD = 5, NEED = 20, STEP = 7, ITEM = 'p56_gun';
@@ -94,8 +95,22 @@ const CARGO56 = (function () {
 
   // ================================================================ the item
   function addItem() {
-    if (typeof ITEMS === 'undefined' || ITEMS[ITEM]) return;
-    ITEMS[ITEM] = { name: TX.gun, sprite: (ITEMS.w_pistol && ITEMS.w_pistol.sprite) || 'gear', desc: TX.gunDesc, key: true };
+    if (typeof ITEMS === 'undefined') return;
+    if (!ITEMS[ITEM]) ITEMS[ITEM] = { name: TX.gun, sprite: (ITEMS.w_pistol && ITEMS.w_pistol.sprite) || 'gear', desc: TX.gunDesc, key: true };
+    addIcon();
+  }
+  // its Phase 20 pixel icon (js/icons.js's PIX kit): the swivel gun's lock, and the bag of shot beside it
+  function addIcon() {
+    if (typeof ICONS === 'undefined' || !ICONS.PIX || !ICONS.C_PX || Object.prototype.hasOwnProperty.call(ICONS.PIX, ITEM)) return;
+    const C = ICONS.C_PX;
+    ICONS.PIX[ITEM] = (d) => {
+      d.layer(C.wood, { shiny: 1 }).poly([3, 14, 14, 11, 15, 14, 4, 17]);             // a stub of the stock
+      d.layer(C.iron, { shiny: 1 }).rect(9, 7, 7, 5);                                  // the lock plate
+      d.layer(C.dsteel).path([11, 7, 10, 4, 12, 3]).rect(14, 5, 2, 2);                 // the cock and the pan
+      d.layer(C.cloth, { shiny: 1 }).ell(17, 17, 4.6, 4);                              // the bag of shot
+      d.layer(C.leather, { shade: 'flat', sep: false }).rect(15, 13, 4, 1);           // its drawstring
+      d.mark('#3a3a3e', 16, 18, 18, 17, 19, 19);                                       // shot showing at the neck
+    };
   }
 
   // ================================================================ the clerk
@@ -159,9 +174,10 @@ const CARGO56 = (function () {
   }
 
   // ================================================================ wiring
-  function missed() { if (hasG() && stage() < 2 && ((Number(G.day) || 0) > DRIFT + 1 || ((Number(G.day) || 0) === DRIFT + 1 && hour() >= DEAD))) F().p56 = 9; }
+  // a guest's game and an extra's own session are not this Book One's calendar (as lyra51, church55, tamsin52 hold it)
+  function missed() { if (hasG() && !guest() && !inExtra() && stage() < 2 && ((Number(G.day) || 0) > DRIFT + 1 || ((Number(G.day) || 0) === DRIFT + 1 && hour() >= DEAD))) F().p56 = 9; }
   function useOwn(e) {
-    if (!e || guest() || !hasG()) return false;
+    if (!e || guest() || inExtra() || !hasG()) return false;
     if (e.use === 'crates' && G.mapId === 'oakhaven' && partOne()) {
       if (clerkHour() && stage() === 0) { clerk(); return true; }
       if (deadHour() && stage() < 2) { crate(); return true; }

@@ -131,8 +131,14 @@ const PIXEL3D = (() => {
   }
   // ---- props: swapped under the stand-in's name
   const props = {};   // name -> { orig, applied }
+  // Engine.loadAll (js/game.js's boot) decodes js/assets.js one sprite at a time and writes each into Engine.sprites as
+  // it goes, so a prop swapped in before its turn came was written over by its stand-in, and stayed so until the next
+  // GFX change. Props are swapped only once every decoded sprite is in.
+  let decodedIn = false;
+  const decoded = () => decodedIn || (decodedIn = typeof Engine !== 'undefined' && !!Engine.sprites &&
+    (typeof ASSETS === 'undefined' || !ASSETS.spr || Object.keys(ASSETS.spr).every((k) => !!Engine.sprites[k])));
   function syncProps() {
-    if (typeof Engine === 'undefined' || !Engine.sprites) return;
+    if (typeof Engine === 'undefined' || !Engine.sprites || !decoded()) return;
     for (const name in ATLAS) {
       if (ATLAS[name].k !== 'prop') continue;
       const want = on(); let p = props[name]; if (!p) p = props[name] = { orig: null, applied: false };
@@ -160,7 +166,7 @@ const PIXEL3D = (() => {
     const _acc = renderAccessibilityMenu;
     renderAccessibilityMenu = function () { const r = _acc.apply(this, arguments); try { appendRow(); } catch (e) { stats.errors++; } return r; };
   }
-  (function boot(n) { if (typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites.proctor) { preload(); return; } if (n < 600) setTimeout(() => boot(n + 1), 100); })(0);
+  (function boot(n) { if (decoded()) { preload(); try { syncProps(); } catch (e) { stats.errors++; } return; } if (n < 600) setTimeout(() => boot(n + 1), 100); })(0);
 
   return { ATLAS, POSES, view, has, covers, preload, stats, models: () => Object.keys(ATLAS).sort(), ready: (n) => !!(atl[n] && atl[n].state === 'ready'), syncProps, budgetBytes: () => bytes, cap: CAP };
 })();

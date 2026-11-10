@@ -14,7 +14,9 @@
 //                     stole) is confiscated, the grapnel also earns a small bounty. It NEVER blocks you: every outcome
 //                     ends with you on the road to where you were going, and Turn back is always offered. Quest items
 //                     (ITEMS[x].key) are never taken.
-//  2. FIRE AND REBUILDING [PROPOSED]. A flask fire (js/kit12.js) that burns beside one of four generic, unnamed houses for
+//  2. FIRE AND REBUILDING [PROPOSED]. A flask fire (js/kit12.js) that burns beside one of four generic buildings, three
+//     shuttered houses and the hay-barn on Tannery Row (the orchard house's slot is retired: it is the Conservatory now,
+//     js/libraries26.js), for
 //     3 s sets it alight (a story event may call ROADS15.ignite). It burns 5 h (flames, smoke through js/firesmoke.js),
 //     stands charred (a wall-decal char, persisted by flags) for 3 days, is scaffolded and worked on by builders in the
 //     daytime for 6 days, then is whole again. Never a shop, never a story building, never the Greening's Oakhaven. A
@@ -163,7 +165,7 @@ const ROADS15 = (() => {
       arson: 'arson',
       doorBurnt: 'The door is charred through and wedged shut with a length of timber. Nobody is humming.',
       doorBuilding: 'New timber is stacked against the wall and the whole place smells of the saw. The door is barred. Nobody is humming yet.',
-      labelBurnt: 'A burnt house', labelBuilding: 'A house being rebuilt',
+      labelBurnt: 'A burnt house', labelBuilding: 'A house being rebuilt', labelBurntBarn: 'A burnt hay-barn', labelBuildingBarn: 'A hay-barn being rebuilt',
       lines: [
         'A neighbour, to no one in particular: "Nobody was in, thank the reeds. We carried the pump up from the Flume by hand, and it was all for the walls next door."',
         'A neighbour, not stopping: "The roof went first. You could hear the tiles, ringing. I have not heard anything ring like that in two years."',
@@ -535,14 +537,20 @@ const ROADS15 = (() => {
   // =============================================================================================================
   //  2. FIRE AND REBUILDING
   // =============================================================================================================
-  // Four generic Oakhaven houses (js/maps.js buildings): unnamed, no shop, no story. Never the Tarrows' (house13), Cooper's
+  // Generic Oakhaven houses (js/maps.js buildings): unnamed, no shop, no story. Never the Tarrows' (house13), Cooper's
   // Row (the one the player can buy), the Boar, the mill, the tannery or anything that is somebody's name.
+  // A slot is never removed or reordered: saves key the fires by index (p15r_b<i>, the p15r_bs bitmask). A house another
+  // module has since given a use is 'retired' instead: it never burns and a saved fire on it counts for nothing.
   const F = BAL.fire;
   const BUILDINGS = [
     { key: 'east', label: 'A shuttered house', x: 40, y: 14, w: 3, h: 6, door: [40, 16] },
-    { key: 'orchard', label: 'A shuttered house', x: 46, y: 39, w: 5, h: 4, door: [48, 39] },
+    // the orchard house's door is the Conservatory Reading Room's since js/libraries26.js (Ilse Brennan's; enterable)
+    { key: 'orchard', label: 'A shuttered house', x: 46, y: 39, w: 5, h: 4, door: [48, 39], retired: 'libraries26' },
     { key: 'meadow', label: 'A shuttered house', x: 38, y: 38, w: 5, h: 4, door: [38, 40] },
     { key: 'madders', label: 'The Madders\' house', x: 4, y: 27, w: 3, h: 6, door: [6, 29] },
+    // the fourth (10 Nov, the owner): every generic house is somebody's now, so the hay-barn on Tannery Row, nobody's and
+    // not in the book; appended, never inserted, so the saved slots above keep their numbers
+    { key: 'haybarn', label: 'A hay-barn', x: 40, y: 57, w: 5, h: 4, door: [42, 57], barn: true },
   ];
   const CHAR = ['p15r_char_a', 'p15r_char_b', 'p15r_char_c'], BURN = 'p15r_burn';
   const MINE_DECALS = new Set(CHAR.concat([BURN]));
@@ -550,7 +558,7 @@ const ROADS15 = (() => {
   const saved = new WeakMap();    // map -> { ci: original decal name | null }
 
   function buildingAt(m, b) {
-    if (!m || m.id !== 'oakhaven' || m.w !== 70 || m.h !== 64) return null;
+    if (!m || !b || b.retired || m.id !== 'oakhaven' || m.w !== 70 || m.h !== 64) return null;
     const dc = m.cells[b.door[1] * m.w + b.door[0]];
     if (!dc || !dc.door || (dc._p15 ? dc._p15.label : dc.label) !== b.label) return null;
     if (dc.portal) return null;                                  // a building you can enter is somebody's
@@ -572,7 +580,7 @@ const ROADS15 = (() => {
     if (dy === b.y) return [0, -1]; return [0, 1];
   }
   function stageOf(i) {
-    if (!set.fire || !hasG() || greened()) return 'none';
+    if (!set.fire || !hasG() || greened() || !BUILDINGS[i] || BUILDINGS[i].retired) return 'none';
     const v = fint(FLAG + 'b' + i, 0, 9999999);
     if (!v) return 'none';
     const start = Math.min(v - 1, Math.floor(clockHours()));      // a hostile save cannot start a fire in the future
@@ -611,8 +619,8 @@ const ROADS15 = (() => {
   function applyDoor(m, i, stage) {
     const b = BUILDINGS[i], c = m.cells[b.door[1] * m.w + b.door[0]]; if (!c || !c.door) return;
     if (!c._p15) { if (c.label !== b.label) return; c._p15 = { label: c.label, lockMsg: c.lockMsg }; }
-    if (stage === 'charred' || stage === 'burning') { c.label = TX.fire.labelBurnt; c.lockMsg = TX.fire.doorBurnt; }
-    else if (stage === 'scaffold') { c.label = TX.fire.labelBuilding; c.lockMsg = TX.fire.doorBuilding; }
+    if (stage === 'charred' || stage === 'burning') { c.label = b.barn ? TX.fire.labelBurntBarn : TX.fire.labelBurnt; c.lockMsg = TX.fire.doorBurnt; }
+    else if (stage === 'scaffold') { c.label = b.barn ? TX.fire.labelBuildingBarn : TX.fire.labelBuilding; c.lockMsg = TX.fire.doorBuilding; }
     else { c.label = c._p15.label; c.lockMsg = c._p15.lockMsg; }
   }
   const sprite = (name) => (typeof Engine !== 'undefined' && Engine.sprites ? Engine.sprites[name] : null);
@@ -760,7 +768,7 @@ const ROADS15 = (() => {
     const c = Engine.cam;
     for (let i = 0; i < BUILDINGS.length; i++) {
       const s = props[i].stage; if (s !== 'charred' && s !== 'scaffold') continue;
-      const bit = 1 << i, said = fint(FLAG + 'bs', 0, 15);
+      const bit = 1 << i, said = fint(FLAG + 'bs', 0, 31);
       if (said & bit) continue;
       const b = BUILDINGS[i];
       if (nearFootprint(b, c.x, c.y) <= F.lineRange) { wint(FLAG + 'bs', said | bit); say(TX.fire.lines[i % TX.fire.lines.length], 'voice', 8000); }
@@ -965,8 +973,10 @@ const ROADS15 = (() => {
       if (k.indexOf(FLAG) !== 0) continue;
       const v = f[k];
       if (k === FLAG + 'trips') { f[k] = fint(k, 0, 99999); continue; }
-      if (/^p15r_b[0-3]$/.test(k)) { f[k] = fint(k, 0, 9999999); if (!f[k]) delete f[k]; else f[k] = Math.min(f[k], Math.floor(clockHours()) + 1); continue; }
-      if (k === FLAG + 'bs') { f[k] = fint(k, 0, 15); continue; }
+      const slot = /^p15r_b(\d+)$/.exec(k);
+      // one record per fire slot, the hay-barn's (4) included
+      if (slot && +slot[1] < BUILDINGS.length) { f[k] = fint(k, 0, 9999999); if (!f[k]) delete f[k]; else f[k] = Math.min(f[k], Math.floor(clockHours()) + 1); continue; }
+      if (k === FLAG + 'bs') { f[k] = fint(k, 0, 31); continue; }
       if (k === FLAG + 'dead') { f[k] = acceptedMask(v); if (!f[k]) delete f[k]; continue; }
       if (k === FLAG + 'dsay') { f[k] = fint(k, 0, 0xFFFF); continue; }
       if (k === FLAG + 'dday') { f[k] = fint(k, 0, 99999); continue; }

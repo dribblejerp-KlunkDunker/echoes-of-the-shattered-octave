@@ -1129,7 +1129,7 @@ Every entry from the four compilations, grouped by kind and then by where in the
 
 - **Quarry Great-Maul** — A lead-weighted quarry sledge on an ash haft. It "cracks bell-plate and golems". Status: **[PROPOSED]**. Source: P12 (ARMS). Bible: new.
 - **Long Glass-Edged Blade** — "A corsair's two-handed blade, the edge ground out of salvaged Aether-Glass. It rings through the Cacophony." Sold by Vane. Status: **[PROPOSED]**. Source: P12. Bible: new. SB says the Cacophony avoids Aether-Glass.
-- **Bell-Bronze Glaive** — "Struck from a chapel bell the Synod did not take." Sold by Ignatius. Status: **[PROPOSED]**. Source: P12. Bible: new. It conflicts with B1: "every bell in the Reach" was requisitioned.
+- **Bell-Bronze Glaive** — "Beaten from the scrap the Synod's casters threw out when the Reach's bells went to the bore." Sold by Orrin Pale (the Church keeps no shop). Status: **[PROPOSED]**. Source: P12. Bible: new. Reworded 10 Nov so it no longer claims a bell escaped: B1 says "every bell in the Reach" was requisitioned.
 - **Reed-Guard Dirk** — A basket-hilted off-hand dirk. "Rust Coast duellists call it the second word." Sold by Hob. Status: **[PROPOSED]**. Source: P12. Bible: new.
 - **Oil Flask, Damper Jar and Weighted Net** — The damper jar is "wool-fat, wax and powdered lead-salt … Apothecaries use it on sickrooms … It is not the Hush." The net is "a corsair's boarding net" of reed-cord and fired clay. Status: **[PROPOSED]**. Source: P12 (KIT). Bible: new.
 - **Office Grapnel OC-742** — "A cutter-man's grapnel gun, Office issue … OC-742 stencilled on the stock." It is taken off the Office cutter in the Deep Woods. Status: **[PROPOSED]**. Source: P12 (RIGGING). Bible: new. SB ch21 has Vane taking "a grapnel" from the cutter.
