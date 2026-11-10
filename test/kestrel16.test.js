@@ -293,7 +293,7 @@ async function boot(browser, viewport, opts) {
       out.lines = KESTREL16.TX.crew.mags.d.every((t) => /^<i>/.test(t) || /signs|sign/i.test(t));
       out.sign = /<i>/.test(KESTREL16.TX.crew.mags.d[0]);
       // the book names the engineer Pennick (ch. 8, 12, 21, 24; the owner, 10 Nov: "if the book names him name him"), and the holed tank is number three (ch. 21, 24)
-      out.eng = [KESTREL16.TX.crew.pennick.name, KESTREL16.TX.crew.pennick.label]; out.titleOnly = KESTREL16.TEXTS.filter((t) => /\b[Tt]he engineer\b/.test(t) && !/Pennick/.test(t)).length;
+      out.eng = [KESTREL16.TX.crew.pennick.name, KESTREL16.TX.crew.pennick.label]; out.titleOnly = KESTREL16.TEXTS.filter((t) => /\bthe engineer\b/i.test(t)).length;
       out.tankTwo = KESTREL16.TEXTS.filter((t) => /number[- ]two/i.test(t)).length; out.tankThree = KESTREL16.TEXTS.filter((t) => /number[- ]three/i.test(t)).length;
       out.speaks = /answers aloud/.test(KESTREL16.TX.crew.mags.intro);
       // talking from behind: she does not answer

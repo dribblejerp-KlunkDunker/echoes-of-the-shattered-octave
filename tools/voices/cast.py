@@ -48,6 +48,7 @@ CAST = {
     'tuningman':  dict(voice='bm_lewis',   speed=0.96, pitch=-2, lang='en-gb', fx=['hall']),
     # ---- the opening cinematic's narrator: an older man, grave and unhurried, in a great room
     'narrator':   dict(voice='bm_daniel',  speed=0.84, pitch=-3, lang='en-gb', fx=['hall']),
+    'tideweaver': dict(voice='am_michael', speed=0.88, pitch=-2, lang='en-us', fx=['hall']),   # the Tide-Weaver, Ilias Marren, who tells the Echoes
     'townswoman': dict(voice='af_sarah',   speed=0.96, pitch=0,  lang='en-us', fx=['outdoors']),
     # ---- the travellers
     'sable':      dict(voice='af_nicole',  speed=0.9,  pitch=-1, lang='en-us', fx=['room']),
@@ -83,7 +84,6 @@ CAST = {
     'pressman':   dict(voice='bm_lewis',   speed=0.8,  pitch=-6, lang='en-gb', fx=['gravel', 'hall']),
     # ---- the many-voiced (the line's voiceOf is spoken, then put through these)
     'weaver':     dict(fx=['chorus', 'hall']),
-    'tideweaver': dict(voice='am_michael', speed=0.88, pitch=-2, lang='en-us', fx=['hall']),   # the Tide-Weaver, Ilias Marren, who tells the Echoes (one calm man, not the Phantom Weaver's chorus)
     'wearer':     dict(fx=['chorus', 'gravel', 'hall']),
     'requiem':    dict(fx=['chorus', 'stack', 'hall']),
     'broodmother':dict(fx=['chorus', 'gravel', 'hall']),

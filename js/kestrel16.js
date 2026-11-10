@@ -30,7 +30,7 @@
 //    rail      35 + 2 Scrap                                        six trophy pegs                               pegged board + pegs
 //    bunks     40 + 2 Mesh + 1 Scrap                               rest also mends injuries                      four blanketed bunks
 //    chart     70 + 1 Mesh + 1 Shard                               map-table ambush chance x0.85                 awning, wall charts, sextant
-//    tank     140 + 6 Scrap + 4 Mesh + 2 Shard + 2 Governor-Gear   the two-mooring hop (needs the engineer, envelope, tank_patched)   a third, burnished tank
+//    tank     140 + 6 Scrap + 4 Mesh + 2 Shard + 2 Governor-Gear   the two-mooring hop (needs Pennick, envelope, tank_patched)   a third, burnished tank
 //  Materials are never out of reach: the chandler's locker in the hold sells Scrap 12, Mesh 18, Gear 30, Shard 55.
 //
 //  THE CREW [PROPOSED for Book One; the game's own text wins]. Mags Tennant (bosun) and Tobiah Marsh (second engineer) are
@@ -97,7 +97,7 @@ const KESTREL16 = (function () {
   // rail       3    35   2 Scrap                                          six trophy pegs aboard (hearth15 trophies)    a pegged board on the mess bulkhead
   // bunks      4    40   2 Proctor-Mesh, 1 Scrap                          rest aboard also mends injuries               four more bunks, blanketed
   // chart      5    70   1 Proctor-Mesh, 1 Light-Glass Shard               map-table ambush chance x0.85                 an awning, wall charts and a sextant
-  // tank       6   140   6 Scrap, 4 Mesh, 2 Shard, 2 Governor-Gear         fly between the two moorings (the engineer, tank patched, envelope fitted)   a third, burnished tank
+  // tank       6   140   6 Scrap, 4 Mesh, 2 Shard, 2 Governor-Gear         fly between the two moorings (Pennick, tank patched, envelope fitted)   a third, burnished tank
   const UPG = [
     { id: 'envelope', bit: 0, gold: 60, mats: [['v_mesh', 3], ['v_scrap', 1]] },
     { id: 'lamps', bit: 1, gold: 50, mats: [['shard', 1], ['v_scrap', 2]] },
