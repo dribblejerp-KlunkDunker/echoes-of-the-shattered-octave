@@ -4169,6 +4169,161 @@
    "text": "The choir has broken the unison — it is the choir — Flambeaux! Purify them! Purify the Rite!",
    "source": "bell69.js TX.purify (Book One, Prologue)",
    "delivery": "shout"
+  },
+  {
+   "id": "weaver.t70.who",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "You will want to know who is talking.",
+   "source": "thread70.js TX.who (Book One, Echo I)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "weaver.t70.night",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "That is the whole of the difference. One night.",
+   "source": "thread70.js TX.oneNight (Book One, Echo I)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "weaver.t70.went",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "Here is the thread where she went.",
+   "source": "thread70.js TX.went (Book One, Echo I)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "wearer.t70.lark",
+   "speaker": "wearer",
+   "kind": "narration",
+   "text": "There's my lark.",
+   "source": "thread70.js TX.lark (Book One, Echo I)",
+   "voiceOf": "tobin",
+   "delivery": "murmur"
+  },
+  {
+   "id": "lyra.t70.hello",
+   "speaker": "lyra",
+   "kind": "narration",
+   "text": "Hello, Da.",
+   "source": "thread70.js TX.hello (Book One, Echo I)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "wearer.t70.come",
+   "speaker": "wearer",
+   "kind": "narration",
+   "text": "Come through. Lark. There's a gap down by the cooperage drain, where the water goes under. It's not even a squeeze. Come through and sit with me a bit. It's cold out here and I've been on my own two years.",
+   "source": "thread70.js TX.come (Book One, Echo I)",
+   "voiceOf": "tobin",
+   "delivery": "murmur"
+  },
+  {
+   "id": "wearer.t70.again",
+   "speaker": "wearer",
+   "kind": "narration",
+   "text": "Come through.",
+   "source": "thread70.js TX.again (Book One, Echo I) [PROPOSED: it asks again in its own first words]",
+   "voiceOf": "tobin",
+   "delivery": "murmur"
+  },
+  {
+   "id": "lyra.t70.no",
+   "speaker": "lyra",
+   "kind": "narration",
+   "text": "No.",
+   "source": "thread70.js TX.no (Book One, Echo I) [PROPOSED: the book says \"she says no eleven times\"]",
+   "delivery": "low"
+  },
+  {
+   "id": "wearer.t70.twelfth",
+   "speaker": "wearer",
+   "kind": "narration",
+   "text": "All right, lark. Then I'll come through to you.",
+   "source": "thread70.js TX.twelfth (Book One, Echo I)",
+   "voiceOf": "tobin",
+   "delivery": "murmur"
+  },
+  {
+   "id": "lyra.t70.coming",
+   "speaker": "lyra",
+   "kind": "narration",
+   "text": "Don't. I'm coming.",
+   "source": "thread70.js TX.coming (Book One, Echo I)"
+  },
+  {
+   "id": "weaver.t70.watched",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "I have watched that moment four hundred and eleven times.",
+   "source": "thread70.js TX.watched (Book One, Echo I)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "weaver.t70.soup",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "That is what a thread is. You are a soup, and a thing in the dark is patient, and some nights you have had enough sleep.",
+   "source": "thread70.js TX.soup (Book One, Echo I)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "weaver.t70.matters",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "I will tell you the part that matters.",
+   "source": "thread70.js TX.matters (Book One, Echo I)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "weaver.t70.good",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "And it is very good.",
+   "source": "thread70.js TX.good (Book One, Echo I)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "weaver.t70.quickly",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "Here is the rest of it, quickly, because you have a book to finish.",
+   "source": "thread70.js TX.quickly (Book One, Echo I)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "weaver.t70.times",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "Four hundred and eleven times.",
+   "source": "thread70.js TX.times (Book One, Echo I)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "weaver.t70.margin",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "That is all. That is the whole margin. A tired woman heard something, and did not go out.",
+   "source": "thread70.js TX.margin (Book One, Echo I)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "weaver.t70.fresh",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "I have watched a great many threads, and I can tell you with some authority that the world is never saved by the people who are fresh.",
+   "source": "thread70.js TX.fresh (Book One, Echo I)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "weaver.t70.looking",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "I have looked at four hundred and eleven of these, and I have not yet found a third option, and I am still looking, and I would like you to remember, when we get there, that I was looking.",
+   "source": "thread70.js TX.looking (Book One, Echo I)",
+   "delivery": "murmur"
   }
  ],
  "skipped": [
