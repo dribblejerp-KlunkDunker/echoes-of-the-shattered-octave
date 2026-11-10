@@ -129,6 +129,47 @@ const LIBRARY = (function () {
       const v = NPCS[b.at]; if (!Array.isArray(v.shop)) v.shop = [];
       if (!v.shop.some(s => s.item === b.id)) v.shop.push({ item: b.id, price: b.price || 2 });
     }
+    installIcons();
+  }
+
+  // Phase 20 pixel icons (js/icons.js's PIX kit) for the books you can own: a closed book, cover, page block and band.
+  // The cover cloth comes from the book's id, the band's colour from its shelf (genre) and the cover's finish from its
+  // style; a cover whose look another owned book already has steps on to the next, so every book's icon is its own.
+  const ICON_COVERS = ['#8c2a24', '#3e5f92', '#3c6a62', '#5f7a3c', '#83522f', '#2e3e60', '#6a4a7a', '#7a6a3a', '#4f565c', '#a8683e', '#5b3822', '#8c1f4a'];
+  const ICON_BANDS = { history: '#d8ad3c', lives: '#e8dfc4', tales: '#c3cbcf', craft: '#9ac45a', faith: '#34302c', world: '#b0613a' };
+  const ICON_LAYOUTS = 3;   // 0 one band across the middle, 1 a band at head and tail, 2 a band down the spine
+  function bookIconLook(b, used) {
+    let h = 2166136261; for (const ch of String(b.id)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+    h >>>= 0;
+    const band = ICON_BANDS[shelfOf(b.genre).key] || ICON_BANDS.world, n = ICON_COVERS.length * ICON_LAYOUTS;
+    let k = h % n;
+    for (let i = 0; i < n && used.has(band + '|' + k); i++) k = (k + 1) % n;
+    used.add(band + '|' + k);
+    return { cover: ICON_COVERS[k % ICON_COVERS.length], layout: (k / ICON_COVERS.length) | 0, band, label: b.style === 'parch' || b.style === 'office' };
+  }
+  // Called whenever books join ITEMS: here for the books you can own, and by js/libraries26.js for the keepers' gifts.
+  // A book's look is fixed the first time it is seen, so a later call never changes an icon already drawn.
+  const iconLooks = Object.create(null), iconUsed = new Set();
+  function installIcons() {
+    if (typeof ICONS === 'undefined' || !ICONS.PIX || !ICONS.C_PX || typeof ITEMS === 'undefined') return;
+    const X = ICONS.PIX, C = ICONS.C_PX;
+    for (const b of BOOKS) {
+      if (!ITEMS[b.id] || ITEMS[b.id].sprite !== 'lib_book' || iconLooks[b.id]) continue;
+      const L = iconLooks[b.id] = bookIconLook(b, iconUsed);
+      if (Object.prototype.hasOwnProperty.call(X, b.id)) continue;   // never override an icon someone else drew
+      X[b.id] = d => {
+        const x = 5, y = 3, w = 13, hh = 18;
+        d.layer(C.paper).rect(x + 2, y + 1, w, hh - 1);                       // the page block, showing at fore-edge and tail
+        d.layer(L.cover, { shiny: L.label ? 0 : 1 }).rect(x, y, w, hh);       // the cover
+        d.layer(L.cover, { lift: -2, sep: false }).rect(x, y, 2, hh);         // the spine, a shade darker
+        const band = d.layer(L.band, { shade: 'flat' });
+        if (L.layout === 0) band.rect(x, y + 8, w, 2);
+        else if (L.layout === 1) band.rect(x, y + 2, w, 1).rect(x, y + hh - 3, w, 1);
+        else band.rect(x + 3, y, 2, hh);
+        if (L.label) d.layer(C.cream, { shade: 'flat' }).rect(x + 6, y + 3, 5, 3);   // a paper title label
+        for (let j = y + 2; j < y + hh; j += 2) d.mark('#f2ead2', x + w + 1, j);     // the page edges
+      };
+    }
   }
 
   // ---------------------------------------------------------------- placement (piles and found books)
@@ -311,5 +352,5 @@ const LIBRARY = (function () {
   }
 
   return { BOOKS, BY_ID, SHELVES, REGIONS, has, got, count, booksAt, foundAt, onShelf, read, menu, pile, place, findSpot, renderLibrary,
-    bodyHtml, genreName, shelfOf, regionOf, hooks, isBook, on };
+    bodyHtml, genreName, shelfOf, regionOf, hooks, isBook, on, installIcons };
 })();

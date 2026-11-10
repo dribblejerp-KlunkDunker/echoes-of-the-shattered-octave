@@ -308,6 +308,7 @@ const LIBRARIES = (function () {
   if (typeof ITEMS !== 'undefined') for (const b of L.BOOKS) if (b.how === 'gift' && !ITEMS[b.id]) {
     ITEMS[b.id] = { name: b.title, sprite: 'lib_book', use: 'lib_book', value: 1, key: true, desc: L.genreName(b.genre) + ' — ' + b.author + '. ' + (b.summary || '') + ' Read it from your pack; reading does not use it up.' };
   }
+  if (typeof L.installIcons === 'function') L.installIcons();   // the gifts' pixel icons, like the other books'
   if (typeof buildAllMaps === 'function') {
     const _build = buildAllMaps;
     buildAllMaps = function () { return install(_build.apply(this, arguments)); };
