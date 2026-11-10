@@ -1946,6 +1946,27 @@ const VOICE_LINES = {
 "src": "voices/lyra_ruined/lyra.h66.write.mp3",
 "t": "Write this down, and get it exactly right, because he'll ask you."
 },
+"lyra.t70.coming": {
+"d": 1.22,
+"kind": "narration",
+"speaker": "lyra",
+"src": "voices/lyra/lyra.t70.coming.mp3",
+"t": "Don't. I'm coming."
+},
+"lyra.t70.hello": {
+"d": 1.01,
+"kind": "narration",
+"speaker": "lyra",
+"src": "voices/lyra/lyra.t70.hello.mp3",
+"t": "Hello, Da."
+},
+"lyra.t70.no": {
+"d": 0.72,
+"kind": "narration",
+"speaker": "lyra",
+"src": "voices/lyra/lyra.t70.no.mp3",
+"t": "No."
+},
 "lyra_fortunate.rite.fortunate": {
 "d": 4.44,
 "kind": "narration",
@@ -3574,6 +3595,38 @@ const VOICE_LINES = {
 "t": "Tammy, there's a gap here. Bring the little ones first.",
 "voiceOf": "tam"
 },
+"wearer.t70.again": {
+"d": 1.75,
+"kind": "narration",
+"speaker": "wearer",
+"src": "voices/wearer/wearer.t70.again.mp3",
+"t": "Come through.",
+"voiceOf": "tobin"
+},
+"wearer.t70.come": {
+"d": 11.54,
+"kind": "narration",
+"speaker": "wearer",
+"src": "voices/wearer/wearer.t70.come.mp3",
+"t": "Come through. Lark. There's a gap down by the cooperage drain, where the water goes under. It's not even a squeeze. Come through and sit with me a bit. It's cold out here and I've been on my own two years.",
+"voiceOf": "tobin"
+},
+"wearer.t70.lark": {
+"d": 2.06,
+"kind": "narration",
+"speaker": "wearer",
+"src": "voices/wearer/wearer.t70.lark.mp3",
+"t": "There's my lark.",
+"voiceOf": "tobin"
+},
+"wearer.t70.twelfth": {
+"d": 2.93,
+"kind": "narration",
+"speaker": "wearer",
+"src": "voices/wearer/wearer.t70.twelfth.mp3",
+"t": "All right, lark. Then I'll come through to you.",
+"voiceOf": "tobin"
+},
 "weaver.h66.thread": {
 "d": 3.14,
 "kind": "narration",
@@ -3594,6 +3647,90 @@ const VOICE_LINES = {
 "speaker": "weaver",
 "src": "voices/weaver/weaver.rope.echo.mp3",
 "t": "I have watched you choose this four hundred and eleven times."
+},
+"weaver.t70.fresh": {
+"d": 7.39,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.fresh.mp3",
+"t": "I have watched a great many threads, and I can tell you with some authority that the world is never saved by the people who are fresh."
+},
+"weaver.t70.good": {
+"d": 1.85,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.good.mp3",
+"t": "And it is very good."
+},
+"weaver.t70.looking": {
+"d": 10.25,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.looking.mp3",
+"t": "I have looked at four hundred and eleven of these, and I have not yet found a third option, and I am still looking, and I would like you to remember, when we get there, that I was looking."
+},
+"weaver.t70.margin": {
+"d": 5.9,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.margin.mp3",
+"t": "That is all. That is the whole margin. A tired woman heard something, and did not go out."
+},
+"weaver.t70.matters": {
+"d": 2.11,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.matters.mp3",
+"t": "I will tell you the part that matters."
+},
+"weaver.t70.night": {
+"d": 2.95,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.night.mp3",
+"t": "That is the whole of the difference. One night."
+},
+"weaver.t70.quickly": {
+"d": 3.6,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.quickly.mp3",
+"t": "Here is the rest of it, quickly, because you have a book to finish."
+},
+"weaver.t70.soup": {
+"d": 6.48,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.soup.mp3",
+"t": "That is what a thread is. You are a soup, and a thing in the dark is patient, and some nights you have had enough sleep."
+},
+"weaver.t70.times": {
+"d": 2.28,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.times.mp3",
+"t": "Four hundred and eleven times."
+},
+"weaver.t70.watched": {
+"d": 3.24,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.watched.mp3",
+"t": "I have watched that moment four hundred and eleven times."
+},
+"weaver.t70.went": {
+"d": 2.11,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.went.mp3",
+"t": "Here is the thread where she went."
+},
+"weaver.t70.who": {
+"d": 2.21,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.t70.who.mp3",
+"t": "You will want to know who is talking."
 },
 "weaver.voice.0": {
 "d": 2.23,

@@ -18,6 +18,21 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## Echo I, "The Thread Where She Answered", as an extra (built 10 Nov; ROADMAP R9 #24)
+
+Title screen, Extras, "The Thread Where She Answered" (the extras open once Book One is finished, or with a finished save code). You are Lyra in the thread the Tide-Weaver shows you: read his cards, go out of her door and down Cooper's Row to the flat stone behind the cooperage, and sit.
+
+- **Grey.** The whole extra is drawn grey, world and HUD. Is it readable at the dead hour on your screen (the shadows are lifted a little), and does it read as an Echo rather than as a broken colour setting?
+- **The stone.** Can you find it in the dark, behind the cooperage at the foot of the Hedge? Is it clear that you sit when you reach it?
+- **The noes.** It asks "Come through." every five seconds and you answer with E, eleven times in all. Does that feel like three hours of refusing, or like a chore? Is "NO · n" at the top of the view clear?
+- **Another thread.** Get up from the stone once while it asks. Is it clear why you are put back, and that nothing is lost?
+- **The drain.** Eleven seconds of the view sinking into the dark, then four minutes of black (six seconds). Too long, too short?
+- **Her boots.** Walking it home up the Row and lying it down in her bed: does being the thing that came back land, or does it need a word more?
+- **Kaelen.** At the door, at the table, his hum at the door. Does the hum carry on real speakers, and is "it does not recognize it" felt?
+- **Reading.** The Weaver's cards are long, word for word from the book (seven of them at the end). Is the pacing right? Do the voices (the Weaver, the thing in Tobin's voice, Lyra) suit?
+
+Notes:
+
 ## The herald and the temptation (built 10 Nov; ROADMAP R9 item 21)
 
 Finish the coda and close the Kestrel's tank, so the herald comes up the south road. Talk to Kaelen at the fire first (the column), then to the herald. Play it twice: once following Kaelen and Lyra into the trees and telling him to take it (the Echo), once staying in the ring. Try one run where Kaelen never told Lyra everything, so she has no voice.
