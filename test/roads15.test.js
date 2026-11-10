@@ -292,9 +292,18 @@ const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:3000';
       const out = {};
       // whitelist: four generic houses, enterable ones never
       setup();
-      check(R.BUILDINGS.length === 4, 'four houses in the whitelist');
+      check(R.BUILDINGS.length === 4, 'four slots in the whitelist (saves key fires by slot)');
+      const retired = R.BUILDINGS.filter(b => b.retired);
+      check(retired.length === 1 && retired[0].key === 'orchard', 'one slot retired: the orchard house');
+      for (const [i, b] of R.BUILDINGS.entries()) if (b.retired) {
+        // the orchard house's door is the Conservatory Reading Room's (js/libraries26.js): enterable, so it never burns
+        const dc = m().cells[b.door[1] * m().w + b.door[0]];
+        check(!R.validateBuilding(i) && dc.door && dc.portal && dc.portal.map === 'lib_conservatory', 'retired ' + b.key + ': its door is the Conservatory now');
+        check(!R.ignite(b.key, 'story') && !R.ignite(i, 'flask') && R.stageOf(i) === 'none', 'retired ' + b.key + ' never burns');
+      }
       for (let i = 0; i < 4; i++) {
-        const b = R.BUILDINGS[i]; check(R.validateBuilding(i), 'building ' + b.key + ' matches the map');
+        const b = R.BUILDINGS[i]; if (b.retired) continue;
+        check(R.validateBuilding(i), 'building ' + b.key + ' matches the map');
         const dc = m().cells[b.door[1] * m().w + b.door[0]];
         check(dc.door && !dc.portal && !dc.shop, b.key + ' is a closed door: not a shop, not an interior');
         check(!/Tarrow|Boar|mill|tannery|Cooper|market|Bettany|Harrow|Office|Synod|watch/i.test(b.label), 'no named building in the whitelist: ' + b.label);
@@ -347,16 +356,16 @@ const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:3000';
       check(R.activeCount() === 0, 'nothing in trouble once rebuilt');
 
       // max two houses at once
-      setup(); check(R.ignite('east', 'story') && R.ignite('orchard', 'story'), 'two at once');
-      check(!R.ignite('meadow', 'story') && !R.ignite('madders', 'story') && R.activeCount() === 2, 'never a third while two are in trouble');
-      passHours(F.charHours + F.rebuildHours + 1); R.syncFire(); check(R.ignite('meadow', 'story'), 'room again once they are rebuilt');
+      setup(); check(R.ignite('east', 'story') && R.ignite('meadow', 'story'), 'two at once');
+      check(!R.ignite('madders', 'story') && R.activeCount() === 2, 'never a third while two are in trouble');
+      passHours(F.charHours + F.rebuildHours + 1); R.syncFire(); check(R.ignite('madders', 'story'), 'room again once they are rebuilt');
 
       // arson: a witnessed flask fire is a heavy bounty; a story fire has no one to blame
       const realLaw = window.lawActive, realWit = window.theftWitness;
       setup(); window.lawActive = () => true; window.theftWitness = () => ({ id: 'townsman' });
       G.player.crime = { bounty: 0 }; check(R.ignite('east', 'flask'), 'a flask fire takes the house');
       check(G.player.crime.bounty === F.arson && F.arson > 35, 'witnessed arson is ' + F.arson + ' (above fire\'s +35): ' + G.player.crime.bounty);
-      setup(); G.player.crime = { bounty: 0 }; R.ignite('orchard', 'story'); check(G.player.crime.bounty === 0, 'a story fire is nobody\'s crime');
+      setup(); G.player.crime = { bounty: 0 }; R.ignite('madders', 'story'); check(G.player.crime.bounty === 0, 'a story fire is nobody\'s crime');
       setup(); window.theftWitness = () => null; G.player.crime = { bounty: 0 }; R.ignite('meadow', 'flask'); check(G.player.crime.bounty === 0, 'no witness, no bounty');
       window.lawActive = realLaw; window.theftWitness = realWit;
 
@@ -383,7 +392,7 @@ const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:3000';
       G.flags.greening = true; R.syncFire(); R.syncAll();
       check(R.stageOf(0) === 'none' && R.activeCount() === 0 && R.props[0].list.length === 0, 'the Greening ends the fire: no stage, no props');
       check(JSON.stringify(decalsOf(0)) === JSON.stringify(before), 'the Greening leaves the walls as the map had them');
-      check(!R.ignite('orchard', 'story') && !R.ignite('meadow', 'flask'), 'no new fires after the Greening');
+      check(!R.ignite('madders', 'story') && !R.ignite('meadow', 'flask'), 'no new fires after the Greening');
       delete G.flags.greening;
       setup(); G.flags.part3 = true; check(!R.ignite('east', 'story'), 'part 3 stops it too'); delete G.flags.part3;
 
@@ -404,6 +413,7 @@ const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:3000';
       evil.flags.p15r_b0 = 1e12; evil.flags.p15r_b1 = 5; evil.flags.p15r_b2 = 6; evil.flags.p15r_b3 = 7; evil.flags.p15r_bs = 'x'; evil.flags.p15r_junk = 4; evil.flags.p15r_dead = -1; evil.flags.p15r_trips = -3;
       restoreGame(evil); G.state = 'play';
       check(R.activeCount() <= F.maxActive, 'a hostile save cannot light more than two houses: ' + R.activeCount());
+      check(R.BUILDINGS.every((b, i) => !b.retired || R.stageOf(i) === 'none'), 'a saved fire on a retired slot counts for nothing');
       check(G.flags.p15r_junk === undefined && G.flags.p15r_trips === 0 && (G.flags.p15r_bs | 0) === 0, 'junk keys are dropped, bad counters reset');
       check(!G.flags.p15r_b0 || G.flags.p15r_b0 <= Math.floor(clk()) + 1, 'a fire cannot start in the future');
       return out;

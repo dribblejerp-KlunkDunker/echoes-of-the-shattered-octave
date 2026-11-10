@@ -14,7 +14,8 @@
 //                     stole) is confiscated, the grapnel also earns a small bounty. It NEVER blocks you: every outcome
 //                     ends with you on the road to where you were going, and Turn back is always offered. Quest items
 //                     (ITEMS[x].key) are never taken.
-//  2. FIRE AND REBUILDING [PROPOSED]. A flask fire (js/kit12.js) that burns beside one of four generic, unnamed houses for
+//  2. FIRE AND REBUILDING [PROPOSED]. A flask fire (js/kit12.js) that burns beside one of three generic houses (a fourth, the
+//     orchard house, is the Conservatory now: js/libraries26.js) for
 //     3 s sets it alight (a story event may call ROADS15.ignite). It burns 5 h (flames, smoke through js/firesmoke.js),
 //     stands charred (a wall-decal char, persisted by flags) for 3 days, is scaffolded and worked on by builders in the
 //     daytime for 6 days, then is whole again. Never a shop, never a story building, never the Greening's Oakhaven. A
@@ -535,12 +536,15 @@ const ROADS15 = (() => {
   // =============================================================================================================
   //  2. FIRE AND REBUILDING
   // =============================================================================================================
-  // Four generic Oakhaven houses (js/maps.js buildings): unnamed, no shop, no story. Never the Tarrows' (house13), Cooper's
+  // Generic Oakhaven houses (js/maps.js buildings): unnamed, no shop, no story. Never the Tarrows' (house13), Cooper's
   // Row (the one the player can buy), the Boar, the mill, the tannery or anything that is somebody's name.
+  // A slot is never removed or reordered: saves key the fires by index (p15r_b<i>, the p15r_bs bitmask). A house another
+  // module has since given a use is 'retired' instead: it never burns and a saved fire on it counts for nothing.
   const F = BAL.fire;
   const BUILDINGS = [
     { key: 'east', label: 'A shuttered house', x: 40, y: 14, w: 3, h: 6, door: [40, 16] },
-    { key: 'orchard', label: 'A shuttered house', x: 46, y: 39, w: 5, h: 4, door: [48, 39] },
+    // the orchard house's door is the Conservatory Reading Room's since js/libraries26.js (Ilse Brennan's; enterable)
+    { key: 'orchard', label: 'A shuttered house', x: 46, y: 39, w: 5, h: 4, door: [48, 39], retired: 'libraries26' },
     { key: 'meadow', label: 'A shuttered house', x: 38, y: 38, w: 5, h: 4, door: [38, 40] },
     { key: 'madders', label: 'The Madders\' house', x: 4, y: 27, w: 3, h: 6, door: [6, 29] },
   ];
@@ -550,7 +554,7 @@ const ROADS15 = (() => {
   const saved = new WeakMap();    // map -> { ci: original decal name | null }
 
   function buildingAt(m, b) {
-    if (!m || m.id !== 'oakhaven' || m.w !== 70 || m.h !== 64) return null;
+    if (!m || !b || b.retired || m.id !== 'oakhaven' || m.w !== 70 || m.h !== 64) return null;
     const dc = m.cells[b.door[1] * m.w + b.door[0]];
     if (!dc || !dc.door || (dc._p15 ? dc._p15.label : dc.label) !== b.label) return null;
     if (dc.portal) return null;                                  // a building you can enter is somebody's
@@ -572,7 +576,7 @@ const ROADS15 = (() => {
     if (dy === b.y) return [0, -1]; return [0, 1];
   }
   function stageOf(i) {
-    if (!set.fire || !hasG() || greened()) return 'none';
+    if (!set.fire || !hasG() || greened() || !BUILDINGS[i] || BUILDINGS[i].retired) return 'none';
     const v = fint(FLAG + 'b' + i, 0, 9999999);
     if (!v) return 'none';
     const start = Math.min(v - 1, Math.floor(clockHours()));      // a hostile save cannot start a fire in the future

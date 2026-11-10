@@ -324,7 +324,7 @@ const GOVERNOR46 = (function () {
     paint();
     if (typeof NPCS !== 'undefined') for (const k in P) if (!NPCS[k]) NPCS[k] = P[k];
     if (typeof ITEMS !== 'undefined') for (const k in ITEM_DEFS) if (!ITEMS[k]) ITEMS[k] = Object.assign({}, ITEM_DEFS[k]);
-    try { if (typeof VOICES !== 'undefined' && VOICES.PEOPLE) Object.assign(VOICES.PEOPLE, Object.assign({ p46_marrit: { f0: 200, fs: 1.02, style: 'plain' } }, VOICES.PEOPLE)); } catch (e) { /* default voices */ }
+    try { if (typeof VOICES !== 'undefined' && VOICES.PEOPLE) Object.assign(VOICES.PEOPLE, Object.assign({ p46_marrit: { f0: 200, fs: 1.02, style: 'human' } }, VOICES.PEOPLE)); } catch (e) { /* default voices */ }
     if (typeof buildAllMaps === 'function') {
       const _b = buildAllMaps;
       buildAllMaps = function () { const maps = _b.apply(this, arguments); try { buildMaps(maps); } catch (e) { warnOnce('build', e); } return maps; };

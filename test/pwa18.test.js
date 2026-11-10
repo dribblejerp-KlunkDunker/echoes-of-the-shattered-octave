@@ -114,6 +114,9 @@ function staticChecks() {
   try {
     for (const d of ['css', 'js', 'img', 'fonts', 'locales', 'assets']) fs.cpSync(path.join(ROOT, d), path.join(scratch, d), { recursive: true });
     for (const f of ['index.html', 'sw.js', 'manifest.webmanifest']) fs.copyFileSync(path.join(ROOT, f), path.join(scratch, f));
+    // files index.html loads from the site root itself (e.g. phase1_stealth_law_gameplay.js) are served too
+    const rootRefs = new Set(refs.map((r) => r.split('?')[0]).filter((r) => !r.includes('/') && !['index.html', 'sw.js', 'manifest.webmanifest'].includes(r)));
+    for (const f of rootRefs) fs.copyFileSync(path.join(ROOT, f), path.join(scratch, f));
     fs.mkdirSync(path.join(scratch, 'music'), { recursive: true }); fs.mkdirSync(path.join(scratch, 'voices/x'), { recursive: true });
     fs.writeFileSync(path.join(scratch, 'music/a.mp3'), 'a'); fs.writeFileSync(path.join(scratch, 'voices/x/b.mp3'), 'b');
     const tool = path.join(ROOT, 'tools/pwa/precache.js'), env = Object.assign({}, process.env, { PRECACHE_ROOT: scratch });
@@ -139,7 +142,7 @@ function staticChecks() {
     // staging for Pages: exactly the served files, nothing of the repository's development material
     run();
     const stage = path.join(scratch, '_site');
-    check(run('--stage', stage) === 0 && fs.existsSync(path.join(stage, 'index.html')) && fs.existsSync(path.join(stage, 'sw.js')) && fs.existsSync(path.join(stage, 'music/a.mp3')) && !fs.existsSync(path.join(stage, 'test')) && !fs.existsSync(path.join(stage, 'story')), 'scratch site: --stage copies the served files (and nothing else) for Pages');
+    check(run('--stage', stage) === 0 && fs.existsSync(path.join(stage, 'index.html')) && fs.existsSync(path.join(stage, 'sw.js')) && fs.existsSync(path.join(stage, 'music/a.mp3')) && [...rootRefs].every((f) => fs.existsSync(path.join(stage, f))) && !fs.existsSync(path.join(stage, 'test')) && !fs.existsSync(path.join(stage, 'story')), 'scratch site: --stage copies the served files (and nothing else) for Pages');
   } finally { fs.rmSync(scratch, { recursive: true, force: true }); }
   check(fs.existsSync(path.join(ROOT, '.github/workflows/pages.yml')), 'the Pages workflow exists');
   const wf = fs.readFileSync(path.join(ROOT, '.github/workflows/pages.yml'), 'utf8');
