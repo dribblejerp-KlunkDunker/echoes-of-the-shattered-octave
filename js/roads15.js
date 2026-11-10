@@ -973,7 +973,9 @@ const ROADS15 = (() => {
       if (k.indexOf(FLAG) !== 0) continue;
       const v = f[k];
       if (k === FLAG + 'trips') { f[k] = fint(k, 0, 99999); continue; }
-      if (/^p15r_b[0-3]$/.test(k)) { f[k] = fint(k, 0, 9999999); if (!f[k]) delete f[k]; else f[k] = Math.min(f[k], Math.floor(clockHours()) + 1); continue; }
+      const slot = /^p15r_b(\d+)$/.exec(k);
+      // one record per fire slot, the hay-barn's (4) included
+      if (slot && +slot[1] < BUILDINGS.length) { f[k] = fint(k, 0, 9999999); if (!f[k]) delete f[k]; else f[k] = Math.min(f[k], Math.floor(clockHours()) + 1); continue; }
       if (k === FLAG + 'bs') { f[k] = fint(k, 0, 31); continue; }
       if (k === FLAG + 'dead') { f[k] = acceptedMask(v); if (!f[k]) delete f[k]; continue; }
       if (k === FLAG + 'dsay') { f[k] = fint(k, 0, 0xFFFF); continue; }

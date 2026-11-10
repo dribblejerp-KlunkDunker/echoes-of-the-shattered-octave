@@ -363,6 +363,8 @@ const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:3000';
       setup(); check(R.ignite('haybarn', 'story') === true && R.stageOf(4) === 'burning', 'the hay-barn burns');
       R.syncFire(); const bd = m().cells[R.BUILDINGS[4].door[1] * m().w + R.BUILDINGS[4].door[0]];
       check(bd.label === 'A burnt hay-barn', 'its door reads as a burnt hay-barn, not a house: ' + bd.label);
+      R.syncAll ? R.syncAll() : null; loadMap('oakhaven', { x: 39.5, y: 12.5, dir: 0 }); G.state = 'play';
+      check(R.stageOf(4) === 'burning' && !!G.flags.p15r_b4, 'the hay-barn\'s fire survives a map load (the save cleaner keeps slot 4)');
       passHours(F.charHours + F.rebuildHours + 1); R.syncFire(); check(R.ignite('madders', 'story'), 'room again once they are rebuilt');
 
       // arson: a witnessed flask fire is a heavy bounty; a story fire has no one to blame
