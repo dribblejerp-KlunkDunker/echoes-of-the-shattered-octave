@@ -42,6 +42,10 @@ CAST = {
     'davin':      dict(voice='bm_george',  speed=0.9,  pitch=0,  lang='en-gb', fx=['room']),
     'ada':        dict(voice='bf_isabella', speed=0.92, pitch=-1, lang='en-gb', fx=['outdoors']),
     'lyra_fortunate': dict(voice='af_heart', speed=0.72, pitch=-1, lang='en-us', fx=[('note', 174.0), 'gravel', 'hall']),
+    # ---- the Prologue (js/bell69.js), the Siphon Foundry, 412: the engineer before the glass arm ("A Reach voice, too
+    #      loud"; not yet thirty), and the Tuning Men calling the match across the open iron
+    'kaelen_foundry': dict(voice='am_fenrir', speed=0.98, pitch=-1, lang='en-us', fx=['hall']),
+    'tuningman':  dict(voice='bm_lewis',   speed=0.96, pitch=-2, lang='en-gb', fx=['hall']),
     # ---- the opening cinematic's narrator: an older man, grave and unhurried, in a great room
     'narrator':   dict(voice='bm_daniel',  speed=0.84, pitch=-3, lang='en-gb', fx=['hall']),
     'townswoman': dict(voice='af_sarah',   speed=0.96, pitch=0,  lang='en-us', fx=['outdoors']),

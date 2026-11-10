@@ -28,7 +28,7 @@ const DAYS35 = (function () {
   const warnOnce = (k, e) => { if (!warned[k]) { warned[k] = true; console.warn('days35: ' + k + ' failed', e); } };
   const guest = () => { try { return typeof SYNC19 !== 'undefined' && !!SYNC19.isGuest(); } catch (e) { return false; } };
   // the extras after Book One (js/extras17.js) keep their own calendar, in their own session and on their own maps
-  const inExtra = () => { try { if (typeof EXTRAS17 !== 'undefined' && EXTRAS17.inExtra()) return true; } catch (e) { /* none */ } return typeof G !== 'undefined' && G && /^(cantabile|p17)/.test(String(G.mapId || '')); };
+  const inExtra = () => { try { if (typeof EXTRAS17 !== 'undefined' && EXTRAS17.inExtra()) return true; } catch (e) { /* none */ } return typeof G !== 'undefined' && G && /^(cantabile|p17|b69_)/.test(String(G.mapId || '')); };
   const say = (t, cls, ms) => { try { msg(t, cls || '', ms || 4500); } catch (e) { /* cosmetic */ } };
 
   const WHEN = { davin: [2, 20], whistle: [2, 14], lure: [3, 19], boots: [3, 0], church: [5, 6] };

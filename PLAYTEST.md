@@ -55,6 +55,20 @@ Notes:
 
 ---
 
+## The Prologue, "The Cracked Bell", as an extra (built 10 Nov; ROADMAP R9 #23)
+
+Title screen, Extras, "The Cracked Bell" (the extras open once Book One is finished, or with a finished save code). You are Solenne Aubade in the choir-loft; walk the pallets, take the stair down, look at the Foundry (E works from across the floor), and go to your place on the top tier.
+
+- **The loft.** Can you find the pallets in the dark? Is counting the voices clear from the HUD, and is Ilse's pallet easy to find?
+- **Reading.** The cards are long, word for word from the book. Is the pacing right between the cards and the messages during the Swell ("One note." creak "One law." creak "One hand.")?
+- **Listening.** Standing still while the chord comes closer: does it feel like listening, or like waiting?
+- **The light.** The frame whitens slowly. Is it readable on your screen, and gentle enough for the No flashes setting? Is the black of the fall too long?
+- **Looking up.** Does turning to the gallery feel like the moment the book has, and do you see Seraphina in her circle of colour?
+- **Sound.** The note (528) under everything, the engineer's low hum near the gantry, the silence when the chord stops, the creak of the censer chain. Real speakers only.
+- **The Echo.** Step down off the risers once during the Swell. Is it clear why, and that nothing is lost?
+
+Notes:
+
 ## Orla's harvest home (built 8 Nov; ROADMAP R9 item 17)
 
 Bring Davin's boots to Orla Hale in the Hollow (after Hearthday night), then speak to her again. Come back on each of the next three days for a line of The Last Sheaf. Try one lesson with the shutters open. Then, at the Greening, go with Lyra to Orla's tree.
