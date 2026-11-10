@@ -2098,6 +2098,13 @@ const VOICE_LINES = {
 "t": "Entry: a stranger, polite, at the wrong end of the continent. Sit. Not there. That is where the proctors will come from.",
 "voiceOf": "sable"
 },
+"sable.hymn9.sung": {
+"d": 7.42,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.hymn9.sung.mp3",
+"t": "Hold us in the little light \u2014 hold us in the little light until the morning comes\u2014"
+},
 "sable_dw.greet.blunt": {
 "d": 2.18,
 "kind": "greet",
@@ -2383,6 +2390,13 @@ const VOICE_LINES = {
 "src": "voices/vane/vane.greet.polite.mp3",
 "t": "Every sailor dies, friend. The trick is to be somewhere else when it happens. Sit; I'm buying, because I'm frightened.",
 "voiceOf": "vane"
+},
+"vane.hold.fortyeight": {
+"d": 0.84,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.hold.fortyeight.mp3",
+"t": "Forty-eight."
 },
 "vane.rope.eight": {
 "d": 0.6,
