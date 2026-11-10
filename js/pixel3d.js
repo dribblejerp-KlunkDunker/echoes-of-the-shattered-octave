@@ -131,10 +131,16 @@ const PIXEL3D = (() => {
   }
   // ---- props: swapped under the stand-in's name
   const props = {};   // name -> { orig, applied }
+  // The engine's own sprites arrive one at a time in Engine.loadAll (js/game.js's boot), and a GFX change (the preset
+  // applied at load) can ready an atlas before then: a model swapped in under a name the engine has not loaded yet is
+  // overwritten when its stand-in arrives, while this still believes it applied. So a prop waits for its stand-in,
+  // and boot() below syncs once every stand-in is in.
+  const standIn = (name) => typeof ASSETS === 'undefined' || !ASSETS.spr || !(name in ASSETS.spr) || !!Engine.sprites[name];
+  const standInsLoaded = () => typeof ASSETS === 'undefined' || !ASSETS.spr || Object.keys(ASSETS.spr).every(k => !!Engine.sprites[k]);
   function syncProps() {
     if (typeof Engine === 'undefined' || !Engine.sprites) return;
     for (const name in ATLAS) {
-      if (ATLAS[name].k !== 'prop') continue;
+      if (ATLAS[name].k !== 'prop' || !standIn(name)) continue;
       const want = on(); let p = props[name]; if (!p) p = props[name] = { orig: null, applied: false };
       if (want) {
         const s = view(name, 0, ''); if (!s || p.applied) continue;
@@ -160,7 +166,7 @@ const PIXEL3D = (() => {
     const _acc = renderAccessibilityMenu;
     renderAccessibilityMenu = function () { const r = _acc.apply(this, arguments); try { appendRow(); } catch (e) { stats.errors++; } return r; };
   }
-  (function boot(n) { if (typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites.proctor) { preload(); return; } if (n < 600) setTimeout(() => boot(n + 1), 100); })(0);
+  (function boot(n) { if (typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites.proctor && standInsLoaded()) { preload(); try { syncProps(); } catch (e) { stats.errors++; } return; } if (n < 600) setTimeout(() => boot(n + 1), 100); })(0);
 
   return { ATLAS, POSES, view, has, covers, preload, stats, models: () => Object.keys(ATLAS).sort(), ready: (n) => !!(atl[n] && atl[n].state === 'ready'), syncProps, budgetBytes: () => bytes, cap: CAP };
 })();
