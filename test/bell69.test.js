@@ -143,13 +143,15 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       window.__msgs.length = 0; const eng = T.ent('eng'); T.at(eng.x - 2, eng.y + 3); T.step(3); out.hum = T.heard(/So low it was nearly under the floor/);
       // the far look: E at something across the floor
       window.__ev.length = 0; T.at(13.0, 13.5, -Math.PI / 2); Engine.render(G.ents, G.tod); interact(); const far = T.last(); out.far = !!far; if (far) T.first();
+      // E at the Spire's white flank, with nobody in the way: the Spire's own card
+      window.__ev.length = 0; T.at(3.5, 3.0, -Math.PI / 2); Engine.cam.pitch = 40; Engine.render(G.ents, G.tod); interact(); const sp = T.last(); out.farSpire = !!sp && /white of a clean bone/.test(sp.b); if (sp) T.first(); Engine.cam.pitch = 0;
       return out;
     });
     if (process.env.DEBUG) console.log('floor', JSON.stringify(floor));
     check(floor.map && floor.card && floor.hint, 'down the stair to the Foundry floor: "the way a scab grows around a nail", the open roof');
     check(floor.spire && floor.bore && floor.glass && floor.choir && floor.choirVo, 'the sights in the book\'s words: the Spire ("It sounds tired."), the Carrow Bore, the glass ("It came in pulses."), the choir\'s work and Ignatius\'s first morning (voiced)');
     check(floor.censer && floor.gallery && floor.eng && floor.seen === 127, 'the censer, the gallery and Seraphina (your hands: "Look at me." And every morning her sister did not), the engineer and his note');
-    check(floor.coralie && floor.hum && floor.far, 'Coralie at your left shoulder; his hum near the gantry; E looks across the floor');
+    check(floor.coralie && floor.hum && floor.far && floor.farSpire, 'Coralie at your left shoulder; his hum near the gantry; E looks across the floor, at a figure or at the Spire itself');
 
     // ---- 3 · her place, and the Morning Swell
     const swell = await E(() => {
@@ -196,13 +198,15 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       window.__ev.length = 0; T.at(BELL69.SPOT.x - 3, BELL69.SPOT.y + 3); T.step(1);
       const e = T.last(); out.echo = !!e && /An Echo/.test(e.t) && /No girl of the choir ever stepped down off the risers/.test(e.b) && document.querySelector('canvas').style.filter.includes('grayscale') && BELL69.fint('b69_echoes') === 1;
       T.first(); out.back = Math.hypot(Engine.cam.x - BELL69.SPOT.x, Engine.cam.y - BELL69.SPOT.y) < 0.01 && !document.querySelector('canvas').style.filter.includes('grayscale');
+      // a step north, off the top tier toward the glass channels, is off the risers too
+      window.__ev.length = 0; T.at(BELL69.SPOT.x, 5.4); T.step(1); const n2 = T.last(); out.north = !!n2 && /An Echo/.test(n2.t); if (n2) T.first();
       T.step(1); const l = T.last(); out.again = !!l && /It let go/.test(l.t); out.letgo = /It let go/.test(l.t) && /for the first time in ten thousand years/.test(l.b) && /It believed them\./.test(l.b);
       T.first(); T.step(1); out.stage4 = BELL69.stage() === 4;
       return out;
     });
     if (process.env.DEBUG) console.log('echo', JSON.stringify(echo));
     check(echo.fork && echo.forkVo, 'the fork falls; "Stop the bore." "Hold the note," he said. And they held it (voiced; your only choice is the one the wire gives)');
-    check(echo.echo && echo.back && echo.again, 'stepping down off the risers is an Echo, grey ("No girl of the choir ever stepped down off the risers"), and you are back in your place, and it goes on from the same moment');
+    check(echo.echo && echo.back && echo.again && echo.north, 'stepping down off the risers is an Echo, grey ("No girl of the choir ever stepped down off the risers"), and you are back in your place, and it goes on from the same moment');
     check(echo.letgo && echo.stage4, '"It believed them. It let go."');
 
     // ---- 4 · the light
@@ -213,6 +217,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       let n = 0; while (n++ < 600 && !/It took everything back/.test(T.last().t)) T.step(1, 0.1);
       out.order = [/^Then the light came down the Spire\.$/, /the way water comes when a dam goes/, /^Where it touched, it took\.$/, /The iron tankers went first/, /his hands go white/].map((r) => T.idx(r));
       out.white = BELL69.R.white > 0.2;
+      const w0 = BELL69.R.white; restoreGame(JSON.parse(JSON.stringify(snapshotGame()))); G.state = 'play'; out.whiteLoad = Math.abs(BELL69.R.white - w0) < 0.05;
       out.tankers = [0, 1, 2].every((i) => T.ent('tanker' + i).hidden) && T.ent('tuning2').hidden;
       T.first(); T.step(1); const r = T.last(); out.risers = /It went into Hesper's mouth like a hand into a glove/.test(r.b) && /little Coralie, fifteen/.test(r.b);
       T.first(); T.step(1); const e = T.last(); out.eng = /through the white she saw the engineer/.test(e.b) && /three gantry boys/.test(e.b) && /like something stopped in amber/.test(e.b) && /I'll never hear that again/.test(e.b);
@@ -220,17 +225,18 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       T.first(); T.step(1); const eg = T.ent('eng'); out.conduit = eg.sprite === 'b69_engineer_glass' && Math.hypot(eg.x - 25, eg.y - 25) < 0.1 && [0, 1, 2].every((i) => T.ent('boy' + i).hidden);
       const d = T.last(); out.diss = /Dissonance!/.test(d.b) && /Purify them! Purify the Rite!/.test(d.b) && /the Flambeaux lifted their staves/.test(d.b) && window.__vo.includes('ignatius.bell.dissonance');
       window.__msgs.length = 0; T.first(); out.lookHint = T.heard(/looked up at the gallery/);
-      // turn to face the gallery
-      const c = Engine.cam; c.dir = Math.atan2(BELL69.GALLERY.y - c.y, BELL69.GALLERY.x - c.x); T.step(2);
+      // facing it is not enough (the choir faces it): lift your eyes to the gallery
+      const c = Engine.cam; c.dir = Math.atan2(BELL69.GALLERY.y - c.y, BELL69.GALLERY.x - c.x); c.pitch = 0; window.__ev.length = 0; T.step(3); out.notYet = window.__ev.length === 0;
+      c.pitch = 20; T.step(2); c.pitch = 0;
       const g = T.last(); out.sister = /Her sister was there/.test(g.t) && /parted around her like a river around a stone/.test(g.b) && /Her hands did not open\./.test(g.b);
       out.rail = !G.map.get(13, 19) && T.ent('canon').hidden && T.ent('sera').sprite === 'b69_seraphina_blade';
       T.pick(/Look at me/); out.fire = T.heard(/said Solenne's hands, and the fire took the risers/) && BELL69.stage() === 5 && BELL69.fint('b69_signs') === 3;
       return out;
     });
     if (process.env.DEBUG) console.log('light', JSON.stringify(light));
-    check(light.silence && light.order.every((i, k, a) => i >= 0 && (k === 0 || i > a[k - 1])) && light.white && light.tankers, 'the chord stops; the light comes down the Spire; where it touched, it took: the tankers go, and the Tuning Man\'s hands');
+    check(light.silence && light.order.every((i, k, a) => i >= 0 && (k === 0 || i > a[k - 1])) && light.white && light.whiteLoad && light.tankers, 'the chord stops; the light comes down the Spire; where it touched, it took: the tankers go, and the Tuning Man\'s hands');
     check(light.risers && light.eng && light.named && light.conduit, 'it comes for the throats first (Hesper, Aude, Coralie); the engineer at the conduit with the three gantry boys, the arm in the glass');
-    check(light.diss && light.lookHint && light.sister && light.rail && light.fire, '"Dissonance!"; look up at the gallery: her sister there, the rail and the Canon taken, her hands on the hilt; "Look at me", and the fire took the risers');
+    check(light.diss && light.lookHint && light.notYet && light.sister && light.rail && light.fire, '"Dissonance!"; look up at the gallery: her sister there, the rail and the Canon taken, her hands on the hilt; "Look at me", and the fire took the risers');
 
     // ---- 5 · the wound, and the mouth
     const wound = await E(() => {

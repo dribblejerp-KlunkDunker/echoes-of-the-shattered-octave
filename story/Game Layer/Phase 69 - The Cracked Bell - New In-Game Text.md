@@ -10,7 +10,7 @@
 - **The plan of the floor.** The book names the parts and how they stand to each other, not distances: the Spire's flank to the north with the seam and the Carrow Bore in it; the glass channels at its foot and down to the tanker bays and the conduit; the gantry; the risers with the top tier nearest the Spire ("threw her backward, off the top tier, over the glass channels, into ... the wound"); the censer platform the choir faces; the gallery above and behind it.
 - **Her place** is the top tier, at Coralie's right hand ("Coralie ... had stood at Solenne's left shoulder").
 - **Listening** (stand still and the chord comes closer) paces the Swell; moving only pauses it.
-- **Looking up at the gallery** is the player turning to it; if they do not, it comes after fifteen seconds (in the book she looks).
+- **Looking up at the gallery** is the player turning to it and lifting their eyes (the choir already faces it); if they do not, it comes after fifteen seconds (in the book she looks).
 - **The Echo.** No girl of the choir ever steps down off the risers in the book; walking off the top tier during the Swell or the light is an Echo (RITE43.echo), grey, and you are back in your place at the same moment.
 - **Voices.** The engineer is unnamed in the Prologue and his line is cast as `kaelen_foundry` (the same voice as Kaelen's, before the glass arm: no glass ring). The Tuning Men are a new cast, `tuningman`. Ignatius is the existing `ignatius`. Thirteen lines are recorded; Solenne has no spoken line.
 - **The HUD calendar** still shows Book One's calendar (a weekday and a day of Harvestmonth); the book gives no date in 412 beyond "the three hundredth sunrise". Not changed here.

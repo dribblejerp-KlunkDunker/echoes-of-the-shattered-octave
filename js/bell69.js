@@ -33,7 +33,7 @@
 //       closer; it asks; the fork falls; "Stop the bore." "Hold the note." And they held it. It let go.
 //    4  THE LIGHT. The chord stops. The light comes down the Spire: the tankers go pale, the Tuning Man's hands; it comes for
 //       the risers and the throats; the engineer at the conduit with the gantry boys and the glass over his arm;
-//       "Dissonance!" and the Flambeaux lift their staves. Look up at the gallery [PROPOSED: turn to it, or it comes in
+//       "Dissonance!" and the Flambeaux lift their staves. Look up at the gallery [PROPOSED: turn to it and lift your eyes, or it comes in
 //       fifteen seconds]: Seraphina, untouched, her hands on the hilt. "Look at me", and the fire takes the risers.
 //    5  THE WOUND. Thrown back into the seam; the fall in the dark with the wire singing; something opens far below and sings
 //       her note back to her. The end of the Prologue: EXTRAS17.finish.
@@ -282,7 +282,7 @@ const BELL69 = (function () {
   const join = (keys) => keys.map((k) => TX[k]).join('<br><br>');
 
   // ================================================================ cards, messages, voices (the RITE43 helpers)
-  const R = { t: 0, wait: false, ear: 0, earSaid: 0, white: 0, black: 0, drone: 0, humT: 0, lookT: 0, silentT: 0, counted: null, sparse: 0 };
+  const R = { t: 0, wait: false, ear: 0, earSaid: 0, white: 0, black: 0, drone: 0, humT: 0, lookT: 0, silentT: 0, counted: null };
   const plain = (t) => String(t).replace(/<br\s*\/?>(<br\s*\/?>)?/g, ' ').replace(/<[^>]+>/g, '');
   const seq = (ids) => { try { if (typeof RITE43 !== 'undefined' && RITE43.seq) RITE43.seq(ids); } catch (e) { warnOnce('seq', e); } };
   const hush = () => { try { if (typeof RITE43 !== 'undefined' && RITE43.hush) RITE43.hush(); } catch (e) { /* nothing playing */ } };
@@ -306,7 +306,7 @@ const BELL69 = (function () {
   function validate() { if (!hasG()) return; const f = F(); for (const k of Object.keys(f)) if (/^b69/.test(k) && (!FLAGS[k] || fint(k) !== f[k])) delete f[k]; }
   const stage = () => fint('b69');
   const beat = () => fint('b69_beat');
-  function setStage(n) { setf('b69', n); setf('b69_beat', 0); R.t = 0; R.wait = false; }
+  function setStage(n) { setf('b69', n); setf('b69_beat', 0); R.t = 0; R.wait = false; applyState(G.maps && G.maps[FOUNDRY]); }
   const SIGHTS = { spire: 1, bore: 2, glass: 4, choir: 8, censer: 16, gallery: 32, engineer: 64 };
 
   // ================================================================ art (procedural stand-ins, painted once) [PROPOSED looks]
@@ -443,15 +443,16 @@ const BELL69 = (function () {
     });
   }
   // the choir: three rows of thirteen on the tiers, facing the censer platform; your place in the top row
-  const NAMED = { 7: 'coralie', 5: 'hesper', 9: 'aude' };   // Coralie at her left shoulder (east, facing south)
+  // the girls the book names, by their place in the rows: Coralie at her left shoulder (east, as they face south)
+  const NAMED = { 7: [TX.lookCoralie, TX.lookCoralieText], 5: [TX.lookHesper, TX.lookChoirText], 9: [TX.lookAude, TX.lookChoirText] };
   function stageFoundry(m) {
     const s = stage(), b = beat(), f = (k, sprite, x, y, o) => put(m, k, Object.assign({ sprite, x, y, _far: true }, o || {}));
     let n = 0;
     for (const [row, y] of [[0, 6.5], [1, 8.5], [2, 10.5]]) for (let i = 0; i < 13; i++) {
       const x = 7.0 + i, k = 'girl' + n++;
       if (row === 0 && Math.abs(x - SPOT.x) < 0.1) continue;   // hers
-      const nm = NAMED[n - 1];
-      f(k, 'b69_girl', x, y, { facing: Math.PI / 2, scale: 0.92, radius: 0.24, label: nm === 'coralie' ? TX.lookCoralie : nm === 'hesper' ? TX.lookHesper : nm === 'aude' ? TX.lookAude : TX.lookChoir, look: nm === 'coralie' ? TX.lookCoralieText : TX.lookChoirText, _sight: nm ? null : 'choir', _named: nm || null });
+      const nm = NAMED[n - 1], who = nm || [TX.lookChoir, TX.lookChoirText];
+      f(k, 'b69_girl', x, y, { facing: Math.PI / 2, scale: 0.92, radius: 0.24, label: who[0], look: who[1], _sight: nm ? null : 'choir', _named: !!nm });
     }
     f('crane', 'flambeau', 13.0, 16.0, { facing: -Math.PI / 2, label: TX.lookCrane, _sight: 'censer', lightCol: [70, 40, 20] });
     f('censer', 'p12_censer', 13.6, 15.3, { scale: 0.55, solid: false, label: TX.lookCrane, _sight: 'censer', lightCol: [60, 40, 20] });
@@ -613,22 +614,28 @@ const BELL69 = (function () {
     if (R.ear >= 0.75 && R.earSaid < 2) { R.earSaid = 2; say(TX.narrowing + ' ' + TX.holdingFor, 'voice', 10000); }
     return R.ear >= 1;
   }
-  // looking up at the gallery: facing it, or after fifteen seconds (in the book she looks)
+  // looking up at the gallery: facing it with the eyes lifted, or after fifteen seconds (in the book she looks)
+  const LOOK_UP = 12;   // cam.pitch, view pixels above level
   function lookUp(dt) {
     const c = Engine.cam; R.lookT += dt;
     let a = Math.atan2(GALLERY.y - c.y, GALLERY.x - c.x) - c.dir; while (a > Math.PI) a -= Math.PI * 2; while (a < -Math.PI) a += Math.PI * 2;
-    return Math.abs(a) < 0.5 || R.lookT >= 15;
+    return (Math.abs(a) < 0.5 && c.pitch >= LOOK_UP) || R.lookT >= 15;
   }
+  // the light whitens the frame from LIGHT's second step on; a load works out how far it had got from the steps' waits
+  const WHITE_RATE = 0.02, WHITE_MAX = 0.62;
+  function whiteAt(b) { let t = 0; for (let k = 1; k < b && k < LIGHT.length; k++) t += LIGHT[k].w || 0; return b >= 1 ? Math.min(WHITE_MAX, t * WHITE_RATE) : 0; }
+  // her place: the top tier (cells y 6-7 across the risers), and no further than a step from it
+  const offRisers = (c) => c.x < 6 || c.x >= 21 || c.y < 6 || c.y >= 8 || dist(c.x, c.y, SPOT.x, SPOT.y) > 1.3;
   function tickScene(dt) {
     if (G.mapId !== FOUNDRY) return;
     const s = stage(), c = Engine.cam;
     if (R.silentT > 0) R.silentT -= dt; else if (s < 5) drone(dt);
-    if (s === 4 && beat() >= 1) R.white = Math.min(0.62, R.white + dt * 0.02);
+    if (s === 4 && beat() >= 1) R.white = Math.min(WHITE_MAX, R.white + dt * WHITE_RATE);
     if (s >= 5) { R.black = Math.min(1, R.black + dt * 0.6); c.x = SPOT.x; c.y = SPOT.y; }
     // stepping down off the risers is a thread the book does not have: an Echo, and back in your place
-    if ((s === 3 || s === 4) && !R.wait && dist(c.x, c.y, SPOT.x, SPOT.y) > 1.3) {
+    if ((s === 3 || s === 4) && !R.wait && offRisers(c)) {
       setf('b69_echoes', fint('b69_echoes') + 1); R.wait = true;
-      echo(TX.echoOff, () => { c.x = SPOT.x; c.y = SPOT.y; c.dir = Math.PI / 2; R.wait = false; R.lastPos = null; });
+      echo(TX.echoOff, () => { c.x = SPOT.x; c.y = SPOT.y; c.dir = Math.PI / 2; c.pitch = 0; R.wait = false; R.lastPos = null; });
       return;
     }
     runLine(dt);
@@ -644,7 +651,7 @@ const BELL69 = (function () {
     solenne(G.player);
     G.journal = []; G.tod = 0.21; G.noise = 1;
     for (const k of Object.keys(G.flags)) if (/^b69/.test(k)) delete G.flags[k];
-    R.counted = new Set(); R.white = 0; R.black = 0; R.wait = false; R.t = 0;
+    Object.assign(R, { counted: new Set(), white: 0, black: 0, wait: false, t: 0, ear: 0, earSaid: 0, still: false, lastPos: null, lookT: 0, silentT: 0, humT: 0, humSaid: false, drone: 0 });
     G.maps[LOFT] = buildLoft(); G.maps[FOUNDRY] = buildFoundry();
     setStage(1);
     loadMap(LOFT); G.state = 'play'; G.keys = {};
@@ -666,8 +673,8 @@ const BELL69 = (function () {
     validate();
     R.t = 0; R.wait = false; R.lastPos = null; R.lookT = 0; R.silentT = 0;
     const s = stage(), b = beat();
-    R.white = s === 4 && b >= 1 ? Math.min(0.62, 0.02 * 8 * b) : 0; R.black = s >= 5 ? 1 : 0;
-    if (s === 3 && b === 8) { R.ear = R.ear || 0; }
+    R.white = s === 4 ? whiteAt(b) : 0; R.black = s >= 5 ? 1 : 0;
+    if (s === 3 && b === 8) { R.ear = 0; R.earSaid = 0; }   // the listening starts again
     paintPeople();
     if (G.mapId === LOFT) stageLoft(G.map);
     else { stageFoundry(G.map); arriveFoundry(); if (stage() >= 3) { const c = Engine.cam; c.x = SPOT.x; c.y = SPOT.y; } }
@@ -700,10 +707,14 @@ const BELL69 = (function () {
     if (!e || !e._b69 || e.use !== 'b69_look') return false;
     return look(e);
   }
-  function farPick() {
-    if (!here() || G.mapId !== FOUNDRY || stage() < 2 || stage() > 4) return null;
-    let e = null; try { e = Engine.pick(G.ents, 16); } catch (err) { e = null; }
-    return e && e._b69 && e._far && e.use === 'b69_look' ? e : null;
+  // E from across the floor: a staged figure, or else the Spire's white flank (or the seam) in front of you
+  function farLook() {
+    if (!here() || G.mapId !== FOUNDRY || stage() < 2 || stage() > 4) return false;
+    const e = Engine.pick(G.ents, 16);
+    if (e && e._b69 && e._far && e.use === 'b69_look') return look(e);
+    const w = Engine.pickWall(14);
+    if (w && w.cell && (w.cell.tex === 'b69_spire' || w.cell.tex === 'b69_seam')) return look({ _sight: 'spire' });
+    return false;
   }
   function wire() {
     const has = (n) => typeof window[n] === 'function';
@@ -712,14 +723,12 @@ const BELL69 = (function () {
     if (has('update')) { const _f = update; update = function (dt) { const r = _f.apply(this, arguments); try { if (here() && G.state === 'play') { G.player.voice = 0; const s = stage(); if (s <= 1) tickLoft(dt || 0); else if (s === 2) tickFloor(dt || 0); else tickScene(dt || 0); } } catch (e) { warnOnce('update', e); } return r; }; }
     if (has('drawHUD')) { const _f = drawHUD; drawHUD = function () { const r = _f.apply(this, arguments); try { drawOverlay(); } catch (e) { warnOnce('hud', e); } return r; }; }
     if (has('useDeco')) { const _f = useDeco; useDeco = function (e) { try { if (here() && useOwn(e)) return undefined; } catch (err) { warnOnce('use', err); } return _f.apply(this, arguments); }; }
-    if (has('interact')) { const _f = interact; interact = function () { try { const e = farPick(); if (e) { useOwn(e); return undefined; } } catch (err) { warnOnce('interact', err); } return _f.apply(this, arguments); }; }
+    if (has('interact')) { const _f = interact; interact = function () { try { if (farLook()) return undefined; } catch (err) { warnOnce('interact', err); } return _f.apply(this, arguments); }; }
     if (has('castSong')) { const _f = castSong; castSong = function () { if (here()) { try { trySpeak(); } catch (e) { warnOnce('speak', e); } return undefined; } return _f.apply(this, arguments); }; }
     if (has('renderRest')) { const _f = renderRest; renderRest = function () { if (here()) { G.state = 'play'; say(TX.noRest, 'warn', 3500); return undefined; } return _f.apply(this, arguments); }; }
     if (has('travelBlocked')) { const _f = travelBlocked; travelBlocked = function () { if (active()) return TX.noTravel; return _f.apply(this, arguments); }; }
     if (has('travelOpen')) { const _f = travelOpen; travelOpen = function () { if (active()) { G.state = 'play'; say(TX.noTravel, 'warn', 3500); return undefined; } return _f.apply(this, arguments); }; }
     if (has('wallLabel')) { const _f = wallLabel; wallLabel = function (cell) { try { if (here() && cell && WALLS[cell.tex]) return WALLS[cell.tex]; } catch (e) { /* fall through */ } return _f.apply(this, arguments); }; }
-    // the Spire is a sight too: E at its white flank
-    if (has('interact')) { const _i = interact; interact = function () { try { if (here() && G.mapId === FOUNDRY && stage() >= 2 && stage() <= 4) { const w = Engine.pickWall(14); if (w && w.cell && (w.cell.tex === 'b69_spire' || w.cell.tex === 'b69_seam') && !Engine.pick(G.ents, 16)) { look({ _sight: 'spire' }); return undefined; } } } catch (e) { warnOnce('spire', e); } return _i.apply(this, arguments); }; }
     try { if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook((Fr) => { try { post(Fr); } catch (e) { warnOnce('post', e); } }, 44); } catch (e) { warnOnce('hook', e); }
   }
   const WALLS = { b69_spire: TX.wallSpire, b69_seam: TX.wallSeam, b69_iron: TX.wallIron, b69_gilt: TX.wallGilt };
