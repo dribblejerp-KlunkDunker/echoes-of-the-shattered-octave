@@ -3838,6 +3838,237 @@
    "text": "Good girl.",
    "source": "grafters67.js TX.orla2 (Book One ch. 3)",
    "delivery": "murmur"
+  },
+  {
+   "id": "engineer.cutter.lift",
+   "speaker": "engineer",
+   "kind": "narration",
+   "text": "Captain. Captain. The lift's gone — we are eleven hundred pounds over what I told you yesterday and yesterday I was lying to make you feel better—",
+   "source": "cutter68.js TX.lift (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.fly",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Can she fly?",
+   "source": "cutter68.js TX.lift (Book One ch. 21)"
+  },
+  {
+   "id": "engineer.cutter.sink",
+   "speaker": "engineer",
+   "kind": "narration",
+   "text": "She can sink slowly—",
+   "source": "cutter68.js TX.lift (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.thenfly",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Then she can fly.",
+   "source": "cutter68.js TX.flyA (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.water",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Water over the side. All of it. And the spare envelope canvas, and the tackle, and that chain.",
+   "source": "cutter68.js TX.flyA (Book One ch. 21)"
+  },
+  {
+   "id": "engineer.cutter.drink",
+   "speaker": "engineer",
+   "kind": "narration",
+   "text": "We'll have nothing to drink—",
+   "source": "cutter68.js TX.drink (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.breathe",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "We'll have nothing to breathe if the Office puts us in the Bell Yard. Over the side.",
+   "source": "cutter68.js TX.drink (Book One ch. 21)"
+  },
+  {
+   "id": "tobiah.cutter.trumpet",
+   "speaker": "tobiah",
+   "kind": "narration",
+   "text": "What's the trumpet for?",
+   "source": "cutter68.js TX.trumpet (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.nottrumpet",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "It's not a trumpet.",
+   "source": "cutter68.js TX.trumpet (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.mags",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Mags. Down, and tell Hetty: everything they can stuff into the straw, round every crate. Blankets, coats, the canvas, the sail-locker spares. Pack it like glass for a long haul.",
+   "source": "cutter68.js TX.magsDown (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.howlow",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Pennick, how low can you put her?",
+   "source": "cutter68.js TX.lower (Book One ch. 21)"
+  },
+  {
+   "id": "engineer.cutter.low",
+   "speaker": "engineer",
+   "kind": "narration",
+   "text": "Captain, we're already low.",
+   "source": "cutter68.js TX.lower (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.lower",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Lower.",
+   "source": "cutter68.js TX.lower (Book One ch. 21)"
+  },
+  {
+   "id": "tobiah.cutter.line",
+   "speaker": "tobiah",
+   "kind": "narration",
+   "text": "The line! Captain, the hook — if we cut it we drop—",
+   "source": "cutter68.js TX.line (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.dontcut",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Don't cut it.",
+   "source": "cutter68.js TX.line (Book One ch. 21)"
+  },
+  {
+   "id": "tobiah.cutter.what",
+   "speaker": "tobiah",
+   "kind": "narration",
+   "text": "What?",
+   "source": "cutter68.js TX.line (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.starboard",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Don't cut it! Mags! Starboard! Take her starboard — into the trees — I want that cutter's bow where we are now in four seconds—",
+   "source": "cutter68.js TX.line2 (Book One ch. 21)"
+  },
+  {
+   "id": "engineer.cutter.victory",
+   "speaker": "engineer",
+   "kind": "narration",
+   "text": "That's not a victory. Captain, I want to be clear, that was not a victory, that was two ships falling and ours is falling slower—",
+   "source": "cutter68.js TX.victory (Book One ch. 21)"
+  },
+  {
+   "id": "quill.cutter.road",
+   "speaker": "quill",
+   "kind": "narration",
+   "text": "Where is the road. The Organum road. The Tramway. Which way— which way—",
+   "source": "cutter68.js TX.road (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.east",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "East.",
+   "source": "cutter68.js TX.road (Book One ch. 21)"
+  },
+  {
+   "id": "quill.cutter.thanks",
+   "speaker": "quill",
+   "kind": "narration",
+   "text": "East, east, east — thank you — thank you—",
+   "source": "cutter68.js TX.eastBS (Book One ch. 21)"
+  },
+  {
+   "id": "quill.cutter.dontstop",
+   "speaker": "quill",
+   "kind": "narration",
+   "text": "Don't stop. Whatever you do. If you stop—",
+   "source": "cutter68.js TX.eastBS (Book One ch. 21)"
+  },
+  {
+   "id": "engineer.cutter.what",
+   "speaker": "engineer",
+   "kind": "narration",
+   "text": "What was that.",
+   "source": "cutter68.js TX.gone (Book One ch. 21)"
+  },
+  {
+   "id": "sable.cutter.courier",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "That was a courier. Arbiterium seal, black ribbon. That is a standing writ, which means it must be delivered into a named hand and read aloud and witnessed.",
+   "source": "cutter68.js TX.sableCourier (Book One ch. 21)"
+  },
+  {
+   "id": "sable.cutter.running",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "He has been running since a Velocity flare caught him, which was five years ago, and he has not delivered it.",
+   "source": "cutter68.js TX.sableCourier (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.how",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "How do you know that?",
+   "source": "cutter68.js TX.sableCourier (Book One ch. 21)"
+  },
+  {
+   "id": "sable.cutter.file",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Because the Office has a file on him, and the file is one line long, and it says: courier Quill, J., in transit.",
+   "source": "cutter68.js TX.sableCourier (Book One ch. 21)"
+  },
+  {
+   "id": "sable.cutter.mausoleum",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "The Mausoleum of Chords. The old Veil-house. Eleven hundred years of records.",
+   "source": "cutter68.js TX.mausoleum (Book One ch. 21)"
+  },
+  {
+   "id": "sable.cutter.rule",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "I learned to rule a page in there.",
+   "source": "cutter68.js TX.mausoleum (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.dangerous",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Is it dangerous?",
+   "source": "cutter68.js TX.mausoleum (Book One ch. 21)"
+  },
+  {
+   "id": "sable.cutter.sad",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Everything here is dangerous, Captain. That one is only sad.",
+   "source": "cutter68.js TX.mausoleum (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.twentyone",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Twenty-one. And four hundred and thirty-two. And one screaming.",
+   "source": "cutter68.js TX.twentyOneB (Book One ch. 21)"
+  },
+  {
+   "id": "vane.cutter.twentyone2",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Twenty-one. And four hundred and thirty-two.",
+   "source": "cutter68.js TX.twentyOne0 (Book One ch. 21)"
   }
  ],
  "skipped": [

@@ -39,6 +39,22 @@ On a new game, go through the tannery's back door into the Hollow on Rootday (th
 
 Notes:
 
+## Ten Heartbeats, the cutter chase (built 10 Nov; ROADMAP R9 item 20)
+
+At Whisper-Grove, with the press taken, climb the Kestrel's mast-ladder and choose "Climb, and go on to the Deep Woods". Play the chase through to the Deep Woods. Then play it again with a different Cloister and Malting behind you: the Aegis destroyed, Bettis put back, or Sable never met.
+
+- **Eleven minutes.** The first card is long (the whole loading, word for word). Does it read, or does it want splitting?
+- **Over the side.** Do you find the four things at the rail without help? Thirty seconds and the crew do it for you: too long, too short?
+- **The hold.** Is the horn's dial clear? Packing never takes it to nothing, on purpose. Does that read as "your cargo is not silent", or as a bug?
+- **The ten heartbeats.** About nine seconds. Is standing still tense, or just waiting? Is it clear that moving, murmuring or swinging is what breaks it? Is the Echo fair?
+- **Without the Aegis.** Two proctors at the rail. Too easy, too hard? Dying is an Echo: does it feel like one?
+- **Four seconds.** Is it clear you can cut the line, and that you should not?
+- **Light.** The deck is dark at dusk, and the scene keeps the game's clock. Can you see the people and the willows?
+
+Notes:
+
+---
+
 ## Orla's harvest home (built 8 Nov; ROADMAP R9 item 17)
 
 Bring Davin's boots to Orla Hale in the Hollow (after Hearthday night), then speak to her again. Come back on each of the next three days for a line of The Last Sheaf. Try one lesson with the shutters open. Then, at the Greening, go with Lyra to Orla's tree.
