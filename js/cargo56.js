@@ -94,8 +94,22 @@ const CARGO56 = (function () {
 
   // ================================================================ the item
   function addItem() {
-    if (typeof ITEMS === 'undefined' || ITEMS[ITEM]) return;
-    ITEMS[ITEM] = { name: TX.gun, sprite: (ITEMS.w_pistol && ITEMS.w_pistol.sprite) || 'gear', desc: TX.gunDesc, key: true };
+    if (typeof ITEMS === 'undefined') return;
+    if (!ITEMS[ITEM]) ITEMS[ITEM] = { name: TX.gun, sprite: (ITEMS.w_pistol && ITEMS.w_pistol.sprite) || 'gear', desc: TX.gunDesc, key: true };
+    addIcon();
+  }
+  // its Phase 20 pixel icon (js/icons.js's PIX kit): the swivel gun's lock, and the bag of shot beside it
+  function addIcon() {
+    if (typeof ICONS === 'undefined' || !ICONS.PIX || !ICONS.C_PX || Object.prototype.hasOwnProperty.call(ICONS.PIX, ITEM)) return;
+    const C = ICONS.C_PX;
+    ICONS.PIX[ITEM] = (d) => {
+      d.layer(C.wood, { shiny: 1 }).poly([3, 14, 14, 11, 15, 14, 4, 17]);             // a stub of the stock
+      d.layer(C.iron, { shiny: 1 }).rect(9, 7, 7, 5);                                  // the lock plate
+      d.layer(C.dsteel).path([11, 7, 10, 4, 12, 3]).rect(14, 5, 2, 2);                 // the cock and the pan
+      d.layer(C.cloth, { shiny: 1 }).ell(17, 17, 4.6, 4);                              // the bag of shot
+      d.layer(C.leather, { shade: 'flat', sep: false }).rect(15, 13, 4, 1);           // its drawstring
+      d.mark('#3a3a3e', 16, 18, 18, 17, 19, 19);                                       // shot showing at the neck
+    };
   }
 
   // ================================================================ the clerk

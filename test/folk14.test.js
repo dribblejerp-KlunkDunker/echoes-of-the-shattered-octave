@@ -180,7 +180,7 @@ async function boot(browser, opts) {
       G.tod = 12 / 24; __stage('oakhaven', 40.5, 22.5, 0); Weather.hold('clear'); __still();
       const mk = (id, y) => { const e = __npc(id, 44.5, y, {}); e.wanderT = 1e6; return e; };
       const walk = (e, secs) => { const seen = new Set(); for (let t = 0; t < secs; t += 0.05) { e.x += 0.04; ANIM.T += 0.05; animCreature(e, 0.05, ANIM.T); seen.add(__sway(e)); } return [...seen]; };
-      const vane = mk('vane', 20.5), town = mk('townsman', 22.5), sable = mk('sable', 24.5);
+      const vane = mk('vane', 20.5), town = mk('townsman', 22.5), sable = mk('sable_wg', 24.5);   // NPC 'sable' became 'umber' (3c9b261); Sable herself is sable_wg, same 'sable' sprite
       o.vaneWalk = walk(vane, 6); o.townWalk = walk(town, 6); o.sableWalk = walk(sable, 6);
       check(o.vaneWalk.some(k => k < 0) && o.vaneWalk.some(k => k > 0), 'a walking coat sways to both sides (' + o.vaneWalk + ')');
       check(o.townWalk.length === 1 && o.townWalk[0] === 0, 'a townsman (no coat sprite) never sways');
@@ -231,15 +231,17 @@ async function boot(browser, opts) {
       // positions: every seat is beside a table, clear of the street door, the cellar door and the way in
       const dd = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
       const door = { x: 8.5, y: 11.5 }, cellar = { x: 3.5, y: 9.5 }, spawn = { x: m.spawn.x, y: m.spawn.y };
+      // Garrow plays in the cellar (x < 6, south of the cellar door, y > 9) on the crates since d73de90 (NO DICE upstairs)
+      const cellar0 = (p) => p.x < 6 && p.y > 9, crates = G.ents.filter(e => e.kind === 'deco' && e.sprite === 'crates' && cellar0(e));
       for (const e of sitting) {
-        const dt = Math.min(...tables.map(t => dd(e, t)));
-        check(dt >= 0.8 && dt <= 2.4, e.id + ' at ' + e.x + ',' + e.y + ' is ' + dt.toFixed(2) + ' from a table');
+        const surf = cellar0(e) ? crates : tables, dt = Math.min(...surf.map(t => dd(e, t)));
+        check(dt >= 0.8 && dt <= 2.4, e.id + ' at ' + e.x + ',' + e.y + ' is ' + dt.toFixed(2) + ' from ' + (cellar0(e) ? 'the cellar crates' : 'a table'));
         check(dd(e, door) > 2.2 && dd(e, cellar) > 1.8 && dd(e, spawn) > 1.2, e.id + ' clear of doors and the spawn');
         const c = m.get(e.x | 0, e.y | 0); check(!c || !c.tex || !m.isSolidCell(e.x | 0, e.y | 0), e.id + ' stands on an open cell');
       }
       // Garrow keeps his place and the Bones table stays reachable: a grid walk from the spawn to the cell east of the table and to Garrow's north side
       const bones = tables.find(t => Math.abs(t.x - 4.5) < 0.1 && Math.abs(t.y - 7.5) < 0.1), garrow = ents.find(e => e.id === 'p11_dicer');
-      check(!!bones && garrow && Math.hypot(garrow.x - 3.4, garrow.y - 7.5) === 0, "Garrow's seat is where tavern11 put him");
+      check(!!bones && garrow && Math.hypot(garrow.x - 5.4, garrow.y - 10.5) === 0, "Garrow's seat is where tavern11 put him (the cellar)");
       const blockers = G.ents.filter(e => e.solid && !e.hidden && !e.dead && e.kind !== 'item');
       const free = (x, y) => { if (m.isSolidCell(x | 0, y | 0)) return false; for (const b of blockers) if (Math.hypot(b.x - (x + 0.5 - (x % 1)), b.y - (y + 0.5 - (y % 1))) < 0 ) return false; return true; };
       const reach = (sx, sy, tx, ty) => { // 0.25-pitch grid, a 0.4 body
@@ -330,7 +332,10 @@ async function boot(browser, opts) {
           return [e.id || e.type, e.x.toFixed(3), e.y.toFixed(3), (+e.animSY).toFixed(4), (+e.animSX).toFixed(4), (+e.animLift).toFixed(4), (+e.animSkew).toFixed(4), e.animAlpha, e.animHurt, e.animGlow, e.animSprite, d.flip, sum(d.sprite)].join(',');
         }).sort().join(';');
         const run = (name, setup, secs) => {
-          __seed(4242); setup(); for (const e of G.ents) if (e.kind === 'npc' || e.kind === 'enemy') { if (e.homeX != null) { e.x = e.homeX; e.y = e.homeY; } e.wanderT = 1e6; e.moving = false; }
+          // and the animation history: since Phase 25 (js/pixel3d.js, js/people25.js) a person's sprite follows its facing, and
+          // the facing, last position (_ax/_ay: the first tick reads the jump home as a step) and anim seed left by the boot's
+          // unseeded wander differ page to page; both pages get the same heading per post and the seed taken from the post
+          __seed(4242); setup(); for (const e of G.ents) if (e.kind === 'npc' || e.kind === 'enemy') { if (e.homeX != null) { e.x = e.homeX; e.y = e.homeY; } e.wanderT = 1e6; e.moving = false; e.facing = ((Math.round(e.x * 4) * 7 + Math.round(e.y * 4) * 13) % 8) * Math.PI / 4; e.animFlip = false; e._ax = e.x; e._ay = e.y; e._spd = 0; e._seed = null; }
           ANIM.T = 10; Weather.hold(Weather.state); __seed(99);
           __run(3);   // history (smoothed speeds, phases) from the boot washes out
           let h = 2166136261, n = 0;
