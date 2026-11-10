@@ -49,7 +49,7 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
       twoCount: Object.values(ARMS12.NEW_WEAPONS).filter(w => w.twoHanded).length, reg: Object.keys(ARMS12.NEW_WEAPONS).every(id => WEAPONS[id]), unique: NPCS.vosk.shop.filter(e => e.item === 'w_p12_greatmaul').length }));
     ok(cat.S.bash && cat.S.two && cat.S.dual, 'all three gameplay switches default on');
     ok(cat.ids.every(i => i.startsWith('p12_')) && cat.items && cat.reg && cat.twoCount === 3, 'three p12_ two-handers and a p12_ dirk exist as weapons and sellable items');
-    ok(cat.stock && cat.unique === 1, 'each new weapon is in an existing merchant\'s stock exactly once (vosk, vane, ignatius, hob)');
+    ok(cat.stock && cat.unique === 1, 'each new weapon is in an existing merchant\'s stock exactly once (vosk, vane, orrin, hob)');
 
     // ---- 1. switches off = the original game: identical seeded fight traces and unchanged equipment behaviour
     const tr = await E(() => {

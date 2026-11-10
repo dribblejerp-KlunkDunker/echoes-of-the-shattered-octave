@@ -6,7 +6,8 @@
 //    roads / doors / water / walls untouched; off restores floorCells and floorTextures exactly;
 //  - painted walls: whole buildings share one front, outdoor stone runs vary, nothing but t_house / t_stone changes,
 //    doors and cell shapes untouched; off restores every cell's texture, and R3D is handed a new cells array;
-//  - tree variety: oaks and willows re-coloured and turned about, same deco at the same place; off restores sprite and flip;
+//  - tree variety: oaks and willows re-coloured and turned about, same deco at the same place under its own sprite name
+//    (drawn through animSprite, so js/sidequests.js and js/anim.js still know an oak); off restores sprite and flip;
 //  - the painted pieces: loaded, swapped in at the stand-in's size and anchor, off gives the stand-in back;
 //  - the Original preset and every switch off are byte-identical frames to a build without the module; no page errors;
 //  - a save made with the module on loads in a page without it.
@@ -124,7 +125,7 @@ const FLAGS = ['p20_ground', 'p20_walls', 'p20_trees', 'p20_pieces'];
       out.walls = Wp.n;
       // --- the trees ---
       const cl = G.maps.clearing, Tp = cl._p20b.trees; check(Tp && Tp.applied && Tp.n >= 6, 'the clearing\'s trees are prepared (' + (Tp && Tp.n) + ')');
-      let turned = 0, recol = 0; for (const t of Tp.list) { check(t.e.sprite === t.sprite && cl.entities.includes(t.e), 'the tree stands where it did'); if (t.flip) turned++; if (t.sprite !== t.sprite0) recol++; }
+      let turned = 0, recol = 0; for (const t of Tp.list) { check((t.e.animSprite || t.e.sprite) === t.sprite && t.e.sprite === t.sprite0 && cl.entities.includes(t.e), 'the tree stands where it did, under its own sprite name, drawn in its variant'); if (t.flip) turned++; if (t.sprite !== t.sprite0) recol++; }
       check(turned > 0 && recol > 0 && turned < Tp.n && recol < Tp.n, 'some trees turned (' + turned + '), some recoloured (' + recol + '), not all');
       for (const k of ['p20b_oak_green', 'p20b_oak_copper', 'p20b_willow_pale']) { const s = Engine.sprites[k], o = Engine.sprites[k.includes('oak') ? 'oak' : 'willow']; check(s && s.w === o.w && s.h === o.h, k + ' matches its source size'); let diff = 0, same = 0; for (let i = 0; i < s.data.length; i++) { if (!(o.data[i] >>> 24)) { check(!(s.data[i] >>> 24), 'alpha kept'); continue; } if (s.data[i] !== o.data[i]) diff++; else same++; } check(diff > same * 0.3 && same > 0, k + ' recolours the leaves and keeps the bark (' + diff + ' changed, ' + same + ' kept)'); }
       out.trees = Tp.n;
@@ -140,7 +141,7 @@ const FLAGS = ['p20_ground', 'p20_walls', 'p20_trees', 'p20_pieces'];
       for (const k of FLAGS) GFX[k] = false; GFX.changed();
       check(oak.floorTextures.length === t0.length && oak.floorCells.every((v, i) => v === c0[i]), 'off: Oakhaven\'s floor is exactly what it was');
       check(oak.cells !== cellsRef && oak.cells.every((c, i) => (c ? c.tex : '') === (texBefore[i].startsWith('t_house') ? 't_house' : texBefore[i].startsWith('t_stone') ? 't_stone' : texBefore[i])), 'off: every wall is its original texture, in a new cells array');
-      check(Tp.list.every((t) => t.e.sprite === t.sprite0 && !!t.e.animFlip === t.flip0), 'off: every tree is its original sprite, unturned');
+      check(Tp.list.every((t) => t.e.sprite === t.sprite0 && t.e.animSprite === t.anim0 && !!t.e.animFlip === t.flip0), 'off: every tree is its original sprite, unturned');
       check(!PAINTED20.pieceApplied('p_barrel') && Engine.sprites.p_barrel.w === 48, 'off: the stand-in barrel is back');
       for (const k of FLAGS) GFX[k] = true; GFX.changed();
       check(P.ground.applied && Wp.applied && Tp.applied && PAINTED20.pieceApplied('p_barrel'), 'on again');

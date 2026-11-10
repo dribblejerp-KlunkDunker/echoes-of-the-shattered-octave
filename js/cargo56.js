@@ -30,6 +30,7 @@ const CARGO56 = (function () {
   const warned = {};
   const warnOnce = (k, e) => { if (!warned[k]) { warned[k] = true; console.warn('cargo56: ' + k + ' failed', e); } };
   const guest = () => { try { return typeof SYNC19 !== 'undefined' && !!SYNC19.isGuest(); } catch (e) { return false; } };
+  const inExtra = () => { try { if (typeof EXTRAS17 !== 'undefined' && EXTRAS17.inExtra()) return true; } catch (e) { /* none */ } return false; };
   const partOne = () => hasG() && !F().greening && !F().part3 && !F().part4 && !F().escaped;
 
   const DRIFT = 6, CLERK_FROM = 19, DEAD = 5, NEED = 20, STEP = 7, ITEM = 'p56_gun';
@@ -159,9 +160,10 @@ const CARGO56 = (function () {
   }
 
   // ================================================================ wiring
-  function missed() { if (hasG() && stage() < 2 && ((Number(G.day) || 0) > DRIFT + 1 || ((Number(G.day) || 0) === DRIFT + 1 && hour() >= DEAD))) F().p56 = 9; }
+  // a guest's game and an extra's own session are not this Book One's calendar (as lyra51, church55, tamsin52 hold it)
+  function missed() { if (hasG() && !guest() && !inExtra() && stage() < 2 && ((Number(G.day) || 0) > DRIFT + 1 || ((Number(G.day) || 0) === DRIFT + 1 && hour() >= DEAD))) F().p56 = 9; }
   function useOwn(e) {
-    if (!e || guest() || !hasG()) return false;
+    if (!e || guest() || inExtra() || !hasG()) return false;
     if (e.use === 'crates' && G.mapId === 'oakhaven' && partOne()) {
       if (clerkHour() && stage() === 0) { clerk(); return true; }
       if (deadHour() && stage() < 2) { crate(); return true; }
