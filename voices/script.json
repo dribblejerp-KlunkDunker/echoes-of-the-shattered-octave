@@ -4324,6 +4324,23 @@
    "text": "I have looked at four hundred and eleven of these, and I have not yet found a third option, and I am still looking, and I would like you to remember, when we get there, that I was looking.",
    "source": "thread70.js TX.looking (Book One, Echo I)",
    "delivery": "murmur"
+  },
+  {
+   "id": "sable.hymn9.sung",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Hold us in the little light — hold us in the little light until the morning comes—",
+   "source": "touches71.js TX.hymnSable (Book One ch. 19)",
+   "sung": true,
+   "delivery": "low, sung: flat and cracked and far too low, in the wrong key, in a voice that has not sung in three years"
+  },
+  {
+   "id": "vane.hold.fortyeight",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Forty-eight.",
+   "source": "touches71.js TX.hold (Book One ch. 5)",
+   "delivery": "low"
   }
  ],
  "skipped": [
