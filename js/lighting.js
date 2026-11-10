@@ -185,12 +185,16 @@ const LIGHTING = (() => {
 
 // Flame frames are fresh sprite objects (anim.js moves the flame pixels), so
 // each one gets its own mask, cut from its own pixels the first time it is seen.
+// So does a turned view of a masked sprite (Kaelen's rigged side from js/people25.js,
+// shown by js/pixel3d.js): the glass arm glows from every side it is seen from.
 (() => {
   const _dir = animDirectionalSprite;
+  const masked = new Set(LIGHTING.names);
+  const turned = (e, sp) => masked.has(e.sprite) && sp !== Engine.sprites[e.sprite] && !(e.animSprite && sp === Engine.sprites[e.animSprite]);
   animDirectionalSprite = function (e) {
     const r = _dir(e);
     try {
-      if (GFX.emissive && r && r.sprite && ANIM.fire.has(e.sprite) && e.kind !== 'enemy') {
+      if (GFX.emissive && r && r.sprite && ((ANIM.fire.has(e.sprite) && e.kind !== 'enemy') || turned(e, r.sprite))) {
         const sp = r.sprite;
         if (!LIGHTING.frames.has(sp)) {
           const m = LIGHTING.computeMask(sp, LIGHTING.rule(e.sprite));

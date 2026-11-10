@@ -88,7 +88,11 @@ const SIDE_ON = ['briarsprite', 'fretcrawler', 'hound'];
       out.glow = [frontGlow, backGlow];
 
       // ---- through the engine's chooser: octants, mirroring, the flags
+      // Phase 25 (js/pixel3d.js, the owner's call: four sides, "front, left side, back, right side"): with the Pixel-3D
+      // models on, as every preset has them, these views are shown snapped to the four sides; switched off in Options,
+      // all five bearings show as before. The five bearings first, with the switch off; the four sides after.
       const cam = { x: Engine.cam.x, y: Engine.cam.y, dir: Engine.cam.dir };
+      const p3 = GFX.pixel3d; GFX.pixel3d = false;
       const at = (e, o) => { Engine.cam.x = Math.cos(o * Math.PI / 4) * 3; Engine.cam.y = Math.sin(o * Math.PI / 4) * 3; return animDirectionalSprite(e); };
       for (const name of MINE) {
         const e = { kind: 'enemy', sprite: name, x: 0, y: 0, facing: 0 };
@@ -99,6 +103,19 @@ const SIDE_ON = ['briarsprite', 'fretcrawler', 'hound'];
         e.animSprite = name + '_w1'; check(at(e, 2).sprite === DIRECTIONS.view(name, 2, '_w1'), name + ' walk frame in the side view');
         e.animSprite = name + '_a2'; check(at(e, 3).sprite === DIRECTIONS.view(name, 3, '_a2'), name + ' strike frame in the back-side view');
       }
+      // the Pixel-3D models on: every bearing shows the nearest of the four sides above (front or head-on view 0, side,
+      // back, the side mirrored), in every pose; no oblique view is left
+      if (typeof PIXEL3D !== 'undefined') for (const name of MINE) for (const p of poses) {
+        const e = { kind: 'enemy', sprite: name, x: 0, y: 0, facing: 0, animSprite: p ? name + p : undefined };
+        GFX.pixel3d = false; const side = [0, 2, 4, 6].map(o => at(e, o)); GFX.pixel3d = true;
+        check(side[1].sprite === DIRECTIONS.view(name, 2, p) && !side[1].flip && side[3].sprite === side[1].sprite && side[3].flip && side[2].sprite === DIRECTIONS.view(name, 4, p), name + p + ' four sides are its own views');
+        for (let o = 0; o < 8; o++) for (const d of [-0.2, 0.2]) {
+          const q = ((Math.round((o + d) / 2) * 2) % 8 + 8) % 8, got = at(e, o + d), want = side[q / 2];
+          check(got.sprite === want.sprite && got.flip === want.flip, 'Pixel-3D on: ' + name + p + ' at bearing ' + (o + d) + ' shows side ' + q);
+        }
+        GFX.pixel3d = false;
+      }
+      GFX.pixel3d = p3;
       // the flag off: directions.js's own stand-ins, exactly; GFX.directions off: the painted front
       const handHash = hash(DIRECTIONS.view('captain', 3, ''));
       GFX.p20_beastA = false;

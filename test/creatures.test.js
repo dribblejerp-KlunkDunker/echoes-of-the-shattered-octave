@@ -132,9 +132,14 @@ const save = (name, dataUrl) => fs.writeFileSync(path.join(SHOTS, name), Buffer.
       out.species = species.length; out.glow = [frontGlow, backGlow];
 
       // --- opposite obliques mirror, exactly as animViewAngle reports ----------
+      // Phase 25 (js/pixel3d.js, the owner's call: "front, left side, back, right side"): with the Pixel-3D models on,
+      // as every preset has them, a turning creature snaps to four sides drawn by this chain. Switched off in Options,
+      // this chain's five bearings show exactly as before: those are checked first, with the switch off.
       const cam = { x: Engine.cam.x, y: Engine.cam.y, dir: Engine.cam.dir };
+      const p3 = GFX.pixel3d; GFX.pixel3d = false;
       const at = (e, octant) => { Engine.cam.x = Math.cos(octant * Math.PI / 4) * 3; Engine.cam.y = Math.sin(octant * Math.PI / 4) * 3; return animDirectionalSprite(e); };
-      for (const name of ['golem', 'hound', 'weaver', 'wearer', 'drowned']) {
+      const CHOSEN = ['golem', 'hound', 'weaver', 'wearer', 'drowned'];
+      for (const name of CHOSEN) {
         const e = { kind: 'enemy', sprite: name, x: 0, y: 0, facing: 0 };
         // Phase 20: creatures painted side-on (the hound) show a head-on drawing at octant 0
         const front0 = typeof BESTIARY20A !== 'undefined' && BESTIARY20A.front0(name) ? BESTIARY20A.view(name, 0, '') : Engine.sprites[name];
@@ -170,6 +175,22 @@ const save = (name, dataUrl) => fs.writeFileSync(path.join(SHOTS, name), Buffer.
       const ge = { kind: 'enemy', sprite: 'golem', x: 0, y: 0, facing: 0 };
       check(at(ge, 4).sprite === Engine.sprites.golem && at(ge, 4).flip === false, 'GFX.directions off gives the original sprite');
       GFX.directions = true;
+      Engine.cam.dir = cam.dir;
+      // the Pixel-3D models on: every bearing shows the nearest of the four sides this chain draws (front, side, back,
+      // the side mirrored); no oblique view is left. The Proctor's sides and back are its js/people25.js rig.
+      if (typeof PIXEL3D !== 'undefined') {
+        const pilotOn = (q, pose) => (q === 0 ? Engine.sprites['proctor' + pose] : BEASTB.view('proctor', q === 4 ? 4 : 2, pose));
+        for (const name of CHOSEN.concat('proctor')) for (const pose of ['', '_w1', '_a2']) {
+          const e = { kind: 'enemy', sprite: name, x: 0, y: 0, facing: 0, animSprite: pose ? name + pose : undefined };
+          GFX.pixel3d = false; const side = [0, 2, 4, 6].map(o => at(e, o)); GFX.pixel3d = true;
+          for (let o = 0; o < 8; o++) for (const d of [-0.2, 0.2]) {
+            const q = ((Math.round((o + d) / 2) * 2) % 8 + 8) % 8, got = at(e, o + d);
+            const want = name === 'proctor' ? { sprite: pilotOn(q, pose), flip: q === 6 } : side[q / 2];
+            check(want.sprite && got.sprite === want.sprite && got.flip === want.flip, 'Pixel-3D on: ' + name + pose + ' at bearing ' + (o + d) + ' shows side ' + q);
+          }
+        }
+      }
+      GFX.pixel3d = p3;
       Object.assign(Engine.cam, cam);
 
       // --- cache: bounded, evicts the oldest, regenerates identically -----------
