@@ -33,6 +33,20 @@ Title screen, Extras, "The Thread Where She Answered" (the extras open once Book
 
 Notes:
 
+## Small canon touches II (built 10 Nov; ROADMAP R9 #25, b, h, j, m, s)
+
+Five more small things from the book, each where the game already has the moment.
+
+- **"Apples in the Rain."** In Part One, walk to the tannery culvert in the south Hedge. When the voice speaks, does the hum at the end of the card land, or is it one beat too many before the choices?
+- **The hound's bed.** In the clearing, stand about five paces from the hound's bed (the patch with bones in it; stepping on it tells you what it is) and throw a skipping stone into it. Is it easy to land one in the bed? Does the silence read as the point, or as a bug? Try it with a hound idle nearby.
+- **The quarry gate.** Break the bore and climb out through the quarry. Are the four Legionnaires at the headframe door easy to see in the dark? Do the grass tufts read as grass growing through their feet? Look at one.
+- **Colours.** Ask a patron at the Boar for news after nine at night. Does the reds line come up within a few asks? Read the Gazette after meeting Kaelen. Does the Church's line about prayer read as the Office printing it?
+- **Hetty's eyebrows.** At the Boar, open Hetty's dialogue and buy a drink. Does the italic, wordless exchange read as told rather than said? Is one sovereign the right price?
+
+Notes:
+
+---
+
 ## The herald and the temptation (built 10 Nov; ROADMAP R9 item 21)
 
 Finish the coda and close the Kestrel's tank, so the herald comes up the south road. Talk to Kaelen at the fire first (the column), then to the herald. Play it twice: once following Kaelen and Lyra into the trees and telling him to take it (the Echo), once staying in the ring. Try one run where Kaelen never told Lyra everything, so she has no voice.
