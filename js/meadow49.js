@@ -36,7 +36,7 @@ const MEADOW49 = (function () {
   const warned = {};
   const warnOnce = (k, e) => { if (!warned[k]) { warned[k] = true; console.warn('meadow49: ' + k + ' failed', e); } };
   const guest = () => { try { return typeof SYNC19 !== 'undefined' && !!SYNC19.isGuest(); } catch (e) { return false; } };
-  const inExtra = () => { try { if (typeof EXTRAS17 !== 'undefined' && EXTRAS17.inExtra()) return true; } catch (e) { /* none */ } return /^(cantabile|p17)/.test(String((typeof G !== 'undefined' && G && G.mapId) || '')); };
+  const inExtra = () => { try { if (typeof EXTRAS17 !== 'undefined' && EXTRAS17.inExtra()) return true; } catch (e) { /* none */ } return /^(cantabile|p17|b69_)/.test(String((typeof G !== 'undefined' && G && G.mapId) || '')); };
   const dist = (ax, ay, bx, by) => Math.hypot(ax - bx, ay - by);
   const PI = Math.PI;
 
