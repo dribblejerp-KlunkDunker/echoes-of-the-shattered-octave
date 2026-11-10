@@ -292,7 +292,8 @@ const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:3000';
       const out = {};
       // whitelist: four generic houses, enterable ones never
       setup();
-      check(R.BUILDINGS.length === 4, 'four slots in the whitelist (saves key fires by slot)');
+      check(R.BUILDINGS.length === 5, 'five slots in the whitelist (saves key fires by slot): four that burn and one retired');
+      check(R.BUILDINGS[4].key === 'haybarn' && R.BUILDINGS[4].label === 'A hay-barn', 'the fourth that burns is the hay-barn on Tannery Row, appended after the retired slot');
       const retired = R.BUILDINGS.filter(b => b.retired);
       check(retired.length === 1 && retired[0].key === 'orchard', 'one slot retired: the orchard house');
       for (const [i, b] of R.BUILDINGS.entries()) if (b.retired) {
@@ -301,7 +302,8 @@ const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:3000';
         check(!R.validateBuilding(i) && dc.door && dc.portal && dc.portal.map === 'lib_conservatory', 'retired ' + b.key + ': its door is the Conservatory now');
         check(!R.ignite(b.key, 'story') && !R.ignite(i, 'flask') && R.stageOf(i) === 'none', 'retired ' + b.key + ' never burns');
       }
-      for (let i = 0; i < 4; i++) {
+      check(R.BUILDINGS.filter(b => !b.retired).length === 4, 'four buildings can burn');
+      for (let i = 0; i < R.BUILDINGS.length; i++) {
         const b = R.BUILDINGS[i]; if (b.retired) continue;
         check(R.validateBuilding(i), 'building ' + b.key + ' matches the map');
         const dc = m().cells[b.door[1] * m().w + b.door[0]];
@@ -357,7 +359,10 @@ const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:3000';
 
       // max two houses at once
       setup(); check(R.ignite('east', 'story') && R.ignite('meadow', 'story'), 'two at once');
-      check(!R.ignite('madders', 'story') && R.activeCount() === 2, 'never a third while two are in trouble');
+      check(!R.ignite('madders', 'story') && !R.ignite('haybarn', 'story') && R.activeCount() === 2, 'never a third while two are in trouble');
+      setup(); check(R.ignite('haybarn', 'story') === true && R.stageOf(4) === 'burning', 'the hay-barn burns');
+      R.syncFire(); const bd = m().cells[R.BUILDINGS[4].door[1] * m().w + R.BUILDINGS[4].door[0]];
+      check(bd.label === 'A burnt hay-barn', 'its door reads as a burnt hay-barn, not a house: ' + bd.label);
       passHours(F.charHours + F.rebuildHours + 1); R.syncFire(); check(R.ignite('madders', 'story'), 'room again once they are rebuilt');
 
       // arson: a witnessed flask fire is a heavy bounty; a story fire has no one to blame
