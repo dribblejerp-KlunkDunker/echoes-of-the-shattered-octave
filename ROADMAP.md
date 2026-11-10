@@ -209,6 +209,7 @@ Gate: each scene is playable start to finish, closes cleanly, and changes lines,
   - ~~the cutter chase~~ (done: #20 above);
   - ~~the Grafters' round~~ (done: #22 above);
   - the Prologue and Echo I as extras.
+  - **#25, the small canon touches: second five done** (10 Nov, `js/touches72.js`, `test/touches72.test.js`). b: "Apples in the Rain", off-key on the fourth bar, hummed at the end of the Hedge-voice card at the tannery culvert; h (taken in place of t): a skipping stone dropped into the hound's bed makes no sound at all; j: four Legionnaires at the greened quarry's gate with grass through their pewter feet; m: the colours brighter once, a late rumour in the book's words and the Church's "come right again with prayer" in the Gazette; s: Hetty's eyebrows, buying a drink as a silent nod, no toasts. Skipped: t (would rewrite existing voiced lines; the book's scene is not played). See `story/Game Layer/Phase 72 - Small Canon Touches II - New In-Game Text.md`.
 - [ ] **The brainstorm's 24 further contradictions,** folded into R2's canon sweep. Biggest: **The four named ones are fixed (canon pass, 28 Oct, PRs #73–#81):** the crates are in the Kestrel's hold; Bettis Renn is Ivo's wife; Hob Wendle dies aboard and the tanner is Abner Fenning; the Wearer is met once. The rest of the 24 stay open; the list is in the Story Brainstorm §5.
   - ~~the crates are in Hetty's cellar, not the Kestrel's hold~~ (fixed: PR #74);
   - ~~Bettis Renn is a man in the game~~ (fixed: the canon pass, `test/canon32.test.js`);
