@@ -65,6 +65,15 @@ At Whisper-Grove, with the press taken, climb the Kestrel's mast-ladder and choo
 - **Without the Aegis.** Two proctors at the rail. Too easy, too hard? Dying is an Echo: does it feel like one?
 - **Four seconds.** Is it clear you can cut the line, and that you should not?
 - **Light.** The deck is dark at dusk, and the scene keeps the game's clock. Can you see the people and the willows?
+## Small canon touches I (built 10 Nov; ROADMAP R9 #25, a, k, n, o, q)
+
+Five small things from the book, each where the game already has the moment.
+
+- **Hymn 9.** Wake the Aegis in the Cloister and sing it down, once with Sable and once yourself. Does Sable's flat, cracked recording fit the moment, or does a sung line from the speech engine jar?
+- **The Gazette.** Read the Synod Gazette after Hearthday night, after the water-meadow and during the Greening. Do the register lines read as the Office, flat and cold?
+- **The decree.** Walk to the corner of the square by the well-house in the morning and in the afternoon, on two days. Is the stand-in wall with its pasted sheet easy to find? Does the paste going dry say "new each day"?
+- **"Forty-eight."** Climb the Kestrel's mast-ladder after ten at night in Part One. Does Vane's line land after the crates, or is it one beat too many?
+- **OK-114.** On the deck in Part Three, walk to the bow. Can you see the mark from the mast? Is it legible only once you are at the rail?
 
 Notes:
 

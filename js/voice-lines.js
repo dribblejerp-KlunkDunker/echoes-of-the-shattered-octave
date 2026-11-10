@@ -2812,6 +2812,13 @@ const VOICE_LINES = {
 "src": "voices/sable/sable.h66.waived.mp3",
 "t": "Waived. He knows what we saw at the Malting."
 },
+"sable.hymn9.sung": {
+"d": 7.42,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.hymn9.sung.mp3",
+"t": "Hold us in the little light \u2014 hold us in the little light until the morning comes\u2014"
+},
 "sable_dw.greet.blunt": {
 "d": 2.18,
 "kind": "greet",
@@ -3279,6 +3286,13 @@ const VOICE_LINES = {
 "speaker": "vane",
 "src": "voices/vane/vane.h66.trade.mp3",
 "t": "Which means the choice isn't Kaelen goes in or nobody goes in. It's Kaelen goes in and buys us nine days we'd have had anyway, because that writ already told us where they are and how fast. It's a bad trade, that's all I'm saying. I've made a career of bad trades and that one's bad."
+},
+"vane.hold.fortyeight": {
+"d": 0.84,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.hold.fortyeight.mp3",
+"t": "Forty-eight."
 },
 "vane.rope.eight": {
 "d": 0.6,
