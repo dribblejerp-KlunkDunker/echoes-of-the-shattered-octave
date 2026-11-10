@@ -56,6 +56,16 @@ Nineteen of Book One's chapter epigraphs are papers in the world, read in the he
 - **The menus.** Tobin's notebooks, Tobiah's papers and the south wall offer a short list. Is the tick on read ones clear?
 - **Gates.** Nothing should appear before its chapter. Does anything feel missing where you expected it?
 - **French.** Switch to French and read three or four: do the Office's forms keep their flat voice?
+## The lived-in world, wave 4: the small places (built 10 Nov; ROADMAP R10 W4)
+
+Walk each through a day: Stillwater Landing (down the lane off the Flume Road), the Low Rings (the Landing's west gangway), the Bell Yard (the archway off the Sunken Court's west side), the Hollow (the tannery's back door), and the clearing at six in the morning and half past five. Go back to the Hollow on Rootday morning, and to any of them after dark.
+
+- **Busy or quiet?** The Landing should feel like a working wharf where nobody looks up; the Low Rings nearly empty; the Bell Yard full of loops; the Hollow quiet but alive; the clearing empty except at the shift change.
+- **The shift change.** Do the two shifts crossing on the track read as a shift change? Is anyone in your way on the path?
+- **Rootday.** When the white wagon comes in, everyone in the Hollow walks to their door and goes in. Does that read as fear, or as a glitch?
+- **Tobit's porch.** The woman with the very small hat at nine, the Reeve's clerk at one, the boy at half past three. Noticeable? Funny?
+- **The Bell Yard at six.** The Hollows walk out through the archway. Does it feel like "the way leaves do"?
+- **Night.** All five are empty of them after dark. Too empty?
 
 Notes:
 

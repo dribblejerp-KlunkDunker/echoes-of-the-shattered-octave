@@ -135,7 +135,7 @@ const LIFE62_WG = (function () {
   try {
     if (typeof window !== 'undefined' && typeof window.loadMap === 'function') {
       const _l = window.loadMap;
-      window.loadMap = function (id) { try { if (id === 'whispergrove') paint(); } catch (e) { /* plain */ } return _l.apply(this, arguments); };   // only for the city: see js/malting61.js on the texture atlas
+      window.loadMap = function (id) { try { if (id === 'whispergrove' || id === 'p31_bellyard') paint(); } catch (e) { /* plain */ } return _l.apply(this, arguments); };   // only where Hollows walk (the city, and the Bell Yard: js/life74-smallplaces.js): see js/malting61.js on the texture atlas
     }
   } catch (e) { /* none */ }
   return { TEXTS, ROSTER: R, paint };

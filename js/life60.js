@@ -15,6 +15,7 @@
 //    * Props for their work (a cart, a washing line, baskets, a sawhorse...) are transient decos too.
 //    * They never block you (solid:false). They do count as witnesses to theft: that is what a busier town means.
 //    * A place can say when its people are gone (opts.gone, e.g. Oakhaven after the Greening): then none are staged.
+//      It can stand them down while a story scene uses it (opts.down): they walk in at their own doors and stay in.
 //    * Switch: GFX.life (default true). Off: nobody is staged.
 // ============================================================
 'use strict';
@@ -150,12 +151,17 @@ const LIFE60 = (function () {
 
   // ================================================================ the schedule
   // stop: { from, to, job, at:[x,y], to2:[x,y] (a shuttle), area:r (wander), face (angle or 'p60_key'), prop }
+  // A 'home' stop may name its own door (at): the gate into town, the headframe down the quarry, an archway.
   function stopAt(p, h) { for (const s of p.day) if (inRange(h, s.from, s.to)) return s; return p.day[p.day.length - 1]; }
   const homeOf = (p) => p.home;
   function spot(p, s) {
-    if (s.job === 'home') return homeOf(p);
+    if (s.job === 'home') return s.at || homeOf(p);
     return s.at;
   }
+  // A place can stand its people down (opts.down: a story scene is using the place): while it holds, everyone walks to
+  // their own door and goes in, whatever the hour, and comes out to the hour's stop when it ends.
+  const DOWN = { from: 0, to: 24, job: 'home', down: true };
+  const isDown = (P) => { try { return !!(P.opts.down && P.opts.down()); } catch (e) { return false; } };
 
   // ================================================================ staging
   function npcDef(p) {
@@ -191,11 +197,11 @@ const LIFE60 = (function () {
   function snap(m) {
     const P = PLACES[m.id]; if (!P) return;
     lastBark = Math.max(lastBark, clock - BARK_GAP + ARRIVE_QUIET);   // nobody speaks the instant you arrive or wake
-    const h = hour();
+    const h = hour(), down = isDown(P);
     for (const e of people(m)) {
       const p = P.byKey[e._life]; if (!p) continue;
       if (gone(p)) { e.hidden = true; e._leaving = true; continue; }
-      const s = stopAt(p, h), at = spot(p, s);
+      const s = down ? DOWN : stopAt(p, h), at = spot(p, s);
       e._stop = s; e._path = null; e._wait = rnd() * 3; e._leg = 0;
       e.x = at[0] + (s.job === 'home' ? 0 : (rnd() - 0.5) * 0.2); e.y = at[1] + (s.job === 'home' ? 0 : (rnd() - 0.5) * 0.2);
       e.hidden = s.job === 'home';
@@ -222,7 +228,7 @@ const LIFE60 = (function () {
     else { e.x += dx / d * st; e.y += dy / d * st; e.facing = Math.atan2(dy, dx); }
     return !e._path.length;
   }
-  function tickPerson(m, P, e, h, dt) {
+  function tickPerson(m, P, e, h, dt, down) {
     const p = P.byKey[e._life]; if (!p) return;
     if (gone(p)) {   // they have left (a place can send someone away for good): walk to the way out, then nobody
       if (e.hidden) return;
@@ -230,10 +236,13 @@ const LIFE60 = (function () {
       if (stepAlong(e, dt)) e.hidden = true;
       return;
     }
-    const s = stopAt(p, h);
+    const s = down ? DOWN : stopAt(p, h);
     if (s !== e._stop) {   // a new stop: come out of the door if at home, and set off
       const was = e._stop; e._stop = s; e._leg = 0;
-      if (was && was.job === 'home') { e.hidden = false; e.x = p.home[0]; e.y = p.home[1]; }
+      if (was && was.job === 'home' && e.hidden) {
+        if (s.job === 'home') { const at = spot(p, s); e.x = at[0]; e.y = at[1]; e._path = null; e._going = false; return; }   // indoors to indoors: no walk
+        const d = spot(p, was); e.hidden = false; e.x = d[0]; e.y = d[1];   // out of the door they went in at (one still on the way in just turns round)
+      }
       const at = spot(p, s); go(m, e, at[0], at[1]); e._going = true;
       return;
     }
@@ -317,9 +326,9 @@ const LIFE60 = (function () {
     if (!hasG() || !on() || G.state !== 'play') return;
     const m = G.map, P = PLACES[m.id]; if (!P || paused()) return;
     if (P.opts.gone && P.opts.gone()) { if (people(m).length) stage(m); return; }
-    const h = hour(), d = Math.min(0.1, Math.max(0, Number(dt) || 0.033));
+    const h = hour(), d = Math.min(0.1, Math.max(0, Number(dt) || 0.033)), down = isDown(P);
     clock += d;
-    for (const e of people(m)) { try { tickPerson(m, P, e, h, d); } catch (err) { warnOnce('person', err); } }
+    for (const e of people(m)) { try { tickPerson(m, P, e, h, d, down); } catch (err) { warnOnce('person', err); } }
     try { barks(m, P); } catch (e) { warnOnce('barks', e); }
   }
   function add(mapId, roster, opts) {
