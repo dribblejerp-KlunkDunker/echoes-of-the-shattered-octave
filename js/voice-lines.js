@@ -535,6 +535,20 @@ const VOICE_LINES = {
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
 },
+"engineer.h66.port": {
+"d": 1.15,
+"kind": "narration",
+"speaker": "engineer",
+"src": "voices/engineer/engineer.h66.port.mp3",
+"t": "Port Cantabile."
+},
+"engineer.h66.tank": {
+"d": 12.17,
+"kind": "narration",
+"speaker": "engineer",
+"src": "voices/engineer/engineer.h66.tank.mp3",
+"t": "We need a tank, Captain. A whole one. And a yard with a drift-bench and somebody who knows how to tune one, and there is one place on this continent inside forty miles of where we can get to."
+},
 "engineer.rope.captain": {
 "d": 0.82,
 "kind": "narration",
@@ -619,6 +633,76 @@ const VOICE_LINES = {
 "src": "voices/harrow/harrow.open.1.mp3",
 "t": "Keep your voice in your chest, friend. And welcome to what's left of Oakhaven.",
 "voiceOf": "harrow"
+},
+"herald.h66.why": {
+"d": 1.63,
+"kind": "narration",
+"speaker": "herald",
+"src": "voices/herald/herald.h66.why.mp3",
+"t": "He will ask me why."
+},
+"herald.h66.writ1": {
+"d": 10.01,
+"kind": "narration",
+"speaker": "herald",
+"src": "voices/herald/herald.h66.writ1.mp3",
+"t": "By the Arbiterium of the Iron Synod, under the hand of the Supreme Arbiter, at the Organum, the seventeenth day of Leaffall, 419."
+},
+"herald.h66.writ2": {
+"d": 19.73,
+"kind": "narration",
+"speaker": "herald",
+"src": "voices/herald/herald.h66.writ2.mp3",
+"t": "Be it known: the persons styled Kaelen Vance, late Chief Resonant Engineer, badge four-oh-eight-A; Lyra Ashgrove, Cantor, of Oakhaven; the carrier styled Vane, of registry OK-114; and the scribe styled Sable, formerly of the Office of the Catalogue, are declared Dissonant."
+},
+"herald.h66.writ2b": {
+"d": 12.29,
+"kind": "narration",
+"speaker": "herald",
+"src": "voices/herald/herald.h66.writ2b.mp3",
+"t": "Their goods are forfeit. Their testimony is void in any court of the Synod. The Church of the Pure Note has entered a claim upon the Cantor, which claim the Arbiterium has stayed, for now."
+},
+"herald.h66.writ3": {
+"d": 15.22,
+"kind": "narration",
+"speaker": "herald",
+"src": "voices/herald/herald.h66.writ3.mp3",
+"t": "Be it further known that the Justiciar Aurelian Vaelen, Dread Arbiter, is upon the Iron Tramway with a column of the Carillon Legions and the authority of the Scales, and will be at the Mausoleum of Chords within nine days."
+},
+"herald.h66.writ4": {
+"d": 3.14,
+"kind": "narration",
+"speaker": "herald",
+"src": "voices/herald/herald.h66.writ4.mp3",
+"t": "And be it known that grace is offered, once."
+},
+"herald.h66.writ5": {
+"d": 15.84,
+"kind": "narration",
+"speaker": "herald",
+"src": "voices/herald/herald.h66.writ5.mp3",
+"t": "To Kaelen Vance: surrender of his person at the Organum, upon these terms. The glass shall be drawn. The Supreme Arbiter attests, upon his own body, that it can be drawn, and that he has carried eighty years of it and will show the engineer how."
+},
+"herald.h66.writ6": {
+"d": 9.17,
+"kind": "narration",
+"speaker": "herald",
+"src": "voices/herald/herald.h66.writ6.mp3",
+"t": "To the Cantor Lyra Ashgrove: amnesty, full and recorded, and the Church's claim extinguished, and transit to any province she names."
+},
+"herald.h66.writ7": {
+"d": 6.72,
+"kind": "narration",
+"speaker": "herald",
+"src": "voices/herald/herald.h66.writ7.mp3",
+"t": "To the persons of Oakhaven aboard the said vessel: relief, transit, and registration waived."
+},
+"herald.h66.writ8": {
+"d": 10.7,
+"kind": "narration",
+"speaker": "herald",
+"src": "voices/herald/herald.h66.writ8.mp3",
+"t": "And to the consignment of engram cores presently aboard the said vessel: proper disposition by the Office of the Catalogue, under the Registrar-General's hand."
 },
 "hetty.greet.blunt": {
 "d": 4.08,
@@ -1075,6 +1159,76 @@ const VOICE_LINES = {
 "t": "Mind the bed, twenty paces off the door. No sound carries over it for a day. Say what you came to say.",
 "voiceOf": "kaelen"
 },
+"kaelen.h66.cantor": {
+"d": 4.08,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.h66.cantor.mp3",
+"t": "He told me the Cantor was the most important person alive."
+},
+"kaelen.h66.didnt": {
+"d": 1.25,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.h66.didnt.mp3",
+"t": "You didn't ask me."
+},
+"kaelen.h66.iknow": {
+"d": 0.86,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.h66.iknow.mp3",
+"t": "I know."
+},
+"kaelen.h66.legion": {
+"d": 2.57,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.h66.legion.mp3",
+"t": "It means they go back into Legionnaires."
+},
+"kaelen.h66.listen": {
+"d": 1.2,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.h66.listen.mp3",
+"t": "Listen to me."
+},
+"kaelen.h66.lyra": {
+"d": 0.84,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.h66.lyra.mp3",
+"t": "Lyra."
+},
+"kaelen.h66.sable": {
+"d": 0.86,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.h66.sable.mp3",
+"t": "Sable."
+},
+"kaelen.h66.taking": {
+"d": 1.15,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.h66.taking.mp3",
+"t": "I'm taking it."
+},
+"kaelen.h66.war": {
+"d": 3.31,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.h66.war.mp3",
+"t": "It's twenty-one people off this ship and out of a war."
+},
+"kaelen.h66.writeas": {
+"d": 1.73,
+"kind": "narration",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.h66.writeas.mp3",
+"t": "What should I write it down as?"
+},
 "kaelen.rite.da": {
 "d": 0.77,
 "kind": "narration",
@@ -1525,6 +1679,153 @@ const VOICE_LINES = {
 "t": "You came. Sit, keep your voice in your chest. I've a thing to ask that I should not ask anyone.",
 "voiceOf": "lyra",
 "when": "!(flags.lyra_wg_met || flags.lyra_dw_met)   // from voices.js lyraState(): after Whisper-Grove she is silent until flags.lyra_voice, then speaks as lyra_ruined"
+},
+"lyra.h66.annet": {
+"d": 2.95,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.annet.mp3",
+"t": "And Annet Sowerby is in the third crate."
+},
+"lyra.h66.consignment": {
+"d": 11.76,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.consignment.mp3",
+"t": "The consignment is not a consignment. It is four hundred and thirty-two people out of Whisper-Grove, and we know all of their numbers and some of their names, and we are taking them home."
+},
+"lyra.h66.declines": {
+"d": 6.05,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.declines.mp3",
+"t": "The Cantor of Oakhaven thanks the Supreme Arbiter for the amnesty and declines it."
+},
+"lyra.h66.forgiven": {
+"d": 14.18,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.forgiven.mp3",
+"t": "I'm not doing this because I've forgiven you. I want to be extremely clear, because I know exactly what you'll make of it if I leave a gap. I have not forgiven you. I'm not sure I'm going to."
+},
+"lyra.h66.furnace": {
+"d": 6.96,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.furnace.mp3",
+"t": "It's four hundred and thirty-two people into a furnace! Proper disposition. You heard it. Say what it means."
+},
+"lyra.h66.goods": {
+"d": 12.19,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.goods.mp3",
+"t": "The persons of Oakhaven aboard this ship are not goods and are not in his gift, and they will go where they choose, and if he wants to do something useful for them he can put the Reach back."
+},
+"lyra.h66.grace": {
+"d": 2.47,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.grace.mp3",
+"t": "And Engineer Vance declines grace."
+},
+"lyra.h66.help": {
+"d": 10.99,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.help.mp3",
+"t": "So: no. You don't get to pay. You get to help. You get to get up tomorrow and do the next useful thing and then the one after that, for as long as it takes,"
+},
+"lyra.h66.help2": {
+"d": 13.99,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.help2.mp3",
+"t": "with people who know exactly what you are, which is the worst sentence I can think of and the only one that's any use to anybody. That's not mercy. Don't write it down as mercy."
+},
+"lyra.h66.lastnight": {
+"d": 15.98,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.lastnight.mp3",
+"t": "Last night I killed the last place my father's voice existed, and the day before that a thing in a fog told me what you did, kindly, and let me sit down, and both of those are in me now and they are not coming out."
+},
+"lyra.h66.nineteen": {
+"d": 10.22,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.nineteen.mp3",
+"t": "Nineteen days ago you were going to go down a shaft on your own and break a bore with your hands. Then you were going to sign a paper so the Hollow wouldn't burn."
+},
+"lyra.h66.nineteen2": {
+"d": 12.77,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.nineteen2.mp3",
+"t": "Now you're going to walk into the Organum and lie down on a table for the man who used you, and every single time, Kaelen, every single time, the plan is only Kaelen goes into the dark."
+},
+"lyra.h66.no": {
+"d": 0.94,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.no.mp3",
+"t": "No."
+},
+"lyra.h66.ofcourse": {
+"d": 1.32,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.ofcourse.mp3",
+"t": "Of course you are."
+},
+"lyra.h66.pay": {
+"d": 13.56,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.pay.mp3",
+"t": "But I have watched you try to pay for seven years, and the arithmetic is wrong, and I'm the only person here who can say so, because everybody else on this ship wants something from you."
+},
+"lyra.h66.pay2": {
+"d": 6.58,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.pay2.mp3",
+"t": "You can't pay. There isn't enough of you. Eleven thousand and forty people and a sky."
+},
+"lyra.h66.pay3": {
+"d": 16.97,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.pay3.mp3",
+"t": "There is no amount of Kaelen Vance that buys that back, and you have been trying to settle it one limb at a time since the year it happened, and the Supreme Arbiter has just offered you the biggest instalment yet and you lit up like a lamp."
+},
+"lyra.h66.question": {
+"d": 3.86,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.question.mp3",
+"t": "Tell him the Cantor says: we heard the question too."
+},
+"lyra.h66.wonderful": {
+"d": 2.9,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.wonderful.mp3",
+"t": "No, it's wonderful. It's the best one yet."
+},
+"lyra.h66.work": {
+"d": 0.86,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.work.mp3",
+"t": "Work."
+},
+"lyra.h66.write": {
+"d": 4.15,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra.h66.write.mp3",
+"t": "Write this down, and get it exactly right, because he'll ask you."
 },
 "lyra_fortunate.rite.fortunate": {
 "d": 4.44,
@@ -2098,6 +2399,97 @@ const VOICE_LINES = {
 "t": "Entry: a stranger, polite, at the wrong end of the continent. Sit. Not there. That is where the proctors will come from.",
 "voiceOf": "sable"
 },
+"sable.h66.anchors": {
+"d": 16.18,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.anchors.mp3",
+"t": "He has eight Anchors to ask a question of, and a Planetary Engine thirty years in the building, and exactly two people alive who have heard a god answer. He is one of them."
+},
+"sable.h66.buying": {
+"d": 9.26,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.buying.mp3",
+"t": "And the thing he is buying with it is one man with a Dawning-glass arm who can hear the Choristers."
+},
+"sable.h66.cure": {
+"d": 16.87,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.cure.mp3",
+"t": "He is a hundred and forty years old and eighty percent glass and he will not last another twenty years, and he has just offered you a cure, a desk, and an education."
+},
+"sable.h66.else": {
+"d": 2.52,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.else.mp3",
+"t": "He also told us something else."
+},
+"sable.h66.engineer": {
+"d": 1.06,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.engineer.mp3",
+"t": "Engineer."
+},
+"sable.h66.parley": {
+"d": 9.96,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.parley.mp3",
+"t": "There is a man in the clearing, in white, under a parley flag, and he says he has a writ for Kaelen Vance,"
+},
+"sable.h66.parley2": {
+"d": 12.05,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.parley2.mp3",
+"t": "and he is going to read it aloud whether or not anyone comes, because the form requires it to be read aloud and witnessed."
+},
+"sable.h66.polite": {
+"d": 5.81,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.polite.mp3",
+"t": "Then he will come for her next, and he will be polite about that too."
+},
+"sable.h66.punished": {
+"d": 6.6,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.punished.mp3",
+"t": "He does not want you punished, Engineer. He wants you at the Organum."
+},
+"sable.h66.succession": {
+"d": 4.75,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.succession.mp3",
+"t": "That is not a sentence. That is a succession."
+},
+"sable.h66.terms": {
+"d": 10.61,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.terms.mp3",
+"t": "Think about the terms. Amnesty for the Cantor, transit for twenty-one farmers, registration waived."
+},
+"sable.h66.terms2": {
+"d": 18.1,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.terms2.mp3",
+"t": "The Registrar-General would never waive registration; it is the only thing he has. And the cores returned, which the Catalogue would demand anyway. All of that is small."
+},
+"sable.h66.waived": {
+"d": 3.48,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.h66.waived.mp3",
+"t": "Waived. He knows what we saw at the Malting."
+},
 "sable_dw.greet.blunt": {
 "d": 2.18,
 "kind": "greet",
@@ -2383,6 +2775,48 @@ const VOICE_LINES = {
 "src": "voices/vane/vane.greet.polite.mp3",
 "t": "Every sailor dies, friend. The trick is to be somewhere else when it happens. Sit; I'm buying, because I'm frightened.",
 "voiceOf": "vane"
+},
+"vane.h66.ninedays": {
+"d": 14.42,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.h66.ninedays.mp3",
+"t": "I've been thinking about it since the herald started, which is longer than I usually think about anything. Nine days, he said. That's a column on the Tramway with a Justiciar at the head of it, and they'll be at this clearing on Driftday, and the Kestrel can't fly on three tanks."
+},
+"vane.h66.putin": {
+"d": 1.39,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.h66.putin.mp3",
+"t": "I'd like to put one thing in."
+},
+"vane.h66.right": {
+"d": 0.7,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.h66.right.mp3",
+"t": "Right."
+},
+"vane.h66.sayit": {
+"d": 0.72,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.h66.sayit.mp3",
+"t": "Say it."
+},
+"vane.h66.thereitis": {
+"d": 0.79,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.h66.thereitis.mp3",
+"t": "There it is."
+},
+"vane.h66.trade": {
+"d": 15.86,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.h66.trade.mp3",
+"t": "Which means the choice isn't Kaelen goes in or nobody goes in. It's Kaelen goes in and buys us nine days we'd have had anyway, because that writ already told us where they are and how fast. It's a bad trade, that's all I'm saying. I've made a career of bad trades and that one's bad."
 },
 "vane.rope.eight": {
 "d": 0.6,
@@ -2698,6 +3132,20 @@ const VOICE_LINES = {
 "src": "voices/wearer/wearer.green.tam.mp3",
 "t": "Tammy, there's a gap here. Bring the little ones first.",
 "voiceOf": "tam"
+},
+"weaver.h66.thread": {
+"d": 3.14,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.h66.thread.mp3",
+"t": "I am going to show you a thread that was not taken."
+},
+"weaver.h66.unhappen": {
+"d": 4.22,
+"kind": "narration",
+"speaker": "weaver",
+"src": "voices/weaver/weaver.h66.unhappen.mp3",
+"t": "This did not happen. It also did not unhappen; nothing does."
 },
 "weaver.rope.echo": {
 "d": 3.48,

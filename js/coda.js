@@ -405,6 +405,7 @@ function ringAfter() {
 function codaHerald() {
   const f = G.flags;
   if (f.herald_answered) return false;   // answered once; the writ is not read twice
+  if (typeof HERALD66 !== 'undefined') return HERALD66.fromTalk();   // ch. 24 played (js/herald66.js); the card below is its fallback
   setTimeout(() => {
     closeModal();
     showEvent('The writ', 'He has walked nine miles alone to read it aloud, because the form requires it. In the name of the Iron Synod: the Chord, all of you, declared Dissonant. The Church\'s claim on the Cantor stayed, not refused. The Dread Arbiter nine days out on the Tramway with a column. And grace, offered once: the glass drawn, the Cantor amnestied, the Oakhaven survivors given transit, and the cores returned for <i>proper disposition</i>.' + (f.sable_with ? '<br><br>Sable, very quietly: "It is not a sentence. It is a succession."' : ''), [

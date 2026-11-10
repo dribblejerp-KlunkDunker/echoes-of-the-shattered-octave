@@ -18,6 +18,19 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## The herald and the temptation (built 10 Nov; ROADMAP R9 item 21)
+
+Finish the coda and close the Kestrel's tank, so the herald comes up the south road. Talk to Kaelen at the fire first (the column), then to the herald. Play it twice: once following Kaelen and Lyra into the trees and telling him to take it (the Echo), once staying in the ring. Try one run where Kaelen never told Lyra everything, so she has no voice.
+
+- **The reading.** Three cards of a writ. Does it hold, or does it drag? Does the ring of figures read as a loose and extremely unfriendly ring?
+- **The trees.** Is it clear that you can walk after them? Is forty seconds the right wait before you hear it from the ring anyway?
+- **The Echo.** Does the grey thread feel like a road not taken, and does coming back under the trees land?
+- **The answer and the bow.** Does standing a yard behind Lyra's shoulder feel like enough to do? Is forty-five seconds the right wait at the bow?
+- **The slate.** Without her voice, do Lyra's long speeches read well as slate writing?
+- **The hold.** Is Vane at the crates easy to find? Is the deck-beam?
+
+Notes:
+
 ## Orla's harvest home (built 8 Nov; ROADMAP R9 item 17)
 
 Bring Davin's boots to Orla Hale in the Hollow (after Hearthday night), then speak to her again. Come back on each of the next three days for a line of The Last Sheaf. Try one lesson with the shutters open. Then, at the Greening, go with Lyra to Orla's tree.
