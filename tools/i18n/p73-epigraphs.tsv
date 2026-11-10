@@ -1,0 +1,100 @@
+# Phase 73, Book One's chapter epigraphs as documents (ROADMAP R6): js/epigraphs73.js (EPI73.TEXTS). English<TAB>French; merged into locales/story/fr.json.
+# The epigraphs are game text (documents placed in the world), not library books, so they are translated now (the library stays English until R8).
+Put it down.	Le reposer.
+Back.	Retour.
+Leave them.	Les laisser.
+Volume	Volume
+Label	Étiquette
+Office circular	Circulaire de l'Office
+Cantor's notebook	Carnet de Chantre
+Ship's papers	Papiers de bord
+Rubric	Rubrique
+Calibration sheet	Feuille d'étalonnage
+Saying	Dicton
+Standing form	Formulaire type
+Carriage note	Bordereau de transport
+Requisition	Réquisition
+Office notes	Notes de l'Office
+Cover-sheet	Page de garde
+Primer	Abécédaire
+Handbill	Prospectus
+Writ	Mandat
+A small battered book with a broken spine	Un petit livre fatigué, au dos cassé
+An Office circular, pinned up by the pumps	Une circulaire de l'Office, épinglée près des pompes
+A vox-bottle: blue glass, red wax, a paper label	Une bouteille-voix : verre bleu, cire rouge, étiquette de papier
+The Cantor's notebooks, twenty years of them	Les carnets du Chantre, vingt ans de carnets
+The Cantor's notebooks	Les carnets du Chantre
+Tobin Ashgrove's notebooks, full of intervals and orchard-lore and small pencil sketches of trees.	Les carnets de Tobin Ashgrove, pleins d'intervalles, de savoir de verger et de petits croquis d'arbres au crayon.
+The Rubric of the Rite, open by the altar step	La Rubrique du Rite, ouverte près de la marche de l'autel
+A bill of lading, tacked to a crate	Un connaissement, cloué à une caisse
+Tobiah Marsh's papers, on the end of the engineer's bench	Les papiers de Tobiah Marsh, au bout de l'établi du mécanicien
+Tobiah Marsh's papers	Les papiers de Tobiah Marsh
+A month of readings, every quarter-hour, in his own small careful hand.	Un mois de relevés, tous les quarts d'heure, de sa petite écriture soigneuse.
+Words cut into a plank by the coiled rope	Des mots gravés dans une planche, près de la corde lovée
+A handbill, nailed to the mast	Un prospectus, cloué au mât
+A stack of printed forms on the registration bench	Une pile de formulaires imprimés sur le banc de l'enregistrement
+A clerk's copy of the house notes, under a blotter	L'exemplaire d'un commis des notes de la maison, sous un buvard
+The shelves on the south wall: paper	Les rayonnages du mur sud : du papier
+The south wall	Le mur sud
+The Office of the Catalogue keeps everything. It keeps intake sheets and requisitions and carriage notes.	L'Office du Catalogue garde tout. Il garde les fiches d'admission, les réquisitions et les bordereaux de transport.
+A box on the table: CONSORTIUM — DAWNING WORKS — RITE OF PURE UNISON — 411/412	Une boîte sur la table : CONSORTIUM — DAWNING WORKS — RITE DE L'UNISSON PUR — 411/412
+A primer from the Null-Watch Press, on the end of a riser	Un abécédaire des Presses de Null-Watch, au bout d'un gradin
+The sealed sheet with the black ribbon	La feuille scellée au ruban noir
+Every structure has a note at which it wishes to fail. The engineer's task is to find that note before the structure does, and to hold the bore a hair's breadth beneath it.	Toute structure a une note à laquelle elle souhaite céder. La tâche de l'ingénieur est de trouver cette note avant la structure, et de tenir le forage à un cheveu en dessous.
+K. Vance, <i>On the Calibration of Resonant Bores</i>, Conservatory of Bores, 409 SR	K. Vance, <i>De l'étalonnage des forages résonants</i>, Conservatoire des Forages, 409 CS
+The label on a vox-bottle	L'étiquette d'une bouteille-voix
+VOX. Genuine Last Words, Sealed at the Deathbed.	VOX. Authentiques Dernières Paroles, Scellées au Lit de Mort.
+Do Not Unstop Within a Mile of Open Country.	Ne Pas Déboucher à Moins d'un Mille de la Rase Campagne.
+No Refunds.	Ni Repris ni Échangé.
+Label on a vox-bottle, Port Cantabile	Étiquette d'une bouteille-voix, Port Cantabile
+Catalogue Circular 12	Circulaire du Catalogue n° 12
+An engram is a harmonic template and possesses no identity. Speech emitted by a damaged engram is to be disregarded and is not to be recorded.	Un engramme est un gabarit harmonique et ne possède aucune identité. La parole émise par un engramme endommagé doit être ignorée et ne doit pas être consignée.
+Catalogue Circular 12, <i>On the Maintenance of Carillon Engrams</i>	Circulaire du Catalogue n° 12, <i>De l'entretien des engrammes du Carillon</i>
+The notebook of 401 SR	Le carnet de 401 CS
+For lost lambs, the calling-song. Sing it full, or not at all. A lamb in the dark will not follow a whisper.	Pour les agneaux perdus, le chant d'appel. Chante-le à pleine voix, ou pas du tout. Un agneau dans le noir ne suivra pas un murmure.
+T. Ashgrove, Cantor's notebook, 401 SR	T. Ashgrove, carnet de Chantre, 401 CS
+Item: engram cores, standard, in straw. Twelve crates. Consignee: Oakhaven Works, Carillon garrison. The consignment is not to be opened in transit. The Office is aware that carriers sometimes hear the consignment. Carriers who report hearing the consignment will not be engaged again.	Article : cœurs d'engramme, modèle standard, sous paille. Douze caisses. Destinataire : Ateliers d'Oakhaven, garnison du Carillon. L'envoi ne doit pas être ouvert en transit. L'Office sait que les transporteurs entendent parfois l'envoi. Les transporteurs qui signalent avoir entendu l'envoi ne seront plus engagés.
+Bill of lading, Office of the Catalogue	Connaissement, Office du Catalogue
+Rubric of the Rite of Unison	Rubrique du Rite de l'Unisson
+The chosen voice shall not speak from the third day, that the instrument be not worn. She shall be given honey and raw egg. She shall be washed. She shall be told that she is fortunate.	La voix élue ne parlera plus à compter du troisième jour, afin que l'instrument ne soit point usé. On lui donnera du miel et de l'œuf cru. Elle sera lavée. On lui dira qu'elle a de la chance.
+Vance Sequence, Revision Seven	Séquence Vance, Révision sept
+STAGE 9 — UNISON HOLD. On failure of the hold, for any cause, the Sequence is not to be halted. Slippage is to be absorbed by the source.	STADE 9 — TENUE À L'UNISSON. En cas d'échec de la tenue, pour quelque cause que ce soit, la Séquence ne doit pas être interrompue. Le glissement doit être absorbé par la source.
+Vance Sequence, Rev. 7, marginal note in an unknown hand	Séquence Vance, rév. 7, note marginale d'une main inconnue
+The notebook of 398 SR	Le carnet de 398 CS
+Growth is the kindest of the eight laws and the least merciful. It has no idea what it is doing. It only knows the word more.	La Croissance est la plus bienveillante des huit lois et la moins miséricordieuse. Elle n'a aucune idée de ce qu'elle fait. Elle ne connaît que le mot encore.
+T. Ashgrove, Cantor's notebook, 398 SR	T. Ashgrove, carnet de Chantre, 398 CS
+A Rust Coast saying	Un dicton de la Côte de Rouille
+The line is not a promise. The line is a rope.	La ligne n'est pas une promesse. La ligne est une corde.
+Rust Coast saying	Dicton de la Côte de Rouille
+On the Calibration of Resonant Bores, Tobiah Marsh's copy	De l'étalonnage des forages résonants, l'exemplaire de Tobiah Marsh
+A structure does not fail where it is weakest. It fails where the load finds it.	Une structure ne cède pas là où elle est le plus faible. Elle cède là où la charge la trouve.
+K. Vance, <i>On the Calibration of Resonant Bores</i>	K. Vance, <i>De l'étalonnage des forages résonants</i>
+Form 9: Intake	Formulaire 9 : Admission
+Form 9: Intake. The subject is to be asked three questions and no more. Name. Age. Trade. Further speech is not to be recorded, as it lengthens the queue.	Formulaire 9 : Admission. Il sera posé au sujet trois questions et pas davantage. Nom. Âge. Métier. Toute parole supplémentaire ne doit pas être consignée, car elle allonge la file.
+Office of the Catalogue, standing forms	Office du Catalogue, formulaires types
+Carriage note, Registry OK-114	Bordereau de transport, immatriculation OK-114
+Registry OK-114. Consignment: twelve crates. The carrier attests that the consignment travelled dry, secure and unopened.	Immatriculation OK-114. Envoi : douze caisses. Le transporteur atteste que l'envoi a voyagé au sec, en sûreté et sans être ouvert.
+Signature of carrier: (mark).	Signature du transporteur : (marque).
+Carriage note, Office of the Catalogue, Greenleaf 417	Bordereau de transport, Office du Catalogue, Feuillevert 417
+Requisition 44	Réquisition 44
+Requisition 44: small clear voices, forty (40). Source: charitable choir, Cloister road, Whisper-Grove. Note: one roof, one hour, one wagon. Efficient.	Réquisition 44 : petites voix claires, quarante (40). Provenance : chœur de charité, route du Cloître, Whisper-Grove. Note : un toit, une heure, une charrette. Efficace.
+Office of the Catalogue, requisition file, Ashfall 416	Office du Catalogue, dossier des réquisitions, Chute des cendres 416
+Notes Toward an Efficient Intake	Notes pour une admission efficace
+Queue discipline is the whole of the work. A subject who has been standing for two hours and has been told three times what will be asked will answer in under nine seconds. A subject who is surprised will take a minute and upset the line behind her.	La discipline de la file est tout le travail. Un sujet debout depuis deux heures, à qui l'on a dit trois fois ce qui lui sera demandé, répondra en moins de neuf secondes. Un sujet surpris mettra une minute et dérangera la file derrière lui.
+S., <i>Notes Toward an Efficient Intake</i>, Office of the Catalogue, 416	S., <i>Notes pour une admission efficace</i>, Office du Catalogue, 416
+The Arbiterium cover-sheet	La page de garde de l'Arbiterium
+Engineer V. is not to be informed of the object of Stage 9. His calibration is measurably more accurate when he believes the object is extraction.	L'ingénieur V. ne doit pas être informé de l'objet du Stade 9. Son étalonnage est d'une précision mesurablement supérieure lorsqu'il croit que l'objet est l'extraction.
+Arbiterium cover-sheet, Rite of Pure Unison, 411 SR	Page de garde de l'Arbiterium, Rite de l'Unisson pur, 411 CS
+A Plain Account of the Cacophony	Exposé simple de la Cacophonie
+It cannot read. It cannot guess. It knows nothing about you that was not said out loud within its hearing, which is why the old women say: do your weeping on paper.	Elle ne sait pas lire. Elle ne sait pas deviner. Elle ne sait rien de vous qui n'ait été dit à voix haute à portée de son oreille, c'est pourquoi les vieilles femmes disent : pleurez sur le papier.
+<i>A Plain Account of the Cacophony</i>, Null-Watch Press	<i>Exposé simple de la Cacophonie</i>, Presses de Null-Watch
+A Free Captains' handbill	Un prospectus des Capitaines libres
+An Office cutter carries listening gear forward of the mast. Running silent will not help you. Your cargo is not silent.	Un cotre de l'Office porte du matériel d'écoute en avant du mât. Naviguer en silence ne vous aidera pas. Votre cargaison n'est pas silencieuse.
+Free Captains' handbill, Port Cantabile	Prospectus des Capitaines libres, Port Cantabile
+The notebook of 404 SR	Le carnet de 404 CS
+For a death with no body, sing the full office anyway. The song is not for the dead. It is for the hole the dead left, and a hole will take a song the way dry ground takes rain.	Pour une mort sans corps, chante quand même l'office entier. Le chant n'est pas pour le mort. Il est pour le trou que le mort a laissé, et un trou prend un chant comme la terre sèche prend la pluie.
+T. Ashgrove, Cantor's notebook, 404 SR	T. Ashgrove, carnet de Chantre, 404 CS
+Writ of Attainder and Grace	Mandat de Proscription et de Grâce
+Writ of Attainder and Grace. Be it known that the persons herein named are declared Dissonant, their goods forfeit, their testimony void, their names struck. Provided always that grace is offered to each, once, and that a man who refuses grace has chosen what follows.	Mandat de Proscription et de Grâce. Qu'il soit su que les personnes ici nommées sont déclarées Dissonantes, leurs biens confisqués, leur témoignage nul, leurs noms rayés. Pourvu toujours que la grâce soit offerte à chacune, une fois, et qu'un homme qui refuse la grâce a choisi ce qui s'ensuit.
+Standing form, the Arbiterium	Formulaire type, l'Arbiterium
+Bill of lading	Connaissement

@@ -18,6 +18,18 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## The epigraphs as documents (built 10 Nov; ROADMAP R6)
+
+Nineteen of Book One's chapter epigraphs are papers in the world, read in the held-document reader. On a new game, look in Lyra's house (the Cantor's notebooks by the shelf), the quarry's pump hall by Tobiah (a battered book and an Office circular) and the Bonded Store at Stillwater (a vox-bottle). After Dawnday, the chapel (the Rubric by the altar step). In Part Three: the Kestrel's hold (bill of lading), the engineer's bench below (Tobiah's papers), the deck (a plank by the coiled rope; the handbill on the mast after the cutter chase), and the Malting (registration bench, a clerk's desk, the Tuning Room's south wall and the box on the table). The Cloister's primer after the Malting; the herald's sheet in the clearing while he waits for an answer.
+
+- **Finding them.** Small papers on the floor: are they easy to spot, too easy, or lost against the floor? Is the label clear enough to make you press Use?
+- **Reading.** Each is one short page. Does a single quoted line on a full sheet feel like a document, or like a card? Is the paper right (parchment, Office grey, plain, slate)?
+- **The menus.** Tobin's notebooks, Tobiah's papers and the south wall offer a short list. Is the tick on read ones clear?
+- **Gates.** Nothing should appear before its chapter. Does anything feel missing where you expected it?
+- **French.** Switch to French and read three or four: do the Office's forms keep their flat voice?
+
+Notes:
+
 ## The herald and the temptation (built 10 Nov; ROADMAP R9 item 21)
 
 Finish the coda and close the Kestrel's tank, so the herald comes up the south road. Talk to Kaelen at the fire first (the column), then to the herald. Play it twice: once following Kaelen and Lyra into the trees and telling him to take it (the Echo), once staying in the ring. Try one run where Kaelen never told Lyra everything, so she has no voice.
