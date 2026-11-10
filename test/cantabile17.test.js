@@ -84,6 +84,14 @@ const HELPERS = () => {
     lastReply() { const l = DLG.log[DLG.log.length - 1]; return l ? l.t : ''; },
     closeUi() { try { closeModal(); } catch (e) { /* none */ } const ev = document.getElementById('event'); if (ev) ev.classList.add('hidden'); G.state = 'play'; G.keys = {}; },
     has(id) { return G.player.inv.some(s => s.id === id); },
+    // In play the extra runs under EXTRAS17 (its own session, EXTRAS17.inExtra() === 'cantabile'), and Book One's calendar
+    // modules (lyra51's forty-one nights, cargo56's Cargo night ...) stand down there. These checks call start() in place,
+    // in the test's own session, so while they run the extra is marked as running too: otherwise start()'s 7 Ashfall reads
+    // to those modules as a Book One night gone by. finishExtra() then hands its result to EXTRAS17.finish, as in play.
+    asExtra(on) {
+      if (on && !T._inX) { T._inX = EXTRAS17.inExtra; EXTRAS17.inExtra = () => 'cantabile'; }
+      else if (!on && T._inX) { EXTRAS17.inExtra = T._inX; T._inX = null; }
+    },
     // (p7t_/p7s_ are the engine's own clocks and gold statistics, not story flags)
     bookOne() { const o = {}; for (const k of Object.keys(G.flags)) if (!k.startsWith('p17c_') && !/^p7[ts]_/.test(k)) o[k] = G.flags[k]; return JSON.stringify(o); },
   };
@@ -185,7 +193,7 @@ const HELPERS = () => {
     }
 
     // ---------------------------------------------------------------- 4. the route
-    const before = await E(() => { T.reset(); return T.bookOne(); });
+    const before = await E(() => { T.reset(); T.asExtra(true); return T.bookOne(); });
     await E(() => { window.__ls = []; const _s = Storage.prototype.setItem; Storage.prototype.setItem = function (k, v) { window.__ls.push(k); return _s.apply(this, arguments); }; });
     {
       const r = await E(() => {
@@ -335,7 +343,7 @@ const HELPERS = () => {
         return o;
       });
       ok(r.rep && !r.junk && r.keys, 'hostile p17c_ flags are repaired or dropped; every flag is a small integer under p17c_');
-      const after = await E(() => T.bookOne());
+      const after = await E(() => { const a = T.bookOne(); T.asExtra(false); return a; });
       const diff = (() => { const A = JSON.parse(before), B2 = JSON.parse(after), d = []; for (const k of new Set([...Object.keys(A), ...Object.keys(B2)])) if (JSON.stringify(A[k]) !== JSON.stringify(B2[k])) d.push(k + ':' + JSON.stringify(A[k]) + '>' + JSON.stringify(B2[k])); return d; })();
       ok(after === before, 'the extra never touches a Book One flag' + (diff.length ? ': ' + diff.join(' ') : ''));
       ok(r.ls.every(k => !/save|slot|autosave|echoes/i.test(k)), 'the extra writes nothing to the save slots (localStorage keys written: ' + (r.ls.join(',') || 'none') + ')');

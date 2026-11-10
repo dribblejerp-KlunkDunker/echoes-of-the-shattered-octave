@@ -316,9 +316,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       p.gold = 0; G.player.gold = 0; renderArrest();
       check(document.querySelector('#crime-pay').disabled, 'cannot pay without funds');
       document.querySelector('#crime-flee').click();
-      check(crimeState().bounty === 20 && G.lawGrace === 5, 'refusal preserves bounty with escape grace');
+      // refusing arrest is resisting (js/game.js resistArrest, "Law: refusing arrest means the watch chases you and attacks")
+      check(crimeState().bounty === 40 && crimeState().resisting === true && G.lawGrace === 2 && !G.openPanel && G.state === 'play', 'refusal keeps the bounty, adds resisting arrest (+20) and gives a two-second start');
       G.player.gold = 50; renderArrest(); document.querySelector('#crime-pay').click();
-      check(crimeState().bounty === 0 && G.player.gold === 30, 'fine deducted exactly and bounty cleared');
+      check(crimeState().bounty === 0 && crimeState().resisting === false && G.player.gold === 10, 'fine deducted exactly (the whole warrant), bounty cleared and the resisting ended');
       crimeState().bounty = 40;
       const clock = G.day * 24 + G.tod * 24, inventory = JSON.stringify(G.player.inv), weapon = JSON.stringify(G.player.weapons);
       renderArrest(); document.querySelector('#crime-jail').click();
@@ -397,17 +398,21 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       pickpocketInput('take');
       if (G.player.gold !== gold || crimeState().thefts !== thefts || !document.querySelector('#pocket-take').disabled) throw new Error('duplicate attempt cannot farm coin');
       pickpocketInput('leave'); G.state = 'panel';
+      // A load puts Bettany back in her day or night place (js/thin29.js routines, R4), away from where this test stood
+      // her: stand her within reach again after each restore, and check the purse panel really opened on her.
+      const restage = (who) => Object.assign(who, { x: 23.5, y: 23.5, facing: Math.PI / 2 });
+      const opened = (who, label) => { if (G.openPanel !== 'pickpocket' || !PICKPOCKET || PICKPOCKET.target !== who) throw new Error(label + ': the purse panel opens on her'); };
       const saved = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(saved); G.state = 'panel';
       const e = G.ents.find(o => o.pocketId === pocketNPC.pocketId); window.pocketNPC = e;
       if (G.flags[pocketKey(e)] !== 'taken' || G.player.gold !== gold) throw new Error('purse completion and coin persist');
-      G.state = 'play'; openPickpocket();
+      restage(e); G.state = 'play'; openPickpocket(); opened(e, 'after a load');
       if (!document.querySelector('#pocket-take').disabled) throw new Error('saved empty purse stays disabled');
       pickpocketInput('leave'); G.state = 'panel';
       // Real old-save flags have no pocket entries.
       for (const key of Object.keys(saved.flags)) if (key.startsWith('pocket:')) delete saved.flags[key];
       restoreGame(saved); G.state = 'panel'; window.pocketNPC = G.ents.find(o => o.id === 'bettany');
       if (G.flags[pocketKey(pocketNPC)]) throw new Error('old save defaults to untouched purse');
-      G.state = 'play'; openPickpocket();
+      restage(pocketNPC); G.state = 'play'; openPickpocket(); opened(pocketNPC, 'an old save');
     });
     // Touch cancellation never spends the one attempt.
     await page.locator('#pocket-leave').tap();
@@ -534,6 +539,9 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       foe.state = 'idle'; G.throwReady = 0; G.state = 'play'; throwDistraction('pebble'); G.state = 'panel';
       check(foe.state === 'investigate', 'idle enemy can investigate a later sound');
       // Save while investigating; no transient impact or stale target may replay.
+      // The fixture's own entities are its base. js/life60.js (R10) stages Oakhaven's townsfolk, transient, on loadMap,
+      // so here they sit before the fixture's later entities: put them after the base, where a built map has them.
+      map.entities.sort((a, b) => (a.transient ? 1 : 0) - (b.transient ? 1 : 0));
       map.baseCount = map.entities.filter(e => !e.transient).length;
       const saved = JSON.parse(JSON.stringify(snapshotGame()));
       check(!saved.maps.oakhaven.extra.some(e => e.kind === 'deco'), 'transient impacts excluded from snapshot');

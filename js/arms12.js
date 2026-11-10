@@ -55,14 +55,14 @@ const ARMS12 = (() => {
     // [PROPOSED] the long glass-edged blade: bought from Captain Vane (off the Kestrel)
     p12_glassblade: { name: 'Long Glass-Edged Blade', img: 'fp_longsword', dmg: [10, 20], reach: 1.9, noise: 1.4, speed: 0.82, type: 'glass', twoHanded: true, value: 210,
       desc: 'A corsair\'s two-handed blade, the edge ground out of salvaged Aether-Glass. It rings through the Cacophony. Two hands, so no shield.' },
-    // [PROPOSED] a Compact polearm in bell-bronze: bought from Brother Ignatius
+    // [PROPOSED] a Compact polearm in bell-bronze: bought from Orrin Pale the sexton, who keeps the chapel's stock (R2: the Church keeps no shop)
     p12_bellglaive: { name: 'Bell-Bronze Glaive', img: 'fp_spear', dmg: [8, 15], reach: 2.2, noise: 2.2, speed: 0.78, type: 'bronze', twoHanded: true, value: 135,
       desc: 'A curved bell-bronze blade on a six-foot shaft, struck from a chapel bell the Synod did not take. Reaches over a shield rim and past a hound. Two hands, so no shield.' },
     // [PROPOSED] a parrying dirk for the off hand: bought from Abner
     p12_dirk: { name: 'Reed-Guard Dirk', img: 'fp_knife', dmg: [3, 8], reach: 1.15, noise: 0.8, speed: 0.30, type: 'iron', value: 30,
       desc: 'A stiff, basket-hilted dirk for the off hand. Light enough to carry beside a blade. Rust Coast duellists call it the second word.' },
   };
-  const STOCK = { vosk: ['p12_greatmaul'], vane: ['p12_glassblade'], ignatius: ['p12_bellglaive'], hob: ['p12_dirk'] };
+  const STOCK = { vosk: ['p12_greatmaul'], vane: ['p12_glassblade'], orrin: ['p12_bellglaive'], hob: ['p12_dirk'] };
 
   // ---- settings ---------------------------------------------------------------------------------------------------------
   const KEY = 'echoes-arms12';
