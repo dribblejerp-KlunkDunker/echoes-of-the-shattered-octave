@@ -127,7 +127,7 @@ Gate: each joins a map that is already reachable, keeps the Hedge rule, closes c
 
 ### R6 — Lore and quests, chosen by playtest
 Gate: owner picks from this list after the R1–R4 playtest; nothing here is required to sell.
-- [ ] **Book One's 24 unused epigraphs placed as documents in the world.** For example: the Grafting Office handbook, K. Vance on calibration, Catalogue Circular 12, the crates' bill of lading, the Warrant of Purification, the Rubric of the Rite.
+- [x] **Book One's 24 unused epigraphs placed as documents in the world.** For example: the Grafting Office handbook, K. Vance on calibration, Catalogue Circular 12, the crates' bill of lading, the Warrant of Purification, the Rubric of the Rite. Done (10 Nov, js/epigraphs73.js): nineteen papers in the held-document reader, word for word with the book's attributions, each gated to its chapter. Five were already in the game word for word and are not placed again (ch. 1 the rhyme, ch. 3 the Grafting Office handbook and ch. 7 the Warrant's line in the library, ch. 15 the Veil's rules, ch. 22 Quist). Placements and gates are [PROPOSED] (`story/Game Layer/Phase 73 - The Epigraphs - New In-Game Text.md`).
 - [ ] **The Madder birth on day 0,** using Hold the Pitch.
 - [ ] **Ilse Brennan** as the voiceless song-teacher. (Lissa Merrow is in the Hollow since R5a.)
 - [ ] **NPCs notice your calling:** Vosk, Ignatius, Vane, Bettany, Tobiah.
