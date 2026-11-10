@@ -45,6 +45,8 @@ async function newGame(page, speed) {
 const snap = (page) => page.evaluate(() => ({
   on: CINEMATIC24.running(), shot: CINEMATIC24.shot(), state: G.state, map: G.mapId, staged: CINEMATIC24.staged(), stats: Object.assign({}, CINEMATIC24.stats),
   cam: [+Engine.cam.x.toFixed(2), +Engine.cam.y.toFixed(2), +Engine.cam.dir.toFixed(3), +Engine.cam.z.toFixed(2)], tod: G.tod,
+  // the eye height the raycaster should hold, read in the same frame as the camera (a second evaluate races the moving shot)
+  eye: G.map ? +(((G.map.groundAt ? G.map.groundAt(Engine.cam.x, Engine.cam.y) : 0) + 0.88).toFixed(2)) : null,
   introCine: !!document.querySelector('#intro.cine'), skipText: (document.querySelector('#btn-intro-skip') || {}).textContent, ui: !!document.querySelector('#cine24'),
   bars: !!document.querySelector('#cine24.bars'), cap: (document.querySelector('#cine24 .cap') || {}).textContent || '', card: !!document.querySelector('#cine24 .card.on'),
   gameCls: document.getElementById('game').className, held: typeof Weather !== 'undefined' ? Weather.held : null, wstate: typeof Weather !== 'undefined' ? Weather.state : null,
@@ -202,7 +204,7 @@ const untilDone = (page, ms) => page.waitForFunction(() => !CINEMATIC24.running(
       await page.waitForTimeout(300);
       const a = await snap(page);
       assert.equal(a.on, true, 'runs');
-      if (!o.r3d) assert.equal(a.cam[3], a.cam[3] && +(await page.evaluate(() => (G.map.groundAt ? G.map.groundAt(Engine.cam.x, Engine.cam.y) : 0) + 0.88)).toFixed(2), 'eye height on the raycaster');
+      if (!o.r3d) assert.equal(a.cam[3], a.eye, 'eye height on the raycaster');
       if (o.reduce) { const b = await snap(page); assert.deepEqual(b.cam.slice(0, 2), a.cam.slice(0, 2), 'the camera holds still under Reduce motion'); }
       await untilDone(page, 80000); await page.waitForTimeout(500);
       const e = await snap(page);
