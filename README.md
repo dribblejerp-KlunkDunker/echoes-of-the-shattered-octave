@@ -177,6 +177,7 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 - **Hearthday at the Boar, played** (Book One ch. 4). Davin Hale stands up and sings; get the children behind the bar while Vane counts to ten, and when the hounds turn toward a child, decide who will be the loudest thing in the room.
 - **The water-meadow, played** (Book One ch. 6). Crawl through the culvert after Lyra at the Listening Hour, whistle the falling fifth at the shape in her father's stoop until it learns it, and watch Old Tam walk out singing.
 - **Grab the Line, played** (Book One ch. 12). Haul the Kestrel's winch drum with Mags while Vane counts the town onto the deck, or load the line with the Governor in the mud; meet the jitter at the rail; and stand through the count to ten while the line snags in a crown.
+- **The Prologue, "The Cracked Bell", as an extra** (Book One, Prologue). From the title screen's Extras: be Solenne Aubade on the risers of the Siphon Foundry on the three hundredth sunrise of the Rite, with the wire in your throat, word for word from the book, until the Spire lets go.
 - **The Narrow.** Noise brings the hounds and silence brings the Hush. Sneak, wear a Synod disguise, pick pockets, hide bodies and throw distractions, under Oakhaven's law and its watch-house gaol.
 - **Combat** with directional mouse swings, parries and blocks. Swords, axes, maces, spears, a steam-maul, a glass-shot pistol and a crossbow; armour across five slots.
 - **Songs,** a magic system built on the Octave, cast with both hands raised.

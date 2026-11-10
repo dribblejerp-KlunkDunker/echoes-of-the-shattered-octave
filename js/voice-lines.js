@@ -668,6 +668,76 @@ const VOICE_LINES = {
 "t": "Evening. Mind the vats; the lime does not care who you are.",
 "voiceOf": "hob"
 },
+"ignatius.bell.daughters": {
+"d": 5.26,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.bell.daughters.mp3",
+"t": "Holy daughters. You hold the Light still so that it may be relieved of its excess."
+},
+"ignatius.bell.dissonance": {
+"d": 1.85,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.bell.dissonance.mp3",
+"t": "Dissonance!"
+},
+"ignatius.bell.hold": {
+"d": 2.06,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.bell.hold.mp3",
+"t": "Hold the note."
+},
+"ignatius.bell.onehand": {
+"d": 1.78,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.bell.onehand.mp3",
+"t": "One hand."
+},
+"ignatius.bell.onelaw": {
+"d": 1.97,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.bell.onelaw.mp3",
+"t": "One law."
+},
+"ignatius.bell.onenote": {
+"d": 1.87,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.bell.onenote.mp3",
+"t": "One note."
+},
+"ignatius.bell.patient": {
+"d": 3.02,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.bell.patient.mp3",
+"t": "You are the hand that steadies the patient."
+},
+"ignatius.bell.purify": {
+"d": 5.9,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.bell.purify.mp3",
+"t": "The choir has broken the unison \u2014 it is the choir \u2014 Flambeaux! Purify them! Purify the Rite!"
+},
+"ignatius.bell.sunrises": {
+"d": 9.6,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.bell.sunrises.mp3",
+"t": "Three hundred sunrises. Three hundred sunrises you have held the Light for us, daughters, and today the Light will give us its heart. Sing as you have never sung."
+},
+"ignatius.bell.today": {
+"d": 2.93,
+"kind": "narration",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.bell.today.mp3",
+"t": "Today, the bore reaches the casing."
+},
 "ignatius.greet.blunt": {
 "d": 7.34,
 "kind": "greet",
@@ -1167,6 +1237,13 @@ const VOICE_LINES = {
 "src": "voices/kaelen/kaelen_dw.greet.normal.mp3",
 "t": "Seven forty-one is gone. I can hear the woods instead. They are very loud.",
 "voiceOf": "kaelen"
+},
+"kaelen_foundry.bell.stop": {
+"d": 4.8,
+"kind": "narration",
+"speaker": "kaelen_foundry",
+"src": "voices/kaelen_foundry/kaelen_foundry.bell.stop.mp3",
+"t": "Stop the bore. Stop \u2014 lift it, lift it now, it's not \u2014 Inquisitor, it's letting go\u2014"
 },
 "kaelen_wg.greet.blunt": {
 "d": 6.79,
@@ -2359,6 +2436,20 @@ const VOICE_LINES = {
 "src": "voices/townswoman/townswoman.greet.polite.mp3",
 "t": "Blessings of the Narrow on you. Softly, now.",
 "voiceOf": "townswoman"
+},
+"tuningman.bell.copper": {
+"d": 6.05,
+"kind": "narration",
+"speaker": "tuningman",
+"src": "voices/tuningman/tuningman.bell.copper.mp3",
+"t": "After a while, girl, you won't have to try. The copper remembers for you. You breathe; it sings."
+},
+"tuningman.bell.match": {
+"d": 4.78,
+"kind": "narration",
+"speaker": "tuningman",
+"src": "voices/tuningman/tuningman.bell.match.mp3",
+"t": "Five-twenty-eight, holding, five-twenty-eight, bore to five-twenty-eight."
 },
 "vane.greet.blunt": {
 "d": 5.83,

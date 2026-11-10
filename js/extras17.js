@@ -15,6 +15,9 @@
 //   isolation but is not an extra after Book One: it is not listed in the Extras menu, needs no unlock (its own
 //   unlocked() still applies), its banner and tags show only its title (no "An extra — after Book One"), and leaving it
 //   returns to the bare title screen instead of the Extras menu. Without the option nothing changes.
+//   Phase 69 (the Prologue, js/bell69.js), one more additive option: register({ ..., tag: 'The Prologue of Book One' }) —
+//   the extra's card, banner and menu tag say that instead of "An extra — after Book One" (an extra that is not set after
+//   the book). Its unlock is unchanged (Book One truly finished). Without the option nothing changes.
 //
 // ---------------------------------------------------------------------------------------------------------------
 // HOW AN EXTRA IS ISOLATED (the Book One save is never touched)
@@ -57,7 +60,7 @@
 //   breath  air11's cold breath (GFX.coldBreath) on that map (its COLD_MAPS set, restored on clear).
 //   Off (flag or switch), or no WINTER17.apply for the current map = pixel-identical frames.
 //
-// Security: every string shown is a constant from TX below or a registered extra's own title/blurb, and all of them
+// Security: every string shown is a constant from TX below or a registered extra's own title/blurb/tag, and all of them
 // go in through textContent. Save data, results and localStorage are validated and never parsed as markup.
 // Every invented fact is [PROPOSED] (there are almost none: this module is plumbing and weather).
 (function () {
@@ -155,6 +158,7 @@
   }
   const byId = (id) => reg.find((r) => r.id === id) || null;
   function titleOf(x) { return cleanRes(x && x.title) || (x && x.id) || ''; }
+  function tagOf(x) { return (x && typeof x.tag === 'string' && cleanRes(x.tag)) || TX.banner; }
   function idCode(id) { let h = 7; for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 999983; return h + 1; }
   const opened = () => st.done === 1;
   function playable(x) {
@@ -315,7 +319,7 @@
       host.appendChild(b);
     }
     b.textContent = '';
-    if (on && cur) { if (!cur.x.hidden) b.appendChild(document.createTextNode(TX.banner)); b.appendChild(el('b', null, titleOf(cur.x))); b.hidden = false; }
+    if (on && cur) { if (!cur.x.hidden) b.appendChild(document.createTextNode(tagOf(cur.x))); b.appendChild(el('b', null, titleOf(cur.x))); b.hidden = false; }
     else b.hidden = true;
   }
 
@@ -374,7 +378,7 @@
   function card(xx, opt) {
     const c = el('div', { class: 'x17-card', 'data-extra': xx.id });
     c.appendChild(el('h3', null, titleOf(xx)));
-    c.appendChild(el('div', { class: 'x17-tag' }, TX.banner));
+    c.appendChild(el('div', { class: 'x17-tag' }, tagOf(xx)));
     const blurb = cleanRes(xx.blurb); if (blurb) c.appendChild(el('p', null, blurb));
     if (opt.failed === xx.id) c.appendChild(el('p', { class: 'x17-warn' }, TX.failed));
     if (st.cut === xx.id) c.appendChild(el('p', { class: 'x17-warn' }, TX.cut));
@@ -457,7 +461,7 @@
   // "An extra — after Book One · <title>" as separate text nodes, so each translates on its own
   function tagEl(id) {
     const t = el('div', id ? { class: 'x17-tag', id } : { class: 'x17-tag' });
-    if (!cur.x.hidden) { t.appendChild(el('span', null, TX.banner)); t.appendChild(document.createTextNode(' · ')); }
+    if (!cur.x.hidden) { t.appendChild(el('span', null, tagOf(cur.x))); t.appendChild(document.createTextNode(' · ')); }
     t.appendChild(el('span', null, titleOf(cur.x)));
     return t;
   }

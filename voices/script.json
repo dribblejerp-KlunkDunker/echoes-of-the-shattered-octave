@@ -3193,6 +3193,106 @@
    "text": "I have watched you choose this four hundred and eleven times.",
    "source": "rope45.js TX.echo (Book One ch. 12)",
    "delivery": "murmur"
+  },
+  {
+   "id": "tuningman.bell.copper",
+   "speaker": "tuningman",
+   "kind": "narration",
+   "text": "After a while, girl, you won't have to try. The copper remembers for you. You breathe; it sings.",
+   "source": "bell69.js TX.wire (Book One, Prologue)",
+   "delivery": "low"
+  },
+  {
+   "id": "ignatius.bell.patient",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "You are the hand that steadies the patient.",
+   "source": "bell69.js TX.choir3 (Book One, Prologue)"
+  },
+  {
+   "id": "ignatius.bell.daughters",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "Holy daughters. You hold the Light still so that it may be relieved of its excess.",
+   "source": "bell69.js TX.choir3 (Book One, Prologue)"
+  },
+  {
+   "id": "ignatius.bell.today",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "Today, the bore reaches the casing.",
+   "source": "bell69.js TX.today (Book One, Prologue)"
+  },
+  {
+   "id": "ignatius.bell.sunrises",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "Three hundred sunrises. Three hundred sunrises you have held the Light for us, daughters, and today the Light will give us its heart. Sing as you have never sung.",
+   "source": "bell69.js TX.sunrises (Book One, Prologue)",
+   "delivery": "loud"
+  },
+  {
+   "id": "ignatius.bell.onenote",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "One note.",
+   "source": "bell69.js TX.sunrises (Book One, Prologue)",
+   "delivery": "loud"
+  },
+  {
+   "id": "ignatius.bell.onelaw",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "One law.",
+   "source": "bell69.js TX.oneLaw (Book One, Prologue)",
+   "delivery": "loud"
+  },
+  {
+   "id": "ignatius.bell.onehand",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "One hand.",
+   "source": "bell69.js TX.oneHand (Book One, Prologue)",
+   "delivery": "loud"
+  },
+  {
+   "id": "tuningman.bell.match",
+   "speaker": "tuningman",
+   "kind": "narration",
+   "text": "Five-twenty-eight, holding, five-twenty-eight, bore to five-twenty-eight.",
+   "source": "bell69.js TX.swell (Book One, Prologue)",
+   "delivery": "loud"
+  },
+  {
+   "id": "kaelen_foundry.bell.stop",
+   "speaker": "kaelen_foundry",
+   "kind": "narration",
+   "text": "Stop the bore. Stop — lift it, lift it now, it's not — Inquisitor, it's letting go—",
+   "source": "bell69.js TX.stop (Book One, Prologue)",
+   "delivery": "shout"
+  },
+  {
+   "id": "ignatius.bell.hold",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "Hold the note.",
+   "source": "bell69.js TX.holdNote (Book One, Prologue)"
+  },
+  {
+   "id": "ignatius.bell.dissonance",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "Dissonance!",
+   "source": "bell69.js TX.diss (Book One, Prologue)",
+   "delivery": "shout"
+  },
+  {
+   "id": "ignatius.bell.purify",
+   "speaker": "ignatius",
+   "kind": "narration",
+   "text": "The choir has broken the unison — it is the choir — Flambeaux! Purify them! Purify the Rite!",
+   "source": "bell69.js TX.purify (Book One, Prologue)",
+   "delivery": "shout"
   }
  ],
  "skipped": [
