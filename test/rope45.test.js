@@ -70,8 +70,8 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const up = await page.evaluate(() => {
       const out = {}, f = G.flags;
       ROPE45.begin(); const c = T.last();
-      out.card = !!c && /The line/.test(c.t) && /They do not rush it/.test(c.b) && /One with arms, for the drum/.test(c.b) && c.c.length === 2;
-      out.vo = window.__vo.includes('vane.rope.arms'); out.journal = G.journal.some((j) => /Mags put the line over/.test(j.text));
+      out.card = !!c && /The line/.test(c.t) && /They do not rush it/.test(c.b) && /jerks her head, once/.test(c.b) && !/Arms!/.test(c.b) && c.c.length === 2;
+      out.vo = !window.__vo.includes('vane.rope.arms'); out.journal = G.journal.some((j) => /Mags put the line over/.test(j.text));
       T.pick(/work the drum/); out.climb = /up the knots between two loads of children/.test(T.last().b);
       T.first(); out.deck = G.mapId === ROPE45.DECK && ROPE45.stage() === 2 && !!T.ent('drum') && !!T.ent('mags') && !!T.ent('vane') && !!T.ent('line');
       out.clock = G.escapeTimer > 0;
@@ -79,7 +79,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       return out;
     });
     if (process.env.DEBUG) console.log('up', JSON.stringify(up));
-    check(up.card && up.vo && up.journal, 'the line over the North Gate: the town does not rush it (Hetty on the block, Bettany, Rooke\'s triage); Vane wants arms at the drum');
+    check(up.card && up.vo && up.journal, 'the line over the North Gate: the town does not rush it (Hetty on the block, Bettany, Rooke\'s triage); Mags, deaf at the drum, jerks her head at you: up (no words put in Vane\'s mouth)');
     check(up.climb && up.deck && up.ladderShut && up.clock, 'up the knots between two loads of children onto the Kestrel\'s deck: the drum, Mags, Vane, the line; the ladder is shut during the scene');
 
     // ---- 2 · the drum
@@ -160,7 +160,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       let n = 0; while (ROPE45.stage() === 1 && n < 900) { T.step(1, 0.1); n++; }
       const c = T.last(); out.eighteen = /At eighteen/.test(c.t) && /They fall at your feet/.test(c.b) && /white-hot wick/.test(c.b);
       T.first(); const l = T.last();
-      out.up = G.mapId === ROPE45.DECK && /Up with her\. Keep her on the knot/.test(l.b) && window.__vo.includes('aldric.rope.you');
+      out.up = G.mapId === ROPE45.DECK && /puts your hands on the knot under hers/.test(l.b) && !/Up with her/.test(l.b) && !window.__vo.includes('aldric.rope.you');
       T.first(); T.first(); const ln = ROPE45.AT.line; T.at(ln[0], ln[1] - 2); Engine.cam.dir = -Math.PI / 2;
       window.__ev.length = 0; n = 0; while (n < 400 && !T.heard(/^Ten\.$/)) { T.step(1, 0.05); n++; }
       await new Promise((r) => setTimeout(r, 500));
@@ -174,13 +174,13 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       // strike the jitter yourself
       f.r45_load = 5; f.r45_count = 15; ROPE45.R.prog = 2.995; T.step(1, 0.1); T.first();
       const j = T.ent('jitter'); j.dead = true; j.hidden = true; T.step(2, 0.1);
-      out.you = f.r45_jitter === 'you' && /You meet it at the rail/.test(T.last().b);
+      out.you = f.r45_jitter === 'you' && /You meet it at the rail/.test(T.last().b) && /takes it out of the air with his glass fist/.test(T.last().b);
       return out;
     });
     if (process.env.DEBUG) console.log('foot', JSON.stringify(foot));
     check(foot.staged && foot.four && foot.eighteen, 'stay at the foot of the line: put them on the knots with Aldric; the count from forty feet up; at eighteen the old man\'s hands fall at your feet, and Kaelen\'s light on the rail');
-    check(foot.up && foot.noEcho && foot.end, 'Aldric puts you on Lyra\'s load ("Up with her. Keep her on the knot."); the count from the deck; not looking at eight; the end card says you loaded with him');
-    check(foot.saved && foot.you, 'a save at the drum keeps you aboard, staged once; strike the jitter yourself before Kaelen and the card says so');
+    check(foot.up && foot.noEcho && foot.end, 'Aldric puts your hands on the knot under Lyra\'s, wordless; the count from the deck; not looking at eight; the end card says you loaded with him');
+    check(foot.saved && foot.you, 'a save at the drum keeps you aboard, staged once; hold the jitter at the rail yourself and Kaelen still takes it out of the air, as the book has it');
 
     // ---- voices and French
     const vo = await page.evaluate(() => ({ missing: Object.values(ROPE45.VO).flat().filter((id) => !VOICE_ACT.LINES[id]) }));

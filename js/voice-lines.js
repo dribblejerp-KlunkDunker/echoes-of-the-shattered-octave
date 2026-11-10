@@ -98,13 +98,6 @@ const VOICE_LINES = {
 "t": "The seal of Queen Maelis bids you welcome. Her signature on the decrees is famously steady for a woman dead a hundred and forty years.",
 "voiceOf": "aldric"
 },
-"aldric.rope.you": {
-"d": 3.17,
-"kind": "narration",
-"speaker": "aldric",
-"src": "voices/aldric/aldric.rope.you.mp3",
-"t": "You. Up with her. Keep her on the knot."
-},
 "aldric_tube.rite.c10": {
 "d": 1.06,
 "kind": "narration",
@@ -764,11 +757,11 @@ const VOICE_LINES = {
 "voiceOf": "ignatius"
 },
 "ignatius.rite.notch": {
-"d": 7.92,
+"d": 6.24,
 "kind": "narration",
 "speaker": "ignatius",
 "src": "voices/ignatius/ignatius.rite.notch.mp3",
-"t": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself. I have seated forty of these.",
+"t": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself.",
 "voiceOf": "ignatius"
 },
 "ignatius.rite.rubric": {
@@ -2391,13 +2384,6 @@ const VOICE_LINES = {
 "t": "Every sailor dies, friend. The trick is to be somewhere else when it happens. Sit; I'm buying, because I'm frightened.",
 "voiceOf": "vane"
 },
-"vane.rope.arms": {
-"d": 1.63,
-"kind": "narration",
-"speaker": "vane",
-"src": "voices/vane/vane.rope.arms.mp3",
-"t": "Arms! One with arms, for the drum!"
-},
 "vane.rope.eight": {
 "d": 0.6,
 "kind": "narration",
@@ -2611,14 +2597,6 @@ const VOICE_LINES = {
 "speaker": "vosk",
 "src": "voices/vosk/vosk.rite.markit.mp3",
 "t": "Mark it.",
-"voiceOf": "vosk"
-},
-"vosk.rite.plate": {
-"d": 2.9,
-"kind": "narration",
-"speaker": "vosk",
-"src": "voices/vosk/vosk.rite.plate.mp3",
-"t": "Engineer Vance. What are you doing at that plate?",
 "voiceOf": "vosk"
 },
 "vosk.rite.stepaway": {

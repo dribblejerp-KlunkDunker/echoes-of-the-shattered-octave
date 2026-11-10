@@ -115,7 +115,7 @@ Twenty-one.
 
 ---
 
-Lyra Ashgrove came up with the last four before the last.
+Lyra Ashgrove came up with the last four before the last, with the girl with no hands roped under the arms and the Marsh boy with his charts stuffed down his shirt.
 
 She came over the rail like a dropped coat, and the big landlady and the old midwife got her under the arms, and she could not stand, and there was blood down the front of a white shift that had been white that morning and a hole under her jaw where a copper wire had been. She got a hand into Kaelen's collar and pulled his ear down to her mouth, and Vane watched her try to say something, and nothing come out at all. Not a rasp. Nothing.
 
@@ -125,7 +125,7 @@ And Mags put the line down for the last load.
 
 Five went onto it.
 
-Vane, leaning over the rail with the wind of the envelope beating up into his face, saw them from above: a girl of eleven with bandaged stumps for hands, roped to the knot under her arms by two men; an old woman in a dye-works apron — the same one who had been pulling children out of the queue, who had, somebody told him later, taken over the night-hummer's stool at the Flume crossing when the old man died; a young man in Consortium drab with a roll of charts stuffed down his shirt; a woman who was screaming somebody's name up at the ship.
+Vane, leaning over the rail with the wind of the envelope beating up into his face, saw them from above: an old woman in a dye-works apron — the same one who had been pulling children out of the queue, who had, somebody told him later, taken over the night-hummer's stool at the Flume crossing when the old man died; two carters who had been passing children up all afternoon; a woman who was screaming somebody's name up at the ship.
 
 And at the bottom, last, with his boots on the lowest knot and one arm through it and the other hand still on the shoulder of the man he had just pushed up ahead of himself, was a big grey-headed old man in a Governor's chain of bronze oak-leaves.
 
@@ -155,7 +155,7 @@ Twenty-one people on the deck. Nine of them children. A boy in the hold with his
 
 *Two.*
 
-The old woman on the line had got her feet onto the branches and was trying to get the girl with no hands off the rope and into the tree, which would have been clever if the tree had been a tree and not the thing that was eating the town.
+The old woman on the line had got her feet onto the branches and was trying to get one of the carters off the rope and into the tree, which would have been clever if the tree had been a tree and not the thing that was eating the town.
 
 *Three.*
 

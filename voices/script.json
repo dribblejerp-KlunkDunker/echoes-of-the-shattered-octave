@@ -2512,7 +2512,7 @@
    "id": "ignatius.rite.notch",
    "speaker": "ignatius",
    "kind": "narration",
-   "text": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself. I have seated forty of these.",
+   "text": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself.",
    "source": "rite43.js TX.needleSeen (Book One ch. 9–10)",
    "voiceOf": "ignatius",
    "delivery": "low, quite gently"
@@ -2607,15 +2607,6 @@
    "source": "rite43.js TX.pitchCall2 (Book One ch. 9–10)",
    "voiceOf": "tobiah",
    "delivery": "loud, uneasy"
-  },
-  {
-   "id": "vosk.rite.plate",
-   "speaker": "vosk",
-   "kind": "narration",
-   "text": "Engineer Vance. What are you doing at that plate?",
-   "source": "rite43.js TX.voskTurns (Book One ch. 9–10)",
-   "voiceOf": "vosk",
-   "delivery": "cool, precise"
   },
   {
    "id": "vosk.rite.stepaway",
@@ -3019,14 +3010,6 @@
    "delivery": "low"
   },
   {
-   "id": "vane.rope.arms",
-   "speaker": "vane",
-   "kind": "narration",
-   "text": "Arms! One with arms, for the drum!",
-   "source": "rope45.js TX.line (Book One ch. 12)",
-   "delivery": "shout"
-  },
-  {
    "id": "vane.rope.four",
    "speaker": "vane",
    "kind": "narration",
@@ -3098,14 +3081,6 @@
    "kind": "narration",
    "text": "I know. I know. They're coming.",
    "source": "rope45.js TX.lyraDeck (Book One ch. 12)",
-   "delivery": "low"
-  },
-  {
-   "id": "aldric.rope.you",
-   "speaker": "aldric",
-   "kind": "narration",
-   "text": "You. Up with her. Keep her on the knot.",
-   "source": "rope45.js TX.lyraFoot (Book One ch. 12)",
    "delivery": "low"
   },
   {
