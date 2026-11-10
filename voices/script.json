@@ -3193,6 +3193,518 @@
    "text": "I have watched you choose this four hundred and eleven times.",
    "source": "rope45.js TX.echo (Book One ch. 12)",
    "delivery": "murmur"
+  },
+  {
+   "id": "sable.h66.engineer",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Engineer.",
+   "source": "herald66.js TX.sableHatch (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "sable.h66.parley",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "There is a man in the clearing, in white, under a parley flag, and he says he has a writ for Kaelen Vance,",
+   "source": "herald66.js TX.sableHatch (Book One ch. 24)",
+   "delivery": "flat, exact"
+  },
+  {
+   "id": "sable.h66.parley2",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "and he is going to read it aloud whether or not anyone comes, because the form requires it to be read aloud and witnessed.",
+   "source": "herald66.js TX.sableHatch (Book One ch. 24)",
+   "delivery": "flat, exact"
+  },
+  {
+   "id": "herald.h66.writ1",
+   "speaker": "herald",
+   "kind": "narration",
+   "text": "By the Arbiterium of the Iron Synod, under the hand of the Supreme Arbiter, at the Organum, the seventeenth day of Leaffall, 419.",
+   "source": "herald66.js TX.writ1 (Book One ch. 24)",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "herald.h66.writ2",
+   "speaker": "herald",
+   "kind": "narration",
+   "text": "Be it known: the persons styled Kaelen Vance, late Chief Resonant Engineer, badge four-oh-eight-A; Lyra Ashgrove, Cantor, of Oakhaven; the carrier styled Vane, of registry OK-114; and the scribe styled Sable, formerly of the Office of the Catalogue, are declared Dissonant.",
+   "source": "herald66.js TX.writ2 (Book One ch. 24)",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "herald.h66.writ2b",
+   "speaker": "herald",
+   "kind": "narration",
+   "text": "Their goods are forfeit. Their testimony is void in any court of the Synod. The Church of the Pure Note has entered a claim upon the Cantor, which claim the Arbiterium has stayed, for now.",
+   "source": "herald66.js TX.writ2 (Book One ch. 24)",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "herald.h66.writ3",
+   "speaker": "herald",
+   "kind": "narration",
+   "text": "Be it further known that the Justiciar Aurelian Vaelen, Dread Arbiter, is upon the Iron Tramway with a column of the Carillon Legions and the authority of the Scales, and will be at the Mausoleum of Chords within nine days.",
+   "source": "herald66.js TX.writ3 (Book One ch. 24)",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "herald.h66.writ4",
+   "speaker": "herald",
+   "kind": "narration",
+   "text": "And be it known that grace is offered, once.",
+   "source": "herald66.js TX.writ4 (Book One ch. 24)",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "herald.h66.writ5",
+   "speaker": "herald",
+   "kind": "narration",
+   "text": "To Kaelen Vance: surrender of his person at the Organum, upon these terms. The glass shall be drawn. The Supreme Arbiter attests, upon his own body, that it can be drawn, and that he has carried eighty years of it and will show the engineer how.",
+   "source": "herald66.js TX.writ5 (Book One ch. 24)",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "herald.h66.writ6",
+   "speaker": "herald",
+   "kind": "narration",
+   "text": "To the Cantor Lyra Ashgrove: amnesty, full and recorded, and the Church's claim extinguished, and transit to any province she names.",
+   "source": "herald66.js TX.writ6 (Book One ch. 24)",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "herald.h66.writ7",
+   "speaker": "herald",
+   "kind": "narration",
+   "text": "To the persons of Oakhaven aboard the said vessel: relief, transit, and registration waived.",
+   "source": "herald66.js TX.writ7 (Book One ch. 24)",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "sable.h66.waived",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Waived. He knows what we saw at the Malting.",
+   "source": "herald66.js TX.waived (Book One ch. 24)",
+   "delivery": "very quiet"
+  },
+  {
+   "id": "herald.h66.writ8",
+   "speaker": "herald",
+   "kind": "narration",
+   "text": "And to the consignment of engram cores presently aboard the said vessel: proper disposition by the Office of the Catalogue, under the Registrar-General's hand.",
+   "source": "herald66.js TX.writ8 (Book One ch. 24)",
+   "delivery": "formal, carried"
+  },
+  {
+   "id": "vane.h66.thereitis",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "There it is.",
+   "source": "herald66.js TX.nobody (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "kaelen.h66.taking",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "I'm taking it.",
+   "source": "herald66.js TX.t1a (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "lyra.h66.ofcourse",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Of course you are.",
+   "source": "herald66.js TX.t1a (Book One ch. 24)",
+   "delivery": "dry"
+  },
+  {
+   "id": "kaelen.h66.listen",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Listen to me.",
+   "source": "herald66.js TX.t1a (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "lyra.h66.wonderful",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "No, it's wonderful. It's the best one yet.",
+   "source": "herald66.js TX.t1b (Book One ch. 24)",
+   "delivery": "dry"
+  },
+  {
+   "id": "lyra.h66.nineteen",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Nineteen days ago you were going to go down a shaft on your own and break a bore with your hands. Then you were going to sign a paper so the Hollow wouldn't burn.",
+   "source": "herald66.js TX.t1c (Book One ch. 24)",
+   "delivery": "flat, hard"
+  },
+  {
+   "id": "lyra.h66.nineteen2",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Now you're going to walk into the Organum and lie down on a table for the man who used you, and every single time, Kaelen, every single time, the plan is only Kaelen goes into the dark.",
+   "source": "herald66.js TX.t1c (Book One ch. 24)",
+   "delivery": "flat, hard"
+  },
+  {
+   "id": "kaelen.h66.war",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "It's twenty-one people off this ship and out of a war.",
+   "source": "herald66.js TX.t1d (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "lyra.h66.furnace",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "It's four hundred and thirty-two people into a furnace! Proper disposition. You heard it. Say what it means.",
+   "source": "herald66.js TX.t1d (Book One ch. 24)",
+   "delivery": "shout"
+  },
+  {
+   "id": "kaelen.h66.legion",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "It means they go back into Legionnaires.",
+   "source": "herald66.js TX.t1d (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "lyra.h66.annet",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "And Annet Sowerby is in the third crate.",
+   "source": "herald66.js TX.annet (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "weaver.h66.thread",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "I am going to show you a thread that was not taken.",
+   "source": "herald66.js TX.echoThread (Book One ch. 24)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "weaver.h66.unhappen",
+   "speaker": "weaver",
+   "kind": "narration",
+   "text": "This did not happen. It also did not unhappen; nothing does.",
+   "source": "herald66.js TX.echoUnhappen (Book One ch. 24)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "vane.h66.putin",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "I'd like to put one thing in.",
+   "source": "herald66.js TX.o1 (Book One ch. 24)",
+   "delivery": "dry"
+  },
+  {
+   "id": "vane.h66.ninedays",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "I've been thinking about it since the herald started, which is longer than I usually think about anything. Nine days, he said. That's a column on the Tramway with a Justiciar at the head of it, and they'll be at this clearing on Driftday, and the Kestrel can't fly on three tanks.",
+   "source": "herald66.js TX.o1 (Book One ch. 24)",
+   "delivery": "dry"
+  },
+  {
+   "id": "kaelen.h66.iknow",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "I know.",
+   "source": "herald66.js TX.o1 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "vane.h66.trade",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Which means the choice isn't Kaelen goes in or nobody goes in. It's Kaelen goes in and buys us nine days we'd have had anyway, because that writ already told us where they are and how fast. It's a bad trade, that's all I'm saying. I've made a career of bad trades and that one's bad.",
+   "source": "herald66.js TX.o1 (Book One ch. 24)",
+   "delivery": "dry"
+  },
+  {
+   "id": "sable.h66.else",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "He also told us something else.",
+   "source": "herald66.js TX.o2 (Book One ch. 24)",
+   "delivery": "flat, exact"
+  },
+  {
+   "id": "sable.h66.terms",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Think about the terms. Amnesty for the Cantor, transit for twenty-one farmers, registration waived.",
+   "source": "herald66.js TX.o2 (Book One ch. 24)",
+   "delivery": "flat, exact"
+  },
+  {
+   "id": "sable.h66.terms2",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "The Registrar-General would never waive registration; it is the only thing he has. And the cores returned, which the Catalogue would demand anyway. All of that is small.",
+   "source": "herald66.js TX.o2 (Book One ch. 24)",
+   "delivery": "flat, exact"
+  },
+  {
+   "id": "sable.h66.buying",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "And the thing he is buying with it is one man with a Dawning-glass arm who can hear the Choristers.",
+   "source": "herald66.js TX.o2 (Book One ch. 24)",
+   "delivery": "flat, exact"
+  },
+  {
+   "id": "kaelen.h66.sable",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Sable.",
+   "source": "herald66.js TX.o2 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "sable.h66.punished",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "He does not want you punished, Engineer. He wants you at the Organum.",
+   "source": "herald66.js TX.o2 (Book One ch. 24)",
+   "delivery": "flat, exact"
+  },
+  {
+   "id": "sable.h66.anchors",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "He has eight Anchors to ask a question of, and a Planetary Engine thirty years in the building, and exactly two people alive who have heard a god answer. He is one of them.",
+   "source": "herald66.js TX.o2 (Book One ch. 24)",
+   "delivery": "flat, exact"
+  },
+  {
+   "id": "sable.h66.cure",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "He is a hundred and forty years old and eighty percent glass and he will not last another twenty years, and he has just offered you a cure, a desk, and an education.",
+   "source": "herald66.js TX.o2 (Book One ch. 24)",
+   "delivery": "flat, exact"
+  },
+  {
+   "id": "sable.h66.succession",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "That is not a sentence. That is a succession.",
+   "source": "herald66.js TX.o2 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "kaelen.h66.cantor",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "He told me the Cantor was the most important person alive.",
+   "source": "herald66.js TX.o4 (Book One ch. 24)",
+   "delivery": "low, slow"
+  },
+  {
+   "id": "sable.h66.polite",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Then he will come for her next, and he will be polite about that too.",
+   "source": "herald66.js TX.o4 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "lyra.h66.write",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Write this down, and get it exactly right, because he'll ask you.",
+   "source": "herald66.js TX.a2 (Book One ch. 24)",
+   "delivery": "steady, her own ruined voice, formal"
+  },
+  {
+   "id": "lyra.h66.declines",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "The Cantor of Oakhaven thanks the Supreme Arbiter for the amnesty and declines it.",
+   "source": "herald66.js TX.a2 (Book One ch. 24)",
+   "delivery": "steady, her own ruined voice, formal"
+  },
+  {
+   "id": "lyra.h66.goods",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "The persons of Oakhaven aboard this ship are not goods and are not in his gift, and they will go where they choose, and if he wants to do something useful for them he can put the Reach back.",
+   "source": "herald66.js TX.a2 (Book One ch. 24)",
+   "delivery": "steady, her own ruined voice, formal"
+  },
+  {
+   "id": "lyra.h66.consignment",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "The consignment is not a consignment. It is four hundred and thirty-two people out of Whisper-Grove, and we know all of their numbers and some of their names, and we are taking them home.",
+   "source": "herald66.js TX.a2 (Book One ch. 24)",
+   "delivery": "steady, her own ruined voice, formal"
+  },
+  {
+   "id": "lyra.h66.grace",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "And Engineer Vance declines grace.",
+   "source": "herald66.js TX.a2 (Book One ch. 24)",
+   "delivery": "steady, her own ruined voice, formal"
+  },
+  {
+   "id": "herald.h66.why",
+   "speaker": "herald",
+   "kind": "narration",
+   "text": "He will ask me why.",
+   "source": "herald66.js TX.a2 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "lyra.h66.question",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Tell him the Cantor says: we heard the question too.",
+   "source": "herald66.js TX.a2 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "kaelen.h66.didnt",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "You didn't ask me.",
+   "source": "herald66.js TX.b1 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "lyra.h66.no",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "No.",
+   "source": "herald66.js TX.b1 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "kaelen.h66.lyra",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "Lyra.",
+   "source": "herald66.js TX.b1 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "lyra.h66.forgiven",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "I'm not doing this because I've forgiven you. I want to be extremely clear, because I know exactly what you'll make of it if I leave a gap. I have not forgiven you. I'm not sure I'm going to.",
+   "source": "herald66.js TX.b1 (Book One ch. 24)",
+   "delivery": "low, level"
+  },
+  {
+   "id": "lyra.h66.lastnight",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Last night I killed the last place my father's voice existed, and the day before that a thing in a fog told me what you did, kindly, and let me sit down, and both of those are in me now and they are not coming out.",
+   "source": "herald66.js TX.b1 (Book One ch. 24)",
+   "delivery": "low, level"
+  },
+  {
+   "id": "lyra.h66.pay",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "But I have watched you try to pay for seven years, and the arithmetic is wrong, and I'm the only person here who can say so, because everybody else on this ship wants something from you.",
+   "source": "herald66.js TX.b2 (Book One ch. 24)",
+   "delivery": "low, level"
+  },
+  {
+   "id": "lyra.h66.pay2",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "You can't pay. There isn't enough of you. Eleven thousand and forty people and a sky.",
+   "source": "herald66.js TX.b2 (Book One ch. 24)",
+   "delivery": "low, level"
+  },
+  {
+   "id": "lyra.h66.pay3",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "There is no amount of Kaelen Vance that buys that back, and you have been trying to settle it one limb at a time since the year it happened, and the Supreme Arbiter has just offered you the biggest instalment yet and you lit up like a lamp.",
+   "source": "herald66.js TX.b2 (Book One ch. 24)",
+   "delivery": "low, level"
+  },
+  {
+   "id": "lyra.h66.help",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "So: no. You don't get to pay. You get to help. You get to get up tomorrow and do the next useful thing and then the one after that, for as long as it takes,",
+   "source": "herald66.js TX.b3 (Book One ch. 24)",
+   "delivery": "low, level"
+  },
+  {
+   "id": "lyra.h66.help2",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "with people who know exactly what you are, which is the worst sentence I can think of and the only one that's any use to anybody. That's not mercy. Don't write it down as mercy.",
+   "source": "herald66.js TX.b3 (Book One ch. 24)",
+   "delivery": "low, level"
+  },
+  {
+   "id": "kaelen.h66.writeas",
+   "speaker": "kaelen",
+   "kind": "narration",
+   "text": "What should I write it down as?",
+   "source": "herald66.js TX.b3 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "lyra.h66.work",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "Work.",
+   "source": "herald66.js TX.b3 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "engineer.h66.tank",
+   "speaker": "engineer",
+   "kind": "narration",
+   "text": "We need a tank, Captain. A whole one. And a yard with a drift-bench and somebody who knows how to tune one, and there is one place on this continent inside forty miles of where we can get to.",
+   "source": "herald66.js TX.n1 (Book One ch. 24)",
+   "delivery": "low, tired"
+  },
+  {
+   "id": "vane.h66.sayit",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Say it.",
+   "source": "herald66.js TX.n1 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "engineer.h66.port",
+   "speaker": "engineer",
+   "kind": "narration",
+   "text": "Port Cantabile.",
+   "source": "herald66.js TX.n1 (Book One ch. 24)",
+   "delivery": "low"
+  },
+  {
+   "id": "vane.h66.right",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Right.",
+   "source": "herald66.js TX.n1 (Book One ch. 24)",
+   "delivery": "low"
   }
  ],
  "skipped": [
