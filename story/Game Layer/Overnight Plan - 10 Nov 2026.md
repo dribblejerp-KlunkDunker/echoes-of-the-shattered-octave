@@ -12,7 +12,15 @@ A queue of work that can run without the owner's input. Each item is built from 
   - recorded voices for new dialogue, using the Kokoro pipeline;
   - a text record in `story/Game Layer/`, a Vol VIII entry, and updates to PLAYTEST.md and the ROADMAP tick;
   - at least one screenshot, which is looked at before it is sent.
-- **Skills used each time:** code review on the diff before the PR is marked ready; bug diagnosis for any test that fails; merge-conflict resolution when `main` has moved.
+- **Skills used on every item** (the owner asked for every skill that fits, every time):
+  - test-first development (`tdd`) for each new scene;
+  - `simplify`, then `code-review`, on every diff before its PR is marked ready, with findings fixed and reported;
+  - bug diagnosis (`diagnosing-bugs`) for any red test;
+  - merge-conflict resolution when `main` has moved;
+  - the `run` skill to see each scene working in the real game;
+  - the morning report published as a page (Artifact) as well as sent as a message.
+
+  Skills for unrelated tools (messaging, databases, finance and the like) do not apply to this project.
 - **Git:** you are the author on every commit, and Claude (noreply@anthropic.com) is the committer. Nothing is force-pushed to `main`. A PR merges only when GitHub's checks are green and the full local suite has nothing new red. A failure that already exists on `main` is compared against `main` and noted on the PR, not hidden.
 - **Stop rules:** stop an item and skip to the next if:
   - it needs a decision only the owner can make;
