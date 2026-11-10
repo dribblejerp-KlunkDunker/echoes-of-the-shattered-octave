@@ -926,7 +926,7 @@ const CODA_VOICES_REQUIEM = [
 const CAMP = {
   vane_dw: {
     name: 'Captain Vane of the Drift-Kestrel', sprite: 'vane', portrait: 'vane', tier: 'high',
-    greet: { polite: 'Ten heartbeats. I counted. This time I didn\'t cut.', normal: 'She\'s on her side in the willows with a hole in her number-two tank you could post a sheep through. We are not leaving by air today.', blunt: 'Don\'t. I know. I put a tree through an Office cutter. It seemed like the thing to do.' },
+    greet: { polite: 'Ten heartbeats. I counted. This time I didn\'t cut.', normal: 'She\'s on her side in the willows with a hole in her number-three tank you could post a sheep through. We are not leaving by air today.', blunt: 'Don\'t. I know. I put a tree through an Office cutter. It seemed like the thing to do.' },
     topics: {
       'The Drift-Kestrel': 'She\'ll fly. Forty-mile hops, if Tobiah can close the tank and stop the seam weeping. Further than that, she needs a whole new lift-tank, and there\'s only one coast that sells them without asking whose ship it is.',
       'The Office cutter': 'She went down east of here with the willow-crown in her bow. Her listening-horn will still be working; those things outlive their crews. It was our hold she was listening to. Four hundred and thirty-two, murmuring. We\'re a bell. I\'ve been ringing it for two years.',
@@ -934,7 +934,7 @@ const CAMP = {
     },
     quest: (g) => {
       const f = g.flags;
-      if (!f.dw_vane_met) { f.dw_vane_met = true; journal('main', 'The Lift-Tank: the Kestrel is down in the Deep Woods with her number-two lift-tank holed. Tobiah can patch her for forty-mile hops with three bolts of lift-silk from the weaverling nests in the south-west, and a brass relief valve off the Office cutter that came down in the east.'); return { text: 'Here is the arithmetic. Number-two tank is holed. Tobiah can patch her for hops, if he has silk that holds gas, and the Spectral Woods are full of things that spin exactly that; there are nests in the south-west. He also needs a relief valve, and the nearest one is on the Office cutter I put a tree through, east of here. That will have a horn on it. Mind the horn.' }; }
+      if (!f.dw_vane_met) { f.dw_vane_met = true; journal('main', 'The Lift-Tank: the Kestrel is down in the Deep Woods with her number-three lift-tank holed. Tobiah can patch her for forty-mile hops with three bolts of lift-silk from the weaverling nests in the south-west, and a brass relief valve off the Office cutter that came down in the east.'); return { text: 'Here is the arithmetic. Number-three tank is holed. Tobiah can patch her for hops, if he has silk that holds gas, and the Spectral Woods are full of things that spin exactly that; there are nests in the south-west. He also needs a relief valve, and the nearest one is on the Office cutter I put a tree through, east of here. That will have a horn on it. Mind the horn.' }; }
       if (f.tank_patched && !f.coda_done) return { text: 'Tank\'s closed. She\'ll lift. — The Cantor isn\'t back. I don\'t lift without the Cantor. I\'ve done that sum before.' };
       if (f.tank_patched && f.coda_done) return { text: 'She\'ll lift when you say. Somebody\'s coming up the south road on foot, alone, in white. In my experience that is never good news and always paperwork.' };
       return null;
@@ -942,14 +942,14 @@ const CAMP = {
   },
   tobiah_dw: {
     name: 'Tobiah Marsh, second engineer', sprite: 'tobiah', portrait: 'tobiah', tier: 'high', scale: 0.94,
-    greet: { polite: 'Don\'t touch that. Or that. That one you can touch, it\'s already broken.', normal: 'Number-two tank. Look at it. I could weep. I nearly have.', blunt: 'I\'m an engine man in a forest. Say something useful or hold this.' },
+    greet: { polite: 'Don\'t touch that. Or that. That one you can touch, it\'s already broken.', normal: 'Number-three tank. Look at it. I could weep. I nearly have.', blunt: 'I\'m an engine man in a forest. Say something useful or hold this.' },
     topics: { 'The Drift-Kestrel': 'Three bolts of silk to close the hole and a relief valve to stop her bursting the patch the first time Vane gets clever. Then hops. Forty miles, down, cool the tank, forty miles. It\'ll be like crossing a river on stepping-stones, if the stones were on fire.' },
     quest: (g) => {
       const f = g.flags;
       if (f.tank_patched) return { text: 'She\'s holding. I keep putting my ear to the seam and she keeps holding. I don\'t trust it. I love her.' };
       const silk = g.count('liftsilk'), valve = g.has('valve');
       if (silk >= 3 && valve) return { text: 'Three bolts and an Office valve. Give them here.', choices: [
-        { t: 'Hand him the silk and the valve.', f: (g) => { for (let i = 0; i < 3; i++) g.take('liftsilk'); g.take('valve'); f.tank_patched = true; questXp(120); journal('main', 'The Lift-Tank: Tobiah closed the Kestrel\'s number-two tank with weaverling silk and fitted the Office relief valve. She will lift, in forty-mile hops.' + (f.coda_done ? '' : ' Vane will not lift without Lyra. She went north, to the Mausoleum of Chords.')); codaCheckHerald(); return 'He works for an hour without speaking, the silk going on in long careful laps like a bandage, then the valve, then a long low hiss that makes him close his eyes. "There," he says. "There. She\'ll lift. Don\'t tell her I said so; she gets ideas."'; } },
+        { t: 'Hand him the silk and the valve.', f: (g) => { for (let i = 0; i < 3; i++) g.take('liftsilk'); g.take('valve'); f.tank_patched = true; questXp(120); journal('main', 'The Lift-Tank: Tobiah closed the Kestrel\'s number-three tank with weaverling silk and fitted the Office relief valve. She will lift, in forty-mile hops.' + (f.coda_done ? '' : ' Vane will not lift without Lyra. She went north, to the Mausoleum of Chords.')); codaCheckHerald(); return 'He works for an hour without speaking, the silk going on in long careful laps like a bandage, then the valve, then a long low hiss that makes him close his eyes. "There," he says. "There. She\'ll lift. Don\'t tell her I said so; she gets ideas."'; } },
       ] };
       return { text: `I need three bolts of lift-silk — I've got ${silk} — and a relief valve ${valve ? '(and you have the valve, bless you)' : 'off that Office cutter'}. The weaverling nests are south-west. Cut the silk off the webs. Don't let the weaverlings cut anything off you.` };
     },
@@ -959,7 +959,7 @@ const CAMP = {
     greet: { polite: 'She watches your mouth, not your eyes, and nods once.', normal: 'She watches your mouth. "Slower," she says. "I read lips, not minds."', blunt: 'She looks at you for a long moment and goes back to splicing one-handed.' },
     topics: {
       'The Office cutter': '"It hunts by sound. That horn on the bow hears a man breathe at a hundred yards. I don\'t make any." She grins. "Go quiet, or go fast, and kill the horn first. When it hears you, everybody hears you."',
-      'The Drift-Kestrel': '"My collarbone and her number-two tank. One of us will be flying in a week."',
+      'The Drift-Kestrel': '"My collarbone and her number-three tank. One of us will be flying in a week."',
     },
     quest: (g) => {
       const f = g.flags;

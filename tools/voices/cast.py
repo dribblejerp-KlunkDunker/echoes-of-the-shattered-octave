@@ -83,6 +83,7 @@ CAST = {
     'pressman':   dict(voice='bm_lewis',   speed=0.8,  pitch=-6, lang='en-gb', fx=['gravel', 'hall']),
     # ---- the many-voiced (the line's voiceOf is spoken, then put through these)
     'weaver':     dict(fx=['chorus', 'hall']),
+    'tideweaver': dict(voice='am_michael', speed=0.88, pitch=-2, lang='en-us', fx=['hall']),   # the Tide-Weaver, Ilias Marren, who tells the Echoes (one calm man, not the Phantom Weaver's chorus)
     'wearer':     dict(fx=['chorus', 'gravel', 'hall']),
     'requiem':    dict(fx=['chorus', 'stack', 'hall']),
     'broodmother':dict(fx=['chorus', 'gravel', 'hall']),

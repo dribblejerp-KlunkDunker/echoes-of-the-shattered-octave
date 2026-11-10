@@ -762,7 +762,7 @@
    "id": "vane_dw.greet.normal",
    "speaker": "vane",
    "kind": "greet",
-   "text": "She's on her side in the willows with a hole in her number-two tank you could post a sheep through. We are not leaving by air today.",
+   "text": "She's on her side in the willows with a hole in her number-three tank you could post a sheep through. We are not leaving by air today.",
    "source": "data.js NPCS.vane_dw.greet.normal",
    "voiceOf": "vane",
    "delivery": "normal"
@@ -789,7 +789,7 @@
    "id": "tobiah_dw.greet.normal",
    "speaker": "tobiah",
    "kind": "greet",
-   "text": "Number-two tank. Look at it. I could weep. I nearly have.",
+   "text": "Number-three tank. Look at it. I could weep. I nearly have.",
    "source": "data.js NPCS.tobiah_dw.greet.normal",
    "voiceOf": "tobiah",
    "delivery": "despairing, dry"
@@ -3188,7 +3188,7 @@
   },
   {
    "id": "weaver.rope.echo",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "I have watched you choose this four hundred and eleven times.",
    "source": "rope45.js TX.echo (Book One ch. 12)",
@@ -3388,7 +3388,7 @@
   },
   {
    "id": "weaver.h66.thread",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "I am going to show you a thread that was not taken.",
    "source": "herald66.js TX.echoThread (Book One ch. 24)",
@@ -3396,7 +3396,7 @@
   },
   {
    "id": "weaver.h66.unhappen",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "This did not happen. It also did not unhappen; nothing does.",
    "source": "herald66.js TX.echoUnhappen (Book One ch. 24)",
@@ -4172,7 +4172,7 @@
   },
   {
    "id": "weaver.t70.who",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "You will want to know who is talking.",
    "source": "thread70.js TX.who (Book One, Echo I)",
@@ -4180,7 +4180,7 @@
   },
   {
    "id": "weaver.t70.night",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "That is the whole of the difference. One night.",
    "source": "thread70.js TX.oneNight (Book One, Echo I)",
@@ -4188,7 +4188,7 @@
   },
   {
    "id": "weaver.t70.went",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "Here is the thread where she went.",
    "source": "thread70.js TX.went (Book One, Echo I)",
@@ -4255,7 +4255,7 @@
   },
   {
    "id": "weaver.t70.watched",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "I have watched that moment four hundred and eleven times.",
    "source": "thread70.js TX.watched (Book One, Echo I)",
@@ -4263,7 +4263,7 @@
   },
   {
    "id": "weaver.t70.soup",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "That is what a thread is. You are a soup, and a thing in the dark is patient, and some nights you have had enough sleep.",
    "source": "thread70.js TX.soup (Book One, Echo I)",
@@ -4271,7 +4271,7 @@
   },
   {
    "id": "weaver.t70.matters",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "I will tell you the part that matters.",
    "source": "thread70.js TX.matters (Book One, Echo I)",
@@ -4279,7 +4279,7 @@
   },
   {
    "id": "weaver.t70.good",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "And it is very good.",
    "source": "thread70.js TX.good (Book One, Echo I)",
@@ -4287,7 +4287,7 @@
   },
   {
    "id": "weaver.t70.quickly",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "Here is the rest of it, quickly, because you have a book to finish.",
    "source": "thread70.js TX.quickly (Book One, Echo I)",
@@ -4295,7 +4295,7 @@
   },
   {
    "id": "weaver.t70.times",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "Four hundred and eleven times.",
    "source": "thread70.js TX.times (Book One, Echo I)",
@@ -4303,7 +4303,7 @@
   },
   {
    "id": "weaver.t70.margin",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "That is all. That is the whole margin. A tired woman heard something, and did not go out.",
    "source": "thread70.js TX.margin (Book One, Echo I)",
@@ -4311,7 +4311,7 @@
   },
   {
    "id": "weaver.t70.fresh",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "I have watched a great many threads, and I can tell you with some authority that the world is never saved by the people who are fresh.",
    "source": "thread70.js TX.fresh (Book One, Echo I)",
@@ -4319,7 +4319,7 @@
   },
   {
    "id": "weaver.t70.looking",
-   "speaker": "weaver",
+   "speaker": "tideweaver",
    "kind": "narration",
    "text": "I have looked at four hundred and eleven of these, and I have not yet found a third option, and I am still looking, and I would like you to remember, when we get there, that I was looking.",
    "source": "thread70.js TX.looking (Book One, Echo I)",
@@ -4753,6 +4753,10 @@
   "engineer": {
    "name": "The Kestrel's engineer",
    "who": "The Drift-Kestrel's first engineer, unnamed in Book One by the author's ruling; frightened, precise, doing ballast sums out loud (ch. 12)."
+  },
+  "tideweaver": {
+   "name": "The Tide-Weaver",
+   "who": "Ilias Marren, who watches the threads and tells the Echoes (Book One, Echo I). Not the Phantom Weaver."
   }
  }
 }

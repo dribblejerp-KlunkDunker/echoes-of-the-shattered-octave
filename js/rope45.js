@@ -84,7 +84,7 @@ const ROPE45 = (function () {
     four: S('Four.'),
     eight: S('Eight.'),
     eleven: S('Eleven.'),
-    captain: S('"Captain—" says the engineer. "I can count."'),
+    captain: S('"Captain—" says Pennick. "I can count."'),
     fifteen: S('Thirteen. Fifteen.'),
     settling: S('The Kestrel is settling. You can feel it through the drum: she is a hundred feet lower than she was ten minutes ago, and the iron-oaks on the common are not a hundred feet lower than they were ten minutes ago. They are higher. The trees are coming up at you.'),
     hudDrum: S('THE DRUM'),
@@ -94,8 +94,8 @@ const ROPE45 = (function () {
     lookMagsText: S('Mags on the drum, hand over hand, jaw set. She cannot hear the count. She is watching Vane\'s mouth.'),
     lookVane: S('Captain Vane'),
     lookVaneText: S('Vane at the wheel, holding her at forty feet, counting them onto the deck.'),
-    lookEngineer: S('The engineer'),
-    lookEngineerText: S('The engineer, with the slate, doing sums he does not like out loud.'),
+    lookEngineer: S('Pennick'),
+    lookEngineerText: S('Pennick, with the slate, doing sums he does not like out loud.'),
     // 1g the foot of the line
     footHint: S('Put them on the knots with the Governor: use the next in the queue. Four to a load.'),
     lookAldric: S('Governor Aldric Vance'),
@@ -116,7 +116,7 @@ const ROPE45 = (function () {
     youStruck: S('You meet it at the rail and it reels back off you, and comes again. Then Kaelen Vance comes over the port rail with his left sleeve gone and his arm blazing like a lamp with a white-hot wick, and takes it out of the air with his glass fist. It bursts into a spray of bright falling notes and a laugh. "Get them up!" he shouts.'),
     kaelenStruck: S('Kaelen Vance comes over the port rail with his left sleeve gone and his arm blazing like a lamp with a white-hot wick, and puts himself between the winch and the line, and when the jitter comes over the rail he takes it out of the air with his glass fist. It bursts into a spray of bright falling notes and a laugh. "Get them up!" he shouts.'),
     kaelenFoot: S('Up on the rail, a light like a lamp with a white-hot wick: Kaelen, with his arm bare, and the thing bursts into a spray of bright falling notes. "Get them up!"'),
-    threeUp: S('They get the three up. The old man on the deck-boards is a pair of boots and a knitted cap and nothing else, and one of the women who came over the rail after him has blood on her, though there was no blood, because she bit through her own lip getting up the rope.<br><br>Twenty-one.<br><br>The engineer has Vane\'s arm in both hands, crying without knowing it. "Captain, we are at twenty-one souls and the crates and we are going down. Not slow. Look at the trees. Look at the trees, Captain—"'),
+    threeUp: S('They get the three up. The old man on the deck-boards is a pair of boots and a knitted cap and nothing else, and one of the women who came over the rail after him has blood on her, though there was no blood, because she bit through her own lip getting up the rope.<br><br>Twenty-one.<br><br>Pennick has Vane\'s arm in both hands, crying without knowing it. "Captain, we are at twenty-one souls and the crates and we are going down. Not slow. Look at the trees. Look at the trees, Captain—"'),
     threeGo: S('The last loads'),
     // 4 Lyra and the last load
     lyraTitle: S('The last four before the last'),
