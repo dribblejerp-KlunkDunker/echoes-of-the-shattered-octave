@@ -9,26 +9,27 @@
 //       punched it down"), the carter rooted at Weavers' Cross, the mouth of the Hollow.
 //    2  THE CORRIDOR. At the well-head Lyra sings the falling fifth at full voice and an eight-foot circle of stillness
 //       walks with her. Your work is the line: pull people out of doorways into it (Hetty and Bettany do the same) and
-//       keep the hounds off its tail. The green closes three feet behind the last person; stray from the line and it
+//       keep the hounds off its tail (none is lost: in the book nobody is). The green closes three feet behind the last person; stray from the line and it
 //       takes your boots. While you are with the line the Greening's clock stands still ("you could not walk faster
 //       for an hour").
 //    3  THE SQUARE. Rooke could not cross Orla's floor and gives Lyra the long drops. Go with Lyra to Orla, or stay and
 //       hold the square line with Rooke.
 //    4  ORLA'S TREE. "You're late, lovey." Three drops on the tongue. "Now, girl. Now. All the lines." The harvest home
 //       as Hold the Pitch: lines one to three, then the fourth line, the narrowest band in the game. If you cut the
-//       Last Sheaf with Harrow you know the song and sing the second voice; if not you hum the Root under her, or keep
+//       Last Sheaf with Harrow you know the song and sing the second voice under her (Lyra holds the fourth line, as the
+//       book has it); if not you hum the Root under her, or keep
 //       the door. Orla stops breathing around the sixth line, whatever you do (canon). Hold the square instead: forty
 //       seconds of hounds at the line, and Lyra sings Orla down alone.
 //    5  THE NORTH GATE. Four hundred people in a lozenge of mud; thorn thirty feet high that outgrows the axes. The Hedge
 //       speaks as Tobin, Tam, Lyra whole and Davin, and as you if you ever answered it (hedge_answered). Lyra screams
-//       DON'T ANSWER IT from the mounting-block: stand beside her, shout it yourself (loud, so hounds come to the
-//       crowd), or hold on and say nothing ([PROPOSED] one more answers). Ada Pellow always goes: "Tobin Ashgrove, is
+//       DON'T ANSWER IT from the mounting-block: stand beside her, shout it with her, or hold on and say nothing.
+//       Ada Pellow always goes, and nobody else moves (the book): "Tobin Ashgrove, is
 //       that you?" / "Hello, Ada." The Chapel falls, the Pure Note stops (the sound drops out for two beats), and the
-//       Kestrel comes down. Then Grab the Line, as game.js's ending has it.
+//       Kestrel comes down. Then Grab the Line (js/rope45.js).
 //    6  done.
 //  Missing a beat changes lines and never fails a quest. The mast still ends Part Two for a player who runs for it.
-//  Figures are transient (staged again on load); progress lives in G.flags (g44*). Children are never harmed: the
-//  hounds take from the tail, and Bettany keeps the children in the middle of the line.
+//  Figures are transient (staged again on load); progress lives in G.flags (g44*). Nothing the player does changes
+//  what happens in the book: nobody is lost from the line, Orla dies in her tree, Ada Pellow goes, nobody else does.
 // ============================================================
 'use strict';
 
@@ -89,7 +90,7 @@ const GREEN44 = (function () {
     carter: S('A carter on his knees in the middle of Weavers\' Cross with his hands pressed to the cobbles, unable to lift them, watching the fine white root-hairs come out of his palms and go down between the stones. He is not screaming. He is looking at his own hands with an expression of dreadful embarrassment, as though he had spilled something in somebody\'s house.'),
     hollow: S('The mouth of the tannery lane, and the Hollow beyond it, where every person in Oakhaven who ever had a root in them was. Lyra has a Cantor\'s training and thirty-three years of the Reach and a whole language for the ways a body can go wrong, and standing at the mouth of the lane she has nothing at all. She goes in anyway.'),
     lookCarter: S('The carter at Weavers\' Cross'),
-    lookCarterText: S('You take him by the shoulders and pull, and his palms do not come up; they are part of the street now. "It\'s all right," he says, mortified. "Go on. You go on."'),
+    lookCarterText: S('You take him by the shoulders and pull, and his palms do not come up; they are part of the street now. He looks at his hands, and not at you.'),
     lookBaker: S('The baker\'s wife'),
     lookBakerText: S('"I punched it down," she tells you, quite reasonably, as if you had asked. "I punched it down."'),
     // 2 the corridor
@@ -100,17 +101,16 @@ const GREEN44 = (function () {
     jCorridor: S('At the well-head Lyra sang the falling fifth at full voice and the grass lay down in a circle around her. The town is walking behind her in a line, hands on shoulders, and the green closes three feet behind the last of them. My work is the line.'),
     hudCircle: S('THE CIRCLE'),
     hudInLine: S('in the line'),
-    hudLost: S('lost'),
     hudGreen: S('THE GREEN HAS YOUR BOOTS'),
     lookDoor: S('Someone in a doorway'),
     lookDoorText: S('They stand in the doorway with the green coming up the step behind them, and do not know where to go.'),
     pulled: S('You take them by the wrist and put their hand on the shoulder in front. "Behind her," you say. "Don\'t let go."'),
-    hettyPulls: S('Hetty Bram gets them into a line, two at a time, with her hands and her voice: "Hands on the shoulder. On the shoulder, Josser, I don\'t care whose."'),
-    bettanyPulls: S('Bettany gets the children into the middle of the line, where nothing can reach them from the front or the back, and holds the smallest by her apron strings.'),
+    hettyPulls: S('Hetty Bram gets them into a line.'),
+    bettanyPulls: S('Bettany gets the children into the middle of it.'),
     dyeWomen: S('The dye-works women come out of a doorway and take the old ones by the elbows.'),
     rookeComes: S('Surgeon-Grafter Rooke comes up the lane in his shirtsleeves with his bag in one hand and blood on both, and starts pulling people out of doorways and pushing them into the column, shouting names.'),
     houndBehind: S('Behind the line, a jitter in the air like heat-haze with teeth. A hound has heard her full voice, and it is coming for the tail.'),
-    houndTook: S('A hound reaches the tail of the line. The last man\'s hand comes off the shoulder in front, and the green closes over the place where he was.'),
+    houndTook: S('The hound reaches the tail of the line, and the last man does not let go of the shoulder in front of him. It comes past him for you.'),
     inGreen: S('You have strayed from the line. The grass around your boots is not grass, and it is holding on.'),
     lineWake: S('Sixty people walk behind her down the middle of their own town, and the green closes over the road behind the last of them, three feet back, the way a wake closes behind a boat.'),
     lyraHolds: S('Lyra holds the circle where it is and waits for you, and it costs her.'),
@@ -134,17 +134,16 @@ const GREEN44 = (function () {
     sheafHint: S('Lines one to three. Hold her under the torn notes.'),
     fourthTitle: S('The fourth line'),
     fourthHint: S('The line Davin could never hold, and his father could never hold. The narrowest band there is.'),
-    orlaTwo: S('Full voice, every line. <i>Oh, the last sheaf\'s in and the barley\'s high, and the swallows are low in the harvest sky.</i> Lyra\'s throat tears on the third line and she goes on through it, and your voice is under hers where it tears, the second voice, the way a whole town used to sing it on the risers. Orla\'s eyes are shut and her mouth has come open a little and she is listening.<br><br>The fourth line, which Davin could never hold, and which his father could never hold. The two of you hold it.<br><br>Somewhere around the sixth line, the old woman stops breathing. Lyra finishes the song. All of it.'),
+    orlaTwo: S('Full voice, every line. <i>Oh, the last sheaf\'s in and the barley\'s high, and the swallows are low in the harvest sky.</i> Lyra\'s throat tears on the third line and she goes on through it, and your voice is under hers where it tears, the second voice, the way a whole town used to sing it on the risers. Orla\'s eyes are shut and her mouth has come open a little and she is listening.<br><br>The fourth line, which Davin could never hold, and which his father could never hold. Lyra holds it, with your voice under hers.<br><br>Somewhere around the sixth line, the old woman stops breathing. Lyra finishes the song. All of it.'),
     orlaRootText: S('Full voice, every line. <i>Oh, the last sheaf\'s in and the barley\'s high, and the swallows are low in the harvest sky.</i> Lyra\'s throat tears on the third line and she goes on through it, and you keep the Root under her, one low note, so that the song has a floor to stand on. Orla\'s eyes are shut and she is listening.<br><br>The fourth line, which Davin could never hold, and which his father could never hold. Lyra holds it.<br><br>Somewhere around the sixth line, the old woman stops breathing. Lyra finishes the song. All of it.'),
     orlaOne: S('Full voice, every line. <i>Oh, the last sheaf\'s in and the barley\'s high, and the swallows are low in the harvest sky.</i> Her throat tears on the third line and she goes on through it, and the sound is barely human and it does not matter, because it is loud, and because Orla Hale is listening, the way she listened on the risers of fifty harvest homes.<br><br>The fourth line, which Davin could never hold, and which his father could never hold, and which Orla Hale held for fifty years in a voice like a rusty gate. Lyra holds it.<br><br>Somewhere around the sixth line, the old woman stops breathing. Lyra finishes the song. All of it.'),
     orlaPoor: S('The fourth line goes out from under you and Lyra takes it on alone, and holds it.'),
     orlaHounds: S('She puts her forehead against the bark for the length of three breaths, which is all she has, because by then the hounds have heard her. They come into the Hollow through the canopy. Kaelen meets the first one at the door of the house with his arm bare and blazing.<br><br>"Lyra." He has her by the wrist. "Lyra. The line\'s moving. Rooke\'s got them to the square and the square\'s going. The gate—"<br><br>"The gate\'s closed," she says.<br><br>"Then we open it."'),
     orlaGo: S('To the North Gate'),
-    jOrlaTwo: S('Orla Hale is dead in her tree. Lyra gave her the long drops and sang her the harvest home, every line, and I sang the second voice, and the two of us held the fourth line. She stopped breathing around the sixth.'),
+    jOrlaTwo: S('Orla Hale is dead in her tree. Lyra gave her the long drops and sang her the harvest home, every line, and I sang the second voice under her, and she held the fourth line that Davin never could. Orla stopped breathing around the sixth.'),
     jOrlaOne: S('Orla Hale is dead in her tree. Lyra gave her the long drops and sang her the harvest home, every line, and held the fourth line that Davin never could. She stopped breathing around the sixth.'),
     squareBack: S('Lyra comes back up the lane with the brown bottle empty and her voice gone to a thread, and Kaelen beside her with his arm still smoking. She does not say anything about Orla. She does not have to.<br><br>"The line\'s moving," Kaelen says. "The square\'s going. The gate—"<br><br>"The gate\'s closed," she says.<br><br>"Then we open it."'),
     squareWhole: S('Rooke\'s line goes to the gate whole. Not one hand came off a shoulder.'),
-    squareNotWhole: S('Rooke\'s line goes to the gate with {0} fewer than it had.'),
     // 5 the North Gate
     gateTitle: S('The North Gate'),
     gate: S('Four hundred people of the town of Oakhaven stand at the North Gate in the last clear ground inside the Hedge, a lozenge of trampled mud sixty feet across, with the green coming in on three sides at a walking pace, and the Governor\'s men and the Consortium\'s men and the Church\'s men shoulder to shoulder in it with everybody else.<br><br>Where the gate was there is a wall of thorn thirty feet high and twenty feet thick, and it is still growing. They go at it with axes, with hedging-bills and hay-knives and a Legionnaire\'s halberd somebody has pulled off a Legionnaire who is no longer using it. The thorn grows back faster than they cut, and after a while the cutting stops, and the town stands in the mud in the green light and listens to itself breathing.'),
@@ -162,10 +161,8 @@ const GREEN44 = (function () {
     dontShout: S('Shout it yourself, as loud as you can'),
     dontSilent: S('Hold on to the people beside you and say nothing'),
     beside: S('You get up on the block beside her, so the back of the crowd can see two of you, and put your hand flat between her shoulders so she does not have to stand on her own.'),
-    shout: S('"DON\'T ANSWER IT!" Your voice goes out over four hundred heads, as loud as you have ever let it be in the Reach, and the hounds hear it. Kaelen turns to the edge of the crowd with his arm already burning.'),
-    shoutHounds: S('The hounds come out of the green at the edge of the mud, toward the crowd and the noise. Keep them off the people.'),
+    shout: S('"DON\'T ANSWER IT!" Your voice goes out over four hundred heads with hers, as loud as you have ever let it be in the Reach.'),
     silent: S('You hold on to the hand on either side of you and say nothing, and the Hedge goes on, and the crowd hears one voice telling it not to listen instead of two.'),
-    silentOne: S('Down the thorn, one of the Tanner cousins says "Mam?" in a small voice, and lets go of the hand beside him, and is gone into the green before anyone can take hold of his coat.'),
     adaTitle: S('Ada Pellow'),
     ada: S('And down at the north end of the thorn, Mistress Pellow says, "Tobin?"<br><br>She is fifty-one years old. Her youngest had a marsh-fever two springs ago, going quiet in her cot, going out like a lamp, and an orchard-cantor stood up in that kitchen at four in the morning and said <i>Well, there\'s nothing for it</i>, and opened his mouth, and sang her back, and walked out into the yard singing so that the hounds would follow him and not the house. Ada Pellow has put a bowl of new milk on Lyra\'s step every week of the two years since, and never once said why.<br><br>"Tobin Ashgrove," she says, to the thorn, in a perfectly ordinary voice, "is that you?"<br><br>"Hello, Ada," says the Hedge.<br><br>She goes into it. The thorn does not part for her. She climbs into it with her arms up over her face, and it closes over her, and for four or five seconds there is the sound of a woman going into a hedge. Then there is no sound at all.'),
     adaReed: S('You cut her a reed for Joram\'s note, once. She had it in her apron.'),
@@ -177,17 +174,15 @@ const GREEN44 = (function () {
     chapelGo: S('Grab the line'),
     jGate: S('At the North Gate the Hedge spoke to four hundred of us in the voices of our dead. Lyra screamed at us not to answer it, and Ada Pellow answered it anyway: "Tobin Ashgrove, is that you?" "Hello, Ada." She went into the thorn. Then the Chapel fell and the Note stopped, and the Kestrel came down out of the green.'),
     hudGate: S('THE NORTH GATE · hold on to each other'),
-    hudShout: S('THE HOUNDS ARE AT THE CROWD'),
     // the end card (game.js's ending())
-    endOrlaTwo: S('Lyra sang Orla Hale down in her tree, every line, and you sang the second voice, and the fourth line held between the two of you while the bark closed over her.'),
+    endOrlaTwo: S('Lyra sang Orla Hale down in her tree, every line, with you on the second voice under her, and held the fourth line that Davin never could.'),
     endOrlaRoot: S('Lyra sang Orla Hale down in her tree, every line, with you on the Root under her, and held the fourth line that Davin never could.'),
     endOrlaOne: S('Lyra sang Orla Hale down in her tree on her own, every line, and held the fourth line that Davin never could, while you held the square with Rooke.'),
     endOrlaDoor: S('Lyra sang Orla Hale down in her tree, every line, and held the fourth line that Davin never could, while you kept the door.'),
-    endLine: S('Sixty people walked behind her circle from the well-head to the square with their hands on each other\'s shoulders{0}.'),
-    endLineLost: S(', and {0} of them were taken from the tail of it'),
+    endLine: S('Sixty people walked behind her circle from the well-head to the square with their hands on each other\'s shoulders, and the green closed over the road three feet behind the last of them.'),
     endAda: S('At the North Gate the Hedge called the town by its dead, and Ada Pellow went to Tobin Ashgrove\'s voice. Everyone else held on.'),
-    endAdaShout: S('At the North Gate you shouted it with her, DON\'T ANSWER IT, and the hounds came to the noise, and Kaelen met them. Ada Pellow went to Tobin Ashgrove\'s voice anyway. Everyone else held on.'),
-    endAdaSilent: S('At the North Gate you said nothing, and Ada Pellow went to Tobin Ashgrove\'s voice, and a Tanner cousin went after a voice that called him Mam. Everyone else held on.'),
+    endAdaShout: S('At the North Gate you shouted it with her, DON\'T ANSWER IT, over four hundred heads. Ada Pellow went to Tobin Ashgrove\'s voice anyway. Everyone else held on.'),
+    endAdaSilent: S('At the North Gate you said nothing and held on, and Ada Pellow went to Tobin Ashgrove\'s voice. Everyone else held on.'),
   };
 
   // ================================================================ the voices: TX key -> recorded lines, in the book's order
@@ -387,12 +382,12 @@ const GREEN44 = (function () {
     for (const e of m.entities) {
       if (!e || e._g44 !== 'tailhound' || e.dead || e.hidden) continue;
       const t = along(CORRIDOR, tailD());
-      if (dist(px(), py(), e.x, e.y) > 3.0) {   // the player is not on it: it goes for the tail
+      if (!e._past && dist(px(), py(), e.x, e.y) > 3.0) {   // the player is not on it: it goes for the tail
         const dx = t.x - e.x, dy = t.y - e.y, l = Math.hypot(dx, dy) || 1;
         e.x += dx / l * Math.min(l, dt * 2.1); e.y += dy / l * Math.min(l, dt * 2.1); e.state = 'chase';
       }
-      if (dist(e.x, e.y, t.x, t.y) < 0.9 && lineN() > 2) {
-        f.g44_lost = (f.g44_lost | 0) + 1; f.g44_line = lineN() - 1; e.dead = true; e.hidden = true; say(TX.houndTook, 'bad', 6000); placeLine(m);
+      if (dist(e.x, e.y, t.x, t.y) < 0.9 && !e._past) {   // nobody is lost from her line in the book: it comes past the last man, for you
+        e._past = true; say(TX.houndTook, 'bad', 6000);
       }
     }
     // stray from the line and the green takes your boots
@@ -446,15 +441,15 @@ const GREEN44 = (function () {
       let tgt = null, best = Infinity;
       for (const o of m.entities) if (o && /^line/.test(o._g44 || '') && !o.hidden) { const dd = dist(e.x, e.y, o.x, o.y); if (dd < best) { best = dd; tgt = o; } }
       if (!tgt) continue;
-      if (dist(px(), py(), e.x, e.y) > 3.0) { const dx = tgt.x - e.x, dy = tgt.y - e.y, l = Math.hypot(dx, dy) || 1; e.x += dx / l * Math.min(l, dt * 1.9); e.y += dy / l * Math.min(l, dt * 1.9); }
-      if (best < 0.8 && lineN() > 2) { R.sqLost = (R.sqLost | 0) + 1; f.g44_lost = (f.g44_lost | 0) + 1; f.g44_line = lineN() - 1; e.dead = true; e.hidden = true; say(TX.houndTook, 'bad', 5000); placeSquare(m); }
+      if (!e._past && dist(px(), py(), e.x, e.y) > 3.0) { const dx = tgt.x - e.x, dy = tgt.y - e.y, l = Math.hypot(dx, dy) || 1; e.x += dx / l * Math.min(l, dt * 1.9); e.y += dy / l * Math.min(l, dt * 1.9); }
+      if (best < 0.8 && !e._past) { e._past = true; say(TX.houndTook, 'bad', 5000); }
     }
     if (R.hold <= 0 && !R.holdDone) {
       R.holdDone = true;
-      f.g44_whole = !(R.sqLost > 0); f.g44_orla = 'one';
+      f.g44_whole = true; f.g44_orla = 'one';
       for (const e of m.entities) if (e && e._g44 === 'sqhound') { e.dead = true; e.hidden = true; }
       journal('main', TX.jOrlaOne);
-      card(TX.squareTitle, TX.squareBack + '<br><br>' + (f.g44_whole ? TX.squareWhole : fmt(TX.squareNotWhole, R.sqLost)), [{ t: TX.orlaGo, f: () => toGate() }]);
+      card(TX.squareTitle, TX.squareBack + '<br><br>' + TX.squareWhole, [{ t: TX.orlaGo, f: () => toGate() }]);
     }
   }
 
@@ -525,26 +520,14 @@ const GREEN44 = (function () {
         if (k === 'hedgeYou') { if (f.hedge_answered) say(fmt(TX.hedgeYou, G.player.name), 'voice', 6000); continue; }
         if (k === 'hinge') { say(TX.hinge, 'warn', 4000); f.g44_gate = 2; R.gt = -1; card(TX.dontTitle, TX.dont, [
           { t: TX.dontBeside, f: () => { f.g44_shout = 'beside'; say(TX.beside, '', 6000); R.after = 0; } },
-          { t: TX.dontShout, f: () => { f.g44_shout = 'shout'; say(TX.shout, 'bad', 7000); try { addNoise(6); } catch (e) { /* noise is a bonus */ } R.shoutT = SHOUT_SECS; R.after = -1; spawnCrowdHounds(m); } },
+          { t: TX.dontShout, f: () => { f.g44_shout = 'shout'; say(TX.shout, 'bad', 7000); R.after = 0; } },
           { t: TX.dontSilent, f: () => { f.g44_shout = 'silent'; say(TX.silent, '', 6000); R.after = 0; } },
         ]); return; }
         say(TX[k], 'voice', 7000);
       }
       return;
     }
-    if (g === 2) {
-      if (f.g44_shout === 'shout' && R.after < 0) {
-        R.shoutT -= dt;
-        const left = m.entities.filter((e) => e && e._g44 === 'crowdhound' && !e.dead && !e.hidden);
-        if (!left.length || R.shoutT <= 0) { for (const e of left) { e.dead = true; e.hidden = true; } R.after = 0; }
-      }
-      if (R.after >= 0) { R.after += dt; if (R.after > 3) { R.after = -1; adaGoes(); } }
-    }
-  }
-  function spawnCrowdHounds(m) {
-    say(TX.shoutHounds, 'bad', 6000);
-    for (let i = 0; i < 3; i++) m.entities.push(Object.assign(hydrate({ kind: 'enemy', type: 'hound', x: 18.2 + i * 5.3, y: 11.4 }), { transient: true, _g44: 'crowdhound', state: 'chase' }));
-    try { Audio_.sfx.hound(); } catch (e) { /* silent */ }
+    if (g === 2 && R.after >= 0) { R.after += dt; if (R.after > 3) { R.after = -1; adaGoes(); } }
   }
   function adaGoes() {
     const f = F(); if ((f.g44_gate | 0) >= 3) return;
@@ -555,7 +538,6 @@ const GREEN44 = (function () {
     const reed = f.p9q_pellow_done === true;
     card(TX.adaTitle, TX.ada + (reed ? '<br><br>' + TX.adaReed : ''), [{ t: TX.adaGo, f: () => {
       say(TX.adaAfter, 'voice', 8000);
-      if (f.g44_shout === 'silent') setTimeout(() => { try { say(TX.silentOne, 'bad', 6000); } catch (e) { /* cosmetic */ } }, 2500);
       R.chapelAt = 6;
     } }]);
   }
@@ -578,7 +560,7 @@ const GREEN44 = (function () {
     if (!hasG()) return [];
     const f = F(), out = [];
     if (f.g44_orla) out.push({ two: TX.endOrlaTwo, root: TX.endOrlaRoot, one: TX.endOrlaOne, door: TX.endOrlaDoor }[f.g44_orla] || TX.endOrlaOne);
-    if ((f.g44 | 0) >= 3) out.push(fmt(TX.endLine, (f.g44_lost | 0) > 0 ? fmt(TX.endLineLost, f.g44_lost | 0) : ''));
+    if ((f.g44 | 0) >= 3) out.push(TX.endLine);
     if ((f.g44_gate | 0) >= 3) out.push(f.g44_shout === 'shout' ? TX.endAdaShout : f.g44_shout === 'silent' ? TX.endAdaSilent : TX.endAda);
     return out;
   }
@@ -602,9 +584,9 @@ const GREEN44 = (function () {
     ctx.save(); ctx.font = '8px "Alegreya SC", serif'; ctx.textAlign = 'center';
     const Y = (typeof VIEW_H === 'number' ? VIEW_H : 150) - 30;
     if (s === 1) { ctx.fillStyle = '#7fe060'; ctx.fillText(TX.hudLanes, 160, Y); }
-    else if (s === 2) { ctx.fillStyle = R.inGreen ? '#ff6a40' : '#7fe060'; ctx.fillText(R.inGreen ? TX.hudGreen : TX.hudCircle + ' · ' + lineN() * 5 + ' ' + TX.hudInLine + ((f.g44_lost | 0) ? ' · ' + f.g44_lost * 5 + ' ' + TX.hudLost : ''), 160, Y); }
+    else if (s === 2) { ctx.fillStyle = R.inGreen ? '#ff6a40' : '#7fe060'; ctx.fillText(R.inGreen ? TX.hudGreen : TX.hudCircle + ' · ' + lineN() * 5 + ' ' + TX.hudInLine, 160, Y); }
     else if (s === 4 && f.g44_hold && !R.holdDone) { ctx.fillStyle = '#d9a441'; ctx.fillText(TX.hudSquare + ' · ' + Math.max(0, Math.ceil(R.hold)), 160, Y); }
-    else if (s === 5) { ctx.fillStyle = f.g44_shout === 'shout' && R.after < 0 && (f.g44_gate | 0) === 2 ? '#ff6a40' : '#e8ecf4'; ctx.fillText(f.g44_shout === 'shout' && R.after < 0 && (f.g44_gate | 0) === 2 ? TX.hudShout : TX.hudGate, 160, Y); }
+    else if (s === 5) { ctx.fillStyle = '#e8ecf4'; ctx.fillText(TX.hudGate, 160, Y); }
     ctx.restore();
   }
   function tick(dt) {

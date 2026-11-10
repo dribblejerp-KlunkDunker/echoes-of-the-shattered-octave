@@ -101,13 +101,13 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       const hp = G.player.hp; T.at(10.5, 46.5); T.step(40, 0.1); out.green = G.player.hp < hp && T.heard(/strayed from the line/) && GREEN44.R.inGreen;
       const hpAfter = G.player.hp; G.player.hp = G.player.hpMax;
       // walk with the line; let the first hound reach the tail, kill the others
-      let n = 0, killed = 0;
+      let n = 0, killed = 0, most = 0;
       while (GREEN44.stage() === 2 && n < 1600) {
         const ly = T.ent('lyra'); T.at(ly.x + 1.2, ly.y + 0.5);
-        for (const h of T.ents(/^tailhound$/)) if (!h.dead && (f.g44_lost | 0) >= 1) { h.dead = true; h.hidden = true; killed++; }
-        T.step(1, 0.1); n++;
+        for (const h of T.ents(/^tailhound$/)) if (!h.dead && h._past) { h.dead = true; h.hidden = true; killed++; }   // it came past the last man for you; you fight it
+        most = Math.max(most, GREEN44.lineN()); T.step(1, 0.1); n++;
       }
-      out.lost = (f.g44_lost | 0) === 1; out.killed = killed >= 1; out.hounds = GREEN44.R.hounds === 3;
+      out.lost = !(f.g44_lost | 0) && GREEN44.lineN() === most && T.heard(/does not let go of the shoulder in front of him\. It comes past him for you/); out.killed = killed >= 1; out.hounds = GREEN44.R.hounds === 3;
       out.joins = T.heard(/Hetty Bram gets them into a line/) && T.heard(/children into the middle/) && T.heard(/Rooke comes up the lane/) && T.heard(/the way a wake closes/);
       out.square = GREEN44.stage() === 3 && /The square/.test(T.last().t) && /long drops/.test(T.last().b);
       out.vo = window.__vo.includes('lyra_ruined.green.orla');
@@ -117,7 +117,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     if (process.env.DEBUG) console.log('cor', JSON.stringify(cor));
     check(cor.hint && cor.line0 && cor.pulled, 'the line: six behind her to start, hands on shoulders; use a person in a doorway and they join it');
     check(cor.green && cor.hpAfter, 'stray from the line and the green takes your boots (health drains; never below one)');
-    check(cor.lost && cor.killed && cor.hounds && cor.joins, 'three hounds come for the tail: one that gets there takes the last man; Hetty, the dye-works women, Bettany (the children in the middle) and Rooke work the line; the wake closes three feet behind');
+    check(cor.lost && cor.killed && cor.hounds && cor.joins, 'three hounds come for the tail; nobody is lost from her line (the book): one that gets there comes past the last man for you; Hetty, the dye-works women, Bettany (the children in the middle) and Rooke work the line; the wake closes three feet behind');
     check(cor.square && cor.vo, 'the square: "Orla." Rooke could not cross her floor; he gives Lyra the long drops: "Go on, girl. Go."');
 
     // ---- 3–4 · with Lyra to Orla's tree
@@ -154,9 +154,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       out.voices = ['"Lark."', 'way through down here', 'Tammy', 'I know the way out', 'the barley'].every((s) => T.heard(new RegExp(s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))));
       out.vo = ['wearer.green.lark', 'wearer.green.tam', 'wearer.green.lyra', 'wearer.green.davin', 'lyra_ruined.green.dont'].every((id) => window.__vo.includes(id));
       const d = T.last(); out.dont = /DON'T ANSWER IT/.test(d.t) && d.c.length === 3;
-      T.pick(/Shout it yourself/); out.loud = G.noise >= 6 && T.ents(/^crowdhound$/).length === 3;
-      T.step(20, 0.1); out.waits = (f.g44_gate | 0) === 2;
-      for (const h of T.ents(/^crowdhound$/)) { h.dead = true; h.hidden = true; }
+      T.pick(/Shout it yourself/); out.loud = T.ents(/^crowdhound$/).length === 0 && T.heard(/as loud as you have ever let it be in the Reach/); out.waits = true;
       n = 0; while ((f.g44_gate | 0) < 3 && n < 100) { T.step(1, 0.1); n++; }
       const a = T.last(); out.ada = /Ada Pellow/.test(a.t) && /is that you\?/.test(a.b) && /Hello, Ada/.test(a.b) && G.ledger.some((r) => r.name === 'Ada Pellow');
       a.c[0].f(); out.easy = T.heard(/easy from this side/);
@@ -167,14 +165,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       out.ending = out.rope && G.state === 'ending' && !document.querySelector('#ending').classList.contains('hidden');
       const txt = document.querySelector('#ending-text').textContent;
       out.endOrla = /with you on the Root under her/.test(txt) && !/Lyra sang Orla Hale down proper/.test(txt);
-      out.endAda = /you shouted it with her/.test(txt) && /taken from the tail/.test(txt);
+      out.endAda = /you shouted it with her/.test(txt) && /three feet behind the last of them/.test(txt) && !/taken from the tail/.test(txt);
       out.journal = G.journal.some((j) => /Hello, Ada\./.test(j.text));
       return out;
     });
     if (process.env.DEBUG) console.log('gate', JSON.stringify(gate));
     check(gate.card && gate.crowd, 'the North Gate: four hundred people in a lozenge of mud, the thorn thirty feet high outgrowing the axes');
     check(gate.voices && gate.vo, 'the Hedge speaks as Tobin ("Lark."), Tam, Lyra whole and Davin\'s harvest home');
-    check(gate.dont && gate.loud && gate.waits, 'Lyra screams DON\'T ANSWER IT from the mounting-block; shout it yourself and the hounds come to the crowd (the scene waits for them)');
+    check(gate.dont && gate.loud && gate.waits, 'Lyra screams DON\'T ANSWER IT from the mounting-block; shout it with her (no hounds come to the crowd: in the book none do)');
     check(gate.ada && gate.easy, 'Ada Pellow: "Tobin Ashgrove, is that you?" "Hello, Ada." She goes into the thorn (into the ledger); "It\'s easy from this side."');
     check(gate.chapel && gate.mute && gate.ending && gate.journal, 'the Chapel falls, the Note stops, "Lyra. Look up." the Kestrel; then Grab the Line');
     check(gate.endOrla && gate.endAda, 'the end card tells it as you played it: Orla sung with you on the Root, the line and its losses, the shout at the gate');
@@ -199,22 +197,22 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       f.g44 = 4; f.g44_hold = 0; delete f.g44_orla; f.p12f_q = 2; window.__ev.length = 0; T.go('orla_house', 7.5, 5.5, Math.PI); if (!T.last()) { out.dbg = { s: GREEN44.stage(), map: G.mapId, live: GREEN44.live(), hold: f.g44_hold, orla: f.g44_orla, esc: f.escaped, held: out.held, sq: out.square, h: out.hold }; return out; } T.last().c[0].f();
       out.second = T.last().c.some((x) => /second voice/.test(x.t));
       window.__curves.length = 0; T.pick(/second voice/); await new Promise((r) => setTimeout(r, 50));
-      out.melody = window.__curves[0] && window.__curves[0].curve.some((p) => p[1] !== 174) && f.g44_orla === 'two' && /The two of you hold it/.test(T.last().b);
+      out.melody = window.__curves[0] && window.__curves[0].curve.some((p) => p[1] !== 174) && f.g44_orla === 'two' && /Lyra holds it, with your voice under hers/.test(T.last().b);
       // the gate, saying nothing
       T.last().c[0].f(); T.last().c[0].f();
       window.__ev.length = 0; T.at(23.5, 9.5); T.step(2, 0.1); T.last().c[0].f(); n = 0;
       while ((f.g44_gate | 0) < 2 && n < 400) { T.at(23.5, 7.5); T.step(1, 0.1); n++; }
       T.pick(/say nothing/); window.__msgs.length = 0; n = 0; while ((f.g44_gate | 0) < 3 && n < 100) { T.step(1, 0.1); n++; }
       T.last().c[0].f(); await new Promise((r) => setTimeout(r, 2700));
-      out.silent = f.g44_shout === 'silent' && T.heard(/Tanner cousins says "Mam\?"/);
+      out.silent = f.g44_shout === 'silent' && !T.heard(/Tanner/);
       out.endLines = GREEN44.endLines().join(' ');
       return out;
     });
     if (process.env.DEBUG) console.log('other', JSON.stringify(other));
     check(other.saved, 'a save in the lanes keeps the stage and Lyra\'s place; the figures are staged again, once');
     check(other.square && other.hold && other.held && other.gate, 'hold the square with Rooke: forty seconds of hounds at the line; Lyra sings Orla down alone and comes back with nothing in her voice; the line goes to the gate whole');
-    check(other.second && other.melody, 'if you cut the Last Sheaf with Harrow you sing the second voice (the melody, not the Root), and the two of you hold the fourth line');
-    check(other.silent && /a Tanner cousin went after a voice/.test(other.endLines), 'say nothing at the gate: [PROPOSED] one more answers, a Tanner cousin; the end card says so');
+    check(other.second && other.melody, 'if you cut the Last Sheaf with Harrow you sing the second voice (the melody, not the Root) under her; Lyra holds the fourth line, as the book has it');
+    check(other.silent && /you said nothing and held on/.test(other.endLines) && !/Tanner/.test(other.endLines), 'say nothing at the gate: Ada Pellow goes and nobody else moves, as the book has it; the end card says so');
 
     // ---- voices and French
     const vo = await page.evaluate(() => {

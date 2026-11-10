@@ -178,7 +178,7 @@ The exceptions follow.
 
 ### Book One, within itself
 
-**N1. The rope's last load (Brainstorm §5 #22; still unruled).**
+**N1. The rope's last load (Brainstorm §5 #22). Applied 10 November 2026 on the author's ruling ("keep everything book accurate").**
 - Ch. 12, ll.3708–3712: "Five went onto it… a girl of eleven with bandaged stumps for hands… a young man in Consortium drab with a roll of charts stuffed down his shirt". Then l.3740 has the old woman "trying to get the girl with no hands off the rope", and l.3784 has "five people falling forty feet into a canopy".
 - Ch. 13 has both aboard. l.3828: "a girl of eleven who had no hands to flay, who had been carried up roped under the arms". l.3978: "The boy had his charts under his arm".
 - **Fix:** move Lissa and Tobiah into "the last four before the last" (l.3700), and give the last load two unnamed carters.

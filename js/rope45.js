@@ -5,20 +5,20 @@
 //  chapter from Vane's deck; the traveller arrives with the four hundred in the mud, so the scene starts there:
 //    1  THE LINE. Mags puts the line over at forty feet. The town does not rush it: Hetty on the mounting-block making a
 //       queue with her forearms, Bettany pulling the children forward, Rooke doing triage with two lamps and no table.
-//       Vane wants arms at the drum [PROPOSED]: go up and work the winch with Mags, or stay at the foot of the line with
-//       the Governor and load.
+//       Mags, at the drum, jerks her head at you, once [PROPOSED]: go up and work the winch with her, or stay at the foot
+//       of the line with the Governor and load.
 //    2  THE DRUM (on deck). Haul on the beat with Mags, four at a time, knots at four feet. Vane counts them onto the
 //       deck: four, eight, eleven ("Captain—" "I can count."), thirteen, fifteen. The ship is settling; the oaks are not.
 //    1g THE FOOT OF THE LINE (in the mud) [PROPOSED]. Put people on the knots with Aldric Vance, who has been doing it
 //       for twenty minutes; hear the count from above.
 //    3  EIGHTEEN. The hounds come into the canopy (a woman singing about lambs and dusk, a man's tenor missing a high
 //       note, a child laughing). The jitter drops onto the line and goes through the old man at the bottom; his hands
-//       stay on the knot, then fall (canon, whatever you do). On deck it comes over the rail: strike it yourself, or
-//       Kaelen comes over the port rail and takes it out of the air with his glass fist (canon). "Get them up!" Three up.
+//       stay on the knot, then fall (canon, whatever you do). On deck it comes over the rail: you can hold it there, but
+//       Kaelen comes over the port rail and takes it out of the air with his glass fist either way (canon). "Get them up!" Three up.
 //       Twenty-one.
 //    4  LYRA, AND THE LAST LOAD. Lyra comes up with the last four before the last (with Lissa Merrow roped under the arms
 //       and Tobiah with his charts: the books-check fix N1, so that ch. 13 holds), and cannot make a sound. "I know. I
-//       know. They're coming." From the foot of the line, Aldric puts you on that load [PROPOSED]. The last load is five:
+//       know. They're coming." From the foot of the line, Aldric puts your hands on that load's knot, wordless [PROPOSED]. The last load is five:
 //       the dye-works woman, two carters, a woman screaming a name, and the Governor at the bottom. "Take her up."
 //    5  THE COUNT. The ship goes sideways, the rope snags in a crown, the drum starts to come out of the deck, and Vane
 //       counts one to ten, as the book has it. Your only input is where you look. Hold on to the drum at ten and the Echo
@@ -70,7 +70,7 @@ const ROPE45 = (function () {
   const TX = {
     // 1 the line
     lineTitle: S('The line'),
-    line: S('The Drift-Kestrel comes down to forty feet and holds there, with the envelope taking a beating from the updraught off all that new wood, and Mags puts the line over, and four hundred people look up at it.<br><br>They do not rush it. Hetty Bram is on the mounting-block by the gatepost, pushing people into a queue with her forearms. Bettany is going down the line pulling children out and moving them forward. Rooke is doing triage on the ground with two lamps and no table. They take the children first: four at a time on the knotted line, the biggest child with the smallest tied against her chest with a shawl, and Mags on the winch drum taking them up hand over hand with her jaw set.<br><br>From forty feet up, Vane\'s voice: "Arms! One with arms, for the drum!" Hetty looks at you.'),
+    line: S('The Drift-Kestrel comes down to forty feet and holds there, with the envelope taking a beating from the updraught off all that new wood, and Mags puts the line over, and four hundred people look up at it.<br><br>They do not rush it. Hetty Bram is on the mounting-block by the gatepost, pushing people into a queue with her forearms. Bettany is going down the line pulling children out and moving them forward. Rooke is doing triage on the ground with two lamps and no table. They take the children first: four at a time on the knotted line, the biggest child with the smallest tied against her chest with a shawl, and Mags on the winch drum taking them up hand over hand with her jaw set.<br><br>Up at the drum, Mags looks down the line at you and jerks her head, once: <i>up</i>.'),
     lineUp: S('Go up and work the drum with Mags'),
     lineStay: S('Stay at the foot of the line with the Governor'),
     climb: S('You go up the knots between two loads of children, forty feet with the green coming in under you, and Mags takes you by the collar at the rail and puts your hands on the drum beside hers without a word. She cannot hear you. She does not need to.'),
@@ -113,15 +113,15 @@ const ROPE45 = (function () {
     jitterFoot: S('From the mud you see the hands come off the knot. They fall at your feet.'),
     jitterGo: S('...'),
     fightHint: S('Over the rail: strike it before it reaches the women.'),
-    youStruck: S('You meet it at the rail and it bursts into a spray of bright falling notes and a laugh you will hear again at three in the morning, for years. Kaelen comes over the port rail a breath later with his arm blazing like a lamp, and finds nothing left to hit. "Get them up!" he shouts.'),
+    youStruck: S('You meet it at the rail and it reels back off you, and comes again. Then Kaelen Vance comes over the port rail with his left sleeve gone and his arm blazing like a lamp with a white-hot wick, and takes it out of the air with his glass fist. It bursts into a spray of bright falling notes and a laugh. "Get them up!" he shouts.'),
     kaelenStruck: S('Kaelen Vance comes over the port rail with his left sleeve gone and his arm blazing like a lamp with a white-hot wick, and puts himself between the winch and the line, and when the jitter comes over the rail he takes it out of the air with his glass fist. It bursts into a spray of bright falling notes and a laugh. "Get them up!" he shouts.'),
     kaelenFoot: S('Up on the rail, a light like a lamp with a white-hot wick: Kaelen, with his arm bare, and the thing bursts into a spray of bright falling notes. "Get them up!"'),
     threeUp: S('They get the three up. The old man on the deck-boards is a pair of boots and a knitted cap and nothing else, and one of the women who came over the rail after him has blood on her, though there was no blood, because she bit through her own lip getting up the rope.<br><br>Twenty-one.<br><br>The engineer has Vane\'s arm in both hands, crying without knowing it. "Captain, we are at twenty-one souls and the crates and we are going down. Not slow. Look at the trees. Look at the trees, Captain—"'),
     threeGo: S('The last loads'),
     // 4 Lyra and the last load
     lyraTitle: S('The last four before the last'),
-    lyraDeck: S('Lyra Ashgrove comes up with the last four before the last: Lissa Merrow roped under the arms, Tobiah Marsh with his charts down his shirt, and a carter\'s boy. She comes over the rail like a dropped coat, and Hetty and Bettany get her under the arms, and she cannot stand. There is blood down the front of a shift that was white this morning and a hole under her jaw where a copper wire was. She gets a hand into Kaelen\'s collar and pulls his ear down to her mouth, and tries to say something, and nothing comes out at all. Not a rasp. Nothing.<br><br>"I know," Kaelen says. "I know. They\'re coming."'),
-    lyraFoot: S('Aldric puts Lyra on the knot himself, and Lissa Merrow roped under the arms, and Tobiah Marsh with his charts down his shirt. Then he takes you by the shoulder, not hard, the way you move a man out of a doorway. "You. Up with her. Keep her on the knot." You go up the rope under her, forty feet, with her boots on your hands, and over the rail. Hetty and Bettany get her under the arms; she cannot stand, and she cannot make a sound.<br><br>"I know," Kaelen says. "I know. They\'re coming."'),
+    lyraDeck: S('Lyra Ashgrove comes up with the last four before the last, Lissa Merrow roped under the arms and Tobiah Marsh with his charts down his shirt among them. She comes over the rail like a dropped coat, and Hetty and Bettany get her under the arms, and she cannot stand. There is blood down the front of a shift that was white this morning and a hole under her jaw where a copper wire was. She gets a hand into Kaelen\'s collar and pulls his ear down to her mouth, and tries to say something, and nothing comes out at all. Not a rasp. Nothing.<br><br>"I know," Kaelen says. "I know. They\'re coming."'),
+    lyraFoot: S('Aldric puts Lyra on the knot himself, and Lissa Merrow roped under the arms, and Tobiah Marsh with his charts down his shirt. Then he takes you by the shoulder, not hard, the way you move a man out of a doorway, and puts your hands on the knot under hers. You go up the rope under her, forty feet, with her boots on your hands, and over the rail. Hetty and Bettany get her under the arms; she cannot stand, and she cannot make a sound.<br><br>"I know," Kaelen says. "I know. They\'re coming."'),
     lastLoad: S('Mags puts the line down for the last load. Five go onto it. From the rail you see them from above: an old woman in a dye-works apron, the same one who was pulling children out of the queue; two carters who have been passing children up all afternoon; a woman screaming somebody\'s name up at the ship. And at the bottom, last, with his boots on the lowest knot and one arm through it and the other hand still on the shoulder of the man he has just pushed up ahead of himself, a big grey-headed old man in a Governor\'s chain of bronze oak-leaves.<br><br>"Take her up," Vane says.<br><br>Mags winds. The line comes up. And the Drift-Kestrel, sixty feet lower than she was at the start of it, does not go with it. She goes sideways. The wind comes round and pushes her, and the line and the five on it swing out and down, and the crown of an iron-oak that was a sapling at breakfast comes up through the arc like a hand closing. The rope goes into the branches. The rope snags.'),
     lastGo: S('Hold on'),
     // 5 the count
@@ -156,20 +156,19 @@ const ROPE45 = (function () {
     ropeLabel: S('Six feet of cut rope hanging from the winch drum. Nobody has coiled it.'),
     // the end card
     endDeck: S('You worked the winch drum with Mags while Vane counted them onto the deck, four to a line, children first{0}. At eighteen the hounds came into the canopy and a jitter went through the old man at the bottom of the rope; his hands stayed on the knot a moment before they fell.'),
-    endDeckYou: S(', and you met the jitter at the rail before Kaelen did'),
-    endFoot: S('You stood at the foot of the line with Aldric Vance and put his town on the knots, four at a time, until he put you on Lyra\'s load with one hand on your shoulder and sent you up.'),
+    endDeckYou: S(', and you held the jitter at the rail until Kaelen took it out of the air'),
+    endFoot: S('You stood at the foot of the line with Aldric Vance and put his town on the knots, four at a time, until he put your hands on the knot under Lyra\'s and sent you up.'),
     endCount: S('On the last load the Governor was at the bottom. The line snagged in a crown, the drum began to come out of the deck, and Vane counted to ten. Aldric Vance looked up and waved the cart on past a hole in the road. "Do it," said Kaelen. Six feet of cut rope hung from the drum for six days.'),
     endEcho: S('You held on to the drum at ten, once, and saw where that goes. Then you were back at nine.'),
   };
 
   // ================================================================ the voices
   const VO = {
-    line: ['vane.rope.arms'],
     four: ['vane.rope.four'], eight: ['vane.rope.eight'], eleven: ['vane.rope.eleven'], captain: ['engineer.rope.captain', 'vane.rope.icancount'], fifteen: ['vane.rope.fifteen'],
     vaneUp: ['vane.rope.up'],
     youStruck: ['kaelen.rope.getthemup'], kaelenStruck: ['kaelen.rope.getthemup'], kaelenFoot: ['kaelen.rope.getthemup'],
     threeUp: ['engineer.rope.down'],
-    lyraDeck: ['kaelen.rope.iknow'], lyraFoot: ['aldric.rope.you', 'kaelen.rope.iknow'],
+    lyraDeck: ['kaelen.rope.iknow'], lyraFoot: ['kaelen.rope.iknow'],
     lastLoad: ['vane.rope.takeup'],
     drumOut: ['engineer.rope.drum'],
     c1: ['vane.rope.n1'], c2: ['vane.rope.n2'], c3: ['vane.rope.n3'], c4: ['vane.rope.n4'], c5: ['vane.rope.n5'], c6: ['vane.rope.n6'], c7: ['vane.rope.n7'], c8: ['vane.rope.n8'],
@@ -316,7 +315,7 @@ const ROPE45 = (function () {
     const j = keyed(G.map, 'jitter');
     const dead = !!j && (j.dead || j.hidden || j.hp <= 0);   // gone from the map is not struck
     if (dead || R.jitterT <= 0) {
-      if (j && !dead) { j.dead = true; j.hidden = true; }
+      if (j && !j.hidden) { j.dead = true; j.hidden = true; }   // whatever you do to it, Kaelen takes it out of the air (the book)
       f.r45_jitter = dead && R.jitterT >= 0 ? 'you' : 'kaelen'; f.r45_kaelen = true; R.jitterT = 0;
       if (G.mapId === DECK) stageDeck(G.map);
       card(TX.jitterTitle, f.r45_jitter === 'you' ? TX.youStruck : TX.kaelenStruck, [{ t: TX.threeGo, f: () => card(TX.jitterTitle, TX.threeUp, [{ t: TX.threeGo, f: () => lyraUp() }]) }]);

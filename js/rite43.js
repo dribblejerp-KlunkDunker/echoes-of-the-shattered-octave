@@ -11,10 +11,12 @@
 //    2  THE VAULT. The cage, four hundred feet; the pumps, where Lyra breathes the Root note into a Hollow's wrist.
 //    3  THE NEEDLE. Kaelen's hands shake. "Closer, Engineer. I must be able to see." You stand between the Inquisitor's
 //       eye and the glass hand for the seconds it takes to put the wire through skin and not through her voice. Then
-//       "Speak, daughter." "I. Am. Fortunate." If he saw, he makes Kaelen thread it again, and her voice pays.
-//    4  THE HOLD. "Head at one span!" Lyra sings 174. Kaelen goes to the drum on the collar walk: eight bolts, forty
-//       seconds if they don't watch him. You hum beside the stool, and the Factor's green lenses, which see pitch as
-//       colour, stay on you. Then he seats the coil, the lock throws, the crown of glass teeth snaps, and Crane shouts
+//       "Speak, daughter." "I. Am. Fortunate." In the book he never sees: if he does here, that is an Echo (GDD 4.9),
+//       shown grey, and you are back on the boards with the needle still in Kaelen's fingers.
+//    4  THE HOLD. "Head at one span!" Lyra sings 174. Kaelen goes to the drum on the collar walk: eight bolts; he
+//       promised himself forty seconds and took fifty-one, and nobody stopped him. You hum beside the stool, and the
+//       Factor's green lenses, which see pitch as colour, stay on you; if they settle on the plate, that is an Echo and
+//       the Hold again. Then he seats the coil, the lock throws, the crown of glass teeth snaps, and Crane shouts
 //       for the hold. "LYRA! SING IT DOWN!": Hold the Pitch on the falling fifth, with her, until the Root lets go.
 //    5  THE GOLEMS. "The Consortium kept four at the casing, and the Factor turned them all at once." Two come; two are
 //       stopped by "Enough." Kaelen knees one and drinks the other, and the tideline is four fingers after.
@@ -22,8 +24,8 @@
 //       the pumps, the cage holds eight, four go up with Tobiah and the sisters, eight are left. Your sixty seconds are
 //       spent on names: a hand on a Hollow's wrist stops him for the length of a breath, and in that breath he says who
 //       he was. Then forty thousand gallons, and the Root drinks, and screams, and cracks, and grows: the Greening.
-//  Missing any of it changes lines, never fails a quest. Flags: r43 (stage), r43_hum, r43_you_hum, r43_strikes,
-//  r43_marched, r43_seen, r43_lenses, r43_fifth, r43_names, r43_palm, rooke_drops, lyra_voice_worse; the eight left are
+//  Missing any of it changes lines, never fails a quest, and never changes what happens in the book. Flags: r43 (stage),
+//  r43_hum, r43_you_hum, r43_strikes, r43_marched, r43_echoes, r43_fifth, r43_names, r43_palm, rooke_drops; the eight left are
 //  in the ledger. Text: TX, collected in TEXTS for the French (tools/i18n/p43-rite.tsv).
 // ============================================================
 'use strict';
@@ -46,6 +48,11 @@ const RITE43 = (function () {
     try { showEvent(title, body, hushed); } catch (e) { warnOnce('card', e); }
     const v = CARD_VO && CARD_VO.find(([t]) => String(body).startsWith(t)); if (v) seq(v[1]);
   };
+  // an Echo (GDD 4.9): a thread the book did not take, shown grey, and then the moment again
+  function echo(body, after) {
+    try { const cv = document.querySelector('canvas'); if (cv) { cv.style.filter = 'grayscale(1) contrast(0.9)'; } } catch (e) { /* cosmetic */ }
+    card(TX.echoTitle, body, [{ t: TX.echoGo, f: () => { try { const cv = document.querySelector('canvas'); if (cv) cv.style.filter = ''; } catch (e) { /* cosmetic */ } if (after) after(); } }]);
+  }
   // the voices (voices/script.json, rendered by tools/voices/build.py): narration is not auto-played by onMsg, so the
   // Rite plays its own, one line after another; a newer card or message cuts the one before, and a choice hushes it.
   let MSG_VO = null, CARD_VO = null, voTok = 0;
@@ -133,7 +140,11 @@ const RITE43 = (function () {
     hudSees: S('he can see the needle'),
     needleTitle: S('The needle'),
     needleGood: S('Kaelen angles his shoulder so that the Inquisitor sees the collar, and the needle, and the ivory spool, and not the place beneath the jaw where his left hand is. The collar goes on to the second notch, one looser than it should be. The glass thumb catches a pinch of skin along the side of her throat, under the shadow of her jaw, and the needle goes through it, and the copper wire after with a little jerk. Blood comes at once, a bright line on the white wool. <i>Good. It has to bleed.</i> Knots at both eyelets; the pegs, one, two, three, four, a half-turn each.<br><br>Crane comes down the ladder and crouches a foot away. "Blood. Good. It should bleed a little at the seating. The Foundry girls used to bleed for days." He looks at her. "Speak, daughter."<br><br>"I," says Lyra Ashgrove. "Am. Fortunate." One hundred and seventy-four, all the way through. Not a hair off.<br><br>"She is," says Ignatius Crane, and makes two fingers in the air, and goes back up the ladder.'),
-    needleSeen: S('The Inquisitor sees. He sees the glass thumb pinch the skin under her jaw, and the needle go through skin and not through the notch of the throat, and the wire come after it. "No," he says, quite gently. "Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself. I have seated forty of these." Kaelen\'s hands shake, and he does it, because there is a Flambeau on the catwalk with a stave of glass-fire and a Cantor on the stool, and the needle goes where the Rite wants it, and the blood is not a bright line but a slow one.<br><br>"Speak, daughter."<br><br>"I," says Lyra Ashgrove. "Am. Fortunate." One hundred and seventy-four. Not a hair off. Something in it is already torn.<br><br>"She is," says Ignatius Crane.'),
+    needleSeen: S('The Inquisitor sees. He sees the glass thumb pinch the skin under her jaw, and the needle go through skin and not through the notch of the throat. "No," he says, quite gently. "Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself." And the needle goes where the Rite wants it, and the blood is not a bright line but a slow one.'),
+    echoTitle: S('An Echo'),
+    echoNeedle: S('That is a thread the Rite did not take. You are back on the boards beside the stool, and the needle is still in Kaelen\'s fingers, and the Inquisitor is still on the catwalk, pacing.'),
+    echoHold: S('That is a thread the Rite did not take. You are back beside the stool, the Hold is just beginning, and the plate over the phase port still has eight bolts.'),
+    echoGo: S('Again'),
     needleGo: S('"Head at one span!"'),
     holdTitle: S('The Hold'),
     hold: S('From the gauge platform, Tobiah Marsh: "Head at one span! One span and holding!" The chains come down a notch, and the grinding changes its note. "One note," says the Inquisitor. "One law. One hand."<br><br>Lyra sings. One hundred and seventy-four: clear, and hoarse, and absolutely steady, with four hours ahead of her. The Root hears her in the first minute. "Pitch coming up," says Tobiah. "It\'s — gods, look at it — it\'s matching." "Mark it," says the Factor.<br><br>The lullaby stops.<br><br>Kaelen stands up from the stool with his toolbag and goes along the collar walk to the drum. "Slippage on the lock," he says, to nobody. "I can hear it." He cannot. "Spanner. Tobiah, sit on the rail there and call the pitch to me every ten seconds." The plate over the phase port has eight bolts. He has promised himself forty seconds if they don\'t watch him, and three minutes if they do.<br><br>Her slate said it, Rootday night, in letters an inch high: <i>THEN DON\'T LET THEM WATCH YOU.</i>'),
@@ -147,16 +158,16 @@ const RITE43 = (function () {
     pitchCall: S('Tobiah, from the rail: "Pitch, one-seventy-four. Holding."'),
     pitchCall2: S('Tobiah: "One-seventy-four. It\'s matching her, sir. It\'s — it\'s coming up to meet her."'),
     fuse: S('Kaelen, at the drum, with the margin of Revision Seven in his head: <i>On failure of the hold, for any cause, the Sequence is not to be halted. Slippage is to be absorbed by the source.</i> Nobody brings a Church four hundred feet down a shaft to save a bore-head. She is not the steadying hand. She is the fuse.'),
-    voskTurns: S('The Factor\'s lenses come off you and go to the drum. "Engineer Vance," she says, quite calmly. "What are you doing at that plate?"'),
-    boltsLost: S('"Engineer Vance, step away from the drum." He does not. He has two bolts to go and the coil in his hand, and he takes the three minutes, and Lyra holds the note the whole three minutes with the wire in her voice.'),
-    boltsWon: S('Eight bolts. Forty-one seconds. Nobody looked.'),
+    voskTurns: S('The Factor\'s green lenses drift from the stool toward the drum.'),
+    boltsLost: S('"Engineer Vance, step away from the drum." The Factor\'s lenses are on the plate, and the Golems turn before the coil is seated.'),
+    boltsWon: S('Eight bolts. He promised himself forty seconds and took fifty-one, and nobody stopped him.'),
     lockTitle: S('The lock throws'),
     lock: S('Tobiah: "Sir, what\'s that?" Kaelen gives him two seconds and one sentence: "You\'ll want to hold onto something." And he seats the reverse-phase coil in the port.<br><br>The drum screams. The chains come up taut and ring like a struck anvil, and the whole bore-head, thirty tons of iron with its teeth buried in living wood, tries to turn and cannot, and the crown of glass teeth snaps off inside the Root with a crack that goes through the chamber like a bell breaking. A chain-drum comes down through the scaffolding. A split channel sends green-gold glass across the platform in a wave two inches deep, and the boards smoke and sing.<br><br>Crane, on his knees on the catwalk: "The hold! Hold the note! Daughter — hold the note!"<br><br>She holds it. Hoarse and thin and unbroken, because she is a Cantor and the last thing a Cantor does is stop. And the Root stays drawn in, listening, asked.<br><br>Kaelen, with his glass hand flat on the drum: "LYRA! <i>SING IT DOWN!</i>"'),
     lockGo: S('Sing it down with her.'),
     fifthTitle: S('Sing it down'),
     fifthHint: S('The falling fifth: 174, and down a whole fifth to 116, slow as a leaf coming off a branch, and up, and down again. Follow her.'),
     fifthGood: S('She lets it fall. The Root note slides down a whole fifth, slow as a leaf coming off a branch, and climbs, and falls again, and you fall with it, a hand\'s width of voice under hers. <i>Down. Go back where you came from.</i><br><br>The Root lets go of the question. Under the grinding the lullaby starts again. Badly. Stumbling. From the beginning.'),
-    fifthPoor: S('She lets it fall, a whole fifth, slow as a leaf coming off a branch, and you lose her on the way down and find her on the way up. It takes four falls, not two, and the glass wave reaches the legs of the stool before the Root lets go of the question. Under the grinding, the lullaby starts again. Badly. Stumbling. From the beginning.'),
+    fifthPoor: S('She lets it fall, a whole fifth, slow as a leaf coming off a branch, and you lose her on the way down and find her on the way up; she does not need you to. <i>Down. Go back where you came from.</i><br><br>The Root lets go of the question. Under the grinding the lullaby starts again. Badly. Stumbling. From the beginning.'),
     golemsTitle: S('The Golems'),
     golems: S('"The Consortium kept four at the casing, and the Factor turned them all at once." Haulage machines, brass and boiler-iron, twice a man\'s height, grapples for hands and a single dim glass eye. Vosk, through a speaking-trumpet, quite calmly: "Engineer Vance, step away from the drum."<br><br>Two come across the platform. Two stand at the rail, waiting to be told.'),
     golemsGo: S('Keep one off her stool.'),
@@ -243,7 +254,7 @@ const RITE43 = (function () {
     pumps: ['sister.rite.daughter', 'vosk.rite.interesting', 'ignatius.rite.gracious'],
     lullaby: ['ignatius.rite.rubric', 'ignatius.rite.engineer'],
     needleGood: ['ignatius.rite.blood', 'ignatius.rite.speak', 'lyra_fortunate.rite.fortunate', 'ignatius.rite.sheis'],
-    needleSeen: ['ignatius.rite.notch', 'ignatius.rite.speak', 'lyra_fortunate.rite.fortunate', 'ignatius.rite.sheis'],
+    needleSeen: ['ignatius.rite.notch'],
     hold: ['tobiah.rite.span', 'ignatius.open.onenote', 'tobiah.rite.matching', 'vosk.rite.markit', 'kaelen.rite.slippage', 'kaelen.rite.spanner'],
     lock: ['tobiah.rite.whatsthat', 'kaelen.rite.holdon', 'ignatius.rite.holdnote', 'kaelen.rite.singitdown'],
     golems: ['vosk.rite.stepaway'],
@@ -252,11 +263,11 @@ const RITE43 = (function () {
     pour: ['kaelen.rite.up'],
     needleHint: ['ignatius.rite.closer'],
     pitchCall: ['tobiah.rite.call1'], pitchCall2: ['tobiah.rite.call2'],
-    voskTurns: ['vosk.rite.plate'], boltsLost: ['vosk.rite.stepaway'],
+    boltsLost: ['vosk.rite.stepaway'],
     aldric41: ['aldric_tube.rite.c41'], aldric30: ['aldric_tube.rite.c30'], aldric20: ['aldric_tube.rite.c20'],
     aldric10: ['aldric_tube.rite.c10'], aldric5: ['aldric_tube.rite.c5'], aldric2: ['aldric_tube.rite.c2'],
   };
-  const MSGS = ['needleHint', 'pitchCall', 'pitchCall2', 'voskTurns', 'boltsLost', 'aldric41', 'aldric30', 'aldric20', 'aldric10', 'aldric5', 'aldric2'];
+  const MSGS = ['needleHint', 'pitchCall', 'pitchCall2', 'boltsLost', 'aldric41', 'aldric30', 'aldric20', 'aldric10', 'aldric5', 'aldric2'];
   MSG_VO = new Map(MSGS.map((k) => [TX[k], VO[k]]));
   CARD_VO = Object.keys(VO).filter((k) => !MSGS.includes(k)).map((k) => [TX[k], VO[k]]);
   const fmt = (t, ...a) => String(t).replace(/\{(\d+)\}/g, (m, i) => a[+i] != null ? a[+i] : m);
@@ -265,7 +276,7 @@ const RITE43 = (function () {
   const DOOR = { x: 21.5, y: 28.6, r: 1.7 };          // outside Lyra's door on Cooper's Row
   const PATH = [[23.5, 20.5], [23.5, 7.5], [21.0, 6.0]]; // the column's head: up the main road, then to the headframe
   const PACE = 1.0;                                    // cells a second, a slow processional pace
-  const NEEDLE_SECS = 12, NEEDLE_SEEN = 4, BOLT_SECS = 41, WATCH_LIMIT = 18, COUNT = 60, UNHOOK_SECS = 3.2;
+  const NEEDLE_SECS = 12, NEEDLE_SEEN = 4, BOLT_SECS = 51, WATCH_LIMIT = 18, COUNT = 60, UNHOOK_SECS = 3.2;
 
   // ================================================================ flags and stages
   const stage = () => (hasG() && F().r43) | 0;
@@ -480,9 +491,13 @@ const RITE43 = (function () {
     loud(); R.blocked = blocked(); if (!R.blocked) R.seen += dt;
     R.needle -= dt;
     if (R.needle <= 0) {
-      const seen = R.seen >= NEEDLE_SEEN; F().r43_seen = seen; if (seen) F().lyra_voice_worse = true;
+      if (R.seen >= NEEDLE_SEEN) {   // the book's Inquisitor never sees: seen is an Echo, and the needle again
+        F().r43_echoes = (F().r43_echoes | 0) + 1; R.needle = NEEDLE_SECS; R.seen = 0;
+        echo(TX.needleSeen + '<br><br>' + TX.echoNeedle, () => { stageVault(G.map); say(TX.needleHint, 'warn', 6000); });
+        return;
+      }
       setStage(4); R.bolt = 0; R.watched = 0; R.q = 0; R.kaelenAt = 'drum';
-      card(TX.needleTitle, seen ? TX.needleSeen : TX.needleGood, [{ t: TX.needleGo, f: () => card(TX.holdTitle, TX.hold, [{ t: TX.holdGo, f: () => { stageVault(G.map); say(TX.holdHint, 'warn', 8000); } }]) }]);
+      card(TX.needleTitle, TX.needleGood, [{ t: TX.needleGo, f: () => card(TX.holdTitle, TX.hold, [{ t: TX.holdGo, f: () => { stageVault(G.map); say(TX.holdHint, 'warn', 8000); } }]) }]);
     }
   }
 
@@ -500,10 +515,15 @@ const RITE43 = (function () {
     const f = F();
     R.call = (R.call || 0) + dt; if (R.call > 10) { R.call = 0; f.r43_calls = (f.r43_calls | 0) + 1; voice(f.r43_calls === 2 ? TX.pitchCall2 : TX.pitchCall, 5000); }
     if (R.q > 0.5 && !f.r43_fuse) { f.r43_fuse = true; say(TX.fuse, '', 9000); }
-    if (R.watched > WATCH_LIMIT * 0.6 && !R.turned) { R.turned = true; voice(TX.voskTurns, 6000); }
-    if (R.watched >= WATCH_LIMIT && !f.r43_lenses) { f.r43_lenses = true; f.lyra_voice_worse = true; voice(TX.boltsLost, 8000); R.bolt = BOLT_SECS; }
+    if (R.watched > WATCH_LIMIT * 0.6 && !R.turned) { R.turned = true; say(TX.voskTurns, 'warn', 6000); }
+    if (R.watched >= WATCH_LIMIT) {   // in the book nobody stops him: the lenses on the plate are an Echo, and the Hold again
+      f.r43_echoes = (f.r43_echoes | 0) + 1; R.bolt = 0; R.watched = 0; R.turned = false; R.q = 0;
+      echo(TX.boltsLost + '<br><br>' + TX.echoHold, () => { stageVault(G.map); say(TX.holdHint, 'warn', 8000); });
+      seq(['vosk.rite.stepaway']);
+      return;
+    }
     if (R.bolt >= BOLT_SECS) {
-      if (!f.r43_lenses) say(TX.boltsWon, '', 4000);
+      say(TX.boltsWon, '', 4000);
       f.bore_seated = true; if (G.has && G.has('coil')) G.take('coil');
       setStage(5); try { Audio_.sfx.crack(); } catch (e) { /* silent */ }
       card(TX.lockTitle, TX.lock, [{ t: TX.lockGo, f: () => singDown() }]);
@@ -514,7 +534,7 @@ const RITE43 = (function () {
     const Rd = (typeof REEDS !== 'undefined' && REEDS && typeof REEDS.holdPitch === 'function') ? REEDS : null;
     if (Rd) {
       try {
-        const band = (Rd.bandFor ? Rd.bandFor(0) : 105) * (f.lyra_voice_worse ? 0.8 : 1);
+        const band = Rd.bandFor ? Rd.bandFor(0) : 105;
         const res = await Rd.holdPitch({ curve: [[0, 174], [1.4, 174], [2.6, 116], [4.0, 116], [5.0, 174], [6.0, 174], [7.2, 116], [9, 116]], width: band, duration: 9, title: TX.fifthTitle, hint: TX.fifthHint });
         score = res && !res.aborted ? res.score : 0;
       } catch (e) { warnOnce('fifth', e); score = 0.5; }
