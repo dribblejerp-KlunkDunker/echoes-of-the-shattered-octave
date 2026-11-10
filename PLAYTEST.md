@@ -18,6 +18,17 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## The Grafters' Rootday round (built 10 Nov; ROADMAP R9 #22)
+
+On a new game, go through the tannery's back door into the Hollow on Rootday (the second day) between eight in the morning and two in the afternoon. Try each way round: beside Lyra, with the Grafters, and from the lane. Walk to Hob Wendle's step (across the lane from the red shutters), then in at the blue door. Try rubbing the mark off Orla's door once. On another run, leave by the tannery halfway, or come after two.
+
+- **The cards.** Seven cards of the book's words. Too long to read in the game? Does Rooke's voice sit right under them?
+- **Getting about.** Is it clear where to go after the wagon card (Hob's step) and after Hob (the blue door)? The cut up to Orla's house and back down to Lissa: does it jar?
+- **Your part.** Do the three ways feel different enough, with only one line each per beat?
+- **The mark.** After the round, look at the green circle on Orla's door in the street. Does it read?
+
+Notes:
+
 ## Orla's harvest home (built 8 Nov; ROADMAP R9 item 17)
 
 Bring Davin's boots to Orla Hale in the Hollow (after Hearthday night), then speak to her again. Come back on each of the next three days for a line of The Last Sheaf. Try one lesson with the shutters open. Then, at the Greening, go with Lyra to Orla's tree.
