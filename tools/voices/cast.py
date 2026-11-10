@@ -58,6 +58,7 @@ CAST = {
     'mourner':    dict(voice='bf_emma',    speed=0.84, pitch=-1, lang='en-gb', fx=[('whisper', 0.75), 'wood']),
     'herald':     dict(voice='bm_george',  speed=0.98, pitch=0,  lang='en-gb', fx=['outdoors']),
     'wren':       dict(voice='af_sky',     speed=1.0,  pitch=4,  lang='en-us', fx=['child', 'wood']),
+    'quill':      dict(voice='am_liam',    speed=1.3,  pitch=2,  lang='en-us', fx=['radio', 'outdoors']),   # courier Quill, J., seventeen, made of light (ch. 21)
     'aegis':      dict(voice='am_onyx',    speed=0.82, pitch=-4, lang='en-us', fx=['stack', 'bell', 'hall']),
     # ---- remembered voices (spoken by the mimics)
     'tobin':      dict(voice='bm_daniel',  speed=0.9,  pitch=-2, lang='en-gb', fx=[]),

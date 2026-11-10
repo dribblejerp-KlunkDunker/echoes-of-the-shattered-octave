@@ -535,6 +535,48 @@ const VOICE_LINES = {
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
 },
+"engineer.cutter.drink": {
+"d": 1.54,
+"kind": "narration",
+"speaker": "engineer",
+"src": "voices/engineer/engineer.cutter.drink.mp3",
+"t": "We'll have nothing to drink\u2014"
+},
+"engineer.cutter.lift": {
+"d": 9.07,
+"kind": "narration",
+"speaker": "engineer",
+"src": "voices/engineer/engineer.cutter.lift.mp3",
+"t": "Captain. Captain. The lift's gone \u2014 we are eleven hundred pounds over what I told you yesterday and yesterday I was lying to make you feel better\u2014"
+},
+"engineer.cutter.low": {
+"d": 1.63,
+"kind": "narration",
+"speaker": "engineer",
+"src": "voices/engineer/engineer.cutter.low.mp3",
+"t": "Captain, we're already low."
+},
+"engineer.cutter.sink": {
+"d": 1.37,
+"kind": "narration",
+"speaker": "engineer",
+"src": "voices/engineer/engineer.cutter.sink.mp3",
+"t": "She can sink slowly\u2014"
+},
+"engineer.cutter.victory": {
+"d": 7.94,
+"kind": "narration",
+"speaker": "engineer",
+"src": "voices/engineer/engineer.cutter.victory.mp3",
+"t": "That's not a victory. Captain, I want to be clear, that was not a victory, that was two ships falling and ours is falling slower\u2014"
+},
+"engineer.cutter.what": {
+"d": 1.03,
+"kind": "narration",
+"speaker": "engineer",
+"src": "voices/engineer/engineer.cutter.what.mp3",
+"t": "What was that."
+},
 "engineer.rope.captain": {
 "d": 0.82,
 "kind": "narration",
@@ -1988,6 +2030,27 @@ const VOICE_LINES = {
 "t": "Vey",
 "voiceOf": "pumpman"
 },
+"quill.cutter.dontstop": {
+"d": 1.85,
+"kind": "narration",
+"speaker": "quill",
+"src": "voices/quill/quill.cutter.dontstop.mp3",
+"t": "Don't stop. Whatever you do. If you stop\u2014"
+},
+"quill.cutter.road": {
+"d": 2.95,
+"kind": "narration",
+"speaker": "quill",
+"src": "voices/quill/quill.cutter.road.mp3",
+"t": "Where is the road. The Organum road. The Tramway. Which way\u2014 which way\u2014"
+},
+"quill.cutter.thanks": {
+"d": 1.75,
+"kind": "narration",
+"speaker": "quill",
+"src": "voices/quill/quill.cutter.thanks.mp3",
+"t": "East, east, east \u2014 thank you \u2014 thank you\u2014"
+},
 "quist.greet.blunt": {
 "d": 4.3,
 "kind": "greet",
@@ -2073,6 +2136,48 @@ const VOICE_LINES = {
 "src": "voices/rooke/rooke.greet.polite.mp3",
 "t": "I have cut more limbs than any butcher in the Reach and done every one with care. Sit. I will not chalk your door today.",
 "voiceOf": "rooke"
+},
+"sable.cutter.courier": {
+"d": 16.68,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.cutter.courier.mp3",
+"t": "That was a courier. Arbiterium seal, black ribbon. That is a standing writ, which means it must be delivered into a named hand and read aloud and witnessed."
+},
+"sable.cutter.file": {
+"d": 11.57,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.cutter.file.mp3",
+"t": "Because the Office has a file on him, and the file is one line long, and it says: courier Quill, J., in transit."
+},
+"sable.cutter.mausoleum": {
+"d": 8.47,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.cutter.mausoleum.mp3",
+"t": "The Mausoleum of Chords. The old Veil-house. Eleven hundred years of records."
+},
+"sable.cutter.rule": {
+"d": 2.45,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.cutter.rule.mp3",
+"t": "I learned to rule a page in there."
+},
+"sable.cutter.running": {
+"d": 9.48,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.cutter.running.mp3",
+"t": "He has been running since a Velocity flare caught him, which was five years ago, and he has not delivered it."
+},
+"sable.cutter.sad": {
+"d": 6.29,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.cutter.sad.mp3",
+"t": "Everything here is dangerous, Captain. That one is only sad."
 },
 "sable.greet.blunt": {
 "d": 5.86,
@@ -2193,6 +2298,27 @@ const VOICE_LINES = {
 "src": "voices/tam/tam.greet.polite.mp3",
 "t": "Sit if you like. She comes on the water about this time. You will hear her if you keep still.",
 "voiceOf": "tam"
+},
+"tobiah.cutter.line": {
+"d": 3.26,
+"kind": "narration",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.cutter.line.mp3",
+"t": "The line! Captain, the hook \u2014 if we cut it we drop\u2014"
+},
+"tobiah.cutter.trumpet": {
+"d": 1.73,
+"kind": "narration",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.cutter.trumpet.mp3",
+"t": "What's the trumpet for?"
+},
+"tobiah.cutter.what": {
+"d": 0.82,
+"kind": "narration",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.cutter.what.mp3",
+"t": "What?"
 },
 "tobiah.green.road": {
 "d": 3.94,
@@ -2359,6 +2485,111 @@ const VOICE_LINES = {
 "src": "voices/townswoman/townswoman.greet.polite.mp3",
 "t": "Blessings of the Narrow on you. Softly, now.",
 "voiceOf": "townswoman"
+},
+"vane.cutter.breathe": {
+"d": 4.37,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.breathe.mp3",
+"t": "We'll have nothing to breathe if the Office puts us in the Bell Yard. Over the side."
+},
+"vane.cutter.dangerous": {
+"d": 1.06,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.dangerous.mp3",
+"t": "Is it dangerous?"
+},
+"vane.cutter.dontcut": {
+"d": 0.91,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.dontcut.mp3",
+"t": "Don't cut it."
+},
+"vane.cutter.east": {
+"d": 0.67,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.east.mp3",
+"t": "East."
+},
+"vane.cutter.fly": {
+"d": 0.89,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.fly.mp3",
+"t": "Can she fly?"
+},
+"vane.cutter.how": {
+"d": 1.15,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.how.mp3",
+"t": "How do you know that?"
+},
+"vane.cutter.howlow": {
+"d": 1.49,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.howlow.mp3",
+"t": "Pennick, how low can you put her?"
+},
+"vane.cutter.lower": {
+"d": 0.72,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.lower.mp3",
+"t": "Lower."
+},
+"vane.cutter.mags": {
+"d": 10.34,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.mags.mp3",
+"t": "Mags. Down, and tell Hetty: everything they can stuff into the straw, round every crate. Blankets, coats, the canvas, the sail-locker spares. Pack it like glass for a long haul."
+},
+"vane.cutter.nottrumpet": {
+"d": 1.1,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.nottrumpet.mp3",
+"t": "It's not a trumpet."
+},
+"vane.cutter.starboard": {
+"d": 6.82,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.starboard.mp3",
+"t": "Don't cut it! Mags! Starboard! Take her starboard \u2014 into the trees \u2014 I want that cutter's bow where we are now in four seconds\u2014"
+},
+"vane.cutter.thenfly": {
+"d": 1.06,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.thenfly.mp3",
+"t": "Then she can fly."
+},
+"vane.cutter.twentyone": {
+"d": 3.14,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.twentyone.mp3",
+"t": "Twenty-one. And four hundred and thirty-two. And one screaming."
+},
+"vane.cutter.twentyone2": {
+"d": 2.21,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.twentyone2.mp3",
+"t": "Twenty-one. And four hundred and thirty-two."
+},
+"vane.cutter.water": {
+"d": 5.04,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.cutter.water.mp3",
+"t": "Water over the side. All of it. And the spare envelope canvas, and the tackle, and that chain."
 },
 "vane.greet.blunt": {
 "d": 5.83,
