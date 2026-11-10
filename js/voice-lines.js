@@ -2020,6 +2020,41 @@ const VOICE_LINES = {
 "t": "He is not to be looked at. Whoever you are. He has a cough.",
 "voiceOf": "nell"
 },
+"orla.graft.dont": {
+"d": 1.56,
+"kind": "narration",
+"speaker": "orla",
+"src": "voices/orla/orla.graft.dont.mp3",
+"t": "Don't, lovey."
+},
+"orla.graft.girl": {
+"d": 6.02,
+"kind": "narration",
+"speaker": "orla",
+"src": "voices/orla/orla.graft.girl.mp3",
+"t": "Here's my girl. And the sawbones. Come in, come in. I'd get up, but. I'm afraid I've put down roots."
+},
+"orla.graft.goodgirl": {
+"d": 1.49,
+"kind": "narration",
+"speaker": "orla",
+"src": "voices/orla/orla.graft.goodgirl.mp3",
+"t": "Good girl."
+},
+"orla.graft.hurt": {
+"d": 12.17,
+"kind": "narration",
+"speaker": "orla",
+"src": "voices/orla/orla.graft.hurt.mp3",
+"t": "It doesn't hurt. I thought it would. It doesn't. It's like... It's like being held. From underneath. Like the whole of the ground's got its arms round me. I'm not frightened. I was, in the spring. I'm not now."
+},
+"orla.graft.singme": {
+"d": 9.38,
+"kind": "narration",
+"speaker": "orla",
+"src": "voices/orla/orla.graft.singme.mp3",
+"t": "But you'll sing me down. When it's time. Won't you? Proper, mind. Not in a jar. Not in the Narrow. Proper, the way I sang the harvest home. You promise me."
+},
 "orla.green.held": {
 "d": 9.36,
 "kind": "narration",
@@ -2336,6 +2371,90 @@ const VOICE_LINES = {
 "src": "voices/requiem/requiem.coda.3.mp3",
 "t": "He was a good man, he was a good man, he was a good man.",
 "voiceOf": "chorus_mourners"
+},
+"rooke.graft.ahead": {
+"d": 1.8,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.ahead.mp3",
+"t": "Ah. You went ahead of me."
+},
+"rooke.graft.cantor": {
+"d": 0.98,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.cantor.mp3",
+"t": "Cantor."
+},
+"rooke.graft.early": {
+"d": 1.75,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.early.mp3",
+"t": "Early. Very early."
+},
+"rooke.graft.fourdays": {
+"d": 8.71,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.fourdays.mp3",
+"t": "He's four days out. He carries a warrant from the High Patriarch for the purification of the Hollow, and the warrant names the marked houses. My marks."
+},
+"rooke.graft.leftme": {
+"d": 2.09,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.leftme.mp3",
+"t": "Well. Let's see what you've left me."
+},
+"rooke.graft.list": {
+"d": 2.45,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.list.mp3",
+"t": "The Inquisitor has asked for the list."
+},
+"rooke.graft.receding": {
+"d": 3.12,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.receding.mp3",
+"t": "And receding, I'd have said. If I didn't know better."
+},
+"rooke.graft.sapmark": {
+"d": 11.88,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.sapmark.mp3",
+"t": "The sap-mark. It means past cutting. That's all it has ever meant. It meant I would come back each month and keep her comfortable, and at the end, when it was time, I'd give her the long drops and you would sing, and her son would bury her."
+},
+"rooke.graft.saws": {
+"d": 4.63,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.saws.mp3",
+"t": "My saws leave people alive. At least there's that. Most days there's that."
+},
+"rooke.graft.told": {
+"d": 5.78,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.told.mp3",
+"t": "I have been told that if I stop making them, someone will be sent to make them for me. Someone less careful."
+},
+"rooke.graft.unusual": {
+"d": 3.29,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.unusual.mp3",
+"t": "Unusual. Recheck next month. Keep him out of the damp."
+},
+"rooke.graft.walk": {
+"d": 1.8,
+"kind": "narration",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.graft.walk.mp3",
+"t": "Good. Clean. He'll walk."
 },
 "rooke.green.couldnot": {
 "d": 11.95,
