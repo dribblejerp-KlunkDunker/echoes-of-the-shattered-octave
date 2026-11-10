@@ -10,9 +10,161 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
   - The Watch Downs are west of the clearing.
   - Wethercombe is past the Downs stile.
   - The Flume Road runs from Oakhaven's east Hedge door.
-  - The Hollow is through the tannery's back door; the Carders' house is the blue door on the north row.
+  - The Hollow is through the tannery's back door; the Carders' house is the blue door halfway down its lane.
+  - Lyra's stone is behind the old cooperage, against the east Hedge.
+  - Depot Three is in the quarry (down the headframe ladder in the clearing). The slag-slope is its back wall.
+  - The Conservatory's reed-hall and orchard are through the east wall of the Conservatory Reading Room.
+  - The Governor's house is the north-row door beside the Greenhall. The standing-stones are through the second gap in the clearing's east hedge.
 
 ---
+
+## Orla's harvest home (built 8 Nov; ROADMAP R9 item 17)
+
+Bring Davin's boots to Orla Hale in the Hollow (after Hearthday night), then speak to her again. Come back on each of the next three days for a line of The Last Sheaf. Try one lesson with the shutters open. Then, at the Greening, go with Lyra to Orla's tree.
+
+- **"Was he any good?"** Does each answer feel right?
+- **The lessons.** One a day: too slow? The fourth line is meant to be hard. Is it hard enough, or too hard?
+- **The open shutters.** Is the Hedge singing the line back to you enough of a warning?
+- **The Song itself.** Sing it somewhere dangerous. Do the hounds come?
+
+Notes:
+
+## The lived-in world, wave 3: Port Cantabile's harbour (built 8 Nov; ROADMAP R10 W3)
+
+Start "A trip to Port Cantabile" from the Extras menu. Walk the Lantern Yard and the Long Mole through the day; be at the Harbour office at noon, and on the Yard at dusk.
+
+- **The Yard and the Mole.** Do they feel busy? Is anyone in your way on the Mole?
+- **The Mole-bell.** When it rings, everyone should stand still and say nothing until the harbour has counted. Does that land?
+- **Hesper's children.** Too many? Too loud?
+
+Notes:
+
+## Aldric's arc: the Greenhall on Rootday, and the signing (built 8 Nov; ROADMAP R9 item 16)
+
+On a new game, meet Kaelen on the first day (Nullday). On Rootday from eight in the morning, go into the Greenhall: you come in behind him. Try staying when the Factor goes, and on another run, going out with her. Then on Driftday at dusk (17:00 to 20:00), go into the Greenhall again for the signing.
+
+- **The Rootday scenes.** They are five cards of the book's words. Too long to read in the game?
+- **Aldric afterwards.** Speak to him after the brandy: does his line about Marrit and the key lead you up to the house?
+- **The signing.** Is the timing too easy to miss?
+
+Notes:
+
+## The lived-in world, wave 2: Whisper-Grove's Hollows (built 8 Nov; ROADMAP R10 W2)
+
+Walk Whisper-Grove by day, at dusk (18:00, when they drift into the Sunken Court) and at night. Look for the book's three: the woman in the wool coat walking between the third pillar and the basin; the two men at the corner of the colonnade (north of the court, by the Malting); the young man washing a plate by the south-west pool.
+
+- **Do they read as Hollows?** Slow, repeating, not looking at you.
+- **The dusk drift.** Do they reach the court in a believable way, like leaves, not like a march?
+- **The Office feeder.** He appears with his cart at dawn and dusk. Too much? Too little?
+
+Notes:
+
+## The Malting's front door and the queue (built 7 Nov; ROADMAP R9 item 15)
+
+In Part Three, once Sable has joined, go through the Malting door on Whisper-Grove's Cloister road: it now opens on the queue-yard. Pick a half from Vane's plan. To try the queue, choose "Stay under the shelter" and talk to the people on the benches.
+
+- **The first sight.** Does the queue land, coming out of the fog of the orchard? Do you recognise Oakhaven's people?
+- **In at the front.** Four cards, ending with you in the press room beside Sable. Too long? Too short?
+- **Working the queue.** Four people gone, or one told while the clerk is close, and the bell rings. Is the clerk easy enough to see coming down the aisle? Is four the right number?
+- **Sable's line afterwards.** Does it read as earned?
+
+Notes:
+
+## The lived-in world, wave 1: Oakhaven's people (built 7 Nov; ROADMAP R10 W1)
+
+Walk Oakhaven at different hours: early morning (6–8), mid-morning, noon (the bench by the square), afternoon, dusk (19:00, when they go in), the evening (the Boar's door, the window-lamps), and the dead hour (only the watch). Use REST to jump; everyone snaps to where the new hour puts them. Talk to anyone in the street.
+
+- **Busy or crowded?** About 20 people are out by day. Does the square feel alive without feeling like a fair? Is anyone in the way?
+- **Whispers.** Overheard lines come every 11 seconds or so at most, from whoever is nearest. Too many? Too few?
+- **The walks.** They take real routes round the houses. Does anyone look stuck, or walk oddly (into a fence, a crate, a tree)?
+- **The jobs.** Selling, sweeping, hammering, picking, scrubbing, hanging washing, raking, playing. Can you tell what each person is doing from how they move?
+- **At home time** they walk to their door and vanish. Does it read as going in?
+## The Reedside Conservatory (built 7 Nov; ROADMAP R5 #7)
+
+In Oakhaven, the Conservatory Reading Room (Ilse Brennan's library, south of the chapel). The new door is in its east wall. Through the reed-hall to the reed orchard. Parts One and Two.
+
+- **Does it feel like a school?** Forty students, down from four hundred: four figures and a lot of empty pews. Too empty, or the point?
+- **The youngest student's tending note** is a Hold the Pitch at 174. Is it clear that you are singing it with her?
+- **The orchard** is mostly to look at: the hollow, the tally-board, the flagstone. Is there enough to do there?
+
+Notes:
+
+## Cargo night, Tobiah's book, the eight men at the pumps (built 7 Nov; ROADMAP R9 items 14, 18, 19)
+
+Cargo night: use the Kestrel's mast-ladder in Oakhaven (east, by the crates) on Driftday (game day 6) after 19:00, and again at the dead hour after (before 05:00). The long gun goes over the slag-slope at Depot Three's back wall. Tobiah: talk to him on the pump floor in the quarry, first as a Blade or an archivist, and again after Dawnday. The pumps: in Part Three, go down the archive steps in the Malting (the door in the clerks' hall).
+
+- **Stall the Clerk.** Three rounds, a topic a round. Is it obvious which topic turns his eye to the bow, or too obvious?
+- **Two visits to one ladder** on one night. Will players think to climb it twice?
+- **The archive voice** fires as you come down the steps. Is it clear where the grey-spined box is (the right-hand wall, between the shelves)?
+
+Notes:
+
+## The Church comes up the road, played (built 7 Nov; ROADMAP R9 item 13)
+
+Book One ch. 7. Be in Oakhaven (the streets, not a house) between 06:00 and 07:30 on Dawnday, game day 5; REST to Dawnday morning first. The tests drive the gatehouse and staying where you are, a noise while the column passes, the warrant, the well-house with and without the glassed calling, arriving within the hour, and missing it. What they cannot judge:
+
+- **Does the column read as thirty voices?** It stages sixteen of the choir, six Flambeaux, the herald and the Inquisitor. From the gatehouse the road is short: is it visible enough before it turns into the square?
+- **The Pure Note over the town.** It hums faintly whenever you are in the streets, from now until the Rite. Too quiet to notice, or too much after an hour?
+- **The well-house.** Kaelen and the Inquisitor stand at the east side of the square until 08:00. Will a player find them?
+
+Notes:
+
+## Tamsin Reed and "Tell Mam" (built 7 Nov; ROADMAP R9 item 10)
+
+Book One ch. 5 and 7. The Legionnaire with the reed grille guards Depot Three in the quarry. Come within three paces. The glassed calling can take it by the bell; an archivist can read it its name; anyone can fight it. The head of the slag-slope is at the depot's back wall (G to send a body over). Then: the next morning, Kaelen's hut; the Factor in the Greenhall; in Part Three, Sable in Whisper-Grove with the cracked core, and the woman at the window on the Bell Yard. The tests drive every choice. What they cannot judge:
+
+- **Dragging her to the slag-slope.** The body system was built for patrols. Is it clear that the slope is where she goes?
+- **The dawn at Kaelen's hut** only happens the first morning after (05:00 to 09:00). Is that too narrow?
+- **The Bell Yard ending.** Three choices, all quiet. Does saying her name land?
+
+Notes:
+
+## The slate and the bells (built 7 Nov; ROADMAP R9 item 12) and Manifest (R9 item 11)
+
+The slate: in Part One, talk to Kaelen, Lyra, Tobiah or Vane with a Legionnaire within seven paces and in sight (Lyra's door guards count, from Dawnday). The Factor's morning walk is 06:00 to 09:00 on a later day, in Oakhaven, the clearing, the quarry or the Greenhall. Manifest: once Sable has joined in Whisper-Grove, go down into the Kestrel's hold.
+
+- **Is the bell card annoying?** It asks once per person per day. Lyra's guards stand in her house, so every visit to her in custody asks. Too often?
+- **Is writing on the slate too free?** It costs ten minutes and nothing else. Should saying it aloud give something writing does not?
+- **Manifest** is five cards of the book's text with one choice. Is it too much reading in one sitting, or right for this scene?
+
+Notes:
+
+## Ash in the Hold, played (built 7 Nov; ROADMAP R9 item 8)
+
+Book One ch. 13. Finish Part Two and press "Begin Part Three": the night aboard is offered first. The tests drive both ways of starting, every beat, both Vanes, the seams found and missed, both Tobiahs, the beam with and without the coat, and saves in the hold and during the seams. What they cannot judge:
+
+- **Is the night long enough to feel?** Nothing forces you to the hospital or Hetty; the hold or the bedroll moves you on to the fourth hour. Does it need a nudge?
+- **The seams.** Five green seams, 140 seconds, a timer on screen. Are they findable on the dark deck without being obvious?
+- **Hob's card.** It is the book's scene nearly whole. Too long to read in one go?
+
+## The forty-one nights (built 7 Nov; ROADMAP R9 item 7)
+
+Book One ch. 1 and 3. The stone is behind the old cooperage, against the east Hedge (north-east of Old Tam's bench). Be within six paces of it at the dead hour after the first evening (game day 1, before 05:00), and again the next night. Questions: is anyone going to be there at 2 a.m. on the first night without being told? Should a rumour or a dream point at it? Is "tell Kaelen" worth having when it only changes lines?
+
+## The water-meadow, played (built 6 Nov; ROADMAP R9 item 4)
+
+Book One ch. 6. Be in the town's low corner (Oakhaven, the tannery or the Hollow) on Massday as 19:00 comes; REST to Massday evening, then walk to the Hollow. The tests drive both crossings, the duel with good and cracked whistles, the run, Tam's walk and a save in the meadow. What they cannot judge:
+
+- **Is the meadow readable at dusk?** Pim and the shape at the trees should be visible from the culvert. The light is the game's own dusk; the shape glows faintly.
+- **The whistle duel.** Three Hold the Pitch rounds of the falling fifth, an octave up. Does watching it learn (a sixth, a wide fifth, exactly right) land?
+- **The run.** About nine seconds of hounds before Tam comes out. Too long, too short? It is meant to be survivable, not won.
+- **Tam's walk.** The hounds veer past you to him. Does it read as him choosing it?
+
+## Hearthday at the Boar & Dulcimer, played (built 6 Nov; ROADMAP R9 item 5)
+
+Book One ch. 4. Be in the Boar on Hearthday (day 2) as 20:00 comes; Davin is by the hearth from noon, Kaelen and Lyra from seven. The tests drive every choice, both ways of drawing the hounds, a save mid-fight and missing it. What they cannot judge:
+
+- **The count.** Ten beats at 1.15 s; "try to stop him" with Strength or Personality 55+ holds it back about two beats. Is the count tense or slow?
+- **The fight.** Five hounds through the gaps; Vane and Kaelen take three on a fixed clock, and two are left when the card asks who will be the loudest thing. Is there enough to do with a sword before the card?
+- **The aftermath card.** It is long. Is it worth reading in full?
+
+## The standing-stones (built 6 Nov; ROADMAP R5 #6)
+
+The second gap in the clearing's east hedge, north of the Greenroot road's. Use the hollow at the foot of the tallest stone, then hold a note at each stone sunwise. Questions: is "sunwise from the Root" clear without a map? Are the hounds a threat to the count, or just noise? Are five-second holds at seven pitches (174 to 741 Hz) too much in a row?
+
+## The Governor's house (built 6 Nov; ROADMAP R5 #5)
+
+The north-row door beside the Greenhall, Parts One and Two only. Upstairs first, then talk to Aldric in the Greenhall, then the coat goes to the hut's step in the clearing. Questions: does the house feel lived in by one man? Is the coat errand findable without the logbook? The dressing-table is the reveal; does it land before or after the novel's "Da. Your hair."?
 
 ## Grab the Line, played (built 6 Nov; ROADMAP R9 item 2)
 

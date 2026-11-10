@@ -122,6 +122,7 @@ const SHOT_DIR = process.env.SHOT_DIR || '';
     const steps = await page.evaluate(() => {
       const W = window.__w, check = W.check;
       GFX.plain(); GFX.reflections = true; W.quiet();
+      GFX.life = false;   // the townsfolk and Hollows on their loops (js/life60.js) wade too: hold them still for this
       for (const e of G.maps.whispergrove.entities) if (e.kind === 'npc') e.hidden = true;
       let t = 100;
       const step = (keys) => { G.keys = keys || {}; update(0.033); t += 0.033; Engine.setTime(t); Engine.render(G.ents, G.tod); };

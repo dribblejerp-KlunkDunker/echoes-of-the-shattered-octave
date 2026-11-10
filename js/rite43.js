@@ -497,12 +497,15 @@ const RITE43 = (function () {
         echo(TX.needleSeen + '<br><br>' + TX.echoNeedle, () => { stageVault(G.map); say(TX.needleHint, 'warn', 6000); });
         return;
       }
-      setStage(4); R.bolt = 0; R.watched = 0; R.q = 0; R.kaelenAt = 'drum';
+      setStage(4); R.bolt = 0; R.q = 0; R.kaelenAt = 'drum';
+      // what the Factor's bells told her before Hearthday: her eye is partly on the collar walk already (js/audit54.js)
+      R.watched = auditHead();
       card(TX.needleTitle, TX.needleGood, [{ t: TX.needleGo, f: () => card(TX.holdTitle, TX.hold, [{ t: TX.holdGo, f: () => { stageVault(G.map); say(TX.holdHint, 'warn', 8000); } }]) }]);
     }
   }
 
   // ================================================================ 4 · the Hold and the bolts
+  const auditHead = () => { try { return typeof AUDIT54 !== 'undefined' ? Math.max(0, Number(AUDIT54.ritePenalty()) || 0) : 0; } catch (e) { return 0; } };
   const humming = () => (G.murmurT > 0) || (G.song && G.song.t > 0) || (G.songFx > 0);
   function tickHold(dt) {
     if (G.mapId !== 'rootvault') return;
@@ -518,7 +521,7 @@ const RITE43 = (function () {
     if (R.q > 0.5 && !f.r43_fuse) { f.r43_fuse = true; say(TX.fuse, '', 9000); }
     if (R.watched > WATCH_LIMIT * 0.6 && !R.turned) { R.turned = true; say(TX.voskTurns, 'warn', 6000); }
     if (R.watched >= WATCH_LIMIT) {   // in the book nobody stops him: the lenses on the plate are an Echo, and the Hold again
-      f.r43_echoes = (f.r43_echoes | 0) + 1; R.bolt = 0; R.watched = 0; R.turned = false; R.q = 0;
+      f.r43_echoes = (f.r43_echoes | 0) + 1; R.bolt = 0; R.watched = auditHead(); R.turned = false; R.q = 0;
       echo(TX.boltsLost + '<br><br>' + TX.echoHold, () => { stageVault(G.map); say(TX.holdHint, 'warn', 8000); });
       seq(['vosk.rite.stepaway']);
       return;
