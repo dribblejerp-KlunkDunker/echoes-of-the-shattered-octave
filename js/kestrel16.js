@@ -35,14 +35,14 @@
 //
 //  THE CREW [PROPOSED for Book One; the game's own text wins]. Mags Tennant (bosun) and Tobiah Marsh (second engineer) are
 //  already in the game (js/data.js mags_dw: she stopped hearing, reads lips, speaks aloud and knows hand-cant). The engineer
-//  is UNNAMED (author's ruling 2026-10-20: Pennick is a Book Two person; titles, not names; the internal id stays 'pennick'
-//  for saves): the FIRST engineer Tobiah is second to, who has been below the whole time. Nobody is
+//  is Pennick, as the book names him (ch. 8, 12, 21, 24; the owner, 10 Nov, superseding the 20 Oct ruling that kept him
+//  unnamed; the internal id 'pennick' is unchanged for saves): the FIRST engineer Tobiah is second to, who has been below the whole time. Nobody is
 //  recruited by force: each has a short beat in dialogue, a place aboard, a daily line and one small effect.
 //    Mags     (deaf, lip-reads, speaks and signs)  part3+; pay 30 sovereigns for a new lens   ambush chance x0.65 on map-table journeys
 //             Her lines are italic with a [signs] note (she signs as she speaks). She answers ONLY when she can see your face: stand in front of her
 //             (within 7 cells, her facing within ~78 degrees of you). From behind she does not hear you; after 4 s of you
 //             standing within 3.4 cells she feels the deck move and turns round.
-//    engineer (unnamed, pessimist)     tank_patched and the envelope fitted          gold cost of every upgrade x0.80; builds the new tank
+//    engineer (Pennick, pessimist)     tank_patched and the envelope fitted          gold cost of every upgrade x0.80; builds the new tank
 //    Nell     (the mill; only if pim_safe) the stove is fitted                         once a game day, one Hearth Bread
 //    Abner      (the tanner; only if twins_named, i.e. he climbed) the lanterns fitted   once a game day, +35 condition to the readied weapon
 //    (Pim Carder, with his mother, sits in the bunk room when pim_safe: the existing NPC, no effect.) Nobody who dies in the
