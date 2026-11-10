@@ -16,10 +16,9 @@ function placeSet() {
 function startPart4() {
   const f = G.flags;
   if (f.part4) return;
+  if (typeof CUTTER68 !== 'undefined' && CUTTER68.start()) return;   // Ten Heartbeats, played on the deck (js/cutter68.js); this card is the fallback
   hide('#event'); hide('#death'); closeModal();
-  f.part4 = true; f.sable_with = !!f.sable_joined;
-  if (f.folder_given) f.lyra_voice = true;   // Kaelen already told her everything, back in the Malting
-  G.day += 1; G.tod = 0.8; G.escapeTimer = 0; G.dead = false;
+  part4State();
   const L = [];
   L.push(`Eleven hundred pounds overloaded: a press, an archivist${f.sable_with ? '' : ' the Reach will not name'}, twenty-one survivors${f.aegis_follow ? ', and a nine-foot automaton coming up the mast-ladder with a red cloak held to its chest' : ''}. The Kestrel lifts off the water of Whisper-Grove like a cart going uphill.`);
   L.push('An hour out, an Office cutter comes out of the mist behind you, hunting by sound: a brass listening-horn on the bow, grey canopy, OC-742 on the hull. A courier-cutter: four hard little tanks and no envelope, too light to carry anything but paper and proctors. She does not need to see you. The Kestrel\'s own hold has four hundred and thirty-two people murmuring in it. Hetty packs blankets round every crate, and Vane flies the canopy at forty feet. The cutter puts a grapnel into the Kestrel\'s rail, and the line goes taut, and Vane\'s hand goes to the boarding axe.');
@@ -28,6 +27,13 @@ function startPart4() {
     { t: 'Say nothing. Let him count.', f: () => part4Chase(false) },
     { t: '"Cut it, Vane."', f: () => part4Chase(true) },
   ]);
+}
+// the passage's state: Part Four begins (shared with js/cutter68.js, which plays the chase and then lands here)
+function part4State() {
+  const f = G.flags;
+  f.part4 = true; f.sable_with = !!f.sable_joined;
+  if (f.folder_given) f.lyra_voice = true;   // Kaelen already told her everything, back in the Malting
+  G.day += 1; G.tod = 0.8; G.escapeTimer = 0; G.dead = false;
 }
 function part4Chase(toldCut) {
   const f = G.flags; f.vane_told_cut = toldCut;
