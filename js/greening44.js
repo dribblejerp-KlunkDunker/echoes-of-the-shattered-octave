@@ -215,7 +215,7 @@ const GREEN44 = (function () {
   const SQUARE = [23.5, 26.0];
   const PIECES = [['churchyard', 12.0], ['bakery', 19.0], ['carter', 35.4], ['hollow', 48.0]];   // by Lyra's place on the lanes
   const DOORWAYS = [[21.0, 47.2], [26.0, 44.6], [21.0, 41.6], [26.0, 38.2], [21.0, 33.6], [26.0, 31.4]];
-  const PACE_LANES = 1.5, PACE_LINE = 0.75, SPACING = 0.85, LINE0 = 6, HOLD_SECS = 40, SHOUT_SECS = 22;
+  const PACE_LANES = 1.5, PACE_LINE = 0.75, SPACING = 0.85, LINE0 = 6, HOLD_SECS = 40;
   const SHEAF_ROOT = [[0, 174], [8, 174]], SHEAF = [[0, 174], [0.8, 196], [1.6, 220], [2.4, 196], [3.2, 174], [4.0, 196], [4.8, 233], [5.6, 220], [6.4, 196], [7.2, 174], [8, 174]];
   const FOURTH_ROOT = [[0, 174], [4, 174]], FOURTH = [[0, 220], [1.0, 262], [2.0, 294], [3.0, 262], [4, 262]];
 
@@ -223,7 +223,7 @@ const GREEN44 = (function () {
   const setStage = (n) => { F().g44 = n; };
   const live = () => hasG() && !guest() && !!F().greening && !F().escaped && !F().part3 && !F().part4 && ((G.escapeTimer || 0) > 0 || ((F().g44 | 0) >= 1 && (F().g44 | 0) <= 5));   // only while the escape runs
   const active = () => live() && stage() >= 1 && stage() <= 5;
-  const R = { drone: 0, lyraWait: 0, hounds: 0, hold: 0, gt: -1, gi: 0, after: -1, shoutT: 0, greenT: 0, said: {} };
+  const R = { drone: 0, lyraWait: 0, hounds: 0, hold: 0, gt: -1, gi: 0, after: -1, greenT: 0, said: {} };
 
   const keyed = (m, k) => (m && m.entities || []).find((e) => e && e._g44 === k);
   function put(m, k, e) {
@@ -339,7 +339,7 @@ const GREEN44 = (function () {
   // ================================================================ 2 · the corridor
   function startCorridor() {
     const f = F(); if (stage() !== 1) return;
-    setStage(2); f.g44_d = 0; f.g44_line = LINE0; f.g44_pulled = []; f.g44_lost = 0; f.g44_joins = 0; R.hounds = 0; R.greenT = 0;
+    setStage(2); f.g44_d = 0; f.g44_line = LINE0; f.g44_pulled = []; f.g44_joins = 0; R.hounds = 0; R.greenT = 0;
     drop(G.map, (e) => e._g44 === 'baker' || e._g44 === 'carter');
     stageTown(G.map);
     card(TX.wellTitle, TX.well, [{ t: TX.wellGo, f: () => { journal('main', TX.jCorridor); say(TX.corridorHint, 'warn', 9000); } }]);
@@ -636,6 +636,6 @@ const GREEN44 = (function () {
 
   return { TX, TEXTS, VO, R, GATE, BLOCK, LANES, CORRIDOR, TO_ORLA, SQUARE, DOORWAYS, stage, live, active, seq, hush, along, polyLen, tailD, lineN,
     arriveTown, startCorridor, arriveSquare, atOrla, sheaf, orlaDone, toGate, adaGoes, noteStops, endLines, pull, tick, withScene,
-    consts: { PACE_LANES, PACE_LINE, SPACING, LINE0, HOLD_SECS, SHOUT_SECS } };
+    consts: { PACE_LANES, PACE_LINE, SPACING, LINE0, HOLD_SECS } };
 })();
 if (typeof window !== 'undefined') window.GREEN44 = GREEN44;

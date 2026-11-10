@@ -362,8 +362,9 @@ const ROPE45 = (function () {
     const f = F(); if (stage() !== 5) return;
     if (f.r45_hold && !f.r45_echo) {
       f.r45_echo = true; f.r45_hold = false;
-      try { const cv = document.querySelector('canvas'); if (cv) { cv.style.filter = 'grayscale(1) contrast(0.9)'; setTimeout(() => { cv.style.filter = ''; }, 9000); } } catch (e) { /* cosmetic */ }
-      card(TX.echoTitle, TX.echo, [{ t: TX.echoGo, f: () => { try { const cv = document.querySelector('canvas'); if (cv) cv.style.filter = ''; } catch (e) { /* cosmetic */ } R.ci = 8; R.ct = 8 * TICK; say(TX.c9, '', TICK * 1000 + 600); } }]);
+      const back = () => { R.ci = 8; R.ct = 8 * TICK; say(TX.c9, '', TICK * 1000 + 600); };
+      if (typeof RITE43 !== 'undefined' && RITE43.echo) { RITE43.echo(TX.echo, back, TX.echoTitle, TX.echoGo); seq(VO.echo); }
+      else card(TX.echoTitle, TX.echo, [{ t: TX.echoGo, f: back }]);
       return;
     }
     cut();
@@ -440,6 +441,7 @@ const ROPE45 = (function () {
     try { if (G.map === m && Engine.setMap) Engine.setMap(m); } catch (e) { /* cosmetic */ }
   }
   function onLoad() {
+    try { if (typeof RITE43 !== 'undefined' && RITE43.grey) RITE43.grey(false); } catch (e) { /* cosmetic */ }
     if (!hasG()) return;
     const m = G.map, s = stage();
     if (m && m.id === DECK) tint(m, aboard());

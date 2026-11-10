@@ -757,11 +757,11 @@ const VOICE_LINES = {
 "voiceOf": "ignatius"
 },
 "ignatius.rite.notch": {
-"d": 7.92,
+"d": 6.24,
 "kind": "narration",
 "speaker": "ignatius",
 "src": "voices/ignatius/ignatius.rite.notch.mp3",
-"t": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself. I have seated forty of these.",
+"t": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself.",
 "voiceOf": "ignatius"
 },
 "ignatius.rite.rubric": {

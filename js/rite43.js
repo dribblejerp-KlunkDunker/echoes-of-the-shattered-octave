@@ -49,9 +49,10 @@ const RITE43 = (function () {
     const v = CARD_VO && CARD_VO.find(([t]) => String(body).startsWith(t)); if (v) seq(v[1]);
   };
   // an Echo (GDD 4.9): a thread the book did not take, shown grey, and then the moment again
-  function echo(body, after) {
-    try { const cv = document.querySelector('canvas'); if (cv) { cv.style.filter = 'grayscale(1) contrast(0.9)'; } } catch (e) { /* cosmetic */ }
-    card(TX.echoTitle, body, [{ t: TX.echoGo, f: () => { try { const cv = document.querySelector('canvas'); if (cv) cv.style.filter = ''; } catch (e) { /* cosmetic */ } if (after) after(); } }]);
+  const grey = (on) => { try { const cv = document.querySelector('canvas'); if (cv) cv.style.filter = on ? 'grayscale(1) contrast(0.9)' : ''; } catch (e) { /* cosmetic */ } };
+  function echo(body, after, title, go) {   // shared with js/rope45.js
+    grey(true);
+    card(title || TX.echoTitle, body, [{ t: go || TX.echoGo, f: () => { grey(false); if (after) after(); } }]);
   }
   // the voices (voices/script.json, rendered by tools/voices/build.py): narration is not auto-played by onMsg, so the
   // Rite plays its own, one line after another; a newer card or message cuts the one before, and a choice hushes it.
@@ -492,7 +493,7 @@ const RITE43 = (function () {
     R.needle -= dt;
     if (R.needle <= 0) {
       if (R.seen >= NEEDLE_SEEN) {   // the book's Inquisitor never sees: seen is an Echo, and the needle again
-        F().r43_echoes = (F().r43_echoes | 0) + 1; R.needle = NEEDLE_SECS; R.seen = 0;
+        F().r43_echoes = (F().r43_echoes | 0) + 1; R.needle = F().r43_marched ? NEEDLE_SECS - 4 : NEEDLE_SECS; R.seen = 0;
         echo(TX.needleSeen + '<br><br>' + TX.echoNeedle, () => { stageVault(G.map); say(TX.needleHint, 'warn', 6000); });
         return;
       }
@@ -671,10 +672,11 @@ const RITE43 = (function () {
     return false;
   }
   function onLoad() {
+    grey(false);   // an Echo left open by a load never leaves the world grey
     if (!hasG()) return;
     const s = stage(), m = G.map;
     if (s === 1 && m && m.id === 'oakhaven') { if (!lyraOf(m)) stageColumn(m); }
-    if (s >= 2 && s <= 6 && m && m.id === 'rootvault') { stageVault(m); if (s === 3) { R.needle = NEEDLE_SECS; R.seen = 0; } if (s === 6 && R.count <= 0) { R.count = COUNT; R.lastSaid = 99; } }
+    if (s >= 2 && s <= 6 && m && m.id === 'rootvault') { stageVault(m); if (s === 3) { R.needle = F().r43_marched ? NEEDLE_SECS - 4 : NEEDLE_SECS; R.seen = 0; } if (s === 6 && R.count <= 0) { R.count = COUNT; R.lastSaid = 99; } }
   }
   function wire() {
     if (typeof update === 'function') {
@@ -747,7 +749,7 @@ const RITE43 = (function () {
   }
   try { wire(); } catch (e) { console.warn('rite43 failed to wire', e); }
 
-  return { TX, TEXTS, VO, seq, hush, slug, R, V, LEFT, DOOR, PATH, COLUMN, KERB, stage, ready, begin, startNeedle, singDown, enough, pour, stageVault, stageColumn, blocked, layout, usePump, onSong, tick, pathAt, pathLen,
+  return { TX, TEXTS, VO, seq, hush, slug, echo, grey, R, V, LEFT, DOOR, PATH, COLUMN, KERB, stage, ready, begin, startNeedle, singDown, enough, pour, stageVault, stageColumn, blocked, layout, usePump, onSong, tick, pathAt, pathLen,
     consts: { NEEDLE_SECS, NEEDLE_SEEN, BOLT_SECS, WATCH_LIMIT, COUNT, UNHOOK_SECS } };
 })();
 if (typeof window !== 'undefined') window.RITE43 = RITE43;
