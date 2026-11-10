@@ -28,6 +28,14 @@ Finish the coda and close the Kestrel's tank, so the herald comes up the south r
 - **The answer and the bow.** Does standing a yard behind Lyra's shoulder feel like enough to do? Is forty-five seconds the right wait at the bow?
 - **The slate.** Without her voice, do Lyra's long speeches read well as slate writing?
 - **The hold.** Is Vane at the crates easy to find? Is the deck-beam?
+## The Grafters' Rootday round (built 10 Nov; ROADMAP R9 #22)
+
+On a new game, go through the tannery's back door into the Hollow on Rootday (the second day) between eight in the morning and two in the afternoon. Try each way round: beside Lyra, with the Grafters, and from the lane. Walk to Hob Wendle's step (across the lane from the red shutters), then in at the blue door. Try rubbing the mark off Orla's door once. On another run, leave by the tannery halfway, or come after two.
+
+- **The cards.** Seven cards of the book's words. Too long to read in the game? Does Rooke's voice sit right under them?
+- **Getting about.** Is it clear where to go after the wagon card (Hob's step) and after Hob (the blue door)? The cut up to Orla's house and back down to Lissa: does it jar?
+- **Your part.** Do the three ways feel different enough, with only one line each per beat?
+- **The mark.** After the round, look at the green circle on Orla's door in the street. Does it read?
 
 Notes:
 

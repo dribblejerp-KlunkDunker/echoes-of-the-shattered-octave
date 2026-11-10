@@ -3705,6 +3705,139 @@
    "text": "Right.",
    "source": "herald66.js TX.n1 (Book One ch. 24)",
    "delivery": "low"
+  },
+  {
+   "id": "rooke.graft.cantor",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "Cantor.",
+   "source": "grafters67.js TX.wagon (Book One ch. 3)"
+  },
+  {
+   "id": "rooke.graft.ahead",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "Ah. You went ahead of me.",
+   "source": "grafters67.js TX.wagon (Book One ch. 3)",
+   "delivery": "low"
+  },
+  {
+   "id": "rooke.graft.leftme",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "Well. Let's see what you've left me.",
+   "source": "grafters67.js TX.wagon (Book One ch. 3)",
+   "delivery": "tired"
+  },
+  {
+   "id": "rooke.graft.walk",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "Good. Clean. He'll walk.",
+   "source": "grafters67.js TX.hobEnd (Book One ch. 3)",
+   "delivery": "low"
+  },
+  {
+   "id": "rooke.graft.early",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "Early. Very early.",
+   "source": "grafters67.js TX.pim2 (Book One ch. 3)",
+   "delivery": "low"
+  },
+  {
+   "id": "rooke.graft.receding",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "And receding, I'd have said. If I didn't know better.",
+   "source": "grafters67.js TX.pim2 (Book One ch. 3)",
+   "delivery": "low"
+  },
+  {
+   "id": "rooke.graft.unusual",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "Unusual. Recheck next month. Keep him out of the damp.",
+   "source": "grafters67.js TX.pim2 (Book One ch. 3)"
+  },
+  {
+   "id": "rooke.graft.sapmark",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "The sap-mark. It means past cutting. That's all it has ever meant. It meant I would come back each month and keep her comfortable, and at the end, when it was time, I'd give her the long drops and you would sing, and her son would bury her.",
+   "source": "grafters67.js TX.lane (Book One ch. 3)",
+   "delivery": "low"
+  },
+  {
+   "id": "rooke.graft.list",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "The Inquisitor has asked for the list.",
+   "source": "grafters67.js TX.lane (Book One ch. 3)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "rooke.graft.fourdays",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "He's four days out. He carries a warrant from the High Patriarch for the purification of the Hollow, and the warrant names the marked houses. My marks.",
+   "source": "grafters67.js TX.lane (Book One ch. 3)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "rooke.graft.told",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "I have been told that if I stop making them, someone will be sent to make them for me. Someone less careful.",
+   "source": "grafters67.js TX.lane (Book One ch. 3)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "rooke.graft.saws",
+   "speaker": "rooke",
+   "kind": "narration",
+   "text": "My saws leave people alive. At least there's that. Most days there's that.",
+   "source": "grafters67.js TX.lane (Book One ch. 3)",
+   "delivery": "tired"
+  },
+  {
+   "id": "orla.graft.girl",
+   "speaker": "orla",
+   "kind": "narration",
+   "text": "Here's my girl. And the sawbones. Come in, come in. I'd get up, but. I'm afraid I've put down roots.",
+   "source": "grafters67.js TX.orla (Book One ch. 3)"
+  },
+  {
+   "id": "orla.graft.dont",
+   "speaker": "orla",
+   "kind": "narration",
+   "text": "Don't, lovey.",
+   "source": "grafters67.js TX.orla2 (Book One ch. 3)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "orla.graft.hurt",
+   "speaker": "orla",
+   "kind": "narration",
+   "text": "It doesn't hurt. I thought it would. It doesn't. It's like... It's like being held. From underneath. Like the whole of the ground's got its arms round me. I'm not frightened. I was, in the spring. I'm not now.",
+   "source": "grafters67.js TX.orla2 (Book One ch. 3)",
+   "delivery": "whisper"
+  },
+  {
+   "id": "orla.graft.singme",
+   "speaker": "orla",
+   "kind": "narration",
+   "text": "But you'll sing me down. When it's time. Won't you? Proper, mind. Not in a jar. Not in the Narrow. Proper, the way I sang the harvest home. You promise me.",
+   "source": "grafters67.js TX.orla2 (Book One ch. 3)",
+   "delivery": "murmur"
+  },
+  {
+   "id": "orla.graft.goodgirl",
+   "speaker": "orla",
+   "kind": "narration",
+   "text": "Good girl.",
+   "source": "grafters67.js TX.orla2 (Book One ch. 3)",
+   "delivery": "murmur"
   }
  ],
  "skipped": [
