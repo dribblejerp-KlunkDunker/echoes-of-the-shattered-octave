@@ -1500,7 +1500,8 @@ const LONGNIGHT17 = (function () {
     const f = flags();
     const putFlags = () => { try { const was = JSON.parse(s.flagsAll); for (const k of Object.keys(f)) delete f[k]; Object.assign(f, was); } catch (e) { for (const k of Object.keys(f)) if (k.indexOf(FP) === 0) delete f[k]; Object.assign(f, s.flags); } };
     putFlags();
-    if (G.journal && G.journal.length > s.journalLen) G.journal.length = s.journalLen;
+    // journal() puts new entries at the front (unshift), so the visit's own entries are the first ones: drop those, not Book One's oldest
+    if (G.journal && G.journal.length > s.journalLen) G.journal.splice(0, G.journal.length - s.journalLen);
     // put the player back where the visit began, and take away maps that the visit alone made (a save never sees them)
     try {
       if (s.mapId && !inMine(s.mapId) && G.maps && G.maps[s.mapId]) { loadMap(s.mapId, { x: s.cam.x, y: s.cam.y, dir: s.cam.dir }); cam().pitch = s.cam.pitch || 0; }

@@ -42,7 +42,9 @@ const GRAFT67 = (function () {
   const partOne = () => { const f = F(); return !(f.greening || f.escaped || f.part3 || f.part4 || f.rite_started); };
   const warned = {};
   const warnOnce = (k, e) => { if (!warned[k]) { warned[k] = true; console.warn('grafters67: ' + k + ' failed', e); } };
-  const guest = () => { try { return typeof SYNC19 !== 'undefined' && !!SYNC19.isGuest(); } catch (e) { return false; } };
+  // stands down in a co-op guest's game and inside a title-menu extra, like cargo56 and lyra51: neither writes Book One flags
+  const inExtra = () => { try { return typeof EXTRAS17 !== 'undefined' && !!EXTRAS17.inExtra(); } catch (e) { return false; } };
+  const guest = () => { try { if (typeof SYNC19 !== 'undefined' && SYNC19.isGuest()) return true; } catch (e) { /* none */ } return inExtra(); };
   const jr = (t) => { try { journal('side', t); } catch (e) { /* none */ } };
   // the voices play through the Rite's player (js/rite43.js), so a newer card from any set-piece cuts the one before
   const seq = (ids) => { try { if (typeof RITE43 !== 'undefined') RITE43.seq(ids); } catch (e) { warnOnce('seq', e); } };
