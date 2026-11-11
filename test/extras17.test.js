@@ -85,7 +85,7 @@ async function boot(browser, viewport, opts) {
     await pg.locator('#btn-extras').click();
     const sp = await ev(() => ({ panel: G.openPanel, state: G.state, title: !document.getElementById('title').classList.contains('hidden'), text: document.getElementById('modal-panel').textContent }));
     check(sp.panel === 'x17spoil' && sp.state === 'title' && sp.title, 'first visit: the spoiler notice opens over the title');
-    check(/Some of these extras take place after Book One and spoil its ending\./.test(sp.text), 'the notice says the extras take place after Book One and spoil its ending');
+    check(/Some of these extras take place after Book One and spoil its ending\./.test(sp.text), 'the notice says some extras take place after Book One and spoil its ending');
     if (SHOTS) await pg.screenshot({ path: SHOTS + '/x17-spoiler.png' });
     await pg.keyboard.press('Escape');
     const esc = await ev(() => ({ open: !document.getElementById('modal').classList.contains('hidden'), state: G.state, title: !document.getElementById('title').classList.contains('hidden'), ack: EXTRAS17.state.ack }));

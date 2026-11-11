@@ -58,7 +58,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const js = allJs();
     check(!/Cantors? of Memory/.test(js) && /House of the Silent Veil/.test(js), 'nothing calls it a tomb of the Cantors of Memory; it is the House of the Silent Veil');
     // the owner, 10 Nov: name Pennick where the book names him, and the holed tank is number three (Book One ch. 8, 12, 21, 24)
-    check(!/number[- ]two (lift-)?tank(?!\. Sound)|\bTank two\b|engineer\\?'s (bench|slate|pride|opinion)|the engineer aboard/i.test(js), 'no module calls the holed tank number two, or Pennick only "the engineer" (his bench, his slate, the crew card)');
+    check(!/\bnumber[- ]two\b(?! lift-tank\. Sound)|\btank two\b|engineer\\?'s (bench|slate|pride|opinion)|the engineer aboard/i.test(js), 'no module calls the holed tank number two, or Pennick only "the engineer" (his bench, his slate, the crew card)');
     check(!/Pellam Dree|Wenna Marl|Annet Sorrel|Orrin Haft|Joss Wendle|Tanner twins/.test(js), 'near-collisions renamed: Tobit Dree, Bethan Marl, Aveline Sorrel, Barnaby Haft, Ned Wendle, the Wendle twins');
 
     // ---- the lore books

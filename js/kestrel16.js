@@ -30,7 +30,7 @@
 //    rail      35 + 2 Scrap                                        six trophy pegs                               pegged board + pegs
 //    bunks     40 + 2 Mesh + 1 Scrap                               rest also mends injuries                      four blanketed bunks
 //    chart     70 + 1 Mesh + 1 Shard                               map-table ambush chance x0.85                 awning, wall charts, sextant
-//    tank     140 + 6 Scrap + 4 Mesh + 2 Shard + 2 Governor-Gear   the two-mooring hop (needs Pennick, envelope, tank_patched)   a third, burnished tank
+//    tank     140 + 6 Scrap + 4 Mesh + 2 Shard + 2 Governor-Gear   the two-mooring hop (needs Pennick, envelope, tank_patched)   a new, burnished number three
 //  Materials are never out of reach: the chandler's locker in the hold sells Scrap 12, Mesh 18, Gear 30, Shard 55.
 //
 //  THE CREW [PROPOSED for Book One; the game's own text wins]. Mags Tennant (bosun) and Tobiah Marsh (second engineer) are
@@ -97,7 +97,7 @@ const KESTREL16 = (function () {
   // rail       3    35   2 Scrap                                          six trophy pegs aboard (hearth15 trophies)    a pegged board on the mess bulkhead
   // bunks      4    40   2 Proctor-Mesh, 1 Scrap                          rest aboard also mends injuries               four more bunks, blanketed
   // chart      5    70   1 Proctor-Mesh, 1 Light-Glass Shard               map-table ambush chance x0.85                 an awning, wall charts and a sextant
-  // tank       6   140   6 Scrap, 4 Mesh, 2 Shard, 2 Governor-Gear         fly between the two moorings (Pennick, tank patched, envelope fitted)   a third, burnished tank
+  // tank       6   140   6 Scrap, 4 Mesh, 2 Shard, 2 Governor-Gear         fly between the two moorings (Pennick, tank patched, envelope fitted)   a new, burnished number three
   const UPG = [
     { id: 'envelope', bit: 0, gold: 60, mats: [['v_mesh', 3], ['v_scrap', 1]] },
     { id: 'lamps', bit: 1, gold: 50, mats: [['shard', 1], ['v_scrap', 2]] },
@@ -165,6 +165,7 @@ const KESTREL16 = (function () {
       tankA: S('Number-one lift-tank. The oldest of the three and the steadiest.'),
       tankB: S('Number-two lift-tank. Sound, and the quietest of the three.'),
       tankThree: S('Number-three lift-tank, closed with weaverling silk and an Office valve. It hums a little flat.'),
+      tankThreeWhole: S('Number-three lift-tank, the youngest of the three.'),
       tankC: S('The new number-three lift-tank, built up from the cutter\'s. The brass has been rubbed until it looks wet.'),
       gauge: S('A pressure gauge. The needle has said forty since Oakhaven.'),
       bench: S('Pennick\'s bench. Every tool has a chalk outline, and every outline is occupied.'),
@@ -197,7 +198,7 @@ const KESTREL16 = (function () {
       back: S('Step back.'),
       hopMsgCamp: S('Pennick holds the number-three tank at pressure for four hours, and the Kestrel makes the hop to the Deep Woods and settles in the willows.'),
       hopMsgCourt: S('Pennick holds the tanks at pressure for four hours, and the Kestrel makes the hop back and hangs over the dry marble at the south landing.'),
-      hopNo: S('She will not make the hop yet. The tanks want a hand that knows them, and a third tank to share the load.'),
+      hopNo: S('She will not make the hop yet. The tanks want a hand that knows them, and a sound number three to share the load.'),
       hopWait: S('Vane will not lift while the choir is waiting. It is the one thing he has said on the subject, and he said it twice.'),
     },
     bed: {
@@ -1066,7 +1067,7 @@ const KESTREL16 = (function () {
     if (upHas('bunks')) for (const [x, y] of BUNKS) prop('bed', x, y, 'u_bunks', { scale: 0.55, solid: true, radius: 0.4, label: TX.below.bunkNew });
     // the holed tank is number three (Book One ch. 21, 24): Tobiah's patch stands in its place until the new tank replaces it
     if (upHas('tank')) prop('p16k_tank_new', ...BELOW_AT.tankC, 'u_tank', { scale: 1.45, solid: true, radius: 0.7, label: TX.below.tankC });
-    else prop('p16k_tank_three', ...BELOW_AT.tankC, 'lifttank', { scale: 1.4, solid: true, radius: 0.7, label: TX.below.tankThree });
+    else prop('lifttank', ...BELOW_AT.tankC, 'tank_three', { scale: 1.4, solid: true, radius: 0.7, label: G.flags.tank_patched ? TX.below.tankThree : TX.below.tankThreeWhole });
     if (upHas('rail')) {
       prop('p16k_railboard', ...BELOW_AT.rail, 'u_rail', { scale: 0.62, yOff: -0.34, label: TX.below.railBoard });
       const st = railState(), h = H15();
