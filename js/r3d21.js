@@ -942,6 +942,8 @@ vec4 r3dLandmarks(float az, float te) {
         B.quad(a, b, cc, d); tris += 2;
       }
     }
+    // ---- extensions (js/eaves78.js: roofs, gables, windows): more triangles into the same mesh, same vertex rules
+    for (const fn of meshExt) { try { tris += fn(m, { B, tex, MAT, ZK }) | 0; } catch (e) { warnOnce('meshExt', e); } }
     // ---- upload
     if (!mesh.vao) { mesh.vao = gl.createVertexArray(); mesh.vbo = gl.createBuffer(); mesh.ibo = gl.createBuffer(); }
     gl.bindVertexArray(mesh.vao);
@@ -1127,6 +1129,8 @@ vec4 r3dLandmarks(float az, float te) {
     return true;
   }
   function invalidate() { mesh.dirty = true; }
+  const meshExt = [];
+  function extendMesh(fn) { if (typeof fn === 'function' && !meshExt.includes(fn)) { meshExt.push(fn); mesh.dirty = true; } return fn; }
 
   // ---------------------------------------------------------------------------------------------------- shaders: world
   const WORLD_VS = `
@@ -1160,7 +1164,7 @@ void main() {
   if (uSky.z > 0.5 && d > uFar.x) { float k = clamp((d - uFar.x) / max(1e-3, uFar.y - uFar.x), 0.0, 1.0); k = k * k * (3.0 - 2.0 * k); c.rgb = mix(c.rgb, textureLod(uTex, vec3(0.5, 0.5, layer), 6.0).rgb, k); }
   // close-range wall detail, as on the CPU (64x64 greyscale at twice the texel frequency)
   if (uDetailOn == 1 && mat == 4.0 && d < uMap.z) { float dd = texture(uDetail, fract(uv) * 2.0).r; c.rgb *= 1.0 + (dd - 0.5) * 0.45 * (1.0 - d / uMap.z); }
-  R3DSurf s; s.albedo = c.rgb; s.pos = vPos; s.nrm = normalize(vNrm); s.side = side; s.mat = mat; s.emissive = 0.0; s.fi = 1.0; s.ladd = vec3(0.0); s.kind = 0;
+  R3DSurf s; s.albedo = c.rgb; s.pos = vPos; s.nrm = normalize(vNrm); s.side = side; s.mat = mat; s.emissive = mat == 8.0 ? 1.0 : 0.0; s.fi = 1.0; s.ladd = vec3(0.0); s.kind = 0;
   oColor = vec4(r3dShade(s), 1.0);
   oAux = vec4(mat / 255.0, 0.0, 0.0, 1.0);
 ${variant === 'bias' ? `  // relief maps: ground stands a little further back than it is, so it never swallows the feet of what stands on it
@@ -2304,7 +2308,7 @@ void main() {
     active: () => st.shown && st.drew, shown: () => st.shown, available: () => st.available === true, mode: () => st.mode, setMode, sync, probe,
     // passes and shaders
     addPass, removePass, getPass, passes: () => passList.map(p => ({ name: p.name, order: p.order })), program, use, setChunk, chunk, bindScene, bindOutput, resolveScene,
-    gl: () => gl, worldTex, textureDirty, invalidate,
+    gl: () => gl, worldTex, textureDirty, invalidate, extendMesh,
     // sprites
     sprites: { submit, setProvider, defaultProvider, dirty: (sp) => atlas.dirty(sp), atlas: () => ({ tex: atlas.tex, pages: atlas.pages, page: atlas.PAGE }), entry: (sp) => atlas.get(sp), count: () => spr.n },
     // picking and read-back
