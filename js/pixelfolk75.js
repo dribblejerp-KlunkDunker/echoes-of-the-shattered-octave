@@ -417,10 +417,10 @@ const PIXELFOLK = (() => {
   }
 
   // ---------------------------------------------------------------- render
-  function render(id, anim, phase, yaw) {
+  // The pose of a figure at one moment: P (angles), J (joints, the figure's own space), wp (its weapon, if it has one).
+  function pose(id, anim, phase) {
     const c = C[id]; if (!c) return null;
     const B = c.body, P = animate(c.attack || c.weapon || anim !== 'attack' ? anim : 'idle', phase, { stride: B.stride });
-    TH = yaw; CT = cos(yaw); ST = sin(yaw);
     if (anim === 'attack' && c.attack) c.attack(P);
     let wp = null;
     if (c.weapon) {
@@ -431,8 +431,13 @@ const PIXELFOLK = (() => {
     const J0 = skeleton(B, P);
     resolveArm(P, J0, 'L'); resolveArm(P, J0, 'R');
     if (c.idleArms && (anim === 'idle' || anim === 'talk')) { const keep = anim === 'talk' ? P.armR : null; c.idleArms(P, J0); if (keep) { P.armR = keep; P.armL = { a: 0.05, b: 0.12, e: 0.35 }; } }
-    const J = skeleton(B, P);
-    clear(); c.draw(J, P, B, wp);
+    return { B, P, J: skeleton(B, P), wp };
+  }
+  function render(id, anim, phase, yaw) {
+    const c = C[id]; if (!c) return null;
+    const q = pose(id, anim, phase);
+    TH = yaw; CT = cos(yaw); ST = sin(yaw);
+    clear(); c.draw(q.J, q.P, q.B, q.wp);
     return resolve();
   }
   const cache = new Map();
@@ -440,7 +445,7 @@ const PIXELFOLK = (() => {
     if (!C[id]) return null; const n = COUNT[anim] || COUNT.idle, k = ((f % n) + n) % n, o = ((octant % 8) + 8) % 8, key = id + '|' + anim + '|' + k + '|' + o;
     let s = cache.get(key); if (!s) { s = render(id, anim, k / n, o * PI / 4); cache.set(key, s); } return s;
   }
-  return { W, H, COUNT, ids: () => Object.keys(C), has: (id) => !!C[id], canAttack: (id) => !!(C[id] && (C[id].attack || C[id].weapon)), render, frame, cache };
+  return { W, H, COUNT, ids: () => Object.keys(C), has: (id) => !!C[id], canAttack: (id) => !!(C[id] && (C[id].attack || C[id].weapon)), render, frame, cache, pose };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PIXELFOLK;
 
@@ -448,13 +453,14 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PIXELFOLK;
 // The last link in the sprite chooser's chain: for a rigged person the frame comes from here, picked from what the
 // body is doing (js/anim.js still decides walk / wind-up / strike; this only draws it). Art switch GFX.pixelfolk.
 if (typeof GFX !== 'undefined') {
-  if (GFX.pixelfolk === undefined) GFX.pixelfolk = true;
+  if (GFX.pixelfolk === undefined) GFX.pixelfolk = false;   // off by default: the owner chose the painted look (js/paintfolk76.js moves the paintings)
   if (!Array.isArray(GFX.ART)) GFX.ART = [];
   if (!GFX.ART.includes('pixelfolk')) GFX.ART.push('pixelfolk');
 }
 if (typeof animDirectionalSprite === 'function' && typeof Engine !== 'undefined') (() => {
   const _dir = animDirectionalSprite, STRIDE = 1.15;            // map units walked per full walk cycle
-  PIXELFOLK.pick = function (e, cam) {
+  // what a body is doing, as an animation, a frame and a side: shared with js/paintfolk76.js
+  PIXELFOLK.choose = function (e, cam) {
     const T = typeof ANIM !== 'undefined' ? ANIM.T : 0, seed = e._seed || 0;
     const heading = Number.isFinite(e.facing) ? e.facing : Math.atan2(cam.y - e.y, cam.x - e.x);
     const rel = Math.atan2(cam.y - e.y, cam.x - e.x) - heading, octant = ((Math.round(-rel / (Math.PI / 4)) % 8) + 8) % 8;
@@ -473,8 +479,9 @@ if (typeof animDirectionalSprite === 'function' && typeof Engine !== 'undefined'
       else if ((e._spd || 0) > 0.25) { anim = 'walk'; f = Math.floor((e._pfd || 0) / STRIDE * PIXELFOLK.COUNT.walk); }
       else if (typeof DLG !== 'undefined' && typeof G !== 'undefined' && G.state === 'dialogue' && DLG.ent === e) { anim = 'talk'; f = Math.floor(T * 7); }
     }
-    return PIXELFOLK.frame(e.sprite, anim, f, octant);
+    return { anim, f, octant };
   };
+  PIXELFOLK.pick = function (e, cam) { const q = PIXELFOLK.choose(e, cam); return PIXELFOLK.frame(e.sprite, q.anim, q.f, q.octant); };
   animDirectionalSprite = function (e) {
     try {
       if (GFX.pixelfolk !== false && e && !e.deathArt && PIXELFOLK.has(e.sprite) && (e.kind === 'npc' || e.kind === 'enemy' || e.pixelfolk)) {
