@@ -146,7 +146,7 @@ const DREAMS = (function () {
     { id: 'sh_wg', trig: 'shard', maps: ['whispergrove'], title: 'The count-in', place: 'Whisper-Grove, the Sunken Court',
       lines: ['"...and a one, and a two. Lean left, Ben. Left."', 'Thirty voices find the key together, the way water finds its level.', 'Then one long note, underneath all of it, that is not in the hymn.'] },
     { id: 'sh_dw', trig: 'shard', maps: ['deepwoods'], title: 'Nose up', place: 'The Deep Woods',
-      lines: ['"Nose up. Hold her nose up, hold her, hold her&mdash;"', '"Tank two is going."', 'A woman\'s voice, very level: "Everyone stays on the line."'] },
+      lines: ['"Nose up. Hold her nose up, hold her, hold her&mdash;"', '"Tank three is going."', 'A woman\'s voice, very level: "Everyone stays on the line."'] },
     { id: 'sh_oak', trig: 'shard', maps: ['oakhaven'], title: 'Three deep', place: 'Oakhaven',
       lines: ['"Three deep. Pack the wool into the thorn until you cannot hear yourself."', 'Spades, and a great many people breathing hard.', 'A child asks whether it will keep the hounds out. A man says, "It keeps the Narrow. That is all we ask of it."'] },
     { id: 'sh_clear', trig: 'shard', maps: ['clearing'], title: 'Beside the reed', place: 'Outside the Hedge',

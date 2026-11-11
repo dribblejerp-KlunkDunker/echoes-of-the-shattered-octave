@@ -13,7 +13,7 @@
 //    Bonded Store    the label on a vox-bottle, Port Cantabile (ch. 4)
 //    Lyra's house    the Cantor's notebooks on the shelf (book, l. 500): Tobin's entries of 401, 398 and 404 SR (ch. 6, 11, 23)
 //    chapel          the Rubric of the Rite of Unison (ch. 9), once the Church has come (church_come or rite_ready)
-//    Kestrel below   the bill of lading by the crates in the hold (ch. 8); on the engineer's bench, Tobiah's K. Vance (ch. 13)
+//    Kestrel below   the bill of lading by the crates in the hold (ch. 8); on Pennick's bench, Tobiah's K. Vance (ch. 13)
 //                    and, while you do not carry his charts, Revision Seven with the margin (ch. 10)
 //    your pack       Tobiah's charts (js/data.js 'charts', "the only copy" of Revision Seven): used once the Rite has begun,
 //                    they read the margin (ch. 10); before it they show their old description
@@ -70,7 +70,7 @@ const EPI73 = (function () {
     hold_bill: { map: 'p16k_kestrel_below', at: [23.4, 10.3], sprite: 'p73_sheet',
       label: S('A bill of lading, tacked to a crate') },
     below_bench: { map: 'p16k_kestrel_below', at: [8.6, 1.9], sprite: 'p73_sheet',
-      label: S('Tobiah Marsh\'s papers, on the end of the engineer\'s bench'), title: S('Tobiah Marsh\'s papers'),
+      label: S('Tobiah Marsh\'s papers, on the end of Pennick\'s bench'), title: S('Tobiah Marsh\'s papers'),
       intro: S('A month of readings, every quarter-hour, in his own small careful hand.') },
     deck_rope: { map: 'p16k_kestrel_deck', at: [23.4, 21.4], sprite: 'p73_plank',
       label: S('Words cut into a plank by the coiled rope') },

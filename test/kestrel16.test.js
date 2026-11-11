@@ -292,8 +292,9 @@ async function boot(browser, viewport, opts) {
       e.facing = 0; c.x = e.x - 2; c.y = e.y; K.T.turnT = 0; for (let i = 0; i < 30; i++) K.tick(0.2); out.turnedAfter = K.magsSees(e);
       out.lines = KESTREL16.TX.crew.mags.d.every((t) => /^<i>/.test(t) || /signs|sign/i.test(t));
       out.sign = /<i>/.test(KESTREL16.TX.crew.mags.d[0]);
-      // the engineer is unnamed (author's ruling 2026-10-20: Pennick is a Book Two person); Mags speaks as well as signs (js/data.js mags_dw)
-      out.eng = [KESTREL16.TX.crew.pennick.name, KESTREL16.TX.crew.pennick.label]; out.noPennick = KESTREL16.TEXTS.filter((t) => /Pennick/.test(t)).length;
+      // the book names the engineer Pennick (ch. 8, 12, 21, 24; the owner, 10 Nov: "if the book names him name him"), and the holed tank is number three (ch. 21, 24)
+      out.eng = [KESTREL16.TX.crew.pennick.name, KESTREL16.TX.crew.pennick.label]; out.titleOnly = KESTREL16.TEXTS.filter((t) => /\bthe engineer\b/i.test(t)).length;
+      out.tankTwo = KESTREL16.TEXTS.filter((t) => /number[- ]two (lift-)?tank(?!\. Sound)/i.test(t)).length; out.tankThree = KESTREL16.TEXTS.filter((t) => /number[- ]three/i.test(t)).length;   // the sound number two below decks is fine; the holed one is three
       out.speaks = /answers aloud/.test(KESTREL16.TX.crew.mags.intro);
       // talking from behind: she does not answer
       e.facing = 0; c.x = e.x - 2; c.y = e.y; K.T.sayAt = -1e9; talk(e); out.stateAfter = G.state;
@@ -302,7 +303,8 @@ async function boot(browser, viewport, opts) {
     check(mg.has && mg.front === true && mg.behind === false && mg.far === false && mg.turned === true, 'Mags answers only when she faces you within range (front ' + mg.front + ', behind ' + mg.behind + ', far ' + mg.far + ')');
     check(mg.turnedAfter === true, 'after four seconds close behind her she feels the deck and turns round');
     check(mg.sign && mg.lines, 'her daily lines are italic and carry a sign note');
-    check(mg.eng.join('|') === "The Kestrel's engineer|The engineer, at the tanks" && mg.noPennick === 0 && mg.speaks, 'the engineer goes by his title, no string names Pennick, and Mags answers aloud as she signs');
+    check(mg.eng.join('|') === "Pennick, the Kestrel's engineer|Pennick, at the tanks" && mg.titleOnly === 0 && mg.speaks, 'the engineer is Pennick, as the book names him; no string calls him only "the engineer"; Mags answers aloud as she signs');
+    check(mg.tankTwo === 0 && mg.tankThree >= 3, 'the patched tank is number three, as the book holes it (ch. 21, 24): ' + mg.tankTwo + ' "number two", ' + mg.tankThree + ' "number three"');
     check(mg.stateAfter === 'play', 'talking to her from behind opens no conversation');
 
     // ---------------------------------------------------------------- never two Mags: the deck Mags and the camp Mags (mags_dw)

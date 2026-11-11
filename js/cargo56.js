@@ -10,7 +10,7 @@
 //      boot over it (canon). He counts twelve. "They do carry on, don't they." "My first posting was the harvest-house at
 //      Whisper-Grove."
 //    * THE THIRD CRATE (the dead hour, game day 7 before 05:00). Pim with his ear to the wood, talking to Annet. Vane prises
-//      the lid; WG-41,004 on the tag. He does not laugh. The engineer's slate: six; then everything over the side, the
+//      the lid; WG-41,004 on the tag. He does not laugh. Pennick's slate: six; then everything over the side, the
 //      brandy, the chain, the long gun last, and it is eighteen. "Annet. You're going home." Vane says it, or lets you.
 //    * THE LONG GUN. "Tomorrow, in the dark, over the slag-pit, so nobody hears the splash." You carry the lock and the
 //      shot down to Depot Three's slag-slope (js/tamsin52.js) and send them over (R6's "Vane's long gun in the quarry mud").
@@ -70,8 +70,8 @@ const CARGO56 = (function () {
     // the third crate
     crateTitle: S('The third crate, at the dead hour'),
     crate: S('Pim Carder is out of the sail-locker, against orders, with his ear to the side of the third crate.<br><br>"She kept saying <i>hello, hello, is anyone there</i>," he says. "She\'s been saying it a long while, I think. So I said hello. And she asked what my name was. Nobody\'s said anything to her for a long time."<br><br>Vane takes a pry-bar to the lid. It comes up easily: Consortium nails, driven by clerks. Inside, in good straw, the spheres. He lifts one out. It is cold, and lighter than it looks, and the tag is written in a fine clerk\'s hand: <b>WG-41,004.</b><br><br>Vane does not laugh. That is how you know how bad it is.'),
-    figuresTitle: S('The engineer\'s slate'),
-    figures: S('<i>How many people can we lift?</i> Vane signs to Mags. <i>With the crates aboard.</i><br><br>The engineer does the figures on a slate by the lift-tanks, twice, and a third time because Vane does not like the answer. "Six. Seven if it\'s children. With the cargo aboard, Captain, six."<br><br>Eighty-four souls in the Hollow, and nineteen of them children. "What goes over the side?"<br><br>The engineer writes. Water, most of it. The spare envelope canvas. The chain cable and half the anchors. The brandy, which is eleven cases and worth more than the rest of the ship together. "And the long gun. The swivel, and the carriage, and the shot. Eleven hundredweight. Even then it\'s eighteen, Captain. Maybe nineteen."<br><br>"Put it over the side," says Vane. "Tomorrow, in the dark, over the slag-pit, so nobody hears the splash."'),
+    figuresTitle: S('Pennick\'s slate'),
+    figures: S('<i>How many people can we lift?</i> Vane signs to Mags. <i>With the crates aboard.</i><br><br>Pennick does the figures on a slate by the lift-tanks, twice, and a third time because Vane does not like the answer. "Six. Seven if it\'s children. With the cargo aboard, Captain, six."<br><br>Eighty-four souls in the Hollow, and nineteen of them children. "What goes over the side?"<br><br>Pennick writes. Water, most of it. The spare envelope canvas. The chain cable and half the anchors. The brandy, which is eleven cases and worth more than the rest of the ship together. "And the long gun. The swivel, and the carriage, and the shot. Eleven hundredweight. Even then it\'s eighteen, Captain. Maybe nineteen."<br><br>"Put it over the side," says Vane. "Tomorrow, in the dark, over the slag-pit, so nobody hears the splash."'),
     annetTitle: S('Annet'),
     annet: S('Vane kneels by the crate with the sphere in his hands, and does not say anything for a long time. Then he looks at you.'),
     letVane: S('Let him say it'),
@@ -87,7 +87,7 @@ const CARGO56 = (function () {
     sendIt: S('Send them over'),
     // logbook
     jClerk: S('Cargo night: the paymaster\'s clerk counted the Kestrel\'s crates while Mags hid the Carders in the sail-locker. Twelve. "They do carry on, don\'t they." His first posting was the harvest-house at Whisper-Grove.'),
-    jCrate: S('Cargo night: Vane opened the third crate. WG-41,004. The engineer\'s slate said six, and then, with everything over the side and the long gun last, eighteen. "Annet. You\'re going home."'),
+    jCrate: S('Cargo night: Vane opened the third crate. WG-41,004. Pennick\'s slate said six, and then, with everything over the side and the long gun last, eighteen. "Annet. You\'re going home."'),
     jGun: S('I put Vane\'s long gun over the slag-slope at Depot Three, in the dark. Nobody heard the splash.'),
   };
   // the three rounds: [safe, safe, the one that turns his eye], and the order they are shown in

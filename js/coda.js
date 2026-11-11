@@ -41,14 +41,14 @@ function part4Chase(toldCut) {
   L.push(toldCut ? 'He looks at you, and then at the line, and does not cut it. "Not this time," he says. "I counted last time. I\'m not counting again."' : 'You count with him. One. Two. At seven he takes his hand off the axe.');
   L.push(`He lets the proctors board${f.aegis_follow ? ', and the Aegis answers the only way its stencil allows: DEFEND THE SINGERS. The rail comes away with them on it' : ', and Mags meets them at the rail one-handed with a belaying pin'}. Then he puts the helm over and drives the Kestrel's willow-crown straight through the cutter's bow.`);
   L.push('Mid-chase a boy of seventeen, made of lightning, crosses the foredeck with an undelivered writ clamped in his fist. "Which way is east?" he asks, and Lyra points, and he is gone, leaving two scorched footprints in the deck and two words: <i>if you stop.</i>');
-  L.push('Then the number-two lift-tank, holed. The Kestrel goes down through a hundred feet of silver willow, and the cutter goes down a mile to the east of her, and the woods close over both.');
+  L.push('Then the number-three lift-tank, holed. The Kestrel goes down through a hundred feet of silver willow, and the cutter goes down a mile to the east of her, and the woods close over both.');
   showEvent('Ten Heartbeats', L.join('<br><br>'), [{ t: 'Brace.', f: () => part4Land() }]);
 }
 function part4Land() {
   const p = G.player;
   p.hp = Math.max(1, Math.round(p.hpMax * 0.7)); p.voice = p.voiceMax; p.fat = p.fatMax;
   loadMap('deepwoods'); G.state = 'play'; G.noise = 1;
-  journal('main', 'Part Four: Coda. The Kestrel came down in the Deep Woods of the Spectral Woods, by the Mausoleum of Chords, with her number-two lift-tank holed. The Office cutter that hunted us came down a mile to the east. Talk to Vane, and to Lyra, at the fire.');
+  journal('main', 'Part Four: Coda. The Kestrel came down in the Deep Woods of the Spectral Woods, by the Mausoleum of Chords, with her number-three lift-tank holed. The Office cutter that hunted us came down a mile to the east. Talk to Vane, and to Lyra, at the fire.');
   msg('You come to on the moss with the taste of lift-gas in your mouth. Silver willows, lilac mist, and somewhere north of the wreck a building made to be listened to, ringing very faintly.', 'voice', 9000);
   setTimeout(() => { if (G.mapId === 'deepwoods') msg('By the fire: Vane, Tobiah, Mags with her arm in a sling, Kaelen, and Lyra, who is listening north with her whole body.', '', 7000); }, 5000);
 }
@@ -159,7 +159,7 @@ function codaCheckHerald() {
 // ---------------------------------------------------------------- things you can use
 function codaUse(e) {
   const f = G.flags, p = G.player;
-  if (e.use === 'kestrel') { msg(f.tank_patched ? 'The Kestrel, still on her side, but her number-two tank is closed and Tobiah keeps putting his ear to the seam.' : 'The Drift-Kestrel lies on her side in the willows. Her number-two lift-tank has a hole in it you could post a sheep through.', '', 5000); return true; }
+  if (e.use === 'kestrel') { msg(f.tank_patched ? 'The Kestrel, still on her side, but her number-three tank is closed and Tobiah keeps putting his ear to the seam.' : 'The Drift-Kestrel lies on her side in the willows. Her number-three lift-tank has a hole in it you could post a sheep through.', '', 5000); return true; }
   if (e.use === 'campfire') {
     if (G.ents.some(o => o.kind === 'enemy' && !o.dead && !o.hidden && o.state === 'chase' && dist2(o.x, o.y, Engine.cam.x, Engine.cam.y) < 100)) { msg('Not with that in the trees.', 'warn', 2500); return true; }
     p.hp = Math.min(p.hpMax, p.hp + 20); p.fat = p.fatMax; msg('You sit by the fire for a while. Somebody passes you a dented cup of something hot. Nobody says who is holding the line tonight; Mags just gets up and goes.', 'good', 6000); return true;

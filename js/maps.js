@@ -1026,7 +1026,7 @@ function buildDeepWoods() {
   pool(16, 29, 18, 31); pool(36, 34, 37, 35); pool(8, 6, 10, 7);
   // the crash
   m.deco('kestrel', 23.6, 44.8, { radius: 1.7, scale: 2.6, glow: 0.25, use: 'kestrel', label: 'The Drift-Kestrel, on her side in the willows' });
-  m.deco('lifttank', 31.0, 45.2, { radius: 0.7, scale: 1.4, label: 'Number-two lift-tank, holed' });
+  m.deco('lifttank', 31.0, 45.2, { radius: 0.7, scale: 1.4, label: 'Number-three lift-tank, holed' });
   m.deco('campfire', 27.5, 41.6, { radius: 0.35, scale: 0.7, glow: 0.8, use: 'campfire', label: 'The camp fire' });
   m.deco('footprints', 21.6, 40.6, { radius: 0.2, scale: 0.6, glow: 0.3, use: 'footprints', solid: false, label: 'A deck-plank with two scorched footprints in it' });
   m.deco('crates', 29.8, 47.0, { radius: 0.4, scale: 0.8, label: 'What came out of the hold' });

@@ -278,7 +278,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     // ---- voices and French
     const vo = await E(() => ({ missing: Object.values(THREAD70.VO).flat().filter((id) => !VOICE_ACT.LINES[id]), speakers: [...new Set(Object.values(THREAD70.VO).flat().map((id) => VOICE_ACT.LINES[id] && VOICE_ACT.LINES[id].speaker))] }));
     const cast = src('tools/voices/cast.py');
-    check(vo.missing.length === 0 && vo.speakers.every((s) => s && new RegExp("'" + s + "'\\s*:").test(cast)) && vo.speakers.includes('weaver'), 'every spoken line is recorded, by a speaker in cast.py, the Tide-Weaver as `weaver` (' + (vo.missing.slice(0, 3).join(', ') || vo.speakers.join(', ')) + ')');
+    check(vo.missing.length === 0 && vo.speakers.every((s) => s && new RegExp("'" + s + "'\\s*:").test(cast)) && vo.speakers.includes('tideweaver'), 'every spoken line is recorded, by a speaker in cast.py, the Tide-Weaver as `tideweaver`, not the Phantom Weaver (' + (vo.missing.slice(0, 3).join(', ') || vo.speakers.join(', ')) + ')');
     const fr = JSON.parse(src('locales/story/fr.json'));
     const tsv = src('tools/i18n/p70-thread.tsv').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
     const pairs = new Map(tsv.map((r) => [r[0], r[1]]));

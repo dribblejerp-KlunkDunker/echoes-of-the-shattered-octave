@@ -191,7 +191,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const texts = await page.evaluate(() => ROPE45.TEXTS.slice());
     const noFr = texts.filter((t) => !pairs.has(t) || !(fr.s[hash(norm(t))] || fr.p.some((p) => p[0] === norm(t))));
     check(texts.length >= 70 && noFr.length === 0 && tsv.every((r) => r.length === 2), 'every registered string has a French pair in p45-rope.tsv and locales/story/fr.json (' + noFr.length + ' missing' + (noFr.length ? ': ' + noFr[0].slice(0, 60) : '') + ')');
-    check(!tsv.some((r) => /\b(Le Hush|les Hollows|Cantor\b|the Hedge|the Narrow|Hearthday|Greening|Pennick)\b/.test(r[1])) && !texts.some((t) => /Pennick/.test(t)), 'the French follows the glossary; the engineer is unnamed in Book One (no "Pennick")');
+    check(!tsv.some((r) => /\b(Le Hush|les Hollows|Cantor\b|the Hedge|the Narrow|Hearthday|Greening)\b/.test(r[1])) && texts.some((t) => /Pennick/.test(t)) && !texts.some((t) => /\bthe engineer\b/i.test(t)), 'the French follows the glossary; the engineer is Pennick, as ch. 12 names him');
 
     check(errors.length === 0, 'no page errors (' + errors.slice(0, 3).join(' | ') + ')');
   } finally {

@@ -3032,11 +3032,11 @@ const VOICE_LINES = {
 "voiceOf": "tobiah"
 },
 "tobiah_dw.greet.normal": {
-"d": 3.79,
+"d": 3.86,
 "kind": "greet",
 "speaker": "tobiah",
 "src": "voices/tobiah/tobiah_dw.greet.normal.mp3",
-"t": "Number-two tank. Look at it. I could weep. I nearly have.",
+"t": "Number-three tank. Look at it. I could weep. I nearly have.",
 "voiceOf": "tobiah"
 },
 "tobiah_dw.greet.polite": {
@@ -3422,11 +3422,11 @@ const VOICE_LINES = {
 "voiceOf": "vane"
 },
 "vane_dw.greet.normal": {
-"d": 7.13,
+"d": 7.1,
 "kind": "greet",
 "speaker": "vane",
 "src": "voices/vane/vane_dw.greet.normal.mp3",
-"t": "She's on her side in the willows with a hole in her number-two tank you could post a sheep through. We are not leaving by air today.",
+"t": "She's on her side in the willows with a hole in her number-three tank you could post a sheep through. We are not leaving by air today.",
 "voiceOf": "vane"
 },
 "vane_dw.greet.polite": {
@@ -3642,108 +3642,108 @@ const VOICE_LINES = {
 "voiceOf": "tobin"
 },
 "weaver.h66.thread": {
-"d": 3.14,
+"d": 3.82,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.h66.thread.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.h66.thread.mp3",
 "t": "I am going to show you a thread that was not taken."
 },
 "weaver.h66.unhappen": {
-"d": 4.22,
+"d": 5.04,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.h66.unhappen.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.h66.unhappen.mp3",
 "t": "This did not happen. It also did not unhappen; nothing does."
 },
 "weaver.rope.echo": {
-"d": 3.48,
+"d": 4.1,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.rope.echo.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.rope.echo.mp3",
 "t": "I have watched you choose this four hundred and eleven times."
 },
 "weaver.t70.fresh": {
-"d": 7.39,
+"d": 7.99,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.fresh.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.fresh.mp3",
 "t": "I have watched a great many threads, and I can tell you with some authority that the world is never saved by the people who are fresh."
 },
 "weaver.t70.good": {
-"d": 1.85,
+"d": 2.26,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.good.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.good.mp3",
 "t": "And it is very good."
 },
 "weaver.t70.looking": {
-"d": 10.25,
+"d": 10.66,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.looking.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.looking.mp3",
 "t": "I have looked at four hundred and eleven of these, and I have not yet found a third option, and I am still looking, and I would like you to remember, when we get there, that I was looking."
 },
 "weaver.t70.margin": {
-"d": 5.9,
+"d": 6.29,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.margin.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.margin.mp3",
 "t": "That is all. That is the whole margin. A tired woman heard something, and did not go out."
 },
 "weaver.t70.matters": {
-"d": 2.11,
+"d": 2.74,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.matters.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.matters.mp3",
 "t": "I will tell you the part that matters."
 },
 "weaver.t70.night": {
-"d": 2.95,
+"d": 3.34,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.night.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.night.mp3",
 "t": "That is the whole of the difference. One night."
 },
 "weaver.t70.quickly": {
-"d": 3.6,
+"d": 4.32,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.quickly.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.quickly.mp3",
 "t": "Here is the rest of it, quickly, because you have a book to finish."
 },
 "weaver.t70.soup": {
-"d": 6.48,
+"d": 7.22,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.soup.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.soup.mp3",
 "t": "That is what a thread is. You are a soup, and a thing in the dark is patient, and some nights you have had enough sleep."
 },
 "weaver.t70.times": {
-"d": 2.28,
+"d": 2.93,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.times.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.times.mp3",
 "t": "Four hundred and eleven times."
 },
 "weaver.t70.watched": {
-"d": 3.24,
+"d": 3.91,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.watched.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.watched.mp3",
 "t": "I have watched that moment four hundred and eleven times."
 },
 "weaver.t70.went": {
-"d": 2.11,
+"d": 2.62,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.went.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.went.mp3",
 "t": "Here is the thread where she went."
 },
 "weaver.t70.who": {
-"d": 2.21,
+"d": 2.76,
 "kind": "narration",
-"speaker": "weaver",
-"src": "voices/weaver/weaver.t70.who.mp3",
+"speaker": "tideweaver",
+"src": "voices/tideweaver/weaver.t70.who.mp3",
 "t": "You will want to know who is talking."
 },
 "weaver.voice.0": {
