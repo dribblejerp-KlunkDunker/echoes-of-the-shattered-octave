@@ -418,9 +418,11 @@ const PIXELFOLK = (() => {
 
   // ---------------------------------------------------------------- render
   // The pose of a figure at one moment: P (angles), J (joints, the figure's own space), wp (its weapon, if it has one).
-  function pose(id, anim, phase) {
-    const c = C[id]; if (!c) return null;
-    const B = c.body, P = animate(c.attack || c.weapon || anim !== 'attack' ? anim : 'idle', phase, { stride: B.stride });
+  // An id with no figure of its own (js/paintfolk76.js rigs every painted person) is posed as a plain standing body.
+  const GENERIC = { body: BODY };
+  function pose(id, anim, phase, o) {
+    const c = C[id] || GENERIC;
+    const B = o && o.stride ? Object.assign({}, c.body, { stride: o.stride }) : c.body, P = animate(c.attack || c.weapon || anim !== 'attack' ? anim : 'idle', phase, { stride: B.stride });
     if (anim === 'attack' && c.attack) c.attack(P);
     let wp = null;
     if (c.weapon) {

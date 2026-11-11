@@ -32,6 +32,17 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       const t0 = performance.now(); let k = 0; PAINTFOLK.cache.clear(); for (let q = 0; q < 8; q++) for (let f = 0; f < 8; f++) { PAINTFOLK.frame(id, 'walk', f, q); k++; } o.ms = (performance.now() - t0) / k;
       out.per[id] = o;
     }
+    // everyone: every painting an NPC wears on any map, or in the cast list, is rigged (hand-laid, borrowed or measured)
+    const use = new Set(); for (const id in G.maps) for (const e of (G.maps[id].entities || [])) if (e.kind === 'npc' && e.sprite) use.add(e.sprite); for (const k in NPCS) if (NPCS[k].sprite) use.add(NPCS[k].sprite);
+    const all = { n: 0, rigged: 0, never: [], bad: [], kinds: {} };
+    for (const id of use) { const sp = Engine.sprites[id]; if (!sp) continue; all.n++; const M = PAINTFOLK.model(id); if (!M) { all.never.push(id); continue; } all.rigged++;
+      const kind = M.rig.auto || (M.rig.pose && M.rig.pose !== '_generic' ? 'borrowed' : 'hand'); all.kinds[kind] = (all.kinds[kind] || 0) + 1;
+      const f0 = PAINTFOLK.render(id, 'idle', 0, 0), w1 = PAINTFOLK.render(id, 'walk', 0.25, 1), w2 = PAINTFOLK.render(id, 'walk', 0.75, 1), bk = PAINTFOLK.render(id, 'walk', 0.25, 4);
+      let m = 0; if (f0) for (let i = 0; i < f0.data.length; i++) if (f0.data[i] >>> 24) m++; let src = 0; for (let i = 0; i < sp.data.length; i++) if ((sp.data[i] >>> 24) >= 128) src++;
+      if (!f0 || !w1 || !w2 || !bk || same(w1, w2) || m < src * 3.2 || m > src * 4.8 || Math.abs(f0.hs - (sp.hs || 1) * f0.h / (sp.h * 2)) > 0.02) all.bad.push(id); }
+    out.all = all;
+    // in play a painting is rigged in a quiet moment: asked for, it is not ready at once, and nothing is drawn wrong meanwhile
+    PAINTFOLK.source('townswoman', Engine.sprites.townswoman); out.lazy = PAINTFOLK.ready('townswoman') === false && PAINTFOLK.stats().waiting >= 1;
     // the chooser: on, a rigged person gets a moving-painting frame; off, the painting as before; an unrigged one is untouched
     const cam = Engine.cam, e = { kind: 'npc', sprite: 'townsman', x: cam.x + 2, y: cam.y, scale: 1 }, h = { kind: 'enemy', sprite: 'hound', x: cam.x + 2, y: cam.y, scale: 1 };
     GFX.paintfolk = true; out.on = !!animDirectionalSprite(e).sprite.paintfolk;
@@ -40,7 +51,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     out.switches = GFX.ART.includes('paintfolk') && GFX.pixelfolk === false;
     return out;
   });
-  check(['kaelen', 'townsman', 'legionnaire', 'lyra'].every((id) => r.has[id]), 'the four pilot paintings are rigged and loaded');
+  check(['kaelen', 'townsman', 'legionnaire', 'lyra'].every((id) => r.has[id]), 'the four hand-rigged paintings are loaded');
   for (const id of r.ids) {
     const o = r.per[id];
     check(o.size[1] >= o.size[3] * 2 - 2 && o.size[1] <= o.size[3] * 2 && Math.abs(o.hs - 1) < 0.01, id + ': twice the painting\'s pixels, the same height in the world (' + o.size.join(',') + ')');
@@ -51,6 +62,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(o.ms < 60, id + ': a new frame costs ' + o.ms.toFixed(1) + ' ms (then it is cached)');
   }
   check(r.per.kaelen.emit && !r.per.townsman.emit, "Kaelen's glass arm still glows; nothing on the orchardman does");
+  check(r.all.n >= 25 && r.all.rigged >= r.all.n - 3 && r.all.never.every((id) => ['orla', 'cat', 'p31_seated'].includes(id)), 'every NPC painting in the game is rigged: ' + r.all.rigged + ' of ' + r.all.n + ' (' + JSON.stringify(r.all.kinds) + '; left still: ' + (r.all.never.join(', ') || 'none') + ')');
+  check(!r.all.bad.length, 'each of them stands as its painting and walks from the front, the side and the back' + (r.all.bad.length ? ' (not: ' + r.all.bad.join(', ') + ')' : ''));
+  check(r.lazy, 'a painting first seen in play is rigged in a quiet moment, not in the middle of a frame');
   check(r.on && r.off && r.other, 'the switch: on draws the moving painting, off the still one, and unrigged creatures are untouched');
   check(r.switches, 'Moving paintings is an art switch, on by default; the drawn pixel figures are off by default');
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors[0] : ''));

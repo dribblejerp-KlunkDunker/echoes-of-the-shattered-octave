@@ -45,7 +45,7 @@ const PAINTFOLK = (() => {
         ['shinR', 'shinR', [[20, 110, 17, 152, 8]], limbs({ ymin: 127, cap: 6 })], ['shinL', 'shinL', [[38, 110, 42, 152, 8]], limbs({ ymin: 127, cap: 6 })],
       ],
       ghosts: [['thighR', 22, 76, 20, 110, 8], ['thighL', 36, 76, 38, 110, 8], ['shinR', 20, 110, 18.5, 130, 7.5], ['shinL', 38, 110, 40, 130, 7.5]],
-      emit: (r, g, b) => b > r + 50 && g > r + 30,
+      emit: (r, g, b) => b > r + 50 && g > r + 30, gen: { stride: 0.3 },
     },
     townsman: {
       w: 60, cx: 30, hair: 9,
@@ -58,7 +58,7 @@ const PAINTFOLK = (() => {
         ['armUL', 'armUL', [[47, 32, 53, 56, 7]], limbs({ cap: 5.5 })], ['armFL', 'armFL', [[53, 56, 53, 89, 5.5]], limbs({ cap: 4 })],
         ['shinR', 'shinR', [[20, 112, 17, 152, 8]], limbs({ ymin: 114, cap: 6 })], ['shinL', 'shinL', [[39, 112, 42, 152, 8]], limbs({ ymin: 114, cap: 6 })],
       ],
-      ghosts: [['thighR', 22, 78, 20, 114, 8.5], ['thighL', 38, 78, 39, 114, 8.5]],
+      ghosts: [['thighR', 22, 78, 20, 114, 8.5], ['thighL', 38, 78, 39, 114, 8.5]], gen: { stride: 0.32 },
     },
     legionnaire: {
       w: 66, cx: 39,
@@ -118,8 +118,8 @@ const PAINTFOLK = (() => {
 
   // ---------------------------------------------------------------- 2. cut it into parts with depth
   function distSeg(px, py, s) { const dx = s[2] - s[0], dy = s[3] - s[1], l2 = dx * dx + dy * dy; let t = l2 ? ((px - s[0]) * dx + (py - s[1]) * dy) / l2 : 0; t = t < 0 ? 0 : t > 1 ? 1 : t; return hyp(px - s[0] - dx * t, py - s[1] - dy * t); }
-  function build(id, sp) {
-    const rig = RIGS[id], img = enlarge(sp), W0 = img.w, H = img.h, ghosts = rig.ghosts || [], W = W0 * (1 + ghosts.length), N = W * H;
+  function build(id, sp, rig) {
+    const img = enlarge(sp), W0 = img.w, H = img.h, ghosts = rig.ghosts || [], W = W0 * (1 + ghosts.length), N = W * H;
     // one wide sheet: the painting on the first page, each hidden part (a "ghost") on a page of its own to the right
     const data = new Uint32Array(N), al = new Uint8Array(N);
     for (let y = 0; y < H; y++) { data.set(img.data.subarray(y * W0, (y + 1) * W0), y * W); al.set(img.al.subarray(y * W0, (y + 1) * W0), y * W); }
@@ -162,9 +162,9 @@ const PAINTFOLK = (() => {
     });
     let emit = null;
     if (rig.emit) { emit = new Uint8Array(N); for (let i = 0; i < N; i++) if (al[i]) { const c = data[i]; if (rig.emit(R_(c), G_(c), B_(c))) emit[i] = 1; } }
-    const v3 = (p) => [(p[0] - rig.cx) * K, 0, (SH - p[1]) * K], J0 = {};
+    const v3 = (p) => [(p[0] - rig.cx) * K, 0, (sp.h - p[1]) * K], J0 = {};
     for (const k in rig.J) J0[k] = v3(rig.J[k]);
-    return { id, rig, data, W, W0, H, owner, thick, parts: parts.filter((P) => !P.empty), J0, emit, hairRow: (rig.hair || 0) * K };
+    return { id, rig, poseId: rig.pose || id, spH: sp.h, hs0: sp.hs || 1, dy0: sp.dy || 0, data, W, W0, H, owner, thick, parts: parts.filter((P) => !P.empty), J0, emit, hairRow: (rig.hair || 0) * K };
   }
 
   // ---------------------------------------------------------------- 3. pose and draw
@@ -183,8 +183,8 @@ const PAINTFOLK = (() => {
   const refs = new Map();
   function transforms(M, anim, phase) {
     const id = M.id, rig = M.rig, J0 = M.J0;
-    let ref = refs.get(id); if (!ref) { ref = PF.pose(id, 'idle', 0); refs.set(id, ref); }
-    const cur = PF.pose(id, anim, phase), A = ref.J, Bj = cur.J, P = cur.P, P0 = ref.P;
+    let ref = refs.get(id); if (!ref) { ref = PF.pose(M.poseId, 'idle', 0, rig.gen); refs.set(id, ref); }
+    const cur = PF.pose(M.poseId, anim, phase, rig.gen), A = ref.J, Bj = cur.J, P = cur.P, P0 = ref.P;
     const d = (J, a, b) => sub(J[b], J[a]), turn = (a, b) => fromTo(d(A, a, b), d(Bj, a, b));
     const Rp = rz((P.twP || 0) - (P0.twP || 0));
     const Rt = mm(fromTo(d(A, 'root', 'neck'), d(Bj, 'root', 'neck')), rz((P.twC || 0) - (P0.twC || 0)));
@@ -200,7 +200,7 @@ const PAINTFOLK = (() => {
       const fixed = rig.armsFixed, Ru = fixed ? Rt : turn('sh' + k, 'elbow' + k), Rf = fixed ? Rt : turn('elbow' + k, 'hand' + k);
       const sh = add(at(root, Rt, 'root', 'sh' + k), breath), el = add(sh, mv(Ru, sub(J0['elbow' + k], J0['sh' + k]))), hand = add(el, mv(Rf, sub(J0['hand' + k], J0['elbow' + k])));
       set('armU' + k, Ru, sh, J0['sh' + k]); set('armF' + k, Rf, el, J0['elbow' + k]);
-      if (k === 'R' && cur.wp) set('weapon', fromTo(ref.wp.d, cur.wp.d), hand, J0.handR);
+      if (k === 'R' && cur.wp && ref.wp) set('weapon', fromTo(ref.wp.d, cur.wp.d), hand, J0.handR);
       const Rth = turn('hip' + k, 'knee' + k), Rs = turn('knee' + k, 'ankle' + k);
       const hip = at(root, Rp, 'root', 'hip' + k), knee = add(hip, mv(Rth, sub(J0['knee' + k], J0['hip' + k])));
       set('thigh' + k, Rth, hip, J0['hip' + k]); set('shin' + k, Rs, knee, J0['knee' + k]);
@@ -218,7 +218,12 @@ const PAINTFOLK = (() => {
   function backColour(M, P, ix, iy) {
     const W = M.W, data = M.data, own = M.owner, mode = P.o.back;
     if (mode === 'hair' && M.hairRow) { let y = Math.round(P.box[2] + 2 + (iy - P.box[2]) * (M.hairRow - 4) / max(1, P.box[3] - P.box[2])); for (let n = 0; n < 6 && own[y * W + ix] !== P.id && y > P.box[2]; n++) y--; if (own[y * W + ix] === P.id) return shade(data[y * W + ix], 0.84); let x = ix; const mid = (P.box[0] + P.box[1]) >> 1; for (let n = 0; n < 12 && own[y * W + x] !== P.id; n++) x += x < mid ? 1 : -1; return shade(data[y * W + x], 0.84); }
-    if (mode === 'edge' && P.rowL[iy] >= 0) { const L = P.rowL[iy], Rr = P.rowR[iy], mid = (L + Rr) / 2, half = (Rr - L) / 2, u = (ix - mid) / (half || 1), band = min(half, 5 * K), x = Math.round(u >= 0 ? Rr - 2 - (1 - u) * band : L + 2 + (1 + u) * band), xx = min(Rr, max(L, x)); if (own[iy * W + xx] === P.id) return shade(data[iy * W + xx], 0.8); }
+    if (mode === 'edge' && P.rowL[iy] >= 0) {                   // cloth carried round the back: the strip at each side, folded back and forth across
+      const L = P.rowL[iy], Rr = P.rowR[iy], mid = (L + Rr) / 2, half = (Rr - L) / 2, band = max(3, min(half, 7 * K)), left = ix < mid;
+      let t = (left ? ix - L : Rr - ix) % (2 * band); if (t > band) t = 2 * band - t;
+      const xx = min(Rr, max(L, Math.round(left ? L + 1 + t : Rr - 1 - t)));
+      if (own[iy * W + xx] === P.id) return shade(data[iy * W + xx], 0.8);
+    }
     return shade(data[iy * W + ix], 0.78);
   }
   function render(id, anim, phase, yaw) {
@@ -269,19 +274,110 @@ const PAINTFOLK = (() => {
     const w = bx1 - bx0 + 1, h = GY - by0, out = new Uint32Array(w * h); let emit = null;
     for (let y = 0; y < h; y++) { const s = (by0 + y) * SW + bx0; out.set(cb.subarray(s, s + w), y * w); }
     if (M.emit) { emit = new Uint8Array(w * h); let any = false; for (let y = 0; y < h; y++) { const s = (by0 + y) * SW + bx0; for (let x = 0; x < w; x++) if (eb[s + x]) { emit[y * w + x] = 1; any = true; } } if (!any) emit = null; }
-    return { w, h, data: out, emit, _mask: emit, hs: h / (SH * K), cx: (GX - bx0) / w, paintfolk: true };
+    return { w, h, data: out, emit, _mask: emit, hs: h / (M.spH * K) * M.hs0, cx: (GX - bx0) / w, dy: M.dy0, paintfolk: true };
   }
 
   // ---------------------------------------------------------------- models and frames
-  const models = new Map(), given = new Map();
-  function model(id) {
-    if (!RIGS[id] || !PF || !PF.has(id)) return null;
-    let M = models.get(id); if (M) return M;
-    const sp = given.get(id) || (typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites[id]);
-    if (!sp || !(sp.data instanceof Uint32Array) || sp.w !== RIGS[id].w || sp.h !== SH) return null;   // not loaded, or not the painting this rig was laid over
-    M = build(id, sp); models.set(id, M); return M;
+  // ---------------------------------------------------------------- a rig for anyone: read off the painting itself
+  // The four pilot paintings have rigs laid by hand (RIGS). A painting with the same outline as one of them (the many
+  // recoloured orchardmen) borrows that rig. Anyone else is measured: where the head ends, where the legs part, whether
+  // the arms hang clear of the body. The rule is caution: a part only moves on its own when the painting shows it
+  // standing clear; a robe, a shawl, a jug held to the chest or a staff stays in one piece and moves with the body.
+  function autorig(sp) {
+    const w = sp.w, h = sp.h, d = sp.data, on = (x, y) => (d[y * w + x] >>> 24) >= 128;
+    const runs = (y) => { const r = []; if (y < 0 || y >= h) return r; let s = -1; for (let x = 0; x <= w; x++) { const o = x < w && on(x, y); if (o && s < 0) s = x; else if (!o && s >= 0) { if (x - s >= 2) r.push([s, x - 1]); s = -1; } } return r; };
+    let top = -1, bot = -1; for (let y = 0; y < h; y++) if (runs(y).length) { if (top < 0) top = y; bot = y; }
+    if (top < 0) return null; const H = bot - top + 1;
+    if (H < 90 || w < 24 || w > 100 || H / w < 1.6 || bot < h - 8) return null;                 // not a person standing
+    const Y = (f) => Math.round(top + f * H), wide = (y) => { let b = null; for (const r of runs(y)) if (!b || r[1] - r[0] > b[1] - b[0]) b = r; return b; }, mid = (r) => (r[0] + r[1]) / 2, len = (r) => r[1] - r[0] + 1;
+    let headW = 0, hx = 0, n = 0; for (let y = top; y < Y(0.12); y++) { const r = wide(y); if (r) { headW = max(headW, len(r)); hx += mid(r); n++; } } hx /= n || 1;
+    let neckY = Y(0.145), nw = 1e9; for (let y = Y(0.09); y <= Y(0.2); y++) { const r = wide(y); if (r && len(r) < nw) { nw = len(r); neckY = y; } }
+    if (nw > headW * 0.85) neckY = Y(0.145);                                                      // a hood, or hair to the shoulders
+    const hr = min(headW / 2, 0.075 * H);
+    let cx = 0, m = 0; for (let y = Y(0.2); y < Y(0.5); y++) { const r = wide(y); if (r) { cx += mid(r); m++; } } cx = m ? cx / m : w / 2;
+    const half = (f) => { const r = wide(Y(f)); return r ? len(r) / 2 : w / 4; };
+    // legs: do they part, and from where
+    const legRows = []; for (let y = Y(0.8); y <= Y(0.93); y++) legRows.push(runs(y));
+    const two = legRows.filter((r) => r.length === 2 && r.every((q) => len(q) >= 0.035 * H)).length / legRows.length, many = legRows.filter((r) => r.length >= 3).length / legRows.length;
+    const split = two >= 0.6 && many < 0.3;
+    const kneeY = Y(0.71), hipY = Y(0.5), ankleY = Y(0.94), waistY = Y(0.4);
+    let xa = [cx - 0.11 * w, cx + 0.11 * w], lr = 0.045 * H, splitTop = bot, feetTop = 0;
+    if (split) {
+      const r = runs(Y(0.9)); if (r.length === 2) { xa = [mid(r[0]), mid(r[1])]; lr = max(len(r[0]), len(r[1])) / 2 + 1.5; }
+      splitTop = Y(0.8); while (splitTop > Y(0.45) && runs(splitTop - 1).length === 2) splitTop--;
+    } else { let y = bot; while (y > Y(0.88) && runs(y).length !== 2) y--; if (runs(y).length === 2) { const r = runs(y); xa = [mid(r[0]), mid(r[1])]; feetTop = y; while (feetTop > Y(0.88) && runs(feetTop - 1).length === 2) feetTop--; } }
+    const trousers = split && splitTop <= Y(0.6), hipX = [cx - (cx - xa[0]) * 0.8, cx + (xa[1] - cx) * 0.8], kneeX = [(hipX[0] + xa[0]) / 2, (hipX[1] + xa[1]) / 2];
+    // arms: only when they hang clear of the body on both sides
+    let armRows = 0, tot = 0; const ex = [0, 0], ew = [0, 0];
+    for (let y = Y(0.3); y <= Y(0.44); y++) { tot++; const r = runs(y); if (r.length !== 3) continue; const wa = len(r[0]), wb = len(r[1]), wc = len(r[2]); if (wb >= 0.09 * H && wa >= 0.02 * H && wa <= 0.09 * H && wc >= 0.02 * H && wc <= 0.09 * H) { armRows++; ex[0] += mid(r[0]); ex[1] += mid(r[2]); ew[0] = max(ew[0], wa); ew[1] = max(ew[1], wc); } }
+    const arms = armRows / tot >= 0.7;
+    const J = { root: [cx, Y(0.47)], neck: [cx, neckY], shR: [cx - half(0.22) * 0.8, Y(0.2)], shL: [cx + half(0.22) * 0.8, Y(0.2)], elbowR: [cx - half(0.3) * 0.9, Y(0.36)], elbowL: [cx + half(0.3) * 0.9, Y(0.36)], handR: [cx - half(0.3) * 0.9, Y(0.52)], handL: [cx + half(0.3) * 0.9, Y(0.52)],
+      hipR: [hipX[0], hipY], hipL: [hipX[1], hipY], kneeR: [kneeX[0], kneeY], kneeL: [kneeX[1], kneeY], ankleR: [xa[0], ankleY], ankleL: [xa[1], ankleY] };
+    const parts = [['head', 'head', [[hx, top + hr, hx, max(top + hr, neckY - hr * 0.6), hr * 1.1]], { ymax: neckY + 1, cap: max(4, hr * 0.95), back: 'hair' }]], ghosts = [];
+    const bodyHalf = half(0.3), tcap = max(6, min(13, bodyHalf * (arms ? 0.6 : 0.42)));
+    if (arms) {
+      for (const [k, i] of [['R', 0], ['L', 1]]) {
+        const exx = ex[i] / armRows; let hy = Y(0.44), hxx = exx;
+        for (let y = Y(0.44); y <= Y(0.62); y++) { const r = runs(y); const q = i ? r[r.length - 1] : r[0]; if (!q || r.length < 3 || abs(mid(q) - hxx) > 4) break; hy = y; hxx = mid(q); }
+        const sh = [exx + (cx - exx) * 0.3, Y(0.2)], rr = ew[i] / 2 + 1;
+        J['sh' + k] = sh; J['elbow' + k] = [exx, Y(0.36)]; J['hand' + k] = [hxx, hy];
+        parts.push(['armU' + k, 'armU' + k, [[sh[0], sh[1], exx, Y(0.36), rr + 0.5]], limbs({ cap: rr * 0.8 })], ['armF' + k, 'armF' + k, [[exx, Y(0.36), hxx, hy + 2, rr]], limbs({ cap: rr * 0.75 })]);
+      }
+    }
+    if (trousers) {
+      parts.push(['torso', 'torso', [[cx, neckY + 3, cx, waistY, bodyHalf + (arms ? 0 : 5)]], { ymax: Y(0.45), cap: tcap, back: 'edge' }], ['pelvis', 'pelvis', [[cx, Y(0.44), cx, Y(0.5), bodyHalf + 2]], { ymin: Y(0.4), ymax: splitTop, cap: tcap, back: 'edge' }]);
+      for (const [k, i] of [['R', 0], ['L', 1]]) parts.push(['thigh' + k, 'thigh' + k, [[hipX[i], hipY + 2, kneeX[i], kneeY, lr + 1]], limbs({ ymin: min(splitTop, hipY + 2), cap: lr * 0.8 })], ['shin' + k, 'shin' + k, [[kneeX[i], kneeY, xa[i], bot - 4, lr]], limbs({ cap: lr * 0.8 })]);
+    } else {
+      const skirtEnd = split ? splitTop : (feetTop ? feetTop - 1 : bot), scap = max(7, min(15, half(0.7) * 0.5));
+      parts.push(['torso', 'torso', [[cx, neckY + 3, cx, waistY, arms ? bodyHalf : w * 0.5]], { ymax: Y(0.56), cap: tcap, back: 'edge' }], ['skirt', 'pelvis', [[cx, Y(0.47), cx, max(Y(0.5), skirtEnd - 3), half(0.7) + 3]], { ymin: Y(0.42), ymax: skirtEnd, cap: scap, back: 'edge' }]);
+      if (split || feetTop) for (const [k, i] of [['R', 0], ['L', 1]]) parts.push(['shin' + k, 'shin' + k, [[kneeX[i], kneeY, xa[i], bot - 3, split ? lr : 6]], limbs({ ymin: skirtEnd + 1, cap: split ? lr * 0.8 : 4 })]);
+      const gr = split ? lr + 0.5 : max(5.5, 0.05 * H), low = min(skirtEnd, bot - 2);
+      for (const [k, i] of [['R', 0], ['L', 1]]) { ghosts.push(['thigh' + k, hipX[i], hipY, kneeX[i], kneeY, gr]); if (low > kneeY + 4) { const t = (low - kneeY) / max(1, ankleY - kneeY); ghosts.push(['shin' + k, kneeX[i], kneeY, kneeX[i] + (xa[i] - kneeX[i]) * min(1, t), low, gr - 0.5]); } }
+    }
+    return { w, cx, hair: max(3, Math.round(top + (neckY - top) * 0.36)), J, parts, ghosts, armsFixed: !arms, pose: '_generic', gen: { stride: trousers ? 0.33 : split ? 0.27 : 0.2 }, auto: trousers ? 'trousers' : split ? 'coat' : 'robe' };
   }
-  const cache = new Map(), CAP = 260, COUNT = PF ? PF.COUNT : {};
+  function sameOutline(a, b) {
+    if (!a || !b || a.w !== b.w || a.h !== b.h) return false; let diff = 0, n = 0;
+    for (let i = 0; i < a.data.length; i++) { const x = (a.data[i] >>> 24) >= 128, y = (b.data[i] >>> 24) >= 128; if (x || y) { n++; if (x !== y) diff++; } }
+    return n > 0 && diff / n < 0.03;
+  }
+  const NEVER = new Set(['orla', 'cat', 'p31_seated']);     // seated in her chair, an animal, a map marker
+  const models = new Map(), given = new Map(), rigOf = new Map();
+  function rigFor(id, sp) {
+    if (rigOf.has(id) && rigOf.get(id).src === sp.data) return rigOf.get(id).rig;
+    let rig = null;
+    if (!NEVER.has(id) && sp.data instanceof Uint32Array && sp.data.length === sp.w * sp.h) {
+      if (RIGS[id] && sp.w === RIGS[id].w && sp.h === SH) rig = RIGS[id];
+      else {
+        const sprites = typeof Engine !== 'undefined' && Engine.sprites ? Engine.sprites : {};
+        for (const base in RIGS) { const b = given.get(base) || sprites[base]; if (b && b !== sp && sameOutline(b, sp)) { rig = Object.assign({}, RIGS[base], { pose: base }); break; } }
+        if (!rig) { try { rig = autorig(sp); } catch (e) { rig = null; } }
+      }
+    }
+    rigOf.set(id, { src: sp.data, rig }); return rig;
+  }
+  function model(id) {
+    if (!PF) return null;
+    const sp = given.get(id) || (typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites[id]);
+    if (!sp || !(sp.data instanceof Uint32Array)) return null;
+    let M = models.get(id); if (M && M.src === sp.data) return M;
+    const rig = rigFor(id, sp); if (!rig) return null;
+    M = build(id, sp, rig); M.src = sp.data; models.set(id, M); refs.delete(id);
+    for (const k of Array.from(cache.keys())) if (k.startsWith(id + '|')) cache.delete(k);
+    return M;
+  }
+  // in play a model is built in a quiet moment, one at a time; until then the still painting draws
+  const queue = []; let pumping = false;
+  function pump() { const id = queue.shift(); if (id == null) { pumping = false; return; } try { model(id); } catch (e) { /* stays a still painting */ } setTimeout(pump, 90); }
+  function ready(id) {
+    const sp = typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites[id]; if (!sp) return false;
+    const M = models.get(id); if (M && M.src === sp.data) return true;
+    if (rigOf.has(id) && rigOf.get(id).src === sp.data && !rigOf.get(id).rig) return false;
+    if (!queue.includes(id)) queue.push(id);
+    if (!pumping) { pumping = true; setTimeout(pump, 30); }
+    return false;
+  }
+  const cache = new Map(), CAP = (typeof navigator !== 'undefined' && navigator.deviceMemory && navigator.deviceMemory <= 4) ? 220 : 420, COUNT = PF ? PF.COUNT : {};
   function frame(id, anim, f, octant) {
     const n = COUNT[anim] || COUNT.idle, k = ((f % n) + n) % n, o = ((octant % 8) + 8) % 8, key = id + '|' + anim + '|' + k + '|' + o;
     let s = cache.get(key);
@@ -290,7 +386,7 @@ const PAINTFOLK = (() => {
     cache.set(key, s); if (cache.size > CAP) cache.delete(cache.keys().next().value);
     return s;
   }
-  return { K, COUNT, ids: () => Object.keys(RIGS), has: (id) => !!model(id), source: (id, sp) => { given.set(id, sp); models.delete(id); }, render, frame, cache, model, canAttack: (id) => PF.canAttack(id) };
+  return { K, COUNT, ids: () => Object.keys(RIGS), has: (id) => !!model(id), ready, rigFor, autorig, source: (id, sp) => { given.set(id, sp); models.delete(id); rigOf.delete(id); }, render, frame, cache, model, canAttack: (id) => PF.canAttack(id), stats: () => ({ models: models.size, frames: cache.size, waiting: queue.length }) };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PAINTFOLK;
 if (typeof window !== 'undefined') window.PAINTFOLK = PAINTFOLK;
@@ -313,7 +409,7 @@ if (typeof animDirectionalSprite === 'function' && typeof Engine !== 'undefined'
   };
   animDirectionalSprite = function (e) {
     try {
-      if (GFX.paintfolk !== false && e && !e.deathArt && (e.kind === 'npc' || e.kind === 'enemy' || e.paintfolk) && PAINTFOLK.has(e.sprite)) {
+      if (GFX.paintfolk !== false && e && !e.deathArt && (e.kind === 'npc' || (e.kind === 'enemy' && e.sprite === 'legionnaire') || e.paintfolk) && e.sprite && PAINTFOLK.ready(e.sprite)) {
         const cam = Engine.cam, q = PIXELFOLK.choose(e, cam), T = typeof ANIM !== 'undefined' ? ANIM.T : 0;
         if (T !== tick) { tick = T; made = 0; }
         const key = e.sprite + '|' + q.anim + '|' + (((q.f % PAINTFOLK.COUNT[q.anim]) + PAINTFOLK.COUNT[q.anim]) % PAINTFOLK.COUNT[q.anim]) + '|' + q.octant;
@@ -323,7 +419,7 @@ if (typeof animDirectionalSprite === 'function' && typeof Engine !== 'undefined'
           e._pk = s; e.animSX = 1; e.animSY = 1; e.animSkew = 0; e.animLift = 0;
           const dist = Math.hypot(e.x - cam.x, e.y - cam.y), onScreen = 150 * (Engine.getScale ? Engine.getScale() : 1) / Math.max(0.2, dist) * (e.scale || 1) * s.hs;
           const r3d = typeof R3D !== 'undefined' && R3D.active && R3D.active();
-          return { sprite: !r3d && onScreen < s.h * 0.72 ? half(s) : s, flip: false };
+          return { sprite: (r3d ? dist > 3.6 : onScreen < s.h * 0.72) ? half(s) : s, flip: false };   // far figures take a quarter of the atlas
         }
       }
     } catch (err) { /* fall through to the still painting */ }
