@@ -163,8 +163,9 @@ const KESTREL16 = (function () {
     },
     below: {
       tankA: S('Number-one lift-tank. The oldest of the three and the steadiest.'),
-      tankB: S('Number-three lift-tank, closed with weaverling silk and an Office valve. It hums a little flat.'),
-      tankC: S('The new lift-tank, built up from the cutter\'s. The brass has been rubbed until it looks wet.'),
+      tankB: S('Number-two lift-tank. Sound, and the quietest of the three.'),
+      tankThree: S('Number-three lift-tank, closed with weaverling silk and an Office valve. It hums a little flat.'),
+      tankC: S('The new number-three lift-tank, built up from the cutter\'s. The brass has been rubbed until it looks wet.'),
       gauge: S('A pressure gauge. The needle has said forty since Oakhaven.'),
       bench: S('Pennick\'s bench. Every tool has a chalk outline, and every outline is occupied.'),
       stoveCold: S('A cast-iron stove with a cold firebox and a pot hung on it. Somebody has swept it. Nobody has lit it.'),
@@ -575,7 +576,7 @@ const KESTREL16 = (function () {
       for (let r = 0; r < 5; r++) line(c, 12, 24 + r * 17, 68, 24 + r * 17, 'rgba(60,50,90,0.65)', 1.2);
       line(c, 20, 20, 18, 108, 'rgba(255,255,255,0.35)', 1.4);
     });
-    // a burnished brass lift-tank with riveted bands, a gauge and a feed-pipe: the engineer's pride
+    // a burnished brass lift-tank with riveted bands, a gauge and a feed-pipe: Pennick's pride
     reg('p16k_tank_new', 96, 148, (c) => {
       ell(c, 48, 142, 36, 5, 'rgba(0,0,0,0.38)');
       rect(c, 10, 22, 76, 112, (() => { const g = c.createLinearGradient(10, 0, 86, 0); g.addColorStop(0, '#6a4a14'); g.addColorStop(0.35, '#e0b84e'); g.addColorStop(0.6, '#b98a2a'); g.addColorStop(1, '#4e340c'); return g; })());
@@ -1063,7 +1064,9 @@ const KESTREL16 = (function () {
     } else prop('p16k_stove_cold', ...BELOW_AT.stove, 'stove_cold', { scale: 0.9, solid: true, radius: 0.3, label: TX.below.stoveCold });
     if (upHas('lamps')) for (const [x, y] of GL_BELOW) prop('p16k_glasslamp', x, y, 'u_lamps', { scale: 0.55, glow: 0.8, glassLamp: true, label: TX.below.lantern });
     if (upHas('bunks')) for (const [x, y] of BUNKS) prop('bed', x, y, 'u_bunks', { scale: 0.55, solid: true, radius: 0.4, label: TX.below.bunkNew });
+    // the holed tank is number three (Book One ch. 21, 24): Tobiah's patch stands in its place until the new tank replaces it
     if (upHas('tank')) prop('p16k_tank_new', ...BELOW_AT.tankC, 'u_tank', { scale: 1.45, solid: true, radius: 0.7, label: TX.below.tankC });
+    else prop('p16k_tank_three', ...BELOW_AT.tankC, 'lifttank', { scale: 1.4, solid: true, radius: 0.7, label: TX.below.tankThree });
     if (upHas('rail')) {
       prop('p16k_railboard', ...BELOW_AT.rail, 'u_rail', { scale: 0.62, yOff: -0.34, label: TX.below.railBoard });
       const st = railState(), h = H15();
