@@ -471,20 +471,23 @@ vec4 r3dLandmarks(float az, float te) {
   // ---------------------------------------------------------------------------------------------------- world textures
   // Every Engine texture is a layer of one TEXTURE_2D_ARRAY (64x64, mipmapped, nearest within a level: the pixel art keeps
   // its texels close up, distance picks a smaller level so nothing shimmers).
-  const world = { tex: null, cap: 0, layers: new Map(), srcs: new Map(), checkI: 0, sums: new Map() };
+  const world = { tex: null, cap: 0, size: 64, layers: new Map(), srcs: new Map(), checkI: 0, sums: new Map() };
+  // Phase 77 (js/walls77.js): with "Sharp walls and ground" on, every layer is 256 x 256, enlarged from the tile itself
+  const worldSize = () => (typeof HDTEX !== 'undefined' && HDTEX.on() ? HDTEX.SIZE : 64);
   function texSum(d) { let h = 0x811c9dc5; for (let i = 0; i < d.length; i += 61) h = Math.imul(h ^ d[i], 16777619); return h >>> 0; }
   function worldEnsureCap(n) {
-    if (n <= world.cap && world.tex) return false;
+    const size = worldSize();
+    if (n <= world.cap && world.tex && size === world.size) return false;
     let cap = Math.max(128, world.cap || 0); while (cap < n) cap *= 2;
     const max = gl.getParameter(gl.MAX_ARRAY_TEXTURE_LAYERS) || 256; cap = Math.min(cap, max);
     if (world.tex) gl.deleteTexture(world.tex);
     const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D_ARRAY, t);
-    gl.texStorage3D(gl.TEXTURE_2D_ARRAY, 7, gl.RGBA8, 64, 64, cap);
+    gl.texStorage3D(gl.TEXTURE_2D_ARRAY, size === 64 ? 7 : 9, gl.RGBA8, size, size, cap);
     gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
     gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_WRAP_S, gl.REPEAT); gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_WRAP_T, gl.REPEAT);
     // no anisotropic filtering: drivers turn it into linear magnification, which would blur the pixel art
-    world.tex = t; world.cap = cap;
+    world.tex = t; world.cap = cap; world.size = size;
     // re-upload what we had
     for (const [name, layer] of world.layers) { const d = Engine.textures[name]; if (d) uploadLayer(layer, d); }
     world.mipDirty = true;
@@ -492,7 +495,9 @@ vec4 r3dLandmarks(float az, float te) {
   }
   function uploadLayer(layer, d) {
     gl.bindTexture(gl.TEXTURE_2D_ARRAY, world.tex);
-    gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, layer, 64, 64, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(d.buffer, d.byteOffset, 64 * 64 * 4));
+    const hd = world.size !== 64 ? HDTEX.bytes(d) : null;
+    if (hd) gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, layer, world.size, world.size, 1, gl.RGBA, gl.UNSIGNED_BYTE, hd);
+    else if (world.size === 64) gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, layer, 64, 64, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(d.buffer, d.byteOffset, 64 * 64 * 4));
     world.mipDirty = true; stats.uploads++;
   }
   // the layer of a texture name (allocated and uploaded on first use); -1 when the engine has no such texture
@@ -512,6 +517,7 @@ vec4 r3dLandmarks(float az, float te) {
   // per frame: replaced textures re-upload at once; a few are checksummed in turn to catch edits in place
   function worldCheck() {
     if (!world.tex) return;
+    if (worldSize() !== world.size) worldEnsureCap(world.cap);          // the switch was flipped: rebuild at the other size
     for (const [name, L] of world.layers) { const d = Engine.textures[name]; if (d && d !== world.srcs.get(name)) { uploadLayer(L, d); world.srcs.set(name, d); world.sums.set(name, texSum(d)); } }
     const names = Array.from(world.layers.keys()); if (!names.length) return;
     for (let k = 0; k < 3; k++) {
