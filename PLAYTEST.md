@@ -31,6 +31,19 @@ Notes:
 
 ---
 
+## Small canon touches IV (built 11 Nov; ROADMAP R9 #25, g, i, l, p)
+
+Four small things from the book, each with one small design decision ([PROPOSED]).
+
+- **Kaelen's clamps.** In Part One, meet Kaelen, then use one of the four turf domes between his hut and the hearth and choose "Walk the clamps". Wear headphones. Can you hear which clamp has gone quiet, by walking among them, before it pops (8 seconds)? Is 8 seconds fair, or too kind? Is 3 sovereigns a clamp worth an evening? With sound captions on (Options), is the named clamp enough to play it without sound?
+- **The whistle.** After the water-meadow (whistle with Lyra at least once), open the Song-book (Tab): is "The falling fifth, whistled" easy to find and to use? In Part Four with Lyra or Kaelen, in fog (wait for the Deep Woods' mist, or the console), tell them to wait, walk off into the white and whistle. Does "from your left, some way off" get you back to them? Once you have whistled outside the Hedge, does the Wearer's second answer from the other side frighten, or only confuse? At the Cloister porch, does your own whistle in "Seven times" land?
+- **Consecrated.** Sit a sermon to the end on a Chapel-day (Dawnday at first light, Stasisday at dusk, Memoryday evening). Does the last line read as the book's quiet aside? As a glassed traveller, walk beside a Legionnaire in the lanes (Dawnday's two who cross to Lyra are the easiest): does the twice-made ward-sign happen, and is it noticeable?
+- **The margin.** Open the Ledger (K). Do the margin selects fit on a narrow screen? With Sable aboard, give an entry "Died bravely.": is her line through it, and the Precept, a sting rather than a scolding?
+
+Notes:
+
+---
+
 ## Echo I, "The Thread Where She Answered", as an extra (built 10 Nov; ROADMAP R9 #24)
 
 Title screen, Extras, "The Thread Where She Answered" (the extras open once Book One is finished, or with a finished save code). You are Lyra in the thread the Tide-Weaver shows you: read his cards, go out of her door and down Cooper's Row to the flat stone behind the cooperage, and sit.
