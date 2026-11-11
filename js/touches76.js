@@ -15,7 +15,8 @@
 //       the water-meadow (js/meadow49.js, p49_whistle), the Song-book offers it: two notes, the Root and down, no voice
 //       spent. In fog (js/weather.js mist), your companion answers from where they are, so you can tell the way: Lyra
 //       whistles it back ("And I'll whistle it back. Then you'll know it's me."). [PROPOSED] Kaelen cannot whistle it
-//       (the book never has him), so his glass hand rings once instead. THE MIMIC RULE: use it outside the Hedge once
+//       (the book never has him), so his glass hand rings once instead; Sable, or anyone downed or told to keep quiet,
+//       gives no answer. THE MIMIC RULE: use it outside the Hedge once
 //       (any map not inside it, js/game.js LAW_MAPS) and from then on, in fog, the Wearer answers too, from somewhere
 //       else: "It got the interval exactly right." (l. 2229). And at the Cloister porch (js/grove.js porchVoice, ch. 20)
 //       it whistles your whistle back at you after the boy's. Not once the Wearer is dead.
@@ -24,8 +25,8 @@
 //       to the end (js/synod15.js, the Chapel's three sermon days) closes with that line. And in Oakhaven's lanes, a
 //       glassed traveller beside a Synod soldier gets the ward-sign (js/narrow28.js's witness) twice: "and then, because
 //       he was walking beside a Synod soldier, made it again, faster." (l. 650) [PROPOSED] beside = within two paces of
-//       any Legionnaire figure, once a game day, Part One only. The game seldom walks a Legionnaire through the lanes
-//       (Dawnday's two at Cooper's Row, the Rite's column), so it is a rare moment, as it should be.
+//       a Legionnaire figure or one at its post (never one after you), once a game day, Part One only. The game seldom
+//       walks a Legionnaire through the lanes (Dawnday's two at Cooper's Row, the Rite's column), so it is rare.
 //    p  THE VEIL'S THREE RULES (ch. 15, l. 4167). [PROPOSED UI] each Ledger entry (K) has a margin: no note, a plain note
 //       (where and when: "Entered: the Kestrel's hold, Massday."), or a comforting one ("Died bravely."). Once Sable is
 //       with you (sable_joined), a comforting note gets what she did to her own: "Sable reads it over your shoulder, and
@@ -100,16 +101,19 @@ const TOUCHES76 = (function () {
   };
 
   // ---------------------------------------------------------------- sound from a place (the spatial-audio mix)
-  // a short gain + pan chain for one effect, so a clamp or an answering whistle comes from where it is
+  // a short gain + low-pass + pan chain for one effect (spatial-audio's mix: walls muffle), so a clamp or an answering
+  // whistle comes from where it is
   function at(x, y, fn) {
     try {
       const ctx = Audio_.ctx;
       if (!ctx || typeof SPATIAL === 'undefined' || !SPATIAL.settings.positional || !Audio_.sfxBus) return fn();
-      const c = Engine.cam, m = SPATIAL.mix({ x: c.x, y: c.y, dir: c.dir }, { x, y }, 0);
-      const g = ctx.createGain(); g.gain.value = m.gain;
-      let tail = g;
-      if (ctx.createStereoPanner) { const p = ctx.createStereoPanner(); p.pan.value = m.pan; g.connect(p); tail = p; }
+      const c = Engine.cam, m = SPATIAL.mix({ x: c.x, y: c.y, dir: c.dir }, { x, y }, SPATIAL.wallsBetween(G.map, x, y, c.x, c.y));
+      const g = ctx.createGain(), lp = ctx.createBiquadFilter(), nodes = [g, lp];
+      g.gain.value = m.gain; lp.type = 'lowpass'; lp.frequency.value = m.cutoff; g.connect(lp);
+      let tail = lp;
+      if (ctx.createStereoPanner) { const p = ctx.createStereoPanner(); p.pan.value = m.pan; lp.connect(p); tail = p; nodes.push(p); }
       tail.connect(Audio_.sfxBus);
+      setTimeout(() => { for (const n of nodes) try { n.disconnect(); } catch (e) { /* gone */ } }, 4000);   // every effect here is under 2 s
       return Audio_.withRoute(g, fn);
     } catch (e) { return undefined; }
   }
@@ -156,7 +160,7 @@ const TOUCHES76 = (function () {
     showEvent(TX.clampTitle, body + '<br><br>' + TX.clampJob, [{ t: TX.walk, f: startJob }, { t: TX.leave, f: null }]);
   }
   function startJob() {
-    job = { round: 1, t: 0, quiet: -1, quietT: 0, saved: 0, lost: 0, dead: [false, false, false, false], hissed: [0, 0, 0, 0], hissT: [0.2, 0.6, 1.0, 1.4] };
+    job = { who: G.player, round: 1, t: 0, quiet: -1, quietT: 0, saved: 0, lost: 0, dead: [false, false, false, false], hissed: [0, 0, 0, 0], hissT: [0.2, 0.6, 1.0, 1.4] };
     say(TX.begin, '', 3000);
   }
   function nextRound() {
@@ -172,6 +176,7 @@ const TOUCHES76 = (function () {
   }
   function tickJob(dt) {
     if (!job) return;
+    if (job.who !== G.player) { job = null; return; }   // a new game or another run: the day's work is not theirs
     if (G.mapId !== 'clearing') { finish(true); return; }
     if (G.state !== 'play') return;
     job.t += dt;
@@ -216,21 +221,22 @@ const TOUCHES76 = (function () {
   }
   let lastWhistle = -1e9;
   function whistle() {
-    if (!hasG() || !knowsWhistle() || G.time - lastWhistle < 3) return false;
+    if (!hasG() || guest() || !knowsWhistle() || G.time - lastWhistle < 3) return false;   // the host keeps the shared flags
     lastWhistle = G.time;
     const f = F(), heardBefore = !!f.p76_heard, wearer = !f.wearer_dead, outside = !insideHedge();
     try { addNoise(3); } catch (e) { /* no noise model */ }
     sfx('song', 348, 0.4); setTimeout(() => sfx('song', 232, 0.6), 420);
     say(TX.wYou, '', 3500);
     if (outside && wearer && !heardBefore) f.p76_heard = 1;
-    if (!foggy() || !outside) return true;
+    if (!foggy()) return true;
     let rel = null;
     const P = G.party, e = P && P.id && typeof partyEnt === 'function' ? partyEnt() : null;
-    if (e && P.map === G.mapId && P.order !== 'quiet') {
+    // Lyra whistles back; Kaelen's glass answers; anyone else (Sable) has no answer the book gives them
+    if (e && P.map === G.mapId && P.order !== 'quiet' && !(P.downed && P.downed[P.id])) {
       if (P.id === 'lyra') rel = answer(TX.wLyra, e.x, e.y, () => sfx('fifth'));
-      else rel = answer(TX.wKaelen, e.x, e.y, () => sfx('glasshit'));
+      else if (P.id === 'kaelen') rel = answer(TX.wKaelen, e.x, e.y, () => sfx('glasshit'));
     }
-    if (wearer && heardBefore) {
+    if (outside && wearer && heardBefore) {
       const c = Engine.cam, a = c.dir + (rel == null ? Math.PI * 0.75 : rel + Math.PI);   // somewhere else in the white
       answer(TX.wMimic, c.x + Math.cos(a) * 8, c.y + Math.sin(a) * 8, () => sfx('fifth'));
     }
@@ -238,7 +244,7 @@ const TOUCHES76 = (function () {
   }
   function addSongRow() {
     if (!knowsWhistle() || G.state !== 'panel' || typeof document === 'undefined') return;
-    const panel = document.querySelector('#modal-panel'); if (!panel || panel.querySelector('#p76-whistle') || !/Song-book/.test((panel.querySelector('h2') || {}).textContent || '')) return;
+    const panel = document.querySelector('#modal-panel'); if (G.openPanel !== 'songs' || !panel || panel.querySelector('#p76-whistle')) return;
     const p = document.createElement('p'); p.className = 'p76-whistle';
     const b = document.createElement('b'); b.style.color = 'var(--gold)'; b.textContent = TX.wName;
     const s = document.createElement('span'); s.className = 'muted'; s.textContent = ' ' + TX.wDesc + ' ';
@@ -249,19 +255,23 @@ const TOUCHES76 = (function () {
   // the porch's cards are built inside grove.js's choice callbacks: once porchVoice has begun (wearer_porch), watch
   // showEvent until the seventh-time card goes by (porchVoice itself is left unwrapped: js/touches71's test reads it)
   const SEVEN = 'Seven times', BEFORE = 'You do not make a sound';
+  let porchW = null;
   function watchPorch() {
-    const f = F(), cur = window.showEvent, on = f.wearer_porch && !f.porch_survived && !f.p76_porch;
-    if (cur && cur._p76) { if (!on) window.showEvent = cur._own; return; }   // the porch ended another way: step back out
+    const f = F(), on = f.wearer_porch && !f.porch_survived && !f.p76_porch;
+    if (porchW) { if (!on) unwatch(); return; }   // the porch ended another way: step back out
     if (!on) return;
+    const own = window.showEvent;
     const w = function (t, b, c) {
-      if (t === SEVEN) {
-        window.showEvent = cur; F().p76_porch = 1;
+      if (porchW === w && t === SEVEN) {
+        F().p76_porch = 1; unwatch();
         if (F().p76_heard && !F().wearer_dead && typeof b === 'string' && b.indexOf(BEFORE) > 0) b = b.replace(BEFORE, TX.porch + '<br><br>' + BEFORE);
       }
-      return cur.call(this, t, b, c);
+      return own.call(this, t, b, c);
     };
-    w._p76 = true; w._own = cur; window.showEvent = w;
+    w._own = own; porchW = w; window.showEvent = w;
   }
+  // put showEvent back only if nobody has wrapped it since; otherwise our wrapper stays in the chain as a pass-through
+  function unwatch() { const w = porchW; porchW = null; if (w && window.showEvent === w) window.showEvent = w._own || window.showEvent; }
 
   // ================================================================ l · Consecrated
   function sermonLine() {
@@ -269,7 +279,8 @@ const TOUCHES76 = (function () {
     const box = document.getElementById('s15-lines'); if (!box || box.querySelector('.p76-cons')) return;
     const p = document.createElement('p'); p.className = 's15-line p76-cons'; p.textContent = TX.cons; box.appendChild(p);
   }
-  const isLegion = (e) => e && !e.dead && !e.hidden && (e.type === 'legionnaire' || e.sprite === 'legionnaire');
+  // a Legionnaire standing or walking at your side: a figure, or one at its post (never one that is after you)
+  const isLegion = (e) => e && !e.dead && !e.hidden && (e.type === 'legionnaire' || e.sprite === 'legionnaire') && (e.kind === 'deco' || e.passive || e.state === 'passive');
   function wardTwice() {
     const f = F();
     if (G.mapId !== 'oakhaven' || !partOne() || !G.player.glassed || f.p76_wday === day() + 1 || typeof NARROW28 === 'undefined') return;
@@ -287,7 +298,7 @@ const TOUCHES76 = (function () {
   const weekday = (d) => (typeof DAYS !== 'undefined' ? DAYS[((d | 0) % 8 + 8) % 8] : '');
   const noteText = (l, n) => (n === 'plain' ? fmt(TX.plainNote, l.where, weekday(l.day)) : n === 'comfort' ? TX.comfortNote : '');
   function setNote(i, v) {
-    const l = G.ledger[i]; if (!l) return;
+    const l = G.ledger[i]; if (!l || guest()) return;
     delete l.p76s;
     if (v === 'plain' || v === 'comfort') l.p76n = v; else delete l.p76n;
     if (v === 'comfort' && F().sable_joined) {

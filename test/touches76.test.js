@@ -135,6 +135,12 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       Weather.set('clear', 3); window.__msgs.length = 0; G.time += 10; TOUCHES76.whistle(); out.clear = !T.heard(/whistling it back/);
       partyDismiss(true); partyJoin('kaelen'); Weather.set('mist', 3); window.__msgs.length = 0; G.time += 10; TOUCHES76.whistle();
       out.kaelen = T.heard(/glass rings once, faintly: Kaelen's hand, answering\./);
+      partyDismiss(true);
+      // Sable has no answer the book gives her; a downed Lyra cannot whistle
+      partyJoin('sable'); window.__msgs.length = 0; G.time += 10; TOUCHES76.whistle();
+      out.sable = !!G.party && G.party.id === 'sable' && !T.heard(/whistling it back|glass rings/);
+      partyDismiss(true); partyJoin('lyra'); G.party.downed = { lyra: true }; window.__msgs.length = 0; G.time += 10; TOUCHES76.whistle();
+      out.downed = !T.heard(/whistling it back/);
       partyDismiss(true); Weather.set('clear', 3);
       return out;
     }).catch((e) => ({ err: String(e && e.stack || e) }));
@@ -144,6 +150,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(r.lyra && r.left, 'i. in fog, Lyra whistles it back, and you can tell where she is');
     check(r.mimic && r.noMimic, 'i. from then on the Wearer answers too: "It got the interval exactly right." (not once it is dead)');
     check(r.clear && r.kaelen, 'i. no answer is needed out of the fog; Kaelen answers with the glass');
+    check(r.sable && r.downed, 'i. nobody else answers for them: not Sable, and not Lyra when she is down');
 
     // the porch: the Wearer uses it on you
     r = await page.evaluate(() => {
@@ -192,6 +199,11 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       window.__msgs.length = 0; T.run(1);
       out.twice = T.heard(/^A woman in a doorway makes the ward-sign at you, fingers to lips and fingers to ear, and then, because you are walking beside a Synod soldier, makes it again, faster\.$/);
       window.__msgs.length = 0; T.run(1); out.daily = !T.heard(/makes it again, faster/) && G.flags.p76_wday === (G.day | 0) + 1;
+      // a Legionnaire that is after you is not walking beside you
+      T.reset(); G.player.glassed = true; lane();
+      const foe = hydrate({ kind: 'enemy', type: 'legionnaire', x: Engine.cam.x + 0.9, y: Engine.cam.y, transient: true }); foe.state = 'chase'; G.ents.push(foe);
+      window.__msgs.length = 0; T.run(0.5); out.notFoe = !T.heard(/makes it again, faster/) && !G.flags.p76_wday;
+      G.ents.splice(G.ents.indexOf(foe), 1);
       T.reset(); G.player.glassed = false; lane(); G.ents.push(leg); leg.x = Engine.cam.x + 0.9; leg.y = Engine.cam.y;
       window.__msgs.length = 0; T.run(1); out.notGlassed = !T.heard(/makes it again, faster/);
       void w1;
@@ -199,7 +211,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     }).catch((e) => ({ err: String(e && e.stack || e) }));
     check(r.open && r.cons && r.once, 'l. a Chapel-day sermon comes round to the Consecrated, and they look toward the North Gate (' + (r.err || '') + ')');
     check(r.twice && r.daily, 'l. glassed, beside a Synod soldier in the lanes: the ward-sign, and then again, faster (once a day)');
-    check(r.noSoldier && r.notGlassed, 'l. not without the soldier, and not unless you carry the glass');
+    check(r.noSoldier && r.notGlassed && r.notFoe, 'l. not without the soldier (nor beside one that is after you), and not unless you carry the glass');
 
     // ---- p. the Veil's three rules
     r = await page.evaluate(() => {
