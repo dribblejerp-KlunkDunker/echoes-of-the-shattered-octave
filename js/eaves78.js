@@ -755,14 +755,31 @@ const EAVES78 = (() => {
         }
       }
       // ---- the Chapel's tower: an open, empty bell-frame ("Nothing hangs in the tower. You can see daylight through the frame.")
-      if (b.towers.length && b.spire) {                        // Greenroot's chapel: a slated spire on the tower, broached at the foot, a finial
+      if (b.towers.length && b.spire) {
+        // Greenroot's chapel (its spire is on Oakhaven's skyline: ruled canon; owner, 11 Nov: "make the spire look crazy cool").
+        // An eight-sided spire of oak shingles, three times as tall as its tower is wide, wrung a quarter-turn and more from
+        // foot to point; broached at the corners, a slim pinnacle on each corner of the tower, louvred lancets under the
+        // eaves, and at the very top the bibles' "silent reed": a bronze tuning-reed, two tines, standing where a cross would.
         let X0 = 1e9, X1 = -1e9, Y0 = 1e9, Y1 = -1e9, T = 0; for (const t of b.towers) { X0 = min(X0, t.x); X1 = max(X1, t.x + 1); Y0 = min(Y0, t.y); Y1 = max(Y1, t.y + 1); T = max(T, t.top); }
-        const cx = (X0 + X1) / 2, cy = (Y0 + Y1) / 2, o = -0.2, hs = max(3.4, (X1 - X0) * 2.4), tip = [cx, cy, T + hs], Ls = L_('e78_slate');
-        box(X0 - 0.05, Y0 - 0.05, X1 + 0.05, Y1 + 0.05, T - 0.04, T + 0.08, Lstone, Lstone, 1.1);
-        const q = [[X0 - o, Y0 - o, T + 0.06], [X1 + o, Y0 - o, T + 0.06], [X1 + o, Y1 + o, T + 0.06], [X0 - o, Y1 + o, T + 0.06]];
-        for (let i = 0; i < 4; i++) { const p0 = q[i], p1 = q[(i + 1) % 4], out = i === 0 ? [0, -1, 0.3] : i === 1 ? [1, 0, 0.3] : i === 2 ? [0, 1, 0.3] : [-1, 0, 0.3], len = hyp(p1[0] - p0[0], p1[1] - p0[1]);
-          tri([p0, p1, tip], [[0, hs], [len, hs], [len / 2, 0]], Ls, MAT.wall, i % 2 ? 1 : 0.84, planeN(p0, p1, tip, out)); }
-        box(cx - 0.03, cy - 0.03, cx + 0.03, cy + 0.03, T + hs - 0.05, T + hs + 0.3, Ldark, Ldark, 0.8);
+        const cx = (X0 + X1) / 2, cy = (Y0 + Y1) / 2, hw = (X1 - X0) / 2, hs = max(4.5, hw * 6.2), zb = T + 0.08, Lsp = L_('e78_shingle'), SEG = 12, TW = 1.75, r0 = hw * 0.98;
+        box(X0 - 0.06, Y0 - 0.06, X1 + 0.06, Y1 + 0.06, T - 0.05, zb, Lstone, Lstone, 1.1);
+        const ring = (k) => { const t = k / SEG, r = r0 * Math.pow(1 - t, 0.92) + 0.012, a0 = PI / 8 + t * TW, z = zb + hs * t, out = []; for (let i2 = 0; i2 < 8; i2++) { const a = a0 + i2 * PI / 4; out.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r, z]); } return out; };
+        for (let k = 0; k < SEG; k++) { const lo = ring(k), hi = ring(k + 1);
+          for (let i2 = 0; i2 < 8; i2++) { const p0 = lo[i2], p1 = lo[(i2 + 1) % 8], p2 = hi[(i2 + 1) % 8], p3 = hi[i2], mx = (p0[0] + p1[0]) / 2 - cx, my = (p0[1] + p1[1]) / 2 - cy, nm = planeN(p0, p1, p3, [mx, my, 0.3]);
+            quad([p0, p1, p2, p3], [[i2 * 0.5, (SEG - k) * 0.5], [(i2 + 1) * 0.5, (SEG - k) * 0.5], [(i2 + 1) * 0.5, (SEG - k - 1) * 0.5], [i2 * 0.5, (SEG - k - 1) * 0.5]], Lsp, MAT.wall, 0.78 + 0.34 * abs(nm[0]) + (i2 % 2 ? 0.06 : 0), nm); } }
+        // the broaches: the square tower meets the eight-sided spire
+        { const base = ring(0); for (const [qx, qy] of [[X0, Y0], [X1, Y0], [X1, Y1], [X0, Y1]]) { let a = null, c2 = null, da = 1e9, dc = 1e9; for (const pt of base) { const d = hyp(pt[0] - qx, pt[1] - qy); if (d < da) { c2 = a; dc = da; a = pt; da = d; } else if (d < dc) { c2 = pt; dc = d; } }
+            const up = ring(2), top2 = up.reduce((m2, pt) => hyp(pt[0] - qx, pt[1] - qy) < hyp(m2[0] - qx, m2[1] - qy) ? pt : m2, up[0]), q0 = [qx, qy, zb];
+            tri([q0, a, top2], [[0, 0.6], [0.4, 0.6], [0.2, 0]], Lsp, MAT.wall, 0.95, planeN(q0, a, top2, [qx - cx, qy - cy, 0.4])); tri([q0, c2, top2], [[0, 0.6], [0.4, 0.6], [0.2, 0]], Lsp, MAT.wall, 0.82, planeN(q0, c2, top2, [qx - cx, qy - cy, 0.4])); } }
+        // corner pinnacles
+        for (const [qx, qy] of [[X0 + 0.02, Y0 + 0.02], [X1 - 0.02, Y0 + 0.02], [X1 - 0.02, Y1 - 0.02], [X0 + 0.02, Y1 - 0.02]]) { box(qx - 0.08, qy - 0.08, qx + 0.08, qy + 0.08, zb, zb + 0.3, Lstone, Lstone, 1.05);
+          const pr = 0.07, tipP = [qx, qy, zb + 0.95], pq = [[qx - pr, qy - pr, zb + 0.3], [qx + pr, qy - pr, zb + 0.3], [qx + pr, qy + pr, zb + 0.3], [qx - pr, qy + pr, zb + 0.3]];
+          for (let i2 = 0; i2 < 4; i2++) tri([pq[i2], pq[(i2 + 1) % 4], tipP], [[0, 0.6], [0.14, 0.6], [0.07, 0]], Lstone, MAT.wall, i2 % 2 ? 1.15 : 0.92, unit(i2 === 1 ? 1 : i2 === 3 ? -1 : 0, i2 === 0 ? -1 : i2 === 2 ? 1 : 0, 0.25)); }
+        // louvred lancets under the eaves of the tower, one to a face that stands clear of the nave roof
+        for (const [nx_, ny_] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) { const fx = cx + nx_ * hw, fy = cy + ny_ * hw, zr = roofZ(b, fx + nx_ * 0.3, fy + ny_ * 0.3), z0w = max(T - 1.15, (zr == null ? T - 1.15 : zr + 0.12)); if (T - 0.2 - z0w > 0.45) opening({ cx: fx, cy: fy, nx: nx_, ny: ny_, z0: z0w, z1: T - 0.2, hw: 0.2, style: 'lancet', lit: false }); }
+        // the silent reed
+        { const zt = zb + hs, Lr = L_('e78_bronze'); box(cx - 0.035, cy - 0.035, cx + 0.035, cy + 0.035, zt - 0.25, zt + 0.42, Lr, Lr, 1.2); box(cx - 0.17, cy - 0.035, cx + 0.17, cy + 0.035, zt + 0.42, zt + 0.49, Lr, Lr, 1.2);
+          for (const sg of [-1, 1]) box(cx + sg * 0.14 - 0.03, cy - 0.03, cx + sg * 0.14 + 0.03, cy + 0.03, zt + 0.49, zt + 1.15, Lr, Lr, 1.3); }
       } else if (b.towers.length) {
         let X0 = 1e9, X1 = -1e9, Y0 = 1e9, Y1 = -1e9, T = 0; for (const t of b.towers) { X0 = min(X0, t.x); X1 = max(X1, t.x + 1); Y0 = min(Y0, t.y); Y1 = max(Y1, t.y + 1); T = max(T, t.top); }
         const pw = 0.16, hgt = 0.62, bm = 0.13;
