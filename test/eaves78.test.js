@@ -83,7 +83,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   const blk = (x0, y0, x1, y1, tex) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) put(x, y, { tex }); };
   blk(2, 1, 9, 6, 't_greymarble'); put(5, 6, { door: true, tex: 't_door', label: 'The Cloister of the Lost Choir' });      // touches the map's edge wall
   blk(12, 3, 17, 9, 't_greymarble'); put(12, 6, { door: true, tex: 't_door', label: 'The Moot-house' });
-  blk(20, 2, 27, 7, 't_stone'); put(20, 4, { door: true, tex: 't_door', label: 'The Malting — Relief Station Nineteen' });
+  blk(20, 2, 27, 7, 't_brick'); put(20, 4, { door: true, tex: 't_door', label: 'The Malting — Relief Station Nineteen' });
   blk(5, 12, 10, 16, 't_greymarble'); blk(2, 17, 10, 20, 't_greymarble'); blk(2, 21, 4, 21, 't_greymarble');           // an L-shaped block and a stub
   blk(14, 13, 16, 20, 't_greymarble');                                                                                // three wide: too thin to be a building
   // a lane: a strip of raised lid in a ring of wall and doors, on dry paving
@@ -97,7 +97,12 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   check(pg.houses.filter((b) => b.grove).every((b) => b.windows.filter((w) => !w.gallery).every((w) => w.style === 'arch' && !w.lit)), 'tall dark arched windows: nobody in the city lights a lamp');
   const gal = moot.windows.filter((w) => w.gallery);
   check(gal.length === 3 && gal.every((w) => w.lit && w.nx === -1 && w.z0 > 1) && Math.abs(gal[0].cx - (12 + moot.inset)) < 1e-9, 'the Moot-house: "a gallery of three windows over the plaza", lit, behind the columns on the side its door is on');
-  check(malt.stone && malt.plain && !malt.grove && malt.type === 'hip' && malt.ext > 0 && malt.windows.every((w) => w.z0 > 1) && malt.windows.some((w) => w.lit) && malt.windows.some((w) => !w.lit), "the Malting, the Office's own house: plain stone, no colonnade, a blind ground floor, some small windows lit above");
+  check(malt.brick && !malt.stone && malt.plain && !malt.grove && malt.type === 'gable' && malt.ext > 0 && malt.jetty === 0 && malt.roofTex === 'e78_slate' && malt.windows.every((w) => w.z0 > 1 && w.style === 'cottage') && malt.windows.some((w) => w.lit) && malt.windows.some((w) => !w.lit), 'the Malting ("a long brick range"): brick, no colonnade, a blind ground floor, shuttered windows above with some lit, one long slate roof');
+  { const k = malt.extras.filter((e) => e.kind === 'kiln'); check(k.length === 2 && k.every((e) => e.y < 4 && e.x > 24 && E.roofZ(malt, e.x, e.y) != null), '"two kiln-chimneys at the north end": two, at the north of the end away from the door'); }
+  { const Wy = 12, Hy = 12, cy = new Array(Wy * Hy).fill(null); for (let y = 0; y < Hy; y++) for (let x = 0; x < Wy; x++) if (x === 0 || y === 0 || y === Hy - 1) cy[y * Wy + x] = { tex: 't_hedge' }; for (let y = 1; y < Hy - 1; y++) for (let x = 9; x < Wy; x++) cy[y * Wy + x] = { tex: 't_brick' }; cy[2 * Wy + 9] = { door: true, tex: 't_door', label: 'The front door' }; cy[7 * Wy + 9] = { door: true, tex: 't_door', label: 'The freight door at the kiln end' };
+    const py = E.plan({ id: 'p61_yard', w: Wy, h: Hy, cells: cy }), yb = py.houses[0];
+    check(py.houses.length === 1 && yb.brick && yb.type === 'gable' && yb.C === Wy && yb.ext > 0 && yb.windows.length >= 1 && yb.windows.every((w) => w.nx === -1 && ![1, 2, 3, 6, 7, 8].includes(Math.floor(w.cy))) && E.roofZ(yb, 9.5, 5) > 1.6, "the Malting's queue-yard: the brick range on the map's edge gets its upper storey and the slope of its roof over the yard; no window over or beside a door");
+    check(yb.extras.filter((e) => e.kind === 'kiln').length === 2 && yb.extras.every((e) => e.y > 5), 'and its two kiln-chimneys stand at the kiln end, by the freight door'); }
   check(clo.front && clo.front.ny === 1 && moot.front && moot.front.nx === -1 && plainG.every((b) => b.front), 'a pediment stands over the front: the door side, or with no door the long side that looks to the middle');
   check(clo.wet && moot.wet && !lane.wet, 'the colonnades take the lit water\'s light after dusk only where a building stands in the water; the lanes are dry');
   check(lane.w === 16 && lane.h === 4 && lane.in.n > 0.9 && lane.in.s > 0.9 && lane.doors.length === 2 && lane.windows.length >= 4 && lane.zBase > 1.6, 'a lane terrace: the gallery runs the length of the lane over the doors, and the roof clears the old lid');
@@ -163,7 +168,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
       const before3 = JSON.stringify(G.maps[id] ? G.maps[id].cells.map((c) => c && [c.tex, c.top, !!c.door]) : 0);
       GFX.eaves = false; R3D.invalidate(); const gOff = go(id, 0.5).tris; GFX.eaves = true; R3D.invalidate(); const gOn = go(id, 0.5);
       const PG = EAVES78.planOf(G.map).houses, b0 = R3D.stats.meshBuilds; G.tod = 0.86; window.advanceTime(16); window.advanceTime(16);
-      out.g[id] = { off: gOff, on: gOn.tris, ms: gOn.ms, n: PG.length, grove: PG.filter((b) => b.grove && !b.lane).length, lanes: PG.filter((b) => b.lane).length, stone: PG.filter((b) => b.stone).map((b) => b.label.slice(0, 11)),
+      out.g[id] = { off: gOff, on: gOn.tris, ms: gOn.ms, n: PG.length, grove: PG.filter((b) => b.grove && !b.lane).length, lanes: PG.filter((b) => b.lane).length, stone: PG.filter((b) => b.brick).map((b) => b.label.slice(0, 11)),
         lit: PG.reduce((n, b) => n + b.windows.filter((w) => w.lit).length, 0), litWho: Array.from(new Set(PG.filter((b) => b.windows.some((w) => w.lit)).map((b) => b.label.slice(0, 14)))), gallery: PG.filter((b) => /Moot-house/.test(b.label)).map((b) => b.windows.filter((w) => w.gallery && w.lit).length)[0] || 0,
         wet: PG.filter((b) => b.wet).length, doors: PG.reduce((n, b) => n + b.doors.length, 0), dusk: R3D.stats.meshBuilds - b0, tex: !!(Engine.textures.e78_lead && Engine.textures.e78_flute_lilac && Engine.textures.e78_arch),
         untouched: JSON.stringify(G.map.cells.map((c) => c && [c.tex, c.top, !!c.door])) === before3 || before3 === '0', shelter: !!EAVES78.shelter(G.map) };
@@ -187,7 +192,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   check(r.c.cliff >= 40 && r.c.shops === 5 && r.c.roofs.length === 1 && r.c.roofs[0] === 'p17c_slate', r.c.cliff + ' cliff houses gabled, ' + r.c.shops + ' stair shops under pentices, every roof slate');
   check(r.c.on > r.c.off + 2000 && r.c.untouched && r.c.tex && r.c.shelter && r.c.ms < 400, 'the harbour: ' + r.c.off + ' -> ' + r.c.on + ' triangles in ' + r.c.ms + ' ms, the map unchanged, rain stops at its roofs');
   { const g = r.g.whispergrove, y = r.g.p31_bellyard;
-    check(g.grove >= 10 && g.stone.length === 1 && /Malting/.test(g.stone[0]) && g.tex, 'Whisper-Grove: ' + g.grove + ' marble buildings under colonnades, the Malting plain stone');
+    check(g.grove >= 10 && g.stone.length === 1 && /Malting/.test(g.stone[0]) && g.tex, 'Whisper-Grove: ' + g.grove + ' marble buildings under colonnades, the Malting a brick range');
     check(g.gallery === 3 && g.litWho.length === 2 && g.litWho.some((l) => /Moot/.test(l)) && g.litWho.some((l) => /Malting/.test(l)), 'after dusk the only lit windows are the Moot-house gallery\'s three and the Malting\'s (' + g.lit + ' in all)');
     check(g.wet >= 9 && g.dusk === 1, g.wet + ' buildings stand in the water and take its light at dusk (one rebuild)');
     check(y.lanes === 3 && y.doors === 13 && y.lit === 0 && y.wet === 0, 'the Bell Yard and Ashlane: three terraces under galleries, a door-case on each of ' + y.doors + ' doors, dry lamps, nothing lit');

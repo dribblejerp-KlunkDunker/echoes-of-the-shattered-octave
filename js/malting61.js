@@ -26,6 +26,21 @@
 // ============================================================
 'use strict';
 
+// The Malting's brick (Book One: "a long brick range with two kiln-chimneys at the north end"). Owner's ruling, 11 Nov:
+// brick, as the book says. One tile, made here because both the queue-yard and the city map build the Malting from it.
+if (typeof Engine !== 'undefined' && Engine.addTexture && !(Engine.textures && Engine.textures.t_brick)) (function () {
+  const h = (a, b) => { let n = (Math.imul(a | 0, 374761393) + Math.imul(b | 0, 668265263)) | 0; n = Math.imul(n ^ (n >>> 13), 1274126177); return ((n ^ (n >>> 16)) >>> 0) / 4294967296; };
+  const d = new Uint32Array(4096), px = (r, g, b) => ((255 << 24) | (Math.max(0, Math.min(255, b)) | 0) << 16 | (Math.max(0, Math.min(255, g)) | 0) << 8 | (Math.max(0, Math.min(255, r)) | 0)) >>> 0;
+  for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+    const row = y >> 3, off = (row & 1) * 8, bx = ((x + off) & 63) >> 4, mortar = (y & 7) === 7 || ((x + off) & 15) === 15;
+    const v = h(bx * 7 + 1, row * 13 + 3), burnt = v < 0.14, n = h(x, y) - 0.5, soot = 1 - 0.1 * h(x >> 3, (y >> 4) + 9);
+    if (mortar) { const k = 150 + n * 22; d[y * 64 + x] = px(k, k * 0.95, k * 0.86); continue; }
+    const k = (burnt ? 0.62 : 0.86 + v * 0.26) * soot * ((y & 7) === 0 ? 1.08 : (y & 7) === 6 ? 0.9 : 1) + n * 0.07;
+    d[y * 64 + x] = px(158 * k, (burnt ? 70 : 82) * k, (burnt ? 66 : 62) * k);
+  }
+  Engine.addTexture('t_brick', d);
+})();
+
 const MALTING61 = (function () {
   const TEXTS = [];
   const S = (t) => { TEXTS.push(t); return t; };
@@ -175,7 +190,7 @@ const MALTING61 = (function () {
     for (let y = 1; y < H - 1; y++) for (let x = 1; x < 10; x++) m.setFloor(x, y, 1);   // the orchard is grass
     m.set(0, 9, DOOR({ portal: { map: 'whispergrove', x: 31.0, y: 5.5, dir: PI }, label: TX.toWG }));
     // the Malting's long brick range along the east side
-    m.rect(27, 1, 29, H - 2, 't_house');
+    m.rect(27, 1, 29, H - 2, 't_brick');
     m.set(27, 9, DOOR({ portal: { map: 'malting', x: 1.6, y: 11.5, dir: 0 }, label: TX.toFront }));
     m.set(27, 14, DOOR({ portal: { map: 'malting', x: 28.2, y: 15.5, dir: PI }, label: TX.toFreight }));
     // the orchard: old apple trees, the lane open

@@ -40,7 +40,7 @@
 //               under an entablature and a low roof with a pediment at each end; a pediment over the front and a
 //               door-case on every door; marble finials on corners and points; tall dark arched windows. Nothing is lit
 //               after dusk but the Moot-house gallery's three windows and a few in the Malting, which is the Office's
-//               house and plain stone with no colonnade. Where a building stands in the water its columns and the
+//               house: "a long brick range with two kiln-chimneys" (Book One; the owner's ruling), under slate. Where a building stands in the water its columns and the
 //               underside of its colonnade take the water's lilac light after dusk. In the Bell Yard and Ashlane the
 //               terraces get the same colonnade as a gallery running the length of each lane (dry: no lilac).
 //
@@ -76,9 +76,11 @@ const EAVES78 = (() => {
     // spires" (ruled canon). After the Unnaming nobody in the city lights a lamp: "at dusk the water lit itself". So: marble
     // under lead; the upper storey of every building is an open colonnade under a low pediment, with marble finials on the
     // roofline; the windows are tall, arched and dark. The only lit windows are the three of the Moot-house gallery (Sable's)
-    // and the Office's own house, the Malting, which is plain stone with no colonnade at all.
+    // and the Office's own house, the Malting, which is brick (Book One; the owner's ruling) with no colonnade at all.
     whispergrove: { builds: 'grey-white marble under lead', shutters: 'none: tall dark arched windows', only: ['an open colonnade for an upper storey, under a low pediment', 'marble finials on every roofline', 'no window lit after dusk but the Moot-house gallery and the Malting'], plan: (m) => planGrove(m) },
     // the Bell Yard and Ashlane, the same city's lanes ("swept streets ... dry lamps"): terraces, the gallery running the length of the lane
+    // the Malting's own yard, on the Cloister road (Book One: "a long brick range with two kiln-chimneys at the north end")
+    p61_yard: { builds: 'brick under slate', shutters: 'grey', only: ['the Malting: the one brick house of a marble city, and its two kiln-chimneys'], plan: (m) => planYard(m) },
     p31_bellyard: { builds: 'grey-white marble under lead', shutters: 'none: tall dark arched windows', only: ['a colonnaded gallery running the length of each lane, over the doors', 'no window lit after dusk'], plan: (m) => planGrove(m) },
   };
   const MAPS = new Set(Object.keys(STYLES));
@@ -286,7 +288,7 @@ const EAVES78 = (() => {
   function planGrove(m) {
     const W = m.w, H = m.h, g = m.cells, seen = new Uint8Array(W * H), houses = [];
     const cell = (x, y) => (x < 0 || y < 0 || x >= W || y >= H) ? null : g[y * W + x];
-    const MARB = /^t_(greymarble|stone)$/, rim = (x, y) => x <= 0 || y <= 0 || x >= W - 1 || y >= H - 1;
+    const MARB = /^t_(greymarble|brick)$/, rim = (x, y) => x <= 0 || y <= 0 || x >= W - 1 || y >= H - 1;
     const part = (x, y) => { const c = cell(x, y); return !!c && !rim(x, y) && c.top == null && (c.door ? true : MARB.test(c.tex || '')); };
     const open = (x, y) => x >= 0 && y >= 0 && x < W && y < H && !cell(x, y);
     // does a building stand in the water? (the lit water is what lights the colonnades after dusk; the lanes are dry)
@@ -303,18 +305,21 @@ const EAVES78 = (() => {
       for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const c = cell(x, y);
         if (c.door) { const nx = x === x0 && open(x - 1, y) ? -1 : x === x1 && open(x + 1, y) ? 1 : 0, ny = nx ? 0 : y === y0 && open(x, y - 1) ? -1 : y === y1 && open(x, y + 1) ? 1 : 0; if (nx || ny) doorList.push({ x, y, nx, ny }); if (c.label) label += c.label + ' '; }
         else if (!wallTex) wallTex = c.tex; }
-      const stone = wallTex === 't_stone', ax = w >= h, across = ax ? h : w, half = across / 2, T = 1;
-      const b = { x0, y0, x1, y1, w, h, axis: ax ? 'x' : 'y', stone, church: false, plain: stone, storeys: 2, label: label.trim(), top: T, jetty: 0, wallTex, towers: [], dome: null, ridges: 1, half, span: half,
+      const brick = wallTex === 't_brick', ax = w >= h, across = ax ? h : w, half = across / 2, T = 1;
+      const b = { x0, y0, x1, y1, w, h, axis: ax ? 'x' : 'y', stone: false, brick, church: false, plain: brick, storeys: 2, label: label.trim(), top: T, jetty: 0, wallTex, towers: [], dome: null, ridges: 1, half, span: half,
         C: ax ? (y0 + y1 + 1) / 2 : (x0 + x1 + 1) / 2, A0: ax ? x0 : y0, A1: (ax ? x1 : y1) + 1, windows: [], doors: doorList, plinth: [], dormers: [], stacks: [], extras: [], roofTex: 'e78_lead', lift: 0.02 };
       const sides = [[0, -1, 'x', y0], [0, 1, 'x', y1], [-1, 0, 'y', x0], [1, 0, 'y', x1]];
       const each = (fn) => { for (const [nx, ny, along, fixed] of sides) { const a0 = along === 'x' ? x0 + 1 : y0 + 1, a1 = along === 'x' ? x1 - 1 : y1 - 1, len = a1 - a0 + 1;
         for (let a = a0; a <= a1; a++) { const x = along === 'x' ? a : fixed, y = along === 'x' ? fixed : a, c = cell(x, y), i = a - a0, px = along === 'x' ? 1 : 0, py = along === 'x' ? 0 : 1, pa = cell(x - px, y - py), pb = cell(x + px, y + py);
           if ((len % 2 ? i % 2 !== 0 : i % 2 !== 1) || !c || c.door || !open(x + nx, y + ny) || (pa && pa.door) || (pb && pb.door) || (m.decals && m.decals[y * W + x])) continue;
           fn(x, y, nx, ny); } } };
-      if (stone) {
-        // the Office's house (the Malting): plain stone, a blind ground floor, small windows above, a hipped lead roof
-        Object.assign(b, { type: 'hip', ext: 0.62, wallTop: T + 0.62, over: 0.12, verge: 0.12, pitch: min(0.3, 0.9 / half) });
-        each((x, y, nx, ny) => b.windows.push({ cx: x + 0.5 + nx * 0.5, cy: y + 0.5 + ny * 0.5, nx, ny, z0: T + 0.16, z1: T + 0.46, hw: 0.15, style: 'attic', lit: h2(x * 7 + 3, y * 13 + 1) < 0.5 }));
+      if (brick) {
+        // the Office's house, the Malting (Book One: "a long brick range with two kiln-chimneys at the north end"; the owner's
+        // ruling: brick, as the book says). No colonnade: a blind ground floor, a brick upper storey with shuttered windows,
+        // some of them lit, one long slate roof, and the two kiln-chimneys at the north of its far end
+        Object.assign(b, { type: 'gable', ext: 0.62, wallTop: T + 0.62, over: 0.2, verge: 0.12, parapet: 0, pitch: min(0.36, 1.5 / half), roofTex: 'e78_slate', lift: LIFT });
+        { const far = doorList[0] && doorList[0].nx < 0 ? x1 + 1 - 2.2 : doorList[0] && doorList[0].nx > 0 ? x0 + 2.2 : (x0 + x1 + 1) / 2, yk = y0 + 1.5; b.extras.push({ kind: 'kiln', x: far - 1.2, y: yk }, { kind: 'kiln', x: far + 1.2, y: yk }); }
+        each((x, y, nx, ny) => b.windows.push({ cx: x + 0.5 + nx * 0.5, cy: y + 0.5 + ny * 0.5, nx, ny, z0: T + 0.14, z1: T + 0.5, hw: 0.17, style: 'cottage', lit: h2(x * 7 + 3, y * 13 + 1) < 0.5 }));   // shuttered (the game: "Grey shutters, an Office seal")
       } else {
         // marble: the ground storey as the map has it, tall arched windows; above it an open colonnade round a set-back
         // wall, carrying an entablature and a low roof with a pediment at each end
@@ -365,6 +370,24 @@ const EAVES78 = (() => {
       houses.push(b);
     }
     return { houses };
+  }
+  // The Malting's queue-yard: the Malting is the brick range along one edge of the map. It gets the same upper storey,
+  // slate roof and kiln-chimneys as in the city; only the slope over the yard is ever seen.
+  function planYard(m) {
+    const W = m.w, H = m.h, g = m.cells; let x0 = 1e9, x1 = -1, y0 = 1e9, y1 = -1;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const c = g[y * W + x]; if (c && !c.door && c.tex === 't_brick') { x0 = min(x0, x); x1 = max(x1, x); y0 = min(y0, y); y1 = max(y1, y); } }
+    if (x1 < 0 || x1 !== W - 1 || x1 - x0 < 1 || y1 - y0 < 3) return { houses: [] };
+    const T = 1, w = x1 - x0 + 1, b = { x0, y0, x1, y1, w, h: y1 - y0 + 1, axis: 'y', stone: false, brick: true, church: false, plain: true, storeys: 2, label: 'The Malting', top: T, ext: 0.62, jetty: 0, wallTop: T + 0.62, wallTex: g[y0 * W + x0].tex,
+      towers: [], dome: null, type: 'gable', ridges: 1, half: w, span: w, C: x1 + 1, A0: y0, A1: y1 + 1, windows: [], doors: [], plinth: [], dormers: [], stacks: [], extras: [], roofTex: 'e78_slate', lift: LIFT, pitch: 0.5, over: 0.24, verge: 0.1 };
+    for (let y = y0 + 1; y < y1; y++) { const c = g[y * W + x0], up = g[(y - 1) * W + x0], dn = g[(y + 1) * W + x0];
+      if ((y - y0) % 2 || !c || c.door || (up && up.door) || (dn && dn.door) || g[y * W + x0 - 1]) continue;
+      b.windows.push({ cx: x0, cy: y + 0.5, nx: -1, ny: 0, z0: T + 0.14, z1: T + 0.5, hw: 0.17, style: 'cottage', lit: h2(x0 * 7 + 3, y * 13 + 1) < 0.5 }); }
+    // its two kiln-chimneys, at the kiln end (the freight door's end of the range, as the yard has it)
+    let kd = null; for (let y = y0; y <= y1; y++) { const c = g[y * W + x0]; if (c && c.door && /kiln|freight/i.test(c.label || '')) kd = y; }
+    const ke = kd != null && kd < (y0 + y1) / 2 ? y0 + 1.4 : y1 + 1 - 1.4, ks = ke < (y0 + y1) / 2 ? 1 : -1;
+    b.extras.push({ kind: 'kiln', x: x0 + 1.6, y: ke }, { kind: 'kiln', x: x0 + 1.6, y: ke + ks * 2.3 });
+    b.zBase = b.wallTop + b.lift; b.ridge = b.zBase + b.span * b.pitch;
+    return { houses: [b] };
   }
   const plans = new WeakMap();
   function planOf(m) { let p = plans.get(m); if (!p || p.cells !== m.cells) { p = plan(m); p.cells = m.cells; plans.set(m, p); } return p; }
@@ -638,7 +661,7 @@ const EAVES78 = (() => {
           quad([q0, q1, q2, q3], uv, Lroof, MAT.wall, sk, up); quad([lo(q0), lo(q1), lo(q2), lo(q3)], uv, Ldark, MAT.wall, 0.6, [-up[0], -up[1], -up[2]]); }
         const mx = ax ? (A0 + A1) / 2 : C, my = ax ? C : (A0 + A1) / 2;
         for (let k = 0; k < 4; k++) { const q0 = E[k], q1 = E[(k + 1) % 4], dx = (q0[0] + q1[0]) / 2 - mx, dy = (q0[1] + q1[1]) / 2 - my, nn = abs(q1[0] - q0[0]) < 1e-6 ? [Math.sign(dx), 0, 0] : [0, Math.sign(dy), 0], len = hyp(q1[0] - q0[0], q1[1] - q0[1]);
-          quad([[q0[0], q0[1], ze + 0.012], [q1[0], q1[1], ze + 0.012], [q1[0], q1[1], ze - 0.08], [q0[0], q0[1], ze - 0.08]], [[0, 0], [len, 0], [len, 0.09], [0, 0.09]], Lstone, MAT.wall, 0.95, nn); }
+          quad([[q0[0], q0[1], ze + 0.012], [q1[0], q1[1], ze + 0.012], [q1[0], q1[1], ze - 0.08], [q0[0], q0[1], ze - 0.08]], [[0, 0], [len, 0], [len, 0.09], [0, 0.09]], b.stone ? Lstone : Lboard, MAT.wall, 0.95, nn); }
         // the Greenhall's dome: a drum and a low dome in the old moss tile, a small finial
         if (b.dome) {
           const cx = b.dome.x + 0.5, cy = b.dome.y + 0.5, rad = 0.92, zb = zr + 0.1, hD = 0.62, S = 14, Rn = 5, Ld = L_('t_roof');
@@ -692,6 +715,12 @@ const EAVES78 = (() => {
           bx(-0.04, 0.04, -0.05, 0.62, e.z, e.z + 0.09, Ldark, Ldark, 1.05);
           bx(-0.05, 0.05, 0.5, 0.6, e.z - 0.12, e.z, Ldark, Ldark, 0.9);
           [[0.16, 0.13], [0.27, 0.2], [0.38, 0.16]].forEach(([o, len]) => bx(-0.017, 0.017, o - 0.017, o + 0.017, e.z - 0.04 - len, e.z - 0.03, Lbronze, Lbronze, 1.25));
+        } else if (e.kind === 'kiln') {                          // a kiln-chimney: a square brick stack, drawn in a little, a stone cap, a dark flue. Cold.
+          const zr = roofZ(b, e.x, e.y), z0 = (zr == null ? b.zBase : zr) - 0.3, z1 = b.ridge + 1.0, r0 = 0.3, r1 = 0.2, Lb = L_('t_brick');
+          [[-1, -1, 1, -1, 0, -1], [1, -1, 1, 1, 1, 0], [1, 1, -1, 1, 0, 1], [-1, 1, -1, -1, -1, 0]].forEach(([ax_, ay_, bx_, by_, nx_, ny_]) =>
+            quad([[e.x + ax_ * r0, e.y + ay_ * r0, z0], [e.x + bx_ * r0, e.y + by_ * r0, z0], [e.x + bx_ * r1, e.y + by_ * r1, z1], [e.x + ax_ * r1, e.y + ay_ * r1, z1]], [[0, z1 - z0], [0.6, z1 - z0], [0.5, 0], [0.1, 0]], Lb, MAT.wall, nx_ ? 1 : 0.8, [nx_, ny_, 0]));
+          box(e.x - r1 - 0.04, e.y - r1 - 0.04, e.x + r1 + 0.04, e.y + r1 + 0.04, z1 - 0.02, z1 + 0.07, Lstone, Lstone, 1.1);
+          box(e.x - 0.11, e.y - 0.11, e.x + 0.11, e.y + 0.11, z1 + 0.07, z1 + 0.13, Ldark, Ldark, 0.6);
         } else if (e.kind === 'bellcote') {                      // the Harbour Office: "Dues, bench and bell"
           const Ls = L_('e78_cope');
           for (const t of [-0.2, 0.2]) bx(t - 0.05, t + 0.05, -0.16, 0.0, e.z - 0.12, e.z + 0.4, Ls, Ls, 1.05);
