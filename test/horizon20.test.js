@@ -66,6 +66,10 @@ async function boot(browser, block) {
     assert.deepEqual(await A.page.evaluate(() => { PRESETS.apply('original'); return [GFX.farCountry, GFX.belfryArt]; }), [true, true], 'the Original preset has both switches on');
     const hashes = (page, preset) => page.evaluate(({ scenes, preset }) => {
       PRESETS.apply(preset); if (typeof HORIZON20 !== 'undefined') { GFX.farCountry = false; GFX.belfryArt = false; } GFX.preset = PRESETS.current(); GFX.changed();
+      // Phase 76 (js/paintfolk76.js) rigs a painting in a quiet moment, on a timer, so the moment a person's picture changes
+      // from still to moving is not the same on two pages. The Chapel scene draws its people; hold the moving paintings out
+      // of this page-to-page comparison (as test/folk14.test.js does).
+      GFX.paintfolk = false;
       return scenes.map(([m, x, y, d, tod]) => { go(m, x, y, d); return hash(grab(tod, d, m === 'chapel')); });
     }, { scenes, preset });
     for (const flag of ['rite', 'plain']) {
