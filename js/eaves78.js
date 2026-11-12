@@ -1,5 +1,5 @@
 // ============================================================
-//  eaves78 — Phase 78, "roofs and fronts": buildings get the shape of buildings, region by region (Oakhaven and its Hollow, Port Cantabile, Whisper-Grove).
+//  eaves78 — Phase 78, "roofs and fronts": buildings get the shape of buildings, region by region (Oakhaven with its Hollow and the country Outside the Hedge, Greenroot, Port Cantabile, Whisper-Grove).
 //
 //  Owner, 11 Nov: the sharp-tiles pass changed almost nothing he could see, and he agreed to start with building
 //  shapes; on seeing the first roofs: "this looks great ... fix the rain through the buildings and houses. I like the
@@ -68,6 +68,14 @@ const EAVES78 = (() => {
     // the Hollow, Oakhaven's low quarter "behind the tannery": the same timber, plaster and thatch, but rows of cottages built
     // back to back, never more than one storey, each row under one long deep roof
     p30_hollow: { builds: 'timber and plaster under thatch', shutters: 'green-grey', only: ['rows of cottages built back to back under one long roof', 'nothing above one storey'], terraces: true, low: true, maxRidge: 3.0, roof: 'e78_thatch' },
+    // Outside the Hedge: Oakhaven's own country. Kaelen's hut ("the stile outside his hut"), and the quarry headframe, which the
+    // books make of iron ("the iron legs of the frame ... rivets going like gunshots") with "a plank shed against the foot" of it
+    clearing: { builds: 'plank and thatch; stone and iron at the quarry', shutters: 'green-grey', only: ["the quarry's iron headframe and its plank shed"], roof: 'e78_thatch', plan: (m) => planSolid(m) },
+    // Greenroot Hamlet, among the iron-bark oaks. The game finds it empty: "Tables laid, doors shut, kettles cold, and nobody.
+    // The chapel stands on the knoll to the east, barred from the inside"; the bibles give it "a chapel with a silent reed", and
+    // its spire is on Oakhaven's skyline (ruled canon). So: the Reach's timber under oak shingles, every shutter closed, no
+    // window lit, and the chapel's spire over all of it.
+    greenroot: { builds: 'timber and plaster under oak shingles', shutters: 'green-grey, all closed', only: ['every shutter closed and no window lit', "the chapel's spire"], roof: 'e78_shingle', empty: true, plan: (m) => planSolid(m) },
     // Port Cantabile "climbs its cliff from the Long Mole by the Salt Stair ... and every shroud in the harbour carries a
     // chime" (Fairweather's Companion); its counting-house is "square stone, a slate roof, iron shutters" (the game's own
     // text). So: lime-washed fronts and ashlar under slate, no thatch and no timber; houses stand gable-end to the water,
@@ -97,6 +105,7 @@ const EAVES78 = (() => {
   // ---------------------------------------------------------------- the roof's height
   // local frame: a runs along the ridge, s across it from the building's middle (b.C)
   function roofZ(b, x, y) {
+    if (b.type === 'flat') return null;
     const ax = b.axis === 'x', a = ax ? x : y, s = (ax ? y : x) - b.C, as = abs(s);
     const OVER = b.over != null ? b.over : OVER0, VERGE = b.verge != null ? b.verge : VERGE0;
     if (b.type === 'hip') {
@@ -301,6 +310,51 @@ const EAVES78 = (() => {
     }
     return { houses, shops };
   }
+  // Villages whose houses are solid blocks with a door (Greenroot, Outside the Hedge): each free-standing rectangle is a
+  // building. Timber is a cottage or a hut; marble with a taller part is a chapel and its tower; plain stone is a small house
+  // of the dead, or the foot of the quarry's headframe.
+  function planSolid(m) {
+    const W = m.w, H = m.h, g = m.cells, seen = new Uint8Array(W * H), houses = [], st = STYLES[m.id] || {};
+    const cell = (x, y) => (x < 0 || y < 0 || x >= W || y >= H) ? null : g[y * W + x], open = (x, y) => x >= 0 && y >= 0 && x < W && y < H && !cell(x, y);
+    const KIND = /^t_(house|wood$|marble|stone$)/, part = (c) => !!c && (c.door || (KIND.test(c.tex || '') && !(c.top != null && c.top < 0.9)));
+    for (let sy = 1; sy < H - 1; sy++) for (let sx = 1; sx < W - 1; sx++) {
+      if (seen[sy * W + sx] || !part(cell(sx, sy)) || cell(sx, sy).door) continue;
+      let x0 = sx, x1 = sx, y0 = sy, y1 = sy, n = 0; const stack = [[sx, sy]]; seen[sy * W + sx] = 1;
+      while (stack.length) { const [x, y] = stack.pop(); n++; x0 = min(x0, x); x1 = max(x1, x); y0 = min(y0, y); y1 = max(y1, y);
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const X = x + dx, Y = y + dy; if (X < 1 || Y < 1 || X >= W - 1 || Y >= H - 1 || seen[Y * W + X] || !part(cell(X, Y))) continue; seen[Y * W + X] = 1; stack.push([X, Y]); } }
+      const w = x1 - x0 + 1, h = y1 - y0 + 1; if (w < 3 || h < 3 || n !== w * h) continue;
+      const base = m.lvls ? m.lvls[y0 * W + x0] || 0 : 0; let label = '', wallTex = null, lowTop = 1e9; const doorList = [], cellsIn = [];
+      for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const c = cell(x, y);
+        if (c.door) { const nx = x === x0 && open(x - 1, y) ? -1 : x === x1 && open(x + 1, y) ? 1 : 0, ny = nx ? 0 : y === y0 && open(x, y - 1) ? -1 : y === y1 && open(x, y + 1) ? 1 : 0; if (nx || ny) doorList.push({ x, y, nx, ny }); if (c.label) label += c.label + ' '; continue; }
+        if (!wallTex) wallTex = c.tex; const t = c.top != null ? (m.lvls ? c.top : base + c.top) : base + 1; lowTop = min(lowTop, t); cellsIn.push({ x, y, top: t }); }
+      if (!doorList.length || !wallTex) continue;
+      const towers = cellsIn.filter((c) => c.top > lowTop + 0.5), marble = /^t_marble/.test(wallTex), rough = wallTex === 't_stone', church = marble && towers.length > 0, d0 = doorList[0];
+      const ax = church ? d0.nx !== 0 : (w === h ? d0.ny !== 0 : w > h), across = ax ? h : w, half = across / 2, top = lowTop, plain = rough || wallTex === 't_wood';
+      const b = { x0, y0, x1, y1, w, h, axis: ax ? 'x' : 'y', stone: marble || rough, church, plain, storeys: 1, label: label.trim(), top, ext: 0, jetty: 0, wallTop: top, wallTex, towers, dome: null, solid: true,
+        type: rough ? 'hip' : 'gable', ridges: 1, half, span: half, C: ax ? (y0 + y1 + 1) / 2 : (x0 + x1 + 1) / 2, A0: ax ? x0 : y0, A1: (ax ? x1 : y1) + 1, windows: [], doors: doorList, plinth: [], dormers: [], extras: [], lift: LIFT };
+      const maxRidge = church ? min(...towers.map((t) => t.top)) - 0.55 : base + (rough ? 1.75 : RIDGE1);
+      b.pitch = min(marble ? 0.6 : rough ? 0.4 : PITCH, (maxRidge - top - LIFT) / half); b.zBase = top + LIFT; b.ridge = b.zBase + half * b.pitch;
+      b.roofTex = marble || rough ? 'e78_slate' : (st.roof || 'e78_thatch');
+      if (/headframe/i.test(label)) { b.headframe = true; b.type = 'flat'; b.ridge = top; b.extras.push({ kind: 'headframe', x: (x0 + x1 + 1) / 2, y: (y0 + y1 + 1) / 2, z: top }); houses.push(b); continue; }
+      if (church) b.spire = true;
+      for (const [nx, ny, along, fixed] of [[0, -1, 'x', y0], [0, 1, 'x', y1], [-1, 0, 'y', x0], [1, 0, 'y', x1]]) {
+        const a0 = along === 'x' ? x0 : y0, a1 = along === 'x' ? x1 : y1, len = a1 - a0 - 1;
+        for (let a = a0; a <= a1; a++) { const x = along === 'x' ? a : fixed, y = along === 'x' ? fixed : a, c = cell(x, y), i = a - a0 - 1;
+          if (!c || c.door || !open(x + nx, y + ny)) continue;
+          if (!b.stone) b.plinth.push({ x, y, nx, ny });
+          const px = along === 'x' ? 1 : 0, py = along === 'x' ? 0 : 1, pa = cell(x - px, y - py), pb = cell(x + px, y + py);
+          if (a === a0 || a === a1 || rough || (len % 2 ? i % 2 !== 0 : i % 2 !== 1) || (pa && pa.door) || (pb && pb.door) || (m.decals && m.decals[y * W + x]) || towers.some((t) => t.x === x && t.y === y)) continue;
+          const cx = x + 0.5 + nx * 0.5, cy = y + 0.5 + ny * 0.5, gz = m.lvls ? m.lvls[(y + ny) * W + x + nx] || 0 : 0;
+          if (marble) b.windows.push({ cx, cy, nx, ny, z0: gz + 0.55, z1: min(top - 0.2, gz + 1.6), hw: 0.17, style: 'lancet', lit: !st.empty });
+          else b.windows.push({ cx, cy, nx, ny, z0: top - 0.63, z1: top - 0.2, hw: 0.21, style: st.empty || wallTex === 't_wood' && h2(x, y) < 0.5 ? 'hatch' : 'cottage', lit: !st.empty && h2(x * 7 + 3, y * 13 + 1) < 0.72 });
+        }
+      }
+      // the Cantor's house: "The shutter on the Cantor's house has a proctor's seal pasted over it" (the game's own text)
+      if (/Cantor/i.test(label)) { const sw = b.windows.find((q) => q.style === 'hatch' && q.nx === d0.nx && q.ny === d0.ny) || b.windows.find((q) => q.style === 'hatch'); if (sw) b.extras.push({ kind: 'seal', x: sw.cx, y: sw.cy, nx: sw.nx, ny: sw.ny, z: (sw.z0 + sw.z1) / 2 }); }
+      houses.push(b);
+    }
+    return { houses };
+  }
   // Whisper-Grove. The city's buildings are solid blocks of marble one storey high. A block (or each straight-sided part of
   // an L-shaped one) that is at least four cells each way is a building; the wall round the edge of the map is not.
   function planGrove(m) {
@@ -442,10 +496,15 @@ const EAVES78 = (() => {
     if (texDone || typeof Engine === 'undefined' || !Engine.textures || !Engine.textures.t_wood || !Engine.textures.t_roof) return texDone;
     const wood = Engine.textures.t_wood, roof = Engine.textures.t_roof, rgb = (r, g, b, a = 255) => ((a << 24) | (min(255, max(0, b)) | 0) << 16 | (min(255, max(0, g)) | 0) << 8 | (min(255, max(0, r)) | 0)) >>> 0;
     const px = (c, k, t) => rgb((c & 255) * k * (t ? t[0] : 1), ((c >>> 8) & 255) * k * (t ? t[1] : 1), ((c >>> 16) & 255) * k * (t ? t[2] : 1));
-    const blue = new Uint32Array(4096), bronze = new Uint32Array(4096), dark = new Uint32Array(4096), shut = new Uint32Array(4096), win = new Uint32Array(4096), lit = new Uint32Array(4096), slate = new Uint32Array(4096), thatch = new Uint32Array(4096), lan = new Uint32Array(4096), lanLit = new Uint32Array(4096);
+    const shingle = new Uint32Array(4096), iron = new Uint32Array(4096), sheave = new Uint32Array(4096), blue = new Uint32Array(4096), bronze = new Uint32Array(4096), dark = new Uint32Array(4096), shut = new Uint32Array(4096), win = new Uint32Array(4096), lit = new Uint32Array(4096), slate = new Uint32Array(4096), thatch = new Uint32Array(4096), lan = new Uint32Array(4096), lanLit = new Uint32Array(4096);
     for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
       const i = y * 64 + x, w = wood[i], n = h2(x >> 1, y >> 1) - 0.5;
       dark[i] = px(w, 0.5);
+      // oak shingles: weathered silver-brown, in courses, the joints staggered course by course
+      { const row = y >> 3, jx = (x + ((h2(row, 5) * 9) | 0)) % (7 + (row % 3)), k = (0.78 + h2((x + row * 5) >> 3, row) * 0.3) * ((y & 7) === 0 ? 0.62 : (y & 7) === 1 ? 1.1 : 1) * (jx === 0 ? 0.7 : 1) + n * 0.08; shingle[i] = rgb(132 * k, 118 * k, 100 * k); }
+      // riveted iron, rust in the seams; and a pit-head wheel (rim, hub, six spokes) on nothing
+      { const rivet = (x % 16 === 3 && y % 8 === 3), seamI = x % 32 === 0 || y % 32 === 0, k = (0.82 + n * 0.2) * (seamI ? 0.6 : 1), rust = h2(x >> 2, y >> 3) < 0.14 || seamI; iron[i] = rivet ? rgb(104, 108, 116) : rust ? rgb(92 * k, 58 * k, 44 * k) : rgb(54 * k, 60 * k, 70 * k);
+        const dx = x - 31.5, dy = y - 31.5, rr = hyp(dx, dy), ang = Math.atan2(dy, dx), spoke = abs(((ang / (PI / 3)) % 1 + 1) % 1 - 0.5) > 0.44; sheave[i] = (rr > 31 || (rr < 25 && rr > 6 && !spoke)) ? 0 : rgb(50 + n * 20, 54 + n * 20, 62 + n * 20); }
       // slate: the roof tile's own courses, in cold blue-grey
       { const c = roof[i], l = 0.3 * (c & 255) + 0.59 * ((c >>> 8) & 255) + 0.11 * ((c >>> 16) & 255), k = (l - 70) * 1.25 + 74 + (h2(x >> 3, y >> 4) - 0.5) * 16; slate[i] = rgb(k * 0.74, k * 0.8, k * 0.93); }
       // thatch: straw combed down the slope, in layers
@@ -472,7 +531,7 @@ const EAVES78 = (() => {
       const ex = (x - 32) / 26, ey = (y - 34) / 26, core = max(0, 1 - (ex * ex + ey * ey) * 0.55), curtain = (x < 18 || x > 45) && y < 40 ? 0.72 : 1;
       lit[i] = rgb((176 + 79 * core + n * 14) * sh * curtain, (112 + 96 * core + n * 12) * sh * curtain, (38 + 70 * core) * sh * curtain);
     }
-    for (const [name, d] of [['e78_shutter_blue', blue], ['e78_bronze', bronze], ['e78_dark', dark], ['e78_shutter', shut], ['e78_win', win], ['e78_winlit', lit], ['e78_slate', slate], ['e78_thatch', thatch], ['e78_lancet', lan], ['e78_lancetlit', lanLit]]) Engine.addTexture(name, d);
+    for (const [name, d] of [['e78_shingle', shingle], ['e78_iron', iron], ['e78_sheave', sheave], ['e78_shutter_blue', blue], ['e78_bronze', bronze], ['e78_dark', dark], ['e78_shutter', shut], ['e78_win', win], ['e78_winlit', lit], ['e78_slate', slate], ['e78_thatch', thatch], ['e78_lancet', lan], ['e78_lancetlit', lanLit]]) Engine.addTexture(name, d);
     return (texDone = true);
   }
 
@@ -620,7 +679,7 @@ const EAVES78 = (() => {
           for (const sgn of [-1, 1]) { const e0 = at(sgn * 0.8, 0.1, zs + 0.06), e1 = at(0, 0.1, zs + 0.36), e2 = at(0, -0.04, zs + 0.36), e3 = at(sgn * 0.8, -0.04, zs + 0.06); quad([e0, e1, e2, e3], [[0, 0], [0.85, 0], [0.85, 0.14], [0, 0.14]], Lm, MAT.wall, 1.2, planeN(e0, e1, e2, UP)); } }
       }
       // ---- the roof
-      if (b.type === 'gable') {
+      if (b.type === 'flat') { /* the foot of the headframe: no roof */ } else if (b.type === 'gable') {
         const a0 = A0 - VERGE, a1 = A1 + VERGE, span = b.span, centres = b.ridges === 2 ? [-span, span] : [0];
         for (const cs of centres) {
           const zr = zB + span * p;
@@ -696,7 +755,15 @@ const EAVES78 = (() => {
         }
       }
       // ---- the Chapel's tower: an open, empty bell-frame ("Nothing hangs in the tower. You can see daylight through the frame.")
-      if (b.towers.length) {
+      if (b.towers.length && b.spire) {                        // Greenroot's chapel: a slated spire on the tower, broached at the foot, a finial
+        let X0 = 1e9, X1 = -1e9, Y0 = 1e9, Y1 = -1e9, T = 0; for (const t of b.towers) { X0 = min(X0, t.x); X1 = max(X1, t.x + 1); Y0 = min(Y0, t.y); Y1 = max(Y1, t.y + 1); T = max(T, t.top); }
+        const cx = (X0 + X1) / 2, cy = (Y0 + Y1) / 2, o = -0.2, hs = max(3.4, (X1 - X0) * 2.4), tip = [cx, cy, T + hs], Ls = L_('e78_slate');
+        box(X0 - 0.05, Y0 - 0.05, X1 + 0.05, Y1 + 0.05, T - 0.04, T + 0.08, Lstone, Lstone, 1.1);
+        const q = [[X0 - o, Y0 - o, T + 0.06], [X1 + o, Y0 - o, T + 0.06], [X1 + o, Y1 + o, T + 0.06], [X0 - o, Y1 + o, T + 0.06]];
+        for (let i = 0; i < 4; i++) { const p0 = q[i], p1 = q[(i + 1) % 4], out = i === 0 ? [0, -1, 0.3] : i === 1 ? [1, 0, 0.3] : i === 2 ? [0, 1, 0.3] : [-1, 0, 0.3], len = hyp(p1[0] - p0[0], p1[1] - p0[1]);
+          tri([p0, p1, tip], [[0, hs], [len, hs], [len / 2, 0]], Ls, MAT.wall, i % 2 ? 1 : 0.84, planeN(p0, p1, tip, out)); }
+        box(cx - 0.03, cy - 0.03, cx + 0.03, cy + 0.03, T + hs - 0.05, T + hs + 0.3, Ldark, Ldark, 0.8);
+      } else if (b.towers.length) {
         let X0 = 1e9, X1 = -1e9, Y0 = 1e9, Y1 = -1e9, T = 0; for (const t of b.towers) { X0 = min(X0, t.x); X1 = max(X1, t.x + 1); Y0 = min(Y0, t.y); Y1 = max(Y1, t.y + 1); T = max(T, t.top); }
         const pw = 0.16, hgt = 0.62, bm = 0.13;
         for (const [px, py] of [[X0, Y0], [X1 - pw, Y0], [X0, Y1 - pw], [X1 - pw, Y1 - pw]]) box(px, py, px + pw, py + pw, T, T + hgt, Ldark, Ldark);
@@ -733,6 +800,29 @@ const EAVES78 = (() => {
           bx(-0.04, 0.04, -0.05, 0.62, e.z, e.z + 0.09, Ldark, Ldark, 1.05);
           bx(-0.05, 0.05, 0.5, 0.6, e.z - 0.12, e.z, Ldark, Ldark, 0.9);
           [[0.16, 0.13], [0.27, 0.2], [0.38, 0.16]].forEach(([o, len]) => bx(-0.017, 0.017, o - 0.017, o + 0.017, e.z - 0.04 - len, e.z - 0.03, Lbronze, Lbronze, 1.25));
+        } else if (e.kind === 'seal') {                          // a proctor's seal pasted over a shutter
+          const tx = -e.ny, ty = e.nx, at = (t, z) => [e.x + tx * t + e.nx * 0.024, e.y + ty * t + e.ny * 0.024, z];
+          quad([at(-0.06, e.z - 0.07), at(0.06, e.z - 0.07), at(0.06, e.z + 0.07), at(-0.06, e.z + 0.07)], [[0.1, 0.3], [0.3, 0.3], [0.3, 0.1], [0.1, 0.1]], L_('e78_cope'), MAT.wall, 1.25, [e.nx, e.ny, 0]);
+          quad([at(-0.022, e.z - 0.022).map((v, k) => v + [e.nx, e.ny, 0][k] * 0.004), at(0.022, e.z - 0.022).map((v, k) => v + [e.nx, e.ny, 0][k] * 0.004), at(0.022, e.z + 0.022).map((v, k) => v + [e.nx, e.ny, 0][k] * 0.004), at(-0.022, e.z + 0.022).map((v, k) => v + [e.nx, e.ny, 0][k] * 0.004)], [[0, 0.1], [0.1, 0.1], [0.1, 0], [0, 0]], L_('e78_iron'), MAT.wall, 1.6, [e.nx, e.ny, 0]);
+        } else if (e.kind === 'headframe') {                     // the quarry's pit-head: four iron legs raked in, braced twice, a wheel at the head; a plank shed at its foot
+          const Li = L_('e78_iron'), Lw = L_('t_wood'), z0 = e.z, z1 = e.z + 2.7, bw = 1.5, bd = 1.1, tw = 0.42, td = 0.34, r = 0.055;
+          const beam = (p, q2) => { for (const [ax_, ay_, bx_, by_, nx_, ny_] of [[-1, -1, 1, -1, 0, -1], [1, -1, 1, 1, 1, 0], [1, 1, -1, 1, 0, 1], [-1, 1, -1, -1, -1, 0]])
+            quad([[p[0] + ax_ * r, p[1] + ay_ * r, p[2]], [p[0] + bx_ * r, p[1] + by_ * r, p[2]], [q2[0] + bx_ * r, q2[1] + by_ * r, q2[2]], [q2[0] + ax_ * r, q2[1] + ay_ * r, q2[2]]], [[0, 2.7], [0.12, 2.7], [0.12, 0], [0, 0]], Li, MAT.wall, nx_ ? 1 : 0.8, [nx_, ny_, 0]); };
+          const at = (f, sx, sy) => [e.x + sx * (bw + (tw - bw) * f), e.y + sy * (bd + (td - bd) * f), z0 + (z1 - z0) * f];
+          for (const sx of [-1, 1]) for (const sy of [-1, 1]) beam(at(0, sx, sy), at(1, sx, sy));
+          for (const f of [0.36, 0.7, 1]) { const a = at(f, -1, -1), c2 = at(f, 1, 1);
+            box(a[0] - r, a[1] - r, c2[0] + r, a[1] + r, a[2] - 0.05, a[2] + 0.05, Li, Li, 0.9); box(a[0] - r, c2[1] - r, c2[0] + r, c2[1] + r, a[2] - 0.05, a[2] + 0.05, Li, Li, 0.9);
+            box(a[0] - r, a[1] - r, a[0] + r, c2[1] + r, a[2] - 0.05, a[2] + 0.05, Li, Li, 1); box(c2[0] - r, a[1] - r, c2[0] + r, c2[1] + r, a[2] - 0.05, a[2] + 0.05, Li, Li, 1); }
+          for (const sy of [-1, 1]) { beam(at(0, -1, sy), at(0.36, 1, sy)); beam(at(0.36, 1, sy), at(0.7, -1, sy)); }
+          const Lsh = L_('e78_sheave'), wr = 0.5, wz = z1 + wr * 0.72;
+          for (const ny_ of [-1, 1]) quad([[e.x - wr, e.y + ny_ * 0.02, wz - wr], [e.x + wr, e.y + ny_ * 0.02, wz - wr], [e.x + wr, e.y + ny_ * 0.02, wz + wr], [e.x - wr, e.y + ny_ * 0.02, wz + wr]], [[0, 1], [1, 1], [1, 0], [0, 0]], Lsh, MAT.wall, 0.9 + 10, [0, ny_, 0]);
+          const sx0 = b.x0 + 0.5, sy0 = b.y0 + 0.5;               // "the night-shift office was a plank shed against the foot of the headframe"
+          box(sx0, sy0, sx0 + 2.0, sy0 + 1.5, z0, z0 + 0.62, Lw, Lw, 0.95);
+          const r0 = [sx0 - 0.1, sy0 - 0.1, z0 + 0.6], r1 = [sx0 + 2.1, sy0 - 0.1, z0 + 0.6], r2 = [sx0 + 2.1, sy0 + 1.6, z0 + 0.92], r3 = [sx0 - 0.1, sy0 + 1.6, z0 + 0.92];
+          quad([r0, r1, r2, r3], [[0, 0], [2.2, 0], [2.2, 1.7], [0, 1.7]], Ldark, MAT.wall, 1, planeN(r0, r1, r2, UP));
+          for (const [fx, fx2] of [[sx0, sx0], [sx0 + 2.0, sx0 + 2.0]]) tri([[fx, sy0, z0 + 0.62], [fx, sy0 + 1.5, z0 + 0.62], [fx2, sy0 + 1.5, z0 + 0.9]], [[0, 0.3], [1.5, 0.3], [1.5, 0]], Lw, MAT.wall, 0.9, [fx === sx0 ? -1 : 1, 0, 0]);
+          quad([[sx0, sy0 + 1.5, z0 + 0.62], [sx0 + 2.0, sy0 + 1.5, z0 + 0.62], [sx0 + 2.0, sy0 + 1.5, z0 + 0.9], [sx0, sy0 + 1.5, z0 + 0.9]], [[0, 0.3], [2, 0.3], [2, 0], [0, 0]], Lw, MAT.wall, 0.8, [0, 1, 0]);
+          opening({ cx: sx0 + 1.0, cy: sy0 + 1.5, nx: 0, ny: 1, z0: z0 + 0.2, z1: z0 + 0.52, hw: 0.17, style: 'attic', lit: true });
         } else if (e.kind === 'kiln') {                          // a kiln-chimney: a square brick stack, drawn in a little, a stone cap, a dark flue. Cold.
           const zr = roofZ(b, e.x, e.y), z0 = (zr == null ? b.zBase : zr) - 0.3, z1 = b.ridge + 1.0, r0 = 0.3, r1 = 0.2, Lb = L_('t_brick');
           [[-1, -1, 1, -1, 0, -1], [1, -1, 1, 1, 1, 0], [1, 1, -1, 1, 0, 1], [-1, 1, -1, -1, -1, 0]].forEach(([ax_, ay_, bx_, by_, nx_, ny_]) =>

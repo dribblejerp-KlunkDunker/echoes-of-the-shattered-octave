@@ -62,6 +62,30 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   check(E.STYLES.p30_hollow.only.length === 2 && E.MAPS.has('p30_hollow'), 'the Hollow lists what only it has');
 }
 
+// ---- Greenroot (empty: every shutter closed, nothing lit, the chapel's spire) and Outside the Hedge (the iron headframe)
+{
+  const Wg = 24, Hg = 16, cg = new Array(Wg * Hg).fill(null), lv = new Float32Array(Wg * Hg);
+  const blk = (x0, y0, x1, y1, c) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) cg[y * Wg + x] = Object.assign({}, c); };
+  for (let y = 0; y < Hg; y++) for (let x = 0; x < Wg; x++) if (!x || !y || x === Wg - 1 || y === Hg - 1) cg[y * Wg + x] = { tex: 't_hedge' };
+  blk(2, 2, 5, 5, { tex: 't_house_p20b_3' }); cg[5 * Wg + 3] = { door: true, tex: 't_door', label: "The Cantor's house" };
+  blk(8, 2, 11, 5, { tex: 't_house' }); cg[2 * Wg + 9] = { door: true, tex: 't_door', label: 'A cottage door' };
+  for (let y = 6; y <= 13; y++) for (let x = 13; x <= 21; x++) lv[y * Wg + x] = 0.6;                                        // the knoll
+  blk(14, 7, 20, 12, { tex: 't_marble', capTex: 't_greymarble', top: 2.5 }); blk(17, 7, 18, 8, { tex: 't_marble', capTex: 't_greymarble', top: 4 }); cg[12 * Wg + 17] = { door: true, tex: 't_door', label: 'The chapel of Greenroot' };
+  blk(3, 9, 5, 11, { tex: 't_stone' }); cg[10 * Wg + 3] = { door: true, tex: 't_door', label: 'The charnel stair' };
+  blk(8, 9, 11, 12, { tex: 't_house' });                                                                                  // no door: not a building
+  const pr = E.plan({ id: 'greenroot', w: Wg, h: Hg, cells: cg, lvls: lv, relief: true }), by = (re) => pr.houses.find((b) => re.test(b.label));
+  const can = by(/Cantor/), cot = by(/cottage/), chp = by(/chapel/), chr = by(/charnel/);
+  check(pr.houses.length === 4 && can && cot && chp && chr, 'Greenroot: two cottages, the chapel and the charnel house; a block with no door is left alone (' + pr.houses.length + ')');
+  check([can, cot].every((b) => b.type === 'gable' && b.storeys === 1 && b.roofTex === 'e78_shingle' && b.ridge <= 2.45 + 1e-6 && b.windows.length >= 2 && b.windows.every((w) => w.style === 'hatch' && !w.lit)), 'timber under oak shingles; "doors shut ... and nobody": every shutter closed, no window lit');
+  check(can.extras.some((e) => e.kind === 'seal') && !cot.extras.length, "the Cantor's house has a proctor's seal pasted over a shutter");
+  check(chp.church && chp.spire && chp.towers.length === 4 && chp.axis === 'y' && chp.top === 2.5 && chp.ridge < 4 - 0.5 && chp.windows.length >= 4 && chp.windows.every((w) => w.style === 'lancet' && !w.lit && w.z0 > 0.6), 'the chapel on its knoll: a nave whose gable faces its door, dark lancets ("barred from the inside"), and a spire on its tower');
+  check(chr.type === 'hip' && chr.windows.length === 0 && chr.roofTex === 'e78_slate', 'the charnel house: stone, a low slate roof, no windows');
+  blk(8, 9, 11, 12, { tex: 't_wood' }); cg[10 * Wg + 11] = { door: true, tex: 't_door', label: "Kaelen's hut" }; blk(2, 9, 6, 12, { tex: 't_stone' }); cg[12 * Wg + 4] = { door: true, tex: 't_door', label: 'The quarry headframe' };
+  const pc2 = E.plan({ id: 'clearing', w: Wg, h: Hg, cells: cg }), hut = pc2.houses.find((b) => /hut/.test(b.label)), hf = pc2.houses.find((b) => b.headframe);
+  check(hut && hut.roofTex === 'e78_thatch' && hut.plain && hut.type === 'gable' && hf && hf.type === 'flat' && hf.extras.some((e) => e.kind === 'headframe') && E.roofZ(hf, 4.5, 10.5) === null, "Outside the Hedge: Kaelen's hut under thatch; the quarry's stone foot carries the iron headframe and has no roof of its own");
+  check(E.MAPS.has('greenroot') && E.MAPS.has('clearing') && E.STYLES.greenroot.only.length === 2, 'both list what only they have');
+}
+
 // ---- Port Cantabile has its own way of building (a region is told apart by its houses)
 {
   const W2 = 32, H2 = 24, c2 = new Array(W2 * H2).fill(null), lv = new Float32Array(W2 * H2).fill(0.4), put = (x, y, c) => { c2[y * W2 + x] = c; };
@@ -168,7 +192,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
     out.rain = !!(LIGHT21.shelter && LIGHT21.shelter().tex && LIGHT21.shelter().src === EAVES78.shelter(G.map)); out.wx = Weather.state;
     if (Weather.hold) Weather.hold('clear'); UPG.weather = 'clear';
     // other maps are not touched
-    const m2 = go('greenroot', 0.5); GFX.eaves = false; R3D.invalidate(); const m2off = go('greenroot', 0.5); out.elsewhere = m2.tris === m2off.tris; GFX.eaves = true;
+    const m2 = go('deepwoods', 0.5); GFX.eaves = false; R3D.invalidate(); const m2off = go('deepwoods', 0.5); out.elsewhere = m2.tris === m2off.tris; GFX.eaves = true;
     out.switch = GFX.ART.includes('eaves');
     // Port Cantabile
     const before2 = JSON.stringify(G.maps.cantabile_harbour ? G.maps.cantabile_harbour.cells.map((c) => c && [c.tex, c.top, !!c.door]) : 0);
@@ -178,6 +202,12 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
       hoists: PC.houses.filter((b) => b.extras.some((e) => e.kind === 'hoist')).length, bell: PC.houses.filter((b) => b.extras.some((e) => e.kind === 'bellcote')).map((b) => b.label.slice(0, 18)),
       roofs: Array.from(new Set(PC.houses.map((b) => b.roofTex))), tex: !!(Engine.textures.e78_cope && Engine.textures.e78_lime && Engine.textures.e78_shutter_blue),
       untouched: JSON.stringify(G.map.cells.map((c) => c && [c.tex, c.top, !!c.door])) === before2 || before2 === '0', shelter: !!EAVES78.shelter(G.map) };
+    // Greenroot and Outside the Hedge
+    out.r = {};
+    for (const id of ['greenroot', 'clearing']) { GFX.eaves = false; R3D.invalidate(); const off = go(id, 0.5).tris, before = JSON.stringify(G.map.cells.map((c) => c && [c.tex, c.top, !!c.door]));
+      GFX.eaves = true; R3D.invalidate(); const on = go(id, 0.86), P = EAVES78.planOf(G.map).houses;
+      out.r[id] = { off, on: on.tris, n: P.length, lit: P.reduce((n, b) => n + b.windows.filter((w) => w.lit).length, 0), spire: P.filter((b) => b.spire).length, seal: P.filter((b) => b.extras.some((e) => e.kind === 'seal')).map((b) => b.label.slice(0, 18)), shingle: P.filter((b) => b.roofTex === 'e78_shingle').length,
+        headframe: P.filter((b) => b.headframe).length, tex: !!(Engine.textures.e78_shingle && Engine.textures.e78_iron && Engine.textures.e78_sheave), untouched: JSON.stringify(G.map.cells.map((c) => c && [c.tex, c.top, !!c.door])) === before, shelter: !!EAVES78.shelter(G.map) }; }
     // the Hollow
     { GFX.eaves = false; R3D.invalidate(); const hOff = go('p30_hollow', 0.5).tris;                                     // (the game dresses a map's walls on the first visit: compare from after that)
       const beforeH = JSON.stringify(G.map.cells.map((c) => c && [c.tex, c.top, !!c.door])); GFX.eaves = true; R3D.invalidate(); const hOn = go('p30_hollow', 0.5), PH = EAVES78.planOf(G.map).houses;
@@ -212,6 +242,8 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   check(r.c.quay === 5 && r.c.hoists === 4 && r.c.bell.length === 1 && /HARBOUR OFFICE/.test(r.c.bell[0]) && r.c.stone.length === 1 && /counting/.test(r.c.stone[0]), "Port Cantabile's quay: Hesper's four houses each with a hoist, the Harbour Office with its bell-cote, the counting-house in stone");
   check(r.c.cliff >= 40 && r.c.shops === 5 && r.c.roofs.length === 1 && r.c.roofs[0] === 'p17c_slate', r.c.cliff + ' cliff houses gabled, ' + r.c.shops + ' stair shops under pentices, every roof slate');
   check(r.c.on > r.c.off + 2000 && r.c.untouched && r.c.tex && r.c.shelter && r.c.ms < 400, 'the harbour: ' + r.c.off + ' -> ' + r.c.on + ' triangles in ' + r.c.ms + ' ms, the map unchanged, rain stops at its roofs');
+  check(r.r.greenroot.n === 8 && r.r.greenroot.shingle === 6 && r.r.greenroot.spire === 1 && r.r.greenroot.lit === 0 && r.r.greenroot.seal.length === 1 && /Cantor/.test(r.r.greenroot.seal[0]), 'Greenroot: ' + r.r.greenroot.n + ' buildings, six cottages under oak shingles, the chapel with its spire, the seal on the Cantor\'s shutter, and not one window lit after dusk');
+  check(r.r.clearing.n === 2 && r.r.clearing.headframe === 1 && r.r.greenroot.tex && r.r.greenroot.on > r.r.greenroot.off + 300 && r.r.clearing.on > r.r.clearing.off + 100 && r.r.greenroot.untouched && r.r.clearing.untouched && r.r.greenroot.shelter, "Outside the Hedge: Kaelen's hut and the iron headframe (" + r.r.clearing.off + ' -> ' + r.r.clearing.on + ' triangles); both maps unchanged');
   check(r.h.n === 4 && r.h.one && r.h.thatch && r.h.doors >= 14 && r.h.high <= 3.0001 && r.h.on > r.h.off + 300 && r.h.untouched && r.h.shelter, 'the Hollow: ' + r.h.n + ' rows, each under one long thatch roof, one storey, ' + r.h.doors + ' doors (' + r.h.off + ' -> ' + r.h.on + ' triangles); the map unchanged');
   { const g = r.g.whispergrove, y = r.g.p31_bellyard;
     check(g.grove >= 10 && g.stone.length === 1 && /Malting/.test(g.stone[0]) && g.tex, 'Whisper-Grove: ' + g.grove + ' marble buildings under colonnades, the Malting a brick range');
