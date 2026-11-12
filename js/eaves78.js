@@ -1,5 +1,5 @@
 // ============================================================
-//  eaves78 — Phase 78, "roofs and fronts": Oakhaven's buildings get the shape of buildings.
+//  eaves78 — Phase 78, "roofs and fronts": buildings get the shape of buildings, region by region (Oakhaven, Port Cantabile).
 //
 //  Owner, 11 Nov: the sharp-tiles pass changed almost nothing he could see, and he agreed to start with building
 //  shapes; on seeing the first roofs: "this looks great ... fix the rain through the buildings and houses. I like the
@@ -19,9 +19,22 @@
 //               through the frame").
 //  Nothing ordinary rises above the mooring mast or the tower: from Hedge Knoll the dome, the mast and the tower still
 //  stand over the roofs. Rain and snow stop at the roofs (EAVES78.shelter, read by js/light21.js). The classic
-//  renderer draws the old boxes exactly as before. Region: Oakhaven (EAVES78.MAPS).
+//  renderer draws the old boxes exactly as before.
 //
-//  EAVES78.plan(map)          -> { houses: [building, ...] }   (every roofed building; .stone, .plain, .storeys tell them apart)
+//  Owner, 11 Nov: "each region should have at least something unique about it even from a building and house
+//  perspective. Nothing that's over the top" and "the invented details are great keep them coming. Yes lets move to
+//  port Cantabile." Every region has an entry in EAVES78.STYLES and may have its own planner:
+//    Port Cantabile   (books: the town "climbs its cliff from the Long Mole by the Salt Stair, six wet flights with shops
+//               on the landings, and every shroud in the harbour carries a chime"; the counting-house is "square stone, a
+//               slate roof, iron shutters"). Lime-wash and ashlar under slate, never thatch or timber. Every house
+//               turns its gable to the water; the gable walls stand above the slates and are capped in pale stone, the
+//               eaves are clipped short. Hesper's four quay houses have a loft door and a hoist beam hung with three
+//               bronze chimes; the Harbour Office ("Dues, bench and bell") a bell-cote; the counting-house a low slate
+//               roof and rows of iron shutters that are never lit; the painted houses up the cliff each get an upper
+//               wall and a small gable with one window; the shops on the stair landings a slate pentice.
+//
+//  EAVES78.STYLES             one entry per region: what it builds with, and what only it has
+//  EAVES78.plan(map)          -> { houses: [building, ...], shops?: [...] }   (every roofed building; .stone, .plain, .storeys, .cliff tell them apart)
 //  EAVES78.roofZ(b, x, y)     the new roof's height over a point, or null outside its eaves
 //  EAVES78.shelter(map)       -> { sig, k, w, h, data } heights the rain stops at (game units; -1e4 = open sky), or null
 //  Switch GFX.eaves (Options -> Graphics & access, "Roofs, windows and eaves"). Nothing is saved; no random numbers.
@@ -41,9 +54,14 @@ const EAVES78 = (() => {
   // it has. Oakhaven is the first; the next region adds an entry and its own rules, it does not borrow Oakhaven's.
   const STYLES = {
     oakhaven: { builds: 'timber and plaster under thatch and slate (the bibles)', shutters: 'green-grey', only: ['jettied upper storeys and double-pile roofs', "the Greenhall's dome", "the Chapel's open bell-frame"] },
+    // Port Cantabile "climbs its cliff from the Long Mole by the Salt Stair ... and every shroud in the harbour carries a
+    // chime" (Fairweather's Companion); its counting-house is "square stone, a slate roof, iron shutters" (the game's own
+    // text). So: lime-washed fronts and ashlar under slate, no thatch and no timber; houses stand gable-end to the water,
+    // the gable walls raised above the slates and capped in stone against the wind, the eaves clipped short.
+    cantabile_harbour: { builds: 'lime-washed plaster and ashlar under slate', shutters: 'sea-blue; iron on the counting-house', only: ['gables turned to the water, raised and stone-capped', 'a loft door and a hoist beam hung with chimes in each quay gable', "the Harbour Office's bell-cote"], plan: (m) => planHarbour(m) },
   };
   const MAPS = new Set(Object.keys(STYLES));
-  const PITCH = 0.85, OVER = 0.28, VERGE = 0.22, LIFT = 0.06, STOREY = 0.6, JETTY = 0.11;
+  const PITCH = 0.85, OVER0 = 0.28, VERGE0 = 0.22, OVER = OVER0, VERGE = VERGE0, LIFT = 0.06, STOREY = 0.6, JETTY = 0.11;
   const RIDGE1 = 2.45, RIDGE2 = 2.7;                             // the highest ridge of a one- and a two-storey house (the mast is 2.8, the tower 3.2)
   const WALL = /^(t_house|t_wood$|t_marble)/, PLAIN = /barn|shed|store|granary|washhouse/i;
   const max = Math.max, min = Math.min, abs = Math.abs, hyp = Math.hypot, PI = Math.PI;
@@ -54,6 +72,7 @@ const EAVES78 = (() => {
   // local frame: a runs along the ridge, s across it from the building's middle (b.C)
   function roofZ(b, x, y) {
     const ax = b.axis === 'x', a = ax ? x : y, s = (ax ? y : x) - b.C, as = abs(s);
+    const OVER = b.over != null ? b.over : OVER0, VERGE = b.verge != null ? b.verge : VERGE0;
     if (b.type === 'hip') {
       if (a < b.A0 - OVER || a > b.A1 + OVER || as > b.half + OVER) return null;
       return b.zBase + b.pitch * min(a - b.A0, b.A1 - a, b.half - as);
@@ -63,7 +82,8 @@ const EAVES78 = (() => {
   }
 
   // ---------------------------------------------------------------- which blocks are a building, and what kind
-  function plan(m) {
+  function plan(m) { const st = m && STYLES[m.id]; return st && st.plan ? st.plan(m) : planTimber(m); }
+  function planTimber(m) {
     const W = m.w, H = m.h, g = m.cells, seen = new Uint8Array(W * H), houses = [];
     const cell = (x, y) => (x < 0 || y < 0 || x >= W || y >= H) ? null : g[y * W + x];
     const part = (c) => !!c && (c.door ? true : (WALL.test(c.tex || '') || c.tex === 't_roof'));
@@ -146,6 +166,100 @@ const EAVES78 = (() => {
     }
     return { houses };
   }
+  // Port Cantabile. A building is a rectangle of plaster or ashlar with a slate lid and a door; heights here are the map's own
+  // (the town stands on a cliff: a wall's top is where the map puts it).
+  function planHarbour(m) {
+    const W = m.w, H = m.h, g = m.cells, seen = new Uint8Array(W * H), houses = [];
+    const cell = (x, y) => (x < 0 || y < 0 || x >= W || y >= H) ? null : g[y * W + x];
+    const WALLH = /^p17c_(plaster|ashlar|shutter)/, part = (c) => !!c && (c.door ? true : (WALLH.test(c.tex || '') || c.tex === 'p17c_slate'));
+    const open = (x, y) => x >= 0 && y >= 0 && x < W && y < H && !cell(x, y), gnd = (x, y) => (m.lvls && x >= 0 && y >= 0 && x < W && y < H) ? (m.lvls[y * W + x] || 0) : 0;
+    for (let sy = 0; sy < H; sy++) for (let sx = 0; sx < W; sx++) {
+      if (seen[sy * W + sx] || !part(cell(sx, sy)) || cell(sx, sy).door) continue;
+      let x0 = sx, x1 = sx, y0 = sy, y1 = sy, n = 0; const stk = [[sx, sy]]; seen[sy * W + sx] = 1;
+      while (stk.length) { const [x, y] = stk.pop(); n++; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const X = x + dx, Y = y + dy; if (X < 0 || Y < 0 || X >= W || Y >= H || seen[Y * W + X] || !part(cell(X, Y))) continue; seen[Y * W + X] = 1; stk.push([X, Y]); } }
+      const w = x1 - x0 + 1, h = y1 - y0 + 1;
+      if (w < 3 || h < 3 || n !== w * h) continue;
+      let lid = 0, wallTex = null, ok = true, label = '', wallTop = -1e9; const doorList = [], inner = [];
+      for (let y = y0; y <= y1 && ok; y++) for (let x = x0; x <= x1; x++) {
+        const c = cell(x, y), edge = x === x0 || x === x1 || y === y0 || y === y1, t = c.top != null ? c.top : gnd(x, y) + 1;
+        if (edge) {
+          if (c.door) { doorList.push({ x, y, nx: y === y0 || y === y1 ? 0 : (x === x0 ? -1 : 1), ny: y === y0 ? -1 : y === y1 ? 1 : 0 }); if (c.label) label += c.label + ' '; }
+          else if (!WALLH.test(c.tex || '')) { ok = false; break; } else { if (!wallTex || /shutter/.test(wallTex)) wallTex = c.tex; if (t > wallTop) wallTop = t; }
+        } else { if (c.door) { ok = false; break; } if (c.tex === 'p17c_slate' || c.capTex === 'p17c_slate') lid++; inner.push({ x, y, top: t }); }
+      }
+      if (!ok || !doorList.length || !lid || !wallTex) continue;
+      const d0 = doorList[0], base = gnd(d0.x + d0.nx, d0.y + d0.ny), stone = /ashlar/.test(wallTex), office = /OFFICE/i.test(label);
+      const ax = d0.nx !== 0, acrossN = ax ? h : w;                         // the ridge runs back from the door: the gable faces the quay
+      const b = { x0, y0, x1, y1, w, h, axis: ax ? 'x' : 'y', stone, church: false, plain: false, storeys: 1, label: label.trim(), top: wallTop, ext: 0, jetty: 0, wallTop, wallTex, towers: [], dome: null,
+        type: 'gable', ridges: 1, half: acrossN / 2, span: acrossN / 2, C: ax ? (y0 + y1 + 1) / 2 : (x0 + x1 + 1) / 2, A0: ax ? x0 : y0, A1: (ax ? x1 : y1) + 1,
+        windows: [], doors: [], plinth: [], dormers: [], stacks: [], extras: [], over: 0.05, verge: 0, parapet: stone ? 0.2 : 0.13, harbour: true, base, roofTex: 'p17c_slate', boardTex: 'e78_cope' };
+      b.pitch = stone ? 0.3 : acrossN >= 7 ? 0.42 : 0.6; b.zBase = wallTop + LIFT; let need = 0;
+      for (const c of inner) for (let k = 0; k < 9; k++) { const z = roofZ(b, c.x + (k % 3) / 2, c.y + ((k / 3) | 0) / 2); if (z != null && c.top + 0.04 - z > need) need = c.top + 0.04 - z; }
+      b.lift = LIFT + need; b.zBase = wallTop + b.lift; b.ridge = b.zBase + b.span * b.pitch;
+      const rise = b.span * b.pitch, tall = wallTop - base;
+      for (const [nx, ny, along, fixed] of [[0, -1, 'x', y0], [0, 1, 'x', y1], [-1, 0, 'y', x0], [1, 0, 'y', x1]]) {
+        const a0 = along === 'x' ? x0 + 1 : y0 + 1, a1 = along === 'x' ? x1 - 1 : y1 - 1, len = a1 - a0 + 1;
+        for (let a = a0; a <= a1; a++) {
+          const x = along === 'x' ? a : fixed, y = along === 'x' ? fixed : a, c = cell(x, y), i = a - a0;
+          if ((len % 2 ? i % 2 !== 0 : i % 2 !== 1) || !c || c.door || !open(x + nx, y + ny) || /shutter/.test(c.tex || '')) continue;
+          const px = along === 'x' ? 1 : 0, py = along === 'x' ? 0 : 1, pa = cell(x - px, y - py), pb = cell(x + px, y + py);
+          if ((pa && pa.door) || (pb && pb.door) || (m.decals && m.decals[y * W + x])) continue;
+          const cx = x + 0.5 + nx * 0.5, cy = y + 0.5 + ny * 0.5, z = gnd(x + nx, y + ny);
+          if (stone) { for (let r = 0; r * 1.2 + 1.6 < tall; r++) b.windows.push({ cx, cy, nx, ny, z0: z + 0.85 + r * 1.2, z1: z + 1.5 + r * 1.2, hw: 0.2, style: 'iron', lit: false }); }
+          else b.windows.push({ cx, cy, nx, ny, z0: z + 0.37, z1: z + 0.8, hw: 0.21, style: 'cottage', shut: 'blue', lit: h2(x * 7 + 3, y * 13 + 1) < (office ? 0.5 : 0.62) });
+        }
+      }
+      // the gable over the door, and the one behind
+      const fa = (ax ? d0.nx : d0.ny) < 0 ? b.A0 : b.A1, fn = fa === b.A0 ? -1 : 1, ra = fa === b.A0 ? b.A1 : b.A0;
+      const on2 = (a) => ({ x: ax ? a : b.C, y: ax ? b.C : a }), F = on2(fa), R = on2(ra), nrm = (k) => ({ nx: ax ? k : 0, ny: ax ? 0 : k });
+      if (stone) b.windows.push({ cx: F.x, cy: F.y, ...nrm(fn), z0: b.zBase + 0.25, z1: b.zBase + min(0.9, rise * 0.5), hw: 0.2, style: 'iron', lit: false });
+      else if (office) {
+        b.windows.push({ cx: F.x, cy: F.y, ...nrm(fn), z0: b.zBase + 0.12, z1: b.zBase + min(0.6, rise * 0.4), hw: 0.19, style: 'attic', lit: true });
+        b.extras.push({ kind: 'bellcote', x: F.x, y: F.y, ...nrm(fn), z: b.ridge + b.parapet });
+      } else {
+        const z1 = b.zBase + min(0.66, rise * 0.46);
+        b.windows.push({ cx: F.x, cy: F.y, ...nrm(fn), z0: b.zBase + 0.12, z1, hw: 0.17, style: 'loft', lit: false });
+        b.extras.push({ kind: 'hoist', x: F.x, y: F.y, ...nrm(fn), z: z1 + 0.1 });
+      }
+      if (!stone) {
+        b.windows.push({ cx: R.x, cy: R.y, ...nrm(-fn), z0: b.zBase + 0.14, z1: b.zBase + min(0.5, rise * 0.36), hw: 0.14, style: 'attic', lit: h2(x0 * 11, y0 * 17) < 0.4 });
+        const sa = ra + fn * 0.12, so = (h2(x0 * 5, y0 * 3) < 0.5 ? -1 : 1) * min(0.9, b.span * 0.4);       // a stone stack in the rear gable
+        b.stacks.push(ax ? { x: sa, y: b.C + so } : { x: b.C + so, y: sa });
+      }
+      houses.push(b);
+    }
+    // the houses up the cliff: a painted front with a block of slate behind it. Each run of fronts is one house; it gets an
+    // upper wall to clear its old lid and its own small gable, turned to the water like the ones on the quay.
+    const FR = /^p17c_front/, isF = (c) => !!c && FR.test(c.tex || '');
+    for (let y = 1; y < H - 1; y++) for (let x = 0; x < W; x++) {
+      const c = cell(x, y); if (!isF(c) || isF(cell(x - 1, y))) continue;
+      let x1 = x; while (isF(cell(x1 + 1, y))) x1++;
+      let ok = true, lid = -1e9, lidLo = 1e9, ft = -1e9;
+      for (let X = x; X <= x1; X++) { const sl = cell(X, y - 1), f = cell(X, y); if (!sl || sl.tex !== 'p17c_slate' || sl.top == null || f.top == null) { ok = false; break; } lid = max(lid, sl.top); lidLo = min(lidLo, sl.top); ft = max(ft, f.top); }
+      const n = x1 - x + 1; if (!ok || n > 5 || lid - ft > 0.9) continue;
+      const v = /front(\d)/.exec(c.tex), wallTex = 'p17c_plaster' + (v ? v[1] : ''), wallTop = lid + 0.04, pitch = n === 1 ? 0.9 : n === 2 ? 0.7 : 0.55;
+      const b = { x0: x, y0: y - 1, x1, y1: y, w: n, h: 2, axis: 'y', stone: false, church: false, plain: false, storeys: 1, label: '', top: ft, ext: wallTop - ft, jetty: 0, skin: 0.012, wallTop, wallTex, towers: [], dome: null,
+        type: 'gable', ridges: 1, half: n / 2, span: n / 2, C: (x + x1 + 1) / 2, A0: y - 1, A1: y + 1, windows: [], doors: [], plinth: [], dormers: [], stacks: [], extras: [], over: 0.05, verge: 0, parapet: 0.1, harbour: true, cliff: true,
+        base: gnd(x, y + 1), roofTex: 'p17c_slate', boardTex: 'e78_cope', pitch, lift: 0.02, zBase: wallTop + 0.02, backFrom: lidLo };
+      b.ridge = b.zBase + b.span * pitch;
+      if (n >= 2) { const rise = b.span * pitch, hw = n === 2 ? 0.13 : 0.16, z1 = b.zBase + min(0.42, rise * 0.5);
+        b.windows.push({ cx: b.C, cy: y + 1, nx: 0, ny: 1, z0: z1 - (n === 2 ? 0.27 : 0.32), z1, hw, style: 'attic', lit: h2(x * 13 + 5, y * 7 + 2) < 0.6 });
+        if (h2(x * 3 + 1, y * 11) < 0.7) b.stacks.push({ x: b.C + (h2(x, y) < 0.5 ? -1 : 1) * b.span * 0.45, y: y - 1 + 0.14 }); }
+      houses.push(b);
+    }
+    // the shops on the Salt Stair's landings (and any door let into a plain wall): a slate pentice over the shop-front
+    const shops = [], inHouse = (x, y) => houses.some((b) => x >= b.x0 && x <= b.x1 && y >= b.y0 && y <= b.y1);
+    for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+      const c = cell(x, y); if (!c || !c.door || inHouse(x, y)) continue;
+      for (const [nx, ny] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const fa = cell(x - ny, y + nx), fb = cell(x + ny, y - nx);
+        if (!open(x + nx, y + ny) || !fa || !fb || !WALLH.test(fa.tex || '') || !WALLH.test(fb.tex || '')) continue;
+        shops.push({ cx: x + 0.5 + nx * 0.5, cy: y + 0.5 + ny * 0.5, nx, ny, hw: 1.46, z: fa.top != null ? fa.top : gnd(x - ny, y + nx) + 1 }); break;
+      }
+    }
+    return { houses, shops };
+  }
   const plans = new WeakMap();
   function planOf(m) { let p = plans.get(m); if (!p || p.cells !== m.cells) { p = plan(m); p.cells = m.cells; plans.set(m, p); } return p; }
   const night = () => { const t = typeof G !== 'undefined' && G && Number.isFinite(G.tod) ? G.tod : 0.5; return t < 0.27 || t > 0.76; };
@@ -160,13 +274,17 @@ const EAVES78 = (() => {
     if (shel && shel.map === m && shel.plan === p) return shel;
     const K = 4, W = m.w * K, H = m.h * K, d = new Float32Array(W * H).fill(-1e4);
     for (let cy = 0; cy < m.h; cy++) for (let cx = 0; cx < m.w; cx++) {             // inside any block it does not rain
-      const c = m.cells[cy * m.w + cx]; if (!c || c.door) continue; const t = (m.lvls ? m.lvls[cy * m.w + cx] || 0 : 0) + (c.top != null ? c.top : 1);
+      const c = m.cells[cy * m.w + cx]; if (!c || c.door) continue; const t = c.top != null && m.lvls ? c.top : (m.lvls ? m.lvls[cy * m.w + cx] || 0 : 0) + (c.top != null ? c.top : 1);
       for (let j = 0; j < K; j++) for (let i = 0; i < K; i++) d[(cy * K + j) * W + cx * K + i] = t;
     }
     for (const b of p.houses) {                                                      // nor under a roof, out to the edge of its eaves
-      const o = OVER + 0.05, X0 = max(0, Math.floor((b.x0 - b.jetty - o) * K)), X1 = min(W - 1, Math.ceil((b.x1 + 1 + b.jetty + o) * K)), Y0 = max(0, Math.floor((b.y0 - b.jetty - o) * K)), Y1 = min(H - 1, Math.ceil((b.y1 + 1 + b.jetty + o) * K));
+      const o = (b.over != null ? b.over : OVER) + 0.05, X0 = max(0, Math.floor((b.x0 - b.jetty - o) * K)), X1 = min(W - 1, Math.ceil((b.x1 + 1 + b.jetty + o) * K)), Y0 = max(0, Math.floor((b.y0 - b.jetty - o) * K)), Y1 = min(H - 1, Math.ceil((b.y1 + 1 + b.jetty + o) * K));
       for (let y = Y0; y <= Y1; y++) for (let x = X0; x <= X1; x++) { const z = roofZ(b, (x + 0.5) / K, (y + 0.5) / K); if (z != null && z > d[y * W + x]) d[y * W + x] = z; }
       if (b.dome) { const r = 1.0 * K; for (let y = -r; y <= r; y++) for (let x = -r; x <= r; x++) if (x * x + y * y <= r * r) { const i = (Math.floor((b.dome.y + 0.5) * K) + y) * W + Math.floor((b.dome.x + 0.5) * K) + x; if (d[i] < b.ridge + 0.4) d[i] = b.ridge + 0.4; } }
+    }
+    for (const q of (p.shops || [])) {                                                // nor under a shop's pentice
+      const tx = -q.ny, ty = q.nx;
+      for (let t = -q.hw; t <= q.hw; t += 0.2) for (let o = 0.05; o <= 0.4; o += 0.15) { const X = Math.floor((q.cx + tx * t + q.nx * o) * K), Y = Math.floor((q.cy + ty * t + q.ny * o) * K); if (X >= 0 && Y >= 0 && X < W && Y < H && d[Y * W + X] < q.z) d[Y * W + X] = q.z; }
     }
     return (shel = { map: m, plan: p, sig, k: K, w: W, h: H, data: d });
   }
@@ -177,7 +295,7 @@ const EAVES78 = (() => {
     if (texDone || typeof Engine === 'undefined' || !Engine.textures || !Engine.textures.t_wood || !Engine.textures.t_roof) return texDone;
     const wood = Engine.textures.t_wood, roof = Engine.textures.t_roof, rgb = (r, g, b, a = 255) => ((a << 24) | (min(255, max(0, b)) | 0) << 16 | (min(255, max(0, g)) | 0) << 8 | (min(255, max(0, r)) | 0)) >>> 0;
     const px = (c, k, t) => rgb((c & 255) * k * (t ? t[0] : 1), ((c >>> 8) & 255) * k * (t ? t[1] : 1), ((c >>> 16) & 255) * k * (t ? t[2] : 1));
-    const dark = new Uint32Array(4096), shut = new Uint32Array(4096), win = new Uint32Array(4096), lit = new Uint32Array(4096), slate = new Uint32Array(4096), thatch = new Uint32Array(4096), lan = new Uint32Array(4096), lanLit = new Uint32Array(4096);
+    const blue = new Uint32Array(4096), bronze = new Uint32Array(4096), dark = new Uint32Array(4096), shut = new Uint32Array(4096), win = new Uint32Array(4096), lit = new Uint32Array(4096), slate = new Uint32Array(4096), thatch = new Uint32Array(4096), lan = new Uint32Array(4096), lanLit = new Uint32Array(4096);
     for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
       const i = y * 64 + x, w = wood[i], n = h2(x >> 1, y >> 1) - 0.5;
       dark[i] = px(w, 0.5);
@@ -188,6 +306,8 @@ const EAVES78 = (() => {
       // a shutter: upright boards, two battens, a dark edge
       const batten = (y > 9 && y < 15) || (y > 48 && y < 54), edge = x < 2 || x > 61 || y < 2 || y > 61, gap = x % 16 === 0;
       shut[i] = px(w, edge ? 0.42 : batten ? 0.62 : gap ? 0.5 : 0.86, [0.78, 0.98, 0.82]);
+      { const l = (0.3 * (w & 255) + 0.59 * ((w >>> 8) & 255) + 0.11 * ((w >>> 16) & 255)) * (edge ? 0.5 : batten ? 0.72 : gap ? 0.58 : 1) * (h2(x * 3, y >> 2) < 0.07 ? 0.75 : 1); blue[i] = rgb(l * 0.5 + 12, l * 0.7 + 22, l * 0.88 + 34); }   // sea-blue paint, salt-faded
+      { const k = 0.8 + n * 0.25 + (x % 16 < 2 ? -0.2 : 0); bronze[i] = rgb(176 * k, 132 * k, 58 * k); }
       // a lancet: a pointed arch in a stone surround, leaded glass
       { const t = y < 24 ? (24 - y) / 24 : 0, hw = 19 * (1 - Math.pow(t, 1.7)), dx = abs(x - 31.5);
         if (dx > hw || y < 1) { lan[i] = 0; lanLit[i] = 0; }
@@ -205,14 +325,27 @@ const EAVES78 = (() => {
       const ex = (x - 32) / 26, ey = (y - 34) / 26, core = max(0, 1 - (ex * ex + ey * ey) * 0.55), curtain = (x < 18 || x > 45) && y < 40 ? 0.72 : 1;
       lit[i] = rgb((176 + 79 * core + n * 14) * sh * curtain, (112 + 96 * core + n * 12) * sh * curtain, (38 + 70 * core) * sh * curtain);
     }
-    for (const [name, d] of [['e78_dark', dark], ['e78_shutter', shut], ['e78_win', win], ['e78_winlit', lit], ['e78_slate', slate], ['e78_thatch', thatch], ['e78_lancet', lan], ['e78_lancetlit', lanLit]]) Engine.addTexture(name, d);
+    for (const [name, d] of [['e78_shutter_blue', blue], ['e78_bronze', bronze], ['e78_dark', dark], ['e78_shutter', shut], ['e78_win', win], ['e78_winlit', lit], ['e78_slate', slate], ['e78_thatch', thatch], ['e78_lancet', lan], ['e78_lancetlit', lanLit]]) Engine.addTexture(name, d);
     return (texDone = true);
+  }
+
+  // Port Cantabile's: lime-wash without the damp line at its foot (for gables), and a pale coping stone
+  function harbourTextures() {
+    if (typeof Engine === 'undefined' || !Engine.textures || Engine.textures.e78_cope || !Engine.textures.p17c_plaster) return;
+    const rgb = (r, g, b) => ((255 << 24) | (min(255, max(0, b)) | 0) << 16 | (min(255, max(0, g)) | 0) << 8 | (min(255, max(0, r)) | 0)) >>> 0;
+    for (const v of ['', '2', '3']) { const src = Engine.textures['p17c_plaster' + v]; if (!src) continue; const d = new Uint32Array(4096);
+      for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) d[y * 64 + x] = src[(y < 44 ? y : 87 - y) * 64 + x];      // the foot of the tile mirrors back up: no band, no seam
+      Engine.addTexture('e78_lime' + v, d); }
+    const cope = new Uint32Array(4096);
+    for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) { const k = (0.9 + (h2(x >> 1, y >> 1) - 0.5) * 0.16 + (h2(x >> 3, y >> 3) - 0.5) * 0.1) * (x % 21 === 0 ? 0.7 : 1) * (h2(x * 5, y * 3) < 0.03 ? 0.82 : 1); cope[y * 64 + x] = rgb(170 * k, 168 * k, 156 * k); }
+    Engine.addTexture('e78_cope', cope);
   }
 
   // ---------------------------------------------------------------- geometry, into the renderer's own mesh
   // h: { B (the mesh builder), tex(name) -> layer, MAT, ZK }. Returns the triangles added.
   function build(m, h) {
     if (!on() || !m || !MAPS.has(m.id) || !textures()) return 0;
+    harbourTextures();
     const B = h.B, MAT = h.MAT, ZK = h.ZK, dusk = night(); let tris = 0;
     const unit = (x, y, z) => { const l = hyp(x, y, z) || 1; return [x / l, y / l, z / l]; };
     // the normal of a plane through three points (in the renderer's space, where heights are scaled), turned to face `toward`
@@ -221,7 +354,7 @@ const EAVES78 = (() => {
     const tri = (p, uv, L, mat, side, n) => { const v = p.map((q, i) => B.vert(q[0], q[1], q[2], uv[i][0], uv[i][1], L, -1, mat, side, n[0], n[1], n[2])); B.quad(v[0], v[1], v[2], v[2]); tris += 1; };
     const UP = [0, 0, 1], DN = [0, 0, -1];
     const L_ = (n) => h.tex(Engine.textures[n] ? n : 't_stone');
-    const Ldark = L_('e78_dark'), Lshut = L_('e78_shutter'), Lwin = L_('e78_win'), Llit = L_('e78_winlit'), Lstone = L_('t_stone'), Llan = L_('e78_lancet'), LlanLit = L_('e78_lancetlit'), Lbrick = L_('t_house_p20b_2');
+    const Ldark = L_('e78_dark'), Lshut = L_('e78_shutter'), Lwin = L_('e78_win'), Llit = L_('e78_winlit'), Lstone = L_('t_stone'), Llan = L_('e78_lancet'), LlanLit = L_('e78_lancetlit'), Lbrick = L_('t_house_p20b_2'), Lblue = L_('e78_shutter_blue'), Lbronze = L_('e78_bronze'), Liron = L_(Engine.textures.p17c_shutter ? 'p17c_shutter' : 'e78_dark');
     // a box standing on z0 (four sides and a top)
     const box = (x0, y0, x1, y1, z0, z1, L, Ltop, sideK = 1) => {
       quad([[x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]], [[x0, z1 - z0], [x1, z1 - z0], [x1, 0], [x0, 0]], L, MAT.wall, 0.8 * sideK, [0, -1, 0]);
@@ -240,29 +373,33 @@ const EAVES78 = (() => {
         for (const sgn of [-1, 1]) quad([at(sgn * 0.005, 0.016, z0), at(sgn * hw, 0.016, z0), at(sgn * hw, 0.016, z1), at(sgn * 0.005, 0.016, z1)], [[0, 1], [1, 1], [1, 0], [0, 0]], Lshut, MAT.wall, side * 0.92, n);
         sill(0.05, 0.04); return;
       }
+      if (w.style === 'iron') { quad([at(-hw, 0.016, z0), at(hw, 0.016, z0), at(hw, 0.016, z1), at(-hw, 0.016, z1)], [[0.1, 0.9], [0.9, 0.9], [0.9, 0.1], [0.1, 0.1]], Liron, MAT.wall, side * 0.95, n);
+        quad([at(-hw - 0.04, 0.05, z0 - 0.05), at(hw + 0.04, 0.05, z0 - 0.05), at(hw + 0.04, 0.05, z0), at(-hw - 0.04, 0.05, z0)], [[0, 0.1], [0.6, 0.1], [0.6, 0], [0, 0]], Lstone, MAT.wall, side * 1.2, n);
+        quad([at(-hw - 0.04, 0.012, z0), at(hw + 0.04, 0.012, z0), at(hw + 0.04, 0.05, z0), at(-hw - 0.04, 0.05, z0)], [[0, 0], [0.6, 0], [0.6, 0.1], [0, 0.1]], Lstone, MAT.wall, 1.4, UP); return; }
+      if (w.style === 'loft') { quad([at(-hw, 0.016, z0), at(hw, 0.016, z0), at(hw, 0.016, z1), at(-hw, 0.016, z1)], [[0, 1], [1, 1], [1, 0], [0, 0]], Lblue, MAT.wall, side * 0.9, n); sill(0.07, 0.04); return; }
       if (w.style === 'lancet') { quad([at(-hw, 0.014, z0), at(hw, 0.014, z0), at(hw, 0.014, z1), at(-hw, 0.014, z1)], [[0.02, 1], [0.98, 1], [0.98, 0], [0.02, 0]], glow ? LlanLit : Llan, glow ? MAT.glow : MAT.wall, side + 10, n); sill(0.05, 0.05); return; }
       const v1 = w.style === 'hall' ? 2 : 1;
       quad([at(-hw, 0.014, z0), at(hw, 0.014, z0), at(hw, 0.014, z1), at(-hw, 0.014, z1)], [[0, v1], [1, v1], [1, 0], [0, 0]], glow ? Llit : Lwin, glow ? MAT.glow : MAT.wall, side, n);
       sill(small ? 0.035 : 0.06, small ? 0.03 : 0.045);
       if (w.style === 'cottage') for (const sgn of [-1, 1]) { const i0 = sgn * (hw + 0.012), i1 = sgn * (hw + 0.2);      // shutters, standing a little open
-        quad([at(i0, 0.02, z0 + 0.01), at(i1, 0.075, z0 + 0.01), at(i1, 0.075, z1 - 0.01), at(i0, 0.02, z1 - 0.01)], [[0, 1], [1, 1], [1, 0], [0, 0]], Lshut, MAT.wall, side, unit(w.nx - tx * sgn * 0.28, w.ny - ty * sgn * 0.28, 0)); }
+        quad([at(i0, 0.02, z0 + 0.01), at(i1, 0.075, z0 + 0.01), at(i1, 0.075, z1 - 0.01), at(i0, 0.02, z1 - 0.01)], [[0, 1], [1, 1], [1, 0], [0, 0]], w.shut === 'blue' ? Lblue : Lshut, MAT.wall, side, unit(w.nx - tx * sgn * 0.28, w.ny - ty * sgn * 0.28, 0)); }
     };
 
     for (const b of planOf(m).houses) {
-      const ax = b.axis === 'x', Lroof = L_(b.roofTex), Lwall = L_(b.wallTex), Lboard = b.stone ? Lstone : Ldark, p = b.pitch, C = b.C, A0 = b.A0, A1 = b.A1, zB = b.zBase, top = b.top, wt = b.wallTop;
+      const ax = b.axis === 'x', Lroof = L_(b.roofTex), Lwall = L_(b.wallTex), lime = b.harbour && !b.stone ? b.wallTex.replace('p17c_plaster', 'e78_lime') : null, Lgab = lime && Engine.textures[lime] ? L_(lime) : Lwall, Lboard = b.boardTex ? L_(b.boardTex) : b.stone ? Lstone : Ldark, OVER = b.over != null ? b.over : OVER0, VERGE = b.verge != null ? b.verge : VERGE0, par = b.parapet || 0, p = b.pitch, C = b.C, A0 = b.A0, A1 = b.A1, zB = b.zBase, top = b.top, wt = b.wallTop;
       const P = (a, s, z) => ax ? [a, C + s, z] : [C + s, a, z], N = (na, ns) => ax ? [na, ns, 0] : [ns, na, 0];
       // ---- the upper wall: a jettied storey, or a stone hall's cornice
       if (b.ext > 0) {
-        const j = b.jetty, X0 = b.x0 - j, X1 = b.x1 + 1 + j, Y0 = b.y0 - j, Y1 = b.y1 + 1 + j, e = b.ext;
-        quad([[X0, Y0, top], [X1, Y0, top], [X1, Y0, wt], [X0, Y0, wt]], [[X1, e], [X0, e], [X0, 0], [X1, 0]], Lwall, MAT.wall, 0.8, [0, -1, 0]);
-        quad([[X0, Y1, top], [X1, Y1, top], [X1, Y1, wt], [X0, Y1, wt]], [[X0, e], [X1, e], [X1, 0], [X0, 0]], Lwall, MAT.wall, 0.8, [0, 1, 0]);
-        quad([[X0, Y0, top], [X0, Y1, top], [X0, Y1, wt], [X0, Y0, wt]], [[Y0, e], [Y1, e], [Y1, 0], [Y0, 0]], Lwall, MAT.wall, 1, [-1, 0, 0]);
-        quad([[X1, Y0, top], [X1, Y1, top], [X1, Y1, wt], [X1, Y0, wt]], [[Y1, e], [Y0, e], [Y0, 0], [Y1, 0]], Lwall, MAT.wall, 1, [1, 0, 0]);
+        const j = b.jetty || b.skin || 0, X0 = b.x0 - j, X1 = b.x1 + 1 + j, Y0 = b.y0 - j, Y1 = b.y1 + 1 + j, e = b.ext;
+        quad([[X0, Y0, top], [X1, Y0, top], [X1, Y0, wt], [X0, Y0, wt]], [[X1, e], [X0, e], [X0, 0], [X1, 0]], Lgab, MAT.wall, 0.8, [0, -1, 0]);
+        quad([[X0, Y1, top], [X1, Y1, top], [X1, Y1, wt], [X0, Y1, wt]], [[X0, e], [X1, e], [X1, 0], [X0, 0]], Lgab, MAT.wall, 0.8, [0, 1, 0]);
+        quad([[X0, Y0, top], [X0, Y1, top], [X0, Y1, wt], [X0, Y0, wt]], [[Y0, e], [Y1, e], [Y1, 0], [Y0, 0]], Lgab, MAT.wall, 1, [-1, 0, 0]);
+        quad([[X1, Y0, top], [X1, Y1, top], [X1, Y1, wt], [X1, Y0, wt]], [[Y1, e], [Y0, e], [Y0, 0], [Y1, 0]], Lgab, MAT.wall, 1, [1, 0, 0]);
         const band = (z0, z1, o, L, k) => { quad([[X0 - o, Y0 - o, z0], [X1 + o, Y0 - o, z0], [X1 + o, Y0 - o, z1], [X0 - o, Y0 - o, z1]], [[X0, 0.1], [X1, 0.1], [X1, 0], [X0, 0]], L, MAT.wall, 0.8 * k, [0, -1, 0]);
           quad([[X0 - o, Y1 + o, z0], [X1 + o, Y1 + o, z0], [X1 + o, Y1 + o, z1], [X0 - o, Y1 + o, z1]], [[X0, 0.1], [X1, 0.1], [X1, 0], [X0, 0]], L, MAT.wall, 0.8 * k, [0, 1, 0]);
           quad([[X0 - o, Y0 - o, z0], [X0 - o, Y1 + o, z0], [X0 - o, Y1 + o, z1], [X0 - o, Y0 - o, z1]], [[Y0, 0.1], [Y1, 0.1], [Y1, 0], [Y0, 0]], L, MAT.wall, k, [-1, 0, 0]);
           quad([[X1 + o, Y0 - o, z0], [X1 + o, Y1 + o, z0], [X1 + o, Y1 + o, z1], [X1 + o, Y0 - o, z1]], [[Y0, 0.1], [Y1, 0.1], [Y1, 0], [Y0, 0]], L, MAT.wall, k, [1, 0, 0]); };
-        if (j > 0) {                                             // the jetty: its underside and the beam it sits on
+        if (b.harbour) { /* plain lime-wash to the eaves */ } else if (j > 0) {                                             // the jetty: its underside and the beam it sits on
           quad([[X0, Y0, top - 0.05], [X1, Y0, top - 0.05], [X1, Y1, top - 0.05], [X0, Y1, top - 0.05]], [[X0, Y0], [X1, Y0], [X1, Y1], [X0, Y1]], Ldark, MAT.wall, 0.55, DN);
           band(top - 0.05, top + 0.055, 0.012, Ldark, 0.95);
         } else { band(wt - 0.07, wt + 0.03, 0.03, Lstone, 1.12); quad([[X0 - 0.03, Y0 - 0.03, wt + 0.03], [X1 + 0.03, Y0 - 0.03, wt + 0.03], [X1 + 0.03, Y1 + 0.03, wt + 0.03], [X0 - 0.03, Y1 + 0.03, wt + 0.03]], [[X0, Y0], [X1, Y0], [X1, Y1], [X0, Y1]], Lstone, MAT.wall, 1.2, UP); }
@@ -277,12 +414,29 @@ const EAVES78 = (() => {
             quad([P(a0, cs + sg * se, ze), P(a1, cs + sg * se, ze), P(a1, cs, zr), P(a0, cs, zr)], [[a0, sl], [a1, sl], [a1, 0], [a0, 0]], Lroof, MAT.wall, side, up);
             quad([P(a0, cs + sg * se, ze - 0.012), P(a1, cs + sg * se, ze - 0.012), P(a1, cs, zr - 0.012), P(a0, cs, zr - 0.012)], [[a0, sl], [a1, sl], [a1, 0], [a0, 0]], Ldark, MAT.wall, 0.6, [-up[0], -up[1], -up[2]]);
             if (!inner) quad([P(a0, cs + sg * se, ze + 0.012), P(a1, cs + sg * se, ze + 0.012), P(a1, cs + sg * se, ze - 0.075), P(a0, cs + sg * se, ze - 0.075)], [[a0, 0], [a1, 0], [a1, 0.09], [a0, 0.09]], Lboard, MAT.wall, 0.9, N(0, sg));
-            for (const [a, na] of [[a0, -1], [a1, 1]]) quad([P(a, cs + sg * se, ze + 0.014), P(a, cs, zr + 0.014), P(a, cs, zr - 0.1), P(a, cs + sg * se, ze - 0.1)], [[0, 0], [sl, 0], [sl, 0.11], [0, 0.11]], Lboard, MAT.wall, 0.85, N(na, 0));
+            if (!par) for (const [a, na] of [[a0, -1], [a1, 1]]) quad([P(a, cs + sg * se, ze + 0.014), P(a, cs, zr + 0.014), P(a, cs, zr - 0.1), P(a, cs + sg * se, ze - 0.1)], [[0, 0], [sl, 0], [sl, 0.11], [0, 0.11]], Lboard, MAT.wall, 0.85, N(na, 0));
             quad([P(a0, cs + sg * 0.07, zr - 0.07 * p + 0.016), P(a1, cs + sg * 0.07, zr - 0.07 * p + 0.016), P(a1, cs, zr + 0.022), P(a0, cs, zr + 0.022)], [[a0, 0.1], [a1, 0.1], [a1, 0], [a0, 0]], Ldark, MAT.wall, sg < 0 ? 1.15 : 1, up);   // the ridge course
           }
           // the gable ends: the wall carried up to the ridge
           for (const [a, na] of [[A0, -1], [A1, 1]]) {
             const u = (s) => (ax ? (na > 0 ? C + s : -(C + s)) : (na > 0 ? -(C + s) : C + s)), sk = ax ? 1 : 0.8;
+            if (par) {                                           // a raised gable: the wall stands above the slates, capped in stone
+              const ai = a - na * 0.16, hs = span + 0.03, w0 = b.backFrom != null && na < 0 ? b.backFrom : wt, ag = b.backFrom != null && na < 0 ? a - 0.006 : a;
+              quad([P(ag, cs - hs, w0), P(ag, cs + hs, w0), P(ag, cs + hs, zB + par), P(ag, cs - hs, zB + par)], [[u(cs - hs), 0], [u(cs + hs), 0], [u(cs + hs), -(zB + par - w0)], [u(cs - hs), -(zB + par - w0)]], Lgab, MAT.wall, sk, N(na, 0));
+              tri([P(ag, cs - hs, zB + par), P(ag, cs + hs, zB + par), P(ag, cs, zr + par)], [[u(cs - hs), -(zB + par - w0)], [u(cs + hs), -(zB + par - w0)], [u(cs), -(zr + par - w0)]], Lgab, MAT.wall, sk, N(na, 0));
+              for (const sg of [-1, 1]) {
+                quad([P(ai, cs + sg * hs, zB - 0.02), P(ai, cs, zr - 0.02), P(ai, cs, zr + par), P(ai, cs + sg * hs, zB + par)], [[0, par], [hs, par], [hs, 0], [0, 0]], Lgab, MAT.wall, sk * 0.85, N(-na, 0));
+                const c0 = P(a + na * 0.02, cs + sg * (hs + 0.02), zB + par), c1 = P(a + na * 0.02, cs, zr + par + 0.015), c2 = P(ai - na * 0.02, cs, zr + par + 0.015), c3 = P(ai - na * 0.02, cs + sg * (hs + 0.02), zB + par);
+                quad([c0, c1, c2, c3], [[0, 0], [hs, 0], [hs, 0.2], [0, 0.2]], Lboard, MAT.wall, sg < 0 ? 1.25 : 1.1, planeN(c0, c1, c2, UP));
+                quad([P(a, cs + sg * hs, zB - 0.05), P(ai, cs + sg * hs, zB - 0.05), P(ai, cs + sg * hs, zB + par), P(a, cs + sg * hs, zB + par)], [[0, 0.2], [0.16, 0.2], [0.16, 0], [0, 0]], Lboard, MAT.wall, 0.95, N(0, sg));
+                // the coping seen from the quay: a stone band down the rake, and a kneeler where it lands
+                const ao = a + na * 0.03, bw = 0.085;
+                quad([P(ao, cs + sg * (hs + 0.03), zB + par - bw), P(ao, cs, zr + par - bw), P(ao, cs, zr + par + 0.015), P(ao, cs + sg * (hs + 0.03), zB + par)], [[0, 0.14], [hs, 0.14], [hs, 0], [0, 0]], Lboard, MAT.wall, 1.2, N(na, 0));
+                const k0 = P(ao, cs + sg * (hs + 0.05), zB + par - 0.2), k1 = P(ao, cs + sg * (hs - 0.14), zB + par - 0.2), k2 = P(ao, cs + sg * (hs - 0.14), zB + par + 0.02), k3 = P(ao, cs + sg * (hs + 0.05), zB + par + 0.02);
+                quad([k0, k1, k2, k3], [[0, 0.22], [0.2, 0.22], [0.2, 0], [0, 0]], Lboard, MAT.wall, 1.25, N(na, 0));
+              }
+              continue;
+            }
             if (zB > wt + 1e-4) quad([P(a, cs - span, wt), P(a, cs + span, wt), P(a, cs + span, zB), P(a, cs - span, zB)], [[u(cs - span), 0], [u(cs + span), 0], [u(cs + span), -(zB - wt)], [u(cs - span), -(zB - wt)]], Lwall, MAT.wall, sk, N(na, 0));
             tri([P(a, cs - span, zB), P(a, cs + span, zB), P(a, cs, zr - 0.02)], [[u(cs - span), -(zB - wt)], [u(cs + span), -(zB - wt)], [u(cs), -(zr - 0.02 - wt)]], Lwall, MAT.wall, sk, N(na, 0));
           }
@@ -354,12 +508,46 @@ const EAVES78 = (() => {
       }
       // ---- windows
       for (const w of b.windows) opening(w);
+      // ---- cold stone stacks (the harbour)
+      for (const e of (b.stacks || [])) { const z = roofZ(b, e.x, e.y); if (z == null) continue; const zt = max(z + 0.5, b.ridge + (b.parapet || 0) + 0.18), Ls = L_('e78_cope');
+        box(e.x - 0.16, e.y - 0.16, e.x + 0.16, e.y + 0.16, z - 0.3, zt, Ls, Ldark, 0.95); box(e.x - 0.19, e.y - 0.19, e.x + 0.19, e.y + 0.19, zt - 0.06, zt, Ls, Ldark, 1.1); }
+      // ---- what only this region has
+      for (const e of (b.extras || [])) {
+        const tx = -e.ny, ty = e.nx, bx = (t0, t1, o0, o1, z0, z1, L, Lt, k) => { const xa = e.x + tx * t0 + e.nx * o0, xb = e.x + tx * t1 + e.nx * o1, ya = e.y + ty * t0 + e.ny * o0, yb = e.y + ty * t1 + e.ny * o1; box(min(xa, xb), min(ya, yb), max(xa, xb), max(ya, yb), z0, z1, L, Lt || L, k || 1); };
+        if (e.kind === 'hoist') {                                // a hoist beam over the loft door, its block, and three chimes ("every shroud in the harbour carries a chime")
+          bx(-0.04, 0.04, -0.05, 0.62, e.z, e.z + 0.09, Ldark, Ldark, 1.05);
+          bx(-0.05, 0.05, 0.5, 0.6, e.z - 0.12, e.z, Ldark, Ldark, 0.9);
+          [[0.16, 0.13], [0.27, 0.2], [0.38, 0.16]].forEach(([o, len]) => bx(-0.017, 0.017, o - 0.017, o + 0.017, e.z - 0.04 - len, e.z - 0.03, Lbronze, Lbronze, 1.25));
+        } else if (e.kind === 'bellcote') {                      // the Harbour Office: "Dues, bench and bell"
+          const Ls = L_('e78_cope');
+          for (const t of [-0.2, 0.2]) bx(t - 0.05, t + 0.05, -0.16, 0.0, e.z - 0.12, e.z + 0.4, Ls, Ls, 1.05);
+          bx(-0.3, 0.3, -0.19, 0.03, e.z + 0.4, e.z + 0.48, Ls, Ls, 1.15);
+          bx(-0.08, 0.08, -0.15, -0.01, e.z + 0.1, e.z + 0.3, Lbronze, Lbronze, 1.2);
+        }
+      }
       // ---- a brick stack under every smoking chimney
       for (const e of chimneysOf(m)) {
         if (e.x < b.x0 || e.x > b.x1 + 1 || e.y < b.y0 || e.y > b.y1 + 1) continue;
         const z = roofZ(b, e.x, e.y), zt = stackTop(b, e.x, e.y); if (z == null) continue;
         box(e.x - 0.17, e.y - 0.17, e.x + 0.17, e.y + 0.17, z - 0.25, zt, Lbrick, Ldark, 0.95);
         box(e.x - 0.2, e.y - 0.2, e.x + 0.2, e.y + 0.2, zt - 0.07, zt, Lstone, Ldark, 1.05);
+      }
+    }
+    // ---- the harbour's shop-fronts: a slate pentice on two brackets ("six wet flights with shops on the landings")
+    for (const q of (planOf(m).shops || [])) {
+      const tx = -q.ny, ty = q.nx, side = q.nx ? 1 : 0.8, hw = q.hw, zf = q.z - 0.07, zb = q.z + 0.26, out = 0.42, back = -0.22, Lsl = L_('p17c_slate'), Lc = L_('e78_cope');
+      const at = (t, off, z) => [q.cx + tx * t + q.nx * off, q.cy + ty * t + q.ny * off, z], n = [q.nx, q.ny, 0];
+      const up = planeN(at(-hw, out, zf), at(hw, out, zf), at(hw, back, zb), UP), sl = hyp(out - back, zb - zf);
+      quad([at(-hw, out, zf), at(hw, out, zf), at(hw, back, zb), at(-hw, back, zb)], [[0, sl], [hw * 2, sl], [hw * 2, 0], [0, 0]], Lsl, MAT.wall, side, up);
+      quad([at(-hw, out, zf - 0.012), at(hw, out, zf - 0.012), at(hw, 0.005, zf + (zb - zf) * (out - 0.005) / (out - back) - 0.012), at(-hw, 0.005, zf + (zb - zf) * (out - 0.005) / (out - back) - 0.012)], [[0, 0.4], [hw * 2, 0.4], [hw * 2, 0], [0, 0]], Ldark, MAT.wall, 0.6, [-up[0], -up[1], -up[2]]);
+      quad([at(-hw, out, zf + 0.012), at(hw, out, zf + 0.012), at(hw, out, zf - 0.055), at(-hw, out, zf - 0.055)], [[0, 0], [hw * 2, 0], [hw * 2, 0.07], [0, 0.07]], Lc, MAT.wall, side * 1.1, n);
+      quad([at(-hw, back, q.z), at(hw, back, q.z), at(hw, back, zb), at(-hw, back, zb)], [[0, 0.26], [hw * 2, 0.26], [hw * 2, 0], [0, 0]], Lc, MAT.wall, side * 0.8, [-q.nx, -q.ny, 0]);
+      for (const sgn of [-1, 1]) {
+        const t = sgn * hw, zw = zf + (zb - zf) * out / (out - back);        // the cheeks: closed over the wall, open under the eave
+        tri([at(t, back, q.z), at(t, 0, q.z), at(t, back, zb)], [[0, 0.26], [0.22, 0.26], [0, 0]], Lc, MAT.wall, 0.9, [tx * sgn, ty * sgn, 0]);
+        tri([at(t, 0, q.z), at(t, 0, zw), at(t, back, zb)], [[0.22, 0.26], [0.22, 0.1], [0, 0]], Lc, MAT.wall, 0.9, [tx * sgn, ty * sgn, 0]);
+        const tb = sgn * (hw - 0.12);
+        for (const k of [1, -1]) quad([at(tb, 0.01, zf - 0.34), at(tb, 0.34, zf - 0.02), at(tb, 0.34, zf - 0.07), at(tb, 0.01, zf - 0.4)], [[0, 0], [0.4, 0], [0.4, 0.06], [0, 0.06]], Ldark, MAT.wall, 0.75, [tx * sgn * k, ty * sgn * k, 0]);
       }
     }
     return tris;
