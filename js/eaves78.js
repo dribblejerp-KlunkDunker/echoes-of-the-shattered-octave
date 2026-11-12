@@ -1,5 +1,5 @@
 // ============================================================
-//  eaves78 — Phase 78, "roofs and fronts": buildings get the shape of buildings, region by region (Oakhaven, Port Cantabile, Whisper-Grove).
+//  eaves78 — Phase 78, "roofs and fronts": buildings get the shape of buildings, region by region (Oakhaven and its Hollow, Port Cantabile, Whisper-Grove).
 //
 //  Owner, 11 Nov: the sharp-tiles pass changed almost nothing he could see, and he agreed to start with building
 //  shapes; on seeing the first roofs: "this looks great ... fix the rain through the buildings and houses. I like the
@@ -65,6 +65,9 @@ const EAVES78 = (() => {
   // it has. Oakhaven is the first; the next region adds an entry and its own rules, it does not borrow Oakhaven's.
   const STYLES = {
     oakhaven: { builds: 'timber and plaster under thatch and slate (the bibles)', shutters: 'green-grey', only: ['jettied upper storeys and double-pile roofs', "the Greenhall's dome", "the Chapel's open bell-frame"] },
+    // the Hollow, Oakhaven's low quarter "behind the tannery": the same timber, plaster and thatch, but rows of cottages built
+    // back to back, never more than one storey, each row under one long deep roof
+    p30_hollow: { builds: 'timber and plaster under thatch', shutters: 'green-grey', only: ['rows of cottages built back to back under one long roof', 'nothing above one storey'], terraces: true, low: true, maxRidge: 3.0, roof: 'e78_thatch' },
     // Port Cantabile "climbs its cliff from the Long Mole by the Salt Stair ... and every shroud in the harbour carries a
     // chime" (Fairweather's Companion); its counting-house is "square stone, a slate roof, iron shutters" (the game's own
     // text). So: lime-washed fronts and ashlar under slate, no thatch and no timber; houses stand gable-end to the water,
@@ -107,7 +110,7 @@ const EAVES78 = (() => {
   // ---------------------------------------------------------------- which blocks are a building, and what kind
   function plan(m) { const st = m && STYLES[m.id]; return st && st.plan ? st.plan(m) : planTimber(m); }
   function planTimber(m) {
-    const W = m.w, H = m.h, g = m.cells, seen = new Uint8Array(W * H), houses = [];
+    const W = m.w, H = m.h, g = m.cells, seen = new Uint8Array(W * H), houses = [], st = (m && STYLES[m.id]) || {}, rects = [];
     const cell = (x, y) => (x < 0 || y < 0 || x >= W || y >= H) ? null : g[y * W + x];
     const part = (c) => !!c && (c.door ? true : (WALL.test(c.tex || '') || c.tex === 't_roof'));
     const open = (x, y) => x >= 0 && y >= 0 && x < W && y < H && !cell(x, y);
@@ -116,8 +119,23 @@ const EAVES78 = (() => {
       let x0 = sx, x1 = sx, y0 = sy, y1 = sy, n = 0; const st = [[sx, sy]]; seen[sy * W + sx] = 1;
       while (st.length) { const [x, y] = st.pop(); n++; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
         for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const X = x + dx, Y = y + dy; if (X < 0 || Y < 0 || X >= W || Y >= H || seen[Y * W + X] || !part(cell(X, Y))) continue; seen[Y * W + X] = 1; st.push([X, Y]); } }
+      { const w = x1 - x0 + 1, h = y1 - y0 + 1; if (w >= 3 && h >= 3 && n === w * h) rects.push([x0, y0, x1, y1]); }   // a plain rectangle
+    }
+    // rows of houses built into one mass (the Hollow): each strip of lid, with the ring of wall and doors round it, is a row
+    if (st.terraces) {
+      const isLid = (x, y) => { const c = cell(x, y); return !!c && !c.door && (c.tex === 't_roof' || c.capTex === 't_roof'); }, seenL = new Uint8Array(W * H);
+      for (let y0 = 1; y0 < H - 1; y0++) for (let x0 = 1; x0 < W - 1; x0++) {
+        if (seenL[y0 * W + x0] || !isLid(x0, y0)) continue;
+        let x1 = x0; while (isLid(x1 + 1, y0)) x1++;
+        const full = (yy) => { if (isLid(x0 - 1, yy) || isLid(x1 + 1, yy)) return false; for (let X = x0; X <= x1; X++) if (!isLid(X, yy)) return false; return true; };
+        let y1 = y0; while (full(y1 + 1)) y1++;
+        for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) seenL[y * W + x] = 1;
+        if (x0 - 1 < 0 || y0 - 1 < 0 || x1 + 1 > W - 1 || y1 + 1 > H - 1 || rects.some((r) => x0 >= r[0] && x1 <= r[2] && y0 >= r[1] && y1 <= r[3])) continue;
+        rects.push([x0 - 1, y0 - 1, x1 + 1, y1 + 1]);
+      }
+    }
+    for (const [x0, y0, x1, y1] of rects) {
       const w = x1 - x0 + 1, h = y1 - y0 + 1;
-      if (w < 3 || h < 3 || n !== w * h) continue;                       // not a plain rectangle
       let lid = 0, wallTex = null, ok = true, label = ''; const doorList = [], towers = [], inner = []; let dome = null;
       for (let y = y0; y <= y1 && ok; y++) for (let x = x0; x <= x1; x++) {
         const c = cell(x, y), edge = x === x0 || x === x1 || y === y0 || y === y1;
@@ -135,7 +153,7 @@ const EAVES78 = (() => {
       const stone = /^t_marble/.test(wallTex), plain = !stone && PLAIN.test(label);
       if (!stone && towers.length) continue;                               // a tower in a timber house: not one of ours
       const church = stone && towers.length > 0;                                 // a towered stone hall: a nave, its gable over the door
-      const ax = church ? doorList[0].nx !== 0 : w >= h, acrossN = ax ? h : w, storeys = (!stone && !plain && w * h >= 25) ? 2 : 1;
+      const ax = church ? doorList[0].nx !== 0 : w >= h, acrossN = ax ? h : w, storeys = (!stone && !plain && !st.low && w * h >= 25) ? 2 : 1;
       const base = m.lvls ? m.lvls[y0 * W + x0] || 0 : 0, top = base + 1;
       const ext = stone ? 0.3 : (storeys === 2 ? STOREY : 0), jetty = storeys === 2 ? JETTY : 0, wallTop = top + ext;
       const b = { x0, y0, x1, y1, w, h, axis: ax ? 'x' : 'y', stone, church, plain, storeys, label: label.trim(), top, ext, jetty, wallTop, wallTex, towers, dome,
@@ -143,7 +161,7 @@ const EAVES78 = (() => {
         windows: [], doors: doorList.filter((d) => open(d.x + d.nx, d.y + d.ny)), plinth: [], dormers: [] };
       b.ridges = (b.type === 'gable' && storeys === 2 && acrossN >= 5) ? 2 : 1; b.span = b.half / b.ridges;
       // the pitch: as steep as the skyline allows, and the whole of the old lid stays under the new roof
-      const maxRidge = base + (stone ? (towers.length ? min(...towers.map((t) => t.top)) - 0.6 : 2.3) : (storeys === 2 ? RIDGE2 : RIDGE1));
+      const maxRidge = base + (stone ? (towers.length ? min(...towers.map((t) => t.top)) - 0.6 : 2.3) : (storeys === 2 ? RIDGE2 : (st.maxRidge || RIDGE1)));
       b.pitch = min(stone ? 0.6 : PITCH, (maxRidge - wallTop - LIFT) / b.span); b.lift = LIFT;
       for (let it = 0; it < 14; it++) {
         b.zBase = wallTop + LIFT; let need = 0;
@@ -152,7 +170,7 @@ const EAVES78 = (() => {
       }
       b.zBase = wallTop + b.lift; b.ridge = b.zBase + b.span * b.pitch;
       const r = h2(x0 * 3 + 1, y0 * 5 + 2);
-      b.roofTex = stone ? 'e78_slate' : storeys === 2 ? (r < 0.55 ? 'e78_slate' : 't_roof') : plain ? (r < 0.5 ? 'e78_thatch' : 't_roof') : (r < 0.42 ? 'e78_thatch' : r < 0.7 ? 'e78_slate' : 't_roof');
+      b.roofTex = st.roof && !stone ? st.roof : stone ? 'e78_slate' : storeys === 2 ? (r < 0.55 ? 'e78_slate' : 't_roof') : plain ? (r < 0.5 ? 'e78_thatch' : 't_roof') : (r < 0.42 ? 'e78_thatch' : r < 0.7 ? 'e78_slate' : 't_roof');
       // ---- windows: a list of openings on wall planes { cx, cy, nx, ny, z0, z1, hw, style, lit }
       const style0 = stone ? (towers.length ? 'lancet' : 'hall') : plain ? 'hatch' : 'cottage';
       const sides = [[0, -1, 'x', y0], [0, 1, 'x', y1], [-1, 0, 'y', x0], [1, 0, 'y', x1]];

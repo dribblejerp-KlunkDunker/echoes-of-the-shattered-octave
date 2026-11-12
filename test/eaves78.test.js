@@ -46,6 +46,22 @@ check(s && s.k === 4 && s.w === W * 4 && at(0.5, 0.5) < -5000, 'open ground is o
 check(Math.abs(at(4.6, 3.6) - E.roofZ(cot, 4.625, 3.625)) < 1e-6 && at(4.5, 1.85) > 0.5 && at(4.5, 1.4) < -5000, 'under a roof it does not rain, out to the edge of the eaves and no further');
 check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) === null, 'nor inside a plain block; other regions are left to the old rule');
 
+// ---- the Hollow, Oakhaven's low quarter: rows built into one mass, one storey, one long thatch roof to a row
+{
+  const Wh = 20, Hh = 14, ch = new Array(Wh * Hh).fill(null), put = (x, y, c) => { ch[y * Wh + x] = c; };
+  for (let y = 0; y < Hh; y++) for (let x = 0; x < Wh; x++) if (x < 2 || y < 2 || x > 13 || y > 8) put(x, y, x >= 14 && x <= 18 && y >= 1 && y <= 12 ? null : { tex: 't_house_p20b_2' });   // the mass, and a street down the east side
+  for (let y = 2; y <= 8; y++) for (let x = 2; x <= 13; x++) put(x, y, x === 13 || y === 8 ? { tex: 't_house' } : { tex: 't_roof', capTex: 't_roof', top: y === 5 ? 1.7 : 1.35 });
+  put(13, 4, { door: true, tex: 't_door', label: 'A sap-mark on the door' }); put(13, 6, { door: true, tex: 't_door', label: 'A barred door' });
+  for (let x = 2; x <= 13; x++) put(x, 9, null);                                                                     // and a lane along the south
+  put(6, 8, { door: true, tex: 't_door', label: 'A sap-mark on the door' });
+  const MH = { id: 'p30_hollow', w: Wh, h: Hh, cells: ch }, ph = E.plan(MH), row = ph.houses[0];
+  check(ph.houses.length === 1 && row && row.x0 === 1 && row.y0 === 1 && row.x1 === 13 && row.y1 === 8, 'the Hollow: a strip of lid with its ring of wall and doors is one row, though it is built into the mass of the map (' + ph.houses.length + ')');
+  check(row.storeys === 1 && row.jetty === 0 && row.ridges === 1 && row.roofTex === 'e78_thatch' && row.ridge <= 3.0 + 1e-6 && row.doors.length === 3, 'nothing above one storey (a block this size in the town would have two): one long thatch roof, its ridge at ' + row.ridge.toFixed(2));
+  let pokeH = 0; for (let y = 2; y <= 7; y++) for (let x = 2; x <= 12; x++) for (let k = 0; k < 9; k++) { const z = E.roofZ(row, x + (k % 3) / 2, y + ((k / 3) | 0) / 2); if (z == null || z < ch[y * Wh + x].top) pokeH++; }
+  check(pokeH === 0 && E.plan(Object.assign({}, MH, { id: 'oakhaven' })).houses.length === 0, 'every old lid lies under the row\'s roof; the town\'s own rule still leaves such a mass alone');
+  check(E.STYLES.p30_hollow.only.length === 2 && E.MAPS.has('p30_hollow'), 'the Hollow lists what only it has');
+}
+
 // ---- Port Cantabile has its own way of building (a region is told apart by its houses)
 {
   const W2 = 32, H2 = 24, c2 = new Array(W2 * H2).fill(null), lv = new Float32Array(W2 * H2).fill(0.4), put = (x, y, c) => { c2[y * W2 + x] = c; };
@@ -162,6 +178,11 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
       hoists: PC.houses.filter((b) => b.extras.some((e) => e.kind === 'hoist')).length, bell: PC.houses.filter((b) => b.extras.some((e) => e.kind === 'bellcote')).map((b) => b.label.slice(0, 18)),
       roofs: Array.from(new Set(PC.houses.map((b) => b.roofTex))), tex: !!(Engine.textures.e78_cope && Engine.textures.e78_lime && Engine.textures.e78_shutter_blue),
       untouched: JSON.stringify(G.map.cells.map((c) => c && [c.tex, c.top, !!c.door])) === before2 || before2 === '0', shelter: !!EAVES78.shelter(G.map) };
+    // the Hollow
+    { GFX.eaves = false; R3D.invalidate(); const hOff = go('p30_hollow', 0.5).tris;                                     // (the game dresses a map's walls on the first visit: compare from after that)
+      const beforeH = JSON.stringify(G.map.cells.map((c) => c && [c.tex, c.top, !!c.door])); GFX.eaves = true; R3D.invalidate(); const hOn = go('p30_hollow', 0.5), PH = EAVES78.planOf(G.map).houses;
+      out.h = { off: hOff, on: hOn.tris, n: PH.length, one: PH.every((b) => b.storeys === 1), thatch: PH.every((b) => b.roofTex === 'e78_thatch'), doors: PH.reduce((n, b) => n + b.doors.length, 0), high: Math.max(...PH.map((b) => b.ridge)),
+        untouched: JSON.stringify(G.map.cells.map((c) => c && [c.tex, c.top, !!c.door])) === beforeH || beforeH === '0', shelter: !!EAVES78.shelter(G.map) }; }
     // Whisper-Grove and its lanes
     out.g = {};
     for (const id of ['whispergrove', 'p31_bellyard']) {
@@ -191,6 +212,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   check(r.c.quay === 5 && r.c.hoists === 4 && r.c.bell.length === 1 && /HARBOUR OFFICE/.test(r.c.bell[0]) && r.c.stone.length === 1 && /counting/.test(r.c.stone[0]), "Port Cantabile's quay: Hesper's four houses each with a hoist, the Harbour Office with its bell-cote, the counting-house in stone");
   check(r.c.cliff >= 40 && r.c.shops === 5 && r.c.roofs.length === 1 && r.c.roofs[0] === 'p17c_slate', r.c.cliff + ' cliff houses gabled, ' + r.c.shops + ' stair shops under pentices, every roof slate');
   check(r.c.on > r.c.off + 2000 && r.c.untouched && r.c.tex && r.c.shelter && r.c.ms < 400, 'the harbour: ' + r.c.off + ' -> ' + r.c.on + ' triangles in ' + r.c.ms + ' ms, the map unchanged, rain stops at its roofs');
+  check(r.h.n === 4 && r.h.one && r.h.thatch && r.h.doors >= 14 && r.h.high <= 3.0001 && r.h.on > r.h.off + 300 && r.h.untouched && r.h.shelter, 'the Hollow: ' + r.h.n + ' rows, each under one long thatch roof, one storey, ' + r.h.doors + ' doors (' + r.h.off + ' -> ' + r.h.on + ' triangles); the map unchanged');
   { const g = r.g.whispergrove, y = r.g.p31_bellyard;
     check(g.grove >= 10 && g.stone.length === 1 && /Malting/.test(g.stone[0]) && g.tex, 'Whisper-Grove: ' + g.grove + ' marble buildings under colonnades, the Malting a brick range');
     check(g.gallery === 3 && g.litWho.length === 2 && g.litWho.some((l) => /Moot/.test(l)) && g.litWho.some((l) => /Malting/.test(l)), 'after dusk the only lit windows are the Moot-house gallery\'s three and the Malting\'s (' + g.lit + ' in all)');
