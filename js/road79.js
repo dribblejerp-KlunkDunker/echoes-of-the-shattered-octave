@@ -88,9 +88,9 @@ const ROAD79 = (function () {
   const SADDLE = { x: 147, y: 32, rx: 4.5, ry: 9, h: 1.8 };                               // the road climbs through the Narrows
   const COPSES = [[44, 54], [76, 50], [18, 34], [110, 37], [72, 80], [140, 88], [114, 88], [26, 90], [84, 24], [50, 18], [160, 60], [8, 62]];
   const h2 = (a, b) => { let n = (Math.imul(a | 0, 374761393) + Math.imul(b | 0, 668265263)) | 0; n = Math.imul(n ^ (n >>> 13), 1274126177); return ((n ^ (n >>> 16)) >>> 0) / 4294967296; };
-  const TRACK = 1, WATER = 2, SHALLOW = 3, PLANK = 4, MOSS = 5, ROCK = 6, CRAG = 't_p79_crag', ROAD = 't_p79_road';
+  const TRACK = 1, WATER = 2, SHALLOW = 3, PLANK = 4, MOSS = 5, ROCK = 6, FALLS = 7, CRAG = 't_p79_crag', ROAD = 't_p79_road', FALLTEX = 't_p79_fall';
   const BRIDGE_Y = [41, 42];
-  const STONE2 = { x: 112.5, y: 46.4 }, FIRE = { x: 25.5, y: 55.6 }, FALL = { x: 96.6, y: 17.1 };
+  const STONE2 = { x: 112.5, y: 46.4 }, FIRE = { x: 25.5, y: 55.6 }, FALL = { x: 96.0, y: 17.2 };
   const inEll = (e, x, y, k) => ((x - e.x) / (e.rx * (k || 1))) ** 2 + ((y - e.y) / (e.ry * (k || 1))) ** 2 < 1;
   // where a line of points passes: a visit every `step` along it
   const along = (pts, step, fn) => { for (let i = 0; i + 1 < pts.length; i++) { const [ax, ay] = pts[i], [bx, by] = pts[i + 1], n = Math.ceil(Math.hypot(bx - ax, by - ay) / step); for (let k = 0; k <= n; k++) fn(ax + (bx - ax) * k / n, ay + (by - ay) * k / n); } };
@@ -98,19 +98,18 @@ const ROAD79 = (function () {
   const roadNear = (x, y) => { let best = 1e9; for (let i = 0; i < ROADLINE.length; i += 2) { const d = Math.hypot(ROADLINE[i] - x, ROADLINE[i + 1] - y); if (d < best) best = d; } return best; };
   let FORDC = [], BANKS = [0, 0]; const RIM = [];
 
-  // The Leap: falling water, painted here (three frames to run through, and three more for the stream in spate).
+  // The Leap's spray, where the white water meets the pool (three frames to run through, and three more, bigger and
+  // browner, for the stream in spate). The fall itself is on the rock: see FALLS in buildRoad.
   function paintFall(spate, phase) {
-    const w = spate ? 38 : 26, h = 56, data = new Uint32Array(w * h), cx = (w - 1) / 2, px = (r, g, b) => (0xff000000 | (b << 16) | (g << 8) | r) >>> 0;
+    const w = spate ? 56 : 44, h = spate ? 26 : 20, data = new Uint32Array(w * h), cx = (w - 1) / 2, px = (r, g, b) => (0xff000000 | (b << 16) | (g << 8) | r) >>> 0;
     for (let y = 0; y < h; y++) {
-      const t = y / (h - 1), half = (spate ? 7.5 : 4.2) + t * (spate ? 7.5 : 5.0) + (y > h - 9 ? (y - (h - 9)) * 0.55 : 0);
+      const t = y / (h - 1), half = (0.28 + 0.72 * Math.sqrt(t)) * cx;               // a mound of spray, widest where it meets the pool
       for (let x = 0; x < w; x++) {
-        const d = Math.abs(x - cx); if (d > half) continue;
-        const yy = y - phase * 6, edge = d / half, n = h2(x * 7 + 3, Math.floor(yy / 3) + 900), fine = h2(x + 31, yy + 400);
-        if (edge > 0.72 && fine < (edge - 0.72) * 3.2) continue;                      // a torn edge
-        if (y > h - 9) { if (fine < 0.3) continue; data[y * w + x] = px(236, 242, 244); continue; }   // spray where it lands
-        let r = 150, g = 186, b = 206;
-        if (n > 0.62) { r = 232; g = 240; b = 244; } else if (n > 0.34) { r = 190; g = 214; b = 226; } else if (n < 0.1) { r = 112; g = 152; b = 182; }
-        if (spate) { r = Math.round(r * 0.9 + 22); g = Math.round(g * 0.84 + 10); b = Math.round(b * 0.7); }
+        const d = Math.abs(x - cx) / half; if (d > 1) continue;
+        const n = h2(x * 3 + phase * 17, y * 5 + phase * 29 + 400), thick = (0.25 + 0.75 * t) * (1 - d * d * 0.8);
+        if (n > thick) continue;                                                     // thin at the top and the edges, full at the foot
+        let r = 240, g = 245, b = 247; if (n < thick * 0.35) { r = 206; g = 226; b = 236; }
+        if (spate) { r = Math.round(r * 0.9); g = Math.round(g * 0.84); b = Math.round(b * 0.7); }
         data[y * w + x] = px(r, g, b);
       }
     }
@@ -128,6 +127,15 @@ const ROAD79 = (function () {
       const crack = (Math.floor(h2(band, 17) * 20) + 5 + ((x >> 5) * 31)) & 63; if (x === crack || (x === ((crack + 23) & 63) && h2(band, 23) < 0.6)) t -= 0.3;
       const li = h2(x >> 1, (y >> 1) + 300);
       d[y * 64 + x] = li > 0.972 ? px([124, 128, 72]) : li < 0.012 ? px([170, 150, 96]) : px(C[Math.max(0, Math.min(4, Math.round(t * 4)))]);
+    }
+    return d;
+  }
+  // White water down a rock face: long streaks (the tile lies on ground that is nearly upright, which draws them out longer).
+  function paintFallTile() {
+    const d = new Uint32Array(64 * 64), px = (r, g, b) => (0xff000000 | (b << 16) | (g << 8) | r) >>> 0;
+    for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+      const col = h2(x >> 1, 811), n = h2(x >> 1, (((y + Math.floor(col * 64)) & 63) >> 3) + 820), f = h2(x, y + 830), v = col * 0.5 + n * 0.35 + f * 0.15;
+      d[y * 64 + x] = v > 0.6 ? px(238, 244, 246) : v > 0.42 ? px(204, 224, 234) : v > 0.26 ? px(164, 196, 214) : px(122, 160, 188);
     }
     return d;
   }
@@ -163,13 +171,13 @@ const ROAD79 = (function () {
     if (typeof Engine === 'undefined' || !Engine.addSprite) return;
     for (let i = 0; i < 3; i++) { if (!Engine.sprites['p79_fall' + i]) Engine.addSprite('p79_fall' + i, paintFall(false, i)); if (!Engine.sprites['p79_spate' + i]) Engine.addSprite('p79_spate' + i, paintFall(true, i)); }
     if (!Engine.sprites.p79_rock0) { Engine.addSprite('p79_rock0', paintRock(0)); Engine.addSprite('p79_rock1', paintRock(1)); Engine.addSprite('p79_cairn', paintCairn()); }
-    if (Engine.addTexture && !Engine.textures[CRAG]) { Engine.addTexture(CRAG, paintCrag()); Engine.addTexture(ROAD, paintRoad()); }
+    if (Engine.addTexture && !Engine.textures[CRAG]) { Engine.addTexture(CRAG, paintCrag()); Engine.addTexture(ROAD, paintRoad()); Engine.addTexture(FALLTEX, paintFallTile()); }
   }
 
   function buildRoad(toClearing, toGreenroot) {
     const m = new GameMap(MAP, TX.name, W, H, {
-      outdoor: true, floor: 't_grass', floorTextures: ['t_grass', ROAD, 't_water', 't_shallows', 'p17c_plank', 't_moss', CRAG], fogDist: 30, fogColor: [70, 76, 66],
-      music: 'wild', danger: 0, spawn: { x: 1.6, y: GW + 0.5, dir: 0 },
+      outdoor: true, floor: 't_grass', floorTextures: ['t_grass', ROAD, 't_water', 't_shallows', 'p17c_plank', 't_moss', CRAG, FALLTEX], fogDist: 30, fogColor: [70, 76, 66],
+      music: 'wild', danger: 1, spawn: { x: 1.6, y: GW + 0.5, dir: 0 },
     });
     m.border('t_hedge');
     m.set(0, GW, DOOR({ tex: 't_hedge', portal: toClearing, label: TX.toOak }));
@@ -211,8 +219,10 @@ const ROAD79 = (function () {
     // flat stones a hand under the water, from the north shore out to the eyot
     for (let y = Math.floor(EYOT.y - EYOT.r); y > MERE.y - MERE.ry - 2; y--) { const x = Math.floor(EYOT.x); if (wet[y * W + x]) { wet[y * W + x] = 0; m.setFloor(x, y, SHALLOW); } }
     // bare rock wherever the ground is too steep to hold turf
-    // (the stream leaves its bed at the lip of the Shelf: down the face it is the Leap, which is painted, not paved)
-    for (let y = 1; y <= H - 2; y++) for (let x = 1; x <= W - 2; x++) if (m.gradeAt(x + 0.5, y + 0.5) > 0.8) { m.setFloor(x, y, ROCK); wet[y * W + x] = run[y * W + x] = 0; }
+    // (where the stream comes to the lip of the Shelf it keeps its bed down the rock as white water, from the lip to the
+    // pool: owner, 12 Nov, of the first Leap, which was only a picture standing in front of the cliff: "it looks like its
+    // just falling from the sky")
+    for (let y = 1; y <= H - 2; y++) for (let x = 1; x <= W - 2; x++) if (m.gradeAt(x + 0.5, y + 0.5) > 0.8) { m.setFloor(x, y, run[y * W + x] ? FALLS : ROCK); wet[y * W + x] = run[y * W + x] = 0; }
     // the track, two cells wide; where it crosses the stream is the ford, and where it crosses the beck it just gets wet
     FORDC = [];
     along(ROADPTS, 0.4, (px, py) => { for (const [dx, dy] of [[0, 0], [1, 0], [0, 1], [1, 1]]) { const x = Math.floor(px - 0.5) + dx, y = Math.floor(py - 0.5) + dy; if (!inside(x, y) || beck[y * W + x]) continue;
@@ -232,14 +242,12 @@ const ROAD79 = (function () {
     m.deco('sign', 23.6, 55.5, { radius: 0.2, scale: 0.7, label: TX.ruin });
     m.add({ kind: 'item', item: 'cache', tier: 1, x: 26.4, y: 54.5, sprite: 'chest', scale: 0.5, yOff: 0, solid: false, label: 'A strongbox' });
     m.deco('campfire', FIRE.x, FIRE.y, { radius: 0.3, scale: 0.55, glow: true, label: TX.fire, _p79: 'fire', hidden: true });
-    // the milestones
-    m.deco('p20_stone', 10.5, 71.2, { radius: 0.22, scale: 0.6, label: TX.stone1 });
+    // the half-way stone (the two end stones stand on the end stretches: js/road79b.js)
     m.deco('p20_stone', STONE2.x, STONE2.y, { radius: 0.22, scale: 0.32, solid: false, label: TX.stoneDown, use: 'p79_stone', _p79: 'stone' });
-    m.deco('p20_stone', 162.5, 15.2, { radius: 0.22, scale: 0.6, label: TX.stone3 });
     // the ford-post, the bridge, the Leap, the mere and its eyot, the tarn, the Hang, the cairn in the Narrows
     m.deco('p12r_post', 96.6, 48.4, { radius: 0.18, scale: 0.8, label: TX.ford, _p79: 'post' });
     m.deco('sign', BANKS[0] - 0.4, BRIDGE_Y[0] - 0.6, { radius: 0.2, scale: 0.7, label: TX.bridge });
-    m.deco('p79_fall0', FALL.x, FALL.y, { radius: 0.2, scale: SHELF[1].h * 0.84, solid: false, _p79: 'fall' });
+    m.deco('p79_fall0', FALL.x, FALL.y, { radius: 0.2, scale: 1.25, solid: false, _p79: 'fall' });   // spray at the foot of the fall
     m.deco('sign', 91.4, 22.4, { radius: 0.2, scale: 0.75, label: TX.leap, _p79: 'leap' });
     m.deco('sign', 122.4, 56.5, { radius: 0.2, scale: 0.75, label: TX.mere });
     m.add({ kind: 'item', item: 'cache', tier: 1, x: EYOT.x + 0.9, y: EYOT.y + 0.6, sprite: 'chest', scale: 0.5, yOff: 0, solid: false, label: 'A strongbox' });   // for whoever finds the stones
@@ -374,7 +382,7 @@ const ROAD79 = (function () {
   if (typeof update === 'function') { const _u = update; update = function () { const r = _u.apply(this, arguments); try { sync(); } catch (e) { /* next frame */ } return r; }; }
   else if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook(() => { try { sync(); } catch (e) { /* next frame */ } }, 30);
 
-  return { MAP, W, H, GW, GE, TX, TEXTS, ROSTER, ROADPTS, STREAMPTS, BECKPTS, MERE, TARN, POOL, EYOT, HANG, LITTLE, SHELF, OAKHILL, buildRoad, join, sync, useOwn, paintFall, paintCrag, paintRoad, paintRock, paintCairn, fordCells: () => FORDC.map((c) => c.slice()), banks: () => BANKS.slice(), BRIDGE_Y, STONE2, FIRE, FALL };
+  return { MAP, W, H, GW, GE, TX, TEXTS, ROSTER, ROADPTS, STREAMPTS, BECKPTS, MERE, TARN, POOL, EYOT, HANG, LITTLE, SHELF, OAKHILL, buildRoad, join, sync, useOwn, util: { h2, along, inEll, hour, night, wet }, CRAG, ROAD, paintFall, paintCrag, paintRoad, paintRock, paintCairn, fordCells: () => FORDC.map((c) => c.slice()), banks: () => BANKS.slice(), BRIDGE_Y, STONE2, FIRE, FALL };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = ROAD79;
 if (typeof window !== 'undefined') window.ROAD79 = ROAD79;

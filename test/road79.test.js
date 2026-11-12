@@ -22,9 +22,12 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const out = {}, R = ROAD79, m = G.maps[R.MAP], W = m.w, H = m.h, cl = G.maps.clearing, gr = G.maps.greenroot;
     const door = (mm, t) => { for (let i = 0; i < mm.cells.length; i++) { const c = mm.cells[i]; if (c && c.door && c.portal && c.portal.map === t) return { x: i % mm.w, y: (i / mm.w) | 0, p: c.portal, label: c.label }; } return null; };
     const land = (p) => { const mm = G.maps[p.map]; return !mm.isBlocked(p.x | 0, p.y | 0); };
-    const a = door(cl, R.MAP), b = door(gr, R.MAP), c = door(m, 'clearing'), d = door(m, 'greenroot');
-    out.joined = !!(a && b && c && d) && !door(cl, 'greenroot') && !door(gr, 'clearing') && land(a.p) && land(b.p) && land(c.p) && land(d.p);
-    out.same = !!c && !!d && Math.hypot(c.p.x - (a.x - 0.6), c.p.y - (a.y + 0.5)) < 1.5 && Math.hypot(d.p.x - (b.x + 1.6), d.p.y - (b.y + 0.5)) < 1.5;   // you come out where you went in
+    // since the road was made three stretches long (js/road79b.js) this map is the middle one: the Long Common leads
+    // into its west gate and Greenroot Wood out of its east
+    const RB = ROAD79B, mw = G.maps[RB.WEST], me = G.maps[RB.EAST];
+    const a = door(mw, R.MAP), b = door(me, R.MAP), c = door(m, RB.WEST), d = door(m, RB.EAST);
+    out.joined = !!(a && b && c && d) && !door(cl, 'greenroot') && !door(gr, 'clearing') && !door(cl, R.MAP) && !door(gr, R.MAP) && land(a.p) && land(b.p) && land(c.p) && land(d.p);
+    out.same = !!c && !!d && Math.hypot(c.p.x - (a.x - 0.6), c.p.y - (a.y + 0.5)) < 1.5 && Math.hypot(d.p.x - (b.x + 1.6), d.p.y - (b.y + 0.5)) < 1.5;   // you come out beside the gate you went in at
     // a walk as the game allows it: no water, no blocks, and no ground too steep to climb
     const g = (x, y) => m.groundAt(x + 0.5, y + 0.5), steep = (x, y) => m.gradeAt(x + 0.5, y + 0.5) > MAX_GRADE;
     const A = R.GW * W + 1, B = R.GE * W + W - 2;
@@ -68,18 +71,18 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     for (let i = 0; i < 20; i++) R.sync(); R.buildRoad({ map: 'clearing', x: 1, y: 1, dir: 0 }, { map: 'greenroot', x: 1, y: 1, dir: 0 }); Math.random = rnd; out.noRandom = calls === 0;
     // the people stand on ground a person can stand on
     out.roster = R.ROSTER.map((p) => p.name + ': ' + p.day.filter((s) => s.job !== 'home').map((s) => s.from + '-' + s.to).join(','));
-    out.posts = R.ROSTER.every((p) => p.day.filter((s) => s.at).every((s) => near(dist, s.at[0], s.at[1]) >= 0 && !m.isBlocked(s.at[0] | 0, s.at[1] | 0)));
+    out.posts = RB.ROSTERS[R.MAP].every((p) => p.day.filter((s) => s.at).every((s) => near(dist, s.at[0], s.at[1]) >= 0 && !m.isBlocked(s.at[0] | 0, s.at[1] | 0)));
     out.texts = R.TEXTS.length;
     return out;
   });
-  check(r.joined && r.same, 'the road stands between the two doors: Outside the Hedge opens on its west gate, Greenroot on its east, and each gate leads out where the old door did');
+  check(r.joined && r.same, 'the middle stretch stands between the other two: the Long Common opens on its west gate, Greenroot Wood on its east, and each gate leads out beside the gate you came in by');
   check(r.dry > 200, 'it takes a while: ' + r.dry + ' steps from gate to gate, where the old door was one step');
   check(r.wind.len > r.wind.chord * 1.2 && r.wind.turn > 360 && r.wind.lo < -15 && r.wind.hi > 15, 'the road is not a straight line: ' + r.wind.len + ' paces of road for ' + r.wind.chord + ' as the crow flies, ' + r.wind.turn + ' degrees of turning, and it swings ' + (-r.wind.lo) + ' paces to one side of the straight way and ' + r.wind.hi + ' to the other');
   check(r.land.mere > 400 && r.land.tarn > 60 && r.land.stream > 80 && r.land.beck > 20, 'lakes and streams: a mere (' + r.land.mere + ' cells of water), a tarn (' + r.land.tarn + '), a stream down to the mere (' + r.land.stream + ') and a beck you can splash through (' + r.land.beck + ')');
   check(r.land.cliff > 200 && r.crags && r.land.top > 5, 'cliffs: ' + r.land.cliff + ' cells of rock face too steep to climb, the tops ' + r.land.top + ' high, and nothing goes up the Hang, the Little Hang or the Shelf (' + r.up + ')');
   check(r.land.rolling >= 35 && r.land.tilted === 0, 'no level country: ' + r.land.rolling + '% of the ground is off the flat, and no water lies on a slope');
   check(r.rockArt, 'the rock, the boulders, the cairn and the falling water are painted here and loaded');
-  check(r.reach && r.caches === 2 && r.things >= 14, 'something to find: ' + r.things + ' things to look at, all of them reachable on foot, a strongbox in the ruin and another on the eyot');
+  check(r.reach && r.caches === 2 && r.things >= 13, 'something to find: ' + r.things + ' things to look at, all of them reachable on foot, a strongbox in the ruin and another on the eyot');
   check(r.roster.length === 2 && /7-12/.test(r.roster[0]) && /20-24/.test(r.roster[1]) && r.posts, 'someone to meet: a road-mender by day, a drover by night, each standing where a person can stand (' + r.roster.join(' | ') + ')');
   check(r.down && r.up, 'a small task: the half-way stone lies on its face until you set it up, once, and it is remembered');
   check(r.day && r.night && r.byUpdate, "only at night: the watch-fire by the ruin, lit and put out by the game's own update (so under either renderer)");
