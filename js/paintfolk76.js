@@ -341,7 +341,7 @@ const PAINTFOLK = (() => {
     for (let i = 0; i < a.data.length; i++) { const x = (a.data[i] >>> 24) >= 128, y = (b.data[i] >>> 24) >= 128; if (x || y) { n++; if (x !== y) diff++; } }
     return n > 0 && diff / n < 0.03;
   }
-  const NEVER = new Set(['orla', 'cat', 'p31_seated']);     // seated in her chair, an animal, a map marker
+  const NEVER = new Set(['orla', 'cat', 'p31_seated', 'p17p_solenne']);     // seated in her chair, an animal, a map marker, a winged figure (her wings would be cut as limbs)
   const models = new Map(), given = new Map(), rigOf = new Map();
   function rigFor(id, sp) {
     if (rigOf.has(id) && rigOf.get(id).src === sp.data) return rigOf.get(id).rig;

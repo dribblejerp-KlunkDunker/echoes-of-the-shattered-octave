@@ -1,5 +1,6 @@
 // PREVIEW_URL=http://127.0.0.1:4175 PLAYWRIGHT_MODULE=/path/to/playwright node test/eaves78.test.js
-// Phase 78 pilot, roofs and fronts: Oakhaven's houses get pitched roofs, gable ends, shuttered windows (3D renderer).
+// Phase 78, roofs and fronts: Oakhaven's buildings get pitched roofs, upper storeys, dormers, windows, the Greenhall's
+// dome and the Chapel's open bell-frame (3D renderer), and the rain stops at the roofs.
 'use strict';
 const path = require('path'), ROOT = path.join(__dirname, '..');
 const E = require(path.join(ROOT, 'js', 'eaves78.js'));
@@ -7,24 +8,41 @@ let fails = 0;
 const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { fails++; console.log('FAIL ' + label); } };
 
 // ---- the planner, on a map made by hand (no browser)
-const W = 30, H = 14, cells = new Array(W * H).fill(null), set = (x, y, c) => { cells[y * W + x] = c; };
-const house = (x0, y0, x1, y1, wall, door, o = {}) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const edge = x === x0 || x === x1 || y === y0 || y === y1; set(x, y, edge ? { tex: wall } : { tex: o.lid || 't_roof', capTex: o.lid || 't_roof', top: o.top || 1.7 }); } if (door) set(door[0], door[1], { door: true }); };
-house(2, 2, 8, 5, 't_house', [5, 5]);                    // 7 x 4, door on the south
-house(11, 2, 13, 8, 't_wood', [11, 5]);                  // 3 x 7, door on the west
-house(16, 2, 20, 6, 't_marble', [18, 6]);                // stone hall: not a house
-house(23, 2, 27, 6, 't_house', null);                    // no door: not a house
-house(2, 9, 6, 12, 't_house_p20b_2', [4, 12], { top: 3.2 });   // a tower inside: left alone
-const p = E.plan({ id: 'oakhaven', w: W, h: H, cells });
-check(p.houses.length === 2, 'two of the five buildings are houses (a stone hall, a doorless block and a tower are left alone): ' + p.houses.length);
-const a = p.houses.find((h) => h.x0 === 2), b = p.houses.find((h) => h.x0 === 11);
-check(a && a.axis === 'x' && b && b.axis === 'y', 'the ridge runs along the long side');
-check(a && Math.abs(E.roofZ(a, 5.5, 4) - a.ridge) < 1e-9 && E.roofZ(a, 5.5, 2) < a.ridge && E.roofZ(a, 5.5, 2) > a.top, 'the roof is highest over the middle and stands above the wall top at the eaves');
-check(a && a.ridge - a.top <= 2.2 && b.ridge - b.top <= 2.2, 'no roof rises more than about two storeys');
-const onDoor = (h) => h.windows.some((w) => { const c = cells[w.y * W + w.x]; const n = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => { const q = cells[(w.y + dy) * W + w.x + dx]; return q && q.door; }); return !c || c.door || n; });
-const corner = (h) => h.windows.some((w) => (w.x === h.x0 || w.x === h.x1) && (w.y === h.y0 || w.y === h.y1));
-check(a && a.windows.length >= 4 && !onDoor(a) && !corner(a) && b.windows.length >= 3 && !onDoor(b) && !corner(b), 'windows: several a house, none on a door, beside a door or on a corner (' + (a && a.windows.length) + ', ' + (b && b.windows.length) + ')');
-check(a && a.windows.every((w) => !cells[(w.y + w.ny) * W + w.x + w.nx]), 'every window looks onto open ground');
-check(JSON.stringify(E.plan({ id: 'oakhaven', w: W, h: H, cells })) === JSON.stringify(p), 'the same map always gives the same houses and the same lit windows');
+const W = 44, H = 24, cells = new Array(W * H).fill(null), set = (x, y, c) => { cells[y * W + x] = c; };
+const house = (x0, y0, x1, y1, wall, door, label, o = {}) => {
+  const along = (x1 - x0) >= (y1 - y0), ridge = along ? y0 + ((y1 - y0 + 1) >> 1) : x0 + ((x1 - x0 + 1) >> 1);
+  for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const edge = x === x0 || x === x1 || y === y0 || y === y1; set(x, y, edge ? { tex: wall } : { tex: wall === 't_marble' ? 't_marble' : 't_roof', capTex: 't_roof', top: (along ? y === ridge : x === ridge) ? 1.7 : 1.35 }); }
+  if (door) set(door[0], door[1], { door: true, tex: 't_door', label });
+  for (const [x, y, top, cap] of (o.blocks || [])) set(x, y, { tex: wall, capTex: cap, top });
+};
+house(2, 2, 6, 5, 't_house', [4, 5], 'A shuttered house');                         // a cottage, 5 x 4
+house(9, 2, 16, 6, 't_house', [12, 6], 'The Boar & Dulcimer');                      // the inn, 8 x 5
+house(19, 2, 21, 8, 't_wood', [19, 5], 'A hay-barn');                               // a barn, 3 x 7
+house(24, 2, 32, 6, 't_marble', [28, 6], 'The Greenhall', { blocks: [[28, 4, 2.1, 't_roof']] });
+house(35, 2, 40, 7, 't_marble', [37, 7], 'The Chapel', { blocks: [[37, 3, 3.2, 't_stone'], [38, 3, 3.2, 't_stone'], [37, 4, 3.2, 't_stone'], [38, 4, 3.2, 't_stone']] });
+house(2, 12, 6, 16, 't_house', null, '');                                           // no door: not a building
+house(9, 12, 13, 16, 't_house', [11, 16], 'A house', { blocks: [[11, 14, 3.2, 't_stone']] });   // a tower in a timber house: left alone
+const M = { id: 'oakhaven', w: W, h: H, cells }, p = E.plan(M), by = (re) => p.houses.find((b) => re.test(b.label));
+const cot = by(/shuttered/), inn = by(/Boar/), barn = by(/barn/), hall = by(/Greenhall/), chap = by(/Chapel/);
+check(p.houses.length === 5 && cot && inn && barn && hall && chap, 'five of the seven blocks are buildings (a doorless block and a timber house with a tower are left alone): ' + p.houses.length);
+check(cot.storeys === 1 && cot.type === 'gable' && cot.axis === 'x' && !cot.plain && cot.dormers.length > 0, 'a cottage: one storey, a gabled roof along its long side, a dormer');
+check(inn.storeys === 2 && inn.ridges === 2 && inn.jetty > 0 && inn.dormers.length >= 2 && inn.windows.some((w) => w.z0 > inn.top), 'the inn: a jettied upper storey with its own windows, a double-pile roof, dormers');
+check(barn.plain && barn.storeys === 1 && barn.dormers.length === 0 && barn.windows.length > 0 && barn.windows.every((w) => w.style === 'hatch'), 'a barn stays plain: one storey, boarded hatches, no dormers, no attic window');
+check(hall.stone && hall.type === 'hip' && hall.dome && hall.dome.x === 28 && hall.roofTex === 'e78_slate' && hall.windows.every((w) => w.style === 'hall'), 'the Greenhall: a hipped slate roof, tall windows, and its dome');
+check(chap.church && chap.type === 'gable' && chap.axis === 'y' && chap.towers.length === 4 && chap.windows.some((w) => w.style === 'lancet'), 'the Chapel: a nave whose gable faces its door, lancet windows, its tower kept');
+check(p.houses.filter((b) => !b.stone).every((b) => b.ridge < 2.8) && chap.ridge < 3.2 - 0.5 && hall.ridge < 2.8, 'the skyline: no ordinary ridge reaches the mooring mast (2.8), and the Chapel roof stays well under its tower (ridges ' + p.houses.map((b) => b.ridge.toFixed(2)).join(', ') + ')');
+let poke = 0; for (const b of p.houses) for (let y = b.y0 + 1; y < b.y1; y++) for (let x = b.x0 + 1; x < b.x1; x++) { const c = cells[y * W + x]; if (c.top > 2) continue; for (let k = 0; k < 9; k++) { const z = E.roofZ(b, x + (k % 3) / 2, y + ((k / 3) | 0) / 2); if (z == null || z < c.top) poke++; } }
+check(poke === 0, 'the whole of every old lid lies under its new roof');
+check(Math.abs(E.roofZ(cot, 4.5, 4) - cot.ridge) < 1e-9 && E.roofZ(cot, 4.5, 2) >= cot.wallTop && E.roofZ(cot, 4.5, 0.5) === null, 'a roof is highest over the middle, clears the wall top at the wall, and ends at its eaves');
+const ground = (b) => b.windows.filter((w) => w.z1 <= b.top + 0.3 && w.style !== 'attic');
+const bad = p.houses.some((b) => ground(b).some((w) => { const x = Math.floor(w.cx - w.nx * 0.5), y = Math.floor(w.cy - w.ny * 0.5), c = cells[y * W + x]; return !c || c.door || [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => { const q = cells[(y + dy) * W + x + dx]; return q && q.door; }) || cells[Math.floor(w.cy + w.ny * 0.5) * W + Math.floor(w.cx + w.nx * 0.5)]; }));
+check(!bad, 'ground-floor windows: none on a door, beside a door, or facing a wall');
+check(JSON.stringify(E.plan(M)) === JSON.stringify(p), 'the same map always gives the same buildings and the same lit windows');
+// the rain stops at the roofs
+const s = E.shelter(M), at = (x, y) => s.data[Math.floor(y * s.k) * s.w + Math.floor(x * s.k)];
+check(s && s.k === 4 && s.w === W * 4 && at(0.5, 0.5) < -5000, 'open ground is open to the rain');
+check(Math.abs(at(4.6, 3.6) - E.roofZ(cot, 4.625, 3.625)) < 1e-6 && at(4.5, 1.85) > 0.5 && at(4.5, 1.4) < -5000, 'under a roof it does not rain, out to the edge of the eaves and no further');
+check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) === null, 'nor inside a plain block; other regions are left to the old rule');
 
 // ---- in the game
 (async () => {
@@ -48,28 +66,40 @@ check(JSON.stringify(E.plan({ id: 'oakhaven', w: W, h: H, cells })) === JSON.str
     out.active = R3D.active();
     GFX.eaves = false; R3D.invalidate(); const off = go('oakhaven', 0.5).tris;
     GFX.eaves = true; R3D.invalidate(); const onDay = go('oakhaven', 0.5).tris;
-    out.off = off; out.on = onDay; out.houses = EAVES78.planOf(G.map).houses.length; out.windows = EAVES78.planOf(G.map).houses.reduce((n, h) => n + h.windows.length, 0);
+    const P = EAVES78.planOf(G.map).houses;
+    out.off = off; out.on = onDay; out.n = P.length; out.windows = P.reduce((n, h) => n + h.windows.length, 0);
+    out.two = P.filter((b) => b.storeys === 2).map((b) => b.label); out.plain = P.filter((b) => b.plain).length; out.dormers = P.reduce((n, b) => n + b.dormers.length, 0);
+    out.hall = P.some((b) => /Greenhall/.test(b.label) && b.dome); out.chapel = P.some((b) => /Chapel/.test(b.label) && b.church && b.towers.length === 4);
+    out.roofs = Array.from(new Set(P.map((b) => b.roofTex))).sort(); out.highest = Math.max(...P.filter((b) => !b.stone).map((b) => b.ridge));
     out.mapUntouched = JSON.stringify(G.maps.oakhaven.cells.map((c) => c && [c.tex, c.top, !!c.door])) === cellsBefore;
     out.ms = R3D.mesh().ms;
     // dusk: the mesh is rebuilt once so the windows light
-    const builds0 = R3D.stats ? R3D.stats.meshBuilds : null; G.tod = 0.85; window.advanceTime(16); window.advanceTime(16); out.rebuiltAtDusk = builds0 == null ? null : R3D.stats.meshBuilds - builds0; window.advanceTime(16); out.thenSteady = builds0 == null ? null : R3D.stats.meshBuilds - builds0;
-    // chimneys stand on the new roof; switch off, they go back
+    const builds0 = R3D.stats.meshBuilds; G.tod = 0.85; window.advanceTime(16); window.advanceTime(16); out.rebuiltAtDusk = R3D.stats.meshBuilds - builds0; window.advanceTime(16); out.thenSteady = R3D.stats.meshBuilds - builds0;
+    // chimneys stand on the new stacks; switch off, they go back
     const ch = G.ents.filter((e) => e._fs === 'chimney'); out.chimneys = ch.length; out.lifted = ch.filter((e) => e._e78).length;
-    GFX.eaves = false; window.advanceTime(16); out.restored = ch.every((e) => !e._e78);
-    GFX.eaves = true;
-    // other maps are not touched by the pilot
+    GFX.eaves = false; window.advanceTime(16); out.restored = ch.every((e) => !e._e78 && e.scale === 0.55);
+    GFX.eaves = true; window.advanceTime(16);
+    // rain: the renderer is given the roof heights
+    G.tod = 0.5; if (typeof Weather !== 'undefined' && Weather.hold) Weather.hold('rain'); UPG.weather = 'rain'; for (let i = 0; i < 4; i++) window.advanceTime(16);
+    out.rain = !!(LIGHT21.shelter && LIGHT21.shelter().tex && LIGHT21.shelter().src === EAVES78.shelter(G.map)); out.wx = Weather.state;
+    if (Weather.hold) Weather.hold('clear'); UPG.weather = 'clear';
+    // other maps are not touched
     const m2 = go('whispergrove', 0.5); GFX.eaves = false; R3D.invalidate(); const m2off = go('whispergrove', 0.5); out.elsewhere = m2.tris === m2off.tris; GFX.eaves = true;
     out.switch = GFX.ART.includes('eaves');
     return out;
   });
   check(r.active, 'the 3D renderer is drawing');
-  check(r.houses >= 20 && r.windows >= 60, "Oakhaven: " + r.houses + ' houses roofed, ' + r.windows + ' windows');
-  check(r.on > r.off + r.houses * 12, 'the switch adds the roofs, gables and windows to the world (' + r.off + ' -> ' + r.on + ' triangles)');
+  check(r.n >= 31 && r.windows >= 150, 'Oakhaven: ' + r.n + ' buildings roofed, ' + r.windows + ' windows, ' + r.dormers + ' dormers');
+  check(r.two.length >= 4 && r.two.some((l) => /Boar/.test(l)) && r.two.some((l) => /mill/.test(l)) && r.plain >= 5, 'upper storeys on the big houses (' + r.two.join('; ') + '); ' + r.plain + ' barns, sheds and stores stay plain');
+  check(r.hall && r.chapel, 'the Greenhall has its dome and the Chapel its tower');
+  check(r.roofs.includes('e78_slate') && r.roofs.includes('e78_thatch') && r.highest < 2.8, 'thatch and slate (' + r.roofs.join(', ') + '); the highest ordinary ridge is ' + r.highest.toFixed(2) + ', under the mast');
+  check(r.on > r.off + r.n * 20, 'the switch adds the new shapes to the world (' + r.off + ' -> ' + r.on + ' triangles)');
   check(r.mapUntouched, 'the map itself is unchanged: walls, doors and heights are what the game still reads');
   check(r.ms < 400, 'building the town with its roofs takes ' + r.ms + ' ms, once');
-  check(r.rebuiltAtDusk === null || (r.rebuiltAtDusk === 1 && r.thenSteady === 1), 'at dusk the windows light: one rebuild, then none');
-  check(r.chimneys > 0 && r.lifted === r.chimneys && r.restored, 'the ' + r.chimneys + ' smoking chimneys stand on the new roofs, and go back when the switch is off (' + r.lifted + ' lifted)');
-  check(r.elsewhere, 'other regions are not touched by the pilot');
+  check(r.rebuiltAtDusk === 1 && r.thenSteady === 1, 'at dusk the windows light: one rebuild, then none');
+  check(r.chimneys > 0 && r.lifted === r.chimneys && r.restored, 'the ' + r.chimneys + ' smoking chimneys stand on brick stacks, and go back when the switch is off (' + r.lifted + ' lifted)');
+  check(r.rain, 'in the rain the renderer is given the roof heights (weather: ' + r.wx + ')');
+  check(r.elsewhere, 'other regions are not touched');
   check(r.switch, 'Roofs, windows and eaves is an art switch');
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors[0] : ''));
   await browser.close();

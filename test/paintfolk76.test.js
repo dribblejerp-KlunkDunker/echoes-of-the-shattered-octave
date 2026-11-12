@@ -62,7 +62,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(o.ms < 60, id + ': a new frame costs ' + o.ms.toFixed(1) + ' ms (then it is cached)');
   }
   check(r.per.kaelen.emit && !r.per.townsman.emit, "Kaelen's glass arm still glows; nothing on the orchardman does");
-  check(r.all.n >= 25 && r.all.rigged >= r.all.n - 3 && r.all.never.every((id) => ['orla', 'cat', 'p31_seated'].includes(id)), 'every NPC painting in the game is rigged: ' + r.all.rigged + ' of ' + r.all.n + ' (' + JSON.stringify(r.all.kinds) + '; left still: ' + (r.all.never.join(', ') || 'none') + ')');
+  check(r.all.n >= 25 && r.all.rigged >= r.all.n - 4 && r.all.never.every((id) => ['orla', 'cat', 'p31_seated', 'p17p_solenne'].includes(id)), 'every NPC painting in the game is rigged: ' + r.all.rigged + ' of ' + r.all.n + ' (' + JSON.stringify(r.all.kinds) + '; left still: ' + (r.all.never.join(', ') || 'none') + ')');
   check(!r.all.bad.length, 'each of them stands as its painting and walks from the front, the side and the back' + (r.all.bad.length ? ' (not: ' + r.all.bad.join(', ') + ')' : ''));
   check(r.lazy, 'a painting first seen in play is rigged in a quiet moment, not in the middle of a frame');
   check(r.on && r.off && r.other, 'the switch: on draws the moving painting, off the still one, and unrigged creatures are untouched');
