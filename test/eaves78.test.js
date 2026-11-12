@@ -2,6 +2,7 @@
 // Phase 78, roofs and fronts: Oakhaven's buildings get pitched roofs, upper storeys, dormers, windows, the Greenhall's
 // dome and the Chapel's open bell-frame (3D renderer), and the rain stops at the roofs. Port Cantabile builds its own
 // way: slate, raised gables turned to the water, hoist beams, a bell-cote, iron shutters, pentices over the stair shops.
+// Whisper-Grove is marble under lead: an open colonnade for an upper storey, finials, dark arched windows, lit water.
 'use strict';
 const path = require('path'), ROOT = path.join(__dirname, '..');
 const E = require(path.join(ROOT, 'js', 'eaves78.js'));
@@ -75,6 +76,37 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   check(E.STYLES.oakhaven && E.STYLES.cantabile_harbour && E.STYLES.cantabile_harbour.only.length >= 2 && E.MAPS.has('cantabile_harbour'), 'each region lists what only it has');
 }
 
+// ---- Whisper-Grove: marble, a colonnade for an upper storey, finials, and no lit windows but two houses'
+{
+  const W3 = 32, H3 = 30, c3 = new Array(W3 * H3).fill(null), fc = new Uint8Array(W3 * H3), put = (x, y, c) => { c3[y * W3 + x] = c; };
+  for (let y = 0; y < H3; y++) for (let x = 0; x < W3; x++) if (x === 0 || y === 0 || x === W3 - 1 || y === H3 - 1) put(x, y, { tex: 't_greymarble' });
+  const blk = (x0, y0, x1, y1, tex) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) put(x, y, { tex }); };
+  blk(2, 1, 9, 6, 't_greymarble'); put(5, 6, { door: true, tex: 't_door', label: 'The Cloister of the Lost Choir' });      // touches the map's edge wall
+  blk(12, 3, 17, 9, 't_greymarble'); put(12, 6, { door: true, tex: 't_door', label: 'The Moot-house' });
+  blk(20, 2, 27, 7, 't_stone'); put(20, 4, { door: true, tex: 't_door', label: 'The Malting — Relief Station Nineteen' });
+  blk(5, 12, 10, 16, 't_greymarble'); blk(2, 17, 10, 20, 't_greymarble'); blk(2, 21, 4, 21, 't_greymarble');           // an L-shaped block and a stub
+  blk(14, 13, 16, 20, 't_greymarble');                                                                                // three wide: too thin to be a building
+  // a lane: a strip of raised lid in a ring of wall and doors, on dry paving
+  for (let x = 13; x <= 28; x++) { put(x, 23, { tex: 't_greymarble' }); put(x, 26, { tex: 't_greymarble' }); for (const y of [24, 25]) put(x, y, x === 13 || x === 28 ? { tex: 't_greymarble' } : { tex: 't_greymarble', capTex: 't_roof', top: 1.6 }); }
+  put(17, 23, { door: true, tex: 't_door', label: 'A name-board by the door' }); put(24, 23, { door: true, tex: 't_door', label: 'A name-board by the door' });
+  for (let x = 12; x <= 29; x++) for (const y of [21, 22, 27, 28]) fc[y * W3 + x] = 1; for (let y = 21; y <= 28; y++) for (const x of [12, 29, 30]) fc[y * W3 + x] = 1;
+  const MG = { id: 'whispergrove', w: W3, h: H3, cells: c3, floorTextures: ['t_shallows', 't_marble'], floorCells: fc }, pg = E.plan(MG), gb = (re) => pg.houses.find((b) => re.test(b.label));
+  const clo = gb(/Cloister/), moot = gb(/Moot/), malt = gb(/Malting/), lane = pg.houses.find((b) => b.lane), plainG = pg.houses.filter((b) => b.grove && !b.lane && !b.label);
+  check(pg.houses.length === 6 && clo && moot && malt && lane && plainG.length === 2, 'Whisper-Grove: the Cloister, the Moot-house, the Malting, both arms of an L-shaped block and a lane terrace; the edge wall, a stub and a three-wide block are left alone (' + pg.houses.length + ')');
+  check([clo, moot, lane, ...plainG].every((b) => b.grove && b.type === 'gable' && b.roofTex === 'e78_lead' && b.colH > 0.5 && b.wallTop > 1.8 && b.gableTex === 'e78_marble'), 'marble under lead: every marble building has an open colonnade for an upper storey, under a low pediment');
+  check(pg.houses.filter((b) => b.grove).every((b) => b.windows.filter((w) => !w.gallery).every((w) => w.style === 'arch' && !w.lit)), 'tall dark arched windows: nobody in the city lights a lamp');
+  const gal = moot.windows.filter((w) => w.gallery);
+  check(gal.length === 3 && gal.every((w) => w.lit && w.nx === -1 && w.z0 > 1) && Math.abs(gal[0].cx - (12 + moot.inset)) < 1e-9, 'the Moot-house: "a gallery of three windows over the plaza", lit, behind the columns on the side its door is on');
+  check(malt.stone && malt.plain && !malt.grove && malt.type === 'hip' && malt.ext > 0 && malt.windows.every((w) => w.z0 > 1) && malt.windows.some((w) => w.lit) && malt.windows.some((w) => !w.lit), "the Malting, the Office's own house: plain stone, no colonnade, a blind ground floor, some small windows lit above");
+  check(clo.front && clo.front.ny === 1 && moot.front && moot.front.nx === -1 && plainG.every((b) => b.front), 'a pediment stands over the front: the door side, or with no door the long side that looks to the middle');
+  check(clo.wet && moot.wet && !lane.wet, 'the colonnades take the lit water\'s light after dusk only where a building stands in the water; the lanes are dry');
+  check(lane.w === 16 && lane.h === 4 && lane.in.n > 0.9 && lane.in.s > 0.9 && lane.doors.length === 2 && lane.windows.length >= 4 && lane.zBase > 1.6, 'a lane terrace: the gallery runs the length of the lane over the doors, and the roof clears the old lid');
+  check(pg.houses.every((b) => b.ridge < 3.1), 'low roofs: the highest ridge is ' + Math.max(...pg.houses.map((b) => b.ridge)).toFixed(2));
+  check(JSON.stringify(E.plan(MG)) === JSON.stringify(pg) && E.MAPS.has('whispergrove') && E.MAPS.has('p31_bellyard') && E.STYLES.whispergrove.only.length === 3, 'the same city always gives the same buildings; the region lists what only it has');
+  const sg = E.shelter(MG), a3 = (x, y) => sg.data[Math.floor(y * sg.k) * sg.w + Math.floor(x * sg.k)];
+  check(a3(14.5, 6.5) > 2 && a3(11.5, 11.5) < -5000, 'rain stops at the lead roofs');
+}
+
 // ---- in the game
 (async () => {
   let chromium; try { ({ chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright')); } catch (e) { console.log('SKIP browser checks (no playwright)'); console.log(fails ? fails + ' FAILED' : 'all passed'); process.exit(fails ? 1 : 0); }
@@ -115,7 +147,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
     out.rain = !!(LIGHT21.shelter && LIGHT21.shelter().tex && LIGHT21.shelter().src === EAVES78.shelter(G.map)); out.wx = Weather.state;
     if (Weather.hold) Weather.hold('clear'); UPG.weather = 'clear';
     // other maps are not touched
-    const m2 = go('whispergrove', 0.5); GFX.eaves = false; R3D.invalidate(); const m2off = go('whispergrove', 0.5); out.elsewhere = m2.tris === m2off.tris; GFX.eaves = true;
+    const m2 = go('greenroot', 0.5); GFX.eaves = false; R3D.invalidate(); const m2off = go('greenroot', 0.5); out.elsewhere = m2.tris === m2off.tris; GFX.eaves = true;
     out.switch = GFX.ART.includes('eaves');
     // Port Cantabile
     const before2 = JSON.stringify(G.maps.cantabile_harbour ? G.maps.cantabile_harbour.cells.map((c) => c && [c.tex, c.top, !!c.door]) : 0);
@@ -125,6 +157,17 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
       hoists: PC.houses.filter((b) => b.extras.some((e) => e.kind === 'hoist')).length, bell: PC.houses.filter((b) => b.extras.some((e) => e.kind === 'bellcote')).map((b) => b.label.slice(0, 18)),
       roofs: Array.from(new Set(PC.houses.map((b) => b.roofTex))), tex: !!(Engine.textures.e78_cope && Engine.textures.e78_lime && Engine.textures.e78_shutter_blue),
       untouched: JSON.stringify(G.map.cells.map((c) => c && [c.tex, c.top, !!c.door])) === before2 || before2 === '0', shelter: !!EAVES78.shelter(G.map) };
+    // Whisper-Grove and its lanes
+    out.g = {};
+    for (const id of ['whispergrove', 'p31_bellyard']) {
+      const before3 = JSON.stringify(G.maps[id] ? G.maps[id].cells.map((c) => c && [c.tex, c.top, !!c.door]) : 0);
+      GFX.eaves = false; R3D.invalidate(); const gOff = go(id, 0.5).tris; GFX.eaves = true; R3D.invalidate(); const gOn = go(id, 0.5);
+      const PG = EAVES78.planOf(G.map).houses, b0 = R3D.stats.meshBuilds; G.tod = 0.86; window.advanceTime(16); window.advanceTime(16);
+      out.g[id] = { off: gOff, on: gOn.tris, ms: gOn.ms, n: PG.length, grove: PG.filter((b) => b.grove && !b.lane).length, lanes: PG.filter((b) => b.lane).length, stone: PG.filter((b) => b.stone).map((b) => b.label.slice(0, 11)),
+        lit: PG.reduce((n, b) => n + b.windows.filter((w) => w.lit).length, 0), litWho: Array.from(new Set(PG.filter((b) => b.windows.some((w) => w.lit)).map((b) => b.label.slice(0, 14)))), gallery: PG.filter((b) => /Moot-house/.test(b.label)).map((b) => b.windows.filter((w) => w.gallery && w.lit).length)[0] || 0,
+        wet: PG.filter((b) => b.wet).length, doors: PG.reduce((n, b) => n + b.doors.length, 0), dusk: R3D.stats.meshBuilds - b0, tex: !!(Engine.textures.e78_lead && Engine.textures.e78_flute_lilac && Engine.textures.e78_arch),
+        untouched: JSON.stringify(G.map.cells.map((c) => c && [c.tex, c.top, !!c.door])) === before3 || before3 === '0', shelter: !!EAVES78.shelter(G.map) };
+    }
     return out;
   });
   check(r.active, 'the 3D renderer is drawing');
@@ -143,6 +186,12 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   check(r.c.quay === 5 && r.c.hoists === 4 && r.c.bell.length === 1 && /HARBOUR OFFICE/.test(r.c.bell[0]) && r.c.stone.length === 1 && /counting/.test(r.c.stone[0]), "Port Cantabile's quay: Hesper's four houses each with a hoist, the Harbour Office with its bell-cote, the counting-house in stone");
   check(r.c.cliff >= 40 && r.c.shops === 5 && r.c.roofs.length === 1 && r.c.roofs[0] === 'p17c_slate', r.c.cliff + ' cliff houses gabled, ' + r.c.shops + ' stair shops under pentices, every roof slate');
   check(r.c.on > r.c.off + 2000 && r.c.untouched && r.c.tex && r.c.shelter && r.c.ms < 400, 'the harbour: ' + r.c.off + ' -> ' + r.c.on + ' triangles in ' + r.c.ms + ' ms, the map unchanged, rain stops at its roofs');
+  { const g = r.g.whispergrove, y = r.g.p31_bellyard;
+    check(g.grove >= 10 && g.stone.length === 1 && /Malting/.test(g.stone[0]) && g.tex, 'Whisper-Grove: ' + g.grove + ' marble buildings under colonnades, the Malting plain stone');
+    check(g.gallery === 3 && g.litWho.length === 2 && g.litWho.some((l) => /Moot/.test(l)) && g.litWho.some((l) => /Malting/.test(l)), 'after dusk the only lit windows are the Moot-house gallery\'s three and the Malting\'s (' + g.lit + ' in all)');
+    check(g.wet >= 9 && g.dusk === 1, g.wet + ' buildings stand in the water and take its light at dusk (one rebuild)');
+    check(y.lanes === 3 && y.doors === 13 && y.lit === 0 && y.wet === 0, 'the Bell Yard and Ashlane: three terraces under galleries, a door-case on each of ' + y.doors + ' doors, dry lamps, nothing lit');
+    check(g.on > g.off + 5000 && y.on > y.off + 2000 && g.untouched && y.untouched && g.shelter && y.shelter && g.ms < 500 && y.ms < 500, 'the city: ' + g.off + ' -> ' + g.on + ' triangles in ' + g.ms + ' ms, the lanes ' + y.off + ' -> ' + y.on + ' in ' + y.ms + ' ms; the maps unchanged; rain stops at the roofs'); }
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors[0] : ''));
   await browser.close();
   console.log(fails ? fails + ' FAILED' : 'all passed'); process.exit(fails ? 1 : 0);
