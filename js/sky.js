@@ -319,6 +319,9 @@ const SKY = (() => {
       return [finish(A), finish(B), finish(C)];
     },
   };
+  // Phase 79: the Greenroot road runs through the Reach's own country, so its skyline is the Reach's: the downs with
+  // their field lines, wooded crests, farmsteads, and Greenroot's spire standing where the road is going.
+  RECIPES.p79_greenroad = RECIPES.oakhaven;
   // The LANDMARKS ridges (js/upgrades.js: the Grey Teeth, cliff shoulders, downs, per outdoor map) were drawn by
   // the engine as smooth gradient silhouettes over the panorama. With panoramas on they are baked here instead, one
   // pixel-art layer per ridge from the same numbers (bearing, width, height, peakiness, lumpiness, snow cap, colour,
