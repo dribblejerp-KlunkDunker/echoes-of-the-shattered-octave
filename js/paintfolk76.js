@@ -366,16 +366,25 @@ const PAINTFOLK = (() => {
     for (const k of Array.from(cache.keys())) if (k.startsWith(id + '|')) cache.delete(k);
     return M;
   }
-  // in play a model is built in a quiet moment, one at a time; until then the still painting draws
-  const queue = []; let pumping = false;
-  function pump() { const id = queue.shift(); if (id == null) { pumping = false; return; } try { model(id); } catch (e) { /* stays a still painting */ } setTimeout(pump, 90); }
+  // A painting is rigged the moment it is first needed, and the people of a place are rigged as you arrive in it (warm,
+  // below). Nothing waits on a timer or a count of frames: when a figure changes from a still painting to a moving one
+  // depends only on what the game has done, so a seeded replay, two pages side by side, or two frames in a row agree.
+  // (It used to be done on a wall-clock timer "in a quiet moment"; that made four test suites depend on how busy the
+  // machine was. One rig is about ten milliseconds, once for each kind of person in a session.)
   function ready(id) {
     const sp = typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites[id]; if (!sp) return false;
     const M = models.get(id); if (M && M.src === sp.data) return true;
     if (rigOf.has(id) && rigOf.get(id).src === sp.data && !rigOf.get(id).rig) return false;
-    if (!queue.includes(id)) queue.push(id);
-    if (!pumping) { pumping = true; setTimeout(pump, 30); }
-    return false;
+    try { const N = model(id); return !!(N && N.src === sp.data); } catch (e) { return false; }
+  }
+  // On arriving in a place, the people already standing in it are rigged there and then: the door's fade hides the work,
+  // and the first frame of the place already has its people moving.
+  function warm(ents) {
+    let n = 0; const seenIds = new Set();
+    for (const e of ents || []) { const id = e && e.sprite; if (!id || seenIds.has(id) || e.deathArt || !(e.kind === 'npc' || (e.kind === 'enemy' && id === 'legionnaire') || e.paintfolk)) continue; seenIds.add(id);
+      const sp = typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites[id]; if (!sp) continue; const M = models.get(id); if (M && M.src === sp.data) continue;
+      n++; try { model(id); } catch (err) { /* stays a still painting */ } }
+    return n;
   }
   const cache = new Map(), CAP = (typeof navigator !== 'undefined' && navigator.deviceMemory && navigator.deviceMemory <= 4) ? 220 : 420, COUNT = PF ? PF.COUNT : {};
   function frame(id, anim, f, octant) {
@@ -386,7 +395,7 @@ const PAINTFOLK = (() => {
     cache.set(key, s); if (cache.size > CAP) cache.delete(cache.keys().next().value);
     return s;
   }
-  return { K, COUNT, ids: () => Object.keys(RIGS), has: (id) => !!model(id), ready, rigFor, autorig, source: (id, sp) => { given.set(id, sp); models.delete(id); rigOf.delete(id); }, render, frame, cache, model, canAttack: (id) => PF.canAttack(id), stats: () => ({ models: models.size, frames: cache.size, waiting: queue.length }) };
+  return { K, COUNT, ids: () => Object.keys(RIGS), has: (id) => !!model(id), ready, warm, rigFor, autorig, source: (id, sp) => { given.set(id, sp); models.delete(id); rigOf.delete(id); }, render, frame, cache, model, canAttack: (id) => PF.canAttack(id), stats: () => ({ models: models.size, frames: cache.size, waiting: 0}) };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PAINTFOLK;
 if (typeof window !== 'undefined') window.PAINTFOLK = PAINTFOLK;
@@ -408,6 +417,9 @@ if (typeof animDirectionalSprite === 'function' && typeof Engine !== 'undefined'
     return (s._half = { w, h, data: d, emit: em, _mask: em, hs: s.hs, cx: s.cx, paintfolk: true });
   };
   animDirectionalSprite = function (e) {
+    // the old chooser always runs first: whatever it does each frame (the game's random numbers it draws, the state it
+    // keeps on the figure) happens exactly as it did before this module, whether or not a painting is ready to move
+    const old = _dir.apply(this, arguments);
     try {
       if (GFX.paintfolk !== false && e && !e.deathArt && (e.kind === 'npc' || (e.kind === 'enemy' && e.sprite === 'legionnaire') || e.paintfolk) && e.sprite && PAINTFOLK.ready(e.sprite)) {
         const cam = Engine.cam, q = PIXELFOLK.choose(e, cam), T = typeof ANIM !== 'undefined' ? ANIM.T : 0;
@@ -423,8 +435,10 @@ if (typeof animDirectionalSprite === 'function' && typeof Engine !== 'undefined'
         }
       }
     } catch (err) { /* fall through to the still painting */ }
-    return _dir.apply(this, arguments);
+    return old;
   };
+  // the people of a place are rigged as you arrive in it; anyone who turns up later is rigged when first drawn
+  if (typeof loadMap === 'function') { const _lm = loadMap; loadMap = function () { const r = _lm.apply(this, arguments); try { if (GFX.paintfolk !== false && typeof G !== 'undefined' && G.ents) PAINTFOLK.warm(G.ents); } catch (err) { /* stays still */ } return r; }; }
   if (typeof renderAccessibilityMenu === 'function' && typeof document !== 'undefined') {
     const _acc = renderAccessibilityMenu;
     renderAccessibilityMenu = function () {
@@ -432,8 +446,8 @@ if (typeof animDirectionalSprite === 'function' && typeof Engine !== 'undefined'
       try {
         const grid = document.querySelector('#modal-panel .ctl-grid');
         if (grid && !document.getElementById('gfx-paintfolk')) {
-          const label = document.createElement('span'); label.className = 'gfx-label'; label.appendChild(document.createTextNode('Moving paintings (pilot) '));
-          const sm = document.createElement('small'); sm.className = 'muted'; sm.textContent = 'Kaelen, Lyra, the orchardmen and the Legionnaires keep their paintings, sharpened, and walk, talk and strike with real limbs'; label.appendChild(sm);
+          const label = document.createElement('span'); label.className = 'gfx-label'; label.appendChild(document.createTextNode('Moving paintings '));
+          const sm = document.createElement('small'); sm.className = 'muted'; sm.textContent = 'everyone keeps their painting, sharpened, and walks, talks and strikes with real limbs'; label.appendChild(sm);
           const b = document.createElement('button'); b.className = 'dfbtn small'; b.id = 'gfx-paintfolk'; b.type = 'button'; b.setAttribute('aria-label', 'Moving paintings');
           const sync = () => { b.textContent = GFX.paintfolk !== false ? 'On' : 'Off'; b.setAttribute('aria-pressed', GFX.paintfolk !== false ? 'true' : 'false'); };
           b.onclick = () => { GFX.paintfolk = GFX.paintfolk === false; if (typeof GFX.changed === 'function') GFX.changed(); sync(); };

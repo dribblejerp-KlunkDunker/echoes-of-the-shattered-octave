@@ -41,8 +41,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       let m = 0; if (f0) for (let i = 0; i < f0.data.length; i++) if (f0.data[i] >>> 24) m++; let src = 0; for (let i = 0; i < sp.data.length; i++) if ((sp.data[i] >>> 24) >= 128) src++;
       if (!f0 || !w1 || !w2 || !bk || same(w1, w2) || m < src * 3.2 || m > src * 4.8 || Math.abs(f0.hs - (sp.hs || 1) * f0.h / (sp.h * 2)) > 0.02) all.bad.push(id); }
     out.all = all;
-    // in play a painting is rigged in a quiet moment: asked for, it is not ready at once, and nothing is drawn wrong meanwhile
-    PAINTFOLK.source('townswoman', Engine.sprites.townswoman); out.lazy = PAINTFOLK.ready('townswoman') === false && PAINTFOLK.stats().waiting >= 1;
+    // a painting is rigged the moment it is first needed, and a place's people as you arrive: no timer, no waiting
+    PAINTFOLK.source('townswoman', Engine.sprites.townswoman); out.lazy = PAINTFOLK.ready('townswoman') === true && PAINTFOLK.stats().waiting === 0;
+    PAINTFOLK.source('lyra', Engine.sprites.lyra); out.clock = PAINTFOLK.warm([{ kind: 'npc', sprite: 'lyra' }, { kind: 'enemy', sprite: 'hound' }, { kind: 'npc', sprite: 'lyra' }]) === 1 && PAINTFOLK.ready('lyra') === true;
+    // the old chooser still runs every time, ready or not: what it draws from the game's random numbers must not depend on this module
+    { const _r = Math.random; let n1 = 0, n2 = 0; const pe = { kind: 'npc', sprite: 'townsman', x: Engine.cam.x + 2, y: Engine.cam.y, scale: 1, state: 'idle' }; PAINTFOLK.has('townsman');
+      Math.random = function () { n1++; return _r.call(Math); }; GFX.paintfolk = true; for (let k = 0; k < 40; k++) animDirectionalSprite(pe);
+      Math.random = function () { n2++; return _r.call(Math); }; GFX.paintfolk = false; for (let k = 0; k < 40; k++) animDirectionalSprite(pe);
+      Math.random = _r; GFX.paintfolk = true; out.sameDraws = n1 === n2; out.draws = n1 + '/' + n2; }
     // the chooser: on, a rigged person gets a moving-painting frame; off, the painting as before; an unrigged one is untouched
     const cam = Engine.cam, e = { kind: 'npc', sprite: 'townsman', x: cam.x + 2, y: cam.y, scale: 1 }, h = { kind: 'enemy', sprite: 'hound', x: cam.x + 2, y: cam.y, scale: 1 };
     GFX.paintfolk = true; out.on = !!animDirectionalSprite(e).sprite.paintfolk;
@@ -64,7 +70,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   check(r.per.kaelen.emit && !r.per.townsman.emit, "Kaelen's glass arm still glows; nothing on the orchardman does");
   check(r.all.n >= 25 && r.all.rigged >= r.all.n - 4 && r.all.never.every((id) => ['orla', 'cat', 'p31_seated', 'p17p_solenne'].includes(id)), 'every NPC painting in the game is rigged: ' + r.all.rigged + ' of ' + r.all.n + ' (' + JSON.stringify(r.all.kinds) + '; left still: ' + (r.all.never.join(', ') || 'none') + ')');
   check(!r.all.bad.length, 'each of them stands as its painting and walks from the front, the side and the back' + (r.all.bad.length ? ' (not: ' + r.all.bad.join(', ') + ')' : ''));
-  check(r.lazy, 'a painting first seen in play is rigged in a quiet moment, not in the middle of a frame');
+  check(r.lazy, 'a painting first seen in play is rigged the moment it is needed: it does not wait on a timer');
+  check(r.clock, "on arriving in a place its people are rigged there and then, each kind once");
+  check(r.sameDraws, "the old chooser runs every time: the game's random draws are the same with moving paintings on and off (" + r.draws + ')');
   check(r.on && r.off && r.other, 'the switch: on draws the moving painting, off the still one, and unrigged creatures are untouched');
   check(r.switches, 'Moving paintings is an art switch, on by default; the drawn pixel figures are off by default');
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors[0] : ''));

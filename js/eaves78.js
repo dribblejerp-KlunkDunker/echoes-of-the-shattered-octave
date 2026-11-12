@@ -916,7 +916,7 @@ if (typeof renderAccessibilityMenu === 'function' && typeof document !== 'undefi
       const grid = document.querySelector('#modal-panel .ctl-grid');
       if (grid && !document.getElementById('gfx-eaves')) {
         const label = document.createElement('span'); label.className = 'gfx-label'; label.appendChild(document.createTextNode('Roofs, windows and eaves '));
-        const sm = document.createElement('small'); sm.className = 'muted'; sm.textContent = "Oakhaven's buildings with pitched roofs, upper storeys, dormers, windows lit after dusk, the Greenhall's dome and the Chapel's bell-frame (3D renderer only)"; label.appendChild(sm);
+        const sm = document.createElement('small'); sm.className = 'muted'; sm.textContent = 'buildings get roofs, upper storeys, windows lit after dusk and the shape their own region builds in (3D renderer only)'; label.appendChild(sm);
         const b = document.createElement('button'); b.className = 'dfbtn small'; b.id = 'gfx-eaves'; b.type = 'button'; b.setAttribute('aria-label', 'Roofs, windows and eaves');
         const sync = () => { b.textContent = GFX.eaves !== false ? 'On' : 'Off'; b.setAttribute('aria-pressed', GFX.eaves !== false ? 'true' : 'false'); };
         b.onclick = () => { GFX.eaves = GFX.eaves === false; if (typeof GFX.changed === 'function') GFX.changed(); if (typeof R3D !== 'undefined' && R3D.invalidate) R3D.invalidate(); sync(); };

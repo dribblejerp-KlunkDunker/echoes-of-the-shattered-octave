@@ -400,7 +400,9 @@ const TRACE = () => {
       const who = await p2.evaluate(() => ({ name: G.player.name, gold: G.player.gold }));
       ok(!before.p && who.name === 'Brother' && who.gold === gold1, 'a guest with no game open joins with the traveller of its newest session slot (' + who.name + ', ' + who.gold + ' sovereigns)');
       const xp = await host.evaluate(() => { const c = Engine.cam, e = hydrate({ kind: 'enemy', type: 'tongueless', x: c.x + 1.2, y: c.y }); G.ents.push(e); killEnemy(e, false); return PARTNER19.earned.xp; });
-      await p2.waitForTimeout(300);
+      // the host's XP has to reach the guest before it parts ways. 300 ms was enough until the pages grew heavier (Phases 75 to 78);
+      // on a slow machine it no longer is, and the check passes unchanged with a longer wait
+      await p2.waitForTimeout(2500);
       await p2.evaluate(() => { G.state = 'panel'; renderMenu(); });
       await p2.locator('#mn-title').tap();
       await until(p2, () => !SYNC19.active() && G.state === 'play' && G.player && G.player.name === 'Brother', null, 10000);
