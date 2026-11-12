@@ -90,7 +90,7 @@ const ROAD79 = (function () {
   const h2 = (a, b) => { let n = (Math.imul(a | 0, 374761393) + Math.imul(b | 0, 668265263)) | 0; n = Math.imul(n ^ (n >>> 13), 1274126177); return ((n ^ (n >>> 16)) >>> 0) / 4294967296; };
   const TRACK = 1, WATER = 2, SHALLOW = 3, PLANK = 4, MOSS = 5, ROCK = 6, CRAG = 't_p79_crag', ROAD = 't_p79_road';
   const BRIDGE_Y = [41, 42];
-  const STONE2 = { x: 112.5, y: 46.4 }, FIRE = { x: 25.5, y: 55.6 }, FALL = { x: 96.6, y: 17.75 };
+  const STONE2 = { x: 112.5, y: 46.4 }, FIRE = { x: 25.5, y: 55.6 }, FALL = { x: 96.6, y: 17.1 };
   const inEll = (e, x, y, k) => ((x - e.x) / (e.rx * (k || 1))) ** 2 + ((y - e.y) / (e.ry * (k || 1))) ** 2 < 1;
   // where a line of points passes: a visit every `step` along it
   const along = (pts, step, fn) => { for (let i = 0; i + 1 < pts.length; i++) { const [ax, ay] = pts[i], [bx, by] = pts[i + 1], n = Math.ceil(Math.hypot(bx - ax, by - ay) / step); for (let k = 0; k <= n; k++) fn(ax + (bx - ax) * k / n, ay + (by - ay) * k / n); } };
@@ -239,7 +239,7 @@ const ROAD79 = (function () {
     // the ford-post, the bridge, the Leap, the mere and its eyot, the tarn, the Hang, the cairn in the Narrows
     m.deco('p12r_post', 96.6, 48.4, { radius: 0.18, scale: 0.8, label: TX.ford, _p79: 'post' });
     m.deco('sign', BANKS[0] - 0.4, BRIDGE_Y[0] - 0.6, { radius: 0.2, scale: 0.7, label: TX.bridge });
-    m.deco('p79_fall0', FALL.x, FALL.y, { radius: 0.2, scale: SHELF[1].h * 0.86, solid: false, _p79: 'fall' });
+    m.deco('p79_fall0', FALL.x, FALL.y, { radius: 0.2, scale: SHELF[1].h * 0.84, solid: false, _p79: 'fall' });
     m.deco('sign', 91.4, 22.4, { radius: 0.2, scale: 0.75, label: TX.leap, _p79: 'leap' });
     m.deco('sign', 122.4, 56.5, { radius: 0.2, scale: 0.75, label: TX.mere });
     m.add({ kind: 'item', item: 'cache', tier: 1, x: EYOT.x + 0.9, y: EYOT.y + 0.6, sprite: 'chest', scale: 0.5, yOff: 0, solid: false, label: 'A strongbox' });   // for whoever finds the stones
