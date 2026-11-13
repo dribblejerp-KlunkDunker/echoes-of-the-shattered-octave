@@ -4,6 +4,40 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 
 ---
 
+## Start here (handover, 13 Nov 2026)
+
+**Where the work is.** Branch `phase-75-pixel-folk`, pull request #119 (mergeable; merging is the owner's click, and it is what updates the GitHub Pages play links). Everything is committed and pushed.
+
+**Done on this branch:** Phases 75 to 82. The Greenroot road in three stretches with Singers' Howe (79, 80); the world plan, approved by the owner on 13 Nov (81); the building style of every region (78 and 82).
+
+**Next: Phase 82b, on Opus 5.5 at high effort.** Build it from `story/Game Layer/Phase 82b - The map, finger-posts and notice boards (brief and text).md`, which has the measurements, the rule for laying every place into the travel map, the test to write, all 23 finger-posts and every notice-board line. Its text is [PROPOSED] until the owner rules; build it and mark it so in the review record.
+
+**After that.** Part B below (87 to 90) is Opus 5.5 work. Phases 83 to 86 want Fable 5.2 at high effort.
+
+**Waiting on the owner:**
+- Phase 82b's text (three questions at the end of its brief).
+- Phase 82's three questions (the Cay under thatch; the one lit window in the Low Rings; thatch on Wethercombe's fold walls).
+- The four words of the woman in the doorway in the Plaza of the Willows (until then she is seen and not heard).
+- The Long Rest, the keeper of Singers' Howe: its name and numbers.
+- The Greenroot road's music: a new recording, or a piece in the procedural score.
+- Merging pull request #119.
+
+**The standing rules** (the owner's, in his words where quoted):
+- Book canon wins. Anything invented is marked [PROPOSED] and listed for his ruling.
+- He is not an artist: all art is made in code. Pictures and GIFs as the work goes, and into the README.
+- Everything committed and pushed. No subagents unless he asks.
+- Each region has something of its own.
+- On every stretch of road: something to find, someone to meet with a small task, something that only happens at night or in bad weather.
+- Roads: never a straight line, with lakes, streams and cliffs; "not too close to each other so its claustrophobic"; "take inspiration from real world areas and then add a fantasy element for that wow factor".
+- "Make sure that each location is exactly where it is on the map with roads leading in the proper directions with signposts. Each town or city should have signposts for notices and extra bits of lore and side quests."
+- Nothing new joins Oakhaven (the Hedge is a story boundary); a new road goes only between places already joined, or to a dead end off a place already reachable (rulings of 22 Oct).
+- Nothing visual may use random numbers. Every new line gets French (`tools/i18n/*.tsv`, then `node tools/i18n/merge-pairs.js`). After any `?v=` change run `node tools/pwa/precache.js`.
+- End every report with the model and effort the next step needs.
+
+**Not yet done, and known:** a full run of every test suite since 13 Nov (only the suites each phase touched were rerun); the three two-player suites (`sync19`, `net19`, `together19`) fail in the build container and need a real machine; in the picture tool a pale rectangle sometimes sits in the middle of the view after moving between places, and nobody has checked whether a player sees it.
+
+**Tools.** `tools/dev/` holds the scripts for taking pictures, filming walks, and running suites, with a README.
+
 ## What is left: the world, in phases (13 Nov 2026)
 
 Owner, 13 Nov: "create a road map with the different phases of things that we have left and then begin", and "be sure to do everything that fable 5.2 is needed for first". So the phases are in two parts. **Part A needs Fable 5.2 at high effort** (new country, new art, new writing, new systems: work where the judgement is the work) and is done first, in this order. **Part B can be done on Opus 5.5 at high effort** (building from a finished plan with the tools Part A leaves behind, tests, French from finished English, pictures, measurements). Every phase keeps the standing rules: book canon wins; invented things are marked [PROPOSED] for the owner; each region has something of its own; every road follows the three road rules (not straight; room to breathe; a real country and one fantasy element); every place is where the map says it is, every road leaves in the right direction, every way out has a finger-post and every town a notice board (owner, 13 Nov) and carries the three kinds of thing (to find, to meet with a small task, only at night or in bad weather); pictures and GIFs as the work goes; everything committed and pushed.
