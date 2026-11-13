@@ -1,6 +1,8 @@
 # Phase 81: the world plan
 
-*Written 13 Nov 2026 for the owner's ruling. Nothing here is built. Every name, person and idea marked [PROPOSED] is invented and waits for a yes or a no. The chart is `screenshots/world81/world-plan.jpg`.*
+*Written 13 Nov 2026 for the owner's ruling. Nothing here is built. The chart is `screenshots/world81/world-plan.jpg`.*
+
+**Approved by the owner, 13 Nov 2026 ("approve all").** Every recommendation in the twelve questions at the end stands as written, so everything marked [PROPOSED] below is now ruled: it is what the later phases build. The marks are left in place to show what was invented. Two things follow from the recommendations as worded: the Dry Flume is built with its older stone conduit (question 7); and the woman in the doorway is seen and not heard until the owner gives her four words (question 9).
 
 ![The world plan](../../screenshots/world81/world-plan.jpg)
 
@@ -303,7 +305,7 @@ With these the walked roads go from about 900 steps to about 3,200.
 
 # Questions for the owner
 
-Each has a recommendation. "Approve all" takes every recommendation as written.
+Each has a recommendation. "Approve all" takes every recommendation as written. **The owner approved all twelve on 13 Nov 2026.**
 
 1. **Three countries, the Kestrel between them; no walking road from the Reach to the Woods or the Coast.** *Recommend: yes.* It is what the books do.
 2. **Road 1:** the Stride and the Pound Stair, water going uphill overhead, gates that open to the Root note, and the four people. *Recommend: yes.*
