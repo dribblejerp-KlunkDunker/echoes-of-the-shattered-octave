@@ -101,6 +101,35 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**And the six smaller places each build their own way too.** Stillwater Landing is black-tarred board under reed thatch, with no window on the lane side: every one looks at the water. The Low Rings are Oakhaven's drowned quarter, with a tide-line on every wall and one lit window. Wethercombe is flint under deep thatch, where even the yard walls wear a little thatched roof and a straw ram stands on the inn's ridge. Nothing on the Watch Downs has a roof at all. On Driftwood Cay the roof is roped down and weighted with stones against the wind. And the Flume, which nobody built, has ribs: living hoops grown over the water, with a bead of sap-light at each crown after dusk.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/eaves82/flume-ribs.gif" alt="Walking the Flume Road at dusk: living hoops of grown wood over the water, each with a bead of green sap-light"></td>
+<td width="50%"><img src="screenshots/eaves82/stillwater-landing.jpg" alt="Stillwater Landing: the lockkeeper's house with its porch, reed thatch and tarred board"></td>
+</tr>
+<tr>
+<td>The Flume Road: the ribs, and their sap-light after dusk.</td>
+<td>Stillwater Landing: reed thatch, tarred board, the lockkeeper's porch.</td>
+</tr>
+<tr>
+<td><img src="screenshots/eaves82/wethercombe-inn.jpg" alt="The Bellwether at Wethercombe under deep straw thatch, a straw ram on its ridge"></td>
+<td><img src="screenshots/eaves82/wethercombe-farm.jpg" alt="A flint farmhouse at Wethercombe, its yard wall wearing a little thatched roof"></td>
+</tr>
+<tr>
+<td>Wethercombe: the Bellwether, with a straw ram on the ridge.</td>
+<td>Wethercombe: flint, thatch, and a thatched yard wall.</td>
+</tr>
+<tr>
+<td><img src="screenshots/eaves82/low-rings.jpg" alt="The Low Rings: upper floors standing out of green water, a dark tide-line along every wall"></td>
+<td><img src="screenshots/eaves82/driftwood-cay.jpg" alt="Hesper's orphan-house on Driftwood Cay: a low roof roped down and weighted with stones, a driftwood porch"></td>
+</tr>
+<tr>
+<td>The Low Rings: upper floors out of the water, a tide-line on every wall.</td>
+<td>Driftwood Cay: the roof roped down against the wind.</td>
+</tr>
+</table>
+
 **The Greenroot road: a world that takes a while to cross.** The door that used to open straight onto Greenroot now opens on a road three stretches long, about six minutes at a walk: the Long Common, the middle stretch and Greenroot Wood. No stretch runs straight. Each has a lake, running water to cross, cliffs, a climb and a far skyline; something to find, someone to meet with a small task, and something that only happens at night or in bad weather. Travellers walk it. Old places off it are not empty. Under the ruined lych-house is a dungeon, Singers' Howe, with the Long Rest waiting behind a door that has no handle, and gear found nowhere else.
 
 <table>
@@ -136,7 +165,7 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>
 
-More pictures of this build: [`screenshots/eaves78/`](screenshots/eaves78) (every region's buildings), [`screenshots/paintfolk76/`](screenshots/paintfolk76), [`screenshots/walls77/`](screenshots/walls77), [`screenshots/road79/`](screenshots/road79), [`screenshots/world81/`](screenshots/world81).
+More pictures of this build: [`screenshots/eaves78/`](screenshots/eaves78) and [`screenshots/eaves82/`](screenshots/eaves82) (every region's buildings), [`screenshots/paintfolk76/`](screenshots/paintfolk76), [`screenshots/walls77/`](screenshots/walls77), [`screenshots/road79/`](screenshots/road79), [`screenshots/world81/`](screenshots/world81).
 
 ## The world
 
