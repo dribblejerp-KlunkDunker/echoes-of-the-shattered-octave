@@ -1,0 +1,22 @@
+# Phase 82: the building style of the other six regions
+
+*Built 13 Nov 2026. No new in-game text: this phase is shape and material, in the 3D renderer only (`js/eaves82.js`, on the same switch as Phase 78, "Roofs, windows and eaves"). No map, wall or door is changed. Everything the books do not give is marked [PROPOSED] and waits for the owner's yes or no.*
+
+Owner, 11 Nov: "each region should have at least something unique about it even from a building and house perspective. Nothing that's over the top but enough so that each new area and region is cool and unique enough to want to explore."
+
+Phase 78 shaped Oakhaven and its Hollow, the country outside the Hedge, Greenroot, Port Cantabile and Whisper-Grove. These are the six it did not reach.
+
+| Region | What it builds with | What only it has | From the books and the game | [PROPOSED] |
+|---|---|---|---|---|
+| **Stillwater Landing** | Black-tarred board under reed thatch | **Blind backs:** no window looks at the lane; every one looks at the water. The lockkeeper's porch. The Bonded Store's hoist-house over its door. The cooperage's smoke-louvre along its ridge. | "River port at the Flume's lower lock. Smugglers' town" (Vol II). "Nobody who looks up." The lockkeeper "does his business on the porch, in the air, where he can see who is listening." The cooperage; the Bonded Store. Flume-Reed is cut here. | Tar and reed as the materials; the blind backs; the hoist-house; the louvre; that only the lockkeeper's windows are lit at night. |
+| **The Low Rings** | Oakhaven's own timber and plaster under slate and moss tile, as the water left it | **A tide-line on every wall.** Upper floors standing out of the water. Roofs holed to the rafters. Every shutter closed, and **one window lit**: the loft with the warm stove. | "Flooded lower city, abandoned since the Flume began over-pumping" (Vol II). "Roofs and upper floors stand out of green water." "A loft with a stove still warm." | The tide-line; the holes; the one lit window (the hidden household is in the game, [PROPOSED] since Phase 16). |
+| **Wethercombe** | Flint under deep straw thatch, pulled low | **Even the yard walls wear thatch**, a little straw ridge on a lime-washed cap. **A straw ram on the Bellwether's ridge.** | Flint and thatch; the Bellwether, whose board shows "a ram with a bell at his throat"; the Chalk Ram (all Phase 22, [PROPOSED] then). | The thatched walls (real chalk-country walls wear thatch in the same way); the straw ram (real thatchers put straw birds and hares on their ridges). |
+| **The Watch Downs** | Dry stone | **Nothing on the Downs has a roof.** Cock-and-hen coping on every wall: stones set on edge along the top, tall and short by turns. | The sheepfold, "dry stone with the gate gone" (ruled canon). | The coping. |
+| **Driftwood Cay** | Lime-wash under marram thatch | **The roof roped down and weighted with stones** against the wind. A porch of driftwood. The kitchen window lit. | Hesper's orphan-house, "low, square, a kitchen window with the light on and a row of boots by the door"; "grey scrub, bent all one way"; "the wind is steady up here". | Marram thatch (the game's lid was slate, and Port Cantabile itself never thatches); the ropes and stones (as on the islands off Scotland); the driftwood porch. |
+| **The Flume Road** | Nothing built: grown wood | **The ribs.** Living hoops grown from the channel wall over the water to the bank, every few paces, with a bead of sap-light at each crown that is dull by day and alight after dusk. | The Flume is a living aqueduct (Vol I, II). "The channel wall is grown, not built. Green light moves in it like sap." It "leaves the Hedge by a grown-wood arch". | The ribs and their beads. |
+
+## Questions for the owner
+
+1. **Driftwood Cay under thatch.** The orphan-house had a slate lid in the game, and Port Cantabile's rule is slate, never thatch. The Cay is poorer and windier, so it is given marram thatch roped down. *Recommend: keep.* If slate is wanted, the ropes go and the porch stays.
+2. **The one lit window in the Low Rings.** It tells the player somebody lives there before they find the stove. *Recommend: keep.* If the household should be a surprise, the window goes dark.
+3. **Thatch on the fold walls of Wethercombe.** Every low wall in the combe wears thatch, the sheepfolds included. *Recommend: keep*, so that the Downs (stone coping) and the combe (thatch coping) differ at a glance.

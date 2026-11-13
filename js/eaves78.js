@@ -44,6 +44,9 @@
 //               underside of its colonnade take the water's lilac light after dusk. In the Bell Yard and Ashlane the
 //               terraces get the same colonnade as a gallery running the length of each lane (dry: no lilac).
 //
+//  The other six regions (Stillwater Landing, the Low Rings, Wethercombe, the Watch Downs, Driftwood Cay, the Flume Road) add
+//  themselves from js/eaves82.js through EAVES78.EXTRA, REGION and PREP.
+//
 //  EAVES78.STYLES             one entry per region: what it builds with, and what only it has
 //  EAVES78.plan(map)          -> { houses: [building, ...], shops?: [...] }   (every roofed building; .stone, .plain, .storeys, .cliff tell them apart)
 //  EAVES78.roofZ(b, x, y)     the new roof's height over a point, or null outside its eaves
@@ -95,6 +98,10 @@ const EAVES78 = (() => {
     p31_bellyard: { builds: 'grey-white marble under lead', shutters: 'none: tall dark arched windows', only: ['a colonnaded gallery running the length of each lane, over the doors', 'no window lit after dusk'], plan: (m) => planGrove(m) },
   };
   const MAPS = new Set(Object.keys(STYLES));
+  // Later regions add themselves from their own files (js/eaves82.js): an entry in STYLES with a planner, and, for what only
+  // they have, a drawer in EXTRA (one thing on one building) or REGION (things that belong to the place, not to a house).
+  // PREP runs before a mesh is built, so their tiles exist by then.
+  const EXTRA = {}, REGION = {}, PREP = [];
   const PITCH = 0.85, OVER0 = 0.28, VERGE0 = 0.22, OVER = OVER0, VERGE = VERGE0, LIFT = 0.06, STOREY = 0.6, JETTY = 0.11;
   const RIDGE1 = 2.45, RIDGE2 = 2.7;                             // the highest ridge of a one- and a two-storey house (the mast is 2.8, the tower 3.2)
   const WALL = /^(t_house|t_wood$|t_marble)/, PLAIN = /barn|shed|store|granary|washhouse/i;
@@ -574,7 +581,7 @@ const EAVES78 = (() => {
   // h: { B (the mesh builder), tex(name) -> layer, MAT, ZK }. Returns the triangles added.
   function build(m, h) {
     if (!on() || !m || !MAPS.has(m.id) || !textures()) return 0;
-    harbourTextures(); groveTextures();
+    harbourTextures(); groveTextures(); for (const f of PREP) f();
     const B = h.B, MAT = h.MAT, ZK = h.ZK, dusk = night(); let tris = 0;
     const unit = (x, y, z) => { const l = hyp(x, y, z) || 1; return [x / l, y / l, z / l]; };
     // the normal of a plane through three points (in the renderer's space, where heights are scaled), turned to face `toward`
@@ -615,6 +622,7 @@ const EAVES78 = (() => {
         quad([at(i0, 0.02, z0 + 0.01), at(i1, 0.075, z0 + 0.01), at(i1, 0.075, z1 - 0.01), at(i0, 0.02, z1 - 0.01)], [[0, 1], [1, 1], [1, 0], [0, 0]], w.shut === 'blue' ? Lblue : Lshut, MAT.wall, side, unit(w.nx - tx * sgn * 0.28, w.ny - ty * sgn * 0.28, 0)); }
     };
 
+    const T = { m, MAT, quad, tri, box, opening, L: L_, planeN, unit, dusk, UP, DN, roofZ, h2 };
     for (const b of planOf(m).houses) {
       const ax = b.axis === 'x', Lroof = L_(b.roofTex), Lwall = L_(b.wallTex), lime = b.gableTex || (b.harbour && !b.stone ? b.wallTex.replace('p17c_plaster', 'e78_lime') : null), Lgab = lime && Engine.textures[lime] ? L_(lime) : Lwall, Lridge = b.ridgeTex ? L_(b.ridgeTex) : Ldark, Lboard = b.boardTex ? L_(b.boardTex) : b.stone ? Lstone : Ldark, OVER = b.over != null ? b.over : OVER0, VERGE = b.verge != null ? b.verge : VERGE0, par = b.parapet || 0, p = b.pitch, C = b.C, A0 = b.A0, A1 = b.A1, zB = b.zBase, top = b.top, wt = b.wallTop;
       const P = (a, s, z) => ax ? [a, C + s, z] : [C + s, a, z], N = (na, ns) => ax ? [na, ns, 0] : [ns, na, 0];
@@ -851,6 +859,7 @@ const EAVES78 = (() => {
           for (const t of [-0.2, 0.2]) bx(t - 0.05, t + 0.05, -0.16, 0.0, e.z - 0.12, e.z + 0.4, Ls, Ls, 1.05);
           bx(-0.3, 0.3, -0.19, 0.03, e.z + 0.4, e.z + 0.48, Ls, Ls, 1.15);
           bx(-0.08, 0.08, -0.15, -0.01, e.z + 0.1, e.z + 0.3, Lbronze, Lbronze, 1.2);
+        } else if (EXTRA[e.kind]) { EXTRA[e.kind](e, b, T);
         }
       }
       // ---- a brick stack under every smoking chimney
@@ -878,6 +887,7 @@ const EAVES78 = (() => {
         for (const k of [1, -1]) quad([at(tb, 0.01, zf - 0.34), at(tb, 0.34, zf - 0.02), at(tb, 0.34, zf - 0.07), at(tb, 0.01, zf - 0.4)], [[0, 0], [0.4, 0], [0.4, 0.06], [0, 0.06]], Ldark, MAT.wall, 0.75, [tx * sgn * k, ty * sgn * k, 0]);
       }
     }
+    if (REGION[m.id]) REGION[m.id](m, T, planOf(m));
     return tris;
   }
 
@@ -902,7 +912,7 @@ const EAVES78 = (() => {
     });
     R3D.on('toggle', (shown) => { try { if (!shown && typeof G !== 'undefined' && G.map) lift(G.map, false); } catch (e) { /* chimneys stay where they were */ } });
   }
-  return { MAPS, STYLES, PITCH, OVER, RIDGE1, RIDGE2, plan, planOf, roofZ, shelter, build, on, night, textures };
+  return { MAPS, STYLES, EXTRA, REGION, PREP, PITCH, OVER, RIDGE1, RIDGE2, LIFT, plan, planOf, roofZ, shelter, build, on, night, textures, h2 };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = EAVES78;
 if (typeof window !== 'undefined') window.EAVES78 = EAVES78;
