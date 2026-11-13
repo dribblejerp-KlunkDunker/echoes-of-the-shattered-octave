@@ -373,7 +373,7 @@ const ROAD79B = (function () {
   const GW_ = (sp) => [1.6, sp.gw + 0.5], GE_ = (sp) => [sp.W - 1.6, sp.ge + 0.5], MIDSP = { W: R.W, gw: R.GW, ge: R.GE };
   // stops along each stretch, west to east
   const onRoad = (sp, i, t) => { const a = sp.road[i], b = sp.road[i + 1]; return [a[0] + (b[0] - a[0]) * t + 0.5, a[1] + (b[1] - a[1]) * t + 0.5]; };   // a point on the road itself
-  const STOPS = { [WEST]: [onRoad(SPW, 5, 0.1), onRoad(SPW, 11, 0.1), onRoad(SPW, 16, 0.1)], [MID]: [[27.5, 63.5], [66.5, 30.5], [116.5, 50.5]], [EAST]: [onRoad(SPE, 7, 0.1), onRoad(SPE, 13, 0.1), onRoad(SPE, 19, 0.1)] };
+  const STOPS = { [WEST]: [onRoad(SPW, 5, 0.1), onRoad(SPW, 11, 0.1), onRoad(SPW, 16, 0.1)], [MID]: [onRoad({ road: R.ROADPTS }, 3, 0.1), onRoad({ road: R.ROADPTS }, 8, 0.5), onRoad({ road: R.ROADPTS }, 15, 0.5)], [EAST]: [onRoad(SPE, 7, 0.1), onRoad(SPE, 13, 0.1), onRoad(SPE, 19, 0.1)] };
   const WELL = SPW.C(WELL0[0], WELL0[1]);
   const packLines = { name: TX.packman, sprite: 'p60_man_a', greet: TX.packGreet, work: TX.packWork, place: TX.packPlace, barks: [TX.packBark] };
   const band = [
@@ -397,7 +397,7 @@ const ROAD79B = (function () {
     ].concat(bandOn(WEST, SPW, 14)),
     [MID]: R.ROSTER.concat([
       Object.assign({ key: 'rd_packman', home: GW_(MIDSP), away: day3(0), exit: GW_(MIDSP),
-        day: [st(10, 11, 'carry', STOPS[MID][0]), st(11, 13, 'sit', [29.5, 60.5]), { from: 13, to: 10, job: 'home', at: GW_(MIDSP) }] }, packLines),
+        day: [st(10, 11, 'carry', STOPS[MID][0]), st(11, 13, 'sit', onRoad({ road: R.ROADPTS }, 3, 0.5)), { from: 13, to: 10, job: 'home', at: GW_(MIDSP) }] }, packLines),
     ]).concat(bandOn(MID, MIDSP, 11)),
     [EAST]: [
       { key: 'rd_antiq', name: TX.antiq, sprite: 'p60_wom_c', home: [CAMP.x, CAMP.y],

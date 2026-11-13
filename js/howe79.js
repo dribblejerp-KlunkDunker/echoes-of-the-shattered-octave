@@ -9,7 +9,8 @@
 //                 stone on the stone). Set a stone on each and the inner door opens. One grave is in the offering room,
 //                 one in the drowned vault, one in the choir.
 //    what is there   Cacophony Swarms in the gallery and the vault, Hush-Moths at the offering-room lamp, two Dirges in
-//                 the choir (a Dirge is funeral songs, eaten), and in the singers' chamber, in the dark, a Quiet.
+//                 the choir (a Dirge is funeral songs, eaten), and in the singers' chamber, in the dark, the Long Rest:
+//                 a Quiet in kind, the oldest and largest of them, with nearly three times a Quiet's strength.
 //                 Three traps (a tripwire, a net, an alarm wire).
 //    special gear   on the singers' shelf: the Old Cantor's Staff (iron: it bites the Quiet; blunt: it breaks armour; a
 //                 long reach, and the quietest long weapon there is) and the Bearer's Gloves (as stout as mail, and they make you quieter);
@@ -19,7 +20,8 @@
 //  the tongue and a stone on the stone (already in the game's Book Four prologue). The Howe itself, its rooms, the words
 //  and the two pieces of gear were [PROPOSED] and approved by the owner on 13 Nov.
 //
-//  Flags: p79_graves (a bit for each grave set), p79_howe_open (1 once all three are), p79_words (1 once read).
+//  Flags: p79_graves (a bit for each grave set), p79_howe_open (1 once all three are), p79_words (1 once read),
+//  p79_rest_seen (1 once you have stood in the singers' chamber).
 // ============================================================
 'use strict';
 
@@ -46,6 +48,8 @@ const HOWE79 = (function () {
     staff: S('Old Cantor\'s Staff'),
     staffDesc: S('Ash, shod with iron at both ends, the grip worn to a hand that is not yours. Iron bites the Quiet, and this makes very little noise about it.'),
     gloves: S('Bearer\'s Gloves'),
+    keeper: S('The Long Rest'),
+    keeperSeen: S('The Long Rest: the silence at the end of every song sung under this hill, kept. It has the shape of a singer with the mouth left out.'),
     glovesDesc: S('Grey kid lined with hush-cloth. The ones who carried the dead down wore them, so that nothing they touched would ring.'),
   };
   const GRAVES = [[4.5, 11.5], [41.5, 10.6], [29.4, 18.4]];
@@ -111,7 +115,7 @@ const HOWE79 = (function () {
     m.enemy('dirge', 17.4, 14.6); m.enemy('dirge', 27.6, 15.4);
     m.enemy('hushmoth', 5.0, 12.0); m.enemy('hushmoth', 6.4, 11.2);
     m.enemy('mites', 38.5, 18.5); m.enemy('mites', 42.5, 13.5); m.enemy('mites', 39.5, 12.5);
-    m.enemy('quiet', 22.5, 3.0);
+    m.enemy('quiet', 22.5, 3.0, { _p79h: 'keeper' });   // the Howe's keeper: a Quiet, but the oldest and the largest (see sync)
     // loot: the offering room, and the singers' shelf
     m.add({ kind: 'item', item: 'cache', tier: 2, x: 3.4, y: 16.5, sprite: 'chest', scale: 0.5, yOff: 0, solid: false, label: 'A strongbox' });
     m.deco('sign', 20.4, 1.6, { radius: 0.2, scale: 0.6, label: TX.shelf });
@@ -127,7 +131,11 @@ const HOWE79 = (function () {
     if (typeof G === 'undefined' || !G.map || G.map.id !== MAP) return;
     const f = G.flags, set = Number(f.p79_graves) || 0;
     for (const e of G.ents) { if (!e || !e._p79h) continue;
-      if (e._p79h === 'grave') { const done = !!(set & (1 << e._i)); e.label = done ? TX.graveDone : TX.grave; e.use = done ? undefined : 'p79_grave'; } }
+      if (e._p79h === 'grave') { const done = !!(set & (1 << e._i)); e.label = done ? TX.graveDone : TX.grave; e.use = done ? undefined : 'p79_grave'; }
+      // the keeper is a Quiet in kind (iron bites it, it drops what a Quiet drops) with its own name and its own strength
+      else if (e._p79h === 'keeper' && e.def && e.def.name !== TX.keeper) { const fresh = e.hp === e.def.hp; e.def = Object.assign({}, e.def, { name: TX.keeper, dmg: [7, 13], xp: 160 }); e.hpMax = 110; if (fresh) e.hp = 110; e.scale = 1.45; e.name = TX.keeper; } }
+    // the first time you stand in its chamber
+    if (!f.p79_rest_seen && typeof Engine !== 'undefined' && Engine.cam && Engine.cam.y < 5.8 && Engine.cam.x > 15.5 && Engine.cam.x < 30.5) { f.p79_rest_seen = 1; if (typeof msg === 'function') msg(TX.keeperSeen, 'bad', 9000); }
   }
   function useOwn(e) {
     if (!e || typeof G === 'undefined' || !G.map || G.map.id !== MAP || typeof e.use !== 'string') return false;
@@ -152,6 +160,7 @@ const HOWE79 = (function () {
   }
   if (typeof useDeco === 'function') { const _ud = useDeco; useDeco = function (e) { try { if (useOwn(e)) return undefined; } catch (err) { /* fall through */ } return _ud.apply(this, arguments); }; }
   if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function () { const r = _l.apply(this, arguments); try { sync(); } catch (e) { /* cosmetic */ } return r; }; }
+  if (typeof update === 'function') { const _u = update; update = function () { const r = _u.apply(this, arguments); try { sync(); } catch (e) { /* next frame */ } return r; }; }
 
   return { MAP, W, H, TX, TEXTS, GRAVES, build, sync, useOwn };
 })();

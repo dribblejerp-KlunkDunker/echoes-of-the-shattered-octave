@@ -67,6 +67,73 @@ To play together, both players press **Play together** on the title screen: one 
 
 The plain link works on phones too: a phone or tablet starts in touch mode by itself. The `?touch=1` link also turns the touch controls on for a touchscreen laptop. A mouse that moves hands control back, unless Options → Controls → Touch controls is set to On.
 
+## New in this build: moving paintings, buildings with real shape, and the long road
+
+*This is the work of pull request #119 (Phases 75 to 79). The play buttons at the top of this page open the game GitHub publishes from `main`, so they carry all of this from the moment that pull request is merged: **[play in your browser](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/)** · **[play on your phone](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/?touch=1)**.*
+
+**Everyone moves.** Every person and creature keeps their painting and now walks, talks and strikes with real limbs.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/paintfolk76/paintings-in-game.gif" alt="Painted townsfolk walking with moving limbs in Oakhaven"></td>
+<td width="50%"><img src="screenshots/paintfolk76/paintings-actions.gif" alt="A painted figure idling, walking, talking and striking"></td>
+</tr>
+</table>
+
+**Buildings with real shape, and every region builds differently.** Roofs with eaves, gables, upper storeys, dormers, chimneys and lit windows; rain stops at the roof. Oakhaven is timber and thatch, Port Cantabile is lime-wash and slate on its hill, Whisper-Grove is lilac marble, the Hollow is terraces, and Greenroot has its twisted spire.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/eaves78/oakhaven-inn.gif" alt="Oakhaven's inn with its jettied upper storey and thatch"></td>
+<td width="50%"><img src="screenshots/eaves78/cantabile-quay.gif" alt="Port Cantabile's quay: lime-washed fronts, blue shutters, slate roofs"></td>
+</tr>
+<tr>
+<td>Oakhaven: timber, thatch and a jettied inn.</td>
+<td>Port Cantabile: lime-wash, slate and hoists on the quay.</td>
+</tr>
+<tr>
+<td><img src="screenshots/eaves78/grove-court.gif" alt="Whisper-Grove's court in lilac marble"></td>
+<td><img src="screenshots/eaves78/greenroot-spire.gif" alt="Greenroot's twisted shingle spire with its bronze reed"></td>
+</tr>
+<tr>
+<td>Whisper-Grove: lilac marble, lead and arches.</td>
+<td>Greenroot: the twisted spire.</td>
+</tr>
+</table>
+
+**The Greenroot road: a world that takes a while to cross.** The door that used to open straight onto Greenroot now opens on a road three stretches long, about six minutes at a walk: the Long Common, the middle stretch and Greenroot Wood. No stretch runs straight. Each has a lake, running water to cross, cliffs, a climb and a far skyline; something to find, someone to meet with a small task, and something that only happens at night or in bad weather. Travellers walk it. Old places off it are not empty. Under the ruined lych-house is a dungeon, Singers' Howe, with the Long Rest waiting behind a door that has no handle, and gear found nowhere else.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/road79/delph-dusk.gif" alt="An old stone pit at dusk: glass grown through the rock lights up green and gold as night falls"></td>
+<td width="50%"><img src="screenshots/road79/narrows-walk.gif" alt="Walking the road up through the Narrows between two crags, mountains ahead"></td>
+</tr>
+<tr>
+<td>The Delph at dusk. Glass has come up through the rock, and it gives its own light.</td>
+<td>Through the Narrows, with the Grey Teeth on the skyline.</td>
+</tr>
+<tr>
+<td><img src="screenshots/road79/land.jpg" alt="The Leap waterfall, the Narrows, the stones out to the eyot, the ruined toll-house"></td>
+<td><img src="screenshots/road79/long-common-and-greenroot-wood.jpg" alt="The Delph by day and night, the Bell Oak, the river road, the Cleave, the eel-stage in the fen"></td>
+</tr>
+<tr>
+<td>The middle stretch: the Leap, the Narrows, the eyot, the toll-house.</td>
+<td>The Long Common and Greenroot Wood: the Delph, the Bell Oak, the Cleave, the fen.</td>
+</tr>
+<tr>
+<td><img src="screenshots/road79/lych-house-and-howe.jpg" alt="The ruined lych-house with an antiquary and her digger, the mouth of the Howe, and the dungeon inside"></td>
+<td><img src="screenshots/road79/hour-and-weather.jpg" alt="The ford dry and flooded, the Leap in spate, a watch-fire at night"></td>
+</tr>
+<tr>
+<td>The lych-house, the explorers camped at it, and Singers' Howe beneath.</td>
+<td>By hour and weather: the ford floods in rain, the Leap comes down in spate, a watch-fire burns at night.</td>
+</tr>
+</table>
+
+<p align="center"><img src="screenshots/road79/plan-whole-road.jpg" alt="A plan of the whole Greenroot road: the Long Common, the middle stretch and Greenroot Wood, with every place on them named" width="92%"></p>
+
+More pictures of this build: [`screenshots/eaves78/`](screenshots/eaves78) (every region's buildings), [`screenshots/paintfolk76/`](screenshots/paintfolk76), [`screenshots/walls77/`](screenshots/walls77), [`screenshots/road79/`](screenshots/road79).
+
 ## The world
 
 <table>

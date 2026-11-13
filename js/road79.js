@@ -31,7 +31,8 @@
 'use strict';
 
 const ROAD79 = (function () {
-  const MAP = 'p79_greenroad', W = 168, H = 96, PI = Math.PI;
+  const K = 1.4;   // room to breathe (owner, 12 Nov): the land below is drawn at a working size and grown K times; built things keep their size
+  const MAP = 'p79_greenroad', W = Math.round(168 * K), H = Math.round(96 * K), PI = Math.PI;
   const TEXTS = [], S = (t) => { TEXTS.push(t); return t; };
   const TX = {
     name: S('The Greenroot Road'),
@@ -73,24 +74,29 @@ const ROAD79 = (function () {
   // toll-house, climbs over Oak Hill, drops to the ford, goes along the north shore of the mere, and turns up through
   // the Narrows, between the Hang and the Little Hang, two crags it cannot climb. North of it all is the Shelf, a scarp
   // the stream comes over in one fall (the Leap). Nothing here is level for long.
-  const GW = 72, GE = 16;                                                              // the rows of the west and east gates
-  const ROADPTS = [[1, 72.5], [12, 72.5], [20, 70], [27, 64], [30, 56], [33, 49], [38, 42], [46, 36], [56, 31], [66, 30], [76, 33], [84, 39], [90, 46], [96, 50], [101, 50.5],
-    [108, 48], [116, 50.5], [126, 54.5], [136, 54], [143, 47], [147, 39], [146, 31], [148, 24], [154, 18], [160, 16.5], [W - 2, 16.5]];
-  const STREAMPTS = [[97, 1], [96.5, 9], [95.5, 16], [96, 22], [99, 30], [98, 40], [98, 50], [100, 58], [104, 61.5], [108, 63.5]];   // off the Shelf, down to the mere
-  const BECKPTS = [[14, 53], [17, 60], [18, 66], [21, 70.5], [27, 75], [33, 78.5]];       // a spring under the west rise, down to the tarn
-  const PATHPTS = [[95, 40], [95, 34], [95.5, 28], [93.5, 23.5], [91.5, 20.5]];          // worn by people who went to look at the Leap
-  const MERE = { x: 124, y: 68, rx: 18, ry: 11 }, TARN = { x: 40, y: 80, rx: 7, ry: 4.5 }, POOL = { x: 96, y: 20.5, rx: 3.2, ry: 2.2 }, EYOT = { x: 128.5, y: 66.5, r: 2.7 };
-  const HANG = { x: 131, y: 30, rx: 12, ry: 9, h: 5.6, steep: 0.13 }, LITTLE = { x: 158, y: 35, rx: 8, ry: 7, h: 3.8, steep: 0.17 }, OAKHILL = { x: 60, y: 31, rx: 17, ry: 12, h: 2.4 };
-  const SHELF = [{ x: 80, y: 3, rx: 15, ry: 13, h: 4.6, steep: 0.12 }, { x: 97, y: 2, rx: 16, ry: 15, h: 4.6, steep: 0.11 }, { x: 114, y: 3, rx: 13, ry: 12, h: 4.6, steep: 0.13 }];
+  const sp = (pts) => pts.map(([x, y]) => [x * K, y * K]), se = (e, hk) => Object.assign({}, e, { x: e.x * K, y: e.y * K, rx: e.rx * K, ry: e.ry * K }, e.h ? { h: e.h * (hk || 1) } : {});
+  const P = (x, y) => [x * K, y * K];                                                   // a place on the land
+  const C = (ax, ay) => { const dx = Math.round(ax * (K - 1)), dy = Math.round(ay * (K - 1)); return (x, y) => [x + dx, y + dy]; };   // a built thing, moved whole
+  const GW = Math.round(72 * K), GE = Math.round(16 * K);                                                              // the rows of the west and east gates
+  const ROADPTS = sp([[1, 72.5], [12, 72.5], [20, 70], [27, 64], [30, 56], [33, 49], [38, 42], [46, 36], [56, 31], [66, 30], [76, 33], [84, 39], [90, 46], [96, 50], [101, 50.5],
+    [108, 48], [116, 50.5], [126, 54.5], [136, 54], [143, 47], [147, 39], [146, 31], [148, 24], [154, 18], [160, 16.5], [166, 16.5]]);
+  ROADPTS[0] = [1, GW + 0.5]; ROADPTS[1][1] = GW + 0.5; ROADPTS[ROADPTS.length - 1] = [W - 2, GE + 0.5]; ROADPTS[ROADPTS.length - 2][1] = GE + 0.5;
+  const STREAMPTS = sp([[97, 1], [96.5, 9], [95.5, 16], [96, 22], [99, 30], [98, 40], [98, 50], [100, 58], [104, 61.5], [108, 63.5]]);   // off the Shelf, down to the mere
+  const BECKPTS = sp([[14, 53], [17, 60], [18, 66], [21, 70.5], [27, 75], [33, 78.5]]);       // a spring under the west rise, down to the tarn
+  const PATHPTS = sp([[95, 40], [95, 34], [95.5, 28], [93.5, 23.5], [91.5, 20.5]]);          // worn by people who went to look at the Leap
+  const MERE = se({ x: 124, y: 68, rx: 18, ry: 11 }), TARN = se({ x: 40, y: 80, rx: 7, ry: 4.5 }), POOL = se({ x: 96, y: 20.5, rx: 3.2, ry: 2.2 }), EYOT = { x: 128.5 * K, y: 66.5 * K, r: 2.7 };
+  const HANG = se({ x: 131, y: 30, rx: 12, ry: 9, h: 5.6, steep: 0.13 }, 1.15), LITTLE = se({ x: 158, y: 35, rx: 8, ry: 7, h: 3.8, steep: 0.17 }, 1.15), OAKHILL = se({ x: 60, y: 31, rx: 17, ry: 12, h: 2.4 }, 1.15);
+  const SHELF = [{ x: 80, y: 3, rx: 15, ry: 13, h: 4.6, steep: 0.12 }, { x: 97, y: 2, rx: 16, ry: 15, h: 4.6, steep: 0.11 }, { x: 114, y: 3, rx: 13, ry: 12, h: 4.6, steep: 0.13 }].map((e) => se(e, 1.15));
   const CRAGS = [HANG, LITTLE].concat(SHELF);
   const RISES = [[9, 50, 9, 8, 2.4], [36, 14, 14, 9, 2.8], [14, 20, 9, 7, 1.8], [70, 66, 11, 8, 2.0], [60, 88, 10, 5, 1.4], [90, 80, 9, 7, 1.8], [154, 76, 9, 9, 2.6], [152, 54, 6, 5, 1.3], [8, 88, 7, 5, 1.4], [44, 60, 8, 6, 1.2],
-    [116, 28, 6, 8, 1.4], [130, 90, 12, 5, 1.4], [30, 34, 9, 7, 1.6], [84, 62, 7, 5, 1.2], [58, 50, 9, 6, 1.5], [162, 86, 5, 8, 1.3], [112, 40, 7, 4, 0.9], [20, 44, 6, 5, 1.0], [43, 45.5, 5, 5, 1.3], [88, 35.5, 5, 4, 1.2], [105, 54.5, 4.5, 3.5, 1.0], [24, 69, 4, 3, 0.8], [72, 28, 5, 4, 1.1]];
-  const SADDLE = { x: 147, y: 32, rx: 4.5, ry: 9, h: 1.8 };                               // the road climbs through the Narrows
-  const COPSES = [[44, 54], [76, 50], [18, 34], [110, 37], [72, 80], [140, 88], [114, 88], [26, 90], [84, 24], [50, 18], [160, 60], [8, 62]];
+    [116, 28, 6, 8, 1.4], [130, 90, 12, 5, 1.4], [30, 34, 9, 7, 1.6], [84, 62, 7, 5, 1.2], [58, 50, 9, 6, 1.5], [162, 86, 5, 8, 1.3], [112, 40, 7, 4, 0.9], [20, 44, 6, 5, 1.0], [43, 45.5, 5, 5, 1.3], [88, 35.5, 5, 4, 1.2], [105, 54.5, 4.5, 3.5, 1.0], [24, 69, 4, 3, 0.8], [72, 28, 5, 4, 1.1]].map(([x, y, rx, ry, h]) => [x * K, y * K, rx * K, ry * K, h * 1.2]);
+  const SADDLE = se({ x: 147, y: 32, rx: 4.5, ry: 9, h: 1.8 }, 1.15);                               // the road climbs through the Narrows
+  const COPSES = sp([[44, 54], [76, 50], [18, 34], [110, 37], [72, 80], [140, 88], [114, 88], [26, 90], [84, 24], [50, 18], [160, 60], [8, 62]]);
   const h2 = (a, b) => { let n = (Math.imul(a | 0, 374761393) + Math.imul(b | 0, 668265263)) | 0; n = Math.imul(n ^ (n >>> 13), 1274126177); return ((n ^ (n >>> 16)) >>> 0) / 4294967296; };
   const TRACK = 1, WATER = 2, SHALLOW = 3, PLANK = 4, MOSS = 5, ROCK = 6, FALLS = 7, CRAG = 't_p79_crag', ROAD = 't_p79_road', FALLTEX = 't_p79_fall';
-  const BRIDGE_Y = [41, 42];
-  const STONE2 = { x: 112.5, y: 46.4 }, FIRE = { x: 25.5, y: 55.6 }, FALL = { x: 96.0, y: 17.2 };
+  const BRIDGE_Y = [Math.round(41 * K), Math.round(41 * K) + 1];
+  const TOLL = C(24.5, 55.5);                                                          // the toll-house and what stands by it
+  const STONE2 = { x: P(112.5, 46.4)[0], y: P(112.5, 46.4)[1] }, FIRE = { x: TOLL(25.5, 55.6)[0], y: TOLL(25.5, 55.6)[1] }, FALL = { x: 95.9 * K, y: SHELF[1].y + SHELF[1].ry + 0.25 };
   const inEll = (e, x, y, k) => ((x - e.x) / (e.rx * (k || 1))) ** 2 + ((y - e.y) / (e.ry * (k || 1))) ** 2 < 1;
   // where a line of points passes: a visit every `step` along it
   const along = (pts, step, fn) => { for (let i = 0; i + 1 < pts.length; i++) { const [ax, ay] = pts[i], [bx, by] = pts[i + 1], n = Math.ceil(Math.hypot(bx - ax, by - ay) / step); for (let k = 0; k <= n; k++) fn(ax + (bx - ax) * k / n, ay + (by - ay) * k / n); } };
@@ -176,7 +182,7 @@ const ROAD79 = (function () {
 
   function buildRoad(toClearing, toGreenroot) {
     const m = new GameMap(MAP, TX.name, W, H, {
-      outdoor: true, floor: 't_grass', floorTextures: ['t_grass', ROAD, 't_water', 't_shallows', 'p17c_plank', 't_moss', CRAG, FALLTEX], fogDist: 30, fogColor: [70, 76, 66],
+      outdoor: true, floor: 't_grass', floorTextures: ['t_grass', ROAD, 't_water', 't_shallows', 'p17c_plank', 't_moss', CRAG, FALLTEX], fogDist: 36, fogColor: [70, 76, 66],
       music: 'wild', danger: 1, spawn: { x: 1.6, y: GW + 0.5, dir: 0 },
     });
     m.border('t_hedge');
@@ -201,10 +207,11 @@ const ROAD79 = (function () {
     m.hill(SADDLE.x, SADDLE.y, SADDLE.rx, SADDLE.ry, SADDLE.h);
     // the road runs down a broad valley: the land climbs to a wooded rim all round, with a gap at each gate
     // (its crest stands a few paces inside the hedge, so from the valley floor the hedge is behind the skyline)
-    const rim = (x, y, i, ns) => { if (Math.hypot(x, y - GW) < 15 || Math.hypot(x - W, y - GE) < 15 || (y < 12 && x > 60 && x < 132)) return; if (rise(x, y, (ns ? 9 : 7) + h2(i, 41) * 5, (ns ? 6 : 9) + h2(i, 43) * 4, 2.8 + h2(i, 47) * 2.0)) RIM.push([x, y]); };
+    const ri = Math.round(5 * K);
+    const rim = (x, y, i, ns) => { if (Math.hypot(x, y - GW) < 15 * K || Math.hypot(x - W, y - GE) < 15 * K || (y < 12 * K && x > 60 * K && x < 132 * K)) return; if (rise(x, y, ((ns ? 9 : 7) + h2(i, 41) * 5) * K, ((ns ? 6 : 9) + h2(i, 43) * 4) * K, 3.0 + h2(i, 47) * 2.2)) RIM.push([x, y]); };
     RIM.length = 0;
-    for (let x = 4, i = 0; x < W; x += 10, i++) { rim(x + h2(i, 51) * 4, 5, i, 1); rim(x + h2(i, 53) * 4, H - 5, i + 40, 1); }
-    for (let y = 8, i = 80; y < H - 4; y += 10, i++) { rim(5, y + h2(i, 55) * 4, i, 0); rim(W - 5, y + h2(i, 57) * 4, i + 40, 0); }
+    for (let x = 4, i = 0; x < W; x += 10 * K, i++) { rim(x + h2(i, 51) * 4, ri, i, 1); rim(x + h2(i, 53) * 4, H - ri, i + 40, 1); }
+    for (let y = 8, i = 80; y < H - 4; y += 10 * K, i++) { rim(ri, y + h2(i, 55) * 4, i, 0); rim(W - ri, y + h2(i, 57) * 4, i + 40, 0); }
     // the hedge shows at the two gates; along the rim it is behind the skyline, and kept too low to stand up over it
     const lowEdge = (x, y) => { if (Math.hypot(x, y - GW) > 17 && Math.hypot(x - (W - 1), y - GE) > 17) m.block(x, y, 't_hedge', Math.min(0.9, m.groundAt(x + 0.5, y + 0.5) + 0.1), { capTex: 't_hedge' }); };
     for (let x = 0; x < W; x++) { lowEdge(x, 0); lowEdge(x, H - 1); }
@@ -222,7 +229,7 @@ const ROAD79 = (function () {
     // (where the stream comes to the lip of the Shelf it keeps its bed down the rock as white water, from the lip to the
     // pool: owner, 12 Nov, of the first Leap, which was only a picture standing in front of the cliff: "it looks like its
     // just falling from the sky")
-    for (let y = 1; y <= H - 2; y++) for (let x = 1; x <= W - 2; x++) if (m.gradeAt(x + 0.5, y + 0.5) > 0.8) { m.setFloor(x, y, run[y * W + x] ? FALLS : ROCK); wet[y * W + x] = run[y * W + x] = 0; }
+    for (let y = 1; y <= H - 2; y++) for (let x = 1; x <= W - 2; x++) { const gr = m.gradeAt(x + 0.5, y + 0.5); if (gr > 0.8 || (run[y * W + x] && gr > 0.03)) { m.setFloor(x, y, run[y * W + x] ? FALLS : ROCK); wet[y * W + x] = run[y * W + x] = 0; } }   // the stream breaks white as soon as its bed tips
     // the track, two cells wide; where it crosses the stream is the ford, and where it crosses the beck it just gets wet
     FORDC = [];
     along(ROADPTS, 0.4, (px, py) => { for (const [dx, dy] of [[0, 0], [1, 0], [0, 1], [1, 1]]) { const x = Math.floor(px - 0.5) + dx, y = Math.floor(py - 0.5) + dy; if (!inside(x, y) || beck[y * W + x]) continue;
@@ -232,31 +239,31 @@ const ROAD79 = (function () {
     a -= 1; b += 1; BANKS = [a - 1, b + 1];
     for (const y of BRIDGE_Y) for (let x = a; x <= b; x++) m.setFloor(x, y, PLANK);
     for (const x of BANKS) for (let y = BRIDGE_Y[0]; y <= BRIDGE_Y[0] + 14 && fl(x, y) !== TRACK; y++) if (!wet[y * W + x]) m.setFloor(x, y, TRACK);
-    along(PATHPTS, 0.4, (px, py) => { const x = Math.floor(px), y = Math.floor(py); if (inside(x, y) && !wet[y * W + x] && (fl(x, y) === 0 || fl(x, y) === MOSS)) m.setFloor(x, y, TRACK); });
+    along([[BANKS[0], BRIDGE_Y[0] - 0.5], PATHPTS[0]].concat(PATHPTS.slice(1)), 0.4, (px, py) => { const x = Math.floor(px), y = Math.floor(py); if (inside(x, y) && !wet[y * W + x] && (fl(x, y) === 0 || fl(x, y) === MOSS)) m.setFloor(x, y, TRACK); });
     // the ruin of the toll-house, where the road turns north: knee-high walls, a gap where the door was
-    const low = (x, y, top) => m.block(x, y, 't_stone', top, { capTex: 't_stone' });
-    for (let x = 22; x <= 27; x++) { low(x, 53, 0.34 + 0.2 * h2(x, 4)); if (x !== 25) low(x, 58, 0.3 + 0.16 * h2(x, 9)); }
-    for (let y = 54; y <= 57; y++) { low(22, y, 0.3 + 0.24 * h2(30, y)); if (y !== 56) low(27, y, 0.3 + 0.2 * h2(36, y)); }
-    low(22, 53, 0.9); low(27, 53, 0.7);                                             // two corners still stand to the chest
-    m.deco('sign', 26.4, 60.2, { radius: 0.2, scale: 0.85, label: TX.board });
-    m.deco('sign', 23.6, 55.5, { radius: 0.2, scale: 0.7, label: TX.ruin });
-    m.add({ kind: 'item', item: 'cache', tier: 1, x: 26.4, y: 54.5, sprite: 'chest', scale: 0.5, yOff: 0, solid: false, label: 'A strongbox' });
+    const low = (x, y, top) => m.block(x, y, 't_stone', m.groundAt(x + 0.5, y + 0.5) + top, { capTex: 't_stone' });
+    for (let x = 22; x <= 27; x++) { low(...TOLL(x, 53), 0.34 + 0.2 * h2(x, 4)); if (x !== 25) low(...TOLL(x, 58), 0.3 + 0.16 * h2(x, 9)); }
+    for (let y = 54; y <= 57; y++) { low(...TOLL(22, y), 0.3 + 0.24 * h2(30, y)); if (y !== 56) low(...TOLL(27, y), 0.3 + 0.2 * h2(36, y)); }
+    low(...TOLL(22, 53), 0.9); low(...TOLL(27, 53), 0.7);                           // two corners still stand to the chest
+    m.deco('sign', ...TOLL(26.4, 60.2), { radius: 0.2, scale: 0.85, label: TX.board });
+    m.deco('sign', ...TOLL(23.6, 55.5), { radius: 0.2, scale: 0.7, label: TX.ruin });
+    m.add({ kind: 'item', item: 'cache', tier: 1, x: TOLL(26.4, 54.5)[0], y: TOLL(26.4, 54.5)[1], sprite: 'chest', scale: 0.5, yOff: 0, solid: false, label: 'A strongbox' });
     m.deco('campfire', FIRE.x, FIRE.y, { radius: 0.3, scale: 0.55, glow: true, label: TX.fire, _p79: 'fire', hidden: true });
     // the half-way stone (the two end stones stand on the end stretches: js/road79b.js)
     m.deco('p20_stone', STONE2.x, STONE2.y, { radius: 0.22, scale: 0.32, solid: false, label: TX.stoneDown, use: 'p79_stone', _p79: 'stone' });
     // the ford-post, the bridge, the Leap, the mere and its eyot, the tarn, the Hang, the cairn in the Narrows
-    m.deco('p12r_post', 96.6, 48.4, { radius: 0.18, scale: 0.8, label: TX.ford, _p79: 'post' });
+    m.deco('p12r_post', ...P(96.6, 48.4), { radius: 0.18, scale: 0.8, label: TX.ford, _p79: 'post' });
     m.deco('sign', BANKS[0] - 0.4, BRIDGE_Y[0] - 0.6, { radius: 0.2, scale: 0.7, label: TX.bridge });
     m.deco('p79_fall0', FALL.x, FALL.y, { radius: 0.2, scale: 1.25, solid: false, _p79: 'fall' });   // spray at the foot of the fall
-    m.deco('sign', 91.4, 22.4, { radius: 0.2, scale: 0.75, label: TX.leap, _p79: 'leap' });
-    m.deco('sign', 122.4, 56.5, { radius: 0.2, scale: 0.75, label: TX.mere });
+    m.deco('sign', ...P(91.4, 22.4), { radius: 0.2, scale: 0.75, label: TX.leap, _p79: 'leap' });
+    m.deco('sign', ...P(122.4, 56.5), { radius: 0.2, scale: 0.75, label: TX.mere });
     m.add({ kind: 'item', item: 'cache', tier: 1, x: EYOT.x + 0.9, y: EYOT.y + 0.6, sprite: 'chest', scale: 0.5, yOff: 0, solid: false, label: 'A strongbox' });   // for whoever finds the stones
     m.deco('willow', EYOT.x - 1.0, EYOT.y + 0.2, { radius: 0.4, scale: 1.7 });
-    m.deco('sign', 36.4, 74.6, { radius: 0.2, scale: 0.75, label: TX.tarn });
-    m.deco('sign', 143.4, 41.6, { radius: 0.2, scale: 0.75, label: TX.hang });
-    m.deco('p79_cairn', 150.2, 27.4, { radius: 0.5, scale: 0.9, label: TX.cairn });
+    m.deco('sign', ...P(36.4, 74.6), { radius: 0.2, scale: 0.75, label: TX.tarn });
+    m.deco('sign', ...P(143.4, 41.6), { radius: 0.2, scale: 0.75, label: TX.hang });
+    m.deco('p79_cairn', ...P(150.2, 27.4), { radius: 0.5, scale: 0.9, label: TX.cairn });
     // the great oak on Oak Hill
-    m.deco('oak', 60.5, 27.6, { radius: 0.6, scale: 2.4, label: TX.oak, _p79: 'oak' });
+    m.deco('oak', ...P(60.5, 27.6), { radius: 0.6, scale: 2.4, label: TX.oak, _p79: 'oak' });
     // scree: fallen rock round the feet of the crags
     const open = (x, y) => inside(x, y) && !m.get(x, y) && fl(x, y) === 0;
     for (const c of CRAGS) for (let y = Math.floor(c.y - c.ry * 1.3); y <= c.y + c.ry * 1.3; y++) for (let x = Math.floor(c.x - c.rx * 1.3); x <= c.x + c.rx * 1.3; x++) {
@@ -268,7 +275,8 @@ const ROAD79 = (function () {
     // trees. The books: "the iron-bark oaks on either side" of the road; then copses with fern under them, willows by
     // the water, and thorns on the tops where nothing else will stand
     const lawn = (x, y) => open(x | 0, y | 0) && m.gradeAt(x, y) < 0.7;
-    const room = (x, y, r) => !(x > 20 && x < 30 && y > 51 && y < 60) && !m.entities.some((e) => Math.hypot(e.x - x, e.y - y) < r);
+    const [tx0, ty0] = TOLL(20, 51), [tx1, ty1] = TOLL(30, 60);
+    const room = (x, y, r) => !(x > tx0 && x < tx1 && y > ty0 && y < ty1) && !m.entities.some((e) => Math.hypot(e.x - x, e.y - y) < r);
     let k = 0, due = 2;
     for (let i = 0; i + 1 < ROADPTS.length; i++) { const [ax, ay] = ROADPTS[i], [bx, by] = ROADPTS[i + 1], L = Math.hypot(bx - ax, by - ay), nx = -(by - ay) / L, ny = (bx - ax) / L;
       for (; due <= L; due += 3.7) for (const side of [-1, 1]) { k++; const off = 2.7 + h2(k, 7) * 1.2, t = due + (h2(k, 9) - 0.5) * 1.6, ox = ax + (bx - ax) * t / L + nx * off * side, oy = ay + (by - ay) * t / L + ny * off * side;
@@ -288,8 +296,8 @@ const ROAD79 = (function () {
       const c = CRAGS[i % CRAGS.length], ox = c.x + (h2(i, 91) - 0.5) * c.rx * 1.1, oy = c.y + (h2(i, 97) - 0.5) * c.ry * 1.1;
       if (inside(ox | 0, oy | 0) && inEll(c, ox, oy, 0.62) && !m.get(ox | 0, oy | 0) && fl(ox | 0, oy | 0) === 0 && room(ox, oy, 2)) m.deco(Engine.sprites && Engine.sprites.p20_thorn ? 'p20_thorn' : 'oak', ox, oy, { radius: 0.3, scale: 0.9 + h2(i, 3) * 0.4 });
     }
-    RIM.forEach(([cx, cy], ci) => { for (let i = 0; i < 7; i++) {                       // the rim is wooded
-      const ox = cx + (h2(ci * 13 + i, 71) - 0.5) * 16, oy = cy + (h2(ci * 19 + i, 73) - 0.5) * 12;
+    RIM.forEach(([cx, cy], ci) => { for (let i = 0; i < 9; i++) {                       // the rim is wooded
+      const ox = cx + (h2(ci * 13 + i, 71) - 0.5) * 16 * K, oy = cy + (h2(ci * 19 + i, 73) - 0.5) * 12 * K;
       if (lawn(ox, oy) && roadNear(ox, oy) > 5 && room(ox, oy, 2.3)) m.deco('oak', ox, oy, { radius: 0.45, scale: 1.6 + h2(ci, i + 31) * 0.9 });
     } });
     m.baseCount = m.entities.length;
@@ -350,9 +358,9 @@ const ROAD79 = (function () {
   const st = (from, to, job, at, x) => Object.assign({ from, to, job, at }, x || {});
   const ROSTER = [
     { key: 'rd_mender', name: TX.mender, sprite: 'p60_man_b', home: [1.6, GW + 0.5],
-      day: [st(7, 12, 'rake', [95.5, 51.4]), st(12, 13, 'sit', [94.5, 48.4]), st(13, 18, 'rake', [102.5, 51.4]), { from: 18, to: 7, job: 'home' }],
+      day: [st(7, 12, 'rake', P(95.5, 51.4)), st(12, 13, 'sit', P(94.5, 48.4)), st(13, 18, 'rake', P(102.5, 51.4)), { from: 18, to: 7, job: 'home' }],
       greet: TX.menderGreet, work: TX.menderWork, place: TX.menderPlace, barks: [TX.menderBark] },
-    { key: 'rd_drover', name: TX.drover, sprite: 'p60_man_c', home: [28.5, 61.5],
+    { key: 'rd_drover', name: TX.drover, sprite: 'p60_man_c', home: P(28.5, 61.5),
       day: [st(20, 24, 'sit', [FIRE.x + 1.0, FIRE.y + 0.3]), st(0, 5, 'sit', [FIRE.x + 1.0, FIRE.y + 0.3]), { from: 5, to: 20, job: 'home' }],
       greet: TX.droverGreet, work: TX.droverWork, place: TX.droverPlace, barks: [TX.droverBark] },
   ];
@@ -372,7 +380,7 @@ const ROAD79 = (function () {
       try { if (join(maps) && typeof FLORA !== 'undefined' && FLORA.place) FLORA.place({ [MAP]: maps[MAP] }); } catch (e) { if (typeof console !== 'undefined') console.warn('road79', e); }
       return maps;
     };
-    try { if (typeof FLORA !== 'undefined' && FLORA.PLANS && !FLORA.PLANS[MAP]) FLORA.PLANS[MAP] = { grass: 760, reed: 44 }; } catch (e) { /* no grass */ }
+    try { if (typeof FLORA !== 'undefined' && FLORA.PLANS && !FLORA.PLANS[MAP]) FLORA.PLANS[MAP] = { grass: 1450, reed: 80 }; } catch (e) { /* no grass */ }
     try { if (typeof LIFE60 !== 'undefined' && LIFE60.add) LIFE60.add(MAP, ROSTER, {}); } catch (e) { /* nobody on the road */ }
   }
   if (typeof useDeco === 'function') { const _ud = useDeco; useDeco = function (e) { try { if (useOwn(e)) return undefined; } catch (err) { /* fall through */ } return _ud.apply(this, arguments); }; }
@@ -382,7 +390,7 @@ const ROAD79 = (function () {
   if (typeof update === 'function') { const _u = update; update = function () { const r = _u.apply(this, arguments); try { sync(); } catch (e) { /* next frame */ } return r; }; }
   else if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook(() => { try { sync(); } catch (e) { /* next frame */ } }, 30);
 
-  return { MAP, W, H, GW, GE, TX, TEXTS, ROSTER, ROADPTS, STREAMPTS, BECKPTS, MERE, TARN, POOL, EYOT, HANG, LITTLE, SHELF, OAKHILL, buildRoad, join, sync, useOwn, util: { h2, along, inEll, hour, night, wet }, CRAG, ROAD, paintFall, paintCrag, paintRoad, paintRock, paintCairn, fordCells: () => FORDC.map((c) => c.slice()), banks: () => BANKS.slice(), BRIDGE_Y, STONE2, FIRE, FALL };
+  return { MAP, W, H, GW, GE, TX, TEXTS, ROSTER, ROADPTS, STREAMPTS, BECKPTS, MERE, TARN, POOL, EYOT, HANG, LITTLE, SHELF, OAKHILL, K, P, buildRoad, join, sync, useOwn, util: { h2, along, inEll, hour, night, wet }, CRAG, ROAD, paintFall, paintCrag, paintRoad, paintRock, paintCairn, fordCells: () => FORDC.map((c) => c.slice()), banks: () => BANKS.slice(), BRIDGE_Y, STONE2, FIRE, FALL };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = ROAD79;
 if (typeof window !== 'undefined') window.ROAD79 = ROAD79;

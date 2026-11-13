@@ -146,3 +146,7 @@ French place names used: la Longue Commune, la Carrière (the Delph), la Futaie 
 | 18 | Ash, shod with iron at both ends, the grip worn to a hand that is not yours. Iron bites the Quiet, and this makes very little noise about it. | Du frêne, ferré aux deux bouts, la prise usée à la forme d'une main qui n'est pas la vôtre. Le fer mord le Calme, et celui-ci le fait sans grand bruit. |
 | 19 | Bearer's Gloves | Gants de porteur |
 | 20 | Grey kid lined with hush-cloth. The ones who carried the dead down wore them, so that nothing they touched would ring. | Chevreau gris doublé d'étoffe sourde. Ceux qui descendaient les morts les portaient, pour que rien de ce qu'ils touchaient ne sonne. |
+| 21 | The Long Rest | Le Long Silence |
+| 22 | The Long Rest: the silence at the end of every song sung under this hill, kept. It has the shape of a singer with the mouth left out. | Le Long Silence : le silence qui vient à la fin de chaque chant chanté sous cette colline, gardé. Il a la forme d'un chantre dont on aurait oublié la bouche. |
+
+**Added 13 Nov, [PROPOSED]:** the Howe's keeper is named **the Long Rest** (a rest being the silence written into music): a Quiet in kind, with 110 health where a Quiet has 40 and a heavier hand (7 to 13), worth 160 XP. Lines 21 and 22 above.

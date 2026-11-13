@@ -44,6 +44,11 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const has = (id) => (G.player.inv || []).some((s) => s && s.id === id) || (G.player.weapons || []).includes(String(id).replace(/^w_/, ''));
     for (const e of G.ents.filter((x) => x.item === 'w_p79_staff' || x.item === 'a_p79_gloves')) pickUp(e);
     out.taken = has('w_p79_staff') && has('a_p79_gloves');
+    // the keeper
+    loadMap(HW.MAP, {}); G.state = 'play'; G.flags.p79_rest_seen = 0; HW.sync(); const kp = G.ents.find((e) => e._p79h === 'keeper');
+    out.keeper = !!kp && kp.type === 'quiet' && kp.def.quiet === true && kp.def.name === 'The Long Rest' && kp.hpMax === 110 && kp.hp === 110 && kp.scale > 1.3 && ENEMIES.quiet.name === 'A Quiet' && ENEMIES.quiet.hp === 40;
+    kp.hp = 37; loadMap(HW.MAP, {}); HW.sync(); const kp2 = G.ents.find((e) => e._p79h === 'keeper'); out.keeperOnce = kp2.hpMax === 110;
+    Engine.cam.x = 22.5; Engine.cam.y = 20; HW.sync(); const before = !G.flags.p79_rest_seen; Engine.cam.y = 4; HW.sync(); out.seen = before && G.flags.p79_rest_seen === 1; G.flags.p79_rest_seen = 0;
     out.texts = HW.TEXTS.length;
     G.flags.p79_graves = 0; G.flags.p79_howe_open = 0; G.flags.p79_words = 0;
     return out;
@@ -55,6 +60,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   check(r.one && r.two && r.three, 'a stone on the stone: each grave takes one stone once, and the third opens the inner door');
   check(r.behind, 'behind it: the Quiet, the singers\' shelf and the best strongbox, all reachable once it is open');
   check(r.staff && r.gloves && r.taken, 'special gear: the Old Cantor\'s Staff (iron and blunt, a long reach, and quieter than every other long weapon) and the Bearer\'s Gloves (as stout as mail, and quieter than bare hands), both of which you can take');
+  check(r.keeper && r.keeperOnce && r.seen, 'the keeper has a name: the Long Rest, a Quiet in kind (so iron bites it) with 110 health where a Quiet has 40, announced the first time you stand in its chamber; the ordinary Quiet is unchanged');
   check(r.words, 'the words over the inner door can be read and remembered, for the antiquary\'s book');
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors[0] : ''));
   await browser.close();
