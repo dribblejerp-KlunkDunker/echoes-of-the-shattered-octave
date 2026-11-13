@@ -10,6 +10,9 @@ const URL = process.env.PREVIEW_URL || 'http://127.0.0.1:3000';
 async function boot(browser) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
   const errors = []; page.on('pageerror', e => errors.push(e.message));
+  // Phase 76 (js/paintfolk76.js) gives every figure its moving painting, which stands in for the older art this suite
+  // checks; that art is still what draws with the switch off, so the suite holds the switch off.
+  await page.addInitScript(() => { setInterval(() => { try { if (typeof GFX !== 'undefined' && GFX.paintfolk) GFX.paintfolk = false; } catch (e) { /* not yet */ } }, 5); });
   await page.goto(URL);
   await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && G.state === 'title' && typeof TOWNSFOLK !== 'undefined');
   await page.locator('#btn-new').click(); await page.locator('#cname').fill('Folk Tester');

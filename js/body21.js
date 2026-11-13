@@ -385,6 +385,11 @@ const BODY21 = (() => {
         if (k === K.METAL || k === K.BRASS) return { c: onRamp(rp(C.head), t * 1.04) };
         if (k === K.WOOD) return { c: onRamp(rp(C.grip), t * PATTERN.grain(x, y)) };
         return null;
+      // Phase 79 (js/howe79.js): the Old Cantor's Staff, ash shod with grey iron where the spear has bronze
+      case 'p79_staff':
+        if (k === K.METAL || k === K.BRASS) return { c: onRamp(rp(C.head), t * 0.92) };
+        if (k === K.WOOD) return { c: onRamp(rp(C.grip), t * PATTERN.grain(x, y)) };
+        return null;
       case 'p22_shears':
         if (k === K.METAL) return { c: onRamp(rp(C.blade), t * 0.94) };
         if (k === K.WOOD) return { c: onRamp(rp(C.grip), t) };

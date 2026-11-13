@@ -74,6 +74,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     out.mothsDay = moths.length === 5 && moths.every((e) => e.hidden); G.tod = 0.93; counted(() => { for (let i = 0; i < 10; i++) B.sync(1 / 30); }); out.mothsNight = moths.every((e) => !e.hidden) && /Hush-moths/.test(ent('lantern').label); G.tod = 0.45; B.sync(0);
     G.flags.p79_words = 0; useDeco(book); out.bookEmpty = !G.flags.p79_words; G.flags.p79_words = 1; useDeco(book); out.bookPaid = G.flags.p79_words === 2 && G.player.gold > gold0 && /LEAVE IT SHUT/.test(book.label); G.flags.p79_words = 0;
     counted(() => { B.buildStage(B.SPW, { map: 'clearing', x: 1, y: 1, dir: 0 }, { map: 'greenroot', x: 1, y: 1, dir: 0 }); B.buildStage(B.SPE, { map: 'clearing', x: 1, y: 1, dir: 0 }, { map: 'greenroot', x: 1, y: 1, dir: 0 }); HOWE79.build({ map: B.EAST, x: 1, y: 1, dir: 0 }); }); out.noRandom = calls === 0;
+    // after the Greening the road is under the green: nobody is left standing on it
+    G.flags.greening = 1; out.greened = B.MINE.map((id) => { loadMap(id, {}); return G.mapId; }).join(','); G.flags.greening = 0; loadMap(B.WEST, {}); out.back = G.mapId;
+    G.state = 'play'; let tr = ''; try { tr = String(travelBlocked()); travelOpen(); tr += '|' + (TRAVEL.dests || []).length; closeModal(); } catch (e) { tr = 'ERR ' + e.message; } out.travel = tr;
     out.texts = B.TEXTS.length;
     return out;
   });
@@ -100,6 +103,8 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   check(r.bookEmpty && r.bookPaid, 'the antiquary\'s task: nothing to write until you have read the words below; then it is written, paid for, and remembered');
   check(r.glass && r.bellOak && r.reedrow >= 4, 'a fantasy element on each stretch: glass through the Delph\'s rock that gives its own light and burns brighter after dark; the Bell Oak, five men high, in its stand; an old reed-row of ' + r.reedrow + ' poles up to the lych-house');
   check(r.grown >= 1.3 && G_W(r) && true, 'room to breathe: each new stretch is its working plan grown ' + r.grown + ' times, with built things kept their own size');
+  check(r.greened === 'clearing,clearing,clearing,clearing' && r.back === 'p79_road_w', 'after the Greening the road is under the green: a save made on any stretch or in the Howe comes back by the clearing\'s hedge (and before it, the road loads as itself)');
+  check(/^null\|[1-9]/.test(r.travel), 'the world map opens on the road and offers the way home (' + r.travel + ')');
   check(r.noRandom, "none of it draws on the game's random numbers (building both stretches and the Howe included)");
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors[0] : ''));
   await browser.close();

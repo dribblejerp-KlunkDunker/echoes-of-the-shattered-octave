@@ -144,6 +144,7 @@ const GEARLOOK21 = (() => {
     // hands
     a_gloves: F({ id: 'a_gloves', slot: 'hands', material: 'leather', shape: 'gloves', pattern: 'grain', col: C([112, 74, 46], [74, 46, 28], [150, 106, 70]), notes: 'work gloves, a cuff over the wrist' }),
     a_gauntlets: F({ id: 'a_gauntlets', slot: 'hands', material: 'mail', shape: 'gauntlets', pattern: 'mail', col: C([140, 148, 152], [84, 92, 102], [204, 208, 208], [40, 44, 52], [100, 70, 46]), notes: 'mail backs on leather palms (trim = the palm leather), a flared cuff' }),
+    a_p79_gloves: F({ id: 'a_p79_gloves', slot: 'hands', material: 'leather', shape: 'gloves', pattern: 'grain', col: C([154, 150, 143], [104, 100, 94], [196, 192, 184]), notes: 'grey kid lined with hush-cloth: the Bearer\'s Gloves, from Singers\' Howe (Phase 79)' }),
     // feet
     a_p22_droverboots: F({ id: 'a_p22_droverboots', slot: 'feet', material: 'leather', shape: 'hobnails', pattern: 'grain', col: C([70, 50, 34], [46, 32, 20], [104, 78, 54]), notes: 'long greased drove-road boots [PROPOSED] (Phase 22b)' }),
     a_softboots: F({ id: 'a_softboots', slot: 'feet', material: 'felt', shape: 'softboots', pattern: 'none', col: C([96, 82, 66], [64, 54, 42], [130, 114, 92]), notes: 'felt-soled, ankle-high, wrapped with a thong' }),
@@ -188,6 +189,7 @@ const GEARLOOK21 = (() => {
     p12_glassblade: W('p12_glassblade', 'greatsword', 'two', 'glass', 14, { blade: [150, 214, 222], edge: [214, 250, 248], grip: [58, 46, 40], guard: [130, 134, 140] }, 'fp_longsword', 'a corsair\'s two-handed blade, the edge ground from salvaged Aether-Glass'),
     p12_bellglaive: W('p12_bellglaive', 'glaive', 'two', 'bellbronze', 22, { blade: [180, 146, 76], edge: [232, 206, 134], grip: [120, 88, 56], head: [180, 146, 76] }, 'fp_spear', 'a curved bell-bronze blade on a six-foot shaft'),
     p22_crook: W('p22_crook', 'spear', 'two', 'wood', 22, { blade: [206, 190, 150], edge: [234, 222, 190], grip: [124, 92, 58], head: [206, 190, 150] }, 'fp_spear', 'an ash crook with a horn head [PROPOSED] (Phase 22b)'),
+    p79_staff: W('p79_staff', 'spear', 'two', 'wood', 22, { blade: [150, 156, 160], edge: [208, 212, 214], grip: [124, 92, 58], head: [150, 156, 160] }, 'fp_spear', 'an ash staff shod with iron at both ends: the Old Cantor\'s Staff, from Singers\' Howe (Phase 79)'),
     p22_shears: W('p22_shears', 'knife', 'one', 'steel', 3.5, { blade: [170, 176, 180], edge: [226, 230, 232], grip: [110, 80, 50], guard: [110, 80, 50] }, 'fp_knife', 'sheep-shears, the bow filed sharp [PROPOSED] (Phase 22b)'),
     p22_leafblade: W('p22_leafblade', 'sword', 'one', 'bellbronze', 8, { blade: [186, 150, 80], edge: [236, 210, 140], grip: [90, 64, 40], guard: [160, 124, 60] }, 'fp_sword', 'a leaf-shaped bronze sword from a barrow grave [PROPOSED] (Phase 22b)'),
     p12_dirk: W('p12_dirk', 'dirk', 'one', 'steel', 4, { blade: [164, 170, 176], edge: [224, 228, 230], grip: [80, 56, 36], guard: [126, 118, 104] }, 'fp_knife', 'a stiff dirk with a basket hilt (guard)'),

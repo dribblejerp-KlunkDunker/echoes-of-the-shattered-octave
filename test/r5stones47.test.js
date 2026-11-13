@@ -64,7 +64,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const ways = await page.evaluate(() => {
       const S = STONES47, out = {};
       out.gap = T.portalAt('clearing', S.GAP[0], S.GAP[1]) === S.MAP && /standing-stones/.test(G.maps.clearing.get(S.GAP[0], S.GAP[1]).label);
-      out.road = T.portalAt('clearing', 39, 33) === 'greenroot';
+      out.road = T.portalAt('clearing', 39, 33) === 'p79_road_w';   // Phase 79: the road is a place now, and begins with the Long Common
       out.back = T.portalAt(S.MAP, 0, 15) === 'clearing';
       const into = []; for (const id in G.maps) { if (id === S.MAP) continue; for (const c of G.maps[id].cells) if (c && c.portal && c.portal.map === S.MAP) into.push(id); }
       out.only = into.length === 1 && into[0] === 'clearing';

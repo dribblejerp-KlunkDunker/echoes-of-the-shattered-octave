@@ -17,7 +17,7 @@
 //    the task     the antiquary camped above wants the words cut over the inner door written in her field-book.
 //  Canon used: Cantors sing the dead into the ground; the Dirge; the Quiet and iron; graves marked with a reed; a stone on
 //  the tongue and a stone on the stone (already in the game's Book Four prologue). The Howe itself, its rooms, the words
-//  and the two pieces of gear are [PROPOSED].
+//  and the two pieces of gear were [PROPOSED] and approved by the owner on 13 Nov.
 //
 //  Flags: p79_graves (a bit for each grave set), p79_howe_open (1 once all three are), p79_words (1 once read).
 // ============================================================
@@ -56,6 +56,25 @@ const HOWE79 = (function () {
     if (!ITEMS.w_p79_staff) ITEMS.w_p79_staff = { name: TX.staff, sprite: 'gear', weapon: 'p79_staff', value: 90, desc: TX.staffDesc };
     if (!ITEMS.a_p79_gloves) ITEMS.a_p79_gloves = { name: TX.gloves, slot: 'hands', ar: 3, noise: -0.2, value: 48, desc: TX.glovesDesc };
   }
+
+  // their pictures in the pack (js/icons.js: every item has a hand-built pixel icon)
+  try { if (typeof ICONS !== 'undefined' && ICONS.PIX && ICONS.C_PX && !Object.prototype.hasOwnProperty.call(ICONS.PIX, 'weapon:p79_staff')) {
+    const C = ICONS.C_PX;
+    const staff = (d) => {   // Old Cantor's Staff: ash, shod with iron at both ends, a grip worn dark
+      d.tilt(12, 12);
+      d.layer(C.ash).rrect(-1, -12, 2, 24);
+      d.layer(C.iron, { shiny: 1 }).rrect(-1.5, -14, 3, 3.4).rrect(-1.5, 10.6, 3, 3.4);
+      d.layer(C.dleather).rrect(-1.3, -2.5, 2.6, 6);
+      d.mark('#e6ecee', 20, 2);
+    };
+    ICONS.PIX['weapon:p79_staff'] = staff; ICONS.PIX.w_p79_staff = staff;
+    ICONS.PIX.a_p79_gloves = (d) => {   // Bearer's Gloves: grey kid, a hush-cloth cuff
+      const g = (x) => d.layer('#9a968f', { shiny: 1 }).rect(x, 9, 6, 7).rect(x, 4, 1, 6).rect(x + 2, 3, 1, 6).rect(x + 4, 4, 1, 6).rect(x + 5, 6, 1, 4).rect(x - 1, 10, 1, 4);
+      g(4); g(13);
+      d.layer('#4a6b62').rect(3, 16, 8, 5).rect(12, 16, 8, 5);
+      d.layer('#223630').rect(3, 16, 8, 1).rect(12, 16, 8, 1);
+    };
+  } } catch (e) { /* the pack shows them without a picture */ }
 
   function build(up) {
     const m = new GameMap(MAP, TX.name, W, H, { floor: 't_flag', floorTextures: ['t_flag', 't_shallows', 't_water'], ceil: 't_stone', fogDist: 10, ambient: 0.08, fogColor: [12, 12, 16], music: 'root', danger: 1, spawn: { x: 22.5, y: 33.4, dir: -PI / 2 } });

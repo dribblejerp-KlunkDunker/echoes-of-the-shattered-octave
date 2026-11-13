@@ -22,7 +22,7 @@
 //               waded: the plank bridge upstream is the way over (it is always there: nobody can be shut in), and the
 //               Leap comes down brown and twice its width.
 //  Canon: the road and its iron-bark oaks ("it lay on the road and on the iron-bark oaks on either side"), which ring in
-//  the wind; the two days' walk. Everything else here is [PROPOSED] and is in story/Game Layer/Phase 79.
+//  the wind; the two days' walk. Everything else here was [PROPOSED], is in story/Game Layer/Phase 79, and was approved by the owner on 13 Nov.
 //
 //  ROAD79.MAP            'p79_greenroad'
 //  ROAD79.sync()         sets the ford, the fire and the Leap for the weather and the hour (called every frame on the road)

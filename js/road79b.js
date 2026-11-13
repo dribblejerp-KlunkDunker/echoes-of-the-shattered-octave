@@ -27,7 +27,7 @@
 //    a band of three who went to Greenroot and turned back, one day in three: west along all three stretches.
 //  Canon: Greenroot is found empty ("Tables laid, doors shut, kettles cold, and nobody"; the boots on the step; the
 //  hush-lamp still burning), so nobody on this road has come from there with good news; noise brings the hounds; the
-//  oaks ring; hush-lamps keep a street from going silent; hush-moths eat the light first. Everything else is [PROPOSED].
+//  oaks ring; hush-lamps keep a street from going silent; hush-moths eat the light first. Everything else was [PROPOSED] and approved by the owner on 13 Nov.
 //
 //  Flags: p79_lamp (0, 1 = you carry the oil-can, 2 = the lamp is filled), p79_words (set in the Howe; 2 once written in
 //  the field-book). No random numbers (the hounds that noise brings are the game's own).
@@ -479,10 +479,16 @@ const ROAD79B = (function () {
     try { if (typeof LIFE60 !== 'undefined' && LIFE60.add) for (const id of [WEST, MID, EAST]) LIFE60.add(id, ROSTERS[id], { walk }); } catch (e) { /* nobody on the road */ }
   }
   if (typeof useDeco === 'function') { const _ud = useDeco; useDeco = function (e) { try { if (useOwn(e)) return undefined; } catch (err) { /* fall through */ } return _ud.apply(this, arguments); }; }
-  if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function () { const r = _l.apply(this, arguments); try { lastKey = ''; warned = false; sync(0); } catch (e) { /* next frame */ } return r; }; }
+  // After the Greening the hedge grows across the old cart-road and "whatever road ran east of here is under the green
+  // now" (js/parish.js shuts the clearing's door for good and puts a save made in Greenroot back in the clearing). The
+  // road is that road: a save made anywhere on it, or in the Howe, comes back to the same place by the hedge.
+  const MINE = [WEST, MID, EAST, HOWE], greened = () => typeof G !== 'undefined' && !!G.flags && !!G.flags.greening;
+  if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function (id) {
+    if (MINE.indexOf(id) >= 0 && greened()) { const cl = G.maps && G.maps.clearing; if (cl && cl._p9pRoad) return _l.call(this, 'clearing', { x: cl.w - 2.4, y: cl._p9pRoad.y + 0.5, dir: PI }); }
+    const r = _l.apply(this, arguments); try { lastKey = ''; warned = false; sync(0); } catch (e) { /* next frame */ } return r; }; }
   if (typeof update === 'function') { const _u = update; update = function (dt) { const r = _u.apply(this, arguments); try { sync(dt); } catch (e) { /* next frame */ } return r; }; }
 
-  return { WEST, EAST, MID, HOWE, K, TX, TEXTS, SPW, SPE, STAND, CAMP, RUIN, HOWE_UP, ROSTERS, STOPS, buildStage, join, sync, useOwn, walkGrid };
+  return { WEST, EAST, MID, HOWE, MINE, K, TX, TEXTS, SPW, SPE, STAND, CAMP, RUIN, HOWE_UP, ROSTERS, STOPS, buildStage, join, sync, useOwn, walkGrid };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = ROAD79B;
 if (typeof window !== 'undefined') window.ROAD79B = ROAD79B;

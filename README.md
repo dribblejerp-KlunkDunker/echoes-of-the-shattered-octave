@@ -192,7 +192,7 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 - **Kaelen and Lyra,** who travel with you, talk on the road, flinch, limp and sing.
 - **A world that moves:** weather and a sky on the world clock, smoking chimneys, crows, swinging bells, rising portcullises and water that reflects.
 - **The Library of the Reach:** 65 books from inside the world, in four libraries.
-- Loot tables for enemies and 32 strongboxes hidden around the world.
+- Loot tables for enemies and 40 strongboxes hidden around the world.
 - An original orchestral score and recorded voices, a French translation, accessibility options, photo mode, a speedrun timer and data-only mod dungeons.
 - Save slots, save codes and save files; offline play once installed; two-player co-op; a desktop build.
 
