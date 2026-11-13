@@ -132,7 +132,11 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 <p align="center"><img src="screenshots/road79/plan-whole-road.jpg" alt="A plan of the whole Greenroot road: the Long Common, the middle stretch and Greenroot Wood, with every place on them named" width="92%"></p>
 
-More pictures of this build: [`screenshots/eaves78/`](screenshots/eaves78) (every region's buildings), [`screenshots/paintfolk76/`](screenshots/paintfolk76), [`screenshots/walls77/`](screenshots/walls77), [`screenshots/road79/`](screenshots/road79).
+**What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
+
+<p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>
+
+More pictures of this build: [`screenshots/eaves78/`](screenshots/eaves78) (every region's buildings), [`screenshots/paintfolk76/`](screenshots/paintfolk76), [`screenshots/walls77/`](screenshots/walls77), [`screenshots/road79/`](screenshots/road79), [`screenshots/world81/`](screenshots/world81).
 
 ## The world
 
