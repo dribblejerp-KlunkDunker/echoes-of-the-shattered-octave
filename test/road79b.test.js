@@ -77,6 +77,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     // after the Greening the road is under the green: nobody is left standing on it
     G.flags.greening = 1; out.greened = B.MINE.map((id) => { loadMap(id, {}); return G.mapId; }).join(','); G.flags.greening = 0; loadMap(B.WEST, {}); out.back = G.mapId;
     G.state = 'play'; let tr = ''; try { tr = String(travelBlocked()); travelOpen(); tr += '|' + (TRAVEL.dests || []).length; closeModal(); } catch (e) { tr = 'ERR ' + e.message; } out.travel = tr;
+    out.cards = [B.WEST, B.MID, B.EAST, B.HOWE].map((id) => SCREENS.familyFor(id)).join(',') + '|' + ['p79_common', 'p79_road', 'p79_wood'].filter((k) => { const c = SCREENS.caches.area[k]; return c && c.width === 320 && c.height === 200; }).length;
     out.texts = B.TEXTS.length;
     return out;
   });
@@ -105,6 +106,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   check(r.grown >= 1.3 && G_W(r) && true, 'room to breathe: each new stretch is its working plan grown ' + r.grown + ' times, with built things kept their own size');
   check(r.greened === 'clearing,clearing,clearing,clearing' && r.back === 'p79_road_w', 'after the Greening the road is under the green: a save made on any stretch or in the Howe comes back by the clearing\'s hedge (and before it, the road loads as itself)');
   check(/^null\|[1-9]/.test(r.travel), 'the world map opens on the road and offers the way home (' + r.travel + ')');
+  check(r.cards === 'p79_common,p79_road,p79_wood,crypt|3', 'each stretch has its own arrival card, painted here, and the Howe arrives as a crypt (' + r.cards + ')');
   check(r.noRandom, "none of it draws on the game's random numbers (building both stretches and the Howe included)");
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors[0] : ''));
   await browser.close();

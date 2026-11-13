@@ -466,7 +466,56 @@ const ROAD79B = (function () {
     return false;
   }
 
+  // ---------------------------------------------------------------- the arrival cards (js/screens.js), one painting a stretch
+  function paintCards() {
+    if (typeof SCREENS === 'undefined' || !SCREENS.FAMILY || !SCREENS.caches || !SCREENS.caches.area || typeof document === 'undefined') return;
+    const A = SCREENS.caches.area; if (A.p79_common) return;
+    const mk = (fn) => { const c = document.createElement('canvas'); c.width = 320; c.height = 200; const x = c.getContext('2d'); fn(x);
+      for (let i = 0; i < 1100; i++) { x.fillStyle = h2(i, 3) < 0.5 ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.07)'; x.fillRect(Math.floor(h2(i, 7) * 320), Math.floor(h2(i, 11) * 200), 1 + (i % 2), 1); }   // the grain every card has
+      const v = x.createRadialGradient(160, 100, 60, 160, 100, 210); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.55)'); x.fillStyle = v; x.fillRect(0, 0, 320, 200); return c; };
+    const sky = (x, stops) => { const g = x.createLinearGradient(0, 0, 0, 130); stops.forEach(([t, c]) => g.addColorStop(t, c)); x.fillStyle = g; x.fillRect(0, 0, 320, 200); };
+    const poly = (x, col, pts) => { x.fillStyle = col; x.beginPath(); x.moveTo(pts[0], pts[1]); for (let i = 2; i < pts.length; i += 2) x.lineTo(pts[i], pts[i + 1]); x.closePath(); x.fill(); };
+    const ridge = (x, col, y0, amp, seed) => { x.fillStyle = col; x.beginPath(); x.moveTo(0, 200); for (let i = 0; i <= 32; i++) x.lineTo(i * 10, y0 - amp * (0.5 + 0.5 * Math.sin(i * 0.7 + seed)) - amp * 0.4 * h2(i, seed * 10 | 0)); x.lineTo(320, 200); x.fill(); };
+    const road = (x, col, pts) => { x.fillStyle = col; x.beginPath(); x.moveTo(pts[0][0] - pts[0][2], pts[0][1]); for (const [cx, cy, w] of pts) x.lineTo(cx - w, cy); for (const [cx, cy, w] of pts.slice().reverse()) x.lineTo(cx + w, cy); x.closePath(); x.fill(); };
+    const tree = (x, cx, by, hgt, leaf, dark) => { x.fillStyle = '#2a2018'; x.fillRect(cx - hgt * 0.05, by - hgt * 0.5, hgt * 0.1, hgt * 0.5); for (let i = 0; i < 9; i++) { x.fillStyle = i % 3 ? leaf : dark; x.beginPath(); x.arc(cx + (h2(i, by | 0) - 0.5) * hgt * 0.7, by - hgt * (0.5 + h2(i, 77) * 0.5), hgt * (0.16 + h2(i, 5) * 0.1), 0, 7); x.fill(); } };
+    // the Long Common: open moor, a tor, the road, the Bell Oak in bronze leaf, a glint of glass
+    A.p79_common = mk((x) => {
+      sky(x, [[0, '#7f9bb4'], [0.7, '#cfd6c4'], [1, '#e6dfc0']]); ridge(x, '#8a9a94', 112, 14, 1.3); ridge(x, '#6f8468', 124, 10, 2.9);
+      poly(x, '#6c6a66', [86, 118, 96, 92, 112, 84, 130, 90, 140, 118]); poly(x, '#8a8780', [98, 116, 104, 94, 114, 88, 120, 116]);
+      x.fillStyle = '#57703f'; x.fillRect(0, 122, 320, 78); ridge(x, '#4c6638', 150, 8, 4.4);
+      road(x, '#b09a72', [[150, 200, 46], [172, 170, 24], [150, 148, 12], [170, 132, 5], [164, 123, 2]]);
+      tree(x, 258, 168, 120, '#b0703a', '#7e4a26'); tree(x, 226, 160, 46, '#8e5a30', '#6a4020'); tree(x, 292, 164, 52, '#96602f', '#6a4020');
+      for (const [gx, gy, gh] of [[34, 176, 16], [46, 180, 24], [58, 178, 12], [22, 184, 10]]) { poly(x, '#3f8e5c', [gx - 4, gy, gx, gy - gh, gx + 4, gy]); poly(x, '#b4e08a', [gx - 1, gy, gx, gy - gh, gx + 2, gy]); }
+      const g = x.createRadialGradient(44, 172, 2, 44, 172, 40); g.addColorStop(0, 'rgba(150,230,140,0.35)'); g.addColorStop(1, 'rgba(150,230,140,0)'); x.fillStyle = g; x.fillRect(0, 130, 100, 70);
+    });
+    // the middle stretch: the Leap off the Shelf, the road up between the Hang and the Little Hang, the Grey Teeth behind
+    A.p79_road = mk((x) => {
+      sky(x, [[0, '#6f8fb0'], [0.8, '#c4d0d0'], [1, '#dcd8c0']]);
+      poly(x, '#7c8a9c', [90, 124, 120, 70, 138, 88, 160, 52, 182, 86, 200, 66, 236, 124]); poly(x, '#e8ecf0', [152, 64, 160, 52, 168, 64, 162, 62, 158, 68]); poly(x, '#e8ecf0', [194, 76, 200, 66, 207, 78]);
+      ridge(x, '#6f8468', 126, 8, 2.1);
+      poly(x, '#5a5852', [0, 150, 0, 70, 70, 66, 96, 78, 104, 150]); for (let i = 0; i < 9; i++) { x.fillStyle = 'rgba(30,28,26,0.25)'; x.fillRect(0, 76 + i * 8, 100 - i * 2, 2); }
+      poly(x, '#eef4f6', [40, 68, 54, 68, 60, 148, 34, 148]); poly(x, '#c2d6e0', [44, 70, 48, 70, 50, 146, 42, 146]);
+      poly(x, '#4e4c48', [118, 150, 124, 92, 150, 86, 158, 150]); poly(x, '#56544e', [196, 150, 204, 96, 250, 90, 270, 150]);
+      x.fillStyle = '#57703f'; x.fillRect(0, 146, 320, 54); poly(x, '#3f7e84', [200, 160, 320, 152, 320, 176, 230, 180]);
+      road(x, '#b09a72', [[120, 200, 44], [150, 176, 22], [186, 158, 10], [178, 146, 5]]);
+      tree(x, 84, 176, 40, '#6f8e3e', '#4c6a2c'); tree(x, 286, 196, 60, '#9a6030', '#6a4020');
+    });
+    // Greenroot Wood: dusk, the reed-row climbing to the lych-house on its knoll, the wood close on both sides
+    A.p79_wood = mk((x) => {
+      sky(x, [[0, '#3c3c58'], [0.6, '#8a6c74'], [1, '#d8a86a']]); ridge(x, '#3a4444', 118, 10, 3.3);
+      poly(x, '#2e3a30', [110, 150, 150, 104, 220, 100, 262, 150]);
+      poly(x, '#1c1e20', [168, 104, 168, 86, 176, 86, 176, 94, 190, 94, 190, 80, 198, 80, 198, 96, 214, 96, 214, 88, 220, 88, 220, 102]);
+      const g = x.createRadialGradient(194, 100, 1, 194, 100, 22); g.addColorStop(0, 'rgba(255,214,150,0.7)'); g.addColorStop(1, 'rgba(255,214,150,0)'); x.fillStyle = g; x.fillRect(160, 70, 70, 50);
+      x.fillStyle = '#26301f'; x.fillRect(0, 146, 320, 54);
+      road(x, '#6e6046', [[160, 200, 30], [150, 176, 14], [168, 150, 6], [188, 118, 2]]);
+      for (const [px_, py, ph] of [[126, 186, 60], [196, 178, 46], [146, 158, 34], [188, 146, 26], [172, 132, 18]]) { x.fillStyle = '#b8ad90'; x.fillRect(px_, py - ph, 2, ph); x.fillRect(px_ - ph * 0.14, py - ph * 0.86, ph * 0.3, 1.5); x.fillRect(px_ - ph * 0.1, py - ph * 0.66, ph * 0.22, 1.5); }
+      tree(x, 30, 190, 150, '#1e2a1c', '#141c14'); tree(x, 80, 180, 90, '#243222', '#182018'); tree(x, 292, 192, 160, '#1c281a', '#121a12'); tree(x, 246, 176, 70, '#22301f', '#182018');
+    });
+    Object.assign(SCREENS.FAMILY, { [WEST]: 'p79_common', [MID]: 'p79_road', [EAST]: 'p79_wood', [HOWE]: 'crypt' });
+  }
+
   installArt();
+  try { paintCards(); } catch (e) { /* the plain card */ }
   try { if (typeof LANDMARKS !== 'undefined' && LANDMARKS[MID]) { if (!LANDMARKS[WEST]) LANDMARKS[WEST] = LANDMARKS[MID].map((l) => Object.assign({}, l, { seed: (l.seed || 0) + 1.7 })); if (!LANDMARKS[EAST]) LANDMARKS[EAST] = LANDMARKS[MID].map((l) => Object.assign({}, l, { seed: (l.seed || 0) + 3.1, h: l.h * 0.85 })); } } catch (e) { /* the plain sky */ }
   if (typeof buildAllMaps === 'function') {
     const _b = buildAllMaps;
@@ -488,7 +537,7 @@ const ROAD79B = (function () {
     const r = _l.apply(this, arguments); try { lastKey = ''; warned = false; sync(0); } catch (e) { /* next frame */ } return r; }; }
   if (typeof update === 'function') { const _u = update; update = function (dt) { const r = _u.apply(this, arguments); try { sync(dt); } catch (e) { /* next frame */ } return r; }; }
 
-  return { WEST, EAST, MID, HOWE, MINE, K, TX, TEXTS, SPW, SPE, STAND, CAMP, RUIN, HOWE_UP, ROSTERS, STOPS, buildStage, join, sync, useOwn, walkGrid };
+  return { WEST, EAST, MID, HOWE, MINE, K, TX, TEXTS, SPW, SPE, STAND, CAMP, RUIN, HOWE_UP, ROSTERS, STOPS, buildStage, join, sync, useOwn, walkGrid, paintCards };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = ROAD79B;
 if (typeof window !== 'undefined') window.ROAD79B = ROAD79B;
