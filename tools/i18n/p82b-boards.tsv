@@ -1,0 +1,119 @@
+# Phase 82b, the notice boards (js/boards82b.js, BOARDS82B.TEXTS). english<TAB>french (vous form, tools/i18n/glossary.fr.md). [PROPOSED] text, approved as written for the build, 13 Nov 2026. {0} and {1} are filled at run time.
+Notices	Avis
+Lore	Ce qu'on y lit encore
+To take	À prendre
+Close	Fermer
+Take it. Reward: {0} sovereigns.	La prendre. Récompense : {0} souverains.
+In hand: {0} of {1}.	En cours : {0} sur {1}.
+Done. Claim {0} sovereigns.	Fait. Réclamer {0} souverains.
+Done and paid.	Fait et payé.
+You take the notice down and put it in your pocket.	Vous décrochez l'avis et le mettez dans votre poche.
+That is done. The board will pay for it.	C'est fait. Le tableau paiera.
+You claim {0} sovereigns.	Vous réclamez {0} souverains.
+And two eels from the trapper.	Et deux anguilles du piégeur.
+The pier end. A willow trap goes off here.	Le bout de la jetée. Une nasse d'osier se pose ici.
+A willow trap, set off the pier.	Une nasse d'osier, posée au bout de la jetée.
+You set a willow trap off the pier, quietly.	Vous posez une nasse d'osier au bout de la jetée, sans bruit.
+Not now. Before light: after dark, and before the dawn.	Pas maintenant. Avant le jour : après la tombée de la nuit, et avant l'aube.
+Too much noise. Wait until you are quiet.	Trop de bruit. Attendez que le silence revienne.
+Flume-Reed in the shallows by the gangway.	Du roseau du Bief dans les hauts-fonds, près de la passerelle.
+You cut a bundle of Flume-Reed, green. {0} of 6.	Vous coupez une botte de roseau du Bief, vert. {0} sur 6.
+You have six bundles. They go to the cooperage door.	Vous avez six bottes. Elles vont à la porte de la tonnellerie.
+The cooperage door. The reed is to be left here.	La porte de la tonnellerie. C'est ici qu'on laisse le roseau.
+You leave the reed at the cooperage door.	Vous laissez le roseau à la porte de la tonnellerie.
+Six bundles. You have {0}.	Six bottes. Vous en avez {0}.
+Hurdles, stacked by the barn.	Des claies, empilées près de la grange.
+You take two hurdles from the barn.	Vous prenez deux claies à la grange.
+Your arms are full.	Vous avez les bras pleins.
+The fold. Hurdles and the bell go here.	Le parc. Les claies et la clochette vont ici.
+You set two hurdles at the fold. {0} of 12.	Vous posez deux claies au parc. {0} sur 12.
+You hang the bell at the fold. It does not ring.	Vous accrochez la clochette au parc. Elle ne sonne pas.
+You have nothing for the fold.	Vous n'avez rien pour le parc.
+Something bronze in the grass by the dew-pond.	Quelque chose de bronze dans l'herbe, près de la mare de rosée.
+A wether-bell, bronze, the tongue tied with wool. It does not ring.	Une clochette de meneuse, en bronze, le battant noué de laine. Elle ne sonne pas.
+A shroud with no chime.	Un hauban sans carillon.
+A shroud with its chime again.	Un hauban qui a retrouvé son carillon.
+You hang a chime on the shroud. The wind finds it at once.	Vous accrochez un carillon au hauban. Le vent le trouve aussitôt.
+You have no chime. The chandler on the third landing sells them.	Vous n'avez pas de carillon. Le chandelier du troisième palier en vend.
+Bronze rigging-chime	Carillon de gréement en bronze
+A bar of small bronze tubes for a shroud-head, the kind every hull in the harbour carries.	Une barre de petits tubes de bronze pour la tête d'un hauban, comme en porte chaque coque du port.
+Rooke's tonic, for the pencilled doors.	Le tonique de Rooke, pour les portes marquées au crayon.
+You take three bottles of Rooke's tonic.	Vous prenez trois flacons du tonique de Rooke.
+A marked door. Knock once.	Une porte marquée. Frappez une fois.
+Rooke's tonic, left on the step.	Le tonique de Rooke, laissé sur le seuil.
+You knock once and leave the tonic on the step. {0} of 3.	Vous frappez une fois et laissez le tonique sur le seuil. {0} sur 3.
+You have no tonic left. The surgery has it.	Il ne vous reste pas de tonique. Le cabinet de Rooke en a.
+Two pails by the well.	Deux seaux près du puits.
+You draw two pails.	Vous tirez deux seaux.
+The step of the end house.	Le seuil de la dernière maison.
+You leave the pails on the step of the end house.	Vous laissez les seaux sur le seuil de la dernière maison.
+You have no water. Draw it at the well.	Vous n'avez pas d'eau. Tirez-la au puits.
+A day-book on the loft shelf.	Un livre de comptes sur l'étagère du grenier.
+The chandler's day-book. You bring it out of the loft.	Le livre de comptes du chandelier. Vous le sortez du grenier.
+Stillwater Landing: the piling board	L'Embarcadère de Stillwater : le tableau du pieu
+THE LOWER LOCK IS SHUT BY ORDER. No name is given for whose order.	L'ÉCLUSE BASSE EST FERMÉE PAR ORDRE. Aucun nom ne dit de qui vient l'ordre.
+TIMBER COMPACT. Strike fund paid out Stasisday, at the raft, to men on the roster. Men not on the roster: see the steward. Men not anywhere: we are asking.	PACTE DU BOIS. Caisse de grève versée le Stasedi, au radeau, aux hommes inscrits au registre. Hommes non inscrits : voir l'intendant. Hommes introuvables : nous posons la question.
+Rafts tied here longer than a month are the Landing's.	Les radeaux amarrés ici plus d'un mois appartiennent à l'Embarcadère.
+A Cantabile broadsheet, pasted crooked, three weeks old. The headline has been torn off. What is left says the plazas of Whisper-Grove are full of people, standing.	Une feuille de Cantabile, collée de travers, vieille de trois semaines. Le gros titre a été arraché. Ce qui reste dit que les places de Whisper-Grove sont pleines de gens, debout.
+In pencil, low down, in a child's hand: the eels know where it goes.	Au crayon, tout en bas, d'une écriture d'enfant : les anguilles savent où ça va.
+Wethercombe: the Bellwether's board	Wethercombe : le tableau du Bellwether
+A fair-day bill, brown with age. WETHERCOMBE FAIR. EIGHT HUNDRED HEAD. The year is 417. There has not been another.	Une affiche de jour de foire, brunie par l'âge. FOIRE DE WETHERCOMBE. HUIT CENTS TÊTES. L'année est 417. Il n'y en a pas eu d'autre.
+STRAYS TO THE PINFOLD. A penny a head to have them back. Nobody has crossed it out, though there is nothing to stray.	BÊTES ÉGARÉES À LA FOURRIÈRE. Un sou par tête pour les reprendre. Personne ne l'a rayé, bien qu'il n'y ait plus rien pour s'égarer.
+In Gideon Thrale's hand: ROOMS, A SOVEREIGN. CIDER. NO CREDIT ON WOOL UNTIL THERE IS WOOL.	De la main de Gideon Thrale : CHAMBRES, UN SOUVERAIN. CIDRE. PAS DE CRÉDIT SUR LA LAINE TANT QU'IL N'Y A PAS DE LAINE.
+The levy notice of the autumn of 417, the Moot's seal still on it: every fleece in the Reach, for the Hedge.	L'avis de réquisition de l'automne 417, le sceau du Conseil encore dessus : chaque toison des Confins, pour la Haie.
+The rhyme, in chalk: When the Ram is white and the fires burn, the barrow gives back.	La comptine, à la craie : Quand le Bélier est blanc et que brûlent les feux, le tertre rend ce qu'il a pris.
+Port Cantabile: the Harbour board	Port Cantabile : le tableau du Port
+DUES AT SLACK WATER, TO THE HARBOUR-QUEEN'S OWN HAND. Six sovereigns a hull, a day.	DROITS À L'ÉTALE, DANS LA MAIN MÊME DE LA REINE DU PORT. Six souverains par coque et par jour.
+ARTICLE THE SIXTEENTH. What lies below the tide-mark belongs to whoever brings it up. The Harbour takes a fifth.	ARTICLE SEIZIÈME. Ce qui gît sous la laisse de marée appartient à qui le remonte. Le Port en prend un cinquième.
+NOBODY SLEEPS ASHORE.	PERSONNE NE DORT À TERRE.
+Four broadsheets pinned one over another, each calling the others liars. One of them is right about something, and there is no telling which.	Quatre feuilles épinglées l'une sur l'autre, chacune traitant les autres de menteuses. L'une d'elles a raison sur quelque chose, et rien ne dit laquelle.
+A tide-table in a small neat hand, with the key the reef sings at each hour. The last column is headed WINTER, and every line of it is the same.	Une table des marées d'une petite écriture soignée, avec le ton que chante le récif à chaque heure. La dernière colonne porte HIVER en tête, et chacune de ses lignes est la même.
+The Hollow: the Grafters' board	Le Creux : le tableau des Greffeurs
+INSPECTION, ROOTDAY MORNING. Households to stand at their doors. Those who cannot stand are to be brought to the door.	INSPECTION, RACINEDI MATIN. Les foyers se tiendront à leur porte. Ceux qui ne peuvent se tenir debout y seront amenés.
+THIRTY-ONE HOUSEHOLDS. Under it, in pencil, somebody keeps the number of souls, and has rubbed it out and written it again many times.	TRENTE ET UN FOYERS. En dessous, au crayon, quelqu'un tient le compte des âmes, et l'a effacé et récrit bien des fois.
+No singing above the tending note.	Pas de chant au-dessus de la note de soin.
+A list of doors in Rooke's hand, each with a mark like a leaf. Some marks have a second stroke through them.	Une liste de portes de la main de Rooke, chacune avec une marque comme une feuille. Certaines marques sont barrées d'un second trait.
+A child's drawing of a wagon, with the horses given too many legs.	Un dessin d'enfant représentant un chariot, dont les chevaux ont trop de pattes.
+The Low Rings: the board at the gangway	Les Anneaux bas : le tableau de la passerelle
+BY ORDER OF THE MOOT. THE LOW RINGS ARE CLOSED UNTIL THE WATER IS PUT RIGHT. The date has been scraped off.	PAR ORDRE DU CONSEIL. LES ANNEAUX BAS SONT FERMÉS JUSQU'À CE QUE L'EAU SOIT REMISE EN ORDRE. La date a été grattée.
+Under it, in pencil: LEAVE THE WATER ALONE.	En dessous, au crayon : LAISSEZ L'EAU TRANQUILLE.
+A row of notches down the board's edge, each with a year cut beside it, each a hand higher than the last.	Une rangée d'encoches le long du bord du tableau, chacune avec une année gravée à côté, chacune une main plus haut que la précédente.
+A scrap of ledger paper: "took only what was ours. Left the cashbox."	Un bout de page de registre : "pris seulement ce qui était à nous. Laissé la caisse."
+Greenroot: the board by the mill	Greenroot : le tableau près du moulin
+The chapel reed to be re-cut on Rootday next.	Le roseau de la chapelle sera recoupé Racinedi prochain.
+In the physician's hand: THE WARD IS FULL. Do not bring them to me. Send, and I will come.	De la main du médecin : LA SALLE EST PLEINE. Ne me les amenez pas. Faites-moi appeler, et je viendrai.
+Meal, by the peck. The prices have been chalked up, rubbed out and chalked lower.	Farine, au boisseau. Les prix ont été écrits à la craie, effacés, puis récrits plus bas.
+A notice begun in good ink, "To whoever comes after us," and nothing after it.	Un avis commencé à la bonne encre, "À ceux qui viendront après nous", et rien après.
+"The North Gate shuts at dusk. It does not open for a voice you know."	"La porte Nord ferme au crépuscule. Elle ne s'ouvre pas pour une voix que vous connaissez."
+"Lamp oil, four pence the pint. Five by the thaw."	"Huile de lampe, quatre sous la pinte. Cinq au dégel."
+"Do not speak to the residents. Do not finish their sentences."	"Ne parlez pas aux résidents. Ne finissez pas leurs phrases."
+In Veil-grey ink: "Two hundred and four in the Plaza of the Willows. Counted."	À l'encre gris du Voile : "Deux cent quatre sur la Place des Saules. Comptés."
+"Fire small. Watch doubled. Nobody goes north alone."	"Petit feu. Garde doublée. Personne ne va au nord seul."
+In Mags's hand: "Whoever took the good kettle, I know."	De la main de Mags : "Toi qui as pris la bonne bouilloire, je sais."
+Three traps before light.	Trois nasses avant le jour.
+"Wanted: hands that can keep quiet. Ask at the pier end."	"On demande : des mains qui savent se taire. S'adresser au bout de la jetée."
+Set three willow traps off the pier at night without raising your noise. The eel-trapper pays in eels and a little coin.	Posez trois nasses d'osier au bout de la jetée, de nuit, sans faire de bruit. Le piégeur d'anguilles paie en anguilles et en un peu de monnaie.
+Reed for the thatcher.	Du roseau pour le chaumier.
+"Six bundles of Flume-Reed, cut green, to the cooperage door."	"Six bottes de roseau du Bief, coupées vertes, à la porte de la tonnellerie."
+Cut reed in the shallows by the gangway and leave it at the door.	Coupez du roseau dans les hauts-fonds près de la passerelle et laissez-le à la porte.
+Twelve hurdles.	Douze claies.
+"Hurdles wanted at the fold. Twelve. T. Farrant."	"On demande des claies au parc. Douze. T. Farrant."
+Carry them from the barn, two at a time.	Portez-les depuis la grange, deux à la fois.
+The lead ewe's bell.	La clochette de la meneuse.
+"Lost on the Downs: a wether-bell, bronze, the tongue tied with wool. It will not ring. That is how you will know it."	"Perdue sur les Hauts : une clochette de meneuse, en bronze, le battant noué de laine. Elle ne sonnera pas. C'est à cela que vous la reconnaîtrez."
+Find it by the dew-pond and bring it to the fold.	Trouvez-la près de la mare de rosée et rapportez-la au parc.
+A bell for a bare hook.	Une cloche pour un crochet nu.
+"There are hooks on the Cay with nothing on them. A bell is a copper."	"Il y a des crochets sur la Caye où rien ne pend. Une cloche coûte un sou."
+Buy a small bell at the chandler's on the third landing and hang it on a bare hook on Driftwood Cay.	Achetez une petite cloche chez le chandelier du troisième palier et accrochez-la à un crochet nu sur la Caye du Bois-Flotté.
+Three chimes.	Trois carillons.
+"Three shrouds on the second quay have lost their chimes. A harbour with a silent shroud is asking for it."	"Trois haubans du deuxième quai ont perdu leurs carillons. Un port qui a un hauban muet le cherche."
+Buy three at the chandler's and hang them.	Achetez-en trois chez le chandelier et accrochez-les.
+Three doors.	Trois portes.
+"Tonic for the pencilled doors, from the surgery. Knock once."	"Du tonique pour les portes marquées au crayon, à prendre au cabinet. Frappez une fois."
+Carry Rooke's tonic to three marked doors.	Portez le tonique de Rooke à trois portes marquées.
+Water for the end house.	De l'eau pour la dernière maison.
+"The end house cannot come to the well."	"La dernière maison ne peut pas venir au puits."
+Draw two pails and leave them on the step.	Tirez deux seaux et laissez-les sur le seuil.
+The chandler's book.	Le livre du chandelier.
+"My husband's day-book is in the loft over the shop. I am in the Ladder now and cannot fetch it. Mind the third board."	"Le livre de comptes de mon mari est au grenier au-dessus de la boutique. Je suis à l'Échelle maintenant et je ne peux pas aller le chercher. Attention à la troisième planche."
+Bring the book out of the chandler's loft.	Sortez le livre du grenier du chandelier.

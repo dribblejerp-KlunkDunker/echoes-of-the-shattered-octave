@@ -206,7 +206,8 @@ const HELPERS = () => {
       ok(t.onRoad === 'p79_road_w' && t.walked === 'greenroot' && t.names.some(x => /Greenroot/.test(x)) && t.homeOk, 'after walking there, the world map lists Greenroot and the way home: ' + t.names.join(' | '));
       ok(t.backAt === 'clearing' && t.thereAt === 'greenroot' && t.grOk, 'travel there and back by the world map works');
       ok(t.footAt === 'p79_road_e' && t.footX > 200, 'the west road door puts you on the road home, at the east gate of Greenroot Wood');
-      ok(t.rect[0] >= 0.72 && t.rect[2] <= 1 && t.rect[3] <= 0.5, 'the waypoint rectangle sits in the free east forest of the Reach painting');
+      // Phase 82b: the Reach painting is the chart drawn from the gates, and Greenroot is at the far east end of its road
+      ok(t.rect[0] >= 0.85 && t.rect[2] <= 1 && t.rect[0] < t.rect[2] && t.rect[1] < t.rect[3], 'the waypoint rectangle sits at the east end of the Reach chart, where the road puts it');
     }
 
     // ---------------------------------------------------------------- 4. maps load, render, and are reachable stage by stage
