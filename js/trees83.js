@@ -45,7 +45,12 @@ const TREES83 = (function () {
 
   // ---------------------------------------------------------------- the shapes, drawn from each tree's own picture
   const cache = new WeakMap();                 // sprite object -> { key: variant sprite }
-  let serial = 0;
+  let names = null;
+  function nameOf(sp) {                                                          // a picture's own name in Engine.sprites
+    const find = () => { names = new Map(); for (const n in Engine.sprites) names.set(Engine.sprites[n], n); };
+    if (!names || !names.has(sp)) find();
+    return names.get(sp) || 'anon' + (sp.w + 'x' + sp.h);
+  }
   function canvasOf(sp) {
     const c = document.createElement('canvas'); c.width = sp.w; c.height = sp.h; const x = c.getContext('2d');
     const id = x.createImageData(sp.w, sp.h); id.data.set(new Uint8ClampedArray(sp.data.buffer, sp.data.byteOffset, sp.data.byteLength)); x.putImageData(id, 0, 0); return c;
@@ -65,7 +70,7 @@ const TREES83 = (function () {
         const up = 1 - y / (H - 1), off = Math.round(Math.sign(S.lean) * lean * Math.pow(up, 1.6));
         x.drawImage(src, 0, y, sp.w, 1, base + off, y, sw, 1);
       }
-      const name = 't83_' + (++serial);
+      const name = nameOf(sp) + '~t83~' + key;                                  // the same name every time, whatever is drawn first
       Engine.addSprite(name, { w: W, h: H, hs: (sp.hs || 1) * S.hf, cx: (base + cx0 * sw) / W, dy: sp.dy || 0, data: new Uint32Array(x.getImageData(0, 0, W, H).data.buffer.slice(0)) });
       const v = Engine.sprites[name]; m[key] = v || null; stats.variants++;
       return v || sp;
@@ -115,10 +120,19 @@ const TREES83 = (function () {
     for (const t of P.list) { t.e.scale = want ? t.s0 * t.k : t.s0; t.e._t83 = want ? t.key : undefined; }
     P.applied = want;
   }
+  // every shape is drawn once, up front and in a fixed order, so no frame ever waits for one (and two pages agree)
+  const RECOLOURS = { oak: ['p20b_oak_green', 'p20b_oak_copper'], willow: ['p20b_willow_pale'] };
+  function drawAll(ms) {
+    if (typeof Engine === 'undefined' || !Engine.sprites) return;
+    const want = new Map();
+    for (const m of ms) if (m._t83) for (const t of m._t83.list) { const k = t.e.sprite + '|' + JSON.stringify(t.key); if (!want.has(k)) want.set(k, t); }
+    for (const k of Array.from(want.keys()).sort()) { const t = want.get(k); for (const n of [t.e.sprite].concat(RECOLOURS[t.e.sprite] || [])) if (Engine.sprites[n]) variant(Engine.sprites[n], t.key); }
+  }
   function sync(maps) {
-    const want = on(), seen = new Set();
-    const each = (ms) => { if (!ms) return; for (const id in ms) { const m = ms[id]; if (!m || seen.has(m)) continue; seen.add(m); prepare(m); apply(m, want); } };
+    const want = on(), seen = new Set(), list = [];
+    const each = (ms) => { if (!ms) return; for (const id in ms) { const m = ms[id]; if (!m || seen.has(m)) continue; seen.add(m); prepare(m); apply(m, want); list.push(m); } };
     each(maps); if (typeof G !== 'undefined' && G && G.maps) each(G.maps);
+    if (want) try { drawAll(list); } catch (e) { warnOnce('draw', e); }
   }
 
   // ---------------------------------------------------------------- hooks
