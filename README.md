@@ -260,6 +260,27 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The Dry Flume (Phase 85).** Before the Flume was grown, it was built. An arch in a bank on the Stride's valley floor opens on the old stone conduit, dry for two hundred years and lit only by the living Flume's root where it has come down through the roof. Seven rooms: the adit, the conduit, the settling tanks (fret-crawlers in the silt), the wheel-pit (a sluice-gate over the ledge on a worn chain: wedge it or it comes down), the sump (when the Flume draws breath it fills to the roof and drains, so the causeway has to be timed), the pump-hall (iron galleries, the engine's beam, and under it the Standing Note, a mire-drone grown to the size of a cart), and the stair up to the Pound Stair's grating, bolted from below. On the engine-man's bench: the Lengthsman's Hook (it reaches, and it pulls) and Sluice-Boots (silent in water).
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p85-dryflume-arch.jpg" alt="A dressed-stone arch set in a grassy bank under the Flume's wooden trunks"></td>
+<td width="50%"><img src="screenshots/p85-dryflume-conduit.jpg" alt="A brick conduit, a glowing green root hanging from its roof"></td>
+</tr>
+<tr>
+<td>The arch on the Stride.</td>
+<td>The conduit and the root.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p85-dryflume-pit.jpg" alt="An iron wheel standing in black water in a pit, lit green by a root"></td>
+<td><img src="screenshots/p85-dryflume-hall.jpg" alt="The pump-hall: iron columns and galleries, the engine's beam, roots of green light"></td>
+</tr>
+<tr>
+<td>The wheel-pit.</td>
+<td>The pump-hall.</td>
+</tr>
+</table>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>
