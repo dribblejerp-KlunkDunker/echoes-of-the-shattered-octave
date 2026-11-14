@@ -192,6 +192,27 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The Flume, down to Stillwater (Phase 83, road 1).** The lane off the Flume Road no longer drops straight onto Stillwater Landing: the road itself is there, in two stretches. On **the Stride** it winds down into Sallow Bottom, among alder and willow, and crosses the brook twice, while the Flume crosses the whole valley overhead in one straight line on grown trunks as tall as a church. After dark its sap-light runs in the channel, one green line from ridge to ridge. On **the Pound Stair** sixteen grown locks step down the hill, each with its square side-pound, and the road zigzags beside them. In rain the Stair "walks" and the low road goes under; afterwards the bottom pound stands empty a while and shows a grating. The lengthsman's three top gates have stuck: hum the Root at them in order, top to bottom, and don't ring the stakes. The text is for the owner's review: [`story/Game Layer/Phase 83 - New In-Game Text (for review).md`](story/Game%20Layer/Phase%2083%20-%20New%20In-Game%20Text%20%28for%20review%29.md).
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p83-stride-night.gif" alt="Walking through Sallow Bottom at night under the Flume, its channel a green line overhead"></td>
+<td width="50%"><img src="screenshots/p83-poundstair-walk.gif" alt="Walking down the Pound Stair beside the locks and side-pounds"></td>
+</tr>
+<tr>
+<td>The Stride at night: the Flume's green line in the sky.</td>
+<td>Down the Pound Stair.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p83-stride-day.jpg" alt="The Flume on its trunks across Sallow Bottom by day"></td>
+<td><img src="screenshots/p83-poundstair.jpg" alt="The road along the locks of the Pound Stair, the side-pounds stepping down the hill"></td>
+</tr>
+<tr>
+<td>The Stride by day.</td>
+<td>The Pound Stair: locks, side-pounds, and the road between.</td>
+</tr>
+</table>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>
@@ -323,7 +344,7 @@ More pictures of this build: [`screenshots/eaves78/`](screenshots/eaves78) and [
 - **Kaelen and Lyra,** who travel with you, talk on the road, flinch, limp and sing.
 - **A world that moves:** weather and a sky on the world clock, smoking chimneys, crows, swinging bells, rising portcullises and water that reflects.
 - **The Library of the Reach:** 65 books from inside the world, in four libraries.
-- Loot tables for enemies and 40 strongboxes hidden around the world.
+- Loot tables for enemies and 41 strongboxes hidden around the world.
 - An original orchestral score and recorded voices, a French translation, accessibility options, photo mode, a speedrun timer and data-only mod dungeons.
 - Save slots, save codes and save files; offline play once installed; two-player co-op; a desktop build.
 

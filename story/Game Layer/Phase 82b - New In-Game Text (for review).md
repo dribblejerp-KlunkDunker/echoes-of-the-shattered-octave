@@ -28,6 +28,8 @@ Built on branch `phase-75-pixel-folk` (pull request #119) from the brief, `Phase
 
 ## Questions for the owner
 
+**Approved by the owner, 13 Nov 2026 ("I agree with all recommendations").** Every recommendation below stands: the text as written; the distances; Greenroot's board with no task; the water-meadow's culvert left as recorded; the house by the well is Greenroot's mill; journey times stay at one minute a cell until Phase 84; the three added posts keep their words. The [PROPOSED] marks are left to show what was invented.
+
 1. **All the text below.** *Recommend: approve as written; say which lines to change.*
 2. **Distances on the Reach's posts** ("half a day", "a day and a half"). Only "Greenroot, two days" is from the books. *Recommend: keep.*
 3. **Greenroot's board gives no task,** because the hamlet is empty on purpose. *Recommend: keep.*

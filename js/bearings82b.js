@@ -318,12 +318,12 @@ const BEARINGS82B = (function () {
   }
   // a place's name as the chart writes it: the part after a colon is the stretch of road, which is what the chart wants
   // the chart's own names for the Greenroot road's stretches and the Court (the rest are the places' own names)
-  const CHART_NAMES = [S('The Long Common'), S('The Greenroot Road'), S('Greenroot Wood'), S('The Sunken Court')];
+  const CHART_NAMES = [S('The Long Common'), S('The Greenroot Road'), S('Greenroot Wood'), S('The Sunken Court'), S('The Stride'), S('The Pound Stair')];
   const tr = (t) => { try { const f = typeof STORY_I18N !== 'undefined' && STORY_I18N.translate(t); return f || t; } catch (e) { return t; } };
   const locale = () => { try { return typeof STORY_I18N !== 'undefined' ? STORY_I18N.locale : 'en'; } catch (e) { return 'en'; } };
   function chartName(m) {
     let n = String(m.name || m.id); const i = n.indexOf(': ');
-    if (i > 0 && /Greenroot Road/.test(n)) n = n.slice(i + 2);
+    if (i > 0 && /Greenroot Road|Flume Road/.test(n)) n = n.slice(i + 2);
     n = n.replace(/^Whisper-Grove — /, '');
     return n.charAt(0).toUpperCase() + n.slice(1);
   }
@@ -413,12 +413,15 @@ const BEARINGS82B = (function () {
     m.entities.splice(i, 1); m.entities.splice(m.baseCount, 0, e); m.baseCount++;
     return e;
   }
+  // later roads add their own posts (window.P82B_POSTS), and say which posts now stand by a door onto them (window.P82B_REMAP)
+  const allPosts = () => POSTS.concat((typeof window !== 'undefined' && window.P82B_POSTS) || []);
+  const targets = (P) => { const R = (typeof window !== 'undefined' && window.P82B_REMAP && window.P82B_REMAP[P.map]) || {}; return P.to.map((t) => R[t] || t); };
   function placePosts(maps) {
     const placed = [];
-    for (const P of POSTS) {
+    for (const P of allPosts()) {
       const m = maps[P.map]; if (!m || !m.entities) continue;
       if (m.entities.some((e) => e && e._p82bPost === P.id)) continue;
-      const gs = P.to.map((t) => gateTo(maps, m, t)).filter(Boolean); if (gs.length !== P.to.length) continue;
+      const to = targets(P), gs = to.map((t) => gateTo(maps, m, t)).filter(Boolean); if (gs.length !== to.length) continue;
       const at = postSpot(maps, m, gs);
       if (!at) { warnOnce('no room for ' + P.id, P); continue; }
       // Greenroot's own rule (js/parish.js): a hint is one short line, and the long words are read with `look`
@@ -513,7 +516,7 @@ const BEARINGS82B = (function () {
   }
   wire();
 
-  return { TEXTS, CHART_NAMES, POSTS, AWAITING, RECORDED, REGIONS, POST_RE, sideOf, edgeOf, gatesOf, pairsOf, layoutRegion, apply, placeOnChart, paintChart, chartImage, chartName, foundSet, placePosts, postSpot, postsNear, wayOuts, report, L };
+  return { TEXTS, CHART_NAMES, POSTS, allPosts, targets, AWAITING, RECORDED, REGIONS, POST_RE, sideOf, edgeOf, gatesOf, pairsOf, layoutRegion, apply, placeOnChart, paintChart, chartImage, chartName, foundSet, placePosts, postSpot, postsNear, wayOuts, report, L };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = BEARINGS82B;
 if (typeof window !== 'undefined') window.BEARINGS82B = BEARINGS82B;

@@ -61,14 +61,14 @@ const BR = require(path.join(ROOT, 'js', 'bearings82b.js')), BO = require(path.j
     out.woods = rep.regions.woods && ['whispergrove', 'p31_bellyard', 'p61_yard', 'deepwoods'].every((id) => rep.regions.woods.places.includes(id));
     // the travel map: every destination's rectangle is the layout's; the Reach is drawn wider than it is tall, as it is walked
     out.rects = ['reach', 'woods'].every((rid) => { const R = TRAVEL_REGIONS[rid], L = B.L.lay[rid]; return Object.keys(R.maps).every((id) => !L.places[id] || JSON.stringify(R.maps[id].rect) === JSON.stringify(L.frac(id))) && R.across === L.Wc; });
-    out.wideReach = B.L.lay.reach.Wc > 900 && B.L.lay.reach.Wc > B.L.lay.reach.Hc * 3;
+    out.wideReach = B.L.lay.reach.Wc > 900 && B.L.lay.reach.Wc > B.L.lay.reach.Hc * 1.5;   // wider than tall (the Flume road, Phase 83, runs it south)
     // the Malting yard: the way back to the Court is on its south side now, and you come in there
     const y = G.maps.p61_yard, wg = G.maps.whispergrove.get(32, 5);
     out.yard = y.get(11, 17) && y.get(11, 17).portal && y.get(11, 17).portal.map === 'whispergrove' && !(y.get(0, 9) && y.get(0, 9).portal) && wg.portal.map === 'p61_yard' && Math.abs(wg.portal.y - 16.4) < 0.01 && y.spawn.y > 16;
     // the posts: every one of the brief's is up once, within five cells of each of its gates
     const gates = B.gatesOf(G.maps);
-    out.posts = B.POSTS.every((P) => { const m = G.maps[P.map], es = m.entities.filter((e) => e._p82bPost === P.id); if (es.length !== 1) return false; const e = es[0];
-      return e.sprite === 'sign' && (e.label === P.text || e.look === P.text) && P.to.every((t) => { const g = gates.find((q) => q.from === P.map && q.to === t && !q.pseudo); return g && Math.hypot(e.x - g.x - 0.5, e.y - g.y - 0.5) <= 5; }) && !m.isBlocked(Math.floor(e.x), Math.floor(e.y)); });
+    out.posts = B.allPosts().every((P) => { const m = G.maps[P.map], es = m.entities.filter((e) => e._p82bPost === P.id); if (es.length !== 1) return false; const e = es[0];
+      return e.sprite === 'sign' && (e.label === P.text || e.look === P.text) && B.targets(P).every((t) => { const g = gates.find((q) => q.from === P.map && q.to === t && !q.pseudo); return g && Math.hypot(e.x - g.x - 0.5, e.y - g.y - 0.5) <= 5; }) && !m.isBlocked(Math.floor(e.x), Math.floor(e.y)); });
     // the ways out with no post are exactly the ones waiting on the owner
     const bare = B.wayOuts().filter((g) => !B.postsNear(g, 5).length).map((g) => g.from + '>' + g.to).sort();
     out.bare = bare; out.awaiting = JSON.stringify(bare) === JSON.stringify(B.AWAITING.map((a) => a.map + '>' + a.to).sort());
@@ -91,7 +91,7 @@ const BR = require(path.join(ROOT, 'js', 'bearings82b.js')), BO = require(path.j
   check(!r.rep.overlaps.length, 'no two places overlap in the layout');
   check(r.reach && r.woods, 'every outdoor place of the Reach and the Woods is laid');
   check(r.rects, 'the travel map lays every destination where the layout puts it, one minute a cell');
-  check(r.wideReach, 'the Reach is laid as it is walked: about a thousand cells across');
+  check(r.wideReach, 'the Reach is laid as it is walked: about a thousand cells across, wider than it is tall');
   check(r.yard, 'the Malting yard\'s way back to the Court leaves by its south side, and the Court\'s door brings you in there');
   check(r.posts, 'all twenty-six finger-posts stand within five cells of their gates, in their words, on open ground');
   check(r.awaiting && !r.bare.length && !r.rep.noPost.length, 'every way out between outdoor places has a finger-post within five cells' + (r.bare.length ? ': not ' + r.bare.join(', ') : ''));
