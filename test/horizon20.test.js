@@ -113,7 +113,8 @@ async function boot(browser, block) {
       check(D && D.outdoor && D.danger === 0 && D.lvls && D.smooth, 'the Downs are an outdoor height-mapped map with danger 0');
       const portals = []; for (let i = 0; i < D.cells.length; i++) { const c = D.cells[i]; if (c && c.portal) portals.push(c.portal.map); }
       // Phase 22 (js/sheepwalk22.js, the Author Rulings' region) adds one stile, south to Wethercombe; nothing else
-      const ways = typeof SHEEPWALK22 !== 'undefined' ? ['clearing', SHEEPWALK22.COMBE] : ['clearing'];
+      // and Phase 83 (js/drove83.js) puts the drove road itself between the stile and Wethercombe
+      const ways = typeof SHEEPWALK22 !== 'undefined' ? ['clearing', typeof DROVE83 !== 'undefined' && G.maps[DROVE83.WETHERS] ? DROVE83.WETHERS : SHEEPWALK22.COMBE] : ['clearing'];
       check(portals.length === ways.length && ways.every((w) => portals.includes(w)), 'the Downs\' ways out are ' + ways.join(' and ') + ' (' + portals.join(',') + ')');
       for (let x = 0; x < D.w; x++) for (const y of [0, D.h - 1]) check(D.get(x, y), 'the Downs are walled at ' + x + ',' + y);
       for (let y = 0; y < D.h; y++) for (const x of [0, D.w - 1]) check(D.get(x, y), 'the Downs are walled at ' + x + ',' + y);

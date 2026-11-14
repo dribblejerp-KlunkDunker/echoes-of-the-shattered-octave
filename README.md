@@ -213,6 +213,27 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The drove road (Phase 83, road 3).** The stile in the Watch Downs' south hedge now opens on the drove road, in two stretches. **The Grey Wethers:** the road runs wide and green round the head of a dry valley and through a flock of grey stones lying in the grass like sheep lying down; every one gives a note when knocked, and in a high wind the whole flock sounds by itself. Past a dew-pond the returners, a family come out of the Hedge after two years, are camped with their handcart at the Three Pines; the old woman among them, a drover's daughter, asks you to strike the five raddled stones in the drovers' call. **The Hundred Hollows:** a holloway under hawthorn, then a down of grassed-over pits where hounds lie up after dark, one hollow still open chalk, and terraces down into Wethercombe; at dawn after a wet night, mist fills the combe. The text is in the same review file as road 1.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p83-grey-wethers.gif" alt="Walking the drove road through the Grey Wethers, grey stones lying in the grass like a flock"></td>
+<td width="50%"><img src="screenshots/p83-holloway-walk.gif" alt="Walking down the holloway, sunk between its banks under a roof of hawthorn"></td>
+</tr>
+<tr>
+<td>The Grey Wethers.</td>
+<td>The holloway.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p83-three-pines.jpg" alt="The Three Pines at the drovers' halt"></td>
+<td><img src="screenshots/p83-dawn-mist.gif" alt="Walking down the terraces into the mist at dawn after a wet night"></td>
+</tr>
+<tr>
+<td>The Three Pines, the drovers' halt.</td>
+<td>Dawn after a wet night: down into the mist.</td>
+</tr>
+</table>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>
@@ -344,7 +365,7 @@ More pictures of this build: [`screenshots/eaves78/`](screenshots/eaves78) and [
 - **Kaelen and Lyra,** who travel with you, talk on the road, flinch, limp and sing.
 - **A world that moves:** weather and a sky on the world clock, smoking chimneys, crows, swinging bells, rising portcullises and water that reflects.
 - **The Library of the Reach:** 65 books from inside the world, in four libraries.
-- Loot tables for enemies and 41 strongboxes hidden around the world.
+- Loot tables for enemies and 42 strongboxes hidden around the world.
 - An original orchestral score and recorded voices, a French translation, accessibility options, photo mode, a speedrun timer and data-only mod dungeons.
 - Save slots, save codes and save files; offline play once installed; two-player co-op; a desktop build.
 

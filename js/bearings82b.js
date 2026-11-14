@@ -318,12 +318,12 @@ const BEARINGS82B = (function () {
   }
   // a place's name as the chart writes it: the part after a colon is the stretch of road, which is what the chart wants
   // the chart's own names for the Greenroot road's stretches and the Court (the rest are the places' own names)
-  const CHART_NAMES = [S('The Long Common'), S('The Greenroot Road'), S('Greenroot Wood'), S('The Sunken Court'), S('The Stride'), S('The Pound Stair')];
+  const CHART_NAMES = [S('The Long Common'), S('The Greenroot Road'), S('Greenroot Wood'), S('The Sunken Court'), S('The Stride'), S('The Pound Stair'), S('The Grey Wethers'), S('The Hundred Hollows')];
   const tr = (t) => { try { const f = typeof STORY_I18N !== 'undefined' && STORY_I18N.translate(t); return f || t; } catch (e) { return t; } };
   const locale = () => { try { return typeof STORY_I18N !== 'undefined' ? STORY_I18N.locale : 'en'; } catch (e) { return 'en'; } };
   function chartName(m) {
     let n = String(m.name || m.id); const i = n.indexOf(': ');
-    if (i > 0 && /Greenroot Road|Flume Road/.test(n)) n = n.slice(i + 2);
+    if (i > 0 && /Greenroot Road|Flume Road|drove road/.test(n)) n = n.slice(i + 2);
     n = n.replace(/^Whisper-Grove — /, '');
     return n.charAt(0).toUpperCase() + n.slice(1);
   }

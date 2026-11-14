@@ -1,4 +1,8 @@
-# Phase 83, road 1: the Flume, down to Stillwater (built, for review)
+# Phase 83: the first two new roads (built, for review)
+
+Road 1, the Flume down to Stillwater, is first (its questions ruled and its lines passed by the owner, 13 Nov 2026). Road 3, the drove road, follows it below, for review.
+
+# Road 1: the Flume, down to Stillwater
 
 From the world plan, `Phase 81 - The World Plan.md`, "Road 1. The Flume, down to Stillwater" (approved by the owner, 13 Nov 2026). Built on branch `phase-75-pixel-folk` (pull request #119). Code: `js/flume83.js`; test: `test/flume83.test.js`; French: `tools/i18n/p83-flume.tsv`. Every line is **[PROPOSED]**: the plan marks the Stride, the Pound Stair, Sallow Bottom, the four people, the raft, the bee-boles and the gauging stone as invented.
 
@@ -93,3 +97,106 @@ From the world plan, `Phase 81 - The World Plan.md`, "Road 1. The Flume, down to
 | 55 | A finger-post. THE POUND STAIR. Under it, smaller: STILLWATER LANDING. | Un poteau indicateur. L'ESCALIER DES BIEFS. En dessous, plus petit : L'EMBARCADÈRE DE STILLWATER. |
 | 56 | A finger-post. THE STRIDE, up. Under it, smaller: THE FLUME ROAD. | Un poteau indicateur. L'ENJAMBÉE, en haut. En dessous, plus petit : LA ROUTE DE LA FLUME. |
 | 57 | A finger-post. STILLWATER LANDING, down. Somebody has cut under it: mind the gates. | Un poteau indicateur. L'EMBARCADÈRE DE STILLWATER, en bas. Quelqu'un a gravé dessous : attention aux portes. |
+
+# Road 3: the drove road (the Grey Wethers and the Hundred Hollows)
+
+From the world plan, "Road 3. The drove road" (approved by the owner, 13 Nov 2026). Code: `js/drove83.js`; test: `test/drove83.test.js`; French: `tools/i18n/p83-drove.tsv`. Every line below is **[PROPOSED]**, for review: the plan marks the Grey Wethers and their notes, the drovers' call, the Three Pines, the Hundred Hollows, the pinfold, the returners, the old woman and her task and the furze-cutter as invented.
+
+## What was built
+
+1. **The road between the stile and Wethercombe.** The stile in the Watch Downs' south hedge used to drop straight into Wethercombe. It now opens on the drove road, in two stretches, and Wethercombe's way up comes out at the foot of the second. Nothing else about the Downs or the combe changes; the Downs stay danger 0, "the quiet way in".
+2. **The Grey Wethers** (120 by 160 cells, danger 0). The drove road, six cells wide and green with the cart-ruts down its middle, swings round the head of a dry valley and runs through a flock of about a hundred grey sarsens lying in the grass like sheep lying down, past a dew-pond (a chalk dish, full) to **the Three Pines**, the drovers' halt, where the returners have stopped with their handcart. A **pinfold** of flint and chalk stands near the halt with a **tally-stick** in its wall; a **drover's cache** is under the middle pine. Every stone gives a note when you knock it; **in a high wind the flock sounds by itself**, faintly, one stone after another.
+3. **The Hundred Hollows** (110 by 170 cells, danger 1). The road narrows into **a holloway**, sunk between its banks with hawthorn on both sides meeting overhead (in the 3D view a green roof with the light coming through in pieces), and comes out on a down that is all grassed-over pits, a hundred of them; then down by **terraces** into Wethercombe. **One hollow is not grassed over**: white chalk and a dark mouth going down (the Antler Galleries, Phase 85; nothing opens yet). **Hounds den in three of the hollows after dark** and are gone by day.
+4. **The old woman's task.** She is a drover's daughter among the returners and cannot climb to the stones. Five Wethers carry her father's red raddle, one stroke to five; the drovers' call goes **three, one, four, two, five**, and she hums it. Struck in that order (use a stone to knock it) the call goes out over the down and she pays 6 sovereigns, with experience and a journal line, once. Out of order the stones only clang: the call starts again, and it is noise.
+5. **The people:** the returners (a man pulling the cart, his wife, their boy, and his mother, the old woman), camped at the Three Pines, with a small fire there at night; a furze-cutter by day among the furze on the east side, cutting faggots for the beacons.
+6. **At night** the three fold-fires (`js/sheepwalk22.js`), once lit, show from the road as fires on three hills, each in the direction of its own hill. **At dawn after a wet night** (rain between eight at night and five in the morning) the combe end fills with mist until half past eight: in the 3D view a white sea at one level over the low terraces, the higher ground standing out of it.
+7. **Finger-posts at the four new gates;** the Downs' stile post and the travel chart moved to the new road, as for road 1.
+
+## Readings I had to take (please check)
+
+- **The notes of the five raddled stones:** G, A, B, D and E (a five-note drovers' scale); the plain stones ring lower.
+- **Which stones are raddled, and where:** upslope east of the road, in the thick of the flock, each within reach of the road.
+- **The returners are camped at the Three Pines** for now (the plan has them travelling the road); they keep their hours there.
+- **The old woman's pay (6 sovereigns), the cache's tier, the three dens and the mist's hours** are mine.
+- **The mist** is drawn in the 3D view only; in the flat view the combe looks as it always does, and looking at the mist gives its line.
+- **Where the far fires stand:** on hills inside each stretch, in the direction of the real fire (the Long Down north, Hob's Knap east, Ewe Barrow west), so they can be seen through the night's haze.
+- **"A returner, his wife" and "his mother":** the boy calls her Gran, the man calls her Mother.
+
+## Questions for the owner
+
+1. **All the text below.** *Recommend: approve as written.*
+2. **The drovers' call:** three, one, four, two, five. *Recommend: keep.*
+3. **Should the returners walk on** (out of the halt and down to Wethercombe after a day or two), or stay camped at the Three Pines? *Recommend: stay camped until Phase 86 gives the roads their travellers.*
+
+## Lines in the game (68, numbered on from road 1)
+
+| # | English [PROPOSED] | French |
+|---|---|---|
+| 58 | The drove road: the Grey Wethers | Le chemin de transhumance : les Moutons Gris |
+| 59 | The drove road: the Hundred Hollows | Le chemin de transhumance : les Cent Creux |
+| 60 | Up to the Watch Downs | Remonter vers les Hauts du Guet |
+| 61 | On to the Hundred Hollows | Continuer vers les Cent Creux |
+| 62 | Back to the Grey Wethers | Revenir aux Moutons Gris |
+| 63 | Down to Wethercombe | Descendre vers Wethercombe |
+| 64 | The drove road. Wide enough for a hundred sheep abreast, and green, because nothing has walked it in two years. | Le chemin de transhumance. Assez large pour cent moutons de front, et vert, parce que rien ne l'a foulé depuis deux ans. |
+| 65 | A dry valley, all turf and no stream. The water went down into the chalk a long time ago, and the valley never noticed. | Une vallée sèche, tout en gazon et sans ruisseau. L'eau est descendue dans la craie il y a longtemps, et la vallée ne s'en est jamais aperçue. |
+| 66 | The Grey Wethers. A flock of grey stones lying in the grass, like sheep lying down. From the road, for a moment, you count them. | Les Moutons Gris. Un troupeau de pierres grises couchées dans l'herbe, comme des moutons couchés. Depuis la route, un instant, vous les comptez. |
+| 67 | A grey wether: a sarsen stone, lying down. Knock it and it gives a note. | Un mouton gris : une pierre de grès, couchée. Frappez-la, et elle rend une note. |
+| 68 | The wind is up, and the stones are sounding by themselves: a hillside of bells, faint, and no sheep anywhere. | Le vent s'est levé, et les pierres sonnent d'elles-mêmes : un coteau de clochettes, faibles, et pas un mouton nulle part. |
+| 69 | A grey wether with one stroke of red raddle on its back. | Un mouton gris avec un trait d'ocre rouge sur le dos. |
+| 70 | A grey wether with two strokes of red raddle on its back. | Un mouton gris avec deux traits d'ocre rouge sur le dos. |
+| 71 | A grey wether with three strokes of red raddle on its back. | Un mouton gris avec trois traits d'ocre rouge sur le dos. |
+| 72 | A grey wether with four strokes of red raddle on its back. | Un mouton gris avec quatre traits d'ocre rouge sur le dos. |
+| 73 | A grey wether with five strokes of red raddle on its back. | Un mouton gris avec cinq traits d'ocre rouge sur le dos. |
+| 74 | You knock the stone. It gives a note, and the note goes on longer than it should. | Vous frappez la pierre. Elle rend une note, et la note dure plus longtemps qu'elle ne devrait. |
+| 75 | The stone answers, and the note runs down the hill to the road. | La pierre répond, et la note descend la colline jusqu'à la route. |
+| 76 | The fifth stone rings, and the call goes out over the down the way it used to. Down at the Three Pines, the old woman stands up. | La cinquième pierre sonne, et l'appel s'en va sur la lande comme autrefois. En bas, aux Trois Pins, la vieille femme se lève. |
+| 77 | Out of order the stones only clang, and the clang goes a long way. | Dans le désordre, les pierres ne font que cogner, et le bruit porte loin. |
+| 78 | A dew-pond: a dish of puddled chalk on the top of the down, holding rain and mist. Nothing has drunk from it in two years. It is full. | Une mare de rosée : une cuvette de craie damée en haut de la lande, qui garde la pluie et la brume. Rien n'y a bu depuis deux ans. Elle est pleine. |
+| 79 | The Three Pines, the drovers' halt. Every night of a drove ended under a clump like this; you could see the next one a day ahead. | Les Trois Pins, la halte des bouviers. Chaque nuit de transhumance finissait sous un bouquet comme celui-ci ; on voyait le suivant un jour à l'avance. |
+| 80 | Something wrapped in oilskin, under the roots of the middle pine. | Quelque chose enveloppé de toile cirée, sous les racines du pin du milieu. |
+| 81 | A pinfold: a pound of flint and chalk for strays, its gate gone. | Une fourrière : un enclos de silex et de craie pour les bêtes égarées, sa barrière disparue. |
+| 82 | A tally-stick pushed into a crack in the pinfold wall, notched for strays. The last notch is cut deeper than the rest. | Un bâton de taille enfoncé dans une fente du mur de la fourrière, entaillé pour les bêtes égarées. La dernière encoche est plus profonde que les autres. |
+| 83 | A handcart, with everything a family kept roped down under a blanket. | Une charrette à bras, avec tout ce qu'une famille a gardé, ficelé sous une couverture. |
+| 84 | The returners' fire, small, under the pines. | Le feu des revenants, petit, sous les pins. |
+| 85 | Furze, in yellow flower and all thorn. | De l'ajonc, en fleurs jaunes et tout en épines. |
+| 86 | Furze faggots, cut and bound, for the beacons. | Des fagots d'ajonc, coupés et liés, pour les fanaux. |
+| 87 | Far off on a hill, a fire. Somebody has lit the beacon. | Au loin sur une colline, un feu. Quelqu'un a allumé le fanal. |
+| 88 | The holloway. The road has worn itself down between its banks until the hawthorn meets overhead, and you walk in a green tunnel. | Le chemin creux. La route s'est usée entre ses talus jusqu'à ce que l'aubépine se rejoigne au-dessus, et vous marchez dans un tunnel vert. |
+| 89 | The Hundred Hollows. The down is all grassed-over pits, side by side, like a field of giant thumb-prints. | Les Cent Creux. La lande n'est que fosses couvertes d'herbe, côte à côte, comme un champ d'empreintes de pouce de géant. |
+| 90 | A hollow, grassed over, a little deeper than a man is tall. | Un creux couvert d'herbe, un peu plus profond qu'un homme n'est grand. |
+| 91 | Flattened grass in the bottom of a hollow, and a smell. Something lies up here. | De l'herbe couchée au fond d'un creux, et une odeur. Quelque chose gîte ici. |
+| 92 | One hollow the grass has not closed over: white chalk sides, and at the bottom a dark mouth going down. It was dug, long ago, with something that was not iron. | Un creux que l'herbe n'a pas refermé : des parois de craie blanche, et au fond une bouche sombre qui descend. On l'a creusé il y a longtemps, avec quelque chose qui n'était pas du fer. |
+| 93 | Terraces down into the combe, each one a step of turf, ploughed along the hill once. | Des terrasses qui descendent dans la combe, chacune une marche de gazon, labourée jadis le long de la colline. |
+| 94 | Mist fills the combe below like milk in a bowl, and the hilltops stand out of it like islands. | La brume emplit la combe en contrebas comme du lait dans un bol, et les sommets en émergent comme des îles. |
+| 95 | An old woman, a drover's daughter | Une vieille femme, fille de bouvier |
+| 96 | "My father drove this road. Twice a year, eight hundred head, and he knew every stone on the down by its note." | "Mon père menait les bêtes sur cette route. Deux fois l'an, huit cents têtes, et il connaissait chaque pierre de la lande à sa note." |
+| 97 | "I can't get up to the stones any more. Will you? My father raddled five of them, one stroke to five. The drovers' call goes three, one, four, two, five." She hums it. "Strike them in that order and they call the flock. Out of order they only make a noise, and noise brings the hounds out of the Hollows." | "Je ne peux plus monter jusqu'aux pierres. Vous voulez bien ? Mon père en a marqué cinq à l'ocre, d'un trait à cinq. L'appel des bouviers va trois, un, quatre, deux, cinq." Elle le fredonne. "Frappez-les dans cet ordre et elles appellent le troupeau. Dans le désordre, elles ne font que du bruit, et le bruit fait sortir les chiens des Creux." |
+| 98 | "We were inside the Hedge two years. Tamar Farrant came out first. We're the next. I wanted to hear the stones once more." | "Nous avons passé deux ans dans la Haie. Tamar Farrant est sortie la première. Nous sommes les suivants. Je voulais entendre les pierres une fois encore." |
+| 99 | The old woman, humming five notes under her breath. | La vieille femme, qui fredonne cinq notes à mi-voix. |
+| 100 | The old woman holds your hand in both of hers and leaves a coin in it. "That was it. That was the call." | La vieille femme prend votre main dans les deux siennes et y laisse une pièce. "C'était ça. C'était l'appel." |
+| 101 | The drove road: I struck the five raddled Grey Wethers in the drovers' call, three, one, four, two, five, for the old woman at the Three Pines. | Le chemin de transhumance : j'ai frappé les cinq Moutons Gris marqués à l'ocre dans l'ordre de l'appel des bouviers, trois, un, quatre, deux, cinq, pour la vieille femme des Trois Pins. |
+| 102 | A returner | Un revenant |
+| 103 | A returner, his wife | Une revenante, sa femme |
+| 104 | A returner's boy | Le garçon des revenants |
+| 105 | "Two years in the Hedge. We're going to see if the farm's still there. Wethercombe way, past the Hollows." | "Deux ans dans la Haie. Nous allons voir si la ferme est toujours là. Du côté de Wethercombe, après les Creux." |
+| 106 | "Pulling the cart. Mother can walk, slow. The boy can't stop running." | "Je tire la charrette. Mère peut marcher, doucement. Le petit ne peut pas s'arrêter de courir." |
+| 107 | "It's so quiet out here. Inside you never had quiet. You never had room." | "C'est si calme, ici. Dedans, on n'avait jamais le calme. On n'avait jamais de place." |
+| 108 | A returner, to the cart: "Nearly there. Nearly." | Un revenant, à la charrette : "Presque. Presque." |
+| 109 | "Mind the boy. He'll talk to you all day." | "Attention au petit. Il vous parlera toute la journée." |
+| 110 | "Looking. Just looking. I'd forgotten how far you can see." | "Je regarde. Seulement. J'avais oublié jusqu'où on voit." |
+| 111 | "Tamar wrote that the house still stands. She didn't say what's in it." | "Tamar a écrit que la maison tient toujours debout. Elle n'a pas dit ce qu'il y a dedans." |
+| 112 | A returner, shading her eyes: "Is that our hill?" | Une revenante, la main en visière : "C'est notre colline, là ?" |
+| 113 | "Are those sheep? They're not sheep. Gran says they ring." | "C'est des moutons ? C'est pas des moutons. Grand-mère dit qu'ils sonnent." |
+| 114 | "Counting the stones. I got to forty and lost count." | "Je compte les pierres. Je suis arrivé à quarante et je me suis perdu." |
+| 115 | "I never saw a hill before. I was little when we went in." | "J'avais jamais vu de colline. J'étais petit quand on est entrés." |
+| 116 | The boy: "Forty-one. Forty-two." | Le garçon : "Quarante et un. Quarante-deux." |
+| 117 | A furze-cutter | Un coupeur d'ajonc |
+| 118 | "Furze for the beacons. It burns fast and hot and tells the whole Reach you're there." | "De l'ajonc pour les fanaux. Ça brûle vite et chaud, et ça dit à tous les Confins que vous êtes là." |
+| 119 | "Faggots for the Long Down and Hob's Knap and Ewe Barrow. Somebody lights them now, nights. I don't ask who." | "Des fagots pour le Long Down, le Knap de Hob et Ewe Barrow. Quelqu'un les allume maintenant, la nuit. Je ne demande pas qui." |
+| 120 | "The Hollows? Not after dark. The hounds lie up in them. In the day they're only holes." | "Les Creux ? Pas après la nuit tombée. Les chiens y gîtent. Le jour, ce ne sont que des trous." |
+| 121 | A furze-cutter, sucking a thumb: "Every bush bites." | Un coupeur d'ajonc, qui suce son pouce : "Chaque buisson mord." |
+| 122 | A finger-post. THE WATCH DOWNS, up. The other arm: WETHERCOMBE, down the drove. | Un poteau indicateur. LES HAUTS DU GUET, en haut. L'autre bras : WETHERCOMBE, en bas par le chemin de transhumance. |
+| 123 | A finger-post. THE HUNDRED HOLLOWS. Under it, cut small: keep to the road after dark. | Un poteau indicateur. LES CENT CREUX. En dessous, gravé petit : restez sur la route après la nuit tombée. |
+| 124 | A finger-post. THE GREY WETHERS, back. Under it, smaller: THE WATCH DOWNS. | Un poteau indicateur. LES MOUTONS GRIS, en arrière. En dessous, plus petit : LES HAUTS DU GUET. |
+| 125 | A finger-post. WETHERCOMBE, down. The Bellwether's ram is burned into it. | Un poteau indicateur. WETHERCOMBE, en bas. Le bélier du Bellwether y est marqué au fer. |
