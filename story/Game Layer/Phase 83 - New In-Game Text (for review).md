@@ -1,6 +1,6 @@
 # Phase 83: the first two new roads (built, for review)
 
-Road 1, the Flume down to Stillwater, is first (its questions ruled and its lines passed by the owner, 13 Nov 2026). Road 3, the drove road, follows it below, for review.
+Road 1, the Flume down to Stillwater, is first (its questions ruled and its lines passed by the owner, 13 Nov 2026). Road 3, the drove road, follows it below (approved by the owner, 14 Nov 2026).
 
 # Road 1: the Flume, down to Stillwater
 
@@ -123,6 +123,8 @@ From the world plan, "Road 3. The drove road" (approved by the owner, 13 Nov 202
 - **"A returner, his wife" and "his mother":** the boy calls her Gran, the man calls her Mother.
 
 ## Questions for the owner
+
+**Approved by the owner, 14 Nov 2026 ("I approve"):** the text as written; the drovers' call three, one, four, two, five; the returners stay camped at the Three Pines until Phase 86. The [PROPOSED] marks are left to show what was invented.
 
 1. **All the text below.** *Recommend: approve as written.*
 2. **The drovers' call:** three, one, four, two, five. *Recommend: keep.*
