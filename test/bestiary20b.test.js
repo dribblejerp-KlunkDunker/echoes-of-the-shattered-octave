@@ -21,6 +21,9 @@ const OURS = ['legionnaire', 'ln17_hollow', 'marine', 'miredrone', 'outrider', '
   try {
     const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
+    // Phase 76 (js/paintfolk76.js) gives every figure its moving painting, which stands in for the older art this suite
+    // checks; that art is still what draws with the switch off, so the suite holds the switch off.
+    await page.addInitScript(() => { setInterval(() => { try { if (typeof GFX !== 'undefined' && GFX.paintfolk) GFX.paintfolk = false; } catch (e) { /* not yet */ } }, 5); });
     await page.goto((process.env.PREVIEW_URL || 'http://127.0.0.1:3000') + '/?nosw=1');
     await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && typeof DIRECTIONS !== 'undefined' && typeof BEASTB !== 'undefined' && G.state === 'title');
     await page.locator('#btn-new').click(); await page.locator('#cname').fill('Bestiary Tester');

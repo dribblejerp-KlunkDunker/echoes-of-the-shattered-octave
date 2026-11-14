@@ -67,6 +67,265 @@ To play together, both players press **Play together** on the title screen: one 
 
 The plain link works on phones too: a phone or tablet starts in touch mode by itself. The `?touch=1` link also turns the touch controls on for a touchscreen laptop. A mouse that moves hands control back, unless Options → Controls → Touch controls is set to On.
 
+## New in this build: moving paintings, buildings with real shape, and the long road
+
+*This is the work of pull request #119 (Phases 75 to 79). The play buttons at the top of this page open the game GitHub publishes from `main`, so they carry all of this from the moment that pull request is merged: **[play in your browser](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/)** · **[play on your phone](https://dribblejerp-klunkdunker.github.io/echoes-of-the-shattered-octave/?touch=1)**.*
+
+**Everyone moves.** Every person and creature keeps their painting and now walks, talks and strikes with real limbs.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/paintfolk76/paintings-in-game.gif" alt="Painted townsfolk walking with moving limbs in Oakhaven"></td>
+<td width="50%"><img src="screenshots/paintfolk76/paintings-actions.gif" alt="A painted figure idling, walking, talking and striking"></td>
+</tr>
+</table>
+
+**Buildings with real shape, and every region builds differently.** Roofs with eaves, gables, upper storeys, dormers, chimneys and lit windows; rain stops at the roof. Oakhaven is timber and thatch, Port Cantabile is lime-wash and slate on its hill, Whisper-Grove is lilac marble, the Hollow is terraces, and Greenroot has its twisted spire.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/eaves78/oakhaven-inn.gif" alt="Oakhaven's inn with its jettied upper storey and thatch"></td>
+<td width="50%"><img src="screenshots/eaves78/cantabile-quay.gif" alt="Port Cantabile's quay: lime-washed fronts, blue shutters, slate roofs"></td>
+</tr>
+<tr>
+<td>Oakhaven: timber, thatch and a jettied inn.</td>
+<td>Port Cantabile: lime-wash, slate and hoists on the quay.</td>
+</tr>
+<tr>
+<td><img src="screenshots/eaves78/grove-court.gif" alt="Whisper-Grove's court in lilac marble"></td>
+<td><img src="screenshots/eaves78/greenroot-spire.gif" alt="Greenroot's twisted shingle spire with its bronze reed"></td>
+</tr>
+<tr>
+<td>Whisper-Grove: lilac marble, lead and arches.</td>
+<td>Greenroot: the twisted spire.</td>
+</tr>
+</table>
+
+**And the six smaller places each build their own way too.** Stillwater Landing is black-tarred board under reed thatch, with no window on the lane side: every one looks at the water. The Low Rings are Oakhaven's drowned quarter, with a tide-line on every wall and one lit window. Wethercombe is flint under deep thatch, where even the yard walls wear a little thatched roof and a straw ram stands on the inn's ridge. Nothing on the Watch Downs has a roof at all. On Driftwood Cay the roof is roped down and weighted with stones against the wind. And the Flume, which nobody built, has ribs: living hoops grown over the water, with a bead of sap-light at each crown after dusk.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/eaves82/flume-ribs.gif" alt="Walking the Flume Road at dusk: living hoops of grown wood over the water, each with a bead of green sap-light"></td>
+<td width="50%"><img src="screenshots/eaves82/stillwater-landing.jpg" alt="Stillwater Landing: the lockkeeper's house with its porch, reed thatch and tarred board"></td>
+</tr>
+<tr>
+<td>The Flume Road: the ribs, and their sap-light after dusk.</td>
+<td>Stillwater Landing: reed thatch, tarred board, the lockkeeper's porch.</td>
+</tr>
+<tr>
+<td><img src="screenshots/eaves82/wethercombe-inn.jpg" alt="The Bellwether at Wethercombe under deep straw thatch, a straw ram on its ridge"></td>
+<td><img src="screenshots/eaves82/wethercombe-farm.jpg" alt="A flint farmhouse at Wethercombe, its yard wall wearing a little thatched roof"></td>
+</tr>
+<tr>
+<td>Wethercombe: the Bellwether, with a straw ram on the ridge.</td>
+<td>Wethercombe: flint, thatch, and a thatched yard wall.</td>
+</tr>
+<tr>
+<td><img src="screenshots/eaves82/low-rings.jpg" alt="The Low Rings: upper floors standing out of green water, a dark tide-line along every wall"></td>
+<td><img src="screenshots/eaves82/driftwood-cay.jpg" alt="Hesper's orphan-house on Driftwood Cay: a low roof roped down and weighted with stones, a driftwood porch"></td>
+</tr>
+<tr>
+<td>The Low Rings: upper floors out of the water, a tide-line on every wall.</td>
+<td>Driftwood Cay: the roof roped down against the wind.</td>
+</tr>
+</table>
+
+**The Greenroot road: a world that takes a while to cross.** The door that used to open straight onto Greenroot now opens on a road three stretches long, about six minutes at a walk: the Long Common, the middle stretch and Greenroot Wood. No stretch runs straight. Each has a lake, running water to cross, cliffs, a climb and a far skyline; something to find, someone to meet with a small task, and something that only happens at night or in bad weather. Travellers walk it. Old places off it are not empty. Under the ruined lych-house is a dungeon, Singers' Howe, with the Long Rest waiting behind a door that has no handle, and gear found nowhere else.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/road79/delph-dusk.gif" alt="An old stone pit at dusk: glass grown through the rock lights up green and gold as night falls"></td>
+<td width="50%"><img src="screenshots/road79/narrows-walk.gif" alt="Walking the road up through the Narrows between two crags, mountains ahead"></td>
+</tr>
+<tr>
+<td>The Delph at dusk. Glass has come up through the rock, and it gives its own light.</td>
+<td>Through the Narrows, with the Grey Teeth on the skyline.</td>
+</tr>
+<tr>
+<td><img src="screenshots/road79/land.jpg" alt="The Leap waterfall, the Narrows, the stones out to the eyot, the ruined toll-house"></td>
+<td><img src="screenshots/road79/long-common-and-greenroot-wood.jpg" alt="The Delph by day and night, the Bell Oak, the river road, the Cleave, the eel-stage in the fen"></td>
+</tr>
+<tr>
+<td>The middle stretch: the Leap, the Narrows, the eyot, the toll-house.</td>
+<td>The Long Common and Greenroot Wood: the Delph, the Bell Oak, the Cleave, the fen.</td>
+</tr>
+<tr>
+<td><img src="screenshots/road79/lych-house-and-howe.jpg" alt="The ruined lych-house with an antiquary and her digger, the mouth of the Howe, and the dungeon inside"></td>
+<td><img src="screenshots/road79/hour-and-weather.jpg" alt="The ford dry and flooded, the Leap in spate, a watch-fire at night"></td>
+</tr>
+<tr>
+<td>The lych-house, the explorers camped at it, and Singers' Howe beneath.</td>
+<td>By hour and weather: the ford floods in rain, the Leap comes down in spate, a watch-fire burns at night.</td>
+</tr>
+</table>
+
+<p align="center"><img src="screenshots/road79/plan-whole-road.jpg" alt="A plan of the whole Greenroot road: the Long Common, the middle stretch and Greenroot Wood, with every place on them named" width="92%"></p>
+
+**Every place where the map says it is, with finger-posts and notice boards (Phase 82b).** The travel map's paintings of the Reach and the Woods are now drawn in code from the places themselves, each laid where its gates put it, with the roads drawn between the gates, so every road leaves the way the map shows. A place you have not found is not drawn. Twenty-six finger-posts stand at every way out, in words, not numbers ("THE LEAP. Under it, smaller: GREENROOT, a day and a half."), and six towns have a notice board under its own small roof, with notices, lore and small tasks to take: set eel-traps before light at Stillwater, carry hurdles to the fold at Wethercombe, hang chimes on the Harbour's shrouds, take Rooke's tonic to the marked doors in the Hollow. The Malting yard's way back to the Court is now on its south side, where the map puts it. The text is for the owner's review: [`story/Game Layer/Phase 82b - New In-Game Text (for review).md`](story/Game%20Layer/Phase%2082b%20-%20New%20In-Game%20Text%20%28for%20review%29.md).
+
+<p align="center"><img src="screenshots/p82b-chart-fills.gif" alt="The Reach chart filling in place by place: Oakhaven, the clearing, the Downs and Wethercombe, the Flume Road and Stillwater, then the three stretches of the Greenroot road" width="92%"></p>
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p82b-combe-walk.gif" alt="Walking up to the Bellwether's notice board at Wethercombe, under its own small roof"></td>
+<td width="50%"><img src="screenshots/p82b-greenroot-walk.gif" alt="Walking up to Greenroot's notice board by the well"></td>
+</tr>
+<tr>
+<td>Wethercombe: the Bellwether's board.</td>
+<td>Greenroot: the board by the mill, with nobody to read it.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p82b-board-panel.jpg" alt="Reading the piling board at Stillwater: notices, lore and the tasks to take"></td>
+<td><img src="screenshots/p82b-travel-woods.jpg" alt="The Spectral Woods on the travel map: the Malting yard north of the Sunken Court, the Bell Yard west, the Deep Woods away to the north-east"></td>
+</tr>
+<tr>
+<td>Reading a board: notices, lore, tasks to take.</td>
+<td>The Woods: the Malting yard north of the Court, where its door is.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p82b-common-post.jpg" alt="A finger-post inside the Long Common's west gate"></td>
+<td><img src="screenshots/p82b-yard-walk.gif" alt="Walking to the Malting yard's south gate, past the Office's painted board on a stake"></td>
+</tr>
+<tr>
+<td>A finger-post inside the Long Common's west gate.</td>
+<td>The Malting yard's way back to the Court, south.</td>
+</tr>
+</table>
+
+**The Flume, down to Stillwater (Phase 83, road 1).** The lane off the Flume Road no longer drops straight onto Stillwater Landing: the road itself is there, in two stretches. On **the Stride** it winds down into Sallow Bottom, among alder and willow, and crosses the brook twice, while the Flume crosses the whole valley overhead in one straight line on grown trunks as tall as a church. After dark its sap-light runs in the channel, one green line from ridge to ridge. On **the Pound Stair** sixteen grown locks step down the hill, each with its square side-pound, and the road zigzags beside them. In rain the Stair "walks" and the low road goes under; afterwards the bottom pound stands empty a while and shows a grating. The lengthsman's three top gates have stuck: hum the Root at them in order, top to bottom, and don't ring the stakes. The text is for the owner's review: [`story/Game Layer/Phase 83 - New In-Game Text (for review).md`](story/Game%20Layer/Phase%2083%20-%20New%20In-Game%20Text%20%28for%20review%29.md).
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p83-stride-night.gif" alt="Walking through Sallow Bottom at night under the Flume, its channel a green line overhead"></td>
+<td width="50%"><img src="screenshots/p83-poundstair-walk.gif" alt="Walking down the Pound Stair beside the locks and side-pounds"></td>
+</tr>
+<tr>
+<td>The Stride at night: the Flume's green line in the sky.</td>
+<td>Down the Pound Stair.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p83-stride-day.jpg" alt="The Flume on its trunks across Sallow Bottom by day"></td>
+<td><img src="screenshots/p83-poundstair.jpg" alt="The road along the locks of the Pound Stair, the side-pounds stepping down the hill"></td>
+</tr>
+<tr>
+<td>The Stride by day.</td>
+<td>The Pound Stair: locks, side-pounds, and the road between.</td>
+</tr>
+</table>
+
+**The drove road (Phase 83, road 3).** The stile in the Watch Downs' south hedge now opens on the drove road, in two stretches. **The Grey Wethers:** the road runs wide and green round the head of a dry valley and through a flock of grey stones lying in the grass like sheep lying down; every one gives a note when knocked, and in a high wind the whole flock sounds by itself. Past a dew-pond the returners, a family come out of the Hedge after two years, are camped with their handcart at the Three Pines; the old woman among them, a drover's daughter, asks you to strike the five raddled stones in the drovers' call. **The Hundred Hollows:** a holloway under hawthorn, then a down of grassed-over pits where hounds lie up after dark, one hollow still open chalk, and terraces down into Wethercombe; at dawn after a wet night, mist fills the combe. The text is in the same review file as road 1.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p83-grey-wethers.gif" alt="Walking the drove road through the Grey Wethers, grey stones lying in the grass like a flock"></td>
+<td width="50%"><img src="screenshots/p83-holloway-walk.gif" alt="Walking down the holloway, sunk between its banks under a roof of hawthorn"></td>
+</tr>
+<tr>
+<td>The Grey Wethers.</td>
+<td>The holloway.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p83-three-pines.jpg" alt="The Three Pines at the drovers' halt"></td>
+<td><img src="screenshots/p83-dawn-mist.gif" alt="Walking down the terraces into the mist at dawn after a wet night"></td>
+</tr>
+<tr>
+<td>The Three Pines, the drovers' halt.</td>
+<td>Dawn after a wet night: down into the mist.</td>
+</tr>
+</table>
+
+**The trees, larger and of many shapes.** Every tree out of doors now grows to a height of its own kind's (an oak three to nearly six times a person's height, a beech or an ash over five, a hawthorn two or three), most of them middling and a few of them giants, and takes one of its own kind's shapes: spreading, stag-old, tall, leaning, wind-bent, the great field oak. By a house a tree grows only as far as there is room. The Options switch "Larger trees, of many shapes" puts them back.
+
+<p align="center"><img src="screenshots/p83-trees-before-after.jpg" alt="Before and after: the Hanger's wood and an oak on Greenroot Wood's slope, the trees grown and of many shapes" width="92%"></p>
+<p align="center"><img src="screenshots/p83-trees-walk.gif" alt="Walking into the Hanger among the grown trees" width="70%"></p>
+
+**Ponies to ride, milestones, and the roads on the map (Phase 84).** Three stables hire a pony for a day (25 sovereigns, 10 back early): the North Gate in Oakhaven, the Bellwether's yard in Wethercombe and the drovers' pen on the Long Common. Each has three ponies in real horses' coats: roan, bay and black; dun, chestnut and palomino; dapple grey, skewbald and leopard-spotted. Pick one by her portrait. Stand by her and press **X** to ride: one and three-quarter times walking pace, a little higher, no bow from the saddle, thrown at the third hard blow. She will not go onto planks, down the Pound Stair, into the Deep Grove or indoors. Left alone she waits six hours, then goes home. A milestone stands by every finger-post; walk past one and the world map can send you there, along the roads, gate to gate. Long journeys stop the night at a halt unless you press on, and an ambush comes on the stretch where it happens.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p84-coats.jpg" alt="Nine ponies side by side: roan, bay, black, dun, chestnut, palomino, dapple grey, skewbald and leopard-spotted"></td>
+<td width="50%"><img src="screenshots/p84-stable.jpg" alt="The drovers' pen: three ponies to choose from by their portraits"></td>
+</tr>
+<tr>
+<td>Nine coats, three to a stable.</td>
+<td>Choosing at the drovers' pen.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p84-pony.jpg" alt="The spotted mare saddled and waiting on the drove road"></td>
+<td><img src="screenshots/p84-riding.jpg" alt="Riding the drove road, the spotted mare's neck and ears below the view"></td>
+</tr>
+<tr>
+<td>Saddled and waiting.</td>
+<td>Riding the drove road.</td>
+</tr>
+</table>
+
+**The Dry Flume (Phase 85).** Before the Flume was grown, it was built. An arch in a bank on the Stride's valley floor opens on the old stone conduit, dry for two hundred years and lit only by the living Flume's root where it has come down through the roof. Seven rooms: the adit, the conduit, the settling tanks (fret-crawlers in the silt), the wheel-pit (a sluice-gate over the ledge on a worn chain: wedge it or it comes down), the sump (when the Flume draws breath it fills to the roof and drains, so the causeway has to be timed), the pump-hall (iron galleries, the engine's beam, and under it the Standing Note, a mire-drone grown to the size of a cart), and the stair up to the Pound Stair's grating, bolted from below. On the engine-man's bench: the Lengthsman's Hook (it reaches, and it pulls) and Sluice-Boots (silent in water).
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p85-dryflume-arch.jpg" alt="A dressed-stone arch set in a grassy bank under the Flume's wooden trunks"></td>
+<td width="50%"><img src="screenshots/p85-dryflume-conduit.jpg" alt="A brick conduit, a glowing green root hanging from its roof"></td>
+</tr>
+<tr>
+<td>The arch on the Stride.</td>
+<td>The conduit and the root.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p85-dryflume-pit.jpg" alt="An iron wheel standing in black water in a pit, lit green by a root"></td>
+<td><img src="screenshots/p85-dryflume-hall.jpg" alt="The pump-hall: iron columns and galleries, the engine's beam, roots of green light"></td>
+</tr>
+<tr>
+<td>The wheel-pit.</td>
+<td>The pump-hall.</td>
+</tr>
+</table>
+
+**The Antler Galleries (Phase 85).** The open hollow on the drove road goes down into an old flint-mine. Low white galleries run out from the shaft's foot, and the antler picks the miners left lie where they put them down, the further ones rooting and putting up new tines. It is still down there, and stillness is the Hush's: your lamp is the way through, filled and lit at the tallow-cups in the niches. Down a second shaft is the deep: a white forest of antler from floor to roof, the seam of black flint they dug for, and in the deepest gallery the Flint-Back, a fret-crawler grown white in the chalk. The Antler Pick (it breaks armour) and the Floorstone Knife (black flint, almost silent) are down there.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p85-antler-gal2.jpg" alt="A low white chalk gallery lit by a lamp, an antler pick rooting in the floor"></td>
+<td width="50%"><img src="screenshots/p85-antler-forest.jpg" alt="A forest of pale glowing antler in a chalk cavern"></td>
+</tr>
+<tr>
+<td>The galleries, by lamplight.</td>
+<td>The white forest.</td>
+</tr>
+</table>
+
+**The Sunk Lanes, the punt and Cross Pool (Phase 85).** Between Stillwater Landing and the Low Rings there is now a way of its own: old cobbles under a hand of water, boards from roof to roof, a hedge-bank, deep pools on either side. The punt-woman hires her punt for a sovereign; pole it over the deep to what the boards cannot reach. West of the Low Rings lies Cross Pool, the old town: the market cross under clear green water, lit from beneath after dark; the corn loft; the weavers' row, where a child's reed goes back on its hook; the Ladder's Foot, where Oakhaven can be heard over the Hedge; and on a still, clear night the kerbs of the old street rise as stepping stones.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p85-lanes-lanes.jpg" alt="Boards laid from roof to roof over green water between drowned houses"></td>
+<td width="50%"><img src="screenshots/p85-lanes-poolnight.jpg" alt="Cross Pool at night: the drowned market cross and street lit green from beneath the water"></td>
+</tr>
+<tr>
+<td>The Sunk Lanes.</td>
+<td>Cross Pool after dark.</td>
+</tr>
+</table>
+
+**The Deep Grove (Phase 85).** A gap in the north side of Greenroot Wood opens on glades of dwarf oaks grown out of mossy boulders. The path is not the same way twice: in every glade one way sounds lower than the others (and says so in a caption). Follow the low note and the wood lets you in, to the Stool, the oldest tree, a ring of trunks round a hollow where something under the roots is sending in no key the Octave uses. Walk by eye and you are let out where you came in. Nobody is there. After dark the silent circle closes round you, and something waits at the gap.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p85-grove-glade.jpg" alt="A glade ringed by old oaks and moss-furred dwarf oaks"></td>
+<td width="50%"><img src="screenshots/p85-grove-stool.jpg" alt="The Stool: a ring of ancient trunks round a dark hollow"></td>
+</tr>
+<tr>
+<td>A glade.</td>
+<td>The Stool.</td>
+</tr>
+</table>
+
+**What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
+
+<p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>
+
+More pictures of this build: [`screenshots/eaves78/`](screenshots/eaves78) and [`screenshots/eaves82/`](screenshots/eaves82) (every region's buildings), [`screenshots/paintfolk76/`](screenshots/paintfolk76), [`screenshots/walls77/`](screenshots/walls77), [`screenshots/road79/`](screenshots/road79), [`screenshots/world81/`](screenshots/world81).
+
 ## The world
 
 <table>
@@ -192,7 +451,7 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 - **Kaelen and Lyra,** who travel with you, talk on the road, flinch, limp and sing.
 - **A world that moves:** weather and a sky on the world clock, smoking chimneys, crows, swinging bells, rising portcullises and water that reflects.
 - **The Library of the Reach:** 65 books from inside the world, in four libraries.
-- Loot tables for enemies and 32 strongboxes hidden around the world.
+- Loot tables for enemies and 50 strongboxes hidden around the world.
 - An original orchestral score and recorded voices, a French translation, accessibility options, photo mode, a speedrun timer and data-only mod dungeons.
 - Save slots, save codes and save files; offline play once installed; two-player co-op; a desktop build.
 

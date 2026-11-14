@@ -66,6 +66,10 @@ async function boot(browser, block) {
     assert.deepEqual(await A.page.evaluate(() => { PRESETS.apply('original'); return [GFX.farCountry, GFX.belfryArt]; }), [true, true], 'the Original preset has both switches on');
     const hashes = (page, preset) => page.evaluate(({ scenes, preset }) => {
       PRESETS.apply(preset); if (typeof HORIZON20 !== 'undefined') { GFX.farCountry = false; GFX.belfryArt = false; } GFX.preset = PRESETS.current(); GFX.changed();
+      // Phase 76 (js/paintfolk76.js) rigs a painting in a quiet moment, on a timer, so the moment a person's picture changes
+      // from still to moving is not the same on two pages. The Chapel scene draws its people; hold the moving paintings out
+      // of this page-to-page comparison (as test/folk14.test.js does).
+      GFX.paintfolk = false;
       return scenes.map(([m, x, y, d, tod]) => { go(m, x, y, d); return hash(grab(tod, d, m === 'chapel')); });
     }, { scenes, preset });
     for (const flag of ['rite', 'plain']) {
@@ -85,7 +89,8 @@ async function boot(browser, block) {
     console.log('PASS off state: the Original preset with both switches off (with and without rite_ready) and Medium with both off are byte-identical to a build without js/horizon20.js in ' + scenes.length + ' scenes');
 
     // ---- maps and saves: the clearing gains one door cell, no entity ----
-    const shape = (page) => page.evaluate(() => { const c = G.maps.clearing; return { n: c.entities.length, base: c.baseCount, cells: c.cells.map((q) => (q ? (q.door ? 'D' : q.tex + '@' + (q.top == null ? '' : q.top)) : '.')) }; });
+    // (Phase 82b puts a finger-post at every way out, so the Downs' gate brings its post: that one is 82b's, not this module's)
+    const shape = (page) => page.evaluate(() => { const c = G.maps.clearing, post = c.entities.some((e) => e._p82bPost === 'clearing_west') ? 1 : 0; return { n: c.entities.length - post, base: c.baseCount - post, cells: c.cells.map((q) => (q ? (q.door ? 'D' : q.tex + '@' + (q.top == null ? '' : q.top)) : '.')) }; });
     const sa = await shape(A.page), sb = await shape(B.page);
     assert.equal(sa.n, sb.n, 'the clearing has the same entities'); assert.equal(sa.base, sb.base, 'and the same baseCount');
     const cellDiff = sa.cells.map((ch, i) => (ch === sb.cells[i] ? -1 : i)).filter((i) => i >= 0);
@@ -108,7 +113,8 @@ async function boot(browser, block) {
       check(D && D.outdoor && D.danger === 0 && D.lvls && D.smooth, 'the Downs are an outdoor height-mapped map with danger 0');
       const portals = []; for (let i = 0; i < D.cells.length; i++) { const c = D.cells[i]; if (c && c.portal) portals.push(c.portal.map); }
       // Phase 22 (js/sheepwalk22.js, the Author Rulings' region) adds one stile, south to Wethercombe; nothing else
-      const ways = typeof SHEEPWALK22 !== 'undefined' ? ['clearing', SHEEPWALK22.COMBE] : ['clearing'];
+      // and Phase 83 (js/drove83.js) puts the drove road itself between the stile and Wethercombe
+      const ways = typeof SHEEPWALK22 !== 'undefined' ? ['clearing', typeof DROVE83 !== 'undefined' && G.maps[DROVE83.WETHERS] ? DROVE83.WETHERS : SHEEPWALK22.COMBE] : ['clearing'];
       check(portals.length === ways.length && ways.every((w) => portals.includes(w)), 'the Downs\' ways out are ' + ways.join(' and ') + ' (' + portals.join(',') + ')');
       for (let x = 0; x < D.w; x++) for (const y of [0, D.h - 1]) check(D.get(x, y), 'the Downs are walled at ' + x + ',' + y);
       for (let y = 0; y < D.h; y++) for (const x of [0, D.w - 1]) check(D.get(x, y), 'the Downs are walled at ' + x + ',' + y);

@@ -867,11 +867,15 @@ const PARISH = (function () {
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, w, h); ctx.clip();
     const pulse = 0.92 + 0.08 * Math.sin((typeof performance !== 'undefined' ? performance.now() : 0) / 1600);
     const lv = clamp01(level * pulse);
-    // soften the rim: two shifted copies of the frame, kept to a ring
-    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, w, h); ctx.rect(w * 0.22, h * 0.2, w * 0.56, h * 0.6); ctx.clip('evenodd');
-    ctx.globalAlpha = 0.34 * lv; ctx.drawImage(Engine.canvas, 0, 0, w, h, -3, -2, w + 6, h + 4);
-    ctx.globalAlpha = 0.22 * lv; ctx.drawImage(Engine.canvas, 0, 0, w, h, 2, 1, w - 4, h - 2);
-    ctx.restore();
+    // soften the rim: two shifted copies of the frame, kept to a ring. Only when the frame is drawn on this canvas: under
+    // the 3D renderer the view is on another canvas, and copying this one laid a pale box of the old picture over it.
+    const gl = typeof R3D !== 'undefined' && R3D.active && R3D.active();
+    if (!gl) {
+      ctx.save(); ctx.beginPath(); ctx.rect(0, 0, w, h); ctx.rect(w * 0.22, h * 0.2, w * 0.56, h * 0.6); ctx.clip('evenodd');
+      ctx.globalAlpha = 0.34 * lv; ctx.drawImage(Engine.canvas, 0, 0, w, h, -3, -2, w + 6, h + 4);
+      ctx.globalAlpha = 0.22 * lv; ctx.drawImage(Engine.canvas, 0, 0, w, h, 2, 1, w - 4, h - 2);
+      ctx.restore();
+    }
     const g = ctx.createRadialGradient(w / 2, h / 2, h * 0.28, w / 2, h / 2, w * 0.6);
     g.addColorStop(0, 'rgba(14,20,26,0)'); g.addColorStop(1, 'rgba(10,14,20,' + (0.82 * lv).toFixed(3) + ')');
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);

@@ -292,6 +292,8 @@ const HELPERS = () => {
     // ------------------------------------------------------------------ 4. rippling light on the flooded floor
     const cs = await page.evaluate(() => {
       const o = {};
+      // the grown trees (js/trees83.js) stand in front of the Court's walls and cut the wall columns this measures short: hold them as they were
+      const trees = typeof TREES83 !== 'undefined' && GFX.trees83 !== false; if (trees) { GFX.trees83 = false; TREES83.sync(); }
       const C = () => SKIES14.caustics.state.stats;
       S.stage('whispergrove', 24.5, 27.5, -1.57, 0.9, 3, {}); S.frame(['causticLight'], 5); o.court = { px: C().px, ms: C().ms };
       S.stage('whispergrove', 33, 16.5, 0, 0.9, 3, {}); S.frame(['causticLight'], 5); o.wall = C().wallPx; o.wallFloor = C().px;
@@ -323,6 +325,7 @@ const HELPERS = () => {
       const rowSum = (y0, y1) => { let s = 0, n = 0; for (let y = y0; y < y1; y++) for (let x = 0; x < b.w; x++) { const i = y * b.w + x; if (b.mbuf[i] === 3 || b.mbuf[i] === 2) { s += S.sum(b, i) - S.sum(a, i); n++; } } return n ? s / n : 0; };
       const hz = b.horizon, hh = b.h;
       o.near = rowSum(hh - 25, hh); o.far = rowSum(hz + 2, hz + 14);
+      if (trees) { GFX.trees83 = true; TREES83.sync(); }
       return o;
     });
     ok(cs.court.px > 3000 && cs.wall > 30 && cs.wallFloor > 500, `caustics: lit on the Court's flooded floor (${cs.court.px} px) and up the walls standing in it (${cs.wall} px)`);

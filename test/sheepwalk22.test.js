@@ -61,10 +61,13 @@ const URL = (process.env.PREVIEW_URL || 'http://127.0.0.1:3000') + '/index.html?
       const portals = (m) => { const out = []; for (const c of m.cells) if (c && c.portal) out.push(c.portal.map); return out; };
       const hanger = typeof HANGER22 !== 'undefined' ? [HANGER22.HANGER, HANGER22.BARROW] : [];   // Phase 22b adds the gap into the Hanger
       const r4 = typeof THIN29 !== 'undefined' ? [THIN29.MAPS.farm, THIN29.MAPS.barn, THIN29.MAPS.cottage] : [];   // R4 opens the farmsteads
-      check(JSON.stringify(portals(C).sort()) === JSON.stringify([S.DOWNS, S.INN].concat(hanger.slice(0, 1), r4).sort()), 'Wethercombe joins the Downs, its inn, the Hanger and its farmsteads only (' + portals(C) + ')');
+      // Phase 83 (js/drove83.js): the drove road runs between the Downs' stile and Wethercombe, in two stretches
+      const drove = typeof DROVE83 !== 'undefined' && G.maps[DROVE83.WETHERS] ? [DROVE83.WETHERS, DROVE83.HOLLOWS] : [];
+      const up = drove.length ? drove[1] : S.DOWNS, stileTo = drove.length ? drove[0] : S.COMBE;
+      check(JSON.stringify(portals(C).sort()) === JSON.stringify([up, S.INN].concat(hanger.slice(0, 1), r4).sort()), 'Wethercombe joins the Downs (by the drove road), its inn, the Hanger and its farmsteads only (' + portals(C) + ')');
       check(JSON.stringify(portals(I)) === JSON.stringify([S.COMBE]), 'the inn joins Wethercombe only');
-      check(portals(D).filter((p) => p === S.COMBE).length === 1, 'the Downs have one stile to Wethercombe');
-      for (const id in G.maps) if (id !== S.DOWNS && id !== S.COMBE && id !== S.INN && hanger.indexOf(id) < 0 && r4.indexOf(id) < 0) check(!portals(G.maps[id]).some((p) => p === S.COMBE || p === S.INN), 'nothing else leads to the new maps (' + id + ')');
+      check(portals(D).filter((p) => p === stileTo).length === 1, 'the Downs have one stile to Wethercombe');
+      for (const id in G.maps) if (id !== S.DOWNS && id !== S.COMBE && id !== S.INN && hanger.indexOf(id) < 0 && r4.indexOf(id) < 0 && drove.indexOf(id) < 0) check(!portals(G.maps[id]).some((p) => p === S.COMBE || p === S.INN), 'nothing else leads to the new maps (' + id + ')');
       check(!portals(G.maps.oakhaven).includes(S.COMBE) && D.danger === 0, 'nothing new joins Oakhaven, and the Downs keep danger 0');
       for (let x = 0; x < C.w; x++) for (const y of [0, C.h - 1]) check(C.get(x, y), 'Wethercombe is walled at ' + x + ',' + y);
       for (let y = 0; y < C.h; y++) for (const x of [0, C.w - 1]) check(C.get(x, y), 'Wethercombe is walled at ' + x + ',' + y);
@@ -100,8 +103,12 @@ const URL = (process.env.PREVIEW_URL || 'http://127.0.0.1:3000') + '/index.html?
       const S = SHEEPWALK22, D = G.maps[S.DOWNS];
       go(S.DOWNS, S.STILE_DOWNS[0] + 0.5, S.STILE_DOWNS[1] - 1.6, Math.PI / 2);
       const st = D.get(S.STILE_DOWNS[0], S.STILE_DOWNS[1]); transfer(st.portal); G.state = 'play';
+      // Phase 83 (js/drove83.js): the stile now opens on the drove road; walk its two stretches through to Wethercombe
+      const thru = (to) => { const c = G.map.cells.find((q) => q && q.door && q.portal && q.portal.map === to); if (c) { transfer(c.portal); G.state = 'play'; } };
+      if (typeof DROVE83 !== 'undefined' && G.mapId === DROVE83.WETHERS) { thru(DROVE83.HOLLOWS); thru(S.COMBE); }
       check(G.mapId === S.COMBE && Math.abs(Engine.cam.y - 1.6) < 0.2, 'through the stile into Wethercombe');
       const back = G.map.get(S.STILE[0], 0); transfer(back.portal); G.state = 'play';
+      if (typeof DROVE83 !== 'undefined' && G.mapId === DROVE83.HOLLOWS) { thru(DROVE83.WETHERS); thru(S.DOWNS); }
       check(G.mapId === S.DOWNS, 'and back up onto the Downs');
       go(S.COMBE); const inn = G.map.cells.find((c) => c && c.portal && c.portal.map === S.INN); transfer(inn.portal); G.state = 'play';
       check(G.mapId === S.INN && G.ents.some((e) => e.id === 'p22_gideon') && G.ents.some((e) => e.id === 'p22_absalom'), 'into the Bellwether: Gideon and Absalom are there');
