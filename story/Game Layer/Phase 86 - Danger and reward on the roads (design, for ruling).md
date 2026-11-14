@@ -21,7 +21,7 @@ Each road gets a **roster**: who is there by day, who comes out at dusk and nigh
 | **Flume road** (the Stride, the Pound Stair) | briar-sprites in the verges | mire-drones come up out of the pounds onto the banks | after rain the briar wakes: twice the sprites; in storm the pounds surge and drones are out all day | nothing new; you see less | the briar sleeps: no sprites |
 | **Drove road** (the Grey Wethers, the Hundred Hollows) | the Wethers are quiet, as the plan says | hounds den in the Hollows after dark, as the plan says; Quiet Faith brothers keep a vigil among the stones | nothing new | the Hollows' hounds come out by day in mist | woolwights come down off the high ground |
 | **Sunk Lanes and Cross Pool** | drones at the pools' edges | (as built) | (as built: storm brings two more and danger 2) | — | — |
-| **The Office column** (see 4) | walks one road a day | camps at night | holds up in its camp in storm | — | — |
+| **The Office column** (see 4b) | walks one road a day | camps at night | holds up in its camp in storm | — | — |
 
 **Not chance:** which places get which foes on a given visit is worked out from the day, the hour and the weather, like the Deep Grove's ways: the same for every player on the same day, and the same for the tests. *(Question 1.)*
 
