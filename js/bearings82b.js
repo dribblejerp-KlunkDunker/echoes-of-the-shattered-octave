@@ -404,6 +404,14 @@ const BEARINGS82B = (function () {
     }
     return null;
   }
+  // a new standing thing joins the map's base entities (the ones a save keeps by place), ahead of anything transient that
+  // another module has already put after them (the scenery's props): never by moving baseCount over those
+  function addBase(m, e) {
+    if (m.baseCount == null) return e;
+    const i = m.entities.lastIndexOf(e); if (i < 0) return e;
+    m.entities.splice(i, 1); m.entities.splice(m.baseCount, 0, e); m.baseCount++;
+    return e;
+  }
   function placePosts(maps) {
     const placed = [];
     for (const P of POSTS) {
@@ -414,8 +422,7 @@ const BEARINGS82B = (function () {
       if (!at) { warnOnce('no room for ' + P.id, P); continue; }
       // Greenroot's own rule (js/parish.js): a hint is one short line, and the long words are read with `look`
       const short = typeof PARISH !== 'undefined' && PARISH.MAPS && PARISH.MAPS.indexOf(P.map) >= 0;
-      m.deco('sign', at[0], at[1], Object.assign({ radius: 0.18, scale: 0.85, solid: false, label: P.text, _p82bPost: P.id }, short ? { label: POST_SHORT, look: P.text, use: 'p9p_look' } : {}));
-      m.baseCount = m.entities.length;
+      addBase(m, m.deco('sign', at[0], at[1], Object.assign({ radius: 0.18, scale: 0.85, solid: false, label: P.text, _p82bPost: P.id }, short ? { label: POST_SHORT, look: P.text, use: 'p9p_look' } : {})));
       placed.push(P.id);
     }
     return placed;

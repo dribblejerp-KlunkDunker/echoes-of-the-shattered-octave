@@ -115,9 +115,9 @@ const BOARDS82B = (function () {
     { task: 'reed', map: 'flume_landing', at: [15.5, 9.6], sprite: 'p82b_none', act: 'deliver', amount: 6, label: TX.coopSpot },
     { task: 'hurdles', map: 'p22_combe', at: [42.2, 9.8], sprite: 'p82b_hurdles', act: 'gather', cap: 2, label: TX.hurdleSpot },
     { task: 'hurdles', map: 'p22_combe', at: [34.9, 31.0], sprite: 'p82b_none', act: 'deliver', amount: 2, label: TX.foldSpot, fold: true },
-    { task: 'bell', map: 'p20_downs', at: [8.8, 35.2], sprite: 'p82b_bell', doneSprite: 'p82b_none', act: 'gather', cap: 1, label: TX.bellSpot },
+    { task: 'bell', map: 'p20_downs', at: [8.8, 35.2], sprite: 'p82b_bell', doneSprite: 'p82b_none', act: 'gather', cap: 1, onArrival: true, label: TX.bellSpot },
     { task: 'bell', map: 'p22_combe', at: [34.9, 31.0], sprite: 'p82b_none', act: 'deliver', amount: 1, label: TX.foldSpot, fold: true, merged: 'hurdles' },
-    ...[[60.5, 55.2], [67.0, 54.5], [63.5, 49.9]].map((at) => ({ task: 'chimes', map: 'cantabile_harbour', at, sprite: 'p82b_shroud', doneSprite: 'p82b_chime', act: 'mark', item: 'p82b_chime', label: TX.shroudSpot, doneLabel: TX.shroudHung, keepDone: true, keepAfter: true })),
+    ...[[60.5, 55.2], [66.6, 53.2], [63.5, 49.9]].map((at) => ({ task: 'chimes', map: 'cantabile_harbour', at, sprite: 'p82b_shroud', doneSprite: 'p82b_chime', act: 'mark', item: 'p82b_chime', label: TX.shroudSpot, doneLabel: TX.shroudHung, keepDone: true, keepAfter: true })),
     { task: 'doors', map: 'surgery', at: [5.5, 4.5], sprite: 'p82b_tonic', act: 'gather', cap: 3, once: true, label: TX.tonicSpot },
     // the doors task's marked doors are found in the Hollow when the maps are built (see addDoorSpots)
     { task: 'water', map: 'p30_hollow', at: [17.2, 17.8], sprite: 'p82b_pails', act: 'gather', cap: 2, hideCarried: true, label: TX.pailSpot },
@@ -225,24 +225,39 @@ const BOARDS82B = (function () {
       return { task: 'doors', map: 'p30_hollow', at, sprite: 'p82b_none', doneSprite: 'p82b_tonic', act: 'deliver', amount: 1, perSpot: true, bit: i, label: TX.doorSpot, doneLabel: TX.doorLeft, keepDone: true };
     });
   }
+  // a new standing thing joins the map's base entities (the ones a save keeps by place), ahead of anything transient that
+  // another module has already put after them (the scenery's props): never by moving baseCount over those
+  function addBase(m, e) {
+    if (m.baseCount == null) return e;
+    const i = m.entities.lastIndexOf(e); if (i < 0) return e;
+    m.entities.splice(i, 1); m.entities.splice(m.baseCount, 0, e); m.baseCount++;
+    return e;
+  }
   let DOOR_SPOTS = [];
   function placeAll(maps) {
     for (const id in BOARDS) {
       const B = BOARDS[id], m = maps[B.map]; if (!m || m.entities.some((e) => e && e._p82bBoard === id)) continue;
       const at = offWall(m, freeNear(m, B.at[0], B.at[1]));
-      m.deco(typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites.p82b_board ? 'p82b_board' : 'sign', at[0], at[1], { radius: 0.3, scale: 1.0, solid: true, use: 'p82b_board', label: B.title, _p82bBoard: id });
-      m.baseCount = m.entities.length;
+      addBase(m, m.deco(typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites.p82b_board ? 'p82b_board' : 'sign', at[0], at[1], { radius: 0.3, scale: 1.0, solid: true, use: 'p82b_board', label: B.title, _p82bBoard: id }));
     }
     DOOR_SPOTS = addDoorSpots(maps);
     SPOTS.concat(DOOR_SPOTS).forEach((s, i) => {
-      const m = maps[s.map]; if (!m) return;
+      const m = maps[s.map]; if (!m || s.onArrival) return;   // the Downs as built keep no uses (js/horizon20.js): placed on arrival
       const key = s.task + ':' + (s.bit != null ? 'd' + s.bit : i);
       if (m.entities.some((e) => e && e._p82bSpot === key)) return;
-      m.deco(s.sprite, s.at[0], s.at[1], { radius: 0.2, scale: 1.0, solid: false, use: 'p82b_spot', label: s.label, _p82bSpot: key, _p82bTask: s.task, _p82bI: i, hidden: true, transient: false });
-      m.baseCount = m.entities.length;
+      addBase(m, m.deco(s.sprite, s.at[0], s.at[1], { radius: 0.2, scale: 1.0, solid: false, use: 'p82b_spot', label: s.label, _p82bSpot: key, _p82bTask: s.task, _p82bI: i, hidden: true, transient: false }));
     });
   }
   const allSpots = () => SPOTS.concat(DOOR_SPOTS);
+  // things placed only when you arrive, and only while their task is in hand (transient: never in a save)
+  function arrive() {
+    if (!hasG() || !G.map) return;
+    allSpots().forEach((s, i) => {
+      if (!s.onArrival || s.map !== G.mapId || st(s.task) !== 1) return;
+      const key = s.task + ':' + i; if (G.map.entities.some((e) => e && e._p82bSpot === key)) return;
+      G.map.entities.push({ kind: 'deco', sprite: s.sprite, x: s.at[0], y: s.at[1], radius: 0.2, scale: 1.0, solid: false, use: 'p82b_spot', label: s.label, _p82bSpot: key, _p82bTask: s.task, _p82bI: i, hidden: true, transient: true });
+    });
+  }
   const spotOf = (e) => allSpots()[e._p82bI];
 
   // ---------------------------------------------------------------- state shown in the world
@@ -363,6 +378,14 @@ const BOARDS82B = (function () {
   // ---------------------------------------------------------------- hooks
   function wire() {
     if (typeof ITEMS !== 'undefined' && !ITEMS.p82b_chime) ITEMS.p82b_chime = { name: TX.chimeName, sprite: 'loot', value: 1, desc: TX.chimeDesc };
+    // its picture in the pack (js/icons.js: every item has a hand-built pixel icon): a bar with five bronze tubes
+    try { if (typeof ICONS !== 'undefined' && ICONS.PIX && !Object.prototype.hasOwnProperty.call(ICONS.PIX, 'p82b_chime')) {
+      ICONS.PIX.p82b_chime = (d) => {
+        d.layer('#6a4a20').rect(4, 4, 16, 2);
+        for (let i = 0; i < 5; i++) d.layer('#d8a050', { shiny: 1 }).rect(5 + i * 3, 6, 2, 8 + (i % 3) * 3);
+        d.layer('#3a3a40').rect(11, 1, 2, 3);
+      };
+    } } catch (e) { /* the pack shows it without a picture */ }
     // Fenwick Sloe sells the chimes beside the grave-bells, at a copper (one sovereign) each [PROPOSED]
     try { const d = typeof NPCS !== 'undefined' && NPCS.p17c_sloe; if (d && Array.isArray(d.shop) && !d.shop.some((s) => s.item === 'p82b_chime')) d.shop.push({ item: 'p82b_chime', price: 1 }); } catch (e) { warnOnce('shop', e); }
     try { art(); } catch (e) { warnOnce('art', e); }
@@ -384,7 +407,7 @@ const BOARDS82B = (function () {
       const _r = renderBountyBoard;
       renderBountyBoard = function () { const r = _r.apply(this, arguments); try { addOldLore(); } catch (e) { warnOnce('oldlore', e); } return r; };
     }
-    if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function () { const r = _l.apply(this, arguments); try { sync(G.ents); } catch (e) { warnOnce('sync', e); } return r; }; }
+    if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function () { const r = _l.apply(this, arguments); try { arrive(); sync(G.ents); } catch (e) { warnOnce('sync', e); } return r; }; }
     if (typeof update === 'function') { const _up = update; update = function () { const r = _up.apply(this, arguments); try { watch(); } catch (e) { warnOnce('watch', e); } return r; }; }
     if (typeof document !== 'undefined' && !document.getElementById('p82b-board-style')) {
       const s = document.createElement('style'); s.id = 'p82b-board-style';
@@ -400,7 +423,7 @@ const BOARDS82B = (function () {
   }
   wire();
 
-  return { TEXTS, TX, BOARDS, OLD_LORE, TASKS, KEYS, SPOTS, THIRD_BOARD, st, num, allSpots, placeAll, openBoard, takeTask, claimTask, useSpot, sync, watch, status, addDoorSpots };
+  return { TEXTS, TX, arrive, BOARDS, OLD_LORE, TASKS, KEYS, SPOTS, THIRD_BOARD, st, num, allSpots, placeAll, openBoard, takeTask, claimTask, useSpot, sync, watch, status, addDoorSpots };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = BOARDS82B;
 if (typeof window !== 'undefined') window.BOARDS82B = BOARDS82B;

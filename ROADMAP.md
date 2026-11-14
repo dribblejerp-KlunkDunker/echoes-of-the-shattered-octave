@@ -34,7 +34,9 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - Nothing visual may use random numbers. Every new line gets French (`tools/i18n/*.tsv`, then `node tools/i18n/merge-pairs.js`). After any `?v=` change run `node tools/pwa/precache.js`.
 - End every report with the model and effort the next step needs.
 
-**Not yet done, and known:** a full run of every test suite since 13 Nov (only the suites each phase touched were rerun); the three two-player suites (`sync19`, `net19`, `together19`) fail in the build container and need a real machine; in the picture tool a pale rectangle sometimes sits in the middle of the view after moving between places, and nobody has checked whether a player sees it.
+**Not yet done, and known:** the three two-player suites (`sync19`, `net19`, `together19`) fail in the build container and need a real machine; `sprites21` fails its GL-pixel check in the build container on the commit before 82b as well (not 82b's; wants a look on a real machine); in the picture tool a pale rectangle sometimes sits in the middle of the view after moving between places, and nobody has checked whether a player sees it.
+
+**Phase 82b verification (13 Nov, a full run of every suite, 174 of them, two at a time on a frozen copy):** 15 failed. Fixed and rerun clean: `cantabile17` (a chime spot off the walkable mole), `folk20` (the chime had no pack icon), `scenery` and `longnight17` (new things were put in ahead of the scenery's transient props by moving baseCount over them; now they join the base entities in place), `horizon20` and `r4thin29` (the Watch Downs as built keep no usable things: the lost wether-bell is now placed only on arrival, while its task is in hand). Load only, clean when rerun alone: `cinematic24`, `screens`, `ghost18`, `skies14`, `r3d21`. Not 82b's: `sprites21` (fails on the baseline too), `sync19`, `net19`, `together19` (the build container).
 
 **Phase 82b test.** `test/bearings82b.test.js` keeps the map true: run it after any new road or place.
 
