@@ -79,6 +79,11 @@ const BODY21 = (() => {
     if (Array.isArray(col)) { const r = GL().ramp(col, 5); return [mulc(r[0], 0.7), r[0], r[1], r[2], r[3], mixc(r[4], [255, 248, 230], 0.35)]; }
     return [mulc(col.dark, 0.75), col.dark, col.shade, col.base, col.light, mixc(col.light, [255, 250, 236], 0.4)];
   }
+  // the glass arm's own glass: deeper and bluer than a glass blade, cut into facets, lit from within only a little
+  // (the owner, 14 Nov: "The glass arm is also far too bright"; his picture: azure facets, dark seams, a few bright edges)
+  const ARM_GLASS = [[10, 34, 70], [18, 62, 120], [34, 104, 176], [62, 150, 214], [118, 196, 238], [196, 232, 250]];
+  const ARM_GLOW = 0.22;   // how much of the arm's colour it gives off as light (the blade's glass keeps its full glow)
+  const armFacet = (x, y) => { const a = ((x * 5 + y * 3) >> 4) & 3, b = ((x * 2 - y * 7 + 400) >> 4) & 1; return [0.78, 1.0, 1.18, 0.9][a] * (b ? 1.06 : 0.94); };
   // map a relative brightness t (1 = the region's typical tone) onto a ramp, smoothly
   function onRamp(R, t) {
     const stops = [0.12, 0.38, 0.68, 1.0, 1.42, 1.95];
@@ -211,7 +216,7 @@ const BODY21 = (() => {
     }
     // typical brightness of each region (the ramp's "base")
     const ref = {};
-    for (const k of [K.SLEEVE, K.HAND, K.METAL, K.WOOD, K.BRASS]) {
+    for (const k of [K.SLEEVE, K.HAND, K.METAL, K.WOOD, K.BRASS, K.GLASS]) {
       const v = []; for (let i = 0; i < N; i++) if (cls[i] === k) v.push(L[i]);
       v.sort((a, b) => a - b); ref[k] = v.length ? v[(v.length * 0.6) | 0] || 0.3 : 0.3;
     }
@@ -338,10 +343,10 @@ const BODY21 = (() => {
     if (sl.cuff && !sl.rolled && !sl.bracer && !sl.plated) S.zones.push({ d: sl.wide ? 7 : 4, R: rampOf(sl.cuff), pat: PATTERN.none, line: false });
     if (glass) S.zones.unshift({ d: 12, glass: true });   // the glass runs past the wrist under the cuff
     const Hd = { R: null, pat: PATTERN.none, zones: [], glass };
-    if (glass) Hd.R = rampOf(G2.GLASS);
+    if (glass) Hd.R = ARM_GLASS;
     else if (hands.bare) Hd.R = rampOf(look.skin);
     else { Hd.R = rampOf(hands.col); Hd.pat = patOf(hands.pattern); if (hands.shape === 'gauntlets') Hd.zones.push({ d: 9, R: rampOf(G2.ARMOR.a_kettle.col), pat: PATTERN.plates, sheen: 1 }); }
-    return { S, H: Hd, skinR: rampOf(look.skin), glassR: rampOf(G2.GLASS) };
+    return { S, H: Hd, skinR: rampOf(look.skin), glassR: ARM_GLASS };
   }
 
   // ================================================================ 4. THE WEAPON IN THE HAND (per weapon id)
@@ -429,6 +434,11 @@ const BODY21 = (() => {
   function build(key, look, wid, side) {
     const bk = buildKey(key, look, wid, side);
     let b = buildCache.get(bk); if (b) { stats.hits++; return b; }
+    // Phase 87: the melee weapons' own pictures, painted in code with the glove and sleeve you wear (js/fp87.js); drawn
+    // at the same place, k times smaller than the canvas (the hook below scales them)
+    if (side === 'right' && key !== 'fp_hands' && typeof FP87 === 'object' && FP87.covers(wid)) {
+      try { const r = FP87.paint(wid, look); if (r) { b = { key, wid, side, main: r.canvas, emis: r.emis || null, ext: null, over: [], w: r.canvas.width, h: r.canvas.height, k: r.k, below: r.below, right: r.right, ms: 0 }; buildCache.set(bk, b); OWNED.set(r.canvas, b); stats.builds++; return b; } } catch (e) { warnOnce('fp87', e); }
+    }
     const s = segment(key); if (!s) return null;
     const t0 = performance.now();
     const { w, h, cls, ink, L, ref, dHand, dSleeve, src, M } = s;
@@ -438,7 +448,7 @@ const BODY21 = (() => {
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
       const i = y * w + x, q = i * 4; let k = cls[i]; if (!k) continue;
       if (k === K.INK) k = ink[i] || K.INK;
-      let col = null, emis = false;
+      let col = null, emis = false, emK = 1;
       const t = L[i] / (ref[k] || 0.3);
       // which arm this pixel belongs to: the left hand of fp_hands / the crossbow's left glove, or the painting's side
       const leftHere = !!s.left[i];
@@ -446,16 +456,16 @@ const BODY21 = (() => {
       if (k === K.SLEEVE) {
         const d = dHand[i]; let z = null;
         for (const zz of AA.S.zones) if (d < zz.d) { z = zz; break; }
-        if (z && z.glass) { col = onRamp(AA.glassR, t * PATTERN.facets(x, y)); emis = true; }
+        if (z && z.glass) { col = onRamp(AA.glassR, Math.pow(t, 1.6) * armFacet(x, y)); emis = true; emK = ARM_GLOW; }
         else if (z && z.skin) col = onRamp(AA.skinR, t);
         else if (z) { let tt = t * z.pat(x, y); if (z.line && d > z.d - 2.2) tt *= 0.55; else if (z.line && d > z.d - 4) tt *= 1.25; if (z.sheen && d < 3) tt *= 1.3; col = onRamp(z.R, tt); }
         else col = onRamp(AA.S.R, t * AA.S.pat(x, y));
       } else if (k === K.HAND) {
         const d = dSleeve[i]; let z = null; for (const zz of AA.H.zones) if (d < zz.d) { z = zz; break; }
-        if (AA.H.glass) { col = onRamp(AA.H.R, t * 1.1 * PATTERN.facets(x, y)); emis = true; }
+        if (AA.H.glass) { col = onRamp(AA.H.R, t * armFacet(x, y)); emis = true; emK = ARM_GLOW; }
         else if (z) col = onRamp(z.R, t * z.pat(x, y) * (d > z.d - 2 ? 0.6 : 1));
         else col = onRamp(AA.H.R, t * AA.H.pat(x, y));
-      } else if (k === K.GLASS) { emis = true; }
+      } else if (k === K.GLASS) { col = onRamp(ARM_GLASS, Math.pow(t, 1.8) * 0.82); emis = true; emK = ARM_GLOW; }   // the painting's own facets and seams, deepened
       else if (k === K.GLOW) {
         // the bare-hands picture has cream Song-light painted between the fingers: on skin and gloves it reads as burnt
         // holes, at rest too. It goes; a Song's light is fp-hands' coloured halo between the hands and its tint over them
@@ -465,7 +475,7 @@ const BODY21 = (() => {
         const r = weaponTone(wid, key, x, y, k, t, s); if (r) { col = r.c; emis = !!r.emis; }
       }
       if (col) { o[q] = col[0]; o[q + 1] = col[1]; o[q + 2] = col[2]; }
-      if (emis) { e[q] = o[q]; e[q + 1] = o[q + 1]; e[q + 2] = o[q + 2]; e[q + 3] = o[q + 3]; anyEmis = true; }
+      if (emis) { e[q] = o[q] * emK; e[q + 1] = o[q + 1] * emK; e[q + 2] = o[q + 2] * emK; e[q + 3] = o[q + 3]; anyEmis = true; }
     }
     if (s.fill && s.fill.length) {
       // palm under the painted light: grown in from the recoloured skin around it, so it matches whatever the hand wears
@@ -1035,7 +1045,11 @@ const BODY21 = (() => {
         return undefined;
       }
       if (!b || arguments.length !== 5) return orig.apply(this, arguments);
-      const dx = arguments[1], dy = arguments[2], dw = arguments[3], dh = arguments[4], sx = dw / img.width, sy = dh / img.height;
+      let dx = arguments[1], dy = arguments[2], dw = arguments[3], dh = arguments[4];
+      // a Phase 87 picture is k times larger than its place: drawn at its place, its right and bottom edges where the old
+      // picture's were (the weapon held in the right of the view, the forearm out of the bottom)
+      if (b.k) { const w2 = dw / b.k, h2 = dh / b.k; dx += dw - w2 + (b.right || 0); dy += dh - h2 + (b.below || 0); dw = w2; dh = h2; }
+      const sx = dw / img.width, sy = dh / img.height;
       if (!st.offDone && b.side === 'right') {
         st.offDone = true;
         try {

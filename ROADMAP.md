@@ -14,6 +14,8 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 
 **After that.** Part B below (87 to 90) is Opus 5.5 work.
 
+**Next after Phase 87 (owner, 14 Nov: "yes please can you please do that after this phase"):** a short list of which Daggerfall Unity ideas to bring in and in what order, for his ruling: weapons with inertia and a visible shield that takes knocks, swings that follow the blade's arc, the roleplay-and-realism items (pack weight, wear), the far view. Ideas only: rewritten in our own code, no assets.
+
 **Waiting on the owner:**
 - (Phase 82b's seven questions: all approved by the owner on 13 Nov, "I agree with all recommendations".)
 - Phase 82's three questions (the Cay under thatch; the one lit window in the Low Rings; thatch on Wethercombe's fold walls).

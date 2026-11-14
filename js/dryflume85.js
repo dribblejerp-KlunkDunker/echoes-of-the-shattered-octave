@@ -73,7 +73,7 @@ const DRYFLUME85 = (function () {
   const FLOOR = 0, SHALLOW = 1, WATER = 2;
 
   // ---------------------------------------------------------------- the special gear
-  const WEAPON_DEF = { name: TX.hook, img: 'fp_spear', dmg: [4, 10], reach: 2.3, noise: 1.1, speed: 0.6, type: 'iron', value: 60, desc: TX.hookDesc, p85pull: true };
+  const WEAPON_DEF = { name: TX.hook, img: 'fp_spear', dmg: [4, 10], reach: 2.3, noise: 1.1, speed: 0.6, type: 'iron', twoHanded: true, value: 60, desc: TX.hookDesc, p85pull: true };
   const BOOTS_DEF = { name: TX.boots, slot: 'feet', ar: 2, noise: -0.2, value: 44, desc: TX.bootsDesc };
   function gear() {
     if (typeof WEAPONS !== 'undefined' && !WEAPONS.p85_hook) WEAPONS.p85_hook = Object.assign({}, WEAPON_DEF);
