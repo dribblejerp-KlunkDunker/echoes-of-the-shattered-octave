@@ -57,7 +57,7 @@ const GEAR87 = (function () {
       armor: ['a_p87_sip_goggles', 'a_p87_sip_apron', 'a_p87_sip_gauntlets', 'a_p87_sip_boots', 'a_p87_sip_cape'], weapons: ['maul', 'pistol'],
       t: { ar: 1, special: 'heat' }, f: { special: 'golem' }, tLine: S('+1 armour; fire and steam hurt you less'), fLine: S('your blows crack golems open faster') },
     { id: 'works', name: S('The Consortium Works'), home: 'Oakhaven\'s quarry',
-      armor: ['a_kettle', 'a_brig', 'a_p87_wks_gauntlets', 'a_p87_wks_boots', 'a_p87_wks_cape', 'a_p87_wks_pavise'], weapons: ['p12_greatmaul', 'p87_handbow'],
+      armor: ['a_kettle', 'a_brig', 'a_p87_wks_gauntlets', 'a_p87_wks_boots', 'a_p87_wks_cape', 'a_p87_wks_pavise'], weapons: ['p12_greatmaul', 'p87_sledge', 'p87_handbow'],
       t: { ar: 2 }, f: { fatRoad: 0.25 }, tLine: S('+2 armour'), fLine: S('heavy work tires you a quarter less') },
     { id: 'captains', name: S('The Free Captains'), home: 'Port Cantabile',
       armor: ['a_p87_cap_bandana', 'a_p87_cap_coat', 'a_p87_cap_gloves', 'a_p87_cap_boots', 'a_p87_cap_cape', 'a_buckler'], weapons: ['axe', 'vesper_hook', 'p12_glassblade', 'crossbow', 'p87_harpoon'],
@@ -89,7 +89,7 @@ const GEAR87 = (function () {
     corsair: { set: 'captains', armor: ['a_p87_cap_bandana', 'a_p87_cap_coat', 'a_p87_cap_gloves', 'a_p87_cap_boots', 'a_buckler'], weapons: ['axe', 'pistol'] },
     archivist: { set: 'hush', armor: ['a_hood', 'a_gambeson', 'a_p87_hush_mitts', 'a_softboots'], weapons: ['throwknife', 'pistol'], tknives: 6 },
     penitent: { set: null, armor: ['a_kettle', 'a_gambeson'], weapons: ['mace', 'hands'] },
-    quarry: { set: 'works', armor: ['a_kettle', 'a_jerkin', 'a_p87_wks_gauntlets', 'a_p87_wks_boots'], weapons: ['p12_greatmaul'] },
+    quarry: { set: 'works', armor: ['a_kettle', 'a_jerkin', 'a_p87_wks_gauntlets', 'a_p87_wks_boots'], weapons: ['p87_sledge'] },   // owner: "make a lighter quarry sledge"
   };
   const OLD_KIT = {};
   function applyKits() {

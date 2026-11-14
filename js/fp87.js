@@ -51,6 +51,7 @@ const FP87 = (function () {
     p79_staff: { head: 'shoe', haft: 'ash' },
     p85_pole: { head: 'shoe', haft: 'pale' },
     p85_hook: { head: 'boathook', haft: 'ash' },
+    p87_sledge: { head: 'nightsledge', haft: 'ash' },
   };
   const BLADE_KINDS = { sword: 1, longsword: 1, greatsword: 1, knife: 1, dirk: 1 };   // throwing knives stay with the ranged (a fan of three)
   const HEAD_KINDS = { axe: 1, mace: 1, hammer: 1, maul: 1, spear: 1, glaive: 1 };
@@ -222,6 +223,16 @@ const FP87 = (function () {
         x.beginPath(); x.moveTo(-3, y + 20); x.lineTo(0, y - 26); x.lineTo(3, y + 20); x.closePath(); fillM(-3, y - 26, 3, y + 20);
         x.beginPath(); x.moveTo(2, y + 4); x.quadraticCurveTo(26, y - 2, 20, y - 20); x.lineWidth = 5; x.strokeStyle = css(H.base); x.stroke(); x.lineWidth = 1.4; x.strokeStyle = css(H.hi); x.stroke();
         rrect(x, -7, y + 16, 14, 18, 4); fillM(-7, y + 16, 7, y + 34); break; }
+      case 'nightsledge': { // the Night-Shift Sledge: a stone-splitter's head (a flat face, a wedge peen), chalk tallies on it,
+        // a red rag knotted at the neck, a brass Consortium tag nailed to the haft
+        x.beginPath(); x.moveTo(-26, y - 2); x.lineTo(10, y - 4); x.lineTo(30, y + 9); x.lineTo(10, y + 22); x.lineTo(-26, y + 20); x.closePath(); fillM(-26, y - 4, 30, y + 22);
+        x.fillStyle = css(H.dk, 0.8); x.fillRect(-27, y - 2, 4, 22);                     // the striking face, battered dark
+        x.fillStyle = 'rgba(236,232,220,0.85)'; for (let i = 0; i < 4; i++) x.fillRect(-16 + i * 5, y + 3, 1.6, 9); x.fillRect(-17, y + 7, 18, 1.4);   // four tallies and a stroke
+        x.strokeStyle = css(H.hi, 0.8); x.lineWidth = 1.2; x.beginPath(); x.moveTo(10, y - 3); x.lineTo(29, y + 9); x.stroke();   // the peen's edge
+        x.beginPath(); x.moveTo(-7, y + 22); x.quadraticCurveTo(-12, y + 34, -6, y + 40); x.lineTo(6, y + 38); x.quadraticCurveTo(10, y + 30, 6, y + 22); x.closePath(); x.fillStyle = lin(x, -8, 0, 8, 0, [[0, [196, 70, 52]], [1, [110, 30, 22]]]); x.fill();   // the rag
+        x.beginPath(); x.moveTo(-6, y + 38); x.lineTo(-14, y + 50); x.lineTo(-8, y + 49); x.closePath(); x.fill();
+        rrect(x, -6, y + 56, 12, 9, 1.5); x.fillStyle = lin(x, -6, 0, 6, 0, [[0, [236, 206, 120]], [1, [150, 112, 40]]]); x.fill(); x.fillStyle = 'rgba(60,40,10,0.8)'; x.fillRect(-3, y + 59, 6, 1); x.fillRect(-3, y + 62, 4, 1);   // the tag and its number
+        break; }
       default: break;
     }
     x.save(); x.globalCompositeOperation = 'source-atop'; speckle(x, -60, y - 60, 120, 120, 120, [0, 0, 0], 0.18, seed); x.restore();

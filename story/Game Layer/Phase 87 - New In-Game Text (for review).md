@@ -35,9 +35,9 @@ Code: `js/gear87.js`. French: `tools/i18n/p87-gear.tsv`.
 | Corsair | The Free Captains | Corsair's Bandana, Captain's Long Coat, Deck Gloves, Sea Boots, Corsair Buckler | Boarding Axe, Glass-Shot Pistol |
 | Archivist of the Veil | Hedge-weavers' Hush (into the mist) | Hush-Cloth Hood, Quilted Gambeson, Hush-Cloth Mitts, Soft Boots | Throwing Knives (six), Glass-Shot Pistol |
 | Flambeau Penitent | none (the Flambeaux have no set) | Iron Kettle Helm, Quilted Gambeson | Bell-Bronze Mace (the Flambeaux cast it), bare hands |
-| Quarry-Hand | The Consortium Works | Iron Kettle Helm, Tanner's Leather Jerkin, Works Gauntlets, Works Boots | Quarry Great-Maul |
+| Quarry-Hand | The Consortium Works | Iron Kettle Helm, Tanner's Leather Jerkin, Works Gauntlets, Works Boots | the Night-Shift Sledge |
 
-   *For the owner:* the Quarry Great-Maul is a heavy weapon to start with (14 to 28, slow, two hands); a lighter quarry sledge could be made for the start instead.
+   *Owner: "make a lighter quarry sledge. Remember I do want each weapon to have its own cool and unique look that represents the world that the shattered octave resides in."* The Quarry-Hand now starts with the **Night-Shift Sledge** (one hand, 6 to 13, quicker than the Great-Maul): a stone-splitter's head with chalk tallies on it, a red rag knotted at the neck so it can be found in the dark, and a brass Consortium tag nailed to the ash haft with a number that is not yours. It joins the Consortium Works set. The Great-Maul is still sold by Factor Vosk.
 3. **Bonuses for the five sets the design table gave no example for** are in the lines below. *Owner: "3 is good."*
 4. **Throwing knives** keep their shared picture until (d). *Owner: "4 is fine for now."*
 
@@ -92,3 +92,5 @@ Code: `js/gear87.js`. French: `tools/i18n/p87-gear.tsv`.
 | The Old Reach | Le Vieux Pays |
 | iron-bough and flint hit 15% harder | le bois-de-fer et le silex frappent 15 % plus fort |
 | the Deep Grove's ways are always the low note | les chemins du Bosquet profond sont toujours la note basse |
+| Night-Shift Sledge | Masse de l'équipe de nuit |
+| A quarry-hand's sledge from the Oakhaven works: a stone-splitter's head on a short ash haft, a brass Consortium tag nailed on with a number that is not yours, and a red rag at the neck so it can be found in the dark. | La masse d'un ouvrier des carrières d'Oakhaven : une tête de fendeur de pierre sur un court manche de frêne, une plaque de laiton du Consortium clouée dessus avec un numéro qui n'est pas le vôtre, et un chiffon rouge noué au col pour la retrouver dans le noir. |
