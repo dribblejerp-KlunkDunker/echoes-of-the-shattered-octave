@@ -18,7 +18,7 @@ Every line below is new and **[PROPOSED]**, except the three names ruled in the 
 ## Where it differs from the design (readings for the owner)
 
 1. **The key is X, not M.** M already opens the map. *Recommend: keep X.*
-2. **No controller binding yet** for getting up and down. On a pad there is no button for it yet, so pad players need the keyboard X. A pad binding can come with the next controls pass. *Recommend: add it in Phase 86's polish.*
+2. **On a controller** (added in the Phase 86 polish, 14 Nov): hold A by her to get up, and hold A again to get down; a tap of A on her gets you up (she can be used with E as well); in the stable the d-pad steps through the ponies.
 3. **She is seen side-on.** She is one picture that always faces you, not four views with walking and trotting. *Recommend: four views later, if you want them.*
 4. **Hounds charging her** is the night fright only (she bolts home). There is no hound on screen chasing her. *Recommend: keep.*
 5. **Coat names and the pattern list** (which coats, which stable) are **[PROPOSED]**: change any.
