@@ -55,7 +55,7 @@ const HOWE79 = (function () {
   const GRAVES = [[4.5, 11.5], [41.5, 10.6], [29.4, 18.4]];
 
   // ---- the special gear
-  if (typeof WEAPONS !== 'undefined' && !WEAPONS.p79_staff) WEAPONS.p79_staff = { name: TX.staff, img: 'fp_spear', dmg: [6, 14], reach: 2.0, noise: 0.6, speed: 0.5, type: 'iron', blunt: true, value: 90, desc: TX.staffDesc };
+  if (typeof WEAPONS !== 'undefined' && !WEAPONS.p79_staff) WEAPONS.p79_staff = { name: TX.staff, img: 'fp_spear', dmg: [6, 14], reach: 2.0, noise: 0.6, speed: 0.5, type: 'iron', blunt: true, twoHanded: true, value: 90, desc: TX.staffDesc };
   if (typeof ITEMS !== 'undefined') {
     if (!ITEMS.w_p79_staff) ITEMS.w_p79_staff = { name: TX.staff, sprite: 'gear', weapon: 'p79_staff', value: 90, desc: TX.staffDesc };
     if (!ITEMS.a_p79_gloves) ITEMS.a_p79_gloves = { name: TX.gloves, slot: 'hands', ar: 3, noise: -0.2, value: 48, desc: TX.glovesDesc };

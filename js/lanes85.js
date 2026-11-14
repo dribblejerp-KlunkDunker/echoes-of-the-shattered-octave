@@ -82,7 +82,7 @@ const LANES85 = (function () {
   const h2 = (a, b) => { const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return s - Math.floor(s); };
 
   // ---------------------------------------------------------------- the gear
-  const POLE = { name: TX.poleName, img: 'fp_spear', dmg: [3, 9], reach: 2.5, noise: 1.0, speed: 0.62, type: 'iron', blunt: true, value: 40, desc: TX.poleDesc, p85push: true };
+  const POLE = { name: TX.poleName, img: 'fp_spear', dmg: [3, 9], reach: 2.5, noise: 1.0, speed: 0.62, type: 'iron', blunt: true, twoHanded: true, value: 40, desc: TX.poleDesc, p85push: true };
   const BUCK = { name: TX.buckName, slot: 'shield', ar: 3, noise: 0.2, value: 50, desc: TX.buckDesc };
   function gear() {
     if (typeof WEAPONS !== 'undefined' && !WEAPONS.p85_pole) WEAPONS.p85_pole = Object.assign({}, POLE);
