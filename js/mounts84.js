@@ -37,6 +37,9 @@ const MOUNTS84 = (function () {
 
   const TX = {
     names: { oakhaven: S('the roan mare'), p22_combe: S('the dun'), p79_road_w: S('the grey') },
+    pick: S('Which of them?'), chooseHint: S('Left and right arrows choose between them.'), hiredAs: S('Hired: {0}'),
+    hireLine: S('You hire {0} for {1} sovereigns. The ostler ties a green ribbon to the bridle: she is yours until this time tomorrow.'),
+    backLine: S('You hand {0} back. The ostler counts {1} sovereigns into your palm and hangs the green ribbon on its nail.'),
     waiting: S('{0}, saddled and waiting. X to get up.'),
     up: S('You get up on {0}.'), down: S('You get down. {0} waits where you leave her.'),
     planks: S('She will not go onto the planks. Get down and go on foot; she will wait.'),
@@ -50,8 +53,8 @@ const MOUNTS84 = (function () {
     dayUp: S('The day\'s hire is up. You get down, and {0} turns for home.'),
     fright: S('Hounds came for {0} in the night. She bolted home, and the ostler wants 5 sovereigns for the fright.'),
     paidFright: S('You pay the ostler 5 sovereigns for the fright.'),
-    yardTitle: S('The Bellwether\'s yard'), yardText: S('A stall behind the Bellwether, and a dun pony who has been down the drove road more times than you have. Absalom Rudd\'s girl does the hiring, and asks nothing.'),
-    penTitle: S('The drovers\' pen on the Long Common'), penText: S('A hurdle pen by the road, a lean-to for the tack, and a grey pony with burrs in her mane. The man who keeps her lives in the lean-to.'),
+    yardTitle: S('The Bellwether\'s yard'), yardText: S('Three stalls behind the Bellwether. The dun has been down the drove road more times than you have. Absalom Rudd\'s girl does the hiring, and asks nothing.'),
+    penTitle: S('The drovers\' pen on the Long Common'), penText: S('A hurdle pen by the road, a lean-to for the tack, and three ponies with burrs in their manes. The man who keeps them lives in the lean-to.'),
     stableSign: S('A stable: a pony to hire for a day, or to give back'),
     mile: S('A milestone. Cut in it: {0}.'), touched: S('You lay a hand on the milestone. {0} is on your map now.'),
     mileName: S('{0}, towards {1}'),
@@ -62,6 +65,25 @@ const MOUNTS84 = (function () {
     halt: S('the halt'), pines: S('the Three Pines'),
   };
 
+  // ---------------------------------------------------------------- the ponies: nine coats a real horse wears, three to a stable [PROPOSED]
+  //  body/light/dark: the coat lit and shaded; hair: mane and tail; legs: the lower legs (black points on a bay, a dun);
+  //  socks: which legs are white below the knee (0 near fore, 1 near hind, 2 far fore, 3 far hind); face: star or blaze;
+  //  mark: the pattern laid over the coat (roan flecks, dapples, the dun's eel stripe and barred legs, skewbald patches, leopard spots).
+  const COATS = {
+    roan:     { name: TX.names.oakhaven, about: S('A red roan: chestnut flecked all over with white, darker on the head and legs.'), body: '#7a4a36', light: '#8e5c44', dark: '#5a3426', hair: '#2a1a12', legs: '#4a2c20', mark: 'roan', chart: '#9a6a48' },
+    bay:      { name: S('the bay mare'), about: S('A bay: a red-brown coat with a black mane and tail and black legs, a white star on her brow.'), body: '#6e3a22', light: '#86492c', dark: '#4e2816', hair: '#16100c', legs: '#18110c', face: 'star', chart: '#8a4a2a' },
+    black:    { name: S('the black mare'), about: S('Black from ears to hooves, with a star and one white hind sock.'), body: '#221c19', light: '#352c27', dark: '#151110', hair: '#0c0a09', legs: '#171311', face: 'star', socks: [1], chart: '#2e2622' },
+    dun:      { name: TX.names.p22_combe, about: S('A dun: sandy, with a dark stripe down her back, dark points and faint bars on her legs.'), body: '#c2a26a', light: '#d2b47c', dark: '#977b4a', hair: '#2a1e14', legs: '#3a2a1c', mark: 'dun', chart: '#c2a26a' },
+    chestnut: { name: S('the chestnut with the blaze'), about: S('A chestnut: copper all over, mane and tail too, with a white blaze and two white socks.'), body: '#9a4e22', light: '#b05e2c', dark: '#723818', hair: '#7a3412', legs: '#8a4420', face: 'blaze', socks: [0, 3], chart: '#a85a2c' },
+    palomino: { name: S('the palomino'), about: S('A palomino: a gold coat with a cream mane and tail, a blaze down her face.'), body: '#d2a85a', light: '#e2bc72', dark: '#a8823e', hair: '#efe4c8', legs: '#c49c52', face: 'blaze', chart: '#d8b060' },
+    grey:     { name: TX.names.p79_road_w, about: S('A dapple grey: iron-grey rings on a pale coat, a white mane, dark knees.'), body: '#9c9c98', light: '#b8b8b4', dark: '#74746f', hair: '#dcdcd6', legs: '#5e5e5a', mark: 'dapple', chart: '#a8a8a4' },
+    skewbald: { name: S('the skewbald'), about: S('A skewbald: big white patches on a brown coat, white legs, a white face.'), body: '#7e4426', light: '#94532e', dark: '#5a2e18', hair: '#3a2416', legs: '#7e4426', face: 'bald', socks: [0, 1, 2, 3], mark: 'pinto', chart: '#9a6040' },
+    spotted:  { name: S('the spotted mare'), about: S('Leopard-spotted: a white coat scattered with dark spots, a thin dark mane and tail.'), body: '#e6e0d4', light: '#f2eee6', dark: '#bdb5a6', hair: '#3e3028', legs: '#d8d2c4', mark: 'spots', chart: '#e6e0d4' },
+  };
+  const OFFER = { oakhaven: ['roan', 'bay', 'black'], p22_combe: ['dun', 'chestnut', 'palomino'], p79_road_w: ['grey', 'skewbald', 'spotted'] };
+  const coatOf = (p) => { const k = (p && p.coat) || (hasG() && G.player.horseCoat); return COATS[k] ? k : (OFFER[(p && p.home) || 'oakhaven'] || OFFER.oakhaven)[0]; };
+  const spriteOf = (k) => (k === 'roan' ? 'p84_pony' : 'p84_pony_' + k);
+
   // ---------------------------------------------------------------- where the stables are, and where she will not go
   const STABLES = { oakhaven: null, p22_combe: { x: 26.5, y: 23.5 }, p79_road_w: null };     // oakhaven's is maps.js's own; the pen is found by the east gate
   const NO_GO = new Set(['p83_poundstair', 'p85_deepgrove']);
@@ -70,9 +92,9 @@ const MOUNTS84 = (function () {
   function pony() {
     if (!hasG()) return null; const p = G.player.p84; if (!p || typeof p !== 'object') return null;
     if (typeof p.map !== 'string' || !G.maps || !G.maps[p.map] || !Number.isFinite(+p.x) || !Number.isFinite(+p.y)) return null;
-    p.x = +p.x; p.y = +p.y; p.mounted = !!p.mounted; p.left = Number.isFinite(+p.left) ? +p.left : clock(); p.home = TX.names[p.home] ? p.home : 'oakhaven'; return p;
+    p.x = +p.x; p.y = +p.y; p.mounted = !!p.mounted; p.left = Number.isFinite(+p.left) ? +p.left : clock(); p.home = TX.names[p.home] ? p.home : 'oakhaven'; p.coat = COATS[p.coat] ? p.coat : coatOf({ home: p.home }); return p;
   }
-  const nameOf = (p) => TX.names[(p && p.home) || 'oakhaven'];
+  const nameOf = (p) => COATS[coatOf(p)].name;
   const hired = () => typeof horseActive === 'function' && horseActive();
   const mounted = () => { const p = pony(); return !!(p && p.mounted && hired()); };
   function stableSpot(home) {
@@ -92,7 +114,7 @@ const MOUNTS84 = (function () {
     if (!hasG() || !G.map) return;
     const m = G.map; for (let i = m.entities.length - 1; i >= 0; i--) if (m.entities[i] && m.entities[i]._p84pony) m.entities.splice(i, 1);
     const p = pony(); if (!p || p.mounted || p.map !== G.mapId || !hired()) return;
-    m.entities.push({ kind: 'deco', sprite: 'p84_pony', x: p.x, y: p.y, scale: 1, solid: false, radius: 0.35, transient: true, _decor: true, _p84pony: true, label: fmt(TX.waiting, nameOf(p)) });
+    m.entities.push({ kind: 'deco', sprite: spriteOf(coatOf(p)), x: p.x, y: p.y, scale: 1, solid: false, radius: 0.35, transient: true, _decor: true, _p84pony: true, label: fmt(TX.waiting, nameOf(p)) });
   }
   function getUp() {
     const p = pony(); if (!p || !hired()) return false;
@@ -113,26 +135,46 @@ const MOUNTS84 = (function () {
 
   // ---------------------------------------------------------------- her head and ears, at the bottom of the view
   let headEl = null;
+  // a coat's marks, laid over whatever is already drawn (source-atop keeps them on the coat). Fixed patterns, no random numbers.
+  function marks(x, C, x0, y0, w, h, sc) {
+    const E = (cx, cy, rx, ry, col, r) => { x.fillStyle = col; x.beginPath(); x.ellipse(cx, cy, rx, ry, r || 0, 0, PI * 2); x.fill(); };
+    const n = Math.round(w * h / 40);
+    x.save(); x.globalCompositeOperation = 'source-atop';
+    if (C.mark === 'roan') for (let i = 0; i < n; i++) E(x0 + ((i * 37) % w), y0 + ((i * 53) % h), sc, sc * 0.8, 'rgba(236,226,216,0.5)');
+    // a staggered grid nudged by a fixed hash: even cover, no lines, the same every time
+    const grid = (dx, dy, fn) => { let j = 0; for (let gy = y0; gy < y0 + h; gy += dy, j++) for (let gx = x0 + (j % 2) * dx / 2, i = 0; gx < x0 + w; gx += dx, i++) { const hsh = ((i * 7 + j * 13) * 2654435761 >>> 0) % 1000 / 1000; fn(gx + (hsh - 0.5) * dx * 0.6, gy + (((hsh * 7) % 1) - 0.5) * dy * 0.6, hsh, i + j); } };
+    if (C.mark === 'dapple') grid(7 * sc, 6 * sc, (cx, cy, q) => { E(cx, cy, 3.2 * sc, 2.6 * sc, 'rgba(78,78,74,0.32)'); E(cx, cy, (1.6 + q) * sc, (1.3 + q * 0.8) * sc, 'rgba(216,216,212,0.7)'); });
+    if (C.mark === 'pinto') { E(x0 + w * 0.42, y0 + h * 0.62, w * 0.2, h * 0.38, '#f2eee6', 0.3); E(x0 + w * 0.12, y0 + h * 0.3, w * 0.1, h * 0.3, '#f2eee6', -0.4); E(x0 + w * 0.74, y0 + h * 0.2, w * 0.08, h * 0.22, '#f2eee6', 0.6); }
+    if (C.mark === 'spots') grid(8 * sc, 6.5 * sc, (cx, cy, q, t) => E(cx, cy, (1.1 + q) * sc, (0.9 + q * 0.6) * sc, t % 3 ? '#3e3028' : '#5e4a3c', q * 3));
+    x.restore();
+  }
+  let headCoat = '';
   function head(on) {
     if (typeof document === 'undefined') return;
     if (!headEl) {
       const cv = document.getElementById('view'), v = (cv && cv.parentElement) || document.body; if (!v) return;   // beside the view canvas, over it
       headEl = document.createElement('canvas'); headEl.width = 240; headEl.height = 110; headEl.id = 'p84-head';
       headEl.style.cssText = 'position:absolute;left:50%;bottom:0;width:30%;transform:translateX(-50%);pointer-events:none;z-index:6;image-rendering:pixelated;display:none';
-      const x = headEl.getContext('2d'), E = (cx, cy, rx, ry, col, r) => { x.fillStyle = col; x.beginPath(); x.ellipse(cx, cy, rx, ry, r || 0, 0, PI * 2); x.fill(); };
-      const P = (pts, col) => { x.fillStyle = col; x.beginPath(); x.moveTo(pts[0][0], pts[0][1]); for (const q of pts.slice(1)) x.lineTo(q[0], q[1]); x.closePath(); x.fill(); };
-      // the neck running away from you, the poll at its top, two pointed ears; the mane falls to the right
-      P([[34, 112], [206, 112], [150, 44], [90, 44]], '#6e4434'); P([[60, 112], [180, 112], [140, 50], [100, 50]], '#7c4e3c');
-      E(120, 44, 30, 13, '#744838');
-      P([[100, 40], [92, 8], [110, 34]], '#6a4232'); P([[140, 40], [148, 8], [130, 34]], '#6a4232');
-      P([[101, 37], [95, 14], [107, 33]], '#3a2418'); P([[139, 37], [145, 14], [133, 33]], '#3a2418');
-      for (let i = 0; i < 22; i++) { const t = i / 21; E(126 + t * 52 + ((i * 5) % 3), 48 + t * 62, 4 + t * 3, 2.4, i % 2 ? '#2a1a12' : '#3a261a', 0.9); }
-      for (let i = 0; i < 46; i++) E(70 + ((i * 37) % 100), 60 + ((i * 53) % 50), 1.2, 1, 'rgba(230,220,210,0.45)');   // roan flecks
-      x.fillStyle = '#2e7a3a'; x.fillRect(112, 46, 16, 4);                               // the green hire ribbon on the bridle
       v.appendChild(headEl);
     }
+    const k = coatOf(pony());
+    if (on && k !== headCoat) {
+      headCoat = k; const C = COATS[k];
+      const x = headEl.getContext('2d'), E = (cx, cy, rx, ry, col, r) => { x.fillStyle = col; x.beginPath(); x.ellipse(cx, cy, rx, ry, r || 0, 0, PI * 2); x.fill(); };
+      const P = (pts, col) => { x.fillStyle = col; x.beginPath(); x.moveTo(pts[0][0], pts[0][1]); for (const q of pts.slice(1)) x.lineTo(q[0], q[1]); x.closePath(); x.fill(); };
+      x.clearRect(0, 0, 240, 110);
+      // the neck running away from you, the poll at its top, two pointed ears; the mane falls to the right
+      P([[34, 112], [206, 112], [150, 44], [90, 44]], C.dark); P([[60, 112], [180, 112], [140, 50], [100, 50]], C.body);
+      E(120, 44, 30, 13, C.body);
+      P([[100, 40], [92, 8], [110, 34]], C.dark); P([[140, 40], [148, 8], [130, 34]], C.dark);
+      marks(x, C, 50, 30, 140, 80, 1.2);
+      P([[101, 37], [95, 14], [107, 33]], 'rgba(20,12,8,0.6)'); P([[139, 37], [145, 14], [133, 33]], 'rgba(20,12,8,0.6)');
+      const thin = C.mark === 'spots' ? 0.6 : 1;
+      for (let i = 0; i < 22; i++) { const t = i / 21; E(126 + t * 52 + ((i * 5) % 3), 48 + t * 62, (4 + t * 3) * thin, 2.4 * thin, C.hair, 0.9); E(126 + t * 52, 47 + t * 62, (2 + t * 2) * thin, 1.2, i % 2 ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.15)', 0.9); }
+      x.fillStyle = '#2e7a3a'; x.fillRect(112, 46, 16, 4);                               // the green hire ribbon on the bridle
+    }
     headEl.style.display = on ? 'block' : 'none';
-    if (on) { const cv = document.getElementById('view'), par = headEl.parentElement; if (cv && par) { const a = cv.getBoundingClientRect(), b = par.getBoundingClientRect(); headEl.style.bottom = Math.max(0, b.bottom - a.bottom) + 'px'; headEl.style.width = Math.round(a.width * 0.3) + 'px'; headEl.style.left = Math.round(a.left - b.left + a.width / 2) + 'px'; } }
+    if (on) { const cv = document.getElementById('view'), par = headEl.parentElement; if (cv && par) { const a = cv.getBoundingClientRect(), b = par.getBoundingClientRect(); const hud = a.height * (1 - (typeof VIEW_H !== 'undefined' && typeof VH !== 'undefined' ? VIEW_H / VH : 0.75)); headEl.style.bottom = Math.max(0, b.bottom - a.bottom + hud) + 'px'; headEl.style.width = Math.round(a.width * 0.3) + 'px'; headEl.style.left = Math.round(a.left - b.left + a.width / 2) + 'px'; } }
   }
 
   // ---------------------------------------------------------------- milestones
@@ -252,25 +294,58 @@ const MOUNTS84 = (function () {
   }
   function crossesDusk(mins) { const h0 = hour(); return h0 >= 5 && h0 < 20 && h0 + mins / 60 > 20; }
 
+  // the pony, side on, facing right: short thick legs, a deep round barrel, a short crested neck, a big head.
+  // The coat is painted on its own layer so the marks stay on the hide; mane, tail, tack go on top.
+  function paintPony(x, C) {
+    const L = document.createElement('canvas'); L.width = 104; L.height = 86; const b = L.getContext('2d');
+    const E = (g, cx, cy, rx, ry, col, r) => { g.fillStyle = col; g.beginPath(); g.ellipse(cx, cy, rx, ry, r || 0, 0, PI * 2); g.fill(); };
+    const legShape = (g, lx, col, bend) => { g.fillStyle = col; g.beginPath(); g.moveTo(lx - 1, 52); g.lineTo(lx + 10, 52); g.lineTo(lx + 8 + bend, 70); g.lineTo(lx + 7 + bend, 78); g.lineTo(lx + 2 + bend, 78); g.lineTo(lx + 1 + bend, 70); g.closePath(); g.fill(); E(g, lx + 5 + bend, 70, 3.6, 3, col); };
+    const LEGS = [[30, 1, true, 2], [70, -1, true, 3], [22, 0, false, 1], [62, 0, false, 0]];   // far hind, far fore, near hind, near fore: x, bend, far, sock index
+    for (const [lx, bend, far] of LEGS) legShape(b, lx, far ? C.dark : C.body, bend);
+    E(b, 48, 44, 31, 15, C.body); E(b, 24, 40, 12, 12, C.body); E(b, 72, 44, 11, 13, C.body);
+    b.fillStyle = C.body; b.beginPath(); b.moveTo(64, 36); b.quadraticCurveTo(72, 18, 84, 12); b.lineTo(94, 18); b.quadraticCurveTo(88, 34, 84, 52); b.lineTo(70, 54); b.closePath(); b.fill();
+    b.beginPath(); b.moveTo(82, 12); b.quadraticCurveTo(92, 6, 98, 14); b.lineTo(103, 30); b.quadraticCurveTo(102, 37, 95, 37); b.quadraticCurveTo(86, 34, 84, 26); b.closePath(); b.fill();
+    b.beginPath(); b.moveTo(85, 11); b.lineTo(86, 2); b.lineTo(90, 9); b.closePath(); b.fill();
+    marks(b, C, 14, 10, 90, 64, 1);
+    b.save(); b.globalCompositeOperation = 'source-atop';
+    E(b, 46, 37, 26, 8, 'rgba(255,240,220,0.12)'); E(b, 50, 56, 28, 5, 'rgba(0,0,0,0.12)'); E(b, 88, 25, 6, 7, 'rgba(255,240,220,0.1)');
+    if (C.mark === 'dun') { b.strokeStyle = C.hair; b.lineWidth = 2; b.beginPath(); b.ellipse(48, 44.5, 30, 14, 0, PI * 1.08, PI * 1.62); b.stroke(); b.fillStyle = C.hair; for (const [lx, bend] of LEGS) for (let k = 0; k < 3; k++) b.fillRect(lx + 1 + bend * 0.5, 58 + k * 3, 8, 1); }
+    // the lower legs: the coat's points, then white socks
+    for (const [lx, bend, far, si] of LEGS) {
+      const white = (C.socks || []).includes(si);
+      b.fillStyle = white ? (far ? '#d6d0c4' : '#eeeae2') : C.legs; b.fillRect(lx - 1 + bend, white ? 66 : 63, 12, white ? 14 : 17);
+      if (far && !white) { b.fillStyle = 'rgba(0,0,0,0.22)'; b.fillRect(lx - 1 + bend, 63, 12, 17); }
+    }
+    E(b, 98, 33, 5, 4, 'rgba(30,18,12,0.55)');                                           // the muzzle, always darker
+    if (C.face === 'star') { b.fillStyle = '#efe9de'; b.beginPath(); b.moveTo(92, 14); b.lineTo(94.5, 17); b.lineTo(92, 20); b.lineTo(89.5, 17); b.closePath(); b.fill(); }
+    if (C.face === 'blaze' || C.face === 'bald') { b.fillStyle = '#efe9de'; b.beginPath(); b.moveTo(89, 13); b.lineTo(C.face === 'bald' ? 97 : 94, 13); b.lineTo(103, 30); b.lineTo(C.face === 'bald' ? 94 : 99, 32); b.closePath(); b.fill(); }
+    b.restore();
+    E(x, 52, 82, 40, 4, 'rgba(0,0,0,0.3)');
+    // the tail, full and long from a high croup (thinner on the spotted mare: leopard-spotted horses often have sparse tails)
+    const tw = C.mark === 'spots' ? 0.55 : 1;
+    x.fillStyle = C.hair; x.beginPath(); x.moveTo(18, 34); x.quadraticCurveTo(6 + (1 - tw) * 8, 44, 9 + (1 - tw) * 6, 70); x.quadraticCurveTo(12, 74, 16, 70); x.quadraticCurveTo(15, 50, 23, 38); x.closePath(); x.fill();
+    x.drawImage(L, 0, 0);
+    for (const [lx, bend] of LEGS) { x.fillStyle = '#1e140e'; x.fillRect(lx + 1 + bend, 77, 7.5, 5); }   // hooves
+    x.fillStyle = 'rgba(20,12,8,0.6)'; x.beginPath(); x.moveTo(86, 4); x.lineTo(88.5, 9); x.lineTo(86.5, 9); x.closePath(); x.fill();   // inside the ear
+    E(x, 93, 18, 1.6, 1.6, '#1e140e'); E(x, 100, 32, 1, 1, '#1e140e');                   // the eye and the nostril
+    // the mane, thick along the crest, and the forelock
+    x.fillStyle = C.hair; x.beginPath(); x.moveTo(84, 9); x.quadraticCurveTo(70, 14, 62, 34); x.lineTo(66, 38); x.quadraticCurveTo(72, 22, 86, 15); x.closePath(); x.fill();
+    for (let i = 0; i < 7; i++) E(x, 67 + i * 2.6, 32 - i * 3, 3 * tw, 2.2 * tw, C.hair, 0.6);
+    E(x, 90, 13, 4 * tw, 2.5, C.hair, 0.4);
+    // the saddle and girth; the bridle with the green hire ribbon
+    x.fillStyle = '#3a2a1c'; x.beginPath(); x.moveTo(36, 31); x.quadraticCurveTo(48, 36, 60, 30); x.lineTo(62, 26); x.quadraticCurveTo(48, 32, 34, 26); x.closePath(); x.fill();
+    x.fillStyle = '#5a4430'; x.fillRect(47, 33, 4, 22); x.fillStyle = '#6a5a40'; x.fillRect(46, 50, 6, 6);
+    x.strokeStyle = '#3a2a1c'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(87, 12); x.lineTo(96, 34); x.moveTo(90, 28); x.lineTo(101, 28); x.stroke();
+    x.fillStyle = '#2e7a3a'; x.fillRect(86, 14, 4, 3); x.fillRect(85, 16, 2, 5);
+  }
+
   // ---------------------------------------------------------------- art (code only, no random numbers)
   function art() {
     if (typeof Engine === 'undefined' || !Engine.addSprite || typeof document === 'undefined') return;
     const add = (name, w, h, hs, fn) => { if (Engine.sprites[name]) return; const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d', { willReadFrequently: true }); fn(x); Engine.addSprite(name, { w, h, hs, cx: 0.5, dy: 0, data: new Uint32Array(x.getImageData(0, 0, w, h).data.buffer.slice(0)) }); };
     const E = (x, cx, cy, rx, ry, col, r) => { x.fillStyle = col; x.beginPath(); x.ellipse(cx, cy, rx, ry, r || 0, 0, PI * 2); x.fill(); };
     // the pony, side on: a roan (red-brown flecked with white), saddled, the green hire ribbon on her bridle
-    add('p84_pony', 104, 86, 1.2, (x) => {
-      E(x, 52, 82, 40, 4, 'rgba(0,0,0,0.3)');
-      x.fillStyle = '#4a2c20'; for (const [lx, sw] of [[26, 0], [34, 2], [68, -2], [76, 0]]) { x.beginPath(); x.moveTo(lx, 50); x.lineTo(lx + 6, 50); x.lineTo(lx + 5 + sw, 80); x.lineTo(lx + 1 + sw, 80); x.closePath(); x.fill(); }
-      x.fillStyle = '#1e140e'; for (const lx of [26, 34, 68, 76]) x.fillRect(lx + 1, 78, 6, 4);
-      E(x, 52, 44, 30, 15, '#7a4c3a'); E(x, 50, 40, 26, 10, '#8a5a46');                  // the barrel
-      x.fillStyle = '#7a4c3a'; x.beginPath(); x.moveTo(74, 40); x.lineTo(88, 16); x.lineTo(96, 20); x.lineTo(84, 46); x.closePath(); x.fill();   // the neck
-      E(x, 94, 22, 9, 6, '#7a4c3a', 0.5); E(x, 100, 27, 4, 3.5, '#5a362a', 0.5);          // the head and muzzle
-      E(x, 90, 12, 2, 5, '#6a4232', -0.3);                                                 // the ear
-      for (let i = 0; i < 10; i++) E(x, 80 + i * 1.5, 18 + i * 2.6, 3, 2, '#2a1a12');      // the mane
-      x.strokeStyle = '#2a1a12'; x.lineWidth = 4; x.beginPath(); x.moveTo(23, 38); x.quadraticCurveTo(14, 50, 18, 66); x.stroke();   // the tail
-      for (let i = 0; i < 60; i++) E(x, 26 + ((i * 37) % 52), 32 + ((i * 53) % 22), 1, 0.8, 'rgba(235,225,215,0.5)');   // roan flecks
-      E(x, 50, 33, 12, 5, '#3a2a1c'); x.fillStyle = '#5a4430'; x.fillRect(48, 36, 3, 14); x.fillStyle = '#2e7a3a'; x.fillRect(90, 20, 5, 2);
-    });
+    for (const k in COATS) add(spriteOf(k), 104, 86, 1.25, (x) => paintPony(x, COATS[k]));
     // a milestone: a short dressed stone with a rounded head, a line cut across it
     add('p84_mile', 32, 40, 0.6, (x) => {
       E(x, 16, 38, 13, 2.5, 'rgba(0,0,0,0.3)');
@@ -303,13 +378,44 @@ const MOUNTS84 = (function () {
     const p = pony();
     if (p && !hired()) { if (p.mounted) { getDown(null); say(fmt(TX.dayUp, nameOf(p)), '', 5000); } G.player.p84 = null; stage(); head(false); return; }
     if (hired() && !p && !G.player.horseFrom) G.player.horseFrom = 'oakhaven';   // a hire made before this phase
-    if (hired() && !p && G.player.horseFrom) { const s = stableSpot(G.player.horseFrom) || stableSpot('oakhaven'); if (s) { G.player.p84 = { map: s.map, x: s.x, y: s.y, mounted: false, left: clock(), home: G.player.horseFrom }; stage(); } }
+    if (hired() && !p && G.player.horseFrom) { const s = stableSpot(G.player.horseFrom) || stableSpot('oakhaven'); if (s) { G.player.p84 = { map: s.map, x: s.x, y: s.y, coat: coatOf({ home: G.player.horseFrom }), mounted: false, left: clock(), home: G.player.horseFrom }; stage(); } }
     if (p && !p.mounted && !p.atHome && clock() - p.left > 6) sendHome(p);
     if (p && !p.mounted && !p.atHome && p.map !== G.mapId && night()) { const m = G.maps[p.map]; if (m && (m.danger || 0) >= 1) { sendHome(p); p.fright = 1; } }
     if (p) head(p.mounted);
     const key = (p ? p.map + p.mounted + p.x.toFixed(1) : '-') + G.mapId; if (key !== lastStage) { lastStage = key; stage(); }
     touch();
   }
+
+  // ---------------------------------------------------------------- the stable panel: three ponies to choose from, a portrait of each
+  const pick = { coat: null };
+  function portrait(k) {
+    const c = document.createElement('canvas'); c.width = 104; c.height = 86; c.className = 'p84-portrait';
+    const s = typeof Engine !== 'undefined' && Engine.sprites[spriteOf(k)];
+    if (s && s.data) c.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(s.data.buffer.slice(0)), s.w, s.h), 0, 0);
+    c.style.cssText = 'width:4.2em;height:auto;image-rendering:pixelated;display:block;margin:0 auto';
+    return c;
+  }
+  function choose(id) {
+    const offer = OFFER[id] || OFFER.oakhaven, active = hired();
+    const study = document.querySelector('#modal-panel .horse-study'); if (!study) return;
+    const cur = active ? coatOf(pony()) : (offer.includes(pick.coat) ? pick.coat : offer[0]); pick.coat = cur;
+    const bh = study.querySelector('b'); if (bh && active) bh.textContent = fmt(TX.hiredAs, COATS[cur].name);
+    const row = document.createElement('div'); row.className = 'p84-coats'; row.setAttribute('role', 'radiogroup'); row.setAttribute('aria-label', tr(TX.pick));
+    row.style.cssText = 'display:flex;gap:1cqw;justify-content:space-between;margin:1cqh 0';
+    const about = document.createElement('p'); about.className = 'p84-about'; about.style.margin = '.4em 0';
+    const show = () => { for (const b of row.children) { const on = b.dataset.coat === pick.coat; b.setAttribute('aria-checked', on ? 'true' : 'false'); b.style.outline = on ? '2px solid var(--gold, #d8b45a)' : 'none'; b.style.opacity = on || !active ? '1' : '0.45'; } about.textContent = tr(COATS[pick.coat].about); };
+    for (const k of offer) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'dfbtn p84-coat'; b.dataset.coat = k; b.setAttribute('role', 'radio'); b.style.cssText = 'flex:1;padding:.2em .2em;line-height:1.15';
+      if (active && k !== cur) b.disabled = true;
+      b.appendChild(portrait(k)); const t = document.createElement('span'); t.textContent = fmt(COATS[k].name); t.style.display = 'block'; b.appendChild(t);
+      b.onclick = () => { if (hired() || G.openPanel !== 'stable') return; pick.coat = k; show(); };
+      row.appendChild(b);
+    }
+    study.insertAdjacentElement('afterend', row); row.insertAdjacentElement('afterend', about); show();
+    const hint = document.querySelector('#modal-panel p.muted:last-of-type'); if (hint && !active) { const h2 = document.createElement('p'); h2.className = 'muted'; h2.textContent = tr(TX.chooseHint); hint.insertAdjacentElement('afterend', h2); }
+    pick.show = show; pick.offer = offer;
+  }
+  function stepChoice(d) { if (!pick.offer || hired()) return; const i = pick.offer.indexOf(pick.coat); pick.coat = pick.offer[(i + d + pick.offer.length) % pick.offer.length]; if (pick.show) pick.show(); }
 
   // ---------------------------------------------------------------- hooks
   function wire() {
@@ -365,7 +471,8 @@ const MOUNTS84 = (function () {
       };
     }
     if (typeof window !== 'undefined' && window.addEventListener) window.addEventListener('keydown', (ev) => {
-      try { if (!hasG() || G.state !== 'play' || ev.repeat) return; if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return; const k = typeof keyOf === 'function' ? keyOf(ev) : (ev.key || '').toLowerCase(); if (k === 'x' && pony()) { ev.preventDefault(); getUp(); } } catch (e) { warnOnce('key', e); }
+      try { if (hasG() && G.openPanel === 'stable' && !ev.repeat) { const k0 = typeof keyOf === 'function' ? keyOf(ev) : (ev.key || '').toLowerCase(); if (k0 === 'arrowleft' || k0 === 'arrowright') { ev.preventDefault(); stepChoice(k0 === 'arrowleft' ? -1 : 1); return; } }
+        if (!hasG() || G.state !== 'play' || ev.repeat) return; if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return; const k = typeof keyOf === 'function' ? keyOf(ev) : (ev.key || '').toLowerCase(); if (k === 'x' && pony()) { ev.preventDefault(); getUp(); } } catch (e) { warnOnce('key', e); }
     });
     // the stables: which pony, and where she comes from; the fright paid for
     if (typeof openStable === 'function') {
@@ -377,10 +484,12 @@ const MOUNTS84 = (function () {
           if (id === 'p22_combe') { if (h) h.textContent = tr(TX.yardTitle); if (pp) pp.textContent = tr(TX.yardText); }
           if (id === 'p79_road_w') { if (h) h.textContent = tr(TX.penTitle); if (pp) pp.textContent = tr(TX.penText); }
           const p = G.player.p84; if (p && p.fright) { p.fright = 0; G.player.gold = Math.max(0, (Number(G.player.gold) || 0) - 5); say(tr(TX.paidFright), '', 4000); }
+          choose(id);
+          const quiet = (fn, self, args) => { const _msg = msg; msg = function () {}; try { return fn && fn.apply(self, args); } finally { msg = _msg; } };
           const rent = document.getElementById('stable-rent');
-          if (rent) { const _c = rent.onclick; rent.onclick = function () { const was = hired(); const rr = _c && _c.apply(this, arguments); if (!was && hired()) { G.player.horseFrom = TX.names[id] ? id : 'oakhaven'; G.player.p84 = null; tick(); } return rr; }; }
+          if (rent) { const _c = rent.onclick; rent.onclick = function () { const was = hired(), k = pick.coat; const rr = quiet(_c, this, arguments); if (!was && hired()) { G.player.horseFrom = TX.names[id] ? id : 'oakhaven'; G.player.horseCoat = k; G.player.p84 = null; tick(); say(fmt(TX.hireLine, COATS[k].name, HORSE.cost), 'good', 6500); } return rr; }; }
           const back = document.getElementById('stable-return');
-          if (back) { const _c = back.onclick; back.onclick = function () { const rr = _c && _c.apply(this, arguments); if (!hired()) { G.player.p84 = null; stage(); head(false); } return rr; }; }
+          if (back) { const _c = back.onclick; back.onclick = function () { const nm = nameOf(pony()), rr = quiet(_c, this, arguments); if (!hired()) { G.player.p84 = null; G.player.horseCoat = null; stage(); head(false); say(fmt(TX.backLine, nm, HORSE.refund), '', 5500); } return rr; }; }
         } catch (e) { warnOnce('stable', e); }
         return r;
       };
@@ -476,7 +585,7 @@ const MOUNTS84 = (function () {
   }
   wire();
 
-  return { ensureRegions, TX, TEXTS, STABLES, NO_GO, RIDE, EYE, pony, mounted, hired, getUp, getDown, stage, tick, sendHome, stableSpot, placeMiles, touched, route, minutesOf, legRisk, haltOn, crossesDusk, mileName, head };
+  return { chartColour: () => { try { return hired() ? COATS[coatOf(pony())].chart : null; } catch (e) { return null; } }, ensureRegions, TX, TEXTS, COATS, OFFER, coatOf, pick, stepChoice, paintPony, STABLES, NO_GO, RIDE, EYE, pony, mounted, hired, getUp, getDown, stage, tick, sendHome, stableSpot, placeMiles, touched, route, minutesOf, legRisk, haltOn, crossesDusk, mileName, head };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = MOUNTS84;
 if (typeof window !== 'undefined') window.MOUNTS84 = MOUNTS84;

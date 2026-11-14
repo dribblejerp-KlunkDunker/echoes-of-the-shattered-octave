@@ -40,8 +40,14 @@ const M = require(path.join(ROOT, 'js', 'mounts84.js'));
     out.stables = ['oakhaven', 'p22_combe', 'p79_road_w'].every((id) => G.maps[id].entities.some((e) => e && e.use === 'stable'));
     // hire at the Bellwether's yard
     G.tod = 0.4; G.player.gold = 100; const st = G.maps.p22_combe.entities.find((e) => e && e.use === 'stable'); go('p22_combe', st.x, st.y + 1.2);
-    openStable(); out.title = document.querySelector('#modal-panel h2').textContent; document.getElementById('stable-rent').click();
-    const p = X.pony(); out.hired = X.hired() && !!p && p.map === 'p22_combe' && p.home === 'p22_combe' && G.player.gold === 75;
+    openStable(); out.title = document.querySelector('#modal-panel h2').textContent;
+    const coats = [...document.querySelectorAll('#modal-panel .p84-coat')].map((b) => b.dataset.coat); out.offer = coats.join(',');
+    out.allPainted = Object.keys(X.COATS).every((k) => Engine.sprites[k === 'roan' ? 'p84_pony' : 'p84_pony_' + k]);
+    X.stepChoice(1); out.stepped = X.pick.coat; document.querySelector('#modal-panel .p84-coat[data-coat="palomino"]').click(); out.picked = X.pick.coat;
+    const shown = []; const _m = msg; msg = function (t) { shown.push(String(t)); return _m.apply(this, arguments); };
+    document.getElementById('stable-rent').click(); msg = _m; out.hireMsg = shown.join(' | ');
+    const p = X.pony(); out.hired = X.hired() && !!p && p.map === 'p22_combe' && p.home === 'p22_combe' && G.player.gold === 75 && p.coat === 'palomino';
+    out.sprite = (G.ents.find((e) => e && e._p84pony) || {}).sprite;
     out.shown = G.ents.some((e) => e && e._p84pony);
     // up, and how she goes
     Engine.cam.x = p.x + 0.8; Engine.cam.y = p.y; X.getUp(); out.up = X.mounted() && !G.ents.some((e) => e && e._p84pony) && document.getElementById('p84-head').style.display === 'block';
@@ -118,6 +124,9 @@ const M = require(path.join(ROOT, 'js', 'mounts84.js'));
   check(/flume_road>p83_stride>p83_poundstair/.test(b.way), 'the way goes along the roads, gate to gate (' + b.way + ')');
   check(b.minsRiding > 0 && b.minsRiding <= Math.ceil(b.mins * 0.55), 'riding, the road takes about half the time (' + b.mins + ' on foot, ' + b.minsRiding + ' riding)');
   check(/p83_wethers/.test(b.longWay) && b.halt, 'a journey that would run past dusk stops the night about halfway (' + b.longWay + '; stopped at ' + b.haltMap + ')');
+  check(a.offer === 'dun,chestnut,palomino' && a.allPainted, 'the Bellwether offers three ponies, each painted (' + a.offer + ')');
+  check(a.stepped === 'chestnut' && a.picked === 'palomino', 'the arrows and the portraits choose between them');
+  check(/palomino/.test(a.hireMsg) && !/roan mare/.test(a.hireMsg) && a.sprite === 'p84_pony_palomino', 'the one chosen is the one hired, named and seen (' + a.hireMsg + ')');
   check(b.ambush, 'an ambush comes on the stretch where it happens (' + b.ambushMap + ')');
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();

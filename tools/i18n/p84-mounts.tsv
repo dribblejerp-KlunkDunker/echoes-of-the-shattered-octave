@@ -1,6 +1,6 @@
 # Phase 84, mounts and fast travel (js/mounts84.js, MOUNTS84.TEXTS). english<TAB>french (vous form). Approved by the owner, 14 Nov 2026.
 the roan mare	la jument rouanne
-the dun	la isabelle
+the dun	l'isabelle
 the grey	la grise
 {0}, saddled and waiting. X to get up.	{0}, sellée, qui attend. X pour monter.
 You get up on {0}.	Vous montez sur {0}.
@@ -17,9 +17,7 @@ The day's hire is up. You get down, and {0} turns for home.	La journée de locat
 Hounds came for {0} in the night. She bolted home, and the ostler wants 5 sovereigns for the fright.	Les chiens sont venus pour {0} dans la nuit. Elle s'est enfuie jusqu'à l'écurie, et le palefrenier veut 5 souverains pour la frayeur.
 You pay the ostler 5 sovereigns for the fright.	Vous payez 5 souverains au palefrenier pour la frayeur.
 The Bellwether's yard	La cour du Bellwether
-A stall behind the Bellwether, and a dun pony who has been down the drove road more times than you have. Absalom Rudd's girl does the hiring, and asks nothing.	Une stalle derrière le Bellwether, et une ponette isabelle qui a descendu le chemin de transhumance plus souvent que vous. La fille d'Absalom Rudd s'occupe de la location, et ne pose pas de questions.
 The drovers' pen on the Long Common	L'enclos des bouviers sur la Longue Commune
-A hurdle pen by the road, a lean-to for the tack, and a grey pony with burrs in her mane. The man who keeps her lives in the lean-to.	Un enclos de claies au bord de la route, un appentis pour le harnachement, et une ponette grise avec des bardanes dans la crinière. L'homme qui la garde vit dans l'appentis.
 A stable: a pony to hire for a day, or to give back	Une écurie : un poney à louer pour la journée, ou à rendre
 A milestone. Cut in it: {0}.	Une borne. Gravé dessus : {0}.
 You lay a hand on the milestone. {0} is on your map now.	Vous posez la main sur la borne. {0} figure maintenant sur votre carte.
@@ -32,3 +30,25 @@ You stop the night at {0}. {1} is still ahead.	Vous faites halte pour la nuit à
 On {0}, mid-road, something has been waiting.	Sur {0}, au milieu de la route, quelque chose attendait.
 the halt	la halte
 the Three Pines	les Trois Pins
+Three stalls behind the Bellwether. The dun has been down the drove road more times than you have. Absalom Rudd's girl does the hiring, and asks nothing.	Trois stalles derrière le Bellwether. L'isabelle a descendu le chemin des troupeaux plus souvent que vous. C'est la fille d'Absalom Rudd qui s'occupe de la location, et elle ne pose pas de questions.
+A hurdle pen by the road, a lean-to for the tack, and three ponies with burrs in their manes. The man who keeps them lives in the lean-to.	Un enclos de claies au bord de la route, un appentis pour le harnachement, et trois poneys avec des bardanes dans la crinière. L'homme qui les garde vit dans l'appentis.
+Which of them?	Laquelle ?
+Left and right arrows choose between them.	Les flèches gauche et droite permettent de choisir.
+Hired: {0}	Louée : {0}
+You hire {0} for {1} sovereigns. The ostler ties a green ribbon to the bridle: she is yours until this time tomorrow.	Vous louez {0} pour {1} souverains. Le palefrenier noue un ruban vert à la bride : elle est à vous jusqu'à demain à la même heure.
+You hand {0} back. The ostler counts {1} sovereigns into your palm and hangs the green ribbon on its nail.	Vous rendez {0}. Le palefrenier vous compte {1} souverains dans la paume et raccroche le ruban vert à son clou.
+the bay mare	la jument baie
+the black mare	la jument noire
+the chestnut with the blaze	l'alezane à la liste
+the palomino	la jument palomino
+the skewbald	la jument pie
+the spotted mare	la jument léopard
+A red roan: chestnut flecked all over with white, darker on the head and legs.	Une rouanne : alezane piquetée de blanc partout, plus sombre à la tête et aux jambes.
+A bay: a red-brown coat with a black mane and tail and black legs, a white star on her brow.	Une baie : robe brun-rouge, crinière, queue et jambes noires, une étoile blanche au front.
+Black from ears to hooves, with a star and one white hind sock.	Noire des oreilles aux sabots, avec une étoile et une balzane blanche à un postérieur.
+A dun: sandy, with a dark stripe down her back, dark points and faint bars on her legs.	Une isabelle : couleur sable, une raie de mulet sombre sur le dos, les extrémités sombres et de légères zébrures aux jambes.
+A chestnut: copper all over, mane and tail too, with a white blaze and two white socks.	Une alezane : cuivrée de partout, crinière et queue comprises, avec une liste blanche et deux balzanes.
+A palomino: a gold coat with a cream mane and tail, a blaze down her face.	Une palomino : robe dorée, crinière et queue crème, une liste sur le chanfrein.
+A dapple grey: iron-grey rings on a pale coat, a white mane, dark knees.	Une gris pommelé : des anneaux gris fer sur une robe pâle, une crinière blanche, les genoux sombres.
+A skewbald: big white patches on a brown coat, white legs, a white face.	Une pie : de grandes taches blanches sur une robe brune, les jambes blanches, la tête blanche.
+Leopard-spotted: a white coat scattered with dark spots, a thin dark mane and tail.	Tachetée léopard : une robe blanche semée de taches sombres, une crinière et une queue sombres et clairsemées.
