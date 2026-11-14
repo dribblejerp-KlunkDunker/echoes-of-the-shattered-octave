@@ -8,14 +8,14 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 
 **Where the work is.** Branch `phase-75-pixel-folk`, pull request #119 (mergeable; merging is the owner's click, and it is what updates the GitHub Pages play links). Everything is committed and pushed.
 
-**Done on this branch:** Phases 75 to 82b. The Greenroot road in three stretches with Singers' Howe (79, 80); the world plan, approved by the owner on 13 Nov (81); the building style of every region (78 and 82); every place laid on the travel map from its gates, the Reach and Woods charts drawn in code, twenty-three finger-posts and six notice boards with their tasks (82b).
+**Done on this branch:** Phases 75 to 82b. The Greenroot road in three stretches with Singers' Howe (79, 80); the world plan, approved by the owner on 13 Nov (81); the building style of every region (78 and 82); every place laid on the travel map from its gates, the Reach and Woods charts drawn in code, twenty-six finger-posts and six notice boards with their tasks (82b).
 
 **Next: Phases 83 to 86, on Fable 5.2 at high effort** (Part A below). Phase 82b is built; its record and seven questions are in `story/Game Layer/Phase 82b - New In-Game Text (for review).md`, its text [PROPOSED] until the owner rules.
 
 **After that.** Part B below (87 to 90) is Opus 5.5 work.
 
 **Waiting on the owner:**
-- Phase 82b's text and seven questions (the end of its review record): the text; the distances on the posts; Greenroot's board with no task; the water-meadow's culvert; which house in Greenroot is the mill; journey times on the new chart; words for three ways out that have no post yet (Oakhaven's North Gate and sluice-arch, the clearing's west gate).
+- Phase 82b's text and seven questions (the end of its review record): the text; the distances on the posts; Greenroot's board with no task; the water-meadow's culvert; which house in Greenroot is the mill; journey times on the new chart; the words of the three posts added for the ways out the brief had no words for (Oakhaven's North Gate and sluice-arch, the clearing's west gate).
 - Phase 82's three questions (the Cay under thatch; the one lit window in the Low Rings; thatch on Wethercombe's fold walls).
 - The four words of the woman in the doorway in the Plaza of the Willows (until then she is seen and not heard).
 - The Long Rest, the keeper of Singers' Howe: its name and numbers.

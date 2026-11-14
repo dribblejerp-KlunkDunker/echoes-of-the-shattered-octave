@@ -28,7 +28,7 @@ const BR = require(path.join(ROOT, 'js', 'bearings82b.js')), BO = require(path.j
   check(Array.from(pairs.values()).every((fr) => fr.trim().length > 0), 'no French line is empty');
   const src = fs.readFileSync(path.join(ROOT, 'js', 'bearings82b.js'), 'utf8') + fs.readFileSync(path.join(ROOT, 'js', 'boards82b.js'), 'utf8');
   check(!/Math\.random/.test(src), 'nothing in Phase 82b uses random numbers');
-  check(BR.POSTS.length === 23 && new Set(BR.POSTS.map((p) => p.id)).size === 23, 'the brief\'s twenty-three finger-posts are all listed');
+  check(BR.POSTS.filter((p) => !p.extra).length === 23 && BR.POSTS.length === 26 && new Set(BR.POSTS.map((p) => p.id)).size === 26, 'the brief\'s twenty-three finger-posts are all listed, and the three worded since');
   check(['landing', 'combe', 'harbour', 'hollow', 'rings', 'greenroot'].every((k) => BO.BOARDS[k]) && Object.keys(BO.TASKS).length === 9 && BO.BOARDS.greenroot.tasks.length === 0, 'six new boards, nine tasks, and Greenroot\'s board gives none');
   // the pure layout rules on a made-up country: a road east, and a door in the middle of a map counting by its nearest edge
   const M = (id, w, h, gates) => { const cells = new Array(w * h).fill(null); for (const [x, y, to] of gates) cells[y * w + x] = { door: true, portal: { map: to, x: 1, y: 1 } }; return { id, w, h, outdoor: true, cells }; };
@@ -93,8 +93,8 @@ const BR = require(path.join(ROOT, 'js', 'bearings82b.js')), BO = require(path.j
   check(r.rects, 'the travel map lays every destination where the layout puts it, one minute a cell');
   check(r.wideReach, 'the Reach is laid as it is walked: about a thousand cells across');
   check(r.yard, 'the Malting yard\'s way back to the Court leaves by its south side, and the Court\'s door brings you in there');
-  check(r.posts, 'all twenty-three finger-posts stand within five cells of their gates, in the brief\'s words, on open ground');
-  check(r.awaiting && !r.rep.noPost.length, 'every other way out has a finger-post within five cells; waiting on the owner\'s words: ' + r.bare.join(', '));
+  check(r.posts, 'all twenty-six finger-posts stand within five cells of their gates, in their words, on open ground');
+  check(r.awaiting && !r.bare.length && !r.rep.noPost.length, 'every way out between outdoor places has a finger-post within five cells' + (r.bare.length ? ': not ' + r.bare.join(', ') : ''));
   check(r.same, 'the chart is drawn the same every time, and a place not yet found is not on it');
   check(r.image, 'the travel map gets the chart as an Image of the chart\'s size');
   check(r.here, 'you are on the chart even where the travel list does not go (Wethercombe)');

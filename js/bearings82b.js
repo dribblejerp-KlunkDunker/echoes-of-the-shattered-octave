@@ -59,14 +59,15 @@ const BEARINGS82B = (function () {
     { id: 'court_west', map: 'whispergrove', to: ['p31_bellyard'], text: S('A way-post in marble. THE BELL YARD AND ASHLANE. Nobody has cleaned the weed off it.') },
     { id: 'bellyard', map: 'p31_bellyard', to: ['whispergrove'], text: S('A way-post in marble. THE COURT.') },
     { id: 'yard', map: 'p61_yard', to: ['whispergrove'], text: S('A painted Office board on a stake. TO THE COURT. QUEUE THIS SIDE.') },
+    // the three ways out the brief gave no words for, worded in its pattern from what the books and the brief already say
+    // (Greenroot two days; Stillwater down the Flume; Wethercombe down the drove) [PROPOSED, for the owner]
+    { id: 'oak_north', map: 'oakhaven', to: ['clearing'], text: S('A finger-post. THE NORTH GATE. Under it, smaller: GREENROOT, two days.'), extra: true },
+    { id: 'oak_sluice', map: 'oakhaven', to: ['flume_road'], text: S('A finger-post. THE SLUICE-ARCH. Under it, smaller: STILLWATER LANDING.'), extra: true },
+    { id: 'clearing_west', map: 'clearing', to: ['p20_downs'], text: S('A finger-post. THE WATCH DOWNS. Under it, smaller: WETHERCOMBE, down the drove.'), extra: true },
   ];
   const POST_SHORT = S('A finger-post');
-  // ways out the brief gives no words for: they wait for the owner's
-  const AWAITING = [
-    { map: 'oakhaven', to: 'clearing', why: 'the North Gate' },
-    { map: 'oakhaven', to: 'flume_road', why: 'the sluice-arch (the Flume Road gate)' },
-    { map: 'clearing', to: 'p20_downs', why: 'the clearing\'s west gate, to the Watch Downs' },
-  ];
+  // ways out with no words yet (none since the three above were worded)
+  const AWAITING = [];
   // what the meadow's culvert does, recorded (see the header)
   const RECORDED = [{ map: 'p49_meadow', to: 'oakhaven', leaves: 'W', arrives: 'S', why: 'the tannery culvert, a scene, not a pair of gates' }];
   // a finger-post, by its words: the brief's and the ones the game had already

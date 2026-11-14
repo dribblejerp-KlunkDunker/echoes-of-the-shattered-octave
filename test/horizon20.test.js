@@ -89,7 +89,8 @@ async function boot(browser, block) {
     console.log('PASS off state: the Original preset with both switches off (with and without rite_ready) and Medium with both off are byte-identical to a build without js/horizon20.js in ' + scenes.length + ' scenes');
 
     // ---- maps and saves: the clearing gains one door cell, no entity ----
-    const shape = (page) => page.evaluate(() => { const c = G.maps.clearing; return { n: c.entities.length, base: c.baseCount, cells: c.cells.map((q) => (q ? (q.door ? 'D' : q.tex + '@' + (q.top == null ? '' : q.top)) : '.')) }; });
+    // (Phase 82b puts a finger-post at every way out, so the Downs' gate brings its post: that one is 82b's, not this module's)
+    const shape = (page) => page.evaluate(() => { const c = G.maps.clearing, post = c.entities.some((e) => e._p82bPost === 'clearing_west') ? 1 : 0; return { n: c.entities.length - post, base: c.baseCount - post, cells: c.cells.map((q) => (q ? (q.door ? 'D' : q.tex + '@' + (q.top == null ? '' : q.top)) : '.')) }; });
     const sa = await shape(A.page), sb = await shape(B.page);
     assert.equal(sa.n, sb.n, 'the clearing has the same entities'); assert.equal(sa.base, sb.base, 'and the same baseCount');
     const cellDiff = sa.cells.map((ch, i) => (ch === sb.cells[i] ? -1 : i)).filter((i) => i >= 0);
