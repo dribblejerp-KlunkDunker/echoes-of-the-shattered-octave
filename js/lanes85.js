@@ -235,6 +235,9 @@ const LANES85 = (function () {
     // the reeds over the garret doors, and the bare hook
     GARRETS.forEach((dx, i) => { const o = { solid: false, radius: 0.1, scale: 0.55, yOff: -0.4, _p85l: 'reed', _i: i };
       if (i === BARE) m.deco('p85_hook', dx + 0.5, 44.35, Object.assign(o, { label: TX.hook, use: 'p85l_hook' })); else m.deco('p9p_doorreed', dx + 0.5, 44.35, Object.assign(o, { label: TX.reed, use: 'p85l_reed' })); });
+    // the two salvagers, working the garret roofs from the board
+    m.deco('p60_man_b', 41.6, 42.9, { radius: 0.3, scale: 1, label: TX.salvager, use: 'p85l_salv', _i: 0 });
+    m.deco('p60_man_c', 43.4, 42.9, { radius: 0.3, scale: 1, label: TX.salvagerB, use: 'p85l_salv', _i: 1 });
     // signs
     m.deco('sign', 48.6, 37.6, { radius: 0.2, scale: 0.75, label: TX.pool });
     m.deco('sign', 7.6, 42.6, { radius: 0.15, scale: 0.6, label: TX.garrets });
@@ -324,6 +327,7 @@ const LANES85 = (function () {
     // the Ladder's Foot: Oakhaven heard over the Hedge
     if (m.id === POOL && !fint('heard') && Engine.cam.y < 6 && Math.abs(Engine.cam.x - 36.5) < 6) { f().p85l_heard = 1; say(TX.heard, '', 9000); }
   }
+  let salvN = -1;
   function tone(hz) { try { if (typeof Audio_ !== 'undefined' && Audio_.sfx && Audio_.sfx.song) Audio_.sfx.song(hz, 1.2); } catch (e) { /* silent */ } }
   function useOwn(e) {
     if (!e || typeof e.use !== 'string' || !/^p85l_/.test(e.use) || typeof G === 'undefined' || !G.map) return false;
@@ -342,6 +346,7 @@ const LANES85 = (function () {
       if (r === 2) { f().p85l_reed = 3; say(TX.womanPaid, 'good', 9000); try { G.player.inv.push({ id: 'w_p85_pole', n: 1 }); G.gold(4); questXp(30); } catch (err) { /* */ } return true; }
       say(r === 1 ? TX.womanWait : TX.womanIdle, '', 6000); return true;
     }
+    if (u === 'p85l_salv') { const L = [TX.salvGreet, TX.salvWork, TX.salvPlace, TX.salvBark]; salvN = (salvN + 1) % L.length; say(L[(salvN + (e._i || 0)) % L.length], '', 6000); return true; }
     if (u === 'p85l_reed') { tone(NOTES[e._i] || 220); say(TX.reed, '', 2500); return true; }
     if (u === 'p85l_hook') { if (fint('reed') === 1) { f().p85l_reed = 2; tone(NOTES[BARE]); say(TX.hang, 'good', 8000); sync(); } else say(TX.hook, '', 3000); return true; }
     return false;

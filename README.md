@@ -294,6 +294,32 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The Sunk Lanes, the punt and Cross Pool (Phase 85).** Between Stillwater Landing and the Low Rings there is now a way of its own: old cobbles under a hand of water, boards from roof to roof, a hedge-bank, deep pools on either side. The punt-woman hires her punt for a sovereign; pole it over the deep to what the boards cannot reach. West of the Low Rings lies Cross Pool, the old town: the market cross under clear green water, lit from beneath after dark; the corn loft; the weavers' row, where a child's reed goes back on its hook; the Ladder's Foot, where Oakhaven can be heard over the Hedge; and on a still, clear night the kerbs of the old street rise as stepping stones.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p85-lanes-lanes.jpg" alt="Boards laid from roof to roof over green water between drowned houses"></td>
+<td width="50%"><img src="screenshots/p85-lanes-poolnight.jpg" alt="Cross Pool at night: the drowned market cross and street lit green from beneath the water"></td>
+</tr>
+<tr>
+<td>The Sunk Lanes.</td>
+<td>Cross Pool after dark.</td>
+</tr>
+</table>
+
+**The Deep Grove (Phase 85).** A gap in the north side of Greenroot Wood opens on glades of dwarf oaks grown out of mossy boulders. The path is not the same way twice: in every glade one way sounds lower than the others (and says so in a caption). Follow the low note and the wood lets you in, to the Stool, the oldest tree, a ring of trunks round a hollow where something under the roots is sending in no key the Octave uses. Walk by eye and you are let out where you came in. Nobody is there. After dark the silent circle closes round you, and something waits at the gap.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p85-grove-glade.jpg" alt="A glade ringed by old oaks and moss-furred dwarf oaks"></td>
+<td width="50%"><img src="screenshots/p85-grove-stool.jpg" alt="The Stool: a ring of ancient trunks round a dark hollow"></td>
+</tr>
+<tr>
+<td>A glade.</td>
+<td>The Stool.</td>
+</tr>
+</table>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>

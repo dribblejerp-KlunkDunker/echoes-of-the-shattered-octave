@@ -1,6 +1,6 @@
 # Phase 85: New In-Game Text (for review)
 
-The big places between, from the world plan the owner approved on 13 Nov ("approve all"). Built one place at a time: the Dry Flume, then the Antler Galleries.
+The big places between, from the world plan the owner approved on 13 Nov ("approve all"). Built one place at a time: the Dry Flume, the Antler Galleries, the Sunk Lanes with Cross Pool, and the Deep Grove. Gear: two pieces in each of the first two; on the owner's word (14 Nov, "lets stick with 4 new pieces of gear") two each in the last two.
 
 ## 1. The Dry Flume (14 Nov)
 
@@ -130,3 +130,141 @@ Everything here is **[PROPOSED]** under the approved plan ("in the Reach, the an
 | Floorstone Knife | Couteau de pierre de fond |
 | Black flint from the floorstone, knapped to an edge you could shave with. It makes almost no sound, and it is very sharp. | Du silex noir de la pierre de fond, taillé jusqu'à un fil à se raser. Il ne fait presque aucun bruit, et il est très tranchant. |
 | The Antler Galleries: under the open hollow on the drove road, an old flint-mine. The antler picks they left grew. The deep galleries are a white forest, and something lies in the deepest. | Les Galeries de Bois-de-Cerf : sous le creux ouvert du chemin de transhumance, une ancienne mine de silex. Les pics en bois de cerf qu'ils ont laissés ont poussé. Les galeries profondes sont une forêt blanche, et quelque chose gît dans la plus profonde. |
+
+## 3. The Sunk Lanes, the punt, and Cross Pool (14 Nov)
+
+Code: `js/lanes85.js`. Test: `test/lanes85.test.js` (16 checks). French: `tools/i18n/p85-lanes.tsv`.
+
+Everything here is **[PROPOSED]** under the approved plan (road 2 and big place 3).
+
+### What was built
+
+- **The Sunk Lanes,** one short stretch now between Stillwater Landing and the Low Rings: old cobbles a hand under the water, then boards laid from roof to roof (you walk the ridges of drowned roofs), then a hedge-bank, bending round deep pools. Drones lie at the pools' edges.
+- **The punt-woman** keeps her punt at a stage on the Lanes. A sovereign hires it for the Lanes and Cross Pool. Use the punt to get in. Press X, or use any mooring stage, to get out on dry ground. In the punt you go over deep water and shallows and nowhere else. A drowned shop-front out in the deep holds a strongbox you can only reach by punt.
+- **Cross Pool,** the old town, west of the Low Rings through a new gate. The market cross stands under clear green water in the middle of a drowned square, with kerbs and doorsteps around it. **After dark the water is lit from beneath** and the whole street shows. A board walk runs round the square. The cashbox the looters left "for being too heavy" lies on the cross's bottom step, with the Market-Warden's Buckler; both are reached only by punt.
+- **The corn loft** (dry, a strongbox), **the weavers' garrets** (six doors along one long board, a tuned reed over each, each a step higher than the last; one hook bare), and **the Ladder's Foot** (the grown-shut water-gate; the first time you stand there you hear Oakhaven over the Hedge).
+- **Her task:** she gives you a child's reed when you hire the punt. Hang it on the bare hook, and she gives you the **Punt-Pole** (reach 2.5, it pushes what it hits away) and 4 sovereigns.
+- **On a still, clear night** the water drops and the kerb-tops of the old street come up as stepping stones to **the kerb house**, alone in its own pool (a strongbox). By day, or in any weather, they are under.
+- **In storm** the water rises, two more drones come out on each map, and the danger is 2.
+- Strongboxes: four new (the shop-front, the cashbox, the corn loft, the kerb house), 50 in the game.
+
+### Readings for the owner
+
+1. **The Low Rings were not rebuilt three times larger.** The existing Low Rings map stays as it was, so nothing in it (the chandler's, the counting-house, the hidden household's loft) moves, and Cross Pool is the old town grown on to its west side. Together they are about the size the plan asked for. *Recommend: keep.*
+2. **The two salvagers stand on the weavers' board** and answer when spoken to; they do not walk a day's round yet. *Recommend: give them a round in the polish pass.*
+3. **The punt is not one boat that follows you.** There is one at the Lanes stage and one at the Cross Pool stage, and the sovereign hires both. *Recommend: keep.*
+4. **"The boards float loose" in storm** is not built. The water rising is shown by the drones and the danger. *Recommend: keep it this way; loose boards would cut the only dry way.*
+
+### The lines
+
+| English | French |
+|---|---|
+| The Sunk Lanes | Les Ruelles noyées |
+| The Low Rings: Cross Pool | Les Anneaux bas : la Mare-à-la-Croix |
+| On to Stillwater Landing | Continuer vers l'Embarcadère de Stillwater |
+| On to the Low Rings | Continuer vers les Anneaux bas |
+| West, by the boards, to Cross Pool | À l'ouest, par les planches, vers la Mare-à-la-Croix |
+| East, to the Low Rings | À l'est, vers les Anneaux bas |
+| The Sunk Lanes. It is not a road but a way: a causeway, then boards from roof to roof, then a bank of hedge. The pools on either side are deeper than they look. | Les Ruelles noyées. Ce n'est pas une route mais un passage : une chaussée, puis des planches de toit en toit, puis un talus de haie. Les mares de chaque côté sont plus profondes qu'elles n'en ont l'air. |
+| The causeway: old cobbles, a hand under the water in places. Keep to the middle. | La chaussée : de vieux pavés, à une main sous l'eau par endroits. Restez au milieu. |
+| Boards laid from roof to roof. Under them, the street. Under the street, nobody knows. | Des planches posées de toit en toit. Dessous, la rue. Sous la rue, personne ne sait. |
+| A hedge-bank, planted on the old lane wall. The only dry thing for a long way. | Un talus de haie, planté sur le vieux mur de la ruelle. La seule chose sèche à des lieues. |
+| The punt-woman | La passeuse |
+| "A sovereign and she's yours, while you're in the Lanes and the Pool. Use her to get in, and get out at any stage or bank. And while you're poling about: I fished this up. A child's reed. It wants hanging back over its own door. The weavers' row, in the Pool. One hook's bare." | "Un souverain et elle est à vous, tant que vous êtes dans les Ruelles et la Mare. Montez-y pour partir, descendez à n'importe quel ponton ou talus. Et pendant que vous godillez : j'ai repêché ça. Le roseau d'un enfant. Il faut le raccrocher au-dessus de sa propre porte. La rangée des tisserands, dans la Mare. Il y a un crochet nu." |
+| "A sovereign for the punt. I don't do credit. The water doesn't either." | "Un souverain pour la barque. Je ne fais pas crédit. L'eau non plus." |
+| "The weavers' row, in the Pool. One hook bare. You'll hear which." | "La rangée des tisserands, dans la Mare. Un crochet nu. Vous entendrez lequel." |
+| "Back where it belongs. Here: my old pole. It's too long for me now, and it pushes as well as it ever did." | "Revenu là où il doit être. Tenez : ma vieille perche. Elle est trop longue pour moi maintenant, et elle repousse aussi bien qu'avant." |
+| "Mind the pools. They look like puddles until they don't." | "Méfiez-vous des mares. Elles ont l'air de flaques jusqu'au moment où elles n'en sont plus." |
+| She gives you the reed. It is cut short and tuned, and somebody has scratched a mark on it. | Elle vous donne le roseau. Il est coupé court et accordé, et quelqu'un y a gravé une marque. |
+| A punt, flat and black with tar, and a pole across it | Une barque à fond plat, plate et noire de goudron, une perche posée en travers |
+| It is the punt-woman's. Ask her. | Elle est à la passeuse. Demandez-lui. |
+| You step down into the punt and take up the pole. | Vous descendez dans la barque et prenez la perche. |
+| You step out and make the punt fast. | Vous descendez et amarrez la barque. |
+| There is nowhere to step out here. | Il n'y a nulle part où descendre ici. |
+| A mooring stage: a few planks on posts | Un ponton d'amarrage : quelques planches sur des pieux |
+| Cross Pool. The market cross stands under the water in the middle of it, with the whole square round it, kerb and step and gutter, as plain as through glass. | La Mare-à-la-Croix. La croix du marché se dresse sous l'eau au milieu, avec toute la place autour, bordure, marche et caniveau, aussi nets qu'à travers une vitre. |
+| The market cross, under the water. The steps round its foot are green, and something heavy lies on the bottom one. | La croix du marché, sous l'eau. Les marches à son pied sont vertes, et quelque chose de lourd repose sur la plus basse. |
+| Under the water, the old street: a kerb, a doorstep, a boot-scraper. | Sous l'eau, la vieille rue : une bordure, un seuil, un décrottoir. |
+| After dark the water is lit from underneath, green, and the whole drowned street shows under the boards. | Après la tombée de la nuit, l'eau s'éclaire par en dessous, verte, et toute la rue noyée apparaît sous les planches. |
+| The corn loft | Le grenier à grain |
+| The corn loft. Sacks gone to dust, a winnowing fan on the wall, the floor dry. | Le grenier à grain. Des sacs tombés en poussière, un van au mur, le plancher sec. |
+| The weavers' garrets, all along one long board. Every door has a reed over it, each for a child born behind it. | Les mansardes des tisserands, le long d'une seule longue planche. Chaque porte a un roseau au-dessus, chacun pour un enfant né derrière. |
+| A tuned reed over a door. It sounds when you touch it. | Un roseau accordé au-dessus d'une porte. Il sonne quand on le touche. |
+| A bare hook over a door, where a reed was. | Un crochet nu au-dessus d'une porte, là où il y avait un roseau. |
+| You hang the reed on the bare hook. It sounds its note, and the row is whole: each door a step higher than the last. | Vous accrochez le roseau au crochet nu. Il sonne sa note, et la rangée est entière : chaque porte un degré plus haut que la précédente. |
+| The child's reed, back over its own door. | Le roseau de l'enfant, de nouveau au-dessus de sa propre porte. |
+| A garret door, swollen shut. | Une porte de mansarde, gonflée et coincée. |
+| The Ladder's Foot. A water-gate grown shut, the wood gone into itself like a healed wound. Oakhaven is on the other side. | Le Pied de l'Échelle. Une porte d'eau fermée par la croissance, le bois refermé sur lui-même comme une plaie guérie. Oakhaven est de l'autre côté. |
+| Over the Hedge, close: a cart on cobbles, somebody calling a name, a door. Oakhaven, a wall's width away, and no way through. | Par-dessus la Haie, tout près : une charrette sur les pavés, quelqu'un qui appelle un nom, une porte. Oakhaven, à l'épaisseur d'un mur, et aucun passage. |
+| The kerb-tops of the old street, just under the water. | Le haut des bordures de la vieille rue, juste sous l'eau. |
+| The Flume's note has dropped tonight, and the water with it. The kerb-tops stand out of the pool like stepping stones. | La note de la Flume a baissé cette nuit, et l'eau avec elle. Le haut des bordures sort de la mare comme des pierres de gué. |
+| A house in the middle of the pool. Its door is only reachable when the water is down. | Une maison au milieu de la mare. On ne peut atteindre sa porte que lorsque l'eau est basse. |
+| The water is up in the storm, and the drones have come out of the lanes. | L'eau est haute dans la tempête, et les bourdons sont sortis des ruelles. |
+| A salvager | Un récupérateur |
+| The other salvager | L'autre récupérateur |
+| "We're working. You're not. Go and not work somewhere else." | "On travaille. Pas vous. Allez ne pas travailler ailleurs." |
+| "Lead off the garret roofs, brass off the doors. What the water left." | "Le plomb des toits des mansardes, le cuivre des portes. Ce que l'eau a laissé." |
+| "The cross? There's a box on the bottom step nobody's lifted. Too heavy. You'd want a punt and a back." | "La croix ? Il y a une caisse sur la dernière marche que personne n'a soulevée. Trop lourde. Il vous faudrait une barque et du dos." |
+| "Mind the boat." | "Attention au bateau." |
+| Punt-Pole | Perche de passeuse |
+| Twelve feet of ash, shod with iron at the foot. It reaches further than a spear, and what it reaches it pushes away. | Douze pieds de frêne, ferrés au pied. Elle porte plus loin qu'une lance, et ce qu'elle atteint, elle le repousse. |
+| Market-Warden's Buckler | Rondache du garde du marché |
+| A round of brass from the market cross, stamped with the weights and measures. It turns a blow, and it rings when it does. | Un rond de laiton de la croix du marché, frappé des poids et mesures. Il détourne un coup, et il sonne quand il le fait. |
+| The cashbox the looters left: iron-bound, and far too heavy | La caisse que les pillards ont laissée : cerclée de fer, et bien trop lourde |
+| The Sunk Lanes and Cross Pool: the Low Rings go on west into the old town, drowned. The punt-woman hires her punt for a sovereign. | Les Ruelles noyées et la Mare-à-la-Croix : les Anneaux bas continuent à l'ouest dans la vieille ville, noyée. La passeuse loue sa barque un souverain. |
+| The punt-woman fished up a child's reed. It belongs over a door on the weavers' row in Cross Pool, where one hook is bare. | La passeuse a repêché le roseau d'un enfant. Il va au-dessus d'une porte de la rangée des tisserands, à la Mare-à-la-Croix, où un crochet est nu. |
+| A plank on a post. STILLWATER, east. Under it, in tar: the causeway is the dry way. | Une planche sur un pieu. STILLWATER, à l'est. Dessous, au goudron : la chaussée est le chemin sec. |
+| A plank on a post. THE LOW RINGS. Under it, in tar: keep off the pools. | Une planche sur un pieu. LES ANNEAUX BAS. Dessous, au goudron : évitez les mares. |
+| A plank on a post. CROSS POOL, by the boards. Somebody has added: and the cross. | Une planche sur un pieu. LA MARE-À-LA-CROIX, par les planches. Quelqu'un a ajouté : et la croix. |
+| A plank on a post. THE LOW RINGS, east. STILLWATER beyond. | Une planche sur un pieu. LES ANNEAUX BAS, à l'est. STILLWATER au-delà. |
+
+## 4. The Deep Grove (14 Nov)
+
+Code: `js/grove85.js`. Test: `test/grove85.test.js` (11 checks). French: `tools/i18n/p85-grove.tsv`.
+
+Everything here is **[PROPOSED]** under the approved plan (big place 4). The plan asked for it last and to be cut if it is not a pleasure: that is your call once you have walked it.
+
+### What was built
+
+- **The gap:** in the north side of Greenroot Wood (the third stretch of the Greenroot road), between two boulders furred green, with a post whose arm has been broken off.
+- **The glades:** four glades in a wood of old oaks and dwarf oaks growing out of mossy boulders, the wood too thick to pass. Each glade has three ways on. **One way sounds lower than the others.** Take it and the wood lets you further in; three low notes bring you to the Stool. Take any other way and you come out at the gap you went in by. Which way is low, and which glades you walk, comes from the hour and how many times you have come in: the same for every player, never chance.
+- **Every note has a caption** ("a low note, under hearing" or "a thinner note, higher"), so the way can be found without sound.
+- **The Stool:** a ring of old trunks round a hollow. Stand in the hollow and you hear what is under the roots: "not in any key the Octave uses". Nothing opens.
+- **Nobody is there and nothing attacks.** After dark, about twenty seconds in, the silent circle closes round you; when you come out, hounds are waiting at the gap.
+- **To find:** four carters' marks, one in each glade, dated the Reach way, by what was growing (Vol VII: "the Reach dates by what is growing"), some of them impossible. The two pieces of gear: the **Carter's Oilskin** (body armour 3, quieter) folded on a boulder, and the **Fallen Iron-Bough** (iron, blunt: it bites the Quiet) at the Stool's foot.
+
+### Readings for the owner
+
+1. **A wrong way puts you straight back outside,** as the plan says, even from the third glade. That is strict. *Recommend: keep it strict, because the notes and their captions make the right way findable.*
+2. **The wood's edge is drawn as trees, not walls.** The ground under them is simply closed to walking.
+
+### The lines
+
+| English | French |
+|---|---|
+| The Deep Grove | Le Bosquet profond |
+| A gap in the north side of the wood, between two boulders furred green. The trees beyond are older than these. | Une trouée dans le flanc nord du bois, entre deux rochers couverts de mousse. Les arbres au-delà sont plus vieux que ceux-ci. |
+| Into the Deep Grove | Dans le Bosquet profond |
+| Out to Greenroot Wood | Sortir vers le bois de Greenroot |
+| The wood closes behind you. The path you came in by is not there when you look round. | Le bois se referme derrière vous. Le chemin par lequel vous êtes entré n'est plus là quand vous vous retournez. |
+| A glade. Oaks no higher than a man grow out of the boulders, every branch furred with moss. Three ways go on. | Une clairière. Des chênes pas plus hauts qu'un homme poussent hors des rochers, chaque branche fourrée de mousse. Trois chemins continuent. |
+| A way on, between the trees | Un chemin qui continue, entre les arbres |
+| [a low note, under hearing, from this way] | [une note grave, sous l'audible, venant de ce chemin] |
+| [a thinner note, higher, from this way] | [une note plus mince, plus aiguë, venant de ce chemin] |
+| The note is lower here. The wood lets you further in. | La note est plus grave ici. Le bois vous laisse aller plus loin. |
+| You walk by eye, and the wood lets you out where you came in. | Vous marchez à vue, et le bois vous laisse sortir par où vous êtes entré. |
+| The Stool: the oldest tree, a ring of trunks round a hollow where one trunk used to be, a thousand years ago or more. | La Souche : l'arbre le plus vieux, un cercle de troncs autour d'un creux où se dressait un tronc, il y a mille ans ou plus. |
+| You stand in the hollow of the Stool. Under the roots something is sending, slow and patient, and it is not in any key the Octave uses. Nothing opens. Nothing asks you in. | Vous vous tenez dans le creux de la Souche. Sous les racines, quelque chose émet, lent et patient, et ce n'est dans aucune tonalité de l'Octave. Rien ne s'ouvre. Rien ne vous invite à entrer. |
+| Cut in the bark: three notches, and IN AT ELDER-FLOWER. Under it: OUT AT ELDER-FLOWER. The same flower, or a year on; it does not say. | Gravé dans l'écorce : trois encoches, et ENTRÉ À LA FLEUR DE SUREAU. Dessous : SORTI À LA FLEUR DE SUREAU. La même fleur, ou un an plus tard ; ça ne le dit pas. |
+| Cut in a boulder: TWO OF US IN AT HAYMAKING. Under it, one name, and OUT THE DAY BEFORE. | Gravé dans un rocher : DEUX DE NOUS ENTRÉS AUX FOINS. Dessous, un seul nom, et SORTI LA VEILLE. |
+| Cut in the bark, deep and careful: IN AT FIRST FROST. Nothing under it. | Gravé dans l'écorce, profond et soigneux : ENTRÉ AUX PREMIÈRES GELÉES. Rien dessous. |
+| A carter's mark, a wheel with a nail through it, and IN WHEN THE SLOES WERE RIPE, OUT WHEN THEY WERE RIPE. | Une marque de charretier, une roue traversée d'un clou, et ENTRÉ QUAND LES PRUNELLES ÉTAIENT MÛRES, SORTI QUAND ELLES ÉTAIENT MÛRES. |
+| The iron-boughs go quiet round you. Not all at once: a ring of quiet, widening, and you can hear it close. Everything for a long way off knows where you are now. | Les bois-de-fer se taisent autour de vous. Pas d'un coup : un anneau de silence, qui s'élargit, et vous pouvez l'entendre se refermer. Tout ce qui est loin à la ronde sait maintenant où vous êtes. |
+| Something is waiting at the gap. The circle called it. | Quelque chose attend à la trouée. Le cercle l'a appelé. |
+| Carter's Oilskin | Ciré de charretier |
+| A long coat of oiled canvas, folded on a boulder and left. It keeps the rain off and the noise in. | Un long manteau de toile huilée, plié sur un rocher et laissé là. Il garde la pluie dehors et le bruit dedans. |
+| Fallen Iron-Bough | Branche de bois-de-fer tombée |
+| A bough of iron-oak, fallen from the Stool and as hard as its name. Iron bites the Quiet, and this is the oldest iron in the Reach. | Une branche de chêne-de-fer, tombée de la Souche et aussi dure que son nom. Le fer mord le Calme, et c'est le plus vieux fer des Confins. |
+| The Deep Grove: off the north side of Greenroot Wood. The path is not the same way twice. Follow the lower note, and it leads in, to the oldest tree. | Le Bosquet profond : au nord du bois de Greenroot. Le chemin n'est jamais deux fois le même. Suivez la note la plus grave, et il mène à l'intérieur, jusqu'au plus vieil arbre. |
+| A post by the gap, its arm broken off. Nobody has cut a name on what is left. | Un poteau près de la trouée, son bras cassé. Personne n'a gravé de nom sur ce qui reste. |
+| A post, furred green, with no arm at all. The way out is behind you, or it was. | Un poteau, fourré de vert, sans aucun bras. La sortie est derrière vous, ou elle l'était. |
