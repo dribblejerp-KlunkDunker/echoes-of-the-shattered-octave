@@ -93,3 +93,7 @@ The stats of the existing 53 items stay as they are, except the three made two-h
 5. **The first-person paintings rebuilt in code, one per weapon, to your picture.** *Recommend: yes, and first in the build, so every new weapon gets its picture as it is made.*
 6. **The glass arm as it is now** (the before-and-after picture). *Recommend: keep; say if you want it darker still.*
 7. **Order of building:** (a) the first-person paintings and hands; (b) the cape slot and the set system with bonuses; (c) the new pieces, one set at a time, with pictures of each set as it is finished; (d) the ranged weapons and their ammunition; (e) where everything is found. *Recommend: this order.*
+
+## The owner's ruling (14 November 2026)
+
+"1 yes, 2 is a yes, yes, yes, 5 is a yes, the glass arm does look better yes, 7 isa yes". All seven approved as recommended: the cape slot; the fourteen sets as listed; bonuses at three pieces and the full set; the six ranged weapons; the first-person paintings rebuilt in code, first; the glass arm kept as it is now; the order of building (a) first-person view, (b) capes and the set system, (c) the new pieces set by set, (d) ranged weapons and ammunition, (e) where everything is found.

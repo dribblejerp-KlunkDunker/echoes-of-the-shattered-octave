@@ -107,7 +107,7 @@ const HELPERS = () => {
         for (const id of [null, ...Object.keys(ARMOR).filter((k) => ARMOR[k].slot === 'hands')]) { p.armor = { body: 'a_gambeson' }; if (id) p.armor.hands = id; out.hands[id || 'none'] = h(BODY21.build('fp_sword', GEARLOOK21.of(p), 'sword', 'right')); }
         p.armor = { body: 'a_jerkin', hands: 'a_gloves' };
         for (const w of Object.keys(WEAPONS)) { const b = BODY21.build(WEAPONS[w].img, GEARLOOK21.of(p), w, 'right'); out.weapons[w] = b ? h(b) : null; if (b && b.over.length) out.second.push(w); }
-        p.armor = keep;
+        p.armor = keep; out.fp87 = Object.keys(WEAPONS).filter((w) => typeof FP87 === 'object' && FP87.covers(w));
         return out;
       });
       const uniq = (o) => new Set(Object.values(o)).size === Object.keys(o).length;
@@ -115,7 +115,8 @@ const HELPERS = () => {
       assert.ok(uniq(r.hands), 'every glove differs');
       assert.ok(Object.values(r.weapons).every(Boolean), 'every weapon has a picture');
       assert.ok(uniq(r.weapons), 'every weapon differs: ' + JSON.stringify(r.weapons));
-      for (const w of ['spear', 'p12_bellglaive', 'p12_glassblade']) assert.ok(r.second.includes(w), w + ' has a second hand');
+      // Phase 87: a melee weapon's own picture (js/fp87.js) has both hands painted into it; the shared paintings add the second
+      for (const w of ['spear', 'p12_bellglaive', 'p12_glassblade']) assert.ok(r.second.includes(w) || r.fp87.includes(w), w + ' has a second hand');
     });
 
     await step('every boot pair, body hem, helm, hood and shield has its own picture; walking frames differ from standing', async () => {
@@ -149,13 +150,13 @@ const HELPERS = () => {
         __gear({ w: 'spear', armor: { body: 'a_chain', hands: 'a_gauntlets', shield: 'a_kite' } }); s0 = snap(); frame(2); out.two = d(s0, snap());
         __gear({ w: 'sword', armor: { body: 'a_gambeson', shield: 'a_kite', feet: 'a_greaves', head: 'a_kettle' } }); const f1 = frame(3);
         __gear({ w: 'sword', armor: { body: 'a_chain', hands: 'a_gauntlets', shield: 'a_kite', feet: 'a_greaves', head: 'a_kettle' } }); const f2 = frame(3);
-        out.changed = f0 !== f1; out.back = f0 === f2;
+        out.changed = f0 !== f1; out.back = f0 === f2; out.fpSword = typeof FP87 === 'object' && FP87.covers('sword');   // Phase 87: the sleeve is in the sword's own picture
         return out;
       });
-      assert.ok(r.level.arms >= 3 && r.level.ext >= 3, 'arm and sleeve each frame ' + JSON.stringify(r.level));
+      assert.ok(r.level.arms >= 3 && (r.level.ext >= 3 || r.fpSword), 'arm and sleeve each frame ' + JSON.stringify(r.level));
       assert.ok(r.level.shield >= 3, 'shield each frame'); assert.equal(r.level.feet, 0, 'no legs at a level look'); assert.ok(!r.level.head, 'no brim at a level look');
       assert.ok(r.down.feet >= 2, 'legs when looking down'); assert.ok(r.up.head >= 2, 'the helm brim when looking up');
-      assert.equal(r.two.shield, 0, 'a two-hander leaves no hand for the shield'); assert.ok(r.two.extra >= 2, 'the second hand on the haft');
+      assert.equal(r.two.shield, 0, 'a two-hander leaves no hand for the shield'); assert.ok(r.two.extra >= 2 || r.fpSword, 'the second hand on the haft (in the weapon\'s own picture since Phase 87)');
       assert.ok(r.changed, 'the view changes with the body armour');
     });
 

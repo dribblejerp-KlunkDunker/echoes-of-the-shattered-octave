@@ -434,6 +434,11 @@ const BODY21 = (() => {
   function build(key, look, wid, side) {
     const bk = buildKey(key, look, wid, side);
     let b = buildCache.get(bk); if (b) { stats.hits++; return b; }
+    // Phase 87: the melee weapons' own pictures, painted in code with the glove and sleeve you wear (js/fp87.js); drawn
+    // at the same place, k times smaller than the canvas (the hook below scales them)
+    if (side === 'right' && key !== 'fp_hands' && typeof FP87 === 'object' && FP87.covers(wid)) {
+      try { const r = FP87.paint(wid, look); if (r) { b = { key, wid, side, main: r.canvas, emis: r.emis || null, ext: null, over: [], w: r.canvas.width, h: r.canvas.height, k: r.k, below: r.below, right: r.right, ms: 0 }; buildCache.set(bk, b); OWNED.set(r.canvas, b); stats.builds++; return b; } } catch (e) { warnOnce('fp87', e); }
+    }
     const s = segment(key); if (!s) return null;
     const t0 = performance.now();
     const { w, h, cls, ink, L, ref, dHand, dSleeve, src, M } = s;
@@ -1040,7 +1045,11 @@ const BODY21 = (() => {
         return undefined;
       }
       if (!b || arguments.length !== 5) return orig.apply(this, arguments);
-      const dx = arguments[1], dy = arguments[2], dw = arguments[3], dh = arguments[4], sx = dw / img.width, sy = dh / img.height;
+      let dx = arguments[1], dy = arguments[2], dw = arguments[3], dh = arguments[4];
+      // a Phase 87 picture is k times larger than its place: drawn at its place, its right and bottom edges where the old
+      // picture's were (the weapon held in the right of the view, the forearm out of the bottom)
+      if (b.k) { const w2 = dw / b.k, h2 = dh / b.k; dx += dw - w2 + (b.right || 0); dy += dh - h2 + (b.below || 0); dw = w2; dh = h2; }
+      const sx = dw / img.width, sy = dh / img.height;
       if (!st.offDone && b.side === 'right') {
         st.offDone = true;
         try {
