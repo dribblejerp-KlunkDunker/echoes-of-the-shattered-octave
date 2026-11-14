@@ -814,7 +814,7 @@ function buildWhisperGrove() {
   // drowned houses
   m.rect(12, 1, 26, 8, 't_greymarble');                  // the Cloister of the Lost Choir
   m.set(19, 8, DOOR({ portal: { map: 'cloister', x: 9.5, y: 13.4, dir: -Math.PI / 2 }, label: 'The Cloister of the Lost Choir' }));
-  m.rect(32, 1, 45, 9, 't_stone');                        // the Malting
+  m.rect(32, 1, 45, 9, 't_brick');                        // the Malting: "a long brick range" (Book One; owner's ruling, 11 Nov). The tile is made in js/malting61.js
   m.set(32, 5, DOOR({ portal: { map: 'malting', x: 1.6, y: 11.5, dir: 0 }, label: 'The Malting — Relief Station Nineteen', locked: 'wg_plan', lockMsg: 'Grey shutters, an Office seal, a painted board: RELIEF STATION NINETEEN — REGISTRATION WITHIN. Boots in the wet outside. You do not know yet what you would be walking into. Find the scribe first.' }));
   m.rect(2, 2, 9, 7, 't_greymarble'); m.rect(2, 10, 8, 15, 't_greymarble');
   m.rect(2, 18, 7, 22, 't_greymarble'); m.rect(2, 25, 7, 28, 't_greymarble');

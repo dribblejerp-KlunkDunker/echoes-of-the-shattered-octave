@@ -61,7 +61,7 @@ const frCheck = async (page, file, mod, label) => {
       out.wg = G.maps.whispergrove.get(32, 5).portal.map === 'p61_yard';
       out.mw = G.maps.malting.get(0, 11).portal.map === 'p61_yard';
       out.mf = G.maps.malting.get(29, 15).portal.map === 'p61_yard';
-      const y = G.maps.p61_yard; out.front = y.get(27, 9).portal.map === 'malting' && y.get(27, 14).portal.map === 'malting' && y.get(0, 9).portal.map === 'whispergrove';
+      const y = G.maps.p61_yard; out.front = y.get(27, 9).portal.map === 'malting' && y.get(27, 14).portal.map === 'malting' && y.get(11, 17).portal.map === 'whispergrove' && !(y.get(0, 9) && y.get(0, 9).portal);
       T.yard(); out.people = LIFE60.people(G.map).filter((e) => !e.hidden).length;
       out.board = G.ents.some((e) => e.sprite === 'sign' && /RELIEF STATION — REACH DISPLACED/.test(e.p61Look || ''));
       const b = T.who('bettis'); out.yardBettis = b && !b.hidden && b.sprite === 'hollow' && NPCS.p60_q_bettis.name === 'A Hollow with a basket';

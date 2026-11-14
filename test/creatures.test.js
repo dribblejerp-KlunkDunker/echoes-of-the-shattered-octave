@@ -168,7 +168,9 @@ const save = (name, dataUrl) => fs.writeFileSync(path.join(SHOTS, name), Buffer.
       for (let o = 1; o <= 4; o++) check(at(pe, o).sprite === animProctorView(o, ''), 'Proctor view ' + o + ' is the pilot drawing');
       check(at(pe, 5).flip === true && at(pe, 5).sprite === at(pe, 3).sprite, 'Proctor still mirrors');
       const npc = { kind: 'npc', sprite: 'golem', x: 0, y: 0, facing: 0 };
-      check(at(npc, 4).sprite === Engine.sprites.golem, 'non-enemies are not transformed');
+      // (an NPC is one of Phase 76's moving paintings, rigged the moment it is first drawn: this line is about the creature views, so they are held out of it)
+      { const pf = typeof GFX !== 'undefined' ? GFX.paintfolk : undefined; if (typeof GFX !== 'undefined') GFX.paintfolk = false;
+        check(at(npc, 4).sprite === Engine.sprites.golem, 'non-enemies are not transformed'); if (typeof GFX !== 'undefined') GFX.paintfolk = pf; }
       const dead = { kind: 'enemy', sprite: 'golem', x: 0, y: 0, facing: 0, deathArt: Engine.sprites.golem };
       check(at(dead, 4).sprite !== DIRECTIONS.view('golem', 4, ''), 'death art keeps its own pose');
       GFX.directions = false;

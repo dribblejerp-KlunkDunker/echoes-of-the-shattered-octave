@@ -26,6 +26,21 @@
 // ============================================================
 'use strict';
 
+// The Malting's brick (Book One: "a long brick range with two kiln-chimneys at the north end"). Owner's ruling, 11 Nov:
+// brick, as the book says. One tile, made here because both the queue-yard and the city map build the Malting from it.
+if (typeof Engine !== 'undefined' && Engine.addTexture && !(Engine.textures && Engine.textures.t_brick)) (function () {
+  const h = (a, b) => { let n = (Math.imul(a | 0, 374761393) + Math.imul(b | 0, 668265263)) | 0; n = Math.imul(n ^ (n >>> 13), 1274126177); return ((n ^ (n >>> 16)) >>> 0) / 4294967296; };
+  const d = new Uint32Array(4096), px = (r, g, b) => ((255 << 24) | (Math.max(0, Math.min(255, b)) | 0) << 16 | (Math.max(0, Math.min(255, g)) | 0) << 8 | (Math.max(0, Math.min(255, r)) | 0)) >>> 0;
+  for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+    const row = y >> 3, off = (row & 1) * 8, bx = ((x + off) & 63) >> 4, mortar = (y & 7) === 7 || ((x + off) & 15) === 15;
+    const v = h(bx * 7 + 1, row * 13 + 3), burnt = v < 0.14, n = h(x, y) - 0.5, soot = 1 - 0.1 * h(x >> 3, (y >> 4) + 9);
+    if (mortar) { const k = 150 + n * 22; d[y * 64 + x] = px(k, k * 0.95, k * 0.86); continue; }
+    const k = (burnt ? 0.62 : 0.86 + v * 0.26) * soot * ((y & 7) === 0 ? 1.08 : (y & 7) === 6 ? 0.9 : 1) + n * 0.07;
+    d[y * 64 + x] = px(158 * k, (burnt ? 70 : 82) * k, (burnt ? 66 : 62) * k);
+  }
+  Engine.addTexture('t_brick', d);
+})();
+
 const MALTING61 = (function () {
   const TEXTS = [];
   const S = (t) => { TEXTS.push(t); return t; };
@@ -39,6 +54,9 @@ const MALTING61 = (function () {
 
   const YARD = 'p61_yard', W = 30, H = 18;
   const WG_DOOR = [32, 5], MALT_WEST = [0, 11], MALT_FREIGHT = [29, 15];
+  // Phase 82b: the way back to the Court is on the yard's south side (the Court's door is on its north side, so the yard
+  // lies north of it); you come in at the south gate facing north, the orchard on your left and the Malting on your right
+  const YARD_GATE = [11, 17], YARD_IN = { x: 11.5, y: 16.4, dir: -Math.PI / 2 };
   const NOTICE = 4, NOTICE_DELAY = 8, HEAR = 3.0;
 
   const TX = {
@@ -170,12 +188,12 @@ const MALTING61 = (function () {
     return out;
   }
   function buildYard() {
-    const m = new GameMap(YARD, TX.yardName, W, H, { outdoor: true, floor: 't_cobble', floorTextures: ['t_cobble', 't_grass'], fogDist: 15, fogColor: [128, 128, 122], ambient: 0.2, music: 'wild', spawn: { x: 1.6, y: 9.5, dir: 0 } });
+    const m = new GameMap(YARD, TX.yardName, W, H, { outdoor: true, floor: 't_cobble', floorTextures: ['t_cobble', 't_grass'], fogDist: 15, fogColor: [128, 128, 122], ambient: 0.2, music: 'wild', spawn: Object.assign({}, YARD_IN) });
     m.border('t_hedge');
     for (let y = 1; y < H - 1; y++) for (let x = 1; x < 10; x++) m.setFloor(x, y, 1);   // the orchard is grass
-    m.set(0, 9, DOOR({ portal: { map: 'whispergrove', x: 31.0, y: 5.5, dir: PI }, label: TX.toWG }));
+    m.set(YARD_GATE[0], YARD_GATE[1], DOOR({ portal: { map: 'whispergrove', x: 31.0, y: 5.5, dir: PI }, label: TX.toWG }));
     // the Malting's long brick range along the east side
-    m.rect(27, 1, 29, H - 2, 't_house');
+    m.rect(27, 1, 29, H - 2, 't_brick');
     m.set(27, 9, DOOR({ portal: { map: 'malting', x: 1.6, y: 11.5, dir: 0 }, label: TX.toFront }));
     m.set(27, 14, DOOR({ portal: { map: 'malting', x: 28.2, y: 15.5, dir: PI }, label: TX.toFreight }));
     // the orchard: old apple trees, the lane open
@@ -195,7 +213,7 @@ const MALTING61 = (function () {
   // the two doors of the existing maps that now open on the yard
   function syncDoors(maps) {
     const wg = maps.whispergrove, mt = maps.malting;
-    if (wg) { const c = wg.get(WG_DOOR[0], WG_DOOR[1]); if (c && c.door && c.portal && c.portal.map === 'malting') c.portal = { map: YARD, x: 1.6, y: 9.5, dir: 0 }; }
+    if (wg) { const c = wg.get(WG_DOOR[0], WG_DOOR[1]); if (c && c.door && c.portal && c.portal.map === 'malting') c.portal = { map: YARD, x: YARD_IN.x, y: YARD_IN.y, dir: YARD_IN.dir }; }
     if (mt) {
       const c = mt.get(MALT_WEST[0], MALT_WEST[1]); if (c && c.door && c.portal && c.portal.map === 'whispergrove') { c.portal = { map: YARD, x: 26.3, y: 9.5, dir: PI }; c.label = TX.toYard; }
       const fc = mt.get(MALT_FREIGHT[0], MALT_FREIGHT[1]); if (!fc || !fc.door) mt.set(MALT_FREIGHT[0], MALT_FREIGHT[1], DOOR({ portal: { map: YARD, x: 26.3, y: 14.5, dir: PI }, label: TX.toYard }));
@@ -217,7 +235,7 @@ const MALTING61 = (function () {
       if (i >= st.length) return;
       const [x, y] = st[i], faceIn = y < 9.4 ? 0.35 : -0.35;   // face up the queue toward the door, a little in toward the aisle
       R.push({
-        key: 'q_' + q.key, name: q.name, sprite: q.sprite, scale: q.scale || 1, home: [x, y], exit: [1.6, 9.5],
+        key: 'q_' + q.key, name: q.name, sprite: q.sprite, scale: q.scale || 1, home: [x, y], exit: [YARD_IN.x, YARD_IN.y],
         day: [{ from: 0, to: 24, job: 'sit', at: [x, y], face: faceIn }], greet: q.greet, barks: q.barks || [],
         away: q.stays ? null : () => isTold(i),
         quest: () => questFor(i, q),
@@ -397,6 +415,6 @@ const MALTING61 = (function () {
   }
   try { wire(); } catch (e) { console.warn('malting61 failed to wire', e); }
 
-  return { TX, TEXTS, Q, YARD, bettisIn, bringBettis, seats, roster, buildYard, syncDoors, syncMalting, enterYard, planCard, front, kiln, queueHalf, tellOne, notice, toldCount, NOTICE };
+  return { TX, TEXTS, Q, YARD, YARD_GATE, YARD_IN, bettisIn, bringBettis, seats, roster, buildYard, syncDoors, syncMalting, enterYard, planCard, front, kiln, queueHalf, tellOne, notice, toldCount, NOTICE };
 })();
 if (typeof window !== 'undefined') window.MALTING61 = MALTING61;

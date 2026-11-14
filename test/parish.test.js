@@ -155,12 +155,13 @@ const HELPERS = () => {
         const cl = G.maps.clearing, r = cl._p9pRoad;
         T.go('clearing', r.x - 0.6, r.y + 0.5, 0); T.quiet(); Engine.render(G.ents, G.tod);
         const w = Engine.pickWall(2.0); o.pick = !!(w && w.cell && w.cell.portal);
-        interact(); o.arrived = G.mapId;
+        interact(); o.arrived = G.mapId;                       // Phase 79: the door now opens on the road, three stretches long
+        o.notYet = G.flags.p9p_visited !== true; T.go('greenroot', 1.6, 13.5, 0);   // and Greenroot is visited when you get there
         o.flagsAfter = { visited: G.flags.p9p_visited === true };
         T.closeUi();
         return o;
       });
-      ok(a.roadClosed.door && a.roadClosed.locked === 'p9p_known' && a.roadClosed.portal === 'greenroot' && a.roadClosed.label === 'The east hedge', 'the clearing\'s east hedge has a shut door that does not name the road: ' + JSON.stringify(a.roadClosed));
+      ok(a.roadClosed.door && a.roadClosed.locked === 'p9p_known' && a.roadClosed.portal === 'p79_road_w' && a.roadClosed.label === 'The east hedge', 'the clearing\'s east hedge has a shut door that does not name the road: ' + JSON.stringify(a.roadClosed));
       ok(a.harrow1.includes('The Greenroot road'), 'Harrow offers "The Greenroot road"');
       ok(!a.harrow1.includes('The third parish'), 'but not yet "The third parish"');
       ok(a.road && /Greenroot/.test(a.roadReply) && a.knownAfter && a.journal, 'asking about the road answers, sets p9p_known and writes the logbook');
@@ -169,7 +170,7 @@ const HELPERS = () => {
       ok(a.ignatius.includes('The third parish'), 'Ignatius offers "The third parish" once the road is known');
       ok(a.noDupJournal, 'asking again does not repeat the logbook entry');
       ok(a.page10.includes('The third parish') && a.page10i.includes('The third parish'), 'Tobin\'s page 10 alone opens "The third parish" (Harrow and Ignatius)');
-      ok(a.pick && a.arrived === 'greenroot' && a.flagsAfter.visited, 'with the road known the hedge door takes you to Greenroot');
+      ok(a.pick && a.arrived === 'p79_road_w' && a.notYet && a.flagsAfter.visited, 'with the road known the hedge door takes you onto the Greenroot road, and Greenroot counts as visited when you reach it');
     }
 
     // ---------------------------------------------------------------- 3. travel there and back
@@ -181,6 +182,7 @@ const HELPERS = () => {
         o.before = travelDestinations('reach').some(d => d.map === 'greenroot');
         // walk there (the door), then travel away and back by the map
         const r = G.maps.clearing._p9pRoad; T.go('clearing', r.x - 0.6, r.y + 0.5, 0); T.adv(300); Engine.render(G.ents, G.tod); interact();
+        o.onRoad = G.mapId; T.go('greenroot', 1.6, 13.5, 0);          // Phase 79: the door opens on the road; Greenroot is at the far end of it
         o.walked = G.mapId; T.quiet(); T.closeUi(); T.adv(300);
         const open = () => { G.state = 'play'; travelOpen(); return TRAVEL.dests.slice(); };
         const east = open(); o.names = east.map(d => d.name);
@@ -189,10 +191,13 @@ const HELPERS = () => {
         o.blocked = travelBlocked();
         T.go('greenroot', 3.5, 13.5, 0); T.quiet();
         o.blocked2 = travelBlocked();
-        open(); travelGo(TRAVEL.dests.find(d => d.map === 'clearing' && d.spawn)); o.backAt = G.mapId; T.closeUi();
+        // Phase 84 (js/mounts84.js): a long journey may stop the night halfway, or meet something mid-road; this check is
+        // about getting there, so it presses on in the dark and holds the stretches' rolls quiet
+        const quietRoad = (fn) => { const mr = Math.random; Math.random = () => 0.999; TRAVEL.p84press = true; try { fn(); } finally { Math.random = mr; } };
+        open(); quietRoad(() => travelGo(TRAVEL.dests.find(d => d.map === 'clearing' && d.spawn))); o.backAt = G.mapId; T.closeUi();
         const gr = open().find(d => d.map === 'greenroot' && d.spawn);
         o.grOk = !!gr && gr.state === 'ok';
-        if (gr) { T.quiet(); travelGo(gr); o.thereAt = G.mapId; T.closeUi(); }
+        if (gr) { T.quiet(); quietRoad(() => travelGo(gr)); o.thereAt = G.mapId; T.closeUi(); }
         o.foes = TRAVEL_FOES.greenroot;
         o.rect = TRAVEL_REGIONS.reach.maps.greenroot.rect;
         // back by foot through the west door
@@ -201,10 +206,11 @@ const HELPERS = () => {
         return o;
       });
       ok(!t.before, 'no Greenroot waypoint before you have been');
-      ok(t.walked === 'greenroot' && t.names.some(x => /Greenroot/.test(x)) && t.homeOk, 'after walking there, the world map lists Greenroot and the way home: ' + t.names.join(' | '));
+      ok(t.onRoad === 'p79_road_w' && t.walked === 'greenroot' && t.names.some(x => /Greenroot/.test(x)) && t.homeOk, 'after walking there, the world map lists Greenroot and the way home: ' + t.names.join(' | '));
       ok(t.backAt === 'clearing' && t.thereAt === 'greenroot' && t.grOk, 'travel there and back by the world map works');
-      ok(t.footAt === 'clearing' && t.footX > 36, 'the west road door returns you to the clearing\'s east hedge');
-      ok(t.rect[0] >= 0.72 && t.rect[2] <= 1 && t.rect[3] <= 0.5, 'the waypoint rectangle sits in the free east forest of the Reach painting');
+      ok(t.footAt === 'p79_road_e' && t.footX > 200, 'the west road door puts you on the road home, at the east gate of Greenroot Wood');
+      // Phase 82b: the Reach painting is the chart drawn from the gates, and Greenroot is at the far east end of its road
+      ok(t.rect[0] >= 0.85 && t.rect[2] <= 1 && t.rect[0] < t.rect[2] && t.rect[1] < t.rect[3], 'the waypoint rectangle sits at the east end of the Reach chart, where the road puts it');
     }
 
     // ---------------------------------------------------------------- 4. maps load, render, and are reachable stage by stage

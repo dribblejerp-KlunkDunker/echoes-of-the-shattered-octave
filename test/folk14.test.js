@@ -321,6 +321,9 @@ async function boot(browser, opts) {
     const { page: orig, errors: origErr } = await boot(browser, { block: true, freeze: true });
     const { page: offp, errors: offErr } = await boot(browser, { freeze: true });
     const scene = async (pg, mode) => pg.evaluate((mode) => {
+      // Phase 76 (js/paintfolk76.js) rigs a painting in a quiet moment, on a timer: when a person's picture changes from still to
+      // moving is not the same on two pages, so the moving paintings are held out of this comparison of the folk14 switches.
+      if (typeof GFX !== 'undefined') GFX.paintfolk = false;
       const trace = [], pos = [];
       const saved = { animCreature, animDirectionalSprite, update, loadMap, restoreGame };
       const sums = new WeakMap(); const sum = (sp) => { let v = sums.get(sp); if (v === undefined) { v = 2166136261; for (let i = 0; i < sp.data.length; i++) { v ^= sp.data[i]; v = Math.imul(v, 16777619); } v = (v >>> 0) ^ (sp.w * 1000 + sp.h); sums.set(sp, v); } return v; };

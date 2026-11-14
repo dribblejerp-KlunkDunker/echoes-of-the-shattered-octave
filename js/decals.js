@@ -208,7 +208,7 @@ const DECALS = (() => {
     ],
     clearing: [{ names: M, walls: STONE, where: faceOpen, density: 0.10 }],
     deepwoods: [{ names: M, walls: ['t_deepwood', 't_mausoleum'], where: faceOpen, density: 0.10 }],
-    whispergrove: [{ names: M, walls: ['t_greymarble', 't_stone'], where: faceOpen, density: 0.07 }],
+    whispergrove: [{ names: M, walls: ['t_greymarble', 't_stone', 't_brick'], where: faceOpen, density: 0.07 }],
     quarry: [{ names: S, walls: ['t_stone', 't_glassrock'], where: faceOpen, density: 0.09 }],
     rootvault: [{ names: S, walls: ['t_glassrock', 't_brass'], where: faceOpen, density: 0.07 }, { names: M, walls: ['t_glassrock'], where: faceOpen, density: 0.06 }],
     underhedge: [{ names: S, walls: STONE, where: faceOpen, density: 0.06 }, { names: M, walls: STONE, where: faceOpen, density: 0.08 }],

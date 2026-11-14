@@ -185,6 +185,8 @@ async function boot(browser, opts) {
       __stage('oakhaven', 23.5, 8.5, Math.PI / 2, 0.73); PRESETS.apply('cinematic'); SPRITES21.dev.on();
       for (let i = 0; i < 12; i++) { const e = hydrate({ kind: 'enemy', type: ['proctor', 'hound', 'legionnaire'][i % 3], x: 21 + (i % 4) * 1.2, y: 11 + Math.floor(i / 4) * 1.3 }); e.facing = i; G.ents.push(e); }
       for (let i = 0; i < 5; i++) __fr();
+      // Phase 76 rigs the paintings in view one every fifth drawn frame: a steady frame is one after that is done
+      if (typeof PAINTFOLK !== 'undefined' && PAINTFOLK.stats) { for (let k = 0; k < 600 && PAINTFOLK.stats().waiting > 0; k++) __fr(); for (let i = 0; i < 24; i++) __fr(); }
       const up0 = SPRITES21.stats.uploads;
       const ms = [], own = []; for (let i = 0; i < 30; i++) { Engine.cam.bob = 0; render(); ms.push(SPRITES21.stats.ms.frame); own.push(SPRITES21.stats.ms.own); }
       const uploads = SPRITES21.stats.uploads - up0, n = SPRITES21.count;
@@ -212,6 +214,8 @@ async function boot(browser, opts) {
         const out = { views: 0, n: 0, worst: 0, missing: 0, attached: false, drawn: 0 };
         for (const sc of SC) {
           R3D.setMode('off'); __stage(...sc); Engine.cam.pitch = 0; __fr();
+          // Phase 76 rigs a painting a few frames after it is first seen: compare the two renderers once the figures in view have settled
+          if (typeof PAINTFOLK !== 'undefined' && PAINTFOLK.stats) { for (let k = 0; k < 400 && PAINTFOLK.stats().waiting > 0; k++) __fr(); for (let k = 0; k < 6; k++) __fr(); }
           const cpu = new Map(); for (const e of G.ents) if (e._screen && (e.kind === 'npc' || e.kind === 'enemy')) cpu.set(e, { ...e._screen });
           R3D.setMode('on'); __fr(); __fr();
           if (!R3D.active()) continue;

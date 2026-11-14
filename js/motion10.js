@@ -116,8 +116,8 @@ const MOTION10 = (() => {
     ctx.strokeStyle = '#1a1006'; ctx.lineWidth = 2.4 * su;
     const swing = Math.sin(step) * 4.5 * su;
     if (o.mounted) {
-      // the roan mare: a barrel, a neck and head, four legs working
-      ctx.fillStyle = '#9a6a48';
+      // the hired pony (the roan mare unless Phase 84 says otherwise): a barrel, a neck and head, four legs working
+      ctx.fillStyle = (typeof MOUNTS84 !== 'undefined' && MOUNTS84.chartColour && MOUNTS84.chartColour()) || '#9a6a48';
       ctx.beginPath(); ctx.ellipse(0, -10 * su, 13 * su, 6.5 * su, 0, 0, TAU); ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(10 * su, -14 * su); ctx.lineTo(17 * su, -22 * su); ctx.lineTo(21 * su, -20 * su); ctx.lineTo(15 * su, -9 * su); ctx.closePath(); ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(-8 * su, -5 * su); ctx.lineTo(-8 * su + swing, 3 * su); ctx.moveTo(-4 * su, -5 * su); ctx.lineTo(-4 * su - swing, 3 * su); ctx.moveTo(6 * su, -5 * su); ctx.lineTo(6 * su - swing, 3 * su); ctx.moveTo(10 * su, -5 * su); ctx.lineTo(10 * su + swing, 3 * su); ctx.stroke();

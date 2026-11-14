@@ -734,7 +734,7 @@ const SYNOD15 = (function () {
     let g = 1;
     if (grow[view]) { g = clamp((performance.now() - grow[view].t0) / 1000 / B.WASH_ANIM, 0, 1); if (g >= 1) { shown[view] = grow[view].stage; grow[view] = null; } }
     const drawStage = grow[view] ? grow[view].stage : shown[view];
-    const key = view + ':' + drawStage + ':' + W + 'x' + H + ':' + (grow[view] ? Math.round(g * 40) : 'x');
+    const key = view + ':' + drawStage + ':' + W + 'x' + H + ':' + (grow[view] ? Math.round(g * 40) : 'x') + ':' + (real.__p82bVer || 0);   // Phase 82b: the Reach and Woods charts are repainted as places are found
     let c = comp[src];
     if (c && c.key === key) return c.cv;
     const cv = c && c.cv && c.cv.width === W && c.cv.height === H ? c.cv : document.createElement('canvas');

@@ -71,7 +71,7 @@
 
 const SPRITES21 = (() => {
   const VWL = 320, VHL = 150;                   // the logical view every overlay works in
-  const PAGE = 1024, MAX_PAGES = 8, AL = 8, LEVELS = 4;   // 8-pixel grid: four clean mip levels
+  const PAGE = 1024, MAX_PAGES = 16, AL = 8, LEVELS = 4;   // 8-pixel grid: four clean mip levels
   const BB_FLOATS = 20;                         // floats per billboard instance
   const PT_FLOATS = 16;                         // floats per particle instance
   const DC_FLOATS = 12;                         // floats per decal vertex

@@ -1,0 +1,126 @@
+# Phase 86: New In-Game Text (for review)
+
+Danger and reward on the roads, from the design the owner approved on 14 Nov ("yes, yes, yes, yes, yes, no they work well, yes"). Built in the order given: the rosters and the board lines, then camps, then keepers and bounties, then the Office column.
+
+Code: `js/roads86.js`. Test: `test/roads86.test.js` (17 checks). French: `tools/i18n/p86-roads.tsv`. Every line below is **[PROPOSED]** under the approved design.
+
+## What was built
+
+- **Rosters by hour and weather,** worked out from the day, the hour and the weather, never chance. On the Greenroot road the pack is out on the Long Common from dusk (three dogs, a fourth in rain), two more dogs by Greenroot Wood, a Dirge after dark on the east stretch, hush-moths in mist; half of it lies up in snow. On the Flume road the briar (six sprites) is up in the rain and the day after it and asleep in snow; drones come out on the Stride and the pound banks at night and all day in storm. On the drove road the Hollows' dogs are out by day in mist, woolwights come down in snow, and the silent brothers sit at the Grey Wethers at night. The foes each road was built with join its roster where they stand: the Stride's briar sleeps in snow with the rest, the Dirge comes out only at dusk, half the dogs lie up in snow, the Pound Stair's drones come up at night, in storm and in the wet. The fallen come back the next day. The map journey meets what the roster has out.
+- **Camps.** Four hostile ones: an **Office survey camp** by the toll-house on the Greenroot road (two proctors and an outrider, a tent, a table with the ledger), a **Quiet Faith vigil** at the Grey Wethers at night (three tongueless round a fire laid and never lit), the **hound den** in the Hollows, and a **briar-bed** on the Stride. Each is held four days in six; cleared, it is cold for a week; each has a crate (8 to 16 sovereigns, once per clearing, and not while the camp is held). Two **friendly fires**: the raft-hands' fire on the Stride (two raft-hands sit at it from dusk to morning) and the fire at the Three Pines. Use either to sit until morning, mended (not with something chasing you).
+- **Keepers,** each out only at its own hour and weather, down for a week once put down, each leaving a trophy that is a valuable for selling or for its bounty (no new gear, on the owner's word): **the Hiss** (a hound the size of a pony; the Long Common, at night in rain; 120 health; her collar), **the Briar Queen** (a briar-sprite the size of a cart; the Stride, the day after rain; her lamps), **the Hollow Dog** (the Hollows, in mist; its den-bone), **the Sunk Bell** (a drone grown under a fallen bell-tower, over the deepest pool in the Sunk Lanes, in storm; reached by punt; its clapper).
+- **Bounties** from the people already on the roads: the turf-cutter (the Hiss), the lengthsman (the Briar Queen), the returning family's father (the Hollow Dog), the salvagers in Cross Pool (the Sunk Bell). Each keeper bounty pays 60 sovereigns, once. Each giver also has **the week's work**, renewed every eight-day week, paying 35: six dogs on the Common, eight briar-sprites on the Flume road, five dogs in the Hollows, four pieces of lead off the garret roofs in Cross Pool. The walking givers ask in their dialogue; the salvager by the long board says it on the spot.
+- **The Office column:** the Assessor, two proctors, an outrider and a hushwarden, on one road a day in turn (the seven road stretches), camped by the road at night and in storm. Fighting it goes in the Office's book: each one you put down adds 6 to your Oakhaven bounty. Broken, the column is gone for a week.
+- **The boards** (every notice board, and Oakhaven's bounty board) carry "On the roads today": what is out on each road for the hour and weather, and where the column is.
+
+## Readings for the owner
+
+- The returners' week's work is five dogs gone from the Hollows, not an escort.
+- The bounties are given in person; the boards carry the road news.
+- The Assessor wears a proctor's figure, named; the keepers are the road's own creatures grown large, without new sprites.
+- Proctors are the Catalogue's, as in Book One; the column calls itself the Office's, as the design table did.
+
+## The lines
+
+| English | French |
+|---|---|
+| The Hiss | la Sifflante |
+| Out on the Common, in the rain, a hiss like a kettle left on: the pack's mother, the size of a pony. You heard her before you saw her. | Dehors sur la Commune, sous la pluie, un sifflement de bouilloire oubliée sur le feu : la mère de la meute, de la taille d'un poney. Vous l'avez entendue avant de la voir. |
+| The Briar Queen | la Reine des ronces |
+| In the verge something the size of a cart lifts itself on a thousand thorns, every one with its little lamp lit. | Dans le talus, une chose de la taille d'une charrette se soulève sur mille épines, chacune avec sa petite lanterne allumée. |
+| The Hollow Dog | le Chien des Creux |
+| Out of the mist in the hollow, the dog that dens deepest. It does not bark. It has never needed to. | Sorti de la brume dans le creux, le chien qui terre le plus profond. Il n'aboie pas. Il n'en a jamais eu besoin. |
+| The Sunk Bell | la Cloche noyée |
+| The pool rings, once, from underneath. A drone grown under a fallen bell-tower comes up, and its note is the bell's. | La mare sonne, une fois, par en dessous. Un bourdon qui a grandi sous un clocher effondré remonte, et sa note est celle de la cloche. |
+| The Hiss is down. It will be a week before anything takes her place on the Common. | La Sifflante est à terre. Il faudra une semaine avant que quoi que ce soit prenne sa place sur la Commune. |
+| The Briar Queen is down. The verges will be a week growing another. | La Reine des ronces est à terre. Les talus mettront une semaine à en faire pousser une autre. |
+| The Hollow Dog is down. The dens are quiet, for a week. | Le Chien des Creux est à terre. Les terriers sont calmes, pour une semaine. |
+| The Sunk Bell is down. The pool will not ring again for a week. | La Cloche noyée est à terre. La mare ne sonnera plus d'une semaine. |
+| The Hiss's collar | Le collier de la Sifflante |
+| A collar of static, still crackling. It belonged to a dog once. The turf-cutter will know it. | Un collier d'électricité statique, qui crépite encore. Il a appartenu à un chien, autrefois. Le coupeur de tourbe le reconnaîtra. |
+| The Briar Queen's lamps | Les lanternes de la Reine des ronces |
+| A fistful of the little pale lamps off her thorns. They go on glowing in your pack. | Une poignée des petites lanternes pâles de ses épines. Elles continuent de luire dans votre sac. |
+| The Hollow Dog's den-bone | L'os du terrier du Chien des Creux |
+| A bone from the deepest den, gnawed white. Nobody has asked whose. | Un os du terrier le plus profond, rongé jusqu'au blanc. Personne n'a demandé à qui il était. |
+| The Sunk Bell's clapper | Le battant de la Cloche noyée |
+| An iron bell-clapper, green with the pool. It still rings if you knock it. | Un battant de cloche en fer, vert de la mare. Il sonne encore si on le cogne. |
+| You take the Hiss's collar. | Vous prenez le collier de la Sifflante. |
+| You take the Briar Queen's lamps. | Vous prenez les lanternes de la Reine des ronces. |
+| You take the Hollow Dog's den-bone. | Vous prenez l'os du terrier du Chien des Creux. |
+| You take the Sunk Bell's clapper. | Vous prenez le battant de la Cloche noyée. |
+| An Office survey camp: grey oilcloth, a table, a theodolite on its legs, a ledger. | Un camp d'arpentage de l'Office : toile cirée grise, une table, un théodolite sur ses pieds, un registre. |
+| The ledger: names taken on the road, a column for where from and a column for where to. The second column is mostly blank. | Le registre : des noms relevés sur la route, une colonne pour la provenance et une colonne pour la destination. La seconde colonne est presque vide. |
+| A ring of the brothers of the Quiet Faith round a fire laid and never lit. They make no sound at all. | Un cercle de frères de la Foi du Calme autour d'un feu préparé et jamais allumé. Ils ne font pas le moindre bruit. |
+| The hound den, and what the hounds have dragged into it. | Le terrier des chiens, et ce que les chiens y ont traîné. |
+| A briar-bed in the verge: a knot of sprites round something they have stripped to the buckles. | Un lit de ronces dans le talus : un nœud de lutins autour de quelque chose qu'ils ont dépouillé jusqu'aux boucles. |
+| A cold camp: ashes, marks in the grass, nobody. | Un camp froid : des cendres, des marques dans l'herbe, personne. |
+| The camp is cleared. Nobody will be back here for a week. | Le camp est vidé. Personne n'y reviendra avant une semaine. |
+| The camp's crate | La caisse du camp |
+| You go through the camp's crate: {0} sovereigns. | Vous fouillez la caisse du camp : {0} souverains. |
+| The crate is empty. | La caisse est vide. |
+| Not while the camp is held. | Pas tant que le camp est tenu. |
+| A fire kept small, and room beside it | Un feu tenu petit, et de la place à côté |
+| You sit by the fire until morning. The night goes by on the road without you. | Vous restez près du feu jusqu'au matin. La nuit passe sur la route sans vous. |
+| Not with something coming. | Pas avec quelque chose qui arrive. |
+| The raft-hands' fire. Men walking home from the rafts stop here for the night. | Le feu des radeleurs. Les hommes qui rentrent à pied des radeaux s'arrêtent ici pour la nuit. |
+| A raft-hand, walking home: "Sit, if you like. Nobody's coming down this road in the dark that we can't see coming." | Un radeleur, sur le chemin du retour : "Asseyez-vous, si vous voulez. Personne ne descend cette route dans le noir sans qu'on le voie venir." |
+| A raft-hand, his boots off by the fire: "Six days on the water. Two more on my feet." | Un radeleur, les bottes retirées près du feu : "Six jours sur l'eau. Encore deux sur mes pieds." |
+| The Assessor | l'Assesseure |
+| An Office column on the road: an assessor in grey with her book, two proctors, an outrider, a hushwarden. They are taking names. | Une colonne de l'Office sur la route : une assesseure en gris avec son registre, deux Procureurs, un éclaireur, un gardien du Silence. Ils relèvent des noms. |
+| That goes in the Office's book. | Cela est noté au registre de l'Office. |
+| The column is broken. The Office will send another, in a week. | La colonne est dispersée. L'Office en enverra une autre, dans une semaine. |
+| I'll do it. | Je m'en charge. |
+| Not now. | Pas maintenant. |
+| Here. | Tenez. |
+| "Suit yourself." | "Comme vous voudrez." |
+| "There's an old dog runs the pack on the Common. Nights, in the wet: you hear her before you see her. She had my own dog, last winter. Bring me the collar and I'll pay what I've got." | "Il y a une vieille chienne qui mène la meute sur la Commune. La nuit, quand il pleut : on l'entend avant de la voir. Elle a eu mon propre chien, l'hiver dernier. Rapportez-moi le collier et je vous paierai ce que j'ai." |
+| "Nights, in the wet. You'll hear her." | "La nuit, quand il pleut. Vous l'entendrez." |
+| The turf-cutter turns the collar over in his hands and does not say anything for a while. Then he pays you. | Le coupeur de tourbe retourne le collier dans ses mains et ne dit rien pendant un moment. Puis il vous paie. |
+| "There's a queen in the briar on the Stride. Comes up the day after rain. She's had the bootlaces off every raft-hand on the Flume. Bring me her lamps." | "Il y a une reine dans les ronces, sur l'Enjambée. Elle sort le lendemain de la pluie. Elle a pris les lacets de chaque radeleur de la Flume. Rapportez-moi ses lanternes." |
+| "The day after rain. Look in the verge." | "Le lendemain de la pluie. Cherchez dans le talus." |
+| "That's her. Compact rate, and a bit over. Don't tell the Compact." | "C'est bien elle. Tarif du Pacte, et un peu plus. N'en dites rien au Pacte." |
+| "There's a dog in the hollows, in the mist. It sits on the way to our farm. We've the little one. Can you?" | "Il y a un chien dans les creux, dans la brume. Il se tient sur le chemin de notre ferme. On a le petit avec nous. Vous pourriez ?" |
+| "When the mist's down. It's always the mist." | "Quand la brume tombe. C'est toujours la brume." |
+| The family look at the bone and then at each other. The father counts out coins he cannot spare and will not let you refuse. | La famille regarde l'os, puis se regarde. Le père compte des pièces qu'il ne peut pas se permettre et refuse que vous les refusiez. |
+| "There's a drone sits under the old bell-tower in the deep pool. In a storm it comes up. It's on our best roof. Fetch us the clapper and you're paid." | "Il y a un bourdon sous le vieux clocher, dans la mare profonde. Quand il y a de l'orage, il remonte. Il est sur notre meilleur toit. Rapportez-nous le battant et vous serez payé." |
+| "In a storm. Bring a punt and a long arm." | "Par l'orage. Prenez une barque et le bras long." |
+| "Clapper. Good iron, that. Here." | "Le battant. Du bon fer, ça. Tenez." |
+| "The Common wants quieting again. Six of them, this week, and I'll pay a fair rate." | "La Commune a besoin qu'on la calme encore. Six d'entre eux, cette semaine, et je paierai un prix juste." |
+| "The briar's back on the lock-ladders. Eight of the little ones, this week." | "Les ronces sont revenues sur les échelles d'écluse. Huit des petits, cette semaine." |
+| "The hollows are full of dogs again. Five of them gone this week and we'll get the cart through." | "Les creux sont de nouveau pleins de chiens. Cinq de moins cette semaine et la charrette passera." |
+| "Lead off the garret roofs. Four pieces this week, off the ones by the long board." | "Du plomb des toits des mansardes. Quatre morceaux cette semaine, sur ceux près des longues planches." |
+| "{0} of {1}. Keep at it." | "{0} sur {1}. Continuez." |
+| "That's the week's work done, then." | "Alors le travail de la semaine est fait." |
+| "Good. Here's your money." | "Bien. Voici votre argent." |
+| "That's this week done. Come back next week." | "C'est fini pour cette semaine. Revenez la semaine prochaine." |
+| Lead flashing on a garret roof, half off already | Un solin de plomb sur un toit de mansarde, déjà à moitié arraché |
+| You peel off a piece of lead. {0} of 4. | Vous détachez un morceau de plomb. {0} sur 4. |
+| The lead is gone from this one. | Le plomb a déjà été pris sur celui-ci. |
+| The turf-cutter on the Long Common wants the collar of the Hiss, the pack's mother: out at night in the wet. | Le coupeur de tourbe de la Longue Commune veut le collier de la Sifflante, la mère de la meute : dehors la nuit, quand il pleut. |
+| The lengthsman wants the Briar Queen's lamps: she is in the Stride's verges the day after rain. | L'éclusier veut les lanternes de la Reine des ronces : elle est dans les talus de l'Enjambée le lendemain de la pluie. |
+| The returning family on the drove road want the Hollow Dog gone: it comes out in the mist. | La famille qui revient par le chemin de transhumance veut qu'on la débarrasse du Chien des Creux : il sort dans la brume. |
+| The salvagers in Cross Pool want the Sunk Bell's clapper: it comes up in a storm, in the Lanes' deepest pool. | Les récupérateurs de la Mare-à-la-Croix veulent le battant de la Cloche noyée : elle remonte par l'orage, dans la mare la plus profonde des Ruelles noyées. |
+| On the roads today | Sur les routes aujourd'hui |
+| The Greenroot road: two dogs on the Common by day, nothing worse. | La route de Greenroot : deux chiens sur la Commune le jour, rien de pire. |
+| The Greenroot road: the pack is out on the Common after dark, and a Dirge comes out of the Wood. Keep your voice down. | La route de Greenroot : la meute sort sur la Commune après la tombée de la nuit, et un Glas sort du Bois. Parlez bas. |
+| In the wet the dogs come closer to the road. | Par temps de pluie, les chiens s'approchent de la route. |
+| Snow on the Greenroot road. It is quiet; half the dogs are lying up. | Neige sur la route de Greenroot. C'est calme ; la moitié des chiens restent couchés. |
+| Moths in Greenroot Wood in the mist. | Des phalènes du Silence dans le bois de Greenroot, par la brume. |
+| The Flume road: briar in the verges on the Stride. | La route de la Flume : des ronces dans les talus de l'Enjambée. |
+| The briar is up with the rain: twice as many, and the day after, something bigger. | Les ronces se lèvent avec la pluie : deux fois plus nombreuses, et le lendemain, quelque chose de plus gros. |
+| Drones on the pound banks after dark. | Des bourdons sur les berges des biefs après la tombée de la nuit. |
+| Storm: the pounds are surging, drones out all day. | Orage : les biefs débordent, les bourdons sortent toute la journée. |
+| Snow on the Flume road: the briar sleeps. | Neige sur la route de la Flume : les ronces dorment. |
+| The drove road: quiet on the Wethers. | Le chemin de transhumance : calme aux Moutons Gris. |
+| After dark: hounds in the Hollows, and the silent brothers at the stones. | Après la tombée de la nuit : des chiens dans les Creux, et les frères silencieux aux pierres. |
+| Mist on the drove road: the Hollows' dogs are out by day, and the one that dens deepest. | Brume sur le chemin de transhumance : les chiens des Creux sortent de jour, et celui qui terre le plus profond. |
+| Snow: woolwights are down off the high ground. | Neige : les Laineux sont descendus des hauteurs. |
+| Storm in the Lanes: drones out, and the deep pool rings. | Orage dans les Ruelles : les bourdons sont dehors, et la mare profonde sonne. |
+| No Office column on the roads this week. | Pas de colonne de l'Office sur les routes cette semaine. |
+| The Office column is on the Greenroot road today, taking names. | La colonne de l'Office est sur la route de Greenroot aujourd'hui, à relever des noms. |
+| The Office column is on the Flume road today, taking names. | La colonne de l'Office est sur la route de la Flume aujourd'hui, à relever des noms. |
+| The Office column is on the drove road today, taking names. | La colonne de l'Office est sur le chemin de transhumance aujourd'hui, à relever des noms. |
+| The Office column is camped on the Greenroot road. | La colonne de l'Office campe sur la route de Greenroot. |
+| The Office column is camped on the Flume road. | La colonne de l'Office campe sur la route de la Flume. |
+| The Office column is camped on the drove road. | La colonne de l'Office campe sur le chemin de transhumance. |
+| an assault on the Office | une agression contre l'Office |

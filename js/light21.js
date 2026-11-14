@@ -524,6 +524,20 @@ vec3 r3dShade(R3DSurf s) {
 
   // ------------------------------------------------------------------------------------------------ the map's heights
   // R32F, one texel per cell: a block's top, an open cell's ground (its centre on a slope), in GL units. Rebuilt per map.
+  // where the rain stops: roof heights over the map (js/eaves78.js), a quarter of a cell to the texel
+  const shel = { tex: null, none: null, src: null, w: 0, h: 0, k: 4 };
+  function shelterNone(gl) { if (!shel.none) { shel.none = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, shel.none); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.R32F, 1, 1); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, 1, 1, gl.RED, gl.FLOAT, new Float32Array([-1e4])); } return shel.none; }
+  function shelterTex(gl, F) {
+    let s = null; try { s = typeof EAVES78 !== 'undefined' && EAVES78.shelter ? EAVES78.shelter(F.map) : null; } catch (e) { warnOnce('shelter', e); }
+    if (!s) return null;
+    if (shel.src !== s) {
+      if (!shel.tex || shel.w !== s.w || shel.h !== s.h) { if (shel.tex) gl.deleteTexture(shel.tex); shel.tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, shel.tex); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.R32F, s.w, s.h);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); shel.w = s.w; shel.h = s.h; }
+      const d = new Float32Array(s.data.length); for (let i = 0; i < d.length; i++) d[i] = s.data[i] < -5000 ? -1e4 : s.data[i] * ZK;
+      gl.bindTexture(gl.TEXTURE_2D, shel.tex); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, s.w, s.h, gl.RED, gl.FLOAT, d); shel.src = s; shel.k = s.k;
+    }
+    return shel.tex;
+  }
   const hgt = { tex: null, map: null, sig: '', w: 0, h: 0, ok: false };
   function buildHeights(gl, m) {
     if (!gl || !m) return;
@@ -831,6 +845,7 @@ uniform vec3 uShaftC;
 uniform vec4 uWx2;   // x rain, y snow, z time, w wind
 uniform float uWinG;   // WINTER17's cold grade (0..1)
 uniform vec3 uWxC;   // the colour of falling rain and snow (the air's light)
+uniform highp sampler2D uWxRoof; uniform vec4 uWxMap;   // where the rain stops (js/eaves78.js): heights over the map, x texels per cell, z on
 uniform sampler2D uAuxT; uniform float uSSR;   // the material target; water reflections on (GFX.reflections)
 uniform vec4 uDread;   // the Dread's shadow at the edge of sight (js/dread.js): x centre (uv), y top (uv from the top), z height (uv), w strength
 uniform sampler2D uDepth; uniform vec4 uHalo[16]; uniform vec4 uHaloC[16]; uniform int uHaloN; uniform float uAspect;
@@ -860,9 +875,13 @@ float wh(float a, float b) { return fract(sin(a * 127.1 + b * 311.7) * 43758.545
 float weather(vec2 uv, float zScene) {
   vec2 lp = floor(vec2(uv.x * 320.0 + uCam.w * 242.42, (1.0 - uv.y) * 150.0));
   float a = 0.0;
+  // under a roof it does not fall: each layer's drop is placed in the world and looked up in the roof heights
+  bool roofs = uWxMap.z > 0.5; vec3 wd = vec3(0.0); float wk = 1.0; ivec2 ws = ivec2(1);
+  if (roofs) { vec2 nd = uv * 2.0 - 1.0; vec4 pa = uInvViewProj * vec4(nd, 1.0, 1.0), pb = uInvViewProj * vec4(nd, -1.0, 1.0); wd = normalize(pa.xyz / pa.w - pb.xyz / pb.w); wk = 1.0 / max(0.05, dot(wd, uFwd.xyz)); ws = textureSize(uWxRoof, 0); }
   for (int i = 0; i < 3; i++) {
     float fi = float(i), dist = 0.9 + fi * 1.7;
     if (zScene < dist) continue;
+    if (roofs) { vec3 wp = uEye.xyz + wd * (dist * wk); ivec2 tc = ivec2(floor(wp.xy * uWxMap.x)); if (tc.x >= 0 && tc.y >= 0 && tc.x < ws.x && tc.y < ws.y && wp.z < texelFetch(uWxRoof, tc, 0).r) continue; }
     float near = 1.0 / (1.0 + fi);
     if (uWx2.x > 0.01) {
       float cw = 5.0 + fi * 4.0, len = 9.0 * near + 3.0;
@@ -979,7 +998,7 @@ void main() {
     S.gl = gl;
     S.vao = gl.createVertexArray();
     S.skyTex = null; S.skyFb = null; S.skyW = S.skyH = 0; S.rt = {}; S.lutTex = null; S.w = S.h = 0;
-    hgt.tex = null; hgt.map = null; hgt.sig = ''; hgt.ok = false; hgt.w = hgt.h = 0;
+    hgt.tex = null; hgt.map = null; hgt.sig = ''; hgt.ok = false; hgt.w = hgt.h = 0; shel.tex = null; shel.none = null; shel.src = null; shel.w = shel.h = 0;
     pano.tex = null; pano.pal = null; pano.key = ''; pano.ok = false; pano.n = 0;
     ship.tex = null; smap.tex = null; smap.fb = null;
     programs();
@@ -1258,6 +1277,9 @@ void main() {
       } catch (e) { warnOnce('dread', e); }
       if (p.u.uDread) gl.uniform4f(p.u.uDread, dr[0], dr[1], dr[2], dr[3]);
       const wxOn = F.outdoor && wx3d();
+      const roofT = wxOn ? shelterTex(gl, F) : null;
+      gl.activeTexture(gl.TEXTURE12); gl.bindTexture(gl.TEXTURE_2D, roofT || shelterNone(gl)); if (p.u.uWxRoof) gl.uniform1i(p.u.uWxRoof, 12);
+      if (p.u.uWxMap) gl.uniform4f(p.u.uWxMap, roofT ? shel.k : 1, 0, roofT ? 1 : 0, 0);
       if (p.u.uWx2) gl.uniform4f(p.u.uWx2, wxOn && P.wet ? (WX() === 'storm' ? 1 : 0.7) : 0, wxOn ? Math.max(P.snow ? 1 : 0, P.win[2] * 1.4) : 0, F.now % 1000, P.cl[1]);
       if (p.u.uWinG) gl.uniform1f(p.u.uWinG, P.win[1]);
       if (p.u.uWxC) gl.uniform3f(p.u.uWxC, Math.min(1, P.ambS[0] * 1.5 + 0.12), Math.min(1, P.ambS[1] * 1.5 + 0.13), Math.min(1, P.ambS[2] * 1.5 + 0.16));
@@ -1293,6 +1315,6 @@ void main() {
   }
   install();
 
-  return { stats, ported, P, available: true, photoGrades, keyAt, frameParams, heights: () => hgt, pano: () => pano, shaderSource: () => ({ SHADE, SKY_FS, COMP_FS }) };
+  return { stats, ported, P, available: true, photoGrades, keyAt, frameParams, heights: () => hgt, shelter: () => shel, pano: () => pano, shaderSource: () => ({ SHADE, SKY_FS, COMP_FS }) };
 })();
 if (typeof window !== 'undefined') window.LIGHT21 = LIGHT21;
