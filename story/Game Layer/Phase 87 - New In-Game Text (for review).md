@@ -29,7 +29,7 @@ Code: `js/items87.js` (the pieces, their pack pictures), `js/gearlook21.js` (wha
 
 - **Every set is whole.** Fourteen capes (cloaks, a tippet, a half-cloak, a pennon, rain-capes, a tarpaulin, a boat-cloak, a plaid, a red-deer pelt), nine head pieces, five body pieces, eleven pairs of gloves or bracers, nine of boots, four shields. The names and lines are in the table below.
 - **Each has its own look,** from the world: Fenning's scraper-mark, the weavers' thorn border, the clerk's silver tassel, the dead queen's brooch, the bell's inscription in verdigris, the Office's silver mesh, the stave of a hymn, the Corps' brass valve, the Consortium stencil, salt-green buttons, the chalk-and-peat check, the barrow's spiral, the lengthsman's lantern-hook, the red deer's tines. On the card: new builders for heads (bandana, biretta, sallet, cowl, mesh hood, goggles, wide-awake, tarred hat, antler crown), capes, body forms, hands (mitts, fingerless cuffs, vambraces, coils, wraps, long cuffs), feet (sandals, buckles, clogs, steel toes, turned-down tops, sabatons) and shields (the targe's tacks, the bell-shield's inscription, the pavise's planks, the barrow shield's ribs). In the pack: a pixel picture each. In first person: the pavise and the round shields, bare arms under the hide tunic, bare fingers in the cuffs and coils.
-- **The set-specials now act** where they say. Six of the full-set lines were reworded so they say only what the game does (the old wording promised things the game has no rule for: blocks never cost fatigue, there is no fall damage, enemies never follow you between places):
+- **The set-specials now act** where they say. Nine of the set lines were reworded so they say only what the game does (the old wording promised things the game has no rule for: blocks never cost fatigue, there is no fall damage, enemies never follow you between places):
 
 | Set | Was | Now |
 |---|---|---|
@@ -51,7 +51,7 @@ Code: `js/items87.js` (the pieces, their pack pictures), `js/gearlook21.js` (wha
 
 ## (e) Where everything is found (done 14 Nov) [PROPOSED]
 
-- **Shops at home:** Fenning (the tanner's cape and targe, the Registry's cuffs and shoes), Tam of the Hedge (the Hush mitts, the felted sling, stones), Captain Vane (bandana, deck gloves, sea boots, harpoons), Factor Vosk (the Works gauntlets, steel-toes, tarpaulin, hand-crossbow, quarrels), Orrin the sexton (the Cantor's cowl and sandals), Madge on the Flume (the tarred hat, sluice gauntlets, shepherd's sling, stones), Sloe in Port Cantabile (the boat-cloak, harpoons).
+- **Shops at home:** Fenning (the tanner's cape and targe, the Registry's cuffs and shoes), Old Tam, the night-hummer, who sells the Hush-cloth (the Hush mitts, the felted sling, stones), Captain Vane (bandana, deck gloves, sea boots, harpoons), Factor Adela Vosk (the Works gauntlets, steel-toes, tarpaulin, hand-crossbow, quarrels), Orrin the sexton (the Cantor's cowl and sandals), Madge Tallow, the Flume's fence (the tarred hat, sluice gauntlets, shepherd's sling, stones), Fenwick Sloe, the Port Cantabile chandler (the boat-cloak, harpoons).
 - **Carried by their people:** legionnaires (vambraces, sabatons, the sallet, the pennon), proctors (gloves, boots, hood, rain-cape), the Office's cutter-men (the oilcloth coat, the carbine), golems (the Corps' goggles, gauntlets and boots), Quiets and hush-wardens (the Hedge cloak), outriders (the half-cloak), woolwights (bracers, fleece mittens), the Old Fleece (the grave-wool cloak).
 - **The best pieces in the big places** (the deepest strongboxes): the bell-shield, the pavise, the barrow greaves and shield, the antler crown, hide and pelt, the hornbow and harpoon gun, the ash-cape, the biretta and tippet, the cassock and choir-mantle, the captain's coat, the Proctor's oilcloth, the carbine.
 
@@ -214,11 +214,11 @@ Code: `js/items87.js` (the pieces, their pack pictures), `js/gearlook21.js` (wha
 | Earth-grey wool from the Old Fleece, to the ankle, with a bronze ring-brooch as big as a hand. | De la laine gris-terre de la Vieille Toison, jusqu'à la cheville, avec une broche annulaire de bronze grande comme une main. |
 | Barrow Round-Shield | Bouclier rond des tertres |
 | Bronze over wood in rings of ribs and studs, the boss hollow. Whoever carried it last was buried with it. | Du bronze sur du bois en anneaux de nervures et de clous, l'umbo creux. Le dernier à l'avoir porté a été enterré avec. |
-| Lengthsman's Tarred Hat | Chapeau goudronné de éclusier |
+| Lengthsman's Tarred Hat | Chapeau goudronné d'éclusier |
 | Low in the crown, with a long back flap to carry the rain off the neck. | Bas de calotte, avec un long rabat arrière pour écarter la pluie de la nuque. |
 | Sluice-Keeper's Gauntlets | Gantelets d'éclusier |
 | Tarred leather to the forearm, with an iron sluice-key on a thong at the wrist. | Du cuir goudronné jusqu'à l'avant-bras, avec une clé d'écluse en fer pendue à une lanière au poignet. |
-| Lengthsman's Oilskin | Ciré de éclusier |
+| Lengthsman's Oilskin | Ciré d'éclusier |
 | A yellow-ochre oilskin shoulder-cape with an iron lantern-hook at the shoulder. Seen a long way off along a cut. | Une pèlerine cirée jaune ocre avec un crochet de lanterne en fer à l'épaule. On la voit de loin le long d'un canal. |
 | Antler Crown | Couronne de bois de cerf |
 | A band of plaited lime-bark set with two short red-deer tines. In the Galleries it was worn by whoever went in first. | Un bandeau d'écorce de tilleul tressée serti de deux courts andouillers de cerf. Dans les Galeries, le portait celui qui entrait le premier. |
