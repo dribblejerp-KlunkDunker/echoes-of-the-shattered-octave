@@ -234,6 +234,11 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The trees, larger and of many shapes.** Every tree out of doors now grows to a height of its own kind's (an oak three to nearly six times a person's height, a beech or an ash over five, a hawthorn two or three), most of them middling and a few of them giants, and takes one of its own kind's shapes: spreading, stag-old, tall, leaning, wind-bent, the great field oak. By a house a tree grows only as far as there is room. The Options switch "Larger trees, of many shapes" puts them back.
+
+<p align="center"><img src="screenshots/p83-trees-before-after.jpg" alt="Before and after: the Hanger's wood and an oak on Greenroot Wood's slope, the trees grown and of many shapes" width="92%"></p>
+<p align="center"><img src="screenshots/p83-trees-walk.gif" alt="Walking into the Hanger among the grown trees" width="70%"></p>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>
