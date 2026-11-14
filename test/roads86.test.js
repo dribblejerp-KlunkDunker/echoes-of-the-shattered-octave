@@ -87,8 +87,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const news = document.querySelector('#modal-panel .p86-roads'); out.board = !!news && /On the roads today/.test(news.textContent) && news.querySelectorAll('p').length >= 4;
     closeModal(); G.state = 'play';
     // ---- the salvagers take the bell job, and the lead off the roofs counts
-    go('p85_crosspool', 0.5, 'clear', 48); const sv = G.ents.find((e) => e && e.use === 'p85l_salv' && e._i === 1); msgs.length = 0; useDeco(sv);
-    out.salv = G.flags.p86b_salv === 1 && msgs.some((t) => /clapper/.test(t));
+    go('p85_crosspool', 0.5, 'clear', 48); const sv = G.ents.find((e) => e && e.id === 'p60_cp_salv2'); msgs.length = 0;
+    talk(sv); const sq = DLG.log.map((l) => l.t).join(' '); const st = DLG.choices && DLG.choices[0]; if (st) st.f(G); closeModal(); G.state = 'play';
+    out.salv = G.flags.p86b_salv === 1 && /clapper/.test(sq);
     const leads = G.ents.filter((e) => e && e._r86 && e._r86.lead != null); for (const e of leads) useDeco(e); useDeco(leads[0]);
     out.lead = leads.length === 4 && msgs.some((t) => /4 of 4/.test(t)) && msgs.some((t) => /lead is gone/.test(t));
     // ---- the map journey draws from the same rosters

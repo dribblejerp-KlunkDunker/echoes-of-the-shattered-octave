@@ -235,9 +235,8 @@ const LANES85 = (function () {
     // the reeds over the garret doors, and the bare hook
     GARRETS.forEach((dx, i) => { const o = { solid: false, radius: 0.1, scale: 0.55, yOff: -0.4, _p85l: 'reed', _i: i };
       if (i === BARE) m.deco('p85_hook', dx + 0.5, 44.35, Object.assign(o, { label: TX.hook, use: 'p85l_hook' })); else m.deco('p9p_doorreed', dx + 0.5, 44.35, Object.assign(o, { label: TX.reed, use: 'p85l_reed' })); });
-    // the two salvagers, working the garret roofs from the board
-    m.deco('p60_man_b', 41.6, 42.9, { radius: 0.3, scale: 1, label: TX.salvager, use: 'p85l_salv', _i: 0 });
-    m.deco('p60_man_c', 43.4, 42.9, { radius: 0.3, scale: 1, label: TX.salvagerB, use: 'p85l_salv', _i: 1 });
+    // the two salvagers walk their round of the garret roofs (LIFE60, below); if the townsfolk are switched off, they stand by the board
+    if (typeof LIFE60 === 'undefined') { m.deco('p60_man_b', 41.6, 43.5, { radius: 0.3, scale: 1, label: TX.salvager, use: 'p85l_salv', _i: 0 }); m.deco('p60_man_c', 43.4, 43.5, { radius: 0.3, scale: 1, label: TX.salvagerB, use: 'p85l_salv', _i: 1 }); }
     // signs
     m.deco('sign', 48.6, 37.6, { radius: 0.2, scale: 0.75, label: TX.pool });
     m.deco('sign', 7.6, 42.6, { radius: 0.15, scale: 0.6, label: TX.garrets });
@@ -387,9 +386,23 @@ const LANES85 = (function () {
       ]);
     }
   }
+  // ---------------------------------------------------------------- the salvagers' round (Phase 85 polish)
+  // Along the board under the garret row: the west roofs in the morning, the middle at noon, the east in the afternoon,
+  // a sit by the board between, and in at the end garret at night. Their chat is their dialogue (greet, work, place).
+  const SY = 43.5, G_ = (i) => [GARRETS[i] + 0.5, SY];
+  const st85 = (from, to, job, at) => ({ from, to, job, at });
+  const SALVAGERS = [
+    { key: 'cp_salv', name: TX.salvager, sprite: 'p60_man_b', home: [45.5, SY],
+      day: [st85(7, 10, 'reach', G_(0)), st85(10, 13, 'reach', G_(2)), st85(13, 14, 'sit', [41.6, SY]), st85(14, 18, 'reach', G_(4)), st85(18, 20, 'sit', [41.6, SY]), { from: 20, to: 7, job: 'home', at: [45.5, SY] }],
+      greet: TX.salvGreet, work: TX.salvWork, place: TX.salvPlace, barks: [TX.salvBark] },
+    { key: 'cp_salv2', name: TX.salvagerB, sprite: 'p60_man_c', home: [45.5, SY],
+      day: [st85(7, 10, 'reach', G_(1)), st85(10, 13, 'reach', G_(3)), st85(13, 14, 'sit', [43.4, SY]), st85(14, 18, 'reach', G_(5)), st85(18, 20, 'sit', [43.4, SY]), { from: 20, to: 7, job: 'home', at: [45.5, SY] }],
+      greet: TX.salvBark, work: TX.salvWork, place: TX.salvPlace, barks: [TX.salvGreet] },
+  ];
+  try { if (typeof LIFE60 !== 'undefined' && LIFE60.add) LIFE60.add(POOL, SALVAGERS, {}); } catch (e) { warnOnce('people', e); }
   wire();
 
-  return { LANES, POOL, TX, TEXTS, NOTES, BARE, SHOP, CROSS, CASH, BUCKLER, KERB, GARRETS, buildLanes, buildPool, join, sync, useOwn, getIn, getOut, inPunt: () => inPunt, lowWater, gear, art };
+  return { LANES, POOL, TX, TEXTS, NOTES, BARE, SHOP, CROSS, CASH, BUCKLER, KERB, GARRETS, SALVAGERS, buildLanes, buildPool, join, sync, useOwn, getIn, getOut, inPunt: () => inPunt, lowWater, gear, art };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = LANES85;
 if (typeof window !== 'undefined') window.LANES85 = LANES85;

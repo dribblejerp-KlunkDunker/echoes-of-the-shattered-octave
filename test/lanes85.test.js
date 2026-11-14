@@ -54,6 +54,10 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     G.tod = 0.5; update(0.016); out.kerbsDown = G.map.isBlocked(45, 9);
     Weather.hold && Weather.hold('storm'); update(0.016); out.storm = G.map.danger === 2 && G.ents.some((e) => e && e._p85l === 'storm' && !e.hidden);
     Weather.hold && Weather.hold('clear'); update(0.016);
+    // the salvagers walk their round of the garret roofs: west in the morning, east in the afternoon, indoors at night
+    const salvAt = (tod) => { G.tod = tod; loadMap(L.POOL); G.state = 'play'; for (let i = 0; i < 400; i++) update(0.1); const a = G.ents.find((e) => e && e.id === 'p60_cp_salv'), b = G.ents.find((e) => e && e.id === 'p60_cp_salv2'); return a && b ? [a.x, b.x, a.hidden, b.hidden] : null; };
+    const am = salvAt(8 / 24), pm = salvAt(15 / 24), nt = salvAt(23 / 24);
+    out.round = !!am && !!pm && !!nt && !am[2] && !pm[2] && am[0] < 20 && pm[0] > 30 && Math.abs(am[1] - pm[1]) > 10 && nt[2] && nt[3];
     msg = _m;
     return out;
   });
@@ -72,6 +76,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   check(r.pole && r.buckler, 'she gives you the Punt-Pole, longer than a spear; the buckler is a shield');
   check(r.kerbs && r.lit && r.kerbsDown, 'on a clear night the kerbs come up and the street under the water is lit; by day they go under');
   check(r.storm, 'in storm the drones come out and the danger rises');
+  check(r.round, 'the salvagers walk their round of the garret roofs, and go in at night');
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();
   console.log(fails ? fails + ' FAILED' : 'all passed');

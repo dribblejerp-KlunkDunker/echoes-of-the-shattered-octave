@@ -128,6 +128,32 @@ const M = require(path.join(ROOT, 'js', 'mounts84.js'));
   check(a.stepped === 'chestnut' && a.picked === 'palomino', 'the arrows and the portraits choose between them');
   check(/palomino/.test(a.hireMsg) && !/roan mare/.test(a.hireMsg) && a.sprite === 'p84_pony_palomino', 'the one chosen is the one hired, named and seen (' + a.hireMsg + ')');
   check(b.ambush, 'an ambush comes on the stretch where it happens (' + b.ambushMap + ')');
+
+  // ---- a controller: hold A to get up and down; a tap on her gets you up; the d-pad picks in the stable
+  const c = await page.evaluate(() => {
+    const out = {}, X = MOUNTS84; closeModal(); G.tod = 0.4;
+    loadMap('oakhaven', { x: G.maps.oakhaven.spawn.x, y: G.maps.oakhaven.spawn.y, dir: 0 }); G.state = 'play';
+    G.player.horseUntil = (Number(G.day) || 0) * 24 + G.tod * 24 + 20; G.player.horseFrom = 'oakhaven'; G.player.horseCoat = 'roan';
+    const cam = Engine.cam; G.player.p84 = { map: 'oakhaven', x: cam.x + 1, y: cam.y, mounted: false, left: 1e9, home: 'oakhaven' }; X.tick();
+    let pressed = false, t = 1000; const pad = { connected: true, buttons: Array.from({ length: 17 }, (_, i) => ({ get pressed() { return i === 0 ? pressed : (i === 15 ? pad.r : false); } })), axes: [0, 0, 0, 0], r: false };
+    const _gp = navigator.getGamepads, _pn = performance.now; navigator.getGamepads = () => [pad]; performance.now = () => t;
+    const hold = (sec) => { pressed = true; for (let i = 0; i < sec * 20; i++) { t += 50; X.padRide(); } pressed = false; t += 50; X.padRide(); };
+    hold(0.2); out.tapNothing = !G.player.p84.mounted;
+    hold(1.0); out.holdUp = !!G.player.p84.mounted;
+    hold(1.0); out.holdDown = !G.player.p84.mounted;
+    // a tap of A on her (the game's own interact) gets you up, and the same press held does not throw you off again
+    X.tick(); const deco = G.ents.find((e) => e && e._p84pony); pressed = true; t += 50; X.padRide(); useDeco(deco); out.tapUp = !!G.player.p84.mounted && deco.use === 'p84_ride';
+    hold(1.0); out.heldStays = !!G.player.p84.mounted;
+    hold(1.0); out.downAgain = !G.player.p84.mounted;
+    // the stable: d-pad right steps to the next pony
+    G.player.horseUntil = 0; G.player.p84 = null; X.tick(); openStable(); const k0 = X.pick.coat;
+    pad.r = true; X.padRide(); pad.r = false; X.padRide(); out.dpad = !!k0 && X.pick.coat !== k0;
+    closeModal(); G.state = 'play'; navigator.getGamepads = _gp; performance.now = _pn;
+    return out;
+  });
+  check(c.tapNothing && c.holdUp && c.holdDown, 'on a controller, holding A by her gets you up, and held again gets you down; a tap does not');
+  check(c.tapUp && c.heldStays && c.downAgain, 'a tap of A on her gets you up, and that same press held does not undo it');
+  check(c.dpad, 'in the stable, the d-pad steps through the ponies');
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();
   console.log(fails ? fails + ' FAILED' : 'all passed');

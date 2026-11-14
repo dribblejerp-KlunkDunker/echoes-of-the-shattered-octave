@@ -37,7 +37,8 @@ Every line below is new and **[PROPOSED]**, except the three names ruled in the 
 | Hired: {0} | Louée : {0} |
 | You hire {0} for {1} sovereigns. The ostler ties a green ribbon to the bridle: she is yours until this time tomorrow. | Vous louez {0} pour {1} souverains. Le palefrenier noue un ruban vert à la bride : elle est à vous jusqu'à demain à la même heure. |
 | You hand {0} back. The ostler counts {1} sovereigns into your palm and hangs the green ribbon on its nail. | Vous rendez {0}. Le palefrenier vous compte {1} souverains dans la paume et raccroche le ruban vert à son clou. |
-| {0}, saddled and waiting. X to get up. | {0}, sellée, qui attend. X pour monter. |
+| {0}, saddled and waiting. X to get up (on a controller, hold A). | {0}, sellée, qui attend. X pour monter (à la manette, maintenez A). |
+| Hold A to get down. | Maintenez A pour descendre. |
 | You get up on {0}. | Vous montez sur {0}. |
 | You get down. {0} waits where you leave her. | Vous mettez pied à terre. {0} attend là où vous la laissez. |
 | She will not go onto the planks. Get down and go on foot; she will wait. | Elle ne veut pas aller sur les planches. Descendez et continuez à pied ; elle attendra. |

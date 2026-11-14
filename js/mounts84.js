@@ -40,7 +40,8 @@ const MOUNTS84 = (function () {
     pick: S('Which of them?'), chooseHint: S('Left and right arrows choose between them.'), hiredAs: S('Hired: {0}'),
     hireLine: S('You hire {0} for {1} sovereigns. The ostler ties a green ribbon to the bridle: she is yours until this time tomorrow.'),
     backLine: S('You hand {0} back. The ostler counts {1} sovereigns into your palm and hangs the green ribbon on its nail.'),
-    waiting: S('{0}, saddled and waiting. X to get up.'),
+    waiting: S('{0}, saddled and waiting. X to get up (on a controller, hold A).'),
+    padDown: S('Hold A to get down.'),
     up: S('You get up on {0}.'), down: S('You get down. {0} waits where you leave her.'),
     planks: S('She will not go onto the planks. Get down and go on foot; she will wait.'),
     stair: S('She will not go down the Pound Stair. You leave her at the top, and she waits.'),
@@ -114,7 +115,7 @@ const MOUNTS84 = (function () {
     if (!hasG() || !G.map) return;
     const m = G.map; for (let i = m.entities.length - 1; i >= 0; i--) if (m.entities[i] && m.entities[i]._p84pony) m.entities.splice(i, 1);
     const p = pony(); if (!p || p.mounted || p.map !== G.mapId || !hired()) return;
-    m.entities.push({ kind: 'deco', sprite: spriteOf(coatOf(p)), x: p.x, y: p.y, scale: 1, solid: false, radius: 0.35, transient: true, _decor: true, _p84pony: true, label: fmt(TX.waiting, nameOf(p)) });
+    m.entities.push({ kind: 'deco', sprite: spriteOf(coatOf(p)), x: p.x, y: p.y, scale: 1, solid: false, radius: 0.35, transient: true, _decor: true, _p84pony: true, use: 'p84_ride', label: fmt(TX.waiting, nameOf(p)) });
   }
   function getUp() {
     const p = pony(); if (!p || !hired()) return false;
@@ -384,6 +385,34 @@ const MOUNTS84 = (function () {
     if (p) head(p.mounted);
     const key = (p ? p.map + p.mounted + p.x.toFixed(1) : '-') + G.mapId; if (key !== lastStage) { lastStage = key; stage(); }
     touch();
+    padRide();
+  }
+
+  // ---------------------------------------------------------------- a controller: hold A to get up or down; in the stable, the
+  // d-pad steps through the ponies. A tap of A still does what it always did (talk, use, pick up), so only a hold rides.
+  const HOLD = 0.6;
+  let padA = 0, padDone = false, padWas = null, padPrevL = false, padPrevR = false, padTold = false;
+  function padNow() { try { const ps = navigator.getGamepads ? navigator.getGamepads() : null; if (ps) for (const g of ps) if (g && g.connected !== false) return g; } catch (e) { /* none */ } return null; }
+  let padT = null;
+  function padRide() {
+    if (typeof navigator === 'undefined') return;
+    const g = padNow(), now = typeof performance !== 'undefined' ? performance.now() : 0, dt = padT == null ? 0 : Math.min(0.1, (now - padT) / 1000); padT = now;
+    if (!g) { padA = 0; padDone = false; return; }
+    const b = (i) => !!(g.buttons[i] && g.buttons[i].pressed);
+    if (G.openPanel === 'stable') {
+      if (b(14) && !padPrevL) stepChoice(-1); if (b(15) && !padPrevR) stepChoice(1);
+      padPrevL = b(14); padPrevR = b(15); return;
+    }
+    padPrevL = padPrevR = false;
+    if (G.state !== 'play' || !b(0)) { padA = 0; padDone = false; padWas = null; return; }
+    if (padWas == null) padWas = mounted();   // a tap of A on the waiting pony gets you up already: a hold must not undo it
+    padA += dt; if (padDone || padA < HOLD) return;
+    padDone = true;
+    const p = pony(); if (!p || !hired()) return;
+    const c = Engine.cam;
+    if (padWas && p.mounted) getUp();
+    else if (!padWas && !p.mounted && p.map === G.mapId && Math.hypot(p.x - c.x, p.y - c.y) <= 2.2) getUp();
+    if (!padWas && mounted() && !padTold) { padTold = true; say(tr(TX.padDown), '', 3500); }
   }
 
   // ---------------------------------------------------------------- the stable panel: three ponies to choose from, a portrait of each
@@ -470,6 +499,8 @@ const MOUNTS84 = (function () {
         return r;
       };
     }
+    // her use: get up. Got up with a tap of A, holding that press on does nothing more
+    if (typeof useDeco === 'function') { const _u = useDeco; useDeco = function (e) { try { if (e && e.use === 'p84_ride') { getUp(); const g = padNow(); if (g && g.buttons[0] && g.buttons[0].pressed) { padDone = true; padWas = true; } return undefined; } } catch (err) { warnOnce('ride', err); } return _u.apply(this, arguments); }; }
     if (typeof window !== 'undefined' && window.addEventListener) window.addEventListener('keydown', (ev) => {
       try { if (hasG() && G.openPanel === 'stable' && !ev.repeat) { const k0 = typeof keyOf === 'function' ? keyOf(ev) : (ev.key || '').toLowerCase(); if (k0 === 'arrowleft' || k0 === 'arrowright') { ev.preventDefault(); stepChoice(k0 === 'arrowleft' ? -1 : 1); return; } }
         if (!hasG() || G.state !== 'play' || ev.repeat) return; if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return; const k = typeof keyOf === 'function' ? keyOf(ev) : (ev.key || '').toLowerCase(); if (k === 'x' && pony()) { ev.preventDefault(); getUp(); } } catch (e) { warnOnce('key', e); }
@@ -585,7 +616,7 @@ const MOUNTS84 = (function () {
   }
   wire();
 
-  return { chartColour: () => { try { return hired() ? COATS[coatOf(pony())].chart : null; } catch (e) { return null; } }, ensureRegions, TX, TEXTS, COATS, OFFER, coatOf, pick, stepChoice, paintPony, STABLES, NO_GO, RIDE, EYE, pony, mounted, hired, getUp, getDown, stage, tick, sendHome, stableSpot, placeMiles, touched, route, minutesOf, legRisk, haltOn, crossesDusk, mileName, head };
+  return { padRide, HOLD, chartColour: () => { try { return hired() ? COATS[coatOf(pony())].chart : null; } catch (e) { return null; } }, ensureRegions, TX, TEXTS, COATS, OFFER, coatOf, pick, stepChoice, paintPony, STABLES, NO_GO, RIDE, EYE, pony, mounted, hired, getUp, getDown, stage, tick, sendHome, stableSpot, placeMiles, touched, route, minutesOf, legRisk, haltOn, crossesDusk, mileName, head };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = MOUNTS84;
 if (typeof window !== 'undefined') window.MOUNTS84 = MOUNTS84;

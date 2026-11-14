@@ -329,7 +329,7 @@ const ROADS86 = (function () {
     cutter: { npc: 'p60_rd_cutter', keeper: 'hiss', offer: TX.cutterOffer, wait: TX.cutterWait, paid: TX.cutterPaid, journal: TX.journalCutter, week: TX.cutterWeek, need: 6, count: () => fint('p86n_p79_road_w_hound') },
     length: { npc: 'p60_fl_length', keeper: 'queen', offer: TX.lengthOffer, wait: TX.lengthWait, paid: TX.lengthPaid, journal: TX.journalLength, week: TX.lengthWeek, need: 8, count: () => fint('p86n_p83_stride_briarsprite') + fint('p86n_p83_poundstair_briarsprite') },
     ret: { npc: 'p60_dr_man', keeper: 'dog', offer: TX.retOffer, wait: TX.retWait, paid: TX.retPaid, journal: TX.journalRet, week: TX.retWeek, need: 5, count: () => fint('p86n_p83_hollows_hound') },
-    salv: { npc: null, keeper: 'bell', offer: TX.salvOffer, wait: TX.salvWait, paid: TX.salvPaid, journal: TX.journalSalv, week: TX.salvWeek, need: 4, count: () => leadCount() },
+    salv: { npc: 'p60_cp_salv2', keeper: 'bell', offer: TX.salvOffer, wait: TX.salvWait, paid: TX.salvPaid, journal: TX.journalSalv, week: TX.salvWeek, need: 4, count: () => leadCount() },
   };
   const BOUNTY_PAY = 60, WEEK_PAY = 35;
   function leadCount() { const b = fint('p86lead'), wk = b >> 4; return wk === week() + 1 ? [0, 1, 2, 3].filter((i) => b & (1 << i)).length : 0; }
@@ -348,8 +348,8 @@ const ROADS86 = (function () {
     if (got >= g.need) return { text: TX.weekPaid, choices: [{ t: TX.give, f: () => { f()['p86wd_' + gk] = wk; G.gold(WEEK_PAY); try { questXp(20); } catch (e) { /* */ } return TX.weekThanks; } }] };
     return { text: fmt(TX.weekSoFar, Math.max(0, got), g.need), quiet: true };
   }
-  // the salvagers are not walking people (they have no dialogue of their own): the one by the long board takes the jobs
-  // when there is something new to say, and they are heard on the spot (no harm in taking on a job); else their own chat
+  // with the townsfolk switched off the salvagers are figures by the board, with no dialogue of their own: the second one
+  // takes the jobs when there is something new to say, heard on the spot (no harm in taking on a job); else their own chat
   let salvTurn = 0;
   function salvUse(e) {
     if (!e || (e._i || 0) !== 1) return false;

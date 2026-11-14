@@ -46,7 +46,7 @@ const GROVE85 = (function () {
     circle: S('The iron-boughs go quiet round you. Not all at once: a ring of quiet, widening, and you can hear it close. Everything for a long way off knows where you are now.'),
     called: S('Something is waiting at the gap. The circle called it.'),
     coatName: S('Carter\'s Oilskin'), coatDesc: S('A long coat of oiled canvas, folded on a boulder and left. It keeps the rain off and the noise in.'),
-    boughName: S('Fallen Iron-Bough'), boughDesc: S('A bough of iron-oak, fallen from the Stool and as hard as its name. Iron bites the Quiet, and this is the oldest iron in the Reach.'),
+    boughName: S('Fallen Iron-Bough'), boughDesc: S('A limb of iron-bough, fallen at the Stool\'s foot: the oldest wood in the Reach, and as heavy as a bell. It strikes like iron and bites the Quiet as iron does. It has not yet agreed to be dead.'),
     journal: S('The Deep Grove: off the north side of Greenroot Wood. The path is not the same way twice. Follow the lower note, and it leads in, to the oldest tree.'),
   };
   const GRASS = 0, MOSS = 1, STONE = 2;
