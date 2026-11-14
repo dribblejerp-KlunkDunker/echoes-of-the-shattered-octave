@@ -396,12 +396,42 @@ const DROVE83 = (function () {
     EAVES78.STYLES[HOLLOWS] = { builds: 'nothing built: a holloway under hawthorn', shutters: 'none', only: ['the hawthorn meeting over the holloway'], plan: () => ({ houses: [] }) };
     EAVES78.MAPS.add(HOLLOWS);
     EAVES78.REGION[HOLLOWS] = (m, T) => {
-      const Lh = T.L('t_p83_haw'); let i = 0;
-      along(HROAD.slice(1, 6), 1.1, (x, y) => {
-        i++; if (y < 6 || y > HOLLOWAY_END - 2 || i % 7 === 3) return;          // a gap now and then: the light comes through in pieces
-        const z = Math.max(m.groundAt(x - 2.8, y), m.groundAt(x + 2.8, y)) + 1.15 + h2(i, 3) * 0.25, w = 3.0 + h2(i, 5) * 0.6, o = (h2(i, 7) - 0.5) * 0.5;
-        T.box(x + o - w, y - 0.62, x + o + w, y + 0.62, z, z + 0.85, Lh, Lh, 0.7);
+      // the hawthorn's roof: an arch of leaves resting on the crowns of the two banks' trees, lumpy on top and ragged at
+      // its edges, cut in slices along the lane (each slice a curve across it, from one bank's crowns over to the other's)
+      const Lh = T.L('t_p83_haw'), S = [];
+      const S0 = []; along(HROAD.slice(1, 6), 0.75, (x, y) => { if (y >= 4 && y <= HOLLOWAY_END + 1) S0.push([x, y]); });
+      // round the bends off (a roof three cells wide cannot turn as sharp as the lane does without folding over itself)
+      for (let i = 0; i < S0.length; i++) { let sx = 0, sy = 0, n = 0; for (let j = Math.max(0, i - 8); j <= Math.min(S0.length - 1, i + 8); j++) { sx += S0[j][0]; sy += S0[j][1]; n++; } S.push([sx / n, sy / n]); }
+      const K = 9, rows = [];                                                    // K points across each slice
+      S.forEach(([x, y], i) => {
+        const [ax, ay] = S[Math.max(0, i - 5)], [bx, by] = S[Math.min(S.length - 1, i + 5)], l = Math.hypot(bx - ax, by - ay) || 1, nx = -(by - ay) / l, ny = (bx - ax) / l;
+        const end = Math.min(1, i / 4, (S.length - 1 - i) / 4);                  // the roof thins and drops at either end of the holloway
+        const zL = m.groundAt(x - nx * 2.9, y - ny * 2.9), zR = m.groundAt(x + nx * 2.9, y + ny * 2.9), base = Math.max(zL, zR) + 0.85;
+        const lo = [], hi = [];
+        for (let k = 0; k < K; k++) {
+          const t = k / (K - 1) * 2 - 1, n1 = h2(i * 13 + k, 71), n2 = h2(i * 7 + k * 3, 73);
+          const r = (3.0 + (n1 - 0.5) * 0.7) * (0.75 + 0.25 * end), o = t * r;
+          const arch = (1 - t * t) * (0.75 + n2 * 0.3) * end, edge = Math.abs(t) > 0.99 ? (n2 - 0.5) * 0.35 : 0;
+          const zb = base - 0.25 * (1 - end) + arch + edge, th = (0.18 + 0.4 * (1 - t * t) + n1 * 0.34 + (1 - t * t) * 0.18 * (1 + Math.sin(i * 0.45 + k))) * (0.4 + 0.6 * end);
+          lo.push([x + nx * o, y + ny * o, zb]); hi.push([x + nx * o, y + ny * o, zb + th]);
+        }
+        rows.push({ lo, hi, d: i * 0.75 });
       });
+      const nrm = (a, b, c, up) => { const ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2], vx = c[0] - a[0], vy = c[1] - a[1], vz = c[2] - a[2]; let X = uy * vz - uz * vy, Y = uz * vx - ux * vz, Z = ux * vy - uy * vx; const L = Math.hypot(X, Y, Z) || 1; X /= L; Y /= L; Z /= L; if ((Z > 0) !== up) { X = -X; Y = -Y; Z = -Z; } return [X, Y, Z]; };
+      for (let i = 0; i + 1 < rows.length; i++) {
+        const A = rows[i], B = rows[i + 1], u0 = A.d / 2.2, u1 = B.d / 2.2;
+        for (let k = 0; k + 1 < K; k++) {
+          const v0 = k / (K - 1) * 2.6, v1 = (k + 1) / (K - 1) * 2.6;
+          // underneath, darker: what you see walking in the tunnel
+          T.quad([A.lo[k], A.lo[k + 1], B.lo[k + 1], B.lo[k]], [[u0, v0], [u0, v1], [u1, v1], [u1, v0]], Lh, T.MAT.wall, 0.55, nrm(A.lo[k], A.lo[k + 1], B.lo[k], false));
+          // on top, lighter and lumpy: what you see from the down above it
+          T.quad([A.hi[k], A.hi[k + 1], B.hi[k + 1], B.hi[k]], [[u0, v0], [u0, v1], [u1, v1], [u1, v0]], Lh, T.MAT.wall, 0.92, nrm(A.hi[k], A.hi[k + 1], B.hi[k], true));
+        }
+        // the ragged edges along both banks, where the roof comes down into the crowns
+        for (const k of [0, K - 1]) T.quad([A.lo[k], B.lo[k], B.hi[k], A.hi[k]], [[u0, 0], [u1, 0], [u1, 0.4], [u0, 0.4]], Lh, T.MAT.wall, 0.7, k ? [rows[i].hi[k][0] - rows[i].hi[k - 1][0], rows[i].hi[k][1] - rows[i].hi[k - 1][1], 0] : [rows[i].hi[0][0] - rows[i].hi[1][0], rows[i].hi[0][1] - rows[i].hi[1][1], 0]);
+      }
+      // the two ends of the roof, closed
+      for (const R of [rows[0], rows[rows.length - 1]]) if (R) for (let k = 0; k + 1 < K; k++) T.quad([R.lo[k], R.lo[k + 1], R.hi[k + 1], R.hi[k]], [[k / 4, 0], [(k + 1) / 4, 0], [(k + 1) / 4, 0.4], [k / 4, 0.4]], Lh, T.MAT.wall, 0.75, [0, R === rows[0] ? -1 : 1, 0]);
       if (mistNow()) {                                                         // the white sea over the combe end
         const Lm = T.L('t_p83_mist'), y0 = TERRACE_Y + 6;
         for (let y = y0; y < HH - 1; y += 8) for (let x = 1; x < HW - 1; x += 8) { const x1 = Math.min(HW - 1, x + 8), y1 = Math.min(HH - 1, y + 8);
