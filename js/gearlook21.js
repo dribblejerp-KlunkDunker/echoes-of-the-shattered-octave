@@ -56,7 +56,7 @@
 //              centimetres { w, h } for both (the buckler's w = h = its diameter)
 //  WEAPONS entry: { id, name, kind, grip, material, len, col: { blade, edge, grip, guard, head }, img, notes }
 //    kind      'fists' | 'glassarm' | 'sword' | 'longsword' | 'greatsword' | 'knife' | 'dirk' | 'throwing' | 'axe' | 'mace' |
-//              'hammer' | 'maul' | 'spear' | 'glaive' | 'pistol' | 'crossbow'
+//              'hammer' | 'maul' | 'spear' | 'glaive' | 'pistol' | 'crossbow' | Phase 87: 'sling' | 'carbine' | 'handbow' | 'harpoon' | 'bow'
 //    grip      'none' | 'one' | 'two' | 'innate'   (two = both hands on the haft or stock)
 //    len       overall length in hand-widths (a hand-width ~ 9 cm): knife 3, sword 8, longsword 11, spear 22
 //    img       the existing first-person painting in Engine.images (fp_*), so BODY can keep it and CARD can read its tones
@@ -277,6 +277,13 @@ const GEARLOOK21 = (() => {
     p85_pick: W('p85_pick', 'hammer', 'one', 'wood', 7, { blade: [222, 210, 184], edge: [244, 236, 214], grip: [188, 170, 136], head: [222, 210, 184] }, 'fp_mace', 'a red-deer antler with the brow tine left long: the Antler Pick, from the Antler Galleries (Phase 85)'),
     p87_sledge: W('p87_sledge', 'hammer', 'one', 'iron', 7, { blade: [92, 96, 100], edge: [170, 174, 176], grip: [150, 112, 70], head: [92, 96, 100], guard: [200, 160, 64] }, 'fp_mace', 'a quarry-hand\'s sledge: a stone-splitter\'s head, a brass Consortium tag, a red rag at the neck: the Night-Shift Sledge (Phase 87)'),
     p85_knife: W('p85_knife', 'knife', 'one', 'glass', 3.5, { blade: [40, 40, 46], edge: [120, 122, 132], grip: [110, 84, 56], guard: [110, 84, 56] }, 'fp_knife', 'black flint knapped to an edge: the Floorstone Knife, from the Antler Galleries (Phase 85)'),
+    // Phase 87 (d): the ranged weapons of the sets [PROPOSED] every look
+    p87_feltsling: W('p87_feltsling', 'sling', 'one', 'hushwool', 6, { blade: [58, 84, 78], edge: [150, 146, 140], grip: [46, 66, 62], guard: [46, 66, 62], head: [58, 84, 78] }, 'fp_pistol', 'a sling of felted Hedge wool, the pouch and cords alike; it makes no sound in the swing'),
+    p87_sling: W('p87_sling', 'sling', 'one', 'linen', 7, { blade: [120, 84, 52], edge: [214, 210, 196], grip: [214, 204, 176], guard: [214, 204, 176], head: [120, 84, 52] }, 'fp_pistol', 'a shepherd\'s sling: plaited Farrant fleece, a leather pouch, a chalk-flint stone'),
+    p87_carbine: W('p87_carbine', 'carbine', 'two', 'iron', 12, { blade: [70, 76, 86], edge: [180, 236, 244], grip: [92, 98, 102], guard: [196, 160, 80], head: [70, 76, 86] }, 'fp_crossbow', 'the Office carbine: oilcloth wound on the stock, a blued barrel, a brass fork tuned to 741 for a front sight, a silver-mesh sling'),
+    p87_handbow: W('p87_handbow', 'handbow', 'one', 'wood', 6, { blade: [130, 136, 142], edge: [210, 206, 190], grip: [118, 94, 62], guard: [196, 164, 92], head: [200, 166, 90] }, 'fp_crossbow', 'the Works hand-crossbow: a short steel prod on a pit-prop stock, a brass tag with a serial'),
+    p87_harpoon: W('p87_harpoon', 'harpoon', 'two', 'bellbronze', 11, { blade: [100, 104, 110], edge: [210, 214, 216], grip: [96, 70, 46], guard: [190, 156, 84], head: [150, 120, 70] }, 'fp_crossbow', 'the Free Captains\' harpoon gun: a fat bronze tube, a barbed iron head, a drum of tarred rope'),
+    p87_hornbow: W('p87_hornbow', 'bow', 'two', 'wood', 14, { blade: [46, 44, 50], edge: [120, 122, 132], grip: [104, 74, 46], guard: [104, 74, 46], head: [222, 210, 184] }, 'fp_crossbow', 'a short recurved bow of horn and sinew on yew, flint-headed arrows: the hornbow of the Old Reach'),
     p12_dirk: W('p12_dirk', 'dirk', 'one', 'steel', 4, { blade: [164, 170, 176], edge: [224, 228, 230], grip: [80, 56, 36], guard: [126, 118, 104] }, 'fp_knife', 'a stiff dirk with a basket hilt (guard)'),
   });
   const NEUTRAL_W = (id) => F(Object.assign({}, WEP.sword, { id, notes: 'unknown weapon: drawn as a sword' }));
@@ -342,7 +349,7 @@ const GEARLOOK21 = (() => {
     };
   }
   // js/ghost18.js lookNow()'s compact encoding, from this table (so partner/ghost and the card agree)
-  const GH_W = { hands: 0, sword: 1, knife: 2, dirk: 2, throwing: 2, longsword: 3, greatsword: 3, axe: 4, mace: 5, hammer: 5, maul: 5, spear: 6, glaive: 6, pistol: 7, crossbow: 8, glassarm: 9, fists: 0 };
+  const GH_W = { hands: 0, sword: 1, knife: 2, dirk: 2, throwing: 2, longsword: 3, greatsword: 3, axe: 4, mace: 5, hammer: 5, maul: 5, spear: 6, glaive: 6, pistol: 7, crossbow: 8, glassarm: 9, fists: 0, sling: 7, carbine: 7, handbow: 8, harpoon: 8, bow: 8 };
   const GH_HEAD = { cap: 1, hood: 2, kettle: 3, bellhelm: 3 };   // Phase 87 forms keep their shape's code
   const GH_BODY = { robe: 1, gambeson: 1, longcoat: 1, jerkin: 2, brigandine: 2, hauberk: 2, cuirass: 2 };
   function ghostLook(p) {

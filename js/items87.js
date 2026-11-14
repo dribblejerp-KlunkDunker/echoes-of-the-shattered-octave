@@ -90,6 +90,33 @@ const ITEMS87 = (function () {
   const WEAPONS87 = {
     // the Quarry-Hand's own (owner, 14 Nov: "make a lighter quarry sledge"): one hand, quicker and lighter than the Great-Maul
     p87_sledge: { name: TX.sledgeName, img: 'fp_mace', dmg: [6, 13], reach: 1.25, noise: 2.4, speed: 0.62, type: 'iron', blunt: true, value: 28, desc: TX.sledgeDesc },
+    // Phase 87 (d): the six ranged weapons of the sets, with their own shot. Stones are dumb iron to the Cacophony and good
+    // inside a Quiet; the carbine fires glass shot like the pistol; quarrels, harpoons and arrows fly as bolts do
+    p87_feltsling: { name: S('Felted Sling'), img: 'fp_pistol', dmg: [4, 9], reach: 8, noise: 0.4, speed: 0.85, type: 'iron', blunt: true, ranged: true, ammo: 'stones', value: 18,
+      desc: S('A Hedge-weaver\'s sling, pouch and cords all felted wool. It makes no sound in the swing, and the stone makes very little when it lands. Uses sling stones.') },
+    p87_sling: { name: S('Shepherd\'s Sling'), img: 'fp_pistol', dmg: [5, 11], reach: 9, noise: 1.0, speed: 0.9, type: 'iron', blunt: true, ranged: true, ammo: 'stones', value: 14,
+      desc: S('Plaited Farrant fleece and a leather pouch. A drover can put a chalk-flint past a ewe\'s ear to turn her at forty paces. Uses sling stones.') },
+    p87_carbine: { name: S('Office Carbine'), img: 'fp_crossbow', center: true, dmg: [12, 22], reach: 12, noise: 5.2, speed: 1.3, type: 'shot', ranged: true, ammo: 'pellets', twoHanded: true, value: 85,
+      desc: S('A proctor\'s long gun: oilcloth wound on the stock, a blued barrel, and for a front sight a little brass fork tuned to 741. Glass shot. Two hands, so no shield.') },
+    p87_handbow: { name: S('Works Hand-Crossbow'), img: 'fp_crossbow', dmg: [6, 12], reach: 8, noise: 1.1, speed: 1.0, type: 'bolt', ranged: true, ammo: 'quarrels', value: 40,
+      desc: S('A short steel prod on a pit-prop stock, spanned with one pull, with a brass tag that says it belongs to the Consortium. Uses quarrels.') },
+    p87_harpoon: { name: S('Harpoon Gun'), img: 'fp_crossbow', center: true, dmg: [14, 26], reach: 9, noise: 3.0, speed: 1.8, type: 'bolt', ranged: true, ammo: 'harpoons', twoHanded: true, value: 90,
+      desc: S('A fat bronze tube that throws a barbed iron head on a tarred line. Made for whatever swims under the Rust Coast piers. Slow to load. Two hands, so no shield.') },
+    p87_hornbow: { name: S('Hornbow'), img: 'fp_crossbow', center: true, dmg: [7, 15], reach: 13, noise: 0.8, speed: 1.05, type: 'bolt', ranged: true, ammo: 'arrows', twoHanded: true, value: 60,
+      desc: S('A short bow of horn and sinew on yew, recurved, from the Antler Galleries. Flint-headed arrows. Two hands, so no shield.') },
+  };
+  // their shot, sold and found by the bundle
+  const AMMO87 = {
+    stones: { name: S('Sling Stones (×8)'), sprite: 'loot', use: 'ammo', ammo: 'stones', n: 8, value: 1, desc: S('Round river stones and chalk-flints, picked for the pouch.') },
+    quarrels: { name: S('Quarrels (×8)'), sprite: 'loot', use: 'ammo', ammo: 'quarrels', n: 8, value: 5, desc: S('Short iron bolts for a hand-crossbow, Works issue.') },
+    harpoons: { name: S('Harpoons (×3)'), sprite: 'loot', use: 'ammo', ammo: 'harpoons', n: 3, value: 9, desc: S('Barbed iron heads on tarred line, for the harpoon gun.') },
+    arrows: { name: S('Flint Arrows (×10)'), sprite: 'loot', use: 'ammo', ammo: 'arrows', n: 10, value: 6, desc: S('Birch shafts, goose fletching, knapped flint heads.') },
+  };
+  const AMMO_TX = {
+    stones: { none: S('No sling stones. Any river has them; a drover will sell you a pouchful.'), load: S('You fill the pouch-bag with stones.') },
+    quarrels: { none: S('No quarrels. The Works stores have them, if you can get in.'), load: S('You load your quarrels.') },
+    harpoons: { none: S('No harpoons. A Free Captain\'s chandler sells them.'), load: S('You coil the harpoon lines.') },
+    arrows: { none: S('No arrows. The Reach-folk fletch them; so can a patient hand.'), load: S('You fill your quiver with arrows.') },
   };
   function register() {
     if (typeof WEAPONS === 'undefined' || typeof ITEMS === 'undefined') return;
@@ -97,6 +124,7 @@ const ITEMS87 = (function () {
       if (!ARMOR[id]) ARMOR[id] = Object.assign({}, ARMOR87[id]);
       if (!ITEMS[id]) ITEMS[id] = Object.assign({ sprite: 'gear', armor: true }, ARMOR87[id]);
     }
+    for (const id in AMMO87) if (!ITEMS[id]) ITEMS[id] = Object.assign({}, AMMO87[id]);
     for (const id in WEAPONS87) {
       if (!WEAPONS[id]) WEAPONS[id] = Object.assign({}, WEAPONS87[id]);
       if (!ITEMS['w_' + id]) ITEMS['w_' + id] = { name: WEAPONS87[id].name, sprite: 'gear', weapon: id, value: WEAPONS87[id].value, desc: WEAPONS87[id].desc };
@@ -449,9 +477,120 @@ const ITEMS87 = (function () {
         d.layer('#e8e4da', { shade: 'flat', sep: false }).px(-5, -9, -3, -9, -1, -9); // chalk tallies
       };
       ICONS.PIX['weapon:p87_sledge'] = sledge; ICONS.PIX.w_p87_sledge = sledge;
+      // Phase 87 (d): the ranged weapons and their shot
+      const W = (id, fn) => { ICONS.PIX['weapon:' + id] = fn; ICONS.PIX['w_' + id] = fn; };
+      const sling = (cord, pouch, stone, plait) => (d) => {   // two cords from a finger-loop to a pouch with its stone
+        d.layer(cord).thick([4, 21, 6, 13, 10, 7], 0.7).thick([7, 22, 11, 15, 14, 8], 0.7);
+        d.layer(pouch).ell(13, 6.5, 5, 3.4);
+        d.layer(stone, { shiny: 1 }).ell(13, 5.5, 2.4, 2.2);
+        d.layer(cord).ell(5, 21, 1.8, 1.8).cut().ell(5, 21, 0.7, 0.7).add();
+        if (plait) d.mark('#8a7a5a', 5, 17, 6, 14, 8, 11, 9, 19, 11, 16, 12, 13);
+      };
+      W('p87_feltsling', sling('#3a5650', '#4c6e66', '#8a8680', false));
+      W('p87_sling', sling('#d6ccb0', '#7a5434', '#d8d4c4', true));
+      W('p87_carbine', (d) => { d.tilt(12, 12);
+        d.layer('#5c6266').rrect(-2.6, 1, 5.2, 11);                                   // the oilcloth-wound stock
+        d.layer('#3a4048', { shiny: 1 }).rrect(-1.1, -12, 2.2, 14);                    // the blued barrel
+        d.layer('#c8a040', { shiny: 1 }).rrect(-1.6, -6, 3.2, 1).rrect(-1.6, -1, 3.2, 1).rrect(-1.5, -14, 0.9, 2.4).rrect(0.6, -14, 0.9, 2.4);   // bands, the fork sight
+        d.layer('#6a7076').rrect(-1.8, 1.5, 3.6, 3);
+        d.mark('#bfe8f0', 12, 3); });
+      W('p87_handbow', (d) => { d.tilt(12, 13);
+        d.layer('#76603e').rrect(-1.4, -6, 2.8, 16);                                    // the pit-prop stock
+        d.layer('#8a9096', { shiny: 1 }).rpoly([-9, -3, 0, -7, 9, -3, 9, -1.8, 0, -5.6, -9, -1.8]);   // the steel prod
+        d.layer('#d8ceb0', { sep: false }).rpoly([-8.6, -2.4, 0, 1.5, 8.6, -2.4, 8.6, -2, 0, 2, -8.6, -2]);
+        d.layer('#c8a448', { shiny: 1 }).rrect(1.6, 3, 2.4, 2.4);                       // the brass tag
+        d.layer('#b8bcc0').rrect(-0.5, -10, 1, 6); });
+      W('p87_harpoon', (d) => { d.tilt(12, 12);
+        d.layer('#96784a', { shiny: 1 }).rrect(-2.4, -6, 4.8, 15);                      // the bronze tube
+        d.layer('#c8a048').rrect(-2.8, -5, 5.6, 1.2).rrect(-2.8, 5, 5.6, 1.2);
+        d.layer('#a0a4a8', { shiny: 1 }).rrect(-0.6, -12, 1.2, 7).rpoly([0, -15, -2.6, -10.5, 2.6, -10.5]);   // the barbed head
+        d.layer('#b09c70').ell(18, 15, 2.6, 2.6).cut().ell(18, 15, 1, 1).add();          // the rope drum
+        d.mark('#5c9a7c', 9, 15); });
+      W('p87_hornbow', (d) => {   // a recurved horn bow, its string, a flint-headed arrow
+        d.layer('#6a4a2e').thick([5, 2, 4, 5, 6, 9, 8, 12, 6, 15, 4, 19, 5, 22], 0.9);
+        d.layer('#e0d4b8', { sep: false }).px(5, 2, 4, 3, 5, 22, 4, 21);
+        d.layer('#d8ceb0', { sep: false }).line(5, 2, 5, 22);
+        d.layer('#9a7a50').line(4, 12, 20, 12);
+        d.layer('#3a3a40', { shiny: 1 }).poly([19, 10, 23, 12, 19, 14]);
+        d.layer('#c84a32').px(4, 11, 5, 11, 4, 13, 5, 13); });
+      const P = ICONS.PIX;
+      P.stones = (d) => { d.layer('#8a867e', { shiny: 1 }).ell(8, 15, 4, 3.4).ell(15, 16, 3.6, 3); d.layer('#d8d4c4', { shiny: 1 }).ell(12, 10, 3.4, 3); d.layer('#6a6660').ell(17, 10, 2.6, 2.2); };
+      P.quarrels = (d) => { d.tilt(12, 12); for (const x of [-3, 0, 3]) { d.layer('#7a6a4c').rrect(x - 0.5, -6, 1, 13); d.layer('#9aa0a6', { shiny: 1 }).rpoly([x, -10, x - 1.4, -6, x + 1.4, -6]); } d.layer('#c8a448').rrect(-4.5, 3, 9, 1.2); };
+      P.harpoons = (d) => { d.tilt(12, 12); for (const x of [-3, 2]) { d.layer('#8a8e92', { shiny: 1 }).rrect(x - 0.6, -7, 1.2, 14).rpoly([x, -11, x - 2.2, -7, x + 2.2, -7]); } d.layer('#b09c70').thick([4, 20, 9, 18, 14, 20, 19, 18], 0.7); };
+      P.arrows = (d) => { d.tilt(12, 12); for (const x of [-3, 0, 3]) { d.layer('#a08060').rrect(x - 0.4, -8, 0.8, 16); d.layer('#3a3a40', { shiny: 1 }).rpoly([x, -11, x - 1.3, -8, x + 1.3, -8]); d.layer(x === 0 ? '#c84a32' : '#e0d4b8').rrect(x - 1, 5, 2, 3); } };
     } catch (e) { /* the pack shows it without a picture */ }
   }
+  // ---------------------------------------------------------------- (e) where everything is found [PROPOSED]
+  // The design (ruled 14 Nov, question 7): each set at home, sold in its town's shops (the cheaper pieces), carried by
+  // its people (dropped by its fighters), and the best pieces in the big places (the deepest strongboxes, tier 3).
+  const WHERE = {
+    shops: {
+      hob: ['a_p87_tan_cape', 'a_p87_tan_shield', 'a_p87_reg_cuffs', 'a_p87_reg_shoes'],               // Fenning's tannery (he sells the Registry's robes)
+      tam: ['a_p87_hush_mitts', 'w_p87_feltsling', 'stones'],                                          // the Hedge-weavers' stall
+      vane: ['a_p87_cap_bandana', 'a_p87_cap_gloves', 'a_p87_cap_boots', 'harpoons'],                  // Captain Vane, the Boar & Dulcimer
+      vosk: ['a_p87_wks_gauntlets', 'a_p87_wks_boots', 'a_p87_wks_cape', 'w_p87_handbow', 'quarrels'], // the Consortium's factor
+      orrin: ['a_p87_can_cowl', 'a_p87_can_sandals'],                                                   // the sexton's crypt-store, by the Cantors' chapel
+      p16f_madge: ['a_p87_flu_cap', 'a_p87_flu_gloves', 'w_p87_sling', 'stones'],                       // the Flume
+      p17c_sloe: ['a_p87_cap_cape', 'harpoons'],                                                        // Port Cantabile
+    },
+    drops: {
+      legionnaire: [['a_p87_leg_vambraces', 5], ['a_p87_leg_sabatons', 3], ['a_p87_ars_sallet', 3], ['a_p87_leg_pennon', 2]],
+      proctor: [['a_p87_pro_gloves', 6], ['a_p87_pro_boots', 4], ['a_p87_pro_hood', 3], ['a_p87_pro_cape', 3]],
+      marine: [['a_p87_pro_coat', 4], ['w_p87_carbine', 2], ['pellets', 6]],
+      golem: [['a_p87_sip_goggles', 4], ['a_p87_sip_gauntlets', 4], ['a_p87_sip_boots', 3]],
+      quiet: [['a_p87_hush_cloak', 4]],
+      hushwarden: [['a_p87_hush_cloak', 6], ['stones', 8]],
+      outrider: [['a_p87_ars_cape', 4], ['quarrels', 8]],
+      p22_woolwight: [['a_p87_bar_bracers', 8], ['a_p87_dro_mittens', 6]],
+      p22_oldfleece: [['a_p87_bar_cloak', 60]],
+    },
+    caches: {
+      1: [['stones', 6], ['a_p87_dro_mittens', 5], ['a_p87_cap_bandana', 4], ['a_p87_old_wraps', 3], ['quarrels', 4], ['arrows', 3]],
+      2: [['a_p87_dro_hat', 5], ['a_p87_dro_plaid', 4], ['a_p87_sip_apron', 3], ['a_p87_flu_cape', 4], ['a_p87_old_shoes', 4], ['w_p87_sling', 4], ['harpoons', 3], ['arrows', 4]],
+      3: [['a_p87_leg_shield', 3], ['a_p87_wks_pavise', 3], ['a_p87_bar_greaves', 3], ['a_p87_bar_shield', 3], ['a_p87_old_crown', 2], ['a_p87_old_hide', 3], ['a_p87_old_pelt', 3],
+        ['w_p87_hornbow', 2], ['w_p87_harpoon', 2], ['a_p87_sip_cape', 3], ['a_p87_reg_biretta', 3], ['a_p87_reg_cape', 3], ['a_p87_ars_cape', 2], ['a_p87_can_cassock', 3], ['a_p87_can_mantle', 3],
+        ['a_p87_cap_coat', 3], ['a_p87_pro_coat', 2], ['w_p87_carbine', 1], ['w_p87_feltsling', 2]],
+    },
+  };
+  function place() {
+    const ok = (id) => typeof ITEMS !== 'undefined' && !!ITEMS[id];
+    if (typeof NPCS !== 'undefined') for (const n in WHERE.shops) { const npc = NPCS[n]; if (!npc || !Array.isArray(npc.shop)) continue; for (const id of WHERE.shops[n]) if (ok(id) && !npc.shop.some((q) => q.item === id)) npc.shop.push({ item: id }); }
+    if (typeof LOOT !== 'undefined') for (const t in WHERE.drops) { const L = LOOT[t]; if (!L || !Array.isArray(L.table)) continue; for (const [id, w] of WHERE.drops[t]) if (ok(id) && !L.table.some((q) => q[0] === id)) L.table.push([id, w]); }
+    if (typeof CACHE !== 'undefined') for (const k in WHERE.caches) { const C2 = CACHE[k]; if (!C2 || !Array.isArray(C2.table)) continue; for (const [id, w] of WHERE.caches[k]) if (ok(id) && !C2.table.some((q) => q[0] === id)) C2.table.push([id, w]); }
+  }
+  // ---------------------------------------------------------------- the new shot: its own words and sounds
+  // (the game's attack() and useItem() know glass shot and bolts; these say the right thing for stones, quarrels,
+  // harpoons and arrows, and a sling whirs instead of firing)
+  function wire() {
+    // modules that add their people and loot later (on their first map) are caught when a map loads
+    if (typeof loadMap === 'function') { const _lm = loadMap; loadMap = function () { const r = _lm.apply(this, arguments); try { place(); } catch (e) { /* */ } return r; }; }
+    if (typeof attack === 'function') {
+      const _at = attack;
+      attack = function () {
+        let k = null; try { const w = currentWeapon(); k = w && w.ammo; } catch (e) { k = null; }
+        if (!k || !AMMO_TX[k] || !G.player || G.attack.t > 0 || G.song.t > 0) return _at.apply(this, arguments);
+        if (!((G.player[k] || 0) > 0)) { msg(AMMO_TX[k].none, 'bad'); return undefined; }
+        const sfx = typeof Audio_ !== 'undefined' && Audio_.sfx, keep = sfx && sfx.shot;
+        try { if (sfx && keep) sfx.shot = (k === 'stones' ? sfx.swing : sfx.bow) || keep; } catch (e) { /* the old sound */ }
+        try { return _at.apply(this, arguments); } finally { try { if (sfx && keep) sfx.shot = keep; } catch (e) { /* */ } }
+      };
+    }
+    if (typeof useItem === 'function') {
+      const _ui = useItem;
+      useItem = function (slot) {
+        const it = slot && typeof ITEMS !== 'undefined' ? ITEMS[slot.id] : null;
+        if (it && it.use === 'ammo' && AMMO_TX[it.ammo] && G.player) {
+          const p = G.player; p[it.ammo] = (p[it.ammo] || 0) + it.n; G.take(slot.id); msg(AMMO_TX[it.ammo].load, 'good');
+          try { renderInventory(); } catch (e) { /* no panel */ }
+          return undefined;
+        }
+        return _ui.apply(this, arguments);
+      };
+    }
+  }
   register();
-  return { TX, TEXTS, WEAPONS87, ARMOR87, register };
+  try { place(); } catch (e) { /* found nowhere new */ }
+  wire();
+  return { TX, TEXTS, WEAPONS87, ARMOR87, AMMO87, AMMO_TX, WHERE, register, place };
 })();
 if (typeof window !== 'undefined') window.ITEMS87 = ITEMS87;

@@ -22,7 +22,20 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const hashOf = (c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let h = 2166136261; for (let i = 0; i < d.length; i += 97) h = Math.imul(h ^ d[i], 16777619); return (h >>> 0) + ':' + c.width + 'x' + c.height; };
     const hs = melee.map((w) => hashOf(FP87.paint(w, look).canvas));
     out.melee = melee.length; out.unique = new Set(hs).size === hs.length;
-    out.ranged = !Object.keys(WEAPONS).some((w) => WEAPONS[w].ranged && FP87.covers(w)) && !FP87.covers('hands') && !FP87.covers('glass');
+    // Phase 87 (d): every ranged weapon has its own picture too, but the throwing knives (owner: "4 is fine for now"); bare hands and the glass arm keep theirs
+    const rng = Object.keys(WEAPONS).filter((w) => WEAPONS[w].ranged && w !== 'throwknife');
+    out.ranged = rng.every((w) => FP87.covers(w)) && !FP87.covers('throwknife') && !FP87.covers('hands') && !FP87.covers('glass');
+    const rh = rng.map((w) => hashOf(FP87.paint(w, look).canvas)); out.rangedUnique = new Set(rh).size === rh.length && rng.length >= 8;
+    // the six new ranged weapons: in the catalog with their own shot, pictures, looks; the shot loads with its own words
+    const R6 = ['p87_feltsling', 'p87_sling', 'p87_carbine', 'p87_handbow', 'p87_harpoon', 'p87_hornbow'];
+    out.r6 = R6.filter((w) => !(WEAPONS[w] && WEAPONS[w].ranged && ITEMS['w_' + w] && ITEMS[WEAPONS[w].ammo] && ITEMS[WEAPONS[w].ammo].use === 'ammo' && ICONS.hasPixel('w_' + w) && ICONS.hasPixel(WEAPONS[w].ammo) && GEARLOOK21.WEAPONS[w] && X.SET_OF[w]));
+    // (e) every new piece, weapon and shot is found somewhere: a shop, a drop or a strongbox
+    ITEMS87.place();
+    const sold = new Set(); for (const n in NPCS) for (const q of (NPCS[n].shop || [])) sold.add(q.item);
+    const dropped = new Set(); for (const t in LOOT) for (const q of (LOOT[t].table || [])) dropped.add(q[0]);
+    for (const k in CACHE) for (const q of (CACHE[k].table || [])) dropped.add(q[0]);
+    out.found = Object.keys(ITEMS87.ARMOR87).concat(R6.map((w) => 'w_' + w), Object.keys(ITEMS87.AMMO87)).filter((id) => !sold.has(id) && !dropped.has(id));
+    const keepS = p.stones; p.stones = 0; G.give('stones', 1); useItem(p.inv.find((q) => q.id === 'stones')); out.load = p.stones === 8; p.stones = keepS;
     // the glove changes the picture; so does the glass arm on a two-hander
     p.armor = { body: 'a_jerkin', hands: 'a_gloves' }; const g1 = hashOf(FP87.paint('sword', GEARLOOK21.of(p)).canvas);
     p.armor = { body: 'a_jerkin', hands: 'a_gauntlets' }; const g2 = hashOf(FP87.paint('sword', GEARLOOK21.of(p)).canvas);
@@ -78,7 +91,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     return out;
   });
   check(r.melee >= 24 && r.unique, 'every melee weapon has its own first-person picture (' + r.melee + '), no two alike');
-  check(r.ranged, 'ranged weapons, bare hands and the glass arm keep the shared pictures for now');
+  check(r.ranged && r.rangedUnique, 'every ranged weapon has its own first-person picture (the throwing knives, bare hands and the glass arm keep theirs for now)');
+  check(!r.found.length, 'every new piece, weapon and shot can be found: a shop, a drop or a strongbox' + (r.found.length ? ' (nowhere: ' + r.found.join(',') + ')' : ''));
+  check(!r.r6.length && r.load, 'the six new ranged weapons, their shot, pictures and looks' + (r.r6.length ? ' (not: ' + r.r6.join(',') + ')' : ''));
   check(r.gloves, 'the picture wears your gloves, and a glass left hand on a two-hander');
   check(r.same, 'painted the same way twice');
   check(r.cape, 'a cape slot');

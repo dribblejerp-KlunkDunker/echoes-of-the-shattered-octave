@@ -138,7 +138,7 @@ const CARD21 = (() => {
   // drawn inside their shape's builder (see FORM below)
   const FORM_KIND = { bandana: 'bandana', biretta: 'biretta', sallet: 'sallet', cowl: 'cowl', widehat: 'widehat', flapcap: 'flapcap', crown: 'crown', goggles: 'cap', mesh: 'hood', buckle: 'shoe', sandals: 'shoe' };
   const MAT_KIND = { leather: 'leather', hushwool: 'wool', iron: 'metal', bellbronze: 'metal', steel: 'metal', oilcloth: 'oil', quilt: 'quilt', canvas: 'canvas', mail: 'mail', felt: 'felt', wood: 'wood', linen: 'cloth', skin: 'skin', glass: 'glass' };
-  const WK_KIND = { fists: 'fists', glassarm: 'glassarm', sword: 'blade', longsword: 'blade', greatsword: 'blade', knife: 'blade', dirk: 'blade', throwing: 'blade', axe: 'axe', mace: 'mace', hammer: 'hammer', maul: 'maul', spear: 'fork', glaive: 'glaive', pistol: 'pistol', crossbow: 'crossbow' };
+  const WK_KIND = { fists: 'fists', glassarm: 'glassarm', sword: 'blade', longsword: 'blade', greatsword: 'blade', knife: 'blade', dirk: 'blade', throwing: 'blade', axe: 'axe', mace: 'mace', hammer: 'hammer', maul: 'maul', spear: 'fork', glaive: 'glaive', pistol: 'pistol', crossbow: 'crossbow', sling: 'sling', carbine: 'pistol', handbow: 'crossbow', harpoon: 'harpoon', bow: 'bow' };
   let adapted = null, adaptedFrom = null;
   function adaptArmor(e, loc) {
     const kind = (e.form && FORM_KIND[e.form]) || SH_KIND[e.shape]; if (!kind) return loc || null;
@@ -187,7 +187,10 @@ const CARD21 = (() => {
     } else if (kind === 'fork' || kind === 'glaive') o.len = clamp(total, 20, 34);
     else if (kind === 'maul' || kind === 'axe' || kind === 'mace' || kind === 'hammer') o.len = clamp(total * 0.85, 10, 24);
     else if (kind === 'crossbow') o.len = clamp(total * 0.5, 9, 14);
-    else if (kind === 'pistol') o.len = clamp(total * 0.5, 6, 9);
+    else if (kind === 'pistol') o.len = clamp(total * 0.5, 6, e.kind === 'carbine' ? 15 : 9);
+    else if (kind === 'sling') o.len = clamp(total * 0.6, 4, 8);
+    else if (kind === 'harpoon') o.len = clamp(total * 0.6, 9, 15);
+    else if (kind === 'bow') o.len = clamp(total, 16, 26);
     o.cols = { blade: c.blade || null, edge: c.edge || null, grip: c.grip || null, guard: c.guard || null, head: c.head || c.blade || null };
     o.two = o.two || e.grip === 'two';
     return o;
@@ -606,8 +609,9 @@ const CARD21 = (() => {
       else if (kind === 'axe' || kind === 'mace' || kind === 'hammer') { wH = [2.6, 8.8, 27]; wV = norm([0.25, 0.32, 0.92]); }
       else if (kind === 'fork' || kind === 'glaive') { wH = [2.4, 8.2, 29]; wV = [0, 0.02, 1]; twoGrip = [2.6, 8.2, 41]; }
       else if (kind === 'maul') { wH = [4.2, 1.2, 31.5]; wV = norm([0.06, 0.12, -1]); twoGrip = [4.2, -0.6, 30.2]; }
-      else if (kind === 'pistol') { wH = [3.4, 8.4, 33]; wV = norm([0.25, 0.35, 0.9]); }
-      else if (kind === 'crossbow') { wH = [3.6, 4.6, 28.5]; wV = norm([0.32, -0.22, 0.92]); twoGrip = [4.6, 1.6, 34.5]; }
+      else if (kind === 'pistol' || kind === 'sling') { wH = [3.4, 8.4, 33]; wV = norm([0.25, 0.35, 0.9]); }
+      else if (kind === 'bow') { wH = [2.6, 8.2, 30]; wV = [0.04, 0.02, 1]; }
+      else if (kind === 'crossbow' || kind === 'harpoon') { wH = [3.6, 4.6, 28.5]; wV = norm([0.32, -0.22, 0.92]); twoGrip = [4.6, 1.6, 34.5]; }
       else if (kind === 'fists') { wH = [4.6, 6.0, 37]; wV = [1, 0, 0]; offH = [5.2, -5.4, 38.5]; }
       else if (kind === 'glassarm') { wH = [1.2, 8.8, 25.5]; wV = [0.5, 0.12, -0.86]; offH = [5.2, -5.8, 37.5]; }
       if (kind !== 'fists' && kind !== 'glassarm' && !twoGrip) {
@@ -1225,6 +1229,30 @@ const CARD21 = (() => {
         next(); capsule(X, add(gripTop, d, 0.2), add(gripTop, d, Wl.len), 0.52, 0.48, metalMat('iron'));
         next(); capsule(X, add(gripTop, d, 0.6), add(gripTop, d, 2.6), 0.62, 0.62, mm); sphere(X, add(gripTop, d, Wl.len + 0.1), 0.42, mm);
         next(); sphere(X, add(add(gripTop, d, 1.3), [0, 0, 0.7]), 0.42, M('w:pellet', C.glass, 'glass', { spec: 1.2, glow: 0.4 }));
+        return;
+      }
+      // Phase 87 (d): the sling (cords and a pouch with its stone), the harpoon gun, the hornbow
+      if (k === 'sling') {
+        const cm = colMat('grip', M('slingcord', [200, 190, 160], 'cloth')), pm = colMat('blade', M('pouch', [110, 80, 50], 'leather')), end = add(g, d, Wl.len);
+        const [v] = flatAxes(d);
+        for (const s2 of [1, -1]) capsule(X, add(g, d, 0.4), add(end, v, s2 * 0.55), 0.15, 0.15, cm);
+        next(); sphere(X, end, 0.9, pm); next(); sphere(X, add(end, d, 0.3), 0.52, colMat('edge', M('stone', [150, 146, 140], 'cloth')));
+        return;
+      }
+      if (k === 'harpoon') {
+        const tm = colMat('head', metalMat('bronze')), len = Wl.len, back = add(g, d, -2.4), front = add(g, d, len - 2.4);
+        capsule(X, back, front, 0.95, 0.85, tm);
+        next(); capsule(X, front, add(front, d, 2.4), 0.24, 0.22, metalMat('iron'));
+        const [v] = flatAxes(d);
+        next(); for (const s2 of [1, -1]) capsule(X, add(front, d, 2.9), add(add(front, d, 1.7), v, s2 * 0.8), 0.28, 0.08, metalMat('steel'));
+        next(); sphere(X, add(add(g, d, 2.6), [0, 0, -1.1]), 1.05, M('rope', [176, 156, 112], 'cloth'));
+        return;
+      }
+      if (k === 'bow') {
+        const hm = colMat('grip', M('bowwood', [104, 74, 46], 'wood')), len = Wl.len, [v] = flatAxes(d), pts = [];
+        for (let i = -5; i <= 5; i++) { const t = i / 5, a = Math.abs(t); pts.push(add(add(g, d, t * len / 2), v, 1.2 * (1 - t * t) - (a > 0.8 ? (a - 0.8) * 4.5 : 0))); }
+        for (let i = 0; i < pts.length - 1; i++) capsule(X, pts[i], pts[i + 1], 0.34 - Math.abs(i - 5) * 0.03, 0.34 - Math.abs(i + 1 - 5) * 0.03, hm);
+        next(); capsule(X, pts[0], pts[pts.length - 1], 0.1, 0.1, M('string', [214, 204, 176], 'cloth'));
         return;
       }
       if (k === 'crossbow') {
