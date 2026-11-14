@@ -191,10 +191,13 @@ const HELPERS = () => {
         o.blocked = travelBlocked();
         T.go('greenroot', 3.5, 13.5, 0); T.quiet();
         o.blocked2 = travelBlocked();
-        open(); travelGo(TRAVEL.dests.find(d => d.map === 'clearing' && d.spawn)); o.backAt = G.mapId; T.closeUi();
+        // Phase 84 (js/mounts84.js): a long journey may stop the night halfway, or meet something mid-road; this check is
+        // about getting there, so it presses on in the dark and holds the stretches' rolls quiet
+        const quietRoad = (fn) => { const mr = Math.random; Math.random = () => 0.999; TRAVEL.p84press = true; try { fn(); } finally { Math.random = mr; } };
+        open(); quietRoad(() => travelGo(TRAVEL.dests.find(d => d.map === 'clearing' && d.spawn))); o.backAt = G.mapId; T.closeUi();
         const gr = open().find(d => d.map === 'greenroot' && d.spawn);
         o.grOk = !!gr && gr.state === 'ok';
-        if (gr) { T.quiet(); travelGo(gr); o.thereAt = G.mapId; T.closeUi(); }
+        if (gr) { T.quiet(); quietRoad(() => travelGo(gr)); o.thereAt = G.mapId; T.closeUi(); }
         o.foes = TRAVEL_FOES.greenroot;
         o.rect = TRAVEL_REGIONS.reach.maps.greenroot.rect;
         // back by foot through the west door

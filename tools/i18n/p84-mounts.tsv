@@ -1,0 +1,34 @@
+# Phase 84, mounts and fast travel (js/mounts84.js, MOUNTS84.TEXTS). english<TAB>french (vous form). Approved by the owner, 14 Nov 2026.
+the roan mare	la jument rouanne
+the dun	la isabelle
+the grey	la grise
+{0}, saddled and waiting. X to get up.	{0}, sellée, qui attend. X pour monter.
+You get up on {0}.	Vous montez sur {0}.
+You get down. {0} waits where you leave her.	Vous mettez pied à terre. {0} attend là où vous la laissez.
+She will not go onto the planks. Get down and go on foot; she will wait.	Elle ne veut pas aller sur les planches. Descendez et continuez à pied ; elle attendra.
+She will not go down the Pound Stair. You leave her at the top, and she waits.	Elle ne veut pas descendre l'Escalier des Biefs. Vous la laissez en haut, et elle attend.
+She will not go in among those trees. You leave her at the edge, and she waits.	Elle ne veut pas entrer sous ces arbres. Vous la laissez à la lisière, et elle attend.
+You leave {0} at the door. She waits.	Vous laissez {0} à la porte. Elle attend.
+You cannot shoot from the saddle.	Vous ne pouvez pas tirer depuis la selle.
+{0} shies at the blow and you come off.	{0} fait un écart sous le coup et vous tombez.
+She is too far off. Go to her first.	Elle est trop loin. Allez d'abord jusqu'à elle.
+{0} has gone home to her stable.	{0} est rentrée à son écurie.
+The day's hire is up. You get down, and {0} turns for home.	La journée de location est finie. Vous descendez, et {0} reprend le chemin de l'écurie.
+Hounds came for {0} in the night. She bolted home, and the ostler wants 5 sovereigns for the fright.	Les chiens sont venus pour {0} dans la nuit. Elle s'est enfuie jusqu'à l'écurie, et le palefrenier veut 5 souverains pour la frayeur.
+You pay the ostler 5 sovereigns for the fright.	Vous payez 5 souverains au palefrenier pour la frayeur.
+The Bellwether's yard	La cour du Bellwether
+A stall behind the Bellwether, and a dun pony who has been down the drove road more times than you have. Absalom Rudd's girl does the hiring, and asks nothing.	Une stalle derrière le Bellwether, et une ponette isabelle qui a descendu le chemin de transhumance plus souvent que vous. La fille d'Absalom Rudd s'occupe de la location, et ne pose pas de questions.
+The drovers' pen on the Long Common	L'enclos des bouviers sur la Longue Commune
+A hurdle pen by the road, a lean-to for the tack, and a grey pony with burrs in her mane. The man who keeps her lives in the lean-to.	Un enclos de claies au bord de la route, un appentis pour le harnachement, et une ponette grise avec des bardanes dans la crinière. L'homme qui la garde vit dans l'appentis.
+A stable: a pony to hire for a day, or to give back	Une écurie : un poney à louer pour la journée, ou à rendre
+A milestone. Cut in it: {0}.	Une borne. Gravé dessus : {0}.
+You lay a hand on the milestone. {0} is on your map now.	Vous posez la main sur la borne. {0} figure maintenant sur votre carte.
+{0}, towards {1}	{0}, vers {1}
+By the roads, through {0}.	Par les routes, en passant par {0}.
+The road runs past dusk.	La route court au-delà du crépuscule.
+Stop the night at {0}	Faire halte pour la nuit à {0}
+Press on in the dark	Continuer dans le noir
+You stop the night at {0}. {1} is still ahead.	Vous faites halte pour la nuit à {0}. {1} est encore devant vous.
+On {0}, mid-road, something has been waiting.	Sur {0}, au milieu de la route, quelque chose attendait.
+the halt	la halte
+the Three Pines	les Trois Pins
