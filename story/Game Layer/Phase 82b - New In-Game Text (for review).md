@@ -11,9 +11,9 @@ Built on branch `phase-75-pixel-folk` (pull request #119) from the brief, `Phase
 3. **The Malting yard's way back to the Court is on its south side** (it was on the west, while the Court's door to it is on the Court's north side). You come into the yard at the south gate facing north, the orchard on your left and the Malting on your right; the queue walks off that way.
 4. **Twenty-three finger-posts,** one at every way out between outdoor places, beside the road inside the gate, in the brief's words. Both renderers draw the existing `sign` sprite.
 5. **Six notice boards** (Stillwater Landing, Wethercombe, Port Cantabile, the Hollow, the Low Rings, Greenroot), each with its notices, lore and tasks, and two more lines of lore on each of the three boards that were there. A task is taken from the board like the Oakhaven board's writs (it goes into your logbook), done in the world, and paid at the board.
-**Ruled by the owner during the build, 13 Nov:** "above the notice boards where they clip through buildings add a small roof over the notice board to protect it from the rain". Every board now stands under its own small shingled roof, drawn low enough to sit under a house's eaves, and a board against a wall stands a step out from it.
-
 6. **The test** `test/bearings82b.test.js` keeps it true: every pair of gates leaves and arrives by opposite sides; no two places overlap; every place lies on the chart in the direction its road leaves; every way out has a post within five cells; every town has its board; every task can be taken, done and paid; every line has French; nothing uses random numbers.
+
+**Ruled by the owner during the build, 13 Nov:** "above the notice boards where they clip through buildings add a small roof over the notice board to protect it from the rain". Every board now stands under its own small shingled roof, drawn low enough to sit under a house's eaves, and a board against a wall stands a step out from it.
 
 ## Readings I had to take (please check)
 
@@ -194,4 +194,4 @@ Built on branch `phase-75-pixel-folk` (pull request #119) from the brief, `Phase
 
 ## Pictures
 
-`screenshots/p82b-chart-reach.jpg`, `p82b-chart-woods.jpg`, `p82b-travel-reach.jpg`, `p82b-travel-woods.jpg`, `p82b-board-panel.jpg`, `p82b-landing-board.jpg`, `p82b-combe-board.jpg`, `p82b-common-post.jpg`, `p82b-clearing-post.jpg`, `p82b-yard-gate.jpg`, and the walk `p82b-combe-walk.gif`.
+`screenshots/p82b-chart-reach.jpg`, `p82b-chart-woods.jpg`, `p82b-travel-reach.jpg`, `p82b-travel-woods.jpg`, `p82b-board-panel.jpg`, `p82b-landing-board.jpg`, `p82b-combe-board.jpg`, `p82b-greenroot-board.jpg`, `p82b-harbour-board.jpg`, `p82b-common-post.jpg`, `p82b-clearing-post.jpg`, `p82b-yard-gate.jpg`; the GIFs `p82b-chart-fills.gif` (the Reach chart filling in place by place), `p82b-combe-walk.gif`, `p82b-greenroot-walk.gif` and `p82b-yard-walk.gif`.
