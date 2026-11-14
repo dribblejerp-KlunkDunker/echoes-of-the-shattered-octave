@@ -406,7 +406,7 @@ const DROVE83 = (function () {
       S.forEach(([x, y], i) => {
         const [ax, ay] = S[Math.max(0, i - 5)], [bx, by] = S[Math.min(S.length - 1, i + 5)], l = Math.hypot(bx - ax, by - ay) || 1, nx = -(by - ay) / l, ny = (bx - ax) / l;
         const end = Math.min(1, i / 4, (S.length - 1 - i) / 4);                  // the roof thins and drops at either end of the holloway
-        const zL = m.groundAt(x - nx * 2.9, y - ny * 2.9), zR = m.groundAt(x + nx * 2.9, y + ny * 2.9), base = Math.max(zL, zR) + 0.85;
+        const zL = m.groundAt(x - nx * 2.9, y - ny * 2.9), zR = m.groundAt(x + nx * 2.9, y + ny * 2.9), base = Math.max(zL, zR) + (typeof TREES83 !== 'undefined' && TREES83.on() ? 1.7 : 0.85);   // on the crowns: higher when the trees are grown (js/trees83.js)
         const lo = [], hi = [];
         for (let k = 0; k < K; k++) {
           const t = k / (K - 1) * 2 - 1, n1 = h2(i * 13 + k, 71), n2 = h2(i * 7 + k * 3, 73);
