@@ -143,9 +143,9 @@ const HELPERS = () => {
         o.noMine = !oak.entities.some(e => /^p16f_/.test(e.sprite || '') || /^p16f_/.test(e.id || ''));
         const road = G.maps.flume_road, land = G.maps.flume_landing, rings = G.maps.flume_lowrings;
         // Phase 83 (js/flume83.js) puts the road itself between the lane and the Landing: the Stride and the Pound Stair
-        const f83 = typeof FLUME83 !== 'undefined' && !!G.maps.p83_stride;
+        const f83 = typeof FLUME83 !== 'undefined' && !!G.maps.p83_stride, l85 = typeof LANES85 !== 'undefined' && !!G.maps.p85_sunklanes;   // Phase 85: the Sunk Lanes lie between the Landing and the Low Rings
         const exits = [
-          [road, 0, 12, 'oakhaven'], [road, 8, 31, f83 ? 'p83_stride' : 'flume_landing'], [land, 16, 0, f83 ? 'p83_poundstair' : 'flume_road'], [land, 0, 13, 'flume_lowrings'], [rings, 37, 18, 'flume_landing'],
+          [road, 0, 12, 'oakhaven'], [road, 8, 31, f83 ? 'p83_stride' : 'flume_landing'], [land, 16, 0, f83 ? 'p83_poundstair' : 'flume_road'], [land, 0, 13, l85 ? 'p85_sunklanes' : 'flume_lowrings'], [rings, 37, 18, l85 ? 'p85_sunklanes' : 'flume_landing'],
         ];
         o.exits = exits.map(([m, x, y, to]) => { const c = m.get(x, y); const t = c && c.portal; const tm = t && G.maps[t.map]; return { at: m.id + ':' + x + ',' + y, to, ok: !!t && t.map === to && !!tm && !tm.isBlocked(t.x | 0, t.y | 0) && t.x > 0 && t.y > 0 && t.x < tm.w && t.y < tm.h }; });
         // really walk through the gate and back

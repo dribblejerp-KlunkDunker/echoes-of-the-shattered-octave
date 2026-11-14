@@ -27,7 +27,7 @@ The place, its rooms, its keeper, its gear and every line below are **[PROPOSED]
 ### Readings for the owner
 
 1. **The keeper is a mire-drone grown large.** It is not a new creature. That fits "mire-drones in the sump" and the Reach's law that growth never stops. *Recommend: keep.*
-2. **The surge comes on a steady beat** while you are in the Dry Flume, faster in rain. It is not tied to the surges on the Pound Stair above, which only come in rain. *Recommend: keep; a dungeon you could only cross in fine weather would be a wall.*
+2. **The surge comes on a steady beat** while you are in the Dry Flume, faster in rain. It is not tied to the surges on the Pound Stair above, which only come in rain. *Recommend: keep; a dungeon you could only cross in fine weather would be a wall.* **Owner, 14 Nov: "the flooding stays on a steady beat. that is fine."**
 3. **The keeper's name, "the Standing Note",** and the two pieces of gear's names: **[PROPOSED]**, change any.
 
 ### The lines
