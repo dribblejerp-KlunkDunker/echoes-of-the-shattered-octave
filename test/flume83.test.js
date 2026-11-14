@@ -50,7 +50,9 @@ const F = require(path.join(ROOT, 'js', 'flume83.js'));
     out.road = doors(G.maps.flume_road).some((d) => d.to === S) && !doors(G.maps.flume_road).some((d) => d.to === 'flume_landing');
     out.land = doors(G.maps.flume_landing).some((d) => d.to === P) && !doors(G.maps.flume_landing).some((d) => d.to === 'flume_road');
     const ds = doors(G.maps[S]), dp = doors(G.maps[P]);
-    out.sDoors = ds.map((d) => d.to).sort().join(','); out.pDoors = dp.map((d) => d.to).sort().join(',');
+    out.sDoors = ds.map((d) => d.to).filter((t) => t !== 'p85_dryflume').sort().join(',');
+    // the Dry Flume's arch (Phase 85) is a door off the road, not a gate
+    out.pDoors = dp.map((d) => d.to).sort().join(',');
     // walk from the north gate to the south gate with the game's own rule for blocked and too-steep ground
     const walk = (m) => {
       const W = m.w, H = m.h, steep = (x, y) => !!m.smooth && typeof MAX_GRADE !== 'undefined' && m.gradeAt(x + 0.5, y + 0.5) > MAX_GRADE;
