@@ -204,7 +204,7 @@ const GROVE85 = (function () {
   function takeWay(g, k) {
     const depth = fint('depth', 3), here = gladeAt(depth);
     if (g !== here) { place(arriveAt(here)); return; }          // a glade not in this visit's chain: the wood turns you back to where you were
-    if (k === lowWay(depth)) {
+    if (k === lowWay(depth) || (typeof GEAR87 === 'object' && GEAR87.special('grove'))) {   // Phase 87: the Old Reach in full always hears the low note
       const next = depth + 1; f().p85g_depth = next;
       if (next >= 3) { place({ x: STOOL[0] + 0.5, y: STOOL[1] + 6.2, dir: -PI / 2 }); say(TX.inward, 'good', 4000); }
       else { place(arriveAt(gladeAt(next))); say(TX.inward, 'good', 4000); }

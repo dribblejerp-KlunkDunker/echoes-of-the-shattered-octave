@@ -308,6 +308,7 @@ const DRYFLUME85 = (function () {
   }
   // anyone on the causeway when it fills is thrown onto the nearer steps
   function sweep() {
+    if (typeof GEAR87 === 'object' && GEAR87.special('water')) return;   // Phase 87: the Flume's own, in full, keep their feet
     const c = Engine.cam, m = G.map, cx = Math.floor(c.x), cy = Math.floor(c.y);
     if (m.floorCells[cy * m.w + cx] !== WATER || !inRect(ROOMS.sump, cx, cy)) return;
     const land = Math.hypot(c.x - 37, c.y - 19.5) < Math.hypot(c.x - 46.5, c.y - 29.5) ? [37.0, 19.0] : [46.5, 29.5];

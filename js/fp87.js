@@ -71,7 +71,7 @@ const FP87 = (function () {
     return null;
   }
   const entryOf = (wid) => { try { return GEARLOOK21.WEAPONS[wid] || null; } catch (e) { return null; } };
-  function covers(wid) { const e = entryOf(wid); return !!(e && (BLADE_KINDS[e.kind] || HEAD_KINDS[e.kind]) && formOf(wid, e)); }
+  function covers(wid) { const e = entryOf(wid); return !!(e && ((BLADE_KINDS[e.kind] || HEAD_KINDS[e.kind]) && formOf(wid, e) || RANGED_KINDS[e.kind])); }
 
   // ---------------------------------------------------------------- shading helpers
   function lin(x, x0, y0, x1, y1, stops) { const g = x.createLinearGradient(x0, y0, x1, y1); for (const [t, c] of stops) g.addColorStop(t, typeof c === 'string' ? c : css(c)); return g; }
@@ -244,7 +244,9 @@ const FP87 = (function () {
     if (glass) return { kind: 'glass', base: [62, 150, 214], lt: [140, 204, 240], sh: [26, 82, 150], dk: [10, 36, 76] };
     if (!H || H.bare) { const s = (look && look.skin) || [214, 170, 136]; return { kind: 'skin', base: s, lt: mix(s, [255, 236, 220], 0.35), sh: mul(s, 0.72), dk: mul(s, 0.45) }; }
     const c = H.col || { base: [112, 74, 46], shade: [74, 46, 28], light: [150, 106, 70] };
-    const kind = H.shape === 'gauntlets' || H.material === 'mail' || H.material === 'iron' || H.material === 'bellbronze' ? 'mail' : 'leather';
+    // Phase 87: fingerless kid and the barrow's coils leave the fingers bare (the coils and cuffs show on the forearm)
+    if (H.form === 'cuffs' || H.form === 'coils') { const s = (look && look.skin) || [214, 170, 136]; return { kind: 'skin', base: s, lt: mix(s, [255, 236, 220], 0.35), sh: mul(s, 0.72), dk: mul(s, 0.45), cuff: H.col.base, form: H.form }; }
+    const kind = H.form === 'coils' || H.form === 'vambrace' ? 'mail' : H.shape === 'gauntlets' || H.material === 'mail' || H.material === 'iron' || H.material === 'bellbronze' ? 'mail' : 'leather';
     return { kind, base: c.base, lt: c.light, sh: c.shade, dk: c.dark || mul(c.shade, 0.6), trim: c.trim };
   }
   function drawFist(x, hl, seed, mirror) {
@@ -289,7 +291,7 @@ const FP87 = (function () {
   // the wrist, the cuff and the sleeve, from the hand out of the bottom of the view (canvas frame)
   function drawForearm(x, look, hl, wx, wy, ex, ey, wid0, wid1, seed, mirror) {
     const dx = ex - wx, dy = ey - wy, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, nx = -uy, ny = ux;
-    const B = look && look.body, sl = (B && B.sleeve) || {}, rolled = !!sl.rolled, scol = sl.col || (B && B.col && B.col.base) || [120, 100, 80];
+    const B = look && look.body, sl = (B && B.sleeve) || {}, bareArm = sl.material === 'skin', rolled = !!sl.rolled && !bareArm, scol = bareArm ? ((look && look.skin) || [200, 160, 130]) : sl.col || (B && B.col && B.col.base) || [120, 100, 80];   // Phase 87: the hide tunic leaves the arms bare
     const glass = hl.kind === 'glass';
     const quad = (t0, t1, w0, w1) => { const a = [wx + ux * t0, wy + uy * t0], b = [wx + ux * t1, wy + uy * t1]; x.beginPath(); x.moveTo(a[0] + nx * w0, a[1] + ny * w0); x.lineTo(b[0] + nx * w1, b[1] + ny * w1); x.lineTo(b[0] - nx * w1, b[1] - ny * w1); x.lineTo(a[0] - nx * w0, a[1] - ny * w0); x.closePath(); };
     const across = (c) => lin(x, wx + nx * wid1, wy + ny * wid1, wx - nx * wid1, wy - ny * wid1, mirror ? [[0, mul(c, 0.5)], [0.6, c], [1, mix(c, [255, 240, 220], 0.3)]] : [[0, mix(c, [255, 240, 220], 0.3)], [0.4, c], [1, mul(c, 0.5)]]);
@@ -299,7 +301,9 @@ const FP87 = (function () {
     if (glass) { x.save(); x.clip(); for (let i = 0; i < 8; i++) { x.beginPath(); const t = hash(i, seed, 8) * L * 0.32; x.moveTo(wx + ux * t - nx * wid0, wy + uy * t - ny * wid0); x.lineTo(wx + ux * (t + 20) + nx * wid0, wy + uy * (t + 20) + ny * wid0); x.strokeStyle = i % 2 ? 'rgba(10,40,80,0.5)' : 'rgba(200,236,255,0.55)'; x.stroke(); } x.restore(); }
     // a glove's cuff: flared, its edge stitched or riveted
     if (!glass && look && look.hands && !look.hands.bare) {
-      quad(L * 0.2, L * 0.36, wid0 * 1.16, wid0 * 1.32); x.fillStyle = across(mix(hl.base, hl.sh, 0.2)); x.fill(); x.lineWidth = 1.3; x.strokeStyle = css(hl.dk); x.stroke();
+      const cc = hl.cuff || hl.base, cd = hl.cuff ? mul(hl.cuff, 0.5) : hl.dk;   // Phase 87: fingerless kid and the barrow's coils show their own colour here
+      quad(L * 0.2, L * 0.36, wid0 * 1.16, wid0 * 1.32); x.fillStyle = across(mix(cc, cd, 0.2)); x.fill(); x.lineWidth = 1.3; x.strokeStyle = css(cd); x.stroke();
+      if (hl.form === 'coils') for (let i = 0; i < 5; i++) { const t = L * (0.215 + i * 0.03); quad(t, t + L * 0.008, wid0 * (1.17 + i * 0.03), wid0 * (1.18 + i * 0.03)); x.fillStyle = css(i % 3 === 0 ? [92, 138, 112] : cd, 0.9); x.fill(); }
       if (hl.trim && hl.kind === 'mail') { quad(L * 0.33, L * 0.36, wid0 * 1.3, wid0 * 1.33); x.fillStyle = css(hl.trim); x.fill(); }
     }
     // the sleeve
@@ -315,9 +319,163 @@ const FP87 = (function () {
 
   // ---------------------------------------------------------------- one painting
   const cache = new Map();
+  // ---------------------------------------------------------------- Phase 87 (d): the ranged weapons, each its own
+  // One-handed (the pistol, the slings, the Works hand-crossbow): held up in the right hand like a blade, the business end
+  // to the upper left. Two-handed (the crossbow, the Office carbine, the harpoon gun, the hornbow): held out in front, seen
+  // from behind, both hands from below; their pictures are centred where the old crossbow's was.
+  const RANGED_KINDS = { pistol: 1, crossbow: 1, sling: 1, carbine: 1, handbow: 1, harpoon: 1, bow: 1 };
+  const CENTRED = { crossbow: 1, carbine: 1, harpoon: 1, bow: 1 };
+  function wood(x, c, a, b, w, h, r, seed) {   // a stock or a grip: lit from the left, grain lines along it
+    rrect(x, a, b, w, h, r); x.fillStyle = lin(x, a, 0, a + w, 0, [[0, mix(c, [255, 236, 210], 0.3)], [0.4, c], [1, mul(c, 0.45)]]); x.fill();
+    x.save(); x.clip(); for (let i = 0; i < 7; i++) { const u = a + hash(i, seed, 3) * w; x.strokeStyle = css(mul(c, 0.55), 0.45); x.lineWidth = 0.8; x.beginPath(); x.moveTo(u, b); x.bezierCurveTo(u + 3, b + h * 0.3, u - 3, b + h * 0.7, u + 1, b + h); x.stroke(); } x.restore();
+    x.strokeStyle = css(mul(c, 0.3)); x.lineWidth = 1; rrect(x, a, b, w, h, r); x.stroke();
+  }
+  function iron(x, c, a, b, w, h, r, edge) {   // a barrel, a lock-plate, a band: a lit stripe down its left third
+    const m = metal(c, edge); rrect(x, a, b, w, h, r);
+    x.fillStyle = lin(x, a, 0, a + w, 0, [[0, m.sh], [0.22, m.hi], [0.38, m.lt], [0.7, m.base], [1, m.dk]]); x.fill();
+    x.strokeStyle = css(m.dk); x.lineWidth = 1; x.stroke();
+  }
+  function band(x, c, a, b, w, h) { iron(x, c, a, b, w, h, 1.5); }
+  function cord(x, pts, col, wid) {   // a cord or a string: a dark line under a lit one
+    x.lineCap = 'round'; x.lineJoin = 'round';
+    for (const [k, lw] of [[0.45, wid + 1.6], [1, wid], [1.35, wid * 0.4]]) { x.strokeStyle = css(mul(col, k)); x.lineWidth = lw; x.beginPath(); x.moveTo(pts[0], pts[1]); if (pts.length === 8) x.bezierCurveTo(pts[2], pts[3], pts[4], pts[5], pts[6], pts[7]); else for (let i = 2; i < pts.length; i += 2) x.lineTo(pts[i], pts[i + 1]); x.stroke(); }
+  }
+  function glowDot(x, cx, cy, r, col) { x.fillStyle = rad(x, cx, cy, 0, r * 2.4, [[0, css(col, 0.9)], [0.4, css(col, 0.35)], [1, css(col, 0)]]); x.fillRect(cx - r * 2.4, cy - r * 2.4, r * 4.8, r * 4.8); ell(x, cx, cy, r, r); x.fillStyle = css(mix(col, [255, 255, 255], 0.45)); x.fill(); }
+  // one-handed: local frame, the grip at (0,0) under the fist, the weapon up -y
+  function drawOneRanged(x, wid, e, L, seed) {
+    const c = e.col || {}, g = c.grip || [104, 66, 40], b = c.blade || [70, 66, 64], br = c.guard || [190, 156, 84];
+    if (e.kind === 'pistol') {
+      wood(x, g, -18, -40, 36, 130, 12, seed); band(x, br, -20, 82, 40, 12);                     // the walnut grip, a brass butt-cap
+      wood(x, g, -19, -L * 0.72, 38, L * 0.72 - 20, 10, seed + 1);                                // the forestock under the barrel
+      iron(x, b, -14, -L, 28, L - 40, 6); band(x, br, -20, -L * 0.62, 40, 11); band(x, br, -20, -L + 14, 40, 13);   // the barrel and its bands
+      iron(x, [96, 98, 102], -24, -88, 48, 44, 5); band(x, br, 18, -112, 12, 34); ell(x, 24, -114, 9, 7); x.fillStyle = css(br); x.fill();   // the lock, the brass striker
+      ell(x, -10, 20, 18, 22); x.lineWidth = 4; x.strokeStyle = css(mul(br, 0.8)); x.stroke();      // the trigger guard
+      glowDot(x, 0, -L - 4, 7, c.edge || [180, 236, 244]);                                        // a glass pellet at the muzzle
+      return;
+    }
+    if (e.kind === 'sling') {
+      // two cords from the fist up to the pouch, mid-whirl, a stone in it: felted Hedge wool or plaited Farrant fleece
+      const felt = wid === 'p87_feltsling', cc = c.grip || [60, 86, 80], pc = c.blade || [60, 86, 80], st = c.edge || [150, 146, 140];
+      const px = -L * 0.55, py = -L * 0.95;
+      cord(x, [-4, -40, -40, -L * 0.45, px + 30, py + 60, px + 18, py + 10], cc, 4.6);
+      cord(x, [6, -40, 10, -L * 0.5, px + 60, py + 40, px + 44, py + 22], cc, 4.6);
+      if (!felt) for (let i = 0; i < 9; i++) { const t = i / 9; x.fillStyle = css(mul(cc, 0.6)); x.fillRect(-4 + (px + 18 + 4) * t * t - 1, -40 + (py + 10 + 40) * t - 1, 2, 2); }   // the plait
+      ell(x, px + 30, py + 14, 44, 26, -0.5); x.fillStyle = lin(x, px, py, px + 60, py + 34, [[0, mix(pc, [255, 240, 220], 0.3)], [0.5, pc], [1, mul(pc, 0.5)]]); x.fill();
+      x.strokeStyle = css(mul(pc, 0.35)); x.lineWidth = 1.2; x.stroke();
+      ell(x, px + 26, py + 6, 19, 16, 0); x.fillStyle = rad(x, px + 20, py, 2, 18, [[0, mix(st, [255, 255, 255], 0.4)], [0.6, st], [1, mul(st, 0.45)]]); x.fill();
+      if (felt) speckle(x, px, py - 4, 60, 34, 40, mul(pc, 0.7), 0.6, seed); else { x.strokeStyle = css(mul(pc, 0.4), 0.7); x.beginPath(); x.moveTo(px + 6, py + 20); x.lineTo(px + 54, py + 8); x.stroke(); }
+      return;
+    }
+    if (e.kind === 'handbow') {
+      // the Works hand-crossbow: a short stock, a steel prod across the top, a quarrel in the groove, a brass tag
+      wood(x, g, -14, -L, 28, L + 90, 8, seed);
+      const py = -L + 34, pw = 120;
+      x.save(); x.translate(0, py);
+      x.beginPath(); x.moveTo(-pw, 26); x.quadraticCurveTo(-pw * 0.5, -10, 0, -6); x.quadraticCurveTo(pw * 0.5, -10, pw, 26); x.lineWidth = 15; x.strokeStyle = css(mul(b, 0.5)); x.stroke(); x.lineWidth = 11; x.strokeStyle = css(b); x.stroke(); x.lineWidth = 2.5; x.strokeStyle = css(mix(b, [255, 255, 255], 0.5)); x.stroke();
+      cord(x, [-pw, 26, 0, 74, pw, 26], [210, 200, 170], 1.4);
+      x.restore();
+      iron(x, [150, 154, 158], -3, -L - 34, 6, 120, 2); x.beginPath(); x.moveTo(-8, -L - 30); x.lineTo(0, -L - 50); x.lineTo(8, -L - 30); x.closePath(); x.fillStyle = css([200, 204, 206]); x.fill();
+      band(x, br, -17, -L + 70, 34, 10);
+      ell(x, 22, -L + 96, 9, 12); x.fillStyle = lin(x, 14, 0, 30, 0, [[0, mix(c.head || br, [255, 255, 255], 0.4)], [1, mul(c.head || br, 0.6)]]); x.fill();   // the brass tag on its ring
+      x.fillStyle = css(mul(c.head || br, 0.4)); x.fillRect(19, -L + 92, 6, 2); x.fillRect(19, -L + 97, 6, 2);
+      return;
+    }
+  }
+  // two-handed: drawn in the whole canvas (W x H), held out in front, the near end at the bottom centre
+  function drawTwoRanged(x, wid, e, W, H0, seed) {
+    const c = e.col || {}, g = c.grip || [108, 70, 42], b = c.blade || [140, 146, 150], br = c.guard || [190, 156, 84], cx = W * 0.5;
+    if (e.kind === 'bow') {
+      // the Reach hornbow, held up in the left hand: horn and sinew recurves, an arrow on the string, a flint head
+      const bx = W * 0.4, top = H0 * 0.04, bot = H0 * 1.02, mid = (top + bot) / 2, hc = c.head || [222, 210, 184];
+      const limb = (y0, y1, s) => { x.beginPath(); x.moveTo(bx, mid + s * 30); x.bezierCurveTo(bx - 70, mid + s * (H0 * 0.25), bx + 10, y1 - s * 60, bx + 38, y1); x.lineWidth = 15; x.strokeStyle = css(mul(g, 0.5)); x.stroke(); x.lineWidth = 11; x.strokeStyle = css(g); x.stroke(); x.lineWidth = 4; x.strokeStyle = css(mix(hc, [255, 255, 255], 0.2)); x.stroke(); };
+      limb(mid, top, -1); limb(mid, bot, 1);
+      const tipT = [bx + 38, top], tipB = [bx + 38, bot], nock = [W * 0.86, H0 * 0.98];
+      cord(x, [tipT[0], tipT[1], nock[0], nock[1], tipB[0], tipB[1]], [214, 204, 176], 1.6);
+      // the arrow from the nock (by the right cheek, out of view) past the bow's grip
+      cord(x, [nock[0], nock[1], bx - 50, mid - 70], [150, 120, 80], 3.2);
+      x.beginPath(); x.moveTo(bx - 50, mid - 70); x.lineTo(bx - 82, mid - 100); x.lineTo(bx - 60, mid - 62); x.closePath(); x.fillStyle = css([46, 44, 50]); x.fill(); x.strokeStyle = css([120, 122, 132]); x.lineWidth = 1; x.stroke();
+      for (const k of [0, 1]) { x.beginPath(); x.moveTo(nock[0] - 40, nock[1] - 34 + k * 12); x.lineTo(nock[0] - 4, nock[1] - 4 + k * 6); x.lineTo(nock[0] - 50, nock[1] - 24 + k * 14); x.closePath(); x.fillStyle = css(k ? [190, 70, 50] : [214, 200, 170]); x.fill(); }
+      return { hold: [bx - 4, mid + 6], right: nock };
+    }
+    // a stock (or a barrel) running from the bottom centre up and away into the picture
+    const near = H0 * 0.98, far = H0 * (e.kind === 'carbine' ? 0.06 : 0.22), wn = e.kind === 'harpoon' ? 58 : 48, wf = e.kind === 'harpoon' ? 34 : 22;
+    const body = (col, w0, w1) => { x.beginPath(); x.moveTo(cx - w0 / 2, near); x.lineTo(cx - w1 / 2, far); x.lineTo(cx + w1 / 2, far); x.lineTo(cx + w0 / 2, near); x.closePath(); x.fillStyle = lin(x, cx - w0 / 2, 0, cx + w0 / 2, 0, [[0, mix(col, [255, 236, 210], 0.3)], [0.42, col], [1, mul(col, 0.45)]]); x.fill(); x.strokeStyle = css(mul(col, 0.3)); x.lineWidth = 1.2; x.stroke(); };
+    if (e.kind === 'crossbow' || e.kind === 'handbow') {
+      body(g, wn, wf);
+      const py = far + 30, pw = W * 0.42;
+      x.beginPath(); x.moveTo(cx - pw, py + 34); x.quadraticCurveTo(cx - pw * 0.4, py - 12, cx, py - 4); x.quadraticCurveTo(cx + pw * 0.4, py - 12, cx + pw, py + 34);
+      x.lineWidth = 13; x.strokeStyle = css(mul(b, 0.45)); x.stroke(); x.lineWidth = 9; x.strokeStyle = css(b); x.stroke(); x.lineWidth = 2; x.strokeStyle = css(mix(b, [255, 255, 255], 0.55)); x.stroke();
+      for (const s of [-1, 1]) { ell(x, cx + s * pw, py + 34, 8, 8); x.fillStyle = css(mul(b, 0.8)); x.fill(); }
+      cord(x, [cx - pw, py + 34, cx, py + 110, cx + pw, py + 34], [210, 200, 170], 2);
+      iron(x, [150, 154, 158], cx - 4, far - 40, 8, 160, 2); x.beginPath(); x.moveTo(cx - 10, far - 36); x.lineTo(cx, far - 62); x.lineTo(cx + 10, far - 36); x.closePath(); x.fillStyle = css([210, 212, 214]); x.fill();
+      ell(x, cx, far - 10, 18, 10); x.lineWidth = 4; x.strokeStyle = css(mul(b, 0.7)); x.stroke();   // the stirrup
+      return { hold: [cx - 6, H0 * 0.6], right: [cx + 20, H0 * 0.9] };
+    }
+    if (e.kind === 'carbine') {
+      // the Office carbine: grey oilcloth wound on the stock, a long blued barrel, a brass fork for a front sight (741)
+      body([92, 98, 102], wn + 8, 30);
+      x.save(); x.beginPath(); x.rect(0, H0 * 0.55, W, H0); x.clip(); for (let y = H0 * 0.58; y < near; y += 14) { x.strokeStyle = 'rgba(30,34,38,0.45)'; x.lineWidth = 2; x.beginPath(); x.moveTo(cx - 34, y); x.lineTo(cx + 34, y - 8); x.stroke(); } x.restore();
+      iron(x, b, cx - 9, far, 18, H0 * 0.6, 4);
+      band(x, br, cx - 13, far + H0 * 0.18, 26, 9); band(x, br, cx - 13, far + H0 * 0.4, 26, 9);
+      for (const s of [-1, 1]) iron(x, br, cx + s * 7 - 2.5, far - 26, 5, 30, 2);   // the fork's two tines
+      iron(x, br, cx - 9, far + 2, 18, 6, 2);
+      iron(x, [84, 88, 92], cx - 24, H0 * 0.6, 48, 40, 5); band(x, br, cx + 20, H0 * 0.56, 10, 22);   // the lock, the striker
+      glowDot(x, cx, far + 8, 5, c.edge || [180, 236, 244]);
+      cord(x, [cx - 40, H0 * 0.66, cx - 70, H0 * 0.3, cx - 20, far + 30], [196, 200, 204], 2);   // the silver-mesh sling
+      return { hold: [cx - 4, H0 * 0.42], right: [cx + 18, H0 * 0.86] };
+    }
+    if (e.kind === 'harpoon') {
+      // the Free Captains' harpoon gun: a fat bronze tube, a barbed iron head standing out of it, a rope coil on a drum
+      body(c.head || [150, 120, 70], wn + 10, wf + 8);
+      const hc = c.head || [150, 120, 70];
+      band(x, br, cx - 26, H0 * 0.4, 52, 12); band(x, br, cx - 22, far + 30, 44, 10);
+      iron(x, [96, 100, 104], cx - 5, far - 80, 10, 110, 3);
+      x.beginPath(); x.moveTo(cx, far - 130); x.lineTo(cx - 16, far - 78); x.lineTo(cx - 5, far - 86); x.lineTo(cx - 5, far - 70); x.lineTo(cx + 5, far - 70); x.lineTo(cx + 5, far - 86); x.lineTo(cx + 16, far - 78); x.closePath();
+      x.fillStyle = lin(x, cx - 16, 0, cx + 16, 0, [[0, [210, 214, 216]], [0.5, [150, 154, 158]], [1, [70, 74, 80]]]); x.fill(); x.strokeStyle = css([40, 42, 46]); x.lineWidth = 1; x.stroke();
+      // the rope drum on the right, rope running up to the head
+      ell(x, cx + 62, H0 * 0.62, 30, 34); x.fillStyle = lin(x, cx + 32, 0, cx + 92, 0, [[0, mix(hc, [255, 240, 210], 0.3)], [1, mul(hc, 0.5)]]); x.fill();
+      for (let i = 0; i < 6; i++) { ell(x, cx + 62, H0 * 0.62, 26 - i * 0.5, 30 - i * 4.4); x.strokeStyle = css(i % 2 ? [176, 156, 112] : [140, 120, 84]); x.lineWidth = 2.4; x.stroke(); }
+      cord(x, [cx + 50, H0 * 0.5, cx + 40, H0 * 0.2, cx + 14, far - 30, cx + 4, far - 72], [176, 156, 112], 2.2);
+      ell(x, cx - 16, H0 * 0.74, 9, 6); x.fillStyle = css(mix(br, [92, 138, 112], 0.5)); x.fill();   // salt-green on the brass
+      return { hold: [cx - 10, H0 * 0.46], right: [cx + 22, H0 * 0.9] };
+    }
+    return { hold: [cx, H0 * 0.6], right: [cx + 20, H0 * 0.9] };
+  }
+  function paintRanged(wid, e, look) {
+    const ck = keyOf(wid, look); let hit = cache.get(ck); if (hit) return hit;
+    const seed = wid.length * 13 + wid.charCodeAt(0), hl = handLook(look, 'right'), hlL = handLook(look, 'left');
+    const centred = !!CENTRED[e.kind] && !(e.kind === 'crossbow' && e.grip !== 'two');
+    const BELOW = 40, RIGHT = centred ? 0 : 26, W0 = Math.round((centred ? 170 : 110) * K * 1.45), W = W0 + RIGHT * K * 2, H0 = Math.round((centred ? 160 : 190) * K * 1.45), H = H0 + BELOW * K * 2;
+    const c = mk(W, H), x = c.getContext('2d'); x.imageSmoothingEnabled = true;
+    if (!centred) {
+      const gx = W0 * 0.56, gy = H0 * 0.74, lean = e.kind === 'sling' ? -0.1 : -0.3, L = e.kind === 'sling' ? H0 * 0.5 : e.kind === 'handbow' ? H0 * 0.42 : H0 * 0.5;
+      drawForearm(x, look, hl, gx + 36, gy + 46, W + 30, H + 40, 46, 120, seed);
+      x.save(); x.translate(gx, gy); x.rotate(lean); drawOneRanged(x, wid, e, L, seed);
+      x.save(); x.translate(6, 0); drawFist(x, hl, seed, false); x.restore(); x.restore();
+    } else {
+      const P = drawTwoRanged(x, wid, e, W, H0, seed);
+      // the right hand on the grip near you, the left under the fore-end (or round the bow), forearms from the bottom corners
+      const [rx, ry] = P.right, [lx, ly] = P.hold;
+      if (e.kind !== 'bow') { drawForearm(x, look, hl, rx + 30, ry + 40, W + 40, H + 60, 42, 110, seed); x.save(); x.translate(rx, ry); x.rotate(-0.25); x.scale(0.85, 0.85); drawFist(x, hl, seed, false); x.restore(); }
+      drawForearm(x, look, hlL, lx - 30, ly + 44, -60, H + 80, 38, 96, seed + 5, true);
+      x.save(); x.translate(lx, ly); x.rotate(e.kind === 'bow' ? 0.1 : 0.2); x.scale(0.82, 0.82); drawFist(x, hlL, seed + 2, true); x.restore();
+    }
+    let emis = null;
+    try {
+      const id = x.getImageData(0, 0, W, H), d = id.data; let any = false;
+      for (let i = 0; i < d.length; i += 4) { const l = d[i] * 0.3 + d[i + 1] * 0.55 + d[i + 2] * 0.15; if (d[i + 3] > 0 && l > 180) { const k = Math.min(1, (l - 180) / 60) * 0.2; d[i] *= k; d[i + 1] *= k; d[i + 2] *= k; any = true; } else { d[i] = d[i + 1] = d[i + 2] = 0; } }
+      if (any) { emis = mk(W, H); emis.getContext('2d').putImageData(id, 0, 0); }
+    } catch (er) { warnOnce('glint', er); }
+    hit = { canvas: c, emis, k: K, below: BELOW, right: RIGHT, center: centred };
+    if (cache.size > 40) cache.clear();
+    cache.set(ck, hit);
+    return hit;
+  }
+
   function keyOf(wid, look) { const h = look && look.hands; return [wid, look && look.key, look && look.glassArm ? 1 : 0].join('|'); }
   function paint(wid, look) {
-    const e = entryOf(wid), f = formOf(wid, e); if (!e || !f) return null;
+    const e = entryOf(wid); if (e && RANGED_KINDS[e.kind]) return paintRanged(wid, e, look);
+    const f = formOf(wid, e); if (!e || !f) return null;
     const ck = keyOf(wid, look); let hit = cache.get(ck); if (hit) return hit;
     const pole = e.kind === 'spear' || e.kind === 'glaive', two = e.grip === 'two', blade = !!BLADE_KINDS[e.kind];
     // the canvas: the old pictures were about 100 x 190; these are drawn 1.25 times as large at K times the detail

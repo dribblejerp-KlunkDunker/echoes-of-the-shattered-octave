@@ -341,6 +341,35 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**Gear, matching sets and the first-person view (Phase 87).** Every weapon in your hand is painted in code, its own shape from the world it comes from: a bell-ringer's hammer, a tuning-fork spear, a quarry-hand's night-shift sledge with a Consortium tag and a red rag, a barrow's leaf-blade, a slab of knapped flint. Every piece you wear belongs to one of fourteen matching sets (Tanner's Row, the Hedge-weavers' Hush, the Synod Registry and Arsenal, the Carillon Legion, the Office's Proctors, the Cantors, the Siphon Corps, the Consortium Works, the Free Captains, the Drovers, the Barrow-Wardens, the Flume, the Old Reach): three pieces give a small bonus, the whole set its own. There is a sixth slot for a cape, fifty-two new pieces, six new ranged weapons with their own shot, and every calling starts in its own clothes with its own weapon. Every line is [PROPOSED]: [`story/Game Layer/Phase 87 - New In-Game Text (for review).md`](story/Game%20Layer/Phase%2087%20-%20New%20In-Game%20Text%20(for%20review).md).
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p87-sets-a.jpg" alt="Seven of the fourteen sets on the character card, front and back: Tanner's Row, the Hush, the Registry, the Arsenal, the Legion, the Proctors, the Cantors"></td>
+<td width="50%"><img src="screenshots/p87-sets-b.jpg" alt="The other seven sets, front and back: the Siphon Corps, the Works, the Free Captains, the Drovers, the Barrow-Wardens, the Flume, the Old Reach"></td>
+</tr>
+<tr>
+<td>Seven of the fourteen sets, front and back.</td>
+<td>The other seven.</td>
+</tr>
+<tr>
+<td width="50%"><img src="screenshots/p87-ranged.jpg" alt="The ranged weapons in first person: the pistol, the two slings, the hand-crossbow, the crossbow, the Office carbine, the harpoon gun and the hornbow"></td>
+<td width="50%"><img src="screenshots/p87-harpoon.jpg" alt="The Free Captains' harpoon gun held out in front on the harbour at Port Cantabile"></td>
+</tr>
+<tr>
+<td>Every ranged weapon, painted in code.</td>
+<td>The harpoon gun, on the harbour.</td>
+</tr>
+<tr>
+<td width="50%"><img src="screenshots/p87-pack.jpg" alt="The fifty-two new pieces' pack pictures"></td>
+<td width="50%"><img src="screenshots/p87-pavise.jpg" alt="The Works pavise on the left arm in first person, a short sword in the right hand"></td>
+</tr>
+<tr>
+<td>The new pieces in the pack.</td>
+<td>The Works pavise.</td>
+</tr>
+</table>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>

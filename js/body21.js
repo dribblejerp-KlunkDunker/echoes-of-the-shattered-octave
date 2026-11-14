@@ -339,12 +339,14 @@ const BODY21 = (() => {
     if (sl.material === 'mail') S.pat = PATTERN.mail;
     if (sl.plated) S.zones.push({ d: 19, R: rampOf(body.col), pat: PATTERN.none, sheen: 1, line: true });               // vambrace over mail
     else if (sl.bracer) S.zones.push({ d: 15, R: rampOf(body.material === 'leather' ? body.col : body.col), pat: body.pattern === 'rivets' ? PATTERN.rivets : PATTERN.grain, line: true });
+    else if (sl.material === 'skin') { S.R = rampOf(look.skin); S.pat = PATTERN.none; }   // Phase 87: the hide tunic leaves the arms bare
     else if (sl.rolled) { S.zones.push({ d: 11, skin: true }); S.zones.push({ d: 16, R: rampOf(mulc(sleeveCol, 0.78)), pat: PATTERN.weave, line: true }); }
     if (sl.cuff && !sl.rolled && !sl.bracer && !sl.plated) S.zones.push({ d: sl.wide ? 7 : 4, R: rampOf(sl.cuff), pat: PATTERN.none, line: false });
     if (glass) S.zones.unshift({ d: 12, glass: true });   // the glass runs past the wrist under the cuff
     const Hd = { R: null, pat: PATTERN.none, zones: [], glass };
     if (glass) Hd.R = ARM_GLASS;
     else if (hands.bare) Hd.R = rampOf(look.skin);
+    else if (hands.form === 'cuffs' || hands.form === 'coils') { Hd.R = rampOf(look.skin); Hd.zones.push({ d: 6, R: rampOf(hands.col), pat: PATTERN.none, line: true }); }   // Phase 87: bare fingers
     else { Hd.R = rampOf(hands.col); Hd.pat = patOf(hands.pattern); if (hands.shape === 'gauntlets') Hd.zones.push({ d: 9, R: rampOf(G2.ARMOR.a_kettle.col), pat: PATTERN.plates, sheen: 1 }); }
     return { S, H: Hd, skinR: rampOf(look.skin), glassR: ARM_GLASS };
   }
@@ -437,7 +439,7 @@ const BODY21 = (() => {
     // Phase 87: the melee weapons' own pictures, painted in code with the glove and sleeve you wear (js/fp87.js); drawn
     // at the same place, k times smaller than the canvas (the hook below scales them)
     if (side === 'right' && key !== 'fp_hands' && typeof FP87 === 'object' && FP87.covers(wid)) {
-      try { const r = FP87.paint(wid, look); if (r) { b = { key, wid, side, main: r.canvas, emis: r.emis || null, ext: null, over: [], w: r.canvas.width, h: r.canvas.height, k: r.k, below: r.below, right: r.right, ms: 0 }; buildCache.set(bk, b); OWNED.set(r.canvas, b); stats.builds++; return b; } } catch (e) { warnOnce('fp87', e); }
+      try { const r = FP87.paint(wid, look); if (r) { b = { key, wid, side, main: r.canvas, emis: r.emis || null, ext: null, over: [], w: r.canvas.width, h: r.canvas.height, k: r.k, below: r.below, right: r.right, center: !!r.center, ms: 0 }; buildCache.set(bk, b); OWNED.set(r.canvas, b); stats.builds++; return b; } } catch (e) { warnOnce('fp87', e); }
     }
     const s = segment(key); if (!s) return null;
     const t0 = performance.now();
@@ -627,7 +629,23 @@ const BODY21 = (() => {
     const sh = look.shield; if (!sh) return null;
     const k = sh.id + '|' + look.key; let a = shieldCache.get(k); if (a) return a;
     const F = sh.face;
-    if (sh.shape === 'kite') {
+    if (sh.shape === 'kite' && sh.form === 'pavise') {
+      // Phase 87: the Works pavise: pit-prop planks bound with strap iron, a stencilled red serial, a brass sighting slot
+      const W2 = 112, H2 = 164, P = pix(W2, H2), cx = W2 / 2;
+      const box = (x0, y0, x1, y1) => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
+      const iron = part(P, { R: rampOf(F.rim), sheen: 1.0, round: 3, z: 3 });
+      const wood = [0, 1, 2, 3].map((i) => part(P, { R: rampOf(mulc(F.field, 0.9 + (i % 2) * 0.12)), round: 6, z: 2, pat: PATTERN.grain, sheen: 0.25 }));
+      for (let i = 0; i < 4; i++) poly(P, box(8 + i * 24, 6 + (i % 2) * 2, 8 + i * 24 + 23, 158 - (i % 2) * 2), wood[i]);
+      poly(P, box(6, 26, 106, 34), iron); poly(P, box(6, 122, 106, 130), iron);
+      const r = render(P, { emis: false });
+      const x = r.canvas.getContext('2d');
+      x.fillStyle = 'rgb(30,24,20)'; x.fillRect(cx - 14, 14, 28, 5); x.fillStyle = 'rgb(' + F.boss.join(',') + ')'; x.fillRect(cx - 16, 12, 32, 2); x.fillRect(cx - 16, 19, 32, 2);
+      x.fillStyle = 'rgba(' + F.figure.join(',') + ',0.85)';
+      for (let i = 0; i < 6; i++) for (let j = 0; j < 5; j++) if (hash2(i, j, 87) < 0.6) x.fillRect(22 + i * 12 + (j % 2), 58 + j * 4, 8, 3);   // the serial
+      for (const yy of [30, 126]) for (let i = 0; i < 6; i++) { x.fillStyle = 'rgb(214,216,214)'; x.fillRect(12 + i * 18, yy - 1, 2, 2); }
+      scuff(r.canvas, 70, 21, (px, py) => py > 8 && py < 156 && px > 8 && px < 104);
+      a = { canvas: r.canvas, w: W2, h: H2, hx: cx, hy: 70, kind: 'kite', gripX: 92, gripY: 78 };
+    } else if (sh.shape === 'kite') {
       // the Synod's dead queen, as the item icon and the character card show her: a crowned ivory head in profile on a
       // red field, in a bevelled brass rim; convex, scuffed, the light catching the rim and the crown
       const W2 = 112, H2 = 164, P = pix(W2, H2), cx = W2 / 2;
@@ -660,6 +678,10 @@ const BODY21 = (() => {
       const r = render(P);
       const x = r.canvas.getContext('2d');
       for (let i = 0; i < 8; i++) { const an = i * Math.PI / 4 + 0.39, qx = Math.round(c + Math.cos(an) * 33), qy = Math.round(c + Math.sin(an) * 33); x.fillStyle = 'rgb(70,74,80)'; x.fillRect(qx - 1, qy - 1, 3, 3); x.fillStyle = 'rgb(236,238,232)'; x.fillRect(qx - 1, qy - 1, 1, 1); }
+      // Phase 87 round shields: brass tacks in a spiral (the hide targe), the bell's inscription (the bell-shield), rings of ribs (the barrow's)
+      if (sh.form === 'targe') for (let i = 0; i < 40; i++) { const an = i * 0.62, rr = 6 + i * 0.6; const qx = Math.round(c + Math.cos(an) * rr), qy = Math.round(c + Math.sin(an) * rr); x.fillStyle = 'rgb(220,180,90)'; x.fillRect(qx - 1, qy - 1, 2, 2); }
+      else if (sh.form === 'bellshield') for (let i = 0; i < 44; i++) { if (hash2(i, 3, 528) < 0.35) continue; const an = i / 44 * Math.PI * 2, qx = Math.round(c + Math.cos(an) * 26), qy = Math.round(c + Math.sin(an) * 26); x.fillStyle = 'rgb(' + F.figure.join(',') + ')'; x.fillRect(qx - 1, qy - 1, 2, 3); }
+      else if (sh.form === 'ribbed') { x.strokeStyle = 'rgba(232,212,150,0.55)'; x.lineWidth = 1.5; for (const rr of [14, 20, 26]) { x.beginPath(); x.arc(c, c, rr, 0, Math.PI * 2); x.stroke(); } for (let i = 0; i < 18; i++) if (hash2(i, 9, 22) < 0.3) { const an = i / 18 * Math.PI * 2; x.fillStyle = 'rgba(' + F.figure.join(',') + ',0.8)'; x.fillRect(Math.round(c + Math.cos(an) * 17) - 2, Math.round(c + Math.sin(an) * 17) - 2, 4, 4); } }
       scuff(r.canvas, 40, 33, (px, py) => Math.hypot(px - c, py - c) < 34);
       a = { canvas: r.canvas, w: W2, h: H2, hx: c, hy: c, kind: 'buckler', gripX: 66, gripY: 46 };
     }
@@ -1048,7 +1070,7 @@ const BODY21 = (() => {
       let dx = arguments[1], dy = arguments[2], dw = arguments[3], dh = arguments[4];
       // a Phase 87 picture is k times larger than its place: drawn at its place, its right and bottom edges where the old
       // picture's were (the weapon held in the right of the view, the forearm out of the bottom)
-      if (b.k) { const w2 = dw / b.k, h2 = dh / b.k; dx += dw - w2 + (b.right || 0); dy += dh - h2 + (b.below || 0); dw = w2; dh = h2; }
+      if (b.k) { const w2 = dw / b.k, h2 = dh / b.k; dx += (b.center ? (dw - w2) / 2 : dw - w2) + (b.right || 0); dy += dh - h2 + (b.below || 0); dw = w2; dh = h2; }   // Phase 87 (d): the two-handed ranged pictures sit centred, as the crossbow's did
       const sx = dw / img.width, sy = dh / img.height;
       if (!st.offDone && b.side === 'right') {
         st.offDone = true;

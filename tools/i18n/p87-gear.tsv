@@ -11,18 +11,18 @@ Tanner's Row	La Rangée des Tanneurs
 fatigue comes back 20% faster	la fatigue revient 20 % plus vite
 Hedge-weavers' Hush	Le Silence des tisserands de la Haie
 footsteps 20% quieter	des pas 20 % plus discrets
-silent on soft ground; enemies hear you at half the distance	silencieux sur sol meuble ; les ennemis vous entendent à moitié moins loin
+enemies hear you at half the distance	les ennemis vous entendent à moitié moins loin
 Synod Registry	Le Registre du Synode
-Synod clerks take you for one of their own	les clercs du Synode vous prennent pour l'un des leurs
-Proctors at a distance pass you by	les Procureurs, de loin, vous laissent passer
+Synod patrols take you for a clerk, as the robes do	les patrouilles du Synode vous prennent pour un clerc, comme avec la robe
+an inspection takes twice as long	une inspection dure deux fois plus longtemps
 Synod Arsenal	L'Arsenal du Synode
 +2 armour	+2 d'armure
-blocks with the kite shield cost no fatigue	parer avec le bouclier en amande ne coûte aucune fatigue
+a blow blocked with the kite shield does a quarter of its harm	un coup paré avec le bouclier en amande ne fait que le quart de ses dégâts
 Carillon Legion	La Légion du Carillon
 hits that land on you ring: the Cacophony near you takes 3	les coups qui vous touchent sonnent : la Cacophonie proche subit 3 dégâts
 The Office's Proctors	Les Procureurs de l'Office
 Proctors at a distance take you for one of their own	les Procureurs, de loin, vous prennent pour l'un des leurs
-the Office column passes you by	la colonne de l'Office vous laisse passer
+inspections never begin: the Office column passes you by	aucune inspection ne commence : la colonne de l'Office vous laisse passer
 The Cantors	Les Chantres
 Songs cost 10% less voice	les Chants coûtent 10 % de voix en moins
 Songs last a third longer	les Chants durent un tiers plus longtemps
@@ -33,16 +33,16 @@ The Consortium Works	Les Ateliers du Consortium
 heavy work tires you a quarter less	le gros ouvrage vous fatigue un quart de moins
 The Free Captains	Les Capitaines libres
 swings 10% faster	des coups 10 % plus rapides
-ranged weapons reload a third faster; no fall damage from a ship's height	les armes à distance se rechargent un tiers plus vite ; pas de dégâts de chute de la hauteur d'un navire
+ranged weapons reload a third faster	les armes à distance se rechargent un tiers plus vite
 The Drovers	Les Bouviers
 fatigue 15% slower on the roads	la fatigue vient 15 % plus lentement sur les routes
-the pony rides 10% faster; hounds come at you one at a time	le poney va 10 % plus vite ; les chiens vous attaquent un par un
+the pony rides 10% faster; hounds hear you at half the distance	le poney va 10 % plus vite ; les chiens vous entendent à moitié moins loin
 The Barrow-Wardens	Les Gardiens des tertres
 +1 armour; the barrow's dead are slower to wake	+1 d'armure ; les morts du tertre s'éveillent plus lentement
-woolwights and the barrow's dead do not follow you past its door	les Laineux et les morts du tertre ne vous suivent pas au-delà de sa porte
+woolwights and the barrow's dead strike you for a third less	les Laineux et les morts du tertre vous frappent un tiers moins fort
 The Flume and the Lanes	La Flume et les Ruelles
 quieter on boards and in water	plus discret sur les planches et dans l'eau
-the punt and wading cost no fatigue; the surge does not knock you down	la barque et le gué ne coûtent aucune fatigue ; la crue ne vous renverse pas
+the Dry Flume's surge does not sweep you off your feet; fatigue comes back 20% faster	la crue de la Flume Sèche ne vous emporte pas ; la fatigue revient 20 % plus vite
 The Old Reach	Le Vieux Pays
 iron-bough and flint hit 15% harder	le bois-de-fer et le silex frappent 15 % plus fort
 the Deep Grove's ways are always the low note	les chemins du Bosquet profond sont toujours la note basse

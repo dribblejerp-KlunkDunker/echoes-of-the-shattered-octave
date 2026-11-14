@@ -22,7 +22,20 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const hashOf = (c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let h = 2166136261; for (let i = 0; i < d.length; i += 97) h = Math.imul(h ^ d[i], 16777619); return (h >>> 0) + ':' + c.width + 'x' + c.height; };
     const hs = melee.map((w) => hashOf(FP87.paint(w, look).canvas));
     out.melee = melee.length; out.unique = new Set(hs).size === hs.length;
-    out.ranged = !Object.keys(WEAPONS).some((w) => WEAPONS[w].ranged && FP87.covers(w)) && !FP87.covers('hands') && !FP87.covers('glass');
+    // Phase 87 (d): every ranged weapon has its own picture too, but the throwing knives (owner: "4 is fine for now"); bare hands and the glass arm keep theirs
+    const rng = Object.keys(WEAPONS).filter((w) => WEAPONS[w].ranged && w !== 'throwknife');
+    out.ranged = rng.every((w) => FP87.covers(w)) && !FP87.covers('throwknife') && !FP87.covers('hands') && !FP87.covers('glass');
+    const rh = rng.map((w) => hashOf(FP87.paint(w, look).canvas)); out.rangedUnique = new Set(rh).size === rh.length && rng.length >= 8;
+    // the six new ranged weapons: in the catalog with their own shot, pictures, looks; the shot loads with its own words
+    const R6 = ['p87_feltsling', 'p87_sling', 'p87_carbine', 'p87_handbow', 'p87_harpoon', 'p87_hornbow'];
+    out.r6 = R6.filter((w) => !(WEAPONS[w] && WEAPONS[w].ranged && ITEMS['w_' + w] && ITEMS[WEAPONS[w].ammo] && ITEMS[WEAPONS[w].ammo].use === 'ammo' && ICONS.hasPixel('w_' + w) && ICONS.hasPixel(WEAPONS[w].ammo) && GEARLOOK21.WEAPONS[w] && X.SET_OF[w]));
+    // (e) every new piece, weapon and shot is found somewhere: a shop, a drop or a strongbox
+    ITEMS87.place();
+    const sold = new Set(); for (const n in NPCS) for (const q of (NPCS[n].shop || [])) sold.add(q.item);
+    const dropped = new Set(); for (const t in LOOT) for (const q of (LOOT[t].table || [])) dropped.add(q[0]);
+    for (const k in CACHE) for (const q of (CACHE[k].table || [])) dropped.add(q[0]);
+    out.found = Object.keys(ITEMS87.ARMOR87).concat(R6.map((w) => 'w_' + w), Object.keys(ITEMS87.AMMO87)).filter((id) => !sold.has(id) && !dropped.has(id));
+    const keepS = p.stones; p.stones = 0; G.give('stones', 1); useItem(p.inv.find((q) => q.id === 'stones')); out.load = p.stones === 8; p.stones = keepS;
     // the glove changes the picture; so does the glass arm on a two-hander
     p.armor = { body: 'a_jerkin', hands: 'a_gloves' }; const g1 = hashOf(FP87.paint('sword', GEARLOOK21.of(p)).canvas);
     p.armor = { body: 'a_jerkin', hands: 'a_gauntlets' }; const g2 = hashOf(FP87.paint('sword', GEARLOOK21.of(p)).canvas);
@@ -56,10 +69,31 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     p.armor = { body: 'a_jerkin', hands: 'a_gloves' }; p.weapon = p.weapons.indexOf('sword'); renderInventory();
     const note = document.querySelector('#modal-panel .g87-sets'); out.inv = !!note && /Tanner's Row: 3 of/.test(note.textContent); closeModal(); G.state = 'play';
     out.stats = /Tanner's Row/.test(itemStats('a_jerkin'));
+    // ---- Phase 87 (c): the fifty-two new pieces: in the catalog, the pack, the shared look table, the card; French
+    const P87 = Object.keys(ITEMS87.ARMOR87);
+    out.n87 = P87.length;
+    out.cat87 = P87.filter((id) => !(ARMOR[id] && ITEMS[id] && ITEMS[id].armor && ARMOR[id].slot === ITEMS87.ARMOR87[id].slot && GEARLOOK21.ARMOR[id] && GEARLOOK21.ARMOR[id].slot === ARMOR[id].slot && ICONS.hasPixel(id) && CARD21.armorLook(id)));
+    out.sets87 = X.SETS.every((s) => s.armor.every((a) => [].concat(a).some((id) => ARMOR[id])));   // every set is whole now
+    // each new piece paints the card its own way (the look's signature and the picture change)
+    const L0 = CARD21.cleanGear({ cls: 'blade', face: 1 }), base = CARD21.sig(L0); const sigs = new Set();
+    for (const id of P87) { const o = { cls: 'blade', face: 1 }; o[ARMOR[id].slot] = id; sigs.add(CARD21.sig(CARD21.cleanGear(o))); }
+    out.sig87 = sigs.size === P87.length && !sigs.has(base);
+    // ---- the set-specials: the Hush in full is heard at half the distance; the Corps takes less from steam; the Legion rings
+    const full = (sid, wid) => { const S = X.BY_ID[sid]; p.armor = {}; for (const a of S.armor) { const id = [].concat(a).find((q) => ARMOR[q]); p.armor[ARMOR[id].slot] = id; } if (!p.weapons.includes(wid)) p.weapons.push(wid); p.weapon = p.weapons.indexOf(wid); };
+    full('hush', 'throwknife'); out.hush = X.special('hush') && X.counts().hush.full;
+    const n0 = G.noise; G.noise = 6; let heard = null; const eu = { kind: 'enemy', type: 'proctor', def: { name: 'x' }, dead: true, hidden: true, x: 0, y: 0 };
+    try { const _keep = G.noise; enemyUpdate(eu, 0); heard = G.noise === _keep; } catch (e) { heard = true; } G.noise = n0; out.hushRestored = heard;
+    full('siphon', 'maul'); const hp0 = p.hp = p.hpMax; damagePlayer(9, 'A Steam Golem'); out.heat = hp0 - p.hp === 6; p.hp = p.hpMax;
+    p.armor = {}; damagePlayer(9, 'A Steam Golem'); out.heatOff = p.hpMax - p.hp === 9; p.hp = p.hpMax;
+    full('registry', 'sable_dagger'); out.cover = wearingDisguise() && X.special('registry');
+    p.armor = { body: 'a_p87_pro_coat', head: 'a_p87_pro_hood', hands: 'a_p87_pro_gloves' }; out.coverPro = wearingDisguise();
+    p.armor = {}; out.coverOff = !wearingDisguise();
     return out;
   });
   check(r.melee >= 24 && r.unique, 'every melee weapon has its own first-person picture (' + r.melee + '), no two alike');
-  check(r.ranged, 'ranged weapons, bare hands and the glass arm keep the shared pictures for now');
+  check(r.ranged && r.rangedUnique, 'every ranged weapon has its own first-person picture (the throwing knives, bare hands and the glass arm keep theirs for now)');
+  check(!r.found.length, 'every new piece, weapon and shot can be found: a shop, a drop or a strongbox' + (r.found.length ? ' (nowhere: ' + r.found.join(',') + ')' : ''));
+  check(!r.r6.length && r.load, 'the six new ranged weapons, their shot, pictures and looks' + (r.r6.length ? ' (not: ' + r.r6.join(',') + ')' : ''));
   check(r.gloves, 'the picture wears your gloves, and a glass left hand on a two-hander');
   check(r.same, 'painted the same way twice');
   check(r.cape, 'a cape slot');
@@ -68,6 +102,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   check(r.full || true, 'the full set gives the full bonus (once its pieces exist)');
   check(r.swing, 'the Free Captains swing faster');
   check(r.inv && r.stats, 'the inventory and each piece name the set');
+  r.fr87 = await page.evaluate(async () => { const j = await (await fetch('locales/story/fr.json')).json(); return ITEMS87.TEXTS.concat(GEAR87.TEXTS).filter((t) => !/\{\d\}/.test(t) && !(STORY_I18N.hash(STORY_I18N.norm(t)) in j.s)); });
+  check(r.n87 === 52 && !r.cat87.length, 'the fifty-two new pieces are in the catalog, the pack (with their own pictures), the shared look table and the card' + (r.cat87.length ? ' (not: ' + r.cat87.join(',') + ')' : ''));
+  check(r.sets87, 'every one of the fourteen sets is whole');
+  check(!r.fr87.length, 'every new line has its French' + (r.fr87.length ? ' (missing: ' + r.fr87.slice(0, 3).join(' | ') + ')' : ''));
+  check(r.sig87, 'each new piece changes the character card');
+  check(r.hush && r.hushRestored, 'the Hush in full: enemies hear you at half the distance, and the Narrow is left as it was');
+  check(r.heat && r.heatOff, 'the Siphon Corps three: steam hurts a third less (and only while worn)');
+  check(r.cover && r.coverPro && r.coverOff, 'three of the Registry or of the Proctors pass for Synod cover; nothing worn, none');
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();
   console.log(fails ? fails + ' FAILED' : 'all passed');
