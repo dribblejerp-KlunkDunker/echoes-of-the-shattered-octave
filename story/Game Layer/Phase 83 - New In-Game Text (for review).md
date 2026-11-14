@@ -26,6 +26,8 @@ From the world plan, `Phase 81 - The World Plan.md`, "Road 1. The Flume, down to
 
 ## Questions for the owner
 
+**Ruled by the owner, 13 Nov 2026:** "to phase 83 the questions 1 is yes, 2 is good, 3 is a yes", and "all proposed pass". The four people stay as descriptions; the lengthsman pays 8 sovereigns, once; the grating becomes the Dry Flume's door in Phase 85; every [PROPOSED] line below is approved (the marks are left to show what was invented).
+
 1. Are the four new people's names right as descriptions only (no personal names), as the plan gives them?
 2. Is 8 sovereigns right for the lengthsman's task, and should it stay paid only once?
 3. The grating shows but does not open. Phase 85 (the Dry Flume) will make it a door: is that still the plan?
