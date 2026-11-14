@@ -320,6 +320,27 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**Danger and reward on the roads (Phase 86).** The roads now change with the hour and the weather, the same way every time: the pack comes out on the Long Common after dark, the briar wakes in the rain and sleeps in snow, drones come up on the pound banks at night and in storm, the Hollows' dogs come out in mist. There are camps to clear (an Office survey camp, a Quiet Faith vigil, a hound den, a briar-bed; cold for a week once cleared, each with a crate), fires where you can sit until morning, and four keepers that come out only at their own hour: the Hiss, the Briar Queen, the Hollow Dog and the Sunk Bell. The people already on the roads pay for them, and for a week's work besides. An Office column walks one road a day, taking names; fighting it goes in the Office's book. Every notice board says what is on the roads today. Every line is [PROPOSED]: [`story/Game Layer/Phase 86 - New In-Game Text (for review).md`](story/Game%20Layer/Phase%2086%20-%20New%20In-Game%20Text%20(for%20review).md).
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p86-hiss.jpg" alt="The Hiss, a hound the size of a pony, on the Long Common at night in the rain"></td>
+<td width="50%"><img src="screenshots/p86-bell.jpg" alt="The Sunk Bell, a great drone over the deepest pool in the Sunk Lanes, in a storm"></td>
+</tr>
+<tr>
+<td>The Hiss, on the Long Common at night in the rain.</td>
+<td>The Sunk Bell, in a storm.</td>
+</tr>
+<tr>
+<td width="50%"><img src="screenshots/p86-column.jpg" alt="The Office column on the road: an assessor, proctors, an outrider and a hushwarden"></td>
+<td width="50%"><img src="screenshots/p86-fire.jpg" alt="The raft-hands' fire on the Stride at night, two raft-hands beside it"></td>
+</tr>
+<tr>
+<td>The Office column, taking names.</td>
+<td>The raft-hands' fire: sit until morning.</td>
+</tr>
+</table>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>

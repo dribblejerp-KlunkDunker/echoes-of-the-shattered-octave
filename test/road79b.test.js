@@ -39,8 +39,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       o.water = water; o.cliff = cliff; o.rolling = Math.round(100 * rolling / n); o.tilted = tilted;
       const looks = m.entities.filter((e) => e.label && e.kind !== 'npc' && !e._flora); o.things = looks.length; o.reach = looks.every((e) => near(m, dist, e.x, e.y) >= 0);
       o.caches = m.entities.filter((e) => e.item === 'cache' && near(m, dist, e.x, e.y) >= 0).length;
-      const foes = m.entities.filter((e) => e.kind === 'enemy'), rn = (x, y) => { let b = 1e9; for (let i = 0; i + 1 < P.length; i++) { const [ax, ay] = P[i], [bx, by] = P[i + 1], L2 = (bx - ax) ** 2 + (by - ay) ** 2, t = Math.max(0, Math.min(1, ((x - ax) * (bx - ax) + (y - ay) * (by - ay)) / L2)); b = Math.min(b, Math.hypot(x - ax - (bx - ax) * t, y - ay - (by - ay) * t)); } return b; };
-      o.foes = foes.map((e) => e.type).sort().join(','); o.foesOff = foes.every((e) => rn(e.x, e.y) > 10 && near(m, dist, e.x, e.y) >= 0);
+      const foes = m.entities.filter((e) => e.kind === 'enemy' && !e._r86),   // Phase 86's rosters and the Office column walk the road itself, by design (test/roads86)
+        foes86 = m.entities.filter((e) => e.kind === 'enemy' && e._r86 && !e._r86.water), rn = (x, y) => { let b = 1e9; for (let i = 0; i + 1 < P.length; i++) { const [ax, ay] = P[i], [bx, by] = P[i + 1], L2 = (bx - ax) ** 2 + (by - ay) ** 2, t = Math.max(0, Math.min(1, ((x - ax) * (bx - ax) + (y - ay) * (by - ay)) / L2)); b = Math.min(b, Math.hypot(x - ax - (bx - ax) * t, y - ay - (by - ay) * t)); } return b; };
+      o.foes = foes.map((e) => e.type).sort().join(','); o.foesOff = foes.every((e) => rn(e.x, e.y) > 10 && near(m, dist, e.x, e.y) >= 0) && foes86.every((e) => near(m, dist, e.x, e.y) >= 0);
       o.traps = m.entities.filter((e) => e.use === 'trap').length; o.danger = m.danger;
       out.st[id] = o; }
     out.total = total; out.mid = out.st[B.MID].steps;

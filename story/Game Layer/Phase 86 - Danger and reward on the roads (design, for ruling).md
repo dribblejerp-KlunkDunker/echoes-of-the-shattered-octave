@@ -90,3 +90,9 @@ The Kestrel still carries you between countries. The big places (the Howe, the D
 5. **The Office column, walking a road a day.** *Recommend: yes; it is the one danger that comes looking for you, and it fits the books.* And: should fighting it count as a crime with the Office? *Recommend: yes, a small one, so keeping out of its way is worth something.*
 6. **Names:** the Hiss, the Briar Queen, the Hollow Dog, the Sunk Bell, the bounty lines. *Recommend: keep, or give your own.*
 7. **Order of building:** the rosters and the board lines first, then camps, then keepers and bounties, then the column. *Recommend: this order.*
+
+## The owner's ruling (14 November 2026)
+
+"yes, yes, yes, yes, yes, no they work well, yes". In order: (1) rosters worked out from the day, hour and weather; (2) the rosters as tabled; (3) camps on a cycle, cold for a week once cleared, and friendly fires to sit by until morning; (4) keepers' trophies for selling and bounties only, no new gear; (5) the Office column walks a road a day, and fighting it is a small crime; (6) the names are kept as written; (7) build in the order given. Built in `js/roads86.js`; the text is in "Phase 86 - New In-Game Text (for review)".
+
+Two readings made in the build, for the owner to overrule: the returners' week's work is five dogs gone from the Hollows (not an escort, which would need the family to walk with you), and the boards carry the road news under "On the roads today" rather than the bounties under "To take" (the bounties are given in person).
