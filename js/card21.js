@@ -133,15 +133,22 @@ const CARD21 = (() => {
   // entries are translated into the local shape once and cached; anything the shared table lacks falls back to LOCAL.
   const HW = 3;   // one hand-width (about 9 cm) in body units (a body is about 57 units, 175 cm)
   const SH_KIND = { cap: 'cap', hood: 'hood', kettle: 'kettle', bellhelm: 'bellhelm', robe: 'robe', gambeson: 'gambeson', jerkin: 'jerkin', longcoat: 'coat', brigandine: 'brig', hauberk: 'mail', cuirass: 'plate', shirt: null,
-    gloves: 'gloves', gauntlets: 'gauntlets', softboots: 'soft', hobnails: 'hobnail', greaves: 'greaves', shoes: null, buckler: 'buckler', kite: 'kite' };
+    gloves: 'gloves', gauntlets: 'gauntlets', softboots: 'soft', hobnails: 'hobnail', greaves: 'greaves', shoes: null, buckler: 'buckler', kite: 'kite', cape: 'cape' };
+  // Phase 87: a piece's own silhouette (GEARLOOK21 `form`) where it needs a builder of its own; the other forms are details
+  // drawn inside their shape's builder (see FORM below)
+  const FORM_KIND = { bandana: 'bandana', biretta: 'biretta', sallet: 'sallet', cowl: 'cowl', widehat: 'widehat', flapcap: 'flapcap', crown: 'crown', goggles: 'cap', mesh: 'hood', buckle: 'shoe', sandals: 'shoe' };
   const MAT_KIND = { leather: 'leather', hushwool: 'wool', iron: 'metal', bellbronze: 'metal', steel: 'metal', oilcloth: 'oil', quilt: 'quilt', canvas: 'canvas', mail: 'mail', felt: 'felt', wood: 'wood', linen: 'cloth', skin: 'skin', glass: 'glass' };
   const WK_KIND = { fists: 'fists', glassarm: 'glassarm', sword: 'blade', longsword: 'blade', greatsword: 'blade', knife: 'blade', dirk: 'blade', throwing: 'blade', axe: 'axe', mace: 'mace', hammer: 'hammer', maul: 'maul', spear: 'fork', glaive: 'glaive', pistol: 'pistol', crossbow: 'crossbow' };
   let adapted = null, adaptedFrom = null;
   function adaptArmor(e, loc) {
-    const kind = SH_KIND[e.shape]; if (!kind) return loc || null;
+    const kind = (e.form && FORM_KIND[e.form]) || SH_KIND[e.shape]; if (!kind) return loc || null;
     const col = e.col && e.col.base ? e.col.base : (loc && loc.col) || C.linen;
     const o = Object.assign({}, loc || {}, { slot: e.slot, kind, mat: MAT_KIND[e.material] || (loc && loc.mat) || 'cloth', col, shared: true });
     if (e.col && e.col.trim) o.trim = e.col.trim;
+    if (e.form) { o.form = e.form; o.pat = e.pattern || null; if (e.col && e.col.shade) o.shade = e.col.shade; }
+    if (e.slot === 'cape') o.len = Number.isFinite(e.len) ? clamp(e.len, 0, 1) : 0.6;
+    if (e.form === 'mesh') o.full = true;
+    if (e.form === 'proctor') o.collar = true;
     if (e.slot === 'body') {
       if (Number.isFinite(e.len)) o.hem = clamp(27.5 - e.len * 25.5, 2.5, 26);
       const sl = e.sleeve || null;
@@ -153,7 +160,11 @@ const CARD21 = (() => {
       if (kind === 'mail' && o.bulk == null) o.bulk = 0.3;
     }
     if (e.slot === 'hands' && e.col && e.col.trim) o.palm = e.col.trim;
-    if (e.slot === 'feet') { o.top = kind === 'soft' ? 6 : kind === 'hobnail' ? 10 : kind === 'greaves' ? 15 : (o.top || 9); if (kind === 'greaves' && e.col.trim) o.boot = e.col.trim; if (kind === 'hobnail') o.studs = true; }
+    if (e.slot === 'feet') {
+      o.top = kind === 'soft' ? 6 : kind === 'hobnail' ? 10 : kind === 'greaves' ? 15 : kind === 'shoe' ? 5.5 : (o.top || 9); if (kind === 'greaves' && e.col.trim) o.boot = e.col.trim; if (kind === 'hobnail') o.studs = true;
+      const ft = { tall: 14, topboot: 14.5, turnshoe: 4.6, clog: 9, sabatons: 15 }[e.form]; if (ft) o.top = ft;
+      if (e.form === 'clog' || e.form === 'topboot') o.studs = false;
+    }
     if (e.slot === 'shield') {
       const f = e.face || {};
       // sizes as the shared table gives them (cm when present: one body unit is about 3 cm), no clamps of our own
@@ -275,7 +286,7 @@ const CARD21 = (() => {
 
   // ================================================================ THE LOOK (validated catalog ids only)
   const CLS_IDS = ['blade', 'cantor', 'corsair', 'archivist', 'penitent', 'quarry'];
-  const SLOTS = ['head', 'body', 'hands', 'feet', 'shield'];
+  const SLOTS = ['head', 'body', 'hands', 'feet', 'shield', 'cape'];   // Phase 87: the cape
   const armorOk = (id, slot) => typeof id === 'string' && id.length < 40 && typeof ARMOR === 'object' && has(ARMOR, id) && ARMOR[id].slot === slot;
   const weaponOk = (id) => typeof id === 'string' && id.length < 40 && typeof WEAPONS === 'object' && has(WEAPONS, id);
   function offHand(p) {
@@ -287,7 +298,7 @@ const CARD21 = (() => {
   }
   function lookOf(p) {
     p = p || (typeof G !== 'undefined' ? G.player : null);
-    const L = { v: 1, cls: 'blade', ci: 0, face: 1, glass: 0, head: null, body: null, hands: null, feet: null, shield: null, stowed: false, weapon: 'hands', off: null };
+    const L = { v: 1, cls: 'blade', ci: 0, face: 1, glass: 0, head: null, body: null, hands: null, feet: null, shield: null, cape: null, stowed: false, weapon: 'hands', off: null };
     if (!p || typeof p !== 'object') return L;
     const cid = p.cls && typeof p.cls === 'object' ? p.cls.id : p.cls;
     const ci = CLS_IDS.indexOf(cid); L.ci = ci >= 0 ? ci : 0; L.cls = CLS_IDS[L.ci];
@@ -307,7 +318,7 @@ const CARD21 = (() => {
   // validate a gear object that came from elsewhere (a save, the network): only catalog ids survive
   function cleanGear(o) {
     if (!o || typeof o !== 'object') return null;
-    const L = { v: 1, cls: 'blade', ci: 0, face: 1, glass: -1, head: null, body: null, hands: null, feet: null, shield: null, stowed: false, weapon: 'hands', off: null };
+    const L = { v: 1, cls: 'blade', ci: 0, face: 1, glass: -1, head: null, body: null, hands: null, feet: null, shield: null, cape: null, stowed: false, weapon: 'hands', off: null };
     const ci = CLS_IDS.indexOf(o.cls); L.ci = ci >= 0 ? ci : clamp(o.ci | 0, 0, 5); L.cls = CLS_IDS[L.ci];
     L.face = [1, 2, 3, 4, 5, 6].includes(o.face) ? o.face : 1;
     L.glass = Number.isFinite(o.glass) && o.glass >= 0 ? clamp(Math.round(o.glass), 0, 100) : -1;
@@ -318,7 +329,7 @@ const CARD21 = (() => {
     L.off = !two && !L.shield && weaponOk(o.off) && !(WEAPONS[o.off].twoHanded) && !WEAPONS[o.off].ranged ? o.off : null;
     return L;
   }
-  const sig = (L) => [L.ci, L.face, L.glass, L.head, L.body, L.hands, L.feet, L.shield, L.stowed ? 1 : 0, L.weapon, L.off].join('|');
+  const sig = (L) => [L.ci, L.face, L.glass, L.head, L.body, L.hands, L.feet, L.shield, L.stowed ? 1 : 0, L.weapon, L.off].join('|') + (L.cape ? '|' + L.cape : '');
   // the ghost painter's compact look -> the nearest LOOK; a remembered full look for this compact one wins (your own
   // ghosts wear what you wore), else the bits are read as gear
   const WK_IDS = ['hands', 'sword', 'knife', 'longsword', 'axe', 'mace', 'spear', 'pistol', 'crossbow', 'glass'];
@@ -642,6 +653,7 @@ const CARD21 = (() => {
     const fc = (T.faces && T.faces[L.face]) || LOCAL.faces[L.face] || LOCAL.faces[1];
     const head = L.head ? armorLook(L.head) : null, body = L.body ? armorLook(L.body) : null;
     const hands = L.hands ? armorLook(L.hands) : null, feet = L.feet ? armorLook(L.feet) : null, shield = L.shield ? armorLook(L.shield) : null;
+    const cape = L.cape ? armorLook(L.cape) : null;   // Phase 87: worn over the back in place of the calling's own cloak
     const W = weaponLook(L.weapon), OW = L.off ? weaponLook(L.off) : null;
     const P = pose(L, W, o);
     const br = P.br;
@@ -662,7 +674,7 @@ const CARD21 = (() => {
     const bodyMat = (b) => {
       if (!b) return robeCalling ? M('robe', cal.coat, 'cloth', { fold: 1.2 }) : mCoat;
       const k = b.mat === 'metal' ? 'metal' : b.mat === 'mail' ? 'mail' : b.mat === 'quilt' ? 'quilt' : b.mat === 'leather' ? 'leather' : b.mat === 'canvas' ? 'canvas' : b.mat === 'oil' ? 'oil' : b.mat === 'wool' ? 'wool' : 'cloth';
-      return M('body:' + b.kind, b.col, k, { spec: k === 'metal' ? 1.1 : k === 'mail' ? 0.6 : k === 'oil' ? 0.35 : 0, fold: k === 'wool' || k === 'oil' || k === 'cloth' ? 1 : 0, kind2: b.kind, trim: b.trim });
+      return M('body:' + b.kind + ':' + (b.form || ''), b.col, k, { spec: k === 'metal' ? 1.1 : k === 'mail' ? 0.6 : k === 'oil' ? 0.35 : 0, fold: k === 'wool' || k === 'oil' || k === 'cloth' ? 1 : 0, kind2: b.form === 'apron' || b.form === 'hide' ? b.form : b.kind, trim: b.trim, pat: b.pat === 'stave' || b.pat === 'fur' ? b.pat : null, hemZ: b.hem });
     };
     const mBody = bodyMat(body);
     const mUnderMail = body && body.under === 'mail' ? M('undermail', C.steel, 'mail', { spec: 0.6 }) : null;
@@ -681,15 +693,16 @@ const CARD21 = (() => {
     let bracerM = null;
     if (body && body.sleeveMat) {
       const sk = body.sleeveMat;
-      const sm = sk === body.mat && sk !== 'cloth' ? mBody : M('sleeve:' + sk, body.sleeveCol || body.col, sk === 'metal' ? 'metal' : sk, { spec: sk === 'mail' ? 0.6 : sk === 'metal' ? 1.1 : 0, fold: sk === 'cloth' || sk === 'wool' ? 0.6 : 0 });
+      const sm = sk === 'skin' ? mSkin : sk === body.mat && sk !== 'cloth' ? mBody : M('sleeve:' + sk, body.sleeveCol || body.col, sk === 'metal' ? 'metal' : sk, { spec: sk === 'mail' ? 0.6 : sk === 'metal' ? 1.1 : 0, fold: sk === 'cloth' || sk === 'wool' ? 0.6 : 0 });
       upperM = body.kind === 'plate' ? (mUnderMail || sm) : sm; foreM = body.rolled ? mSkin : sm;
       if (body.kind === 'jerkin' && !robeCalling) upperM = sm;
       if (body.bracer) bracerM = M('bracer:' + body.kind, body.bracer.col, body.bracer.mat === 'metal' ? 'metal' : 'leather', { spec: body.bracer.mat === 'metal' ? 1.1 : 0.2 });
     }
-    const handM = hands ? M('hands:' + hands.kind, hands.col, hands.mat === 'mail' ? 'mail' : 'leather', { spec: hands.mat === 'mail' ? 0.6 : 0 }) : mSkin;
+    const handKind = (m) => m === 'mail' ? 'mail' : m === 'metal' ? 'metal' : m === 'wool' || m === 'felt' || m === 'canvas' || m === 'cloth' ? m : 'leather';
+    const handM = hands ? M('hands:' + hands.kind + ':' + (hands.form || ''), hands.col, handKind(hands.mat), { spec: hands.mat === 'mail' ? 0.6 : hands.mat === 'metal' ? 1.1 : 0, pat: hands.form === 'wraps' ? 'wrap' : null, trim: hands.trim }) : mSkin;
     // ---- feet and legs
     const bootTop = feet ? (feet.top || 9) : 5.5;
-    const bootM = feet ? (feet.kind === 'greaves' ? M('boot', feet.boot || [70, 50, 36], 'leather') : M('boot:' + feet.kind, feet.col, feet.mat === 'felt' ? 'felt' : 'leather', { studs: !!feet.studs })) : M('shoe', [72, 52, 38], 'leather');
+    const bootM = feet && feet.form === 'sandals' ? M('sock', feet.trim || [170, 160, 150], 'wool') : feet ? (feet.kind === 'greaves' ? M('boot', feet.boot || [70, 50, 36], 'leather') : M('boot:' + feet.kind, feet.col, feet.mat === 'felt' ? 'felt' : 'leather', { studs: !!feet.studs })) : M('shoe', [72, 52, 38], 'leather');
     const greaveM = feet && feet.kind === 'greaves' ? M('greave', feet.col, 'metal', { spec: 1.1 }) : null;
     const leg = (Lg, side) => {
       next(); capsule(X, Lg.hip, Lg.knee, 2.6, 2.05, mTrous); capsule(X, Lg.knee, Lg.ank, 2.0, 1.45, mTrous);
@@ -707,14 +720,105 @@ const CARD21 = (() => {
         capsule(X, add(g0, [0.45, 0, 0]), add(g1, [0.45, 0, 0]), 1.75, 2.05, greaveM);
         sphere(X, add(Lg.knee, [0.9, 0, 0.3]), 1.65, greaveM);
       }
+      // Phase 87: the feet forms' own details
+      const ff = feet && feet.form;
+      if (ff) {
+        next();
+        const inst = lerp3(Lg.heel, Lg.toe, 0.5);
+        if (ff === 'buckle') slab(X, add(inst, [0.2, 0, 1.15]), [1, 0, 0.55], [0, 1, 0], norm([-0.55, 0, 1]), 0.14, [-0.6, 0.6, -0.75, 0.75], (a, b) => Math.abs(a) < 0.6 && Math.abs(b) < 0.75 && !(Math.abs(a) < 0.3 && Math.abs(b) < 0.42), M('buckle', feet.trim || C.silver, 'metal', { spec: 1.3 }));
+        else if (ff === 'sandals') {   // straps over a grey wool sock
+          const sm = M('sandal', feet.col, 'leather');
+          capsule(X, add(Lg.ank, [0.15, 0, 0.6]), add(Lg.ank, [0.15, 0, 0.6]), 1.72, 1.72, sm);
+          capsule(X, add(lerp3(Lg.heel, Lg.toe, 0.62), [0, -1.1, 0.9]), add(lerp3(Lg.heel, Lg.toe, 0.62), [0, 1.1, 0.9]), 0.4, 0.4, sm);
+          capsule(X, add(lerp3(Lg.heel, Lg.toe, 0.35), [0, -1.2, 1.1]), add(lerp3(Lg.heel, Lg.toe, 0.8), [0, 1.0, 0.6]), 0.32, 0.32, sm);
+        } else if (ff === 'clog') { capsule(X, [Lg.heel[0], Lg.heel[1], 0.75], [Lg.toe[0] + 0.25, Lg.toe[1], 0.7], 0.85, 0.8, M('clogsole', [120, 88, 56], 'wood')); next(); sphere(X, add(Lg.toe, [0.2, 0, 0.35]), 1.2, M('toecap', feet.trim || C.brass, 'metal', { spec: 1.3 })); }
+        else if (ff === 'steeltoe') sphere(X, add(Lg.toe, [0.15, 0, 0.3]), 1.18, M('irontoe', feet.trim || C.iron, 'metal', { spec: 1.1 }));
+        else if (ff === 'topboot') { const kT = clamp((bootTop - Lg.ank[2]) / Math.max(1, Lg.knee[2] - Lg.ank[2]), 0, 1); capsule(X, lerp3(Lg.ank, Lg.knee, kT - 0.12), lerp3(Lg.ank, Lg.knee, kT + 0.02), 2.25, 2.35, M('bootcuff', feet.trim || feet.col, 'leather')); }
+        else if (ff === 'sabatons') capsule(X, add(Lg.heel, [0.3, 0, 0.25]), add(Lg.toe, [0.1, 0, 0.2]), 1.42, 1.22, M('sabaton', feet.col, 'metal', { spec: 1.2, lames: true }));
+        else if (ff === 'spiral') { sphere(X, add(Lg.knee, [1.9, 0, 0.3]), 0.9, M('spiral', mixc(feet.col, [255, 230, 160], 0.25), 'metal', { spec: 1.4, pat: 'spiral' })); }
+        else if (ff === 'turnshoe') capsule(X, add(Lg.ank, [0, 0, 1.8]), add(Lg.ank, [0, 0, 2.1]), 1.75, 1.75, M('thong', [80, 56, 36], 'leather'));
+      }
     };
     // ---- the cloak (behind), the shield slung on the back
     const cloak = () => {
+      if (cape && cape.kind === 'cape') { capeDraw(cape); return; }
       next();
       const robeLong = robeCalling || (body && (body.kind === 'coat' || body.kind === 'robe'));
       const z0 = robeLong ? 9 : 15;
       const sw = (z) => (P.st ? P.st * (44 - z) * 0.035 : 0);
       section(X, z0, 45.5 + br * 0.3, (z) => [-3.6 - (45 - z) * 0.035 + P.lean * (z / 44) + sw(z) * 0.2, 0], (z) => (o.display ? 6.5 + (45 - z) * 0.07 : 5.4 + (45 - z) * 0.03) - (z > 43 ? (z - 43) * 0.6 : 0), (z) => 1.6 + (45 - z) * 0.03, mCloak, { back: true, inner: mCloakIn });
+    };
+
+    // ---- Phase 87: a worn cape, cloak, plaid, pennon or pelt (js/gearlook21.js says which; [PROPOSED] every shape)
+    const capeMat = (cp, extra) => {
+      const k = cp.mat === 'oil' ? 'oil' : cp.mat === 'leather' ? 'leather' : cp.mat === 'canvas' ? 'canvas' : cp.mat === 'cloth' ? 'cloth' : 'wool';
+      return M('cape:' + cp.form, cp.col, k, Object.assign({ fold: k === 'leather' || k === 'canvas' ? 0.35 : 0.9, pat: cp.pat, trim: cp.trim, shade2: cp.shade }, extra || {}));
+    };
+    const capeDraw = (cp) => {
+      const f = cp.form || 'cloak', hemZ = 45.5 - (cp.len == null ? 0.6 : cp.len) * 40;
+      const sw = (z) => (P.st ? P.st * (44 - z) * 0.035 : 0);
+      const cm = capeMat(cp, { hemZ });
+      const soft = f === 'shoulder' || f === 'pelt' || f === 'halfcloak' || f === 'mantle';   // bone, ivory and thread; the rest are metal fittings
+      const trimM = M('capetrim:' + f, cp.trim || C.brass, soft ? 'cloth' : 'metal', soft ? null : { spec: 1.1 });
+      const inner = M('capein:' + f, f === 'boatcloak' ? cp.trim : mixc(cp.col, [20, 16, 18], 0.45), f === 'boatcloak' ? 'wool' : 'wool');
+      // the long ones hang down the back behind the body, like the calling's cloak, with a yoke over the shoulders
+      const back = (z0, wid, dep, shift, op) => {
+        next();
+        section(X, z0, 45.5 + br * 0.3, (z) => [-3.6 - (45 - z) * 0.035 + P.lean * (z / 44) + sw(z) * 0.2, shift || 0],
+          (z) => (o.display ? wid + 1.1 : wid) + (45 - z) * (op && op.stiff ? 0 : 0.05) - (z > 43 ? (z - 43) * 0.6 : 0), (z) => dep + (45 - z) * 0.03, cm, Object.assign({ back: true, inner }, op || {}));
+      };
+      // the short ones go right round the shoulders, open down the front
+      const round = (z0, arc, flare) => {
+        next();
+        section(X, z0, 46.4 + br * 0.3, (z) => [P.lean * (z - 26) / 17 - 0.35 + sw(z) * 0.1, 0],
+          (z) => z > 43 ? 8.3 - (z - 43) * 1.55 : 8.3 + (43 - z) * (flare || 0.12) + (o.display ? 0.6 : 0),
+          (z) => z > 43 ? 4.6 - (z - 43) * 0.6 : 4.6 + (43 - z) * 0.07, cm, { arc, inner });
+      };
+      const throat = [3.2 + P.lean * 0.4, 0, 44.2 + br * 0.3];
+      if (f === 'cloak') {
+        back(hemZ, 5.6, 1.7);
+        if (cp.trim && cp.mat !== 'skin') {   // a thrown-back hood (the Hedge's) or a ring-brooch the size of a hand (the barrow's)
+          if (hemZ > 10) { next(); section(X, 40.8, 46.6 + br * 0.3, (z) => [-4.2 + P.lean * 0.9, 0], (z) => 3.4 - Math.abs(z - 43.6) * 0.42, (z) => 2.1 - Math.abs(z - 43.6) * 0.2, cm, { back: true, inner }); }
+          else { next(); const c = [2.6 + P.lean * 0.4, 4.6, 42.6], n = norm([1, 0.35, 0.15]); slab(X, c, [0, 0, 1], norm(cross([0, 0, 1], n)), n, 0.22, [-1.3, 1.3, -1.3, 1.3], (a, b) => { const q = a * a + b * b; return q < 1.69 && q > 0.55; }, trimM); next(); capsule(X, add(c, [0, -0.4, 0.9]), add(c, [0.1, 0.5, -1.1]), 0.2, 0.2, trimM); }
+        }
+      } else if (f === 'boatcloak') {
+        back(hemZ, 5.9, 1.8, -0.6);
+        next(); capsule(X, [-1.4 + P.lean * 0.4, 6.4, 44.4], [-3.2, 6.6, 30], 1.15, 1.55, inner);   // thrown back off the right shoulder: the red lining
+        next(); capsule(X, throat, [3.55 + P.lean * 0.35, -1.0, 37.2], 0.12, 0.12, trimM); sphere(X, [3.7 + P.lean * 0.35, -1.1, 36.8], 0.42, trimM);   // the bosun's whistle
+      } else if (f === 'halfcloak') {
+        back(hemZ, 4.4, 1.6, -2.0);
+        next(); capsule(X, [-0.6 + P.lean * 0.4, -6.6, 44.6], [2.8, -6.2, 33.5], 1.5, 2.1, cm);   // over the left shoulder
+        next(); sphere(X, [3.1 + P.lean * 0.4, -4.4, 42.4], 0.75, trimM); sphere(X, [3.55 + P.lean * 0.4, -4.4, 42.4], 0.4, M('brooch', C.steel, 'metal', { spec: 1.3 }));
+      } else if (f === 'pennon') {
+        next();
+        const top = 44.6, bot = Math.max(8, hemZ), mid = (top + bot) / 2, half = (top - bot) / 2;
+        const c = [-4.4 + P.lean * 0.6 + sw(mid) * 0.3, 0, mid];
+        slab(X, c, [0, 0, 1], [0, 1, 0], [-1, 0, 0], 0.12, [-half, half, -1.6, 1.6], (a, b) => Math.abs(b) < 1.35 && !(a < -half + 2.2 && Math.abs(b) < (-half + 2.2 - a) * 0.62), cm, (a, b) => [0, 0], inner);
+        next(); capsule(X, [-4.1 + P.lean * 0.6, -3.0, top + 0.4], [-4.1 + P.lean * 0.6, 3.0, top + 0.4], 0.32, 0.32, trimM);   // the bronze bar across the shoulders
+        next(); for (const s of [1, -1]) sphere(X, [-4.4 + P.lean * 0.4 + sw(bot) * 0.3, s * 1.05, bot + 0.15], 0.48, trimM);   // bells at the two tails
+      } else if (f === 'plaid') {
+        back(hemZ, 5.5, 1.7, -0.4);
+        next();   // wrapped over the left shoulder and across the chest to the right hip, under the belt
+        const pts = [[-0.6 + P.lean * 0.42, -6.0, 45.0], [2.9 + P.lean * 0.36, -3.4, 39.5], [3.9 + P.lean * 0.18, 0.6, 32.5], [3.6, 4.4, 26.4]];
+        for (let i = 0; i < pts.length - 1; i++) capsule(X, pts[i], pts[i + 1], 1.55 - i * 0.12, 1.45 - i * 0.12, cm);
+      } else if (f === 'tarp') {
+        back(hemZ, 6.0, 1.35, 0, { stiff: true });
+        next(); for (const s of [1, -1]) capsule(X, add(throat, [0, s * 0.5, 0.3]), add(throat, [0.45, s * 0.25, -2.6]), 0.18, 0.15, M('cord', [170, 150, 110], 'cloth'));
+      } else if (f === 'pelt') {
+        round(hemZ, 0.95, 0.16);
+        next(); for (const s of [1, -1]) capsule(X, [2.0 + P.lean * 0.4, s * 5.6, 43.4], [3.7 + P.lean * 0.3, s * 0.7, 38.6], 1.0, 0.65, cm);   // the forelegs, knotted at the chest
+        next(); sphere(X, [3.95 + P.lean * 0.3, 0, 38.4], 0.85, cm);
+        next(); section(X, 43.6, 46.2, (z) => [P.lean * 0.45 - 0.5, 0], (z) => 3.4 - (z - 43.6) * 0.35, (z) => 3.0 - (z - 43.6) * 0.3, M('throat', cp.trim, 'wool', { pat: 'fur' }), { back: true });
+      } else {
+        // tippet, mantle, shoulder, raincape, short: round the shoulders, open down the front
+        const arc = f === 'tippet' || f === 'mantle' ? 0.32 : f === 'raincape' ? 0.42 : f === 'shoulder' ? 0.55 : 0.85;
+        round(Math.min(40.5, hemZ), arc, f === 'raincape' ? 0.2 : 0.12);
+        next();
+        if (f === 'tippet') sphere(X, add(throat, [0.25, 0, -0.6]), 0.6, trimM);   // the small silver seal
+        else if (f === 'shoulder') capsule(X, add(throat, [0.3, -0.7, -0.6]), add(throat, [0.3, 0.7, -0.6]), 0.32, 0.32, trimM);   // the bone toggle
+        else if (f === 'short') { const c = add(throat, [0.4, 0, -0.5]), n = norm([1, 0, 0.12]); slab(X, c, [0, 0, 1], [0, 1, 0], n, 0.18, [-1.0, 1.0, -1.0, 1.0], (a, b) => { const q = a * a + b * b; return q < 1 && (q > 0.5 || Math.abs(a) < 0.18 || Math.abs(b) < 0.18); }, trimM); }   // the brass valve-wheel
+        else if (f === 'raincape' && cp.trim && cp.trim[0] < 120) { capsule(X, [0.6 + P.lean * 0.4, 7.4, 44.4], [0.9 + P.lean * 0.4, 7.8, 47.2], 0.22, 0.2, trimM); sphere(X, [1.2 + P.lean * 0.4, 7.4, 47.4], 0.32, trimM); }   // the lantern-hook
+      }
     };
     const slung = () => {
       if (!shield || !L.stowed) return;
@@ -769,7 +873,7 @@ const CARD21 = (() => {
       }
       // belt and buckle (over a short body; a long coat or robe gets a cord)
       next();
-      const beltM = body && (body.kind === 'robe') ? M('cord', body.trim || C.silver, 'metal', { spec: 0.5 }) : mBelt;
+      const beltM = body && body.kind === 'robe' && body.form !== 'cassock' ? M('cord', body.trim || C.silver, 'metal', { spec: 0.5 }) : mBelt;
       const bz = body && body.kind === 'plate' ? 27.2 : 26.2;
       section(X, bz - 0.7, bz + 0.7, fAt, (z) => hw(z) + (body ? (body.bulk || 0.3) + 0.12 : 0.18), (z) => hd(z) + (body ? (body.bulk || 0.3) * 0.8 + 0.1 : 0.15), beltM);
       next();
@@ -781,10 +885,31 @@ const CARD21 = (() => {
         capsule(X, [hd(26) + 0.1, -2.6, 25.5], [hd(26) - 0.3, -3.6, 19], 0.75, 0.55, sm);
       }
       // the Synod stole: two silver bands down the front
-      if (body && body.kind === 'robe' && body.trim) {
+      if (body && body.kind === 'robe' && body.trim && body.form !== 'cassock') {
         next();
         const stM = M('stole', body.trim, 'metal', { spec: 0.8 });
         for (const s of [1, -1]) section(X, 10, 44.8, (z) => [(z > 27 ? hd(z) + 0.5 : 3.35 + (27 - z) * 0.08) + 0.14 + P.lean * (z - 26) / 17, s * 1.9], () => 0.85, () => 0.35, stM);
+      }
+      // Phase 87: the body forms' own details
+      if (body && body.form) {
+        const fm = body.form, frontX = (z) => hd(z) + (body.bulk || 0.3) * 0.8 + P.lean * (z - 26) / 17;
+        if (fm === 'cassock') {   // a row of small horn buttons from the throat to the knee
+          next(); const hm = M('horn', [196, 180, 150], 'cloth');
+          for (let z = 43.2; z > 14; z -= z > 27 ? 2.1 : 2.6) sphere(X, [(z > 27 ? frontX(z) + 0.1 : 3.5 + (27 - z) * 0.08 + 0.1), 0, z], 0.36, hm);
+        } else if (fm === 'apron') {   // the furnace-apron: a bib and a long front to the shin, a brass pressure-badge
+          next(); const z0 = body.hem == null ? 12 : body.hem, am = M('apron', body.col, 'leather', { spec: 0.3, pat: 'scorch', trim: [30, 24, 20], half: (27 - z0) / 2 });
+          slab(X, [4.0 + P.lean * 0.1, 0, (27 + z0) / 2], [0, 0, 1], [0, 1, 0], [1, 0, 0], 0.18, [-(27 - z0) / 2, (27 - z0) / 2, -5.2, 5.2], (a, b) => Math.abs(b) < 4.3 + (a < 0 ? -a * 0.05 : 0), am, (a, b) => [0, b * 0.09]);
+          next(); slab(X, [frontX(37) + 0.35, 0, 37], [0, 0, 1], [0, 1, 0], [1, 0, 0.08], 0.2, [-1.0, 1.0, -1.0, 1.0], (a, b) => a * a + b * b < 1, M('badge', body.trim || C.brass, 'metal', { spec: 1.3 }));
+          next(); for (const s2 of [1, -1]) capsule(X, [frontX(41.5), s2 * 2.6, 41.5], [P.lean * 0.45 - 0.4, s2 * 1.9, 46.2], 0.32, 0.3, am);   // the neck strap
+        } else if (fm === 'captain') {   // deep turned-back cuffs and two rows of brass buttons going green
+          next(); const bm2 = M('capbtn', body.trim || C.brass, 'metal', { spec: 1.2 });
+          for (let z = 42.4; z > 28; z -= 2.6) for (const s2 of [1, -1]) sphere(X, [frontX(z) + 0.05, s2 * 1.7, z], 0.34, bm2);
+        } else if (fm === 'hide') {   // the hair left on at the shoulders, sinew lacing down the sides
+          next(); const fur = M('hidefur', mixc(body.col, [60, 40, 24], 0.3), 'wool', { pat: 'fur' });
+          for (const s2 of [1, -1]) { const sh = s2 > 0 ? P.shR : P.shL; sphere(X, add(sh, [0, -s2 * 0.6, 0.4]), 2.55, fur); sphere(X, add(sh, [0.4, -s2 * 2.2, 0.9]), 2.0, fur); }
+          next(); const lm = M('sinew', body.trim || [120, 88, 58], 'leather');
+          for (const s2 of [1, -1]) for (let z = 40; z > 24; z -= 2.4) capsule(X, [0.4, s2 * (hw(z) + (body.bulk || 0.3) + 0.05), z], [-0.4, s2 * (hw(z - 1.2) + (body.bulk || 0.3) + 0.05), z - 1.2], 0.16, 0.16, lm);
+        }
       }
       // the neck
       next();
@@ -801,20 +926,20 @@ const CARD21 = (() => {
       if (!closed) {
         section(X, cz - RZ, cz + RZ, (z) => [hc[0] + (z < cz - 1 ? (cz - 1 - z) * 0.06 : 0), 0], (z) => RX * prof(z), (z) => RD * prof(z), faceM);
         // ears and nose
-        if (!(head && head.kind === 'hood')) { next(); for (const s of [1, -1]) sphere(X, [hc[0] - 0.35, s * (RX - 0.1), cz - 0.4], 0.75, mSkin); }
+        if (!(head && head.kind === 'hood')) { next(); for (const s of [1, -1]) sphere(X, [hc[0] - 0.35, s * (RX - 0.1), cz - 0.4], 0.75, mSkin); }   // (the Cantor's cowl leaves the ears free)
         next(); capsule(X, [hc[0] + RD - 0.7, 0, cz - 0.2], [hc[0] + RD - 0.05, 0, cz - 1.3], 0.34, 0.42, faceM);
       }
       const hair = fc.hair ? M('hair', fc.hair, 'hair') : null;
       const wear = head ? head.kind : fc.wear || null;
-      X.brim = wear === 'kettle' || wear === 'cap' || wear === 'captain' || wear === 'hood';
+      X.brim = wear === 'kettle' || wear === 'cap' || wear === 'captain' || wear === 'hood' || wear === 'cowl' || wear === 'widehat' || wear === 'flapcap' || wear === 'sallet' || wear === 'biretta' || wear === 'bandana';
       const hidden = head && head.full;
       // hair under and around everything but a full helm
       if (hair && !hidden) {
         next();
-        if ((fc.style === 'long' && wear !== 'hood') || fc.style === 'braids') {
+        if ((fc.style === 'long' && wear !== 'hood' && wear !== 'cowl') || fc.style === 'braids') {
           section(X, cz - (fc.style === 'long' ? 9.5 : 3), cz + 2, (z) => [hc[0] - 1.2, 0], (z) => (RX + 0.6) * (z > cz ? prof(z) * 1.02 + 0.05 : 1) + (z < cz - 4 ? (cz - 4 - z) * 0.1 : 0), (z) => (RD - 0.2) * (z > cz ? prof(z) : 1), hair, { arc: 1.05 });
         }
-        if (wear !== 'hood' && wear !== 'bellhelm') {
+        if (wear !== 'hood' && wear !== 'bellhelm' && wear !== 'cowl') {
           next();
           section(X, cz + 1.7, cz + RZ + 0.45, (z) => [hc[0] - 0.3, 0], (z) => (RX + 0.4) * Math.sqrt(Math.max(0, 1 - ((z - cz) / (RZ + 0.45)) ** 2)), (z) => (RD + 0.36) * Math.sqrt(Math.max(0, 1 - ((z - cz) / (RZ + 0.45)) ** 2)), hair);
           if (fc.style !== 'bald') section(X, cz - 2.6, cz + 1.9, (z) => [hc[0] - 0.45, 0], (z) => (RX + 0.32) * Math.max(0.6, prof(z)), (z) => (RD + 0.25) * Math.max(0.6, prof(z)), hair, { arc: 1.2 });
@@ -827,7 +952,7 @@ const CARD21 = (() => {
             sphere(X, add(b, [0, 0, -0.6]), 0.55, M('braidtie', [70, 44, 28], 'leather'));
           }
         }
-        if ((fc.style === 'fringe' || fc.style === 'long') && !head && wear !== 'hood') {   // a fringe only under the bare sky (never through a helm)
+        if ((fc.style === 'fringe' || fc.style === 'long') && !head && wear !== 'hood' && wear !== 'cowl') {   // a fringe only under the bare sky (never through a helm)
           next();
           section(X, cz + 1.4, cz + 3.4, (z) => [hc[0] + 0.55, 0], (z) => RX * 0.95, (z) => RD * 0.92, hair, { back: false });
         }
@@ -844,6 +969,9 @@ const CARD21 = (() => {
         const hin = M('hoodin', mixc(head ? head.col : fc.wearCol || cal.cloak, [10, 8, 10], 0.65), 'wool');
         section(X, cz - 3.4, cz + RZ + 1.25, (z) => [hc[0] - 0.65, 0], (z) => (RX + 1.25) * Math.sqrt(Math.max(0, 1 - ((z - cz - 0.4) / (RZ + 1.1)) ** 2)) + 0.3, (z) => (RD + 1.2) * Math.sqrt(Math.max(0, 1 - ((z - cz - 0.4) / (RZ + 1.1)) ** 2)) + 0.25, hm, { arc: 0.62, inner: hin });
         next(); section(X, 42.6 + br * 0.3, cz - 3.0, (z) => [hc[0] - 0.9, 0], (z) => 5.7 - (z - 42.6) * 0.38, (z) => 4.1 - (z - 42.6) * 0.12, hm, { arc: 0.45, inner: hin });
+        if (head && head.form === 'mesh') {   // the Office's silver mesh over the face: nobody sees who is inside
+          next(); section(X, cz - RZ + 0.4, cz + 3.7, (z) => [hc[0] + 0.15, 0], (z) => (RX + 0.2) * Math.max(0.6, prof(z)), (z) => (RD + 0.2) * Math.max(0.6, prof(z)), M('mesh', mixc(head.trim || C.silver, [40, 44, 52], 0.5), 'mail', { spec: 0.4 }));
+        }
       } else if (wear === 'captain') {
         next();
         const top = M('captop', [222, 214, 196], 'cloth'), band = M('capband', C.navy, 'cloth'), peak = M('cappeak', [24, 22, 26], 'leather', { spec: 0.6 });
@@ -853,15 +981,79 @@ const CARD21 = (() => {
         next(); sphere(X, [hc[0] + RD + 0.85, 0, cz + 2.55], 0.42, mBrass);
       } else if (wear === 'cap') {
         next();
-        const cm = M('cap', head.col, 'leather', { spec: 0.35 }), tm = M('captrim', head.trim || head.col, 'leather');
+        const cm = M('cap:' + (head.form || ''), head.col, 'leather', { spec: 0.35 }), tm = M('captrim', head.form === 'goggles' ? head.col.map((v) => v * 0.7 | 0) : head.trim || head.col, 'leather');
         section(X, cz + 1.2, cz + RZ + 0.75, (z) => [hc[0] - 0.25, 0], (z) => (RX + 0.6) * Math.sqrt(Math.max(0, 1 - ((z - cz - 0.6) / (RZ + 0.25)) ** 2)), (z) => (RD + 0.55) * Math.sqrt(Math.max(0, 1 - ((z - cz - 0.6) / (RZ + 0.25)) ** 2)), cm);
         next(); section(X, cz + 1.0, cz + 1.9, (z) => [hc[0] - 0.25, 0], () => RX + 0.78, () => RD + 0.72, tm);
+        if (head.form === 'goggles') {   // smoked glass in brass cups on a strap, pushed up on the brow
+          const gm = M('gogcup', head.trim || C.brass, 'metal', { spec: 1.3 }), lens = M('goglens', [40, 46, 50], 'glass', { spec: 1.4 });
+          next(); section(X, cz + 2.4, cz + 3.1, (z) => [hc[0] - 0.2, 0], () => RX + 0.86, () => RD + 0.8, M('gogstrap', [50, 36, 26], 'leather'));
+          for (const s2 of [1, -1]) { next(); capsule(X, [hc[0] + RD + 0.1, s2 * 1.45, cz + 2.85], [hc[0] + RD + 1.05, s2 * 1.5, cz + 3.0], 1.0, 0.95, gm); next(); sphere(X, [hc[0] + RD + 1.25, s2 * 1.5, cz + 3.0], 0.75, lens); }
+        }
       } else if (wear === 'kettle') {
         next();
         const km = M('kettle', head.col, 'metal', { spec: 1.2 });
         section(X, cz + 1.2, cz + RZ + 1.4, (z) => [hc[0] - 0.2, 0], (z) => (RX + 0.75) * Math.sqrt(Math.max(0, 1 - ((z - cz - 1.0) / (RZ + 0.4)) ** 2)), (z) => (RD + 0.7) * Math.sqrt(Math.max(0, 1 - ((z - cz - 1.0) / (RZ + 0.4)) ** 2)), km);
         next(); section(X, cz + 1.05, cz + 1.65, (z) => [hc[0] - 0.2, 0], (z) => RX + 3.0 - (z - cz - 1.05) * 1.4, (z) => RD + 2.9 - (z - cz - 1.05) * 1.4, km);
         next(); sphere(X, [hc[0] - 0.2, 0, cz + RZ + 1.35], 0.55, km);
+      } else if (wear === 'bandana') {
+        // a sea-faded headscarf: close over the crown, knotted behind with two tails, a brass ring through one corner
+        next();
+        const bm = M('bandana', head.col, 'cloth', { fold: 0.35 }), sq = (t) => Math.sqrt(Math.max(0, 1 - t * t));
+        section(X, cz + 1.3, cz + RZ + 0.6, (z) => [hc[0] - 0.3, 0], (z) => (RX + 0.55) * sq((z - cz - 0.4) / (RZ + 0.3)), (z) => (RD + 0.5) * sq((z - cz - 0.4) / (RZ + 0.3)), bm);
+        next(); sphere(X, [hc[0] - RD - 0.55, 0, cz + 1.6], 0.95, bm);
+        next(); capsule(X, [hc[0] - RD - 0.7, 0.35, cz + 1.2], [hc[0] - RD - 1.25, 1.05, cz - 2.9], 0.6, 0.32, bm); capsule(X, [hc[0] - RD - 0.7, -0.35, cz + 1.2], [hc[0] - RD - 1.0, -0.8, cz - 2.2], 0.55, 0.3, bm);
+        next(); sphere(X, [hc[0] - RD - 1.0, 1.0, cz + 0.8], 0.42, M('bandring', head.trim || C.brass, 'metal', { spec: 1.3 }));
+      } else if (wear === 'biretta') {
+        // a square clerk's cap: a flat-topped drum, three ridges standing on the crown, a silver tassel
+        next();
+        const bm = M('biretta', head.col, 'felt'), tm = M('tassel', head.trim || C.silver, 'metal', { spec: 0.8 }), top = cz + RZ + 0.5;
+        const rr = (z) => z < top - 0.7 ? 1 : Math.sqrt(Math.max(0, 1 - ((z - (top - 0.7)) / 0.8) ** 2));
+        section(X, cz + 1.4, top + 0.1, (z) => [hc[0] - 0.2, 0], (z) => (RX + 0.7) * rr(z), (z) => (RD + 0.6) * rr(z), bm);
+        next(); capsule(X, [hc[0] - 0.2, 0, top + 1.0], [hc[0] + RD - 0.2, 0, top - 0.1], 0.42, 0.36, bm);
+        for (const s2 of [1, -1]) capsule(X, [hc[0] - 0.2, s2 * 0.2, top + 1.0], [hc[0] - 0.2, s2 * (RX - 0.1), top - 0.1], 0.42, 0.36, bm);
+        next(); sphere(X, [hc[0] - 0.2, 0, top + 1.45], 0.6, tm);
+      } else if (wear === 'sallet') {
+        // arsenal steel: a rounded skull, a long tail flaring over the neck, the visor raised on the brow, a plume-tube
+        next();
+        const sm = M('sallet', head.col, 'metal', { spec: 1.25, studs: true }), sq = (t) => Math.sqrt(Math.max(0, 1 - t * t));
+        section(X, cz + 1.0, cz + RZ + 1.3, (z) => [hc[0] - 0.25, 0], (z) => (RX + 0.75) * sq((z - cz - 0.9) / (RZ + 0.45)), (z) => (RD + 0.75) * sq((z - cz - 0.9) / (RZ + 0.45)), sm);
+        next(); section(X, cz - 3.4, cz + 1.6, (z) => [hc[0] - 0.9 - (cz + 1.6 - z) * 0.32, 0], (z) => RX + 0.85 + (cz + 1.6 - z) * 0.16, (z) => RD + 0.75 + (cz + 1.6 - z) * 0.22, sm, { back: true, inner: M('sallin', mixc(head.col, [10, 10, 14], 0.6), 'metal') });
+        next(); section(X, cz + 1.5, cz + 2.7, (z) => [hc[0] + 0.15, 0], () => RX + 0.95, () => RD + 1.0, sm);
+        next(); slab(X, [hc[0] + RD + 1.25, 0, cz + 2.5], [1, 0, 0.5], [0, 1, 0], norm([-0.5, 0, 1]), 0.15, [-1.0, 1.0, -3.0, 3.0], (a, b) => (b / 3.0) ** 2 + (a / 1.0) ** 2 < 1, sm);
+        next(); capsule(X, [hc[0] - 1.6, 0, cz + RZ + 0.6], [hc[0] - 2.3, 0, cz + RZ + 2.0], 0.42, 0.38, M('plume', head.trim || C.canvas, 'metal', { spec: 0.8 }));
+      } else if (wear === 'cowl') {
+        // soft wool folded down to the shoulders, open about the ears; a big roll at the neck and a brass fork-pin
+        next();
+        const hm = M('cowl', head.col, 'wool', { fold: 1.0 }), hin = M('cowlin', mixc(head.col, [10, 8, 10], 0.6), 'wool');
+        section(X, cz - 1.4, cz + RZ + 0.75, (z) => [hc[0] - 0.85, 0], (z) => (RX + 0.9) * Math.sqrt(Math.max(0, 1 - ((z - cz - 0.2) / (RZ + 0.6)) ** 2)) + 0.2, (z) => (RD + 0.95) * Math.sqrt(Math.max(0, 1 - ((z - cz - 0.2) / (RZ + 0.6)) ** 2)) + 0.2, hm, { arc: 1.05, inner: hin });
+        next(); section(X, 41.6 + br * 0.3, cz - 1.2, (z) => [hc[0] - 1.0, 0], (z) => 6.6 - (z - 41.6) * 0.32, (z) => 4.7 - (z - 41.6) * 0.14, hm, { arc: 0.5, inner: hin });
+        next(); sphere(X, [hc[0] + 2.7, 0, 42.4 + br * 0.3], 0.45, M('forkpin', head.trim || C.brass, 'metal', { spec: 1.3 }));
+      } else if (wear === 'widehat') {
+        // brown felt gone the shape of the rain: a dented crown, a broad soft brim that dips at front and back, a band
+        next();
+        const hm = M('widehat', head.col, 'felt'), bm2 = M('hatband', head.trim || C.linen, 'cloth');
+        section(X, cz + 1.9, cz + RZ + 2.4, (z) => [hc[0] - 0.25, 0], (z) => (RX + 0.55) * (z > cz + RZ + 1.4 ? Math.sqrt(Math.max(0, 1 - ((z - cz - RZ - 1.4) / 1.0) ** 2)) : 1) - (z > cz + RZ + 1.7 ? 0.5 : 0), (z) => (RD + 0.5) * (z > cz + RZ + 1.4 ? Math.sqrt(Math.max(0, 1 - ((z - cz - RZ - 1.4) / 1.0) ** 2)) : 1), hm);
+        next(); section(X, cz + 1.9, cz + 2.8, (z) => [hc[0] - 0.25, 0], () => RX + 0.62, () => RD + 0.58, bm2);
+        next(); section(X, cz + 1.55, cz + 2.05, (z) => [hc[0] - 0.25, 0], (z) => RX + 4.2 - (z - cz - 1.55) * 1.6, (z) => RD + 4.4 - (z - cz - 1.55) * 1.6, hm);
+        next(); for (const s2 of [0, 0.6]) capsule(X, [hc[0] + 0.3 - s2, RX + 0.62, cz + 2.5], [hc[0] - 0.6 - s2, RX + 0.95, cz + 4.4 - s2], 0.2, 0.14, M('heather', [150, 110, 140], 'cloth'));
+      } else if (wear === 'flapcap') {
+        // a lengthsman's tarred hat: low crown, a short front brim, a long back flap over the neck
+        next();
+        const fm = M('flapcap', head.col, 'oil', { spec: 0.4 }), sq = (t) => Math.sqrt(Math.max(0, 1 - t * t));
+        section(X, cz + 1.2, cz + RZ + 0.9, (z) => [hc[0] - 0.3, 0], (z) => (RX + 0.7) * sq((z - cz - 0.9) / (RZ + 0.1)), (z) => (RD + 0.7) * sq((z - cz - 0.9) / (RZ + 0.1)), fm);
+        next(); section(X, cz - 3.8, cz + 1.4, (z) => [hc[0] - 1.1 - (cz + 1.4 - z) * 0.2, 0], (z) => RX + 1.0 + (cz + 1.4 - z) * 0.22, (z) => RD + 0.8 + (cz + 1.4 - z) * 0.2, fm, { back: true, inner: M('flapin', mixc(head.col, [20, 16, 10], 0.55), 'oil') });
+        next(); slab(X, [hc[0] + RD + 0.95, 0, cz + 1.25], [1, 0, -0.2], [0, 1, 0], norm([0.2, 0, 1]), 0.13, [-1.3, 1.1, -3.0, 3.0], (a, b) => (a / 1.2) ** 2 + (b / 3.0) ** 2 < 1 && a > -1.0, fm);
+      } else if (wear === 'crown') {
+        // a band of plaited lime-bark and two short red-deer tines, branching once
+        next();
+        const bm = M('barkband', head.col, 'wood'), am = M('antler', head.trim || C.ivory, 'cloth');
+        section(X, cz + 2.0, cz + 3.1, (z) => [hc[0] - 0.3, 0], () => RX + 0.62, () => RD + 0.6, bm);
+        for (const s2 of [1, -1]) {
+          next();
+          const a0 = [hc[0] - 0.4, s2 * (RX + 0.3), cz + 3.0], a1 = [hc[0] - 0.9, s2 * (RX + 1.6), cz + 6.0], a2 = [hc[0] - 0.4, s2 * (RX + 2.0), cz + 8.4];
+          capsule(X, a0, a1, 0.55, 0.42, am); capsule(X, a1, a2, 0.42, 0.22, am);
+          capsule(X, lerp3(a0, a1, 0.7), add(lerp3(a0, a1, 0.7), [1.6, s2 * 0.5, 1.4]), 0.32, 0.16, am);
+        }
       } else if (wear === 'bellhelm') {
         next();
         const bm = M('bellhelm', head.col, 'metal', { spec: 1.3, slit: cz + 0.2 });
@@ -889,16 +1081,27 @@ const CARD21 = (() => {
       if (glassArm && !gFore) capsule(X, lerp3(el, wrist, 0.7), wrist, 1.3, 1.3, mGlass);
       // gloves and gauntlets: a cuff, and the hand
       next();
-      const hm = gHand ? mGlass : handM;
+      const hf = hands && hands.form, bare87 = hf === 'cuffs' || hf === 'coils';   // fingerless kid; bronze coils over bare hands
+      const hm = gHand ? mGlass : bare87 ? mSkin : handM;
       if (bracerM && !gFore) { capsule(X, lerp3(el, wrist, 0.18), lerp3(el, wrist, 0.92), 1.92, 1.55, bracerM); next(); }
-      if (hands && !gHand) { capsule(X, lerp3(el, hd, 0.6), wrist, hands.kind === 'gauntlets' ? 1.62 : 1.42, hands.kind === 'gauntlets' ? 1.72 : 1.45, handM); }
+      if (hands && !gHand && !bare87) { capsule(X, lerp3(el, hd, 0.6), wrist, hands.kind === 'gauntlets' ? 1.62 : 1.42, hands.kind === 'gauntlets' ? 1.72 : 1.45, handM); }
       handBall(hd, hm, true);
+      if (hf && !gHand && !gFore) {
+        next();
+        if (hf === 'longcuff') capsule(X, lerp3(el, wrist, 0.1), wrist, 1.98, 1.62, handM);   // to the elbow
+        else if (hf === 'vambrace') { capsule(X, lerp3(el, wrist, 0.12), lerp3(el, wrist, 0.95), 2.0, 1.72, M('vambrace', hands.col, 'metal', { spec: 1.25, pat: 'inscr', trim: hands.trim })); }
+        else if (hf === 'coils') capsule(X, lerp3(el, wrist, 0.08), lerp3(el, wrist, 1.0), 1.95, 1.55, M('coils', hands.col, 'metal', { spec: 1.3, pat: 'coils', trim: hands.trim }));
+        else if (hf === 'cuffs') { capsule(X, lerp3(el, wrist, 0.15), lerp3(el, wrist, 0.9), 1.95, 1.7, M('sleeveguard', [44, 44, 48], 'oil', { spec: 0.4 })); next(); capsule(X, lerp3(wrist, hd, 0.1), lerp3(wrist, hd, 0.6), 1.38, 1.32, handM); }
+        else if (hf === 'wraps') capsule(X, lerp3(el, wrist, 0.55), wrist, 1.5, 1.42, handM);
+        else if (hf === 'mitts') sphere(X, add(hd, [0.2, 0, 0.1]), 1.42, handM);
+      }
+      if (body && body.form === 'captain' && !gFore) { next(); capsule(X, lerp3(el, wrist, 0.6), lerp3(el, wrist, 0.86), 2.05, 2.15, mBody); }   // the turned-back cuff
       if (glassArm) {
         next();   // facets of glass where it climbs out of the sleeve
         const s0 = gUpper ? lerp3(sh, el, 0.15) : gFore ? lerp3(el, wrist, 0.05) : lerp3(el, wrist, 0.7);
         for (let i = 0; i < 3; i++) { const p = add(s0, [0.6 - i * 0.6, side * (0.9 + i * 0.2), 0.4 - i * 0.5]); sphere(X, p, 0.55 - i * 0.1, mGlass); }
       }
-      if (hands && hands.kind === 'gauntlets' && !gHand) { next(); sphere(X, add(hd, [0.25, side * 0.35, 0.45]), 1.0, M('gauntplate', C.steel, 'metal', { spec: 1.1 })); }
+      if (hands && hands.kind === 'gauntlets' && !gHand && !bare87) { next(); sphere(X, add(hd, [0.25, side * 0.35, 0.45]), 1.0, hf === 'vambrace' ? M('leadglove', C.lead, 'metal', { spec: 0.6 }) : hf === 'rigger' ? M('riggertag', hands.trim || C.brass, 'metal', { spec: 1.2 }) : M('gauntplate', C.steel, 'metal', { spec: 1.1 })); }
     };
     // a weapon at a grip point g with direction d (unit, from the hand toward the business end)
     const metalMat = (name) => {
@@ -1042,7 +1245,15 @@ const CARD21 = (() => {
     // a shield: centre c, facing n (unit), up u
     const shieldShape = (S, c, n, upv, onBack, arm) => {
       const v = norm(cross(upv, n)), U2 = norm(cross(n, v));
-      if (S.kind === 'kite') {
+      if (S.kind === 'kite' && S.form === 'pavise') {
+        // the Works pavise: a tall board of pit-prop planks, bound with strap iron, a red serial and a sighting slot
+        const h = S.h || 30, top = h * 0.4, wTop = S.wTop || 9;
+        const inside = (a, b) => a < top && a > top - h && Math.abs(b) < wTop * (1 - (top - a) / h * 0.08);
+        const faceM = M('paviseface', S.col, 'wood', { pat: 'planks', trim: S.emblem || [150, 58, 44], top }), ironM = M('paviseiron', S.rim || C.iron, 'metal', { spec: 1.0, studs: true });
+        slab(X, c, U2, v, n, 0.55, [top - h - 0.2, top + 0.2, -wTop - 0.2, wTop + 0.2], inside, faceM, (a, b) => [0, b * 0.03], M('paviseback', [92, 70, 46], 'wood'));
+        next(); slab(X, add(c, n, 0.14), U2, v, n, 0.55, [top - h - 0.2, top + 0.2, -wTop - 0.2, wTop + 0.2], (a, b) => inside(a, b) && (Math.abs(a - (top - h * 0.18)) < 0.5 || Math.abs(a - (top - h * 0.78)) < 0.5 || !(inside(a + 0.55, b) && inside(a - 0.55, b) && inside(a, b + 0.55) && inside(a, b - 0.55))), ironM, (a, b) => [0, b * 0.03]);
+        if (!onBack && arm) { next(); const sm = M('strap', [70, 46, 28], 'leather'); for (const t of [0.25, 0.9]) { const p0 = lerp3(arm[0], arm[1], t), d = (c[0] - p0[0]) * n[0] + (c[1] - p0[1]) * n[1] + (c[2] - p0[2]) * n[2] - 1.1; if (d > 0.2) capsule(X, p0, add(p0, n, d), 0.42, 0.42, sm); } }
+      } else if (S.kind === 'kite') {
         const h = S.h || 15, top = h * 0.36, wTop = S.wTop || 4.7;
         const inside = (a, b) => { if (a > top || a < top - h) return false; const t = (top - a) / h; const half = t < 0.28 ? wTop * (0.9 + 0.1 * Math.sin(t / 0.28 * Math.PI / 2)) : wTop * Math.pow(Math.max(0, 1 - (t - 0.28) / 0.72), 0.85); return Math.abs(b) < half - (a > top - 0.6 ? (a - (top - 0.6)) * 0.0 : 0); };
         const rimW = 0.55;
@@ -1060,8 +1271,12 @@ const CARD21 = (() => {
           for (const t of [0.25, 0.9]) { const p0 = lerp3(arm[0], arm[1], t), d = (c[0] - p0[0]) * n[0] + (c[1] - p0[1]) * n[1] + (c[2] - p0[2]) * n[2] - 0.45 - 0.45; if (d > 0.2) capsule(X, p0, add(p0, n, d), 0.42, 0.42, sm); }
         }
       } else {
-        const r = S.r || 3.1;
-        const faceM = M('bucklerface', S.face || [96, 70, 48], 'wood', S.band ? { band: S.band } : null), rimM = M('bucklerrim', S.col || C.steel, 'metal', { spec: 1.2 });
+        const r = S.r || 3.1, sf = S.form;
+        // Phase 87 round shields: the hide targe (tacks in a spiral), the bell-shield (the inscription), the barrow shield (ribs)
+        const faceM = sf === 'targe' ? M('targeface', S.face || [146, 108, 66], 'leather', { pat: 'tacks', trim: S.band || C.brass, R: r })
+          : sf === 'bellshield' ? M('bellface', S.face || C.bronze, 'metal', { spec: 1.3, pat: 'bellring', trim: S.band, R: r })
+          : sf === 'ribbed' ? M('ribface', S.face || C.bronze, 'metal', { spec: 1.2, pat: 'ribs', trim: S.band, R: r })
+          : M('bucklerface', S.face || [96, 70, 48], 'wood', S.band ? { band: S.band } : null), rimM = M('bucklerrim:' + (sf || ''), S.col || C.steel, sf === 'targe' ? 'leather' : 'metal', { spec: sf === 'targe' ? 0.2 : 1.2 });
         slab(X, c, U2, v, n, 0.32, [-r, r, -r, r], (a, b) => a * a + b * b < r * r, faceM, (a, b) => [a * 0.12, b * 0.12], M('bucklerback', [84, 60, 40], 'wood'));
         next(); slab(X, add(c, n, 0.08), U2, v, n, 0.34, [-r, r, -r, r], (a, b) => { const q = a * a + b * b; return q < r * r && q > (r - 0.65) * (r - 0.65); }, rimM, (a, b) => [a * 0.15, b * 0.15]);
         next(); sphere(X, add(c, n, r * 0.26 - 0.25), r * 0.26, S.boss ? M('bucklerboss', S.boss, 'metal', { spec: 1.3 }) : rimM);
@@ -1107,6 +1322,81 @@ const CARD21 = (() => {
 
   // ================================================================ SHADING
   const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map((v) => (v + 0.5) / 16 - 0.5);
+  // Phase 87: the surface patterns of the new pieces (a material's `pat`, its `trim` colour, `hemZ` where a hem is).
+  // Pure functions of the texture coordinates (tu around / across, tv up / along) and the pixel: no random numbers.
+  const frac = (v) => v - Math.floor(v);
+  function pat87(Mt, tu, tv, x, y) {
+    const t = Mt.trim, rT = () => Mt._rT || (Mt._rT = ramp(t || [200, 190, 160], 'cloth')), rM = () => Mt._rM || (Mt._rM = ramp(t || [200, 160, 80], 'metal'));
+    switch (Mt.pat) {
+      case 'check': {   // a plaid: crossing bands of the trim colour, darker where they cross, a thin light line between
+        const a = frac(tu / 1.7), b = frac(tv / 1.7), sa = a < 0.34, sb = b < 0.34;
+        if (sa && sb) return { rp: rT(), dv: -0.18 };
+        if (sa || sb) return { rp: Mt._rC || (Mt._rC = ramp(mixc(Mt.col, t || Mt.col, 0.55), 'cloth')) };
+        if (Math.abs(a - 0.67) < 0.05 || Math.abs(b - 0.67) < 0.05) return { dv: 0.12 };
+        return null;
+      }
+      case 'stave': {   // five lines of a stave round the hem, and a few notes on them
+        const z0 = (Mt.hemZ == null ? 4 : Mt.hemZ) + 0.7, k = (tv - z0) / 0.5;
+        if (k < -0.2 || k > 4.25) return null;
+        const line = Math.abs(k - Math.round(k)) < 0.2 && Math.round(k) >= 0 && Math.round(k) <= 4;
+        const cell = Math.floor(tu / 1.35), note = hash2(cell, 87) < 0.4 && Math.abs(frac(tu / 1.35) - 0.5) < 0.17 && Math.abs(k - (1 + Math.floor(hash2(cell, 88) * 3))) < 0.48;
+        return line || note ? { rp: rT(), dv: note ? -0.1 : 0.05 } : null;
+      }
+      case 'scorch': {   // burned dark toward the hem, in licks
+        // on a section tv is the height and tu runs round; on a slab (the apron) tu runs up from its centre, tv across
+        const slabbed = Mt.half != null, h = slabbed ? tu + Mt.half : tv - (Mt.hemZ == null ? 4 : Mt.hemZ), across = slabbed ? tv : tu;
+        const edge = 2.2 + Math.sin(across * 1.7) * 0.6 + Math.sin(across * 4.3) * 0.25;
+        if (h < edge) return { rp: Mt._rS || (Mt._rS = ramp(mixc(Mt.col, [24, 20, 18], 0.6), 'cloth')), dv: (h - edge) * 0.05 };
+        return null;
+      }
+      case 'stencil': {   // CONSORTIUM in faded red block letters across the back (cells, not real letters at this size)
+        const zc = 36.5, k = (tv - zc) / 0.62;
+        if (Math.abs(k) > 1.6) return null;
+        const col = Math.floor(tu / 0.62), letter = Math.floor(col / 4);
+        if (frac(col / 4) > 0.74 || letter < -6 || letter > 5) return null;
+        return hash2(col * 7 + Math.round(k) * 3, letter) < 0.58 ? { rp: rT(), dv: -0.06 } : null;
+      }
+      case 'fur': return { dv: (hash2(x, y >> 2) - 0.5) * 0.32 + (hash2(x >> 1, (y + 1) >> 3) - 0.5) * 0.1 };
+      case 'coils': {   // bronze rings wound wrist to elbow: dark grooves, every third green with age
+        const r = frac(tv / 0.62), n = Math.floor(tv / 0.62);
+        if (r < 0.2) return { dv: -0.4 };
+        return n % 3 === 0 ? { rp: Mt._rV || (Mt._rV = ramp(t || [92, 138, 112], 'cloth')) } : null;
+      }
+      case 'inscr': {   // a line of an inscription cast round the middle, verdigris in the letters
+        const a = frac(tv / 2.4);
+        if (a < 0.38 || a > 0.62) return null;
+        const cell = Math.floor(tu / 0.42);
+        return hash2(cell, Math.floor(tv / 2.4) + 5) < 0.55 && Math.abs(a - 0.5) < 0.08 ? { rp: Mt._rV || (Mt._rV = ramp(t || [92, 128, 104], 'cloth')), dv: -0.12 } : null;
+      }
+      case 'wrap': return ((x + y) >> 1) % 3 === 0 ? { dv: -0.22 } : null;   // cord wound round and round
+      case 'tacks': {   // brass tacks in a spiral on the hide face
+        const r = Math.hypot(tu, tv), an = (Math.atan2(tv, tu) / (Math.PI * 2) + 1) % 1, k = r / 1.15 - an;
+        if (Math.abs(k - Math.round(k)) < 0.16 && frac((Math.round(k) + an) * 7) < 0.3 && r > 1.0) return { rp: rM(), dv: 0.25 };
+        if (r > (Mt.R || 7) - 0.55) return { rp: Mt._rT2 || (Mt._rT2 = ramp([214, 196, 160], 'cloth')), dv: frac(Math.atan2(tv, tu) * 6) < 0.5 ? 0.1 : -0.1 };   // the rawhide lacing
+        return null;
+      }
+      case 'ribs': {   // rings of raised ribs and studs, green with age in patches
+        const r = Math.hypot(tu, tv), q = frac(r / 1.25);
+        const green = hash2(Math.floor(tu / 1.6) + 40, Math.floor(tv / 1.6)) < 0.3 ? { rp: Mt._rV || (Mt._rV = ramp(t || [92, 138, 112], 'cloth')) } : {};
+        if (q < 0.18) return Object.assign(green, { dv: 0.3 });
+        if (Math.abs(q - 0.6) < 0.12 && frac(Math.atan2(tv, tu) * r * 0.8) < 0.3) return Object.assign(green, { dv: 0.35 });
+        return green.rp ? green : null;
+      }
+      case 'bellring': {   // the bell's inscription still running round the rim
+        const r = Math.hypot(tu, tv), R0 = (Mt.R || 9) - 1.5;
+        if (Math.abs(r - R0) > 0.45) return Math.abs(r - R0) < 0.65 ? { dv: -0.2 } : null;
+        const cell = Math.floor((Math.atan2(tv, tu) + Math.PI) * R0 / 0.5);
+        return hash2(cell, 528) < 0.6 ? { rp: Mt._rV || (Mt._rV = ramp(t || [92, 128, 104], 'cloth')), dv: -0.15 } : null;
+      }
+      case 'planks': {   // pit-prop planks, a stencilled red serial, a brass sighting slot near the top
+        if (frac(tv / 1.7 + 0.5) < 0.07) return { dv: -0.3 };
+        if (Mt.top != null && Math.abs(tu - (Mt.top - 1.6)) < 0.42 && Math.abs(tv) < 1.6) return { rp: Mt._rD || (Mt._rD = ramp([30, 24, 20], 'cloth')), dv: -0.3 };
+        if (Mt.top != null && Math.abs(tu - (Mt.top - 5.2)) < 0.9 && Math.abs(tv) < 3.4) { const c2 = Math.floor((tv + 3.4) / 0.56); return frac(c2 / 3) < 0.67 && hash2(c2, Math.floor((tu - Mt.top) / 0.45)) < 0.62 ? { rp: rT() } : null; }
+        return null;
+      }
+      default: return null;
+    }
+  }
   const hash2 = (x, y) => { let h = (x * 374761393 + y * 668265263) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
   const LX = -0.52, LY = 0.6, LZ = 0.6;   // light from the upper left, a little in front
   const HXl = Math.hypot(LX, LY, LZ + 1), HX = LX / HXl, HY = LY / HXl, HZ = (LZ + 1) / HXl;
@@ -1258,6 +1548,7 @@ const CARD21 = (() => {
           if (nz > 0.45 && Math.abs(lon) < 0.62 && Math.abs(tv - Mt.slit) < 0.45 - Math.abs(lon) * 0.3) { rp = ramp([26, 20, 20], 'cloth'); v = 0.1; }
         }
         if (kind === 'wood' && Mt.band && Math.abs(tv) < 0.55) rp = ramp(Mt.band, 'cloth');
+        if (Mt.pat) { const q = pat87(Mt, tu, tv, x, y); if (q) { if (q.rp) rp = q.rp; if (q.dv) v += q.dv; } }
         // glass glows: it never sinks into the dark tones
         if (Mt.glow) v = v * (1 - Mt.glow * 0.5) + Mt.glow * 0.7;
         const t = clamp(v * 0.94 + BAYER[(y & 3) * 4 + (x & 3)] * (kind === 'metal' || kind === 'mail' || kind === 'glass' ? 0.05 : 0.11), 0, 1.199) * (N_TONE - 1) / 1.2 * 1.2;

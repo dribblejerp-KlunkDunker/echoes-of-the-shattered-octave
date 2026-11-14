@@ -37,19 +37,19 @@ const GEAR87 = (function () {
       t: { ar: 1 }, f: { fatBack: 0.2 }, tLine: S('+1 armour'), fLine: S('fatigue comes back 20% faster') },
     { id: 'hush', name: S('Hedge-weavers\' Hush'), home: 'the Hedge',
       armor: ['a_hood', 'a_hushcoat', 'a_p87_hush_mitts', 'a_softboots', 'a_p87_hush_cloak'], weapons: ['throwknife', 'p87_feltsling'],
-      t: { noise: -0.25 }, f: { noise: -0.35, special: 'hush' }, tLine: S('footsteps 20% quieter'), fLine: S('silent on soft ground; enemies hear you at half the distance') },
+      t: { noise: -0.25 }, f: { noise: -0.35, special: 'hush' }, tLine: S('footsteps 20% quieter'), fLine: S('enemies hear you at half the distance') },
     { id: 'registry', name: S('Synod Registry'), home: 'Fortis',
       armor: ['a_p87_reg_biretta', 'a_synodrobe', 'a_p87_reg_cuffs', 'a_p87_reg_shoes', 'a_p87_reg_cape'], weapons: ['sable_dagger'],
-      t: { special: 'clerk' }, f: { special: 'registry' }, tLine: S('Synod clerks take you for one of their own'), fLine: S('Proctors at a distance pass you by') },
+      t: { special: 'clerk' }, f: { special: 'registry' }, tLine: S('Synod patrols take you for a clerk, as the robes do'), fLine: S('an inspection takes twice as long') },
     { id: 'arsenal', name: S('Synod Arsenal'), home: 'Fortis',
       armor: ['a_p87_ars_sallet', 'a_chain', 'a_gauntlets', 'a_greaves', 'a_p87_ars_cape', 'a_kite'], weapons: ['longsword', 'p12_dirk'],
-      t: { ar: 2 }, f: { special: 'kiteblock' }, tLine: S('+2 armour'), fLine: S('blocks with the kite shield cost no fatigue') },
+      t: { ar: 2 }, f: { special: 'kiteblock' }, tLine: S('+2 armour'), fLine: S('a blow blocked with the kite shield does a quarter of its harm') },
     { id: 'legion', name: S('Carillon Legion'), home: 'the Legion\'s posts',
       armor: ['a_bellhelm', 'a_plate', 'a_p87_leg_vambraces', 'a_p87_leg_sabatons', 'a_p87_leg_pennon', 'a_p87_leg_shield'], weapons: ['mace', 'p12_bellglaive'],
       t: { ar: 2 }, f: { special: 'ring' }, tLine: S('+2 armour'), fLine: S('hits that land on you ring: the Cacophony near you takes 3') },
     { id: 'proctor', name: S('The Office\'s Proctors'), home: 'wherever the Office goes',
       armor: ['a_p87_pro_hood', 'a_p87_pro_coat', 'a_p87_pro_gloves', 'a_p87_pro_boots', 'a_p87_pro_cape'], weapons: ['spear', 'p87_carbine'],
-      t: { special: 'proctor' }, f: { special: 'column' }, tLine: S('Proctors at a distance take you for one of their own'), fLine: S('the Office column passes you by') },
+      t: { special: 'proctor' }, f: { special: 'column' }, tLine: S('Proctors at a distance take you for one of their own'), fLine: S('inspections never begin: the Office column passes you by') },
     { id: 'cantor', name: S('The Cantors'), home: 'Oakhaven and the Howe',
       armor: ['a_p87_can_cowl', 'a_p87_can_cassock', 'a_p79_gloves', 'a_p87_can_sandals', 'a_p87_can_mantle'], weapons: ['p79_staff', 'tobin_blade', 'tollhammer'],
       t: { voice: 0.1 }, f: { special: 'songlong' }, tLine: S('Songs cost 10% less voice'), fLine: S('Songs last a third longer') },
@@ -61,16 +61,16 @@ const GEAR87 = (function () {
       t: { ar: 2 }, f: { fatRoad: 0.25 }, tLine: S('+2 armour'), fLine: S('heavy work tires you a quarter less') },
     { id: 'captains', name: S('The Free Captains'), home: 'Port Cantabile',
       armor: ['a_p87_cap_bandana', 'a_p87_cap_coat', 'a_p87_cap_gloves', 'a_p87_cap_boots', 'a_p87_cap_cape', 'a_buckler'], weapons: ['axe', 'vesper_hook', 'p12_glassblade', 'crossbow', 'p87_harpoon'],
-      t: { swing: 0.1 }, f: { special: 'deck' }, tLine: S('swings 10% faster'), fLine: S('ranged weapons reload a third faster; no fall damage from a ship\'s height') },
+      t: { swing: 0.1 }, f: { special: 'deck' }, tLine: S('swings 10% faster'), fLine: S('ranged weapons reload a third faster') },
     { id: 'drovers', name: S('The Drovers'), home: 'Wethercombe and the drove road',
       armor: ['a_p87_dro_hat', 'a_p22_mantle', 'a_p87_dro_mittens', 'a_p22_droverboots', 'a_p87_dro_plaid'], weapons: ['p22_crook', 'p22_shears', 'p87_sling'],
-      t: { fatRoad: 0.15 }, f: { special: 'drove' }, tLine: S('fatigue 15% slower on the roads'), fLine: S('the pony rides 10% faster; hounds come at you one at a time') },
+      t: { fatRoad: 0.15 }, f: { special: 'drove' }, tLine: S('fatigue 15% slower on the roads'), fLine: S('the pony rides 10% faster; hounds hear you at half the distance') },
     { id: 'barrow', name: S('The Barrow-Wardens'), home: 'Ewe Barrow',
       armor: ['a_p22_barrowhelm', 'a_p22_shroud', 'a_p87_bar_bracers', 'a_p87_bar_greaves', 'a_p87_bar_cloak', 'a_p87_bar_shield'], weapons: ['p22_leafblade'],
-      t: { ar: 1, special: 'barrow' }, f: { special: 'wight' }, tLine: S('+1 armour; the barrow\'s dead are slower to wake'), fLine: S('woolwights and the barrow\'s dead do not follow you past its door') },
+      t: { ar: 1, special: 'barrow' }, f: { special: 'wight' }, tLine: S('+1 armour; the barrow\'s dead are slower to wake'), fLine: S('woolwights and the barrow\'s dead strike you for a third less') },
     { id: 'flume', name: S('The Flume and the Lanes'), home: 'the Flume road and the Low Rings',
       armor: ['a_p87_flu_cap', 'a_p85_coat', 'a_p87_flu_gloves', 'a_p85_boots', 'a_p87_flu_cape', 'a_p85_buckler'], weapons: ['p85_hook', 'p85_pole'],
-      t: { noise: -0.2 }, f: { special: 'water' }, tLine: S('quieter on boards and in water'), fLine: S('the punt and wading cost no fatigue; the surge does not knock you down') },
+      t: { noise: -0.2 }, f: { fatBack: 0.2, special: 'water' }, tLine: S('quieter on boards and in water'), fLine: S('the Dry Flume\'s surge does not sweep you off your feet; fatigue comes back 20% faster') },
     { id: 'oldreach', name: S('The Old Reach'), home: 'the Antler Galleries and the Deep Grove',
       armor: ['a_p87_old_crown', 'a_p87_old_hide', 'a_p87_old_wraps', 'a_p87_old_shoes', 'a_p87_old_pelt'], weapons: ['p85_pick', 'p85_knife', 'p85_bough', 'p87_hornbow'],
       t: { special: 'flint' }, f: { special: 'grove' }, tLine: S('iron-bough and flint hit 15% harder'), fLine: S('the Deep Grove\'s ways are always the low note') },
@@ -112,10 +112,19 @@ const GEAR87 = (function () {
 
   // ---------------------------------------------------------------- how much of each set is worn, and what it gives
   const has = (o, k) => o && Object.prototype.hasOwnProperty.call(o, k);
+  let memo = null, memoKey = '';   // read every frame by the specials: worked out again only when the gear changes
   function counts(p) {
     p = p || (typeof G !== 'undefined' && G.player); const out = {};
     if (!p || !p.armor) return out;
     const wid = p.weapons && p.weapons[p.weapon];
+    const a = p.armor, key = [a.head, a.body, a.hands, a.feet, a.shield, a.cape, wid, typeof ARMOR !== 'undefined' ? Object.keys(ARMOR).length : 0].join('|');
+    if (p === (typeof G !== 'undefined' && G.player) && memo && key === memoKey) return memo;
+    const fresh = countsNow(p, wid);
+    if (p === (typeof G !== 'undefined' && G.player)) { memo = fresh; memoKey = key; }
+    return fresh;
+  }
+  function countsNow(p, wid) {
+    const out = {};
     for (const s of SETS) {
       const exist = s.armor.map((a) => [].concat(a).filter((id) => typeof ARMOR !== 'undefined' && has(ARMOR, id))).filter((l) => l.length);
       const worn = exist.filter((l) => l.some((id) => p.armor[ARMOR[id].slot] === id)).length;
@@ -138,7 +147,7 @@ const GEAR87 = (function () {
 
   // ---------------------------------------------------------------- where the bonuses act
   function wire() {
-    capeSlot(); applyKits();
+    capeSlot(); applyKits(); wireSpecials();
     if (typeof giveKit === 'function') { const _g = giveKit; giveKit = function (p) { try { applyKits(); } catch (e) { warnOnce('kits', e); } const r = _g.apply(this, arguments); try { const K = p && p.cls && KITS[p.cls.id]; if (K && K.tknives && !(p.tknives > 0)) p.tknives = K.tknives; } catch (e) { /* */ } return r; }; }
     if (typeof armorRating === 'function') { const _a = armorRating; armorRating = function (p) { const r = _a.apply(this, arguments); try { return r + bonus('ar', p || G.player); } catch (e) { return r; } }; }
     if (typeof armorNoise === 'function') { const _n = armorNoise; armorNoise = function (p) { const r = _n.apply(this, arguments); try { return Math.max(-0.8, r + bonus('noise', p || G.player)); } catch (e) { return r; } }; }
@@ -153,6 +162,113 @@ const GEAR87 = (function () {
       return r; }; }
     if (typeof renderInventory === 'function') { const _ri = renderInventory; renderInventory = function () { const r = _ri.apply(this, arguments); try { inventoryNote(); } catch (e) { warnOnce('inv', e); } return r; }; }
     if (typeof itemStats === 'function') { const _is = itemStats; itemStats = function (id) { const r = _is.apply(this, arguments); try { const key = typeof ITEMS !== 'undefined' && ITEMS[id] ? (ITEMS[id].weapon || id) : id, sid = SET_OF[key] || SET_OF[id]; if (sid) return (r ? r + ' · ' : '') + BY_ID[sid].name; } catch (e) { /* plain */ } return r; }; }
+  }
+
+  // ---------------------------------------------------------------- the set-specials, where they act (Phase 87 (c))
+  // Each is read live (special(name)), so taking a piece off ends it at once. No random numbers; nothing saved.
+  const FIRE = /steam|fire|flame|burn|scald|furnace|golem|cinder|ember/i;
+  const FLINT = ['p85_pick', 'p85_knife', 'p85_bough', 'p87_hornbow'];
+  let inEnemy = null;   // the enemy whose turn it is (its blows reach damagePlayer from inside enemyUpdate)
+  function wireSpecials() {
+    // who hears you: the Hush in full, and the drove's hounds, hear you at half the distance; the barrow's dead wake slower
+    if (typeof enemyUpdate === 'function') {
+      const _eu = enemyUpdate;
+      enemyUpdate = function (e) {
+        const was = inEnemy; inEnemy = e;
+        let n0 = null;
+        try {
+          if (e && e.kind === 'enemy' && Number.isFinite(G.noise)) {
+            const half = special('hush') || (e.type === 'hound' && special('drove')) || (/^p22_/.test(e.type || '') && special('barrow'));
+            if (half) { n0 = G.noise; G.noise = Math.max(0, (G.noise - 1.9) * 0.5); }   // hearRange = 1.5 + noise x 0.8: about half
+          }
+        } catch (er) { warnOnce('hear', er); }
+        try { return _eu.apply(this, arguments); } finally { if (n0 != null) G.noise = Math.max(G.noise, n0); inEnemy = was; }
+      };
+    }
+    // blows that land on you: fire and steam (the Corps), the barrow's dead (the Wardens), the kite block (the Arsenal),
+    // the ring (the Legion), and the Flume's surge
+    if (typeof damagePlayer === 'function') {
+      const _dp = damagePlayer;
+      damagePlayer = function (dmg, src) {
+        try {
+          if (Number.isFinite(dmg) && dmg > 0) {
+            if (special('heat') && FIRE.test(String(src || (inEnemy && inEnemy.def && inEnemy.def.name) || ''))) dmg = Math.max(1, Math.round(dmg * 0.67));
+            if (inEnemy && /^p22_/.test(inEnemy.type || '') && special('wight')) dmg = Math.max(1, Math.round(dmg * 0.67));
+            if (inEnemy && special('kiteblock') && typeof UPG !== 'undefined' && UPG.blocking && UPG.parryCool > 0 && !(UPG.parryWindow > 0) && G.player.armor.shield === 'a_kite') dmg = Math.max(1, Math.round(dmg * 0.75));   // guard.js then takes it to a third: a quarter in all
+          }
+        } catch (er) { warnOnce('hurt', er); }
+        const hp0 = G.player ? G.player.hp : 0;
+        const r = _dp.call(this, dmg, src);
+        try {
+          if (G.player && G.player.hp < hp0 && special('ring')) {   // the bell-plate rings: the Cacophony near you takes 3
+            const c = Engine.cam;
+            for (const e of G.ents) if (e && e.kind === 'enemy' && !e.dead && !e.hidden && e.def && e.def.cacophony && Math.hypot(e.x - c.x, e.y - c.y) < 2.6) { e.hp -= 3; e.flash = true; if (e.hp <= 0 && typeof killEnemy === 'function') killEnemy(e, false); }
+          }
+        } catch (er) { warnOnce('ring', er); }
+        return r;
+      };
+    }
+    // blows you land: the Corps cracks golems open, the Old Reach's flint and iron-bough bite deeper; the Captains reload faster
+    if (typeof attack === 'function') {
+      const _at = attack;
+      attack = function () {
+        const before = new Map(); const t0 = G.attack && G.attack.t;
+        try { for (const e of G.ents) if (e && e.kind === 'enemy' && !e.dead) before.set(e, e.hp); } catch (er) { /* none */ }
+        const r = _at.apply(this, arguments);
+        try {
+          const wid = G.player.weapons[G.player.weapon], w = WEAPONS[wid] || {};
+          for (const [e, hp] of before) {
+            if (e.dead || !(e.hp < hp)) continue;
+            let k = 0;
+            if (e.type === 'golem' && special('golem')) k += 0.3;
+            if (FLINT.includes(wid) && special('flint')) k += 0.15;
+            if (k) { e.hp -= Math.max(1, Math.round((hp - e.hp) * k)); if (e.hp <= 0 && !e.dead && typeof killEnemy === 'function') killEnemy(e, false); }
+          }
+          if (w.ranged && special('deck') && G.attack && !(t0 > 0) && G.attack.t > 0) { G.attack.t *= 0.67; G.attack.dur = G.attack.t; }
+        } catch (er) { warnOnce('strike', er); }
+        return r;
+      };
+    }
+    // Synod cover: three Registry pieces (or three of the Proctors') are taken for a clerk, as the robes are
+    if (typeof wearingDisguise === 'function') {
+      const _wd = wearingDisguise;
+      wearingDisguise = function () { return _wd.apply(this, arguments) || special('clerk') || special('proctor'); };
+    }
+    if (typeof tickDisguise === 'function') {
+      const _td = tickDisguise;
+      tickDisguise = function (dt) {
+        const s0 = G.coverSuspicion || 0, r = _td.apply(this, arguments);
+        try {
+          const s1 = G.coverSuspicion || 0;
+          if (s1 > s0) { if (special('column')) G.coverSuspicion = s0; else if (special('registry')) G.coverSuspicion = s0 + (s1 - s0) * 0.5; }
+        } catch (er) { warnOnce('cover', er); }
+        return r;
+      };
+    }
+    // Songs last a third longer (the Cantors in full): the Root ward and the falling fifth's hold
+    if (typeof castSong === 'function') {
+      const _cs = castSong;
+      castSong = function () {
+        const w0 = G.rootWard || 0, st = new Map();
+        try { for (const e of G.ents) if (e && e.kind === 'enemy') st.set(e, e.stun || 0); } catch (er) { /* none */ }
+        const r = _cs.apply(this, arguments);
+        try {
+          if (special('songlong')) {
+            if ((G.rootWard || 0) > w0) G.rootWard = w0 + (G.rootWard - w0) * 1.34;
+            for (const [e, s] of st) if ((e.stun || 0) > s) e.stun = s + (e.stun - s) * 1.34;
+          }
+        } catch (er) { warnOnce('song', er); }
+        return r;
+      };
+    }
+    // the drove: the pony goes a tenth faster under a drover
+    if (typeof playerMove === 'function') {
+      const _pm = playerMove;
+      playerMove = function (o, dx, dy) {
+        try { if (o === Engine.cam && typeof MOUNTS84 === 'object' && MOUNTS84.mounted && MOUNTS84.mounted() && special('drove')) { dx *= 1.1; dy *= 1.1; } } catch (er) { /* on foot */ }
+        return _pm.call(this, o, dx, dy);
+      };
+    }
   }
   // the inventory says what is worn of which set, and what it gives
   function inventoryNote() {

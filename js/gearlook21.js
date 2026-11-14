@@ -25,6 +25,7 @@
 //      glassArm: bool,            // the player's LEFT arm is Aether-Glass past the elbow (p.glassed; the Dissonant Blade)
 //      head, body, hands, feet,   // ARMOR entries (or the BARE entry for an empty slot; .bare = true)
 //      shield,                    // ARMOR entry or null; shieldStowed: true when a two-handed weapon puts it on the back
+//      cape,                      // ARMOR entry or null (Phase 87: the sixth slot, worn over the back)
 //      shieldStowed: bool,
 //      weapon,                    // WEAPONS entry of the readied weapon (bare hands when none)
 //      offhand,                   // WEAPONS entry of the Phase 12 off-hand blade (dual wield) or null
@@ -32,7 +33,9 @@
 //      key: string }              // same as key(player)
 //
 //  ARMOR entry: { id, slot, name, material, shape, pattern, col: { base, shade, light, dark, trim }, len?, notes }
-//    slot      'head' | 'body' | 'hands' | 'feet' | 'shield'
+//    slot      'head' | 'body' | 'hands' | 'feet' | 'shield' | 'cape' (Phase 87)
+//    form      Phase 87: the piece's own silhouette inside its shape (bandana, sallet, cassock, mitts, sandals, pavise, plaid...);
+//              a painter that does not know a form draws the shape
 //    material  'leather' | 'hushwool' | 'iron' | 'bellbronze' | 'oilcloth' | 'quilt' | 'canvas' | 'mail' | 'felt' | 'wood' | 'linen' | 'skin'
 //    shape     the silhouette, per slot:
 //      head:   'bare' | 'cap' (close skullcap) | 'hood' (cowl to the shoulders) | 'kettle' (broad brim) | 'bellhelm' (bell dome, eye slit)
@@ -43,6 +46,7 @@
 //      hands:  'bare' | 'gloves' | 'gauntlets'
 //      feet:   'shoes' | 'softboots' (ankle, wrapped) | 'hobnails' (mid-calf, studded soles) | 'greaves' (shin-plates over knee boots)
 //      shield: 'buckler' (round, fist-sized, a boss) | 'kite' (long, painted face)
+//      cape:   'cape' (len: 0 over the shoulders only .. 1 to the ankles; form says which: cloak, tippet, pennon, plaid, pelt...)
 //    pattern   'none' | 'quilt' | 'mail' | 'rivets' | 'plates' | 'weave' | 'studs' | 'stole' | 'grain'
 //    len       body only: hem height as a fraction of leg length below the hip (0 = at the hip, 1 = to the ankle)
 //    sleeve    body only: { material, col, cuff } what the forearm shows; bracer: true when a bracer/vambrace covers it
@@ -160,6 +164,76 @@ const GEARLOOK21 = (() => {
       face: F({ field: [186, 148, 70], figure: [120, 92, 44], rim: [214, 180, 100], boss: [236, 210, 140] }), notes: 'a round of brass from the market cross, stamped with the weights and measures: the Market-Warden\'s Buckler, from Cross Pool (Phase 85)' }),
     a_kite: F({ id: 'a_kite', slot: 'shield', material: 'wood', shape: 'kite', pattern: 'none', col: C([94, 60, 50], [62, 38, 32], [130, 88, 72]), width: 6.7, height: 10, cm: F({ w: 60, h: 90 }),
       face: F({ field: [94, 60, 50], figure: [210, 196, 166], rim: [176, 150, 98], boss: [200, 164, 80] }), notes: 'long and heavy, painted with the Synod\'s dead queen: a pale crowned figure on an oxblood field [PROPOSED: the colours]' }),
+    // ---- Phase 87 (c): the new pieces of the fourteen sets. `form` is the piece's own silhouette inside its slot's
+    // shape (the card and the first-person view draw it; anything that only knows the shape still draws the shape).
+    // Every look here is [PROPOSED] under the approved Phase 87 design; the world's own colours and marks.
+    // capes (the sixth slot): shape 'cape'; len = how far down the back (0 the shoulders, 1 the ankles)
+    a_p87_tan_cape: F({ id: 'a_p87_tan_cape', slot: 'cape', material: 'leather', shape: 'cape', form: 'shoulder', pattern: 'grain', len: 0.12, col: C([112, 72, 42], [74, 46, 26], [152, 104, 66], null, [214, 200, 168]), notes: 'a short shoulder-cape of oiled hide, Fenning\'s scraper-mark burned in at the throat, a bone toggle (trim)' }),
+    a_p87_hush_cloak: F({ id: 'a_p87_hush_cloak', slot: 'cape', material: 'hushwool', shape: 'cape', form: 'cloak', pattern: 'weave', len: 0.8, col: C([50, 72, 66], [30, 46, 42], [78, 102, 92], null, [118, 104, 70]), notes: 'packed Hedge wool to the calf, a woven border of the weavers\' thorn pattern (trim), a deep hood thrown back' }),
+    a_p87_reg_cape: F({ id: 'a_p87_reg_cape', slot: 'cape', material: 'oilcloth', shape: 'cape', form: 'tippet', pattern: 'none', len: 0.0, col: C([122, 128, 128], [84, 90, 92], [166, 170, 168], null, [212, 212, 196]), notes: 'a clerk\'s tippet of grey oilcloth over the shoulders, silver braid at the edge, a small silver seal (trim)' }),
+    a_p87_ars_cape: F({ id: 'a_p87_ars_cape', slot: 'cape', material: 'hushwool', shape: 'cape', form: 'halfcloak', pattern: 'weave', len: 0.45, col: C([104, 44, 40], [68, 28, 26], [140, 66, 58], null, [218, 206, 180]), notes: 'an oxblood half-cloak on the left shoulder, pinned with a steel brooch of the dead queen\'s head (trim: ivory)' }),
+    a_p87_leg_pennon: F({ id: 'a_p87_leg_pennon', slot: 'cape', material: 'linen', shape: 'cape', form: 'pennon', pattern: 'none', len: 0.7, col: C([86, 120, 102], [56, 82, 68], [124, 156, 136], null, [190, 152, 78]), notes: 'a narrow verdigris banner from the shoulders, a dead name stitched down it, a small bronze bell at the tail (trim)' }),
+    a_p87_pro_cape: F({ id: 'a_p87_pro_cape', slot: 'cape', material: 'oilcloth', shape: 'cape', form: 'raincape', pattern: 'none', len: 0.3, col: C([108, 114, 116], [72, 78, 82], [150, 156, 156], null, [228, 228, 220]), notes: 'grey oilcloth to the hip, the Catalogue index-number painted inside in white (trim)' }),
+    a_p87_can_mantle: F({ id: 'a_p87_can_mantle', slot: 'cape', material: 'hushwool', shape: 'cape', form: 'mantle', pattern: 'stave', len: 0.08, col: C([206, 196, 176], [150, 140, 122], [232, 224, 206], null, [96, 74, 102]), notes: 'a cream choir-mantle over the shoulders, the five lines of a stave stitched round the hem in plum (trim)' }),
+    a_p87_sip_cape: F({ id: 'a_p87_sip_cape', slot: 'cape', material: 'canvas', shape: 'cape', form: 'short', pattern: 'scorch', len: 0.22, col: C([66, 64, 62], [42, 40, 40], [98, 94, 90], null, [196, 158, 76]), notes: 'waxed canvas the colour of cold ash, scorched at the hem, a brass valve-wheel for a clasp (trim)' }),
+    a_p87_wks_cape: F({ id: 'a_p87_wks_cape', slot: 'cape', material: 'canvas', shape: 'cape', form: 'tarp', pattern: 'stencil', len: 0.35, col: C([112, 108, 78], [76, 72, 50], [150, 146, 108], null, [150, 58, 44]), notes: 'a square of company tarpaulin tied at the throat with cord, CONSORTIUM stencilled across it in faded red (trim)' }),
+    a_p87_cap_cape: F({ id: 'a_p87_cap_cape', slot: 'cape', material: 'hushwool', shape: 'cape', form: 'boatcloak', pattern: 'weave', len: 0.6, col: C([46, 56, 78], [28, 34, 50], [72, 84, 108], null, [150, 54, 44]), notes: 'a heavy navy boat-cloak lined in red (trim), thrown back over one shoulder, a silver bosun\'s whistle on a chain' }),
+    a_p87_dro_plaid: F({ id: 'a_p87_dro_plaid', slot: 'cape', material: 'hushwool', shape: 'cape', form: 'plaid', pattern: 'check', len: 0.55, col: C([200, 190, 160], [146, 136, 110], [226, 218, 192], null, [96, 70, 48]), notes: 'a long chalk-and-peat checked plaid (trim: the peat brown), wrapped over the left shoulder and belted' }),
+    a_p87_bar_cloak: F({ id: 'a_p87_bar_cloak', slot: 'cape', material: 'hushwool', shape: 'cape', form: 'cloak', pattern: 'weave', len: 0.9, col: C([96, 92, 84], [62, 60, 54], [128, 124, 114], null, [170, 136, 74]), notes: 'earth-grey grave-wool to the ankle, a bronze ring-brooch as big as a hand at the shoulder (trim)' }),
+    a_p87_flu_cape: F({ id: 'a_p87_flu_cape', slot: 'cape', material: 'oilcloth', shape: 'cape', form: 'raincape', pattern: 'none', len: 0.28, col: C([176, 138, 60], [124, 94, 38], [212, 178, 98], null, [70, 66, 60]), notes: 'a yellow-ochre oilskin shoulder-cape, an iron lantern-hook at the shoulder (trim)' }),
+    a_p87_old_pelt: F({ id: 'a_p87_old_pelt', slot: 'cape', material: 'skin', shape: 'cape', form: 'pelt', pattern: 'fur', len: 0.5, col: C([146, 92, 56], [100, 60, 34], [184, 132, 90], null, [228, 214, 186]), notes: 'a red deer\'s hide over the shoulders, fur out, the forelegs knotted at the chest; a pale throat-patch (trim)' }),
+    // heads
+    a_p87_reg_biretta: F({ id: 'a_p87_reg_biretta', slot: 'head', material: 'felt', shape: 'cap', form: 'biretta', pattern: 'none', col: C([112, 118, 120], [76, 80, 84], [152, 156, 156], null, [212, 212, 196]), notes: 'a square grey biretta, three ridges on the crown, a silver tassel (trim); the clerk\'s number inked in the band' }),
+    a_p87_ars_sallet: F({ id: 'a_p87_ars_sallet', slot: 'head', material: 'steel', shape: 'kettle', form: 'sallet', pattern: 'rivets', col: C([150, 158, 166], [90, 98, 110], [210, 216, 220], [44, 48, 58], [104, 44, 40]), notes: 'Synod arsenal steel: a long tail over the neck, a raised visor, an oxblood plume-tube (trim), a stamped tag' }),
+    a_p87_pro_hood: F({ id: 'a_p87_pro_hood', slot: 'head', material: 'oilcloth', shape: 'hood', form: 'mesh', pattern: 'none', col: C([110, 116, 118], [74, 80, 84], [150, 156, 156], null, [206, 212, 216]), notes: 'the Office\'s grey oilcloth hood with silver mesh over the face (trim): no one sees who is inside' }),
+    a_p87_can_cowl: F({ id: 'a_p87_can_cowl', slot: 'head', material: 'hushwool', shape: 'hood', form: 'cowl', pattern: 'weave', col: C([96, 76, 100], [64, 50, 68], [130, 108, 132], null, [196, 160, 80]), notes: 'a soft plum cowl folded to the shoulders, open about the ears so they are free to listen; a brass fork-pin (trim)' }),
+    a_p87_sip_goggles: F({ id: 'a_p87_sip_goggles', slot: 'head', material: 'leather', shape: 'cap', form: 'goggles', pattern: 'grain', col: C([84, 58, 40], [56, 38, 26], [120, 88, 62], null, [196, 158, 76]), notes: 'a scorched leather skullcap, smoked-glass goggles in brass cups (trim) pushed up on the brow' }),
+    a_p87_cap_bandana: F({ id: 'a_p87_cap_bandana', slot: 'head', material: 'linen', shape: 'cap', form: 'bandana', pattern: 'none', col: C([158, 58, 46], [108, 36, 30], [196, 96, 76], null, [200, 164, 84]), notes: 'a sea-faded red headscarf knotted at the back, a brass ring through one corner (trim)' }),
+    a_p87_dro_hat: F({ id: 'a_p87_dro_hat', slot: 'head', material: 'felt', shape: 'kettle', form: 'widehat', pattern: 'none', col: C([92, 76, 58], [62, 50, 38], [128, 108, 84], null, [196, 186, 150]), notes: 'a drover\'s wide-awake: rain-shaped brown felt, a tally-cord and a sprig of chalk heather in the band (trim)' }),
+    a_p87_flu_cap: F({ id: 'a_p87_flu_cap', slot: 'head', material: 'oilcloth', shape: 'cap', form: 'flapcap', pattern: 'none', col: C([66, 60, 50], [42, 38, 32], [98, 90, 76], null, [176, 138, 60]), notes: 'a lengthsman\'s tarred hat, low in the crown, a long back flap to carry the rain off the neck' }),
+    a_p87_old_crown: F({ id: 'a_p87_old_crown', slot: 'head', material: 'wood', shape: 'cap', form: 'crown', pattern: 'grain', col: C([108, 82, 56], [72, 54, 36], [146, 116, 82], null, [226, 214, 190]), notes: 'a band of plaited lime-bark set with two short red-deer tines (trim), from the Antler Galleries' }),
+    // bodies
+    a_p87_pro_coat: F({ id: 'a_p87_pro_coat', slot: 'body', material: 'oilcloth', shape: 'longcoat', form: 'proctor', pattern: 'none', len: 0.75, col: C([106, 112, 114], [70, 76, 80], [146, 152, 152], null, [84, 88, 90]),
+      sleeve: F({ material: 'oilcloth', col: [106, 112, 114], cuff: [84, 88, 90] }), notes: 'the Catalogue field staff\'s long grey oilcloth, a felted collar, the buttons covered so they never click' }),
+    a_p87_can_cassock: F({ id: 'a_p87_can_cassock', slot: 'body', material: 'hushwool', shape: 'robe', form: 'cassock', pattern: 'stave', len: 0.95, col: C([92, 72, 98], [60, 46, 66], [126, 104, 130], null, [214, 200, 170]),
+      sleeve: F({ material: 'hushwool', col: [92, 72, 98], cuff: [60, 46, 66] }), notes: 'dusty plum to the ankle, a row of small horn buttons, the staves of a hymn stitched round the hem in cream (trim)' }),
+    a_p87_sip_apron: F({ id: 'a_p87_sip_apron', slot: 'body', material: 'leather', shape: 'jerkin', form: 'apron', pattern: 'grain', len: 0.62, col: C([88, 60, 42], [58, 38, 26], [124, 90, 64], null, [196, 158, 76]),
+      sleeve: F({ material: 'linen', col: [164, 150, 128], cuff: [88, 60, 42], bracer: true, rolled: true }), notes: 'a heavy furnace-apron of scorched hide to the shin, a brass pressure-badge on the bib (trim); sleeves rolled' }),
+    a_p87_cap_coat: F({ id: 'a_p87_cap_coat', slot: 'body', material: 'hushwool', shape: 'longcoat', form: 'captain', pattern: 'weave', len: 0.55, col: C([54, 76, 98], [34, 50, 66], [84, 108, 130], null, [190, 160, 84]),
+      sleeve: F({ material: 'hushwool', col: [54, 76, 98], cuff: [190, 160, 84] }), notes: 'a faded sea-blue coat to the knee, deep turned-back cuffs, brass buttons going green with salt (trim)' }),
+    a_p87_old_hide: F({ id: 'a_p87_old_hide', slot: 'body', material: 'leather', shape: 'jerkin', form: 'hide', pattern: 'fur', len: 0.3, col: C([150, 108, 70], [104, 72, 44], [188, 146, 102], null, [120, 88, 58]),
+      sleeve: F({ material: 'skin', col: null, cuff: null, rolled: true }), notes: 'a deer-hide tunic laced down the sides with sinew, the hair left on at the shoulders; bare arms' }),
+    // hands
+    a_p87_hush_mitts: F({ id: 'a_p87_hush_mitts', slot: 'hands', material: 'hushwool', shape: 'gloves', form: 'mitts', pattern: 'weave', col: C([60, 86, 80], [38, 56, 52], [90, 116, 106]), notes: 'felted Hedge-wool mitts, the fingers split for a knife and a sling-cord' }),
+    a_p87_reg_cuffs: F({ id: 'a_p87_reg_cuffs', slot: 'hands', material: 'leather', shape: 'gloves', form: 'cuffs', pattern: 'none', col: C([58, 58, 62], [38, 38, 42], [90, 90, 96], null, [212, 212, 196]), notes: 'fingerless black kid, oilcloth sleeve-guards stained with lamp-black, a silver RECONCILIATION pin (trim)' }),
+    a_p87_leg_vambraces: F({ id: 'a_p87_leg_vambraces', slot: 'hands', material: 'bellbronze', shape: 'gauntlets', form: 'vambrace', pattern: 'plates', col: C([166, 128, 66], [110, 82, 42], [222, 192, 124], [60, 42, 20], [96, 130, 108]), notes: 'bell-bronze vambraces over leaded gloves, a line of the bell\'s inscription cast round each, verdigris in the letters (trim)' }),
+    a_p87_pro_gloves: F({ id: 'a_p87_pro_gloves', slot: 'hands', material: 'felt', shape: 'gloves', form: 'felted', pattern: 'none', col: C([96, 100, 104], [64, 68, 72], [134, 138, 140], null, [70, 72, 74]), notes: 'grey gloves felted on the palm, so a rod does not slip and a fork does not ring' }),
+    a_p87_sip_gauntlets: F({ id: 'a_p87_sip_gauntlets', slot: 'hands', material: 'leather', shape: 'gloves', form: 'longcuff', pattern: 'quilt', col: C([124, 96, 62], [84, 62, 38], [164, 132, 90], null, [40, 32, 28]), notes: 'quilted hide to the elbow, scorched black at the fingertips (trim)' }),
+    a_p87_wks_gauntlets: F({ id: 'a_p87_wks_gauntlets', slot: 'hands', material: 'canvas', shape: 'gauntlets', form: 'rigger', pattern: 'rivets', col: C([118, 106, 76], [80, 70, 48], [156, 142, 104], null, [196, 164, 92]), notes: 'company canvas with riveted leather palms, a brass tag with somebody else\'s number (trim)' }),
+    a_p87_cap_gloves: F({ id: 'a_p87_cap_gloves', slot: 'hands', material: 'canvas', shape: 'gloves', form: 'tarred', pattern: 'none', col: C([54, 50, 46], [34, 32, 30], [82, 76, 70], null, [150, 124, 84]), notes: 'tarred deck-canvas, rope-burned pale across the palm (trim)' }),
+    a_p87_dro_mittens: F({ id: 'a_p87_dro_mittens', slot: 'hands', material: 'hushwool', shape: 'gloves', form: 'mitts', pattern: 'weave', col: C([214, 204, 180], [160, 150, 128], [236, 230, 212]), notes: 'undyed Farrant fleece, the thumb sewn open for the crook' }),
+    a_p87_bar_bracers: F({ id: 'a_p87_bar_bracers', slot: 'hands', material: 'bellbronze', shape: 'gauntlets', form: 'coils', pattern: 'none', col: C([150, 128, 76], [100, 84, 48], [204, 182, 122], [56, 46, 24], [92, 138, 112]), notes: 'bronze arm-rings coiled from wrist to elbow over bare hands, green with age (trim) from a barrow grave' }),
+    a_p87_flu_gloves: F({ id: 'a_p87_flu_gloves', slot: 'hands', material: 'leather', shape: 'gloves', form: 'longcuff', pattern: 'none', col: C([62, 54, 44], [40, 34, 28], [92, 82, 68], null, [118, 120, 120]), notes: 'tarred leather to the forearm, an iron sluice-key on a thong at the wrist (trim)' }),
+    a_p87_old_wraps: F({ id: 'a_p87_old_wraps', slot: 'hands', material: 'linen', shape: 'gloves', form: 'wraps', pattern: 'weave', col: C([168, 146, 104], [118, 100, 68], [204, 184, 140]), notes: 'hands and wrists wound with strips of lime-bark cord, the fingertips bare' }),
+    // feet
+    a_p87_reg_shoes: F({ id: 'a_p87_reg_shoes', slot: 'feet', material: 'leather', shape: 'shoes', form: 'buckle', pattern: 'none', col: C([44, 42, 46], [28, 26, 30], [72, 70, 76], null, [212, 212, 196]), notes: 'black low shoes with square silver buckles (trim), felted soles for corridor work' }),
+    a_p87_leg_sabatons: F({ id: 'a_p87_leg_sabatons', slot: 'feet', material: 'bellbronze', shape: 'greaves', form: 'sabatons', pattern: 'plates', col: C([160, 124, 64], [106, 80, 40], [216, 186, 118], [58, 40, 20], [70, 72, 76]), notes: 'bronze foot-plates and shin-lames over lead-soled boots (trim = the lead); they toll on stone' }),
+    a_p87_pro_boots: F({ id: 'a_p87_pro_boots', slot: 'feet', material: 'oilcloth', shape: 'softboots', form: 'tall', pattern: 'none', col: C([92, 98, 102], [60, 66, 70], [130, 136, 138]), notes: 'grey oilcloth to the knee, felt-soled: they stand an hour without a creak' }),
+    a_p87_can_sandals: F({ id: 'a_p87_can_sandals', slot: 'feet', material: 'leather', shape: 'shoes', form: 'sandals', pattern: 'none', col: C([130, 96, 62], [88, 62, 38], [170, 132, 92], null, [170, 160, 150]), notes: 'pilgrim\'s sandals over grey wool socks (trim): the road to the Howe is walked, not ridden' }),
+    a_p87_sip_boots: F({ id: 'a_p87_sip_boots', slot: 'feet', material: 'leather', shape: 'hobnails', form: 'clog', pattern: 'none', col: C([70, 52, 40], [46, 34, 26], [102, 80, 62], null, [196, 158, 76]), notes: 'thick wooden soles for standing on hot plate, brass toecaps (trim)' }),
+    a_p87_wks_boots: F({ id: 'a_p87_wks_boots', slot: 'feet', material: 'leather', shape: 'hobnails', form: 'steeltoe', pattern: 'studs', col: C([104, 96, 86], [70, 64, 56], [146, 138, 126], null, [120, 126, 130]), notes: 'hobnails with iron toecaps (trim), chalk-white with stone dust' }),
+    a_p87_cap_boots: F({ id: 'a_p87_cap_boots', slot: 'feet', material: 'leather', shape: 'hobnails', form: 'topboot', pattern: 'grain', col: C([62, 44, 32], [40, 28, 20], [94, 70, 52], null, [124, 98, 70]), notes: 'salt-cracked sea boots to the knee, the tops turned down in a wide cuff (trim)' }),
+    a_p87_bar_greaves: F({ id: 'a_p87_bar_greaves', slot: 'feet', material: 'bellbronze', shape: 'greaves', form: 'spiral', pattern: 'plates', col: C([146, 126, 76], [98, 82, 48], [198, 178, 120], [54, 44, 24], [110, 100, 84]), notes: 'bronze shin-guards with spiral bosses at the knee, over wrapped wool leggings (trim)' }),
+    a_p87_old_shoes: F({ id: 'a_p87_old_shoes', slot: 'feet', material: 'leather', shape: 'softboots', form: 'turnshoe', pattern: 'fur', col: C([140, 104, 70], [96, 70, 46], [178, 142, 102]), notes: 'soft one-piece hide shoes gathered at the ankle with a thong, moss stuffed in the heel' }),
+    // shields
+    a_p87_tan_shield: F({ id: 'a_p87_tan_shield', slot: 'shield', material: 'leather', shape: 'buckler', form: 'targe', pattern: 'none', col: C([146, 108, 66], [100, 72, 42], [186, 146, 98]), radius: 2.4, cm: F({ w: 44, h: 44 }),
+      face: F({ field: [146, 108, 66], figure: [200, 160, 70], rim: [214, 196, 160], boss: [200, 160, 70] }), notes: 'a hide targe: a board faced with three layers of boiled hide, laced with rawhide at the rim, brass tacks in a spiral' }),
+    a_p87_leg_shield: F({ id: 'a_p87_leg_shield', slot: 'shield', material: 'bellbronze', shape: 'buckler', form: 'bellshield', pattern: 'none', col: BRONZE, radius: 3.0, cm: F({ w: 56, h: 56 }),
+      face: F({ field: [172, 134, 70], figure: [92, 128, 104], rim: [134, 100, 52], boss: [214, 182, 110] }), notes: 'a cracked bell\'s lip, cut flat and hammered round: its inscription still runs about the rim, verdigris in the letters' }),
+    a_p87_wks_pavise: F({ id: 'a_p87_wks_pavise', slot: 'shield', material: 'wood', shape: 'kite', form: 'pavise', pattern: 'none', col: C([132, 104, 70], [90, 70, 46], [170, 140, 100]), width: 6.0, height: 11, cm: F({ w: 54, h: 100 }),
+      face: F({ field: [132, 104, 70], figure: [150, 58, 44], rim: [86, 90, 94], boss: [196, 164, 92] }), notes: 'pit-prop planks bound with strap iron (rim), a stencilled red serial, a brass sighting slot' }),
+    a_p87_bar_shield: F({ id: 'a_p87_bar_shield', slot: 'shield', material: 'bellbronze', shape: 'buckler', form: 'ribbed', pattern: 'none', col: C([150, 128, 76], [100, 84, 48], [204, 182, 122]), radius: 2.8, cm: F({ w: 52, h: 52 }),
+      face: F({ field: [138, 118, 70], figure: [92, 138, 112], rim: [164, 142, 86], boss: [196, 176, 116] }), notes: 'a barrow round-shield: bronze over wood in rings of ribs and studs, the boss hollow; green with age (figure)' }),
   });
   // empty slots
   const BARE = F({
@@ -245,7 +319,7 @@ const GEARLOOK21 = (() => {
   function key(p) {
     p = playerOf(p); if (!p) return 'none';
     const off = offhandId(p);
-    return [classId(p), faceOf(p), p.glassed ? 1 : 0, armorId(p, 'head'), armorId(p, 'body'), armorId(p, 'hands'), armorId(p, 'feet'), armorId(p, 'shield'), weaponId(p), off, twoHandedId(weaponId(p)) ? 2 : 1].join('|');
+    return [classId(p), faceOf(p), p.glassed ? 1 : 0, armorId(p, 'head'), armorId(p, 'body'), armorId(p, 'hands'), armorId(p, 'feet'), armorId(p, 'shield'), weaponId(p), off, twoHandedId(weaponId(p)) ? 2 : 1, armorId(p, 'cape')].join('|');
   }
   function of(p) {
     p = playerOf(p);
@@ -262,14 +336,14 @@ const GEARLOOK21 = (() => {
       calling: { id: cid, coat: call.coat, accent: call.accent },
       glassArm: !!(p && p.glassed),
       head: slot('head') || BARE.head, body, hands: slot('hands') || BARE.hands, feet: slot('feet') || BARE.feet,
-      shield: sh, shieldStowed: !!(sh && two),
+      shield: sh, shieldStowed: !!(sh && two), cape: slot('cape'),
       weapon: wE, offhand: off ? WEP[off] : null, twoHanded: two,
       key: key(p),
     };
   }
   // js/ghost18.js lookNow()'s compact encoding, from this table (so partner/ghost and the card agree)
   const GH_W = { hands: 0, sword: 1, knife: 2, dirk: 2, throwing: 2, longsword: 3, greatsword: 3, axe: 4, mace: 5, hammer: 5, maul: 5, spear: 6, glaive: 6, pistol: 7, crossbow: 8, glassarm: 9, fists: 0 };
-  const GH_HEAD = { cap: 1, hood: 2, kettle: 3, bellhelm: 3 };
+  const GH_HEAD = { cap: 1, hood: 2, kettle: 3, bellhelm: 3 };   // Phase 87 forms keep their shape's code
   const GH_BODY = { robe: 1, gambeson: 1, longcoat: 1, jerkin: 2, brigandine: 2, hauberk: 2, cuirass: 2 };
   function ghostLook(p) {
     p = playerOf(p); const L = of(p);

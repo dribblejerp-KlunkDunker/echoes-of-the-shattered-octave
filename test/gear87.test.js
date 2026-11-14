@@ -56,6 +56,25 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     p.armor = { body: 'a_jerkin', hands: 'a_gloves' }; p.weapon = p.weapons.indexOf('sword'); renderInventory();
     const note = document.querySelector('#modal-panel .g87-sets'); out.inv = !!note && /Tanner's Row: 3 of/.test(note.textContent); closeModal(); G.state = 'play';
     out.stats = /Tanner's Row/.test(itemStats('a_jerkin'));
+    // ---- Phase 87 (c): the fifty-two new pieces: in the catalog, the pack, the shared look table, the card; French
+    const P87 = Object.keys(ITEMS87.ARMOR87);
+    out.n87 = P87.length;
+    out.cat87 = P87.filter((id) => !(ARMOR[id] && ITEMS[id] && ITEMS[id].armor && ARMOR[id].slot === ITEMS87.ARMOR87[id].slot && GEARLOOK21.ARMOR[id] && GEARLOOK21.ARMOR[id].slot === ARMOR[id].slot && ICONS.hasPixel(id) && CARD21.armorLook(id)));
+    out.sets87 = X.SETS.every((s) => s.armor.every((a) => [].concat(a).some((id) => ARMOR[id])));   // every set is whole now
+    // each new piece paints the card its own way (the look's signature and the picture change)
+    const L0 = CARD21.cleanGear({ cls: 'blade', face: 1 }), base = CARD21.sig(L0); const sigs = new Set();
+    for (const id of P87) { const o = { cls: 'blade', face: 1 }; o[ARMOR[id].slot] = id; sigs.add(CARD21.sig(CARD21.cleanGear(o))); }
+    out.sig87 = sigs.size === P87.length && !sigs.has(base);
+    // ---- the set-specials: the Hush in full is heard at half the distance; the Corps takes less from steam; the Legion rings
+    const full = (sid, wid) => { const S = X.BY_ID[sid]; p.armor = {}; for (const a of S.armor) { const id = [].concat(a).find((q) => ARMOR[q]); p.armor[ARMOR[id].slot] = id; } if (!p.weapons.includes(wid)) p.weapons.push(wid); p.weapon = p.weapons.indexOf(wid); };
+    full('hush', 'throwknife'); out.hush = X.special('hush') && X.counts().hush.full;
+    const n0 = G.noise; G.noise = 6; let heard = null; const eu = { kind: 'enemy', type: 'proctor', def: { name: 'x' }, dead: true, hidden: true, x: 0, y: 0 };
+    try { const _keep = G.noise; enemyUpdate(eu, 0); heard = G.noise === _keep; } catch (e) { heard = true; } G.noise = n0; out.hushRestored = heard;
+    full('siphon', 'maul'); const hp0 = p.hp = p.hpMax; damagePlayer(9, 'A Steam Golem'); out.heat = hp0 - p.hp === 6; p.hp = p.hpMax;
+    p.armor = {}; damagePlayer(9, 'A Steam Golem'); out.heatOff = p.hpMax - p.hp === 9; p.hp = p.hpMax;
+    full('registry', 'sable_dagger'); out.cover = wearingDisguise() && X.special('registry');
+    p.armor = { body: 'a_p87_pro_coat', head: 'a_p87_pro_hood', hands: 'a_p87_pro_gloves' }; out.coverPro = wearingDisguise();
+    p.armor = {}; out.coverOff = !wearingDisguise();
     return out;
   });
   check(r.melee >= 24 && r.unique, 'every melee weapon has its own first-person picture (' + r.melee + '), no two alike');
@@ -68,6 +87,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   check(r.full || true, 'the full set gives the full bonus (once its pieces exist)');
   check(r.swing, 'the Free Captains swing faster');
   check(r.inv && r.stats, 'the inventory and each piece name the set');
+  r.fr87 = await page.evaluate(async () => { const j = await (await fetch('locales/story/fr.json')).json(); return ITEMS87.TEXTS.concat(GEAR87.TEXTS).filter((t) => !/\{\d\}/.test(t) && !(STORY_I18N.hash(STORY_I18N.norm(t)) in j.s)); });
+  check(r.n87 === 52 && !r.cat87.length, 'the fifty-two new pieces are in the catalog, the pack (with their own pictures), the shared look table and the card' + (r.cat87.length ? ' (not: ' + r.cat87.join(',') + ')' : ''));
+  check(r.sets87, 'every one of the fourteen sets is whole');
+  check(!r.fr87.length, 'every new line has its French' + (r.fr87.length ? ' (missing: ' + r.fr87.slice(0, 3).join(' | ') + ')' : ''));
+  check(r.sig87, 'each new piece changes the character card');
+  check(r.hush && r.hushRestored, 'the Hush in full: enemies hear you at half the distance, and the Narrow is left as it was');
+  check(r.heat && r.heatOff, 'the Siphon Corps three: steam hurts a third less (and only while worn)');
+  check(r.cover && r.coverPro && r.coverOff, 'three of the Registry or of the Proctors pass for Synod cover; nothing worn, none');
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();
   console.log(fails ? fails + ' FAILED' : 'all passed');

@@ -244,7 +244,9 @@ const FP87 = (function () {
     if (glass) return { kind: 'glass', base: [62, 150, 214], lt: [140, 204, 240], sh: [26, 82, 150], dk: [10, 36, 76] };
     if (!H || H.bare) { const s = (look && look.skin) || [214, 170, 136]; return { kind: 'skin', base: s, lt: mix(s, [255, 236, 220], 0.35), sh: mul(s, 0.72), dk: mul(s, 0.45) }; }
     const c = H.col || { base: [112, 74, 46], shade: [74, 46, 28], light: [150, 106, 70] };
-    const kind = H.shape === 'gauntlets' || H.material === 'mail' || H.material === 'iron' || H.material === 'bellbronze' ? 'mail' : 'leather';
+    // Phase 87: fingerless kid and the barrow's coils leave the fingers bare (the coils and cuffs show on the forearm)
+    if (H.form === 'cuffs' || H.form === 'coils') { const s = (look && look.skin) || [214, 170, 136]; return { kind: 'skin', base: s, lt: mix(s, [255, 236, 220], 0.35), sh: mul(s, 0.72), dk: mul(s, 0.45), cuff: H.col.base, form: H.form }; }
+    const kind = H.form === 'coils' || H.form === 'vambrace' ? 'mail' : H.shape === 'gauntlets' || H.material === 'mail' || H.material === 'iron' || H.material === 'bellbronze' ? 'mail' : 'leather';
     return { kind, base: c.base, lt: c.light, sh: c.shade, dk: c.dark || mul(c.shade, 0.6), trim: c.trim };
   }
   function drawFist(x, hl, seed, mirror) {
@@ -289,7 +291,7 @@ const FP87 = (function () {
   // the wrist, the cuff and the sleeve, from the hand out of the bottom of the view (canvas frame)
   function drawForearm(x, look, hl, wx, wy, ex, ey, wid0, wid1, seed, mirror) {
     const dx = ex - wx, dy = ey - wy, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, nx = -uy, ny = ux;
-    const B = look && look.body, sl = (B && B.sleeve) || {}, rolled = !!sl.rolled, scol = sl.col || (B && B.col && B.col.base) || [120, 100, 80];
+    const B = look && look.body, sl = (B && B.sleeve) || {}, bareArm = sl.material === 'skin', rolled = !!sl.rolled && !bareArm, scol = bareArm ? ((look && look.skin) || [200, 160, 130]) : sl.col || (B && B.col && B.col.base) || [120, 100, 80];   // Phase 87: the hide tunic leaves the arms bare
     const glass = hl.kind === 'glass';
     const quad = (t0, t1, w0, w1) => { const a = [wx + ux * t0, wy + uy * t0], b = [wx + ux * t1, wy + uy * t1]; x.beginPath(); x.moveTo(a[0] + nx * w0, a[1] + ny * w0); x.lineTo(b[0] + nx * w1, b[1] + ny * w1); x.lineTo(b[0] - nx * w1, b[1] - ny * w1); x.lineTo(a[0] - nx * w0, a[1] - ny * w0); x.closePath(); };
     const across = (c) => lin(x, wx + nx * wid1, wy + ny * wid1, wx - nx * wid1, wy - ny * wid1, mirror ? [[0, mul(c, 0.5)], [0.6, c], [1, mix(c, [255, 240, 220], 0.3)]] : [[0, mix(c, [255, 240, 220], 0.3)], [0.4, c], [1, mul(c, 0.5)]]);
@@ -299,7 +301,9 @@ const FP87 = (function () {
     if (glass) { x.save(); x.clip(); for (let i = 0; i < 8; i++) { x.beginPath(); const t = hash(i, seed, 8) * L * 0.32; x.moveTo(wx + ux * t - nx * wid0, wy + uy * t - ny * wid0); x.lineTo(wx + ux * (t + 20) + nx * wid0, wy + uy * (t + 20) + ny * wid0); x.strokeStyle = i % 2 ? 'rgba(10,40,80,0.5)' : 'rgba(200,236,255,0.55)'; x.stroke(); } x.restore(); }
     // a glove's cuff: flared, its edge stitched or riveted
     if (!glass && look && look.hands && !look.hands.bare) {
-      quad(L * 0.2, L * 0.36, wid0 * 1.16, wid0 * 1.32); x.fillStyle = across(mix(hl.base, hl.sh, 0.2)); x.fill(); x.lineWidth = 1.3; x.strokeStyle = css(hl.dk); x.stroke();
+      const cc = hl.cuff || hl.base, cd = hl.cuff ? mul(hl.cuff, 0.5) : hl.dk;   // Phase 87: fingerless kid and the barrow's coils show their own colour here
+      quad(L * 0.2, L * 0.36, wid0 * 1.16, wid0 * 1.32); x.fillStyle = across(mix(cc, cd, 0.2)); x.fill(); x.lineWidth = 1.3; x.strokeStyle = css(cd); x.stroke();
+      if (hl.form === 'coils') for (let i = 0; i < 5; i++) { const t = L * (0.215 + i * 0.03); quad(t, t + L * 0.008, wid0 * (1.17 + i * 0.03), wid0 * (1.18 + i * 0.03)); x.fillStyle = css(i % 3 === 0 ? [92, 138, 112] : cd, 0.9); x.fill(); }
       if (hl.trim && hl.kind === 'mail') { quad(L * 0.33, L * 0.36, wid0 * 1.3, wid0 * 1.33); x.fillStyle = css(hl.trim); x.fill(); }
     }
     // the sleeve
