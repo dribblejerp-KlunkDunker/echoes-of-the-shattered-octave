@@ -23,12 +23,23 @@ Code: `js/gear87.js`. French: `tools/i18n/p87-gear.tsv`.
 - **The inventory** lists the sets you are wearing, how many pieces of each, and both bonuses (lit when they are on). Each piece's line names its set.
 - **Bonuses that work now:** armour, noise, fatigue back faster, fatigue on the roads, swing speed, the voice a Song costs. The set-special ones (the Office column passing you by, the pony faster, the Deep Grove's low note and the rest) come with each set's pieces in (c).
 
-## Readings for the owner
+## Readings, and the owner's answers (14 Nov)
 
-1. **The Quilted Gambeson** was in no set in the design table. It is now Tanner's Row's other body piece: the jerkin or the gambeson counts.
-2. **A new game starts with three pieces of Tanner's Row** (the jerkin, the gloves, the short sword), so every new traveller has its +1 armour from the start.
-3. **Bonuses for the five sets the design table gave no example for** (Synod Registry, the Siphon Corps, the Consortium Works, the Barrow-Wardens, the Flume and the Lanes) are in the lines below.
-4. **Throwing knives** keep their shared picture (a fan of three) and come with the ranged weapons in (d), with the bare hands and the glass arm's own pose.
+1. **The Quilted Gambeson** is Tanner's Row's other body piece: the jerkin or the gambeson counts. *Owner: "the quilted gambeson works."*
+2. **Starting kits.** *Owner: "each new game should start with that characters weapon of choice as well as the clothing/armor they normally wear."* Each calling now starts in its own set's clothes, with its own weapon. Pieces not made yet are stood in for by the old kit's piece for that slot until (c) makes them:
+
+| Calling | Set | Starting clothes | Starting weapons |
+|---|---|---|---|
+| Dissonant Blade (a former bore-engineer) | The Siphon Corps | Siphon Goggle-Helm, Foundry Apron-Coat, Heat Gauntlets, Foundry Boots | Short Sword, and the glass arm |
+| Cantor | The Cantors | Cantor's Cowl, Cantor's Cassock, Bearer's Sandals, Cantor's Mantle | none: the Songs (and the glass-shot pistol, as before) |
+| Corsair | The Free Captains | Corsair's Bandana, Captain's Long Coat, Deck Gloves, Sea Boots, Corsair Buckler | Boarding Axe, Glass-Shot Pistol |
+| Archivist of the Veil | Hedge-weavers' Hush (into the mist) | Hush-Cloth Hood, Quilted Gambeson, Hush-Cloth Mitts, Soft Boots | Throwing Knives (six), Glass-Shot Pistol |
+| Flambeau Penitent | none (the Flambeaux have no set) | Iron Kettle Helm, Quilted Gambeson | Bell-Bronze Mace (the Flambeaux cast it), bare hands |
+| Quarry-Hand | The Consortium Works | Iron Kettle Helm, Tanner's Leather Jerkin, Works Gauntlets, Works Boots | Quarry Great-Maul |
+
+   *For the owner:* the Quarry Great-Maul is a heavy weapon to start with (14 to 28, slow, two hands); a lighter quarry sledge could be made for the start instead.
+3. **Bonuses for the five sets the design table gave no example for** are in the lines below. *Owner: "3 is good."*
+4. **Throwing knives** keep their shared picture until (d). *Owner: "4 is fine for now."*
 
 ## The lines
 

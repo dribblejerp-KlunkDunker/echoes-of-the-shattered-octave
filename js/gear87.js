@@ -80,6 +80,30 @@ const GEAR87 = (function () {
   // an armour entry may be a list: any one of them fills that place in the set
   const SET_OF = {}; for (const s of SETS) { for (const a of s.armor) for (const id of [].concat(a)) SET_OF[id] = s.id; for (const w of s.weapons) SET_OF[w] = s.id; }
 
+  // ---------------------------------------------------------------- each calling starts in its own clothes, with its own weapon
+  // (owner, 14 Nov: "each new game should start with that characters weapon of choice as well as the clothing/armor they
+  // normally wear"). A piece not made yet (Phase 87 (c)) is stood in for by the old kit's piece for that slot.
+  const KITS = {
+    blade: { set: 'siphon', armor: ['a_p87_sip_goggles', 'a_p87_sip_apron', 'a_p87_sip_gauntlets', 'a_p87_sip_boots'], weapons: ['sword', 'glass'] },
+    cantor: { set: 'cantor', armor: ['a_p87_can_cowl', 'a_p87_can_cassock', 'a_p87_can_sandals', 'a_p87_can_mantle'], weapons: ['hands', 'pistol'] },
+    corsair: { set: 'captains', armor: ['a_p87_cap_bandana', 'a_p87_cap_coat', 'a_p87_cap_gloves', 'a_p87_cap_boots', 'a_buckler'], weapons: ['axe', 'pistol'] },
+    archivist: { set: 'hush', armor: ['a_hood', 'a_gambeson', 'a_p87_hush_mitts', 'a_softboots'], weapons: ['throwknife', 'pistol'], tknives: 6 },
+    penitent: { set: null, armor: ['a_kettle', 'a_gambeson'], weapons: ['mace', 'hands'] },
+    quarry: { set: 'works', armor: ['a_kettle', 'a_jerkin', 'a_p87_wks_gauntlets', 'a_p87_wks_boots'], weapons: ['p12_greatmaul'] },
+  };
+  const OLD_KIT = {};
+  function applyKits() {
+    if (typeof CLASS_KIT === 'undefined' || typeof ARMOR === 'undefined') return;
+    for (const cid in KITS) {
+      if (!OLD_KIT[cid]) OLD_KIT[cid] = (CLASS_KIT[cid] || []).slice();
+      const K = KITS[cid], bySlot = {};
+      for (const id of OLD_KIT[cid]) if (has(ARMOR, id)) bySlot[ARMOR[id].slot] = id;
+      for (const id of K.armor) if (has(ARMOR, id)) bySlot[ARMOR[id].slot] = id;
+      const list = Object.values(bySlot); CLASS_KIT[cid].length = 0; CLASS_KIT[cid].push(...list);
+      if (typeof CLASSES !== 'undefined') { const c = CLASSES.find((q) => q.id === cid); const ws = K.weapons.filter((w) => typeof WEAPONS !== 'undefined' && has(WEAPONS, w)); if (c && ws.length) { c.weapons.length = 0; c.weapons.push(...ws); } }
+    }
+  }
+
   // ---------------------------------------------------------------- the cape slot
   function capeSlot() {
     if (typeof ARMOR_SLOTS === 'undefined' || ARMOR_SLOTS.some((x) => x[0] === 'cape')) return;
@@ -114,7 +138,8 @@ const GEAR87 = (function () {
 
   // ---------------------------------------------------------------- where the bonuses act
   function wire() {
-    capeSlot();
+    capeSlot(); applyKits();
+    if (typeof giveKit === 'function') { const _g = giveKit; giveKit = function (p) { try { applyKits(); } catch (e) { warnOnce('kits', e); } const r = _g.apply(this, arguments); try { const K = p && p.cls && KITS[p.cls.id]; if (K && K.tknives && !(p.tknives > 0)) p.tknives = K.tknives; } catch (e) { /* */ } return r; }; }
     if (typeof armorRating === 'function') { const _a = armorRating; armorRating = function (p) { const r = _a.apply(this, arguments); try { return r + bonus('ar', p || G.player); } catch (e) { return r; } }; }
     if (typeof armorNoise === 'function') { const _n = armorNoise; armorNoise = function (p) { const r = _n.apply(this, arguments); try { return Math.max(-0.8, r + bonus('noise', p || G.player)); } catch (e) { return r; } }; }
     if (typeof attack === 'function') { const _at = attack; attack = function () { const t0 = G.attack && G.attack.t; const r = _at.apply(this, arguments); try { const k = bonus('swing'); if (k && G.attack && !(t0 > 0) && G.attack.t > 0) { G.attack.t *= 1 - k; G.attack.dur *= 1 - k; } } catch (e) { warnOnce('swing', e); } return r; }; }
@@ -150,6 +175,6 @@ const GEAR87 = (function () {
   }
   wire();
 
-  return { TX, TEXTS, SETS, BY_ID, SET_OF, counts, bonus, special };
+  return { TX, TEXTS, SETS, BY_ID, SET_OF, KITS, applyKits, counts, bonus, special };
 })();
 if (typeof window !== 'undefined') window.GEAR87 = GEAR87;
