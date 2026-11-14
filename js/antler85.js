@@ -49,7 +49,7 @@ const ANTLER85 = (function () {
     den: S('The deepest gallery. Something has lain here so long that the floor is worn to its shape.'),
     keeper: S('The Flint-Back'),
     keeperSeen: S('A fret-crawler grown white in the chalk, as long as a boat, flint grown into the ridges of its shell. It is lying in the deepest gallery as if it were part of the floor.'),
-    pickName: S('Antler Pick'), pickDesc: S('A red-deer antler, the brow tine left long for a point and the rest cut away, the beam worn smooth by a hand four thousand years gone. It breaks armour.'),
+    pickName: S('Antler Pick'), pickDesc: S('A red-deer antler, the brow tine left long for a point and the rest cut away, the beam worn smooth by a hand that was gone before anyone wrote anything down. It breaks armour.'),
     knifeName: S('Floorstone Knife'), knifeDesc: S('Black flint from the floorstone, knapped to an edge you could shave with. It makes almost no sound, and it is very sharp.'),
     journal: S('The Antler Galleries: under the open hollow on the drove road, an old flint-mine. The antler picks they left grew. The deep galleries are a white forest, and something lies in the deepest.'),
   };
