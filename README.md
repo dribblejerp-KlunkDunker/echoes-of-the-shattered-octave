@@ -281,6 +281,19 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The Antler Galleries (Phase 85).** The open hollow on the drove road goes down into an old flint-mine. Low white galleries run out from the shaft's foot, and the antler picks the miners left lie where they put them down, the further ones rooting and putting up new tines. It is still down there, and stillness is the Hush's: your lamp is the way through, filled and lit at the tallow-cups in the niches. Down a second shaft is the deep: a white forest of antler from floor to roof, the seam of black flint they dug for, and in the deepest gallery the Flint-Back, a fret-crawler grown white in the chalk. The Antler Pick (it breaks armour) and the Floorstone Knife (black flint, almost silent) are down there.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p85-antler-gal2.jpg" alt="A low white chalk gallery lit by a lamp, an antler pick rooting in the floor"></td>
+<td width="50%"><img src="screenshots/p85-antler-forest.jpg" alt="A forest of pale glowing antler in a chalk cavern"></td>
+</tr>
+<tr>
+<td>The galleries, by lamplight.</td>
+<td>The white forest.</td>
+</tr>
+</table>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>
@@ -412,7 +425,7 @@ More pictures of this build: [`screenshots/eaves78/`](screenshots/eaves78) and [
 - **Kaelen and Lyra,** who travel with you, talk on the road, flinch, limp and sing.
 - **A world that moves:** weather and a sky on the world clock, smoking chimneys, crows, swinging bells, rising portcullises and water that reflects.
 - **The Library of the Reach:** 65 books from inside the world, in four libraries.
-- Loot tables for enemies and 44 strongboxes hidden around the world.
+- Loot tables for enemies and 46 strongboxes hidden around the world.
 - An original orchestral score and recorded voices, a French translation, accessibility options, photo mode, a speedrun timer and data-only mod dungeons.
 - Save slots, save codes and save files; offline play once installed; two-player co-op; a desktop build.
 

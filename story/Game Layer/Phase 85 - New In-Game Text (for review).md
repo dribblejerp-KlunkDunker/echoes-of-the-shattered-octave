@@ -1,6 +1,6 @@
 # Phase 85: New In-Game Text (for review)
 
-The big places between, from the world plan the owner approved on 13 Nov ("approve all"). Built one place at a time, the Dry Flume first.
+The big places between, from the world plan the owner approved on 13 Nov ("approve all"). Built one place at a time: the Dry Flume, then the Antler Galleries.
 
 ## 1. The Dry Flume (14 Nov)
 
@@ -72,3 +72,61 @@ The place, its rooms, its keeper, its gear and every line below are **[PROPOSED]
 | The grating in the empty pound. You unbolted it from below. Steps go down into the Dry Flume. | La grille dans le bief vide. Vous l'avez déverrouillée par en dessous. Des marches descendent dans la Flume Sèche. |
 | You lift the grating and go down the steps into the Dry Flume. | Vous soulevez la grille et descendez les marches dans la Flume Sèche. |
 | The Dry Flume: under the Stride is the old stone conduit that carried the water before the Flume was grown. The grating in the Pound Stair's bottom pound is its back door, and I have unbolted it. | La Flume Sèche : sous l'Enjambée se trouve l'ancien conduit de pierre qui portait l'eau avant que la Flume ne soit cultivée. La grille du dernier bief de l'Escalier des Biefs est sa porte de derrière, et je l'ai déverrouillée. |
+
+## 2. The Antler Galleries (14 Nov)
+
+Code: `js/antler85.js`. Test: `test/antler85.test.js` (14 checks). French: `tools/i18n/p85-antler.tsv`.
+
+Everything here is **[PROPOSED]** under the approved plan ("in the Reach, the antler picks that were left in the galleries grew").
+
+### What was built
+
+- **The way down:** the open hollow on the drove road (Phase 83). Use its mouth and you go down notches cut in the chalk.
+- **The galleries:** low passages of white chalk running out from the shaft's foot on every side and branching, the walls covered in pick-strokes, with dead ends and an old face at the far end. Antler picks lie where they were put down. Near the shaft they are only picks. Further out they have taken root and are putting up new tines.
+- **The Hush.** Both levels are still enough for the Hush, like the siphoned places: stand still and it leans in.
+- **Light is the way through.** You come down with your lamp dark. Each niche holds a tallow-cup. Use one and it fills your lamp and lights them both; a lit niche stays lit. A full lamp burns for a minute and a half, warns you when it is low, and goes out. While it burns, stillness creeps in at half the rate.
+- **What lives there:** swarms in numbers in the dead ends and the old face, hush-moths about the niches, a lesser strongbox at the old face.
+- **The deep,** down a second shaft by a ladder of lashed poles. **The white forest:** antler grown from the floor to the roof, on and on, with a winding way through it. The antler gives a little light of its own, so the forest shows white in the dark. It is the only white place in the game. **The floorstone:** the seam of black flint along the foot of the wall. **The den:** the deepest gallery.
+- **The keeper: the Flint-Back.** A fret-crawler grown white in the chalk, as long as a boat, with flint grown into the ridges of its shell. It has 130 health and hits for 6 to 12. It is painted in its own colours in every pose.
+- **The gear:** the **Antler Pick** (lying at the forest's heart; it breaks armour) and the **Floorstone Knife** (by the floorstone; very quiet, very fast, glass-sharp). A strongbox of the best kind in the den. That makes 46 strongboxes in the game.
+
+### Readings for the owner
+
+1. **The keeper is a fret-crawler grown large and white,** as the Standing Note is a mire-drone grown large. *Recommend: keep; the plan only said "something denned in the deepest gallery".*
+2. **The lamp is not an item in the pack.** It is the light you carry in these galleries only; the niches fill it. *Recommend: keep, so nothing new has to be carried, bought or lost.*
+3. **The galleries' roof is a little higher than a person** (about one and a third), not as low as a real flint-mine's. Lower than that, the 3D view puts the roof on your eyes. *Recommend: keep.*
+4. **Names:** the Flint-Back, the Antler Pick, the Floorstone Knife: **[PROPOSED]**, change any. ("Floorstone" is the real miners' name for the best flint seam at Grime's Graves.)
+
+### The lines
+
+| English | French |
+|---|---|
+| The Antler Galleries | Les Galeries de Bois-de-Cerf |
+| The Antler Galleries: the deep | Les Galeries de Bois-de-Cerf : les profondeurs |
+| The open hollow's mouth. Notches cut in the chalk go down it like a ladder. | La bouche du creux ouvert. Des encoches taillées dans la craie y descendent comme une échelle. |
+| You go down the notches into the chalk. | Vous descendez les encoches dans la craie. |
+| Up the notches to the Hollows | Remonter les encoches vers les Creux |
+| Up the ladder to the galleries | Remonter l'échelle vers les galeries |
+| A second shaft, and a ladder of lashed poles going down it | Un second puits, et une échelle de perches liées qui y descend |
+| The shaft's foot. Galleries go out from it on every side, low, white, the walls marked all over with the strokes of picks. | Le pied du puits. Des galeries en partent de tous côtés, basses, blanches, les murs couverts de coups de pic. |
+| A gallery, cut low. You go stooping. Every stroke in the chalk is the width of a tine. | Une galerie, taillée bas. Vous avancez courbé. Chaque coup dans la craie a la largeur d'un andouiller. |
+| An antler pick, lying where it was put down. It has been lying here a very long time. | Un pic en bois de cerf, posé là où on l'a laissé. Il est là depuis très longtemps. |
+| An antler pick that has taken root. Its tines have gone into the floor, and new tines are coming up out of the old. | Un pic en bois de cerf qui a pris racine. Ses andouillers sont entrés dans le sol, et de nouveaux andouillers sortent des anciens. |
+| A niche cut in the wall, and a cup of chalk in it with tallow and a wick. Use it to fill your lamp and light it. | Une niche taillée dans le mur, et dedans une coupe de craie avec du suif et une mèche. Utilisez-la pour remplir votre lampe et l'allumer. |
+| A niche, its tallow-cup burning. Use it to fill your lamp. | Une niche, sa coupe de suif allumée. Utilisez-la pour remplir votre lampe. |
+| You fill your lamp from the cup and light them both. The chalk throws the light a long way. | Vous remplissez votre lampe à la coupe et les allumez toutes deux. La craie renvoie la lumière très loin. |
+| You fill your lamp from the cup. | Vous remplissez votre lampe à la coupe. |
+| Your lamp is burning low. Find a niche. | Votre lampe baisse. Trouvez une niche. |
+| Your lamp goes out. The dark here is very still, and stillness is the Hush's. | Votre lampe s'éteint. L'obscurité ici est très immobile, et l'immobilité appartient au Silence. |
+| The old face, where the first of them stopped digging. The floor is a litter of chalk and broken tine. | Le vieux front de taille, là où le premier d'entre eux a cessé de creuser. Le sol est jonché de craie et d'andouillers brisés. |
+| The white forest. The picks they left grew, and kept growing: antler from the floor to the roof, branching, white on white, as far as the light goes. | La forêt blanche. Les pics qu'ils ont laissés ont poussé, et poussent encore : du bois de cerf du sol à la voûte, ramifié, blanc sur blanc, aussi loin que porte la lumière. |
+| Antler, grown from a pick. It is warm to the touch, and it is still growing. | Du bois de cerf, poussé d'un pic. Il est tiède au toucher, et il pousse encore. |
+| The floorstone: the seam of black flint they dug all this to reach, a band of it along the foot of the wall like a line of ink. | La pierre de fond : le filon de silex noir qu'ils ont creusé tout cela pour atteindre, une bande au pied du mur comme un trait d'encre. |
+| The deepest gallery. Something has lain here so long that the floor is worn to its shape. | La galerie la plus profonde. Quelque chose est resté couché ici si longtemps que le sol a pris sa forme. |
+| The Flint-Back | Dos-de-Silex |
+| A fret-crawler grown white in the chalk, as long as a boat, flint grown into the ridges of its shell. It is lying in the deepest gallery as if it were part of the floor. | Un rampant à frettes devenu blanc dans la craie, long comme une barque, du silex poussé dans les crêtes de sa carapace. Il est couché dans la galerie la plus profonde comme s'il faisait partie du sol. |
+| Antler Pick | Pic en bois de cerf |
+| A red-deer antler, the brow tine left long for a point and the rest cut away, the beam worn smooth by a hand four thousand years gone. It breaks armour. | Un bois de cerf élaphe, l'andouiller d'œil laissé long pour faire une pointe et le reste coupé, le merrain poli par une main disparue depuis quatre mille ans. Il brise les armures. |
+| Floorstone Knife | Couteau de pierre de fond |
+| Black flint from the floorstone, knapped to an edge you could shave with. It makes almost no sound, and it is very sharp. | Du silex noir de la pierre de fond, taillé jusqu'à un fil à se raser. Il ne fait presque aucun bruit, et il est très tranchant. |
+| The Antler Galleries: under the open hollow on the drove road, an old flint-mine. The antler picks they left grew. The deep galleries are a white forest, and something lies in the deepest. | Les Galeries de Bois-de-Cerf : sous le creux ouvert du chemin de transhumance, une ancienne mine de silex. Les pics en bois de cerf qu'ils ont laissés ont poussé. Les galeries profondes sont une forêt blanche, et quelque chose gît dans la plus profonde. |
