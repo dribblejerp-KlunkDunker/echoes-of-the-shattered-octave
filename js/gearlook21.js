@@ -141,18 +141,23 @@ const GEARLOOK21 = (() => {
       sleeve: F({ material: 'mail', col: MAIL.base, cuff: [82, 90, 100] }), notes: 'arsenal mail to the knee and the wrist' }),
     a_plate: F({ id: 'a_plate', slot: 'body', material: 'bellbronze', shape: 'cuirass', pattern: 'plates', len: 0.3, col: BRONZE,
       sleeve: F({ material: 'mail', col: MAIL.base, cuff: BRONZE.base, bracer: true, plated: true }), notes: 'a Legionnaire\'s bell-cast cuirass; couters and vambraces over mail sleeves; tassets' }),
+    a_p85_coat: F({ id: 'a_p85_coat', slot: 'body', material: 'oilcloth', shape: 'longcoat', pattern: 'none', len: 0.85, col: C([112, 104, 74], [76, 70, 48], [150, 140, 104]),
+      sleeve: F({ material: 'oilcloth', col: [112, 104, 74], cuff: [76, 70, 48] }), notes: 'a long coat of oiled canvas: the Carter\'s Oilskin, from the Deep Grove (Phase 85)' }),
     // hands
     a_gloves: F({ id: 'a_gloves', slot: 'hands', material: 'leather', shape: 'gloves', pattern: 'grain', col: C([112, 74, 46], [74, 46, 28], [150, 106, 70]), notes: 'work gloves, a cuff over the wrist' }),
     a_gauntlets: F({ id: 'a_gauntlets', slot: 'hands', material: 'mail', shape: 'gauntlets', pattern: 'mail', col: C([140, 148, 152], [84, 92, 102], [204, 208, 208], [40, 44, 52], [100, 70, 46]), notes: 'mail backs on leather palms (trim = the palm leather), a flared cuff' }),
     a_p79_gloves: F({ id: 'a_p79_gloves', slot: 'hands', material: 'leather', shape: 'gloves', pattern: 'grain', col: C([154, 150, 143], [104, 100, 94], [196, 192, 184]), notes: 'grey kid lined with hush-cloth: the Bearer\'s Gloves, from Singers\' Howe (Phase 79)' }),
     // feet
     a_p22_droverboots: F({ id: 'a_p22_droverboots', slot: 'feet', material: 'leather', shape: 'hobnails', pattern: 'grain', col: C([70, 50, 34], [46, 32, 20], [104, 78, 54]), notes: 'long greased drove-road boots [PROPOSED] (Phase 22b)' }),
+    a_p85_boots: F({ id: 'a_p85_boots', slot: 'feet', material: 'leather', shape: 'hobnails', pattern: 'grain', col: C([46, 40, 34], [28, 24, 20], [74, 66, 56]), notes: 'thigh-high tarred waders, felt-soled: the Sluice-Boots, from the Dry Flume (Phase 85)' }),
     a_softboots: F({ id: 'a_softboots', slot: 'feet', material: 'felt', shape: 'softboots', pattern: 'none', col: C([96, 82, 66], [64, 54, 42], [130, 114, 92]), notes: 'felt-soled, ankle-high, wrapped with a thong' }),
     a_hobnails: F({ id: 'a_hobnails', slot: 'feet', material: 'leather', shape: 'hobnails', pattern: 'studs', col: C([76, 54, 38], [50, 34, 22], [112, 82, 58], null, [176, 176, 168]), notes: 'mid-calf boots, iron studs round the sole (trim)' }),
     a_greaves: F({ id: 'a_greaves', slot: 'feet', material: 'iron', shape: 'greaves', pattern: 'plates', col: C([132, 142, 150], [80, 88, 100], [196, 204, 208], [40, 44, 54], [62, 44, 32]), notes: 'shin-plates over knee-high riding boots (trim = the boot leather)' }),
     // shields
     a_buckler: F({ id: 'a_buckler', slot: 'shield', material: 'iron', shape: 'buckler', pattern: 'none', col: IRON, radius: 1.67, cm: F({ w: 30, h: 30 }),
       face: F({ field: [118, 96, 72], figure: [150, 62, 48], rim: [104, 112, 120], boss: [176, 184, 188] }), notes: 'a fist-sized round deck shield: iron rim and boss on a leather-faced board, a corsair\'s red band [PROPOSED]' }),
+    a_p85_buckler: F({ id: 'a_p85_buckler', slot: 'shield', material: 'bellbronze', shape: 'buckler', pattern: 'none', col: C([196, 158, 76], [140, 108, 48], [236, 206, 128]), radius: 1.67, cm: F({ w: 30, h: 30 }),
+      face: F({ field: [186, 148, 70], figure: [120, 92, 44], rim: [214, 180, 100], boss: [236, 210, 140] }), notes: 'a round of brass from the market cross, stamped with the weights and measures: the Market-Warden\'s Buckler, from Cross Pool (Phase 85)' }),
     a_kite: F({ id: 'a_kite', slot: 'shield', material: 'wood', shape: 'kite', pattern: 'none', col: C([94, 60, 50], [62, 38, 32], [130, 88, 72]), width: 6.7, height: 10, cm: F({ w: 60, h: 90 }),
       face: F({ field: [94, 60, 50], figure: [210, 196, 166], rim: [176, 150, 98], boss: [200, 164, 80] }), notes: 'long and heavy, painted with the Synod\'s dead queen: a pale crowned figure on an oxblood field [PROPOSED: the colours]' }),
   });
@@ -192,6 +197,11 @@ const GEARLOOK21 = (() => {
     p79_staff: W('p79_staff', 'spear', 'two', 'wood', 22, { blade: [150, 156, 160], edge: [208, 212, 214], grip: [124, 92, 58], head: [150, 156, 160] }, 'fp_spear', 'an ash staff shod with iron at both ends: the Old Cantor\'s Staff, from Singers\' Howe (Phase 79)'),
     p22_shears: W('p22_shears', 'knife', 'one', 'steel', 3.5, { blade: [170, 176, 180], edge: [226, 230, 232], grip: [110, 80, 50], guard: [110, 80, 50] }, 'fp_knife', 'sheep-shears, the bow filed sharp [PROPOSED] (Phase 22b)'),
     p22_leafblade: W('p22_leafblade', 'sword', 'one', 'bellbronze', 8, { blade: [186, 150, 80], edge: [236, 210, 140], grip: [90, 64, 40], guard: [160, 124, 60] }, 'fp_sword', 'a leaf-shaped bronze sword from a barrow grave [PROPOSED] (Phase 22b)'),
+    p85_pole: W('p85_pole', 'spear', 'two', 'wood', 28, { blade: [96, 100, 104], edge: [150, 154, 158], grip: [176, 150, 110], head: [96, 100, 104] }, 'fp_spear', 'twelve feet of pale ash shod with iron: the Punt-Pole, from the Sunk Lanes (Phase 85)'),
+    p85_hook: W('p85_hook', 'glaive', 'two', 'iron', 22, { blade: [84, 88, 92], edge: [140, 146, 150], grip: [150, 120, 82], head: [84, 88, 92] }, 'fp_spear', 'a boat-hook on an ash pole: the Lengthsman\'s Hook, from the Dry Flume (Phase 85)'),
+    p85_bough: W('p85_bough', 'mace', 'one', 'wood', 9, { blade: [58, 60, 56], edge: [96, 104, 84], grip: [72, 64, 50], head: [58, 60, 56] }, 'fp_mace', 'a limb of iron-bough, dark and mossed at the knot: the Fallen Iron-Bough, from the Deep Grove (Phase 85)'),
+    p85_pick: W('p85_pick', 'hammer', 'one', 'wood', 7, { blade: [222, 210, 184], edge: [244, 236, 214], grip: [188, 170, 136], head: [222, 210, 184] }, 'fp_mace', 'a red-deer antler with the brow tine left long: the Antler Pick, from the Antler Galleries (Phase 85)'),
+    p85_knife: W('p85_knife', 'knife', 'one', 'glass', 3.5, { blade: [40, 40, 46], edge: [120, 122, 132], grip: [110, 84, 56], guard: [110, 84, 56] }, 'fp_knife', 'black flint knapped to an edge: the Floorstone Knife, from the Antler Galleries (Phase 85)'),
     p12_dirk: W('p12_dirk', 'dirk', 'one', 'steel', 4, { blade: [164, 170, 176], edge: [224, 228, 230], grip: [80, 56, 36], guard: [126, 118, 104] }, 'fp_knife', 'a stiff dirk with a basket hilt (guard)'),
   });
   const NEUTRAL_W = (id) => F(Object.assign({}, WEP.sword, { id, notes: 'unknown weapon: drawn as a sword' }));

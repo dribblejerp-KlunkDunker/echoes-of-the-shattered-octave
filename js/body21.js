@@ -398,6 +398,24 @@ const BODY21 = (() => {
         if (k === K.METAL) return { c: onRamp(rp(y < (M.guard ? M.guard[0] : 120) ? C.blade : C.guard), t) };
         if (k === K.WOOD) return { c: onRamp(rp(C.grip), t * 0.95) };
         return null;
+      // Phase 85: the Punt-Pole (pale ash, an iron shoe) and the Lengthsman's Hook (dark iron) on the spear's painting; the
+      // Fallen Iron-Bough (dark wood, all of it) and the Antler Pick (pale antler) on the mace's; the Floorstone Knife (flint)
+      case 'p85_pole':
+      case 'p85_hook':
+        if (k === K.METAL || k === K.BRASS) return { c: onRamp(rp(C.head), t * (wid === 'p85_hook' ? 0.86 : 1)) };
+        if (k === K.WOOD) return { c: onRamp(rp(C.grip), t * PATTERN.grain(x, y)) };
+        return null;
+      case 'p85_bough':
+        if (k === K.METAL || k === K.BRASS || k === K.WOOD) return { c: onRamp(rp(k === K.WOOD ? C.grip : C.head), t * PATTERN.grain(x, y)) };
+        return null;
+      case 'p85_pick':
+        if (k === K.METAL || k === K.BRASS) return { c: onRamp(rp(C.head), t * 1.05) };
+        if (k === K.WOOD) return { c: onRamp(rp(C.grip), t) };
+        return null;
+      case 'p85_knife':
+        if (k === K.METAL) return { c: onRamp(rp(y < (M.tip || 0) ? C.edge : C.blade), t * 0.9) };
+        if (k === K.WOOD) return { c: onRamp(rp(C.grip), t) };
+        return null;
       default: return null;
     }
   }

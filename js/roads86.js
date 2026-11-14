@@ -104,6 +104,13 @@ const ROADS86 = (function () {
     if (typeof ITEMS === 'undefined') return;
     const add = (id, name, desc, v) => { if (!ITEMS[id]) ITEMS[id] = { name, sprite: 'loot', valuable: true, value: v, desc }; };
     add('t_p86_collar', TX.collar, TX.collarDesc, 44); add('t_p86_lamps', TX.lamps, TX.lampsDesc, 40); add('t_p86_denbone', TX.denbone, TX.denboneDesc, 36); add('t_p86_clapper', TX.clapper, TX.clapperDesc, 48);
+    // pack pictures, pixel by pixel (24 by 24)
+    try { if (typeof ICONS !== 'undefined' && ICONS.PIX && !Object.prototype.hasOwnProperty.call(ICONS.PIX, 't_p86_collar')) {
+      ICONS.PIX.t_p86_collar = (d) => { d.layer('#3a3444', { shiny: 1 }).ell(12, 13, 8, 6); d.layer('#14101a', { shade: 'flat', sep: false }).ell(12, 13, 5.4, 3.6); d.layer('#9ad8ff', { shade: 'flat', sep: false }).px(5, 9, 7, 7, 17, 7, 19, 10, 20, 15, 4, 16, 9, 19, 15, 19); d.layer('#b08a40', { shiny: 1, sep: false }).rect(11, 17, 3, 3); };
+      ICONS.PIX.t_p86_lamps = (d) => { d.layer('#4a5a2a').path([6, 20, 12, 12, 18, 20]).path([12, 12, 12, 5]); d.layer('#efe8c0', { shade: 'flat', sep: false }).px(6, 19, 9, 15, 12, 12, 15, 15, 18, 19, 12, 5, 10, 8, 14, 9); d.layer('#fffbe0', { shade: 'flat', sep: false }).px(12, 12, 12, 5); };
+      ICONS.PIX.t_p86_denbone = (d) => { d.tilt(12, 12); d.layer('#e6dec8', { shiny: 1 }).rect(-1.5, -7, 3, 14).ell(-2, -8, 2.2, 2).ell(2, -8, 2.2, 2).ell(-2, 8, 2.2, 2).ell(2, 8, 2.2, 2); d.layer('#9c9278', { shade: 'flat', sep: false }).px(13, 11, 12, 14, 11, 9); };
+      ICONS.PIX.t_p86_clapper = (d) => { d.layer('#4a5048', { shiny: 1 }).rect(11, 3, 2, 11).ell(12, 17, 4, 4.4); d.layer('#5a8a5a', { shade: 'flat', sep: false }).px(9, 16, 10, 19, 14, 18, 15, 15, 12, 8, 11, 11); d.layer('#2a2e2a', { sep: false }).rect(10, 2, 4, 2); };
+    } } catch (e) { /* the pack shows them without a picture */ }
   }
 
   // ---------------------------------------------------------------- the hour and the weather

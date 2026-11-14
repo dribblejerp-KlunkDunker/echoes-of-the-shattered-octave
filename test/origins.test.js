@@ -91,8 +91,9 @@ async function boot(page, opts) {
       }
       await page.locator('#c-go').click(); await page.locator('#btn-intro-skip').click();
       await page.waitForFunction(() => G.state === 'play');
-      // everything creation makes; the play-time clocks (playtools' p7 timers, the hour of day) tick on their own and are not part of it
-      return page.evaluate(() => JSON.stringify({ player: G.player, flags: Object.fromEntries(Object.entries(G.flags).filter(([k]) => !/^p7[ts]_/.test(k))), journal: G.journal, ledger: G.ledger, day: G.day, mapId: G.mapId }));
+      // everything creation makes; the play-time clocks (playtools' p7 timers, the hour of day) tick on their own and are not part of it;
+      // flags in name order: what is set, not which frame set it first (Phase 84's milestone at the gate is touched on the first frame)
+      return page.evaluate(() => JSON.stringify({ player: G.player, flags: Object.fromEntries(Object.entries(G.flags).filter(([k]) => !/^p7[ts]_/.test(k)).sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))), journal: G.journal, ledger: G.ledger, day: G.day, mapId: G.mapId }));
     };
     const classIds = data.ids.split(',');
     const order = await page.evaluate(() => CLASSES.map(c => c.id));
@@ -257,7 +258,7 @@ async function boot(page, opts) {
         document.querySelectorAll('#or-mode').forEach(e => { e.hidden = true; });
       };
       window.law = () => { const l = crimeState(); return { bounty: l.bounty, thefts: l.thefts }; };
-      window.snap = () => JSON.stringify({ flags: G.flags, inv: G.player.inv, gold: G.player.gold, law: law(), hp: G.player.hp, state: G.state, panel: G.openPanel });
+      window.snap = () => JSON.stringify({ flags: Object.fromEntries(Object.entries(G.flags).filter(([k]) => !/^p7[ts]_/.test(k))), inv: G.player.inv, gold: G.player.gold, law: law(), hp: G.player.hp, state: G.state, panel: G.openPanel });
       window.clear = () => { G.state = 'play'; closeModal(); G.keys = {}; $('#msgs').innerHTML = ''; };
     });
     const run = (fn, arg) => page.evaluate(fn, arg);
@@ -544,10 +545,11 @@ async function boot(page, opts) {
       reset(); ORIGINS.setEnabled(true); ORIGINS.setMode('info');
       const m = mkroom(); m.npc('lyra', 5, 6); m.item('tonic', 5, 3); m.deco('crates', 5, 9, { use: 'crates' });
       place(m, 3.5, 6, 0);
-      const before = snap(), flagsBefore = JSON.stringify(G.flags);
+      const fl = () => JSON.stringify(Object.fromEntries(Object.entries(G.flags).filter(([k]) => !/^p7[ts]_/.test(k))));   // the play-time clocks tick on their own
+      const before = snap(), flagsBefore = fl();
       interact(); const line = msgs();
       Engine.cam.dir = 0; Engine.cam.x = 4.2; Engine.cam.y = 9; clear(); settle(); interact(); const line2 = msgs();
-      return { before, after: snap(), flagsBefore, flagsAfter: JSON.stringify(G.flags), line, line2, stateAfter: G.state };
+      return { before, after: snap(), flagsBefore, flagsAfter: fl(), line, line2, stateAfter: G.state };
     });
     assert.equal(info.line, 'Lyra Ashgrove, Cantor of Oakhaven \u00b7 Someone you could speak to.', 'Info on a story NPC: the name, nothing of their quests, greeting or tier');
     assert.equal(info.flagsBefore, info.flagsAfter, 'Info sets no flags');
