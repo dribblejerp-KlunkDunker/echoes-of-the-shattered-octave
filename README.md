@@ -239,6 +239,27 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 <p align="center"><img src="screenshots/p83-trees-before-after.jpg" alt="Before and after: the Hanger's wood and an oak on Greenroot Wood's slope, the trees grown and of many shapes" width="92%"></p>
 <p align="center"><img src="screenshots/p83-trees-walk.gif" alt="Walking into the Hanger among the grown trees" width="70%"></p>
 
+**Ponies to ride, milestones, and the roads on the map (Phase 84).** Three stables hire a pony for a day (25 sovereigns, 10 back early): the North Gate in Oakhaven, the Bellwether's yard in Wethercombe and the drovers' pen on the Long Common. Each has three ponies in real horses' coats: roan, bay and black; dun, chestnut and palomino; dapple grey, skewbald and leopard-spotted. Pick one by her portrait. Stand by her and press **X** to ride: one and three-quarter times walking pace, a little higher, no bow from the saddle, thrown at the third hard blow. She will not go onto planks, down the Pound Stair, into the Deep Grove or indoors. Left alone she waits six hours, then goes home. A milestone stands by every finger-post; walk past one and the world map can send you there, along the roads, gate to gate. Long journeys stop the night at a halt unless you press on, and an ambush comes on the stretch where it happens.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p84-coats.jpg" alt="Nine ponies side by side: roan, bay, black, dun, chestnut, palomino, dapple grey, skewbald and leopard-spotted"></td>
+<td width="50%"><img src="screenshots/p84-stable.jpg" alt="The drovers' pen: three ponies to choose from by their portraits"></td>
+</tr>
+<tr>
+<td>Nine coats, three to a stable.</td>
+<td>Choosing at the drovers' pen.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p84-pony.jpg" alt="The spotted mare saddled and waiting on the drove road"></td>
+<td><img src="screenshots/p84-riding.jpg" alt="Riding the drove road, the spotted mare's neck and ears below the view"></td>
+</tr>
+<tr>
+<td>Saddled and waiting.</td>
+<td>Riding the drove road.</td>
+</tr>
+</table>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>

@@ -43,3 +43,9 @@ The Kestrel still carries you between countries; nothing walks from the Reach to
 5. **Ambushes on the stretch where they happen.** *Recommend: yes.*
 6. **The punt built with the Sunk Lanes in Phase 85.** *Recommend: yes.*
 7. **Names:** "the roan mare" stays her name at the North Gate; the other two stables' ponies are "the dun" and "the grey". *Recommend: keep, or give your own.*
+
+## The owner's ruling
+
+**14 Nov 2026: "I approve of phase 84".** All seven questions pass as recommended. Built on branch `phase-75-pixel-folk`; what was built, and where it differs from this design, is in `story/Game Layer/Phase 84 - New In-Game Text (for review).md`.
+
+Later the same night the owner asked for more ponies: "lets add several different horses that can be ridden and rented with different patterns that resemble real horses." Each stable now offers three (question 7's names stay, as the first pony at each).
