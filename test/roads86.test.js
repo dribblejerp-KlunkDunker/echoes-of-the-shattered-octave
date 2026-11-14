@@ -29,7 +29,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     out.byHour = day1 === 0 && night.length > 0 && night === night2;
     go('p83_stride', 0.5, 'snow', 2); const snow = out86((e) => e.type === 'briarsprite' && plain(e)).length;
     go('p83_stride', 0.5, 'rain', 2); const rain = out86((e) => e.type === 'briarsprite' && plain(e)).length;
-    out.byWeather = snow === 0 && rain >= 5;
+    const statics = () => G.ents.filter((e) => e && e._r86s && e.type === 'briarsprite' && !e.dead && !e.hidden).length;
+    go('p83_stride', 0.5, 'snow', 2); const sSnow = statics(); go('p83_stride', 0.5, 'clear', 2);
+    out.byWeather = snow === 0 && rain >= 5 && sSnow === 0 && statics() >= 5;
     go('p83_hollows', 0.5, 'mist', 2); const mist = out86((e) => e.type === 'hound' && plain(e)).length;
     go('p83_hollows', 0.5, 'clear', 2); out.mistHounds = mist >= 2 && out86((e) => e.type === 'hound' && plain(e)).length === 0;
     // no new enemy draws on Math.random when it is woken (named here, not by hydrate)
@@ -96,7 +98,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     return out;
   });
   check(r.byHour, 'what walks a road is set by the hour, and is the same for the same hour');
-  check(r.byWeather, 'and by the weather: the briar sleeps in snow and is up in the rain');
+  check(r.byWeather, 'and by the weather: the briar sleeps in snow (the Stride\'s own as well) and is up in the rain');
   check(r.mistHounds, 'the Hollows\' dogs are out by day only in mist');
   check(r.noRandom, 'nothing new draws on Math.random when it is woken');
   check(r.hissOut && r.hissDay, 'the Hiss is out on the Common at night in the wet, and not by day');

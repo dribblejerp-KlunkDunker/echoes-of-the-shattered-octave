@@ -186,6 +186,14 @@ const ROADS86 = (function () {
       { keeper: 'bell', type: 'miredrone', at: [[24.5, 25.5]], water: true, when: (c) => c.storm },   // over the water: the punt's to reach it
     ],
   };
+  // the foes each road was built with join its roster: still where they were put, but out only at their hour and weather
+  // (k counts them by type, so "half the dogs" is every other one). They are not woken again once put down, as before.
+  const STATIC = {
+    p79_road_w: { hound: (c, k) => !(c.snow && k % 2) },
+    p79_road_e: { dirge: (c) => c.dusk, mites: (c) => !c.snow, hound: (c, k) => !(c.snow && k % 2), hushmoth: (c) => c.mist || c.dusk },
+    p83_stride: { briarsprite: (c) => !c.snow },
+    p83_poundstair: { hound: (c, k) => !(c.snow && k % 2), miredrone: (c) => c.night || c.storm || c.wet },
+  };
   const KEEPER = { hiss: { name: TX.hiss, seen: TX.hissSeen, down: TX.hissDown, took: TX.tookCollar, hp: 120, dmg: [6, 13], scale: 1.8, speed: 1.25, xp: 150 }, queen: { name: TX.queen, seen: TX.queenSeen, down: TX.queenDown, took: TX.tookLamps, hp: 110, dmg: [5, 11], scale: 2.4, yOff: 0.2, speed: 0.8, xp: 140 }, dog: { name: TX.dog, seen: TX.dogSeen, down: TX.dogDown, took: TX.tookDenbone, hp: 110, dmg: [6, 12], scale: 1.6, speed: 1.3, xp: 140 }, bell: { name: TX.bell, seen: TX.bellSeen, down: TX.bellDown, took: TX.tookClapper, hp: 160, dmg: [7, 14], scale: 2.2, speed: 0.6, xp: 170 } };
   const CAMP_TEXT = { office: TX.office, vigil: TX.vigil, den: TX.den, briar: TX.briar };
   const CAMP_OFF = { office: 0, vigil: 2, den: 4, briar: 1 };
@@ -209,6 +217,8 @@ const ROADS86 = (function () {
     for (const id of Object.keys(PLAN)) {
       const m = maps[id]; if (!m || m._r86) continue;
       const S = spotsOf(m, 10, id.length * 7 + id.charCodeAt(id.length - 1));
+      const ST = STATIC[id], seen = {};
+      if (ST) for (const e of m.entities) if (e && e.kind === 'enemy' && !e._r86 && ST[e.type] && !e.boss && !e.hidden) { seen[e.type] = (seen[e.type] || 0) + 1; e._r86s = { type: e.type, k: seen[e.type] - 1 }; }
       const groups = PLAN[id](m, S); m._r86 = { groups, spots: S };
       groups.forEach((g, gi) => {
         if (g.fire) { if (!g.at) return; put(m, 'deco', null, 0, 0, { kind: 'deco', sprite: 'campfire', x: g.at[0], y: g.at[1], scale: 0.8, solid: false, radius: 0.3, glow: 0.8, lightCol: [220, 140, 60], label: g.fire === 'rafthands' ? TX.rafthands : TX.fire, use: 'p86_sit', _r86: { fire: g.fire } });
@@ -260,6 +270,13 @@ const ROADS86 = (function () {
     if (c.rain) f().p86_rain = day() || 1;
     if (!R) return;
     const cam = typeof Engine !== 'undefined' ? Engine.cam : { x: 0, y: 0 };
+    const ST = STATIC[m.id];
+    if (ST) for (const e of G.ents) {
+      const s = e && e._r86s; if (!s || e.dead) continue;
+      const want = ST[s.type](c, s.k), busy = e.state === 'chase' || e.state === 'attack';
+      if (!onLoad && (busy || Math.hypot(e.x - cam.x, e.y - cam.y) < 10) && want !== !e.hidden) continue;
+      e.hidden = !want;
+    }
     for (const e of G.ents) {
       const r = e && e._r86; if (!r) continue;
       if (r.campDeco) { e.label = campHeld(r.campDeco, c) ? (r.campDeco === 'office' && e.sprite === 'table' ? TX.officeLedger : CAMP_TEXT[r.campDeco]) : TX.campCold; continue; }
