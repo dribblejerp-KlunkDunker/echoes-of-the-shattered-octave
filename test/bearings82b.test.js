@@ -126,7 +126,7 @@ const BR = require(path.join(ROOT, 'js', 'bearings82b.js')), BO = require(path.j
     out.reed = run('reed', () => { here('flume_landing', 13, 13); const s = spots('reed'), drop = s.find((e) => e.label === B.TX.coopSpot); useDeco(drop); const short = B.st('reed') === 1; for (const e of s) if (e !== drop) useDeco(e); useDeco(drop); if (!short) throw new Error('reed'); });
     out.hurdles = run('hurdles', () => { here('p22_combe', 30, 24); const s = spots('hurdles'), stack = s.find((e) => e.sprite === 'p82b_hurdles'), fold = s.find((e) => e !== stack); for (let i = 0; i < 6; i++) { useDeco(stack); useDeco(fold); } });
     out.bell = run('bell', () => { here('p20_downs', 10, 34); useDeco(spots('bell')[0]); here('p22_combe', 30, 24); useDeco(spots('bell').find((e) => !e.hidden)); });
-    out.hook = run('hook', () => { here('cantabile_harbour', 40, 50); G.flags.p17c_hung = (Number(G.flags.p17c_hung) | 0) | 2; B.watch(); });
+    out.hook = run('hook', () => { here('cantabile_harbour', 40, 50); G.flags.p17c_hung = 0; B.watch(); if (B.st('hook') !== 1) throw new Error('hook done with no bell'); G.flags.p17c_hung = 2; B.watch(); });
     out.chimes = run('chimes', () => { here('cantabile_harbour', 40, 50); useDeco(spots('chimes')[0]); const none = B.num('chimes', 'n') === 0; G.give('p82b_chime', 3); for (const e of spots('chimes')) useDeco(e); if (!none) throw new Error('chime without a chime'); });
     out.chimeShop = NPCS.p17c_sloe.shop.some((s) => s.item === 'p82b_chime') && !!ITEMS.p82b_chime;
     out.doors = run('doors', () => { here('surgery', 5, 5); useDeco(spots('doors')[0]); here('p30_hollow', 16, 16); const s = spots('doors'); for (const e of s.slice(0, 3)) useDeco(e); });

@@ -140,15 +140,21 @@ const BOARDS82B = (function () {
     if (typeof Engine === 'undefined' || !Engine.addSprite || typeof document === 'undefined') return;
     const add = (name, w, h, hs, fn) => { if (Engine.sprites && Engine.sprites[name]) return; try { Engine.addSprite(name, { w, h, data: paint(w, h, fn), hs, cx: 0.5, dy: 0 }); } catch (e) { warnOnce('art ' + name, e); } };
     add('p82b_none', 2, 2, 0.1, () => {});
-    // a notice board: two posts, a little roof, a weathered board, papers of different ages pinned on it
-    add('p82b_board', 64, 72, 1.25, (x) => {
-      R(x, 8, 10, 4, 62, '#3e3022'); R(x, 52, 10, 4, 62, '#3e3022'); R(x, 9, 10, 1, 62, '#5a4632'); R(x, 53, 10, 1, 62, '#5a4632');
-      x.beginPath(); x.moveTo(2, 12); x.lineTo(32, 2); x.lineTo(62, 12); x.lineTo(62, 15); x.lineTo(2, 15); x.closePath(); x.fillStyle = '#4a3828'; x.fill();
-      Ln(x, 2, 12, 32, 2, '#6a523a', 1.2); Ln(x, 32, 2, 62, 12, '#2a2018', 1.2);
-      R(x, 5, 16, 54, 34, '#6a5238'); for (let i = 0; i < 5; i++) R(x, 5, 17 + i * 7, 54, 1, 'rgba(30,20,12,0.5)');
-      x.strokeStyle = '#2e2216'; x.lineWidth = 1.5; x.strokeRect(5, 16, 54, 34);
+    // a notice board under its own small roof (owner, 13 Nov: "add a small roof over the notice board to protect it from
+    // the rain"): two posts, a shingled pent roof wide enough to keep the rain off the papers, its shadow on the top of
+    // the board, and papers of different ages pinned up. Drawn to stand under a house's eaves, not through them.
+    add('p82b_board', 72, 76, 0.94, (x) => {
+      R(x, 11, 14, 4, 62, '#3e3022'); R(x, 57, 14, 4, 62, '#3e3022'); R(x, 12, 14, 1, 62, '#5a4632'); R(x, 58, 14, 1, 62, '#5a4632');
+      // the roof: a low gable of shingles, overhanging the posts on both sides and the board in front
+      x.beginPath(); x.moveTo(1, 20); x.lineTo(36, 3); x.lineTo(71, 20); x.lineTo(71, 23); x.lineTo(1, 23); x.closePath(); x.fillStyle = '#3a2c20'; x.fill();
+      for (let r = 0; r < 4; r++) { const y0 = 6 + r * 4.2; for (let k = 0; k < 14; k++) { const xs = 36 - (y0 + 2 - 3) * 2.06 + k * 5 + (r % 2) * 2.5, xe = Math.min(xs + 4.4, 36 + (y0 + 2 - 3) * 2.06); if (xs > xe) continue; R(x, xs, y0, xe - xs, 3.4, k % 3 === 1 ? '#5c4632' : k % 3 === 2 ? '#4e3c2a' : '#66503a'); } }
+      Ln(x, 1, 20.5, 36, 3, '#7a6248', 1.2); Ln(x, 36, 3, 71, 20.5, '#241a12', 1.2); R(x, 1, 21, 70, 2.5, '#2a2018');
+      // the board, in the roof's shadow at the top
+      R(x, 8, 25, 56, 30, '#6a5238'); for (let i = 0; i < 4; i++) R(x, 8, 26 + i * 7, 56, 1, 'rgba(30,20,12,0.5)');
+      x.strokeStyle = '#2e2216'; x.lineWidth = 1.5; x.strokeRect(8, 25, 56, 30);
       const paper = (px, py, pw, ph, c) => { R(x, px + 1, py + 1, pw, ph, 'rgba(0,0,0,0.35)'); R(x, px, py, pw, ph, c); for (let k = 0; k < ph - 4; k += 3) R(x, px + 2, py + 3 + k, pw - 4 - ((k * 7) % 5), 1, 'rgba(40,30,20,0.55)'); R(x, px + pw / 2 - 1, py + 1, 2, 2, '#8a8a90'); };
-      paper(8, 19, 14, 18, '#e4dcc4'); paper(25, 18, 12, 14, '#d8c89c'); paper(40, 20, 15, 12, '#ece6d4'); paper(27, 34, 13, 12, '#c8b88a'); paper(9, 39, 11, 9, '#e0d6b8'); paper(43, 35, 11, 12, '#d4c49c');
+      paper(11, 28, 14, 16, '#d8d0b8'); paper(28, 27, 12, 13, '#ccbc92'); paper(43, 29, 16, 11, '#dcd6c4'); paper(30, 42, 13, 11, '#bcac80'); paper(12, 46, 11, 8, '#d0c6a8'); paper(47, 42, 12, 11, '#c8b890');
+      R(x, 8, 25, 56, 4, 'rgba(0,0,0,0.28)');
     });
     // a willow eel-trap: a cone of withies, the neck tied, on a line
     add('p82b_trap', 28, 24, 0.35, (x) => {
@@ -198,6 +204,16 @@ const BOARDS82B = (function () {
     for (let r = 0.4; r <= 3; r += 0.4) for (let a = 0; a < 12; a++) { const px = x + Math.cos(a / 12 * Math.PI * 2) * r, py = y + Math.sin(a / 12 * Math.PI * 2) * r; if (ok(px, py)) return [+px.toFixed(2), +py.toFixed(2)]; }
     return [x, y];
   }
+  // a board against a house stands a step out from the wall, so its little roof sits under the eaves and not in them
+  function offWall(m, at) {
+    let [x, y] = at;
+    for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+      const c = m.get(Math.floor(x + dx * 0.75), Math.floor(y + dy * 0.75)); if (!c || c.door) continue;
+      const nx = x - dx * 0.35, ny = y - dy * 0.35, k = m.get(Math.floor(nx), Math.floor(ny));
+      if (!k && !m.isBlocked(Math.floor(nx), Math.floor(ny))) { x = nx; y = ny; }
+    }
+    return [+x.toFixed(2), +y.toFixed(2)];
+  }
   function addDoorSpots(maps) {
     const m = maps.p30_hollow; if (!m) return [];
     const marks = m.entities.filter((e) => e && (e.sprite === 'p30_sapmark' || e.sprite === 'p30_pencil')).sort((a, b) => a.y - b.y || a.x - b.x);
@@ -213,7 +229,7 @@ const BOARDS82B = (function () {
   function placeAll(maps) {
     for (const id in BOARDS) {
       const B = BOARDS[id], m = maps[B.map]; if (!m || m.entities.some((e) => e && e._p82bBoard === id)) continue;
-      const at = freeNear(m, B.at[0], B.at[1]);
+      const at = offWall(m, freeNear(m, B.at[0], B.at[1]));
       m.deco(typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites.p82b_board ? 'p82b_board' : 'sign', at[0], at[1], { radius: 0.3, scale: 1.0, solid: true, use: 'p82b_board', label: B.title, _p82bBoard: id });
       m.baseCount = m.entities.length;
     }
@@ -286,10 +302,11 @@ const BOARDS82B = (function () {
     sync(G.ents);
     return true;
   }
-  // the grave-bell on the Cay is js/cantabile17.js's: the task is done when a hook is hung after you took it
+  // the grave-bell on the Cay is js/cantabile17.js's: the task is done once a bare hook has a bell
   function watch() {
     if (!hasG()) return;
-    if (st('hook') === 1) { const hung = Number(F().p17c_hung) | 0, at = num('hook', 'b'); if ((hung & ~at) !== 0) { setNum('hook', 'n', 1); finish('hook'); } }
+    // (like the Oakhaven board's writs, a bell already hung counts: the Cay has only so many bare hooks)
+    if (st('hook') === 1 && (Number(F().p17c_hung) | 0) !== 0) { setNum('hook', 'n', 1); finish('hook'); }
     // the third board in from the chandler's door creaks
     if (G.mapId === THIRD_BOARD.map && typeof Engine !== 'undefined' && Engine.cam && Math.floor(Engine.cam.x) === THIRD_BOARD.x && Math.floor(Engine.cam.y) === THIRD_BOARD.y) {
       if (!watch.on) { watch.on = true; G.noise = Math.max(Number(G.noise) || 0, 2.2); try { if (Audio_.sfx.creak) Audio_.sfx.creak(); } catch (e) { /* silent */ } }
@@ -300,7 +317,6 @@ const BOARDS82B = (function () {
   function takeTask(k) {
     if (st(k) !== 0) return;
     F()['p82b_' + k] = 1; setNum(k, 'n', 0); setNum(k, 'c', 0); setNum(k, 'b', 0);
-    if (k === 'hook') setNum(k, 'b', Number(F().p17c_hung) | 0);
     try { journal('side', TASKS[k].what); } catch (e) { /* no logbook */ }
     say(TX.taken, 'good', 3500);
     sync(G.ents);
@@ -324,7 +340,7 @@ const BOARDS82B = (function () {
     const lines = (arr) => arr.map((t) => `<p>${esc(t)}</p>`).join('');
     const tasks = B.tasks.map((k) => {
       const T = TASKS[k], s = st(k);
-      return `<button class="dfbtn" id="p82b-t-${k}" ${s === 3 || s === 1 ? 'disabled' : ''}><b>${esc(T.title)}</b> <span>${esc(T.notice)}</span> <span class="muted">${esc(T.what)}</span> <span>${esc(status(k))}</span>${T.items ? ` <span>${esc(TX.eels)}</span>` : ''}</button>`;
+      return `<button class="dfbtn" id="p82b-t-${k}" ${s === 3 || s === 1 ? 'disabled' : ''}><b>${esc(T.title)}</b> <span>${esc(T.notice)}</span> <span class="muted">${esc(T.what)}</span> <span class="p82b-st">${esc(status(k))}</span>${T.items ? ` <span class="p82b-st">${esc(TX.eels)}</span>` : ''}</button>`;
     }).join('');
     const html = `<h2>${esc(B.title)}</h2><button class="dfbtn small close" id="x">${esc(TX.close)}</button>
       <div class="p82b-board"><h3>${esc(TX.notices)}</h3>${lines(B.notices)}<h3>${esc(TX.lore)}</h3><div class="p82b-lore">${lines(B.lore)}</div>
@@ -374,7 +390,11 @@ const BOARDS82B = (function () {
       const s = document.createElement('style'); s.id = 'p82b-board-style';
       s.textContent = '.p82b-board h3{font-family:var(--font-sc);color:var(--gold);margin:.8cqh 0 .3cqh;font-size:2cqw;font-weight:500}'
         + '.p82b-board p{margin:.2cqh 0 .5cqh;line-height:1.3}.p82b-lore p{font-style:italic}'
-        + '.p82b-board .list .dfbtn{text-align:left;white-space:normal}.p82b-board .list .dfbtn span{display:inline}';
+        + '.p82b-board{max-height:64cqh;overflow-y:auto;padding-right:.6cqw}'
+        + '.p82b-board .list{display:flex;flex-direction:column;gap:.8cqh}'
+        + '.p82b-board .list .dfbtn{text-align:left;white-space:normal;font-size:2cqw}'
+        + '.p82b-board .list .dfbtn span{display:block;font-family:var(--font-body);letter-spacing:0;font-size:1.65cqw;color:var(--parch,#e8dcc0);margin-top:.3cqh}'
+        + '.p82b-board .list .dfbtn span.muted{opacity:.8}.p82b-board .list .dfbtn span.p82b-st{color:var(--gold)}';
       (document.head || document.documentElement).appendChild(s);
     }
   }

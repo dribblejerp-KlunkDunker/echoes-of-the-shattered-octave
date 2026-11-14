@@ -287,7 +287,7 @@ const BEARINGS82B = (function () {
     }
     // the names, in ink: the biggest places first, each name above its place, or inside its top edge, or under it,
     // wherever it does not run into a name already written
-    const fs = Math.max(13, Math.round(W / 78)), boxes = [];
+    const fs = Math.max(13, Math.round(W / (W / H > 2.2 ? 66 : 40))), boxes = [];   // the Woods chart is shown much smaller than it is drawn
     const hit = (b) => boxes.some((o) => b[0] < o[2] && o[0] < b[2] && b[1] < o[3] && o[1] < b[3]);
     const ids = Object.keys(lay.places).filter((id) => found[id] && G.maps[id]).sort((a, b) => lay.places[b].w * lay.places[b].h - lay.places[a].w * lay.places[a].h || (a < b ? -1 : 1));
     x.textAlign = 'center'; x.textBaseline = 'bottom';
@@ -461,7 +461,8 @@ const BEARINGS82B = (function () {
         const rid = regionOfImg(src);
         // (repaints only when a place has been found since; otherwise what is filed under the name is returned as before,
         // which while js/synod15.js is drawing is its washed copy)
-        if (rid && hasMaps()) { try { chartImage(rid); } catch (e) { warnOnce('chart', e); } }
+        // (the found places are read again when the travel map opens, not on every frame it draws)
+        if (rid && hasMaps() && (!L.chart[rid] || L.chart[rid].lay !== L.lay[rid])) { try { chartImage(rid); } catch (e) { warnOnce('chart', e); } }
         return _i.apply(this, arguments);
       };
     }

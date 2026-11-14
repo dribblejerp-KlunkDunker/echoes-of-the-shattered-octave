@@ -161,6 +161,37 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 <p align="center"><img src="screenshots/road79/plan-whole-road.jpg" alt="A plan of the whole Greenroot road: the Long Common, the middle stretch and Greenroot Wood, with every place on them named" width="92%"></p>
 
+**Every place where the map says it is, with finger-posts and notice boards (Phase 82b).** The travel map's paintings of the Reach and the Woods are now drawn in code from the places themselves, each laid where its gates put it, with the roads drawn between the gates, so every road leaves the way the map shows. A place you have not found is not drawn. Twenty-three finger-posts stand at the ways out, in words, not numbers ("THE LEAP. Under it, smaller: GREENROOT, a day and a half."), and six towns have a notice board under its own small roof, with notices, lore and small tasks to take: set eel-traps before light at Stillwater, carry hurdles to the fold at Wethercombe, hang chimes on the Harbour's shrouds, take Rooke's tonic to the marked doors in the Hollow. The Malting yard's way back to the Court is now on its south side, where the map puts it. The text is for the owner's review: [`story/Game Layer/Phase 82b - New In-Game Text (for review).md`](story/Game%20Layer/Phase%2082b%20-%20New%20In-Game%20Text%20%28for%20review%29.md).
+
+<p align="center"><img src="screenshots/p82b-chart-fills.gif" alt="The Reach chart filling in place by place: Oakhaven, the clearing, the Downs and Wethercombe, the Flume Road and Stillwater, then the three stretches of the Greenroot road" width="92%"></p>
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p82b-combe-walk.gif" alt="Walking up to the Bellwether's notice board at Wethercombe, under its own small roof"></td>
+<td width="50%"><img src="screenshots/p82b-greenroot-walk.gif" alt="Walking up to Greenroot's notice board by the well"></td>
+</tr>
+<tr>
+<td>Wethercombe: the Bellwether's board.</td>
+<td>Greenroot: the board by the mill, with nobody to read it.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p82b-board-panel.jpg" alt="Reading the piling board at Stillwater: notices, lore and the tasks to take"></td>
+<td><img src="screenshots/p82b-travel-woods.jpg" alt="The Spectral Woods on the travel map: the Malting yard north of the Sunken Court, the Bell Yard west, the Deep Woods away to the north-east"></td>
+</tr>
+<tr>
+<td>Reading a board: notices, lore, tasks to take.</td>
+<td>The Woods: the Malting yard north of the Court, where its door is.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p82b-common-post.jpg" alt="A finger-post inside the Long Common's west gate"></td>
+<td><img src="screenshots/p82b-yard-walk.gif" alt="Walking to the Malting yard's south gate, past the Office's painted board on a stake"></td>
+</tr>
+<tr>
+<td>A finger-post inside the Long Common's west gate.</td>
+<td>The Malting yard's way back to the Court, south.</td>
+</tr>
+</table>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>
