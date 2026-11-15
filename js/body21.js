@@ -439,7 +439,7 @@ const BODY21 = (() => {
     // Phase 87: the melee weapons' own pictures, painted in code with the glove and sleeve you wear (js/fp87.js); drawn
     // at the same place, k times smaller than the canvas (the hook below scales them)
     if (side === 'right' && key !== 'fp_hands' && typeof FP87 === 'object' && FP87.covers(wid)) {
-      try { const r = FP87.paint(wid, look); if (r) { b = { key, wid, side, main: r.canvas, emis: r.emis || null, ext: null, over: [], w: r.canvas.width, h: r.canvas.height, k: r.k, below: r.below, right: r.right, center: !!r.center, ms: 0 }; buildCache.set(bk, b); OWNED.set(r.canvas, b); stats.builds++; return b; } } catch (e) { warnOnce('fp87', e); }
+      try { const r = FP87.paint(wid, look); if (r) { b = { key, wid, side, main: r.canvas, emis: r.emis || null, ext: null, over: [], w: r.canvas.width, h: r.canvas.height, k: r.k, below: r.below, right: r.right, center: !!r.center, tip: r.tip || null, root: r.root || null, ms: 0 }; buildCache.set(bk, b); OWNED.set(r.canvas, b); stats.builds++; return b; } } catch (e) { warnOnce('fp87', e); }
     }
     const s = segment(key); if (!s) return null;
     const t0 = performance.now();
@@ -1020,13 +1020,15 @@ const BODY21 = (() => {
     if (!look.shield || look.shieldStowed || hiddenBody()) return false;
     const art = shieldArt(look); if (!art) return false;
     const p = shieldPose(art), sx = p.s * (art.kind === 'kite' ? 0.86 : 0.92), sy = p.s;
+    let face = art.canvas;
+    if (typeof FEEL88 === 'object') { try { const j = FEEL88.shieldJolt(); p.x += j.x; p.y += j.y; p.r += j.r; face = FEEL88.marked(art, look.shield.id) || art.canvas; } catch (e) { face = art.canvas; } }   // Phase 88: the knocks it takes
     // where the hand holds it: the strap behind the right edge of the face (on the screen, toward the centre)
     const gx = p.x + ((art.gripX - art.hx) * Math.cos(p.r) - (art.gripY - art.hy) * Math.sin(p.r)) * sx;
     const gy = p.y + ((art.gripX - art.hx) * Math.sin(p.r) + (art.gripY - art.hy) * Math.cos(p.r)) * sy;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
     const arm = drawOffArm(ctx, look, gx + 3, gy + 6, false);
     ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.scale(sx, sy);
-    put2(ctx, lit(art.canvas), -art.hx, -art.hy, art.w, art.h);
+    put2(ctx, lit(face), -art.hx, -art.hy, art.w, art.h);
     ctx.restore();
     // the fingers curl over the rim
     if (arm) { ctx.save(); ctx.translate(gx, gy); ctx.rotate(p.r - 0.15); put2(ctx, lit(arm.fingers, arm.fingersEm), -6, -8, 20, 15, arm.fingersEm); ctx.restore(); }
@@ -1068,6 +1070,7 @@ const BODY21 = (() => {
       }
       if (!b || arguments.length !== 5) return orig.apply(this, arguments);
       let dx = arguments[1], dy = arguments[2], dw = arguments[3], dh = arguments[4];
+      if (b.side === 'right' && typeof FEEL88 === 'object') { try { const o = FEEL88.weaponOffset(b.wid); dx += o.x; dy += o.y; } catch (e) { /* still */ } }   // Phase 88: the weapon's weight
       // a Phase 87 picture is k times larger than its place: drawn at its place, its right and bottom edges where the old
       // picture's were (the weapon held in the right of the view, the forearm out of the bottom)
       if (b.k) { const w2 = dw / b.k, h2 = dh / b.k; dx += (b.center ? (dw - w2) / 2 : dw - w2) + (b.right || 0); dy += dh - h2 + (b.below || 0); dw = w2; dh = h2; }   // Phase 87 (d): the two-handed ranged pictures sit centred, as the crossbow's did
@@ -1585,7 +1588,7 @@ void main() {
   }
 
   function clearCaches() { headCache.clear(); buildCache.clear(); shieldCache.clear(); armCache.clear(); legCache.clear(); }
-  return { set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
+  return { owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
     R3B, FX3, LB, lbBuild, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;

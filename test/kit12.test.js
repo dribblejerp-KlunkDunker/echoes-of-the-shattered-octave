@@ -245,7 +245,8 @@ function ok(cond, label) { console.log((cond ? 'PASS ' : 'FAIL ') + label); if (
     ok(smoke[1] > smoke[0], 'it smokes through firesmoke\'s own particle pool (' + smoke + ')');
 
     const burnSelf = await page.evaluate(() => {
-      __stage(); const f = KIT12.startFire({ x: Engine.cam.x, y: Engine.cam.y }); const h0 = G.player.hp; for (let i = 0; i < 60; i++) update(1 / 30); const h1 = G.player.hp; KIT12.endAll(); return h0 - h1;
+      __stage(); const keepA = G.player.armor; G.player.armor = {};   // Phase 87: the Blade starts in Siphon Corps clothes, and three of them take a third off fire
+      const f = KIT12.startFire({ x: Engine.cam.x, y: Engine.cam.y }); const h0 = G.player.hp; for (let i = 0; i < 60; i++) update(1 / 30); const h1 = G.player.hp; KIT12.endAll(); G.player.armor = keepA; return h0 - h1;
     });
     ok(burnSelf >= 4, 'standing in your own fire burns you (' + burnSelf + ' in 2 s)');
 

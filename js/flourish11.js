@@ -163,9 +163,19 @@ const FLOURISH11 = (() => {
   function trailPoints(w, prog, dirLabel) {
     const img = Engine.images[w.img]; if (!img) return null;
     const iw = img.width * 0.5, ih = img.height * 0.5;
+    // Phase 88: a picture painted in code (js/fp87.js) is k times its place and knows where its edge is: follow that
+    let b = null; try { b = typeof BODY21 === 'object' && BODY21.owned ? BODY21.owned(img) : null; } catch (e) { b = null; }
+    if (b && b.k && b.tip) return trailPoints88(w, prog, dirLabel, iw, ih, b);
     const bx = w.img === 'fp_hands' ? VW / 2 - iw / 2 : w.center ? VW / 2 - iw / 2 + 22 : VW - iw - 10;
     const bob = Engine.cam.bob || 0, out = [];
     for (let k = 0; k <= 6; k++) { const f = clamp(prog - k * 0.035, 0.05, 1); out.push(tipAt(w, f, dirLabel, iw, ih, bx, bob)); }
+    return out;
+  }
+  function trailPoints88(w, prog, dirLabel, iw, ih, b) {
+    const bx = w.img === 'fp_hands' ? VW / 2 - iw / 2 : w.center ? VW / 2 - iw / 2 + 22 : VW - iw - 10, bob = Engine.cam.bob || 0, out = [];
+    const w2 = iw / b.k, h2 = ih / b.k, left = (b.center ? (iw - w2) / 2 : iw - w2) + (b.right || 0) - iw * 0.5, top = -ih + 12 + ih - h2 + (b.below || 0);
+    const at = (pose, u, v) => { const lx = (left + u * w2) * pose.scale, ly = (top + v * h2) * pose.scale, s = Math.sin(pose.rotation), c = Math.cos(pose.rotation), ox = bx + pose.x + iw * 0.5, oy = VIEW_H + 12 + pose.y + bob * 1.5; return [ox + lx * c - ly * s, oy + lx * s + ly * c]; };
+    for (let k = 0; k <= 6; k++) { const f = clamp(prog - k * 0.035, 0.05, 1), pose = animWeaponPose(w, f, dirLabel); out.push({ tip: at(pose, b.tip[0], b.tip[1]), root: at(pose, b.tip[0] * 0.55 + b.root[0] * 0.45, b.tip[1] * 0.55 + b.root[1] * 0.45) }); }
     return out;
   }
   function drawTrail(ctx) {

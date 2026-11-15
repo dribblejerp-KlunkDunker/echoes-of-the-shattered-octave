@@ -134,7 +134,7 @@ const SHOTS = process.env.SHOTS || '';
         let best = null; for (const f of [0.4, 0.5, 0.6]) { const d = withOff(wi, f); if (!best || d.n > best.n) best = d; }
         out[name] = best; check(best.n > 40, name + ' leaves a visible trail: ' + best.n + ' pixels');
       }
-      check(out.glass.b > out.glass.r, 'glass trail is cyan'); check(out.sword.r > out.sword.b && out.mace.r > out.mace.b, 'iron/bronze trails are warm'); check(out.mace.r - out.mace.b > out.sword.r - out.sword.b, 'bronze warmer than iron');
+      check(out.glass.b > out.glass.r, 'glass trail is cyan'); check(out.sword.r > out.sword.b && out.mace.r > out.mace.b, 'iron/bronze trails are warm'); check((out.mace.r - out.mace.b) / out.mace.n > (out.sword.r - out.sword.b) / out.sword.n, 'bronze warmer than iron');   // per pixel: since Phase 88 the trails follow each painted blade's own tip, so their sizes differ
       check(out.hands.n < out.sword.n * 1.5, 'wood/hands trail is dull');
       check(FLOURISH11.trail.materialOf(WEAPONS.glass) === 'glass' && FLOURISH11.trail.materialOf(WEAPONS.mace) === 'bronze' && FLOURISH11.trail.materialOf(WEAPONS.hands) === 'wood', 'material mapping');
       // ranged weapons and idle: none
