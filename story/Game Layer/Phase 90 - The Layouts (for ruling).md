@@ -2,6 +2,8 @@
 
 *Written 14 Nov 2026. Phase 89, the continent's lore and great cities, was approved by the owner on 14 Nov. This is its second half: **every place drawn as a plan, before any graphics.** Nothing here is built.*
 
+*Approved by the owner, 14 Nov 2026: "you have my approval for all now you may proceed". The six numbers at the end stand as written; Phase 91 builds the Souls rules in the Reach first.*
+
 *The plans, the room lists below and the record are made from one file (`tools/maps/layouts90_data.py`) by `tools/maps/layouts90.py` and `layouts90_doc.py`, so the pictures and the words cannot disagree. Nothing is random.*
 
 ## How to read the plans

@@ -48,7 +48,8 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] the 33 new great places as plans, room by room (258 rooms, 69 lamps, 28 shortcuts; five places one way on purpose) (`screenshots/p90/places-*.jpg`)
 - [x] the eight great cities at walking scale (500 steps across) with the heart's way in, lamps, keepers and doors; the Organum's ranks with 712 pipes where the eight figures cross (`screenshots/p90/city-*.jpg`)
 - [x] the 65 smaller places sketched room by room; six numbers for the owner (city size, the Piece, lamps, the hour-bead at 120 sovereigns, keepers' gear, the building order)
-- [ ] next: the owner's ruling on the six numbers; then **Phase 91, the Souls rules** (lamps, the Piece, shortcuts) in the Reach's built great places, then the Dawning Heights
+- [x] approved by the owner, 14 Nov: "you have my approval for all now you may proceed" (all six numbers as written)
+- [ ] next: **Phase 91, the Souls rules** (lamps, the Piece, shortcuts) in the Reach's built great places, then the Dawning Heights
 Record: [`story/Game Layer/Phase 90 - The Layouts (for ruling).md`](story/Game%20Layer/Phase%2090%20-%20The%20Layouts%20(for%20ruling).md).
 
 **Phase 89: the Continent, lore and great cities (14 Nov, branch `p89-continent`; for the owner's ruling, nothing built).** Owner, 14 Nov: "lets pack as much information in as possible about the locations and the inhabitants... design the layout of each place so that we know what they will look like before doing the actual graphical designs... inspired by elden ring and dark souls... In each region there must be an large city or large town and I want the layout designed around the frequency in that region using cymatics." Done:
