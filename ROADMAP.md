@@ -49,7 +49,9 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] each realm's great city laid out by its own note with the owner's Cymatic City Engine (fixed seed, nothing random), the canon places pinned on the figure (`screenshots/p89/`)
 - [x] the Souls frame: four great places a realm (36), a named keeper each (32 new), lamps, shortcuts, the Piece; about 70 smaller places
 - [x] twenty questions for the owner, each with a recommendation
-- [ ] next: the owner's ruling; then **Phase 90, the layouts** (every place drawn as a plan before any graphics); then the building, country by country in the books' order (the Heights first). Part B's old 89 and 90 (measurements on a real machine; full runs and release notes) move after it.
+- [x] approved by the owner, 14 Nov: "i agree with your recommendation about the new countries and all proposals pass"
+- [x] the painted map of the continent (`tools/maps/continent89.py`, `screenshots/p89/continent-map.jpg`)
+- [ ] next: **Phase 90, the layouts** (every place drawn as a plan before any graphics); then the building, country by country in the books' order (the Heights first). Part B's old 89 and 90 (measurements on a real machine; full runs and release notes) move after it.
 Record: [`story/Game Layer/Phase 89 - The Continent (lore and great cities, for ruling).md`](story/Game%20Layer/Phase%2089%20-%20The%20Continent%20(lore%20and%20great%20cities,%20for%20ruling).md).
 
 **Phase 88: the rules and the feel (14 Nov, branch `phase-88-feel`).** Owner, 14 Nov: "blocking should cost fatigue, there needs to be fall damage, enemies should follow. I agree with your recommendation. Lets proceed and when this is done I want everything pushed and merged." Done:

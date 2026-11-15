@@ -2,6 +2,12 @@
 
 *Written 14 Nov 2026 for the owner's ruling. Nothing here is built. This is the first half of the world expansion: the lore, and the plan of each realm's great city. The second half (Phase 90) draws the layout of every place named here, room by room, before any graphics.*
 
+**Approved by the owner, 14 Nov 2026:** "i agree with your recommendation about the new countries and all proposals pass." Every recommendation in the twenty questions stands as written, so everything marked [PROPOSED] below is now ruled; the marks are left in place to show what was invented.
+
+![Aethelgard, the painted map](../../screenshots/p89/continent-map.jpg)
+
+*The painted map (`tools/maps/continent89.py`, drawn in code, nothing random). The working chart it replaced:*
+
 ![Aethelgard](../../screenshots/p89/continent.jpg)
 
 ## How to read this
