@@ -1,0 +1,41 @@
+# Phase 91, the Souls rules in the Reach (js/souls91.js). english<TAB>french. [PROPOSED] lines, for the owner's review.
+A hush-lamp on an iron post, unlit. Its reed-whistle is stopped with wax.	Une veilleuse sur un poteau de fer, éteinte. Son sifflet de roseau est bouché à la cire.
+A hush-lamp on an iron post, burning. Use it to rest.	Une veilleuse sur un poteau de fer, allumée. Utilisez-la pour vous reposer.
+You light the lamp. Its reed-whistle takes up its thin note. It will be here when you need it.	Vous allumez la lampe. Son sifflet de roseau reprend sa note mince. Elle sera là quand vous en aurez besoin.
+You sit by the lamp a while. Your wounds close, and your breath comes back. Behind you, in the dark, the place fills up again.	Vous restez un moment assis près de la lampe. Vos blessures se referment, votre souffle revient. Derrière vous, dans le noir, l'endroit se remplit de nouveau.
+You fill your own lamp from it.	Vous y remplissez votre propre lampe.
+The game is saved.	La partie est sauvegardée.
+Somewhere below, something that lay a long time in the dark has got up again.	Quelque part en dessous, une chose longtemps couchée dans le noir s'est relevée.
+Not with something hunting you.	Pas avec quelque chose à vos trousses.
+You wake by the last lamp you lit. What you carried is where you fell.	Vous vous réveillez près de la dernière lampe que vous avez allumée. Ce que vous portiez est resté là où vous êtes tombé.
+What you carried is where you fell.	Ce que vous portiez est resté là où vous êtes tombé.
+What you carried will wait where you fell, sounding your note.	Ce que vous portiez attendra là où vous êtes tombé, en sonnant votre note.
+A lilac shimmer, low down, humming your note.	Un miroitement lilas, au ras du sol, qui fredonne votre note.
+You stand where you fell, and your Piece comes home.	Vous vous tenez là où vous êtes tombé, et votre Fragment rentre au foyer.
+You stand where you fell, and your Piece comes home, with {0} sovereigns.	Vous vous tenez là où vous êtes tombé, et votre Fragment rentre au foyer, avec {0} souverains.
+Load the save from the lamp	Charger la sauvegarde de la lampe
+Swallow the hour-bead	Avaler la perle d'heure
+You swallow the hour-bead. The last few heartbeats come undone, and you are standing where you fell, with everything you carried.	Vous avalez la perle d'heure. Les derniers battements de cœur se défont, et vous voilà debout là où vous êtes tombé, avec tout ce que vous portiez.
+Hour-bead	Perle d'heure
+A sealed glass bead with an hour of somebody's life in it, certified by the Collegium. Swallowed, it undoes one death on the spot. Keep it until you need it.	Une perle de verre scellée qui contient une heure de la vie de quelqu'un, certifiée par le Collegium. Avalée, elle défait une mort sur-le-champ. Gardez-la jusqu'à ce que vous en ayez besoin.
+Keep it until you need it. It undoes a death, and nothing else.	Gardez-la jusqu'à ce que vous en ayez besoin. Elle défait une mort, et rien d'autre.
+You can only carry one hour-bead.	Vous ne pouvez porter qu'une seule perle d'heure.
+An hour-bead costs 120 sovereigns.	Une perle d'heure coûte 120 souverains.
+You buy an hour-bead.	Vous achetez une perle d'heure.
+A chimney in the chalk, going down. A rope hangs in it, tied off far below, out of reach.	Une cheminée dans la craie, qui descend. Une corde y pend, attachée tout en bas, hors de portée.
+Down the chimney on the rope, to the deepest gallery	Descendre la cheminée par la corde, jusqu'à la galerie la plus profonde
+A chimney in the chalk, going up, and a rope down it. Climb it	Une cheminée dans la craie, qui monte, et une corde qui y pend. Grimper
+You climb the chimney on the rope and come out at the shaft's foot. You tie the rope off at the top: it is a way down now, too.	Vous grimpez la cheminée par la corde et ressortez au pied du puits. Vous attachez la corde en haut : c'est désormais aussi un chemin pour descendre.
+An iron door in the gallery wall. It does not move: it is barred on the far side.	Une porte de fer dans le mur de la galerie. Elle ne bouge pas : elle est barrée de l'autre côté.
+The iron door between the sump passage and the pump-hall	La porte de fer entre le passage du puisard et la salle des pompes
+An iron bar across the door, in two brackets. Use it to lift it out.	Une barre de fer en travers de la porte, posée dans deux crochets. Utilisez-la pour la soulever.
+The bar is on the other side.	La barre est de l'autre côté.
+You lift the bar out of its brackets and set it against the wall. The door swings. Nobody has to time the sump again.	Vous sortez la barre de ses crochets et l'appuyez contre le mur. La porte pivote. Plus personne n'aura à guetter le puisard.
+The bar, set against the wall where you left it.	La barre, appuyée contre le mur où vous l'avez laissée.
+The shaft's foot	Le pied du puits
+The floorstone seam	La veine de la pierre de fond
+The adit's foot	Le pied de la galerie d'accès
+The foot of the stair	Le pied de l'escalier
+The Deep Grove's gap	La trouée du Bosquet profond
+Souls rules	Règles des Âmes
+lamps to rest at, and the Piece: what you carried waits where you fell (Off: wake by the lamp and lose five coins, as before)	des lampes où se reposer, et le Fragment : ce que vous portiez attend là où vous êtes tombé (désactivé : réveil près de la lampe et perte de cinq pièces, comme avant)
