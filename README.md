@@ -374,6 +374,31 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 <p align="center"><img src="screenshots/p88-knocks.jpg" alt="The Synod kite shield in first person, clean on the left, and after twelve blocks on the right: pale scratches and dents across the dead queen"></p>
 
+**The whole continent (Phase 89, approved by the owner on 14 Nov).** All eight realms and the Organum, with as much lore about the places and the people as the books and bibles hold, and a great deal more marked [PROPOSED] where they are thin: five realms the game does not have yet (the Dawning Heights, Cinderhold, the Iron Peaks, the Shifting Dunes, the Rift), built in the spirit of Elden Ring and Dark Souls, with four great places in each (the city's heart, a huge underground, a spire, a magical place), a named keeper for each, lamps to rest at, shortcuts that loop back, and a cost for dying (the Piece). Each realm's great city is laid out by its own note with the owner's Cymatic City Engine. Nothing is built yet; the layouts of every place come next. [`story/Game Layer/Phase 89 - The Continent (lore and great cities, for ruling).md`](story/Game%20Layer/Phase%2089%20-%20The%20Continent%20(lore%20and%20great%20cities,%20for%20ruling).md).
+
+<p align="center"><img src="screenshots/p89/continent-map-half.jpg" alt="The painted map of Aethelgard: the eight realms and the Organum, with every named place, the Tramway, the Kestrel's way, the Rift and the not-colour beyond it" width="96%"></p>
+
+<p align="center"><img src="screenshots/p89/continent.jpg" alt="A chart of Aethelgard: the eight realms and the Organum, with the places the Master Reference gives coordinates for and the great cities placed near them" width="92%"></p>
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p89/eight-cities.jpg" alt="The eight great cities laid out by the Cymatic City Engine at 174, 285, 396, 417, 528, 639, 741 and 852 Hz"></td>
+<td width="50%"><img src="screenshots/p89/city-heights.jpg" alt="Sol-Luminary's 528 Hz figure read as the face of the hanging city, with the Basilica, the line, the Foundry, the Umbral Tiers and the Keel Docks pinned"></td>
+</tr>
+<tr>
+<td>The eight cities, each from its own note.</td>
+<td>Sol-Luminary, read as the face of a city hung on a mountain.</td>
+</tr>
+<tr>
+<td width="50%"><img src="screenshots/p89/city-cinder.jpg" alt="Cinderhold's 285 Hz figure: eight fall-roads down the caldera to the Great Beat, the Houses on the rim"></td>
+<td width="50%"><img src="screenshots/p89/city-fortis.jpg" alt="Bastion Fortis's 396 Hz figure on a square plate: terraces stepping down to the root-shaft, the Wall on the rim"></td>
+</tr>
+<tr>
+<td>Cinderhold: eight fall-roads to the Great Beat.</td>
+<td>Fortis: a square pit of terraces.</td>
+</tr>
+</table>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>
