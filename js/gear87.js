@@ -43,7 +43,7 @@ const GEAR87 = (function () {
       t: { special: 'clerk' }, f: { special: 'registry' }, tLine: S('Synod patrols take you for a clerk, as the robes do'), fLine: S('an inspection takes twice as long') },
     { id: 'arsenal', name: S('Synod Arsenal'), home: 'Fortis',
       armor: ['a_p87_ars_sallet', 'a_chain', 'a_gauntlets', 'a_greaves', 'a_p87_ars_cape', 'a_kite'], weapons: ['longsword', 'p12_dirk'],
-      t: { ar: 2 }, f: { special: 'kiteblock' }, tLine: S('+2 armour'), fLine: S('a blow blocked with the kite shield does a quarter of its harm') },
+      t: { ar: 2 }, f: { special: 'kiteblock' }, tLine: S('+2 armour'), fLine: S('blocks with the kite shield cost no fatigue') },
     { id: 'legion', name: S('Carillon Legion'), home: 'the Legion\'s posts',
       armor: ['a_bellhelm', 'a_plate', 'a_p87_leg_vambraces', 'a_p87_leg_sabatons', 'a_p87_leg_pennon', 'a_p87_leg_shield'], weapons: ['mace', 'p12_bellglaive'],
       t: { ar: 2 }, f: { special: 'ring' }, tLine: S('+2 armour'), fLine: S('hits that land on you ring: the Cacophony near you takes 3') },
@@ -61,13 +61,13 @@ const GEAR87 = (function () {
       t: { ar: 2 }, f: { fatRoad: 0.25 }, tLine: S('+2 armour'), fLine: S('heavy work tires you a quarter less') },
     { id: 'captains', name: S('The Free Captains'), home: 'Port Cantabile',
       armor: ['a_p87_cap_bandana', 'a_p87_cap_coat', 'a_p87_cap_gloves', 'a_p87_cap_boots', 'a_p87_cap_cape', 'a_buckler'], weapons: ['axe', 'vesper_hook', 'p12_glassblade', 'crossbow', 'p87_harpoon'],
-      t: { swing: 0.1 }, f: { special: 'deck' }, tLine: S('swings 10% faster'), fLine: S('ranged weapons reload a third faster') },
+      t: { swing: 0.1 }, f: { special: 'deck' }, tLine: S('swings 10% faster'), fLine: S('ranged weapons reload a third faster; no fall damage from a ship\'s height') },
     { id: 'drovers', name: S('The Drovers'), home: 'Wethercombe and the drove road',
       armor: ['a_p87_dro_hat', 'a_p22_mantle', 'a_p87_dro_mittens', 'a_p22_droverboots', 'a_p87_dro_plaid'], weapons: ['p22_crook', 'p22_shears', 'p87_sling'],
       t: { fatRoad: 0.15 }, f: { special: 'drove' }, tLine: S('fatigue 15% slower on the roads'), fLine: S('the pony rides 10% faster; hounds hear you at half the distance') },
     { id: 'barrow', name: S('The Barrow-Wardens'), home: 'Ewe Barrow',
       armor: ['a_p22_barrowhelm', 'a_p22_shroud', 'a_p87_bar_bracers', 'a_p87_bar_greaves', 'a_p87_bar_cloak', 'a_p87_bar_shield'], weapons: ['p22_leafblade'],
-      t: { ar: 1, special: 'barrow' }, f: { special: 'wight' }, tLine: S('+1 armour; the barrow\'s dead are slower to wake'), fLine: S('woolwights and the barrow\'s dead strike you for a third less') },
+      t: { ar: 1, special: 'barrow' }, f: { special: 'wight' }, tLine: S('+1 armour; the barrow\'s dead are slower to wake'), fLine: S('woolwights and the barrow\'s dead do not follow you past its door') },
     { id: 'flume', name: S('The Flume and the Lanes'), home: 'the Flume road and the Low Rings',
       armor: ['a_p87_flu_cap', 'a_p85_coat', 'a_p87_flu_gloves', 'a_p85_boots', 'a_p87_flu_cape', 'a_p85_buckler'], weapons: ['p85_hook', 'p85_pole'],
       t: { noise: -0.2 }, f: { fatBack: 0.2, special: 'water' }, tLine: S('quieter on boards and in water'), fLine: S('the Dry Flume\'s surge does not sweep you off your feet; fatigue comes back 20% faster') },
@@ -185,16 +185,14 @@ const GEAR87 = (function () {
         try { return _eu.apply(this, arguments); } finally { if (n0 != null) G.noise = Math.max(G.noise, n0); inEnemy = was; }
       };
     }
-    // blows that land on you: fire and steam (the Corps), the barrow's dead (the Wardens), the kite block (the Arsenal),
-    // the ring (the Legion), and the Flume's surge
+    // blows that land on you: fire and steam (the Corps) and the ring (the Legion); the kite block, the ship's height and
+    // the barrow's door are in js/rules88.js
     if (typeof damagePlayer === 'function') {
       const _dp = damagePlayer;
       damagePlayer = function (dmg, src) {
         try {
           if (Number.isFinite(dmg) && dmg > 0) {
             if (special('heat') && FIRE.test(String(src || (inEnemy && inEnemy.def && inEnemy.def.name) || ''))) dmg = Math.max(1, Math.round(dmg * 0.67));
-            if (inEnemy && /^p22_/.test(inEnemy.type || '') && special('wight')) dmg = Math.max(1, Math.round(dmg * 0.67));
-            if (inEnemy && special('kiteblock') && typeof UPG !== 'undefined' && UPG.blocking && UPG.parryCool > 0 && !(UPG.parryWindow > 0) && G.player.armor.shield === 'a_kite') dmg = Math.max(1, Math.round(dmg * 0.75));   // guard.js then takes it to a third: a quarter in all
           }
         } catch (er) { warnOnce('hurt', er); }
         const hp0 = G.player ? G.player.hp : 0;

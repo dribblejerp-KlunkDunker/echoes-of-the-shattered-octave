@@ -43,6 +43,8 @@ Code: `js/items87.js` (the pieces, their pack pictures), `js/gearlook21.js` (wha
 | Barrow-Wardens (full) | woolwights and the barrow's dead do not follow you past its door | woolwights and the barrow's dead strike you for a third less |
 | Flume (full) | the punt and wading cost no fatigue; the surge does not knock you down | the Dry Flume's surge does not sweep you off your feet; fatigue comes back 20% faster |
 
+**The owner's answer (14 Nov):** "blocking should cost fatigue, there needs to be fall damage, enemies should follow." So three of those lines go back to the first wording, and Phase 88 makes them true: blocking now costs fatigue (and the Arsenal's kite shield in full costs none); the game's own fall damage stays (it was already there: drops over 0.9 hurt) and the Free Captains in full land a ship's height free; enemies now follow you through doors (and the barrow's dead do not, for the Wardens in full). The Arsenal, Free Captains and Barrow-Wardens rows above are back to the "Was" wording.
+
 ## (d) The ranged weapons and their shot (done 14 Nov)
 
 - **Six new ranged weapons:** the Felted Sling (Hush), the Shepherd's Sling (Drovers), the Office Carbine (Proctors; glass shot, two hands), the Works Hand-Crossbow (Works; one hand), the Harpoon Gun (Free Captains; two hands, slow), the Hornbow (Old Reach; two hands).
@@ -95,7 +97,7 @@ Code: `js/items87.js` (the pieces, their pack pictures), `js/gearlook21.js` (wha
 | an inspection takes twice as long | une inspection dure deux fois plus longtemps |
 | Synod Arsenal | L'Arsenal du Synode |
 | +2 armour | +2 d'armure |
-| a blow blocked with the kite shield does a quarter of its harm | un coup paré avec le bouclier en amande ne fait que le quart de ses dégâts |
+| blocks with the kite shield cost no fatigue | parer avec le bouclier en amande ne coûte aucune fatigue |
 | Carillon Legion | La Légion du Carillon |
 | hits that land on you ring: the Cacophony near you takes 3 | les coups qui vous touchent sonnent : la Cacophonie proche subit 3 dégâts |
 | The Office's Proctors | Les Procureurs de l'Office |
@@ -111,13 +113,13 @@ Code: `js/items87.js` (the pieces, their pack pictures), `js/gearlook21.js` (wha
 | heavy work tires you a quarter less | le gros ouvrage vous fatigue un quart de moins |
 | The Free Captains | Les Capitaines libres |
 | swings 10% faster | des coups 10 % plus rapides |
-| ranged weapons reload a third faster | les armes à distance se rechargent un tiers plus vite |
+| ranged weapons reload a third faster; no fall damage from a ship's height | les armes à distance se rechargent un tiers plus vite ; pas de dégâts de chute de la hauteur d'un navire |
 | The Drovers | Les Bouviers |
 | fatigue 15% slower on the roads | la fatigue vient 15 % plus lentement sur les routes |
 | the pony rides 10% faster; hounds hear you at half the distance | le poney va 10 % plus vite ; les chiens vous entendent à moitié moins loin |
 | The Barrow-Wardens | Les Gardiens des tertres |
 | +1 armour; the barrow's dead are slower to wake | +1 d'armure ; les morts du tertre s'éveillent plus lentement |
-| woolwights and the barrow's dead strike you for a third less | les Laineux et les morts du tertre vous frappent un tiers moins fort |
+| woolwights and the barrow's dead do not follow you past its door | les Laineux et les morts du tertre ne vous suivent pas au-delà de sa porte |
 | The Flume and the Lanes | La Flume et les Ruelles |
 | quieter on boards and in water | plus discret sur les planches et dans l'eau |
 | the Dry Flume's surge does not sweep you off your feet; fatigue comes back 20% faster | la crue de la Flume Sèche ne vous emporte pas ; la fatigue revient 20 % plus vite |

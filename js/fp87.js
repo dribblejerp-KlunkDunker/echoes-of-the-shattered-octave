@@ -522,7 +522,10 @@ const FP87 = (function () {
       for (let i = 0; i < d.length; i += 4) { const l = d[i] * 0.3 + d[i + 1] * 0.55 + d[i + 2] * 0.15; if (d[i + 3] > 0 && l > 180) { const k = Math.min(1, (l - 180) / 60) * 0.2; d[i] *= k; d[i + 1] *= k; d[i + 2] *= k; any = true; } else { d[i] = d[i + 1] = d[i + 2] = 0; d[i + 3] = 0; } }
       if (any) { emis = mk(W, H); emis.getContext('2d').putImageData(id, 0, 0); }
     } catch (e) { warnOnce('glint', e); }
-    hit = { canvas: c, emis, k: K, below: BELOW, right: RIGHT };   // the canvas is K times its place; it hangs BELOW view pixels lower   // the canvas is K times its place on the screen (which is 1.25 times the old pictures)
+    // Phase 88: where the business end is, as fractions of the canvas (the swing's smear follows it)
+    const rot = (lx, ly) => [gx + lx * Math.cos(lean) - ly * Math.sin(lean), gy + lx * Math.sin(lean) + ly * Math.cos(lean)];
+    const tipL = blade ? rot(0, -gripL * 0.5 + 6 - len) : rot(0, -len + 20), rootL = blade ? rot(0, -gripL * 0.5 + 6) : rot(0, -len * 0.45);
+    hit = { canvas: c, emis, k: K, below: BELOW, right: RIGHT, tip: [tipL[0] / W, tipL[1] / H], root: [rootL[0] / W, rootL[1] / H] };   // the canvas is K times its place; it hangs BELOW view pixels lower   // the canvas is K times its place on the screen (which is 1.25 times the old pictures)
     if (cache.size > 40) cache.clear();
     cache.set(ck, hit);
     return hit;
