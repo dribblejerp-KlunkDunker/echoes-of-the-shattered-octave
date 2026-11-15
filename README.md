@@ -370,6 +370,10 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**Weight, knocks and following (Phase 88).** Blocking costs fatigue, and with none left you cannot raise your guard. An enemy chasing you comes through the door after you. The weapon in your hand lags behind a turn and settles with its weight (a maul more than a knife). The shield jolts when you block and keeps its scratches and dents until you rest. The swing you drag is the swing you see, whatever the weapon. Every line is [PROPOSED]: [`story/Game Layer/Phase 88 - New In-Game Text (for review).md`](story/Game%20Layer/Phase%2088%20-%20New%20In-Game%20Text%20(for%20review).md).
+
+<p align="center"><img src="screenshots/p88-knocks.jpg" alt="The Synod kite shield in first person, clean on the left, and after twelve blocks on the right: pale scratches and dents across the dead queen"></p>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>
