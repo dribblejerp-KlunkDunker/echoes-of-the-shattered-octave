@@ -8,7 +8,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   const URL0 = (process.env.PREVIEW_URL || 'http://127.0.0.1:8000').replace(/\/$/, '');
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
   const page = await browser.newPage(); const errors = []; page.on('pageerror', (e) => errors.push(e.message));
-  await page.addInitScript(() => { try { localStorage.removeItem('octave.souls91.v1'); } catch (e) { /* */ } });
+  await page.addInitScript(() => { try { localStorage.removeItem('octave.souls91.v1'); localStorage.setItem('octave.air93.v1', JSON.stringify({ on: false })); } catch (e) { /* */ } });   // flights here go straight through (Phase 93's meetings are test/air93.test.js's)
   await page.goto(URL0 + '/index.html?nosw=1');
   await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && !document.querySelector('#loading')?.classList.contains('on'), null, { timeout: 90000 });
   const hit = (sel) => page.locator(sel).first().dispatchEvent('click');

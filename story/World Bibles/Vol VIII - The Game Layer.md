@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 93, 15 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 93 built, 15 November 2026).
 
 ---
 
@@ -2249,7 +2249,18 @@ The owner asked for air combat as a system. The design keeps the Kestrel unarmed
 - guns laid to one height (Book Three ch. 1);
 - Church packets and Justiciary cutters.
 
-The traveller works the ship's stations (the wheel by Vane's word, the tank-cradle, the hold, the rail, the lamps). The flight card shows height, lift, noise and the horn's four states, and the horn's states come from the owner's Forge engine stealth machine. Encounters fall on map-table journeys, worked out from the route, the day and the weather. None of the books' later scenes is replayed. The worst outcome is a forced landing. **Status:** [PROPOSED]; seven questions are the owner's.
+The traveller works the ship's stations (the wheel by Vane's word, the tank-cradle, the hold, the rail, the lamps). The flight card shows height, lift, noise and the horn's four states, and the horn's states come from the owner's Forge engine stealth machine. None of the books' later scenes is replayed.
+
+**Ruled and built, 15 Nov** (*"keep everything lore bound 1 no. 2 yes. 3 no. 4 based off the book it is randomized. 5 yes. yes. use as much of my engine that is useful"*), in `js/air93.js`:
+- A long flight is met at even odds, by chance, as in the books.
+- The first meeting is an Office courier-cutter. Four proctors come down its grapnel-line (canon kinds).
+- On the way south to the Heights the Kestrel crosses the **Valley of Velocity**. Its standing rain muffles the horn, and a weeping tank's jet pushes her round, the push growing (Book Three ch. 1's law, in its own place).
+- The Kestrel is never lost. A forced landing costs half a day and canvas and drift-glass. Knocked down at the rail, the proctors take part of your purse and go back up their line.
+- **Canon (book):** the cutter's class, the horn, weeping drift-glass, "Lower.", "Pack it like glass for a long haul" (in the hold's words), and the four proctors.
+- **[PROPOSED]:** every other line, the numbers, and the Valley's place on the way south (Phase 89 puts the Tramway over the Valley, from the Reach toward the Heights).
+- **Not built, for the lore:** the battery at the Saddle. The guns there are the Arbiterium column's, laid in Book Three. A battery standing in 419 belongs to Bastion Fortis's walls, and waits for the Peaks.
+
+**Status:** canon (ruled), 15 Nov.
 
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 

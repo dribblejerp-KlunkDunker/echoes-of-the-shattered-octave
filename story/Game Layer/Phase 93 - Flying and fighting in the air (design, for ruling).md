@@ -1,6 +1,34 @@
-# Phase 93: flying and fighting in the air (design, for ruling)
+# Phase 93: flying and fighting in the air (design, ruled and built)
 
 *Written 15 Nov 2026, after the owner's word: "yes I want the flying combat to be a system." Nothing is built yet. Everything not quoted from a book is [PROPOSED]; seven questions at the end are the owner's. The owner also offered his Forge engine ("if it will help use my idtechengine"); what it can and cannot do here is in §7.*
+
+## Ruled and built (15 Nov 2026)
+
+The owner's answers: *"keep everything lore bound 1 no. 2 yes. 3 no. 4 based off the book it is randomized. 5 yes. yes. use as much of my engine that is useful."*
+
+1. **No new gun.** She stays unarmed.
+2. **Vane keeps the wheel,** and the traveller works the stations.
+3. **She is never lost:** a forced landing costs half a day and up to 40 sovereigns of canvas and drift-glass. Knocked down at the rail, the proctors take three tenths of your purse and go back up their line.
+4. **It is chance, as in the books:** even odds that a long flight (south to a far country, or home from one) is met. The roll is `Math.random` at the moment of the flight; nothing visual uses it. Short hops inside the Reach are never met. A switch in Options (Graphics & access, "Meetings in the air") turns it off.
+5. **The set-piece names stand,** with one change for the lore. *The battery at the Saddle* is not built here: the guns at the Saddle are the Arbiterium column's, laid in Book Three, after Harvestmonth 419. A battery that stands in 419 belongs to Bastion Fortis's walls, so the battery kind waits for the Peaks' flights. The first set piece is the courier-cutter over the Valley of Velocity on the way south: Book Three ch. 1's standing rain, and its law that what moves goes on getting faster, so a weeping tank's jet pushes her round.
+6. **Short working orders only:** "Up." "Hold her." "Lower." (Vane's own word in Book One ch. 21), "Into the cloud." "Down to the deck."
+7. **The Forge:** the horn uses the four ai_cast states from `scripts/ai/ashen_enemy_aicast_mds.gd` (relaxed, query, alert, combat, shown as swivelling, pausing, turned and coming) on the same 0 to 100 awareness meter. The Forge declares the meter but does not yet fill it, so the fill and drain (what the horn hears, at its distance, through cloud and rain) are written here and offered back.
+
+**Built:** `js/air93.js`; the flight hook in `js/kestrel16.js` (`setFlightHook`); test `test/air93.test.js` (16 checks); French `tools/i18n/p93-air.tsv` (102 lines). The cutter, the chains and the tank-cradle are drawn in code. The pictures are `screenshots/p93/p93-closing.gif`, `p93-cutter.jpg` and `p93-hooked.jpg`. The numbers are [PROPOSED] for the owner to tune:
+
+| Number | Value |
+|---|---|
+| Odds of a meeting | 1 in 2 |
+| The stretch the cutter works | 200 seconds |
+| Start height | 540 ft |
+| Cloud band | 600 to 760 ft |
+| Ceiling | 900 ft |
+| The cutter starts at | 1,500 yards |
+| It loses you at | 2,300 yards |
+| It closes, coming / turned | 22 / 9 yards a second |
+| The long gun | every 45 s, 4 in 10 hit, half that running dark |
+| A chain | 3 blows of the axe |
+| Lashing the hold / patching a tank | 6 / 7 seconds standing by it |
 
 ## 1. What the books give us
 
