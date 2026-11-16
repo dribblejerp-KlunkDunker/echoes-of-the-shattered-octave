@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 92, 15 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 93, 15 November 2026).
 
 ---
 
@@ -2239,6 +2239,17 @@ The Kestrel's map table flies south to Sol-Luminary in 30 hours, once Book One i
 - Three shade-lamps stand on the Tiers, and a Piece here rings at **528 Hz**. The fifteenth gear set is the Umbral Tiers.
 
 **Status:** canon (ruled), 15 Nov: the 30-hour flight, the new names ("the new names are good") and the customs. "Anselm Dray" shares a first name with Anselm Rooke; it was approved with the other names.
+
+#### Phase 93: flying and fighting in the air (15 Nov; design for ruling, nothing built; `story/Game Layer/Phase 93 - Flying and fighting in the air (design, for ruling).md`)
+The owner asked for air combat as a system. The design keeps the Kestrel unarmed, as the books leave her (the long gun went over the side in Book One ch. 8: "a fat brass goose over open country"). It is built on canon kinds:
+- the Office courier-cutter, which hunts by its listening-horn (Book One ch. 21);
+- noise: "We're a bell"; the crates are packed "like glass" to stop the ringing;
+- weeping drift-glass, which takes the lift slowly and never explodes;
+- grapnels on the rail, the shrouds and the bag, with proctors and Office marines coming over the rail (Book Three ch. 8);
+- guns laid to one height (Book Three ch. 1);
+- Church packets and Justiciary cutters.
+
+The traveller works the ship's stations (the wheel by Vane's word, the tank-cradle, the hold, the rail, the lamps). The flight card shows height, lift, noise and the horn's four states, and the horn's states come from the owner's Forge engine stealth machine. Encounters fall on map-table journeys, worked out from the route, the day and the weather. None of the books' later scenes is replayed. The worst outcome is a forced landing. **Status:** [PROPOSED]; seven questions are the owner's.
 
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 
