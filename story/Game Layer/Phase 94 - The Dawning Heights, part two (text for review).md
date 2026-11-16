@@ -124,7 +124,7 @@ The same reading turned up four more things in the Umbral Tiers. All are fixed i
 | They stand in the dark between the ribs, seven of them, facing up. Each one sounds the same high note. None of them has moved in a long time, and all of them are awake. [PROPOSED] | Ils se tiennent dans le noir entre les côtes, sept, le visage levé. Chacun sonne la même note haute. Aucun n'a bougé depuis longtemps, et tous sont éveillés. |
 | Whose are you? Never mind. Touch nothing that has a handle. [PROPOSED] | À qui êtes-vous ? Peu importe. Ne touchez à rien qui ait une poignée. |
 | Winchman's Cap [PROPOSED] | Calotte de treuilliste |
-| Winchmaster Bardo [PROPOSED] | Bardo, maître treuilliste |
+| Winchmaster Bardo (Vol II) | Bardo, maître treuilliste |
 | You knock the brake off. A keel-weight goes down past you in the dark, and the cage goes up the bone like a bucket up a well, to the winch-room. It will ride both ways now. [PROPOSED] | Vous faites sauter le frein. Un poids de quille descend devant vous dans le noir, et la cage remonte le long de l'os comme un seau dans un puits, jusqu'à la salle du treuil. Elle fera désormais le trajet dans les deux sens. |
 | a tether jerk weighs on you half as long [PROPOSED] | l'à-coup d'une longe vous pèse moitié moins longtemps |
 | the chain's well [PROPOSED] | le puits de la chaîne |
