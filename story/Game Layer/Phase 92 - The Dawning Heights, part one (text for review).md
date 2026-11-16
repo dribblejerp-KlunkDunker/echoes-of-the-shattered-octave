@@ -16,6 +16,8 @@
 
 ## For the owner
 
+*Answered 15 Nov 2026: "1 yes the 30 hour works. the new names are good. 3 is good." So the thirty-hour flight and its tank stand, Ysolde Carrow, Anselm Dray and Joss Feveril keep their names, and the Tiers' customs stay with who speaks them. Question 4 (the cloth-pole) had no separate answer and stands as recommended.*
+
 1. The flight is thirty hours each way, and needs the number-three tank, like the hop. *Recommend: keep; the far countries should feel far.*
 2. The Umbral folk's names (Ysolde Carrow, Anselm Dray, Joss Feveril) and the woman under the canvas left unnamed. *Recommend: keep.*
 3. "Casts" turned to praise in the Tiers (Phase 89 [PROPOSED], approved) is spoken by the cobbler; "shade-right" by the harbour-master; the black window by the woman under the canvas. *No ruling needed unless you want it changed.*
