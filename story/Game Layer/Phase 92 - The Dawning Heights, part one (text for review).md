@@ -27,6 +27,45 @@
 
 - Phase 91's question 4 (a trophy and realm gear for the Reach's two keepers): to be raised again when the Heights' four keepers are all built ("remind me of 4 later when it is time", 15 Nov). One of the four, the Lamplighter, is built now.
 
+## Matched to Book Two ch. 9 (15 Nov, after the rulings)
+
+Reading the book for the flying-combat plan turned up four things the first build had wrong. All four now follow Book Two, Part Two, ch. 9:
+
+1. **The Keel Docks are eleven iron cradles** hung on chains below the lowest tier, over two thousand feet of air. The first build had a plank dock with four winch-boats. The Kestrel now lies in the fourth cradle from the end. A Church packet (the white sun-disc on its envelope) and two battered freighters lie in three of the others; their pictures are the Kestrel's own picture, recoloured. The winch-boats moved to the docks' two ends.
+2. **The harbourmaster comes down veiled:** a black hat and veil, black gloves, and a black lantern shuttered to a slit. Two pole-men with iron hooks stand in her shadow. Her greeting is now "Name. Cargo." The book has her say exactly that, and the first build had an invented line.
+3. **Her custom (canon):** she takes any mirror into a black velvet bag the first time you come near her with one, and gives it back when you climb the Kestrel's ladder ("returned when you leave the chains"). Her new topic, "Glass", is her line from the book, word for word. Flag `p92_bag` (0 or 1).
+4. **Brenna Corliss** (canon) keeps her chandlery in a hanging house on the second tier, under a sign that says ROPE, painted black on black. Her lamp is turned down to a slit. The right half of her face is white. She sells black cloth by the bolt (`p92_blackcloth`, 4 sovereigns), bandages and tonic. Her three topics are the morning it let go (the book's words), black cloth, and the Free Captains (Oona Salt's letter, from the book).
+
+Brenna's other greetings and shop lines, and the cloth's description, are [PROPOSED]. Test: three new checks in `test/heights92.test.js` (23 in all). Pictures: `screenshots/p92/p92-cradles.jpg`, `p92-veil.jpg`, `p92-brenna.jpg`.
+
+| English | French |
+|---|---|
+| An iron cradle, hung on chains below the lowest tier over two thousand feet of air, big enough to take a skyship's gondola. It swings. | Un berceau de fer, pendu à des chaînes sous le dernier étage, au-dessus de deux mille pieds de vide, assez grand pour recevoir la nacelle d'un navire du ciel. Il se balance. |
+| A Church packet in its cradle, with the white sun-disc on its envelope. Nobody on the docks looks at it. | Un paquebot de l'Église dans son berceau, le disque solaire blanc sur son enveloppe. Personne sur les quais ne le regarde. |
+| A battered freighter in its cradle, its envelope patched as often as the Kestrel's. | Un cargo cabossé dans son berceau, son enveloppe rapiécée aussi souvent que celle du Kestrel. |
+| A sign over the door: ROPE, painted black on black, so you have to know it is there to read it. | Une enseigne au-dessus de la porte : CORDE, peinte noir sur noir, si bien qu'il faut savoir qu'elle est là pour la lire. |
+| The harbourmaster holds out a gloved hand. "Glass." She takes your mirror into a black velvet bag without looking at it. "A reflection is a second light. The Light is jealous. It will be returned when you leave the chains." | La capitaine du port tend une main gantée. « Le verre. » Elle prend votre miroir dans un sac de velours noir sans le regarder. « Un reflet est une seconde lumière. La Lumière est jalouse. On vous le rendra quand vous quitterez les chaînes. » |
+| At the foot of the ladder the harbourmaster gives back your mirror out of the black velvet bag, still without looking at it. | Au pied de l'échelle, la capitaine du port vous rend votre miroir, tiré du sac de velours noir, toujours sans le regarder. |
+| A Bolt of Black Cloth | Un rouleau de drap noir |
+| Black cloth, sold by the bolt in the Umbral Tiers. You wind it round your head and face until only your eyes show, and round your hands, and go up toward the light. | Du drap noir, vendu au rouleau dans les Étages Ombraux. On s'en enroule la tête et le visage jusqu'à ne laisser voir que les yeux, et les mains, et l'on monte vers la lumière. |
+| Brenna Corliss, the Free Captains' woman in the Keel Docks | Brenna Corliss, la femme des Capitaines libres aux Quais de Quille |
+| Name. Cargo. Quietly: we speak in the Narrow here. | Nom. Cargaison. Doucement : ici, on parle dans l'Étroit. |
+| Glass | Le verre |
+| Your mirrors. Your sextant. Your shaving-glasses, your hand-mirrors, any lens that shows a face. A reflection is a second light. The Light is jealous. They'll be returned when you leave the chains. | Vos miroirs. Votre sextant. Vos miroirs à raser, vos miroirs à main, toute lentille qui montre un visage. Un reflet est une seconde lumière. La Lumière est jalouse. On vous les rendra quand vous quitterez les chaînes. |
+| Come in under the lamp. Not that side. This side. | Entrez sous la lampe. Pas de ce côté. De ce côté-ci. |
+| Rope, cloth, tar. What do you need? | Corde, drap, goudron. Qu'est-ce qu'il vous faut ? |
+| Quieter. The whole tier can hear a Coast voice. | Plus bas. Tout l'étage entend une voix de la Côte. |
+| The morning | Le matin |
+| I was on the fourth tier, at a window, on the morning it let go. Facing south. I turned my head. Most people didn't have time to turn their heads. | J'étais au quatrième étage, à une fenêtre, le matin où ça a lâché. Tournée vers le sud. J'ai tourné la tête. La plupart des gens n'ont pas eu le temps de tourner la tête. |
+| Black cloth | Le drap noir |
+| The Tiers sell it by the bolt. Wind it round your face till only your eyes show, and your hands, before you go anywhere near the line. | Les Étages le vendent au rouleau. Enroulez-le autour du visage jusqu'à ne laisser voir que les yeux, et des mains, avant d'approcher de la ligne. |
+| The Free Captains | Les Capitaines libres |
+| I keep the Free Captains' business in the Keel Docks. A letter from Oona Salt gets you through my door. Without one, you are buying rope. | Je tiens les affaires des Capitaines libres aux Quais de Quille. Une lettre d'Oona Salt vous fait passer ma porte. Sans elle, vous achetez de la corde. |
+| Rope, cloth, tar, and what the Free Captains leave with me. | Corde, drap, goudron, et ce que les Capitaines libres me laissent. |
+| Then you are not buying rope today. | Alors vous n'achetez pas de corde aujourd'hui. |
+| Wind it tight. | Serrez bien. |
+| Keep the right side of your face to the dark. | Gardez le côté droit du visage tourné vers l'ombre. |
+
 ## The new lines
 
 | English | French |

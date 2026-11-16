@@ -98,6 +98,18 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     out.foes = ENEMIES.p92_lamplighter && ENEMIES.p92_bleachhound && Engine.sprites.p92_bleachhound && Engine.sprites.p92_lamplighter && m.entities.filter((e) => e.kind === 'enemy' && e.type === 'p92_bleachhound').length >= 4;
     // the people and the foes stand on walkways, never over the drop
     out.standing = m.entities.filter((e) => e.kind === 'npc' || e.kind === 'enemy').every((e) => m.smooth[(e.y | 0) * m.w + (e.x | 0)] === 1);
+    // Book Two ch. 9: eleven cradles, the Kestrel in the fourth from the end, a Church packet and two freighters; the veiled
+    // harbourmaster with her two pole-men, who takes your mirror and gives it back when you leave the chains; Brenna Corliss
+    const ents = m.entities, cr = ents.filter((e) => e.sprite === 'p92_cradle').sort((a, b) => a.x - b.x), ks = ents.find((e) => e._p92 === 'kestrel');
+    out.cradles = cr.length === 11 && !!ks && Math.abs(ks.x - cr[3].x) < 0.6 && ents.filter((e) => e.sprite === 'p92_packet').length === 1 && ents.filter((e) => e.sprite === 'p92_freighter').length === 2;
+    const ys = ents.find((e) => e.id === 'p92_ysolde');
+    out.veil = NPCS.p92_ysolde.sprite === 'p92_veiled' && !!Engine.sprites.p92_veiled && ents.filter((e) => e.sprite === 'p92_poleman' && Math.hypot(e.x - ys.x, e.y - ys.y) < 2.5).length === 2;
+    out.brenna = ents.some((e) => e.id === 'p92_brenna') && NPCS.p92_brenna.shop.some((s) => s.item === 'p92_blackcloth') && ents.some((e) => e.label === H.TX.rope) && Object.keys(NPCS.p92_brenna.topics).length === 3;
+    G.flags.p92_bag = 0; while (G.has('v_p92_mirror')) G.take('v_p92_mirror'); G.give('v_p92_mirror');
+    Engine.cam.x = H.P.ysolde[0] + 0.4; Engine.cam.y = H.P.ysolde[1] + 1.2; msgs.length = 0; H.tick(0.016);
+    const taken = !G.has('v_p92_mirror') && G.flags.p92_bag === 1 && said(/velvet bag/);
+    H.useOwn(G.ents.find((e) => e.use === 'p92_kestrel'));
+    out.bag = taken && G.has('v_p92_mirror') && G.flags.p92_bag === 0; K.leaveShip(); update(0.016);
     msg = _m;
     return out;
   });
@@ -120,6 +132,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   check(r.cageShut && r.cageDrop && r.cageUp, 'the goods-cage: out of reach from below, knocked loose from the top, then it rides both ways');
   check(r.people && r.shops, 'the Umbral folk: the harbour-master, the cobbler, the woman under the canvas, the chain-crewman; two of them sell');
   check(r.gear, 'the Heights gear: hood, boots and cloak each with its own look and picture, and the amber a valuable');
+  check(r.cradles, 'the Keel Docks: eleven iron cradles on chains, the Kestrel in the fourth from the end, a Church packet and two freighters (Book Two ch. 9)');
+  check(r.veil && r.bag, 'the harbourmaster comes veiled with two pole-men, takes your mirror into the velvet bag and gives it back when you leave the chains');
+  check(r.brenna, 'Brenna Corliss keeps her chandlery under the ROPE sign and sells black cloth by the bolt');
   check(r.foes && r.standing, 'bleach-hounds and the Lamplighter are painted; everyone stands on a walkway');
   // every new line has its French (tools/i18n/p91-souls.tsv, merged into locales/story/fr.json)
   const texts = await page.evaluate(() => HEIGHTS92.TEXTS);

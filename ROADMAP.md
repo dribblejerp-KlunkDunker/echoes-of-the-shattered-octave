@@ -35,6 +35,7 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - Nothing new joins Oakhaven (the Hedge is a story boundary); a new road goes only between places already joined, or to a dead end off a place already reachable (rulings of 22 Oct).
 - Nothing visual may use random numbers. Every new line gets French (`tools/i18n/*.tsv`, then `node tools/i18n/merge-pairs.js`). After any `?v=` change run `node tools/pwa/precache.js`.
 - End every report with the model and effort the next step needs.
+- "Every update needs to be added to the game lore" (15 Nov): each phase's places, people, creatures, customs, items and rulings go into `story/World Bibles/Vol VIII - The Game Layer.md` (Part IV, phase by phase) in the same commit. Phases 75 to 92 were added on 15 Nov.
 
 **Not yet done, and known:** the three two-player suites (`sync19`, `net19`, `together19`) fail in the build container and need a real machine; `sprites21` fails its GL-pixel check in the build container on the commit before 82b as well (not 82b's; wants a look on a real machine); in the picture tool a pale rectangle sometimes sits in the middle of the view after moving between places, and nobody has checked whether a player sees it.
 
@@ -51,6 +52,7 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] the dangers: the Bleach below the line; the chain-walks jerk on the chains' beat (stand still and you hold); the gulf; the Lamplighter of the Seventh Chain's glass-fire
 - [x] the Souls rules from the start: three shade-lamps (SOULS91 group h); the keeper's week; his hood and amber glass (rule 5); a Piece in the Heights rings at 528
 - [x] the Umbral folk: Mother Ysolde Carrow, Anselm Dray (boots), the woman under the black canvas (cloak, cloth-pole, the mirror), Joss Feveril; the fifteenth gear set, the Umbral Tiers
+- [x] matched to Book Two ch. 9 (15 Nov): the Keel Docks are eleven iron cradles (the Kestrel in the fourth from the end, a Church packet and two freighters); the harbourmaster comes veiled, with two pole-men, and takes your mirror into the velvet bag until you leave the chains; Brenna Corliss's chandlery under the ROPE sign sells black cloth by the bolt
 - [ ] next: the Anchorage, the Pilgrim Chain and the Altar, the White Mile, then the Heights' smaller places
 - [ ] **reminder owed:** when the Heights' four keepers are all built, remind the owner of Phase 91's question 4 (trophies and realm gear for the Reach's two keepers): "remind me of 4 later when it is time" (15 Nov)
 Record: [`story/Game Layer/Phase 92 - The Dawning Heights, part one (text for review).md`](story/Game%20Layer/Phase%2092%20-%20The%20Dawning%20Heights%2C%20part%20one%20(text%20for%20review).md).
