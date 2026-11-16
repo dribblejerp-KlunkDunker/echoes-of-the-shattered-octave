@@ -51,6 +51,7 @@ const FP87 = (function () {
     p79_staff: { head: 'shoe', haft: 'ash' },
     p85_pole: { head: 'shoe', haft: 'pale' },
     p85_hook: { head: 'boathook', haft: 'ash' },
+    p92_clothpole: { head: 'cloth', haft: 'ash' },
     p87_sledge: { head: 'nightsledge', haft: 'ash' },
   };
   const BLADE_KINDS = { sword: 1, longsword: 1, greatsword: 1, knife: 1, dirk: 1 };   // throwing knives stay with the ranged (a fan of three)
@@ -219,6 +220,12 @@ const FP87 = (function () {
         x.beginPath(); x.arc(-16, y, 16, 0, PI * 1.25, true); x.lineWidth = 10; x.strokeStyle = css([206, 190, 150]); x.stroke(); x.lineWidth = 3; x.strokeStyle = 'rgba(255,250,230,0.6)'; x.beginPath(); x.arc(-16, y, 18, -0.2, PI * 1.1, true); x.stroke(); break; }
       case 'shoe': { // iron at the end of the staff or the pole
         rrect(x, -8, y - 6, 16, 26, 5); fillM(-8, y - 6, 8, y + 20); x.fillStyle = css(H.dk, 0.7); x.fillRect(-8, y + 12, 16, 2); break; }
+      case 'cloth': { // the scavengers' cloth-pole (Phase 92): a crossbar at the head and a black cloth hung from it, ragged
+        rrect(x, -26, y - 2, 52, 6, 3); fillM(-26, y - 2, 26, y + 4);
+        x.beginPath(); x.moveTo(-24, y + 4); x.lineTo(24, y + 4); for (let i = 0; i <= 8; i++) x.lineTo(24 - i * 6, y + 58 + (hash(i, seed, 9) - 0.5) * 14 + Math.sin(i) * 4); x.closePath();
+        x.fillStyle = lin(x, -24, y, 24, y, [[0, [30, 28, 34]], [0.5, [14, 13, 17]], [1, [26, 24, 30]]]); x.fill(); x.strokeStyle = 'rgba(70,66,74,0.7)'; x.lineWidth = 1; x.stroke();
+        for (let i = 0; i < 5; i++) { x.strokeStyle = 'rgba(0,0,0,0.5)'; x.beginPath(); x.moveTo(-18 + i * 9, y + 8); x.lineTo(-20 + i * 9, y + 46); x.stroke(); }   // its folds
+        rrect(x, -6, y - 12, 12, 14, 4); fillM(-6, y - 12, 6, y + 2); break; }
       case 'boathook': { // a boat-hook: spike and a hook back
         x.beginPath(); x.moveTo(-3, y + 20); x.lineTo(0, y - 26); x.lineTo(3, y + 20); x.closePath(); fillM(-3, y - 26, 3, y + 20);
         x.beginPath(); x.moveTo(2, y + 4); x.quadraticCurveTo(26, y - 2, 20, y - 20); x.lineWidth = 5; x.strokeStyle = css(H.base); x.stroke(); x.lineWidth = 1.4; x.strokeStyle = css(H.hi); x.stroke();

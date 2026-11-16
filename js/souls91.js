@@ -77,7 +77,15 @@ const SOULS91 = (function () {
     optLabel: S('Souls rules '),
     optSmall: S('lamps to rest at, and the Piece: what you carried waits where you fell (Off: wake by the lamp and lose five coins, as before)'),
   };
-  const NOTE = 174;                  // the Piece sounds the Reach's note, Growth and Root (Phase 89) [PROPOSED]
+  // the Piece sounds the note of the realm you fell in (the owner, 15 Nov: "yes", to Phase 91's question 1): the Reach
+  // 174, the Heights 528, the Woods 741, the Coast 639 (Phase 89's figures). A place's group carries its own note.
+  const NOTE = 174;
+  const REALM_NOTES = [[/^(whispergrove|deepwoods|mausoleum|catacombs|p16_|wg_)/, 741], [/^cantabile/, 639]];
+  function noteOf(mapId) {
+    for (const k in GROUPS) if (GROUPS[k].maps.includes(mapId) && GROUPS[k].note) return GROUPS[k].note;
+    for (const [re, hz] of REALM_NOTES) if (re.test(String(mapId || ''))) return hz;
+    return NOTE;
+  }
   const BEAD_PRICE = 120, WEEK = 8, WAKE_HP = 0.6;
   const UP = 'p85_galleries', DEEP = 'p85_antlerdeep', FLUME = 'p85_dryflume', GROVE = 'p85_deepgrove', ROAD_E = 'p79_road_e';
   // the lamps: where they stand, where you wake beside them, which place they belong to
@@ -98,6 +106,16 @@ const SOULS91 = (function () {
   const CHIMNEY_UP = [23, 7], CHIMNEY_DEEP = [37, 27], BAR_DOOR = [39, 9];
   const CHIMNEY_TOP = { x: 23.5, y: 6.2, dir: -PI / 2 }, CHIMNEY_FOOT = { x: 35.8, y: 27.5, dir: PI };
 
+  // ---------------------------------------------------------------- other countries' lamps (Phase 92 on)
+  // register(g, group, lamps): a place's own group (one letter, its own flag p91_l<g>) and its lamps, each
+  // { map, x, y, wx, wy, dir, name, sprite?, litSprite?, label?, litLabel?, lightCol? }. Its module puts the lamp entities
+  // into its own built map with lampEnt(L) (SOULS91.lampEnt), so the order of entities stays its own.
+  function register(g, group, lamps) {
+    if (typeof g !== 'string' || !/^[a-z]$/.test(g) || GROUPS[g]) return [];
+    GROUPS[g] = { maps: group.maps.slice(), revive: (group.revive || []).slice(), keeper: group.keeper || (() => false), kflag: group.kflag || null, note: Number(group.note) || null };
+    return lamps.map((L) => { const o = Object.assign({}, L, { id: LAMPS.length, g }); LAMPS.push(o); return o; });
+  }
+
   // ---------------------------------------------------------------- the switch
   const KEY = 'octave.souls91.v1';
   const cfg = { on: true };
@@ -110,7 +128,7 @@ const SOULS91 = (function () {
   const f = () => G.flags;
   const fint = (k, max) => { const v = Number(f()[k]); return Number.isFinite(v) ? Math.max(0, Math.min(max, Math.floor(v))) : 0; };
   const day = () => Math.max(0, Math.floor(Number(G.day) || 0));
-  const litBits = () => fint('p91_lit', 31);
+  const litBits = () => fint('p91_lit', 0x3fffffff);   // a bit a lamp: room for thirty
   const isLit = (L) => !!(litBits() & (1 << L.id));
   const lastOf = (g) => { const n = fint('p91_l' + g, LAMPS.length); return n > 0 && LAMPS[n - 1].g === g && isLit(LAMPS[n - 1]) ? LAMPS[n - 1] : null; };
   const say = (t, cls, ms) => { try { msg(t, cls || '', ms || 6000); } catch (e) { /* quiet */ } };
@@ -208,7 +226,7 @@ const SOULS91 = (function () {
 
   // ---------------------------------------------------------------- the lamps and the shortcuts, put into the built maps
   function addBase(m, ent) { const at = m.baseCount == null ? m.entities.length : m.baseCount; m.entities.splice(at, 0, ent); if (m.baseCount != null) m.baseCount++; return ent; }
-  function lampEnt(L) { return { kind: 'deco', sprite: 'p91_lamp', x: L.x, y: L.y, scale: 1, solid: true, radius: 0.22, label: TX.lamp, use: 'p91_lamp', _p91: 'lamp', _i: L.id, glow: 0, lightCol: [255, 196, 120] }; }
+  function lampEnt(L) { return { kind: 'deco', sprite: L.sprite || 'p91_lamp', x: L.x, y: L.y, scale: 1, solid: true, radius: 0.22, label: L.label || TX.lamp, use: 'p91_lamp', _p91: 'lamp', _i: L.id, glow: 0, lightCol: L.lightCol || [255, 196, 120] }; }
   function join(maps) {
     const up = maps[UP], deep = maps[DEEP], fl = maps[FLUME], road = maps[ROAD_E];
     if (up && !up._p91) {
@@ -239,7 +257,7 @@ const SOULS91 = (function () {
     const bits = litBits(), live = on();
     for (const e of G.ents) {
       if (!e || !e._p91) continue;
-      if (e._p91 === 'lamp') { const lit = live && !!(bits & (1 << e._i)); e.sprite = lit ? 'p91_lamplit' : 'p91_lamp'; e.glow = lit ? 0.95 : 0; e.label = lit ? TX.lampLit : TX.lamp; e.hidden = !live; e.solid = live; e.use = live ? 'p91_lamp' : undefined; }
+      if (e._p91 === 'lamp') { const lit = live && !!(bits & (1 << e._i)), L = LAMPS[e._i] || {}; e.sprite = lit ? (L.litSprite || 'p91_lamplit') : (L.sprite || 'p91_lamp'); e.glow = lit ? 0.95 : 0; e.label = lit ? (L.litLabel || TX.lampLit) : (L.label || TX.lamp); e.hidden = !live; e.solid = live; e.use = live ? 'p91_lamp' : undefined; }
       else if (e._p91 === 'bar') { const done = fint('p91_scf', 1) === 1; e.label = done ? TX.barGone : TX.bar; }
     }
   }
@@ -309,7 +327,7 @@ const SOULS91 = (function () {
     const p = G.player; p.p91piece = null;
     p.gold = (p.gold | 0) + q.g; p.xp = (Number(p.xp) || 0) + q.xp;
     say(q.g ? TX.pieceHomeN.replace('{0}', String(q.g)) : TX.pieceHome, 'good', 6000);
-    try { if (typeof Audio_ !== 'undefined' && Audio_.sfx && Audio_.sfx.song) Audio_.sfx.song(NOTE * 4, 0.5); } catch (e) { /* audio is optional */ }
+    try { if (typeof Audio_ !== 'undefined' && Audio_.sfx && Audio_.sfx.song) Audio_.sfx.song(noteOf(q.m) * (noteOf(q.m) < 300 ? 4 : 2), 0.5); } catch (e) { /* audio is optional */ }
     try { checkLevel(); } catch (e) { warnOnce('level', e); }
     placePiece(); hum(0, 0);
   }
@@ -376,15 +394,16 @@ const SOULS91 = (function () {
 
   // the Piece's note: one sine and its octave, panned to where it lies, heard from fourteen steps, seen from four
   let humNode = null;
-  function hum(level, pan) {
+  function hum(level, pan, hz) {
     try {
       const A = typeof Audio_ !== 'undefined' ? Audio_ : null, ctx = A && A.ctx; if (!ctx || !A.sfxBus) return;
       if (!humNode) { if (level <= 0) return;
         const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), g2 = ctx.createGain(), pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
         o.type = 'sine'; o.frequency.value = NOTE; o2.type = 'sine'; o2.frequency.value = NOTE * 2.003; g2.gain.value = 0.25; g.gain.value = 0.0001;
         o.connect(g); o2.connect(g2).connect(g); if (pn) { g.connect(pn); pn.connect(A.sfxBus); } else g.connect(A.sfxBus); o.start(); o2.start();
-        humNode = { o, o2, g, pn, level: 0 };
+        humNode = { o, o2, g, pn, level: 0, hz: NOTE };
       }
+      if (hz && humNode.hz !== hz) { humNode.hz = hz; humNode.o.frequency.setTargetAtTime(hz, ctx.currentTime, 0.05); humNode.o2.frequency.setTargetAtTime(hz * 2.003, ctx.currentTime, 0.05); }
       const want = A.muted ? 0 : Math.max(0, Math.min(1, level));
       if (Math.abs(want - humNode.level) > 0.004) { humNode.level = want; humNode.g.gain.setTargetAtTime(Math.max(0.0001, want * 0.05), ctx.currentTime, 0.2); }
       if (humNode.pn) humNode.pn.pan.setTargetAtTime(Math.max(-1, Math.min(1, pan || 0)), ctx.currentTime, 0.1);
@@ -409,7 +428,7 @@ const SOULS91 = (function () {
       else { ent.hidden = d > 4; ent.glow = 0.45 + 0.2 * Math.sin(clock * 2.1); ent.x = q.x; ent.y = q.y; }
       if (d < 1.0) { takePiece(q); return; }
       const rel = Math.atan2(q.y - c.y, q.x - c.x) - c.dir;
-      hum(d < 14 ? Math.pow(1 - d / 14, 2) : 0, Math.sin(rel));
+      hum(d < 14 ? Math.pow(1 - d / 14, 2) : 0, Math.sin(rel), noteOf(q.m));
     } else hum(0, 0);
   }
 
@@ -458,8 +477,8 @@ const SOULS91 = (function () {
   }
   wire();
 
-  return { TX, TEXTS, LAMPS, GROUPS, NOTE, BEAD_PRICE, WEEK, CHIMNEY_UP, CHIMNEY_DEEP, BAR_DOOR, CHIMNEY_TOP, CHIMNEY_FOOT,
-    on, setOn, cfg, join, sync, useOwn, rest, refill, light, piece, placePiece, undo, buyBead, beads, groupOf, lastOf, isLit, tick, art, items,
+  return { TX, TEXTS, LAMPS, GROUPS, NOTE, noteOf, BEAD_PRICE, WEEK, CHIMNEY_UP, CHIMNEY_DEEP, BAR_DOOR, CHIMNEY_TOP, CHIMNEY_FOOT,
+    on, setOn, cfg, join, sync, register, lampEnt, useOwn, rest, refill, light, piece, placePiece, undo, buyBead, beads, groupOf, lastOf, isLit, tick, art, items,
     prevMap: () => prevMap, fell: () => fell };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = SOULS91;
