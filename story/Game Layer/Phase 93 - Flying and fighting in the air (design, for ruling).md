@@ -1,6 +1,6 @@
 # Phase 93: flying and fighting in the air (design, ruled and built)
 
-*Written 15 Nov 2026, after the owner's word: "yes I want the flying combat to be a system." Nothing is built yet. Everything not quoted from a book is [PROPOSED]; seven questions at the end are the owner's. The owner also offered his Forge engine ("if it will help use my idtechengine"); what it can and cannot do here is in §7.*
+*Written 15 Nov 2026, after the owner's word: "yes I want the flying combat to be a system"; ruled and built the same night (next section). Everything not quoted from a book is [PROPOSED]. The design below is kept as it was put to the owner; where the build differs, the rulings section says so. The owner also offered his Forge engine ("if it will help use my idtechengine"); what it can and cannot do here is in §7.*
 
 ## Ruled and built (15 Nov 2026)
 
@@ -115,7 +115,7 @@ The rail is where the traveller's own fighting comes in. It uses the melee and b
 
 The Forge (`idtech3-nextgen-forge`, Godot 4.6, Jolt physics) is attached to this session, and I read it. Two honest points:
 
-- **What carries over.** Its enemy brain (`scripts/ai/ashen_enemy_aicast_mds.gd`) is Return to Castle Wolfenstein's ai_cast stealth machine. It has four states (relaxed, query, alert, combat) and an awareness meter that fills and drains. That is the listening-horn exactly: swivelling, pausing, turned, coming. I propose porting that logic, not its code, to JavaScript for the horn. That way the Office hunts the same way in both games.
+- **What carries over.** Its enemy brain (`scripts/ai/ashen_enemy_aicast_mds.gd`) is Return to Castle Wolfenstein's ai_cast stealth machine. It has four states (relaxed, query, alert, combat) and a 0 to 100 awareness meter (on reading it closely: the Forge declares the meter but does not yet fill or drain it). That is the listening-horn exactly: swivelling, pausing, turned, coming. I propose porting that logic, not its code, to JavaScript for the horn. That way the Office hunts the same way in both games.
 - **What does not carry over.** *Echoes* is a browser game: a JavaScript ray-caster and its WebGL view. A Godot build cannot run inside it, so the air scenes themselves have to be made in this game's own engine. If you want a full 3D air battle (the Kestrel and a cutter as real models in the sky), the Forge is the right place to build that as its own scene or cinematic. That would be a separate piece of work on the Forge's side, behind its asset review (question 7).
 
 ## 8. Questions for the owner
