@@ -27,7 +27,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     // (4) chance, as in the books: a roll at or over the odds goes straight through; under it, the flight is met
     A.setRoll(() => 0.99); let f = K.flyFar(H.MAP);
     out.straight = f.ok && !f.met && !A.R.live && K.farNow() && K.farNow().id === H.MAP;
-    K.board(); A.setRoll(() => 0.1); const day0 = G.day * 24 + G.tod * 24;
+    K.board(); A.setRoll(() => 0.1); A.setNext('courier'); const day0 = G.day * 24 + G.tod * 24;
     f = K.hop('whispergrove');
     out.met = f.ok && f.met && A.R.live && G.flags.p93_go === 16 && K.farNow() && K.farNow().id === H.MAP && G.mapId === K.DECK;
     out.notYet = Math.abs((G.day * 24 + G.tod * 24) - day0) < 0.01;   // the 30 hours wait until she is through
@@ -62,20 +62,40 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     out.unlent = !G.map.entities.some((e) => /^p93_/.test(e.use || ''));
     play();
     // (3) a forced landing: she is never lost; half a day and the price of canvas and drift-glass
-    A.setRoll(() => 0.1); K.flyFar(H.MAP); play(); const g1 = G.player.gold; const d1 = G.day * 24 + G.tod * 24;
+    A.setRoll(() => 0.1); A.setNext('courier'); K.flyFar(H.MAP); play(); const g1 = G.player.gold; const d1 = G.day * 24 + G.tod * 24;
     A.R.ft = 3; A.R.target = 0; A.R.tanks.forEach((k) => { k.st = 'weep'; k.lift = 0.4; }); run(2);
     out.downCard = A.R.ended && said !== null; const ev2 = document.querySelector('#event button, #event .dfbtn'); if (ev2) ev2.click();
     out.down = !A.R.live && K.farNow() && K.farNow().id === H.MAP && G.player.gold === Math.max(0, g1 - A.B.DOWN_COST) && (G.day * 24 + G.tod * 24) - d1 >= 30 + A.B.DOWN_HOURS - 0.01 && G.flags.p93_down === 1;
     play();
     // lost in the air: far enough off and it is through
-    A.setRoll(() => 0.1); K.hop('deepwoods'); play(); A.R.yd = A.B.LOSE_YD + 10; run(0.5); const ev3 = document.querySelector('#event button, #event .dfbtn'); if (ev3) ev3.click();
+    A.setRoll(() => 0.1); A.setNext('courier'); K.hop('deepwoods'); play(); A.R.yd = A.B.LOSE_YD + 10; run(0.5); const ev3 = document.querySelector('#event button, #event .dfbtn'); if (ev3) ev3.click();
     out.lostIt = !A.R.live && K.mooring() === 'deepwoods';
     play();
     // a save made mid-meeting finishes the flight on load
-    K.board(); A.setRoll(() => 0.1); K.flyFar(H.MAP); const code = G.flags.p93_go; A.R.live = false; A.resumeFlight();
+    K.board(); A.setRoll(() => 0.1); A.setNext('courier'); K.flyFar(H.MAP); const code = G.flags.p93_go; A.R.live = false; A.resumeFlight();
     out.resume = code === 1 && !G.flags.p93_go && K.farNow() && K.farNow().id === H.MAP;
+    // the Church packet: it crosses her course and looks; kept in the cloud it passes and sees nothing
+    K.board(); A.setRoll(() => 0.1); A.setNext('packet'); K.hop('whispergrove'); play();
+    out.packetMet = A.R.live && A.R.threat === 'packet' && G.map.entities.some((e) => e._p93 === 'cutter' && /packet|kestrel_m2/.test(e.sprite));
+    A.R.ft = 680; A.R.target = 680; run(A.B.PACKET_S + 2); let ev4 = document.querySelector('#event button, #event .dfbtn'); if (ev4) ev4.click();
+    out.packetPassed = !A.R.live && !G.flags.p93_told && K.mooring() === 'whispergrove';
+    play();
+    // in open sky with the lamps lit it sees her, and the word meets her at the Keel Docks
+    K.board(); A.setRoll(() => 0.1); A.setNext('packet'); K.flyFar(H.MAP); play();
+    A.R.ft = 450; A.R.target = 450; G.tod = 0.9; msgs.length = 0; run(A.B.PACKET_S + 2); ev4 = document.querySelector('#event button, #event .dfbtn'); if (ev4) ev4.click();
+    out.packetSaw = G.flags.p93_told === 1 && said(/She has seen the Kestrel/);
+    play(); K.leaveShip(); update(0.016);
+    out.told = G.mapId === H.MAP && G.flags.p93_told === 2 && said(/Word came up the chains/);
+    // the squall: gusts throw her about, and an unlashed hold makes them worse; ridden out, she is through
+    K.board(); A.setRoll(() => 0.1); A.setNext('squall'); K.hop('deepwoods'); play();
+    A.setRoll(() => 0.9); A.R.gustT = 0; const f0 = A.R.ft; A.tickSquall(A.R, 0.25); const loose = Math.abs(A.R.gustV);
+    A.R.lashed = true; A.R.gustT = 0; A.tickSquall(A.R, 0.25); const tight = Math.abs(A.R.gustV);
+    out.gusts = A.R.threat === 'squall' && loose > tight && A.R.ft !== f0 && !G.map.entities.some((e) => e._p93 === 'cutter');
+    A.R.gustT = 999; A.R.ft = 500; A.R.target = 500; run(A.B.SQUALL_S + 2); ev4 = document.querySelector('#event button, #event .dfbtn'); if (ev4) ev4.click();
+    out.squallPast = !A.R.live && K.mooring() === 'deepwoods';
+    play();
     // the switch: off, and every flight goes straight through
-    A.setOn(false); K.board(); A.setRoll(() => 0); const g = K.hop('whispergrove'); out.off = g.ok && !g.met && !A.R.live; A.setOn(true);
+    A.setOn(false); K.board(); A.setRoll(() => 0); const g = K.flyFar(H.MAP); out.off = g.ok && !g.met && !A.R.live; K.hop('whispergrove'); A.setOn(true);
     // short hops inside the Reach are never met
     K.board(); A.setRoll(() => 0); const s = K.hop('deepwoods'); out.short = s.ok && !s.met;
     // art made in code
@@ -96,6 +116,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   check(r.down, 'a forced landing: never lost; half a day and the price of canvas and drift-glass, then on to where she was going');
   check(r.lostIt, 'far enough off and the cutter has lost you');
   check(r.resume, 'a save made mid-meeting finishes the flight on load');
+  check(r.packetMet && r.packetPassed, 'a Church packet crosses her course; kept in the cloud, she passes unseen');
+  check(r.packetSaw && r.told, 'in open sky with the lamps lit the packet sees her, and the word is at the Keel Docks before her');
+  check(r.gusts && r.squallPast, 'a squall line throws her about (worse with the hold unlashed), and ridden out she is through');
   check(r.off && r.short, 'switched off, or a short hop inside the Reach: no meeting');
   check(r.art, 'the cutter, the chain and the cradle are drawn in code');
   const texts = await page.evaluate(() => AIR93.TEXTS);

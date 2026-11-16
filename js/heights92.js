@@ -197,7 +197,7 @@ const HEIGHTS92 = (function () {
 
   // ---------------------------------------------------------------- the pictures (code only, fixed patterns)
   const h2 = (a, b) => { const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return s - Math.floor(s); };
-    // a Church packet and two freighters, from the Kestrel's own picture: the packet's envelope white with the gold sun-disc,
+    // a Church packet and two freighters, from the Kestrel's own picture: the packet's envelope tawny with the white sun-disc (Book Two ch. 9),
     // the freighters darker and patched (fixed changes of colour, nothing random)
   function shipArt() {
     if (typeof Engine === 'undefined' || !Engine.sprites || !Engine.addSprite) return;
@@ -206,7 +206,7 @@ const HEIGHTS92 = (function () {
       if (kp && !Engine.sprites.p92_packet) {
         const recol = (fn) => { const d = new Uint32Array(kp.data.length); for (let i = 0; i < d.length; i++) { const v = kp.data[i], a = v >>> 24; if (!a) continue; const r = v & 255, g = (v >> 8) & 255, b = (v >> 16) & 255, yy = (i / kp.w) | 0, xx = i % kp.w; const o = fn(r, g, b, xx, yy); d[i] = (a << 24) | (o[2] << 16) | (o[1] << 8) | o[0]; } return Object.assign({}, kp, { data: d }); };
         const top = kp.h * 0.62;
-        Engine.addSprite('p92_packet', recol((r, g, b, xx, yy) => { if (yy > top) return [r, g, b]; const l = (r + g + b) / 3, dx = xx - kp.w / 2, dy = yy - top * 0.5; if (dx * dx + dy * dy < 64) return [236, 196, 90]; return [Math.min(255, 150 + l * 0.5) | 0, Math.min(255, 148 + l * 0.5) | 0, Math.min(255, 140 + l * 0.5) | 0]; }));
+        Engine.addSprite('p92_packet', recol((r, g, b, xx, yy) => { if (yy > top) return [r, g, b]; const l = (r + g + b) / 3, dx = xx - kp.w / 2, dy = yy - top * 0.5; const dd = dx * dx + dy * dy; if (dd < 49) return [250, 250, 244]; if (dd < 81) return [200, 160, 70]; return [Math.min(255, 120 + l * 0.45) | 0, Math.min(255, 104 + l * 0.42) | 0, Math.min(255, 76 + l * 0.35) | 0]; }));
         Engine.addSprite('p92_freighter', recol((r, g, b, xx, yy) => { const k = 0.7 + 0.15 * ((((xx >> 3) + (yy >> 3)) & 1)); return [(r * k * 0.9) | 0, (g * k * 0.85) | 0, (b * k * 0.8) | 0]; }));
       }
     } catch (e) { warnOnce('packet', e); }

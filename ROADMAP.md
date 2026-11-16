@@ -50,7 +50,8 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] the system: the stations, the four numbers (height, lift, noise, the horn), the threats, the forced landing, where encounters fall; the Forge engine's ai_cast stealth states as the horn's brain
 - [x] the owner's answers (15 Nov): "keep everything lore bound 1 no. 2 yes. 3 no. 4 based off the book it is randomized. 5 yes. yes. use as much of my engine that is useful"
 - [x] built: `js/air93.js` (the meeting by chance, the stations, the four numbers, the horn's ai_cast states, the courier-cutter, grapnels and four proctors, the forced landing, the Valley of Velocity on the way south), the flight hook in `js/kestrel16.js`, `test/air93.test.js` (16 checks), French `tools/i18n/p93-air.tsv`, `screenshots/p93/`
-- [ ] next: the Church packet (search and run) and the squall line; the battery waits for Bastion Fortis's walls (the Saddle's guns are Book Three's, laid later)
+- [x] the Church packet (it looks, and carries word of the Kestrel to the Keel Docks) and the squall line (gusts, worse with the hold unlashed); the packet's sun-disc drawn white, as Book Two has it
+- [ ] the battery waits for Bastion Fortis's walls (the Saddle's guns are Book Three's, laid later); the flotilla (three cutters, Office marines) waits for its book's time
 - [ ] offer to the Forge: the horn's fill and drain as a hearing component for its ai_cast enemies; the Kestrel and the cutter as recipes for M1 Port Cantabile
 
 **Phase 92: the Dawning Heights, part one: the Umbral Tiers (15 Nov, branch `p92-heights`).** Rulings, 15 Nov: "1 yes the 30 hour works. the new names are good. 3 is good." `js/heights92.js` and `js/heights92_grid.js` (cut by `tools/maps/tiers92.py` from the Cymatic City Engine's 528 Hz plan of Sol-Luminary), test `test/heights92.test.js`, French `tools/i18n/p92-heights.tsv`:

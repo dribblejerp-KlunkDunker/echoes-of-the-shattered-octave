@@ -33,7 +33,8 @@
 //  take the coin in your purse and go back up their line.
 //
 //  Flags (small ints): p93_go (a flight met and not yet through: 1..15 a far country, 16 home to the Court, 17 home to the
-//  camp; a load finishes it), p93_met (encounters met, capped), p93_down (forced landings, capped).
+//  camp; a load finishes it), p93_met (encounters met, capped), p93_down (forced landings, capped), p93_told (a Church packet saw the Kestrel: 1 until
+//  the word meets her at the Keel Docks, then 2).
 //  Options: "Meetings in the air" (On by default; Off and every flight goes straight through, as before).
 // ============================================================
 'use strict';
@@ -135,6 +136,30 @@ const AIR93 = (function () {
     knocked: S('You go down on the planks by the rail. Mags drags you in behind the mast. When you can see again the proctors are going back up their line with the coin from your purse, and the cutter is sheering off.'),
     knockedGo: S('Get up'),
     journalMet: S('Met an Office courier-cutter in the air; it hunted the Kestrel by its horn.'),
+    // the Church packet (Book Two ch. 8: "there's a Church packet goes out of here on Hearthday… whatever he's going to do,
+    // he'd best be doing it before the packet makes the Heights"; ch. 9: the white sun-disc on its envelope)
+    packetTitle: S('A sun-disc on the envelope'),
+    packet: S('Off the starboard bow, crossing your course: a Church packet, the white sun-disc on its envelope, making for the Heights with the news of every port it has touched.'),
+    packet2: S('It does not hunt. It looks. A lookout at its rail with a glass, and whatever the glass sees is told at the Heights before you get there.'),
+    packetHow: S('Keep out of its sight: the cloud, the lamps hooded, distance. Let it go by.'),
+    watch: S('The packet\'s lookout'),
+    watch0: S('looking elsewhere'), watch1: S('a glass on you'), watch2: S('seen'),
+    watchLine0: S('Nobody aboard her is looking this way.'), watchLine1: S('A glass at her rail has found something.'), watchLine2: S('She has seen the Kestrel, and she will say so.'),
+    packetSeen: S('The glass at the packet\'s rail stays on you a long moment, and then is lowered. She has seen the Kestrel. She will say so at the Heights.'),
+    packetPassed: S('The packet goes on south with its sun-disc catching the light, and nobody at its rail ever looked your way.'),
+    packetGone: S('The packet goes on south ahead of you, carrying your name.'),
+    journalPacket: S('A Church packet crossed the Kestrel\'s course on the way to the Heights.'),
+    toldArrive: S('Word came up the chains before you. The packet\'s lookout saw the Kestrel on the way south, and the harbourmaster has her name in the book already.'),
+    // the squall line (Book One ch. 21: "The wind came round… and pushed her, and she had no ballast and no grip and she slid")
+    squallTitle: S('The squall line'),
+    squall: S('Out of the west a wall of weather is coming on, black underneath and boiling on top, and the air goes cold and still in front of it.'),
+    squall2: S('There is no getting round it. Lash what knocks, keep her between the treetops and the ceiling, and ride it through.'),
+    squallLabel: S('The squall'),
+    gustUp: S('A gust takes her and throws her up.'), gustDown: S('A gust takes her and throws her down.'),
+    lurch: S('The hold shifts in the gust, and she lurches.'),
+    squallPast: S('The squall goes on into the east, grumbling, and leaves her wet and whole in clear air.'),
+    journalSquall: S('Rode out a squall line in the air.'),
+
   };
 
   // ================================================================ the numbers
@@ -144,6 +169,7 @@ const AIR93 = (function () {
     START_FT: 540, CEIL: 900, CLOUD: [600, 760], TREES: 120, CUTTER_FLOOR: 200,
     START_YD: 1500, LOSE_YD: 2300, SEE_YD: 650, GUN_YD: 900, HOOK_YD: 60,
     GUN_EVERY: 45, GUN_HIT: 0.4,
+    PACKET_SEE: 900, PACKET_NEAR: 260, PACKET_SPEED: 16, PACKET_S: 140, SQUALL_S: 120, GUST: 28,
     CLOSE: 22, TURN: 9,     // yards a second: coming (twice her speed), turned
     WEEP: 0.006,            // lift a second lost from a weeping tank
     SOUR_LIFT: 0.92, SOUR_AFTER: 15,
@@ -165,6 +191,7 @@ const AIR93 = (function () {
   // ================================================================ the encounter's state (transient: a load finishes the flight)
   const R = { live: false };
   let roll = () => Math.random();   // the books' chance; a test may set its own
+  let nextThreat = null;            // a test may name the next meeting
   function fresh(kind, to, hours, go) {
     return {
       live: true, kind, to, hours, go, t: 0, ft: B.START_FT, target: B.START_FT,
@@ -172,6 +199,7 @@ const AIR93 = (function () {
       cells: 0, have: { water: true, spares: true, salvage: true }, lashed: false, dark: false,
       yd: B.START_YD, aw: 0, horn: 0, bearing: 0.6, gunT: B.GUN_EVERY * 0.6, spike: 0, ceilT: 0,
       hooked: false, chains: [], proctors: [], job: null, valley: south(kind, to), spin: 0, progress: 0, ended: false,
+      threat: 'courier', sight: 0, seen: false, gustT: 3, gustV: 0, gustLeft: 0,
     };
   }
   // the way south to the Heights crosses the Valley of Velocity (Phase 89: the Tramway runs out of the Reach toward the
@@ -271,6 +299,7 @@ const AIR93 = (function () {
     placeCutter();
   }
   function unstage() {
+    if (R.wx !== undefined) { try { Weather.hold(R.wx); Weather.release(); } catch (e) { /* weather */ } R.wx = undefined; }
     for (const b of borrowed.splice(0)) { b.e.use = b.use; b.e.label = b.label; }
     if (G.map && G.map.id === DECK()) { drop(() => true); G.map.ambient = R.amb != null ? R.amb : G.map.ambient; if (R.fog != null) G.map.fogDist = R.fog; }
   }
@@ -278,8 +307,11 @@ const AIR93 = (function () {
   function placeCutter() {
     if (!R.live || !G.map || G.map.id !== DECK()) return;
     const c = at(13.5, 5);
-    const cells = R.hooked ? 3.2 : clamp(R.yd / 90, 3.2, 22);   // past about 800 yards it is lost in the mist off the deck
-    const e = put('cutter', { kind: 'deco', sprite: 'p93_cutter', x: c[0], y: c[1], scale: 3.2, solid: false, radius: 0.05, label: TX.metTitle });
+    const cells = R.hooked ? 3.2 : R.threat === 'packet' ? clamp(R.yd / 50, 6, 22) : clamp(R.yd / 90, 3.2, 22);   // past about 800 yards it is lost in the mist off the deck
+    if (R.threat === 'squall') { drop((o) => o._p93 === 'cutter'); return; }
+    const packet = R.threat === 'packet', spr = packet ? (Engine.sprites.p92_packet ? 'p92_packet' : 'kestrel_m2') : 'p93_cutter';
+    const e = put('cutter', { kind: 'deco', sprite: spr, x: c[0], y: c[1], scale: packet ? 3.4 : 3.2, solid: false, radius: 0.05, label: packet ? TX.packetTitle : TX.metTitle });
+    e.sprite = spr;
     if (R.hooked) { const r = at(14.5, -1.4); e.x = r[0]; e.y = r[1]; }   // alongside, hard against the port rail, on her grapnels
     else { const r = at(13.5, -1.5); e.x = r[0] + Math.cos(R.bearing) * cells; e.y = r[1] - Math.abs(Math.sin(R.bearing)) * cells * 0.6; }   // off the port side
     e.yOff = -1.2; e.hidden = inCloud(R) && !R.hooked;
@@ -323,10 +355,20 @@ const AIR93 = (function () {
     // noise
     const n = el('div', 'row'); n.appendChild(el('div', '', TX.noise)); const nb = el('div', 'bar'), nf = el('div', 'fill'); nf.style.width = clamp(noiseOf(r) * 60, 0, 100) + '%'; nf.style.background = '#c8784e'; nb.appendChild(nf); n.appendChild(nb); d.appendChild(n);
     // the horn
-    const hn = el('div', 'row'); hn.appendChild(el('div', '', TX.horn)); const hs = el('div', 'horn');
-    [TX.horn0, TX.horn1, TX.horn2, TX.horn3].forEach((s, i) => hs.appendChild(el('div', 'hs' + (i === r.horn ? ' on' : ''), s)));
-    hn.appendChild(hs); hn.appendChild(el('div', 'muted', [TX.hornLine0, TX.hornLine1, TX.hornLine2, TX.hornLine3][r.horn]));
-    const dist = el('div', 'muted'); dist.appendChild(el('span', '', r.yd > B.SEE_YD * 1.6 ? TX.gone : fmt(TX.near, Math.round(r.yd / 10) * 10))); hn.appendChild(dist); d.appendChild(hn);
+    const hn = el('div', 'row'), hs = el('div', 'horn');
+    if (r.threat === 'packet') {
+      const wv = watchOf(r.sight); hn.appendChild(el('div', '', TX.watch));
+      [TX.watch0, TX.watch1, TX.watch2].forEach((s, i) => hs.appendChild(el('div', 'hs' + (i === wv ? ' on' : ''), s)));
+      hn.appendChild(hs); hn.appendChild(el('div', 'muted', [TX.watchLine0, TX.watchLine1, TX.watchLine2][wv]));
+    } else if (r.threat === 'squall') {
+      hn.appendChild(el('div', '', TX.squallLabel)); hn.appendChild(el('div', 'muted', r.gustLeft > 0 ? (r.gustV > 0 ? TX.gustUp : TX.gustDown) : (r.lashed ? TX.lashed : TX.holdLabel)));
+    } else {
+      hn.appendChild(el('div', '', TX.horn));
+      [TX.horn0, TX.horn1, TX.horn2, TX.horn3].forEach((s, i) => hs.appendChild(el('div', 'hs' + (i === r.horn ? ' on' : ''), s)));
+      hn.appendChild(hs); hn.appendChild(el('div', 'muted', [TX.hornLine0, TX.hornLine1, TX.hornLine2, TX.hornLine3][r.horn]));
+    }
+    if (r.threat !== 'squall') { const dist = el('div', 'muted'); dist.appendChild(el('span', '', r.yd > B.SEE_YD * 1.6 ? TX.gone : fmt(TX.near, Math.round(r.yd / 10) * 10))); hn.appendChild(dist); }
+    d.appendChild(hn);
     // the flight
     const j = el('div', 'row'); j.appendChild(el('span', '', TX.journey)); const jb = el('div', 'bar'), jf = el('div', 'fill'); jf.style.width = clamp(r.progress * 100, 0, 100) + '%'; jf.style.background = '#7a8c6a'; jb.appendChild(jf); j.appendChild(jb); d.appendChild(j);
     cardEl.replaceChildren(d);
@@ -337,15 +379,23 @@ const AIR93 = (function () {
     if (!hasG() || R.live) return false;
     if (!force && (!on() || roll() >= B.CHANCE)) return false;
     Object.assign(R, fresh(kind, to, hours, go));
+    // which meeting: on the way to or from the Heights a Church packet may cross her course; anywhere, weather
+    const w = roll();
+    R.threat = nextThreat || (R.valley && w < 0.3 ? 'packet' : w < (R.valley ? 0.5 : 0.25) ? 'squall' : 'courier'); nextThreat = null;
+    if (R.threat !== 'courier') { R.yd = R.threat === 'packet' ? Math.hypot(B.PACKET_NEAR, B.PACKET_SPEED * 60) : 9999; }
+    if (R.threat === 'squall') { try { if (typeof Weather !== 'undefined' && Weather.hold) { R.wx = Weather.state; Weather.hold('storm'); } } catch (e) { warnOnce('weather', e); } }
     const k = K(); let code = 0;
     if (kind === 'far' && k) code = k.FAR.findIndex((x) => x.id === to) + 1;
     else if (kind === 'home') code = to === 'whispergrove' ? 16 : 17;
     F().p93_go = code; F().p93_met = Math.min(99, fint('p93_met', 99) + 1);
-    try { if (typeof journal === 'function') journal('side', TX.journalMet); } catch (e) { /* no journal */ }
+    try { if (typeof journal === 'function') journal('side', R.threat === 'packet' ? TX.journalPacket : R.threat === 'squall' ? TX.journalSquall : TX.journalMet); } catch (e) { /* no journal */ }
     if (G.map && G.map.id === DECK()) { R.amb = G.map.ambient; R.fog = G.map.fogDist; }
     stage();
-    const parts = [TX.met, TX.cls, TX.far]; if (R.valley) parts.push(TX.valley); parts.push(TX.how);
-    try { showEvent(TX.metTitle, parts.join('<br><br>'), [{ t: TX.metGo, f: () => {} }]); } catch (e) { warnOnce('card', e); }
+    const parts = R.threat === 'packet' ? [TX.packet, TX.packet2] : R.threat === 'squall' ? [TX.squall, TX.squall2] : [TX.met, TX.cls, TX.far];
+    if (R.valley) parts.push(TX.valley);
+    parts.push(R.threat === 'packet' ? TX.packetHow : TX.how);
+    const title = R.threat === 'packet' ? TX.packetTitle : R.threat === 'squall' ? TX.squallTitle : TX.metTitle;
+    try { showEvent(title, parts.join('<br><br>'), [{ t: TX.metGo, f: () => {} }]); } catch (e) { warnOnce('card', e); }
     return true;
   }
   function tick(dt) {
@@ -364,7 +414,11 @@ const AIR93 = (function () {
     // the journey (in the Valley a weeping tank's jet pushes her round, and the push grows)
     const weeping = r.tanks.some((k) => k.st === 'weep');
     if (r.valley && r.progress < 0.4 && weeping) { if (r.spin === 0) say(TX.valleyPush, 'warn'); r.spin = Math.min(0.8, r.spin + 0.02 * dt); } else r.spin = Math.max(0, r.spin - 0.1 * dt);
-    if (!r.hooked) r.progress = Math.min(1, r.progress + dt / B.JOURNEY_S * (1 - r.spin));
+    const span = r.threat === 'packet' ? B.PACKET_S : r.threat === 'squall' ? B.SQUALL_S : B.JOURNEY_S;
+    if (!r.hooked) r.progress = Math.min(1, r.progress + dt / span * (1 - r.spin));
+    if (r.ft <= 0) return forcedDown();
+    if (r.threat === 'packet') return tickPacket(r, dt);
+    if (r.threat === 'squall') return tickSquall(r, dt);
     // the horn: the Forge's awareness meter, filled by what it hears and drained by quiet
     r.spike = Math.max(0, r.spike - dt * 0.5);
     const hd = heard(r), was = r.horn;
@@ -392,6 +446,37 @@ const AIR93 = (function () {
     if (r.yd >= B.LOSE_YD) return through(TX.lost);
     if (r.progress >= 1 && r.horn < 3 && !r.hooked) return through(TX.outlast);
     cardT -= dt; if (cardT <= 0) { cardT = 0.25; placeCutter(); if (R.fog != null) G.map.fogDist = inCloud(r) ? 4 : R.fog; }
+  }
+  // the packet: it crosses her course and looks; what its glass sees for long enough is told at the Heights
+  const watchOf = (v) => (v >= 100 ? 2 : v >= 30 ? 1 : 0);
+  function tickPacket(r, dt) {
+    const tc = r.t - 60;                                                // closest at a minute in
+    r.yd = Math.hypot(B.PACKET_NEAR, B.PACKET_SPEED * tc);
+    const night = typeof G.tod === 'number' && (G.tod < 0.25 || G.tod > 0.8);
+    let see = 0;
+    if (!inCloud(r) && r.yd < B.PACKET_SEE) see = (B.PACKET_SEE - r.yd) / B.PACKET_SEE * 22 * (r.dark ? 0.35 : night ? 1.4 : 1) * (r.ft < B.CUTTER_FLOOR ? 0.6 : 1);
+    const was = watchOf(r.sight);
+    if (!r.seen) r.sight = clamp(r.sight + (see > 0 ? see : -6) * dt, 0, 100);
+    const now = watchOf(r.sight);
+    if (now === 2 && !r.seen) { r.seen = true; F().p93_told = 1; say(TX.packetSeen, 'bad', 7000); }
+    else if (now === 1 && was === 0) say(TX.watchLine1, 'warn', 4000);
+    if (tc > 0 && r.yd >= B.LOSE_YD) return through(r.seen ? TX.packetGone : TX.packetPassed);
+    if (r.progress >= 1) return through(r.seen ? TX.packetGone : TX.packetPassed);
+    cardT -= dt; if (cardT <= 0) { cardT = 0.25; placeCutter(); if (R.fog != null) G.map.fogDist = inCloud(r) ? 4 : R.fog; }
+  }
+  // the squall: gusts throw her up and down; an unlashed hold makes every gust worse
+  function tickSquall(r, dt) {
+    r.gustT -= dt;
+    if (r.gustT <= 0) {
+      r.gustT = 5 + 3 * roll(); r.gustLeft = 2.5;
+      r.gustV = (roll() < 0.5 ? -1 : 1) * B.GUST * (0.6 + 0.8 * roll()) * (r.lashed ? 1 : 1.5);
+      say(r.gustV > 0 ? TX.gustUp : TX.gustDown, 'warn', 2500);
+      if (!r.lashed) say(TX.lurch, 'warn', 2500);
+    }
+    if (r.gustLeft > 0) { r.gustLeft -= dt; r.ft = Math.max(0, r.ft + r.gustV * dt); }
+    if (r.ft <= 0) return forcedDown();
+    if (r.progress >= 1) return through(TX.squallPast);
+    cardT -= dt; if (cardT <= 0) { cardT = 0.25; placeCutter(); if (R.fog != null) G.map.fogDist = 5; }
   }
   function fire() {
     try { Audio_.sfx.shot(); } catch (e) { /* silent */ }
@@ -531,7 +616,7 @@ const AIR93 = (function () {
     if (typeof update === 'function') { const _u = update; update = function (dt) { const r = _u.apply(this, arguments); try { tick(dt); tickJob(dt); } catch (e) { warnOnce('update', e); } return r; }; }
     if (typeof drawHUD === 'function') { const _d = drawHUD; drawHUD = function () { const r = _d.apply(this, arguments); try { drawCard(); } catch (e) { warnOnce('hud', e); } return r; }; }
     if (typeof useDeco === 'function') { const _ud = useDeco; useDeco = function (e) { try { if (useOwn(e)) return undefined; } catch (err) { warnOnce('use', err); } return _ud.apply(this, arguments); }; }
-    if (typeof loadMap === 'function') { const _lm = loadMap; loadMap = function () { const r = _lm.apply(this, arguments); try { if (R.live) { borrowed.length = 0; stage(); } } catch (e) { warnOnce('load', e); } return r; }; }
+    if (typeof loadMap === 'function') { const _lm = loadMap; loadMap = function () { const r = _lm.apply(this, arguments); try { if (R.live) { borrowed.length = 0; stage(); } else if (G.mapId === 'p92_tiers' && fint('p93_told', 2) === 1) { F().p93_told = 2; say(TX.toldArrive, 'warn', 9000); } } catch (e) { warnOnce('load', e); } return r; }; }
     if (typeof restoreGame === 'function') { const _rg = restoreGame; restoreGame = function () { if (R.live) { try { unstage(); } catch (e) { /* the old map */ } R.live = false; R.ended = true; drawCard(); } const r = _rg.apply(this, arguments); try { resumeFlight(); } catch (e) { warnOnce('restore', e); } return r; }; }
     // knocked down at the rail in a boarding is not a death (the Kestrel and her people are never lost)
     if (typeof die === 'function') { const _die = die; die = function () { try { if (R.live && R.hooked && !R.ended && !G.dead && !(typeof hardcoreOn === 'function' && hardcoreOn())) { knockedDown(); return undefined; } } catch (e) { warnOnce('die', e); } return _die.apply(this, arguments); }; }
@@ -559,6 +644,7 @@ const AIR93 = (function () {
     TX, TEXTS, B, R, cfg, on, setOn, start, tick, tickJob, useOwn, noiseOf, heard, hornOf, trimOf, liftOf, weightOf, inCloud, art, stage, drawCard,
     cutChain, hook, fire, forcedDown, through, knockedDown, resumeFlight, wheelMenu, holdMenu,
     setRoll: (f) => { roll = typeof f === 'function' ? f : () => Math.random(); },
+    setNext: (t) => { nextThreat = ['courier', 'packet', 'squall'].includes(t) ? t : null; }, watchOf: (v) => watchOf(v), tickPacket, tickSquall,
   };
 })();
 if (typeof window !== 'undefined') window.AIR93 = AIR93;

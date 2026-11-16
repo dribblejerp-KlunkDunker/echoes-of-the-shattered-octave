@@ -30,6 +30,15 @@ The owner's answers: *"keep everything lore bound 1 no. 2 yes. 3 no. 4 based off
 | A chain | 3 blows of the axe |
 | Lashing the hold / patching a tank | 6 / 7 seconds standing by it |
 
+## The Church packet and the squall line (15 Nov, the owner's "proceed")
+
+A met flight is now one of three meetings. On the way to or from the Heights the odds are 3 in 10 for the packet, 2 in 10 for the squall and 5 in 10 for the cutter; on any other long flight they are 1 in 4 for the squall and 3 in 4 for the cutter. These are [PROPOSED] numbers.
+
+- **The Church packet** (canon kind: Book Two ch. 8, Oona Salt's warning: "there's a Church packet goes out of here on Hearthday… he'd best be doing it before the packet makes the Heights"; ch. 9, the white sun-disc on its envelope). It does not hunt; it looks. It crosses her course, closest at about 260 yards a minute in. Its lookout's glass fills a watch meter (looking elsewhere, a glass on you, seen) while the Kestrel is in open sky and near. The meter fills faster at night with the lamps lit, slower running dark or low in the treetops, and never in the cloud. If the lookout sees her, the word goes ahead: at the Keel Docks, "Word came up the chains before you… the harbourmaster has her name in the book already" (flag `p93_told`) [PROPOSED]. No fight; the packet is never boarded.
+- **The squall line** (Book One ch. 21: "The wind came round… and pushed her, and she had no ballast and no grip and she slid"). A wall of weather, two minutes to ride through. The sky goes to storm while it lasts and comes back after. Gusts throw her up or down every five to eight seconds, half as hard again with the hold unlashed. Keep her between the treetops and the ceiling.
+- **Lore fix:** the packet's picture (Phase 92's cradle and this meeting) had a gold disc on a pale envelope. It is now the book's white sun-disc, with a gold rim, on a tawny envelope.
+- **Test:** three more checks in `test/air93.test.js` (19 in all). **French:** 25 more lines. **Pictures:** `screenshots/p93/p93-packet.jpg` and `p93-squall.jpg`.
+
 ## 1. What the books give us
 
 The Kestrel does not fight in the air. She hides, climbs, sinks, sheds weight and holds her rail. Every rule below grows out of these lines.

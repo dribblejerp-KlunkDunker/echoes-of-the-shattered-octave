@@ -2262,6 +2262,12 @@ The traveller works the ship's stations (the wheel by Vane's word, the tank-crad
 
 **Status:** canon (ruled), 15 Nov.
 
+**The Church packet and the squall line** (15 Nov, the same phase):
+- **The Church packet** (canon kind, Book Two ch. 8 and 9) crosses the Kestrel's course on the way to or from the Heights. It does not hunt; its lookout looks. If the lookout sees her in open sky, the word goes up the chains ahead of her to the Keel Docks [PROPOSED].
+- **The squall line** (Book One ch. 21's wind that "pushed her") throws her up and down, worse with the hold unlashed.
+- **Changed:** the packet's sun-disc is drawn white, as the book has it (it had been gold).
+- **Status:** the kinds are canon (book); the lines and numbers are [PROPOSED].
+
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 
 ### The canon pass of 28 October 2026: what changed and why
