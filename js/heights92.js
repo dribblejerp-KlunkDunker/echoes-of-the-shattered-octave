@@ -404,21 +404,33 @@ const HEIGHTS92 = (function () {
     // the Lamplighter: a Flambeau (Book One ch. 7: "robes the red of banked coals, hooded, their faces in shadow, each carrying
     // a fire-stave: a staff of black iron as tall as a man, topped with an iron cage, and in every cage a fist-sized lump of
     // amber Aether-Glass, burning"), seven years below the line: the hem gone rust-black with the Tiers' own dark
-    add('p92_lamplighter', 96, 176, undefined, (x) => {
-      const cx = 40;
-      x.fillStyle = '#6e1c12'; x.beginPath(); x.moveTo(cx - 20, 174); x.lineTo(cx - 14, 58); x.lineTo(cx + 14, 58); x.lineTo(cx + 20, 174); x.closePath(); x.fill();
-      for (let y = 58; y < 174; y += 6) px(x, 'rgba(180,70,40,0.25)', cx - 3 + ((y / 6) & 1) * 2, y, 2, 6);   // the fold down the front, a coal's glow in it
-      for (let y = 112; y < 174; y += 3) px(x, `rgba(20,14,14,${((y - 112) / 78).toFixed(2)})`, cx - 20, y, 40, 3);   // the hem gone to the Tiers' black
-      px(x, '#641a10', cx - 24, 64, 8, 56); px(x, '#641a10', cx + 16, 64, 8, 50);
-      px(x, '#2a1c18', cx - 23, 118, 6, 6); px(x, '#2a1c18', cx + 17, 112, 6, 6);   // gloved hands
+    // one drawing for each pose (idle, two steps, the stave drawn back, the stave swung): the engine picks them as he walks and strikes
+    const flambeau = (pose) => (x) => {
+      const cx = 40, step = pose === '_w1' ? -3 : pose === '_w2' ? 3 : 0;
+      const sway = (y) => Math.round(step * (y - 58) / 116);
+      x.fillStyle = '#6e1c12'; x.beginPath(); x.moveTo(cx - 20 + step, 174); x.lineTo(cx - 14, 58); x.lineTo(cx + 14, 58); x.lineTo(cx + 20 + step, 174); x.closePath(); x.fill();
+      for (let y = 58; y < 174; y += 6) px(x, 'rgba(180,70,40,0.25)', cx - 3 + ((y / 6) & 1) * 2 + sway(y), y, 2, 6);   // the fold down the front, a coal's glow in it
+      for (let y = 112; y < 174; y += 3) px(x, `rgba(20,14,14,${((y - 112) / 78).toFixed(2)})`, cx - 20 + sway(y), y, 40, 3);   // the hem gone to the Tiers' black
+      const armL = pose === '_a2' ? 44 : 56 + (step < 0 ? -4 : 0), armR = pose === '_a1' ? 40 : pose === '_a2' ? 46 : 50 + (step > 0 ? -4 : 0);
+      px(x, '#641a10', cx - 24, 64, 8, armL); px(x, '#641a10', cx + 16, 64, 8, armR);
+      px(x, '#2a1c18', cx - 23, 64 + armL - 2, 6, 6); px(x, '#2a1c18', cx + 17, 64 + armR - 2, 6, 6);   // gloved hands
       x.fillStyle = '#4e140e'; x.beginPath(); x.moveTo(cx - 14, 62); x.lineTo(cx - 13, 30); x.quadraticCurveTo(cx, 12, cx + 13, 30); x.lineTo(cx + 14, 62); x.closePath(); x.fill();   // the hood
       x.fillStyle = '#0c0808'; x.beginPath(); x.moveTo(cx - 8, 56); x.lineTo(cx - 8, 36); x.quadraticCurveTo(cx, 26, cx + 8, 36); x.lineTo(cx + 8, 56); x.closePath(); x.fill();   // the face, in shadow
-      // the fire-stave: black iron, as tall as a man, an iron cage at its head and the lump burning in it
+      // the fire-stave: black iron, as tall as a man, an iron cage at its head and the lump burning in it. It turns about the hand:
+      // drawn back before a blow, swung across the body for one
+      const hy = 64 + armR, turn = pose === '_a1' ? 0.2 : pose === '_a2' ? -0.5 : 0, bob = step < 0 ? -3 : step > 0 ? -1 : 0;
+      x.save(); x.translate(cx + 25, hy + bob); x.rotate(turn); x.translate(-(cx + 25), -114);
       px(x, '#18181a', cx + 23, 38, 3, 136); px(x, '#2c2c30', cx + 24, 40, 1, 132);
       px(x, '#18181a', cx + 16, 34, 17, 3); px(x, '#18181a', cx + 16, 10, 17, 3);
       px(x, '#f6d47a', cx + 19, 15, 11, 17); px(x, '#fff8e0', cx + 21, 18, 7, 11);
       for (const d of [0, 5, 10, 15]) px(x, '#18181a', cx + 16 + d, 10, 2, 26);
-    }, (r, g, b, a) => a > 200 && r > 240 && g > 200);
+      x.restore();
+      if (pose === '_a2') for (let k = 0; k < 26; k++) {   // white-gold fire splashes from the cage (Book One ch. 7), placed by a hash of its own number
+        const fx = 4 + ((h2(k, 7) * 30) | 0), fy = 34 + ((h2(k, 11) * 60) | 0);
+        px(x, k % 3 ? '#fff8e0' : '#f6d47a', fx, fy, 2, 3 + ((h2(k, 5) * 4) | 0));
+      }
+    };
+    for (const pose of ['', '_w1', '_w2', '_a1', '_a2']) add('p92_lamplighter' + pose, 96, 176, undefined, flambeau(pose), (r, g, b, a) => a > 200 && r > 240 && g > 200);
     // white-gold fire on the planks
     add('p92_glassfire', 48, 40, 0.55, (x) => {
       for (let i = 0; i < 48; i++) { const hgt = 6 + Math.abs(Math.sin(i * 0.7)) * 22 + h2(i, 3) * 8; for (let y = 0; y < hgt; y++) { const k = y / hgt; px(x, k < 0.5 ? '#fffbea' : k < 0.8 ? '#f8e2a0' : '#e8b860', i, 39 - y); } }
@@ -429,12 +441,15 @@ const HEIGHTS92 = (function () {
     }, (r, g, b, a) => a > 0);
     // a bleach-hound: the hound, bleached (from its own picture, the same pixels, whitened)
     try {
-      const hd = Engine.sprites.hound;
-      if (hd && !Engine.sprites.p92_bleachhound) {
+      for (const pose of ['', '_w1', '_w2', '_a1', '_a2']) {   // every pose of the hound, so it runs and bites as the hound does
+      const hd = Engine.sprites['hound' + pose];
+      if (hd && !Engine.sprites['p92_bleachhound' + pose]) {
         const src = hd.data, d = new Uint32Array(src.length);
         for (let i = 0; i < src.length; i++) { const v = src[i], a = v >>> 24; if (!a) { d[i] = 0; continue; } const r = v & 255, g = (v >> 8) & 255, b = (v >> 16) & 255, l = (r * 0.3 + g * 0.59 + b * 0.11); const n = Math.min(255, 150 + l * 0.45) | 0; d[i] = (a << 24) | (Math.min(255, n + 6) << 16) | (n << 8) | Math.max(0, n - 8); }
-        Engine.addSprite('p92_bleachhound', Object.assign({}, hd, { data: d }));
+        Engine.addSprite('p92_bleachhound' + pose, Object.assign({}, hd, { data: d }));
       }
+      }
+      if (typeof ANIM !== 'undefined' && ANIM.quadruped) ANIM.quadruped.add('p92_bleachhound');
     } catch (e) { warnOnce('hound', e); }
   }
 

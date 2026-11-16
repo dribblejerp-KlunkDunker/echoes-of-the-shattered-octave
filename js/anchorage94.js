@@ -258,17 +258,22 @@ const ANCHORAGE94 = (function () {
     add('p94_glassgrown', 64, 160, undefined, (x) => grown(x, false), (r, gg, b, a) => a > 0 && r > 240);
     add('p94_glassgrown_turn', 64, 160, undefined, (x) => grown(x, true), (r, gg, b, a) => a > 0 && r > 240);
     // the Nineteen: men of blue-white voltage, leaning into one bar (whole pixels: the far ones thinner, a dither, not a fade)
-    add('p94_nineteen', 150, 170, undefined, (x) => {
-      const man = (cx, top, lean, thin) => {
+    // one drawing for each pose: two steps of the tramp round the bars, the lean back before a haul, and the haul
+    const nineteen = (pose) => (x) => {
+      const dl = pose === '_w1' ? -2 : pose === '_w2' ? 2 : pose === '_a1' ? -6 : pose === '_a2' ? 7 : 0, seed = ['', '_w1', '_w2', '_a1', '_a2'].indexOf(pose) * 31;
+      const man = (cx, top, lean0, thin) => {
+        const lean = lean0 + dl;
         const dot = (c, i, j2) => { if (thin && ((i + j2) % thin) !== 0) return; px(x, c, i, j2); };
         for (let j2 = top + 30; j2 < top + 150; j2++) { const sh = (lean * (top + 150 - j2) / 120) | 0; for (let i = cx - 12 + sh; i < cx + 12 + sh; i++) dot((i - cx - sh) * (i - cx - sh) < 30 ? '#dff0ff' : '#5a9cf0', i, j2); }
         for (let j2 = top + 6; j2 < top + 30; j2++) for (let i = cx - 9; i < cx + 9; i++) { const ox = i - cx, oy = j2 - top - 18; if (ox * ox / 81 + oy * oy / 121 <= 1) dot(ox * ox + oy * oy < 20 ? '#f4fbff' : '#6aa8f4', i + ((lean * 1.3) | 0), j2); }
         for (let i = cx + lean + 10; i < cx + lean + 36; i++) for (let j2 = top + 44; j2 < top + 50; j2++) dot('#6aa8f4', i, j2);   // arms to the bar
-        for (let j2 = top + 34; j2 < top + 148; j2 += 7) { const o = ((h2(cx, j2) * 15) | 0) - 7; px(x, '#ffffff', cx + o + ((lean * (top + 150 - j2) / 120) | 0), j2, 2, 5); }   // the crackle
+        for (let j2 = top + 34; j2 < top + 148; j2 += 7) { const o = ((h2(cx + seed, j2) * 15) | 0) - 7; px(x, '#ffffff', cx + o + ((lean * (top + 150 - j2) / 120) | 0), j2, 2, 5); }   // the crackle
       };
       man(28, 16, 10, 3); man(88, 12, 11, 3); man(58, 8, 12, 2); man(44, 2, 12, 0); man(74, 0, 13, 0);
-      px(x, '#9cc8ff', 20, 50, 126, 5); px(x, '#f4fbff', 20, 51, 126, 2);   // the bar
-    }, (r, gg, b, a) => a > 0 && b > 200);   // self-lit, with no light of their own on top of them (that washes them warm): the cold light stands by the capstan
+      px(x, '#9cc8ff', 20 + dl, 50, 126, 5); px(x, '#f4fbff', 20 + dl, 51, 126, 2);   // the bar
+      if (pose === '_a2') for (let k = 0; k < 14; k++) px(x, '#ffffff', 24 + k * 9, 46 + ((h2(k, 3) * 12) | 0), 2, 6);   // the haul: the bar crackles along its length
+    };
+    for (const pose of ['', '_w1', '_w2', '_a1', '_a2']) add('p94_nineteen' + pose, 150, 170, undefined, nineteen(pose), (r, gg, b, a) => a > 0 && b > 200);   // self-lit, with no light of their own on top of them (that washes them warm): the cold light stands by the capstan
     add('p94_capstan', 110, 120, 1.5, (x) => {
       for (let j = 30; j < 112; j++) { const k = Math.abs((j - 70) / 42), w = 22 + (k > 0.7 ? 8 : 0); px(x, g((58 - k * 26) | 0), 55 - w, j, w * 2, 1); }
       px(x, g(30), 20, 112, 70, 8); px(x, g(84), 30, 28, 50, 5);

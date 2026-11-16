@@ -52,6 +52,7 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] the keeper: the Nineteen, tied to the capstan; Vol II's tether jerk on a beat; the Brake-Gloves and the notched link, once
 - [x] three lamps (Souls group i), the sixteenth gear set (the Chain-Yards), Bardo and the link
 - [x] Phase 92 matched to the books again: the Flambeau in red with a fire-stave, the offerings on the line, the Wired's note, the black angel
+- [x] the three new foes (the Lamplighter, the bleach-hound, the Nineteen) have their walking and striking drawings: five poses each, so the Lamplighter draws his fire-stave back and swings it, and the `creatures` suite (red on them since Phase 92) passes again
 - [ ] the owner's eight answers (the Phase 94 record)
 - [ ] next: the Pilgrim Chain and the Altar, then the White Mile; two of the Heights' four keepers are built (the reminder of Phase 91's question 4 comes with the fourth)
 
