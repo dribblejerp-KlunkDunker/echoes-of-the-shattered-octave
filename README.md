@@ -433,6 +433,35 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The Dawning Heights, part two: the Anchorage (Phase 94).** A low iron door by the goods-cage's top leads into the inside of Sol-Luminary's frame, where the nine chains that hold the city come down through it "like the bones they are" (Book Two). Winchmaster Bardo (World Bible Vol II) keeps his winch there, with the tally of his nineteen lost men cut in the housing. You walk down the seventh chain itself, link by link, over its well. The nine chains toll one after another in a bell-ringers' change, and a card shows the row: when the seventh speaks, a link under you throws you and a pin holds you. Below are the tolling gallery, seven Glass-Grown who are never fought, the keel-weights of white stone, and the Winch-Deep, where the Nineteen still haul at the old capstan and make you weigh four times what you weigh. Three lamps, a shortcut cage, and a sixteenth gear set, the Chain-Yards (`js/anchorage94.js`, `test/anchorage94.test.js`). The book changed this place's plan: it had been drawn as shafts in the mountain, and Book Two has no rock under the city.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p94/p94-bone.jpg" alt="The seventh chain going down into the dark as a walkway of links and pins, tallow lamps on the pins, a swarm ahead, and the change's card at the top of the screen"></td>
+<td width="50%"><img src="screenshots/p94/p94-gallery.jpg" alt="The tolling gallery: great pillars of chain link coming down through the roof and the floor, one tallow lamp beyond them"></td>
+</tr>
+<tr>
+<td>Down the seventh bone. The card shows the change.</td>
+<td>The tolling gallery: all nine bones through one floor.</td>
+</tr>
+<tr>
+<td width="50%"><img src="screenshots/p94/p94-winch.jpg" alt="Winchmaster Bardo, grey-bearded in a black coat and harness, beside an iron winch drum with a brake-wheel and a long lever, nineteen tally strokes cut on its housing"></td>
+<td width="50%"><img src="screenshots/p94/p94-nineteen.jpg" alt="Figures of blue-white voltage leaning together on one bar in a dark round chamber"></td>
+</tr>
+<tr>
+<td>Winchmaster Bardo and the tally of nineteen.</td>
+<td>The Nineteen, at the old capstan.</td>
+</tr>
+<tr>
+<td width="50%"><img src="screenshots/p94/p94-glassgrown.jpg" alt="Pale amber figures of glass standing in a dark iron room, faces turned up, a winchman's cap on the floor before them"></td>
+<td width="50%"><img src="screenshots/p94/p94-weights.jpg" alt="Blocks of pale dressed stone as big as buildings, banded with iron, hanging close together in the dark"></td>
+</tr>
+<tr>
+<td>The Glass-Grown, facing up toward the Spire.</td>
+<td>The keel-weights.</td>
+</tr>
+</table>
+
 **Flying and fighting in the air (Phase 93).** A long flight on the Kestrel's map table can be met in the air. It is chance, as in the books, and a switch in Options turns it off. An Office courier-cutter, the lead-grey forty-footer from Book One ch. 21, hunts her by its listening-horn. On the way to the Heights a Church packet may cross her course instead and carry word of her ahead, or a squall line may throw her about. The Kestrel stays unarmed, as the book leaves her. You work her stations in first person: you ask Vane for a height at the wheel, lash the hold so nothing knocks, help Pennick patch a weeping tank, hood the lamps, and throw weight over the side. The flight card shows height, lift, noise and the horn's four states. If the horn turns and the cutter comes down your line of sound, the grapnels come over the rail and four proctors with them. Cut the chains (three blows each) or fight. She is never lost: the worst is a forced landing and a repair. The way south to the Heights crosses the Valley of Velocity, where a weeping tank's jet pushes her round. The horn's states come from the owner's Forge engine (`js/air93.js`, `test/air93.test.js`).
 
 <table>

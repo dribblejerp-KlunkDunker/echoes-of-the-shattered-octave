@@ -78,6 +78,10 @@ const GEAR87 = (function () {
     { id: 'umbral', name: S('The Umbral Tiers'), home: 'Sol-Luminary',
       armor: ['a_p92_lamphood', 'a_p92_chainboots', 'a_p92_shadecloak'], weapons: ['p92_clothpole'],
       t: { noise: -0.15 }, f: { special: 'shade' }, tLine: S('quieter on the planks'), fLine: S('the Bleach eats at you half as fast') },
+    // Phase 94: the Chain-Yards, inside Sol-Luminary's frame [PROPOSED]
+    { id: 'chainyards', name: S('The Chain-Yards'), home: 'the Anchorage, Sol-Luminary',
+      armor: ['a_p94_cap', 'a_p94_gloves', 'a_p94_harness'], weapons: ['p94_lever'],
+      t: { ar: 1 }, f: { special: 'weight' }, tLine: S('+1 armour'), fLine: S('a tether jerk weighs on you half as long') },
   ];
   const BY_ID = {}; for (const s of SETS) BY_ID[s.id] = s;
   // which set a piece belongs to (the design puts every piece in exactly one)

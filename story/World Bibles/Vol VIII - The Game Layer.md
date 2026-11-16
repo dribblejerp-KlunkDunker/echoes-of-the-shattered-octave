@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 93 built, 15 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 94, 15 November 2026).
 
 ---
 
@@ -2267,6 +2267,35 @@ The traveller works the ship's stations (the wheel by Vane's word, the tank-crad
 - **The squall line** (Book One ch. 21's wind that "pushed her") throws her up and down, worse with the hold unlashed.
 - **Changed:** the packet's sun-disc is drawn white, as the book has it (it had been gold).
 - **Status:** the kinds are canon (book); the lines and numbers are [PROPOSED].
+
+#### Phase 94: the Dawning Heights, part two: the Anchorage (15 Nov; `js/anchorage94.js`)
+**The book changed the plan.** Phase 89 drew the Anchorage as shafts in Mount Lumina with a cavern under the city. Book Two forbids it: the city is "a great inverted cone" over a gulf; the nine chains "came down from rings in the Spire's flank… and took hold of the city's rim"; each goes "on down through the floor into the city's frame"; the anchor-houses are on the rim, in the Bleach. So the Anchorage is the inside of the city's frame, the Chain-Yards (Vol II), worked from underneath since the Fracture.
+
+**From the books and bibles (canon):**
+- "The nine were the city's bones" (Book Two). The game calls the chains inside the frame *bones*.
+- **Winchmaster Bardo** (Vol II) is alive in his winch-room, with the tally of his nineteen lost men cut in the winch housing.
+- The winch is the book's: an iron drum the height of a man, a brake-wheel like a ship's wheel, a lever as long as an oar.
+- **The Glass-Grown** (Vol II): seven stand in the frame facing up toward the Spire, sounding 528, conscious. They are never fought.
+- **The tether jerk** (Vol II): four times your weight for six seconds.
+- Fret-crawlers and shriek-motes (Vol II).
+
+**Invented, and the owner's [PROPOSED]:**
+- The way in is a low iron door by the goods-cage's top, under the bell-gallery stair.
+- **The change:** the nine bones toll one after another in a plain hunt on nine. A link under the seventh throws you when it speaks; a pin holds you.
+- **The keel-weights:** blocks of Lumina's white stone hung on the bones' ends in the keel, to keep the city's point down.
+- **The Winch-Deep:** the nine made fast in one ring in the keel, and an old capstan that turns by itself.
+- **The Nineteen** (the keeper): a Static Remnant cohered from Bardo's nineteen, tied to the capstan, hauling on a chain already made fast. Nobody has recorded it, so the bibles' count of nine cohered Remnants stands.
+- Bardo's words and oaths. Shown the Nineteen's notched link, he cuts one bar across the nineteen strokes.
+- The counterweight cage (the shortcut), three shade-lamps, and the sixteenth gear set, **the Chain-Yards** (Winchman's Cap, Brake-Gloves, Chain-Crew Harness, Brake-Lever).
+
+**Phase 92 matched to the books again (the same day):**
+- Flambeaux wear "robes the red of banked coals" and carry fire-staves (Book One ch. 7). The Lamplighter had been in white with a lantern.
+- Glass-fire is "smokeless and without fuel", so nothing of his is sooty now.
+- "The Tiers would pull the ladders up on Flambeaux" (Book Two): the cobbler now says they did.
+- The Tiers' offerings to the black angel lie on the line (Book Two ch. 10), and Brenna Corliss speaks of the Wired and the black angel in the book's words.
+- The Unison's one note is heard throughout the Tiers, and fades as you stop hearing it.
+
+**Status:** [PROPOSED] under the approved Phases 89 and 90; eight questions are the owner's, in the Phase 94 record.
 
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 

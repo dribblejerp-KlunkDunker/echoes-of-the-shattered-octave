@@ -242,6 +242,7 @@ The 528 Hz figure is the most ornate of the eight: a vertical spine through the 
 - *Shortcut:* a goods-cage on the seventh chain's anchor-house, winched down from above, back to the docks.
 
 **2. The Anchorage** (the underground) [PROPOSED]
+- ***Corrected in Phase 94 (15 Nov):*** *Book Two has the city as an inverted cone over a gulf, the chains coming down from the Spire to the rim and on into the city's frame. There are no shafts in the mountain and no cavern under the city. The Anchorage was built as the inside of the city's frame, with every room below kept. See the Phase 94 record.*
 - *What:* where the nine chains go into the mountain. Each anchor-house on the rim opens on a gallery cut into Mount Lumina, and the chains run down it into the rock, a kilometre of link in a shaft, fixed at the bottom to **the bed-weights**: blocks of the mountain's own stone, as big as churches, cut free and hung. The nine shafts join in a cavern under the city, **the Winch-Deep**, where the first crews tied the city to the mountain.
 - *The wonder:* the chains toll. Inside the rock the city's sway is a sound: nine notes, never together, rolling through the galleries like a slow bell-change. When a chain jerks, the whole Anchorage rings, and anything standing on a link is thrown.
 - *What lives there:* fret-crawlers on the walls, shriek-motes clustered on the tolling links, and **Glass-Grown** (Vol II: terminal vitrification cases, human-shaped bells, conscious, drawn to their Anchor) standing in the shafts facing up toward the light they cannot reach.

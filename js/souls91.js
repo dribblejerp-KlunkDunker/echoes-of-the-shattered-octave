@@ -215,6 +215,8 @@ const SOULS91 = (function () {
   // ---------------------------------------------------------------- the hour-bead (an item; the merchants come with the Dunes)
   function items() {
     if (typeof ITEMS !== 'undefined' && !ITEMS.p91_bead) ITEMS.p91_bead = { name: TX.beadName, sprite: 'gear', value: BEAD_PRICE, use: 'p91_bead', desc: TX.beadDesc };
+    // its picture in the pack: a bead of pale glass on a thong, a grain of sand caught in it
+    try { if (typeof ICONS !== 'undefined' && ICONS.PIX && !Object.prototype.hasOwnProperty.call(ICONS.PIX, 'p91_bead')) ICONS.PIX.p91_bead = (d) => { d.layer('#5a4a34').rect(11.4, 2, 1.2, 7); d.layer('#cfe0e8', { shiny: 1 }).rrect(7, 8, 10, 10); d.layer('#eef6fa', { shiny: 1 }).rrect(9, 10, 4, 4); d.layer('#c8a050').rect(12.5, 13.5, 1.6, 1.6); d.mark('#ffffff', 10, 10); }; } catch (e) { /* no icons */ }
   }
   function buyBead() {
     const p = G.player; if (!p) return false;
