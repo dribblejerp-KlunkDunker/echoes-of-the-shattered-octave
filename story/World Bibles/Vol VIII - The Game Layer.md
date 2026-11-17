@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 95, 16 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 96, 16 November 2026).
 
 ---
 
@@ -2326,6 +2326,23 @@ The traveller works the ship's stations (the wheel by Vane's word, the tank-crad
 **Phase 96, the lore readers (16 Nov):** before the Heights' remaining places were built, each was read against the books. Withdrawn as not lore-bound: the nine anchor-houses (the books know two), the cloud deck and the valley farms. Renamed: "the Bell Yard" is a Whisper-Grove street; the Heights' place is the black square before the Basilica's west end. Held for the owner: the White Mile (the Mirror Walks and the Polisher against "the only mirror the Altar permitted"). The records are in `story/Game Layer/` under "Phase 96".
 
 **Status:** [PROPOSED] under the approved Phases 89 and 90; nine questions are the owner's, in the Phase 95 record.
+
+#### Phase 96: the Dawning Heights, part four: the smaller places, read against the books first (16 Nov)
+Each place of the plan was read against the books by a lore reader before anything was built. The briefs quote book and bible by file and line; the records are in `story/Game Layer/` under "Phase 96".
+
+**Built:**
+- **The Basilica school** (`js/school96.js`, map `p96_school`). Canon: Seraphina was taught "in the Basilica school at Sol-Luminary, on a bench under the great east window, by a Cantor of the Pure Note with a tuning-rod and a voice like a bell" (Book Three); the east end is above the line, "Taken", the Lightward Nave "sealed since the morning of the Fracture" (Book Two); "the children's choirs of the Basilica school" still sing in 419. So the bench is never shown. Invented [PROPOSED]: the school meets in a room on the shade side of the iron wall; the roll with seven years crossed through (312 names, then 26); a treble and an unnamed Cantor there at dusk only, with the book's lesson word for word; nobody "chosen" this year.
+- **The black square** (`js/blacksquare96.js`, map `p96_blacksquare`), which the plan called "the Bell Yard". That name is a street of Whisper-Grove (Book One). Canon: "the black square in front of the Basilica's west end, where the shade lay thick as wool and the great black doors stood shut"; "Every shutter on the square was open a crack"; the bell rings "from the Basilica's black tower, a deep slow bronze note", and the Tiers "go silent beneath it, level on level". Invented [PROPOSED]: the bell rings daily at noon and at the third hour, three strokes; its silence goes down the Tiers and lifts forty seconds after the last stroke; the watchers behind six shutters. The black doors never open; there is no herald and no proclamation (Ashfall's).
+- **Sun-Peak Vigil** (`js/vigil96.js`, maps `p96_vigil`, `p96_cell`). Canon is the bibles' only (Series Bible; Vol II; the Master Reference): a mountain house, twelve clergy, **Abbess Coriel**, who watched the Rite and did nothing, helps completely and will not be thanked; a bell rung at dusk. Vol III took away its "old faith" and what was "under the Altar", so the Vigil has no doctrine here, and the plan's under-stair, "thirty-eight years" and Light's lullaby are cut (the keepers of Anchors are Book Four's to reveal). Invented [PROPOSED]: the gate-bell, the cloister, her cell, the dusk-bell tower; the twelve include Coriel; eleven names (Fabian, Ottavia, Domitia, Albinus, Honoria, Marcellin, Prisca, Quintin, Liviana, Clemence, Galen); her help whole, once a day. Reached by the Kestrel.
+- **The Chalk Cliffs** (`js/cliffs96.js`, map `p96_cliffs`). Canon is two lines of Vol II: "Shadow remnants crawl up them nightly. The Vigil rings a bell at dusk and the bell is the only thing that works." No cloud deck (Book Two has no cloud in the Heights). Invented [PROPOSED], and as little as the place needs: a shadow remnant is a shadow with nothing to cast it, lying on the rock; it does cold harm; blows and songs do nothing to it; each stroke of the bell makes it let go, and when the twelve strokes end it climbs; the postern yard at the top is safe (a shade-lamp, Souls group l); a cairn of names at the foot.
+- **A person's own subjects can be asked** (`js/owntopics96.js`): Brenna Corliss, Bardo, Perpetua Lisle and the rest now show their own subjects under "Tell me about".
+
+**Not built, because the books do not allow them (a findings record each):**
+- **The nine anchor-houses.** The books know two, the sixth and the seventh; nobody lives in the Bleach; the others are "not whole".
+- **The cloud deck and the valley farms.** No cloud lies under the city; nothing grows below it; no chain reaches the ground; the city is fed by skyship.
+- **The White Mile** is held for the owner: the Foundry is on the Spire; the Unison hunts by sound; the Eye is "the only mirror the Altar permitted in all the Heights", against the plan's Mirror Walks and Polisher.
+
+**Status:** [PROPOSED]; the questions are the owner's, in each record.
 
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 

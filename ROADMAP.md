@@ -58,7 +58,9 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] eight lore briefs, each quoting book and bible by file and line
 - [x] withdrawn as not lore-bound, with a findings record each: the nine anchor-houses; the cloud deck and the valley farms
 - [x] held for the owner, with three designs to choose from: the White Mile
-- [ ] being built from the lore: the Basilica school (a schoolroom on the shade side), the black square (the plan's "Bell Yard"), Sun-Peak Vigil, the Chalk Cliffs
+- [x] built from the lore, each with its test, French and record: the Basilica school (`js/school96.js`, 14 checks), the black square, the plan's "Bell Yard" (`js/blacksquare96.js`, 16), Sun-Peak Vigil (`js/vigil96.js`, 20), the Chalk Cliffs (`js/cliffs96.js`, 19)
+- [x] a person's own subjects have buttons under "Tell me about" (`js/owntopics96.js`, 5 checks): they could be answered but never asked
+- [ ] the owner's answers: the White Mile's design; the three withdrawals; each built place's [PROPOSED] list
 - [ ] the fourth Heights keeper waits on the White Mile; the reminder of Phase 91's question 4 comes with it (three of four are built)
 
 **Phase 94: the Dawning Heights, part two: the Anchorage (15 Nov, branch `p94-anchorage`, on Fable 5.2).** Owner, 15 Nov: "you now have fable so go forth". `js/anchorage94.js`, test `test/anchorage94.test.js` (17 checks), French `tools/i18n/p94-anchorage.tsv`. Record: [`story/Game Layer/Phase 94 - The Dawning Heights, part two (text for review).md`](story/Game%20Layer/Phase%2094%20-%20The%20Dawning%20Heights%2C%20part%20two%20(text%20for%20review).md).

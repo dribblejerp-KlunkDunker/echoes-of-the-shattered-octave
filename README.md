@@ -441,6 +441,14 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 | ![A Flambeau of the Chain in his own shade](screenshots/p95/p95-flambeau.jpg) | ![Brother-Captain Aurel Sant on the lowest step](screenshots/p95/p95-sant.jpg) |
 | ![The Altar's rim at the dawn office: the line, the choir, the Eye](screenshots/p95/p95-rim.jpg) | ![The Glass-Grown's slope and the chain's shadow](screenshots/p95/p95-slope.jpg) |
 
+**The Dawning Heights, part four: the smaller places (Phase 96).** Each was read against the books before it was built, and the books changed every one. The Basilica school meets in a black room on the shade side of the iron wall, because the bench under the east window is in the sealed nave (`js/school96.js`). The plan's "Bell Yard" is the book's black square before the Basilica's west end, where the bell in the black tower silences the Tiers level on level (`js/blacksquare96.js`). Sun-Peak Vigil is a mountain house of twelve who keep a bell, with Abbess Coriel, who helps completely and will not be thanked (`js/vigil96.js`); below it the Chalk Cliffs, where shadow remnants climb at dusk and the Vigil's bell is the only thing that works (`js/cliffs96.js`). Three planned places were not built because the books do not allow them (the nine anchor-houses, the cloud deck, the valley farms), and the White Mile waits for the owner's ruling.
+
+| | |
+|---|---|
+| ![The school's roll](screenshots/p96/p96-school.jpg) | ![The black square and the white dome](screenshots/p96/p96-blacksquare.jpg) |
+| ![Sun-Peak Vigil: the tower and the garth](screenshots/p96/p96-vigil.jpg) | ![Abbess Coriel in her cell](screenshots/p96/p96-coriel.jpg) |
+| ![The Vigil's gate and its bell](screenshots/p96/p96-gate.jpg) | ![The Chalk Cliffs at dusk](screenshots/p96/p96-cliffs.jpg) |
+
 **The Dawning Heights, part two: the Anchorage (Phase 94).** A low iron door by the goods-cage's top leads into the inside of Sol-Luminary's frame, where the nine chains that hold the city come down through it "like the bones they are" (Book Two). Winchmaster Bardo (World Bible Vol II) keeps his winch there, with the tally of his nineteen lost men cut in the housing. You walk down the seventh chain itself, link by link, over its well. The nine chains toll one after another in a bell-ringers' change, and a card shows the row: when the seventh speaks, a link under you throws you and a pin holds you. Below are the tolling gallery, seven Glass-Grown who are never fought, the keel-weights of white stone, and the Winch-Deep, where the Nineteen still haul at the old capstan and make you weigh four times what you weigh. Three lamps, a shortcut cage, and a sixteenth gear set, the Chain-Yards (`js/anchorage94.js`, `test/anchorage94.test.js`). The book changed this place's plan: it had been drawn as shafts in the mountain, and Book Two has no rock under the city.
 
 <table>
