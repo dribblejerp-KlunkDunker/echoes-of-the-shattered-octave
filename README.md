@@ -380,6 +380,19 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 <p align="center"><img src="screenshots/p89/continent.jpg" alt="A chart of Aethelgard: the eight realms and the Organum, with the places the Master Reference gives coordinates for and the great cities placed near them" width="92%"></p>
 
+**Every place, drawn as a plan (Phase 90, for the owner's ruling).** Before any graphics: each great place room by room (lamps, the keeper's arena, the shortcut loop back to the first lamp, and what does not open), each great city at walking scale (500 steps across) with the heart's way in, and the Organum's 712 pipes set where the eight figures cross. 33 new great places, 258 rooms, 69 lamps, 65 smaller places sketched. [`story/Game Layer/Phase 90 - The Layouts (for ruling).md`](story/Game%20Layer/Phase%2090%20-%20The%20Layouts%20(for%20ruling).md).
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p90/places-heights.jpg" alt="The Dawning Heights' four great places as plans: the Umbral Tiers, the Anchorage, the Pilgrim Chain and the White Mile"></td>
+<td width="50%"><img src="screenshots/p90/city-coast.jpg" alt="Port Cantabile at walking scale: the Salt Stair's six landings on the 639 Hz figure, the way in from the Mole to the sixth landing"></td>
+</tr>
+<tr>
+<td>The Heights' great places, room by room.</td>
+<td>Port Cantabile at walking scale.</td>
+</tr>
+</table>
+
 <table>
 <tr>
 <td width="50%"><img src="screenshots/p89/eight-cities.jpg" alt="The eight great cities laid out by the Cymatic City Engine at 174, 285, 396, 417, 528, 639, 741 and 852 Hz"></td>
