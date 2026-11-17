@@ -380,7 +380,7 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 <p align="center"><img src="screenshots/p89/continent.jpg" alt="A chart of Aethelgard: the eight realms and the Organum, with the places the Master Reference gives coordinates for and the great cities placed near them" width="92%"></p>
 
-**Every place, drawn as a plan (Phase 90, for the owner's ruling).** Before any graphics: each great place room by room (lamps, the keeper's arena, the shortcut loop back to the first lamp, and what does not open), each great city at walking scale (500 steps across) with the heart's way in, and the Organum's 712 pipes set where the eight figures cross. 33 new great places, 258 rooms, 69 lamps, 65 smaller places sketched. [`story/Game Layer/Phase 90 - The Layouts (for ruling).md`](story/Game%20Layer/Phase%2090%20-%20The%20Layouts%20(for%20ruling).md).
+**Every place, drawn as a plan (Phase 90, approved by the owner on 14 Nov).** Before any graphics: each great place room by room (lamps, the keeper's arena, the shortcut loop back to the first lamp, and what does not open), each great city at walking scale (500 steps across) with the heart's way in, and the Organum's 712 pipes set where the eight figures cross. 33 new great places, 258 rooms, 69 lamps, 65 smaller places sketched. [`story/Game Layer/Phase 90 - The Layouts (for ruling).md`](story/Game%20Layer/Phase%2090%20-%20The%20Layouts%20(for%20ruling).md).
 
 <table>
 <tr>
@@ -409,6 +409,27 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 <tr>
 <td>Cinderhold: eight fall-roads to the Great Beat.</td>
 <td>Fortis: a square pit of terraces.</td>
+</tr>
+</table>
+
+**The Souls rules, first in the Reach (Phase 91).** Lamps to rest at: stand by one and it is lit; use it and you are whole again, the place's ordinary foes get up where they first stood (its keeper too, once it has been down a week), and the game is saved. Five so far: the Antler Galleries' shaft foot and floorstone seam, the Dry Flume's adit and stair foot, and the Deep Grove's gap in Greenroot. Die in one of those places and you wake by the last of its lamps you lit. **Your Piece:** the coin you carried and what you had learned toward your next level wait where you fell, humming your note, seen only close as a lilac wisp; stand there and it comes home; die again first and it is gone. Gear is never lost. Two shortcuts opened from the far side: a chimney from the Flint-Back's den up to the shaft's foot, and an iron door barred on the Dry Flume's pump-hall side, so nobody has to time the sump twice. The hour-bead (120 sovereigns, one at a time) undoes a death on the spot; the hour-merchants who sell it come with the Dunes. Options: **Souls rules** (On; Off keeps the old cost of five coins).
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p91/p91-foot.jpg" alt="A lit hush-lamp on an iron post at the foot of the Antler Galleries' shaft, in white chalk"></td>
+<td width="50%"><img src="screenshots/p91/p91-piece.jpg" alt="The Piece: a lilac wisp rising from a pale pool on the floor of the Flint-Back's den, with the chimney in the far wall"></td>
+</tr>
+<tr>
+<td>A lamp, lit, at the Galleries' shaft foot.</td>
+<td>Your Piece, where you fell.</td>
+</tr>
+<tr>
+<td width="50%"><img src="screenshots/p91/p91-chimney.jpg" alt="The chimney at the shaft's foot: a dark arched mouth in the chalk with a rope hanging down it"></td>
+<td width="50%"><img src="screenshots/p91/p91-door.jpg" alt="The iron door in the Dry Flume's brick, barred across, seen from the pump-hall"></td>
+</tr>
+<tr>
+<td>The chimney: tied off from below until you climb it from the den.</td>
+<td>The iron door, barred on the pump-hall side.</td>
 </tr>
 </table>
 
