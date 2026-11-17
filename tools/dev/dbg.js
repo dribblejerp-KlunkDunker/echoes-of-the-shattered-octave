@@ -2,7 +2,7 @@ const { chromium } = require('/opt/npm-tools/node_modules/playwright');
 (async () => {
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] }); const page = await browser.newPage();
   page.on('console', (m) => { if (m.type() !== 'log') console.log('[' + m.type() + ']', m.text().slice(0, 300)); });
-  await page.goto('http://127.0.0.1:4175/index.html?nosw=1');
+  await page.goto((process.env.PREVIEW_URL || 'http://127.0.0.1:4175') + '/index.html?nosw=1');
   await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && !document.querySelector('#loading')?.classList.contains('on'), null, { timeout: 90000 });
   const hit = (sel) => page.locator(sel).first().dispatchEvent('click');
   await hit('#btn-new'); await page.locator('#cname').fill('Wren Ashby'); await hit('#c-next'); await hit('.classlist button'); await hit('#c-next'); await hit('#c-next');
