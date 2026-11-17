@@ -20,14 +20,17 @@
 //     been gilded, were white"; the old chapels above it, their people "still in them, at their prayers, seven years thin";
 //     the Vessel's stone, "a step high and ten feet across"; the Eye, "Forty feet across. Bronze, once", white now but for
 //     "a circle of bright bronze the size of a cartwheel", polished "every day for seven years with oil and ash".
-//  The Rite is Book Two's, a month on (13 Ashfall 419). In Harvestmonth the Altar choir holds the note under one ring of
-//  canopies [PROPOSED: the book's ten rings are the Rite's]; the player reaches the rim and never sets foot on the disc.
+//  The Rite is Book Two's, a month on (13 Ashfall 419), and the Church "had come back to the Altar" only six days before it
+//  was told of. The Pure Note is held day and night only "wherever the Church prepares a Rite", so in Harvestmonth nobody
+//  holds it here. What the Altar has every day is its own people: the clerics who polish the Eye, and the choir at the dawn
+//  office (Book Three: the Pure Note is "sounded at the Altar every dawn by the Church's choirs"), under one ring of canopies
+//  [PROPOSED: the book's ten rings are the Rite's]. The player reaches the rim and never sets foot on the disc.
 //
 //  THE ROOMS (Phase 90's nine, each kept):
 //    1 the chain's foot             the robing-room: white robes in rows, black canopies stacked; Perpetua Lisle [PROPOSED]
 //    2 the hostel lamp              in the robing-room
 //    3 the first span (hazard)      "Walk in the shade of the one ahead of you. If there is no one ahead of you, run."
-//                                   Choir shifts go out and back under canopies; outside their shade the Bleach takes you
+//                                   The Altar's clerics go out and back under canopies; outside their shade the Bleach takes you
 //    4 the half-way rest (a lamp)   the cage
 //    5 the second span (hazard)     no canopies: the Flambeaux of the Chain walk it, each in the shade of his own fire
 //    6 the Glass-Grown's slope      (a secret) down a ladder to Lumina's shoulder; they face the Eye; walk
@@ -66,7 +69,7 @@ const PILGRIM95 = (function () {
     doorBack: S('The iron stair, back down to the winch-room'),
     arriveHouse: S('The old robing-room, under the seventh anchor-house. Four hundred white robes hang in rows in the dark, and none but the choir\'s has been out in the light for seven years.'),
     robes: S('Pilgrims\' robes on their pegs: white linen, a number stitched at each neck. They have been washed. They have not been worn.'),
-    canopies: S('Canopies, folded and stacked: black silk on black poles. The Church walks its choir up the chain under these.'),
+    canopies: S('Canopies, folded and stacked: black silk on black poles. The Church walks the chain under these, and no other way.'),
     copper: S('A wash-copper, still warm.'),
     perpetua: S('Perpetua Lisle'),
     stairUp: S('The stair up, into the anchor-house'),
@@ -86,7 +89,7 @@ const PILGRIM95 = (function () {
     saying: S('Walk in the shade of the one ahead of you. If there is no one ahead of you, run.'),
     bleachOn: S('The light is on you. It is taking the colour out of your hands.'),
     shadeIn: S('Shade. The light goes on round you.'),
-    party: S('A choir shift under its canopy: white robes, black silk on black poles, and nobody looking to either side.'),
+    party: S('Clerics of the Altar under their canopy: white robes, black silk on black poles, and nobody looking to either side.'),
     rail: S('The rail, at waist height. Beyond it, the gulf.'),
     roller: S('An iron roller, and the cable lying in it: the cage\'s cable.'),
     link: S('A link of the Pilgrim Chain: black adamantine, as long as a ship\'s boat.'),
@@ -97,7 +100,7 @@ const PILGRIM95 = (function () {
     // the hours
     sunUp: S('The sun has cleared the peaks. Two lights now, the white and the sun, and the two together are more than anything can stand in.'),
     night: S('Night. Only the sourceless white, as it has lain here every night for seven years.'),
-    deadHour: S('The dead hour. The sun is as far under Lumina as it goes, and the white lies thinnest now.'),
+    deadHour: S('The dead hour, before dawn. For this one hour the white lies thinnest.'),
     cardName: S('The Bleach'), cardDay: S('sun up'), cardNight: S('night'), cardDead: S('the dead hour'), cardShade: S('in shade'), cardLight: S('in the light'),
     // the cage
     cage: S('The cage: a long low carriage of black iron under a canopy of black silk, on its cable. It is the only roof on the whole chain.'),
@@ -140,16 +143,17 @@ const PILGRIM95 = (function () {
     kneel: S('Brother-Captain Aurel Sant, kneeling by the lowest step with his hands open. His fire is out. He is waiting for it.'),
     // the Altar
     steps: S('The great steps, white, going up to the Altar.'),
-    rim: S('The Altar\'s rim. Black silk on black poles, and under it, in the shade, the Altar choir holding the Pure Note in their shifts. It comes up off the stone like heat off a road: five hundred and twenty-eight.'),
+    rim: S('The Altar\'s rim. Black silk on black poles: the canopies the Altar choir stands under at the dawn office, when the Church sounds the Pure Note here, as it does every dawn.'),
+    dawn: S('The dawn office. Under the black silk the Altar choir sounds the Pure Note, five hundred and twenty-eight, and it comes up off the stone like heat off a road.'),
     canopy: S('A canopy of the Altar: black silk on black poles.'),
     pillar: S('A pillar of the Altar\'s rim. It was gilded. It is white.'),
     line: S('A Flambeau of the line, his stave grounded. Nobody goes onto the Altar who is not choir.'),
     lineSay: S('The line of Flambeaux does not move and does not speak. The staves come down across the gap, all together, and the glass-fire stands up in the cages.'),
     altar: S('The Altar of Lumina: a disc of white stone two hundred feet across, cut into the shoulder of the mountain, facing the Spire across the gulf. It was white before. It is whiter now.'),
-    vessel: S('The Vessel\'s stone, at the centre: a round dais a step high. There has always been a singer on it at the dawn office, a child, the best treble of the Basilica school. At this hour it is empty.'),
+    vessel: S('The Vessel\'s stone, at the centre: a round dais a step high. There was always a singer on it at the dawn office, a child, the best treble of the Basilica school. It is empty.'),
     eye: S('The Eye, on its frame of white iron, forty feet across. It was bronze, polished to a mirror: the only mirror the Altar permits in all the Heights. It has gone white as the inside of a shell, but for a circle at its centre the size of a cartwheel, bright bronze, facing the Spire.'),
     polisher: S('A cleric of the Altar on the frame, polishing the bright circle with oil and ash, as one of them has every day for seven years.'),
-    choir: S('The Altar choir under its canopy, holding the one note. They are paler than their robes.'),
+    choir: S('The Altar choir under its canopy, sounding the Pure Note at the dawn office. They are paler than their robes.'),
     chapel: S('An old pilgrims\' chapel, cut in the mountainside above the Altar. Somebody is still in it, at prayer, seven years thin. You do not look for long.'),
     // lamps (the Souls rules)
     lampRobing: S('The robing-room'), lampCage: S('The cage, at the half-way mark'), lampRim: S('The Altar\'s rim'),
@@ -173,7 +177,7 @@ const PILGRIM95 = (function () {
       topics: {
         [S('The robes')]: S('Four hundred. I wash every one each spring and hang it back on its peg, and nobody has put one on since the Fracture but the choir. In the old days the whole city went out at dawn in these. You walked out over the gulf with the Spire on your right hand, shining, and you sang.'),
         [S('The chain')]: S('A kilometre, almost level, and not a roof on it but the cage. The Tiers teach it to their children as soon as they can walk: walk in the shade of the one ahead of you. If there is no one ahead of you, run.'),
-        [S('The canopies')]: S('Black silk on black poles. The Church walks its choir up under them in shifts, like a procession of black mushrooms. Keep under one and the light goes on round you. Step out, and it begins.'),
+        [S('The canopies')]: S('Black silk on black poles. The Altar\'s people go out under them every day, the choir before dawn and the clerics after it to polish the Eye, like a procession of black mushrooms. Keep under one and the light goes on round you. Step out, and it begins.'),
         [S('The Flambeaux')]: S('Two upstairs, keeping the winch. They let choir and bearers out of the mouth and nobody else. They look at the robe. They have never once looked at a face. Past the cage it is the Brother-Captain\'s half, Aurel Sant\'s. His men walk it in their own fire: the white parts round glass-fire.'),
         [S('The dead hour')]: S('The white never goes out. But when the sun is up there are two lights on the chain, and the two together are more than anything can stand in. Go by night. Go at the dead hour if you can: it lies thinnest then.'),
         [S('The Eye')]: S('Bronze, forty feet across, at the back of the Altar. The only mirror in the Heights that is not a crime. It has gone white like everything, all but the middle, where they polish it every day with oil and ash. I have not seen it in seven years. I can tell you exactly what it looks like.'),
@@ -602,8 +606,12 @@ const PILGRIM95 = (function () {
   const special = (n) => { try { return typeof GEAR87 === 'object' && GEAR87.special && GEAR87.special(n); } catch (e) { return false; } };
   const B = { DAY: 3.0, NIGHT: 1.5, DEAD: 0.6, GRACE: 3, FLAMBEAU_SHADE: 2.2, CENSER_SHADE: 2.0, CENSER_S: 45, SANT_SHADE: 2.8, FIRE_SHADE: 1.9, FIRE_BURN: 0.8, FIRE_HURT: 5, FIRE_S: 9, FIRE_EVERY: 5.5, FIRE_MAX: 4,
     PATROL: 0.85, WHITE_NEAR: 1.6, QUIET: 2.6 };
-  // the hour: by day two lights; by night the sourceless white; thinnest in the dead hour (the first hour after midnight)
-  const hour = () => { const t = ((Number(G.tod) % 1) + 1) % 1; return t < 1 / 24 ? 'dead' : (t < 0.25 || t >= 0.8) ? 'night' : 'day'; };
+  // the hour: by day two lights; by night the sourceless white; thinnest in the dead hour (Vol VII: "The dead hour is the hour
+  // before dawn"). The dawn office is the hour after it (Book Three: the Pure Note is "sounded at the Altar every dawn").
+  const DAWN = 0.25, HOUR = 1 / 24;
+  const tod01 = () => ((Number(G.tod) % 1) + 1) % 1;
+  const hour = () => { const t = tod01(); return (t >= DAWN - HOUR && t < DAWN) ? 'dead' : (t < DAWN || t >= 0.8) ? 'night' : 'day'; };
+  const dawnOffice = () => { const t = tod01(); return t >= DAWN && t < DAWN + HOUR; };
   const rateOf = (h) => (h === 'dead' ? B.DEAD : h === 'night' ? B.NIGHT : B.DAY) * (special('shade') ? 0.5 : 1);
   const fires = [];      // the Brother-Captain's glass-fire on the stone: { x, y, t, ent }
   const censers = [];    // censers left burning on the deck: { x, y, t, ent }
@@ -660,7 +668,7 @@ const PILGRIM95 = (function () {
     try {
       if (typeof Audio_ !== 'undefined' && Audio_.hum) {
         let want = 0;
-        if (onChain() && G.state === 'play') { const c = Engine.cam; want = 0.03 + 0.3 * Math.max(0, Math.min(1, (c.y - 120) / 110)); if (turned) want += 0.12; }
+        if (onChain() && G.state === 'play') { const c = Engine.cam, near = Math.max(0, Math.min(1, (c.y - 120) / 110)); want = dawnOffice() ? 0.05 + 0.3 * near : 0.02 + 0.1 * Math.max(0, 1 - Math.abs(c.y - 188) / 40); if (turned) want += 0.12; }
         if (want > 0 || noteLevel > 0) { Audio_.hum(want, 528, 'p95_note'); noteLevel = want; }
       }
     } catch (e) { warnOnce('note', e); }
@@ -678,7 +686,10 @@ const PILGRIM95 = (function () {
       m.ambient = h === 'day' ? 1 : h === 'dead' ? 0.8 : 0.9;
     }
     if (c.y > 8.5) once(22, TX.saying, 'warn', 9000);
-    // the choir shifts go out and back on the place's own clock
+    // the Altar choir stands under its canopies only at the dawn office
+    const office = dawnOffice();
+    for (const e of G.ents) if (e && e._p95 === 'choir') e.hidden = !office;
+    // the Altar's people go out and back on the place's own clock
     for (const e of G.ents) if (e && e._p95 === 'party') { const q = partyAt(e._i | 0, clock); e.x = q.x; e.y = q.y; e.sprite = (Math.floor(clock * 2.2 + (e._i | 0)) & 1) ? 'p95_party_b' : 'p95_party'; }
     // the Flambeaux of the Chain: they walk their lengths; in the whites they take you for a bearer until you are close
     const white = special('white');
@@ -743,7 +754,7 @@ const PILGRIM95 = (function () {
     }
     // the rim: what you can see from it
     if (c.y >= RIM) {
-      once(14, TX.rim, '', 10000);
+      once(14, TX.rim, '', 10000); if (office) once(23, TX.dawn, '', 10000);
       if (c.y > RIM + 2.4 && Math.abs(c.x - CX) < 7) { if (once(15, TX.lineSay, 'warn', 8000)) { try { Audio_.sfx.door(); } catch (e) { /* */ } } }
       if (Math.abs(c.x - CX) < 5 && c.y > RIM + 1) once(16, TX.altar, '', 10000);
       if (c.x < CX - 6) once(17, TX.eye, '', 12000);
@@ -809,7 +820,7 @@ const PILGRIM95 = (function () {
   wire();
 
   return { TX, SAY, TEXTS, MAP, HOUSE, W, H, P, B, SENTRIES, GG, SLOPE, PARTIES, PARTY_SPEED, PARTY_SHADE, KEEPER_DEF, FLAMBEAU_DEF, ARMOR_DEFS, STAVE_DEF, hv, lvlAt, slopeH, plan, build, buildHouse, join, tick, useOwn, sync, sung, turn, drawCard,
-    partyAt, shadeAt, hour, rateOf, addFire, leaveCenser, clearFires, lamps: () => LAMPS, fires: () => fires, censers: () => censers, clock: () => clock, setClock: (v) => { clock = v; }, turned: () => turned };
+    partyAt, shadeAt, hour, dawnOffice, rateOf, addFire, leaveCenser, clearFires, lamps: () => LAMPS, fires: () => fires, censers: () => censers, clock: () => clock, setClock: (v) => { clock = v; }, turned: () => turned };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PILGRIM95;
 if (typeof window !== 'undefined') window.PILGRIM95 = PILGRIM95;

@@ -50,7 +50,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     // the chain
     p.armor.body = 'a_p95_robe'; update(0.016); loadMap(A.MAP); play(); msgs.length = 0;
     // the hours: by day two lights, by night the white, thinnest in the dead hour
-    const hours = [0.5, 0.9, 0.02].map((t) => { G.tod = t; return A.hour(); });
+    const hours = [0.5, 0.9, 0.23].map((t) => { G.tod = t; return A.hour(); });
     out.hours = hours.join() === 'day,night,dead' && A.rateOf('day') > A.rateOf('night') && A.rateOf('night') > A.rateOf('dead') && A.rateOf('dead') > 0;
     // the choir shifts: eight, on the place's own clock, each a moving shade; outside them the Bleach takes you by the hour
     const q0 = A.partyAt(0, 0), q1 = A.partyAt(0, 10), q2 = A.partyAt(0, 10);
@@ -64,7 +64,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     A.setClock(0); A.tick(0.001); A.setClock(0);
     const nightLoss = (() => { A.setClock(0); put(33, openY); A.tick(0.001); const h0 = p.hp; for (let i = 0; i < 10; i++) { A.setClock(0); Engine.cam.x = 33; Engine.cam.y = openY; A.tick(0.1); } return h0 - p.hp; })();
     G.tod = 0.5; const dayLoss = (() => { A.setClock(0); put(33, openY); A.tick(0.001); const h0 = p.hp; for (let i = 0; i < 10; i++) { A.setClock(0); Engine.cam.x = 33; Engine.cam.y = openY; A.tick(0.1); } return h0 - p.hp; })();
-    G.tod = 0.02; const deadLoss = (() => { A.setClock(0); put(33, openY); A.tick(0.001); const h0 = p.hp; for (let i = 0; i < 20; i++) { A.setClock(0); Engine.cam.x = 33; Engine.cam.y = openY; A.tick(0.1); } return h0 - p.hp; })();
+    G.tod = 0.23; const deadLoss = (() => { A.setClock(0); put(33, openY); A.tick(0.001); const h0 = p.hp; for (let i = 0; i < 20; i++) { A.setClock(0); Engine.cam.x = 33; Engine.cam.y = openY; A.tick(0.1); } return h0 - p.hp; })();
     out.loss = [nightLoss, dayLoss, deadLoss, openY];
     out.bleach = openY > 0 && nightLoss >= 1 && nightLoss <= 2 && dayLoss >= 2 && dayLoss <= 4 && deadLoss >= 1 && deadLoss <= 2 && said(/taking the colour out of your hands/);
     // under a canopy: nothing
@@ -123,6 +123,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     let rowShut = true; for (let i = 0; i < W; i++) { const k = A.P.pillarRow * W + i; if (m.smooth[k] === 1 && !m.get(i, A.P.pillarRow) && !m.isBlocked(i, A.P.pillarRow)) rowShut = false; }
     out.rim = lamp3 && rowShut && lineEnts.length === 7 && lineEnts.every((e) => e.kind === 'deco') && said(/staves come down across the gap/) && said(/Altar of Lumina/) && said(/size of a cartwheel/) && said(/Vessel's stone/)
       && G.ents.some((e) => e._p95 === 'eye') && G.ents.filter((e) => e._p95 === 'choir').length === 3;
+    // the Altar choir stands under its canopies only at the dawn office (the hour after the dead hour)
+    const choir = G.ents.filter((e) => e._p95 === 'choir'); G.tod = 0.9; A.tick(0.01); const away = choir.every((e) => e.hidden === true);
+    msgs.length = 0; G.tod = 0.26; put(33, 228); A.tick(0.01); out.office = away && choir.every((e) => e.hidden === false) && A.dawnOffice() && said(/The dawn office/); G.tod = 0.9; A.tick(0.01);
     // the full set: leaving shade, the Bleach waits three breaths
     p.weapons = p.weapons || []; if (!p.weapons.includes('p95_stave')) p.weapons.push('p95_stave'); p.weapon = p.weapons.indexOf('p95_stave');
     const full = GEAR87.special('afterglow'); G.tod = 0.5; A.setClock(0); put(33, openY); A.tick(0.001); const hg = p.hp;
@@ -162,6 +165,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   check(r.down && r.downOnce, 'his fire goes out: he kneels, and leaves the dark stave and the warrant, once; the keeper\'s week begins');
   check(r.cageRide, 'the shortcut: the Lumina brake freed, the cage rides between the half-way mark and the winch, both ways');
   check(r.rim, 'the Altar\'s rim: shade under the canopies, the third lamp, a line of Flambeaux across every gap; the Altar, the Vessel\'s stone and the Eye are seen');
+  check(r.office, 'the Pure Note is sounded at the Altar at the dawn office only: the choir stands under its canopies then, and at no other hour');
   check(r.grace, 'the Pilgrim Chain set in full: leaving shade, the Bleach waits three breaths');
   check(r.died && r.piece, 'lost to the Bleach: you wake by the last lamp and your Piece waits on the chain');
   check(r.gear, 'the gear: robe, cowl, sandals and the Dark Stave, each with its own look and picture, the seventeenth set');
