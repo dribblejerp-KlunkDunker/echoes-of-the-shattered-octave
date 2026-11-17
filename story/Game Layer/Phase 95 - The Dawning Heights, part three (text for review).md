@@ -41,7 +41,7 @@ The lore readers of Phase 96 (see below) and this phase's own reading found six 
 2. **The bell hangs in the black tower, below the line.** "From the Basilica's black tower, a deep slow bronze note"; "Below them, in the black tower, a bell began to ring". The sign at the bell-gallery stair said the bell was above the line.
 3. **There is no cloud under the city.** "Two thousand feet of dark air, and the peaks at the bottom of it pale as teeth under the stars." The gulf's floor is now drawn as dark air with the peaks' snow, and the words "cloud" and "cloud deck" are gone from the Tiers.
 4. **No winch-boats, no valley farms.** The only supply the books show is by skyship into the cradles ("a Church packet… a pair of battered freighters"). The two winch-boats are removed, and the harbourmaster now says: "The freighters come into the cradles, and the ladders go up from here. Everything the city eats comes past me, and I count it."
-5. **The Bleach has no source.** It comes "from nowhere and from everywhere". Brenna's line that mirrors are "what the Bleach shines from, up on the Walks" now reads: "The Altar permits one mirror in all the Heights, and it is not this one."
+5. **The Bleach has no source.** It comes "from nowhere and from everywhere". Brenna's line that mirrors are "what the Bleach shines from, up on the Walks" now reads, in the Sun-Altar's own posted words: "A reflection is a second light, and the Light is jealous."
 6. **The city hangs from the Spire's flank,** not from the mountain's face (the arrival line).
 
 ## What the lore readers found for the rest of the Heights (Phase 96)

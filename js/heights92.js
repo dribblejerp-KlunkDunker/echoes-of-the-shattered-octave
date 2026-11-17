@@ -154,7 +154,7 @@ const HEIGHTS92 = (function () {
     canvas: {
       greet: { polite: S('Under the canvas, quick. What do you need that you cannot buy in the light?'), normal: S('Looking, or buying?'), blunt: S('Loud. Go and be loud somewhere else.') },
       topics: {
-        [S('The mirror')]: S('The only one in the Tiers, and it stays under the cloth. Mirrors are illegal. The Altar permits one mirror in all the Heights, and it is not this one. You want it, you buy it covered, and you never take the cloth off down here.'),
+        [S('The mirror')]: S('The only one in the Tiers, and it stays under the cloth. Mirrors are illegal. A reflection is a second light, and the Light is jealous. You want it, you buy it covered, and you never take the cloth off down here.'),
         [S('The black window')]: S('Every window painted black on the inside, and every family scratches one sign in the paint. A bird, a name, a sun. At dusk the scratch-light tells you whose house it is.'),
       },
     },
