@@ -10,7 +10,7 @@
 //  deck" is cut: Book Two has no cloud in the Heights. The peaks have their snow (Harvestmonth 419; BkII 523). There is no
 //  Bleach here: the cliffs stand on the range, away from the city.
 //
-//  THE PLACE (Phase 90:131): the postern yard at the top (a lamp), the cliff path in switchbacks, three ledges, the foot.
+//  THE PLACE (Phase 90:131): the postern yard at the top, on the map's south edge against the Vigil's north wall (a lamp), the cliff path in switchbacks, three ledges, the foot.
 //  THE TIMER: the Vigil's dusk bell, read from VIGIL96.bell (the one contract between the two modules) with a safe copy
 //  here (localBell) behind a typeof guard. Twelve strokes, one every six seconds, from the engine's sunset (tod 0.75).
 //  While it rings the remnants cannot climb: each stroke and they let go. When it stops, it is dark, and they come up the
@@ -27,7 +27,7 @@ const CLIFFS96 = (function () {
   const PI = Math.PI;
   const MAP = 'p96_cliffs', VIGIL = 'p96_vigil';
   const W = 36, H = 150, DROP_Z = -40, SLOPE = 0.11;
-  const hv = (vy) => -SLOPE * vy;
+  const hv = (vy) => -SLOPE * (H - vy);   // the top (the yard) is at the south edge
   const lvlAt = (j) => hv(j + 0.5);
   const warned = {};
   const warnOnce = (k, e) => { if (!warned[k]) { warned[k] = true; console.warn('cliffs96: ' + k + ' failed', e); } };
@@ -50,6 +50,9 @@ const CLIFFS96 = (function () {
     cairnTake: S('Under the top stone, wrapped in oilcloth: twenty-five sovereigns and a tonic. You take them.'),
     cairnDone: S('The names. Nothing else.'),
     lamp: S('The postern lamp'),
+    // the finger-posts at the two ends of the postern (js/bearings82b.js)
+    postCliffs: S('A finger-post. SUN-PEAK VIGIL, up, by the postern.'),
+    postVigil: S('A finger-post. THE CHALK CLIFFS, down, by the postern. Under it, smaller: be up before the last stroke.'),
     lampLabel: S('A lamp on an iron post by the postern, unlit. Stand by it to light it.'),
     lampLit: S('The lamp by the postern, burning. Use it to rest.'),
     // the bell, heard from above (Vol II:93: "The Vigil rings a bell at dusk")
@@ -67,21 +70,37 @@ const CLIFFS96 = (function () {
   };
 
   // ================================================================ the plan (cells; x east, y south; the map goes down to the south)
-  const P = {
+  // The plan is written top-down (the yard at the top of the page, the face going down the page) and then turned north for
+  // south as a whole, so that the yard and its postern lie on the SOUTH edge, against the Vigil's north wall, and the face
+  // goes down to the NORTH (the map agrees with the ground: js/bearings82b.js). One transform, never number by number.
+  const MY = (y) => H - y;                                  // a point
+  const MJ = (j) => H - 1 - j;                              // a cell
+  const MC = (j) => H - 2 - j;                              // the top cell of a two-cell block
+  const MR = (r) => [r[0], MJ(r[3]), r[2], MJ(r[1])];       // a rectangle of cells
+  const MPt = (p) => [p[0], MY(p[1])];
+  const D = {
     arrive: [18.5, 3.5], door: [18, 1], vigilOut: [34.5, 2.6],
     yard: [10, 2, 26, 9], lamp: [13.5, 6.5],
     ledge1: [6, 40, 30, 46], ledge2: [6, 78, 30, 84], ledge3: [6, 114, 30, 120], foot: [4, 138, 32, 147],
     reststone: [7.6, 43.5], overhang: [6.7, 81.0], ring: [19.6, 120.8], cairn: [18.5, 143.5],
     lip: 10,
   };
+  const P = {
+    arrive: MPt(D.arrive), arriveDir: -PI / 2, door: [D.door[0], MJ(D.door[1])], vigilOut: D.vigilOut,   // vigilOut is in the Vigil's own map
+    yard: MR(D.yard), lamp: MPt(D.lamp),
+    ledge1: MR(D.ledge1), ledge2: MR(D.ledge2), ledge3: MR(D.ledge3), foot: MR(D.foot),
+    reststone: MPt(D.reststone), overhang: MPt(D.overhang), ring: MPt(D.ring), cairn: MPt(D.cairn),
+    lip: MJ(D.lip),   // the last row of the face; the yard lies beyond it (y > lip)
+  };
   // the path: two cells wide, a corner at each point (the left column of the pair), three ledges between the stretches
-  const WAY = [
+  const D_WAY = [
     [[17, 9], [17, 18], [22, 18], [22, 30], [17, 30], [17, 40]],
     [[20, 46], [20, 56], [15, 56], [15, 67], [20, 67], [20, 78]],
     [[17, 84], [17, 94], [22, 94], [22, 105], [17, 105], [17, 114]],
     [[20, 120], [20, 128], [15, 128], [15, 138]],
   ];
-  const FOOT_X = [6.5, 9.5, 12.5, 15.5, 20.5, 23.5, 26.5, 29.5], FOOT_Y = 146.5;
+  const WAY = D_WAY.map((run) => run.map(([x, y]) => [x, MC(y)]));
+  const FOOT_X = [6.5, 9.5, 12.5, 15.5, 20.5, 23.5, 26.5, 29.5], FOOT_Y = MY(146.5), UP = 1;   // UP: the way up the face, in y (south, toward the yard)
   const FLOORS = ['t_p96c_path', 't_p96c_ledge', 't_p96c_drop'];
   const PATH = 0, LEDGE = 1, DROP = 2;
   const SPEED = 1.1, TOUCH = 0.9, TOUCH_COOL = 1.0, DMG = [4, 7], XP_TOP = 150, STIR = 0.3, STIR_MAX = 1.8;
@@ -231,7 +250,7 @@ const CLIFFS96 = (function () {
   function lamps() {
     if (LAMPS.length || typeof SOULS91 === 'undefined' || !SOULS91.register) return LAMPS;
     LAMPS = SOULS91.register('l', { maps: [MAP], revive: [] }, [
-      { map: MAP, x: P.lamp[0], y: P.lamp[1], wx: P.lamp[0] + 1.4, wy: P.lamp[1], dir: PI / 2, name: TX.lamp, sprite: 'p92_shadelamp', litSprite: 'p92_shadelamplit', label: TX.lampLabel, litLabel: TX.lampLit, lightCol: [240, 186, 110] },
+      { map: MAP, x: P.lamp[0], y: P.lamp[1], wx: P.lamp[0] + 1.4, wy: P.lamp[1], dir: P.arriveDir, name: TX.lamp, sprite: 'p92_shadelamp', litSprite: 'p92_shadelamplit', label: TX.lampLabel, litLabel: TX.lampLit, lightCol: [240, 186, 110] },
     ]) || [];
     return LAMPS;
   }
@@ -253,8 +272,8 @@ const CLIFFS96 = (function () {
       const e = E[j];
       for (let i = 0; i < W; i++) {
         const k = at(i, j); if (kind[k]) continue;
-        if (j <= 1) out[k] = 3;
-        else if (j >= P.foot[3] + 1 || i >= W - 1) out[k] = 0;
+        if (j >= H - 2) out[k] = 3;
+        else if (j <= P.foot[1] - 1 || i >= W - 1) out[k] = 0;
         else out[k] = i <= e ? 3 : 0;
       }
     }
@@ -262,7 +281,7 @@ const CLIFFS96 = (function () {
   }
   const open = (kind, i, j) => { const k = at(i, j); return k >= 0 && (kind[k] === 1 || kind[k] === 2); };
   // where a remnant may lie: the path, the ledges and the foot, not the yard
-  const walkable = (kind, i, j) => j >= P.lip && open(kind, i, j);
+  const walkable = (kind, i, j) => j <= P.lip && open(kind, i, j);
   function field(kind, seeds) {
     const d = new Int32Array(W * H).fill(-1), q = [];
     for (const [i, j] of seeds) { const k = at(i, j); if (k >= 0 && d[k] < 0 && walkable(kind, i, j)) { d[k] = 0; q.push(k); } }
@@ -276,7 +295,7 @@ const CLIFFS96 = (function () {
 
   function build() {
     const m = new GameMap(MAP, TX.name, W, H, { outdoor: true, floor: 't_p96c_path', ceil: null, floorTextures: FLOORS, fogDist: 24, fogColor: [86, 92, 106], ambient: 0.28, music: 'inside', danger: 2,
-      spawn: { x: P.arrive[0], y: P.arrive[1], dir: PI / 2 } });
+      spawn: { x: P.arrive[0], y: P.arrive[1], dir: P.arriveDir } });
     const kind = kindOf();
     const V = m.ensureVerts(), L = m.ensureLvls(), W1 = W + 1;
     for (let vy = 0; vy <= H; vy++) for (let vx = 0; vx <= W; vx++) V[vy * W1 + vx] = hv(vy);
@@ -313,6 +332,8 @@ const CLIFFS96 = (function () {
     // the way back up is a door into the Vigil (the yard under its bell tower); if the Vigil is not built, it stays barred
     if (!maps[VIGIL]) m.set(P.door[0], P.door[1], DOOR({ tex: 't_p96c_postern', locked: '__never', lockMsg: TX.barred, label: TX.barred }));
     maps[MAP] = m;
+    // the finger-posts by the postern, at both ends (the Vigil's way out is there only while the Cliffs are)
+    try { if (maps[VIGIL] && typeof BEARINGS82B !== 'undefined' && BEARINGS82B.placePosts) BEARINGS82B.placePosts(maps); } catch (e) { warnOnce('posts', e); }
     return true;
   }
 
@@ -332,7 +353,7 @@ const CLIFFS96 = (function () {
   function stepOn(d, x, y) {
     const i = x | 0, j = y | 0, k = at(i, j); const here0 = k >= 0 ? d[k] : -1;
     let best = null, bv = here0 >= 0 ? here0 : 1e9;
-    for (const [a, b] of [[0, -1], [1, 0], [-1, 0], [0, 1]]) { const nk = at(i + a, j + b); if (nk < 0 || d[nk] < 0) continue; if (d[nk] < bv) { bv = d[nk]; best = [i + a + 0.5, j + b + 0.5]; } }
+    for (const [a, b] of [[0, UP], [1, 0], [-1, 0], [0, -UP]]) { const nk = at(i + a, j + b); if (nk < 0 || d[nk] < 0) continue; if (d[nk] < bv) { bv = d[nk]; best = [i + a + 0.5, j + b + 0.5]; } }
     if (!best && here0 < 0) return [i + 0.5, j + 0.5];
     return best;
   }
@@ -344,7 +365,7 @@ const CLIFFS96 = (function () {
       const dx = t[0] - e.x, dy = t[1] - e.y, l = Math.hypot(dx, dy); if (l < 1e-6) break;
       const s = Math.min(left, l); e.x += dx / l * s; e.y += dy / l * s; left -= s;
     }
-    if (e.y < P.lip) e.y = P.lip + 0.05;
+    if (e.y > P.lip + 0.95) e.y = P.lip + 0.95;
   }
   function rebuild(b) {
     if (b.phase === 'day') { showAll(false); for (const e of ents()) toFoot(e); return; }
@@ -357,12 +378,12 @@ const CLIFFS96 = (function () {
   function chaseField(c) {
     const kind = G.map._p96c ? G.map._p96c.kind : kindOf(), i = c.x | 0, j = c.y | 0, key = i + ',' + j;
     if (chase.key === key && chase.d) return chase.d;
-    const seeds = walkable(kind, i, j) ? [[i, j]] : j < P.lip ? lipSeeds(kind) : [[i, j], [i - 1, j], [i + 1, j], [i, j - 1], [i, j + 1]];
+    const seeds = walkable(kind, i, j) ? [[i, j]] : j > P.lip ? lipSeeds(kind) : [[i, j], [i - 1, j], [i + 1, j], [i, j - 1], [i, j + 1]];
     chase = { key, d: field(kind, seeds) }; return chase.d;
   }
   function hunt(dt, c, p) {
-    const d = chaseField(c), list = live(), inYard = c.y < P.lip;
-    const tx = c.x, ty = inYard ? P.lip + 0.4 : c.y;
+    const d = chaseField(c), list = live(), inYard = c.y >= P.lip + 1;
+    const tx = c.x, ty = inYard ? P.lip + 0.6 : c.y;
     const dist = (e) => Math.hypot(e.x - c.x, e.y - c.y);
     const order = list.slice().sort((a, b) => dist(a) - dist(b) || a._n - b._n);
     for (const e of order) {
@@ -372,7 +393,7 @@ const CLIFFS96 = (function () {
       let t = (dv >= 0 && dv <= 1) ? [tx, ty] : stepOn(d, e.x, e.y);
       if (!t) t = [tx, ty];
       const dx = t[0] - e.x, dy = t[1] - e.y, l = Math.hypot(dx, dy); if (l < 1e-6) continue;
-      const s = Math.min(step, l), nx = e.x + dx / l * s, ny = Math.max(P.lip + 0.05, e.y + dy / l * s);
+      const s = Math.min(step, l), nx = e.x + dx / l * s, ny = Math.min(P.lip + 0.95, e.y + dy / l * s);
       if (list.some((o) => o !== e && Math.hypot(o.x - nx, o.y - ny) < 0.5 && dist(o) < dist(e))) continue;   // one waits behind another
       e.x = nx; e.y = ny;
     }
@@ -409,7 +430,7 @@ const CLIFFS96 = (function () {
       else { for (const e of live()) toFoot(e); if (live().length) once(6, TX.letGo, '', 5000); }
     }
     if (b.phase === 'dark' && lastPhase === 'ringing') {
-      if (c.y >= P.lip) { say(TX.dark, 'bad', 6000); f().p96b_dark = Math.min(99, fint('p96b_dark', 99) + 1); }
+      if (c.y < P.lip + 1) { say(TX.dark, 'bad', 6000); f().p96b_dark = Math.min(99, fint('p96b_dark', 99) + 1); }
       showAll(true);
     }
     if (b.phase === 'day' && lastPhase && lastPhase !== 'day') { showAll(false); for (const e of ents()) toFoot(e); }
@@ -421,13 +442,13 @@ const CLIFFS96 = (function () {
     if (inR(P.ledge3, i, j)) once(3, TX.ledge3, '', 4000);
     if (inR(P.foot, i, j)) once(4, TX.foot, '', 6000);
     const t = ((Number(G.tod) % 1) + 1) % 1;
-    if (j >= P.foot[1] && (b.phase === 'ringing' || (b.phase === 'day' && t >= 0.5))) footDay = duskDay();
-    if (j < P.lip && b.phase === 'ringing' && footDay === duskDay() && !fint('p96b_top', 1)) {
+    if (j <= P.foot[3] && (b.phase === 'ringing' || (b.phase === 'day' && t >= 0.5))) footDay = duskDay();
+    if (j > P.lip && b.phase === 'ringing' && footDay === duskDay() && !fint('p96b_top', 1)) {
       f().p96b_top = 1; say(TX.top, 'good', 7000);
       try { if (typeof questXp === 'function') questXp(XP_TOP); else p.xp += XP_TOP; } catch (e) { warnOnce('xp', e); }
     }
     // the remnants: they stir at the foot while it rings, and come up the path once it is dark
-    if (b.phase === 'ringing') for (const e of live()) { const s = Math.min(STIR_MAX, (e._stir || 0) + STIR * dt); e._stir = s; e.y = FOOT_Y - s; }
+    if (b.phase === 'ringing') for (const e of live()) { const s = Math.min(STIR_MAX, (e._stir || 0) + STIR * dt); e._stir = s; e.y = FOOT_Y + UP * s; }
     else if (b.phase === 'dark') hunt(dt, c, p);
   }
 
@@ -446,6 +467,11 @@ const CLIFFS96 = (function () {
   function sung() { if (here() && live().length) once(9, TX.noSong, 'warn', 4500); }
 
   // ================================================================ wiring
+  // the finger-posts (read by js/bearings82b.js; placed in join(), once both maps are built)
+  if (typeof window !== 'undefined') window.P82B_POSTS = (window.P82B_POSTS || []).concat([
+    { id: 'p96_cliffs_postern', map: MAP, to: [VIGIL], text: TX.postCliffs },
+    { id: 'p96_vigil_postern', map: VIGIL, to: [MAP], text: TX.postVigil },
+  ]);
   function wire() {
     defs(); art();
     if (typeof buildAllMaps === 'function') { const _b = buildAllMaps; buildAllMaps = function () { const maps = _b.apply(this, arguments); try { join(maps); } catch (e) { warnOnce('build', e); } return maps; }; }
@@ -458,7 +484,7 @@ const CLIFFS96 = (function () {
   }
   wire();
 
-  return { TX, TEXTS, MAP, VIGIL, W, H, P, WAY, FOOT_X, FOOT_Y, BELL, REMNANT_DEF, hv, lvlAt, plan, build, join, tick, useOwn, sung, bell, localBell, secondsDark,
+  return { TX, TEXTS, MAP, VIGIL, W, H, P, D, WAY, D_WAY, MY, MJ, UP, FOOT_X, FOOT_Y, BELL, REMNANT_DEF, hv, lvlAt, plan, build, join, tick, useOwn, sung, bell, localBell, secondsDark,
     lamps: () => LAMPS, remnants: live, all: ents, topField, field, walkable: (i, j) => walkable(kindOf(), i, j),
     setTod: (t) => { G.tod = ((Number(t) % 1) + 1) % 1; }, reenter: () => { entered = true; chase = { key: '', d: null }; },
     consts: { SPEED, TOUCH, TOUCH_COOL, DMG, XP_TOP, SEC_PER_DAY } };

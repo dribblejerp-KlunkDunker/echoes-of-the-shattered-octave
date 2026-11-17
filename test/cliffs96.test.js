@@ -18,7 +18,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
 
   const r = await page.evaluate(() => {
     window.requestAnimationFrame = () => 0; closeModal(); hide('#event'); G.state = 'play'; Weather.hold && Weather.hold('clear');
-    const out = {}, C = CLIFFS96, S = SOULS91, p = G.player, msgs = []; const _m = msg; msg = function (t) { msgs.push(String(t)); return _m.apply(this, arguments); };
+    const out = {}, C = CLIFFS96, dn = (y) => C.MY(y), footAt = (e) => Math.abs(e.y - C.FOOT_Y) <= 0.5, S = SOULS91, p = G.player, msgs = []; const _m = msg; msg = function (t) { msgs.push(String(t)); return _m.apply(this, arguments); };
     const said = (re) => msgs.some((t) => re.test(t));
     const m = G.maps[C.MAP], W = C.W;
     out.map = !!m && m.w === 36 && m.h === 150 && m.entities.length === m.baseCount && m.outdoor && Math.abs(C.lvlAt(146) - C.lvlAt(3)) > 15;
@@ -29,6 +29,11 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       out.door = !!d0 && d0.door && d0.portal && d0.portal.map === C.VIGIL && !!vm.smooth === !!vm.smooth && (!back || m.smooth[(back.portal.y | 0) * W + (back.portal.x | 0)] === 1);
       out.doorNote = 'vigil built; its postern ' + (back ? 'leads here' : 'not set yet');
     } else { out.door = !!d0 && d0.door && d0.locked === '__never'; out.doorNote = 'vigil not built: barred'; }
+    // the map agrees with the ground: the Cliffs lie north of the Vigil, so their door is on their south edge; a finger-post at each end
+    const gates = BEARINGS82B.gatesOf(G.maps), gc = gates.find((g) => g.from === C.MAP && g.to === C.VIGIL), gv = gates.find((g) => g.from === C.VIGIL && g.to === C.MAP);
+    out.bearing = !vm || (!!gc && !!gv && gc.side === 'S' && gv.side === 'N');
+    out.posts = !vm || (BEARINGS82B.postsNear(gc, 5).length === 1 && BEARINGS82B.postsNear(gv, 5).length === 1);
+    out.gateSides = gc && gv ? gc.side + '/' + gv.side : 'none';
     const withV = C.build(); const fake = { [C.VIGIL]: {} }; C.join(fake); const bare = {}; C.join(bare);
     const pd = withV.get(C.P.door[0], C.P.door[1]), fd = fake[C.MAP].get(C.P.door[0], C.P.door[1]), bd = bare[C.MAP].get(C.P.door[0], C.P.door[1]);
     out.doorBoth = pd.portal && pd.portal.map === C.VIGIL && Math.abs(pd.portal.x - 34.5) < 0.01 && fd.portal && !fd.locked && bd.locked === '__never' && !!bd.lockMsg;
@@ -41,11 +46,11 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     out.reach = { yard: near(...mid(C.P.yard)), lamp: L.length ? near(L[0].x, L[0].y) : -1, ledge1: near(...mid(C.P.ledge1)), ledge2: near(...mid(C.P.ledge2)), ledge3: near(...mid(C.P.ledge3)), foot: near(...mid(C.P.foot)), cairn: near(C.P.cairn[0], C.P.cairn[1]), rest: near(...C.P.reststone), overhang: near(...C.P.overhang), ring: near(...C.P.ring) };
     out.reachOk = L.length === 1 && Object.values(out.reach).every((v) => v >= 0);
     // the climb: the path from the foot to the postern, in cells and in walking time
-    const fd2 = new Int32Array(W * m.h).fill(-1), q2 = [143 * W + 18]; fd2[q2[0]] = 0;
+    const fd2 = new Int32Array(W * m.h).fill(-1), q2 = [(C.P.cairn[1] | 0) * W + 18]; fd2[q2[0]] = 0;
     for (let h = 0; h < q2.length; h++) { const i = q2[h], x = i % W, y = (i / W) | 0; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy, k = ny * W + nx; if (nx < 0 || ny < 0 || nx >= W || ny >= m.h || fd2[k] >= 0 || !m.smooth[k] || m.get(nx, ny) || m.isBlocked(nx, ny)) continue; fd2[k] = fd2[i] + 1; q2.push(k); } }
-    out.cells = fd2[2 * W + 18];
+    out.cells = fd2[(C.P.door[1] - 1) * W + 18];
     // the walk: the centre line from the cairn to the postern, corner to corner
-    const pts = [[18.5, 143.5]]; for (let s = C.WAY.length - 1; s >= 0; s--) for (let n = C.WAY[s].length - 1; n >= 0; n--) pts.push([C.WAY[s][n][0] + 1, C.WAY[s][n][1] + 1]); pts.push([18.5, 2.5]);
+    const pts = [C.P.cairn.slice()]; for (let s = C.WAY.length - 1; s >= 0; s--) for (let n = C.WAY[s].length - 1; n >= 0; n--) pts.push([C.WAY[s][n][0] + 1, C.WAY[s][n][1] + 1]); pts.push([18.5, dn(2.5)]);
     let len = 0; for (let n = 1; n < pts.length; n++) len += Math.hypot(pts[n][0] - pts[n - 1][0], pts[n][1] - pts[n - 1][1]);
     const spd = 2.6 + p.attrs.Speed / 60; out.walk = { units: Math.round(len), speed: +spd.toFixed(2), seconds: +(len / spd).toFixed(1) };
     out.climb = out.cells >= 150 && out.cells <= 200 && len >= 165 && len <= 195;
@@ -64,14 +69,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const put = (x, y) => { Engine.cam.x = x; Engine.cam.y = y; p.feet = m.groundAt(x, y); p.fallFrom = null; p.fallV = 0; G.keys = {}; };
     const live = () => C.remnants();
     // by day: no remnants
-    C.setTod(0.5); C.reenter(); put(18.5, 81.5); update(0.016); out.day = live().length === 0 && C.all().length === 8;
+    C.setTod(0.5); C.reenter(); put(18.5, dn(81.5)); update(0.016); out.day = live().length === 0 && C.all().length === 8;
     // the lamp lights by the postern (the Souls rules, group l)
     put(L[0].x + 1.0, L[0].y + 0.4); update(0.016); out.lamp = S.isLit(L[0]) && G.flags.p91_ll === L[0].id + 1;
     // the first stroke: eight at the foot, held below
-    put(18.5, 81.5); C.setTod(0.7495); update(0.016); msgs.length = 0; C.setTod(0.7501); update(0.016);
-    out.first = live().length === 8 && live().every((e) => e.y >= 146) && said(/The dusk bell\. 1 of twelve/);
+    put(18.5, dn(81.5)); C.setTod(0.7495); update(0.016); msgs.length = 0; C.setTod(0.7501); update(0.016);
+    out.first = live().length === 8 && live().every(footAt) && said(/The dusk bell\. 1 of twelve/);
     // they stir between strokes, and each stroke they let go
-    for (let i = 0; i < 20; i++) update(0.2); const stirred = live().every((e) => e.y < 146.4);
+    for (let i = 0; i < 20; i++) update(0.2); const stirred = live().every((e) => (e.y - C.FOOT_Y) * C.UP > 0.1);
     C.setTod(0.75 + C.BELL.gap * 1.02); update(0.016);
     out.letGo = stirred && live().every((e) => Math.abs(e.y - C.FOOT_Y) < 0.05) && said(/let go of the rock/) && said(/2 of twelve/);
     // the last stroke: dark, and you are on the face
@@ -79,24 +84,24 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     out.dark = said(/The last stroke\. Dark\./) && (G.flags.p96b_dark | 0) === dark0 + 1;
     // dark: they come up the path toward you
     const mean = () => live().reduce((s, e) => s + Math.hypot(e.x - Engine.cam.x, e.y - Engine.cam.y), 0) / Math.max(1, live().length);
-    const d0m = mean(); for (let i = 0; i < 40; i++) { put(18.5, 81.5); p.hp = p.hpMax; update(0.1); } const d1m = mean();
+    const d0m = mean(); for (let i = 0; i < 40; i++) { put(18.5, dn(81.5)); p.hp = p.hpMax; update(0.1); } const d1m = mean();
     out.hunt = d1m < d0m - 3 && live().every((e) => C.walkable(e.x | 0, e.y | 0));
     out.huntNums = [+d0m.toFixed(1), +d1m.toFixed(1)];
     // come back later in the dark: they are where the hour puts them (never chance), and never in the yard
-    C.setTod(0.79); C.reenter(); put(18.5, 81.5); C.tick(0.0001); const a1 = live().map((e) => e.x.toFixed(3) + ',' + e.y.toFixed(3)).join(' ');
+    C.setTod(0.79); C.reenter(); put(18.5, dn(81.5)); C.tick(0.0001); const a1 = live().map((e) => e.x.toFixed(3) + ',' + e.y.toFixed(3)).join(' ');
     C.setTod(0.79); C.reenter(); C.tick(0.0001); const a2 = live().map((e) => e.x.toFixed(3) + ',' + e.y.toFixed(3)).join(' ');
-    const lead = Math.min(...live().map((e) => e.y));
-    C.setTod(0.95); C.reenter(); put(18.5, 5.5); update(0.016);
-    out.rebuild = a1 === a2 && lead < 146.5 - 5 && lead > 100 && live().every((e) => e.y >= C.P.lip) && Math.min(...live().map((e) => e.y)) < 14;
+    const lead = Math.min(...live().map((e) => dn(e.y)));
+    C.setTod(0.95); C.reenter(); put(18.5, dn(5.5)); update(0.016);
+    out.rebuild = a1 === a2 && lead < 146.5 - 5 && lead > 100 && live().every((e) => dn(e.y) >= C.D.lip) && Math.min(...live().map((e) => dn(e.y))) < 14;
     // the yard is safe: they wait at the lip
-    const hpY = p.hp; for (let i = 0; i < 20; i++) { put(18.5, 5.5); update(0.1); } out.yard = p.hp === hpY && live().every((e) => e.y >= C.P.lip);
+    const hpY = p.hp; for (let i = 0; i < 20; i++) { put(18.5, dn(5.5)); update(0.1); } out.yard = p.hp === hpY && live().every((e) => dn(e.y) >= C.D.lip);
     // the cold: within reach, it hurts, once a second
-    put(19.5, 60.5); p.hp = p.hpMax; const one = live()[0]; one.x = 19.5; one.y = 61.1; one._cool = 0; msgs.length = 0;
-    for (const e of live()) if (e !== one) { e.x = 12.5; e.y = 140.5; }
+    put(19.5, dn(60.5)); p.hp = p.hpMax; const one = live()[0]; one.x = 19.5; one.y = dn(61.1); one._cool = 0; msgs.length = 0;
+    for (const e of live()) if (e !== one) { e.x = 12.5; e.y = dn(140.5); }
     update(0.05); const hp1 = p.hp; update(0.3); const hp2 = p.hp;
     out.cold = p.hpMax - hp1 >= 4 && p.hpMax - hp1 <= 7 && hp2 === hp1 && said(/cold where it holds you/);
     // nothing else works: a blow, a killing, a song
-    p.hp = p.hpMax; Engine.cam.dir = Math.PI / 2; one.x = 19.5; one.y = 61.0; let swung = 0;
+    p.hp = p.hpMax; Engine.cam.dir = -Math.PI / 2; one.x = 19.5; one.y = dn(61.0); let swung = 0;
     for (let i = 0; i < 25; i++) { G.attack.t = 0; G.song.t = 0; attack(); swung++; update(0.016); }
     const hit1 = one.hp === one.hpMax && !one.dead && !one.hidden;
     one.hp -= 5000; update(0.016); const hit2 = one.hp === one.hpMax && said(/out of the rock behind\. Nothing\./);
@@ -106,16 +111,16 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     // dawn: gone; the next dusk's stroke puts them back at the foot
     C.setTod(0.3); update(0.016); const gone = live().length === 0;
     C.setTod(0.7499); update(0.016); C.setTod(0.7502); update(0.016);
-    out.nextDusk = gone && live().length === 8 && live().every((e) => e.y >= 146);
+    out.nextDusk = gone && live().length === 8 && live().every(footAt);
     // the top before dark: up from the foot while the bell still rings, once
     // not without the foot: a fresh dusk, straight into the yard, nothing
-    G.flags.p96b_top = 0; G.day = (G.day | 0) + 1; C.setTod(0.7499); put(18.5, 60.5); update(0.016); C.setTod(0.76); put(18.5, 5.5); update(0.016); out.noFoot = !G.flags.p96b_top;
-    G.flags.p96b_top = 0; C.setTod(0.7); put(18.5, 142.5); update(0.016); C.setTod(0.76); put(18.5, 5.5); let qx = 0; const _q = questXp; questXp = function (n) { qx += n; return _q.apply(this, arguments); }; msgs.length = 0; update(0.016);
+    G.flags.p96b_top = 0; G.day = (G.day | 0) + 1; C.setTod(0.7499); put(18.5, dn(60.5)); update(0.016); C.setTod(0.76); put(18.5, dn(5.5)); update(0.016); out.noFoot = !G.flags.p96b_top;
+    G.flags.p96b_top = 0; C.setTod(0.7); put(18.5, dn(142.5)); update(0.016); C.setTod(0.76); put(18.5, dn(5.5)); let qx = 0; const _q = questXp; questXp = function (n) { qx += n; return _q.apply(this, arguments); }; msgs.length = 0; update(0.016);
     const qx1 = qx; update(0.016); questXp = _q;
     out.top = out.noFoot && G.flags.p96b_top === 1 && qx1 === C.consts.XP_TOP && qx === qx1 && said(/Up before the last stroke/);
     // the cairn: twenty-five and a tonic, once
     C.setTod(0.5); update(0.016);
-    const cairn = G.ents.find((e) => e._p96c === 'cairn'); put(C.P.cairn[0], C.P.cairn[1] - 1.2); const g0 = p.gold, t0 = G.has('tonic') ? (p.inv.find((s) => s.id === 'tonic') || {}).n || 1 : 0; msgs.length = 0;
+    const cairn = G.ents.find((e) => e._p96c === 'cairn'); put(C.P.cairn[0], C.P.cairn[1] + 1.2 * C.UP); const g0 = p.gold, t0 = G.has('tonic') ? (p.inv.find((s) => s.id === 'tonic') || {}).n || 1 : 0; msgs.length = 0;
     C.useOwn(cairn); const g1 = p.gold, t1 = (p.inv.find((s) => s.id === 'tonic') || {}).n || 0; C.useOwn(cairn);
     out.cairn = g1 === g0 + 25 && t1 === t0 + 1 && p.gold === g1 && G.flags.p96b_foot === 1 && said(/twenty-five sovereigns/) && said(/The names\. Nothing else\./);
     // the remnant: an ENEMIES entry with all five frames, still to the engine, drawn in code
@@ -127,6 +132,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   });
   if (process.env.DEBUG96) console.log(JSON.stringify(r));
   check(r.map && r.door, 'the Chalk Cliffs: one map down the white face; the postern at the top (' + r.doorNote + ')');
+  check(r.bearing && r.posts, 'the Cliffs lie north of the Vigil: their door on their south edge (' + r.gateSides + '), a finger-post by each end');
   check(r.doorBoth, 'the postern both ways: a door into the Vigil when the Vigil is built, barred when it is not');
   check(r.reachOk, 'from the postern you can walk to the yard, the lamp, each ledge and its thing, the foot and the cairn: ' + JSON.stringify(r.reach));
   check(r.climb, 'the climb from the foot to the postern: ' + r.cells + ' cells; ' + JSON.stringify(r.walk));

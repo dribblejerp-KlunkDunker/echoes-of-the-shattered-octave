@@ -421,8 +421,8 @@ const VIGIL96 = (function () {
     const cl = typeof CLIFFS96 !== 'undefined' && CLIFFS96 && CLIFFS96.MAP ? CLIFFS96 : null;
     const [i, j] = P.postern;
     if (cl) {
-      const a = cl.P && Array.isArray(cl.P.arrive) ? cl.P.arrive : [18.5, 3.5];
-      m.set(i, j, DOOR({ tex: 't_p96v_postern', label: TX.postern, portal: { map: cl.MAP, x: a[0], y: a[1], dir: PI / 2 } }));
+      const a = cl.P && Array.isArray(cl.P.arrive) ? cl.P.arrive : [18.5, 146.5];   // the Cliffs' yard, on its south edge
+      m.set(i, j, DOOR({ tex: 't_p96v_postern', label: TX.postern, portal: { map: cl.MAP, x: a[0], y: a[1], dir: cl.P && typeof cl.P.arriveDir === 'number' ? cl.P.arriveDir : -PI / 2 } }));
     } else m.set(i, j, DOOR({ tex: 't_p96v_postern', label: TX.postern, locked: '__never', lockMsg: TX.posternBarred }));
     for (const x of [i - 1, i + 1]) m.block(x, j, 't_p96v_low', 2.0);
   }
