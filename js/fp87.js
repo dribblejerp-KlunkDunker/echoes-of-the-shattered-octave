@@ -52,6 +52,7 @@ const FP87 = (function () {
     p85_pole: { head: 'shoe', haft: 'pale' },
     p85_hook: { head: 'boathook', haft: 'ash' },
     p92_clothpole: { head: 'cloth', haft: 'ash' },
+    p94_lever: { head: 'lever', haft: 'iron' },
     p87_sledge: { head: 'nightsledge', haft: 'ash' },
   };
   const BLADE_KINDS = { sword: 1, longsword: 1, greatsword: 1, knife: 1, dirk: 1 };   // throwing knives stay with the ranged (a fan of three)
@@ -226,6 +227,11 @@ const FP87 = (function () {
         x.fillStyle = lin(x, -24, y, 24, y, [[0, [30, 28, 34]], [0.5, [14, 13, 17]], [1, [26, 24, 30]]]); x.fill(); x.strokeStyle = 'rgba(70,66,74,0.7)'; x.lineWidth = 1; x.stroke();
         for (let i = 0; i < 5; i++) { x.strokeStyle = 'rgba(0,0,0,0.5)'; x.beginPath(); x.moveTo(-18 + i * 9, y + 8); x.lineTo(-20 + i * 9, y + 46); x.stroke(); }   // its folds
         rrect(x, -6, y - 12, 12, 14, 4); fillM(-6, y - 12, 6, y + 2); break; }
+      case 'lever': { // the Brake-Lever (Phase 94): the square socket of an old winch's lever, a collar under it
+        rrect(x, -11, y - 22, 22, 26, 3); fillM(-11, y - 22, 11, y + 4);
+        x.fillStyle = css(H.dk, 0.95); x.fillRect(-6, y - 17, 12, 12);                    // the socket, square and dark
+        rrect(x, -8, y + 4, 16, 8, 2); fillM(-8, y + 4, 8, y + 12);
+        x.fillStyle = css(H.hi, 0.7); x.fillRect(-10, y - 21, 2, 22); break; }
       case 'boathook': { // a boat-hook: spike and a hook back
         x.beginPath(); x.moveTo(-3, y + 20); x.lineTo(0, y - 26); x.lineTo(3, y + 20); x.closePath(); fillM(-3, y - 26, 3, y + 20);
         x.beginPath(); x.moveTo(2, y + 4); x.quadraticCurveTo(26, y - 2, 20, y - 20); x.lineWidth = 5; x.strokeStyle = css(H.base); x.stroke(); x.lineWidth = 1.4; x.strokeStyle = css(H.hi); x.stroke();

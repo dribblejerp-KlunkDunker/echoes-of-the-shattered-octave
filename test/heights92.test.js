@@ -75,7 +75,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const kp = G.ents.find((e) => e._p92 === 'keeper');
     Engine.cam.x = kp.x; Engine.cam.y = kp.y + 3; p.feet = m.groundAt(Engine.cam.x, Engine.cam.y); p.fallFrom = null; p.hp = p.hpMax;
     kp.state = 'chase'; H.tick(0.01); kp.state = 'chase'; H.tick(0.01);
-    out.fire = H.patches().length >= 1 && said(/white fire splashes/) && H.inBleach(Engine.cam.x, Engine.cam.y) > 0;
+    out.fire = H.patches().length >= 1 && said(/white-gold fire splashes/) && H.inBleach(Engine.cam.x, Engine.cam.y) > 0;
     // put down: his hood and his amber, once; the Souls week begins
     killEnemy(kp); update(0.016); update(0.016);
     const drops = G.ents.filter((e) => e.kind === 'item' && (e.item === 'a_p92_lamphood' || e.item === 'v_p92_amber'));
@@ -104,7 +104,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     out.cradles = cr.length === 11 && !!ks && Math.abs(ks.x - cr[3].x) < 0.6 && ents.filter((e) => e.sprite === 'p92_packet').length === 1 && ents.filter((e) => e.sprite === 'p92_freighter').length === 2;
     const ys = ents.find((e) => e.id === 'p92_ysolde');
     out.veil = NPCS.p92_ysolde.sprite === 'p92_veiled' && !!Engine.sprites.p92_veiled && ents.filter((e) => e.sprite === 'p92_poleman' && Math.hypot(e.x - ys.x, e.y - ys.y) < 2.5).length === 2;
-    out.brenna = ents.some((e) => e.id === 'p92_brenna') && NPCS.p92_brenna.shop.some((s) => s.item === 'p92_blackcloth') && ents.some((e) => e.label === H.TX.rope) && Object.keys(NPCS.p92_brenna.topics).length === 3;
+    out.brenna = ents.some((e) => e.id === 'p92_brenna') && NPCS.p92_brenna.shop.some((s) => s.item === 'p92_blackcloth') && ents.some((e) => e.label === H.TX.rope) && Object.keys(NPCS.p92_brenna.topics).length === 5 && !!NPCS.p92_brenna.topics['The black angel'];
     G.flags.p92_bag = 0; while (G.has('v_p92_mirror')) G.take('v_p92_mirror'); G.give('v_p92_mirror');
     Engine.cam.x = H.P.ysolde[0] + 0.4; Engine.cam.y = H.P.ysolde[1] + 1.2; msgs.length = 0; H.tick(0.016);
     const taken = !G.has('v_p92_mirror') && G.flags.p92_bag === 1 && said(/velvet bag/);

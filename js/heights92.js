@@ -60,6 +60,11 @@ const HEIGHTS92 = (function () {
     // the places
     docks: S('The Keel Docks. The winch-boats come up through the cloud deck here, and the ladders go up from here into the city.'),
     winchboat: S('A winch-boat, hung on its rope over the gulf. The cloud is a long way down.'),
+    offerBread: S('A loaf of bread, black on the crust, half wrapped in a cloth. A tin cup with water in it.'),
+    offerCandle: S('A candle-end, unlit, in a saucer. Three pears.'),
+    offerDrawing: S('A child\'s drawing on a scrap of paper, weighted with a pebble: a black shape with wings, and a sun crossed out.'),
+    offerBlanket: S('A folded blanket, black. Offerings, left on the edge of the light by the people who live in the dark, for the thing that lives in it.'),
+    unison: S('From far above, up through the stone and the shade and the line, one high pure tone, sustained, endless, without a breath in it.'),
     cradle: S('An iron cradle, hung on chains below the lowest tier over two thousand feet of air, big enough to take a skyship\'s gondola. It swings.'),
     packet: S('A Church packet in its cradle, with the white sun-disc on its envelope. Nobody on the docks looks at it.'),
     freighter: S('A battered freighter in its cradle, its envelope patched as often as the Kestrel\'s.'),
@@ -100,15 +105,15 @@ const HEIGHTS92 = (function () {
     jerked: S('The chain-walk jerks under you and throws you sideways.'),
     held: S('The chain-walk jerks. You hold still, and it does not throw you.'),
     gulf: S('the gulf'),
-    glassfire: S('He swings his lantern, and white fire splashes where you stood. The light comes in after it.'),
+    glassfire: S('He swings his fire-stave, and white-gold fire splashes where you stood. The light comes in after it.'),
     keeperName: S('The Lamplighter of the Seventh Chain'),
     keeperDesc: S('A Flambeau who stayed below the line when his chapter went up, and has been correcting the Tiers for seven years. He carries glass-fire into the dark, and where it burns, the Bleach follows.'),
-    keeperDown: S('The Lamplighter goes down on the hanging square, and his lantern goes out. The dark comes back in over the planks like water.'),
+    keeperDown: S('The Lamplighter goes down on the hanging square, and his fire-stave rings on the planks. The dark comes back in over them like water.'),
     houndName: S('Bleach-Hound'),
     houndDesc: S('A Dissonance Hound whose wrong notes have been bleached white. It hunts the edge of the light.'),
     // the gear
-    hood: S('Lamplighter\'s Hood'), hoodDesc: S('A Flambeau\'s white hood, blacked with seven years of soot from the inside out. It still smells of amber glass burning.'),
-    amber: S('Lump of Amber Glass'), amberDesc: S('Amber glass from the Lamplighter\'s lantern: glass-fire\'s food. The Church pays for it, and asks where you got it.'),
+    hood: S('Lamplighter\'s Hood'), hoodDesc: S('A Flambeau\'s hood, the red of banked coals, gone rust-black in seven years below the line. Glass-fire is smokeless: the black is the Tiers\' own, rubbed in.'),
+    amber: S('Lump of Amber Glass'), amberDesc: S('A fist-sized lump of amber Aether-Glass from the cage of the Lamplighter\'s fire-stave. It burned white-gold and smokeless and without fuel. The Church pays for it, and asks where you got it.'),
     boots: S('Chain-Walk Boots'), bootsDesc: S('Soft black boots soled with tarred rope, for planks that move. The cobbler of the fourth tier makes them; you hear nothing when you walk in them.'),
     cloak: S('Umbral Shade-Cloak'), cloakDesc: S('A long black cloak cut wide, to lend its shade to whoever walks behind you. A small sun is scratched into the lining, for the house it came from.'),
     pole: S('Scavenger\'s Cloth-Pole'), poleDesc: S('An ash pole with a crossbar at its head and a black cloth hung from it. The scavengers carry them up into the Bleach: where the cloth vanishes, the light is too strong to go in. It also keeps a hound at a pole\'s length.'),
@@ -133,6 +138,8 @@ const HEIGHTS92 = (function () {
       topics: {
         [S('The morning')]: S('I was on the fourth tier, at a window, on the morning it let go. Facing south. I turned my head. Most people didn\'t have time to turn their heads.'),
         [S('Black cloth')]: S('The Tiers sell it by the bolt. Wind it round your face till only your eyes show, and your hands, before you go anywhere near the line.'),
+        [S('The Wired')]: S('The Wired. Up in the Bleach. They sing. Day and night, since the Fracture, one note. You stop hearing it after a year. You hear it in your sleep.'),
+        [S('The black angel')]: S('There\'s talk, on the upper tiers, where the Tiers go up to the line to scavenge. They say there\'s something up in the Bleach that isn\'t Wired. Something that moves at night on the chains. With wings. The Tiers call it the black angel. They leave food out for it on the line.'),
         [S('The Free Captains')]: S('I keep the Free Captains\' business in the Keel Docks. A letter from Oona Salt gets you through my door. Without one, you are buying rope.'),
       },
     },
@@ -140,7 +147,7 @@ const HEIGHTS92 = (function () {
       greet: { polite: S('Light keep you true. Sit, if you want boots. Rope soles. The planks move.'), normal: S('Boots? You walk like somebody from flat country.'), blunt: S('Mind your feet in my shop and mind your voice on my tier.') },
       topics: {
         [S('The chain-walks')]: S('When the chains jerk, stand still. The ones who keep walking go over. I mend boots for the ones who stand still.'),
-        [S('The Lamplighter')]: S('He was a Flambeau. When his chapter went up the Pilgrim Chain he stayed below. Now he walks the Tiers with glass-fire, correcting us, he says. Where he burns, the light comes down after.'),
+        [S('The Lamplighter')]: S('He was a Flambeau. When his chapter went up the Pilgrim Chain he stayed below. The Tiers would pull the ladders up on Flambeaux, and we did: he was already down. Now he keeps the square with glass-fire, correcting us, he says. Where he burns, the light comes down after.'),
         [S('Casts')]: S('Up there it was an insult: "he casts", a thing with a shadow, provincial. Down here it is the best thing you can say of a person. Somebody who casts is somebody you can stand behind.'),
       },
     },
@@ -383,6 +390,10 @@ const HEIGHTS92 = (function () {
       folk(x, { coat: '#141318', hood: '#0e0d12', trim: '#24222a', skin: '#d0c4b8' });
       px(x, '#3a2a18', 54, 0, 3, 168); px(x, '#3a3c40', 50, 0, 8, 3); px(x, '#3a3c40', 50, 0, 3, 8);   // a long pole with an iron hook
     });
+    add('p92_offer_bread', 40, 24, 0.3, (x) => { px(x, '#1c1410', 4, 12, 18, 9); px(x, '#3a2a1c', 6, 13, 14, 3); px(x, '#b8b0a0', 14, 16, 12, 6); px(x, '#6a6e74', 28, 12, 8, 10); px(x, '#3a4a5a', 29, 13, 6, 2); });
+    add('p92_offer_candle', 40, 24, 0.3, (x) => { px(x, '#a8a090', 2, 19, 14, 3); px(x, '#e8e0c8', 7, 12, 4, 7); px(x, '#1a1a1a', 9, 10, 1, 2); for (const [i, j] of [[22, 16], [28, 17], [25, 12]]) { px(x, '#8a9a4a', i, j, 6, 7); px(x, '#5a4a2a', i + 3, j - 2, 1, 2); } });
+    add('p92_offer_drawing', 32, 24, 0.3, (x) => { px(x, '#d8d0bc', 4, 8, 22, 15); px(x, '#141214', 9, 13, 5, 6); px(x, '#141214', 5, 11, 4, 5); px(x, '#141214', 14, 11, 4, 5); x.strokeStyle = '#141214'; x.lineWidth = 1; x.beginPath(); x.arc(21, 13, 2.5, 0, 6.3); x.moveTo(18, 10); x.lineTo(24, 16); x.moveTo(24, 10); x.lineTo(18, 16); x.stroke(); px(x, '#6a665e', 4, 18, 4, 4); });
+    add('p92_offer_blanket', 36, 20, 0.3, (x) => { px(x, '#101014', 3, 8, 30, 12); px(x, '#1e1e24', 3, 11, 30, 1); px(x, '#1e1e24', 3, 15, 30, 1); });
     add('p92_cradle', 80, 110, 2.2, (x) => {
       for (const cx of [10, 70]) for (let y = 0; y < 50; y += 6) { px(x, '#5a5e66', cx, y, 4, 5); px(x, '#1a1a1e', cx + 1, y + 1, 2, 3); }
       x.strokeStyle = '#4e525a'; x.lineWidth = 3; x.beginPath(); x.moveTo(8, 50); x.quadraticCurveTo(40, 120, 72, 50); x.stroke();
@@ -390,24 +401,37 @@ const HEIGHTS92 = (function () {
       x.lineWidth = 4; x.beginPath(); x.moveTo(6, 50); x.lineTo(74, 50); x.stroke();
     });
 
-    // the Lamplighter: a Flambeau's white robe gone grey to the knee, the hood blacked with soot, and on a pole the lantern
-    add('p92_lamplighter', 96, 176, undefined, (x) => {
-      const cx = 40;
-      x.fillStyle = '#b8b0a0'; x.beginPath(); x.moveTo(cx - 20, 174); x.lineTo(cx - 14, 58); x.lineTo(cx + 14, 58); x.lineTo(cx + 20, 174); x.closePath(); x.fill();
-      for (let y = 120; y < 174; y += 3) px(x, `rgba(40,36,32,${((y - 120) / 70).toFixed(2)})`, cx - 20, y, 40, 3);   // soot to the knee
-      px(x, '#d8c890', cx - 2, 62, 4, 60);   // a gold stole
-      px(x, '#c8a040', cx - 6, 72, 12, 3);
-      px(x, '#b8b0a0', cx - 24, 64, 8, 56); px(x, '#b8b0a0', cx + 16, 64, 8, 50);
-      px(x, '#d8c8b8', cx - 7, 36, 14, 20); px(x, '#2a1a10', cx - 4, 44, 2, 2); px(x, '#2a1a10', cx + 2, 44, 2, 2);
-      x.fillStyle = '#18161a'; x.beginPath(); x.moveTo(cx - 13, 60); x.lineTo(cx - 12, 30); x.quadraticCurveTo(cx, 14, cx + 12, 30); x.lineTo(cx + 13, 60); x.lineTo(cx + 8, 56); x.lineTo(cx + 9, 36); x.quadraticCurveTo(cx, 26, cx - 9, 36); x.lineTo(cx - 8, 56); x.closePath(); x.fill();
-      // the pole and the lantern of amber glass, burning white-gold
-      px(x, '#3a2a18', cx + 22, 20, 3, 154);
-      px(x, '#2a2018', cx + 22, 18, 22, 3); px(x, '#2a2018', cx + 41, 18, 2, 10);
-      px(x, '#1a1a1c', cx + 34, 28, 18, 3); px(x, '#1a1a1c', cx + 34, 52, 18, 3);
-      px(x, '#f6d47a', cx + 35, 31, 16, 21); px(x, '#fff8e0', cx + 39, 34, 8, 15);
-      for (const d of [0, 7, 14]) px(x, '#1a1a1c', cx + 35 + d, 31, 2, 21);
-    }, (r, g, b, a) => a > 200 && r > 240 && g > 200);
-    // white fire on the planks
+    // the Lamplighter: a Flambeau (Book One ch. 7: "robes the red of banked coals, hooded, their faces in shadow, each carrying
+    // a fire-stave: a staff of black iron as tall as a man, topped with an iron cage, and in every cage a fist-sized lump of
+    // amber Aether-Glass, burning"), seven years below the line: the hem gone rust-black with the Tiers' own dark
+    // one drawing for each pose (idle, two steps, the stave drawn back, the stave swung): the engine picks them as he walks and strikes
+    const flambeau = (pose) => (x) => {
+      const cx = 40, step = pose === '_w1' ? -3 : pose === '_w2' ? 3 : 0;
+      const sway = (y) => Math.round(step * (y - 58) / 116);
+      x.fillStyle = '#6e1c12'; x.beginPath(); x.moveTo(cx - 20 + step, 174); x.lineTo(cx - 14, 58); x.lineTo(cx + 14, 58); x.lineTo(cx + 20 + step, 174); x.closePath(); x.fill();
+      for (let y = 58; y < 174; y += 6) px(x, 'rgba(180,70,40,0.25)', cx - 3 + ((y / 6) & 1) * 2 + sway(y), y, 2, 6);   // the fold down the front, a coal's glow in it
+      for (let y = 112; y < 174; y += 3) px(x, `rgba(20,14,14,${((y - 112) / 78).toFixed(2)})`, cx - 20 + sway(y), y, 40, 3);   // the hem gone to the Tiers' black
+      const armL = pose === '_a2' ? 44 : 56 + (step < 0 ? -4 : 0), armR = pose === '_a1' ? 40 : pose === '_a2' ? 46 : 50 + (step > 0 ? -4 : 0);
+      px(x, '#641a10', cx - 24, 64, 8, armL); px(x, '#641a10', cx + 16, 64, 8, armR);
+      px(x, '#2a1c18', cx - 23, 64 + armL - 2, 6, 6); px(x, '#2a1c18', cx + 17, 64 + armR - 2, 6, 6);   // gloved hands
+      x.fillStyle = '#4e140e'; x.beginPath(); x.moveTo(cx - 14, 62); x.lineTo(cx - 13, 30); x.quadraticCurveTo(cx, 12, cx + 13, 30); x.lineTo(cx + 14, 62); x.closePath(); x.fill();   // the hood
+      x.fillStyle = '#0c0808'; x.beginPath(); x.moveTo(cx - 8, 56); x.lineTo(cx - 8, 36); x.quadraticCurveTo(cx, 26, cx + 8, 36); x.lineTo(cx + 8, 56); x.closePath(); x.fill();   // the face, in shadow
+      // the fire-stave: black iron, as tall as a man, an iron cage at its head and the lump burning in it. It turns about the hand:
+      // drawn back before a blow, swung across the body for one
+      const hy = 64 + armR, turn = pose === '_a1' ? 0.2 : pose === '_a2' ? -0.5 : 0, bob = step < 0 ? -3 : step > 0 ? -1 : 0;
+      x.save(); x.translate(cx + 25, hy + bob); x.rotate(turn); x.translate(-(cx + 25), -114);
+      px(x, '#18181a', cx + 23, 38, 3, 136); px(x, '#2c2c30', cx + 24, 40, 1, 132);
+      px(x, '#18181a', cx + 16, 34, 17, 3); px(x, '#18181a', cx + 16, 10, 17, 3);
+      px(x, '#f6d47a', cx + 19, 15, 11, 17); px(x, '#fff8e0', cx + 21, 18, 7, 11);
+      for (const d of [0, 5, 10, 15]) px(x, '#18181a', cx + 16 + d, 10, 2, 26);
+      x.restore();
+      if (pose === '_a2') for (let k = 0; k < 26; k++) {   // white-gold fire splashes from the cage (Book One ch. 7), placed by a hash of its own number
+        const fx = 4 + ((h2(k, 7) * 30) | 0), fy = 34 + ((h2(k, 11) * 60) | 0);
+        px(x, k % 3 ? '#fff8e0' : '#f6d47a', fx, fy, 2, 3 + ((h2(k, 5) * 4) | 0));
+      }
+    };
+    for (const pose of ['', '_w1', '_w2', '_a1', '_a2']) add('p92_lamplighter' + pose, 96, 176, undefined, flambeau(pose), (r, g, b, a) => a > 200 && r > 240 && g > 200);
+    // white-gold fire on the planks
     add('p92_glassfire', 48, 40, 0.55, (x) => {
       for (let i = 0; i < 48; i++) { const hgt = 6 + Math.abs(Math.sin(i * 0.7)) * 22 + h2(i, 3) * 8; for (let y = 0; y < hgt; y++) { const k = y / hgt; px(x, k < 0.5 ? '#fffbea' : k < 0.8 ? '#f8e2a0' : '#e8b860', i, 39 - y); } }
     }, (r, g, b, a) => a > 0 && r > 230);
@@ -417,12 +441,15 @@ const HEIGHTS92 = (function () {
     }, (r, g, b, a) => a > 0);
     // a bleach-hound: the hound, bleached (from its own picture, the same pixels, whitened)
     try {
-      const hd = Engine.sprites.hound;
-      if (hd && !Engine.sprites.p92_bleachhound) {
+      for (const pose of ['', '_w1', '_w2', '_a1', '_a2']) {   // every pose of the hound, so it runs and bites as the hound does
+      const hd = Engine.sprites['hound' + pose];
+      if (hd && !Engine.sprites['p92_bleachhound' + pose]) {
         const src = hd.data, d = new Uint32Array(src.length);
         for (let i = 0; i < src.length; i++) { const v = src[i], a = v >>> 24; if (!a) { d[i] = 0; continue; } const r = v & 255, g = (v >> 8) & 255, b = (v >> 16) & 255, l = (r * 0.3 + g * 0.59 + b * 0.11); const n = Math.min(255, 150 + l * 0.45) | 0; d[i] = (a << 24) | (Math.min(255, n + 6) << 16) | (n << 8) | Math.max(0, n - 8); }
-        Engine.addSprite('p92_bleachhound', Object.assign({}, hd, { data: d }));
+        Engine.addSprite('p92_bleachhound' + pose, Object.assign({}, hd, { data: d }));
       }
+      }
+      if (typeof ANIM !== 'undefined' && ANIM.quadruped) ANIM.quadruped.add('p92_bleachhound');
     } catch (e) { warnOnce('hound', e); }
   }
 
@@ -449,8 +476,8 @@ const HEIGHTS92 = (function () {
     }
     // their pictures in the pack (each its own: the realm's look)
     try { if (typeof ICONS !== 'undefined' && ICONS.PIX && !Object.prototype.hasOwnProperty.call(ICONS.PIX, 'a_p92_lamphood')) {
-      ICONS.PIX.a_p92_lamphood = (d) => {   // a white hood blacked with soot from the inside, a gold thread at the brow
-        d.layer('#a8a294').rrect(5, 3, 14, 16); d.layer('#2a2624').rrect(8, 7, 8, 11); d.layer('#c8a050', { shiny: 1 }).rect(7, 6, 10, 1); d.layer('#5a5650').rect(5, 16, 14, 3);
+      ICONS.PIX.a_p92_lamphood = (d) => {   // a Flambeau's hood, the red of banked coals, gone rust-black at the hem
+        d.layer('#8a2a1c').rrect(5, 3, 14, 16); d.layer('#0c0808').rrect(8, 7, 8, 11); d.layer('#b4462a').rect(7, 6, 10, 1); d.layer('#2a1614').rect(5, 16, 14, 3);
       };
       ICONS.PIX.a_p92_chainboots = (d) => {   // soft black boots, tarred rope soles
         const b = (x) => { d.layer('#1c1a1c').rect(x, 4, 5, 13).rect(x, 14, 8, 4); d.layer('#7a6446').rect(x, 18, 8, 2); for (let i = 0; i < 4; i++) d.layer('#4a3c2a').rect(x + i * 2, 18, 1, 2); };
@@ -462,6 +489,7 @@ const HEIGHTS92 = (function () {
       ICONS.PIX.v_p92_amber = (d) => { d.layer('#c88a30', { shiny: 1 }).rrect(6, 7, 12, 10); d.layer('#f4c868', { shiny: 1 }).rrect(8, 9, 5, 4); d.mark('#fff4d0', 16, 8); };
       const pole = (d) => { d.tilt(12, 12); d.layer('#7a5e40').rrect(-1, -10, 2, 22); d.layer('#46484c', { shiny: 1 }).rect(-6, -12, 12, 1.6); d.layer('#141218').rect(-5.5, -10.5, 11, 9); };
       ICONS.PIX['weapon:p92_clothpole'] = pole; ICONS.PIX.w_p92_clothpole = pole;
+      ICONS.PIX.p92_blackcloth = (d) => { d.layer('#141218').rrect(4, 6, 16, 12); d.layer('#24222a').rect(4, 9, 16, 1).rect(4, 13, 16, 1); d.layer('#0a0a0c').rrect(17, 7, 4, 10); d.layer('#6a5434').rect(9, 6, 1.5, 12); };   // a bolt of black cloth, tied
       ICONS.PIX.v_p92_mirror = (d) => { d.layer('#0c0c10').rrect(5, 4, 14, 16); d.layer('#6a5434').rect(5, 11, 14, 2); };
     } } catch (e) { warnOnce('icons', e); }
     if (typeof NPCS !== 'undefined') {
@@ -568,6 +596,11 @@ const HEIGHTS92 = (function () {
     for (const [cx, cy, r] of BLEACH_SPOTS) for (let j = Math.floor(cy - r); j <= Math.ceil(cy + r); j++) for (let i = Math.floor(cx - r); i <= Math.ceil(cx + r); i++) { const k = at(i, j); if (k >= 0 && m.smooth[k] && Math.hypot(i + 0.5 - cx, j + 0.5 - cy) <= r) { bleach[k] = 1; m.setFloor(i, j, BLEACH); } }
     m._p92 = { kind, bleach, fallCells };
     // ---- the iron door (seen, not entered)
+    // the Tiers' offerings to the black angel, left on the line (Book Two ch. 10): bread and water, a candle-end and three pears,
+    // a child's drawing weighted with a pebble, a folded black blanket
+    for (const [spr, dx, lab] of [['p92_offer_bread', 3.4, TX.offerBread], ['p92_offer_candle', 4.4, TX.offerCandle], ['p92_offer_drawing', 5.5, TX.offerDrawing], ['p92_offer_blanket', 6.6, TX.offerBlanket]]) {
+      const ox = P.ironDoor[0] + dx, oy = WALL_ROWS + 0.45; if (m.smooth[at(ox | 0, oy | 0)]) m.deco(spr, ox, oy, { radius: 0.15, scale: 1, solid: false, label: lab, _p92: 'offering' });
+    }
     m.set(P.ironDoor[0], P.ironDoor[1], DOOR({ tex: 't_p92_irondoor', label: TX.ironDoorLabel, locked: 'p92_never', lockMsg: TX.ironDoor }));
     m.setLvl(P.ironDoor[0], P.ironDoor[1], lvlAt(P.ironDoor[1]));
     // ---- the Kestrel's ladder, the winch-boats, the docks
@@ -660,8 +693,23 @@ const HEIGHTS92 = (function () {
     G.ents.push(ent); patches.push({ x, y, r: 1.4, t: 6, ent });
   }
   function clearPatches() { for (const q of patches) { const i = G.ents.indexOf(q.ent); if (i >= 0) G.ents.splice(i, 1); } patches.length = 0; }
+  // the Unison's note (Book Two ch. 9, 10: "one high pure tone, sustained, endless"; "You stop hearing it after a year"): heard
+  // everywhere in the Tiers, clearest when you arrive, and then you stop hearing most of it
+  let unisonT = 0;
+  function unison(dt) {
+    try {
+      if (typeof Audio_ === 'undefined' || !Audio_.hum) return;
+      if (!here() || G.state !== 'play') { if (unisonT > 0) { unisonT = 0; Audio_.hum(0, 528, 'p92_unison'); } return; }
+      unisonT += dt;
+      const c = Engine.cam, up = 1 - Math.min(1, Math.max(0, (c.y - WALL_ROWS) / (H - WALL_ROWS)));   // louder toward the line
+      const used = unisonT < 20 ? 1 : Math.max(0.3, 1 - (unisonT - 20) / 60);
+      Audio_.hum((0.05 + 0.1 * up) * used, 528, 'p92_unison');
+    } catch (e) { warnOnce('unison', e); }
+  }
   function tick(dt) {
+    unison(dt);
     if (!here() || G.state !== 'play' || !G.player || G.dead) return;
+    if (unisonT > 3) once(3, TX.unison, '', 8000);
     clock += dt;
     const p = G.player, c = Engine.cam, d = G.map._p92; if (!d) return;
     const k = cellK(c.x, c.y), standing = p.fallFrom == null && m_smooth(k);
@@ -700,7 +748,12 @@ const HEIGHTS92 = (function () {
       keeperCool -= dt;
       if (keeperCool <= 0) { keeperCool = 5.5; addPatch(c.x, c.y); once(2, TX.glassfire, 'bad', 6000); }
     } else keeperCool = Math.min(keeperCool, 2);
-    if (kp) { kp.glow = kp.dead ? 0 : 0.4; kp.lightCol = [255, 214, 150]; }
+    // his fire-stave lights the square: a light that goes where he goes (he himself keeps his colours: the red of banked coals)
+    if (kp) {
+      let kl = G.ents.find((e) => e && e._p92 === 'klight');
+      if (!kl) { kl = { kind: 'deco', sprite: 'p92_glassfire', x: kp.x, y: kp.y, scale: 0.01, solid: false, radius: 0.01, nopick: true, transient: true, _decor: true, glow: 0.4, lightCol: [255, 214, 150], _p92: 'klight' }; G.ents.push(kl); }
+      kl.x = kp.x; kl.y = kp.y; kl.hidden = !!(kp.dead || kp.hidden); kp.glow = 0;
+    }
     // the keeper's gear, once
     if (kp && kp.dead && !fint('p92_kdrop', 1)) {
       f().p92_kdrop = 1; clearPatches();
@@ -744,7 +797,7 @@ const HEIGHTS92 = (function () {
     if (typeof document !== 'undefined' && document.head && !document.getElementById('p92-style')) { const st = document.createElement('style'); st.id = 'p92-style'; st.textContent = '#fx.p92-white { background: rgba(255, 252, 236, 0.22); }'; document.head.appendChild(st); }
     if (typeof buildAllMaps === 'function') { const _b = buildAllMaps; buildAllMaps = function () { const maps = _b.apply(this, arguments); try { join(maps); } catch (e) { warnOnce('build', e); } return maps; }; }
     if (typeof useDeco === 'function') { const _ud = useDeco; useDeco = function (e) { try { if (useOwn(e)) return undefined; } catch (err) { warnOnce('use', err); } return _ud.apply(this, arguments); }; }
-    if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function () { const r = _l.apply(this, arguments); try { patches.length = 0; lastSafe = null; burnAcc = 0; sync(); } catch (e) { warnOnce('load', e); } return r; }; }
+    if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function () { const r = _l.apply(this, arguments); try { patches.length = 0; lastSafe = null; burnAcc = 0; unisonT = 0; sync(); } catch (e) { warnOnce('load', e); } return r; }; }
     if (typeof update === 'function') { const _u = update; update = function (dt) { const r = _u.apply(this, arguments); try { tick(Number(dt) || 0); } catch (e) { warnOnce('tick', e); } return r; }; }
     wireKestrel();
   }

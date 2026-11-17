@@ -38,16 +38,12 @@ The chains creak, all at once. Hold still.	Les chaînes grincent, toutes à la f
 The chain-walk jerks under you and throws you sideways.	La passerelle tressaute sous vous et vous projette de côté.
 The chain-walk jerks. You hold still, and it does not throw you.	La passerelle tressaute. Vous ne bougez pas, et elle ne vous projette pas.
 the gulf	le gouffre
-He swings his lantern, and white fire splashes where you stood. The light comes in after it.	Il balance sa lanterne, et un feu blanc éclabousse l'endroit où vous vous teniez. La lumière entre à sa suite.
 The Lamplighter of the Seventh Chain	L'Allumeur de la Septième Chaîne
 A Flambeau who stayed below the line when his chapter went up, and has been correcting the Tiers for seven years. He carries glass-fire into the dark, and where it burns, the Bleach follows.	Un Flambeau resté sous la ligne quand son chapitre est monté, et qui corrige les Étages depuis sept ans. Il porte le feu de verre dans le noir, et là où il brûle, la Blancheur suit.
-The Lamplighter goes down on the hanging square, and his lantern goes out. The dark comes back in over the planks like water.	L'Allumeur s'effondre sur la place suspendue, et sa lanterne s'éteint. Le noir revient sur les planches comme de l'eau.
 Bleach-Hound	Molosse blanchi
 A Dissonance Hound whose wrong notes have been bleached white. It hunts the edge of the light.	Un Molosse de Dissonance dont les fausses notes ont été blanchies. Il chasse au bord de la lumière.
 Lamplighter's Hood	Capuche de l'Allumeur
-A Flambeau's white hood, blacked with seven years of soot from the inside out. It still smells of amber glass burning.	La capuche blanche d'un Flambeau, noircie de l'intérieur par sept ans de suie. Elle sent encore le verre d'ambre qui brûle.
 Lump of Amber Glass	Morceau de verre d'ambre
-Amber glass from the Lamplighter's lantern: glass-fire's food. The Church pays for it, and asks where you got it.	Du verre d'ambre tiré de la lanterne de l'Allumeur : la nourriture du feu de verre. L'Église le paie, et demande où vous l'avez trouvé.
 Chain-Walk Boots	Bottes de passerelle
 Soft black boots soled with tarred rope, for planks that move. The cobbler of the fourth tier makes them; you hear nothing when you walk in them.	Des bottes noires et souples, semelées de corde goudronnée, pour les planches qui bougent. Le cordonnier du quatrième étage les fabrique ; on n'entend rien quand on marche avec.
 Umbral Shade-Cloak	Cape d'ombre ombrale
@@ -76,7 +72,6 @@ Mind your feet in my shop and mind your voice on my tier.	Surveillez vos pieds d
 The chain-walks	Les passerelles à chaînes
 When the chains jerk, stand still. The ones who keep walking go over. I mend boots for the ones who stand still.	Quand les chaînes tressautent, ne bougez plus. Ceux qui continuent de marcher passent par-dessus bord. Je répare les bottes de ceux qui restent immobiles.
 The Lamplighter	L'Allumeur
-He was a Flambeau. When his chapter went up the Pilgrim Chain he stayed below. Now he walks the Tiers with glass-fire, correcting us, he says. Where he burns, the light comes down after.	C'était un Flambeau. Quand son chapitre est monté par la Chaîne des Pèlerins, il est resté en bas. Maintenant il arpente les Étages avec le feu de verre, pour nous corriger, dit-il. Là où il brûle, la lumière descend ensuite.
 Casts	Porter ombre
 Up there it was an insult: "he casts", a thing with a shadow, provincial. Down here it is the best thing you can say of a person. Somebody who casts is somebody you can stand behind.	Là-haut, c'était une insulte : « il porte ombre », une chose qui a une ombre, provinciale. Ici, c'est ce qu'on peut dire de mieux de quelqu'un. Quelqu'un qui porte ombre, c'est quelqu'un derrière qui on peut se tenir.
 Under the canvas, quick. What do you need that you cannot buy in the light?	Sous la toile, vite. De quoi avez-vous besoin que vous ne pouvez pas acheter à la lumière ?
@@ -139,3 +134,18 @@ Rope, cloth, tar, and what the Free Captains leave with me.	Corde, drap, goudron
 Then you are not buying rope today.	Alors vous n'achetez pas de corde aujourd'hui.
 Wind it tight.	Serrez bien.
 Keep the right side of your face to the dark.	Gardez le côté droit du visage tourné vers l'ombre.
+# Phase 92 canon fix 2 (15 Nov): the Flambeau in red with a fire-stave (Book One ch. 7); the offerings on the line, the Wired, the black angel (Book Two ch. 9, 10).
+He swings his fire-stave, and white-gold fire splashes where you stood. The light comes in after it.	Il balance son bâton de feu, et un feu d'or blanc éclabousse l'endroit où vous vous teniez. La lumière entre à sa suite.
+The Lamplighter goes down on the hanging square, and his fire-stave rings on the planks. The dark comes back in over them like water.	L'Allumeur s'effondre sur la place suspendue, et son bâton de feu sonne sur les planches. Le noir revient sur elles comme de l'eau.
+A Flambeau's hood, the red of banked coals, gone rust-black in seven years below the line. Glass-fire is smokeless: the black is the Tiers' own, rubbed in.	La capuche d'un Flambeau, du rouge des braises couvertes, devenue noir de rouille en sept ans sous la ligne. Le feu de verre ne fume pas : ce noir est celui des Étages, incrusté.
+A fist-sized lump of amber Aether-Glass from the cage of the Lamplighter's fire-stave. It burned white-gold and smokeless and without fuel. The Church pays for it, and asks where you got it.	Un morceau de Verre d'Éther ambré, gros comme le poing, tiré de la cage du bâton de feu de l'Allumeur. Il brûlait d'un or blanc, sans fumée et sans combustible. L'Église le paie, et demande où vous l'avez trouvé.
+He was a Flambeau. When his chapter went up the Pilgrim Chain he stayed below. The Tiers would pull the ladders up on Flambeaux, and we did: he was already down. Now he keeps the square with glass-fire, correcting us, he says. Where he burns, the light comes down after.	C'était un Flambeau. Quand son chapitre est monté par la Chaîne des Pèlerins, il est resté en bas. Les Étages retireraient les échelles devant des Flambeaux, et nous l'avons fait : il était déjà descendu. Maintenant il tient la place avec le feu de verre, pour nous corriger, dit-il. Là où il brûle, la lumière descend ensuite.
+A loaf of bread, black on the crust, half wrapped in a cloth. A tin cup with water in it.	Une miche de pain, la croûte noire, à moitié enveloppée dans un linge. Un gobelet de fer-blanc avec de l'eau dedans.
+A candle-end, unlit, in a saucer. Three pears.	Un bout de chandelle, éteint, dans une soucoupe. Trois poires.
+A child's drawing on a scrap of paper, weighted with a pebble: a black shape with wings, and a sun crossed out.	Un dessin d'enfant sur un bout de papier, lesté d'un caillou : une forme noire avec des ailes, et un soleil barré.
+A folded blanket, black. Offerings, left on the edge of the light by the people who live in the dark, for the thing that lives in it.	Une couverture pliée, noire. Des offrandes, laissées au bord de la lumière par ceux qui vivent dans le noir, pour la chose qui y vit.
+From far above, up through the stone and the shade and the line, one high pure tone, sustained, endless, without a breath in it.	De très haut, à travers la pierre, l'ombre et la ligne, une seule note haute et pure, tenue, sans fin, sans un souffle.
+The Wired	Les Câblés
+The Wired. Up in the Bleach. They sing. Day and night, since the Fracture, one note. You stop hearing it after a year. You hear it in your sleep.	Les Câblés. Là-haut, dans la Blancheur. Ils chantent. Jour et nuit, depuis la Fracture, une seule note. Au bout d'un an, on ne l'entend plus. On l'entend dans son sommeil.
+The black angel	L'ange noir
+There's talk, on the upper tiers, where the Tiers go up to the line to scavenge. They say there's something up in the Bleach that isn't Wired. Something that moves at night on the chains. With wings. The Tiers call it the black angel. They leave food out for it on the line.	On raconte, aux étages du haut, là où les Étages montent jusqu'à la ligne pour récupérer, qu'il y a quelque chose là-haut dans la Blancheur qui n'est pas Câblé. Quelque chose qui se déplace la nuit sur les chaînes. Avec des ailes. Les Étages l'appellent l'ange noir. On lui laisse à manger sur la ligne.

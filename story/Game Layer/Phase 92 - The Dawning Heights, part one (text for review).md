@@ -66,6 +66,15 @@ Brenna's other greetings and shop lines, and the cloth's description, are [PROPO
 | Wind it tight. | Serrez bien. |
 | Keep the right side of your face to the dark. | Gardez le côté droit du visage tourné vers l'ombre. |
 
+## Matched to the books again (15 Nov, Phase 94)
+
+Four more fixes, made while building the Anchorage. The full account is in the Phase 94 record.
+
+1. The Lamplighter is a Flambeau, and Book One ch. 7 dresses Flambeaux in "robes the red of banked coals" with a fire-stave of black iron topped with an iron cage. He had a white robe and a lantern on a pole. His picture, his hood and four lines changed.
+2. Glass-fire is "smokeless and without fuel", so the hood and the amber no longer speak of soot or of feeding the fire.
+3. The Tiers' offerings to the black angel now lie on the line (Book Two ch. 10), and Brenna Corliss has two new topics in the book's words: the Wired, and the black angel.
+4. The Unison's one note is heard throughout the Tiers.
+
 ## The new lines
 
 | English | French |
