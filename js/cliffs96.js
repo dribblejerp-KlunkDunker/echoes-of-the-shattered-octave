@@ -69,7 +69,7 @@ const CLIFFS96 = (function () {
     noSong: S('It does not listen.'),
   };
 
-  // ================================================================ the plan (cells; x east, y south; the map goes down to the south)
+  // ================================================================ the plan (cells; x east, y south; the face goes down to the north)
   // The plan is written top-down (the yard at the top of the page, the face going down the page) and then turned north for
   // south as a whole, so that the yard and its postern lie on the SOUTH edge, against the Vigil's north wall, and the face
   // goes down to the NORTH (the map agrees with the ground: js/bearings82b.js). One transform, never number by number.
@@ -263,7 +263,7 @@ const CLIFFS96 = (function () {
     const kind = new Uint8Array(W * H);
     const rect = (x0, y0, x1, y1, k) => { for (let j = Math.min(y0, y1); j <= Math.max(y0, y1); j++) for (let i = Math.min(x0, x1); i <= Math.max(x0, x1); i++) if (at(i, j) >= 0 && kind[at(i, j)] !== 2) kind[at(i, j)] = k; };
     for (const r of [P.yard, P.ledge1, P.ledge2, P.ledge3, P.foot]) rect(r[0], r[1], r[2], r[3], 2);
-    for (const run of WAY) for (let n = 0; n + 1 < run.length; n++) { const [ax, ay] = run[n], [bx, by] = run[n + 1]; rect(ax, ay, bx + 1, by + 1, 1); }
+    for (const run of WAY) for (let n = 0; n + 1 < run.length; n++) { const [ax, ay] = run[n], [bx, by] = run[n + 1]; rect(ax, ay + 1, bx + 1, by, 1); }   // the mirror of the plan's (ax, ay)-(bx+1, by+1): the two-cell block lies the other way up
     // the face: west of a row's last open cell it is rock; east of it, the drop
     const E = new Int16Array(H).fill(-1);
     for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) if (kind[at(i, j)]) E[j] = Math.max(E[j], i);

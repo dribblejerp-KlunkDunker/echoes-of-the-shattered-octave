@@ -182,6 +182,9 @@ const HELPERS = () => {
     await step('combat timing unchanged: a seeded fight (swings, a guard, a shield bash, a Song), DRAWN every step, matches a page with the module blocked', async () => {
       const trace = (P) => P.page.evaluate((base) => __pin(() => {
         __seed(5); restoreGame(JSON.parse(base));
+        // the birdsong timer is the page's own and is not in a save: it carries over from whatever the page did before, so set it
+        // the same on both pages (its roll is counted in __rc, and whether it fell on a sampled step used to depend on the boot)
+        if (typeof UPG === 'object') UPG._ambT = 4;
         __stage('clearing', 12.5, 11.5, -Math.PI / 2); G.tod = 0.4; G.day = 3; G.player.hpMax = G.player.hp = 400; G.player.xp = 0; G.player.fat = G.player.fatMax = 200;
         __gear({ w: 'spear' }); __gear({ w: 'sword', armor: { body: 'a_chain', hands: 'a_gauntlets', shield: 'a_kite', feet: 'a_greaves', head: 'a_kettle' } });
         const es = [__spawn('legionnaire', 12.5, 9.0, true), __spawn('hound', 14.5, 9.5, true), __spawn('proctor', 10.5, 9.5, true)];

@@ -74,7 +74,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     put(L[0].x + 1.0, L[0].y + 0.4); update(0.016); out.lamp = S.isLit(L[0]) && G.flags.p91_ll === L[0].id + 1;
     // the first stroke: eight at the foot, held below
     put(18.5, dn(81.5)); C.setTod(0.7495); update(0.016); msgs.length = 0; C.setTod(0.7501); update(0.016);
-    out.first = live().length === 8 && live().every(footAt) && said(/The dusk bell\. 1 of twelve/);
+    out.first = C.UP === 1 && C.FOOT_Y > C.P.foot[1] && C.FOOT_Y < C.P.foot[3] + 1 && C.P.foot[3] < C.P.yard[1] && live().length === 8 && live().every(footAt) && said(/The dusk bell\. 1 of twelve/);
     // they stir between strokes, and each stroke they let go
     for (let i = 0; i < 20; i++) update(0.2); const stirred = live().every((e) => (e.y - C.FOOT_Y) * C.UP > 0.1);
     C.setTod(0.75 + C.BELL.gap * 1.02); update(0.016);
