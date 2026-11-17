@@ -82,6 +82,10 @@ const GEAR87 = (function () {
     { id: 'chainyards', name: S('The Chain-Yards'), home: 'the Anchorage, Sol-Luminary',
       armor: ['a_p94_cap', 'a_p94_gloves', 'a_p94_harness'], weapons: ['p94_lever'],
       t: { ar: 1 }, f: { special: 'weight' }, tLine: S('+1 armour'), fLine: S('a tether jerk weighs on you half as long') },
+    // Phase 95: the Pilgrim Chain [PROPOSED]: the whites the city once walked the chain in, and a Flambeau's stave gone dark
+    { id: 'pilgrim', name: S('The Pilgrim Chain'), home: 'the Pilgrim Chain, Sol-Luminary',
+      armor: ['a_p95_robe', 'a_p95_cowl', 'a_p95_sandals'], weapons: ['p95_stave'],
+      t: { special: 'white' }, f: { special: 'afterglow' }, tLine: S('in the whites, the Flambeaux of the Chain take you for a bearer until you are close'), fLine: S('leaving shade, the Bleach waits three breaths before it begins on you') },
   ];
   const BY_ID = {}; for (const s of SETS) BY_ID[s.id] = s;
   // which set a piece belongs to (the design puts every piece in exactly one)

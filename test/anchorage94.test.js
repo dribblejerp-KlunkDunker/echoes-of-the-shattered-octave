@@ -94,7 +94,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     out.link = G.flags.p94_link === 1 && said(/cuts one bar across all nineteen/) && G.has('v_p94_link') && G.ents.some((e) => e._p94 === 'tally' && /one long bar/.test(e.label));
     // the gear: each piece its own look and picture, in the sixteenth set
     out.gear = ['a_p94_cap', 'a_p94_gloves', 'a_p94_harness'].every((id) => ARMOR[id] && ITEMS[id] && GEARLOOK21.ARMOR[id] && ICONS.PIX[id]) && WEAPONS.p94_lever && GEARLOOK21.WEAPONS.p94_lever && ICONS.PIX.w_p94_lever && ITEMS.v_p94_link.valuable
-      && GEAR87.SET_OF && GEAR87.SET_OF.a_p94_harness === 'chainyards' && GEAR87.SETS.length === 16;
+      && GEAR87.SET_OF && GEAR87.SET_OF.a_p94_harness === 'chainyards' && GEAR87.SETS.length >= 16;
     // everyone stands on the floor; the art is made in code
     out.standing = m.entities.filter((e) => e.kind === 'npc' || e.kind === 'enemy').every((e) => m.smooth[(e.y | 0) * W + (e.x | 0)] === 1);
     out.art = ['p94_winch', 'p94_bardo', 'p94_glassgrown', 'p94_glassgrown_turn', 'p94_nineteen', 'p94_capstan', 'p94_chainend', 'p94_chainlamp'].every((k) => Engine.sprites[k]);

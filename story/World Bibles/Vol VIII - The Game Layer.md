@@ -2295,7 +2295,7 @@ The traveller works the ship's stations (the wheel by Vane's word, the tank-crad
 - The Tiers' offerings to the black angel lie on the line (Book Two ch. 10), and Brenna Corliss speaks of the Wired and the black angel in the book's words.
 - The Unison's one note is heard throughout the Tiers, and fades as you stop hearing it.
 
-**Status:** [PROPOSED] under the approved Phases 89 and 90; eight questions are the owner's, in the Phase 94 record.
+**Status:** RULED, 16 Nov 2026 (the owner: "I accept all, merge and proceed"). All eight questions of the Phase 94 record stand as built: the Anchorage is the city's frame; Bardo's winch hauls the goods-cage; the keel-weights keep the city's point down; the change's and the Nineteen's numbers; the Glass-Grown are never fought; the Chain-Yards set; Bardo's oaths.
 
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 

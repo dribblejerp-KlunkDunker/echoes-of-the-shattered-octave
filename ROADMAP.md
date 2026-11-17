@@ -53,7 +53,7 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] three lamps (Souls group i), the sixteenth gear set (the Chain-Yards), Bardo and the link
 - [x] Phase 92 matched to the books again: the Flambeau in red with a fire-stave, the offerings on the line, the Wired's note, the black angel
 - [x] the three new foes (the Lamplighter, the bleach-hound, the Nineteen) have their walking and striking drawings: five poses each, so the Lamplighter draws his fire-stave back and swings it, and the `creatures` suite (red on them since Phase 92) passes again
-- [ ] the owner's eight answers (the Phase 94 record)
+- [x] the owner's eight answers (16 Nov: "I accept all, merge and proceed"): all eight stand as built; #125 to #129 merged into main
 - [ ] next: the Pilgrim Chain and the Altar, then the White Mile; two of the Heights' four keepers are built (the reminder of Phase 91's question 4 comes with the fourth)
 
 **Phase 93: flying and fighting in the air (15 Nov, branch `p93-air`; ruled and built the same night).** Owner, 15 Nov: "yes I want the flying combat to be a system"; "if it will help use my idtechengine". Record: [`story/Game Layer/Phase 93 - Flying and fighting in the air (design, for ruling).md`](story/Game%20Layer/Phase%2093%20-%20Flying%20and%20fighting%20in%20the%20air%20(design%2C%20for%20ruling).md); the flight-card mock `screenshots/p93/hud-mock.jpg`, drawn by `tools/design/hud93.py`.
