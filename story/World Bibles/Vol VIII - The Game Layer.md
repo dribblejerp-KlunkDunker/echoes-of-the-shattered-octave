@@ -2325,7 +2325,7 @@ The traveller works the ship's stations (the wheel by Vane's word, the tank-crad
 
 **Phase 96, the lore readers (16 Nov):** before the Heights' remaining places were built, each was read against the books. Withdrawn as not lore-bound: the nine anchor-houses (the books know two), the cloud deck and the valley farms. Renamed: "the Bell Yard" is a Whisper-Grove street; the Heights' place is the black square before the Basilica's west end. Held for the owner: the White Mile (the Mirror Walks and the Polisher against "the only mirror the Altar permitted"). The records are in `story/Game Layer/` under "Phase 96".
 
-**Status:** [PROPOSED] under the approved Phases 89 and 90; nine questions are the owner's, in the Phase 95 record.
+**Status:** [PROPOSED] under the approved Phases 89 and 90; eleven questions are the owner's, in the Phase 95 record (among them: whether the player belongs on the chain a month before the book's people walk it).
 
 #### Phase 96: the Dawning Heights, part four: the smaller places, read against the books first (16 Nov)
 Each place of the plan was read against the books by a lore reader before anything was built. The briefs quote book and bible by file and line; the records are in `story/Game Layer/` under "Phase 96".

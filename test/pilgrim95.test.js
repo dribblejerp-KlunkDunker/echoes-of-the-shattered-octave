@@ -173,6 +173,8 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   const texts = await page.evaluate(() => PILGRIM95.TEXTS);
   let fr = null; try { const { hash, norm } = require('../tools/i18n/lib'); const d = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'locales', 'story', 'fr.json'), 'utf8')); fr = texts.filter((t) => !/\{\d/.test(t) && d.s[hash(norm(t))] == null); } catch (e) { fr = ['(could not read fr.json: ' + e.message + ')']; }
   check(fr.length === 0, 'every new line has its French' + (fr.length ? ' (' + fr.length + ' missing): ' + fr.slice(0, 3).join(' | ') : ''));
+  const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'js', 'pilgrim95.js'), 'utf8');
+  check(!/Math\.random/.test(src), 'nothing in the module uses chance (no Math.random)');
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();
   console.log(fails ? fails + ' FAILED' : 'all passed');
