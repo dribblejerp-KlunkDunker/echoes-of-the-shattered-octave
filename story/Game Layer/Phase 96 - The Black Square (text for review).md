@@ -1,6 +1,6 @@
 # Phase 96: the Dawning Heights, part four: the black square (text for review)
 
-*Written 16 Nov 2026 by Team C (builder C-BUILD-BELLYARD), under the owner's approval of Phases 89 and 90 (14 Nov) and the Team C design of 16 Nov. Code: `js/bellyard96.js` (global `BLACKSQUARE96`; `BELLYARD96` still points at it until the files are renamed). Test: `test/bellyard96.test.js`. French: `tools/i18n/p96-bellyard.tsv`. Every line is new and [PROPOSED] unless a book is named.*
+*Written 16 Nov 2026 by Team C (builder C-BUILD-BELLYARD), under the owner's approval of Phases 89 and 90 (14 Nov) and the Team C design of 16 Nov. Code: `js/blacksquare96.js` (global `BLACKSQUARE96`; `BELLYARD96` still points at it until the files are renamed). Test: `test/blacksquare96.test.js`. French: `tools/i18n/p96-blacksquare.tsv`. Every line is new and [PROPOSED] unless a book is named.*
 
 ## The place is the black square, not "the Bell Yard"
 
@@ -51,7 +51,7 @@ All from `story/Books/Book Two - The Great Discord/Part Two Ch8-14.md` (quoted i
 - **Flags:** `p96c_sq` (bits for lines said once, 0 to 255), `p96c_tolls` (0 to 9). Both read through a clamp.
 - **No foes, gear, items or lamps.** The Souls group `m` is unused.
 
-Test: `test/bellyard96.test.js`, 16 checks: the arch both ways; reaching the steps' top, the tower door, the board and every shutter; the locked doors; the shutters by day, by night and under the bell; three strokes; the wave (row 7 at once, row 200 at about ten seconds); the lift forty seconds after the last stroke; noon and the third hour by the hour crossing; a rest over the hour; the cap at nine; the Tiers' folk still and silent, then walking; the art; the white dome; French for every line; no book names, herald, proclamation or Rite; no page errors; no chance in the building.
+Test: `test/blacksquare96.test.js`, 16 checks: the arch both ways; reaching the steps' top, the tower door, the board and every shutter; the locked doors; the shutters by day, by night and under the bell; three strokes; the wave (row 7 at once, row 200 at about ten seconds); the lift forty seconds after the last stroke; noon and the third hour by the hour crossing; a rest over the hour; the cap at nine; the Tiers' folk still and silent, then walking; the art; the white dome; French for every line; no book names, herald, proclamation or Rite; no page errors; no chance in the building.
 
 ## For the owner
 

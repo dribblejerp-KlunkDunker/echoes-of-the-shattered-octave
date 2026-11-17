@@ -1,5 +1,5 @@
-// Phase 96: the black square in front of the Basilica's west end (js/bellyard96.js, global BLACKSQUARE96).
-// Run: PREVIEW_URL=http://127.0.0.1:4183 node test/bellyard96.test.js
+// Phase 96: the black square in front of the Basilica's west end (js/blacksquare96.js, global BLACKSQUARE96).
+// Run: PREVIEW_URL=http://127.0.0.1:4183 node test/blacksquare96.test.js
 'use strict';
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const URL0 = process.env.PREVIEW_URL || 'http://127.0.0.1:4183';
