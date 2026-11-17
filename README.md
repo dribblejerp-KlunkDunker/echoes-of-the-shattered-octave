@@ -433,6 +433,27 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**Flying and fighting in the air (Phase 93).** A long flight on the Kestrel's map table can be met in the air. It is chance, as in the books, and a switch in Options turns it off. An Office courier-cutter, the lead-grey forty-footer from Book One ch. 21, hunts her by its listening-horn. On the way to the Heights a Church packet may cross her course instead and carry word of her ahead, or a squall line may throw her about. The Kestrel stays unarmed, as the book leaves her. You work her stations in first person: you ask Vane for a height at the wheel, lash the hold so nothing knocks, help Pennick patch a weeping tank, hood the lamps, and throw weight over the side. The flight card shows height, lift, noise and the horn's four states. If the horn turns and the cutter comes down your line of sound, the grapnels come over the rail and four proctors with them. Cut the chains (three blows each) or fight. She is never lost: the worst is a forced landing and a repair. The way south to the Heights crosses the Valley of Velocity, where a weeping tank's jet pushes her round. The horn's states come from the owner's Forge engine (`js/air93.js`, `test/air93.test.js`).
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p93/p93-closing.gif" alt="From the Kestrel's deck: the flight card at the left while the lead-grey cutter with its brass horn comes out of the mist and alongside on its grapnels"></td>
+<td width="50%"><img src="screenshots/p93/p93-hooked.jpg" alt="The cutter alongside, grapnel chains taut from the rail, grey proctors on the Kestrel's deck"></td>
+</tr>
+<tr>
+<td>The horn turns; the cutter comes down the line of the sound.</td>
+<td>Grapnels at the rail, and four proctors down the line.</td>
+</tr>
+<tr>
+<td width="50%"><img src="screenshots/p93/p93-packet.jpg" alt="A Church packet with a white sun-disc on its envelope crossing the Kestrel's course in grey air, the flight card showing the packet's lookout with a glass on you"></td>
+<td width="50%"><img src="screenshots/p93/p93-squall.jpg" alt="Rain slanting across the Kestrel's deck in a squall, the flight card saying a gust throws her down"></td>
+</tr>
+<tr>
+<td>A Church packet: its lookout has a glass on you.</td>
+<td>The squall line.</td>
+</tr>
+</table>
+
 **The Dawning Heights, part one: the Umbral Tiers (Phase 92).** The Kestrel's table now flies south to Sol-Luminary, the city that hangs from Mount Lumina on nine chains. Her ladder lands you on the Keel Docks, and the Umbral Tiers climb from there up the mountain's face to the Basilica's black wall, where the light stops. The ground plan is cut straight from the Cymatic City Engine's 528 Hz city: its streets are the walkways, its bold nodal lines the chain-walks, its buildings the hanging houses, and everything else is two thousand feet of dark air. Walk in the shade: patches of the Bleach eat at you, the chain-walks jerk on the chains' beat (stand still and you hold on), and the gulf is a long way down. Three shade-lamps to rest at; the Lamplighter of the Seventh Chain holds the hanging square with glass-fire; the seventh chain's goods-cage, knocked loose from the top, is the shortcut back to the docks. The Umbral folk speak in the Narrow and sell boots, a shade-cloak, a scavenger's cloth-pole and the only mirror in the Tiers, under a cloth.
 
 <table>

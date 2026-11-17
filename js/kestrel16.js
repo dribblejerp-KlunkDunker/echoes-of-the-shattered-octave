@@ -445,11 +445,17 @@ const KESTREL16 = (function () {
   const FAR = [];
   function addFar(d) { if (!d || typeof d.id !== 'string' || FAR.some((x) => x.id === d.id) || FAR.length >= 15) return false; FAR.push(d); return true; }
   const farNow = () => { const n = fint('p16k_far'); return n > 0 && n <= FAR.length ? FAR[n - 1] : null; };
-  function flyFar(id) {
+  // a long flight can be met in the air (Phase 93, js/air93.js): the hook may take the flight over and call go() when the
+  // ship gets through; it returns true when it has done so. Short hops inside the Reach are never met.
+  let flightHook = null;
+  const setFlightHook = (f) => { flightHook = typeof f === 'function' ? f : null; };
+  const metInAir = (kind, to, hours, go) => { if (!flightHook) return false; try { return !!flightHook({ kind, to, hours, go }); } catch (e) { warnOnce('flightHook', e); return false; } };
+  function flyFar(id, through) {
     if (!cfg.on || !hasG()) return { ok: false, why: 'off' };
     if (!hopAllowed()) return { ok: false, why: 'hop' };
     const i = FAR.findIndex((x) => x.id === id); if (i < 0) return { ok: false, why: 'bad' };
     if (fint('p16k_far') === i + 1) return { ok: false, why: 'same' };
+    if (!through && metInAir('far', id, FAR[i].hours || 30, () => flyFar(id, true))) return { ok: true, to: id, met: true };
     fset('p16k_far', i + 1); passHours(FAR[i].hours || 30); refresh();
     say(FAR[i].arrive, 'good', 9000);
     return { ok: true, to: id };
@@ -1181,13 +1187,14 @@ const KESTREL16 = (function () {
 
   // ---------------------------------------------------------------- the map table: journeys, and the hop
   function hopAllowed() { return upHas('tank') && !!(hasG() && G.flags.coda_done) && !G.flags.coda_go; }
-  function hop(to) {
+  function hop(to, through) {
     if (!cfg.on || !hasG()) return { ok: false, why: 'off' };
     if (!upHas('tank')) return { ok: false, why: 'tank' };
     if (!G.flags.coda_done || G.flags.coda_go) return { ok: false, why: 'coda' };
     if (to !== 'whispergrove' && to !== 'deepwoods') return { ok: false, why: 'bad' };
     if (mooring() === to) return { ok: false, why: 'same' };
     const fromFar = !!farNow();
+    if (fromFar && !through && metInAir('home', to, B.FAR_HOME_HOURS, () => hop(to, true))) return { ok: true, to, met: true };
     fset('p16k_moor', to === 'whispergrove' ? 1 : 2); fset('p16k_far', 0);
     passHours(fromFar ? B.FAR_HOME_HOURS : B.HOP_HOURS);
     refresh();
@@ -1449,7 +1456,7 @@ const KESTREL16 = (function () {
     CARDS, FILL_BELOW, DECK, BELOW, MAPS, B, UPG, LOCKER, CREW, FLAGS, TX, cfg, saveCfg, loadCfg, DECK_AT, BELOW_AT, RAIL_PEGS, OX, OY, T,
     get TEXTS() { return LIST.slice(); },
     fint, fset, sanitize, upHas, crewHas, seenHas, mooring, landing, costOf, blockers, canFit, fit, buyMaterial, travelMinutesFor, riskFactor, magsSees, magsAtCamp,
-    FAR, addFar, farNow, flyFar,
+    FAR, addFar, farNow, flyFar, setFlightHook,
     recruitCheck, hire, giveLoaf, mendWeapon, railState, hangRail, takeRail, furnish, refresh, board, boardBlock, leaveShip, goBelow, goDeck, rest, hop, hopAllowed,
     tableMenu, openList, boardMenu, tick, onLoad, buildDeck, buildBelow, shipExists, aboard, humLevel, stopSounds, isDeckLocal,
   };
