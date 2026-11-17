@@ -50,7 +50,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const ids = Object.keys(ARMOR).concat(Object.keys(WEAPONS).filter((w) => !WEAPONS[w].innate));
     out.missing = ids.filter((id) => !X.SET_OF[id]);
     const seen = {}; let twice = 0; for (const s of X.SETS) for (const id of [].concat(...s.armor, s.weapons)) { if (seen[id]) twice++; seen[id] = 1; }
-    out.once = twice === 0 && X.SETS.length === 14;
+    out.once = twice === 0 && X.SETS.length === 15;
     // ---- three pieces of Tanner's Row: +1 armour; the full set: fatigue back faster
     p.armor = {}; if (!p.weapons.includes('sword')) p.weapons.push('sword'); p.weapon = p.weapons.indexOf('sword');
     const ar0 = armorRating(); p.armor = { body: 'a_jerkin', hands: 'a_gloves' }; const ar2 = armorRating();
@@ -97,14 +97,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   check(r.gloves, 'the picture wears your gloves, and a glass left hand on a two-hander');
   check(r.same, 'painted the same way twice');
   check(r.cape, 'a cape slot');
-  check(!r.missing.length && r.once, 'every weapon and piece of armour is in exactly one of the fourteen sets' + (r.missing.length ? ' (missing ' + r.missing.join(',') + ')' : ''));
+  check(!r.missing.length && r.once, 'every weapon and piece of armour is in exactly one of the fifteen sets' + (r.missing.length ? ' (missing ' + r.missing.join(',') + ')' : ''));
   check(r.three, 'three pieces of a set give its small bonus (Tanner\'s Row: +1 armour), not the full');
   check(r.full || true, 'the full set gives the full bonus (once its pieces exist)');
   check(r.swing, 'the Free Captains swing faster');
   check(r.inv && r.stats, 'the inventory and each piece name the set');
   r.fr87 = await page.evaluate(async () => { const j = await (await fetch('locales/story/fr.json')).json(); return ITEMS87.TEXTS.concat(GEAR87.TEXTS).filter((t) => !/\{\d\}/.test(t) && !(STORY_I18N.hash(STORY_I18N.norm(t)) in j.s)); });
   check(r.n87 === 52 && !r.cat87.length, 'the fifty-two new pieces are in the catalog, the pack (with their own pictures), the shared look table and the card' + (r.cat87.length ? ' (not: ' + r.cat87.join(',') + ')' : ''));
-  check(r.sets87, 'every one of the fourteen sets is whole');
+  check(r.sets87, 'every one of the fifteen sets is whole');
   check(!r.fr87.length, 'every new line has its French' + (r.fr87.length ? ' (missing: ' + r.fr87.slice(0, 3).join(' | ') + ')' : ''));
   check(r.sig87, 'each new piece changes the character card');
   check(r.hush && r.hushRestored, 'the Hush in full: enemies hear you at half the distance, and the Narrow is left as it was');

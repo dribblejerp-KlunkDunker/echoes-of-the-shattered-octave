@@ -82,6 +82,7 @@ const KESTREL16 = (function () {
     MEND: 35,              // Abner: +35 condition to the readied weapon, once a game day (the whetstone's number)
     LOAF: 1,               // Nell: one Hearth Bread, once a game day
     HOP_HOURS: 4,          // flying the Kestrel between the two moorings
+    FAR_HOME_HOURS: 30,    // home from a far country to either mooring (Phase 92) [PROPOSED]
     CHASE: 14,             // a hostile this close and chasing: nobody climbs a rope with that behind them
     SIGHT: 0.2,            // Mags sees your face when dot(her facing, direction to you) > this, within SIGHT_R
     SIGHT_R: 7,
@@ -396,10 +397,11 @@ const KESTREL16 = (function () {
   //   p16k_crew  0-15    bit per recruit (CREW order: mags, pennick = the engineer, nell, hob; ids kept for saves)
   //   p16k_seen  0-63    beats seen: 0 aboard, 1 vane, 2 mags, 3 the engineer, 4 nell, 5 hob
   //   p16k_moor  0-2     0 as the story left her (Whisper-Grove in Part Three, the Deep Woods in Part Four), 1 the Court, 2 the camp
+  //   p16k_far   0-15    0 at home in the Reach and the Woods; n: moored in the n-th far country (FAR, below; Phase 92 on)
   //   p16k_visits 0-9999 times you have climbed aboard
   //   p16k_loaf / p16k_mend  the game day + 1 on which Nell's loaf / Abner's edge were last given (0 never)
   //   p16k_rp0..5 0-12   which trophy (1-12) hangs on rail peg n, 0 bare
-  const FLAGS = { p16k_up: [0, 127], p16k_crew: [0, 15], p16k_seen: [0, 63], p16k_moor: [0, 2], p16k_visits: [0, 9999], p16k_loaf: [0, 99999], p16k_mend: [0, 99999], p16k_rest: [0, 9999] };
+  const FLAGS = { p16k_up: [0, 127], p16k_crew: [0, 15], p16k_seen: [0, 63], p16k_moor: [0, 2], p16k_far: [0, 15], p16k_visits: [0, 9999], p16k_loaf: [0, 99999], p16k_mend: [0, 99999], p16k_rest: [0, 9999] };
   for (let i = 0; i < 6; i++) FLAGS['p16k_rp' + i] = [0, 12];
   const hasG = () => typeof G !== 'undefined' && !!G && !!G.flags && typeof G.flags === 'object';
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
@@ -437,8 +439,24 @@ const KESTREL16 = (function () {
   // the story: the ship exists for a player who has left Oakhaven by it
   const shipExists = () => hasG() && !!(G.flags.part3 || G.flags.part4);
 
+  // the far countries (Phase 92 on): each country's module registers its mooring here, and the map table offers the
+  // flight once the hop is allowed (the new number-three tank, and Book One's story done: Phase 89, approved 14 Nov).
+  // { id, name (the menu line), arrive (the message), hours, landing() -> { map, x, y, dir }, toLabel (for the ladder) }
+  const FAR = [];
+  function addFar(d) { if (!d || typeof d.id !== 'string' || FAR.some((x) => x.id === d.id) || FAR.length >= 15) return false; FAR.push(d); return true; }
+  const farNow = () => { const n = fint('p16k_far'); return n > 0 && n <= FAR.length ? FAR[n - 1] : null; };
+  function flyFar(id) {
+    if (!cfg.on || !hasG()) return { ok: false, why: 'off' };
+    if (!hopAllowed()) return { ok: false, why: 'hop' };
+    const i = FAR.findIndex((x) => x.id === id); if (i < 0) return { ok: false, why: 'bad' };
+    if (fint('p16k_far') === i + 1) return { ok: false, why: 'same' };
+    fset('p16k_far', i + 1); passHours(FAR[i].hours || 30); refresh();
+    say(FAR[i].arrive, 'good', 9000);
+    return { ok: true, to: id };
+  }
   // where the Kestrel is moored right now
   function mooring() {
+    const far = farNow(); if (far) return far.id;
     const m = fint('p16k_moor');
     if (m === 1 && upHas('tank')) return 'whispergrove';
     if (m === 2 && upHas('tank')) return 'deepwoods';
@@ -446,6 +464,7 @@ const KESTREL16 = (function () {
   }
   // the rope ladder / the hatch: where you stand when you climb down
   function landing() {
+    const far = farNow(); if (far) { try { const L = far.landing(); if (L && G.maps && G.maps[L.map]) return L; } catch (e) { warnOnce('far', e); } }
     const id = mooring();
     const m = typeof G !== 'undefined' && G.maps ? G.maps[id] : null;
     const want = id === 'whispergrove' ? { x: 24.5, y: 43.4, dir: -Math.PI / 2 } : { x: 26.2, y: 43.2, dir: Math.PI };
@@ -1034,7 +1053,7 @@ const KESTREL16 = (function () {
     if (own === BELOW) m.ambient = belowAmbient();
     if (own === DECK) { m.music = mooring() === 'deepwoods' ? 'coda' : 'grove'; }
     // the ladder says where it goes
-    for (const e of m.entities) if (e.use === 'p16k_exit') e.label = fmt(TX.board.ladderLabel, mooring() === 'deepwoods' ? TX.board.toCamp : TX.board.toCourt);
+    for (const e of m.entities) if (e.use === 'p16k_exit') { const far = farNow(); e.label = fmt(TX.board.ladderLabel, far ? far.toLabel : mooring() === 'deepwoods' ? TX.board.toCamp : TX.board.toCourt); }
     if (!cfg.on || !shipExists()) return;
     const add = (o, tag) => { const e = Object.assign({ transient: true, _decor: true, _p16k: tag }, o); m.entities.push(e); return e; };
     const prop = (sprite, x, y, tag, o) => add(Object.assign({ kind: 'deco', sprite, x, y, solid: false, radius: 0.2 }, o || {}), tag);
@@ -1122,7 +1141,8 @@ const KESTREL16 = (function () {
     const L = landing();
     stopSounds();
     loadMap(L.map, { x: L.x, y: L.y, dir: L.dir });
-    say(L.map === 'whispergrove' ? TX.board.arriveCourt : TX.board.arriveCamp, '', 6000);
+    const far = farNow();
+    say(far ? (far.down || far.arrive) : L.map === 'whispergrove' ? TX.board.arriveCourt : TX.board.arriveCamp, '', 6000);
     return true;
   }
   function goBelow() { loadMap(BELOW, { x: BELOW_AT.arrive[0], y: BELOW_AT.arrive[1], dir: -Math.PI / 2 }); }
@@ -1167,8 +1187,9 @@ const KESTREL16 = (function () {
     if (!G.flags.coda_done || G.flags.coda_go) return { ok: false, why: 'coda' };
     if (to !== 'whispergrove' && to !== 'deepwoods') return { ok: false, why: 'bad' };
     if (mooring() === to) return { ok: false, why: 'same' };
-    fset('p16k_moor', to === 'whispergrove' ? 1 : 2);
-    passHours(B.HOP_HOURS);
+    const fromFar = !!farNow();
+    fset('p16k_moor', to === 'whispergrove' ? 1 : 2); fset('p16k_far', 0);
+    passHours(fromFar ? B.FAR_HOME_HOURS : B.HOP_HOURS);
     refresh();
     say(to === 'whispergrove' ? TX.table.hopMsgCourt : TX.table.hopMsgCamp, 'good', 8000);
     return { ok: true, to };
@@ -1177,8 +1198,13 @@ const KESTREL16 = (function () {
     if (typeof showEvent !== 'function') return;
     const T = TX.table, ch = [{ t: T.plan, f: () => { if (typeof travelOpen === 'function') travelOpen(); } }];
     if (upHas('tank')) {
-      const other = mooring() === 'deepwoods' ? 'whispergrove' : 'deepwoods';
-      ch.push({ t: other === 'whispergrove' ? T.flyCourt : T.flyCamp, f: () => { if (!hopAllowed()) { say(T.hopWait, 'warn', 6000); return; } hop(other); } });
+      if (farNow()) {   // abroad: home to either mooring
+        for (const to of ['whispergrove', 'deepwoods']) ch.push({ t: to === 'whispergrove' ? T.flyCourt : T.flyCamp, f: () => { if (!hopAllowed()) { say(T.hopWait, 'warn', 6000); return; } hop(to); } });
+      } else {
+        const other = mooring() === 'deepwoods' ? 'whispergrove' : 'deepwoods';
+        ch.push({ t: other === 'whispergrove' ? T.flyCourt : T.flyCamp, f: () => { if (!hopAllowed()) { say(T.hopWait, 'warn', 6000); return; } hop(other); } });
+      }
+      for (const d of FAR) if (farNow() !== d) ch.push({ t: d.name, f: () => { if (!hopAllowed()) { say(T.hopWait, 'warn', 6000); return; } flyFar(d.id); } });
     }
     ch.push(NO(T.back));
     showEvent(T.title, T.body + (crewHas('mags') ? '<br>' + T.mags : ''), ch);
@@ -1423,6 +1449,7 @@ const KESTREL16 = (function () {
     CARDS, FILL_BELOW, DECK, BELOW, MAPS, B, UPG, LOCKER, CREW, FLAGS, TX, cfg, saveCfg, loadCfg, DECK_AT, BELOW_AT, RAIL_PEGS, OX, OY, T,
     get TEXTS() { return LIST.slice(); },
     fint, fset, sanitize, upHas, crewHas, seenHas, mooring, landing, costOf, blockers, canFit, fit, buyMaterial, travelMinutesFor, riskFactor, magsSees, magsAtCamp,
+    FAR, addFar, farNow, flyFar,
     recruitCheck, hire, giveLoaf, mendWeapon, railState, hangRail, takeRail, furnish, refresh, board, boardBlock, leaveShip, goBelow, goDeck, rest, hop, hopAllowed,
     tableMenu, openList, boardMenu, tick, onLoad, buildDeck, buildBelow, shipExists, aboard, humLevel, stopSounds, isDeckLocal,
   };

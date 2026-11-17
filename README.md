@@ -433,6 +433,27 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The Dawning Heights, part one: the Umbral Tiers (Phase 92).** The Kestrel's table now flies south to Sol-Luminary, the city that hangs from Mount Lumina on nine chains. Her ladder lands you on the Keel Docks, and the Umbral Tiers climb from there up the mountain's face to the Basilica's black wall, where the light stops. The ground plan is cut straight from the Cymatic City Engine's 528 Hz city: its streets are the walkways, its bold nodal lines the chain-walks, its buildings the hanging houses, and everything else is two thousand feet of dark air. Walk in the shade: patches of the Bleach eat at you, the chain-walks jerk on the chains' beat (stand still and you hold on), and the gulf is a long way down. Three shade-lamps to rest at; the Lamplighter of the Seventh Chain holds the hanging square with glass-fire; the seventh chain's goods-cage, knocked loose from the top, is the shortcut back to the docks. The Umbral folk speak in the Narrow and sell boots, a shade-cloak, a scavenger's cloth-pole and the only mirror in the Tiers, under a cloth.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p92/p92-docks.jpg" alt="The Drift-Kestrel moored broadside at the edge of the Keel Docks, her ladder down to the dark planks"></td>
+<td width="50%"><img src="screenshots/p92/p92-keeper.jpg" alt="The Lamplighter of the Seventh Chain on the hanging square with his lantern, two of its four chains rising, white light spilling over the black wall behind"></td>
+</tr>
+<tr>
+<td>The Kestrel at the Keel Docks.</td>
+<td>The Lamplighter on the hanging square; the Bleach over the line.</td>
+</tr>
+<tr>
+<td width="50%"><img src="screenshots/p92/p92-lamp.jpg" alt="A lit shade-lamp on an iron post on the fourth tier, black-windowed hanging houses with small scratched signs, a sun and a bird"></td>
+<td width="50%"><img src="screenshots/p92/p92-plan.jpg" alt="The Umbral Tiers' ground plan from the 528 Hz figure: tan walkways, orange chain-walks, dark houses over a navy gulf"></td>
+</tr>
+<tr>
+<td>A shade-lamp at the cobbler's, fourth tier.</td>
+<td>The plan, cut from the 528 Hz city.</td>
+</tr>
+</table>
+
 **What comes next: the world plan.** The Greenroot road is the first of seven. The plan for the rest, for the owner to rule on, is [`story/Game Layer/Phase 81 - The World Plan.md`](story/Game%20Layer/Phase%2081%20-%20The%20World%20Plan.md): three countries with the *Drift-Kestrel* between them, six more roads, and four big places off them (a dungeon, a mine, a drowned old town and a wood where the path is never the same way twice). Each road is drawn from a real country with one wonder added. Nothing on this chart in ochre or red is built yet.
 
 <p align="center"><img src="screenshots/world81/world-plan.jpg" alt="The world plan: the Reach, the Woods and the Coast, with the built Greenroot road in green and the proposed roads and big places in ochre and red" width="92%"></p>

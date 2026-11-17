@@ -74,6 +74,10 @@ const GEAR87 = (function () {
     { id: 'oldreach', name: S('The Old Reach'), home: 'the Antler Galleries and the Deep Grove',
       armor: ['a_p87_old_crown', 'a_p87_old_hide', 'a_p87_old_wraps', 'a_p87_old_shoes', 'a_p87_old_pelt'], weapons: ['p85_pick', 'p85_knife', 'p85_bough', 'p87_hornbow'],
       t: { special: 'flint' }, f: { special: 'grove' }, tLine: S('iron-bough and flint hit 15% harder'), fLine: S('the Deep Grove\'s ways are always the low note') },
+    // Phase 92: the Dawning Heights' first set [PROPOSED]
+    { id: 'umbral', name: S('The Umbral Tiers'), home: 'Sol-Luminary',
+      armor: ['a_p92_lamphood', 'a_p92_chainboots', 'a_p92_shadecloak'], weapons: ['p92_clothpole'],
+      t: { noise: -0.15 }, f: { special: 'shade' }, tLine: S('quieter on the planks'), fLine: S('the Bleach eats at you half as fast') },
   ];
   const BY_ID = {}; for (const s of SETS) BY_ID[s.id] = s;
   // which set a piece belongs to (the design puts every piece in exactly one)
