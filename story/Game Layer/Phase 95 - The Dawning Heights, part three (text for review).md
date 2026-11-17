@@ -50,9 +50,9 @@ An army of readers checked every remaining Heights place against the books befor
 - **The White Mile:** on hold for your ruling. The Foundry is on the Spire, not in the city; the Unison hunts by sound, not sight; the Eye is "the only mirror the Altar permitted in all the Heights", which sets Book Two against Vol II's Mirror Walks and so against the Polisher. Three whole designs to choose from are in "Phase 96 - The White Mile (findings and options, for ruling)".
 - **The nine anchor-houses:** withdrawn. The books know only the sixth and the seventh; nobody lives in the Bleach.
 - **The cloud deck and the valley farms:** withdrawn. The book has no cloud under the city and nothing growing below it.
-- **The Bell Yard:** that name is a Whisper-Grove street in Book One. The place is being built as the book's black square before the Basilica's west end, with the black tower and its bell.
-- **The Basilica school:** the bench under the east window is above the line, in the sealed nave. The school is being built as a schoolroom on the shade side [PROPOSED].
-- **Sun-Peak Vigil and the Chalk Cliffs:** these stand on the bibles alone. They are being built small, without the under-stair, the "thirty-eight years" or the Light's lullaby, which the books contradict or would give away early.
+- **The Bell Yard:** that name is a Whisper-Grove street in Book One. The place was built as the book's black square before the Basilica's west end, with the black tower and its bell.
+- **The Basilica school:** the bench under the east window is above the line, in the sealed nave. The school was built as a schoolroom on the shade side [PROPOSED].
+- **Sun-Peak Vigil and the Chalk Cliffs:** these stand on the bibles alone. They were built small, without the under-stair, the "thirty-eight years" or the Light's lullaby, which the books contradict or would give away early.
 
 ## For the owner
 
