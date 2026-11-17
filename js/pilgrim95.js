@@ -379,10 +379,10 @@ const PILGRIM95 = (function () {
     add('p95_copper', 56, 44, 0.7, (x) => { x.fillStyle = '#7a5030'; x.beginPath(); x.moveTo(6, 10); x.lineTo(50, 10); x.lineTo(44, 40); x.lineTo(12, 40); x.closePath(); x.fill(); px(x, '#a87848', 6, 10, 44, 2); px(x, '#d8d8d4', 10, 6, 36, 4); px(x, '#f0f0ec', 14, 4, 10, 3); px(x, '#f0f0ec', 28, 3, 12, 4); px(x, g(30), 10, 40, 36, 4); });
     // the Eye, on its frame of white iron: white as the inside of a shell, but for the cartwheel of bright bronze at its centre
     add('p95_eye', 176, 184, 7.2, (x) => {
-      x.strokeStyle = '#c4c2bc'; x.lineWidth = 5; x.beginPath(); x.moveTo(20, 182); x.lineTo(60, 60); x.moveTo(156, 182); x.lineTo(116, 60); x.moveTo(8, 182); x.lineTo(168, 182); x.moveTo(44, 130); x.lineTo(132, 130); x.stroke();
-      x.fillStyle = '#b6b4ae'; x.beginPath(); x.ellipse(88, 84, 80, 80, 0, 0, PI * 2); x.fill();
-      x.fillStyle = '#e6e2d8'; x.beginPath(); x.ellipse(88, 84, 76, 76, 0, 0, PI * 2); x.fill();
-      for (let r = 20; r < 76; r += 14) { x.strokeStyle = '#d8d4c8'; x.lineWidth = 1; x.beginPath(); x.ellipse(88, 84, r, r, 0, 0, PI * 2); x.stroke(); }
+      x.strokeStyle = '#8c8a86'; x.lineWidth = 6; x.beginPath(); x.moveTo(20, 182); x.lineTo(60, 60); x.moveTo(156, 182); x.lineTo(116, 60); x.moveTo(8, 182); x.lineTo(168, 182); x.moveTo(44, 130); x.lineTo(132, 130); x.stroke();
+      x.fillStyle = '#7e7c78'; x.beginPath(); x.ellipse(88, 84, 80, 80, 0, 0, PI * 2); x.fill();
+      x.fillStyle = '#dcd8cc'; x.beginPath(); x.ellipse(88, 84, 74, 74, 0, 0, PI * 2); x.fill();
+      for (let r = 20; r < 76; r += 14) { x.strokeStyle = '#bcb8ac'; x.lineWidth = 1; x.beginPath(); x.ellipse(88, 84, r, r, 0, 0, PI * 2); x.stroke(); }
       x.fillStyle = '#b8862e'; x.beginPath(); x.ellipse(88, 84, 13, 13, 0, 0, PI * 2); x.fill(); x.fillStyle = '#f2d27a'; x.beginPath(); x.ellipse(86, 82, 9, 9, 0, 0, PI * 2); x.fill(); px(x, '#fff6d0', 82, 78, 4, 4);
     }, (r, gg, b, a) => a > 0 && r > 180 && b < 140 && gg > 150);
     add('p95_polisher', 32, 96, 1.1, (x) => { px(x, '#c4c2bc', 4, 0, 2, 96); px(x, '#c4c2bc', 24, 0, 2, 96); for (let j = 8; j < 96; j += 12) px(x, '#c4c2bc', 4, j, 22, 2); x.fillStyle = '#eeeae0'; x.beginPath(); x.moveTo(8, 60); x.lineTo(10, 24); x.lineTo(22, 24); x.lineTo(24, 60); x.closePath(); x.fill(); x.fillStyle = '#e4e0d4'; x.beginPath(); x.arc(16, 17, 6, 0, PI * 2); x.fill(); px(x, '#eeeae0', 22, 20, 8, 3); px(x, '#3a3020', 28, 18, 4, 5); });
@@ -431,14 +431,14 @@ const PILGRIM95 = (function () {
     const base = { sprite: 'p92_shadelamp', litSprite: 'p92_shadelamplit', label: TX.lampLabel, litLabel: TX.lampLit, lightCol: [240, 186, 110] };
     LAMPS = SOULS91.register('j', { maps: [HOUSE, MAP], revive: [MAP], keeper: (e) => e._p95 === 'keeper', kflag: 'p95k', note: 528 }, [
       Object.assign({ map: HOUSE, x: P.lamp1[0], y: P.lamp1[1], wx: P.lamp1[0] + 1.3, wy: P.lamp1[1] - 0.9, dir: -PI / 2, name: TX.lampRobing }, base),
-      Object.assign({ map: MAP, x: P.lamp2[0], y: P.lamp2[1], wx: P.lamp2[0] + 1.1, wy: P.lamp2[1] + 0.9, dir: PI / 2, name: TX.lampCage }, base),
+      Object.assign({ map: MAP, x: P.lamp2[0], y: P.lamp2[1], wx: P.lamp2[0] + 1.1, wy: P.lamp2[1] + 0.9, dir: PI / 2, name: TX.lampCage }, base, { lightCol: [80, 62, 38] }),   // dim: its light must not grey the black silk over it
       Object.assign({ map: MAP, x: P.lamp3[0], y: P.lamp3[1], wx: P.lamp3[0] + 1.4, wy: P.lamp3[1] - 0.7, dir: 0, name: TX.lampRim }, base),
     ]) || [];
   }
 
   // ================================================================ building: the house (the robing-room and the anchor-house)
   function buildHouse() {
-    const m = new GameMap(HOUSE, TX.nameHouse, HW, HH, { floor: 't_p95_flag', ceil: 't_p95_slate', floorTextures: HFLOORS, fogDist: 14, fogColor: [8, 8, 10], ambient: 0.2, music: 'inside', danger: 0,
+    const m = new GameMap(HOUSE, TX.nameHouse, HW, HH, { floor: 't_p95_flag', ceil: 't_p95_slate', floorTextures: HFLOORS, fogDist: 14, fogColor: [8, 8, 10], ambient: 0.3, music: 'inside', danger: 0,
       spawn: { x: P.hArrive[0], y: P.hArrive[1], dir: 0 } });
     m.ceilZ = 2.2;
     m.rect(0, 0, HW - 1, HH - 1, 't_p94_rib');
@@ -508,7 +508,7 @@ const PILGRIM95 = (function () {
     return { kind, shade };
   }
   function build() {
-    const m = new GameMap(MAP, TX.name, W, H, { floor: 't_p95_deck', ceil: null, floorTextures: FLOORS, fogDist: 64, fogColor: [240, 238, 228], ambient: 1, music: 'inside', danger: 2,
+    const m = new GameMap(MAP, TX.name, W, H, { floor: 't_p95_deck', ceil: null, floorTextures: FLOORS, fogDist: 84, fogColor: [240, 238, 228], ambient: 1, music: 'inside', danger: 2,
       spawn: { x: P.arrive[0], y: P.arrive[1], dir: PI / 2 } });
     m.bright = true;   // lit by the Bleach: never darkened as a room is (js/lighting.js)
     const { kind, shade } = plan();
