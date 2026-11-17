@@ -207,7 +207,7 @@ const PILGRIM95 = (function () {
   const GG = [[41.5, 181.5], [44.6, 180.4], [47.5, 182.6], [42.4, 185.4], [46.2, 186.5], [49.0, 188.4], [41.2, 189.6], [44.4, 191.5], [47.6, 193.2], [42.6, 195.0], [48.6, 196.2]];
   const FLOORS = ['t_p95_deck', 't_p95_stone', 't_p95_white', 't_p95_step', 't_p95_altar', 't_p95_slope', 't_p95_shadow'];
   const DECK = 0, STONE = 1, BLOCKED = 2, STEP = 3, ALTAR = 4, SLOPEF = 5, SHADOW = 6;
-  const HFLOORS = ['t_p95_flag', 't_p95_deck', 't_p95_white', 't_p95_ringfloor'];
+  const HFLOORS = ['t_p95_flag', 't_p95_deck', 't_p95_white', 't_p95_ring0', 't_p95_ring1', 't_p95_ring2', 't_p95_ring3'];
 
   // ---------------------------------------------------------------- the choir shifts on the first span: the place's own clock
   const PARTIES = 8, PARTY_SPEED = 1.25, PARTY_SHADE = 1.5;
@@ -266,7 +266,10 @@ const PILGRIM95 = (function () {
       tex('t_p95_flag', (x) => { for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const joint = (j % 32) === 0 || ((i + ((j >> 5) & 1) * 16) % 32) === 0; px(x, g((joint ? 14 : 30) + (h2(i, j) * 10 | 0)), i, j); } });
       tex('t_p95_slate', (x) => { for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const row = j >> 3, off = (row & 1) * 6; px(x, g(22 + (h2((i + off) / 12 | 0, row) * 10 | 0) + ((j % 8) === 0 ? -10 : 0) + (((i + off) % 12) === 0 ? -8 : 0)), i, j); } px(x, '#2a1c12', 0, 28, 64, 6); px(x, '#3a2a1c', 0, 28, 64, 1); });
       tex('t_p95_towerwall', (x) => { for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const row = j >> 4, off = (row & 1) * 16, joint = (j % 16) === 0 || ((i + off) % 32) === 0; px(x, g((joint ? 70 : 104) + (h2((i + off) >> 5, row) * 14 | 0) + (h2(i, j) * 8 | 0)), i, j); } });
-      tex('t_p95_ringfloor', (x) => { for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) px(x, g(30 + (h2(i, j) * 10 | 0)), i, j); x.strokeStyle = g(96); x.lineWidth = 7; x.beginPath(); x.arc(32, 32, 24, 0, PI * 2); x.stroke(); x.strokeStyle = g(130); x.lineWidth = 1; x.beginPath(); x.arc(32, 32, 27, 0, PI * 2); x.stroke(); px(x, g(4), 18, 18, 28, 28); });
+      // the iron ring, ten feet across, sunk in the floor: four cells, a quarter of it in each, and the dark of the frame inside it
+      [[64, 64], [0, 64], [64, 0], [0, 0]].forEach(([qx, qy], q) => tex('t_p95_ring' + q, (x) => {
+        for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const d = Math.hypot(i - qx, j - qy); px(x, d < 40 ? g(3 + (h2(i, j) * 3 | 0)) : d < 52 ? g(88 + (h2(i, j) * 14 | 0) - (d > 49 || d < 42 ? 30 : 0)) : g(30 + (h2(i + q * 64, j) * 10 | 0)), i, j); }
+      }));
       tex('t_p95_door', (x) => { px(x, g(30), 0, 0, 64, 64); px(x, g(52), 6, 4, 52, 60); for (let j = 8; j < 64; j += 12) for (const i of [10, 52]) px(x, g(96), i, j, 2, 2); x.strokeStyle = g(150); x.lineWidth = 3; x.beginPath(); x.arc(32, 26, 9, 0, PI * 2); x.stroke(); px(x, g(150), 31, 35, 3, 12); px(x, g(150), 24, 46, 17, 3); });   // the pilgrims' sign: a disc on a stand
       tex('t_p95_bar', (x) => { px(x, g(40), 0, 0, 64, 64); px(x, g(64), 6, 4, 52, 60); px(x, '#3a2a1c', 0, 28, 64, 8); px(x, '#5a4630', 0, 28, 64, 1); for (const i of [4, 56]) px(x, g(110), i, 26, 4, 12); px(x, '#f4f0e4', 6, 61, 52, 3); });
       tex('t_p95_archway', (x) => { for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) px(x, g(96 + (h2(i, j) * 10 | 0)), i, j); px(x, '#f6f2e6', 8, 6, 48, 58); px(x, '#1a1816', 8, 6, 48, 3); for (let j = 14; j < 64; j += 9) px(x, '#18181a', 8, j, 48, 1); });   // the mouth, from inside: the white
@@ -431,7 +434,7 @@ const PILGRIM95 = (function () {
 
   // ================================================================ building: the house (the robing-room and the anchor-house)
   function buildHouse() {
-    const m = new GameMap(HOUSE, TX.nameHouse, HW, HH, { floor: 't_p95_flag', ceil: 't_p95_slate', floorTextures: HFLOORS, fogDist: 13, fogColor: [8, 8, 10], ambient: 0.13, music: 'inside', danger: 0,
+    const m = new GameMap(HOUSE, TX.nameHouse, HW, HH, { floor: 't_p95_flag', ceil: 't_p95_slate', floorTextures: HFLOORS, fogDist: 14, fogColor: [8, 8, 10], ambient: 0.2, music: 'inside', danger: 0,
       spawn: { x: P.hArrive[0], y: P.hArrive[1], dir: 0 } });
     m.ceilZ = 2.2;
     m.rect(0, 0, HW - 1, HH - 1, 't_p94_rib');
@@ -445,7 +448,7 @@ const PILGRIM95 = (function () {
     m.block(0, 0, 't_p94_rib', m.ceilZ);
     // the deck from the ring to the mouth, and the ring
     for (let j = P.ringC[1] + 2; j <= P.mouthDoor[1] - 1; j++) for (const i of [43, 44, 45]) if (!m.get(i, j)) m.setFloor(i, j, 1);
-    for (let j = P.ringC[1] - 1; j <= P.ringC[1]; j++) for (let i = P.ringC[0] - 1; i <= P.ringC[0]; i++) m.setFloor(i, j, 3);
+    for (let q = 0; q < 4; q++) m.setFloor(P.ringC[0] - 1 + (q & 1), P.ringC[1] - 1 + (q >> 1), 3 + q);
     m.block(P.ringC[0], P.ringC[1] + 1, 't_p94_chain', 0.55);   // the chain, bending down to the ring from the mouth
     // doors: down to the winch-room; the barred door to the top tier; the mouth
     m.set(P.hDoor[0], P.hDoor[1], DOOR({ tex: 't_p95_door', portal: { map: ANCH, x: P.anchOut[0], y: P.anchOut[1], dir: PI }, label: TX.doorBack }));
@@ -503,6 +506,7 @@ const PILGRIM95 = (function () {
   function build() {
     const m = new GameMap(MAP, TX.name, W, H, { floor: 't_p95_deck', ceil: null, floorTextures: FLOORS, fogDist: 64, fogColor: [240, 238, 228], ambient: 1, music: 'inside', danger: 2,
       spawn: { x: P.arrive[0], y: P.arrive[1], dir: PI / 2 } });
+    m.bright = true;   // lit by the Bleach: never darkened as a room is (js/lighting.js)
     const { kind, shade } = plan();
     const V = m.ensureVerts(), L = m.ensureLvls(), W1 = W + 1;
     for (let vy = 0; vy <= H; vy++) for (let vx = 0; vx <= W; vx++) V[vy * W1 + vx] = (vx >= SLOPE[0] && vx <= SLOPE[2] + 1 && vy >= SLOPE[1] && vy <= SLOPE[3] + 1) ? slopeH(vy) : hv(vy);

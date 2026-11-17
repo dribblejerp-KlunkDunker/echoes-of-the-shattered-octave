@@ -26,7 +26,7 @@
 //    7 the hanging square (the keeper, the Lamplighter of the Seventh Chain; slung on four chains, its edges open)
 //    8 the bell-gallery stair (a lamp, under the black wall)     9 the iron door (seen, not entered: the Rite is Book Two's)
 //   10 the seventh chain's goods-cage (the shortcut: knock its pin out at the top and it drops to the docks; then it rides)
-//  THE DANGER: light. Patches of the Bleach below the line, and the Lamplighter's glass-fire, eat at you while you stand in
+//  THE DANGER: light. Patches of the Bleach below the line eat at you, and the Lamplighter's glass-fire burns you, while you stand in
 //  them; the safe way is the way through shadow. The chain-walks jerk on the chains' beat (a creak first): walk on through
 //  one and it throws you; stand still and you hold on. Fall into the gulf and you die, and your Piece is left at the last
 //  place you stood. What walks there: bleach-hounds (Phase 89 [PROPOSED]), Cacophony hounds, swarms.
@@ -84,9 +84,10 @@ const HEIGHTS92 = (function () {
     wall: S('The Basilica\'s black wall. It runs along the line: above it, the Bleach; below it, the Tiers.'),
     ironDoor: S('The iron door: man-high, studded, in the middle of the black wall. The line. It does not open, and nobody here would open it.'),
     ironDoorLabel: S('The iron door in the black wall'),
-    bellStair: S('The bell-gallery stair, under the black wall. The Basilica\'s bell is somewhere above, on the other side of the line.'),
+    bellStair: S('The bell-gallery stair, under the black wall. The gallery is above, on the other side of the line. The bell is not: it hangs in the black tower, on this side.'),   // Book Two: "from the Basilica's black tower, a deep slow bronze note"; "Below them, in the black tower, a bell began to ring"
     streetlamp: S('A shade-lamp: a lantern under a black hood, so it lights the planks and nothing else.'),
     bleachPatch: S('A patch of the Bleach, below the line: the light has got in here, and the planks are white as bone.'),
+    firePatch: S('Glass-fire on the planks: white-gold, smokeless, burning on nothing.'),
     // the Souls lamps: shade-lamps
     lampLabel: S('A shade-lamp on an iron post, unlit: a hood of black tin over the glass. Stand by it to light it.'),
     lampLit: S('A shade-lamp on an iron post, burning under its black hood. Use it to rest.'),
@@ -105,9 +106,9 @@ const HEIGHTS92 = (function () {
     jerked: S('The chain-walk jerks under you and throws you sideways.'),
     held: S('The chain-walk jerks. You hold still, and it does not throw you.'),
     gulf: S('the gulf'),
-    glassfire: S('He swings his fire-stave, and white-gold fire splashes where you stood. The light comes in after it.'),
+    glassfire: S('He swings his fire-stave, and white-gold fire splashes where you stood. It burns without smoke, on nothing.'),
     keeperName: S('The Lamplighter of the Seventh Chain'),
-    keeperDesc: S('A Flambeau who stayed below the line when his chapter went up, and has been correcting the Tiers for seven years. He carries glass-fire into the dark, and where it burns, the Bleach follows.'),
+    keeperDesc: S('A Flambeau who stayed below the line when his chapter went up, and has been correcting the Tiers for seven years. He carries glass-fire into the dark, and burns what the dark has kept.'),
     keeperDown: S('The Lamplighter goes down on the hanging square, and his fire-stave rings on the planks. The dark comes back in over them like water.'),
     houndName: S('Bleach-Hound'),
     houndDesc: S('A Dissonance Hound whose wrong notes have been bleached white. It hunts the edge of the light.'),
@@ -147,7 +148,7 @@ const HEIGHTS92 = (function () {
       greet: { polite: S('Light keep you true. Sit, if you want boots. Rope soles. The planks move.'), normal: S('Boots? You walk like somebody from flat country.'), blunt: S('Mind your feet in my shop and mind your voice on my tier.') },
       topics: {
         [S('The chain-walks')]: S('When the chains jerk, stand still. The ones who keep walking go over. I mend boots for the ones who stand still.'),
-        [S('The Lamplighter')]: S('He was a Flambeau. When his chapter went up the Pilgrim Chain he stayed below. The Tiers would pull the ladders up on Flambeaux, and we did: he was already down. Now he keeps the square with glass-fire, correcting us, he says. Where he burns, the light comes down after.'),
+        [S('The Lamplighter')]: S('He was a Flambeau. When his chapter went up the Pilgrim Chain he stayed below. The Tiers would pull the ladders up on Flambeaux, and we did: he was already down. Now he keeps the square with glass-fire, correcting us, he says. Glass-fire wants no fuel. It will burn on a plank, or a coat, or you.'),
         [S('Casts')]: S('Up there it was an insult: "he casts", a thing with a shadow, provincial. Down here it is the best thing you can say of a person. Somebody who casts is somebody you can stand behind.'),
       },
     },
@@ -689,7 +690,7 @@ const HEIGHTS92 = (function () {
   }
   function onChainWalk(x, y) { const d = G.map._p92; return !!(d && d.kind[cellK(x, y)] === 4); }
   function addPatch(x, y) {
-    const ent = { kind: 'deco', sprite: 'p92_glassfire', x, y, scale: 1.4, solid: false, radius: 0.05, transient: true, _decor: true, glow: 1, lightCol: [255, 240, 200], label: TX.bleachPatch };
+    const ent = { kind: 'deco', sprite: 'p92_glassfire', x, y, scale: 1.4, solid: false, radius: 0.05, transient: true, _decor: true, glow: 1, lightCol: [255, 240, 200], label: TX.firePatch };
     G.ents.push(ent); patches.push({ x, y, r: 1.4, t: 6, ent });
   }
   function clearPatches() { for (const q of patches) { const i = G.ents.indexOf(q.ent); if (i >= 0) G.ents.splice(i, 1); } patches.length = 0; }
@@ -724,10 +725,11 @@ const HEIGHTS92 = (function () {
     // the Bleach: it eats while you stand in it
     const b = inBleach(c.x, c.y);
     if (b) {
-      burnAcc += dt * 4 * b * (typeof GEAR87 === 'object' && GEAR87.special('shade') ? 0.5 : 1);   // the Umbral set, in full: half
-      if (burnAcc >= 1) { const n = Math.floor(burnAcc); burnAcc -= n; p.hp -= n; G.hurtT = 0.12; if (p.hp <= 0) { die(TX.bleachPatch); return; } }
-      try { fx('p92-white', 220); } catch (e) { /* no overlay */ }
-      once(0, TX.bleach, 'bad', 5000);
+      // glass-fire is fire, not the Bleach (Book Two ch. 14: the white parts round it), so the Umbral set's shade is no help against it
+      const fire = b > 1;
+      burnAcc += dt * 4 * b * (!fire && typeof GEAR87 === 'object' && GEAR87.special('shade') ? 0.5 : 1);   // the Umbral set, in full: half
+      if (burnAcc >= 1) { const n = Math.floor(burnAcc); burnAcc -= n; p.hp -= n; G.hurtT = 0.12; if (p.hp <= 0) { die(fire ? TX.firePatch : TX.bleachPatch); return; } }
+      if (!fire) { try { fx('p92-white', 220); } catch (e) { /* no overlay */ } once(0, TX.bleach, 'bad', 5000); }
     } else burnAcc = 0;
     // glass-fire burns out
     for (let i = patches.length - 1; i >= 0; i--) { const q = patches[i]; q.t -= dt; q.ent.glow = 0.6 + 0.4 * Math.sin(clock * 9 + i); if (q.t <= 0) { const j = G.ents.indexOf(q.ent); if (j >= 0) G.ents.splice(j, 1); patches.splice(i, 1); } }
