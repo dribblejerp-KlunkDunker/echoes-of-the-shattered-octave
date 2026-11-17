@@ -433,6 +433,14 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The Dawning Heights, part three: the Pilgrim Chain and the Altar (Phase 95).** An iron stair from Bardo's winch-room goes up to the old robing-room under the seventh anchor-house, where Perpetua Lisle keeps four hundred pilgrims' robes nobody wears. In a robe, the two Flambeaux at the winch let you out of the mouth onto the Pilgrim Chain: a kilometre of black link across the gulf, wholly in the Bleach, which takes you by the hour (worst by day, thinnest in the dead hour before dawn). The Tiers' rule is the way across: "Walk in the shade of the one ahead of you. If there is no one ahead of you, run." The Altar's clerics go out and back under black canopies; the cage, "the only roof on that whole chain" (Book Two), stands at the half-way mark; past it the Flambeaux of the Chain walk each in the shade of his own glass-fire. At the far end Brother-Captain Aurel Sant holds the great steps, and his fire is the only shade in the fight; when it goes out he kneels. From the Altar's rim you see the Altar and the Eye and never set foot there. Three lamps, the cage as a shortcut, and a seventeenth gear set (`js/pilgrim95.js`, `test/pilgrim95.test.js`).
+
+| | |
+|---|---|
+| ![The chain, and the clerics' canopies](screenshots/p95/p95-chain.jpg) | ![The cage at the half-way mark](screenshots/p95/p95-cage.jpg) |
+| ![A Flambeau of the Chain in his own shade](screenshots/p95/p95-flambeau.jpg) | ![Brother-Captain Aurel Sant on the lowest step](screenshots/p95/p95-sant.jpg) |
+| ![The Altar's rim at the dawn office: the line, the choir, the Eye](screenshots/p95/p95-rim.jpg) | ![The Glass-Grown's slope and the chain's shadow](screenshots/p95/p95-slope.jpg) |
+
 **The Dawning Heights, part two: the Anchorage (Phase 94).** A low iron door by the goods-cage's top leads into the inside of Sol-Luminary's frame, where the nine chains that hold the city come down through it "like the bones they are" (Book Two). Winchmaster Bardo (World Bible Vol II) keeps his winch there, with the tally of his nineteen lost men cut in the housing. You walk down the seventh chain itself, link by link, over its well. The nine chains toll one after another in a bell-ringers' change, and a card shows the row: when the seventh speaks, a link under you throws you and a pin holds you. Below are the tolling gallery, seven Glass-Grown who are never fought, the keel-weights of white stone, and the Winch-Deep, where the Nineteen still haul at the old capstan and make you weigh four times what you weigh. Three lamps, a shortcut cage, and a sixteenth gear set, the Chain-Yards (`js/anchorage94.js`, `test/anchorage94.test.js`). The book changed this place's plan: it had been drawn as shafts in the mountain, and Book Two has no rock under the city.
 
 <table>

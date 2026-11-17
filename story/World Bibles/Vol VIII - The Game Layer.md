@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 94, 15 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 95, 16 November 2026).
 
 ---
 
@@ -2296,6 +2296,36 @@ The traveller works the ship's stations (the wheel by Vane's word, the tank-crad
 - The Unison's one note is heard throughout the Tiers, and fades as you stop hearing it.
 
 **Status:** RULED, 16 Nov 2026 (the owner: "I accept all, merge and proceed"). All eight questions of the Phase 94 record stand as built: the Anchorage is the city's frame; Bardo's winch hauls the goods-cage; the keel-weights keep the city's point down; the change's and the Nineteen's numbers; the Glass-Grown are never fought; the Chain-Yards set; Bardo's oaths.
+
+#### Phase 95: the Dawning Heights, part three: the Pilgrim Chain and the Altar (16 Nov; `js/pilgrim95.js`)
+**The book changed the plan** (Book Two ch. 13, 14). The chain's city end is the seventh anchor-house; "the cage… the only roof on that whole chain" is the half-way rest; the shortcut is the cage on its cable; the Bleach parts round glass-fire; glass-fire burns on its bearer's faith; by day there are two lights; the Church is not at the Altar before Ashfall.
+
+**From the books and bibles (canon):**
+- **The seventh anchor-house:** "a squat stone tower on the rim… whole, with a slate roof, because the Church had kept it"; the winch; two Flambeaux keeping it; the iron ring in its floor.
+- **The Pilgrim Chain:** a kilometre, almost level, an iron deck with a rail at either hand, the cable on iron rollers to a second drum on Lumina. "Nobody had walked it since the Fracture, except the Church, and only under canopies."
+- **The cage:** black iron under black silk, on the cable.
+- **The Tiers' rule:** "Walk in the shade of the one ahead of you. If there is no one ahead of you, run."
+- **Glass-fire:** the white parts round it ("a little moving bubble of ordinary shade"); it smells of "hot metal and honey" and a struck flint; it burns on its bearer's faith.
+- **The hours:** by night the sourceless white; by day "two… together were more than anything could stand in"; the dead hour is the hour before dawn (Vol VII).
+- **The Altar of Lumina:** a disc of white stone two hundred feet across; the great steps; the pillars that were gilded; the old chapels and their people, "seven years thin"; the Vessel's stone; **the Eye**, forty feet across, bronze once, white now but for a cartwheel of bright bronze its clerics polish every day with oil and ash; "the only mirror the Altar permitted in all the Heights".
+- **The dawn office:** the Pure Note is "sounded at the Altar every dawn by the Church's choirs" (Book Three). It is held day and night only where the Church prepares a Rite, so not here in Harvestmonth.
+- **The Glass-Grown** ring the Spire's approaches, "standing, facing the light" (Vol II).
+
+**Invented, and the owner's [PROPOSED]:**
+- The old **robing-room** under the seventh anchor-house (Phase 90's "pilgrims' hostel"), and **Perpetua Lisle**, the robing-woman.
+- The Flambeaux pass anyone in a pilgrim's robe out of the mouth.
+- The cage rests at the half-way mark between offices. The Altar's clerics cross under canopies in eight parties.
+- **Brother-Captain Aurel Sant** (Phase 89) holds the far end with a chapter of Flambeaux: four on the second span, seven at the Altar's pillars. His fire goes out; he is not killed; after a week it is lit again.
+- **The Glass-Grown's slope** below the Altar, in the stripe of the chain's shadow.
+- That the white lies thinnest in the dead hour (Phase 90).
+- The Bleach's rates; the seventeenth gear set, **the Pilgrim Chain** (Pilgrim's Robe, Bearer's Cowl, Pilgrim's Sandals, the Dark Stave).
+- A reading, for ruling: the seventh anchor-house holds both the seventh of the nine and the Pilgrim Chain, a tenth.
+
+**Phase 92 matched to the books again (16 Nov):** glass-fire is fire, not the Bleach; the Basilica's bell hangs in the black tower, below the line; there is no cloud under the city (the gulf is dark air, with the peaks' snow at the bottom); no winch-boats and no valley farms (the city is fed by skyship into the cradles); the Bleach has no source, so it does not shine from mirrors; the city hangs from the Spire's flank.
+
+**Phase 96, the lore readers (16 Nov):** before the Heights' remaining places were built, each was read against the books. Withdrawn as not lore-bound: the nine anchor-houses (the books know two), the cloud deck and the valley farms. Renamed: "the Bell Yard" is a Whisper-Grove street; the Heights' place is the black square before the Basilica's west end. Held for the owner: the White Mile (the Mirror Walks and the Polisher against "the only mirror the Altar permitted"). The records are in `story/Game Layer/` under "Phase 96".
+
+**Status:** [PROPOSED] under the approved Phases 89 and 90; nine questions are the owner's, in the Phase 95 record.
 
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 
