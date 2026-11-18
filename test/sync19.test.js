@@ -505,8 +505,8 @@ const TRACE = () => {
       // ---- the link drops for a moment (longer than the 1.5 s limit) and comes back: the guest stands where it stood
       {
         const ep0 = await host.page.evaluate(() => SYNC19._internal.H.ep);
-        // (the time a newcomer is given to build the world is over for this one)
-        for (const pp of [host.page, pg.page]) await pp.evaluate(() => { NET19._state.holdUntil = 0; });
+        ok((await host.page.evaluate(() => NET19._state.holdUntil || 0)) === 0, 'the time a newcomer is given ends with its first step');
+        await pg.page.evaluate(() => { NET19._state.holdUntil = 0; });
         relay.cut = true; await sleep(2300); relay.cut = false;
         let back = false;
         for (let i = 0; i < 120 && !back; i++) { await sleep(150); const h = await host.page.evaluate(() => { const H = SYNC19._internal.H; return H.gs ? [H.ep, H.gs.inputs] : null; }); back = !!h && h[0] > ep0 && h[1] > 6 && (await pg.page.evaluate(() => SYNC19._internal.C.ep)) === h[0]; }

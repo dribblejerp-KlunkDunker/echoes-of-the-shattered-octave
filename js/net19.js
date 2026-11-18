@@ -632,7 +632,8 @@ const NET19 = (function () {
       setName(n) { const c = cleanName(n); if (c) S.myName = c; return S.myName; },
       // The other side is about to go quiet for a known reason (a guest builds the whole of the host's world on joining:
       // seconds with nothing sent, longer on a phone). Its silence is not a lost link until ms have passed (30 s at most).
-      hold(ms) { const n = +ms; if (Number.isFinite(n) && n > 0) S.holdUntil = Math.max(S.holdUntil || 0, now() + Math.min(n, 30000)); return S.holdUntil || 0; },
+      // hold(0) ends it: whoever asked knows when the quiet is over.
+      hold(ms) { const n = +ms; S.holdUntil = Number.isFinite(n) && n > 0 ? now() + Math.min(n, 30000) : 0; return S.holdUntil; },
       _adoptManual: adoptManual,
       _state: S,
     };

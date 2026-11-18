@@ -624,6 +624,7 @@ const SYNC19 = (function () {
       if (d.seq <= gs.lastSeq) continue;
       if (gs.lastSeq >= 0 && d.seq - gs.lastSeq > B.SEQ_JUMP) { gs.rejected++; reject('in-jump'); continue; }
       gs.lastSeq = d.seq; gs.inputs++; ST.inputs++;
+      if (gs.inputs === 1) hold(0);   // its first step: the newcomer has built the world and is speaking again
       if (d.block && !gs.block) blockEdge = true;
       gs.pitch = d.pitch; gs.act = d.act; gs.ap = d.ap; gs.block = d.block; gs.run = d.run; if (!held) gs.dir = d.dir;
       if (ep !== H.ep || H.frozen || held || H.mapPending) { gs.vx = gs.vy = 0; continue; }   // an input from before the last map change moves nothing
@@ -829,6 +830,7 @@ const SYNC19 = (function () {
     if (!follow(p)) { C.on = false; G.flags = C.stash.flags; G.maps = C.stash.maps; G.player = C.stash.player; C.stash = null; if (C.entered) { try { PL.guest.returnHome(); } catch (e) { /* home */ } } return; }
     if (typeof hostLookOk === 'function') C.hostLook = hostLookOk(p.look);
     G.state = 'play'; G.keys = {};
+    hold(2500);   // built: what the host sent meanwhile is waiting to be read, which takes a moment more
     say(fmt(TX.joined, C.hostName || TX.companion), 'good', 6000);
     emit('join', { side: 'guest', peer: from });
   }
