@@ -859,7 +859,7 @@ const RIFT100 = (function () {
       const asleep = (b++ % 3) === 1; m.deco(asleep ? 'p100_bunkasleep' : 'p100_bunk', x, y, { radius: 0.6, scale: 1, solid: true, label: asleep ? TX.sleeper : TX.bunk });
       if (asleep) m.npc('p100_watcher', x + 0.2, y + (y < 10 ? 1.3 : -1.3), { facing: y < 10 ? -PI / 2 : PI / 2 }); }
     for (const [x, y] of [[31.5, 14.5], [36.5, 14.5], [40.5, 17.5], [10.5, 15.5]]) m.deco('p100_table', x, y, { radius: 0.7, scale: 1, solid: true, label: TX.table });
-    for (const [x, y] of [[8.5, 8.2], [16.5, 22.8], [33.5, 22.8], [43.6, 12.5], [24.5, 3.2], [49.5, 12.2], [52.5, 3.2], [61.5, 5.2], [61.5, 14.5], [50.5, 21.2], [64.5, 21.2], [57.5, 34.8]]) lantern(x, y);
+    for (const [x, y] of [[8.5, 8.2], [16.5, 22.8], [33.5, 22.8], [44.8, 12.5], [24.5, 3.2], [49.5, 12.2], [52.5, 3.2], [61.5, 5.2], [62.8, 14.5], [50.5, 21.2], [64.5, 21.2], [57.5, 34.8]]) lantern(x, y);
     for (let x = 6.5; x <= 42; x += 5) for (const y of [12.5, 18.5]) m.deco('p100_lantern', x, y, { radius: 0.1, scale: 1, solid: false, glow: 0.8, lightCol: [240, 196, 120], label: TX.passage, nopick: true, _decor: true });   // lanterns on posts down the hall
     for (const [x, y] of [[49.5, 15.5], [52.5, 6.5], [57.5, 27.5], [50.5, 31.5], [63.5, 31.5]]) m.deco('p100_lantern', x, y, { radius: 0.1, scale: 1, solid: false, glow: 0.8, lightCol: [240, 196, 120], label: TX.passage, nopick: true, _decor: true });
     m.deco('p100_hatch', Q.issue[0], 8.25, { radius: 0.4, scale: 1, solid: false, label: TX.hatch, nopick: true, _decor: true });
