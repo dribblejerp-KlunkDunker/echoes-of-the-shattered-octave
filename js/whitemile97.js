@@ -328,7 +328,7 @@ const WHITEMILE97 = (() => {
     a_p97_gloves: { name: TX.gloves, slot: 'hands', ar: 1, noise: 0, value: 22, desc: TX.glovesDesc },
     a_p97_coat: { name: TX.coat, slot: 'body', ar: 2, noise: -0.1, value: 54, desc: TX.coatDesc },
   };
-  const HOOK_DEF = { name: TX.hook, img: 'fp_spear', dmg: [4, 9], reach: 2.3, noise: 0.5, speed: 0.75, type: 'iron', twoHanded: true, value: 48, desc: TX.hookDesc };
+  const HOOK_DEF = { name: TX.hook, img: 'fp_spear', dmg: [4, 9], reach: 2.3, noise: 0.8, speed: 0.75, type: 'iron', twoHanded: true, value: 48, desc: TX.hookDesc };
   function defs() {
     if (typeof WEAPONS !== 'undefined' && !WEAPONS.p97_hook) WEAPONS.p97_hook = Object.assign({}, HOOK_DEF);
     if (typeof ARMOR !== 'undefined') for (const k in ARMOR_DEFS) if (!ARMOR[k]) ARMOR[k] = Object.assign({}, ARMOR_DEFS[k]);
