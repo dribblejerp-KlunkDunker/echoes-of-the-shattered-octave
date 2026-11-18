@@ -24,3 +24,10 @@ Branch `p100-rift` (from `main` fbd98c8). Written 18 Nov 2026 in case the sessio
 - The Stray is not killed: the fourth line of its lullaby stands it down. The lullaby's four lines.
 - Troopers are known by rota-number. The names of the set and its five pieces. The numbers in `B` (seconds of quiet, the bell's reach).
 - The Rift side of the wall-walk has a shin-high lead coping, not a parapet, so the lip can be seen over it.
+
+## The eleven old pull requests (plan accepted by the owner, 18 Nov; for Opus 5.5 at high effort, after Phase 100)
+One pull request at a time. Bring the branch up to today's `main`, settle the conflicts, run every suite, then merge. Never skip a failing test.
+1. Bring up to date and merge: #105 (Phase 66 small places), #118 (Phase 75 canon touches), then #45, #41, #40. For #40 (a co-op fix), first check that Phase 99's two-player work (`js/sync19.js`, `js/net19.js`) has not already replaced it.
+2. Check first, then merge or close: #44 (Phase 21 ground), #36 (Phase 15 work), #39 (World Bible Vols I and II dates). They are 365 to 605 commits behind `main`; only the absence of their files from `main` has been checked, not their contents. Book canon wins over the bibles.
+3. The owner's to decide, not to be merged without his word: #88 (Book Four, Part Two, chapters 5 to 8: a draft; merging makes it manuscript) and #48 (the Phase 23 living-figures pilot).
+4. Close without merging: #23 (`main` into the old `phase10-picks` branch; nothing to gain).
