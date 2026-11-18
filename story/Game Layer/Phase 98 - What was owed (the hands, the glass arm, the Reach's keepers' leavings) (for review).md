@@ -46,13 +46,15 @@ Every suite in the repository (200) was run against this work, and each failure 
 
 Still failing, and failing the same way on `main` before any of this (so not from this work): `logmap` (a static list of older modules' journal lines), `smalllife` (a saved-state comparison), `sprites21` (every sprite at once needs more than eight atlas pages; the renderer's own limit is sixteen), `sync19` (the two-player census) and `net19` (it needs a network this machine does not give it).
 
+**Correction, 18 Nov (Phase 99).** That list was short by three. `origins`, `motion10` and `ledger15` were also failing at this commit and were missed in the report. And two of the reasons given above were wrong: `net19` did not need a network, and `sync19` was not only the census; both were the host dropping a newcomer while it built the world. All eight are fixed in Phase 99; see its record.
+
 ## For the owner
 
 1. **The glass arm on the left.** *Recommend: keep. It is the left arm everywhere else in the game and in the books.*
 2. **Punches go straight out** where they swept before. *Recommend: keep.*
 3. **The four names:** Chalk-White Shell-Plate, Ridge-Flint, the Standing Note's Reed, Beam-Key. *Recommend: keep, or give me yours.*
 4. **The leavings are weapons, not worn pieces,** so that no set grows. *Recommend: keep.*
-5. **The five old failing checks** listed above. *Recommend: a small phase of their own; say if you want it next.*
+5. **The five old failing checks** listed above. *Recommend: a small phase of their own; say if you want it next.* **Done 18 Nov (Phase 99), with three more.**
 6. **Hearth trophies.** The house on Cooper's Row hangs the twelve Book One boss trophies on its pegs. The keepers' trophies here are valuables to sell, as the rule says, and do not hang there. *Recommend: leave as the rule has it, unless you want keepers' pegs too.*
 
 ## The new lines (English; the French is in `tools/i18n/p98-owed.tsv`)

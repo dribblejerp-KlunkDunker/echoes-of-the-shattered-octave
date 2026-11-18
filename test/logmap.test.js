@@ -134,13 +134,16 @@ async function boot() {
     // cached, drawn once, and not blank
     const cached = await page.evaluate(() => {
       const a = LOGMAP.sketchURL('gate'), b = LOGMAP.sketchURL('gate'); const out = { same: a === b, lens: {} };
-      for (const id of Object.keys(LOGMAP.SUBJECTS)) out.lens[id] = LOGMAP.sketchURL(id).length;
+      // a painted sketch that is already decoded is served as its file (img/painted/sketch/); the drawn ones are data URLs
+      out.painted = [];
+      for (const id of Object.keys(LOGMAP.SUBJECTS)) { const u = LOGMAP.sketchURL(id); if (/^img\/painted\/sketch\/[\w-]+\.jpg$/.test(u)) { out.painted.push(id); continue; } out.lens[id] = u.length; }
       return out;
     });
     assert(cached.same, 'sketch URL cached');
     const distinct = new Set(Object.values(cached.lens));
     assert(Object.values(cached.lens).every(l => l > 5000), 'no sketch is blank: ' + JSON.stringify(cached.lens));
     assert(distinct.size >= Object.keys(cached.lens).length - 2, 'sketches are distinct drawings');
+    assert(cached.painted.length <= 4 && Object.keys(cached.lens).length >= 35, 'only the few painted sketches are files; the rest are drawn (' + cached.painted.join(', ') + ')');
     const ink = await page.evaluate(async () => {
       const res = {};
       for (const id of Object.keys(LOGMAP.SUBJECTS)) {
@@ -245,7 +248,10 @@ async function boot() {
     const mapOff = await page.evaluate(() => { GFX.mapStamps = false; G.state = 'panel'; renderMap(); const c = document.getElementById('amap'); return { url: c.toDataURL(), legend: !!document.getElementById('lm-legend'), cls: document.getElementById('modal-panel').classList.contains('lm-map'), html: document.getElementById('modal-panel').innerHTML.replace(/<canvas[^>]*>/, '') }; });
     assert(!mapOff.legend && !mapOff.cls, 'mapStamps off: no legend, no class');
     const mapOn = await page.evaluate(() => { GFX.mapStamps = true; closeModal(); G.state = 'panel'; renderMap(); const c = document.getElementById('amap'); const lg = document.getElementById('lm-legend'); return { url: c.toDataURL(), keys: [...lg.querySelectorAll('.lm-key')].map(k => k.textContent), html: document.getElementById('modal-panel').innerHTML.replace(/<canvas[^>]*>/, ''), cls: document.getElementById('modal-panel').classList.contains('lm-map') }; });
-    assert.equal(mapOn.html.replace(/<div class="lm-legend"[^]*?<\/div>/, ''), mapOff.html, 'mapStamps on adds only the legend to the original markup');
+    // (the list of places under the map takes the room that is left, so its height follows the legend: a number of
+    // layout, held out of the comparison of the markup)
+    const noFit = (h) => h.replace(/(id="p97-places"[^>]*?)max-height: [^;]+;/, '$1max-height: ;');
+    assert.equal(noFit(mapOn.html.replace(/<div class="lm-legend"[^]*?<\/div>/, '')), noFit(mapOff.html), 'mapStamps on adds only the legend to the original markup');
     assert.notEqual(mapOn.url, mapOff.url, 'stamps are painted on the automap canvas');
     assert.deepEqual(mapOn.keys, ['Door', 'Quest giver', 'Shop', 'Danger', 'Boss', 'Trap'], 'legend lists every stamp kind');
     assert(mapOn.cls, 'panel marked for the compact map height');

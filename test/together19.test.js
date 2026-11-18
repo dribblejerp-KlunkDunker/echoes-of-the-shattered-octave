@@ -452,6 +452,10 @@ const TRACE = () => {
           GFX.particles = 0; GFX.reduceMotion = true; if (GFX.changed) GFX.changed();
           s.frames = {};
           // (not Oakhaven: its townsfolk keep real-time state of their own, so it differs between any two pages)
+          // (and the animation clock is set: it counts real time since the page opened, which no two pages share, and a
+          // figure standing in a room is drawn in whichever frame of its idle that clock gives. Left alone, the two pages
+          // differed in a dozen pixels of one distant figure about one run in two)
+          ANIM.T = 600; ANIM.last = 123456 / 1000;
           for (const id of ['mill', 'greenhall', 'underhedge']) { __freeze(123456); loadMap(id, G.maps[id].spawn); G.fadeT = 0; __thaw(); s.frames[id] = __frame(); }
           PRESETS.apply('cinematic'); s.frames.cinematic = __frame(); PRESETS.apply('original'); s.frames.original = __frame(); PRESETS.apply('medium');
           s.frame = Object.values(s.frames).join('.');

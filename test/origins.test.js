@@ -701,9 +701,9 @@ async function boot(page, opts) {
       return msg;
     };
     await scramble();
-    const big = path.join(TMP, 'big.txt'); fs.writeFileSync(big, 'OCTZ1.' + 'A'.repeat(600 * 1024));
-    await refuse('oversize', big, /too large to be a save.*512 KB/);
-    const exactly = path.join(TMP, 'edge.txt'); fs.writeFileSync(exactly, 'OCTZ1.' + 'A'.repeat(512 * 1024 - 6));
+    const big = path.join(TMP, 'big.txt'); fs.writeFileSync(big, 'OCTZ1.' + 'A'.repeat(2 * 1024 * 1024 + 4096));
+    await refuse('oversize', big, /too large to be a save.*2 MB/);
+    const exactly = path.join(TMP, 'edge.txt'); fs.writeFileSync(exactly, 'OCTZ1.' + 'A'.repeat(2 * 1024 * 1024 - 6));
     await refuse('exactly at the cap is read, then judged as a save', exactly, /did not read as a save/);
     const bin = path.join(TMP, 'bin.octave'); fs.writeFileSync(bin, Buffer.from(Array.from({ length: 4000 }, (_, i) => (i * 37 + 11) & 255)));
     await refuse('binary garbage', bin, /did not read as a save/);
@@ -745,13 +745,15 @@ async function boot(page, opts) {
     await page.locator('#ld-file').setInputFiles(hcFile);
     await page.waitForFunction(() => /\S/.test(document.querySelector('#ld-err').textContent));
     assert.match(await page.locator('#ld-err').innerText(), /hardcore run\. It only opens inside a hardcore run/, 'a hardcore file does not open in an ordinary game');
-    // a hardcore code as a file
+    // a hardcore code as a file (uncompressed: the form the game writes where the browser cannot compress)
+    const ORIGINS_FILE_MAX = await run(() => ORIGINS.FILE_MAX);
     const hcCode = await run(async () => { const d = snapshotGame(); d.player = Object.assign({}, d.player, { hardcore: true }); const json = JSON.stringify(d); return 'OCTJ1.' + b64(new TextEncoder().encode(json)); });
     const hcCodeFile = path.join(TMP, 'hc-code.txt'); fs.writeFileSync(hcCodeFile, hcCode);
     await run(() => { G.state = 'panel'; renderLoad(false); });
     await page.locator('#ld-file').setInputFiles(hcCodeFile);
     await page.waitForFunction(() => /\S/.test(document.querySelector('#ld-err').textContent));
     assert.match(await page.locator('#ld-err').innerText(), /hardcore run\. Hardcore runs never travel as codes/, 'nor does a hardcore code');
+    assert.ok(hcCode.length < ORIGINS_FILE_MAX / 2, 'the game\'s own uncompressed save (' + hcCode.length + ' characters) is under half the file limit');
     // inside a hardcore run the panel offers no file at all, and a dropped one is refused untouched
     await run(() => { reset(); G.player.hardcore = true; HARDCORE.save = snapshotGame(); G.player.gold = 55; G.state = 'panel'; renderLoad(false); });
     assert.equal(await page.locator('#or-file-btn, #ld-file, #ld-code').count(), 0, 'a hardcore run\'s load panel has no file, no code box');
@@ -845,9 +847,9 @@ async function boot(page, opts) {
       assert.equal(await pf.locator('#or-file-btn').innerText(), 'Charger depuis un fichier…');
       const noteLeft = await pf.evaluate(() => STORY_I18N.untranslated(document.querySelector('#modal-panel')));
       assert.deepEqual(noteLeft, [], 'the Load panel is all French');
-      const big = path.join(TMP, 'big-fr.txt'); fs.writeFileSync(big, 'x'.repeat(600 * 1024));
+      const big = path.join(TMP, 'big-fr.txt'); fs.writeFileSync(big, 'x'.repeat(2 * 1024 * 1024 + 4096));
       await pf.locator('#ld-file').setInputFiles(big); await pf.waitForTimeout(300);
-      assert.match(await pf.locator('#ld-err').innerText(), /trop volumineux.*512 Ko/);
+      assert.match(await pf.locator('#ld-err').innerText(), /trop volumineux.*2 Mo/);
       await pf.evaluate(() => { ORIGINS.setEnabled(false); closeModal(); G.state = 'play'; });
       assert.deepEqual(errsF, [], 'no page errors in French');
       await pf.close();

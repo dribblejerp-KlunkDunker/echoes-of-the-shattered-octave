@@ -614,7 +614,8 @@ const HEIGHTS92 = (function () {
       m.add({ kind: 'deco', sprite: 'p92_cradle', x, y: 221.0, scale: 2.3, solid: false, radius: 0.05, yOff: GULF_Z + 1.8, label: TX.cradle, _decor: true });
       shipArt();
       const ship = k === 2 ? ['p92_freighter', TX.freighter] : k === 7 ? ['p92_packet', TX.packet] : k === 9 ? ['p92_freighter', TX.freighter] : null;
-      if (ship && Engine.sprites && Engine.sprites[ship[0]]) m.add({ kind: 'deco', sprite: ship[0], x, y: 222.4, scale: 4.6, solid: false, radius: 0.05, yOff: GULF_Z + 1.4, label: ship[1], _decor: true });
+      // (placed whether or not her picture could be made: the map's list of things must not depend on another module being loaded, or a saved game's places shift)
+      if (ship) m.add({ kind: 'deco', sprite: ship[0], x, y: 222.4, scale: 4.6, solid: false, radius: 0.05, yOff: GULF_Z + 1.4, label: ship[1], _decor: true });
     }
     // the Kestrel herself, moored broadside under the dock's edge, her envelope standing above the planks (her cell's
     // floor is the gulf's, so she is lifted back up to the docks)
