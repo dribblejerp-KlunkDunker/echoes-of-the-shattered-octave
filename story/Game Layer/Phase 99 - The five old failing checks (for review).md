@@ -2,7 +2,7 @@
 
 *Written 18 Nov 2026. The owner, 18 Nov: "lets fix the old 5 failing checks. if nothing needs to be merged lets move on." Branch `p99-checks`, on top of Phase 98. Built by the Commander alone. Nothing new was added to the world in this phase: no place, person, item or line of story. One line the player reads changed (the save-file limit, section 6), with its French in `tools/i18n/p99-checks.tsv`.*
 
-Five of the game's test suites had been failing on `main` since before Phase 96: `logmap`, `smalllife`, `sprites21`, `sync19` and `net19`. Each was traced to its cause. Four of the five were real faults in the game, not in the checks. None was skipped, loosened to pass, or switched off. The full run afterwards found a sixth (section 6).
+Five of the game's test suites had been failing on `main` since before Phase 96: `logmap`, `smalllife`, `sprites21`, `sync19` and `net19`. Each was traced to its cause. Four of the five were real faults in the game, not in the checks. None was skipped, loosened to pass, or switched off. Running every suite afterwards found three more that I had missed in Phase 98 (sections 6 to 8).
 
 ## What each one was
 
@@ -45,11 +45,24 @@ Result: 54 of 54.
 **The fix.** The same 15 seconds. No change to the suite.
 Result: 52 of 52. On `main`, the same suite still fails in the same three places, which is how the cause was confirmed.
 
-### 6. A sixth, found by the full run: `origins` (saving to a file and loading it back)
-**I reported this one wrongly in Phase 98.** I wrote then that every suite but the five was passing. `origins` was not: it fails the same way on the Phase 98 commit. The fault is mine in the reporting, and older than this phase in the game.
+## Three more, found by running everything afterwards
+
+**I reported these wrongly in Phase 98.** I wrote then that every suite but the five was passing when run alone. Three more were not: `origins`, `motion10` and `ledger15`. Each fails the same way with Phase 98's own files put back, so none comes from this phase's work; two come from Phase 97's map marks and one from the world's growth. The mistake was in my report, and it is corrected here and in the roadmap.
+
+### 6. `origins` (saving to a file and loading it back)
 **The fault, a real one.** A save can be downloaded as a file and loaded back. The loader refuses any file over 512 KB. Where a browser can compress, the file is small and all is well. Where it cannot (older browsers), the game writes the save uncompressed, and with the world as large as it now is (99 places) that file is 559 KB. So on such a browser the game could not load a save it had just written.
 **The fix.** The limit is 2 MB (`js/origins.js`), and the message says so, in English and French ("La limite est de 2 Mo."). A new check holds the game's own uncompressed save under half the limit, so this cannot creep up unseen again.
 Result: 25 of 25.
+
+### 7. `motion10` (the journey's picture on the travel chart)
+**The fault.** Travelling by the chart with the moving picture must give exactly what travelling without it gives. Since Phase 97 it did not: the map's place-marks read the picture's caption as if it were hearsay, and announced "The North Gate is on your map now." in the middle of the journey, before you had arrived.
+**The fix** (`js/places97.js`). A place you travel to by the chart is marked without a word: you chose it from a list, and you are standing in it. The travel chart is no longer read for place names at all; like the map, it is a list of places you can already go.
+Result: 7 of 7.
+
+### 8. `ledger15` (the map screen)
+**The fault.** With a dozen places known, Phase 97's list under the map ("Marked on this map") pushed the "Clear marks" button and the line above it off the bottom of the panel, and cut its own last line in half.
+**The fix** (`js/places97.js`). The list takes only the room that is left: whole lines, its heading on the first line, and it scrolls for the rest. Picture: `screenshots/p99/p99-map-panel.jpg`.
+Result: all pass.
 
 ## What a player will notice
 - Joining a friend's game no longer stutters into "connection lost" and back again on a slow device.
@@ -57,6 +70,7 @@ Result: 25 of 25.
 - The guest sees one moored ship and one set of banners.
 - Being a guest leaves your own save untouched.
 - A downloaded save loads back on an older browser too.
+- No "is on your map now" in the middle of a journey; the map screen's Clear marks button is always in view.
 
 ## The owner's rulings recorded with this phase (18 Nov)
 - **"the compass is good."** The compass points at people who have quests, as built in Phase 97. Giving each step of every quest its own place to point at is not wanted now. Phase 97's question 3 is closed.

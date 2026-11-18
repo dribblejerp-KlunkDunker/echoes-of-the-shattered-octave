@@ -136,13 +136,18 @@ async function boot(browser, opts) {
       __stage('oakhaven', 23.5, 8.5, Math.PI / 2, 0.5); Engine.cam.pitch = 0;
       SPRITES21.dev.on(); __fr();
       const g = SPRITES21.gl, c = SPRITES21.dev.canvas, harrow = G.ents.filter((e) => (e.kind === 'npc' || e.kind === 'enemy') && e._screen && e._screen.x0 > 20 && e._screen.x1 < 300).sort((a, b) => (b._screen.y1 - b._screen.y0) - (a._screen.y1 - a._screen.y0))[0];
-      const s = harrow._screen, X = Math.round((s.x0 + s.x1) / 2 / 320 * c.width), Y = Math.round(c.height - ((s.y0 * 0.4 + s.y1 * 0.6) / 150 * c.height));
-      const p = new Uint8Array(4); g.readPixels(X, Y, 1, 1, g.RGBA, g.UNSIGNED_BYTE, p);
-      // hide him: the pixel shows what is behind
-      harrow.hidden = true; __fr(); const q = new Uint8Array(4); g.readPixels(X, Y, 1, 1, g.RGBA, g.UNSIGNED_BYTE, q); harrow.hidden = false;
-      return { p: [...p], q: [...q], n: SPRITES21.count };
+      // (five points down the middle of the figure, not one: a single point can fall in the gap between two legs or on
+      // cloth the colour of the wall behind, depending on which stride the figure is in)
+      const s = harrow._screen, X = Math.round((s.x0 + s.x1) / 2 / 320 * c.width), Ys = [0.25, 0.4, 0.5, 0.6, 0.75].map((f) => Math.round(c.height - ((s.y0 * (1 - f) + s.y1 * f) / 150 * c.height)));
+      const read = () => Ys.map((Y) => { const p = new Uint8Array(4); g.readPixels(X, Y, 1, 1, g.RGBA, g.UNSIGNED_BYTE, p); return [...p]; });
+      const P = read();
+      // hide him: the pixels show what is behind
+      harrow.hidden = true; __fr(); const Q = read(); harrow.hidden = false;
+      const d = P.map((p, i) => Math.abs(p[0] - Q[i][0]) + Math.abs(p[1] - Q[i][1]) + Math.abs(p[2] - Q[i][2]));
+      const k = d.indexOf(Math.max(...d));
+      return { p: P[k], q: Q[k], d, n: SPRITES21.count };
     });
-    assert.ok(Math.abs(pix.p[0] - pix.q[0]) + Math.abs(pix.p[1] - pix.q[1]) + Math.abs(pix.p[2] - pix.q[2]) > 20, 'no GL sprite pixels at the sprite');
+    assert.ok(pix.d.filter((v) => v > 20).length >= 2, 'no GL sprite pixels at the sprite (differences down the figure: ' + pix.d + ')');
     console.log('PASS GL pixels: the sprite is drawn where its rect says (' + pix.p.slice(0, 3) + ' vs background ' + pix.q.slice(0, 3) + ')');
 
     // ---------------------------------------------------------------- switches

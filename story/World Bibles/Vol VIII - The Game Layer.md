@@ -2384,7 +2384,8 @@ The owner, 18 Nov: "lets fix the old 5 failing checks." Record: `story/Game Laye
 **What changed in the game as played.**
 - *Two players.* A guest joining a host's world builds all of it first and is silent while it does; the host now waits (15 seconds) and no longer takes that for a lost connection. A guest whose connection drops for a moment comes back where they stood, not at the host's heels. The guest sees one moored Kestrel and one set of the wind's banners, where they had seen two. Standing in a place as a guest marks nothing on your own map and writes nothing in your own save.
 - *Saves.* The ships at the Heights' docks and the Drift-Kestrel at the Vigil's mast are in the world whether or not the "small life" option is on, so a save is the same either way.
-- *The map's places (Phase 97).* The place you stand in is marked when you arrive.
+- *The map's places (Phase 97).* The place you stand in is marked when you arrive. A place you travel to by the chart is marked without a word, and the chart itself is not read for names (it had announced "The North Gate is on your map now." in the middle of the journey). On the map screen the list of marked places takes only the room left, so "Clear marks" stays in view.
+- *Saving to a file.* The loader's limit is 2 MB, not 512 KB: the world is now 99 places, and the uncompressed form of its save (written where a browser cannot compress) had grown to 559 KB.
 
 **Ruled.** The owner, 18 Nov: **"the compass is good."** The compass points at people who have quests and side quests (Phase 97) and stays so; quests are not given a place for each step. Status: **ruled**. Phase 97's question on quest steps is closed.
 

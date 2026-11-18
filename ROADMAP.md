@@ -85,6 +85,7 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] `sync19` (53): the guest sees one of a swaying prop, not two; being a guest writes nothing in your own save (`js/places97.js`); a newcomer has 15 s to build the host's world before silence counts as a lost link (`js/net19.js` `hold`); a guest whose link drops comes back where it stood (`js/sync19.js`)
 - [x] `net19` (52): the same cause as the last of those; no change to the suite
 - [x] Phase 89's "the two-player suites that fail in the build container" is answered for `sync19` and `net19`: it was the game, not the container
+- [x] three more that Phase 98's report missed (each fails the same way with Phase 98's files): `origins` (25): the game's own uncompressed save, 559 KB, was over its loader's 512 KB; the limit is 2 MB, with French; `motion10` (7): a place travelled to by the chart is marked without a word, and the chart is not read as hearsay (`js/places97.js`); `ledger15`: the map screen's place list takes only the room left, so Clear marks stays in view
 - [ ] VERIFY_ROADMAP
 
 **Phase 98: what was owed (17 Nov).** Owner: "lets bust out phase 87 then lets move onto 91". Built by the Commander alone.

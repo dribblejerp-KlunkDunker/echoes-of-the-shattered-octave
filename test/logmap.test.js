@@ -248,7 +248,10 @@ async function boot() {
     const mapOff = await page.evaluate(() => { GFX.mapStamps = false; G.state = 'panel'; renderMap(); const c = document.getElementById('amap'); return { url: c.toDataURL(), legend: !!document.getElementById('lm-legend'), cls: document.getElementById('modal-panel').classList.contains('lm-map'), html: document.getElementById('modal-panel').innerHTML.replace(/<canvas[^>]*>/, '') }; });
     assert(!mapOff.legend && !mapOff.cls, 'mapStamps off: no legend, no class');
     const mapOn = await page.evaluate(() => { GFX.mapStamps = true; closeModal(); G.state = 'panel'; renderMap(); const c = document.getElementById('amap'); const lg = document.getElementById('lm-legend'); return { url: c.toDataURL(), keys: [...lg.querySelectorAll('.lm-key')].map(k => k.textContent), html: document.getElementById('modal-panel').innerHTML.replace(/<canvas[^>]*>/, ''), cls: document.getElementById('modal-panel').classList.contains('lm-map') }; });
-    assert.equal(mapOn.html.replace(/<div class="lm-legend"[^]*?<\/div>/, ''), mapOff.html, 'mapStamps on adds only the legend to the original markup');
+    // (the list of places under the map takes the room that is left, so its height follows the legend: a number of
+    // layout, held out of the comparison of the markup)
+    const noFit = (h) => h.replace(/(id="p97-places"[^>]*?)max-height: [^;]+;/, '$1max-height: ;');
+    assert.equal(noFit(mapOn.html.replace(/<div class="lm-legend"[^]*?<\/div>/, '')), noFit(mapOff.html), 'mapStamps on adds only the legend to the original markup');
     assert.notEqual(mapOn.url, mapOff.url, 'stamps are painted on the automap canvas');
     assert.deepEqual(mapOn.keys, ['Door', 'Quest giver', 'Shop', 'Danger', 'Boss', 'Trap'], 'legend lists every stamp kind');
     assert(mapOn.cls, 'panel marked for the compact map height');
