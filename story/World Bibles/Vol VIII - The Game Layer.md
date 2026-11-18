@@ -2325,7 +2325,7 @@ The traveller works the ship's stations (the wheel by Vane's word, the tank-crad
 
 **Phase 96, the lore readers (16 Nov):** before the Heights' remaining places were built, each was read against the books. Withdrawn as not lore-bound: the nine anchor-houses (the books know two), the cloud deck and the valley farms. Renamed: "the Bell Yard" is a Whisper-Grove street; the Heights' place is the black square before the Basilica's west end. Held for the owner: the White Mile (the Mirror Walks and the Polisher against "the only mirror the Altar permitted"). The records are in `story/Game Layer/` under "Phase 96".
 
-**Status:** [PROPOSED] under the approved Phases 89 and 90; eleven questions are the owner's, in the Phase 95 record (among them: whether the player belongs on the chain a month before the book's people walk it).
+**Status:** RULED, 17 Nov 2026 (the owner: "phase 95 is good I accept all recommendations"). All eleven questions of the Phase 95 record stand as recommended there, and every [PROPOSED] line of Phase 95 is accepted: the player may walk the chain in Harvestmonth 419; Brother-Captain Aurel Sant is the chain's keeper; the whites' hours, the dead hour as the hour before dawn, the dawn office, the pilgrim set and the stave stand as built.
 
 #### Phase 96: the Dawning Heights, part four: the smaller places, read against the books first (16 Nov)
 Each place of the plan was read against the books by a lore reader before anything was built. The briefs quote book and bible by file and line; the records are in `story/Game Layer/` under "Phase 96".
@@ -2342,7 +2342,7 @@ Each place of the plan was read against the books by a lore reader before anythi
 - **The cloud deck and the valley farms.** No cloud lies under the city; nothing grows below it; no chain reaches the ground; the city is fed by skyship.
 - **The White Mile** is held for the owner: the Foundry is on the Spire; the Unison hunts by sound; the Eye is "the only mirror the Altar permitted in all the Heights", against the plan's Mirror Walks and Polisher.
 
-**Status:** [PROPOSED]; the questions are the owner's, in each record.
+**Status:** RULED, 17 Nov 2026 (the owner: "all proposals I accept all recommendations I accept"). The four built places stand as built and every [PROPOSED] line in their records is accepted: the school on the shade side with its roll and its treble; the black square and its bell at noon and the third hour; Sun-Peak Vigil without a doctrine, its twelve and their names; the Chalk Cliffs, the Shadow Remnants and the twelve strokes. The withdrawals stand (the anchor-houses, the cloud deck, the valley farms). **The White Mile: the owner chose design (a)** ("my ruling is A"): the book's mile, the Glassmarket as its wonder, a keeper who owes nothing to mirrors (the Tallyman), no Mirror Walks, no Polisher. It is built in Phase 97.
 
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 

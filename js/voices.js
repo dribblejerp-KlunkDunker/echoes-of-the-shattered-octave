@@ -106,6 +106,25 @@ const VOICES = (() => {
     p17c_wife: { f0: 212, fs: 1.1, style: 'human' },
     p17c_hand: { f0: 110, fs: 0.95, style: 'human' },
     p17c_child: { f0: 300, fs: 1.25, style: 'human' },      // a child of the Cay
+    // the Dawning Heights (Phases 92 to 97): the Umbral folk speak low, in the Narrow
+    p92_ysolde: { f0: 188, fs: 1.03, style: 'human' },      // the harbourmaster, veiled
+    p92_brenna: { f0: 178, fs: 1.01, style: 'human' },      // Brenna Corliss, half her face gone white
+    p92_anselm: { f0: 108, fs: 0.93, style: 'human' },      // the old cobbler
+    p92_canvas: { f0: 146, fs: 0.99, style: 'human' },
+    p92_joss:   { f0: 126, fs: 0.98, style: 'human' },
+    p92_folk:   { f0: 158, fs: 1.0,  style: 'human' },
+    p94_bardo:  { f0: 94,  fs: 0.89, style: 'human' },      // the Winchmaster: a chest like a drum
+    p95_perpetua: { f0: 172, fs: 1.02, style: 'human' },    // Perpetua Lisle, of the robing-room
+    p95_warden: { f0: 106, fs: 0.92, style: 'human' },      // a Flambeau of the winch
+    p96v_coriel: { f0: 162, fs: 0.97, style: 'human' },     // the Abbess, in her eighties
+    p96v_fabian: { f0: 118, fs: 0.96, style: 'human' }, p96v_ottavia: { f0: 186, fs: 1.04, style: 'human' }, p96v_domitia: { f0: 204, fs: 1.07, style: 'human' },
+    p96v_albinus: { f0: 102, fs: 0.92, style: 'human' }, p96v_honoria: { f0: 212, fs: 1.08, style: 'human' }, p96v_marcellin: { f0: 128, fs: 0.97, style: 'human' },
+    p96v_prisca: { f0: 222, fs: 1.1, style: 'human' }, p96v_quintin: { f0: 136, fs: 0.99, style: 'human' }, p96v_liviana: { f0: 196, fs: 1.05, style: 'human' },
+    p96v_clemence: { f0: 180, fs: 1.02, style: 'human' }, p96v_galen: { f0: 96, fs: 0.9, style: 'human' },
+    p96c_treble: { f0: 312, fs: 1.26, style: 'human' },     // a child of about ten
+    p96c_cantor: { f0: 152, fs: 1.0, style: 'human' },      // "a voice like a bell"
+    p97_tallyman: { f0: 114, fs: 0.94, style: 'human' },    // the Tallyman: a scavenger's voice, kept under the breath
+    p97_scav: { f0: 168, fs: 1.01, style: 'human' },
     townsman:  { f0: 122, fs: 0.97, style: 'human' },
     townswoman:{ f0: 202, fs: 1.08, style: 'human' },
     sable:     { f0: 208, fs: 1.1,  style: 'human' },
@@ -143,6 +162,11 @@ const VOICES = (() => {
   };
   const ENEMY_VOICES = Object.assign({
     legionnaire: { f0: 104, fs: 0.9,  style: 'brass' },
+    p92_lamplighter: { f0: 92, fs: 0.9, style: 'human' },     // the Lamplighter of the Tiers
+    p92_bleachhound: { f0: 172, fs: 0.95, style: 'beast' },
+    p94_nineteen: { f0: 62, fs: 0.8, style: 'golem' },        // glass all through: it rings, it does not speak
+    p95_sant: { f0: 100, fs: 0.9, style: 'human' },           // Brother-Captain Aurel Sant
+    p95_flambeau: { f0: 116, fs: 0.95, style: 'human' },
     golem:       { f0: 58,  fs: 0.78, style: 'golem' },
     proctor:     { f0: 150, fs: 1.0,  style: 'brass' },
     wearer:      { f0: 112, fs: 0.95, style: 'multi' },
