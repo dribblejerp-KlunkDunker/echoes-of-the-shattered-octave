@@ -186,8 +186,8 @@ const PLACES97 = (() => {
     try { if (typeof COMPASS97 !== 'undefined' && (typeof UPG === 'undefined' || UPG.questMarkers !== false)) { COMPASS97._st.at = -1e9; quests = COMPASS97.targets(); } } catch (e) { quests = []; }
     for (const q of quests) questMark(cx, q.kind, q.x * cw, q.y * cw - (q.kind === 'via' ? 0 : 4));
     const old = document.getElementById('p97-places'); if (old) old.remove();
-    const box = document.createElement('div'); box.id = 'p97-places'; box.setAttribute('role', 'list'); box.style.cssText = 'display:flex;flex-wrap:wrap;gap:.3cqh .9cqw;margin-top:.6cqh;font-size:1.25cqw;align-items:center;max-height:13cqh;overflow-y:auto';
-    const head = document.createElement('p'); head.style.cssText = 'margin:0;flex-basis:100%'; head.className = 'muted'; head.textContent = tr(places.length || quests.length ? TX.listTitle : TX.listNone); box.appendChild(head);
+    const box = document.createElement('div'); box.id = 'p97-places'; box.setAttribute('role', 'list'); box.style.cssText = 'display:flex;flex-wrap:wrap;gap:.3cqh .9cqw;margin-top:.6cqh;font-size:1.25cqw;align-items:center;max-height:13cqh;overflow-y:auto;scrollbar-width:thin';
+    const head = document.createElement('p'); head.style.cssText = 'margin:0'; head.className = 'muted'; head.textContent = tr(places.length || quests.length ? TX.listTitle : TX.listNone); box.appendChild(head);
     const row = (draw, text) => { const s = document.createElement('span'); s.setAttribute('role', 'listitem'); s.className = 'p97-row'; s.style.cssText = 'display:inline-flex;align-items:center;gap:.35cqw';
       const c = document.createElement('canvas'); c.width = 11; c.height = 11; c.setAttribute('aria-hidden', 'true'); c.style.cssText = 'width:1.5cqw;height:1.5cqw;image-rendering:pixelated'; draw(c.getContext('2d')); s.appendChild(c);
       const t = document.createElement('span'); t.textContent = text; s.appendChild(t); box.appendChild(s); };
@@ -197,6 +197,20 @@ const PLACES97 = (() => {
     if (via) row((c) => questMark(c, 'via', 5.5, 5.5), tr(TX.via) + (via.label ? ': ' + tr(via.label) : ''));
     for (const p of places) row((c) => icon(c, p.kind, 5, 5), tr(p.name) + ' (' + tr(TX.kinds[p.kind]) + ')');
     cv.parentNode.insertBefore(box, cv.nextSibling);
+    // The list takes the room that is left. What the panel shows under it (the legend, the places you marked, Clear
+    // marks) stays in view; the list shows whole lines and scrolls for the rest. (With a dozen places known it had
+    // pushed the Clear marks button off the bottom of the panel and cut its own last line in half: test/ledger15.)
+    try {
+      const pn = document.getElementById('modal-panel'), rows = box.querySelectorAll('.p97-row');
+      if (pn && rows.length) {
+        const cap = parseFloat(getComputedStyle(box).maxHeight) || 1e9; box.style.maxHeight = 'none';
+        const full = box.getBoundingClientRect().height, rowGap = parseFloat(getComputedStyle(box).rowGap) || 0;
+        const line = rows[0].getBoundingClientRect().height + rowGap, first = 0;   // (the heading sits on the first line with the first places)
+        let want = Math.min(full, cap); box.style.maxHeight = want + 'px';
+        const over = pn.scrollHeight - pn.clientHeight; if (over > 0) want -= over;
+        if (want < full - 0.5) { const n = Math.max(1, Math.floor((want - first + rowGap) / line)); box.style.maxHeight = (first + n * line - rowGap) + 'px'; } else box.style.maxHeight = 'none';
+      }
+    } catch (e) { /* the list keeps its plain cap */ }
   }
 
   // ---------------------------------------------------------------- wiring
