@@ -239,6 +239,8 @@ const FREEZE = () => {
     const frame = async (blocked, setup) => {
       const pg = await boot(browser, blocked);
       await pg.evaluate(FREEZE);
+      // Phase 97: the compass's quest marks are held out of the comparison (they come and go with the map's own markers)
+      await pg.evaluate(() => { if (typeof UPG !== 'undefined') UPG.questMarkers = false; });
       // a constant backdrop: the 3D view is not deterministic between pages, the HUD is what we compare
       await pg.evaluate(() => { Engine.render = () => { Engine.ctx.fillStyle = '#334455'; Engine.ctx.fillRect(0, 0, VW, VIEW_H); }; });
       const out = await pg.evaluate((setup) => {
