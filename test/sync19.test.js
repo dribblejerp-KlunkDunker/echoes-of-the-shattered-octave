@@ -189,7 +189,9 @@ const TRACE = () => {
     const ownBefore = await guest.page.evaluate(`(${OWN})()`);
     // host stands in Oakhaven's street
     await host.page.evaluate(() => { for (const id in G.maps) for (const e of G.maps[id].entities) if (e.kind === 'enemy') e.hidden = true; loadMap('oakhaven', { x: 23.5, y: 6.5, dir: Math.PI / 2 }); G.state = 'play'; G.fadeT = 0; G.player.hp = G.player.hpMax = 9999; });
+    await host.page.evaluate(() => { window.__lv = []; const t0 = performance.now(); for (const ev of ['join', 'leave']) SYNC19.on(ev, (e) => __lv.push([ev, e && e.why, Math.round(performance.now() - t0)])); for (const ev of ['net:lost', 'net:closed', 'net:peer', 'net:back']) NET19.on(ev, (e) => __lv.push([ev, e && (e.reason || e.id), Math.round(performance.now() - t0)])); });
     const CODE = await host.page.evaluate(async () => (await NET19.host({ transport: __relayT(), name: 'Host Tester' })).code);
+    for (const pp of [host.page, guest.page]) await pp.evaluate(() => { window.__gaps = []; let last = performance.now(); const t0 = last; const f = () => { const t = performance.now(); if (t - last > 400) __gaps.push([Math.round(last - t0), Math.round(t - last)]); last = t; requestAnimationFrame(f); }; requestAnimationFrame(f); });
     await guest.page.evaluate(async (c) => { await NET19.join(c, { transport: __relayT(), name: 'Guest Tester' }); }, CODE);
     ok(await guest.page.evaluate(() => NET19.role() === 'guest' && NET19.connected()), 'the guest is connected through NET19 (code ' + CODE + ')');
     await guest.page.waitForFunction(() => SYNC19.isGuest(), null, { timeout: 8000 });
@@ -204,6 +206,12 @@ const TRACE = () => {
         console.log('  guest unmatched', await guest.page.evaluate(() => JSON.stringify(G.ents.filter((e) => !SYNC19._internal.C.applied.has(e._sid19)).map((e) => [e._sid19, e.kind, e.sprite, e.x.toFixed(1), e.y.toFixed(1), !!e.hidden]).slice(0, 12))));
         console.log('  host', await host.page.evaluate(() => JSON.stringify({ base: G.map.baseCount, n: G.ents.length, extras: G.ents.filter((e, i) => i >= G.map.baseCount).map((e) => [e.kind, e.sprite, e.x.toFixed(1), e.y.toFixed(1)]).slice(0, 10) })));
         console.log('  guest base', await guest.page.evaluate(() => G.map.baseCount));
+        { const H = await host.page.evaluate(() => G.ents.map((e) => [e.kind, e.sprite].join(' ')));
+          const Gs = await guest.page.evaluate(() => G.ents.map((e) => [e.kind, e.sprite, e.x.toFixed(1), e.y.toFixed(1), e._sid19 == null ? 'nosid' : 'sid', e.transient ? 'transient' : '', e._sl ? 'critter' : '', Object.keys(e).filter((k) => k[0] === '_').join(',')].join(' ')));
+          const hc = new Map(); for (const k of H) hc.set(k, (hc.get(k) || 0) + 1);
+          const extra = []; for (const g0 of Gs) { const k = g0.split(' ').slice(0, 2).join(' '); if (hc.get(k) > 0) hc.set(k, hc.get(k) - 1); else extra.push(g0); }
+          const missing = []; for (const [k, n] of hc) if (n > 0) missing.push(k + ' x' + n);
+          console.log('  guest has, host has not:', JSON.stringify(extra.slice(0, 14))); console.log('  host has, guest has not:', JSON.stringify(missing.slice(0, 14))); }
       }
       ok(g.n === h.n && g.vis === h.vis, 'the census gives the guest the host\'s entities (' + g.n + ' / ' + g.vis + ' visible)');
       ok(g.st === 'play' && g.figs === 1 && (await host.page.evaluate(() => SYNC19.figures().length)) === 1, 'each side sees one remote traveller');
@@ -246,6 +254,9 @@ const TRACE = () => {
       const h2 = await host.page.evaluate(() => { const g = SYNC19.guestState(); return [g.x, g.y]; });
       const moved = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]), hostMoved1 = Math.hypot(h1[0] - h0[0], h1[1] - h0[1]);
       console.log(`  predicted after 120 ms: ${moved.toFixed(3)} tiles (host had ${hostMoved1.toFixed(3)}); after release guest ${p2.st.map((v) => v.toFixed(3))} host ${h2.map((v) => v.toFixed(3))}; recon err max ${p2.stats.reconErrMax}`);
+      const built = await guest.page.evaluate(() => (__gaps[0] || [0, 0])[1]), lv = await host.page.evaluate(() => window.__lv);
+      console.log('  the guest built the host\'s world in', built, 'ms of silence (this test calls a link lost after 1500); the host\'s link log:', JSON.stringify(lv));
+      ok(!lv.some((e) => e[0] === 'net:lost' || e[0] === 'leave'), 'the host does not take a newcomer\'s silence while it builds the world for a lost link');
       ok(moved > 0.15 && p1[2] <= seq0 + 1, 'the guest\'s movement shows at once (predicted: ' + moved.toFixed(2) + ' tiles), before the host has answered for any of it (240 ms round trip)');
       ok(Math.hypot(h2[0] - h0[0], h2[1] - h0[1]) > 1.5, 'the host moved the guest\'s traveller from the inputs');
       ok(Math.hypot(p2.st[0] - h2[0], p2.st[1] - h2[1]) < 0.02 && Math.hypot(p2.cam[0] - h2[0], p2.cam[1] - h2[1]) < 0.05, 'reconciled: the guest ends exactly where the host says');
@@ -443,6 +454,7 @@ const TRACE = () => {
       const g = await guest.page.evaluate(`({ save: (${OWN})(), map: G.mapId, st: G.state, active: SYNC19.active() })`);
       ok(!g.active && g.map === 'tavern' && g.st === 'play', 'leaving puts the guest back in their own tavern');
       if (g.save !== ownBefore) { const a = JSON.parse(ownBefore), b = JSON.parse(g.save); const walk = (x, y, p) => { if (JSON.stringify(x) === JSON.stringify(y)) return; if (x && y && typeof x === 'object' && typeof y === 'object') { for (const k of new Set([...Object.keys(x), ...Object.keys(y)])) walk(x[k], y[k], p + '.' + k); } else console.log('  OWN DIFF', p, JSON.stringify(x)?.slice(0, 160), JSON.stringify(y)?.slice(0, 160)); }; walk(a, b, ''); }
+      if (g.save !== ownBefore) console.log('  places marked on the guest:', await guest.page.evaluate(() => JSON.stringify(typeof PLACES97 !== 'undefined' ? PLACES97.marks : [])));
       ok(g.save === ownBefore, 'the guest\'s own save is byte-identical before joining and after leaving (' + ownBefore.length + ' bytes)');
       await host.page.waitForFunction(() => !SYNC19.active(), null, { timeout: 3000 });
       ok(true, 'the host is told and carries on alone');
@@ -462,6 +474,15 @@ const TRACE = () => {
       await pg.page.waitForFunction(() => SYNC19.stats().recon > 3, null, { timeout: 5000 });
       const m = await pg.page.evaluate(() => ({ map: G.mapId, title: document.getElementById('title').classList.contains('hidden'), p: !!G.player }));
       ok(m.map === (await host.page.evaluate(() => G.mapId)) && m.title && m.p, 'the phone guest joins straight from the title screen with a stand-in traveller');
+      // (a phone drawing its first frames can go quiet for longer than this test's 1.5 s limit: the host lets go, the phone
+      // knocks again and is welcomed back. Walk once the two are steadily in step: the host is taking this guest's steps)
+      const inStep = async () => {
+        const h = await host.page.evaluate(() => { const H = SYNC19._internal.H; return H.gs ? [H.ep, H.gs.inputs] : null; });
+        const g = await pg.page.evaluate(() => SYNC19._internal.C.ep);
+        return h && h[0] === g ? h[1] : -1;
+      };
+      { let last = -1, steady = 0; for (let i = 0; i < 150 && steady < 6; i++) { const n = await inStep(); steady = n > 12 && n > last && last > 0 ? steady + 1 : 0; last = n; await sleep(150); }
+        ok(steady >= 6, 'the host is taking the phone guest\'s steps'); }
       // walk with the touch stick: a thumb down on the left of the view, pushed up
       const box = await pg.page.locator('#view').boundingBox();
       // face away from the host (PARTNER sets the newcomer down just behind them)
@@ -478,9 +499,23 @@ const TRACE = () => {
       await pg.page.waitForTimeout(800);
       const end = await pg.page.evaluate(() => [SYNC19._internal.C.st.x, SYNC19._internal.C.st.y]);
       const hg = await host.page.evaluate(() => { const g = SYNC19.guestState(); return [g.x, g.y]; });
-      console.log('  phone: touch', JSON.stringify(mid), 'end', end, 'host has', hg);
+      console.log('  phone: start', JSON.stringify(start), 'touch', JSON.stringify(mid), 'end', end, 'host has', hg, 'moved', Math.hypot(mid.cam[0] - start[0], mid.cam[1] - start[1]).toFixed(2), 'then', Math.hypot(end[0] - start[0], end[1] - start[1]).toFixed(2));
       ok(mid.touch && mid.fy > 0.3 && Math.hypot(mid.cam[0] - start[0], mid.cam[1] - start[1]) > 0.8, 'the phone guest walks with the touch stick');
       ok(Math.hypot(end[0] - hg[0], end[1] - hg[1]) < 0.05, 'and the host agrees where the phone guest stands');
+      // ---- the link drops for a moment (longer than the 1.5 s limit) and comes back: the guest stands where it stood
+      {
+        const ep0 = await host.page.evaluate(() => SYNC19._internal.H.ep);
+        ok((await host.page.evaluate(() => NET19._state.holdUntil || 0)) === 0, 'the time a newcomer is given ends with its first step');
+        await pg.page.evaluate(() => { NET19._state.holdUntil = 0; });
+        relay.cut = true; await sleep(2300); relay.cut = false;
+        let back = false;
+        for (let i = 0; i < 120 && !back; i++) { await sleep(150); const h = await host.page.evaluate(() => { const H = SYNC19._internal.H; return H.gs ? [H.ep, H.gs.inputs] : null; }); back = !!h && h[0] > ep0 && h[1] > 6 && (await pg.page.evaluate(() => SYNC19._internal.C.ep)) === h[0]; }
+        const at = await pg.page.evaluate(() => [SYNC19._internal.C.st.x, SYNC19._internal.C.st.y]);
+        const hh = await host.page.evaluate(() => { const g = SYNC19.guestState(); return [g.x, g.y, Engine.cam.x, Engine.cam.y]; });
+        console.log('  after a dropped link: guest at', at.map((v) => v.toFixed(2)), 'was', end.map((v) => v.toFixed(2)), 'host has', hh.slice(0, 2).map((v) => v.toFixed(2)));
+        ok(back, 'a link that drops for a moment comes back by itself (the phone knocks again and is welcomed)');
+        ok(Math.hypot(at[0] - end[0], at[1] - end[1]) < 0.3 && Math.hypot(hh[0] - end[0], hh[1] - end[1]) < 0.3 && Math.hypot(end[0] - hh[2], end[1] - hh[3]) > 2, 'and the guest stands where it stood, not back at the host\'s heels');
+      }
       const saveTry = await pg.page.evaluate(() => { try { const d = snapshotGame(); return d.flags && d.flags.p17x_on === 1 && d.mapId !== G.mapId + '_' ? 'isolated:' + d.player.name : 'saved'; } catch (e) { return e.message; } });
       const hostName = await host.page.evaluate(() => G.player.name);
       ok(saveTry !== 'saved' && !saveTry.includes(hostName), 'saving on the phone while joined never saves the host\'s world (' + saveTry + ')');

@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 96, 16 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 99, 18 November 2026).
 
 ---
 
@@ -2325,7 +2325,7 @@ The traveller works the ship's stations (the wheel by Vane's word, the tank-crad
 
 **Phase 96, the lore readers (16 Nov):** before the Heights' remaining places were built, each was read against the books. Withdrawn as not lore-bound: the nine anchor-houses (the books know two), the cloud deck and the valley farms. Renamed: "the Bell Yard" is a Whisper-Grove street; the Heights' place is the black square before the Basilica's west end. Held for the owner: the White Mile (the Mirror Walks and the Polisher against "the only mirror the Altar permitted"). The records are in `story/Game Layer/` under "Phase 96".
 
-**Status:** [PROPOSED] under the approved Phases 89 and 90; eleven questions are the owner's, in the Phase 95 record (among them: whether the player belongs on the chain a month before the book's people walk it).
+**Status:** RULED, 17 Nov 2026 (the owner: "phase 95 is good I accept all recommendations"). All eleven questions of the Phase 95 record stand as recommended there, and every [PROPOSED] line of Phase 95 is accepted: the player may walk the chain in Harvestmonth 419; Brother-Captain Aurel Sant is the chain's keeper; the whites' hours, the dead hour as the hour before dawn, the dawn office, the pilgrim set and the stave stand as built.
 
 #### Phase 96: the Dawning Heights, part four: the smaller places, read against the books first (16 Nov)
 Each place of the plan was read against the books by a lore reader before anything was built. The briefs quote book and bible by file and line; the records are in `story/Game Layer/` under "Phase 96".
@@ -2342,7 +2342,54 @@ Each place of the plan was read against the books by a lore reader before anythi
 - **The cloud deck and the valley farms.** No cloud lies under the city; nothing grows below it; no chain reaches the ground; the city is fed by skyship.
 - **The White Mile** is held for the owner: the Foundry is on the Spire; the Unison hunts by sound; the Eye is "the only mirror the Altar permitted in all the Heights", against the plan's Mirror Walks and Polisher.
 
-**Status:** [PROPOSED]; the questions are the owner's, in each record.
+**Status:** RULED, 17 Nov 2026 (the owner: "all proposals I accept all recommendations I accept"). The four built places stand as built and every [PROPOSED] line in their records is accepted: the school on the shade side with its roll and its treble; the black square and its bell at noon and the third hour; Sun-Peak Vigil without a doctrine, its twelve and their names; the Chalk Cliffs, the Shadow Remnants and the twelve strokes. The withdrawals stand (the anchor-houses, the cloud deck, the valley farms). **The White Mile: the owner chose design (a)** ("my ruling is A"): the book's mile, the Glassmarket as its wonder, a keeper who owes nothing to mirrors (the Tallyman), no Mirror Walks, no Polisher. It is built in Phase 97.
+
+#### Phase 97: the Dawning Heights, part five: the White Mile; and reading aloud, the compass, the map's places, Oakhaven's houses (17 Nov)
+Records: `story/Game Layer/Phase 97 - The White Mile (text for review).md` and `Phase 97 - Reading aloud, the compass, the map's places, Oakhaven's houses (for review).md`.
+
+**The White Mile** (`js/whitemile97.js`, maps `p97_gutted`, `p97_mile`), built to the owner's design (a).
+- **Canon (Book Two Part Two):** the way in is "a hanging house that had been gutted and left — a dark room with nothing in it, black walls, a black-painted window — and out through its roof onto a walkway"; the offerings lie on the line; the light is "sourceless", "It did not hurt", and "every shadow" points away from the Spire; one crosses "from shadow to shadow, the way you cross a river on stones", two to five strides at a time; black cloth over the face and black gloves; "Everything up there can hear it"; by day "the two of them together were more than anything could stand in"; the Unison goes "in four ranks of ten, coming slowly down the white street toward the plaza"; "the old Glassmarket" is "on the fourth tier above the line", with "White baskets of white fruit on white trestles under white awnings" and, among the stalls, the people, "seven years thin", one "still reaching for the coin"; "Don't touch them".
+- **Built as canon gives it:** the gutted house off the Tiers and its ladder; the walkway; the line and four offerings that can be looked at and never taken; four tiers of white street joined by roofed stairs; the light that takes health out of shade (least in the dead hour, most by day, more nearer the Spire), slowed by the wrap and the gloves; the Unison's forty on their own round, who hear noise and nothing else, lean, come, strike a note that deafens and never kills, and go back; the Glassmarket and its people, who are not touched.
+- **Never done there:** nobody from the books is met or named; no nest, no sixth chain, no mirror, no Polisher; the Unison is never stopped or harmed; the line does not move; no child is shown; the street is shut above the market.
+- **Ruled with the design (17 Nov):** the scavengers' shelf and its shade-lamp (Souls group k, no keeper to put down); the house names **Sancterre** and **Valmont-Lune**; **the Tallyman**, a half-white scavenger who counts the market's people by night; the drop-line; the eighteenth gear set, **the Scavenger's Blacks** (wrap, gloves, coat, the Tallyman's Hook).
+- **Invented beyond the ruling [PROPOSED]:** the Tallyman's count (nine now, fourteen the first winter), his words and his tallied pillar; a scavenger on the shelf; Valmont-Lune's garden terrace and statues, where the drop-line is let down; the street furniture; the eight figures of the market (nine people); the set's words and numbers; every balance number; that the Unison keeps to its street and comes only to noise on the second tier or above.
+- **Status:** built, [PROPOSED] list and five questions with the owner. Phase 91's question 4 (trophies and realm gear for the Reach's two keepers) is due: the Heights' fourth keeper is built.
+
+**Everything read aloud** (`js/reader97.js`). The owner: "I need all the lines properly voiced, my brother cant read so he needs everything read to him." With "Read everything aloud" on, the device's voice speaks every message, hint, spoken line (with the speaker's name), event, choice, panel, button and screen. F2 on and off; F3 or `[` again; F4 or `]` the whole screen. A switch on the title screen and in Options. Recorded voices stay for the 491 lines that have them. Status: built; whether to record more lines is the owner's (about 9,800 lines, about 250 MB if all were recorded). The Heights' people and foes were given voices of their own (`js/voices.js`).
+
+**The compass points to quest and side-quest markers** (`js/compass97.js`). A gold diamond for a quest, a pale blue disc for a side quest, an arrow when it is behind you, a diamond with a dark centre for the door toward a marker on another map. It follows the map's own markers and their Options switch. Status: built. It points at people with quests; quest steps are not tracked places yet.
+
+**Places read or heard of go on the map** (`js/places97.js`). Any place a person, notice, letter, sign or message names is marked on its map with a small picture of its kind (inn, healer, chapel, hall, gate, works, store, shop, house, mooring, way down, water, market, school, tower, place), with a line to say so and a readable list under the map. Status: built.
+
+**Oakhaven's houses stand taller** (`js/eaves78.js`, `js/r3d21.js`, `js/maps.js`). The owner: "the front doors are too small and the roofs are to low." A higher ground storey, front doors a quarter taller than a person in a timber case, higher ridges; the chapel tower and the mooring mast raised to stay over the roofs. The Hollow a little less; other towns unchanged. In the 3D view. Status: built; the other towns are the owner's to ask for.
+
+#### Phase 98: what was owed: the bare hands and the glass arm (Phase 87); the Reach's keepers' leavings (Phase 91, question 4) (17 Nov)
+The owner, 17 Nov: "lets bust out phase 87 then lets move onto 91". Record: `story/Game Layer/Phase 98 - What was owed (the hands, the glass arm, the Reach's keepers' leavings) (for review).md`.
+
+**The hands (`js/fp87.js`, `js/body21.js`).** The last two of the first week's first-person paintings are painted in code: the bare fist, raised where a blade's hand is, wearing what you wear; the glass arm, raised on the LEFT, where that arm is (it was drawn on the right); the two open hands a Song is cast from, the light between the palms. The glass keeps the look approved on 14 Nov (deep azure planes, dark seams, a few bright edges, a quarter of its first glow), now drawn plane by plane. The hand that is not striking rests low at its own side. A fist goes straight out. The locked arm's pale wash lies on the arm itself. No number changes. Status: built; the glass arm on the left and the straight punch are with the owner.
+
+**The keepers' leavings (`js/keepers98.js`).** Phase 90's rule 5 (approved): a keeper put down leaves a trophy, a valuable only, and one piece of gear in its realm's look, once. The Heights' three fought keepers were checked and do. The Reach's two now do [PROPOSED]:
+- **The Flint-Back** (the Antler Galleries): the **Chalk-White Shell-Plate** (a valuable), and the **Ridge-Flint**, a ridge of black flint off its back still set in a fist of white shell; a weapon of the Old Reach set, and flint for its bonus.
+- **The Standing Note** (the Dry Flume): **the Standing Note's Reed** (a valuable), and the **Beam-Key**, the engine-man's iron key it lay on for two hundred years; a weapon of the Flume set.
+- Once each; given late to whoever put a keeper down before; no set asks for more pieces than before.
+Status: built; the four names and the choice of weapons over worn pieces are with the owner. Phase 91's question 4 is closed, and Phase 87 owes nothing more.
+
+**Put right while checking.** The Vigil's and the Chalk Cliffs' finger-posts now have their milestones (they joined the world after the milestones were laid). The Scavenger's Cloth-Pole's noise is 0.7 and the Tallyman's Hook's 0.8, so the Old Cantor's Staff is again "quieter than every other long weapon" (Phase 79).
+
+#### Phase 99: the five old failing checks; the compass ruled (18 Nov)
+The owner, 18 Nov: "lets fix the old 5 failing checks." Record: `story/Game Layer/Phase 99 - The five old failing checks (for review).md`.
+
+**Nothing was added to the world.** No place, person, creature, custom, item or line. This entry is here because the rule is that every update is recorded.
+
+**What changed in the game as played.**
+- *Two players.* A guest joining a host's world builds all of it first and is silent while it does; the host now waits (15 seconds) and no longer takes that for a lost connection. A guest whose connection drops for a moment comes back where they stood, not at the host's heels. The guest sees one moored Kestrel and one set of the wind's banners, where they had seen two. Standing in a place as a guest marks nothing on your own map and writes nothing in your own save.
+- *Saves.* The ships at the Heights' docks and the Drift-Kestrel at the Vigil's mast are in the world whether or not the "small life" option is on, so a save is the same either way.
+- *The map's places (Phase 97).* The place you stand in is marked when you arrive. A place you travel to by the chart is marked without a word, and the chart itself is not read for names (it had announced "The North Gate is on your map now." in the middle of the journey). On the map screen the list of marked places takes only the room left, so "Clear marks" stays in view.
+- *Saving to a file.* The loader's limit is 2 MB, not 512 KB: the world is now 99 places, and the uncompressed form of its save (written where a browser cannot compress) had grown to 559 KB.
+
+**Ruled.** The owner, 18 Nov: **"the compass is good."** The compass points at people who have quests and side quests (Phase 97) and stays so; quests are not given a place for each step. Status: **ruled**. Phase 97's question on quest steps is closed.
+
+**Standing instruction.** The owner, 18 Nov: "remind me later about everything that is mine to decide." The open list is carried at the end of each phase's record until answered.
 
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 

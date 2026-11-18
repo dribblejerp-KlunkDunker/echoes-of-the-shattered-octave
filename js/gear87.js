@@ -69,10 +69,10 @@ const GEAR87 = (function () {
       armor: ['a_p22_barrowhelm', 'a_p22_shroud', 'a_p87_bar_bracers', 'a_p87_bar_greaves', 'a_p87_bar_cloak', 'a_p87_bar_shield'], weapons: ['p22_leafblade'],
       t: { ar: 1, special: 'barrow' }, f: { special: 'wight' }, tLine: S('+1 armour; the barrow\'s dead are slower to wake'), fLine: S('woolwights and the barrow\'s dead do not follow you past its door') },
     { id: 'flume', name: S('The Flume and the Lanes'), home: 'the Flume road and the Low Rings',
-      armor: ['a_p87_flu_cap', 'a_p85_coat', 'a_p87_flu_gloves', 'a_p85_boots', 'a_p87_flu_cape', 'a_p85_buckler'], weapons: ['p85_hook', 'p85_pole'],
+      armor: ['a_p87_flu_cap', 'a_p85_coat', 'a_p87_flu_gloves', 'a_p85_boots', 'a_p87_flu_cape', 'a_p85_buckler'], weapons: ['p85_hook', 'p85_pole', 'p98_beamkey'],
       t: { noise: -0.2 }, f: { fatBack: 0.2, special: 'water' }, tLine: S('quieter on boards and in water'), fLine: S('the Dry Flume\'s surge does not sweep you off your feet; fatigue comes back 20% faster') },
     { id: 'oldreach', name: S('The Old Reach'), home: 'the Antler Galleries and the Deep Grove',
-      armor: ['a_p87_old_crown', 'a_p87_old_hide', 'a_p87_old_wraps', 'a_p87_old_shoes', 'a_p87_old_pelt'], weapons: ['p85_pick', 'p85_knife', 'p85_bough', 'p87_hornbow'],
+      armor: ['a_p87_old_crown', 'a_p87_old_hide', 'a_p87_old_wraps', 'a_p87_old_shoes', 'a_p87_old_pelt'], weapons: ['p85_pick', 'p85_knife', 'p85_bough', 'p87_hornbow', 'p98_ridge'],
       t: { special: 'flint' }, f: { special: 'grove' }, tLine: S('iron-bough and flint hit 15% harder'), fLine: S('the Deep Grove\'s ways are always the low note') },
     // Phase 92: the Dawning Heights' first set [PROPOSED]
     { id: 'umbral', name: S('The Umbral Tiers'), home: 'Sol-Luminary',
@@ -86,6 +86,10 @@ const GEAR87 = (function () {
     { id: 'pilgrim', name: S('The Pilgrim Chain'), home: 'the Pilgrim Chain, Sol-Luminary',
       armor: ['a_p95_robe', 'a_p95_cowl', 'a_p95_sandals'], weapons: ['p95_stave'],
       t: { special: 'white' }, f: { special: 'afterglow' }, tLine: S('in the whites, the Flambeaux of the Chain take you for a bearer until you are close'), fLine: S('leaving shade, the Bleach waits three breaths before it begins on you') },
+    // Phase 97: the White Mile [PROPOSED]: what a scavenger of the line goes up in (Book Two: black cloth round the face, black gloves), and the Tallyman's second hook
+    { id: 'blacks', name: S('The Scavenger\'s Blacks'), home: 'the White Mile, Sol-Luminary',
+      armor: ['a_p97_wrap', 'a_p97_gloves', 'a_p97_coat'], weapons: ['p97_hook'],
+      t: { noise: -0.2 }, f: { special: 'unheard' }, tLine: S('quieter on white stone'), fLine: S('the Unison must be a third nearer to hear you') },
   ];
   const BY_ID = {}; for (const s of SETS) BY_ID[s.id] = s;
   // which set a piece belongs to (the design puts every piece in exactly one)
@@ -179,7 +183,7 @@ const GEAR87 = (function () {
   // ---------------------------------------------------------------- the set-specials, where they act (Phase 87 (c))
   // Each is read live (special(name)), so taking a piece off ends it at once. No random numbers; nothing saved.
   const FIRE = /steam|fire|flame|burn|scald|furnace|golem|cinder|ember/i;
-  const FLINT = ['p85_pick', 'p85_knife', 'p85_bough', 'p87_hornbow'];
+  const FLINT = ['p85_pick', 'p85_knife', 'p85_bough', 'p87_hornbow', 'p98_ridge'];   // p98_ridge: the Flint-Back's leaving (Phase 91 question 4)
   let inEnemy = null;   // the enemy whose turn it is (its blows reach damagePlayer from inside enemyUpdate)
   function wireSpecials() {
     // who hears you: the Hush in full, and the drove's hounds, hear you at half the distance; the barrow's dead wake slower

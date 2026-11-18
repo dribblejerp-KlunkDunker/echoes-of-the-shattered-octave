@@ -111,7 +111,7 @@ function animFireSprite(source, phase) {
 // costs and cooldowns. Wind-up, strike and recovery follow its existing clock.
 function animWeaponPose(w, progress, direction) {
   const f = Math.max(0, Math.min(1, progress));
-  const thrust = direction === 'thrust' || w.img === 'fp_knife' || w.img === 'fp_spear';
+  const thrust = direction === 'thrust' || w.img === 'fp_knife' || w.img === 'fp_spear' || w.img === 'fp_hands' || w.img === 'fp_glass';   // a fist goes straight out
   const overhead = !thrust && (w.blunt || w.img === 'fp_axe' || direction === 'chop down');
   const family = w.ranged ? 'ranged' : thrust ? 'thrust' : overhead ? 'overhead' : 'sweep';
   const tracks = {

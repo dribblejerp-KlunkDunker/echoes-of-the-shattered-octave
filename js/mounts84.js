@@ -454,6 +454,8 @@ const MOUNTS84 = (function () {
       const _l = loadMap;
       loadMap = function (id) {
         let from = null; try { if (mounted() && G.map) from = { map: G.mapId, x: Engine.cam.x, y: Engine.cam.y }; } catch (e) { /* first load */ }
+        // a place joined to the world by a later module (the Vigil, the Cliffs) has finger-posts too: its milestones go in before it is first stood in
+        try { if (typeof G !== 'undefined' && G.maps) placeMiles(G.maps); } catch (e) { warnOnce('late miles', e); }
         const r = _l.apply(this, arguments);
         try {
           if (from && mounted()) {

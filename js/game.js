@@ -1956,6 +1956,7 @@ function drainNeeds(hours) {
 function passHours(hours) { G.tod += hours / 24; while (G.tod >= 1) { G.tod -= 1; G.day++; } tickCustody(hours); drainNeeds(hours); if (typeof Weather !== 'undefined') Weather.advance(hours); }
 function timeName() { const h = G.tod * 24; return h < 5 ? 'the dead hour' : h < 7 ? 'before dawn' : h < 12 ? 'morning' : h < 17 ? 'afternoon' : h < 20 ? 'dusk' : 'night'; }
 function renderMap() {
+  if (G._dryMap) return;   // js/compass97.js: lets the modules that hook the map bring their quest markers up to date without opening it
   const m = G.map; const cw = 4; const html = `<h2>${m.name}</h2><button class="dfbtn small close" id="x">Close</button><p class="muted">What you have walked. ${m.outdoor ? 'North is up.' : 'The automap remembers where the lamps were.'}</p><canvas id="amap" width="${m.w * cw}" height="${m.h * cw}" style="width:100%;max-height:70cqh;object-fit:contain;image-rendering:pixelated;background:#0a0806;border:2px solid #0b0806"></canvas>`;
   openModal(html, 'map'); $('#x').onclick = () => { closeModal(); G.state = 'play'; };
   const cv = $('#amap'), cx = cv.getContext('2d');
@@ -2409,7 +2410,7 @@ function drawHUD() {
     ctx.rotate(rotation); ctx.scale(zoom, zoom);
     ctx.drawImage(img, -iw * 0.5, -ih + 12, iw, ih);
     ctx.restore();
-    if (G.glassLock > 0 && w.type === 'glass') { ctx.fillStyle = 'rgba(80,200,220,0.25)'; ctx.fillRect(bx + ax, VIEW_H - ih + 24 + ay, iw, ih); }
+    if (G.glassLock > 0 && w.type === 'glass' && !(typeof BODY21 === 'object' && BODY21.owned && (BODY21.owned(img) || {}).k)) { ctx.fillStyle = 'rgba(80,200,220,0.25)'; ctx.fillRect(bx + ax, VIEW_H - ih + 24 + ay, iw, ih); }   // a painted arm (js/fp87.js) takes the wash on itself (js/body21.js)
   }
   // crosshair
   // the crosshair is the centre of the view: a pitched look aims up or down with it

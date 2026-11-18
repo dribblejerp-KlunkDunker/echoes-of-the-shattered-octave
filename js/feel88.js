@@ -115,8 +115,9 @@ const FEEL88 = (function () {
           // the label decides the family; the weapon only decides when there is no label (a key or a tap)
           const proxy = Object.assign({}, w);
           if (label === 'thrust') { proxy.img = 'fp_spear'; return _p.call(this, proxy, progress, 'thrust'); }
-          if (label === 'chop down') { proxy.blunt = true; return _p.call(this, proxy, progress, 'chop down'); }
-          if (label === 'slash left' || label === 'slash right') { proxy.blunt = false; proxy.img = 'fp_sword'; return _p.call(this, proxy, progress, label); }
+          if (label === 'chop down') { proxy.blunt = true; if (proxy.img === 'fp_glass') proxy.img = 'fp_mace'; return _p.call(this, proxy, progress, 'chop down'); }   // (a fist thrusts unless you drag it down)
+          // (the glass arm's picture is mirrored on the screen, on the left: its slashes change hands so a drag still swings the way it goes)
+          if (label === 'slash left' || label === 'slash right') { proxy.blunt = false; proxy.img = 'fp_sword'; return _p.call(this, proxy, progress, w.img === 'fp_glass' ? (label === 'slash left' ? 'slash right' : 'slash left') : label); }
         }
       } catch (e) { warnOnce('arc', e); }
       return _p.apply(this, arguments);

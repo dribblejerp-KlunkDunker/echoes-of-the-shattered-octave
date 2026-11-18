@@ -272,6 +272,7 @@ const PROBE = `(() => {
     const off = await variant(false, true), flagsOn = await variant(false, false);
     const baseErrors = [];
     for (const id of ['oakhaven', 'catacombs', 'tavern', 'deepwoods']) assert.equal(off[id], original[id], 'switches off: ' + id + ' frame identical to a build without the module');
+    { let k = 0; while (k < original.snap.length && original.snap[k] === off.snap[k]) k++; if (k < original.snap.length || off.snap.length !== original.snap.length) console.log('OFFDIFF at', k, 'without:', JSON.stringify(original.snap.slice(Math.max(0, k - 160), k + 200)), 'off:', JSON.stringify(off.snap.slice(Math.max(0, k - 160), k + 200))); }
     assert.equal(off.snap, original.snap, 'switches off: saved state identical to a build without the module');
     // switched on, a map with nothing for the module to do is unchanged too
     assert.equal(flagsOn.tavern, original.tavern, 'switches on: the tavern frame is untouched');

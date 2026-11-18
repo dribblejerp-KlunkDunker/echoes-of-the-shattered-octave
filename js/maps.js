@@ -429,11 +429,12 @@ function buildInteriors() {
 // Only cells change here, never entities, so saved entity indexes still line up.
 function shapeOakhaven(m) {
   // the Chapel of the Carillon's bell-tower stands over everything in town
-  for (const [x, y] of [[48, 5], [49, 5], [48, 6], [49, 6]]) m.block(x, y, 't_marble', 3.2, { capTex: 't_stone' });
+  // (4.1 and 3.6 since 17 Nov: the houses' ground storeys and roofs were raised, and these two still stand over every roof)
+  for (const [x, y] of [[48, 5], [49, 5], [48, 6], [49, 6]]) m.block(x, y, 't_marble', 4.1, { capTex: 't_stone' });
   // the Greenhall's dome
   m.block(30, 6, 't_marble', 2.1, { capTex: 't_roof' });
   // the mooring mast: a tall timber pylon the Kestrel ties up to
-  m.lowWall(36, 19, 37, 20, 't_wood', 2.8, { capTex: 't_wood' });
+  m.lowWall(36, 19, 37, 20, 't_wood', 3.6, { capTex: 't_wood' });
   // the empty bell-plinth is knee-high stone, not a wall
   m.block(49, 11, 't_stone', 0.3);
   // bridge piers become parapets: you can look over them into the Flume

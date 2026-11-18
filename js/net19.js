@@ -490,7 +490,7 @@ const NET19 = (function () {
       const c = cfg(), t = now();
       if (S.state === 'open' && S.link) {
         rawSend(S.link, 'net.ping', { t: Math.round(t * 10) / 10 }, false);
-        if (t - S.heard > c.lostMs) linkLost(S.link);
+        if (t - S.heard > c.lostMs && !(t < (S.holdUntil || 0))) linkLost(S.link);
       } else if (S.state === 'lost') {
         if (t > S.giveUpAt) {
           if (S.role === 'guest') finish('gave-up');
@@ -630,6 +630,10 @@ const NET19 = (function () {
       off(type, fn) { const s = handlers.get(type); if (s) s.delete(fn); },
       send,
       setName(n) { const c = cleanName(n); if (c) S.myName = c; return S.myName; },
+      // The other side is about to go quiet for a known reason (a guest builds the whole of the host's world on joining:
+      // seconds with nothing sent, longer on a phone). Its silence is not a lost link until ms have passed (30 s at most).
+      // hold(0) ends it: whoever asked knows when the quiet is over.
+      hold(ms) { const n = +ms; S.holdUntil = Number.isFinite(n) && n > 0 ? now() + Math.min(n, 30000) : 0; return S.holdUntil; },
       _adoptManual: adoptManual,
       _state: S,
     };

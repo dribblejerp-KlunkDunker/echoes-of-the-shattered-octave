@@ -54,6 +54,9 @@ const FP87 = (function () {
     p92_clothpole: { head: 'cloth', haft: 'ash' },
     p94_lever: { head: 'lever', haft: 'iron' },
     p95_stave: { head: 'firecage', haft: 'iron' },
+    p97_hook: { head: 'tallyhook', haft: 'bough' },
+    p98_ridge: { head: 'ridgeflint', haft: 'shell', len: 0.3, hw: 40 },     // Phase 91 question 4: no haft, a lump of shell in the fist
+    p98_beamkey: { head: 'beamkey', haft: 'iron', len: 0.4 },
     p87_sledge: { head: 'nightsledge', haft: 'ash' },
   };
   const BLADE_KINDS = { sword: 1, longsword: 1, greatsword: 1, knife: 1, dirk: 1 };   // throwing knives stay with the ranged (a fan of three)
@@ -168,7 +171,7 @@ const FP87 = (function () {
   }
 
   // ---------------------------------------------------------------- hafted weapons (local frame: grip at 0,0; the head up -y)
-  function haftCol(f, e) { const g = e.col.grip || [110, 76, 46]; return f.haft === 'red' ? [132, 46, 36] : f.haft === 'pale' ? [196, 172, 128] : f.haft === 'iron' ? [80, 84, 90] : f.haft === 'bough' ? [62, 60, 52] : g; }
+  function haftCol(f, e) { const g = e.col.grip || [110, 76, 46]; return f.haft === 'red' ? [132, 46, 36] : f.haft === 'pale' ? [196, 172, 128] : f.haft === 'iron' ? [80, 84, 90] : f.haft === 'shell' ? [232, 226, 210] : f.haft === 'bough' ? [62, 60, 52] : g; }
   function drawHaft(x, f, e, top, bot, w, seed) {
     const c = haftCol(f, e);
     if (f.haft === 'bough' || f.haft === 'antler') { // a natural limb: bulges and a twist
@@ -238,6 +241,26 @@ const FP87 = (function () {
         for (const bx of [-12, -5, 2, 9]) { x.fillStyle = css(H.dk, 0.95); x.fillRect(bx, y - 28, 3, 32); x.fillStyle = css(H.hi, 0.5); x.fillRect(bx, y - 28, 1, 32); }
         x.fillStyle = 'rgb(96,72,34)'; x.fillRect(-6, y - 14, 12, 14); x.fillStyle = 'rgb(134,104,52)'; x.fillRect(-4, y - 12, 4, 6);   // the lump, unlit
         rrect(x, -6, y + 7, 12, 8, 2); fillM(-6, y + 7, 6, y + 15); break; }
+      case 'ridgeflint': { // the Ridge-Flint (Phase 91 question 4): a ragged ridge of black flint that grew its own edge, standing out of white shell
+        x.beginPath(); x.moveTo(-13, y + 30); x.lineTo(-17, y + 6); x.lineTo(-10, y - 8); x.lineTo(-13, y - 24); x.lineTo(-5, y - 40); x.lineTo(1, y - 30); x.lineTo(6, y - 46); x.lineTo(12, y - 28); x.lineTo(9, y - 10); x.lineTo(15, y + 4); x.lineTo(12, y + 30); x.closePath(); fillM(-17, y - 46, 15, y + 30);
+        x.save(); x.clip(); x.lineWidth = 1;
+        for (let k = 0; k < 7; k++) { x.strokeStyle = k % 3 ? 'rgba(0,0,0,0.45)' : 'rgba(170,174,190,0.5)'; x.beginPath(); x.arc(-18 + hash(k, seed, 1) * 10, y + 30 - k * 11, 14 + hash(k, seed, 2) * 12, -0.9, 0.5); x.stroke(); }   // the flake scars
+        x.restore();
+        x.beginPath(); x.moveTo(-13, y + 30); x.lineTo(-17, y + 6); x.lineTo(-10, y - 8); x.lineTo(-13, y - 24); x.lineTo(-5, y - 40); x.lineWidth = 1.6; x.strokeStyle = css(H.hi, 0.9); x.stroke();                             // the edge in the light
+        ell(x, 0, y + 34, 19, 12); x.fillStyle = lin(x, -19, y + 22, 19, y + 46, [[0, 'rgb(250,246,236)'], [0.5, 'rgb(230,224,208)'], [1, 'rgb(164,156,138)']]); x.fill(); x.lineWidth = 1; x.strokeStyle = 'rgba(96,90,76,0.9)'; x.stroke();
+        x.save(); x.clip(); speckle(x, -19, y + 22, 38, 24, 40, [90, 84, 70], 0.3, seed + 3); x.restore(); break; }
+      case 'beamkey': { // the Beam-Key (Phase 91 question 4): an engine-man's key, an open jaw on a flat iron shank, the jaw's faces worn bright
+        x.beginPath(); x.moveTo(-17, y + 22); x.lineTo(-19, y - 2); x.lineTo(-13, y - 16); x.lineTo(-6, y - 16); x.lineTo(-6, y + 2); x.lineTo(6, y + 2); x.lineTo(6, y - 16); x.lineTo(13, y - 16); x.lineTo(19, y - 2); x.lineTo(17, y + 22); x.lineTo(7, y + 34); x.lineTo(-7, y + 34); x.closePath(); fillM(-19, y - 16, 19, y + 34);
+        x.fillStyle = css(mix(H.hi, [255, 255, 255], 0.4)); x.fillRect(-7.5, y - 15, 2, 17); x.fillRect(5.5, y - 15, 2, 17); x.fillRect(-6, y + 0.6, 12, 1.8);   // the jaw
+        x.fillStyle = 'rgba(0,0,0,0.35)'; x.fillRect(-5.5, y - 16, 11, 16);
+        for (let k = 0; k < 3; k++) { x.fillStyle = 'rgba(20,22,26,0.55)'; x.fillRect(-9 + k * 7, y + 12, 4, 1.4); }                                       // the maker's stamp, worn
+        rrect(x, -6, y + 30, 12, 20, 2); fillM(-6, y + 30, 6, y + 50); break; }
+      case 'tallyhook': { // the Tallyman's Hook (Phase 97): a flat crook of iron, no spike; a rag of black cloth knotted under it; tally-notches down the pole
+        rrect(x, -3, y - 4, 6, 26, 2); fillM(-3, y - 4, 3, y + 22);
+        x.beginPath(); x.moveTo(0, y - 2); x.quadraticCurveTo(-2, y - 30, -18, y - 26); x.quadraticCurveTo(-26, y - 22, -22, y - 10); x.lineWidth = 6; x.strokeStyle = css(H.base); x.stroke(); x.lineWidth = 1.5; x.strokeStyle = css(H.hi); x.stroke();
+        x.fillStyle = 'rgb(10,10,13)'; x.beginPath(); x.moveTo(-7, y + 20); x.lineTo(7, y + 20); x.lineTo(11, y + 46); x.lineTo(3, y + 40); x.lineTo(-2, y + 50); x.lineTo(-9, y + 42); x.closePath(); x.fill();   // the rag
+        x.fillStyle = 'rgba(40,38,44,0.9)'; x.fillRect(-7, y + 20, 14, 5);
+        for (let k = 0; k < 5; k++) { x.fillStyle = 'rgba(196,184,160,0.85)'; x.fillRect(-4, y + 60 + k * 7, 8, 1.5); } break; }
       case 'boathook': { // a boat-hook: spike and a hook back
         x.beginPath(); x.moveTo(-3, y + 20); x.lineTo(0, y - 26); x.lineTo(3, y + 20); x.closePath(); fillM(-3, y - 26, 3, y + 20);
         x.beginPath(); x.moveTo(2, y + 4); x.quadraticCurveTo(26, y - 2, 20, y - 20); x.lineWidth = 5; x.strokeStyle = css(H.base); x.stroke(); x.lineWidth = 1.4; x.strokeStyle = css(H.hi); x.stroke();
@@ -258,9 +281,25 @@ const FP87 = (function () {
   }
 
   // ---------------------------------------------------------------- the hand round the grip (local frame, grip vertical)
+  // the glass arm's planes (approved 14 Nov: "azure facets with dark seams and a few bright edges"): a hashed mesh of
+  // triangles over whatever is clipped, each plane its own tone, lit from the left; nothing here is chance
+  function glassFacets(x, a, b, w, h, cell, seed) {
+    const cols = Math.ceil(w / cell) + 3, rows = Math.ceil(h / cell) + 3, P = [];
+    for (let j = 0; j < rows; j++) { const row = []; for (let i = 0; i < cols; i++) row.push([a + (i - 1 + ((j & 1) ? 0.5 : 0) + (hash(i, j, seed) - 0.5) * 0.7) * cell, b + (j - 1 + (hash(i, j, seed + 3) - 0.5) * 0.7) * cell]); P.push(row); }
+    let n = 0;
+    const tri = (p, q, r) => { n++; const t = hash(n, seed, 11), side = 1 - Math.max(0, Math.min(1, ((p[0] + q[0] + r[0]) / 3 - a) / Math.max(1, w))), v = t * 0.8 + side * 0.28;
+      x.beginPath(); x.moveTo(p[0], p[1]); x.lineTo(q[0], q[1]); x.lineTo(r[0], r[1]); x.closePath();
+      x.fillStyle = v > 0.93 ? 'rgba(176,226,250,0.5)' : v > 0.76 ? 'rgba(96,182,238,0.3)' : v > 0.56 ? 'rgba(62,150,214,0.05)' : v > 0.32 ? 'rgba(18,66,140,0.42)' : 'rgba(8,36,96,0.62)'; x.fill();
+      x.lineWidth = 0.7; x.strokeStyle = 'rgba(8,30,66,0.34)'; x.stroke();
+      if (hash(n, seed, 12) > 0.6) { x.beginPath(); x.moveTo(p[0], p[1]); x.lineTo(q[0], q[1]); x.lineWidth = 0.9; x.strokeStyle = 'rgba(204,238,255,0.55)'; x.stroke(); } };   // one bright edge, never a whole outline
+    for (let j = 0; j < rows - 1; j++) for (let i = 0; i < cols - 1; i++) { const p00 = P[j][i], p10 = P[j][i + 1], p01 = P[j + 1][i], p11 = P[j + 1][i + 1]; if ((i + j) & 1) { tri(p00, p10, p11); tri(p00, p11, p01); } else { tri(p00, p10, p01); tri(p10, p11, p01); } }
+  }
+  // the current path, filled already, takes the glass's planes
+  function glassOver(x, path, a, b, w, h, cell, seed, rim) { path(); x.save(); x.clip(); glassFacets(x, a, b, w, h, cell, seed); x.restore(); path(); x.lineWidth = rim || 1.4; x.strokeStyle = 'rgba(164,228,255,0.95)'; x.stroke(); }   // and a bright edge
+  const GLASS_HL = { kind: 'glass', base: [52, 140, 212], lt: [128, 204, 244], sh: [22, 78, 152], dk: [10, 36, 76] };
   function handLook(look, side) {
     const H = look && look.hands, glass = side === 'left' && look && look.glassArm;
-    if (glass) return { kind: 'glass', base: [62, 150, 214], lt: [140, 204, 240], sh: [26, 82, 150], dk: [10, 36, 76] };
+    if (glass) return GLASS_HL;
     if (!H || H.bare) { const s = (look && look.skin) || [214, 170, 136]; return { kind: 'skin', base: s, lt: mix(s, [255, 236, 220], 0.35), sh: mul(s, 0.72), dk: mul(s, 0.45) }; }
     const c = H.col || { base: [112, 74, 46], shade: [74, 46, 28], light: [150, 106, 70] };
     // Phase 87: fingerless kid and the barrow's coils leave the fingers bare (the coils and cuffs show on the forearm)
@@ -275,20 +314,23 @@ const FP87 = (function () {
     const back = () => { x.beginPath(); x.moveTo(-6, -31); x.bezierCurveTo(18, -38, 40, -28, 42, -6); x.bezierCurveTo(44, 16, 38, 34, 26, 42); x.lineTo(-2, 44); x.closePath(); };
     // the back of the hand
     back(); x.fillStyle = lin(x, -4, -34, 40, 40, [[0, hl.lt], [0.45, hl.base], [1, hl.dk]]); x.fill(); x.lineWidth = 1.1; x.strokeStyle = css(hl.dk, 0.9); x.stroke();
+    if (hl.kind === 'glass') glassOver(x, back, -8, -40, 54, 88, 17, seed + 20);
     // the palm's shadow where the fingers meet the grip
     x.fillStyle = lin(x, -6, 0, 6, 0, [[0, css(hl.dk, 0)], [1, css(hl.dk, 0.55)]]); x.fillRect(-6, -30, 10, 72);
     // four fingers wrapped round the grip, overlapping, the index on top; the tips curl back under
     for (let i = 3; i >= 0; i--) {
       const fy = -21 + i * 14.2, fw = 34 - i * 2.5, fh = 8.6 - i * 0.5;
-      x.beginPath(); x.moveTo(2, fy - fh); x.bezierCurveTo(-fw * 0.5, fy - fh * 1.25, -fw, fy - fh * 0.9, -fw, fy); x.bezierCurveTo(-fw, fy + fh * 0.95, -fw * 0.5, fy + fh * 1.15, 2, fy + fh); x.closePath();
+      const fing = () => { x.beginPath(); x.moveTo(2, fy - fh); x.bezierCurveTo(-fw * 0.5, fy - fh * 1.25, -fw, fy - fh * 0.9, -fw, fy); x.bezierCurveTo(-fw, fy + fh * 0.95, -fw * 0.5, fy + fh * 1.15, 2, fy + fh); x.closePath(); }; fing();
       x.fillStyle = lin(x, -fw, fy - fh, -fw * 0.2, fy + fh, [[0, hl.lt], [0.4, hl.base], [1, hl.sh]]); x.fill(); x.lineWidth = 1; x.strokeStyle = css(hl.dk, 0.75); x.stroke();
+      if (hl.kind === 'glass') glassOver(x, fing, -fw - 2, fy - fh * 1.3, fw + 6, fh * 2.6, 11, seed + 30 + i);
       x.fillStyle = css(mix(hl.lt, [255, 255, 255], 0.2), 0.55); ell(x, -fw * 0.72, fy - fh * 0.45, fw * 0.14, fh * 0.28); x.fill();   // the knuckle in the light
       x.strokeStyle = css(hl.dk, 0.45); x.lineWidth = 0.8; x.beginPath(); x.moveTo(-fw * 0.38, fy - fh * 0.9); x.quadraticCurveTo(-fw * 0.42, fy, -fw * 0.36, fy + fh * 0.9); x.stroke();   // the joint
       if (hl.kind === 'mail') { x.beginPath(); x.moveTo(-fw * 0.98, fy - fh * 0.7); x.lineTo(-fw * 0.5, fy - fh * 0.85); x.lineTo(-fw * 0.5, fy + fh * 0.85); x.lineTo(-fw * 0.98, fy + fh * 0.7); x.closePath(); x.fillStyle = lin(x, 0, fy - fh, 0, fy + fh, [[0, mix(hl.lt, [255, 255, 255], 0.45)], [0.5, hl.base], [1, hl.dk]]); x.fill(); x.strokeStyle = css(hl.dk); x.stroke(); }
     }
     // the thumb, down over the index finger
-    x.beginPath(); x.moveTo(10, -32); x.bezierCurveTo(-4, -40, -22, -38, -30, -27); x.bezierCurveTo(-33, -22, -29, -17, -24, -18); x.bezierCurveTo(-12, -22, 0, -20, 8, -14); x.closePath();
+    const thumb = () => { x.beginPath(); x.moveTo(10, -32); x.bezierCurveTo(-4, -40, -22, -38, -30, -27); x.bezierCurveTo(-33, -22, -29, -17, -24, -18); x.bezierCurveTo(-12, -22, 0, -20, 8, -14); x.closePath(); }; thumb();
     x.fillStyle = lin(x, -30, -40, 8, -14, [[0, mix(hl.lt, [255, 255, 255], 0.18)], [0.55, hl.base], [1, hl.sh]]); x.fill(); x.lineWidth = 1.1; x.strokeStyle = css(hl.dk, 0.85); x.stroke();
+    if (hl.kind === 'glass') glassOver(x, thumb, -34, -42, 46, 30, 12, seed + 40);
     ell(x, -25, -27, 4.5, 2.6, -0.4); x.fillStyle = css(hl.lt, 0.6); x.fill();
     // materials
     if (hl.kind === 'leather') { // seams, stitching, a little wear on the knuckles
@@ -298,10 +340,7 @@ const FP87 = (function () {
       x.save(); back(); x.clip();
       for (let yy = -38; yy < 46; yy += 3.4) for (let xx = -6 + ((Math.round(yy / 3.4)) & 1) * 1.7; xx < 46; xx += 3.4) { ell(x, xx, yy, 1.5, 1.2); x.strokeStyle = css(hl.dk, 0.5); x.lineWidth = 0.6; x.stroke(); x.fillStyle = css(mix(hl.lt, [255, 255, 255], 0.3), 0.35); x.fillRect(xx - 0.8, yy - 1, 0.8, 0.8); }
       x.restore();
-    } else if (hl.kind === 'glass') { // facets with dark seams and a few bright edges
-      x.save(); back(); x.clip();
-      for (let i = 0; i < 10; i++) { x.beginPath(); x.moveTo(-6 + hash(i, 1, seed) * 50, -38 + hash(i, 2, seed) * 84); x.lineTo(-6 + hash(i, 3, seed) * 50, -38 + hash(i, 4, seed) * 84); x.strokeStyle = i % 3 ? 'rgba(10,40,80,0.55)' : 'rgba(210,240,255,0.7)'; x.lineWidth = 0.8; x.stroke(); }
-      x.restore();
+    } else if (hl.kind === 'glass') { // its planes are laid on each part as it is drawn (glassOver)
     } else { // skin: the tendons on the back of the hand
       x.strokeStyle = css(hl.sh, 0.45); x.lineWidth = 0.9; for (let i = 0; i < 3; i++) { x.beginPath(); x.moveTo(8 + i * 8, -24); x.quadraticCurveTo(12 + i * 9, 0, 14 + i * 9, 28); x.stroke(); }
     }
@@ -316,8 +355,9 @@ const FP87 = (function () {
     const across = (c) => lin(x, wx + nx * wid1, wy + ny * wid1, wx - nx * wid1, wy - ny * wid1, mirror ? [[0, mul(c, 0.5)], [0.6, c], [1, mix(c, [255, 240, 220], 0.3)]] : [[0, mix(c, [255, 240, 220], 0.3)], [0.4, c], [1, mul(c, 0.5)]]);
     // the forearm itself (glove, skin or glass) up to the cuff
     const armC = glass || (look && look.hands && !look.hands.bare) ? hl.base : ((look && look.skin) || hl.base);
-    quad(-4, L * 0.32, wid0, wid0 * 1.12); x.fillStyle = across(armC); x.fill();
-    if (glass) { x.save(); x.clip(); for (let i = 0; i < 8; i++) { x.beginPath(); const t = hash(i, seed, 8) * L * 0.32; x.moveTo(wx + ux * t - nx * wid0, wy + uy * t - ny * wid0); x.lineTo(wx + ux * (t + 20) + nx * wid0, wy + uy * (t + 20) + ny * wid0); x.strokeStyle = i % 2 ? 'rgba(10,40,80,0.5)' : 'rgba(200,236,255,0.55)'; x.stroke(); } x.restore(); }
+    quad(-4, L * 0.32, wid0, wid0 * 1.12); x.fillStyle = across(glass ? mix(armC, hl.sh, 0.3) : armC); x.fill();
+    const gb = glass ? [Math.min(wx, ex) - wid1 - 24, Math.min(wy, ey) - wid1 - 24, Math.abs(dx) + wid1 * 2 + 48, Math.abs(dy) + wid1 * 2 + 48] : null;
+    if (glass) glassOver(x, () => quad(-4, L * 0.32, wid0, wid0 * 1.12), gb[0], gb[1], gb[2], gb[3], 44, seed + 50, 3);
     // a glove's cuff: flared, its edge stitched or riveted
     if (!glass && look && look.hands && !look.hands.bare) {
       const cc = hl.cuff || hl.base, cd = hl.cuff ? mul(hl.cuff, 0.5) : hl.dk;   // Phase 87: fingerless kid and the barrow's coils show their own colour here
@@ -326,7 +366,7 @@ const FP87 = (function () {
       if (hl.trim && hl.kind === 'mail') { quad(L * 0.33, L * 0.36, wid0 * 1.3, wid0 * 1.33); x.fillStyle = css(hl.trim); x.fill(); }
     }
     // the sleeve
-    if (glass) { quad(L * 0.3, L + 20, wid0 * 1.1, wid1); x.fillStyle = across(hl.base); x.fill(); return; }
+    if (glass) { quad(L * 0.3, L + 20, wid0 * 1.1, wid1); x.fillStyle = across(mix(hl.base, hl.sh, 0.3)); x.fill(); glassOver(x, () => quad(L * 0.3, L + 20, wid0 * 1.1, wid1), gb[0], gb[1], gb[2], gb[3], 50, seed + 51, 3); return; }
     if (rolled) { quad(L * 0.36, L * 0.6, wid0 * 1.15, wid0 * 1.3); x.fillStyle = across((look && look.skin) || hl.base); x.fill(); quad(L * 0.58, L * 0.72, wid0 * 1.4, wid0 * 1.5); x.fillStyle = across(scol); x.fill(); x.strokeStyle = css(mul(scol, 0.5)); x.lineWidth = 1; x.stroke(); quad(L * 0.72, L + 20, wid0 * 1.5, wid1); x.fillStyle = across(scol); x.fill(); return; }
     quad(L * 0.34, L + 20, wid0 * 1.3, wid1); x.fillStyle = across(scol); x.fill();
     x.save(); x.clip();
@@ -491,6 +531,84 @@ const FP87 = (function () {
     return hit;
   }
 
+  // ---------------------------------------------------------------- Phase 87, the last of (d): the hands themselves
+  // An open hand seen from its back, fingers up (a Song is cast from the two of them, the light between). Drawn in the
+  // fist's 60-pixel frame: the thumb on the inner side, to the left; mirrored for the left hand.
+  function drawOpenHand(x, hl, seed, mirror) {
+    const S = mirror ? -1 : 1, Z = 1.85, glass = hl.kind === 'glass';
+    x.save(); x.scale(S * Z, Z);
+    const part = (path, grad, lw, a, gb, cell, gs) => { path(); x.fillStyle = grad; x.fill(); x.lineWidth = lw; x.strokeStyle = css(hl.dk, a); x.stroke(); if (glass) glassOver(x, path, gb[0], gb[1], gb[2], gb[3], cell, seed + gs); };
+    // the thumb, out to the inner side
+    const thumb = () => { x.beginPath(); x.moveTo(-13, 16); x.bezierCurveTo(-22, 8, -30, -4, -33, -15); x.bezierCurveTo(-34, -21, -27, -23, -24, -17); x.bezierCurveTo(-21, -8, -17, -2, -12, 2); x.closePath(); };
+    part(thumb, lin(x, -34, -20, -12, 14, [[0, mix(hl.lt, [255, 255, 255], 0.15)], [0.5, hl.base], [1, hl.sh]]), 1.1, 0.85, [-36, -24, 26, 42], 12, 60);
+    // the back of the hand
+    const back = () => { x.beginPath(); x.moveTo(-12, 33); x.bezierCurveTo(-19, 14, -20, -2, -17, -12); x.lineTo(17, -12); x.bezierCurveTo(20, -2, 19, 14, 12, 33); x.closePath(); };
+    part(back, lin(x, -20, -12, 18, 34, [[0, hl.lt], [0.5, hl.base], [1, hl.dk]]), 1.1, 0.9, [-22, -14, 44, 50], 16, 61);
+    // four fingers, a little fanned: index next to the thumb, the middle the longest
+    const F = [[-12.5, 27, -0.13, 7.4], [-4.3, 32, -0.04, 7.8], [4.2, 29, 0.05, 7.4], [12.2, 22, 0.17, 6.6]];
+    F.forEach(([fx, len, ang, wd], i) => {
+      x.save(); x.translate(fx, -10); x.rotate(ang);
+      const fing = () => { x.beginPath(); x.moveTo(-wd / 2, 3); x.lineTo(-wd / 2 + 0.4, -len + wd / 2); x.arc(0, -len + wd / 2, wd / 2 - 0.4, PI, 0); x.lineTo(wd / 2, 3); x.closePath(); };
+      part(fing, lin(x, -wd / 2, 0, wd / 2, 0, [[0, hl.lt], [0.45, hl.base], [1, hl.sh]]), 1, 0.8, [-wd, -len - 2, wd * 2, len + 8], 10, 62 + i);
+      x.strokeStyle = css(hl.dk, 0.45); x.lineWidth = 0.8;
+      for (const t of [0.36, 0.68]) { x.beginPath(); x.moveTo(-wd / 2 + 0.8, -len * t); x.quadraticCurveTo(0, -len * t + 1.4, wd / 2 - 0.8, -len * t); x.stroke(); }   // the joints
+      ell(x, -0.6, -1.5, wd * 0.32, 2); x.fillStyle = css(mix(hl.lt, [255, 255, 255], 0.2), 0.5); x.fill();                                          // the knuckle in the light
+      if (hl.kind === 'skin') { rrect(x, -wd * 0.3, -len + 1.2, wd * 0.6, 4.2, 1.4); x.fillStyle = css(mix(hl.lt, [255, 240, 232], 0.5), 0.75); x.fill(); x.lineWidth = 0.5; x.strokeStyle = css(hl.sh, 0.6); x.stroke(); }   // the nail
+      if (hl.kind === 'mail') { for (const t of [0.14, 0.5]) { rrect(x, -wd / 2 + 0.6, -len * (t + 0.2), wd - 1.2, len * 0.17, 1); x.fillStyle = lin(x, -wd / 2, 0, wd / 2, 0, [[0, mix(hl.lt, [255, 255, 255], 0.4)], [0.5, hl.base], [1, hl.dk]]); x.fill(); x.lineWidth = 0.6; x.strokeStyle = css(hl.dk); x.stroke(); } }
+      if (hl.kind === 'leather') { x.strokeStyle = css(hl.dk, 0.55); x.lineWidth = 0.7; x.setLineDash([1.5, 1.5]); x.beginPath(); x.moveTo(wd / 2 - 1.3, 2); x.lineTo(wd / 2 - 1.3, -len + wd / 2); x.stroke(); x.setLineDash([]); }
+      x.restore();
+    });
+    // materials on the back of the hand
+    if (hl.kind === 'leather') { x.strokeStyle = css(hl.dk, 0.6); x.lineWidth = 0.8; x.setLineDash([1.6, 1.6]); x.beginPath(); x.moveTo(-15, -8); x.quadraticCurveTo(0, -3, 15, -8); x.stroke(); x.beginPath(); x.moveTo(-9, 30); x.quadraticCurveTo(-13, 10, -12, -6); x.stroke(); x.setLineDash([]);
+      x.save(); back(); x.clip(); speckle(x, -22, -14, 44, 50, 110, [0, 0, 0], 0.12, seed + 7); speckle(x, -22, -14, 44, 50, 46, [255, 240, 220], 0.1, seed + 8); x.restore();
+    } else if (hl.kind === 'mail') { x.save(); back(); x.clip();
+      for (let yy = -14; yy < 36; yy += 3.4) for (let xx = -22 + ((Math.round(yy / 3.4)) & 1) * 1.7; xx < 22; xx += 3.4) { ell(x, xx, yy, 1.5, 1.2); x.strokeStyle = css(hl.dk, 0.5); x.lineWidth = 0.6; x.stroke(); x.fillStyle = css(mix(hl.lt, [255, 255, 255], 0.3), 0.35); x.fillRect(xx - 0.8, yy - 1, 0.8, 0.8); }
+      x.restore();
+    } else if (hl.kind === 'skin') { x.strokeStyle = css(hl.sh, 0.4); x.lineWidth = 0.9; for (let i = 0; i < 4; i++) { x.beginPath(); x.moveTo(-5 + i * 3.4, 28); x.quadraticCurveTo(-9 + i * 6.2, 8, -12.5 + i * 8.3, -9); x.stroke(); } }
+    x.restore();
+  }
+  // the bare hands and the glass arm (`pose`): 'fist' the right fist raised, as it holds a blade but holding nothing;
+  // 'glassfist' the same fist in glass (the body module draws it mirrored, on the left, where that arm is); 'open' both
+  // hands open and raised, for a Song. Each wears what you wear.
+  function paintHands(look, pose) {
+    const ck = ['hands', pose, look && look.key, look && look.glassArm ? 1 : 0].join('|'); let hit = cache.get(ck); if (hit) return hit;
+    const BELOW = 40, seed = 87 + pose.length;
+    let c, x, W, H, RIGHT = 0, out;
+    if (pose === 'open') {
+      const H0 = Math.round(150 * K * 1.45); W = Math.round(200 * K * 1.45); H = H0 + BELOW * K * 2;
+      c = mk(W, H); x = c.getContext('2d'); x.imageSmoothingEnabled = true;
+      const hlR = handLook(look, 'right'), hlL = handLook(look, 'left'), HS = 1.5, cy = H0 * 0.38;
+      for (const [hl, cx, mirror, rot, ex] of [[hlL, W * 0.21, true, 0.2, -40], [hlR, W * 0.79, false, -0.2, W + 40]]) {
+        const wx = cx - Math.sin(rot) * 34 * 1.85 * HS, wy = cy + Math.cos(rot) * 34 * 1.85 * HS;
+        drawForearm(x, look, hl, wx, wy - 14, ex, H + 50, 38, 104, seed + (mirror ? 5 : 0), mirror);
+        x.save(); x.translate(cx, cy); x.rotate(rot); x.scale(HS, HS); drawOpenHand(x, hl, seed + (mirror ? 2 : 0), mirror); x.restore();
+      }
+      out = { center: true };
+    } else {
+      const W0 = Math.round(110 * K * 1.45), H0 = Math.round(190 * K * 1.45); RIGHT = 26; W = W0 + RIGHT * K * 2; H = H0 + BELOW * K * 2;
+      c = mk(W, H); x = c.getContext('2d'); x.imageSmoothingEnabled = true;
+      const hl = pose === 'glassfist' ? GLASS_HL : handLook(look, 'right'), FS = 1.3, gx = W0 * 0.56, gy = H0 * 0.655, lean = -0.1;
+      const lk = pose === 'glassfist' ? Object.assign({}, look, { hands: null }) : look;
+      drawForearm(x, lk, hl, gx + 40 * FS, gy + 50 * FS, W + 34, H + 44, 46 * FS * 0.96, 132, seed);
+      x.save(); x.translate(gx, gy); x.rotate(lean); x.scale(FS, FS); x.translate(6, 0); drawFist(x, hl, seed, false); x.restore();
+      out = { flip: pose === 'glassfist', shift: pose === 'fist', tip: [(gx - 58 * FS) / W, (gy - 6) / H], root: [(gx + 44 * FS) / W, (gy + 60 * FS) / H] };
+    }
+    // what glows of its own: the glass (a quarter of its old light, as approved), and the brightest glints of the rest
+    let emis = null;
+    try {
+      const id = x.getImageData(0, 0, W, H), d = id.data, GL = 0.22; let any = false;
+      const glassAt = pose === 'glassfist' ? () => true : pose === 'open' && look && look.glassArm ? (px) => px < W / 2 : () => false;
+      for (let i = 0, p = 0; i < d.length; i += 4, p++) { if (!d[i + 3]) continue;
+        if (glassAt(p % W)) { d[i] *= GL; d[i + 1] *= GL; d[i + 2] *= GL; any = true; continue; }
+        const l = d[i] * 0.3 + d[i + 1] * 0.55 + d[i + 2] * 0.15; if (l > 180) { const k = Math.min(1, (l - 180) / 60) * 0.2; d[i] *= k; d[i + 1] *= k; d[i + 2] *= k; any = true; } else { d[i] = d[i + 1] = d[i + 2] = 0; d[i + 3] = 0; } }
+      if (any) { emis = mk(W, H); emis.getContext('2d').putImageData(id, 0, 0); }
+    } catch (e) { warnOnce('hands glint', e); }
+    hit = Object.assign({ canvas: c, emis, k: K, below: BELOW, right: RIGHT, pose }, out);
+    if (cache.size > 40) cache.clear();
+    cache.set(ck, hit);
+    return hit;
+  }
+
   function keyOf(wid, look) { const h = look && look.hands; return [wid, look && look.key, look && look.glassArm ? 1 : 0].join('|'); }
   function paint(wid, look) {
     const e = entryOf(wid); if (e && RANGED_KINDS[e.kind]) return paintRanged(wid, e, look);
@@ -506,7 +624,7 @@ const FP87 = (function () {
     const hl = handLook(look, 'right'), hlL = handLook(look, 'left');
     // where the right hand holds it, and the lean of it (the tip out to the upper left)
     const gx = W0 * (pole ? 0.62 : 0.56), gy = H0 * (pole ? 0.8 : 0.74), lean = pole ? -0.42 : two ? -0.2 : -0.16;
-    const len = blade ? Math.min(H0 * 0.66, (e.len || 8) * 30 + 90) : pole ? H0 * 0.64 : two ? H0 * 0.56 : H0 * 0.44;
+    const len = blade ? Math.min(H0 * 0.66, (e.len || 8) * 30 + 90) : pole ? H0 * 0.64 : two ? H0 * 0.56 : H0 * (f.len || 0.44);
     // the forearm first (it is behind the hand), out of the bottom-right
     drawForearm(x, look, hl, gx + 36, gy + 46, W + 30, H + 40, 46, 120, seed);
     x.save(); x.translate(gx, gy); x.rotate(lean);
@@ -519,7 +637,7 @@ const FP87 = (function () {
       x.restore();
     } else {
       // the heads are drawn in a small frame and scaled to the hand (HS), the haft as thick as a fist can close on
-      const HS = pole ? 2.5 : 2.3, bot = pole ? 170 : two ? 150 : 90, w = pole ? 28 : two ? 30 : 24;
+      const HS = pole ? 2.5 : 2.3, bot = pole ? 170 : two ? 150 : 90, w = f.hw || (pole ? 28 : two ? 30 : 24);
       drawHaft(x, f, e, -len + 20, bot, w, seed);
       x.save(); x.translate(0, -len + 20); x.scale(HS, HS); drawHead(x, f, e, 0, seed); x.restore();
     }
@@ -550,6 +668,6 @@ const FP87 = (function () {
     return hit;
   }
 
-  return { K, FORM, covers, paint, formOf, cache };
+  return { K, FORM, covers, paint, paintHands, formOf, cache };
 })();
 if (typeof window !== 'undefined') window.FP87 = FP87;
