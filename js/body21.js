@@ -433,7 +433,29 @@ const BODY21 = (() => {
   function buildKey(key, look, wid, side) {
     return [key, wid, side, look.key, look.glassArm ? 1 : 0].join('#');
   }
+  // Phase 87, the last of (d): the bare hands and the glass arm are painted in code too (js/fp87.js). Which picture:
+  // 'fist' the bare right fist; 'open' both hands open, for a Song; 'glassfist' the glass arm, drawn mirrored on the left
+  function handsPose(key) {
+    if (typeof FP87 !== 'object' || !FP87.paintHands) return '';
+    if (key === 'fp_glass') return 'glassfist';
+    if (key !== 'fp_hands') return '';
+    let bare = false; try { bare = currentWeapon().img === 'fp_hands'; } catch (e) { bare = false; }
+    // (and while the bare hands are being put away for a weapon, they go down as the fist they were)
+    if (!bare) { try { const f = fph(); bare = !!(f && f.shown && typeof WEAPONS === 'object' && WEAPONS[f.shown] && WEAPONS[f.shown].img === 'fp_hands'); } catch (e) { bare = false; } }
+    return bare && !(G.song && G.song.t > 0) && !(G.songFx > 0) ? 'fist' : 'open';
+  }
+  function handsBuild(pose, look, wid, side, key) {
+    const bk = ['hands87', pose, side, look.key, look.glassArm ? 1 : 0].join('#');
+    let b = buildCache.get(bk); if (b) { stats.hits++; return b; }
+    const r = FP87.paintHands(look, pose); if (!r) return null;
+    b = { key, wid, side, main: r.canvas, emis: r.emis || null, ext: null, over: [], w: r.canvas.width, h: r.canvas.height, k: r.k, below: r.below, right: r.right, center: !!r.center, flip: !!r.flip, shift: !!r.shift, pose, tip: r.tip || null, root: r.root || null, ms: 0 };
+    if (buildCache.size > 48) buildCache.delete(buildCache.keys().next().value);
+    buildCache.set(bk, b); OWNED.set(r.canvas, b); stats.builds++;
+    return b;
+  }
   function build(key, look, wid, side) {
+    const pose = handsPose(key);
+    if (pose) { try { const hb = handsBuild(pose, look, wid, side, key); if (hb) return hb; } catch (e) { warnOnce('fp87 hands', e); } }
     const bk = buildKey(key, look, wid, side);
     let b = buildCache.get(bk); if (b) { stats.hits++; return b; }
     // Phase 87: the melee weapons' own pictures, painted in code with the glove and sleeve you wear (js/fp87.js); drawn
@@ -1036,22 +1058,40 @@ const BODY21 = (() => {
     stats.drawn.shield++;
     return true;
   }
-  // a glassed traveller with a blade in the right hand: the glass left hand rests low on the left (fp_glass, mirrored)
+  // the hand that is not striking rests low at its own side of the view, a fist with its forearm running out of the
+  // bottom corner: never a loose fist. A glassed traveller with a blade in the right hand: the glass left hand. Bare
+  // hands: the left fist (glass, if that arm is). The glass arm raised: the right fist, in whatever it wears.
   function drawGlassIdle(ctx, look, wid) {
-    if (!look.glassArm || hiddenBody() || look.shield && !look.shieldStowed || look.offhand || look.twoHanded) return false;
-    if (wid === 'glass' || wid === 'hands' || G.song.t > 0 || G.songFx > 0) return false;
-    // the glass forearm with its continuation, mirrored, running out of the bottom-left of the view: never a loose fist
-    const b = build('fp_glass', look, 'glass', 'left'); if (!b) return false;
-    const img = b.main, f = fph(), drop = f && f.lower > 0 ? f.lower * 90 : 0;
-    const k = 0.4, iw = img.width * k, ih = img.height * k;
+    if (hiddenBody() || look.shield && !look.shieldStowed || look.offhand || look.twoHanded) return false;
+    if (G.song.t > 0 || G.songFx > 0) return false;
+    const painted = typeof FP87 === 'object' && !!FP87.paintHands;
+    const rightSide = wid === 'glass';
+    if (rightSide) { if (!painted) return false; }
+    else if (wid === 'hands') { if (!painted) return false; }
+    else if (!look.glassArm) return false;
+    const f = fph(), drop = f && f.lower > 0 ? f.lower * 90 : 0;
+    let b = null;
+    if (painted) { try { b = handsBuild(rightSide || !look.glassArm ? 'fist' : 'glassfist', look, rightSide ? 'hands' : 'glass', 'left', rightSide || !look.glassArm ? 'fp_hands' : 'fp_glass'); } catch (e) { warnOnce('off fist', e); } }
+    if (!b) { if (rightSide || !look.glassArm) return false; b = build('fp_glass', look, 'glass', 'left'); if (!b) return false; }
+    const img = b.k ? lit(b.main, b.emis) : b.main;
+    // a painted fist is K times its place and carries its own margins: brought to the size the old resting hand had
+    const k = b.k ? 0.4 / b.k * 1.02 : 0.4, iw = img.width * k, ih = img.height * k;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
-    ctx.translate(20 + iw * 0.5, VHv() + 34 + bobNow(1.7) * 1.5 + drop + WS.gk * 30); ctx.rotate(0.42); ctx.scale(-1, 1);
-    const ox = -iw * 0.5, oy = -ih + 12;
+    if (rightSide) { ctx.translate(VWv() - 20 - iw * 0.5, VHv() + 34 + bobNow(1.7) * 1.5 + drop + WS.gk * 30); ctx.rotate(-0.42); }
+    else { ctx.translate(20 + iw * 0.5, VHv() + 34 + bobNow(1.7) * 1.5 + drop + WS.gk * 30); ctx.rotate(0.42); ctx.scale(-1, 1); }
+    const ox = -iw * 0.5 + (b.k ? (b.right || 0) * b.k * 2 * k * 0.8 : 0), oy = -ih + 12 + (b.k ? (b.below || 0) * b.k * 2 * k * 0.8 : 0);
     if (b.ext) put2(ctx, b.ext.canvas, ox + b.ext.ox * k, oy + b.ext.oy * k, b.ext.w * k, b.ext.h * k, b.ext.canvas);
-    put2(ctx, img, ox, oy, iw, ih, img);
+    put2(ctx, img, ox, oy, iw, ih, b.k ? b.emis : img);
     ctx.restore();
     stats.drawn.glassIdle++;
     return true;
+  }
+  // the locked glass arm rings flat: a pale wash over the arm itself
+  const lockTints = new WeakMap();
+  function lockTint(cv) {
+    let t = lockTints.get(cv); if (t) return t;
+    t = mkCanvas(cv.width, cv.height); const x = t.getContext('2d'); x.drawImage(cv, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = 'rgb(80,200,220)'; x.fillRect(0, 0, t.width, t.height);
+    lockTints.set(cv, t); return t;
   }
 
   // the drawImage hook: wherever a gear painting is drawn, its sleeve continuation goes under it and its extra hand over
@@ -1082,10 +1122,17 @@ const BODY21 = (() => {
           if (!drawShield(this, look)) drawGlassIdle(this, look, wid);
         } catch (e) { warnOnce('off arm', e); } finally { this.drawImage = hook; this.restore(); }
       }
-      const dr = (c, x, y, w, h, em) => { if (REC) { const keep = this.drawImage; this.drawImage = orig; try { put2(this, c, x, y, w, h, em); } finally { this.drawImage = keep; } } else orig.call(this, c, x, y, w, h); };
-      if (b.ext) { dr(lit(b.ext.canvas), dx + b.ext.ox * sx, dy + b.ext.oy * sy, b.ext.w * sx, b.ext.h * sy); stats.drawn.ext++; }
-      dr(img, dx, dy, dw, dh, b.emis); stats.drawn.arms++;
-      for (const o of b.over) { dr(lit(o.canvas, o.emis), dx + o.ox * sx, dy + o.oy * sy, o.w * sx, o.h * sy, o.emis); stats.drawn.extra++; }
+      const dr = (c, x, y, w, h, em, add) => { if (REC) { const keep = this.drawImage; this.drawImage = orig; try { put2(this, c, x, y, w, h, em, add); } finally { this.drawImage = keep; } } else orig.call(this, c, x, y, w, h); };
+      // Phase 87: the bare fist is drawn where a blade's hand is (the game centres the old hands picture), and the glass
+      // arm is the LEFT arm: its picture, its swing and its pivot are mirrored across the middle of the view
+      let moved = false;
+      if (b.side === 'right' && (b.flip || b.shift)) { try { const M = this.getTransform(), S = b.shift ? VWv() / 2 - arguments[3] / 2 - 10 : 0; let T = new DOMMatrix(); if (b.flip) T = T.translate(VWv(), 0).scale(-1, 1); if (S) T = T.translate(S, 0); this.save(); moved = true; setT.call(this, baseM.multiply(T).multiply(baseM.inverse()).multiply(M)); } catch (e) { warnOnce('side', e); } }
+      try {
+        if (b.ext) { dr(lit(b.ext.canvas), dx + b.ext.ox * sx, dy + b.ext.oy * sy, b.ext.w * sx, b.ext.h * sy); stats.drawn.ext++; }
+        dr(img, dx, dy, dw, dh, b.emis); stats.drawn.arms++;
+        for (const o of b.over) { dr(lit(o.canvas, o.emis), dx + o.ox * sx, dy + o.oy * sy, o.w * sx, o.h * sy, o.emis); stats.drawn.extra++; }
+        if (b.pose === 'glassfist' && b.side === 'right' && G.glassLock > 0) { const t = lockTint(b.main); if (REC) dr(t, dx, dy, dw, dh, null, 0.3); else { const a0 = this.globalAlpha; this.globalAlpha = a0 * 0.3; orig.call(this, t, dx, dy, dw, dh); this.globalAlpha = a0; } }
+      } finally { if (moved) this.restore(); }
       return undefined;
     };
     return { hook, st };
@@ -1128,7 +1175,8 @@ const BODY21 = (() => {
     // pixels higher, by lending the draw a lower head-bob for its duration (they all add cam.bob x 1.5)
     const bob0 = Engine.cam.bob;
     // not for the bare hands and Songs: the casting pose has its own rise and its glow its own place
-    const handsUp = !!(G.song && G.song.t > 0) || G.songFx > 0 || (() => { try { return currentWeapon().img === 'fp_hands'; } catch (e) { return false; } })();
+    // (a bare fist painted in code is raised like any weapon: js/fp87.js)
+    const handsUp = !!(G.song && G.song.t > 0) || G.songFx > 0 || (() => { try { return currentWeapon().img === 'fp_hands' && !(typeof FP87 === 'object' && FP87.paintHands); } catch (e) { return false; } })();
     if (look) {
       // the lift, and the weapon's idle sway put on a half-pixel grid (drawHUD draws at cam.bob + sway, times 1.5): a
       // picture sliding by hundredths of a pixel flips a scatter of nearest-sampled pixels every frame; on the grid it

@@ -72,10 +72,30 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] places read or heard of are marked on the map by kind (`js/places97.js`, 17 checks)
 - [x] Oakhaven's houses taller: ground storey, front doors, ridges, tower and mast (`js/eaves78.js`, 78 checks)
 - [x] voices of their own for the Heights' people and foes (`js/voices.js`)
-- [ ] the owner's answers: the White Mile's five questions and its [PROPOSED] list; recorded voices or the device's; quest steps for the compass; the other towns' houses
-- [ ] Phase 91's question 4, now due: trophies and realm gear for the Reach's two keepers
-- [ ] still owed from Phase 87: first-person pictures of the bare hands and the glass arm's pose
-- [ ] known red, not from this phase: `test/logmap` fails at its first static check (older modules' journal sites)
+- [x] the owner, 18 Nov: "the compass is good": it points at people with quests, as built; no quest steps
+- [ ] the owner's answers: the White Mile's five questions and its [PROPOSED] list; recorded voices or the device's; the reader's keys; the other towns' houses
+- [x] Phase 91's question 4: trophies and realm gear for the Reach's two keepers (P98)
+- [x] owed from Phase 87: the bare hands and the glass arm's pose, painted in code (P98)
+- [x] known red, not from this phase: `test/logmap` failed at its first static check (one journal site in the air fights; fixed in P99)
+
+**Phase 99: the five old failing checks (18 Nov, branch `p99-checks`).** Owner: "lets fix the old 5 failing checks. if nothing needs to be merged lets move on." Built by the Commander alone. Record: [`story/Game Layer/Phase 99 - The five old failing checks (for review).md`](story/Game%20Layer/Phase%2099%20-%20The%20five%20old%20failing%20checks%20(for%20review).md). Nothing added to the world; no new words.
+- [x] `logmap` (13): the air fight chooses its journal entry before writing it, so the logbook's scan can read it (`js/air93.js`); the check knows painted sketches are picture files
+- [x] `smalllife`: a save is the same with small life on or off again: the Heights' docked ships and the Vigil's moored Kestrel are always in the world (`js/heights92.js`, `js/vigil96.js`)
+- [x] `sprites21` (9): 929 pictures no longer fit eight sheets; packed tighter (11 sheets, was 12); the check asks that all fit inside the limit of 16 with none thrown out, and counts re-sent pictures only after the first seconds
+- [x] `sync19` (53): the guest sees one of a swaying prop, not two; being a guest writes nothing in your own save (`js/places97.js`); a newcomer has 15 s to build the host's world before silence counts as a lost link (`js/net19.js` `hold`); a guest whose link drops comes back where it stood (`js/sync19.js`)
+- [x] `net19` (52): the same cause as the last of those; no change to the suite
+- [x] Phase 89's "the two-player suites that fail in the build container" is answered for `sync19` and `net19`: it was the game, not the container
+- [x] three more that Phase 98's report missed (each fails the same way with Phase 98's files): `origins` (25): the game's own uncompressed save, 559 KB, was over its loader's 512 KB; the limit is 2 MB, with French; `motion10` (7): a place travelled to by the chart is marked without a word, and the chart is not read as hearsay (`js/places97.js`); `ledger15`: the map screen's place list takes only the room left, so Clear marks stays in view
+- [x] every suite (200) run two at a time: 186 passed first time; the 14 others run alone: three real faults fixed (above), `together19`'s frame comparison now sets the animation clock (it differed by a dozen pixels of one idling figure about one run in two), and ten were timing under load and pass alone
+- [ ] still to be measured on real hardware: two devices on a real network (Phase 89's row)
+
+**Phase 98: what was owed (17 Nov).** Owner: "lets bust out phase 87 then lets move onto 91". Built by the Commander alone.
+- [x] Phase 87 (d): the bare fist, the glass arm (raised on the left, where that arm is) and the open hands for a Song, painted in code at the weapons' detail (`js/fp87.js`, `js/body21.js`); the other hand rests at its own side; a fist goes straight out; the locked arm's wash lies on the arm
+- [x] Phase 91 question 4: the Flint-Back leaves a shell-plate and the Ridge-Flint, the Standing Note its reed and the Beam-Key, once each, and late to whoever beat them before (`js/keepers98.js`); the Heights' three fought keepers checked against the same rule
+- [x] `test/owed98.test.js`, 23 checks; French; the record; Vol VIII
+- [x] every suite (200) run; found and fixed: no milestones at the Vigil's and the Cliffs' finger-posts (P96); the cloth-pole as quiet as the Old Cantor's Staff (P92); the Flambeau's own painting
+- [x] red on `main` before this work: `logmap`, `smalllife`, `sprites21`, `sync19`, `net19` (all five fixed in P99). Correction, 18 Nov: `origins`, `motion10` and `ledger15` were red at this commit too and were missed in this report (fixed in P99)
+- [ ] the owner's answers: the glass arm on the left; the straight punch; the four names; weapons, not worn pieces
 
 **Phase 94: the Dawning Heights, part two: the Anchorage (15 Nov, branch `p94-anchorage`, on Fable 5.2).** Owner, 15 Nov: "you now have fable so go forth". `js/anchorage94.js`, test `test/anchorage94.test.js` (17 checks), French `tools/i18n/p94-anchorage.tsv`. Record: [`story/Game Layer/Phase 94 - The Dawning Heights, part two (text for review).md`](story/Game%20Layer/Phase%2094%20-%20The%20Dawning%20Heights%2C%20part%20two%20(text%20for%20review).md).
 - [x] the book changed the plan: the Anchorage is the inside of the city's frame (Book Two: an inverted cone over a gulf, the chains down from the Spire to the rim and on into the frame), not shafts in the mountain

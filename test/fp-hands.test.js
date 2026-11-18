@@ -144,7 +144,7 @@ const FREEZE = () => {
     // glow actually changes pixels and the colour dominates; Full Voice brighter than Murmur
     const px = await page.evaluate(() => {
       const F = FPHANDS, ctx = Engine.ctx, res = {};
-      const grab = () => { const d = ctx.getImageData(110, 100, 100, 50).data; let r = 0, g = 0, b = 0; for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; } return [r, g, b]; };
+      const grab = () => { const d = ctx.getImageData(90, 60, 140, 90).data; /* Phase 87: the open hands are painted larger and held higher (js/fp87.js) */ let r = 0, g = 0, b = 0; for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; } return [r, g, b]; };
       G.song.t = 0; G.songFx = 0; F.st.cast = 0; render(); res.base = grab();
       for (const id of ['tending', 'name', 't_639']) {
         G.song.t = 0; G.songFx = 0; G.player.voice = G.player.voiceMax; castSong(id);

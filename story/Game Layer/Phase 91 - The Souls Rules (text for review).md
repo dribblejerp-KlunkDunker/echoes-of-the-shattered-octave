@@ -15,6 +15,8 @@
 
 *Answered 15 Nov 2026: "for your questions 1 yes. 2 yes. 3 yes. yes. remind me of 4 later when it is time". So: a Piece rings the note of the realm it fell in (built in Phase 92: the Heights' ring at 528); resting passes one hour; waking stays inside the place you died in until every realm has lamps; and question 4 waits until the Heights' keepers are all built, when the owner is to be reminded.*
 
+*Question 4, 17 Nov 2026: the Heights' keepers are built, and the owner said "lets move onto 91". Built in Phase 98 (`js/keepers98.js`): the Flint-Back leaves a shell-plate and the Ridge-Flint; the Standing Note leaves its reed and the Beam-Key; once each.*
+
 1. The Piece sounds 174 Hz, the Reach's note, as "your note". Should it be the player's own note (if the game ever gives the player one), or the note of the realm where they fell? *Recommend: the realm's note, so the Heights' Pieces ring at 528.*
 2. Resting at a lamp passes one hour. *Recommend: keep; a full sleep is still the inn's.*
 3. Waking only by a lamp of the place you died in (see above). *Recommend: keep until every realm has its lamps, then make it the last lamp lit anywhere.*

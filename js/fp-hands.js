@@ -96,12 +96,16 @@ const FPHANDS = (() => {
     g.addColorStop(0, `rgba(${col},0.95)`); g.addColorStop(0.35, `rgba(${col},0.45)`); g.addColorStop(1, `rgba(${col},0)`);
     x.fillStyle = g; x.fillRect(0, 0, 64, 64); cache.set(key, c); return c;
   }
+  const tints = new WeakMap();
   function tintSprite(img, col) {
-    const key = 't' + col.join(',') + img.width; let c = cache.get(key); if (c) return c;
+    // one tint for each picture and colour (the hands are painted for what you wear now, and are not one picture)
+    let per = tints.get(img); if (!per) { per = new Map(); tints.set(img, per); }
+    const key = col.join(','); let c = per.get(key); if (c) return c;
     c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
     const x = c.getContext('2d'); x.drawImage(img, 0, 0);
     x.globalCompositeOperation = 'source-in'; x.fillStyle = `rgb(${col})`; x.fillRect(0, 0, c.width, c.height);
-    cache.set(key, c); return c;
+    if (per.size > 8) per.clear();
+    per.set(key, c); return c;
   }
   // Skin tones sampled once from the existing fp_hands art so climbing hands match.
   let skin = null;
@@ -152,16 +156,19 @@ const FPHANDS = (() => {
     const rise = G.song.t > 0 ? -Math.sin((1 - G.song.t / 0.7) * Math.PI) * 30 : 0;
     const g = weaponGeom(WEAPONS.hands, rise, 0); if (!g) return;
     const col = st.castCol;
+    let own = null; try { own = typeof BODY21 === 'object' && BODY21.owned ? BODY21.owned(hands) : null; } catch (e) { own = null; }
+    const pk = own && own.k ? own.k : 1, pbelow = pk > 1 ? (own.below || 0) : 0;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VW, VIEW_H); ctx.clip();
     ctx.globalCompositeOperation = 'lighter';
     // the hands take the Song's colour
     const handsUp = G.song.t > 0 || G.songFx > 0;   // Murmur keeps the weapon out: halo only
     if (handsUp) {
       ctx.globalAlpha = Math.min(0.55, a * 0.5);
-      ctx.save(); ctx.translate(g.tx, g.ty); ctx.drawImage(tintSprite(hands, col), -g.iw * 0.5, -g.ih + 12, g.iw, g.ih); ctx.restore();
+      // a picture painted in code (js/fp87.js) is k times its place, centred, and hangs lower: the tint goes where it is drawn
+      ctx.save(); ctx.translate(g.tx, g.ty); ctx.drawImage(tintSprite(hands, col), -g.iw * 0.5 + (g.iw - g.iw / pk) / 2, -g.ih + 12 + g.ih - g.ih / pk + pbelow, g.iw / pk, g.ih / pk); ctx.restore();
     }
     // pulsing halo between the hands
-    const r = (16 + st.castPower * 22) * pulse, cy = handsUp ? g.ty - g.ih * 0.55 : VIEW_H - 14;
+    const r = (16 + st.castPower * 22) * pulse, cy = handsUp ? g.ty - (pk > 1 ? 62 : g.ih * 0.55) : VIEW_H - 14;
     ctx.globalAlpha = Math.min(1, a * 0.9);
     ctx.drawImage(haloSprite(col), g.tx - r, cy - r, r * 2, r * 2);
     ctx.restore();

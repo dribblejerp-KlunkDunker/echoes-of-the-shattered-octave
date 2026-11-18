@@ -115,6 +115,7 @@ const PLACES97 = (() => {
   function mark(p, quiet) {
     if (!p || isKnown(p)) return false;
     G.flags[key(p)] = bits(key(p)) | (1 << ((p.x | 0) % 30));
+    marks.push({ name: p.name, map: p.map, at: typeof G !== 'undefined' ? G.mapId : '', quiet: !!quiet, from: lastText.slice(0, 80) }); if (marks.length > 40) marks.shift();   // for checks: what was marked, where you stood, and from which words
     if (!quiet) { try { const here = G.mapId === p.map, t = tr(here ? TX.learned : TX.learnedFar).replace('{0}', tr(p.name)).replace('{1}', tr(G.maps[p.map].name)); muted = t; msg(t, 'good', 4200); } catch (e) { /* the mark is made all the same */ } }
     return true;
   }
@@ -125,8 +126,10 @@ const PLACES97 = (() => {
   const wordAt = (text, k, from) => { let i = text.indexOf(k, from || 0); while (i >= 0) { const a = i === 0 ? ' ' : text[i - 1], b = i + k.length >= text.length ? ' ' : text[i + k.length]; if (!/[a-z0-9]/.test(a) && !/[a-z0-9]/.test(b)) return i; i = text.indexOf(k, i + 1); } return -1; };
   const scanned = new Set(); let muted = '';
   // text put in front of the player: mark every place it names. Returns how many were new.
+  const marks = []; let lastText = '';
   function hear(text, quiet) {
-    const ix = index(); if (!ix || typeof G === 'undefined' || !G.flags || !G.map) return 0;
+    lastText = String(text || '');
+    const ix = index(); if (!ix || typeof G === 'undefined' || !G.flags || !G.map || guest()) return 0;
     const t = low(String(text || '').replace(/<[^>]+>/g, ' ')); if (t.length < 4 || t === low(muted)) return 0;
     const sig = G.mapId + '|' + t; if (scanned.has(sig)) return 0; scanned.add(sig); if (scanned.size > 4000) scanned.clear();
     let n = 0; const hub = hubOf(G.mapId), mine = (id) => id === G.mapId || id === hub;
@@ -183,8 +186,8 @@ const PLACES97 = (() => {
     try { if (typeof COMPASS97 !== 'undefined' && (typeof UPG === 'undefined' || UPG.questMarkers !== false)) { COMPASS97._st.at = -1e9; quests = COMPASS97.targets(); } } catch (e) { quests = []; }
     for (const q of quests) questMark(cx, q.kind, q.x * cw, q.y * cw - (q.kind === 'via' ? 0 : 4));
     const old = document.getElementById('p97-places'); if (old) old.remove();
-    const box = document.createElement('div'); box.id = 'p97-places'; box.setAttribute('role', 'list'); box.style.cssText = 'display:flex;flex-wrap:wrap;gap:.3cqh .9cqw;margin-top:.6cqh;font-size:1.25cqw;align-items:center;max-height:13cqh;overflow-y:auto';
-    const head = document.createElement('p'); head.style.cssText = 'margin:0;flex-basis:100%'; head.className = 'muted'; head.textContent = tr(places.length || quests.length ? TX.listTitle : TX.listNone); box.appendChild(head);
+    const box = document.createElement('div'); box.id = 'p97-places'; box.setAttribute('role', 'list'); box.style.cssText = 'display:flex;flex-wrap:wrap;gap:.3cqh .9cqw;margin-top:.6cqh;font-size:1.25cqw;align-items:center;max-height:13cqh;overflow-y:auto;scrollbar-width:thin';
+    const head = document.createElement('p'); head.style.cssText = 'margin:0'; head.className = 'muted'; head.textContent = tr(places.length || quests.length ? TX.listTitle : TX.listNone); box.appendChild(head);
     const row = (draw, text) => { const s = document.createElement('span'); s.setAttribute('role', 'listitem'); s.className = 'p97-row'; s.style.cssText = 'display:inline-flex;align-items:center;gap:.35cqw';
       const c = document.createElement('canvas'); c.width = 11; c.height = 11; c.setAttribute('aria-hidden', 'true'); c.style.cssText = 'width:1.5cqw;height:1.5cqw;image-rendering:pixelated'; draw(c.getContext('2d')); s.appendChild(c);
       const t = document.createElement('span'); t.textContent = text; s.appendChild(t); box.appendChild(s); };
@@ -194,29 +197,61 @@ const PLACES97 = (() => {
     if (via) row((c) => questMark(c, 'via', 5.5, 5.5), tr(TX.via) + (via.label ? ': ' + tr(via.label) : ''));
     for (const p of places) row((c) => icon(c, p.kind, 5, 5), tr(p.name) + ' (' + tr(TX.kinds[p.kind]) + ')');
     cv.parentNode.insertBefore(box, cv.nextSibling);
+    // The list takes the room that is left. What the panel shows under it (the legend, the places you marked, Clear
+    // marks) stays in view; the list shows whole lines and scrolls for the rest. (With a dozen places known it had
+    // pushed the Clear marks button off the bottom of the panel and cut its own last line in half: test/ledger15.)
+    try {
+      const pn = document.getElementById('modal-panel'), rows = box.querySelectorAll('.p97-row');
+      if (pn && rows.length) {
+        const cap = parseFloat(getComputedStyle(box).maxHeight) || 1e9; box.style.maxHeight = 'none';
+        const full = box.getBoundingClientRect().height, rowGap = parseFloat(getComputedStyle(box).rowGap) || 0;
+        const line = rows[0].getBoundingClientRect().height + rowGap, first = 0;   // (the heading sits on the first line with the first places)
+        let want = Math.min(full, cap); box.style.maxHeight = want + 'px';
+        const over = pn.scrollHeight - pn.clientHeight; if (over > 0) want -= over;
+        if (want < full - 0.5) { const n = Math.max(1, Math.floor((want - first + rowGap) / line)); box.style.maxHeight = (first + n * line - rowGap) + 'px'; } else box.style.maxHeight = 'none';
+      }
+    } catch (e) { /* the list keeps its plain cap */ }
   }
 
   // ---------------------------------------------------------------- wiring
   let timer = 0;
+  const seenEl = new WeakSet();
+  const guest = () => { try { return typeof SYNC19 !== 'undefined' && !!SYNC19.isGuest && SYNC19.isGuest(); } catch (e) { return false; } };
   function sweep() {
     timer = 0;
     try {
       if (typeof G === 'undefined' || !G.map || !G.flags || G.state === 'title') return;
-      for (const sel of ['#dlg-log .them', '#event-panel', '#msgs .m', '#hint']) for (const el of document.querySelectorAll(sel)) { const t = el.textContent; if (t) hear(t, sel === '#hint'); }   // a door you are looking at is marked without a word
+      // in a friend's game the world and its flags are the host's: nothing is marked there, and what was said there is
+      // not heard again when you are back in your own (your own save comes back exactly as it was: js/sync19.js)
+      const away = guest();
+      for (const sel of ['#dlg-log .them', '#event-panel', '#msgs .m', '#hint']) for (const el of document.querySelectorAll(sel)) {
+        const once = sel === '#msgs .m' || sel === '#dlg-log .them';   // a line in the log is one thing said once; the hint and the event panel change their words
+        if (once) { if (seenEl.has(el)) continue; seenEl.add(el); }
+        if (away) continue;
+        const t = el.textContent; if (t) hear(t, sel === '#hint');   // a door you are looking at is marked without a word
+      }
+      if (away) return;
       const mp = document.getElementById('modal-panel'), modal = document.getElementById('modal');
-      if (mp && modal && !modal.classList.contains('hidden') && G.openPanel !== 'dialogue' && G.openPanel !== 'map' && G.openPanel !== 'controls') { for (const el of mp.querySelectorAll('p, li, blockquote, pre, h2, h3, .text, .page, .note')) { const t = el.textContent; if (t && t.length < 4000) hear(t); } }
+      if (mp && modal && !modal.classList.contains('hidden') && G.openPanel !== 'dialogue' && G.openPanel !== 'map' && G.openPanel !== 'controls' && G.openPanel !== 'travel' && G.openPanel !== 'travelanim') {   // (the travel chart is a map too: its names are places you can already go)
+        for (const el of mp.querySelectorAll('p, li, blockquote, pre, h2, h3, .text, .page, .note')) { const t = el.textContent; if (t && t.length < 4000) hear(t); } }
     } catch (e) { /* never break the page */ }
   }
   function wire() {
     if (typeof document === 'undefined') return;
     const game = document.getElementById('game'); if (!game) return;
     try { new MutationObserver(() => { if (!timer) timer = setTimeout(sweep, 260); }).observe(game, { childList: true, subtree: true, characterData: true }); } catch (e) { /* asking still marks */ }
+    // the place you are standing in is on your map from the moment you are in it (not a moment later, when its name is
+    // read off the screen): a save made on arrival and one made after are the same
+    // ... and so is the place you have just travelled to by the chart: it is marked without a word (it was being
+    // announced in the middle of the journey's picture, before you had arrived: test/motion10)
+    if (typeof travelGo === 'function') { const _tg = travelGo; travelGo = function (d) { const r = _tg.apply(this, arguments); try { if (d && d.name && typeof G !== 'undefined' && G.map && d.map === G.mapId) hear(String(d.name), true); } catch (e) { /* the journey is made all the same */ } return r; }; }
+    if (typeof loadMap === 'function') { const _lm = loadMap; loadMap = function () { const r = _lm.apply(this, arguments); try { if (typeof G !== 'undefined' && G.map && G.map.name) hear(String(G.map.name), true); } catch (e) { /* the map still loads */ } return r; }; }
     if (typeof askPlace === 'function') { const _ap = askPlace; askPlace = function (place) { try { hear(String(place), false); } catch (e) { /* the answer still comes */ } return _ap.apply(this, arguments); }; }
     if (typeof renderMap === 'function') { const _rm = renderMap; renderMap = function () { const r = _rm.apply(this, arguments); try { decorate(); } catch (e) { console.warn('places97: map marks failed', e); } return r; }; }
   }
   if (typeof document !== 'undefined') { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire(); }
 
-  return { TEXTS, TX, RULES, kindOf, nameOf, index, known, isKnown, mark, hear, icon, decorate, sweep, hubOf, _reset: () => { IDX = null; scanned.clear(); } };
+  return { TEXTS, TX, RULES, kindOf, nameOf, index, known, isKnown, mark, hear, icon, decorate, sweep, hubOf, marks, _reset: () => { IDX = null; scanned.clear(); } };
 })();
 if (typeof window !== 'undefined') window.PLACES97 = PLACES97;
 if (typeof module !== 'undefined' && module.exports) module.exports = PLACES97;

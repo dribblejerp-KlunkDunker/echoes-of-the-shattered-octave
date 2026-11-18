@@ -49,7 +49,7 @@ Code: `js/items87.js` (the pieces, their pack pictures), `js/gearlook21.js` (wha
 
 - **Six new ranged weapons:** the Felted Sling (Hush), the Shepherd's Sling (Drovers), the Office Carbine (Proctors; glass shot, two hands), the Works Hand-Crossbow (Works; one hand), the Harpoon Gun (Free Captains; two hands, slow), the Hornbow (Old Reach; two hands).
 - **Their shot:** Sling Stones (x8), Quarrels (x8), Harpoons (x3), Flint Arrows (x10); each with its own "none left" and "loaded" line, and the sling whirs instead of firing.
-- **First person:** every ranged weapon now has its own picture painted in code (the pistol and crossbow too): the one-handed ones held up like a blade, the two-handed ones held out in front with both hands, centred where the crossbow was. The throwing knives keep their picture (owner: "4 is fine for now"). **Still owed from (d):** new pictures for the bare hands and the glass arm's pose; they keep the old ones for now.
+- **First person:** every ranged weapon now has its own picture painted in code (the pistol and crossbow too): the one-handed ones held up like a blade, the two-handed ones held out in front with both hands, centred where the crossbow was. The throwing knives keep their picture (owner: "4 is fine for now"). **Owed from (d), paid in Phase 98 (17 Nov):** new pictures for the bare hands and the glass arm's pose, painted in code; the glass arm is raised on the left, where that arm is.
 
 ## (e) Where everything is found (done 14 Nov) [PROPOSED]
 
