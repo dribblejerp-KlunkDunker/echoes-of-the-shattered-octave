@@ -218,7 +218,8 @@ const PLACES97 = (() => {
       }
       if (away) return;
       const mp = document.getElementById('modal-panel'), modal = document.getElementById('modal');
-      if (mp && modal && !modal.classList.contains('hidden') && G.openPanel !== 'dialogue' && G.openPanel !== 'map' && G.openPanel !== 'controls') { for (const el of mp.querySelectorAll('p, li, blockquote, pre, h2, h3, .text, .page, .note')) { const t = el.textContent; if (t && t.length < 4000) hear(t); } }
+      if (mp && modal && !modal.classList.contains('hidden') && G.openPanel !== 'dialogue' && G.openPanel !== 'map' && G.openPanel !== 'controls' && G.openPanel !== 'travel' && G.openPanel !== 'travelanim') {   // (the travel chart is a map too: its names are places you can already go)
+        for (const el of mp.querySelectorAll('p, li, blockquote, pre, h2, h3, .text, .page, .note')) { const t = el.textContent; if (t && t.length < 4000) hear(t); } }
     } catch (e) { /* never break the page */ }
   }
   function wire() {
@@ -227,6 +228,9 @@ const PLACES97 = (() => {
     try { new MutationObserver(() => { if (!timer) timer = setTimeout(sweep, 260); }).observe(game, { childList: true, subtree: true, characterData: true }); } catch (e) { /* asking still marks */ }
     // the place you are standing in is on your map from the moment you are in it (not a moment later, when its name is
     // read off the screen): a save made on arrival and one made after are the same
+    // ... and so is the place you have just travelled to by the chart: it is marked without a word (it was being
+    // announced in the middle of the journey's picture, before you had arrived: test/motion10)
+    if (typeof travelGo === 'function') { const _tg = travelGo; travelGo = function (d) { const r = _tg.apply(this, arguments); try { if (d && d.name && typeof G !== 'undefined' && G.map && d.map === G.mapId) hear(String(d.name), true); } catch (e) { /* the journey is made all the same */ } return r; }; }
     if (typeof loadMap === 'function') { const _lm = loadMap; loadMap = function () { const r = _lm.apply(this, arguments); try { if (typeof G !== 'undefined' && G.map && G.map.name) hear(String(G.map.name), true); } catch (e) { /* the map still loads */ } return r; }; }
     if (typeof askPlace === 'function') { const _ap = askPlace; askPlace = function (place) { try { hear(String(place), false); } catch (e) { /* the answer still comes */ } return _ap.apply(this, arguments); }; }
     if (typeof renderMap === 'function') { const _rm = renderMap; renderMap = function () { const r = _rm.apply(this, arguments); try { decorate(); } catch (e) { console.warn('places97: map marks failed', e); } return r; }; }
