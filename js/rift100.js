@@ -311,15 +311,15 @@ const RIFT100 = (function () {
   const G0 = typeof RIFT100_GRID !== 'undefined' ? RIFT100_GRID : null;
   const W = G0 ? G0.w : 372, H = G0 ? G0.h : 133;
   const RC = G0 ? G0.rc : 166.6667, CX = G0 ? -G0.x0 * RC : 171.667, CY = G0 ? -G0.y0 * RC : 110;   // the city's centre and radius, in cells
-  const WH = 5.0, PARA = 0.55, TOWER_TOP = 7.6, VOID_Z = -40;
+  const WH = 5.0, PARA = 0.55, COPE_H = 0.2, TOWER_TOP = 7.6, VOID_Z = -40;
   const pol = (r, deg) => [CX + r * Math.cos(deg * PI / 180), CY - r * Math.sin(deg * PI / 180)];
   const rOf = (x, y) => Math.hypot(x - CX, y - CY), degOf = (x, y) => Math.atan2(CY - y, x - CX) * 180 / PI;
   const TOWERS = [5, 6, 7, 8, 9].map((n) => ({ n, deg: (n - 5) * 9, at: pol(RC + 0.4, (n - 5) * 9), manned: n !== 8 }));
   const STAIRS = [{ deg: 4.5, r0: RC - 19, r1: RC - 5 }, { deg: 32.5, r0: RC - 18, r1: RC - 5 }];   // the stair from the mooring-yard; the stair down to Tower Nine's foot
   const ARC0 = -9, ARC1 = 52;                           // the wall facing the Rift, in degrees (the rest of the rim is the inner wall toward the plain)
   // floors (index 2 is the engine's "you cannot walk here")
-  const SETT = 0, FLAG = 1, ROCK = 2, WALK = 3, NOTC = 4, YARD = 5, STEP = 6;
-  const FLOORS = ['t_p100_sett', 't_p100_flag', 't_p100_rock', 't_p100_walk', 't_p100_not', 't_p100_yard', 't_p100_step'];
+  const SETT = 0, FLAG = 1, ROCK = 2, WALK = 3, NOTC = 4, YARD = 5, STEP = 6, COPE = 7;
+  const FLOORS = ['t_p100_sett', 't_p100_flag', 't_p100_rock', 't_p100_walk', 't_p100_not', 't_p100_yard', 't_p100_step', 't_p100_cope'];
   const P = {
     yard: [296, 90, 318, 108], mast: [304.5, 99.5], kestrel: [304.5, 98.6], arrive: [305.6, 101.4], ward: [308.4, 100.4], n94: [309.2, 101.6],
     chain: [319.5, 98.5], n211: [317.2, 96.4], stairTop: [334.2, 97.6], order9: [319, 93],
@@ -419,6 +419,12 @@ const RIFT100 = (function () {
       });
       tex('t_p100_step', (x) => {   // stair treads: obsidian, each nosing leaded and worn bright
         for (let s = 0; s < 4; s++) { const b = 22 + s * 3; px(x, `rgb(${b},${b + 1},${b + 6})`, 0, s * 16, 64, 16); px(x, '#8a8e98', 0, s * 16, 64, 2); px(x, '#b4b8c2', 14, s * 16, 36, 1); px(x, '#0a0a0e', 0, s * 16 + 14, 64, 2); }
+      });
+      tex('t_p100_cope', (x) => {   // the coping on the Rift side: sheet lead dressed over the block, an iron eye and the cable through it
+        for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const v = 74 + h2(i >> 2, j >> 2) * 10 + h2(i, j) * 4; px(x, `rgb(${v | 0},${(v + 2) | 0},${(v + 8) | 0})`, i, j); }
+        px(x, '#3c3e46', 0, 0, 64, 1); px(x, '#3c3e46', 0, 0, 1, 64); px(x, '#9498a2', 1, 1, 63, 1);
+        px(x, '#55575e', 0, 30, 64, 4); px(x, '#888c94', 0, 30, 64, 1);                    // the cable
+        px(x, '#22242a', 28, 26, 8, 12); px(x, '#55575e', 30, 29, 4, 6);                  // an iron eye
       });
       tex('t_p100_rock', (x) => {   // bare grey rock: flat, nothing growing, nothing lying on it
         for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const v = 96 + h2(i >> 3, j >> 3) * 10 + h2(i >> 1, j >> 1) * 6; px(x, `rgb(${v | 0},${v | 0},${(v + 3) | 0})`, i, j); }
@@ -695,7 +701,7 @@ const RIFT100 = (function () {
       const k = j * W + i, c = grid[j][i], x = i + 0.5, y = j + 0.5, r = rOf(x, y), dg = degOf(x, y), rift = dg >= ARC0 && dg <= ARC1;
       let t = c === ',' || c === '=' || c === '#' ? 1 : c === 'H' ? 2 : 0;
       if (rift) {
-        if (r >= RC + 21) t = 8; else if (r >= RC + 0.4) t = 7; else if (r >= RC - 1) t = 3; else if (r >= RC - 5) t = 4; else if (r >= RC - 7) t = 3;
+        if (r >= RC + 21) t = 8; else if (r >= RC + 0.4) t = 7; else if (r >= RC - 1) t = 11; else if (r >= RC - 5) t = 4; else if (r >= RC - 7) t = 3;
       } else if (r >= RC - 2) t = 9;
       kind[k] = t;
     }
@@ -734,8 +740,9 @@ const RIFT100 = (function () {
     return [x, y];
   };
   function build() {
-    const m = new GameMap(MAP, TX.name, W, H, { floor: 't_p100_sett', ceil: null, floorTextures: FLOORS, fogDist: 44, fogColor: [118, 120, 126], ambient: 0.5, music: 'inside', danger: 0,
+    const m = new GameMap(MAP, TX.name, W, H, { floor: 't_p100_sett', ceil: null, floorTextures: FLOORS, fogDist: 46, fogColor: [118, 120, 126], ambient: 0.95, music: 'inside', danger: 0,
       spawn: { x: P.arrive[0], y: P.arrive[1], dir: 0 } });
+    m.bright = true;   // lit by the sky it has: "grey from above", the same at every hour (and at night, no stars)
     const { kind, top, stair } = plan();
     const V = m.ensureVerts(), L = m.ensureLvls(), W1 = W + 1;
     // corner heights: the wall-walk is level; a stair rises with its radius; everything else is the ground
@@ -746,6 +753,8 @@ const RIFT100 = (function () {
       V[vy * W1 + vx] = z;
     }
     m.setSide(0, 0, W - 1, H - 1, 't_p100_obsidian');
+    const cope = new Uint8Array(W * H);
+    m.isBlocked = function (x, y) { if (GameMap.prototype.isBlocked.call(this, x, y)) return true; return x >= 0 && y >= 0 && x < W && y < H && cope[y * W + x] === 1; };
     for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
       const k = j * W + i, t = kind[k];
       if (t === 1 || t === 4 || t === 5 || t === 6) {
@@ -753,6 +762,8 @@ const RIFT100 = (function () {
         m.setFloor(i, j, t === 4 ? WALK : t === 5 ? STEP : t === 6 ? (i > 290 && j > 60 ? YARD : FLAG) : SETT); continue;
       }
       m.smooth[k] = 0;
+      // the Rift-side parapet is a lead coping the height of a shin: you see over it, and nobody steps onto it
+      if (t === 11) { L[k] = WH + COPE_H; m.setFloor(i, j, COPE); cope[k] = 1; if ((i + j) % 3 === 0) m.setSide(i, j, i, j, 't_p100_cable'); continue; }
       if (t === 7) { L[k] = 0; m.setFloor(i, j, ROCK); continue; }
       if (t === 8) { L[k] = VOID_Z; m.setFloor(i, j, ROCK); continue; }
       L[k] = 0;
@@ -825,7 +836,7 @@ const RIFT100 = (function () {
 
   // ---------------------------------------------------------------- building the Halls
   function buildHalls() {
-    const m = new GameMap(HALLS, TX.nameHalls, HW, HH, { floor: 't_p100_boards', ceil: 't_p100_vault', floorTextures: ['t_p100_boards', 't_p100_flag', 't_p100_rock', 't_p100_felt'], fogDist: 18, fogColor: [22, 20, 18], ambient: 0.4, music: 'inside', danger: 0,
+    const m = new GameMap(HALLS, TX.nameHalls, HW, HH, { floor: 't_p100_boards', ceil: 't_p100_vault', floorTextures: ['t_p100_boards', 't_p100_flag', 't_p100_rock', 't_p100_felt'], fogDist: 30, fogColor: [30, 27, 24], ambient: 0.8, music: 'inside', danger: 0,
       spawn: { x: Q.in[0], y: Q.in[1], dir: -PI / 2 } });
     m.rect(0, 0, HW - 1, HH - 1, 't_p100_hall');
     const room = (r, floor) => { m.clear(r[0], r[1], r[2], r[3]); if (floor != null) for (let j = r[1]; j <= r[3]; j++) for (let i = r[0]; i <= r[2]; i++) m.setFloor(i, j, floor); };
@@ -849,6 +860,8 @@ const RIFT100 = (function () {
       if (asleep) m.npc('p100_watcher', x + 0.2, y + (y < 10 ? 1.3 : -1.3), { facing: y < 10 ? -PI / 2 : PI / 2 }); }
     for (const [x, y] of [[31.5, 14.5], [36.5, 14.5], [40.5, 17.5], [10.5, 15.5]]) m.deco('p100_table', x, y, { radius: 0.7, scale: 1, solid: true, label: TX.table });
     for (const [x, y] of [[8.5, 8.2], [16.5, 22.8], [33.5, 22.8], [43.6, 12.5], [24.5, 3.2], [49.5, 12.2], [52.5, 3.2], [61.5, 5.2], [61.5, 14.5], [50.5, 21.2], [64.5, 21.2], [57.5, 34.8]]) lantern(x, y);
+    for (let x = 6.5; x <= 42; x += 5) for (const y of [12.5, 18.5]) m.deco('p100_lantern', x, y, { radius: 0.1, scale: 1, solid: false, glow: 0.8, lightCol: [240, 196, 120], label: TX.passage, nopick: true, _decor: true });   // lanterns on posts down the hall
+    for (const [x, y] of [[49.5, 15.5], [52.5, 6.5], [57.5, 27.5], [50.5, 31.5], [63.5, 31.5]]) m.deco('p100_lantern', x, y, { radius: 0.1, scale: 1, solid: false, glow: 0.8, lightCol: [240, 196, 120], label: TX.passage, nopick: true, _decor: true });
     m.deco('p100_hatch', Q.issue[0], 8.25, { radius: 0.4, scale: 1, solid: false, label: TX.hatch, nopick: true, _decor: true });
     m.npc('p100_issue', Q.issue[0], Q.issue[1], { facing: PI / 2 });
     // pairs, talking
