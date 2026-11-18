@@ -79,11 +79,16 @@ async function boot(browser, opts) {
       // a sprite whose pixels change is uploaded again
       const sp = Engine.sprites.lamp, en0 = SPRITES21.entryFor(sp), up0 = SPRITES21.stats.uploads;
       const copy = { ...sp, data: new Uint32Array(sp.data) }; SPRITES21.entryFor(copy); const up1 = SPRITES21.stats.uploads;
-      return { ok: true, n, miss, px, pages: SPRITES21.pages, reupload: SPRITES21.stats.uploads - again, changed: up1 - up0, en0: !!en0, ev: SPRITES21.stats.evictions };
+      let padded = 0; { const AL = SPRITES21.consts.AL, pad = (v) => Math.ceil(v / AL) * AL; for (const k in Engine.sprites) { const sp = Engine.sprites[k]; padded += (pad(sp.w) + AL) * (pad(sp.h) + AL); } }
+      return { ok: true, n, miss, px, padded, max: SPRITES21.consts.MAX_PAGES, page: SPRITES21.consts.PAGE, pages: SPRITES21.pages, reupload: SPRITES21.stats.uploads - again, changed: up1 - up0, en0: !!en0, ev: SPRITES21.stats.evictions };
     });
     assert.ok(atlas.ok, 'WebGL2 parity view did not start');
     assert.equal(atlas.miss, 0); assert.equal(atlas.reupload, 1); assert.equal(atlas.changed, 1);
-    assert.ok(atlas.pages <= 8);
+    // every sprite in the game at once (929 of them by Phase 98, 8.9 Mpx with their gutters) fits the atlas with no page
+    // emptied, and the packing wastes less than a quarter of what it takes. (The first budget, 8 pages, was for 400 sprites.)
+    const fill = atlas.padded / (atlas.pages * atlas.page * atlas.page);
+    assert.ok(atlas.pages <= atlas.max && atlas.ev === 0, 'all sprites fit the atlas at once: ' + atlas.pages + ' of ' + atlas.max + ' pages, ' + atlas.ev + ' evictions');
+    assert.ok(fill >= 0.75, 'the packing is tight: ' + (fill * 100).toFixed(0) + '% of ' + atlas.pages + ' pages filled');
     console.log(`PASS atlas: all ${atlas.n} sprites (${(atlas.px / 1e6).toFixed(2)} Mpx) placed on ${atlas.pages} pages of 1024x1024 with ${await page.evaluate(() => SPRITES21.consts.LEVELS)} mip levels, ${atlas.ev} evictions; found again by identity, re-uploaded when their pixels change`);
 
     // ---------------------------------------------------------------- parity: rects
@@ -187,6 +192,10 @@ async function boot(browser, opts) {
       for (let i = 0; i < 5; i++) __fr();
       // Phase 76 rigs the paintings in view one every fifth drawn frame: a steady frame is one after that is done
       if (typeof PAINTFOLK !== 'undefined' && PAINTFOLK.stats) { for (let k = 0; k < 600 && PAINTFOLK.stats().waiting > 0; k++) __fr(); for (let i = 0; i < 24; i++) __fr(); }
+      // ... and a rigged painting's poses are made the first time each is shown: the people in view walk through their
+      // cycles for a few seconds before nothing new is drawn. Steady begins when a run of frames uploads nothing (measured:
+      // 39, 4, 12, 1, 0 uploads in the first five runs of thirty)
+      let warm = 0; for (let k = 0; k < 24; k++) { const u = SPRITES21.stats.uploads; for (let i = 0; i < 30; i++) { Engine.cam.bob = 0; render(); } warm++; if (SPRITES21.stats.uploads === u) break; }
       const up0 = SPRITES21.stats.uploads;
       const ms = [], own = []; for (let i = 0; i < 30; i++) { Engine.cam.bob = 0; render(); ms.push(SPRITES21.stats.ms.frame); own.push(SPRITES21.stats.ms.own); }
       const uploads = SPRITES21.stats.uploads - up0, n = SPRITES21.count;
@@ -199,10 +208,11 @@ async function boot(browser, opts) {
         t = performance.now(); SPRITES21.frame(G.ents, view); ownB.push(SPRITES21.stats.ms.own);
       }
       const med = (a) => a.slice().sort((x, y) => x - y)[a.length >> 1];
-      return { median: med(ms), own: med(own), ownB: med(ownB), cpu: med(cpu), n, calls: n.runs, uploads, parts: SPRITES21.stats.ms.parts };
+      return { median: med(ms), own: med(own), ownB: med(ownB), cpu: med(cpu), n, calls: n.runs, uploads, warm, parts: SPRITES21.stats.ms.parts };
     });
     assert.ok(perf.ownB < perf.cpu * 0.5 + 1, 'CPU collect too slow: ' + perf.ownB.toFixed(2) + ' ms of this module vs ' + perf.cpu.toFixed(2) + ' ms for the raycaster frame it replaces');
-    assert.ok(perf.uploads <= 40, 'atlas churn: ' + perf.uploads + ' uploads in 30 steady frames');
+    assert.ok(perf.warm < 24, 'the atlas settles: no thirty frames without an upload in ' + perf.warm + ' tries');
+    assert.ok(perf.uploads <= 4, 'atlas churn: ' + perf.uploads + ' uploads in 30 steady frames');
     console.log(`PASS cost: ${perf.n.billboards} billboards, ${perf.n.decalVerts} decal vertices, ${perf.n.particles} particles in ${perf.n.runs} atlas run(s); CPU collect median ${perf.ownB.toFixed(2)} ms against ${perf.cpu.toFixed(2)} ms for the raycaster's whole frame in the same moments (parts ${JSON.stringify(perf.parts, (k, v) => typeof v === 'number' ? +v.toFixed(2) : v)}), ${perf.uploads} atlas uploads in 30 frames of animation (SwiftShader host; GPU time not measurable here)`);
     if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'sprites21-parity.png') });
 

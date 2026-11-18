@@ -134,13 +134,16 @@ async function boot() {
     // cached, drawn once, and not blank
     const cached = await page.evaluate(() => {
       const a = LOGMAP.sketchURL('gate'), b = LOGMAP.sketchURL('gate'); const out = { same: a === b, lens: {} };
-      for (const id of Object.keys(LOGMAP.SUBJECTS)) out.lens[id] = LOGMAP.sketchURL(id).length;
+      // a painted sketch that is already decoded is served as its file (img/painted/sketch/); the drawn ones are data URLs
+      out.painted = [];
+      for (const id of Object.keys(LOGMAP.SUBJECTS)) { const u = LOGMAP.sketchURL(id); if (/^img\/painted\/sketch\/[\w-]+\.jpg$/.test(u)) { out.painted.push(id); continue; } out.lens[id] = u.length; }
       return out;
     });
     assert(cached.same, 'sketch URL cached');
     const distinct = new Set(Object.values(cached.lens));
     assert(Object.values(cached.lens).every(l => l > 5000), 'no sketch is blank: ' + JSON.stringify(cached.lens));
     assert(distinct.size >= Object.keys(cached.lens).length - 2, 'sketches are distinct drawings');
+    assert(cached.painted.length <= 4 && Object.keys(cached.lens).length >= 35, 'only the few painted sketches are files; the rest are drawn (' + cached.painted.join(', ') + ')');
     const ink = await page.evaluate(async () => {
       const res = {};
       for (const id of Object.keys(LOGMAP.SUBJECTS)) {

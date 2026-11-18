@@ -204,6 +204,13 @@ const TRACE = () => {
         console.log('  guest unmatched', await guest.page.evaluate(() => JSON.stringify(G.ents.filter((e) => !SYNC19._internal.C.applied.has(e._sid19)).map((e) => [e._sid19, e.kind, e.sprite, e.x.toFixed(1), e.y.toFixed(1), !!e.hidden]).slice(0, 12))));
         console.log('  host', await host.page.evaluate(() => JSON.stringify({ base: G.map.baseCount, n: G.ents.length, extras: G.ents.filter((e, i) => i >= G.map.baseCount).map((e) => [e.kind, e.sprite, e.x.toFixed(1), e.y.toFixed(1)]).slice(0, 10) })));
         console.log('  guest base', await guest.page.evaluate(() => G.map.baseCount));
+        { const key = (e) => [e.kind, e.sprite, e.x.toFixed(1), e.y.toFixed(1)].join(' ');
+          const H = await host.page.evaluate(() => G.ents.map((e) => [e.kind, e.sprite].join(' ')));
+          const Gs = await guest.page.evaluate(() => G.ents.map((e) => [e.kind, e.sprite, e.x.toFixed(1), e.y.toFixed(1), e._sid19 == null ? 'nosid' : 'sid', e.transient ? 'transient' : '', e._sl ? 'critter' : '', Object.keys(e).filter((k) => k[0] === '_').join(',')].join(' ')));
+          const hc = new Map(); for (const k of H) hc.set(k, (hc.get(k) || 0) + 1);
+          const extra = []; for (const g0 of Gs) { const k = g0.split(' ').slice(0, 2).join(' '); if (hc.get(k) > 0) hc.set(k, hc.get(k) - 1); else extra.push(g0); }
+          const missing = []; for (const [k, n] of hc) if (n > 0) missing.push(k + ' x' + n);
+          console.log('  guest has, host has not:', JSON.stringify(extra.slice(0, 14))); console.log('  host has, guest has not:', JSON.stringify(missing.slice(0, 14))); void key; }
       }
       ok(g.n === h.n && g.vis === h.vis, 'the census gives the guest the host\'s entities (' + g.n + ' / ' + g.vis + ' visible)');
       ok(g.st === 'play' && g.figs === 1 && (await host.page.evaluate(() => SYNC19.figures().length)) === 1, 'each side sees one remote traveller');

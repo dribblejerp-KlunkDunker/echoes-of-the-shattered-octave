@@ -392,7 +392,8 @@ const VIGIL96 = (function () {
     // the postern is set in join(), once it is known whether the Chalk Cliffs are there
     // ---- the shelf: the Kestrel, her ladder
     m.deco('ladder', P.ladder[0], P.ladder[1], { radius: 0.2, scale: 1.5, solid: false, use: 'p96v_kestrel', label: TX.ladder });
-    if (typeof Engine !== 'undefined' && Engine.sprites && Engine.sprites.kestrel_m2) m.add({ kind: 'deco', sprite: 'kestrel_m2', x: P.kestrel[0], y: P.kestrel[1], scale: 2.6, solid: false, radius: 0.05, yOff: -0.5, label: TX.kestrel, _decor: true, _p96v: 'kestrel' });
+    // (placed whether or not her picture is loaded: the map's list of things must not depend on another module)
+    m.add({ kind: 'deco', sprite: 'kestrel_m2', x: P.kestrel[0], y: P.kestrel[1], scale: 2.6, solid: false, radius: 0.05, yOff: -0.5, label: TX.kestrel, _decor: true, _p96v: 'kestrel' });
     // ---- the people
     for (const [k, x, y, f] of PEOPLE) { const [qx, qy] = snap(m, x, y); m.npc('p96v_' + k, qx, qy, { facing: f, _p96v: k }); }
     m.baseCount = m.entities.length;
