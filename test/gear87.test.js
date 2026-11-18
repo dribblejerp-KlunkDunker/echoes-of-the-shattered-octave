@@ -50,7 +50,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const ids = Object.keys(ARMOR).concat(Object.keys(WEAPONS).filter((w) => !WEAPONS[w].innate));
     out.missing = ids.filter((id) => !X.SET_OF[id]);
     const seen = {}; let twice = 0; for (const s of X.SETS) for (const id of [].concat(...s.armor, s.weapons)) { if (seen[id]) twice++; seen[id] = 1; }
-    out.once = twice === 0 && X.SETS.length === 17;
+    out.once = twice === 0 && X.SETS.length === 18;
     // ---- three pieces of Tanner's Row: +1 armour; the full set: fatigue back faster
     p.armor = {}; if (!p.weapons.includes('sword')) p.weapons.push('sword'); p.weapon = p.weapons.indexOf('sword');
     const ar0 = armorRating(); p.armor = { body: 'a_jerkin', hands: 'a_gloves' }; const ar2 = armorRating();

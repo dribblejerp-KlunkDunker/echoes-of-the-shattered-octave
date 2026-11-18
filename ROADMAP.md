@@ -53,7 +53,7 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] `js/lighting.js`: a map can be `bright` (lit by the Bleach, never darkened as a room)
 - [x] Phase 92 matched to the books a third and fourth time (glass-fire, the bell, no cloud, no winch-boats or valley farms, the Bleach's source, the Spire's flank)
 - [x] reviewed by an independent agent (16 claims checked against the books, all held; its two lore questions added to the record as questions 10 and 11)
-- [ ] the owner's eleven answers (the Phase 95 record)
+- [x] the owner's eleven answers (17 Nov: "phase 95 is good I accept all recommendations")
 
 **Phase 96: the Heights' remaining places, read against the books by an army of lore readers (16 Nov).** Owner: an agent army, Standard size, Opus throughout. Sub-agents cannot spawn sub-agents in this environment, so the army ran flat from the Commander.
 - [x] eight lore briefs, each quoting book and bible by file and line
@@ -61,8 +61,21 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] held for the owner, with three designs to choose from: the White Mile
 - [x] built from the lore, each with its test, French and record: the Basilica school (`js/school96.js`, 14 checks), the black square, the plan's "Bell Yard" (`js/blacksquare96.js`, 16), Sun-Peak Vigil (`js/vigil96.js`, 20), the Chalk Cliffs (`js/cliffs96.js`, 19)
 - [x] a person's own subjects have buttons under "Tell me about" (`js/owntopics96.js`, 5 checks): they could be answered but never asked
-- [ ] the owner's answers: the White Mile's design; the three withdrawals; each built place's [PROPOSED] list
-- [ ] the fourth Heights keeper waits on the White Mile; the reminder of Phase 91's question 4 comes with it (three of four are built)
+- [x] the owner's answers (17 Nov): the White Mile is design (a); the withdrawals stand; every [PROPOSED] line of the built places accepted
+- [x] the fourth Heights keeper is built with the White Mile (P97); Phase 91's question 4 is put to the owner again there
+
+**Phase 97: the White Mile, and four things the owner asked for (17 Nov).** Built by the Commander alone, no sub-agents.
+- [x] the White Mile to design (a) (`js/whitemile97.js`, 30 checks): the gutted house, the line and its offerings, four tiers crossed shadow to shadow, the light by the hour, the Unison's forty (never fought), the Glassmarket and its people, the Tallyman, the drop-line, one lamp (Souls group k), the eighteenth gear set (the Scavenger's Blacks)
+- [x] `js/light21.js`: a `bright` map is evenly lit and fades to its own white in the 3D view (this also brightens the Pilgrim Chain there)
+- [x] everything read aloud for a player who cannot read (`js/reader97.js`, 27 checks)
+- [x] the compass points to quest and side-quest markers, and to the door toward one (`js/compass97.js`, 10 checks)
+- [x] places read or heard of are marked on the map by kind (`js/places97.js`, 17 checks)
+- [x] Oakhaven's houses taller: ground storey, front doors, ridges, tower and mast (`js/eaves78.js`, 78 checks)
+- [x] voices of their own for the Heights' people and foes (`js/voices.js`)
+- [ ] the owner's answers: the White Mile's five questions and its [PROPOSED] list; recorded voices or the device's; quest steps for the compass; the other towns' houses
+- [ ] Phase 91's question 4, now due: trophies and realm gear for the Reach's two keepers
+- [ ] still owed from Phase 87: first-person pictures of the bare hands and the glass arm's pose
+- [ ] known red, not from this phase: `test/logmap` fails at its first static check (older modules' journal sites)
 
 **Phase 94: the Dawning Heights, part two: the Anchorage (15 Nov, branch `p94-anchorage`, on Fable 5.2).** Owner, 15 Nov: "you now have fable so go forth". `js/anchorage94.js`, test `test/anchorage94.test.js` (17 checks), French `tools/i18n/p94-anchorage.tsv`. Record: [`story/Game Layer/Phase 94 - The Dawning Heights, part two (text for review).md`](story/Game%20Layer/Phase%2094%20-%20The%20Dawning%20Heights%2C%20part%20two%20(text%20for%20review).md).
 - [x] the book changed the plan: the Anchorage is the inside of the city's frame (Book Two: an inverted cone over a gulf, the chains down from the Spire to the rim and on into the frame), not shafts in the mountain

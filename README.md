@@ -449,6 +449,20 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 | ![Sun-Peak Vigil: the tower and the garth](screenshots/p96/p96-vigil.jpg) | ![Abbess Coriel in her cell](screenshots/p96/p96-coriel.jpg) |
 | ![The Vigil's gate and its bell](screenshots/p96/p96-gate.jpg) | ![The Chalk Cliffs at dusk](screenshots/p96/p96-cliffs.jpg) |
 
+**The Dawning Heights, part five: the White Mile (Phase 97).** The owner chose the book's own mile. A doorway in the top wall of the Tiers leads into a gutted house, "a dark room with nothing in it", and a ladder goes up through its roof to a walkway of black planks where the shade stops "straight as a ruled line". Past the line everything is white, and the light takes you unless you cross "from shadow to shadow, the way you cross a river on stones": least in the dead hour before dawn, most by day, slower with black cloth round the face and black gloves on. Offerings lie on the line and are never taken. On the third tier the Unison walks its street, forty in four ranks of ten; they hear noise and nothing else, and they cannot be fought. On the fourth is the old Glassmarket, whose people still stand among the stalls, white and thin enough to see through: "Don't touch them." Across the market's widest gap, by night, the Tallyman counts them, and gives the eighteenth gear set, the Scavenger's Blacks. A drop-line let down from a noble garden is the short way back (`js/whitemile97.js`).
+
+| | |
+|---|---|
+| ![The line: where the shade stops](screenshots/p97/p97-mile-line.jpg) | ![The two great houses and the carriage](screenshots/p97/p97-mile-houses.jpg) |
+| ![The Unison, four ranks of ten](screenshots/p97/p97-mile-unison.jpg) | ![The Glassmarket: a woman with her hand out for a coin](screenshots/p97/p97-mile-market.jpg) |
+| ![Two old men on a bench](screenshots/p97/p97-mile-bench.jpg) | ![The Tallyman in the arcade's shade](screenshots/p97/p97-mile-tallyman.jpg) |
+
+**Read aloud, pointed at, and marked (Phase 97).** "Read everything aloud" speaks every line of the game in the device's voice, for a player who cannot read: F2 on and off, F3 or `[` says it again, F4 or `]` reads the whole screen (`js/reader97.js`). The compass shows quest markers as gold diamonds and side-quest markers as pale blue discs, and points at the door toward one on another map (`js/compass97.js`). Any place you read or hear of is marked on its map with a small picture of its kind (`js/places97.js`). Oakhaven's houses stand taller, with front doors over a person's head (`js/eaves78.js`).
+
+| | |
+|---|---|
+| ![Oakhaven's houses, taller](screenshots/p97/p97-oakhaven-after.jpg) | ![Places and quest markers on the map](screenshots/p97/p97-map.jpg) |
+
 **The Dawning Heights, part two: the Anchorage (Phase 94).** A low iron door by the goods-cage's top leads into the inside of Sol-Luminary's frame, where the nine chains that hold the city come down through it "like the bones they are" (Book Two). Winchmaster Bardo (World Bible Vol II) keeps his winch there, with the tally of his nineteen lost men cut in the housing. You walk down the seventh chain itself, link by link, over its well. The nine chains toll one after another in a bell-ringers' change, and a card shows the row: when the seventh speaks, a link under you throws you and a pin holds you. Below are the tolling gallery, seven Glass-Grown who are never fought, the keel-weights of white stone, and the Winch-Deep, where the Nineteen still haul at the old capstan and make you weigh four times what you weigh. Three lamps, a shortcut cage, and a sixteenth gear set, the Chain-Yards (`js/anchorage94.js`, `test/anchorage94.test.js`). The book changed this place's plan: it had been drawn as shafts in the mountain, and Book Two has no rock under the city.
 
 <table>

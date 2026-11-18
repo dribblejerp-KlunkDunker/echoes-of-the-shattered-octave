@@ -86,6 +86,10 @@ const GEAR87 = (function () {
     { id: 'pilgrim', name: S('The Pilgrim Chain'), home: 'the Pilgrim Chain, Sol-Luminary',
       armor: ['a_p95_robe', 'a_p95_cowl', 'a_p95_sandals'], weapons: ['p95_stave'],
       t: { special: 'white' }, f: { special: 'afterglow' }, tLine: S('in the whites, the Flambeaux of the Chain take you for a bearer until you are close'), fLine: S('leaving shade, the Bleach waits three breaths before it begins on you') },
+    // Phase 97: the White Mile [PROPOSED]: what a scavenger of the line goes up in (Book Two: black cloth round the face, black gloves), and the Tallyman's second hook
+    { id: 'blacks', name: S('The Scavenger\'s Blacks'), home: 'the White Mile, Sol-Luminary',
+      armor: ['a_p97_wrap', 'a_p97_gloves', 'a_p97_coat'], weapons: ['p97_hook'],
+      t: { noise: -0.2 }, f: { special: 'unheard' }, tLine: S('quieter on white stone'), fLine: S('the Unison must be a third nearer to hear you') },
   ];
   const BY_ID = {}; for (const s of SETS) BY_ID[s.id] = s;
   // which set a piece belongs to (the design puts every piece in exactly one)

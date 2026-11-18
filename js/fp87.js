@@ -54,6 +54,7 @@ const FP87 = (function () {
     p92_clothpole: { head: 'cloth', haft: 'ash' },
     p94_lever: { head: 'lever', haft: 'iron' },
     p95_stave: { head: 'firecage', haft: 'iron' },
+    p97_hook: { head: 'tallyhook', haft: 'bough' },
     p87_sledge: { head: 'nightsledge', haft: 'ash' },
   };
   const BLADE_KINDS = { sword: 1, longsword: 1, greatsword: 1, knife: 1, dirk: 1 };   // throwing knives stay with the ranged (a fan of three)
@@ -238,6 +239,12 @@ const FP87 = (function () {
         for (const bx of [-12, -5, 2, 9]) { x.fillStyle = css(H.dk, 0.95); x.fillRect(bx, y - 28, 3, 32); x.fillStyle = css(H.hi, 0.5); x.fillRect(bx, y - 28, 1, 32); }
         x.fillStyle = 'rgb(96,72,34)'; x.fillRect(-6, y - 14, 12, 14); x.fillStyle = 'rgb(134,104,52)'; x.fillRect(-4, y - 12, 4, 6);   // the lump, unlit
         rrect(x, -6, y + 7, 12, 8, 2); fillM(-6, y + 7, 6, y + 15); break; }
+      case 'tallyhook': { // the Tallyman's Hook (Phase 97): a flat crook of iron, no spike; a rag of black cloth knotted under it; tally-notches down the pole
+        rrect(x, -3, y - 4, 6, 26, 2); fillM(-3, y - 4, 3, y + 22);
+        x.beginPath(); x.moveTo(0, y - 2); x.quadraticCurveTo(-2, y - 30, -18, y - 26); x.quadraticCurveTo(-26, y - 22, -22, y - 10); x.lineWidth = 6; x.strokeStyle = css(H.base); x.stroke(); x.lineWidth = 1.5; x.strokeStyle = css(H.hi); x.stroke();
+        x.fillStyle = 'rgb(10,10,13)'; x.beginPath(); x.moveTo(-7, y + 20); x.lineTo(7, y + 20); x.lineTo(11, y + 46); x.lineTo(3, y + 40); x.lineTo(-2, y + 50); x.lineTo(-9, y + 42); x.closePath(); x.fill();   // the rag
+        x.fillStyle = 'rgba(40,38,44,0.9)'; x.fillRect(-7, y + 20, 14, 5);
+        for (let k = 0; k < 5; k++) { x.fillStyle = 'rgba(196,184,160,0.85)'; x.fillRect(-4, y + 60 + k * 7, 8, 1.5); } break; }
       case 'boathook': { // a boat-hook: spike and a hook back
         x.beginPath(); x.moveTo(-3, y + 20); x.lineTo(0, y - 26); x.lineTo(3, y + 20); x.closePath(); fillM(-3, y - 26, 3, y + 20);
         x.beginPath(); x.moveTo(2, y + 4); x.quadraticCurveTo(26, y - 2, 20, y - 20); x.lineWidth = 5; x.strokeStyle = css(H.base); x.stroke(); x.lineWidth = 1.4; x.strokeStyle = css(H.hi); x.stroke();

@@ -206,7 +206,7 @@ const LIGHT21 = (() => {
     const hf = (flag('mist') || flag('softFog') ? 0.16 : 0) + (flag('cineFog') ? 0.22 : 0) + (WX() === 'mist' ? 0.35 : 0) + haze * 0.6;
     P.fog = [1, F.outdoor ? hf : hf * 0.4, 0.22 * ZK, P.maxH];
     P.shadowOn = !!(F.outdoor && flag('p21_shadows') && hgt.ok && (P.sunC[0] + P.sunC[1] + P.sunC[2]) > 0.01);
-    P.pt = [1.9 + 0.6 * night, 0.62 * ZK, flag('darkInteriors') ? 2 : 1, flag('reflections') ? 1 : 0];   // lamps carry the night
+    P.pt = [1.9 + 0.6 * night, 0.62 * ZK, (F.map && F.map.bright && !F.outdoor) ? 0.5 : flag('darkInteriors') ? 2 : 1, flag('reflections') ? 1 : 0];   // lamps carry the night; 0.5: a place lit by its own light
     P.t = [F.now || 0, F.time || 0, 0, 1];
     // clouds: cover from the weather; wind from Weather.wind
     const wind = typeof Weather !== 'undefined' ? (Weather.wind || 0.2) : 0.2;
@@ -465,14 +465,19 @@ vec3 r3dShade(R3DSurf s) {
     float f = clamp(1.0 - dist * uFog.w, 0.0, 1.0); f = uLit.y + (1.0 - uLit.y) * f;
     fogK = 1.0 - f;
   } else {
-    // indoors: the raycaster's distance-to-dark (readability), the lamps on top
-    float f = s.kind == 1 ? s.fi : clamp(1.0 - dist * uFog.w, 0.0, 1.0);
+    // indoors: the raycaster's distance-to-dark (readability), the lamps on top.
+    // A place lit by its own light (map.bright: the Bleach, Phases 95 and 97) is never dark and does not go dark with
+    // distance: it is lit evenly, and what is far fades into its own white air.
+    bool bright = uL21P.z < 0.75;
+    float fd = clamp(1.0 - dist * uFog.w, 0.0, 1.0);
+    float f = s.kind == 1 ? s.fi : (bright ? 1.0 : fd);
     if (s.kind != 1) { f = uLit.y + (1.0 - uLit.y) * f; f *= s.side; f *= uLit.z; f *= l21AO(lp, n); }
     vec3 pts = l21Points(lp + n * 0.02, n, s.kind == 0 ? 0.2 : 0.6) * uL21P.x;
     if (spr) pts = max(pts, s.ladd);
-    c = s.albedo * (f * 0.86 + pts * 1.15) + pts * 0.06;
+    c = s.albedo * (f * (bright ? 1.04 : 0.86) + pts * 1.15) + pts * 0.06;
     if (uL21P.z > 1.5 && s.emissive < 0.5) c *= l21Dark(lp);
     fogK = 0.0;
+    if (bright && s.kind != 1) c = mix(c, uFog.rgb, pow(1.0 - fd, 1.6) * 0.9);
   }
   if (water && uL21P.w > 0.5) {
     vec3 r = reflect(vd, n); r.z = abs(r.z);
