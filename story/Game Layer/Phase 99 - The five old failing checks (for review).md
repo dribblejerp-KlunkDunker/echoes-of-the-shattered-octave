@@ -77,7 +77,23 @@ Result: all pass.
 - **"remind me later about everything that is mine to decide."** The open list is kept and repeated in each report until answered. It stands at the end of this record.
 
 ## Verification
-VERIFY_PLACEHOLDER
+**Every suite was run** (200 of them, two at a time on a two-core machine, which is harder on the timing checks than running alone). 186 passed first time. The 14 that did not, each run again alone:
+
+| Suite | What it was | Now, alone |
+|---|---|---|
+| `origins`, `motion10`, `ledger15` | Real faults, older than this phase (sections 6 to 8) | fixed: 25, 7, all |
+| `together19` | A weak spot in the check itself: it compared two pages' pictures of a room without setting the animation clock, which counts real time since the page opened. A figure standing in the room was drawn in a different frame of its idle on the two pages about one run in two (a dozen pixels). The clock is now set before the pictures are taken. | 3 of 3, the same picture every time |
+| `sync19`, `net19` | Timing checks under the load of two suites at once | 54 and 52 |
+| `cinematic24`, `far14`, `couriers`, `screens`, `roads15`, `deep16`, `festivals12` | The known timing-sensitive ones, under load | all pass |
+| `r3d21` | The long 3D suite ran out of time under load | 24 |
+
+After the last change to the game's files, these were run again one at a time and pass: `logmap` 13, `smalllife`, `sprites21` 9 (three runs), `sync19` 54, `net19` 52, `together19` (three runs), `origins` 25, `motion10` 7, `ledger15`, `places97` 17, `compass97` 10, `reader97` 27, `bearings82b` 33, `screens` 60, `skies14` 51, `cantabile17` 40, `pwa18` 88, `r3d21` 24, `partner19` 19, `card21` 11, `story-i18n` 17.
+
+**Two checks were made steadier without being made easier:**
+- `sprites21` read one point on a figure to see that the graphics card had drawn it. That point could fall in the gap between two legs, depending on the stride. It now reads five points down the figure and needs two of them to show the figure.
+- `logmap` compares the map screen's markup with the legend on and off. The list of places now sizes itself to the room left, so its height follows the legend; that one number is held out of the comparison.
+
+**Not measured here:** frame time on a real graphics card, and two real devices on a real network. The two-player checks run two browser pages on one machine through a local relay or a local signalling stub.
 
 ## Still the owner's to decide (carried forward)
 1. **Recorded voices for every line, or the device's voice** (Phase 97). Recorded lines do not slow the game: each is fetched the first time it is spoken and kept. What grows is size: 12 MB of voices today, about 250 MB if all 9,800 lines were recorded.

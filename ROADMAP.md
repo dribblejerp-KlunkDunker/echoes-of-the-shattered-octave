@@ -86,14 +86,15 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] `net19` (52): the same cause as the last of those; no change to the suite
 - [x] Phase 89's "the two-player suites that fail in the build container" is answered for `sync19` and `net19`: it was the game, not the container
 - [x] three more that Phase 98's report missed (each fails the same way with Phase 98's files): `origins` (25): the game's own uncompressed save, 559 KB, was over its loader's 512 KB; the limit is 2 MB, with French; `motion10` (7): a place travelled to by the chart is marked without a word, and the chart is not read as hearsay (`js/places97.js`); `ledger15`: the map screen's place list takes only the room left, so Clear marks stays in view
-- [ ] VERIFY_ROADMAP
+- [x] every suite (200) run two at a time: 186 passed first time; the 14 others run alone: three real faults fixed (above), `together19`'s frame comparison now sets the animation clock (it differed by a dozen pixels of one idling figure about one run in two), and ten were timing under load and pass alone
+- [ ] still to be measured on real hardware: two devices on a real network (Phase 89's row)
 
 **Phase 98: what was owed (17 Nov).** Owner: "lets bust out phase 87 then lets move onto 91". Built by the Commander alone.
 - [x] Phase 87 (d): the bare fist, the glass arm (raised on the left, where that arm is) and the open hands for a Song, painted in code at the weapons' detail (`js/fp87.js`, `js/body21.js`); the other hand rests at its own side; a fist goes straight out; the locked arm's wash lies on the arm
 - [x] Phase 91 question 4: the Flint-Back leaves a shell-plate and the Ridge-Flint, the Standing Note its reed and the Beam-Key, once each, and late to whoever beat them before (`js/keepers98.js`); the Heights' three fought keepers checked against the same rule
 - [x] `test/owed98.test.js`, 23 checks; French; the record; Vol VIII
 - [x] every suite (200) run; found and fixed: no milestones at the Vigil's and the Cliffs' finger-posts (P96); the cloth-pole as quiet as the Old Cantor's Staff (P92); the Flambeau's own painting
-- [x] red on `main` before this work: `logmap`, `smalllife`, `sprites21`, `sync19`, `net19` (all five fixed in P99)
+- [x] red on `main` before this work: `logmap`, `smalllife`, `sprites21`, `sync19`, `net19` (all five fixed in P99). Correction, 18 Nov: `origins`, `motion10` and `ledger15` were red at this commit too and were missed in this report (fixed in P99)
 - [ ] the owner's answers: the glass arm on the left; the straight punch; the four names; weapons, not worn pieces
 
 **Phase 94: the Dawning Heights, part two: the Anchorage (15 Nov, branch `p94-anchorage`, on Fable 5.2).** Owner, 15 Nov: "you now have fable so go forth". `js/anchorage94.js`, test `test/anchorage94.test.js` (17 checks), French `tools/i18n/p94-anchorage.tsv`. Record: [`story/Game Layer/Phase 94 - The Dawning Heights, part two (text for review).md`](story/Game%20Layer/Phase%2094%20-%20The%20Dawning%20Heights%2C%20part%20two%20(text%20for%20review).md).

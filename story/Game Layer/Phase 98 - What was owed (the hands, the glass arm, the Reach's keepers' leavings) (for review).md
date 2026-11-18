@@ -46,6 +46,8 @@ Every suite in the repository (200) was run against this work, and each failure 
 
 Still failing, and failing the same way on `main` before any of this (so not from this work): `logmap` (a static list of older modules' journal lines), `smalllife` (a saved-state comparison), `sprites21` (every sprite at once needs more than eight atlas pages; the renderer's own limit is sixteen), `sync19` (the two-player census) and `net19` (it needs a network this machine does not give it).
 
+**Correction, 18 Nov (Phase 99).** That list was short by three. `origins`, `motion10` and `ledger15` were also failing at this commit and were missed in the report. And two of the reasons given above were wrong: `net19` did not need a network, and `sync19` was not only the census; both were the host dropping a newcomer while it built the world. All eight are fixed in Phase 99; see its record.
+
 ## For the owner
 
 1. **The glass arm on the left.** *Recommend: keep. It is the left arm everywhere else in the game and in the books.*
