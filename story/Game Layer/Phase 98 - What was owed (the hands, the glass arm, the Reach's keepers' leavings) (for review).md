@@ -38,7 +38,7 @@ The rule (Phase 90, rule 5, approved): a keeper put down leaves a trophy, which 
 
 ## 3. Found while checking, and put right
 
-Every suite in the repository (199) was run against this work, and each failure was run again alone and against the earlier branches. Three older faults turned up and were fixed here:
+Every suite in the repository (200) was run against this work, and each failure was run again alone and against the earlier branches. Three older faults turned up and were fixed here:
 
 - **The Vigil and the Chalk Cliffs had finger-posts with no milestone** (Phase 96). A milestone is placed by every finger-post, but those two places join the world after the milestones were laid. They now get theirs before you first stand in them, so the world map can send you there like anywhere else.
 - **The Scavenger's Cloth-Pole was as quiet as the Old Cantor's Staff** (Phase 92). The staff is "quieter than every other long weapon" (Phase 79, approved). The cloth-pole's noise is now 0.7 (it was 0.6, the staff's own). The Tallyman's Hook (Phase 97) was set at 0.8 for the same reason.

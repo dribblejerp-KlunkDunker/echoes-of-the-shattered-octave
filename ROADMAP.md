@@ -81,7 +81,7 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] Phase 87 (d): the bare fist, the glass arm (raised on the left, where that arm is) and the open hands for a Song, painted in code at the weapons' detail (`js/fp87.js`, `js/body21.js`); the other hand rests at its own side; a fist goes straight out; the locked arm's wash lies on the arm
 - [x] Phase 91 question 4: the Flint-Back leaves a shell-plate and the Ridge-Flint, the Standing Note its reed and the Beam-Key, once each, and late to whoever beat them before (`js/keepers98.js`); the Heights' three fought keepers checked against the same rule
 - [x] `test/owed98.test.js`, 23 checks; French; the record; Vol VIII
-- [x] every suite (199) run; found and fixed: no milestones at the Vigil's and the Cliffs' finger-posts (P96); the cloth-pole as quiet as the Old Cantor's Staff (P92); the Flambeau's own painting
+- [x] every suite (200) run; found and fixed: no milestones at the Vigil's and the Cliffs' finger-posts (P96); the cloth-pole as quiet as the Old Cantor's Staff (P92); the Flambeau's own painting
 - [ ] red on `main` before this work, still red: `logmap`, `smalllife`, `sprites21`, `sync19`, `net19`
 - [ ] the owner's answers: the glass arm on the left; the straight punch; the four names; weapons, not worn pieces
 
