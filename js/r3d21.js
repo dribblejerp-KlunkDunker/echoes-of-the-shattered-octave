@@ -986,8 +986,10 @@ vec4 r3dLandmarks(float az, float te) {
       const cx = ci % W, cy = (ci / W) | 0;
       const open = d.open || 0;
       if (open >= 0.98) continue;
-      const base = relief ? cellGround(m, cx, cy, 0.5, 0.5) : 0, top = base + 1;
-      const L = worldTex(Engine.textures[c.tex] ? c.tex : 't_stone'); if (L < 0) continue;
+      // a house's front door may stand taller than a wall cell and wear its own leaf (js/eaves78.js; owner, 17 Nov)
+      const e78 = (typeof EAVES78 !== 'undefined' && EAVES78.door) ? EAVES78.door(m, cx, cy) : null;
+      const base = relief ? cellGround(m, cx, cy, 0.5, 0.5) : 0, top = base + (e78 ? e78.h : 1);
+      const L = worldTex(e78 && Engine.textures[e78.tex] ? e78.tex : Engine.textures[c.tex] ? c.tex : 't_stone'); if (L < 0) continue;
       const dec = (m.decals && m.decals[ci] && Engine.textures[m.decals[ci]]) ? worldTex(m.decals[ci]) : -1;
       // a lifting gate (js/gates.js): the lattice rises, seen through its gaps
       let g = null;

@@ -67,10 +67,16 @@ const EAVES78 = (() => {
   // and unique enough to want to explore"). A region is an entry here: what it builds with, and the one or two things only
   // it has. Oakhaven is the first; the next region adds an entry and its own rules, it does not borrow Oakhaven's.
   const STYLES = {
-    oakhaven: { builds: 'timber and plaster under thatch and slate (the bibles)', shutters: 'green-grey', only: ['jettied upper storeys and double-pile roofs', "the Greenhall's dome", "the Chapel's open bell-frame"] },
+    // Owner, 17 Nov: "the houses for oakhaven are a bit small like the front doors are too small and the roofs are to low".
+    // A person stands 1 high, and the map's wall ring is 1 high too, so the eaves came down to the top of your head and a
+    // door was exactly your own height. `ground` is how much taller the ground storey stands in the 3D renderer (a band of
+    // the house's own wall over the map's ring), `doorH` the height of a front door's leaf, `storey` the upper storey,
+    // `ridge1`/`ridge2`/`hall` the highest ridges. The map itself is not touched; the mast and the tower were raised in
+    // js/maps.js so they still stand over every roof.
+    oakhaven: { builds: 'timber and plaster under thatch and slate (the bibles)', shutters: 'green-grey', only: ['jettied upper storeys and double-pile roofs', "the Greenhall's dome", "the Chapel's open bell-frame"], ground: 0.38, doorH: 1.24, storey: 0.72, ridge1: 3.0, ridge2: 3.45, hall: 2.7 },
     // the Hollow, Oakhaven's low quarter "behind the tannery": the same timber, plaster and thatch, but rows of cottages built
     // back to back, never more than one storey, each row under one long deep roof
-    p30_hollow: { builds: 'timber and plaster under thatch', shutters: 'green-grey', only: ['rows of cottages built back to back under one long roof', 'nothing above one storey'], terraces: true, low: true, maxRidge: 3.0, roof: 'e78_thatch' },
+    p30_hollow: { builds: 'timber and plaster under thatch', shutters: 'green-grey', only: ['rows of cottages built back to back under one long roof', 'nothing above one storey'], terraces: true, low: true, maxRidge: 3.3, roof: 'e78_thatch', ground: 0.3, doorH: 1.2 },
     // Outside the Hedge: Oakhaven's own country. Kaelen's hut ("the stile outside his hut"), and the quarry headframe, which the
     // books make of iron ("the iron legs of the frame ... rivets going like gunshots") with "a plank shed against the foot" of it
     clearing: { builds: 'plank and thatch; stone and iron at the quarry', shutters: 'green-grey', only: ["the quarry's iron headframe and its plank shed"], roof: 'e78_thatch', plan: (m) => planSolid(m) },
@@ -170,14 +176,15 @@ const EAVES78 = (() => {
       if (!stone && towers.length) continue;                               // a tower in a timber house: not one of ours
       const church = stone && towers.length > 0;                                 // a towered stone hall: a nave, its gable over the door
       const ax = church ? doorList[0].nx !== 0 : w >= h, acrossN = ax ? h : w, storeys = (!stone && !plain && !st.low && w * h >= 25) ? 2 : 1;
-      const base = m.lvls ? m.lvls[y0 * W + x0] || 0 : 0, top = base + 1;
-      const ext = stone ? 0.3 : (storeys === 2 ? STOREY : 0), jetty = storeys === 2 ? JETTY : 0, wallTop = top + ext;
-      const b = { x0, y0, x1, y1, w, h, axis: ax ? 'x' : 'y', stone, church, plain, storeys, label: label.trim(), top, ext, jetty, wallTop, wallTex, towers, dome,
+      const base = m.lvls ? m.lvls[y0 * W + x0] || 0 : 0, ground = (st.ground || 0) * (plain ? 0.6 : 1), top = base + 1 + ground;
+      const ext = stone ? 0.3 : (storeys === 2 ? (st.storey || STOREY) : 0), jetty = storeys === 2 ? JETTY : 0, wallTop = top + ext;
+      const doorH = st.doorH ? min(st.doorH, 1 + ground - 0.08) : 1;
+      const b = { x0, y0, x1, y1, w, h, axis: ax ? 'x' : 'y', stone, church, plain, storeys, label: label.trim(), top, ext, jetty, wallTop, wallTex, towers, dome, base, ground, doorH, ring: doorList,
         type: stone && !church ? 'hip' : 'gable', half: acrossN / 2 + jetty, C: ax ? (y0 + y1 + 1) / 2 : (x0 + x1 + 1) / 2, A0: (ax ? x0 : y0) - jetty, A1: (ax ? x1 : y1) + 1 + jetty,
         windows: [], doors: doorList.filter((d) => open(d.x + d.nx, d.y + d.ny)), plinth: [], dormers: [] };
       b.ridges = (b.type === 'gable' && storeys === 2 && acrossN >= 5) ? 2 : 1; b.span = b.half / b.ridges;
       // the pitch: as steep as the skyline allows, and the whole of the old lid stays under the new roof
-      const maxRidge = base + (stone ? (towers.length ? min(...towers.map((t) => t.top)) - 0.6 : 2.3) : (storeys === 2 ? RIDGE2 : (st.maxRidge || RIDGE1)));
+      const maxRidge = base + (stone ? (towers.length ? min(...towers.map((t) => t.top)) - 0.6 : (st.hall || 2.3)) : (storeys === 2 ? (st.ridge2 || RIDGE2) : (st.maxRidge || st.ridge1 || RIDGE1)));
       b.pitch = min(stone ? 0.6 : PITCH, (maxRidge - wallTop - LIFT) / b.span); b.lift = LIFT;
       for (let it = 0; it < 14; it++) {
         b.zBase = wallTop + LIFT; let need = 0;
@@ -197,14 +204,14 @@ const EAVES78 = (() => {
           const x = along === 'x' ? a : fixed, y = along === 'x' ? fixed : a, c = cell(x, y), i = a - a0;
           if (len % 2 ? i % 2 !== 0 : i % 2 !== 1) continue;                 // every other cell, so the wall between them reads
           const cx = x + 0.5 + nx * 0.5, cy = y + 0.5 + ny * 0.5, lit = h2(x * 7 + 3, y * 13 + 1);
-          if (storeys === 2) b.windows.push({ cx: cx + nx * jetty, cy: cy + ny * jetty, nx, ny, z0: top + 0.17, z1: top + 0.5, hw: 0.19, style: 'cottage', lit: h2(x * 5 + 9, y * 3 + 4) < 0.6 });
+          if (storeys === 2) b.windows.push({ cx: cx + nx * jetty, cy: cy + ny * jetty, nx, ny, z0: top + 0.17, z1: top + (ext > 0.65 ? 0.58 : 0.5), hw: 0.19, style: 'cottage', lit: h2(x * 5 + 9, y * 3 + 4) < 0.6 });
           if (!c || c.door || !open(x + nx, y + ny)) continue;
           const px = along === 'x' ? 1 : 0, py = along === 'x' ? 0 : 1, pa = cell(x - px, y - py), pb = cell(x + px, y + py);
           if ((pa && pa.door) || (pb && pb.door) || (m.decals && m.decals[y * W + x])) continue;
           if (plain && i % 4 > 1) continue;
           if (style0 === 'lancet') b.windows.push({ cx, cy, nx, ny, z0: top - 0.74, z1: top + 0.2, hw: 0.17, style: 'lancet', lit: true });
           else if (style0 === 'hall') b.windows.push({ cx, cy, nx, ny, z0: top - 0.7, z1: top + 0.06, hw: 0.2, style: 'hall', lit: lit < 0.3 });
-          else b.windows.push({ cx, cy, nx, ny, z0: top - 0.63, z1: top - 0.2, hw: 0.21, style: style0, lit: lit < 0.72 });
+          else b.windows.push({ cx, cy, nx, ny, z0: top - 0.63 - ground * 0.55, z1: top - 0.2 - ground * 0.3, hw: 0.21 + ground * 0.08, style: style0, lit: lit < 0.72 });
         }
       }
       if (b.type === 'gable') {
@@ -470,6 +477,14 @@ const EAVES78 = (() => {
   }
   const plans = new WeakMap();
   function planOf(m) { let p = plans.get(m); if (!p || p.cells !== m.cells) { p = plan(m); p.cells = m.cells; plans.set(m, p); } return p; }
+  // A front door of a house with a taller ground storey: how high its leaf stands and which leaf it is (js/r3d21.js asks,
+  // once a door, when it builds the leaves). Four leaves: oak, tarred, green-grey paint, and the halls' studded dark oak.
+  function door(m, cx, cy) {
+    if (!on() || !m || !MAPS.has(m.id) || !texDone) return null;
+    const p = planOf(m);
+    if (!p.doorAt) { p.doorAt = new Map(); for (const b of p.houses) if (b.ground > 0 && b.ring) for (const d of b.ring) p.doorAt.set(d.y * m.w + d.x, { h: b.doorH, tex: 'e97_door' + (b.stone ? 3 : (h2(d.x * 7 + 1, d.y * 11 + 3) * 3) | 0) }); }
+    return p.doorAt.get(cy * m.w + cx) || null;
+  }
   const night = () => { const t = typeof G !== 'undefined' && G && Number.isFinite(G.tod) ? G.tod : 0.5; return t < 0.27 || t > 0.76; };
   const chimneysOf = (m) => (m && m._fs && m._fs.chimneys) || [];
   function stackTop(b, x, y) { const z = roofZ(b, x, y); return z == null ? null : max(z + 0.45, b.ridge + 0.2); }
@@ -539,6 +554,29 @@ const EAVES78 = (() => {
       lit[i] = rgb((176 + 79 * core + n * 14) * sh * curtain, (112 + 96 * core + n * 12) * sh * curtain, (38 + 70 * core) * sh * curtain);
     }
     for (const [name, d] of [['e78_shingle', shingle], ['e78_iron', iron], ['e78_sheave', sheave], ['e78_shutter_blue', blue], ['e78_bronze', bronze], ['e78_dark', dark], ['e78_shutter', shut], ['e78_win', win], ['e78_winlit', lit], ['e78_slate', slate], ['e78_thatch', thatch], ['e78_lancet', lan], ['e78_lancetlit', lanLit]]) Engine.addTexture(name, d);
+    // front-door leaves for the taller ground storey (owner, 17 Nov). A leaf is drawn 1 wide and a door's height tall behind
+    // a door-case, so the boards keep to the middle: the case's posts hide the outer eighths and its head the top rows.
+    // 0 oak, 1 tarred, 2 the town's green-grey paint (peeling to the wood), 3 a hall's dark oak, studded in bronze.
+    for (let v = 0; v < 4; v++) {
+      const d = new Uint32Array(4096), base = [[128, 90, 54], [60, 52, 46], [94, 112, 98], [62, 46, 36]][v], metal = v === 3 ? [176, 132, 62] : [44, 46, 52];
+      for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+        const i = y * 64 + x;
+        if (x < 8 || x >= 56 || y < 5) { const k = 0.8 + h2(x + v * 31, y >> 2) * 0.3; d[i] = rgb(30 * k, 24 * k, 20 * k); continue; }
+        const bi = (x - 8) >> 3, gap = ((x - 8) & 7) === 0, grain = h2(x * 3 + v * 17, y >> 3) - 0.5, tone = 0.9 + h2(bi * 5 + v * 3, 7) * 0.2, foot = y > 55 ? 0.78 + (63 - y) * 0.027 : 1;
+        let k = (tone + grain * 0.16 + (h2(x, y) - 0.5) * 0.06) * foot * (gap ? 0.5 : 1), c = base;
+        if (v === 2 && h2(x >> 1, (y >> 1) + 90) < 0.035) c = [104, 100, 80];                                   // paint gone to the wood
+        const knot = v !== 3 && Math.hypot(x - (14 + bi * 8) % 40 - 10, (y - 22 - bi * 9) * 0.6) < 1.6 && bi % 2 === 1; if (knot) k *= 0.62;
+        let px = rgb(c[0] * k, c[1] * k, c[2] * k);
+        // two strap hinges from the hanging side, each ending in a point, with a stud every board
+        for (const hy of [15, 47]) { const dy = abs(y - hy), len = 46 - dy * 2.2; if (dy <= 2 && x >= 8 && x < len) { const stud = dy === 0 && ((x - 8) & 7) === 4, hl = y < hy ? 1.25 : 0.85; px = stud ? rgb(metal[0] * 1.5, metal[1] * 1.5, metal[2] * 1.5) : rgb(metal[0] * hl, metal[1] * hl, metal[2] * hl); } }
+        // the ring, on the closing side, on its plate
+        { const rx = x - 48.5, ry = y - 34.5, r = Math.hypot(rx, ry); if (abs(rx) <= 1.5 && ry >= -6.5 && ry <= -3.5) px = rgb(metal[0] * 1.1, metal[1] * 1.1, metal[2] * 1.1); else if (abs(r - 3.3) < 0.85) px = rgb(metal[0] * (ry < 0 ? 1.45 : 1.05), metal[1] * (ry < 0 ? 1.45 : 1.05), metal[2] * (ry < 0 ? 1.45 : 1.05)); }
+        // a hall's door: bronze studs in rows
+        if (v === 3 && ((x - 8) & 7) === 4 && (y % 9) === 4 && abs(y - 15) > 3 && abs(y - 47) > 3) px = rgb(196, 150, 72);
+        d[i] = px;
+      }
+      Engine.addTexture('e97_door' + v, d);
+    }
     return (texDone = true);
   }
 
@@ -626,6 +664,35 @@ const EAVES78 = (() => {
     for (const b of planOf(m).houses) {
       const ax = b.axis === 'x', Lroof = L_(b.roofTex), Lwall = L_(b.wallTex), lime = b.gableTex || (b.harbour && !b.stone ? b.wallTex.replace('p17c_plaster', 'e78_lime') : null), Lgab = lime && Engine.textures[lime] ? L_(lime) : Lwall, Lridge = b.ridgeTex ? L_(b.ridgeTex) : Ldark, Lboard = b.boardTex ? L_(b.boardTex) : b.stone ? Lstone : Ldark, OVER = b.over != null ? b.over : OVER0, VERGE = b.verge != null ? b.verge : VERGE0, par = b.parapet || 0, p = b.pitch, C = b.C, A0 = b.A0, A1 = b.A1, zB = b.zBase, top = b.top, wt = b.wallTop;
       const P = (a, s, z) => ax ? [a, C + s, z] : [C + s, a, z], N = (na, ns) => ax ? [na, ns, 0] : [ns, na, 0];
+      // ---- a taller ground storey (owner, 17 Nov): the house's own wall carried up from the map's ring (1 high) to the storey
+      //      top, and a front door that stands taller than whoever opens it, in a timber door-case
+      if (b.ground > 0) {
+        const g0 = b.base + 1, dz = b.base + b.doorH;
+        for (const [nx, ny, f] of [[0, -1, b.y0], [0, 1, b.y1 + 1], [-1, 0, b.x0], [1, 0, b.x1 + 1]]) {
+          const alongX = ny !== 0, a0 = alongX ? b.x0 : b.y0, a1 = alongX ? b.x1 : b.y1, sk = nx ? 1 : 0.8;
+          for (let a = a0; a <= a1; a++) {
+            const qx = alongX ? a : (nx < 0 ? b.x0 : b.x1), qy = alongX ? (ny < 0 ? b.y0 : b.y1) : a;
+            const z0 = b.ring.some((d) => d.x === qx && d.y === qy && d.nx === nx && d.ny === ny) ? dz : g0;   // over a door the wall starts at the door's head
+            const pt = (aa, z) => alongX ? [aa, f, z] : [f, aa, z];
+            quad([pt(a, z0), pt(a + 1, z0), pt(a + 1, top), pt(a, top)], [[a, 1 - (z0 - g0)], [a + 1, 1 - (z0 - g0)], [a + 1, 1 - (top - g0)], [a, 1 - (top - g0)]], Lwall, MAT.wall, sk, [nx, ny, 0]);
+          }
+        }
+        for (const d of b.ring) {
+          const tx = -d.ny, ty = d.nx, cx = d.x + 0.5 + d.nx * 0.5, cy = d.y + 0.5 + d.ny * 0.5, sk = d.nx ? 1 : 0.8, n = [d.nx, d.ny, 0];
+          const at = (t, off, z) => [cx + tx * t + d.nx * off, cy + ty * t + d.ny * off, z];
+          const bx = (t0, t1, o0, o1, z0, z1, L, k) => { const p0 = at(t0, o0, 0), p1 = at(t1, o1, 0); box(min(p0[0], p1[0]), min(p0[1], p1[1]), max(p0[0], p1[0]), max(p0[1], p1[1]), z0, z1, L, L, k || 1); };
+          // the reveals above the map's ring, and the soffit over the doorway
+          for (const sgn of [-1, 1]) quad([at(sgn * 0.5, 0, g0), at(sgn * 0.5, -1, g0), at(sgn * 0.5, -1, dz), at(sgn * 0.5, 0, dz)], [[0, 1], [1, 1], [1, 1 - (dz - g0)], [0, 1 - (dz - g0)]], Lwall, MAT.wall, sk * 0.72, [-tx * sgn, -ty * sgn, 0]);
+          quad([at(-0.5, 0, dz), at(0.5, 0, dz), at(0.5, -1, dz), at(-0.5, -1, dz)], [[0, 0], [1, 0], [1, 1], [0, 1]], Ldark, MAT.wall, 0.5, DN);
+          // the door-case, just proud of the leaf: two posts and a head; a lintel beam on the wall face; a stone step
+          const f0 = -0.488, f1 = -0.42, pw = 0.125, hh = 0.1, Lc = b.stone ? Lstone : Ldark;
+          bx(-0.5, -0.5 + pw, f0, f1, b.base, dz, Lc, b.stone ? 1.05 : 1.15); bx(0.5 - pw, 0.5, f0, f1, b.base, dz, Lc, b.stone ? 1.05 : 1.15);
+          bx(-0.5, 0.5, f0, f1 + 0.012, dz - hh, dz, Lc, b.stone ? 1.1 : 1.25);
+          quad([at(-0.57, 0.016, dz - 0.03), at(0.57, 0.016, dz - 0.03), at(0.57, 0.016, dz + 0.085), at(-0.57, 0.016, dz + 0.085)], [[0, 0.12], [1.14, 0.12], [1.14, 0], [0, 0]], Lc, MAT.wall, sk * (b.stone ? 1.12 : 1.05), n);
+          quad([at(-0.57, 0, dz - 0.03), at(0.57, 0, dz - 0.03), at(0.57, 0.016, dz - 0.03), at(-0.57, 0.016, dz - 0.03)], [[0, 0], [1.14, 0], [1.14, 0.02], [0, 0.02]], Lc, MAT.wall, 0.55, DN);
+          bx(-0.5, 0.5, 0, 0.13, b.base, b.base + 0.045, Lstone, 1.1);
+        }
+      }
       // ---- the upper wall: a jettied storey, or a stone hall's cornice
       if (b.ext > 0) {
         const j = b.jetty || b.skin || 0, X0 = b.x0 - j, X1 = b.x1 + 1 + j, Y0 = b.y0 - j, Y1 = b.y1 + 1 + j, e = b.ext;
@@ -797,7 +864,7 @@ const EAVES78 = (() => {
       }
       // ---- a stone footing along the foot of every timber wall that meets open ground
       for (const q of b.plinth) {
-        const tx = -q.ny, ty = q.nx, cx = q.x + 0.5 + q.nx * 0.5, cy = q.y + 0.5 + q.ny * 0.5, side = q.nx ? 1 : 0.8, zb = top - 1, zt = zb + 0.15, o = 0.03;
+        const tx = -q.ny, ty = q.nx, cx = q.x + 0.5 + q.nx * 0.5, cy = q.y + 0.5 + q.ny * 0.5, side = q.nx ? 1 : 0.8, zb = b.ground > 0 ? b.base : top - 1, zt = zb + 0.15, o = 0.03;
         const at = (t, off, z) => [cx + tx * t + q.nx * off, cy + ty * t + q.ny * off, z], u0 = q.nx ? q.y : q.x;
         quad([at(-0.5 - o, o, zb), at(0.5 + o, o, zb), at(0.5 + o, o, zt), at(-0.5 - o, o, zt)], [[u0, 0.15], [u0 + 1, 0.15], [u0 + 1, 0], [u0, 0]], Lstone, MAT.wall, side * 0.92, [q.nx, q.ny, 0]);
         quad([at(-0.5 - o, 0, zt), at(0.5 + o, 0, zt), at(0.5 + o, o, zt), at(-0.5 - o, o, zt)], [[u0, 0], [u0 + 1, 0], [u0 + 1, 0.03], [u0, 0.03]], Lstone, MAT.wall, 1.2, UP);
@@ -912,7 +979,7 @@ const EAVES78 = (() => {
     });
     R3D.on('toggle', (shown) => { try { if (!shown && typeof G !== 'undefined' && G.map) lift(G.map, false); } catch (e) { /* chimneys stay where they were */ } });
   }
-  return { MAPS, STYLES, EXTRA, REGION, PREP, PITCH, OVER, RIDGE1, RIDGE2, LIFT, plan, planOf, roofZ, shelter, build, on, night, textures, h2 };
+  return { MAPS, STYLES, EXTRA, REGION, PREP, PITCH, OVER, RIDGE1, RIDGE2, LIFT, plan, planOf, roofZ, shelter, build, on, night, textures, h2, door };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = EAVES78;
 if (typeof window !== 'undefined') window.EAVES78 = EAVES78;

@@ -32,11 +32,14 @@ check(inn.storeys === 2 && inn.ridges === 2 && inn.jetty > 0 && inn.dormers.leng
 check(barn.plain && barn.storeys === 1 && barn.dormers.length === 0 && barn.windows.length > 0 && barn.windows.every((w) => w.style === 'hatch'), 'a barn stays plain: one storey, boarded hatches, no dormers, no attic window');
 check(hall.stone && hall.type === 'hip' && hall.dome && hall.dome.x === 28 && hall.roofTex === 'e78_slate' && hall.windows.every((w) => w.style === 'hall'), 'the Greenhall: a hipped slate roof, tall windows, and its dome');
 check(chap.church && chap.type === 'gable' && chap.axis === 'y' && chap.towers.length === 4 && chap.windows.some((w) => w.style === 'lancet'), 'the Chapel: a nave whose gable faces its door, lancet windows, its tower kept');
-check(p.houses.filter((b) => !b.stone).every((b) => b.ridge < 2.8) && chap.ridge < 3.2 - 0.5 && hall.ridge < 2.8, 'the skyline: no ordinary ridge reaches the mooring mast (2.8), and the Chapel roof stays well under its tower (ridges ' + p.houses.map((b) => b.ridge.toFixed(2)).join(', ') + ')');
+// owner, 17 Nov: the houses were "a bit small ... the front doors are too small and the roofs are to low": the ground storey
+// and the ridges were raised, and the mast (now 3.6) and the tower (4.1 in the town) with them
+check(p.houses.filter((b) => !b.stone).every((b) => b.ridge < 3.6) && chap.ridge < 3.2 - 0.5 && hall.ridge < 3.6, 'the skyline: no ordinary ridge reaches the mooring mast (3.6), and the Chapel roof stays well under its tower (ridges ' + p.houses.map((b) => b.ridge.toFixed(2)).join(', ') + ')');
 let poke = 0; for (const b of p.houses) for (let y = b.y0 + 1; y < b.y1; y++) for (let x = b.x0 + 1; x < b.x1; x++) { const c = cells[y * W + x]; if (c.top > 2) continue; for (let k = 0; k < 9; k++) { const z = E.roofZ(b, x + (k % 3) / 2, y + ((k / 3) | 0) / 2); if (z == null || z < c.top) poke++; } }
 check(poke === 0, 'the whole of every old lid lies under its new roof');
 check(Math.abs(E.roofZ(cot, 4.5, 4) - cot.ridge) < 1e-9 && E.roofZ(cot, 4.5, 2) >= cot.wallTop && E.roofZ(cot, 4.5, 0.5) === null, 'a roof is highest over the middle, clears the wall top at the wall, and ends at its eaves');
 const ground = (b) => b.windows.filter((w) => w.z1 <= b.top + 0.3 && w.style !== 'attic');
+check(cot.ground > 0.3 && cot.top - cot.base > 1.3 && cot.doorH > 1.15 && cot.doorH < cot.top - cot.base && inn.wallTop - inn.base > 2 && barn.ground > 0 && barn.ground < cot.ground && cot.ring.length >= cot.doors.length && ground(cot).every((w) => w.z0 > cot.base + 0.4 && w.z1 < cot.top), 'a taller ground storey (owner, 17 Nov): a cottage\'s eaves stand at ' + (cot.top - cot.base).toFixed(2) + ' and its door at ' + cot.doorH.toFixed(2) + ', over a person\'s head (1); the inn\'s eaves at ' + (inn.wallTop - inn.base).toFixed(2) + '; a barn rises less');
 const bad = p.houses.some((b) => ground(b).some((w) => { const x = Math.floor(w.cx - w.nx * 0.5), y = Math.floor(w.cy - w.ny * 0.5), c = cells[y * W + x]; return !c || c.door || [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => { const q = cells[(y + dy) * W + x + dx]; return q && q.door; }) || cells[Math.floor(w.cy + w.ny * 0.5) * W + Math.floor(w.cx + w.nx * 0.5)]; }));
 check(!bad, 'ground-floor windows: none on a door, beside a door, or facing a wall');
 check(JSON.stringify(E.plan(M)) === JSON.stringify(p), 'the same map always gives the same buildings and the same lit windows');
@@ -56,7 +59,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   put(6, 8, { door: true, tex: 't_door', label: 'A sap-mark on the door' });
   const MH = { id: 'p30_hollow', w: Wh, h: Hh, cells: ch }, ph = E.plan(MH), row = ph.houses[0];
   check(ph.houses.length === 1 && row && row.x0 === 1 && row.y0 === 1 && row.x1 === 13 && row.y1 === 8, 'the Hollow: a strip of lid with its ring of wall and doors is one row, though it is built into the mass of the map (' + ph.houses.length + ')');
-  check(row.storeys === 1 && row.jetty === 0 && row.ridges === 1 && row.roofTex === 'e78_thatch' && row.ridge <= 3.0 + 1e-6 && row.doors.length === 3, 'nothing above one storey (a block this size in the town would have two): one long thatch roof, its ridge at ' + row.ridge.toFixed(2));
+  check(row.storeys === 1 && row.jetty === 0 && row.ridges === 1 && row.roofTex === 'e78_thatch' && row.ridge <= 3.3 + 1e-6 && row.doors.length === 3, 'nothing above one storey (a block this size in the town would have two): one long thatch roof, its ridge at ' + row.ridge.toFixed(2));
   let pokeH = 0; for (let y = 2; y <= 7; y++) for (let x = 2; x <= 12; x++) for (let k = 0; k < 9; k++) { const z = E.roofZ(row, x + (k % 3) / 2, y + ((k / 3) | 0) / 2); if (z == null || z < ch[y * Wh + x].top) pokeH++; }
   check(pokeH === 0 && E.plan(Object.assign({}, MH, { id: 'oakhaven' })).houses.length === 0, 'every old lid lies under the row\'s roof; the town\'s own rule still leaves such a mass alone');
   check(E.STYLES.p30_hollow.only.length === 2 && E.MAPS.has('p30_hollow'), 'the Hollow lists what only it has');
@@ -179,6 +182,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
     out.two = P.filter((b) => b.storeys === 2).map((b) => b.label); out.plain = P.filter((b) => b.plain).length; out.dormers = P.reduce((n, b) => n + b.dormers.length, 0);
     out.hall = P.some((b) => /Greenhall/.test(b.label) && b.dome); out.chapel = P.some((b) => /Chapel/.test(b.label) && b.church && b.towers.length === 4);
     out.roofs = Array.from(new Set(P.map((b) => b.roofTex))).sort(); out.highest = Math.max(...P.filter((b) => !b.stone).map((b) => b.ridge));
+    { const mm = G.maps.oakhaven; out.mast = mm.cells[19 * mm.w + 36].top; out.tower = mm.cells[5 * mm.w + 48].top; out.door = EAVES78.door(mm, 29, 16); out.doorTex = !!(out.door && Engine.textures[out.door.tex]); out.gate = EAVES78.door(mm, 23, 0); GFX.eaves = false; out.doorOff = EAVES78.door(mm, 29, 16); GFX.eaves = true; }
     out.mapUntouched = JSON.stringify(G.maps.oakhaven.cells.map((c) => c && [c.tex, c.top, !!c.door])) === cellsBefore;
     out.ms = R3D.mesh().ms;
     // dusk: the mesh is rebuilt once so the windows light
@@ -230,7 +234,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   check(r.n >= 31 && r.windows >= 150, 'Oakhaven: ' + r.n + ' buildings roofed, ' + r.windows + ' windows, ' + r.dormers + ' dormers');
   check(r.two.length >= 4 && r.two.some((l) => /Boar/.test(l)) && r.two.some((l) => /mill/.test(l)) && r.plain >= 5, 'upper storeys on the big houses (' + r.two.join('; ') + '); ' + r.plain + ' barns, sheds and stores stay plain');
   check(r.hall && r.chapel, 'the Greenhall has its dome and the Chapel its tower');
-  check(r.roofs.includes('e78_slate') && r.roofs.includes('e78_thatch') && r.highest < 2.8, 'thatch and slate (' + r.roofs.join(', ') + '); the highest ordinary ridge is ' + r.highest.toFixed(2) + ', under the mast');
+  check(r.roofs.includes('e78_slate') && r.roofs.includes('e78_thatch') && r.highest < 3.6 && r.mast === 3.6 && r.tower === 4.1 && r.door && r.door.h > 1.15 && /^e97_door[0-3]$/.test(r.door.tex) && r.doorTex && r.gate === null && r.doorOff === null, 'thatch and slate (' + r.roofs.join(', ') + '); the highest ordinary ridge is ' + r.highest.toFixed(2) + ', under the mast');
   check(r.on > r.off + r.n * 20, 'the switch adds the new shapes to the world (' + r.off + ' -> ' + r.on + ' triangles)');
   check(r.mapUntouched, 'the map itself is unchanged: walls, doors and heights are what the game still reads');
   check(r.ms < 400, 'building the town with its roofs takes ' + r.ms + ' ms, once');
@@ -244,7 +248,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   check(r.c.on > r.c.off + 2000 && r.c.untouched && r.c.tex && r.c.shelter && r.c.ms < 400, 'the harbour: ' + r.c.off + ' -> ' + r.c.on + ' triangles in ' + r.c.ms + ' ms, the map unchanged, rain stops at its roofs');
   check(r.r.greenroot.n === 8 && r.r.greenroot.shingle === 6 && r.r.greenroot.spire === 1 && r.r.greenroot.lit === 0 && r.r.greenroot.seal.length === 1 && /Cantor/.test(r.r.greenroot.seal[0]), 'Greenroot: ' + r.r.greenroot.n + ' buildings, six cottages under oak shingles, the chapel with its spire, the seal on the Cantor\'s shutter, and not one window lit after dusk');
   check(r.r.clearing.n === 2 && r.r.clearing.headframe === 1 && r.r.greenroot.tex && r.r.greenroot.on > r.r.greenroot.off + 300 && r.r.clearing.on > r.r.clearing.off + 100 && r.r.greenroot.untouched && r.r.clearing.untouched && r.r.greenroot.shelter, "Outside the Hedge: Kaelen's hut and the iron headframe (" + r.r.clearing.off + ' -> ' + r.r.clearing.on + ' triangles); both maps unchanged');
-  check(r.h.n === 4 && r.h.one && r.h.thatch && r.h.doors >= 14 && r.h.high <= 3.0001 && r.h.on > r.h.off + 300 && r.h.untouched && r.h.shelter, 'the Hollow: ' + r.h.n + ' rows, each under one long thatch roof, one storey, ' + r.h.doors + ' doors (' + r.h.off + ' -> ' + r.h.on + ' triangles); the map unchanged');
+  check(r.h.n === 4 && r.h.one && r.h.thatch && r.h.doors >= 14 && r.h.high <= 3.3001 && r.h.on > r.h.off + 300 && r.h.untouched && r.h.shelter, 'the Hollow: ' + r.h.n + ' rows, each under one long thatch roof, one storey, ' + r.h.doors + ' doors (' + r.h.off + ' -> ' + r.h.on + ' triangles); the map unchanged');
   { const g = r.g.whispergrove, y = r.g.p31_bellyard;
     check(g.grove >= 10 && g.stone.length === 1 && /Malting/.test(g.stone[0]) && g.tex, 'Whisper-Grove: ' + g.grove + ' marble buildings under colonnades, the Malting a brick range');
     check(g.gallery === 3 && g.litWho.length === 2 && g.litWho.some((l) => /Moot/.test(l)) && g.litWho.some((l) => /Malting/.test(l)), 'after dusk the only lit windows are the Moot-house gallery\'s three and the Malting\'s (' + g.lit + ' in all)');
