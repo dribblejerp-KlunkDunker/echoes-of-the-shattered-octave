@@ -78,6 +78,15 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] owed from Phase 87: the bare hands and the glass arm's pose, painted in code (P98)
 - [x] known red, not from this phase: `test/logmap` failed at its first static check (one journal site in the air fights; fixed in P99)
 
+**Phase 100: the Continental Rift, part one: Null-Watch, the Wall and the Talking Halls (18 Nov, branch `p100-rift`).** Owner: "commit to github and merge then proceed." Built by the Commander alone. Record: [`story/Game Layer/Phase 100 - The Continental Rift, part one (text for review).md`](story/Game%20Layer/Phase%20100%20-%20The%20Continental%20Rift%2C%20part%20one%20(text%20for%20review).md).
+- [x] two maps (`p100_wall` cut from the city's own 852 Hz plan, `p100_halls`); the Kestrel's flight; three talking-posts (Souls group `m`); the battery rail
+- [x] the talk rule (a subject, the Murmur, the bell, Relieved), the Stray of Magazine Four and its fourth line
+- [x] the Watch's Issue: set 19, looks, icons, first-person paintings, voices
+- [x] `test/rift100.test.js`, 35 checks; French (284 lines); the record; Vol VIII; README
+- [ ] every suite run (see the handover note until this is ticked)
+- [ ] later parts of the Rift: the Rift Wall and the Under-Shelves, Redoubt Zero, the Edge, the seven smaller places; then the Middle Country
+- [ ] the eleven old pull requests (plan accepted 18 Nov; in the handover note)
+
 **Phase 99: the five old failing checks (18 Nov, branch `p99-checks`).** Owner: "lets fix the old 5 failing checks. if nothing needs to be merged lets move on." Built by the Commander alone. Record: [`story/Game Layer/Phase 99 - The five old failing checks (for review).md`](story/Game%20Layer/Phase%2099%20-%20The%20five%20old%20failing%20checks%20(for%20review).md). Nothing added to the world; no new words.
 - [x] `logmap` (13): the air fight chooses its journal entry before writing it, so the logbook's scan can read it (`js/air93.js`); the check knows painted sketches are picture files
 - [x] `smalllife`: a save is the same with small life on or off again: the Heights' docked ships and the Vigil's moored Kestrel are always in the world (`js/heights92.js`, `js/vigil96.js`)
