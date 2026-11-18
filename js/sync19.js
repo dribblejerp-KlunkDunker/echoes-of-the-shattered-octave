@@ -140,6 +140,8 @@ const SYNC19 = (function () {
     USE_REACH: 3.4,       // and uses things within this
     FLAG_MS: 1000,        // how often the host looks for changed world flags
     MAX_FLAGS: 6000, FLAG_STR: 64,
+    BUILD_MS: 15000,      // how long a newly welcomed guest may be silent while it builds the host's world (NET19.hold)
+    KEEP_MS: 90000,       // a guest whose link dropped comes back where it stood, if it is back within this long
     HELLO_MS: 2000,       // the guest asks again this often until welcomed
     LOST_MS: 30000,       // a guest with no snapshot for this long goes home (NET's own give-up closes sooner or later)
     EXT_MAX: 2048,        // bytes per PARTNER extension per snapshot
@@ -269,6 +271,8 @@ const SYNC19 = (function () {
     try { if (typeof t.connected === 'function') return t.connected() ? 1 : 0; } catch (e) { return 0; }
     if (typeof t.peers !== 'function') return 0; try { const p = t.peers(); return Array.isArray(p) ? p.length : (p && typeof p.size === 'number' ? p.size : 0); } catch (e) { return 0; }
   }
+  // the other side has work to do before it can speak again: NET is told not to call that silence a lost link
+  function hold(ms) { const t = T; try { if (t && typeof t.hold === 'function') t.hold(ms); } catch (e) { /* a transport without it */ } }
   function send(type, payload, reliable) {
     const t = T; if (!t || typeof t.send !== 'function') return false;
     let n = 0; try { n = JSON.stringify(payload).length; } catch (e) { return false; }
@@ -473,9 +477,13 @@ const SYNC19 = (function () {
       if (!r || !r.ok) { send('sync.refused', { reason: plainStr(r && r.reason, 40) }, true); return reject('hello-card'); }
     } else if (P && partner()) { try { P.pause(false); } catch (e) { /* not paused */ } }
     if (partner()) { try { const S = pState(P); if (S && S.pp && S.pp.attrs && isNum(S.pp.attrs.Speed)) H.spdAttr = clampN(S.pp.attrs.Speed, 0, 100); } catch (e) { /* default speed */ } }
-    const at = placeNear(c.x, c.y, c.dir);
+    // the same guest back after its link dropped for a moment (a phone drawing its first frames, a tunnel): it stands
+    // where it stood, not at the host's heels again (the host may have walked on, and the guest was mid-stride)
+    const k = H.keep; H.keep = null;
+    const kept = k && k.map === G.mapId && now() - k.at < B.KEEP_MS ? k : null;
+    const at = kept || placeNear(c.x, c.y, c.dir), dir0 = kept ? kept.dir : c.dir;
     H.gs = {
-      peer, map: G.mapId, x: at.x, y: at.y, vx: 0, vy: 0, feet: (G.map.lvls || G.map.smooth) ? G.map.groundAt(at.x, at.y) : 0, dir: c.dir, pitch: 0,
+      peer, map: G.mapId, x: at.x, y: at.y, vx: 0, vy: 0, feet: (G.map.lvls || G.map.smooth) ? G.map.groundAt(at.x, at.y) : 0, dir: dir0, pitch: 0,
       run: false, block: false, act: 0, ap: 0, lastSeq: -1, ackEp: -1, ackQ: -1, budget: B.STEP * 3, budgetAt: now(), lastInputAt: now(),
       inputs: 0, rejected: 0, inB: { t: now(), n: B.IN_RATE }, actB: { t: now(), n: B.ACT_RATE }, buf: [], gclock: null,
     };
@@ -485,9 +493,10 @@ const SYNC19 = (function () {
     if (P && !H.storySub && typeof P.onStory === 'function') { H.storySub = true; P.onStory((st) => { if (H.gs && !partnerWired() && st && typeof st === 'object' && jsonLen(st) <= 6000) send('sync.story', st, true); }); }
     const flags = flagsDiff(true), fk = Object.keys(flags);
     send('sync.welcome', {
-      v: B.V, ep: H.ep, map: G.mapId, x: H.gs.x, y: H.gs.y, dir: c.dir, spd: H.spdAttr, flags: {}, gr: !!G.flags.greening,
+      v: B.V, ep: H.ep, map: G.mapId, x: H.gs.x, y: H.gs.y, dir: dir0, spd: H.spdAttr, flags: {}, gr: !!G.flags.greening,
       wx: typeof Weather !== 'undefined' ? Weather.save() : null, tod: Math.round(G.tod * 10000), day: G.day | 0, sig: mapSig(G.map), name: p ? plainStr(p.name, 24) : '', look: hostLook(),
     }, true);
+    if (!kept) hold(B.BUILD_MS);   // a newcomer now builds this whole world and says nothing meanwhile
     // the host's world flags follow in chunks (NET caps a frame at 1024 JSON values)
     for (let i = 0; i < fk.length; i += 400) { const f = {}; for (const k of fk.slice(i, i + 400)) f[k] = flags[k]; send('sync.flags', { f }, true); }
     H.lastFlags = now();
@@ -495,7 +504,8 @@ const SYNC19 = (function () {
   }
   function hostEnd(why) {
     if (!H.gs) return;
-    const peer = H.gs.peer; H.gs = null; H.ring.clear();
+    const peer = H.gs.peer, was = H.gs; H.gs = null; H.ring.clear();
+    H.keep = why === 'dropped' && G.map && isNum(was.x) && isNum(was.y) ? { map: G.mapId, x: was.x, y: was.y, dir: was.dir, at: now() } : null;
     const P = partner();
     if (P) {
       if (why === 'dropped') { try { P.pause(true); } catch (e) { /* fine */ } H.pausedAt = now(); }   // NET reconnects; the host carries on
@@ -788,6 +798,7 @@ const SYNC19 = (function () {
       G.flags = cleanFlags(p.flags, {}); C.lastSnapAt = now(); C.offset = null; follow(p); return;
     }
     if (!p || p.v !== B.V || !isInt(p.ep) || typeof p.map !== 'string' || !isNum(p.x) || !isNum(p.y) || !isNum(p.dir)) return reject('welcome-shape');
+    hold(B.BUILD_MS);   // (and this page hears nothing while it builds: the host has not gone anywhere)
     const probe = buildAllMaps(); if (!Object.prototype.hasOwnProperty.call(probe, p.map)) return reject('welcome-map');
     // PARTNER puts the guest's own game aside first (an isolated session, so nothing played here can reach the guest's
     // own saves); SYNC then puts that session aside too and shows the host's world in its place
@@ -919,6 +930,42 @@ const SYNC19 = (function () {
     }
     return null;
   }
+  // ... and the other way about: a prop this page's own modules put down AFTER the host's census had already been shown
+  // (the wind's banners, the moored Kestrel: placed a moment after arrival) is the same thing as the stand-in the census
+  // made. The local one takes the host's identity, since it is the one that moves in the wind; the stand-in goes. Without
+  // this the guest saw both.
+  // the host's stand-in for a thing this page also has: the same thing in the same place; or, for a painted prop that
+  // sways about its own anchor on each page's own clock (the moored Kestrel on her rope is never in quite the same place
+  // on two screens), the same thing when there is exactly one of it on each side
+  function twinOf(e, d) {
+    let only = null, n = 0;
+    for (const [sid, q] of C.ents) {
+      if (!q._mirror19 || q._sid19 !== sid) continue;
+      const dq = descOf(q); if (!dq || dq[0] !== d[0] || dq[1] !== d[1]) continue;
+      if (Math.abs(q.x - e.x) < 0.3 && Math.abs(q.y - e.y) < 0.3) return q;
+      only = q; n++;
+    }
+    if (n !== 1 || d[0] !== 2 || !e.transient || e.solid) return null;
+    for (const o of G.map.entities) {
+      if (o === e || o._mirror19 || (o._sid19 != null && C.ents.get(o._sid19) === o)) continue;
+      const dd = descOf(o); if (dd && dd[0] === d[0] && dd[1] === d[1]) return null;
+    }
+    return only;
+  }
+  function reclaimLocals() {
+    const m = G.map; if (!m || !m.entities) return;
+    let locals = null;
+    // (a prop swept off the list on arrival and put back later may still carry the identity it had before: it is local
+    // again unless the host's identity is really its own)
+    for (const e of m.entities) if (e && !e._mirror19 && e.transient && (e._sid19 == null || C.ents.get(e._sid19) !== e)) (locals || (locals = [])).push(e);
+    if (!locals) return;
+    for (const e of locals) {
+      const d = descOf(e); if (!d) continue;
+      const q = twinOf(e, d); if (!q) continue;
+      const sid = q._sid19, i = m.entities.indexOf(q); if (i >= 0) m.entities.splice(i, 1);
+      C.moving.delete(q); e._sid19 = sid; e._sbuf = null; C.ents.set(sid, e); ST.reclaimed = (ST.reclaimed || 0) + 1;
+    }
+  }
   function removeEnt(sid) {
     const e = C.ents.get(sid); if (!e) return;
     if (sid >= (G.map.baseCount || 0)) { const i = G.map.entities.indexOf(e); if (i >= 0) G.map.entities.splice(i, 1); C.ents.delete(sid); }
@@ -951,6 +998,7 @@ const SYNC19 = (function () {
       C.applied.set(k, v);
     }
     for (const k of Array.from(C.applied.keys())) if (!next.has(k)) { if (k >= 0) removeEnt(k); C.applied.delete(k); }
+    try { reclaimLocals(); } catch (e) { console.warn('sync19: reclaim', e); }
     C.lastQ = p.q; C.lastSnapAt = t0;
     // the host's figure
     if (Array.isArray(p.h) && p.h.length === 7 && p.h.every(isInt)) sample(C.hostBuf, p.t, { x: p.h[0] / 32, y: p.h[1] / 32, feet: p.h[2] / 32, dir: byteDir(p.h[3]), act: clampN(p.h[4], 0, 9), ap: clampN(p.h[5], 0, 15) / 15, spd: p.h[6] / 10 });
@@ -1014,13 +1062,13 @@ const SYNC19 = (function () {
       const e = es[i]; if (e._sid19 != null || e._fx19) continue;
       // a module put its own copy back: if the host's copy is here as a stand-in, the module's own one takes its place
       const d = descOf(e); let swapped = false;
-      if (d) for (const [sid, m] of C.ents) {
-        if (!m._mirror19 || Math.abs(m.x - e.x) > 0.3 || Math.abs(m.y - e.y) > 0.3) continue;
-        const md = descOf(m); if (!md || md[0] !== d[0] || md[1] !== d[1]) continue;
+      const m = d ? twinOf(e, d) : null;
+      if (m) {
+        const sid = m._sid19;
         for (const k of ['dead', 'hidden', 'solid', 'hp', 'state']) if (m[k] !== undefined) e[k] = m[k];
         e._sid19 = sid; e._sbuf = m._sbuf; C.ents.set(sid, e); C.moving.delete(m); if (e._sbuf) C.moving.add(e);
         const j = es.indexOf(m); if (j >= 0) es.splice(j, 1); if (j >= 0 && j < i) i--;
-        swapped = true; break;
+        swapped = true;
       }
       if (!swapped) es.splice(i, 1);
     }
@@ -1249,6 +1297,9 @@ const SYNC19 = (function () {
       return r;
     };
   }
+  // once a frame, after everything has been drawn (the modules that put props down do it while they draw): a prop put
+  // down late takes the host's stand-in's place before anybody can see two
+  if (typeof render === 'function') { ORIG.render = render; render = function () { const r = ORIG.render.apply(this, arguments); if (C.on) { try { reclaimLocals(); } catch (err) { /* cosmetic */ } } return r; }; }
   ORIG.update = update; ORIG.loadMap = loadMap; ORIG.interact = interact; ORIG.attack = attack; ORIG.castSong = castSong;
   ORIG.transfer = transfer; ORIG.snapshotGame = snapshotGame; ORIG.msg = msg; ORIG.renderSave = renderSave;
   update = function (dt) {
@@ -1361,7 +1412,8 @@ const SYNC19 = (function () {
   // ---------------------------------------------------------------- listen
   on('sync.hello', onHello); on('sync.in', onIn); on('sync.act', onAct); on('sync.bye', onBye);
   on('net:lost', () => { if (H.gs) hostEnd('dropped'); });
-  on('net:closed', () => { if (H.gs) hostEnd('closed'); if (C.on) finishLeave('lost', undefined); });
+  on('net:closed', () => { H.keep = null; if (H.gs) hostEnd('closed'); if (C.on) finishLeave('lost', undefined); });
+  on('net:peer', () => { H.keep = null; });   // somebody new: nobody's place is kept for them
   on('sync.wb', onWb);
   on('p19p:wb', (p, from) => { if (C.on && C.entered && from === C.peer) finishLeave(C.leaving ? 'left' : 'ended', undefined, true); }); on('sync.refused', onRefused); on('sync.story', onStory);
   on('sync.welcome', onWelcome); on('sync.map', onMap); on('sync.snap', onSnap); on('sync.flags', onFlags); on('sync.msg', onMsg); on('sync.full', onFull);
