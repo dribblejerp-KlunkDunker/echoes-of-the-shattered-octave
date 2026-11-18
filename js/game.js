@@ -2410,7 +2410,7 @@ function drawHUD() {
     ctx.rotate(rotation); ctx.scale(zoom, zoom);
     ctx.drawImage(img, -iw * 0.5, -ih + 12, iw, ih);
     ctx.restore();
-    if (G.glassLock > 0 && w.type === 'glass') { ctx.fillStyle = 'rgba(80,200,220,0.25)'; ctx.fillRect(bx + ax, VIEW_H - ih + 24 + ay, iw, ih); }
+    if (G.glassLock > 0 && w.type === 'glass' && !(typeof BODY21 === 'object' && BODY21.owned && (BODY21.owned(img) || {}).k)) { ctx.fillStyle = 'rgba(80,200,220,0.25)'; ctx.fillRect(bx + ax, VIEW_H - ih + 24 + ay, iw, ih); }   // a painted arm (js/fp87.js) takes the wash on itself (js/body21.js)
   }
   // crosshair
   // the crosshair is the centre of the view: a pitched look aims up or down with it

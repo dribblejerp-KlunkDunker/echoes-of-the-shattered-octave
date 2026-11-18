@@ -463,7 +463,7 @@ const HEIGHTS92 = (function () {
     a_p92_chainboots: { name: TX.boots, slot: 'feet', ar: 1, noise: -0.3, value: 30, desc: TX.bootsDesc },
     a_p92_shadecloak: { name: TX.cloak, slot: 'cape', ar: 1, noise: -0.1, value: 36, desc: TX.cloakDesc },
   };
-  const POLE_DEF = { name: TX.pole, img: 'fp_spear', dmg: [2, 7], reach: 2.4, noise: 0.6, speed: 0.7, type: 'iron', blunt: true, twoHanded: true, value: 22, desc: TX.poleDesc };
+  const POLE_DEF = { name: TX.pole, img: 'fp_spear', dmg: [2, 7], reach: 2.4, noise: 0.7, speed: 0.7, type: 'iron', blunt: true, twoHanded: true, value: 22, desc: TX.poleDesc };
   function defs() {
     if (typeof WEAPONS !== 'undefined' && !WEAPONS.p92_clothpole) WEAPONS.p92_clothpole = Object.assign({}, POLE_DEF);
     if (typeof ENEMIES !== 'undefined') { if (!ENEMIES.p92_lamplighter) ENEMIES.p92_lamplighter = Object.assign({}, KEEPER_DEF); if (!ENEMIES.p92_bleachhound) ENEMIES.p92_bleachhound = Object.assign({}, HOUND_DEF); }

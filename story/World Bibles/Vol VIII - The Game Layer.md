@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 97, 17 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 98, 17 November 2026).
 
 ---
 
@@ -2362,6 +2362,19 @@ Records: `story/Game Layer/Phase 97 - The White Mile (text for review).md` and `
 **Places read or heard of go on the map** (`js/places97.js`). Any place a person, notice, letter, sign or message names is marked on its map with a small picture of its kind (inn, healer, chapel, hall, gate, works, store, shop, house, mooring, way down, water, market, school, tower, place), with a line to say so and a readable list under the map. Status: built.
 
 **Oakhaven's houses stand taller** (`js/eaves78.js`, `js/r3d21.js`, `js/maps.js`). The owner: "the front doors are too small and the roofs are to low." A higher ground storey, front doors a quarter taller than a person in a timber case, higher ridges; the chapel tower and the mooring mast raised to stay over the roofs. The Hollow a little less; other towns unchanged. In the 3D view. Status: built; the other towns are the owner's to ask for.
+
+#### Phase 98: what was owed: the bare hands and the glass arm (Phase 87); the Reach's keepers' leavings (Phase 91, question 4) (17 Nov)
+The owner, 17 Nov: "lets bust out phase 87 then lets move onto 91". Record: `story/Game Layer/Phase 98 - What was owed (the hands, the glass arm, the Reach's keepers' leavings) (for review).md`.
+
+**The hands (`js/fp87.js`, `js/body21.js`).** The last two of the first week's first-person paintings are painted in code: the bare fist, raised where a blade's hand is, wearing what you wear; the glass arm, raised on the LEFT, where that arm is (it was drawn on the right); the two open hands a Song is cast from, the light between the palms. The glass keeps the look approved on 14 Nov (deep azure planes, dark seams, a few bright edges, a quarter of its first glow), now drawn plane by plane. The hand that is not striking rests low at its own side. A fist goes straight out. The locked arm's pale wash lies on the arm itself. No number changes. Status: built; the glass arm on the left and the straight punch are with the owner.
+
+**The keepers' leavings (`js/keepers98.js`).** Phase 90's rule 5 (approved): a keeper put down leaves a trophy, a valuable only, and one piece of gear in its realm's look, once. The Heights' three fought keepers were checked and do. The Reach's two now do [PROPOSED]:
+- **The Flint-Back** (the Antler Galleries): the **Chalk-White Shell-Plate** (a valuable), and the **Ridge-Flint**, a ridge of black flint off its back still set in a fist of white shell; a weapon of the Old Reach set, and flint for its bonus.
+- **The Standing Note** (the Dry Flume): **the Standing Note's Reed** (a valuable), and the **Beam-Key**, the engine-man's iron key it lay on for two hundred years; a weapon of the Flume set.
+- Once each; given late to whoever put a keeper down before; no set asks for more pieces than before.
+Status: built; the four names and the choice of weapons over worn pieces are with the owner. Phase 91's question 4 is closed, and Phase 87 owes nothing more.
+
+**Put right while checking.** The Vigil's and the Chalk Cliffs' finger-posts now have their milestones (they joined the world after the milestones were laid). The Scavenger's Cloth-Pole's noise is 0.7 and the Tallyman's Hook's 0.8, so the Old Cantor's Staff is again "quieter than every other long weapon" (Phase 79).
 
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 

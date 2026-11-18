@@ -73,9 +73,17 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] Oakhaven's houses taller: ground storey, front doors, ridges, tower and mast (`js/eaves78.js`, 78 checks)
 - [x] voices of their own for the Heights' people and foes (`js/voices.js`)
 - [ ] the owner's answers: the White Mile's five questions and its [PROPOSED] list; recorded voices or the device's; quest steps for the compass; the other towns' houses
-- [ ] Phase 91's question 4, now due: trophies and realm gear for the Reach's two keepers
-- [ ] still owed from Phase 87: first-person pictures of the bare hands and the glass arm's pose
+- [x] Phase 91's question 4: trophies and realm gear for the Reach's two keepers (P98)
+- [x] owed from Phase 87: the bare hands and the glass arm's pose, painted in code (P98)
 - [ ] known red, not from this phase: `test/logmap` fails at its first static check (older modules' journal sites)
+
+**Phase 98: what was owed (17 Nov).** Owner: "lets bust out phase 87 then lets move onto 91". Built by the Commander alone.
+- [x] Phase 87 (d): the bare fist, the glass arm (raised on the left, where that arm is) and the open hands for a Song, painted in code at the weapons' detail (`js/fp87.js`, `js/body21.js`); the other hand rests at its own side; a fist goes straight out; the locked arm's wash lies on the arm
+- [x] Phase 91 question 4: the Flint-Back leaves a shell-plate and the Ridge-Flint, the Standing Note its reed and the Beam-Key, once each, and late to whoever beat them before (`js/keepers98.js`); the Heights' three fought keepers checked against the same rule
+- [x] `test/owed98.test.js`, 23 checks; French; the record; Vol VIII
+- [x] every suite (199) run; found and fixed: no milestones at the Vigil's and the Cliffs' finger-posts (P96); the cloth-pole as quiet as the Old Cantor's Staff (P92); the Flambeau's own painting
+- [ ] red on `main` before this work, still red: `logmap`, `smalllife`, `sprites21`, `sync19`, `net19`
+- [ ] the owner's answers: the glass arm on the left; the straight punch; the four names; weapons, not worn pieces
 
 **Phase 94: the Dawning Heights, part two: the Anchorage (15 Nov, branch `p94-anchorage`, on Fable 5.2).** Owner, 15 Nov: "you now have fable so go forth". `js/anchorage94.js`, test `test/anchorage94.test.js` (17 checks), French `tools/i18n/p94-anchorage.tsv`. Record: [`story/Game Layer/Phase 94 - The Dawning Heights, part two (text for review).md`](story/Game%20Layer/Phase%2094%20-%20The%20Dawning%20Heights%2C%20part%20two%20(text%20for%20review).md).
 - [x] the book changed the plan: the Anchorage is the inside of the city's frame (Book Two: an inverted cone over a gulf, the chains down from the Spire to the rim and on into the frame), not shafts in the mountain

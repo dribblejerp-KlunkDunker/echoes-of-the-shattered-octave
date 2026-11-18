@@ -463,6 +463,15 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 |---|---|
 | ![Oakhaven's houses, taller](screenshots/p97/p97-oakhaven-after.jpg) | ![Places and quest markers on the map](screenshots/p97/p97-map.jpg) |
 
+**What was owed (Phase 98).** The last two of the first week's first-person paintings are painted in code, like every weapon since Phase 87: the bare fist, raised where a blade's hand is and wearing what you wear; the glass arm, raised on the left, where that arm is, its azure planes drawn one by one; and the two open hands a Song is cast from, the light between the palms. The hand that is not striking rests low at its own side, and a fist goes straight out (`js/fp87.js`, `js/body21.js`). The Reach's two keepers now leave what every keeper leaves, a trophy and one piece of gear in their realm's look, once: the Flint-Back a shell-plate and the Ridge-Flint, the Standing Note its reed and the Beam-Key (`js/keepers98.js`).
+
+| | |
+|---|---|
+| ![Bare hands: the right fist raised, the glass fist resting](screenshots/p98/p98-hands-bare.jpg) | ![The glass arm, raised on the left](screenshots/p98/p98-hands-glass.jpg) |
+| ![A Song cast from open hands](screenshots/p98/p98-hands-song.jpg) | ![The old pictures](screenshots/p98/p98-hands-before.jpg) |
+| ![The Flint-Back's leavings](screenshots/p98/p98-flintback.jpg) | ![The Standing Note's leavings](screenshots/p98/p98-standingnote.jpg) |
+| ![The Ridge-Flint](screenshots/p98/p98-ridge.jpg) | ![The Beam-Key](screenshots/p98/p98-beamkey.jpg) |
+
 **The Dawning Heights, part two: the Anchorage (Phase 94).** A low iron door by the goods-cage's top leads into the inside of Sol-Luminary's frame, where the nine chains that hold the city come down through it "like the bones they are" (Book Two). Winchmaster Bardo (World Bible Vol II) keeps his winch there, with the tally of his nineteen lost men cut in the housing. You walk down the seventh chain itself, link by link, over its well. The nine chains toll one after another in a bell-ringers' change, and a card shows the row: when the seventh speaks, a link under you throws you and a pin holds you. Below are the tolling gallery, seven Glass-Grown who are never fought, the keel-weights of white stone, and the Winch-Deep, where the Nineteen still haul at the old capstan and make you weigh four times what you weigh. Three lamps, a shortcut cage, and a sixteenth gear set, the Chain-Yards (`js/anchorage94.js`, `test/anchorage94.test.js`). The book changed this place's plan: it had been drawn as shafts in the mountain, and Book Two has no rock under the city.
 
 <table>
