@@ -12,14 +12,14 @@
 //      (a click, not a drag), the touch "Mode" button, or D-pad left/right (which duplicate LB/RB, so
 //      weapon cycling is not lost). Steal goes only through the existing law/crime paths.
 //   3. Load from file. The Load panel's file picker and a dropped file read the file as TEXT (FileReader,
-//      512 KB cap) and hand it to decodeSave + restoreGame, the same path a pasted save code takes: the
+//      2 MB cap) and hand it to decodeSave + restoreGame, the same path a pasted save code takes: the
 //      same validation, hardcore refusals and error texts. Nothing else ever parses the file.
 // Saved state: none. The mode setting lives in localStorage under octave.origins.v1 (guarded).
 'use strict';
 
 const ORIGINS = (function () {
   const SETTINGS_KEY = 'octave.origins.v1';
-  const FILE_MAX = 512 * 1024;
+  const FILE_MAX = 2 * 1024 * 1024;   // (was 512 KB: by Phase 98 the world's own uncompressed save, the form written where the browser cannot compress, was 559 KB)
   const $q = (s) => document.querySelector(s);
   const hasG = () => typeof G !== 'undefined' && G;
 
@@ -564,11 +564,11 @@ const ORIGINS = (function () {
     const token = G.panelToken;
     if (hardcoreOn()) { loadSayError('Downloaded files cannot open a hardcore run.'); return false; }
     if (!file) return false;
-    if (file.size > FILE_MAX) { loadSayError('That file is too large to be a save. The limit is 512 KB.'); return false; }
+    if (file.size > FILE_MAX) { loadSayError('That file is too large to be a save. The limit is 2 MB.'); return false; }
     let text;
     try { text = await readText(file); } catch (e) { loadSayError('That file could not be read.'); return false; }
     if (G.panelToken !== token || !isLoadPanel()) return false;                          // the player moved on while it read
-    if (text.length > FILE_MAX) { loadSayError('That file is too large to be a save. The limit is 512 KB.'); return false; }
+    if (text.length > FILE_MAX) { loadSayError('That file is too large to be a save. The limit is 2 MB.'); return false; }
     if (!text.trim()) { loadSayError('That file is empty.'); return false; }
     try { restoreGame(await decodeSave(text)); return true; }
     catch (e) { loadSayError('That did not read as a save. ' + (e && e.message ? e.message : '')); return false; }

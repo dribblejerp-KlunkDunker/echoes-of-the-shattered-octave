@@ -144,7 +144,7 @@ const FREEZE = () => {
     // glow actually changes pixels and the colour dominates; Full Voice brighter than Murmur
     const px = await page.evaluate(() => {
       const F = FPHANDS, ctx = Engine.ctx, res = {};
-      const grab = () => { const d = ctx.getImageData(110, 100, 100, 50).data; let r = 0, g = 0, b = 0; for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; } return [r, g, b]; };
+      const grab = () => { const d = ctx.getImageData(90, 60, 140, 90).data; /* Phase 87: the open hands are painted larger and held higher (js/fp87.js) */ let r = 0, g = 0, b = 0; for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; } return [r, g, b]; };
       G.song.t = 0; G.songFx = 0; F.st.cast = 0; render(); res.base = grab();
       for (const id of ['tending', 'name', 't_639']) {
         G.song.t = 0; G.songFx = 0; G.player.voice = G.player.voiceMax; castSong(id);
@@ -239,6 +239,8 @@ const FREEZE = () => {
     const frame = async (blocked, setup) => {
       const pg = await boot(browser, blocked);
       await pg.evaluate(FREEZE);
+      // Phase 97: the compass's quest marks are held out of the comparison (they come and go with the map's own markers)
+      await pg.evaluate(() => { if (typeof UPG !== 'undefined') UPG.questMarkers = false; });
       // a constant backdrop: the 3D view is not deterministic between pages, the HUD is what we compare
       await pg.evaluate(() => { Engine.render = () => { Engine.ctx.fillStyle = '#334455'; Engine.ctx.fillRect(0, 0, VW, VIEW_H); }; });
       const out = await pg.evaluate((setup) => {

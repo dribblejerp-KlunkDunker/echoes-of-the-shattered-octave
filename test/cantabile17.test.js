@@ -93,7 +93,7 @@ const HELPERS = () => {
       else if (!on && T._inX) { EXTRAS17.inExtra = T._inX; T._inX = null; }
     },
     // (p7t_/p7s_ are the engine's own clocks and gold statistics, not story flags)
-    bookOne() { const o = {}; for (const k of Object.keys(G.flags)) if (!k.startsWith('p17c_') && !/^p7[ts]_/.test(k)) o[k] = G.flags[k]; return JSON.stringify(o); },
+    bookOne() { const o = {}; for (const k of Object.keys(G.flags)) if (!k.startsWith('p17c_') && !/^p7[ts]_/.test(k) && !k.startsWith('p97m_')) o[k] = G.flags[k];   /* p97m_: places read of go on the map (Phase 97); they are no part of the story's state */ return JSON.stringify(o); },
   };
 };
 

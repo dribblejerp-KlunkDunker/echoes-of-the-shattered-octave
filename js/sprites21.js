@@ -117,7 +117,8 @@ const SPRITES21 = (() => {
   function placeIn(pg, w, h) {
     let best = null;
     for (const s of pg.shelves) if (s.h >= h && PAGE - s.x >= w && (!best || s.h < best.h)) best = s;
-    if (best && best.h <= h * 1.6 + 8) { const x = best.x; best.x += w; return [x, best.y]; }
+    // (a shelf up to a quarter taller is taken; looser than that wasted a page in twelve once the game had 900 sprites)
+    if (best && best.h <= h * 1.25 + 8) { const x = best.x; best.x += w; return [x, best.y]; }
     if (pg.top + h <= PAGE) { pg.shelves.push({ y: pg.top, h, x: w }); pg.top += h; return [0, pg.top - h]; }
     if (best) { const x = best.x; best.x += w; return [x, best.y]; }
     return null;

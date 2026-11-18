@@ -6,7 +6,7 @@ const OUT = path.join(__dirname, 'out'), a = process.argv.slice(2), r3d = !!proc
   const page = await (await browser.newContext({ viewport: { width: +(process.env.VW || 1280), height: +(process.env.VH || 800) } })).newPage();
   const errs = []; page.on('pageerror', (e) => errs.push(e.message)); page.on('console', (m) => { if (m.type() === 'error') errs.push('console: ' + m.text().slice(0, 200)); });
   if (r3d) await page.addInitScript(() => { window.__r3d21 = { automation: true }; });
-  await page.goto('http://127.0.0.1:4175/index.html?nosw=1');
+  await page.goto((process.env.PREVIEW_URL || 'http://127.0.0.1:4175') + '/index.html?nosw=1');
   await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && !document.querySelector('#loading')?.classList.contains('on'), null, { timeout: 90000 });
   const hit = (sel) => page.locator(sel).first().dispatchEvent('click');
   await hit('#btn-new'); await page.locator('#cname').fill('Wren Ashby'); await hit('#c-next'); await hit('.classlist button'); await hit('#c-next'); await hit('#c-next');

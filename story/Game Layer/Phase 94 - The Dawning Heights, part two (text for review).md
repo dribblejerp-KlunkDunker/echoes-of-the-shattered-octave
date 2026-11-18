@@ -43,6 +43,8 @@ The same reading turned up four more things in the Umbral Tiers. All are fixed i
 
 ## For the owner
 
+**Ruled, 16 Nov 2026.** The owner: "I accept all, merge and proceed". All eight stand as built, Bardo's oaths included. Pull requests #125 to #129 (Phases 90 to 94) were merged into main the same day.
+
 1. **The Anchorage is the city's frame, not shafts in the mountain.** *Recommend: keep; it is what Book Two allows.*
 2. **Bardo's place.** Vol II calls him Sky-Dock Winchmaster. Here his winch is the one that hauls the goods-cage up from the docks, and he says he pinned the cage himself "after the nineteenth". *Recommend: keep.*
 3. **The keel-weights** hang inside the keel "to keep the city's point down". That reason is invented. *Recommend: keep.*

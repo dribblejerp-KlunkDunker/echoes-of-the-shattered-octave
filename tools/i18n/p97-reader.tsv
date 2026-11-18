@@ -1,0 +1,59 @@
+# Phase 97, reading everything aloud and the compass's quest marks (js/reader97.js, js/compass97.js). english<TAB>french. [PROPOSED] lines, for the owner's review.
+Reading aloud is on. F3 says the last thing again. F4 reads the whole screen. F2 turns reading off.	La lecture à voix haute est activée. F3 répète la dernière chose dite. F4 lit tout l'écran. F2 arrête la lecture.
+Reading aloud is off.	La lecture à voix haute est désactivée.
+You can answer:	Vous pouvez répondre :
+You can choose:	Vous pouvez choisir :
+{0} says:	{0} dit :
+Nothing to say again yet.	Rien à répéter pour l'instant.
+You are in {0}.	Vous êtes à {0}.
+Health {0} of {1}.	Santé : {0} sur {1}.
+It is {0}.	Nous sommes {0}.
+You are facing {0}.	Vous regardez vers le {0}.
+Read everything aloud	Tout lire à voix haute
+for a player who cannot read: F3 or [ says it again, F4 or ] reads the screen, F2 on or off	pour un joueur qui ne sait pas lire : F3 ou [ répète, F4 ou ] lit l'écran, F2 active ou désactive
+Read aloud: On	Lecture à voix haute : oui
+Read aloud: Off	Lecture à voix haute : non
+north	nord
+north-east	nord-est
+east	est
+south-east	sud-est
+south	sud
+south-west	sud-ouest
+west	ouest
+north-west	nord-ouest
+A quest marker is {0}, about {1} paces.	Un repère de quête se trouve {0}, à environ {1} pas.
+A side-quest marker is {0}, about {1} paces.	Un repère de quête secondaire se trouve {0}, à environ {1} pas.
+The way to the nearest quest marker is {0}, about {1} paces, through {2}.	Le chemin vers le repère de quête le plus proche est {0}, à environ {1} pas, par {2}.
+No quest markers are in reach.	Aucun repère de quête à portée.
+A quest marker is right beside you.	Un repère de quête est juste à côté de vous.
+A side-quest marker is right beside you.	Un repère de quête secondaire est juste à côté de vous.
+ahead	devant vous
+ahead and to the left	devant vous, sur la gauche
+ahead and to the right	devant vous, sur la droite
+to your left	à votre gauche
+to your right	à votre droite
+behind you	derrière vous
+a door	une porte
+{0} is on your map now.	{0} est maintenant sur votre carte.
+{0} is marked on the map of {1}.	{0} est marqué sur la carte de {1}.
+Marked on this map:	Marqué sur cette carte :
+Nothing is marked on this map yet. Places you read or hear of are marked here.	Rien n'est encore marqué sur cette carte. Les lieux dont vous lisez ou entendez le nom y sont marqués.
+a quest marker	un repère de quête
+a side-quest marker	un repère de quête secondaire
+the way to the nearest quest marker	le chemin vers le repère de quête le plus proche
+an inn	une auberge
+a healer	un soigneur
+a chapel	une chapelle
+a hall	une grande salle
+a gate	une porte de ville
+a works	un atelier
+a store	un entrepôt
+a shop	une boutique
+a house	une maison
+a mooring	un mouillage
+a way down	un passage vers le bas
+water	de l'eau
+a market	un marché
+a school	une école
+a tower	une tour
+a place	un lieu

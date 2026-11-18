@@ -14,7 +14,7 @@
 //  THE PLACE (one map, p92_tiers, 160 x 226 cells, a cell a step and a half; cut by tools/maps/tiers92.py from the Cymatic
 //  City Engine's own 528 Hz plan of the city, js/heights92_grid.js): north is up the mountain's face. The streets and
 //  rings of the figure are the walkways, its bold nodal lines the chain-walks, its buildings the hanging houses, and
-//  everything else is the gulf, with the cloud deck far below. The walkways climb with the face, about thirteen units
+//  everything else is the gulf, dark air with the peaks far below. The walkways climb with the face, about thirteen units
 //  from the docks to the wall. Rooms, as Phase 90 drew them:
 //    1 the Keel Docks (the way in): Book Two ch. 9's eleven iron cradles hung on chains below the lowest tier, each to
 //      take a skyship's gondola; the Kestrel lies in the fourth from the end, a Church packet with the white sun-disc and
@@ -26,7 +26,7 @@
 //    7 the hanging square (the keeper, the Lamplighter of the Seventh Chain; slung on four chains, its edges open)
 //    8 the bell-gallery stair (a lamp, under the black wall)     9 the iron door (seen, not entered: the Rite is Book Two's)
 //   10 the seventh chain's goods-cage (the shortcut: knock its pin out at the top and it drops to the docks; then it rides)
-//  THE DANGER: light. Patches of the Bleach below the line, and the Lamplighter's glass-fire, eat at you while you stand in
+//  THE DANGER: light. Patches of the Bleach below the line eat at you, and the Lamplighter's glass-fire burns you, while you stand in
 //  them; the safe way is the way through shadow. The chain-walks jerk on the chains' beat (a creak first): walk on through
 //  one and it throws you; stand still and you hold on. Fall into the gulf and you die, and your Piece is left at the last
 //  place you stood. What walks there: bleach-hounds (Phase 89 [PROPOSED]), Cacophony hounds, swarms.
@@ -53,13 +53,12 @@ const HEIGHTS92 = (function () {
     name: S('Sol-Luminary: the Umbral Tiers'),
     // the Kestrel
     fly: S('Fly south to Sol-Luminary, in the Dawning Heights.'),
-    arrive: S('Thirty hours south, the peaks come up pale as teeth, and above them, hanging from the mountain\'s face on nine chains, Sol-Luminary. Pennick brings her in under the city to the Keel Docks, where the winch-boats come up through the cloud.'),
+    arrive: S('Thirty hours south, the peaks come up pale as teeth, and above them, hanging from the Spire\'s flank on nine chains, Sol-Luminary. Pennick brings her in under the city, through its shadow, to the Keel Docks, where the iron cradles swing over the gulf.'),
     down: S('You climb down onto the Keel Docks. The planks move under you. The whole city moves. Nobody here speaks above the Narrow.'),
     toLabel: S('the Keel Docks, under Sol-Luminary'),
     ladder: S('The Kestrel\'s ladder, hanging at the dock. Climb aboard'),
     // the places
-    docks: S('The Keel Docks. The winch-boats come up through the cloud deck here, and the ladders go up from here into the city.'),
-    winchboat: S('A winch-boat, hung on its rope over the gulf. The cloud is a long way down.'),
+    docks: S('The Keel Docks. Eleven iron cradles for the skyships, and the ladders go up from here into the city.'),
     offerBread: S('A loaf of bread, black on the crust, half wrapped in a cloth. A tin cup with water in it.'),
     offerCandle: S('A candle-end, unlit, in a saucer. Three pears.'),
     offerDrawing: S('A child\'s drawing on a scrap of paper, weighted with a pebble: a black shape with wings, and a sun crossed out.'),
@@ -84,9 +83,10 @@ const HEIGHTS92 = (function () {
     wall: S('The Basilica\'s black wall. It runs along the line: above it, the Bleach; below it, the Tiers.'),
     ironDoor: S('The iron door: man-high, studded, in the middle of the black wall. The line. It does not open, and nobody here would open it.'),
     ironDoorLabel: S('The iron door in the black wall'),
-    bellStair: S('The bell-gallery stair, under the black wall. The Basilica\'s bell is somewhere above, on the other side of the line.'),
+    bellStair: S('The bell-gallery stair, under the black wall. The gallery is above, on the other side of the line. The bell is not: it hangs in the black tower, on this side.'),   // Book Two: "from the Basilica's black tower, a deep slow bronze note"; "Below them, in the black tower, a bell began to ring"
     streetlamp: S('A shade-lamp: a lantern under a black hood, so it lights the planks and nothing else.'),
     bleachPatch: S('A patch of the Bleach, below the line: the light has got in here, and the planks are white as bone.'),
+    firePatch: S('Glass-fire on the planks: white-gold, smokeless, burning on nothing.'),
     // the Souls lamps: shade-lamps
     lampLabel: S('A shade-lamp on an iron post, unlit: a hood of black tin over the glass. Stand by it to light it.'),
     lampLit: S('A shade-lamp on an iron post, burning under its black hood. Use it to rest.'),
@@ -105,9 +105,9 @@ const HEIGHTS92 = (function () {
     jerked: S('The chain-walk jerks under you and throws you sideways.'),
     held: S('The chain-walk jerks. You hold still, and it does not throw you.'),
     gulf: S('the gulf'),
-    glassfire: S('He swings his fire-stave, and white-gold fire splashes where you stood. The light comes in after it.'),
+    glassfire: S('He swings his fire-stave, and white-gold fire splashes where you stood. It burns without smoke, on nothing.'),
     keeperName: S('The Lamplighter of the Seventh Chain'),
-    keeperDesc: S('A Flambeau who stayed below the line when his chapter went up, and has been correcting the Tiers for seven years. He carries glass-fire into the dark, and where it burns, the Bleach follows.'),
+    keeperDesc: S('A Flambeau who stayed below the line when his chapter went up, and has been correcting the Tiers for seven years. He carries glass-fire into the dark, and burns what the dark has kept.'),
     keeperDown: S('The Lamplighter goes down on the hanging square, and his fire-stave rings on the planks. The dark comes back in over them like water.'),
     houndName: S('Bleach-Hound'),
     houndDesc: S('A Dissonance Hound whose wrong notes have been bleached white. It hunts the edge of the light.'),
@@ -126,7 +126,7 @@ const HEIGHTS92 = (function () {
     ysolde: {
       greet: { polite: S('Name. Cargo. Quietly: we speak in the Narrow here.'), normal: S('You came up on that airship. Keep your voice down and your feet in the shade.'), blunt: S('Speak like that again and the whole dock will look at you. Nobody here looks at anybody.') },
       topics: {
-        [S('The Keel Docks')]: S('The winch-boats come up through the cloud from the valley farms. The ladders go up from here. Everything the city eats comes past me, and I count it.'),
+        [S('The Keel Docks')]: S('The freighters come into the cradles, and the ladders go up from here. Everything the city eats comes past me, and I count it.'),
         [S('The line')]: S('Up the face, where the black wall is. Above it, the Bleach. Below it, us. Seven years we have lived on the undersides, and we are good at it.'),
         [S('Shade-right')]: S('The one ahead owns their shadow and lends it. Step out of somebody\'s shade without a word and you have insulted them. Give your shade to a stranger and you have done the finest thing you can do here.'),
         [S('The lamp')]: S('The shade-lamp at my door. Sit by it when you come back down, and you will be whole again. Everybody comes back down.'),
@@ -147,14 +147,14 @@ const HEIGHTS92 = (function () {
       greet: { polite: S('Light keep you true. Sit, if you want boots. Rope soles. The planks move.'), normal: S('Boots? You walk like somebody from flat country.'), blunt: S('Mind your feet in my shop and mind your voice on my tier.') },
       topics: {
         [S('The chain-walks')]: S('When the chains jerk, stand still. The ones who keep walking go over. I mend boots for the ones who stand still.'),
-        [S('The Lamplighter')]: S('He was a Flambeau. When his chapter went up the Pilgrim Chain he stayed below. The Tiers would pull the ladders up on Flambeaux, and we did: he was already down. Now he keeps the square with glass-fire, correcting us, he says. Where he burns, the light comes down after.'),
+        [S('The Lamplighter')]: S('He was a Flambeau. When his chapter went up the Pilgrim Chain he stayed below. The Tiers would pull the ladders up on Flambeaux, and we did: he was already down. Now he keeps the square with glass-fire, correcting us, he says. Glass-fire wants no fuel. It will burn on a plank, or a coat, or you.'),
         [S('Casts')]: S('Up there it was an insult: "he casts", a thing with a shadow, provincial. Down here it is the best thing you can say of a person. Somebody who casts is somebody you can stand behind.'),
       },
     },
     canvas: {
       greet: { polite: S('Under the canvas, quick. What do you need that you cannot buy in the light?'), normal: S('Looking, or buying?'), blunt: S('Loud. Go and be loud somewhere else.') },
       topics: {
-        [S('The mirror')]: S('The only one in the Tiers, and it stays under the cloth. Mirrors are illegal. Mirrors are what the Bleach shines from, up on the Walks. You want it, you buy it covered, and you never take the cloth off down here.'),
+        [S('The mirror')]: S('The only one in the Tiers, and it stays under the cloth. Mirrors are illegal. A reflection is a second light, and the Light is jealous. You want it, you buy it covered, and you never take the cloth off down here.'),
         [S('The black window')]: S('Every window painted black on the inside, and every family scratches one sign in the paint. A bird, a name, a sun. At dusk the scratch-light tells you whose house it is.'),
       },
     },
@@ -250,9 +250,11 @@ const HEIGHTS92 = (function () {
         for (let c = 0; c < 8; c++) { const b = 38 + (h2(c, 2) * 10 | 0); px(x, `rgb(${b + 6},${b},${b - 6})`, c * 8, 0, 8, 64); px(x, '#0e0b09', c * 8, 0, 1, 64); }
         for (let y = 0; y < 64; y += 10) { px(x, '#3c4046', 1, y, 4, 7); px(x, '#1a1c20', 2, y + 2, 2, 3); px(x, '#3c4046', 59, y + 5, 4, 7); px(x, '#1a1c20', 60, y + 7, 2, 3); }   // the chain at each edge
       });
-      // the cloud deck, far down in the dark: soft billows, a little blue
+      // the gulf's floor (Book Two: "two thousand feet of dark air, and the peaks at the bottom of it pale as teeth"): dark air,
+      // and the peaks' snow far down in it. The name is the old one (Phase 92 drew cloud here, which the book does not have).
       tex('t_p92_cloud', (x) => {
-        for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const v = 0.5 + 0.25 * Math.sin(i * 0.2 + Math.sin(j * 0.15) * 2) + 0.25 * Math.sin(j * 0.26 + i * 0.05), b = 70 + v * 60; px(x, `rgb(${b | 0},${(b + 4) | 0},${(b + 16) | 0})`, i, j); }
+        for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const b = 10 + (h2(i >> 2, j >> 2) * 6 | 0); px(x, `rgb(${b},${b + 2},${b + 8})`, i, j); }
+        for (const [cx, cy, r] of [[14, 12, 9], [44, 20, 12], [26, 44, 10], [54, 52, 7]]) for (let j = -r; j <= r; j++) for (let i = -r; i <= r; i++) { const d = Math.abs(i) + Math.abs(j) * 1.4; if (d < r && h2(cx + i, cy + j) < 1 - d / r) px(x, d < r * 0.4 ? '#c8ccd4' : '#7c828e', (cx + i) & 63, (cy + j) & 63); }
       });
       tex('t_p92_bleach', (x) => {
         px(x, '#f2efe6', 0, 0, 64, 64);
@@ -461,7 +463,7 @@ const HEIGHTS92 = (function () {
     a_p92_chainboots: { name: TX.boots, slot: 'feet', ar: 1, noise: -0.3, value: 30, desc: TX.bootsDesc },
     a_p92_shadecloak: { name: TX.cloak, slot: 'cape', ar: 1, noise: -0.1, value: 36, desc: TX.cloakDesc },
   };
-  const POLE_DEF = { name: TX.pole, img: 'fp_spear', dmg: [2, 7], reach: 2.4, noise: 0.6, speed: 0.7, type: 'iron', blunt: true, twoHanded: true, value: 22, desc: TX.poleDesc };
+  const POLE_DEF = { name: TX.pole, img: 'fp_spear', dmg: [2, 7], reach: 2.4, noise: 0.7, speed: 0.7, type: 'iron', blunt: true, twoHanded: true, value: 22, desc: TX.poleDesc };
   function defs() {
     if (typeof WEAPONS !== 'undefined' && !WEAPONS.p92_clothpole) WEAPONS.p92_clothpole = Object.assign({}, POLE_DEF);
     if (typeof ENEMIES !== 'undefined') { if (!ENEMIES.p92_lamplighter) ENEMIES.p92_lamplighter = Object.assign({}, KEEPER_DEF); if (!ENEMIES.p92_bleachhound) ENEMIES.p92_bleachhound = Object.assign({}, HOUND_DEF); }
@@ -603,7 +605,7 @@ const HEIGHTS92 = (function () {
     }
     m.set(P.ironDoor[0], P.ironDoor[1], DOOR({ tex: 't_p92_irondoor', label: TX.ironDoorLabel, locked: 'p92_never', lockMsg: TX.ironDoor }));
     m.setLvl(P.ironDoor[0], P.ironDoor[1], lvlAt(P.ironDoor[1]));
-    // ---- the Kestrel's ladder, the winch-boats, the docks
+    // ---- the Kestrel's ladder, the docks
     m.deco('ladder', P.kestrel[0], P.kestrel[1], { radius: 0.2, scale: 1.5, solid: false, use: 'p92_kestrel', label: TX.ladder });
     // the eleven cradles below the dock's edge (Book Two ch. 9): the Kestrel in the fourth from the west end; a Church packet
     // and two freighters in three of the others; the rest empty and swinging
@@ -612,12 +614,12 @@ const HEIGHTS92 = (function () {
       m.add({ kind: 'deco', sprite: 'p92_cradle', x, y: 221.0, scale: 2.3, solid: false, radius: 0.05, yOff: GULF_Z + 1.8, label: TX.cradle, _decor: true });
       shipArt();
       const ship = k === 2 ? ['p92_freighter', TX.freighter] : k === 7 ? ['p92_packet', TX.packet] : k === 9 ? ['p92_freighter', TX.freighter] : null;
-      if (ship && Engine.sprites && Engine.sprites[ship[0]]) m.add({ kind: 'deco', sprite: ship[0], x, y: 222.4, scale: 4.6, solid: false, radius: 0.05, yOff: GULF_Z + 1.4, label: ship[1], _decor: true });
+      // (placed whether or not her picture could be made: the map's list of things must not depend on another module being loaded, or a saved game's places shift)
+      if (ship) m.add({ kind: 'deco', sprite: ship[0], x, y: 222.4, scale: 4.6, solid: false, radius: 0.05, yOff: GULF_Z + 1.4, label: ship[1], _decor: true });
     }
     // the Kestrel herself, moored broadside under the dock's edge, her envelope standing above the planks (her cell's
     // floor is the gulf's, so she is lifted back up to the docks)
     m.add({ kind: 'deco', sprite: 'kestrel_m2', x: P.kestrel[0], y: 222.6, scale: 5.0, solid: false, radius: 0.05, yOff: GULF_Z + 1.4, label: TX.ladder, _decor: true, _p92: 'kestrel' });
-    for (const x of [51.5, 109.5]) m.deco('p92_winchboat', x, 220.6, { radius: 0.2, scale: 1.3, solid: false, yOff: GULF_Z + 0.6, label: TX.winchboat });   // hung over the gulf at the docks' ends
     m.deco('sign', 84.6, 206.2, { radius: 0.15, scale: 0.8, solid: false, label: TX.docks });
     // ---- the lamps (Souls), the goods-cage
     lamps();
@@ -689,7 +691,7 @@ const HEIGHTS92 = (function () {
   }
   function onChainWalk(x, y) { const d = G.map._p92; return !!(d && d.kind[cellK(x, y)] === 4); }
   function addPatch(x, y) {
-    const ent = { kind: 'deco', sprite: 'p92_glassfire', x, y, scale: 1.4, solid: false, radius: 0.05, transient: true, _decor: true, glow: 1, lightCol: [255, 240, 200], label: TX.bleachPatch };
+    const ent = { kind: 'deco', sprite: 'p92_glassfire', x, y, scale: 1.4, solid: false, radius: 0.05, transient: true, _decor: true, glow: 1, lightCol: [255, 240, 200], label: TX.firePatch };
     G.ents.push(ent); patches.push({ x, y, r: 1.4, t: 6, ent });
   }
   function clearPatches() { for (const q of patches) { const i = G.ents.indexOf(q.ent); if (i >= 0) G.ents.splice(i, 1); } patches.length = 0; }
@@ -724,10 +726,11 @@ const HEIGHTS92 = (function () {
     // the Bleach: it eats while you stand in it
     const b = inBleach(c.x, c.y);
     if (b) {
-      burnAcc += dt * 4 * b * (typeof GEAR87 === 'object' && GEAR87.special('shade') ? 0.5 : 1);   // the Umbral set, in full: half
-      if (burnAcc >= 1) { const n = Math.floor(burnAcc); burnAcc -= n; p.hp -= n; G.hurtT = 0.12; if (p.hp <= 0) { die(TX.bleachPatch); return; } }
-      try { fx('p92-white', 220); } catch (e) { /* no overlay */ }
-      once(0, TX.bleach, 'bad', 5000);
+      // glass-fire is fire, not the Bleach (Book Two ch. 14: the white parts round it), so the Umbral set's shade is no help against it
+      const fire = b > 1;
+      burnAcc += dt * 4 * b * (!fire && typeof GEAR87 === 'object' && GEAR87.special('shade') ? 0.5 : 1);   // the Umbral set, in full: half
+      if (burnAcc >= 1) { const n = Math.floor(burnAcc); burnAcc -= n; p.hp -= n; G.hurtT = 0.12; if (p.hp <= 0) { die(fire ? TX.firePatch : TX.bleachPatch); return; } }
+      if (!fire) { try { fx('p92-white', 220); } catch (e) { /* no overlay */ } once(0, TX.bleach, 'bad', 5000); }
     } else burnAcc = 0;
     // glass-fire burns out
     for (let i = patches.length - 1; i >= 0; i--) { const q = patches[i]; q.t -= dt; q.ent.glow = 0.6 + 0.4 * Math.sin(clock * 9 + i); if (q.t <= 0) { const j = G.ents.indexOf(q.ent); if (j >= 0) G.ents.splice(j, 1); patches.splice(i, 1); } }

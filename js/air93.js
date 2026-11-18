@@ -388,7 +388,9 @@ const AIR93 = (function () {
     if (kind === 'far' && k) code = k.FAR.findIndex((x) => x.id === to) + 1;
     else if (kind === 'home') code = to === 'whispergrove' ? 16 : 17;
     F().p93_go = code; F().p93_met = Math.min(99, fint('p93_met', 99) + 1);
-    try { if (typeof journal === 'function') journal('side', R.threat === 'packet' ? TX.journalPacket : R.threat === 'squall' ? TX.journalSquall : TX.journalMet); } catch (e) { /* no journal */ }
+    // (the line is chosen first: the logbook's scan reads a journal call for its text, and this one's is one of three)
+    const jLine = R.threat === 'packet' ? TX.journalPacket : R.threat === 'squall' ? TX.journalSquall : TX.journalMet;
+    try { if (typeof journal === 'function') journal('side', jLine); } catch (e) { /* no journal */ }
     if (G.map && G.map.id === DECK()) { R.amb = G.map.ambient; R.fog = G.map.fogDist; }
     stage();
     const parts = R.threat === 'packet' ? [TX.packet, TX.packet2] : R.threat === 'squall' ? [TX.squall, TX.squall2] : [TX.met, TX.cls, TX.far];

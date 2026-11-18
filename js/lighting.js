@@ -76,7 +76,7 @@ const LIGHTING = (() => {
   const dayness = tod => Math.max(0, Math.min(1, (Math.cos((tod - 0.5) * Math.PI * 2) + 0.3) / 1.3));
 
   function interiorK() {
-    const m = typeof G !== 'undefined' && G.map; if (!m || m.outdoor || !GFX.darkInteriors) return 1;
+    const m = typeof G !== 'undefined' && G.map; if (!m || m.outdoor || m.bright || !GFX.darkInteriors) return 1;   // m.bright (Phase 95): an open place lit by its own light (the Bleach), never a dark room
     const amb = m.ambient || 0;
     // never darker than a small floor: a dark room is still a playable room
     return amb > 0 ? Math.min(1, Math.max(INTERIOR_K, AMBIENT_FLOOR / amb)) : 1;
@@ -138,7 +138,7 @@ const LIGHTING = (() => {
   }
   let gw = 0, gh = 0, grid = null, rowBuf = null, w0 = 0, h0 = 0, stat = { ms: 0, lights: 0, ran: 0, glow: 0 };
   function darken(F) {
-    if (F.outdoor || !GFX.darkInteriors) return;
+    if (F.outdoor || (F.map && F.map.bright) || !GFX.darkInteriors) return;
     const lights = F.ptLights; if (!lights || !F.dbuf) return;
     const t0 = performance.now();
     const w = F.w, h = F.h, S = F.S || 1, cell = CELL * S;
