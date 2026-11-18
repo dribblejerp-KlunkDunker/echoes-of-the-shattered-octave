@@ -46,7 +46,7 @@ The owner: "the houses for oakhaven are a bit small like the front doors are too
 
 1. **Recorded voices for every line, or the device's voice?** Recording all 9,800 lines the way the 491 were made would take the download from 12 MB to about 250 MB, and every later text change would need its line made again. The reader built here speaks everything today, in English and French, at no size. *Recommend: keep the reader for everything, and record more of the lines that matter most (the main story's speakers) in batches, as a job of its own.*
 2. **The reader's keys** (F2, F3 or `[`, F4 or `]`). *Recommend: keep; tell me if your brother's keyboard or controller needs others.*
-3. **The compass points at people with quests, not at each step of a quest.** Quests here are logbook text, not tracked steps, so there is no "next step" to point at yet. Giving every quest a place for each step is a real piece of work across all the quests. *Recommend: decide after you have played with the markers.*
+3. **The compass points at people with quests, not at each step of a quest.** Quests here are logbook text, not tracked steps, so there is no "next step" to point at yet. Giving every quest a place for each step is a real piece of work across all the quests. *Recommend: decide after you have played with the markers.* **Ruled 18 Nov: "the compass is good." It stays as built; no quest steps.**
 4. **Shall the other towns' houses be raised the same way?** Only Oakhaven and the Hollow were changed. *Recommend: yes, town by town with a picture each, since each style has its own proportions.*
 
 ## The new words
