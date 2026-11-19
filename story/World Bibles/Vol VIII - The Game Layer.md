@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 100, 18 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 102, 19 November 2026).
 
 ---
 
@@ -2420,6 +2420,14 @@ Record: `story/Game Layer/Phase 100 - The Continental Rift, part one (text for r
 **Other rulings of 18 Nov.** The not-colour stays as drawn: the grey of the air, no grain, no horizon ("ok I like the not color"). Every town is to have raised houses, as Oakhaven has ("yes every town should have raised houses"); not built yet. Phase 98's four names stand ("the phase 98 four names is good"). Dialogue is to be read aloud "in the best possible voices available"; for now by Kokoro, in the player's own browser ("continue using Kokoro for now").
 
 **Not done here, because the books do it later.** The postern, the buttress, the crane and the rope are seen and not used. Nobody of the books' company is named.
+
+#### Phase 102: every person's own dialogue, voiced (19 Nov)
+Record: `story/Game Layer/Phase 102 - Every person's dialogue, voiced (for review).md`. The owner, 18 Nov: "any time there is dialogue it should be read aloud in the best possible voices available", then "continue using Kokoro for now".
+
+**Nothing was added to the world** (no place, person, item or line of text). What changed is how the world sounds: every person's own greetings and topic answers are spoken in a voice of their own (Kokoro, rendered ahead of time). Two rules the game now keeps, which bear on canon:
+- **General Ward stays mute.** Her iron-cant is said aloud by Ninety-Four, as the book has it; her greeting plays in his voice. Status: **follows the book** (Book Three ch. 2).
+- **The silent stay silent:** Lyra while voiceless, the cat, the Quiet, the Tongueless, Mags signing. Stage directions are never read aloud.
+The casting of 122 people (which voice each has) is [PROPOSED], for the owner's review in the record.
 
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 
