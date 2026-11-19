@@ -4407,14 +4407,6 @@
    "source": "NPCS.harrow.topics.The Hedge"
   },
   {
-   "id": "herald.g.271ee2",
-   "speaker": "herald",
-   "kind": "greet",
-   "text": "He has walked nine miles alone, and he is going to read it aloud, because the form requires it.",
-   "auto": true,
-   "source": "NPCS.herald.greet.polite"
-  },
-  {
    "id": "hetty.t.12fc8c",
    "speaker": "hetty",
    "kind": "topic",

@@ -130,10 +130,15 @@ const ROOT = path.join(__dirname, '..');
           check(played.length === 1 && VOICE_ACT.LINES[played[0]].speaker === 'p100_94' && VOICE_ACT.LINES[played[0]].for === 'p100_ward', 'the General\'s greeting is said aloud by Ninety-Four (' + played[0] + ')');
           closeModal(); G.state = 'play';
           VOICES.resetLimits(); played.length = 0; DLG.tone = 'blunt';
-          talk(at('mags_dw'));
-          check(played.length === 0 && /^She /.test(DLG.log[0].t), 'a stage direction plays nothing (' + DLG.log[0].t.slice(0, 40) + ')');
+          const _sq = NPCS.sexton.quest; NPCS.sexton.quest = () => null;
+          try { talk(at('sexton')); } finally { NPCS.sexton.quest = _sq; }
+          check(G.state === 'dialogue' && played.length === 0 && /^He does not stop digging/.test(DLG.log[0].t), 'a stage direction plays nothing (' + String(DLG.log[0] && DLG.log[0].t).slice(0, 40) + ')');
           closeModal(); G.state = 'play';
         }
+        // 5c. a person's own line plays only in a conversation with them, never off a stray message with the same words
+        { const a = Object.keys(VOICE_ACT.LINES).find((k) => VOICE_ACT.LINES[k].auto && VOICE_ACT.LINES[k].kind === 'greet');
+          VOICES.resetLimits(); played.length = 0; msg('Somebody nearby says: ' + VOICE_ACT.LINES[a].t, '', 3000);
+          check(played.length === 0, 'a message with a person\'s words does not play their recording (' + a + ')'); }
         // 6. Grunts and Off never play recordings
         for (const m of ['grunts', 'off']) {
           VOICES.setMode(m); VOICES.resetLimits(); played.length = 0; DLG.tone = 'polite';

@@ -123,6 +123,7 @@ def main():
     hand = [l for l in script['lines'] if not l.get('auto')]
     have = {(l['speaker'], norm(l.get('text') or '')) for l in hand}
     have_any = {norm(l.get('text') or '') for l in hand}
+    ruled_out = {norm(x.get('original') or '') for x in script.get('skipped', [])}   # lines the hand-made script already ruled unspoken
     import importlib.util
     spec = importlib.util.spec_from_file_location('cast_hand', os.path.join(HERE, 'cast.py'))
     cast_mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(cast_mod)
@@ -141,6 +142,7 @@ def main():
             say, shown = r
             n = norm(say)
             if len(n) < 2: skipped['no words'] = skipped.get('no words', 0) + 1; continue
+            if norm(ln['text']) in ruled_out or n in ruled_out: skipped['ruled out by hand'] = skipped.get('ruled out by hand', 0) + 1; continue
             if (sp, n) in have or (sp, n) in seen: continue
             if n in have_any and (sp, n) not in have:   # the same words already recorded by someone else: theirs plays
                 pass

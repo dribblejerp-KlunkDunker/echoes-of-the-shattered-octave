@@ -114,7 +114,11 @@ const VOICE_ACT = (() => {
   }
 
   // true when a recorded line says this text (so "read aloud" does not say it a second time)
-  function covers(text) { return !!find(text, null, null) && ['acted', 'spoken'].includes(VOICES.mode); }
+  function covers(text) {
+    const l = find(text, null, null);
+    if (!l || !['acted', 'spoken'].includes(VOICES.mode)) return false;
+    return !l.auto || (typeof G !== 'undefined' && G.state === 'dialogue');   // a person's own line covers their words only in conversation
+  }
 
   // Lyra's own lines follow the game's voice rules: her clear voice only before the Grove, her ruined one after lyra_voice
   function mayspeak(l) {
@@ -127,7 +131,7 @@ const VOICE_ACT = (() => {
   function onMsg(text, cls) {
     if (typeof VOICES === 'undefined' || !['acted', 'spoken'].includes(VOICES.mode)) return;
     const l = find(text, ['mimic', 'boss', 'companion', 'greet', 'intro', 'defeat', 'death'], null);
-    if (!l || !mayspeak(l)) return;
+    if (!l || l.auto || !mayspeak(l)) return;   // a person's own dialogue plays only in a conversation with them
     const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
     if (st.lastMsgAt[l.id] && now - st.lastMsgAt[l.id] < 1500) return;   // the same message twice in a row
     st.lastMsgAt[l.id] = now;
@@ -141,8 +145,12 @@ const VOICE_ACT = (() => {
     const last = DLG.log[DLG.log.length - 1];
     if (!last || last.who !== 'them' || last === st.said) return;
     st.said = last;
-    if (DLG.log.length === 1) return;   // the greeting: VOICES.play's 'greet' already took it (and a quest's opening stays unvoiced)
-    const l = find(String(last.t || ''), ['topic', 'greet'], speakersOf(DLG.ent.id));
+    const id = String(DLG.ent.id);
+    // the greeting: VOICES.play's 'greet' already took it (and a quest's opening stays unvoiced); but VOICES.play says
+    // nothing at all for a silent person, so one whom somebody speaks for (General Ward) is greeted from here
+    const spoken = index.some((l) => l.for === id);
+    if (DLG.log.length === 1 && !spoken) return;
+    const l = DLG.log.length === 1 ? find(String(last.t || ''), ['greet'], [id]) : find(String(last.t || ''), ['topic', 'greet'], speakersOf(id));
     if (l) api.playLine(l, { interrupt: true });
   }
 
