@@ -519,8 +519,20 @@ const TRACE = () => {
       const saveTry = await pg.page.evaluate(() => { try { const d = snapshotGame(); return d.flags && d.flags.p17x_on === 1 && d.mapId !== G.mapId + '_' ? 'isolated:' + d.player.name : 'saved'; } catch (e) { return e.message; } });
       const hostName = await host.page.evaluate(() => G.player.name);
       ok(saveTry !== 'saved' && !saveTry.includes(hostName), 'saving on the phone while joined never saves the host\'s world (' + saveTry + ')');
+      // ---- the guest says goodbye while the link is down (PR #40): the host, paused after the drop, still sends it
+      // home with what it earned, as soon as the link is back, and keeps no place for it
+      await host.page.evaluate(() => { window.__pl = []; const P = PARTNER19, l = P.leave; P.leave = function (w) { window.__pl.push([w, !!SYNC19._internal.H.gs]); return l.apply(this, arguments); }; });
+      await pg.page.evaluate(() => { NET19._state.holdUntil = 0; });
+      relay.cut = true;
+      await host.page.waitForFunction(() => !SYNC19._internal.H.gs && SYNC19._internal.H.pausedAt > 0, null, { timeout: 8000 });
       await pg.page.evaluate(() => SYNC19.leave());
-      await pg.page.waitForFunction(() => !SYNC19.active(), null, { timeout: 6000 });
+      ok(await pg.page.evaluate(() => SYNC19.active() && SYNC19._internal.C.leaving > 0), 'a guest who chooses to leave while the link is down waits for it to come back');
+      const tBack = Date.now(); relay.cut = false;
+      await pg.page.waitForFunction(() => !SYNC19.active(), null, { timeout: 14000 });
+      const took = Date.now() - tBack;
+      const hb = await host.page.evaluate(() => ({ pl: window.__pl, paused: SYNC19._internal.H.pausedAt, keep: SYNC19._internal.H.keep, gs: !!SYNC19._internal.H.gs, partner: PARTNER19.active() }));
+      console.log('  goodbye during a drop:', JSON.stringify(hb), 'home in', took, 'ms');
+      ok(hb.pl.some((x) => x[0] === 'bye') && !hb.partner && !hb.paused && !hb.keep && !hb.gs && took < 12000, 'and when it is back the host sends it home with what it earned (not after the 15 s wait), and keeps no place for it');
       ok(await pg.page.evaluate(() => G.state === 'title' && !G.player && !document.getElementById('title').classList.contains('hidden')), 'leaving takes the phone guest back to the title screen');
       allErrors.push(...pg.errors);
       await pg.ctx.close();
