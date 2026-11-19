@@ -181,28 +181,28 @@
   "fx": [
    "room"
   ],
-  "lang": "en-us",
+  "lang": "en-gb",
   "pitch": 0,
-  "speed": 0.9,
-  "voice": "af_aoede"
+  "speed": 0.84,
+  "voice": "bm_fable"
  },
  "p100_tr_c": {
   "fx": [
    "room"
   ],
-  "lang": "en-us",
-  "pitch": -1,
-  "speed": 0.88,
-  "voice": "af_jessica"
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_fable"
  },
  "p100_tr_d": {
   "fx": [
    "room"
   ],
-  "lang": "en-us",
-  "pitch": -1,
-  "speed": 0.82,
-  "voice": "am_adam"
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_fable"
  },
  "p100_watcher": {
   "fx": [
@@ -422,7 +422,7 @@
   "lang": "en-gb",
   "pitch": 0,
   "speed": 0.84,
-  "voice": "bm_daniel"
+  "voice": "bm_fable"
  },
  "p16h_steward": {
   "fx": [
@@ -448,17 +448,17 @@
    "room"
   ],
   "lang": "en-us",
-  "pitch": -2,
-  "speed": 0.8,
-  "voice": "am_santa"
+  "pitch": -1,
+  "speed": 0.92,
+  "voice": "am_onyx"
  },
  "p16k_mags": {
   "fx": [
-   "room"
+   "wood"
   ],
   "lang": "en-us",
   "pitch": -1,
-  "speed": 0.9,
+  "speed": 0.92,
   "voice": "af_kore"
  },
  "p16k_nell": {
@@ -466,9 +466,9 @@
    "room"
   ],
   "lang": "en-gb",
-  "pitch": 2,
-  "speed": 0.95,
-  "voice": "bf_emma"
+  "pitch": 1,
+  "speed": 1.0,
+  "voice": "bf_lily"
  },
  "p16k_pennick": {
   "fx": [
@@ -484,8 +484,8 @@
    "room"
   ],
   "lang": "en-us",
-  "pitch": 0,
-  "speed": 0.83,
+  "pitch": -1,
+  "speed": 1.0,
   "voice": "am_puck"
  },
  "p17c_bessa": {
@@ -545,7 +545,7 @@
   "lang": "en-us",
   "pitch": -3,
   "speed": 0.8,
-  "voice": "af_nova"
+  "voice": "af_aoede"
  },
  "p17c_oona": {
   "fx": [
@@ -569,10 +569,10 @@
   "fx": [
    "room"
   ],
-  "lang": "en-us",
+  "lang": "en-gb",
   "pitch": -2,
   "speed": 0.81,
-  "voice": "am_puck"
+  "voice": "bm_fable"
  },
  "p17c_sloe": {
   "fx": [
@@ -788,9 +788,9 @@
    "room"
   ],
   "lang": "en-gb",
-  "pitch": -1,
-  "speed": 0.81,
-  "voice": "bm_daniel"
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_fable"
  },
  "p29_sim": {
   "fx": [
