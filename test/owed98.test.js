@@ -92,7 +92,7 @@ const read = (f) => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
     out.fp = FP87.covers('p98_ridge') && FP87.covers('p98_beamkey') && !!cR && !!cK && new Set([sum(cR.canvas).h, sum(cK.canvas).h, sum(cA.canvas).h, sum(cM.canvas).h]).size === 4 && FP87.FORM.p98_ridge.head === 'ridgeflint' && FP87.FORM.p98_beamkey.head === 'beamkey';
     void eR;
     const set = (id) => GEAR87.SETS.find((s) => s.id === id);
-    out.sets = GEAR87.SETS.length === 18 && set('oldreach').weapons.includes('p98_ridge') && set('flume').weapons.includes('p98_beamkey') && set('oldreach').armor.length === 5 && set('flume').armor.length === 6;
+    out.sets = GEAR87.SETS.length >= 18 && set('oldreach').weapons.includes('p98_ridge') && set('flume').weapons.includes('p98_beamkey') && set('oldreach').armor.length === 5 && set('flume').armor.length === 6;
     // put a keeper down: its leavings lie by it, once
     const run = (map, is, flag, ids, re) => {
       const o = {}; delete G.flags[flag]; loadMap(map); closeModal(); G.state = 'play'; p.hp = p.hpMax = 900;

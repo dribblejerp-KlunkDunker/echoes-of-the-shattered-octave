@@ -491,7 +491,7 @@ const RIFT100 = (function () {
     const T = (name, o, hgt) => add(name, 64, hgt || 160, undefined, (x) => trooper(x, o));
     T('p100_tr_a', { num: 57, hair: '#5a4630' }); T('p100_tr_b', { num: 132, skin: '#b0907a', hair: '#1e1a18' }); T('p100_tr_c', { num: 208, hair: '#8a7250', coat: '#666a74' }); T('p100_tr_d', { num: 9, skin: '#d2bca8', hair: '#6a6660', crop: true });
     T('p100_94', { num: 94, hair: '#4a3a28', skin: '#d0b8a0' });
-    T('p100_211', { num: 211, hair: '#3a3028', coat: '#70747c', fn: (x, cx) => { px(x, '#70747c', cx - 22, 56, 6, 56); px(x, '#70747c', cx + 16, 56, 6, 56); px(x, '#c8b29c', cx - 22, 112, 9, 9); px(x, '#c8b29c', cx + 15, 112, 9, 9); } }, 172);   // big, slow, enormous hands
+    T('p100_211', { num: 211, hair: '#3a3028', coat: '#70747c', fn: (x, cx) => { px(x, '#70747c', cx - 22, 56, 6, 56); px(x, '#70747c', cx + 16, 56, 6, 56); px(x, '#c8b29c', cx - 22, 112, 9, 9); px(x, '#c8b29c', cx + 15, 112, 9, 9); } });   // big, slow, enormous hands (drawn in the usual frame; made big where he stands)
     T('p100_19', { num: 19, hair: '#9a9a98', crop: true, skin: '#bca692', fn: (x, cx) => { px(x, '#e8dcd0', cx + 2, 33, 5, 1); px(x, '#bca692', cx + 4, 32, 1, 3); } });   // grey, a scarred eyebrow
     T('p100_88', { num: 88, hair: '#6a4a2a', skin: '#d6c0aa', fn: (x, cx) => { px(x, '#d6c0aa', cx + 13, 92, 6, 6); px(x, '#6c7078', cx + 12, 56, 8, 36); } });   // one hand up, by his ear
     T('p100_roster', { num: 302, hair: '#2a2622', fn: (x, cx) => { px(x, '#e8e4d8', cx + 15, 104, 5, 9); px(x, '#3a3228', cx - 24, 96, 10, 14); px(x, '#c8c4b4', cx - 23, 98, 8, 1); px(x, '#c8c4b4', cx - 23, 102, 8, 1); } });   // chalk, and a slate
@@ -823,7 +823,7 @@ const RIFT100 = (function () {
     const who = (id, x, y, face, extra) => { const [px, py] = snap(m, x, y); return m.npc(id, px, py, Object.assign({ facing: face || 0 }, extra || {})); };
     who('p100_ward', P.ward[0], P.ward[1], PI); who('p100_94', P.n94[0], P.n94[1], PI);
     for (const [dx, dy] of [[-3.4, -2.2], [-2.6, 2.6], [1.2, -3.0]]) who('p100_mastcrew', P.mast[0] + dx, P.mast[1] + dy, 0);
-    who('p100_211', P.n211[0], P.n211[1], PI);
+    who('p100_211', P.n211[0], P.n211[1], PI, { scale: 1.1 });
     // a pair at every manned battery (the bell is theirs to ring); Nineteen at Seven, Eighty-Eight at Six
     const pairs = { 5: ['p100_tr_b', 'p100_tr_c'], 6: ['p100_88', 'p100_tr_a'], 7: ['p100_19', 'p100_tr_d'], 9: ['p100_tr_c', 'p100_tr_b'] };
     for (const tw of TOWERS) if (tw.manned && tw.bell) { const ids = pairs[tw.n], tx = -Math.sin(tw.deg * PI / 180), ty = -Math.cos(tw.deg * PI / 180);
