@@ -90,6 +90,11 @@ const GEAR87 = (function () {
     { id: 'blacks', name: S('The Scavenger\'s Blacks'), home: 'the White Mile, Sol-Luminary',
       armor: ['a_p97_wrap', 'a_p97_gloves', 'a_p97_coat'], weapons: ['p97_hook'],
       t: { noise: -0.2 }, f: { special: 'unheard' }, tLine: S('quieter on white stone'), fLine: S('the Unison must be a third nearer to hear you') },
+    // Phase 100: Null-Watch [PROPOSED]: what a trooper of the Watch is issued (Book Three: long grey coats with lead plates sewn in), the
+    // magazines' felt overshoes, a cable-splicer's spike and the copper mallet of Magazine Four
+    { id: 'watch', name: S('The Watch\'s Issue'), home: 'Null-Watch, the Continental Rift',
+      armor: ['a_p100_coat', 'a_p100_mitts', 'a_p100_felts'], weapons: ['p100_spike', 'p100_mallet'],
+      t: { special: 'talk' }, f: { special: 'bell' }, tLine: S('on the wall, quiet takes half as long again to come on you'), fLine: S('a manned battery\'s bell reaches you from twice as far') },
   ];
   const BY_ID = {}; for (const s of SETS) BY_ID[s.id] = s;
   // which set a piece belongs to (the design puts every piece in exactly one)

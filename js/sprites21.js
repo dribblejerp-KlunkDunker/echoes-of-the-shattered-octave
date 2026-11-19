@@ -108,11 +108,11 @@ const SPRITES21 = (() => {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAX_LEVEL, LEVELS - 1);
     gl.activeTexture(at);
-    const pg = { tex, shelves: [], top: 0, gen: ++atlasGen, used: 0, idx: pages.length };
+    const pg = { tex, shelves: [], top: 0, gen: ++atlasGen, used: 0, idx: pages.length, area: 0 };   // area: pixels placed on it, gutters included
     pages.push(pg); st.pages = pages.length;
     return pg;
   }
-  function resetPage(pg) { pg.shelves.length = 0; pg.top = 0; pg.gen = ++atlasGen; st.evictions++; }
+  function resetPage(pg) { pg.shelves.length = 0; pg.top = 0; pg.area = 0; pg.gen = ++atlasGen; st.evictions++; }
   // shelf packing on the 8-pixel grid: the best-fitting shelf by height, else a new shelf
   function placeIn(pg, w, h) {
     let best = null;
@@ -124,15 +124,16 @@ const SPRITES21 = (() => {
     return null;
   }
   function alloc(w, h) {
-    for (const pg of pages) { const at = placeIn(pg, w, h); if (at) return [pg, at]; }
-    if (pages.length < MAX_PAGES) { const pg = newPage(); const at = placeIn(pg, w, h); if (at) return [pg, at]; }
+    const took = (pg, at) => { pg.area += w * h; return [pg, at]; };
+    for (const pg of pages) { const at = placeIn(pg, w, h); if (at) return took(pg, at); }
+    if (pages.length < MAX_PAGES) { const pg = newPage(); const at = placeIn(pg, w, h); if (at) return took(pg, at); }
     // full: empty the least recently used page that this frame has not drawn from
     let lru = null;
     for (const pg of pages) if (pg.used !== frameNo && (!lru || pg.used < lru.used)) lru = pg;
     if (!lru) return null;
     resetPage(lru);
     const at = placeIn(lru, w, h);
-    return at ? [lru, at] : null;
+    return at ? took(lru, at) : null;
   }
   // level 0 copy (alpha quantised, emissive marked) and the two smaller levels (the raycaster's spriteMip rule)
   function level0(sp, W, H, keep) {
@@ -1375,7 +1376,7 @@ void main() {
   return {
     attach, detach, frame, drawOpaque, drawDecals, drawTranslucent, drawCasters, dev, stats: st,
     entryFor: (sp) => (gl ? entryFor(sp) : null), project: (x, y, z) => (V && project(x, y, z) > 0 ? { x: PJ[0], y: PJ[1], w: PJ[2] } : null),
-    get pages() { return pages.length; }, get count() { return { billboards: nBB, particles: nPT + nPTadd, decalVerts: nDC, figures: figures.length, runs: runs.length }; },
+    get pages() { return pages.length; }, get pageFill() { return pages.map((pg) => pg.area / (PAGE * PAGE)); }, get count() { return { billboards: nBB, particles: nPT + nPTadd, decalVerts: nDC, figures: figures.length, runs: runs.length }; },
     get gl() { return gl; },
     consts: { PAGE, MAX_PAGES, AL, LEVELS, ALPHA_CUT, EMIT_A },
   };

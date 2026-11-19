@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 99, 18 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 100, 18 November 2026).
 
 ---
 
@@ -2390,6 +2390,31 @@ The owner, 18 Nov: "lets fix the old 5 failing checks." Record: `story/Game Laye
 **Ruled.** The owner, 18 Nov: **"the compass is good."** The compass points at people who have quests and side quests (Phase 97) and stays so; quests are not given a place for each step. Status: **ruled**. Phase 97's question on quest steps is closed.
 
 **Standing instruction.** The owner, 18 Nov: "remind me later about everything that is mine to decide." The open list is carried at the end of each phase's record until answered.
+
+#### Phase 100: the Continental Rift, part one. Null-Watch, the Wall and the Talking Halls (18 Nov)
+Record: `story/Game Layer/Phase 100 - The Continental Rift, part one (text for review).md`. Sources: Book Three ch. 2; Vol VI §1. As of Harvestmonth 419.
+
+**Places.** *Null-Watch: the Wall* (the mooring-yard and mast, the wall stair between Towers Five and Six, the wall-walk and batteries Five to Nine, Tower Nine's foot and its barred postern, the square, the magazine lane, the west gate) and *Null-Watch: the Talking Halls* (the hall, the talk-roster, the issue-hatch, a squad's barrack, the powder passage, Magazine Four). Status of the plan: **follows the book**, except the points below.
+
+**From the book, unchanged.** The obsidian, lead and cable; the dampening batteries; thirty yards of rock and then the land stops; Standing Order Nine; rota-numbers for names; General Ward's iron-cant and her voice; Two-Eleven, Nineteen, Eighty-Eight, the Quartermaster; the Lead Brothers; the watchers by the bunks.
+
+**The game's own, approved by the owner on 18 Nov ("I approve of the proposals"). Status: ruled.**
+- *The talk-roster.* Every number has an hour and a subject, and nobody may take another's. Visitors pick one of four (the days, cable-eyes, onions, the road) and are not let up the wall stair without one.
+- *Relieved.* What the game calls being taken by the quiet: 8 seconds of silence on the wall-walk, and the traveller walks to the coping and over. A manned battery's bell fetches them back. Tower Eight is unmanned this week.
+- *Talking-posts.* The Watch's lamps: a lantern on an iron post and a tin with a note, which whoever sits there reads aloud and replaces.
+- *The Talking Halls.* So loud that nothing done in them is heard.
+- *The Stray of Magazine Four.* A Carillon Legionnaire left to guard the powder, six years on the same nine paces, which stopped nine days ago and says three lines of a cradle-song. It is not destroyed: the fourth line stands it down. Its squad (Corporal One-Forty-Two, Fifty-One, Two-Oh-Seven) have not reported it.
+- *The cradle-song.* "The lamp is low, the bread is put away, / The hens are shut, the dog is on the stair, / Your father's boots are drying by the grate, / And nothing's wanted of you anywhere." Written out by Fifty-One.
+- *Magazine rules.* No flame, no shot, no iron on stone; felt overshoes; lanterns behind glass let into the wall; copper tools.
+- *The battery rail.* An ammunition trolley on a track at the wall's foot: Tower Nine's foot, the mooring-yard, the west gate.
+- *Things.* The Watch's Issue (Watch Coat, Wall Mitts, Powder-Felts, Cable-Spike, Magazine Mallet); Nine Days of Brass Tape.
+- *The flight.* 48 hours east from the Reach.
+
+**Moved for the book.** The way in is the mooring-yard under the wall (Book Three), not the west gate of the Phase 90 layout.
+
+**Other rulings of 18 Nov.** The not-colour stays as drawn: the grey of the air, no grain, no horizon ("ok I like the not color"). Every town is to have raised houses, as Oakhaven has ("yes every town should have raised houses"); not built yet. Phase 98's four names stand ("the phase 98 four names is good"). Dialogue is to be read aloud "in the best possible voices available"; for now by Kokoro, in the player's own browser ("continue using Kokoro for now").
+
+**Not done here, because the books do it later.** The postern, the buttress, the crane and the rope are seen and not used. Nobody of the books' company is named.
 
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 

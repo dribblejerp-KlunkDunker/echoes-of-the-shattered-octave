@@ -35,6 +35,7 @@ const FP87 = (function () {
     p22_shears: { blade: 'shears', w: 26, guard: 'none', pommel: 'none', wrap: 'bow' },
     sable_dagger: { blade: 'taper', w: 26, glassTip: true, guard: 'ring', gw: 26, pommel: 'ball', wrap: 'ivory' },
     p85_knife: { blade: 'flint', w: 38, guard: 'none', pommel: 'none', wrap: 'hide' },
+    p100_spike: { blade: 'spike', w: 16, guard: 'none', pommel: 'ring', wrap: 'cord' },   // Phase 100: a cable-splicer's spike, round, no edge
     p12_dirk: { blade: 'taper', w: 30, fuller: 0.5, guard: 'basket', gw: 64, pommel: 'ball', wrap: 'wire' },
     throwknife: { blade: 'taper', w: 28, guard: 'none', pommel: 'ring', wrap: 'cord' },
     axe: { head: 'bearded', haft: 'ash', spike: true },
@@ -57,6 +58,7 @@ const FP87 = (function () {
     p97_hook: { head: 'tallyhook', haft: 'bough' },
     p98_ridge: { head: 'ridgeflint', haft: 'shell', len: 0.3, hw: 40 },     // Phase 91 question 4: no haft, a lump of shell in the fist
     p98_beamkey: { head: 'beamkey', haft: 'iron', len: 0.4 },
+    p100_mallet: { head: 'kegmallet', haft: 'ash', len: 0.42 },
     p87_sledge: { head: 'nightsledge', haft: 'ash' },
   };
   const BLADE_KINDS = { sword: 1, longsword: 1, greatsword: 1, knife: 1, dirk: 1 };   // throwing knives stay with the ranged (a fan of three)
@@ -98,6 +100,7 @@ const FP87 = (function () {
     x.beginPath();
     if (f.blade === 'leaf') { x.moveTo(-half * 0.8, 0); x.bezierCurveTo(-half * 1.35, -L * 0.45, -half * 1.1, -L * 0.75, 0, -L); x.bezierCurveTo(half * 1.1, -L * 0.75, half * 1.35, -L * 0.45, half * 0.8, 0); }
     else if (f.blade === 'broad') { x.moveTo(-half, 0); x.lineTo(-half * 1.05, -L * 0.82); x.quadraticCurveTo(-half * 0.6, -L * 0.97, 0, -L); x.quadraticCurveTo(half * 0.5, -L * 0.93, half * 0.98, -L * 0.8); x.lineTo(half, 0); }
+    else if (f.blade === 'spike') { x.moveTo(-half, 0); x.lineTo(-half * 0.92, -L * 0.12); x.lineTo(-half * 0.22, -L * 0.96); x.quadraticCurveTo(0, -L * 1.01, half * 0.22, -L * 0.96); x.lineTo(half * 0.92, -L * 0.12); x.lineTo(half, 0); }
     else if (f.blade === 'flint') { const pts = [[-half, 0], [-half * 1.15, -L * 0.2], [-half * 0.95, -L * 0.42], [-half * 1.05, -L * 0.6], [-half * 0.6, -L * 0.82], [0, -L], [half * 0.5, -L * 0.8], [half * 0.9, -L * 0.55], [half * 0.8, -L * 0.3], [half, 0]]; x.moveTo(...pts[0]); for (const p of pts.slice(1)) x.lineTo(...p); }
     else if (f.back) { x.moveTo(-half, 0); x.lineTo(-half * 0.9, -L * 0.7); x.quadraticCurveTo(-half * 0.4, -L * 0.94, 0, -L); x.lineTo(half, -L * 0.62); x.lineTo(half, 0); }
     else { const t = f.blade === 'taper' ? 0.62 : 0.86; x.moveTo(-half, 0); x.lineTo(-half * t, -L * 0.86); x.lineTo(0, -L); x.lineTo(half * t, -L * 0.86); x.lineTo(half, 0); }
@@ -255,6 +258,13 @@ const FP87 = (function () {
         x.fillStyle = 'rgba(0,0,0,0.35)'; x.fillRect(-5.5, y - 16, 11, 16);
         for (let k = 0; k < 3; k++) { x.fillStyle = 'rgba(20,22,26,0.55)'; x.fillRect(-9 + k * 7, y + 12, 4, 1.4); }                                       // the maker's stamp, worn
         rrect(x, -6, y + 30, 12, 20, 2); fillM(-6, y + 30, 6, y + 50); break; }
+      case 'kegmallet': { // the Magazine Mallet (Phase 100): a barrel of copper across an ash handle, the striking faces green, no iron anywhere
+        rrect(x, -27, y - 13, 54, 28, 7); fillM(-27, y - 13, 27, y + 15);
+        x.fillStyle = 'rgba(96,170,136,0.55)'; rrect(x, -27, y - 13, 9, 28, 5); x.fill(); rrect(x, 18, y - 13, 9, 28, 5); x.fill();   // verdigris on the faces
+        x.fillStyle = 'rgba(0,0,0,0.3)'; x.fillRect(-17.5, y - 13, 1.4, 28); x.fillRect(16.1, y - 13, 1.4, 28);
+        x.fillStyle = css(H.hi, 0.7); x.fillRect(-16, y - 10, 32, 1.6);
+        x.fillStyle = 'rgba(40,24,14,0.6)'; ell(x, 0, y + 1, 5, 7); x.fill();                                                           // the handle's eye, wedged with oak
+        break; }
       case 'tallyhook': { // the Tallyman's Hook (Phase 97): a flat crook of iron, no spike; a rag of black cloth knotted under it; tally-notches down the pole
         rrect(x, -3, y - 4, 6, 26, 2); fillM(-3, y - 4, 3, y + 22);
         x.beginPath(); x.moveTo(0, y - 2); x.quadraticCurveTo(-2, y - 30, -18, y - 26); x.quadraticCurveTo(-26, y - 22, -22, y - 10); x.lineWidth = 6; x.strokeStyle = css(H.base); x.stroke(); x.lineWidth = 1.5; x.strokeStyle = css(H.hi); x.stroke();

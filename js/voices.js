@@ -125,6 +125,17 @@ const VOICES = (() => {
     p96c_cantor: { f0: 152, fs: 1.0, style: 'human' },      // "a voice like a bell"
     p97_tallyman: { f0: 114, fs: 0.94, style: 'human' },    // the Tallyman: a scavenger's voice, kept under the breath
     p97_scav: { f0: 168, fs: 1.01, style: 'human' },
+    // Phase 100: Null-Watch. Everybody talks but the General (mute since the first night, Book Three ch. 2).
+    p100_ward: { f0: 180, fs: 1.0, style: 'silent' },
+    p100_94: { f0: 148, fs: 1.0, style: 'human' },          // Ninety-Four, the General's voice: young, never stops
+    p100_211: { f0: 84, fs: 0.87, style: 'gravel' },        // Two-Eleven: big, slow, from the Peaks
+    p100_19: { f0: 108, fs: 0.93, style: 'gravel' },        // Nineteen: fifty, grey
+    p100_88: { f0: 172, fs: 1.03, style: 'human' },         // Eighty-Eight: a boy from Coldharrow
+    p100_qm: { f0: 92, fs: 0.9, style: 'gravel' },          // the Quartermaster
+    p100_tr_a: { f0: 126, fs: 0.97, style: 'human' }, p100_tr_b: { f0: 206, fs: 1.07, style: 'human' }, p100_tr_c: { f0: 190, fs: 1.04, style: 'human' }, p100_tr_d: { f0: 112, fs: 0.94, style: 'human' },
+    p100_mastcrew: { f0: 134, fs: 0.98, style: 'human' }, p100_roster: { f0: 120, fs: 0.96, style: 'human' }, p100_issue: { f0: 100, fs: 0.92, style: 'human' },
+    p100_corp: { f0: 116, fs: 0.95, style: 'human' }, p100_51: { f0: 214, fs: 1.08, style: 'human' }, p100_207: { f0: 140, fs: 0.99, style: 'human' },
+    p100_watcher: { f0: 130, fs: 0.97, style: 'breathy' },  // a paired watcher: talks low, to a sleeper
     townsman:  { f0: 122, fs: 0.97, style: 'human' },
     townswoman:{ f0: 202, fs: 1.08, style: 'human' },
     sable:     { f0: 208, fs: 1.1,  style: 'human' },
@@ -162,6 +173,7 @@ const VOICES = (() => {
   };
   const ENEMY_VOICES = Object.assign({
     legionnaire: { f0: 104, fs: 0.9,  style: 'brass' },
+    p100_stray:  { f0: 96,  fs: 0.9,  style: 'brass' },   // Phase 100: a Legionnaire saying a lullaby, lower and slower than the drill voice
     p92_lamplighter: { f0: 92, fs: 0.9, style: 'human' },     // the Lamplighter of the Tiers
     p92_bleachhound: { f0: 172, fs: 0.95, style: 'beast' },
     p94_nineteen: { f0: 62, fs: 0.8, style: 'golem' },        // glass all through: it rings, it does not speak
