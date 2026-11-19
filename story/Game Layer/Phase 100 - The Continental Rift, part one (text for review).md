@@ -62,7 +62,7 @@ Sources: Book Three ch. 2; World Bible Vol VI §1; Phase 89 "VIII. The Continent
 - The White Mile's [PROPOSED] list and its five questions (the Tallyman's count nine or fourteen; the white house not climbable; nobody there by day; the light still kills after the Unison's blow).
 - The glass arm on the left and the straight punch.
 - That the keepers leave weapons and not worn pieces; hearth pegs for keepers' trophies.
-- The eleven old pull requests: the plan you accepted on 18 Nov is in the handover note; #88 (Book Four, chapters 5 to 8) and #48 (the living-figures pilot) wait for your word.
+- The eleven old pull requests: the plan you accepted on 18 Nov is in the ROADMAP (Phase 100); #88 (Book Four, chapters 5 to 8) and #48 (the living-figures pilot) wait for your word.
 
 ## Verification
 - `test/rift100.test.js`: 35 checks, all pass.
