@@ -122,7 +122,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       const out = {};
       const PALM = /lifts a hand toward you, palm flat, the way everyone in Oakhaven measures sound now\. A hand's width of voice, no more\./;
       T.reset(); T.go('oakhaven', 23.5, 16.5, 0); G.tod = 0.5; T.quiet(); crimeState().bounty = 0;
-      const c = Engine.cam; const w = { kind: 'npc', id: 'n28_hummer', sprite: 'townswoman', x: c.x + 3, y: c.y, facing: Math.PI, solid: false, radius: 0.3 };
+      for (const e of G.ents) if (e.kind === 'npc') e.hidden = true;   // the town's own walkers pass by at their hours: the woman placed here is the one who sees you
+      // (she stands in the open street: three steps east is now inside a house front, since Oakhaven's houses were rebuilt)
+      const c = Engine.cam; const w = { kind: 'npc', id: 'townswoman', sprite: 'townswoman', x: c.x + 1.8, y: c.y, facing: Math.PI, solid: false, radius: 0.3 };
       w._h = true; w.homeX = w.x; w.homeY = w.y; w.wanderT = 1e9; w.dir = Math.PI; G.ents.push(w);
       NARROW28.reset(); T.step(30); window.__msgs.length = 0;
       G.noise = 3.5; T.step(2); out.quiet = !T.heard(PALM);
