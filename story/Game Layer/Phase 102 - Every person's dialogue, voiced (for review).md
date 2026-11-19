@@ -14,7 +14,7 @@
 1. `node tools/voices/dump-dialogue.js` (with the game served) writes `tools/voices/dialogue.json`: every person's greetings and topic answers from the running game, and each voice profile from `js/voices.js`.
 2. `python3 tools/voices/extract.py` adds their spoken lines to `voices/script.json` (marked `auto`; hand-written lines are never touched, and a line the hand-made script ruled unspoken stays out) and casts anyone without a hand entry into `tools/voices/cast_auto.json`.
 3. `python3 tools/voices/build.py --model DIR` renders only what is new or changed, saving as it goes, and removes recordings whose line has gone.
-One person, one voice: ids that share a name (Hesper, the sexton in three places, the Kestrel's crew met again in Phase 16) take the voice already cast for that name, a hand-cast one first. Casting rules: a woman's or man's voice from the person's portrait or painting, otherwise from their profile's pitch; a child's from about 280 Hz or a child's portrait; British or American by a hash of the id; pitch from the profile (a man is never pitched up past +1, which sounds strained); pace matched to the hand-cast lines (about 2.9 words a second); gravel, a bell, or a Hollow's whisper from the profile. A hand entry in `tools/voices/cast.py` always wins.
+One person, one voice: ids that share a person's own name and portrait (Hesper, the sexton in three places, the Kestrel's crew met again in Phase 16) take the voice already cast for that name, a hand-cast one first. Casting rules: a woman's or man's voice from the person's portrait or painting, otherwise from their profile's pitch; a child's from about 280 Hz or a child's portrait; British or American by a hash of the id; pitch from the profile (a man is never pitched up past +1, which sounds strained); pace matched to the hand-cast lines (about 2.9 words a second); gravel, a bell, or a Hollow's whisper from the profile. A hand entry in `tools/voices/cast.py` always wins.
 
 ## For the owner: the casting
 The 48 people cast by hand before (Harrow, Lyra, Kaelen, Hetty, Vane, Sable and the rest) keep their voices. These 122 were cast by the rules above. Any of them can be changed by name, and their lines re-rendered in minutes; say "give Two-Eleven a deeper voice" or "make Fifty-One British", for example. The voice ids are Kokoro's own; pitch is in semitones; speed 1 is Kokoro's natural pace.
@@ -40,9 +40,9 @@ The 48 people cast by hand before (Harrow, Lyra, Kaelen, Hetty, Vane, Sable and 
 | The Quartermaster | `p100_qm` | British man | bm_fable | -2 | 0.8 | gravel | 6 |
 | The roster-corporal | `p100_roster` | British man | bm_fable | +0 | 0.84 | - | 6 |
 | A trooper of the Watch | `p100_tr_a` | British man | bm_fable | +0 | 0.84 | - | 4 |
-| A trooper of the Watch | `p100_tr_b` | British man | bm_fable | +0 | 0.84 | - | 4 |
-| A trooper of the Watch | `p100_tr_c` | British man | bm_fable | +0 | 0.84 | - | 4 |
-| A trooper of the Watch | `p100_tr_d` | British man | bm_fable | +0 | 0.84 | - | 4 |
+| A trooper of the Watch | `p100_tr_b` | American woman | af_aoede | +0 | 0.9 | - | 4 |
+| A trooper of the Watch | `p100_tr_c` | American woman | af_jessica | -1 | 0.88 | - | 4 |
+| A trooper of the Watch | `p100_tr_d` | American man | am_adam | -1 | 0.82 | - | 4 |
 | A watcher by the bunks | `p100_watcher` | American man | am_michael | +1 | 0.84 | whisper | 4 |
 | Garrow Finch | `p11_dicer` | British man | bm_daniel | +0 | 0.84 | - | 3 |
 | Flume fisher-wife | `p11c_fish` | British woman | bf_alice | +0 | 0.91 | - | 3 |
@@ -152,4 +152,4 @@ The 48 people cast by hand before (Harrow, Lyra, Kaelen, Hetty, Vane, Sable and 
 ## Verification
 - `test/voice-acting`: every recording exists, decodes and matches its line; a topic answer plays its speaker's own recording, once; a shared answer plays nothing; the General's greeting is said by Ninety-Four; a stage direction plays nothing; a message with a person's words does not play them; Grunts and Off play no recordings. Passes, with `voices` and `reader97`.
 - Every suite (201) with 19 Nov's `main` merged in: 188 passed two at a time; the other 13 pass alone (`sync19` failed twice alone at different timing checks, then passed 3 of 3, as `main` did).
-- After merging (#145): people met under two ids no longer speak in two voices; 56 lines re-rendered.
+- After merging (#145): people met under two ids no longer speak in two voices; 56 lines re-rendered. That first fix also merged the four troopers, who share the generic name "A trooper of the Watch", into one man's voice; corrected in #146 (only a person's own name, with a matching portrait, counts), and `test/voice-acting` now checks that every automatic voice matches its portrait.

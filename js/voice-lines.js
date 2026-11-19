@@ -3347,7 +3347,7 @@ const VOICE_LINES = {
 },
 "p100_tr_b.g.156fa5": {
 "auto": true,
-"d": 4.97,
+"d": 3.91,
 "kind": "greet",
 "speaker": "p100_tr_b",
 "src": "voices/p100_tr_b/p100_tr_b.g.156fa5.mp3",
@@ -3355,7 +3355,7 @@ const VOICE_LINES = {
 },
 "p100_tr_b.g.565f11": {
 "auto": true,
-"d": 8.18,
+"d": 7.42,
 "kind": "greet",
 "speaker": "p100_tr_b",
 "src": "voices/p100_tr_b/p100_tr_b.g.565f11.mp3",
@@ -3363,7 +3363,7 @@ const VOICE_LINES = {
 },
 "p100_tr_b.g.e1e745": {
 "auto": true,
-"d": 4.54,
+"d": 3.22,
 "kind": "greet",
 "speaker": "p100_tr_b",
 "src": "voices/p100_tr_b/p100_tr_b.g.e1e745.mp3",
@@ -3371,7 +3371,7 @@ const VOICE_LINES = {
 },
 "p100_tr_b.t.6a03e3": {
 "auto": true,
-"d": 10.9,
+"d": 11.28,
 "kind": "topic",
 "speaker": "p100_tr_b",
 "src": "voices/p100_tr_b/p100_tr_b.t.6a03e3.mp3",
@@ -3379,7 +3379,7 @@ const VOICE_LINES = {
 },
 "p100_tr_c.g.b9369e": {
 "auto": true,
-"d": 3.36,
+"d": 2.3,
 "kind": "greet",
 "speaker": "p100_tr_c",
 "src": "voices/p100_tr_c/p100_tr_c.g.b9369e.mp3",
@@ -3387,7 +3387,7 @@ const VOICE_LINES = {
 },
 "p100_tr_c.g.e676ce": {
 "auto": true,
-"d": 4.03,
+"d": 3.05,
 "kind": "greet",
 "speaker": "p100_tr_c",
 "src": "voices/p100_tr_c/p100_tr_c.g.e676ce.mp3",
@@ -3395,7 +3395,7 @@ const VOICE_LINES = {
 },
 "p100_tr_c.g.faa72a": {
 "auto": true,
-"d": 7.92,
+"d": 6.7,
 "kind": "greet",
 "speaker": "p100_tr_c",
 "src": "voices/p100_tr_c/p100_tr_c.g.faa72a.mp3",
@@ -3403,7 +3403,7 @@ const VOICE_LINES = {
 },
 "p100_tr_c.t.4037dd": {
 "auto": true,
-"d": 9.67,
+"d": 8.33,
 "kind": "topic",
 "speaker": "p100_tr_c",
 "src": "voices/p100_tr_c/p100_tr_c.t.4037dd.mp3",
@@ -3411,7 +3411,7 @@ const VOICE_LINES = {
 },
 "p100_tr_d.g.580f2e": {
 "auto": true,
-"d": 3.22,
+"d": 2.11,
 "kind": "greet",
 "speaker": "p100_tr_d",
 "src": "voices/p100_tr_d/p100_tr_d.g.580f2e.mp3",
@@ -3419,7 +3419,7 @@ const VOICE_LINES = {
 },
 "p100_tr_d.g.b4d50e": {
 "auto": true,
-"d": 5.74,
+"d": 6.07,
 "kind": "greet",
 "speaker": "p100_tr_d",
 "src": "voices/p100_tr_d/p100_tr_d.g.b4d50e.mp3",
@@ -3427,7 +3427,7 @@ const VOICE_LINES = {
 },
 "p100_tr_d.g.bf9b9e": {
 "auto": true,
-"d": 4.61,
+"d": 3.98,
 "kind": "greet",
 "speaker": "p100_tr_d",
 "src": "voices/p100_tr_d/p100_tr_d.g.bf9b9e.mp3",
@@ -3435,7 +3435,7 @@ const VOICE_LINES = {
 },
 "p100_tr_d.t.cd442d": {
 "auto": true,
-"d": 7.34,
+"d": 7.15,
 "kind": "topic",
 "speaker": "p100_tr_d",
 "src": "voices/p100_tr_d/p100_tr_d.t.cd442d.mp3",
