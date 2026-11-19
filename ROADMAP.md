@@ -86,6 +86,7 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [ ] every suite run (see the handover note until this is ticked)
 - [ ] later parts of the Rift: the Rift Wall and the Under-Shelves, Redoubt Zero, the Edge, the seven smaller places; then the Middle Country
 - [ ] the eleven old pull requests (plan accepted 18 Nov; in the handover note)
+- [ ] **owner, 18 Nov: "when its an opportune time the hands and arms need a massive overhaul as well"**: the first-person hands and arms (the gloved right hand, the glass left arm, the open hands for a Song; `js/fp-hands.js`, `js/fp87.js`, Phase 98's paintings). A phase of its own, with options shown to the owner before anything replaces what is there
 
 **Phase 99: the five old failing checks (18 Nov, branch `p99-checks`).** Owner: "lets fix the old 5 failing checks. if nothing needs to be merged lets move on." Built by the Commander alone. Record: [`story/Game Layer/Phase 99 - The five old failing checks (for review).md`](story/Game%20Layer/Phase%2099%20-%20The%20five%20old%20failing%20checks%20(for%20review).md). Nothing added to the world; no new words.
 - [x] `logmap` (13): the air fight chooses its journal entry before writing it, so the logbook's scan can read it (`js/air93.js`); the check knows painted sketches are picture files

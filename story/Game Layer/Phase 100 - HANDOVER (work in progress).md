@@ -31,3 +31,6 @@ One pull request at a time. Bring the branch up to today's `main`, settle the co
 2. Check first, then merge or close: #44 (Phase 21 ground), #36 (Phase 15 work), #39 (World Bible Vols I and II dates). They are 365 to 605 commits behind `main`; only the absence of their files from `main` has been checked, not their contents. Book canon wins over the bibles.
 3. The owner's to decide, not to be merged without his word: #88 (Book Four, Part Two, chapters 5 to 8: a draft; merging makes it manuscript) and #48 (the Phase 23 living-figures pilot).
 4. Close without merging: #23 (`main` into the old `phase10-picks` branch; nothing to gain).
+
+## Asked for by the owner, 18 Nov: the hands and arms
+"when its an opportune time the hands and arms need a massive overhaul as well". The first-person hands and arms (`js/fp-hands.js`, `js/fp87.js`; the bare fist, the glass arm and the Song hands were last painted in Phase 98). Make it a phase of its own: two or three painted options on one sheet for the owner to choose from, all in code, nothing random. Best done by Fable when the week's allowance is back; Opus at high effort can do it if the owner prefers not to wait.
