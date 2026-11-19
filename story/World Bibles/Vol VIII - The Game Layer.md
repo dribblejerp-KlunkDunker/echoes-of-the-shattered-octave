@@ -2412,7 +2412,7 @@ Record: `story/Game Layer/Phase 100 - The Continental Rift, part one (text for r
 
 **Moved for the book.** The way in is the mooring-yard under the wall (Book Three), not the west gate of the Phase 90 layout.
 
-**Other rulings of 18 Nov.** The not-colour stays as drawn: the grey of the air, no grain, no horizon ("ok I like the not color"). Every town is to have raised houses, as Oakhaven has ("yes every town should have raised houses"); not built yet. Phase 98's four names stand ("the phase 98 four names is good"). Dialogue is to be read aloud "in the best possible voices available"; the tool is not chosen.
+**Other rulings of 18 Nov.** The not-colour stays as drawn: the grey of the air, no grain, no horizon ("ok I like the not color"). Every town is to have raised houses, as Oakhaven has ("yes every town should have raised houses"); not built yet. Phase 98's four names stand ("the phase 98 four names is good"). Dialogue is to be read aloud "in the best possible voices available"; for now by Kokoro, in the player's own browser ("continue using Kokoro for now").
 
 **Not done here, because the books do it later.** The postern, the buttress, the crane and the rope are seen and not used. Nobody of the books' company is named.
 

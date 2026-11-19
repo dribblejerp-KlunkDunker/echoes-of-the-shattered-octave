@@ -53,12 +53,12 @@ Sources: Book Three ch. 2; World Bible Vol VI §1; Phase 89 "VIII. The Continent
 - "ok I like the not color": the not-colour stays as drawn (question 4 below is closed unless you want more).
 - "yes every town should have raised houses": every town's houses are to be raised as Oakhaven's were in Phase 97. Not built yet; on the roadmap.
 - "the phase 98 four names is good": Phase 98's four names stand.
-- "any time there is dialogue it should be read aloud in the best possible voices available": dialogue is to be spoken in made voices, not only the device's voice. Which tool makes them is still open (Voicebox was asked about; see the roadmap).
+- "any time there is dialogue it should be read aloud in the best possible voices available", and then "continue using Kokoro for now": dialogue is to be spoken by Kokoro, a voice model that runs in the player's own browser, with the device's voice as the fallback. Voicebox (recorded files) may come later.
 - The hands and arms are to be overhauled: Opus first, Fable for touch-ups.
 - The plan for the eleven old pull requests is accepted.
 
 ## Still yours to decide from earlier phases
-- Which tool makes the voices, and whose voices they are; the reader's keys (F2, F3 or [, F4 or ]).
+- Which Kokoro voice each character gets (I will propose a list); the reader's keys (F2, F3 or [, F4 or ]).
 - The White Mile's [PROPOSED] list and its five questions (the Tallyman's count nine or fourteen; the white house not climbable; nobody there by day; the light still kills after the Unison's blow).
 - The glass arm on the left and the straight punch.
 - That the keepers leave weapons and not worn pieces; hearth pegs for keepers' trophies.
@@ -68,7 +68,7 @@ Sources: Book Three ch. 2; World Bible Vol VI §1; Phase 89 "VIII. The Continent
 - `test/rift100.test.js`: 35 checks, all pass.
 - `gear87` (20), `look10` (81), `souls91` (29), `voices` (14): pass.
 - French: 284 lines in `tools/i18n/p100-rift.tsv`, merged.
-- Every suite: see the ROADMAP entry.
+- Every suite (201): 184 passed when run two at a time; the 17 others were run alone. Three real faults were found and fixed (Two-Eleven's painting sat 12 pixels above its frame's foot, so the painting rigger saw nobody standing; `owed98` pinned the number of sets at 18; `sprites21` counted the newest, nearly empty sheet of pictures as waste, and now judges the full sheets). The other fourteen pass alone.
 
 ## Pictures
 `screenshots/p100/`: the mooring-yard, the wall-walk, the lip, Magazine Four, Tower Nine's foot, the Talking Halls, the plan.
