@@ -50,7 +50,7 @@ Sources: Book Three ch. 2; World Bible Vol VI §1; Phase 89 "VIII. The Continent
 
 ## Ruled by the owner on 18 Nov, while this phase was being built
 - "I approve of the proposals": the thirteen above.
-- "ok I like the not color": the not-colour stays as drawn (question 4 below is closed unless you want more).
+- "ok I like the not color": the not-colour stays as drawn (question 4 above is closed unless you want more).
 - "yes every town should have raised houses": every town's houses are to be raised as Oakhaven's were in Phase 97. Not built yet; on the roadmap.
 - "the phase 98 four names is good": Phase 98's four names stand.
 - "any time there is dialogue it should be read aloud in the best possible voices available", and then "continue using Kokoro for now": dialogue is to be spoken by Kokoro, a voice model that runs in the player's own browser, with the device's voice as the fallback. Voicebox (recorded files) may come later.
