@@ -26,6 +26,8 @@ Sources: Book Three ch. 2; World Bible Vol VI §1; Phase 89 "VIII. The Continent
 - Phase 90 drew the way in at the west gate. Book Three has the Watch's mooring-yard under the wall, with a stair from it to the wall-walk between Towers Five and Six. So the Kestrel moors there, and the west gate is the far end of the place (shut: the plain is a later phase).
 
 ## [PROPOSED] (not in the books; for the owner)
+**Ruled, 18 Nov: the owner, "I approve of the proposals."** All thirteen below stand as built. (They keep the [PROPOSED] mark in the code only to show they are the game's and not the books'.)
+
 1. The flight takes 48 hours.
 2. The battery rail has a third stop, at the mooring-yard.
 3. A visitor needs a subject from the talk-roster before Two-Eleven lets them past the chain at the wall stair. The four visitors' subjects: the days of the week, counting cable-eyes, onions, the road you came by.

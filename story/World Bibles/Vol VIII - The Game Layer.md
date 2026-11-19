@@ -2398,7 +2398,7 @@ Record: `story/Game Layer/Phase 100 - The Continental Rift, part one (text for r
 
 **From the book, unchanged.** The obsidian, lead and cable; the dampening batteries; thirty yards of rock and then the land stops; Standing Order Nine; rota-numbers for names; General Ward's iron-cant and her voice; Two-Eleven, Nineteen, Eighty-Eight, the Quartermaster; the Lead Brothers; the watchers by the bunks.
 
-**PROPOSED (the game only).**
+**The game's own, approved by the owner on 18 Nov ("I approve of the proposals"). Status: ruled.**
 - *The talk-roster.* Every number has an hour and a subject, and nobody may take another's. Visitors pick one of four (the days, cable-eyes, onions, the road) and are not let up the wall stair without one.
 - *Relieved.* What the game calls being taken by the quiet: 8 seconds of silence on the wall-walk, and the traveller walks to the coping and over. A manned battery's bell fetches them back. Tower Eight is unmanned this week.
 - *Talking-posts.* The Watch's lamps: a lantern on an iron post and a tin with a note, which whoever sits there reads aloud and replaces.

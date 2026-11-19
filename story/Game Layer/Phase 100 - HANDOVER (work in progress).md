@@ -15,7 +15,7 @@ Branch `p100-rift` (from `main` fbd98c8). Written 18 Nov 2026 in case the sessio
 3. Records: `story/Game Layer/Phase 100 - The Continental Rift, part one (text for review).md`; Vol VIII section ("last: Phase 100"); README section with the pictures; ROADMAP; the Project doc.
 4. Pull request `p100-rift` into `main`. The owner said (18 Nov) to complete pull requests, so merge it once every suite is green.
 
-## For the owner to decide (all [PROPOSED])
+## Approved by the owner on 18 Nov ("I approve of the proposals"): these stand as built
 - The Kestrel moors in the mooring-yard under the wall (Book Three) and not at the west gate (the Phase 90 layout); the west gate is the far end.
 - The flight is 48 hours.
 - The battery rail has a third stop, at the mooring-yard.
@@ -33,4 +33,4 @@ One pull request at a time. Bring the branch up to today's `main`, settle the co
 4. Close without merging: #23 (`main` into the old `phase10-picks` branch; nothing to gain).
 
 ## Asked for by the owner, 18 Nov: the hands and arms
-"when its an opportune time the hands and arms need a massive overhaul as well". The first-person hands and arms (`js/fp-hands.js`, `js/fp87.js`; the bare fist, the glass arm and the Song hands were last painted in Phase 98). Make it a phase of its own: two or three painted options on one sheet for the owner to choose from, all in code, nothing random. Best done by Fable when the week's allowance is back; Opus at high effort can do it if the owner prefers not to wait.
+"when its an opportune time the hands and arms need a massive overhaul as well". The first-person hands and arms (`js/fp-hands.js`, `js/fp87.js`; the bare fist, the glass arm and the Song hands were last painted in Phase 98). Make it a phase of its own: two or three painted options on one sheet for the owner to choose from, all in code, nothing random. The owner, 18 Nov: "ill let opus do it for now and then use fable later on to do any touch ups." So: Opus 5.5 at high effort does the overhaul; Fable touches it up later.
