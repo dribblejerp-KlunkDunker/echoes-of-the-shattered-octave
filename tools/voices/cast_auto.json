@@ -1,0 +1,1132 @@
+{
+ "lib_ilse": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "af_bella"
+ },
+ "lib_odile": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "af_sarah"
+ },
+ "lib_shelver": {
+  "fx": [
+   [
+    "whisper",
+    0.75
+   ],
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 1,
+  "speed": 0.86,
+  "voice": "bm_daniel"
+ },
+ "moor_bookseller": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_lewis"
+ },
+ "n28_hummer": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "af_nicole"
+ },
+ "n28_lamplighter": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_daniel"
+ },
+ "orrin": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_fable"
+ },
+ "p100_19": {
+  "fx": [
+   "gravel",
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -1,
+  "speed": 0.82,
+  "voice": "bm_daniel"
+ },
+ "p100_207": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 1,
+  "speed": 0.85,
+  "voice": "bm_daniel"
+ },
+ "p100_211": {
+  "fx": [
+   "gravel",
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -3,
+  "speed": 0.78,
+  "voice": "bm_daniel"
+ },
+ "p100_51": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "bf_lily"
+ },
+ "p100_88": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 1,
+  "speed": 0.88,
+  "voice": "bm_fable"
+ },
+ "p100_94": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 1,
+  "speed": 0.86,
+  "voice": "am_michael"
+ },
+ "p100_corp": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.83,
+  "voice": "bm_lewis"
+ },
+ "p100_issue": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.81,
+  "voice": "am_fenrir"
+ },
+ "p100_mastcrew": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 1,
+  "speed": 0.85,
+  "voice": "bm_daniel"
+ },
+ "p100_qm": {
+  "fx": [
+   "gravel",
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -2,
+  "speed": 0.8,
+  "voice": "bm_fable"
+ },
+ "p100_roster": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_fable"
+ },
+ "p100_tr_a": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_fable"
+ },
+ "p100_tr_b": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.9,
+  "voice": "af_aoede"
+ },
+ "p100_tr_c": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.88,
+  "voice": "af_jessica"
+ },
+ "p100_tr_d": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.82,
+  "voice": "am_adam"
+ },
+ "p100_watcher": {
+  "fx": [
+   [
+    "whisper",
+    0.35
+   ],
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 1,
+  "speed": 0.84,
+  "voice": "am_michael"
+ },
+ "p11_dicer": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_daniel"
+ },
+ "p11c_fish": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "bf_alice"
+ },
+ "p11c_herb": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "af_jessica"
+ },
+ "p11c_larder": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_fable"
+ },
+ "p11c_odds": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "bf_lily"
+ },
+ "p11c_tinker": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_daniel"
+ },
+ "p12_baker": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "bf_lily"
+ },
+ "p12_dunna": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "bf_isabella"
+ },
+ "p12_herald": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "am_santa"
+ },
+ "p13h_wenna": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "bf_isabella"
+ },
+ "p15_dealer": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "af_heart"
+ },
+ "p15l_clerk": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_george"
+ },
+ "p15l_veil": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_daniel"
+ },
+ "p15s_preacher": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.83,
+  "voice": "am_michael"
+ },
+ "p16f_hand": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.83,
+  "voice": "am_liam"
+ },
+ "p16f_madge": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.91,
+  "voice": "af_nova"
+ },
+ "p16f_orrin": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -2,
+  "speed": 0.82,
+  "voice": "bm_daniel"
+ },
+ "p16f_pellam": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_daniel"
+ },
+ "p16f_wife": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.92,
+  "voice": "af_jessica"
+ },
+ "p16h_dessa": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "af_nova"
+ },
+ "p16h_ines": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "af_jessica"
+ },
+ "p16h_mossbrook": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_daniel"
+ },
+ "p16h_orrin": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_daniel"
+ },
+ "p16h_steward": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "am_adam"
+ },
+ "p16h_vause": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 1,
+  "speed": 0.9,
+  "voice": "am_fenrir"
+ },
+ "p16k_hob": {
+  "fx": [
+   "gravel",
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -2,
+  "speed": 0.8,
+  "voice": "am_santa"
+ },
+ "p16k_mags": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.9,
+  "voice": "af_kore"
+ },
+ "p16k_nell": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 2,
+  "speed": 0.95,
+  "voice": "bf_emma"
+ },
+ "p16k_pennick": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -1,
+  "speed": 0.82,
+  "voice": "bm_george"
+ },
+ "p16k_vane": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.83,
+  "voice": "am_puck"
+ },
+ "p17c_bessa": {
+  "fx": [
+   [
+    "whisper",
+    0.35
+   ],
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 2,
+  "speed": 0.93,
+  "voice": "af_aoede"
+ },
+ "p17c_child": {
+  "fx": [
+   "child",
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 2,
+  "speed": 0.96,
+  "voice": "af_sky"
+ },
+ "p17c_dunmore": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 1,
+  "speed": 0.85,
+  "voice": "bm_fable"
+ },
+ "p17c_hand": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.83,
+  "voice": "am_onyx"
+ },
+ "p17c_hesper": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -3,
+  "speed": 0.8,
+  "voice": "af_aoede"
+ },
+ "p17c_hesper2": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -3,
+  "speed": 0.8,
+  "voice": "af_nova"
+ },
+ "p17c_oona": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -2,
+  "speed": 0.88,
+  "voice": "af_heart"
+ },
+ "p17c_quain": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -2,
+  "speed": 0.81,
+  "voice": "bm_fable"
+ },
+ "p17c_quain2": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -2,
+  "speed": 0.81,
+  "voice": "am_puck"
+ },
+ "p17c_sloe": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "am_puck"
+ },
+ "p17c_tace": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "bf_isabella"
+ },
+ "p17c_teague": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.83,
+  "voice": "am_onyx"
+ },
+ "p17c_teel": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -1,
+  "speed": 0.82,
+  "voice": "bm_george"
+ },
+ "p17c_wife": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.92,
+  "voice": "af_nicole"
+ },
+ "p17n_jory": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_lewis"
+ },
+ "p17n_marl": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -2,
+  "speed": 0.8,
+  "voice": "am_santa"
+ },
+ "p17n_tansy": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 1,
+  "speed": 0.93,
+  "voice": "bf_isabella"
+ },
+ "p22_absalom": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -2,
+  "speed": 0.8,
+  "voice": "bm_daniel"
+ },
+ "p22_gideon": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.82,
+  "voice": "am_fenrir"
+ },
+ "p22_kit": {
+  "fx": [
+   "child",
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 2,
+  "speed": 0.96,
+  "voice": "af_nova"
+ },
+ "p22_kitlost": {
+  "fx": [
+   "child",
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 2,
+  "speed": 0.96,
+  "voice": "af_nova"
+ },
+ "p22_tamar": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.88,
+  "voice": "af_jessica"
+ },
+ "p29_abel": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.81,
+  "voice": "am_liam"
+ },
+ "p29_agnes": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.88,
+  "voice": "af_jessica"
+ },
+ "p29_ambrose": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.83,
+  "voice": "bm_fable"
+ },
+ "p29_corvin": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.82,
+  "voice": "am_santa"
+ },
+ "p29_ennis": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.87,
+  "voice": "bf_emma"
+ },
+ "p29_gil": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.83,
+  "voice": "am_echo"
+ },
+ "p29_hurst": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -2,
+  "speed": 0.86,
+  "voice": "bf_isabella"
+ },
+ "p29_jem": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -1,
+  "speed": 0.82,
+  "voice": "bm_lewis"
+ },
+ "p29_moll": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.9,
+  "voice": "af_aoede"
+ },
+ "p29_prue": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 1,
+  "speed": 0.91,
+  "voice": "af_bella"
+ },
+ "p29_sexton": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -1,
+  "speed": 0.81,
+  "voice": "bm_daniel"
+ },
+ "p29_sim": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 1,
+  "speed": 0.84,
+  "voice": "bm_lewis"
+ },
+ "p29_ysolde": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -1,
+  "speed": 0.87,
+  "voice": "bf_lily"
+ },
+ "p30_hob": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -1,
+  "speed": 0.82,
+  "voice": "bm_fable"
+ },
+ "p30_lissa": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 3,
+  "speed": 0.94,
+  "voice": "af_sarah"
+ },
+ "p31_jugs": {
+  "fx": [
+   [
+    "whisper",
+    0.75
+   ],
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -1,
+  "speed": 0.9,
+  "voice": "bf_lily"
+ },
+ "p31_shutters": {
+  "fx": [
+   [
+    "whisper",
+    0.75
+   ],
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 1,
+  "speed": 0.85,
+  "voice": "bm_fable"
+ },
+ "p31_sweeper": {
+  "fx": [
+   [
+    "whisper",
+    0.75
+   ],
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 1,
+  "speed": 0.88,
+  "voice": "am_michael"
+ },
+ "p46_marrit": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.87,
+  "voice": "bf_emma"
+ },
+ "p92_anselm": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.82,
+  "voice": "am_fenrir"
+ },
+ "p92_brenna": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -2,
+  "speed": 0.87,
+  "voice": "af_nicole"
+ },
+ "p92_canvas": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -3,
+  "speed": 0.85,
+  "voice": "bf_lily"
+ },
+ "p92_folk": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 1,
+  "speed": 0.86,
+  "voice": "am_michael"
+ },
+ "p92_joss": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.85,
+  "voice": "am_santa"
+ },
+ "p92_ysolde": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.88,
+  "voice": "af_nova"
+ },
+ "p94_bardo": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -2,
+  "speed": 0.79,
+  "voice": "am_michael"
+ },
+ "p95_perpetua": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -2,
+  "speed": 0.87,
+  "voice": "af_nicole"
+ },
+ "p95_warden": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.81,
+  "voice": "am_liam"
+ },
+ "p96c_cantor": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 1,
+  "speed": 0.86,
+  "voice": "bm_fable"
+ },
+ "p96c_treble": {
+  "fx": [
+   "child",
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 2,
+  "speed": 0.96,
+  "voice": "af_nova"
+ },
+ "p96v_albinus": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.81,
+  "voice": "am_eric"
+ },
+ "p96v_clemence": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -1,
+  "speed": 0.87,
+  "voice": "bf_emma"
+ },
+ "p96v_coriel": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -2,
+  "speed": 0.84,
+  "voice": "bf_emma"
+ },
+ "p96v_domitia": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.9,
+  "voice": "bf_lily"
+ },
+ "p96v_fabian": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "bm_lewis"
+ },
+ "p96v_galen": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": -2,
+  "speed": 0.8,
+  "voice": "bm_fable"
+ },
+ "p96v_honoria": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "af_heart"
+ },
+ "p96v_liviana": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.89,
+  "voice": "af_aoede"
+ },
+ "p96v_marcellin": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 1,
+  "speed": 0.84,
+  "voice": "am_echo"
+ },
+ "p96v_ottavia": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.88,
+  "voice": "af_kore"
+ },
+ "p96v_prisca": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 1,
+  "speed": 0.92,
+  "voice": "bf_emma"
+ },
+ "p96v_quintin": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 1,
+  "speed": 0.85,
+  "voice": "am_michael"
+ },
+ "p97_scav": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": -2,
+  "speed": 0.87,
+  "voice": "af_bella"
+ },
+ "p97_tallyman": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.82,
+  "voice": "bm_george"
+ },
+ "p9_ada": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 0,
+  "speed": 0.91,
+  "voice": "bf_isabella"
+ },
+ "p9_tomas": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-us",
+  "pitch": 0,
+  "speed": 0.84,
+  "voice": "am_puck"
+ },
+ "umber": {
+  "fx": [
+   "room"
+  ],
+  "lang": "en-gb",
+  "pitch": 2,
+  "speed": 0.9,
+  "voice": "bf_alice"
+ }
+}

@@ -195,11 +195,12 @@ def main():
         k = key_of(line); out = os.path.join(ROOT, rel)
         if (not only or line['speaker'] in only) and (a.force or cache.get(lid) != k or not os.path.exists(out)):
             x = render(a.model, line); write_mp3(x, out); cache[lid] = k; done += 1
+            json.dump(cache, open(cache_p, 'w'), indent=0, sort_keys=True)   # saved line by line: a render cut short resumes
             print('rendered', lid, '%.1fs' % (len(x) / SR), flush=True)
         if not os.path.exists(out): continue
         dur = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', out], capture_output=True, text=True).stdout.strip() or 0)
         manifest[lid] = {'src': rel, 'd': round(dur, 2), 'speaker': line['speaker'], 'kind': line['kind'], 't': line['text']}
-        for f in ('when', 'ref', 'voiceOf'):
+        for f in ('when', 'ref', 'voiceOf', 'match', 'for'):
             if line.get(f) is not None: manifest[lid][f] = line[f]
     json.dump(cache, open(cache_p, 'w'), indent=0, sort_keys=True)
     with open(os.path.join(ROOT, 'js', 'voice-lines.js'), 'w') as f:

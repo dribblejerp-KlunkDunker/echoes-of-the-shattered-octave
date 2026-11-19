@@ -2280,6 +2280,637 @@ const VOICE_LINES = {
 "t": "Position reassessed.",
 "voiceOf": "outrider"
 },
+"p100_19.g.1f620d": {
+"d": 3.7,
+"kind": "greet",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.g.1f620d.mp3",
+"t": "so I numbered them instead. Nineteen. Keep talking."
+},
+"p100_19.g.90a2c2": {
+"d": 3.14,
+"kind": "greet",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.g.90a2c2.mp3",
+"t": "That's it. Loud is fine. Loud is alive."
+},
+"p100_19.g.9f5b81": {
+"d": 3.05,
+"kind": "greet",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.g.9f5b81.mp3",
+"t": "and the grey one went broody in the spring\u2014 What."
+},
+"p100_19.t.4d5f57": {
+"d": 7.51,
+"kind": "topic",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.t.4d5f57.mp3",
+"t": "Thirty yards of bare rock, and then the land stops. Don't look at it long. You can't, anyway. You'll find you're looking at your boots."
+},
+"p100_19.t.4ed063": {
+"d": 13.2,
+"kind": "topic",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.t.4ed063.mp3",
+"t": "The only men on the Watch allowed to be silent. Lead over the face, hammered to fit, no holes in it. They stand along the lip and listen for us. When one of theirs starts to walk, the two beside him fetch him back. They don't fetch us."
+},
+"p100_19.t.b22cba": {
+"d": 6.17,
+"kind": "topic",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.t.b22cba.mp3",
+"t": "I kept eleven. You name a hen and it dies, so I numbered them. Then I came here, and they numbered me."
+},
+"p100_19.t.f36607": {
+"d": 11.64,
+"kind": "topic",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.t.f36607.mp3",
+"t": "Brass, nine feet across the mouth, under a lead hood. They don't throw shot. They throw noise. Forty of them, at dawn, out over the edge of the world, every day since the crack. We call it the Refusal."
+},
+"p100_207.g.3f8aa4": {
+"d": 4.3,
+"kind": "greet",
+"speaker": "p100_207",
+"src": "voices/p100_207/p100_207.g.3f8aa4.mp3",
+"t": "Shh\u2014 no. Not that. Sorry. Keep talking. Just not about that."
+},
+"p100_207.g.53995e": {
+"d": 2.09,
+"kind": "greet",
+"speaker": "p100_207",
+"src": "voices/p100_207/p100_207.g.53995e.mp3",
+"t": "nine days. Ten tomorrow."
+},
+"p100_207.g.fe62fd": {
+"d": 5.93,
+"kind": "greet",
+"speaker": "p100_207",
+"src": "voices/p100_207/p100_207.g.fe62fd.mp3",
+"t": "and it grounds the halberd soft, every time. Because of the powder. It still knows about the powder."
+},
+"p100_207.t.7f5331": {
+"d": 9.79,
+"kind": "topic",
+"speaker": "p100_207",
+"src": "voices/p100_207/p100_207.t.7f5331.mp3",
+"t": "Through the barrack and down. Felts on. No flame, no shot, no iron on stone. It will not open the big door to anybody, but it has never thought to bar ours."
+},
+"p100_207.t.bb770c": {
+"d": 12.31,
+"kind": "topic",
+"speaker": "p100_207",
+"src": "voices/p100_207/p100_207.t.bb770c.mp3",
+"t": "The Arbiterium left it with us when the old guns went out of use, to mind the powder. Six years it has walked the same nine paces. Nine days ago it stopped in the middle of them and said something about bread."
+},
+"p100_211.g.4bf4ec": {
+"d": 7.03,
+"kind": "greet",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.g.4bf4ec.mp3",
+"t": "he could open a gate, that dog. Not push it. Open it. Evening. You're quiet. You want to watch that, here."
+},
+"p100_211.g.8c3b9d": {
+"d": 5.28,
+"kind": "greet",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.g.8c3b9d.mp3",
+"t": "and the food, which is always worse. You're quiet. You want to watch that, here."
+},
+"p100_211.g.a39e34": {
+"d": 5.35,
+"kind": "greet",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.g.a39e34.mp3",
+"t": "Shout if you like. It all counts. It's the quiet ones we ring the bell for."
+},
+"p100_211.t.113456": {
+"d": 11.02,
+"kind": "topic",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.t.113456.mp3",
+"t": "Nothing that matters. Nobody on the Watch does. That's what talk is for. That's the whole trick of it. Onions. Days of the week. Counting cable-eyes. My dog."
+},
+"p100_211.t.4bc685": {
+"d": 14.18,
+"kind": "topic",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.t.4bc685.mp3",
+"t": "You go quiet on the Watch and somebody sounds the bell. Standing order. Nine. They don't look first. They don't ask. They just ring it. It's not a punishment. It's because the ones that go quiet are the ones that go."
+},
+"p100_211.t.51ed7f": {
+"d": 8.88,
+"kind": "topic",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.t.51ed7f.mp3",
+"t": "Over. To listen. Near enough a hundred and eighty since the year of the crack, and every one of them went quiet first. So we talk."
+},
+"p100_211.t.da093a": {
+"d": 11.09,
+"kind": "topic",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.t.da093a.mp3",
+"t": "Up to the walk between Five and Six. Keep to the manned batteries till you've got the way of it. Eight's hooded this week. From Seven to Nine there's nobody but you."
+},
+"p100_211.t.f1fa24": {
+"d": 11.47,
+"kind": "topic",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.t.f1fa24.mp3",
+"t": "Rufus. I had him as a boy in the Peaks. He'd lift the latch with his nose and walk the gate back, and then he'd sit down in the gap and look at you, as if you'd asked him to."
+},
+"p100_51.g.408751": {
+"d": 4.92,
+"kind": "greet",
+"speaker": "p100_51",
+"src": "voices/p100_51/p100_51.g.408751.mp3",
+"t": "my nan sang it. Every night. I'd know it in my sleep. I do know it in my sleep."
+},
+"p100_51.g.b97c82": {
+"d": 2.35,
+"kind": "greet",
+"speaker": "p100_51",
+"src": "voices/p100_51/p100_51.g.b97c82.mp3",
+"t": "Not so loud. Not about that."
+},
+"p100_51.g.fd51ba": {
+"d": 2.74,
+"kind": "greet",
+"speaker": "p100_51",
+"src": "voices/p100_51/p100_51.g.fd51ba.mp3",
+"t": "four lines. It only ever does three."
+},
+"p100_51.t.a344a8": {
+"d": 9.14,
+"kind": "topic",
+"speaker": "p100_51",
+"src": "voices/p100_51/p100_51.t.a344a8.mp3",
+"t": "Because it stops at the third line, and waits, and then it starts again, and while it is doing that it is still here. Nobody knows what it does when it gets to the end."
+},
+"p100_51.t.e07c9a": {
+"d": 9.79,
+"kind": "topic",
+"speaker": "p100_51",
+"src": "voices/p100_51/p100_51.t.e07c9a.mp3",
+"t": "A cradle-song. It is from where I am from, and I am not saying where. I wrote it out so I would stop hearing the gap at the end. It is in my locker, under the Sermon."
+},
+"p100_88.g.31ba9f": {
+"d": 4.68,
+"kind": "greet",
+"speaker": "p100_88",
+"src": "voices/p100_88/p100_88.g.31ba9f.mp3",
+"t": "If you are going to shout, shout something with a rhythm. I can use that."
+},
+"p100_88.g.3f2c6f": {
+"d": 6.43,
+"kind": "greet",
+"speaker": "p100_88",
+"src": "voices/p100_88/p100_88.g.3f2c6f.mp3",
+"t": "two short, a pause, one long: that is yes. Sorry. Eighty-Eight. I was listening to her knuckles."
+},
+"p100_88.g.d76166": {
+"d": 4.46,
+"kind": "greet",
+"speaker": "p100_88",
+"src": "voices/p100_88/p100_88.g.d76166.mp3",
+"t": "four flat: the Watch holds the wall. Everybody knows that one."
+},
+"p100_88.t.73c311": {
+"d": 3.89,
+"kind": "topic",
+"speaker": "p100_88",
+"src": "voices/p100_88/p100_88.t.73c311.mp3",
+"t": "In the Peaks. You would not know it. I would not know it now."
+},
+"p100_88.t.f0911f": {
+"d": 9.72,
+"kind": "topic",
+"speaker": "p100_88",
+"src": "voices/p100_88/p100_88.t.f0911f.mp3",
+"t": "Everybody learns the battery calls. I am learning the rest. There is nothing to do on the wall but talk and listen, so I talk with my mouth and listen with everything else."
+},
+"p100_94.g.2aaf0f": {
+"d": 5.83,
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.2aaf0f.mp3",
+"t": "and the bag is patched on the starboard side, General, a good deal\u2014 Yes? Ninety-Four."
+},
+"p100_94.g.370d5c": {
+"d": 6.17,
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.370d5c.mp3",
+"t": "and that one has a mouth on them, General. I would not, if I were you. She can hear tone."
+},
+"p100_94.g.4c0666": {
+"d": 4.37,
+"for": "p100_ward",
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.4c0666.mp3",
+"t": "The General is waiting for you to say that again, in another way."
+},
+"p100_94.g.5f522b": {
+"d": 7.44,
+"for": "p100_ward",
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.5f522b.mp3",
+"t": "The General says, state your ship and your business, and say it aloud, and go on saying something after."
+},
+"p100_94.g.6871b5": {
+"d": 5.33,
+"for": "p100_ward",
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.6871b5.mp3",
+"t": "The General says, welcome to Null-Watch. The General says, keep talking."
+},
+"p100_94.g.f613bb": {
+"d": 8.28,
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.f613bb.mp3",
+"t": "and that is a traveller, General, off the Coast skyship, and civil with it\u2014 Ninety-Four. I say what the General says."
+},
+"p100_94.t.392e40": {
+"d": 19.15,
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.392e40.mp3",
+"t": "It was the Fortis sappers' code, tapped on pipes in the deep galleries where a voice does not carry. She strikes it on the iron over her heart. Everybody on the Watch learns the battery calls. Almost nobody learns the whole of it. I have enough to say it after her."
+},
+"p100_94.t.3e2f59": {
+"d": 7.3,
+"for": "p100_ward",
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.3e2f59.mp3",
+"t": "The General says, the Watch holds the wall. The General says, the Watch holds the wall and nothing else."
+},
+"p100_94.t.3f2e1d": {
+"d": 16.03,
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.3f2e1d.mp3",
+"t": "That is my subject. Three sovereigns the cask at the Fenwick chandler's when I left, and four here, and the sutler says five by Frostmonth, and the wicks are extra. Nobody else may have lamp-oil. Ask on the roster."
+},
+"p100_94.t.4fc3bb": {
+"d": 11.95,
+"for": "p100_ward",
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.4fc3bb.mp3",
+"t": "The General says, keep talking. On the wall, in the yards, on the stairs. The General says, if you go quiet somebody will ring a bell, and they will not look first."
+},
+"p100_94.t.5563e3": {
+"d": 6.98,
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.5563e3.mp3",
+"t": "In the Reach. I owed money there. You get the wall for a debt of that size. Three years, so far."
+},
+"p100_94.t.5cec21": {
+"d": 21.0,
+"for": "p100_ward",
+"kind": "topic",
+"match": "Spring of 413. The batteries were new and nobody knew how to lay them. She laid them by voice, tower to tower in the dark, for thirty-one hours. At dawn on the second day she opened her mouth to say cease firing, and nothing came out.",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.5cec21.mp3",
+"t": "The General says nothing about that. Spring of 413. The batteries were new and nobody knew how to lay them. She laid them by voice, tower to tower in the dark, for thirty-one hours. At dawn on the second day she opened her mouth to say cease firing, and nothing came out."
+},
+"p100_94.t.69c403": {
+"d": 9.36,
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.69c403.mp3",
+"t": "It is not an appointment. It is come by. The one before me talked about rope. When I stop, somebody will come up a stair and offer."
+},
+"p100_94.t.d4f68e": {
+"d": 11.26,
+"for": "p100_ward",
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.d4f68e.mp3",
+"t": "The General says the Watch obeys the Synod when the Synod is not mad. The General says the Synod has been mad since the spring of 413."
+},
+"p100_corp.g.2317fa": {
+"d": 2.23,
+"kind": "greet",
+"speaker": "p100_corp",
+"src": "voices/p100_corp/p100_corp.g.2317fa.mp3",
+"t": "Move along. Keep talking."
+},
+"p100_corp.g.c7e26f": {
+"d": 5.21,
+"kind": "greet",
+"speaker": "p100_corp",
+"src": "voices/p100_corp/p100_corp.g.c7e26f.mp3",
+"t": "Say that louder and I will have you counting cable-eyes till Frostmonth."
+},
+"p100_corp.g.e601e2": {
+"d": 4.54,
+"kind": "greet",
+"speaker": "p100_corp",
+"src": "voices/p100_corp/p100_corp.g.e601e2.mp3",
+"t": "Nothing through there. Blankets. Keep talking and keep moving."
+},
+"p100_corp.t.1d4323": {
+"d": 6.17,
+"kind": "topic",
+"speaker": "p100_corp",
+"src": "voices/p100_corp/p100_corp.t.1d4323.mp3",
+"t": "Shut for the damp. Nine days. It is routine, and it is on the sheet as routine."
+},
+"p100_issue.g.7c7c5c": {
+"d": 4.39,
+"kind": "greet",
+"speaker": "p100_issue",
+"src": "voices/p100_issue/p100_issue.g.7c7c5c.mp3",
+"t": "Issue. Coat, mitts, spike. You sign with a mark if you can't sign."
+},
+"p100_issue.g.973161": {
+"d": 1.06,
+"kind": "greet",
+"speaker": "p100_issue",
+"src": "voices/p100_issue/p100_issue.g.973161.mp3",
+"t": "Issue. What."
+},
+"p100_issue.g.cb5c88": {
+"d": 4.63,
+"kind": "greet",
+"speaker": "p100_issue",
+"src": "voices/p100_issue/p100_issue.g.cb5c88.mp3",
+"t": "Issue. Mind your tone, or you can go on the wall in what you stand up in."
+},
+"p100_issue.t.506c53": {
+"d": 11.02,
+"kind": "topic",
+"speaker": "p100_issue",
+"src": "voices/p100_issue/p100_issue.t.506c53.mp3",
+"t": "Lead plates, sewn in. It will not stop the quiet. Nothing stops the quiet but your own mouth. But it is the Watch's coat, and the Watch knows its own."
+},
+"p100_issue.t.6cccd9": {
+"d": 6.31,
+"kind": "topic",
+"speaker": "p100_issue",
+"src": "voices/p100_issue/p100_issue.t.6cccd9.mp3",
+"t": "Not from me. The magazines keep their own, on a rack. You do not walk on powder in nails."
+},
+"p100_mastcrew.g.54347e": {
+"d": 4.63,
+"kind": "greet",
+"speaker": "p100_mastcrew",
+"src": "voices/p100_mastcrew/p100_mastcrew.g.54347e.mp3",
+"t": "and that's her lines made fast, and that's the windlass pawled\u2014 Mind the ladder."
+},
+"p100_mastcrew.g.873e92": {
+"d": 3.53,
+"kind": "greet",
+"speaker": "p100_mastcrew",
+"src": "voices/p100_mastcrew/p100_mastcrew.g.873e92.mp3",
+"t": "and that one shouts. Good. Shout on the wall and you'll live."
+},
+"p100_mastcrew.g.99cc83": {
+"d": 2.88,
+"kind": "greet",
+"speaker": "p100_mastcrew",
+"src": "voices/p100_mastcrew/p100_mastcrew.g.99cc83.mp3",
+"t": "Coast-built, by the cut of her, and knocked about"
+},
+"p100_mastcrew.t.7d0934": {
+"d": 7.22,
+"kind": "topic",
+"speaker": "p100_mastcrew",
+"src": "voices/p100_mastcrew/p100_mastcrew.t.7d0934.mp3",
+"t": "Not many ships come. The Synod's packets, with the condemned, four times a year. A sutler's barge when the wind allows. You."
+},
+"p100_qm.g.3b96e9": {
+"d": 3.05,
+"kind": "greet",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.g.3b96e9.mp3",
+"t": "Keep talking. Somewhere else."
+},
+"p100_qm.g.70ddea": {
+"d": 6.96,
+"kind": "greet",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.g.70ddea.mp3",
+"t": "Keep talking. Stores are the other side of the Watch. This is Nine. Nothing here is for issue."
+},
+"p100_qm.g.b7e214": {
+"d": 1.87,
+"kind": "greet",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.g.b7e214.mp3",
+"t": "Keep talking."
+},
+"p100_qm.t.26a6c2": {
+"d": 5.47,
+"kind": "topic",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.t.26a6c2.mp3",
+"t": "I can't. I can write my name and two words more. It has been enough."
+},
+"p100_qm.t.3d677a": {
+"d": 8.69,
+"kind": "topic",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.t.3d677a.mp3",
+"t": "Barred. It goes out onto the rock, to the buttress and the crane. Nobody goes out there without my leave, and you have not got it."
+},
+"p100_qm.t.8bc217": {
+"d": 9.72,
+"kind": "topic",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.t.8bc217.mp3",
+"t": "In the Peaks. I hit an officer who had hit a boy. Spring of '13. They sent me to the end of the world for it. It had only just become the end."
+},
+"p100_roster.g.6f0f28": {
+"d": 4.8,
+"kind": "greet",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.g.6f0f28.mp3",
+"t": "Number and subject. No number? Visitor, then. Subject."
+},
+"p100_roster.g.86293d": {
+"d": 1.25,
+"kind": "greet",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.g.86293d.mp3",
+"t": "Subject?"
+},
+"p100_roster.g.cc0a2f": {
+"d": 4.46,
+"kind": "greet",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.g.cc0a2f.mp3",
+"t": "Subject. I have four hundred of these to chalk before the hour."
+},
+"p100_roster.t.81dd58": {
+"d": 8.71,
+"kind": "topic",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.t.81dd58.mp3",
+"t": "Read the board. Pick one of the visitors' four. Keep to it. If you dry up on the wall, say the days: nobody has ever run out of days."
+},
+"p100_roster.t.f2ab93": {
+"d": 9.38,
+"kind": "topic",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.t.f2ab93.mp3",
+"t": "Somebody sits by every bunk and talks, to keep the sleeper's breathing company. Two hours on. It is the kindest duty on the roster and the dullest."
+},
+"p100_roster.t.f65e3a": {
+"d": 10.9,
+"kind": "topic",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.t.f65e3a.mp3",
+"t": "A lantern and a tin. Whoever sat there last leaves a note for whoever sits there next, and you read it out. It does not matter what it says. It matters that it gets said."
+},
+"p100_tr_a.g.90012e": {
+"d": 2.47,
+"kind": "greet",
+"speaker": "p100_tr_a",
+"src": "voices/p100_tr_a/p100_tr_a.g.90012e.mp3",
+"t": "thin, I said, and a heavy pan"
+},
+"p100_tr_a.g.a35a70": {
+"d": 2.4,
+"kind": "greet",
+"speaker": "p100_tr_a",
+"src": "voices/p100_tr_a/p100_tr_a.g.a35a70.mp3",
+"t": "that's the way, good and loud, now the pan"
+},
+"p100_tr_a.g.ebf1b1": {
+"d": 6.26,
+"kind": "greet",
+"speaker": "p100_tr_a",
+"src": "voices/p100_tr_a/p100_tr_a.g.ebf1b1.mp3",
+"t": "and then you take your onions, and you want them sliced thin, not chopped, thin, and you want a heavy pan"
+},
+"p100_tr_a.t.00c794": {
+"d": 7.63,
+"kind": "topic",
+"speaker": "p100_tr_a",
+"src": "voices/p100_tr_a/p100_tr_a.t.00c794.mp3",
+"t": "Standing Order Nine. You get used to it. The new ones can't sleep for a month, and after that they can't sleep anywhere else."
+},
+"p100_tr_b.g.156fa5": {
+"d": 3.91,
+"kind": "greet",
+"speaker": "p100_tr_b",
+"src": "voices/p100_tr_b/p100_tr_b.g.156fa5.mp3",
+"t": "forty-four, forty-five\u2014 don't make me lose my place\u2014 forty-six"
+},
+"p100_tr_b.g.565f11": {
+"d": 7.42,
+"kind": "greet",
+"speaker": "p100_tr_b",
+"src": "voices/p100_tr_b/p100_tr_b.g.565f11.mp3",
+"t": "forty-one, forty-two, forty-three, and that's the cable-eyes on the north face of Six done, now the south face, forty-four"
+},
+"p100_tr_b.g.e1e745": {
+"d": 3.22,
+"kind": "greet",
+"speaker": "p100_tr_b",
+"src": "voices/p100_tr_b/p100_tr_b.g.e1e745.mp3",
+"t": "forty-seven! Forty-eight! See, I can do it loud as well"
+},
+"p100_tr_b.t.6a03e3": {
+"d": 11.28,
+"kind": "topic",
+"speaker": "p100_tr_b",
+"src": "voices/p100_tr_b/p100_tr_b.t.6a03e3.mp3",
+"t": "The iron eyes the cable runs through. Somebody counts them every watch. If the count comes out different, either an eye has gone or the counter has, and both are worth knowing."
+},
+"p100_tr_c.g.b9369e": {
+"d": 2.3,
+"kind": "greet",
+"speaker": "p100_tr_c",
+"src": "voices/p100_tr_c/p100_tr_c.g.b9369e.mp3",
+"t": "the blue, in the end. Obviously the blue"
+},
+"p100_tr_c.g.e676ce": {
+"d": 3.05,
+"kind": "greet",
+"speaker": "p100_tr_c",
+"src": "voices/p100_tr_c/p100_tr_c.g.e676ce.mp3",
+"t": "and she had a voice on her like yours, as it happens"
+},
+"p100_tr_c.g.faa72a": {
+"d": 6.7,
+"kind": "greet",
+"speaker": "p100_tr_c",
+"src": "voices/p100_tr_c/p100_tr_c.g.faa72a.mp3",
+"t": "told her, I said, you can have the blue or you can have the green, but you can't have both and expect your mother not to say something"
+},
+"p100_tr_c.t.4037dd": {
+"d": 8.33,
+"kind": "topic",
+"speaker": "p100_tr_c",
+"src": "voices/p100_tr_c/p100_tr_c.t.4037dd.mp3",
+"t": "She shouted her voice to rags that first night. Shouted it to bits, and the bits went over the edge, and she's never had it back. Now, the thing with gravy\u2014"
+},
+"p100_tr_d.g.580f2e": {
+"d": 2.11,
+"kind": "greet",
+"speaker": "p100_tr_d",
+"src": "voices/p100_tr_d/p100_tr_d.g.580f2e.mp3",
+"t": "Massday, Stasisday, Dawnday"
+},
+"p100_tr_d.g.b4d50e": {
+"d": 6.07,
+"kind": "greet",
+"speaker": "p100_tr_d",
+"src": "voices/p100_tr_d/p100_tr_d.g.b4d50e.mp3",
+"t": "Rootday, Hearthday, Massday, Stasisday, Dawnday, Driftday, Memoryday, Nullday, Rootday, Hearthday"
+},
+"p100_tr_d.g.bf9b9e": {
+"d": 3.98,
+"kind": "greet",
+"speaker": "p100_tr_d",
+"src": "voices/p100_tr_d/p100_tr_d.g.bf9b9e.mp3",
+"t": "Driftday! Memoryday! Nullday! Go on, you take the next round"
+},
+"p100_tr_d.t.cd442d": {
+"d": 7.15,
+"kind": "topic",
+"speaker": "p100_tr_d",
+"src": "voices/p100_tr_d/p100_tr_d.t.cd442d.mp3",
+"t": "It's the easiest subject there is. You can't run out. You get to Nullday and there's Rootday again, waiting for you."
+},
+"p100_watcher.g.2bd635": {
+"d": 2.74,
+"kind": "greet",
+"speaker": "p100_watcher",
+"src": "voices/p100_watcher/p100_watcher.g.2bd635.mp3",
+"t": "Wake him and you take the next two hours."
+},
+"p100_watcher.g.3ee79b": {
+"d": 2.23,
+"kind": "greet",
+"speaker": "p100_watcher",
+"src": "voices/p100_watcher/p100_watcher.g.3ee79b.mp3",
+"t": "in, and out, that's it, and the calf"
+},
+"p100_watcher.g.8c7744": {
+"d": 6.38,
+"kind": "greet",
+"speaker": "p100_watcher",
+"src": "voices/p100_watcher/p100_watcher.g.8c7744.mp3",
+"t": "and then your sister wrote, and the calf was a heifer after all\u2014 I can do both. Go on."
+},
+"p100_watcher.t.4fc592": {
+"d": 11.64,
+"kind": "topic",
+"speaker": "p100_watcher",
+"src": "voices/p100_watcher/p100_watcher.t.4fc592.mp3",
+"t": "You talk to their breathing. In, and out. If it changes, you talk closer. It has never failed yet in this hall, and nobody wants to be the one it fails for."
+},
 "pim.greet.normal": {
 "d": 2.11,
 "kind": "greet",
