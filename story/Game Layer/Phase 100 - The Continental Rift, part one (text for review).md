@@ -48,12 +48,20 @@ Sources: Book Three ch. 2; World Bible Vol VI §1; Phase 89 "VIII. The Continent
 3. Is the cradle-song right for the Reach or the Peaks, or should it come from somewhere named?
 4. Should looking at the not-colour do more than turn your eyes down?
 
+## Ruled by the owner on 18 Nov, while this phase was being built
+- "I approve of the proposals": the thirteen above.
+- "ok I like the not color": the not-colour stays as drawn (question 4 below is closed unless you want more).
+- "yes every town should have raised houses": every town's houses are to be raised as Oakhaven's were in Phase 97. Not built yet; on the roadmap.
+- "the phase 98 four names is good": Phase 98's four names stand.
+- "any time there is dialogue it should be read aloud in the best possible voices available": dialogue is to be spoken in made voices, not only the device's voice. Which tool makes them is still open (Voicebox was asked about; see the roadmap).
+- The hands and arms are to be overhauled: Opus first, Fable for touch-ups.
+- The plan for the eleven old pull requests is accepted.
+
 ## Still yours to decide from earlier phases
-- Recorded voices, or the device's voice, for reading aloud; the reader's keys (F2, F3 or [, F4 or ]).
-- Whether other towns' houses are raised like Oakhaven's.
+- Which tool makes the voices, and whose voices they are; the reader's keys (F2, F3 or [, F4 or ]).
 - The White Mile's [PROPOSED] list and its five questions (the Tallyman's count nine or fourteen; the white house not climbable; nobody there by day; the light still kills after the Unison's blow).
 - The glass arm on the left and the straight punch.
-- Phase 98's four names, and that the keepers leave weapons and not worn pieces; hearth pegs for keepers' trophies.
+- That the keepers leave weapons and not worn pieces; hearth pegs for keepers' trophies.
 - The eleven old pull requests: the plan you accepted on 18 Nov is in the handover note; #88 (Book Four, chapters 5 to 8) and #48 (the living-figures pilot) wait for your word.
 
 ## Verification

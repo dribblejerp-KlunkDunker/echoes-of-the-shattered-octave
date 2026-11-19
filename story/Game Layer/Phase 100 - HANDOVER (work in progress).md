@@ -34,3 +34,9 @@ One pull request at a time. Bring the branch up to today's `main`, settle the co
 
 ## Asked for by the owner, 18 Nov: the hands and arms
 "when its an opportune time the hands and arms need a massive overhaul as well". The first-person hands and arms (`js/fp-hands.js`, `js/fp87.js`; the bare fist, the glass arm and the Song hands were last painted in Phase 98). Make it a phase of its own: two or three painted options on one sheet for the owner to choose from, all in code, nothing random. The owner, 18 Nov: "ill let opus do it for now and then use fable later on to do any touch ups." So: Opus 5.5 at high effort does the overhaul; Fable touches it up later.
+
+## State of the full test run when Fable stopped (18 Nov, 20:10)
+Two shards, resumable: `/tmp/full100.sh 0 2` and `/tmp/full100.sh 1 2` (results in `/tmp/full100/res0.txt` and `res1.txt`; if `/tmp` is gone, copy the loop from the ROADMAP's Phase 99 notes). 123 of 201 suites had finished. The environment restarted twice during the run. Nine had failed while two ran side by side and have NOT yet been run alone: `air11`, `couriers`, `festivals12`, `flourish11`, `props14`, `cinematic24`, `far14`, `flume16`, `net19`. Several of these are known to fail only under load (cinematic24, far14, couriers, festivals12, net19 timing), but that is not yet shown for this branch: run each alone, and against `main` if one still fails, before calling it a flake. Do not merge the Phase 100 pull request until every suite has passed.
+
+## Rulings of 18 Nov to carry forward
+Every town gets raised houses; Phase 98's four names stand; the not-colour stays as drawn; dialogue is to be voiced (tool not chosen: see the ROADMAP).

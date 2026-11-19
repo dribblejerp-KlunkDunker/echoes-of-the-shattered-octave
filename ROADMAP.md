@@ -86,6 +86,8 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [ ] every suite run (see the handover note until this is ticked)
 - [ ] later parts of the Rift: the Rift Wall and the Under-Shelves, Redoubt Zero, the Edge, the seven smaller places; then the Middle Country
 - [ ] the eleven old pull requests (plan accepted 18 Nov; in the handover note)
+- [ ] **owner, 18 Nov: "yes every town should have raised houses"**: raise every town's houses as Oakhaven's were in Phase 97
+- [ ] **owner, 18 Nov: "any time there is dialogue it should be read aloud in the best possible voices available"**: made voices for dialogue, with the device's voice as the fallback where no file exists. To settle first: the tool (Voicebox, a free program that runs on the owner's own computer, can make the files; a paid cloud service is the other route), whose voices, French, and how much the download grows. Start with one place as a trial (Null-Watch, where everybody talks)
 - [ ] **owner, 18 Nov: "when its an opportune time the hands and arms need a massive overhaul as well"**: the first-person hands and arms (the gloved right hand, the glass left arm, the open hands for a Song; `js/fp-hands.js`, `js/fp87.js`, Phase 98's paintings). A phase of its own, with options shown to the owner before anything replaces what is there
 
 **Phase 99: the five old failing checks (18 Nov, branch `p99-checks`).** Owner: "lets fix the old 5 failing checks. if nothing needs to be merged lets move on." Built by the Commander alone. Record: [`story/Game Layer/Phase 99 - The five old failing checks (for review).md`](story/Game%20Layer/Phase%2099%20-%20The%20five%20old%20failing%20checks%20(for%20review).md). Nothing added to the world; no new words.
