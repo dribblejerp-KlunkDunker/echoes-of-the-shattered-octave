@@ -78,6 +78,13 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] owed from Phase 87: the bare hands and the glass arm's pose, painted in code (P98)
 - [x] known red, not from this phase: `test/logmap` failed at its first static check (one journal site in the air fights; fixed in P99)
 
+**Phase 101: sheep and mutton across the newer places (19 Nov, branch `p101-mutton`).** Owner: "if there should be sheep lets add them to the game. At any store that sells goods or at an inn make sure that Mutton is added to the menu or list of things to buy in a few different varieties." Built by the Commander alone. Record: [`story/Game Layer/Phase 101 - Sheep and mutton across the newer places (for review).md`](story/Game%20Layer/Phase%20101%20-%20Sheep%20and%20mutton%20across%20the%20newer%20places%20(for%20review).md).
+- [x] an audit of every seller in the game (26, and the market's five): Phase 22 had covered every inn and food-seller of October; none built since had mutton
+- [x] `js/mutton101.js`: salt mutton at Corvin Ash's (Stillwater), salt mutton and broth at Brenna Corliss's (the Keel Docks, 6 and 7) and at Null-Watch's issue-hatch; each from the seller's own lines; R2's Oakhaven holds kept
+- [x] sheep: none added, by the books (the Reach's empty hills are canon; the next flocks belong to the Iron Peaks, the Rust Coast's farms and Fortis, when built)
+- [x] `test/mutton101.test.js` (21 checks and two purchases through the real trade window); the record; Vol VIII
+- [ ] the owner's four questions (in the record)
+
 **Phase 100: the Continental Rift, part one: Null-Watch, the Wall and the Talking Halls (18 Nov, branch `p100-rift`).** Owner: "commit to github and merge then proceed." Built by the Commander alone. Record: [`story/Game Layer/Phase 100 - The Continental Rift, part one (text for review).md`](story/Game%20Layer/Phase%20100%20-%20The%20Continental%20Rift%2C%20part%20one%20(text%20for%20review).md).
 - [x] two maps (`p100_wall` cut from the city's own 852 Hz plan, `p100_halls`); the Kestrel's flight; three talking-posts (Souls group `m`); the battery rail
 - [x] the talk rule (a subject, the Murmur, the bell, Relieved), the Stray of Magazine Four and its fourth line

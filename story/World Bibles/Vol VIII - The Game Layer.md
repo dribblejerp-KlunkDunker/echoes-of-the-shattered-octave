@@ -2418,6 +2418,22 @@ Record: `story/Game Layer/Phase 100 - The Continental Rift, part one (text for r
 
 **Not done here, because the books do it later.** The postern, the buttress, the crane and the rope are seen and not used. Nobody of the books' company is named.
 
+#### Phase 101: sheep and mutton across the newer places (19 Nov)
+Record: `story/Game Layer/Phase 101 - Sheep and mutton across the newer places (for review).md`. Code: `js/mutton101.js`. Sources: Book One ch. 6 and ch. 10; Book Three, Part Three; Book Four, Part One; Vol I §III.4; Phase 22; the R2 canon sweep. As of Harvestmonth 419.
+
+**Asked by the owner (19 Nov):** sheep where there should be sheep, and mutton "in a few different varieties" at every store that sells goods and every inn.
+
+**Mutton, added. Status: [PROPOSED].** Phase 22's dishes, no new ones:
+- *Corvin Ash, smuggler, Stillwater Landing:* salt mutton, at his markup. His barrels go down to Fortis, the salt-mutton town (Vol I §III.4: "Root stew, salt mutton, black bread").
+- *Brenna Corliss, the Keel Docks, Sol-Luminary:* salt mutton (6) and mutton broth (7), "what the Free Captains leave with me". Dear: the Heights grow nothing, and the Tiers are "seven years thin" (Book Two).
+- *One-Oh-Six, the issue-hatch, Null-Watch:* salt mutton and mutton broth, "what the sutler left".
+
+**Held as they were.** Oakhaven sells only dear salt mutton (R2): Hetty and the market salt only; no mutton at the bakers' or at Ambrose Vettle's. The Bellwether six ways, Tamar two, Vane and Sloe salt mutton and broth (Phase 22). Specialists (arms, leather, books, boots, salvage and so on) sell none.
+
+**Sheep: none added, by the books.** The built world has sheep where canon allows them: Tamar Farrant's eleven Rust Coast ewes and a tup in Wethercombe, and on the Watch Downs once they are home. The rest of the Reach is empty of sheep on purpose: the wool went into the Hedge in 417 (Book Four, Part One) and the Downs flocks were eaten in the two shut years (Phase 20–21 rulings, delegated), and the game says so again and again ("There are no sheep"). **Canon (book)** puts the next flocks in places not yet built: the Iron Peaks above Coldharrow (Book Three, Part Three: "My father kept sheep in the Peaks above Coldharrow"), the Rust Coast's farms (where Tamar's ewes came from), and Fortis (salt mutton, Vol I). To be built with those regions. The Dawning Heights grow nothing ("no winch-boats or valley farms", Phase 92 matched to Book Two).
+
+**For the owner's ruling:** fresh mutton at the Boar once Tamar's flock is home (recommend no: R2 stands); salt mutton at Ambrose Vettle's (recommend no); whether "any store that sells goods" should include the specialists (recommend no); the Heights' prices (recommend keep).
+
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 
 ### The canon pass of 28 October 2026: what changed and why
