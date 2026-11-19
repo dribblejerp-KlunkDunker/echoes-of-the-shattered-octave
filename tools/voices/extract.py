@@ -129,6 +129,11 @@ def main():
     cast_mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(cast_mod)
     hand_cast = getattr(cast_mod, 'HAND_CAST', cast_mod.CAST)
     added, skipped, auto, seen = [], {}, {}, set()
+    # one person, one voice: ids that share a name (Hesper and Hesper's second post, the sexton in three places) are cast once
+    who = lambda i: re.split(r',', (people.get(i) or {}).get('name', '') or i)[0].strip().lower()
+    by_name = {}
+    for i in sorted(people):                      # the hand-cast first: a person met again under another id keeps their voice
+        if base_of(i) in hand_cast and who(i): by_name.setdefault(who(i), base_of(i))
     for nid in sorted(people):
         p = people[nid]
         speaker_id = PROXY.get(nid, nid)
@@ -153,7 +158,11 @@ def main():
             if norm(shown) != n: line['match'] = shown
             if nid in PROXY: line['for'] = nid
             added.append(line)
-            if sp not in hand_cast and sp not in auto: auto[sp] = auto_cast(sp, prof, ' '.join([people.get(speaker_id, p).get('portrait', ''), people.get(speaker_id, p).get('sprite', '')]))
+            if sp not in hand_cast and sp not in auto:
+                nm = who(speaker_id)
+                if nm and nm in by_name: auto[sp] = dict(auto[by_name[nm]]) if by_name[nm] in auto else dict(hand_cast[by_name[nm]])
+                else: auto[sp] = auto_cast(sp, prof, ' '.join([people.get(speaker_id, p).get('portrait', ''), people.get(speaker_id, p).get('sprite', '')]))
+            if sp not in by_name.values(): by_name.setdefault(who(speaker_id), sp)
     script['lines'] = hand + added
     json.dump(script, open(sp_path, 'w'), indent=1, ensure_ascii=False); open(sp_path, 'a').write('\n')
     json.dump(auto, open(os.path.join(HERE, 'cast_auto.json'), 'w'), indent=1, sort_keys=True)
