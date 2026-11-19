@@ -1,4 +1,4 @@
-# Phase 101: every person's own dialogue, voiced (for review)
+# Phase 102: every person's own dialogue, voiced (for review)
 
 18 to 19 November 2026. Branch `p101-voices`. Built by Opus 5.5 (the owner, 18 Nov: "ill let opus do it for now and then use fable later on to do any touch ups"). The owner, 18 Nov: "any time there is dialogue it should be read aloud in the best possible voices available", then "continue using Kokoro for now".
 

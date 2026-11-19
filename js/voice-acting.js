@@ -10,7 +10,7 @@
 //   barks      - speaking enemy families (Office, Carillon, the Quiet Faith, the cutter's crew) say a recorded line
 //                on alert / hurt / death; a boss says its intro on its first alert of a visit and its defeat line.
 //   spoken msgs- boss mimicry, Hollow fragments, companions: any message whose words match a recorded line plays it.
-//   answers    - (Phase 101) every person's own topic answers, and the greetings tools/voices/extract.py added, play when
+//   answers    - (Phase 102) every person's own topic answers, and the greetings tools/voices/extract.py added, play when
 //                they appear in the conversation (renderDialogue); a line marked `for` is said by someone else on that
 //                person's behalf (General Ward's iron-cant, said aloud by Ninety-Four). The shared TOPICS answers stay unvoiced.
 // Silent characters stay silent (VOICES.resolve decides). Nothing is saved; nothing here touches G.flags.

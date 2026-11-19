@@ -109,7 +109,7 @@ Formant-synthesised vocal sounds: a sawtooth buzz through three band-pass forman
 
 ## Recorded voice lines (voices/, js/voice-lines.js, js/voice-acting.js)
 
-Neural text-to-speech, rendered offline by `tools/voices/build.py` from `voices/script.json`; casting in `tools/voices/cast.py`. Since Phase 101 every person's own greetings and topic answers are in it too: `tools/voices/dump-dialogue.js` takes them from the running game, `tools/voices/extract.py` adds them (marked `auto`) and casts whoever `cast.py` does not, into `tools/voices/cast_auto.json`. 1,138 lines, 32 MB.
+Neural text-to-speech, rendered offline by `tools/voices/build.py` from `voices/script.json`; casting in `tools/voices/cast.py`. Since Phase 102 every person's own greetings and topic answers are in it too: `tools/voices/dump-dialogue.js` takes them from the running game, `tools/voices/extract.py` adds them (marked `auto`) and casts whoever `cast.py` does not, into `tools/voices/cast_auto.json`. 1,138 lines, 32 MB.
 
 | Item | Source | Licence | Status |
 |---|---|---|---|

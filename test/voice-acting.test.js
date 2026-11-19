@@ -111,7 +111,7 @@ const ROOT = path.join(__dirname, '..');
         talk({ id: 'lyra_wg', x: Engine.cam.x + 1, y: Engine.cam.y, kind: 'npc' });
         check(played.length === 0, 'voiceless Lyra plays no recording'); closeModal(); G.state = 'play';
         delete G.flags.lyra_wg_met;
-        // 5b. (Phase 101) answers: a person's own topic answer plays their recording; a shared answer and a stage
+        // 5b. (Phase 102) answers: a person's own topic answer plays their recording; a shared answer and a stage
         //     direction play nothing; General Ward's greeting is said by Ninety-Four
         {
           const at = (id) => ({ id, x: Engine.cam.x + 1, y: Engine.cam.y, kind: 'npc' });

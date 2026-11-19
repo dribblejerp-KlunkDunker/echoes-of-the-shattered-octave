@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 101, 19 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 102, 19 November 2026).
 
 ---
 
@@ -2421,8 +2421,8 @@ Record: `story/Game Layer/Phase 100 - The Continental Rift, part one (text for r
 
 **Not done here, because the books do it later.** The postern, the buttress, the crane and the rope are seen and not used. Nobody of the books' company is named.
 
-#### Phase 101: every person's own dialogue, voiced (19 Nov)
-Record: `story/Game Layer/Phase 101 - Every person's dialogue, voiced (for review).md`. The owner, 18 Nov: "any time there is dialogue it should be read aloud in the best possible voices available", then "continue using Kokoro for now".
+#### Phase 102: every person's own dialogue, voiced (19 Nov)
+Record: `story/Game Layer/Phase 102 - Every person's dialogue, voiced (for review).md`. The owner, 18 Nov: "any time there is dialogue it should be read aloud in the best possible voices available", then "continue using Kokoro for now".
 
 **Nothing was added to the world** (no place, person, item or line of text). What changed is how the world sounds: every person's own greetings and topic answers are spoken in a voice of their own (Kokoro, rendered ahead of time). Two rules the game now keeps, which bear on canon:
 - **General Ward stays mute.** Her iron-cant is said aloud by Ninety-Four, as the book has it; her greeting plays in his voice. Status: **follows the book** (Book Three ch. 2).
