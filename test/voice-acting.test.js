@@ -40,6 +40,19 @@ const ROOT = path.join(__dirname, '..');
     assert.ok(!SILENT.includes(l.speaker), 'a silent character has no line: ' + l.id);
     assert.ok(l.source === 'PROPOSED' || /\.js\b/.test(l.source) || (l.auto && /^NPCS\.\w+\.(greet|topics)\./.test(l.source)), l.id + ' names its source');
   }
+  // (Phase 102) the automatic casting gives a woman's portrait a woman's voice and a man's a man's
+  { const dlg = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/voices/dialogue.json'), 'utf8'));
+    const auto = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/voices/cast_auto.json'), 'utf8'));
+    const wrong = [];
+    for (const [id, c] of Object.entries(auto)) {
+      const p = dlg[id]; if (!p || !p.portrait) continue;
+      const child = (c.fx || []).some((f) => f === 'child'), woman = /^[ab]f_/.test(c.voice);
+      if (child) continue;
+      if (p.portrait === 'townswoman' && !woman) wrong.push(id + ' (woman, ' + c.voice + ')');
+      if (p.portrait === 'townsman' && woman) wrong.push(id + ' (man, ' + c.voice + ')');
+    }
+    assert.deepEqual(wrong, [], 'every automatic voice matches its portrait');
+  }
   const kinds = {}; for (const id of ids) kinds[L[id].kind] = (kinds[L[id].kind] || 0) + 1;
   console.log('PASS files: ' + ids.length + ' lines, ' + (bytes / 1048576).toFixed(1) + ' MB, kinds ' + JSON.stringify(kinds));
 

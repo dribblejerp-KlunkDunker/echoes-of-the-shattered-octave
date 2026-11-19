@@ -181,28 +181,28 @@
   "fx": [
    "room"
   ],
-  "lang": "en-gb",
+  "lang": "en-us",
   "pitch": 0,
-  "speed": 0.84,
-  "voice": "bm_fable"
+  "speed": 0.9,
+  "voice": "af_aoede"
  },
  "p100_tr_c": {
   "fx": [
    "room"
   ],
-  "lang": "en-gb",
-  "pitch": 0,
-  "speed": 0.84,
-  "voice": "bm_fable"
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.88,
+  "voice": "af_jessica"
  },
  "p100_tr_d": {
   "fx": [
    "room"
   ],
-  "lang": "en-gb",
-  "pitch": 0,
-  "speed": 0.84,
-  "voice": "bm_fable"
+  "lang": "en-us",
+  "pitch": -1,
+  "speed": 0.82,
+  "voice": "am_adam"
  },
  "p100_watcher": {
   "fx": [

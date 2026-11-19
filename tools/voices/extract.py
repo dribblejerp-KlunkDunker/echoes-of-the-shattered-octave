@@ -130,7 +130,11 @@ def main():
     hand_cast = getattr(cast_mod, 'HAND_CAST', cast_mod.CAST)
     added, skipped, auto, seen = [], {}, {}, set()
     # one person, one voice: ids that share a name (Hesper and Hesper's second post, the sexton in three places) are cast once
-    who = lambda i: re.split(r',', (people.get(i) or {}).get('name', '') or i)[0].strip().lower()
+    def who(i):
+        # a person's own name, with their portrait: "A trooper of the Watch" is four people, not one; nor is "One of the mast-crew"
+        nm = re.split(r',', (people.get(i) or {}).get('name', '') or '')[0].strip()
+        if not nm or re.match(r'(?i)(a|an|one of|some)\b', nm): return ''
+        return nm.lower() + '|' + (people.get(i) or {}).get('portrait', '')
     by_name = {}
     for i in sorted(people):                      # the hand-cast first: a person met again under another id keeps their voice
         if base_of(i) in hand_cast and who(i): by_name.setdefault(who(i), base_of(i))
