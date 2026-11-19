@@ -69,6 +69,7 @@ const HORIZON20 = (() => {
   // Rite's lamp, the first opening's hook carries the glass-fire lamp instead.
   const BW = 128, BH = 64, BELFRY_Z0 = 2.2, BELFRY_Z1 = 3.2;
   const TOWER = { x0: 48, y0: 5, x1: 50, y1: 7, top: 3.2 };   // the four tower cells in js/maps.js shapeOakhaven
+  const FAR_MIN = 84;   // the far town is drawn at least this far: the whole Long Down summit can see the tower (beacon 77-79)
   const STONE = ['#7c766c', '#968f82', '#ada597', '#c3bba9', '#d6cfbd'].map((s) => hex(s));
   const OAK = ['#2a1a10', '#40291a', '#583a24', '#6e4a2e'].map((s) => hex(s));
   const IRON = [hex('#18161a'), hex('#34323a'), hex('#5a5862')];
@@ -307,7 +308,6 @@ const HORIZON20 = (() => {
     fold: 'A sheepfold of dry stone, the gate gone. Thistles inside. Somebody kept it mended for a long time, and then stopped.',
     pond: 'A dew-pond, lined with clay, older than the Hedge. Rain still fills it. Nothing drinks from it that you can see.',
     stone: 'A boundary stone, leaning. Whatever parish it marked the edge of, the lettering is gone under the lichen.',
-    wall: 'A dry-stone wall across the slope, with a gap for a stile.',
   };
   function downsGateRow(cl) {
     // a row on the clearing's west wall with open ground and no solid prop in front of it (preferring the middle)
@@ -492,7 +492,9 @@ const HORIZON20 = (() => {
   function farTown(F, oak, off) {
     const { fb, dbuf, mbuf, w, h, horizon } = F, CZ = F.cam.z;
     const OX = F.cam.x + off[0], OY = F.cam.y + off[1], W = oak.w, H = oak.h, cells = oak.cells;
-    const tStone = Engine.textures.t_stone, tmax0 = Math.min(110, F.fogDist * 3.2);
+    // out to 3.2 fog lengths, and never short of FAR_MIN: the beacon on the Long Down is 77 units from the Chapel's
+    // tower and its text says you can see the belfry from there, which at Medium (fog 22, so 70) it would not
+    const tStone = Engine.textures.t_stone, tmax0 = Math.min(110, Math.max(F.fogDist * 3.2, FAR_MIN));
     let n = 0;
     for (let x = 0; x < w; x++) {
       const rdx = rdX[x], rdy = rdY[x];
