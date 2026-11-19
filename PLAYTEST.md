@@ -18,6 +18,19 @@ This file lists what the automated tests cannot judge: feel, timing, how busy or
 
 ---
 
+## Small canon touches III (built 11 Nov; ROADMAP R9 #25, c, d, e, f)
+
+Four more small things from the book. Each needed a small design decision; the numbers are [PROPOSED] and want a feel check. Play a Cantor for d and f.
+
+- **The Pure Note as a lid.** Let the Church come on Dawnday, then walk the town on the next two days. Do the "nobody is sleeping" and "wet cloth… wool… children crying" lines land, or do they get lost among the other messages? Rest in the Boar and in a house under the note: is half the hours and half the recovery felt as the lid, or only as a nuisance? (While the note holds, REST in Oakhaven moves the clock 2 or 4 hours, not 4 or 8.)
+- **Every mending borrows.** As a Cantor, get hurt and sing the tending note. Does the root-hair message read as the cost of the craft? Is once a game day the right rate?
+- **The palm held flat.** Inside the Hedge in daylight, sprint past people, then sing. Does a flat palm come before the ward-sign often enough to warn you, and seldom enough not to nag? (Noise 5 to 6.5, once a minute.)
+- **The clay jar.** As a Cantor, use the jar from the pack after a fight. Does it feel worth carrying against simply singing (same voice, half the noise, 20 against 14)? Is "not while anything is hunting you" clear when it refuses? Does the icon read as a clay jar?
+
+Notes:
+
+---
+
 ## Echo I, "The Thread Where She Answered", as an extra (built 10 Nov; ROADMAP R9 #24)
 
 Title screen, Extras, "The Thread Where She Answered" (the extras open once Book One is finished, or with a finished save code). You are Lyra in the thread the Tide-Weaver shows you: read his cards, go out of her door and down Cooper's Row to the flat stone behind the cooperage, and sit.
