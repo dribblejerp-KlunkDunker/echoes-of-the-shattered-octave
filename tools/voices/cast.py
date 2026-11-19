@@ -102,3 +102,12 @@ DELIVERY = {
 
 # fallbacks for speakers the table does not name: by kind
 FALLBACK = dict(voice='am_adam', speed=0.95, pitch=0, lang='en-us', fx=['room'])
+
+# ---- everyone else: cast from their profile by tools/voices/extract.py (cast_auto.json). A hand entry above wins.
+import json as _json, os as _os
+HAND_CAST = CAST
+try:
+    _auto = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'cast_auto.json')))
+except FileNotFoundError:
+    _auto = {}
+CAST = {**{k: dict(v, fx=[tuple(f) if isinstance(f, list) else f for f in v.get('fx', [])]) for k, v in _auto.items()}, **HAND_CAST}

@@ -109,15 +109,16 @@ Formant-synthesised vocal sounds: a sawtooth buzz through three band-pass forman
 
 ## Recorded voice lines (voices/, js/voice-lines.js, js/voice-acting.js)
 
-Neural text-to-speech, rendered offline by `tools/voices/build.py` from `voices/script.json`; casting in `tools/voices/cast.py`.
+Neural text-to-speech, rendered offline by `tools/voices/build.py` from `voices/script.json`; casting in `tools/voices/cast.py`. Since Phase 102 every person's own greetings and topic answers are in it too: `tools/voices/dump-dialogue.js` takes them from the running game, `tools/voices/extract.py` adds them (marked `auto`) and casts whoever `cast.py` does not, into `tools/voices/cast_auto.json`. 1,138 lines, 32 MB.
 
 | Item | Source | Licence | Status |
 |---|---|---|---|
 | `voices/<speaker>/*.mp3` (mono, 24 kHz, 40 kbps) | Kokoro-82M (hexgrad) voices through kokoro-onnx, then per-character treatment (age waver, gravel, Hollow breath, Kaelen's 528 Hz glass ring, bell, many-voiced chorus, rooms) | Kokoro-82M and its voices: Apache-2.0 | generated; recorded actors could replace any file with the same name |
-| `voices/script.json` | the words: game text (greetings, mimicry, companions, the Aegis), plus short barks for speaking enemies marked PROPOSED | game text | for the author's review |
+| `voices/script.json` | the words: game text (greetings, topic answers, mimicry, companions, the Aegis), plus short barks for speaking enemies marked PROPOSED | game text | for the author's review |
+| `tools/voices/cast_auto.json` | which Kokoro voice each of 122 people has, worked out from their profile in `js/voices.js` and their portrait | game source | generated; a hand entry in `cast.py` replaces any of it |
 | `js/voice-lines.js` | generated manifest | game source | generated |
 
-Not voiced: the player's own lines, lines that need the player's name, sung passages with no words in the game, the Deacon's hand-cant, and every silent character.
+Not voiced: the player's own lines, lines that need the player's name, sung passages with no words in the game, the Deacon's hand-cant, stage directions ("She does not stop singing."), the shared answers anyone gives (`TOPICS`), and every silent character, except General Ward, whose iron-cant Ninety-Four says aloud.
 
 ## Paintings (img/painted/)
 

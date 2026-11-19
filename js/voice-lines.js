@@ -98,6 +98,22 @@ const VOICE_LINES = {
 "t": "The seal of Queen Maelis bids you welcome. Her signature on the decrees is famously steady for a woman dead a hundred and forty years.",
 "voiceOf": "aldric"
 },
+"aldric.t.876176": {
+"auto": true,
+"d": 10.46,
+"kind": "topic",
+"speaker": "aldric",
+"src": "voices/aldric/aldric.t.876176.mp3",
+"t": "My son thinks penance is a thing you do alone, in a hut, in the smoke. It is not. It is a thing you do in a room full of people who need feeding."
+},
+"aldric.t.9407aa": {
+"auto": true,
+"d": 10.7,
+"kind": "topic",
+"speaker": "aldric",
+"src": "voices/aldric/aldric.t.9407aa.mp3",
+"t": "In the Cascade famine I had a town and no bread. The Consortium had bread and wanted a hole. I made the arithmetic. I have been making it ever since."
+},
 "aldric_tube.rite.c10": {
 "d": 1.06,
 "kind": "narration",
@@ -193,6 +209,30 @@ const VOICE_LINES = {
 "src": "voices/bettany/bettany.greet.polite.mp3",
 "t": "Softly, love. What ails? I have tonic, I have honey for the throat, and I have shot, which I do not approve of and sell anyway.",
 "voiceOf": "bettany"
+},
+"bettany.t.ad6744": {
+"auto": true,
+"d": 7.15,
+"kind": "topic",
+"speaker": "bettany",
+"src": "voices/bettany/bettany.t.ad6744.mp3",
+"t": "They walked her past my stall this morning in white. I put a jar of honey in her hand. The proctor took it off her before the corner."
+},
+"bettany.t.b8f6f7": {
+"auto": true,
+"d": 8.26,
+"kind": "topic",
+"speaker": "bettany",
+"src": "voices/bettany/bettany.t.b8f6f7.mp3",
+"t": "I have hummed forty-one births through a clay jar so the hounds would not hear the mother. Forty-one. I keep the count on the stall-post, under the cloth."
+},
+"bettis.g.4b835e": {
+"auto": true,
+"d": 1.63,
+"kind": "greet",
+"speaker": "bettis",
+"src": "voices/bettis/bettis.g.4b835e.mp3",
+"t": "...I will go second..."
 },
 "bettis.greet.blunt": {
 "d": 1.78,
@@ -612,6 +652,22 @@ const VOICE_LINES = {
 "src": "voices/engineer/engineer.rope.drum.mp3",
 "t": "The drum, Captain, the drum's coming out of the deck..."
 },
+"halder.g.7bf299": {
+"auto": true,
+"d": 2.81,
+"kind": "greet",
+"speaker": "halder",
+"src": "voices/halder/halder.g.7bf299.mp3",
+"t": "...four plates. The blue one goes there..."
+},
+"halder.g.7fdab5": {
+"auto": true,
+"d": 2.02,
+"kind": "greet",
+"speaker": "halder",
+"src": "voices/halder/halder.g.7fdab5.mp3",
+"t": "...they will be in directly..."
+},
 "halder.greet.blunt": {
 "d": 2.33,
 "kind": "greet",
@@ -675,6 +731,14 @@ const VOICE_LINES = {
 "src": "voices/harrow/harrow.open.1.mp3",
 "t": "Keep your voice in your chest, friend. And welcome to what's left of Oakhaven.",
 "voiceOf": "harrow"
+},
+"harrow.t.69795e": {
+"auto": true,
+"d": 9.43,
+"kind": "topic",
+"speaker": "harrow",
+"src": "voices/harrow/harrow.t.69795e.mp3",
+"t": "I've stood this gate eleven years. Last night it whistled a tune only the Cantor and the Carder boy know. Whistled it exactly right."
 },
 "herald.h66.why": {
 "d": 1.63,
@@ -770,6 +834,14 @@ const VOICE_LINES = {
 "t": "Sit anywhere that isn't broken. Small beer or smaller. We do not sing in here, not since Davin.",
 "voiceOf": "hetty"
 },
+"hetty.t.12fc8c": {
+"auto": true,
+"d": 13.87,
+"kind": "topic",
+"speaker": "hetty",
+"src": "voices/hetty/hetty.t.12fc8c.mp3",
+"t": "Her captain drinks in the corner and laughs too loud at nothing. His crates for the garrison are in his ship's hold, at the mast. I send his supper up the mast-ladder of an evening, and last night, with the hatch open, I swear to you one of them said a name."
+},
 "hob.greet.blunt": {
 "d": 3.22,
 "kind": "greet",
@@ -793,6 +865,22 @@ const VOICE_LINES = {
 "src": "voices/hob/hob.greet.polite.mp3",
 "t": "Evening. Mind the vats; the lime does not care who you are.",
 "voiceOf": "hob"
+},
+"hob.t.0e1a57": {
+"auto": true,
+"d": 10.1,
+"kind": "topic",
+"speaker": "hob",
+"src": "voices/hob/hob.t.0e1a57.mp3",
+"t": "The twins went down the culvert after their dog. Driftday last. I set a lamp in their window of a night. The key to the grate is on the nail inside; I have not had the stomach to turn it."
+},
+"hob.t.1e7435": {
+"auto": true,
+"d": 6.07,
+"kind": "topic",
+"speaker": "hob",
+"src": "voices/hob/hob.t.1e7435.mp3",
+"t": "A tannery is the one trade that gets quieter the harder you work it. Should have been safe. Should have been."
 },
 "ignatius.bell.daughters": {
 "d": 5.26,
@@ -983,6 +1071,30 @@ const VOICE_LINES = {
 "src": "voices/ignatius/ignatius.rite.speak.mp3",
 "t": "Speak, daughter.",
 "voiceOf": "ignatius"
+},
+"ignatius.t.23125e": {
+"auto": true,
+"d": 13.32,
+"kind": "topic",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.t.23125e.mp3",
+"t": "Seven years I have held that it let go because one voice shouted. Vance's voice. The engineer says it let go because we held. I have thought about his answer every night since he gave it. I do not know yet which of us I would rather be right."
+},
+"ignatius.t.78a310": {
+"auto": true,
+"d": 8.57,
+"kind": "topic",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.t.78a310.mp3",
+"t": "He has a glass arm that sings with the Note whether he wills it or not. I envied him that, for a moment, before I remembered what it is doing to him."
+},
+"ignatius.t.a2f081": {
+"auto": true,
+"d": 15.1,
+"kind": "topic",
+"speaker": "ignatius",
+"src": "voices/ignatius/ignatius.t.a2f081.mp3",
+"t": "The warrant is read. The Pure Note is held over Oakhaven day and night until the casing. The Hollow behind the tannery is to be burned at the hour of the Rite. The Cantor is in the Church's protection, which is a phrase I chose myself, and I meant it, and it is a cell."
 },
 "kaelen.companion.boss0": {
 "d": 2.78,
@@ -1418,6 +1530,62 @@ const VOICE_LINES = {
 "src": "voices/kaelen/kaelen.rope.iknow.mp3",
 "t": "I know. I know. They're coming."
 },
+"kaelen.t.2760d0": {
+"auto": true,
+"d": 12.67,
+"kind": "topic",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.t.2760d0.mp3",
+"t": "Every press in the Office is tuned to a note I specified. I would like to see one. I would like to know how it works, so that I can learn how to stop one, and so that I stop dreaming about how it works."
+},
+"kaelen.t.3ae1c7": {
+"auto": true,
+"d": 15.43,
+"kind": "topic",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.t.3ae1c7.mp3",
+"t": "It drinks what it breaks. Every Legionnaire I put down, the ring gets fuller and the tideline climbs. Three fingers from the shoulder, this morning. When it reaches the heart they call it Heartglass, and you become a humming statue, alive and aware."
+},
+"kaelen.t.472105": {
+"auto": true,
+"d": 14.14,
+"kind": "topic",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.t.472105.mp3",
+"t": "The Memory Anchor. I calibrated its sister in the Dawning. Two percent survival at Stage Nine; I wrote the number down myself. I did not write down Whisper-Grove. I did not have to. It was in the next column."
+},
+"kaelen.t.866ee7": {
+"auto": true,
+"d": 17.02,
+"kind": "topic",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.t.866ee7.mp3",
+"t": "Tuned stone. Every Cantor of the Memory Anchor, each in a tomb that rings the note they kept. Ring them in the order you would sing them home, high to low, and the choir opens. I know because I read the specification. I read all the specifications."
+},
+"kaelen.t.98449d": {
+"auto": true,
+"d": 11.74,
+"kind": "topic",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.t.98449d.mp3",
+"t": "I laid my hand on it once. The humming stopped and something turned toward me. It is tired. It has been holding a lullaby for ten thousand years and it keeps losing the tune."
+},
+"kaelen.t.dd54e3": {
+"auto": true,
+"d": 20.47,
+"kind": "topic",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.t.dd54e3.mp3",
+"t": "Revision Seven. My method, improved in an Arbiterium hand. Stage Nine is a four-hour hold at 174 with a collar and a wire. They did it at the Dawning Spire with forty singers for three hundred days. On the last morning the Light heard its own note held for it, and it asked a question, and it let go. I was there. I failed to stabilize it. That is the lie I tell."
+},
+"kaelen.t.fe71e2": {
+"auto": true,
+"d": 8.59,
+"kind": "topic",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.t.fe71e2.mp3",
+"t": "If I carry all of it, no one else has to. I know what that sounds like. I'm an engineer; I know a bad load path when I draw one."
+},
 "kaelen_dw.greet.blunt": {
 "d": 0.98,
 "kind": "greet",
@@ -1528,6 +1696,142 @@ const VOICE_LINES = {
 "src": "voices/legionnaire/legionnaire.hurt.1.mp3",
 "t": "Let it toll.",
 "voiceOf": "legionnaire"
+},
+"lib_ilse.g.4d3cce": {
+"auto": true,
+"d": 3.43,
+"kind": "greet",
+"speaker": "lib_ilse",
+"src": "voices/lib_ilse/lib_ilse.g.4d3cce.mp3",
+"t": "Read what you like. Quietly. The reeds are listening."
+},
+"lib_ilse.g.5b4e6e": {
+"auto": true,
+"d": 0.79,
+"kind": "greet",
+"speaker": "lib_ilse",
+"src": "voices/lib_ilse/lib_ilse.g.5b4e6e.mp3",
+"t": "QUIETLY."
+},
+"lib_ilse.g.a64202": {
+"auto": true,
+"d": 4.22,
+"kind": "greet",
+"speaker": "lib_ilse",
+"src": "voices/lib_ilse/lib_ilse.g.a64202.mp3",
+"t": "The Conservatory. What is left of it. Sit, if you mean to read."
+},
+"lib_ilse.t.013c6a": {
+"auto": true,
+"d": 6.19,
+"kind": "topic",
+"speaker": "lib_ilse",
+"src": "voices/lib_ilse/lib_ilse.t.013c6a.mp3",
+"t": "My best pupil and my worst listener. She sings the way I used to. Tell her nothing I said."
+},
+"lib_ilse.t.4a18ff": {
+"auto": true,
+"d": 9.82,
+"kind": "topic",
+"speaker": "lib_ilse",
+"src": "voices/lib_ilse/lib_ilse.t.4a18ff.mp3",
+"t": "The Debt of Overtone. Eleven years ago I sang one note too many for a dying boy. He lived. The note kept my voice. I would sing it again."
+},
+"lib_ilse.t.90a778": {
+"auto": true,
+"d": 5.71,
+"kind": "topic",
+"speaker": "lib_ilse",
+"src": "voices/lib_ilse/lib_ilse.t.90a778.mp3",
+"t": "Older than the Synod. We sang the orchards. Ask the books, not me; they are less tired."
+},
+"lib_ilse.t.e10619": {
+"auto": true,
+"d": 7.61,
+"kind": "topic",
+"speaker": "lib_ilse",
+"src": "voices/lib_ilse/lib_ilse.t.e10619.mp3",
+"t": "We taught the reed and the breath. Forty Cantors went out of this room. I kept the books because I could not keep the voices."
+},
+"lib_odile.g.9ae344": {
+"auto": true,
+"d": 4.92,
+"kind": "greet",
+"speaker": "lib_odile",
+"src": "voices/lib_odile/lib_odile.g.9ae344.mp3",
+"t": "If you are from the lock, you have seen nothing. If you are not, you have still seen nothing."
+},
+"lib_odile.g.a52fb6": {
+"auto": true,
+"d": 7.58,
+"kind": "greet",
+"speaker": "lib_odile",
+"src": "voices/lib_odile/lib_odile.g.a52fb6.mp3",
+"t": "Everything here came up the river inside something else. Read on the stools; buy at the counter. A sovereign or two a book."
+},
+"lib_odile.g.a8f4ce": {
+"auto": true,
+"d": 5.47,
+"kind": "greet",
+"speaker": "lib_odile",
+"src": "voices/lib_odile/lib_odile.g.a8f4ce.mp3",
+"t": "Broadsheets, novels, sermons, filth, hymnals. I do not judge, I only carry. Mind the lamp."
+},
+"lib_odile.t.690b4d": {
+"auto": true,
+"d": 7.46,
+"kind": "topic",
+"speaker": "lib_odile",
+"src": "voices/lib_odile/lib_odile.t.690b4d.mp3",
+"t": "He reads everything I carry before I carry it, and sells what he reads. So I carry nothing he would want to sell. Mostly."
+},
+"lib_odile.t.6a5e34": {
+"auto": true,
+"d": 11.16,
+"kind": "topic",
+"speaker": "lib_odile",
+"src": "voices/lib_odile/lib_odile.t.6a5e34.mp3",
+"t": "Four papers on the Row, all libellous, one occasionally correct. They print what the Synod will not, and I bring it upstream in tea-chests. Nobody in the Reach drinks that much tea."
+},
+"lib_odile.t.df6ec1": {
+"auto": true,
+"d": 8.14,
+"kind": "topic",
+"speaker": "lib_odile",
+"src": "voices/lib_odile/lib_odile.t.df6ec1.mp3",
+"t": "My best customer and my worst debtor. If you see him at the Boar, remind him what he owes me. Do not use the word \"owes\". He faints."
+},
+"lib_shelver.g.14e667": {
+"auto": true,
+"d": 3.43,
+"kind": "greet",
+"speaker": "lib_shelver",
+"src": "voices/lib_shelver/lib_shelver.g.14e667.mp3",
+"t": "...by size... the tall ones at the back... mind the spines..."
+},
+"lib_shelver.g.62c7eb": {
+"auto": true,
+"d": 1.51,
+"kind": "greet",
+"speaker": "lib_shelver",
+"src": "voices/lib_shelver/lib_shelver.g.62c7eb.mp3",
+"t": "...not by name..."
+},
+"lib_shelver.g.7166a5": {
+"auto": true,
+"d": 3.34,
+"kind": "greet",
+"speaker": "lib_shelver",
+"src": "voices/lib_shelver/lib_shelver.g.7166a5.mp3",
+"t": "...on the left, by size... not by name... not by name..."
+},
+"lib_shelver.t.3ef087": {
+"auto": true,
+"d": 1.63,
+"kind": "topic",
+"speaker": "lib_shelver",
+"src": "voices/lib_shelver/lib_shelver.t.3ef087.mp3",
+"t": "...somebody will want it..."
 },
 "lyra.companion.boss0": {
 "d": 2.04,
@@ -1946,6 +2250,30 @@ const VOICE_LINES = {
 "src": "voices/lyra_ruined/lyra.h66.write.mp3",
 "t": "Write this down, and get it exactly right, because he'll ask you."
 },
+"lyra.t.38179a": {
+"auto": true,
+"d": 5.26,
+"kind": "topic",
+"speaker": "lyra",
+"src": "voices/lyra/lyra.t.38179a.mp3",
+"t": "A martyr is just a musician who gave up before the coda. I would rather not be either."
+},
+"lyra.t.56318f": {
+"auto": true,
+"d": 16.03,
+"kind": "topic",
+"speaker": "lyra",
+"src": "voices/lyra/lyra.t.56318f.mp3",
+"t": "Stage Nine: a four-hour unison hold at the casing. Source: Cantor, local. That is me. They will put a collar on my throat and a wire through my voice and I will sing the Root to sleep for them, and then they will drink it. Unless we break the bore first."
+},
+"lyra.t.690aa3": {
+"auto": true,
+"d": 15.94,
+"kind": "topic",
+"speaker": "lyra",
+"src": "voices/lyra/lyra.t.690aa3.mp3",
+"t": "He was my shadow when we were children. He left at seventeen for the Conservatory of Bores and came back with an arm of glass and no words. He lives outside the Hedge because the hounds will not touch him, and because he has decided he does not deserve the inside."
+},
 "lyra.t70.coming": {
 "d": 1.22,
 "kind": "narration",
@@ -2032,6 +2360,23 @@ const VOICE_LINES = {
 "t": "The pumps.",
 "voiceOf": "lyra_ruined"
 },
+"mags.t.51814b": {
+"auto": true,
+"d": 4.9,
+"kind": "topic",
+"speaker": "mags",
+"src": "voices/mags/mags.t.51814b.mp3",
+"t": "My collarbone and her number-three tank. One of us will be flying in a week."
+},
+"mags.t.e961a3": {
+"auto": true,
+"d": 11.88,
+"kind": "topic",
+"match": "It hunts by sound. That horn on the bow hears a man breathe at a hundred yards. I don't make any.",
+"speaker": "mags",
+"src": "voices/mags/mags.t.e961a3.mp3",
+"t": "It hunts by sound. That horn on the bow hears a man breathe at a hundred yards. I don't make any. Go quiet, or go fast, and kill the horn first. When it hears you, everybody hears you."
+},
 "mags_dw.greet.normal": {
 "d": 2.02,
 "kind": "greet",
@@ -2080,6 +2425,46 @@ const VOICE_LINES = {
 "t": "Consignment disputes the manifest.",
 "voiceOf": "marine"
 },
+"moor_bookseller.g.0273f1": {
+"auto": true,
+"d": 8.81,
+"kind": "greet",
+"speaker": "moor_bookseller",
+"src": "voices/moor_bookseller/moor_bookseller.g.0273f1.mp3",
+"t": "Two parts, stitched, up the river from Broadsheet Row. Hetty keeps a paid-for bundle by the east table if coin is short."
+},
+"moor_bookseller.g.142d34": {
+"auto": true,
+"d": 8.23,
+"kind": "greet",
+"speaker": "moor_bookseller",
+"src": "voices/moor_bookseller/moor_bookseller.g.142d34.mp3",
+"t": "Paper tears more easily than people think. So do manners. A sovereign a part, and keep it inside your coat."
+},
+"moor_bookseller.g.17ec24": {
+"auto": true,
+"d": 13.51,
+"kind": "greet",
+"speaker": "moor_bookseller",
+"src": "voices/moor_bookseller/moor_bookseller.g.17ec24.mp3",
+"t": "Dry pages, if you would like something to read. A Cantabile serial in two parts, a tale out of the Caldera. A sovereign a part, or read the Cantor\u2019s lending copies for nothing."
+},
+"moor_bookseller.t.130b5c": {
+"auto": true,
+"d": 13.42,
+"kind": "topic",
+"speaker": "moor_bookseller",
+"src": "voices/moor_bookseller/moor_bookseller.t.130b5c.mp3",
+"t": "The Cantor keeps lending copies on a shelf at her house. You can read both parts there without buying them. The bundle here was paid for by a carter: one of each for whoever wants to take them home."
+},
+"moor_bookseller.t.d5cc25": {
+"auto": true,
+"d": 19.44,
+"kind": "topic",
+"speaker": "moor_bookseller",
+"src": "voices/moor_bookseller/moor_bookseller.t.d5cc25.mp3",
+"t": "Four papers on the Row, all libellous, one occasionally correct. This is none of the four. It is a tale, the names are changed, and that is the only reason it came up the river past Stillwater. The lockkeeper there reads everything I carry, and sells what he reads."
+},
 "mourner.greet.normal": {
 "d": 2.69,
 "kind": "greet",
@@ -2095,6 +2480,54 @@ const VOICE_LINES = {
 "src": "voices/mourner/mourner.greet.polite.mp3",
 "t": "Lilies for the Cantor. Lilies.",
 "voiceOf": "mourner"
+},
+"n28_hummer.g.14f028": {
+"auto": true,
+"d": 5.74,
+"kind": "greet",
+"speaker": "n28_hummer",
+"src": "voices/n28_hummer/n28_hummer.g.14f028.mp3",
+"t": "Hm. Keep to the Narrow, love, and the street keeps you."
+},
+"n28_hummer.g.56fe9f": {
+"auto": true,
+"d": 7.54,
+"kind": "greet",
+"speaker": "n28_hummer",
+"src": "voices/n28_hummer/n28_hummer.g.56fe9f.mp3",
+"t": "Hm-mm. All's well. Sit if you like; the stool next door is free."
+},
+"n28_hummer.g.e9f755": {
+"auto": true,
+"d": 4.51,
+"kind": "greet",
+"speaker": "n28_hummer",
+"src": "voices/n28_hummer/n28_hummer.g.e9f755.mp3",
+"t": "Lower. I am humming for the whole street, not for you."
+},
+"n28_lamplighter.g.030040": {
+"auto": true,
+"d": 5.83,
+"kind": "greet",
+"speaker": "n28_lamplighter",
+"src": "voices/n28_lamplighter/n28_lamplighter.g.030040.mp3",
+"t": "Evening. Mind the pole. Every lamp in Oakhaven by full dark, and not one of them quiet."
+},
+"n28_lamplighter.g.b3b5eb": {
+"auto": true,
+"d": 4.82,
+"kind": "greet",
+"speaker": "n28_lamplighter",
+"src": "voices/n28_lamplighter/n28_lamplighter.g.b3b5eb.mp3",
+"t": "Can't stop. Twenty-four lamps and one taper, and the dark does not wait on me."
+},
+"n28_lamplighter.g.e7151a": {
+"auto": true,
+"d": 4.03,
+"kind": "greet",
+"speaker": "n28_lamplighter",
+"src": "voices/n28_lamplighter/n28_lamplighter.g.e7151a.mp3",
+"t": "Out of the way of the pole, if you would. Lamps first. Talk after."
 },
 "narrator.open.0": {
 "d": 7.08,
@@ -2159,6 +2592,22 @@ const VOICE_LINES = {
 "src": "voices/nell/nell.greet.polite.mp3",
 "t": "He is not to be looked at. Whoever you are. He has a cough.",
 "voiceOf": "nell"
+},
+"nell.t.b7f031": {
+"auto": true,
+"d": 12.46,
+"kind": "topic",
+"speaker": "nell",
+"src": "voices/nell/nell.t.b7f031.mp3",
+"t": "Lyra hummed him through the night it started. Spent her whole voice on his hands. She had nothing left for Orla Hale in the morning, and Orla put out roots in her chair while Lyra sat there with her mouth open and nothing coming out."
+},
+"nell.t.f2e779": {
+"auto": true,
+"d": 11.3,
+"kind": "topic",
+"speaker": "nell",
+"src": "voices/nell/nell.t.f2e779.mp3",
+"t": "The Grafters posted the inspection on the Greenhall door. Every child under twelve, hands and feet, Rootday week. Rooke chalks the mark. After the mark they come for you with the saw, and they are kind about it."
 },
 "orla.graft.dont": {
 "d": 1.56,
@@ -2240,6 +2689,30 @@ const VOICE_LINES = {
 "t": "Come closer, I cannot turn. Are you here about Davin?",
 "voiceOf": "orla"
 },
+"orla.t.e60f0f": {
+"auto": true,
+"d": 9.19,
+"kind": "topic",
+"speaker": "orla",
+"src": "voices/orla/orla.t.e60f0f.mp3",
+"t": "I heard my son sing my harvest song at the Boar. And then I heard it sung back by something with nobody inside it. All the lines. Even the fourth."
+},
+"orrin.g.0f0b9f": {
+"auto": true,
+"d": 7.06,
+"kind": "greet",
+"speaker": "orrin",
+"src": "voices/orrin/orrin.g.0f0b9f.mp3",
+"t": "Evening. If it is about a burial, I keep the book. If it is about anything else, I keep my voice down."
+},
+"orrin.g.7734a8": {
+"auto": true,
+"d": 4.25,
+"kind": "greet",
+"speaker": "orrin",
+"src": "voices/orrin/orrin.g.7734a8.mp3",
+"t": "Salt for the paths, a spade for the rest. What do you need?"
+},
 "outrider.alert.0": {
 "d": 2.23,
 "kind": "alert",
@@ -2280,6 +2753,4374 @@ const VOICE_LINES = {
 "t": "Position reassessed.",
 "voiceOf": "outrider"
 },
+"p100_19.g.1f620d": {
+"auto": true,
+"d": 3.7,
+"kind": "greet",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.g.1f620d.mp3",
+"t": "so I numbered them instead. Nineteen. Keep talking."
+},
+"p100_19.g.90a2c2": {
+"auto": true,
+"d": 3.14,
+"kind": "greet",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.g.90a2c2.mp3",
+"t": "That's it. Loud is fine. Loud is alive."
+},
+"p100_19.g.9f5b81": {
+"auto": true,
+"d": 3.05,
+"kind": "greet",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.g.9f5b81.mp3",
+"t": "and the grey one went broody in the spring\u2014 What."
+},
+"p100_19.t.4d5f57": {
+"auto": true,
+"d": 7.51,
+"kind": "topic",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.t.4d5f57.mp3",
+"t": "Thirty yards of bare rock, and then the land stops. Don't look at it long. You can't, anyway. You'll find you're looking at your boots."
+},
+"p100_19.t.4ed063": {
+"auto": true,
+"d": 13.2,
+"kind": "topic",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.t.4ed063.mp3",
+"t": "The only men on the Watch allowed to be silent. Lead over the face, hammered to fit, no holes in it. They stand along the lip and listen for us. When one of theirs starts to walk, the two beside him fetch him back. They don't fetch us."
+},
+"p100_19.t.b22cba": {
+"auto": true,
+"d": 6.17,
+"kind": "topic",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.t.b22cba.mp3",
+"t": "I kept eleven. You name a hen and it dies, so I numbered them. Then I came here, and they numbered me."
+},
+"p100_19.t.f36607": {
+"auto": true,
+"d": 11.64,
+"kind": "topic",
+"speaker": "p100_19",
+"src": "voices/p100_19/p100_19.t.f36607.mp3",
+"t": "Brass, nine feet across the mouth, under a lead hood. They don't throw shot. They throw noise. Forty of them, at dawn, out over the edge of the world, every day since the crack. We call it the Refusal."
+},
+"p100_207.g.3f8aa4": {
+"auto": true,
+"d": 4.3,
+"kind": "greet",
+"speaker": "p100_207",
+"src": "voices/p100_207/p100_207.g.3f8aa4.mp3",
+"t": "Shh\u2014 no. Not that. Sorry. Keep talking. Just not about that."
+},
+"p100_207.g.53995e": {
+"auto": true,
+"d": 2.09,
+"kind": "greet",
+"speaker": "p100_207",
+"src": "voices/p100_207/p100_207.g.53995e.mp3",
+"t": "nine days. Ten tomorrow."
+},
+"p100_207.g.fe62fd": {
+"auto": true,
+"d": 5.93,
+"kind": "greet",
+"speaker": "p100_207",
+"src": "voices/p100_207/p100_207.g.fe62fd.mp3",
+"t": "and it grounds the halberd soft, every time. Because of the powder. It still knows about the powder."
+},
+"p100_207.t.7f5331": {
+"auto": true,
+"d": 9.79,
+"kind": "topic",
+"speaker": "p100_207",
+"src": "voices/p100_207/p100_207.t.7f5331.mp3",
+"t": "Through the barrack and down. Felts on. No flame, no shot, no iron on stone. It will not open the big door to anybody, but it has never thought to bar ours."
+},
+"p100_207.t.bb770c": {
+"auto": true,
+"d": 12.31,
+"kind": "topic",
+"speaker": "p100_207",
+"src": "voices/p100_207/p100_207.t.bb770c.mp3",
+"t": "The Arbiterium left it with us when the old guns went out of use, to mind the powder. Six years it has walked the same nine paces. Nine days ago it stopped in the middle of them and said something about bread."
+},
+"p100_211.g.4bf4ec": {
+"auto": true,
+"d": 7.03,
+"kind": "greet",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.g.4bf4ec.mp3",
+"t": "he could open a gate, that dog. Not push it. Open it. Evening. You're quiet. You want to watch that, here."
+},
+"p100_211.g.8c3b9d": {
+"auto": true,
+"d": 5.28,
+"kind": "greet",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.g.8c3b9d.mp3",
+"t": "and the food, which is always worse. You're quiet. You want to watch that, here."
+},
+"p100_211.g.a39e34": {
+"auto": true,
+"d": 5.35,
+"kind": "greet",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.g.a39e34.mp3",
+"t": "Shout if you like. It all counts. It's the quiet ones we ring the bell for."
+},
+"p100_211.t.113456": {
+"auto": true,
+"d": 11.02,
+"kind": "topic",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.t.113456.mp3",
+"t": "Nothing that matters. Nobody on the Watch does. That's what talk is for. That's the whole trick of it. Onions. Days of the week. Counting cable-eyes. My dog."
+},
+"p100_211.t.4bc685": {
+"auto": true,
+"d": 14.18,
+"kind": "topic",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.t.4bc685.mp3",
+"t": "You go quiet on the Watch and somebody sounds the bell. Standing order. Nine. They don't look first. They don't ask. They just ring it. It's not a punishment. It's because the ones that go quiet are the ones that go."
+},
+"p100_211.t.51ed7f": {
+"auto": true,
+"d": 8.88,
+"kind": "topic",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.t.51ed7f.mp3",
+"t": "Over. To listen. Near enough a hundred and eighty since the year of the crack, and every one of them went quiet first. So we talk."
+},
+"p100_211.t.da093a": {
+"auto": true,
+"d": 11.09,
+"kind": "topic",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.t.da093a.mp3",
+"t": "Up to the walk between Five and Six. Keep to the manned batteries till you've got the way of it. Eight's hooded this week. From Seven to Nine there's nobody but you."
+},
+"p100_211.t.f1fa24": {
+"auto": true,
+"d": 11.47,
+"kind": "topic",
+"speaker": "p100_211",
+"src": "voices/p100_211/p100_211.t.f1fa24.mp3",
+"t": "Rufus. I had him as a boy in the Peaks. He'd lift the latch with his nose and walk the gate back, and then he'd sit down in the gap and look at you, as if you'd asked him to."
+},
+"p100_51.g.408751": {
+"auto": true,
+"d": 4.92,
+"kind": "greet",
+"speaker": "p100_51",
+"src": "voices/p100_51/p100_51.g.408751.mp3",
+"t": "my nan sang it. Every night. I'd know it in my sleep. I do know it in my sleep."
+},
+"p100_51.g.b97c82": {
+"auto": true,
+"d": 2.35,
+"kind": "greet",
+"speaker": "p100_51",
+"src": "voices/p100_51/p100_51.g.b97c82.mp3",
+"t": "Not so loud. Not about that."
+},
+"p100_51.g.fd51ba": {
+"auto": true,
+"d": 2.74,
+"kind": "greet",
+"speaker": "p100_51",
+"src": "voices/p100_51/p100_51.g.fd51ba.mp3",
+"t": "four lines. It only ever does three."
+},
+"p100_51.t.a344a8": {
+"auto": true,
+"d": 9.14,
+"kind": "topic",
+"speaker": "p100_51",
+"src": "voices/p100_51/p100_51.t.a344a8.mp3",
+"t": "Because it stops at the third line, and waits, and then it starts again, and while it is doing that it is still here. Nobody knows what it does when it gets to the end."
+},
+"p100_51.t.e07c9a": {
+"auto": true,
+"d": 9.79,
+"kind": "topic",
+"speaker": "p100_51",
+"src": "voices/p100_51/p100_51.t.e07c9a.mp3",
+"t": "A cradle-song. It is from where I am from, and I am not saying where. I wrote it out so I would stop hearing the gap at the end. It is in my locker, under the Sermon."
+},
+"p100_88.g.31ba9f": {
+"auto": true,
+"d": 4.68,
+"kind": "greet",
+"speaker": "p100_88",
+"src": "voices/p100_88/p100_88.g.31ba9f.mp3",
+"t": "If you are going to shout, shout something with a rhythm. I can use that."
+},
+"p100_88.g.3f2c6f": {
+"auto": true,
+"d": 6.43,
+"kind": "greet",
+"speaker": "p100_88",
+"src": "voices/p100_88/p100_88.g.3f2c6f.mp3",
+"t": "two short, a pause, one long: that is yes. Sorry. Eighty-Eight. I was listening to her knuckles."
+},
+"p100_88.g.d76166": {
+"auto": true,
+"d": 4.46,
+"kind": "greet",
+"speaker": "p100_88",
+"src": "voices/p100_88/p100_88.g.d76166.mp3",
+"t": "four flat: the Watch holds the wall. Everybody knows that one."
+},
+"p100_88.t.73c311": {
+"auto": true,
+"d": 3.89,
+"kind": "topic",
+"speaker": "p100_88",
+"src": "voices/p100_88/p100_88.t.73c311.mp3",
+"t": "In the Peaks. You would not know it. I would not know it now."
+},
+"p100_88.t.f0911f": {
+"auto": true,
+"d": 9.72,
+"kind": "topic",
+"speaker": "p100_88",
+"src": "voices/p100_88/p100_88.t.f0911f.mp3",
+"t": "Everybody learns the battery calls. I am learning the rest. There is nothing to do on the wall but talk and listen, so I talk with my mouth and listen with everything else."
+},
+"p100_94.g.2aaf0f": {
+"auto": true,
+"d": 5.83,
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.2aaf0f.mp3",
+"t": "and the bag is patched on the starboard side, General, a good deal\u2014 Yes? Ninety-Four."
+},
+"p100_94.g.370d5c": {
+"auto": true,
+"d": 6.17,
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.370d5c.mp3",
+"t": "and that one has a mouth on them, General. I would not, if I were you. She can hear tone."
+},
+"p100_94.g.4c0666": {
+"auto": true,
+"d": 4.37,
+"for": "p100_ward",
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.4c0666.mp3",
+"t": "The General is waiting for you to say that again, in another way."
+},
+"p100_94.g.5f522b": {
+"auto": true,
+"d": 7.44,
+"for": "p100_ward",
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.5f522b.mp3",
+"t": "The General says, state your ship and your business, and say it aloud, and go on saying something after."
+},
+"p100_94.g.6871b5": {
+"auto": true,
+"d": 5.33,
+"for": "p100_ward",
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.6871b5.mp3",
+"t": "The General says, welcome to Null-Watch. The General says, keep talking."
+},
+"p100_94.g.f613bb": {
+"auto": true,
+"d": 8.28,
+"kind": "greet",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.g.f613bb.mp3",
+"t": "and that is a traveller, General, off the Coast skyship, and civil with it\u2014 Ninety-Four. I say what the General says."
+},
+"p100_94.t.392e40": {
+"auto": true,
+"d": 19.15,
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.392e40.mp3",
+"t": "It was the Fortis sappers' code, tapped on pipes in the deep galleries where a voice does not carry. She strikes it on the iron over her heart. Everybody on the Watch learns the battery calls. Almost nobody learns the whole of it. I have enough to say it after her."
+},
+"p100_94.t.3e2f59": {
+"auto": true,
+"d": 7.3,
+"for": "p100_ward",
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.3e2f59.mp3",
+"t": "The General says, the Watch holds the wall. The General says, the Watch holds the wall and nothing else."
+},
+"p100_94.t.3f2e1d": {
+"auto": true,
+"d": 16.03,
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.3f2e1d.mp3",
+"t": "That is my subject. Three sovereigns the cask at the Fenwick chandler's when I left, and four here, and the sutler says five by Frostmonth, and the wicks are extra. Nobody else may have lamp-oil. Ask on the roster."
+},
+"p100_94.t.4fc3bb": {
+"auto": true,
+"d": 11.95,
+"for": "p100_ward",
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.4fc3bb.mp3",
+"t": "The General says, keep talking. On the wall, in the yards, on the stairs. The General says, if you go quiet somebody will ring a bell, and they will not look first."
+},
+"p100_94.t.5563e3": {
+"auto": true,
+"d": 6.98,
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.5563e3.mp3",
+"t": "In the Reach. I owed money there. You get the wall for a debt of that size. Three years, so far."
+},
+"p100_94.t.5cec21": {
+"auto": true,
+"d": 21.0,
+"for": "p100_ward",
+"kind": "topic",
+"match": "Spring of 413. The batteries were new and nobody knew how to lay them. She laid them by voice, tower to tower in the dark, for thirty-one hours. At dawn on the second day she opened her mouth to say cease firing, and nothing came out.",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.5cec21.mp3",
+"t": "The General says nothing about that. Spring of 413. The batteries were new and nobody knew how to lay them. She laid them by voice, tower to tower in the dark, for thirty-one hours. At dawn on the second day she opened her mouth to say cease firing, and nothing came out."
+},
+"p100_94.t.69c403": {
+"auto": true,
+"d": 9.36,
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.69c403.mp3",
+"t": "It is not an appointment. It is come by. The one before me talked about rope. When I stop, somebody will come up a stair and offer."
+},
+"p100_94.t.d4f68e": {
+"auto": true,
+"d": 11.26,
+"for": "p100_ward",
+"kind": "topic",
+"speaker": "p100_94",
+"src": "voices/p100_94/p100_94.t.d4f68e.mp3",
+"t": "The General says the Watch obeys the Synod when the Synod is not mad. The General says the Synod has been mad since the spring of 413."
+},
+"p100_corp.g.2317fa": {
+"auto": true,
+"d": 2.23,
+"kind": "greet",
+"speaker": "p100_corp",
+"src": "voices/p100_corp/p100_corp.g.2317fa.mp3",
+"t": "Move along. Keep talking."
+},
+"p100_corp.g.c7e26f": {
+"auto": true,
+"d": 5.21,
+"kind": "greet",
+"speaker": "p100_corp",
+"src": "voices/p100_corp/p100_corp.g.c7e26f.mp3",
+"t": "Say that louder and I will have you counting cable-eyes till Frostmonth."
+},
+"p100_corp.g.e601e2": {
+"auto": true,
+"d": 4.54,
+"kind": "greet",
+"speaker": "p100_corp",
+"src": "voices/p100_corp/p100_corp.g.e601e2.mp3",
+"t": "Nothing through there. Blankets. Keep talking and keep moving."
+},
+"p100_corp.t.1d4323": {
+"auto": true,
+"d": 6.17,
+"kind": "topic",
+"speaker": "p100_corp",
+"src": "voices/p100_corp/p100_corp.t.1d4323.mp3",
+"t": "Shut for the damp. Nine days. It is routine, and it is on the sheet as routine."
+},
+"p100_issue.g.7c7c5c": {
+"auto": true,
+"d": 4.39,
+"kind": "greet",
+"speaker": "p100_issue",
+"src": "voices/p100_issue/p100_issue.g.7c7c5c.mp3",
+"t": "Issue. Coat, mitts, spike. You sign with a mark if you can't sign."
+},
+"p100_issue.g.973161": {
+"auto": true,
+"d": 1.06,
+"kind": "greet",
+"speaker": "p100_issue",
+"src": "voices/p100_issue/p100_issue.g.973161.mp3",
+"t": "Issue. What."
+},
+"p100_issue.g.cb5c88": {
+"auto": true,
+"d": 4.63,
+"kind": "greet",
+"speaker": "p100_issue",
+"src": "voices/p100_issue/p100_issue.g.cb5c88.mp3",
+"t": "Issue. Mind your tone, or you can go on the wall in what you stand up in."
+},
+"p100_issue.t.506c53": {
+"auto": true,
+"d": 11.02,
+"kind": "topic",
+"speaker": "p100_issue",
+"src": "voices/p100_issue/p100_issue.t.506c53.mp3",
+"t": "Lead plates, sewn in. It will not stop the quiet. Nothing stops the quiet but your own mouth. But it is the Watch's coat, and the Watch knows its own."
+},
+"p100_issue.t.6cccd9": {
+"auto": true,
+"d": 6.31,
+"kind": "topic",
+"speaker": "p100_issue",
+"src": "voices/p100_issue/p100_issue.t.6cccd9.mp3",
+"t": "Not from me. The magazines keep their own, on a rack. You do not walk on powder in nails."
+},
+"p100_mastcrew.g.54347e": {
+"auto": true,
+"d": 4.63,
+"kind": "greet",
+"speaker": "p100_mastcrew",
+"src": "voices/p100_mastcrew/p100_mastcrew.g.54347e.mp3",
+"t": "and that's her lines made fast, and that's the windlass pawled\u2014 Mind the ladder."
+},
+"p100_mastcrew.g.873e92": {
+"auto": true,
+"d": 3.53,
+"kind": "greet",
+"speaker": "p100_mastcrew",
+"src": "voices/p100_mastcrew/p100_mastcrew.g.873e92.mp3",
+"t": "and that one shouts. Good. Shout on the wall and you'll live."
+},
+"p100_mastcrew.g.99cc83": {
+"auto": true,
+"d": 2.88,
+"kind": "greet",
+"speaker": "p100_mastcrew",
+"src": "voices/p100_mastcrew/p100_mastcrew.g.99cc83.mp3",
+"t": "Coast-built, by the cut of her, and knocked about"
+},
+"p100_mastcrew.t.7d0934": {
+"auto": true,
+"d": 7.22,
+"kind": "topic",
+"speaker": "p100_mastcrew",
+"src": "voices/p100_mastcrew/p100_mastcrew.t.7d0934.mp3",
+"t": "Not many ships come. The Synod's packets, with the condemned, four times a year. A sutler's barge when the wind allows. You."
+},
+"p100_qm.g.3b96e9": {
+"auto": true,
+"d": 3.05,
+"kind": "greet",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.g.3b96e9.mp3",
+"t": "Keep talking. Somewhere else."
+},
+"p100_qm.g.70ddea": {
+"auto": true,
+"d": 6.96,
+"kind": "greet",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.g.70ddea.mp3",
+"t": "Keep talking. Stores are the other side of the Watch. This is Nine. Nothing here is for issue."
+},
+"p100_qm.g.b7e214": {
+"auto": true,
+"d": 1.87,
+"kind": "greet",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.g.b7e214.mp3",
+"t": "Keep talking."
+},
+"p100_qm.t.26a6c2": {
+"auto": true,
+"d": 5.47,
+"kind": "topic",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.t.26a6c2.mp3",
+"t": "I can't. I can write my name and two words more. It has been enough."
+},
+"p100_qm.t.3d677a": {
+"auto": true,
+"d": 8.69,
+"kind": "topic",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.t.3d677a.mp3",
+"t": "Barred. It goes out onto the rock, to the buttress and the crane. Nobody goes out there without my leave, and you have not got it."
+},
+"p100_qm.t.8bc217": {
+"auto": true,
+"d": 9.72,
+"kind": "topic",
+"speaker": "p100_qm",
+"src": "voices/p100_qm/p100_qm.t.8bc217.mp3",
+"t": "In the Peaks. I hit an officer who had hit a boy. Spring of '13. They sent me to the end of the world for it. It had only just become the end."
+},
+"p100_roster.g.6f0f28": {
+"auto": true,
+"d": 4.8,
+"kind": "greet",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.g.6f0f28.mp3",
+"t": "Number and subject. No number? Visitor, then. Subject."
+},
+"p100_roster.g.86293d": {
+"auto": true,
+"d": 1.25,
+"kind": "greet",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.g.86293d.mp3",
+"t": "Subject?"
+},
+"p100_roster.g.cc0a2f": {
+"auto": true,
+"d": 4.46,
+"kind": "greet",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.g.cc0a2f.mp3",
+"t": "Subject. I have four hundred of these to chalk before the hour."
+},
+"p100_roster.t.81dd58": {
+"auto": true,
+"d": 8.71,
+"kind": "topic",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.t.81dd58.mp3",
+"t": "Read the board. Pick one of the visitors' four. Keep to it. If you dry up on the wall, say the days: nobody has ever run out of days."
+},
+"p100_roster.t.f2ab93": {
+"auto": true,
+"d": 9.38,
+"kind": "topic",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.t.f2ab93.mp3",
+"t": "Somebody sits by every bunk and talks, to keep the sleeper's breathing company. Two hours on. It is the kindest duty on the roster and the dullest."
+},
+"p100_roster.t.f65e3a": {
+"auto": true,
+"d": 10.9,
+"kind": "topic",
+"speaker": "p100_roster",
+"src": "voices/p100_roster/p100_roster.t.f65e3a.mp3",
+"t": "A lantern and a tin. Whoever sat there last leaves a note for whoever sits there next, and you read it out. It does not matter what it says. It matters that it gets said."
+},
+"p100_tr_a.g.90012e": {
+"auto": true,
+"d": 2.47,
+"kind": "greet",
+"speaker": "p100_tr_a",
+"src": "voices/p100_tr_a/p100_tr_a.g.90012e.mp3",
+"t": "thin, I said, and a heavy pan"
+},
+"p100_tr_a.g.a35a70": {
+"auto": true,
+"d": 2.4,
+"kind": "greet",
+"speaker": "p100_tr_a",
+"src": "voices/p100_tr_a/p100_tr_a.g.a35a70.mp3",
+"t": "that's the way, good and loud, now the pan"
+},
+"p100_tr_a.g.ebf1b1": {
+"auto": true,
+"d": 6.26,
+"kind": "greet",
+"speaker": "p100_tr_a",
+"src": "voices/p100_tr_a/p100_tr_a.g.ebf1b1.mp3",
+"t": "and then you take your onions, and you want them sliced thin, not chopped, thin, and you want a heavy pan"
+},
+"p100_tr_a.t.00c794": {
+"auto": true,
+"d": 7.63,
+"kind": "topic",
+"speaker": "p100_tr_a",
+"src": "voices/p100_tr_a/p100_tr_a.t.00c794.mp3",
+"t": "Standing Order Nine. You get used to it. The new ones can't sleep for a month, and after that they can't sleep anywhere else."
+},
+"p100_tr_b.g.156fa5": {
+"auto": true,
+"d": 3.91,
+"kind": "greet",
+"speaker": "p100_tr_b",
+"src": "voices/p100_tr_b/p100_tr_b.g.156fa5.mp3",
+"t": "forty-four, forty-five\u2014 don't make me lose my place\u2014 forty-six"
+},
+"p100_tr_b.g.565f11": {
+"auto": true,
+"d": 7.42,
+"kind": "greet",
+"speaker": "p100_tr_b",
+"src": "voices/p100_tr_b/p100_tr_b.g.565f11.mp3",
+"t": "forty-one, forty-two, forty-three, and that's the cable-eyes on the north face of Six done, now the south face, forty-four"
+},
+"p100_tr_b.g.e1e745": {
+"auto": true,
+"d": 3.22,
+"kind": "greet",
+"speaker": "p100_tr_b",
+"src": "voices/p100_tr_b/p100_tr_b.g.e1e745.mp3",
+"t": "forty-seven! Forty-eight! See, I can do it loud as well"
+},
+"p100_tr_b.t.6a03e3": {
+"auto": true,
+"d": 11.28,
+"kind": "topic",
+"speaker": "p100_tr_b",
+"src": "voices/p100_tr_b/p100_tr_b.t.6a03e3.mp3",
+"t": "The iron eyes the cable runs through. Somebody counts them every watch. If the count comes out different, either an eye has gone or the counter has, and both are worth knowing."
+},
+"p100_tr_c.g.b9369e": {
+"auto": true,
+"d": 2.3,
+"kind": "greet",
+"speaker": "p100_tr_c",
+"src": "voices/p100_tr_c/p100_tr_c.g.b9369e.mp3",
+"t": "the blue, in the end. Obviously the blue"
+},
+"p100_tr_c.g.e676ce": {
+"auto": true,
+"d": 3.05,
+"kind": "greet",
+"speaker": "p100_tr_c",
+"src": "voices/p100_tr_c/p100_tr_c.g.e676ce.mp3",
+"t": "and she had a voice on her like yours, as it happens"
+},
+"p100_tr_c.g.faa72a": {
+"auto": true,
+"d": 6.7,
+"kind": "greet",
+"speaker": "p100_tr_c",
+"src": "voices/p100_tr_c/p100_tr_c.g.faa72a.mp3",
+"t": "told her, I said, you can have the blue or you can have the green, but you can't have both and expect your mother not to say something"
+},
+"p100_tr_c.t.4037dd": {
+"auto": true,
+"d": 8.33,
+"kind": "topic",
+"speaker": "p100_tr_c",
+"src": "voices/p100_tr_c/p100_tr_c.t.4037dd.mp3",
+"t": "She shouted her voice to rags that first night. Shouted it to bits, and the bits went over the edge, and she's never had it back. Now, the thing with gravy\u2014"
+},
+"p100_tr_d.g.580f2e": {
+"auto": true,
+"d": 2.11,
+"kind": "greet",
+"speaker": "p100_tr_d",
+"src": "voices/p100_tr_d/p100_tr_d.g.580f2e.mp3",
+"t": "Massday, Stasisday, Dawnday"
+},
+"p100_tr_d.g.b4d50e": {
+"auto": true,
+"d": 6.07,
+"kind": "greet",
+"speaker": "p100_tr_d",
+"src": "voices/p100_tr_d/p100_tr_d.g.b4d50e.mp3",
+"t": "Rootday, Hearthday, Massday, Stasisday, Dawnday, Driftday, Memoryday, Nullday, Rootday, Hearthday"
+},
+"p100_tr_d.g.bf9b9e": {
+"auto": true,
+"d": 3.98,
+"kind": "greet",
+"speaker": "p100_tr_d",
+"src": "voices/p100_tr_d/p100_tr_d.g.bf9b9e.mp3",
+"t": "Driftday! Memoryday! Nullday! Go on, you take the next round"
+},
+"p100_tr_d.t.cd442d": {
+"auto": true,
+"d": 7.15,
+"kind": "topic",
+"speaker": "p100_tr_d",
+"src": "voices/p100_tr_d/p100_tr_d.t.cd442d.mp3",
+"t": "It's the easiest subject there is. You can't run out. You get to Nullday and there's Rootday again, waiting for you."
+},
+"p100_watcher.g.2bd635": {
+"auto": true,
+"d": 2.74,
+"kind": "greet",
+"speaker": "p100_watcher",
+"src": "voices/p100_watcher/p100_watcher.g.2bd635.mp3",
+"t": "Wake him and you take the next two hours."
+},
+"p100_watcher.g.3ee79b": {
+"auto": true,
+"d": 2.23,
+"kind": "greet",
+"speaker": "p100_watcher",
+"src": "voices/p100_watcher/p100_watcher.g.3ee79b.mp3",
+"t": "in, and out, that's it, and the calf"
+},
+"p100_watcher.g.8c7744": {
+"auto": true,
+"d": 6.38,
+"kind": "greet",
+"speaker": "p100_watcher",
+"src": "voices/p100_watcher/p100_watcher.g.8c7744.mp3",
+"t": "and then your sister wrote, and the calf was a heifer after all\u2014 I can do both. Go on."
+},
+"p100_watcher.t.4fc592": {
+"auto": true,
+"d": 11.64,
+"kind": "topic",
+"speaker": "p100_watcher",
+"src": "voices/p100_watcher/p100_watcher.t.4fc592.mp3",
+"t": "You talk to their breathing. In, and out. If it changes, you talk closer. It has never failed yet in this hall, and nobody wants to be the one it fails for."
+},
+"p11_dicer.g.402d44": {
+"auto": true,
+"d": 2.23,
+"kind": "greet",
+"speaker": "p11_dicer",
+"src": "voices/p11_dicer/p11_dicer.g.402d44.mp3",
+"t": "Bones, or back up the stair,"
+},
+"p11_dicer.g.a84401": {
+"auto": true,
+"d": 6.67,
+"kind": "greet",
+"speaker": "p11_dicer",
+"src": "voices/p11_dicer/p11_dicer.g.a84401.mp3",
+"t": "Hetty's board says no dice, and Hetty's board is upstairs. A throw of bones, if you have a coin to lose?"
+},
+"p11_dicer.g.ef7d94": {
+"auto": true,
+"d": 6.05,
+"kind": "greet",
+"speaker": "p11_dicer",
+"src": "voices/p11_dicer/p11_dicer.g.ef7d94.mp3",
+"t": "Bones? One to twenty sovereigns. Nobody down here ever got rich, and nobody has had to leave."
+},
+"p11c_fish.g.066b40": {
+"auto": true,
+"d": 1.68,
+"kind": "greet",
+"speaker": "p11c_fish",
+"src": "voices/p11c_fish/p11c_fish.g.066b40.mp3",
+"t": "Eel or nothing."
+},
+"p11c_fish.g.a1199c": {
+"auto": true,
+"d": 3.26,
+"kind": "greet",
+"speaker": "p11c_fish",
+"src": "voices/p11c_fish/p11c_fish.g.a1199c.mp3",
+"t": "You smell of the Hedge. Buy an eel and I will forget."
+},
+"p11c_fish.g.b48df9": {
+"auto": true,
+"d": 4.85,
+"kind": "greet",
+"speaker": "p11c_fish",
+"src": "voices/p11c_fish/p11c_fish.g.b48df9.mp3",
+"t": "Flume eel, the green sort. Do not worry about the colour. It is only the water."
+},
+"p11c_herb.g.04e76f": {
+"auto": true,
+"d": 2.26,
+"kind": "greet",
+"speaker": "p11c_herb",
+"src": "voices/p11c_herb/p11c_herb.g.04e76f.mp3",
+"t": "Handle it or buy it. It bruises."
+},
+"p11c_herb.g.21d35e": {
+"auto": true,
+"d": 2.28,
+"kind": "greet",
+"speaker": "p11c_herb",
+"src": "voices/p11c_herb/p11c_herb.g.21d35e.mp3",
+"t": "Herbs. Bandage-stuff, if you bleed."
+},
+"p11c_herb.g.c87a74": {
+"auto": true,
+"d": 4.3,
+"kind": "greet",
+"speaker": "p11c_herb",
+"src": "voices/p11c_herb/p11c_herb.g.c87a74.mp3",
+"t": "Willow-bark, reed-pith, moss. Cut this morning, so it still remembers being green."
+},
+"p11c_larder.g.04ef3c": {
+"auto": true,
+"d": 3.22,
+"kind": "greet",
+"speaker": "p11c_larder",
+"src": "voices/p11c_larder/p11c_larder.g.04ef3c.mp3",
+"t": "Buy or stop breathing on the pies."
+},
+"p11c_larder.g.0b1e7b": {
+"auto": true,
+"d": 4.13,
+"kind": "greet",
+"speaker": "p11c_larder",
+"src": "voices/p11c_larder/p11c_larder.g.0b1e7b.mp3",
+"t": "Honey, eel, tonic. Eat first, ask after."
+},
+"p11c_larder.g.9fc657": {
+"auto": true,
+"d": 4.66,
+"kind": "greet",
+"speaker": "p11c_larder",
+"src": "voices/p11c_larder/p11c_larder.g.9fc657.mp3",
+"t": "Eat something. You have the look of someone who has been listening too hard."
+},
+"p11c_odds.g.0b0e2e": {
+"auto": true,
+"d": 3.62,
+"kind": "greet",
+"speaker": "p11c_odds",
+"src": "voices/p11c_odds/p11c_odds.g.0b0e2e.mp3",
+"t": "A little of everything, and the everything is mostly quiet."
+},
+"p11c_odds.g.4a54a8": {
+"auto": true,
+"d": 3.79,
+"kind": "greet",
+"speaker": "p11c_odds",
+"src": "voices/p11c_odds/p11c_odds.g.4a54a8.mp3",
+"t": "Reeds, bottles, pebbles. Do not ask what the pebbles are for."
+},
+"p11c_odds.g.c2bc8a": {
+"auto": true,
+"d": 1.97,
+"kind": "greet",
+"speaker": "p11c_odds",
+"src": "voices/p11c_odds/p11c_odds.g.c2bc8a.mp3",
+"t": "Look, do not breathe on it."
+},
+"p11c_tinker.g.8eb4ab": {
+"auto": true,
+"d": 2.52,
+"kind": "greet",
+"speaker": "p11c_tinker",
+"src": "voices/p11c_tinker/p11c_tinker.g.8eb4ab.mp3",
+"t": "If it is loud, I do not stock it."
+},
+"p11c_tinker.g.a3e4b3": {
+"auto": true,
+"d": 3.46,
+"kind": "greet",
+"speaker": "p11c_tinker",
+"src": "voices/p11c_tinker/p11c_tinker.g.a3e4b3.mp3",
+"t": "Edges and shot. Do not ask where the shot came from."
+},
+"p11c_tinker.g.beb474": {
+"auto": true,
+"d": 3.02,
+"kind": "greet",
+"speaker": "p11c_tinker",
+"src": "voices/p11c_tinker/p11c_tinker.g.beb474.mp3",
+"t": "Mending, selling, sharpening. Mostly selling."
+},
+"p12_baker.g.67ea5f": {
+"auto": true,
+"d": 5.57,
+"kind": "greet",
+"speaker": "p12_baker",
+"src": "voices/p12_baker/p12_baker.g.67ea5f.mp3",
+"t": "Hearth bread, cider, moot-curd. Last Sheaf week. Market prices; I am not here to get rich."
+},
+"p12_baker.g.ce89c4": {
+"auto": true,
+"d": 3.96,
+"kind": "greet",
+"speaker": "p12_baker",
+"src": "voices/p12_baker/p12_baker.g.ce89c4.mp3",
+"t": "If you are going to shout, buy something first, and shout into the bread."
+},
+"p12_baker.g.cf9755": {
+"auto": true,
+"d": 7.56,
+"kind": "greet",
+"speaker": "p12_baker",
+"src": "voices/p12_baker/p12_baker.g.cf9755.mp3",
+"t": "Softly, love. New flour, the first in a year that tastes of nearly what it should. Bread, cider, curd. Eat it while it is warm."
+},
+"p12_baker.t.3cae4d": {
+"auto": true,
+"d": 6.86,
+"kind": "topic",
+"speaker": "p12_baker",
+"src": "voices/p12_baker/p12_baker.t.3cae4d.mp3",
+"t": "We bake for the Last Sheaf every year the field is cut. This year the dough is rising and nobody has told the Church."
+},
+"p12_baker.t.a8b288": {
+"auto": true,
+"d": 3.5,
+"kind": "topic",
+"speaker": "p12_baker",
+"src": "voices/p12_baker/p12_baker.t.a8b288.mp3",
+"t": "Flour does not mind the Hedge. Flour minds the damp."
+},
+"p12_dunna.g.734a9e": {
+"auto": true,
+"d": 2.11,
+"kind": "greet",
+"speaker": "p12_dunna",
+"src": "voices/p12_dunna/p12_dunna.g.734a9e.mp3",
+"t": "Not here. Not now. Ask Harrow."
+},
+"p12_dunna.g.9f5a80": {
+"auto": true,
+"d": 1.78,
+"kind": "greet",
+"speaker": "p12_dunna",
+"src": "voices/p12_dunna/p12_dunna.g.9f5a80.mp3",
+"t": "Not now. Ask Harrow."
+},
+"p12_dunna.g.df2c8b": {
+"auto": true,
+"d": 2.57,
+"kind": "greet",
+"speaker": "p12_dunna",
+"src": "voices/p12_dunna/p12_dunna.g.df2c8b.mp3",
+"t": "Hush. Ask Harrow, and ask him quietly."
+},
+"p12_herald.g.05150f": {
+"auto": true,
+"d": 8.06,
+"kind": "greet",
+"speaker": "p12_herald",
+"src": "voices/p12_herald/p12_herald.g.05150f.mp3",
+"t": "Blessings of the Pure Note, citizen. Take a place in the square. There is bread after. There is always bread after."
+},
+"p12_herald.g.22a118": {
+"auto": true,
+"d": 4.03,
+"kind": "greet",
+"speaker": "p12_herald",
+"src": "voices/p12_herald/p12_herald.g.22a118.mp3",
+"t": "The Rite is a festival. Festivals are attended."
+},
+"p12_herald.g.f3e40d": {
+"auto": true,
+"d": 4.56,
+"kind": "greet",
+"speaker": "p12_herald",
+"src": "voices/p12_herald/p12_herald.g.f3e40d.mp3",
+"t": "Lower your voice. This is a feast, and feasts are quiet."
+},
+"p12_herald.t.4f10f1": {
+"auto": true,
+"d": 5.59,
+"kind": "topic",
+"speaker": "p12_herald",
+"src": "voices/p12_herald/p12_herald.t.4f10f1.mp3",
+"t": "A feast for the whole district. Attendance is a courtesy and will be noted."
+},
+"p13h_wenna.g.250ede": {
+"auto": true,
+"d": 3.5,
+"kind": "greet",
+"speaker": "p13h_wenna",
+"src": "voices/p13h_wenna/p13h_wenna.g.250ede.mp3",
+"t": "Does it ring? Not next door, it does not. Keep your voice down."
+},
+"p13h_wenna.g.70f398": {
+"auto": true,
+"d": 2.57,
+"kind": "greet",
+"speaker": "p13h_wenna",
+"src": "voices/p13h_wenna/p13h_wenna.g.70f398.mp3",
+"t": "If you mean to shout, shout at your own door."
+},
+"p13h_wenna.g.a4f974": {
+"auto": true,
+"d": 4.32,
+"kind": "greet",
+"speaker": "p13h_wenna",
+"src": "voices/p13h_wenna/p13h_wenna.g.a4f974.mp3",
+"t": "Softly, if you would. I stand out here because I cannot sit in there."
+},
+"p13h_wenna.t.0aea5d": {
+"auto": true,
+"d": 10.2,
+"kind": "topic",
+"speaker": "p13h_wenna",
+"src": "voices/p13h_wenna/p13h_wenna.t.0aea5d.mp3",
+"t": "Tuned to you before you can lift your head, and hung over the door. Every reed in this lane stirs a little when the wind comes through the Hedge. The Tarrows' hang still. The wind goes round them."
+},
+"p13h_wenna.t.14dc30": {
+"auto": true,
+"d": 11.14,
+"kind": "topic",
+"speaker": "p13h_wenna",
+"src": "voices/p13h_wenna/p13h_wenna.t.14dc30.mp3",
+"t": "It keeps every sound this town ever made. It has your first cry and your mother's last word, and it gives them back when it likes, in whatever voice it was given. That is the only mercy in it."
+},
+"p13h_wenna.t.2378de": {
+"auto": true,
+"d": 14.42,
+"kind": "topic",
+"speaker": "p13h_wenna",
+"src": "voices/p13h_wenna/p13h_wenna.t.2378de.mp3",
+"t": "When one of us is dying the family holds their pitch until the body lets go, and counts it out in eights, one for each Anchor. On the eighth, the note is let go. We do it in silence now. It is not that we are afraid. It is that it does not carry."
+},
+"p13h_wenna.t.ec014a": {
+"auto": true,
+"d": 12.65,
+"kind": "topic",
+"speaker": "p13h_wenna",
+"src": "voices/p13h_wenna/p13h_wenna.t.ec014a.mp3",
+"t": "Gil cut reeds. Maud kept the carders' books. Linnet is eight and counts everything she walks past. Nan was Gil's mother, and the oldest voice in this lane. They went out on the last cart before the gate was barred."
+},
+"p15_dealer.g.3d1119": {
+"auto": true,
+"d": 1.56,
+"kind": "greet",
+"speaker": "p15_dealer",
+"src": "voices/p15_dealer/p15_dealer.g.3d1119.mp3",
+"t": "Rounds, or the next seat,"
+},
+"p15_dealer.g.541a81": {
+"auto": true,
+"d": 3.6,
+"kind": "greet",
+"speaker": "p15_dealer",
+"src": "voices/p15_dealer/p15_dealer.g.541a81.mp3",
+"t": "Rounds. Two to thirty sovereigns. I only cheat the river."
+},
+"p15_dealer.g.a9afcd": {
+"auto": true,
+"d": 2.86,
+"kind": "greet",
+"speaker": "p15_dealer",
+"src": "voices/p15_dealer/p15_dealer.g.a9afcd.mp3",
+"t": "Evening. A round of Rounds, if you have the patience?"
+},
+"p15l_clerk.g.2d3bc7": {
+"auto": true,
+"d": 11.81,
+"kind": "greet",
+"speaker": "p15l_clerk",
+"src": "voices/p15l_clerk/p15l_clerk.g.2d3bc7.mp3",
+"t": "Good day. The Consortium draws letters of credit here, payable to the bearer. Five in the hundred on cashing. Quietly, please; the Factor is at the next desk."
+},
+"p15l_clerk.g.5aaa89": {
+"auto": true,
+"d": 5.09,
+"kind": "greet",
+"speaker": "p15l_clerk",
+"src": "voices/p15l_clerk/p15l_clerk.g.5aaa89.mp3",
+"t": "If you want to shout, shout at the Factor. If you want a letter, speak low."
+},
+"p15l_clerk.g.a5a091": {
+"auto": true,
+"d": 5.95,
+"kind": "greet",
+"speaker": "p15l_clerk",
+"src": "voices/p15l_clerk/p15l_clerk.g.a5a091.mp3",
+"t": "Letters of credit. Gold in, paper out. Do not unfold one near the lamp."
+},
+"p15l_veil.g.b3bdcf": {
+"auto": true,
+"d": 5.26,
+"kind": "greet",
+"speaker": "p15l_veil",
+"src": "voices/p15l_veil/p15l_veil.g.b3bdcf.mp3",
+"t": "Ledger-keeper. If it is paper, I will read it. If it is owed, I will write it down."
+},
+"p15l_veil.g.bd5548": {
+"auto": true,
+"d": 5.04,
+"kind": "greet",
+"speaker": "p15l_veil",
+"src": "voices/p15l_veil/p15l_veil.g.bd5548.mp3",
+"t": "You are welcome at the desk. It is not much of a desk. Everything on it is kept."
+},
+"p15l_veil.g.c11776": {
+"auto": true,
+"d": 3.48,
+"kind": "greet",
+"speaker": "p15l_veil",
+"src": "voices/p15l_veil/p15l_veil.g.c11776.mp3",
+"t": "Raised voices are written down too. Shall I begin?"
+},
+"p15s_preacher.g.82ce76": {
+"auto": true,
+"d": 5.02,
+"kind": "greet",
+"speaker": "p15s_preacher",
+"src": "voices/p15s_preacher/p15s_preacher.g.82ce76.mp3",
+"t": "Lower your voice. This is a listening, and you are in the middle of it."
+},
+"p15s_preacher.g.a160a3": {
+"auto": true,
+"d": 7.34,
+"kind": "greet",
+"speaker": "p15s_preacher",
+"src": "voices/p15s_preacher/p15s_preacher.g.a160a3.mp3",
+"t": "Peace, under the Note. Sit, if there is a place. We begin when the last of us has stopped talking."
+},
+"p15s_preacher.g.f6eebd": {
+"auto": true,
+"d": 4.9,
+"kind": "greet",
+"speaker": "p15s_preacher",
+"src": "voices/p15s_preacher/p15s_preacher.g.f6eebd.mp3",
+"t": "The Note is held. There is a place at the end of the bench, if you want it."
+},
+"p15s_preacher.t.5eb8ac": {
+"auto": true,
+"d": 10.92,
+"kind": "topic",
+"speaker": "p15s_preacher",
+"src": "voices/p15s_preacher/p15s_preacher.t.5eb8ac.mp3",
+"t": "We are not here to frighten anyone. A frightened town sings out of tune, and a held town sings one note, and the quiet has nothing to take."
+},
+"p15s_preacher.t.8e2f91": {
+"auto": true,
+"d": 5.42,
+"kind": "topic",
+"speaker": "p15s_preacher",
+"src": "voices/p15s_preacher/p15s_preacher.t.8e2f91.mp3",
+"t": "Hearthday. Attendance is a courtesy. I would come. It will be a long note."
+},
+"p16f_hand.g.277300": {
+"auto": true,
+"d": 7.99,
+"kind": "greet",
+"speaker": "p16f_hand",
+"src": "voices/p16f_hand/p16f_hand.g.277300.mp3",
+"t": "You came along the Flume road on foot? Under the Wash? Then you timed it. Good. The last man who did not is still being walked back down."
+},
+"p16f_hand.g.59da52": {
+"auto": true,
+"d": 3.07,
+"kind": "greet",
+"speaker": "p16f_hand",
+"src": "voices/p16f_hand/p16f_hand.g.59da52.mp3",
+"t": "Mind the planks. They are not all as old as they look."
+},
+"p16f_hand.g.ba4359": {
+"auto": true,
+"d": 1.22,
+"kind": "greet",
+"speaker": "p16f_hand",
+"src": "voices/p16f_hand/p16f_hand.g.ba4359.mp3",
+"t": "Not now."
+},
+"p16f_madge.g.1c86e6": {
+"auto": true,
+"d": 3.36,
+"kind": "greet",
+"speaker": "p16f_madge",
+"src": "voices/p16f_madge/p16f_madge.g.1c86e6.mp3",
+"t": "Half. Half of what a clean shop pays, and no questions."
+},
+"p16f_madge.g.4bbe51": {
+"auto": true,
+"d": 2.18,
+"kind": "greet",
+"speaker": "p16f_madge",
+"src": "voices/p16f_madge/p16f_madge.g.4bbe51.mp3",
+"t": "Put it on the board or put it back."
+},
+"p16f_madge.g.e86b33": {
+"auto": true,
+"d": 5.04,
+"kind": "greet",
+"speaker": "p16f_madge",
+"src": "voices/p16f_madge/p16f_madge.g.e86b33.mp3",
+"t": "Do not tell me where it came from. I will tell you what it is worth, and it is less than you hoped."
+},
+"p16f_orrin.g.05a7dc": {
+"auto": true,
+"d": 3.84,
+"kind": "greet",
+"speaker": "p16f_orrin",
+"src": "voices/p16f_orrin/p16f_orrin.g.05a7dc.mp3",
+"t": "If you are not here about the wheel, you are in the way of the wheel."
+},
+"p16f_orrin.g.3043eb": {
+"auto": true,
+"d": 2.59,
+"kind": "greet",
+"speaker": "p16f_orrin",
+"src": "voices/p16f_orrin/p16f_orrin.g.3043eb.mp3",
+"t": "Forty logs and a chained lock."
+},
+"p16f_orrin.g.822280": {
+"auto": true,
+"d": 3.84,
+"kind": "greet",
+"speaker": "p16f_orrin",
+"src": "voices/p16f_orrin/p16f_orrin.g.822280.mp3",
+"t": "Does it ring? No. Nothing rings on this wharf, that is the trouble."
+},
+"p16f_pellam.g.49b435": {
+"auto": true,
+"d": 6.84,
+"kind": "greet",
+"speaker": "p16f_pellam",
+"src": "voices/p16f_pellam/p16f_pellam.g.49b435.mp3",
+"t": "You have the look of someone who wants to know something. It is twelve sovereigns, or the tide, whichever turns first."
+},
+"p16f_pellam.g.6cea1c": {
+"auto": true,
+"d": 5.38,
+"kind": "greet",
+"speaker": "p16f_pellam",
+"src": "voices/p16f_pellam/p16f_pellam.g.6cea1c.mp3",
+"t": "Lock dues in advance, friend. Or a coin for the news. Or both. Everyone does both."
+},
+"p16f_pellam.g.a7b978": {
+"auto": true,
+"d": 2.28,
+"kind": "greet",
+"speaker": "p16f_pellam",
+"src": "voices/p16f_pellam/p16f_pellam.g.a7b978.mp3",
+"t": "Quietly. The basin carries."
+},
+"p16f_wife.g.4af79c": {
+"auto": true,
+"d": 2.86,
+"kind": "greet",
+"speaker": "p16f_wife",
+"src": "voices/p16f_wife/p16f_wife.g.4af79c.mp3",
+"t": "We are out of tea, patience and luck, in that order."
+},
+"p16f_wife.g.6863ee": {
+"auto": true,
+"d": 1.92,
+"kind": "greet",
+"speaker": "p16f_wife",
+"src": "voices/p16f_wife/p16f_wife.g.6863ee.mp3",
+"t": "Mind your feet near the edge."
+},
+"p16f_wife.g.e59c60": {
+"auto": true,
+"d": 10.3,
+"kind": "greet",
+"speaker": "p16f_wife",
+"src": "voices/p16f_wife/p16f_wife.g.e59c60.mp3",
+"t": "My man poles the raft. The wheel has been shut since spring. The Compact blames the lock, the lock blames the keeper, the keeper blames the weather. It is a very cold way to run a river."
+},
+"p16h_dessa.g.34279d": {
+"auto": true,
+"d": 4.99,
+"kind": "greet",
+"speaker": "p16h_dessa",
+"src": "voices/p16h_dessa/p16h_dessa.g.34279d.mp3",
+"t": "Does it ring? I write letters. Forty-one since the gate was barred. Not one has had an answer."
+},
+"p16h_dessa.g.38576d": {
+"auto": true,
+"d": 5.09,
+"kind": "greet",
+"speaker": "p16h_dessa",
+"src": "voices/p16h_dessa/p16h_dessa.g.38576d.mp3",
+"t": "If you want a letter written, say what to put in it. If you want to shout, the Hedge will oblige."
+},
+"p16h_dessa.g.f7472f": {
+"auto": true,
+"d": 7.9,
+"kind": "greet",
+"speaker": "p16h_dessa",
+"src": "voices/p16h_dessa/p16h_dessa.g.f7472f.mp3",
+"t": "Does it ring? True enough, if you keep it low. I write letters for people who cannot, and I sit where the Chapel can see me, so nobody says I hide it."
+},
+"p16h_ines.g.2db533": {
+"auto": true,
+"d": 3.17,
+"kind": "greet",
+"speaker": "p16h_ines",
+"src": "voices/p16h_ines/p16h_ines.g.2db533.mp3",
+"t": "I have not got a penny and I have not got a minute. Go away."
+},
+"p16h_ines.g.34af13": {
+"auto": true,
+"d": 2.98,
+"kind": "greet",
+"speaker": "p16h_ines",
+"src": "voices/p16h_ines/p16h_ines.g.34af13.mp3",
+"t": "Counting-room. Staff only. I did not see you. I am writing."
+},
+"p16h_ines.g.b0e9f4": {
+"auto": true,
+"d": 7.27,
+"kind": "greet",
+"speaker": "p16h_ines",
+"src": "voices/p16h_ines/p16h_ines.g.b0e9f4.mp3",
+"t": "Oh. You are not on the sheet. Please do not tell Corporal Pike I looked up. I am owed four months and I have forgotten how it feels to sit down."
+},
+"p16h_mossbrook.g.69b3e3": {
+"auto": true,
+"d": 3.02,
+"kind": "greet",
+"speaker": "p16h_mossbrook",
+"src": "voices/p16h_mossbrook/p16h_mossbrook.g.69b3e3.mp3",
+"t": "I have a good deal to do, and none of it is you."
+},
+"p16h_mossbrook.g.a803b4": {
+"auto": true,
+"d": 4.99,
+"kind": "greet",
+"speaker": "p16h_mossbrook",
+"src": "voices/p16h_mossbrook/p16h_mossbrook.g.a803b4.mp3",
+"t": "Alder Mossbrook. Reeve. You will forgive me if I do not stand; the moot ran long."
+},
+"p16h_mossbrook.g.d0a754": {
+"auto": true,
+"d": 4.44,
+"kind": "greet",
+"speaker": "p16h_mossbrook",
+"src": "voices/p16h_mossbrook/p16h_mossbrook.g.d0a754.mp3",
+"t": "The Reeve-Moot is always glad of an honest petitioner. Sit, sit."
+},
+"p16h_orrin.g.51cbaa": {
+"auto": true,
+"d": 3.7,
+"kind": "greet",
+"speaker": "p16h_orrin",
+"src": "voices/p16h_orrin/p16h_orrin.g.51cbaa.mp3",
+"t": "This is a house of the Note. Shout in the lane."
+},
+"p16h_orrin.g.933cae": {
+"auto": true,
+"d": 4.22,
+"kind": "greet",
+"speaker": "p16h_orrin",
+"src": "voices/p16h_orrin/p16h_orrin.g.933cae.mp3",
+"t": "Keep your voice down in here, if you would. The floor carries."
+},
+"p16h_orrin.g.c1bcdb": {
+"auto": true,
+"d": 4.51,
+"kind": "greet",
+"speaker": "p16h_orrin",
+"src": "voices/p16h_orrin/p16h_orrin.g.c1bcdb.mp3",
+"t": "The Chapel is open to all who keep to the Note. Mind the step."
+},
+"p16h_steward.g.06cada": {
+"auto": true,
+"d": 4.42,
+"kind": "greet",
+"speaker": "p16h_steward",
+"src": "voices/p16h_steward/p16h_steward.g.06cada.mp3",
+"t": "Say what you want or say nothing. We have had a great deal of the second."
+},
+"p16h_steward.g.8a5526": {
+"auto": true,
+"d": 6.79,
+"kind": "greet",
+"speaker": "p16h_steward",
+"src": "voices/p16h_steward/p16h_steward.g.8a5526.mp3",
+"t": "Does it ring? True enough. We are the Timber Compact; we cut what the Consortium counts, and nobody counts us."
+},
+"p16h_steward.g.c71573": {
+"auto": true,
+"d": 5.06,
+"kind": "greet",
+"speaker": "p16h_steward",
+"src": "voices/p16h_steward/p16h_steward.g.c71573.mp3",
+"t": "Compact steward. If you are the Consortium's, say so and I will move my wagon."
+},
+"p16h_vause.g.3e08a0": {
+"auto": true,
+"d": 3.58,
+"kind": "greet",
+"speaker": "p16h_vause",
+"src": "voices/p16h_vause/p16h_vause.g.3e08a0.mp3",
+"t": "Sergeant Vause. This is the Quarry Gate. Are you on the roster?"
+},
+"p16h_vause.g.3e8bea": {
+"auto": true,
+"d": 5.35,
+"kind": "greet",
+"speaker": "p16h_vause",
+"src": "voices/p16h_vause/p16h_vause.g.3e8bea.mp3",
+"t": "You may say that again, civilly, or you may leave. I am not in a mood to be tested."
+},
+"p16h_vause.g.ab0940": {
+"auto": true,
+"d": 8.35,
+"kind": "greet",
+"speaker": "p16h_vause",
+"src": "voices/p16h_vause/p16h_vause.g.ab0940.mp3",
+"t": "Good day. Quarry Administration, Quarry Gate. If you have papers, I will read them. If you have none, I will say I did not see you."
+},
+"p16k_hob.g.595aea": {
+"auto": true,
+"d": 3.22,
+"kind": "greet",
+"speaker": "p16k_hob",
+"src": "voices/p16k_hob/p16k_hob.g.595aea.mp3",
+"t": "I have buried two apprentices this year. Try me."
+},
+"p16k_hob.g.6715e1": {
+"auto": true,
+"d": 6.05,
+"kind": "greet",
+"speaker": "p16k_hob",
+"src": "voices/p16k_hob/p16k_hob.g.6715e1.mp3",
+"t": "A tannery is the one trade that gets quieter the harder you work it. A ship is the other way about."
+},
+"p16k_hob.g.b9b05a": {
+"auto": true,
+"d": 3.36,
+"kind": "greet",
+"speaker": "p16k_hob",
+"src": "voices/p16k_hob/p16k_hob.g.b9b05a.mp3",
+"t": "Evening. Mind the vats. There are no vats, but mind them."
+},
+"p16k_hob.t.d26f71": {
+"auto": true,
+"d": 8.88,
+"kind": "topic",
+"speaker": "p16k_hob",
+"src": "voices/p16k_hob/p16k_hob.t.d26f71.mp3",
+"t": "The twins went down the culvert after their dog. I put out the lamp in their window before I climbed. It was the first thing I had been able to do for them in a month."
+},
+"p16k_hob.t.d80a1d": {
+"auto": true,
+"d": 5.38,
+"kind": "topic",
+"speaker": "p16k_hob",
+"src": "voices/p16k_hob/p16k_hob.t.d80a1d.mp3",
+"t": "Everything up here creaks. In a tannery a creak is a flaw. Up here it is a conversation."
+},
+"p16k_mags.g.17762b": {
+"auto": true,
+"d": 1.8,
+"kind": "greet",
+"speaker": "p16k_mags",
+"src": "voices/p16k_mags/p16k_mags.g.17762b.mp3",
+"t": "[signs] Slow, please. Face me."
+},
+"p16k_mags.g.e7b0c3": {
+"auto": true,
+"d": 3.29,
+"kind": "greet",
+"speaker": "p16k_mags",
+"src": "voices/p16k_mags/p16k_mags.g.e7b0c3.mp3",
+"t": "[signs] I read lips, not minds. Say it to my face."
+},
+"p16k_mags.t.1fb95c": {
+"auto": true,
+"d": 5.88,
+"kind": "topic",
+"speaker": "p16k_mags",
+"src": "voices/p16k_mags/p16k_mags.t.1fb95c.mp3",
+"t": "[signs] I cannot hear her hum. I feel it in my teeth. That is how I know she is still ours."
+},
+"p16k_mags.t.31af49": {
+"auto": true,
+"d": 8.52,
+"kind": "topic",
+"speaker": "p16k_mags",
+"src": "voices/p16k_mags/p16k_mags.t.31af49.mp3",
+"t": "[signs] The rest of you go quiet and I do not notice. I notice when your mouths stop moving. It is the same, I think, from the other side."
+},
+"p16k_nell.g.2f0a5b": {
+"auto": true,
+"d": 4.44,
+"kind": "greet",
+"speaker": "p16k_nell",
+"src": "voices/p16k_nell/p16k_nell.g.2f0a5b.mp3",
+"t": "Do not go near the lad with the cough. He is fine. He is only not to be gone near."
+},
+"p16k_nell.g.742f75": {
+"auto": true,
+"d": 3.77,
+"kind": "greet",
+"speaker": "p16k_nell",
+"src": "voices/p16k_nell/p16k_nell.g.742f75.mp3",
+"t": "Wipe your boots. I have flour on the deck and I mean to keep it there."
+},
+"p16k_nell.g.798af8": {
+"auto": true,
+"d": 1.54,
+"kind": "greet",
+"speaker": "p16k_nell",
+"src": "voices/p16k_nell/p16k_nell.g.798af8.mp3",
+"t": "Out of my light."
+},
+"p16k_nell.t.33038e": {
+"auto": true,
+"d": 10.66,
+"kind": "topic",
+"speaker": "p16k_nell",
+"src": "voices/p16k_nell/p16k_nell.t.33038e.mp3",
+"t": "It was a mill town. That is not nothing. The wheel will have a tree through it by now and the stones will still be turning, and I keep the flour so something of it is still used for what it was for."
+},
+"p16k_nell.t.fb4d25": {
+"auto": true,
+"d": 5.5,
+"kind": "topic",
+"speaker": "p16k_nell",
+"src": "voices/p16k_nell/p16k_nell.t.fb4d25.mp3",
+"t": "Twenty-one cups on hooks. I counted them twice. It is a comfort to have a number you can hold."
+},
+"p16k_pennick.g.d80504": {
+"auto": true,
+"d": 5.26,
+"kind": "greet",
+"speaker": "p16k_pennick",
+"src": "voices/p16k_pennick/p16k_pennick.g.d80504.mp3",
+"t": "Mind the pipework. It is older than your manners and in better shape."
+},
+"p16k_pennick.g.dcbfa8": {
+"auto": true,
+"d": 5.59,
+"kind": "greet",
+"speaker": "p16k_pennick",
+"src": "voices/p16k_pennick/p16k_pennick.g.dcbfa8.mp3",
+"t": "Touch nothing. If you must touch something, tell me what, so I know where to start."
+},
+"p16k_pennick.g.ef51a6": {
+"auto": true,
+"d": 4.32,
+"kind": "greet",
+"speaker": "p16k_pennick",
+"src": "voices/p16k_pennick/p16k_pennick.g.ef51a6.mp3",
+"t": "It is going to fail. I am only deciding which morning."
+},
+"p16k_pennick.t.2bb5d3": {
+"auto": true,
+"d": 10.97,
+"kind": "topic",
+"speaker": "p16k_pennick",
+"src": "voices/p16k_pennick/p16k_pennick.t.2bb5d3.mp3",
+"t": "Three tanks, one note, no margin. The hum is the number-three tank. If you ever stop hearing it, come and get me before you come and get anyone else."
+},
+"p16k_pennick.t.d3e51c": {
+"auto": true,
+"d": 7.32,
+"kind": "topic",
+"speaker": "p16k_pennick",
+"src": "voices/p16k_pennick/p16k_pennick.t.d3e51c.mp3",
+"t": "It hums at its own pitch, and it tells you what it keeps if you listen. I do not listen. I weld."
+},
+"p16k_vane.g.b1b0d8": {
+"auto": true,
+"d": 2.98,
+"kind": "greet",
+"speaker": "p16k_vane",
+"src": "voices/p16k_vane/p16k_vane.g.b1b0d8.mp3",
+"t": "Say it quick. The rail is loose and so is my patience."
+},
+"p16k_vane.g.b97cb7": {
+"auto": true,
+"d": 3.05,
+"kind": "greet",
+"speaker": "p16k_vane",
+"src": "voices/p16k_vane/p16k_vane.g.b97cb7.mp3",
+"t": "Welcome aboard. Wipe your feet. She has been sick on worse."
+},
+"p16k_vane.g.dc5cb3": {
+"auto": true,
+"d": 2.04,
+"kind": "greet",
+"speaker": "p16k_vane",
+"src": "voices/p16k_vane/p16k_vane.g.dc5cb3.mp3",
+"t": "You can look at her. You cannot lean on her."
+},
+"p16k_vane.t.6a1e0d": {
+"auto": true,
+"d": 7.44,
+"kind": "topic",
+"speaker": "p16k_vane",
+"src": "voices/p16k_vane/p16k_vane.t.6a1e0d.mp3",
+"t": "I have a file at the Office that says reliable, does not ask questions. I would like it burned, and I would like to read it first."
+},
+"p16k_vane.t.dc2d17": {
+"auto": true,
+"d": 10.94,
+"kind": "topic",
+"speaker": "p16k_vane",
+"src": "voices/p16k_vane/p16k_vane.t.dc2d17.mp3",
+"t": "Wood, silk, three tanks and a debt. Pennick would give you a longer list and a worse mood. The repair list is in the hold, nailed to a stanchion. I did not write the prices; the chandlers did."
+},
+"p17c_bessa.g.5c6563": {
+"auto": true,
+"d": 3.36,
+"kind": "greet",
+"speaker": "p17c_bessa",
+"src": "voices/p17c_bessa/p17c_bessa.g.5c6563.mp3",
+"t": "I am eighty-four. If you want something, it had better be short."
+},
+"p17c_bessa.g.6d2f43": {
+"auto": true,
+"d": 3.84,
+"kind": "greet",
+"speaker": "p17c_bessa",
+"src": "voices/p17c_bessa/p17c_bessa.g.6d2f43.mp3",
+"t": "Eyes shut, head on one side. That is how it is done. What's she singing?"
+},
+"p17c_bessa.g.78334d": {
+"auto": true,
+"d": 3.65,
+"kind": "greet",
+"speaker": "p17c_bessa",
+"src": "voices/p17c_bessa/p17c_bessa.g.78334d.mp3",
+"t": "Sit, if you can sit quietly. The reef does not like a talker."
+},
+"p17c_bessa.t.0902a4": {
+"auto": true,
+"d": 5.02,
+"kind": "topic",
+"speaker": "p17c_bessa",
+"src": "voices/p17c_bessa/p17c_bessa.t.0902a4.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_bessa.t.56fa5a": {
+"auto": true,
+"d": 7.25,
+"kind": "topic",
+"speaker": "p17c_bessa",
+"src": "voices/p17c_bessa/p17c_bessa.t.56fa5a.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_bessa.t.8f286f": {
+"auto": true,
+"d": 9.0,
+"kind": "topic",
+"speaker": "p17c_bessa",
+"src": "voices/p17c_bessa/p17c_bessa.t.8f286f.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_bessa.t.9956cb": {
+"auto": true,
+"d": 7.68,
+"kind": "topic",
+"speaker": "p17c_bessa",
+"src": "voices/p17c_bessa/p17c_bessa.t.9956cb.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_bessa.t.aebb09": {
+"auto": true,
+"d": 5.4,
+"kind": "topic",
+"speaker": "p17c_bessa",
+"src": "voices/p17c_bessa/p17c_bessa.t.aebb09.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_bessa.t.bd6b18": {
+"auto": true,
+"d": 14.64,
+"kind": "topic",
+"speaker": "p17c_bessa",
+"src": "voices/p17c_bessa/p17c_bessa.t.bd6b18.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_child.g.1f80a0": {
+"auto": true,
+"d": 2.26,
+"kind": "greet",
+"speaker": "p17c_child",
+"src": "voices/p17c_child/p17c_child.g.1f80a0.mp3",
+"t": "Shh. You will frighten the bells."
+},
+"p17c_child.g.cfd4cc": {
+"auto": true,
+"d": 5.78,
+"kind": "greet",
+"speaker": "p17c_child",
+"src": "voices/p17c_child/p17c_child.g.cfd4cc.mp3",
+"t": "That one is my brother's. He was three. It only rings when the wind is from the west, and nowhere else."
+},
+"p17c_child.g.d8099d": {
+"auto": true,
+"d": 6.48,
+"kind": "greet",
+"speaker": "p17c_child",
+"src": "voices/p17c_child/p17c_child.g.d8099d.mp3",
+"t": "Hesper says the crooked one rings crooked because the hook is crooked. I say it rings crooked because he was."
+},
+"p17c_child.t.10f964": {
+"auto": true,
+"d": 8.11,
+"kind": "topic",
+"speaker": "p17c_child",
+"src": "voices/p17c_child/p17c_child.t.10f964.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_child.t.63a44c": {
+"auto": true,
+"d": 6.82,
+"kind": "topic",
+"speaker": "p17c_child",
+"src": "voices/p17c_child/p17c_child.t.63a44c.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_child.t.868300": {
+"auto": true,
+"d": 7.15,
+"kind": "topic",
+"speaker": "p17c_child",
+"src": "voices/p17c_child/p17c_child.t.868300.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_child.t.90beaa": {
+"auto": true,
+"d": 4.61,
+"kind": "topic",
+"speaker": "p17c_child",
+"src": "voices/p17c_child/p17c_child.t.90beaa.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_child.t.c6ad43": {
+"auto": true,
+"d": 13.15,
+"kind": "topic",
+"speaker": "p17c_child",
+"src": "voices/p17c_child/p17c_child.t.c6ad43.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_child.t.c88451": {
+"auto": true,
+"d": 5.26,
+"kind": "topic",
+"speaker": "p17c_child",
+"src": "voices/p17c_child/p17c_child.t.c88451.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_dunmore.g.3bb244": {
+"auto": true,
+"d": 5.26,
+"kind": "greet",
+"speaker": "p17c_dunmore",
+"src": "voices/p17c_dunmore/p17c_dunmore.g.3bb244.mp3",
+"t": "Six sovereigns the unit. I am told it is more than the trade will bear."
+},
+"p17c_dunmore.g.7346dd": {
+"auto": true,
+"d": 7.85,
+"kind": "greet",
+"speaker": "p17c_dunmore",
+"src": "voices/p17c_dunmore/p17c_dunmore.g.7346dd.mp3",
+"t": "Bottles are received, graded and reconciled. Receipts are stamped. The Office is grateful for your cooperation."
+},
+"p17c_dunmore.g.94ab43": {
+"auto": true,
+"d": 3.41,
+"kind": "greet",
+"speaker": "p17c_dunmore",
+"src": "voices/p17c_dunmore/p17c_dunmore.g.94ab43.mp3",
+"t": "There is a queue. It is, at present, you."
+},
+"p17c_dunmore.t.06adf6": {
+"auto": true,
+"d": 7.75,
+"kind": "topic",
+"speaker": "p17c_dunmore",
+"src": "voices/p17c_dunmore/p17c_dunmore.t.06adf6.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_dunmore.t.52e8aa": {
+"auto": true,
+"d": 5.64,
+"kind": "topic",
+"speaker": "p17c_dunmore",
+"src": "voices/p17c_dunmore/p17c_dunmore.t.52e8aa.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_dunmore.t.52f28b": {
+"auto": true,
+"d": 6.36,
+"kind": "topic",
+"speaker": "p17c_dunmore",
+"src": "voices/p17c_dunmore/p17c_dunmore.t.52f28b.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_dunmore.t.73c6cf": {
+"auto": true,
+"d": 13.34,
+"kind": "topic",
+"speaker": "p17c_dunmore",
+"src": "voices/p17c_dunmore/p17c_dunmore.t.73c6cf.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_dunmore.t.cb7a1c": {
+"auto": true,
+"d": 8.23,
+"kind": "topic",
+"speaker": "p17c_dunmore",
+"src": "voices/p17c_dunmore/p17c_dunmore.t.cb7a1c.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_dunmore.t.f952f1": {
+"auto": true,
+"d": 9.29,
+"kind": "topic",
+"speaker": "p17c_dunmore",
+"src": "voices/p17c_dunmore/p17c_dunmore.t.f952f1.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_hand.g.34fcc1": {
+"auto": true,
+"d": 9.72,
+"kind": "greet",
+"speaker": "p17c_hand",
+"src": "voices/p17c_hand/p17c_hand.g.34fcc1.mp3",
+"t": "Mind the Twelfth. The Harbour does not forbid theft, it forbids theft from its own pocket. I was a thief nine years and never once took a nail from the Harbour."
+},
+"p17c_hand.g.4caeef": {
+"auto": true,
+"d": 1.06,
+"kind": "greet",
+"speaker": "p17c_hand",
+"src": "voices/p17c_hand/p17c_hand.g.4caeef.mp3",
+"t": "Not now."
+},
+"p17c_hand.g.c9e3ea": {
+"auto": true,
+"d": 3.36,
+"kind": "greet",
+"speaker": "p17c_hand",
+"src": "voices/p17c_hand/p17c_hand.g.c9e3ea.mp3",
+"t": "Fish, tar and rum. In that order, on a good day."
+},
+"p17c_hand.t.184a4a": {
+"auto": true,
+"d": 8.16,
+"kind": "topic",
+"speaker": "p17c_hand",
+"src": "voices/p17c_hand/p17c_hand.t.184a4a.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_hand.t.188153": {
+"auto": true,
+"d": 5.62,
+"kind": "topic",
+"speaker": "p17c_hand",
+"src": "voices/p17c_hand/p17c_hand.t.188153.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_hand.t.415225": {
+"auto": true,
+"d": 8.62,
+"kind": "topic",
+"speaker": "p17c_hand",
+"src": "voices/p17c_hand/p17c_hand.t.415225.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_hand.t.5f53fa": {
+"auto": true,
+"d": 5.3,
+"kind": "topic",
+"speaker": "p17c_hand",
+"src": "voices/p17c_hand/p17c_hand.t.5f53fa.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_hand.t.a9e2a8": {
+"auto": true,
+"d": 7.08,
+"kind": "topic",
+"speaker": "p17c_hand",
+"src": "voices/p17c_hand/p17c_hand.t.a9e2a8.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_hand.t.e0eeb5": {
+"auto": true,
+"d": 13.46,
+"kind": "topic",
+"speaker": "p17c_hand",
+"src": "voices/p17c_hand/p17c_hand.t.e0eeb5.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_hesper.g.2f0487": {
+"auto": true,
+"d": 8.38,
+"kind": "greet",
+"speaker": "p17c_hesper",
+"src": "voices/p17c_hesper/p17c_hesper.g.2f0487.mp3",
+"t": "Four houses, and a Cay, and nine children at supper tonight, and I have lost count, which is not a thing I say lightly."
+},
+"p17c_hesper.g.656537": {
+"auto": true,
+"d": 5.59,
+"kind": "greet",
+"speaker": "p17c_hesper",
+"src": "voices/p17c_hesper/p17c_hesper.g.656537.mp3",
+"t": "If you want something, say it. If you want to stand there, stand in the sun, it is free."
+},
+"p17c_hesper.g.fdb3b3": {
+"auto": true,
+"d": 6.38,
+"kind": "greet",
+"speaker": "p17c_hesper",
+"src": "voices/p17c_hesper/p17c_hesper.g.fdb3b3.mp3",
+"t": "You have the look of someone off the airship. They have all got it, the ones with ears for an engine."
+},
+"p17c_hesper.t.1e85df": {
+"auto": true,
+"d": 6.41,
+"kind": "topic",
+"speaker": "p17c_hesper",
+"src": "voices/p17c_hesper/p17c_hesper.t.1e85df.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_hesper.t.2f02e5": {
+"auto": true,
+"d": 10.61,
+"kind": "topic",
+"speaker": "p17c_hesper",
+"src": "voices/p17c_hesper/p17c_hesper.t.2f02e5.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_hesper.t.4c4f89": {
+"auto": true,
+"d": 5.71,
+"kind": "topic",
+"speaker": "p17c_hesper",
+"src": "voices/p17c_hesper/p17c_hesper.t.4c4f89.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_hesper.t.57d26e": {
+"auto": true,
+"d": 8.57,
+"kind": "topic",
+"speaker": "p17c_hesper",
+"src": "voices/p17c_hesper/p17c_hesper.t.57d26e.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_hesper.t.5a53e2": {
+"auto": true,
+"d": 9.14,
+"kind": "topic",
+"speaker": "p17c_hesper",
+"src": "voices/p17c_hesper/p17c_hesper.t.5a53e2.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_hesper.t.7ce3af": {
+"auto": true,
+"d": 17.04,
+"kind": "topic",
+"speaker": "p17c_hesper",
+"src": "voices/p17c_hesper/p17c_hesper.t.7ce3af.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_hesper2.g.4f7847": {
+"auto": true,
+"d": 6.38,
+"kind": "greet",
+"speaker": "p17c_hesper2",
+"src": "voices/p17c_hesper2/p17c_hesper2.g.4f7847.mp3",
+"t": "You have the look of someone off the airship. They have all got it, the ones with ears for an engine."
+},
+"p17c_hesper2.g.51d447": {
+"auto": true,
+"d": 5.59,
+"kind": "greet",
+"speaker": "p17c_hesper2",
+"src": "voices/p17c_hesper2/p17c_hesper2.g.51d447.mp3",
+"t": "If you want something, say it. If you want to stand there, stand in the sun, it is free."
+},
+"p17c_hesper2.g.77ae6e": {
+"auto": true,
+"d": 8.38,
+"kind": "greet",
+"speaker": "p17c_hesper2",
+"src": "voices/p17c_hesper2/p17c_hesper2.g.77ae6e.mp3",
+"t": "Four houses, and a Cay, and nine children at supper tonight, and I have lost count, which is not a thing I say lightly."
+},
+"p17c_hesper2.t.3766f2": {
+"auto": true,
+"d": 8.57,
+"kind": "topic",
+"speaker": "p17c_hesper2",
+"src": "voices/p17c_hesper2/p17c_hesper2.t.3766f2.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_hesper2.t.42152a": {
+"auto": true,
+"d": 5.71,
+"kind": "topic",
+"speaker": "p17c_hesper2",
+"src": "voices/p17c_hesper2/p17c_hesper2.t.42152a.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_hesper2.t.56a885": {
+"auto": true,
+"d": 17.04,
+"kind": "topic",
+"speaker": "p17c_hesper2",
+"src": "voices/p17c_hesper2/p17c_hesper2.t.56a885.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_hesper2.t.680920": {
+"auto": true,
+"d": 6.41,
+"kind": "topic",
+"speaker": "p17c_hesper2",
+"src": "voices/p17c_hesper2/p17c_hesper2.t.680920.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_hesper2.t.9353ef": {
+"auto": true,
+"d": 10.61,
+"kind": "topic",
+"speaker": "p17c_hesper2",
+"src": "voices/p17c_hesper2/p17c_hesper2.t.9353ef.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_hesper2.t.be1fc5": {
+"auto": true,
+"d": 9.14,
+"kind": "topic",
+"speaker": "p17c_hesper2",
+"src": "voices/p17c_hesper2/p17c_hesper2.t.be1fc5.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_oona.g.506d27": {
+"auto": true,
+"d": 4.54,
+"kind": "greet",
+"speaker": "p17c_oona",
+"src": "voices/p17c_oona/p17c_oona.g.506d27.mp3",
+"t": "I have ears, a harbour and a headache, and I can only put down one of them."
+},
+"p17c_oona.g.a119a3": {
+"auto": true,
+"d": 1.13,
+"kind": "greet",
+"speaker": "p17c_oona",
+"src": "voices/p17c_oona/p17c_oona.g.a119a3.mp3",
+"t": "What's she singing?"
+},
+"p17c_oona.g.d7b1ac": {
+"auto": true,
+"d": 6.6,
+"kind": "greet",
+"speaker": "p17c_oona",
+"src": "voices/p17c_oona/p17c_oona.g.d7b1ac.mp3",
+"t": "Harbour-Queen is not a title anyone gives you, and not one anyone can take back. What is it you want?"
+},
+"p17c_oona.t.0c2289": {
+"auto": true,
+"d": 8.16,
+"kind": "topic",
+"speaker": "p17c_oona",
+"src": "voices/p17c_oona/p17c_oona.t.0c2289.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_oona.t.2f4ca5": {
+"auto": true,
+"d": 5.78,
+"kind": "topic",
+"speaker": "p17c_oona",
+"src": "voices/p17c_oona/p17c_oona.t.2f4ca5.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_oona.t.652e49": {
+"auto": true,
+"d": 15.26,
+"kind": "topic",
+"speaker": "p17c_oona",
+"src": "voices/p17c_oona/p17c_oona.t.652e49.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_oona.t.87b5e0": {
+"auto": true,
+"d": 9.0,
+"kind": "topic",
+"speaker": "p17c_oona",
+"src": "voices/p17c_oona/p17c_oona.t.87b5e0.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_oona.t.b7f4b7": {
+"auto": true,
+"d": 7.58,
+"kind": "topic",
+"speaker": "p17c_oona",
+"src": "voices/p17c_oona/p17c_oona.t.b7f4b7.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_oona.t.fbce09": {
+"auto": true,
+"d": 4.97,
+"kind": "topic",
+"speaker": "p17c_oona",
+"src": "voices/p17c_oona/p17c_oona.t.fbce09.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_quain.g.58a676": {
+"auto": true,
+"d": 3.46,
+"kind": "greet",
+"speaker": "p17c_quain",
+"src": "voices/p17c_quain/p17c_quain.g.58a676.mp3",
+"t": "The boat goes when I say. Not before."
+},
+"p17c_quain.g.5a23f9": {
+"auto": true,
+"d": 5.83,
+"kind": "greet",
+"speaker": "p17c_quain",
+"src": "voices/p17c_quain/p17c_quain.g.5a23f9.mp3",
+"t": "Cay run, a copper there and back. I go at the slack and I come back at the slack."
+},
+"p17c_quain.g.b40d7e": {
+"auto": true,
+"d": 5.98,
+"kind": "greet",
+"speaker": "p17c_quain",
+"src": "voices/p17c_quain/p17c_quain.g.b40d7e.mp3",
+"t": "If it is the Cay you want, sit in the stern. If it is not the Cay, I am asleep."
+},
+"p17c_quain.t.0d14d7": {
+"auto": true,
+"d": 5.88,
+"kind": "topic",
+"speaker": "p17c_quain",
+"src": "voices/p17c_quain/p17c_quain.t.0d14d7.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_quain.t.1d1e27": {
+"auto": true,
+"d": 7.97,
+"kind": "topic",
+"speaker": "p17c_quain",
+"src": "voices/p17c_quain/p17c_quain.t.1d1e27.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_quain.t.98e15a": {
+"auto": true,
+"d": 6.55,
+"kind": "topic",
+"speaker": "p17c_quain",
+"src": "voices/p17c_quain/p17c_quain.t.98e15a.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_quain.t.c7d2ea": {
+"auto": true,
+"d": 14.06,
+"kind": "topic",
+"speaker": "p17c_quain",
+"src": "voices/p17c_quain/p17c_quain.t.c7d2ea.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_quain.t.eaa0cf": {
+"auto": true,
+"d": 8.54,
+"kind": "topic",
+"speaker": "p17c_quain",
+"src": "voices/p17c_quain/p17c_quain.t.eaa0cf.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_quain.t.ed5d8e": {
+"auto": true,
+"d": 9.77,
+"kind": "topic",
+"speaker": "p17c_quain",
+"src": "voices/p17c_quain/p17c_quain.t.ed5d8e.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_quain2.g.41931f": {
+"auto": true,
+"d": 5.83,
+"kind": "greet",
+"speaker": "p17c_quain2",
+"src": "voices/p17c_quain2/p17c_quain2.g.41931f.mp3",
+"t": "Cay run, a copper there and back. I go at the slack and I come back at the slack."
+},
+"p17c_quain2.g.533818": {
+"auto": true,
+"d": 3.46,
+"kind": "greet",
+"speaker": "p17c_quain2",
+"src": "voices/p17c_quain2/p17c_quain2.g.533818.mp3",
+"t": "The boat goes when I say. Not before."
+},
+"p17c_quain2.g.c649d5": {
+"auto": true,
+"d": 5.98,
+"kind": "greet",
+"speaker": "p17c_quain2",
+"src": "voices/p17c_quain2/p17c_quain2.g.c649d5.mp3",
+"t": "If it is the Cay you want, sit in the stern. If it is not the Cay, I am asleep."
+},
+"p17c_quain2.t.1f5d42": {
+"auto": true,
+"d": 8.54,
+"kind": "topic",
+"speaker": "p17c_quain2",
+"src": "voices/p17c_quain2/p17c_quain2.t.1f5d42.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_quain2.t.42e936": {
+"auto": true,
+"d": 7.97,
+"kind": "topic",
+"speaker": "p17c_quain2",
+"src": "voices/p17c_quain2/p17c_quain2.t.42e936.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_quain2.t.5b751e": {
+"auto": true,
+"d": 6.55,
+"kind": "topic",
+"speaker": "p17c_quain2",
+"src": "voices/p17c_quain2/p17c_quain2.t.5b751e.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_quain2.t.5c3058": {
+"auto": true,
+"d": 5.88,
+"kind": "topic",
+"speaker": "p17c_quain2",
+"src": "voices/p17c_quain2/p17c_quain2.t.5c3058.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_quain2.t.a77032": {
+"auto": true,
+"d": 14.06,
+"kind": "topic",
+"speaker": "p17c_quain2",
+"src": "voices/p17c_quain2/p17c_quain2.t.a77032.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_quain2.t.ded614": {
+"auto": true,
+"d": 9.77,
+"kind": "topic",
+"speaker": "p17c_quain2",
+"src": "voices/p17c_quain2/p17c_quain2.t.ded614.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_sloe.g.0fbe55": {
+"auto": true,
+"d": 4.34,
+"kind": "greet",
+"speaker": "p17c_sloe",
+"src": "voices/p17c_sloe/p17c_sloe.g.0fbe55.mp3",
+"t": "I do not haggle. Haggling is a form of theft and the Harbour has a view."
+},
+"p17c_sloe.g.c8ca1e": {
+"auto": true,
+"d": 6.6,
+"kind": "greet",
+"speaker": "p17c_sloe",
+"src": "voices/p17c_sloe/p17c_sloe.g.c8ca1e.mp3",
+"t": "Rope, tar, lamp-oil, brass. The brass is from Fortis. Do not look at me like that, they all say it."
+},
+"p17c_sloe.g.cbb8c0": {
+"auto": true,
+"d": 4.61,
+"kind": "greet",
+"speaker": "p17c_sloe",
+"src": "voices/p17c_sloe/p17c_sloe.g.cbb8c0.mp3",
+"t": "Gauge-valves, bells, oil. Ask. If I have it, you will not like the price."
+},
+"p17c_sloe.t.1f8375": {
+"auto": true,
+"d": 8.42,
+"kind": "topic",
+"speaker": "p17c_sloe",
+"src": "voices/p17c_sloe/p17c_sloe.t.1f8375.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_sloe.t.21beff": {
+"auto": true,
+"d": 7.61,
+"kind": "topic",
+"speaker": "p17c_sloe",
+"src": "voices/p17c_sloe/p17c_sloe.t.21beff.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_sloe.t.4e36b8": {
+"auto": true,
+"d": 5.54,
+"kind": "topic",
+"speaker": "p17c_sloe",
+"src": "voices/p17c_sloe/p17c_sloe.t.4e36b8.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_sloe.t.b4e4dd": {
+"auto": true,
+"d": 5.26,
+"kind": "topic",
+"speaker": "p17c_sloe",
+"src": "voices/p17c_sloe/p17c_sloe.t.b4e4dd.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_sloe.t.b9fbc9": {
+"auto": true,
+"d": 9.46,
+"kind": "topic",
+"speaker": "p17c_sloe",
+"src": "voices/p17c_sloe/p17c_sloe.t.b9fbc9.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_sloe.t.f65065": {
+"auto": true,
+"d": 15.22,
+"kind": "topic",
+"speaker": "p17c_sloe",
+"src": "voices/p17c_sloe/p17c_sloe.t.f65065.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_tace.g.c3b742": {
+"auto": true,
+"d": 3.5,
+"kind": "greet",
+"speaker": "p17c_tace",
+"src": "voices/p17c_tace/p17c_tace.g.c3b742.mp3",
+"t": "I do not sell it. That is the first thing everyone asks."
+},
+"p17c_tace.g.c4bf80": {
+"auto": true,
+"d": 4.49,
+"kind": "greet",
+"speaker": "p17c_tace",
+"src": "voices/p17c_tace/p17c_tace.g.c4bf80.mp3",
+"t": "Mind the step. I sweep it every morning, and every morning it is salt again."
+},
+"p17c_tace.g.ec7c24": {
+"auto": true,
+"d": 5.06,
+"kind": "greet",
+"speaker": "p17c_tace",
+"src": "voices/p17c_tace/p17c_tace.g.ec7c24.mp3",
+"t": "Come in out of the stair. You will want to sit down; everyone does after the fourth flight."
+},
+"p17c_tace.t.0b4d43": {
+"auto": true,
+"d": 7.37,
+"kind": "topic",
+"speaker": "p17c_tace",
+"src": "voices/p17c_tace/p17c_tace.t.0b4d43.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_tace.t.0f7c86": {
+"auto": true,
+"d": 13.51,
+"kind": "topic",
+"speaker": "p17c_tace",
+"src": "voices/p17c_tace/p17c_tace.t.0f7c86.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_tace.t.578c08": {
+"auto": true,
+"d": 6.96,
+"kind": "topic",
+"speaker": "p17c_tace",
+"src": "voices/p17c_tace/p17c_tace.t.578c08.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_tace.t.75e083": {
+"auto": true,
+"d": 4.87,
+"kind": "topic",
+"speaker": "p17c_tace",
+"src": "voices/p17c_tace/p17c_tace.t.75e083.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_tace.t.97d000": {
+"auto": true,
+"d": 8.26,
+"kind": "topic",
+"speaker": "p17c_tace",
+"src": "voices/p17c_tace/p17c_tace.t.97d000.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_tace.t.fc5c8f": {
+"auto": true,
+"d": 5.33,
+"kind": "topic",
+"speaker": "p17c_tace",
+"src": "voices/p17c_tace/p17c_tace.t.fc5c8f.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_teague.g.518236": {
+"auto": true,
+"d": 4.06,
+"kind": "greet",
+"speaker": "p17c_teague",
+"src": "voices/p17c_teague/p17c_teague.g.518236.mp3",
+"t": "Be quick. The tide will not wait, and neither will the Harbour-Queen."
+},
+"p17c_teague.g.898190": {
+"auto": true,
+"d": 5.26,
+"kind": "greet",
+"speaker": "p17c_teague",
+"src": "voices/p17c_teague/p17c_teague.g.898190.mp3",
+"t": "Harbour office. Dues, bench and bell, in that order, and the bell is not mine to ring."
+},
+"p17c_teague.g.fc3ad5": {
+"auto": true,
+"d": 5.66,
+"kind": "greet",
+"speaker": "p17c_teague",
+"src": "voices/p17c_teague/p17c_teague.g.fc3ad5.mp3",
+"t": "Harbour office. If it is dues, it is not me. If it is not dues, it is still not me."
+},
+"p17c_teague.t.221e37": {
+"auto": true,
+"d": 13.46,
+"kind": "topic",
+"speaker": "p17c_teague",
+"src": "voices/p17c_teague/p17c_teague.t.221e37.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_teague.t.ab0503": {
+"auto": true,
+"d": 8.16,
+"kind": "topic",
+"speaker": "p17c_teague",
+"src": "voices/p17c_teague/p17c_teague.t.ab0503.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_teague.t.af8d09": {
+"auto": true,
+"d": 7.08,
+"kind": "topic",
+"speaker": "p17c_teague",
+"src": "voices/p17c_teague/p17c_teague.t.af8d09.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_teague.t.b365b2": {
+"auto": true,
+"d": 5.3,
+"kind": "topic",
+"speaker": "p17c_teague",
+"src": "voices/p17c_teague/p17c_teague.t.b365b2.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_teague.t.b6c90c": {
+"auto": true,
+"d": 5.62,
+"kind": "topic",
+"speaker": "p17c_teague",
+"src": "voices/p17c_teague/p17c_teague.t.b6c90c.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_teague.t.e1ab17": {
+"auto": true,
+"d": 8.62,
+"kind": "topic",
+"speaker": "p17c_teague",
+"src": "voices/p17c_teague/p17c_teague.t.e1ab17.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_teel.g.4c29cb": {
+"auto": true,
+"d": 6.65,
+"kind": "greet",
+"speaker": "p17c_teel",
+"src": "voices/p17c_teel/p17c_teel.g.4c29cb.mp3",
+"t": "If you are selling, I am buying at a price you will not like. If you are buying, I have nothing."
+},
+"p17c_teel.g.5419f0": {
+"auto": true,
+"d": 5.14,
+"kind": "greet",
+"speaker": "p17c_teel",
+"src": "voices/p17c_teel/p17c_teel.g.5419f0.mp3",
+"t": "I am sitting on the best bollard in the Yard and I am not moving."
+},
+"p17c_teel.g.9eb7c2": {
+"auto": true,
+"d": 7.03,
+"kind": "greet",
+"speaker": "p17c_teel",
+"src": "voices/p17c_teel/p17c_teel.g.9eb7c2.mp3",
+"t": "Hollis Teel, the Long Odds. Salvage and nothing else, whatever you have heard. What's she singing?"
+},
+"p17c_teel.t.2fc4f6": {
+"auto": true,
+"d": 9.02,
+"kind": "topic",
+"speaker": "p17c_teel",
+"src": "voices/p17c_teel/p17c_teel.t.2fc4f6.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_teel.t.3855a4": {
+"auto": true,
+"d": 11.33,
+"kind": "topic",
+"speaker": "p17c_teel",
+"src": "voices/p17c_teel/p17c_teel.t.3855a4.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_teel.t.6d0862": {
+"auto": true,
+"d": 17.23,
+"kind": "topic",
+"speaker": "p17c_teel",
+"src": "voices/p17c_teel/p17c_teel.t.6d0862.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_teel.t.7b018a": {
+"auto": true,
+"d": 9.55,
+"kind": "topic",
+"speaker": "p17c_teel",
+"src": "voices/p17c_teel/p17c_teel.t.7b018a.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_teel.t.92a1b5": {
+"auto": true,
+"d": 5.9,
+"kind": "topic",
+"speaker": "p17c_teel",
+"src": "voices/p17c_teel/p17c_teel.t.92a1b5.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_teel.t.ab0ec5": {
+"auto": true,
+"d": 6.94,
+"kind": "topic",
+"speaker": "p17c_teel",
+"src": "voices/p17c_teel/p17c_teel.t.ab0ec5.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17c_wife.g.0a93dd": {
+"auto": true,
+"d": 15.53,
+"kind": "greet",
+"speaker": "p17c_wife",
+"src": "voices/p17c_wife/p17c_wife.g.0a93dd.mp3",
+"t": "They light the Stair at dusk, one landing at a time, from the bottom up. The lamplighter is on his fourth in three years. I tell you so you will hold the rail."
+},
+"p17c_wife.g.bf18ff": {
+"auto": true,
+"d": 10.42,
+"kind": "greet",
+"speaker": "p17c_wife",
+"src": "voices/p17c_wife/p17c_wife.g.bf18ff.mp3",
+"t": "Mind the rail. It is a hundred and ninety feet from here to the Yard roofs, and the Yard roofs are not soft."
+},
+"p17c_wife.g.dd420a": {
+"auto": true,
+"d": 5.26,
+"kind": "greet",
+"speaker": "p17c_wife",
+"src": "voices/p17c_wife/p17c_wife.g.dd420a.mp3",
+"t": "I am mending. If you are going to talk, hold the other end."
+},
+"p17c_wife.t.116610": {
+"auto": true,
+"d": 23.93,
+"kind": "topic",
+"speaker": "p17c_wife",
+"src": "voices/p17c_wife/p17c_wife.t.116610.mp3",
+"t": "A bottle is a drowned man's breath with a stopper in it, or a thing that learned his name off the water, or nothing at all. Nobody can tell which until the wax is broken. The Coast has a rule for that: never take the stopper out."
+},
+"p17c_wife.t.2204d4": {
+"auto": true,
+"d": 14.76,
+"kind": "topic",
+"speaker": "p17c_wife",
+"src": "voices/p17c_wife/p17c_wife.t.2204d4.mp3",
+"t": "The hounds came down out of the hills the same year the quiets came up out of the trenches. The Coast has both. We do not discuss which is worse."
+},
+"p17c_wife.t.6d09ac": {
+"auto": true,
+"d": 12.43,
+"kind": "topic",
+"speaker": "p17c_wife",
+"src": "voices/p17c_wife/p17c_wife.t.6d09ac.mp3",
+"t": "The Flambeaux have had the counting-house since the spring, up at the top of the Stair. They pay for talk, and the Lantern Yard has plenty."
+},
+"p17c_wife.t.95ecd7": {
+"auto": true,
+"d": 11.16,
+"kind": "topic",
+"speaker": "p17c_wife",
+"src": "voices/p17c_wife/p17c_wife.t.95ecd7.mp3",
+"t": "The airship on the mast-tower. She came in on the morning tide, and half the Yard has already worked out what she is carrying."
+},
+"p17c_wife.t.b882bc": {
+"auto": true,
+"d": 7.51,
+"kind": "topic",
+"speaker": "p17c_wife",
+"src": "voices/p17c_wife/p17c_wife.t.b882bc.mp3",
+"t": "The Synod taxed this harbour for a hundred years and has never once been thanked for it."
+},
+"p17c_wife.t.befd90": {
+"auto": true,
+"d": 8.52,
+"kind": "topic",
+"speaker": "p17c_wife",
+"src": "voices/p17c_wife/p17c_wife.t.befd90.mp3",
+"t": "It keeps what it takes. Nobody on the Coast says more than that, and nobody says it loudly."
+},
+"p17n_jory.g.6b3faf": {
+"auto": true,
+"d": 5.18,
+"kind": "greet",
+"speaker": "p17n_jory",
+"src": "voices/p17n_jory/p17n_jory.g.6b3faf.mp3",
+"t": "Lamps first. The moths come for the light and the dark comes for the rest."
+},
+"p17n_jory.g.996811": {
+"auto": true,
+"d": 9.38,
+"kind": "greet",
+"speaker": "p17n_jory",
+"src": "voices/p17n_jory/p17n_jory.g.996811.mp3",
+"t": "I brought the oil. Six lamps, and a flask each, he says. I said that is not much of a plan. Take it from the niche by the east lamp."
+},
+"p17n_jory.g.a1419d": {
+"auto": true,
+"d": 1.32,
+"kind": "greet",
+"speaker": "p17n_jory",
+"src": "voices/p17n_jory/p17n_jory.g.a1419d.mp3",
+"t": "Mind the lamps."
+},
+"p17n_marl.g.0572a5": {
+"auto": true,
+"d": 7.37,
+"kind": "greet",
+"speaker": "p17n_marl",
+"src": "voices/p17n_marl/p17n_marl.g.0572a5.mp3",
+"t": "Does it ring? Don't answer. There is no breath to spare. Hold the middle of the note and it will find you."
+},
+"p17n_marl.g.80777b": {
+"auto": true,
+"d": 4.82,
+"kind": "greet",
+"speaker": "p17n_marl",
+"src": "voices/p17n_marl/p17n_marl.g.80777b.mp3",
+"t": "Low and slow. That is all the old ones ever asked."
+},
+"p17n_marl.g.c573b6": {
+"auto": true,
+"d": 2.21,
+"kind": "greet",
+"speaker": "p17n_marl",
+"src": "voices/p17n_marl/p17n_marl.g.c573b6.mp3",
+"t": "Sing, or sit down."
+},
+"p17n_tansy.g.18f52b": {
+"auto": true,
+"d": 1.92,
+"kind": "greet",
+"speaker": "p17n_tansy",
+"src": "voices/p17n_tansy/p17n_tansy.g.18f52b.mp3",
+"t": "I am singing. Look at the lamps."
+},
+"p17n_tansy.g.b702a4": {
+"auto": true,
+"d": 2.35,
+"kind": "greet",
+"speaker": "p17n_tansy",
+"src": "voices/p17n_tansy/p17n_tansy.g.b702a4.mp3",
+"t": "I keep losing my place on the turn."
+},
+"p17n_tansy.g.e265b6": {
+"auto": true,
+"d": 6.79,
+"kind": "greet",
+"speaker": "p17n_tansy",
+"src": "voices/p17n_tansy/p17n_tansy.g.e265b6.mp3",
+"t": "Is it always this cold? Marl says it is the coldest place in the Reach. I thought he was being a Cantor about it."
+},
+"p22_absalom.g.510164": {
+"auto": true,
+"d": 5.57,
+"kind": "greet",
+"speaker": "p22_absalom",
+"src": "voices/p22_absalom/p22_absalom.g.510164.mp3",
+"t": "Three fires on three hills. I lit them forty back-ends running. Then the Hedge."
+},
+"p22_absalom.g.d098c3": {
+"auto": true,
+"d": 4.58,
+"kind": "greet",
+"speaker": "p22_absalom",
+"src": "voices/p22_absalom/p22_absalom.g.d098c3.mp3",
+"t": "Sit down, sit down. My knees have been asking after company."
+},
+"p22_absalom.g.d3f499": {
+"auto": true,
+"d": 3.36,
+"kind": "greet",
+"speaker": "p22_absalom",
+"src": "voices/p22_absalom/p22_absalom.g.d3f499.mp3",
+"t": "Talk louder. No. Do not. Talk the way you were."
+},
+"p22_absalom.t.4b47c1": {
+"auto": true,
+"d": 11.57,
+"kind": "topic",
+"speaker": "p22_absalom",
+"src": "voices/p22_absalom/p22_absalom.t.4b47c1.mp3",
+"t": "Long Down to the north, over the Downs; Hob's Knap east, above the orchard; Ewe Barrow west, on the old mound. You can see all three from the Knap, if your eyes are better than mine."
+},
+"p22_gideon.g.3c237c": {
+"auto": true,
+"d": 5.06,
+"kind": "greet",
+"speaker": "p22_gideon",
+"src": "voices/p22_gideon/p22_gideon.g.3c237c.mp3",
+"t": "Sit where the light is. The fire is mutton-fat and it smokes, but it is warm."
+},
+"p22_gideon.g.4b8270": {
+"auto": true,
+"d": 6.7,
+"kind": "greet",
+"speaker": "p22_gideon",
+"src": "voices/p22_gideon/p22_gideon.g.4b8270.mp3",
+"t": "Rooms are a sovereign. Supper is whatever Tamar can spare, and she can spare more than she lets on."
+},
+"p22_gideon.g.b2b210": {
+"auto": true,
+"d": 7.1,
+"kind": "greet",
+"speaker": "p22_gideon",
+"src": "voices/p22_gideon/p22_gideon.g.b2b210.mp3",
+"t": "I opened an inn on a road nobody walks. Say something I have not already said to myself."
+},
+"p22_gideon.t.6c105f": {
+"auto": true,
+"d": 15.05,
+"kind": "topic",
+"speaker": "p22_gideon",
+"src": "voices/p22_gideon/p22_gideon.t.6c105f.mp3",
+"t": "The Bellwether was the drovers' house. Eight hundred sheep a fair-day went past that door. I had it from my uncle and shut it with my own hands the night the Hedge closed, and I opened it again the week Tamar came back up."
+},
+"p22_kit.g.25ff16": {
+"auto": true,
+"d": 2.74,
+"kind": "greet",
+"speaker": "p22_kit",
+"src": "voices/p22_kit/p22_kit.g.25ff16.mp3",
+"t": "Have you seen the Ram? You can't, he's gone green."
+},
+"p22_kit.g.5c69da": {
+"auto": true,
+"d": 3.82,
+"kind": "greet",
+"speaker": "p22_kit",
+"src": "voices/p22_kit/p22_kit.g.5c69da.mp3",
+"t": "Mam says I'm to watch the fold and not the hill. I watch the hill."
+},
+"p22_kit.g.c6ebd4": {
+"auto": true,
+"d": 2.21,
+"kind": "greet",
+"speaker": "p22_kit",
+"src": "voices/p22_kit/p22_kit.g.c6ebd4.mp3",
+"t": "I'm not scared of hounds. I'm not."
+},
+"p22_kitlost.g.85dee4": {
+"auto": true,
+"d": 6.65,
+"kind": "greet",
+"speaker": "p22_kitlost",
+"src": "voices/p22_kitlost/p22_kitlost.g.85dee4.mp3",
+"t": "You came. It was making a noise like a lamb. Like a lamb that needed me. And then it was big. It's still in there. Is it still in there?"
+},
+"p22_tamar.g.16c5c9": {
+"auto": true,
+"d": 4.15,
+"kind": "greet",
+"speaker": "p22_tamar",
+"src": "voices/p22_tamar/p22_tamar.g.16c5c9.mp3",
+"t": "Mind the gate, love. It is the only thing between them and the whole of the Reach."
+},
+"p22_tamar.g.3ec483": {
+"auto": true,
+"d": 6.12,
+"kind": "greet",
+"speaker": "p22_tamar",
+"src": "voices/p22_tamar/p22_tamar.g.3ec483.mp3",
+"t": "Farrant. We had the sheep-walk off the Downs for six generations. I am the seventh, and I am starting again."
+},
+"p22_tamar.g.ab8523": {
+"auto": true,
+"d": 3.86,
+"kind": "greet",
+"speaker": "p22_tamar",
+"src": "voices/p22_tamar/p22_tamar.g.ab8523.mp3",
+"t": "If you have come to tell me the hill is not safe, I know. The sheep do not."
+},
+"p22_tamar.t.0e3909": {
+"auto": true,
+"d": 15.67,
+"kind": "topic",
+"speaker": "p22_tamar",
+"src": "voices/p22_tamar/p22_tamar.t.0e3909.mp3",
+"t": "Every sheep in the Reach went into the Hedge. They sheared them for the wool the town packed into the roots, and they drove the Downs flocks in behind the thorn after. Two years shut in. We ate them. Ours too. I fed my children my father's ewes, one a month, and I would do it again. Nothing took them. We did."
+},
+"p22_tamar.t.137e75": {
+"auto": true,
+"d": 10.9,
+"kind": "topic",
+"speaker": "p22_tamar",
+"src": "voices/p22_tamar/p22_tamar.t.137e75.mp3",
+"t": "Wethercombe was the sheep-walk's door: the fold, the fair, the Bellwether for the drovers. When the Hedge went up we all went in. I am the first back. Gideon came after me, because somebody has to feed me."
+},
+"p29_abel.g.0d9cb6": {
+"auto": true,
+"d": 3.67,
+"kind": "greet",
+"speaker": "p29_abel",
+"src": "voices/p29_abel/p29_abel.g.0d9cb6.mp3",
+"t": "There are no sheep. That is what you came to ask, so there it is."
+},
+"p29_abel.g.306ebc": {
+"auto": true,
+"d": 7.56,
+"kind": "greet",
+"speaker": "p29_abel",
+"src": "voices/p29_abel/p29_abel.g.306ebc.mp3",
+"t": "There are no sheep. Nobody says where they went, and I have stopped asking. The combe is down past the stile, if you want people."
+},
+"p29_abel.g.6e7a72": {
+"auto": true,
+"d": 8.06,
+"kind": "greet",
+"speaker": "p29_abel",
+"src": "voices/p29_abel/p29_abel.g.6e7a72.mp3",
+"t": "Read the sign? Sheep-walk. There are no sheep. The turf is short anyway, as if it remembers them. I cut it for the Bellwether's fire."
+},
+"p29_agnes.g.3cc5f9": {
+"auto": true,
+"d": 4.03,
+"kind": "greet",
+"speaker": "p29_agnes",
+"src": "voices/p29_agnes/p29_agnes.g.3cc5f9.mp3",
+"t": "If you want bread, buy bread. If you want to watch me, the shutters are free."
+},
+"p29_agnes.g.e4059e": {
+"auto": true,
+"d": 3.67,
+"kind": "greet",
+"speaker": "p29_agnes",
+"src": "voices/p29_agnes/p29_agnes.g.e4059e.mp3",
+"t": "Mind the flour. I would offer you a chair but they are all full of bread."
+},
+"p29_agnes.g.e960a9": {
+"auto": true,
+"d": 5.45,
+"kind": "greet",
+"speaker": "p29_agnes",
+"src": "voices/p29_agnes/p29_agnes.g.e960a9.mp3",
+"t": "Loaves are two, the honey four. I have not slept since the Hedge went up, so do not haggle; I will cry."
+},
+"p29_ambrose.g.0d7e86": {
+"auto": true,
+"d": 6.46,
+"kind": "greet",
+"speaker": "p29_ambrose",
+"src": "voices/p29_ambrose/p29_ambrose.g.0d7e86.mp3",
+"t": "Candles, oil, reeds for the hush-lamps. If it keeps a light lit or a street humming, I have it."
+},
+"p29_ambrose.g.8e91f5": {
+"auto": true,
+"d": 5.83,
+"kind": "greet",
+"speaker": "p29_ambrose",
+"src": "voices/p29_ambrose/p29_ambrose.g.8e91f5.mp3",
+"t": "Tallow's cheaper. Wax is for the chapel and people who want to be seen buying wax."
+},
+"p29_ambrose.g.d71700": {
+"auto": true,
+"d": 5.18,
+"kind": "greet",
+"speaker": "p29_ambrose",
+"src": "voices/p29_ambrose/p29_ambrose.g.d71700.mp3",
+"t": "Buy something or let my door shut. Every draught costs me a candle."
+},
+"p29_corvin.g.1ae6d6": {
+"auto": true,
+"d": 3.7,
+"kind": "greet",
+"speaker": "p29_corvin",
+"src": "voices/p29_corvin/p29_corvin.g.1ae6d6.mp3",
+"t": "Not here. Not loud. Barrels have ears."
+},
+"p29_corvin.g.7e5d88": {
+"auto": true,
+"d": 4.37,
+"kind": "greet",
+"speaker": "p29_corvin",
+"src": "voices/p29_corvin/p29_corvin.g.7e5d88.mp3",
+"t": "Tobit sells news; I sell what the news is about."
+},
+"p29_corvin.g.ab80ef": {
+"auto": true,
+"d": 7.68,
+"kind": "greet",
+"speaker": "p29_corvin",
+"src": "voices/p29_corvin/p29_corvin.g.ab80ef.mp3",
+"t": "Timber goes down to Fortis, broadsheets come up from Cantabile, and some of what is in the barrels is neither."
+},
+"p29_ennis.g.04559a": {
+"auto": true,
+"d": 3.5,
+"kind": "greet",
+"speaker": "p29_ennis",
+"src": "voices/p29_ennis/p29_ennis.g.04559a.mp3",
+"t": "Honey's four. The bees do the work; I only tell them things."
+},
+"p29_ennis.g.63b6c6": {
+"auto": true,
+"d": 2.62,
+"kind": "greet",
+"speaker": "p29_ennis",
+"src": "voices/p29_ennis/p29_ennis.g.63b6c6.mp3",
+"t": "Not so loud. You will put them off their comb."
+},
+"p29_ennis.g.b3f6a2": {
+"auto": true,
+"d": 3.7,
+"kind": "greet",
+"speaker": "p29_ennis",
+"src": "voices/p29_ennis/p29_ennis.g.b3f6a2.mp3",
+"t": "Softly by the skeps, if you would. They take a voice to heart."
+},
+"p29_gil.g.717a01": {
+"auto": true,
+"d": 1.73,
+"kind": "greet",
+"speaker": "p29_gil",
+"src": "voices/p29_gil/p29_gil.g.717a01.mp3",
+"t": "Pay or wade."
+},
+"p29_gil.g.9eb1dd": {
+"auto": true,
+"d": 4.78,
+"kind": "greet",
+"speaker": "p29_gil",
+"src": "voices/p29_gil/p29_gil.g.9eb1dd.mp3",
+"t": "Roof to roof, a penny a pole. I know where the street still has a bottom."
+},
+"p29_gil.g.f254a8": {
+"auto": true,
+"d": 4.9,
+"kind": "greet",
+"speaker": "p29_gil",
+"src": "voices/p29_gil/p29_gil.g.f254a8.mp3",
+"t": "Mind the sinkholes. Where the water goes dark, the street went down with it."
+},
+"p29_hurst.g.66ab4c": {
+"auto": true,
+"d": 7.46,
+"kind": "greet",
+"speaker": "p29_hurst",
+"src": "voices/p29_hurst/p29_hurst.g.66ab4c.mp3",
+"t": "There are no sheep. There were, and now there are none, and the turf keeps the shape of them. That is all I know and all I am saying."
+},
+"p29_hurst.g.721b85": {
+"auto": true,
+"d": 6.46,
+"kind": "greet",
+"speaker": "p29_hurst",
+"src": "voices/p29_hurst/p29_hurst.g.721b85.mp3",
+"t": "Come in off the combe. They are all up at the fold; I mind the soup. There are no sheep, mind. You will have noticed."
+},
+"p29_hurst.g.d4ab2c": {
+"auto": true,
+"d": 3.46,
+"kind": "greet",
+"speaker": "p29_hurst",
+"src": "voices/p29_hurst/p29_hurst.g.d4ab2c.mp3",
+"t": "No, there are no sheep. Everybody asks. Shut the door."
+},
+"p29_jem.g.27cb4a": {
+"auto": true,
+"d": 3.74,
+"kind": "greet",
+"speaker": "p29_jem",
+"src": "voices/p29_jem/p29_jem.g.27cb4a.mp3",
+"t": "Bar the door behind you. Properly. Both pins."
+},
+"p29_jem.g.47e284": {
+"auto": true,
+"d": 8.86,
+"kind": "greet",
+"speaker": "p29_jem",
+"src": "voices/p29_jem/p29_jem.g.47e284.mp3",
+"t": "Two years of clip and nobody to buy it. I shear what Tamar brings me and I stack it, and I wait for the road to come back."
+},
+"p29_jem.g.d67970": {
+"auto": true,
+"d": 9.19,
+"kind": "greet",
+"speaker": "p29_jem",
+"src": "voices/p29_jem/p29_jem.g.d67970.mp3",
+"t": "I barred it from the inside because of the woolwight. You came in anyway, so you are either very quiet or not what I thought you were."
+},
+"p29_moll.g.583c90": {
+"auto": true,
+"d": 5.18,
+"kind": "greet",
+"speaker": "p29_moll",
+"src": "voices/p29_moll/p29_moll.g.583c90.mp3",
+"t": "That door goes through to the Hollow. Rooke keeps it shut. We hear them in there at night, humming."
+},
+"p29_moll.g.ca47e3": {
+"auto": true,
+"d": 2.14,
+"kind": "greet",
+"speaker": "p29_moll",
+"src": "voices/p29_moll/p29_moll.g.ca47e3.mp3",
+"t": "No, you cannot go through. Ask Rooke."
+},
+"p29_moll.g.eb777d": {
+"auto": true,
+"d": 5.62,
+"kind": "greet",
+"speaker": "p29_moll",
+"src": "voices/p29_moll/p29_moll.g.eb777d.mp3",
+"t": "Eighty-four in the Hollow, Rooke says, and more since. We send the scraps through for their fires."
+},
+"p29_prue.g.10840a": {
+"auto": true,
+"d": 2.42,
+"kind": "greet",
+"speaker": "p29_prue",
+"src": "voices/p29_prue/p29_prue.g.10840a.mp3",
+"t": "Read the board. That is what it is for."
+},
+"p29_prue.g.1ed33e": {
+"auto": true,
+"d": 7.03,
+"kind": "greet",
+"speaker": "p29_prue",
+"src": "voices/p29_prue/p29_prue.g.1ed33e.mp3",
+"t": "SYNOD REASSURES, it says, every week. I put it up anyway. People like to see what they are not to believe."
+},
+"p29_prue.g.cff807": {
+"auto": true,
+"d": 7.73,
+"kind": "greet",
+"speaker": "p29_prue",
+"src": "voices/p29_prue/p29_prue.g.cff807.mp3",
+"t": "Cantabile sheets, three weeks old, still true. The board is free to read; I only charge for the ones I read aloud."
+},
+"p29_sexton.g.3055ae": {
+"auto": true,
+"d": 5.28,
+"kind": "greet",
+"speaker": "p29_sexton",
+"src": "voices/p29_sexton/p29_sexton.g.3055ae.mp3",
+"t": "Mind the drifts. It is not for the hounds; it is for the ones under the turf."
+},
+"p29_sexton.g.aa27a9": {
+"auto": true,
+"d": 2.21,
+"kind": "greet",
+"speaker": "p29_sexton",
+"src": "voices/p29_sexton/p29_sexton.g.aa27a9.mp3",
+"t": "Out of the barrow's road."
+},
+"p29_sexton.g.e69fc0": {
+"auto": true,
+"d": 6.19,
+"kind": "greet",
+"speaker": "p29_sexton",
+"src": "voices/p29_sexton/p29_sexton.g.e69fc0.mp3",
+"t": "Salt for the paths, before the town is up. What is buried stays buried, and says nothing."
+},
+"p29_sim.g.252fba": {
+"auto": true,
+"d": 8.14,
+"kind": "greet",
+"speaker": "p29_sim",
+"src": "voices/p29_sim/p29_sim.g.252fba.mp3",
+"t": "Lime, then the beam, then the vats. Same as always. The hides are thinner this year, and nobody will say why."
+},
+"p29_sim.g.2aa03e": {
+"auto": true,
+"d": 3.67,
+"kind": "greet",
+"speaker": "p29_sim",
+"src": "voices/p29_sim/p29_sim.g.2aa03e.mp3",
+"t": "Mind the vats. They do not care whose hand goes in."
+},
+"p29_sim.g.380638": {
+"auto": true,
+"d": 7.66,
+"kind": "greet",
+"speaker": "p29_sim",
+"src": "voices/p29_sim/p29_sim.g.380638.mp3",
+"t": "Abner is outside. He likes the air. I like the work; it stops you hearing the Hollow through the wall."
+},
+"p29_ysolde.g.5ea207": {
+"auto": true,
+"d": 5.47,
+"kind": "greet",
+"speaker": "p29_ysolde",
+"src": "voices/p29_ysolde/p29_ysolde.g.5ea207.mp3",
+"t": "Smugglers' town, they call the Landing. The Rings are where the smuggled things go to wait."
+},
+"p29_ysolde.g.af0a1b": {
+"auto": true,
+"d": 2.78,
+"kind": "greet",
+"speaker": "p29_ysolde",
+"src": "voices/p29_ysolde/p29_ysolde.g.af0a1b.mp3",
+"t": "Buying or selling? Talking is extra."
+},
+"p29_ysolde.g.dec904": {
+"auto": true,
+"d": 6.98,
+"kind": "greet",
+"speaker": "p29_ysolde",
+"src": "voices/p29_ysolde/p29_ysolde.g.dec904.mp3",
+"t": "Salvage, dry and wet. I ask no questions about what you bring me, and you ask none about where I got it."
+},
+"p30_hob.g.4e521b": {
+"auto": true,
+"d": 5.35,
+"kind": "greet",
+"speaker": "p30_hob",
+"src": "voices/p30_hob/p30_hob.g.4e521b.mp3",
+"t": "Mind the step. I would get up, only it is a business, getting up, on these."
+},
+"p30_hob.g.700e60": {
+"auto": true,
+"d": 3.67,
+"kind": "greet",
+"speaker": "p30_hob",
+"src": "voices/p30_hob/p30_hob.g.700e60.mp3",
+"t": "Keep 'em dry, she says. I keep 'em dry."
+},
+"p30_hob.g.bad790": {
+"auto": true,
+"d": 4.15,
+"kind": "greet",
+"speaker": "p30_hob",
+"src": "voices/p30_hob/p30_hob.g.bad790.mp3",
+"t": "Field-hand. Was. You cannot follow a plough on roots."
+},
+"p30_lissa.g.36e081": {
+"auto": true,
+"d": 1.08,
+"kind": "greet",
+"speaker": "p30_lissa",
+"src": "voices/p30_lissa/p30_lissa.g.36e081.mp3",
+"t": "Mind my cup."
+},
+"p30_lissa.g.7296fb": {
+"auto": true,
+"d": 4.42,
+"kind": "greet",
+"speaker": "p30_lissa",
+"src": "voices/p30_lissa/p30_lissa.g.7296fb.mp3",
+"t": "You can sit on the step if you like. Not on the door. The door is for the house."
+},
+"p30_lissa.g.c01443": {
+"auto": true,
+"d": 5.11,
+"kind": "greet",
+"speaker": "p30_lissa",
+"src": "voices/p30_lissa/p30_lissa.g.c01443.mp3",
+"t": "I am not sick. It is only in my arms, Rooke says, up to here. He looks every month."
+},
+"p31_jugs.g.687f8d": {
+"auto": true,
+"d": 3.46,
+"kind": "greet",
+"speaker": "p31_jugs",
+"src": "voices/p31_jugs/p31_jugs.g.687f8d.mp3",
+"t": "...the blue one, and the white one... the blue one, and the white one..."
+},
+"p31_shutters.g.83ceb9": {
+"auto": true,
+"d": 3.53,
+"kind": "greet",
+"speaker": "p31_shutters",
+"src": "voices/p31_shutters/p31_shutters.g.83ceb9.mp3",
+"t": "...latched... latched... you can never be too sure..."
+},
+"p31_sweeper.g.3f93fc": {
+"auto": true,
+"d": 3.26,
+"kind": "greet",
+"speaker": "p31_sweeper",
+"src": "voices/p31_sweeper/p31_sweeper.g.3f93fc.mp3",
+"t": "...the step, then the next step... she likes the step done..."
+},
+"p46_marrit.g.027eea": {
+"auto": true,
+"d": 4.34,
+"kind": "greet",
+"speaker": "p46_marrit",
+"src": "voices/p46_marrit/p46_marrit.g.027eea.mp3",
+"t": "Wipe your boots. He's at the Greenhall, if it's him you want. He mostly is."
+},
+"p46_marrit.g.3397fc": {
+"auto": true,
+"d": 1.61,
+"kind": "greet",
+"speaker": "p46_marrit",
+"src": "voices/p46_marrit/p46_marrit.g.3397fc.mp3",
+"t": "Boots. Then talk."
+},
+"p46_marrit.t.1edfd2": {
+"auto": true,
+"d": 9.65,
+"kind": "topic",
+"speaker": "p46_marrit",
+"src": "voices/p46_marrit/p46_marrit.t.1edfd2.mp3",
+"t": "I bathed that boy. I know what he looks like from the back walking off up the North Gate road in the snow, and so does the whole town, and so does his father, from the step."
+},
+"p46_marrit.t.6b6734": {
+"auto": true,
+"d": 9.14,
+"kind": "topic",
+"speaker": "p46_marrit",
+"src": "voices/p46_marrit/p46_marrit.t.6b6734.mp3",
+"t": "I don't go in his dressing-room, and if I did I wouldn't say what I saw there. They come to the garden door, not the front. He has the courtesy to let me be out."
+},
+"p46_marrit.t.c798f2": {
+"auto": true,
+"d": 10.46,
+"kind": "topic",
+"speaker": "p46_marrit",
+"src": "voices/p46_marrit/p46_marrit.t.c798f2.mp3",
+"t": "I air it every spring. He has me do it. He had me do it again on Massday, and it isn't spring, and I didn't say so, and neither did he. Go up if you want. Mind the third stair."
+},
+"p92_anselm.g.7b2277": {
+"auto": true,
+"d": 2.93,
+"kind": "greet",
+"speaker": "p92_anselm",
+"src": "voices/p92_anselm/p92_anselm.g.7b2277.mp3",
+"t": "Boots? You walk like somebody from flat country."
+},
+"p92_anselm.g.84f62a": {
+"auto": true,
+"d": 4.99,
+"kind": "greet",
+"speaker": "p92_anselm",
+"src": "voices/p92_anselm/p92_anselm.g.84f62a.mp3",
+"t": "Light keep you true. Sit, if you want boots. Rope soles. The planks move."
+},
+"p92_anselm.g.b8cc3d": {
+"auto": true,
+"d": 3.77,
+"kind": "greet",
+"speaker": "p92_anselm",
+"src": "voices/p92_anselm/p92_anselm.g.b8cc3d.mp3",
+"t": "Mind your feet in my shop and mind your voice on my tier."
+},
+"p92_anselm.t.2f1ad6": {
+"auto": true,
+"d": 18.89,
+"kind": "topic",
+"speaker": "p92_anselm",
+"src": "voices/p92_anselm/p92_anselm.t.2f1ad6.mp3",
+"t": "He was a Flambeau. When his chapter went up the Pilgrim Chain he stayed below. The Tiers would pull the ladders up on Flambeaux, and we did: he was already down. Now he keeps the square with glass-fire, correcting us, he says. Glass-fire wants no fuel. It will burn on a plank, or a coat, or you."
+},
+"p92_anselm.t.339073": {
+"auto": true,
+"d": 0.98,
+"kind": "topic",
+"speaker": "p92_anselm",
+"src": "voices/p92_anselm/p92_anselm.t.339073.mp3",
+"t": "he casts"
+},
+"p92_anselm.t.a91ab7": {
+"auto": true,
+"d": 7.8,
+"kind": "topic",
+"speaker": "p92_anselm",
+"src": "voices/p92_anselm/p92_anselm.t.a91ab7.mp3",
+"t": "When the chains jerk, stand still. The ones who keep walking go over. I mend boots for the ones who stand still."
+},
+"p92_brenna.g.04bce0": {
+"auto": true,
+"d": 4.42,
+"kind": "greet",
+"speaker": "p92_brenna",
+"src": "voices/p92_brenna/p92_brenna.g.04bce0.mp3",
+"t": "Quieter. The whole tier can hear a Coast voice."
+},
+"p92_brenna.g.44cdec": {
+"auto": true,
+"d": 3.58,
+"kind": "greet",
+"speaker": "p92_brenna",
+"src": "voices/p92_brenna/p92_brenna.g.44cdec.mp3",
+"t": "Rope, cloth, tar. What do you need?"
+},
+"p92_brenna.g.7905a9": {
+"auto": true,
+"d": 4.85,
+"kind": "greet",
+"speaker": "p92_brenna",
+"src": "voices/p92_brenna/p92_brenna.g.7905a9.mp3",
+"t": "Come in under the lamp. Not that side. This side."
+},
+"p92_brenna.t.0fdc57": {
+"auto": true,
+"d": 26.93,
+"kind": "topic",
+"speaker": "p92_brenna",
+"src": "voices/p92_brenna/p92_brenna.t.0fdc57.mp3",
+"t": "There's talk, on the upper tiers, where the Tiers go up to the line to scavenge. They say there's something up in the Bleach that isn't Wired. Something that moves at night on the chains. With wings. The Tiers call it the black angel. They leave food out for it on the line."
+},
+"p92_brenna.t.38b9c3": {
+"auto": true,
+"d": 13.92,
+"kind": "topic",
+"speaker": "p92_brenna",
+"src": "voices/p92_brenna/p92_brenna.t.38b9c3.mp3",
+"t": "I keep the Free Captains' business in the Keel Docks. A letter from Oona Salt gets you through my door. Without one, you are buying rope."
+},
+"p92_brenna.t.65a029": {
+"auto": true,
+"d": 15.31,
+"kind": "topic",
+"speaker": "p92_brenna",
+"src": "voices/p92_brenna/p92_brenna.t.65a029.mp3",
+"t": "The Wired. Up in the Bleach. They sing. Day and night, since the Fracture, one note. You stop hearing it after a year. You hear it in your sleep."
+},
+"p92_brenna.t.88a75c": {
+"auto": true,
+"d": 15.46,
+"kind": "topic",
+"speaker": "p92_brenna",
+"src": "voices/p92_brenna/p92_brenna.t.88a75c.mp3",
+"t": "I was on the fourth tier, at a window, on the morning it let go. Facing south. I turned my head. Most people didn't have time to turn their heads."
+},
+"p92_brenna.t.c525cb": {
+"auto": true,
+"d": 13.42,
+"kind": "topic",
+"speaker": "p92_brenna",
+"src": "voices/p92_brenna/p92_brenna.t.c525cb.mp3",
+"t": "The Tiers sell it by the bolt. Wind it round your face till only your eyes show, and your hands, before you go anywhere near the line."
+},
+"p92_canvas.g.228c3a": {
+"auto": true,
+"d": 2.54,
+"kind": "greet",
+"speaker": "p92_canvas",
+"src": "voices/p92_canvas/p92_canvas.g.228c3a.mp3",
+"t": "Loud. Go and be loud somewhere else."
+},
+"p92_canvas.g.5a6e1a": {
+"auto": true,
+"d": 2.09,
+"kind": "greet",
+"speaker": "p92_canvas",
+"src": "voices/p92_canvas/p92_canvas.g.5a6e1a.mp3",
+"t": "Looking, or buying?"
+},
+"p92_canvas.g.acba58": {
+"auto": true,
+"d": 4.39,
+"kind": "greet",
+"speaker": "p92_canvas",
+"src": "voices/p92_canvas/p92_canvas.g.acba58.mp3",
+"t": "Under the canvas, quick. What do you need that you cannot buy in the light?"
+},
+"p92_canvas.t.0a8575": {
+"auto": true,
+"d": 10.68,
+"kind": "topic",
+"speaker": "p92_canvas",
+"src": "voices/p92_canvas/p92_canvas.t.0a8575.mp3",
+"t": "Every window painted black on the inside, and every family scratches one sign in the paint. A bird, a name, a sun. At dusk the scratch-light tells you whose house it is."
+},
+"p92_canvas.t.a0ee0a": {
+"auto": true,
+"d": 12.82,
+"kind": "topic",
+"speaker": "p92_canvas",
+"src": "voices/p92_canvas/p92_canvas.t.a0ee0a.mp3",
+"t": "The only one in the Tiers, and it stays under the cloth. Mirrors are illegal. A reflection is a second light, and the Light is jealous. You want it, you buy it covered, and you never take the cloth off down here."
+},
+"p92_folk.g.6b6f83": {
+"auto": true,
+"d": 1.25,
+"kind": "greet",
+"speaker": "p92_folk",
+"src": "voices/p92_folk/p92_folk.g.6b6f83.mp3",
+"t": "Shh."
+},
+"p92_folk.g.7f8945": {
+"auto": true,
+"d": 1.51,
+"kind": "greet",
+"speaker": "p92_folk",
+"src": "voices/p92_folk/p92_folk.g.7f8945.mp3",
+"t": "Light keep you true."
+},
+"p92_folk.g.e853e6": {
+"auto": true,
+"d": 1.27,
+"kind": "greet",
+"speaker": "p92_folk",
+"src": "voices/p92_folk/p92_folk.g.e853e6.mp3",
+"t": "Quiet. Please."
+},
+"p92_folk.t.cadc56": {
+"auto": true,
+"d": 9.19,
+"kind": "topic",
+"speaker": "p92_folk",
+"src": "voices/p92_folk/p92_folk.t.cadc56.mp3",
+"t": "We do not go above the line. Some go up for what the noble houses left, with a black cloth on a pole. Not all come down."
+},
+"p92_joss.g.5ee68b": {
+"auto": true,
+"d": 4.1,
+"kind": "greet",
+"speaker": "p92_joss",
+"src": "voices/p92_joss/p92_joss.g.5ee68b.mp3",
+"t": "Talk like that on a chain-walk and the chain will answer you."
+},
+"p92_joss.g.bba9b8": {
+"auto": true,
+"d": 2.09,
+"kind": "greet",
+"speaker": "p92_joss",
+"src": "voices/p92_joss/p92_joss.g.bba9b8.mp3",
+"t": "Crew. Seventh chain."
+},
+"p92_joss.g.be546d": {
+"auto": true,
+"d": 3.96,
+"kind": "greet",
+"speaker": "p92_joss",
+"src": "voices/p92_joss/p92_joss.g.be546d.mp3",
+"t": "Light keep you true. Seventh chain. Mind the walk."
+},
+"p92_joss.t.40f071": {
+"auto": true,
+"d": 12.82,
+"kind": "topic",
+"speaker": "p92_joss",
+"src": "voices/p92_joss/p92_joss.t.40f071.mp3",
+"t": "The seventh chain's cage runs from the anchor-house down past the bell-gallery to the docks. Somebody pinned it up top, years back. Knock the pin out from up there and it comes down."
+},
+"p92_joss.t.762993": {
+"auto": true,
+"d": 10.13,
+"kind": "topic",
+"speaker": "p92_joss",
+"src": "voices/p92_joss/p92_joss.t.762993.mp3",
+"t": "Every crewman wears one. A notch for every man you lost. One in nine of us, Bardo says. He keeps a tally of nineteen in his winch housing."
+},
+"p92_joss.t.942cae": {
+"auto": true,
+"d": 9.26,
+"kind": "topic",
+"speaker": "p92_joss",
+"src": "voices/p92_joss/p92_joss.t.942cae.mp3",
+"t": "Children learn the nine links by name before they learn their letters. The chain you are on decides which way you run when one jerks."
+},
+"p92_ysolde.g.5f9e93": {
+"auto": true,
+"d": 4.39,
+"kind": "greet",
+"speaker": "p92_ysolde",
+"src": "voices/p92_ysolde/p92_ysolde.g.5f9e93.mp3",
+"t": "You came up on that airship. Keep your voice down and your feet in the shade."
+},
+"p92_ysolde.g.f9ce91": {
+"auto": true,
+"d": 5.04,
+"kind": "greet",
+"speaker": "p92_ysolde",
+"src": "voices/p92_ysolde/p92_ysolde.g.f9ce91.mp3",
+"t": "Speak like that again and the whole dock will look at you. Nobody here looks at anybody."
+},
+"p92_ysolde.g.fa05d1": {
+"auto": true,
+"d": 3.19,
+"kind": "greet",
+"speaker": "p92_ysolde",
+"src": "voices/p92_ysolde/p92_ysolde.g.fa05d1.mp3",
+"t": "Name. Cargo. Quietly: we speak in the Narrow here."
+},
+"p92_ysolde.t.191d6b": {
+"auto": true,
+"d": 7.63,
+"kind": "topic",
+"speaker": "p92_ysolde",
+"src": "voices/p92_ysolde/p92_ysolde.t.191d6b.mp3",
+"t": "Up the face, where the black wall is. Above it, the Bleach. Below it, us. Seven years we have lived on the undersides, and we are good at it."
+},
+"p92_ysolde.t.2705c3": {
+"auto": true,
+"d": 10.32,
+"kind": "topic",
+"speaker": "p92_ysolde",
+"src": "voices/p92_ysolde/p92_ysolde.t.2705c3.mp3",
+"t": "The one ahead owns their shadow and lends it. Step out of somebody's shade without a word and you have insulted them. Give your shade to a stranger and you have done the finest thing you can do here."
+},
+"p92_ysolde.t.33b508": {
+"auto": true,
+"d": 10.37,
+"kind": "topic",
+"speaker": "p92_ysolde",
+"src": "voices/p92_ysolde/p92_ysolde.t.33b508.mp3",
+"t": "Your mirrors. Your sextant. Your shaving-glasses, your hand-mirrors, any lens that shows a face. A reflection is a second light. The Light is jealous. They'll be returned when you leave the chains."
+},
+"p92_ysolde.t.4abbcb": {
+"auto": true,
+"d": 6.43,
+"kind": "topic",
+"speaker": "p92_ysolde",
+"src": "voices/p92_ysolde/p92_ysolde.t.4abbcb.mp3",
+"t": "The shade-lamp at my door. Sit by it when you come back down, and you will be whole again. Everybody comes back down."
+},
+"p92_ysolde.t.dbbbde": {
+"auto": true,
+"d": 6.84,
+"kind": "topic",
+"speaker": "p92_ysolde",
+"src": "voices/p92_ysolde/p92_ysolde.t.dbbbde.mp3",
+"t": "The freighters come into the cradles, and the ladders go up from here. Everything the city eats comes past me, and I count it."
+},
+"p94_bardo.g.23303e": {
+"auto": true,
+"d": 4.22,
+"kind": "greet",
+"speaker": "p94_bardo",
+"src": "voices/p94_bardo/p94_bardo.g.23303e.mp3",
+"t": "Light keep you true, and keep your boots off my brake."
+},
+"p94_bardo.g.6cabb3": {
+"auto": true,
+"d": 9.62,
+"kind": "greet",
+"speaker": "p94_bardo",
+"src": "voices/p94_bardo/p94_bardo.g.6cabb3.mp3",
+"t": "Low-pitched, loud-footed, lamp-blind son of a slack link. Speak in the Narrow, or go up and shout at the Bleach."
+},
+"p94_bardo.g.aca6bd": {
+"auto": true,
+"d": 4.99,
+"kind": "greet",
+"speaker": "p94_bardo",
+"src": "voices/p94_bardo/p94_bardo.g.aca6bd.mp3",
+"t": "Whose are you? Never mind. Touch nothing that has a handle."
+},
+"p94_bardo.t.13864f": {
+"auto": true,
+"d": 17.21,
+"kind": "topic",
+"speaker": "p94_bardo",
+"src": "voices/p94_bardo/p94_bardo.t.13864f.mp3",
+"t": "The city sways, and the bones take it one after another, never two together. Count the row. When the seventh speaks, be standing on a pin. A link under a speaking chain will throw a man, and it does not care which."
+},
+"p94_bardo.t.54e59e": {
+"auto": true,
+"d": 18.12,
+"kind": "topic",
+"speaker": "p94_bardo",
+"src": "voices/p94_bardo/p94_bardo.t.54e59e.mp3",
+"t": "The nine come down out of the sky to the rim, through the rings, and on down through the frame to the keel. The city's bones. Since the light took the rim we cannot get at them from on top, so we keep them from underneath."
+},
+"p94_bardo.t.874bba": {
+"auto": true,
+"d": 12.6,
+"kind": "topic",
+"speaker": "p94_bardo",
+"src": "voices/p94_bardo/p94_bardo.t.874bba.mp3",
+"t": "Nineteen men, to jerking tethers. I cut each one in the housing, where I have to look at it. I do not say their names in here. The chains know them."
+},
+"p94_bardo.t.b3e51a": {
+"auto": true,
+"d": 12.29,
+"kind": "topic",
+"speaker": "p94_bardo",
+"src": "voices/p94_bardo/p94_bardo.t.b3e51a.mp3",
+"t": "The seventh's goods-cage. I pinned it up top myself, after the nineteenth, and may whoever knocks that pin out come back as a link on the wet side."
+},
+"p94_bardo.t.e96898": {
+"auto": true,
+"d": 21.7,
+"kind": "topic",
+"speaker": "p94_bardo",
+"src": "voices/p94_bardo/p94_bardo.t.e96898.mp3",
+"t": "Below the weights, in the keel, where the nine are made fast. The old capstan. Nobody has worked it since before my time, and it turns. I have nineteen strokes up here, and I have stood at the top of that stair and heard nineteen men hauling. I do not go down."
+},
+"p95_perpetua.g.a946cb": {
+"auto": true,
+"d": 6.02,
+"kind": "greet",
+"speaker": "p95_perpetua",
+"src": "voices/p95_perpetua/p95_perpetua.g.a946cb.mp3",
+"t": "You cast, I will say that for you. Do not drip on the linen."
+},
+"p95_perpetua.g.b3b43a": {
+"auto": true,
+"d": 4.97,
+"kind": "greet",
+"speaker": "p95_perpetua",
+"src": "voices/p95_perpetua/p95_perpetua.g.b3b43a.mp3",
+"t": "Light keep you true. Mind the hems, they are clean."
+},
+"p95_perpetua.g.da4906": {
+"auto": true,
+"d": 8.59,
+"kind": "greet",
+"speaker": "p95_perpetua",
+"src": "voices/p95_perpetua/p95_perpetua.g.da4906.mp3",
+"t": "Seven years I have had nobody to robe. Stand still and let me see the length of you."
+},
+"p95_perpetua.t.26a619": {
+"auto": true,
+"d": 29.26,
+"kind": "topic",
+"speaker": "p95_perpetua",
+"src": "voices/p95_perpetua/p95_perpetua.t.26a619.mp3",
+"t": "Two upstairs, keeping the winch. They let choir and bearers out of the mouth and nobody else. They look at the robe. They have never once looked at a face. Past the cage it is the Brother-Captain's half, Aurel Sant's. His men walk it in their own fire: the white parts round glass-fire."
+},
+"p95_perpetua.t.610c0f": {
+"auto": true,
+"d": 20.9,
+"kind": "topic",
+"speaker": "p95_perpetua",
+"src": "voices/p95_perpetua/p95_perpetua.t.610c0f.mp3",
+"t": "A kilometre, almost level, and not a roof on it but the cage. The Tiers teach it to their children as soon as they can walk: walk in the shade of the one ahead of you. If there is no one ahead of you, run."
+},
+"p95_perpetua.t.7e2e98": {
+"auto": true,
+"d": 21.48,
+"kind": "topic",
+"speaker": "p95_perpetua",
+"src": "voices/p95_perpetua/p95_perpetua.t.7e2e98.mp3",
+"t": "The white never goes out. But when the sun is up there are two lights on the chain, and the two together are more than anything can stand in. Go by night. Go at the dead hour if you can: it lies thinnest then."
+},
+"p95_perpetua.t.d98190": {
+"auto": true,
+"d": 29.62,
+"kind": "topic",
+"speaker": "p95_perpetua",
+"src": "voices/p95_perpetua/p95_perpetua.t.d98190.mp3",
+"t": "Bronze, forty feet across, at the back of the Altar. The only mirror in the Heights that is not a crime. It has gone white like everything, all but the middle, where they polish it every day with oil and ash. I have not seen it in seven years. I can tell you exactly what it looks like."
+},
+"p95_perpetua.t.fa46eb": {
+"auto": true,
+"d": 28.58,
+"kind": "topic",
+"speaker": "p95_perpetua",
+"src": "voices/p95_perpetua/p95_perpetua.t.fa46eb.mp3",
+"t": "Four hundred. I wash every one each spring and hang it back on its peg, and nobody has put one on since the Fracture but the choir. In the old days the whole city went out at dawn in these. You walked out over the gulf with the Spire on your right hand, shining, and you sang."
+},
+"p95_perpetua.t.fb6d72": {
+"auto": true,
+"d": 27.34,
+"kind": "topic",
+"speaker": "p95_perpetua",
+"src": "voices/p95_perpetua/p95_perpetua.t.fb6d72.mp3",
+"t": "Black silk on black poles. The Altar's people go out under them every day, the choir before dawn and the clerics after it to polish the Eye, like a procession of black mushrooms. Keep under one and the light goes on round you. Step out, and it begins."
+},
+"p95_warden.g.02551b": {
+"auto": true,
+"d": 1.78,
+"kind": "greet",
+"speaker": "p95_warden",
+"src": "voices/p95_warden/p95_warden.g.02551b.mp3",
+"t": "Light keep you true."
+},
+"p95_warden.g.9b8274": {
+"auto": true,
+"d": 1.66,
+"kind": "greet",
+"speaker": "p95_warden",
+"src": "voices/p95_warden/p95_warden.g.9b8274.mp3",
+"t": "State your office."
+},
+"p95_warden.g.e4f291": {
+"auto": true,
+"d": 3.7,
+"kind": "greet",
+"speaker": "p95_warden",
+"src": "voices/p95_warden/p95_warden.g.e4f291.mp3",
+"t": "Low-pitched. Speak up, or go back down the hole you came out of."
+},
+"p95_warden.t.3acbd8": {
+"auto": true,
+"d": 7.15,
+"kind": "topic",
+"speaker": "p95_warden",
+"src": "voices/p95_warden/p95_warden.t.3acbd8.mp3",
+"t": "Choir and bearers. Nobody else has walked the chain since the Fracture, and nobody else will while this winch is kept."
+},
+"p95_warden.t.e91d24": {
+"auto": true,
+"d": 2.76,
+"kind": "topic",
+"speaker": "p95_warden",
+"src": "voices/p95_warden/p95_warden.t.e91d24.mp3",
+"t": "There is one note. The second note is sin."
+},
+"p95_warden.t.eb4de4": {
+"auto": true,
+"d": 7.99,
+"kind": "topic",
+"speaker": "p95_warden",
+"src": "voices/p95_warden/p95_warden.t.eb4de4.mp3",
+"t": "Brother-Captain Sant has the far end, and the steps. His fire has not dipped in seven years. Ask him what yours is doing."
+},
+"p96c_cantor.g.604a29": {
+"auto": true,
+"d": 3.82,
+"kind": "greet",
+"speaker": "p96c_cantor",
+"src": "voices/p96c_cantor/p96c_cantor.g.604a29.mp3",
+"t": "Light keep you true. In this room we speak softly, and we listen."
+},
+"p96c_cantor.g.8ef1fe": {
+"auto": true,
+"d": 2.18,
+"kind": "greet",
+"speaker": "p96c_cantor",
+"src": "voices/p96c_cantor/p96c_cantor.g.8ef1fe.mp3",
+"t": "Light keep you true."
+},
+"p96c_cantor.g.c27934": {
+"auto": true,
+"d": 4.63,
+"kind": "greet",
+"speaker": "p96c_cantor",
+"src": "voices/p96c_cantor/p96c_cantor.g.c27934.mp3",
+"t": "Light keep you true. Sit, if you like, and keep the note company."
+},
+"p96c_cantor.t.3ab1c2": {
+"auto": true,
+"d": 4.2,
+"kind": "topic",
+"speaker": "p96c_cantor",
+"src": "voices/p96c_cantor/p96c_cantor.t.3ab1c2.mp3",
+"t": "We taught under the east window, before. We teach here now."
+},
+"p96c_cantor.t.da67a9": {
+"auto": true,
+"d": 3.77,
+"kind": "topic",
+"speaker": "p96c_cantor",
+"src": "voices/p96c_cantor/p96c_cantor.t.da67a9.mp3",
+"t": "The Church teaches that the second note is sin."
+},
+"p96c_cantor.t.e55d73": {
+"auto": true,
+"d": 6.38,
+"kind": "topic",
+"speaker": "p96c_cantor",
+"src": "voices/p96c_cantor/p96c_cantor.t.e55d73.mp3",
+"t": "Every soul holds one true note. Sin is the note going flat. Grace is the note held."
+},
+"p96c_treble.g.0e004e": {
+"auto": true,
+"d": 1.58,
+"kind": "greet",
+"speaker": "p96c_treble",
+"src": "voices/p96c_treble/p96c_treble.g.0e004e.mp3",
+"t": "Light keep you true."
+},
+"p96c_treble.g.62f5c8": {
+"auto": true,
+"d": 3.19,
+"kind": "greet",
+"speaker": "p96c_treble",
+"src": "voices/p96c_treble/p96c_treble.g.62f5c8.mp3",
+"t": "Light keep you true. Speak low, please. I am practising."
+},
+"p96c_treble.g.9cf692": {
+"auto": true,
+"d": 3.26,
+"kind": "greet",
+"speaker": "p96c_treble",
+"src": "voices/p96c_treble/p96c_treble.g.9cf692.mp3",
+"t": "You are very loud. Out there they would call that low-pitched."
+},
+"p96c_treble.t.618059": {
+"auto": true,
+"d": 3.34,
+"kind": "topic",
+"speaker": "p96c_treble",
+"src": "voices/p96c_treble/p96c_treble.t.618059.mp3",
+"t": "We may sing here. Out there nobody speaks above the Narrow."
+},
+"p96c_treble.t.99dadc": {
+"auto": true,
+"d": 4.51,
+"kind": "topic",
+"speaker": "p96c_treble",
+"src": "voices/p96c_treble/p96c_treble.t.99dadc.mp3",
+"t": "I am holding it. The Cantor says if I hold it every night it will hold itself."
+},
+"p96v_albinus.g.e56b79": {
+"auto": true,
+"d": 3.65,
+"kind": "greet",
+"speaker": "p96v_albinus",
+"src": "voices/p96v_albinus/p96v_albinus.g.e56b79.mp3",
+"t": "You are loud for a mountain. Light keep you true, all the same."
+},
+"p96v_albinus.g.f50090": {
+"auto": true,
+"d": 3.43,
+"kind": "greet",
+"speaker": "p96v_albinus",
+"src": "voices/p96v_albinus/p96v_albinus.g.f50090.mp3",
+"t": "Light keep you true. You came up a long way to see snow."
+},
+"p96v_albinus.t.2bcd85": {
+"auto": true,
+"d": 4.68,
+"kind": "topic",
+"speaker": "p96v_albinus",
+"src": "voices/p96v_albinus/p96v_albinus.t.2bcd85.mp3",
+"t": "She was here before any of us. She does not sleep much, and she will not be thanked."
+},
+"p96v_albinus.t.626419": {
+"auto": true,
+"d": 4.61,
+"kind": "topic",
+"speaker": "p96v_albinus",
+"src": "voices/p96v_albinus/p96v_albinus.t.626419.mp3",
+"t": "Twelve of us. There were more once. Nobody comes up the mountain to join now."
+},
+"p96v_clemence.g.b0b817": {
+"auto": true,
+"d": 3.65,
+"kind": "greet",
+"speaker": "p96v_clemence",
+"src": "voices/p96v_clemence/p96v_clemence.g.b0b817.mp3",
+"t": "You are loud for a mountain. Light keep you true, all the same."
+},
+"p96v_clemence.g.e31f13": {
+"auto": true,
+"d": 3.58,
+"kind": "greet",
+"speaker": "p96v_clemence",
+"src": "voices/p96v_clemence/p96v_clemence.g.e31f13.mp3",
+"t": "Light keep you true. Speak softly. The Abbess is resting."
+},
+"p96v_clemence.t.047c7d": {
+"auto": true,
+"d": 4.8,
+"kind": "topic",
+"speaker": "p96v_clemence",
+"src": "voices/p96v_clemence/p96v_clemence.t.047c7d.mp3",
+"t": "It does not go off the peaks, not even at the end of summer. We melt it for water."
+},
+"p96v_clemence.t.fbe72b": {
+"auto": true,
+"d": 4.46,
+"kind": "topic",
+"speaker": "p96v_clemence",
+"src": "voices/p96v_clemence/p96v_clemence.t.fbe72b.mp3",
+"t": "Twelve of us. There were more once. Nobody comes up the mountain to join now."
+},
+"p96v_coriel.g.06ddc4": {
+"auto": true,
+"d": 3.74,
+"kind": "greet",
+"speaker": "p96v_coriel",
+"src": "voices/p96v_coriel/p96v_coriel.g.06ddc4.mp3",
+"t": "Light keep you true. Sit, if you like. There is only the cot."
+},
+"p96v_coriel.g.8f96df": {
+"auto": true,
+"d": 4.8,
+"kind": "greet",
+"speaker": "p96v_coriel",
+"src": "voices/p96v_coriel/p96v_coriel.g.8f96df.mp3",
+"t": "Light keep you true. Come in, and shut the door. The cold gets into everything."
+},
+"p96v_coriel.g.c2938b": {
+"auto": true,
+"d": 2.33,
+"kind": "greet",
+"speaker": "p96v_coriel",
+"src": "voices/p96v_coriel/p96v_coriel.g.c2938b.mp3",
+"t": "Light keep you true, all the same."
+},
+"p96v_coriel.t.252f4b": {
+"auto": true,
+"d": 3.46,
+"kind": "topic",
+"speaker": "p96v_coriel",
+"src": "voices/p96v_coriel/p96v_coriel.t.252f4b.mp3",
+"t": "We ring it at dusk. It is the only thing that works."
+},
+"p96v_coriel.t.6f2fb9": {
+"auto": true,
+"d": 9.34,
+"kind": "topic",
+"speaker": "p96v_coriel",
+"src": "voices/p96v_coriel/p96v_coriel.t.6f2fb9.mp3",
+"t": "Something comes up the cliffs every night, out of the dark below. The bell holds it while it rings. If you go down by the postern, be up before the last stroke."
+},
+"p96v_coriel.t.b5d620": {
+"auto": true,
+"d": 5.16,
+"kind": "topic",
+"speaker": "p96v_coriel",
+"src": "voices/p96v_coriel/p96v_coriel.t.b5d620.mp3",
+"t": "Coriel. I am the Abbess of this house. There are twelve of us left. I am the oldest."
+},
+"p96v_coriel.t.d14829": {
+"auto": true,
+"d": 10.97,
+"kind": "topic",
+"speaker": "p96v_coriel",
+"src": "voices/p96v_coriel/p96v_coriel.t.d14829.mp3",
+"t": "I watched it. From the tower you can see the Spire, on a clear morning. Three hundred sunrises I stood up there and watched, and I did nothing. That is all there is to say about it."
+},
+"p96v_domitia.g.15727c": {
+"auto": true,
+"d": 3.74,
+"kind": "greet",
+"speaker": "p96v_domitia",
+"src": "voices/p96v_domitia/p96v_domitia.g.15727c.mp3",
+"t": "You are loud for a mountain. Light keep you true, all the same."
+},
+"p96v_domitia.g.168e6d": {
+"auto": true,
+"d": 4.01,
+"kind": "greet",
+"speaker": "p96v_domitia",
+"src": "voices/p96v_domitia/p96v_domitia.g.168e6d.mp3",
+"t": "Light keep you true. Are you hurt? Then go to the Abbess, not to me."
+},
+"p96v_domitia.t.ab8b55": {
+"auto": true,
+"d": 5.09,
+"kind": "topic",
+"speaker": "p96v_domitia",
+"src": "voices/p96v_domitia/p96v_domitia.t.ab8b55.mp3",
+"t": "She gives away what she needs. I scold her for it, and she does it again the next day."
+},
+"p96v_domitia.t.c419c7": {
+"auto": true,
+"d": 6.86,
+"kind": "topic",
+"speaker": "p96v_domitia",
+"src": "voices/p96v_domitia/p96v_domitia.t.c419c7.mp3",
+"t": "I keep the infirmary. Chilblains, mostly, and the old cough. Up here the cold is the only enemy you can see."
+},
+"p96v_fabian.g.6285f9": {
+"auto": true,
+"d": 4.25,
+"kind": "greet",
+"speaker": "p96v_fabian",
+"src": "voices/p96v_fabian/p96v_fabian.g.6285f9.mp3",
+"t": "You are loud for a mountain. Light keep you true, all the same."
+},
+"p96v_fabian.g.979a33": {
+"auto": true,
+"d": 3.43,
+"kind": "greet",
+"speaker": "p96v_fabian",
+"src": "voices/p96v_fabian/p96v_fabian.g.979a33.mp3",
+"t": "Light keep you true. Mind the ice on the step."
+},
+"p96v_fabian.t.57c847": {
+"auto": true,
+"d": 6.7,
+"kind": "topic",
+"speaker": "p96v_fabian",
+"src": "voices/p96v_fabian/p96v_fabian.t.57c847.mp3",
+"t": "Ring the bell on the post and somebody comes. Most of the winter nobody rings it at all."
+},
+"p96v_fabian.t.ba5c45": {
+"auto": true,
+"d": 5.3,
+"kind": "topic",
+"speaker": "p96v_fabian",
+"src": "voices/p96v_fabian/p96v_fabian.t.ba5c45.mp3",
+"t": "We do not get many. A ship on the shelf is a thing we talk about for a month."
+},
+"p96v_galen.g.3dcb1c": {
+"auto": true,
+"d": 5.33,
+"kind": "greet",
+"speaker": "p96v_galen",
+"src": "voices/p96v_galen/p96v_galen.g.3dcb1c.mp3",
+"t": "Light keep you true. Watch the sky. It changes fast up here."
+},
+"p96v_galen.g.b2110a": {
+"auto": true,
+"d": 4.75,
+"kind": "greet",
+"speaker": "p96v_galen",
+"src": "voices/p96v_galen/p96v_galen.g.b2110a.mp3",
+"t": "You are loud for a mountain. Light keep you true, all the same."
+},
+"p96v_galen.t.76e4ae": {
+"auto": true,
+"d": 5.95,
+"kind": "topic",
+"speaker": "p96v_galen",
+"src": "voices/p96v_galen/p96v_galen.t.76e4ae.mp3",
+"t": "She was here before any of us. She does not sleep much, and she will not be thanked."
+},
+"p96v_honoria.g.49be69": {
+"auto": true,
+"d": 3.53,
+"kind": "greet",
+"speaker": "p96v_honoria",
+"src": "voices/p96v_honoria/p96v_honoria.g.49be69.mp3",
+"t": "You are loud for a mountain. Light keep you true, all the same."
+},
+"p96v_honoria.g.f4ea54": {
+"auto": true,
+"d": 3.67,
+"kind": "greet",
+"speaker": "p96v_honoria",
+"src": "voices/p96v_honoria/p96v_honoria.g.f4ea54.mp3",
+"t": "Light keep you true. Walk on the flags. The garth is deep."
+},
+"p96v_honoria.t.57ef7a": {
+"auto": true,
+"d": 8.09,
+"kind": "topic",
+"speaker": "p96v_honoria",
+"src": "voices/p96v_honoria/p96v_honoria.t.57ef7a.mp3",
+"t": "On a clear morning you can see it from the tower, a white needle a long way off. You can see the crack in it. We do not look at it much."
+},
+"p96v_liviana.g.04b9b0": {
+"auto": true,
+"d": 3.6,
+"kind": "greet",
+"speaker": "p96v_liviana",
+"src": "voices/p96v_liviana/p96v_liviana.g.04b9b0.mp3",
+"t": "You are loud for a mountain. Light keep you true, all the same."
+},
+"p96v_liviana.g.69cbc0": {
+"auto": true,
+"d": 2.69,
+"kind": "greet",
+"speaker": "p96v_liviana",
+"src": "voices/p96v_liviana/p96v_liviana.g.69cbc0.mp3",
+"t": "Light keep you true. Do not lean on the parapet."
+},
+"p96v_liviana.t.ef0700": {
+"auto": true,
+"d": 4.82,
+"kind": "topic",
+"speaker": "p96v_liviana",
+"src": "voices/p96v_liviana/p96v_liviana.t.ef0700.mp3",
+"t": "She was here before any of us. She does not sleep much, and she will not be thanked."
+},
+"p96v_marcellin.g.234545": {
+"auto": true,
+"d": 3.5,
+"kind": "greet",
+"speaker": "p96v_marcellin",
+"src": "voices/p96v_marcellin/p96v_marcellin.g.234545.mp3",
+"t": "Light keep you true. We are not used to new faces."
+},
+"p96v_marcellin.g.952458": {
+"auto": true,
+"d": 4.08,
+"kind": "greet",
+"speaker": "p96v_marcellin",
+"src": "voices/p96v_marcellin/p96v_marcellin.g.952458.mp3",
+"t": "You are loud for a mountain. Light keep you true, all the same."
+},
+"p96v_marcellin.t.08c397": {
+"auto": true,
+"d": 8.28,
+"kind": "topic",
+"speaker": "p96v_marcellin",
+"src": "voices/p96v_marcellin/p96v_marcellin.t.08c397.mp3",
+"t": "On a clear morning you can see it from the tower, a white needle a long way off. You can see the crack in it. We do not look at it much."
+},
+"p96v_marcellin.t.4b2887": {
+"auto": true,
+"d": 5.71,
+"kind": "topic",
+"speaker": "p96v_marcellin",
+"src": "voices/p96v_marcellin/p96v_marcellin.t.4b2887.mp3",
+"t": "Sister Ottavia rings it at dusk. Whatever comes up the cliffs stops while it rings."
+},
+"p96v_ottavia.g.2c06d0": {
+"auto": true,
+"d": 2.54,
+"kind": "greet",
+"speaker": "p96v_ottavia",
+"src": "voices/p96v_ottavia/p96v_ottavia.g.2c06d0.mp3",
+"t": "Light keep you true. Do not touch the rope."
+},
+"p96v_ottavia.g.772fcd": {
+"auto": true,
+"d": 3.72,
+"kind": "greet",
+"speaker": "p96v_ottavia",
+"src": "voices/p96v_ottavia/p96v_ottavia.g.772fcd.mp3",
+"t": "You are loud for a mountain. Light keep you true, all the same."
+},
+"p96v_ottavia.t.203944": {
+"auto": true,
+"d": 7.46,
+"kind": "topic",
+"speaker": "p96v_ottavia",
+"src": "voices/p96v_ottavia/p96v_ottavia.t.203944.mp3",
+"t": "Twelve strokes at dusk. While it rings, whatever comes up the cliffs lets go of the rock. When it stops, it does not."
+},
+"p96v_ottavia.t.761634": {
+"auto": true,
+"d": 5.14,
+"kind": "topic",
+"speaker": "p96v_ottavia",
+"src": "voices/p96v_ottavia/p96v_ottavia.t.761634.mp3",
+"t": "It is mine to ring. My hands know the weight of it, and the bell knows my hands."
+},
+"p96v_prisca.g.4c9eb0": {
+"auto": true,
+"d": 3.5,
+"kind": "greet",
+"speaker": "p96v_prisca",
+"src": "voices/p96v_prisca/p96v_prisca.g.4c9eb0.mp3",
+"t": "You are loud for a mountain. Light keep you true, all the same."
+},
+"p96v_prisca.g.54e72d": {
+"auto": true,
+"d": 3.41,
+"kind": "greet",
+"speaker": "p96v_prisca",
+"src": "voices/p96v_prisca/p96v_prisca.g.54e72d.mp3",
+"t": "Light keep you true. Shut the gate behind you, when you go."
+},
+"p96v_prisca.t.50afd1": {
+"auto": true,
+"d": 4.44,
+"kind": "topic",
+"speaker": "p96v_prisca",
+"src": "voices/p96v_prisca/p96v_prisca.t.50afd1.mp3",
+"t": "She was here before any of us. She does not sleep much, and she will not be thanked."
+},
+"p96v_quintin.g.176856": {
+"auto": true,
+"d": 4.22,
+"kind": "greet",
+"speaker": "p96v_quintin",
+"src": "voices/p96v_quintin/p96v_quintin.g.176856.mp3",
+"t": "You are loud for a mountain. Light keep you true, all the same."
+},
+"p96v_quintin.g.27bd27": {
+"auto": true,
+"d": 3.91,
+"kind": "greet",
+"speaker": "p96v_quintin",
+"src": "voices/p96v_quintin/p96v_quintin.g.27bd27.mp3",
+"t": "Light keep you true. The wind is from the south today."
+},
+"p96v_quintin.t.44ebce": {
+"auto": true,
+"d": 5.74,
+"kind": "topic",
+"speaker": "p96v_quintin",
+"src": "voices/p96v_quintin/p96v_quintin.t.44ebce.mp3",
+"t": "She was here before any of us. She does not sleep much, and she will not be thanked."
+},
+"p96v_quintin.t.e65dfb": {
+"auto": true,
+"d": 9.86,
+"kind": "topic",
+"speaker": "p96v_quintin",
+"src": "voices/p96v_quintin/p96v_quintin.t.e65dfb.mp3",
+"t": "On a clear morning you can see it from the tower, a white needle a long way off. You can see the crack in it. We do not look at it much."
+},
+"p97_scav.g.bb1ea2": {
+"auto": true,
+"d": 4.39,
+"kind": "greet",
+"speaker": "p97_scav",
+"src": "voices/p97_scav/p97_scav.g.bb1ea2.mp3",
+"t": "Light keep you true. Mind the line. It does not look like anything."
+},
+"p97_scav.g.c2fc3e": {
+"auto": true,
+"d": 3.7,
+"kind": "greet",
+"speaker": "p97_scav",
+"src": "voices/p97_scav/p97_scav.g.c2fc3e.mp3",
+"t": "Light keep you true. You are a long way up for a stranger."
+},
+"p97_scav.g.db7961": {
+"auto": true,
+"d": 1.61,
+"kind": "greet",
+"speaker": "p97_scav",
+"src": "voices/p97_scav/p97_scav.g.db7961.mp3",
+"t": "Speak low or go down."
+},
+"p97_scav.t.34bd10": {
+"auto": true,
+"d": 10.2,
+"kind": "topic",
+"speaker": "p97_scav",
+"src": "voices/p97_scav/p97_scav.t.34bd10.mp3",
+"t": "He goes up every night, further than any of us, to the old market. He counts the ones who are still standing in it. Ask him why. He will tell you somebody should."
+},
+"p97_scav.t.56f618": {
+"auto": true,
+"d": 13.75,
+"kind": "topic",
+"speaker": "p97_scav",
+"src": "voices/p97_scav/p97_scav.t.56f618.mp3",
+"t": "There is a ring in the wall at the east end of the shelf. The line that goes on it is up in the garden, coiled on the parapet. Whoever gets up there by the streets can let it down, and after that it is one climb."
+},
+"p97_scav.t.6bdcff": {
+"auto": true,
+"d": 10.27,
+"kind": "topic",
+"speaker": "p97_scav",
+"src": "voices/p97_scav/p97_scav.t.6bdcff.mp3",
+"t": "Go at night. The dead hour if you can wait for it. Wrap your face and glove your hands. And keep quiet on the third tier: that street belongs to the choir."
+},
+"p97_scav.t.8944b7": {
+"auto": true,
+"d": 9.98,
+"kind": "topic",
+"speaker": "p97_scav",
+"src": "voices/p97_scav/p97_scav.t.8944b7.mp3",
+"t": "There, where the dark stops. Things left on it are not ours and not yours. Past it you go from shadow to shadow and you do not dawdle between."
+},
+"p97_tallyman.g.44c24c": {
+"auto": true,
+"d": 3.96,
+"kind": "greet",
+"speaker": "p97_tallyman",
+"src": "voices/p97_tallyman/p97_tallyman.g.44c24c.mp3",
+"t": "Light keep you true. Keep your voice where mine is."
+},
+"p97_tallyman.g.466b3e": {
+"auto": true,
+"d": 3.31,
+"kind": "greet",
+"speaker": "p97_tallyman",
+"src": "voices/p97_tallyman/p97_tallyman.g.466b3e.mp3",
+"t": "Low. Or go and be loud somewhere I am not."
+},
+"p97_tallyman.g.f1687c": {
+"auto": true,
+"d": 4.13,
+"kind": "greet",
+"speaker": "p97_tallyman",
+"src": "voices/p97_tallyman/p97_tallyman.g.f1687c.mp3",
+"t": "Light keep you true. Low. They are two streets down."
+},
+"p97_tallyman.t.5ba663": {
+"auto": true,
+"d": 18.91,
+"kind": "topic",
+"speaker": "p97_tallyman",
+"src": "voices/p97_tallyman/p97_tallyman.t.5ba663.mp3",
+"t": "Every night. I stand here and I count them, and I cut it on the pole, and I chalk it on the pillar. Fourteen. Thirteen. A long while at thirteen. Nine tonight. Nobody comes for them. They are only less, a little at a time, the way a gull goes in that light."
+},
+"p97_tallyman.t.82e5fe": {
+"auto": true,
+"d": 13.66,
+"kind": "topic",
+"speaker": "p97_tallyman",
+"src": "voices/p97_tallyman/p97_tallyman.t.82e5fe.mp3",
+"t": "Shadow to shadow, the way you cross a river on stones. Every shadow up here lies north. The dead hour is the kindest. By day I would not put my hand out of that arcade."
+},
+"p97_tallyman.t.aaba30": {
+"auto": true,
+"d": 12.26,
+"kind": "topic",
+"speaker": "p97_tallyman",
+"src": "voices/p97_tallyman/p97_tallyman.t.aaba30.mp3",
+"t": "It was a market on the morning it happened. You can see what they were doing. One was taking a coin. I do not know their names. I used to make names for them, and I stopped."
+},
+"p97_tallyman.t.ef47b6": {
+"auto": true,
+"d": 16.46,
+"kind": "topic",
+"speaker": "p97_tallyman",
+"src": "voices/p97_tallyman/p97_tallyman.t.ef47b6.mp3",
+"t": "They do not hear words. They hear noise. Run, and they hear you. Strike something, and they hear you. Sing, and they will come up a house to find the mouth it came out of. Walk, and keep your voice in your chest, and you are a wall to them."
+},
+"p97_tallyman.t.fd66f0": {
+"auto": true,
+"d": 10.06,
+"kind": "topic",
+"speaker": "p97_tallyman",
+"src": "voices/p97_tallyman/p97_tallyman.t.fd66f0.mp3",
+"t": "The street is shut above the market. I have not looked for a way round. Things live on the chains. I leave them be, and they leave the count be."
+},
+"p9_ada.g.2a0d25": {
+"auto": true,
+"d": 2.9,
+"kind": "greet",
+"speaker": "p9_ada",
+"src": "voices/p9_ada/p9_ada.g.2a0d25.mp3",
+"t": "Does it ring? True enough, I suppose. Keep it low."
+},
+"p9_ada.g.54c9ce": {
+"auto": true,
+"d": 6.48,
+"kind": "greet",
+"speaker": "p9_ada",
+"src": "voices/p9_ada/p9_ada.g.54c9ce.mp3",
+"t": "Good day to you. Softly. I sit out here more, now, under it. It does not sound, but I like to be under it."
+},
+"p9_ada.g.89b6ba": {
+"auto": true,
+"d": 5.52,
+"kind": "greet",
+"speaker": "p9_ada",
+"src": "voices/p9_ada/p9_ada.g.89b6ba.mp3",
+"t": "I have buried a husband and I have hung his reed twice. I will not be shouted at on my own step."
+},
+"p9_ada.t.a14237": {
+"auto": true,
+"d": 12.29,
+"kind": "topic",
+"speaker": "p9_ada",
+"src": "voices/p9_ada/p9_ada.t.a14237.mp3",
+"t": "Joram went in 418. The family holds the note until the body lets go, and in the old days it was sung out after. It cannot be now. The Hedge eats a note before it is halfway to the door."
+},
+"p9_ada.t.d7698d": {
+"auto": true,
+"d": 4.73,
+"kind": "topic",
+"speaker": "p9_ada",
+"src": "voices/p9_ada/p9_ada.t.d7698d.mp3",
+"t": "Seventy years in one street. It was louder when I was a girl. Everything was."
+},
+"p9_tomas.g.bc820b": {
+"auto": true,
+"d": 4.49,
+"kind": "greet",
+"speaker": "p9_tomas",
+"src": "voices/p9_tomas/p9_tomas.g.bc820b.mp3",
+"t": "I have one good hand and a bad temper. Choose which you want to speak to."
+},
+"p9_tomas.g.d16f73": {
+"auto": true,
+"d": 6.05,
+"kind": "greet",
+"speaker": "p9_tomas",
+"src": "voices/p9_tomas/p9_tomas.g.d16f73.mp3",
+"t": "The wagons do not creak any more. They hum. You feel it through the seat. A man could miss a creak."
+},
+"p9_tomas.g.dc6f26": {
+"auto": true,
+"d": 5.33,
+"kind": "greet",
+"speaker": "p9_tomas",
+"src": "voices/p9_tomas/p9_tomas.g.dc6f26.mp3",
+"t": "Does it ring? True enough. The wagon is loaded, and it hums, and I find I am used to it."
+},
+"p9_tomas.t.2886b2": {
+"auto": true,
+"d": 8.88,
+"kind": "topic",
+"speaker": "p9_tomas",
+"src": "voices/p9_tomas/p9_tomas.t.2886b2.mp3",
+"t": "Timber comes out of the clearing and goes into the town, and the Hedge takes the noise off it at the gate. I have wondered where the noise goes."
+},
+"p9_tomas.t.c209ca": {
+"auto": true,
+"d": 5.18,
+"kind": "topic",
+"speaker": "p9_tomas",
+"src": "voices/p9_tomas/p9_tomas.t.c209ca.mp3",
+"t": "The Synod counts timber by the load. It does not count what the load weighs on a man."
+},
 "pim.greet.normal": {
 "d": 2.11,
 "kind": "greet",
@@ -2295,6 +7136,14 @@ const VOICE_LINES = {
 "src": "voices/pim/pim.greet.polite.mp3",
 "t": "Shh. Mam says I'm not to talk to anybody about my hands.",
 "voiceOf": "pim"
+},
+"pim.t.32930f": {
+"auto": true,
+"d": 6.05,
+"kind": "topic",
+"speaker": "pim",
+"src": "voices/pim/pim.t.32930f.mp3",
+"t": "Something whistled my whistle from the culvert. Only me and Lyra know my whistle. I didn't go. I nearly went."
 },
 "pressman.alert.0": {
 "d": 3.58,
@@ -2509,6 +7358,30 @@ const VOICE_LINES = {
 "t": "Hot water? There is always hot water. Sit; the chair is clean. People hesitate less when the chair is clean.",
 "voiceOf": "quist"
 },
+"quist.t.1c1d68": {
+"auto": true,
+"d": 7.08,
+"kind": "topic",
+"speaker": "quist",
+"src": "voices/quist/quist.t.1c1d68.mp3",
+"t": "Seventy-four thousand, and not one of them filed. The Hush did that, not us. We are the only people who ever came back to write them down."
+},
+"quist.t.3034e0": {
+"auto": true,
+"d": 11.33,
+"kind": "topic",
+"speaker": "quist",
+"src": "voices/quist/quist.t.3034e0.mp3",
+"t": "We do not harvest, whatever the pamphlets in the Reach say. We relieve. A man walks out of the Greening with his whole life on his back and nowhere to put it down. We take it from him. Most of them look relieved at six seconds."
+},
+"quist.t.faba49": {
+"auto": true,
+"d": 8.3,
+"kind": "topic",
+"speaker": "quist",
+"src": "voices/quist/quist.t.faba49.mp3",
+"t": "Sable. I taught her to rule a page. Ruler, nib, blotter; she had the straightest hand I ever saw. She designed the harvest schedule herself, you know. I only signed it."
+},
 "requiem.coda.1": {
 "d": 2.59,
 "kind": "mimic",
@@ -2655,6 +7528,14 @@ const VOICE_LINES = {
 "t": "I have cut more limbs than any butcher in the Reach and done every one with care. Sit. I will not chalk your door today.",
 "voiceOf": "rooke"
 },
+"rooke.t.ff0642": {
+"auto": true,
+"d": 9.74,
+"kind": "topic",
+"speaker": "rooke",
+"src": "voices/rooke/rooke.t.ff0642.mp3",
+"t": "The Synod sends the saws. I hold them. Somebody has to hold them who will stop when the patient asks. The Inquisitor has asked for my list of sap-marks. I have been slow to find it."
+},
 "sable.cutter.courier": {
 "d": 16.68,
 "kind": "narration",
@@ -2696,6 +7577,14 @@ const VOICE_LINES = {
 "speaker": "sable",
 "src": "voices/sable/sable.cutter.sad.mp3",
 "t": "Everything here is dangerous, Captain. That one is only sad."
+},
+"sable.g.ab822b": {
+"auto": true,
+"d": 6.6,
+"kind": "greet",
+"speaker": "sable",
+"src": "voices/sable/sable.g.ab822b.mp3",
+"t": "Entry: the Deep Woods. One wreck, twenty-six souls, a press, and me."
 },
 "sable.greet.blunt": {
 "d": 5.86,
@@ -2819,6 +7708,78 @@ const VOICE_LINES = {
 "src": "voices/sable/sable.hymn9.sung.mp3",
 "t": "Hold us in the little light \u2014 hold us in the little light until the morning comes\u2014"
 },
+"sable.t.0ba267": {
+"auto": true,
+"d": 18.67,
+"kind": "topic",
+"speaker": "sable",
+"src": "voices/sable/sable.t.0ba267.mp3",
+"t": "Entry: the subject asks the subject about the subject. Sable is a Veil designation. My own name is one of the three things I have left, and I do not spend it on strangers."
+},
+"sable.t.11c98f": {
+"auto": true,
+"d": 18.82,
+"kind": "topic",
+"speaker": "sable",
+"src": "voices/sable/sable.t.11c98f.mp3",
+"t": "I hold the manifests for every core that captain has carried. Eleven consignments. I know the total. He does not want to. One day I will read it to him, one name at a time."
+},
+"sable.t.311f33": {
+"auto": true,
+"d": 16.7,
+"kind": "topic",
+"speaker": "sable",
+"src": "voices/sable/sable.t.311f33.mp3",
+"t": "Crystallized song. A voice, bled out and set. I can read the name off a core the way you would read a label off a jar. That is what the Veil trained me for."
+},
+"sable.t.881c81": {
+"auto": true,
+"d": 22.66,
+"kind": "topic",
+"speaker": "sable",
+"src": "voices/sable/sable.t.881c81.mp3",
+"t": "Two hundred and six Hollows in the Sunken Court. I read twenty names a night. Ten years and two hundred and twenty days to finish, and then you start again, because by then the first ones have stopped answering to them."
+},
+"sable.t.90f2d6": {
+"auto": true,
+"d": 18.0,
+"kind": "topic",
+"speaker": "sable",
+"src": "voices/sable/sable.t.90f2d6.mp3",
+"t": "I have read his calibration records. Two percent survival at Stage Nine. He wrote that number himself, in a very steady hand, and then he went and lived outside a hedge."
+},
+"sable.t.babd00": {
+"auto": true,
+"d": 16.22,
+"kind": "topic",
+"speaker": "sable",
+"src": "voices/sable/sable.t.babd00.mp3",
+"t": "Stage Nine of the Vance Sequence. I filed it. The Cantor goes down in white because I wrote 'in white' on the form, so that she would not be mistaken for staff."
+},
+"sable.t.e07af3": {
+"auto": true,
+"d": 38.35,
+"kind": "topic",
+"speaker": "sable",
+"src": "voices/sable/sable.t.e07af3.mp3",
+"t": "A courier-cutter cannot carry anything heavier than paper and proctors. She was not carrying; she was listening, to four hundred and thirty-two cores murmuring in our hold. If there is anything under her hatch it is evidence: the Office seizes vox-bottles off the Rust Coast boats. If you open that hold, do not unstopper them in the dark. Quiets come through an open bottle like water through a sluice."
+},
+"sable.t.e35414": {
+"auto": true,
+"d": 15.55,
+"kind": "topic",
+"speaker": "sable",
+"src": "voices/sable/sable.t.e35414.mp3",
+"t": "Entry: the Hush does not take names. It takes the people and leaves the names lying about, like coats. The Catalogue only learned to pick them up."
+},
+"sable.t.e9bbeb": {
+"auto": true,
+"d": 12.05,
+"kind": "topic",
+"speaker": "sable",
+"src": "voices/sable/sable.t.e9bbeb.mp3",
+"t": "I did not merely sign the catalogue. I designed the harvest schedule. I made it efficient. That is what I was good at."
+},
 "sable_dw.greet.blunt": {
 "d": 2.18,
 "kind": "greet",
@@ -2914,6 +7875,22 @@ const VOICE_LINES = {
 "src": "voices/tam/tam.greet.polite.mp3",
 "t": "Sit if you like. She comes on the water about this time. You will hear her if you keep still.",
 "voiceOf": "tam"
+},
+"tam.t.19fb9c": {
+"auto": true,
+"d": 10.15,
+"kind": "topic",
+"speaker": "tam",
+"src": "voices/tam/tam.t.19fb9c.mp3",
+"t": "Everyone says never answer it. I know what they say. I say she gets the second verse right, and the Hedge could not know the second verse."
+},
+"tam.t.d75c4b": {
+"auto": true,
+"d": 26.3,
+"kind": "topic",
+"speaker": "tam",
+"src": "voices/tam/tam.t.d75c4b.mp3",
+"t": "My Essa. Forty years dead, near enough; the pox took her the year the old king went into the glass. She used to call me Tammy. Nobody else ever did, before or since. And now something out past the thorn calls me Tammy, three or four nights in the eight, and three nights ago it came up the Flume in her voice, singing The Miller's Daughter, which is ours. Mine and hers."
 },
 "tobiah.cutter.line": {
 "d": 3.26,
@@ -3023,6 +8000,22 @@ const VOICE_LINES = {
 "t": "Sir, what's that?",
 "voiceOf": "tobiah"
 },
+"tobiah.t.0b7910": {
+"auto": true,
+"d": 9.29,
+"kind": "topic",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.t.0b7910.mp3",
+"t": "I learned the Vance Sequence at fourteen. I asked its author to sign my copy. He did. Then he looked at it for a long time and told me to keep the charts somewhere the Factor would not look."
+},
+"tobiah.t.ca429c": {
+"auto": true,
+"d": 13.63,
+"kind": "topic",
+"speaker": "tobiah",
+"src": "voices/tobiah/tobiah.t.ca429c.mp3",
+"t": "Three bolts of silk to close the hole and a relief valve to stop her bursting the patch the first time Vane gets clever. Then hops. Forty miles, down, cool the tank, forty miles. It'll be like crossing a river on stepping-stones, if the stones were on fire."
+},
 "tobiah_dw.greet.blunt": {
 "d": 4.37,
 "kind": "greet",
@@ -3115,6 +8108,86 @@ const VOICE_LINES = {
 "speaker": "tuningman",
 "src": "voices/tuningman/tuningman.bell.match.mp3",
 "t": "Five-twenty-eight, holding, five-twenty-eight, bore to five-twenty-eight."
+},
+"umber.g.31b0d1": {
+"auto": true,
+"d": 7.03,
+"kind": "greet",
+"speaker": "umber",
+"src": "voices/umber/umber.g.31b0d1.mp3",
+"t": "Entry: a stranger, polite, at the wrong end of the continent. Sit. Not there. That is where the proctors will come from."
+},
+"umber.g.7ec06b": {
+"auto": true,
+"d": 4.66,
+"kind": "greet",
+"speaker": "umber",
+"src": "voices/umber/umber.g.7ec06b.mp3",
+"t": "Precision, please. I was trained to record everything, including the tone."
+},
+"umber.g.add6fd": {
+"auto": true,
+"d": 3.58,
+"kind": "greet",
+"speaker": "umber",
+"src": "voices/umber/umber.g.add6fd.mp3",
+"t": "I am a day-book, not a cure. Say what you came to say."
+},
+"umber.t.2c78c4": {
+"auto": true,
+"d": 8.9,
+"kind": "topic",
+"speaker": "umber",
+"src": "voices/umber/umber.t.2c78c4.mp3",
+"t": "I copied the harvest schedule fair, fourteen times, in a straight hand. Sable designed it. I only made it legible. That is what I was good at."
+},
+"umber.t.32e9fe": {
+"auto": true,
+"d": 16.13,
+"kind": "topic",
+"speaker": "umber",
+"src": "voices/umber/umber.t.32e9fe.mp3",
+"t": "Umber is a Veil designation, as Sable is. She is the last archivist of the Silent Veil, and she is in Whisper-Grove, reading names to the drowned, twenty a night. I was her junior. I could not stay and read with her, and I could not leave either, so I am here, which is neither."
+},
+"umber.t.78b2d9": {
+"auto": true,
+"d": 12.41,
+"kind": "topic",
+"speaker": "umber",
+"src": "voices/umber/umber.t.78b2d9.mp3",
+"t": "Eleven consignments to Whisper-Grove. The archivist there holds the manifests and knows the total. I copied the totals and did not add them up. One day she will read it to him, one name at a time."
+},
+"umber.t.ae1657": {
+"auto": true,
+"d": 8.98,
+"kind": "topic",
+"speaker": "umber",
+"src": "voices/umber/umber.t.ae1657.mp3",
+"t": "Entry: the Hush does not take names. It takes the people and leaves the names lying about, like coats. The Catalogue only learned to pick them up."
+},
+"umber.t.ba51a4": {
+"auto": true,
+"d": 11.78,
+"kind": "topic",
+"speaker": "umber",
+"src": "voices/umber/umber.t.ba51a4.mp3",
+"t": "I have seen his calibration records; Sable kept them. Two percent survival at Stage Nine, in a very steady hand. He lives outside a hedge now, and I am told the hounds will not touch him."
+},
+"umber.t.c93744": {
+"auto": true,
+"d": 10.13,
+"kind": "topic",
+"speaker": "umber",
+"src": "voices/umber/umber.t.c93744.mp3",
+"t": "Stage Nine of the Vance Sequence. Sable filed it. I ruled the lines on the form. 'In white' is in her hand, so that the Cantor would not be mistaken for staff."
+},
+"umber.t.e9ac01": {
+"auto": true,
+"d": 9.53,
+"kind": "topic",
+"speaker": "umber",
+"src": "voices/umber/umber.t.e9ac01.mp3",
+"t": "Crystallized song. A voice, bled out and set. I can read the name off a core the way you would read a label off a jar. That is what the Veil trained me for."
 },
 "vane.cutter.breathe": {
 "d": 4.37,
@@ -3413,6 +8486,78 @@ const VOICE_LINES = {
 "src": "voices/vane/vane.rope.up.mp3",
 "t": "Up. Mags, up, get them..."
 },
+"vane.t.3c3a96": {
+"auto": true,
+"d": 12.36,
+"kind": "topic",
+"speaker": "vane",
+"src": "voices/vane/vane.t.3c3a96.mp3",
+"t": "One thousand three hundred and forty-two. I know the number now. I didn't want to; somebody made me hear it. The Office has me in a file under \"reliable, does not ask questions.\" I am asking questions now. Loudly."
+},
+"vane.t.67a1ce": {
+"auto": true,
+"d": 7.2,
+"kind": "topic",
+"speaker": "vane",
+"src": "voices/vane/vane.t.67a1ce.mp3",
+"t": "I carry one. Labelled with a name I won't say. Almost certainly a fake. I have never unstopped it, and I think about it every night."
+},
+"vane.t.90307c": {
+"auto": true,
+"d": 7.2,
+"kind": "topic",
+"speaker": "vane",
+"src": "voices/vane/vane.t.90307c.mp3",
+"t": "North. Big marble thing in a ring of graves. The Cantor wants to go there. I'm not going to be the man who tells the Cantor no."
+},
+"vane.t.a1f03f": {
+"auto": true,
+"d": 8.69,
+"kind": "topic",
+"speaker": "vane",
+"src": "voices/vane/vane.t.a1f03f.mp3",
+"t": "Twenty-one souls, a hold that murmurs, and a lift-tank with a weep in the seam. She'll get us off this water. Further than that I won't promise anybody."
+},
+"vane.t.a7757d": {
+"auto": true,
+"d": 13.7,
+"kind": "topic",
+"speaker": "vane",
+"src": "voices/vane/vane.t.a7757d.mp3",
+"t": "She went down east of here with the willow-crown in her bow. Her listening-horn will still be working; those things outlive their crews. It was our hold she was listening to. Four hundred and thirty-two, murmuring. We're a bell. I've been ringing it for two years."
+},
+"vane.t.be2fd0": {
+"auto": true,
+"d": 8.42,
+"kind": "topic",
+"speaker": "vane",
+"src": "voices/vane/vane.t.be2fd0.mp3",
+"t": "Twelve crates of replacement cores for the quarry garrison. I don't ask what's in them. I have been very carefully not asking for two years. It is a skill."
+},
+"vane.t.d74c96": {
+"auto": true,
+"d": 9.58,
+"kind": "topic",
+"speaker": "vane",
+"src": "voices/vane/vane.t.d74c96.mp3",
+"t": "I've flown over it twice with cargo. Never put down. You don't, here. The Hollows walk out across the water toward the ladder like they've been waiting for a ship, and then they walk back."
+},
+"vane.t.e5882b": {
+"auto": true,
+"d": 8.16,
+"kind": "topic",
+"speaker": "vane",
+"src": "voices/vane/vane.t.e5882b.mp3",
+"t": "Bought with money I'd rather not discuss, from people I'd rather not name. She holds eighteen if nobody's fat and she lifts with three tanks."
+},
+"vane.t.ef8fec": {
+"auto": true,
+"d": 11.98,
+"kind": "topic",
+"speaker": "vane",
+"src": "voices/vane/vane.t.ef8fec.mp3",
+"t": "She'll fly. Forty-mile hops, if Tobiah can close the tank and stop the seam weeping. Further than that, she needs a whole new lift-tank, and there's only one coast that sells them without asking whose ship it is."
+},
 "vane_dw.greet.blunt": {
 "d": 4.27,
 "kind": "greet",
@@ -3516,6 +8661,22 @@ const VOICE_LINES = {
 "src": "voices/vosk/vosk.rite.stepaway.mp3",
 "t": "Engineer Vance, step away from the drum.",
 "voiceOf": "vosk"
+},
+"vosk.t.0e0304": {
+"auto": true,
+"d": 9.74,
+"kind": "topic",
+"speaker": "vosk",
+"src": "voices/vosk/vosk.t.0e0304.mp3",
+"t": "Stage Nine. Source: Cantor, local, one. Collar: standard. Wire: standard. It is a procedure, not a sacrifice. The Church likes the robes; we like the yield."
+},
+"vosk.t.528e06": {
+"auto": true,
+"d": 9.1,
+"kind": "topic",
+"speaker": "vosk",
+"src": "voices/vosk/vosk.t.528e06.mp3",
+"t": "A resource. It will yield without limit if correctly relieved. That is the Arbiterium's phrasing, not mine, and I confess I do not entirely follow it."
 },
 "wearer.coda.0": {
 "d": 3.0,
@@ -3805,6 +8966,33 @@ const VOICE_LINES = {
 "src": "voices/weaver/weaver.voice.5.mp3",
 "t": "Seven forty-one. I wrote it down myself.",
 "voiceOf": "kaelen"
+},
+"wren.g.a8f89f": {
+"auto": true,
+"d": 1.2,
+"kind": "greet",
+"match": "Hello,",
+"speaker": "wren",
+"src": "voices/wren/wren.g.a8f89f.mp3",
+"t": "Hello, hello."
+},
+"wren.t.34dd04": {
+"auto": true,
+"d": 7.15,
+"kind": "topic",
+"match": "She's teaching me the skipping one. Too loud brings the hounds, too still brings the Hush.",
+"speaker": "wren",
+"src": "voices/wren/wren.t.34dd04.mp3",
+"t": "She's teaching me the skipping one. Too loud brings the hounds, too still brings the Hush. You have to be in the middle. That's called the Narrow."
+},
+"wren.t.e2c4dd": {
+"auto": true,
+"d": 7.7,
+"kind": "topic",
+"match": "They don't talk. Mam said that's holy. Mam said if I sang nice the Quiet would come and be kind to me.",
+"speaker": "wren",
+"src": "voices/wren/wren.t.e2c4dd.mp3",
+"t": "They don't talk. Mam said that's holy. Mam said if I sang nice the Quiet would come and be kind to me. It wasn't going to be kind, was it."
 },
 "wren_dw.greet.normal.1": {
 "d": 0.84,

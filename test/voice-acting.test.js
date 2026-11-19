@@ -21,7 +21,7 @@ const ROOT = path.join(__dirname, '..');
   for (const id of ids) {
     const f = path.join(ROOT, L[id].src);
     assert.ok(fs.existsSync(f), 'file for ' + id); bytes += fs.statSync(f).size;
-    assert.ok(L[id].d > 0.2 && L[id].d < 20, id + ' has a sane duration ' + L[id].d);
+    assert.ok(L[id].d > 0.2 && L[id].d < (L[id].kind === 'topic' ? 45 : 20), id + ' has a sane duration ' + L[id].d);   // a topic answer can be a whole speech
   }
   const onDisk = [];
   (function walk(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (p.endsWith('.mp3')) onDisk.push(path.relative(ROOT, p)); } })(path.join(ROOT, 'voices'));
@@ -38,7 +38,20 @@ const ROOT = path.join(__dirname, '..');
   const SILENT = ['quiet', 'hushmoth', 'tongueless', 'hushwarden', 'cat'];
   for (const l of script.lines) {
     assert.ok(!SILENT.includes(l.speaker), 'a silent character has no line: ' + l.id);
-    assert.ok(l.source === 'PROPOSED' || /\.js\b/.test(l.source), l.id + ' names its source');
+    assert.ok(l.source === 'PROPOSED' || /\.js\b/.test(l.source) || (l.auto && /^NPCS\.\w+\.(greet|topics)\./.test(l.source)), l.id + ' names its source');
+  }
+  // (Phase 102) the automatic casting gives a woman's portrait a woman's voice and a man's a man's
+  { const dlg = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/voices/dialogue.json'), 'utf8'));
+    const auto = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/voices/cast_auto.json'), 'utf8'));
+    const wrong = [];
+    for (const [id, c] of Object.entries(auto)) {
+      const p = dlg[id]; if (!p || !p.portrait) continue;
+      const child = (c.fx || []).some((f) => f === 'child'), woman = /^[ab]f_/.test(c.voice);
+      if (child) continue;
+      if (p.portrait === 'townswoman' && !woman) wrong.push(id + ' (woman, ' + c.voice + ')');
+      if (p.portrait === 'townsman' && woman) wrong.push(id + ' (man, ' + c.voice + ')');
+    }
+    assert.deepEqual(wrong, [], 'every automatic voice matches its portrait');
   }
   const kinds = {}; for (const id of ids) kinds[L[id].kind] = (kinds[L[id].kind] || 0) + 1;
   console.log('PASS files: ' + ids.length + ' lines, ' + (bytes / 1048576).toFixed(1) + ' MB, kinds ' + JSON.stringify(kinds));
@@ -111,6 +124,34 @@ const ROOT = path.join(__dirname, '..');
         talk({ id: 'lyra_wg', x: Engine.cam.x + 1, y: Engine.cam.y, kind: 'npc' });
         check(played.length === 0, 'voiceless Lyra plays no recording'); closeModal(); G.state = 'play';
         delete G.flags.lyra_wg_met;
+        // 5b. (Phase 102) answers: a person's own topic answer plays their recording; a shared answer and a stage
+        //     direction play nothing; General Ward's greeting is said by Ninety-Four
+        {
+          const at = (id) => ({ id, x: Engine.cam.x + 1, y: Engine.cam.y, kind: 'npc' });
+          VOICES.resetLimits(); played.length = 0; DLG.tone = 'normal';
+          talk(at('p100_211')); played.length = 0;
+          const own = Object.keys(NPCS.p100_211.topics)[0]; askTopic(own); renderDialogue();
+          check(played.length === 1 && VOICE_ACT.LINES[played[0]].speaker === 'p100_211' && VOICE_ACT.LINES[played[0]].kind === 'topic', 'a topic answer plays the speaker\'s own recording (' + played[0] + ')');
+          renderDialogue(); check(played.length === 1, 'and not again when the conversation is redrawn');
+          const shared = Object.keys(TOPICS).find((t) => !(t in NPCS.p100_211.topics));
+          played.length = 0; const R = Math.random; Math.random = () => 0.99;   // no blunt refusal, no rumour, no blessing
+          try { DLG.tone = 'normal'; askTopic(shared); renderDialogue(); } finally { Math.random = R; }
+          check(played.length === 0, 'a shared answer from TOPICS plays nothing (' + shared + ')');
+          closeModal(); G.state = 'play';
+          VOICES.resetLimits(); played.length = 0; DLG.tone = 'normal';
+          talk(at('p100_ward'));
+          check(played.length === 1 && VOICE_ACT.LINES[played[0]].speaker === 'p100_94' && VOICE_ACT.LINES[played[0]].for === 'p100_ward', 'the General\'s greeting is said aloud by Ninety-Four (' + played[0] + ')');
+          closeModal(); G.state = 'play';
+          VOICES.resetLimits(); played.length = 0; DLG.tone = 'blunt';
+          const _sq = NPCS.sexton.quest; NPCS.sexton.quest = () => null;
+          try { talk(at('sexton')); } finally { NPCS.sexton.quest = _sq; }
+          check(G.state === 'dialogue' && played.length === 0 && /^He does not stop digging/.test(DLG.log[0].t), 'a stage direction plays nothing (' + String(DLG.log[0] && DLG.log[0].t).slice(0, 40) + ')');
+          closeModal(); G.state = 'play';
+        }
+        // 5c. a person's own line plays only in a conversation with them, never off a stray message with the same words
+        { const a = Object.keys(VOICE_ACT.LINES).find((k) => VOICE_ACT.LINES[k].auto && VOICE_ACT.LINES[k].kind === 'greet');
+          VOICES.resetLimits(); played.length = 0; msg('Somebody nearby says: ' + VOICE_ACT.LINES[a].t, '', 3000);
+          check(played.length === 0, 'a message with a person\'s words does not play their recording (' + a + ')'); }
         // 6. Grunts and Off never play recordings
         for (const m of ['grunts', 'off']) {
           VOICES.setMode(m); VOICES.resetLimits(); played.length = 0; DLG.tone = 'polite';

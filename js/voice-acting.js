@@ -10,6 +10,9 @@
 //   barks      - speaking enemy families (Office, Carillon, the Quiet Faith, the cutter's crew) say a recorded line
 //                on alert / hurt / death; a boss says its intro on its first alert of a visit and its defeat line.
 //   spoken msgs- boss mimicry, Hollow fragments, companions: any message whose words match a recorded line plays it.
+//   answers    - (Phase 102) every person's own topic answers, and the greetings tools/voices/extract.py added, play when
+//                they appear in the conversation (renderDialogue); a line marked `for` is said by someone else on that
+//                person's behalf (General Ward's iron-cant, said aloud by Ninety-Four). The shared TOPICS answers stay unvoiced.
 // Silent characters stay silent (VOICES.resolve decides). Nothing is saved; nothing here touches G.flags.
 // Setting: Options > Graphics & access > Voices: Voiced (default) / Voiced + read aloud / Grunts / Off.
 'use strict';
@@ -18,7 +21,7 @@ const VOICE_ACT = (() => {
   const audioRnd = (() => { let s = (Date.now() ^ 0x5bd1e995) >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; })();
   const LINES = (typeof VOICE_LINES !== 'undefined' && VOICE_LINES) ? VOICE_LINES : {};
   const norm = (s) => String(s).toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
-  const index = Object.keys(LINES).map((id) => ({ id, ...LINES[id], n: norm(LINES[id].t || '') })).filter((l) => l.n.length >= 2);
+  const index = Object.keys(LINES).map((id) => ({ id, ...LINES[id], n: norm(LINES[id].match || LINES[id].t || '') })).filter((l) => l.n.length >= 2);
   const bySpeakerKind = {};
   for (const l of index) (bySpeakerKind[l.speaker + ':' + l.kind] = bySpeakerKind[l.speaker + ':' + l.kind] || []).push(l);
   const st = { played: 0, last: null, current: null, failed: 0, introsDone: new Set(), lastMsgAt: {} };
@@ -64,7 +67,7 @@ const VOICE_ACT = (() => {
     let best = null;
     for (const l of index) {
       if (kinds && !kinds.includes(l.kind)) continue;
-      if (speakers && !speakers.includes(l.speaker)) continue;
+      if (speakers && !speakers.includes(l.speaker) && !(l.for && speakers.includes(l.for))) continue;
       if (n.includes(' ' + l.n + ' ') && (!best || l.n.length > best.n.length)) best = l;
     }
     return best;
@@ -77,14 +80,21 @@ const VOICE_ACT = (() => {
   }
 
   // called by VOICES.play before it synthesizes a grunt; returns seconds when a recorded line took the event
+  // the speakers whose recordings may answer for this person: their own, their painting's, and anyone speaking for them
+  function speakersOf(id) {
+    const out = [baseOf(id), String(id)];
+    if (typeof NPCS !== 'undefined' && NPCS[id] && NPCS[id].sprite) out.push(NPCS[id].sprite);
+    return out;
+  }
   function handle(kind, id, ev, pr) {
-    if (pr && pr.silent) return 0;
+    if (pr && pr.silent && !(kind === 'npc' && ev === 'greet' && index.some((l) => l.for === String(id)))) return 0;
     if (kind === 'npc' && ev === 'greet') {
       const t = greetText(); if (!t) return 0;
       const base = baseOf(id);
       const speakers = pr && pr.why === 'her own ruined voice' ? ['lyra_ruined'] : null;
-      const l = find(t, ['greet'], speakers);
-      if (!l || (l.speaker !== base && !(speakers && speakers.includes(l.speaker)) && !(typeof NPCS !== 'undefined' && NPCS[id] && NPCS[id].sprite === l.speaker))) return 0;
+      const l = find(t, ['greet'], speakers || speakersOf(id));
+      if (!l) return 0;
+      st.said = DLG.log[0];
       return api.playLine(l, { interrupt: true });
     }
     if (kind === 'enemy') {
@@ -104,7 +114,11 @@ const VOICE_ACT = (() => {
   }
 
   // true when a recorded line says this text (so "read aloud" does not say it a second time)
-  function covers(text) { return !!find(text, null, null) && ['acted', 'spoken'].includes(VOICES.mode); }
+  function covers(text) {
+    const l = find(text, null, null);
+    if (!l || !['acted', 'spoken'].includes(VOICES.mode)) return false;
+    return !l.auto || (typeof G !== 'undefined' && G.state === 'dialogue');   // a person's own line covers their words only in conversation
+  }
 
   // Lyra's own lines follow the game's voice rules: her clear voice only before the Grove, her ruined one after lyra_voice
   function mayspeak(l) {
@@ -117,14 +131,38 @@ const VOICE_ACT = (() => {
   function onMsg(text, cls) {
     if (typeof VOICES === 'undefined' || !['acted', 'spoken'].includes(VOICES.mode)) return;
     const l = find(text, ['mimic', 'boss', 'companion', 'greet', 'intro', 'defeat', 'death'], null);
-    if (!l || !mayspeak(l)) return;
+    if (!l || l.auto || !mayspeak(l)) return;   // a person's own dialogue plays only in a conversation with them
     const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
     if (st.lastMsgAt[l.id] && now - st.lastMsgAt[l.id] < 1500) return;   // the same message twice in a row
     st.lastMsgAt[l.id] = now;
     api.playLine(l, { interrupt: l.kind !== 'companion' });
   }
 
+  // a person's answer, as it appears in the conversation: their own recording of those words, if there is one
+  function onAnswer() {
+    if (typeof VOICES === 'undefined' || !['acted', 'spoken'].includes(VOICES.mode)) return;
+    if (typeof DLG === 'undefined' || !Array.isArray(DLG.log) || !DLG.log.length || !DLG.ent || typeof G === 'undefined' || G.state !== 'dialogue') return;
+    const last = DLG.log[DLG.log.length - 1];
+    if (!last || last.who !== 'them' || last === st.said) return;
+    st.said = last;
+    const id = String(DLG.ent.id);
+    // the greeting: VOICES.play's 'greet' already took it (and a quest's opening stays unvoiced); but VOICES.play says
+    // nothing at all for a silent person, so one whom somebody speaks for (General Ward) is greeted from here
+    const spoken = index.some((l) => l.for === id);
+    if (DLG.log.length === 1 && !spoken) return;
+    const l = DLG.log.length === 1 ? find(String(last.t || ''), ['greet'], [id]) : find(String(last.t || ''), ['topic', 'greet'], speakersOf(id));
+    if (l) api.playLine(l, { interrupt: true });
+  }
+
   function wire() {
+    if (typeof renderDialogue === 'function') {
+      const _rd = renderDialogue;
+      renderDialogue = function () {
+        const r = _rd.apply(this, arguments);
+        try { onAnswer(); } catch (e) { console.warn('voice answer failed', e); }
+        return r;
+      };
+    }
     if (typeof msg === 'function') {
       const _msg = msg;
       msg = function (text, cls) {
@@ -147,7 +185,7 @@ const VOICE_ACT = (() => {
   }
   wire();
   // calls go through this object, so a test or a mod can observe or replace playback
-  const api = { LINES, index, state: st, handle, find, covers, playLine, onMsg, preload: (id) => LINES[id] && Audio_.ctx ? load(LINES[id].src) : null };
+  const api = { LINES, index, state: st, handle, find, covers, playLine, onMsg, onAnswer, speakersOf, preload: (id) => LINES[id] && Audio_.ctx ? load(LINES[id].src) : null };
   return api;
 })();
 if (typeof window !== 'undefined') window.VOICE_ACT = VOICE_ACT;
