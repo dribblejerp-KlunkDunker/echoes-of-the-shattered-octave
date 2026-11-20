@@ -57,7 +57,7 @@ CAST = {
     'quist':      dict(voice='am_eric',    speed=0.94, pitch=-1, lang='en-us', fx=['radio', 'room']),
     'halder':     dict(voice='bm_lewis',   speed=0.84, pitch=-2, lang='en-gb', fx=[('whisper', 0.7), 'old', 'room']),
     'lamplighter':dict(voice='bm_daniel',  speed=0.84, pitch=-1, lang='en-gb', fx=[('whisper', 0.75), 'outdoors']),
-    'bettis':     dict(voice='am_liam',    speed=0.84, pitch=0,  lang='en-us', fx=[('whisper', 0.75), 'outdoors']),
+    'bettis':     dict(voice='bf_isabella',speed=0.84, pitch=0,  lang='en-gb', fx=[('whisper', 0.75), 'outdoors']),   # Bettis Renn, Ivo's wife (was a man's voice until Phase 103)
     'hollow':     dict(voice='bm_daniel',  speed=0.84, pitch=-1, lang='en-gb', fx=[('whisper', 0.8), 'outdoors']),
     'sexton':     dict(voice='bm_lewis',   speed=0.8,  pitch=-3, lang='en-gb', fx=[('whisper', 0.7), 'wood']),
     'mourner':    dict(voice='bf_emma',    speed=0.84, pitch=-1, lang='en-gb', fx=[('whisper', 0.75), 'wood']),
