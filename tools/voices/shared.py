@@ -6,8 +6,8 @@ one), and the town's gossips can pass on any of the rumours. Recording each answ
 be about 29 hours of speech (roughly 500 MB). Instead each person is put in the voice group nearest their own casting,
 and each group records each shared answer once:
 
-  - nine plain groups, one per common Kokoro voice (men and women, English and American speech); a person whose
-    voice is another Kokoro voice joins the nearest one (NEAREST below)
+  - a plain group for each Kokoro voice anyone is cast in, so a person's shared answers come in the same voice as
+    their own lines (their own pitch and treatment are not kept: those would need a recording per person)
   - children, and two breathy groups (a man's and a woman's) for the Hollows and the whispering old
   - three people keep their own voice for these too, because no group would sound like them: Kaelen Vance (the glass
     ring of his arm), the Aegis (a chord), and Registrar-General Quist (a voice that reads rather than speaks)

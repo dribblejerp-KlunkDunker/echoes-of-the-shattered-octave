@@ -113,7 +113,7 @@ except FileNotFoundError:
 CAST = {**{k: dict(v, fx=[tuple(f) if isinstance(f, list) else f for f in v.get('fx', [])]) for k, v in _auto.items()}, **HAND_CAST}
 
 # ---- Phase 103: the voice groups that say the shared answers (tools/voices/shared.py). Each group speaks plainly
-# in its Kokoro voice with a little room; children and the breathy (Hollows, the whispering old) have their own.
+# in one Kokoro voice with a little room; children and the breathy (Hollows, the whispering old) have their own.
 def _g(voice, lang, speed=0.9, pitch=0, fx=('room',)): return dict(voice=voice, speed=speed, pitch=pitch, lang=lang, fx=list(fx))
 GROUPS = {
     'shared_bm_fable':   _g('bm_fable', 'en-gb'),
@@ -129,5 +129,9 @@ GROUPS = {
     'shared_breath_m':   _g('bm_daniel', 'en-gb', speed=0.84, pitch=-1, fx=(('whisper', 0.7), 'room')),
     'shared_breath_f':   _g('bf_lily', 'en-gb', speed=0.84, pitch=-1, fx=(('whisper', 0.7), 'room')),
 }
+# every other Kokoro voice anyone is cast in gets a plain group of its own, so a person's shared answers come in the
+# same voice as their own lines (only their pitch and treatment are the group's)
+for _v in sorted({c.get('voice') for c in CAST.values() if c.get('voice')}):
+    GROUPS.setdefault('shared_' + _v, _g(_v, 'en-gb' if _v[0] == 'b' else 'en-us'))
 OWN_SHARED = ('kaelen', 'aegis', 'quist')   # no group sounds like them: they say the shared answers in their own voice
 CAST.update(GROUPS)
