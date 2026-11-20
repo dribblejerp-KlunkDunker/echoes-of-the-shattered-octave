@@ -13,9 +13,9 @@
 //   answers    - (Phase 102) every person's own topic answers, and the greetings tools/voices/extract.py added, play when
 //                they appear in the conversation (renderDialogue); a line marked `for` is said by someone else on that
 //                person's behalf (General Ward's iron-cant, said aloud by Ninety-Four).
-//   shared     - (Phase 103) the answers anyone can give (TOPICS, the gossips' RUMOURS, a blunt tone's refusals, the
-//                polite blessings) are recorded once per voice group (tools/voices/shared.py); VOICE_GROUPS says whose
-//                voice group answers for each person. These match the whole answer exactly, never a part of it, and a
+//   shared     - (Phase 103, 104) the answers anyone can give (TOPICS, the gossips' RUMOURS, a blunt tone's refusals,
+//                the polite blessings), recorded in each person's own casting (tools/voices/shared.py); VOICE_GROUPS
+//                says whose recordings answer for each person (people who share a casting share them). These match the whole answer exactly, never a part of it, and a
 //                blessing on the end plays after the answer. French play stays unvoiced (its text matches nothing).
 // Silent characters stay silent (VOICES.resolve decides). Nothing is saved; nothing here touches G.flags.
 // Setting: Options > Graphics & access > Voices: Voiced (default) / Voiced + read aloud / Grunts / Off.

@@ -73,7 +73,7 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] Oakhaven's houses taller: ground storey, front doors, ridges, tower and mast (`js/eaves78.js`, 78 checks)
 - [x] voices of their own for the Heights' people and foes (`js/voices.js`)
 - [x] the owner, 18 Nov: "the compass is good": it points at people with quests, as built; no quest steps
-- [ ] the owner's answers: the White Mile's five questions and its [PROPOSED] list; recorded voices or the device's; the reader's keys; the other towns' houses
+- [x] the owner's answers: the White Mile's five questions and its [PROPOSED] list (19 Nov: settled by the recommendations); recorded voices (18 Nov: Kokoro, Phases 102 to 104); the reader's keys (19 Nov: kept as built); the other towns' houses (18 Nov: every town raised, its own item below)
 - [x] Phase 91's question 4: trophies and realm gear for the Reach's two keepers (P98)
 - [x] owed from Phase 87: the bare hands and the glass arm's pose, painted in code (P98)
 - [x] known red, not from this phase: `test/logmap` failed at its first static check (one journal site in the air fights; fixed in P99)

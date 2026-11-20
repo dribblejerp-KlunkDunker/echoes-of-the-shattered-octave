@@ -153,9 +153,36 @@ def render(model_dir, line):
         fx = [f for f in fx if (f[0] if isinstance(f, tuple) else f) not in ('room', 'wood', 'outdoors', 'hall', 'chapel')] + list(CAST[speaker].get('fx', []))
     return finish(treat(x, fx), deliv.get('gain', 0.0))
 
+# Phase 104: a shared answer is said by every person in their own casting. The speech itself depends only on the voice,
+# the language and the words, so it is made once per Kokoro voice at SHARED_SPEED and kept on disk (not in the repo);
+# each person's speed and pitch are then applied by time-stretching, and their treatment as usual.
+SHARED_SPEED = 0.88
+RAW_DIR = os.environ.get('VOICE_RAW_CACHE', os.path.join(os.path.expanduser('~'), '.cache', 'octave-voice-raw'))
+
+def raw_speech(model_dir, text, voice, lang):
+    k = hashlib.sha1(json.dumps([text, voice, lang, SHARED_SPEED]).encode()).hexdigest()[:20]
+    p = os.path.join(RAW_DIR, voice, k + '.npy')
+    if os.path.exists(p):
+        try: return np.load(p).astype(np.float32) / 32767.0
+        except (ValueError, OSError): pass
+    x = speak(model_dir, text, voice, SHARED_SPEED, lang)
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    np.save(p + '.tmp.npy', np.clip(x * 32767.0, -32767, 32767).astype(np.int16)); os.replace(p + '.tmp.npy', p)
+    return x
+
+def render_shared(model_dir, line):
+    from pedalboard import time_stretch
+    c = cast_of(line['speaker'])
+    text = re.sub(r'\.{2,}|…', ', ', line['text']).strip(' ,')
+    x = raw_speech(model_dir, text, c['voice'], c['lang'])
+    rate, semis = float(c['speed']) / SHARED_SPEED, float(c.get('pitch', 0))
+    if abs(rate - 1) > 1e-3 or semis:
+        x = time_stretch(x[None, :], SR, stretch_factor=rate, pitch_shift_in_semitones=semis)[0].astype(np.float32)
+    return finish(treat(x, list(c.get('fx', []))), 0.0)
+
 def key_of(line):
     sp, vo = line['speaker'], line.get('voiceOf') or line['speaker']
-    blob = json.dumps([line['text'], line.get('say'), line.get('delivery'), repr(cast_of(sp)), repr(cast_of(vo)), DELIVERY, 3] + ([line['beats']] if line.get('beats') else []), sort_keys=True)
+    blob = json.dumps([line['text'], line.get('say'), line.get('delivery'), repr(cast_of(sp)), repr(cast_of(vo)), DELIVERY, 3] + (['own', SHARED_SPEED] if line['kind'] == 'shared' else []) + ([line['beats']] if line.get('beats') else []), sort_keys=True)
     return hashlib.sha1(blob.encode()).hexdigest()[:16]
 
 def write_mp3(x, path):
@@ -197,7 +224,7 @@ def main():
         lid = line['id']; rel = 'voices/%s/%s.mp3' % (line['speaker'], lid)
         k = key_of(line); out = os.path.join(ROOT, rel)
         if (not only or line['speaker'] in only) and (a.force or cache.get(lid) != k or not os.path.exists(out)):
-            x = render(a.model, line); write_mp3(x, out); cache[lid] = k; done += 1
+            x = (render_shared if line['kind'] == 'shared' else render)(a.model, line); write_mp3(x, out); cache[lid] = k; done += 1
             if a.worker and os.path.exists(cache_p):                   # another worker may have saved lines too
                 try: cache = {**json.load(open(cache_p)), lid: k}
                 except ValueError: pass
