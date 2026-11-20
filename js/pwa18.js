@@ -11,7 +11,7 @@
 //      version starts the next time the game is opened.
 //   3. OPTIONS (Graphics & access), three rows appended the way cinema14 / extras17 do:
 //        Keep saves on this device   default OFF. Off, nothing below runs and the game is exactly as before.
-//        Offline audio               downloads the music and voices (about 52 MB) so they play offline too; the
+//        Offline audio               downloads the music and voices (about 450 MB) so they play offline too; the
 //                                    scripts, pictures and text are already offline after the first visit.
 //        Install the game            only when the browser offers installation.
 //   4. KEEP SAVES ON THIS DEVICE. When ON, the three session slots (SLOTS in game.js) are mirrored into IndexedDB
@@ -44,7 +44,7 @@
     keepHint: 'the three session slots stay in this browser after you close the page. Hardcore runs and the extras are never stored. Off: slots last until you leave the page, as before.',
     keepNoStore: 'This browser cannot store them (private window or storage blocked): slots last until you leave the page.',
     audioLabel: 'Offline audio',
-    audioHint: 'download the music and voices (about 52 MB) so they play without a connection. Everything else is already offline after the first visit.',
+    audioHint: 'download the music and voices (about 450 MB) so they play without a connection. Everything else is already offline after the first visit.',
     audioBtn: 'Download',
     audioNone: 'Offline play starts once this page has been fully loaded from a web address (not a file).',
     audioDone: 'Ready',
