@@ -416,6 +416,18 @@ const LONGNIGHT17 = (function () {
       const k = 0.88 + n * 0.08 + g * 0.04;
       return [206 * k, 216 * k, 232 * k];
     });
+    // (Phase 106) rime: the same snow with frozen glints in it, lying flat where the frost patches were (they had stood up
+    // as pale cards in the 3D view). Hashed, so it is the same every load.
+    make('ln17_rime', (x, y) => {
+      const n = Math.sin(x * 2.3 + Math.sin(y * 0.7) * 2) * Math.sin(y * 1.9 + Math.sin(x * 0.5) * 2) * 0.5 + 0.5;
+      const g = ((x * 7 + y * 13 + (x * y) % 11) % 5) / 5;
+      const k = 0.88 + n * 0.08 + g * 0.04;
+      let ice = 0;
+      for (let i = 0; i < 9; i++) { const cx = (i * 23 + 7) % 64, cy = (i * 37 + 19) % 64; let dx = Math.abs(x - cx), dy = Math.abs(y - cy); dx = Math.min(dx, 64 - dx); dy = Math.min(dy, 64 - dy); const e = (dx / 7) * (dx / 7) + (dy / 3) * (dy / 3); if (e < 1) ice = Math.max(ice, e < 0.35 ? 2 : 1); }
+      if (ice === 2) return [240, 247, 255];
+      if (ice === 1) return [176 * k + 30, 196 * k + 30, 226 * k + 26];
+      return [206 * k, 216 * k, 232 * k];
+    });
     // ---- the gallery's stone (POLISH17). Flat-shaded pixel shapes rather than per-texel noise, because the rail is seen from
     // half a pace and a wall from a pace or two: magnified, these stay crisp blocks and carved lines instead of a smear.
     // On this relief map a face's texture is anchored at its top, so the rail (0.46 high) shows the top 29 rows only.
@@ -681,7 +693,7 @@ const LONGNIGHT17 = (function () {
   }
   function buildOrchard() {
     const W = 30, H = 20;
-    const m = new GameMap(ORCH, TX.orchardName, W, H, { outdoor: true, floor: 'ln17_snow', floorTextures: ['ln17_snow', 't_cobble'], fogDist: 17, fogColor: [150, 160, 176], music: 'wild', danger: 0, spawn: { x: 14.5, y: 14.5, dir: -Math.PI / 2 } });
+    const m = new GameMap(ORCH, TX.orchardName, W, H, { outdoor: true, floor: 'ln17_snow', floorTextures: ['ln17_snow', 't_cobble', 'ln17_rime'], fogDist: 17, fogColor: [150, 160, 176], music: 'wild', danger: 0, spawn: { x: 14.5, y: 14.5, dir: -Math.PI / 2 } });
     m.border('t_hedge');
     m.rect(1, 1, W - 2, 2, 't_hedge');
     // the Conservatory's orchard wall down the west side, broken where the oak fell
@@ -699,7 +711,8 @@ const LONGNIGHT17 = (function () {
     for (let i = 0; i < 7; i++) m.deco('p9_log', 4.2 + i * 1.15, 9.5 + Math.sin(i * 0.7) * 0.25, { solid: true, radius: 0.5, scale: 1.5, label: TX.orchard.oak });
     m.deco('oak', 3.1, 10.0, { solid: true, radius: 0.6, scale: 1.1, label: TX.orchard.oak });
     for (const [x, y, s] of [[22.4, 5.4, 1.5], [26.2, 8.2, 1.7], [24.0, 14.2, 1.4], [8.0, 16.4, 1.5], [7.0, 5.6, 1.6], [27.0, 16.6, 1.5], [20.2, 17.0, 1.3], [9.4, 12.6, 1.4]]) m.deco('oak', x, y, { solid: true, radius: 0.45, scale: s, label: TX.orchard.tree });
-    for (const [x, y] of [[13.4, 8.4], [16.0, 9.2], [11.6, 13.6], [18.6, 12.4], [9.6, 7.0], [21.2, 10.6]]) m.deco('ln17_frost', x, y, { solid: false, scale: 0.8 });
+    // frost lies flat: rimed snow in these cells (Phase 106; until then upright 'ln17_frost' cards). The trodden way stays cobble.
+    for (const [x, y] of [[13.4, 8.4], [16.0, 9.2], [11.6, 13.6], [18.6, 12.4], [9.6, 7.0], [21.2, 10.6]]) { const cx = Math.floor(x), cy = Math.floor(y); if (!(m.floorCells && m.floorCells[cy * m.w + cx] === 1)) m.setFloor(cx, cy, 2); }
     for (const [x, y] of [[12.5, 8.0], [15.9, 8.0]]) m.deco('lamp', x, y, { solid: true, radius: 0.2, scale: 0.85, glow: 0.8 });
     // the three Cantors at dusk (separate entities from the gallery's; hidden at dawn until they come up)
     KEEPERS.forEach((K, i) => m.add({ kind: 'npc', id: K.id, x: [12.3, 15.6, 17.5][i], y: [9.6, 9.8, 9.2][i], sprite: K.sprite, scale: 0.95, solid: true, radius: 0.32, facing: -Math.PI / 2, _orch: i }));

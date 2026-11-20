@@ -815,13 +815,22 @@ vec4 r3dLandmarks(float az, float te) {
         B.quad(a, b, cc, d); tris += 2;
       }
     }
-    // ---- flat maps: the CPU's floor runs on past the map's edge to the horizon; an apron does the same
-    if (!relief) {
+    // ---- flat maps: the CPU's floor runs on past the map's edge to the horizon; an apron does the same.
+    // (Phase 106) a hilly map gets one too, at the lowest height along its edge, so what lies past a low hedge is ground
+    // and not a pale void; what the apron cannot reach the sky pass paints in the ground's colour.
+    {
+      let z0 = 0;
+      if (relief) {
+        z0 = Infinity;
+        for (let x = 0; x < W; x++) { z0 = Math.min(z0, surfAt(x, 0, 0.5, 0), surfAt(x, H - 1, 0.5, 1)); }
+        for (let y = 0; y < H; y++) { z0 = Math.min(z0, surfAt(0, y, 0, 0.5), surfAt(W - 1, y, 1, 0.5)); }
+        z0 = Number.isFinite(z0) ? z0 - 0.01 : 0;
+      }
       const L = tex(Engine.textures[floorDef] ? floorDef : 't_flag'), R = 160;
       const rects = [[-R, -R, W + R, 0], [-R, H, W + R, H + R], [-R, 0, 0, H], [W, 0, W + R, H]];
       for (const [x0, y0, x1, y1] of rects) {
-        const a = B.vert(x0, y0, 0, x0, y0, L, -1, MAT.ground, 1, 0, 0, 1), b = B.vert(x1, y0, 0, x1, y0, L, -1, MAT.ground, 1, 0, 0, 1);
-        const cc = B.vert(x1, y1, 0, x1, y1, L, -1, MAT.ground, 1, 0, 0, 1), d = B.vert(x0, y1, 0, x0, y1, L, -1, MAT.ground, 1, 0, 0, 1);
+        const a = B.vert(x0, y0, z0, x0, y0, L, -1, MAT.ground, 1, 0, 0, 1), b = B.vert(x1, y0, z0, x1, y0, L, -1, MAT.ground, 1, 0, 0, 1);
+        const cc = B.vert(x1, y1, z0, x1, y1, L, -1, MAT.ground, 1, 0, 0, 1), d = B.vert(x0, y1, z0, x0, y1, L, -1, MAT.ground, 1, 0, 0, 1);
         B.quad(a, b, cc, d); tris += 2;
       }
     }
@@ -1194,6 +1203,7 @@ uniform sampler2D uSkyRows; uniform sampler2D uCloud;
 uniform vec4 uSun;   // x azimuth, y tan(elevation of the body's centre on screen), z strength, w night (0/1)
 uniform vec3 uSunCol;
 uniform float uRows; // the engine's sky rows (150 x S)
+uniform vec3 uGroundTint;   // (Phase 106) the hue of the map's ground, as a tint of the haze (1 = the haze itself)
 in vec2 vNdc;
 layout(location=0) out vec4 oColor; layout(location=1) out vec4 oAux;
 void main() {
@@ -1201,7 +1211,14 @@ void main() {
   vec3 dir = normalize(a.xyz / a.w - b.xyz / b.w);
   if (uLit.w < 0.5) { oColor = vec4(uFog.rgb, 1.0); oAux = vec4(0.0); return; }   // indoors without a ceiling: the dark
   float te = dir.z / max(1e-4, length(dir.xy));            // tan(elevation) in GL space
-  if (te < 0.0) { oColor = vec4(uFogPx.rgb, 1.0); oAux = vec4(1.0 / 255.0, 0.0, 0.0, 1.0); return; }   // below the horizon: haze
+  if (te < 0.0) {
+    // below the horizon, where no ground was drawn (past the edge of a hilly map): the ground goes on, in its own colour
+    // under the same light, into the haze with distance. (Until Phase 106 this was flat haze, a pale void behind hedges.)
+    float dist = uEye.z / max(1e-4, -te);
+    float f = clamp(1.0 - dist * uFog.w, 0.0, 1.0);
+    vec3 g = uFogPx.rgb * uGroundTint * 0.8;
+    oColor = vec4(mix(uFogPx.rgb, g, f), 1.0); oAux = vec4(1.0 / 255.0, 0.0, 0.0, 1.0); return;
+  }
   // the engine's sky row for this elevation: 112.5 - FX tan(e) logical rows, in the S-scaled row table
   float S = uRows / 150.0;
   float sy = clamp((112.5 - ${FX.toFixed(6)} * te) * S, 0.0, uRows - 1.0);
@@ -1324,6 +1341,19 @@ void main() {
     if (mesh.dcount) { gl.bindVertexArray(mesh.dvao); gl.drawElements(gl.TRIANGLES, mesh.dcount, gl.UNSIGNED_INT, 0); stats.draws++; }
     gl.bindVertexArray(null);
   }
+  // (Phase 106) the hue of a map's ground (its floor texture's mean colour over its brightness), for the sky pass's
+  // ground past the map's edge; 1,1,1 when there is none
+  const tintCache = new WeakMap();
+  function groundTint(m) {
+    if (!m) return [1, 1, 1];
+    const d = typeof Engine !== 'undefined' && Engine.textures[m.floor || ''];
+    if (!d || !d.length) return [1, 1, 1];
+    let t = tintCache.get(d); if (t) return t;
+    let r = 0, gg = 0, b = 0; for (let i = 0; i < d.length; i++) { const px = d[i]; r += px & 255; gg += (px >> 8) & 255; b += (px >> 16) & 255; }
+    const n = d.length * 255, mr = r / n, mg = gg / n, mb = b / n, l = Math.max(0.05, (mr + mg + mb) / 3);
+    t = [mr / l, mg / l, mb / l].map((v) => Math.max(0.5, Math.min(1.6, v)));
+    tintCache.set(d, t); return t;
+  }
   const skyPass = {
     name: 'sky', order: 0,
     draw(g, f) {
@@ -1331,6 +1361,7 @@ void main() {
       g.disable(g.DEPTH_TEST); g.depthMask(false); g.disable(g.CULL_FACE); g.disable(g.BLEND);
       const pr = use(P.sky);
       g.uniform4f(pr.u.uSun, sun.az, sun.te, sun.str, sun.night); g.uniform3f(pr.u.uSunCol, sun.r, sun.g, sun.b); g.uniform1f(pr.u.uRows, sky.rows);
+      if (pr.u.uGroundTint) { const t = groundTint(f.map); g.uniform3f(pr.u.uGroundTint, t[0], t[1], t[2]); }
       g.activeTexture(g.TEXTURE4); g.bindTexture(g.TEXTURE_2D, T.skyRows);
       g.activeTexture(g.TEXTURE5); g.bindTexture(g.TEXTURE_2D, T.cloud);
       g.bindVertexArray(triVAO); g.drawArrays(g.TRIANGLES, 0, 3); g.bindVertexArray(null); stats.draws++;
@@ -1488,6 +1519,11 @@ void main() {
     F.pitchA = th;
     const cd = Math.cos(d), sd = Math.sin(d), ct = Math.cos(th), stt = Math.sin(th);
     const E = F.eye; E[0] = cam.x; E[1] = cam.y; E[2] = (cam.z == null ? 0.88 : cam.z) * ZK;
+    // (Phase 106) an eye exactly on a cell line puts the corners of the cells beside it at zero depth, and some
+    // rasterisers (SwiftShader among them) then drop those whole quads: the near ceiling of a room went black wherever
+    // a map's arrival point sat on a whole number (the surgery, the mill, the tannery). A nudge too small to see.
+    if (E[0] === Math.round(E[0])) E[0] += 1e-4;
+    if (E[1] === Math.round(E[1])) E[1] += 1e-4;
     const Fw = F.fwd; Fw[0] = ct * cd; Fw[1] = ct * sd; Fw[2] = stt;
     const R = F.right; R[0] = -sd; R[1] = cd; R[2] = 0;
     const U = F.up; U[0] = -stt * cd; U[1] = -stt * sd; U[2] = ct;
@@ -2319,6 +2355,7 @@ void main() {
     on, off,
     // tools and tests
     netStep, netFeed, net: NET, cpuHooks, measure, dynamicTris: () => mesh.dcount / 3, mesh: () => mesh.info, vframe: () => VCAM, reliefDepth, vdepth, buildMesh: () => { mesh.dirty = true; },
+    groundTint: (m) => groundTint(m || F.map),   // (Phase 106) the hue of a map's ground, for the ground past its edge
     readPixels() {
       if (!gl || !canvas) return null;
       const w = canvas.width, h = canvas.height, out = new Uint8Array(w * h * 4);

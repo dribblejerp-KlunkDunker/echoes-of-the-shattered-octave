@@ -241,7 +241,11 @@ const LIFE60 = (function () {
       const was = e._stop; e._stop = s; e._leg = 0;
       if (was && was.job === 'home' && e.hidden) {
         if (s.job === 'home') { const at = spot(p, s); e.x = at[0]; e.y = at[1]; e._path = null; e._going = false; return; }   // indoors to indoors: no walk
-        const d = spot(p, was); e.hidden = false; e.x = d[0]; e.y = d[1];   // out of the door they went in at (one still on the way in just turns round)
+        const d = spot(p, was);
+        // (Phase 106) a door is often the way into the place, where you arrive: nobody steps out through you. They wait
+        // indoors until you have moved off the doorstep.
+        if (G.player && Math.hypot(G.player.x - d[0], G.player.y - d[1]) < 1.4) { e._stop = was; return; }
+        e.hidden = false; e.x = d[0]; e.y = d[1];   // out of the door they went in at (one still on the way in just turns round)
       }
       const at = spot(p, s); go(m, e, at[0], at[1]); e._going = true;
       return;

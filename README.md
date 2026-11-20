@@ -471,6 +471,10 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 | ![A Song cast from open hands](screenshots/p98/p98-hands-song.jpg) | ![The old pictures](screenshots/p98/p98-hands-before.jpg) |
 | ![The Flint-Back's leavings](screenshots/p98/p98-flintback.jpg) | ![The Standing Note's leavings](screenshots/p98/p98-standingnote.jpg) |
 
+**The visual sweep (Phase 106).** Every place photographed and looked at (`tools/dev/sweep106.js`, 404 pictures). Fixed: black ceilings in a dozen rooms in the 3D view, a pale void past the edge of hilly maps, road-walkers stepping out of the gate through you, and the Long Night orchard's frost standing up as cards. Record: [`story/Game Layer/Phase 106 - The visual sweep.md`](story/Game%20Layer/Phase%20106%20-%20The%20visual%20sweep.md).
+
+![Phase 106, before and after](screenshots/p106-fixes.jpg)
+
 **Ground cover (Phase 105).** Grass tufts, clover, pebbles and fallen leaves near your feet outdoors in the 3D renderer, the same in the same place every visit (Options, "Ground cover"). Record: [`story/Game Layer/Phase 105 - Ground cover.md`](story/Game%20Layer/Phase%20105%20-%20Ground%20cover.md).
 
 | Oakhaven's green (top off, bottom on) | The Deep Woods (top off, bottom on) |
