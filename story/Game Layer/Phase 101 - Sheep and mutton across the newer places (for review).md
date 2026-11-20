@@ -79,6 +79,8 @@ The Dawning Heights grow nothing: Phase 92 was matched to Book Two with "no winc
 
 ## Questions for the owner
 
+**Ruled 19 Nov 2026.** The owner: "I agree." All four recommendations stand, so nothing in the game changes: no fresh mutton at the Boar, none at Ambrose Vettle's, the specialists stay without, and the Heights' prices stay at 6 and 7. Every [PROPOSED] placement above is accepted.
+
 1. **Fresh mutton at the Boar & Dulcimer once Tamar's flock is home?** R2 keeps Oakhaven to dear salt mutton, and its test holds it. A flock of eleven ewes and a tup will not feed Oakhaven's inn as well. *Recommend: no; Oakhaven stays as R2 left it.*
 2. **Ambrose Vettle's chandlery:** dear salt mutton, as R2 allows? *Recommend: no; he sells what keeps a light lit.*
 3. **"Any store that sells goods":** taken here to mean inns and sellers of food or provisions, not the specialists (the armourer, the cobbler, the tanner and so on). *Recommend: keep it so.* If every shop should carry mutton, it is one line per seller in `js/mutton101.js`.

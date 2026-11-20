@@ -2426,7 +2426,7 @@ Record: `story/Game Layer/Phase 101 - Sheep and mutton across the newer places (
 
 **Asked by the owner (19 Nov):** sheep where there should be sheep, and mutton "in a few different varieties" at every store that sells goods and every inn.
 
-**Mutton, added. Status: [PROPOSED].** Phase 22's dishes, no new ones:
+**Mutton, added. Status: ruled 19 Nov (accepted).** Phase 22's dishes, no new ones:
 - *Corvin Ash, smuggler, Stillwater Landing:* salt mutton, at his markup. His barrels go down to Fortis, the salt-mutton town (Vol I §III.4: "Root stew, salt mutton, black bread").
 - *Brenna Corliss, the Keel Docks, Sol-Luminary:* salt mutton (6) and mutton broth (7), "what the Free Captains leave with me". Dear: the Heights grow nothing, and the Tiers are "seven years thin" (Book Two).
 - *One-Oh-Six, the issue-hatch, Null-Watch:* salt mutton and mutton broth, "what the sutler left".
@@ -2435,7 +2435,7 @@ Record: `story/Game Layer/Phase 101 - Sheep and mutton across the newer places (
 
 **Sheep: none added, by the books.** The built world has sheep where canon allows them: Tamar Farrant's eleven Rust Coast ewes and a tup in Wethercombe, and on the Watch Downs once they are home. The rest of the Reach is empty of sheep on purpose: the wool went into the Hedge in 417 (Book Four, Part One) and the Downs flocks were eaten in the two shut years (Phase 20–21 rulings, delegated), and the game says so again and again ("There are no sheep"). **Canon (book)** puts the next flocks in places not yet built: the Iron Peaks above Coldharrow (Book Three, Part Three: "My father kept sheep in the Peaks above Coldharrow"), the Rust Coast's farms (where Tamar's ewes came from), and Fortis (salt mutton, Vol I). To be built with those regions. The Dawning Heights grow nothing ("no winch-boats or valley farms", Phase 92 matched to Book Two).
 
-**For the owner's ruling:** fresh mutton at the Boar once Tamar's flock is home (recommend no: R2 stands); salt mutton at Ambrose Vettle's (recommend no); whether "any store that sells goods" should include the specialists (recommend no); the Heights' prices (recommend keep).
+**Ruled (19 Nov, the owner: "I agree"), all as recommended; the placements above are accepted and are no longer [PROPOSED]:** fresh mutton at the Boar once Tamar's flock is home (no: R2 stands); salt mutton at Ambrose Vettle's (no); whether "any store that sells goods" should include the specialists (no); the Heights' prices (kept at 6 and 7).
 
 #### Phase 102: every person's own dialogue, voiced (19 Nov)
 Record: `story/Game Layer/Phase 102 - Every person's dialogue, voiced (for review).md`. The owner, 18 Nov: "any time there is dialogue it should be read aloud in the best possible voices available", then "continue using Kokoro for now".
