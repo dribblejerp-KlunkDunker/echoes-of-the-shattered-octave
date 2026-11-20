@@ -2445,6 +2445,13 @@ Record: `story/Game Layer/Phase 102 - Every person's dialogue, voiced (for revie
 - **The silent stay silent:** Lyra while voiceless, the cat, the Quiet, the Tongueless, Mags signing. Stage directions are never read aloud.
 The casting of 122 people (which voice each has) is [PROPOSED], for the owner's review in the record.
 
+#### The owner's rulings of 19 Nov
+Record: `story/Game Layer/Rulings of 19 Nov 2026.md`. Settled by their recommendations:
+- **The White Mile (Phase 97):** status **ruled**. Its nine [PROPOSED] points stand. The Tallyman counts nine now, fourteen the first winter; the white house on the Unison's street is a doorway, not a house to climb; by day the Tallyman and the shelf's scavenger are not there; the Unison's blow never kills, but the light still can.
+- **Phase 98:** status **ruled**. The glass arm is the left arm, and a fist goes straight out; a keeper leaves a weapon, never a worn piece.
+- **Phase 102's casting:** status **ruled** (all 122 voices stand). French play stays unvoiced for now.
+- **Book Four, Part Two, chapters 5 to 7, are manuscript** (PR #88). Book canon wins over this volume where they differ. With them, the author's ruling of 5 Nov: a death no longer needs an heir.
+
 **Keeping this volume current.** From 15 Nov 2026 the owner's rule is: *"every update needs to be added to the game lore."* Every phase that adds a place, person, creature, custom, item or ruling gets its entry here in the same commit.
 
 ### The canon pass of 28 October 2026: what changed and why

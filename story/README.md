@@ -28,10 +28,11 @@ Book One, *The Silenced Province*, is a complete draft: prologue, 24 chapters an
 interlude, around 94,000 words. Book Two, *The Great Discord*, is complete in fourteen chapters.
 Book Three, *The Hall of Carriage*, is complete in twelve (about 95,000 words). Book Four,
 *The Relief Shift*, has Part One (*Seven Voices*, chapters 1–4, about 39,000 words) drafted; Part
-Two, *The Bleach Falls*, is next. The series is planned as five books (World Bible Vol III;
-Series Bible v1.3, Part X). The decided ending is the **Resonant Accord**; character deaths follow
-the **no death without an heir** rule; the Book Two action register is **kinetic, legible,
-lethal**. All three are written up in the Series Bible.
+Two, *The Bleach Falls*, is begun, with Chapters Five to Seven (*Dawnday*, *The Correspondence* and *The Fall-Chains*, about
+36,000 words) drafted. The series is planned as five books (World Bible Vol III;
+Series Bible v1.5, Part X). The decided ending is the **Resonant Accord**; since 5 November 2026
+a character's death **no longer needs an heir** (the author's ruling); the Book Two action register
+is **kinetic, legible, lethal**. All three are written up in the Series Bible.
 
 The Book One game follows the book (the owner's ruling of 28 October 2026). What it adds to the
 world is recorded, item by item, in World Bible Vol VIII.
