@@ -109,7 +109,7 @@ Formant-synthesised vocal sounds: a sawtooth buzz through three band-pass forman
 
 ## Recorded voice lines (voices/, js/voice-lines.js, js/voice-acting.js)
 
-Neural text-to-speech, rendered offline by `tools/voices/build.py` from `voices/script.json`; casting in `tools/voices/cast.py`. Since Phase 102 every person's own greetings and topic answers are in it too: `tools/voices/dump-dialogue.js` takes them from the running game, `tools/voices/extract.py` adds them (marked `auto`) and casts whoever `cast.py` does not, into `tools/voices/cast_auto.json`. Since Phase 103 the shared answers too: `tools/voices/shared.py` puts everyone in a voice group (`voices/groups.json`) and adds each group's recordings of the shared topics, rumours, refusals and blessings (kind `shared`). 2,956 lines, 114 MB.
+Neural text-to-speech, rendered offline by `tools/voices/build.py` from `voices/script.json`; casting in `tools/voices/cast.py`. Since Phase 102 every person's own greetings and topic answers are in it too: `tools/voices/dump-dialogue.js` takes them from the running game, `tools/voices/extract.py` adds them (marked `auto`) and casts whoever `cast.py` does not, into `tools/voices/cast_auto.json`. Since Phase 103 the shared answers too: `tools/voices/shared.py` puts everyone in a voice group (`voices/groups.json`) and adds each group's recordings of the shared topics, rumours, refusals and blessings (kind `shared`); since Phase 104 in each person's own casting, the speech made once per Kokoro voice and time-stretched to each person. 9,078 lines, 404 MB.
 
 | Item | Source | Licence | Status |
 |---|---|---|---|

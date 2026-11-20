@@ -112,26 +112,5 @@ except FileNotFoundError:
     _auto = {}
 CAST = {**{k: dict(v, fx=[tuple(f) if isinstance(f, list) else f for f in v.get('fx', [])]) for k, v in _auto.items()}, **HAND_CAST}
 
-# ---- Phase 103: the voice groups that say the shared answers (tools/voices/shared.py). Each group speaks plainly
-# in one Kokoro voice with a little room; children and the breathy (Hollows, the whispering old) have their own.
-def _g(voice, lang, speed=0.9, pitch=0, fx=('room',)): return dict(voice=voice, speed=speed, pitch=pitch, lang=lang, fx=list(fx))
-GROUPS = {
-    'shared_bm_fable':   _g('bm_fable', 'en-gb'),
-    'shared_bm_daniel':  _g('bm_daniel', 'en-gb'),
-    'shared_bm_lewis':   _g('bm_lewis', 'en-gb', speed=0.86, pitch=-1),
-    'shared_am_michael': _g('am_michael', 'en-us'),
-    'shared_am_fenrir':  _g('am_fenrir', 'en-us', speed=0.88, pitch=-1, fx=('gravel', 'room')),
-    'shared_bf_lily':    _g('bf_lily', 'en-gb'),
-    'shared_bf_isabella':_g('bf_isabella', 'en-gb'),
-    'shared_af_aoede':   _g('af_aoede', 'en-us'),
-    'shared_af_nova':    _g('af_nova', 'en-us'),
-    'shared_child':      _g('af_sky', 'en-us', speed=0.96, pitch=4, fx=('child', 'room')),
-    'shared_breath_m':   _g('bm_daniel', 'en-gb', speed=0.84, pitch=-1, fx=(('whisper', 0.7), 'room')),
-    'shared_breath_f':   _g('bf_lily', 'en-gb', speed=0.84, pitch=-1, fx=(('whisper', 0.7), 'room')),
-}
-# every other Kokoro voice anyone is cast in gets a plain group of its own, so a person's shared answers come in the
-# same voice as their own lines (only their pitch and treatment are the group's)
-for _v in sorted({c.get('voice') for c in CAST.values() if c.get('voice')}):
-    GROUPS.setdefault('shared_' + _v, _g(_v, 'en-gb' if _v[0] == 'b' else 'en-us'))
-OWN_SHARED = ('kaelen', 'aegis', 'quist')   # no group sounds like them: they say the shared answers in their own voice
-CAST.update(GROUPS)
+# Phase 103 said the shared answers in voice groups; since Phase 104 everyone says them in their own casting above
+# (tools/voices/shared.py), so there are no group voices here any more.

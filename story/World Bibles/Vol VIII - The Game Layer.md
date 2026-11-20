@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 103, 19 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 104, 20 November 2026).
 
 ---
 
@@ -2449,6 +2449,9 @@ The casting of 122 people (which voice each has) is [PROPOSED], for the owner's 
 Record: `story/Game Layer/Phase 103 - The answers anyone can give, voiced.md`. The owner, 19 Nov: "Yes make the answers anyone can give should be voiced. Leave the French voices out for now."
 
 **Nothing was added to the world.** The shared answers (what anyone in the world knows of Oakhaven, the Hedge, the Narrow, the Rite, Kaelen and the rest), the gossips' rumours, a blunt tone's refusals and the Narrow's polite blessings ("Blessings of the Narrow on you.", "Keep your voice low, friend.", "Mind how you go.") are now spoken. The rules Phase 102 keeps still hold: **the silent stay silent** (Lyra after the Grove, Mags signing, General Ward, whose words only Ninety-Four says), **the Hollows answer in breath**, and **children answer in a child's voice**. The voice groups are [PROPOSED], for the owner's review.
+
+#### Phase 104: every character's own voice for the shared answers (20 Nov)
+Record: `story/Game Layer/Phase 104 - Every character's own voice for the shared answers.md`. The owner, 19 Nov: "give every character their own voices". **Nothing was added to the world.** Each person now says what anyone knows in their own voice: a person is one voice wherever they appear. Phase 103's voice groups are gone. The same evening: **no pegs by the hearth** for the keepers' trophies (the rule stands); the reader's keys kept.
 
 #### The owner's rulings of 19 Nov
 Record: `story/Game Layer/Rulings of 19 Nov 2026.md`. Settled by their recommendations:

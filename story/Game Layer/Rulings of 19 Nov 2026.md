@@ -24,8 +24,14 @@ The owner, 19 Nov 2026, word for word:
 - **The glass arm is on the left** (Phase 98): stands, and **punches go straight out**: stands.
 - **Keepers leave weapons, not worn pieces** (Phase 98): stands, so no gear set grows.
 
+## Later the same evening (19 Nov, 22:56)
+
+> "give every character their own voices. I agree leaving the rule as is. do 3 and what was decision 4"
+
+- **Every character's own voice for the shared answers:** done in Phase 104. The Phase 103 voice groups are gone; each person says the shared answers in their own casting (record: `story/Game Layer/Phase 104 - Every character's own voice for the shared answers.md`).
+- **Pegs by the hearth for the keepers' trophies (Phase 98, question 6):** no pegs. The rule stands as it is.
+- **The reader's keys (Phase 97):** kept as built. F2 turns reading aloud on and off, F3 (or `[`) says the last thing again, F4 (or `]`) reads the whole screen, Esc stops the voice.
+
 ## Still open
 
-- Pegs by the hearth for the keepers' trophies (Phase 98, question 6; recommended: leave as the rule has it).
-- The reader's keys (F2, F3 or [, F4 or ]).
-- The Phase 103 voice groups (recommended: keep; any person can be given their own set later).
+- Whether to move #44's close-up ground cover (grass tufts, pebbles, fallen leaves near the player) onto Phase 77's sharp ground.
