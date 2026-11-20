@@ -1,5 +1,7 @@
 # Phase 103: the answers anyone can give, voiced
 
+> **Replaced in Phase 104** (owner, 19 Nov: "give every character their own voices"): the voice groups below are gone; each person now says the shared answers in their own casting. See `Phase 104 - Every character's own voice for the shared answers.md`.
+
 19 November 2026. Branch `p103-voices`. Built by Opus 5.5. The owner, 19 Nov: "Yes make the answers anyone can give should be voiced. Leave the French voices out for now."
 
 ## What changed in the game
