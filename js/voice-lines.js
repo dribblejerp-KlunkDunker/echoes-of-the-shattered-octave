@@ -42,6 +42,486 @@ const VOICE_LINES = {
 "voiceOf": "wg41005",
 "when": "aegisDestroyed (Aegis killed, not calmed)"
 },
+"aegis.shared.aether-glass.high": {
+"auto": true,
+"d": 16.46,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"aegis.shared.aether-glass.low": {
+"auto": true,
+"d": 4.82,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"aegis.shared.bless.0": {
+"auto": true,
+"d": 2.5,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"aegis.shared.bless.1": {
+"auto": true,
+"d": 2.28,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"aegis.shared.bless.2": {
+"auto": true,
+"d": 1.8,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"aegis.shared.governor-vance.high": {
+"auto": true,
+"d": 10.2,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"aegis.shared.governor-vance.low": {
+"auto": true,
+"d": 5.04,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"aegis.shared.hush-lamps.high": {
+"auto": true,
+"d": 10.18,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"aegis.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.51,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"aegis.shared.kaelen-vance.high": {
+"auto": true,
+"d": 13.39,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"aegis.shared.kaelen-vance.low": {
+"auto": true,
+"d": 8.11,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"aegis.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.92,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"aegis.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.19,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"aegis.shared.oakhaven.high": {
+"auto": true,
+"d": 14.86,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"aegis.shared.oakhaven.low": {
+"auto": true,
+"d": 5.59,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"aegis.shared.refuse.0": {
+"auto": true,
+"d": 3.46,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"aegis.shared.refuse.1": {
+"auto": true,
+"d": 2.95,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"aegis.shared.refuse.2": {
+"auto": true,
+"d": 1.1,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.refuse.2.mp3",
+"t": "No."
+},
+"aegis.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.32,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"aegis.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.46,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"aegis.shared.the-catalogue.high": {
+"auto": true,
+"d": 15.12,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"aegis.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.25,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"aegis.shared.the-church.high": {
+"auto": true,
+"d": 15.31,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"aegis.shared.the-church.low": {
+"auto": true,
+"d": 9.91,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"aegis.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.57,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"aegis.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.61,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"aegis.shared.the-flambeaux.high": {
+"auto": true,
+"d": 14.62,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"aegis.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.78,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"aegis.shared.the-flume.high": {
+"auto": true,
+"d": 13.85,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"aegis.shared.the-flume.low": {
+"auto": true,
+"d": 9.62,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"aegis.shared.the-grafters.high": {
+"auto": true,
+"d": 10.32,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"aegis.shared.the-grafters.low": {
+"auto": true,
+"d": 3.62,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"aegis.shared.the-hedge.high": {
+"auto": true,
+"d": 12.36,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"aegis.shared.the-hedge.low": {
+"auto": true,
+"d": 7.3,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"aegis.shared.the-hush.high": {
+"auto": true,
+"d": 14.47,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"aegis.shared.the-hush.low": {
+"auto": true,
+"d": 5.16,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"aegis.shared.the-iron-synod.high": {
+"auto": true,
+"d": 14.33,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"aegis.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.08,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"aegis.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 16.51,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"aegis.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.75,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"aegis.shared.the-narrow.high": {
+"auto": true,
+"d": 13.7,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"aegis.shared.the-narrow.low": {
+"auto": true,
+"d": 5.45,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"aegis.shared.the-office-cutter.high": {
+"auto": true,
+"d": 14.93,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"aegis.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.81,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"aegis.shared.the-quarry.high": {
+"auto": true,
+"d": 12.55,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"aegis.shared.the-quarry.low": {
+"auto": true,
+"d": 5.11,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"aegis.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 16.34,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"aegis.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.74,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"aegis.shared.the-rite.high": {
+"auto": true,
+"d": 16.49,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"aegis.shared.the-rite.low": {
+"auto": true,
+"d": 5.93,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"aegis.shared.the-root.high": {
+"auto": true,
+"d": 14.14,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"aegis.shared.the-root.low": {
+"auto": true,
+"d": 5.66,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"aegis.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 14.45,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"aegis.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 10.82,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"aegis.shared.vesper.high": {
+"auto": true,
+"d": 12.07,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"aegis.shared.vesper.low": {
+"auto": true,
+"d": 2.18,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"aegis.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.64,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"aegis.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.57,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"aegis.shared.whisper-grove.high": {
+"auto": true,
+"d": 15.36,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"aegis.shared.whisper-grove.low": {
+"auto": true,
+"d": 13.46,
+"kind": "shared",
+"speaker": "aegis",
+"src": "voices/aegis/aegis.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
 "aegis_dw.greet.normal": {
 "d": 1.7,
 "kind": "greet",
@@ -228,14 +708,14 @@ const VOICE_LINES = {
 },
 "bettis.g.4b835e": {
 "auto": true,
-"d": 1.63,
+"d": 1.7,
 "kind": "greet",
 "speaker": "bettis",
 "src": "voices/bettis/bettis.g.4b835e.mp3",
 "t": "...I will go second..."
 },
 "bettis.greet.blunt": {
-"d": 1.78,
+"d": 1.75,
 "kind": "greet",
 "speaker": "bettis",
 "src": "voices/bettis/bettis.greet.blunt.mp3",
@@ -243,7 +723,7 @@ const VOICE_LINES = {
 "voiceOf": "bettis"
 },
 "bettis.greet.normal": {
-"d": 1.78,
+"d": 1.75,
 "kind": "greet",
 "speaker": "bettis",
 "src": "voices/bettis/bettis.greet.normal.mp3",
@@ -1529,6 +2009,270 @@ const VOICE_LINES = {
 "speaker": "kaelen",
 "src": "voices/kaelen/kaelen.rope.iknow.mp3",
 "t": "I know. I know. They're coming."
+},
+"kaelen.shared.aether-glass.high": {
+"auto": true,
+"d": 18.48,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"kaelen.shared.bless.0": {
+"auto": true,
+"d": 1.75,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"kaelen.shared.bless.1": {
+"auto": true,
+"d": 1.56,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"kaelen.shared.bless.2": {
+"auto": true,
+"d": 1.22,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"kaelen.shared.governor-vance.high": {
+"auto": true,
+"d": 11.3,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"kaelen.shared.hush-lamps.high": {
+"auto": true,
+"d": 11.74,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"kaelen.shared.kaelen-vance.high": {
+"auto": true,
+"d": 15.24,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"kaelen.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 12.31,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"kaelen.shared.oakhaven.high": {
+"auto": true,
+"d": 16.66,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"kaelen.shared.refuse.0": {
+"auto": true,
+"d": 2.93,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"kaelen.shared.refuse.1": {
+"auto": true,
+"d": 1.97,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"kaelen.shared.refuse.2": {
+"auto": true,
+"d": 0.74,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.refuse.2.mp3",
+"t": "No."
+},
+"kaelen.shared.the-cacophony.high": {
+"auto": true,
+"d": 14.71,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"kaelen.shared.the-catalogue.high": {
+"auto": true,
+"d": 16.58,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"kaelen.shared.the-church.high": {
+"auto": true,
+"d": 16.92,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"kaelen.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 9.7,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"kaelen.shared.the-flambeaux.high": {
+"auto": true,
+"d": 15.74,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"kaelen.shared.the-flume.high": {
+"auto": true,
+"d": 14.98,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"kaelen.shared.the-grafters.high": {
+"auto": true,
+"d": 11.06,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"kaelen.shared.the-hedge.high": {
+"auto": true,
+"d": 14.16,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"kaelen.shared.the-hush.high": {
+"auto": true,
+"d": 16.01,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"kaelen.shared.the-iron-synod.high": {
+"auto": true,
+"d": 15.46,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"kaelen.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 18.5,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"kaelen.shared.the-narrow.high": {
+"auto": true,
+"d": 16.22,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"kaelen.shared.the-office-cutter.high": {
+"auto": true,
+"d": 16.49,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"kaelen.shared.the-quarry.high": {
+"auto": true,
+"d": 14.14,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"kaelen.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 17.59,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"kaelen.shared.the-rite.high": {
+"auto": true,
+"d": 17.83,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"kaelen.shared.the-root.high": {
+"auto": true,
+"d": 15.74,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"kaelen.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 15.62,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"kaelen.shared.vesper.high": {
+"auto": true,
+"d": 13.01,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"kaelen.shared.vox-bottles.high": {
+"auto": true,
+"d": 9.6,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"kaelen.shared.whisper-grove.high": {
+"auto": true,
+"d": 17.16,
+"kind": "shared",
+"speaker": "kaelen",
+"src": "voices/kaelen/kaelen.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
 },
 "kaelen.t.2760d0": {
 "auto": true,
@@ -7358,6 +8102,246 @@ const VOICE_LINES = {
 "t": "Hot water? There is always hot water. Sit; the chair is clean. People hesitate less when the chair is clean.",
 "voiceOf": "quist"
 },
+"quist.shared.aether-glass.high": {
+"auto": true,
+"d": 14.38,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"quist.shared.bless.0": {
+"auto": true,
+"d": 1.92,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"quist.shared.bless.1": {
+"auto": true,
+"d": 1.85,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"quist.shared.bless.2": {
+"auto": true,
+"d": 1.37,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"quist.shared.governor-vance.high": {
+"auto": true,
+"d": 9.0,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"quist.shared.hush-lamps.high": {
+"auto": true,
+"d": 8.45,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"quist.shared.kaelen-vance.high": {
+"auto": true,
+"d": 11.93,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"quist.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 9.72,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"quist.shared.oakhaven.high": {
+"auto": true,
+"d": 13.1,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"quist.shared.refuse.0": {
+"auto": true,
+"d": 2.76,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"quist.shared.refuse.1": {
+"auto": true,
+"d": 2.06,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"quist.shared.refuse.2": {
+"auto": true,
+"d": 0.79,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.refuse.2.mp3",
+"t": "No."
+},
+"quist.shared.the-cacophony.high": {
+"auto": true,
+"d": 11.57,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"quist.shared.the-church.high": {
+"auto": true,
+"d": 13.37,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"quist.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 7.54,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"quist.shared.the-flambeaux.high": {
+"auto": true,
+"d": 12.26,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"quist.shared.the-flume.high": {
+"auto": true,
+"d": 11.98,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"quist.shared.the-grafters.high": {
+"auto": true,
+"d": 9.17,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"quist.shared.the-hedge.high": {
+"auto": true,
+"d": 10.78,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"quist.shared.the-hush.high": {
+"auto": true,
+"d": 11.78,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"quist.shared.the-iron-synod.high": {
+"auto": true,
+"d": 12.24,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"quist.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 14.42,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"quist.shared.the-narrow.high": {
+"auto": true,
+"d": 11.71,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"quist.shared.the-office-cutter.high": {
+"auto": true,
+"d": 13.08,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"quist.shared.the-quarry.high": {
+"auto": true,
+"d": 10.94,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"quist.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 13.92,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"quist.shared.the-rite.high": {
+"auto": true,
+"d": 13.85,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"quist.shared.the-root.high": {
+"auto": true,
+"d": 11.86,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"quist.shared.vesper.high": {
+"auto": true,
+"d": 10.51,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"quist.shared.vox-bottles.high": {
+"auto": true,
+"d": 7.56,
+"kind": "shared",
+"speaker": "quist",
+"src": "voices/quist/quist.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
 "quist.t.1c1d68": {
 "auto": true,
 "d": 7.08,
@@ -7843,6 +8827,13566 @@ const VOICE_LINES = {
 "src": "voices/sexton/sexton.greet.polite.mp3",
 "t": "One more before the light goes. One more.",
 "voiceOf": "sexton"
+},
+"shared_af_aoede.shared.aether-glass.high": {
+"auto": true,
+"d": 17.9,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_af_aoede.shared.aether-glass.low": {
+"auto": true,
+"d": 4.37,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_af_aoede.shared.bless.0": {
+"auto": true,
+"d": 1.73,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_af_aoede.shared.bless.1": {
+"auto": true,
+"d": 1.54,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_af_aoede.shared.bless.2": {
+"auto": true,
+"d": 1.2,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_af_aoede.shared.governor-vance.high": {
+"auto": true,
+"d": 10.44,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_af_aoede.shared.governor-vance.low": {
+"auto": true,
+"d": 4.58,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_af_aoede.shared.hush-lamps.high": {
+"auto": true,
+"d": 10.9,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_af_aoede.shared.hush-lamps.low": {
+"auto": true,
+"d": 3.91,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_af_aoede.shared.kaelen-vance.high": {
+"auto": true,
+"d": 14.16,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_af_aoede.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.97,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_af_aoede.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 11.4,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_af_aoede.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.05,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_af_aoede.shared.oakhaven.high": {
+"auto": true,
+"d": 16.1,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_af_aoede.shared.oakhaven.low": {
+"auto": true,
+"d": 5.38,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_af_aoede.shared.refuse.0": {
+"auto": true,
+"d": 2.71,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_af_aoede.shared.refuse.1": {
+"auto": true,
+"d": 1.94,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_af_aoede.shared.refuse.2": {
+"auto": true,
+"d": 0.72,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_af_aoede.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.87,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_af_aoede.shared.the-cacophony.low": {
+"auto": true,
+"d": 3.94,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_af_aoede.shared.the-catalogue.high": {
+"auto": true,
+"d": 15.46,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_af_aoede.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.7,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_af_aoede.shared.the-church.high": {
+"auto": true,
+"d": 15.89,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_af_aoede.shared.the-church.low": {
+"auto": true,
+"d": 10.2,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_af_aoede.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.93,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_af_aoede.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.03,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_af_aoede.shared.the-flambeaux.high": {
+"auto": true,
+"d": 14.83,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_af_aoede.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_af_aoede.shared.the-flume.high": {
+"auto": true,
+"d": 14.11,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_af_aoede.shared.the-flume.low": {
+"auto": true,
+"d": 9.82,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_af_aoede.shared.the-grafters.high": {
+"auto": true,
+"d": 10.68,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_af_aoede.shared.the-grafters.low": {
+"auto": true,
+"d": 3.14,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_af_aoede.shared.the-hedge.high": {
+"auto": true,
+"d": 13.58,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_af_aoede.shared.the-hedge.low": {
+"auto": true,
+"d": 7.42,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_af_aoede.shared.the-hush.high": {
+"auto": true,
+"d": 15.86,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_af_aoede.shared.the-hush.low": {
+"auto": true,
+"d": 4.42,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_af_aoede.shared.the-iron-synod.high": {
+"auto": true,
+"d": 14.57,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_af_aoede.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.74,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_af_aoede.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 17.69,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_af_aoede.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 11.59,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_af_aoede.shared.the-narrow.high": {
+"auto": true,
+"d": 15.34,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_af_aoede.shared.the-narrow.low": {
+"auto": true,
+"d": 5.23,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_af_aoede.shared.the-office-cutter.high": {
+"auto": true,
+"d": 15.6,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_af_aoede.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.81,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_af_aoede.shared.the-quarry.high": {
+"auto": true,
+"d": 13.3,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_af_aoede.shared.the-quarry.low": {
+"auto": true,
+"d": 4.78,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_af_aoede.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 17.11,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_af_aoede.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.22,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_af_aoede.shared.the-rite.high": {
+"auto": true,
+"d": 17.28,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_af_aoede.shared.the-rite.low": {
+"auto": true,
+"d": 5.95,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_af_aoede.shared.the-root.high": {
+"auto": true,
+"d": 15.0,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_af_aoede.shared.the-root.low": {
+"auto": true,
+"d": 5.45,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_af_aoede.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 14.9,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_af_aoede.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 11.02,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_af_aoede.shared.vesper.high": {
+"auto": true,
+"d": 12.62,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_af_aoede.shared.vesper.low": {
+"auto": true,
+"d": 1.27,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_af_aoede.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.86,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_af_aoede.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.35,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_af_aoede.shared.whisper-grove.high": {
+"auto": true,
+"d": 16.08,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_af_aoede.shared.whisper-grove.low": {
+"auto": true,
+"d": 13.78,
+"kind": "shared",
+"speaker": "shared_af_aoede",
+"src": "voices/shared_af_aoede/shared_af_aoede.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_af_bella.shared.aether-glass.high": {
+"auto": true,
+"d": 19.34,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_af_bella.shared.aether-glass.low": {
+"auto": true,
+"d": 5.28,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_af_bella.shared.bless.0": {
+"auto": true,
+"d": 1.73,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_af_bella.shared.bless.1": {
+"auto": true,
+"d": 1.63,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_af_bella.shared.bless.2": {
+"auto": true,
+"d": 1.1,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_af_bella.shared.governor-vance.high": {
+"auto": true,
+"d": 10.44,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_af_bella.shared.governor-vance.low": {
+"auto": true,
+"d": 4.94,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_af_bella.shared.hush-lamps.high": {
+"auto": true,
+"d": 11.16,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_af_bella.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.27,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_af_bella.shared.kaelen-vance.high": {
+"auto": true,
+"d": 14.9,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_af_bella.shared.kaelen-vance.low": {
+"auto": true,
+"d": 8.66,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_af_bella.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 11.88,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_af_bella.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.58,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_af_bella.shared.oakhaven.high": {
+"auto": true,
+"d": 16.82,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_af_bella.shared.oakhaven.low": {
+"auto": true,
+"d": 5.88,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_af_bella.shared.refuse.0": {
+"auto": true,
+"d": 3.0,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_af_bella.shared.refuse.1": {
+"auto": true,
+"d": 1.87,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_af_bella.shared.refuse.2": {
+"auto": true,
+"d": 0.65,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_af_bella.shared.the-cacophony.high": {
+"auto": true,
+"d": 15.0,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_af_bella.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.56,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_af_bella.shared.the-catalogue.high": {
+"auto": true,
+"d": 16.46,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_af_bella.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.25,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_af_bella.shared.the-church.high": {
+"auto": true,
+"d": 16.34,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_af_bella.shared.the-church.low": {
+"auto": true,
+"d": 10.78,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_af_bella.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 9.58,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_af_bella.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.54,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_af_bella.shared.the-flambeaux.high": {
+"auto": true,
+"d": 15.07,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_af_bella.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.34,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_af_bella.shared.the-flume.high": {
+"auto": true,
+"d": 14.88,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_af_bella.shared.the-flume.low": {
+"auto": true,
+"d": 10.25,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_af_bella.shared.the-grafters.high": {
+"auto": true,
+"d": 10.92,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_af_bella.shared.the-grafters.low": {
+"auto": true,
+"d": 3.48,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_af_bella.shared.the-hedge.high": {
+"auto": true,
+"d": 14.11,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_af_bella.shared.the-hedge.low": {
+"auto": true,
+"d": 7.8,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_af_bella.shared.the-hush.high": {
+"auto": true,
+"d": 16.46,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_af_bella.shared.the-hush.low": {
+"auto": true,
+"d": 5.18,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_af_bella.shared.the-iron-synod.high": {
+"auto": true,
+"d": 15.86,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_af_bella.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.32,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_af_bella.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 18.7,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_af_bella.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 12.19,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_af_bella.shared.the-narrow.high": {
+"auto": true,
+"d": 16.25,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_af_bella.shared.the-narrow.low": {
+"auto": true,
+"d": 5.66,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_af_bella.shared.the-office-cutter.high": {
+"auto": true,
+"d": 16.7,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_af_bella.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.95,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_af_bella.shared.the-quarry.high": {
+"auto": true,
+"d": 13.9,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_af_bella.shared.the-quarry.low": {
+"auto": true,
+"d": 5.06,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_af_bella.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 17.74,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_af_bella.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.6,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_af_bella.shared.the-rite.high": {
+"auto": true,
+"d": 18.72,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_af_bella.shared.the-rite.low": {
+"auto": true,
+"d": 6.29,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_af_bella.shared.the-root.high": {
+"auto": true,
+"d": 15.91,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_af_bella.shared.the-root.low": {
+"auto": true,
+"d": 5.86,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_af_bella.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 15.98,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_af_bella.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 11.76,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_af_bella.shared.vesper.high": {
+"auto": true,
+"d": 12.74,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_af_bella.shared.vesper.low": {
+"auto": true,
+"d": 1.27,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_af_bella.shared.vox-bottles.high": {
+"auto": true,
+"d": 9.17,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_af_bella.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.81,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_af_bella.shared.whisper-grove.high": {
+"auto": true,
+"d": 16.82,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_af_bella.shared.whisper-grove.low": {
+"auto": true,
+"d": 14.74,
+"kind": "shared",
+"speaker": "shared_af_bella",
+"src": "voices/shared_af_bella/shared_af_bella.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_af_heart.shared.aether-glass.high": {
+"auto": true,
+"d": 18.72,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_af_heart.shared.aether-glass.low": {
+"auto": true,
+"d": 4.75,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_af_heart.shared.bless.0": {
+"auto": true,
+"d": 1.8,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_af_heart.shared.bless.1": {
+"auto": true,
+"d": 1.68,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_af_heart.shared.bless.2": {
+"auto": true,
+"d": 1.2,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_af_heart.shared.governor-vance.high": {
+"auto": true,
+"d": 10.03,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_af_heart.shared.governor-vance.low": {
+"auto": true,
+"d": 4.78,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_af_heart.shared.hush-lamps.high": {
+"auto": true,
+"d": 10.56,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_af_heart.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.03,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_af_heart.shared.kaelen-vance.high": {
+"auto": true,
+"d": 14.45,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_af_heart.shared.kaelen-vance.low": {
+"auto": true,
+"d": 8.04,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_af_heart.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 11.33,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_af_heart.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.1,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_af_heart.shared.oakhaven.high": {
+"auto": true,
+"d": 16.32,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_af_heart.shared.oakhaven.low": {
+"auto": true,
+"d": 5.57,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_af_heart.shared.refuse.0": {
+"auto": true,
+"d": 2.86,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_af_heart.shared.refuse.1": {
+"auto": true,
+"d": 1.94,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_af_heart.shared.refuse.2": {
+"auto": true,
+"d": 0.72,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_af_heart.shared.the-cacophony.high": {
+"auto": true,
+"d": 14.3,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_af_heart.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.25,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_af_heart.shared.the-catalogue.high": {
+"auto": true,
+"d": 15.84,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_af_heart.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.01,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_af_heart.shared.the-church.high": {
+"auto": true,
+"d": 16.08,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_af_heart.shared.the-church.low": {
+"auto": true,
+"d": 10.18,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_af_heart.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 9.19,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_af_heart.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.27,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_af_heart.shared.the-flambeaux.high": {
+"auto": true,
+"d": 14.86,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_af_heart.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.13,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_af_heart.shared.the-flume.high": {
+"auto": true,
+"d": 14.33,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_af_heart.shared.the-flume.low": {
+"auto": true,
+"d": 9.74,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_af_heart.shared.the-grafters.high": {
+"auto": true,
+"d": 10.73,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_af_heart.shared.the-grafters.low": {
+"auto": true,
+"d": 3.41,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_af_heart.shared.the-hedge.high": {
+"auto": true,
+"d": 13.66,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_af_heart.shared.the-hedge.low": {
+"auto": true,
+"d": 7.3,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_af_heart.shared.the-hush.high": {
+"auto": true,
+"d": 16.08,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_af_heart.shared.the-hush.low": {
+"auto": true,
+"d": 4.78,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_af_heart.shared.the-iron-synod.high": {
+"auto": true,
+"d": 15.41,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_af_heart.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.89,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_af_heart.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 17.83,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_af_heart.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 11.5,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_af_heart.shared.the-narrow.high": {
+"auto": true,
+"d": 15.72,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_af_heart.shared.the-narrow.low": {
+"auto": true,
+"d": 5.26,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_af_heart.shared.the-office-cutter.high": {
+"auto": true,
+"d": 16.15,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_af_heart.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.66,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_af_heart.shared.the-quarry.high": {
+"auto": true,
+"d": 13.54,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_af_heart.shared.the-quarry.low": {
+"auto": true,
+"d": 4.9,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_af_heart.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 17.4,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_af_heart.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.5,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_af_heart.shared.the-rite.high": {
+"auto": true,
+"d": 17.83,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_af_heart.shared.the-rite.low": {
+"auto": true,
+"d": 5.93,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_af_heart.shared.the-root.high": {
+"auto": true,
+"d": 15.29,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_af_heart.shared.the-root.low": {
+"auto": true,
+"d": 5.66,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_af_heart.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 15.38,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_af_heart.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 11.18,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_af_heart.shared.vesper.high": {
+"auto": true,
+"d": 12.5,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_af_heart.shared.vesper.low": {
+"auto": true,
+"d": 1.3,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_af_heart.shared.vox-bottles.high": {
+"auto": true,
+"d": 9.02,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_af_heart.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.35,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_af_heart.shared.whisper-grove.high": {
+"auto": true,
+"d": 16.46,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_af_heart.shared.whisper-grove.low": {
+"auto": true,
+"d": 14.09,
+"kind": "shared",
+"speaker": "shared_af_heart",
+"src": "voices/shared_af_heart/shared_af_heart.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_af_jessica.shared.aether-glass.high": {
+"auto": true,
+"d": 15.07,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_af_jessica.shared.aether-glass.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_af_jessica.shared.bless.0": {
+"auto": true,
+"d": 2.04,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_af_jessica.shared.bless.1": {
+"auto": true,
+"d": 1.87,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_af_jessica.shared.bless.2": {
+"auto": true,
+"d": 1.51,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_af_jessica.shared.governor-vance.high": {
+"auto": true,
+"d": 8.98,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_af_jessica.shared.governor-vance.low": {
+"auto": true,
+"d": 4.01,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_af_jessica.shared.hush-lamps.high": {
+"auto": true,
+"d": 9.1,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_af_jessica.shared.hush-lamps.low": {
+"auto": true,
+"d": 3.65,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_af_jessica.shared.kaelen-vance.high": {
+"auto": true,
+"d": 12.31,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_af_jessica.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.13,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_af_jessica.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.03,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_af_jessica.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 5.52,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_af_jessica.shared.oakhaven.high": {
+"auto": true,
+"d": 13.68,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_af_jessica.shared.oakhaven.low": {
+"auto": true,
+"d": 4.42,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_af_jessica.shared.refuse.0": {
+"auto": true,
+"d": 2.86,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_af_jessica.shared.refuse.1": {
+"auto": true,
+"d": 2.3,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_af_jessica.shared.refuse.2": {
+"auto": true,
+"d": 0.84,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_af_jessica.shared.the-cacophony.high": {
+"auto": true,
+"d": 12.02,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_af_jessica.shared.the-cacophony.low": {
+"auto": true,
+"d": 3.6,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_af_jessica.shared.the-catalogue.high": {
+"auto": true,
+"d": 13.32,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_af_jessica.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.48,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_af_jessica.shared.the-church.high": {
+"auto": true,
+"d": 13.82,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_af_jessica.shared.the-church.low": {
+"auto": true,
+"d": 8.88,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_af_jessica.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 7.92,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_af_jessica.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 3.79,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_af_jessica.shared.the-flambeaux.high": {
+"auto": true,
+"d": 12.58,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_af_jessica.shared.the-flambeaux.low": {
+"auto": true,
+"d": 3.72,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_af_jessica.shared.the-flume.high": {
+"auto": true,
+"d": 12.43,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_af_jessica.shared.the-flume.low": {
+"auto": true,
+"d": 8.5,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_af_jessica.shared.the-grafters.high": {
+"auto": true,
+"d": 9.41,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_af_jessica.shared.the-grafters.low": {
+"auto": true,
+"d": 3.19,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_af_jessica.shared.the-hedge.high": {
+"auto": true,
+"d": 11.78,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_af_jessica.shared.the-hedge.low": {
+"auto": true,
+"d": 6.29,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_af_jessica.shared.the-hush.high": {
+"auto": true,
+"d": 12.98,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_af_jessica.shared.the-hush.low": {
+"auto": true,
+"d": 4.15,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_af_jessica.shared.the-iron-synod.high": {
+"auto": true,
+"d": 12.82,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_af_jessica.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.53,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_af_jessica.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 15.1,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_af_jessica.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 9.72,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_af_jessica.shared.the-narrow.high": {
+"auto": true,
+"d": 12.7,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_af_jessica.shared.the-narrow.low": {
+"auto": true,
+"d": 4.61,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_af_jessica.shared.the-office-cutter.high": {
+"auto": true,
+"d": 13.44,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_af_jessica.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.16,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_af_jessica.shared.the-quarry.high": {
+"auto": true,
+"d": 11.38,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_af_jessica.shared.the-quarry.low": {
+"auto": true,
+"d": 4.25,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_af_jessica.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 14.66,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_af_jessica.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.12,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_af_jessica.shared.the-rite.high": {
+"auto": true,
+"d": 14.66,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_af_jessica.shared.the-rite.low": {
+"auto": true,
+"d": 5.21,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_af_jessica.shared.the-root.high": {
+"auto": true,
+"d": 12.55,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_af_jessica.shared.the-root.low": {
+"auto": true,
+"d": 4.78,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_af_jessica.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 13.03,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_af_jessica.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 9.5,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_af_jessica.shared.vesper.high": {
+"auto": true,
+"d": 11.02,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_af_jessica.shared.vesper.low": {
+"auto": true,
+"d": 1.61,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_af_jessica.shared.vox-bottles.high": {
+"auto": true,
+"d": 7.66,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_af_jessica.shared.vox-bottles.low": {
+"auto": true,
+"d": 4.68,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_af_jessica.shared.whisper-grove.high": {
+"auto": true,
+"d": 13.9,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_af_jessica.shared.whisper-grove.low": {
+"auto": true,
+"d": 12.24,
+"kind": "shared",
+"speaker": "shared_af_jessica",
+"src": "voices/shared_af_jessica/shared_af_jessica.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_af_kore.shared.aether-glass.high": {
+"auto": true,
+"d": 17.66,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_af_kore.shared.bless.0": {
+"auto": true,
+"d": 1.7,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_af_kore.shared.bless.1": {
+"auto": true,
+"d": 1.51,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_af_kore.shared.bless.2": {
+"auto": true,
+"d": 1.13,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_af_kore.shared.governor-vance.high": {
+"auto": true,
+"d": 10.87,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_af_kore.shared.hush-lamps.high": {
+"auto": true,
+"d": 10.94,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_af_kore.shared.kaelen-vance.high": {
+"auto": true,
+"d": 14.16,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_af_kore.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 11.66,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_af_kore.shared.oakhaven.high": {
+"auto": true,
+"d": 16.22,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_af_kore.shared.refuse.0": {
+"auto": true,
+"d": 2.81,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_af_kore.shared.refuse.1": {
+"auto": true,
+"d": 1.92,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_af_kore.shared.refuse.2": {
+"auto": true,
+"d": 0.72,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_af_kore.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.99,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_af_kore.shared.the-catalogue.high": {
+"auto": true,
+"d": 15.65,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_af_kore.shared.the-church.high": {
+"auto": true,
+"d": 16.03,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_af_kore.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 9.41,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_af_kore.shared.the-flambeaux.high": {
+"auto": true,
+"d": 14.9,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_af_kore.shared.the-flume.high": {
+"auto": true,
+"d": 14.54,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_af_kore.shared.the-grafters.high": {
+"auto": true,
+"d": 10.56,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_af_kore.shared.the-hedge.high": {
+"auto": true,
+"d": 13.56,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_af_kore.shared.the-hush.high": {
+"auto": true,
+"d": 15.72,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_af_kore.shared.the-iron-synod.high": {
+"auto": true,
+"d": 14.86,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_af_kore.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 17.57,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_af_kore.shared.the-narrow.high": {
+"auto": true,
+"d": 15.62,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_af_kore.shared.the-office-cutter.high": {
+"auto": true,
+"d": 16.03,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_af_kore.shared.the-quarry.high": {
+"auto": true,
+"d": 13.44,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_af_kore.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 17.02,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_af_kore.shared.the-rite.high": {
+"auto": true,
+"d": 17.06,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_af_kore.shared.the-root.high": {
+"auto": true,
+"d": 15.02,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_af_kore.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 14.88,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_af_kore.shared.vesper.high": {
+"auto": true,
+"d": 12.6,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_af_kore.shared.vox-bottles.high": {
+"auto": true,
+"d": 9.24,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_af_kore.shared.whisper-grove.high": {
+"auto": true,
+"d": 16.32,
+"kind": "shared",
+"speaker": "shared_af_kore",
+"src": "voices/shared_af_kore/shared_af_kore.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_af_nicole.shared.aether-glass.high": {
+"auto": true,
+"d": 29.62,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_af_nicole.shared.aether-glass.low": {
+"auto": true,
+"d": 7.44,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_af_nicole.shared.bless.0": {
+"auto": true,
+"d": 2.45,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_af_nicole.shared.bless.1": {
+"auto": true,
+"d": 2.16,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_af_nicole.shared.bless.2": {
+"auto": true,
+"d": 1.46,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_af_nicole.shared.governor-vance.high": {
+"auto": true,
+"d": 17.11,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_af_nicole.shared.governor-vance.low": {
+"auto": true,
+"d": 7.7,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_af_nicole.shared.hush-lamps.high": {
+"auto": true,
+"d": 17.57,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_af_nicole.shared.hush-lamps.low": {
+"auto": true,
+"d": 6.72,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_af_nicole.shared.kaelen-vance.high": {
+"auto": true,
+"d": 23.02,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_af_nicole.shared.kaelen-vance.low": {
+"auto": true,
+"d": 13.32,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_af_nicole.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 18.05,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_af_nicole.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 9.79,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_af_nicole.shared.oakhaven.high": {
+"auto": true,
+"d": 26.81,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_af_nicole.shared.oakhaven.low": {
+"auto": true,
+"d": 9.12,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_af_nicole.shared.refuse.0": {
+"auto": true,
+"d": 4.58,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_af_nicole.shared.refuse.1": {
+"auto": true,
+"d": 2.5,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_af_nicole.shared.refuse.2": {
+"auto": true,
+"d": 0.82,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_af_nicole.shared.the-cacophony.high": {
+"auto": true,
+"d": 22.49,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_af_nicole.shared.the-cacophony.low": {
+"auto": true,
+"d": 7.03,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_af_nicole.shared.the-catalogue.high": {
+"auto": true,
+"d": 25.18,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_af_nicole.shared.the-catalogue.low": {
+"auto": true,
+"d": 6.12,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_af_nicole.shared.the-church.high": {
+"auto": true,
+"d": 25.94,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_af_nicole.shared.the-church.low": {
+"auto": true,
+"d": 16.46,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_af_nicole.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 14.83,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_af_nicole.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 6.72,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_af_nicole.shared.the-flambeaux.high": {
+"auto": true,
+"d": 24.17,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_af_nicole.shared.the-flambeaux.low": {
+"auto": true,
+"d": 6.36,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_af_nicole.shared.the-flume.high": {
+"auto": true,
+"d": 22.03,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_af_nicole.shared.the-flume.low": {
+"auto": true,
+"d": 15.58,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_af_nicole.shared.the-grafters.high": {
+"auto": true,
+"d": 17.23,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_af_nicole.shared.the-grafters.low": {
+"auto": true,
+"d": 4.82,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_af_nicole.shared.the-hedge.high": {
+"auto": true,
+"d": 22.32,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_af_nicole.shared.the-hedge.low": {
+"auto": true,
+"d": 12.58,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_af_nicole.shared.the-hush.high": {
+"auto": true,
+"d": 24.94,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_af_nicole.shared.the-hush.low": {
+"auto": true,
+"d": 7.51,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_af_nicole.shared.the-iron-synod.high": {
+"auto": true,
+"d": 24.77,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_af_nicole.shared.the-iron-synod.low": {
+"auto": true,
+"d": 5.95,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_af_nicole.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 29.21,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_af_nicole.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 18.7,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_af_nicole.shared.the-narrow.high": {
+"auto": true,
+"d": 25.13,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_af_nicole.shared.the-narrow.low": {
+"auto": true,
+"d": 8.21,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_af_nicole.shared.the-office-cutter.high": {
+"auto": true,
+"d": 26.21,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_af_nicole.shared.the-office-cutter.low": {
+"auto": true,
+"d": 9.43,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_af_nicole.shared.the-quarry.high": {
+"auto": true,
+"d": 21.94,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_af_nicole.shared.the-quarry.low": {
+"auto": true,
+"d": 7.9,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_af_nicole.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 28.3,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_af_nicole.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 5.59,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_af_nicole.shared.the-rite.high": {
+"auto": true,
+"d": 28.25,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_af_nicole.shared.the-rite.low": {
+"auto": true,
+"d": 9.84,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_af_nicole.shared.the-root.high": {
+"auto": true,
+"d": 24.07,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_af_nicole.shared.the-root.low": {
+"auto": true,
+"d": 8.5,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_af_nicole.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 25.08,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_af_nicole.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 18.38,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_af_nicole.shared.vesper.high": {
+"auto": true,
+"d": 19.9,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_af_nicole.shared.vesper.low": {
+"auto": true,
+"d": 1.56,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_af_nicole.shared.vox-bottles.high": {
+"auto": true,
+"d": 13.97,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_af_nicole.shared.vox-bottles.low": {
+"auto": true,
+"d": 9.05,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_af_nicole.shared.whisper-grove.high": {
+"auto": true,
+"d": 26.81,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_af_nicole.shared.whisper-grove.low": {
+"auto": true,
+"d": 23.11,
+"kind": "shared",
+"speaker": "shared_af_nicole",
+"src": "voices/shared_af_nicole/shared_af_nicole.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_af_nova.shared.aether-glass.high": {
+"auto": true,
+"d": 15.22,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_af_nova.shared.aether-glass.low": {
+"auto": true,
+"d": 4.27,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_af_nova.shared.bless.0": {
+"auto": true,
+"d": 2.09,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_af_nova.shared.bless.1": {
+"auto": true,
+"d": 2.06,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_af_nova.shared.bless.2": {
+"auto": true,
+"d": 1.58,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_af_nova.shared.governor-vance.high": {
+"auto": true,
+"d": 9.41,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_af_nova.shared.governor-vance.low": {
+"auto": true,
+"d": 4.58,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_af_nova.shared.hush-lamps.high": {
+"auto": true,
+"d": 9.22,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_af_nova.shared.hush-lamps.low": {
+"auto": true,
+"d": 3.98,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_af_nova.shared.kaelen-vance.high": {
+"auto": true,
+"d": 12.29,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_af_nova.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.15,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_af_nova.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.06,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_af_nova.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 5.69,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_af_nova.shared.oakhaven.high": {
+"auto": true,
+"d": 13.92,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_af_nova.shared.oakhaven.low": {
+"auto": true,
+"d": 5.21,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_af_nova.shared.refuse.0": {
+"auto": true,
+"d": 3.0,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_af_nova.shared.refuse.1": {
+"auto": true,
+"d": 2.42,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_af_nova.shared.refuse.2": {
+"auto": true,
+"d": 0.91,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_af_nova.shared.the-cacophony.high": {
+"auto": true,
+"d": 12.0,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_af_nova.shared.the-cacophony.low": {
+"auto": true,
+"d": 3.98,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_af_nova.shared.the-catalogue.high": {
+"auto": true,
+"d": 13.34,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_af_nova.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.77,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_af_nova.shared.the-church.high": {
+"auto": true,
+"d": 13.78,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_af_nova.shared.the-church.low": {
+"auto": true,
+"d": 8.83,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_af_nova.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.02,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_af_nova.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.2,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_af_nova.shared.the-flambeaux.high": {
+"auto": true,
+"d": 12.96,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_af_nova.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_af_nova.shared.the-flume.high": {
+"auto": true,
+"d": 12.48,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_af_nova.shared.the-flume.low": {
+"auto": true,
+"d": 8.54,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_af_nova.shared.the-grafters.high": {
+"auto": true,
+"d": 9.46,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_af_nova.shared.the-grafters.low": {
+"auto": true,
+"d": 3.29,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_af_nova.shared.the-hedge.high": {
+"auto": true,
+"d": 11.26,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_af_nova.shared.the-hedge.low": {
+"auto": true,
+"d": 6.38,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_af_nova.shared.the-hush.high": {
+"auto": true,
+"d": 12.7,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_af_nova.shared.the-hush.low": {
+"auto": true,
+"d": 4.42,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_af_nova.shared.the-iron-synod.high": {
+"auto": true,
+"d": 12.77,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_af_nova.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.79,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_af_nova.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 14.74,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_af_nova.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 9.84,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_af_nova.shared.the-narrow.high": {
+"auto": true,
+"d": 12.74,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_af_nova.shared.the-narrow.low": {
+"auto": true,
+"d": 5.14,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_af_nova.shared.the-office-cutter.high": {
+"auto": true,
+"d": 13.66,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_af_nova.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.38,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_af_nova.shared.the-quarry.high": {
+"auto": true,
+"d": 11.35,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_af_nova.shared.the-quarry.low": {
+"auto": true,
+"d": 4.73,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_af_nova.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 14.83,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_af_nova.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.43,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_af_nova.shared.the-rite.high": {
+"auto": true,
+"d": 14.83,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_af_nova.shared.the-rite.low": {
+"auto": true,
+"d": 5.45,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_af_nova.shared.the-root.high": {
+"auto": true,
+"d": 13.01,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_af_nova.shared.the-root.low": {
+"auto": true,
+"d": 5.04,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_af_nova.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 13.1,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_af_nova.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 9.74,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_af_nova.shared.vesper.high": {
+"auto": true,
+"d": 10.99,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_af_nova.shared.vesper.low": {
+"auto": true,
+"d": 1.63,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_af_nova.shared.vox-bottles.high": {
+"auto": true,
+"d": 7.75,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_af_nova.shared.vox-bottles.low": {
+"auto": true,
+"d": 4.99,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_af_nova.shared.whisper-grove.high": {
+"auto": true,
+"d": 13.82,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_af_nova.shared.whisper-grove.low": {
+"auto": true,
+"d": 12.22,
+"kind": "shared",
+"speaker": "shared_af_nova",
+"src": "voices/shared_af_nova/shared_af_nova.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_af_sarah.shared.aether-glass.high": {
+"auto": true,
+"d": 17.69,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_af_sarah.shared.aether-glass.low": {
+"auto": true,
+"d": 4.58,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_af_sarah.shared.bless.0": {
+"auto": true,
+"d": 1.78,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_af_sarah.shared.bless.1": {
+"auto": true,
+"d": 1.7,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_af_sarah.shared.bless.2": {
+"auto": true,
+"d": 1.27,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_af_sarah.shared.governor-vance.high": {
+"auto": true,
+"d": 9.96,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_af_sarah.shared.governor-vance.low": {
+"auto": true,
+"d": 4.75,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_af_sarah.shared.hush-lamps.high": {
+"auto": true,
+"d": 10.37,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_af_sarah.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_af_sarah.shared.kaelen-vance.high": {
+"auto": true,
+"d": 13.94,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_af_sarah.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.94,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_af_sarah.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.94,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_af_sarah.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.12,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_af_sarah.shared.oakhaven.high": {
+"auto": true,
+"d": 15.65,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_af_sarah.shared.oakhaven.low": {
+"auto": true,
+"d": 5.62,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_af_sarah.shared.refuse.0": {
+"auto": true,
+"d": 2.93,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_af_sarah.shared.refuse.1": {
+"auto": true,
+"d": 1.94,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_af_sarah.shared.refuse.2": {
+"auto": true,
+"d": 0.79,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_af_sarah.shared.rumour.0": {
+"auto": true,
+"d": 12.89,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.0.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The grey men at the gate are proctors from the Catalogue. They are looking for a woman with a book. She is outside the Hedge, east of Kaelen's hut. Do not tell them I said so."
+},
+"shared_af_sarah.shared.rumour.1": {
+"auto": true,
+"d": 10.82,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.1.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: There's a scribe in the mist reading names off the dead Legion. They say she can give a Hollow its name back. They say it costs her something."
+},
+"shared_af_sarah.shared.rumour.10": {
+"auto": true,
+"d": 10.7,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.10.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: A skyship came in off the Rust Coast with twelve crates for the garrison. The crew drink at the Boar and do not talk about the cargo."
+},
+"shared_af_sarah.shared.rumour.11": {
+"auto": true,
+"d": 9.94,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.11.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: They say the Church is coming up the Greenroot road under glass-fire, singing. Hymns bring hounds. The Church does not care."
+},
+"shared_af_sarah.shared.rumour.12": {
+"auto": true,
+"d": 9.82,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.12.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: My fingernails grew a quarter-inch between dusk and dawn. Nobody's remarked on it. Nobody remarks on anything."
+},
+"shared_af_sarah.shared.rumour.13": {
+"auto": true,
+"d": 9.96,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.13.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Davin Hale sang his mother's harvest song at the Boar. The hounds sang it back. That was the last anyone saw of Davin."
+},
+"shared_af_sarah.shared.rumour.14": {
+"auto": true,
+"d": 10.68,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.14.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Governor took the Consortium's purse. Again. We eat, and the Root is bled, and the oaks ring like bronze when the wind moves."
+},
+"shared_af_sarah.shared.rumour.15": {
+"auto": true,
+"d": 10.1,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.15.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Keep your voice in your chest. Keep your lamp lit. Do not go to the Hedge at the dead hour, whatever it says, whoever it sounds like."
+},
+"shared_af_sarah.shared.rumour.16": {
+"auto": true,
+"d": 10.54,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.16.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Tam the night-hummer listens to his dead wife at the Flume crossing. We all know. None of us has the heart to tell him what she is."
+},
+"shared_af_sarah.shared.rumour.17": {
+"auto": true,
+"d": 10.25,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.17.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Bettany at the market stall takes coin for tonic but she would rather take eggs. Nobody has eggs. The hens went quiet first."
+},
+"shared_af_sarah.shared.rumour.18": {
+"auto": true,
+"d": 12.6,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.18.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Fenning twins went down the culvert after their dog on Driftday last. Abner Fenning still sets a lamp in their window. He keeps the culvert key on a nail."
+},
+"shared_af_sarah.shared.rumour.19": {
+"auto": true,
+"d": 12.96,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.19.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Cantor sang the Tanner boys into the ground side by side, after the bore head went on the platform. Marten and Old Coyle with them. She has not been the same since."
+},
+"shared_af_sarah.shared.rumour.2": {
+"auto": true,
+"d": 9.65,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.2.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Abner Fenning on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night."
+},
+"shared_af_sarah.shared.rumour.20": {
+"auto": true,
+"d": 10.87,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.20.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Nell Carder has not let the boy out of the mill since the Grafters posted the inspection. She says he has a cough. It is not a cough."
+},
+"shared_af_sarah.shared.rumour.21": {
+"auto": true,
+"d": 9.65,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.21.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Red was redder when I was a girl. Summers were warmer. Everyone over thirty says so. The young ones think we are mad."
+},
+"shared_af_sarah.shared.rumour.22": {
+"auto": true,
+"d": 11.28,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.22.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The dead are buried with bound jaws and a stone on the tongue so they cannot ring. We have not rung a bell in this town since the Synod took them."
+},
+"shared_af_sarah.shared.rumour.3": {
+"auto": true,
+"d": 9.12,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.3.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Captain Vane will sell you anything off the Kestrel that isn't nailed down. Crossbows. Axes. Opinions."
+},
+"shared_af_sarah.shared.rumour.4": {
+"auto": true,
+"d": 9.38,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.4.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Factor keeps Consortium brigandine and a steam-maul in Greenhall. At Consortium prices, naturally."
+},
+"shared_af_sarah.shared.rumour.5": {
+"auto": true,
+"d": 9.14,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.5.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Orrin Pale the sexton sells what the old watch left in the crypt. Ask him quietly; he is used to quiet."
+},
+"shared_af_sarah.shared.rumour.6": {
+"auto": true,
+"d": 9.38,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.6.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Old Tam has a coat of the Hedge's own wool. You walk in it like a held breath. He doesn't sell it to just anyone."
+},
+"shared_af_sarah.shared.rumour.7": {
+"auto": true,
+"d": 9.48,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.7.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Pim Carder put out roots on Rootday. Bettany hummed him through it. The Grafters have not been told. Do not tell them."
+},
+"shared_af_sarah.shared.rumour.8": {
+"auto": true,
+"d": 9.1,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.8.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Old Harrow swears the Hedge whistled the falling fifth last night. Exactly right. Nobody taught it that."
+},
+"shared_af_sarah.shared.rumour.9": {
+"auto": true,
+"d": 9.43,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.rumour.9.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The baker says her bread rose until the oven split. Burl-sickness in the dough, she says, as if dough could sicken."
+},
+"shared_af_sarah.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.7,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_af_sarah.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.27,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_af_sarah.shared.the-catalogue.high": {
+"auto": true,
+"d": 15.36,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_af_sarah.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.01,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_af_sarah.shared.the-church.high": {
+"auto": true,
+"d": 15.38,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_af_sarah.shared.the-church.low": {
+"auto": true,
+"d": 10.13,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_af_sarah.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 9.02,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_af_sarah.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.34,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_af_sarah.shared.the-flambeaux.high": {
+"auto": true,
+"d": 14.18,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_af_sarah.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.15,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_af_sarah.shared.the-flume.high": {
+"auto": true,
+"d": 13.97,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_af_sarah.shared.the-flume.low": {
+"auto": true,
+"d": 9.53,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_af_sarah.shared.the-grafters.high": {
+"auto": true,
+"d": 10.56,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_af_sarah.shared.the-grafters.low": {
+"auto": true,
+"d": 3.41,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_af_sarah.shared.the-hedge.high": {
+"auto": true,
+"d": 13.32,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_af_sarah.shared.the-hedge.low": {
+"auto": true,
+"d": 7.06,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_af_sarah.shared.the-hush.high": {
+"auto": true,
+"d": 15.14,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_af_sarah.shared.the-hush.low": {
+"auto": true,
+"d": 4.61,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_af_sarah.shared.the-iron-synod.high": {
+"auto": true,
+"d": 14.64,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_af_sarah.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.01,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_af_sarah.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 16.92,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_af_sarah.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.99,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_af_sarah.shared.the-narrow.high": {
+"auto": true,
+"d": 15.07,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_af_sarah.shared.the-narrow.low": {
+"auto": true,
+"d": 5.3,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_af_sarah.shared.the-office-cutter.high": {
+"auto": true,
+"d": 15.41,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_af_sarah.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.59,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_af_sarah.shared.the-quarry.high": {
+"auto": true,
+"d": 12.98,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_af_sarah.shared.the-quarry.low": {
+"auto": true,
+"d": 4.7,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_af_sarah.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 16.61,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_af_sarah.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.55,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_af_sarah.shared.the-rite.high": {
+"auto": true,
+"d": 17.04,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_af_sarah.shared.the-rite.low": {
+"auto": true,
+"d": 6.12,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_af_sarah.shared.the-root.high": {
+"auto": true,
+"d": 14.5,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_af_sarah.shared.the-root.low": {
+"auto": true,
+"d": 5.47,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_af_sarah.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 15.02,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_af_sarah.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 11.04,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_af_sarah.shared.vesper.high": {
+"auto": true,
+"d": 11.95,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_af_sarah.shared.vesper.low": {
+"auto": true,
+"d": 1.3,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_af_sarah.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.54,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_af_sarah.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.45,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_af_sarah.shared.whisper-grove.high": {
+"auto": true,
+"d": 15.96,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_af_sarah.shared.whisper-grove.low": {
+"auto": true,
+"d": 13.8,
+"kind": "shared",
+"speaker": "shared_af_sarah",
+"src": "voices/shared_af_sarah/shared_af_sarah.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_am_adam.shared.aether-glass.high": {
+"auto": true,
+"d": 16.9,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_am_adam.shared.aether-glass.low": {
+"auto": true,
+"d": 4.51,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_am_adam.shared.bless.0": {
+"auto": true,
+"d": 1.82,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_am_adam.shared.bless.1": {
+"auto": true,
+"d": 1.68,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_am_adam.shared.bless.2": {
+"auto": true,
+"d": 1.27,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_am_adam.shared.governor-vance.high": {
+"auto": true,
+"d": 9.74,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_am_adam.shared.governor-vance.low": {
+"auto": true,
+"d": 4.51,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_am_adam.shared.hush-lamps.high": {
+"auto": true,
+"d": 10.13,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_am_adam.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.08,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_am_adam.shared.kaelen-vance.high": {
+"auto": true,
+"d": 13.42,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_am_adam.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.9,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_am_adam.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 11.21,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_am_adam.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 5.76,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_am_adam.shared.oakhaven.high": {
+"auto": true,
+"d": 15.17,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_am_adam.shared.oakhaven.low": {
+"auto": true,
+"d": 5.4,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_am_adam.shared.refuse.0": {
+"auto": true,
+"d": 2.9,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_am_adam.shared.refuse.1": {
+"auto": true,
+"d": 2.04,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_am_adam.shared.refuse.2": {
+"auto": true,
+"d": 0.7,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_am_adam.shared.rumour.0": {
+"auto": true,
+"d": 11.93,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.0.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The grey men at the gate are proctors from the Catalogue. They are looking for a woman with a book. She is outside the Hedge, east of Kaelen's hut. Do not tell them I said so."
+},
+"shared_am_adam.shared.rumour.1": {
+"auto": true,
+"d": 10.78,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.1.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: There's a scribe in the mist reading names off the dead Legion. They say she can give a Hollow its name back. They say it costs her something."
+},
+"shared_am_adam.shared.rumour.10": {
+"auto": true,
+"d": 10.39,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.10.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: A skyship came in off the Rust Coast with twelve crates for the garrison. The crew drink at the Boar and do not talk about the cargo."
+},
+"shared_am_adam.shared.rumour.11": {
+"auto": true,
+"d": 9.84,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.11.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: They say the Church is coming up the Greenroot road under glass-fire, singing. Hymns bring hounds. The Church does not care."
+},
+"shared_am_adam.shared.rumour.12": {
+"auto": true,
+"d": 9.55,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.12.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: My fingernails grew a quarter-inch between dusk and dawn. Nobody's remarked on it. Nobody remarks on anything."
+},
+"shared_am_adam.shared.rumour.13": {
+"auto": true,
+"d": 9.82,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.13.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Davin Hale sang his mother's harvest song at the Boar. The hounds sang it back. That was the last anyone saw of Davin."
+},
+"shared_am_adam.shared.rumour.14": {
+"auto": true,
+"d": 10.46,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.14.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Governor took the Consortium's purse. Again. We eat, and the Root is bled, and the oaks ring like bronze when the wind moves."
+},
+"shared_am_adam.shared.rumour.15": {
+"auto": true,
+"d": 9.74,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.15.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Keep your voice in your chest. Keep your lamp lit. Do not go to the Hedge at the dead hour, whatever it says, whoever it sounds like."
+},
+"shared_am_adam.shared.rumour.16": {
+"auto": true,
+"d": 10.34,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.16.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Tam the night-hummer listens to his dead wife at the Flume crossing. We all know. None of us has the heart to tell him what she is."
+},
+"shared_am_adam.shared.rumour.17": {
+"auto": true,
+"d": 10.03,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.17.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Bettany at the market stall takes coin for tonic but she would rather take eggs. Nobody has eggs. The hens went quiet first."
+},
+"shared_am_adam.shared.rumour.18": {
+"auto": true,
+"d": 12.34,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.18.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Fenning twins went down the culvert after their dog on Driftday last. Abner Fenning still sets a lamp in their window. He keeps the culvert key on a nail."
+},
+"shared_am_adam.shared.rumour.19": {
+"auto": true,
+"d": 12.6,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.19.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Cantor sang the Tanner boys into the ground side by side, after the bore head went on the platform. Marten and Old Coyle with them. She has not been the same since."
+},
+"shared_am_adam.shared.rumour.2": {
+"auto": true,
+"d": 9.41,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.2.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Abner Fenning on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night."
+},
+"shared_am_adam.shared.rumour.20": {
+"auto": true,
+"d": 10.51,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.20.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Nell Carder has not let the boy out of the mill since the Grafters posted the inspection. She says he has a cough. It is not a cough."
+},
+"shared_am_adam.shared.rumour.21": {
+"auto": true,
+"d": 9.31,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.21.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Red was redder when I was a girl. Summers were warmer. Everyone over thirty says so. The young ones think we are mad."
+},
+"shared_am_adam.shared.rumour.22": {
+"auto": true,
+"d": 11.11,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.22.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The dead are buried with bound jaws and a stone on the tongue so they cannot ring. We have not rung a bell in this town since the Synod took them."
+},
+"shared_am_adam.shared.rumour.3": {
+"auto": true,
+"d": 8.78,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.3.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Captain Vane will sell you anything off the Kestrel that isn't nailed down. Crossbows. Axes. Opinions."
+},
+"shared_am_adam.shared.rumour.4": {
+"auto": true,
+"d": 9.17,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.4.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Factor keeps Consortium brigandine and a steam-maul in Greenhall. At Consortium prices, naturally."
+},
+"shared_am_adam.shared.rumour.5": {
+"auto": true,
+"d": 9.19,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.5.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Orrin Pale the sexton sells what the old watch left in the crypt. Ask him quietly; he is used to quiet."
+},
+"shared_am_adam.shared.rumour.6": {
+"auto": true,
+"d": 9.12,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.6.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Old Tam has a coat of the Hedge's own wool. You walk in it like a held breath. He doesn't sell it to just anyone."
+},
+"shared_am_adam.shared.rumour.7": {
+"auto": true,
+"d": 9.07,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.7.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Pim Carder put out roots on Rootday. Bettany hummed him through it. The Grafters have not been told. Do not tell them."
+},
+"shared_am_adam.shared.rumour.8": {
+"auto": true,
+"d": 8.9,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.8.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Old Harrow swears the Hedge whistled the falling fifth last night. Exactly right. Nobody taught it that."
+},
+"shared_am_adam.shared.rumour.9": {
+"auto": true,
+"d": 9.31,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.rumour.9.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The baker says her bread rose until the oven split. Burl-sickness in the dough, she says, as if dough could sicken."
+},
+"shared_am_adam.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.51,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_am_adam.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.03,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_am_adam.shared.the-catalogue.high": {
+"auto": true,
+"d": 14.98,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_am_adam.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.74,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_am_adam.shared.the-church.high": {
+"auto": true,
+"d": 15.12,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_am_adam.shared.the-church.low": {
+"auto": true,
+"d": 9.79,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_am_adam.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.4,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_am_adam.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_am_adam.shared.the-flambeaux.high": {
+"auto": true,
+"d": 14.04,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_am_adam.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.03,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_am_adam.shared.the-flume.high": {
+"auto": true,
+"d": 13.8,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_am_adam.shared.the-flume.low": {
+"auto": true,
+"d": 9.22,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_am_adam.shared.the-grafters.high": {
+"auto": true,
+"d": 10.3,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_am_adam.shared.the-grafters.low": {
+"auto": true,
+"d": 3.36,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_am_adam.shared.the-hedge.high": {
+"auto": true,
+"d": 12.82,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_am_adam.shared.the-hedge.low": {
+"auto": true,
+"d": 7.08,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_am_adam.shared.the-hush.high": {
+"auto": true,
+"d": 14.47,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_am_adam.shared.the-hush.low": {
+"auto": true,
+"d": 4.75,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_am_adam.shared.the-iron-synod.high": {
+"auto": true,
+"d": 14.45,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_am_adam.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.86,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_am_adam.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 17.04,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_am_adam.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.8,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_am_adam.shared.the-narrow.high": {
+"auto": true,
+"d": 14.26,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_am_adam.shared.the-narrow.low": {
+"auto": true,
+"d": 5.11,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_am_adam.shared.the-office-cutter.high": {
+"auto": true,
+"d": 15.22,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_am_adam.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.57,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_am_adam.shared.the-quarry.high": {
+"auto": true,
+"d": 12.48,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_am_adam.shared.the-quarry.low": {
+"auto": true,
+"d": 4.7,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_am_adam.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 16.32,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_am_adam.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.43,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_am_adam.shared.the-rite.high": {
+"auto": true,
+"d": 16.54,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_am_adam.shared.the-rite.low": {
+"auto": true,
+"d": 5.83,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_am_adam.shared.the-root.high": {
+"auto": true,
+"d": 14.14,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_am_adam.shared.the-root.low": {
+"auto": true,
+"d": 5.28,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_am_adam.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 14.4,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_am_adam.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 10.27,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_am_adam.shared.vesper.high": {
+"auto": true,
+"d": 11.71,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_am_adam.shared.vesper.low": {
+"auto": true,
+"d": 1.37,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_am_adam.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.33,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_am_adam.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.16,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_am_adam.shared.whisper-grove.high": {
+"auto": true,
+"d": 15.48,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_am_adam.shared.whisper-grove.low": {
+"auto": true,
+"d": 13.46,
+"kind": "shared",
+"speaker": "shared_am_adam",
+"src": "voices/shared_am_adam/shared_am_adam.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_am_echo.shared.aether-glass.high": {
+"auto": true,
+"d": 15.65,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_am_echo.shared.aether-glass.low": {
+"auto": true,
+"d": 4.61,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_am_echo.shared.bless.0": {
+"auto": true,
+"d": 2.28,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_am_echo.shared.bless.1": {
+"auto": true,
+"d": 2.21,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_am_echo.shared.bless.2": {
+"auto": true,
+"d": 1.66,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_am_echo.shared.governor-vance.high": {
+"auto": true,
+"d": 9.26,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_am_echo.shared.governor-vance.low": {
+"auto": true,
+"d": 4.61,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_am_echo.shared.hush-lamps.high": {
+"auto": true,
+"d": 9.46,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_am_echo.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.32,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_am_echo.shared.kaelen-vance.high": {
+"auto": true,
+"d": 12.38,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_am_echo.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.39,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_am_echo.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.18,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_am_echo.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 5.86,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_am_echo.shared.oakhaven.high": {
+"auto": true,
+"d": 14.14,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_am_echo.shared.oakhaven.low": {
+"auto": true,
+"d": 5.35,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_am_echo.shared.refuse.0": {
+"auto": true,
+"d": 3.17,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_am_echo.shared.refuse.1": {
+"auto": true,
+"d": 2.42,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_am_echo.shared.refuse.2": {
+"auto": true,
+"d": 0.91,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_am_echo.shared.the-cacophony.high": {
+"auto": true,
+"d": 12.48,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_am_echo.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.22,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_am_echo.shared.the-catalogue.high": {
+"auto": true,
+"d": 13.73,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_am_echo.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.03,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_am_echo.shared.the-church.high": {
+"auto": true,
+"d": 13.73,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_am_echo.shared.the-church.low": {
+"auto": true,
+"d": 9.19,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_am_echo.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.35,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_am_echo.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.42,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_am_echo.shared.the-flambeaux.high": {
+"auto": true,
+"d": 12.91,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_am_echo.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.34,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_am_echo.shared.the-flume.high": {
+"auto": true,
+"d": 12.7,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_am_echo.shared.the-flume.low": {
+"auto": true,
+"d": 8.69,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_am_echo.shared.the-grafters.high": {
+"auto": true,
+"d": 9.65,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_am_echo.shared.the-grafters.low": {
+"auto": true,
+"d": 3.46,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_am_echo.shared.the-hedge.high": {
+"auto": true,
+"d": 11.71,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_am_echo.shared.the-hedge.low": {
+"auto": true,
+"d": 6.65,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_am_echo.shared.the-hush.high": {
+"auto": true,
+"d": 13.51,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_am_echo.shared.the-hush.low": {
+"auto": true,
+"d": 4.75,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_am_echo.shared.the-iron-synod.high": {
+"auto": true,
+"d": 13.22,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_am_echo.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_am_echo.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 15.36,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_am_echo.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.06,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_am_echo.shared.the-narrow.high": {
+"auto": true,
+"d": 13.13,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_am_echo.shared.the-narrow.low": {
+"auto": true,
+"d": 5.21,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_am_echo.shared.the-office-cutter.high": {
+"auto": true,
+"d": 14.09,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_am_echo.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.5,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_am_echo.shared.the-quarry.high": {
+"auto": true,
+"d": 11.64,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_am_echo.shared.the-quarry.low": {
+"auto": true,
+"d": 5.04,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_am_echo.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 15.02,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_am_echo.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.67,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_am_echo.shared.the-rite.high": {
+"auto": true,
+"d": 15.1,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_am_echo.shared.the-rite.low": {
+"auto": true,
+"d": 6.0,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_am_echo.shared.the-root.high": {
+"auto": true,
+"d": 13.18,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_am_echo.shared.the-root.low": {
+"auto": true,
+"d": 5.47,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_am_echo.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 13.25,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_am_echo.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 9.89,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_am_echo.shared.vesper.high": {
+"auto": true,
+"d": 10.99,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_am_echo.shared.vesper.low": {
+"auto": true,
+"d": 1.68,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_am_echo.shared.vox-bottles.high": {
+"auto": true,
+"d": 7.97,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_am_echo.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.52,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_am_echo.shared.whisper-grove.high": {
+"auto": true,
+"d": 14.18,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_am_echo.shared.whisper-grove.low": {
+"auto": true,
+"d": 12.36,
+"kind": "shared",
+"speaker": "shared_am_echo",
+"src": "voices/shared_am_echo/shared_am_echo.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_am_eric.shared.aether-glass.high": {
+"auto": true,
+"d": 14.66,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_am_eric.shared.bless.0": {
+"auto": true,
+"d": 1.94,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_am_eric.shared.bless.1": {
+"auto": true,
+"d": 1.9,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_am_eric.shared.bless.2": {
+"auto": true,
+"d": 1.37,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_am_eric.shared.governor-vance.high": {
+"auto": true,
+"d": 9.14,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_am_eric.shared.hush-lamps.high": {
+"auto": true,
+"d": 8.47,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_am_eric.shared.kaelen-vance.high": {
+"auto": true,
+"d": 12.17,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_am_eric.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 9.91,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_am_eric.shared.oakhaven.high": {
+"auto": true,
+"d": 13.54,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_am_eric.shared.refuse.0": {
+"auto": true,
+"d": 2.78,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_am_eric.shared.refuse.1": {
+"auto": true,
+"d": 2.16,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_am_eric.shared.refuse.2": {
+"auto": true,
+"d": 0.77,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_am_eric.shared.the-cacophony.high": {
+"auto": true,
+"d": 11.78,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_am_eric.shared.the-catalogue.high": {
+"auto": true,
+"d": 12.84,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_am_eric.shared.the-church.high": {
+"auto": true,
+"d": 13.73,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_am_eric.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 7.68,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_am_eric.shared.the-flambeaux.high": {
+"auto": true,
+"d": 12.53,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_am_eric.shared.the-flume.high": {
+"auto": true,
+"d": 12.24,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_am_eric.shared.the-grafters.high": {
+"auto": true,
+"d": 9.26,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_am_eric.shared.the-hedge.high": {
+"auto": true,
+"d": 11.09,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_am_eric.shared.the-hush.high": {
+"auto": true,
+"d": 12.0,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_am_eric.shared.the-iron-synod.high": {
+"auto": true,
+"d": 12.48,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_am_eric.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 14.66,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_am_eric.shared.the-narrow.high": {
+"auto": true,
+"d": 12.12,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_am_eric.shared.the-office-cutter.high": {
+"auto": true,
+"d": 13.46,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_am_eric.shared.the-quarry.high": {
+"auto": true,
+"d": 11.16,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_am_eric.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 14.38,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_am_eric.shared.the-rite.high": {
+"auto": true,
+"d": 14.11,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_am_eric.shared.the-root.high": {
+"auto": true,
+"d": 12.31,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_am_eric.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 12.79,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_am_eric.shared.vesper.high": {
+"auto": true,
+"d": 10.82,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_am_eric.shared.vox-bottles.high": {
+"auto": true,
+"d": 7.82,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_am_eric.shared.whisper-grove.high": {
+"auto": true,
+"d": 13.61,
+"kind": "shared",
+"speaker": "shared_am_eric",
+"src": "voices/shared_am_eric/shared_am_eric.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_am_fenrir.shared.aether-glass.high": {
+"auto": true,
+"d": 18.0,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_am_fenrir.shared.aether-glass.low": {
+"auto": true,
+"d": 4.56,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_am_fenrir.shared.bless.0": {
+"auto": true,
+"d": 1.68,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_am_fenrir.shared.bless.1": {
+"auto": true,
+"d": 1.54,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_am_fenrir.shared.bless.2": {
+"auto": true,
+"d": 1.2,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_am_fenrir.shared.governor-vance.high": {
+"auto": true,
+"d": 11.04,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_am_fenrir.shared.governor-vance.low": {
+"auto": true,
+"d": 4.75,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_am_fenrir.shared.hush-lamps.high": {
+"auto": true,
+"d": 11.28,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_am_fenrir.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.1,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_am_fenrir.shared.kaelen-vance.high": {
+"auto": true,
+"d": 14.69,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_am_fenrir.shared.kaelen-vance.low": {
+"auto": true,
+"d": 8.4,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_am_fenrir.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 12.22,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_am_fenrir.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.41,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_am_fenrir.shared.oakhaven.high": {
+"auto": true,
+"d": 16.22,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_am_fenrir.shared.oakhaven.low": {
+"auto": true,
+"d": 5.76,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_am_fenrir.shared.refuse.0": {
+"auto": true,
+"d": 2.86,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_am_fenrir.shared.refuse.1": {
+"auto": true,
+"d": 1.92,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_am_fenrir.shared.refuse.2": {
+"auto": true,
+"d": 0.72,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_am_fenrir.shared.the-cacophony.high": {
+"auto": true,
+"d": 14.45,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_am_fenrir.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.1,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_am_fenrir.shared.the-catalogue.high": {
+"auto": true,
+"d": 16.18,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_am_fenrir.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.86,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_am_fenrir.shared.the-church.high": {
+"auto": true,
+"d": 16.63,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_am_fenrir.shared.the-church.low": {
+"auto": true,
+"d": 10.68,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_am_fenrir.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 9.38,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_am_fenrir.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.25,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_am_fenrir.shared.the-flambeaux.high": {
+"auto": true,
+"d": 15.24,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_am_fenrir.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.32,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_am_fenrir.shared.the-flume.high": {
+"auto": true,
+"d": 14.45,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_am_fenrir.shared.the-flume.low": {
+"auto": true,
+"d": 10.27,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_am_fenrir.shared.the-grafters.high": {
+"auto": true,
+"d": 10.82,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_am_fenrir.shared.the-grafters.low": {
+"auto": true,
+"d": 3.22,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_am_fenrir.shared.the-hedge.high": {
+"auto": true,
+"d": 13.7,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_am_fenrir.shared.the-hedge.low": {
+"auto": true,
+"d": 7.8,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_am_fenrir.shared.the-hush.high": {
+"auto": true,
+"d": 15.79,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_am_fenrir.shared.the-hush.low": {
+"auto": true,
+"d": 4.8,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_am_fenrir.shared.the-iron-synod.high": {
+"auto": true,
+"d": 15.05,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_am_fenrir.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_am_fenrir.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 17.98,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_am_fenrir.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 12.14,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_am_fenrir.shared.the-narrow.high": {
+"auto": true,
+"d": 15.7,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_am_fenrir.shared.the-narrow.low": {
+"auto": true,
+"d": 5.33,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_am_fenrir.shared.the-office-cutter.high": {
+"auto": true,
+"d": 16.06,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_am_fenrir.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.98,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_am_fenrir.shared.the-quarry.high": {
+"auto": true,
+"d": 13.61,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_am_fenrir.shared.the-quarry.low": {
+"auto": true,
+"d": 5.09,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_am_fenrir.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 17.06,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_am_fenrir.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.55,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_am_fenrir.shared.the-rite.high": {
+"auto": true,
+"d": 17.52,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_am_fenrir.shared.the-rite.low": {
+"auto": true,
+"d": 6.48,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_am_fenrir.shared.the-root.high": {
+"auto": true,
+"d": 15.31,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_am_fenrir.shared.the-root.low": {
+"auto": true,
+"d": 5.69,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_am_fenrir.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 15.1,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_am_fenrir.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 11.57,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_am_fenrir.shared.vesper.high": {
+"auto": true,
+"d": 12.77,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_am_fenrir.shared.vesper.low": {
+"auto": true,
+"d": 1.25,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_am_fenrir.shared.vox-bottles.high": {
+"auto": true,
+"d": 9.5,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_am_fenrir.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.66,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_am_fenrir.shared.whisper-grove.high": {
+"auto": true,
+"d": 16.7,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_am_fenrir.shared.whisper-grove.low": {
+"auto": true,
+"d": 14.62,
+"kind": "shared",
+"speaker": "shared_am_fenrir",
+"src": "voices/shared_am_fenrir/shared_am_fenrir.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_am_liam.shared.aether-glass.high": {
+"auto": true,
+"d": 15.34,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_am_liam.shared.aether-glass.low": {
+"auto": true,
+"d": 4.2,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_am_liam.shared.bless.0": {
+"auto": true,
+"d": 2.06,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_am_liam.shared.bless.1": {
+"auto": true,
+"d": 1.97,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_am_liam.shared.bless.2": {
+"auto": true,
+"d": 1.51,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_am_liam.shared.governor-vance.high": {
+"auto": true,
+"d": 9.17,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_am_liam.shared.governor-vance.low": {
+"auto": true,
+"d": 4.49,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_am_liam.shared.hush-lamps.high": {
+"auto": true,
+"d": 9.34,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_am_liam.shared.hush-lamps.low": {
+"auto": true,
+"d": 3.86,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_am_liam.shared.kaelen-vance.high": {
+"auto": true,
+"d": 12.48,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_am_liam.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.27,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_am_liam.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.06,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_am_liam.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 5.45,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_am_liam.shared.oakhaven.high": {
+"auto": true,
+"d": 13.99,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_am_liam.shared.oakhaven.low": {
+"auto": true,
+"d": 4.85,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_am_liam.shared.refuse.0": {
+"auto": true,
+"d": 2.83,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_am_liam.shared.refuse.1": {
+"auto": true,
+"d": 2.28,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_am_liam.shared.refuse.2": {
+"auto": true,
+"d": 0.84,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_am_liam.shared.the-cacophony.high": {
+"auto": true,
+"d": 12.34,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_am_liam.shared.the-cacophony.low": {
+"auto": true,
+"d": 3.98,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_am_liam.shared.the-catalogue.high": {
+"auto": true,
+"d": 13.32,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_am_liam.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.72,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_am_liam.shared.the-church.high": {
+"auto": true,
+"d": 13.9,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_am_liam.shared.the-church.low": {
+"auto": true,
+"d": 8.95,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_am_liam.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.02,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_am_liam.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.03,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_am_liam.shared.the-flambeaux.high": {
+"auto": true,
+"d": 12.82,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_am_liam.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_am_liam.shared.the-flume.high": {
+"auto": true,
+"d": 12.55,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_am_liam.shared.the-flume.low": {
+"auto": true,
+"d": 8.54,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_am_liam.shared.the-grafters.high": {
+"auto": true,
+"d": 9.5,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_am_liam.shared.the-grafters.low": {
+"auto": true,
+"d": 3.17,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_am_liam.shared.the-hedge.high": {
+"auto": true,
+"d": 11.88,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_am_liam.shared.the-hedge.low": {
+"auto": true,
+"d": 6.5,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_am_liam.shared.the-hush.high": {
+"auto": true,
+"d": 13.3,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_am_liam.shared.the-hush.low": {
+"auto": true,
+"d": 4.37,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_am_liam.shared.the-iron-synod.high": {
+"auto": true,
+"d": 12.91,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_am_liam.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.79,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_am_liam.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 15.38,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_am_liam.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.01,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_am_liam.shared.the-narrow.high": {
+"auto": true,
+"d": 12.77,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_am_liam.shared.the-narrow.low": {
+"auto": true,
+"d": 4.9,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_am_liam.shared.the-office-cutter.high": {
+"auto": true,
+"d": 13.78,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_am_liam.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.38,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_am_liam.shared.the-quarry.high": {
+"auto": true,
+"d": 11.47,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_am_liam.shared.the-quarry.low": {
+"auto": true,
+"d": 4.51,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_am_liam.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 14.98,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_am_liam.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.36,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_am_liam.shared.the-rite.high": {
+"auto": true,
+"d": 14.76,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_am_liam.shared.the-rite.low": {
+"auto": true,
+"d": 5.57,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_am_liam.shared.the-root.high": {
+"auto": true,
+"d": 12.91,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_am_liam.shared.the-root.low": {
+"auto": true,
+"d": 5.06,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_am_liam.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 13.1,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_am_liam.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 9.55,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_am_liam.shared.vesper.high": {
+"auto": true,
+"d": 11.06,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_am_liam.shared.vesper.low": {
+"auto": true,
+"d": 1.58,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_am_liam.shared.vox-bottles.high": {
+"auto": true,
+"d": 7.94,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_am_liam.shared.vox-bottles.low": {
+"auto": true,
+"d": 4.85,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_am_liam.shared.whisper-grove.high": {
+"auto": true,
+"d": 13.82,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_am_liam.shared.whisper-grove.low": {
+"auto": true,
+"d": 12.38,
+"kind": "shared",
+"speaker": "shared_am_liam",
+"src": "voices/shared_am_liam/shared_am_liam.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_am_michael.shared.aether-glass.high": {
+"auto": true,
+"d": 20.09,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_am_michael.shared.aether-glass.low": {
+"auto": true,
+"d": 5.21,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_am_michael.shared.bless.0": {
+"auto": true,
+"d": 1.99,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_am_michael.shared.bless.1": {
+"auto": true,
+"d": 1.78,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_am_michael.shared.bless.2": {
+"auto": true,
+"d": 1.37,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_am_michael.shared.governor-vance.high": {
+"auto": true,
+"d": 11.23,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_am_michael.shared.governor-vance.low": {
+"auto": true,
+"d": 5.3,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_am_michael.shared.hush-lamps.high": {
+"auto": true,
+"d": 11.76,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_am_michael.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.61,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_am_michael.shared.kaelen-vance.high": {
+"auto": true,
+"d": 15.98,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_am_michael.shared.kaelen-vance.low": {
+"auto": true,
+"d": 9.24,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_am_michael.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 12.91,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_am_michael.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 7.03,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_am_michael.shared.oakhaven.high": {
+"auto": true,
+"d": 17.69,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_am_michael.shared.oakhaven.low": {
+"auto": true,
+"d": 6.46,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_am_michael.shared.refuse.0": {
+"auto": true,
+"d": 3.36,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_am_michael.shared.refuse.1": {
+"auto": true,
+"d": 2.26,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_am_michael.shared.refuse.2": {
+"auto": true,
+"d": 0.77,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_am_michael.shared.rumour.0": {
+"auto": true,
+"d": 14.57,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.0.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The grey men at the gate are proctors from the Catalogue. They are looking for a woman with a book. She is outside the Hedge, east of Kaelen's hut. Do not tell them I said so."
+},
+"shared_am_michael.shared.rumour.1": {
+"auto": true,
+"d": 12.48,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.1.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: There's a scribe in the mist reading names off the dead Legion. They say she can give a Hollow its name back. They say it costs her something."
+},
+"shared_am_michael.shared.rumour.10": {
+"auto": true,
+"d": 12.05,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.10.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: A skyship came in off the Rust Coast with twelve crates for the garrison. The crew drink at the Boar and do not talk about the cargo."
+},
+"shared_am_michael.shared.rumour.11": {
+"auto": true,
+"d": 11.71,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.11.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: They say the Church is coming up the Greenroot road under glass-fire, singing. Hymns bring hounds. The Church does not care."
+},
+"shared_am_michael.shared.rumour.12": {
+"auto": true,
+"d": 11.59,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.12.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: My fingernails grew a quarter-inch between dusk and dawn. Nobody's remarked on it. Nobody remarks on anything."
+},
+"shared_am_michael.shared.rumour.13": {
+"auto": true,
+"d": 11.62,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.13.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Davin Hale sang his mother's harvest song at the Boar. The hounds sang it back. That was the last anyone saw of Davin."
+},
+"shared_am_michael.shared.rumour.14": {
+"auto": true,
+"d": 12.14,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.14.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Governor took the Consortium's purse. Again. We eat, and the Root is bled, and the oaks ring like bronze when the wind moves."
+},
+"shared_am_michael.shared.rumour.15": {
+"auto": true,
+"d": 12.29,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.15.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Keep your voice in your chest. Keep your lamp lit. Do not go to the Hedge at the dead hour, whatever it says, whoever it sounds like."
+},
+"shared_am_michael.shared.rumour.16": {
+"auto": true,
+"d": 12.17,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.16.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Tam the night-hummer listens to his dead wife at the Flume crossing. We all know. None of us has the heart to tell him what she is."
+},
+"shared_am_michael.shared.rumour.17": {
+"auto": true,
+"d": 12.26,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.17.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Bettany at the market stall takes coin for tonic but she would rather take eggs. Nobody has eggs. The hens went quiet first."
+},
+"shared_am_michael.shared.rumour.18": {
+"auto": true,
+"d": 14.23,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.18.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Fenning twins went down the culvert after their dog on Driftday last. Abner Fenning still sets a lamp in their window. He keeps the culvert key on a nail."
+},
+"shared_am_michael.shared.rumour.19": {
+"auto": true,
+"d": 14.98,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.19.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Cantor sang the Tanner boys into the ground side by side, after the bore head went on the platform. Marten and Old Coyle with them. She has not been the same since."
+},
+"shared_am_michael.shared.rumour.2": {
+"auto": true,
+"d": 11.35,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.2.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Abner Fenning on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night."
+},
+"shared_am_michael.shared.rumour.20": {
+"auto": true,
+"d": 12.55,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.20.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Nell Carder has not let the boy out of the mill since the Grafters posted the inspection. She says he has a cough. It is not a cough."
+},
+"shared_am_michael.shared.rumour.21": {
+"auto": true,
+"d": 11.33,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.21.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Red was redder when I was a girl. Summers were warmer. Everyone over thirty says so. The young ones think we are mad."
+},
+"shared_am_michael.shared.rumour.22": {
+"auto": true,
+"d": 12.98,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.22.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The dead are buried with bound jaws and a stone on the tongue so they cannot ring. We have not rung a bell in this town since the Synod took them."
+},
+"shared_am_michael.shared.rumour.3": {
+"auto": true,
+"d": 10.9,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.3.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Captain Vane will sell you anything off the Kestrel that isn't nailed down. Crossbows. Axes. Opinions."
+},
+"shared_am_michael.shared.rumour.4": {
+"auto": true,
+"d": 10.82,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.4.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The Factor keeps Consortium brigandine and a steam-maul in Greenhall. At Consortium prices, naturally."
+},
+"shared_am_michael.shared.rumour.5": {
+"auto": true,
+"d": 10.85,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.5.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Orrin Pale the sexton sells what the old watch left in the crypt. Ask him quietly; he is used to quiet."
+},
+"shared_am_michael.shared.rumour.6": {
+"auto": true,
+"d": 11.28,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.6.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Old Tam has a coat of the Hedge's own wool. You walk in it like a held breath. He doesn't sell it to just anyone."
+},
+"shared_am_michael.shared.rumour.7": {
+"auto": true,
+"d": 11.11,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.7.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Pim Carder put out roots on Rootday. Bettany hummed him through it. The Grafters have not been told. Do not tell them."
+},
+"shared_am_michael.shared.rumour.8": {
+"auto": true,
+"d": 10.46,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.8.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: Old Harrow swears the Hedge whistled the falling fifth last night. Exactly right. Nobody taught it that."
+},
+"shared_am_michael.shared.rumour.9": {
+"auto": true,
+"d": 11.21,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.rumour.9.mp3",
+"t": "I couldn't say. But I'll tell you what I heard: The baker says her bread rose until the oven split. Burl-sickness in the dough, she says, as if dough could sicken."
+},
+"shared_am_michael.shared.the-cacophony.high": {
+"auto": true,
+"d": 15.65,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_am_michael.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.56,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_am_michael.shared.the-catalogue.high": {
+"auto": true,
+"d": 17.64,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_am_michael.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.51,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_am_michael.shared.the-church.high": {
+"auto": true,
+"d": 17.81,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_am_michael.shared.the-church.low": {
+"auto": true,
+"d": 11.74,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_am_michael.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 10.18,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_am_michael.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.8,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_am_michael.shared.the-flambeaux.high": {
+"auto": true,
+"d": 16.54,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_am_michael.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.78,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_am_michael.shared.the-flume.high": {
+"auto": true,
+"d": 15.96,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_am_michael.shared.the-flume.low": {
+"auto": true,
+"d": 10.8,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_am_michael.shared.the-grafters.high": {
+"auto": true,
+"d": 12.07,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_am_michael.shared.the-grafters.low": {
+"auto": true,
+"d": 3.79,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_am_michael.shared.the-hedge.high": {
+"auto": true,
+"d": 14.86,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_am_michael.shared.the-hedge.low": {
+"auto": true,
+"d": 8.21,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_am_michael.shared.the-hush.high": {
+"auto": true,
+"d": 17.02,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_am_michael.shared.the-hush.low": {
+"auto": true,
+"d": 5.57,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_am_michael.shared.the-iron-synod.high": {
+"auto": true,
+"d": 17.06,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_am_michael.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.42,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_am_michael.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 20.04,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_am_michael.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 13.06,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_am_michael.shared.the-narrow.high": {
+"auto": true,
+"d": 16.94,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_am_michael.shared.the-narrow.low": {
+"auto": true,
+"d": 5.98,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_am_michael.shared.the-office-cutter.high": {
+"auto": true,
+"d": 18.14,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_am_michael.shared.the-office-cutter.low": {
+"auto": true,
+"d": 6.14,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_am_michael.shared.the-quarry.high": {
+"auto": true,
+"d": 14.88,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_am_michael.shared.the-quarry.low": {
+"auto": true,
+"d": 5.54,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_am_michael.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 18.94,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_am_michael.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.86,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_am_michael.shared.the-rite.high": {
+"auto": true,
+"d": 19.68,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_am_michael.shared.the-rite.low": {
+"auto": true,
+"d": 6.86,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_am_michael.shared.the-root.high": {
+"auto": true,
+"d": 16.8,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_am_michael.shared.the-root.low": {
+"auto": true,
+"d": 6.29,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_am_michael.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 17.09,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_am_michael.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 12.62,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_am_michael.shared.vesper.high": {
+"auto": true,
+"d": 13.63,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_am_michael.shared.vesper.low": {
+"auto": true,
+"d": 1.44,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_am_michael.shared.vox-bottles.high": {
+"auto": true,
+"d": 9.89,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_am_michael.shared.vox-bottles.low": {
+"auto": true,
+"d": 6.17,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_am_michael.shared.whisper-grove.high": {
+"auto": true,
+"d": 18.1,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_am_michael.shared.whisper-grove.low": {
+"auto": true,
+"d": 15.86,
+"kind": "shared",
+"speaker": "shared_am_michael",
+"src": "voices/shared_am_michael/shared_am_michael.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_am_onyx.shared.aether-glass.high": {
+"auto": true,
+"d": 15.34,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_am_onyx.shared.aether-glass.low": {
+"auto": true,
+"d": 4.34,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_am_onyx.shared.bless.0": {
+"auto": true,
+"d": 2.09,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_am_onyx.shared.bless.1": {
+"auto": true,
+"d": 2.09,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_am_onyx.shared.bless.2": {
+"auto": true,
+"d": 1.46,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_am_onyx.shared.governor-vance.high": {
+"auto": true,
+"d": 9.48,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_am_onyx.shared.governor-vance.low": {
+"auto": true,
+"d": 4.46,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_am_onyx.shared.hush-lamps.high": {
+"auto": true,
+"d": 9.29,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_am_onyx.shared.hush-lamps.low": {
+"auto": true,
+"d": 3.91,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_am_onyx.shared.kaelen-vance.high": {
+"auto": true,
+"d": 12.38,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_am_onyx.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.34,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_am_onyx.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.18,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_am_onyx.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 5.74,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_am_onyx.shared.oakhaven.high": {
+"auto": true,
+"d": 13.68,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_am_onyx.shared.oakhaven.low": {
+"auto": true,
+"d": 5.16,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_am_onyx.shared.refuse.0": {
+"auto": true,
+"d": 3.12,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_am_onyx.shared.refuse.1": {
+"auto": true,
+"d": 2.26,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_am_onyx.shared.refuse.2": {
+"auto": true,
+"d": 0.79,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_am_onyx.shared.the-cacophony.high": {
+"auto": true,
+"d": 12.34,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_am_onyx.shared.the-cacophony.low": {
+"auto": true,
+"d": 3.91,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_am_onyx.shared.the-catalogue.high": {
+"auto": true,
+"d": 13.56,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_am_onyx.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.7,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_am_onyx.shared.the-church.high": {
+"auto": true,
+"d": 13.99,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_am_onyx.shared.the-church.low": {
+"auto": true,
+"d": 9.0,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_am_onyx.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.21,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_am_onyx.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_am_onyx.shared.the-flambeaux.high": {
+"auto": true,
+"d": 13.37,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_am_onyx.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.08,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_am_onyx.shared.the-flume.high": {
+"auto": true,
+"d": 12.6,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_am_onyx.shared.the-flume.low": {
+"auto": true,
+"d": 8.47,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_am_onyx.shared.the-grafters.high": {
+"auto": true,
+"d": 9.62,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_am_onyx.shared.the-grafters.low": {
+"auto": true,
+"d": 3.36,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_am_onyx.shared.the-hedge.high": {
+"auto": true,
+"d": 11.4,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_am_onyx.shared.the-hedge.low": {
+"auto": true,
+"d": 6.53,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_am_onyx.shared.the-hush.high": {
+"auto": true,
+"d": 12.98,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_am_onyx.shared.the-hush.low": {
+"auto": true,
+"d": 4.44,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_am_onyx.shared.the-iron-synod.high": {
+"auto": true,
+"d": 13.08,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_am_onyx.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.79,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_am_onyx.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 15.26,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_am_onyx.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.06,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_am_onyx.shared.the-narrow.high": {
+"auto": true,
+"d": 12.86,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_am_onyx.shared.the-narrow.low": {
+"auto": true,
+"d": 5.06,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_am_onyx.shared.the-office-cutter.high": {
+"auto": true,
+"d": 13.66,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_am_onyx.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.47,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_am_onyx.shared.the-quarry.high": {
+"auto": true,
+"d": 11.3,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_am_onyx.shared.the-quarry.low": {
+"auto": true,
+"d": 4.66,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_am_onyx.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 14.81,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_am_onyx.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.38,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_am_onyx.shared.the-rite.high": {
+"auto": true,
+"d": 14.98,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_am_onyx.shared.the-rite.low": {
+"auto": true,
+"d": 5.52,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_am_onyx.shared.the-root.high": {
+"auto": true,
+"d": 13.03,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_am_onyx.shared.the-root.low": {
+"auto": true,
+"d": 4.99,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_am_onyx.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 13.15,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_am_onyx.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 9.6,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_am_onyx.shared.vesper.high": {
+"auto": true,
+"d": 11.02,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_am_onyx.shared.vesper.low": {
+"auto": true,
+"d": 1.61,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_am_onyx.shared.vox-bottles.high": {
+"auto": true,
+"d": 7.73,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_am_onyx.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.06,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_am_onyx.shared.whisper-grove.high": {
+"auto": true,
+"d": 13.92,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_am_onyx.shared.whisper-grove.low": {
+"auto": true,
+"d": 12.43,
+"kind": "shared",
+"speaker": "shared_am_onyx",
+"src": "voices/shared_am_onyx/shared_am_onyx.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_am_puck.shared.aether-glass.high": {
+"auto": true,
+"d": 16.56,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_am_puck.shared.aether-glass.low": {
+"auto": true,
+"d": 4.3,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_am_puck.shared.bless.0": {
+"auto": true,
+"d": 1.56,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_am_puck.shared.bless.1": {
+"auto": true,
+"d": 1.46,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_am_puck.shared.bless.2": {
+"auto": true,
+"d": 1.13,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_am_puck.shared.governor-vance.high": {
+"auto": true,
+"d": 10.27,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_am_puck.shared.governor-vance.low": {
+"auto": true,
+"d": 4.51,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_am_puck.shared.hush-lamps.high": {
+"auto": true,
+"d": 10.54,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_am_puck.shared.hush-lamps.low": {
+"auto": true,
+"d": 3.84,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_am_puck.shared.kaelen-vance.high": {
+"auto": true,
+"d": 13.56,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_am_puck.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.87,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_am_puck.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 11.14,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_am_puck.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 5.88,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_am_puck.shared.oakhaven.high": {
+"auto": true,
+"d": 15.29,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_am_puck.shared.oakhaven.low": {
+"auto": true,
+"d": 5.18,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_am_puck.shared.refuse.0": {
+"auto": true,
+"d": 2.64,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_am_puck.shared.refuse.1": {
+"auto": true,
+"d": 1.82,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_am_puck.shared.refuse.2": {
+"auto": true,
+"d": 0.72,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_am_puck.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.37,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_am_puck.shared.the-cacophony.low": {
+"auto": true,
+"d": 3.89,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_am_puck.shared.the-catalogue.high": {
+"auto": true,
+"d": 14.83,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_am_puck.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.48,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_am_puck.shared.the-church.high": {
+"auto": true,
+"d": 15.38,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_am_puck.shared.the-church.low": {
+"auto": true,
+"d": 9.62,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_am_puck.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.71,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_am_puck.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 3.86,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_am_puck.shared.the-flambeaux.high": {
+"auto": true,
+"d": 14.26,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_am_puck.shared.the-flambeaux.low": {
+"auto": true,
+"d": 3.86,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_am_puck.shared.the-flume.high": {
+"auto": true,
+"d": 13.73,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_am_puck.shared.the-flume.low": {
+"auto": true,
+"d": 9.36,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_am_puck.shared.the-grafters.high": {
+"auto": true,
+"d": 10.22,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_am_puck.shared.the-grafters.low": {
+"auto": true,
+"d": 3.12,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_am_puck.shared.the-hedge.high": {
+"auto": true,
+"d": 12.74,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_am_puck.shared.the-hedge.low": {
+"auto": true,
+"d": 7.22,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_am_puck.shared.the-hush.high": {
+"auto": true,
+"d": 15.0,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_am_puck.shared.the-hush.low": {
+"auto": true,
+"d": 4.3,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_am_puck.shared.the-iron-synod.high": {
+"auto": true,
+"d": 14.06,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_am_puck.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.65,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_am_puck.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 16.68,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_am_puck.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 11.28,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_am_puck.shared.the-narrow.high": {
+"auto": true,
+"d": 14.76,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_am_puck.shared.the-narrow.low": {
+"auto": true,
+"d": 5.14,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_am_puck.shared.the-office-cutter.high": {
+"auto": true,
+"d": 15.19,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_am_puck.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.47,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_am_puck.shared.the-quarry.high": {
+"auto": true,
+"d": 12.89,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_am_puck.shared.the-quarry.low": {
+"auto": true,
+"d": 4.54,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_am_puck.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 16.22,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_am_puck.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.07,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_am_puck.shared.the-rite.high": {
+"auto": true,
+"d": 16.13,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_am_puck.shared.the-rite.low": {
+"auto": true,
+"d": 5.74,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_am_puck.shared.the-root.high": {
+"auto": true,
+"d": 14.26,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_am_puck.shared.the-root.low": {
+"auto": true,
+"d": 5.18,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_am_puck.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 14.09,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_am_puck.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 10.73,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_am_puck.shared.vesper.high": {
+"auto": true,
+"d": 12.19,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_am_puck.shared.vesper.low": {
+"auto": true,
+"d": 1.2,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_am_puck.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.52,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_am_puck.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.28,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_am_puck.shared.whisper-grove.high": {
+"auto": true,
+"d": 15.6,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_am_puck.shared.whisper-grove.low": {
+"auto": true,
+"d": 13.46,
+"kind": "shared",
+"speaker": "shared_am_puck",
+"src": "voices/shared_am_puck/shared_am_puck.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_am_santa.shared.aether-glass.high": {
+"auto": true,
+"d": 18.19,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_am_santa.shared.aether-glass.low": {
+"auto": true,
+"d": 5.4,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_am_santa.shared.bless.0": {
+"auto": true,
+"d": 2.28,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_am_santa.shared.bless.1": {
+"auto": true,
+"d": 2.23,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_am_santa.shared.bless.2": {
+"auto": true,
+"d": 1.46,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_am_santa.shared.governor-vance.high": {
+"auto": true,
+"d": 11.11,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_am_santa.shared.governor-vance.low": {
+"auto": true,
+"d": 5.33,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_am_santa.shared.hush-lamps.high": {
+"auto": true,
+"d": 10.82,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_am_santa.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.9,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_am_santa.shared.kaelen-vance.high": {
+"auto": true,
+"d": 14.76,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_am_santa.shared.kaelen-vance.low": {
+"auto": true,
+"d": 8.88,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_am_santa.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 12.36,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_am_santa.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.84,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_am_santa.shared.oakhaven.high": {
+"auto": true,
+"d": 16.61,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_am_santa.shared.oakhaven.low": {
+"auto": true,
+"d": 6.5,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_am_santa.shared.refuse.0": {
+"auto": true,
+"d": 3.38,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_am_santa.shared.refuse.1": {
+"auto": true,
+"d": 2.42,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_am_santa.shared.refuse.2": {
+"auto": true,
+"d": 0.77,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_am_santa.shared.the-cacophony.high": {
+"auto": true,
+"d": 14.64,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_am_santa.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.75,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_am_santa.shared.the-catalogue.high": {
+"auto": true,
+"d": 16.22,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_am_santa.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.63,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_am_santa.shared.the-church.high": {
+"auto": true,
+"d": 16.56,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_am_santa.shared.the-church.low": {
+"auto": true,
+"d": 10.9,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_am_santa.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 9.94,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_am_santa.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.97,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_am_santa.shared.the-flambeaux.high": {
+"auto": true,
+"d": 15.46,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_am_santa.shared.the-flambeaux.low": {
+"auto": true,
+"d": 5.09,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_am_santa.shared.the-flume.high": {
+"auto": true,
+"d": 14.98,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_am_santa.shared.the-flume.low": {
+"auto": true,
+"d": 10.34,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_am_santa.shared.the-grafters.high": {
+"auto": true,
+"d": 11.45,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_am_santa.shared.the-grafters.low": {
+"auto": true,
+"d": 4.01,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_am_santa.shared.the-hedge.high": {
+"auto": true,
+"d": 13.82,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_am_santa.shared.the-hedge.low": {
+"auto": true,
+"d": 8.04,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_am_santa.shared.the-hush.high": {
+"auto": true,
+"d": 15.77,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_am_santa.shared.the-hush.low": {
+"auto": true,
+"d": 5.4,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_am_santa.shared.the-iron-synod.high": {
+"auto": true,
+"d": 15.7,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_am_santa.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.7,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_am_santa.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 18.34,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_am_santa.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 11.98,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_am_santa.shared.the-narrow.high": {
+"auto": true,
+"d": 15.58,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_am_santa.shared.the-narrow.low": {
+"auto": true,
+"d": 6.07,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_am_santa.shared.the-office-cutter.high": {
+"auto": true,
+"d": 16.58,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_am_santa.shared.the-office-cutter.low": {
+"auto": true,
+"d": 6.53,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_am_santa.shared.the-quarry.high": {
+"auto": true,
+"d": 13.82,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_am_santa.shared.the-quarry.low": {
+"auto": true,
+"d": 5.5,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_am_santa.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 17.74,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_am_santa.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 4.18,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_am_santa.shared.the-rite.high": {
+"auto": true,
+"d": 17.64,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_am_santa.shared.the-rite.low": {
+"auto": true,
+"d": 6.79,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_am_santa.shared.the-root.high": {
+"auto": true,
+"d": 15.43,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_am_santa.shared.the-root.low": {
+"auto": true,
+"d": 6.26,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_am_santa.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 15.86,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_am_santa.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 11.57,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_am_santa.shared.vesper.high": {
+"auto": true,
+"d": 12.62,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_am_santa.shared.vesper.low": {
+"auto": true,
+"d": 1.46,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_am_santa.shared.vox-bottles.high": {
+"auto": true,
+"d": 9.58,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_am_santa.shared.vox-bottles.low": {
+"auto": true,
+"d": 6.1,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_am_santa.shared.whisper-grove.high": {
+"auto": true,
+"d": 16.99,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_am_santa.shared.whisper-grove.low": {
+"auto": true,
+"d": 14.86,
+"kind": "shared",
+"speaker": "shared_am_santa",
+"src": "voices/shared_am_santa/shared_am_santa.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_bf_alice.shared.aether-glass.high": {
+"auto": true,
+"d": 16.39,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_bf_alice.shared.aether-glass.low": {
+"auto": true,
+"d": 4.85,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_bf_alice.shared.bless.0": {
+"auto": true,
+"d": 2.28,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_bf_alice.shared.bless.1": {
+"auto": true,
+"d": 2.16,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_bf_alice.shared.bless.2": {
+"auto": true,
+"d": 1.63,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_bf_alice.shared.governor-vance.high": {
+"auto": true,
+"d": 10.01,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_bf_alice.shared.governor-vance.low": {
+"auto": true,
+"d": 4.82,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_bf_alice.shared.hush-lamps.high": {
+"auto": true,
+"d": 10.08,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_bf_alice.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.46,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_bf_alice.shared.kaelen-vance.high": {
+"auto": true,
+"d": 13.68,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_bf_alice.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.9,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_bf_alice.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.68,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_bf_alice.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.24,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_bf_alice.shared.oakhaven.high": {
+"auto": true,
+"d": 15.67,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_bf_alice.shared.oakhaven.low": {
+"auto": true,
+"d": 5.59,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_bf_alice.shared.refuse.0": {
+"auto": true,
+"d": 3.31,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_bf_alice.shared.refuse.1": {
+"auto": true,
+"d": 2.47,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_bf_alice.shared.refuse.2": {
+"auto": true,
+"d": 0.84,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_bf_alice.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.39,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_bf_alice.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.34,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_bf_alice.shared.the-catalogue.high": {
+"auto": true,
+"d": 15.12,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_bf_alice.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.03,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_bf_alice.shared.the-church.high": {
+"auto": true,
+"d": 14.9,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_bf_alice.shared.the-church.low": {
+"auto": true,
+"d": 9.96,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_bf_alice.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.66,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_bf_alice.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.2,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_bf_alice.shared.the-flambeaux.high": {
+"auto": true,
+"d": 14.18,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_bf_alice.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.3,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_bf_alice.shared.the-flume.high": {
+"auto": true,
+"d": 13.75,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_bf_alice.shared.the-flume.low": {
+"auto": true,
+"d": 9.55,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_bf_alice.shared.the-grafters.high": {
+"auto": true,
+"d": 10.66,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_bf_alice.shared.the-grafters.low": {
+"auto": true,
+"d": 3.41,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_bf_alice.shared.the-hedge.high": {
+"auto": true,
+"d": 12.84,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_bf_alice.shared.the-hedge.low": {
+"auto": true,
+"d": 7.15,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_bf_alice.shared.the-hush.high": {
+"auto": true,
+"d": 14.54,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_bf_alice.shared.the-hush.low": {
+"auto": true,
+"d": 4.8,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_bf_alice.shared.the-iron-synod.high": {
+"auto": true,
+"d": 14.3,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_bf_alice.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.98,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_bf_alice.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 16.66,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_bf_alice.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.7,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_bf_alice.shared.the-narrow.high": {
+"auto": true,
+"d": 14.47,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_bf_alice.shared.the-narrow.low": {
+"auto": true,
+"d": 5.28,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_bf_alice.shared.the-office-cutter.high": {
+"auto": true,
+"d": 15.14,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_bf_alice.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.69,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_bf_alice.shared.the-quarry.high": {
+"auto": true,
+"d": 12.62,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_bf_alice.shared.the-quarry.low": {
+"auto": true,
+"d": 4.78,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_bf_alice.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 16.46,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_bf_alice.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.65,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_bf_alice.shared.the-rite.high": {
+"auto": true,
+"d": 15.96,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_bf_alice.shared.the-rite.low": {
+"auto": true,
+"d": 5.98,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_bf_alice.shared.the-root.high": {
+"auto": true,
+"d": 14.21,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_bf_alice.shared.the-root.low": {
+"auto": true,
+"d": 5.47,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_bf_alice.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 14.33,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_bf_alice.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 10.49,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_bf_alice.shared.vesper.high": {
+"auto": true,
+"d": 11.95,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_bf_alice.shared.vesper.low": {
+"auto": true,
+"d": 1.68,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_bf_alice.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.45,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_bf_alice.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.42,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_bf_alice.shared.whisper-grove.high": {
+"auto": true,
+"d": 15.48,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_bf_alice.shared.whisper-grove.low": {
+"auto": true,
+"d": 13.39,
+"kind": "shared",
+"speaker": "shared_bf_alice",
+"src": "voices/shared_bf_alice/shared_bf_alice.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_bf_emma.shared.aether-glass.high": {
+"auto": true,
+"d": 16.34,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_bf_emma.shared.aether-glass.low": {
+"auto": true,
+"d": 4.58,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_bf_emma.shared.bless.0": {
+"auto": true,
+"d": 1.97,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_bf_emma.shared.bless.1": {
+"auto": true,
+"d": 1.92,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_bf_emma.shared.bless.2": {
+"auto": true,
+"d": 1.46,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_bf_emma.shared.governor-vance.high": {
+"auto": true,
+"d": 9.53,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_bf_emma.shared.governor-vance.low": {
+"auto": true,
+"d": 4.63,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_bf_emma.shared.hush-lamps.high": {
+"auto": true,
+"d": 9.62,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_bf_emma.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.03,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_bf_emma.shared.kaelen-vance.high": {
+"auto": true,
+"d": 13.18,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_bf_emma.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.58,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_bf_emma.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.39,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_bf_emma.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 5.78,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_bf_emma.shared.oakhaven.high": {
+"auto": true,
+"d": 15.05,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_bf_emma.shared.oakhaven.low": {
+"auto": true,
+"d": 5.09,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_bf_emma.shared.refuse.0": {
+"auto": true,
+"d": 2.93,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_bf_emma.shared.refuse.1": {
+"auto": true,
+"d": 2.11,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_bf_emma.shared.refuse.2": {
+"auto": true,
+"d": 1.03,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_bf_emma.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.32,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_bf_emma.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_bf_emma.shared.the-catalogue.high": {
+"auto": true,
+"d": 14.9,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_bf_emma.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.65,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_bf_emma.shared.the-church.high": {
+"auto": true,
+"d": 14.09,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_bf_emma.shared.the-church.low": {
+"auto": true,
+"d": 9.43,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_bf_emma.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.26,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_bf_emma.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.08,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_bf_emma.shared.the-flambeaux.high": {
+"auto": true,
+"d": 13.56,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_bf_emma.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.08,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_bf_emma.shared.the-flume.high": {
+"auto": true,
+"d": 13.25,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_bf_emma.shared.the-flume.low": {
+"auto": true,
+"d": 9.07,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_bf_emma.shared.the-grafters.high": {
+"auto": true,
+"d": 10.3,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_bf_emma.shared.the-grafters.low": {
+"auto": true,
+"d": 3.22,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_bf_emma.shared.the-hedge.high": {
+"auto": true,
+"d": 12.36,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_bf_emma.shared.the-hedge.low": {
+"auto": true,
+"d": 6.96,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_bf_emma.shared.the-hush.high": {
+"auto": true,
+"d": 14.33,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_bf_emma.shared.the-hush.low": {
+"auto": true,
+"d": 4.56,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_bf_emma.shared.the-iron-synod.high": {
+"auto": true,
+"d": 13.9,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_bf_emma.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.84,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_bf_emma.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 16.49,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_bf_emma.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.25,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_bf_emma.shared.the-narrow.high": {
+"auto": true,
+"d": 14.26,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_bf_emma.shared.the-narrow.low": {
+"auto": true,
+"d": 5.02,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_bf_emma.shared.the-office-cutter.high": {
+"auto": true,
+"d": 14.62,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_bf_emma.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.42,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_bf_emma.shared.the-quarry.high": {
+"auto": true,
+"d": 11.95,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_bf_emma.shared.the-quarry.low": {
+"auto": true,
+"d": 4.51,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_bf_emma.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 15.86,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_bf_emma.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.46,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_bf_emma.shared.the-rite.high": {
+"auto": true,
+"d": 15.89,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_bf_emma.shared.the-rite.low": {
+"auto": true,
+"d": 5.9,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_bf_emma.shared.the-root.high": {
+"auto": true,
+"d": 13.58,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_bf_emma.shared.the-root.low": {
+"auto": true,
+"d": 5.11,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_bf_emma.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 13.61,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_bf_emma.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 10.27,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_bf_emma.shared.vesper.high": {
+"auto": true,
+"d": 11.5,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_bf_emma.shared.vesper.low": {
+"auto": true,
+"d": 1.54,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_bf_emma.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.02,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_bf_emma.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.23,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_bf_emma.shared.whisper-grove.high": {
+"auto": true,
+"d": 14.86,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_bf_emma.shared.whisper-grove.low": {
+"auto": true,
+"d": 12.79,
+"kind": "shared",
+"speaker": "shared_bf_emma",
+"src": "voices/shared_bf_emma/shared_bf_emma.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_bf_isabella.shared.aether-glass.high": {
+"auto": true,
+"d": 16.46,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_bf_isabella.shared.aether-glass.low": {
+"auto": true,
+"d": 4.75,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_bf_isabella.shared.bless.0": {
+"auto": true,
+"d": 1.92,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_bf_isabella.shared.bless.1": {
+"auto": true,
+"d": 1.97,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_bf_isabella.shared.bless.2": {
+"auto": true,
+"d": 1.46,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_bf_isabella.shared.governor-vance.high": {
+"auto": true,
+"d": 9.46,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_bf_isabella.shared.governor-vance.low": {
+"auto": true,
+"d": 4.78,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_bf_isabella.shared.hush-lamps.high": {
+"auto": true,
+"d": 9.84,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_bf_isabella.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.13,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_bf_isabella.shared.kaelen-vance.high": {
+"auto": true,
+"d": 13.06,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_bf_isabella.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.8,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_bf_isabella.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.37,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_bf_isabella.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 5.83,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_bf_isabella.shared.oakhaven.high": {
+"auto": true,
+"d": 14.98,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_bf_isabella.shared.oakhaven.low": {
+"auto": true,
+"d": 5.33,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_bf_isabella.shared.refuse.0": {
+"auto": true,
+"d": 2.98,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_bf_isabella.shared.refuse.1": {
+"auto": true,
+"d": 2.21,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_bf_isabella.shared.refuse.2": {
+"auto": true,
+"d": 0.89,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_bf_isabella.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.2,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_bf_isabella.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.18,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_bf_isabella.shared.the-catalogue.high": {
+"auto": true,
+"d": 14.83,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_bf_isabella.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.7,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_bf_isabella.shared.the-church.high": {
+"auto": true,
+"d": 14.18,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_bf_isabella.shared.the-church.low": {
+"auto": true,
+"d": 9.38,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_bf_isabella.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.26,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_bf_isabella.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.13,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_bf_isabella.shared.the-flambeaux.high": {
+"auto": true,
+"d": 13.44,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_bf_isabella.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.18,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_bf_isabella.shared.the-flume.high": {
+"auto": true,
+"d": 13.3,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_bf_isabella.shared.the-flume.low": {
+"auto": true,
+"d": 9.17,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_bf_isabella.shared.the-grafters.high": {
+"auto": true,
+"d": 10.2,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_bf_isabella.shared.the-grafters.low": {
+"auto": true,
+"d": 3.38,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_bf_isabella.shared.the-hedge.high": {
+"auto": true,
+"d": 12.31,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_bf_isabella.shared.the-hedge.low": {
+"auto": true,
+"d": 7.22,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_bf_isabella.shared.the-hush.high": {
+"auto": true,
+"d": 14.54,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_bf_isabella.shared.the-hush.low": {
+"auto": true,
+"d": 4.68,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_bf_isabella.shared.the-iron-synod.high": {
+"auto": true,
+"d": 14.02,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_bf_isabella.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.86,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_bf_isabella.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 16.42,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_bf_isabella.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.39,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_bf_isabella.shared.the-narrow.high": {
+"auto": true,
+"d": 14.16,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_bf_isabella.shared.the-narrow.low": {
+"auto": true,
+"d": 5.04,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_bf_isabella.shared.the-office-cutter.high": {
+"auto": true,
+"d": 14.88,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_bf_isabella.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.42,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_bf_isabella.shared.the-quarry.high": {
+"auto": true,
+"d": 12.02,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_bf_isabella.shared.the-quarry.low": {
+"auto": true,
+"d": 4.78,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_bf_isabella.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 15.79,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_bf_isabella.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.58,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_bf_isabella.shared.the-rite.high": {
+"auto": true,
+"d": 16.2,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_bf_isabella.shared.the-rite.low": {
+"auto": true,
+"d": 5.71,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_bf_isabella.shared.the-root.high": {
+"auto": true,
+"d": 13.87,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_bf_isabella.shared.the-root.low": {
+"auto": true,
+"d": 5.35,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_bf_isabella.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 13.54,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_bf_isabella.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 10.22,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_bf_isabella.shared.vesper.high": {
+"auto": true,
+"d": 11.57,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_bf_isabella.shared.vesper.low": {
+"auto": true,
+"d": 1.58,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_bf_isabella.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.04,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_bf_isabella.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.47,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_bf_isabella.shared.whisper-grove.high": {
+"auto": true,
+"d": 14.83,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_bf_isabella.shared.whisper-grove.low": {
+"auto": true,
+"d": 12.77,
+"kind": "shared",
+"speaker": "shared_bf_isabella",
+"src": "voices/shared_bf_isabella/shared_bf_isabella.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_bf_lily.shared.aether-glass.high": {
+"auto": true,
+"d": 16.18,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_bf_lily.shared.aether-glass.low": {
+"auto": true,
+"d": 4.8,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_bf_lily.shared.bless.0": {
+"auto": true,
+"d": 2.42,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_bf_lily.shared.bless.1": {
+"auto": true,
+"d": 2.33,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_bf_lily.shared.bless.2": {
+"auto": true,
+"d": 1.8,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_bf_lily.shared.governor-vance.high": {
+"auto": true,
+"d": 9.91,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_bf_lily.shared.governor-vance.low": {
+"auto": true,
+"d": 4.82,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_bf_lily.shared.hush-lamps.high": {
+"auto": true,
+"d": 9.65,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_bf_lily.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.34,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_bf_lily.shared.kaelen-vance.high": {
+"auto": true,
+"d": 13.56,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_bf_lily.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.63,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_bf_lily.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.75,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_bf_lily.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.14,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_bf_lily.shared.oakhaven.high": {
+"auto": true,
+"d": 15.38,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_bf_lily.shared.oakhaven.low": {
+"auto": true,
+"d": 5.4,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_bf_lily.shared.refuse.0": {
+"auto": true,
+"d": 3.29,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_bf_lily.shared.refuse.1": {
+"auto": true,
+"d": 2.62,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_bf_lily.shared.refuse.2": {
+"auto": true,
+"d": 0.98,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_bf_lily.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.2,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_bf_lily.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.22,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_bf_lily.shared.the-catalogue.high": {
+"auto": true,
+"d": 14.9,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_bf_lily.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.84,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_bf_lily.shared.the-church.high": {
+"auto": true,
+"d": 14.64,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_bf_lily.shared.the-church.low": {
+"auto": true,
+"d": 9.79,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_bf_lily.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.42,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_bf_lily.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.34,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_bf_lily.shared.the-flambeaux.high": {
+"auto": true,
+"d": 14.14,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_bf_lily.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.25,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_bf_lily.shared.the-flume.high": {
+"auto": true,
+"d": 13.94,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_bf_lily.shared.the-flume.low": {
+"auto": true,
+"d": 9.26,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_bf_lily.shared.the-grafters.high": {
+"auto": true,
+"d": 10.32,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_bf_lily.shared.the-grafters.low": {
+"auto": true,
+"d": 3.36,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_bf_lily.shared.the-hedge.high": {
+"auto": true,
+"d": 12.82,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_bf_lily.shared.the-hedge.low": {
+"auto": true,
+"d": 6.91,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_bf_lily.shared.the-hush.high": {
+"auto": true,
+"d": 14.38,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_bf_lily.shared.the-hush.low": {
+"auto": true,
+"d": 4.68,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_bf_lily.shared.the-iron-synod.high": {
+"auto": true,
+"d": 14.54,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_bf_lily.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.89,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_bf_lily.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 16.61,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_bf_lily.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.44,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_bf_lily.shared.the-narrow.high": {
+"auto": true,
+"d": 14.3,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_bf_lily.shared.the-narrow.low": {
+"auto": true,
+"d": 5.23,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_bf_lily.shared.the-office-cutter.high": {
+"auto": true,
+"d": 14.95,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_bf_lily.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.69,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_bf_lily.shared.the-quarry.high": {
+"auto": true,
+"d": 12.38,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_bf_lily.shared.the-quarry.low": {
+"auto": true,
+"d": 4.68,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_bf_lily.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 16.42,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_bf_lily.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.65,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_bf_lily.shared.the-rite.high": {
+"auto": true,
+"d": 16.1,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_bf_lily.shared.the-rite.low": {
+"auto": true,
+"d": 5.81,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_bf_lily.shared.the-root.high": {
+"auto": true,
+"d": 14.18,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_bf_lily.shared.the-root.low": {
+"auto": true,
+"d": 5.3,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_bf_lily.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 14.16,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_bf_lily.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 10.39,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_bf_lily.shared.vesper.high": {
+"auto": true,
+"d": 11.71,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_bf_lily.shared.vesper.low": {
+"auto": true,
+"d": 1.87,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_bf_lily.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.06,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_bf_lily.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.16,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_bf_lily.shared.whisper-grove.high": {
+"auto": true,
+"d": 15.31,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_bf_lily.shared.whisper-grove.low": {
+"auto": true,
+"d": 13.18,
+"kind": "shared",
+"speaker": "shared_bf_lily",
+"src": "voices/shared_bf_lily/shared_bf_lily.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_bm_daniel.shared.aether-glass.high": {
+"auto": true,
+"d": 15.05,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_bm_daniel.shared.aether-glass.low": {
+"auto": true,
+"d": 4.63,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_bm_daniel.shared.bless.0": {
+"auto": true,
+"d": 2.28,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_bm_daniel.shared.bless.1": {
+"auto": true,
+"d": 2.14,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_bm_daniel.shared.bless.2": {
+"auto": true,
+"d": 1.61,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_bm_daniel.shared.governor-vance.high": {
+"auto": true,
+"d": 9.38,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_bm_daniel.shared.governor-vance.low": {
+"auto": true,
+"d": 4.51,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_bm_daniel.shared.hush-lamps.high": {
+"auto": true,
+"d": 9.19,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_bm_daniel.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.22,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_bm_daniel.shared.kaelen-vance.high": {
+"auto": true,
+"d": 12.43,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_bm_daniel.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.13,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_bm_daniel.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.13,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_bm_daniel.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 5.88,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_bm_daniel.shared.oakhaven.high": {
+"auto": true,
+"d": 14.18,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_bm_daniel.shared.oakhaven.low": {
+"auto": true,
+"d": 4.99,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_bm_daniel.shared.refuse.0": {
+"auto": true,
+"d": 3.19,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_bm_daniel.shared.refuse.1": {
+"auto": true,
+"d": 2.42,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_bm_daniel.shared.refuse.2": {
+"auto": true,
+"d": 1.01,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_bm_daniel.shared.the-cacophony.high": {
+"auto": true,
+"d": 12.34,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_bm_daniel.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.15,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_bm_daniel.shared.the-catalogue.high": {
+"auto": true,
+"d": 14.06,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_bm_daniel.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.77,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_bm_daniel.shared.the-church.high": {
+"auto": true,
+"d": 13.75,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_bm_daniel.shared.the-church.low": {
+"auto": true,
+"d": 9.19,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_bm_daniel.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.14,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_bm_daniel.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.13,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_bm_daniel.shared.the-flambeaux.high": {
+"auto": true,
+"d": 13.32,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_bm_daniel.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.15,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_bm_daniel.shared.the-flume.high": {
+"auto": true,
+"d": 13.01,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_bm_daniel.shared.the-flume.low": {
+"auto": true,
+"d": 8.52,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_bm_daniel.shared.the-grafters.high": {
+"auto": true,
+"d": 9.91,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_bm_daniel.shared.the-grafters.low": {
+"auto": true,
+"d": 3.26,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_bm_daniel.shared.the-hedge.high": {
+"auto": true,
+"d": 11.9,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_bm_daniel.shared.the-hedge.low": {
+"auto": true,
+"d": 6.6,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_bm_daniel.shared.the-hush.high": {
+"auto": true,
+"d": 13.2,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_bm_daniel.shared.the-hush.low": {
+"auto": true,
+"d": 4.63,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_bm_daniel.shared.the-iron-synod.high": {
+"auto": true,
+"d": 13.3,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_bm_daniel.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.86,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_bm_daniel.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 15.46,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_bm_daniel.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.1,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_bm_daniel.shared.the-narrow.high": {
+"auto": true,
+"d": 13.2,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_bm_daniel.shared.the-narrow.low": {
+"auto": true,
+"d": 5.23,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_bm_daniel.shared.the-office-cutter.high": {
+"auto": true,
+"d": 13.85,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_bm_daniel.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.47,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_bm_daniel.shared.the-quarry.high": {
+"auto": true,
+"d": 11.47,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_bm_daniel.shared.the-quarry.low": {
+"auto": true,
+"d": 4.46,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_bm_daniel.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 15.02,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_bm_daniel.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.46,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_bm_daniel.shared.the-rite.high": {
+"auto": true,
+"d": 15.02,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_bm_daniel.shared.the-rite.low": {
+"auto": true,
+"d": 5.62,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_bm_daniel.shared.the-root.high": {
+"auto": true,
+"d": 13.03,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_bm_daniel.shared.the-root.low": {
+"auto": true,
+"d": 5.04,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_bm_daniel.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 13.03,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_bm_daniel.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 9.55,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_bm_daniel.shared.vesper.high": {
+"auto": true,
+"d": 11.33,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_bm_daniel.shared.vesper.low": {
+"auto": true,
+"d": 1.73,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_bm_daniel.shared.vox-bottles.high": {
+"auto": true,
+"d": 7.66,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_bm_daniel.shared.vox-bottles.low": {
+"auto": true,
+"d": 4.9,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_bm_daniel.shared.whisper-grove.high": {
+"auto": true,
+"d": 13.85,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_bm_daniel.shared.whisper-grove.low": {
+"auto": true,
+"d": 12.41,
+"kind": "shared",
+"speaker": "shared_bm_daniel",
+"src": "voices/shared_bm_daniel/shared_bm_daniel.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_bm_fable.shared.aether-glass.high": {
+"auto": true,
+"d": 15.62,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_bm_fable.shared.aether-glass.low": {
+"auto": true,
+"d": 5.38,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_bm_fable.shared.bless.0": {
+"auto": true,
+"d": 2.59,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_bm_fable.shared.bless.1": {
+"auto": true,
+"d": 2.69,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_bm_fable.shared.bless.2": {
+"auto": true,
+"d": 1.78,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_bm_fable.shared.governor-vance.high": {
+"auto": true,
+"d": 9.67,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_bm_fable.shared.governor-vance.low": {
+"auto": true,
+"d": 5.23,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_bm_fable.shared.hush-lamps.high": {
+"auto": true,
+"d": 9.72,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_bm_fable.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.66,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_bm_fable.shared.kaelen-vance.high": {
+"auto": true,
+"d": 12.7,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_bm_fable.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.82,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_bm_fable.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.34,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_bm_fable.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.41,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_bm_fable.shared.oakhaven.high": {
+"auto": true,
+"d": 14.26,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_bm_fable.shared.oakhaven.low": {
+"auto": true,
+"d": 5.69,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_bm_fable.shared.refuse.0": {
+"auto": true,
+"d": 3.65,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_bm_fable.shared.refuse.1": {
+"auto": true,
+"d": 2.93,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_bm_fable.shared.refuse.2": {
+"auto": true,
+"d": 1.01,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_bm_fable.shared.the-cacophony.high": {
+"auto": true,
+"d": 12.65,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_bm_fable.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.8,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_bm_fable.shared.the-catalogue.high": {
+"auto": true,
+"d": 14.26,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_bm_fable.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.54,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_bm_fable.shared.the-church.high": {
+"auto": true,
+"d": 13.51,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_bm_fable.shared.the-church.low": {
+"auto": true,
+"d": 9.65,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_bm_fable.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.71,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_bm_fable.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.78,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_bm_fable.shared.the-flambeaux.high": {
+"auto": true,
+"d": 13.34,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_bm_fable.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.68,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_bm_fable.shared.the-flume.high": {
+"auto": true,
+"d": 12.91,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_bm_fable.shared.the-flume.low": {
+"auto": true,
+"d": 9.14,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_bm_fable.shared.the-grafters.high": {
+"auto": true,
+"d": 9.77,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_bm_fable.shared.the-grafters.low": {
+"auto": true,
+"d": 3.86,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_bm_fable.shared.the-hedge.high": {
+"auto": true,
+"d": 12.07,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_bm_fable.shared.the-hedge.low": {
+"auto": true,
+"d": 7.3,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_bm_fable.shared.the-hush.high": {
+"auto": true,
+"d": 13.66,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_bm_fable.shared.the-hush.low": {
+"auto": true,
+"d": 5.21,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_bm_fable.shared.the-iron-synod.high": {
+"auto": true,
+"d": 13.37,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_bm_fable.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.34,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_bm_fable.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 15.48,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_bm_fable.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.34,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_bm_fable.shared.the-narrow.high": {
+"auto": true,
+"d": 13.87,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_bm_fable.shared.the-narrow.low": {
+"auto": true,
+"d": 5.74,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_bm_fable.shared.the-office-cutter.high": {
+"auto": true,
+"d": 13.68,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_bm_fable.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.98,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_bm_fable.shared.the-quarry.high": {
+"auto": true,
+"d": 11.62,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_bm_fable.shared.the-quarry.low": {
+"auto": true,
+"d": 5.18,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_bm_fable.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 14.71,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_bm_fable.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_bm_fable.shared.the-rite.high": {
+"auto": true,
+"d": 15.24,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_bm_fable.shared.the-rite.low": {
+"auto": true,
+"d": 6.12,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_bm_fable.shared.the-root.high": {
+"auto": true,
+"d": 13.54,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_bm_fable.shared.the-root.low": {
+"auto": true,
+"d": 5.76,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_bm_fable.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 13.2,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_bm_fable.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 10.49,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_bm_fable.shared.vesper.high": {
+"auto": true,
+"d": 10.9,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_bm_fable.shared.vesper.low": {
+"auto": true,
+"d": 2.11,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_bm_fable.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.26,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_bm_fable.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.74,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_bm_fable.shared.whisper-grove.high": {
+"auto": true,
+"d": 13.75,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_bm_fable.shared.whisper-grove.low": {
+"auto": true,
+"d": 12.79,
+"kind": "shared",
+"speaker": "shared_bm_fable",
+"src": "voices/shared_bm_fable/shared_bm_fable.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_bm_george.shared.aether-glass.high": {
+"auto": true,
+"d": 18.96,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_bm_george.shared.aether-glass.low": {
+"auto": true,
+"d": 5.52,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_bm_george.shared.bless.0": {
+"auto": true,
+"d": 2.74,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_bm_george.shared.bless.1": {
+"auto": true,
+"d": 2.3,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_bm_george.shared.bless.2": {
+"auto": true,
+"d": 1.68,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_bm_george.shared.governor-vance.high": {
+"auto": true,
+"d": 11.54,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_bm_george.shared.governor-vance.low": {
+"auto": true,
+"d": 5.42,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_bm_george.shared.hush-lamps.high": {
+"auto": true,
+"d": 11.28,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_bm_george.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.94,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_bm_george.shared.kaelen-vance.high": {
+"auto": true,
+"d": 15.26,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_bm_george.shared.kaelen-vance.low": {
+"auto": true,
+"d": 8.71,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_bm_george.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 12.19,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_bm_george.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.79,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_bm_george.shared.oakhaven.high": {
+"auto": true,
+"d": 17.35,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_bm_george.shared.oakhaven.low": {
+"auto": true,
+"d": 6.22,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_bm_george.shared.refuse.0": {
+"auto": true,
+"d": 3.74,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_bm_george.shared.refuse.1": {
+"auto": true,
+"d": 2.66,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_bm_george.shared.refuse.2": {
+"auto": true,
+"d": 0.89,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_bm_george.shared.the-cacophony.high": {
+"auto": true,
+"d": 14.64,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_bm_george.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.87,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_bm_george.shared.the-catalogue.high": {
+"auto": true,
+"d": 16.87,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_bm_george.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.56,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_bm_george.shared.the-church.high": {
+"auto": true,
+"d": 16.94,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_bm_george.shared.the-church.low": {
+"auto": true,
+"d": 11.18,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_bm_george.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 9.91,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_bm_george.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.99,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_bm_george.shared.the-flambeaux.high": {
+"auto": true,
+"d": 16.3,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_bm_george.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.73,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_bm_george.shared.the-flume.high": {
+"auto": true,
+"d": 15.46,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_bm_george.shared.the-flume.low": {
+"auto": true,
+"d": 10.61,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_bm_george.shared.the-grafters.high": {
+"auto": true,
+"d": 11.66,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_bm_george.shared.the-grafters.low": {
+"auto": true,
+"d": 3.77,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_bm_george.shared.the-hedge.high": {
+"auto": true,
+"d": 14.62,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_bm_george.shared.the-hedge.low": {
+"auto": true,
+"d": 7.99,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_bm_george.shared.the-hush.high": {
+"auto": true,
+"d": 16.34,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_bm_george.shared.the-hush.low": {
+"auto": true,
+"d": 5.59,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_bm_george.shared.the-iron-synod.high": {
+"auto": true,
+"d": 16.7,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_bm_george.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.46,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_bm_george.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 19.2,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_bm_george.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 12.34,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_bm_george.shared.the-narrow.high": {
+"auto": true,
+"d": 16.39,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_bm_george.shared.the-narrow.low": {
+"auto": true,
+"d": 5.95,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_bm_george.shared.the-office-cutter.high": {
+"auto": true,
+"d": 17.14,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_bm_george.shared.the-office-cutter.low": {
+"auto": true,
+"d": 6.55,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_bm_george.shared.the-quarry.high": {
+"auto": true,
+"d": 14.38,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_bm_george.shared.the-quarry.low": {
+"auto": true,
+"d": 5.45,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_bm_george.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 18.38,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_bm_george.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 4.13,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_bm_george.shared.the-rite.high": {
+"auto": true,
+"d": 18.55,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_bm_george.shared.the-rite.low": {
+"auto": true,
+"d": 6.79,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_bm_george.shared.the-root.high": {
+"auto": true,
+"d": 16.08,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_bm_george.shared.the-root.low": {
+"auto": true,
+"d": 6.34,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_bm_george.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 16.37,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_bm_george.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 11.9,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_bm_george.shared.vesper.high": {
+"auto": true,
+"d": 13.34,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_bm_george.shared.vesper.low": {
+"auto": true,
+"d": 1.82,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_bm_george.shared.vox-bottles.high": {
+"auto": true,
+"d": 9.46,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_bm_george.shared.vox-bottles.low": {
+"auto": true,
+"d": 6.07,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_bm_george.shared.whisper-grove.high": {
+"auto": true,
+"d": 17.5,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_bm_george.shared.whisper-grove.low": {
+"auto": true,
+"d": 15.41,
+"kind": "shared",
+"speaker": "shared_bm_george",
+"src": "voices/shared_bm_george/shared_bm_george.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_bm_lewis.shared.aether-glass.high": {
+"auto": true,
+"d": 19.56,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_bm_lewis.shared.aether-glass.low": {
+"auto": true,
+"d": 5.93,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_bm_lewis.shared.bless.0": {
+"auto": true,
+"d": 2.23,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_bm_lewis.shared.bless.1": {
+"auto": true,
+"d": 2.21,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_bm_lewis.shared.bless.2": {
+"auto": true,
+"d": 1.49,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_bm_lewis.shared.governor-vance.high": {
+"auto": true,
+"d": 11.59,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_bm_lewis.shared.governor-vance.low": {
+"auto": true,
+"d": 5.62,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_bm_lewis.shared.hush-lamps.high": {
+"auto": true,
+"d": 11.83,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_bm_lewis.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.9,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_bm_lewis.shared.kaelen-vance.high": {
+"auto": true,
+"d": 15.84,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_bm_lewis.shared.kaelen-vance.low": {
+"auto": true,
+"d": 9.05,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_bm_lewis.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 12.6,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_bm_lewis.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 7.15,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_bm_lewis.shared.oakhaven.high": {
+"auto": true,
+"d": 18.14,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_bm_lewis.shared.oakhaven.low": {
+"auto": true,
+"d": 6.36,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_bm_lewis.shared.refuse.0": {
+"auto": true,
+"d": 3.65,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_bm_lewis.shared.refuse.1": {
+"auto": true,
+"d": 2.33,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_bm_lewis.shared.refuse.2": {
+"auto": true,
+"d": 0.77,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_bm_lewis.shared.the-cacophony.high": {
+"auto": true,
+"d": 15.7,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_bm_lewis.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.99,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_bm_lewis.shared.the-catalogue.high": {
+"auto": true,
+"d": 17.52,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_bm_lewis.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.54,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_bm_lewis.shared.the-church.high": {
+"auto": true,
+"d": 17.59,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_bm_lewis.shared.the-church.low": {
+"auto": true,
+"d": 11.45,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_bm_lewis.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 10.18,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_bm_lewis.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 5.09,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_bm_lewis.shared.the-flambeaux.high": {
+"auto": true,
+"d": 16.37,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_bm_lewis.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.82,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_bm_lewis.shared.the-flume.high": {
+"auto": true,
+"d": 15.84,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_bm_lewis.shared.the-flume.low": {
+"auto": true,
+"d": 10.99,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_bm_lewis.shared.the-grafters.high": {
+"auto": true,
+"d": 12.0,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_bm_lewis.shared.the-grafters.low": {
+"auto": true,
+"d": 3.77,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_bm_lewis.shared.the-hedge.high": {
+"auto": true,
+"d": 14.9,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_bm_lewis.shared.the-hedge.low": {
+"auto": true,
+"d": 8.52,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_bm_lewis.shared.the-hush.high": {
+"auto": true,
+"d": 17.02,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_bm_lewis.shared.the-hush.low": {
+"auto": true,
+"d": 5.66,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_bm_lewis.shared.the-iron-synod.high": {
+"auto": true,
+"d": 17.28,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_bm_lewis.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.58,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_bm_lewis.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 19.97,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_bm_lewis.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 12.62,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_bm_lewis.shared.the-narrow.high": {
+"auto": true,
+"d": 17.06,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_bm_lewis.shared.the-narrow.low": {
+"auto": true,
+"d": 6.05,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_bm_lewis.shared.the-office-cutter.high": {
+"auto": true,
+"d": 17.9,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_bm_lewis.shared.the-office-cutter.low": {
+"auto": true,
+"d": 6.67,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_bm_lewis.shared.the-quarry.high": {
+"auto": true,
+"d": 15.1,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_bm_lewis.shared.the-quarry.low": {
+"auto": true,
+"d": 5.5,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_bm_lewis.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 18.89,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_bm_lewis.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 4.15,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_bm_lewis.shared.the-rite.high": {
+"auto": true,
+"d": 19.3,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_bm_lewis.shared.the-rite.low": {
+"auto": true,
+"d": 6.91,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_bm_lewis.shared.the-root.high": {
+"auto": true,
+"d": 17.4,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_bm_lewis.shared.the-root.low": {
+"auto": true,
+"d": 6.46,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_bm_lewis.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 16.94,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_bm_lewis.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 12.62,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_bm_lewis.shared.vesper.high": {
+"auto": true,
+"d": 13.82,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_bm_lewis.shared.vesper.low": {
+"auto": true,
+"d": 1.63,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_bm_lewis.shared.vox-bottles.high": {
+"auto": true,
+"d": 9.7,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_bm_lewis.shared.vox-bottles.low": {
+"auto": true,
+"d": 6.29,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_bm_lewis.shared.whisper-grove.high": {
+"auto": true,
+"d": 18.02,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_bm_lewis.shared.whisper-grove.low": {
+"auto": true,
+"d": 15.77,
+"kind": "shared",
+"speaker": "shared_bm_lewis",
+"src": "voices/shared_bm_lewis/shared_bm_lewis.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_breath_f.shared.aether-glass.high": {
+"auto": true,
+"d": 17.14,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_breath_f.shared.aether-glass.low": {
+"auto": true,
+"d": 5.14,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_breath_f.shared.bless.0": {
+"auto": true,
+"d": 2.71,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_breath_f.shared.bless.1": {
+"auto": true,
+"d": 2.47,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_breath_f.shared.bless.2": {
+"auto": true,
+"d": 1.94,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_breath_f.shared.governor-vance.high": {
+"auto": true,
+"d": 10.51,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_breath_f.shared.governor-vance.low": {
+"auto": true,
+"d": 5.06,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_breath_f.shared.hush-lamps.high": {
+"auto": true,
+"d": 10.44,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_breath_f.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.54,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_breath_f.shared.kaelen-vance.high": {
+"auto": true,
+"d": 14.35,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_breath_f.shared.kaelen-vance.low": {
+"auto": true,
+"d": 8.26,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_breath_f.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 11.47,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_breath_f.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.6,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_breath_f.shared.oakhaven.high": {
+"auto": true,
+"d": 16.44,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_breath_f.shared.oakhaven.low": {
+"auto": true,
+"d": 5.78,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_breath_f.shared.refuse.0": {
+"auto": true,
+"d": 3.5,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_breath_f.shared.refuse.1": {
+"auto": true,
+"d": 2.81,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_breath_f.shared.refuse.2": {
+"auto": true,
+"d": 1.06,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_breath_f.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.94,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_breath_f.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.51,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_breath_f.shared.the-catalogue.high": {
+"auto": true,
+"d": 15.96,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_breath_f.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.13,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_breath_f.shared.the-church.high": {
+"auto": true,
+"d": 15.53,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_breath_f.shared.the-church.low": {
+"auto": true,
+"d": 10.44,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_breath_f.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 9.05,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_breath_f.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.7,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_breath_f.shared.the-flambeaux.high": {
+"auto": true,
+"d": 15.19,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_breath_f.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.54,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_breath_f.shared.the-flume.high": {
+"auto": true,
+"d": 14.98,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_breath_f.shared.the-flume.low": {
+"auto": true,
+"d": 9.91,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_breath_f.shared.the-grafters.high": {
+"auto": true,
+"d": 11.02,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_breath_f.shared.the-grafters.low": {
+"auto": true,
+"d": 3.58,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_breath_f.shared.the-hedge.high": {
+"auto": true,
+"d": 13.49,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_breath_f.shared.the-hedge.low": {
+"auto": true,
+"d": 7.3,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_breath_f.shared.the-hush.high": {
+"auto": true,
+"d": 15.24,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_breath_f.shared.the-hush.low": {
+"auto": true,
+"d": 5.06,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_breath_f.shared.the-iron-synod.high": {
+"auto": true,
+"d": 15.26,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_breath_f.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.18,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_breath_f.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 17.81,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_breath_f.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 11.35,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_breath_f.shared.the-narrow.high": {
+"auto": true,
+"d": 15.38,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_breath_f.shared.the-narrow.low": {
+"auto": true,
+"d": 5.52,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_breath_f.shared.the-office-cutter.high": {
+"auto": true,
+"d": 16.1,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_breath_f.shared.the-office-cutter.low": {
+"auto": true,
+"d": 6.05,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_breath_f.shared.the-quarry.high": {
+"auto": true,
+"d": 13.2,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_breath_f.shared.the-quarry.low": {
+"auto": true,
+"d": 4.85,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_breath_f.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 17.33,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_breath_f.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.91,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_breath_f.shared.the-rite.high": {
+"auto": true,
+"d": 17.33,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_breath_f.shared.the-rite.low": {
+"auto": true,
+"d": 6.24,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_breath_f.shared.the-root.high": {
+"auto": true,
+"d": 15.1,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_breath_f.shared.the-root.low": {
+"auto": true,
+"d": 5.78,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_breath_f.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 15.14,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_breath_f.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 11.06,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_breath_f.shared.vesper.high": {
+"auto": true,
+"d": 12.53,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_breath_f.shared.vesper.low": {
+"auto": true,
+"d": 1.99,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_breath_f.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.71,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_breath_f.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.54,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_breath_f.shared.whisper-grove.high": {
+"auto": true,
+"d": 16.34,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_breath_f.shared.whisper-grove.low": {
+"auto": true,
+"d": 14.14,
+"kind": "shared",
+"speaker": "shared_breath_f",
+"src": "voices/shared_breath_f/shared_breath_f.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_breath_m.shared.aether-glass.high": {
+"auto": true,
+"d": 16.06,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_breath_m.shared.aether-glass.low": {
+"auto": true,
+"d": 4.99,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_breath_m.shared.bless.0": {
+"auto": true,
+"d": 2.52,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_breath_m.shared.bless.1": {
+"auto": true,
+"d": 2.3,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_breath_m.shared.bless.2": {
+"auto": true,
+"d": 1.73,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_breath_m.shared.governor-vance.high": {
+"auto": true,
+"d": 9.82,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_breath_m.shared.governor-vance.low": {
+"auto": true,
+"d": 4.82,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_breath_m.shared.hush-lamps.high": {
+"auto": true,
+"d": 10.03,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_breath_m.shared.hush-lamps.low": {
+"auto": true,
+"d": 4.44,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_breath_m.shared.kaelen-vance.high": {
+"auto": true,
+"d": 13.2,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_breath_m.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.61,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_breath_m.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.75,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_breath_m.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 6.29,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_breath_m.shared.oakhaven.high": {
+"auto": true,
+"d": 14.95,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_breath_m.shared.oakhaven.low": {
+"auto": true,
+"d": 5.42,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_breath_m.shared.refuse.0": {
+"auto": true,
+"d": 3.46,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_breath_m.shared.refuse.1": {
+"auto": true,
+"d": 2.54,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_breath_m.shared.refuse.2": {
+"auto": true,
+"d": 1.03,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_breath_m.shared.the-cacophony.high": {
+"auto": true,
+"d": 13.08,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_breath_m.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.37,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_breath_m.shared.the-catalogue.high": {
+"auto": true,
+"d": 14.64,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_breath_m.shared.the-catalogue.low": {
+"auto": true,
+"d": 4.08,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_breath_m.shared.the-church.high": {
+"auto": true,
+"d": 14.54,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_breath_m.shared.the-church.low": {
+"auto": true,
+"d": 9.84,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_breath_m.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.57,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_breath_m.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.49,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_breath_m.shared.the-flambeaux.high": {
+"auto": true,
+"d": 14.14,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_breath_m.shared.the-flambeaux.low": {
+"auto": true,
+"d": 4.44,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_breath_m.shared.the-flume.high": {
+"auto": true,
+"d": 13.7,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_breath_m.shared.the-flume.low": {
+"auto": true,
+"d": 9.29,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_breath_m.shared.the-grafters.high": {
+"auto": true,
+"d": 10.46,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_breath_m.shared.the-grafters.low": {
+"auto": true,
+"d": 3.55,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_breath_m.shared.the-hedge.high": {
+"auto": true,
+"d": 12.62,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_breath_m.shared.the-hedge.low": {
+"auto": true,
+"d": 7.08,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_breath_m.shared.the-hush.high": {
+"auto": true,
+"d": 14.09,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_breath_m.shared.the-hush.low": {
+"auto": true,
+"d": 4.85,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_breath_m.shared.the-iron-synod.high": {
+"auto": true,
+"d": 14.11,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_breath_m.shared.the-iron-synod.low": {
+"auto": true,
+"d": 4.13,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_breath_m.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 16.42,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_breath_m.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.56,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_breath_m.shared.the-narrow.high": {
+"auto": true,
+"d": 13.99,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_breath_m.shared.the-narrow.low": {
+"auto": true,
+"d": 5.42,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_breath_m.shared.the-office-cutter.high": {
+"auto": true,
+"d": 14.95,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_breath_m.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.78,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_breath_m.shared.the-quarry.high": {
+"auto": true,
+"d": 12.26,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_breath_m.shared.the-quarry.low": {
+"auto": true,
+"d": 4.78,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_breath_m.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 15.98,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_breath_m.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.72,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_breath_m.shared.the-rite.high": {
+"auto": true,
+"d": 15.77,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_breath_m.shared.the-rite.low": {
+"auto": true,
+"d": 6.12,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_breath_m.shared.the-root.high": {
+"auto": true,
+"d": 13.75,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_breath_m.shared.the-root.low": {
+"auto": true,
+"d": 5.47,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_breath_m.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 13.68,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_breath_m.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 10.13,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_breath_m.shared.vesper.high": {
+"auto": true,
+"d": 11.88,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_breath_m.shared.vesper.low": {
+"auto": true,
+"d": 1.82,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_breath_m.shared.vox-bottles.high": {
+"auto": true,
+"d": 8.18,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_breath_m.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.28,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_breath_m.shared.whisper-grove.high": {
+"auto": true,
+"d": 15.0,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_breath_m.shared.whisper-grove.low": {
+"auto": true,
+"d": 13.01,
+"kind": "shared",
+"speaker": "shared_breath_m",
+"src": "voices/shared_breath_m/shared_breath_m.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
+},
+"shared_child.shared.aether-glass.high": {
+"auto": true,
+"d": 16.3,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.aether-glass.high.mp3",
+"t": "Crystallized song: a Chorister's voice bled out and set. Every tanker of fuel is part god. Glass remembers whatever is pressed into it, which is how the Catalogue stores stolen names. Raw glass crystallizes flesh in four stages: ringing, frost, set, heartglass."
+},
+"shared_child.shared.aether-glass.low": {
+"auto": true,
+"d": 4.42,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.aether-glass.low.mp3",
+"t": "Fuel. Lamps, engines, the Legions. It comes out of the ground green here."
+},
+"shared_child.shared.bless.0": {
+"auto": true,
+"d": 2.02,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.bless.0.mp3",
+"t": "Blessings of the Narrow on you."
+},
+"shared_child.shared.bless.1": {
+"auto": true,
+"d": 1.85,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.bless.1.mp3",
+"t": "Keep your voice low, friend."
+},
+"shared_child.shared.bless.2": {
+"auto": true,
+"d": 1.39,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.bless.2.mp3",
+"t": "Mind how you go."
+},
+"shared_child.shared.governor-vance.high": {
+"auto": true,
+"d": 9.22,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.governor-vance.high.mp3",
+"t": "He sold the Root during the Cascade famine to keep Oakhaven fed, and he has been bleeding the town slowly to save it ever since. There are roots under his sleeves."
+},
+"shared_child.shared.governor-vance.low": {
+"auto": true,
+"d": 4.54,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.governor-vance.low.mp3",
+"t": "He keeps us fed. That is what he says. He has not aired his room in two years."
+},
+"shared_child.shared.hush-lamps.high": {
+"auto": true,
+"d": 9.46,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.hush-lamps.high.mp3",
+"t": "A room that falls silent is a door left open. Every house keeps one burning. Night-hummers sit at the crossings till dawn. Tam does the Flume crossing, or did."
+},
+"shared_child.shared.hush-lamps.low": {
+"auto": true,
+"d": 3.91,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.hush-lamps.low.mp3",
+"t": "The reed on the lantern. It whistles so the house never goes quiet."
+},
+"shared_child.shared.kaelen-vance.high": {
+"auto": true,
+"d": 13.03,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.kaelen-vance.high.mp3",
+"t": "Chief Resonant Engineer of the Consortium by twenty-seven. He calibrated the bore at the Dawning Spire. His left arm is Light-glass, Stage Three and spreading; anyone who knows glass can read his past off his skin."
+},
+"shared_child.shared.kaelen-vance.low": {
+"auto": true,
+"d": 7.39,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.kaelen-vance.low.mp3",
+"t": "The Governor's son. Lives outside the Hedge in a charcoal-burner's hut. The hounds won't touch him. People say that tells you something."
+},
+"shared_child.shared.lyra-ashgrove.high": {
+"auto": true,
+"d": 10.56,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.lyra-ashgrove.high.mp3",
+"t": "Tobin Ashgrove raised his voice above the Narrow to call a fevered child back from the Hush. The child lived. Something wears his voice now, and it has been courting her at the Hedge."
+},
+"shared_child.shared.lyra-ashgrove.low": {
+"auto": true,
+"d": 5.66,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.lyra-ashgrove.low.mp3",
+"t": "Our Cantor. Sings the births and the burials. Her father was taken in 417."
+},
+"shared_child.shared.oakhaven.high": {
+"auto": true,
+"d": 14.42,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.oakhaven.high.mp3",
+"t": "Capital of the Resonant Reach, under the seal of a queen who has been dead a hundred and forty years. Since 417 the Consortium has milked the Growth Anchor's root from the quarry, and the law is going soft. Saplings split cobbles overnight."
+},
+"shared_child.shared.oakhaven.low": {
+"auto": true,
+"d": 5.11,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.oakhaven.low.mp3",
+"t": "Orchard town. Used to be. Now it's a town inside a hedge that eats its own noise."
+},
+"shared_child.shared.refuse.0": {
+"auto": true,
+"d": 2.83,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.refuse.0.mp3",
+"t": "Lower your voice and ask me again like a person."
+},
+"shared_child.shared.refuse.1": {
+"auto": true,
+"d": 2.16,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.refuse.1.mp3",
+"t": "I have nothing to say to that tone."
+},
+"shared_child.shared.refuse.2": {
+"auto": true,
+"d": 0.79,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.refuse.2.mp3",
+"t": "No."
+},
+"shared_child.shared.the-cacophony.high": {
+"auto": true,
+"d": 12.86,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-cacophony.high.mp3",
+"t": "What song becomes when the Hush bites it. They hunt voices because every voice is a small song, and they wear what they eat. Aether-Glass breaks them; glass shot from an ordinary pistol will do. They will not cross the glassed."
+},
+"shared_child.shared.the-cacophony.low": {
+"auto": true,
+"d": 4.06,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-cacophony.low.mp3",
+"t": "Static with teeth. They come to music. Hounds, mostly, round here."
+},
+"shared_child.shared.the-catalogue.high": {
+"auto": true,
+"d": 14.26,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-catalogue.high.mp3",
+"t": "Formerly the Silent Veil. Registrar-General Quist runs the harvest-houses where people are Unnamed: a hand-press tuned to 741, eight seconds of contact. What remains is a Hollow, repeating the last thing it did."
+},
+"shared_child.shared.the-catalogue.low": {
+"auto": true,
+"d": 3.7,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-catalogue.low.mp3",
+"t": "The Office. They take names. Every name is a unit, they say."
+},
+"shared_child.shared.the-church.high": {
+"auto": true,
+"d": 14.33,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-church.high.mp3",
+"t": "The Choir-Church of the Pure Note holds that the Light let go because one voice shouted at the Dawning Spire. Its Flambeau burn what sings off-key. Ignatius Crane leads the column coming to Oakhaven; his left hand was bleached white at the Dawning."
+},
+"shared_child.shared.the-church.low": {
+"auto": true,
+"d": 9.26,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-church.low.mp3",
+"t": "The Choir-Church. They took the bells in 417, for the bore's teeth. They are coming back up the road to sing over us, and that is supposed to be a blessing."
+},
+"shared_child.shared.the-drift-kestrel.high": {
+"auto": true,
+"d": 8.35,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-drift-kestrel.high.mp3",
+"t": "Captain Vane, late of the Wave-Cutter. Rust Coast. Twelve crates in his hold for the quarry garrison, and at the dead hour the crates say names."
+},
+"shared_child.shared.the-drift-kestrel.low": {
+"auto": true,
+"d": 4.13,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-drift-kestrel.low.mp3",
+"t": "A skyship at the mooring mast. Smuggler, by the look of her captain."
+},
+"shared_child.shared.the-flambeaux.high": {
+"auto": true,
+"d": 13.34,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-flambeaux.high.mp3",
+"t": "Ignatius Crane is their brightest flame. He swung the censer through three hundred sunrises of the Rite of Pure Unison and ordered the choir burned when the light turned. He has spent seven years praying over the one voice that shouted."
+},
+"shared_child.shared.the-flambeaux.low": {
+"auto": true,
+"d": 3.94,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-flambeaux.low.mp3",
+"t": "The Church's burners. They carry glass-fire the hounds will not cross."
+},
+"shared_child.shared.the-flume.high": {
+"auto": true,
+"d": 12.96,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-flume.high.mp3",
+"t": "The Chlorophyll Flume carries Growth-water down from the Anchor's country to the orchards. It has been running sweeter and faster since 417, which is not good news. What it carries, it also carries voices in."
+},
+"shared_child.shared.the-flume.low": {
+"auto": true,
+"d": 8.66,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-flume.low.mp3",
+"t": "The green river. Aqueduct, really, from the Anchor country. You can drink it if you boil it twice. Old Tam sits at the crossing of a night and listens to it."
+},
+"shared_child.shared.the-grafters.high": {
+"auto": true,
+"d": 9.94,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-grafters.high.mp3",
+"t": "Surgeon-Grafter Rooke does the cutting here. He has done every one with care. The sap-mark he chalks on a door means past cutting, and now it also means the Inquisitor's list."
+},
+"shared_child.shared.the-grafters.low": {
+"auto": true,
+"d": 3.31,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-grafters.low.mp3",
+"t": "Synod surgeons. They come for the burl-sick with saws."
+},
+"shared_child.shared.the-hedge.high": {
+"auto": true,
+"d": 12.07,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-hedge.high.mp3",
+"t": "Planted in 417 after the first hounds came. It keeps the Narrow for us. But at the dead hour it has started to speak, in the voices of our dead. Never answer it. Answering tells it you are there."
+},
+"shared_child.shared.the-hedge.low": {
+"auto": true,
+"d": 6.5,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-hedge.low.mp3",
+"t": "Three men deep of thorn and packed wool. It swallows our sounds so the hounds don't hear. Don't go near it after dark."
+},
+"shared_child.shared.the-hush.high": {
+"auto": true,
+"d": 13.78,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-hush.high.mp3",
+"t": "It is not empty. It is a silence that is alive, patient, and hungry, and it does not kill what it takes. It digests. Where a law thins, the Hush leans in. The Tongueless worship it as the Merciful Quiet. They are right that it is quiet."
+},
+"shared_child.shared.the-hush.low": {
+"auto": true,
+"d": 4.39,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-hush.low.mp3",
+"t": "What's outside. The quiet. We don't talk about it, which I suppose is the point."
+},
+"shared_child.shared.the-iron-synod.high": {
+"auto": true,
+"d": 13.58,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-iron-synod.high.mp3",
+"t": "Five organs that need each other and hate each other: the Glass Court of dead kings, the Choir-Church, the Arbiterium, the Consortium of Bores and the Office of the Catalogue. And the Carillon Legions, every one of them running on a stolen name."
+},
+"shared_child.shared.the-iron-synod.low": {
+"auto": true,
+"d": 3.86,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-iron-synod.low.mp3",
+"t": "One Note, One Law, One Hand. They took our bells for bore-teeth."
+},
+"shared_child.shared.the-mausoleum-of-chords.high": {
+"auto": true,
+"d": 15.6,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-mausoleum-of-chords.high.mp3",
+"t": "The Mausoleum of Chords is the Synod's survey name for the House of the Silent Veil, where the Veil's scribes kept the names of the dead for eleven hundred years. Over the door: What is written is not lost. Its own scribes are buried under it, each in stone tuned to the note they kept."
+},
+"shared_child.shared.the-mausoleum-of-chords.low": {
+"auto": true,
+"d": 10.3,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-mausoleum-of-chords.low.mp3",
+"t": "The Synod's maps call it a mausoleum. The scribes who lived there called it the House: the old house of the Silent Veil, out in the Woods. They say its tombs still ring if you knock."
+},
+"shared_child.shared.the-narrow.high": {
+"auto": true,
+"d": 13.49,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-narrow.high.mp3",
+"t": "Mortals live in the band between two predators. Speak in a murmur. Keep a hush-lamp lit so no room ever goes silent. In siphoned country a person who falls truly silent begins to unwrite: warmth first, then name, then outline."
+},
+"shared_child.shared.the-narrow.low": {
+"auto": true,
+"d": 4.9,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-narrow.low.mp3",
+"t": "Too loud brings the hounds, too still brings the Hush. Every child knows the rhyme."
+},
+"shared_child.shared.the-office-cutter.high": {
+"auto": true,
+"d": 14.38,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-office-cutter.high.mp3",
+"t": "An Office courier-cutter, too light to carry anything but paper and proctors, with a listening-horn on the bow. It hunted the murmur of the four hundred and thirty-two in our own hold. Vane put the willow-crown through her. She came down in the woods to the east."
+},
+"shared_child.shared.the-office-cutter.low": {
+"auto": true,
+"d": 5.35,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-office-cutter.low.mp3",
+"t": "The grey ship that hunted us by sound. It came down east of here with a tree through its bow."
+},
+"shared_child.shared.the-quarry.high": {
+"auto": true,
+"d": 12.0,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-quarry.high.mp3",
+"t": "At the bottom is a chamber grown out of the Root itself, veined with glass and breathing. Depot Three holds the engineers' stores. The shaft to the Root-vault is sealed to anyone without a Consortium pass."
+},
+"shared_child.shared.the-quarry.low": {
+"auto": true,
+"d": 4.46,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-quarry.low.mp3",
+"t": "North of the Hedge. Headframe over a green-lit shaft. Hollows work the pumps."
+},
+"shared_child.shared.the-quiet-faith.high": {
+"auto": true,
+"d": 15.74,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-quiet-faith.high.mp3",
+"t": "A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be \"already quiet\", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else."
+},
+"shared_child.shared.the-quiet-faith.low": {
+"auto": true,
+"d": 3.46,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-quiet-faith.low.mp3",
+"t": "Them in the woods who cut their tongues out. Don't look at them."
+},
+"shared_child.shared.the-rite.high": {
+"auto": true,
+"d": 15.5,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-rite.high.mp3",
+"t": "A four-hour unison hold at 174 Hz, sung at the casing with a collar and a wire. The Vance Sequence, Revision Seven, Stage Nine. Source: Cantor, local. They did the same thing at the Dawning Spire in 412 and the Light let go."
+},
+"shared_child.shared.the-rite.low": {
+"auto": true,
+"d": 5.62,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-rite.low.mp3",
+"t": "The Church is coming to hold the Pure Note over the town. On Hearthday. They say it is a blessing."
+},
+"shared_child.shared.the-root.high": {
+"auto": true,
+"d": 13.56,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-root.high.mp3",
+"t": "The Root of the Growth Anchor, 174 Hz. The Spire is the tower you can see; the Anchor is what is inside it, and the Root is where it drinks. There is something singing down there, a lullaby, and it keeps losing the tune."
+},
+"shared_child.shared.the-root.low": {
+"auto": true,
+"d": 5.11,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-root.low.mp3",
+"t": "What's under the quarry. The Consortium drills it. Pays the town's bread, the Governor says."
+},
+"shared_child.shared.the-scribe-in-the-mist.high": {
+"auto": true,
+"d": 13.78,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-scribe-in-the-mist.high.mp3",
+"t": "A Veil scribe, by the cut of her coat, which should not be possible; the Veil was folded into the Catalogue years ago. The proctors at the North Gate are asking for a woman carrying a ledger. Whatever she has, the Office wants it back badly."
+},
+"shared_child.shared.the-scribe-in-the-mist.low": {
+"auto": true,
+"d": 10.03,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.the-scribe-in-the-mist.low.mp3",
+"t": "There's a woman out past Kaelen's hut, east, in the trees. Pale. Writing in a book by a hush-lamp, at night, outside the Hedge. Grey men have been asking after her at the gate."
+},
+"shared_child.shared.vesper.high": {
+"auto": true,
+"d": 11.26,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.vesper.high.mp3",
+"t": "The first mate of the Wave-Cutter, in 414. She went into a tonal trench with the tow. Captain Vane held the axe for ten heartbeats before he cut the hawser. Forty-eight men lived."
+},
+"shared_child.shared.vesper.low": {
+"auto": true,
+"d": 1.39,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.vesper.low.mp3",
+"t": "Never heard the name."
+},
+"shared_child.shared.vox-bottles.high": {
+"auto": true,
+"d": 7.94,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.vox-bottles.high.mp3",
+"t": "The grieving buy them. Opening one brings hounds, and worse: sailors say a quiet comes aboard through a bottle left too long unstoppered."
+},
+"shared_child.shared.vox-bottles.low": {
+"auto": true,
+"d": 5.14,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.vox-bottles.low.mp3",
+"t": "Last words of the dead, stoppered. The Free Captains sell them. Don't open one indoors."
+},
+"shared_child.shared.whisper-grove.high": {
+"auto": true,
+"d": 14.74,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.whisper-grove.high.mp3",
+"t": "The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground."
+},
+"shared_child.shared.whisper-grove.low": {
+"auto": true,
+"d": 13.08,
+"kind": "shared",
+"speaker": "shared_child",
+"src": "voices/shared_child/shared_child.shared.whisper-grove.low.mp3",
+"t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did."
 },
 "sister.rite.daughter": {
 "d": 2.3,
@@ -9026,4 +23570,166 @@ const VOICE_LINES = {
 "t": "Hello.",
 "voiceOf": "wren"
 }
+};
+const VOICE_GROUPS = {
+"aegis_dw": "aegis",
+"aegis_wg": "aegis",
+"aldric": "shared_bm_george",
+"bettany": "shared_bf_emma",
+"bettis": "shared_breath_f",
+"halder": "shared_breath_m",
+"harrow": "shared_bm_lewis",
+"herald": "shared_bm_george",
+"hetty": "shared_bf_alice",
+"hob": "shared_am_onyx",
+"ignatius": "shared_bm_fable",
+"kaelen": "kaelen",
+"kaelen_dw": "kaelen",
+"kaelen_wg": "kaelen",
+"lamplighter": "shared_breath_m",
+"lib_ilse": "shared_af_bella",
+"lib_odile": "shared_af_sarah",
+"lib_shelver": "shared_breath_m",
+"lyra": "shared_af_heart",
+"mags_dw": "shared_af_kore",
+"moor_bookseller": "shared_bm_lewis",
+"mourner": "shared_breath_f",
+"n28_hummer": "shared_af_nicole",
+"n28_lamplighter": "shared_bm_daniel",
+"nell": "shared_bf_lily",
+"orla": "shared_bf_lily",
+"orrin": "shared_bm_fable",
+"p100_19": "shared_bm_daniel",
+"p100_207": "shared_bm_daniel",
+"p100_211": "shared_bm_daniel",
+"p100_51": "shared_bf_lily",
+"p100_88": "shared_bm_fable",
+"p100_94": "shared_am_michael",
+"p100_corp": "shared_bm_lewis",
+"p100_issue": "shared_am_fenrir",
+"p100_mastcrew": "shared_bm_daniel",
+"p100_qm": "shared_bm_fable",
+"p100_roster": "shared_bm_fable",
+"p100_tr_a": "shared_bm_fable",
+"p100_tr_b": "shared_af_aoede",
+"p100_tr_c": "shared_af_jessica",
+"p100_tr_d": "shared_am_adam",
+"p100_watcher": "shared_breath_m",
+"p11_dicer": "shared_bm_daniel",
+"p11c_fish": "shared_bf_alice",
+"p11c_herb": "shared_af_jessica",
+"p11c_larder": "shared_bm_fable",
+"p11c_odds": "shared_bf_lily",
+"p11c_tinker": "shared_bm_daniel",
+"p12_baker": "shared_bf_lily",
+"p12_dunna": "shared_bf_isabella",
+"p12_herald": "shared_am_santa",
+"p13h_wenna": "shared_bf_isabella",
+"p15_dealer": "shared_af_heart",
+"p15l_clerk": "shared_bm_george",
+"p15l_veil": "shared_bm_daniel",
+"p15s_preacher": "shared_am_michael",
+"p16f_hand": "shared_am_liam",
+"p16f_madge": "shared_af_nova",
+"p16f_orrin": "shared_bm_daniel",
+"p16f_pellam": "shared_bm_daniel",
+"p16f_wife": "shared_af_jessica",
+"p16h_dessa": "shared_af_nova",
+"p16h_ines": "shared_af_jessica",
+"p16h_mossbrook": "shared_bm_daniel",
+"p16h_orrin": "shared_bm_fable",
+"p16h_steward": "shared_am_adam",
+"p16h_vause": "shared_am_fenrir",
+"p16k_hob": "shared_am_onyx",
+"p16k_mags": "shared_af_kore",
+"p16k_nell": "shared_bf_lily",
+"p16k_pennick": "shared_bm_george",
+"p16k_vane": "shared_am_puck",
+"p17c_bessa": "shared_breath_f",
+"p17c_child": "shared_child",
+"p17c_dunmore": "shared_bm_fable",
+"p17c_hand": "shared_am_onyx",
+"p17c_hesper": "shared_af_aoede",
+"p17c_hesper2": "shared_af_aoede",
+"p17c_oona": "shared_af_heart",
+"p17c_quain": "shared_bm_fable",
+"p17c_quain2": "shared_bm_fable",
+"p17c_sloe": "shared_am_puck",
+"p17c_tace": "shared_bf_isabella",
+"p17c_teague": "shared_am_onyx",
+"p17c_teel": "shared_bm_george",
+"p17c_wife": "shared_af_nicole",
+"p17n_jory": "shared_bm_lewis",
+"p17n_marl": "shared_am_santa",
+"p17n_tansy": "shared_bf_isabella",
+"p17p_aegis": "aegis",
+"p22_absalom": "shared_bm_daniel",
+"p22_gideon": "shared_am_fenrir",
+"p22_kit": "shared_child",
+"p22_kitlost": "shared_child",
+"p22_tamar": "shared_af_jessica",
+"p29_abel": "shared_am_liam",
+"p29_agnes": "shared_af_jessica",
+"p29_ambrose": "shared_bm_fable",
+"p29_corvin": "shared_am_santa",
+"p29_ennis": "shared_bf_emma",
+"p29_gil": "shared_am_echo",
+"p29_hurst": "shared_bf_isabella",
+"p29_jem": "shared_bm_lewis",
+"p29_moll": "shared_af_aoede",
+"p29_prue": "shared_af_bella",
+"p29_sexton": "shared_bm_fable",
+"p29_sim": "shared_bm_lewis",
+"p29_ysolde": "shared_bf_lily",
+"p30_hob": "shared_bm_fable",
+"p30_lissa": "shared_af_sarah",
+"p31_jugs": "shared_breath_f",
+"p31_shutters": "shared_breath_m",
+"p31_sweeper": "shared_breath_m",
+"p46_marrit": "shared_bf_emma",
+"p92_anselm": "shared_am_fenrir",
+"p92_brenna": "shared_af_nicole",
+"p92_canvas": "shared_bf_lily",
+"p92_folk": "shared_am_michael",
+"p92_joss": "shared_am_santa",
+"p92_ysolde": "shared_af_nova",
+"p94_bardo": "shared_am_michael",
+"p95_perpetua": "shared_af_nicole",
+"p95_warden": "shared_am_liam",
+"p96c_cantor": "shared_bm_fable",
+"p96c_treble": "shared_child",
+"p96v_albinus": "shared_am_eric",
+"p96v_clemence": "shared_bf_emma",
+"p96v_coriel": "shared_bf_emma",
+"p96v_domitia": "shared_bf_lily",
+"p96v_fabian": "shared_bm_lewis",
+"p96v_galen": "shared_bm_fable",
+"p96v_honoria": "shared_af_heart",
+"p96v_liviana": "shared_af_aoede",
+"p96v_marcellin": "shared_am_echo",
+"p96v_ottavia": "shared_af_kore",
+"p96v_prisca": "shared_bf_emma",
+"p96v_quintin": "shared_am_michael",
+"p97_scav": "shared_af_bella",
+"p97_tallyman": "shared_bm_george",
+"p9_ada": "shared_bf_isabella",
+"p9_tomas": "shared_am_puck",
+"pim": "shared_child",
+"quist": "quist",
+"rooke": "shared_bm_daniel",
+"sable_dw": "shared_af_nicole",
+"sable_wg": "shared_af_nicole",
+"sexton": "shared_breath_m",
+"tam": "shared_bm_lewis",
+"tobiah": "shared_bm_fable",
+"tobiah_dw": "shared_bm_fable",
+"townsman": "shared_am_adam",
+"townswoman": "shared_af_sarah",
+"umber": "shared_bf_alice",
+"vane": "shared_am_puck",
+"vane_dw": "shared_am_puck",
+"vane_wg": "shared_am_puck",
+"vosk": "shared_bf_isabella",
+"wren": "shared_child",
+"wren_dw": "shared_child"
 };

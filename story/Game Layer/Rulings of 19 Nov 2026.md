@@ -11,7 +11,7 @@ The owner, 19 Nov 2026, word for word:
 - **#143 (Phase 101, mutton on the menus):** brought up to date with `main` and merged (19 Nov). Only the README, Vol VIII and `sw.js` conflicted; both phases' entries are kept.
 - **The casting (Phase 102):** stands as built, all 122 automatic voices.
 - **French voices:** left out for now. French play stays unvoiced.
-- **The answers anyone can give (`TOPICS`):** to be voiced. See below for how.
+- **The answers anyone can give (`TOPICS`):** voiced in Phase 103. Every person's own voice for every answer would have been about 29 hours of speech and 500 MB, so each person answers in a group recorded in their own Kokoro voice (record: `story/Game Layer/Phase 103 - The answers anyone can give, voiced.md`). The groups are for the owner's review.
 - **#88, Book Four, Part Two, chapters 5 to 7** (*Dawnday*, *The Correspondence*, *The Fall-Chains*, about 36,000 words): merged. They are manuscript now, and book canon from here on. With them comes the author's ruling of 5 Nov 2026 already in the Series Bible: **a character's death no longer needs an heir.**
 - **#48, the Phase 23 living-figures pilot:** closed, not merged. Its aim (painted people with moving limbs) was met by the way the owner chose on 11 Nov ("I like that art style much better"): Phases 75 and 76, "Moving paintings". Merging it would lay a second figure system over every character. The branch is kept.
 - **#44, Phase 21 close-up ground at 4x:** closed, not merged. The close-up ground kept in the Phase 20-21 rulings is delivered by Phase 77, "Sharp walls and ground" (approved): every wall, roof, floor and ground tile at 256 x 256 in the 3D view. Merging both would lay two close-up textures over every surface. The branch is kept; its ground cover (grass tufts, pebbles, fallen leaves near the player) could be ported onto Phase 77 if wanted.
@@ -28,4 +28,4 @@ The owner, 19 Nov 2026, word for word:
 
 - Pegs by the hearth for the keepers' trophies (Phase 98, question 6; recommended: leave as the rule has it).
 - The reader's keys (F2, F3 or [, F4 or ]).
-- How the shared answers are voiced (below).
+- The Phase 103 voice groups (recommended: keep; any person can be given their own set later).

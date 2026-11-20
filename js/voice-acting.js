@@ -12,7 +12,11 @@
 //   spoken msgs- boss mimicry, Hollow fragments, companions: any message whose words match a recorded line plays it.
 //   answers    - (Phase 102) every person's own topic answers, and the greetings tools/voices/extract.py added, play when
 //                they appear in the conversation (renderDialogue); a line marked `for` is said by someone else on that
-//                person's behalf (General Ward's iron-cant, said aloud by Ninety-Four). The shared TOPICS answers stay unvoiced.
+//                person's behalf (General Ward's iron-cant, said aloud by Ninety-Four).
+//   shared     - (Phase 103) the answers anyone can give (TOPICS, the gossips' RUMOURS, a blunt tone's refusals, the
+//                polite blessings) are recorded once per voice group (tools/voices/shared.py); VOICE_GROUPS says whose
+//                voice group answers for each person. These match the whole answer exactly, never a part of it, and a
+//                blessing on the end plays after the answer. French play stays unvoiced (its text matches nothing).
 // Silent characters stay silent (VOICES.resolve decides). Nothing is saved; nothing here touches G.flags.
 // Setting: Options > Graphics & access > Voices: Voiced (default) / Voiced + read aloud / Grunts / Off.
 'use strict';
@@ -21,7 +25,15 @@ const VOICE_ACT = (() => {
   const audioRnd = (() => { let s = (Date.now() ^ 0x5bd1e995) >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; })();
   const LINES = (typeof VOICE_LINES !== 'undefined' && VOICE_LINES) ? VOICE_LINES : {};
   const norm = (s) => String(s).toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
-  const index = Object.keys(LINES).map((id) => ({ id, ...LINES[id], n: norm(LINES[id].match || LINES[id].t || '') })).filter((l) => l.n.length >= 2);
+  const index = Object.keys(LINES).filter((id) => LINES[id].kind !== 'shared').map((id) => ({ id, ...LINES[id], n: norm(LINES[id].match || LINES[id].t || '') })).filter((l) => l.n.length >= 2);
+  const GROUPS = (typeof VOICE_GROUPS !== 'undefined' && VOICE_GROUPS) ? VOICE_GROUPS : {};
+  const shared = {}, blessings = {};   // group -> Map(words -> line); group -> the blessings a polite answer may end with
+  for (const id of Object.keys(LINES)) {
+    if (LINES[id].kind !== 'shared') continue;
+    const l = { id, ...LINES[id], n: norm(LINES[id].t || '') };
+    (shared[l.speaker] = shared[l.speaker] || new Map()).set(l.n, l);
+    if (/\.shared\.bless\./.test(id)) (blessings[l.speaker] = blessings[l.speaker] || []).push(l);
+  }
   const bySpeakerKind = {};
   for (const l of index) (bySpeakerKind[l.speaker + ':' + l.kind] = bySpeakerKind[l.speaker + ':' + l.kind] || []).push(l);
   const st = { played: 0, last: null, current: null, failed: 0, introsDone: new Set(), lastMsgAt: {} };
@@ -53,7 +65,7 @@ const VOICE_ACT = (() => {
       const s = ctx.createBufferSource(), g = ctx.createGain();
       s.buffer = buf; g.gain.value = VOL * ((opts && opts.vol) || 1);
       s.connect(g); g.connect(Audio_.sfxBus); s.start();
-      if (opts && opts.interrupt) { st.current = s; s.onended = () => { if (st.current === s) st.current = null; }; }
+      if (opts && opts.interrupt) { st.current = s; s.onended = () => { if (st.current === s) { st.current = null; if (opts.then) opts.then(); } }; }
     }).catch((e) => console.warn('voice line failed', l.id, e && e.message));
     st.played++; st.last = l.id;
     return l.d || 1;
@@ -113,10 +125,28 @@ const VOICE_ACT = (() => {
     return 0;
   }
 
+  // the shared answer this text is, in this person's group voice: [answer, blessing on the end or null], or null
+  const groupOf = (id) => GROUPS[String(id)] || GROUPS[baseOf(id)] || null;
+  function sharedLines(text, id) {
+    const g = groupOf(id), m = g && shared[g];
+    if (!m) return null;
+    const n = norm(text);
+    if (m.has(n)) return [m.get(n), null];
+    for (const b of blessings[g] || []) if (n.endsWith(' ' + b.n)) { const a = m.get(n.slice(0, -b.n.length - 1)); if (a) return [a, b]; }
+    return null;
+  }
+  function mayShare(id) {
+    if (typeof VOICES === 'undefined' || typeof VOICES.resolveNpc !== 'function') return true;
+    const pr = VOICES.resolveNpc(id) || {};
+    return !pr.silent && pr.why !== 'her own ruined voice';   // Lyra after the Grove: no group voice is hers
+  }
+
   // true when a recorded line says this text (so "read aloud" does not say it a second time)
   function covers(text) {
+    if (!['acted', 'spoken'].includes(VOICES.mode)) return false;
+    if (typeof G !== 'undefined' && G.state === 'dialogue' && typeof DLG !== 'undefined' && DLG.ent && mayShare(DLG.ent.id) && sharedLines(text, DLG.ent.id)) return true;
     const l = find(text, null, null);
-    if (!l || !['acted', 'spoken'].includes(VOICES.mode)) return false;
+    if (!l) return false;
     return !l.auto || (typeof G !== 'undefined' && G.state === 'dialogue');   // a person's own line covers their words only in conversation
   }
 
@@ -151,7 +181,17 @@ const VOICE_ACT = (() => {
     const spoken = index.some((l) => l.for === id);
     if (DLG.log.length === 1 && !spoken) return;
     const l = DLG.log.length === 1 ? find(String(last.t || ''), ['greet'], [id]) : find(String(last.t || ''), ['topic', 'greet'], speakersOf(id));
-    if (l) api.playLine(l, { interrupt: true });
+    const said = last, text = String(last.t || '');
+    const then = (b) => b ? () => { if (st.said === said && G.state === 'dialogue') api.playLine(b, { interrupt: true }); } : null;
+    if (l) {   // their own words; a polite blessing on the end follows in their group's voice
+      const n = norm(text), g = groupOf(id), b = DLG.log.length > 1 && g && mayShare(id) ? (blessings[g] || []).find((x) => n.endsWith(' ' + x.n) && !l.n.endsWith(x.n)) : null;
+      api.playLine(l, { interrupt: true, then: then(b) }); return;
+    }
+    if (DLG.log.length === 1 || !mayShare(id)) return;
+    const s = sharedLines(text, id);   // an answer anyone could give, in this person's group voice
+    if (!s) return;
+    const after = s[1];
+    api.playLine(s[0], { interrupt: true, then: then(after) });
   }
 
   function wire() {
@@ -185,7 +225,7 @@ const VOICE_ACT = (() => {
   }
   wire();
   // calls go through this object, so a test or a mod can observe or replace playback
-  const api = { LINES, index, state: st, handle, find, covers, playLine, onMsg, onAnswer, speakersOf, preload: (id) => LINES[id] && Audio_.ctx ? load(LINES[id].src) : null };
+  const api = { LINES, index, GROUPS, state: st, handle, find, covers, playLine, onMsg, onAnswer, speakersOf, sharedLines, preload: (id) => LINES[id] && Audio_.ctx ? load(LINES[id].src) : null };
   return api;
 })();
 if (typeof window !== 'undefined') window.VOICE_ACT = VOICE_ACT;

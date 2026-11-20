@@ -120,7 +120,7 @@ def main():
     people = json.load(open(os.path.join(HERE, 'dialogue.json')))
     sp_path = os.path.join(ROOT, 'voices', 'script.json')
     script = json.load(open(sp_path))
-    hand = [l for l in script['lines'] if not l.get('auto')]
+    hand = [l for l in script['lines'] if not l.get('auto') or l.get('kind') == 'shared']   # shared lines are shared.py's
     have = {(l['speaker'], norm(l.get('text') or '')) for l in hand}
     have_any = {norm(l.get('text') or '') for l in hand}
     ruled_out = {norm(x.get('original') or '') for x in script.get('skipped', [])}   # lines the hand-made script already ruled unspoken

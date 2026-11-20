@@ -3,8 +3,9 @@
 //
 //   PREVIEW_URL=http://127.0.0.1:4176 PLAYWRIGHT_MODULE=/path/to/playwright node tools/voices/dump-dialogue.js
 //
-// Only plain strings are taken (a topic that is a function is decided in play and stays unvoiced); the shared answers
-// in TOPICS are spoken by anyone and are not recorded per speaker.
+// Only plain strings are taken (a topic that is a function is decided in play and stays unvoiced). The shared answers
+// (TOPICS, RUMOURS) go to tools/voices/shared.json with each person's tier and rumour flag; tools/voices/shared.py
+// records them once per voice group (Phase 103).
 'use strict';
 const fs = require('fs'), path = require('path');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
@@ -21,10 +22,15 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       else if (g) for (const k of ['polite', 'normal', 'blunt']) if (typeof g[k] === 'string') lines.push({ kind: 'greet', key: k, text: g[k] });
       for (const t of Object.keys(n.topics || {})) if (typeof n.topics[t] === 'string') lines.push({ kind: 'topic', key: t, text: n.topics[t] });
       people[id] = { name: String(n.name || ''), sprite: n.sprite || '', portrait: typeof n.portrait === 'string' ? n.portrait : '', profile: { f0: pr.f0, fs: pr.fs, style: pr.style, silent: !!pr.silent, authored: !!pr.authored }, lines };
+      people[id].tier = n.tier === 'high' ? 'high' : ''; people[id].rumour = !!n.rumour;
     }
-    return people;
+    const topics = {};
+    for (const t of TOPIC_KEYS) if (TOPICS[t] && typeof TOPICS[t].low === 'string' && typeof TOPICS[t].high === 'string') topics[t] = { low: TOPICS[t].low, high: TOPICS[t].high };
+    return { people, shared: { topics, rumours: RUMOURS.slice() } };
   });
-  fs.writeFileSync(path.join(__dirname, 'dialogue.json'), JSON.stringify(out, null, 1) + '\n');
-  console.log('people', Object.keys(out).length, 'lines', Object.values(out).reduce((a, x) => a + x.lines.length, 0));
+  const people = out.people;
+  fs.writeFileSync(path.join(__dirname, 'dialogue.json'), JSON.stringify(people, null, 1) + '\n');
+  fs.writeFileSync(path.join(__dirname, 'shared.json'), JSON.stringify(out.shared, null, 1) + '\n');
+  console.log('people', Object.keys(people).length, 'topics', Object.keys(out.shared.topics).length, 'lines', Object.values(people).reduce((a, x) => a + x.lines.length, 0));
   await b.close();
 })();
