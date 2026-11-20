@@ -3,6 +3,7 @@
 // spoken line in the script is game text or marked PROPOSED, silent characters have no lines, greetings play the
 // recorded line for the greeting shown, speaking enemies bark, bosses say their intro once a visit, boss mimicry
 // plays from its message, Grunts/Off modes never play a recording, and "read aloud" does not repeat a recorded line.
+// Phase 103: the shared answers (TOPICS, rumours, refusals, blessings) play in each person's voice group.
 'use strict';
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -21,7 +22,7 @@ const ROOT = path.join(__dirname, '..');
   for (const id of ids) {
     const f = path.join(ROOT, L[id].src);
     assert.ok(fs.existsSync(f), 'file for ' + id); bytes += fs.statSync(f).size;
-    assert.ok(L[id].d > 0.2 && L[id].d < (L[id].kind === 'topic' ? 45 : 20), id + ' has a sane duration ' + L[id].d);   // a topic answer can be a whole speech
+    assert.ok(L[id].d > 0.2 && L[id].d < (['topic', 'shared'].includes(L[id].kind) ? 45 : 20), id + ' has a sane duration ' + L[id].d);   // a topic answer can be a whole speech
   }
   const onDisk = [];
   (function walk(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (p.endsWith('.mp3')) onDisk.push(path.relative(ROOT, p)); } })(path.join(ROOT, 'voices'));
@@ -38,7 +39,7 @@ const ROOT = path.join(__dirname, '..');
   const SILENT = ['quiet', 'hushmoth', 'tongueless', 'hushwarden', 'cat'];
   for (const l of script.lines) {
     assert.ok(!SILENT.includes(l.speaker), 'a silent character has no line: ' + l.id);
-    assert.ok(l.source === 'PROPOSED' || /\.js\b/.test(l.source) || (l.auto && /^NPCS\.\w+\.(greet|topics)\./.test(l.source)), l.id + ' names its source');
+    assert.ok(l.source === 'PROPOSED' || /\.js\b/.test(l.source) || (l.auto && /^NPCS\.\w+\.(greet|topics)\./.test(l.source)) || (l.kind === 'shared' && l.source === 'shared answers (Phase 103)'), l.id + ' names its source');
   }
   // (Phase 102) the automatic casting gives a woman's portrait a woman's voice and a man's a man's
   { const dlg = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/voices/dialogue.json'), 'utf8'));
@@ -53,6 +54,31 @@ const ROOT = path.join(__dirname, '..');
     }
     assert.deepEqual(wrong, [], 'every automatic voice matches its portrait');
   }
+  // (Phase 103) the shared answers: everyone who speaks has a voice group, a group of the right sex, and a group that
+  // recorded every shared answer its people can be heard to give
+  { const dlg = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/voices/dialogue.json'), 'utf8'));
+    const sh = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/voices/shared.json'), 'utf8'));
+    const gctx = {}; vm.runInNewContext(fs.readFileSync(path.join(ROOT, 'js/voice-lines.js'), 'utf8') + ';this.G=VOICE_GROUPS;', gctx);
+    const GR = gctx.G, have = new Set(ids.filter((i) => L[i].kind === 'shared').map((i) => L[i].speaker + '|' + L[i].t)), wrong = [], missing = [];
+    assert.ok(Object.keys(sh.topics).length >= 27, 'the shared topics were dumped (' + Object.keys(sh.topics).length + ')');
+    for (const [id, p] of Object.entries(dlg)) {
+      const g = GR[id];
+      if (p.profile.silent) { assert.ok(!g, 'a silent person has no voice group: ' + id); continue; }
+      if (!g) continue;
+      const man = /^shared_(b|a)m_|^shared_breath_m$/.test(g), woman = /^shared_(b|a)f_|^shared_breath_f$/.test(g);
+      if (p.portrait === 'townswoman' && man) wrong.push(id + ' in ' + g);
+      if (p.portrait === 'townsman' && woman) wrong.push(id + ' in ' + g);
+      const own = new Set(p.lines.filter((l) => l.kind === 'topic').map((l) => l.key));
+      for (const t of Object.keys(sh.topics)) if (!own.has(t)) for (const tr of p.tier === 'high' ? ['high'] : ['low', 'high']) if (!have.has(g + '|' + sh.topics[t][tr])) missing.push(id + ' ' + t + ' ' + tr);
+      if (p.rumour) for (const ru of sh.rumours) if (!have.has(g + '|I couldn\'t say. But I\'ll tell you what I heard: ' + ru)) missing.push(id + ' rumour');
+    }
+    assert.deepEqual(wrong, [], 'every voice group matches its people\'s portraits');
+    assert.deepEqual(missing.slice(0, 5), [], 'every shared answer a person can give is recorded in their group (' + missing.length + ' missing)');
+    const speaking = Object.entries(dlg).filter(([id, p]) => !p.profile.silent && (p.lines.length > 0) && id in GR).length;
+    assert.ok(speaking >= 150, 'at least 150 people answer in a group voice (' + speaking + ')');
+    console.log('PASS shared answers: ' + Object.keys(GR).length + ' people in ' + new Set(Object.values(GR)).size + ' voice groups, ' + have.size + ' recordings');
+  }
+  assert.ok(bytes < 160 * 1048576, 'all the recordings stay under 160 MB (' + (bytes / 1048576).toFixed(1) + ')');
   const kinds = {}; for (const id of ids) kinds[L[id].kind] = (kinds[L[id].kind] || 0) + 1;
   console.log('PASS files: ' + ids.length + ' lines, ' + (bytes / 1048576).toFixed(1) + ' MB, kinds ' + JSON.stringify(kinds));
 
@@ -78,7 +104,8 @@ const ROOT = path.join(__dirname, '..');
       check(VOICES.mode === 'acted', 'Voiced is the default (' + VOICES.mode + ')');
       const played = []; const _pl = VOICE_ACT.playLine, _q = NPCS.harrow.quest;
       // record what would play, and still decode it to prove the file is real audio
-      VOICE_ACT.playLine = function (l, o) { played.push(l.id); return _pl.call(this, l, o); };
+      let lastOpts = null;
+      VOICE_ACT.playLine = function (l, o) { played.push(l.id); lastOpts = o || null; return _pl.call(this, l, o); };
       try {
         // 1. greetings: Harrow, at each tone the game can pick
         const harrow = { id: 'harrow', x: Engine.cam.x + 1, y: Engine.cam.y, kind: 'npc' };
@@ -124,8 +151,8 @@ const ROOT = path.join(__dirname, '..');
         talk({ id: 'lyra_wg', x: Engine.cam.x + 1, y: Engine.cam.y, kind: 'npc' });
         check(played.length === 0, 'voiceless Lyra plays no recording'); closeModal(); G.state = 'play';
         delete G.flags.lyra_wg_met;
-        // 5b. (Phase 102) answers: a person's own topic answer plays their recording; a shared answer and a stage
-        //     direction play nothing; General Ward's greeting is said by Ninety-Four
+        // 5b. (Phase 102) answers: a person's own topic answer plays their recording; (Phase 103) a shared answer plays in
+        //     their voice group's recording; a stage direction plays nothing; General Ward's greeting is said by Ninety-Four
         {
           const at = (id) => ({ id, x: Engine.cam.x + 1, y: Engine.cam.y, kind: 'npc' });
           VOICES.resetLimits(); played.length = 0; DLG.tone = 'normal';
@@ -136,8 +163,20 @@ const ROOT = path.join(__dirname, '..');
           const shared = Object.keys(TOPICS).find((t) => !(t in NPCS.p100_211.topics));
           played.length = 0; const R = Math.random; Math.random = () => 0.99;   // no blunt refusal, no rumour, no blessing
           try { DLG.tone = 'normal'; askTopic(shared); renderDialogue(); } finally { Math.random = R; }
-          check(played.length === 0, 'a shared answer from TOPICS plays nothing (' + shared + ')');
+          const g211 = VOICE_ACT.GROUPS.p100_211;
+          check(played.length === 1 && VOICE_ACT.LINES[played[0]].kind === 'shared' && VOICE_ACT.LINES[played[0]].speaker === g211 && VOICE_ACT.LINES[played[0]].t === DLG.log[DLG.log.length - 1].t, 'a shared answer plays in the speaker\'s group voice (' + played[0] + ')');
+          check(VOICE_ACT.covers(DLG.log[DLG.log.length - 1].t), 'read-aloud would skip the recorded shared answer');
+          // (Phase 103) a blessing on the end follows the answer; a refusal is recorded; a part of an answer is not
+          played.length = 0; DLG.log.push({ who: 'them', t: TOPICS[shared].high + ' Mind how you go.' }); renderDialogue();
+          check(played.length === 1 && VOICE_ACT.LINES[played[0]].t === TOPICS[shared].high && lastOpts && typeof lastOpts.then === 'function', 'a blessed answer plays the answer first (' + played[0] + ')');
+          lastOpts.then();
+          check(played.length === 2 && VOICE_ACT.LINES[played[1]].t === 'Mind how you go.' && VOICE_ACT.LINES[played[1]].speaker === g211, 'then the blessing, in the same voice (' + played[1] + ')');
+          played.length = 0; DLG.log.push({ who: 'them', t: 'No.' }); renderDialogue();
+          check(played.length === 1 && VOICE_ACT.LINES[played[0]].t === 'No.', 'a blunt refusal plays (' + played[0] + ')');
+          played.length = 0; DLG.log.push({ who: 'them', t: 'No. That is in Oakhaven. You are a long way from Oakhaven.' }); renderDialogue();
+          check(played.length === 0, 'an answer that only contains shared words plays nothing');
           closeModal(); G.state = 'play';
+          check(VOICE_ACT.GROUPS.pim === 'shared_child' && /^shared_breath_/.test(VOICE_ACT.GROUPS.sexton) && VOICE_ACT.GROUPS.kaelen === 'kaelen' && !VOICE_ACT.GROUPS.lyra_wg, 'children, Hollows, Kaelen and the voiceless have the right voices for shared answers');
           VOICES.resetLimits(); played.length = 0; DLG.tone = 'normal';
           talk(at('p100_ward'));
           check(played.length === 1 && VOICE_ACT.LINES[played[0]].speaker === 'p100_94' && VOICE_ACT.LINES[played[0]].for === 'p100_ward', 'the General\'s greeting is said aloud by Ninety-Four (' + played[0] + ')');
