@@ -32,6 +32,13 @@ The owner, 19 Nov 2026, word for word:
 - **Pegs by the hearth for the keepers' trophies (Phase 98, question 6):** no pegs. The rule stands as it is.
 - **The reader's keys (Phase 97):** kept as built. F2 turns reading aloud on and off, F3 (or `[`) says the last thing again, F4 (or `]`) reads the whole screen, Esc stops the voice.
 
+## 20 Nov, 16:34
+
+> "1 add the ground details. keep the 453 mb download"
+
+- **#44's ground cover:** added in Phase 105 (record: `story/Game Layer/Phase 105 - Ground cover.md`).
+- **The offline download:** stays at 453 MB, shared answers included.
+
 ## Still open
 
-- Whether to move #44's close-up ground cover (grass tufts, pebbles, fallen leaves near the player) onto Phase 77's sharp ground.
+- Nothing from these rulings.

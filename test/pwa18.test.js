@@ -130,13 +130,13 @@ function staticChecks() {
     fs.writeFileSync(path.join(scratch, 'index.html'), idx.replace('</body>', '<script src="js/extra.js?v=9"></script></body>'));
     check(run('--check') === 1, 'scratch site: a new script tag in index.html makes --check fail');
     check(run() === 0 && fs.readFileSync(path.join(scratch, 'sw.js'), 'utf8').includes('"js/extra.js?v=9"'), 'scratch site: the new script is cached under its own ?v= URL');
-    fs.writeFileSync(path.join(scratch, 'index.html'), idx.replace('js/pwa18.js?v=2', 'js/pwa18.js?v=3'));
+    fs.writeFileSync(path.join(scratch, 'index.html'), idx.replace(/js\/pwa18\.js\?v=(\d+)/, (m, v) => 'js/pwa18.js?v=' + (+v + 1)));
     check(run('--check') === 1, 'scratch site: bumping a ?v= tag alone makes --check fail');
     run();
     fs.writeFileSync(path.join(scratch, 'music/new.mp3'), 'n');
     check(run('--check') === 1, 'scratch site: a new sound in music/ makes --check fail');
     run();
-    fs.writeFileSync(path.join(scratch, 'index.html'), idx.replace('js/pwa18.js?v=2', 'js/missing.js?v=1'));
+    fs.writeFileSync(path.join(scratch, 'index.html'), idx.replace(/js\/pwa18\.js\?v=\d+/, 'js/missing.js?v=1'));
     check(run('--check') === 2, 'scratch site: an index.html reference to a missing file is an error');
     fs.writeFileSync(path.join(scratch, 'index.html'), idx);
     // staging for Pages: exactly the served files, nothing of the repository's development material
@@ -149,6 +149,11 @@ function staticChecks() {
   check(/branches:\s*\[\s*main\s*\]/.test(wf) && /actions\/deploy-pages@/.test(wf) && /actions\/upload-pages-artifact@/.test(wf) && /pages:\s*write/.test(wf) && /id-token:\s*write/.test(wf) && /precache\.js/.test(wf), 'the workflow deploys on push to main with Pages permissions and runs the precache tool');
   const tsv = fs.readFileSync(path.join(ROOT, 'tools/i18n/p18-pwa.tsv'), 'utf8').split('\n').filter((l) => l.trim() && !l.startsWith('#')).map((l) => l.split('\t'));
   const T = fs.readFileSync(path.join(ROOT, 'js/pwa18.js'), 'utf8');
+  { // (Phase 105) the Options hint says roughly how big the offline audio is (it said 52 MB after the voices grew to 453)
+    const mb = +((/audioHint: 'download the music and voices \(about (\d+) MB\)/.exec(T) || [])[1] || 0);
+    const bytes = +((/const MEDIA_BYTES = (\d+);/.exec(fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8')) || [])[1] || 0);
+    check(mb > 0 && bytes > 0 && Math.abs(mb - bytes / 1048576) / (bytes / 1048576) < 0.2, 'the offline-audio hint (' + mb + ' MB) is within a fifth of the real download (' + (bytes / 1048576).toFixed(0) + ' MB)');
+  }
   const texts = [...T.slice(T.indexOf('const TX = {'), T.indexOf('const TEXTS')).matchAll(/:\s*'((?:[^'\\]|\\.)*)'/g)].map((x) => x[1].replace(/\\'/g, "'"));
   const have = new Map(tsv.map((r) => [r[0], r[1]]));
   const noFr = texts.filter((t) => !have.has(t) || !have.get(t) || have.get(t) === t && t.length > 3);

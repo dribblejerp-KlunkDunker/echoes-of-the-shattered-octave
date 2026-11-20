@@ -471,6 +471,12 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 | ![A Song cast from open hands](screenshots/p98/p98-hands-song.jpg) | ![The old pictures](screenshots/p98/p98-hands-before.jpg) |
 | ![The Flint-Back's leavings](screenshots/p98/p98-flintback.jpg) | ![The Standing Note's leavings](screenshots/p98/p98-standingnote.jpg) |
 
+**Ground cover (Phase 105).** Grass tufts, clover, pebbles and fallen leaves near your feet outdoors in the 3D renderer, the same in the same place every visit (Options, "Ground cover"). Record: [`story/Game Layer/Phase 105 - Ground cover.md`](story/Game%20Layer/Phase%20105%20-%20Ground%20cover.md).
+
+| Oakhaven's green (top off, bottom on) | The Deep Woods (top off, bottom on) |
+| --- | --- |
+| ![Phase 105, Oakhaven](screenshots/p105-oakhaven.jpg) | ![Phase 105, the Deep Woods](screenshots/p105-deepwoods.jpg) |
+
 **Every character's own voice (Phase 104).** The shared answers are now said by each person in their own casting, the same voice, pitch and treatment as their own lines: 7,940 recordings for 160 people. The offline download is 453 MB. Record: [`story/Game Layer/Phase 104 - Every character's own voice for the shared answers.md`](story/Game%20Layer/Phase%20104%20-%20Every%20character%27s%20own%20voice%20for%20the%20shared%20answers.md).
 
 **The answers anyone can give (Phase 103).** Ask anyone about Oakhaven, the Hedge or the Rite and their answer is spoken too, as are the gossips' rumours, a blunt tone's refusals and a polite answer's blessing. Each person answers in their own Kokoro voice (a group per voice, so the same answer is recorded once for everyone who shares that voice); children, the Hollows, Kaelen, the Aegis and Quist have voices of their own for it. French stays unvoiced. Record: [`story/Game Layer/Phase 103 - The answers anyone can give, voiced.md`](story/Game%20Layer/Phase%20103%20-%20The%20answers%20anyone%20can%20give%2C%20voiced.md).
