@@ -11,6 +11,8 @@ Playwright is expected at `/opt/npm-tools/node_modules/playwright` (the path is 
 | Tool | What it does |
 |---|---|
 | `shot.js` | `node shot.js <name> <map> <x> <y> <dir> <tod> [...]`. Pictures of a place. `dir` is in half-turns (0 east, 0.5 south, -0.5 north). `R3D=1` for the 3D renderer, `SCALE=2`, `PATHS='[[name,map,x0,y0,d0,x1,y1,d1,tod,frames]]'` to film a walk. **Take one place per run:** the second place in a run can carry a pale rectangle in the middle of the view. |
+| `sweep106.js` | `node sweep106.js <map> [<map> ...]`. Pictures of each place from its arrival point: ahead, behind and at night (`R3D=1` for the 3D view), into `out/sweep/r3d` or `out/sweep/classic`. `VIEWS=day,back,night`, `PITCH` (rows, up to 40), `OUTDIR`. Many places per run are fine. |
+| `sheets106.py` | `python3 sheets106.py [out]`. Contact sheets from the sweep: six places a sheet, 3D ahead, behind, night and classic side by side, labelled. |
 | `mkgif.py` | `python3 mkgif.py <out.gif> <width> <colours> <ms> <label> <frames dir>`. A GIF from a filmed walk. |
 | `dbg.js` | `node dbg.js "<expression>"`. Runs an expression inside a started game and prints the answer. |
 | `dbg3d.js` | The same, with the 3D renderer on. |
