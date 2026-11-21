@@ -23,6 +23,8 @@ The best-looking figures in the game are the moving paintings of Phase 76 (`js/p
 | beams over plaster gone black with smoke | the tannery, the bakery |
 | a boarded ceiling | the conservatory, the bonded store, the Kestrel below decks, the hold, the Greenroot chapel |
 
+**Ruled 21 Nov:** "It doesn't matter to me which houses get which ceilings." The table stands as built.
+
 A timber room not in the list gets limewash, joists or beams by its name (hashed, the same every time). Test: `test/surfaces.test.js` (eight ceiling textures; each room's ceiling). Picture: `screenshots/p107-ceilings.jpg`.
 
 **The Rift's far walls shimmer** (owner ruling, 20 Nov). Phase 106 asked whether the classic view's moiré on the Rift's far walls should be calmed. The owner wants it to shimmer: left as it is.
