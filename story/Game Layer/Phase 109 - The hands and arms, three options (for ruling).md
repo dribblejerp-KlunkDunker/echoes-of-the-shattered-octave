@@ -1,4 +1,4 @@
-# Phase 109: the hands and arms, three options (for ruling)
+# Phase 109: the hands and arms, three options (ruled 21 Nov)
 
 The owner, 18 November 2026: "when its an opportune time the hands and arms need a massive overhaul as well", with options shown before anything replaces what is there, and "ill let opus do it for now and then use fable later on to do any touch ups". On 20 November he set the bar: "Whatever is technically the best visuals should be the benchmark everywhere." Then, 21 November: "proceed with the next step".
 
@@ -44,7 +44,14 @@ The same kind of model, drawn at a third of the size in crisp pixel art (small c
 
 All three keep the glass arm on the **left**, as in the books ("a man with a glass arm"; "the edge of the glass came up along the bone"). They also keep the look approved on 14 November: deep azure planes, dark seams, a few bright edges, a bright rim, about a quarter of its old glow. At rest it does not blaze green; the books keep that for when it drinks a blow.
 
-## For the owner
+## Ruled, 21 November 2026
+
+The owner: **"lets use the pixel art in the game for now but I do want to eventually use the sculpted lit by the world so please save that to the repo and memory"**.
+- **Now:** option 3, pixel art (`tools/hands109/hands109x.js`), goes into the game (Phase 110).
+- **Eventually:** option 1, sculpted and lit by the world (`tools/hands109/hands109s.js`), replaces it. Keep that module and its test (`test/hands109s.test.js`) in the repo, working, for that day. Its bare fist is to be fixed first (see its weak point above).
+- Option 2, painted, stays in the repo as built, unused.
+
+## For the owner (as asked before the ruling)
 
 1. **Which one?** *Recommend: option 1, sculpted, for the 3D view.* It is the only one the world's light reaches, the only one whose fingers can truly move, and the closest to "technically the best visuals". Its bare fist would be fixed first. Then *option 3, pixel art, for the classic view*, where the old pixel look is the point. Both are built from posed joints, so one set of poses could drive both. Option 2 is the loveliest still picture, but it is the slowest and cannot move or change with the light.
 2. **Anything in your choice you want changed before it goes in?** For example the glass's colour or the glove's leather.
