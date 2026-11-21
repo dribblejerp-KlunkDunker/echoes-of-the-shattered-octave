@@ -47,12 +47,11 @@ const HANDS109P = (() => {
   }
 
   // ---------------------------------------------------------------- buffers (made once, reused)
-  let Z, NX, NY, NZ, U, PID, MAT, GRP, AO, SH, SPEC, GID, GID2, GE, FX, FY, FZ, hand, handX;
+  let Z, NX, NY, NZ, U, PID, MAT, GRP, AO, SH, SPEC, hand, handX;
   function buffers() {
     if (Z) return;
     Z = new Float32Array(N); NX = new Float32Array(N); NY = new Float32Array(N); NZ = new Float32Array(N); U = new Float32Array(N);
     PID = new Uint16Array(N); MAT = new Uint8Array(N); GRP = new Uint8Array(N); AO = new Float32Array(N); SH = new Float32Array(N); SPEC = new Uint8Array(N);
-    GID = new Int32Array(N); GID2 = new Int32Array(N); GE = new Float32Array(N); FX = new Float32Array(N); FY = new Float32Array(N); FZ = new Float32Array(N);
     const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
     hand = mk(BW, BH); handX = hand.getContext('2d');
   }
@@ -328,39 +327,37 @@ const HANDS109P = (() => {
   }
   // the glass arm's planes: which cut each pixel lies on, and that cut's own (flat) facing, from the pixels seen on it
   const CU = new Float64Array(9), CV = new Float64Array(9), CI = new Int32Array(9);
-  function facets() {
-    let cIu = 1e9, cIv = 1e9, cGk = -1, tId = 0, tX = 0, tY = 0, tZ = 0;
-    for (let y = by0; y <= by1; y++) for (let x = bx0; x <= bx1; x++) {
-      const i = y * BW + x; if (!PID[i] || MAT[i] !== M_GLASS) continue;
-      const part = parts[PID[i] - 1], z = Z[i], k = FOC / -z;
-      // the cuts are laid out on the picture itself, as a painter lays planes: straight-edged, longer along a finger
-      const wide = part.kind === 'palm' || part.kind === 'knuckle' || part.kind === 'tmeta';
-      const gk = wide ? 5000 + part.hand * 10 : part.kind === 'forearm' ? 6000 + part.hand * 10 : PID[i];
-      const ang = wide || part.kind === 'forearm' ? (part.hand ? 0.7 : 0.4) : part.sang;
-      const Gu = (wide ? 2.6 : part.kind === 'forearm' ? 3.4 : max(1.7, part.len * 0.55)) * k, Gv = (wide ? 2.1 : part.kind === 'forearm' ? 2.4 : part.r * 1.25) * k;
-      const ca = cos(ang), sa = sin(ang), u = (x * ca + y * sa) / Gu, v = (-x * sa + y * ca) / Gv, iu = floor(u), iv = floor(v);
-      if (iu !== cIu || iv !== cIv || gk !== cGk) {               // the nine nearby cuts' centres, kept while we stay in one cell
-        cIu = iu; cIv = iv; cGk = gk;
-        for (let dj = -1, q = 0; dj <= 1; dj++) for (let di = -1; di <= 1; di++, q++) {
-          const cu = iu + di, cv = iv + dj; CU[q] = cu + 0.5 + (hash(cu * 7 + gk, cv) - 0.5) * 0.8; CV[q] = cv + 0.5 + (hash(cv * 13 + gk, cu + 5) - 0.5) * 0.8;
-          CI[q] = (Math.imul(cu, 73856093) ^ Math.imul(cv, 19349663) ^ Math.imul(gk, 83492791)) | 0;
-        }
+  // facet(x, y, i, part) leaves in F_: the cut's id, its neighbour's id, centimetres to the seam, the cut's facing
+  let cIu = 1e9, cIv = 1e9, cGk = -1, tId = 0, tX = 0, tY = 0, tZ = 0, F_id = 0, F_id2 = 0, F_e = 0, F_x = 0, F_y = 0, F_z = 1;
+  function facet(x, y, i, part) {
+    const z = Z[i], k = FOC / -z;
+    // the cuts are laid out on the picture itself, as a painter lays planes: straight-edged, longer along a finger
+    const wide = part.kind === 'palm' || part.kind === 'knuckle' || part.kind === 'tmeta';
+    const gk = wide ? 5000 + part.hand * 10 : part.kind === 'forearm' ? 6000 + part.hand * 10 : PID[i];
+    const ang = wide || part.kind === 'forearm' ? (part.hand ? 0.7 : 0.4) : part.sang;
+    const Gu = (wide ? 2.6 : part.kind === 'forearm' ? 3.4 : max(1.7, part.len * 0.55)) * k, Gv = (wide ? 2.1 : part.kind === 'forearm' ? 2.4 : part.r * 1.25) * k;
+    const ca = cos(ang), sa = sin(ang), u = (x * ca + y * sa) / Gu, v = (-x * sa + y * ca) / Gv, iu = floor(u), iv = floor(v);
+    if (iu !== cIu || iv !== cIv || gk !== cGk) {               // the nine nearby cuts' centres, kept while we stay in one cell
+      cIu = iu; cIv = iv; cGk = gk;
+      for (let dj = -1, q = 0; dj <= 1; dj++) for (let di = -1; di <= 1; di++, q++) {
+        const cu = iu + di, cv = iv + dj; CU[q] = cu + 0.5 + (hash(cu * 7 + gk, cv) - 0.5) * 0.8; CV[q] = cv + 0.5 + (hash(cv * 13 + gk, cu + 5) - 0.5) * 0.8;
+        CI[q] = (Math.imul(cu, 73856093) ^ Math.imul(cv, 19349663) ^ Math.imul(gk, 83492791)) | 0;
       }
-      let d1 = 1e9, d2 = 1e9, c1u = 0, c1v = 0, c2u = 0, c2v = 0, id1 = 0, id2 = 0;
-      for (let q = 0; q < 9; q++) {
-        const pu = CU[q], pv = CV[q], du = u - pu, dv = v - pv, d = du * du + dv * dv, id = CI[q];
-        if (d < d1) { d2 = d1; c2u = c1u; c2v = c1v; id2 = id1; d1 = d; c1u = pu; c1v = pv; id1 = id; } else if (d < d2) { d2 = d; c2u = pu; c2v = pv; id2 = id; }
-      }
-      const cl = Math.hypot(c2u - c1u, c2v - c1v) || 1;
-      GID[i] = id1; GID2[i] = id2; GE[i] = (d2 - d1) / (2 * cl) * min(Gu, Gv) / k;   // centimetres to the nearest seam
-      // the cut's own facing: the form's facing at the cut's centre (a flat plane), turned a little as a cutter leaves it
-      const sx = round((c1u * Gu) * ca - (c1v * Gv) * sa), sy = round((c1u * Gu) * sa + (c1v * Gv) * ca);
-      let fx = NX[i], fy = NY[i], fz = NZ[i];
-      if (sx >= 0 && sy >= 0 && sx < BW && sy < BH) { const j = sy * BW + sx; if (PID[j] && MAT[j] === M_GLASS && parts[PID[j] - 1].hand === part.hand) { fx = NX[j]; fy = NY[j]; fz = NZ[j]; } }
-      if (id1 !== tId) { tId = id1; tX = (h3(id1, 1, 7) - 0.5) * 0.7; tY = (h3(id1, 2, 7) - 0.5) * 0.7; tZ = (h3(id1, 3, 7) - 0.5) * 0.7 + 0.1; }
-      fx += tX; fy += tY; fz += tZ;
-      const m = 1 / (Math.hypot(fx, fy, fz) || 1); FX[i] = fx * m; FY[i] = fy * m; FZ[i] = fz * m;
     }
+    let d1 = 1e9, d2 = 1e9, c1u = 0, c1v = 0, c2u = 0, c2v = 0, id1 = 0, id2 = 0;
+    for (let q = 0; q < 9; q++) {
+      const pu = CU[q], pv = CV[q], du = u - pu, dv = v - pv, d = du * du + dv * dv, id = CI[q];
+      if (d < d1) { d2 = d1; c2u = c1u; c2v = c1v; id2 = id1; d1 = d; c1u = pu; c1v = pv; id1 = id; } else if (d < d2) { d2 = d; c2u = pu; c2v = pv; id2 = id; }
+    }
+    const cl = Math.hypot(c2u - c1u, c2v - c1v) || 1;
+    F_id = id1; F_id2 = id2; F_e = (d2 - d1) / (2 * cl) * min(Gu, Gv) / k;
+    // the cut's own facing: the form's facing at the cut's centre (a flat plane), turned a little as a cutter leaves it
+    const sx = round((c1u * Gu) * ca - (c1v * Gv) * sa), sy = round((c1u * Gu) * sa + (c1v * Gv) * ca);
+    let fx = NX[i], fy = NY[i], fz = NZ[i];
+    if (sx >= 0 && sy >= 0 && sx < BW && sy < BH) { const j = sy * BW + sx; if (PID[j] && MAT[j] === M_GLASS && parts[PID[j] - 1].hand === part.hand) { fx = NX[j]; fy = NY[j]; fz = NZ[j]; } }
+    if (id1 !== tId) { tId = id1; tX = (h3(id1, 1, 7) - 0.5) * 0.7; tY = (h3(id1, 2, 7) - 0.5) * 0.7; tZ = (h3(id1, 3, 7) - 0.5) * 0.7 + 0.1; }
+    fx += tX; fy += tY; fz += tZ;
+    const m = 1 / (Math.hypot(fx, fy, fz) || 1); F_x = fx * m; F_y = fy * m; F_z = fz * m;
   }
   function shade(img, look, lt, song) {
     const L = norm([lt.dir[0], lt.dir[1], lt.dir[2]]), key = lt.key.map(v => v / 255), amb = lt.amb.map(v => v / 255);
@@ -497,13 +494,14 @@ const HANDS109P = (() => {
       let r, g, b, sp = 0;
       if (glassNow) {
         // the glass arm: deep azure planes, dark seams, a few bright edges, a bright rim, a quarter of its glow
-        const id = GID[i], fx = FX[i], fy = FY[i], fz = FZ[i];
+        facet(x, y, i, part);
+        const id = F_id, fx = F_x, fy = F_y, fz = F_z;
         const dl = max(0, fx * L[0] + fy * L[1] + fz * L[2]), val = 0.7 + 0.55 * h3(id, 5, 9);
         const fq = 1 - max(0, nz), fres = fq * fq * sqrt(fq), smooth = max(0, nx * L[0] + ny * L[1] + nz * L[2]);
         // a plane's value from how it faces the light: deep azure turned away, clear blue toward it
         const t1 = sstep(0.05, 0.85, dl) * val, t2 = sstep(0.7, 0.98, dl);
-        r = mix(0.015, 0.16, t1); g = mix(0.08, 0.48, t1); b = mix(0.3, 0.9, t1);
-        const t3 = t2 * (h3(id, 4, 2) < 0.22 ? 0.6 : 0.12);
+        r = mix(0.012, 0.13, t1); g = mix(0.07, 0.42, t1); b = mix(0.28, 0.84, t1);
+        const t3 = t2 * (h3(id, 4, 2) < 0.18 ? 0.5 : 0.08);
         r = mix(r, 0.55, t3); g = mix(g, 0.84, t3); b = mix(b, 1.0, t3);
         // within a plane, a slow sheen with the arm's round
         r += 0.02 * smooth; g += 0.05 * smooth; b += 0.08 * smooth;
@@ -511,19 +509,20 @@ const HANDS109P = (() => {
         const ry2 = 2 * fz * fy - 0; const ev = env(ry2); const rk = 0.05 + 0.3 * fres;
         r += (ev[0] - 0.5) * rk * 0.5; g += (ev[1] - 0.5) * rk * 0.6; b += (ev[2] - 0.45) * rk * 0.8;
         // the inner glow, a quarter of its first strength, strongest through the thick of the arm
-        const core = nz * nz * (part.r > 1.5 ? 1 : 0.7); r += 0.04 * core; g += 0.13 * core; b += 0.24 * core;
+        const core = nz * nz * (part.r > 1.5 ? 0.7 : 0.5); r += 0.03 * core; g += 0.11 * core; b += 0.2 * core;
         // the bright rim
         r += 0.6 * fres * fres; g += 0.9 * fres * fres; b += 1.0 * fres * fres;
         const hx = max(0, fx * Hh[0] + fy * Hh[1] + fz * Hh[2]), h2 = hx * hx, h4 = h2 * h2, h8 = h4 * h4, h32 = h8 * h8 * h8 * h8;
         const hs = max(0, nx * Hh[0] + ny * Hh[1] + nz * Hh[2]), s2 = hs * hs, s4 = s2 * s2, s8 = s4 * s4, s16 = s8 * s8, s32 = s16 * s16, s128 = s32 * s32 * s32 * s32;
-        sp = (h32 * h8 * 0.9 + s128 * s32 * 0.8) * shd; r += sp; g += sp; b += sp;
+        // a plane catches the light only when it faces it squarely, and only some of them (as cut glass flashes)
+        sp = (h32 * h32 * (h3(id, 6, 3) < 0.45 ? 0.75 : 0.25) + s128 * s32 * 0.8) * shd; r += sp * 0.85; g += sp * 0.95; b += sp;
         r *= 0.8 + 0.2 * shd; g *= 0.8 + 0.2 * shd; b *= 0.85 + 0.15 * shd;
         // the seams between the planes: most dark and fine, a few catching the light
-        const e = GE[i], pairH = hash(min(id, GID2[i]) | 0, max(id, GID2[i]) | 0);
+        const e = F_e, pairH = hash(min(id, F_id2) | 0, max(id, F_id2) | 0);
         if (e < 0.07) { const s = sstep(0.07, 0.02, e); if (pairH < 0.22) { r = mix(r, 0.82, s); g = mix(g, 0.96, s); b = mix(b, 1, s); } else { r = mix(r, 0.01, s * 0.8); g = mix(g, 0.05, s * 0.8); b = mix(b, 0.16, s * 0.8); } }
         r *= mix(0.7, 1, ao); g *= mix(0.7, 1, ao); b *= mix(0.78, 1, ao);
         // the thin of it lets the world through
-        alpha = clamp(0.66 + 0.4 * fres + 0.12 * t2 - (part.r < 1.2 ? 0.05 : 0) - (h3(id, 9, 1) < 0.35 ? 0.1 : 0), 0.5, 1);
+        alpha = clamp(0.8 + 0.3 * fres + 0.08 * t2 - (part.r < 1.2 ? 0.07 : 0) - (h3(id, 9, 1) < 0.3 ? 0.07 : 0), 0.66, 1);
         if (song) { const sx = song.p[0] - X, sy = song.p[1] - Y, sz = song.p[2] - z, sd = Math.hypot(sx, sy, sz), I = 1 / (1 + (sd / 9) ** 2), nd = max(0, (nx * sx + ny * sy + nz * sz) / sd); const s = I * (nd * 0.8 + fres * 1.6) * 1.1; r += sc[0] * s; g += sc[1] * s; b += sc[2] * s; }
       } else {
         const ndl = nx * L[0] + ny * L[1] + nz * L[2];
@@ -738,7 +737,7 @@ const HANDS109P = (() => {
     handX.setTransform(1, 0, 0, 1, 0, 0); handX.globalCompositeOperation = 'source-over'; handX.globalAlpha = 1; handX.clearRect(0, 0, BW, BH);
     if (!IMG) IMG = handX.createImageData(BW, BH);
     const img = IMG; prevRows = [y0, min(BH - 1, y0 + h)];
-    const tf0 = performance.now(); facets(); const tf1 = performance.now();
+    const tf0 = performance.now(); cIu = 1e9; cGk = -1; tId = 0; const tf1 = performance.now();
     shade(img, look, lt, song); const tf2 = performance.now();
     handX.putImageData(img, 0, 0, x0, y0, w, h);
     const t3 = performance.now();
@@ -784,4 +783,5 @@ const HANDS109P = (() => {
   }
   return { render, _stats: () => last };
 })();
+if (typeof window !== 'undefined') window.HANDS109P = HANDS109P;   // the review harness looks for it on the window
 if (typeof module !== 'undefined') module.exports = HANDS109P;
