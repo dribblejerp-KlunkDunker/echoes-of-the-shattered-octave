@@ -483,6 +483,10 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 ![Phase 107: the beeches and the edges, before and after](screenshots/p107-beeches-edges.jpg)
 
+**Every town raised (Phase 108).** The other ten towns' houses now stand as Oakhaven's do: taller ground storeys and front doors taller than you, in a case with a step, each town in its own proportions. Record: [`story/Game Layer/Phase 108 - Every town raised.md`](story/Game%20Layer/Phase%20108%20-%20Every%20town%20raised.md).
+
+![Phase 108: four towns, before and after](screenshots/p108-towns.jpg)
+
 **Ground cover (Phase 105).** Grass tufts, clover, pebbles and fallen leaves near your feet outdoors in the 3D renderer, the same in the same place every visit (Options, "Ground cover"). Record: [`story/Game Layer/Phase 105 - Ground cover.md`](story/Game%20Layer/Phase%20105%20-%20Ground%20cover.md).
 
 | Oakhaven's green (top off, bottom on) | The Deep Woods (top off, bottom on) |

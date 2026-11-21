@@ -107,7 +107,7 @@ const EAVES78 = (() => {
   // Later regions add themselves from their own files (js/eaves82.js): an entry in STYLES with a planner, and, for what only
   // they have, a drawer in EXTRA (one thing on one building) or REGION (things that belong to the place, not to a house).
   // PREP runs before a mesh is built, so their tiles exist by then.
-  const EXTRA = {}, REGION = {}, PREP = [];
+  const EXTRA = {}, REGION = {}, PREP = [], POST = [];
   const PITCH = 0.85, OVER0 = 0.28, VERGE0 = 0.22, OVER = OVER0, VERGE = VERGE0, LIFT = 0.06, STOREY = 0.6, JETTY = 0.11;
   const RIDGE1 = 2.45, RIDGE2 = 2.7;                             // the highest ridge of a one- and a two-storey house (the mast is 2.8, the tower 3.2)
   const WALL = /^(t_house|t_wood$|t_marble)/, PLAIN = /barn|shed|store|granary|washhouse/i;
@@ -257,7 +257,7 @@ const EAVES78 = (() => {
       const ax = d0.nx !== 0, acrossN = ax ? h : w;                         // the ridge runs back from the door: the gable faces the quay
       const b = { x0, y0, x1, y1, w, h, axis: ax ? 'x' : 'y', stone, church: false, plain: false, storeys: 1, label: label.trim(), top: wallTop, ext: 0, jetty: 0, wallTop, wallTex, towers: [], dome: null,
         type: 'gable', ridges: 1, half: acrossN / 2, span: acrossN / 2, C: ax ? (y0 + y1 + 1) / 2 : (x0 + x1 + 1) / 2, A0: ax ? x0 : y0, A1: (ax ? x1 : y1) + 1,
-        windows: [], doors: [], plinth: [], dormers: [], stacks: [], extras: [], over: 0.05, verge: 0, parapet: stone ? 0.2 : 0.13, harbour: true, base, roofTex: 'p17c_slate', boardTex: 'e78_cope' };
+        windows: [], doors: [], plinth: [], dormers: [], stacks: [], extras: [], over: 0.05, verge: 0, parapet: stone ? 0.2 : 0.13, harbour: true, base, roofTex: 'p17c_slate', boardTex: 'e78_cope', ring0: doorList };
       b.pitch = stone ? 0.3 : acrossN >= 7 ? 0.42 : 0.6; b.zBase = wallTop + LIFT; let need = 0;
       for (const c of inner) for (let k = 0; k < 9; k++) { const z = roofZ(b, c.x + (k % 3) / 2, c.y + ((k / 3) | 0) / 2); if (z != null && c.top + 0.04 - z > need) need = c.top + 0.04 - z; }
       b.lift = LIFT + need; b.zBase = wallTop + b.lift; b.ridge = b.zBase + b.span * b.pitch;
@@ -465,6 +465,7 @@ const EAVES78 = (() => {
     if (x1 < 0 || x1 !== W - 1 || x1 - x0 < 1 || y1 - y0 < 3) return { houses: [] };
     const T = 1, w = x1 - x0 + 1, b = { x0, y0, x1, y1, w, h: y1 - y0 + 1, axis: 'y', stone: false, brick: true, church: false, plain: true, storeys: 2, label: 'The Malting', top: T, ext: 0.62, jetty: 0, wallTop: T + 0.62, wallTex: g[y0 * W + x0].tex,
       towers: [], dome: null, type: 'gable', ridges: 1, half: w, span: w, C: x1 + 1, A0: y0, A1: y1 + 1, windows: [], doors: [], plinth: [], dormers: [], stacks: [], extras: [], roofTex: 'e78_slate', lift: LIFT, pitch: 0.5, over: 0.24, verge: 0.1 };
+    b.ring0 = []; for (let y = y0; y <= y1; y++) { const c = g[y * W + x0]; if (c && c.door && x0 > 0 && !g[y * W + x0 - 1]) b.ring0.push({ x: x0, y, nx: -1, ny: 0 }); }   // its doors, for js/towns108.js
     for (let y = y0 + 1; y < y1; y++) { const c = g[y * W + x0], up = g[(y - 1) * W + x0], dn = g[(y + 1) * W + x0];
       if ((y - y0) % 2 || !c || c.door || (up && up.door) || (dn && dn.door) || g[y * W + x0 - 1]) continue;
       b.windows.push({ cx: x0, cy: y + 0.5, nx: -1, ny: 0, z0: T + 0.14, z1: T + 0.5, hw: 0.17, style: 'cottage', lit: h2(x0 * 7 + 3, y * 13 + 1) < 0.5 }); }
@@ -476,7 +477,8 @@ const EAVES78 = (() => {
     return { houses: [b] };
   }
   const plans = new WeakMap();
-  function planOf(m) { let p = plans.get(m); if (!p || p.cells !== m.cells) { p = plan(m); p.cells = m.cells; plans.set(m, p); } return p; }
+  // POST: functions (m, plan) run on every fresh plan, after its planner (js/towns108.js raises the other towns' houses)
+  function planOf(m) { let p = plans.get(m); if (!p || p.cells !== m.cells) { p = plan(m); for (const f of POST) { try { f(m, p); } catch (e) { console.warn('eaves78 post', e); } } p.cells = m.cells; plans.set(m, p); } return p; }
   // A front door of a house with a taller ground storey: how high its leaf stands and which leaf it is (js/r3d21.js asks,
   // once a door, when it builds the leaves). Four leaves: oak, tarred, green-grey paint, and the halls' studded dark oak.
   function door(m, cx, cy) {
@@ -979,7 +981,7 @@ const EAVES78 = (() => {
     });
     R3D.on('toggle', (shown) => { try { if (!shown && typeof G !== 'undefined' && G.map) lift(G.map, false); } catch (e) { /* chimneys stay where they were */ } });
   }
-  return { MAPS, STYLES, EXTRA, REGION, PREP, PITCH, OVER, RIDGE1, RIDGE2, LIFT, plan, planOf, roofZ, shelter, build, on, night, textures, h2, door };
+  return { MAPS, STYLES, EXTRA, REGION, PREP, POST, PITCH, OVER, RIDGE1, RIDGE2, LIFT, plan, planOf, roofZ, shelter, build, on, night, textures, h2, door };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = EAVES78;
 if (typeof window !== 'undefined') window.EAVES78 = EAVES78;

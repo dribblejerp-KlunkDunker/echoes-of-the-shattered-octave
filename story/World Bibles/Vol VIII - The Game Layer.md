@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 107, 20 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 108, 21 November 2026).
 
 ---
 
@@ -2449,6 +2449,9 @@ The casting of 122 people (which voice each has) is [PROPOSED], for the owner's 
 Record: `story/Game Layer/Phase 103 - The answers anyone can give, voiced.md`. The owner, 19 Nov: "Yes make the answers anyone can give should be voiced. Leave the French voices out for now."
 
 **Nothing was added to the world.** The shared answers (what anyone in the world knows of Oakhaven, the Hedge, the Narrow, the Rite, Kaelen and the rest), the gossips' rumours, a blunt tone's refusals and the Narrow's polite blessings ("Blessings of the Narrow on you.", "Keep your voice low, friend.", "Mind how you go.") are now spoken. The rules Phase 102 keeps still hold: **the silent stay silent** (Lyra after the Grove, Mags signing, General Ward, whose words only Ninety-Four says), **the Hollows answer in breath**, and **children answer in a child's voice**. The voice groups are [PROPOSED], for the owner's review.
+
+#### Phase 108: every town raised (21 Nov)
+Record: `story/Game Layer/Phase 108 - Every town raised.md`. **Nothing was added to the world.** The owner (18 Nov): "yes every town should have raised houses". Greenroot, the Low Rings, Port Cantabile's quay, Whisper-Grove with the Bell Yard and Ashlane, the Malting, Wethercombe, Kaelen's hut, Stillwater Landing and Driftwood Cay stand as Oakhaven's houses have since Phase 97: a taller ground storey and doors a quarter taller than a person. Each town's proportions are [PROPOSED] (Whisper-Grove's marble has the tallest doors in the Reach; the Landing and the Cay stay low against the wind). Greenroot's chapel spire still stands over every roof.
 
 #### Phase 107: the best look everywhere, part two (20 Nov)
 Record: `story/Game Layer/Phase 107 - The best look everywhere.md`. **Nothing was added to the world.** The Hanger's beeches are drawn as the game already describes them, "smooth and grey as a seal": round trunks, no bark, root flares, the dark eyes where branches fell. **The Hedge is Oakhaven's alone** (canon: "The Hedge was grey", "three men deep of thorn and packed wool", "planted to swallow sound"): places far from Oakhaven that had borrowed its grey wall as a border (the Watch Downs, Wethercombe, the water-meadow, the Stride, the Pound Stair, the Grey Wethers, the Hundred Hollows, the Sunk Lanes, Cross Pool) now end in field hedgerows of thorn and hazel, and the Deep Grove in the edge of the wood. Oakhaven and the places beside it keep the Hedge. The hedgerows' and the wood's inspect lines are [PROPOSED].
