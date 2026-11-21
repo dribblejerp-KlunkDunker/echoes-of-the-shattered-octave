@@ -395,7 +395,7 @@ const PAINTFOLK = (() => {
     cache.set(key, s); if (cache.size > CAP) cache.delete(cache.keys().next().value);
     return s;
   }
-  return { K, COUNT, ids: () => Object.keys(RIGS), has: (id) => !!model(id), ready, warm, rigFor, autorig, source: (id, sp) => { given.set(id, sp); models.delete(id); rigOf.delete(id); }, render, frame, cache, model, canAttack: (id) => PF.canAttack(id), stats: () => ({ models: models.size, frames: cache.size, waiting: 0}) };
+  return { K, COUNT, enlarge, ids: () => Object.keys(RIGS), has: (id) => !!model(id), ready, warm, rigFor, autorig, source: (id, sp) => { given.set(id, sp); models.delete(id); rigOf.delete(id); }, render, frame, cache, model, canAttack: (id) => PF.canAttack(id), stats: () => ({ models: models.size, frames: cache.size, waiting: 0}) };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PAINTFOLK;
 if (typeof window !== 'undefined') window.PAINTFOLK = PAINTFOLK;

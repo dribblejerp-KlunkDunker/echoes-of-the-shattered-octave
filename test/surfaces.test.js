@@ -63,7 +63,7 @@ const SHOT_DIR = process.env.SHOT_DIR || path.join(os.tmpdir(), 'surfaces-shots'
 
       // --- textures: all registered, 64x64, decals are cut-outs ------------------
       check(DEC.length === 12 && ['d_moss1', 'd_moss2', 'd_moss3', 'd_crack1', 'd_crack2', 'd_scorch1', 'd_scorch2', 'd_poster1', 'd_poster2', 'd_poster3', 'd_synod1', 'd_synod2'].every(n => DEC.includes(n)), 'the twelve decal textures are listed');
-      check(CEI.length === 3 && ['c_beams', 'c_vault', 'c_rock'].every(n => CEI.includes(n)), 'the three ceiling textures are listed');
+      check(CEI.length === 8 && ['c_beams', 'c_vault', 'c_rock', 'c_beams_lime', 'c_joists', 'c_rafters', 'c_boards', 'c_beams_smoke'].every(n => CEI.includes(n)), 'the eight ceiling textures are listed (Phase 107 added five timber ones)');
       for (const n of DEC.concat(CEI)) {
         const t = Engine.textures[n];
         check(t instanceof Uint32Array && t.length === 64 * 64, n + ' is a 64x64 texture');
@@ -202,7 +202,7 @@ const SHOT_DIR = process.env.SHOT_DIR || path.join(os.tmpdir(), 'surfaces-shots'
         quarry: ceilCase('quarry', G.maps.quarry.spawn.x, G.maps.quarry.spawn.y, 0, 40, 'c_rock'),
       };
       for (const id of ['underhedge', 'rootvault']) check(G.maps[id].ceilTextures[1] === 'c_rock', id + ' gets rock');
-      for (const id of ['lyra_house', 'surgery', 'mill', 'tannery', 'malting', 'belfry']) check(G.maps[id].ceilTextures[1] === 'c_beams', id + ' gets beams');
+      for (const [id, t] of [['lyra_house', 'c_beams_lime'], ['surgery', 'c_joists'], ['mill', 'c_rafters'], ['tannery', 'c_beams_smoke'], ['malting', 'c_rafters'], ['belfry', 'c_rafters'], ['lib_bonded', 'c_boards']]) check(G.maps[id].ceilTextures[1] === t, id + ' gets ' + t + ' (Phase 107: timber rooms differ)');
       check(G.maps.chapel.ceilTextures[1] === 'c_vault', 'the Chapel is vaulted');
       check(G.maps.oakhaven.ceilCells == null && G.maps.clearing.ceilCells == null && !G.maps.deepwoods.ceilTextures, 'open-sky maps are untouched');
       check(G.maps.mausoleum.ceilTextures === undefined || G.maps.mausoleum.ceilTextures === null, 'maps outside the brief keep their ceilings');

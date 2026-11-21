@@ -319,7 +319,10 @@ const PRESETS = (() => {
     GFX.onChange(() => { if (GFX.particles !== lastPt) { lastPt = GFX.particles; scaleParticles(GFX.particles); } });
   }
 
-  const api = { apply, current, table, measure, scenes: SCENES, order: ORDER, cinemaOnly: CINEMA_ONLY, art: ART, allButLow: ALL_BUT_LOW, isArt, fxWanted, refresh: () => { try { refreshBlock(); } catch (e) { /* menu closed */ } }, upscale, setScale, setViewDist, stepViewDist, snapViewDist, farLabel: FAR_LABEL, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
+  // (Phase 107) a switch registered by a file loaded after the startup preset (js/max20.js applies a returning
+  // player's choice early) starts as that preset wants it, not as plain on (Codex review, PR #152)
+  function startValue(flag) { const t = table[GFX.preset]; return t ? fxWanted(t.fx, flag) : true; }
+  const api = { apply, current, startValue, table, measure, scenes: SCENES, order: ORDER, cinemaOnly: CINEMA_ONLY, art: ART, allButLow: ALL_BUT_LOW, isArt, fxWanted, refresh: () => { try { refreshBlock(); } catch (e) { /* menu closed */ } }, upscale, setScale, setViewDist, stepViewDist, snapViewDist, farLabel: FAR_LABEL, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
   rememberParticles();
   wire();
   apply(BOOT);

@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 106, 20 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 107, 20 November 2026).
 
 ---
 
@@ -2449,6 +2449,9 @@ The casting of 122 people (which voice each has) is [PROPOSED], for the owner's 
 Record: `story/Game Layer/Phase 103 - The answers anyone can give, voiced.md`. The owner, 19 Nov: "Yes make the answers anyone can give should be voiced. Leave the French voices out for now."
 
 **Nothing was added to the world.** The shared answers (what anyone in the world knows of Oakhaven, the Hedge, the Narrow, the Rite, Kaelen and the rest), the gossips' rumours, a blunt tone's refusals and the Narrow's polite blessings ("Blessings of the Narrow on you.", "Keep your voice low, friend.", "Mind how you go.") are now spoken. The rules Phase 102 keeps still hold: **the silent stay silent** (Lyra after the Grove, Mags signing, General Ward, whose words only Ninety-Four says), **the Hollows answer in breath**, and **children answer in a child's voice**. The voice groups are [PROPOSED], for the owner's review.
+
+#### Phase 107: the best look everywhere, part one (20 Nov)
+Record: `story/Game Layer/Phase 107 - The best look everywhere.md`. **Nothing was added to the world.** The moving paintings' sharp enlargement is now the benchmark for every figure close to you in the 3D view (creatures, foes, items, props). Timber rooms no longer share one ceiling: inns keep sooty beams, the better houses have limewash, ordinary houses joists, the mill, malting, barn, carders' and belfry open rafters under thatch, the tannery and bakery smoke-black plaster, the stores and the ship boards. Which room has which ceiling is [PROPOSED]. Owner ruling: the Rift's far walls keep their shimmer.
 
 #### Phase 106: the visual sweep (20 Nov)
 Record: `story/Game Layer/Phase 106 - The visual sweep.md`. **Nothing was added to the world.** Fixes to how places are drawn: whole ceilings, ground past a hilly map's edge, walkers who wait in their doorway while you stand there, and the Long Night orchard's frost lying in the snow as rime. Confirmed as written and left alone: the Rift is "grey from above" at every hour, with no stars; the gutted house, the Basilica School and the Black Square are dark until a lamp is lit.
