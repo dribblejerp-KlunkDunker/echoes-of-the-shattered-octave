@@ -487,6 +487,11 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 ![Phase 108: four towns, before and after](screenshots/p108-towns.jpg)
 
+**The hands and arms, three options (Phase 109).** For the owner's choice, nothing in the game changed yet: today's hands beside three new ones drawn in code: sculpted and lit by the world, painted, and pixel art. Record: [`story/Game Layer/Phase 109 - The hands and arms, three options (for ruling).md`](story/Game%20Layer/Phase%20109%20-%20The%20hands%20and%20arms%2C%20three%20options%20(for%20ruling).md).
+
+![Phase 109: today and the three options](screenshots/p109-options.jpg)
+![Phase 109: the sculpted option by night](screenshots/p109-sculpted-night.jpg)
+
 **Ground cover (Phase 105).** Grass tufts, clover, pebbles and fallen leaves near your feet outdoors in the 3D renderer, the same in the same place every visit (Options, "Ground cover"). Record: [`story/Game Layer/Phase 105 - Ground cover.md`](story/Game%20Layer/Phase%20105%20-%20Ground%20cover.md).
 
 | Oakhaven's green (top off, bottom on) | The Deep Woods (top off, bottom on) |
