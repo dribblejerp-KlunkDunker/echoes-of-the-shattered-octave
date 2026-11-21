@@ -315,8 +315,9 @@ const HANGER22 = (function () {
     addSprite('p22_wooltree', 112, 150, (x) => {
       const r = seeded(921);
       E(x, 56, 147, 34, 3.5, 'rgba(0,0,0,0.3)');
-      P(x, [[48, 148], [50, 84], [54, 60], [60, 60], [64, 84], [66, 148]], VG(x, 60, 148, '#7a7a72', '#4a4c46'));
-      L(x, 56, 84, 26, 50, '#5e5e56', 4); L(x, 58, 80, 88, 46, '#5e5e56', 4);
+      // (Phase 107) the same smooth beech as the rest of the wood, a shade darker under its wool
+      if (SW && SW.beechTrunk) SW.beechTrunk(x, 57, 148, 56, 33, ['#30322e', '#40423c', '#50524c', '#60625a', '#72746a', '#84857a', '#96968a']);
+      else { P(x, [[48, 148], [50, 84], [54, 60], [60, 60], [64, 84], [66, 148]], VG(x, 60, 148, '#7a7a72', '#4a4c46')); L(x, 56, 84, 26, 50, '#5e5e56', 4); L(x, 58, 80, 88, 46, '#5e5e56', 4); }
       for (let i = 0; i < 60; i++) { const a = r() * Math.PI * 2, d = Math.sqrt(r()); E(x, 56 + Math.cos(a) * d * 48, 46 + Math.sin(a) * d * 34, 6 + r() * 5, 5 + r() * 4, ['#2e4a22', '#38582a', '#24401c'][(r() * 3) | 0]); }
       for (let i = 0; i < 40; i++) { const px = 12 + r() * 88, py = 20 + r() * 90; L(x, px, py, px + (r() - 0.5) * 3, py + 6 + r() * 6, '#8a847a', 1); E(x, px, py + 8 + r() * 4, 3, 4, '#9a9488'); }
     });

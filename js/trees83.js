@@ -78,8 +78,9 @@ const TREES83 = (function () {
   }
 
   // ---------------------------------------------------------------- growing the trees of one map
-  // what a crown must keep clear of: a building's wall. Hedges, low walls and plinths a crown may hang over.
-  const wallAt = (m, x, y) => { const c = m.get(x, y); if (!c || c.door) return false; if (/hedge/.test(c.tex || '')) return false; if (c.top != null && c.top - m.groundAt(x + 0.5, y + 0.5) < 1.6) return false; return true; };
+  // what a crown must keep clear of: a building's wall. Hedges, low walls and plinths a crown may hang over, and (Phase 107)
+  // the edge of a wood, which is leaves and undergrowth (js/edges107.js).
+  const wallAt = (m, x, y) => { const c = m.get(x, y); if (!c || c.door) return false; if (/hedge|woodedge/.test(c.tex || '')) return false; if (c.top != null && c.top - m.groundAt(x + 0.5, y + 0.5) < 1.6) return false; return true; };
   function roomFor(m, e, reach) {                                  // how far the nearest wall is, up to `reach`
     let best = reach; const X = Math.floor(e.x), Y = Math.floor(e.y), R = Math.ceil(reach) + 1;
     for (let dy = -R; dy <= R; dy++) for (let dx = -R; dx <= R; dx++) {

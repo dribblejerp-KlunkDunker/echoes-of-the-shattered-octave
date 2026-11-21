@@ -416,6 +416,54 @@ const SHEEPWALK22 = (function () {
     });
   }
 
+  // (Phase 107) a beech's trunk: smooth grey skin and no bark, as a beech has (owner, 20 Nov: "change the bare beech trunks
+  // so it looks like a plain grey trees. with no bark"). Before, the trunk was one flat grey strip and stood in the 3D view
+  // like a square pillar. Now it is round: lit from the left and shadowed on the right, a hard dark edge on the shadow
+  // side, a root flare that spreads into four roots gripping the ground, two limbs forking up into the crown, faint green
+  // on the shaded side, and the dark "eyes" a beech keeps where old branches fell. Pixel by pixel from fixed palettes;
+  // the eyes and green are placed by a hash of the seed, the same every time.
+  const BEECH_GREY = ['#3e403c', '#50524c', '#62645d', '#74766e', '#888a80', '#9c9d92', '#b0b0a4'];
+  const hseed = (a, b, c) => { let n = (Math.imul(a | 0, 374761393) + Math.imul(b | 0, 668265263) + Math.imul(c | 0, 1442695041)) | 0; n = Math.imul(n ^ (n >>> 13), 1274126177); return ((n ^ (n >>> 16)) >>> 0) / 4294967296; };
+  function beechTrunk(x, cx, base, top, seed, G) {
+    const px = (X, Y, i) => { x.fillStyle = G[Math.max(0, Math.min(G.length - 1, i))]; x.fillRect(X, Y, 1, 1); };
+    // a round limb or trunk slice: u is -1 (left, lit) .. 1 (right, shadow)
+    const tone = (u) => { const n = Math.sqrt(Math.max(0, 1 - u * u)); const l = 0.25 + 0.75 * Math.max(0, n * 0.75 - u * 0.55); return Math.round(l * (G.length - 1)); };
+    // the limbs first, behind the trunk's top: up-left and up-right, tapering
+    for (const [dx, len, w0] of [[-1, 30, 4.2], [1, 32, 4.6], [-0.25, 20, 3.2]]) {
+      const x0 = cx + dx * 2, y0 = top + 24, x1 = cx + dx * len * 0.9, y1 = top - 6 - (1 - Math.abs(dx)) * 10;
+      const steps = 40;
+      for (let k = 0; k <= steps; k++) {
+        const t = k / steps, mx = x0 + (x1 - x0) * t, my = y0 + (y1 - y0) * t - Math.sin(t * Math.PI) * 4, hw = w0 * (1 - t * 0.6);
+        for (let ox = -Math.ceil(hw); ox <= Math.ceil(hw); ox++) { const u = ox / hw; if (Math.abs(u) > 1) continue; px(Math.round(mx + ox), Math.round(my), Math.abs(u) > 0.86 && u > 0 ? 0 : tone(u)); }
+      }
+    }
+    // the trunk, row by row: a slight taper, then the root flare in the last fifth
+    const H = base - top;
+    for (let y = top; y <= base; y++) {
+      const t = (y - top) / H, flare = Math.max(0, (t - 0.72) / 0.28), hw = 5 + t * 2.2 + flare * flare * 12;
+      // four roots: the flare's edge is scalloped into them
+      for (let ox = -Math.ceil(hw); ox <= Math.ceil(hw); ox++) {
+        const u = ox / hw; if (Math.abs(u) > 1) continue;
+        if (flare > 0.3) { const ru = Math.abs(Math.sin((u + 1) * Math.PI * 2)); if (Math.abs(u) > 0.35 && ru < flare * 0.55) continue; }
+        let i = tone(u);
+        if (u > 0.84) i = 0;                                                             // the hard shadow edge
+        else if (u < -0.82) i = Math.max(1, i - 2);                                     // the turned-away lit edge
+        if (u > 0.25 && hseed(seed, ox + 40, y >> 2) < 0.18) i = Math.max(0, i - 1);    // faint mottle, no bark
+        px(cx + ox, y, i);
+      }
+      // the creases between the roots
+      if (flare > 0.5) for (const cu of [-0.5, 0.55]) { const ox = Math.round(cu * hw * (0.5 + flare * 0.5)); px(cx + ox, y, Math.max(1, tone(cu) - 2)); }
+    }
+    // green on the shaded side, a hand's width up from the roots
+    for (let k = 0; k < 26; k++) { const y = Math.round(top + H * (0.35 + hseed(seed, k, 1) * 0.5)), ox = Math.round(2 + hseed(seed, k, 2) * 4); x.fillStyle = hseed(seed, k, 3) < 0.5 ? '#5e6e4c' : '#6a7a56'; x.fillRect(cx + ox, y, 1, 1 + (hseed(seed, k, 4) * 3 | 0)); }
+    // the eyes: a dark almond where a branch fell, a pale lid above it
+    for (let k = 0; k < 3; k++) {
+      const ey = Math.round(top + 12 + hseed(seed, k, 5) * H * 0.55), ex = cx - 3 + Math.round(hseed(seed, k, 6) * 6), ew = 2 + (hseed(seed, k, 7) * 2 | 0);
+      x.fillStyle = G[G.length - 1]; x.fillRect(ex - ew, ey - 1, ew * 2 + 1, 1);
+      x.fillStyle = G[0]; x.fillRect(ex - ew + 1, ey, ew * 2 - 1, 1); x.fillRect(ex - 1, ey + 1, 3, 1);
+    }
+  }
+
   // trees and undergrowth for the chalk country (procedural stand-ins): beech, ash, yew, hawthorn in haw, elder; bracken,
   // fern, cow parsley, foxglove, tall grasses, nettle, thistle, reedmace
   function paintFlora() {
@@ -425,9 +473,8 @@ const SHEEPWALK22 = (function () {
     };
     addSprite('p22_beech', 112, 150, (x) => {
       const r = seeded(31);
-      E(x, 56, 147, 34, 3.5, 'rgba(0,0,0,0.3)');
-      P(x, [[48, 148], [50, 84], [54, 60], [60, 60], [64, 84], [66, 148]], VG(x, 60, 148, '#9a9a90', '#5e605a'));
-      L(x, 52, 140, 54, 70, 'rgba(255,255,255,0.18)', 2); L(x, 56, 84, 30, 52, '#6e6e66', 4); L(x, 58, 80, 86, 48, '#6e6e66', 4);
+      E(x, 56, 147, 36, 3.5, 'rgba(0,0,0,0.3)');
+      beechTrunk(x, 57, 148, 56, 31, BEECH_GREY);
       leafy(x, r, 56, 48, 50, 38, 80, ['#3e6428', '#4c7630', '#5a8434', '#365a24', '#6a9038'], 'rgba(170,210,110,0.5)');
       for (let i = 0; i < 14; i++) E(x, 14 + r() * 84, 20 + r() * 50, 3, 2, 'rgba(200,170,60,0.55)');   // the first turned leaves
     });
@@ -1401,7 +1448,7 @@ const SHEEPWALK22 = (function () {
   }
   wire();
 
-  return {
+  return { beechTrunk, BEECH_GREY,
     DOWNS, COMBE, INN, OFF, STILE, STILE_DOWNS, PYLON, FOLD, BEACONS, STRAYS, TREES, RAM, STAKE_AT, MENUS, DISH, MUTTON, TX, TEXTS: LIST, stats,
     ITEM_DEFS, NPC_DEFS, buildCombe, buildInn, syncMap, ramCells, homeCount, scourCount, litCount, flockStage, ramStage, fireStage, silenced,
     bleat, T, addLush, LUSH, closeAtLeaving,

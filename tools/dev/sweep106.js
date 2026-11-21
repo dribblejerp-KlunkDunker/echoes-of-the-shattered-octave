@@ -23,8 +23,8 @@ fs.mkdirSync(OUT, { recursive: true });
     if (typeof R3D !== 'undefined' && R3D.setMode) R3D.setMode(r3d ? 'on' : 'off');
     window.requestAnimationFrame = () => 0;
     window.CLEAN = () => { for (const s of ['#msgs']) { const n = document.querySelector(s); if (n) n.innerHTML = ''; } const h = document.querySelector('#hint'); if (h) h.textContent = ''; };
-    window.GO = (id, back, tod) => {
-      closeModal(); hide('#event'); const m = G.maps[id], sp = m.spawn || { x: 1.5, y: 1.5, dir: 0 };
+    window.GO = (id, back, tod, at) => {
+      closeModal(); hide('#event'); const m = G.maps[id], sp = at || m.spawn || { x: 1.5, y: 1.5, dir: 0 };
       loadMap(id, { x: sp.x, y: sp.y, dir: (sp.dir || 0) + (back ? Math.PI : 0) });
       G.state = 'play'; G.tod = tod; G.fadeT = 0; UPG.weather = 'clear'; UPG.weatherFx = { sight: 1, hear: 1 }; if (typeof Weather !== 'undefined' && Weather.hold) Weather.hold('clear');
       UPG.tutorial = false; G.player.hp = G.player.hpMax = 999; G.noise = 0; Engine.cam.pitch = window.__pitch || 0; if (G.player) G.player.pitch = Engine.cam.pitch; for (const e of G.ents) if (e.kind === 'enemy') e.state = 'idle';
@@ -37,12 +37,14 @@ fs.mkdirSync(OUT, { recursive: true });
     for (const v of VIEWS) {
       errs.length = 0;
       let at;
-      try { at = await page.evaluate(([map, back, tod]) => GO(map, back, tod), [map, v === 'back', v === 'night' ? 0.95 : 0.45]); }
+      // map@x,y,dir (dir in degrees) stands there instead of the arrival point; FLAGS=a=0,b=1 sets GFX switches first
+      const [mid, pos] = map.split('@'), P = pos ? pos.split(',').map(Number) : null;
+      try { at = await page.evaluate(([map, back, tod, P, flags]) => { for (const kv of flags) { const [k, v] = kv.split('='); GFX[k] = v === '1'; } if (flags.length && GFX.changed) GFX.changed(); return GO(map, back, tod, P ? { x: P[0], y: P[1], dir: P[2] * Math.PI / 180 } : null); }, [mid, v === 'back', v === 'night' ? 0.95 : 0.45, P, (process.env.FLAGS || '').split(',').filter(Boolean)]); }
       catch (e) { console.log('FAIL', map, v, String(e.message).slice(0, 160)); continue; }
       for (let k = 0; k < 3; k++) { await page.evaluate(() => { for (let i = 0; i < 3; i++) { window.advanceTime(1000 / 60); CLEAN(); if (window.__pitch) Engine.cam.pitch = window.__pitch; } }); await page.waitForTimeout(r3d ? 400 : 120); }
-      await page.screenshot({ path: path.join(OUT, map + '-' + v + '.png'), clip: { x: 0, y: 0, width: 1280, height: 600 } });
+      await page.screenshot({ path: path.join(OUT, (process.env.TAG || '') + mid + (pos ? '_' + pos.replace(/,/g, '_') : '') + '-' + v + '.png'), clip: { x: 0, y: 0, width: 1280, height: 600 } });
       const act = await page.evaluate(() => typeof R3D !== 'undefined' && R3D.active && R3D.active());
-      console.log('shot', r3d ? 'r3d' : 'classic', act ? '3d' : 'cpu', map, v, at.x.toFixed(1) + ',' + at.y.toFixed(1), errs.length ? 'ERRORS ' + JSON.stringify(errs.slice(0, 3)) : '');
+      console.log('shot', r3d ? 'r3d' : 'classic', act ? '3d' : 'cpu', mid, v, at.x.toFixed(1) + ',' + at.y.toFixed(1), errs.length ? 'ERRORS ' + JSON.stringify(errs.slice(0, 3)) : '');
     }
   }
   await browser.close();

@@ -479,6 +479,10 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 ![Phase 107: six rooms, six ceilings](screenshots/p107-ceilings.jpg)
 
+**The best look everywhere, part two (Phase 107).** The Hanger's beeches are round, smooth and grey, with root flares and no bark. The Watch Downs, the drove roads and the low country no longer end in a stone-grey wall: they end in hedgerows whose height rises and falls, with the downs showing over the low stretches, and the Deep Grove in the edge of the wood (Options: "Natural edges"). Oakhaven keeps the Hedge, which is its own.
+
+![Phase 107: the beeches and the edges, before and after](screenshots/p107-beeches-edges.jpg)
+
 **Ground cover (Phase 105).** Grass tufts, clover, pebbles and fallen leaves near your feet outdoors in the 3D renderer, the same in the same place every visit (Options, "Ground cover"). Record: [`story/Game Layer/Phase 105 - Ground cover.md`](story/Game%20Layer/Phase%20105%20-%20Ground%20cover.md).
 
 | Oakhaven's green (top off, bottom on) | The Deep Woods (top off, bottom on) |
