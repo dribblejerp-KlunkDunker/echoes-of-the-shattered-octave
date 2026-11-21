@@ -138,11 +138,42 @@ const HANDS109S = (() => {
   ];
   // a pose: per finger [MCP, PIP, DIP flexion, splay] in degrees; the thumb: its metacarpal's direction and its nail's
   // facing (hand-local), then its MCP and IP flexion
+  // a pose's thumb may give the facing of each segment (zs): the thumb turns along its length, so that in a fist its nail
+  // faces out of the fist's front while its metacarpal's mound stays on the palm's side
   const POSE = {
-    fist: { f: [[92, 120, 76, -3], [94, 122, 76, 0], [96, 122, 74, 3], [98, 120, 72, 6]], t: { z: [-0.83, -0.05, 0.55], pts: [[-3.75, 4.7, -2.7], [-3.0, 7.0, -5.0], [-0.4, 7.6, -5.2]] } },
-    grip: { f: [[80, 100, 60, -4], [82, 102, 60, -1], [84, 102, 60, 3], [86, 100, 58, 6]], t: { z: [-0.89, -0.27, 0.36], pts: [[-3.75, 4.9, -2.5], [-3.2, 7.3, -4.7], [-0.9, 8.3, -5.4]] } },
+    fist: { f: [[90, 117, 72, 2, -7], [92, 118, 72, 0.5, -2.5], [94, 118, 70, -2, 3], [96, 116, 68, -4, 8]], t: { z: [-0.83, -0.05, 0.55], zs: [[-0.83, -0.05, 0.55], [-0.6, -0.15, -0.78], [-0.12, 0.3, -0.95]], pts: [[-3.75, 4.7, -2.7], [-3.0, 6.9, -5.0], [-0.35, 7.5, -5.25]] } },
+    grip: { f: [[80, 100, 60, -4], [82, 102, 60, -1], [84, 102, 60, 3], [86, 100, 58, 6]], t: { z: [-0.89, -0.27, 0.36], zs: [[-0.89, -0.27, 0.36], [-0.6, -0.2, -0.77], [-0.2, 0.25, -0.95]], pts: [[-3.75, 4.9, -2.5], [-3.2, 7.3, -4.7], [-0.9, 8.3, -5.4]] } },
     open: { f: [[6, 8, 5, -9], [4, 6, 4, -2], [6, 8, 5, 5], [9, 10, 6, 12]], t: { d: [-0.72, 0.64, -0.26], z: [-0.55, -0.15, 0.82], f: [10, 12] } },
   };
+  // the sword's grip in the right hand's frame: its middle, and its turn about the hand's z so that it lies along the
+  // knuckles' line (the index's knuckle higher than the little finger's)
+  const GRIP_G = [0.3, 8.0, -2.55], GRIP_ROT = -7.8, GRIP_R = 1.37;
+  // a finger's joint frames (the base of each segment, then the tip) for [MCP, PIP, DIP, splay]
+  function fingerChain(fd, ang) {
+    const [mcp, pip, dip, spl] = ang, fl = [mcp, pip, dip];
+    let lf = chain(T(...fd.at), RZ(-spl), RY(ang[4] || 0), RX(-mcp)); const fr = [lf];
+    for (let s = 0; s < 3; s++) { lf = chain(lf, T(0, fd.L[s], 0), RX(-(s < 2 ? fl[s + 1] : 0))); fr.push(lf); }
+    return fr;
+  }
+  // wrap a finger round the grip: the flexions that lay its segments on the grip's surface, with its middle knuckle at
+  // the same turn round the grip as the others' (so the knuckles run in a line along it)
+  function fitGrip(fd, spl, rf) {
+    const ga = GRIP_ROT * D2R, a = [Math.cos(ga), Math.sin(ga), 0], e1 = [0, 0, 1], e2 = cross(a, e1), Rc = GRIP_R + rf * 0.92;
+    const rel = (p) => { const d = sub(p, GRIP_G); return sub(d, mul(a, dot(d, a))); };
+    const thStar = -2.45;
+    let best = null;
+    for (let mcp = 30; mcp <= 100; mcp += 2.5) for (let pip = 40; pip <= 118; pip += 3) for (let dip = 15; dip <= 85; dip += 5) {
+      const fr = fingerChain(fd, [mcp, pip, dip, spl]); let err = 0;
+      for (let s = 0; s < 3; s++) for (const t of (s === 0 ? [0.6, 0.8, 1.0] : [0.35, 0.7, 1.0])) {
+        const e = len(rel(app(fr[s], [0, fd.L[s] * t, 0]))) - Rc * (s === 2 && t === 1 ? 0.9 : 1);
+        err += e < 0 ? 8 * e * e : e * e;
+      }
+      const q = rel(fr[1].o); let dth = Math.atan2(dot(q, e2), dot(q, e1)) - thStar;
+      dth = Math.atan2(Math.sin(dth), Math.cos(dth)); err += 1.5 * dth * dth;
+      if (!best || err < best.err) best = { err, f: [mcp, pip, dip, spl] };
+    }
+    return best.f;
+  }
   function buildHand(sc, h) {
     const hf = h.frame, mat = h.mat, skinny = mat === 'bare', glass = mat === 'glass';
     const res = { nu: 18, nv: 16 };
@@ -175,10 +206,12 @@ const HANDS109S = (() => {
         let td = 0;
         for (let k = 0; k < 4; k++) {
           const fx = FING[k].at[0], xt = lerp(fx * 0.25, fx, clamp((y - 1.2) / 7.4, 0, 1));
-          const fade = clamp((y - 1.2) / 2.0, 0, 1) * clamp((FING[k].at[1] - 0.6 - y) / 1.5, 0, 1);
-          td += Math.exp(-Math.pow((x - xt) / 0.34, 2)) * fade;
+          const fade = clamp((y - 1.6) / 2.0, 0, 1) * clamp((FING[k].at[1] - 0.3 - y) / 1.8, 0, 1) * (k === 3 ? 0.7 : 1);
+          td += Math.exp(-Math.pow((x - xt) / 0.27, 2)) * fade;
         }
-        z += (skinny ? 0.16 : 0.05) * td * dorsal;
+        z += (skinny ? 0.27 : 0.05) * td * dorsal;
+        // the flat plane of the back between the knuckles and the wrist
+        if (skinny) z -= 0.12 * dorsal * Math.exp(-Math.pow((y - 5.2) / 2.2, 2)) * clamp(1 - Math.pow(x / A, 2), 0, 1);
       }
       // leather: three stitched lines on the back
       let seam = 99, along = y, wear = 0;
@@ -186,16 +219,36 @@ const HANDS109S = (() => {
       if (y > CY + 2.5 && z > 0) wear = clamp((y - CY - 2.5) / 2.0, 0, 1) * clamp(z / C, 0, 1);
       return { p: [x, y, z], uv: [x, y], ex: [skinny ? wear * 0.6 : wear * 0.8, seam, along, 0] };
     };
-    grid(sc, handMat, ppart, hf, ID(), 40, 30, palmFn);
+    grid(sc, handMat, ppart, hf, ID(), 68, 44, palmFn);
     for (let gy = 1.2; gy <= 8.4; gy += 1.8) for (let gx = -3.0; gx <= 3.01; gx += 2.0) sphere(sc, app(hf, [gx, gy, -0.1]), 1.45, ppart);
     // ---- fingers
     const tips = [];
+    // an adult's fingers: slimmer than the first sculpt (the proximal segment 0.85 of it), tapering more to the tip; a
+    // glove's leather adds a little back
+    const RS = [0.85, 0.81, 0.76, 0.72], thick = skinny || glass ? 1 : 1.1;
     FING.forEach((fd, k) => {
-      const [mcp, pip, dip, spl] = pose.f[k];
-      let lf = chain(T(...fd.at), RZ(-spl), RX(-mcp));
+      const fr = fd.r.map((r, i) => r * RS[i] * thick);
+      const ang = h.pose === 'grip' && h.wrap ? fitGrip(fd, pose.f[k][3], fr[1]) : pose.f[k];
+      // splay turns an open finger aside; tilt (the fifth value) leans a curled finger's plane so that, in a fist, the
+      // folded fingers press together
+      const [mcp, pip, dip, spl] = ang;
+      let lf = chain(T(...fd.at), RZ(-spl), RY(ang[4] || 0), RX(-mcp));
       const flex = [mcp, pip, dip];
+      // the knuckle's head: the metacarpal's end, a hard rounded ridge on the back of the hand (the middle one highest)
+      if (h.pose !== 'open' || skinny) {
+        const op = h.pose === 'open', hi = [0.1, 0.24, 0.12, 0.0][k] * (op ? 0.4 : 1);
+        const kf = chain(T(fd.at[0], fd.at[1] + (op ? -0.2 : 0.05), (op ? 0.3 : 0.28) + hi), RZ(-spl * 0.5), RX(op ? 0 : -42));
+        const kp = sc.part++, kx = fr[0] * 1.3, ky = op ? 0.78 : 1.0, kz = op ? 0.58 : 0.78;
+        grid(sc, handMat, kp, W2(kf), kf, 18, 12, (u, v) => {
+          const th = -Math.PI / 2 + v * Math.PI, ph = u * Math.PI * 2, ct = Math.cos(th);
+          let x = kx * spow(ct, 0.8) * spow(Math.cos(ph), 0.85), y = ky * spow(Math.sin(th), 0.8), z = kz * spow(ct, 0.8) * spow(Math.sin(ph), 0.85);
+          if (z > 0) z *= 1 + 0.18 * Math.exp(-x * x / (kx * kx * 0.12)); // a ridge along the bone, not a dome
+          if (v === 0 || v === 1) x = z = 0;
+          return { p: [x, y, z], uv: [x * 3, y * 3], ex: [skinny ? 0.55 * clamp(z / kz, 0, 1) : clamp(z / kz, 0, 1), 99, y, 0] };
+        });
+      }
       for (let s = 0; s < 3; s++) {
-        const L = fd.L[s], r0 = fd.r[s], r1 = fd.r[s + 1], bendIn = flex[s], bendOut = s < 2 ? flex[s + 1] : 0;
+        const L = fd.L[s], r0 = fr[s], r1 = fr[s + 1], bendIn = flex[s], bendOut = s < 2 ? flex[s + 1] : 0;
         const ex = (y, phi, rho) => {
           const dors = Math.max(0, Math.sin(phi));
           const nb = Math.exp(-Math.pow(y / 1.0, 2)), nt = Math.exp(-Math.pow((y - L) / 0.9, 2));
@@ -203,12 +256,24 @@ const HANDS109S = (() => {
           let seam = 99, along = y + s * 5;
           if (mat === 'leather') { const a = Math.min(Math.abs(phi), Math.abs(phi - Math.PI), Math.abs(phi - 2 * Math.PI)); seam = a * rho; }
           const cb = Math.exp(-Math.pow(y / 0.55, 2)), ct = Math.exp(-Math.pow((y - L) / 0.5, 2));
-          const crease = (cb * (s === 1 ? 1 : s === 2 ? 0.5 : 0) + ct * (s === 0 ? 1 : s === 1 ? 0.5 : 0)) * dors;
+          const crease = (cb * (s === 1 ? 1 : s === 2 ? 0.5 : 0) + ct * (s === 0 ? 1 : s === 1 ? 0.5 : 0)) * (0.45 + 0.55 * dors);
           const tipR = s === 2 ? 0.35 * clamp((y - L * 0.4) / (L * 0.6), 0, 1) : 0;
           return [clamp(knk + tipR, 0, 1), seam, along, crease];
         };
-        const mod = (y) => 1 + 0.09 * Math.exp(-Math.pow(y / 0.55, 2)) * (s > 0 ? 1 : 0.4) + 0.06 * Math.exp(-Math.pow((y - L) / 0.55, 2));
-        capsule(sc, handMat, W2(lf), lf, L, r0, r1, { sx: s === 0 ? 1.12 : 1.06, sz: 0.94, nu: res.nu, nv: res.nv, mod, ex, pad: s === 2 ? (y) => 0.22 * Math.exp(-Math.pow((y - L * 0.55) / (L * 0.45), 2)) : null });
+        // flat planes between the joints (a squarish section, the shaft a little waisted), and a hard corner on the
+        // back of each bent joint where the bone's end shows
+        const sqn = skinny || glass ? 2.8 : 2.4;
+        const mod = (y, phi) => {
+          const c = Math.abs(Math.cos(phi)), sn = Math.sin(phi), dors = Math.max(0, sn);
+          const tipFade = s === 2 ? clamp((L * 0.85 - y) / (L * 0.5), 0, 1) : 1;
+          const sq = 1 + (Math.pow(Math.pow(c, sqn) + Math.pow(Math.abs(sn), sqn), -1 / sqn) - 1) * tipFade * (sn > 0 ? 1 : 0.5);
+          const waist = 1 - 0.05 * Math.sin(Math.PI * clamp(y / L, 0, 1));
+          const jIn = Math.exp(-Math.pow(y / 0.42, 2)) * (s > 0 ? 0.07 : 0.03);
+          const jOut = Math.exp(-Math.pow((y - L) / 0.42, 2)) * (s < 2 ? 0.05 : 0);
+          const corner = (Math.exp(-Math.pow((y - L) / 0.36, 2)) * clamp(bendOut / 90, 0, 1.2) * 0.16 + Math.exp(-Math.pow(y / 0.36, 2)) * clamp(bendIn / 90, 0, 1.2) * (s > 0 ? 0.1 : 0)) * dors * dors;
+          return 0.97 * sq * waist + jIn + jOut + corner;
+        };
+        capsule(sc, handMat, W2(lf), lf, L, r0, r1, { sx: s === 0 ? 1.1 : 1.1, sz: 0.92, nu: 22, nv: 26, mod, ex, pad: s === 2 ? (y) => 0.2 * Math.exp(-Math.pow((y - L * 0.55) / (L * 0.45), 2)) : (y) => (skinny ? 0.4 : 0.14) * Math.sin(Math.PI * clamp(y / L, 0, 1)) });
         if (s === 2 && skinny) {
           // the nail: a thin flattened cap on the back of the last segment
           const nf = chain(lf, T(0, L * 0.58, r1 * 0.80 * 0.94), RX(-8));
@@ -240,11 +305,13 @@ const HANDS109S = (() => {
       }
       let Zp = pose.t.z; const fl = [0, 0, 0], Ls = [], frames = [];
       for (let k = 0; k < 3; k++) {
+        if (pose.t.zs) Zp = pose.t.zs[k];
         const Y = norm(sub(pts[k + 1], pts[k])), Z = norm(sub(Zp, mul(Y, dot(Y, Zp))));
         frames.push(F(pts[k], cross(Y, Z), Y, Z)); Ls.push(len(sub(pts[k + 1], pts[k]))); Zp = Z;
         if (k > 0) fl[k - 1] = Math.acos(clamp(dot(Y, frames[k - 1].Y), -1, 1)) / D2R;
       }
-      const rs = [[1.6, 1.2], [1.16, 1.05], [1.06, 0.88]];
+      const tk = skinny || glass ? 1 : 1.08;
+      const rs = [[skinny ? 1.25 : 1.6, skinny ? 1.0 : 1.2], [0.93 * tk, 0.86 * tk], [0.86 * tk, 0.68 * tk]];
       for (let s = 0; s < 3; s++) {
         const L = Ls[s], lf = frames[s];
         const ex = (y, phi, rho) => {
@@ -252,11 +319,16 @@ const HANDS109S = (() => {
           let seam = 99; if (mat === 'leather' && s > 0) { const a = Math.min(Math.abs(phi), Math.abs(phi - Math.PI), Math.abs(phi - 2 * Math.PI)); seam = a * rho; }
           return [clamp((nt * fl[s] / 60 + (s > 0 ? nb * fl[s - 1] / 60 : 0)) * dors, 0, 1) * 0.7, seam, y + s * 5, (s > 0 ? nb : 0) * dors];
         };
-        const pad = s === 2 ? (y) => 0.3 * Math.exp(-Math.pow((y - L * 0.5) / (L * 0.5), 2)) : s === 0 ? (y) => 0.35 * Math.exp(-Math.pow((y - L * 0.4) / (L * 0.6), 2)) : null;
-        capsule(sc, handMat, W2(lf), lf, L, rs[s][0], rs[s][1], { sx: s === 0 ? 1.2 : 1.05, sz: s === 0 ? 0.95 : 0.92, nu: res.nu, nv: res.nv, ex, pad, mod: (y) => 1 + 0.06 * Math.exp(-Math.pow((y - L) / 0.5, 2)) });
+        const pad = s === 2 ? (y) => 0.12 * Math.exp(-Math.pow((y - L * 0.5) / (L * 0.5), 2)) : s === 0 ? (y) => (skinny ? 0.15 : 0.35) * Math.exp(-Math.pow((y - L * 0.4) / (L * 0.6), 2)) : null;
+        const tmod = (y, phi) => {
+          const sn = Math.sin(phi), c = Math.abs(Math.cos(phi)), dors = Math.max(0, sn);
+          const sq = s === 0 ? 1 : 1 + (Math.pow(Math.pow(c, 2.6) + Math.pow(Math.abs(sn), 2.6), -1 / 2.6) - 1) * (sn > 0 ? 1 : 0.4) * (s === 2 ? clamp((L * 0.8 - y) / (L * 0.5), 0, 1) : 1);
+          return 0.97 * sq + 0.05 * Math.exp(-Math.pow((y - L) / 0.45, 2)) * (s < 2 ? 1 : 0) + 0.12 * Math.exp(-Math.pow((y - L) / 0.36, 2)) * dors * dors * (s === 1 ? clamp(fl[1] / 60, 0, 1) : 0);
+        };
+        capsule(sc, handMat, W2(lf), lf, L, rs[s][0], rs[s][1], { sx: s === 0 ? 1.2 : 1.04, sz: s === 0 ? 0.95 : 0.88, nu: 22, nv: 22, ex, pad, mod: tmod });
         if (s === 2 && skinny) {
           const nf = chain(lf, T(0, L * 0.6, rs[2][1] * 0.82 * 0.92), RX(-8));
-          const np = sc.part++, na = rs[2][1] * 0.78, nb2 = L * 0.38;
+          const np = sc.part++, na = rs[2][1] * 0.84, nb2 = L * 0.4;
           grid(sc, 'nail', np, W2(nf), nf, 14, 8, (u, v) => {
             const th = -Math.PI / 2 + v * Math.PI, ph = u * Math.PI * 2, ct = Math.cos(th);
             let x = na * spow(ct, 0.5) * spow(Math.cos(ph), 0.6), y = nb2 * spow(Math.sin(th), 0.5), z = 0.14 * spow(ct, 0.5) * spow(Math.sin(ph), 0.6);
@@ -269,10 +341,10 @@ const HANDS109S = (() => {
     }
     // ---- inside a fist the fingers press into the palm's pads: fill the hollow so no daylight shows through it
     if (h.pose === 'fist') {
-      const lf = T(-0.4, 7.0, -2.7), part = sc.part++;
+      const lf = T(-0.4, 7.0, -2.35), part = sc.part++;
       grid(sc, handMat, part, W2(lf), lf, 20, 14, (u, v) => {
         const th = -Math.PI / 2 + v * Math.PI, ph = u * Math.PI * 2;
-        return { p: [3.3 * Math.cos(th) * Math.cos(ph), 1.9 * Math.sin(th), 1.6 * Math.cos(th) * Math.sin(ph)], uv: [ph, th], ex: [0, 99, 0, 0] };
+        return { p: [3.4 * Math.cos(th) * Math.cos(ph), 2.1 * Math.sin(th), 1.45 * Math.cos(th) * Math.sin(ph)], uv: [ph, th], ex: [0, 99, 0, 0] };
       });
     }
     // ---- the web between the thumb and the index finger
@@ -291,18 +363,25 @@ const HANDS109S = (() => {
     const afl = ID(); // its local frame is its own
     const FL = 44;
     const rx = (s) => s < 0 ? 2.9 : lerp(2.9, 4.2, sm(clamp(s / 24, 0, 1))) + 0.25 * Math.exp(-Math.pow((s - 19) / 6, 2));
-    const rz = (s) => s < 0 ? 1.95 : lerp(1.95, 3.8, sm(clamp(s / 24, 0, 1)));
+    const rz = (s) => s < 0 ? 1.8 : lerp(1.8, 3.8, sm(clamp(s / 24, 0, 1)));
     const armMat = glass ? 'glass' : mat === 'bare' ? 'skin' : 'leather'; // a gloved wrist is the glove's own
     {
-      const part = sc.part++, nu = 30, nv = 36;
+      const part = sc.part++, nu = 44, nv = 44;
       grid(sc, armMat, part, af, afl, nu, nv, (u, v) => {
         const s = -1.6 + v * (FL + 1.6), ph = u * Math.PI * 2;
         let rr = 1; if (s < 0) rr = Math.sqrt(Math.max(0, 1 - Math.pow(s / 1.6, 2)));
         if (v === 0) rr = 0;
         const j = 1;
         // the ulna's knob at the wrist, on the little finger's side
-        const knob = 1 + 0.07 * Math.exp(-Math.pow((s - 1.4) / 1.0, 2)) * Math.max(0, Math.cos(ph - 0.5));
-        return { p: [rx(s) * Math.cos(ph) * rr * j * knob, s, rz(s) * Math.sin(ph) * rr * j], uv: [ph * 3.2, s], ex: [0, 99, 0, 0] };
+        const bone = skinny ? 1 : 0.45;
+        const knob = 1 + bone * 0.2 * Math.exp(-Math.pow((s - 1.5) / 0.75, 2)) * Math.pow(Math.max(0, Math.cos(ph - 0.55)), 3);
+        // the radius's end on the thumb's side, and the wrist a little narrower between the hand and the forearm's flesh
+        const rad = 1 + bone * 0.07 * Math.exp(-Math.pow((s - 1.2) / 0.9, 2)) * Math.pow(Math.max(0, Math.cos(ph - Math.PI + 0.4)), 2);
+        const neck = 1 - bone * 0.06 * Math.exp(-Math.pow((s - 3.2) / 1.6, 2));
+        // two tendons running up the inside of the wrist and a flatter back
+        const flat = 1 - bone * 0.05 * Math.pow(Math.max(0, Math.sin(ph)), 4) * clamp(1 - s / 10, 0, 1);
+        const m = knob * rad * neck * flat;
+        return { p: [rx(s) * Math.cos(ph) * rr * j * m, s, rz(s) * Math.sin(ph) * rr * j * m], uv: [ph * 3.2, s], ex: [0.25 * (knob - 1) / 0.2 * bone, 99, 0, 0] };
       });
       for (let s = 0; s < 30; s += 2.2) sphere(sc, app(af, [0, s, 0]), Math.min(rx(s), rz(s)) * 0.95, part);
     }
@@ -348,9 +427,8 @@ const HANDS109S = (() => {
   // ---------------------------------------------------------------- the short sword, in the right hand's frame: the grip
   // across the curled fingers, the blade out past the thumb (local -x), its edges in line with the knuckles
   function buildSword(sc, hf) {
-    const G = [0.3, 8.15, -2.55];
-    const sf = chain(hf, T(...G)); // sword frame: +x pommel side, -x blade
-    const lf0 = T(...G);
+    const sf = chain(hf, T(...GRIP_G), RZ(GRIP_ROT)); // sword frame: +x pommel side, -x blade
+    const lf0 = chain(T(...GRIP_G), RZ(GRIP_ROT));
     // grip (leather-wrapped), along x: capsule axis is local y, so turn y -> -x
     const gf = chain(sf, T(5.0, 0, 0), RZ(90)), glf = chain(lf0, T(5.0, 0, 0), RZ(90));
     capsule(sc, 'grip', gf, glf, 10.0, 1.32, 1.42, { nu: 20, nv: 18, sx: 1, sz: 0.92 });
@@ -367,6 +445,7 @@ const HANDS109S = (() => {
     // the blade: a lens of bevels with a fuller, flat-shaded faces, from the guard out along -x
     {
       const part = sc.part++, g = group(sc, 'steel'), BL = 43, x0 = -6.2;
+      sc.blade = [app(sf, [x0, 0, 0]), app(sf, [x0 - BL, 0, 0])];
       const st = [0, 0.04, 0.3, 0.55, 0.72, 0.84, 0.93, 1.0];
       const hw = (t) => t < 0.72 ? lerp(2.25, 1.75, t / 0.72) : 1.75 * Math.sqrt(Math.max(0, 1 - Math.pow((t - 0.72) / 0.28, 1.6)));
       const th = (t) => lerp(0.36, 0.14, t) * (t > 0.9 ? (1 - t) / 0.1 : 1) + 0.001;
@@ -412,7 +491,7 @@ const HANDS109S = (() => {
           const c = (dx * n[0] + dy * n[1] + dz * n[2]) / d; if (c <= 0) continue;
           occ += c * r2 / d2;
         }
-        v[o + 11] = clamp(1 - occ * 0.75, 0.18, 1);
+        v[o + 11] = clamp(1 - occ * 0.9, 0.15, 1);
       }
     }
   }
@@ -448,12 +527,12 @@ const HANDS109S = (() => {
     const FISTC = [-0.3, 7.2, -1.5]; // a fist's middle, in the hand's frame
     const raisedFist = (m, mat, sleeve) => {
       // the raised fist: knuckles up and towards the middle, the curled fingers and the thumb across them towards us
-      const f0 = handFrame([0, 0, 0], [-0.45 * m, 0.75, -0.4], [0.4 * m, -0.2, -0.88], m < 0);
+      const f0 = handFrame([0, 0, 0], [-0.5 * m, 0.72, -0.4], [0.62 * m, -0.12, -0.77], m < 0);
       buildHand(sc, { frame: placeAt(f0, FISTC, m > 0 ? 975 : 177, 290, 36), pose: 'fist', mat, sleeve, arm: [0.36 * m, -0.88, 0.3] });
     };
     const restFist = (m, mat, sleeve, cx, cy, D) => {
       // the resting fist low in the corner, the forearm out of the bottom
-      const f0 = handFrame([0, 0, 0], [0.75 * m, 0.3, -0.55], [-0.4 * m, 0.3, -0.85], m > 0);
+      const f0 = handFrame([0, 0, 0], [0.75 * m, 0.3, -0.55], m > 0 ? [-0.4, 0.6, -0.5] : [0.4, 0.3, -0.85], m > 0);
       buildHand(sc, { frame: placeAt(f0, FISTC, cx, cy, D), pose: 'fist', mat, sleeve, arm: [-0.62 * m, -0.6, 0.5] });
     };
     if (pose === 'fist') {
@@ -464,9 +543,9 @@ const HANDS109S = (() => {
       restFist(-1, right, sleeveR, 915, 380, 39);
     } else if (pose === 'sword') {
       // the blade (the hand's -x, past the thumb) rises away up the view, leaning a little left; the palm's side to us
-      const hf0 = handFrameXZ([0, 0, 0], mul([0.3, 0.68, -0.67], -1), [0.45, -0.1, -0.88]);
-      const hf2 = placeAt(hf0, [0.3, 8.15, -2.55], 985, 350, 42);
-      buildHand(sc, { frame: hf2, pose: 'grip', mat: right, sleeve: sleeveR, arm: [0.38, -0.85, 0.36] });
+      const hf0 = handFrameXZ([0, 0, 0], mul([0.39, 0.68, -0.67], -1), [0.45, -0.1, -0.88]);
+      const hf2 = placeAt(hf0, GRIP_G, 985, 350, 42);
+      buildHand(sc, { frame: hf2, pose: 'grip', wrap: true, mat: right, sleeve: sleeveR, arm: [0.38, -0.85, 0.36] });
       buildSword(sc, hf2);
       restFist(1, leftMat, sleeveL, 240, 382, 37);
     } else if (pose.startsWith('dbgv')) { // dbgv|yx,yy,yz|zx,zy,zz|pose|left: try an orientation at the raised fist's place
@@ -477,7 +556,7 @@ const HANDS109S = (() => {
       const [, hp, view, mat] = pose.split('-');
       const V = { back: [[0, 1, 0], [0, 0, 1]], side: [[0, 1, 0], [1, 0, 0]], palm: [[0, 1, 0], [0, 0, -1]], thumb: [[0, 1, 0], [-1, 0, 0]], top: [[0, 0, -1], [0, 1, 0]] }[view] || [[0, 1, 0], [0, 0, 1]];
       const hf = handFrame([0, -9, -36], V[0], V[1], false);
-      buildHand(sc, { frame: hf, pose: hp, mat: mat || 'bare', sleeve: true, arm: mul(V[0], -1) });
+      buildHand(sc, { frame: hf, pose: hp, wrap: hp === 'grip', mat: mat || 'bare', sleeve: true, arm: mul(V[0], -1) });
       if (hp === 'grip') buildSword(sc, hf);
     } else { // song
       // both hands open and raised, backs to us, the palms turned a little towards each other; the Song between them
@@ -520,25 +599,38 @@ float rimf(vec3 N, vec3 V){ float f = 1.0 - max(dot(N,V),0.0); return f*f*f * (0
   const FS = {
     skin: `void main(){ vec3 N = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   float ao = v_occ.x, sh = v_occ.y;
-  float h = vnoise(v_loc*5.0)*0.006 + vnoise(v_loc*23.0)*0.0022;
-  float cr = v_ex.w * pow(abs(sin(v_uv.y*9.0 + vnoise(v_loc*3.0)*2.0)), 10.0); h -= cr*0.06;
+  // the skin's fine relief: broad soft lumps, a hashed fine grain (pores), and a faint cross-hatch of creases
+  float h = vnoise(v_loc*5.0)*0.006 + vnoise(v_loc*23.0)*0.002;
+  float pore = hsh(floor(v_loc*36.0)); h -= smoothstep(0.82, 1.0, pore)*0.0016;
+  float gr = vnoise(v_loc*52.0); h += gr*0.0012;
+  vec3 q = v_loc*vec3(9.0, 4.0, 9.0);
+  float hatch = pow(abs(sin(q.x*2.1 + q.y*1.3 + sin(v_loc.y*3.1 + v_loc.z*1.7)*1.5)), 14.0) + pow(abs(sin(q.z*2.3 - q.y*1.1 + sin(v_loc.x*2.9 - v_loc.y*1.3)*1.5)), 14.0);
+  h -= hatch*0.0011;
+  // the creases at the joints: a few deep lines, darker
+  float cr = v_ex.w * pow(abs(sin(v_uv.y*8.0 + vnoise(v_loc*3.0)*2.0)), 24.0); h -= cr*0.009;
   N = bump(N, v_pos, h);
-  vec3 alb = pow(u_base, vec3(1.15)) * mix(vec3(1.0), vec3(1.2,0.7,0.64), clamp(v_ex.x,0.0,1.0)*0.75) * (0.9 + 0.2*vnoise(v_loc*1.3)) * (1.0 - cr*0.3);
+  float red = clamp(v_ex.x, 0.0, 1.0);
+  vec3 alb = pow(u_base, vec3(1.15)) * mix(vec3(1.0), vec3(1.25,0.7,0.62), red*0.6) * (0.9 + 0.2*vnoise(v_loc*1.3)) * (1.0 - cr*0.22 - v_ex.w*0.08) * (0.97 + 0.06*gr);
   float ndl = dot(N,L); vec3 w = vec3(0.5,0.3,0.24);
   vec3 dif = clamp((vec3(ndl)+w)/(1.0+w), 0.0, 1.0); dif *= dif;
   vec3 shc = mix(vec3(sh), vec3(1.0), vec3(0.18,0.06,0.03)*(1.0-sh));
-  vec3 Hh = normalize(L+V); float spec = pow(max(dot(N,Hh),0.0), 22.0) * 0.18 * (0.3+0.7*sh);
+  // less gloss: a low broad sheen and a faint tight one
+  vec3 Hh = normalize(L+V); float nh = max(dot(N,Hh),0.0);
+  float spec = (pow(nh, 18.0)*0.05 + pow(nh, 70.0)*0.06) * (0.3+0.7*sh);
   float fr = pow(1.0 - max(dot(N,V),0.0), 4.0);
   vec3 Lt, Ls; vec3 tor = pl(N, u_torchPos, u_torch, 30.0, 0.4, Lt); vec3 sng = pl(N, u_songPos, u_song, 13.0, 0.35, Ls);
-  vec3 col = alb * (u_key*dif*shc + hemi(N)*ao*0.85 + tor*ao + sng) + u_key*spec*sh + (u_key*sh*0.06 + u_amb*0.12)*fr*ao
-           + alb*u_rim*rimf(N,V)*1.4 + u_torch*pow(max(dot(N,normalize(Lt+V)),0.0),22.0)*0.1;
+  vec3 col = alb * (u_key*dif*shc + hemi(N)*ao*0.85*vec3(0.9,0.97,1.1) + tor*ao + sng) + u_key*spec*sh + (u_key*sh*0.03 + u_amb*0.07)*fr*ao
+           + alb*u_rim*rimf(N,V)*1.4 + u_torch*pow(max(dot(N,normalize(Lt+V)),0.0),22.0)*0.05;
+  // the shade is cooler than the light
+  float lit = clamp(max(ndl, 0.0)*sh, 0.0, 1.0);
+  col *= mix(vec3(0.9, 0.96, 1.07), vec3(1.0), smoothstep(0.0, 0.5, lit));
   gl_FragColor = vec4(tonemap(col), 1.0); }`,
     nail: `void main(){ vec3 N = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   float ao = v_occ.x, sh = v_occ.y;
-  vec3 alb = mix(u_base*vec3(1.05,0.86,0.84), vec3(0.85,0.78,0.72), smoothstep(0.75,0.95,v_ex.x));
+  vec3 alb = mix(mix(u_base*vec3(1.12,0.84,0.84), u_base*vec3(1.2,1.05,1.0), smoothstep(0.25,0.0,v_ex.x)), vec3(0.92,0.86,0.8), smoothstep(0.78,0.95,v_ex.x));
   float ndl = max(dot(N,L),0.0); vec3 Hh = normalize(L+V);
   vec3 Lt, Ls; vec3 tor = pl(N, u_torchPos, u_torch, 30.0, 0.2, Lt); vec3 sng = pl(N, u_songPos, u_song, 13.0, 0.2, Ls);
-  vec3 col = alb*(u_key*ndl*sh + hemi(N)*ao + tor + sng) + u_key*pow(max(dot(N,Hh),0.0),60.0)*0.5*sh + env(reflect(-V,N))*0.05;
+  vec3 col = alb*(u_key*ndl*sh + hemi(N)*ao + tor + sng) + u_key*pow(max(dot(N,Hh),0.0),50.0)*0.7*sh + env(reflect(-V,N))*0.08;
   gl_FragColor = vec4(tonemap(col), 1.0); }`,
     leather: `void main(){ vec3 N = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   float ao = v_occ.x, sh = v_occ.y;
@@ -640,7 +732,7 @@ void main(){ vec3 N0 = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   float ao = v_occ.x, sh = v_occ.y;
   // the planes: the hand's own space cut into tetrahedra (the simplex lattice, about 3.9 cm); where the surface passes
   // through one tetrahedron it is one plane of the glass, with straight edges where it meets the next
-  vec3 x = (v_loc + vec3(0.37, 0.71, 0.19)) / 3.9;
+  vec3 x = (v_loc + vec3(0.37, 0.71, 0.19)) / 5.6;
   vec3 sk = x + (x.x + x.y + x.z) / 3.0;
   vec3 ip = floor(sk), f = sk - ip;
   vec3 a = f; float pm = 0.0;
@@ -651,28 +743,35 @@ void main(){ vec3 N0 = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   vec4 bc = vec4(1.0 - a.x, a.x - a.y, a.y - a.z, a.z);
   float m = min(min(bc.x, bc.y), min(bc.z, bc.w));
   float wv = fwidth(m);
-  float seam = 1.0 - smoothstep(wv*0.9, wv*2.3, m);
+  float seam = 1.0 - smoothstep(wv*0.45, wv*1.25, m);
   vec3 cid = ip + vec3(pm*0.137, pm*0.291, pm*0.073);
   // which face is nearest decides the neighbour; a few edges are bright
   float face = m == bc.x ? 0.0 : m == bc.y ? 1.0 : m == bc.z ? 2.0 : 3.0;
-  float bright = seam * step(hsh(ip*1.31 + vec3(face*3.1 + pm*0.7, face, pm)), 0.13);
+  float bright = seam * step(hsh(ip*1.31 + vec3(face*3.1 + pm*0.7, face, pm)), 0.09);
   vec3 tl = h33(cid*1.91 + vec3(4.0)) - 0.5;
   vec3 N = normalize(N0*0.28 + tl*0.95 + V*0.42);
   float fh = hsh(cid*2.3 + vec3(9.0));
+  // a few planes (about one in five) are cut to catch the key light: each flashes whole, the rest stay dark and deep
+  vec3 Hk = normalize(L+V);
+  float katch = step(hsh(cid*3.7 + vec3(1.0, 5.0, 2.0)), 0.16);
+  N = normalize(mix(N, Hk, katch*0.72));
   float ndv = max(dot(N0,V), 0.0), ndl = dot(N,L);
   vec3 Hh = normalize(L+V), R = reflect(-V,N);
   float F = 0.04 + 0.96*pow(1.0 - max(dot(N,V),0.0), 5.0);
-  vec3 deep = u_base * (0.2 + 1.3*fh*fh);
+  // each plane its own value: some nearly black-blue, most a deep azure, a few pale
+  float tone = fh < 0.3 ? 0.05 + fh*0.4 : fh > 0.91 ? 1.5 : 0.25 + (fh - 0.3)*1.1;
+  vec3 deep = u_base * tone; if (fh > 0.91) deep = mix(deep, u_alt*0.8, 0.25);
   vec3 Lt, Ls; vec3 tor = pl(N, u_torchPos, u_torch, 30.0, 0.0, Lt); vec3 sng = pl(N, u_songPos, u_song, 13.0, 0.3, Ls);
-  vec3 body = deep*(u_key*(0.08 + 1.1*max(ndl,0.0))*(0.45+0.55*sh) + hemi(N)*0.8*ao + tor*1.1 + sng*1.6)
+  vec3 body = deep*(u_key*(0.06 + 0.75*max(ndl,0.0))*(0.45+0.55*sh) + hemi(N)*0.7*ao + tor*1.1 + sng*1.1)
             + u_alt*0.25*u_lvl*(0.35 + 0.65*(1.0-ndv));
-  vec3 refl = env(R)*u_alt*0.9*F;
-  float gl = pow(max(dot(N,Hh),0.0), 300.0)*7.0;
-  vec3 col = body + refl + u_key*gl*sh + u_torch*pow(max(dot(N,normalize(Lt+V)),0.0),120.0)*4.0 + u_song*pow(max(dot(N,normalize(Ls+V)),0.0),30.0)*1.2;
+  vec3 refl = env(R)*u_alt*0.9*F*(0.45 + 0.55*katch);
+  float nh = max(dot(N,Hh),0.0);
+  float gl = katch*(pow(nh, 30.0)*0.9 + pow(nh, 400.0)*4.0);
+  vec3 col = body + refl + mix(u_key, u_alt*1.6, 0.3)*gl*sh + u_torch*pow(max(dot(N,normalize(Lt+V)),0.0),120.0)*4.0 + u_song*pow(max(dot(N,normalize(Ls+V)),0.0),30.0)*1.2;
   // the rim: bright where the form turns away
   float rim = pow(1.0 - ndv, 6.0);
   col += (u_alt*1.6*u_lvl + u_rim*1.8 + u_torch*0.5) * rim + u_alt*0.3*u_lvl*pow(1.0 - ndv, 2.0);
-  col = mix(col, u_base*0.05, seam*0.85);
+  col = mix(col, vec3(0.002, 0.006, 0.02), seam*0.93);
   col = mix(col, (u_alt*1.3 + vec3(0.35))*u_lvl + u_torch*0.6, bright*(0.5 + 0.5*sh));
   float al = mix(0.76, 0.96, smoothstep(0.08, 0.6, ndv)); al = max(al, seam*0.95);
   vec3 c = tonemap(col);
@@ -796,6 +895,6 @@ void main(){ vec3 N0 = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
     }
     return out;
   }
-  return { render, _toScreen: toScreen, _scene: scenePose };
+  return { render, _toScreen: toScreen, _scene: scenePose, _fit: (k) => fitGrip(FING[k], POSE.grip.f[k][3], FING[k].r[1] * 0.81 * 1.1) };
 })();
 if (typeof window !== 'undefined') window.HANDS109S = HANDS109S;
