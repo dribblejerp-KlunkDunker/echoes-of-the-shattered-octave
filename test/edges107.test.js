@@ -47,9 +47,11 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
           for (const [i, orig, mine] of L) {
             const c = m.cells[i];
             if (!c || c !== mine || c.tex !== tex || orig.tex !== 't_hedge') bad++;
-            min = Math.min(min, c.top); max = Math.max(max, c.top);
             const x = i % m.w, y = (i / m.w) | 0;
-            for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const X = x + dx, Y = y + dy; if (X < 0 || Y < 0 || X >= m.w || Y >= m.h) continue; const n = m.cells[Y * m.w + X]; if (n && (n.door || n.tex === 't_p20_gate') && c.top < 1) gateLow++; }
+            // its height above the highest ground under it (a wall's top is a height in the world)
+            let g = 0; if (m.groundAt) { g = -Infinity; for (const [fx, fy] of [[0.02, 0.02], [0.98, 0.02], [0.02, 0.98], [0.98, 0.98], [0.5, 0.5]]) g = Math.max(g, m.groundAt(x + fx, y + fy)); }
+            const h = c.top - g; min = Math.min(min, h); max = Math.max(max, h);
+            for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const X = x + dx, Y = y + dy; if (X < 0 || Y < 0 || X >= m.w || Y >= m.h) continue; const n = m.cells[Y * m.w + X]; if (n && (n.door || n.tex === 't_p20_gate') && c.top - g < 1) gateLow++; }
           }
           out[id] = { n: L.length, bad, min, max, lo, hi, gateLow };
         }

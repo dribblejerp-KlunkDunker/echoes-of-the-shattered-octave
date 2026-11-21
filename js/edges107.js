@@ -16,7 +16,8 @@
 //      uneven and the downs beyond show over the low places (the ground past the edge runs on, Phase 106);
 //    * in the Deep Grove, the wood's edge (holly and hazel under the trees, trunks in the shade) at the height of trees.
 //  Next to a gate or a door the hedge keeps its full height, so the gate posts still have something to stand in.
-//  Heights come from hashed smooth noise along each side (no random numbers): the same every time. Nothing changes what
+//  Heights are above the highest ground under each cell (on a scarp the hedge stands on the scarp), and come from
+//  hashed smooth noise along each side (no random numbers): the same every time. Nothing changes what
 //  you can walk through: a cell that was solid is solid.
 //
 //  Switch: GFX.edges107 (in GFX.FX: off in Original, on in every other preset); Options row "Natural edges". Off puts
@@ -82,6 +83,12 @@ const EDGES107 = (() => {
   const noise1 = (t, seed) => { const i = Math.floor(t), f = t - i, s = f * f * (3 - 2 * f); return hash(i, seed, 13) * (1 - s) + hash(i + 1, seed, 13) * s; };
   const seedOf = (id) => { let n = 2166136261; for (let i = 0; i < id.length; i++) { n ^= id.charCodeAt(i); n = Math.imul(n, 16777619); } return n | 0; };
   let changed = 0;
+  function groundUnder(m, x, y) {
+    if (typeof m.groundAt !== 'function') return 0;
+    let g = -Infinity;
+    for (const [fx, fy] of [[0.02, 0.02], [0.98, 0.02], [0.02, 0.98], [0.98, 0.98], [0.5, 0.5]]) { const v = +m.groundAt(x + fx, y + fy); if (Number.isFinite(v)) g = Math.max(g, v); }
+    return Number.isFinite(g) ? g : 0;
+  }
   function isPlain(c) { if (!c || c.tex !== 't_hedge') return false; for (const k in c) if (k !== 'tex') return false; return true; }
   function apply(m) {
     if (!m || !m.cells || m._edges107 || !PLACES[m.id]) return;
@@ -98,7 +105,10 @@ const EDGES107 = (() => {
       // so the hedge really does run from low to high, and the cell's own part keeps a long run from reading as a wall
       const sw = Math.max(0, Math.min(1, (noise1(along / 7, S + side * 101) - 0.5) * 2.2 + 0.5));
       const n = Math.max(0, Math.min(1, sw * 0.7 + noise1(along / 2.3, S + side * 101 + 7) * 0.2 + hash(along, side, S) * 0.1));
-      const top = gateNear(x, y) ? Math.max(1, hi * 0.5 + 0.5) : Math.round((lo + (hi - lo) * n) * 100) / 100;
+      // a wall's top is a height in the world, not above its own ground: on a scarp or a hill the hedge stands on the
+      // highest ground under its cell (Codex review, PR #153)
+      const g = groundUnder(m, x, y);
+      const top = Math.round((g + (gateNear(x, y) ? Math.max(1, hi * 0.5 + 0.5) : lo + (hi - lo) * n)) * 100) / 100;
       const mine = { tex, top, edge107: true };
       list.push([i, c, mine]);
     }
