@@ -131,10 +131,10 @@ const HANDS109S = (() => {
   // ---------------------------------------------------------------- the hand (a right hand in its own frame: wrist at the
   // origin, +y towards the fingers, +z the back of the hand, +x the little finger's side; a left hand is its mirror)
   const FING = [ // MCP position, segment lengths, radii (proximal..tip), width/depth
-    { at: [-2.75, 8.7, -0.1], L: [4.1, 2.6, 2.05], r: [1.0, 0.92, 0.84, 0.74] },
-    { at: [-0.9, 9.1, 0.0], L: [4.5, 2.95, 2.15], r: [1.04, 0.95, 0.86, 0.76] },
-    { at: [0.95, 8.75, -0.05], L: [4.2, 2.75, 2.05], r: [0.98, 0.9, 0.82, 0.72] },
-    { at: [2.7, 7.95, -0.2], L: [3.4, 2.05, 1.85], r: [0.86, 0.79, 0.72, 0.64] },
+    { at: [-2.75, 8.7, -0.1], L: [4.1, 2.6, 2.05], r: [0.94, 0.86, 0.78, 0.69] },
+    { at: [-0.9, 9.1, 0.0], L: [4.5, 2.95, 2.15], r: [0.97, 0.89, 0.8, 0.71] },
+    { at: [0.95, 8.75, -0.05], L: [4.2, 2.75, 2.05], r: [0.92, 0.84, 0.76, 0.67] },
+    { at: [2.7, 7.95, -0.2], L: [3.4, 2.05, 1.85], r: [0.81, 0.74, 0.67, 0.6] },
   ];
   // a pose: per finger [MCP, PIP, DIP flexion, splay] in degrees; the thumb: its metacarpal's direction and its nail's
   // facing (hand-local), then its MCP and IP flexion
@@ -204,7 +204,8 @@ const HANDS109S = (() => {
           if (mat === 'leather') { const a = Math.min(Math.abs(phi), Math.abs(phi - Math.PI), Math.abs(phi - 2 * Math.PI)); seam = a * rho; }
           const cb = Math.exp(-Math.pow(y / 0.55, 2)), ct = Math.exp(-Math.pow((y - L) / 0.5, 2));
           const crease = (cb * (s === 1 ? 1 : s === 2 ? 0.5 : 0) + ct * (s === 0 ? 1 : s === 1 ? 0.5 : 0)) * dors;
-          return [clamp(knk, 0, 1), seam, along, crease];
+          const tipR = s === 2 ? 0.35 * clamp((y - L * 0.4) / (L * 0.6), 0, 1) : 0;
+          return [clamp(knk + tipR, 0, 1), seam, along, crease];
         };
         const mod = (y) => 1 + 0.09 * Math.exp(-Math.pow(y / 0.55, 2)) * (s > 0 ? 1 : 0.4) + 0.06 * Math.exp(-Math.pow((y - L) / 0.55, 2));
         capsule(sc, handMat, W2(lf), lf, L, r0, r1, { sx: s === 0 ? 1.12 : 1.06, sz: 0.94, nu: res.nu, nv: res.nv, mod, ex, pad: s === 2 ? (y) => 0.22 * Math.exp(-Math.pow((y - L * 0.55) / (L * 0.45), 2)) : null });
@@ -307,7 +308,7 @@ const HANDS109S = (() => {
     }
     // the glove's flared cuff
     if (mat === 'leather' || mat === 'mail') {
-      const part = sc.part++, s1 = 5.6;
+      const part = sc.part++, s1 = 5.0;
       grid(sc, 'leather', part, af, afl, 34, 22, (u, v) => {
         const ph = u * Math.PI * 2;
         // profile: inside lip -> rim -> outside down to the wrist
@@ -325,7 +326,7 @@ const HANDS109S = (() => {
     }
     // the wool sleeve: folds from hashed noise, a rolled hem
     if (h.sleeve) {
-      const part = sc.part++, s0 = mat === 'bare' ? 4.6 : 4.7, s1 = FL + 2;
+      const part = sc.part++, s0 = mat === 'bare' ? 2.6 : 4.1, s1 = FL + 2;
       const fold = (ph, s) => {
         const c = Math.cos(ph), sn = Math.sin(ph);
         return 0.75 * (fbm(c * 1.3 + 11, sn * 1.3 + 4, s * 0.16) - 0.5) + 0.35 * Math.sin(s * 0.55 + 2.4 * vn3(c * 1.5, sn * 1.5, s * 0.05 + 3)) * clamp((s - s0 - 3) / 6, 0, 1)
@@ -411,7 +412,7 @@ const HANDS109S = (() => {
           const c = (dx * n[0] + dy * n[1] + dz * n[2]) / d; if (c <= 0) continue;
           occ += c * r2 / d2;
         }
-        v[o + 11] = clamp(1 - occ * 0.55, 0.22, 1);
+        v[o + 11] = clamp(1 - occ * 0.75, 0.18, 1);
       }
     }
   }
@@ -522,14 +523,14 @@ float rimf(vec3 N, vec3 V){ float f = 1.0 - max(dot(N,V),0.0); return f*f*f * (0
   float h = vnoise(v_loc*5.0)*0.006 + vnoise(v_loc*23.0)*0.0022;
   float cr = v_ex.w * pow(abs(sin(v_uv.y*9.0 + vnoise(v_loc*3.0)*2.0)), 10.0); h -= cr*0.06;
   N = bump(N, v_pos, h);
-  vec3 alb = u_base * mix(vec3(1.0), vec3(1.16,0.72,0.66), clamp(v_ex.x,0.0,1.0)*0.7) * (0.93 + 0.14*vnoise(v_loc*1.3)) * (1.0 - cr*0.25);
+  vec3 alb = pow(u_base, vec3(1.15)) * mix(vec3(1.0), vec3(1.2,0.7,0.64), clamp(v_ex.x,0.0,1.0)*0.75) * (0.9 + 0.2*vnoise(v_loc*1.3)) * (1.0 - cr*0.3);
   float ndl = dot(N,L); vec3 w = vec3(0.5,0.3,0.24);
   vec3 dif = clamp((vec3(ndl)+w)/(1.0+w), 0.0, 1.0); dif *= dif;
   vec3 shc = mix(vec3(sh), vec3(1.0), vec3(0.18,0.06,0.03)*(1.0-sh));
   vec3 Hh = normalize(L+V); float spec = pow(max(dot(N,Hh),0.0), 22.0) * 0.18 * (0.3+0.7*sh);
   float fr = pow(1.0 - max(dot(N,V),0.0), 4.0);
   vec3 Lt, Ls; vec3 tor = pl(N, u_torchPos, u_torch, 30.0, 0.4, Lt); vec3 sng = pl(N, u_songPos, u_song, 13.0, 0.35, Ls);
-  vec3 col = alb * (u_key*dif*shc + hemi(N)*ao + tor*ao + sng) + u_key*spec*sh + (u_key*sh*0.06 + u_amb*0.12)*fr*ao
+  vec3 col = alb * (u_key*dif*shc + hemi(N)*ao*0.85 + tor*ao + sng) + u_key*spec*sh + (u_key*sh*0.06 + u_amb*0.12)*fr*ao
            + alb*u_rim*rimf(N,V)*1.4 + u_torch*pow(max(dot(N,normalize(Lt+V)),0.0),22.0)*0.1;
   gl_FragColor = vec4(tonemap(col), 1.0); }`,
     nail: `void main(){ vec3 N = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
@@ -650,7 +651,7 @@ void main(){ vec3 N0 = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   vec4 bc = vec4(1.0 - a.x, a.x - a.y, a.y - a.z, a.z);
   float m = min(min(bc.x, bc.y), min(bc.z, bc.w));
   float wv = fwidth(m);
-  float seam = 1.0 - smoothstep(wv*0.6, wv*1.8, m);
+  float seam = 1.0 - smoothstep(wv*0.9, wv*2.3, m);
   vec3 cid = ip + vec3(pm*0.137, pm*0.291, pm*0.073);
   // which face is nearest decides the neighbour; a few edges are bright
   float face = m == bc.x ? 0.0 : m == bc.y ? 1.0 : m == bc.z ? 2.0 : 3.0;
@@ -661,9 +662,9 @@ void main(){ vec3 N0 = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   float ndv = max(dot(N0,V), 0.0), ndl = dot(N,L);
   vec3 Hh = normalize(L+V), R = reflect(-V,N);
   float F = 0.04 + 0.96*pow(1.0 - max(dot(N,V),0.0), 5.0);
-  vec3 deep = u_base * (0.35 + 1.05*fh);
+  vec3 deep = u_base * (0.2 + 1.3*fh*fh);
   vec3 Lt, Ls; vec3 tor = pl(N, u_torchPos, u_torch, 30.0, 0.0, Lt); vec3 sng = pl(N, u_songPos, u_song, 13.0, 0.3, Ls);
-  vec3 body = deep*(u_key*(0.12 + 0.88*max(ndl,0.0))*(0.45+0.55*sh) + hemi(N)*1.0*ao + tor*1.1 + sng*1.6)
+  vec3 body = deep*(u_key*(0.08 + 1.1*max(ndl,0.0))*(0.45+0.55*sh) + hemi(N)*0.8*ao + tor*1.1 + sng*1.6)
             + u_alt*0.25*u_lvl*(0.35 + 0.65*(1.0-ndv));
   vec3 refl = env(R)*u_alt*0.9*F;
   float gl = pow(max(dot(N,Hh),0.0), 300.0)*7.0;
