@@ -95,9 +95,9 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
       await p2.goto(URL + '/?nosw=1', { timeout: 600000, waitUntil: 'domcontentloaded' });
       await p2.waitForFunction(() => typeof Engine !== 'undefined' && typeof SHARP107 !== 'undefined' && G.state === 'title', null, { timeout: 600000, polling: 500 });
       await p2.waitForTimeout(1500);
-      const r = await p2.evaluate(() => ({ preset: GFX.preset, current: PRESETS.current(), sharp: GFX.sharpSprites, cover: GFX.groundCover }));
+      const r = await p2.evaluate(() => ({ preset: GFX.preset, current: PRESETS.current(), sharp: GFX.sharpSprites, cover: GFX.groundCover, edges: GFX.edges107 }));
       await p2.close();
-      assert.ok(r.preset === 'original' && r.current === 'original' && r.sharp === false && r.cover === false, JSON.stringify(r));
+      assert.ok(r.preset === 'original' && r.current === 'original' && r.sharp === false && r.cover === false && r.edges === false, JSON.stringify(r));
     });
     await step('no page errors', async () => { assert.deepStrictEqual(errors, []); });
   } finally {

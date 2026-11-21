@@ -1,4 +1,4 @@
-# Phase 107: the best look everywhere (part one)
+# Phase 107: the best look everywhere
 
 The owner, 20 November 2026: "change the ceilings so things feel different. lets change the bare beech trunks so it looks like a plain grey trees. with no bark. make the rifts far walls shimmer again. Change some of the edges so that it looks more natural of a barrier. fix all old sprites including the enemies. Whatever is technically the best visuals should be the benchmark everywhere proceed". Then, mid-phase: "commit and merge everything so far".
 
@@ -29,7 +29,20 @@ A timber room not in the list gets limewash, joists or beams by its name (hashed
 
 **A returning player's Original stays Original** (Codex review of PR #152). Switches made by files that load after the game has applied a returning player's saved preset used to start plainly on: a player who chose Original came back to sun shadows, clouds, ground cover and (new) sharp figures, and the menu called it Custom. They now start as the preset in force wants (`PRESETS.startValue`): Phase 21's shadows and clouds, Phase 105's ground cover and the sharp figures. Test: `test/sharp107.test.js` boots as a returning Original player.
 
-## Part two (next)
+## Part two
 
-- The Hanger's beech trunks: a plain smooth grey tree with no bark (root flare, branch scars), as the owner asked.
-- Natural edges: some of the rock walls that ring every open map's horizon become tree lines, hedge banks and broken cliff.
+**The beeches** (`js/sheepwalk22.js`, the Hanger's wool-tree in `js/hanger22.js`). The owner: "change the bare beech trunks so it looks like a plain grey trees. with no bark". The trunk was one flat grey strip and stood in the 3D view like a square pillar. Now it is a round, smooth grey trunk with no bark: lit on the left and shadowed on the right with a hard dark edge, a root flare spreading into roots that grip the ground, two limbs forking up into the crown, a little green on the shaded side, and the dark "eyes" a beech keeps where old branches fell. The game's own line already says it: "A beech, smooth and grey as a seal". The wool-tree is the same beech, a shade darker under its wool.
+
+**Natural edges** (`js/edges107.js`, Options row "Natural edges", `GFX.edges107`). The owner: "Change some of the edges so that it looks more natural of a barrier". Most open places ended in a tall, level, stone-grey wall all round the horizon. That wall is the tile of **the Hedge**, which in the books is Oakhaven's own: "The Hedge was grey", "three men deep of thorn and packed wool" (the game's own inspect line), "planted to swallow sound". Places far from Oakhaven had borrowed it as a plain border, and inspecting it there said "The Hedge". So:
+
+| Kept exactly as it is (the grey wall there is the Hedge) | Changed |
+| --- | --- |
+| Oakhaven, Outside the Hedge, Greenroot, the Flume Road and its landings, the orchards, the queue-yard | the Watch Downs, Wethercombe, the water-meadow, the Stride, the Pound Stair, the Grey Wethers, the Hundred Hollows, the Sunk Lanes and Cross Pool: a field hedgerow (thorn and hazel, haws, old man's beard); the Deep Grove: the wood's edge (holly and hazel under the trees) |
+
+The hedgerow's height rises and falls along each side, from chest height to a little over head height (the wood's edge from 1.4 to 2.8, the height of trees), so the skyline is uneven and the downs beyond show over the low stretches. Beside a gate it keeps full height for the gate posts. Heights come from hashed smooth noise: the same every time. Nothing you could not walk through becomes walkable. Inspecting it says "A hedgerow: thorn and hazel, haws, and old man's beard over all. Too thick to push through." or "The edge of the wood: holly and hazel under the trees, too thick to push through." [PROPOSED: the wording and which places changed]. Off in Original, on in every other preset. Test: `test/edges107.test.js` (also checks the beech's round shading and root flare).
+
+Picture: `screenshots/p107-beeches-edges.jpg` (before on the left, after on the right).
+
+## Verification
+- New: `test/sharp107.test.js` (6), `test/edges107.test.js` (6). Taught: `test/surfaces.test.js` (eight ceilings).
+- Also passing: sprites21, creatures, body21, folk20, horizon20, presets, max20, cover105, story-i18n, pwa18, light21 (part one); and the suites listed in the pull request for part two.
