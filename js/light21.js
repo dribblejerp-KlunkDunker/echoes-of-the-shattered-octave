@@ -58,7 +58,7 @@
 'use strict';
 
 for (const k of ['p21_shadows', 'p21_clouds']) {
-  if (typeof GFX !== 'undefined') { if (GFX[k] === undefined) GFX[k] = true; if (GFX.FX && !GFX.FX.includes(k)) GFX.FX.push(k); }
+  if (typeof GFX !== 'undefined') { if (GFX[k] === undefined) GFX[k] = (typeof PRESETS !== 'undefined' && PRESETS.startValue) ? PRESETS.startValue(k) : true; if (GFX.FX && !GFX.FX.includes(k)) GFX.FX.push(k); }
 }
 
 const LIGHT21 = (() => {

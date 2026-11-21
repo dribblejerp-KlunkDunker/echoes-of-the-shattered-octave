@@ -88,6 +88,17 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
       assert.ok(!r.missing && r.off === false && r.on === true, JSON.stringify(r));
       assert.ok(r.pre.original === false && ['low', 'medium', 'high', 'ultra', 'cinematic'].every(p => r.pre[p] === true), JSON.stringify(r));
     });
+    await step('a returning player who chose Original starts with it off (and the ground cover off), and stays Original', async () => {
+      const p2 = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+      p2.on('pageerror', (e) => errors.push('pageerror (Original): ' + e.message));
+      await p2.addInitScript(() => { window.__max20 = { automation: true, fake: { hwgl2: true, cores: 8, mobile: false, memory: 8 } }; try { localStorage.setItem('octave.max20.v1', JSON.stringify({ v: 1, user: 'original', base: 'original' })); } catch (e) { /* none */ } });
+      await p2.goto(URL + '/?nosw=1', { timeout: 600000, waitUntil: 'domcontentloaded' });
+      await p2.waitForFunction(() => typeof Engine !== 'undefined' && typeof SHARP107 !== 'undefined' && G.state === 'title', null, { timeout: 600000, polling: 500 });
+      await p2.waitForTimeout(1500);
+      const r = await p2.evaluate(() => ({ preset: GFX.preset, current: PRESETS.current(), sharp: GFX.sharpSprites, cover: GFX.groundCover }));
+      await p2.close();
+      assert.ok(r.preset === 'original' && r.current === 'original' && r.sharp === false && r.cover === false, JSON.stringify(r));
+    });
     await step('no page errors', async () => { assert.deepStrictEqual(errors, []); });
   } finally {
     await browser.close();

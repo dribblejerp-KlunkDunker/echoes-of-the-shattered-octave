@@ -27,6 +27,8 @@ A timber room not in the list gets limewash, joists or beams by its name (hashed
 
 **The Rift's far walls shimmer** (owner ruling, 20 Nov). Phase 106 asked whether the classic view's moiré on the Rift's far walls should be calmed. The owner wants it to shimmer: left as it is.
 
+**A returning player's Original stays Original** (Codex review of PR #152). Switches made by files that load after the game has applied a returning player's saved preset used to start plainly on: a player who chose Original came back to sun shadows, clouds, ground cover and (new) sharp figures, and the menu called it Custom. They now start as the preset in force wants (`PRESETS.startValue`): Phase 21's shadows and clouds, Phase 105's ground cover and the sharp figures. Test: `test/sharp107.test.js` boots as a returning Original player.
+
 ## Part two (next)
 
 - The Hanger's beech trunks: a plain smooth grey tree with no bark (root flare, branch scars), as the owner asked.

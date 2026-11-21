@@ -27,7 +27,8 @@
 const SHARP107 = (() => {
   const FLAG = 'sharpSprites', NEAR = 4.5, BUDGET = 3, MAXPX = 320 * 320;
   if (typeof GFX !== 'undefined') {
-    if (GFX[FLAG] === undefined) GFX[FLAG] = true;
+    // a returning player's preset was applied before this file loaded (js/max20.js): start as that preset wants
+    if (GFX[FLAG] === undefined) GFX[FLAG] = (typeof PRESETS !== 'undefined' && PRESETS.startValue ? PRESETS.startValue(FLAG) : true);
     if (GFX.FX && !GFX.FX.includes(FLAG)) GFX.FX.push(FLAG);
   }
   const warned = {};

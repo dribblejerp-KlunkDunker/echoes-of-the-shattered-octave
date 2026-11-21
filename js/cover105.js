@@ -20,7 +20,8 @@
 const COVER105 = (() => {
   const FLAG = 'groundCover';
   if (typeof GFX !== 'undefined') {
-    if (GFX[FLAG] === undefined) GFX[FLAG] = true;
+    // a returning player's preset was applied before this file loaded (js/max20.js): start as that preset wants
+    if (GFX[FLAG] === undefined) GFX[FLAG] = (typeof PRESETS !== 'undefined' && PRESETS.startValue ? PRESETS.startValue(FLAG) : true);
     if (GFX.FX && !GFX.FX.includes(FLAG)) GFX.FX.push(FLAG);
   }
   const warned = {};
