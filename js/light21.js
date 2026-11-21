@@ -625,6 +625,7 @@ uniform vec4 uL21PanoK[16]; uniform int uL21PanoN; uniform vec4 uL21PanoAir; uni
 uniform vec4 uL21Ecl;   // js/synod15.js's eclipse: x cover 0..1, y side (-1/+1), z shimmer clock
 uniform vec4 uL21Ship; uniform sampler2D uL21ShipT; uniform vec2 uL21ShipS;   // the Drift-Kestrel: az, tan(el), alpha, flip; art size
 uniform vec4 uL21Cl; uniform vec4 uL21Sky2; uniform vec3 uL21Aur[3]; uniform vec2 uL21Size; uniform int uL21LmOn;
+uniform vec3 uL21GroundTint;   // (Phase 106) the hue of the map's ground (R3D.groundTint)
 in vec2 vNdc;
 layout(location=0) out vec4 oSky;
 float h21(vec2 p) { p = fract(p * vec2(443.897, 441.423)); p += dot(p, p.yx + 19.19); return fract((p.x + p.y) * p.x); }
@@ -780,6 +781,9 @@ void main() {
   } else if (uL21LmOn == 1 && te >= 0.0) {
     vec4 lm = r3dLandmarks(az, te); if (lm.a > 0.5) { c = lm.rgb; glowFlag = 0.0; }
   }
+  // (Phase 106) below the horizon, where no ground was drawn (past the edge of a hilly map), the ground goes on in its
+  // own colour under the same light and fades into the haze with distance, instead of a flat pale void
+  if (te < 0.0) { float gd = uEye.z / max(1e-4, -te); float gf = clamp(1.0 - gd * uFog.w, 0.0, 1.0); c = mix(c, c * uL21GroundTint * 0.8, gf); glowFlag = 0.0; }
   oSky = vec4(max(c, vec3(0.0)), glowFlag);
 }`;
   // the low-resolution sky laid into the scene target, nearest; the material is sky, the alpha is the glow flag
@@ -1128,6 +1132,7 @@ void main() {
         if (u.uL21Aur) gl.uniform3fv(u.uL21Aur, new Float32Array([].concat(P.aur[0], P.aur[1], P.aur[2])));
         if (u.uL21Size) gl.uniform2f(u.uL21Size, sw, sh);
         if (u.uL21LmOn) gl.uniform1i(u.uL21LmOn, !P.panoOn ? 1 : 0);
+        if (u.uL21GroundTint) { const t = R3D.groundTint ? R3D.groundTint(F.map) : [1, 1, 1]; gl.uniform3f(u.uL21GroundTint, t[0], t[1], t[2]); }
         tri(gl);
       }
       R3D.bindScene(gl, F);
