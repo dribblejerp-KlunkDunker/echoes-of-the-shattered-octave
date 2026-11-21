@@ -1,5 +1,5 @@
 // PLAYWRIGHT_MODULE=/path/to/playwright PREVIEW_URL=http://127.0.0.1:4182 node test/hands109p.test.js
-// Covers js/hands109p.js (Phase 109, option P "Painted": the first-person hands and arms painted in code, for the owner's
+// Covers tools/hands109/hands109p.js (Phase 109, option P "Painted": the first-person hands and arms painted in code, for the owner's
 // ruling; the game does not use it yet).
 //   - every pose gives a 1152 x 500 canvas, clear where there is no hand or arm
 //   - where the hands are: the fist and the sword on the right, the raised glass arm on the left, the Song on both sides;
@@ -25,7 +25,7 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
   page.on('console', (m) => { if (m.type() === 'error' || (m.type() === 'warning' && /hands109/i.test(m.text()))) errors.push('console: ' + m.text()); });
   await page.goto(URL + '/?nosw=1', { timeout: 600000, waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => typeof G !== 'undefined' && G.state === 'title', null, { timeout: 600000, polling: 500 });
-  await page.addScriptTag({ path: 'js/hands109p.js' });
+  await page.addScriptTag({ path: 'tools/hands109/hands109p.js' });
   await page.evaluate(() => {
     window.LOOK = (pose, hands) => ({ hands: hands || (pose === 'fist' ? 'bare' : 'leather'), skin: [214, 170, 136], sleeve: [92, 78, 62], glassArm: pose !== 'fist', song: pose === 'song' ? [226, 196, 64] : null });
     window.DAY = { key: [255, 244, 226], dir: [-0.45, 0.7, 0.55], amb: [120, 132, 150], torch: null };

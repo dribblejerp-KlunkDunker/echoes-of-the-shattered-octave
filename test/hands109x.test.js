@@ -1,5 +1,5 @@
 // PLAYWRIGHT_MODULE=/path/to/playwright PREVIEW_URL=http://127.0.0.1:4183 node test/hands109x.test.js
-// Covers js/hands109x.js (Phase 109, option X: the hands and arms in pixel art). Not used by the game yet.
+// Covers tools/hands109/hands109x.js (Phase 109, option X: the hands and arms in pixel art). Not used by the game yet.
 //   - each pose gives a 1152 x 500 canvas, transparent where there is no hand
 //   - where the hands are: fist and sword mostly right of centre, glass mostly left, song on both sides; the sword has
 //     bright blade pixels above the hand toward the upper left
@@ -25,7 +25,7 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
   page.on('console', (m) => { if (m.type() === 'error' && /hands109/i.test(m.text())) errors.push('console: ' + m.text()); });
   await page.goto(URL + '/?nosw=1', { timeout: 600000, waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => typeof G !== 'undefined' && G.state === 'title', null, { timeout: 600000, polling: 500 });
-  await page.addScriptTag({ path: 'js/hands109x.js' });
+  await page.addScriptTag({ path: 'tools/hands109/hands109x.js' });
   await page.evaluate(() => {
     window.LOOK = (pose, hands) => ({
       hands: hands || (pose === 'fist' ? 'bare' : 'leather'), skin: [214, 170, 136], sleeve: [92, 78, 62],

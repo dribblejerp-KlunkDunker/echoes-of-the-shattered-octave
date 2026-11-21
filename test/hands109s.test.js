@@ -1,5 +1,5 @@
 // PLAYWRIGHT_MODULE=/path/to/playwright PREVIEW_URL=http://127.0.0.1:4181 node test/hands109s.test.js
-// Covers js/hands109s.js (Phase 109, option S for the first-person hands and arms: "Sculpted, lit by the world").
+// Covers tools/hands109/hands109s.js (Phase 109, option S for the first-person hands and arms: "Sculpted, lit by the world").
 //   - each pose gives a 1152 x 500 canvas, transparent where there is no hand
 //   - where the hands are: fist and sword mostly right of the middle, glass mostly left, song on both sides; the sword's
 //     bright blade rises above the hand, a little to its left
@@ -26,7 +26,7 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
   page.on('console', (m) => { if (m.type() === 'error' || (m.type() === 'warning' && /hands109s/.test(m.text()))) errors.push('console: ' + m.text()); });
   await page.goto(URL + '/?nosw=1', { timeout: 600000, waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && typeof G !== 'undefined' && G.state === 'title', null, { timeout: 600000, polling: 500 });
-  await page.addScriptTag({ path: 'js/hands109s.js' });
+  await page.addScriptTag({ path: 'tools/hands109/hands109s.js' });
   await page.evaluate(() => {
     window.T109 = {
       LOOKS: {

@@ -10,7 +10,7 @@ Pictures:
 
 ## The three options
 
-### 1. Sculpted, lit by the world (`js/hands109s.js`)
+### 1. Sculpted, lit by the world (`tools/hands109/hands109s.js`)
 Real 3D hands and arms built in code (palm, three-jointed fingers, thumb, wrist, forearm, cuff, sleeve) and drawn by their own small 3D renderer.
 - **Good:**
   - It is the only option the world lights: by day the sun, at night a lamp warms the hands and the glass catches it.
@@ -21,7 +21,7 @@ Real 3D hands and arms built in code (palm, three-jointed fingers, thumb, wrist,
 - **Cost:** about 150 ms to draw one pose on the build machine's software graphics (far less on a real graphics card).
 - **To put in the game:** a grip for each weapon, the swings and the climb as moving joints, the game's light fed in each frame. About two to three phases.
 
-### 2. Painted (`js/hands109p.js`)
+### 2. Painted (`tools/hands109/hands109p.js`)
 The same kind of posed forms, painted pixel by pixel in code: light, half-tone and shadow, light thrown back from the street, rim light, then brush strokes along the forms.
 - **Good:** the most lifelike skin of the three; the fists and the grip read at a glance; the glass is the approved planes.
 - **Weak:**
@@ -30,7 +30,7 @@ The same kind of posed forms, painted pixel by pixel in code: light, half-tone a
   - It does not change at night.
 - **To put in the game:** a grip for each weapon; every swing, the Song and the climb painted ahead as frames.
 
-### 3. Pixel art (`js/hands109x.js`)
+### 3. Pixel art (`tools/hands109/hands109x.js`)
 The same kind of model, drawn at a third of the size in crisp pixel art (small colour ramps, outlines on the shadow side, a little dithering on the sleeve) and scaled up.
 - **Good:**
   - It sits naturally in the game's pixel look and matches the walls and the people.

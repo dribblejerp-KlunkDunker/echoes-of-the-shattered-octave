@@ -1,7 +1,7 @@
 // Phase 109: the review sheet for the hands-and-arms options.
 //
 //   PREVIEW_URL=http://127.0.0.1:4176 PLAYWRIGHT_MODULE=/opt/npm-tools/node_modules/playwright \
-//     tools/dev/browser.sh node tools/dev/hands109.js OUTDIR [js/hands109s.js js/hands109p.js js/hands109x.js]
+//     tools/dev/browser.sh node tools/dev/hands109.js OUTDIR [tools/hands109/hands109s.js tools/hands109/hands109p.js tools/hands109/hands109x.js]
 //
 // Writes, in OUTDIR:
 //   bg-day.png, bg-night.png      the 3D view in Oakhaven's street (by day; at night with the lamps lit), no HUD at all
@@ -9,7 +9,7 @@
 //   <name>-<pose>[-night].png     each option module's picture over the same frame (name: the module's file name)
 //   times.json                    how long each render took (ms)
 //
-// An option module defines one global named after its file in capitals (js/hands109s.js -> HANDS109S) with
+// An option module defines one global named after its file in capitals (tools/hands109/hands109s.js -> HANDS109S) with
 //   render(pose, look, light) -> a 1152 x 500 canvas (the 3D view's own size in the review window), transparent where
 //                                 there is no hand or arm; the harness lays it over the view at (64, 41)
 //   pose:  'sword' | 'fist' | 'glass' | 'song'
