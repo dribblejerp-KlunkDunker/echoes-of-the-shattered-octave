@@ -594,7 +594,8 @@ void main() {
       const floor = groundAt(e.x, e.y);
       const z0 = floor - ((e.yOff || 0) - (e.animLift || 0)) - (sp.dy || 0) * unit * hs;
       if (offscreen(e.x, e.y, z0, z0 + wH, wW + Math.abs(e.animSkew || 0) * wH)) { st.culled++; continue; }
-      const en = entryFor(sp); if (!en) continue;
+      // (Phase 107) close to the eye, the picture's sharp enlargement (js/sharp107.js): same size, four times the pixels
+      const en = entryFor(typeof SHARP107 !== 'undefined' ? SHARP107.pick(sp, d2) : sp); if (!en) continue;
       const d = Math.sqrt(d2);
       let f = lightF(d);
       if (e.glow) f = Math.max(f, e.glow);

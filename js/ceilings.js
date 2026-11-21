@@ -9,7 +9,9 @@
 //  floor alone. GFX.ceilings switches it off (map.ceilCells = null gives back
 //  each map's original single ceiling texture).
 //
-//  Texture memory: 3 tiles x 64x64x4 B = 49,152 B (counted by DECALS.budgetBytes()).
+//  Phase 107: five more timber ceilings (limewash, joists, rafters, boards, smoke) chosen per room (TIMBER below).
+//
+//  Texture memory: 8 tiles x 64x64x4 B = 131,072 B (counted by DECALS.budgetBytes()).
 // ============================================================
 'use strict';
 
@@ -18,7 +20,7 @@ if (!GFX.FX.includes('ceilings')) GFX.FX.push('ceilings');
 
 const CEILINGS = (() => {
   const T = 64;
-  const textures = ['c_beams', 'c_vault', 'c_rock'];
+  const textures = ['c_beams', 'c_vault', 'c_rock', 'c_beams_lime', 'c_joists', 'c_rafters', 'c_boards', 'c_beams_smoke'];
   let generated = 0;
 
   const clamp8 = (v) => v < 0 ? 0 : v > 255 ? 255 : v | 0;
@@ -96,6 +98,99 @@ const CEILINGS = (() => {
       const [ax, ay] = cr[i], [bx, by] = cr[i + 1], n = Math.max(Math.abs(bx - ax), Math.abs(by - ay));
       for (let k = 0; k <= n; k++) { const x = Math.round(ax + (bx - ax) * k / n) & 63, y = Math.round(ay + (by - ay) * k / n) & 63; if (y < B0 - 1 || y > B1 + 1) d[y * T + x] = PL[1]; }
     }
+    return d;
+  }
+
+  // ---- Phase 107: five more timber ceilings, so houses are not all one room ------------------------------------
+  // The owner, 20 Nov: "change the ceilings so things feel different". Same rules as c_beams: fixed palettes, hard
+  // outlines, light from the room's lamps (upper left), no dither (ceilings are seen at grazing angles), hashed detail.
+  const OAKP = () => pal('#24160c', '#3a2414', '#4f321b', '#634024', '#76502e', '#8c623a');
+  // a beam across the tile, rows y0..y1: lit top arris, dark underside, outline, grain streaks
+  function beamRows(d, y0, y1, P, seed, grain) {
+    for (let y = y0; y <= y1; y++) for (let x = 0; x < T; x++) {
+      const k = 1 - (y - y0) / Math.max(1, y1 - y0);
+      let c = band(P, 0.3 + 0.4 * k);
+      if (y === y0 || y === y1) c = P[0]; else if (y === y0 + 1) c = P[5]; else if (y === y1 - 1) c = P[1];
+      d[y * T + x] = c;
+    }
+    for (let i = 0; i < grain; i++) { const row = y0 + 2 + Math.floor(hash(i, 1, seed) * Math.max(1, y1 - y0 - 3)), x0 = Math.floor(hash(i, 2, seed) * T), len = 6 + Math.floor(hash(i, 3, seed) * 20); for (let k = 0; k < len; k++) d[row * T + ((x0 + k) & 63)] = P[2]; }
+  }
+  // c_beams_lime: the better house. A narrower chamfered beam, fresh limewash between, no soot, no cracks.
+  function paintLime() {
+    const d = new Uint32Array(T * T);
+    const LM = pal('#9a8f7e', '#b5ab98', '#c9c0ad', '#d8d0bf', '#e4ddce', '#eee8dc');
+    const OAK = OAKP();
+    for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {
+      const dist = y < 26 ? 26 - y : y - 37, shade = Math.max(0, 1 - dist / 7);
+      d[y * T + x] = band(LM, 0.86 - shade * 0.35 + (tfbm(x, y, 4, 71) - 0.5) * 0.1);
+      if (dist === 1) d[y * T + x] = LM[1];
+    }
+    beamRows(d, 26, 37, OAK, 72, 9);
+    for (let x = 0; x < T; x++) { d[27 * T + x] = OAK[5]; d[36 * T + x] = OAK[1]; }        // the chamfers
+    for (const [x, y] of [[16, 31], [48, 31]]) { d[y * T + x] = OAK[0]; d[y * T + x + 1] = OAK[4]; }   // oak pegs
+    return d;
+  }
+  // c_joists: an ordinary house's ground floor: close joists, and the floorboards of the room above between them.
+  function paintJoists() {
+    const d = new Uint32Array(T * T);
+    const BD = pal('#2e2016', '#3e2c1e', '#4e3826', '#5e4630', '#6e543a', '#7e6246');   // the boards above, in shadow
+    const OAK = OAKP();
+    for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {
+      const seam = (x % 16) === 0, b = Math.floor(x / 16);
+      let c = band(BD, 0.45 + (hash(b, y >> 4, 81) - 0.5) * 0.3 + (tfbm(x * 4, y, 3, 82) - 0.5) * 0.15);
+      if (seam) c = BD[0];
+      d[y * T + x] = c;
+    }
+    for (let k = 0; k < 6; k++) { const x = 4 + Math.floor(hash(k, 0, 83) * 56), y = Math.floor(hash(k, 1, 83) * 64); d[y * T + x] = BD[0]; }   // nail heads
+    beamRows(d, 8, 17, OAK, 84, 5); beamRows(d, 40, 49, OAK, 85, 5);
+    return d;
+  }
+  // c_rafters: a mill, a malting, a barn, a workshop: open rafters running across, and the underside of the thatch.
+  function paintRafters() {
+    const d = new Uint32Array(T * T);
+    const TH = pal('#3a2e1a', '#4e3e22', '#62502c', '#766236', '#8a7442', '#9e874e');   // straw, old and dusty
+    const RF = pal('#1e140c', '#2e2014', '#3e2c1c', '#4e3824', '#5e442c', '#6e5236');
+    for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {
+      // straw in bundles: short strokes along y, hashed per 3-pixel column and 8-pixel band
+      const col = Math.floor(x / 3), band8 = Math.floor((y + col * 3) / 8), t = hash(col, band8, 91);
+      let c = band(TH, 0.25 + t * 0.55 + ((y + col * 3) % 8 === 0 ? -0.25 : 0));
+      d[y * T + x] = c;
+    }
+    // two rafters (rows 6..12 and 38..44) and a purlin running the other way (cols 28..33)
+    beamRows(d, 6, 12, RF, 92, 3); beamRows(d, 38, 44, RF, 93, 3);
+    for (let y = 0; y < T; y++) for (let x = 28; x <= 33; x++) {
+      if ((y >= 6 && y <= 12) || (y >= 38 && y <= 44)) continue;
+      const k = 1 - (x - 28) / 5; d[y * T + x] = x === 28 || x === 33 ? RF[0] : x === 29 ? RF[5] : band(RF, 0.3 + 0.35 * k);
+    }
+    // cobweb in a corner where purlin meets rafter
+    for (let i = 0; i < 6; i++) d[(13 + i) * T + 34 + i] = hex('#9a9488'); for (let i = 0; i < 4; i++) d[(13 + i) * T + 34] = hex('#8a8478');
+    return d;
+  }
+  // c_boards: a boarded ceiling (a library, an office, a ship's deckhead): long planks with tight seams.
+  function paintBoards() {
+    const d = new Uint32Array(T * T);
+    const PB = pal('#3a2616', '#4c321c', '#5e3e24', '#704c2c', '#825a34', '#94683e');
+    for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {
+      const row = Math.floor(y / 8), off = Math.floor(hash(row, 0, 101) * 64), ex = (x + off) & 63;
+      const tone = 0.42 + (hash(row, Math.floor(ex / 32), 102) - 0.5) * 0.3 + (tfbm(x * 3, y, 4, 103) - 0.5) * 0.12;
+      let c = band(PB, tone);
+      if (y % 8 === 0) c = PB[0]; else if (y % 8 === 1) c = PB[4]; else if (ex % 32 === 0) c = PB[1];
+      d[y * T + x] = c;
+    }
+    for (let row = 0; row < 8; row++) for (const ex of [4, 28, 36, 60]) { const x = (ex - Math.floor(hash(row, 0, 101) * 64) + 128) & 63, y = row * 8 + 4; d[y * T + x] = hex('#1c1410'); }   // nails
+    return d;
+  }
+  // c_beams_smoke: a bakery, a smithy, a tannery: the same beam over plaster gone brown-black with years of smoke.
+  function paintSmoke() {
+    const d = new Uint32Array(T * T);
+    const SM = pal('#1e1a16', '#2c2620', '#3a322a', '#4a4034', '#5a4e40', '#6a5c4c');
+    const OAK = pal('#120c08', '#1e140c', '#2a1c12', '#362418', '#422e1e', '#503826');
+    for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {
+      const dist = y < 22 ? 22 - y : y - 41, clean = Math.min(1, dist / 20);
+      d[y * T + x] = band(SM, 0.2 + clean * 0.5 + (tfbm(x, y, 5, 111) - 0.5) * 0.3);
+    }
+    beamRows(d, 22, 41, OAK, 112, 8);
+    for (let i = 0; i < 5; i++) { const x = Math.floor(hash(i, 0, 113) * 64); for (let k = 0; k < 4; k++) d[(42 + k) * T + ((x + (k & 1)) & 63)] = SM[0]; }   // tar runs
     return d;
   }
 
@@ -192,13 +287,23 @@ const CEILINGS = (() => {
 
   // ---- assignment ------------------------------------------------------------
   const VAULT_MAPS = { cloister: 1, chapel: 1 };          // painted vaults
+  // (Phase 107) which timber ceiling each timber room has; a room not named here gets one of HOUSES by its name
+  const TIMBER = {
+    tavern: 'c_beams', p22_bellwether: 'c_beams',                                        // the inns keep their sooty beams
+    lyra_house: 'c_beams_lime', greenhall: 'c_beams_lime', cantabile_office: 'c_beams_lime', cantabile_widow: 'c_beams_lime', p46_house: 'c_beams_lime', p46_room: 'c_beams_lime',
+    cooper_house: 'c_joists', p13h_tarrow: 'c_joists', p29_cottage: 'c_joists', p29_farmhouse: 'c_joists', orla_house: 'c_joists', p31_wick: 'c_joists', p31_renn: 'c_joists', cantabile_chandler: 'c_joists', p29_chandler: 'c_joists', wickhouse: 'c_joists', surgery: 'c_joists',
+    mill: 'c_rafters', malting: 'c_rafters', p29_barn: 'c_rafters', p30_carders: 'c_rafters', belfry: 'c_rafters',
+    tannery: 'c_beams_smoke', p29_bakery: 'c_beams_smoke',
+    lib_conservatory: 'c_boards', lib_bonded: 'c_boards', p16k_kestrel_below: 'c_boards', p50_hold: 'c_boards', greenroot_chapel: 'c_boards',
+  };
+  const HOUSES = ['c_joists', 'c_beams_lime', 'c_beams'];
   const ROCK_MAPS = { quarry: 1, underhedge: 1, rootvault: 1, catacombs: 1 };
   // Which painted ceiling a map should get, or null to keep the original.
   function pick(m) {
     if (!m || !m.ceil) return null;
     if (VAULT_MAPS[m.id]) return 'c_vault';
     if (ROCK_MAPS[m.id] || m.rooms) return 'c_rock';   // m.rooms: a generated dungeon
-    if (m.ceil === 't_wood') return 'c_beams';          // timber interiors: the tavern, houses, mill, malting, belfry
+    if (m.ceil === 't_wood') return TIMBER[m.id] || HOUSES[Math.floor(hash(m.id.length, m.id.charCodeAt(m.id.length - 1), 121) * HOUSES.length)];
     return null;
   }
   // Another module may already own a map's per-cell ceilings: leave those alone.
@@ -219,6 +324,8 @@ const CEILINGS = (() => {
   const budgetBytes = () => generated;
 
   register('c_beams', paintBeams());
+  register('c_beams_lime', paintLime()); register('c_joists', paintJoists()); register('c_rafters', paintRafters());
+  register('c_boards', paintBoards()); register('c_beams_smoke', paintSmoke());
   register('c_vault', paintVault());
   register('c_rock', paintRock());
 

@@ -475,6 +475,10 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 ![Phase 106, before and after](screenshots/p106-fixes.jpg)
 
+**The best look everywhere, part one (Phase 107).** Creatures, foes, items and props close to you in the 3D view are drawn as crisply as the people (Options: "Sharp figures"), and timber rooms each have a ceiling of their own kind: sooty beams in the inns, limewash in the better houses, joists in ordinary ones, rafters under thatch in the mill and barn, smoke-black plaster in the tannery and bakery, boards in the stores. Record: [`story/Game Layer/Phase 107 - The best look everywhere.md`](story/Game%20Layer/Phase%20107%20-%20The%20best%20look%20everywhere.md).
+
+![Phase 107: six rooms, six ceilings](screenshots/p107-ceilings.jpg)
+
 **Ground cover (Phase 105).** Grass tufts, clover, pebbles and fallen leaves near your feet outdoors in the 3D renderer, the same in the same place every visit (Options, "Ground cover"). Record: [`story/Game Layer/Phase 105 - Ground cover.md`](story/Game%20Layer/Phase%20105%20-%20Ground%20cover.md).
 
 | Oakhaven's green (top off, bottom on) | The Deep Woods (top off, bottom on) |
