@@ -40,11 +40,10 @@ const FORBIDDEN = /\b(shelf|ledge|basket|below|rendered|hollow|rope)\b/i;
     const msgs = []; { const _m = msg; msg = function (t) { msgs.push(String(t)); return _m.apply(this, arguments); }; }
     const said = (t) => msgs.includes(t), clear = () => { msgs.length = 0; };
     const go = (id, x, y, dir) => { closeModal(); hide('#event'); loadMap(id, { x, y, dir: dir || 0 }); G.state = 'play'; G.dead = false; G.player.hp = G.player.hpMax; G.fadeT = 0; G.player.feet = G.map.groundAt(x, y); G.murmurT = 0; clear(); };
-    const fl = G.flags;
-    const reset = (glassed) => { for (const k of ['p113_qm', 'p113_carry', 'p113_seen', 'p113_bits']) fl[k] = 0; G.player.glassed = !!glassed; S.resetNight(); };
+    const reset = (glassed) => { for (const k of ['p113_qm', 'p113_carry', 'p113_seen', 'p113_bits']) G.flags[k] = 0; G.player.glassed = !!glassed; S.resetNight(); };
     // ---- Math.random is counted while the place is built and while the night plays
-    let rnd = 0; const _r = Math.random; Math.random = function () { rnd++; return _r.apply(Math, arguments); };
-    const maps = {}; maps[R.MAP] = R.build(); S.join(maps); const builtRnd = rnd;
+    let rnd = 0; const _r = Math.random; Math.random = function () { rnd++; return _r.apply(Math, arguments); };   // (RIFT100's own wall is built first, outside the count)
+    const maps = {}; maps[R.MAP] = R.build(); rnd = 0; S.join(maps); const builtRnd = rnd;
     Math.random = _r;
     out.builtNoRandom = builtRnd === 0 && !!maps[S.MAP] && maps[S.MAP] !== G.maps[S.MAP];
     // ---- the map and the door
@@ -85,51 +84,51 @@ const FORBIDDEN = /\b(shelf|ledge|basket|below|rendered|hollow|rope)\b/i;
     // the cart, before any errand
     const cart = () => G.ents.find((e) => e && e._p113 === 'cart');
     { closeModal(); G.state = 'play'; const c = cart(); out.cartThere = !!c && c.label === TX.cart && Math.hypot(c.x - R.P.gate[0], c.y - R.P.gate[1]) < 20;
-      clear(); useDeco(c); out.cartLook = said(TX.cartLook) && fl.p113_carry === 0; }
+      clear(); useDeco(c); out.cartLook = said(TX.cartLook) && G.flags.p113_carry === 0; }
     // errand one, asked (0 to 1); the trolley is still chocked, so he says so
     talk(qmEnt()); let L = work();
-    out.ask1 = hasLine(L, TX.ask1) && hasLine(L, TX.trolley) && fl.p113_qm === 1 && !hasLine(L, TX.glass);
-    L = work(); out.ask1again = hasLine(L, TX.ask1) && fl.p113_qm === 1;
+    out.ask1 = hasLine(L, TX.ask1) && hasLine(L, TX.trolley) && G.flags.p113_qm === 1 && !hasLine(L, TX.glass);
+    L = work(); out.ask1again = hasLine(L, TX.ask1) && G.flags.p113_qm === 1;
     G.flags.p100_rail = 1; L = work(); out.noTrolley = hasLine(L, TX.ask1) && !hasLine(L, TX.trolley);
     // the cart, during errand one
-    closeModal(); G.state = 'play'; clear(); useDeco(cart()); out.cartTake = said(TX.cartTake) && fl.p113_carry === 1;
-    clear(); useDeco(cart()); out.cartOnce = !said(TX.cartTake) && fl.p113_carry === 1;
+    closeModal(); G.state = 'play'; clear(); useDeco(cart()); out.cartTake = said(TX.cartTake) && G.flags.p113_carry === 1;
+    clear(); useDeco(cart()); out.cartOnce = !said(TX.cartTake) && G.flags.p113_carry === 1;
     // errand one brought (1 to 2), errand two asked at once (2 to 3)
-    talk(qmEnt()); L = work(); out.brought1 = hasLine(L, TX.brought1) && hasLine(L, TX.ask2) && L.indexOf(TX.brought1) < L.indexOf(TX.ask2) && fl.p113_qm === 3 && fl.p113_carry === 0;
+    talk(qmEnt()); L = work(); out.brought1 = hasLine(L, TX.brought1) && hasLine(L, TX.ask2) && L.indexOf(TX.brought1) < L.indexOf(TX.ask2) && G.flags.p113_qm === 3 && G.flags.p113_carry === 0;
     // One-Oh-Six at the hatch
     closeModal(); go(R.HALLS, R.Q.issue[0], R.Q.issue[1] + 1.2, -Math.PI / 2);
     const inHalls = (id) => G.ents.find((e) => e && e.kind === 'npc' && e.id === id);
-    out.oil = hasLine(talkTo(inHalls('p100_issue')), TX.oil106) && fl.p113_carry === 2;
-    closeModal(); G.state = 'play'; out.oilOnce = !hasLine(talkTo(inHalls('p100_issue')), TX.oil106) && fl.p113_carry === 2;
+    out.oil = hasLine(talkTo(inHalls('p100_issue')), TX.oil106) && G.flags.p113_carry === 2;
+    closeModal(); G.state = 'play'; out.oilOnce = !hasLine(talkTo(inHalls('p100_issue')), TX.oil106) && G.flags.p113_carry === 2;
     // a trooper in the Halls does not give a blanket before it is asked for
-    closeModal(); G.state = 'play'; out.noEarlyBlanket = !hasLine(talkTo(inHalls('p100_tr_a')), TX.blanket) && fl.p113_carry === 2;
+    closeModal(); G.state = 'play'; out.noEarlyBlanket = !hasLine(talkTo(inHalls('p100_tr_a')), TX.blanket) && G.flags.p113_carry === 2;
     // errand two brought (3 to 4), errand three asked (4 to 5)
     closeModal(); go(R.MAP, R.P.qm[0] - 1.2, R.P.qm[1], 0); talk(qmEnt()); L = work();
-    out.brought2 = hasLine(L, TX.brought2) && fl.p113_qm === 5 && fl.p113_carry === 0;
+    out.brought2 = hasLine(L, TX.brought2) && G.flags.p113_qm === 5 && G.flags.p113_carry === 0;
     // a trooper in the Halls (or the squad's barrack) gives one
     closeModal(); go(R.HALLS, 14.5, 12.4, Math.PI / 2);
-    out.blanket = hasLine(talkTo(inHalls('p100_tr_a')), TX.blanket) && fl.p113_carry === 3;
+    out.blanket = hasLine(talkTo(inHalls('p100_tr_a')), TX.blanket) && G.flags.p113_carry === 3;
     // errand three brought (5 to 6)
     closeModal(); go(R.MAP, R.P.qm[0] - 1.2, R.P.qm[1], 0); talk(qmEnt()); L = work();
-    out.brought3 = hasLine(L, TX.brought3) && fl.p113_qm === 6 && fl.p113_carry === 0 && !hasLine(L, TX.ask4);
+    out.brought3 = hasLine(L, TX.brought3) && G.flags.p113_qm === 6 && G.flags.p113_carry === 0 && !hasLine(L, TX.ask4);
     // no glass arm: the next Work asks the letter (6 to 7), read aloud in his hearing (7 to 8)
-    L = work(); out.ask4 = hasLine(L, TX.ask4) && fl.p113_qm === 7 && !!DLG.choices && DLG.choices.length === 1 && DLG.choices[0].t === TX.letter;
+    L = work(); out.ask4 = hasLine(L, TX.ask4) && G.flags.p113_qm === 7 && !!DLG.choices && DLG.choices.length === 1 && DLG.choices[0].t === TX.letter;
     out.letterShown = !!Array.from(document.querySelectorAll('#d-topics button')).find((b) => b.textContent === TX.letter.replace(/<[^>]+>/g, ''));
     { const b = document.querySelector('#d-topics [data-choice="0"]'); if (b) b.click(); }
-    L = log(); out.letter = hasLine(L, TX.letter) && hasLine(L, TX.after1) && hasLine(L, TX.after2) && L.indexOf(TX.after1) < L.indexOf(TX.after2) && fl.p113_qm === 8;
-    L = work(); out.afterLetter = hasLine(L, TX.end) && fl.p113_qm === 8;
+    L = log(); out.letter = hasLine(L, TX.letter) && hasLine(L, TX.after1) && hasLine(L, TX.after2) && L.indexOf(TX.after1) < L.indexOf(TX.after2) && G.flags.p113_qm === 8;
+    L = work(); out.afterLetter = hasLine(L, TX.end) && G.flags.p113_qm === 8;
     // flags survive a save and a load
-    { fl.p113_seen = 0; fl.p113_bits = 1; const snap = JSON.parse(JSON.stringify(snapshotGame())); closeModal(); restoreGame(snap); out.saved = G.flags.p113_qm === 8 && G.flags.p113_carry === 0 && G.flags.p113_bits === 1 && !!G.maps[S.MAP]; }
+    { G.flags.p113_seen = 0; G.flags.p113_bits = 1; const snap = JSON.parse(JSON.stringify(snapshotGame())); closeModal(); restoreGame(snap); out.saved = G.flags.p113_qm === 8 && G.flags.p113_carry === 0 && G.flags.p113_bits === 1 && !!G.maps[S.MAP]; }
 
     // ================= the glass arm: told something else, never the letter, never the hour
     reset(true); go(R.MAP, R.P.qm[0] - 1.2, R.P.qm[1], 0); talk(qmEnt());
     const all = [];
-    L = work(); all.push(...L); out.glass = L[0] === TX.glass && hasLine(L, TX.ask1) && fl.p113_qm === 1;
+    L = work(); all.push(...L); out.glass = L[0] === TX.glass && hasLine(L, TX.ask1) && G.flags.p113_qm === 1;
     L = work(); all.push(...L); out.glassOnce = !hasLine(L, TX.glass);
-    fl.p113_carry = 1; all.push(...work()); out.g2 = fl.p113_qm === 3; fl.p113_carry = 2; all.push(...work()); out.g3 = fl.p113_qm === 5; fl.p113_carry = 3;
-    L = work(); all.push(...L); out.gFold = hasLine(L, TX.brought3) && fl.p113_qm === 6;
+    G.flags.p113_carry = 1; all.push(...work()); out.g2 = G.flags.p113_qm === 3; G.flags.p113_carry = 2; all.push(...work()); out.g3 = G.flags.p113_qm === 5; G.flags.p113_carry = 3;
+    L = work(); all.push(...L); out.gFold = hasLine(L, TX.brought3) && G.flags.p113_qm === 6;
     for (let i = 0; i < 3; i++) { L = work(); all.push(...L); }
-    out.glassEnd = hasLine(L, TX.end) && fl.p113_qm === 6 && !DLG.choices;
+    out.glassEnd = hasLine(L, TX.end) && G.flags.p113_qm === 6 && !DLG.choices;
     out.glassNever = !all.includes(TX.ask4) && !all.includes(TX.letter) && !all.includes(TX.after2) && !all.some((t) => /third hour|Between Five and Six/.test(t));
     closeModal(); G.state = 'play';
 
@@ -138,13 +137,13 @@ const FORBIDDEN = /\b(shelf|ledge|basket|below|rendered|hollow|rope)\b/i;
     const at = (deg, rr) => R.pol(R.RC - (rr || 3), deg);
     const five6 = at(4.2), seven8 = at(22.5), qmFoot = [R.P.qm[0] - 1.2, R.P.qm[1]];
     const stepNight = (s) => { for (let t = 0; t < s; t += 0.1) { S.tick(0.1); R.tick(0.1); G.murmurT = 1; } };
-    reset(false); fl.p113_qm = 8;
+    reset(false); G.flags.p113_qm = 8;
     out.stretch = S.onStretch(...five6) && !S.onStretch(...seven8) && !S.onStretch(...at(4.2, 12)) && S.inHour(mid) && !S.inHour(T.from - 0.01) && !S.inHour(T.to + 0.01) && !S.inHour(0.5);
     // the wrong hour on the right stretch: nothing
-    go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = T.from - 0.02; stepNight(3); out.wrongHour = !said(TX.night[0]) && fl.p113_seen === 0;
+    go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = T.from - 0.02; stepNight(3); out.wrongHour = !said(TX.night[0]) && G.flags.p113_seen === 0;
     // the right hour on the wrong stretch: nothing
-    go(R.MAP, seven8[0], seven8[1], -Math.PI / 2); G.tod = mid; stepNight(3); out.wrongPlace = !said(TX.night[0]) && fl.p113_seen === 0;
-    go(R.MAP, ...qmFoot, 0); G.tod = mid; stepNight(3); out.notAtFoot = !said(TX.night[0]) && fl.p113_seen === 0;
+    go(R.MAP, seven8[0], seven8[1], -Math.PI / 2); G.tod = mid; stepNight(3); out.wrongPlace = !said(TX.night[0]) && G.flags.p113_seen === 0;
+    go(R.MAP, ...qmFoot, 0); G.tod = mid; stepNight(3); out.notAtFoot = !said(TX.night[0]) && G.flags.p113_seen === 0;
     // the right stretch, the right hour: the eight lines in order, and the lights
     go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid;
     let nr = 0; Math.random = function () { nr++; return _r.apply(Math, arguments); };
@@ -160,22 +159,22 @@ const FORBIDDEN = /\b(shelf|ledge|basket|below|rendered|hollow|rope)\b/i;
     Math.random = _r;
     out.nightNoRandom = nr === 0;
     const idx = TX.night.map((t) => msgs.indexOf(t));
-    out.night = idx.every((i) => i >= 0) && idx.every((v, i) => !i || v > idx[i - 1]) && fl.p113_seen === 1;
+    out.night = idx.every((i) => i >= 0) && idx.every((v, i) => !i || v > idx[i - 1]) && G.flags.p113_seen === 1;
     out.lights = seenLights.lantern > 20 && seenLights.gold > 20 && seenLights.answer > 10 && seenLights.goldDown && seenLights.goldSmaller;
     out.lightEnts = G.ents.filter((e) => e && e._p113 === 'light').length === 0;   // all gone once it is over
     // once
-    clear(); go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid; stepNight(10); out.once = !said(TX.night[0]) && fl.p113_seen === 1;
+    clear(); go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid; stepNight(10); out.once = !said(TX.night[0]) && G.flags.p113_seen === 1;
     // the Watch's rule still holds while it plays: say nothing and the quiet comes on
     reset(false); go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid; G.murmurT = 0;
     for (let t = 0; t < R.B.WARN_S + 0.6; t += 0.1) { S.tick(0.1); R.tick(0.1); G.tod = mid; }
     out.stillTalk = said(TX.night[0]) && said(R.TX.quietWarn);
     // the night is seen by anyone standing there: a glassed traveller too, who was never told
-    reset(true); go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid; stepNight(2); out.glassSees = said(TX.night[0]) && fl.p113_seen === 1;
+    reset(true); go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid; stepNight(2); out.glassSees = said(TX.night[0]) && G.flags.p113_seen === 1;
     // afterwards, Work gives once: the glassed get three words
     go(R.MAP, ...qmFoot, 0); talk(qmEnt()); L = work(); out.afterGlass = L[0] === TX.afterNightGlass || L.includes(TX.afterNightGlass);
     L = work(); out.afterGlassOnce = !L.includes(TX.afterNightGlass);
     closeModal(); G.state = 'play';
-    reset(false); fl.p113_qm = 8; fl.p113_seen = 1; talk(qmEnt()); L = work(); out.afterNight = L.includes(TX.afterNight) && !L.includes(TX.afterNightGlass);
+    reset(false); G.flags.p113_qm = 8; G.flags.p113_seen = 1; talk(qmEnt()); L = work(); out.afterNight = L.includes(TX.afterNight) && !L.includes(TX.afterNightGlass);
     L = work(); out.afterNightOnce = !L.includes(TX.afterNight);
     closeModal(); G.state = 'play';
 
