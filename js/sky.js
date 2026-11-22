@@ -64,6 +64,8 @@ const SKY = (() => {
   function drawStars(F) {
     stats.stars = 0;
     if (!F.outdoor || !on('stars')) return;
+    // Phase 113b: over the Rift the night is "black and starless" (Book Three); js/deepsky113.js says which maps
+    if (typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.starless && DEEPSKY113.starless(F.map)) return;
     const night = nightOf(F);
     // cloud and haze put the stars out; a storm or a sea-fog leaves none
     const vis = night * clamp(1 - F.wx.cloud * 1.45, 0, 1) * clamp(1 - F.wx.haze * 3.2, 0, 1) * (1 - F.wx.flash);
@@ -71,6 +73,8 @@ const SKY = (() => {
     const { fb, mbuf, w, h, S, horizon, dirX, dirY } = F;
     const p = Math.hypot(F.planeX, F.planeY), halfH = h * 0.5, t = F.animT;
     const extent = h * 0.1;           // stars dim into the horizon haze
+    // Phase 113b: with the deep night sky on, the Spire of Decay's quarter of the Reach's sky holds its stars still
+    const still = typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.stillQuarter ? DEEPSKY113.stillQuarter(F) : null;
     let n = 0;
     for (let i = 0; i < NALL; i++) {
       const c = st.cx[i], s = st.sy[i];
@@ -81,7 +85,8 @@ const SKY = (() => {
       const y = (horizon - st.el[i] * halfH) | 0;
       if (y < 0 || y >= horizon) continue;
       const ext = clamp((horizon - y) / extent, 0, 1);
-      const tw = 0.76 + 0.24 * Math.sin(t * st.sp[i] + st.ph[i]);   // subtle twinkle tied to the animation clock
+      let tw = 0.76 + 0.24 * Math.sin(t * st.sp[i] + st.ph[i]);   // subtle twinkle tied to the animation clock
+      if (still && st.el[i] * halfH < still.tanTop * S * (160 / 0.66) && Math.abs(((Math.atan2(s, c) - still.az + Math.PI) % (TAU) + TAU) % TAU - Math.PI) < still.half) tw = 1;
       const base = vis * st.mag[i] * tw * ext;
       if (base < 0.03) continue;
       const bright = st.mag[i] > 0.7;

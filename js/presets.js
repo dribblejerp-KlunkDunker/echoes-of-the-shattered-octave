@@ -13,7 +13,7 @@ const PRESETS = (() => {
   // Any flag this list does not name is "unknown": on for low/medium/high, off for original. (The painted panoramas
   // left this list in Phase 20 MAX: they are art, on in every preset; see ART below.)
   const LOW_OFF = ['bloom', 'softFog', 'mist', 'reflections', 'grass', 'groundCover', 'flyovers', 'darkInteriors', 'groundShadows',
-    'sunShafts', 'heatHaze', 'glassGlare', 'seeThrough', 'coldBreath', 'footprints', 'hushWave', 'folkHoods', 'folkHuddle', 'folkCapes', 'folkTavern', 'greenStages', 'glassSpread', 'rootVeins', 'p14pMirrors', 'p14pShimmer', 'aurora', 'causticLight', 'deepView', 'flumeGlow', 'winter17'];   // ground shadows cost about 1 ms a frame in town; the Phase 11 air effects are all per-frame (js/air11.js)
+    'sunShafts', 'heatHaze', 'glassGlare', 'seeThrough', 'coldBreath', 'footprints', 'hushWave', 'folkHoods', 'folkHuddle', 'folkCapes', 'folkTavern', 'greenStages', 'glassSpread', 'rootVeins', 'p14pMirrors', 'p14pShimmer', 'aurora', 'causticLight', 'deepView', 'flumeGlow', 'winter17', 'deepSky'];   // ground shadows cost about 1 ms a frame in town; the Phase 11 air effects are all per-frame (js/air11.js)
   // Phase 14 CINEMA: these flags are on ONLY in the Cinematic preset (off in original/low/medium/high, so those frames are
   // unchanged); js/cinema14.js owns them. Any other flag in a 'cinema' preset follows the 'all' rule.
   const CINEMA_ONLY = ['cineLight', 'cineFog', 'cineGrade'];
