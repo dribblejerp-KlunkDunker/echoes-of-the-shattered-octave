@@ -477,7 +477,7 @@ const SCULPTED112 = (() => {
   // ---------------------------------------------------------------- the renderer
   const VS = `attribute vec3 a_pos, a_nrm, a_loc; attribute vec2 a_uv, a_occ; attribute vec4 a_ex;
 uniform mat4 u_proj, u_model; varying vec3 v_pos, v_nrm, v_loc; varying vec2 v_uv, v_occ; varying vec4 v_ex;
-void main(){ vec4 p=u_model*vec4(a_pos,1.0); v_pos=p.xyz; v_nrm=normalize(mat3(u_model)*a_nrm); v_loc=a_loc; v_uv=a_uv; v_occ=a_occ; v_ex=a_ex; gl_Position=u_proj*p; }`;
+void main(){ vec4 p=u_model*vec4(a_pos,1.0); v_pos=p.xyz; v_nrm=normalize((u_model*vec4(a_nrm,0.0)).xyz); v_loc=a_loc; v_uv=a_uv; v_occ=a_occ; v_ex=a_ex; gl_Position=u_proj*p; }`;
   const FS_HEAD = `#extension GL_OES_standard_derivatives : enable
 precision highp float;
 varying vec3 v_pos, v_nrm, v_loc; varying vec2 v_uv, v_occ; varying vec4 v_ex;
@@ -670,7 +670,9 @@ void main(){ vec3 N0 = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
             + u_alt*0.25*u_lvl*(0.35 + 0.65*(1.0-ndv));
   vec3 refl = env(R)*u_alt*0.9*F*(0.45 + 0.55*katch);
   float nh = max(dot(N,Hh),0.0);
-  float gl = katch*(pow(nh, 30.0)*0.9 + pow(nh, 400.0)*4.0);
+  // (Phase 112: the planes that catch the light flash half as hard as the option's did: in the game's own light and
+  // through its bloom they stood white, a harlequin's sleeve)
+  float gl = katch*(pow(nh, 30.0)*0.42 + pow(nh, 400.0)*2.0);
   vec3 col = body + refl + mix(u_key, u_alt*1.6, 0.3)*gl*sh + u_torch*pow(max(dot(N,normalize(Lt+V)),0.0),120.0)*4.0 + u_song*pow(max(dot(N,normalize(Ls+V)),0.0),30.0)*1.2;
   // the rim: bright where the form turns away
   float rim = pow(1.0 - ndv, 6.0);
@@ -685,7 +687,9 @@ void main(){ vec3 N0 = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
 
   // ---------------------------------------------------------------- the switch (off everywhere until the owner rules)
   const FLAG = 'sculptedHands';
-  try { if (typeof GFX !== 'undefined') { if (typeof PRESETS !== 'undefined' && PRESETS.keep) PRESETS.keep(FLAG); if (GFX[FLAG] === undefined) GFX[FLAG] = false; } } catch (e) { /* no GFX: a tool's page */ }
+  // (a choice, not an effect: no preset turns it on or off. It starts off; PRESETS.keep then restores the player's own
+  // stored choice, if there is one, and stores every later change)
+  try { if (typeof GFX !== 'undefined') { if (GFX[FLAG] === undefined) GFX[FLAG] = false; if (typeof PRESETS !== 'undefined' && PRESETS.keep) PRESETS.keep(FLAG); } } catch (e) { /* no GFX: a tool's page */ }
   const on = () => typeof GFX !== 'undefined' && GFX[FLAG] === true && typeof PIXELHANDS110 === 'object' && !!PIXELHANDS110.poses;
   const warned = {};
   const warnOnce = (k, e) => { if (warned[k]) return; warned[k] = 1; try { console.warn('sculpted112: ' + k + ': ' + (e && e.message ? e.message : e)); } catch (x) { /* none */ } };
@@ -740,10 +744,11 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
   const r2 = (v) => v.map((x) => x.toFixed(2)).join(',');
   function matOf(h, look) {
     if (h.glass) return { mat: 'glass', sleeve: false, base: [30, 104, 205], alt: [120, 205, 255] };
-    const g = look && look.hands, sl = look && look.body && look.body.sleeve, sleeve = !!sl, wool = (sl && sl.col) || [92, 78, 62];
-    if (!g) return { mat: 'bare', sleeve, wool };
-    const metal = /mail|plate|steel|iron|chain/.test(String(g.material || '') + ' ' + String(g.form || ''));
-    const c = g.col || {};
+    // (bare, gloved and sleeved are told as the pixel hands tell them: js/pixelhands110.js wearOf)
+    const g = look && look.hands, B = look && look.body, sl = (B && B.sleeve) || {}, sleeve = sl.material !== 'skin', wool = sl.col || (B && B.col && B.col.base) || [120, 100, 80];
+    if (!g || g.bare || !g.col) return { mat: 'bare', sleeve, wool };
+    const metal = /^(mail|iron|bellbronze|steel)$/.test(String(g.material || ''));
+    const c = g.col;
     return metal ? { mat: 'mail', sleeve, wool, base: c.base || [170, 172, 178] } : { mat: 'leather', sleeve, wool, base: c.base || [96, 62, 40], alt: c.light || [150, 112, 80] };
   }
   function handScene(h, look, flipped) {
@@ -839,8 +844,8 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
       }
       for (const h of it.P.hands) {
         const E = handScene(h, it.look, flip), m = matrix(it.t, h.x, h.y, h.cm);
-        // a left hand is a mirror image, and so is a picture drawn mirrored: either turns the faces' winding round
-        gl.frontFace((E.det < 0) !== flip ? gl.CW : gl.CCW);
+        // a picture drawn mirrored turns the faces' winding round (a left hand's own mirroring is already in its mesh)
+        gl.frontFace(flip ? gl.CW : gl.CCW);
         const mats = {
           skin: { base: lin((it.look && it.look.skin) || [214, 170, 136], 1), alt: [0, 0, 0] }, nail: { base: lin((it.look && it.look.skin) || [214, 170, 136], 1), alt: [0, 0, 0] },
           leather: { base: lin(E.M.base || [96, 62, 40], 1), alt: lin(E.M.alt || [150, 112, 80], 1) }, grip: { base: lin([74, 48, 32], 1), alt: [0, 0, 0] },
@@ -871,7 +876,49 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
     return cv;
   }
   function clear() { CACHE.clear(); posed.clear(); }
+  // the canvas as last drawn, for tests: { w, h, data } (rows bottom first, as WebGL reads them)
+  function read() { if (!GL) return null; const { gl } = GL, w = W * SS, h = H * SS, data = new Uint8Array(w * h * 4); gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, data); return { w, h, data }; }
 
-  return { FLAG, on, begin, place, flush, clear, stats, W, H, _gl: () => GL };
+  // ---------------------------------------------------------------- the Options row: "Hands: in pixels / sculpted"
+  const ROW = ['gfx-sculpted112', 'Hands', 'in pixels, or sculpted and lit by the world (the 3D view; the sculpted hands are still in work)'];
+  const WORDS = ['In pixels', 'Sculpted'];
+  const chosen = () => typeof GFX !== 'undefined' && GFX[FLAG] === true;
+  function syncRow() {
+    if (typeof document === 'undefined') return;
+    const b = document.getElementById(ROW[0]); if (!b) return;
+    const v = chosen(); b.textContent = WORDS[v ? 1 : 0]; b.setAttribute('aria-pressed', v ? 'true' : 'false'); b.classList.toggle('sel', v);
+  }
+  function setOn(v) {
+    GFX[FLAG] = !!v;
+    if (typeof PRESETS !== 'undefined' && PRESETS.current) GFX.preset = PRESETS.current();
+    if (GFX.changed) GFX.changed();
+    try { if (typeof BODY21 === 'object' && BODY21.clearCaches) BODY21.clearCaches(); } catch (e) { warnOnce('clear', e); }
+    syncRow();
+  }
+  function wireRow() {
+    if (typeof renderAccessibilityMenu !== 'function' || typeof document === 'undefined') return;
+    const _acc = renderAccessibilityMenu;
+    renderAccessibilityMenu = function () {
+      const r = _acc.apply(this, arguments);
+      try {
+        const grid = document.querySelector('#modal-panel .ctl-grid');
+        if (grid && !document.getElementById(ROW[0])) {
+          const lab = document.createElement('span'); lab.className = 'gfx-label'; lab.appendChild(document.createTextNode(ROW[1] + ' '));
+          const sm = document.createElement('small'); sm.className = 'muted'; sm.textContent = ROW[2]; lab.appendChild(sm);
+          const b = document.createElement('button'); b.className = 'dfbtn small'; b.id = ROW[0]; b.type = 'button'; b.setAttribute('aria-label', ROW[1]);
+          b.onclick = () => setOn(!chosen());
+          const after = document.getElementById('gfx-pixelhands110');
+          if (after && after.parentNode === grid) { after.insertAdjacentElement('afterend', b); after.insertAdjacentElement('afterend', lab); }
+          else { grid.appendChild(lab); grid.appendChild(b); }
+          syncRow();
+        }
+      } catch (e) { warnOnce('row', e); }
+      return r;
+    };
+  }
+  try { wireRow(); } catch (e) { warnOnce('wire', e); }
+  try { if (typeof GFX !== 'undefined' && GFX.onChange) GFX.onChange(() => { try { syncRow(); } catch (e) { /* menu closed */ } }); } catch (e) { warnOnce('onChange', e); }
+
+  return { FLAG, ROW, WORDS, on, setOn, begin, place, flush, clear, read, stats, W, H, _gl: () => GL };
 })();
 if (typeof window !== 'undefined') window.SCULPTED112 = SCULPTED112;

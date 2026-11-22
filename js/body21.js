@@ -1727,7 +1727,7 @@ void main() {
   }
 
   function clearCaches() { headCache.clear(); buildCache.clear(); shieldCache.clear(); armCache.clear(); legCache.clear(); }
-  return { owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
+  return { sculptLight, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
     R3B, FX3, LB, lbBuild, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;
