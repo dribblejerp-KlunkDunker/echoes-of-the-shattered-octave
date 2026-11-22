@@ -32,6 +32,8 @@ Picture: `screenshots/p110-hands.jpg`. In reading order:
 - a hammer, a glaive, a spear, a pistol, a crossbow;
 - a mail gauntlet, a fingerless glove, the climb.
 
+**Your switches are kept** (Codex review of PR #156). A player who turned "Pixel hands" off lost the choice at the next launch: the game's older switches each store their own (`js/hud11.js`, `js/look10.js`), but the five added since Phase 105 did not. Those are Pixel hands, Natural edges, Sharp figures, Ground cover, and Phase 21's sun shadows and clouds. They now keep the player's own choice across launches (`PRESETS.keep`). A preset chosen afterwards is what is kept. Test: `test/keep110.test.js`.
+
 ## Still to do (for the touch-up pass)
 - **The arm behind a shield** is still the old picture (it is drawn inside `js/body21.js`).
 - **By day the glass looks lighter than on the review sheet.** The 3D view's daylight brightens every first-person picture, the old ones too, so the glass reads a lighter azure. During a Song the old glow tint whitens it further.

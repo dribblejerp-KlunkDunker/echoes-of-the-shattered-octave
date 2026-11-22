@@ -36,7 +36,7 @@
 const PIXELHANDS110 = (() => {
   const FLAG = 'pixelHands';
   if (typeof GFX !== 'undefined') {
-    if (GFX[FLAG] === undefined) GFX[FLAG] = (typeof PRESETS !== 'undefined' && PRESETS.startValue) ? PRESETS.startValue(FLAG) : true;
+    if (typeof PRESETS !== 'undefined' && PRESETS.keep) PRESETS.keep(FLAG); else if (GFX[FLAG] === undefined) GFX[FLAG] = true;   // the player's own choice, kept across launches
     if (GFX.FX && !GFX.FX.includes(FLAG)) GFX.FX.push(FLAG);
   }
   const on = () => typeof GFX !== 'undefined' && GFX[FLAG] === true;
