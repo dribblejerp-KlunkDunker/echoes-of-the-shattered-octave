@@ -168,12 +168,19 @@ const DEEPSKY113 = (function () {
 
   // ---------------------------------------------------------------- stars
   const NOTE_RGB = [[74, 156, 98], [180, 96, 62], [118, 128, 150], [186, 158, 86], [108, 196, 206], [100, 154, 206], [154, 112, 200], [124, 114, 134]];   // js/skies14.js NOTES, in order
-  // the eight notes (approved 22 Nov): along the Chord from its western end (Growth) to its eastern, the Spire of Decay's end
+  // the Chord's visible arc: from its west-south-west horizon end (t = 0) over its highest point in the north-west to its
+  // east-north-east end (t = 1), evenly by angle along the great circle (for the stones: the Keepers' lamps)
+  const ARC_T = nrm([-(N[2] * N[0]), -(N[2] * N[1]), 1 - N[2] * N[2]]);          // the arc's top: up, less its part along N
+  let ARC_H = nrm(cross([0, 0, 1], N)); if (Math.atan2(ARC_H[1], ARC_H[0]) < 0) ARC_H = [-ARC_H[0], -ARC_H[1], -ARC_H[2]];   // the western end
+  function chord(t) { const th = clamp(+t || 0, 0, 1) * Math.PI, c = Math.cos(th), s2 = Math.sin(th); return aeOf([c * ARC_H[0] + s2 * ARC_T[0], c * ARC_H[1] + s2 * ARC_T[1], c * ARC_H[2] + s2 * ARC_T[2]]); }
+  // the sun's own road, as js/light21.js draws the sun: t = 0 its rising in the east, 1 its setting in the west
+  function sunRoad(t) { const tod = 0.25 + 0.5 * clamp(+t || 0, 0, 1), a = (tod - 0.25) * TAU; return { az: Math.atan2(Math.sin(a), Math.cos(a)), el: Math.asin(clamp(Math.cos((tod - 0.5) * TAU), -1, 1)) * 0.74 }; }
+  // the eight notes, the Keepers' lamps (approved 22 Nov): at chord(1/16), chord(3/16) .. chord(15/16), the week's order,
+  // Rootday to Nullday, each the faintest tint of its note: Growth at the western end, Decay at the eastern, the Spire's end
   const NOTES = [];
   for (let k = 0; k < 8; k++) {
-    const l = 146 - k * 20.5, b = (hh(k, 1, 91) - 0.5) * 2.6, ae = fromGal(l, b);
-    const c = NOTE_RGB[k], m = Math.max(c[0], c[1], c[2]);
-    NOTES.push({ l, b, az: ae.az, el: ae.el, rgb: [0.72 + 0.28 * c[0] / m, 0.72 + 0.28 * c[1] / m, 0.72 + 0.28 * c[2] / m], mag: 0.34 });
+    const t = (2 * k + 1) / 16, ae = chord(t), c = NOTE_RGB[k], m = Math.max(c[0], c[1], c[2]);
+    NOTES.push({ t, az: ae.az, el: ae.el, rgb: [0.72 + 0.28 * c[0] / m, 0.72 + 0.28 * c[1] / m, 0.72 + 0.28 * c[2] / m], mag: 0.34 });
   }
   // the dozen brightest, each with a one-pixel cross glint
   const BRIGHT = [];
@@ -744,7 +751,7 @@ const DEEPSKY113 = (function () {
   return {
     FLAG, ROW, W, H, on, setOn, darkness, darknessOf, starless, spire, reset, slice, build, ready: () => MAP.ready, hash, stats, last,
     lastFrame: null, drawCount: () => draws, hooks: { classic: drawClassic }, skyGL, resetGL, map: () => MAP,
-    stillQuarter, meteors, meteorAt, dirOf, visible, drawChart, relore,
+    chord, sunRoad, stillQuarter, meteors, meteorAt, dirOf, visible, drawChart, relore,
     sample(az, el) { if (!MAP.ready) return null; const i = ((Math.floor((az / TAU + 0.5) * W) % W) + W) % W, j = clamp(Math.floor(el * ROWK), 0, H - 1), o = (j * W + i) * 4, D = MAP.data; return { dust: [(D[o] & 255) / 255 * DS, (D[o] >> 8) / 255 * DS, (D[o + 1] & 255) / 255 * DS], river: (D[o + 1] >> 8) / 255 * DS, star: [(D[o + 2] & 255) / 255, (D[o + 2] >> 8) / 255, (D[o + 3] & 255) / 255], gate: (D[o + 3] >> 8) & 3 }; },
     CORE, LANE, GALAXIES: GALAXIES.map((g) => ({ name: g.name, kind: g.kind, az: g.az, el: g.el, R: g.R })), NOTES, BRIGHT, SPIRE, N, galOf, fromGal,
   };

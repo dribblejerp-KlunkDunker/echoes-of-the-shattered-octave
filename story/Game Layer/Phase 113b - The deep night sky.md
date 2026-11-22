@@ -21,9 +21,11 @@ With it on, out in open country on a clear moonless night:
   one great lane that wanders and breaks, a branch and a spur across the core, and fine dark filaments. Star-clouds knot
   along it. Silver-blue in the arms, warm cream at the core, nine small rose knots along it, and in the far arms a faint
   teal on one side of the lane and violet on the other. Thousands of faint stars thicken toward it and thin in the lanes.
-- **Eight notes** (approved 22 Nov). Eight stars along the Chord a little brighter than their neighbours, each with the
-  faintest tint of one of the eight note colours the Octave lights already use, in order: Growth at the western end,
-  Decay at the eastern, the Spire of Decay's end.
+- **Eight notes** (approved 22 Nov; the faith calls them the eight Keepers' lamps). Eight stars along the Chord a little
+  brighter than their neighbours, each with the faintest tint of one of the eight note colours the Octave lights already
+  use, at chord(1/16), chord(3/16) .. chord(15/16), in the week's order Rootday to Nullday: Growth 174 (green) at the
+  western end, then Heat 285, Mass 396, Time 417, Light 528, Velocity 639, Memory 741, and Decay 852 (grey-mauve) at the
+  eastern end, the Spire of Decay's end.
 - **Three far galaxies** (approved 22 Nov), unnamed, in the southern sky away from the Chord: a tilted spiral about eight
   degrees long with a bright small core and a dust lane along it (south by west, 20 degrees up); a small face-on spiral
   (south-east, 22 degrees up); a pair of ragged clouds low in the east-south-east (one of them holds the tenth rose knot).
@@ -91,6 +93,12 @@ The owner wants named constellations with lore and standing stones that sight th
   They obey darkness, cloud, the moon and the Rift like every star: the bright ones stay in a lit town, the faint ones
   need the dark. They are drawn with the switch on.
 - `DEEPSKY113.dirOf(id)`: { az, el } of the middle of a constellation or a wanderer, or null.
+- `DEEPSKY113.chord(t)`: { az, el } along the Chord's visible arc, evenly by angle: t = 0 its west-south-west end on the
+  horizon (bearing 157 degrees, game angle 2.739), t = 0.5 its highest point (63.2 degrees up, north-west), t = 1 its
+  east-north-east end (bearing -23 degrees, game angle -0.403). The Spire of Decay's quarter lies nearest t = 1 (about 24
+  degrees from it).
+- `DEEPSKY113.sunRoad(t)`: { az, el } along the sun's road as js/light21.js draws it: t = 0 rising in the east, 0.5 south at
+  66.6 degrees, 1 setting in the west.
 - `DEEPSKY113.visible(id)`: 0 to 1, how well it can be seen from where the player stands now (0 by day, indoors, on the
   Rift, under cloud, below the horizon).
 - `DEEPSKY113.drawChart(ctx, id, x, y, w, h, opts)`: the zoomed picture through a stone: the same deep-sky map behind,

@@ -16,6 +16,7 @@
 //   - shooting stars: a few a night on a fixed schedule (no random numbers), only where the night is dark
 //   - the stones' constellations (window.STARLORE113, a fixture table here): their stars drawn in both views at their
 //     places, dirOf / visible / drawChart; with no table nothing changes and nothing throws
+//   - for the stones: chord(t) along the Chord's visible arc, sunRoad(t) along the sun's; the eight notes at chord((2k+1)/16)
 //   - the Options row and its French; Original and Low have it off; the classic view's cost at 1x
 'use strict';
 const assert = require('node:assert');
@@ -377,6 +378,34 @@ const MIDNIGHT = 0.0, NEW = 5, FULL = 1;
       for (const v of ['classic', '3d']) assert.ok(r[v].star.max > 25 && r[v].wander.max > 25 && r[v].steady.max === 0 && r[v].steady.mean === 0, v + ' ' + JSON.stringify(r[v]));
       assert.ok(r.chart === true && r.chartStat.diff === 0 && r.chartStat.lit > 500 && r.chartStat.lines > 100 && r.chartStat.rand === 0 && r.chartStat.unknown === false, 'chart ' + JSON.stringify(r.chartStat));
       assert.ok(r.back && r.junk, 'without a table, or with a broken one, nothing changes ' + JSON.stringify([r.back, r.junk]));
+    });
+
+    // ------------------------------------------------------------------------------------------------ the stones' roads
+    await step('the stones\' roads: chord(t) along the visible arc, sunRoad(t) as the sun is drawn; the eight notes at chord((2k + 1) / 16)', async () => {
+      const r = await EB(() => {
+        DEEPSKY113.build();
+        const c = [0, 0.25, 0.5, 0.75, 1].map((t) => DEEPSKY113.chord(t)), sun = [0, 0.5, 1].map((t) => DEEPSKY113.sunRoad(t));
+        // evenly by angle: the angle between successive points of a fine walk is the same everywhere
+        const dir = (p) => [Math.cos(p.az) * Math.cos(p.el), Math.sin(p.az) * Math.cos(p.el), Math.sin(p.el)];
+        const steps = []; for (let k = 0; k < 16; k++) { const a = dir(DEEPSKY113.chord(k / 16)), b = dir(DEEPSKY113.chord((k + 1) / 16)); steps.push(Math.acos(Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]))); }
+        // on the Chord: perpendicular to light21's bandN
+        const N = DEEPSKY113.N, off = Math.max(...c.map((p) => { const d = dir(p); return Math.abs(d[0] * N[0] + d[1] * N[1] + d[2] * N[2]); }));
+        // the sun as js/light21.js draws it at an hour of the day
+        const tod = 0.4, a = (tod - 0.25) * Math.PI * 2, want = { az: Math.atan2(Math.sin(a), Math.cos(a)), el: Math.asin(Math.cos((tod - 0.5) * Math.PI * 2)) * 0.74 }, got = DEEPSKY113.sunRoad((tod - 0.25) / 0.5);
+        const notes = DEEPSKY113.NOTES.map((n, k) => { const p = DEEPSKY113.chord((2 * k + 1) / 16), s = DEEPSKY113.sample(n.az, n.el); return { at: Math.abs(p.az - n.az) + Math.abs(p.el - n.el), star: s.star, gate: s.gate }; });
+        return { c, sun, steps, off, sunErr: Math.abs(got.az - want.az) + Math.abs(got.el - want.el), notes };
+      });
+      console.log('  chord: t = 0 at az ' + (r.c[0].az * 180 / Math.PI).toFixed(1) + ', top ' + (r.c[2].el * 180 / Math.PI).toFixed(1) + ' deg, t = 1 at az ' + (r.c[4].az * 180 / Math.PI).toFixed(1));
+      assert.ok(Math.abs(r.c[0].el) < 1e-6 && Math.abs(r.c[4].el) < 1e-6 && r.c[2].el > r.c[1].el && r.c[2].el > r.c[3].el && r.off < 1e-9, 'the visible arc ' + JSON.stringify(r.c));
+      assert.ok(Math.cos(r.c[0].az) < 0 && Math.cos(r.c[4].az) > 0, 't = 0 the western end, t = 1 the eastern');
+      assert.ok(Math.max(...r.steps) - Math.min(...r.steps) < 1e-9, 'evenly by angle ' + JSON.stringify(r.steps));
+      assert.ok(Math.abs(r.sun[0].az) < 1e-9 && Math.abs(r.sun[0].el) < 1e-9 && Math.abs(r.sun[1].az - Math.PI / 2) < 1e-9 && Math.abs(Math.abs(r.sun[2].az) - Math.PI) < 1e-9 && Math.abs(r.sun[2].el) < 1e-9 && r.sunErr < 1e-9, 'the sun\'s road ' + JSON.stringify(r.sun));
+      const HUE = [[74, 156, 98], [180, 96, 62], [118, 128, 150], [186, 158, 86], [108, 196, 206], [100, 154, 206], [154, 112, 200], [124, 114, 134]];
+      r.notes.forEach((n, k) => {
+        assert.ok(n.at < 1e-9 && n.gate === 1 && Math.max(...n.star) > 0.25, 'note ' + k + ' ' + JSON.stringify(n));
+        const h = HUE[k], top = h.indexOf(Math.max(...h)), st = n.star.indexOf(Math.max(...n.star));
+        assert.strictEqual(st, top, 'note ' + k + ' carries its own hue ' + JSON.stringify(n.star));
+      });
     });
 
     // ------------------------------------------------------------------------------------------------ the switch
