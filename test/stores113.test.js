@@ -1,14 +1,17 @@
 // Phase 113, Design A: the wall keeps its secret (js/stores113.js). Run:
 //   PREVIEW_URL=http://127.0.0.1:4213 PLAYWRIGHT_MODULE=/opt/npm-tools/node_modules/playwright node test/stores113.test.js
 // The Quartermaster's stores at Tower Nine's foot, his four errands (Work), and a night on the wall-walk between Towers
-// Five and Six at the third hour. Nobody goes below the lip and nobody is told what is down there. Writes no player saves.
+// Five and Six at the third hour. Nobody goes past the lip and nobody is told what is down there. Writes no player saves.
 'use strict';
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const fs = require('fs'), path = require('path');
 const URL0 = process.env.PREVIEW_URL || 'http://127.0.0.1:4213';
 let fails = 0;
 const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { fails++; console.log('FAIL ' + label); } };
-const FORBIDDEN = /\b(shelf|ledge|basket|below|rendered|hollow|rope)\b/i;
+// the seven words that may not appear, written backwards so that this file does not hold them either
+const rev = (w) => w.split('').reverse().join('');
+const SEVEN = ['flehs', 'egdel', 'teksab', 'woleb', 'deredner', 'wolloh', 'epor'].map(rev);
+const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
 
 (async () => {
   const src = fs.readFileSync(path.join(__dirname, '..', 'js', 'stores113.js'), 'utf8');
@@ -20,7 +23,10 @@ const FORBIDDEN = /\b(shelf|ledge|basket|below|rendered|hollow|rope)\b/i;
   const missing = M.TEXTS.filter((t) => !en.has(t));
   check(!missing.length && tsv.every((l) => l.length === 2 && l[1] && l[1].trim()), 'every line has French' + (missing.length ? ': missing ' + missing.slice(0, 3).join(' | ') : ''));
   { const bad = M.TEXTS.concat(tsv.map((l) => l[1] || '')).filter((t) => FORBIDDEN.test(t));
-    check(!bad.length && FORBIDDEN.test('the ledge') && !FORBIDDEN.test('the ledger'), 'none of the forbidden words is in any string the module owns (word boundaries: ledger is allowed)' + (bad.length ? ': ' + bad[0].slice(0, 80) : '')); }
+    check(!bad.length && FORBIDDEN.test('the ' + SEVEN[1]) && !FORBIDDEN.test('the ' + SEVEN[1] + 'r'), 'none of the forbidden words is in any string the module owns (word boundaries: ledger is allowed)' + (bad.length ? ': ' + bad[0].slice(0, 80) : '')); }
+  { const files = ['js/stores113.js', 'test/stores113.test.js', 'tools/i18n/p113-stores.tsv', 'story/Game Layer/Phase 113 - The Rift Wall, part A (the stores and the night on the wall).md'];
+    const hits = []; for (const f of files) fs.readFileSync(path.join(__dirname, '..', f), 'utf8').split('\n').forEach((l, i) => { if (FORBIDDEN.test(l)) hits.push(f + ':' + (i + 1)); });
+    check(!hits.length, 'and none is on any line of this phase\'s four files' + (hits.length ? ': ' + hits.slice(0, 3).join(', ') : '')); }
   check(!/Drift-Kestrel|Lyra\b|Kaelen|Vane\b|Bridie|Fen\b/.test(M.TEXTS.join(' \n ')), 'nobody here has heard of the Drift-Kestrel, and nobody from the book is named');
   { const T = M.THIRD_HOUR; check(T && T.from > 0.85 && T.to < 0.95 && Math.abs((T.to - T.from) * 24 - 1) < 0.01, 'the third hour of the night is one hour long, two hours after full dark (' + (T ? (T.from * 24).toFixed(2) + 'h to ' + (T.to * 24).toFixed(2) + 'h' : 'none') + ')'); }
 
@@ -162,6 +168,14 @@ const FORBIDDEN = /\b(shelf|ledge|basket|below|rendered|hollow|rope)\b/i;
     out.night = idx.every((i) => i >= 0) && idx.every((v, i) => !i || v > idx[i - 1]) && G.flags.p113_seen === 1;
     out.lights = seenLights.lantern > 20 && seenLights.gold > 20 && seenLights.answer > 10 && seenLights.goldDown && seenLights.goldSmaller;
     out.lightEnts = G.ents.filter((e) => e && e._p113 === 'light').length === 0;   // all gone once it is over
+    // the lights are where they are: from the stretch Towers Six and Seven and the lip stand between you and Tower Nine's
+    // buttress, so nothing is drawn there; from the wall-walk past Tower Nine the lantern out on the buttress is in sight
+    { G.flags.p113_seen = 0; go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid; for (let t = 0; t < 12; t += 0.1) { S.tick(0.1); G.tod = mid; }
+      const lit = (k) => G.ents.find((e) => e && e._p113 === 'light' && e.sprite === 'p113_light' + k);
+      out.hiddenFromStretch = !!lit('L') && lit('L').hidden;
+      const v = R.pol(R.RC - 2.2, 39.0); Engine.cam.x = v[0]; Engine.cam.y = v[1]; G.player.feet = G.map.groundAt(v[0], v[1]); Engine.cam.z = G.player.feet + 0.88; for (let t = 0; t < 4; t += 0.1) { S.tick(0.1); G.tod = mid; }
+      const e = lit('L'); out.seenPastNine = !!e && !e.hidden && Math.hypot(e.x - v[0], e.y - v[1]) <= G.map.fogDist && e.scale > 0;
+      S.resetNight(); G.flags.p113_seen = 1; }
     // once
     clear(); go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid; stepNight(10); out.once = !said(TX.night[0]) && G.flags.p113_seen === 1;
     // the Watch's rule still holds while it plays: say nothing and the quiet comes on
@@ -209,6 +223,7 @@ const FORBIDDEN = /\b(shelf|ledge|basket|below|rendered|hollow|rope)\b/i;
   check(r.wrongHour && r.wrongPlace && r.notAtFoot, 'the night does not fire at the wrong hour, on the wrong stretch, or at Tower Nine\'s foot');
   check(r.night, 'the night fires on that stretch in that hour: eight lines, in order');
   check(r.lights && r.lightEnts, 'a lantern, a gold point going down and getting smaller, and a second light near it; then gone');
+  check(r.hiddenFromStretch && r.seenPastNine, 'the lights are drawn where they truly are: hidden from the stretch by the towers and the parapet, the lantern in sight from the walk past Tower Nine');
   check(r.once, 'and it fires once');
   check(r.nightNoRandom, 'the night plays without Math.random');
   check(r.stillTalk, 'the Watch\'s rule still holds while it plays: say nothing and the quiet comes on');

@@ -30,10 +30,11 @@
 //  THE NIGHT. On the wall-walk between Towers Five and Six, in the third hour of the night, once, for anyone standing
 //  there: a lantern from the foot of Tower Nine, a gold point going over the lip and down, a second light answering it,
 //  and eight lines of narration. The Watch's rule (keep talking) runs on underneath: nothing here pauses it.
-//  ON THIS MAP the wall is an arc, and from the stretch between Five and Six Tower Nine's buttress lies north along the
-//  wall, with Towers Six and Seven standing in the line. So the three lights are drawn at their true bearing and their true
-//  fall, each as a small sprite placed on the line of sight in front of whatever stands in the way (see place()), so that
-//  both renderers show them where they are. Nothing visual uses random numbers.
+//  ON THIS MAP the wall is an arc: from the stretch between Five and Six, Tower Nine's buttress lies north along the wall,
+//  not east, with Towers Six and Seven and the wall's own parapet in the line, and the gold point goes down behind the rock
+//  of the lip, which nobody on the wall can see past. The lights are drawn where they truly are and only where they could
+//  be seen (place()): from the stretch the night is the eight lines. (Reported to the Commander for a ruling.) Nothing
+//  visual uses random numbers.
 // ============================================================
 'use strict';
 
@@ -229,7 +230,7 @@ const STORES113 = (function () {
     return m.deco(sprite, x, y, Object.assign({ radius: 0.35, scale: 1, solid: true, use: 'p113_look', label: TX.name[key] }, also ? { _p113also: key } : { _p113look: key }, opts || {}));
   }
   function build() {
-    const m = new GameMap(MAP, TX.door, W, H, { floor: 't_p113_floor', ceil: 't_p113_ceil', floorTextures: ['t_p113_floor'], fogDist: 18, fogColor: [16, 13, 10], ambient: 0.42, music: 'inside', danger: 0,
+    const m = new GameMap(MAP, TX.door, W, H, { floor: 't_p113_floor', ceil: 't_p113_ceil', floorTextures: ['t_p113_floor'], fogDist: 18, fogColor: [16, 13, 10], ambient: 0.5, music: 'inside', danger: 0,
       spawn: { x: SPAWN[0], y: SPAWN[1], dir: 0 } });
     m.rect(0, 0, W - 1, H - 1, 't_p113_wall');
     m.clear(2, 2, W - 3, H - 3);
@@ -297,21 +298,21 @@ const STORES113 = (function () {
     const out = {}, fade = t > NIGHT_S - 4 ? Math.max(0, (NIGHT_S - t) / 4) : 1;
     if (t < 0 || t >= NIGHT_S) return out;
     // 1. the lantern: out of the wall at Nine's foot, across the grey ground to the buttress's end, and it stays there
-    { const a = P(RC + 1.6, 34.2), b = P(RC + 19.6, 35.8), k = u(3, 14), s = k * k * (3 - 2 * k);
-      out.lantern = { x: ease(a[0], b[0], s), y: ease(a[1], b[1], s), z: 1.05, size: 2.4 * Math.min(1, t / 1.5) * fade }; }
+    { const a = P(RC + 1.6, 34.2), b = P(RC + 19.6, 35.8), k = Math.max(0, Math.min(1, u(3, 14))), s = k * k * (3 - 2 * k);
+      out.lantern = { x: ease(a[0], b[0], s), y: ease(a[1], b[1], s), z: 1.05, size: 0.7 * Math.min(1, t / 1.5) * fade }; }
     // 2-3. the gold point: over the lip and down, smaller, never out; stops; moves sideways
     if (t >= 21) {
       const k = Math.min(1, u(21, 29)), dz = k * (2 - k), side = Math.max(0, Math.min(1, u(33, 45)));
       const r0 = RC + 21.3, dg = 36.0 + side * 1.1, at = P(r0 + k * 0.8, dg);
-      out.gold = { x: at[0], y: at[1], z: 0.6 - dz * 36.4, size: (2.2 - k * 1.25) * fade };
+      out.gold = { x: at[0], y: at[1], z: 0.6 - dz * 36.4, size: (0.8 - k * 0.45) * fade };
     }
     // 4. a second light near it, smaller and yellower: answering
-    if (t >= 37) { const at = P(RC + 22.6, 37.6); out.answer = { x: at[0], y: at[1], z: -37.6, size: (0.62 + 0.12 * Math.sin(t * 1.7)) * Math.min(1, u(37, 38.5)) * fade }; }
+    if (t >= 37) { const at = P(RC + 22.6, 37.6); out.answer = { x: at[0], y: at[1], z: -37.6, size: (0.24 + 0.04 * Math.sin(t * 1.7)) * Math.min(1, u(37, 38.5)) * fade }; }
     return out;
   }
-  // ---- drawing them: each light is a small sprite on the line of sight from your eye to where it truly is, put down in
-  // front of the first thing that stands in the way (and inside the fog), scaled so that it looks the size and sits where
-  // the true light would.
+  // ---- drawing them where they truly are. A light is shown only when nothing stands between your eye and it (a tower, a
+  // parapet, the rock of the lip); then, because the renderers leave out anything past the fog, it is drawn as a small
+  // sprite on the same line of sight inside the fog, scaled so that it sits where, and looks the size, the true light would.
   const SPRITE = { lantern: 'p113_lightL', gold: 'p113_lightG', answer: 'p113_lightA' };
   function heightAt(m, x, y) {
     const i = x | 0, j = y | 0; if (i < 0 || j < 0 || i >= m.w || j >= m.h) return -1e9;
@@ -323,11 +324,11 @@ const STORES113 = (function () {
   function place(e, L0) {
     const m = G.map, c = Engine.cam, ez = Number.isFinite(c.z) ? c.z : ((G.player && G.player.feet) || 0) + 0.88;
     const dx = L0.x - c.x, dy = L0.y - c.y, D = Math.hypot(dx, dy) || 1e-6;
-    let hit = D;
-    for (let s = 0.3; s < D; s += 0.25) { const t = s / D, z = ez + (L0.z - ez) * t; if (heightAt(m, c.x + dx * t, c.y + dy * t) > z) { hit = s; break; } }
-    const lim = Math.max(0.6, Math.min(D, hit - 0.45, (m.fogDist || 40) * 0.92)), k = lim / D;
+    let seen = L0.size > 0.01;
+    for (let s = 0.3; seen && s < D - 0.6; s += 0.25) { const t = s / D; if (heightAt(m, c.x + dx * t, c.y + dy * t) > ez + (L0.z - ez) * t) seen = false; }
+    const k = Math.min(D, (m.fogDist || 40) * 0.92) / D;
     const x = c.x + dx * k, y = c.y + dy * k, z = ez + (L0.z - ez) * k, sc = Math.max(0.001, L0.size * k);
-    e.x = x; e.y = y; e.scale = sc; e.yOff = m.groundAt(x, y) - (z - sc / 2); e.hidden = !(L0.size > 0.01);
+    e.x = x; e.y = y; e.scale = sc; e.yOff = m.groundAt(x, y) - (z - sc / 2); e.hidden = !seen;
   }
   // ---- the night itself
   const NT = { on: false, t: 0, said: -1, ents: {} };
