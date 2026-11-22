@@ -19,9 +19,11 @@ Playwright is expected at `/opt/npm-tools/node_modules/playwright` (the path is 
 | `walk.js` | `node walk.js <name> <tod> <step> [from to]`. Films a walk along the Greenroot road. |
 | `roadplan.js` | `node roadplan.js <map> <out.png>`. A plan of a road map, with what can be reached on foot. |
 | `rerun.sh` | `bash rerun.sh <suite> <suite> ...`. Runs the named test suites one after another and prints pass and fail counts. Logs go to `$OCTAVE_OUT/out/rerun` (default `/tmp/octave-dev`). |
-| `hands111.js` | `node hands111.js <outdir> <name>=<key:value,...> ...`. Your own hands as the game draws them (the 3D view; `R3D=0` the classic one): any weapon (`w:`), gloves (`h:`), shield (`s:`), hour (`tod:`), swing (`atk:`, `dir:`), lowering (`low:`), Song (`song:`), climb (`climb:`), place (`at:`). `CROP=1` writes only the view; `EVAL='...'` prints a value from the page after each scene. |
+| `hands111.js` | `node hands111.js <outdir> <name>=<key:value,...> ...`. Your own hands as the game draws them (the 3D view; `R3D=0` the classic one): any weapon (`w:`), gloves (`h:`), shield (`s:`), hour (`tod:`), swing (`atk:`, `dir:`), lowering (`low:`), Song (`song:`, how far through it `cast:`), climb (`climb:`), place (`at:`). `CROP=1` writes only the view; `EVAL='...'` prints a value from the page after each scene. |
 | `px111.js` | `node px111.js <out.png> <spec.js> [scale]`. The pixel hands alone on a blank page, no game loaded (a second or two a picture), for working on the model. |
 | `sheets111.py` | `python3 sheets111.py <new> <old> screenshots/p109-options.jpg <outdir>`. Phase 111's review sheets from `hands111.js` pictures. |
+| `shots112.sh` | `tools/dev/shots112.sh <out>`. Phase 112: every picture of the sculpted hands (`<out>/s`) and a slash, a thrust and a Song frame by frame (`<out>/clip`), taken by `hands111.js` with "Hands: Sculpted" chosen. |
+| `sheets112.py` | `python3 sheets112.py <out>/s <pixel> <out>/clip screenshots/p109-options.jpg <outdir>`. Phase 112's review sheets and clip from those pictures (`<pixel>`: Phase 111's pictures of the pixel hands). |
 | `fullrun2.sh` | `bash fullrun2.sh <shard> <count>`. One shard of a full run of every suite. |
 
 A single suite: `PREVIEW_URL=http://127.0.0.1:4175 PLAYWRIGHT_MODULE=/opt/npm-tools/node_modules/playwright node test/<name>.test.js`.

@@ -492,6 +492,14 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 ![Phase 109: today and the three options](screenshots/p109-options.jpg)
 ![Phase 109: the sculpted option by night](screenshots/p109-sculpted-night.jpg)
 
+**The sculpted hands, lit by the world (Phase 112).** A second way to draw your own hands, in Options: "Hands: In pixels / Sculpted". The pixel hands stay the default. The sculpted hands are jointed and take the world's light each frame: the sun or the moon, the sky and the ground, a lamp near you, a Song's own colour between the open hands. They hold every weapon kind where the pixel hands hold it; the wrist cocks and snaps through a swing; the fingers open as a Song gathers; the arm behind a shield and the fists of a climb are sculpted too. They work in the 3D view; the classic view keeps the pixel hands.
+
+![Phase 112: the option chosen, the pixel hands, and the sculpted hands by day, by night and by a street lamp](screenshots/p112-hands.jpg)
+
+![Phase 112: every weapon kind, mail, swings, a lamp at night, behind a shield, a climb](screenshots/p112-kinds.jpg)
+
+![Phase 112: a slash, a thrust and a Song](screenshots/p112-swing.gif)
+
 **The pixel hands, touched up (Phase 111).** The arm behind a shield is pixel art now: the forearm comes up behind the shield and the fingers hook over its rim. Through a swing the arm runs out of the view (it used to end in the air at the edge of its picture). In the 3D view the hands keep their painted colours by day, so the glass arm is its approved deep azure and the gloves are leather brown; by night they darken, and warm by a lamp. A Song lights the hands in its own colour on the sides that face it. The bare palm has its pads and creases, the leather glove is no longer blotched, and a cloth sleeve's folds are drawn as creases.
 
 ![Phase 111: the approved sheet, the game before, and now by day and by night](screenshots/p111-hands.jpg)
