@@ -192,6 +192,32 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
       const v = R.pol(R.RC - 2.2, 39.0); Engine.cam.x = v[0]; Engine.cam.y = v[1]; G.player.feet = G.map.groundAt(v[0], v[1]); Engine.cam.z = G.player.feet + 0.88; for (let t = 0; t < 4; t += 0.1) { S.tick(0.1); G.tod = mid; }
       const e = lit('L'); out.seenPastNine = !!e && !e.hidden && Math.hypot(e.x - v[0], e.y - v[1]) <= G.map.fogDist && e.scale > 0;
       S.resetNight(); G.flags.p113_seen = 1; }
+    // ---- the wall's own light by the hour (RIFT100): grey from above by day, exactly as Phase 100 had it; dark by night
+    { const A = R.wallAmbient, ok = typeof A === 'function';
+      let maxStep = 0; if (ok) for (let i = 1; i <= 1440; i++) maxStep = Math.max(maxStep, Math.abs(A(i / 1440) - A((i - 1) / 1440)));
+      out.lightCurve = ok && A(0.5) === 0.95 && A(7.01 / 24) === 0.95 && A(16.99 / 24) === 0.95 && A(mid) >= 0.16 && A(mid) <= 0.2 && A(0.7985) <= 0.2 && A(4.9 / 24) <= 0.2 && A(18 / 24) > 0.2 && A(18 / 24) < 0.95 && A(6 / 24) > 0.2 && A(6 / 24) < 0.95 && maxStep < 0.01;
+      const view = () => { const c = Engine.canvas, sx = c.width / 320, d = c.getContext('2d').getImageData(0, 0, c.width, Math.round(150 * sx)).data; return { d, w: c.width, sx }; };
+      const lumAt = (v, x, y) => { const i = ((y | 0) * v.w + (x | 0)) * 4; return 0.3 * v.d[i] + 0.59 * v.d[i + 1] + 0.11 * v.d[i + 2]; };
+      const patch = (v) => { let s = 0, n = 0; for (let y = 86; y < 94; y++) for (let x = 150; x < 170; x++) { s += lumAt(v, x * v.sx, y * v.sx); n++; } return s / n; };
+      // noon: the same frame before and after the wall's light is ticked
+      G.flags.p113_seen = 1; const along = at(2.0); go(R.MAP, along[0], along[1], -Math.PI / 2); G.tod = 0.5; R.tick(0.1);
+      Engine.cam.dir = -Math.PI / 2 - 0.06; Engine.cam.pitch = 0; Engine.render(G.ents, 0.5); const v0 = view(), f0 = Array.from(v0.d.slice(0, 40000));
+      R.tick(0.1); R.tick(0.1); Engine.render(G.ents, 0.5); const v1 = view();
+      out.noonSame = G.map.ambient === 0.95 && G.map.bright === true && f0.every((b, i) => b === v1.d[i]);
+      const noon = patch(v1);
+      // the third hour: dark, away from any lamp
+      G.tod = mid; R.tick(0.1); Engine.render(G.ents, mid); const night = patch(view());
+      out.nightDark = G.map.ambient >= 0.16 && G.map.ambient <= 0.2 && night < noon * 0.5;
+      out.lightNums = [noon.toFixed(1), night.toFixed(1), G.map.ambient];
+      // the far lights are the brightest things in the frame
+      G.flags.p113_seen = 0; go(R.MAP, five6[0], five6[1], 0); G.tod = mid;
+      for (let t = 0; t < 26; t += 0.1) { S.tick(0.1); R.tick(0.1); G.murmurT = 2; G.tod = mid; }
+      Engine.cam.dir = S.farLights().gold.a; Engine.cam.pitch = 0; S.tick(0.01); Engine.render(G.ents, mid);
+      const v = view(), g = G.ents.find((e) => e && e._p113 === 'far' && e.sprite === 'p113_lightG' && !e.hidden);
+      let gl = 0, mx = 0; for (let y = 0; y < 150 * v.sx; y++) for (let x = 0; x < v.w; x++) mx = Math.max(mx, lumAt(v, x, y));
+      if (g && g._screen) for (let y = Math.max(0, g._screen.y0 * v.sx); y <= g._screen.y1 * v.sx; y++) for (let x = Math.max(0, g._screen.x0 * v.sx); x <= g._screen.x1 * v.sx; x++) gl = Math.max(gl, lumAt(v, x, y));
+      out.farBrightest = !!g && gl > 0 && gl >= mx * 0.98 && gl > 200;
+      S.resetNight(); G.flags.p113_seen = 1; }
     // once
     clear(); go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid; stepNight(10); out.once = !said(TX.night[0]) && G.flags.p113_seen === 1;
     // the Watch's rule still holds while it plays: say nothing and the quiet comes on
@@ -242,6 +268,10 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
   check(r.farDrawn && r.farMoves && r.farAboveParapet, 'from the stretch the night is drawn as far lights: the lantern moves a short way; the gold point sinks toward the parapet line, smaller, stops, slides sideways; the second light beside it');
   check(r.lights && r.lightEnts, 'a lantern, a gold point going down and getting smaller, and a second light near it; then gone');
   check(r.hiddenFromStretch && r.seenPastNine, 'the lights are drawn where they truly are: hidden from the stretch by the towers and the parapet, the lantern in sight from the walk past Tower Nine');
+  check(r.lightCurve, 'the wall\'s light by the hour: 0.95 from seven to five, falling smoothly through dusk to dark at full dark, dark to the dead hour, rising at dawn');
+  check(r.noonSame, 'at noon the wall is lit exactly as Phase 100 lit it, and the frame is unchanged');
+  check(r.nightDark, 'at the third hour the wall is dark: open floor away from any lamp is much darker than at noon (' + (r.lightNums || []).join(', ') + ')');
+  check(r.farBrightest, 'at night the far lights are the brightest things in the frame');
   check(r.once, 'and it fires once');
   check(r.nightNoRandom, 'the night plays without Math.random');
   check(r.stillTalk, 'the Watch\'s rule still holds while it plays: say nothing and the quiet comes on');
