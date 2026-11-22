@@ -124,11 +124,34 @@ A lamp-teller, of all three: "Other folds, on hills too far off to walk to. They
 - At night with too much light or cloud: `Too much light here tonight. The lamps are there. You cannot have them.`
 - On a clear dark night: the sky in the stone's eye is shown large, the figure's stars drawn out and joined, and under it the figure's name, whose it is, and its story (the texts above).
 
-**Where they stand.** (The places are being surveyed against the game's maps now; the list will be added here before anything is built.) The plan:
+**Where they stand.** The places were surveyed against the game's maps on 22 Nov (open ground, dark, on a path a traveller walks; `story/Game Layer/Lore briefs/The sky and the faiths (22 Nov 2026)/SITES.md`). One discovery: **the ring outside the Hedge was already built** in Phase 47, as the Weekstones: eight stones, one to each day of the week, sunwise from Rootday's, with Nullday's lying fallen. The Fold's eight Keepers are the week's eight, in the week's order, so the Weekstones are the Fold's ring, and nothing about them is changed. That the Owl's stone is the fallen one fits him.
+
+Each stone has a **sighting peg**, a knee-high stone with a cup in its top, set so that standing at it you face the figure through or past the stone.
+
+| Stone | Where | Sights |
+| --- | --- | --- |
+| The Weekstones (Phase 47) | Outside the Hedge, the ring | The eight Keepers, each from its day's stone |
+| A small stone set apart | Just outside the Weekstones | The Sparrow |
+| Needle-stone | Outside the Hedge, the south-west knoll | The Open Door (the first sign a child is shown, at the first place a traveller walks) |
+| Needle-stone | The Flume Road: the Stride | The Cloister Walk |
+| Needle-stone | The drove road: the Hundred Hollows | The Hound's Step (the hounds den there) |
+| Needle-stone | The Greenroot Road: Greenroot Wood | The Floating Light (the fen is there) |
+| Needle-stone | The Greenroot Road: the Long Common | The Road-Song (the carters' road) |
+| Needle-stone | The Greenroot Road, the middle stretch | The Mourner's Hour |
+| Needle-stone | The Flume Road: the Pound Stair | The Broken Fifth (sixteen lock-gates, evenly spaced) |
+| The five great raddled wethers | The drove road: the Grey Wethers | The loose five, in the call's order |
+| Ewe Barrow's sarsen door | Wethercombe | The Lantern |
+| Notch-stone | The Watch Downs | The Far Fold |
+| Notch-stone | The Greenroot Road, above the Leap | The Wheel (the carters' road) |
+| Notch-stone | Wethercombe, the west scarp | The Two Fleeces (sheep country) |
+| Canted needle-stone | Null-Watch, the mooring-yard | The Owl, never seen |
+| Needle-stone | The Chalk Cliffs below Sun-Peak Vigil | The Cockerel, never seen |
+
+The first plan, kept for the record:
 
 | Stone | What it sights | Why there |
 | --- | --- | --- |
-| **The ring outside the Hedge** (already canon, purpose undecided until now) | The eight Keepers, one over each of eight stones; a ninth, low stone for the Sparrow | The great place of the Fold. This settles what the ring was. |
+| **The ring outside the Hedge** (built in Phase 47 as the Weekstones) | The eight Keepers, one to each day's stone; a low stone apart for the Sparrow | The great place of the Fold. |
 | **The Grey Wethers** (already in the game) | The loose five, one to each raddled sarsen | The drovers' call is their order. The Quiet Faith's vigil already sits there: the two faiths at one set of stones. |
 | **Ewe Barrow** (already in the game) | The Lantern | The lunula in the grave. |
 | **Seven needle-stones on the roads and downs** | The seven Signs, one each | A walker meets them one at a time over the whole Reach. |
@@ -136,7 +159,7 @@ A lamp-teller, of all three: "Other folds, on hills too far off to walk to. They
 | **A blind stone on the road to Null-Watch** | The Owl, which cannot be seen | `A needle-stone, canted, its eye to the east. Whoever set it meant the Owl to sit in it. You look through. Black. The sky over the Rift has no lamps in it at all. Somebody has pecked a new cup-mark under the old ones, not long ago, and then tried to rub it out.` |
 | **A blind stone in the Dawning Heights** | The Cockerel, which cannot be seen | `Its eye looks for the Cockerel. Since the Spire broke there has been no night up here to see him by. The stone is warm.` |
 
-**One person to meet:** a lamp-teller, **Old Marrable**, at the ring outside the Hedge, by night only. She says the five sayings, and the line about the signs. She sells nothing and asks for nothing.
+**One person to meet:** a lamp-teller, **Old Marrable**, at the Weekstones, by night only, sitting by the fallen Nullday stone. She says the five sayings, and the line about the signs. She sells nothing and asks for nothing.
 
 ## 8. Ruled 22 Nov (approved as proposed)
 
