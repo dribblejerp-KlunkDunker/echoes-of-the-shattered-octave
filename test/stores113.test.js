@@ -54,7 +54,12 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
     out.builtNoRandom = builtRnd === 0 && !!maps[S.MAP] && maps[S.MAP] !== G.maps[S.MAP];
     // ---- the map and the door
     const wall = G.maps[R.MAP], st = G.maps[S.MAP];
-    out.map = !!st && !!st.ceil && st.w === S.W && st.h === S.H;
+    out.map = !!st && !!st.ceil && st.w === S.W && st.h === S.H && st.name === TX.door && TX.door === 'The old garrison\'s store';
+    // narrow and crowded: about seven cells by sixteen inside, an aisle no more than three wide, racks on both sides and across the end
+    { let wide = 0, racks = 0; for (let x = 1; x < st.w - 1; x++) { let n = 0; for (let y = 1; y < st.h - 1; y++) if (!st.isBlocked(x, y)) n++; if (n > 3) wide++; }
+      for (const c of st.cells) if (c && /^t_p113_r/.test(c.tex || '')) racks++;
+      const endRack = [3, 4, 5].every((y) => /^t_p113_r/.test((st.cells[y * st.w + st.w - 2] || {}).tex || ''));
+      out.narrow = st.w - 2 === 16 && st.h - 2 === 7 && wide === 0 && racks >= 30 && endRack; }
     const dc = wall.cells[S.DOOR[1] * wall.w + S.DOOR[0]];
     out.door = !!dc && !!dc.door && !dc.locked && !!dc.portal && dc.portal.map === S.MAP && dc.label === TX.door;
     out.doorNear = Math.hypot(S.DOOR[0] + 0.5 - R.P.qm[0], S.DOOR[1] + 0.5 - R.P.qm[1]) < 6 && R.P.nine[0] <= S.DOOR[0] + 1 && S.DOOR[0] - 1 <= R.P.nine[2] && R.P.nine[1] <= S.DOOR[1] && S.DOOR[1] <= R.P.nine[3];
@@ -122,7 +127,7 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
     out.letterShown = !!Array.from(document.querySelectorAll('#d-topics button')).find((b) => b.textContent === TX.letter.replace(/<[^>]+>/g, ''));
     { const b = document.querySelector('#d-topics [data-choice="0"]'); if (b) b.click(); }
     L = log(); out.letter = hasLine(L, TX.letter) && hasLine(L, TX.after1) && hasLine(L, TX.after2) && L.indexOf(TX.after1) < L.indexOf(TX.after2) && G.flags.p113_qm === 8;
-    L = work(); out.afterLetter = hasLine(L, TX.end) && G.flags.p113_qm === 8;
+    L = work(); out.afterLetter = hasLine(L, TX.done) && !hasLine(L, TX.end) && G.flags.p113_qm === 8 && TX.done === '"That is the work done. The third hour, if you are awake. Between Five and Six."';
     // flags survive a save and a load
     { G.flags.p113_seen = 0; G.flags.p113_bits = 1; const snap = JSON.parse(JSON.stringify(snapshotGame())); closeModal(); restoreGame(snap); out.saved = G.flags.p113_qm === 8 && G.flags.p113_carry === 0 && G.flags.p113_bits === 1 && !!G.maps[S.MAP]; }
 
@@ -146,7 +151,7 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
     reset(false); G.flags.p113_qm = 8;
     out.stretch = S.onStretch(...five6) && !S.onStretch(...seven8) && !S.onStretch(...at(4.2, 12)) && S.inHour(mid) && !S.inHour(T.from - 0.01) && !S.inHour(T.to + 0.01) && !S.inHour(0.5);
     // the wrong hour on the right stretch: nothing
-    go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = T.from - 0.02; stepNight(3); out.wrongHour = !said(TX.night[0]) && G.flags.p113_seen === 0;
+    go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = T.from - 0.02; stepNight(3); out.wrongHour = !said(TX.night[0]) && G.flags.p113_seen === 0 && !G.ents.some((e) => e && e._p113 === 'far' && !e.hidden);
     // the right hour on the wrong stretch: nothing
     go(R.MAP, seven8[0], seven8[1], -Math.PI / 2); G.tod = mid; stepNight(3); out.wrongPlace = !said(TX.night[0]) && G.flags.p113_seen === 0;
     go(R.MAP, ...qmFoot, 0); G.tod = mid; stepNight(3); out.notAtFoot = !said(TX.night[0]) && G.flags.p113_seen === 0;
@@ -155,19 +160,30 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
     let nr = 0; Math.random = function () { nr++; return _r.apply(Math, arguments); };
     const seenLights = { lantern: 0, gold: 0, answer: 0, goldDown: 0, goldSmaller: 0 };
     let gold0 = null;
+    // the far lights, as drawn from the stretch: bearing (radians) and elevation (slope from the eye) of each, over time
+    const far = { n: 0, L: [], G: [], A: [] };
     for (let t = 0; t < S.NIGHT_S + 5; t += 0.1) {
       S.tick(0.1); G.tod = mid;
       const L0 = S.lights();
       if (L0.lantern) seenLights.lantern++;
       if (L0.gold) { seenLights.gold++; if (!gold0) gold0 = L0.gold; else { if (L0.gold.z < gold0.z - 20) seenLights.goldDown = 1; if (L0.gold.size < gold0.size) seenLights.goldSmaller = 1; } }
       if (L0.answer) seenLights.answer++;
+      const vis = G.ents.filter((e) => e && e._p113 === 'far' && !e.hidden); far.n = Math.max(far.n, vis.length);
+      const F = S.farLights(), tt = S.night().t;
+      if (F.lantern && !F.lantern.hidden) far.L.push([tt, F.lantern.a, F.lantern.el]); if (F.gold && !F.gold.hidden) far.G.push([tt, F.gold.a, F.gold.el, F.gold.size]); if (F.answer && !F.answer.hidden) far.A.push([tt, F.answer.a, F.answer.el]);
     }
+    { const at = (arr, t) => arr.find((v) => v[0] >= t), dA = (a, b) => Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b)));
+      const l0 = at(far.L, 2), l1 = at(far.L, 16), g0 = at(far.G, 21.2), g1 = at(far.G, 29.5), g2 = at(far.G, 32.5), g3 = at(far.G, 46), a0 = at(far.A, 39);
+      out.farDrawn = far.n === 3 && far.L.length > 100 && far.G.length > 100 && far.A.length > 50;
+      out.farMoves = !!(l0 && l1 && g0 && g1 && g2 && g3 && a0) && dA(l0[1], l1[1]) > 0.005 && g1[2] < g0[2] - 0.02 && g1[3] < g0[3] && Math.abs(g2[2] - g1[2]) < 1e-3 && dA(g2[1], g1[1]) < 1e-3 && dA(g3[1], g2[1]) > 0.004 && a0[3 - 1] <= g3[2] + 0.02 && dA(a0[1], g3[1]) < 0.03;
+      out.farAboveParapet = far.G.every((v) => v[2] > S.farFrame().line); }
     Math.random = _r;
     out.nightNoRandom = nr === 0;
     const idx = TX.night.map((t) => msgs.indexOf(t));
-    out.night = idx.every((i) => i >= 0) && idx.every((v, i) => !i || v > idx[i - 1]) && G.flags.p113_seen === 1;
+    out.line1 = TX.night[0] === 'Far along the wall, at the foot of Tower Nine, a lantern comes out of the wall, by a door you were not let through.';
+    out.night = out.line1 && idx.every((i) => i >= 0) && idx.every((v, i) => !i || v > idx[i - 1]) && G.flags.p113_seen === 1;
     out.lights = seenLights.lantern > 20 && seenLights.gold > 20 && seenLights.answer > 10 && seenLights.goldDown && seenLights.goldSmaller;
-    out.lightEnts = G.ents.filter((e) => e && e._p113 === 'light').length === 0;   // all gone once it is over
+    out.lightEnts = G.ents.filter((e) => e && (e._p113 === 'light' || e._p113 === 'far')).length === 0;   // all gone once it is over
     // the lights are where they are: from the stretch Towers Six and Seven and the lip stand between you and Tower Nine's
     // buttress, so nothing is drawn there; from the wall-walk past Tower Nine the lantern out on the buttress is in sight
     { G.flags.p113_seen = 0; go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid; for (let t = 0; t < 12; t += 0.1) { S.tick(0.1); G.tod = mid; }
@@ -201,7 +217,8 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
     return out;
   });
   check(r.builtNoRandom, 'the stores, the door and the cart are built without Math.random');
-  check(r.map && r.door && r.doorNear, 'a door in the obsidian at Tower Nine\'s foot, by the Quartermaster: "The Quartermaster\'s stores", an indoor map with its own ceiling');
+  check(r.map && r.door && r.doorNear, 'a door in the obsidian at Tower Nine\'s foot, by the Quartermaster: "The old garrison\'s store", an indoor map with its own ceiling');
+  check(r.narrow, 'the store is narrow and crowded: sixteen by seven, an aisle no wider than three, racks both sides and across the end');
   check(r.postern, 'the postern at Tower Nine\'s foot is still barred, with Phase 100\'s line ("... Not yours. Not tonight.")');
   check(r.inside && r.exit && r.left, 'the stores can be entered from the wall, and left again by the same door');
   check(r.things && r.looks, 'nine things to look at, each reached on foot, each with its name and its line');
@@ -215,13 +232,14 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
   check(r.noEarlyBlanket && r.brought2 && r.blanket, 'errand two brought (3 to 5); a trooper in the Halls gives a blanket, and only when it is asked for');
   check(r.brought3, 'errand three brought (5 to 6)');
   check(r.ask4 && r.letterShown && r.letter, 'no glass arm: the letter is asked (6 to 7) and read aloud in his hearing (7 to 8), and he tells you the hour');
-  check(r.afterLetter, 'after the letter, Work has nothing more');
+  check(r.afterLetter, 'after the letter, Work gives its own last line');
   check(r.saved, 'the p113_ flags survive a save and a load');
   check(r.glass && r.glassOnce && r.g2 && r.g3 && r.gFold, 'the glass arm: he hears it ring first, once; the three errands go the same');
   check(r.glassEnd && r.glassNever, 'the glass arm: Work ends after the blanket; never the letter, never the hour');
   check(r.stretch, 'the stretch between Towers Five and Six, and the third hour of the night, are what they say');
   check(r.wrongHour && r.wrongPlace && r.notAtFoot, 'the night does not fire at the wrong hour, on the wrong stretch, or at Tower Nine\'s foot');
   check(r.night, 'the night fires on that stretch in that hour: eight lines, in order');
+  check(r.farDrawn && r.farMoves && r.farAboveParapet, 'from the stretch the night is drawn as far lights: the lantern moves a short way; the gold point sinks toward the parapet line, smaller, stops, slides sideways; the second light beside it');
   check(r.lights && r.lightEnts, 'a lantern, a gold point going down and getting smaller, and a second light near it; then gone');
   check(r.hiddenFromStretch && r.seenPastNine, 'the lights are drawn where they truly are: hidden from the stretch by the towers and the parapet, the lantern in sight from the walk past Tower Nine');
   check(r.once, 'and it fires once');
