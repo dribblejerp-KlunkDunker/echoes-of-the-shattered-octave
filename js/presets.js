@@ -322,7 +322,19 @@ const PRESETS = (() => {
   // (Phase 107) a switch registered by a file loaded after the startup preset (js/max20.js applies a returning
   // player's choice early) starts as that preset wants it, not as plain on (Codex review, PR #152)
   function startValue(flag) { const t = table[GFX.preset]; return t ? fxWanted(t.fx, flag) : true; }
-  const api = { apply, current, startValue, table, measure, scenes: SCENES, order: ORDER, cinemaOnly: CINEMA_ONLY, art: ART, allButLow: ALL_BUT_LOW, isArt, fxWanted, refresh: () => { try { refreshBlock(); } catch (e) { /* menu closed */ } }, upscale, setScale, setViewDist, stepViewDist, snapViewDist, farLabel: FAR_LABEL, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
+  // (Phase 110) a late switch that keeps the player's own choice across launches, as the older modules do with their own
+  // storage (js/hud11.js, js/look10.js): restore the stored value if there is one, else start as the preset in force wants;
+  // store every later change, whether the player's or a preset's (Codex review, PR #156)
+  function keep(flag) {
+    const KEY = 'octave.switch.' + flag;
+    try { const v = JSON.parse(localStorage.getItem(KEY) || 'null'); if (typeof v === 'boolean') GFX[flag] = v; } catch (e) { /* no storage */ }
+    if (GFX[flag] === undefined) GFX[flag] = startValue(flag);
+    let last = GFX[flag];
+    const store = () => { if (GFX[flag] === last) return; last = GFX[flag]; try { localStorage.setItem(KEY, JSON.stringify(!!last)); } catch (e) { /* no storage */ } };
+    if (GFX.onChange) GFX.onChange(store);
+    return store;
+  }
+  const api = { apply, current, startValue, keep, table, measure, scenes: SCENES, order: ORDER, cinemaOnly: CINEMA_ONLY, art: ART, allButLow: ALL_BUT_LOW, isArt, fxWanted, refresh: () => { try { refreshBlock(); } catch (e) { /* menu closed */ } }, upscale, setScale, setViewDist, stepViewDist, snapViewDist, farLabel: FAR_LABEL, setParticles, setCurve, setUpscale, syncClasses, boot: BOOT, last: null, lastBest: null };
   rememberParticles();
   wire();
   apply(BOOT);

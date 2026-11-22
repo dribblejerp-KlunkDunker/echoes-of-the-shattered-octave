@@ -190,6 +190,8 @@ const FPHANDS = (() => {
       let y = 38 + d - 34 + gap * 0.3;
       if (cyc < 0.15) y += (1 - ease(cyc / 0.15)) * 40;           // reaching up to the next rung
       const x = i ? 168 : 120;
+      // Phase 110: the pixel hands (js/pixelhands110.js), a fist round the rung, when they are switched on
+      try { if (typeof PIXELHANDS110 === 'object' && PIXELHANDS110.climbHand(ctx, i, x, y)) continue; } catch (e) { /* the hands below */ }
       ctx.fillStyle = sk[1]; ctx.fillRect(x - 1, y - 1, 34, 16);    // outline
       ctx.fillStyle = sk[0]; ctx.fillRect(x, y, 32, 14);            // fist over the rung
       ctx.fillStyle = sk[2]; for (let f = 0; f < 4; f++) ctx.fillRect(x + 2 + f * 8, y + 1, 6, 4); // knuckles

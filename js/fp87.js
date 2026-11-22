@@ -388,6 +388,12 @@ const FP87 = (function () {
 
   // ---------------------------------------------------------------- one painting
   const cache = new Map();
+  // Phase 110: paint(wid, look, { noHands: true }) and paintHands(look, pose, { noHands: true }) paint the picture
+  // WITHOUT the hands, the forearms and the sleeves, and say where each hand would be instead: `grips`, a list of
+  // { side, mirror, m, arm } where m = [a, b, c, d, e, f] is the canvas transform of the hand's own frame (the grip at its
+  // origin, the business end up -y; for a raised fist the fist's frame, for an open hand the open hand's) and arm = [wx, wy, ex, ey] the forearm's line as drawForearm would have drawn it. js/pixelhands110.js
+  // draws its own hands there. Without the option nothing here changes: the same pictures, byte for byte, the same cache.
+  const gripAt = (x, side, mirror, ox, oy, arm) => { x.save(); if (ox || oy) x.translate(ox || 0, oy || 0); const t = x.getTransform(); x.restore(); return { side, mirror: !!mirror, m: [t.a, t.b, t.c, t.d, t.e, t.f], arm }; };
   // ---------------------------------------------------------------- Phase 87 (d): the ranged weapons, each its own
   // One-handed (the pistol, the slings, the Works hand-crossbow): held up in the right hand like a blade, the business end
   // to the upper left. Two-handed (the crossbow, the Office carbine, the harpoon gun, the hornbow): held out in front, seen
@@ -510,32 +516,34 @@ const FP87 = (function () {
     }
     return { hold: [cx, H0 * 0.6], right: [cx + 20, H0 * 0.9] };
   }
-  function paintRanged(wid, e, look) {
-    const ck = keyOf(wid, look); let hit = cache.get(ck); if (hit) return hit;
+  function paintRanged(wid, e, look, opt) {
+    const nh = !!(opt && opt.noHands), grips = nh ? [] : null;   // Phase 110: no hands, only where they go
+    const ck = keyOf(wid, look) + (nh ? '|nh' : ''); let hit = cache.get(ck); if (hit) return hit;
     const seed = wid.length * 13 + wid.charCodeAt(0), hl = handLook(look, 'right'), hlL = handLook(look, 'left');
     const centred = !!CENTRED[e.kind] && !(e.kind === 'crossbow' && e.grip !== 'two');
     const BELOW = 40, RIGHT = centred ? 0 : 26, W0 = Math.round((centred ? 170 : 110) * K * 1.45), W = W0 + RIGHT * K * 2, H0 = Math.round((centred ? 160 : 190) * K * 1.45), H = H0 + BELOW * K * 2;
     const c = mk(W, H), x = c.getContext('2d'); x.imageSmoothingEnabled = true;
     if (!centred) {
       const gx = W0 * 0.56, gy = H0 * 0.74, lean = e.kind === 'sling' ? -0.1 : -0.3, L = e.kind === 'sling' ? H0 * 0.5 : e.kind === 'handbow' ? H0 * 0.42 : H0 * 0.5;
-      drawForearm(x, look, hl, gx + 36, gy + 46, W + 30, H + 40, 46, 120, seed);
+      if (!nh) drawForearm(x, look, hl, gx + 36, gy + 46, W + 30, H + 40, 46, 120, seed);
       x.save(); x.translate(gx, gy); x.rotate(lean); drawOneRanged(x, wid, e, L, seed);
-      x.save(); x.translate(6, 0); drawFist(x, hl, seed, false); x.restore(); x.restore();
+      if (nh) grips.push(gripAt(x, 'right', false, 0, 0, [gx + 36, gy + 46, W + 30, H + 40])); else { x.save(); x.translate(6, 0); drawFist(x, hl, seed, false); x.restore(); } x.restore();
     } else {
       const P = drawTwoRanged(x, wid, e, W, H0, seed);
       // the right hand on the grip near you, the left under the fore-end (or round the bow), forearms from the bottom corners
       const [rx, ry] = P.right, [lx, ly] = P.hold;
-      if (e.kind !== 'bow') { drawForearm(x, look, hl, rx + 30, ry + 40, W + 40, H + 60, 42, 110, seed); x.save(); x.translate(rx, ry); x.rotate(-0.25); x.scale(0.85, 0.85); drawFist(x, hl, seed, false); x.restore(); }
-      drawForearm(x, look, hlL, lx - 30, ly + 44, -60, H + 80, 38, 96, seed + 5, true);
-      x.save(); x.translate(lx, ly); x.rotate(e.kind === 'bow' ? 0.1 : 0.2); x.scale(0.82, 0.82); drawFist(x, hlL, seed + 2, true); x.restore();
+      if (e.kind !== 'bow') { if (!nh) drawForearm(x, look, hl, rx + 30, ry + 40, W + 40, H + 60, 42, 110, seed); x.save(); x.translate(rx, ry); x.rotate(-0.25); x.scale(0.85, 0.85); if (nh) grips.push(gripAt(x, 'right', false, 0, 0, [rx + 30, ry + 40, W + 40, H + 60])); else drawFist(x, hl, seed, false); x.restore(); }
+      if (!nh) drawForearm(x, look, hlL, lx - 30, ly + 44, -60, H + 80, 38, 96, seed + 5, true);
+      x.save(); x.translate(lx, ly); x.rotate(e.kind === 'bow' ? 0.1 : 0.2); x.scale(0.82, 0.82); if (nh) grips.push(gripAt(x, 'left', true, 0, 0, [lx - 30, ly + 44, -60, H + 80])); else drawFist(x, hlL, seed + 2, true); x.restore();
     }
     let emis = null;
-    try {
+    if (!nh) try {
       const id = x.getImageData(0, 0, W, H), d = id.data; let any = false;
       for (let i = 0; i < d.length; i += 4) { const l = d[i] * 0.3 + d[i + 1] * 0.55 + d[i + 2] * 0.15; if (d[i + 3] > 0 && l > 180) { const k = Math.min(1, (l - 180) / 60) * 0.2; d[i] *= k; d[i + 1] *= k; d[i + 2] *= k; any = true; } else { d[i] = d[i + 1] = d[i + 2] = 0; } }
       if (any) { emis = mk(W, H); emis.getContext('2d').putImageData(id, 0, 0); }
     } catch (er) { warnOnce('glint', er); }
     hit = { canvas: c, emis, k: K, below: BELOW, right: RIGHT, center: centred };
+    if (nh) hit.grips = grips;
     if (cache.size > 40) cache.clear();
     cache.set(ck, hit);
     return hit;
@@ -580,8 +588,9 @@ const FP87 = (function () {
   // the bare hands and the glass arm (`pose`): 'fist' the right fist raised, as it holds a blade but holding nothing;
   // 'glassfist' the same fist in glass (the body module draws it mirrored, on the left, where that arm is); 'open' both
   // hands open and raised, for a Song. Each wears what you wear.
-  function paintHands(look, pose) {
-    const ck = ['hands', pose, look && look.key, look && look.glassArm ? 1 : 0].join('|'); let hit = cache.get(ck); if (hit) return hit;
+  function paintHands(look, pose, opt) {
+    const nh = !!(opt && opt.noHands), grips = nh ? [] : null;   // Phase 110: no hands, only where they go
+    const ck = ['hands', pose, look && look.key, look && look.glassArm ? 1 : 0].join('|') + (nh ? '|nh' : ''); let hit = cache.get(ck); if (hit) return hit;
     const BELOW = 40, seed = 87 + pose.length;
     let c, x, W, H, RIGHT = 0, out;
     if (pose === 'open') {
@@ -590,8 +599,8 @@ const FP87 = (function () {
       const hlR = handLook(look, 'right'), hlL = handLook(look, 'left'), HS = 1.5, cy = H0 * 0.38;
       for (const [hl, cx, mirror, rot, ex] of [[hlL, W * 0.21, true, 0.2, -40], [hlR, W * 0.79, false, -0.2, W + 40]]) {
         const wx = cx - Math.sin(rot) * 34 * 1.85 * HS, wy = cy + Math.cos(rot) * 34 * 1.85 * HS;
-        drawForearm(x, look, hl, wx, wy - 14, ex, H + 50, 38, 104, seed + (mirror ? 5 : 0), mirror);
-        x.save(); x.translate(cx, cy); x.rotate(rot); x.scale(HS, HS); drawOpenHand(x, hl, seed + (mirror ? 2 : 0), mirror); x.restore();
+        if (!nh) drawForearm(x, look, hl, wx, wy - 14, ex, H + 50, 38, 104, seed + (mirror ? 5 : 0), mirror);
+        x.save(); x.translate(cx, cy); x.rotate(rot); x.scale(HS, HS); if (nh) grips.push(gripAt(x, mirror ? 'left' : 'right', mirror, 0, 0, [wx, wy - 14, ex, H + 50])); else drawOpenHand(x, hl, seed + (mirror ? 2 : 0), mirror); x.restore();
       }
       out = { center: true };
     } else {
@@ -599,13 +608,13 @@ const FP87 = (function () {
       c = mk(W, H); x = c.getContext('2d'); x.imageSmoothingEnabled = true;
       const hl = pose === 'glassfist' ? GLASS_HL : handLook(look, 'right'), FS = 1.3, gx = W0 * 0.56, gy = H0 * 0.655, lean = -0.1;
       const lk = pose === 'glassfist' ? Object.assign({}, look, { hands: null }) : look;
-      drawForearm(x, lk, hl, gx + 40 * FS, gy + 50 * FS, W + 34, H + 44, 46 * FS * 0.96, 132, seed);
-      x.save(); x.translate(gx, gy); x.rotate(lean); x.scale(FS, FS); x.translate(6, 0); drawFist(x, hl, seed, false); x.restore();
+      if (!nh) drawForearm(x, lk, hl, gx + 40 * FS, gy + 50 * FS, W + 34, H + 44, 46 * FS * 0.96, 132, seed);
+      x.save(); x.translate(gx, gy); x.rotate(lean); x.scale(FS, FS); x.translate(6, 0); if (nh) grips.push(gripAt(x, 'right', false, 0, 0, [gx + 40 * FS, gy + 50 * FS, W + 34, H + 44])); else drawFist(x, hl, seed, false); x.restore();
       out = { flip: pose === 'glassfist', shift: pose === 'fist', tip: [(gx - 58 * FS) / W, (gy - 6) / H], root: [(gx + 44 * FS) / W, (gy + 60 * FS) / H] };
     }
     // what glows of its own: the glass (a quarter of its old light, as approved), and the brightest glints of the rest
     let emis = null;
-    try {
+    if (!nh) try {
       const id = x.getImageData(0, 0, W, H), d = id.data, GL = 0.22; let any = false;
       const glassAt = pose === 'glassfist' ? () => true : pose === 'open' && look && look.glassArm ? (px) => px < W / 2 : () => false;
       for (let i = 0, p = 0; i < d.length; i += 4, p++) { if (!d[i + 3]) continue;
@@ -614,16 +623,18 @@ const FP87 = (function () {
       if (any) { emis = mk(W, H); emis.getContext('2d').putImageData(id, 0, 0); }
     } catch (e) { warnOnce('hands glint', e); }
     hit = Object.assign({ canvas: c, emis, k: K, below: BELOW, right: RIGHT, pose }, out);
+    if (nh) hit.grips = grips;
     if (cache.size > 40) cache.clear();
     cache.set(ck, hit);
     return hit;
   }
 
   function keyOf(wid, look) { const h = look && look.hands; return [wid, look && look.key, look && look.glassArm ? 1 : 0].join('|'); }
-  function paint(wid, look) {
-    const e = entryOf(wid); if (e && RANGED_KINDS[e.kind]) return paintRanged(wid, e, look);
+  function paint(wid, look, opt) {
+    const e = entryOf(wid); if (e && RANGED_KINDS[e.kind]) return paintRanged(wid, e, look, opt);
     const f = formOf(wid, e); if (!e || !f) return null;
-    const ck = keyOf(wid, look); let hit = cache.get(ck); if (hit) return hit;
+    const nh = !!(opt && opt.noHands), grips = nh ? [] : null;   // Phase 110: no hands, only where they go
+    const ck = keyOf(wid, look) + (nh ? '|nh' : ''); let hit = cache.get(ck); if (hit) return hit;
     const pole = e.kind === 'spear' || e.kind === 'glaive', two = e.grip === 'two', blade = !!BLADE_KINDS[e.kind];
     // the canvas: the old pictures were about 100 x 190; these are drawn 1.25 times as large at K times the detail
     // BELOW: the forearm runs on under the old picture's bottom edge, out of the bottom of the view (in view pixels: the
@@ -636,7 +647,7 @@ const FP87 = (function () {
     const gx = W0 * (pole ? 0.62 : 0.56), gy = H0 * (pole ? 0.8 : 0.74), lean = pole ? -0.42 : two ? -0.2 : -0.16;
     const len = blade ? Math.min(H0 * 0.66, (e.len || 8) * 30 + 90) : pole ? H0 * 0.64 : two ? H0 * 0.56 : H0 * (f.len || 0.44);
     // the forearm first (it is behind the hand), out of the bottom-right
-    drawForearm(x, look, hl, gx + 36, gy + 46, W + 30, H + 40, 46, 120, seed);
+    if (!nh) drawForearm(x, look, hl, gx + 36, gy + 46, W + 30, H + 40, 46, 120, seed);
     x.save(); x.translate(gx, gy); x.rotate(lean);
     const gripL = blade ? (two ? 160 : 110) : 0;
     if (blade) {
@@ -652,19 +663,20 @@ const FP87 = (function () {
       x.save(); x.translate(0, -len + 20); x.scale(HS, HS); drawHead(x, f, e, 0, seed); x.restore();
     }
     // the right hand closes round the grip
-    x.save(); x.translate(6, blade ? -gripL * 0.5 + 6 + gripL * 0.55 : 0); drawFist(x, hl, seed, false); x.restore();
+    if (nh) grips.push(gripAt(x, 'right', false, 0, blade ? -gripL * 0.5 + 6 + gripL * 0.55 : 0, [gx + 36, gy + 46, W + 30, H + 40]));
+    else { x.save(); x.translate(6, blade ? -gripL * 0.5 + 6 + gripL * 0.55 : 0); drawFist(x, hl, seed, false); x.restore(); }
     x.restore();
     // two hands: the left hand further up a pole, or just below the right on a long grip (glass if the arm is glass)
     if (two) {
       // up the shaft (or down the long grip) from the right hand: the shaft's own direction
       const up = pole ? 200 : -150, ax = gx + Math.sin(lean) * up, ay = gy - Math.cos(lean) * up, lx = 0, ly = 0;
-      drawForearm(x, look, hlL, ax - 30, ay + 44, -70, H + 80, 38, 90, seed + 5, true);
-      x.save(); x.translate(ax, ay); x.rotate(lean); drawFist(x, hlL, seed + 2, true); x.restore();
+      if (!nh) drawForearm(x, look, hlL, ax - 30, ay + 44, -70, H + 80, 38, 90, seed + 5, true);
+      x.save(); x.translate(ax, ay); x.rotate(lean); if (nh) grips.push(gripAt(x, 'left', true, 0, 0, [ax - 30, ay + 44, -70, H + 80])); else drawFist(x, hlL, seed + 2, true); x.restore();
       void lx; void ly;
     }
     // the glint: the brightest parts (edges, the lit flat, glass) keep a little light of their own under the scene's shading
     let emis = null;
-    try {
+    if (!nh) try {
       const id = x.getImageData(0, 0, W, H), d = id.data; let any = false;
       for (let i = 0; i < d.length; i += 4) { const l = d[i] * 0.3 + d[i + 1] * 0.55 + d[i + 2] * 0.15; if (d[i + 3] > 0 && l > 180) { const k = Math.min(1, (l - 180) / 60) * 0.2; d[i] *= k; d[i + 1] *= k; d[i + 2] *= k; any = true; } else { d[i] = d[i + 1] = d[i + 2] = 0; d[i + 3] = 0; } }
       if (any) { emis = mk(W, H); emis.getContext('2d').putImageData(id, 0, 0); }
@@ -672,7 +684,8 @@ const FP87 = (function () {
     // Phase 88: where the business end is, as fractions of the canvas (the swing's smear follows it)
     const rot = (lx, ly) => [gx + lx * Math.cos(lean) - ly * Math.sin(lean), gy + lx * Math.sin(lean) + ly * Math.cos(lean)];
     const tipL = blade ? rot(0, -gripL * 0.5 + 6 - len) : rot(0, -len + 20), rootL = blade ? rot(0, -gripL * 0.5 + 6) : rot(0, -len * 0.45);
-    hit = { canvas: c, emis, k: K, below: BELOW, right: RIGHT, tip: [tipL[0] / W, tipL[1] / H], root: [rootL[0] / W, rootL[1] / H] };   // the canvas is K times its place; it hangs BELOW view pixels lower   // the canvas is K times its place on the screen (which is 1.25 times the old pictures)
+    hit = { canvas: c, emis, k: K, below: BELOW, right: RIGHT, tip: [tipL[0] / W, tipL[1] / H], root: [rootL[0] / W, rootL[1] / H] };
+    if (nh) hit.grips = grips;   // the canvas is K times its place; it hangs BELOW view pixels lower   // the canvas is K times its place on the screen (which is 1.25 times the old pictures)
     if (cache.size > 40) cache.clear();
     cache.set(ck, hit);
     return hit;

@@ -106,7 +106,9 @@ This document tracks the full evolution of **Echoes of the Shattered Octave — 
 - [x] **owner, 20 Nov: "I also want to go back and make sure that visually the game looks right with assets", "proceed"**: Phase 106, the visual sweep (branch `p106-sweep`). All 101 places photographed (3D ahead, behind, night; classic) and looked at. Fixed: the near ceiling black on a cell line in the 3D view (a dozen rooms), the pale void past hilly maps' edges, road-walkers stepping out of the gate through you, the orchard's frost cards. Record with what was left and why: `story/Game Layer/Phase 106 - The visual sweep.md`
   - [x] for the owner (Phase 106 findings), ruled 20 Nov: ceiling variants (P107: five more timber ceilings by room); older sprites blocky close up (P107: "Sharp figures"); the Rift's moiré (ruled: keep the shimmer)
   - [x] Phase 107 part two (P107): the Hanger's beeches as plain smooth grey trunks with no bark; natural edges (hedgerows, the wood's edge) on the ten places that had borrowed the Hedge's wall; Oakhaven keeps the Hedge
-- [ ] **owner, 18 Nov: "when its an opportune time the hands and arms need a massive overhaul as well"**: Phase 109 (21 Nov, branch `p109-hands`) built the three options for the owner's choice (sculpted and lit, painted, pixel art; nothing in the game changed); record `story/Game Layer/Phase 109 - The hands and arms, three options (for ruling).md`. Waiting on the owner's choice, then the build into the game.
+- [ ] **owner, 18 Nov: "when its an opportune time the hands and arms need a massive overhaul as well"**: Phase 109 (21 Nov, branch `p109-hands`) built the three options for the owner's choice (sculpted and lit, painted, pixel art; nothing in the game changed); record `story/Game Layer/Phase 109 - The hands and arms, three options (for ruling).md`. **Ruled 21 Nov: "lets use the pixel art in the game for now but I do want to eventually use the sculpted lit by the world".**
+  - [x] Phase 110 (P110): the pixel-art hands in the game (every weapon, the swings, the Song, the glass arm, the off hand, the climb); still to touch up: the arm behind a shield, the glass's daylight brightness and the Song tint
+  - [ ] **later (the owner's aim): the sculpted hands, lit by the world** (`tools/hands109/hands109s.js`) replace the pixel ones in the 3D view; fix its bare fist first; keep the module and `test/hands109s.test.js` working until then
 
 **Phase 99: the five old failing checks (18 Nov, branch `p99-checks`).** Owner: "lets fix the old 5 failing checks. if nothing needs to be merged lets move on." Built by the Commander alone. Record: [`story/Game Layer/Phase 99 - The five old failing checks (for review).md`](story/Game%20Layer/Phase%2099%20-%20The%20five%20old%20failing%20checks%20(for%20review).md). Nothing added to the world; no new words.
 - [x] `logmap` (13): the air fight chooses its journal entry before writing it, so the logbook's scan can read it (`js/air93.js`); the check knows painted sketches are picture files
@@ -226,6 +228,27 @@ Record: [`story/Game Layer/Phase 87 - New In-Game Text (for review).md`](story/G
 **Phase 83, road 1 (13 Nov).** `js/flume83.js`: the Stride (Sallow Bottom under the Flume on its trunks, green after dusk, the brook over its fords in rain, Ennis Crowle's bee-boles, the gauging stone) and the Pound Stair (sixteen grown locks and their side-pounds, the low road under water in rain, the bottom pound empty after a surge with its grating, the lengthsman's three stuck gates opened with the Root in order, the wedged raft), with the runner, the gauger, the lengthsman and two raft-hands, and danger 1 (briar-sprites, mire-drones, hounds that come to a rung stake). Test `test/flume83.test.js`. `flume16` and `bearings82b` taught that the lane and the Landing now open onto the road; both rerun clean, with `eaves78`, `eaves82`, `life74`, `parish`, `r4thin29`, `roads15`, `synod15`, `travel`, `weather`, `story-i18n`, `horizon20`, `scenery`.
 
 **Tools.** `tools/dev/` holds the scripts for taking pictures, filming walks, and running suites, with a README.
+
+## Fable 5.2 roadmap (21 Nov 2026)
+
+The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on these next objectives and any others that will benefit from fable. put it into a road map and give it phases". The full plan, what "done" means for each phase, the open decisions and **the prompt to start the next session** are in [`story/Game Layer/Roadmap for Fable 5.2 (21 Nov 2026).md`](story/Game%20Layer/Roadmap%20for%20Fable%205.2%20(21%20Nov%202026).md).
+
+**Part A: Fable 5.2, in this order**
+
+| Phase | What |
+| --- | --- |
+| 111 | The pixel hands touched up: the arm behind a shield; the glass's deep azure by day; the hands' own Song light; the palm and the glove wear; every swing frame by frame |
+| 112 | The sculpted hands, lit by the world, finished and in the game as an Options choice (pixel stays the default until the owner says) |
+| 113 | The Continental Rift, part two: the Rift Wall and the Under-Shelves |
+| 114 | The Rift, part three: Redoubt Zero and the Edge, with their keepers and lamps |
+| 115 | The Rift, part four: the seven smaller places |
+| 116 | Roofs for the later places (Sun-Peak Vigil, Null-Watch, Cross Pool), then raised as in Phase 108 |
+| 117 | The Middle Country, part one: lore briefs, its great city by its frequency |
+| 118 | Book One in play (R9): the novel's set-pieces still open |
+| 119 | Pack weight and wear, and the far land (the Daggerfall list's 3, 4 and 5): designs for ruling |
+| 120 | The Library's second wave of books |
+
+**Part B: Opus 5.5:** French for the books once signed off; the remaining roads (the Cliff Walk, the Willow Walks, the road to the Stump); full suite runs; release preparation; tidying stale lines. **The owner's own:** a playtest on real hardware in English and French, two players over a real network, a low-end laptop and a phone.
 
 ## What is left: the world, in phases (13 Nov 2026)
 

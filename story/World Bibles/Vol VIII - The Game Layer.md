@@ -1,6 +1,6 @@
 # World Bible Vol VIII — The Game Layer
 
-### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 109, 21 November 2026).
+### What the Book One game adds to the world: what the owner has ruled, what follows the book, what was decided on the owner's behalf, and what is still only proposed. Compiled 29 October 2026; kept current phase by phase since (last: Phase 110, 21 November 2026).
 
 ---
 
@@ -2450,8 +2450,11 @@ Record: `story/Game Layer/Phase 103 - The answers anyone can give, voiced.md`. T
 
 **Nothing was added to the world.** The shared answers (what anyone in the world knows of Oakhaven, the Hedge, the Narrow, the Rite, Kaelen and the rest), the gossips' rumours, a blunt tone's refusals and the Narrow's polite blessings ("Blessings of the Narrow on you.", "Keep your voice low, friend.", "Mind how you go.") are now spoken. The rules Phase 102 keeps still hold: **the silent stay silent** (Lyra after the Grove, Mags signing, General Ward, whose words only Ninety-Four says), **the Hollows answer in breath**, and **children answer in a child's voice**. The voice groups are [PROPOSED], for the owner's review.
 
+#### Phase 110: the pixel-art hands, in the game (21 Nov)
+Record: `story/Game Layer/Phase 110 - The pixel-art hands in the game.md`. **Nothing was added to the world.** The owner's choice of 21 Nov: the player's own hands and every weapon held are drawn as pixel art (Options "Pixel hands"; off in Original). The glass arm stays the left arm, at rest unblazing, in its approved azure. The owner's aim remains the sculpted hands, lit by the world.
+
 #### Phase 109: the hands and arms, three options (21 Nov)
-Record: `story/Game Layer/Phase 109 - The hands and arms, three options (for ruling).md`. **Nothing in the game changed.** Three options for the first-person hands and arms, for the owner's choice: sculpted and lit by the world, painted, and pixel art. Canon kept in all three: the glass arm is the left arm ("a man with a glass arm"; "the edge of the glass came up along the bone"); at rest it does not blaze green (it blazes when it drinks a blow); its look is the one approved on 14 Nov (deep azure planes, dark seams, a bright rim, a quarter of its old glow). The owner also ruled on 21 Nov that which room has which ceiling (Phase 107) does not matter: it stands as built.
+Record: `story/Game Layer/Phase 109 - The hands and arms, three options (for ruling).md`. **Nothing in the game changed.** Three options for the first-person hands and arms, for the owner's choice: sculpted and lit by the world, painted, and pixel art. Canon kept in all three: the glass arm is the left arm ("a man with a glass arm"; "the edge of the glass came up along the bone"); at rest it does not blaze green (it blazes when it drinks a blow); its look is the one approved on 14 Nov (deep azure planes, dark seams, a bright rim, a quarter of its old glow). **Ruled 21 Nov:** "lets use the pixel art in the game for now but I do want to eventually use the sculpted lit by the world": the pixel-art hands go into the game now; the sculpted hands, lit by the world, are the hands the game is to have in the end. The owner also ruled on 21 Nov that which room has which ceiling (Phase 107) does not matter: it stands as built.
 
 #### Phase 108: every town raised (21 Nov)
 Record: `story/Game Layer/Phase 108 - Every town raised.md`. **Nothing was added to the world.** The owner (18 Nov): "yes every town should have raised houses". Greenroot, the Low Rings, Port Cantabile's quay, Whisper-Grove with the Bell Yard and Ashlane, the Malting, Wethercombe, Kaelen's hut, Stillwater Landing and Driftwood Cay stand as Oakhaven's houses have since Phase 97: a taller ground storey and doors a quarter taller than a person. Each town's proportions are [PROPOSED] (Whisper-Grove's marble has the tallest doors in the Reach; the Landing and the Cay stay low against the wind). Greenroot's chapel spire still stands over every roof.

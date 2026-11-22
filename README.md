@@ -492,6 +492,10 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 ![Phase 109: today and the three options](screenshots/p109-options.jpg)
 ![Phase 109: the sculpted option by night](screenshots/p109-sculpted-night.jpg)
 
+**The pixel-art hands, in the game (Phase 110).** The owner chose the pixel art: every weapon in the hand is now pixel art with a pixel hand on its grip, and so are the fists (each glove in its own colours), the glass arm, the Song's open hands and the climb (Options: "Pixel hands"). Record: [`story/Game Layer/Phase 110 - The pixel-art hands in the game.md`](story/Game%20Layer/Phase%20110%20-%20The%20pixel-art%20hands%20in%20the%20game.md).
+
+![Phase 110: the pixel-art hands in the game](screenshots/p110-hands.jpg)
+
 **Ground cover (Phase 105).** Grass tufts, clover, pebbles and fallen leaves near your feet outdoors in the 3D renderer, the same in the same place every visit (Options, "Ground cover"). Record: [`story/Game Layer/Phase 105 - Ground cover.md`](story/Game%20Layer/Phase%20105%20-%20Ground%20cover.md).
 
 | Oakhaven's green (top off, bottom on) | The Deep Woods (top off, bottom on) |
