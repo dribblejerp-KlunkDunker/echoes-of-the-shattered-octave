@@ -1062,6 +1062,18 @@ const BODY21 = (() => {
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
     // Phase 111: the pixel hands' arm behind the shield (js/pixelhands110.js offArm): the forearm comes up from below the
     // view behind the shield, through its middle, and the fingers are hooked over the rim where the arm's line meets it
+    // Phase 112: the sculpted hands' arm behind the shield (js/sculpted112.js): the whole arm is given first, then the
+    // shield's face as a card in the same picture, so the forearm is hidden behind it and the hooked fingers come over
+    if (sculptOn() && PIXELHANDS110.OA) {
+      try {
+        const OA = PIXELHANDS110.OA, ex = p.x - 30, ey = VHv() + 70, ul = Math.hypot(p.x - ex, p.y - ey) || 1, u = [(p.x - ex) / ul, (p.y - ey) / ul];
+        const R = rimAlong(art, u, p.r, sx, sy), hx = p.x + u[0] * R, hy = p.y + u[1] * R, ang = Math.atan2(u[0], -u[1]), q = p.s / 0.5, DEG = 180 / Math.PI;
+        const m0 = REC.inv.multiply(ctx.getTransform()), six = (m) => [m.a, m.b, m.c, m.d, m.e, m.f];
+        const ta = m0.translate(hx, hy).rotate(ang * DEG).scale(q, q).translate(-OA.hx, -OA.hy).scale(0.25, 0.25);
+        const tc = m0.translate(p.x, p.y).rotate(p.r * DEG).scale(sx, sy).translate(-art.hx, -art.hy).scale(art.w / face.width, art.h / face.height);
+        if (SCULPTED112.place('o', 'arm', look, six(ta)) && SCULPTED112.card(face, six(tc))) { ctx.restore(); stats.drawn.shield++; return true; }
+      } catch (e) { warnOnce('sculpted shield', e); }
+    }
     let px = null; try { px = typeof PIXELHANDS110 === 'object' && PIXELHANDS110.offArm ? PIXELHANDS110.offArm(look) : null; } catch (e) { warnOnce('pixel off arm', e); px = null; }
     if (px) {
       const ex = p.x - 30, ey = VHv() + 70, ul = Math.hypot(p.x - ex, p.y - ey) || 1, u = [(p.x - ex) / ul, (p.y - ey) / ul];
@@ -1193,6 +1205,20 @@ const BODY21 = (() => {
     if (!sculptOn() || !b || !b.main || !b.k) return false;
     const m = REC.inv.multiply(ctx.getTransform()), sx = dw / b.main.width, sy = dh / b.main.height;
     return SCULPTED112.place(b.pose ? 'h' : 'w', b.pose || b.wid, REC.look, [m.a * sx, m.b * sx, m.c * sy, m.d * sy, m.a * dx + m.c * dy + m.e, m.b * dx + m.d * dy + m.f]);
+  }
+  // the climb (js/fp-hands.js drawClimb): each fist round its rung is given to the sculpted hands, and when both are, they
+  // are drawn at once and laid on the HUD's own canvas over the ladder painted there (nothing else of the body shows in a climb)
+  function sculptClimb(ctx, i, x, y) {
+    if (!sculptOn() || !PIXELHANDS110.CL) return false;
+    const CL = PIXELHANDS110.CL, m = REC.inv.multiply(ctx.getTransform()), dx = x + 16 - CL.gx, dy = y + 2 - CL.gy, s = 0.25;
+    return SCULPTED112.place('c', i === 0 ? 'L' : 'R', REC.look, [m.a * s, m.b * s, m.c * s, m.d * s, m.a * dx + m.c * dy + m.e, m.b * dx + m.d * dy + m.f]);
+  }
+  function sculptClimbEnd(ctx) {
+    if (!sculptOn()) return false;
+    const cv = SCULPTED112.flush(sculptLight()); if (!cv) return false;
+    // (the HUD canvas's own setTransform counts in game pixels: the true one is the prototype's)
+    const P2 = CanvasRenderingContext2D.prototype; ctx.save(); P2.setTransform.call(ctx, REC.inv.inverse()); P2.drawImage.call(ctx, cv, 0, 0, VWv(), VHv()); ctx.restore();
+    return true;
   }
   // the world's light where you stand, for the sculpted hands: the sun's or the moon's colour and where it stands in the
   // view (js/light21.js), the sky's and the ground's light, lamps near you as a torch, a Song's colour
@@ -1727,7 +1753,7 @@ void main() {
   }
 
   function clearCaches() { headCache.clear(); buildCache.clear(); shieldCache.clear(); armCache.clear(); legCache.clear(); }
-  return { sculptLight, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
+  return { sculptLight, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
     R3B, FX3, LB, lbBuild, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;

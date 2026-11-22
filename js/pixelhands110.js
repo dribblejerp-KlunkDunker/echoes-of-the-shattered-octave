@@ -931,13 +931,31 @@ const PIXELHANDS110 = (() => {
   const PALM_C = [0, 5, 0];
   function poses(kind, id, look) {
     if (!_paint) return null;
-    const r = kind === 'w' ? _paint(id, look, { noHands: true }) : _paintHands(look, id, { noHands: true }); if (!r) return null;
-    const Wf = r.canvas.width, Hf = r.canvas.height; plain(Wf, Hf);
+    const lone = kind === 'c' || kind === 'o';
+    const r = lone ? null : kind === 'w' ? _paint(id, look, { noHands: true }) : _paintHands(look, id, { noHands: true }); if (!r && !lone) return null;
+    const Wf = lone ? (kind === 'c' ? CL.w : OA.w) * 4 : r.canvas.width, Hf = lone ? (kind === 'c' ? CL.h : OA.h) * 4 : r.canvas.height; plain(Wf, Hf);
     const wear = wearOf(look), out = { w: Wf, h: Hf, weapon: kind === 'w' ? r.canvas : null, hands: [] };
     const give = (P, curl, anchor, glass, dev, flexW) => {
       const a = scr(P, anchor); let arm = [0, -1, 0]; if (dev) arm = rot(arm, [0, 0, 1], dev * D2R); if (flexW) arm = rot(arm, [1, 0, 0], flexW * D2R);
       out.hands.push({ curl, glass: !!glass, x: a[0] * GR, y: a[1] * GR, cm: P.s * GR * a[3], Y: toWorld(P, [0, 1, 0]), Z: toWorld(P, [0, 0, 1]), left: !!P.mirror, arm: toWorld(P, arm) });
     };
+    if (kind === 'c') {
+      // a fist round a rung (climbArt above): id 'L' the left hand, 'R' the right
+      const left = id === 'L', P = { f: frame([0, 0.97, -0.25], [0, 0.25, 0.97]), s: 34 * 4 / 9.2 / GR, ax: 0, ay: 0, D, mirror: left, roll: left ? -6 : 6 };
+      const c = scr(P, GRIP_C); P.ax = CL.gx * 4 / GR - c[0]; P.ay = CL.gy * 4 / GR - c[1];
+      give(P, 'grip', GRIP_C, left && !!(look && look.glassArm), 0, 0);
+      // (a forearm that ran on along the hand would come at the eye and fill the view: the wrist bends, and it hangs nearly straight down)
+      const h = out.hands[0], a = [h.arm[0] * 0.5, -0.97, 0.06], l = Math.hypot(a[0], a[1], a[2]); h.arm = [a[0] / l, a[1] / l, a[2] / l];
+      return out;
+    }
+    if (kind === 'o') {
+      // the arm behind a shield (offArmArt above), for a hand that is whole and has depth: it leans toward you over the
+      // rim, so the forearm falls away behind the shield's face and only the hooked fingers come over it
+      const P = { f: frame([0.05, 0.955, 0.29], [0, 0.29, -0.955]), s: OA.cm / GR, ax: 0, ay: 0, D, mirror: true, roll: 0 };
+      const c = scr(P, GRIP_C); P.ax = OA.hx * 4 / GR - c[0]; P.ay = OA.hy * 4 / GR - c[1];
+      give(P, 'grip', GRIP_C, !!(look && look.glassArm), 0, 0);
+      return out;
+    }
     if (kind === 'w') {
       for (const g of r.grips || []) {
         const P = gripPose(g, null); let arm = g.arm;
@@ -1039,6 +1057,6 @@ const PIXELHANDS110 = (() => {
     return finish(compose(shadeScene(S, wear), null), 0, spec.w, spec.h);
   }
 
-  return { FLAG, GR, on, setOn, paint, paintHands, climbHand, climbArt, offArm, songCanvas, poses, wearOf, ROW, stats, MRG, original: () => (FP87 && FP87._px110) || null, _raise: (o) => { RAISE = Object.assign({}, RAISE, o); }, _dev: { hands: devHands } };
+  return { FLAG, GR, on, setOn, paint, paintHands, climbHand, climbArt, offArm, songCanvas, poses, CL, OA, wearOf, ROW, stats, MRG, original: () => (FP87 && FP87._px110) || null, _raise: (o) => { RAISE = Object.assign({}, RAISE, o); }, _dev: { hands: devHands } };
 })();
 if (typeof window !== 'undefined') window.PIXELHANDS110 = PIXELHANDS110;

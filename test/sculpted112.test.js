@@ -6,6 +6,7 @@
 //   - the hands are placed where the pixel hands are: each hand's middle on the sculpted canvas is near where the pixel
 //     hands' pose puts it
 //   - every weapon kind is held (a card for the weapon, a hand or two closed on it), the fists, the glass arm, a Song
+//   - behind a shield the arm is sculpted and the shield's face is a card before it; a climb's two fists are sculpted
 //   - the game's light: by night the canvas is darker than by day; a Song's colour lights the open hands
 //   - the same state draws the same pixels; nothing uses Math.random
 //   - the Options row ("Hands": In pixels / Sculpted) and its French; the classic view is not touched; no page errors
@@ -43,16 +44,21 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
       G.state = 'play'; G.tod = o.tod == null ? 0.45 : o.tod; G.fadeT = 0; UPG.weather = 'clear'; UPG.weatherFx = { sight: 1, hear: 1 }; if (typeof Weather !== 'undefined' && Weather.hold) Weather.hold('clear');
       UPG.tutorial = false; G.player.hp = G.player.hpMax = 999; G.noise = 0; Engine.cam.pitch = 0; G.player.pitch = 0;
       for (const e of G.ents) if (e.kind === 'enemy') e.state = 'idle';
-      const p = G.player, w = o.w || 'sword'; p.glassed = o.g !== 0; p.weapons = [w]; p.weapon = 0; p.armor = Object.assign({}, p.armor, { hands: o.h === undefined ? 'a_gloves' : o.h, shield: null });
+      const p = G.player, w = o.w || 'sword'; p.glassed = o.g !== 0; p.weapons = [w]; p.weapon = 0; p.armor = Object.assign({}, p.armor, { hands: o.h === undefined ? 'a_gloves' : o.h, shield: o.s || null });
       G.attack.t = 0; G.song.t = 0; G.songFx = 0; FPHANDS.st.shown = w; FPHANDS.st.lower = 0; FPHANDS.st.cast = 0; FPHANDS.st.climb = 0;
       GFX.sculptedHands = !!o.on; BODY21.clearCaches();
       for (let i = 0; i < 6; i++) window.advanceTime(1000 / 30);
-      const hold = () => { if (o.song) { G.song.t = 0.35; FPHANDS.st.cast = 0.6; FPHANDS.st.castDur = 0.9; FPHANDS.st.castCol = o.song; FPHANDS.st.castPower = 0.8; } if (o.atk != null) { G.attack.dur = 0.4; G.attack.t = 0.4 * (1 - o.atk); G.attack.dirLabel = 'slash left'; } };
+      const hold = () => { if (o.climb != null) FPHANDS.st.climb = FPHANDS.CLIMB_T * (1 - o.climb); if (o.song) { G.song.t = 0.35; FPHANDS.st.cast = 0.6; FPHANDS.st.castDur = 0.9; FPHANDS.st.castCol = o.song; FPHANDS.st.castPower = 0.8; } if (o.atk != null) { G.attack.dur = 0.4; G.attack.t = 0.4 * (1 - o.atk); G.attack.dirLabel = 'slash left'; } };
       const pn = performance.now; performance.now = () => 5000;   // (the idle sway reads the clock)
       const upd = update; update = function () {}; BODY21.R3B.check = true; const s0 = Object.assign({}, SCULPTED112.stats);
-      try { hold(); window.advanceTime(16); hold(); window.advanceTime(1); } finally { update = upd; performance.now = pn; }
+      // (a climb's pixel fists are counted as they are painted)
+      let pixClimb = 0; const ch = PIXELHANDS110.climbHand; PIXELHANDS110.climbHand = function () { const r = ch.apply(this, arguments); if (r) pixClimb++; return r; };
+      try { hold(); window.advanceTime(16); hold(); pixClimb = 0; window.advanceTime(1); } finally { update = upd; performance.now = pn; PIXELHANDS110.climbHand = ch; }
       const list = (BODY21.R3B.last && BODY21.R3B.last.list) || [], cv = SCULPTED112._gl() && SCULPTED112._gl().cv;
       const out = { pix: list.filter((it) => it.pix).length, live: list.filter((it) => it.over > 0 && it.img === cv).length, hands: SCULPTED112.stats.hands - s0.hands, cards: SCULPTED112.stats.cards - s0.cards, frames: SCULPTED112.stats.frames - s0.frames, glErr: BODY21.R3B.glErr };
+      out.pixClimb = pixClimb; out.shieldQuads = list.filter((it) => !it.over && !it.pix && it.img && it.img.width > 40 && it.img !== cv).length;
+      // the HUD's own canvas where the left fist holds its rung half way up a climb (view pixel 136, 60)
+      try { const t = Engine.ctx.getTransform(); out.hudA = Engine.ctx.getImageData(Math.round(136 * t.a), Math.round(60 * t.d), 1, 1).data[3]; } catch (e) { out.hudA = -1; }
       if (o.on && cv) {
         const px = SCULPTED112.read(), W = px.w, H = px.h, d = px.data; let n = 0, left = 0, right = 0, hash = 0, lum = 0; const R = [], Gc = [], B = [];
         for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) { const q = (y * W + x) * 4; if (d[q + 3] < 200) continue; n++; if (x < W / 2) left++; else right++; lum += d[q] * 0.3 + d[q + 1] * 0.55 + d[q + 2] * 0.15; hash = (hash * 31 + d[q] + d[q + 1] * 7 + d[q + 2] * 13) >>> 0; if (d[q + 2] > d[q] + 40 && d[q + 2] > 90) { R.push(d[q]); Gc.push(d[q + 1]); B.push(d[q + 2]); } }
@@ -107,6 +113,15 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
       assert.ok(r.night.lum < day.lum * 0.75 && r.night.lum > day.lum * 0.12 && r.night.glErr === 0, JSON.stringify([r.night.lum, day.lum]));
       assert.ok(r.song.hands >= 2 && r.song.pix === 0 && r.song.live === 1 && r.song.hash !== r.plain.hash, 'the open hands under a Song ' + JSON.stringify(r.song));
     });
+    await step('behind a shield the arm is sculpted too, the shield\'s face a card before it; a climb\'s two fists are sculpted, laid on the HUD over the ladder', async () => {
+      const r = await page.evaluate(() => ({ off: SHOT({ on: false, s: 'a_kite' }), on: SHOT({ on: true, s: 'a_kite' }), bare: SHOT({ on: true, s: 'a_buckler', g: 0, h: null }),
+        cOff: SHOT({ on: false, climb: 0.5 }), cOn: SHOT({ on: true, climb: 0.5 }) }));
+      console.log('  shield ' + JSON.stringify([r.off.pix, r.on.pix, r.on.hands, r.on.cards, r.on.left.toFixed(2), r.bare.hands, r.bare.cards]) + ' climb ' + JSON.stringify([r.cOff.pixClimb, r.cOn.pixClimb, r.cOn.hands, r.cOn.live, r.cOn.hudA]));
+      assert.ok(r.off.pix >= 3, 'the pixel arm and its fingers, with the pixel hands ' + JSON.stringify(r.off));
+      for (const k of ['on', 'bare']) assert.ok(r[k].pix === 0 && r[k].live === 1 && r[k].frames >= 1 && r[k].hands === 2 * r[k].frames && r[k].cards === 2 * r[k].frames && r[k].left > 0.15 && r[k].glErr === 0, k + ' ' + JSON.stringify(r[k]));
+      assert.ok(r.on.blueN > 300, 'the glass arm behind the shield ' + r.on.blueN);
+      assert.ok(r.cOff.pixClimb === 2 && r.cOn.pixClimb === 0 && r.cOn.hands >= 2 && r.cOn.live === 0 && r.cOn.hudA > 200 && r.cOn.glErr === 0, JSON.stringify([r.cOff, r.cOn]));
+    });
     await step('the Options row: "Hands", In pixels / Sculpted, with French; the classic view is not touched', async () => {
       const r = await page.evaluate(() => {
         GFX.sculptedHands = false; renderAccessibilityMenu();
@@ -124,8 +139,12 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
       for (const s of ['Sculptées', 'En pixels', 'sculptées et éclairées par le monde']) assert.ok(flat.includes(s), 'French: ' + s);
     });
     await step('nothing here uses Math.random; no page errors', async () => {
-      const n = await page.evaluate(() => { const a = window.__rand; SHOT({ on: true }); const b0 = window.__rand; GFX.sculptedHands = false; const c0 = window.__rand; SHOT({ on: false }); return { on: b0 - a, off: window.__rand - c0 }; });
-      assert.ok(n.on <= n.off, 'no more draws of Math.random with the sculpted hands than without ' + JSON.stringify(n));
+      const n = await page.evaluate(() => {
+        GFX.sculptedHands = true; SCULPTED112.clear(); const look = GEARLOOK21.of(G.player), a = window.__rand; let hands = 0;
+        for (const [k, id] of [['w', 'sword'], ['w', 'spear'], ['h', 'fist'], ['h', 'glassfist'], ['h', 'open']]) { SCULPTED112.begin(); if (SCULPTED112.place(k, id, look, [0.25, 0, 0, 0.25, 180, 20])) hands++; SCULPTED112.flush(BODY21.sculptLight()); }
+        const used = window.__rand - a; GFX.sculptedHands = false; return { used, hands };
+      });
+      assert.ok(n.used === 0 && n.hands === 5, 'posing, building and drawing the hands draws no random number ' + JSON.stringify(n));
       assert.deepStrictEqual(errors, []);
     });
   } finally {

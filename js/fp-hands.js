@@ -199,6 +199,8 @@ const FPHANDS = (() => {
       if (cyc < 0.15) y += (1 - ease(cyc / 0.15)) * 40;           // reaching up to the next rung
       const x = i ? 168 : 120;
       // Phase 110: the pixel hands (js/pixelhands110.js), a fist round the rung, when they are switched on
+      // Phase 112: the sculpted hands, when they are chosen (js/sculpted112.js, through js/body21.js)
+      try { if (typeof BODY21 === 'object' && BODY21.sculptClimb && BODY21.sculptClimb(ctx, i, x, y)) continue; } catch (e) { /* the hands below */ }
       try { if (typeof PIXELHANDS110 === 'object' && PIXELHANDS110.climbHand(ctx, i, x, y)) continue; } catch (e) { /* the hands below */ }
       ctx.fillStyle = sk[1]; ctx.fillRect(x - 1, y - 1, 34, 16);    // outline
       ctx.fillStyle = sk[0]; ctx.fillRect(x, y, 32, 14);            // fist over the rung
@@ -208,6 +210,7 @@ const FPHANDS = (() => {
       ctx.fillStyle = sk[1]; ctx.fillRect(x + 6, y + 14, 20, VIEW_H);       // forearm
       ctx.fillStyle = sk[0]; ctx.fillRect(x + 8, y + 14, 16, VIEW_H);
     }
+    try { if (typeof BODY21 === 'object' && BODY21.sculptClimbEnd) BODY21.sculptClimbEnd(ctx); } catch (e) { /* the ladder alone */ }
     ctx.restore();
   }
 

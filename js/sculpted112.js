@@ -787,6 +787,13 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
       return true;
     } catch (e) { warnOnce('place ' + id, e); return false; }
   }
+  // card(canvas, t): a painted picture (a shield's face) stood in the pictures' plane, in the order it is given: what was
+  // placed before it and lies behind the plane is hidden by it, what comes forward of the plane (hooked fingers) is not
+  function card(canvas, t) {
+    if (!on() || !canvas) return false;
+    items.push({ P: { w: canvas.width, h: canvas.height, weapon: canvas, hands: [] }, look: null, t, kind: 'card', id: '' });
+    return true;
+  }
   // the matrix that carries a point about (px, py) on the picture, s view-plane units to its own unit, into the view
   function matrix(t, px, py, s) {
     const [a, b, c, d, e, f] = t, sq = Math.sqrt(Math.abs(a * d - b * c)), lx = a * px + c * py + e, ly = b * px + d * py + f;
@@ -919,6 +926,6 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
   try { wireRow(); } catch (e) { warnOnce('wire', e); }
   try { if (typeof GFX !== 'undefined' && GFX.onChange) GFX.onChange(() => { try { syncRow(); } catch (e) { /* menu closed */ } }); } catch (e) { warnOnce('onChange', e); }
 
-  return { FLAG, ROW, WORDS, on, setOn, begin, place, flush, clear, read, stats, W, H, _gl: () => GL };
+  return { FLAG, ROW, WORDS, on, setOn, begin, place, card, flush, clear, read, stats, W, H, _gl: () => GL };
 })();
 if (typeof window !== 'undefined') window.SCULPTED112 = SCULPTED112;
