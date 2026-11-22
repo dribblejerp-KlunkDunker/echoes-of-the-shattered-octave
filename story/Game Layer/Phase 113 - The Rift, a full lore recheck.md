@@ -41,7 +41,7 @@ These are in the manuscript or between volumes. None blocks Design A. I have not
 5. **Who commands.** Vol II has "Garrison-Commander Nine-Four ('Ferris')" and command rotating every ninety days (V2:426, V1:335); the manuscript has General Theresa Ward, six years in post, with 94 as her voice. The game follows the manuscript.
 6. **Two-Eleven.** Vol II's is a battery-sergeant of nineteen years (V2:427); the manuscript's is the big slow trooper with the dog. The game follows the manuscript.
 7. **The garrison's size.** Vol II says about eight thousand (V2:412); the manuscript gives no count.
-8. **The Null-Amalgam.** Vol I and II have it as a thing that already walks, "wearing ... two hundred and six Null-Watch personnel" (V1:531, V2:545); the Series Bible has it "forming below the Maw" and "growing in the dark" (SB:141, 228). **This matters for Phase 114**, whose plan makes it Redoubt Zero's keeper. See section 5.
+8. **The Null-Amalgam.** Vol I and II have it as a thing that already walks, "wearing ... two hundred and six Null-Watch personnel" (V1:531, V2:545); the Series Bible has it as "a forming body" (SB:287), "forming below the Maw" (SB:377), and says "Something is growing in the dark below the wall" (SB:228). **This matters for Phase 114**, whose plan makes it Redoubt Zero's keeper. See section 5.
 9. **Redoubt Zero** is in Vol II and the Series Bible only (V2:418, SB:228): "the closest permanent structure to the Maw", "guards the southern lip", ninety-day rotations. Book Three never names it. The causeway and the rotation road of the Phase 90 plan are in no book and no volume.
 
 ## 4. What the player must never do or pre-empt at the Rift
