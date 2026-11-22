@@ -185,31 +185,39 @@ const PIXELHANDS110 = (() => {
   // o: { curl: 'fist'|'grip'|'open', wear, glass, foreLen, dev, flexW, noSleeve }
   function addHand(S, P, o) {
     const wear = o.wear, glass = !!o.glass, g = S.gid; S.gid += 20;
-    const G = { palm: g, f: [g + 1, g + 2, g + 3, g + 4], thumb: g + 5, wrist: g + 6, cuff: g + 7, hem: g + 8, sleeve: g + 9, trim: g + 10, roll: g + 11 };
+    const G = { palm: g, f: [g + 1, g + 2, g + 3, g + 4], thumb: g + 5, wrist: g + 6, cuff: g + 7, hem: g + 8, sleeve: g + 9, trim: g + 10, roll: g + 11, thenar: g + 12, hypo: g + 13 };
     if (wear.form === 'mitts' && !glass) G.f = [g + 1, g + 1, g + 1, g + 1];                       // mittens: the fingers are one
     const hm = glass ? M.GLASS : wear.hand, gloved = wear.gloved && !glass && !wear.coils;
     const fingerM = (seg) => (wear.fingerless && !glass && seg > 0 ? M.SKIN : hm);
     const curl = o.curl;
     const flex = curl === 'fist' ? [[86, 102, 66], [88, 102, 64], [90, 100, 62], [92, 98, 60]]
-      : curl === 'grip' ? [[74, 96, 52], [80, 96, 52], [84, 94, 52], [88, 92, 50]]
+      : (curl === 'grip' || curl === 'hook') ? [[74, 96, 52], [80, 96, 52], [84, 94, 52], [88, 92, 50]]
         : [[6, 10, 6], [4, 8, 5], [6, 9, 6], [10, 12, 8]];
     const spread = curl === 'open' ? [-9, -2, 5, 12] : [-2, 0, 1, 3];
     const fingers = [];
     for (let i = 0; i < 4; i++) {
       const J = fingerJoints(i, flex[i], spread[i]), F = FING[i]; fingers.push(J);
+      if (o.only === 'fingers') { for (let j = 0; j < 3; j++) cap(S, P, J[j], J[j + 1], F.r[Math.min(2, j)] * (j ? 1 : 1.05), j < 2 ? F.r[j + 1] : F.r[2] * 0.82, fingerM(j), G.f[i], { finger: i, seg: j }); continue; }
       cap(S, P, J[0], J[1], F.r[0] * 1.05, F.r[1], fingerM(0), G.f[i], { finger: i, seg: 0 });
       cap(S, P, J[1], J[2], F.r[1], F.r[2], fingerM(1), G.f[i], { finger: i, seg: 1 });
       cap(S, P, J[2], J[3], F.r[2], F.r[2] * 0.82, fingerM(2), G.f[i], { finger: i, seg: 2 });
       ell(S, P, add(F.k, [0, -0.35, 0.2]), [[F.r[0] * 1.08, 0, 0], [0, F.r[0] * 1.15, 0], [0, 0, F.r[0] * 1.05]], hm, G.palm, { knuckle: i });
     }
+    if (o.only === 'fingers') {   // their nails, and no more
+      if (hm === M.SKIN || wear.fingerless) for (let i = 0; i < 4; i++) { const J = fingers[i], d = norm(sub(J[3], J[2])), zc = norm(sub([0, 0, 1], mul(d, dot([0, 0, 1], d)))); line(S, P, [add(lerp3(J[2], J[3], 0.45), mul(zc, FING[i].r[2] * 0.85)), add(lerp3(J[2], J[3], 0.92), mul(zc, FING[i].r[2] * 0.62))], 'nail', G.f[i]); }
+      return { G, fingers };
+    }
     ell(S, P, [-0.05, 5.0, -0.15], [[4.0, 0, 0], [0, 5.5, 0], [0, 0, 1.5]], hm, G.palm, { palm: 1 });
-    ell(S, P, [2.6, 3.6, -0.6], [[1.45, 0, 0], [0, 3.2, 0], [0, 0, 1.15]], hm, G.palm, { palm: 1 });
+    // Phase 111: the heel of the hand and the thumb's pad are forms of their own (they were one broad flat plane with
+    // the palm): each rounds into the light by itself, and a line falls where one stands in front of the palm's hollow
+    ell(S, P, [2.5, 3.3, -0.95], [[1.5, 0, 0], [0, 3.1, 0], [0, 0, 1.3]], hm, G.hypo, { palm: 1, pad: 1 });
     const cmc = [-2.2, 1.4, -0.6];
     let tm, ti, tt;
     if (curl === 'open') { tm = [-4.3, 5.0, -1.1]; ti = [-5.7, 7.4, -1.0]; tt = [-6.5, 9.5, -0.8]; ell(S, P, [-3.3, 6.1, -0.55], [[1.25, 0, 0], [0, 2.1, 0], [0, 0, 0.7]], hm, G.palm, { palm: 1 }); }
     else if (curl === 'grip') { tm = [-4.5, 5.6, -3.4]; ti = [-3.6, 8.3, -5.6]; tt = [-1.2, 9.1, -5.9]; }
+    else if (curl === 'hook') { tm = [-4.4, 4.9, -1.0]; ti = [-5.0, 6.9, -0.9]; tt = [-5.1, 8.5, -1.1]; }
     else { tm = [-4.4, 5.5, -3.1]; ti = [-3.5, 8.1, -5.1]; tt = [-0.8, 8.6, -5.2]; }
-    ell(S, P, [-2.3, 3.4, -1.1], [[1.6, 0, 0], [0, 2.6, 0], [0, 0, 1.3]], hm, G.palm, { palm: 1 });
+    ell(S, P, [-2.45, 3.5, -1.45], [[1.8, 0, 0], [0.35, 2.75, 0], [0, 0, 1.6]], hm, G.thenar, { palm: 1, pad: 1 });
     cap(S, P, cmc, tm, 1.5, 1.22, hm, G.thumb, { thumb: 0 });
     cap(S, P, tm, ti, 1.18, 1.08, fingerM(1), G.thumb, { thumb: 1 });
     cap(S, P, ti, tt, 1.06, 0.86, fingerM(2), G.thumb, { thumb: 2 });
@@ -223,7 +231,8 @@ const PIXELHANDS110 = (() => {
     // the forearm runs only as far as the sleeve: a long tapered solid coming at the eye swells wider than it is along its
     // length on the screen, and under a sleeve that showed past the sleeve's roll as a ball
     const sleeved = !glass && !o.noSleeve && sl.mat !== 'skin', fEnd = sleeved ? (sl.rolled ? 14.6 : 7.4) : fl;
-    cap(S, P, fa([0, -1.5, -0.15]), fa([0.1 * fEnd / fl, -fEnd, 0.2 * fEnd / fl]), 2.25, 2.25 + (fEnd / fl), fm, G.wrist, { fore: 1, arm: 1 });
+    cap(S, P, fa([0, -1.5, -0.15]), fa([0.1 * fEnd / fl, -fEnd, 0.2 * fEnd / fl]), 2.25, 2.25 + (fEnd / fl), fm, G.wrist, { fore: 1, arm: 1, ob: !sleeved });
+    if (!sleeved) cap(S, P, fa([0.1, -fl, 0.2]), fa([0.2, -fl - 34, 0.5]), 3.25, 4.1, fm, G.wrist, { fore: 1, arm: 1, oa: 1 });   // Phase 111: on, past the picture's edge
     const ring = (y, r) => { const pts = []; for (let i = 0; i <= 28; i++) { const a = i / 28 * Math.PI * 2; pts.push(fa([Math.cos(a) * r, y, Math.sin(a) * r * 0.95])); } return pts; };
     // the glove's cuff, flared; its trim
     if (gloved && wear.cuff) {
@@ -241,9 +250,19 @@ const PIXELHANDS110 = (() => {
     if (!glass && !o.noSleeve && sl.mat !== 'skin') {
       const sm = sl.mat === 'mail' ? M.SLMAIL : M.WOOL;
       const y0 = sl.rolled ? -13.5 : -6.4;
-      if (sl.rolled) cap(S, P, fa([0, y0 + 0.4, 0]), fa([0, y0 - 1.3, 0.05]), 2.8, 2.95, M.WOOL, G.roll, { hem: 1, arm: 1 });   // the roll of the sleeve
+      if (sl.rolled) cap(S, P, fa([0, y0 + 0.4, 0]), fa([0, y0 - 1.7, 0.05]), 2.8, 2.95, M.WOOL, G.roll, { hem: 1, arm: 1, ob: 1 });   // the roll of the sleeve
       else cap(S, P, fa([0, y0, 0]), fa([0, y0 - 1.5, 0.05]), 3.95, 4.1, sl.cuff ? M.SCUFF : sm, G.hem, { hem: 1, arm: 1 });
-      cap(S, P, fa([0, y0 - 1.5, 0.05]), fa([0.2, -fl - 14, 0.4]), sl.rolled ? 2.95 : 4.1, 6.2, sm, G.sleeve, { sleeve: 1, arm: 1 });
+      cap(S, P, fa([0, y0 - 1.5, 0.05]), fa([0.2, -fl - 14, 0.4]), sl.rolled ? 2.95 : 4.1, 6.2, sm, G.sleeve, { sleeve: 1, arm: 1, oa: 1, ob: 1 });
+      cap(S, P, fa([0.2, -fl - 14, 0.4]), fa([0.3, -fl - 46, 0.6]), 6.2, 7.0, sm, G.sleeve, { sleeve: 1, arm: 1, oa: 1, u0: fl + 12.5 + y0 });   // Phase 111: on, past the picture's edge
+    }
+    // Phase 111: the palm side of the wrist. Bare: two creases across it and the two tendons running up the forearm;
+    // gloved in leather: the gather where the glove is drawn in
+    const wristP = (x, y, lift) => fa([x, y, -Math.sqrt(Math.max(0, 2.3 * 2.3 - x * x)) - 0.2 + (lift || 0)]);
+    if (!glass && !gloved) {
+      for (const y of [0.9, 0.2]) line(S, P, [-1.9, -1.0, 0, 1.0, 1.9].map((x) => wristP(x, y + x * x * 0.06)), 'crease1', G.wrist);
+      for (const x of [-0.5, 0.55]) line(S, P, [-0.4, -2.2, -4.2, -6.0].map((y) => wristP(x * (1 - y * 0.03), y)), 'tendon', G.wrist);
+    } else if (!glass && hm === M.GLOVE && !wear.fingerless) {
+      line(S, P, [-2.0, -1.0, 0, 1.0, 2.0].map((x) => wristP(x, 0.5)), 'crease1', G.wrist);
     }
     // details on the back of the hand
     const dors = (x, y) => [x, y, 1.42 * Math.sqrt(Math.max(0, 1 - (x / 4.0) ** 2 - ((y - 5) / 5.5) ** 2)) - 0.1];
@@ -287,10 +306,15 @@ const PIXELHANDS110 = (() => {
         const A = proj(P, p.a), Bp = proj(P, p.b), Ra = p.ra * P.s * A[3], Rb = p.rb * P.s * Bp[3];
         const x0 = Math.max(0, Math.floor(Math.min(A[0] - Ra, Bp[0] - Rb))), x1 = Math.min(W - 1, Math.ceil(Math.max(A[0] + Ra, Bp[0] + Rb)));
         const y0 = Math.max(0, Math.floor(Math.min(A[1] - Ra, Bp[1] - Rb))), y1 = Math.min(H - 1, Math.ceil(Math.max(A[1] + Ra, Bp[1] + Rb)));
+        const oa = !!(p.tag && p.tag.oa), ob = !!(p.tag && p.tag.ob);
         const dx = Bp[0] - A[0], dy = Bp[1] - A[1], l2 = dx * dx + dy * dy || 1e-6, len = Math.hypot(p.b[0] - p.a[0], p.b[1] - p.a[1], p.b[2] - p.a[2]), il = 1 / Math.sqrt(l2);
         for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
           const px = x + 0.5, py = y + 0.5;
-          let t = ((px - A[0]) * dx + (py - A[1]) * dy) / l2; t = t < 0 ? 0 : t > 1 ? 1 : t;
+          let t = ((px - A[0]) * dx + (py - A[1]) * dy) / l2;
+          // Phase 111: an end that another solid carries on from is left open (no rounded end): seen along the arm, the
+          // rounded ends of the sleeve's parts stood out of it as pale discs
+          if ((t < 0 && oa) || (t > 1 && ob)) continue;
+          t = t < 0 ? 0 : t > 1 ? 1 : t;
           const cx = A[0] + dx * t, cy = A[1] + dy * t, r = Ra + (Rb - Ra) * t, ox = px - cx, oy = py - cy, d2 = ox * ox + oy * oy;
           if (d2 >= r * r) continue;
           const h = Math.sqrt(r * r - d2), k = A[3] + (Bp[3] - A[3]) * t, z = A[2] + (Bp[2] - A[2]) * t + h / (P.s * k), side = (ox * (-dy) + oy * dx) * il;
@@ -323,16 +347,28 @@ const PIXELHANDS110 = (() => {
       const m = B.mat[i]; if (!m) continue;
       const p = prims[B.prim[i]], tag = p.tag || {};
       let n = [B.nx[i], B.ny[i], B.nz[i]];
-      if ((m === M.WOOL || m === M.SCUFF) && p.k === 'cap') {   // folds: a soft ripple round the sleeve, a little askew
-        const f = Math.sin(B.u[i] * 1.05 + B.v[i] * 1.6) * 0.38 + Math.sin(B.u[i] * 0.47 - B.v[i] * 0.9 + 1.3) * 0.22;
-        n = norm(add(n, mul(norm(sub(p.b, p.a)), f)));
-      }
       const w = dot(n, LIGHT), sp = dot(n, HALF), cfg = SHADE[m], off = (hash(B.grp[i], 77) - 0.5) * 0.09;
       let t = 1; for (const c of cfg.cuts) if (w > c + off) t++;
+      // Phase 111: leather's lightest tone on the broad forms (the back of the hand, the pads, the wrist) only where they
+      // face the light squarely: at 0.62 it lay there in blotches
+      if (m === M.GLOVE && (tag.palm || tag.fore) && t === 4 && w < 0.9) t = 3;
       if (sp > cfg.spec && w > 0.3 && !tag.palm && !tag.fore) t = cfg.top;
       tone[i] = t;
     }
     return { tone, tint };
+  }
+  // Phase 111: a cloth sleeve's folds are drawn, not shaded: the sleeve is lit as the plain round it is (clean bands of
+  // tone along it), and each fold is a dark crease with a light ridge beside it, running askew round the arm, unevenly
+  // spaced. (They were a ripple in the surface's slope; along a sleeve seen at length that broke its light into a row of
+  // pale ovals, like a pattern printed on the cloth.)
+  function folds(S, B, T) {
+    const t = T.tone, TWO = Math.PI * 2;
+    for (let i = 0; i < W * H; i++) {
+      const m = B.mat[i]; if (m !== M.WOOL && m !== M.SCUFF) continue;
+      const p = S.prims[B.prim[i]]; if (p.k !== 'cap' || !(p.tag && p.tag.sleeve)) continue;
+      const u = B.u[i] + (p.tag.u0 || 0), q = (u * 0.75 + B.v[i] * 1.25 + 0.9 * Math.sin(u * 0.23 + 0.7)) / TWO, fr = q - Math.floor(q), wd = 0.2 / (p.P.s * 1.1);
+      if (fr < wd) t[i] = Math.max(1, t[i] - 1); else if (fr < wd * 2) t[i] = Math.min(SHADE[m].top, t[i] + 1);
+    }
   }
   function castShadow(B, T) {
     const out = new Int8Array(T.tone);
@@ -386,6 +422,7 @@ const PIXELHANDS110 = (() => {
           if (L.mode === 'dark') t[i] = Math.max(0, Math.min(t[i] - 2, 1));
           else if (L.mode === 'stitch') t[i] = (n % 3 === 0) ? Math.min(top - 1, t[i] + 1) : Math.max(0, Math.min(t[i] - 1, 2));
           else if (L.mode === 'crease') t[i] = Math.max(0, t[i] - 2);
+          else if (L.mode === 'crease1') t[i] = Math.max(1, t[i] - 1);
           else if (L.mode === 'darn') t[i] = top;
           else if (L.mode === 'trim') T.tint[i] = 2;
           else if (L.mode === 'plate') T.tint[i] = 3;
@@ -399,7 +436,10 @@ const PIXELHANDS110 = (() => {
       for (let y = Math.floor(c[1] - r); y <= Math.ceil(c[1] + r); y++) for (let x = Math.floor(c[0] - r); x <= Math.ceil(c[0] + r); x++) {
         if ((x + 0.5 - c[0]) ** 2 + (y + 0.5 - c[1]) ** 2 > r * r) continue;
         const i = onSurf(x, y, c[2], sp.grp); if (i < 0) continue;
-        if (sp.mode === 'wear') { if (t[i] >= 3 && t[i] < SHADE[B.mat[i]].top) t[i] += 1; }
+        if (sp.mode === 'wear') {   // Phase 111: a scuff, not a disc: a solid heart of a pixel or two, the rest in a checker
+          const core = (x + 0.5 - c[0]) ** 2 + (y + 0.5 - c[1]) ** 2 < r * r * 0.3;
+          if (t[i] >= 2 && t[i] < SHADE[B.mat[i]].top - 1 && (core || ((x + y) & 1) === 0)) t[i] += 1;
+        }
         else if (sp.mode === 'red') { if (B.mat[i] === M.SKIN) T.tint[i] = 1; }
         else if (sp.mode === 'rivet') T.tint[i] = 2;
       }
@@ -514,7 +554,7 @@ const PIXELHANDS110 = (() => {
     const skip = { [M.MAIL]: 1, [M.SLMAIL]: 1, [M.GLASS]: 1 };
     modeFilter(B, T, skip); cleanup(B, T, skip);
     if (S.prims.some((p) => p.mat === M.GLASS)) glassFacets(S, B, T);
-    mailRings(S, B, T); decals(S, B, T); outlines(B, T); woolDither(B, T); rim(B, T);
+    folds(S, B, T); mailRings(S, B, T); decals(S, B, T); outlines(B, T); woolDither(B, T); rim(B, T);
     const PAL = palettes(wear), N = W * H, ed = edgeDist(B);
     const col = new Uint8ClampedArray(N * 4), layer = new Uint8Array(N), glass = new Uint8Array(N);   // layer: 1 arm, 2 hand, 3 halo
     for (let i = 0; i < N; i++) {
@@ -531,7 +571,21 @@ const PIXELHANDS110 = (() => {
       const tag = S.prims[B.prim[i]].tag || {};
       layer[i] = tag.arm ? 1 : 2;
     }
-    return { col, layer, glass };
+    // Phase 111: a Song's light (S.song: where it burns on the sheet, and how far toward the eye, in cm): how squarely
+    // each pixel faces it, and how near it is, in three steps. The picture stays as painted; the steps are drawn over
+    // it in the Song's colour (songCanvas), so the light lies on the inner edges of the fingers and palms and nowhere else
+    let song = null;
+    if (S.song) {
+      song = new Uint8Array(N);
+      for (let i = 0; i < N; i++) {
+        const m = B.mat[i]; if (!m || T.kind[i] === 2) continue;
+        const P = S.prims[B.prim[i]].P, z = B.depth[i], k = P.D / (P.D - Math.min(z, P.D * 0.33)), kl = P.D / (P.D - S.song.z);
+        const dx = (S.song.x - P.ax) / (P.s * kl) - (i % W + 0.5 - P.ax) / (P.s * k), dy = -(S.song.y - P.ay) / (P.s * kl) + (((i / W) | 0) + 0.5 - P.ay) / (P.s * k), dz = S.song.z - z;
+        const d = Math.hypot(dx, dy, dz) || 1, w = (B.nx[i] * dx + B.ny[i] * dy + B.nz[i] * dz) / d, v = Math.max(0, w * 0.9 + 0.1) / (1 + (d / S.song.r) ** 2);
+        song[i] = v > 0.46 ? 3 : v > 0.28 ? 2 : v > 0.13 ? 1 : 0;
+      }
+    }
+    return { col, layer, glass, song };
   }
 
   // ---------------------------------------------------------------- placing a hand
@@ -543,7 +597,7 @@ const PIXELHANDS110 = (() => {
   const wrapA = (a) => { while (a > Math.PI) a -= 2 * Math.PI; while (a < -Math.PI) a += 2 * Math.PI; return a; };
   function gripPose(g, opt) {
     const m = g.m, sc = Math.hypot(m[0], m[1]) || 1;
-    const T = [m[4] / GR, m[5] / GR], U = norm([-m[2], -m[3], 0]), want = Math.atan2(U[1], U[0]);
+    const T = [m[4] / GR + OX, m[5] / GR + OY], U = norm([-m[2], -m[3], 0]), want = Math.atan2(U[1], U[0]);
     const P = { f: frame(SW.Y, SW.Z), s: S_GRIP * sc * ((opt && opt.size) || 1) / GR, ax: 0, ay: 0, D, mirror: !!g.mirror, roll: SW.roll };
     const ang = (r) => { P.roll = r; const a = scr(P, sub(GRIP_C, GRIP_AX)), b = scr(P, add(GRIP_C, GRIP_AX)); return Math.atan2(a[1] - b[1], a[0] - b[0]); };
     let r = SW.roll;
@@ -646,43 +700,76 @@ const PIXELHANDS110 = (() => {
   }
 
   // ---------------------------------------------------------------- the picture
-  function finish(low, glassMask, Wf, Hf) {
-    // nearest-neighbour up by the grain into the picture's own size; the glow: the glass at a quarter, the brightest glints
-    const c = document.createElement('canvas'); c.width = Wf; c.height = Hf;
-    const x = c.getContext('2d'), id = x.createImageData(Wf, Hf), d = id.data;
-    const em = new Uint8ClampedArray(W * H * 4); let anyE = false;
+  // Phase 111: the picture is built on a wider sheet than FP87's own canvas, MRG low pixels more below it and to one
+  // side, so the forearm and its sleeve run on past the picture's edge. What is on the sheet inside FP87's canvas is the
+  // picture, exactly where it was; the arms on the whole sheet are given beside it as `ext` (js/body21.js draws an `ext`
+  // under its picture, in the same transform). Through a swing the picture turns and travels, and the arm used to end
+  // in the air at the picture's edge; now it runs out of the view.
+  const MRG = 110;
+  let OX = 0, OY = 0;                 // where the picture's own corner is on the sheet
+  function sheet(Wf, Hf, left) { const w = Math.ceil(Wf / GR), h = Math.ceil(Hf / GR); OX = left ? MRG : 0; OY = 0; W = w + MRG; H = h + MRG; return { w, h }; }
+  function plain(Wf, Hf) { W = Math.ceil(Wf / GR); H = Math.ceil(Hf / GR); OX = 0; OY = 0; return { w: W, h: H }; }
+  const mkc = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+  // nearest-neighbour up by the grain: a w x h rectangle of the sheet at (x0, y0) into a canvas of its own
+  function upCanvas(src, x0, y0, w, h, Wf, Hf) {
+    const c = mkc(Wf, Hf), x = c.getContext('2d'), id = x.createImageData(Wf, Hf), d = id.data;
+    for (let y = 0; y < Hf; y++) { const ly = y0 + ((y / GR) | 0); if (ly >= H) break; const row = ly * W; for (let xx = 0; xx < Wf; xx++) { const lx = x0 + ((xx / GR) | 0); if (lx >= W) break; const q = (row + lx) * 4, t = (y * Wf + xx) * 4; d[t] = src[q]; d[t + 1] = src[q + 1]; d[t + 2] = src[q + 2]; d[t + 3] = src[q + 3]; } }
+    x.putImageData(id, 0, 0); return c;
+  }
+  // the glow: the glass's bright edges, rim and lit facets (about a quarter of the arm, at a quarter of its old light: its
+  // deep azure planes are lit by the world like the rest of you, so at rest it does not blaze), and the brightest glints
+  function glowOf(low, gm) {
+    const em = new Uint8ClampedArray(W * H * 4); let any = false;
     for (let i = 0; i < W * H; i++) {
       const q = i * 4; if (!low[q + 3]) continue;
-      // the glass: only its bright edges, rim and lit facets carry the glow (about a quarter of the arm, at a quarter of
-      // its old light); its deep azure planes are lit by the world like the rest of you, so at rest it does not blaze
-      if (glassMask[i]) { if (low[q + 2] > 230 && low[q + 3] === 255) { em[q] = low[q] * 0.22; em[q + 1] = low[q + 1] * 0.22; em[q + 2] = low[q + 2] * 0.22; em[q + 3] = 255; anyE = true; } continue; }
+      if (gm[i]) { if (low[q + 2] > 230 && low[q + 3] === 255) { em[q] = low[q] * 0.22; em[q + 1] = low[q + 1] * 0.22; em[q + 2] = low[q + 2] * 0.22; em[q + 3] = 255; any = true; } continue; }
       const l = low[q] * 0.3 + low[q + 1] * 0.55 + low[q + 2] * 0.15;
-      if (l > 180 && low[q + 3] > 200) { const k = Math.min(1, (l - 180) / 60) * 0.2; em[q] = low[q] * k; em[q + 1] = low[q + 1] * k; em[q + 2] = low[q + 2] * k; em[q + 3] = 255; anyE = true; }
+      if (l > 180 && low[q + 3] > 200) { const k = Math.min(1, (l - 180) / 60) * 0.2; em[q] = low[q] * k; em[q + 1] = low[q + 1] * k; em[q + 2] = low[q + 2] * k; em[q + 3] = 255; any = true; }
     }
-    const up = (src, dst) => { for (let y = 0; y < Hf; y++) { const ly = (y / GR) | 0, row = ly * W; for (let xx = 0; xx < Wf; xx++) { const s = (row + ((xx / GR) | 0)) * 4, t = (y * Wf + xx) * 4; dst[t] = src[s]; dst[t + 1] = src[s + 1]; dst[t + 2] = src[s + 2]; dst[t + 3] = src[s + 3]; } } };
-    up(low, d); x.putImageData(id, 0, 0);
-    let emis = null;
-    if (anyE) { emis = document.createElement('canvas'); emis.width = Wf; emis.height = Hf; const ex = emis.getContext('2d'), ei = ex.createImageData(Wf, Hf); up(em, ei.data); ex.putImageData(ei, 0, 0); }
-    return { canvas: c, emis };
+    return any ? em : null;
+  }
+  const SONG_A = [0, 64, 118, 176];   // how strongly each step of a Song's light lies over the painted colour
+  // C: what compose gives (the sheet); x0: where the picture's corner is on it; (Wf, Hf): FP87's canvas
+  function finish(C, x0, Wf, Hf) {
+    const low = C.low, w = Math.ceil(Wf / GR), h = Math.ceil(Hf / GR), em = glowOf(low, C.gm);
+    const out = { canvas: upCanvas(low, x0, 0, w, h, Wf, Hf), emis: em ? upCanvas(em, x0, 0, w, h, Wf, Hf) : null, ext: null, song: null };
+    out.canvas.__px111 = true; if (out.emis) out.emis.__px111 = true;
+    // the arms beyond the picture's edge
+    let far = false;
+    if (C.arm && (W > w || H > h)) for (let y = 0; y < H && !far; y++) for (let x = 0; x < W; x++) if (C.arm[y * W + x] && (x < x0 || x >= x0 + w || y >= h)) { far = true; break; }
+    if (far) {
+      const al = new Uint8ClampedArray(W * H * 4), ae = em ? new Uint8ClampedArray(W * H * 4) : null; let anyE = false;
+      for (let i = 0; i < W * H; i++) { if (!C.arm[i]) continue; const q = i * 4; al[q] = low[q]; al[q + 1] = low[q + 1]; al[q + 2] = low[q + 2]; al[q + 3] = low[q + 3]; if (ae && em[q + 3]) { ae[q] = em[q]; ae[q + 1] = em[q + 1]; ae[q + 2] = em[q + 2]; ae[q + 3] = 255; anyE = true; } }
+      out.ext = { canvas: upCanvas(al, 0, 0, W, H, W * GR, H * GR), emis: anyE ? upCanvas(ae, 0, 0, W, H, W * GR, H * GR) : null, ox: -x0 * GR, oy: 0, w: W * GR, h: H * GR };
+      out.ext.canvas.__px111 = true; if (out.ext.emis) out.ext.emis.__px111 = true;
+    }
+    if (C.song) {
+      const sm = new Uint8ClampedArray(W * H * 4); let any = false;
+      for (let i = 0; i < W * H; i++) { const v = C.song[i]; if (!v || !low[i * 4 + 3]) continue; const q = i * 4; sm[q] = sm[q + 1] = sm[q + 2] = 255; sm[q + 3] = SONG_A[v]; any = true; }
+      if (any) { out.song = upCanvas(sm, x0, 0, w, h, Wf, Hf); out.song.__px111song = true; }
+    }
+    return out;
   }
   // lay the layers: the arms, then the weapon, then the hands
   function compose(hands, weapon) {
-    const N = W * H, low = new Uint8ClampedArray(N * 4), gm = new Uint8Array(N);
+    const N = W * H, low = new Uint8ClampedArray(N * 4), gm = new Uint8Array(N), arm = new Uint8Array(N), song = hands && hands.song ? new Uint8Array(N) : null;
     for (let i = 0; i < N; i++) {
       const q = i * 4, L = hands ? hands.layer[i] : 0;
       let src = null;
       if (L === 2) src = hands.col; else if (weapon && weapon.on[i]) src = weapon.col; else if (L === 1 || L === 3) src = hands.col;
       if (!src) continue;
       low[q] = src[q]; low[q + 1] = src[q + 1]; low[q + 2] = src[q + 2]; low[q + 3] = src[q + 3];
-      if (src === hands.col && hands.glass[i]) gm[i] = 1;
+      if (src === hands.col) { if (hands.glass[i]) gm[i] = 1; if (L === 1 || (L === 3 && armHalo(hands.layer, i))) arm[i] = 1; if (song) song[i] = hands.song[i]; }
     }
-    return { low, gm };
+    return { low, gm, arm, song };
   }
-  // the left hand mirrored on its own canvas side is the one FP87 draws mirrored: flip a low picture left to right
-  function flipLow(low, gm) {
-    const o = new Uint8ClampedArray(low.length), g2 = new Uint8Array(gm.length);
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const a = y * W + x, b = y * W + (W - 1 - x); o.set(low.subarray(a * 4, a * 4 + 4), b * 4); g2[b] = gm[a]; }
-    return { low: o, gm: g2 };
+  // a halo pixel belongs to the arm when it lies against the arm
+  function armHalo(layer, i) { const x = i % W, y = (i / W) | 0; return (x > 0 && layer[i - 1] === 1) || (x < W - 1 && layer[i + 1] === 1) || (y > 0 && layer[i - W] === 1) || (y < H - 1 && layer[i + W] === 1); }
+  // the left hand mirrored on its own canvas side is the one FP87 draws mirrored: flip a sheet left to right
+  function flipLow(C) {
+    const o = new Uint8ClampedArray(C.low.length), fl = (a) => { if (!a) return null; const r = new Uint8Array(a.length); for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) r[y * W + (W - 1 - x)] = a[y * W + x]; return r; };
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const a = y * W + x, b = y * W + (W - 1 - x); o.set(C.low.subarray(a * 4, a * 4 + 4), b * 4); }
+    return { low: o, gm: fl(C.gm), arm: fl(C.arm), song: fl(C.song) };
   }
 
   const KEYP = 'px110|';
@@ -695,8 +782,9 @@ const PIXELHANDS110 = (() => {
     const ck = KEYP + 'w|' + wid + '|' + lookKey(look), cache = FP87.cache; let hit = cache.get(ck); if (hit) return hit;
     const t0 = performance.now();
     const r = _paint(wid, look, { noHands: true }); if (!r) return null;
-    const Wf = r.canvas.width, Hf = r.canvas.height; W = Math.ceil(Wf / GR); H = Math.ceil(Hf / GR);
-    const wear = wearOf(look), weapon = pixelWeapon(r.canvas, W, H);
+    const Wf = r.canvas.width, Hf = r.canvas.height, M0 = sheet(Wf, Hf, false);
+    const wear = wearOf(look), wp = pixelWeapon(r.canvas, M0.w, M0.h), weapon = { col: new Uint8ClampedArray(W * H * 4), on: new Uint8Array(W * H) };
+    for (let y = 0; y < M0.h; y++) { weapon.on.set(wp.on.subarray(y * M0.w, (y + 1) * M0.w), y * W); weapon.col.set(wp.col.subarray(y * M0.w * 4, (y + 1) * M0.w * 4), y * W * 4); }
     const S = Scene();
     for (const g of r.grips || []) {
       const P = gripPose(g, null), glass = g.side === 'left' && !!(look && look.glassArm);
@@ -708,8 +796,8 @@ const PIXELHANDS110 = (() => {
       addHand(S, P, { curl: 'grip', wear, glass, foreLen: 34, dev: armDev(P, arm ? arm.map((v) => v / GR) : null, SW.dev, 0) });
     }
     const hands = S.prims.length ? shadeScene(S, wear) : null;
-    const { low, gm } = compose(hands, weapon), out = finish(low, gm, Wf, Hf);
-    hit = Object.assign({}, r, { canvas: out.canvas, emis: out.emis, pixel: true }); delete hit.grips;
+    const out = finish(compose(hands, weapon), 0, Wf, Hf);
+    hit = Object.assign({}, r, { canvas: out.canvas, emis: out.emis, ext: out.ext, pixel: true }); delete hit.grips;
     if (cache.size > 40) cache.clear();
     cache.set(ck, hit); note(t0);
     return hit;
@@ -721,38 +809,52 @@ const PIXELHANDS110 = (() => {
     const ck = KEYP + 'h|' + pose + '|' + lookKey(look), cache = FP87.cache; let hit = cache.get(ck); if (hit) return hit;
     const t0 = performance.now();
     const r = _paintHands(look, pose, { noHands: true }); if (!r) return null;
-    const Wf = r.canvas.width, Hf = r.canvas.height; W = Math.ceil(Wf / GR); H = Math.ceil(Hf / GR);
+    const Wf = r.canvas.width, Hf = r.canvas.height, glass = pose === 'glassfist', M0 = sheet(Wf, Hf, glass);
     const wear = wearOf(look), S = Scene();
-    let flip = false;
     if (pose === 'open') {
       for (const g of r.grips || []) {
         const m = g.m, sc = Math.hypot(m[0], m[1]), Z = 1.85;
         // FP87's open hand: its back and fingers from y -42 to 33 in its frame, centred a little left of its origin
         const cx = (m[0] * -1.5 * Z * (g.mirror ? -1 : 1) + m[2] * -4.5 * Z + m[4]) / GR, cy = (m[1] * -1.5 * Z * (g.mirror ? -1 : 1) + m[3] * -4.5 * Z + m[5]) / GR;
         const P = { f: frame(SONG.Y, SONG.Z), s: 1, ax: 0, ay: 0, D, mirror: !!g.mirror, roll: (g.mirror ? 1 : -1) * 4 };
-        fitPose(P, 'open', cx, cy, 75 * Z * sc * 1.02 / GR, wear);
+        fitPose(P, 'open', cx + OX, cy + OY, 75 * Z * sc * 1.02 / GR, wear);
         addHand(S, P, { curl: 'open', wear, glass: g.side === 'left' && !!(look && look.glassArm), foreLen: 34, dev: 12, flexW: -8 });
       }
+      // the Song's light burns between the hands, where js/fp-hands.js draws its halo: 74 view pixels above the bottom
+      // of the picture's place (the picture is 2k picture pixels to a view pixel), level with the hands, so it lies on
+      // what faces inward and not on the backs of the hands
+      S.song = { x: OX + Wf / 2 / GR, y: OY + (Hf - (74 + (r.below || 0)) * 2 * (r.k || 2)) / GR, z: -1, r: 13 };
     } else {
       const g = (r.grips || [])[0]; if (!g) return null;
       const m = g.m, sc = Math.hypot(m[0], m[1]), Z = 1.85;
-      const glass = pose === 'glassfist';
       // FP87's fist: x -34..44, y -40..44 in its frame (times 1.85)
       let cx = (m[0] * 5 * Z + m[2] * 2 * Z + m[4]) / GR; const cy = (m[1] * 5 * Z + m[3] * 2 * Z + m[5]) / GR;
       // the glass arm is the LEFT arm: it is built as a left hand where the mirror image of this place is, lit from the
-      // upper left as it will be seen, and the picture is flipped so that body21's own mirroring puts it back
-      if (glass) { cx = W - cx; flip = true; }
+      // upper left as it will be seen, and the sheet is flipped so that body21's own mirroring puts it back
+      if (glass) cx = M0.w - cx;
       const P = { f: frame(RAISE.Y, RAISE.Z), s: 1, ax: 0, ay: 0, D, mirror: glass, roll: 0 };
-      fitPose(P, 'fist', cx, cy, 84 * Z * sc * 0.98 / GR, wear);
+      fitPose(P, 'fist', cx + OX, cy + OY, 84 * Z * sc * 0.98 / GR, wear);
       addHand(S, P, { curl: 'fist', wear: glass ? Object.assign({}, wear, { gloved: false, hand: M.SKIN }) : wear, glass, foreLen: 36 });
     }
-    let { low, gm } = compose(shadeScene(S, wear), null);
-    if (flip) ({ low, gm } = flipLow(low, gm));
-    const out = finish(low, gm, Wf, Hf);
-    hit = Object.assign({}, r, { canvas: out.canvas, emis: out.emis, pixel: true }); delete hit.grips;
+    let C = compose(shadeScene(S, wear), null);
+    if (glass) C = flipLow(C);
+    const out = finish(C, 0, Wf, Hf);
+    hit = Object.assign({}, r, { canvas: out.canvas, emis: out.emis, ext: out.ext, song: out.song, pixel: true }); delete hit.grips;
     if (cache.size > 40) cache.clear();
     cache.set(ck, hit); note(t0);
     return hit;
+  }
+  // a Song's light for a picture of the open hands, in the Song's colour (js/fp-hands.js draws it over the hands)
+  const songTints = new WeakMap();
+  function songCanvas(mask, col) {
+    if (!mask) return null;
+    let per = songTints.get(mask); if (!per) { per = new Map(); songTints.set(mask, per); }
+    const key = col.join(','); let c = per.get(key); if (c) return c;
+    c = mkc(mask.width, mask.height); const x = c.getContext('2d'); x.drawImage(mask, 0, 0);
+    x.globalCompositeOperation = 'source-in'; x.fillStyle = 'rgb(' + col.map((v) => Math.round(Math.min(255, v * 0.55 + 255 * 0.45))).join(',') + ')'; x.fillRect(0, 0, c.width, c.height);
+    c.__px111song = true;
+    if (per.size > 8) per.clear();
+    per.set(key, c); return c;
   }
 
   // ---------------------------------------------------------------- the climb: a fist on a rung (js/fp-hands.js)
@@ -761,14 +863,14 @@ const PIXELHANDS110 = (() => {
   const CL = { w: 48, h: 176, gx: 24, gy: 18 };     // in view pixels: the picture's size, where the rung passes through the fist
   function climbArt(look, left) {
     const ck = KEYP + 'c|' + (left ? 'L' : 'R') + '|' + lookKey(look), cache = FP87.cache; let hit = cache.get(ck); if (hit) return hit;
-    const Wf = CL.w * 4, Hf = CL.h * 4; W = Math.ceil(Wf / GR); H = Math.ceil(Hf / GR);
+    const Wf = CL.w * 4, Hf = CL.h * 4; plain(Wf, Hf);
     const wear = wearOf(look), S = Scene();
     const P = { f: frame([0, 0.97, -0.25], [0, 0.25, 0.97]), s: 1, ax: 0, ay: 0, D, mirror: !!left, roll: left ? -6 : 6 };
     // the rung through the curled fingers: GRIP_C at the rung's place; the fist about 34 view pixels across
     P.s = 34 * 4 / 9.2 / GR;
     const c = scr(P, GRIP_C); P.ax = CL.gx * 4 / GR - c[0]; P.ay = CL.gy * 4 / GR - c[1];
     addHand(S, P, { curl: 'grip', wear, glass: !!left && !!(look && look.glassArm), foreLen: 46 });
-    const { low, gm } = compose(shadeScene(S, wear), null), out = finish(low, gm, Wf, Hf);
+    const out = finish(compose(shadeScene(S, wear), null), 0, Wf, Hf);
     hit = { canvas: out.canvas, emis: out.emis };
     if (cache.size > 40) cache.clear();
     cache.set(ck, hit);
@@ -783,6 +885,31 @@ const PIXELHANDS110 = (() => {
     ctx.drawImage(a.canvas, x + 16 - CL.gx, y + 2 - CL.gy, CL.w, CL.h);
     return true;
   }
+
+  // ---------------------------------------------------------------- the arm behind a shield (js/body21.js)
+  // Phase 111. The shield rides the left forearm, its face toward you: the forearm comes up from below behind it, the palm
+  // against its back, and the four fingers are hooked over its rim onto the face. Two pictures, to the same measure: the
+  // whole arm and hand (drawn under the shield) and the fingers alone (drawn over it), each with the place where the
+  // rim's edge passes through the hooked fingers (hx, hy), 4 picture pixels to a view pixel; the arm points up the picture.
+  const OA = { w: 44, h: 168, hx: 22, hy: 16, cm: 7.6 };     // view pixels; cm: picture pixels to a centimetre of hand
+  function offArm(look) { return on() ? offArmArt(look) : null; }
+  function offArmArt(look) {
+    const ck = KEYP + 'o|' + lookKey(look), cache = (typeof FP87 === 'object' && FP87.cache) || localCache; let hit = cache.get(ck); if (hit) return hit;
+    const Wf = OA.w * 4, Hf = OA.h * 4, glass = !!(look && look.glassArm), wear = wearOf(look);
+    const pic = (only) => {
+      plain(Wf, Hf);
+      const S = Scene(), P = { f: frame([0.05, 0.975, -0.2], [0, -0.2, -0.98]), s: OA.cm / GR, ax: 0, ay: 0, D, mirror: true, roll: 0 };
+      const c = scr(P, GRIP_C); P.ax = OA.hx * 4 / GR - c[0]; P.ay = OA.hy * 4 / GR - c[1];
+      addHand(S, P, { curl: 'hook', wear: glass ? Object.assign({}, wear, { gloved: false, hand: M.SKIN }) : wear, glass, foreLen: 50, only });
+      return finish(compose(shadeScene(S, wear), null), 0, Wf, Hf);
+    };
+    const a = pic(null), f = pic('fingers');
+    hit = { canvas: a.canvas, emis: a.emis, fingers: f.canvas, fingersEm: f.emis, w: OA.w, h: OA.h, hx: OA.hx, hy: OA.hy, pixel: true };
+    if (cache.size > 40) cache.clear();
+    cache.set(ck, hit);
+    return hit;
+  }
+  const localCache = new Map();
 
   // ---------------------------------------------------------------- the wraps
   let _paint = null, _paintHands = null;
@@ -841,6 +968,21 @@ const PIXELHANDS110 = (() => {
   try { wireRow(); } catch (e) { warnOnce('wire', e); }
   try { if (typeof GFX !== 'undefined' && GFX.onChange) GFX.onChange(() => { if (on() !== last) { last = on(); rebuild(); } try { syncRow(); } catch (e) { /* menu closed */ } }); } catch (e) { warnOnce('onChange', e); }
 
-  return { FLAG, GR, on, setOn, paint, paintHands, climbHand, climbArt, wearOf, ROW, stats, original: () => (FP87 && FP87._px110) || null, _raise: (o) => { RAISE = Object.assign({}, RAISE, o); } };
+  // for the working tools only (tools/dev/px111.js): one picture of posed hands, no game needed
+  //   spec: { w, h (picture pixels), look, hands: [{ Y, Z, curl, glass, mirror, roll, fit: [cx, cy, h] | at: [x, y, pixels per cm], dev, flexW, foreLen, noSleeve }] }
+  function devHands(spec) {
+    if (spec.offArm) return offArmArt(spec.look);
+    if (spec.sheet) sheet(spec.w, spec.h, false); else plain(spec.w, spec.h);
+    const wear = wearOf(spec.look), S = Scene();
+    for (const h of spec.hands) {
+      const P = { f: frame(h.Y, h.Z), s: 1, ax: 0, ay: 0, D, mirror: !!h.mirror, roll: h.roll || 0 };
+      if (h.fit) fitPose(P, h.curl, h.fit[0] / GR, h.fit[1] / GR, h.fit[2] / GR, wear); else { P.s = h.at[2] / GR; P.ax = h.at[0] / GR; P.ay = h.at[1] / GR; }
+      addHand(S, P, { curl: h.curl, wear: h.glass ? Object.assign({}, wear, { gloved: false, hand: M.SKIN }) : wear, glass: !!h.glass, foreLen: h.foreLen || 34, dev: h.dev || 0, flexW: h.flexW || 0, noSleeve: !!h.noSleeve, only: h.only });
+    }
+    if (spec.song) S.song = { x: spec.song[0] / GR, y: spec.song[1] / GR, z: spec.song[2] == null ? -1 : spec.song[2], r: spec.song[3] || 13 };
+    return finish(compose(shadeScene(S, wear), null), 0, spec.w, spec.h);
+  }
+
+  return { FLAG, GR, on, setOn, paint, paintHands, climbHand, climbArt, offArm, songCanvas, wearOf, ROW, stats, MRG, original: () => (FP87 && FP87._px110) || null, _raise: (o) => { RAISE = Object.assign({}, RAISE, o); }, _dev: { hands: devHands } };
 })();
 if (typeof window !== 'undefined') window.PIXELHANDS110 = PIXELHANDS110;

@@ -6,6 +6,9 @@
 //   - a glove's colours change the hand's pixels; the glass arm is azure; FP87's grip frames are given
 //   - the switch off gives FP87's own output exactly (and FP87's default output is not changed by the hand-less option)
 //   - the climb's fists; the Options row; Original off and the other presets on; French; no page errors
+//   Phase 111 (the touch-ups): the arm runs on past its picture (ext) and reaches the view's edge mid-swing; the arm
+//   behind a shield is pixel art, fingers over the rim; a Song's own light in steps, laid over; the glove not blotched,
+//   the palm formed. (The 3D view's light on the pixel pictures: test/pixelhands111.test.js.)
 'use strict';
 const assert = require('node:assert');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
@@ -178,6 +181,119 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
         return { differ: a !== b, again: a === c, arms: arms > 0 };
       });
       assert.ok(r.differ && r.again && r.arms, JSON.stringify(r));
+    });
+
+    // ---------------------------------------------------------------- Phase 111: the touch-ups
+    await step('P111 the arm runs on past its picture: an ext for every weapon and pose, drawn through a swing to the edge of the view', async () => {
+      const r = await page.evaluate(() => {
+        const p = G.player; p.glassed = true; p.armor = Object.assign({}, p.armor, { hands: 'a_gloves', shield: null }); closeModal(); G.state = 'play';
+        const out = { bad: [] };
+        const far = (e, w, h) => { const d = e.canvas.getContext('2d').getImageData(0, 0, e.canvas.width, e.canvas.height).data; let n = 0; for (let y = 0; y < e.canvas.height; y += 3) for (let x = 0; x < e.canvas.width; x += 3) { const X = x + e.ox, Y = y + e.oy; if ((X < 0 || X >= w || Y >= h) && d[(y * e.canvas.width + x) * 4 + 3] === 255) n++; } return n; };
+        for (const w of ['sword', 'spear', 'p12_greatmaul', 'pistol']) { p.weapons = [w]; p.weapon = 0; FP87.cache.clear(); const a = FP87.paint(w, GEARLOOK21.of(p)); if (!a.ext || !a.ext.canvas || a.ext.ox > 0 || a.ext.w <= a.canvas.width || far(a.ext, a.canvas.width, a.canvas.height) < 300) out.bad.push(w); }
+        const look = GEARLOOK21.of(p);
+        for (const pose of ['fist', 'glassfist', 'open']) { const a = FP87.paintHands(look, pose); if (!a.ext || far(a.ext, a.canvas.width, a.canvas.height) < 300) out.bad.push(pose); }
+        p.weapons = ['sword']; p.weapon = 0;
+        const b = BODY21.build(WEAPONS.sword.img, GEARLOOK21.of(p), 'sword', 'right'); out.build = !!(b && b.ext && b.pixel);
+        // mid-swing, on a flat ground: the arm reaches the right edge of the view (it used to end in the air)
+        Engine.render = () => { Engine.ctx.fillStyle = '#334455'; Engine.ctx.fillRect(0, 0, VW, VIEW_H); };
+        if (typeof FPHANDS !== 'undefined') { FPHANDS.st.lower = 0; FPHANDS.st.shown = 'sword'; }
+        const edge = (on) => {
+          PIXELHANDS110.setOn(on); G.attack.dur = 0.4; G.attack.t = 0.4 * 0.52; G.attack.dirLabel = 'slash left'; render();
+          const k = Engine.canvas.width / VW, d = Engine.ctx.getImageData(Engine.canvas.width - 1, 0, 1, Math.round(VIEW_H * k)).data; let n = 0;
+          for (let i = 0; i < d.length; i += 4) if (!(d[i] === 0x33 && d[i + 1] === 0x44 && d[i + 2] === 0x55)) n++;
+          return n / k;
+        };
+        out.edge = edge(true); G.attack.t = 0; PIXELHANDS110.setOn(true);
+        return out;
+      });
+      assert.deepStrictEqual(r.bad, [], JSON.stringify(r));
+      assert.ok(r.build && r.edge >= 8, JSON.stringify(r));
+    });
+
+    await step('P111 the arm behind a shield is pixel art: the arm under it, the hooked fingers over its rim; glass on the left; off with the switch', async () => {
+      const r = await page.evaluate(() => {
+        const p = G.player; p.weapons = ['sword']; p.weapon = 0; closeModal(); G.state = 'play';
+        const blocks = (cv) => { const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data, W = cv.width; let n = 0, mixed = 0, top = 1e9, bot = 0, b = 0, r = 0; for (let y = 0; y + 3 <= cv.height; y += 3) for (let x = 0; x + 3 <= W; x += 3) { const q = (y * W + x) * 4; if (d[q + 3] !== 255) continue; n++; top = Math.min(top, y); bot = Math.max(bot, y); r += d[q]; b += d[q + 2]; const q2 = ((y + 2) * W + x + 2) * 4; if (d[q] !== d[q2] || d[q + 1] !== d[q2 + 1] || d[q + 2] !== d[q2 + 2]) mixed++; } return { n, mixed, top, bot, r: r / n, b: b / n }; };
+        const out = {};
+        p.armor = Object.assign({}, p.armor, { hands: 'a_gloves', shield: 'a_buckler' });
+        p.glassed = true; FP87.cache.clear(); const g = PIXELHANDS110.offArm(GEARLOOK21.of(p));
+        out.glass = blocks(g.canvas); out.glassF = blocks(g.fingers); out.h = g.canvas.height; out.same = g === PIXELHANDS110.offArm(GEARLOOK21.of(p));
+        p.glassed = false; FP87.cache.clear(); const w = PIXELHANDS110.offArm(GEARLOOK21.of(p)); out.worn = blocks(w.canvas); out.wornF = blocks(w.fingers);
+        // in play: the shield is drawn with the pixel arm (the fingers after the shield's face), and with the switch off the old arm
+        Engine.render = () => { Engine.ctx.fillStyle = '#334455'; Engine.ctx.fillRect(0, 0, VW, VIEW_H); };
+        if (typeof FPHANDS !== 'undefined') { FPHANDS.st.lower = 0; FPHANDS.st.shown = 'sword'; }
+        const pn = performance.now; performance.now = () => 5000; const l0 = BODY21.set.light; BODY21.setSwitch('light', false);   // (the body's light makes tinted copies of each picture: off, the pictures themselves are drawn)
+        try {
+          const seen = []; const dI = CanvasRenderingContext2D.prototype.drawImage;
+          CanvasRenderingContext2D.prototype.drawImage = function (img) { if (this === Engine.ctx && img && (img === w.canvas || img === w.fingers)) seen.push(img === w.fingers ? 'f' : 'a'); return dI.apply(this, arguments); };
+          const n0 = BODY21.stats.drawn.shield;
+          try { render(); } finally { CanvasRenderingContext2D.prototype.drawImage = dI; }
+          out.seen = seen.join(''); out.shield = BODY21.stats.drawn.shield - n0;
+          const grab = () => { render(); const d = Engine.ctx.getImageData(0, 0, Engine.canvas.width, Engine.canvas.height).data; let h = 0; for (let i = 0; i < d.length; i += 4) h = (h * 31 + d[i] + d[i + 1] * 7 + d[i + 2] * 13) >>> 0; return h; };
+          const a = grab(); PIXELHANDS110.setOn(false); out.offNull = PIXELHANDS110.offArm(GEARLOOK21.of(p)) === null; const b = grab(); PIXELHANDS110.setOn(true); const c = grab();
+          out.differ = a !== b; out.again = a === c;
+        } finally { performance.now = pn; BODY21.setSwitch('light', l0); }
+        p.armor = Object.assign({}, p.armor, { shield: null }); p.glassed = true;
+        return out;
+      });
+      assert.ok(r.glass.n > 1500 && !r.glass.mixed && !r.glassF.mixed && !r.worn.mixed && !r.wornF.mixed && r.same, JSON.stringify(r));
+      assert.ok(r.glass.b > r.glass.r + 70 && r.glassF.b > r.glassF.r + 70 && r.worn.r > r.worn.b, 'glass on the left ' + JSON.stringify(r));
+      assert.ok(r.glassF.n > 60 && r.glassF.n < r.glass.n * 0.25 && r.glassF.bot < r.h * 0.3 && r.glass.bot > r.h * 0.9, 'fingers at the rim, the arm out of the bottom ' + JSON.stringify(r));
+      assert.ok(r.seen === 'af' && r.shield === 1 && r.offNull && r.differ && r.again, JSON.stringify(r));
+    });
+
+    await step('P111 a Song lights the pixel hands with a light of their own: in steps, on what faces it, laid over and not added', async () => {
+      const r = await page.evaluate(() => {
+        const p = G.player; p.glassed = true; p.weapons = ['hands']; p.weapon = 0; p.armor = Object.assign({}, p.armor, { hands: 'a_gloves', shield: null }); closeModal(); G.state = 'play';
+        FP87.cache.clear(); BODY21.clearCaches();
+        const look = GEARLOOK21.of(p), a = FP87.paintHands(look, 'open'), out = {};
+        const d = a.song.getContext('2d').getImageData(0, 0, a.song.width, a.song.height).data, h = a.canvas.getContext('2d').getImageData(0, 0, a.canvas.width, a.canvas.height).data;
+        const steps = new Set(); let lit = 0, hands = 0, stray = 0, inner = 0, outer = 0; const W = a.canvas.width;
+        for (let i = 0; i < d.length; i += 4) { if (h[i + 3] === 255) hands++; if (!d[i + 3]) continue; steps.add(d[i + 3]); lit++; if (h[i + 3] !== 255) stray++; const x = (i / 4) % W; if (Math.abs(x - W / 2) < W * 0.3) inner++; else outer++; }
+        out.steps = [...steps].sort((x, y) => x - y); out.share = lit / hands; out.stray = stray; out.inner = inner / lit;
+        const c1 = PIXELHANDS110.songCanvas(a.song, [226, 196, 64]), c2 = PIXELHANDS110.songCanvas(a.song, [96, 214, 112]);
+        const mean = (cv) => { const q = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; let r = 0, g = 0, b = 0, n = 0; for (let i = 0; i < q.length; i += 4) if (q[i + 3]) { r += q[i]; g += q[i + 1]; b += q[i + 2]; n++; } return [r / n, g / n, b / n]; };
+        out.gold = mean(c1); out.green = mean(c2); out.cached = c1 === PIXELHANDS110.songCanvas(a.song, [226, 196, 64]);
+        out.fist = !FP87.paintHands(look, 'fist').song;
+        // in play: the light is drawn over the hands (source-over), the old whole-picture tint (lighter) is not
+        Engine.render = () => { Engine.ctx.fillStyle = '#334455'; Engine.ctx.fillRect(0, 0, VW, VIEW_H); };
+        const calls = (on) => {
+          PIXELHANDS110.setOn(on);
+          G.song.t = 0.35; FPHANDS.st.cast = 0.6; FPHANDS.st.castDur = 0.9; FPHANDS.st.castCol = [226, 196, 64]; FPHANDS.st.castPower = 0.8; FPHANDS.st.lower = 0; FPHANDS.st.shown = 'hands';
+          const seen = []; const dI = CanvasRenderingContext2D.prototype.drawImage;
+          CanvasRenderingContext2D.prototype.drawImage = function (img) { if (this === Engine.ctx && img && img.width > 200) seen.push((img.__px111song ? 'S' : 'x') + ':' + this.globalCompositeOperation); return dI.apply(this, arguments); };
+          try { render(); } finally { CanvasRenderingContext2D.prototype.drawImage = dI; }
+          return seen;
+        };
+        const on = calls(true), off = calls(false); PIXELHANDS110.setOn(true); G.song.t = 0; FPHANDS.st.cast = 0;
+        out.on = on.filter((s) => s === 'S:source-over').length + '/' + on.filter((s) => s === 'x:lighter').length;
+        out.off = off.filter((s) => s[0] === 'S').length + '/' + off.filter((s) => s === 'x:lighter').length;
+        p.weapons = ['sword'];
+        return out;
+      });
+      assert.ok(r.steps.length === 3 && r.share > 0.04 && r.share < 0.4 && r.stray === 0 && r.inner > 0.8, 'steps, on what faces the light ' + JSON.stringify(r));
+      assert.ok(r.gold[0] > r.gold[2] + 40 && r.green[1] > r.green[0] + 30 && r.cached && r.fist, JSON.stringify(r));
+      assert.ok(r.on === '1/0' && r.off === '0/1', 'laid over, not added ' + JSON.stringify(r));
+    });
+
+    await step('P111 the glove is not blotched, a cloth sleeve has drawn folds, the bare palm has its pads and creases', async () => {
+      const r = await page.evaluate(() => {
+        const p = G.player; p.glassed = false; p.weapons = ['hands']; p.weapon = 0; FP87.cache.clear();
+        const tones = (cv, y0, y1) => { const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data, W = cv.width, m = new Map(); let n = 0; for (let y = Math.floor(cv.height * y0); y < cv.height * y1; y += 3) for (let x = 0; x < W; x += 3) { const q = (y * W + x) * 4; if (d[q + 3] !== 255) continue; n++; const k = d[q] << 16 | d[q + 1] << 8 | d[q + 2]; m.set(k, (m.get(k) || 0) + 1); } return { n, m }; };
+        const out = {};
+        // leather: its lightest tones are a small part of the glove (they lay on the back of the hand and the wrist in blots)
+        p.armor = Object.assign({}, p.armor, { hands: 'a_gloves', shield: null });
+        const g = tones(FP87.paintHands(GEARLOOK21.of(p), 'fist').canvas, 0, 1), lum = (k) => ((k >> 16) * 0.3 + ((k >> 8) & 255) * 0.55 + (k & 255) * 0.15);
+        const ks = [...g.m.keys()].filter((k) => (k >> 16) > (k & 255) + 30).sort((a, b) => lum(b) - lum(a)); let leather = 0; for (const k of ks) leather += g.m.get(k);
+        out.light = (g.m.get(ks[0]) + g.m.get(ks[1])) / leather;
+        // bare: the palm half of the fist has more than four tones of skin, and creases (the darker tones among the light)
+        p.armor = Object.assign({}, p.armor, { hands: null }); FP87.cache.clear();
+        const b = tones(FP87.paintHands(GEARLOOK21.of(p), 'fist').canvas, 0.3, 0.62);
+        out.skinTones = [...b.m.entries()].filter(([k, v]) => v >= 12 && (k >> 16) > (k & 255) + 20).length;
+        p.glassed = true; p.weapons = ['sword'];
+        return out;
+      });
+      assert.ok(r.light < 0.2 && r.skinTones >= 6, JSON.stringify(r));
     });
 
     await step('no page errors', async () => { assert.deepStrictEqual(errors, []); });
