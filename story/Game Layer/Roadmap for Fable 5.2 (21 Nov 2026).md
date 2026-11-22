@@ -94,7 +94,7 @@ Since the copy was taken, this repo has changed 9,385 files (Phases 75 to 110) a
 ## Open decisions for the owner (as of 22 Nov)
 - Phase 107: the wording of the hedgerow's and the wood's edge's inspect lines; which ten places got natural edges, and whether more should.
 - Phase 108: each town's proportions; the later places' roofs (Phase 116 above).
-- Phase 111: the nod for the touched-up pixel hands (`screenshots/p111-hands.jpg`, `screenshots/p111-kinds.jpg`), and the merge of its pull request (#157: a session may not merge without the owner's word in so many words).
+- Phase 111: the nod for the touched-up pixel hands (`screenshots/p111-hands.jpg`, `screenshots/p111-kinds.jpg`), and the merge of its pull request (#157: the session's own merge was refused by its safety check, twice, so the merge is the owner's click).
 - Phase 112: when "Sculpted" becomes the default in the 3D view (`screenshots/p112-hands.jpg`, `p112-kinds.jpg`, `p112-swing.gif`); whether the bare fist is finished enough; the merge of its pull request.
 - **From "Two sessions at once" (parked by the owner on 21 Nov):**
   - 4. The glass arm: one look in both, or each its own? Here it is deep azure with no green at rest (approved 14 Nov); the realistic look has sea-green glass with one moving green vein.
