@@ -15,9 +15,9 @@ The owner, 22 Nov, 1:29 pm, in answer to the report on Phases 111 to 113:
 | "keep 8 parked" | The other project's four questions stay parked. | Nothing owed. |
 | "due a full lore recheck then proceed with 114" | **A full lore recheck first.** Read as: every line about the Rift in all four books and every bible, read again by lore readers one file each, before anything more is built there. Then build. | Then the Rift Wall as ruled (A, then C), then Phase 114 (Redoubt Zero and the Edge). |
 
-## Readings to confirm
+## Readings, confirmed
 
-Two of these are my reading of short words. Say if either is wrong.
+Two of these were my reading of short words. **The owner, 22 Nov, 1:33 pm: "you are correct."** Both stand.
 
 1. **"the rift may have keepers"**: read as "keepers are allowed there", so A is built without one and C with one. If you meant every part must have a keeper, A needs one.
 2. **"then proceed with 114"**: read as "go on down the roadmap". A then C is the roadmap's Phase 113 and is built first, since you ruled its order; Redoubt Zero and the Edge follow as Phase 114.
