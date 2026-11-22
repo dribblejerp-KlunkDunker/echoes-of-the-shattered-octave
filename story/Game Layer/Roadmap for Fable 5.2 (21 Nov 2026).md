@@ -15,7 +15,7 @@ Fable 5.2 goes where the judgement is the work: art that must look finished, pla
 
 | Phase | What | Done when |
 | --- | --- | --- |
-| **111** | **The pixel hands, touched up.** The arm behind a shield in pixel art (`js/body21.js`, `offArmArt`). The glass arm by day reads lighter than the review sheet: the 3D view brightens every first-person picture, so hold the glass's approved deep azure. The Song's old additive tint whitens the hands: give the pixel hands their own Song light. The broad flat palm and thumb pad, and the blotchy glove wear. The hands through every swing, the lowering and raising, the Song and the climb, frame by frame. Optionally, the night tints the pixel ramps (the hands darker and warmer by a lamp). | A sheet beside column 3 of `screenshots/p109-options.jpg` that matches or beats it, by day and by night, with every weapon kind, the shield and the climb; `test/pixelhands110.test.js` extended; the owner's nod. |
+| **111** | **Done 22 Nov, waiting for the owner's nod** (record: `Phase 111 - The pixel hands, touched up.md`). **The pixel hands, touched up.** The arm behind a shield in pixel art (`js/body21.js`, `offArmArt`). The glass arm by day reads lighter than the review sheet: the 3D view brightens every first-person picture, so hold the glass's approved deep azure. The Song's old additive tint whitens the hands: give the pixel hands their own Song light. The broad flat palm and thumb pad, and the blotchy glove wear. The hands through every swing, the lowering and raising, the Song and the climb, frame by frame. Optionally, the night tints the pixel ramps (the hands darker and warmer by a lamp). | A sheet beside column 3 of `screenshots/p109-options.jpg` that matches or beats it, by day and by night, with every weapon kind, the shield and the climb; `test/pixelhands110.test.js` extended; the owner's nod. |
 | **112** | **The sculpted hands, lit by the world: finished, shown, not yet the default.** The owner's aim (21 Nov: "I do want to eventually use the sculpted lit by the world"). `tools/hands109/hands109s.js` to finished standard: a real bare fist (Phase 109's weak point), the glass luminous as approved, every weapon gripped (use `FP87.paint(wid, look, { noHands: true })` and its `grips`, as Phase 110 does), the swings and the Song as moving joints, the game's own light fed in each frame. Into the game as an Options choice ("Hands: pixel / sculpted") with pixel still the default. | A sheet and a short clip: every weapon kind, by day, night and lamplight, beside the pixel hands; the owner rules when sculpted becomes the default in the 3D view (pixel stays for the classic view). |
 | **113** | **The Continental Rift, part two: the Rift Wall and the Under-Shelves.** Lore brief first (every line in `story/Books/` and `story/World Bibles/` about them; Vol VI is the manuscript's for the Rift); what the books do there later is never done by the player; places as of Harvestmonth 419. If the book overturns the plan, hold and give the owner two or three designs. | Built, lore-bound, tested, French, pictures, Vol VIII; or a findings record if the book leaves nothing to build. |
 | **114** | **The Rift, part three: Redoubt Zero and the Edge**, with their keepers and Souls lamps (Phase 91's rules). | As 113. |
@@ -36,6 +36,8 @@ Fable 5.2 goes where the judgement is the work: art that must look finished, pla
 ## Two sessions at once (added 21 Nov, evening)
 
 The owner, 21 Nov: "I have another session going on this same repo can you find out what exactly its working on and add it to this roadmap so that everything works together well without a bunch of issues".
+
+**The owner, 21 Nov, later: "I will leave that other projects alone for now lets just keep working on this one here".** So this section is kept for the day the two are brought together; decisions 4 to 7 below it are parked, and nothing here is owed until then.
 
 ### What the other session is doing
 
@@ -93,7 +95,8 @@ Since the copy was taken, this repo has changed 9,385 files (Phases 75 to 110) a
 - Phase 107: the wording of the hedgerow's and the wood's edge's inspect lines; which ten places got natural edges, and whether more should.
 - Phase 108: each town's proportions; the later places' roofs (Phase 116 above).
 - Phase 110: when the sculpted hands become the default (Phase 112 above).
-- **From "Two sessions at once":**
+- Phase 111: the nod for the touched-up pixel hands (`screenshots/p111-hands.jpg`, `screenshots/p111-kinds.jpg`).
+- **From "Two sessions at once" (parked by the owner on 21 Nov):**
   - 4. The glass arm: one look in both, or each its own? Here it is deep azure with no green at rest (approved 14 Nov); the realistic look has sea-green glass with one moving green vein.
   - 5. The realistic look's hands in the end: its own arms, or the sculpted hands of Phase 112 carried over (one set of poses for both)?
   - 6. When the realistic look comes into this repo, and whether the Pixel style stays the default until then.
@@ -103,7 +106,7 @@ Since the copy was taken, this repo has changed 9,385 files (Phases 75 to 110) a
 
 Paste this to start:
 
-> You are working on my browser RPG "Echoes of the Shattered Octave", repo github.com/dribblejerp-KlunkDunker/echoes-of-the-shattered-octave (I wrote the books it is made from; they are in `story/`). You are on Fable 5.2, high effort. Read `ROADMAP.md` (start with "Fable 5.2 roadmap (21 Nov 2026)") and `story/Game Layer/Roadmap for Fable 5.2 (21 Nov 2026).md`, then the last three phase records in `story/Game Layer/` (Phases 108, 109, 110), then begin **Phase 111** and carry on through the Part A phases in order, one phase at a time, using the /octave-phase-cycle skill.
+> You are working on my browser RPG "Echoes of the Shattered Octave", repo github.com/dribblejerp-KlunkDunker/echoes-of-the-shattered-octave (I wrote the books it is made from; they are in `story/`). You are on Fable 5.2, high effort. Read `ROADMAP.md` (start with "Fable 5.2 roadmap (21 Nov 2026)") and `story/Game Layer/Roadmap for Fable 5.2 (21 Nov 2026).md`, then the last three phase records in `story/Game Layer/` (Phases 109, 110, 111), then begin **Phase 112** and carry on through the Part A phases in order, one phase at a time, using the /octave-phase-cycle skill.
 >
 > My standing rules (none may be broken):
 > - Book canon wins: the manuscripts beat the bibles; Vol III and III(b) beat Vol I and II; Vol VI is the manuscript's for the Rift. If something is canon in the books it must be kept in the game. Keep everything lore-bound. Read the books before designing any place (a lore brief quoting file and line). What the books do later is never done by the player; places are shown as of Harvestmonth 419. Inventions are marked [PROPOSED] for me.
@@ -121,5 +124,6 @@ Paste this to start:
 > - `tools/dev/dbg.js` and `tools/dev/dbg3d.js` (evaluate in the game).
 > - `tools/dev/sweep106.js`: pictures of any place; `map@x,y,dir` stands somewhere, `FLAGS=a=0,b=1` sets switches, `R3D=1` uses the 3D view.
 > - `tools/dev/hands109.js`: the hands review sheet over the game's own frame.
+> - `tools/dev/hands111.js`: your own hands as the game draws them, any weapon, shield, hour, swing, Song or climb (`CROP=1`, `R3D=0`, `EVAL=`); `tools/dev/px111.js`: the pixel hands alone, no game loaded; `tools/dev/sheets111.py`: the review sheets.
 > - `tools/dev/closeup107.js` and `tools/dev/sprpng107.js`: close-ups and sprites.
 > - Serve the working copy with `python3 -m http.server 4176 --bind 127.0.0.1` before any browser job.

@@ -5,6 +5,17 @@
 //  to eventually use the sculpted lit by the world". This is option 3 (tools/hands109/hands109x.js, which stays where it
 //  is, untouched), made a game module: everywhere you see your own hands, they are pixel art.
 //
+//  Phase 111 (22 Nov 2026) touched them up, here and in js/body21.js and js/fp-hands.js:
+//    * the arm behind a shield (offArm): the forearm up behind the shield, the fingers hooked over its rim;
+//    * each picture is built on a wider sheet, and the arm beyond the picture's edge is given as `ext`, so through a
+//      swing the arm runs out of the view;
+//    * a picture of the open hands knows which pixels face a Song's light (`song`, songCanvas): the Song's colour is
+//      laid on those in three steps (the old tint, added over everything, whitened the hands);
+//    * every canvas made here is marked `__px111`: the 3D view never draws such a picture brighter than it was painted
+//      (the glass's approved deep azure holds by day) and darkens it in the light's own cast by night;
+//    * the thumb's pad and the heel of the hand are forms of their own, the wrist has its creases and tendons, leather
+//      is not blotched, and a cloth sleeve's folds are drawn as creases.
+//
 //  How (the same model and rules as option 3, copied here and adapted):
 //    * the hands, forearms and sleeves are built in 3D from tapered capsules and ellipsoids in centimetres, posed, and
 //      rasterised at a third of the picture's resolution into a buffer that knows each pixel's material, part, depth and

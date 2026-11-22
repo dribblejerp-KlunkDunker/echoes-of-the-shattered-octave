@@ -237,7 +237,7 @@ The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on the
 
 | Phase | What |
 | --- | --- |
-| 111 | The pixel hands touched up: the arm behind a shield; the glass's deep azure by day; the hands' own Song light; the palm and the glove wear; every swing frame by frame |
+| 111 | **Done (22 Nov), for the owner's nod.** The pixel hands touched up: the arm behind a shield; the glass's deep azure by day; the hands' own Song light; the palm and the glove wear; every swing frame by frame; the night tint. Record: `story/Game Layer/Phase 111 - The pixel hands, touched up.md` |
 | 112 | The sculpted hands, lit by the world, finished and in the game as an Options choice (pixel stays the default until the owner says) |
 | 113 | The Continental Rift, part two: the Rift Wall and the Under-Shelves |
 | 114 | The Rift, part three: Redoubt Zero and the Edge, with their keepers and lamps |

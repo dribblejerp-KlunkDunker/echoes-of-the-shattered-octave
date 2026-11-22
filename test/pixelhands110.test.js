@@ -281,11 +281,14 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
         const p = G.player; p.glassed = false; p.weapons = ['hands']; p.weapon = 0; FP87.cache.clear();
         const tones = (cv, y0, y1) => { const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data, W = cv.width, m = new Map(); let n = 0; for (let y = Math.floor(cv.height * y0); y < cv.height * y1; y += 3) for (let x = 0; x < W; x += 3) { const q = (y * W + x) * 4; if (d[q + 3] !== 255) continue; n++; const k = d[q] << 16 | d[q + 1] << 8 | d[q + 2]; m.set(k, (m.get(k) || 0) + 1); } return { n, m }; };
         const out = {};
-        // leather: its lightest tones are a small part of the glove (they lay on the back of the hand and the wrist in blots)
-        p.armor = Object.assign({}, p.armor, { hands: 'a_gloves', shield: null });
-        const g = tones(FP87.paintHands(GEARLOOK21.of(p), 'fist').canvas, 0, 1), lum = (k) => ((k >> 16) * 0.3 + ((k >> 8) & 255) * 0.55 + (k & 255) * 0.15);
-        const ks = [...g.m.keys()].filter((k) => (k >> 16) > (k & 255) + 30).sort((a, b) => lum(b) - lum(a)); let leather = 0; for (const k of ks) leather += g.m.get(k);
-        out.light = (g.m.get(ks[0]) + g.m.get(ks[1])) / leather;
+        // leather: its lighter tone lay on the back of the gripping hand and the wrist in blots (17% of the warm pixels
+        // of the sword's picture); it is now only where the leather faces the light squarely (8%). The tone is read by
+        // its brightness (105 to 122), which also takes in a shadow tone of the bare forearm (5% either way)
+        p.armor = Object.assign({}, p.armor, { hands: 'a_gloves', shield: null }); p.weapons = ['sword'];
+        const lum = (k) => ((k >> 16) * 0.3 + ((k >> 8) & 255) * 0.55 + (k & 255) * 0.15);
+        const g = tones(FP87.paint('sword', GEARLOOK21.of(p)).canvas, 0, 1); let warm = 0, lightTone = 0;
+        for (const [k, v] of g.m) { const r = k >> 16, gg = (k >> 8) & 255, bb = k & 255; if (!(r > bb + 30 && r < 215 && gg < 150 && gg > bb)) continue; warm += v; const l = lum(k); if (l >= 105 && l <= 122) lightTone += v; }
+        out.light = lightTone / warm; p.weapons = ['hands'];
         // bare: the palm half of the fist has more than four tones of skin, and creases (the darker tones among the light)
         p.armor = Object.assign({}, p.armor, { hands: null }); FP87.cache.clear();
         const b = tones(FP87.paintHands(GEARLOOK21.of(p), 'fist').canvas, 0.3, 0.62);
@@ -293,7 +296,8 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
         p.glassed = true; p.weapons = ['sword'];
         return out;
       });
-      assert.ok(r.light < 0.2 && r.skinTones >= 6, JSON.stringify(r));
+      console.log('  glove and palm ' + JSON.stringify(r));
+      assert.ok(r.light < 0.18 && r.light > 0.03 && r.skinTones >= 6, JSON.stringify(r));
     });
 
     await step('no page errors', async () => { assert.deepStrictEqual(errors, []); });
