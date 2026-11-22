@@ -1,6 +1,6 @@
 // ============================================================
 //  stores113 — Phase 113, Design A (ruled by the owner 22 Nov 2026, "A then C"): the wall keeps its secret. The
-//  Quartermaster's stores at Tower Nine's foot, his errands, and a night on the wall-walk. See
+//  old garrison's store at Tower Nine's foot (the Quartermaster's since 406; not the Watch's stores), his errands, and a night on the wall-walk. See
 //  story/Game Layer/Phase 113 - The Rift Wall, part A (the stores and the night on the wall).md
 //
 //  THE ONE RULE. The traveller never goes past the lip, never goes out by the postern, and is never told what is down
@@ -18,7 +18,7 @@
 //  nobody here has heard of the Drift-Kestrel.
 //  [PROPOSED]: the stores' place and furniture, the cart, the errands, the letter, "Hal".
 //
-//  THE PLACE. p113_stores: a long low vault of obsidian behind a door in the obsidian at Tower Nine's foot, next to the
+//  THE PLACE. p113_stores: a narrow, crowded vault, sixteen by seven, racks floor to roof, behind a door in the obsidian at Tower Nine's foot, next to the
 //  Quartermaster (added to RIFT100's wall from here, by wrapping buildAllMaps after RIFT100 does: no hook in rift100.js was
 //  needed). Two dim lamps; nine things to look at; knotted strings on everything (they are the stores' ledger). A cart at
 //  the west gate.
@@ -33,8 +33,9 @@
 //  ON THIS MAP the wall is an arc: from the stretch between Five and Six, Tower Nine's buttress lies north along the wall,
 //  not east, with Towers Six and Seven and the wall's own parapet in the line, and the gold point goes down behind the rock
 //  of the lip, which nobody on the wall can see past. The lights are drawn where they truly are and only where they could
-//  be seen (place()): from the stretch the night is the eight lines. (Reported to the Commander for a ruling.) Nothing
-//  visual uses random numbers.
+//  be seen (place()). From the stretch itself the book wins (Book Three Part One, 859 to 913): the night is drawn as far
+//  lights, placed by eye (farFrame(), farAt()). The night over the Rift is starless by the book; the sky is not this
+//  module's. Nothing visual uses random numbers.
 // ============================================================
 'use strict';
 
@@ -44,7 +45,7 @@ const STORES113 = (function () {
   const warned = {}, warnOnce = (k, e) => { if (!warned[k]) { warned[k] = true; if (typeof console !== 'undefined') console.warn('stores113: ' + k, e); } };
   const THINGS = ['onions', 'eyes', 'plates', 'oil', 'tally', 'bread', 'hook', 'cot', 'shot'];
   const TX = {
-    door: S('The Quartermaster\'s stores'),
+    door: S('The old garrison\'s store'),   // not the Watch's stores (Phase 100: "Stores are the other side of the Watch"): the old garrison's, his since 406
     work: S('Work'),
     name: { onions: S('Onions'), eyes: S('Cable-eyes'), plates: S('Lead plates'), oil: S('Lamp-oil'), tally: S('The tally-board'), bread: S('The bread-racks'), hook: S('The hook'), cot: S('The cot'), shot: S('Old shot') },
     look: {
@@ -72,13 +73,14 @@ const STORES113 = (function () {
     blanket: S('"For the Quartermaster? Take mine. I sleep in the coat anyway."'),
     brought3: S('He folds it small, and then smaller. "That will do. That will do very well."'),
     end: S('"That is all I have for you. Go and talk to somebody about onions."'),
+    done: S('"That is the work done. The third hour, if you are awake. Between Five and Six."'),
     ask4: S('"The cart brought a letter, and Two-Eleven is on the wall till the dead hour. I never had the reading. Would you? Out loud. Everything is out loud here."'),
     letter: S('Hal. The wool came dear and I have got the grey after all, it will not show the dirt. You do not say how big. Two-Eleven writes a fair hand but he does not say how big, so I am making it for a small one and it can be grown into. Whose it is you do not say either, and I have stopped asking. The oven is drawing badly since the wet. I have a new girl for the mornings who cannot be taught to leave a loaf alone. Keep your feet dry. Your sister.'),
     after1: S('He is quiet for a moment, which for a man of the Watch is a long time. "She always did make them to be grown into."'),
     after2: S('"If you are not asleep at the third hour, the wall is a fair place to stand. Between Five and Six. Look east, and do not look long. I will not say more, and you will not ask me after."'),
     // the night on the wall (narration, one at a time as it happens)
     night: [
-      S('At the foot of Tower Nine a lantern comes out of the wall, by a door you were not let through.'),
+      S('Far along the wall, at the foot of Tower Nine, a lantern comes out of the wall, by a door you were not let through.'),
       S('It goes out across the grey ground at a steady walk. One lantern. One man, with something on his back.'),
       S('Out on the end of the buttress a wheel turns. You cannot hear it. The wind here carries nothing three feet.'),
       S('A gold point goes over the lip and down. Past where the rock goes black. Still down. It gets small, and does not go out.'),
@@ -92,11 +94,11 @@ const STORES113 = (function () {
   };
 
   // ---------------------------------------------------------------- the places
-  const MAP = 'p113_stores', WALL = 'p100_wall', HALLS = 'p100_halls';
-  const W = 32, H = 11;
+  const MAP = 'p113_stores', WALLMAP = 'p100_wall', HALLS = 'p100_halls';
+  const W = 18, H = 9;                         // inside: sixteen cells by seven, racks both sides, an aisle three wide
   const DOOR_AT = [301, 21];                      // in the obsidian at Tower Nine's foot, east side, beside the Quartermaster (RIFT100.P.qm)
   const OUTSIDE = [300.3, 21.5];               // where you stand on the wall map coming out
-  const SPAWN = [2.7, 5.5];                    // inside, by the door, facing down the vault
+  const SPAWN = [1.6, 4.5];                    // inside, by the door, facing down the aisle
   const CART = [17.5, 105.6];                  // at the west gate (RIFT100.P.gate)
   const TROOPERS = ['p100_tr_a', 'p100_tr_b', 'p100_tr_c', 'p100_tr_d', 'p100_51', 'p100_207'];   // troopers of the Watch who already stand in the Halls or the squad's barrack
   // the hour. Full dark: the engine's sky (engine.js buildSky) has no day left in it once cos(2π(tod − 0.5)) ≤ −0.3, which
@@ -121,11 +123,11 @@ const STORES113 = (function () {
     const px = (x, c, i, j, w, h) => { x.fillStyle = c; x.fillRect(i, j, w || 1, h || 1); };
     // a knotted string: pale hemp hanging from a nail, with knots along it (how many, and where, by a fixed hash)
     const knots = (x, i, j, len, seed, nail) => {
-      if (nail !== false) { px(x, '#2a2c30', i - 1, j - 1, 3, 2); px(x, '#8a8e96', i - 1, j - 1, 1, 1); }
+      if (nail !== false) { px(x, '#16181c', i - 1, j - 1, 4, 3); px(x, '#9a9ea6', i - 1, j - 1, 1, 1); }
       const sway = (k) => Math.round(Math.sin(k * 0.21 + seed) * 0.7);
-      for (let k = 0; k < len; k++) px(x, k % 5 === 4 ? '#a08a62' : '#c4b08a', i + sway(k), j + 1 + k);
-      const n = 2 + ((h2(seed, 3.3) * 4) | 0);
-      for (let q = 0; q < n; q++) { const k = Math.min(len - 1, 2 + ((h2(seed + q * 7.1, q) * (len - 3)) | 0)); px(x, '#6e5a3a', i + sway(k) - 1, j + k, 3, 2); px(x, '#d8c8a0', i + sway(k), j + k, 1, 1); }
+      for (let k = 0; k < len; k++) { px(x, '#f0e4c0', i + sway(k), j + 1 + k, 2, 1); px(x, '#9c8862', i + sway(k) + 2, j + 1 + k, 1, 1); }
+      const n = 2 + ((h2(seed, 3.3) * 3) | 0);
+      for (let q = 0; q < n; q++) { const k = Math.min(len - 2, 2 + (((q + h2(seed, q) * 0.6) / n) * (len - 3) | 0)); px(x, '#24160a', i + sway(k) - 1, j + k, 4, 3); px(x, '#5c4228', i + sway(k), j + k, 2, 1); }
     };
     const obs = (x, i0, j0, w, h, s) => { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) { const v = 13 + h2((i0 + i) >> 2, (j0 + j) >> 2 + s) * 9 + h2(i0 + i, j0 + j + s) * 3 + (1 - j / h) * 5; px(x, `rgb(${v | 0},${(v + 1) | 0},${(v + 6) | 0})`, i0 + i, j0 + j); } px(x, 'rgba(150,160,190,0.22)', i0, j0, w, 1); };
     if (Engine.addTexture) {
@@ -141,6 +143,27 @@ const STORES113 = (function () {
         for (const [fx, fy, fw, fh] of [[1, 1, 30, 22], [33, 1, 30, 22], [1, 25, 20, 38], [23, 25, 40, 18], [23, 45, 40, 18]]) { const b = 52 + (h2(fx, fy) * 12 | 0); px(x, `rgb(${b},${b + 1},${b + 4})`, fx, fy, fw, fh); px(x, `rgb(${b + 8},${b + 9},${b + 12})`, fx, fy, fw, 1); }
         for (let i = 0; i < 10; i++) px(x, 'rgba(200,170,120,0.35)', (h2(i, 17) * 60) | 0, (h2(i, 19) * 60) | 0, 2, 1);   // onion-skin
       });
+      // the racks, floor to roof: three shelves of dark wood, what is kept on each, and from every board's edge a pale
+      // string with dark knots hanging down (the stores' ledger is on everything)
+      // a rack's cord: thicker and paler than a sprite's string, with big dark knots, so that it reads from across the aisle
+      const cord = (x, i, j, len, seed) => {
+        px(x, '#0c0a08', i - 1, j, 5, 2);
+        for (let k = 0; k < len; k++) px(x, '#fff4d8', i, j + 1 + k, 3, 1);
+        for (let q = 0; q < 3; q++) { const k = 4 + (((q + h2(seed, q) * 0.4) / 3) * (len - 6) | 0); px(x, '#1a0e06', i - 1, j + k, 5, 2); }
+      };
+      const rack = (name, goods) => tex(name, (x) => {
+        px(x, '#120f0c', 0, 0, 64, 64);
+        for (let r = 0; r < 3; r++) { const j = r * 21; goods(x, j, r); px(x, '#5a4630', 0, j + 18, 64, 3); px(x, '#7a6244', 0, j + 18, 64, 1); }
+        for (let r = 0; r < 3; r++) for (let k = 0; k < 2; k++) { const j = r * 21 - 2; cord(x, 14 + k * 30 + ((h2(r, k + 2) * 6) | 0), j, 16 + ((h2(r * 3, k) * 3) | 0), r * 5 + k + name.length); }   // drawn last, over the goods
+        px(x, '#3a2c1e', 0, 0, 3, 64); px(x, '#3a2c1e', 61, 0, 3, 64);
+      });
+      const ell = (x, c, cx, cy, rx, ry) => { x.fillStyle = c; x.beginPath(); x.ellipse(cx, cy, rx, ry, 0, 0, PI * 2); x.fill(); };
+      rack('t_p113_r_onions', (x, j, r) => { for (let k = 0; k < 9; k++) { const cx = 6 + k * 6.5, cy = j + 13 - ((k + r) % 2) * 3; ell(x, h2(k, r) > 0.5 ? '#b8803a' : '#9c6428', cx, cy, 3.6, 4); px(x, '#e8c080', cx - 1, cy - 3, 1, 2); } for (let k = 0; k < 64; k += 5) px(x, 'rgba(120,100,70,0.6)', k, j + 4, 1, 14); });
+      rack('t_p113_r_crates', (x, j, r) => { for (let k = 0; k < 2; k++) { const i = 4 + k * 29; px(x, '#4e3c28', i, j + 2, 26, 16); px(x, '#64503a', i, j + 2, 26, 2); for (let q = 6; q < 16; q += 5) px(x, '#3a2c1e', i, j + q, 26, 1); x.strokeStyle = '#2a2c30'; x.lineWidth = 2; x.beginPath(); x.arc(i + 13, j + 10, 3.5, 0, PI * 2); x.stroke(); px(x, '#b0b4bc', i + 11, j + 6, 3, 1); } });
+      rack('t_p113_r_plates', (x, j, r) => { for (let q = 0; q < 5; q++) { const o = (q % 2) * 2; px(x, '#7c8088', 5 + o, j + 15 - q * 3, 24, 3); px(x, '#a8acb6', 5 + o, j + 15 - q * 3, 24, 1); px(x, '#7c8088', 35 - o, j + 15 - q * 3, 24, 3); px(x, '#a8acb6', 35 - o, j + 15 - q * 3, 24, 1); } });
+      rack('t_p113_r_tins', (x, j, r) => { for (let k = 0; k < 5; k++) { const i = 4 + k * 12; px(x, '#5a5e62', i, j + 4, 9, 14); px(x, '#8e9298', i, j + 4, 9, 2); px(x, '#3a3e42', i + 7, j + 6, 2, 12); px(x, '#a88a40', i + 2, j + 9, 4, 4); } });
+      rack('t_p113_r_bread', (x, j, r) => { for (let k = 0; k < 5; k++) { const cx = 8 + k * 12; ell(x, '#94663a', cx, j + 13, 5.5, 4); px(x, '#c48e50', cx - 4, j + 10, 8, 1); px(x, '#6e4a28', cx - 2, j + 12, 1, 2); px(x, '#6e4a28', cx + 2, j + 12, 1, 2); } });
+      rack('t_p113_r_shot', (x, j, r) => { for (const [ci, n] of [[16, 3], [46, 3]]) for (let q = 0; q < n; q++) for (let k = 0; k <= q; k++) { const cx = ci - q * 3 + k * 6, cy = j + 16 - (n - 1 - q) * 5; ell(x, '#5c6066', cx, cy, 2.8, 2.8); px(x, '#a4a8b0', cx - 1, cy - 2, 1, 1); } });
       // the door in the obsidian: a low door of black oak, iron-strapped, with a knotted string nailed beside the latch
       tex('t_p113_door', (x) => {
         obs(x, 0, 0, 64, 64, 4); px(x, '#6e7278', 0, 30, 64, 1);
@@ -230,30 +253,35 @@ const STORES113 = (function () {
     return m.deco(sprite, x, y, Object.assign({ radius: 0.35, scale: 1, solid: true, use: 'p113_look', label: TX.name[key] }, also ? { _p113also: key } : { _p113look: key }, opts || {}));
   }
   function build() {
-    const m = new GameMap(MAP, TX.door, W, H, { floor: 't_p113_floor', ceil: 't_p113_ceil', floorTextures: ['t_p113_floor'], fogDist: 18, fogColor: [16, 13, 10], ambient: 0.5, music: 'inside', danger: 0,
+    const m = new GameMap(MAP, TX.door, W, H, { floor: 't_p113_floor', ceil: 't_p113_ceil', floorTextures: ['t_p113_floor'], fogDist: 14, fogColor: [16, 13, 10], ambient: 0.55, music: 'inside', danger: 0,
       spawn: { x: SPAWN[0], y: SPAWN[1], dir: 0 } });
     m.rect(0, 0, W - 1, H - 1, 't_p113_wall');
-    m.clear(2, 2, W - 3, H - 3);
-    m.set(1, 5, DOOR({ tex: 't_p113_door', portal: { map: WALL, x: OUTSIDE[0], y: OUTSIDE[1], dir: PI }, label: TX.door }));
+    m.clear(1, 3, W - 4, 5);   // the aisle, three wide, from the door to the end racks
+    // racks floor to roof down both sides (two deep) and across the end; the shot-racks stand across the aisle near the
+    // end, with a gap, and the cot is in the nook behind them
+    const north = ['t_p113_wall', 'r_onions', 'r_onions', 'r_plates', 'r_plates', 'r_tins', 'r_tins', 'r_bread', 'r_bread', 'r_bread', 'r_crates', 'r_crates', 'r_bread', 'r_bread', 'r_onions', 'r_onions'];
+    const south = ['t_p113_wall', 'r_crates', 'r_crates', 'r_bread', 'r_bread', 'r_bread', 'r_onions', 'r_onions', 'r_tins', 'r_tins', 'r_plates', 'r_plates', 'r_shot', 'r_shot', 'r_crates', 'r_crates'];
+    const tx = (t) => (t[0] === 'r' ? 't_p113_' + t : t);
+    for (let i = 0; i < 16; i++) { for (const y of [1, 2]) m.set(i + 1, y, WALL(tx(north[i]))); for (const y of [6, 7]) m.set(i + 1, y, WALL(tx(south[i]))); }
+    for (const y of [3, 4, 5]) { m.set(W - 3, y, WALL('t_p113_r_crates')); m.set(W - 2, y, WALL('t_p113_r_crates')); }
+    m.set(12, 3, WALL('t_p113_r_shot')); m.set(12, 4, WALL('t_p113_r_shot'));
+    m.set(0, 4, DOOR({ tex: 't_p113_door', portal: { map: WALLMAP, x: OUTSIDE[0], y: OUTSIDE[1], dir: PI }, label: TX.door }));
     // by the door: the tally-board and the hook
-    look(m, 'p113_tally', 3.6, 2.3, 'tally', { solid: false, radius: 0.1 });
-    look(m, 'p113_hook', 3.3, 8.72, 'hook', { solid: false, radius: 0.1 });
-    // the north side: onions to the roof, lead plates, lamp-oil; the south side: cable-eye crates
-    look(m, 'p113_onions', 7.4, 2.5, 'onions');
-    look(m, 'p113_onions', 9.0, 2.5, 'onions', null, true); look(m, 'p113_onions', 7.6, 8.5, 'onions', null, true);
-    look(m, 'p113_plates', 12.6, 2.6, 'plates');
-    look(m, 'p113_tins', 16.2, 2.6, 'oil'); look(m, 'p113_tins', 17.6, 2.6, 'oil', null, true);
-    look(m, 'p113_crates', 12.4, 8.3, 'eyes', { radius: 0.6 }); look(m, 'p113_crates', 14.4, 8.3, 'eyes', { radius: 0.6 }, true);
-    // the bread-racks
-    look(m, 'p113_racks', 20.6, 2.5, 'bread'); look(m, 'p113_racks', 22.2, 2.5, 'bread', null, true); look(m, 'p113_racks', 20.6, 8.5, 'bread', null, true); look(m, 'p113_racks', 22.2, 8.5, 'bread', null, true);
-    // the old shot, the shot-racks across the far end, and the cot behind them
-    look(m, 'p113_shot', 25.2, 6.6, 'shot', { radius: 0.5 });
-    for (const y of [2.6, 3.8, 5.0, 6.2]) look(m, 'p113_shotrack', 27.0, y, 'shot', { radius: 0.5, facing: PI / 2 }, true);
-    look(m, 'p113_cot', 28.9, 4.0, 'cot', { radius: 0.6 });
-    // the strings, from the vault, everywhere
-    for (const [x, y] of [[5.5, 4.2], [10.5, 6.8], [14.5, 4.0], [18.6, 6.6], [24.0, 4.4], [29.0, 7.6], [5.8, 7.0], [26.5, 8.2]]) m.deco('p113_strings', x, y, { radius: 0.05, scale: 1, solid: false, nopick: true, _decor: true, _p113: 'strings' });
-    // two dim lamps
-    for (const x of [9.5, 21.4]) m.deco('p113_lamp', x, 5.5, { radius: 0.05, scale: 1, solid: false, glow: 0.55, lightCol: [214, 160, 96], nopick: true, _decor: true, _p113: 'lamp' });
+    look(m, 'p113_tally', 1.5, 3.06, 'tally', { solid: false, radius: 0.1 });
+    look(m, 'p113_hook', 1.4, 5.94, 'hook', { solid: false, radius: 0.1 });
+    // the things in front of their racks
+    look(m, 'p113_onions', 2.6, 3.22, 'onions', { solid: false, radius: 0.2, scale: 0.9 });
+    look(m, 'p113_plates', 4.5, 3.3, 'plates', { radius: 0.3 });
+    look(m, 'p113_tins', 6.4, 3.3, 'oil', { radius: 0.3 });
+    look(m, 'p113_racks', 8.5, 3.22, 'bread', { solid: false, radius: 0.2, scale: 0.9 });
+    look(m, 'p113_crates', 2.6, 5.62, 'eyes', { radius: 0.3, scale: 0.8 });
+    look(m, 'p113_shot', 11.4, 5.55, 'shot', { radius: 0.3 });
+    look(m, 'p113_shotrack', 12.0, 5.2, 'shot', { solid: false, radius: 0.1, scale: 0.9 }, true);
+    look(m, 'p113_cot', 13.9, 3.75, 'cot', { radius: 0.4, scale: 0.85 });
+    // strings hanging from the vault, near the racks
+    for (const [x, y] of [[3.6, 3.12], [5.4, 5.88], [7.5, 3.12], [9.4, 5.88], [10.6, 3.12], [14.4, 5.5]]) m.deco('p113_strings', x, y, { radius: 0.05, scale: 1, solid: false, nopick: true, _decor: true, _p113: 'strings' });
+    // two lamps, low and warm, hung close over the racks
+    for (const [x, y] of [[4.0, 3.5], [9.8, 5.5]]) m.deco('p113_lamp', x, y, { radius: 0.05, scale: 1, solid: false, glow: 0.55, lightCol: [120, 86, 46], nopick: true, _decor: true, _p113: 'lamp' });
     m.baseCount = m.entities.length;
     return m;
   }
@@ -266,10 +294,10 @@ const STORES113 = (function () {
     w.entities.splice(base, 0, cart); w.baseCount = base + 1;
   }
   function join(maps) {
-    if (!maps || maps[MAP] || !maps[WALL] || typeof GameMap === 'undefined') return false;
+    if (!maps || maps[MAP] || !maps[WALLMAP] || typeof GameMap === 'undefined') return false;
     art();
     maps[MAP] = build();
-    onWall(maps[WALL]);
+    onWall(maps[WALLMAP]);
     return true;
   }
 
@@ -284,7 +312,7 @@ const STORES113 = (function () {
   const inHour = (tod) => { const t = Number(tod); return Number.isFinite(t) && t >= THIRD_HOUR.from && t < THIRD_HOUR.to; };
   function onStretch(x, y) {
     if (typeof RIFT100 === 'undefined') return false;
-    const w = (typeof G !== 'undefined' && G.maps && G.maps[WALL]) || null, kind = w && w._p100 ? w._p100.kind : null;
+    const w = (typeof G !== 'undefined' && G.maps && G.maps[WALLMAP]) || null, kind = w && w._p100 ? w._p100.kind : null;
     if (!kind) return false;
     const i = x | 0, j = y | 0; if (i < 0 || j < 0 || i >= RIFT100.W || j >= RIFT100.H) return false;
     const d = RIFT100.degOf(x, y), t5 = RIFT100.TOWERS[0].deg, t6 = RIFT100.TOWERS[1].deg;
@@ -330,10 +358,49 @@ const STORES113 = (function () {
     const x = c.x + dx * k, y = c.y + dy * k, z = ez + (L0.z - ez) * k, sc = Math.max(0.001, L0.size * k);
     e.x = x; e.y = y; e.scale = sc; e.yOff = m.groundAt(x, y) - (z - sc / 2); e.hidden = !seen;
   }
+  // ---- the far lights, from the stretch between Five and Six. The book has it seen from exactly there ("Far off along
+  // the wall, at the foot of Tower Nine, he could see a knot of lanterns", Book Three Part One, 859 to 913); the game's
+  // wall is drawn short and curved, so from that stretch Tower Nine's buttress is hidden. Far sights on this wall are
+  // therefore placed by eye: at the true compass bearing of the buttress's end, turned outward (toward the Rift) by the
+  // least angle that clears the wall and the towers, far off inside the fog, just above the parapet line (the highest
+  // line of anything nearer along that bearing). The renderers' own depth test still hides them behind anything nearer.
+  const FAR = { MARGIN: 1.5 * PI / 180, STEP: 0.25 * PI / 180, CLEAR: 5.65, SLIDE: 0.7 * PI / 180, WALK: 1.2 * PI / 180, BESIDE: 0.3 * PI / 180 };
+  function farFrame() {
+    if (typeof RIFT100 === 'undefined' || !G.map) return null;
+    const R = RIFT100, m = G.map, c = Engine.cam, ez = Number.isFinite(c.z) ? c.z : ((G.player && G.player.feet) || 0) + 0.88;
+    const B = R.pol(R.RC + 19.6, 35.8), a0 = Math.atan2(B[1] - c.y, B[0] - c.x), out = Math.atan2(c.y - R.CY, c.x - R.CX);
+    const turn = Math.atan2(Math.sin(out - a0), Math.cos(out - a0)), sgn = turn < 0 ? -1 : 1, d = (m.fogDist || 40) * 0.9;
+    for (let k = 0; k * FAR.STEP <= Math.abs(turn) + 1e-9; k++) {
+      const a = a0 + sgn * k * FAR.STEP; let ok = true, line = -1e9;
+      for (let s = 0.3; s < d; s += 0.25) { const h = heightAt(m, c.x + Math.cos(a) * s, c.y + Math.sin(a) * s); if (h > FAR.CLEAR) { ok = false; break; } line = Math.max(line, (h - ez) / s); }
+      if (ok) {   // clear: step on by a small margin (still clear) so that the lights do not sit on a tower's edge
+        const a1 = a + sgn * FAR.MARGIN; let ok1 = true, line1 = -1e9;
+        for (let s = 0.3; s < d; s += 0.25) { const h = heightAt(m, c.x + Math.cos(a1) * s, c.y + Math.sin(a1) * s); if (h > FAR.CLEAR) { ok1 = false; break; } line1 = Math.max(line1, (h - ez) / s); }
+        return ok1 && k * FAR.STEP + FAR.MARGIN <= Math.abs(turn) ? { a: a1, sgn, d, ez, line: Math.min(line1, -0.01), turn: k * FAR.STEP + FAR.MARGIN } : { a, sgn, d, ez, line: Math.min(line, -0.01), turn: k * FAR.STEP };
+      }
+    }
+    return null;
+  }
+  function farAt(t, F) {
+    if (!F) return {};
+    const k01 = (a, b) => Math.max(0, Math.min(1, (t - a) / (b - a))), band = -F.line, fade = t > NIGHT_S - 4 ? Math.max(0, (NIGHT_S - t) / 4) : 1, o = {};
+    const top = F.line + band * 0.6;
+    { const k = k01(3, 14); o.lantern = { a: F.a - F.sgn * FAR.WALK * (1 - k * k * (3 - 2 * k)), el: top, size: 1.5 * Math.min(1, t / 1.5) * fade }; }
+    if (t >= 21) { const k = k01(21, 29), dz = k * (2 - k), side = k01(33, 45);
+      o.gold = { a: F.a + F.sgn * FAR.SLIDE * side, el: top - (top - (F.line + band * 0.06)) * dz, size: (1.5 - k * 0.85) * fade }; }
+    if (t >= 37) o.answer = { a: F.a + F.sgn * (FAR.SLIDE + FAR.BESIDE), el: F.line + band * 0.035, size: (0.5 + 0.07 * Math.sin(t * 1.7)) * Math.min(1, k01(37, 38.5)) * fade };
+    return o;
+  }
+  let farLast = {};
+  function placeFar(e, L0, F) {
+    const m = G.map, c = Engine.cam, x = c.x + Math.cos(L0.a) * F.d, y = c.y + Math.sin(L0.a) * F.d, z = F.ez + L0.el * F.d, sc = Math.max(0.001, L0.size);
+    e.x = x; e.y = y; e.scale = sc; e.yOff = m.groundAt(x, y) - (z - sc / 2); e.hidden = !(L0.size > 0.01);
+    L0.hidden = e.hidden;
+  }
   // ---- the night itself
   const NT = { on: false, t: 0, said: -1, ents: {} };
-  function clearLights() { if (typeof G === 'undefined' || !G.ents) { NT.ents = {}; return; } for (const k in NT.ents) { const e = NT.ents[k], i = G.ents.indexOf(e); if (i >= 0) G.ents.splice(i, 1); else if (G.maps && G.maps[WALL]) { const j = G.maps[WALL].entities.indexOf(e); if (j >= 0) G.maps[WALL].entities.splice(j, 1); } } NT.ents = {}; }
-  function stopNight() { clearLights(); NT.on = false; NT.t = 0; NT.said = -1; }
+  function clearLights() { if (typeof G === 'undefined' || !G.ents) { NT.ents = {}; return; } for (const k in NT.ents) { const e = NT.ents[k], i = G.ents.indexOf(e); if (i >= 0) G.ents.splice(i, 1); else if (G.maps && G.maps[WALLMAP]) { const j = G.maps[WALLMAP].entities.indexOf(e); if (j >= 0) G.maps[WALLMAP].entities.splice(j, 1); } } NT.ents = {}; }
+  function stopNight() { clearLights(); NT.on = false; NT.t = 0; NT.said = -1; farLast = {}; }
   function tickNight(dt) {
     if (!NT.on) {
       if (fint('p113_seen', 1) || !inHour(G.tod) || !onStretch(Engine.cam.x, Engine.cam.y)) return;
@@ -341,17 +408,19 @@ const STORES113 = (function () {
     } else NT.t += dt;
     while (NT.said + 1 < LINES_AT.length && NT.t >= LINES_AT[NT.said + 1]) { NT.said++; say(TX.night[NT.said], '', 7800); }
     if (NT.t >= NIGHT_S) { stopNight(); return; }
-    const L = lightsAt(NT.t);
+    const L = lightsAt(NT.t), fromStretch = onStretch(Engine.cam.x, Engine.cam.y), F = fromStretch ? farFrame() : null, FL = F ? farAt(NT.t, F) : {};
+    const ent = (key, k, tag) => { let e = NT.ents[key]; if (!e) { e = NT.ents[key] = { kind: 'deco', sprite: SPRITE[k], x: Engine.cam.x, y: Engine.cam.y, scale: 0.1, solid: false, radius: 0.01, glow: 1, nopick: true, transient: true, _decor: true, _p113: tag }; G.ents.push(e); } return e; };
     for (const k of ['lantern', 'gold', 'answer']) {
-      if (!L[k]) { if (NT.ents[k]) NT.ents[k].hidden = true; continue; }
-      let e = NT.ents[k];
-      if (!e) { e = NT.ents[k] = { kind: 'deco', sprite: SPRITE[k], x: L[k].x, y: L[k].y, scale: 0.1, solid: false, radius: 0.01, glow: 1, nopick: true, transient: true, _decor: true, _p113: 'light' }; G.ents.push(e); }
-      place(e, L[k]);
+      // the lights where they truly are, seen only where they could be seen (from the stretch they cannot)
+      if (!L[k]) { if (NT.ents[k]) NT.ents[k].hidden = true; } else { const e = ent(k, k, 'light'); place(e, L[k]); if (fromStretch) e.hidden = true; }
+      // and from the stretch, the far lights
+      if (!FL[k]) { if (NT.ents['far_' + k]) NT.ents['far_' + k].hidden = true; } else placeFar(ent('far_' + k, k, 'far'), FL[k], F);
     }
+    farLast = FL;
   }
   function tick(dt) {
     if (typeof G === 'undefined' || G.state !== 'play' || !G.player || G.dead) return;
-    if (here(WALL)) tickNight(Number(dt) || 0);
+    if (here(WALLMAP)) tickNight(Number(dt) || 0);
     else if (NT.on) stopNight();
   }
 
@@ -373,6 +442,7 @@ const STORES113 = (function () {
     else if (q === 4) { set(5); out.push(TX.brought2); }
     else if (q === 5) { if (c === 3) { f().p113_carry = 0; set(6); out.push(TX.brought3); } else out.push(TX.brought2); }
     else if ((q === 6 || q === 7) && !g) { set(7); out.push(TX.ask4); letterChoice(); }
+    else if (q === 8 && !g) out.push(TX.done);
     else out.push(TX.end);
     return out;
   }
@@ -402,7 +472,7 @@ const STORES113 = (function () {
     return false;
   }
   function sync() {
-    if (typeof G === 'undefined' || !G.map || !here(WALL)) return;
+    if (typeof G === 'undefined' || !G.map || !here(WALLMAP)) return;
     const taken = fint('p113_qm', 8) >= 2 || fint('p113_carry', 3) === 1;
     for (const e of G.ents) if (e && e._p113 === 'cart') e.sprite = taken ? 'p113_cart_taken' : 'p113_cart';
   }
@@ -423,7 +493,7 @@ const STORES113 = (function () {
   wire();
 
   return { TX, TEXTS, THINGS, MAP, W, H, DOOR: DOOR_AT, OUTSIDE, SPAWN, CART, TROOPERS, THIRD_HOUR, LINES_AT, NIGHT_S, build, join, tick, useOwn, sync, inHour, onStretch, lightsAt, resetNight, workLines,
-    lights: () => (NT.on ? lightsAt(NT.t) : {}), night: () => ({ on: NT.on, t: NT.t, said: NT.said }) };
+    lights: () => (NT.on ? lightsAt(NT.t) : {}), farLights: () => (NT.on ? farLast : {}), farFrame, night: () => ({ on: NT.on, t: NT.t, said: NT.said }) };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = STORES113;
 if (typeof window !== 'undefined') window.STORES113 = STORES113;
