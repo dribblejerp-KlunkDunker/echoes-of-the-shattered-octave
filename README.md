@@ -492,6 +492,12 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 ![Phase 109: today and the three options](screenshots/p109-options.jpg)
 ![Phase 109: the sculpted option by night](screenshots/p109-sculpted-night.jpg)
 
+**The pixel hands, touched up (Phase 111).** The arm behind a shield is pixel art now: the forearm comes up behind the shield and the fingers hook over its rim. Through a swing the arm runs out of the view (it used to end in the air at the edge of its picture). In the 3D view the hands keep their painted colours by day, so the glass arm is its approved deep azure and the gloves are leather brown; by night they darken, and warm by a lamp. A Song lights the hands in its own colour on the sides that face it. The bare palm has its pads and creases, the leather glove is no longer blotched, and a cloth sleeve's folds are drawn as creases.
+
+![Phase 111: the approved sheet, the game before, and now by day and by night](screenshots/p111-hands.jpg)
+
+![Phase 111: every weapon kind, the arm behind a shield, the climb, mid-swing, and night](screenshots/p111-kinds.jpg)
+
 **The pixel-art hands, in the game (Phase 110).** The owner chose the pixel art: every weapon in the hand is now pixel art with a pixel hand on its grip, and so are the fists (each glove in its own colours), the glass arm, the Song's open hands and the climb (Options: "Pixel hands"). Record: [`story/Game Layer/Phase 110 - The pixel-art hands in the game.md`](story/Game%20Layer/Phase%20110%20-%20The%20pixel-art%20hands%20in%20the%20game.md).
 
 ![Phase 110: the pixel-art hands in the game](screenshots/p110-hands.jpg)

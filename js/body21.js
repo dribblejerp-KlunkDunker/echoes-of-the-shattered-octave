@@ -448,7 +448,7 @@ const BODY21 = (() => {
     const bk = ['hands87', pose, side, look.key, look.glassArm ? 1 : 0].join('#');
     let b = buildCache.get(bk); if (b) { stats.hits++; return b; }
     const r = FP87.paintHands(look, pose); if (!r) return null;
-    b = { key, wid, side, main: r.canvas, emis: r.emis || null, ext: null, over: [], w: r.canvas.width, h: r.canvas.height, k: r.k, below: r.below, right: r.right, center: !!r.center, flip: !!r.flip, shift: !!r.shift, pose, tip: r.tip || null, root: r.root || null, ms: 0 };
+    b = { key, wid, side, main: r.canvas, emis: r.emis || null, ext: r.ext || null, over: [], w: r.canvas.width, h: r.canvas.height, k: r.k, below: r.below, right: r.right, center: !!r.center, flip: !!r.flip, shift: !!r.shift, pose, tip: r.tip || null, root: r.root || null, pixel: !!r.pixel, song: r.song || null, ms: 0 };   // Phase 111: a pixel picture's arm beyond its edge (ext), its Song light
     if (buildCache.size > 48) buildCache.delete(buildCache.keys().next().value);
     buildCache.set(bk, b); OWNED.set(r.canvas, b); stats.builds++;
     return b;
@@ -461,7 +461,7 @@ const BODY21 = (() => {
     // Phase 87: the melee weapons' own pictures, painted in code with the glove and sleeve you wear (js/fp87.js); drawn
     // at the same place, k times smaller than the canvas (the hook below scales them)
     if (side === 'right' && key !== 'fp_hands' && typeof FP87 === 'object' && FP87.covers(wid)) {
-      try { const r = FP87.paint(wid, look); if (r) { b = { key, wid, side, main: r.canvas, emis: r.emis || null, ext: null, over: [], w: r.canvas.width, h: r.canvas.height, k: r.k, below: r.below, right: r.right, center: !!r.center, tip: r.tip || null, root: r.root || null, ms: 0 }; buildCache.set(bk, b); OWNED.set(r.canvas, b); stats.builds++; return b; } } catch (e) { warnOnce('fp87', e); }
+      try { const r = FP87.paint(wid, look); if (r) { b = { key, wid, side, main: r.canvas, emis: r.emis || null, ext: r.ext || null, over: [], w: r.canvas.width, h: r.canvas.height, k: r.k, below: r.below, right: r.right, center: !!r.center, tip: r.tip || null, root: r.root || null, pixel: !!r.pixel, ms: 0 }; buildCache.set(bk, b); OWNED.set(r.canvas, b); stats.builds++; return b; } } catch (e) { warnOnce('fp87', e); }
     }
     const s = segment(key); if (!s) return null;
     const t0 = performance.now();
@@ -947,11 +947,11 @@ const BODY21 = (() => {
   // pixels, from the canvas transform it would have been drawn with) and the R3D 'body' pass draws the list in the scene,
   // lit by the scene's shading and graded by its post chain. REC is that recording (null on the raycaster path).
   let REC = null;
-  function put2(ctx, img, dx, dy, dw, dh, em, add) {
+  function put2(ctx, img, dx, dy, dw, dh, em, add, over) {
     if (REC) {
       const L = REC.inv.multiply(ctx.getTransform());
       const p = (x, y) => { const q = L.transformPoint({ x, y }); return [q.x, q.y]; };
-      REC.list.push({ img, em: em || null, add: add || 0, pts: [p(dx, dy), p(dx + dw, dy), p(dx + dw, dy + dh), p(dx, dy + dh)] });
+      REC.list.push({ img, em: em || null, add: add || 0, pix: !!(img && img.__px111), over: over || 0, pts: [p(dx, dy), p(dx + dw, dy), p(dx + dw, dy + dh), p(dx, dy + dh)] });
       return;
     }
     ctx.drawImage(img, dx, dy, dw, dh);
@@ -1038,6 +1038,18 @@ const BODY21 = (() => {
     ctx.save(); ctx.translate(ax, ay); ctx.rotate(ang); put2(ctx, lit(a.canvas, a.emis), -14, -9, 28, 95, a.emis); ctx.restore();
     return a;
   }
+  // how far from a shield's own centre its edge lies along the direction u on the screen (the shield turned by r and
+  // scaled by sx, sy): read from its picture, so it holds for every shape
+  function rimAlong(art, u, r, sx, sy) {
+    if (!art.alpha) { try { const d = art.canvas.getContext('2d').getImageData(0, 0, art.canvas.width, art.canvas.height).data, a = new Uint8Array(art.canvas.width * art.canvas.height); for (let i = 0; i < a.length; i++) a[i] = d[i * 4 + 3] > 128 ? 1 : 0; art.alpha = a; art.aw = art.canvas.width; art.ah = art.canvas.height; } catch (e) { art.alpha = new Uint8Array(0); art.aw = art.ah = 0; } }
+    const c = Math.cos(-r), sn = Math.sin(-r), kx = art.aw / art.w, ky = art.ah / art.h; let R = 0;
+    for (let t = 0; t <= 140; t += 0.5) {
+      const vx = u[0] * t, vy = u[1] * t, ax = Math.floor((art.hx + (vx * c - vy * sn) / sx) * kx), ay = Math.floor((art.hy + (vx * sn + vy * c) / sy) * ky);
+      if (ax < 0 || ay < 0 || ax >= art.aw || ay >= art.ah) break;
+      if (art.alpha[ay * art.aw + ax]) R = t;
+    }
+    return Math.max(0, R - 1.5);
+  }
   function drawShield(ctx, look) {
     if (!look.shield || look.shieldStowed || hiddenBody()) return false;
     const art = shieldArt(look); if (!art) return false;
@@ -1048,6 +1060,22 @@ const BODY21 = (() => {
     const gx = p.x + ((art.gripX - art.hx) * Math.cos(p.r) - (art.gripY - art.hy) * Math.sin(p.r)) * sx;
     const gy = p.y + ((art.gripX - art.hx) * Math.sin(p.r) + (art.gripY - art.hy) * Math.cos(p.r)) * sy;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
+    // Phase 111: the pixel hands' arm behind the shield (js/pixelhands110.js offArm): the forearm comes up from below the
+    // view behind the shield, through its middle, and the fingers are hooked over the rim where the arm's line meets it
+    let px = null; try { px = typeof PIXELHANDS110 === 'object' && PIXELHANDS110.offArm ? PIXELHANDS110.offArm(look) : null; } catch (e) { warnOnce('pixel off arm', e); px = null; }
+    if (px) {
+      const ex = p.x - 30, ey = VHv() + 70, ul = Math.hypot(p.x - ex, p.y - ey) || 1, u = [(p.x - ex) / ul, (p.y - ey) / ul];
+      const R = rimAlong(art, u, p.r, sx, sy), hx = p.x + u[0] * R, hy = p.y + u[1] * R, ang = Math.atan2(u[0], -u[1]), q = p.s / 0.5;
+      const one = (cv, em) => { ctx.save(); ctx.translate(hx, hy); ctx.rotate(ang); ctx.scale(q, q); put2(ctx, lit(cv, em), -px.hx, -px.hy, px.w, px.h, em); ctx.restore(); };
+      one(px.canvas, px.emis);
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.scale(sx, sy);
+      put2(ctx, lit(face), -art.hx, -art.hy, art.w, art.h);
+      ctx.restore();
+      one(px.fingers, px.fingersEm);
+      ctx.restore();
+      stats.drawn.shield++;
+      return true;
+    }
     const arm = drawOffArm(ctx, look, gx + 3, gy + 6, false);
     ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.scale(sx, sy);
     put2(ctx, lit(face), -art.hx, -art.hy, art.w, art.h);
@@ -1080,7 +1108,8 @@ const BODY21 = (() => {
     if (rightSide) { ctx.translate(VWv() - 20 - iw * 0.5, VHv() + 34 + bobNow(1.7) * 1.5 + drop + WS.gk * 30); ctx.rotate(-0.42); }
     else { ctx.translate(20 + iw * 0.5, VHv() + 34 + bobNow(1.7) * 1.5 + drop + WS.gk * 30); ctx.rotate(0.42); ctx.scale(-1, 1); }
     const ox = -iw * 0.5 + (b.k ? (b.right || 0) * b.k * 2 * k * 0.8 : 0), oy = -ih + 12 + (b.k ? (b.below || 0) * b.k * 2 * k * 0.8 : 0);
-    if (b.ext) put2(ctx, b.ext.canvas, ox + b.ext.ox * k, oy + b.ext.oy * k, b.ext.w * k, b.ext.h * k, b.ext.canvas);
+    if (b.ext && b.pixel) put2(ctx, lit(b.ext.canvas, b.ext.emis), ox + b.ext.ox * k, oy + b.ext.oy * k, b.ext.w * k, b.ext.h * k, b.ext.emis);   // Phase 111: the pixel arm on past its picture
+    else if (b.ext) put2(ctx, b.ext.canvas, ox + b.ext.ox * k, oy + b.ext.oy * k, b.ext.w * k, b.ext.h * k, b.ext.canvas);
     put2(ctx, img, ox, oy, iw, ih, b.k ? b.emis : img);
     ctx.restore();
     stats.drawn.glassIdle++;
@@ -1108,6 +1137,12 @@ const BODY21 = (() => {
         try { put2(this, img, arguments[1], arguments[2], arguments[3], arguments[4], null, this.globalAlpha); } finally { this.drawImage = keep; }
         return undefined;
       }
+      // Phase 111: the pixel hands' own Song light (js/pixelhands110.js songCanvas) is laid over them, not added
+      if (!b && REC && arguments.length === 5 && img && img.__px111song) {
+        const keep = this.drawImage; this.drawImage = orig;
+        try { put2(this, img, arguments[1], arguments[2], arguments[3], arguments[4], null, 0, this.globalAlpha); } finally { this.drawImage = keep; }
+        return undefined;
+      }
       if (!b || arguments.length !== 5) return orig.apply(this, arguments);
       let dx = arguments[1], dy = arguments[2], dw = arguments[3], dh = arguments[4];
       if (b.side === 'right' && typeof FEEL88 === 'object') { try { const o = FEEL88.weaponOffset(b.wid); dx += o.x; dy += o.y; } catch (e) { /* still */ } }   // Phase 88: the weapon's weight
@@ -1128,7 +1163,7 @@ const BODY21 = (() => {
       let moved = false;
       if (b.side === 'right' && (b.flip || b.shift)) { try { const M = this.getTransform(), S = b.shift ? VWv() / 2 - arguments[3] / 2 - 10 : 0; let T = new DOMMatrix(); if (b.flip) T = T.translate(VWv(), 0).scale(-1, 1); if (S) T = T.translate(S, 0); this.save(); moved = true; setT.call(this, baseM.multiply(T).multiply(baseM.inverse()).multiply(M)); } catch (e) { warnOnce('side', e); } }
       try {
-        if (b.ext) { dr(lit(b.ext.canvas), dx + b.ext.ox * sx, dy + b.ext.oy * sy, b.ext.w * sx, b.ext.h * sy); stats.drawn.ext++; }
+        if (b.ext) { dr(lit(b.ext.canvas, b.ext.emis), dx + b.ext.ox * sx, dy + b.ext.oy * sy, b.ext.w * sx, b.ext.h * sy, b.ext.emis); stats.drawn.ext++; }
         dr(img, dx, dy, dw, dh, b.emis); stats.drawn.arms++;
         for (const o of b.over) { dr(lit(o.canvas, o.emis), dx + o.ox * sx, dy + o.oy * sy, o.w * sx, o.h * sy, o.emis); stats.drawn.extra++; }
         if (b.pose === 'glassfist' && b.side === 'right' && G.glassLock > 0) { const t = lockTint(b.main); if (REC) dr(t, dx, dy, dw, dh, null, 0.3); else { const a0 = this.globalAlpha; this.globalAlpha = a0 * 0.3; orig.call(this, t, dx, dy, dw, dh); this.globalAlpha = a0; } }
@@ -1225,18 +1260,34 @@ void main() {
   else { vPos = uEye.xyz + vec3(uFwdH.xy * 0.3, -0.12); gl_Position = vec4(aPos.xy, -1.0, 1.0); }
 }`;
   const BODY_FS = `
-uniform sampler2D uImg; uniform sampler2D uEm; uniform float uHasEm; uniform float uAdd;
+uniform sampler2D uImg; uniform sampler2D uEm; uniform float uHasEm; uniform float uAdd; uniform float uPix;
 in vec2 vUv; in vec3 vPos; flat in float vMode;
 layout(location = 0) out vec4 oColor; layout(location = 1) out vec4 oAux;
 void main() {
   vec4 c = texture(uImg, vUv);
   // 3: a Song's light on the hands (fp-hands draws it 'lighter'): added on top, unlit, the material left as it is
+  // 4 (Phase 111): the pixel hands' own Song light: laid over them (blended by its own alpha), unlit
+  if (vMode > 3.5) { float a = c.a * uAdd; oColor = vec4(c.rgb, a); oAux = vec4(6.0 / 255.0, 0.0, 0.0, a); return; }
   if (vMode > 2.5) { oColor = vec4(c.rgb * c.a * uAdd, 0.0); oAux = vec4(0.0); return; }
   if (vMode > 1.5) { float a = c.a * 0.9; if (a < 0.01) discard; oColor = vec4(0.0, 0.0, 0.0, a); oAux = vec4(5.0 / 255.0, 0.0, 0.0, a); return; }
   if (c.a < 0.5) discard;
   float e = uHasEm > 0.5 ? step(0.5, texture(uEm, vUv).a) : 0.0;
   R3DSurf s; s.albedo = c.rgb; s.pos = vPos; s.nrm = vec3(-uFwdH.xy, 0.0); s.side = 1.0; s.mat = 6.0; s.emissive = e; s.fi = 1.0; s.ladd = vec3(0.0); s.kind = 2;
-  vec3 col = r3dShade(s);
+  vec3 col;
+  if (uPix > 0.5) {
+    // Phase 111: a pixel-art picture is painted in its daylight colours. The scene's light never makes it brighter than
+    // it was painted (daylight above 1.0 turned the glass's deep azure pale); in full light it is as painted; as the
+    // light falls it darkens in the light's own cast (cool at night, warm by a lamp), never below what can be read
+    s.albedo = vec3(1.0);
+    vec3 L = r3dShade(s);
+    L /= max(1.0, max(L.r, max(L.g, L.b)));
+    float lv = dot(L, vec3(0.3, 0.59, 0.11));
+    L = mix(L, vec3(1.0), smoothstep(0.6, 0.9, lv));
+    L = max(L, 0.5 * mix(vec3(1.0), L / max(lv, 0.001), 0.35));
+    col = c.rgb * L; e *= 0.1;   // (its glints bloom faintly: at full strength the bloom alone turned the glass pale)
+    oColor = vec4(mix(col, c.rgb, step(0.01, e)), 1.0); oAux = vec4(6.0 / 255.0, e, 0.0, 1.0); return;
+  }
+  col = r3dShade(s);
   col = mix(col, c.rgb, e);
   oColor = vec4(col, 1.0); oAux = vec4(6.0 / 255.0, e, 0.0, 1.0);
 }`;
@@ -1298,8 +1349,9 @@ void main() {
       if (R3B.check) while (g.getError() !== g.NO_ERROR) { /* tests only: start clean */ }
       for (const it of rec.list) {
         const pts = it.pts.map((q) => [q[0] / 160 - 1, 1 - q[1] / 75, 0]);
-        if (it.add) { g.enable(g.BLEND); g.blendFunc(g.ONE, g.ONE); g.uniform1f(R3B.prog.u.uAdd, it.add * 0.6); quad(g, pts, 3, it.img, null); g.disable(g.BLEND); }   // softer than on the HUD: the scene's grade and bloom brighten it again (a glow over the skin, not a coat of paint)
-        else quad(g, pts, 0, it.img, it.em);
+        if (it.over) { g.enable(g.BLEND); g.blendFunc(g.SRC_ALPHA, g.ONE_MINUS_SRC_ALPHA); g.uniform1f(R3B.prog.u.uAdd, it.over); quad(g, pts, 4, it.img, null); g.disable(g.BLEND); }   // Phase 111
+        else if (it.add) { g.enable(g.BLEND); g.blendFunc(g.ONE, g.ONE); g.uniform1f(R3B.prog.u.uAdd, it.add * 0.6); quad(g, pts, 3, it.img, null); g.disable(g.BLEND); }   // softer than on the HUD: the scene's grade and bloom brighten it again (a glow over the skin, not a coat of paint)
+        else { g.uniform1f(R3B.prog.u.uPix, it.pix ? 1 : 0); quad(g, pts, 0, it.img, it.em); }
       }
       if (R3B.check) R3B.glErr = g.getError();   // tests only (a sync stall): did every picture draw?
       g.depthMask(true); g.enable(g.DEPTH_TEST);

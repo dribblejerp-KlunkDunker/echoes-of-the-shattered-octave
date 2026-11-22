@@ -163,9 +163,17 @@ const FPHANDS = (() => {
     // the hands take the Song's colour
     const handsUp = G.song.t > 0 || G.songFx > 0;   // Murmur keeps the weapon out: halo only
     if (handsUp) {
-      ctx.globalAlpha = Math.min(0.55, a * 0.5);
+      // Phase 111: the pixel hands have a Song light of their own (js/pixelhands110.js): the Song's colour laid in steps
+      // on what faces the light between the hands. (The old tint, added over the whole picture, whitened them.)
+      let light = null;
+      try { light = own && own.pixel && own.song && typeof PIXELHANDS110 === 'object' && PIXELHANDS110.on() ? PIXELHANDS110.songCanvas(own.song, col) : null; } catch (e) { light = null; }
       // a picture painted in code (js/fp87.js) is k times its place, centred, and hangs lower: the tint goes where it is drawn
-      ctx.save(); ctx.translate(g.tx, g.ty); ctx.drawImage(tintSprite(hands, col), -g.iw * 0.5 + (g.iw - g.iw / pk) / 2, -g.ih + 12 + g.ih - g.ih / pk + pbelow, g.iw / pk, g.ih / pk); ctx.restore();
+      ctx.save(); ctx.translate(g.tx, g.ty);
+      if (light) { ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = Math.min(1, a * 1.25); }
+      else ctx.globalAlpha = Math.min(0.55, a * 0.5);
+      ctx.drawImage(light || tintSprite(hands, col), -g.iw * 0.5 + (g.iw - g.iw / pk) / 2, -g.ih + 12 + g.ih - g.ih / pk + pbelow, g.iw / pk, g.ih / pk);
+      ctx.restore();
+      ctx.globalCompositeOperation = 'lighter';
     }
     // pulsing halo between the hands
     const r = (16 + st.castPower * 22) * pulse, cy = handsUp ? g.ty - (pk > 1 ? 62 : g.ih * 0.55) : VIEW_H - 14;
