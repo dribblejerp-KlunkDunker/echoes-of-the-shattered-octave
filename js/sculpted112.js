@@ -889,10 +889,12 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
         const wrot = wristTurn(E.sc.wrist, it.anim);
         // a picture drawn mirrored turns the faces' winding round (a left hand's own mirroring is already in its mesh)
         gl.frontFace(flip ? gl.CW : gl.CCW);
+        // (the colours are the look's as it is now: a hand built for one pair of gloves is the same hand in another pair)
+        const M = matOf(h, it.look);
         const mats = {
           skin: { base: lin((it.look && it.look.skin) || [214, 170, 136], 1), alt: [0, 0, 0] }, nail: { base: lin((it.look && it.look.skin) || [214, 170, 136], 1), alt: [0, 0, 0] },
-          leather: { base: lin(E.M.base || [96, 62, 40], 1), alt: lin(E.M.alt || [150, 112, 80], 1) }, grip: { base: lin([74, 48, 32], 1), alt: [0, 0, 0] },
-          mail: { base: lin(E.M.base || [170, 172, 178], 1), alt: [0, 0, 0] }, wool: { base: lin(E.M.wool || [92, 78, 62], 1), alt: [0, 0, 0] },
+          leather: { base: lin(M.base || [96, 62, 40], 1), alt: lin(M.alt || [150, 112, 80], 1) }, grip: { base: lin([74, 48, 32], 1), alt: [0, 0, 0] },
+          mail: { base: lin(M.base || [170, 172, 178], 1), alt: [0, 0, 0] }, wool: { base: lin(M.wool || [92, 78, 62], 1), alt: [0, 0, 0] },
           steel: { base: lin([214, 218, 224], 1), alt: [0, 0, 0] }, iron: { base: lin([150, 140, 128], 1), alt: [0, 0, 0] },
           glass: { base: lin([30, 104, 205], 1), alt: lin([120, 205, 255], 1) },
         };

@@ -133,17 +133,23 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
         const P = PIXELHANDS110.poses('w', 'sword', look), h = P.hands[0], gx = Math.round((0.25 * h.x + 180) * 3.6), gy = Math.round(540 - (0.25 * h.y + 20) * 3.6);
         const diff = (a, b) => { let near = 0, far = 0, all = 0; for (let y = 0; y < a.h; y += 2) for (let x = 0; x < a.w; x += 2) { const q = (y * a.w + x) * 4; if (Math.abs(a.data[q] - b.data[q]) + Math.abs(a.data[q + 1] - b.data[q + 1]) + Math.abs(a.data[q + 2] - b.data[q + 2]) + Math.abs(a.data[q + 3] - b.data[q + 3]) > 24) { all++; if (Math.hypot(x - gx, y - gy) < 36) near++; else if (Math.hypot(x - gx, y - gy) > 110) far++; } } return { near, far, all }; };
         const rest = pic('w', 'sword', null), zero = pic('w', 'sword', { dev: 0, flex: 0 }), cock = pic('w', 'sword', { dev: 13, flex: 0 }), snap = pic('w', 'sword', { dev: -13, flex: 0 }), bend = pic('w', 'sword', { dev: 0, flex: 10 });
+        // other gloves of the same kind and another shirt: the same hand, in their colours (Codex review, PR #158)
+        const look2 = Object.assign({}, look, { hands: Object.assign({}, look.hands, { col: Object.assign({}, look.hands.col, { base: [24, 150, 60], light: [70, 200, 110] }) }) });
+        const col = (px) => { let n = 0, r = 0, g = 0; for (let i = 0; i < px.data.length; i += 16) if (px.data[i + 3] > 200) { n++; r += px.data[i]; g += px.data[i + 1]; } return [Math.round(r / n), Math.round(g / n)]; };
+        const pic2 = () => { SCULPTED112.begin(); SCULPTED112.place('w', 'sword', look2, t, null); SCULPTED112.flush(L); return SCULPTED112.read(); };
+        const cA = col(rest), cB = col(pic2()), cA2 = col(pic('w', 'sword', null));
         const open = pic('h', 'open', { spread: 2 }), half = pic('h', 'open', { spread: 0 }), part = pic('h', 'open', { spread: 1 });
         // what the game asks for: through a slash, a thrust, a Song
         const A = (u, dir) => { G.attack.dur = 0.4; G.attack.t = 0.4 * (1 - u); G.attack.dirLabel = dir; const o = BODY21.sculptAnim({ side: 'right' }); G.attack.t = 0; return o; };
         const C = (c) => { FPHANDS.st.cast = 0.9 * (1 - c); FPHANDS.st.castDur = 0.9; const o = BODY21.sculptAnim({ side: 'right', pose: 'open' }); FPHANDS.st.cast = 0; return o; };
-        const out = { zero: diff(rest, zero), cock: diff(rest, cock), snap: diff(rest, snap), both: diff(cock, snap), bend: diff(rest, bend), half: diff(open, half), part: diff(open, part), halfPart: diff(half, part),
+        const out = { cA, cB, cA2, zero: diff(rest, zero), cock: diff(rest, cock), snap: diff(rest, snap), both: diff(cock, snap), bend: diff(rest, bend), half: diff(open, half), part: diff(open, part), halfPart: diff(half, part),
           still: BODY21.sculptAnim({ side: 'right' }), s18: A(0.18, 'slash left'), s60: A(0.6, 'slash left'), s100: A(0.999, 'slash left'), r18: A(0.18, 'slash right'), th: A(0.18, 'thrust'), ch: A(0.18, 'chop down'),
           c05: C(0.05), c18: C(0.18), c50: C(0.5), c92: C(0.92) };
         GFX.sculptedHands = false; return out;
       });
       console.log('  wrist ' + JSON.stringify([r.cock, r.snap, r.bend]) + ' fingers ' + JSON.stringify([r.half, r.part]) + ' asked ' + JSON.stringify([r.s18, r.s60, r.th, r.c05, r.c50]));
       assert.ok(r.zero.all === 0, 'a wrist at rest is the picture as it was ' + JSON.stringify(r.zero));
+      assert.ok((r.cB[1] - r.cB[0]) > (r.cA[1] - r.cA[0]) + 10 && r.cA[0] > r.cA[1] && r.cA2[0] === r.cA[0] && r.cA2[1] === r.cA[1], 'green gloves are drawn green on the hand built for brown ones, and brown again after ' + JSON.stringify([r.cA, r.cB, r.cA2]));
       for (const k of ['cock', 'snap', 'bend']) assert.ok(r[k].far > 400 && r[k].near < r[k].far * 0.25, k + ': the forearm moves, the hand on the grip all but stays ' + JSON.stringify(r[k]));
       assert.ok(r.both.far > r.cock.far, 'cocked and snapped are further apart than either from rest ' + JSON.stringify(r.both));
       assert.ok(r.half.all > 300 && r.part.all > 100 && r.halfPart.all > 100, 'three stands of the fingers ' + JSON.stringify([r.half, r.part, r.halfPart]));
