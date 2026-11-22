@@ -1062,6 +1062,18 @@ const BODY21 = (() => {
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, VWv(), VHv()); ctx.clip();
     // Phase 111: the pixel hands' arm behind the shield (js/pixelhands110.js offArm): the forearm comes up from below the
     // view behind the shield, through its middle, and the fingers are hooked over the rim where the arm's line meets it
+    // Phase 112: the sculpted hands' arm behind the shield (js/sculpted112.js): the whole arm is given first, then the
+    // shield's face as a card in the same picture, so the forearm is hidden behind it and the hooked fingers come over
+    if (sculptOn() && PIXELHANDS110.OA) {
+      try {
+        const OA = PIXELHANDS110.OA, ex = p.x - 30, ey = VHv() + 70, ul = Math.hypot(p.x - ex, p.y - ey) || 1, u = [(p.x - ex) / ul, (p.y - ey) / ul];
+        const R = rimAlong(art, u, p.r, sx, sy), hx = p.x + u[0] * R, hy = p.y + u[1] * R, ang = Math.atan2(u[0], -u[1]), q = p.s / 0.5, DEG = 180 / Math.PI;
+        const m0 = REC.inv.multiply(ctx.getTransform()), six = (m) => [m.a, m.b, m.c, m.d, m.e, m.f];
+        const ta = m0.translate(hx, hy).rotate(ang * DEG).scale(q, q).translate(-OA.hx, -OA.hy).scale(0.25, 0.25);
+        const tc = m0.translate(p.x, p.y).rotate(p.r * DEG).scale(sx, sy).translate(-art.hx, -art.hy).scale(art.w / face.width, art.h / face.height);
+        if (SCULPTED112.place('o', 'arm', look, six(ta)) && SCULPTED112.card(face, six(tc))) { ctx.restore(); stats.drawn.shield++; return true; }
+      } catch (e) { warnOnce('sculpted shield', e); }
+    }
     let px = null; try { px = typeof PIXELHANDS110 === 'object' && PIXELHANDS110.offArm ? PIXELHANDS110.offArm(look) : null; } catch (e) { warnOnce('pixel off arm', e); px = null; }
     if (px) {
       const ex = p.x - 30, ey = VHv() + 70, ul = Math.hypot(p.x - ex, p.y - ey) || 1, u = [(p.x - ex) / ul, (p.y - ey) / ul];
@@ -1108,6 +1120,7 @@ const BODY21 = (() => {
     if (rightSide) { ctx.translate(VWv() - 20 - iw * 0.5, VHv() + 34 + bobNow(1.7) * 1.5 + drop + WS.gk * 30); ctx.rotate(-0.42); }
     else { ctx.translate(20 + iw * 0.5, VHv() + 34 + bobNow(1.7) * 1.5 + drop + WS.gk * 30); ctx.rotate(0.42); ctx.scale(-1, 1); }
     const ox = -iw * 0.5 + (b.k ? (b.right || 0) * b.k * 2 * k * 0.8 : 0), oy = -ih + 12 + (b.k ? (b.below || 0) * b.k * 2 * k * 0.8 : 0);
+    if (sculpt(ctx, b, ox, oy, iw, ih)) { ctx.restore(); stats.drawn.glassIdle++; return true; }   // Phase 112
     if (b.ext && b.pixel) put2(ctx, lit(b.ext.canvas, b.ext.emis), ox + b.ext.ox * k, oy + b.ext.oy * k, b.ext.w * k, b.ext.h * k, b.ext.emis);   // Phase 111: the pixel arm on past its picture
     else if (b.ext) put2(ctx, b.ext.canvas, ox + b.ext.ox * k, oy + b.ext.oy * k, b.ext.w * k, b.ext.h * k, b.ext.canvas);
     put2(ctx, img, ox, oy, iw, ih, b.k ? b.emis : img);
@@ -1139,6 +1152,7 @@ const BODY21 = (() => {
       }
       // Phase 111: the pixel hands' own Song light (js/pixelhands110.js songCanvas) is laid over them, not added
       if (!b && REC && arguments.length === 5 && img && img.__px111song) {
+        if (sculptOn()) return undefined;   // Phase 112: the sculpted hands are lit by the Song itself
         const keep = this.drawImage; this.drawImage = orig;
         try { put2(this, img, arguments[1], arguments[2], arguments[3], arguments[4], null, 0, this.globalAlpha); } finally { this.drawImage = keep; }
         return undefined;
@@ -1163,6 +1177,7 @@ const BODY21 = (() => {
       let moved = false;
       if (b.side === 'right' && (b.flip || b.shift)) { try { const M = this.getTransform(), S = b.shift ? VWv() / 2 - arguments[3] / 2 - 10 : 0; let T = new DOMMatrix(); if (b.flip) T = T.translate(VWv(), 0).scale(-1, 1); if (S) T = T.translate(S, 0); this.save(); moved = true; setT.call(this, baseM.multiply(T).multiply(baseM.inverse()).multiply(M)); } catch (e) { warnOnce('side', e); } }
       try {
+        if (sculpt(this, b, dx, dy, dw, dh)) { stats.drawn.arms++; return undefined; }   // Phase 112
         if (b.ext) { dr(lit(b.ext.canvas, b.ext.emis), dx + b.ext.ox * sx, dy + b.ext.oy * sy, b.ext.w * sx, b.ext.h * sy, b.ext.emis); stats.drawn.ext++; }
         dr(img, dx, dy, dw, dh, b.emis); stats.drawn.arms++;
         for (const o of b.over) { dr(lit(o.canvas, o.emis), dx + o.ox * sx, dy + o.oy * sy, o.w * sx, o.h * sy, o.emis); stats.drawn.extra++; }
@@ -1182,15 +1197,83 @@ const BODY21 = (() => {
     return { wid, list };
   }
 
+  // ---------------------------------------------------------------- Phase 112: the sculpted hands (js/sculpted112.js)
+  // With them on, in the 3D view, a first-person picture is posed as ever and then not drawn: its place on the screen goes
+  // to SCULPTED112, which draws every hand of the frame on one canvas of its own; that canvas is laid over the view once.
+  const sculptOn = () => !!REC && typeof SCULPTED112 === 'object' && !!SCULPTED112 && SCULPTED112.on();
+  function sculpt(ctx, b, dx, dy, dw, dh) {
+    if (!sculptOn() || !b || !b.main || !b.k) return false;
+    const m = REC.inv.multiply(ctx.getTransform()), sx = dw / b.main.width, sy = dh / b.main.height;
+    return SCULPTED112.place(b.pose ? 'h' : 'w', b.pose || b.wid, REC.look, [m.a * sx, m.b * sx, m.c * sy, m.d * sy, m.a * dx + m.c * dy + m.e, m.b * dx + m.d * dy + m.f], sculptAnim(b));
+  }
+  // the wrist through a swing and a Song (the picture itself is carried and turned by the game, as the pixel hands' is;
+  // the sculpted hand has a joint, and it works): cocked back as a blow starts, snapped through as it lands, then at
+  // rest; a thrust straightens it and a blow from above bends it; under a Song the open hands tip back as it rises, and
+  // their fingers open from a hand at rest as it gathers and ease again as it ends
+  const WRIST = { slash: 13, chop: 11, chopDev: 4, thrust: 8, song: 9, tremor: 1.5 };
+  function sculptAnim(b) {
+    const out = { dev: 0, flex: 0 };
+    try {
+      const a = G.attack, f = fph();
+      if (b.pose === 'open') {
+        if (f && f.cast > 0) { const c = clamp(1 - f.cast / Math.max(0.05, f.castDur || 0.9), 0, 1); out.flex = -(WRIST.song * Math.sin(Math.PI * c) + WRIST.tremor * Math.sin(c * 6 * Math.PI)); out.spread = c < 0.12 ? 0 : c < 0.26 ? 1 : c < 0.82 ? 2 : 1; }
+        return out;
+      }
+      if (a && a.t > 0 && a.dur > 0 && b.side === 'right') {
+        const u = clamp(1 - a.t / a.dur, 0, 1), d = String(a.dirLabel || '');
+        const w = u < 0.18 ? Math.sin(u / 0.18 * Math.PI / 2) : u < 0.6 ? Math.cos((u - 0.18) / 0.42 * Math.PI) : -Math.cos((u - 0.6) / 0.4 * Math.PI / 2);
+        if (/thrust/.test(d)) out.flex = WRIST.thrust * w;
+        else if (/chop|down/.test(d)) { out.flex = -WRIST.chop * w; out.dev = WRIST.chopDev * w; }
+        else out.dev = WRIST.slash * w * (/right/.test(d) ? -1 : 1);
+      }
+    } catch (e) { warnOnce('sculpt anim', e); }
+    return out;
+  }
+  // the climb (js/fp-hands.js drawClimb): each fist round its rung is given to the sculpted hands, and when both are, they
+  // are drawn at once and laid on the HUD's own canvas over the ladder painted there (nothing else of the body shows in a climb)
+  function sculptClimb(ctx, i, x, y) {
+    if (!sculptOn() || !PIXELHANDS110.CL) return false;
+    const CL = PIXELHANDS110.CL, m = REC.inv.multiply(ctx.getTransform()), dx = x + 16 - CL.gx, dy = y + 2 - CL.gy, s = 0.25;
+    return SCULPTED112.place('c', i === 0 ? 'L' : 'R', REC.look, [m.a * s, m.b * s, m.c * s, m.d * s, m.a * dx + m.c * dy + m.e, m.b * dx + m.d * dy + m.f]);
+  }
+  function sculptClimbEnd(ctx) {
+    if (!sculptOn()) return false;
+    const cv = SCULPTED112.flush(sculptLight()); if (!cv) return false;
+    // (the HUD canvas's own setTransform counts in game pixels: the true one is the prototype's)
+    const P2 = CanvasRenderingContext2D.prototype; ctx.save(); P2.setTransform.call(ctx, REC.inv.inverse()); P2.drawImage.call(ctx, cv, 0, 0, VWv(), VHv()); ctx.restore();
+    return true;
+  }
+  // the world's light where you stand, for the sculpted hands: the sun's or the moon's colour and where it stands in the
+  // view (js/light21.js), the sky's and the ground's light, lamps near you as a torch, a Song's colour
+  function sculptLight() {
+    const out = { key: [255, 244, 226], dir: null, sky: [120, 132, 150], ground: null, night: 0, torch: null, song: null, lock: false };
+    try {
+      out.lock = G.glassLock > 0;
+      const P = typeof LIGHT21 === 'object' && LIGHT21 && LIGHT21.P, outdoor = !!(G.map && G.map.outdoor);
+      if (P && outdoor) {
+        out.key = P.sunC.map((v) => v * 255); out.sky = P.ambS.map((v) => v * 255); out.ground = P.ambG.map((v) => v * 255); out.night = P.night || 0;
+        const d = Engine.cam.dir || 0, f = P.sun[0] * Math.cos(d) + P.sun[1] * Math.sin(d), r = -P.sun[0] * Math.sin(d) + P.sun[1] * Math.cos(d);
+        // (a light dead ahead would leave the side of the hands you see unlit: a third of it always falls from the upper left)
+        const v = [r * 0.65 - 0.45 * 0.35, P.sun[2] * 0.65 + 0.7 * 0.35, Math.max(0.15, -f * 0.65 + 0.55 * 0.35)], l = Math.hypot(v[0], v[1], v[2]) || 1;
+        out.dir = [v[0] / l, v[1] / l, v[2] / l];
+      } else if (!outdoor) { out.key = [150, 138, 120]; out.sky = [64, 60, 56]; out.night = 0.25; }
+      const lamp = lampsAt(Engine.cam.x, Engine.cam.y), ls = lamp[0] + lamp[1] + lamp[2];
+      if (ls > 6) out.torch = lamp.map((v) => Math.min(255, v * 4.2));
+      const f2 = fph();
+      if (f2 && f2.cast > 0 && f2.castCol) { const k = Math.min(1, f2.cast / Math.max(0.05, f2.castDur || 0.9) * 2.2) * (0.45 + 0.55 * (f2.castPower || 0.6)); out.song = f2.castCol.map((v) => v * k); }
+    } catch (e) { warnOnce('sculpt light', e); }
+    return out;
+  }
+
   const LIFT = 30;
   const _drawHUD = drawHUD;
   drawHUD = function () {
     if (!on() || !G.player || typeof Engine === 'undefined' || !Engine.images) return _drawHUD.apply(this, arguments);
     const t0 = performance.now(), ctx = Engine.ctx;
     let look = null, swaps = [], hookSt = null, had = false, prev = null;
-    REC = r3dOn() ? { inv: ctx.getTransform().inverse(), list: [], legs: null } : null;
+    REC = r3dOn() ? { inv: ctx.getTransform().inverse(), list: [], legs: null, look: null } : null;
     try {
-      look = GL().of(G.player);
+      look = GL().of(G.player); if (REC) { REC.look = look; if (sculptOn()) SCULPTED112.begin(); }
       frameState();
       drawLegs(ctx, look);
       drawHead(ctx, look);
@@ -1230,6 +1313,8 @@ const BODY21 = (() => {
       // nothing drew a weapon picture this frame (the weapon is away): the shield still rides the arm
       if (look && hookSt && !hookSt.offDone && G.state === 'play') { ctx.save(); if (!drawShield(ctx, look)) drawGlassIdle(ctx, look, ''); ctx.restore(); }
     } catch (e) { warnOnce('late shield', e); }
+    // Phase 112: every sculpted hand of this frame, on its one canvas, laid over the view
+    if (REC && sculptOn()) { try { const cv = SCULPTED112.flush(sculptLight()); if (cv) REC.list.push({ img: cv, em: null, add: 0, pix: false, over: 1, pts: [[0, 0], [VWv(), 0], [VWv(), VHv()], [0, VHv()]] }); } catch (e) { warnOnce('sculpted', e); } }
     if (REC) { R3B.last = REC; REC = null; } else R3B.last = null;
     const ms = performance.now() - t0; stats.lastMs = ms; stats.maxMs = Math.max(stats.maxMs * 0.995, ms); stats.frames++;
     return r;
@@ -1293,11 +1378,15 @@ void main() {
 }`;
   function texOf(g, cv) {
     let t = R3B.tex.get(cv);
-    if (t) { R3B.tex.delete(cv); R3B.tex.set(cv, t); return t; }   // LRU order
+    if (t) {
+      R3B.tex.delete(cv); R3B.tex.set(cv, t);   // LRU order
+      if (cv.__live) { g.bindTexture(g.TEXTURE_2D, t); g.pixelStorei(g.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false); g.pixelStorei(g.UNPACK_FLIP_Y_WEBGL, false); g.texImage2D(g.TEXTURE_2D, 0, g.RGBA, g.RGBA, g.UNSIGNED_BYTE, cv); }   // Phase 112: a canvas redrawn every frame
+      return t;
+    }
     t = g.createTexture(); g.bindTexture(g.TEXTURE_2D, t);
     g.pixelStorei(g.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false); g.pixelStorei(g.UNPACK_FLIP_Y_WEBGL, false);
     g.texImage2D(g.TEXTURE_2D, 0, g.RGBA, g.RGBA, g.UNSIGNED_BYTE, cv);
-    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.NEAREST); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.NEAREST);
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, cv.__live ? g.LINEAR : g.NEAREST); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, cv.__live ? g.LINEAR : g.NEAREST);
     g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE); g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE);
     R3B.tex.set(cv, t);
     if (R3B.tex.size > 64) { const k = R3B.tex.keys().next().value; g.deleteTexture(R3B.tex.get(k)); R3B.tex.delete(k); }
@@ -1688,7 +1777,7 @@ void main() {
   }
 
   function clearCaches() { headCache.clear(); buildCache.clear(); shieldCache.clear(); armCache.clear(); legCache.clear(); }
-  return { owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
+  return { sculptLight, sculptAnim, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
     R3B, FX3, LB, lbBuild, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;

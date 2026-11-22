@@ -10,6 +10,7 @@
 //   s      a shield: an ARMOR id (a_buckler, a_kite, ...)
 //   tod    the hour as the game counts it, 0..1 (0.45 day, 0.95 night; default 0.45)
 //   song   1 a Song being sung (the open hands and their light); a number > 1 is the Song's root in Hz
+//   cast   0..1 how far through the Song (default a third of the way)
 //   atk    0..1 how far through a swing; dir the swing ('slash left', 'slash right', 'chop down', 'thrust')
 //   low    0..1 how far lowered (putting away)
 //   climb  0..1 how far through a climb
@@ -70,7 +71,7 @@ const scenes = process.argv.slice(3).map((s) => {
       GFX.body21 = true; GFX.fpHands = true;
       const hold = () => {
         if (o.atk != null) { G.attack.dur = 0.4; G.attack.t = 0.4 * (1 - +o.atk); G.attack.dirLabel = o.dir || 'slash left'; }
-        if (o.song) { const hz = +o.song > 1 ? +o.song : 396; G.song.t = 0.35; FPHANDS.st.cast = 0.6; FPHANDS.st.castDur = 0.9; FPHANDS.st.castCol = FPHANDS.colourFor(hz); FPHANDS.st.castPower = 0.8; }
+        if (o.song) { const hz = +o.song > 1 ? +o.song : 396; G.song.t = 0.35; FPHANDS.st.cast = o.cast != null ? Math.max(0.01, 0.9 * (1 - +o.cast)) : 0.6; FPHANDS.st.castDur = 0.9; FPHANDS.st.castCol = FPHANDS.colourFor(hz); FPHANDS.st.castPower = 0.8; }
         if (o.low != null) { FPHANDS.st.lower = +o.low; }
         if (o.climb != null) { FPHANDS.st.climb = FPHANDS.CLIMB_T * (1 - +o.climb); }
       };
