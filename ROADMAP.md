@@ -229,6 +229,27 @@ Record: [`story/Game Layer/Phase 87 - New In-Game Text (for review).md`](story/G
 
 **Tools.** `tools/dev/` holds the scripts for taking pictures, filming walks, and running suites, with a README.
 
+## Fable 5.2 roadmap (21 Nov 2026)
+
+The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on these next objectives and any others that will benefit from fable. put it into a road map and give it phases". The full plan, what "done" means for each phase, the open decisions and **the prompt to start the next session** are in [`story/Game Layer/Roadmap for Fable 5.2 (21 Nov 2026).md`](story/Game%20Layer/Roadmap%20for%20Fable%205.2%20(21%20Nov%202026).md).
+
+**Part A: Fable 5.2, in this order**
+
+| Phase | What |
+| --- | --- |
+| 111 | The pixel hands touched up: the arm behind a shield; the glass's deep azure by day; the hands' own Song light; the palm and the glove wear; every swing frame by frame |
+| 112 | The sculpted hands, lit by the world, finished and in the game as an Options choice (pixel stays the default until the owner says) |
+| 113 | The Continental Rift, part two: the Rift Wall and the Under-Shelves |
+| 114 | The Rift, part three: Redoubt Zero and the Edge, with their keepers and lamps |
+| 115 | The Rift, part four: the seven smaller places |
+| 116 | Roofs for the later places (Sun-Peak Vigil, Null-Watch, Cross Pool), then raised as in Phase 108 |
+| 117 | The Middle Country, part one: lore briefs, its great city by its frequency |
+| 118 | Book One in play (R9): the novel's set-pieces still open |
+| 119 | Pack weight and wear, and the far land (the Daggerfall list's 3, 4 and 5): designs for ruling |
+| 120 | The Library's second wave of books |
+
+**Part B: Opus 5.5:** French for the books once signed off; the remaining roads (the Cliff Walk, the Willow Walks, the road to the Stump); full suite runs; release preparation; tidying stale lines. **The owner's own:** a playtest on real hardware in English and French, two players over a real network, a low-end laptop and a phone.
+
 ## What is left: the world, in phases (13 Nov 2026)
 
 Owner, 13 Nov: "create a road map with the different phases of things that we have left and then begin", and "be sure to do everything that fable 5.2 is needed for first". So the phases are in two parts. **Part A needs Fable 5.2 at high effort** (new country, new art, new writing, new systems: work where the judgement is the work) and is done first, in this order. **Part B can be done on Opus 5.5 at high effort** (building from a finished plan with the tools Part A leaves behind, tests, French from finished English, pictures, measurements). Every phase keeps the standing rules: book canon wins; invented things are marked [PROPOSED] for the owner; each region has something of its own; every road follows the three road rules (not straight; room to breathe; a real country and one fantasy element); every place is where the map says it is, every road leaves in the right direction, every way out has a finger-post and every town a notice board (owner, 13 Nov) and carries the three kinds of thing (to find, to meet with a small task, only at night or in bad weather); pictures and GIFs as the work goes; everything committed and pushed.
