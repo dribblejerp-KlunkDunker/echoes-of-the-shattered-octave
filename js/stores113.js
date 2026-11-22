@@ -364,7 +364,7 @@ const STORES113 = (function () {
   // therefore placed by eye: at the true compass bearing of the buttress's end, turned outward (toward the Rift) by the
   // least angle that clears the wall and the towers, far off inside the fog, just above the parapet line (the highest
   // line of anything nearer along that bearing). The renderers' own depth test still hides them behind anything nearer.
-  const FAR = { MARGIN: 1.5 * PI / 180, STEP: 0.25 * PI / 180, CLEAR: 5.65, SLIDE: 0.7 * PI / 180, WALK: 1.2 * PI / 180, BESIDE: 0.3 * PI / 180 };
+  const FAR = { D0: 41.4, MARGIN: 1.5 * PI / 180, STEP: 0.25 * PI / 180, CLEAR: 5.65, SLIDE: 0.7 * PI / 180, WALK: 1.2 * PI / 180, BESIDE: 0.3 * PI / 180 };
   function farFrame() {
     if (typeof RIFT100 === 'undefined' || !G.map) return null;
     const R = RIFT100, m = G.map, c = Engine.cam, ez = Number.isFinite(c.z) ? c.z : ((G.player && G.player.feet) || 0) + 0.88;
@@ -393,7 +393,7 @@ const STORES113 = (function () {
   }
   let farLast = {};
   function placeFar(e, L0, F) {
-    const m = G.map, c = Engine.cam, x = c.x + Math.cos(L0.a) * F.d, y = c.y + Math.sin(L0.a) * F.d, z = F.ez + L0.el * F.d, sc = Math.max(0.001, L0.size);
+    const m = G.map, c = Engine.cam, x = c.x + Math.cos(L0.a) * F.d, y = c.y + Math.sin(L0.a) * F.d, z = F.ez + L0.el * F.d, sc = Math.max(0.001, L0.size * F.d / FAR.D0);   // sizes are given as seen at FAR.D0 cells; the fog's reach shortens at night
     e.x = x; e.y = y; e.scale = sc; e.yOff = m.groundAt(x, y) - (z - sc / 2); e.hidden = !(L0.size > 0.01);
     L0.hidden = e.hidden;
   }

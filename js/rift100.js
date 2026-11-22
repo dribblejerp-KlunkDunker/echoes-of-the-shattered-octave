@@ -917,17 +917,27 @@ const RIFT100 = (function () {
   // 273); "under no stars" (Part One, 983); lanterns in the dark (Part One, 859 to 913). The game's clock: dusk from the
   // seventeenth hour (timeName), full dark at tod 0.7985 (engine.js buildSky: no day left), the dead hour until the fifth,
   // morning from the seventh. Smoothstep between, so there is never a snap.
-  const LIGHT = { DAY: 0.95, NIGHT: 0.18, DUSK: 17 / 24, DARK: 0.7985, DAWN0: 5 / 24, DAWN1: 7 / 24 };
-  function wallAmbient(tod) {
+  const LIGHT = { DAY: 0.95, NIGHT: 0.18, DUSK: 17 / 24, DARK: 0.7985, DAWN0: 5 / 24, DAWN1: 7 / 24,
+    FOG_DAY: [118, 120, 126], FOG_NIGHT: [5, 5, 8], DIST_NIGHT: 14, BRIGHT_UNDER: 0.30 };
+  // how much day there is: 1 from the seventh hour to the seventeenth, 0 from full dark to the end of the dead hour
+  function wallDay(tod) {
     const t = ((Number(tod) % 1) + 1) % 1, L = LIGHT, ss = (a, b, x) => { const k = Math.max(0, Math.min(1, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
-    if (!Number.isFinite(t) || (t >= L.DAWN1 && t <= L.DUSK)) return L.DAY;
-    const k = t > L.DUSK ? 1 - ss(L.DUSK, L.DARK, t) : ss(L.DAWN0, L.DAWN1, t);
-    return L.NIGHT + (L.DAY - L.NIGHT) * k;
+    if (!Number.isFinite(t) || (t >= L.DAWN1 && t <= L.DUSK)) return 1;
+    return t > L.DUSK ? 1 - ss(L.DUSK, L.DARK, t) : ss(L.DAWN0, L.DAWN1, t);
   }
-  function wallLight(force) {   // set the wall's ambient from the hour; the engine takes a map's ambient when the map is set
-    const m = G.maps && G.maps[MAP]; if (!m) return; const a = wallAmbient(G.tod);
-    if (!force && Math.abs(a - (m.ambient || 0)) < 0.005 && !(a === LIGHT.DAY && m.ambient !== LIGHT.DAY)) return;
+  function wallAmbient(tod) { const k = wallDay(tod); return k === 1 ? LIGHT.DAY : LIGHT.NIGHT + (LIGHT.DAY - LIGHT.NIGHT) * k; }
+  // the wall's light from the hour: the ambient; the fog, which is the Rift's sky here (its colour is the air above the
+  // wall: grey by day, black and starless by night) and how far it lets you see; and, once the ambient is low, the wall
+  // lit as a dark place with lamps (bright off). The engine takes these when the map is set.
+  function wallLight(force) {
+    const m = G.maps && G.maps[MAP]; if (!m) return;
+    if (!m._p100day) m._p100day = { dist: m.fogDist };
+    const k = wallDay(G.tod), a = wallAmbient(G.tod), lerp = (n, d) => n + (d - n) * k;
+    if (!force && Math.abs(a - (m.ambient || 0)) < 0.005 && !(k === 1 && m.ambient !== LIGHT.DAY)) return;
     m.ambient = a;
+    m.fogColor = k === 1 ? LIGHT.FOG_DAY.slice() : LIGHT.FOG_DAY.map((c, i) => Math.round(lerp(LIGHT.FOG_NIGHT[i], c)));
+    m.fogDist = k === 1 ? m._p100day.dist : lerp(LIGHT.DIST_NIGHT, m._p100day.dist);
+    m.bright = a >= LIGHT.BRIGHT_UNDER;
     if (onWall() && Engine.setMap) { const cam = Object.assign({}, Engine.cam); Engine.setMap(m); Object.assign(Engine.cam, cam); }
   }
   const B = { WARN_S: 4.5, QUIET_S: 8.0, WALK: 0.85, OVER_S: 2.6, BELL_R: 7, TALK_S: 4.0, LOOK_S: 3.5, CYCLE: 16, GAP0: 11.5, GAP1: 15.6, XP: 240 };
@@ -1076,7 +1086,7 @@ const RIFT100 = (function () {
     defs(); art();
     if (typeof buildAllMaps === 'function') { const _b = buildAllMaps; buildAllMaps = function () { const maps = _b.apply(this, arguments); try { join(maps); } catch (e) { warnOnce('build', e); } return maps; }; }
     if (typeof useDeco === 'function') { const _ud = useDeco; useDeco = function (e) { try { if (useOwn(e)) return undefined; } catch (err) { warnOnce('use', err); } return _ud.apply(this, arguments); }; }
-    if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function (id) { try { if (id === MAP && G.maps && G.maps[MAP]) G.maps[MAP].ambient = wallAmbient(G.tod); } catch (e) { warnOnce('light', e); } const r = _l.apply(this, arguments); try { quiet = 0; relieved = false; atParapet = 0; talkT = 0; lookT = 0; lastSafe = null; warnedQuiet = false; sClock = 0; sStage = -1; rang = false; try { document.getElementById('view').classList.remove('unwrite'); } catch (e2) { /* */ } sync(); } catch (e) { warnOnce('load', e); } return r; }; }
+    if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function (id) { try { if (id === MAP && G.maps && G.maps[MAP]) wallLight(true); } catch (e) { warnOnce('light', e); } const r = _l.apply(this, arguments); try { quiet = 0; relieved = false; atParapet = 0; talkT = 0; lookT = 0; lastSafe = null; warnedQuiet = false; sClock = 0; sStage = -1; rang = false; try { document.getElementById('view').classList.remove('unwrite'); } catch (e2) { /* */ } sync(); } catch (e) { warnOnce('load', e); } return r; }; }
     if (typeof update === 'function') { const _u = update; update = function (dt) { const r = _u.apply(this, arguments); try { tick(Number(dt) || 0); } catch (e) { warnOnce('tick', e); } return r; }; }
     // the Murmur is talk here; and any sound of yours counts as talk on the wall, while in the Halls nothing of yours is heard
     if (typeof castSong === 'function') { const _c = castSong; castSong = function (id) { try { if (id === 'murmur' && (onWall() || inHalls()) && G.state === 'play' && !G.dead) { murmur(); return undefined; } } catch (e) { warnOnce('murmur', e); } return _c.apply(this, arguments); }; }
@@ -1088,7 +1098,7 @@ const RIFT100 = (function () {
   wire();
 
   return { TX, SAY, TEXTS, MAP, HALLS, W, H, HW, HH, P, Q, ROUTES, FLOORS, TOWERS, STAIRS, RC, CX, CY, WH, B, STRAY_DEF, ARMOR_DEFS, SPIKE_DEF, MALLET_DEF, pol, rOf, degOf, plan, build, buildHalls, join, decode, tick, useOwn, sync, murmur, talk, standDown, answer,
-    wallAmbient, LIGHT, lamps: () => LAMPS, state: () => ({ quiet, relieved, atParapet, talkT, sClock, sStage }), setQuiet: (v) => { quiet = v; }, setStray: (v) => { sClock = v; }, onLip: (x, y) => onLip(x, y), mannedNear };
+    wallAmbient, wallDay, wallLight, LIGHT, lamps: () => LAMPS, state: () => ({ quiet, relieved, atParapet, talkT, sClock, sStage }), setQuiet: (v) => { quiet = v; }, setStray: (v) => { sClock = v; }, onLip: (x, y) => onLip(x, y), mannedNear };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = RIFT100;
 if (typeof window !== 'undefined') window.RIFT100 = RIFT100;

@@ -214,9 +214,11 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
       for (let t = 0; t < 26; t += 0.1) { S.tick(0.1); R.tick(0.1); G.murmurT = 2; G.tod = mid; }
       Engine.cam.dir = S.farLights().gold.a; Engine.cam.pitch = 0; S.tick(0.01); Engine.render(G.ents, mid);
       const v = view(), g = G.ents.find((e) => e && e._p113 === 'far' && e.sprite === 'p113_lightG' && !e.hidden);
-      let gl = 0, mx = 0; for (let y = 0; y < 150 * v.sx; y++) for (let x = 0; x < v.w; x++) mx = Math.max(mx, lumAt(v, x, y));
+      // the brightest pixel of the frame is in a far light, and the gold point outshines everything that is not one
+      const rects = G.ents.filter((e) => e && e._p113 === 'far' && !e.hidden && e._screen).map((e) => e._screen), inFar = (x, y) => rects.some((q) => x >= q.x0 * v.sx - 1 && x <= q.x1 * v.sx + 1 && y >= q.y0 * v.sx - 1 && y <= q.y1 * v.sx + 1);
+      let gl = 0, mx = 0, fx = 0, out0 = 0; for (let y = 0; y < 150 * v.sx; y++) for (let x = 0; x < v.w; x++) { const l = lumAt(v, x, y); mx = Math.max(mx, l); if (inFar(x, y)) fx = Math.max(fx, l); else out0 = Math.max(out0, l); }
       if (g && g._screen) for (let y = Math.max(0, g._screen.y0 * v.sx); y <= g._screen.y1 * v.sx; y++) for (let x = Math.max(0, g._screen.x0 * v.sx); x <= g._screen.x1 * v.sx; x++) gl = Math.max(gl, lumAt(v, x, y));
-      out.farBrightest = !!g && gl > 0 && gl >= mx * 0.98 && gl > 200; out.brightNums = [gl.toFixed(0), mx.toFixed(0), !!g, !!(g && g._screen)];
+      out.farBrightest = !!g && rects.length >= 2 && fx === mx && gl > out0 && gl > 200; out.brightNums = ['gold ' + gl.toFixed(0), 'far ' + fx.toFixed(0), 'max ' + mx.toFixed(0), 'rest ' + out0.toFixed(0)];
       S.resetNight(); G.flags.p113_seen = 1; }
     // once
     clear(); go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid; stepNight(10); out.once = !said(TX.night[0]) && G.flags.p113_seen === 1;
