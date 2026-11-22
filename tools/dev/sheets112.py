@@ -1,7 +1,7 @@
 # Phase 112: the sculpted hands' review sheets and clip, from full-frame pictures taken by tools/dev/hands111.js.
 #   python3 tools/dev/sheets112.py SCULPTED_DIR PIXEL_DIR CLIP_DIR screenshots/p109-options.jpg OUT_DIR
 # SCULPTED_DIR: scenes with flags:sculptedHands=1 (full frames); PIXEL_DIR: Phase 111's pixel-hand pictures of the four
-# poses (CROP=1); CLIP_DIR: swing frames (sw04..sw92, th10..th94). Writes p112-hands.jpg (the approved sculpted option,
+# poses (CROP=1); CLIP_DIR: a slash, a thrust and a Song frame by frame (sw*, th*, so*; tools/dev/shots112.sh takes them all). Writes p112-hands.jpg (the approved sculpted option,
 # the pixel hands, sculpted by day, by night, by a street lamp at night), p112-kinds.jpg and p112-swing.gif.
 import sys, glob, os
 from PIL import Image, ImageDraw, ImageFont
@@ -37,7 +37,7 @@ kinds = [[('Knife', 'knife'), ('Longsword', 'longsword'), ('Axe', 'axe'), ('Mace
          [('Mail gauntlets', 'mail'), ('Mid-swing', 'swing'), ('A maul coming down', 'maulswing'), ('By a street lamp at night', 'blade-l')],
          [('Behind a kite shield (the glass arm)', 'shield'), ('Behind a buckler (bare)', 'buckler'), ('Climbing', 'climb'), ('Climbing, bare hands', 'climbbare')]]
 sheet(4, None, [('', [(lab, view(f'{sc}/{k}.png')) for lab, k in row]) for row in kinds], 'p112-kinds.jpg')
-frames = [view(p) for p in sorted(glob.glob(clip + '/sw*.png'))] + [view(p) for p in sorted(glob.glob(clip + '/th*.png'))]
+frames = [view(p) for k in ('sw', 'th', 'so') for p in sorted(glob.glob(clip + '/' + k + '*.png'))]
 if frames:
     frames[0].save(out + '/p112-swing.gif', save_all=True, append_images=frames[1:], duration=90, loop=0, optimize=True)
     print('p112-swing.gif', len(frames), os.path.getsize(out + '/p112-swing.gif'))

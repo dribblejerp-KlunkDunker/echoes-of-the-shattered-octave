@@ -69,8 +69,9 @@ const SCULPTED112 = (() => {
   const det = (f) => dot(f.X, cross(f.Y, f.Z));
 
   // ---------------------------------------------------------------- mesh building
-  // vertex: pos3 nrm3 loc3 uv2 occ2 ex4 = 17 floats. ex: [wear/redness, seam distance (cm), along seam (cm), crease]
-  const STRIDE = 17;
+  // vertex: pos3 nrm3 loc3 uv2 occ3 ex4 = 18 floats. occ: [ambient occlusion, soft shadow, how far the vertex goes with the
+  // forearm when the wrist turns (0 the hand, 1 the arm)]; ex: [wear/redness, seam distance (cm), along seam (cm), crease]
+  const STRIDE = 18;
   function newScene() { return { groups: {}, spheres: [], part: 0, verts: [] }; }
   function group(sc, mat) { return sc.groups[mat] || (sc.groups[mat] = { mat, v: [], i: [], n: 0, parts: [] }); }
   // a parametric grid: f(u, v) -> { p:[x,y,z] local, uv:[a,b], ex:[4] }; u wraps (around), v runs 0..1 (along)
@@ -103,7 +104,8 @@ const SCULPTED112 = (() => {
     const swap = mir !== !!opt.flip;
     const base = g.n;
     for (let k = 0; k < WP.length; k++) {
-      g.v.push(...WP[k], ...WN[k], ...LP[k], ...UV[k], 1, 1, ...EX[k]); g.parts.push(part); g.n++;
+      // (an arm's part: its first centimetres past the wrist go part of the way with it, so the joint bends and does not break)
+      g.v.push(...WP[k], ...WN[k], ...LP[k], ...UV[k], 1, 1, opt.arm ? sm(clamp((P[k][1] + 1.0) / 3.5, 0, 1)) : 0, ...EX[k]); g.parts.push(part); g.n++;
     }
     for (let j = 0; j < nv; j++) for (let i = 0; i < nu; i++) {
       const a = base + j * (nu + 1) + i, b = a + (nu + 1), c = a + 1, d = b + 1;
@@ -165,7 +167,11 @@ const SCULPTED112 = (() => {
   }
   // wrap a finger round the grip: the flexions that lay its segments on the grip's surface, with its middle knuckle at
   // the same turn round the grip as the others' (so the knuckles run in a line along it)
+  // (the search is the costly part of building a gripping hand, and its answer depends only on the finger and its
+  // thickness: it is made once and kept)
+  const FIT = new Map();
   function fitGrip(fd, spl, rf) {
+    const fk = fd.at.join(',') + '|' + spl + '|' + rf.toFixed(3), kept = FIT.get(fk); if (kept) return kept;
     const ga = GRIP_ROT * D2R, a = [Math.cos(ga), Math.sin(ga), 0], e1 = [0, 0, 1], e2 = cross(a, e1), Rc = GRIP_R + rf * 0.92;
     const rel = (p) => { const d = sub(p, GRIP_G); return sub(d, mul(a, dot(d, a))); };
     const thStar = -2.45;
@@ -180,6 +186,7 @@ const SCULPTED112 = (() => {
       dth = Math.atan2(Math.sin(dth), Math.cos(dth)); err += 1.5 * dth * dth;
       if (!best || err < best.err) best = { err, f: [mcp, pip, dip, spl] };
     }
+    FIT.set(fk, best.f);
     return best.f;
   }
   function buildHand(sc, h) {
@@ -236,7 +243,7 @@ const SCULPTED112 = (() => {
     const RS = [0.85, 0.81, 0.76, 0.72], thick = skinny || glass ? 1 : 1.1;
     FING.forEach((fd, k) => {
       const fr = fd.r.map((r, i) => r * RS[i] * thick);
-      const ang = h.pose === 'grip' && h.wrap ? fitGrip(fd, pose.f[k][3], fr[1]) : pose.f[k];
+      const ang = h.pose === 'grip' && h.wrap ? fitGrip(fd, pose.f[k][3], fr[1]) : (h.f || pose.f)[k];
       // splay turns an open finger aside; tilt (the fifth value) leans a curled finger's plane so that, in a fist, the
       // folded fingers press together
       const [mcp, pip, dip, spl] = ang;
@@ -390,7 +397,7 @@ const SCULPTED112 = (() => {
         const flat = 1 - bone * 0.05 * Math.pow(Math.max(0, Math.sin(ph)), 4) * clamp(1 - s / 10, 0, 1);
         const m = knob * rad * neck * flat;
         return { p: [rx(s) * Math.cos(ph) * rr * j * m, s, rz(s) * Math.sin(ph) * rr * j * m], uv: [ph * 3.2, s], ex: [0.25 * (knob - 1) / 0.2 * bone, 99, 0, 0] };
-      });
+      }, { arm: true });
       for (let s = 0; s < 30; s += 2.2) sphere(sc, app(af, [0, s, 0]), Math.min(rx(s), rz(s)) * 0.95, part);
     }
     // the glove's flared cuff
@@ -408,7 +415,7 @@ const SCULPTED112 = (() => {
         const r = (q) => (q + 0.42 + fl + dr) * wob;
         const seam = Math.min(Math.abs(s - (s1 - 0.75)), Math.abs(ph - 0.2) * 4 + (s < 1 ? 9 : 0));
         return { p: [r(rx(Math.max(s, 0))) * Math.cos(ph), s, r(rz(Math.max(s, 0))) * Math.sin(ph)], uv: [ph * 4, s], ex: [0, v < 0.2 ? 99 : seam, s < s1 - 1.2 ? ph * 4 : s * 3, 0] };
-      }, { flip: true });
+      }, { flip: true, arm: true });
       for (let s = 0; s < s1; s += 2) sphere(sc, app(af, [0, s, 0]), Math.min(rx(s), rz(s)) + 0.5, part);
     }
     // the wool sleeve: folds from hashed noise, a rolled hem
@@ -427,8 +434,11 @@ const SCULPTED112 = (() => {
         else { const t = (v - 0.14) / 0.86; s = lerp(s0 + 0.1, s1, t); dr = 0.3 * Math.exp(-Math.pow((s - s0 - 0.5) / 0.6, 2)); }
         const r = (q) => q + 1.25 + fold(ph, s) + dr + 0.25 * clamp((s - s0) / 20, 0, 1);
         return { p: [r(rx(s)) * Math.cos(ph), s, r(rz(s)) * Math.sin(ph)], uv: [ph * 5, s], ex: [0, 99, 0, v < 0.14 ? 1 : 0] };
-      });
+      }, { arm: true });
     }
+    // the wrist, for the joint: where it is, the line across it (it bends about this), the forearm's line, and the line
+    // through it from palm to back (it tilts to the thumb's side or the little finger's about this)
+    sc.wrist = { o: af.o, X: af.X, Y: af.Y, Z: af.Z };
     return { tips };
   }
 
@@ -475,9 +485,10 @@ const SCULPTED112 = (() => {
   }
 
   // ---------------------------------------------------------------- the renderer
-  const VS = `attribute vec3 a_pos, a_nrm, a_loc; attribute vec2 a_uv, a_occ; attribute vec4 a_ex;
+  const VS = `attribute vec3 a_pos, a_nrm, a_loc, a_occ; attribute vec2 a_uv; attribute vec4 a_ex; uniform vec3 u_wpiv; uniform mat3 u_wrot;
 uniform mat4 u_proj, u_model; varying vec3 v_pos, v_nrm, v_loc; varying vec2 v_uv, v_occ; varying vec4 v_ex;
-void main(){ vec4 p=u_model*vec4(a_pos,1.0); v_pos=p.xyz; v_nrm=normalize((u_model*vec4(a_nrm,0.0)).xyz); v_loc=a_loc; v_uv=a_uv; v_occ=a_occ; v_ex=a_ex; gl_Position=u_proj*p; }`;
+void main(){ vec3 q=mix(a_pos, u_wrot*(a_pos-u_wpiv)+u_wpiv, a_occ.z), n=normalize(mix(a_nrm, u_wrot*a_nrm, a_occ.z));
+  vec4 p=u_model*vec4(q,1.0); v_pos=p.xyz; v_nrm=normalize((u_model*vec4(n,0.0)).xyz); v_loc=a_loc; v_uv=a_uv; v_occ=a_occ.xy; v_ex=a_ex; gl_Position=u_proj*p; }`;
   const FS_HEAD = `#extension GL_OES_standard_derivatives : enable
 precision highp float;
 varying vec3 v_pos, v_nrm, v_loc; varying vec2 v_uv, v_occ; varying vec4 v_ex;
@@ -666,8 +677,12 @@ void main(){ vec3 N0 = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   float tone = fh < 0.3 ? 0.05 + fh*0.4 : fh > 0.91 ? 1.5 : 0.25 + (fh - 0.3)*1.1;
   vec3 deep = u_base * tone; if (fh > 0.91) deep = mix(deep, u_alt*0.8, 0.25);
   vec3 Lt, Ls; vec3 tor = pl(N, u_torchPos, u_torch, 30.0, 0.0, Lt); vec3 sng = pl(N, u_songPos, u_song, 13.0, 0.3, Ls);
-  vec3 body = deep*(u_key*(0.06 + 0.75*max(ndl,0.0))*(0.45+0.55*sh) + hemi(N)*0.7*ao + tor*1.1 + sng*1.1)
-            + u_alt*0.25*u_lvl*(0.35 + 0.65*(1.0-ndv));
+  // (Phase 112: the glass holds its own azure in the game's light. The sun's warm light alone left it a dull teal by
+  // day, so the light on the glass is taken three parts as its brightness and one part as its colour, and the glass
+  // gives a little light of its own)
+  vec3 keyG = mix(vec3(dot(u_key, vec3(0.2126, 0.7152, 0.0722))), u_key, 0.25);
+  vec3 body = deep*(keyG*(0.06 + 0.75*max(ndl,0.0))*(0.45+0.55*sh) + hemi(N)*0.7*ao + tor*1.1 + sng*1.1)
+            + u_alt*0.25*u_lvl*(0.35 + 0.65*(1.0-ndv)) + u_base*0.42*u_lvl*(0.4 + 0.6*min(tone, 1.0));
   vec3 refl = env(R)*u_alt*0.9*F*(0.45 + 0.55*katch);
   float nh = max(dot(N,Hh),0.0);
   // (Phase 112: the planes that catch the light flash half as hard as the option's did: in the game's own light and
@@ -751,14 +766,23 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
     const c = g.col;
     return metal ? { mat: 'mail', sleeve, wool, base: c.base || [170, 172, 178] } : { mat: 'leather', sleeve, wool, base: c.base || [96, 62, 40], alt: c.light || [150, 112, 80] };
   }
-  function handScene(h, look, flipped) {
-    const M = matOf(h, look), key = [h.curl, M.mat, M.sleeve ? 1 : 0, r2(h.Y), r2(h.Z), r2(h.arm), h.left ? 1 : 0, flipped ? 1 : 0].join('|');
+  // an open hand's fingers as a Song gathers: 0 half curled (a hand at rest), 1 opening, 2 open (the pose itself)
+  const REST = [[30, 40, 24, -4], [32, 42, 26, -1], [34, 42, 26, 2], [38, 44, 28, 6]], SPREAD = [0.85, 0.42, 0];
+  let built = 0;
+  // variant: for an open hand, 0..2 as above. A variant not yet built is built only if nothing else was built this
+  // frame; otherwise null comes back and the caller draws the open hand it has (one build a frame, never a stall)
+  function handScene(h, look, flipped, variant) {
+    const v = h.curl === 'open' && variant != null && variant < 2 ? variant : 2;
+    const M = matOf(h, look), key = [h.curl, M.mat, M.sleeve ? 1 : 0, r2(h.Y), r2(h.Z), r2(h.arm), h.left ? 1 : 0, flipped ? 1 : 0, v].join('|');
     let E = CACHE.get(key); if (E) return E;
+    if (v < 2 && built > 0) return null;
+    built++;
     const pose = h.curl === 'grip' ? 'grip' : h.curl === 'open' ? 'open' : 'fist';
+    const fAng = v < 2 ? POSE.open.f.map((a, k) => a.map((x, i) => lerp(x, REST[k][i], SPREAD[v]))) : null;
     const f0 = handFrame([0, 0, 0], h.Y, h.Z, h.left), anchor = pose === 'grip' ? GRIP_G : PALM;
     const fr = F(mul(rotv(f0, anchor), -1), f0.X, f0.Y, f0.Z);
     const sc = newScene();
-    buildHand(sc, { frame: fr, pose, wrap: pose === 'grip', mat: M.mat, sleeve: M.sleeve, arm: norm(h.arm) });
+    buildHand(sc, { frame: fr, pose, wrap: pose === 'grip', mat: M.mat, sleeve: M.sleeve, arm: norm(h.arm), f: fAng });
     occlusion(sc);
     // the soft self-shadow is cast once, for the light from the upper left as the hand is seen (a picture drawn mirrored
     // is lit from its own upper right, so that on the screen the light is still from the left)
@@ -776,14 +800,16 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
   let items = [];
   const posed = new Map();
   function begin() { items = []; }
-  function place(kind, id, look, t) {
+  // anim (or nothing): how the wrist stands this frame, { dev, flex } in degrees, and for open hands how far the fingers
+  // have opened, { spread: 0 | 1 | 2 }
+  function place(kind, id, look, t, anim) {
     if (!on()) return false;
     try {
       const key = kind + '|' + id + '|' + (look && look.key) + '|' + (look && look.glassArm ? 1 : 0);
       let P = posed.get(key);
       if (P === undefined) { P = PIXELHANDS110.poses(kind, id, look) || null; if (posed.size > 60) posed.clear(); posed.set(key, P); }
       if (!P || !P.hands.length) return false;
-      items.push({ P, look, t, kind, id });
+      items.push({ P, look, t, kind, id, anim: anim || null });
       return true;
     } catch (e) { warnOnce('place ' + id, e); return false; }
   }
@@ -800,6 +826,14 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
     return new Float32Array([a * s * UQ, -b * s * UQ, 0, 0, -c * s * UQ, d * s * UQ, 0, 0, 0, 0, s * sq * UQ, 0, (lx - 160) * UQ, -(ly - 75) * UQ, -DV, 1]);
   }
   const mirrored = (t) => t[0] * t[3] - t[1] * t[2] < 0;
+  // a turn about a line through the origin (Rodrigues), as a 3 x 3 in column order; two of them, one after the other
+  const turn = (k, deg) => { const a = deg * D2R, c = Math.cos(a), s = Math.sin(a), t = 1 - c, [x, y, z] = k; return [t * x * x + c, t * x * y + s * z, t * x * z - s * y, t * x * y - s * z, t * y * y + c, t * y * z + s * x, t * x * z + s * y, t * y * z - s * x, t * z * z + c]; };
+  const mul3 = (A, B) => { const o = new Array(9); for (let c = 0; c < 3; c++) for (let r = 0; r < 3; r++) o[c * 3 + r] = A[r] * B[c * 3] + A[3 + r] * B[c * 3 + 1] + A[6 + r] * B[c * 3 + 2]; return o; };
+  const ID3 = new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+  function wristTurn(w, anim) {
+    if (!w || !anim || (!anim.dev && !anim.flex)) return ID3;
+    return new Float32Array(mul3(turn(w.Z, anim.dev || 0), turn(w.X, anim.flex || 0)));
+  }
   const apply = (m, p) => [m[0] * p[0] + m[4] * p[1] + m[8] * p[2] + m[12], m[1] * p[0] + m[5] * p[1] + m[9] * p[2] + m[13], m[2] * p[0] + m[6] * p[1] + m[10] * p[2] + m[14]];
   function texOf(cv) {
     const { gl, tex } = GL; let t = tex.get(cv); if (t) return t;
@@ -813,10 +847,10 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
   const stats = { frames: 0, hands: 0, cards: 0, lastMs: 0 };
   // light: { key: [r, g, b] the sun's or moon's light (0..255 and over), dir: where it comes from in the view (x right,
   //   y up, z toward the eye), sky, ground: the sky's and the ground's light, night: 0..1, torch: lamps near you or null,
-  //   song: a Song's colour times its strength, or null }
+  //   song: a Song's colour times its strength, or null, lock: true while the glass arm is locked }
   function flush(light) {
     if (!items.length) return null;
-    const t0 = performance.now();
+    const t0 = performance.now(); built = 0;
     const { gl, cv, progs, pic, qbuf } = initGL();
     light = light || { key: [255, 244, 226], dir: KEY_DIR, sky: [120, 132, 150], night: 0, torch: null, song: null };
     const n = clamp(light.night || 0, 0, 1), L = norm(light.dir || KEY_DIR), sky = light.sky || [120, 132, 150];
@@ -850,7 +884,9 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
         gl.drawArrays(gl.TRIANGLES, 0, 6); gl.enable(gl.CULL_FACE); stats.cards++;
       }
       for (const h of it.P.hands) {
-        const E = handScene(h, it.look, flip), m = matrix(it.t, h.x, h.y, h.cm);
+        const E = handScene(h, it.look, flip, it.anim ? it.anim.spread : null) || handScene(h, it.look, flip), m = matrix(it.t, h.x, h.y, h.cm);
+        // the wrist as a joint: the forearm turned about it (anim: dev degrees to the thumb's side, flex degrees to the palm's)
+        const wrot = wristTurn(E.sc.wrist, it.anim);
         // a picture drawn mirrored turns the faces' winding round (a left hand's own mirroring is already in its mesh)
         gl.frontFace(flip ? gl.CW : gl.CCW);
         const mats = {
@@ -860,11 +896,14 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
           steel: { base: lin([214, 218, 224], 1), alt: [0, 0, 0] }, iron: { base: lin([150, 140, 128], 1), alt: [0, 0, 0] },
           glass: { base: lin([30, 104, 205], 1), alt: lin([120, 205, 255], 1) },
         };
+        // the locked glass arm rings flat: the raised arm is washed pale (as js/body21.js washes the pixel one)
+        if (light.lock && it.kind === 'h' && it.id === 'glassfist') { const pale = lin([196, 204, 212], 1); mats.glass.base = mats.glass.base.map((v, i) => lerp(v, pale[i], 0.45)); mats.glass.alt = mats.glass.alt.map((v, i) => lerp(v, pale[i], 0.45)); }
         for (const k of ['wool', 'skin', 'nail', 'leather', 'mail', 'grip', 'iron', 'steel', 'glass']) {
           const g = E.sc.groups[k]; if (!g) continue;
           const pr = progs[k], U = pr.U; gl.useProgram(pr.p);
           if (k === 'glass') { gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); } else gl.disable(gl.BLEND);
           gl.uniformMatrix4fv(U.u_proj, false, PROJ); gl.uniformMatrix4fv(U.u_model, false, m);
+          if (U.u_wrot) gl.uniformMatrix3fv(U.u_wrot, false, wrot); if (U.u_wpiv) gl.uniform3fv(U.u_wpiv, E.sc.wrist ? E.sc.wrist.o : [0, 0, 0]);
           const u3 = (nm, v) => { if (U[nm]) gl.uniform3fv(U[nm], v); };
           u3('u_keyDir', L); u3('u_key', keyc); u3('u_amb', amb); u3('u_torchPos', [7, -30, -16]); u3('u_torch', torch);
           u3('u_songPos', songPos); u3('u_song', songc); u3('u_rimDir', norm([0.55, 0.45, -0.7])); u3('u_rim', rim);
@@ -872,7 +911,7 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
           if (U.u_exposure) gl.uniform1f(U.u_exposure, lerp(1.05, 1.0, n));
           if (U.u_lvl) gl.uniform1f(U.u_lvl, lerp(1.0, 0.4, n));
           gl.bindBuffer(gl.ARRAY_BUFFER, g.buf); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, g.ibuf);
-          const sz = [3, 3, 3, 2, 2, 4]; let off = 0;
+          const sz = [3, 3, 3, 2, 3, 4]; let off = 0;
           for (let i = 0; i < 6; i++) { gl.enableVertexAttribArray(i); gl.vertexAttribPointer(i, sz[i], gl.FLOAT, false, STRIDE * 4, off * 4); off += sz[i]; }
           gl.drawElements(gl.TRIANGLES, g.count, g.big ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT, 0);
         }

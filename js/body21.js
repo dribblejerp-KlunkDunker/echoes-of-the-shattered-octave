@@ -1204,7 +1204,30 @@ const BODY21 = (() => {
   function sculpt(ctx, b, dx, dy, dw, dh) {
     if (!sculptOn() || !b || !b.main || !b.k) return false;
     const m = REC.inv.multiply(ctx.getTransform()), sx = dw / b.main.width, sy = dh / b.main.height;
-    return SCULPTED112.place(b.pose ? 'h' : 'w', b.pose || b.wid, REC.look, [m.a * sx, m.b * sx, m.c * sy, m.d * sy, m.a * dx + m.c * dy + m.e, m.b * dx + m.d * dy + m.f]);
+    return SCULPTED112.place(b.pose ? 'h' : 'w', b.pose || b.wid, REC.look, [m.a * sx, m.b * sx, m.c * sy, m.d * sy, m.a * dx + m.c * dy + m.e, m.b * dx + m.d * dy + m.f], sculptAnim(b));
+  }
+  // the wrist through a swing and a Song (the picture itself is carried and turned by the game, as the pixel hands' is;
+  // the sculpted hand has a joint, and it works): cocked back as a blow starts, snapped through as it lands, then at
+  // rest; a thrust straightens it and a blow from above bends it; under a Song the open hands tip back as it rises, and
+  // their fingers open from a hand at rest as it gathers and ease again as it ends
+  const WRIST = { slash: 13, chop: 11, chopDev: 4, thrust: 8, song: 9, tremor: 1.5 };
+  function sculptAnim(b) {
+    const out = { dev: 0, flex: 0 };
+    try {
+      const a = G.attack, f = fph();
+      if (b.pose === 'open') {
+        if (f && f.cast > 0) { const c = clamp(1 - f.cast / Math.max(0.05, f.castDur || 0.9), 0, 1); out.flex = -(WRIST.song * Math.sin(Math.PI * c) + WRIST.tremor * Math.sin(c * 6 * Math.PI)); out.spread = c < 0.12 ? 0 : c < 0.26 ? 1 : c < 0.82 ? 2 : 1; }
+        return out;
+      }
+      if (a && a.t > 0 && a.dur > 0 && b.side === 'right') {
+        const u = clamp(1 - a.t / a.dur, 0, 1), d = String(a.dirLabel || '');
+        const w = u < 0.18 ? Math.sin(u / 0.18 * Math.PI / 2) : u < 0.6 ? Math.cos((u - 0.18) / 0.42 * Math.PI) : -Math.cos((u - 0.6) / 0.4 * Math.PI / 2);
+        if (/thrust/.test(d)) out.flex = WRIST.thrust * w;
+        else if (/chop|down/.test(d)) { out.flex = -WRIST.chop * w; out.dev = WRIST.chopDev * w; }
+        else out.dev = WRIST.slash * w * (/right/.test(d) ? -1 : 1);
+      }
+    } catch (e) { warnOnce('sculpt anim', e); }
+    return out;
   }
   // the climb (js/fp-hands.js drawClimb): each fist round its rung is given to the sculpted hands, and when both are, they
   // are drawn at once and laid on the HUD's own canvas over the ladder painted there (nothing else of the body shows in a climb)
@@ -1223,8 +1246,9 @@ const BODY21 = (() => {
   // the world's light where you stand, for the sculpted hands: the sun's or the moon's colour and where it stands in the
   // view (js/light21.js), the sky's and the ground's light, lamps near you as a torch, a Song's colour
   function sculptLight() {
-    const out = { key: [255, 244, 226], dir: null, sky: [120, 132, 150], ground: null, night: 0, torch: null, song: null };
+    const out = { key: [255, 244, 226], dir: null, sky: [120, 132, 150], ground: null, night: 0, torch: null, song: null, lock: false };
     try {
+      out.lock = G.glassLock > 0;
       const P = typeof LIGHT21 === 'object' && LIGHT21 && LIGHT21.P, outdoor = !!(G.map && G.map.outdoor);
       if (P && outdoor) {
         out.key = P.sunC.map((v) => v * 255); out.sky = P.ambS.map((v) => v * 255); out.ground = P.ambG.map((v) => v * 255); out.night = P.night || 0;
@@ -1753,7 +1777,7 @@ void main() {
   }
 
   function clearCaches() { headCache.clear(); buildCache.clear(); shieldCache.clear(); armCache.clear(); legCache.clear(); }
-  return { sculptLight, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
+  return { sculptLight, sculptAnim, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
     R3B, FX3, LB, lbBuild, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;
