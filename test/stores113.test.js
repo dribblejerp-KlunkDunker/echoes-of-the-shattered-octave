@@ -203,12 +203,12 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
       G.flags.p113_seen = 1; const along = at(2.0); go(R.MAP, along[0], along[1], -Math.PI / 2); G.tod = 0.5; R.tick(0.1);
       Engine.cam.dir = -Math.PI / 2 - 0.06; Engine.cam.pitch = 0; Engine.render(G.ents, 0.5); const v0 = view(), f0 = Array.from(v0.d.slice(0, 40000));
       R.tick(0.1); R.tick(0.1); Engine.render(G.ents, 0.5); const v1 = view();
-      out.noonSame = G.map.ambient === 0.95 && G.map.bright === true && f0.every((b, i) => b === v1.d[i]);
+      out.noonSame = G.map.ambient === 0.95 && G.map.bright === true && G.map.fogColor.join() === '118,120,126' && G.map.fogDist === 46 && f0.every((b, i) => b === v1.d[i]);
       const noon = patch(v1);
       // the third hour: dark, away from any lamp
-      G.tod = mid; R.tick(0.1); Engine.render(G.ents, mid); const night = patch(view());
-      out.nightDark = G.map.ambient >= 0.16 && G.map.ambient <= 0.2 && night < noon * 0.5;
-      out.lightNums = [noon.toFixed(1), night.toFixed(1), G.map.ambient];
+      G.tod = mid; R.tick(0.1); Engine.render(G.ents, mid); const vn = view(), night = patch(vn); let sky = 0, sn = 0; for (let y = 8; y < 40; y++) for (let x = 120; x < 200; x++) { sky += lumAt(vn, x * vn.sx, y * vn.sx); sn++; } sky /= sn;
+      out.nightDark = G.map.ambient >= 0.16 && G.map.ambient <= 0.2 && night < noon * 0.5 && sky < 16 && G.map.bright === false && G.map.fogDist <= 15;
+      out.lightNums = [noon.toFixed(1), night.toFixed(1), 'sky ' + sky.toFixed(1), G.map.ambient];
       // the far lights are the brightest things in the frame
       G.flags.p113_seen = 0; go(R.MAP, five6[0], five6[1], 0); G.tod = mid;
       for (let t = 0; t < 26; t += 0.1) { S.tick(0.1); R.tick(0.1); G.murmurT = 2; G.tod = mid; }
@@ -270,7 +270,7 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
   check(r.hiddenFromStretch && r.seenPastNine, 'the lights are drawn where they truly are: hidden from the stretch by the towers and the parapet, the lantern in sight from the walk past Tower Nine');
   check(r.lightCurve, 'the wall\'s light by the hour: 0.95 from seven to five, falling smoothly through dusk to dark at full dark, dark to the dead hour, rising at dawn');
   check(r.noonSame, 'at noon the wall is lit exactly as Phase 100 lit it, and the frame is unchanged');
-  check(r.nightDark, 'at the third hour the wall is dark: open floor away from any lamp is much darker than at noon (' + (r.lightNums || []).join(', ') + ')');
+  check(r.nightDark, 'at the third hour the wall is dark: a black starless sky over the parapet, and open floor away from any lamp much darker than at noon (' + (r.lightNums || []).join(', ') + ')');
   check(r.farBrightest, 'at night the far lights are the brightest things in the frame (' + (r.brightNums || []).join(', ') + ')');
   check(r.once, 'and it fires once');
   check(r.nightNoRandom, 'the night plays without Math.random');
