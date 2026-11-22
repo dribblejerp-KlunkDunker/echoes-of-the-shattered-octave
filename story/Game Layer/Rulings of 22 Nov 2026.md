@@ -34,6 +34,10 @@ The owner, 22 Nov, 5:55 pm, after reading the plan for it:
 | "I approve of all proposals" | **Every [PROPOSED] item put to him up to this hour is approved**: in the Rift Wall's Design A (the old garrison's store and its furniture, the errands, the letter and "Hal"), in Design C (the cart gate, the sally-way, the stage, the three sentences and their people, the leavings, the trooper's line, the Carter's Sprag, Tower Eight's postern), and in the night sky (the eight notes along the Chord, the three far galaxies, how darkness is reckoned). | Their records say "approved 22 Nov". New inventions made after this hour are still marked [PROPOSED] and brought to him. |
 | "no stars over the rift is good" | **Confirmed: the Rift's night is starless**, as Book Three has it. | Not behind any switch. |
 
+## The Fold, approved
+
+The owner, 22 Nov, 6:14 pm, of `Phase 113c - The Fold, the faith of the stars (for review).md`: **"excellent I approve."** The whole record stands as written, and all seven questions in its section 8 are settled as proposed.
+
 ## Readings, confirmed
 
 Two of these were my reading of short words. **The owner, 22 Nov, 1:33 pm: "you are correct."** Both stand.

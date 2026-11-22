@@ -2,7 +2,7 @@
 
 22 Nov 2026. The owner: "Add constellations with lore please. I want an added religion based around the galaxies, stars and planets with monoliths and megaliths cleverly placed around the games map that perfectly show the constellation or constellations. When looked through I want the constellations or planets zoomed in on with a good explanation of what its called, why and the story or myth behind it."
 
-**Everything here is [PROPOSED] and is for you to read before it is built.** The faith is added by your order; its name, its sayings, the figures and their stories are mine. Nothing is in the game yet.
+**Approved by the owner, 22 Nov 2026, 6:14 pm: "excellent I approve."** Every item below, and every question in section 8 as proposed, stands: the Fold and its lamp-tellers; the Sparrow in the sky; the Broken Fifth and its disagreeing tellers; the dial-men; the ring outside the Hedge as the Fold's ring; the loose five's names; a sky that does not turn.
 
 Two lore readers went through the four novels and every volume first (their briefs: `story/Game Layer/Lore briefs/The sky and the faiths (22 Nov 2026)/`). Short names: **B1 to B4** the novels, **V1 to V8** the World Bibles, **SB** the Series Bible, **R21** the Phase 20-21 rulings.
 
@@ -138,7 +138,7 @@ A lamp-teller, of all three: "Other folds, on hills too far off to walk to. They
 
 **One person to meet:** a lamp-teller, **Old Marrable**, at the ring outside the Hedge, by night only. She says the five sayings, and the line about the signs. She sells nothing and asks for nothing.
 
-## 8. For you to rule
+## 8. Ruled 22 Nov (approved as proposed)
 
 1. **The name "the Fold"**, and "lamp-tellers".
 2. **The Sparrow as a ninth figure.** She is in the fable already, and she is not called a ninth anywhere. If she sits too near "the ninth will be born", she can be left out of the sky.
