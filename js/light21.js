@@ -648,7 +648,7 @@ vec3 l21Deep(vec3 dir, float az, vec3 c, ivec2 pix) {
   uvec4 t = texelFetch(uL21DeepT, ivec2(col, min(383, int(floor(el * 244.46199)))), 0);
   float river = float(t.g >> 8u);
   vec3 dust = vec3(float(t.r & 255u), float(t.r >> 8u), float(t.g & 255u));
-  vec3 add = (vec3(0.86, 0.9, 1.0) * river * (1.0 - dk) + dust * dk) * rk * (0.35 / 255.0);
+  vec3 add = (vec3(0.86, 0.9, 1.0) * river * (1.0 - dk) * 0.5 + dust * dk) * rk * (0.35 / 255.0);
   bool sp = uL21Deep.z > -50.0 && abs(mod(az - uL21Deep.z + 3.14159265, 6.2831853) - 3.14159265) < 0.17453 && el < 0.26180;
   if (sp) { float L = dot(add, vec3(0.3, 0.59, 0.11)) * 0.9; add = mix(add, vec3(L), 0.65); }
   uint gate = (t.a >> 8u) & 3u, ph = t.a >> 10u;

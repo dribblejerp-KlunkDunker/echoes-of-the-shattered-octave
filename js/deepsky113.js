@@ -497,7 +497,7 @@ const DEEPSKY113 = (function () {
         if ((a | b | c | e) === 0) continue;
         let ar = 0, ag = 0, ab = 0;
         if (riv > 0 && (a | b)) {
-          const river = b >> 8, k1 = riv * (1 - dp), k2 = riv * dp;
+          const river = b >> 8, k1 = riv * (1 - dp) * 0.5, k2 = riv * dp;   // the lane-softened river comes up at half strength: the full glow needs the dark
           ar = (rr * river * k1 + (a & 255) * U * k2); ag = (rg * river * k1 + (a >> 8) * U * k2); ab = (rb * river * k1 + (b & 255) * U * k2);
         }
         const isSp = rsp && colSp[x];
@@ -614,10 +614,15 @@ const DEEPSKY113 = (function () {
         if (el < 0) { buf[q] = 10; buf[q + 1] = 10; buf[q + 2] = 12; continue; }
         const fx = (az / TAU + 0.5) * W - 0.5, fy = el * ROWK - 0.5, ix = Math.floor(fx), iy = Math.floor(fy), ax = fx - ix, ay = fy - iy;
         const sky = [6 + 14 * (1 - Math.min(1, el * 3)), 8 + 14 * (1 - Math.min(1, el * 3)), 22 + 18 * (1 - Math.min(1, el * 3))];
+        let lum = 0;
         for (let c = 0; c < 3; c++) {
           const v = (dust(ix, iy, c) * (1 - ax) + dust(ix + 1, iy, c) * ax) * (1 - ay) + (dust(ix, iy + 1, c) * (1 - ax) + dust(ix + 1, iy + 1, c) * ax) * ay;
-          buf[q + c] = sky[c] + v * DS * 1.25;
+          buf[q + c] = sky[c] + v * DS * 1.3 * (c === 0 ? 1.04 : c === 2 ? 0.97 : 1); lum += v * DS / 3;
         }
+        // the grain the map is too coarse to hold: faint stars on the zoomed art grid, thicker where the dust is bright,
+        // hashed from the direction (so the same patch of sky always has the same grain)
+        const gi = Math.floor(az * 2600), gj = Math.floor(el * 2600), hg = hh(gi, gj, 211);
+        if (hg < 0.0035 + 0.06 * Math.min(1, lum / 70)) { const k = 18 + 60 * hh(gi, gj, 212) * hh(gi, gj, 213), cool = hh(gi, gj, 214) < 0.75; buf[q] += k * (cool ? 0.85 : 1); buf[q + 1] += k * 0.92; buf[q + 2] += k * (cool ? 1 : 0.75); }
       }
       // the field's own stars, as points on the art grid (the figure's, gate 3, are drawn large below)
       const R = Math.hypot(w, h) * 0.5 / scale, jr0 = Math.max(0, Math.floor((mid.el - R * 1.2) * ROWK)), jr1 = Math.min(H - 1, Math.ceil((mid.el + R * 1.2) * ROWK));
