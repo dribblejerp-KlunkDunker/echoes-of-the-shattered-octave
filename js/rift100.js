@@ -912,6 +912,24 @@ const RIFT100 = (function () {
   const onWall = () => typeof G !== 'undefined' && G.map && G.mapId === MAP && G.map.id === MAP;
   const inHalls = () => typeof G !== 'undefined' && G.map && G.mapId === HALLS && G.map.id === HALLS;
   const inRect = (r, x, y) => x >= r[0] && x < r[2] + 1 && y >= r[1] && y < r[3] + 1;
+  // the wall's own light by the hour. By day "grey from above" (Vol VI, 110), lit the same as Phase 100 built it (ambient
+  // 0.95). By night the book has it dark: "the sky over the Rift, which was black and starless" (Book Three Part Two, 143,
+  // 273); "under no stars" (Part One, 983); lanterns in the dark (Part One, 859 to 913). The game's clock: dusk from the
+  // seventeenth hour (timeName), full dark at tod 0.7985 (engine.js buildSky: no day left), the dead hour until the fifth,
+  // morning from the seventh. Smoothstep between, so there is never a snap.
+  const LIGHT = { DAY: 0.95, NIGHT: 0.18, DUSK: 17 / 24, DARK: 0.7985, DAWN0: 5 / 24, DAWN1: 7 / 24 };
+  function wallAmbient(tod) {
+    const t = ((Number(tod) % 1) + 1) % 1, L = LIGHT, ss = (a, b, x) => { const k = Math.max(0, Math.min(1, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
+    if (!Number.isFinite(t) || (t >= L.DAWN1 && t <= L.DUSK)) return L.DAY;
+    const k = t > L.DUSK ? 1 - ss(L.DUSK, L.DARK, t) : ss(L.DAWN0, L.DAWN1, t);
+    return L.NIGHT + (L.DAY - L.NIGHT) * k;
+  }
+  function wallLight(force) {   // set the wall's ambient from the hour; the engine takes a map's ambient when the map is set
+    const m = G.maps && G.maps[MAP]; if (!m) return; const a = wallAmbient(G.tod);
+    if (!force && Math.abs(a - (m.ambient || 0)) < 0.005 && !(a === LIGHT.DAY && m.ambient !== LIGHT.DAY)) return;
+    m.ambient = a;
+    if (onWall() && Engine.setMap) { const cam = Object.assign({}, Engine.cam); Engine.setMap(m); Object.assign(Engine.cam, cam); }
+  }
   const B = { WARN_S: 4.5, QUIET_S: 8.0, WALK: 0.85, OVER_S: 2.6, BELL_R: 7, TALK_S: 4.0, LOOK_S: 3.5, CYCLE: 16, GAP0: 11.5, GAP1: 15.6, XP: 240 };
   // ---- talk: the Murmur, on the Watch, is the next line of your subject
   let quiet = 0, relieved = false, atParapet = 0, talkT = 0, lookT = 0, lastSafe = null, warnedQuiet = false;
@@ -1006,7 +1024,7 @@ const RIFT100 = (function () {
   }
   function tick(dt) {
     if (typeof G === 'undefined' || G.state !== 'play' || !G.player || G.dead) return;
-    if (onWall()) tickWall(dt); else if (inHalls()) tickHalls(dt); else if (relieved) { relieved = false; quiet = 0; }
+    if (onWall()) { wallLight(false); tickWall(dt); } else if (inHalls()) tickHalls(dt); else if (relieved) { relieved = false; quiet = 0; }
   }
 
   // ---------------------------------------------------------------- using things
@@ -1058,7 +1076,7 @@ const RIFT100 = (function () {
     defs(); art();
     if (typeof buildAllMaps === 'function') { const _b = buildAllMaps; buildAllMaps = function () { const maps = _b.apply(this, arguments); try { join(maps); } catch (e) { warnOnce('build', e); } return maps; }; }
     if (typeof useDeco === 'function') { const _ud = useDeco; useDeco = function (e) { try { if (useOwn(e)) return undefined; } catch (err) { warnOnce('use', err); } return _ud.apply(this, arguments); }; }
-    if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function () { const r = _l.apply(this, arguments); try { quiet = 0; relieved = false; atParapet = 0; talkT = 0; lookT = 0; lastSafe = null; warnedQuiet = false; sClock = 0; sStage = -1; rang = false; try { document.getElementById('view').classList.remove('unwrite'); } catch (e2) { /* */ } sync(); } catch (e) { warnOnce('load', e); } return r; }; }
+    if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function (id) { try { if (id === MAP && G.maps && G.maps[MAP]) G.maps[MAP].ambient = wallAmbient(G.tod); } catch (e) { warnOnce('light', e); } const r = _l.apply(this, arguments); try { quiet = 0; relieved = false; atParapet = 0; talkT = 0; lookT = 0; lastSafe = null; warnedQuiet = false; sClock = 0; sStage = -1; rang = false; try { document.getElementById('view').classList.remove('unwrite'); } catch (e2) { /* */ } sync(); } catch (e) { warnOnce('load', e); } return r; }; }
     if (typeof update === 'function') { const _u = update; update = function (dt) { const r = _u.apply(this, arguments); try { tick(Number(dt) || 0); } catch (e) { warnOnce('tick', e); } return r; }; }
     // the Murmur is talk here; and any sound of yours counts as talk on the wall, while in the Halls nothing of yours is heard
     if (typeof castSong === 'function') { const _c = castSong; castSong = function (id) { try { if (id === 'murmur' && (onWall() || inHalls()) && G.state === 'play' && !G.dead) { murmur(); return undefined; } } catch (e) { warnOnce('murmur', e); } return _c.apply(this, arguments); }; }
@@ -1070,7 +1088,7 @@ const RIFT100 = (function () {
   wire();
 
   return { TX, SAY, TEXTS, MAP, HALLS, W, H, HW, HH, P, Q, ROUTES, FLOORS, TOWERS, STAIRS, RC, CX, CY, WH, B, STRAY_DEF, ARMOR_DEFS, SPIKE_DEF, MALLET_DEF, pol, rOf, degOf, plan, build, buildHalls, join, decode, tick, useOwn, sync, murmur, talk, standDown, answer,
-    lamps: () => LAMPS, state: () => ({ quiet, relieved, atParapet, talkT, sClock, sStage }), setQuiet: (v) => { quiet = v; }, setStray: (v) => { sClock = v; }, onLip: (x, y) => onLip(x, y), mannedNear };
+    wallAmbient, LIGHT, lamps: () => LAMPS, state: () => ({ quiet, relieved, atParapet, talkT, sClock, sStage }), setQuiet: (v) => { quiet = v; }, setStray: (v) => { sClock = v; }, onLip: (x, y) => onLip(x, y), mannedNear };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = RIFT100;
 if (typeof window !== 'undefined') window.RIFT100 = RIFT100;

@@ -216,7 +216,7 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
       const v = view(), g = G.ents.find((e) => e && e._p113 === 'far' && e.sprite === 'p113_lightG' && !e.hidden);
       let gl = 0, mx = 0; for (let y = 0; y < 150 * v.sx; y++) for (let x = 0; x < v.w; x++) mx = Math.max(mx, lumAt(v, x, y));
       if (g && g._screen) for (let y = Math.max(0, g._screen.y0 * v.sx); y <= g._screen.y1 * v.sx; y++) for (let x = Math.max(0, g._screen.x0 * v.sx); x <= g._screen.x1 * v.sx; x++) gl = Math.max(gl, lumAt(v, x, y));
-      out.farBrightest = !!g && gl > 0 && gl >= mx * 0.98 && gl > 200;
+      out.farBrightest = !!g && gl > 0 && gl >= mx * 0.98 && gl > 200; out.brightNums = [gl.toFixed(0), mx.toFixed(0), !!g, !!(g && g._screen)];
       S.resetNight(); G.flags.p113_seen = 1; }
     // once
     clear(); go(R.MAP, five6[0], five6[1], -Math.PI / 2); G.tod = mid; stepNight(10); out.once = !said(TX.night[0]) && G.flags.p113_seen === 1;
@@ -271,7 +271,7 @@ const FORBIDDEN = new RegExp('\\b(' + SEVEN.join('|') + ')\\b', 'i');
   check(r.lightCurve, 'the wall\'s light by the hour: 0.95 from seven to five, falling smoothly through dusk to dark at full dark, dark to the dead hour, rising at dawn');
   check(r.noonSame, 'at noon the wall is lit exactly as Phase 100 lit it, and the frame is unchanged');
   check(r.nightDark, 'at the third hour the wall is dark: open floor away from any lamp is much darker than at noon (' + (r.lightNums || []).join(', ') + ')');
-  check(r.farBrightest, 'at night the far lights are the brightest things in the frame');
+  check(r.farBrightest, 'at night the far lights are the brightest things in the frame (' + (r.brightNums || []).join(', ') + ')');
   check(r.once, 'and it fires once');
   check(r.nightNoRandom, 'the night plays without Math.random');
   check(r.stillTalk, 'the Watch\'s rule still holds while it plays: say nothing and the quiet comes on');
