@@ -44,7 +44,7 @@ Every installment runs the same small loop: beat plan, draft, check against this
 | "Spire" and "Anchor" used interchangeably. | The Spire is the tower you can see. The Anchor is what is inside it. This distinction is the trilogy's central secret. |
 | Kaelen's arm glows cyan; Oakhaven's glass should be green. | Aether-Glass takes the color of its Anchor. Growth glass runs green-gold. Kaelen's arm is pale cyan Light-glass because it came from the Dawning Spire. Anyone who knows glass can read his past off his skin. |
 | Section 6 of the master reference: numbers-station tuners, binaural entrainment, the manipulation framework, signal-integrity scoring. | Belongs to the Sovereign Aegis project and stays out of the novel's canon. The tuner survives in-world as Null-Watch's **intercept dials**, used to listen for the Cacophony. |
-| The Null-Amalgam "forming below the Maw" (this bible, to v1.5) and already walking, having eaten "two hundred and six Null-Watch personnel" (World Bible Vol I and Vol II). | The volumes stand (author's ruling, 23 Nov 2026). It already walks the Maw in Harvestmonth 419, and the Hush is still feeding it. |
+| The Null-Amalgam "forming below the Maw" (this bible, to v1.5) and already walking, having eaten "two hundred and six Null-Watch personnel" (World Bible Vol I and Vol II). | The volumes stand (author's ruling, 23 Nov 2026). It already walks the Maw's lip in Harvestmonth 419. The thing the Hush is feeding is not the Amalgam but what lies below it: Book Three's sleeper under the Shelf, "so large that the word did not apply", which has "slept down there under the Refusal" for six years. Vol I already says so: the Amalgam "is not the final threat. It is the Maw's immune response". (The split into two is Claude's reading of the ruling against the manuscript, put to the author on 23 Nov for his word.) |
 
 ---
 
@@ -139,7 +139,7 @@ The Choir-Church of the Pure Note teaches that celestial Architects pinned reali
 
 **The Cacophony** is what song becomes when the Hush bites it: torn fragments of law with an appetite. They hunt voices because every voice is a small song, and they wear what they eat. They are the Hush's teeth and its lures. Once one has learned your voice, it can follow that voice anywhere in the world.
 
-**The Gate of Decay.** The 852 Hz Chorister sings the rest between notes: the silence that belongs to the world, which is the only thing that keeps out the silence that belongs to nothing. When the Synod drilled it in 413, the gate cracked, and the Continental Rift is the wound. Through the Rift, and through every siphon-bore on the continent, the Hush is feeding something: the Null-Amalgam, a body that already walks the Maw and is still growing. Vesper's name for the bores is exact. They are umbilical cords.
+**The Gate of Decay.** The 852 Hz Chorister sings the rest between notes: the silence that belongs to the world, which is the only thing that keeps out the silence that belongs to nothing. When the Synod drilled it in 413, the gate cracked, and the Continental Rift is the wound. Through the Rift, and through every siphon-bore on the continent, the Hush is feeding something below the Maw: the thing Book Three feels turn over at every Refusal. The Null-Amalgam, which already walks the Maw's lip, is its immune response (World Bible Vol I). Vesper's name for the bores is exact. They are umbilical cords.
 
 **The lost curriculum.** The Architects' teaching did not vanish. It decayed into folk-craft: the Cantors of the Reach, whose tending notes for births and fevers and apple trees are fragments of the law-songs. The Church declared every second note a sin. For four centuries the Synod has suppressed the one body of knowledge that could let the gods rest without letting the world end.
 
@@ -285,7 +285,7 @@ The chronomancers of the Sandglass: neutral keepers of time and brokers of hours
 
 ### The Cacophony and the Hush
 
-Not factions. Appetites. The Cacophony has named horrors: the Wearer, the Siren Sirena, the Phantom Weaver. The Hush has a body, the **Null-Amalgam**, already walking and still being fed; its field hunters, the **quiets**; and one runaway child, **Mote**.
+Not factions. Appetites. The Cacophony has named horrors: the Wearer, the Siren Sirena, the Phantom Weaver. The Hush has something asleep below the Maw; a body that walks above it, the **Null-Amalgam**; its field hunters, the **quiets**; and one runaway child, **Mote**.
 
 ### Game layer: Concordance
 
@@ -375,7 +375,7 @@ The last Veil-sworn scribe, conscripted into the Catalogue. She recorded the Unn
 
 **The Wearer.** The Cacophony that ate Tobin Ashgrove and wears his voice. It courts Lyra at the Hedge, and for two years it has also been listening outside Kaelen's hut.
 
-**The Null-Amalgam.** The Hush's body, at the Maw. It already walks: nine and a half tonnes of absence wearing the geometry of what it has eaten (tiles, cannon, two hundred and six of the Null-Watch), and it is still being fed (World Bible Vol I and Vol II).
+**The Null-Amalgam.** At the Maw's lip, and it already walks: nine and a half tonnes of absence wearing the geometry of what it has eaten (tiles, cannon, two hundred and six of the Null-Watch). "It is not the final threat. It is the Maw's immune response" (World Bible Vol I; Vol II). What the Hush is feeding lies below it, asleep, and turns over at the Refusal (Book Three, Part One, ch. 2 to 4).
 
 **Allies and townsfolk.** General Theresa Ward of Null-Watch; Oona Salt, Harbor-Queen of Port Cantabile; Abbess Wenna of the Unrung Bell.
 
@@ -718,7 +718,7 @@ Added in v1.4 from the manuscript, because the game builds on them. Where the ma
 - **v1.3** (29 Oct 2026): v1.2 unchanged, plus the pointers to World Bible Vol VIII (the game layer) in the Roadmap and under *Game layer: Concordance*, this history, and the appendix below.
 - **v1.4** (29 Oct 2026): brought into line with the manuscripts after the books check. Sable's age (forty-one, Book One ch. 22); the last traces of the old Aegis entry (her voice line and the Aegis's bonds); the cut rope's six days; a new list, *Book One details on record*, under Part XI; and the "Chord" naming question under Open Decisions. The replaced lines are in the appendix.
 - **v1.5** (5 Nov 2026): Book Four Part Two begun (Ch 5–7 drafted, Ch 8 mapped), with the canon each chapter adds. **The author ruled that a death no longer needs an heir**; Part X's succession rule is rewritten to match, and the old text is in the appendix.
-- **v1.6** (23 Nov 2026): **the author ruled that the Null-Amalgam is as World Bible Vol I and Vol II have it**: it already walks the Maw, wearing what it has eaten. This bible had it as a body still forming below the Maw. Three lines are brought into line (Part III, the Gate of Decay; Part VII, the Cacophony and the Hush; Part VIII, Antagonists and Key Figures), and a row is added to the Canon Ledger. What this bible added stays: the Hush is still feeding it, and the bores are still umbilical cords. The replaced lines are in the appendix.
+- **v1.6** (23 Nov 2026): **the author ruled that the Null-Amalgam is as World Bible Vol I and Vol II have it**: it already walks the Maw, wearing what it has eaten. This bible had it as a body still forming below the Maw. Three lines are brought into line (Part III, the Gate of Decay; Part VII, the Cacophony and the Hush; Part VIII, Antagonists and Key Figures), and a row is added to the Canon Ledger. The manuscript is kept beside the ruling: Book Three has a sleeper under the Shelf that turns over at every Refusal, so the thing the Hush feeds through the bores stays below the Maw, and the Amalgam that walks is what Vol I calls it, the Maw's immune response. That reading is put to the author for his word. The bores are still umbilical cords. The replaced lines are in the appendix.
 
 ## Appendix: superseded text, kept for the record
 
