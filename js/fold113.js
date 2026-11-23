@@ -541,7 +541,7 @@ const FOLD113 = (function () {
       to: { x: s.sx, y: s.sy, dir: a.az, pa: clamp(Math.max(0, a.el), -lim, lim) } });
     try { releaseMouse(); } catch (e) { /* not ready */ }
     G.state = 'event'; G.keys = {};
-    const step = () => { if (!TURN.on) return; const k = clamp((now() - TURN.t0) / TURN.dur, 0, 1); poseAt(k); if (k >= 1) finishTurn(); else setTimeout(step, 16); };
+    const step = () => { if (!TURN.on) return; const k = clamp((now() - TURN.t0) / TURN.dur, 0, 1); poseAt(k); skyPump(5); if (k >= 1) finishTurn(); else setTimeout(step, 16); };
     setTimeout(step, 16);
   }
   function poseAt(k) {
@@ -620,6 +620,14 @@ const FOLD113 = (function () {
     const p = typeof document !== 'undefined' ? document.getElementById('event-panel') : null; if (p) p.classList.remove('p113f-view');
     if (hasG()) { G.state = 'play'; G.keys = {}; }
   }
+  // the sky's map is laid a slice at a time, never all at once (Codex, P2 on #160): a stone may be opened before the
+  // deep sky has ever been drawn (the switch off, or a stone used at once), and laying the whole map takes a third of a second
+  const skyLaid = () => typeof DEEPSKY113 === 'undefined' || !DEEPSKY113.ready || !DEEPSKY113.slice || DEEPSKY113.ready();
+  function skyPump(ms) {
+    if (skyLaid()) return true;
+    try { const t0 = now(); do { if (DEEPSKY113.slice()) break; } while (now() - t0 < ms); } catch (e) { warnOnce('pump', e); return true; }
+    return skyLaid();
+  }
   function drawInto(cv, s, id, mode) {
     if (!cv) return;
     const cw = cv.clientWidth || 640, ch = cv.clientHeight || 300, dpr = clamp((typeof window !== 'undefined' && window.devicePixelRatio) || 1, 1, 2);
@@ -630,6 +638,11 @@ const FOLD113 = (function () {
     try {
       if (mode === 'sky') {
         ensureTable(true);
+        if (!skyPump(6)) {   // not laid yet: a dark sight for a few frames, then the chart
+          ctx.fillStyle = '#05060b'; ctx.fillRect(0, 0, W, H);
+          V.timers.push(setTimeout(() => { if (V.open && V.fig === id) drawInto(cv, s, id, mode); }, 0));
+          return;
+        }
         const still = typeof GFX !== 'undefined' && GFX.reduceMotion;
         const chart = (c2, L) => typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.drawChart && DEEPSKY113.drawChart(c2, id, 0, 0, W, H, { lines: L, lineK: 1.7, minExt: 0.5, galK: 7 });
         if (!chart(ctx, still ? 1 : 0)) { drawFace(ctx, W, H, id, grain); return; }

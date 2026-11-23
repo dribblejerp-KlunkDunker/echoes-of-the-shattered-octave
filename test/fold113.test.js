@@ -143,6 +143,7 @@ const FORBIDDEN = new RegExp('\\b(' + ['flehs', 'egdel', 'teksab', 'deredner'].m
     G.flags.p113f_seen = 0; G.flags.p113f_blind = 0; G.flags.p113f_marr = 0; G.flags.p11c_sign = 1;
     const j0 = G.journal.length;
     let viewRand = 0;
+    DEEPSKY113.build();   // the sky laid, as it is once a night has been walked under it: a view then draws its chart at once (the unlaid case has its own check below)
     for (const s of S) {
       go(s, 0.0, 5);
       const e = peg(s); if (!e) { out.views.push(s.key + ' no peg'); continue; }
