@@ -126,6 +126,8 @@ Where it would land first, because the game already has the scene: the Church at
 
 ## 8. What to do, in order
 
+**Ruled by the owner the same morning (9:35 am):** "I like your suggestions. When its time proceed and I will accept all proposals now and future proposals so long as it makes sense." Item 1 is settled as (a), with "in their boots": at the book's great moments the player steps into the hero whose moment it is and steps back out (`Rulings of 23 Nov 2026.md`).
+
 1. **Settle who the player is** (owner's ruling). (a) The likenesses become six faces with no canon name, and each calling gets its own person and history, a stranger to Oakhaven; recommended, because it is what the Rite's design already assumes and it is the root the callings can grow from. (b) You may truly play Kaelen, Lyra, Vane or Sable, and that person is then not met in the world; a very large change. (c) Keep the faces, blank the name, drop the histories; the cheapest, and the weakest.
 2. **The callings** (section 7): a phase, with a lore brief for each calling, then lines, sights and one signature act each, scene by scene.
 3. **Match the text to the books:** the eleven live lines in 3.3, the five Thursdays, the Blade's and the Archivist's stories, "traveller" spelt one way. A small phase. Each needs its French and, where a line is voiced, its voice.
