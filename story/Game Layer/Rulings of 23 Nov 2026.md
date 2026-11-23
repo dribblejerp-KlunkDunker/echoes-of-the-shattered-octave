@@ -1,0 +1,17 @@
+# Rulings of 23 November 2026
+
+The owner, 23 Nov, 8:49 am, in answer to the morning's report (which listed, first among his open decisions, whether the Null-Amalgam at Redoubt Zero already walks, as Vol I and Vol II have it, or is still forming below the Maw, as the Series Bible had it):
+
+> "got with what the volume says and update the bible. what are the contradictions? merge and proceed with what needs fable 5.2"
+
+| His words | Ruling | What follows |
+| --- | --- | --- |
+| "go with what the volume says" | **The Null-Amalgam is as World Bible Vol I and Vol II have it.** It already walks the Maw in Harvestmonth 419: "Nine and a half tonnes of absence wearing the geometry of things it has eaten: tiles, cannon, and two hundred and six Null-Watch personnel." (Vol II, line 545; Vol I, line 531.) | Phase 114 may put it at Redoubt Zero whole, as the Phase 89 plan had it. The Phase 114 lore brief still comes first, and still reads Book Three for what the books do there later. |
+| "and update the bible" | **The Series Bible is brought into line**, as v1.6. | Three lines changed (Part III, the Gate of Decay; Part VII, the Cacophony and the Hush; Part VIII, Antagonists and Key Figures); a row added to the Canon Ledger; the old lines kept in the appendix. What the Series Bible added is kept: the Hush is still feeding it, and the bores are still "umbilical cords". "Something is growing in the dark below the wall" (Part VI) is untouched, since a thing that walks can still grow. World Bible Vol VIII records the ruling. |
+| "what are the contradictions?" | A question. Answered in the report, from section 3 of `Phase 113 - The Rift, a full lore recheck.md`. | No book is changed for any of the others. They wait on the owner. |
+| "merge" | Read as: **merge the builders' finished work, and merge Phase 113 into main when it is verified and Codex's review is answered.** | If the owner meant only the first, he says so and the pull request waits for his click. |
+| "proceed with what needs fable 5.2" | **Carry on with the Commander's work**: integration, verification, and Phase 114's lore brief and designs. | Builders stay on Opus, two at a time. |
+
+## Still open (not ruled today)
+
+One question sits beside the one ruled, and Phase 114's designs will turn on it. The Series Bible and Vol IV make the Null-Amalgam **the Hush's** body, and Vol IV, 1.8, rule 5 says of the Hush: "It has never once been fought successfully, and no scene should imply that it could be." Vol II files the Amalgam under "Class VI, Apex and Unique", with hit points, as a thing that is fought. The Phase 89 plan (question 9) recommended fighting it at Redoubt Zero, "with the fallback that it becomes a thing to cross, like the Drift of Wells, if the owner reads it as the Hush's". Today's ruling settles that it walks. It does not settle whether the player beats it, survives it or crosses it. The designs will offer those.

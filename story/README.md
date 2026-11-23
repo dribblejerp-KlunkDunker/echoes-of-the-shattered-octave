@@ -30,7 +30,7 @@ Book Three, *The Hall of Carriage*, is complete in twelve (about 95,000 words). 
 *The Relief Shift*, has Part One (*Seven Voices*, chapters 1–4, about 39,000 words) drafted; Part
 Two, *The Bleach Falls*, is begun, with Chapters Five to Seven (*Dawnday*, *The Correspondence* and *The Fall-Chains*, about
 36,000 words) drafted. The series is planned as five books (World Bible Vol III;
-Series Bible v1.5, Part X). The decided ending is the **Resonant Accord**; since 5 November 2026
+Series Bible v1.6, Part X). The decided ending is the **Resonant Accord**; since 5 November 2026
 a character's death **no longer needs an heir** (the author's ruling); the Book Two action register
 is **kinetic, legible, lethal**. All three are written up in the Series Bible.
 
