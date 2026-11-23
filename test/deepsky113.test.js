@@ -331,6 +331,8 @@ const MIDNIGHT = 0.0, NEW = 5, FULL = 1;
     await step('constellations (a fixture table): drawn in both views at their places; dirOf, visible, drawChart; none without a table', async () => {
       const r = await EB(() => {
         const out = {};
+        // the game's own table (js/fold113.js, Phase 113c) is taken away first: this check brings its own fixture
+        window.STARLORE113 = undefined;
         PRESETS.apply('medium'); GFX.deepSky = true; DEEPSKY113.build();
         T113.view('classic'); T113.stage('p20_downs', null, null, 2.4, 0.0, 5, 0.33); T113.frame(); const bare = T113.hash(T113.grab());
         out.noTable = { dir: DEEPSKY113.dirOf('fixA'), vis: DEEPSKY113.visible('fixA'), chart: DEEPSKY113.drawChart(document.createElement('canvas').getContext('2d'), 'fixA', 0, 0, 64, 40) };

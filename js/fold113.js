@@ -631,9 +631,18 @@ const FOLD113 = (function () {
       if (mode === 'sky') {
         ensureTable(true);
         const still = typeof GFX !== 'undefined' && GFX.reduceMotion;
-        const draw = (L) => { if (!V.open || V.fig !== id) return; if (!(typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.drawChart && DEEPSKY113.drawChart(ctx, id, 0, 0, W, H, { lines: L, lineK: 1.7 }))) drawFace(ctx, W, H, id, grain); };
-        draw(still ? 1 : 0);
-        if (!still) for (let k = 1; k <= 5; k++) V.timers.push(setTimeout(() => draw(k / 5), k * 200));
+        const chart = (c2, L) => typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.drawChart && DEEPSKY113.drawChart(c2, id, 0, 0, W, H, { lines: L, lineK: 1.7 });
+        if (!chart(ctx, still ? 1 : 0)) { drawFace(ctx, W, H, id, grain); return; }
+        if (still) return;
+        // the lines come in over about a second: the sky without them and the sky with them, each drawn once, the second
+        // laid over the first a fifth at a time (a chart costs tens of milliseconds; the fade costs nothing)
+        const mk = () => { const c2 = document.createElement('canvas'); c2.width = W; c2.height = H; return c2; };
+        const base = mk(); base.getContext('2d').drawImage(cv, 0, 0);
+        V.timers.push(setTimeout(() => {
+          if (!V.open || V.fig !== id) return;
+          const full = mk(); if (!chart(full.getContext('2d'), 1)) return;
+          for (let k = 1; k <= 5; k++) V.timers.push(setTimeout(() => { if (!V.open || V.fig !== id) return; ctx.globalAlpha = 1; ctx.drawImage(base, 0, 0); ctx.globalAlpha = k / 5; ctx.drawImage(full, 0, 0); ctx.globalAlpha = 1; }, k * 180));
+        }, 30));
       } else if (mode === 'moon') drawMoon(ctx, W, H, moonIdx(), grain);
       else if (mode === 'blind') drawBlind(ctx, W, H, s.blind, grain);
       else drawFace(ctx, W, H, id, grain, !isDay(G.tod));

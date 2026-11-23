@@ -256,6 +256,7 @@ const DEEPSKY113 = (function () {
     for (let k = 0; k < NOTES.length; k++) { const s = NOTES[k], [i, j] = tex(s); putStar(i, j, s.rgb[0] * s.mag, s.rgb[1] * s.mag, s.rgb[2] * s.mag, 1, (hh(k, 3, 91) * 62) | 0); }
     const M = stats.map; M.bandMean = M.bandN ? M.bandSum / M.bandN : 0;
     MAP.ready = true; MAP.built++; MAP.gen = (MAP.gen || 0) + 1; lore.key = null;
+    syncLore();   // the table's stars go in as the map is finished, however it was built (in slices or at once): one map
   }
   function reset() { MAP.data = new Uint16Array(W * H * 4); MAP.row = 0; MAP.col = 0; MAP.ready = false; Object.assign(stats.map, { coreMax: 0, bandMean: 0, galaxyMax: 0, stars: 0, bandN: 0, bandSum: 0 }); lore.saved = null; lore.key = null; }
   // a slice: eight rows, or fewer if the clock says three milliseconds have gone
