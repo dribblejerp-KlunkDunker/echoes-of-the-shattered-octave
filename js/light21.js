@@ -53,6 +53,8 @@
 //  sunShafts or cineLight -> shafts; grade -> the area grade; cineGrade -> Cinematic grade and vignette; mist, softFog,
 //  cineFog -> height fog; reflections -> water reflection; stars, panoramas, aurora, moonPhase as named. New:
 //  GFX.p21_shadows (sun/moon shadows) and GFX.p21_clouds (cloud layers), on in every preset but Original.
+//  Phase 113b: the sky shader also reads js/deepsky113.js's deep-sky map (the river of stars, far galaxies, shooting stars,
+//  the stones' constellations) through one sampler and its numbers (deepBind below); none on the Rift's maps, no stars at all.
 //  Loaded after js/r3d21.js (its own script tag). No assets: everything is drawn here or comes from the game.
 // ============================================================
 'use strict';
@@ -212,7 +214,9 @@ const LIGHT21 = (() => {
     const wind = typeof Weather !== 'undefined' ? (Weather.wind || 0.2) : 0.2;
     P.cl = [clamp(0.4 + cloud * 0.76, 0, 1), wind, dark, flag('p21_clouds') ? 1 : 0];
     // stars: night, thinned by cloud and haze; aurora from js/skies14.js's plan for tonight
-    P.sky2 = [flag('stars') || (typeof GFX !== 'undefined' && GFX.stars === undefined) ? night * clamp(1 - cloud * 1.3, 0, 1) * clamp(1 - haze * 3, 0, 1) * (1 - fl) : 0, 0, fl, F.pxK || 1];
+    // (Phase 113b) over the Rift the night is "black and starless" (Book Three): js/deepsky113.js says which maps
+    const starless = typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.starless ? DEEPSKY113.starless(F.map) : false;
+    P.sky2 = [!starless && (flag('stars') || (typeof GFX !== 'undefined' && GFX.stars === undefined)) ? night * clamp(1 - cloud * 1.3, 0, 1) * clamp(1 - haze * 3, 0, 1) * (1 - fl) : 0, 0, fl, F.pxK || 1];
     try {
       if (night > 0.3 && flag('aurora') && typeof SKIES14 !== 'undefined' && SKIES14.aurora && SKIES14.aurora.plan && typeof G !== 'undefined' && F.outdoor) {
         const plan = SKIES14.aurora.plan(G.day | 0, G.tod, G.flags || {});
@@ -633,6 +637,45 @@ float n21(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f)
   return mix(mix(h21(i), h21(i + vec2(1, 0)), f.x), mix(h21(i + vec2(0, 1)), h21(i + vec2(1, 1)), f.x), f.y); }
 float fbm(vec2 p) { float s = 0.0, a = 0.5; for (int i = 0; i < 5; i++) { s += a * n21(p); p = p * 2.03 + vec2(17.1, 9.3); a *= 0.5; } return s; }
 float bay(ivec2 p) { return (float(r3dBayer(p)) + 0.5) / 16.0; }
+// (Phase 113b) the deep night sky: js/deepsky113.js's map (1536 x 384, RGBA16UI; see its header) and its numbers:
+// uL21Deep x darkness, y star visibility, z the Spire of Decay's bearing (-100: none), w the pixel scale; uL21Met a shooting
+// star's head and tail (az, el, az, el; el < -0.5: none). Both zero: the branch below is never taken.
+uniform highp usampler2D uL21DeepT; uniform vec4 uL21Deep; uniform vec4 uL21Met;
+vec3 l21Deep(vec3 dir, float az, vec3 c, ivec2 pix) {
+  float d = uL21Deep.x, rk = smoothstep(0.35, 0.75, d), dk = smoothstep(0.75, 0.92, d);
+  float el = asin(clamp(dir.z, 0.0, 1.0));
+  int col = int(floor((az / 6.2831853 + 0.5) * 1536.0)); col = ((col % 1536) + 1536) % 1536;
+  uvec4 t = texelFetch(uL21DeepT, ivec2(col, min(383, int(floor(el * 244.46199)))), 0);
+  float river = float(t.g >> 8u);
+  vec3 dust = vec3(float(t.r & 255u), float(t.r >> 8u), float(t.g & 255u));
+  vec3 add = (vec3(0.86, 0.9, 1.0) * river * (1.0 - dk) * 0.5 + dust * dk) * rk * (0.35 / 255.0);
+  bool sp = uL21Deep.z > -50.0 && abs(mod(az - uL21Deep.z + 3.14159265, 6.2831853) - 3.14159265) < 0.17453 && el < 0.26180;
+  if (sp) { float L = dot(add, vec3(0.3, 0.59, 0.11)) * 0.9; add = mix(add, vec3(L), 0.65); }
+  uint gate = (t.a >> 8u) & 3u, ph = t.a >> 10u;
+  vec3 sc = vec3(float(t.b & 255u), float(t.b >> 8u), float(t.a & 255u)) / 255.0;
+  float sk = gate == 1u ? rk : gate == 2u ? dk : 0.0;
+  if (gate == 3u) sk = uL21Deep.y * clamp((max(sc.r, max(sc.g, sc.b)) - (1.0 - d) * 0.55) / 0.2, 0.0, 1.0);
+  if (sk > 0.0) {
+    float tw = 1.0;
+    if (!sp && ph != 63u) { float fp = float(ph); tw = 1.0 - (0.18 + 0.4 * (1.0 - smoothstep(0.0, 0.35, dir.z))) * (gate == 3u ? 0.35 : 1.0) * (0.5 + 0.5 * sin(uL21T.x * (1.3 + 2.6 * fract(fp * 0.618)) + fp / 64.0 * 6.2831853)); }
+    add += sc * sk * tw;
+  }
+  float allow = clamp(1.0 - (dot(c, vec3(0.33333)) - 0.09) / 0.3, 0.0, 1.0) * smoothstep(0.0, 0.16, dir.z);
+  ivec2 bp = pix / max(1, int(uL21Deep.w));
+  vec3 q = floor(add * allow * 63.75 + bay(bp)) / 63.75;
+  // a shooting star: a thin streak along the great circle from its tail to its head, the head brightest
+  if (uL21Met.y > -0.5 && dk > 0.0) {
+    vec3 hd = vec3(cos(uL21Met.x) * cos(uL21Met.y), sin(uL21Met.x) * cos(uL21Met.y), sin(uL21Met.y));
+    vec3 td = vec3(cos(uL21Met.z) * cos(uL21Met.w), sin(uL21Met.z) * cos(uL21Met.w), sin(uL21Met.w));
+    vec3 pn = cross(td, hd); float pl = length(pn);
+    if (pl > 1e-5) {
+      pn /= pl; float off = abs(dot(dir, pn)), seg = atan(pl, dot(td, hd));
+      vec3 pr = normalize(dir - pn * dot(dir, pn)); float a = atan(dot(cross(td, pr), pn), dot(td, pr));
+      if (off < 0.9 / ${FX.toFixed(3)} && a >= 0.0 && a <= seg) { float f = a / seg; q += vec3(0.92, 0.95, 1.0) * floor(0.7 * dk * (0.15 + 0.85 * f * f) * 31.875 + bay(bp)) / 31.875 * smoothstep(0.0, 0.16, dir.z); }
+    }
+  }
+  return q;
+}
 void main() {
   ivec2 pix = ivec2(gl_FragCoord.xy);
   vec4 a = uInvViewProj * vec4(vNdc, 1.0, 1.0); vec4 b = uInvViewProj * vec4(vNdc, -1.0, 1.0);
@@ -643,6 +686,7 @@ void main() {
   vec3 c = l21SkyCol(dir);
   float up = clamp(dir.z, 0.0, 1.0);
   // stars: one logical pixel each on an angle grid, twinkling, faint toward the horizon
+  vec3 l21OldB = vec3(0.0);
   if (uL21Sky2.x > 0.01 && dir.z > 0.02) {
     vec3 g3 = floor(dir * ${(FX * 0.5).toFixed(3)});
     vec2 cell = vec2(g3.x * 1.31 + g3.z * 7.7, g3.y * 1.73 - g3.z * 3.1);
@@ -652,16 +696,20 @@ void main() {
     float band = exp(-pow(dot(dir, bandN), 2.0) / 0.018);
     float dust = n21(vec2(atan(dir.y, dir.x) * 9.0, dir.z * 14.0)) * 0.6 + n21(vec2(atan(dir.y, dir.x) * 31.0, dir.z * 45.0)) * 0.4;
     float allowB = clamp(1.0 - (dot(c, vec3(0.33)) - 0.06) / 0.3, 0.0, 1.0);
-    c += vec3(0.42, 0.44, 0.62) * band * smoothstep(0.35, 0.8, dust) * 0.16 * uL21Sky2.x * allowB * clamp(dir.z * 5.0, 0.0, 1.0);
+    l21OldB = vec3(0.42, 0.44, 0.62) * band * smoothstep(0.35, 0.8, dust) * 0.16 * uL21Sky2.x * allowB * clamp(dir.z * 5.0, 0.0, 1.0);
+    c += l21OldB;
     float thr = 0.9935 - band * 0.006;
     if (h > thr) {
       float m = (h - thr) / (1.0 - thr); m = 0.25 + 0.75 * m * m * m;
       float tw = 0.75 + 0.25 * sin(uL21T.x * (1.3 + 3.0 * h21(cell + 1.3)) + h * 40.0);
+      if (uL21Deep.z > -50.0 && dir.z < 0.2588 && abs(mod(az - uL21Deep.z + 3.14159265, 6.2831853) - 3.14159265) < 0.17453) tw = 1.0;   // (Phase 113b) the Spire of Decay's quarter: still
       vec3 sc = h21(cell + 7.7) < 0.6 ? vec3(0.92, 0.95, 1.0) : h21(cell + 2.1) < 0.6 ? vec3(0.68, 0.78, 1.0) : vec3(1.0, 0.85, 0.65);
       float allow = clamp(1.0 - (dot(c, vec3(0.33)) - 0.08) / 0.35, 0.0, 1.0);
       c += sc * m * tw * uL21Sky2.x * allow * clamp(dir.z * 8.0, 0.0, 1.0) * 1.1;
     }
   }
+  // (Phase 113b) the deep night sky: the river takes the old pale band's place as it comes up
+  if ((uL21Deep.x > 0.0 || uL21Deep.y > 0.0) && dir.z > 0.0) { c -= l21OldB * smoothstep(0.35, 0.75, uL21Deep.x); c += l21Deep(dir, az, c, pix); }
   // the Octave lights: thin ribbons high in the night sky, one hue per note along each ribbon, rays, a soft lower fringe
   float elA = asin(clamp(dir.z, -1.0, 1.0));
   if (uL21Sky2.y > 0.01 && elA > 0.2) {
@@ -1010,6 +1058,7 @@ void main() {
     hgt.tex = null; hgt.map = null; hgt.sig = ''; hgt.ok = false; hgt.w = hgt.h = 0; shel.tex = null; shel.none = null; shel.src = null; shel.w = shel.h = 0;
     pano.tex = null; pano.pal = null; pano.key = ''; pano.ok = false; pano.n = 0;
     ship.tex = null; smap.tex = null; smap.fb = null;
+    deep.dummy = null; try { if (typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.resetGL) DEEPSKY113.resetGL(); } catch (e) { /* none */ }
     programs();
   }
   function tri(gl) { gl.bindVertexArray(S.vao); gl.drawArrays(gl.TRIANGLES, 0, 3); gl.bindVertexArray(null); }
@@ -1095,6 +1144,24 @@ void main() {
     return true;
   }
 
+  // ------------------------------------------------------------------------------------------------ the deep sky
+  // (Phase 113b) js/deepsky113.js's map on unit 11 and its numbers; when it has nothing to say, a 1 x 1 empty map and
+  // zeros, so the shader's deep-sky branch is never taken and the frame is the old one
+  const deep = { gl: null, dummy: null };
+  function deepBind(gl, u, F) {
+    let r = null;
+    gl.activeTexture(gl.TEXTURE11);   // whatever is made or filled below is bound on its own unit, never over another's
+    try { if (typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.skyGL) r = DEEPSKY113.skyGL(gl, F); } catch (e) { warnOnce('deep sky', e); r = null; }
+    if (!r && (!deep.dummy || deep.gl !== gl)) {
+      deep.gl = gl; deep.dummy = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, deep.dummy);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16UI, 1, 1, 0, gl.RGBA_INTEGER, gl.UNSIGNED_SHORT, new Uint16Array(4));
+    }
+    if (u.uL21DeepT) { gl.activeTexture(gl.TEXTURE11); gl.bindTexture(gl.TEXTURE_2D, r ? r.tex : deep.dummy); gl.uniform1i(u.uL21DeepT, 11); }
+    if (r) { v4(gl, u.uL21Deep, r.k[0], r.k[1], r.k[2], r.k[3]); v4(gl, u.uL21Met, r.met[0], r.met[1], r.met[2], r.met[3]); }
+    else { v4(gl, u.uL21Deep, 0, 0, -100, 1); v4(gl, u.uL21Met, 0, -1, 0, -1); }
+  }
+
   // ------------------------------------------------------------------------------------------------ the sky pass
   const skyPass = {
     name: 'sky', order: 0,
@@ -1129,6 +1196,7 @@ void main() {
         if (u.uL21ShipT) { gl.activeTexture(gl.TEXTURE10); gl.bindTexture(gl.TEXTURE_2D, ship.tex); gl.uniform1i(u.uL21ShipT, 10); }
         if (u.uL21ShipS) gl.uniform2f(u.uL21ShipS, ship.w, ship.h);
         v4(gl, u.uL21Sky2, P.sky2[0], P.sky2[1], P.sky2[2], P.sky2[3]);
+        deepBind(gl, u, F);
         if (u.uL21Aur) gl.uniform3fv(u.uL21Aur, new Float32Array([].concat(P.aur[0], P.aur[1], P.aur[2])));
         if (u.uL21Size) gl.uniform2f(u.uL21Size, sw, sh);
         if (u.uL21LmOn) gl.uniform1i(u.uL21LmOn, !P.panoOn ? 1 : 0);
