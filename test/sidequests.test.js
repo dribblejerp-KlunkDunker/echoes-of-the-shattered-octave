@@ -183,7 +183,7 @@ const ok = (m) => console.log('PASS ' + m);
       return out;
     });
     assert(tam.btn && tam.label === 'Ask about Joram Pellow'); assert(/question of my own/.test(tam.busy)); assert.equal(tam.stage, 1);
-    assert(/Nine winters/.test(tam.told[1]) && /two hundred and three/.test(tam.told[2])); assert.equal(tam.stage2, 2); assert.equal(tam.via, 1); assert(/two hundred and three/.test(tam.j));
+    assert(/Two winters/.test(tam.told[1]) && /two hundred and three/.test(tam.told[2])); assert.equal(tam.stage2, 2); assert.equal(tam.via, 1); assert(/two hundred and three/.test(tam.j));
     assert(/Again, then/.test(tam.again[0]));
     assert.deepEqual(tam.after, { p9q_pellow: 2, p9q_pellow_via: 1 });
     ok('Tam: the button appears only when it matters, he is busy until his own question is answered, then hums 203 Hz; the pitch is learnt once');

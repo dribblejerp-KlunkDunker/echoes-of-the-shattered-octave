@@ -18,8 +18,8 @@ const ITEMS87 = (function () {
   const A = (id, slot, name, ar, noise, value, desc) => [id, slot, S(name), ar, noise, value, S(desc)];
   const PIECES = [
     // Tanner's Row (Oakhaven)
-    A('a_p87_tan_cape', 'cape', 'Tanner\'s Shoulder-Cape', 1, 0, 18, 'Oiled hide cut short at the waist, with Abner Fenning\'s scraper-mark burned in at the throat and a bone toggle. Rain runs off it like off a roof.'),
-    A('a_p87_tan_shield', 'shield', 'Fenning\'s Hide Targe', 2, 0.1, 22, 'A round board faced with three layers of boiled hide, laced at the rim with rawhide and set with brass tacks in a spiral. Light enough to forget you carry it.'),
+    A('a_p87_tan_cape', 'cape', 'Tanner\'s Shoulder-Cape', 1, 0, 18, 'Oiled hide cut short at the waist, with Jabez Barker\'s scraper-mark burned in at the throat and a bone toggle. Rain runs off it like off a roof.'),
+    A('a_p87_tan_shield', 'shield', 'Barker\'s Hide Targe', 2, 0.1, 22, 'A round board faced with three layers of boiled hide, laced at the rim with rawhide and set with brass tacks in a spiral. Light enough to forget you carry it.'),
     // the Hedge-weavers' Hush (the Hedge)
     A('a_p87_hush_mitts', 'hands', 'Hush-Cloth Mitts', 1, -0.2, 14, 'Felted Hedge wool, the fingers split for a knife and a sling-cord. Your hands make no sound against anything.'),
     A('a_p87_hush_cloak', 'cape', 'Hedge-Weaver\'s Cloak', 0, -0.3, 40, 'Packed wool to the calf, bordered with the weavers\' thorn pattern. The hood is deep enough to sleep in.'),
@@ -132,7 +132,7 @@ const ITEMS87 = (function () {
     icons();
   }
   // ---------------------------------------------------------------- the armour's pack pictures (24 by 24, by hand)
-  // One drawing per piece, each with its own mark of where it comes from: Fenning's scraper-mark, the weavers' thorn
+  // One drawing per piece, each with its own mark of where it comes from: Barker's scraper-mark, the weavers' thorn
   // border, the clerk's silver tassel, the dead queen's brooch, the bell's inscription, the Office's mesh, the stave
   // of a hymn, the Corps' brass valve, the Consortium stencil, the salt-green buttons, the chalk-and-peat check, the
   // barrow's spiral, the lengthsman's lantern-hook, the red deer's tines.
@@ -525,7 +525,7 @@ const ITEMS87 = (function () {
   // its people (dropped by its fighters), and the best pieces in the big places (the deepest strongboxes, tier 3).
   const WHERE = {
     shops: {
-      hob: ['a_p87_tan_cape', 'a_p87_tan_shield', 'a_p87_reg_cuffs', 'a_p87_reg_shoes'],               // Fenning's tannery (he sells the Registry's robes)
+      hob: ['a_p87_tan_cape', 'a_p87_tan_shield', 'a_p87_reg_cuffs', 'a_p87_reg_shoes'],               // Barker's tannery (he sells the Registry's robes)
       tam: ['a_p87_hush_mitts', 'w_p87_feltsling', 'stones'],                                          // the Hedge-weavers' stall
       vane: ['a_p87_cap_bandana', 'a_p87_cap_gloves', 'a_p87_cap_boots', 'harpoons'],                  // Captain Vane, the Boar & Dulcimer
       vosk: ['a_p87_wks_gauntlets', 'a_p87_wks_boots', 'a_p87_wks_cape', 'w_p87_handbow', 'quarrels'], // the Consortium's factor

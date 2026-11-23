@@ -82,7 +82,7 @@ const LIFE62_WG = (function () {
     { key: 'baker', name: H, sprite: 'hollow', home: [8.6, 20.5],
       day: [st(5, 18, 'knead', [8.6, 20.5], { face: W }), dusk()],
       greet: S('A man in a doorway, kneading. His hands are white to the elbow with flour that was washed off three years ago.'),
-      barks: [S('A Hollow in a doorway: "...the bread\'s for Thursday..."')] },
+      barks: [S('A Hollow in a doorway: "...the bread\'s for Hearthday..."')] },
     { key: 'wash', name: H, sprite: 'p62_hollow_c', home: [3.6, 23.6],
       day: [st(5, 18, 'hang', [3.6, 23.6], { face: N }), dusk()],
       props: [['p60_line', 4.6, 23.0, 1.0, 0]],

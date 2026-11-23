@@ -6,18 +6,20 @@
 //  seeded noise at load time, to be replaced by hand-made art later. They are
 //  registered as ordinary engine textures, so the renderer needs nothing new.
 //
-//  Texture memory (the budget this team's art takes; the cap is 512 KB):
+//  Texture memory (the code-drawn textures; the cap is 768 KB = 786,432 B, raised from 512 KB in Phase 121):
 //    12 decals x 64x64x4 B = 196,608 B   (moss x3, crack x2, scorch x2, poster x3, synod x2)
 //     1 wall grain         =  16,384 B   (greyscale, stored in the red channel)
-//     3 ceilings (js/ceilings.js, added via CEILINGS.budgetBytes()) = 49,152 B
-//    total                 = 262,144 B   (256 KB, half the cap)
+//     8 ceilings (js/ceilings.js, added via CEILINGS.budgetBytes()) = 131,072 B
+//    DECALS.budgetBytes()  = 344,064 B
+//    + painted tiles (js/painted20.js, PAINTED20.budgetBytes(), 11 tiles) = 180,224 B
+//    together              = 524,288 B   (512 KB, two thirds of the cap)
 //  Per-map decal tables are small objects (about 5-12% of the wall cells).
 //  budgetBytes() refuses nothing at runtime but the tests pin it under the cap.
 // ============================================================
 'use strict';
 
 const DECALS = (() => {
-  const T = 64, CAP_BYTES = 512 * 1024;
+  const T = 64, CAP_BYTES = 768 * 1024;   // 786,432 B (Phase 121; was 512 KB)
   const NAMES = {
     moss: ['d_moss1', 'd_moss2', 'd_moss3'],
     crack: ['d_crack1', 'd_crack2'],
