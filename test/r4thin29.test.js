@@ -85,8 +85,10 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       if (id === 'p20_downs') check(r.danger === 0, 'the Watch Downs stays danger 0 (Author Rulings 93-95)');
       await shot('p29-' + id.replace(/^p2\d_/, ''));
     }
-    const built = await page.evaluate(() => { const D = buildAllMaps().p20_downs; return !D.entities.some((e) => e.kind === 'npc' || e.use) && D.danger === 0; });
-    check(built, 'the Downs as built keeps no people or uses (horizon20\'s rule); they are placed on arrival');
+    const built = await page.evaluate(() => { const D = buildAllMaps().p20_downs; return !D.entities.some((e) => e.kind === 'npc' || (e.use && !e._p113f)) && D.danger === 0; });
+    // Phase 113c (approved 22 Nov): the Fold's notch-stone for the Far Fold stands on the Downs, and you look through it.
+    // It is a stone, as the Downs' own signs and stones are: no person, no foe, nothing to take. It is the one use there as built.
+    check(built, 'the Downs as built keeps no people, and no uses but the Fold\'s stone (horizon20\'s rule); people are placed on arrival');
     const nosheep = await page.evaluate(() => [NPCS.p29_abel.greet.normal, NPCS.p29_hurst.greet.normal].every((t) => /There are no sheep/.test(t)));
     check(nosheep, '"There are no sheep" has speakers: Abel Sedge on the Downs, Mother Hurst in the combe');
     const combe = await page.evaluate(() => { const m = G.maps.p22_combe, out = {}; for (const [k, [x, y]] of Object.entries(THIN29.COMBE_DOORS)) out[k] = m.get(x, y).portal && m.get(x, y).portal.map; return out; });
