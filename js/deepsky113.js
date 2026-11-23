@@ -610,7 +610,7 @@ const DEEPSKY113 = (function () {
       const C = item(id); if (!C || !ctx || !(w > 0) || !(h > 0)) return false;
       opts = opts || {};
       if (!MAP.ready) build(); else syncLore();
-      const lines = clamp(fin(opts.lines) ? opts.lines : 1, 0, 1);
+      const lines = clamp(fin(opts.lines) ? opts.lines : 1, 0, 1), LK = clamp(fin(opts.lineK) ? opts.lineK : 1, 0.5, 3);   // lineK: how strong the lines are (the stones' view, 113c)
       w = Math.round(w); h = Math.round(h);
       const mid = middle(C), cd = dirOfAE(mid.az, mid.el), ce = nrm(cross([0, 0, 1], cd)), cn = cross(cd, ce);
       // the figure framed with a margin: its spread in the tangent plane, at least six degrees across
@@ -661,8 +661,8 @@ const DEEPSKY113 = (function () {
         for (let s = ra; s < L - rb; s += P) {
           const f = s / L, i = Math.floor((A[0] + (B[0] - A[0]) * f) / P), j = Math.floor((A[1] + (B[1] - A[1]) * f) / P);
           if (i < 0 || j < 0 || i >= cw || j >= ch) continue;
-          if ((BAY[((j & 3) << 2) | (i & 3)] + 0.5) / 16 > lines * 0.8) continue;   // fades in as a dither
-          const q = (j * cw + i) * 3; buf[q] += 92 * lines; buf[q + 1] += 80 * lines; buf[q + 2] += 50 * lines;
+          if ((BAY[((j & 3) << 2) | (i & 3)] + 0.5) / 16 > lines * Math.min(1, 0.8 * LK)) continue;   // fades in as a dither
+          const q = (j * cw + i) * 3; buf[q] += 92 * lines * LK; buf[q + 1] += 80 * lines * LK; buf[q + 2] += 50 * lines * LK;
         }
       }
       // the figure's stars: a bright core, a soft dithered halo, four glints (none for a wanderer: a small steady disc)

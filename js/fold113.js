@@ -164,11 +164,11 @@ const FOLD113 = (function () {
     story: 'Faint and blue and always behind one of the others. Nobody has ever seen the Dog bring one in. It is the opinion of the Downs that he is not trying to; he is only seeing that none of them is out alone.' });
   // the three far folds: the sky's own galaxies (js/deepsky113.js GALAXIES: the tilted spiral, the small face-on spiral,
   // the pair of ragged clouds), framed in their own tangent planes; [az, el, frame centre X, Y, half-width, half-height]
-  fig('g_farfold', 'fold', { name: 'The Far Fold', head: TX.foldHead, gal: [104, 20, 0, 0, 5.4, 4.2],
+  fig('g_farfold', 'fold', { name: 'The Far Fold', head: TX.foldHead, gal: [104, 20, 0, 0, 4.6, 2.6],
     story: 'The nearest of the other folds. On the clearest nights you can see that it leans, the way a flock leans on a hillside.' });
-  fig('g_wheel', 'fold', { name: 'The Wheel', head: TX.foldHead, gal: [48, 22, 0, 0, 3.2, 3.0],
+  fig('g_wheel', 'fold', { name: 'The Wheel', head: TX.foldHead, gal: [48, 22, 0, 0, 2.6, 2.4],
     story: 'A carter\'s wheel stood on its rim, as they stand one over a carter\'s grave. Whose, nobody says.' });
-  fig('g_fleeces', 'fold', { name: 'The Two Fleeces', head: TX.foldHead, gal: [76, 10, 5.5, 1.75, 9.6, 4.4],
+  fig('g_fleeces', 'fold', { name: 'The Two Fleeces', head: TX.foldHead, gal: [76, 10, 5.5, 1.75, 9.2, 3.0],
     story: 'Two fleeces left on a hedge to dry by somebody who meant to come back for them.' });
   fig('m_lantern', 'lantern', { name: 'The Lantern', head: TX.lanternHead,
     story: 'The shepherd\'s lantern: trimmed over four nights and let down over four, the same as the week. The hill people do not think that is chance. When the Lantern is full the Fold is hard to count, and they say the shepherd is doing it for them that night.' });
@@ -319,8 +319,8 @@ const FOLD113 = (function () {
 
   // the sprites' proportions (see paint): a needle's eye centre at NE_F of its height, radius NE_R of it; a notch's
   // sight line through NO_F of the tall stone's height
-  const NE_W = 22, NE_H = 56, NE_HS = 2.6, NE_EY = 21, NE_F = 1 - (NE_EY + 0.5) / NE_H, NE_RPX = 3.0, NE_R = NE_RPX / NE_H;
-  const NO_W = 20, NO_H = 40, NO_HS = 1.9, NO_F = 0.84;
+  const NE_W = 33, NE_H = 84, NE_HS = 2.6, NE_EY = 32, NE_F = 1 - (NE_EY + 0.5) / NE_H, NE_RPX = 4.5, NE_R = NE_RPX / NE_H;
+  const NO_W = 30, NO_H = 60, NO_HS = 1.9, NO_F = 0.84;
   const TRACK_RE = /road|track|cobble|plank|^t_wood$|flag|sett\b|_walk|lane/i;
   const trackCache = new WeakMap();
   function trackCells(m) {
@@ -394,7 +394,7 @@ const FOLD113 = (function () {
     const m = maps[s.map]; if (!m || !m.entities) return null;
     const A = s.fig ? aimAt(s.fig, 0, 0) : null;
     const mk = (sprite, x, y, o) => { const e = addBase(m, m.deco(sprite, x, y, Object.assign({ _p113f: s.key, site: s.key }, o))); return e; };
-    const R = { key: s.key, kind: s.kind, map: s.map, fig: s.fig || null, blind: s.blind || null, x: null, y: null, sx: null, sy: null, az: A ? A.az : 0, el: A ? A.el : 0, moved: 0, wether: s.wether || null };
+    const R = { key: s.key, kind: s.kind, map: s.map, fig: s.fig || null, blind: s.blind || null, cant: !!s.cant, x: null, y: null, sx: null, sy: null, az: A ? A.az : 0, el: A ? A.el : 0, moved: 0, wether: s.wether || null };
     if (s.kind === 'week') {
       if (typeof STONES47 === 'undefined' || !STONES47.stoneAt) return null;
       const w = STONES47.stoneAt(s.stone); R.sx = w.x - 1.2 * Math.cos(A.az); R.sy = w.y - 1.2 * Math.sin(A.az); R.weekstone = s.stone;
@@ -481,14 +481,15 @@ const FOLD113 = (function () {
   }
   function place(maps) {
     if (!maps) return;
-    // idempotent: a map that has its stones keeps them
-    const mine = [];
+    // idempotent: a map that has its stones keeps them. What is placed is remembered per map (a spot on one map says
+    // nothing about the same numbers on another)
+    const mine = {};
     for (const s of SITES) {
       const m = maps[s.map]; if (!m || !m.entities) continue;
       if (m.entities.some((e) => e && e._p113f === s.key)) continue;
-      try { placeSite(maps, s, mine); } catch (e) { warnOnce('place ' + s.key, e); }
+      try { placeSite(maps, s, mine[s.map] || (mine[s.map] = [])); } catch (e) { warnOnce('place ' + s.key, e); }
     }
-    try { if (maps.p47_stones && !maps.p47_stones.entities.some((e) => e && e._p113f === 'marr')) placeMarrable(maps, mine); } catch (e) { warnOnce('marrable', e); }
+    try { if (maps.p47_stones && !maps.p47_stones.entities.some((e) => e && e._p113f === 'marr')) placeMarrable(maps, mine.p47_stones || []); } catch (e) { warnOnce('marrable', e); }
   }
   function sites(maps) {
     maps = maps || (hasG() ? G.maps : null); if (!maps) return [];
@@ -560,9 +561,11 @@ const FOLD113 = (function () {
   function style() {
     if (styled || typeof document === 'undefined') return; styled = true;
     const st = document.createElement('style');
-    st.textContent = '#event-panel.p113f-view{width:84cqw}' +
-      '#event-panel.p113f-view canvas.p113f-chart{display:block;width:100%;height:48cqh;image-rendering:pixelated;image-rendering:crisp-edges;margin:.4cqh 0 1cqh;border:2px solid;border-color:var(--edge-d) var(--edge-l) var(--edge-l) var(--edge-d);background:#05060a}' +
-      '#event-panel.p113f-view .p113f-line{color:var(--parch-dim);margin:.2cqh 0 .6cqh}' +
+    // the chart keeps its size; the words under it scroll (a long story, or French, never shrinks the type)
+    st.textContent = '#event-panel.p113f-view{width:84cqw;max-height:94cqh}' +
+      '#event-panel.p113f-view canvas.p113f-chart{flex:none;display:block;width:100%;height:44cqh;image-rendering:pixelated;image-rendering:crisp-edges;margin:.4cqh 0 .8cqh;border:2px solid;border-color:var(--edge-d) var(--edge-l) var(--edge-l) var(--edge-d);background:#05060a}' +
+      '#event-panel.p113f-view .p113f-text{flex:1 1 auto;min-height:0;overflow-y:auto;padding-right:.6cqw}' +
+      '#event-panel.p113f-view > p.p113f-line{flex:none;overflow:visible;color:var(--parch-dim);font-style:italic;margin:.2cqh 0 .4cqh}' +
       '#event-panel.p113f-view .p113f-head{color:var(--gold);margin:.2cqh 0 .5cqh}' +
       '#event-panel.p113f-view .p113f-phase{color:var(--gold);font-variant:small-caps;letter-spacing:.06em;margin:-.3cqh 0 .5cqh}' +
       '#event-panel.p113f-view .p113f-say{color:var(--parch-dim);font-style:italic}' +
@@ -585,15 +588,15 @@ const FOLD113 = (function () {
     p.classList.add('p113f-view');
     let html;
     if (mode === 'blind') {
-      html = '<h2>' + esc(s.cant ? TX.canted : TX.needle) + '</h2><canvas class="p113f-chart" data-kind="blind"></canvas><p>' + esc(TX[s.blind]) + '</p>';
+      html = '<h2>' + esc(s.cant ? TX.canted : TX.needle) + '</h2><canvas class="p113f-chart" data-kind="blind"></canvas><div class="p113f-text"><p>' + esc(TX[s.blind]) + '</p></div>';
     } else {
       html = '<h2>' + esc(f.name) + '</h2>' + (line ? '<p class="p113f-line">' + esc(line) + '</p>' : '') +
-        '<canvas class="p113f-chart" data-kind="' + (mode === 'face' ? 'face' : mode) + '"></canvas>' +
+        '<canvas class="p113f-chart" data-kind="' + (mode === 'face' ? 'face' : mode) + '"></canvas><div class="p113f-text">' +
         '<p class="p113f-head"><i>' + esc(f.head) + '</i></p>' +
         (f.kind === 'lantern' ? '<p class="p113f-phase">' + esc(moonName()) + '</p>' : '') +
         '<p class="p113f-story">' + esc(f.story) + '</p>' +
         (f.kind === 'fold' ? '<p class="p113f-say">' + esc(TX.foldsSay) + '</p>' : '') +
-        (f.kind === 'sign' && ownSign() === f.sign ? '<p class="p113f-own">' + esc(TX.ownSign) + '</p>' : '');
+        (f.kind === 'sign' && ownSign() === f.sign ? '<p class="p113f-own">' + esc(TX.ownSign) + '</p>' : '') + '</div>';
     }
     html += '<div class="list" style="margin-top:1cqh"><button class="dfbtn" data-p113f="leave">' + esc(TX.leave) + '</button></div>';
     p.innerHTML = html;
@@ -628,7 +631,7 @@ const FOLD113 = (function () {
       if (mode === 'sky') {
         ensureTable(true);
         const still = typeof GFX !== 'undefined' && GFX.reduceMotion;
-        const draw = (L) => { if (!V.open || V.fig !== id) return; if (!(typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.drawChart && DEEPSKY113.drawChart(ctx, id, 0, 0, W, H, { lines: L }))) drawFace(ctx, W, H, id, grain); };
+        const draw = (L) => { if (!V.open || V.fig !== id) return; if (!(typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.drawChart && DEEPSKY113.drawChart(ctx, id, 0, 0, W, H, { lines: L, lineK: 1.7 }))) drawFace(ctx, W, H, id, grain); };
         draw(still ? 1 : 0);
         if (!still) for (let k = 1; k <= 5; k++) V.timers.push(setTimeout(() => draw(k / 5), k * 200));
       } else if (mode === 'moon') drawMoon(ctx, W, H, moonIdx(), grain);
@@ -658,8 +661,8 @@ const FOLD113 = (function () {
       v *= 0.86 + 0.22 * (1 - j / ch) * (1 - 0.4 * i / cw);   // light from the upper left
       let r = v * tint[0], g = v * tint[1], b = v * tint[2];
       const li = fbm(x * 0.9 + 40, y * 0.9, seed + 33), li2 = fbm(x * 1.3, y * 1.3 + 70, seed + 41);
-      if (li > 0.66) { const k = smooth(0.66, 0.72, li); r += (150 - r) * k * 0.8; g += (148 - g) * k * 0.8; b += (72 - b) * k * 0.8; }
-      if (li2 > 0.7) { const k = smooth(0.7, 0.75, li2); r += (186 - r) * k * 0.7; g += (184 - g) * k * 0.7; b += (166 - b) * k * 0.7; }
+      if (li > 0.7) { const k = smooth(0.7, 0.78, li) * (0.55 + 0.45 * n2); r += (132 - r) * k * 0.7; g += (136 - g) * k * 0.7; b += (88 - b) * k * 0.7; }
+      if (li2 > 0.72) { const k = smooth(0.72, 0.8, li2); r += (180 - r) * k * 0.6; g += (178 - g) * k * 0.6; b += (164 - b) * k * 0.6; }
       if (hh(i, j, seed + 90) < 0.04) { r *= 0.8; g *= 0.8; b *= 0.8; }
       buf[q] = r; buf[q + 1] = g; buf[q + 2] = b;
     }
@@ -727,7 +730,7 @@ const FOLD113 = (function () {
       }
     } else {
       const pt = pattern('k_cockerel', cw, ch);
-      const sx = 0.32, ox = cw * 0.68, oy = ch * 0.62;
+      const sx = 0.3, ox = cw * 0.8, oy = ch * 0.46;
       pt.pts.forEach((p) => cup(buf, cw, ch, ox + (p[0] - cw / 2) * sx, oy + (p[1] - ch / 2) * sx, 1.6 * u));
     }
     blit(ctx, W, H, P, buf, cw);
@@ -790,25 +793,25 @@ const FOLD113 = (function () {
     const needle = (id, cant, seed) => (px, w, h, get, clr) => {
       for (let y = 1; y < h; y++) {
         // the lean pivots on the eye, so the eye stays on the stone's own line (the sprite's anchor)
-        const k = y / h, ke = (NE_EY + 0.5) / h, half = 4.6 + k * 4.8 + (y < 5 ? -(5 - y) * 0.8 : 0), lean = (ke - k) * (cant ? 9 : ((seed % 3) - 1) * 1.6);
+        const k = y / h, ke = (NE_EY + 0.5) / h, half = 6.9 + k * 7.2 + (y < 8 ? -(8 - y) * 0.75 : 0) + (hh(y, 1, seed) - 0.5) * 0.8, lean = (ke - k) * (cant ? 13 : ((seed % 3) - 1) * 2.4);
         const cx = w / 2 + lean;
-        for (let x = Math.round(cx - half); x < Math.round(cx + half); x++) { const c = stoneCol(x, y, w, h, seed, x < cx); px(x, y, c[0], c[1], c[2]); }
+        for (let x = Math.round(cx - half); x < Math.round(cx + half); x++) { const c = stoneCol(x / 1.5, y / 1.5, w, h, seed, x < cx); px(x, y, c[0], c[1], c[2]); }
       }
       const ecx = w / 2;
       for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const r = Math.hypot(x + 0.5 - ecx, y + 0.5 - (NE_EY + 0.5)); if (r < NE_RPX) clr(x, y); }
       outline(px, w, h, get);
-      for (let a = 0; a < TAU; a += 0.2) { const x = ecx + Math.cos(a) * (NE_RPX + 0.6), y = NE_EY + 0.5 + Math.sin(a) * (NE_RPX + 0.6); if (get(x | 0, y | 0)) px(x, y, 70, 68, 62); }
-      if (id) cups(px, id, w / 2 - 6, NE_EY + 7, w / 2 + 6, h - 6);
+      for (let a = 0; a < TAU; a += 0.12) { const x = ecx + Math.cos(a) * (NE_RPX + 0.6), y = NE_EY + 0.5 + Math.sin(a) * (NE_RPX + 0.6); if (get(x | 0, y | 0)) px(x, y, 70, 68, 62); }
+      if (id) cups(px, id, w / 2 - 9, NE_EY + 10, w / 2 + 9, h - 9);
     };
     for (const id of SIGNS.concat(['k_cockerel'])) mk('p113f_needle_' + id, NE_W, NE_H, NE_HS, needle(id, false, FIG[id].bit + 2));
     mk('p113f_cant', NE_W, NE_H, NE_HS, needle('k_owl', true, 5));
     // a notch-stone's tall stone: square-shouldered, a V cut in its head; the short one is the peg you stand at
     const notch = (id, seed) => (px, w, h, get, clr) => {
-      for (let y = 0; y < h; y++) { const k = y / h, half = 6 + k * 3; for (let x = Math.round(w / 2 - half); x < Math.round(w / 2 + half); x++) { const c = stoneCol(x, y, w, h, seed, x < w / 2); px(x, y, c[0], c[1], c[2]); } }
+      for (let y = 0; y < h; y++) { const k = y / h, half = 9 + k * 4.5 + (hh(y, 2, seed) - 0.5) * 0.8; for (let x = Math.round(w / 2 - half); x < Math.round(w / 2 + half); x++) { const c = stoneCol(x / 1.5, y / 1.5, w, h, seed, x < w / 2); px(x, y, c[0], c[1], c[2]); } }
       const nd = Math.round(h * (1 - NO_F) * 2);   // the V: its middle at NO_F of the height
       for (let y = 0; y < nd; y++) { const half = (nd - y) * 0.42; for (let x = Math.round(w / 2 - half); x < Math.round(w / 2 + half); x++) clr(x, y); }
       outline(px, w, h, get);
-      cups(px, id, w / 2 - 5, nd + 4, w / 2 + 5, h - 5);
+      cups(px, id, w / 2 - 8, nd + 6, w / 2 + 8, h - 8);
     };
     for (const id of ['g_farfold', 'g_wheel', 'g_fleeces']) mk('p113f_notch_' + id, NO_W, NO_H, NO_HS, notch(id, FIG[id].bit));
     // the pegs: knee-high, a cup pecked in the top

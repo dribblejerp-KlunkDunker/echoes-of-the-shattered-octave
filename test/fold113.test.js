@@ -241,12 +241,13 @@ const FORBIDDEN = new RegExp('\\b(' + ['flehs', 'egdel', 'teksab', 'deredner'].m
     out.active = false;
     for (const s of F.sites().filter((q) => q.kind === 'needle' && !q.blind)) {
       T.stage(s); const e = G.ents.find((q) => q._p113f === s.key && q.use); useDeco(e); F.finishTurn(); F.closeView(); G.state = 'play';
-      await frames(5);
       out.active = R3D.active();
       const m = (x, y) => Engine.materialAt(x, y), M = Engine.MAT || { sky: 1, sprite: 6 };
       const st = G.ents.find((q) => q._p113f === s.key && q.stoneOf);
       const rpx = Math.max(2, Math.round(F.eyeScreenR(s)));
-      const centre = m(160, 75), left = m(160 - Math.round(rpx * 1.7), 75), right = m(160 + Math.round(rpx * 1.7), 75);
+      // the read-back lags a frame or more behind: draw until two reads in a row agree
+      let centre = -1, left = -1, right = -1, prev = '';
+      for (let i = 0; i < 16; i++) { await frames(1); centre = m(160, 75); left = m(160 - Math.round(rpx * 1.7), 75); right = m(160 + Math.round(rpx * 1.7), 75); const k = centre + '/' + left + '/' + right; if (i >= 3 && k === prev) break; prev = k; }
       out.rows.push({ key: s.key, fig: s.fig, centre, left, right, rpx, ok: centre === M.sky && left === M.sprite && right === M.sprite, st: !!st });
     }
     R3D.setMode('off');
