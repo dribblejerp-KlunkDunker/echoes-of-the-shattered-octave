@@ -29,8 +29,8 @@ const FORBIDDEN = new RegExp('\\b(' + WORDS.join('|') + ')\\b', 'i');
     check(!hits.length, 'and none is on any line of this phase\'s four files' + (hits.length ? ': ' + hits.slice(0, 3).join(', ') : '')); }
   { const all = (M.TEXTS || []).join(' \n ');
     check(!/Drift-Kestrel|Lyra\b|Kaelen|Vesper|Sable\b|Amalgam/.test(all), 'nobody from the books\' company is named, and nobody here has heard of the Drift-Kestrel');
-    const counts = all.match(/\b(two|three|four|five|seven|eight|nine|ten|eleven|twelve|twenty|hundred|\d+)\b[^.]{0,20}\b(wagons?|carts?|people|men|women|years?)\b/gi) || [];
-    check(counts.every((c) => /six years|three of ours/i.test(c) || !/wagons?|carts?|people|years?/i.test(c)), 'no count of wagons, people or years beyond "six years" for the ruts (' + counts.join(' | ') + ')'); }
+    const counts = all.match(/\b(two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|hundred|many|\d+)\s+(\w+\s+)?(wagons?|carts?|people|men|women|years?)\b/gi) || [];
+    check(counts.every((c) => /^six years$/i.test(c)), 'no count of wagons, people or years beyond "six years" for the ruts (' + counts.join(' | ') + ')'); }
   const T0 = M.TX || {};
   check(T0.half && T0.half.length === 3 && T0.finished && T0.finished.every((f, i) => f.indexOf(T0.half[i].replace(/—"$/, '')) === 0 && f !== T0.half[i]), 'three half-sentences, each finished by its own ending');
 
@@ -50,7 +50,7 @@ const FORBIDDEN = new RegExp('\\b(' + WORDS.join('|') + ')\\b', 'i');
     const msgs = []; { const _m = msg; msg = function (t) { msgs.push(String(t)); return _m.apply(this, arguments); }; }
     const said = (t) => msgs.includes(t), clear = () => { msgs.length = 0; }, count = (t) => msgs.filter((m) => m === t).length;
     const go = (id, x, y, dir) => { closeModal(); hide('#event'); hide('#death'); loadMap(id, { x, y, dir: dir || 0 }); G.state = 'play'; G.dead = false; G.player.hp = G.player.hpMax; G.player.voice = G.player.voiceMax; G.fadeT = 0; G.player.feet = G.map.groundAt(x, y); G.murmurT = 0; clear(); };
-    const tick = (dt) => { R.tick(dt); T.tick(dt); };
+    const tick = (dt) => { G.player.voice = Math.min(G.player.voiceMax, G.player.voice + dt * 0.08); R.tick(dt); T.tick(dt); };   // (the game's own voice comes back at 0.08 a second)
     const run = (s, step) => { for (let t = 0; t < s && !G.dead; t += step || 0.1) tick(step || 0.1); };
     const reset = () => { for (const k of ['p113_know', 'p113_jaw', 'p113_done', 'p113_tipk', 'p113_tdrop', 'p113_post8', 'p113_tbits']) G.flags[k] = 0; G.player.glassed = false; T.resetState(); };
     // ---- Math.random is counted while the places are built and while the keeper runs

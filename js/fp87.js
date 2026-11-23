@@ -59,6 +59,7 @@ const FP87 = (function () {
     p98_ridge: { head: 'ridgeflint', haft: 'shell', len: 0.3, hw: 40 },     // Phase 91 question 4: no haft, a lump of shell in the fist
     p98_beamkey: { head: 'beamkey', haft: 'iron', len: 0.4 },
     p100_mallet: { head: 'kegmallet', haft: 'ash', len: 0.42 },
+    p113_sprag: { head: 'sprag', haft: 'ash', len: 0.36 },   // Phase 113 C: a billet of ash shod with iron; the handle is the billet's own end, polished
     p87_sledge: { head: 'nightsledge', haft: 'ash' },
   };
   const BLADE_KINDS = { sword: 1, longsword: 1, greatsword: 1, knife: 1, dirk: 1 };   // throwing knives stay with the ranged (a fan of three)
@@ -264,6 +265,15 @@ const FP87 = (function () {
         x.fillStyle = 'rgba(0,0,0,0.3)'; x.fillRect(-17.5, y - 13, 1.4, 28); x.fillRect(16.1, y - 13, 1.4, 28);
         x.fillStyle = css(H.hi, 0.7); x.fillRect(-16, y - 10, 32, 1.6);
         x.fillStyle = 'rgba(40,24,14,0.6)'; ell(x, 0, y + 1, 5, 7); x.fill();                                                           // the handle's eye, wedged with oak
+        break; }
+      case 'sprag': { // Carter's Sprag (Phase 113): a billet of ash, squared and tapering to a wedge, shod with iron at the striking end; polished where a hand carries it
+        x.beginPath(); x.moveTo(-14, y + 46); x.lineTo(-17, y - 8); x.lineTo(-13, y - 30); x.lineTo(13, y - 30); x.lineTo(17, y - 8); x.lineTo(14, y + 46); x.closePath();
+        x.fillStyle = lin(x, -17, 0, 17, 0, [[0, [214, 190, 150]], [0.35, [186, 158, 116]], [0.75, [140, 112, 76]], [1, [92, 70, 46]]]); x.fill(); x.lineWidth = 1.2; x.strokeStyle = 'rgba(60,42,26,0.9)'; x.stroke();
+        x.save(); x.clip(); for (let k = 0; k < 7; k++) { x.strokeStyle = 'rgba(96,70,40,0.45)'; x.lineWidth = 0.8; const u = -12 + k * 4 + (hash(k, seed, 3) - 0.5) * 2; x.beginPath(); x.moveTo(u, y - 30); x.bezierCurveTo(u + 2, y - 4, u - 2, y + 20, u + 1, y + 46); x.stroke(); }
+        x.fillStyle = 'rgba(255,244,220,0.28)'; x.fillRect(-9, y + 8, 6, 38); x.restore();                                              // polished where the hand goes
+        rrect(x, -14, y - 34, 28, 12, 2); fillM(-14, y - 34, 14, y - 22);                                                                  // the iron shoe
+        x.fillStyle = css(H.dk, 0.8); x.fillRect(-14, y - 23, 28, 1.6); for (const sx of [-9, 0, 9]) { x.fillStyle = css(H.hi, 0.9); x.fillRect(sx - 1, y - 30, 2, 2); }   // its nails
+        x.fillStyle = 'rgba(30,22,14,0.55)'; x.fillRect(-13, y - 2, 26, 1.4); x.fillRect(-13, y + 4, 26, 1);                             // where a wheel has bitten it
         break; }
       case 'tallyhook': { // the Tallyman's Hook (Phase 97): a flat crook of iron, no spike; a rag of black cloth knotted under it; tally-notches down the pole
         rrect(x, -3, y - 4, 6, 26, 2); fillM(-3, y - 4, 3, y + 22);
