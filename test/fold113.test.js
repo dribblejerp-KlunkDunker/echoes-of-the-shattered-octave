@@ -330,6 +330,28 @@ const FORBIDDEN = new RegExp('\\b(' + ['flehs', 'egdel', 'teksab', 'deredner'].m
     check(!notMerged.length, 'and it is merged into the catalogue' + (notMerged.length ? ': ' + notMerged.slice(0, 2).join(' | ') : ''));
     check(/\ble Parc\b/i.test(tsv.map((l) => l[1]).join('\n')) && /\bla Lanterne\b/i.test(tsv.map((l) => l[1]).join('\n')) && /\ble Blaireau\b/i.test(tsv.map((l) => l[1]).join('\n')), 'the faith\'s French names (le Parc, la Lanterne, le Blaireau)');
   }
+  // Codex, P2 on #160: a stone opened before the sky's map is built (Deep night sky off, or a stone used at once) must
+  // not build the whole map in one go. The view lays it a slice at a time and draws the chart when it is laid.
+  {
+    const r = await page.evaluate(async () => {
+      const F = FOLD113, s = F.sites().find((q) => q.fig === 'k_badger');
+      closeModal(); hide('#event'); F.closeView(); G.day = 5; loadMap(s.map, { x: s.sx, y: s.sy, dir: 0 }); G.tod = 0.0; G.day = 5; G.state = 'play'; G.dead = false;
+      G.player.hp = G.player.hpMax; G.fadeT = 0; G.player.feet = G.map.groundAt(s.sx, s.sy); Weather.hold('clear'); Weather.apply();
+      const e = G.ents.find((q) => q._p113f === s.key && q.use && q.peg) || G.ents.find((q) => q._p113f === s.key && q.use);
+      DEEPSKY113.reset();
+      let builds = 0; const _b = DEEPSKY113.build; DEEPSKY113.build = function () { builds++; return _b.apply(this, arguments); };
+      useDeco(e); F.finishTurn();
+      const readyAtOnce = DEEPSKY113.ready(), openAtOnce = F.view.open;
+      const t0 = performance.now(); while (!DEEPSKY113.ready() && performance.now() - t0 < 8000) await new Promise((res) => setTimeout(res, 20));
+      await new Promise((res) => setTimeout(res, 200));
+      const cv = document.querySelector('#event-panel canvas.p113f-chart'); let lit = 0;
+      if (cv) { const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; for (let i = 0; i < d.length; i += 4) if (d[i] + d[i + 1] + d[i + 2] > 150) lit++; }
+      DEEPSKY113.build = _b; const out = { builds, readyAtOnce, openAtOnce, readyAfter: DEEPSKY113.ready(), lit, ms: Math.round(performance.now() - t0) };
+      F.closeView(); G.state = 'play'; return out;
+    });
+    check(r.openAtOnce && !r.readyAtOnce && r.builds === 0, 'a stone opened before the sky is laid opens at once and does not lay the whole sky in one go (builds ' + r.builds + ', ready at once ' + r.readyAtOnce + ')');
+    check(r.readyAfter && r.lit > 20, 'and the chart is drawn when the sky is laid (' + r.ms + ' ms, ' + r.lit + ' lit pixels)');
+  }
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();
   console.log(`${passes} passed, ${fails} failed`);
