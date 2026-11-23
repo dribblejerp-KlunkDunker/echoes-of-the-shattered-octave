@@ -66,7 +66,12 @@ const FORBIDDEN = new RegExp('\\b(' + WORDS.join('|') + ')\\b', 'i');
     // ---- the doors join up
     const cellAt = (m, p) => m.cells[(p[1] | 0) * m.w + (p[0] | 0)];
     const gate = cellAt(wall, T.P.gate), wicket = cellAt(sally, T.S.wicket), mouth = cellAt(sally, T.S.mouth), back = cellAt(tip, T.T.door), post = cellAt(wall, T.P.post8), postIn = cellAt(sally, T.S.post8);
-    out.gate = !!gate && gate.door && gate.portal && gate.portal.map === T.SALLY && gate.label === TX.gate && !gate.locked;
+    // the gate: two leaves the full height of a gate on this wall (taller than the eye, three units), two cells wide, and a
+    // way through it used in front of it (the engine draws a door cell on this map one unit tall, so it is not a door cell)
+    { const leaves = T.P.leaves || [], ge = wall.entities.find((e) => e && e._p113t === 'gate');
+      out.gate = leaves.length === 2 && leaves.every((l) => { const c = cellAt(wall, l); return c && !c.door && c.tex === 't_p113t_leaf' && c.top >= 2.5; }) && !!gate && gate.tex === 't_p113t_leaf'
+        && !!ge && ge.label === TX.gate && ge.use === 'p113t' && Math.hypot(ge.x - T.P.gateFront[0], ge.y - T.P.gateFront[1]) < 1.5
+        && wall.floorTextures[wall.floorCells[(T.P.gateFront[1] | 0) * wall.w + (T.P.gateFront[0] | 0)]] === 't_p113t_yardrut'; }
     out.joins = !!wicket && wicket.portal && wicket.portal.map === R.MAP && !!mouth && mouth.portal && mouth.portal.map === T.TIP && !!back && back.portal && back.portal.map === T.SALLY;
     out.post = !!post && post.portal && post.portal.map === T.SALLY && post.locked === 'p113_post8' && post.lockMsg === TX.post8Barred && !!postIn && postIn.portal && postIn.portal.map === R.MAP && !postIn.locked;
     { const d = R.degOf(...T.P.gate), d8 = R.degOf(...T.P.post8); out.where = d > R.TOWERS[2].deg && d < R.TOWERS[3].deg && Math.abs(d8 - R.TOWERS[3].deg) < 2 && R.rOf(...T.P.gate) < R.RC - 4; }
@@ -93,6 +98,7 @@ const FORBIDDEN = new RegExp('\\b(' + WORDS.join('|') + ')\\b', 'i');
     // the far mouth; the glass arm's line, only for a glassed player
     go(T.SALLY, T.S.mouthFront[0], T.S.mouthFront[1], 0); run(0.5); out.mouth = said(TX.mouthLine) && !said(TX.glass);
     reset(); G.player.glassed = true; go(T.SALLY, T.S.mouthFront[0], T.S.mouthFront[1], 0); run(0.5); out.glass = said(TX.glass); clear(); go(T.SALLY, T.S.mouthFront[0], T.S.mouthFront[1], 0); run(0.5); out.glassOnce = !said(TX.glass); G.player.glassed = false;
+    { go(R.MAP, T.P.gateFront[0] - 0.4, T.P.gateFront[1], 0); T.useOwn(G.ents.find((e) => e && e._p113t === 'gate')); out.gateGoes = G.mapId === T.SALLY; }
     // ---- the postern opens only from within, and stays open
     reset(); go(R.MAP, T.P.post8Front[0], T.P.post8Front[1], 0);
     out.barred = !G.flags.p113_post8 && cellAt(G.map, T.P.post8).locked === 'p113_post8';
@@ -179,7 +185,7 @@ const FORBIDDEN = new RegExp('\\b(' + WORDS.join('|') + ')\\b', 'i');
   });
   check(r.builtNoRandom, 'nothing is chosen by chance while the sally-way and the stage are built');
   check(r.maps && r.sallyShape, 'the sally-way is indoors under its own ceiling, five cells wide and twenty-five to thirty long with a wider turning-place; the stage is open');
-  check(r.gate && r.where, 'the cart gate stands in the wall on the Watch\'s side between Towers Seven and Eight, and its wicket goes into the sally-way');
+  check(r.gate && r.gateGoes && r.where, 'the cart gate stands in the wall on the Watch\'s side between Towers Seven and Eight, two leaves wide and three units tall, ruts running in under it, and it lets you into the sally-way');
   check(r.joins && r.post, 'the doors join up: the wicket back to the wall, the far mouth to the stage and back; Tower Eight\'s postern barred on the Watch\'s side');
   check(r.reachWall && r.reachSally && r.reachTip, 'every place can be walked to: the gate and the postern from the wall; the mouth, the postern and the sleeve; the breaths, the shoe and the sprag');
   check(r.penned, 'nobody walks over the lip or along it: the cable fence pens the ground, and the Lead Brother stands out of reach, a hundred yards along');

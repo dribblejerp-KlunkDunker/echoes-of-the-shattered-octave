@@ -100,6 +100,7 @@ const TIP113 = (function () {
     edge: [[20.55, 88.5], [20.55, 92.0], [20.55, 99.0], [20.55, 102.5]], stageMark: [15.0, 97.0], brother: [19.4, 161.5],
   };
   const P = {};   // on the wall: worked out from RIFT100's own plan when the yard is cut (gate, gateFront, post8, post8Front, trooper)
+  const GATE_H = 3.0;   // the cart gate's height in the game's units (the eye is 0.88; one picture a unit, so a whole number)
   const K = { EVERY: 3.5, LAST: 90, AGAIN_S: 20, REACH: 2, REGEN: 0.08 };   // the saying's period, how long a full voice lasts, the "again" line's gap
 
   // ---------------------------------------------------------------- the pictures (code only, fixed patterns)
@@ -126,13 +127,28 @@ const TIP113 = (function () {
         for (let i = 0; i < 64; i += 3) { px(x, 'rgba(160,166,190,0.32)', i, 23, 2, 1); px(x, 'rgba(160,166,190,0.22)', i + 1, 40, 2, 1); if (h2(i, 7) > 0.7) px(x, '#0a0a0c', i, 22, 2, 2); }
       });
       tex('t_p113t_ceil', (x) => { for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const v = 10 + h2(i >> 3, j >> 3) * 6; px(x, `rgb(${v | 0},${v | 0},${(v + 4) | 0})`, i, j); } for (let k = 0; k < 64; k += 21) px(x, '#26282e', 0, k, 64, 1); });
-      // the cart gate: two leaves of black oak, iron-bound, and a wicket in the left one
-      tex('t_p113t_gate', (x) => {
-        px(x, '#141210', 0, 0, 64, 64);
-        for (let c = 0; c < 8; c++) { const b = 24 + (h2(c, 4) * 5 | 0); px(x, `rgb(${b},${b - 3},${b - 5})`, c * 8, 0, 8, 64); px(x, '#151311', c * 8, 0, 1, 64); for (let j = 0; j < 64; j += 2) if (h2(c * 8 + (j & 7), j) > 0.86) px(x, 'rgba(60,54,46,0.6)', c * 8 + 2 + ((h2(j, c) * 4) | 0), j, 1, 3); }
-        px(x, '#060606', 31, 0, 2, 64);
-        for (const j of [6, 30, 56]) { px(x, '#3c3e44', 0, j, 64, 4); px(x, '#5c6068', 0, j, 64, 1); for (let i = 3; i < 64; i += 8) px(x, '#7a7e86', i, j + 1, 2, 2); }
-        px(x, '#2a2420', 8, 30, 16, 30); px(x, '#5c6068', 8, 30, 16, 1); px(x, '#5c6068', 8, 30, 1, 30); px(x, '#5c6068', 23, 30, 1, 30); px(x, '#6a6e76', 20, 44, 2, 4);   // the wicket
+      // the cart gate on the wall, as tall as the wall lets a gate be (three units, one picture a unit, so it tiles up the
+      // leaf): black oak planks, a heavy stile on each edge, an iron strap with its nails across every unit of height
+      tex('t_p113t_leaf', (x) => {
+        for (let c = 0; c < 6; c++) { const b = 26 + (h2(c, 9) * 6 | 0); px(x, `rgb(${b},${b - 3},${b - 6})`, 6 + c * 9, 0, 9, 64); px(x, '#171513', 6 + c * 9, 0, 1, 64);
+          for (let j = 0; j < 64; j += 3) if (h2(c * 9 + (j & 7), j + 5) > 0.88) px(x, 'rgba(58,52,44,0.55)', 8 + c * 9 + ((h2(j, c) * 5) | 0), j, 1, 4); }
+        for (const s of [0, 58]) { px(x, '#1c1a17', s, 0, 6, 64); px(x, '#2e2a25', s + 1, 0, 1, 64); }   // the stiles
+        px(x, '#34363c', 0, 24, 64, 8); px(x, '#5a5e66', 0, 24, 64, 1); px(x, '#1e2024', 0, 31, 64, 1);    // the iron strap
+        for (let i = 4; i < 64; i += 9) { px(x, '#70747c', i, 26, 3, 3); px(x, '#9a9ea6', i, 26, 1, 1); }
+      });
+      // the jambs either side: obsidian faced with iron where the hubs have struck it
+      tex('t_p113t_jamb', (x) => {
+        for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const v = 16 + h2(i >> 3, j >> 3) * 8; px(x, `rgb(${v | 0},${(v + 1) | 0},${(v + 5) | 0})`, i, j); }
+        px(x, '#3a3c42', 0, 0, 64, 64); px(x, '#2a2c30', 2, 0, 60, 64); for (let j = 4; j < 64; j += 15) for (const i of [8, 32, 56]) { px(x, '#6a6e76', i - 1, j, 3, 3); }
+        for (let k = 0; k < 9; k++) px(x, 'rgba(150,154,164,0.35)', 4 + ((h2(k, 3) * 54) | 0), 30 + ((h2(k, 7) * 30) | 0), 6, 1);   // bright scars at a hub's height
+      });
+      // the lintel over the gate: the obsidian sheathed in lead, dull grey, its seams dressed over
+      tex('t_p113t_lintel', (x) => { for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const v = 96 + h2(i >> 2, j >> 2) * 10 + h2(i, j) * 3; px(x, `rgb(${v | 0},${(v + 2) | 0},${(v + 8) | 0})`, i, j); } px(x, '#5c6068', 0, 31, 64, 2); px(x, '#b0b4bc', 0, 33, 64, 1); for (let i = 6; i < 64; i += 14) px(x, '#5c6068', i, 0, 1, 64); });
+      // the yard's flags with a rut cut for a wheel, running in under the gate
+      tex('t_p113t_yardrut', (x) => {
+        px(x, '#30323a', 0, 0, 64, 64);
+        for (const [fx, fy, fw, fh] of [[1, 1, 30, 30], [33, 1, 30, 30], [1, 33, 30, 30], [33, 33, 30, 30]]) { const b = 86 + (h2(fx, fy) * 14 | 0); px(x, `rgb(${b},${b + 2},${b + 7})`, fx, fy, fw, fh); }
+        px(x, '#24262c', 0, 24, 64, 16); px(x, '#3a3c44', 0, 27, 64, 10); for (let i = 0; i < 64; i++) px(x, `rgba(170,174,186,${(0.25 + h2(i, 6) * 0.2).toFixed(2)})`, i, 31, 1, 2);
       });
       // the far mouth from inside: grey daylight, and the rock under it
       tex('t_p113t_mouth', (x) => { for (let j = 0; j < 64; j++) { const v = Math.round(132 + j * 0.6); px(x, `rgb(${v},${v + 1},${v + 6})`, 0, j, 64, 1); } px(x, 'rgba(96,98,104,0.9)', 0, 52, 64, 12); for (let i = 0; i < 64; i += 4) px(x, 'rgba(70,72,78,0.5)', i, 52 + ((h2(i, 2) * 4) | 0), 3, 1); px(x, '#1c1d22', 0, 0, 3, 64); px(x, '#1c1d22', 61, 0, 3, 64); });
@@ -161,14 +177,20 @@ const TIP113 = (function () {
     add('p113t_none', 4, 4, 0.3, () => {});
     // a breath, hanging as a breath hangs on a cold morning: a soft cloud of pale motes, densest a little below its middle,
     // thinning upward and to the sides (whole motes from fixed noise, so it reads in the classic view and in the 3D one)
+    // (smooth value noise on a coarse grid gives a ragged soft edge; the grey rises gently toward the middle and never to
+    // white, so it sits a little paler than the air and nothing in it glitters)
+    const vnoise = (u, v, s) => { const i0 = Math.floor(u), j0 = Math.floor(v), fu = u - i0, fv = v - j0, sm = (t) => t * t * (3 - 2 * t), a = h2(i0 + s, j0), b = h2(i0 + 1 + s, j0), c = h2(i0 + s, j0 + 1), d = h2(i0 + 1 + s, j0 + 1), su = sm(fu), sv = sm(fv);
+      return (a * (1 - su) + b * su) * (1 - sv) + (c * (1 - su) + d * su) * sv; };
     const breath = (seed) => (x) => {
-      for (let y = 0; y < 40; y++) for (let i = 0; i < 48; i++) {
-        const dx = (i - 24 - Math.sin(y * 0.21 + seed) * 2.5) / 19, dy = (y - 24) / 13, d = dx * dx + dy * dy * (y < 24 ? 0.8 : 1.6), n = h2(i + seed * 7, y);
-        if (d < 0.16 && n > 0.25) px(x, n > 0.7 ? 'rgba(244,246,250,0.95)' : 'rgba(222,226,234,0.9)', i, y);
-        else if (d < 1 && n > 0.42 + d * 0.5) px(x, n > 0.85 ? 'rgba(236,238,244,0.85)' : 'rgba(196,202,214,0.75)', i, y);
+      for (let y = 0; y < 40; y++) for (let i = 0; i < 56; i++) {
+        const dx = (i - 28 - Math.sin(y * 0.12 + seed) * 2) / 22, dy = (y - 23) / 12, e = 1 - Math.sqrt(dx * dx + dy * dy * (y < 23 ? 0.75 : 1.5));
+        const dens = e + (vnoise(i / 7, y / 6, seed * 13) - 0.5) * 0.55 + (vnoise(i / 3.5, y / 3, seed * 29) - 0.5) * 0.12;
+        if (dens <= 0.14) continue;
+        const k = Math.min(1, (dens - 0.14) / 0.6), t = k * k * (3 - 2 * k), v = 138 + t * 36;
+        px(x, `rgb(${v | 0},${(v + 2) | 0},${(v + 7) | 0})`, i, y);
       }
     };
-    for (let k = 1; k <= 3; k++) add('p113t_breath' + k, 48, 40, 0.42, breath(k * 1.7), (r, g, b, a) => a > 200 && r > 230);
+    for (let k = 1; k <= 3; k++) add('p113t_breath' + k, 56, 40, 0.44, breath(k * 1.7));
     // an empty lamp bracket of iron, set in the obsidian
     add('p113t_bracket', 24, 28, 0.32, (x) => { px(x, '#1a1b1e', 9, 0, 6, 6); px(x, '#3a3c42', 9, 0, 6, 1); px(x, '#1a1b1e', 11, 6, 2, 12); px(x, '#1a1b1e', 6, 16, 12, 2); px(x, '#1a1b1e', 6, 18, 2, 8); px(x, '#1a1b1e', 16, 18, 2, 8); px(x, '#4a4c54', 7, 18, 1, 6); }, null, { dy: -1.05 });
     // the clerk's place: a flat cut in the obsidian at a clerk's height, a dry inkwell, a rule on a chain; the floor under
@@ -267,7 +289,25 @@ const TIP113 = (function () {
     const g = doorOn(23.6), p8 = doorOn(27.3);
     if (!g || !p8) { warnOnce('yard', 'no door place'); return false; }
     P.gate = g.at; P.gateFront = g.front; P.post8 = p8.at; P.post8Front = p8.front;
-    w.set(g.at[0], g.at[1], DOOR({ tex: 't_p113t_gate', portal: { map: SALLY, x: S0.spawn[0], y: S0.spawn[1], dir: 0 }, label: TX.gate })); w.setLvl(g.at[0], g.at[1], 0);
+    // the cart gate: two leaves the full height a gate can stand on this wall, two cells wide, iron jambs either side, the
+    // lead-sheathed lintel above it, the ruts running in under it. (A door cell on a map without a ceiling is drawn one
+    // unit tall by the engine, so the gate is drawn as tall blocks, and the way through is a thing to use in front of it.)
+    { const [di, dj] = [Math.round(g.front[0] - 0.5 - g.at[0]), Math.round(g.front[1] - 0.5 - g.at[1])], along = [dj !== 0 ? 1 : 0, di !== 0 ? 1 : 0];
+      const ok = (i, j) => kind[j * Wm + i] === 3 && yard[(j + dj) * Wm + i + di];
+      let g2 = null; for (const s of [1, -1]) { const i = g.at[0] + along[0] * s, j = g.at[1] + along[1] * s; if (ok(i, j)) { g2 = [i, j]; break; } }
+      const leaves = g2 ? [g.at, g2] : [g.at];
+      for (const [i, j] of leaves) { if (w.smooth) w.smooth[j * Wm + i] = 0; w.block(i, j, 't_p113t_leaf', GATE_H, { capTex: 't_p113t_lintel' }); w.setLvl(i, j, 0); w.setSide(i - di, j - dj, i - di, j - dj, 't_p113t_lintel'); const k = (j - dj) * Wm + i - di; if (kind[k] === 3 && w.cells[k]) w.cells[k] = Object.assign({}, w.cells[k], { tex: 't_p113t_lintel' }); }
+      for (const s of [-1, 1]) { const ref = s < 0 ? leaves.reduce((a, b) => (b[0] * along[0] + b[1] * along[1] < a[0] * along[0] + a[1] * along[1] ? b : a)) : leaves.reduce((a, b) => (b[0] * along[0] + b[1] * along[1] > a[0] * along[0] + a[1] * along[1] ? b : a));
+        const i = ref[0] + along[0] * s, j = ref[1] + along[1] * s, k = j * Wm + i; if (kind[k] === 3 && w.cells[k]) w.cells[k] = Object.assign({}, w.cells[k], { tex: 't_p113t_jamb' }); }
+      // the ruts, out from under the gate across the yard
+      if (Array.isArray(w.floorTextures) && !w.floorTextures.includes('t_p113t_yardrut')) w.floorTextures = w.floorTextures.concat(['t_p113t_yardrut']);
+      const RUT = w.floorTextures.indexOf('t_p113t_yardrut');
+      for (const [i, j] of leaves) for (let s = 1; s <= 9; s++) { const ii = i + di * s, jj = j + dj * s, k = jj * Wm + ii; if (ii < 0 || jj < 0 || ii >= Wm || jj >= w.h || !yard[k]) break; w.setFloor(ii, jj, RUT); }
+      P.gate2 = g2; P.leaves = leaves;
+      const cx = leaves.reduce((a, b) => a + b[0], 0) / leaves.length + 0.5 + di * 0.85, cy = leaves.reduce((a, b) => a + b[1], 0) / leaves.length + 0.5 + dj * 0.85;
+      P.gateUse = [cx, cy];
+      const base0 = w.baseCount != null ? w.baseCount : w.entities.length;
+      w.entities.splice(base0, 0, { kind: 'deco', sprite: 'p113t_none', x: cx, y: cy, scale: 1, solid: false, radius: 0.6, label: TX.gate, use: 'p113t', _p113t: 'gate' }); w.baseCount = base0 + 1; }
     w.set(p8.at[0], p8.at[1], DOOR({ tex: 't_p100_door', portal: { map: SALLY, x: S0.post8Front[0], y: S0.post8Front[1], dir: PI / 2 }, label: TX.post8, locked: 'p113_post8', lockMsg: TX.post8Barred })); w.setLvl(p8.at[0], p8.at[1], 0);
     P.gateDir = g.dir; P.post8Dir = p8.dir;
     // the trooper, near Battery Eight, on the Watch's side, a little off the gate
@@ -285,7 +325,7 @@ const TIP113 = (function () {
     m.clear(1, 4, 29, 8); m.clear(12, 2, 18, 10);
     for (let i = 1; i <= 29; i++) for (const j of [3, 9]) if (i % 3 === 1 && m.get(i, j)) m.set(i, j, WALL('t_p100_cable'));   // the cable strung from iron eyes down the walls
     for (let i = 1; i <= 29; i++) for (const j of [5, 7]) m.setFloor(i, j, 1);   // the ruts, the width of an Office wagon
-    m.set(S0.wicket[0], S0.wicket[1], DOOR({ tex: 't_p113t_gate', portal: { map: MAP, x: P.gateFront ? P.gateFront[0] : 0, y: P.gateFront ? P.gateFront[1] : 0, dir: (P.gateDir || 0) }, label: TX.gate }));
+    m.set(S0.wicket[0], S0.wicket[1], DOOR({ tex: 't_p113t_leaf', portal: { map: MAP, x: P.gateFront ? P.gateFront[0] : 0, y: P.gateFront ? P.gateFront[1] : 0, dir: (P.gateDir || 0) }, label: TX.gate }));
     m.set(S0.mouth[0], S0.mouth[1], DOOR({ tex: 't_p113t_mouth', portal: { map: TIP, x: T0.spawn[0], y: T0.spawn[1], dir: 0 }, label: TX.mouthLine }));
     m.set(S0.post8[0], S0.post8[1], DOOR({ tex: 't_p100_door', portal: { map: MAP, x: P.post8Front ? P.post8Front[0] : 0, y: P.post8Front ? P.post8Front[1] : 0, dir: (P.post8Dir || 0), _p113post8: true }, label: TX.post8 }));
     const look = (k, sprite, at, extra) => m.deco(sprite, at[0], at[1], Object.assign({ radius: 0.1, scale: 1, solid: false, label: TX.name[k], use: 'p113t', _p113t: k }, extra || {}));
@@ -327,7 +367,7 @@ const TIP113 = (function () {
     for (const e of T0.edge) look('edge', 'p113t_none', e);
     m.add({ kind: 'deco', sprite: 'p113t_brother', x: T0.brother[0], y: T0.brother[1], scale: 1, solid: false, radius: 0.05, label: TX.name.brother, _decor: true, _p113t: 'brother', facing: 0 });
     // the Unfinished: three breaths at the height of a face, with nobody under them
-    T0.breaths.forEach((b, n) => m.add({ kind: 'deco', sprite: 'p113t_breath' + (n + 1), x: b[0], y: b[1], scale: 1, solid: false, radius: 0.05, yOff: -0.72, nopick: true, _decor: true, glow: 0.25, _p113t: 'breath' + (n + 1) }));
+    T0.breaths.forEach((b, n) => m.add({ kind: 'deco', sprite: 'p113t_breath' + (n + 1), x: b[0], y: b[1], scale: 1, solid: false, radius: 0.05, yOff: -0.72, nopick: true, _decor: true, glow: 0, _p113t: 'breath' + (n + 1) }));
     m.baseCount = m.entities.length;
     return m;
   }
@@ -420,7 +460,7 @@ const TIP113 = (function () {
         const b = T0.breaths[next - 1]; if (next && Math.hypot(c.x - b[0], c.y - b[1]) <= K.REACH) take(next);
       }
       if (fint('p113_tipk', 1) && !fint('p113_tdrop', 1)) leavings();
-      for (let n = 1; n <= 3; n++) { const e = ent('breath' + n); if (e && !e.hidden) e.yOff = -0.72 + Math.sin(clock * 0.9 + n * 2.1) * 0.03; }
+      for (let n = 1; n <= 3; n++) { const e = ent('breath' + n); if (e && !e.hidden) { const b = T0.breaths[n - 1]; e.yOff = -0.72 + Math.sin(clock * 0.5 + n * 2.1) * 0.03; e.x = b[0] + Math.sin(clock * 0.23 + n * 1.3) * 0.08; } }
     } else if (here(SALLY)) {
       if (c.x > S0.mouthFront[0] - 2.9 && !mouthSaid) { mouthSaid = true; say(TX.mouthLine, '', 7000); if (G.player.glassed && !tbit(1)) { setTbit(1); say(TX.glass, 'warn', 8000); } }
       // a Relieved walker goes on out of the mouth, and on toward the edge
@@ -432,6 +472,7 @@ const TIP113 = (function () {
   function useOwn(e) {
     if (!e || e.use !== 'p113t' || typeof G === 'undefined' || !G.map) return false;
     const k = e._p113t;
+    if (k === 'gate') { try { Audio_.sfx.door(); } catch (er) { /* */ } transfer({ map: SALLY, x: S0.spawn[0], y: S0.spawn[1], dir: 0 }); return true; }
     if (k === 'sleeve') { say(TX.look.sleeve, '', 8000); say(TX.letter, 'voice', 10000); f().p113_know = know() | 1; return true; }
     if (k === 'shoe') { say(TX.look.shoe, '', 9000); f().p113_know = know() | 2; return true; }
     if (k === 'card') { say(TX.look.card, '', 9000); f().p113_know = know() | 4; return true; }

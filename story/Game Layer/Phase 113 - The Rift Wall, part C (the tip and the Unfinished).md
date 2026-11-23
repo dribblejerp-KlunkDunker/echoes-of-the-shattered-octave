@@ -7,8 +7,11 @@ proposal of the design was approved on 22 Nov. Built in `js/tip113.js`; tested b
 ## What was built
 
 - **On the wall (`p100_wall`).** A small cart yard cut at the inner foot of the wall between Towers Seven and Eight, on the
-  Watch's side. In the wall's face: **the cart gate** (its wicket goes into the sally-way) and **Tower Eight's postern**,
-  barred on this side. A trooper of the Watch stands in the yard, near Battery Eight: she is the trooper who counts
+  Watch's side. In the wall's face: **the cart gate**, two leaves of iron-strapped black oak two cells wide and three
+  units tall (the eye is at 0.88), between iron-faced jambs, under a lead-sheathed lintel, with the ruts running in under
+  it across the yard; used in front of it, it lets you into the sally-way. (The engine draws a door cell on a map without
+  a ceiling one unit tall, so the gate is built as tall blocks and the way through is a thing to use; no wicket is drawn,
+  since a wall picture repeats once every unit of height.) And **Tower Eight's postern**, barred on this side. A trooper of the Watch stands in the yard, near Battery Eight: she is the trooper who counts
   cable-eyes (Phase 100's picture, greeting and voice) with one subject of her own, **The cart gate**.
 - **The sally-way (`p113_sally`).** A wagon-road cut under the wall, five cells wide and twenty-nine long, with a wider
   turning-place half way; its own ceiling; dark always, with grey daylight coming in at the far mouth. Ruts cut in the
