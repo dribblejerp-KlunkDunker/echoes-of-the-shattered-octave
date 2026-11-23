@@ -599,7 +599,7 @@ float rimf(vec3 N, vec3 V){ float f = 1.0 - max(dot(N,V),0.0); return f*f*f * (0
   vec3 Hh = normalize(L+V); float nh = max(dot(N,Hh),0.0);
   float spec = (pow(nh, 18.0)*0.05 + pow(nh, 70.0)*0.06) * (0.3+0.7*sh);
   // (Phase 122) bare skin: the skin drawn taut over a knuckle has a sheen of its own
-  if (v_ex.y < 50.0) spec *= 1.0 + red*2.2;
+  if (v_ex.y < 50.0) spec *= 1.0 + red*3.0;
   float fr = pow(1.0 - max(dot(N,V),0.0), 4.0);
   vec3 Lt, Ls; vec3 tor = pl(N, u_torchPos, u_torch, 30.0, 0.4, Lt); vec3 sng = pl(N, u_songPos, u_song, 13.0, 0.35, Ls);
   vec3 col = alb * (u_key*dif*shc + hemi(N)*ao*0.85*vec3(0.9,0.97,1.1) + tor*ao + sng) + u_key*spec*sh + (u_key*sh*0.03 + u_amb*0.07)*fr*ao
@@ -620,7 +620,7 @@ float rimf(vec3 N, vec3 V){ float f = 1.0 - max(dot(N,V),0.0); return f*f*f * (0
   vec3 plate = mix(skin*vec3(1.02,0.82,0.84), vec3(0.5,0.38,0.36), 0.3);
   vec3 alb = mix(plate, mix(skin, vec3(0.72,0.66,0.62), 0.5), (1.0 - smoothstep(0.12, 0.3, al))*(1.0 - smoothstep(0.3, 0.7, ac)));
   float edge = smoothstep(0.84, 0.95, al);
-  alb = mix(alb, vec3(0.74,0.68,0.58) * (0.9 + 0.1*vnoise(v_loc*20.0)), edge);
+  alb = mix(alb, vec3(0.7,0.63,0.53) * (0.9 + 0.1*vnoise(v_loc*20.0)), edge);
   // the folds: the outermost band is the skin lapping over the plate (the cuticle at the base, the folds at the sides),
   // then a thin dark groove where the plate goes under it
   float fold = max(1.0 - smoothstep(0.05, 0.12, al), smoothstep(0.84, 0.92, ac) * (1.0 - edge));
