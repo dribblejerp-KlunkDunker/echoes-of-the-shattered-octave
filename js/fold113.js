@@ -164,11 +164,11 @@ const FOLD113 = (function () {
     story: 'Faint and blue and always behind one of the others. Nobody has ever seen the Dog bring one in. It is the opinion of the Downs that he is not trying to; he is only seeing that none of them is out alone.' });
   // the three far folds: the sky's own galaxies (js/deepsky113.js GALAXIES: the tilted spiral, the small face-on spiral,
   // the pair of ragged clouds), framed in their own tangent planes; [az, el, frame centre X, Y, half-width, half-height]
-  fig('g_farfold', 'fold', { name: 'The Far Fold', head: TX.foldHead, gal: [104, 20, 0, 0, 4.6, 2.6],
+  fig('g_farfold', 'fold', { name: 'The Far Fold', head: TX.foldHead, gal: [104, 20, 0, 0, 5.8, 1.0],
     story: 'The nearest of the other folds. On the clearest nights you can see that it leans, the way a flock leans on a hillside.' });
-  fig('g_wheel', 'fold', { name: 'The Wheel', head: TX.foldHead, gal: [48, 22, 0, 0, 2.6, 2.4],
+  fig('g_wheel', 'fold', { name: 'The Wheel', head: TX.foldHead, gal: [48, 22, 0, 0, 3.6, 0.8],
     story: 'A carter\'s wheel stood on its rim, as they stand one over a carter\'s grave. Whose, nobody says.' });
-  fig('g_fleeces', 'fold', { name: 'The Two Fleeces', head: TX.foldHead, gal: [76, 10, 5.5, 1.75, 9.2, 3.0],
+  fig('g_fleeces', 'fold', { name: 'The Two Fleeces', head: TX.foldHead, gal: [76, 10, 5.5, 1.75, 12, 1.5],
     story: 'Two fleeces left on a hedge to dry by somebody who meant to come back for them.' });
   fig('m_lantern', 'lantern', { name: 'The Lantern', head: TX.lanternHead,
     story: 'The shepherd\'s lantern: trimmed over four nights and let down over four, the same as the week. The hill people do not think that is chance. When the Lantern is full the Fold is hard to count, and they say the shepherd is doing it for them that night.' });
@@ -631,7 +631,7 @@ const FOLD113 = (function () {
       if (mode === 'sky') {
         ensureTable(true);
         const still = typeof GFX !== 'undefined' && GFX.reduceMotion;
-        const chart = (c2, L) => typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.drawChart && DEEPSKY113.drawChart(c2, id, 0, 0, W, H, { lines: L, lineK: 1.7 });
+        const chart = (c2, L) => typeof DEEPSKY113 !== 'undefined' && DEEPSKY113.drawChart && DEEPSKY113.drawChart(c2, id, 0, 0, W, H, { lines: L, lineK: 1.7, minExt: 0.5, galK: 7 });
         if (!chart(ctx, still ? 1 : 0)) { drawFace(ctx, W, H, id, grain); return; }
         if (still) return;
         // the lines come in over about a second: the sky without them and the sky with them, each drawn once, the second

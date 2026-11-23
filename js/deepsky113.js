@@ -615,7 +615,7 @@ const DEEPSKY113 = (function () {
       w = Math.round(w); h = Math.round(h);
       const mid = middle(C), cd = dirOfAE(mid.az, mid.el), ce = nrm(cross([0, 0, 1], cd)), cn = cross(cd, ce);
       // the figure framed with a margin: its spread in the tangent plane, at least six degrees across
-      let ext = 3 * D2R;
+      let ext = (C.kind === 'frame' && fin(opts.minExt) ? clamp(opts.minExt, 0.2, 3) : 3) * D2R;   // minExt: a far fold may be framed closer (113c)
       const pts = C.stars.map((s) => { const d = dirOfAE(s.az, s.el), z = dot(d, cd); const X = dot(d, ce) / z, Y = dot(d, cn) / z; ext = Math.max(ext, Math.abs(X) * h / w, Math.abs(Y)); return [X, Y]; });
       const scale = (h * 0.5 * 0.72) / ext;   // pixels a unit of the tangent plane
       const P = 2, cw = Math.ceil(w / P), ch = Math.ceil(h / P), img = ctx.createImageData(w, h), out = img.data;
@@ -652,6 +652,31 @@ const DEEPSKY113 = (function () {
           const k = 1.5, sr = (c & 255) * k, sg = (c >> 8) * k, sb = (e & 255) * k, m = Math.max(sr, sg, sb);
           addPt(p[0], p[1], sr, sg, sb);
           if (m > 200) for (const [dx, dy] of [[-P, 0], [P, 0], [0, -P], [0, P]]) addPt(p[0] + dx, p[1] + dy, sr * 0.3, sg * 0.3, sb * 0.3);
+        }
+      }
+      // a far fold seen close (opts.galK, the stones' view): the galaxy itself, drawn from its own shape at every art pixel
+      // (not read from the coarse map), tone-mapped so its core burns and its arms and lane read; then a few near stars over it
+      if (C.kind === 'frame' && fin(opts.galK) && opts.galK > 0) {
+        const gk = clamp(opts.galK, 0.5, 40);
+        for (let j = 0; j < ch; j++) for (let i = 0; i < cw; i++) {
+          const d = toDir(i * P + P / 2, j * P + P / 2), q = (j * cw + i) * 3;
+          let r = 0, g = 0, b = 0;
+          for (const Gx of GALAXIES) { const c = galaxyAt(Gx, d[0], d[1], d[2]); if (c) { r += c[0]; g += c[1]; b += c[2]; } }
+          if (r + g + b <= 0) continue;
+          buf[q] += 255 * (1 - Math.exp(-r * gk)); buf[q + 1] += 250 * (1 - Math.exp(-g * gk)); buf[q + 2] += 255 * (1 - Math.exp(-b * gk));
+        }
+        let hid = 0; for (let k = 0; k < C.id.length; k++) hid = (hid * 31 + C.id.charCodeAt(k)) | 0;
+        for (let k = 0; k < 14; k++) {
+          const sx = (0.12 + 0.76 * hh(k, 1, hid)) * w, sy = (0.15 + 0.7 * hh(k, 2, hid)) * h, m = 0.25 + 0.6 * Math.pow(hh(k, 3, 229), 2);
+          const cool = hh(k, 4, 229) < 0.7, core = 1 + 2.2 * m, spike = m > 0.55 ? 6 + 14 * m : 0;
+          for (let j = Math.floor((sy - core * 3 - spike) / P); j <= Math.ceil((sy + core * 3 + spike) / P); j++) for (let i = Math.floor((sx - core * 3 - spike) / P); i <= Math.ceil((sx + core * 3 + spike) / P); i++) {
+            if (i < 0 || j < 0 || i >= cw || j >= ch) continue;
+            const dx = i * P + P / 2 - sx, dy = j * P + P / 2 - sy, rr = Math.hypot(dx, dy);
+            let v = rr <= core ? 1 : Math.exp(-Math.pow((rr - core) / (core * 1.4), 2)) * 0.4;
+            if (spike) { const ax = Math.abs(dx), ay = Math.abs(dy); if (ay < P * 0.6 && ax < spike) v = Math.max(v, 0.45 * (1 - ax / spike)); if (ax < P * 0.6 && ay < spike) v = Math.max(v, 0.45 * (1 - ay / spike)); }
+            if (v < 0.02) continue;
+            const q = (j * cw + i) * 3, t = 255 * m * v; buf[q] += t * (cool ? 0.86 : 1); buf[q + 1] += t * 0.93; buf[q + 2] += t * (cool ? 1 : 0.78);
+          }
         }
       }
       // the lines: dotted pale gold, stopping short of each star
