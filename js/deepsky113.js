@@ -256,6 +256,7 @@ const DEEPSKY113 = (function () {
     for (let k = 0; k < NOTES.length; k++) { const s = NOTES[k], [i, j] = tex(s); putStar(i, j, s.rgb[0] * s.mag, s.rgb[1] * s.mag, s.rgb[2] * s.mag, 1, (hh(k, 3, 91) * 62) | 0); }
     const M = stats.map; M.bandMean = M.bandN ? M.bandSum / M.bandN : 0;
     MAP.ready = true; MAP.built++; MAP.gen = (MAP.gen || 0) + 1; lore.key = null;
+    syncLore();   // the table's stars go in as the map is finished, however it was built (in slices or at once): one map
   }
   function reset() { MAP.data = new Uint16Array(W * H * 4); MAP.row = 0; MAP.col = 0; MAP.ready = false; Object.assign(stats.map, { coreMax: 0, bandMean: 0, galaxyMax: 0, stars: 0, bandN: 0, bandSum: 0 }); lore.saved = null; lore.key = null; }
   // a slice: eight rows, or fewer if the clock says three milliseconds have gone
@@ -293,7 +294,9 @@ const DEEPSKY113 = (function () {
       if (!c || typeof c.id !== 'string' || !Array.isArray(c.stars)) continue;
       const stars = c.stars.map(star); if (!stars.length || stars.some((s) => !s)) continue;
       const lines = Array.isArray(c.lines) ? c.lines.filter((p) => Array.isArray(p) && p.length === 2 && stars[p[0]] && stars[p[1]]) : [];
-      const C = { id: c.id, stars, lines, kind: 'con' }; cons.push(C); byId[c.id] = C;
+      // frame: true (Phase 113c, the far folds): the stars only frame a patch of the sky (a galaxy); they are not laid in the
+      // map and not drawn by drawChart, and dirOf is the middle of the frame
+      const C = { id: c.id, stars, lines, kind: c.frame === true ? 'frame' : 'con' }; cons.push(C); byId[c.id] = C;
     }
     if (t && Array.isArray(t.wanderers)) for (const w of t.wanderers) {
       const s = w && typeof w.id === 'string' ? star(w) : null; if (!s) continue;
@@ -318,7 +321,7 @@ const DEEPSKY113 = (function () {
       D[o + 2] = enc8(rgb[0] * k * 255) | (enc8(rgb[1] * k * 255) << 8); D[o + 3] = enc8(rgb[2] * k * 255) | (3 << 8) | (ph << 10);
     };
     for (const C of lore.cons.concat(lore.wand)) for (let n = 0; n < C.stars.length; n++) {
-      const s = C.stars[n]; if (s.el < 0) continue;
+      const s = C.stars[n]; if (s.el < 0 || C.kind === 'frame') continue;
       const i = Math.floor((s.az / TAU + 0.5) * W), j = Math.floor(s.el * ROWK), rgb = s.hue || [0.95, 0.96, 1.0], k = 0.28 + 0.62 * s.mag;
       const ph = C.kind === 'wanderer' ? STEADY : (hh(n, i, 101) * 62) | 0;
       if (C.kind === 'wanderer') { put(i, j, rgb, k, ph); for (const [di, dj] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) put(i + di, j + dj, rgb, k * 0.55, ph); }
@@ -595,6 +598,7 @@ const DEEPSKY113 = (function () {
       const s = nowState(null); if (!s.map || !s.map.outdoor || s.map.bright || starless(s.map)) return 0;
       const sv = skyVis(s.map, s.tod, s.wx); if (sv <= 0) return 0;
       const d = darknessOf(s), thr = (1 - d) * 0.55;
+      if (C.kind === 'frame') return clamp(smooth(0.6, 0.85, d) * sv, 0, 1);   // a far galaxy: only where the deep sky comes up
       let sum = 0;
       for (const st of C.stars) { if (st.el <= 0.02) continue; const m = Math.max(...(st.hue || [0.95, 0.96, 1])) * (0.28 + 0.62 * st.mag); sum += clamp((m - thr) / 0.2, 0, 1) * smooth(0.0, 0.16, Math.sin(st.el)); }
       return clamp(sv * sum / C.stars.length, 0, 1);
@@ -607,11 +611,11 @@ const DEEPSKY113 = (function () {
       const C = item(id); if (!C || !ctx || !(w > 0) || !(h > 0)) return false;
       opts = opts || {};
       if (!MAP.ready) build(); else syncLore();
-      const lines = clamp(fin(opts.lines) ? opts.lines : 1, 0, 1);
+      const lines = clamp(fin(opts.lines) ? opts.lines : 1, 0, 1), LK = clamp(fin(opts.lineK) ? opts.lineK : 1, 0.5, 3);   // lineK: how strong the lines are (the stones' view, 113c)
       w = Math.round(w); h = Math.round(h);
       const mid = middle(C), cd = dirOfAE(mid.az, mid.el), ce = nrm(cross([0, 0, 1], cd)), cn = cross(cd, ce);
       // the figure framed with a margin: its spread in the tangent plane, at least six degrees across
-      let ext = 3 * D2R;
+      let ext = (C.kind === 'frame' && fin(opts.minExt) ? clamp(opts.minExt, 0.2, 3) : 3) * D2R;   // minExt: a far fold may be framed closer (113c)
       const pts = C.stars.map((s) => { const d = dirOfAE(s.az, s.el), z = dot(d, cd); const X = dot(d, ce) / z, Y = dot(d, cn) / z; ext = Math.max(ext, Math.abs(X) * h / w, Math.abs(Y)); return [X, Y]; });
       const scale = (h * 0.5 * 0.72) / ext;   // pixels a unit of the tangent plane
       const P = 2, cw = Math.ceil(w / P), ch = Math.ceil(h / P), img = ctx.createImageData(w, h), out = img.data;
@@ -650,20 +654,45 @@ const DEEPSKY113 = (function () {
           if (m > 200) for (const [dx, dy] of [[-P, 0], [P, 0], [0, -P], [0, P]]) addPt(p[0] + dx, p[1] + dy, sr * 0.3, sg * 0.3, sb * 0.3);
         }
       }
+      // a far fold seen close (opts.galK, the stones' view): the galaxy itself, drawn from its own shape at every art pixel
+      // (not read from the coarse map), tone-mapped so its core burns and its arms and lane read; then a few near stars over it
+      if (C.kind === 'frame' && fin(opts.galK) && opts.galK > 0) {
+        const gk = clamp(opts.galK, 0.5, 40);
+        for (let j = 0; j < ch; j++) for (let i = 0; i < cw; i++) {
+          const d = toDir(i * P + P / 2, j * P + P / 2), q = (j * cw + i) * 3;
+          let r = 0, g = 0, b = 0;
+          for (const Gx of GALAXIES) { const c = galaxyAt(Gx, d[0], d[1], d[2]); if (c) { r += c[0]; g += c[1]; b += c[2]; } }
+          if (r + g + b <= 0) continue;
+          buf[q] += 255 * (1 - Math.exp(-r * gk)); buf[q + 1] += 250 * (1 - Math.exp(-g * gk)); buf[q + 2] += 255 * (1 - Math.exp(-b * gk));
+        }
+        let hid = 0; for (let k = 0; k < C.id.length; k++) hid = (hid * 31 + C.id.charCodeAt(k)) | 0;
+        for (let k = 0; k < 14; k++) {
+          const sx = (0.12 + 0.76 * hh(k, 1, hid)) * w, sy = (0.15 + 0.7 * hh(k, 2, hid)) * h, m = 0.25 + 0.6 * Math.pow(hh(k, 3, 229), 2);
+          const cool = hh(k, 4, 229) < 0.7, core = 1 + 2.2 * m, spike = m > 0.55 ? 6 + 14 * m : 0;
+          for (let j = Math.floor((sy - core * 3 - spike) / P); j <= Math.ceil((sy + core * 3 + spike) / P); j++) for (let i = Math.floor((sx - core * 3 - spike) / P); i <= Math.ceil((sx + core * 3 + spike) / P); i++) {
+            if (i < 0 || j < 0 || i >= cw || j >= ch) continue;
+            const dx = i * P + P / 2 - sx, dy = j * P + P / 2 - sy, rr = Math.hypot(dx, dy);
+            let v = rr <= core ? 1 : Math.exp(-Math.pow((rr - core) / (core * 1.4), 2)) * 0.4;
+            if (spike) { const ax = Math.abs(dx), ay = Math.abs(dy); if (ay < P * 0.6 && ax < spike) v = Math.max(v, 0.45 * (1 - ax / spike)); if (ax < P * 0.6 && ay < spike) v = Math.max(v, 0.45 * (1 - ay / spike)); }
+            if (v < 0.02) continue;
+            const q = (j * cw + i) * 3, t = 255 * m * v; buf[q] += t * (cool ? 0.86 : 1); buf[q + 1] += t * 0.93; buf[q + 2] += t * (cool ? 1 : 0.78);
+          }
+        }
+      }
       // the lines: dotted pale gold, stopping short of each star
       const sp = pts.map(([X, Y]) => [w / 2 + X * scale, h / 2 - Y * scale]);
-      if (lines > 0) for (const [a, b] of C.lines) {
+      if (lines > 0 && C.kind !== 'frame') for (const [a, b] of C.lines) {
         const A = sp[a], B = sp[b], L = Math.hypot(B[0] - A[0], B[1] - A[1]); if (L < 1) continue;
         const ra = 7 + 9 * C.stars[a].mag, rb = 7 + 9 * C.stars[b].mag;
         for (let s = ra; s < L - rb; s += P) {
           const f = s / L, i = Math.floor((A[0] + (B[0] - A[0]) * f) / P), j = Math.floor((A[1] + (B[1] - A[1]) * f) / P);
           if (i < 0 || j < 0 || i >= cw || j >= ch) continue;
-          if ((BAY[((j & 3) << 2) | (i & 3)] + 0.5) / 16 > lines * 0.8) continue;   // fades in as a dither
-          const q = (j * cw + i) * 3; buf[q] += 92 * lines; buf[q + 1] += 80 * lines; buf[q + 2] += 50 * lines;
+          if ((BAY[((j & 3) << 2) | (i & 3)] + 0.5) / 16 > lines * Math.min(1, 0.8 * LK)) continue;   // fades in as a dither
+          const q = (j * cw + i) * 3; buf[q] += 92 * lines * LK; buf[q + 1] += 80 * lines * LK; buf[q + 2] += 50 * lines * LK;
         }
       }
       // the figure's stars: a bright core, a soft dithered halo, four glints (none for a wanderer: a small steady disc)
-      for (let n = 0; n < C.stars.length; n++) {
+      for (let n = 0; n < (C.kind === 'frame' ? 0 : C.stars.length); n++) {
         const s = C.stars[n], [px, py] = sp[n], col = s.hue || [0.95, 0.96, 1.0], wand = C.kind === 'wanderer';
         const core = wand ? 3 + 3 * s.mag : 2 + 3.5 * s.mag, halo = core * (wand ? 3 : 4.5), spike = wand ? 0 : 10 + 30 * s.mag, top = 255 * (0.65 + 0.35 * s.mag);
         const i0 = Math.floor((px - Math.max(halo, spike)) / P), i1 = Math.ceil((px + Math.max(halo, spike)) / P), j0 = Math.floor((py - Math.max(halo, spike)) / P), j1 = Math.ceil((py + Math.max(halo, spike)) / P);
