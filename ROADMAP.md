@@ -237,7 +237,7 @@ The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on the
 
 | | What | Waits on |
 | --- | --- | --- |
-| Audit 1 | **Match the text to the books:** the eleven live contradictions, the five Thursdays, the five kilometres, the two stray "gold", one spelling. With French, and voices where a line is voiced | The owner's choice of spelling (the manuscripts are American); otherwise nothing |
+| Audit 1 | **Match the text to the books:** the eleven live contradictions, the five Thursdays, the two stray "gold", "traveller" spelt one way. With French, and voices where a line is voiced | Nothing |
 | Audit 2 | **Who the traveller is:** the six likenesses are the six canon people, and the Blade's and the Archivist's stories are Kaelen's and Sable's | The owner's ruling: (a) own people for each calling, recommended; (b) truly play a hero; (c) faces only |
 | Audit 3 | **The callings:** a lore brief for each of the six, then lines, sights and one act of its own for each, scene by scene; how each plays | Audit 2 |
 | Audit 4 | One real choice in every big scene of the main story, of the kind the pumps have | |
