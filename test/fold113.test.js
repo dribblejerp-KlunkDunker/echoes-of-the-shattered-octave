@@ -159,7 +159,7 @@ const FORBIDDEN = new RegExp('\\b(' + ['flehs', 'egdel', 'teksab', 'deredner'].m
         else if (aim.el < R3D.camera.limit() - 0.01 && Math.abs(R3D.camera.angle() - aim.el) > D2R) bad = 'pitch';
         else if (V.fig !== s.fig && s.kind !== 'wether') bad = 'shows ' + V.fig;
         else if (isDown ? (V.mode !== 'face' || txt.indexOf(F.TX.down) < 0) : (V.mode !== 'sky' && V.mode !== 'moon')) bad = 'mode ' + V.mode + ' (' + F.visibleOf(V.fig).toFixed(2) + ')';
-        else if (txt.indexOf(fig.name) < 0 || txt.indexOf(fig.head) < 0 || txt.indexOf(fig.story) < 0) bad = 'text';
+        else if (txt.indexOf(fig.name) < 0 || txt.indexOf(fig.head) < 0 || txt.indexOf(fig.story.replace(/<[^>]+>/g, '')) < 0) bad = 'text';
         else if (s.fig === 's_door' && txt.indexOf(F.TX.ownSign) < 0) bad = 'no own-sign line';
         else if (s.fig === 's_cloister' && txt.indexOf(F.TX.ownSign) >= 0) bad = 'own-sign line on another sign';
         else { const cv = document.querySelector('#event-panel canvas[data-kind]'); if (!cv || cv.width < 200) bad = 'no chart'; else if (isDown) { /* the face */ } else { const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; let lit = 0; for (let i = 0; i < d.length; i += 16) if (d[i] + d[i + 1] + d[i + 2] > 240) lit++; if (lit < 3) bad = 'chart dark'; } }
@@ -233,14 +233,15 @@ const FORBIDDEN = new RegExp('\\b(' + ['flehs', 'egdel', 'teksab', 'deredner'].m
   check(r.weekUse, 'a Weekstone used as before still says its own face (Counted in Eights untouched)');
 
   // ------------------------------------------------------------------ the 3D view: the lamp in the stone's eye
-  const eye = await page.evaluate(() => {
+  const eye = await page.evaluate(async () => {
     const F = FOLD113, out = { rows: [] };
+    const frames = async (n) => { for (let i = 0; i < n; i++) { Engine.cam.bob = 0; render(); await new Promise((q) => setTimeout(q, 50)); } };   // the 3D view reads its materials back a frame late
     R3D.setMode('on');
     const T = { stage: (s) => { closeModal(); hide('#event'); F.closeView(); G.day = 5; loadMap(s.map, { x: s.sx, y: s.sy, dir: 0 }); G.tod = 0.0; G.day = 5; G.state = 'play'; G.fadeT = 0; G.player.feet = G.map.groundAt(s.sx, s.sy); Weather.hold('clear'); Weather.apply(); } };
     out.active = false;
     for (const s of F.sites().filter((q) => q.kind === 'needle' && !q.blind)) {
       T.stage(s); const e = G.ents.find((q) => q._p113f === s.key && q.use); useDeco(e); F.finishTurn(); F.closeView(); G.state = 'play';
-      Engine.cam.bob = 0; render(); render(); render();
+      await frames(5);
       out.active = R3D.active();
       const m = (x, y) => Engine.materialAt(x, y), M = Engine.MAT || { sky: 1, sprite: 6 };
       const st = G.ents.find((q) => q._p113f === s.key && q.stoneOf);
@@ -252,9 +253,10 @@ const FORBIDDEN = new RegExp('\\b(' + ['flehs', 'egdel', 'teksab', 'deredner'].m
     // the classic view, where its look reaches
     for (const s of F.sites().filter((q) => q.kind === 'needle' && !q.blind && F.aim(q.fig).el < R3D.camera.limit() - 0.02)) {
       T.stage(s); const e = G.ents.find((q) => q._p113f === s.key && q.use); useDeco(e); F.finishTurn(); F.closeView(); G.state = 'play';
-      Engine.cam.bob = 0; render(); render();
+      await frames(2);
       const m = (x, y) => Engine.materialAt(x, y), M = Engine.MAT || { sky: 1, sprite: 6 }, rpx = Math.max(2, Math.round(F.eyeScreenR(s)));
-      out.rows.push({ key: s.key + ' (classic)', centre: m(160, 75), rpx, ok: m(160, 75) === M.sky && m(160 - Math.round(rpx * 1.7), 75) === M.sprite });
+      const left = m(160 - Math.round(rpx * 1.7), 75), right = m(160 + Math.round(rpx * 1.7), 75);
+      out.rows.push({ key: s.key + ' (classic)', centre: m(160, 75), left, right, rpx, ok: m(160, 75) === M.sky && left === M.sprite && right === M.sprite });
     }
     return out;
   });
@@ -325,7 +327,7 @@ const FORBIDDEN = new RegExp('\\b(' + ['flehs', 'egdel', 'teksab', 'deredner'].m
     const fr = JSON.parse(fs.readFileSync(path.join(ROOT, 'locales', 'story', 'fr.json'), 'utf8'));
     const notMerged = texts.filter((t) => !/\{\d/.test(t) && fr.s[lib.hash(lib.norm(t))] == null);
     check(!notMerged.length, 'and it is merged into the catalogue' + (notMerged.length ? ': ' + notMerged.slice(0, 2).join(' | ') : ''));
-    check(/le Parc/.test(tsv.map((l) => l[1]).join('\n')) && /la Lanterne/.test(tsv.map((l) => l[1]).join('\n')) && /le Blaireau/.test(tsv.map((l) => l[1]).join('\n')), 'the faith\'s French names (le Parc, la Lanterne, le Blaireau)');
+    check(/\ble Parc\b/i.test(tsv.map((l) => l[1]).join('\n')) && /\bla Lanterne\b/i.test(tsv.map((l) => l[1]).join('\n')) && /\ble Blaireau\b/i.test(tsv.map((l) => l[1]).join('\n')), 'the faith\'s French names (le Parc, la Lanterne, le Blaireau)');
   }
   check(!errors.length, 'no page errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();

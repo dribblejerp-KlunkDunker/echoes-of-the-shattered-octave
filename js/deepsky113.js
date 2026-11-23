@@ -293,7 +293,9 @@ const DEEPSKY113 = (function () {
       if (!c || typeof c.id !== 'string' || !Array.isArray(c.stars)) continue;
       const stars = c.stars.map(star); if (!stars.length || stars.some((s) => !s)) continue;
       const lines = Array.isArray(c.lines) ? c.lines.filter((p) => Array.isArray(p) && p.length === 2 && stars[p[0]] && stars[p[1]]) : [];
-      const C = { id: c.id, stars, lines, kind: 'con' }; cons.push(C); byId[c.id] = C;
+      // frame: true (Phase 113c, the far folds): the stars only frame a patch of the sky (a galaxy); they are not laid in the
+      // map and not drawn by drawChart, and dirOf is the middle of the frame
+      const C = { id: c.id, stars, lines, kind: c.frame === true ? 'frame' : 'con' }; cons.push(C); byId[c.id] = C;
     }
     if (t && Array.isArray(t.wanderers)) for (const w of t.wanderers) {
       const s = w && typeof w.id === 'string' ? star(w) : null; if (!s) continue;
@@ -318,7 +320,7 @@ const DEEPSKY113 = (function () {
       D[o + 2] = enc8(rgb[0] * k * 255) | (enc8(rgb[1] * k * 255) << 8); D[o + 3] = enc8(rgb[2] * k * 255) | (3 << 8) | (ph << 10);
     };
     for (const C of lore.cons.concat(lore.wand)) for (let n = 0; n < C.stars.length; n++) {
-      const s = C.stars[n]; if (s.el < 0) continue;
+      const s = C.stars[n]; if (s.el < 0 || C.kind === 'frame') continue;
       const i = Math.floor((s.az / TAU + 0.5) * W), j = Math.floor(s.el * ROWK), rgb = s.hue || [0.95, 0.96, 1.0], k = 0.28 + 0.62 * s.mag;
       const ph = C.kind === 'wanderer' ? STEADY : (hh(n, i, 101) * 62) | 0;
       if (C.kind === 'wanderer') { put(i, j, rgb, k, ph); for (const [di, dj] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) put(i + di, j + dj, rgb, k * 0.55, ph); }
@@ -595,6 +597,7 @@ const DEEPSKY113 = (function () {
       const s = nowState(null); if (!s.map || !s.map.outdoor || s.map.bright || starless(s.map)) return 0;
       const sv = skyVis(s.map, s.tod, s.wx); if (sv <= 0) return 0;
       const d = darknessOf(s), thr = (1 - d) * 0.55;
+      if (C.kind === 'frame') return clamp(smooth(0.6, 0.85, d) * sv, 0, 1);   // a far galaxy: only where the deep sky comes up
       let sum = 0;
       for (const st of C.stars) { if (st.el <= 0.02) continue; const m = Math.max(...(st.hue || [0.95, 0.96, 1])) * (0.28 + 0.62 * st.mag); sum += clamp((m - thr) / 0.2, 0, 1) * smooth(0.0, 0.16, Math.sin(st.el)); }
       return clamp(sv * sum / C.stars.length, 0, 1);
@@ -652,7 +655,7 @@ const DEEPSKY113 = (function () {
       }
       // the lines: dotted pale gold, stopping short of each star
       const sp = pts.map(([X, Y]) => [w / 2 + X * scale, h / 2 - Y * scale]);
-      if (lines > 0) for (const [a, b] of C.lines) {
+      if (lines > 0 && C.kind !== 'frame') for (const [a, b] of C.lines) {
         const A = sp[a], B = sp[b], L = Math.hypot(B[0] - A[0], B[1] - A[1]); if (L < 1) continue;
         const ra = 7 + 9 * C.stars[a].mag, rb = 7 + 9 * C.stars[b].mag;
         for (let s = ra; s < L - rb; s += P) {
@@ -663,7 +666,7 @@ const DEEPSKY113 = (function () {
         }
       }
       // the figure's stars: a bright core, a soft dithered halo, four glints (none for a wanderer: a small steady disc)
-      for (let n = 0; n < C.stars.length; n++) {
+      for (let n = 0; n < (C.kind === 'frame' ? 0 : C.stars.length); n++) {
         const s = C.stars[n], [px, py] = sp[n], col = s.hue || [0.95, 0.96, 1.0], wand = C.kind === 'wanderer';
         const core = wand ? 3 + 3 * s.mag : 2 + 3.5 * s.mag, halo = core * (wand ? 3 : 4.5), spike = wand ? 0 : 10 + 30 * s.mag, top = 255 * (0.65 + 0.35 * s.mag);
         const i0 = Math.floor((px - Math.max(halo, spike)) / P), i1 = Math.ceil((px + Math.max(halo, spike)) / P), j0 = Math.floor((py - Math.max(halo, spike)) / P), j1 = Math.ceil((py + Math.max(halo, spike)) / P);
