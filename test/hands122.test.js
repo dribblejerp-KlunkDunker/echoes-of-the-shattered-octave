@@ -78,7 +78,14 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
           n++; const m = s / c;
           if (L[i] < m - 14) dark++; else if (L[i] > m + 14) pale++;
         }
-        return { dark, pale, n };
+        // the skin's mean colour (warm pixels) here, and on the pixel hands' own fist for the same look
+        const warm = (r, g, b) => r > g + 18 && g > b - 4 && r > 60, lum = (c) => c[0] * 0.3 + c[1] * 0.55 + c[2] * 0.15;
+        let s = [0, 0, 0, 0]; for (let i = 0; i < W * H; i++) if (A[i] && warm(d[i * 4], d[i * 4 + 1], d[i * 4 + 2])) { s[0] += d[i * 4]; s[1] += d[i * 4 + 1]; s[2] += d[i * 4 + 2]; s[3]++; }
+        const was2 = GFX.pixelHands; GFX.pixelHands = true; FP87.cache.clear(); const pc = FP87.paintHands(look, 'fist'); GFX.pixelHands = was2; FP87.cache.clear();
+        const c2 = pc.canvas || pc, q = c2.getContext('2d').getImageData(0, 0, c2.width, c2.height).data; let tt = [0, 0, 0, 0];
+        for (let i = 0; i < q.length; i += 4) if (q[i + 3] > 250 && warm(q[i], q[i + 1], q[i + 2])) { tt[0] += q[i]; tt[1] += q[i + 1]; tt[2] += q[i + 2]; tt[3]++; }
+        const scm = s.slice(0, 3).map((v) => v / s[3]), pxm = tt.slice(0, 3).map((v) => v / tt[3]);
+        return { dark, pale, n, sc: Math.round(lum(scm)), px: Math.round(lum(pxm)) };
       };
       // the sleeve in a climb, right arm: the widest the arm is (view pixels) in the rows 40 to 120 view pixels below the rung,
       // as the pixel hands paint it and as the sculpted hands draw it at the same place; and whether the rung is in the fist
@@ -134,6 +141,13 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
         assert.ok(m.dark >= b.dark * 1.4, 'face ' + f + ': darker crease pixels ' + m.dark + ' against Phase 112\'s ' + b.dark);
         assert.ok(m.pale >= b.pale * 1.15, 'face ' + f + ': paler nail pixels ' + m.pale + ' against Phase 112\'s ' + b.pale);
       }
+    });
+    await step('the sculpted skin takes the chosen face\'s tone as the pixel hand does (three tones)', async () => {
+      const r = await A.page.evaluate(() => ({ f4: FIST(4), f1: FIST(1), f5: FIST(5) }));
+      console.log('  skin (sculpted, pixel) ' + JSON.stringify([[r.f4.sc, r.f4.px], [r.f1.sc, r.f1.px], [r.f5.sc, r.f5.px]]));
+      assert.ok(r.f4.px > r.f1.px && r.f1.px > r.f5.px, 'the pixel hand\'s tones ' + JSON.stringify(r));
+      assert.ok(r.f4.sc > r.f1.sc && r.f1.sc > r.f5.sc, 'the sculpted tones follow in the same order ' + JSON.stringify(r));
+      assert.ok((r.f4.sc - r.f5.sc) >= 0.6 * (r.f4.px - r.f5.px), 'and as far apart (at least 0.6 of the pixel hand\'s spread) ' + JSON.stringify(r));
     });
     await step('the sleeve in a climb: no wider than the pixel arm\'s sleeve, give or take a tenth; the fist round the rung', async () => {
       const r = await A.page.evaluate(() => ({ gloved: CLIMB(false), bare: CLIMB(true) }));

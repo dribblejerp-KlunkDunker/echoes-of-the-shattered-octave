@@ -56,10 +56,17 @@ const scenes = process.argv.slice(3).map((s) => {
         for (let c = 0; c < 3; c++) im.data[o2 + c] = Math.round(d[q + c] + 96 * (1 - al)); im.data[o2 + 3] = 255;
       }
       cx.putImageData(im, 0, 0);
-      return { png: cv.toDataURL('image/png'), dark, pale, n, ms: Math.round(ms) };
+      // the mean colour of the skin (warm pixels, r > g + 18 > b) on the sculpted picture and on the pixel hands' fist
+      const warm = (r, g, b) => r > g + 18 && g > b - 4 && r > 60;
+      let sr = 0, sg = 0, sb = 0, sn = 0; for (let i = 0; i < W * H; i++) if (A[i] && warm(d[i * 4], d[i * 4 + 1], d[i * 4 + 2])) { sr += d[i * 4]; sg += d[i * 4 + 1]; sb += d[i * 4 + 2]; sn++; }
+      let pr = 0, pg = 0, pb = 0, pn = 0;
+      try { const was = GFX.pixelHands; GFX.pixelHands = true; FP87.cache.clear(); const pc = FP87.paintHands(look, 'fist'); GFX.pixelHands = was; const c2 = pc.canvas || pc, q = c2.getContext('2d').getImageData(0, 0, c2.width, c2.height).data;
+        for (let i = 0; i < q.length; i += 4) if (q[i + 3] > 250 && warm(q[i], q[i + 1], q[i + 2])) { pr += q[i]; pg += q[i + 1]; pb += q[i + 2]; pn++; } } catch (e) { pn = -1; }
+      const mean = (a, b, c, n) => n > 0 ? [Math.round(a / n), Math.round(b / n), Math.round(c / n)] : null;
+      return { png: cv.toDataURL('image/png'), dark, pale, n, ms: Math.round(ms), skin: look.skin, sc: mean(sr, sg, sb, sn), px: mean(pr, pg, pb, pn) };
     }, sc);
     fs.writeFileSync(path.join(OUT, sc.name + '.png'), Buffer.from(r.png.split(',')[1], 'base64'));
-    console.log(sc.name + ' ' + JSON.stringify({ dark: r.dark, pale: r.pale, n: r.n, ms: r.ms }));
+    console.log(sc.name + ' ' + JSON.stringify({ dark: r.dark, pale: r.pale, n: r.n, ms: r.ms, skin: r.skin, sc: r.sc, px: r.px }));
   }
   await browser.close();
 })();

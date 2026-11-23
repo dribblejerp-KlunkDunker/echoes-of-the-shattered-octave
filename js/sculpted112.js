@@ -379,11 +379,11 @@ const SCULPTED112 = (() => {
         if (s === 2 && skinny) {
           // (Phase 122) the thumb's nail seated on its surface, wider and squarer than a finger's
           const rm = lerp(rs[2][0], rs[2][1], 0.6) * 0.88 * 0.97;
-          const nf = chain(lf, T(0, L * 0.5, rm * 1.02 - 0.06), RX(2));
+          const nf = chain(lf, T(0, L * 0.5, rm * 1.04 - 0.05), RX(2));
           const np = segPart, na = rm * 0.86, nb2 = L * 0.3;
           grid(sc, 'nail', np, W2(nf), nf, 18, 12, (u, v) => {
             const th = -Math.PI / 2 + v * Math.PI, ph = u * Math.PI * 2, ct = Math.cos(th);
-            let x = na * spow(ct, 0.42) * spow(Math.cos(ph), 0.55), y = nb2 * spow(Math.sin(th), 0.5), z = 0.12 * spow(ct, 0.5) * spow(Math.sin(ph), 0.6);
+            let x = na * spow(ct, 0.6) * spow(Math.cos(ph), 0.7), y = nb2 * spow(Math.sin(th), 0.6), z = 0.1 * spow(ct, 0.5) * spow(Math.sin(ph), 0.6);
             z -= 0.24 * (x / na) * (x / na); if (v === 0 || v === 1) x = z = 0;
             return { p: [x, y, z], uv: [x, y], ex: [clamp((y / nb2 + 1) / 2, 0, 1), x / na, 0, 0] };
           });
@@ -441,7 +441,7 @@ const SCULPTED112 = (() => {
         const flat = 1 - bone * 0.05 * Math.pow(Math.max(0, Math.sin(ph)), 4) * clamp(1 - s / 10, 0, 1);
         const m = knob * rad * neck * flat;
         // (Phase 122) a bare wrist is creased across where it bends: the bracelet lines on the inside, finer ones on the back
-        const wc = skinny ? Math.exp(-Math.pow((s - 1.1) / 0.55, 2)) * (Math.sin(ph) < 0 ? 0.75 : 0.15) : 0;
+        const wc = skinny ? Math.exp(-Math.pow((s - 1.1) / 0.55, 2)) * (Math.sin(ph) < 0 ? 0.9 : 0.2) : 0;
         return { p: [rx(s) * Math.cos(ph) * rr * j * m, s, rz(s) * Math.sin(ph) * rr * j * m], uv: [ph * 3.2, s], ex: [0.25 * (knob - 1) / 0.2 * bone, skinny ? s - 1.1 + 0.12 * Math.cos(ph) * Math.cos(ph) + 0.01 : 99, 0, wc] };
       }, { arm: true });
       for (let s = 0; s < 30; s += 2.2) sphere(sc, app(af, [0, s, 0]), Math.min(rx(s), rz(s)) * 0.95, part);
@@ -574,7 +574,7 @@ float rimf(vec3 N, vec3 V){ float f = 1.0 - max(dot(N,V),0.0); return f*f*f * (0
   h -= hatch*0.0011;
   // (Phase 122) bare skin (it carries its crease line in v_ex.y): the fine cross-hatch of the skin's lines deeper, and
   // drawn a shade darker, as on the back of a working hand
-  if (v_ex.y < 50.0) h -= hatch*0.0022;
+  if (v_ex.y < 50.0) h -= hatch*0.003;
   // the creases at the joints. (Phase 122) Bare skin carries its own crease line (v_ex.y, cm from the joint, bowed at
   // the sides): a band of fine lines across it, each breaking and rejoining, the skin between them a little raised;
   // elsewhere (a glove's wrist) the old few lines along the segment
@@ -585,11 +585,11 @@ float rimf(vec3 N, vec3 V){ float f = 1.0 - max(dot(N,V),0.0); return f*f*f * (0
   float ln = pow(abs(sin(cc*fq + wob)), v_ex.y < 50.0 ? 18.0 : 24.0);
   float cr = v_ex.w * ln * (v_ex.y < 50.0 ? 0.2 + 0.8*brk : 1.0);
   float ridge = v_ex.w * pow(abs(cos(cc*fq + wob)), 8.0) * (v_ex.y < 50.0 ? 1.0 : 0.0);
-  h -= cr*(v_ex.y < 50.0 ? 0.026 : 0.009); h += ridge*0.007;
+  h -= cr*(v_ex.y < 50.0 ? 0.026 : 0.009); h += ridge*0.009;
   N = bump(N, v_pos, h);
   float red = clamp(v_ex.x, 0.0, 1.0), pale = clamp(-v_ex.x, 0.0, 1.0);
-  vec3 alb = pow(u_base, vec3(1.15)) * mix(vec3(1.0), vec3(1.25,0.7,0.62), red*0.6) * (0.9 + 0.2*vnoise(v_loc*1.3)) * (1.0 - cr*(v_ex.y < 50.0 ? 0.72 : 0.22) - v_ex.w*0.08 + ridge*0.16*brk) * (0.97 + 0.06*gr)
-    * (v_ex.y < 50.0 ? 1.0 - hatch*0.09 : 1.0);
+  vec3 alb = pow(u_base, vec3(1.15)) * mix(vec3(1.0), vec3(1.25,0.7,0.62), red*0.6) * (0.9 + 0.2*vnoise(v_loc*1.3)) * (1.0 - cr*(v_ex.y < 50.0 ? 0.72 : 0.22) - v_ex.w*0.08 + ridge*0.22*brk) * (0.97 + 0.06*gr)
+    * (v_ex.y < 50.0 ? 1.0 - hatch*0.11 : 1.0);
   // (Phase 122) the heel of the hand paler and a little yellower, as thick skin is
   alb = mix(alb, alb*vec3(1.16, 1.12, 1.02), pale*0.7);
   float ndl = dot(N,L); vec3 w = vec3(0.5,0.3,0.24);
@@ -599,7 +599,7 @@ float rimf(vec3 N, vec3 V){ float f = 1.0 - max(dot(N,V),0.0); return f*f*f * (0
   vec3 Hh = normalize(L+V); float nh = max(dot(N,Hh),0.0);
   float spec = (pow(nh, 18.0)*0.05 + pow(nh, 70.0)*0.06) * (0.3+0.7*sh);
   // (Phase 122) bare skin: the skin drawn taut over a knuckle has a sheen of its own
-  if (v_ex.y < 50.0) spec *= 1.0 + red*3.0;
+  if (v_ex.y < 50.0) spec *= 1.0 + red*4.5;
   float fr = pow(1.0 - max(dot(N,V),0.0), 4.0);
   vec3 Lt, Ls; vec3 tor = pl(N, u_torchPos, u_torch, 30.0, 0.4, Lt); vec3 sng = pl(N, u_songPos, u_song, 13.0, 0.35, Ls);
   vec3 col = alb * (u_key*dif*shc + hemi(N)*ao*0.85*vec3(0.9,0.97,1.1) + tor*ao + sng) + u_key*spec*sh + (u_key*sh*0.03 + u_amb*0.07)*fr*ao
@@ -614,27 +614,29 @@ float rimf(vec3 N, vec3 V){ float f = 1.0 - max(dot(N,V),0.0); return f*f*f * (0
     nail: `void main(){ vec3 N = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   float ao = v_occ.x, sh = v_occ.y;
   float al = clamp(v_ex.x, 0.0, 1.0), ac = clamp(abs(v_ex.y), 0.0, 1.0);
-  float h = sin(v_ex.y*26.0 + vnoise(v_loc*9.0)*1.5)*0.0012 + vnoise(v_loc*30.0)*0.0006;
+  // (the far edge follows the nail's own rounded outline: how far out along the oval this point is)
+  float rr = length(vec2(ac, al*2.0 - 1.0));
+  float h = sin(v_ex.y*26.0 + vnoise(v_loc*9.0)*1.5)*0.0008 + vnoise(v_loc*30.0)*0.0005;
   N = bump(N, v_pos, h);
   vec3 skin = pow(u_base, vec3(1.15));
-  vec3 plate = mix(skin*vec3(1.02,0.82,0.84), vec3(0.5,0.38,0.36), 0.3);
-  vec3 alb = mix(plate, mix(skin, vec3(0.72,0.66,0.62), 0.5), (1.0 - smoothstep(0.12, 0.3, al))*(1.0 - smoothstep(0.3, 0.7, ac)));
-  float edge = smoothstep(0.84, 0.95, al);
-  alb = mix(alb, vec3(0.7,0.63,0.53) * (0.9 + 0.1*vnoise(v_loc*20.0)), edge);
-  // the folds: the outermost band is the skin lapping over the plate (the cuticle at the base, the folds at the sides),
-  // then a thin dark groove where the plate goes under it
-  float fold = max(1.0 - smoothstep(0.05, 0.12, al), smoothstep(0.84, 0.92, ac) * (1.0 - edge));
-  float groove = max(smoothstep(0.06, 0.12, al) * (1.0 - smoothstep(0.12, 0.2, al)), smoothstep(0.72, 0.8, ac) * (1.0 - smoothstep(0.84, 0.9, ac)) * (1.0 - edge));
-  float rim = groove;
-  alb = mix(alb, skin*vec3(0.46, 0.3, 0.26), groove*0.85);
-  alb = mix(alb, skin*vec3(0.98, 0.86, 0.82), fold);
+  // a soft plate: the skin's colour a little paler and pinker, the half-moon a touch paler again
+  vec3 plate = mix(skin*vec3(1.06,0.9,0.9), vec3(0.6,0.42,0.42), 0.22);
+  vec3 alb = mix(plate, plate*vec3(1.16,1.13,1.1), (1.0 - smoothstep(0.1, 0.28, al))*(1.0 - smoothstep(0.2, 0.6, ac)));
+  // the free edge: a thin rounded rim, a shade paler than the plate (no white)
+  float edge = smoothstep(0.86, 0.96, rr) * smoothstep(0.55, 0.8, al);
+  alb = mix(alb, plate*vec3(1.22,1.17,1.1), edge);
+  // the folds: the skin lapping over the plate at the cuticle and down the sides, a faint darker line where it goes under
+  float fold = max(1.0 - smoothstep(0.04, 0.1, al), smoothstep(0.86, 0.94, ac) * (1.0 - smoothstep(0.6, 0.85, al)));
+  float groove = max(smoothstep(0.05, 0.1, al) * (1.0 - smoothstep(0.1, 0.17, al)), smoothstep(0.74, 0.82, ac) * (1.0 - smoothstep(0.84, 0.9, ac)) * (1.0 - smoothstep(0.6, 0.85, al)));
+  alb = mix(alb, skin*vec3(0.72, 0.56, 0.52), groove*0.5);
+  alb = mix(alb, skin, fold);
   // (lit as the skin round it is lit, so that it is paler than the skin by its colour and not by its light)
   float ndl = dot(N,L); vec3 Hh = normalize(L+V); vec3 w = vec3(0.3,0.22,0.2);
   vec3 dif = clamp((vec3(ndl)+w)/(1.0+w), 0.0, 1.0); dif *= dif;
   vec3 Lt, Ls; vec3 tor = pl(N, u_torchPos, u_torch, 30.0, 0.2, Lt); vec3 sng = pl(N, u_songPos, u_song, 13.0, 0.2, Ls);
-  float gloss = (1.0 - rim) * (1.0 - edge*0.6);
-  vec3 col = alb*(u_key*dif*sh + hemi(N)*ao*0.85*vec3(0.9,0.97,1.1) + tor*ao + sng) + u_key*(pow(max(dot(N,Hh),0.0),220.0)*0.3 + pow(max(dot(N,Hh),0.0),30.0)*0.025)*sh*gloss
-           + env(reflect(-V,N))*0.06*gloss + (u_key*0.12*sh + u_amb*0.2 + u_rim*0.3)*smoothstep(0.9, 0.99, al);
+  float gloss = (1.0 - fold) * (1.0 - groove);
+  vec3 col = alb*(u_key*dif*sh + hemi(N)*ao*0.85*vec3(0.9,0.97,1.1) + tor*ao + sng) + u_key*(pow(max(dot(N,Hh),0.0),90.0)*0.18 + pow(max(dot(N,Hh),0.0),16.0)*0.02)*sh*gloss
+           + env(reflect(-V,N))*0.04*gloss + (u_key*0.05*sh + u_rim*0.12)*edge;
   gl_FragColor = vec4(tonemap(col), 1.0); }`,
     leather: `void main(){ vec3 N = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   float ao = v_occ.x, sh = v_occ.y;
