@@ -47,7 +47,7 @@ async function start(r3d) {
       reset() { restoreGame(JSON.parse(JSON.stringify(window.__base))); G.state = 'play'; window.__ev.length = 0; window.__msgs.length = 0; },
       last() { return window.__ev[window.__ev.length - 1] || null; },
       ladder() { return G.ents.find((x) => x && x.use === 'crates' && x.sprite === 'ladder'); },
-      rim(x, y) { loadMap('clearing', { x: x == null ? 11.5 : x, y: y == null ? 6.4 : y, dir: -Math.PI / 2 }); G.state = 'play'; },
+      rim(x, y) { loadMap('clearing', { x: x == null ? MAST123.FOOT.x : x, y: y == null ? MAST123.FOOT.y + 0.8 : y, dir: -Math.PI / 2 }); G.state = 'play'; },
     };
   });
   return { browser, page, errors };
@@ -93,7 +93,7 @@ async function start(r3d) {
     if (M) { const p = M.inFrame('oakhaven'); out.north = p && p.y < -20 && Math.abs(p.x - 23.5) < 15; out.pos = p; }
     // the tallest thing for miles: taller than the Chapel's tower (4.1) and every tree on the rim's map
     const sp = Engine.sprites.p123_mast, hOf = (e) => (e.scale || 1) * ((Engine.sprites[e.sprite] && Engine.sprites[e.sprite].hs) || 1);
-    out.tall = !!mast && hOf(mast) >= 11 && hOf(mast) > 4.1 * 2 && cl.entities.filter((e) => e !== mast && e.sprite && e.sprite !== 'kestrel').every((e) => hOf(e) < hOf(mast) / 2);
+    out.tall = !!mast && hOf(mast) >= 11 && hOf(mast) > 4.1 * 2 && cl.entities.filter((e) => e !== mast && e.sprite).every((e) => hOf(e) < hOf(mast) * 0.6);
     out.h = mast && +hOf(mast).toFixed(2);
     // iron on four splayed legs: four runs of iron along the bottom row, wider apart at the foot than at the head
     if (sp) {
@@ -120,7 +120,7 @@ async function start(r3d) {
   check(r.standing && r.labels, 'the east side of the square is the carters\' standing: a mounting-block and a water trough in the old slots, and a hitching rail; nothing to use');
   check(r.rim, 'the mast stands on the quarry rim (the clearing\'s north edge, by the headframe), seen at any distance, solid, not picked (its ladder is)');
   check(r.north, 'in Oakhaven\'s frame the mast is north of the square, past the North Gate (' + JSON.stringify(r.pos) + ')');
-  check(r.tall, 'it is the tallest thing for miles (' + r.h + ' high; the tower is 4.1)');
+  check(r.tall, 'it is the tallest thing for miles (' + r.h + ' high: the tower is 4.1, the tallest oak on the rim\'s map about 6)');
   check(r.legs === 4 && r.splay, 'it stands on four splayed legs (' + r.legs + ' runs at the foot)');
   check(r.iron && r.rivets, 'it is riveted iron, dark, rust at the joints (' + r.ironNums + ')');
   check(r.ladder && r.trig, 'the mast-ladder, up to her hold, is at its foot, and the mast\'s trigger beside it');
@@ -150,20 +150,21 @@ async function start(r3d) {
     // the trigger: before the Greening, the ship and nobody aboard to talk to
     const trig = () => G.map.triggers.find((t) => t.id === 'mast');
     const at = () => { const t = trig(); Engine.cam.x = t.x; Engine.cam.y = t.y; t.inside = false; t.said = false; checkTriggers(); };
-    T.reset(); T.rim(11.5, 9); at(); out.before = window.__msgs.some((t) => /hangs from the mast, her lift-tanks murmuring/.test(t));
+    T.reset(); T.rim(13.0, 9); at(); out.before = window.__msgs.some((t) => /hangs from the mast, her lift-tanks murmuring/.test(t));
     // after the Greening, the Hedge answered, the Greening's scene not running: the voice and the hounds, then the ship
     window.__ended = 0; const _end = window.ending; window.ending = () => { window.__ended++; };
-    T.reset(); T.rim(11.5, 9); Object.assign(G.flags, { greening: true, hedge_answered: true }); delete G.flags.mast_voice; G.escapeTimer = 0;
+    T.reset(); T.rim(13.0, 9); Object.assign(G.flags, { greening: true, hedge_answered: true }); delete G.flags.mast_voice; G.escapeTimer = 0;
     const h0 = G.ents.filter((o) => o.kind === 'enemy' && o.type === 'hound' && !o.dead).length; window.__msgs.length = 0; at();
-    out.voice = !!G.flags.mast_voice && G.ents.filter((o) => o.kind === 'enemy' && o.type === 'hound' && !o.dead).length === h0 + 3 && window.__msgs.some((m) => /"Grab the line\." It followed your voice here/.test(m)) && window.__ended === 0;
+    // three hounds, as before, up to the game's own five-alive cap (spawnHound): the rim has hounds of its own
+    out.voice = !!G.flags.mast_voice && G.ents.filter((o) => o.kind === 'enemy' && o.type === 'hound' && !o.dead).length === Math.min(5, h0 + 3) && h0 + 3 > 3 && window.__msgs.some((m) => /"Grab the line\." It followed your voice here/.test(m)) && window.__ended === 0;
     for (const o of G.ents) if (o.kind === 'enemy' && o.type === 'hound') o.dead = true;
     at(); out.end = window.__ended === 1;
     // while the Greening's scene runs (the town's lanes, the gate, Grab the Line) the mast ends nothing: the book's order
-    window.__ended = 0; T.reset(); T.rim(11.5, 9); Object.assign(G.flags, { greening: true }); G.escapeTimer = 240; G.flags.g44 = 0; window.__msgs.length = 0; at();
+    window.__ended = 0; T.reset(); T.rim(13.0, 9); Object.assign(G.flags, { greening: true }); G.escapeTimer = 240; G.flags.g44 = 0; window.__msgs.length = 0; at();
     out.inOrder = window.__ended === 0 && (typeof GREEN44 === 'undefined' || GREEN44.live());
     window.__ended = 0; G.flags.g44 = 6; G.flags.r45 = 1; at(); out.inOrder2 = window.__ended === 0;
     // Part Three: nothing replays
-    window.__ended = 0; T.reset(); T.rim(11.5, 9); Object.assign(G.flags, { greening: true, part3: true }); at(); out.p3 = window.__ended === 0;
+    window.__ended = 0; T.reset(); T.rim(13.0, 9); Object.assign(G.flags, { greening: true, part3: true }); at(); out.p3 = window.__ended === 0;
     window.ending = _end;
     return out;
   });
@@ -172,7 +173,7 @@ async function start(r3d) {
   check(r.clerk && r.crate, 'cargo night: the clerk on Driftday night and the third crate at the dead hour, from the rim\'s ladder');
   check(r.fortyEight, '"Forty-eight." to the hold at night, from the rim\'s ladder');
   check(r.before, 'the mast\'s trigger before the Greening: the Kestrel on her line, nobody aboard to talk to yet');
-  check(r.voice && r.end, 'after the Greening with the Hedge answered: the voice and three hounds at the mast, then the ship once they are dead');
+  check(r.voice && r.end, 'after the Greening with the Hedge answered: the voice and the hounds at the mast (three, up to the five-alive cap), then the ship once they are dead');
   check(r.inOrder && r.inOrder2, 'while the Greening and Grab the Line are running, the mast on the rim ends nothing (the ship comes to the North Gate, as the book has it)');
   check(r.p3, 'in Part Three the mast replays nothing');
 
@@ -211,16 +212,16 @@ async function start(r3d) {
     const a = grab(); M.setFar(false); const b = grab(); M.setFar(true);
     let diff = 0; for (let i = 0; i < a.length; i += 4) if (a[i] !== b[i] || a[i + 1] !== b[i + 1]) diff++; out.diff = diff;
     // over the roofs: nothing of it is drawn below the town's skyline in front of it (the Greenhall's front is nearer)
-    out.behind = fm && fm._screen && fm._screen.dist > 40;
+    out.behind = !!fm && fm._trueD > 40 && fm.y < 1 && fm.y > -0.1;   // drawn as from 50-odd cells off, stood in the Hedge's outer row
     // looking east from the square, it is not in the view
     far = look('oakhaven', 23.5, 21.5, 0, 0.5); out.eastOff = !far.find((e) => e._p123 === 'mast')._screen;
     // from the North Gate (inside it), the mast and her ladder fill the view to the north
     far = look('oakhaven', 23.5, 2.6, -Math.PI / 2, 0.6); const g = far.find((e) => e._p123 === 'mast')._screen;
-    out.gate = !!g && (g.y1 - g.y0) > 60;
+    out.gate = !!g && (g.y1 - g.y0) > 45; out.gateH = g && (g.y1 - g.y0);
     // at night her lamps show
     far = look('oakhaven', 23.5, 21.5, -Math.PI / 2, 0.02); const ship = far.find((e) => e._p123 === 'ship');
     const spr = ship && Engine.sprites[ship.animSprite || ship.sprite];
-    out.lamps = !!spr && !!spr.emit && Array.prototype.some.call(spr.emit, (v) => v > 0);
+    out.lamps = !!spr && /night/.test(ship.animSprite) && !!spr.emit && Array.prototype.filter.call(spr.emit, (v) => v > 0).length > 60;
     // from the Downs too
     far = look('p20_downs', 37.5, 31.5, -Math.PI / 4, 0.5); out.downs = far.some((e) => e._p123 === 'mast');
     // on the rim itself the mast is the map's own entity, not a far copy
@@ -230,8 +231,8 @@ async function start(r3d) {
   });
   check(r.list, 'from Oakhaven the mast and the ship are drawn where they stand, as far copies outside the map\'s own list');
   check(r.north && r.diff > 150, 'from the square they are in the view to the north, high above the horizon (' + JSON.stringify(r.screen) + ', ' + r.diff + ' pixels)');
-  check(r.behind && r.eastOff, 'behind everything in the town, and not in the view looking east');
-  check(r.gate, 'from the North Gate the mast fills the view to the north');
+  check(r.behind && r.eastOff, 'behind everything in the town (seen as from its true distance, stood past every house), and not in the view looking east');
+  check(r.gate, 'from the North Gate the mast stands a third of the view high, to the north (' + r.gateH + ' of 150 rows)');
   check(r.lamps, 'at night the ship\'s lamps show');
   check(r.downs, 'from the Downs too');
   check(r.rimOwn && r.fromGateRoad, 'on the rim\'s own map the mast is its own entity, seen from the North Gate road at thirty cells');

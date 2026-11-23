@@ -120,13 +120,13 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     // ---- o. "Forty-eight." to the hold at night
     r = await page.evaluate(() => {
       const out = {};
-      const ladder = () => G.ents.find((e) => e && e.use === 'crates' && e.sprite === 'ladder');
-      T.reset(); T.at(2, 23); loadMap('oakhaven'); useDeco(ladder()); let ev = T.last();
+      const ladder = () =>   /* Phase 123: the mast-ladder is on the quarry rim */ G.ents.find((e) => e && e.use === 'crates' && e.sprite === 'ladder');
+      T.reset(); T.at(2, 23); loadMap('clearing'); useDeco(ladder()); let ev = T.last();
       out.night = ev && ev.t === 'The crates in the hold' && /Annet Sowerby/.test(ev.b) && /"Forty-eight," he tells the dark, the way he does most nights\./.test(ev.b) && /The dark, as usual, has nothing to say to that\./.test(ev.b);
       out.vo = window.__vo.includes('vane.hold.fortyeight');
-      T.reset(); T.at(2, 14); loadMap('oakhaven'); useDeco(ladder()); ev = T.last();
+      T.reset(); T.at(2, 14); loadMap('clearing'); useDeco(ladder()); ev = T.last();
       out.day = ev && ev.t === 'The crates in the hold' && !/Forty-eight/.test(ev.b) && !window.__vo.includes('vane.hold.fortyeight');
-      T.reset(); T.at(6, 23); loadMap('oakhaven'); useDeco(ladder()); ev = T.last();
+      T.reset(); T.at(6, 23); loadMap('clearing'); useDeco(ladder()); ev = T.last();
       out.cargo = ev && ev.t !== 'The crates in the hold' && !/Forty-eight/.test(ev.b || '');
       out.restored = String(window.showEvent).includes('__ev');
       return out;

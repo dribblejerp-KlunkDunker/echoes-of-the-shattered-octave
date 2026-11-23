@@ -33,8 +33,9 @@ check(barn.plain && barn.storeys === 1 && barn.dormers.length === 0 && barn.wind
 check(hall.stone && hall.type === 'hip' && hall.dome && hall.dome.x === 28 && hall.roofTex === 'e78_slate' && hall.windows.every((w) => w.style === 'hall'), 'the Greenhall: a hipped slate roof, tall windows, and its dome');
 check(chap.church && chap.type === 'gable' && chap.axis === 'y' && chap.towers.length === 4 && chap.windows.some((w) => w.style === 'lancet'), 'the Chapel: a nave whose gable faces its door, lancet windows, its tower kept');
 // owner, 17 Nov: the houses were "a bit small ... the front doors are too small and the roofs are to low": the ground storey
-// and the ridges were raised, and the mast (now 3.6) and the tower (4.1 in the town) with them
-check(p.houses.filter((b) => !b.stone).every((b) => b.ridge < 3.6) && chap.ridge < 3.2 - 0.5 && hall.ridge < 3.6, 'the skyline: no ordinary ridge reaches the mooring mast (3.6), and the Chapel roof stays well under its tower (ridges ' + p.houses.map((b) => b.ridge.toFixed(2)).join(', ') + ')');
+// and the ridges were raised, and the mast (then 3.6) and the tower (4.1 in the town) with them. Phase 123: the mast is on the
+// quarry rim (js/mast123.js), not in the town; the skyline keeps the height it had to stay under
+check(p.houses.filter((b) => !b.stone).every((b) => b.ridge < 3.6) && chap.ridge < 3.2 - 0.5 && hall.ridge < 3.6, 'the skyline: no ordinary ridge reaches 3.6 (the old mast\'s height), and the Chapel roof stays well under its tower (ridges ' + p.houses.map((b) => b.ridge.toFixed(2)).join(', ') + ')');
 let poke = 0; for (const b of p.houses) for (let y = b.y0 + 1; y < b.y1; y++) for (let x = b.x0 + 1; x < b.x1; x++) { const c = cells[y * W + x]; if (c.top > 2) continue; for (let k = 0; k < 9; k++) { const z = E.roofZ(b, x + (k % 3) / 2, y + ((k / 3) | 0) / 2); if (z == null || z < c.top) poke++; } }
 check(poke === 0, 'the whole of every old lid lies under its new roof');
 check(Math.abs(E.roofZ(cot, 4.5, 4) - cot.ridge) < 1e-9 && E.roofZ(cot, 4.5, 2) >= cot.wallTop && E.roofZ(cot, 4.5, 0.5) === null, 'a roof is highest over the middle, clears the wall top at the wall, and ends at its eaves');
@@ -182,7 +183,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
     out.two = P.filter((b) => b.storeys === 2).map((b) => b.label); out.plain = P.filter((b) => b.plain).length; out.dormers = P.reduce((n, b) => n + b.dormers.length, 0);
     out.hall = P.some((b) => /Greenhall/.test(b.label) && b.dome); out.chapel = P.some((b) => /Chapel/.test(b.label) && b.church && b.towers.length === 4);
     out.roofs = Array.from(new Set(P.map((b) => b.roofTex))).sort(); out.highest = Math.max(...P.filter((b) => !b.stone).map((b) => b.ridge));
-    { const mm = G.maps.oakhaven; out.mast = mm.cells[19 * mm.w + 36].top; out.tower = mm.cells[5 * mm.w + 48].top; out.door = EAVES78.door(mm, 29, 16); out.doorTex = !!(out.door && Engine.textures[out.door.tex]); out.gate = EAVES78.door(mm, 23, 0); GFX.eaves = false; out.doorOff = EAVES78.door(mm, 29, 16); GFX.eaves = true; }
+    { const mm = G.maps.oakhaven; out.mast = mm.cells[19 * mm.w + 36] ? mm.cells[19 * mm.w + 36].top : null;   /* Phase 123: the mast is on the quarry rim */ out.tower = mm.cells[5 * mm.w + 48].top; out.door = EAVES78.door(mm, 29, 16); out.doorTex = !!(out.door && Engine.textures[out.door.tex]); out.gate = EAVES78.door(mm, 23, 0); GFX.eaves = false; out.doorOff = EAVES78.door(mm, 29, 16); GFX.eaves = true; }
     out.mapUntouched = JSON.stringify(G.maps.oakhaven.cells.map((c) => c && [c.tex, c.top, !!c.door])) === cellsBefore;
     out.ms = R3D.mesh().ms;
     // dusk: the mesh is rebuilt once so the windows light
@@ -234,7 +235,7 @@ check(at(2.5, 12.5) === 1 && E.shelter({ id: 'elsewhere', w: W, h: H, cells }) =
   check(r.n >= 31 && r.windows >= 150, 'Oakhaven: ' + r.n + ' buildings roofed, ' + r.windows + ' windows, ' + r.dormers + ' dormers');
   check(r.two.length >= 4 && r.two.some((l) => /Boar/.test(l)) && r.two.some((l) => /mill/.test(l)) && r.plain >= 5, 'upper storeys on the big houses (' + r.two.join('; ') + '); ' + r.plain + ' barns, sheds and stores stay plain');
   check(r.hall && r.chapel, 'the Greenhall has its dome and the Chapel its tower');
-  check(r.roofs.includes('e78_slate') && r.roofs.includes('e78_thatch') && r.highest < 3.6 && r.mast === 3.6 && r.tower === 4.1 && r.door && r.door.h > 1.15 && /^e97_door[0-3]$/.test(r.door.tex) && r.doorTex && r.gate === null && r.doorOff === null, 'thatch and slate (' + r.roofs.join(', ') + '); the highest ordinary ridge is ' + r.highest.toFixed(2) + ', under the mast');
+  check(r.roofs.includes('e78_slate') && r.roofs.includes('e78_thatch') && r.highest < 3.6 && r.mast === null && r.tower === 4.1 && r.door && r.door.h > 1.15 && /^e97_door[0-3]$/.test(r.door.tex) && r.doorTex && r.gate === null && r.doorOff === null, 'thatch and slate (' + r.roofs.join(', ') + '); the highest ordinary ridge is ' + r.highest.toFixed(2) + ', under 3.6 and the tower; no mast in the town (Phase 123: it is on the quarry rim)');
   check(r.on > r.off + r.n * 20, 'the switch adds the new shapes to the world (' + r.off + ' -> ' + r.on + ' triangles)');
   check(r.mapUntouched, 'the map itself is unchanged: walls, doors and heights are what the game still reads');
   check(r.ms < 400, 'building the town with its roofs takes ' + r.ms + ' ms, once');

@@ -60,7 +60,7 @@ async function boot(browser) {
       closeModal(); G.state = 'play';
       // the mast: Part Three never replays the Part Two ending
       let ends = 0; const _end = window.ending; window.ending = () => { ends++; };
-      loadMap('oakhaven'); const mast = G.map.triggers.find((t) => t.id === 'mast');
+      loadMap('clearing'); const mast = G.map.triggers.find((t) => t.id === 'mast');   // Phase 123: the mast is on the quarry rim
       const at = () => { Engine.cam.x = mast.x; Engine.cam.y = mast.y; mast.inside = false; checkTriggers(); };
       G.flags = Object.assign({}, keep, { greening: true, part3: true }); at(); out.p3 = ends;
       G.flags = Object.assign({}, keep, { greening: true }); at(); out.p2 = ends;
