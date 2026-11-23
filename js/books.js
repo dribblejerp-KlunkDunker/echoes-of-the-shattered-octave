@@ -9,12 +9,12 @@ const MOOR_BOOKS = (function () {
   const volumes = [
     {
       id: 'book_things_taken_home', title: 'The Things Taken Home', part: 1, price: 1,
-      preface: 'When the lower works fell in, it took the street above it. Hessa lost her house and her father in one morning, and her husband was carried into the works infirmary. The traveler has been back into the ruin for her, and has brought out a box.',
+      preface: 'When the lower works fell in, it took the street above it. Hessa lost her house and her father in one morning, and her husband was carried into the works infirmary. The traveller has been back into the ruin for her, and has brought out a box.',
       text: `Hessa read the back of the portrait twice.
 
 The first time, she smiled.
 
-It was such a small, unexpected expression that the traveler looked away.
+It was such a small, unexpected expression that the traveller looked away.
 
 “The shirt was yellow,” she said. “He wore it to mend everything. Mother said there was no point washing it because you could stand it in the corner by itself.”
 
@@ -28,7 +28,7 @@ One clasp resisted her fingers. She tried again, became angry with it, and put b
 
 “I thought I’d know what to do when someone brought something back.”
 
-The traveler said nothing.
+The traveller said nothing.
 
 “The chair, perhaps. Or his boots. Something I could clean.”
 
@@ -70,7 +70,7 @@ That was enough.
 
 “Then which one?”
 
-He glanced at the traveler.
+He glanced at the traveller.
 
 “May we close the door?”
 
@@ -106,7 +106,7 @@ Hessa’s hand tightened around the box lid.
 
 She stood so abruptly that the wooden bird fell from the table.
 
-The traveler caught it before she stepped on it.
+The traveller caught it before she stepped on it.
 
 “Where is he?”
 
@@ -228,7 +228,7 @@ At that, Hessa interrupted.
 
 “He told them that too.”
 
-She looked toward the traveler, as though one of them must have misunderstood a simple fact.
+She looked toward the traveller, as though one of them must have misunderstood a simple fact.
 
 Esser described the engineer entering the room. The questions about the latch, the paint, the direction the door might open.
 
@@ -258,7 +258,7 @@ Esser nodded.
 
 “Not through my office. They will know which record I opened.”
 
-The traveler spoke.
+The traveller spoke.
 
 “Would it appear anywhere else?”
 
@@ -272,7 +272,7 @@ Hessa pulled the paper toward her.
 
 “Write the number.”
 
-Esser wrote it twice: once on his copy, and once on a scrap for the traveler.
+Esser wrote it twice: once on his copy, and once on a scrap for the traveller.
 
 It was nearly dark when Esser left.
 
@@ -282,7 +282,7 @@ Hessa had refused.
 
 “They’ve seen your face at a desk,” she told him. “They’ll wonder why you’re asking about a wagon.”
 
-The traveler would go instead.
+The traveller would go instead.
 
 Not to demand a prisoner.
 
@@ -296,7 +296,7 @@ She took the nineteen sovereigns from the box and counted them.
 
 Then she separated six.
 
-The traveler pushed them back.
+The traveller pushed them back.
 
 “We don’t know what we’ll need yet.”
 
@@ -310,7 +310,7 @@ But the portrait she placed upright against a cup.
 
 “Would you turn it a little?”
 
-The traveler adjusted it.
+The traveller adjusted it.
 
 “More.”
 
@@ -338,15 +338,15 @@ For the first time since the collapse, there was somewhere to go.`
     },
     {
       id: 'book_gate_book', title: 'The Gate Book', part: 2, price: 1,
-      preface: 'The day after the collapse, a wagon left the lower works under escort. The traveler takes the docket number to the works gate.',
+      preface: 'The day after the collapse, a wagon left the lower works under escort. The traveller takes the docket number to the works gate.',
       // [PROPOSED] Original continuation. The docket number itself stays unspecified.
       text: `The gatekeeper had put his supper on the book.
 
-He moved the bowl when the traveler asked about a wagon, but left the spoon across the page.
+He moved the bowl when the traveller asked about a wagon, but left the spoon across the page.
 
 “Which wagon?”
 
-The traveler showed him the number on a separate scrap. Esser’s copy was still at the shelter.
+The traveller showed him the number on a separate scrap. Esser’s copy was still at the shelter.
 
 “From the lower works.”
 
@@ -368,7 +368,7 @@ The other book was on a low shelf behind his chair. Its cover had split at the h
 
 “That’s what I mean.”
 
-He found the day by a strip of cloth caught between the leaves. There were more entries than the traveler had expected. Coal. Empty wagons. A water cart admitted twice. A line drawn through a team that had not arrived.
+He found the day by a strip of cloth caught between the leaves. There were more entries than the traveller had expected. Coal. Empty wagons. A water cart admitted twice. A line drawn through a team that had not arrived.
 
 The gatekeeper ran his finger down a column and stopped.
 
@@ -378,7 +378,7 @@ The number matched.
 
 Beside it was written: EQUIPMENT RETURNED FOR ASSESSMENT.
 
-“No passengers?” the traveler asked.
+“No passengers?” the traveller asked.
 
 “Not in that column.”
 
@@ -402,7 +402,7 @@ The finger left the paper.
 
 Outside, a driver called for the gate to be opened. The keeper went to the window. He asked the driver’s name, repeated it, and wrote it in the current book before touching the latch.
 
-The traveler waited.
+The traveller waited.
 
 When the keeper came back, he did not sit.
 
@@ -416,7 +416,7 @@ When the keeper came back, he did not sit.
 
 He looked at the window.
 
-“What does the road column say?” the traveler asked instead.
+“What does the road column say?” the traveller asked instead.
 
 The keeper bent over the book.
 
@@ -430,7 +430,7 @@ The keeper bent over the book.
 
 “After that isn’t my gate.”
 
-The traveler copied the entry. At the foot of the page, someone had added a time and the words HOLD FOR REWEIGH. The keeper said that meant the weight on the docket had not agreed with the wagon.
+The traveller copied the entry. At the foot of the page, someone had added a time and the words HOLD FOR REWEIGH. The keeper said that meant the weight on the docket had not agreed with the wagon.
 
 “Does that happen often?”
 
@@ -440,9 +440,9 @@ The traveler copied the entry. At the foot of the page, someone had added a time
 
 “No.”
 
-He closed the book before the traveler could ask anything else.
+He closed the book before the traveller could ask anything else.
 
-At the door, the traveler offered him a sovereign for the trouble.
+At the door, the traveller offered him a sovereign for the trouble.
 
 He drew his hand away.
 
@@ -450,7 +450,7 @@ He drew his hand away.
 
 The coin went back with the other five.
 
-The lower weighing house was a mile beyond the last cottages. The traveler reached it after the lamps had been lit. A cart stood on the platform with one wheel missing, propped on cut timber. Beside it, a woman was washing black grease from her hands in a bucket.
+The lower weighing house was a mile beyond the last cottages. The traveller reached it after the lamps had been lit. A cart stood on the platform with one wheel missing, propped on cut timber. Beside it, a woman was washing black grease from her hands in a bucket.
 
 “No loads till morning.”
 
@@ -494,7 +494,7 @@ She folded the rag once, then opened it again.
 
 “Both hands. One worse. He kept the bad one under the other.”
 
-The traveler took out the scrap, though there was nothing on it that could help.
+The traveller took out the scrap, though there was nothing on it that could help.
 
 “Did he give a name?”
 
@@ -508,7 +508,7 @@ The traveler took out the scrap, though there was nothing on it that could help.
 
 “I know his mare. Grey, with a white patch under the collar. He carries washing to the old survey house.”
 
-She saw the traveler’s face.
+She saw the traveller’s face.
 
 “That doesn’t mean he went there.”
 
@@ -528,13 +528,13 @@ For a while she watched the water settle in the bucket.
 
 “He asked what day it was,” she said. “I told him. He said he’d lost a morning.”
 
-The traveler waited for more.
+The traveller waited for more.
 
 “That was all.”
 
 Hessa was still awake.
 
-She listened without reaching for either paper. When the traveler put all six coins on the table, she moved them aside to make room for the copied entry.
+She listened without reaching for either paper. When the traveller put all six coins on the table, she moved them aside to make room for the copied entry.
 
 “Equipment,” she said.
 

@@ -310,7 +310,7 @@ const RITE43 = (function () {
     ['A Tanner cousin', 'townsman', 25.7, 14.2, null, 'always'], ['A Tanner cousin', 'townsman', 25.7, 13.5, null, 'always'], ['A Tanner cousin', 'townsman', 25.7, 12.8, null, 'always'],
     ['An old woman on a stool', 'townswoman', 21.3, 12.2, null, 'always'], ['An old woman on a stool', 'townswoman', 21.3, 10.2, null, 'always'],
     ['Lissa Merrow', 'townswoman', 21.3, 8.2, null, 'always', 0.68],
-    ['Abner Fenning', 'hob', 25.7, 20.4, null, (f) => !!f.hob_told],
+    ['Jabez Barker', 'hob', 25.7, 20.4, null, (f) => !!f.hob_told],
     ['Nell Carder', 'nell', 25.7, 16.6, null, (f) => !!f.p30c_told], ['Pim', 'pim', 26.3, 16.0, null, (f) => !!f.p30c_told, 0.6],
     ['Surgeon-Grafter Rooke', 'rooke', 17.0, 15.6, 0, (f) => !!f.boots_delivered || !!f.rooke_drops],
     ['Old Harrow', 'harrow', 25.7, 9.6, null, (f) => !!f.met_harrow],

@@ -80,7 +80,7 @@ In Vane's hand, with the engineer's opinions in the margin. The prices are the c
 In Vane's hand, with Pennick's opinions in the margin. The prices are the chandlers'; he would like that noted.	De la main de Vane, avec les avis de Pennick dans la marge. Les prix sont ceux des fournisseurs ; il aimerait que cela soit noté.
 Purse: {0} sovereigns.	Bourse : {0} souverains.
 The engineer takes a fifth off the gold.	L'ingénieur prend un cinquième sur l'or.
-Pennick takes a fifth off the gold.	Pennick prend un cinquième sur l'or.
+Pennick takes a fifth off the sovereigns.	Pennick prend un cinquième sur les souverains.
 Fit it	La poser
 Fitted	Posée
 Needs: {0}	Il faut : {0}
@@ -168,10 +168,10 @@ Tobiah's patch is holding. I have put my ear to it nine times. Mend the envelope
 You mended the envelope. Fine. I have looked at what you paid for. I could take the tanks in hand, and the prices, and I would make your money last. It will not last. It will last longer.	Vous avez réparé l'enveloppe. Bien. J'ai regardé ce que vous avez payé. Je pourrais prendre les caissons en main, et les prix, et faire durer votre argent. Il ne durera pas. Il durera plus longtemps.
 Ask him to take the tanks in hand.	Lui demander de prendre les caissons en main.
 Pessimist's terms. I keep the tanks. You keep the money. I will see it goes further.	Conditions de pessimiste. Je garde les caissons. Vous gardez l'argent. Je veillerai à ce qu'il aille plus loin.
-The engineer takes the tanks in hand: every upgrade costs a fifth less gold, and he will build the new lift-tank.	L'ingénieur prend les caissons en main : chaque amélioration coûte un cinquième d'or de moins, et il construira le nouveau caisson de levée.
-Pennick takes the tanks in hand: every upgrade costs a fifth less gold, and he will build the new lift-tank.	Pennick prend les caissons en main : chaque amélioration coûte un cinquième d'or de moins, et il construira le nouveau caisson de levée.
-The Kestrel's engineer, who has kept her tanks humming and has been below since Oakhaven, has taken them in hand. Every fitting on the repair list costs a fifth less gold, and he will build the new lift-tank.	L'ingénieur de la Crécerelle, qui fait bourdonner ses caissons et se tient en bas depuis Oakhaven, les a pris en main. Chaque pose de la liste de réparations coûte un cinquième d'or de moins, et il construira le nouveau caisson de levée.
-Pennick, the Kestrel's engineer, who has kept her tanks humming and has been below since Oakhaven, has taken them in hand. Every fitting on the repair list costs a fifth less gold, and he will build the new lift-tank.	Pennick, l'ingénieur de la Crécerelle, qui fait bourdonner ses caissons et se tient en bas depuis Oakhaven, les a pris en main. Chaque pose de la liste de réparations coûte un cinquième d'or de moins, et il construira le nouveau caisson de levée.
+The engineer takes the tanks in hand: every upgrade costs a fifth less in sovereigns, and he will build the new lift-tank.	L'ingénieur prend les caissons en main : chaque amélioration coûte un cinquième de souverains en moins, et il construira le nouveau caisson de levée.
+Pennick takes the tanks in hand: every upgrade costs a fifth less in sovereigns, and he will build the new lift-tank.	Pennick prend les caissons en main : chaque amélioration coûte un cinquième de souverains en moins, et il construira le nouveau caisson de levée.
+The Kestrel's engineer, who has kept her tanks humming and has been below since Oakhaven, has taken them in hand. Every fitting on the repair list costs a fifth less in sovereigns, and he will build the new lift-tank.	L'ingénieur de la Crécerelle, qui fait bourdonner ses caissons et se tient en bas depuis Oakhaven, les a pris en main. Chaque pose de la liste de réparations coûte un cinquième de souverains en moins, et il construira le nouveau caisson de levée.
+Pennick, the Kestrel's engineer, who has kept her tanks humming and has been below since Oakhaven, has taken them in hand. Every fitting on the repair list costs a fifth less in sovereigns, and he will build the new lift-tank.	Pennick, l'ingénieur de la Crécerelle, qui fait bourdonner ses caissons et se tient en bas depuis Oakhaven, les a pris en main. Chaque pose de la liste de réparations coûte un cinquième de souverains en moins, et il construira le nouveau caisson de levée.
 The number-two tank is making the sound it makes before it makes another sound.	Le caisson numéro deux fait le bruit qu'il fait avant de faire un autre bruit.
 The number-three tank is making the sound it makes before it makes another sound.	Le caisson numéro trois fait le bruit qu'il fait avant de faire un autre bruit.
 Gauge says forty. Gauge has said forty since Oakhaven. I do not trust a number that steady.	Le manomètre dit quarante. Il dit quarante depuis Oakhaven. Je me méfie d'un chiffre aussi stable.
@@ -200,8 +200,8 @@ Reach flour tastes of less every harvest. This is from before. I am spending it 
 The lad's hands are still clean. I check them every morning. He has stopped asking why.	Les mains du petit sont encore propres. Je les vérifie chaque matin. Il a cessé de demander pourquoi.
 Hearth bread wants a hot stove and no company. You have given me one of those.	Le pain de foyer veut un poêle chaud et pas de compagnie. Vous m'avez donné l'un des deux.
 They sang the calling-song after us from four miles back. I knead to it, slowly.	Ils ont chanté le chant d'appel derrière nous depuis quatre milles. Je pétris en rythme, lentement.
-Abner Fenning, tanner	Abner Fenning, tanneur
-Abner Fenning, on a sack of hides	Abner Fenning, sur un sac de peaux
+Jabez Barker, tanner	Jabez Barker, tanneur
+Jabez Barker, on a sack of hides	Jabez Barker, sur un sac de peaux
 Evening. Mind the vats. There are no vats, but mind them.	Bonsoir. Fais attention aux cuves. Il n'y a pas de cuves, mais fais attention.
 A tannery is the one trade that gets quieter the harder you work it. A ship is the other way about.	Un tannage est le seul métier qui devient plus silencieux à mesure qu'on le travaille. Un navire, c'est l'inverse.
 I have buried two apprentices this year. Try me.	J'ai enterré deux apprentis cette année. Essaie donc.
@@ -212,8 +212,8 @@ He turns a strip of hide over in his hands. "No light in this ship worth cutting
 Give him the bench in the hold.	Lui donner l'établi de la cale.
 Not yet.	Pas encore.
 He sets a lantern on the bench, in a window that is not there, and turns it so the light goes the right way. "Bring me what is worn. I will see to the edge."	Il pose une lanterne sur l'établi, dans une fenêtre qui n'existe pas, et la tourne pour que la lumière aille dans le bon sens. « Apporte-moi ce qui est usé. Je m'occuperai du fil. »
-Abner has the bench in the hold: once a game day he will put an edge back on your readied weapon (+35 condition).	Abner tient l'établi de la cale : une fois par jour de jeu, il remettra du fil à votre arme en main (+35 d'état).
-Abner Fenning has the bench in the Kestrel's hold. Once a day he will see to the edge of whatever I carry.	Abner Fenning tient l'établi de la cale de la Crécerelle. Une fois par jour, il s'occupera du fil de ce que je porte.
+Jabez has the bench in the hold: once a game day he will put an edge back on your readied weapon (+35 condition).	Jabez tient l'établi de la cale : une fois par jour de jeu, il remettra du fil à votre arme en main (+35 d'état).
+Jabez Barker has the bench in the Kestrel's hold. Once a day he will see to the edge of whatever I carry.	Jabez Barker tient l'établi de la cale de la Crécerelle. Une fois par jour, il s'occupera du fil de ce que je porte.
 Ask him to see to your weapon.	Lui demander de s'occuper de votre arme.
 He takes it, turns it once in the lantern light, draws it twice along a strip of hide and hands it back. It is as good as it has been.	Il la prend, la tourne une fois dans la lumière de la lanterne, la passe deux fois sur une bande de cuir et la rend. Elle est aussi bonne qu'elle l'a jamais été.
 "It has had its turn today," he says. "Come back when the day has."	« Elle a eu son tour aujourd'hui, dit-il. Reviens quand la journée aura tourné. »

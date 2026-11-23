@@ -91,14 +91,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       out.column = !!ly && !!leg && !!head && ly.y > head.y && leg.y > ly.y && Math.abs(ly.x - 23.5) < 0.1 && ly.y < Engine.cam.y;
       out.kerb = G.ents.filter((e) => e._r43 && /^kerb/.test(e._r43)).length;
       out.hum = f.r43_hum;
-      out.hob = G.ents.some((e) => e._r43 && /^kerb/.test(e._r43) && e._name === 'Abner Fenning' && e._hums);
+      out.hob = G.ents.some((e) => e._r43 && /^kerb/.test(e._r43) && e._name === 'Jabez Barker' && e._hums);
       out.rookeHums = G.ents.some((e) => e._r43 && /^kerb/.test(e._r43) && e._name === 'Surgeon-Grafter Rooke' && e._hums);   // he has her instruction
       delete f.tam_met;
       return out;
     });
     check(door.card && /Walk with them\.\|Not yet\./.test(door.choices) && door.notYet && door.again, 'at Lyra\'s door the column forms: the point of no return lists the open threads, "Not yet." waits and asks again');
     check(door.started && door.journal, 'walking with them starts the Rite: Hearthday, day 10, the coil in Kaelen\'s toolbag, the pass kept');
-    check(door.column && door.kerb === 21 && door.hum === 18 && door.hob && door.rookeHums, 'the column stands on the road ahead of you, Lyra behind the choir, the Legionnaires at her shoulders; the kerbs hum (16 of the book\'s, plus Abner Fenning whom you helped and Rooke who has her instruction)');
+    check(door.column && door.kerb === 21 && door.hum === 18 && door.hob && door.rookeHums, 'the column stands on the road ahead of you, Lyra behind the choir, the Legionnaires at her shoulders; the kerbs hum (16 of the book\'s, plus Jabez Barker whom you helped and Rooke who has her instruction)');
 
     // ---- the procession: it waits for you, N hums with the town, a loud Song turns a stave, the beats fire in order
     const walk = await page.evaluate(() => {
@@ -114,7 +114,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       while (f.r43 === 1 && n < 900) { T.at(ly().x + 0.3, ly().y + 1.0); T.step(1, 0.1); n++; }
       for (const t of window.__msgs) { const i = lines.findIndex((re) => re.test(t)); if (i >= 0 && !seq.includes(i)) seq.push(i); }
       out.beats = f.r43_beats === 5 && seq.join(',') === '0,1,2,3,4';
-      out.helped = T.heard(/Abner Fenning, Surgeon-Grafter Rooke are at the kerb, and hum/); out.wept = T.heard(/weeps without making a sound/);
+      out.helped = T.heard(/Jabez Barker, Surgeon-Grafter Rooke are at the kerb, and hum/); out.wept = T.heard(/weeps without making a sound/);
       const a = T.last(); out.arrive = !!a && /headframe/.test(a.t) && /Tobiah Marsh/.test(a.b) && new RegExp('counted ' + (f.r43_hum + 1) + ' voices').test(a.b) && /Yours was one of them/.test(a.b) && /back of the column/.test(a.b);
       a.c[0].f(); out.stage = f.r43; out.map = G.mapId; out.gone = !G.maps.oakhaven.entities.some((e) => e._r43);
       const c1 = T.last(); out.cage = /Four hundred feet/.test(c1.t); c1.c[0].f(); const c2 = T.last(); out.pumps = /The pumps/.test(c2.t) && /gracious to a tool/.test(c2.b); c2.c[0].f();

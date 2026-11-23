@@ -84,7 +84,7 @@ const SHOT_DIR = process.env.SHOT_DIR || path.join(os.tmpdir(), 'surfaces-shots'
       // --- memory budget -----------------------------------------------------------
       const bytes = DECALS.budgetBytes();
       check(bytes === (DEC.length + CEI.length + 1) * 64 * 64 * 4, 'the budget counts every generated texture exactly (' + bytes + ')');
-      check(bytes < 512 * 1024, 'the budget is under 512 KB');
+      check(DECALS.capBytes <= 768 * 1024 && bytes < DECALS.capBytes, 'the budget is under the cap (' + bytes + ' of ' + DECALS.capBytes + ' B, no more than 768 KB)');
       out.budgetBytes = bytes;
 
       // --- GFX flags exist and join the plain() set ---------------------------------

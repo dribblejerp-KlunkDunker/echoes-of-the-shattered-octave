@@ -28,7 +28,7 @@ const LOGMAP = (function () {
   const SUBJECTS = {
     gate: 'The North Gate', rite: 'The Rite of Hearthday', coil: 'The reverse-phase coil', bore: 'The quarry bore',
     greening: 'The Root Greening', hedge: 'The Hedge', crates: 'The corsair\'s crates', boots: 'Davin\'s boots',
-    twins: 'The Fenning twins\' coats', tam: 'The voice on the Flume', pim: 'Pim\'s rooted hands', bells: 'The bells',
+    twins: 'The Barker twins\' coats', tam: 'The voice on the Flume', pim: 'Pim\'s rooted hands', bells: 'The bells',
     sable: 'Sable and the Bound Ledger', pumps: 'The pumps at Depot Two', names: 'A page of names',
     press: 'The Office hand-press', kestrel: 'The Drift-Kestrel', tank: 'The Kestrel\'s lift-tank',
     cutterlog: 'The cutter\'s log', sunken: 'The Sunken Court', lamps: 'The dry lamps', pools: 'The reflecting pools',
@@ -52,7 +52,7 @@ const LOGMAP = (function () {
     ['vesper', /^vesper:/], ['lantern', /^lanterns in the mist/], ['tobin', /^the year 417/],
     ['deed', /deed to 4 cooper/],
     ['folder', /^coda: kaelen|grey arbiterium folder|calibration|tuning room/], ['mausoleum', /^coda:/],
-    ['mausoleum', /^the requiem:|^in the choir of the mausoleum/], ['aegis', /the thing at the porch|voice at the door/],
+    ['mausoleum', /^the unended office:|^the requiem:|^in the choir of the mausoleum/], ['aegis', /the thing at the porch|voice at the door/],
     ['pumps', /hew callan/], ['aegis', /aegis|hymn 9|^the red cloak/], ['table', /table for four|halder/],
     ['lamps', /lamplighter|dry lamps/], ['pools', /reflecting pools/], ['tapes', /name-tapes from (ten|the choir)/],
     ['sunken', /^the office came out/], ['press', /^the pressman's round|hand-press|bettis renn/],

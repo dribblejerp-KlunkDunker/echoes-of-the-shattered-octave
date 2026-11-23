@@ -76,7 +76,7 @@ const STORYRUM = (() => {
       : c.daysLeft >= 1 ? 'Hearthday is on us tomorrow or the day after. I have put the good mugs in the cellar and the bad ones on the bar. Sap and splinters, I hate a Rite.'
       : 'They say it is Hearthday or near enough, and the Chapel smells of hot bronze. I have stopped counting days. I count lamps.');
   add('d_gate', 'deed', 'any', 20, { req: ['gate_open'], not: ['kaelen_met'], note: 'Harrow has opened the North Gate for you' },
-    'Harrow unbarred the North Gate after dusk for someone with the Cantor\'s word. Eleven years he has kept it shut at night, and it took a stranger and one sentence to move him. Folk would like the sentence.');
+    'Harrow unbarred the North Gate after dusk for someone with the Cantor\'s word. Eleven years he has kept a gate in this town, and this one shut at night since the Hedge went in, and it took a stranger and one sentence to move him. Folk would like the sentence.');
   add('d_kaelen', 'deed', 'any', 30, { req: ['kaelen_met'], not: ['coil_done'], note: 'You have met Kaelen' },
     'Somebody walked out past the hound-bed to the Governor\'s son and walked back with their voice still in them. That is more than anyone expected. What he said is what folk want to know.');
   add('d_quarry_charts', 'deed', 'any', 32, { req: ['tobiah_met'], not: ['coil_done'], note: 'Tobiah gave you his charts' },
@@ -116,13 +116,13 @@ const STORYRUM = (() => {
   add('d_plinth', 'deed', 'any', 28, { req: ['plinth_read'], not: ['greening'], note: 'You read the chalk on the empty bell-frame' },
     'Somebody has read the chalk on the empty bell-frame. They rang in E, it says. The old women have started saying it under their breath, like a grace, and asking who taught the Hedge to whistle.');
   add('d_culvert_key', 'deed', 'any', 38, { req: ['culvert_open'], not: ['twins_found'], note: 'You took the culvert key' },
-    'The culvert key is off its nail at Abner Fenning\'s. First time in a month. Somebody has gone down, and nobody has said so.');
+    'The culvert key is off its nail at Jabez Barker\'s. First time in a month. Somebody has gone down, and nobody has said so.');
   add('d_twins_found', 'deed', 'any', 42, { req: ['twins_found'], not: ['hob_told'], note: 'You found the twins\' coats under the culvert' },
-    'A stranger has been down the Tannery culvert and come back up. Abner\'s lamp is still in the window, and Abner is standing at it, not looking.');
+    'A stranger has been down the Tannery culvert and come back up. Jabez\'s lamp is still in the window, and Jabez is standing at it, not looking.');
   add('d_twins_named', 'deed', 'any', 43, { req: ['twins_named'], not: ['greening'], note: 'You wrote Ned and Wyn in your ledger' },
-    'Somebody has written the Fenning twins down, Ned and Wyn, whole names, somewhere that is not the Office\'s ledger. I do not know where that is. I would like to.');
-  add('d_hob_told', 'deed', 'any', 44, { req: ['hob_told'], not: ['greening'], note: 'You told Abner what you found' },
-    'Abner Fenning has put out the lamp in his window. All of Tannery Row saw it go dark, and none of us said a word.');
+    'Somebody has written the Barker twins down, Ned and Wyn, whole names, somewhere that is not the Office\'s ledger. I do not know where that is. I would like to.');
+  add('d_hob_told', 'deed', 'any', 44, { req: ['hob_told'], not: ['greening'], note: 'You told Jabez what you found' },
+    'Jabez Barker has put out the lamp in his window. All of Tannery Row saw it go dark, and none of us said a word.');
   add('d_boots', 'deed', 'any', 46, { req: ['rooke_boots'], not: ['boots_delivered'], note: 'Rooke gave you Davin\'s boots' },
     'Rooke handed a stranger a pair of boots to carry across town. In this town that is the nearest thing to a confession we have.');
   add('d_boots_done', 'deed', 'any', 48, { req: ['boots_delivered'], not: ['greening'], note: 'You gave Orla Hale the boots' },
@@ -187,7 +187,7 @@ const STORYRUM = (() => {
 
   // ---- what the player is
   add('p_glass', 'deed', 'any', 8, { note: 'Your character is a glass-bearer (p.glassed)', when: (c) => c.glassed && !c.has('greening') },
-    'Somebody\'s arm is the colour of lamp-glass, green-gold at the wrist, and climbing. The Governor\'s son has the same, and look how he lives. Folk say coincidence. Folk are generous.');
+    'Somebody\'s arm is the colour of lamp-glass, pale blue at the wrist, and climbing. The Governor\'s son has the same, and look how he lives. Folk say coincidence. Folk are generous.');
   add('p_horse', 'deed', 'any', 9, { note: 'You have a hired horse right now', when: (c) => c.horse && !c.has('greening') },
     'Someone has hired a horse out of the North Gate stables by the hour. A horse. In Oakhaven. It will be back before it is missed, or it will not.');
 

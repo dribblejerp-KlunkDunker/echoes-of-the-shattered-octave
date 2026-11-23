@@ -88,7 +88,7 @@ const HOUSE13 = (function () {
     mapName: S('The Tarrows\' house'),
     door: {
       label: S('The Tarrows\' house'),
-      shut: S('The Tarrows\' house. The door is shut, not barred, and nobody has answered it for weeks. Three reeds hang still above it. The neighbour has the key.'),
+      shut: S('The Tarrows\' house. The door is shut, not barred, and nobody has answered it for two years. Three reeds hang still above it. The neighbour has the key.'),
       out: S('Out to the street'),
       inner: S('A door'),
     },
@@ -109,7 +109,7 @@ const HOUSE13 = (function () {
         'The Hedge': S('It keeps every sound this town ever made. It has your first cry and your mother\'s last word, and it gives them back when it likes, in whatever voice it was given. That is the only mercy in it.'),
         'The Last Note': S('When one of us is dying the family holds their pitch until the body lets go, and counts it out in eights, one for each Anchor. On the eighth, the note is let go. We do it in silence now. It is not that we are afraid. It is that it does not carry.'),
       },
-      intro: S('Does it ring? No. That is the trouble. Look at the lintel next door: three reeds and a bare nail. The family went out on the last cart before the gate was barred, three weeks gone, and that house has not been empty since. There is a kettle in there that comes up to the boil all night and never gets there. And a child, counting. One to seven. Always seven. That is Linnet, the girl; she is well, I watched her go. It is only her voice the Hedge has, the way it has all of ours, and it will not hand it back finished. I have the key. I have not used it.'),
+      intro: S('Does it ring? No. That is the trouble. Look at the lintel next door: three reeds and a bare nail. The family went out on the last cart before the gate was barred, two years gone, and that house has not been empty since. There is a kettle in there that comes up to the boil all night and never gets there. And a child, counting. One to seven. Always seven. That is Linnet, the girl; she is well, I watched her go. It is only her voice the Hedge has, the way it has all of ours, and it will not hand it back finished. I have the key. I have not used it.'),
       again: S('You again. Will you go in? I have not stopped hearing it, and I would rather it were you than me.'),
       yes: S('I will go in.'),
       no: S('Not today.'),
@@ -124,7 +124,7 @@ const HOUSE13 = (function () {
     look: {
       board: S('A pitch-board nailed beside the door, the way a household keeps its pitches: four notches cut in a plank, each with a name in chalk. GIL. MAUD. LINNET, in a child\'s chalk, rubbed out and written again. NAN, the lowest, cut deepest: a little under Gil\'s.'),
       shelfFront: S('Cloaks on pegs. Three pegs, three cloaks. The fourth peg holds a shawl-pin and nothing else.'),
-      hearth: S('The hearth is swept and cold, and has been for weeks.'),
+      hearth: S('The hearth is swept and cold, and has been for two years.'),
       kettle: S('A tin kettle. There is no fire under it, and the water in it is cold, and it is making the small rising sound of water about to boil. It never boils.'),
       kitchenTable: S('A table laid for four. Three bowls are clean. In the fourth a spoon stands upright, as if somebody had set it down for an old woman who could not hold it.'),
       chair: S('A plain chair with a worn seat. It is cold, and it is only a chair.'),

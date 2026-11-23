@@ -7,7 +7,7 @@
 //     pale highlight marks the struck edge. Symmetric blobs (swarm, moth,
 //     horn) burst and scatter instead. Frames are built once per source sprite
 //     (so once per species, pose and view), cached and byte-budgeted.
-//  2. The Requiem cracks at half health: ~1 s of cracks spreading across it,
+//  2. The Unended Office cracks at half health: ~1 s of cracks spreading across it,
 //     shards flying off as screen-space particles, then a cracked variant for
 //     the rest of the fight. The Brood-Mother sheds her egg-sacs the same way:
 //     the pods peel off and fall, leaving a deflated variant.
@@ -154,7 +154,7 @@ const ENEMY_FX = (() => {
     return store(src, en, symmetric ? buildBurst(src) : buildRecoil(src), s => { en.flinch = s; });
   }
 
-  // ---- 2a. the Requiem's cracks -----------------------------------------
+  // ---- 2a. the Unended Office's cracks -----------------------------------------
   // Crack geometry in sprite space (0..1), grown from the chest outward; t is
   // how far along the spread a segment appears.
   let CRACKS = null;

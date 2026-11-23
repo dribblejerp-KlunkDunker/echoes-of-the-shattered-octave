@@ -4399,10 +4399,10 @@
    "source": "NPCS.halder.greet.normal"
   },
   {
-   "id": "harrow.t.69795e",
+   "id": "harrow.t.fd14e3",
    "speaker": "harrow",
    "kind": "topic",
-   "text": "I've stood this gate eleven years. Last night it whistled a tune only the Cantor and the Carder boy know. Whistled it exactly right.",
+   "text": "I've kept a gate in this town eleven years, and this one since they planted the Hedge. Last night it whistled a tune only the Cantor and the Carder boy know. Whistled it exactly right.",
    "auto": true,
    "source": "NPCS.harrow.topics.The Hedge"
   },
@@ -7880,10 +7880,10 @@
    "source": "NPCS.p29_sexton.greet.blunt"
   },
   {
-   "id": "p29_sim.g.380638",
+   "id": "p29_sim.g.e44df0",
    "speaker": "p29_sim",
    "kind": "greet",
-   "text": "Abner is outside. He likes the air. I like the work; it stops you hearing the Hollow through the wall.",
+   "text": "Jabez is outside. He likes the air. I like the work; it stops you hearing the Hollow through the wall.",
    "auto": true,
    "source": "NPCS.p29_sim.greet.polite"
   },
@@ -9128,10 +9128,10 @@
    "source": "NPCS.p9_ada.greet.blunt"
   },
   {
-   "id": "p9_ada.t.d7698d",
+   "id": "p9_ada.t.6cd1da",
    "speaker": "p9_ada",
    "kind": "topic",
-   "text": "Seventy years in one street. It was louder when I was a girl. Everything was.",
+   "text": "Seventy years in one parish. It was louder when I was a girl. Everything was.",
    "auto": true,
    "source": "NPCS.p9_ada.topics.Oakhaven"
   },
@@ -9886,7 +9886,7 @@
    "id": "aegis.shared.whisper-grove.low",
    "speaker": "aegis",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -10582,7 +10582,7 @@
    "id": "bettany.shared.whisper-grove.low",
    "speaker": "bettany",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -11062,7 +11062,7 @@
    "id": "bettis.shared.whisper-grove.low",
    "speaker": "bettis",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -11542,7 +11542,7 @@
    "id": "halder.shared.whisper-grove.low",
    "speaker": "halder",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -12006,7 +12006,7 @@
    "id": "harrow.shared.whisper-grove.low",
    "speaker": "harrow",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -12734,7 +12734,7 @@
    "id": "hetty.shared.whisper-grove.low",
    "speaker": "hetty",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -13182,7 +13182,7 @@
    "id": "hob.shared.whisper-grove.low",
    "speaker": "hob",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -14166,7 +14166,7 @@
    "id": "lamplighter.shared.whisper-grove.low",
    "speaker": "lamplighter",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -14910,7 +14910,7 @@
    "id": "lib_odile.shared.whisper-grove.low",
    "speaker": "lib_odile",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -15390,7 +15390,7 @@
    "id": "lib_shelver.shared.whisper-grove.low",
    "speaker": "lib_shelver",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -16342,7 +16342,7 @@
    "id": "moor_bookseller.shared.whisper-grove.low",
    "speaker": "moor_bookseller",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -16822,7 +16822,7 @@
    "id": "mourner.shared.whisper-grove.low",
    "speaker": "mourner",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -17302,7 +17302,7 @@
    "id": "n28_hummer.shared.whisper-grove.low",
    "speaker": "n28_hummer",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -17782,7 +17782,7 @@
    "id": "n28_lamplighter.shared.whisper-grove.low",
    "speaker": "n28_lamplighter",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -18230,7 +18230,7 @@
    "id": "nell.shared.whisper-grove.low",
    "speaker": "nell",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -18694,7 +18694,7 @@
    "id": "orla.shared.whisper-grove.low",
    "speaker": "orla",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -19174,7 +19174,7 @@
    "id": "orrin.shared.whisper-grove.low",
    "speaker": "orrin",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -19654,7 +19654,7 @@
    "id": "p100_19.shared.whisper-grove.low",
    "speaker": "p100_19",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -20134,7 +20134,7 @@
    "id": "p100_207.shared.whisper-grove.low",
    "speaker": "p100_207",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -20614,7 +20614,7 @@
    "id": "p100_211.shared.whisper-grove.low",
    "speaker": "p100_211",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -21094,7 +21094,7 @@
    "id": "p100_51.shared.whisper-grove.low",
    "speaker": "p100_51",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -21574,7 +21574,7 @@
    "id": "p100_88.shared.whisper-grove.low",
    "speaker": "p100_88",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -22054,7 +22054,7 @@
    "id": "p100_94.shared.whisper-grove.low",
    "speaker": "p100_94",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -22534,7 +22534,7 @@
    "id": "p100_corp.shared.whisper-grove.low",
    "speaker": "p100_corp",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -23014,7 +23014,7 @@
    "id": "p100_issue.shared.whisper-grove.low",
    "speaker": "p100_issue",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -23494,7 +23494,7 @@
    "id": "p100_mastcrew.shared.whisper-grove.low",
    "speaker": "p100_mastcrew",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -23974,7 +23974,7 @@
    "id": "p100_qm.shared.whisper-grove.low",
    "speaker": "p100_qm",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -24454,7 +24454,7 @@
    "id": "p100_roster.shared.whisper-grove.low",
    "speaker": "p100_roster",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -24934,7 +24934,7 @@
    "id": "p100_tr_a.shared.whisper-grove.low",
    "speaker": "p100_tr_a",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -25414,7 +25414,7 @@
    "id": "p100_tr_b.shared.whisper-grove.low",
    "speaker": "p100_tr_b",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -25894,7 +25894,7 @@
    "id": "p100_tr_c.shared.whisper-grove.low",
    "speaker": "p100_tr_c",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -26374,7 +26374,7 @@
    "id": "p100_tr_d.shared.whisper-grove.low",
    "speaker": "p100_tr_d",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -26854,7 +26854,7 @@
    "id": "p100_watcher.shared.whisper-grove.low",
    "speaker": "p100_watcher",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -27334,7 +27334,7 @@
    "id": "p11_dicer.shared.whisper-grove.low",
    "speaker": "p11_dicer",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -27814,7 +27814,7 @@
    "id": "p11c_fish.shared.whisper-grove.low",
    "speaker": "p11c_fish",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -28294,7 +28294,7 @@
    "id": "p11c_herb.shared.whisper-grove.low",
    "speaker": "p11c_herb",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -28774,7 +28774,7 @@
    "id": "p11c_larder.shared.whisper-grove.low",
    "speaker": "p11c_larder",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -29254,7 +29254,7 @@
    "id": "p11c_odds.shared.whisper-grove.low",
    "speaker": "p11c_odds",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -29734,7 +29734,7 @@
    "id": "p11c_tinker.shared.whisper-grove.low",
    "speaker": "p11c_tinker",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -30182,7 +30182,7 @@
    "id": "p12_baker.shared.whisper-grove.low",
    "speaker": "p12_baker",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -30662,7 +30662,7 @@
    "id": "p12_dunna.shared.whisper-grove.low",
    "speaker": "p12_dunna",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -31126,7 +31126,7 @@
    "id": "p12_herald.shared.whisper-grove.low",
    "speaker": "p12_herald",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -31590,7 +31590,7 @@
    "id": "p13h_wenna.shared.whisper-grove.low",
    "speaker": "p13h_wenna",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -32070,7 +32070,7 @@
    "id": "p15_dealer.shared.whisper-grove.low",
    "speaker": "p15_dealer",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -33046,7 +33046,7 @@
    "id": "p15s_preacher.shared.whisper-grove.low",
    "speaker": "p15s_preacher",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -33526,7 +33526,7 @@
    "id": "p16f_hand.shared.whisper-grove.low",
    "speaker": "p16f_hand",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -34006,7 +34006,7 @@
    "id": "p16f_madge.shared.whisper-grove.low",
    "speaker": "p16f_madge",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -34486,7 +34486,7 @@
    "id": "p16f_orrin.shared.whisper-grove.low",
    "speaker": "p16f_orrin",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -34966,7 +34966,7 @@
    "id": "p16f_pellam.shared.whisper-grove.low",
    "speaker": "p16f_pellam",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -35446,7 +35446,7 @@
    "id": "p16f_wife.shared.whisper-grove.low",
    "speaker": "p16f_wife",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -35926,7 +35926,7 @@
    "id": "p16h_dessa.shared.whisper-grove.low",
    "speaker": "p16h_dessa",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -36406,7 +36406,7 @@
    "id": "p16h_ines.shared.whisper-grove.low",
    "speaker": "p16h_ines",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -36886,7 +36886,7 @@
    "id": "p16h_mossbrook.shared.whisper-grove.low",
    "speaker": "p16h_mossbrook",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -37366,7 +37366,7 @@
    "id": "p16h_orrin.shared.whisper-grove.low",
    "speaker": "p16h_orrin",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -37846,7 +37846,7 @@
    "id": "p16h_steward.shared.whisper-grove.low",
    "speaker": "p16h_steward",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -38326,7 +38326,7 @@
    "id": "p16h_vause.shared.whisper-grove.low",
    "speaker": "p16h_vause",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -38774,7 +38774,7 @@
    "id": "p16k_hob.shared.whisper-grove.low",
    "speaker": "p16k_hob",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -39470,7 +39470,7 @@
    "id": "p16k_nell.shared.whisper-grove.low",
    "speaker": "p16k_nell",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -40350,7 +40350,7 @@
    "id": "p17c_bessa.shared.whisper-grove.low",
    "speaker": "p17c_bessa",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -40734,7 +40734,7 @@
    "id": "p17c_child.shared.whisper-grove.low",
    "speaker": "p17c_child",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -41102,7 +41102,7 @@
    "id": "p17c_dunmore.shared.whisper-grove.low",
    "speaker": "p17c_dunmore",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -41486,7 +41486,7 @@
    "id": "p17c_hand.shared.whisper-grove.low",
    "speaker": "p17c_hand",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -41870,7 +41870,7 @@
    "id": "p17c_hesper.shared.whisper-grove.low",
    "speaker": "p17c_hesper",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -42254,7 +42254,7 @@
    "id": "p17c_hesper2.shared.whisper-grove.low",
    "speaker": "p17c_hesper2",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -42638,7 +42638,7 @@
    "id": "p17c_oona.shared.whisper-grove.low",
    "speaker": "p17c_oona",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -43022,7 +43022,7 @@
    "id": "p17c_quain.shared.whisper-grove.low",
    "speaker": "p17c_quain",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -43406,7 +43406,7 @@
    "id": "p17c_quain2.shared.whisper-grove.low",
    "speaker": "p17c_quain2",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -43790,7 +43790,7 @@
    "id": "p17c_sloe.shared.whisper-grove.low",
    "speaker": "p17c_sloe",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -44174,7 +44174,7 @@
    "id": "p17c_tace.shared.whisper-grove.low",
    "speaker": "p17c_tace",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -44558,7 +44558,7 @@
    "id": "p17c_teague.shared.whisper-grove.low",
    "speaker": "p17c_teague",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -44942,7 +44942,7 @@
    "id": "p17c_teel.shared.whisper-grove.low",
    "speaker": "p17c_teel",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -45326,7 +45326,7 @@
    "id": "p17c_wife.shared.whisper-grove.low",
    "speaker": "p17c_wife",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -45806,7 +45806,7 @@
    "id": "p17n_jory.shared.whisper-grove.low",
    "speaker": "p17n_jory",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -46286,7 +46286,7 @@
    "id": "p17n_marl.shared.whisper-grove.low",
    "speaker": "p17n_marl",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -46766,7 +46766,7 @@
    "id": "p17n_tansy.shared.whisper-grove.low",
    "speaker": "p17n_tansy",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -47230,7 +47230,7 @@
    "id": "p22_absalom.shared.whisper-grove.low",
    "speaker": "p22_absalom",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -47694,7 +47694,7 @@
    "id": "p22_gideon.shared.whisper-grove.low",
    "speaker": "p22_gideon",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -48174,7 +48174,7 @@
    "id": "p22_kit.shared.whisper-grove.low",
    "speaker": "p22_kit",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -48654,7 +48654,7 @@
    "id": "p22_kitlost.shared.whisper-grove.low",
    "speaker": "p22_kitlost",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -49102,7 +49102,7 @@
    "id": "p22_tamar.shared.whisper-grove.low",
    "speaker": "p22_tamar",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -49582,7 +49582,7 @@
    "id": "p29_abel.shared.whisper-grove.low",
    "speaker": "p29_abel",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -50062,7 +50062,7 @@
    "id": "p29_agnes.shared.whisper-grove.low",
    "speaker": "p29_agnes",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -50542,7 +50542,7 @@
    "id": "p29_ambrose.shared.whisper-grove.low",
    "speaker": "p29_ambrose",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -51022,7 +51022,7 @@
    "id": "p29_corvin.shared.whisper-grove.low",
    "speaker": "p29_corvin",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -51502,7 +51502,7 @@
    "id": "p29_ennis.shared.whisper-grove.low",
    "speaker": "p29_ennis",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -51982,7 +51982,7 @@
    "id": "p29_gil.shared.whisper-grove.low",
    "speaker": "p29_gil",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -52462,7 +52462,7 @@
    "id": "p29_hurst.shared.whisper-grove.low",
    "speaker": "p29_hurst",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -52942,7 +52942,7 @@
    "id": "p29_jem.shared.whisper-grove.low",
    "speaker": "p29_jem",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -53422,7 +53422,7 @@
    "id": "p29_moll.shared.whisper-grove.low",
    "speaker": "p29_moll",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -53902,7 +53902,7 @@
    "id": "p29_prue.shared.whisper-grove.low",
    "speaker": "p29_prue",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -54382,7 +54382,7 @@
    "id": "p29_sexton.shared.whisper-grove.low",
    "speaker": "p29_sexton",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -54862,7 +54862,7 @@
    "id": "p29_sim.shared.whisper-grove.low",
    "speaker": "p29_sim",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -55342,7 +55342,7 @@
    "id": "p29_ysolde.shared.whisper-grove.low",
    "speaker": "p29_ysolde",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -55822,7 +55822,7 @@
    "id": "p30_hob.shared.whisper-grove.low",
    "speaker": "p30_hob",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -56302,7 +56302,7 @@
    "id": "p30_lissa.shared.whisper-grove.low",
    "speaker": "p30_lissa",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -56782,7 +56782,7 @@
    "id": "p31_jugs.shared.whisper-grove.low",
    "speaker": "p31_jugs",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -57262,7 +57262,7 @@
    "id": "p31_shutters.shared.whisper-grove.low",
    "speaker": "p31_shutters",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -57742,7 +57742,7 @@
    "id": "p31_sweeper.shared.whisper-grove.low",
    "speaker": "p31_sweeper",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -58174,7 +58174,7 @@
    "id": "p46_marrit.shared.whisper-grove.low",
    "speaker": "p46_marrit",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -58654,7 +58654,7 @@
    "id": "p92_anselm.shared.whisper-grove.low",
    "speaker": "p92_anselm",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -59134,7 +59134,7 @@
    "id": "p92_brenna.shared.whisper-grove.low",
    "speaker": "p92_brenna",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -59614,7 +59614,7 @@
    "id": "p92_canvas.shared.whisper-grove.low",
    "speaker": "p92_canvas",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -60094,7 +60094,7 @@
    "id": "p92_folk.shared.whisper-grove.low",
    "speaker": "p92_folk",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -60238,7 +60238,7 @@
    "id": "p92_folk.shared.rumour.2",
    "speaker": "p92_folk",
    "kind": "shared",
-   "text": "I couldn't say. But I'll tell you what I heard: Abner Fenning on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.",
+   "text": "I couldn't say. But I'll tell you what I heard: Jabez Barker on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -60366,7 +60366,7 @@
    "id": "p92_folk.shared.rumour.18",
    "speaker": "p92_folk",
    "kind": "shared",
-   "text": "I couldn't say. But I'll tell you what I heard: The Fenning twins went down the culvert after their dog on Driftday last. Abner Fenning still sets a lamp in their window. He keeps the culvert key on a nail.",
+   "text": "I couldn't say. But I'll tell you what I heard: The Barker twins went down the culvert after their dog on Driftday last. Jabez Barker still sets a lamp in their window. He keeps the culvert key on a nail.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -60758,7 +60758,7 @@
    "id": "p92_joss.shared.whisper-grove.low",
    "speaker": "p92_joss",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -61238,7 +61238,7 @@
    "id": "p92_ysolde.shared.whisper-grove.low",
    "speaker": "p92_ysolde",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -61718,7 +61718,7 @@
    "id": "p94_bardo.shared.whisper-grove.low",
    "speaker": "p94_bardo",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -62182,7 +62182,7 @@
    "id": "p95_perpetua.shared.whisper-grove.low",
    "speaker": "p95_perpetua",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -66614,7 +66614,7 @@
    "id": "p97_scav.shared.whisper-grove.low",
    "speaker": "p97_scav",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -67094,7 +67094,7 @@
    "id": "p97_tallyman.shared.whisper-grove.low",
    "speaker": "p97_tallyman",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -67542,7 +67542,7 @@
    "id": "p9_ada.shared.whisper-grove.low",
    "speaker": "p9_ada",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -67990,7 +67990,7 @@
    "id": "p9_tomas.shared.whisper-grove.low",
    "speaker": "p9_tomas",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -68454,7 +68454,7 @@
    "id": "pim.shared.whisper-grove.low",
    "speaker": "pim",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -69694,7 +69694,7 @@
    "id": "sexton.shared.whisper-grove.low",
    "speaker": "sexton",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -70142,7 +70142,7 @@
    "id": "tam.shared.whisper-grove.low",
    "speaker": "tam",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -70886,7 +70886,7 @@
    "id": "townsman.shared.whisper-grove.low",
    "speaker": "townsman",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -71030,7 +71030,7 @@
    "id": "townsman.shared.rumour.2",
    "speaker": "townsman",
    "kind": "shared",
-   "text": "I couldn't say. But I'll tell you what I heard: Abner Fenning on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.",
+   "text": "I couldn't say. But I'll tell you what I heard: Jabez Barker on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -71158,7 +71158,7 @@
    "id": "townsman.shared.rumour.18",
    "speaker": "townsman",
    "kind": "shared",
-   "text": "I couldn't say. But I'll tell you what I heard: The Fenning twins went down the culvert after their dog on Driftday last. Abner Fenning still sets a lamp in their window. He keeps the culvert key on a nail.",
+   "text": "I couldn't say. But I'll tell you what I heard: The Barker twins went down the culvert after their dog on Driftday last. Jabez Barker still sets a lamp in their window. He keeps the culvert key on a nail.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -71550,7 +71550,7 @@
    "id": "townswoman.shared.whisper-grove.low",
    "speaker": "townswoman",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -71694,7 +71694,7 @@
    "id": "townswoman.shared.rumour.2",
    "speaker": "townswoman",
    "kind": "shared",
-   "text": "I couldn't say. But I'll tell you what I heard: Abner Fenning on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.",
+   "text": "I couldn't say. But I'll tell you what I heard: Jabez Barker on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -71822,7 +71822,7 @@
    "id": "townswoman.shared.rumour.18",
    "speaker": "townswoman",
    "kind": "shared",
-   "text": "I couldn't say. But I'll tell you what I heard: The Fenning twins went down the culvert after their dog on Driftday last. Abner Fenning still sets a lamp in their window. He keeps the culvert key on a nail.",
+   "text": "I couldn't say. But I'll tell you what I heard: The Barker twins went down the culvert after their dog on Driftday last. Jabez Barker still sets a lamp in their window. He keeps the culvert key on a nail.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -72926,7 +72926,7 @@
    "id": "wren.shared.whisper-grove.low",
    "speaker": "wren",
    "kind": "shared",
-   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.",
+   "text": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.",
    "source": "shared answers (Phase 103)",
    "auto": true
   },
@@ -73359,8 +73359,8 @@
    "who": "The Cacophony that wears Tobin Ashgrove and has practised the player's voice and everyone's; speaks in borrowed voices, warm and exact."
   },
   "requiem": {
-   "name": "The Requiem",
-   "who": "A Cacophony of three hundred years of funeral offices from the Mausoleum of Chords; a mourning veil, a broken bell for a head; sings in the dead's voices."
+   "name": "The Unended Office",
+   "who": "A Cacophony of eleven hundred years of funeral offices from the Mausoleum of Chords; a mourning veil, a broken bell for a head; sings in the dead's voices."
   },
   "core_voice": {
    "name": "The voice in the core",

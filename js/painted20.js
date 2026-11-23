@@ -259,7 +259,7 @@ const PAINTED20 = (() => {
     } catch (e) { warnOnce('tiles', e); }
     return tilesReady;
   }
-  const budgetBytes = () => stats.tiles * TEX * TEX * 4;   // 11 tiles = 180,224 B, under the 512 KB cap with DECALS' 256 KB
+  const budgetBytes = () => stats.tiles * TEX * TEX * 4;   // 11 tiles = 180,224 B; with DECALS' 344,064 B, 524,288 B under the 768 KB cap (DECALS.capBytes)
 
   // ---------------------------------------------------------------- 1. the ground
   function floorNameAt(m, i) { const idx = m.floorCells ? m.floorCells[i] : 0; return (idx && m.floorTextures ? m.floorTextures[idx] : null) || m.floor; }

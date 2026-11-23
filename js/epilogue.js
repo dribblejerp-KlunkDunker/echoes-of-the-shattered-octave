@@ -103,7 +103,7 @@ const EPILOGUE = (function () {
     { id: 'lb_sang_wearer', when: (f) => gf(f, 'coda_done') && gf(f, 'wearer_coda_dead'),
       text: 'Lyra sang eight bars of her father\'s funeral office in harmony with the thing that ate him, and then sang the coda alone. She has not sung it since. At the fire she hums something else, anything else, a skipping-rhyme, a reed-orchard drone, with the care of a woman walking past a grave on the wrong side. Tobin Ashgrove got his office sung to him, properly, once. It was not the one he was owed.' },
     { id: 'lb_sang_req', when: (f) => gf(f, 'coda_done'),
-      text: 'Lyra sang the coda against the Requiem, and three hundred years of funeral offices came out of it sung properly, and for the length of one hymn she was exactly what she was trained to be. It cost her what was left of her voice. She talks in chalk now, in capitals, and makes every word earn its place on the wall.' },
+      text: 'Lyra sang the coda against the Unended Office, and eleven hundred years of funeral offices came out of it sung properly, and for the length of one hymn she was exactly what she was trained to be. It cost her most of what was left of her voice. She spends the rest sparingly now, low and seldom, and makes every word earn its place.' },
     { id: 'lb_pending', when: (f) => gf(f, 'part4'),
       text: 'The Mausoleum is still singing to itself, a mile north, and Lyra faces it the way you face a debt that has been politely deferred. She has her father\'s office in her mouth and nowhere to put it. At night she hums the Root under her breath so that the woods will know a Cantor is still in them.' },
     { id: 'lb_p3', when: () => true,
@@ -111,7 +111,7 @@ const EPILOGUE = (function () {
   ];
   const B1_LYRA_SUFFIX = [
     { id: 'lb_s_tend', when: (f) => own(f, 'p6e_tend_l'), text: 'When you were bleeding in the moss she sang the tending note low and laid a hand flat over the wound. "Don\'t thank me for the healing," she said. "Thank me when we\'re all home." You are not home. You thanked her anyway.' },
-    { id: 'lb_s_wren', when: (f) => gf(f, 'wren_saved'), text: 'Linnet sits at her elbow and sings the skipping-rhyme too loud, and Lyra lets her. Somebody has to be taught what the Reach was.' },
+    { id: 'lb_s_wren', when: (f) => gf(f, 'wren_saved'), text: 'Pipit sits at her elbow and sings the skipping-rhyme too loud, and Lyra lets her. Somebody has to be taught what the Reach was.' },
     { id: 'lb_s_taken', when: (f) => gf(f, 'wren_taken'), text: 'She asked once about the girl in the north-west, and you told her. She nodded, and did not ask again, and hummed the skipping-rhyme for the rest of the night the way you hum for the ones you are not allowed to name.' },
     { id: 'lb_s_down', when: (f) => own(f, 'p6e_down_l'), text: 'She went down in the moss once and you got her back to the fire. She laughs about it now. It is the wrong kind of laugh.' },
     { id: 'lb_s_ride', when: (f) => own(f, 'p6e_ride_l'), text: 'You walked the Deep Woods with her. When the Hush came near she hummed, and it came no nearer. She has never asked you to thank her for it.' },

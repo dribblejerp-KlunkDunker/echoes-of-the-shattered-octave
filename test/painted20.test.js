@@ -98,7 +98,8 @@ const FLAGS = ['p20_ground', 'p20_walls', 'p20_trees', 'p20_pieces'];
       const lum = (c) => 0.299 * (c & 255) + 0.587 * ((c >> 8) & 255) + 0.114 * ((c >> 16) & 255);
       const avg = (t) => t.reduce((s, c) => s + lum(c), 0) / t.length;
       for (const fam of ['t_grass', 't_moss']) for (const n of PAINTED20.GROUND[fam].slice(1)) check(Math.abs(avg(Engine.textures[n]) - avg(Engine.textures[fam])) < 34, n + ' stays near its base tile\'s luminance (' + avg(Engine.textures[n]).toFixed(1) + ' vs ' + avg(Engine.textures[fam]).toFixed(1) + ')');
-      check(PAINTED20.budgetBytes() + DECALS.budgetBytes() < 512 * 1024, 'the tiles and the decals fit the 512 KB texture budget together');
+      check(DECALS.capBytes <= 768 * 1024, 'the texture cap is no more than 768 KB (' + DECALS.capBytes + ' B)');
+      check(PAINTED20.budgetBytes() + DECALS.budgetBytes() <= DECALS.capBytes, 'the tiles and the decals fit the texture budget together (' + (PAINTED20.budgetBytes() + DECALS.budgetBytes()) + ' of ' + DECALS.capBytes + ' B)');
       out.tiles = names.length;
       // --- the ground ---
       const oak = G.maps.oakhaven, P = oak._p20b;

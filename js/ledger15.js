@@ -81,7 +81,7 @@ const LEDGER15 = (function () {
       hours: S('Two hours pass over the lesson.'),
     },
     tr: {
-      harrow: { offer: S('Quiet feet? I have kept this gate eleven years on quiet feet. Heel first. Breathe with the Hedge, not against it. I will show you for coin, and I will not say what I do with the coin.'),
+      harrow: { offer: S('Quiet feet? I have kept a gate in this town eleven years on quiet feet, and this one since the Hedge. Heel first. Breathe with the Hedge, not against it. I will show you for coin, and I will not say what I do with the coin.'),
         done: S('Again. Slower. Better. There. The Hedge did not notice you, which is the whole of it.'),
         cap: S('That is all I have. The rest you learn by being afraid at the right moment.') },
       vane: { offer: S('Blade-work? I can show you. Rust Coast style: short, mean, nothing a Synod fencing-master would sign. It costs. Everything I know cost me something.'),

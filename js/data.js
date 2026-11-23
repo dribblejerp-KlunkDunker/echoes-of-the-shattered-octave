@@ -180,7 +180,7 @@ const ARMOR = {
   a_bellhelm: { name: 'Carillon Bell-Helm', slot: 'head', ar: 5, noise: 0.6, value: 45, desc: 'A Legion helm, hollowed out. It still hums a name you don\'t know.' },
   a_synodrobe: { name: 'Synod Clerk Robes', slot: 'body', ar: 1, noise: 0, value: 32, desc: 'Grey oilcloth and a silver registry stole. Wear to pass distant Proctors and Legionnaires; close inspection and witnessed suspicious acts expose you for this area. Y opens cover status. Not a pass through story seals or the town watch.' },
   a_gambeson: { name: 'Quilted Gambeson', slot: 'body', ar: 3, noise: 0, value: 14, desc: 'Layers of linen and wool. Quiet, warm, and better than nothing.' },
-  a_jerkin: { name: 'Tanner\'s Leather Jerkin', slot: 'body', ar: 5, noise: 0.1, value: 24, desc: 'Abner Fenning\'s work. Oiled so it doesn\'t creak.' },
+  a_jerkin: { name: 'Tanner\'s Leather Jerkin', slot: 'body', ar: 5, noise: 0.1, value: 24, desc: 'Jabez Barker\'s work. Oiled so it doesn\'t creak.' },
   a_hushcoat: { name: 'Hush-Cloth Coat', slot: 'body', ar: 3, noise: -0.6, value: 42, desc: 'A long coat of the Hedge\'s own wool. You move inside it like a held breath. Too quiet in siphoned country.' },
   a_brig: { name: 'Consortium Brigandine', slot: 'body', ar: 8, noise: 0.5, value: 58, desc: 'Riveted plates under company canvas, stamped with a Consortium serial.' },
   a_chain: { name: 'Synod Chainmail', slot: 'body', ar: 10, noise: 1.0, value: 75, desc: 'Arsenal mail. It shushes and chinks with every step.' },
@@ -304,7 +304,7 @@ const PLACES = {
 const RUMOURS = [
   'The grey men at the gate are proctors from the Catalogue. They are looking for a woman with a book. She is outside the Hedge, east of Kaelen\'s hut. Do not tell them I said so.',
   'There\'s a scribe in the mist reading names off the dead Legion. They say she can give a Hollow its name back. They say it costs her something.',
-  'Abner Fenning on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.',
+  'Jabez Barker on Tannery Row oils his leather so it never creaks. Worth it, if you mean to walk anywhere at night.',
   'Captain Vane will sell you anything off the Kestrel that isn\'t nailed down. Crossbows. Axes. Opinions.',
   'The Factor keeps Consortium brigandine and a steam-maul in Greenhall. At Consortium prices, naturally.',
   'Orrin Pale the sexton sells what the old watch left in the crypt. Ask him quietly; he is used to quiet.',
@@ -320,7 +320,7 @@ const RUMOURS = [
   'Keep your voice in your chest. Keep your lamp lit. Do not go to the Hedge at the dead hour, whatever it says, whoever it sounds like.',
   'Tam the night-hummer listens to his dead wife at the Flume crossing. We all know. None of us has the heart to tell him what she is.',
   'Bettany at the market stall takes coin for tonic but she would rather take eggs. Nobody has eggs. The hens went quiet first.',
-  'The Fenning twins went down the culvert after their dog on Driftday last. Abner Fenning still sets a lamp in their window. He keeps the culvert key on a nail.',
+  'The Barker twins went down the culvert after their dog on Driftday last. Jabez Barker still sets a lamp in their window. He keeps the culvert key on a nail.',
   'The Cantor sang the Tanner boys into the ground side by side, after the bore head went on the platform. Marten and Old Coyle with them. She has not been the same since.',
   'Nell Carder has not let the boy out of the mill since the Grafters posted the inspection. She says he has a cough. It is not a cough.',
   'Red was redder when I was a girl. Summers were warmer. Everyone over thirty says so. The young ones think we are mad.',
@@ -333,7 +333,7 @@ const NPCS = {
   harrow: {
     name: 'Old Harrow, gate-warden', sprite: 'harrow', portrait: 'harrow', tier: 'low', scale: 0.93,
     greet: { polite: 'Keep your voice down, friend, and welcome to what\'s left of Oakhaven.', normal: 'Gate\'s shut after dusk. Keep it low.', blunt: 'You shout like that again and I\'ll put you out through the thorn myself.' },
-    topics: { 'The Hedge': 'I\'ve stood this gate eleven years. Last night it whistled a tune only the Cantor and the Carder boy know. Whistled it exactly right.' },
+    topics: { 'The Hedge': 'I\'ve kept a gate in this town eleven years, and this one since they planted the Hedge. Last night it whistled a tune only the Cantor and the Carder boy know. Whistled it exactly right.' },
     quest: (g) => {
       if (g.flags.need_gate && !g.flags.gate_open) { g.flags.gate_open = true; g.flags.met_harrow = true; return { text: 'Lyra\'s word, is it. Then it is on her head. Go on, through the gate, and go quick and quiet. His hut is north, past the hound-bed. You\'ll smell the charcoal before you see it. Do not sing out there.', journal: ['main', 'Harrow has unbarred the North Gate for me. Kaelen Vance\'s hut lies north of the Hedge, past the hound-bed.'] }; }
       if (!g.flags.met_harrow) { g.flags.met_harrow = true; return { text: 'You\'re the one the Cantor sent for? Then go and see her. Cooper\'s Row, the house with the green door, south side of the square. And friend, we keep the gate shut at night because of what is on the other side of it. Not to keep you in.', journal: ['main', 'Old Harrow at the North Gate says the Cantor, Lyra Ashgrove, is expecting me. Her house is on Cooper\'s Row, south of the square.'] }; }
@@ -480,11 +480,11 @@ const NPCS = {
     },
   },
   hob: {
-    name: 'Abner Fenning, tanner', sprite: 'hob', portrait: 'hob', tier: 'low', scale: 1.08,
+    name: 'Jabez Barker, tanner', sprite: 'hob', portrait: 'hob', tier: 'low', scale: 1.08,
     greet: { polite: 'Evening. Mind the vats; the lime does not care who you are.', normal: 'Tannery\'s shut. Nobody wants leather off a town that is turning to wood.', blunt: 'I have buried two apprentices this year. Try me.' },
     topics: { 'The Hedge': 'The twins went down the culvert after their dog. Driftday last. I set a lamp in their window of a night. The key to the grate is on the nail inside; I have not had the stomach to turn it.', 'Oakhaven': 'A tannery is the one trade that gets quieter the harder you work it. Should have been safe. Should have been.' },
     quest: (g) => {
-      if (g.flags.twins_found && !g.flags.hob_told) { g.flags.hob_told = true; g.gold(10); return { text: 'You went down. You — their coats. Folded. They folded their coats.' + (g.flags.twins_named ? ' And you wrote them in your book, Ned and Wyn, so they are somewhere. Here. It is all I have on me. Take it, and do not argue with a tanner.' : ' Take this. Take it. I cannot go down there, and now I do not have to.'), journal: ['side', 'I told Abner Fenning what I found under the culvert. He paid me, which I did not ask for, and put out the lamp in the twins\' window.'] }; }
+      if (g.flags.twins_found && !g.flags.hob_told) { g.flags.hob_told = true; g.gold(10); return { text: 'You went down. You — their coats. Folded. They folded their coats.' + (g.flags.twins_named ? ' And you wrote them in your book, Ned and Wyn, so they are somewhere. Here. It is all I have on me. Take it, and do not argue with a tanner.' : ' Take this. Take it. I cannot go down there, and now I do not have to.'), journal: ['side', 'I told Jabez Barker what I found under the culvert. He paid me, which I did not ask for, and put out the lamp in the twins\' window.'] }; }
       return null;
     },
   },
@@ -570,13 +570,13 @@ LOOK  click the view to capture the mouse, then just move it (Esc gives it back)
 ATTACK  left-click to thrust · hold the button and move the mouse to slash or chop · wheel or 1-4 changes weapon · Tab opens song-book
 USE / TALK  E or Space · or click when the name under the crosshair is bright (dim means step closer)
 PICKPOCKET  Oakhaven adults: face them within arm’s reach and press P to inspect · approach from behind, quietly · Enter attempts theft, Escape leaves · touch Purse / controller Y inspects, A attempts, B leaves · caught or witnessed theft adds bounty
-DISGUISE  Buy Synod Clerk Robes from Abner and Wear in Inventory · Y / touch Cover / controller Back opens status and wear/remove · distant Proctors/Legionnaires accept robes; close inspection fills suspicion in 3s; move away before exposure · noise 4+ speeds inspection; witnessed hostile acts break cover per area, saved · combat, monsters, bosses, alarms and bounty arrests still apply
+DISGUISE  Buy Synod Clerk Robes from Jabez and Wear in Inventory · Y / touch Cover / controller Back opens status and wear/remove · distant Proctors/Legionnaires accept robes; close inspection fills suspicion in 3s; move away before exposure · noise 4+ speeds inspection; witnessed hostile acts break cover per area, saved · combat, monsters, bosses, alarms and bounty arrests still apply
 BODIES  Face settled physical remains: G / touch Body / controller left-stick click · Enter/A drags or drops, H/X conceals at a shrouded recess, Escape/B leaves · dragging slows you; visible remains raise one patrol alarm; witnessed dragging adds a watch bounty · remains last for this area visit, not through saves
 DISTRACTIONS  O / touch Throw / controller right-stick click opens throws · 1 or A stone, 2 or X empty bottle, Escape or B cancels · aim first; walls stop throws; active combat and bosses cannot be lured
 SONGS  F1-F5 cast the song in that slot · N to murmur (keeps the Hush off)
 PANELS  I inventory · C character · L logbook · M map · T world map and travel · R rest · K ledger · Esc closes
 GEAR  I inventory: Wear / Off armour · AR blunts blows, but heavy armour is loud · 1–9 ready weapons · bronze rings the Cacophony, bolts bite the Quiet
-TRADE  talk to merchants (Abner, Vane, Vosk, Tam, Ignatius) and choose Buy… or Sell… · strongboxes and the fallen carry loot
+TRADE  talk to merchants (Jabez, Vane, Vosk, Tam, Ignatius) and choose Buy… or Sell… · strongboxes and the fallen carry loot
 SAVE  Esc (or the SAVE button) opens Options: save to a session slot, copy a save code, or change Controls
 SOUND  V sound on/off · B music on/off
 TOUCH  left thumb is a stick, right thumb drags to look, tap to use or strike · swipe across STRIKE to slash
@@ -633,7 +633,7 @@ ENEMIES.aegis = { name: 'The Aegis Sentinel', sprite: 'aegis', hp: 120, dmg: [6,
   desc: 'Nine feet of Catalogue bronze, DEFEND THE SINGERS stencilled across the chest. It stands between you and the risers. The hymn board is behind it.' };
 
 TOPICS['Whisper-Grove'] = {
-  low: 'The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in one night. They say the Hollows still walk the plazas, doing the last thing they did.',
+  low: 'The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did.',
   high: 'The capital of the Spectral Woods, sunk a foot under its own lit water. Seven forty-one is the Memory note. When its Anchor was silenced the Catalogue did not have to harvest Whisper-Grove at all: it only had to walk through and pick the names up off the ground.',
 };
 TOPIC_KEYS.push('Whisper-Grove');
@@ -819,7 +819,7 @@ Object.assign(ENEMIES, {
 Object.assign(ITEMS, {
   roundbook: { name: 'Mallow\'s Round-Book', sprite: 'loot', desc: 'An Office round-book on a broken chain. SECOND PRESSINGS — WEST QUARTER. Eight names, each with a date, a time, and a tick. Three ticks are still blank.', key: true },
   thread: { name: 'The Weaver\'s Last Thread', sprite: 'loot', desc: 'One lilac thread from the shroud, wound on a finger-bone. It hums in a voice you nearly know. (+10 maximum voice. Hounds hear you a little further.)', key: true },
-  adaletter: { name: 'Bryony Wick\'s Letter', sprite: 'loot', desc: 'To the Precentor of the Cloister, from Bryony Wick: Tom and Wat are to sing on Thursday; she has let out their cloaks; please mind Wat on the risers, he leans.', key: true },
+  adaletter: { name: 'Bryony Wick\'s Letter', sprite: 'loot', desc: 'To the Precentor of the Cloister, from Bryony Wick: Tom and Wat are to sing on Memoryday; she has let out their cloaks; please mind Wat on the risers, he leans.', key: true },
 });
 const FREED_NAMES = ['Corra Bell', 'Simeon Rusk', 'Pip Lawler', 'Agnes Moy', 'Harl Teague'];
 const ROUND_NAMES = ['Edda Thorne', 'Baz Kettle', 'Lise Marrow', 'Old Peg Hollis', 'Tobias Venn', 'Mary Quarrie', 'Fen Abbot', 'Isolde Crake'];
@@ -890,7 +890,7 @@ Object.assign(ENEMIES, {
     desc: 'A Cacophony made of three hundred years of eaten funeral songs. Near it your own voice runs out of you, into the mourning.' },
   warden: { name: 'Chord-Warden', sprite: 'warden', hp: 62, dmg: [6, 12], speed: 0.8, reach: 1.3, armored: true, toll: true, scale: 1.25, xp: 60,
     desc: 'A marble choirmaster who has stood at the Mausoleum\'s graves so long it has started to keep them. Its mouth is open, and something in there sings.' },
-  requiem: { name: 'The Requiem', sprite: 'requiem', hp: 170, dmg: [7, 15], speed: 1.25, reach: 1.5, cacophony: true, fearless: true, coda: true, mimic: true, scale: 1.5, xp: 260,
+  requiem: { name: 'The Unended Office', sprite: 'requiem', hp: 170, dmg: [7, 15], speed: 1.25, reach: 1.5, cacophony: true, fearless: true, coda: true, mimic: true, scale: 1.5, xp: 260,
     desc: 'A named horror of the Cacophony that has eaten every funeral office ever sung in the Mausoleum of Chords, and sings them back.' },
   wearer_coda: { name: 'The Wearer', sprite: 'wearer', hp: 140, dmg: [7, 15], speed: 1.5, reach: 1.4, cacophony: true, fearless: true, coda: true, mimic: true, scale: 1.2, xp: 260,
     desc: 'It wears Tobin Ashgrove. It has followed you a hundred miles through the mist, and it has practised everyone.' },
@@ -976,7 +976,7 @@ const CAMP = {
       const f = g.flags, voice = f.lyra_voice;
       if (f.coda_done) {
         if (f.requiem_done) return { text: voice ? '"The House is quiet," she says, in her own ruined voice. "It\'s only a building now. I didn\'t think there was that much of it left in me."' : 'She writes: <b>THE HOUSE IS QUIET. THANK YOU.</b> And underneath, smaller: <b>I WILL GET IT BACK.</b>' };
-        if (!f.lyra_requiem) { f.lyra_requiem = true; journal('side', 'The Requiem: Lyra says something older than the Wearer is singing her father\'s office in the choir of the Mausoleum of Chords, in a hundred voices: every office ever sung there. The two-voice coda ends it. Kaelen says the tombs in the hall open the choir, rung high to low.'); return { text: voice ? '"There\'s still something in the Mausoleum singing his office," she says. "Not the Wearer. Something older. It has every office ever sung there, and it has his now." She looks north. "The coda ends them too. It is two voices. When you\'re ready."' : 'She writes fast: <b>SOMETHING IN THE MAUSOLEUM IS STILL SINGING MY FATHER\'S OFFICE.</b> She rubs it out. <b>NOT THE WEARER. SOMETHING OLDER. IT HAS EVERY OFFICE EVER SUNG THERE.</b> Then: <b>THE CODA ENDS THEM. IT IS TWO VOICES. I WILL NEED YOU TO HOLD IT OFF ME.</b>' }; }
+        if (!f.lyra_requiem) { f.lyra_requiem = true; journal('side', 'The Unended Office: Lyra says something older than the Wearer is singing her father\'s office in the choir of the Mausoleum of Chords, in a hundred voices: every office ever sung there. The two-voice coda ends it. Kaelen says the tombs in the hall open the choir, rung high to low.'); return { text: voice ? '"There\'s still something in the Mausoleum singing his office," she says. "Not the Wearer. Something older. It has every office ever sung there, and it has his now." She looks north. "The coda ends them too. It is two voices. When you\'re ready."' : 'She writes fast: <b>SOMETHING IN THE MAUSOLEUM IS STILL SINGING MY FATHER\'S OFFICE.</b> She rubs it out. <b>NOT THE WEARER. SOMETHING OLDER. IT HAS EVERY OFFICE EVER SUNG THERE.</b> Then: <b>THE CODA ENDS THEM. IT IS TWO VOICES. I WILL NEED YOU TO HOLD IT OFF ME.</b>' }; }
         return { text: voice ? '"North," she says. "When you\'re ready. It\'s only a building."' : 'She writes: <b>NORTH. WHEN YOU ARE READY. HOLD IT OFF ME.</b>' };
       }
       if (!f.lyra_dw_met) {
@@ -1149,13 +1149,13 @@ NPCS.wren = {
   quest: () => ({ text: 'She does not stop singing.' }),
 };
 NPCS.wren_dw = {
-  name: 'Linnet', sprite: 'wren', portrait: 'wren', tier: 'low', scale: 0.72,
+  name: 'Pipit', sprite: 'wren', portrait: 'wren', tier: 'low', scale: 0.72,
   greet: { polite: '"Hello," she says, very loudly, and then, remembering, much more quietly: "hello."', normal: '"Hello," she says, very loudly, and then, remembering, much more quietly: "hello."', blunt: 'She looks at you, and at your weapon, and decides you are all right.' },
   topics: {
     'The Quiet Faith': '"They don\'t talk. Mam said that\'s holy. Mam said if I sang nice the Quiet would come and be kind to me." She thinks about it. "It wasn\'t going to be kind, was it."',
     'Lyra Ashgrove': '"She\'s teaching me the skipping one. Too loud brings the hounds, too still brings the Hush." She hops, twice, very softly. "You have to be in the middle. That\'s called the Narrow."',
   },
-  quest: (g) => ({ text: g.flags.coda_done ? 'Linnet is sitting by the fire, humming the skipping-rhyme under her breath, exactly in the middle of the Narrow. "Lyra says I can be a Cantor," she says. "If there are any Cantors left."' : 'Linnet is sitting by the fire, as close to Lyra as she can get without being in her lap. "She says I sing too loud," she whispers. "She says that\'s a good problem."' }),
+  quest: (g) => ({ text: g.flags.coda_done ? 'Pipit is sitting by the fire, humming the skipping-rhyme under her breath, exactly in the middle of the Narrow. "Lyra says I can be a Cantor," she says. "If there are any Cantors left."' : 'Pipit is sitting by the fire, as close to Lyra as she can get without being in her lap. "She says I sing too loud," she whispers. "She says that\'s a good problem."' }),
 };
 TOPICS['The Quiet Faith'] = { low: 'Them in the woods who cut their tongues out. Don\'t look at them.', high: 'A rural cult in siphoned country that worships the Hush as the Merciful Quiet. Its faithful cut out their own tongues to be "already quiet", and they leave children who sing in the woods as hush-gifts. They are right that the Hush is quiet. They are wrong about everything else.' };
 TOPIC_KEYS.push('The Quiet Faith');
