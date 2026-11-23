@@ -233,6 +233,18 @@ Record: [`story/Game Layer/Phase 87 - New In-Game Text (for review).md`](story/G
 
 The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on these next objectives and any others that will benefit from fable. put it into a road map and give it phases". The full plan, what "done" means for each phase, the open decisions and **the prompt to start the next session** are in [`story/Game Layer/Roadmap for Fable 5.2 (21 Nov 2026).md`](story/Game%20Layer/Roadmap%20for%20Fable%205.2%20(21%20Nov%202026).md).
 
+**The roadmap from the audit (23 Nov 2026, evening).** The owner: "the game audit. put a road map together. I want to start seeing more added to the game visually as well". The full plan is in [`story/Game Layer/Roadmap from the audit (23 Nov 2026).md`](story/Game%20Layer/Roadmap%20from%20the%20audit%20(23%20Nov%202026).md). Every step is two phases side by side, and at least one of the two puts new pictures on the screen. The game is scored again after Step 5.
+
+| Step | Phases | What you will see |
+| --- | --- | --- |
+| 1 (in build) | **116** roofs for the later places; **123** the mooring mast where the book has it | Stone and snow, lead, mossed slate; the iron mast over the quarry |
+| 2 | **124** Faces of their own (portraits in code for the seventy-nine people who borrow two faces); **125** who the traveller is, and "in their boots" (Audit 2) | A face for everyone; new likenesses; the hero's own hands at the book's great moments |
+| 3 | **126** the callings, part one (Blade, Cantor, Corsair); **127** part two (Archivist, Penitent, Quarry-Hand) (Audit 3) | Each calling's own sight drawn in the world; the quarry at work |
+| 4 | **114** Redoubt Zero and the Edge, the dawn Refusal (Audit 8); **128** the roads filled (Audit 5) | A new place; the Amalgam; wayside art; the old road-walkers redrawn |
+| 5 | **129** one real choice in every big scene, the scene at the fire, a lighter road (Audit 4 and 10; folds in 118); **130** side quests for Sol-Luminary and the Rift (Audit 6) | The epilogue remembering; new gear, each with its own look |
+| 6 | **131** the run without a person, the short reading setting (Audit 7); then the owner's two hours | |
+| After | **115**, **117**, **119**, **120**, as planned | |
+
 **From the audit of 23 Nov 2026** (`story/Game Layer/Audit of 23 Nov 2026 - the game against the books, the quests, the dialogue, with ratings.md`). The owner asked for the audit, and the same morning for each calling to be able to do, say and see what the others cannot and to feel different to play. Numbers are given when each is started (fetch main first). **The owner, 23 Nov: "I like your suggestions. When its time proceed and I will accept all proposals now and future proposals so long as it makes sense."**
 
 | | What | Waits on |
@@ -257,7 +269,7 @@ The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on the
 | 114 | The Rift, part three: Redoubt Zero and the Edge, with their keepers and lamps. **Ruled 23 Nov: the Null-Amalgam walks, as Vol I and II have it** (`story/Game Layer/Rulings of 23 Nov 2026.md`; Series Bible v1.6). **Ruled 23 Nov, afternoon: it is survived**, not beaten and not simply passed; the sleeper under the Shelf is another thing and is never shown |
 | 115 | The Rift, part four: the seven smaller places |
 | 116 | Roofs for the later places (Sun-Peak Vigil, Null-Watch, Cross Pool), then raised as in Phase 108. **Brought forward 23 Nov** ("finish up with 5") |
-| 121 | **Done (23 Nov).** Record: `story/Game Layer/Phase 121 - The text matched to the books.md`; `test/text121.test.js`, 63 checks. The text matched to the books (the audit's first item): the five Thursdays, the live contradictions, the new names (Smalt, Pipit, Jabez Barker, the Unended Office), the texture budget |
+| 121 | **Done (23 Nov).** Record: `story/Game Layer/Phase 121 - The text matched to the books.md`; `test/text121.test.js`, 67 checks. The text matched to the books (the audit's first item): the five Thursdays, the live contradictions, the new names (Smalt, Pipit, Jabez Barker, the Unended Office), the texture budget |
 | 122 | **Done (23 Nov).** Record: `story/Game Layer/Phase 122 - The sculpted hands finished, and the default.md`; `test/hands122.test.js`, 9 checks. The sculpted hands finished (the bare fist, the sleeve in a climb) and made the default in the 3D view |
 | 123 | The mooring mast, where the book has it: off the east side of the square and onto the quarry's rim, in iron, seen over the roofs to the north. **Ruled 23 Nov: "match the book and change the map."** |
 | 117 | The Middle Country, part one: lore briefs, its great city by its frequency |
