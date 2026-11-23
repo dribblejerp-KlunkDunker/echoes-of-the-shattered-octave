@@ -98,6 +98,14 @@ some(/eleven hundred years of funeral offices/, 'C18: eleven hundred years (Vol 
 check(TEXT['coda.js'].some((s) => /^A sexton's register, three hundred years of it/.test(s)), 'C18: the sexton\'s register of three hundred years is another thing, and stays');
 check(/\^the unended office:/.test(src('js/logmap.js')) && /\^the requiem:/.test(src('js/logmap.js')), 'C18: the logbook map files the new journal entry with the Mausoleum (and an old save\'s still)');
 
+// ---- E. left to Claude by the owner, 23 Nov evening ("make the right ones"): the Wearer's burst, in its older scene, says what the book says
+// Book One, ch. 23: "It had eaten a Cantor and four others and two years of a woman's nights". It learned Lyra for two years, not Kaelen;
+// five people, not a village; "Lark" is Tobin's word for his daughter, not a girl it ate.
+none(/two years of Kaelen talking to himself/, 'E20: the Wearer did not eat two years of Kaelen in his hut');
+none(/a whole village of voices/, 'E20: nor a whole village');
+none(/a girl who used to be called lark/, 'E20: nor a girl called lark');
+check(TEXT['coda.js'].some((s) => /^It bursts, and everything it ever ate comes out at once: a Cantor and four others, two years of a woman's nights, a boy whistling a falling fifth/.test(s)), 'E20: the older scene now gives the book\'s list (a Cantor and four others, two years of a woman\'s nights)');
+
 // ---- ids, flags and keys stay
 const data = src('js/data.js');
 check(/requiem: \{ name: 'The Unended Office', sprite: 'requiem'/.test(data), 'ids stay: the enemy id and sprite are still requiem');
