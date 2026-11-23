@@ -636,7 +636,7 @@ const FOLD113 = (function () {
         if (!still) for (let k = 1; k <= 5; k++) V.timers.push(setTimeout(() => draw(k / 5), k * 200));
       } else if (mode === 'moon') drawMoon(ctx, W, H, moonIdx(), grain);
       else if (mode === 'blind') drawBlind(ctx, W, H, s.blind, grain);
-      else drawFace(ctx, W, H, id, grain);
+      else drawFace(ctx, W, H, id, grain, !isDay(G.tod));
     } catch (e) { warnOnce('draw', e); }
   }
 
@@ -659,12 +659,12 @@ const FOLD113 = (function () {
       const crack = 1 - Math.abs(2 * fbm(x * 0.35 + 9, y * 0.9, seed + 21) - 1);
       let v = 84 + 70 * n + 14 * (n2 - 0.5) - 30 * smooth(0.9, 0.98, crack);
       v *= 0.86 + 0.22 * (1 - j / ch) * (1 - 0.4 * i / cw);   // light from the upper left
-      let r = v * tint[0], g = v * tint[1], b = v * tint[2];
+      let r = v, g = v * 0.97, b = v * 0.9;
       const li = fbm(x * 0.9 + 40, y * 0.9, seed + 33), li2 = fbm(x * 1.3, y * 1.3 + 70, seed + 41);
       if (li > 0.7) { const k = smooth(0.7, 0.78, li) * (0.55 + 0.45 * n2); r += (132 - r) * k * 0.7; g += (136 - g) * k * 0.7; b += (88 - b) * k * 0.7; }
       if (li2 > 0.72) { const k = smooth(0.72, 0.8, li2); r += (180 - r) * k * 0.6; g += (178 - g) * k * 0.6; b += (164 - b) * k * 0.6; }
       if (hh(i, j, seed + 90) < 0.04) { r *= 0.8; g *= 0.8; b *= 0.8; }
-      buf[q] = r; buf[q + 1] = g; buf[q + 2] = b;
+      buf[q] = r * tint[0]; buf[q + 1] = g * tint[1] / 0.97; buf[q + 2] = b * tint[2] / 0.9;
     }
     return buf;
   }
@@ -700,8 +700,9 @@ const FOLD113 = (function () {
     const sc = ch * 0.5 * 0.72 / ext;
     return { pts: t.map(([X, Y], i) => [cw / 2 + X * sc, ch / 2 - Y * sc, C.stars[i].mag]), lines: C.lines };
   }
-  function drawFace(ctx, W, H, id, P) {
-    const cw = Math.ceil(W / P), ch = Math.ceil(H / P), buf = stoneBuf(cw, ch, 113 + (FIG[id] ? FIG[id].bit * 7 : 0), [1.0, 0.97, 0.9]);
+  function drawFace(ctx, W, H, id, P, night) {
+    // by night the face is seen by what light there is: darker, and bluer
+    const cw = Math.ceil(W / P), ch = Math.ceil(H / P), buf = stoneBuf(cw, ch, 113 + (FIG[id] ? FIG[id].bit * 7 : 0), night ? [0.5, 0.54, 0.64] : [1.0, 0.97, 0.9]);
     const pt = pattern(id, cw, ch), u = Math.max(cw, ch) / 160;
     const rad = pt.pts.map((p) => (2.2 + 3.2 * p[2]) * u);
     pt.lines.forEach(([a, b], k) => scratch(buf, cw, ch, pt.pts[a], pt.pts[b], rad[a], rad[b], 300 + k));
