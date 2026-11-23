@@ -468,6 +468,9 @@ vec3 r3dShade(R3DSurf s) {
     // the raycaster's visibility (view distance, ambient floor), as fog toward the sky behind
     float f = clamp(1.0 - dist * uFog.w, 0.0, 1.0); f = uLit.y + (1.0 - uLit.y) * f;
     fogK = 1.0 - f;
+    // (Phase 123) a farSee sprite (the mooring mast and the ship at it, js/mast123.js; material 6.5 from js/sprites21.js)
+    // keeps the raycaster's visibility floor (its glow), as the classic view does: the tallest thing for miles, hazed
+    if (s.kind == 1 && abs(s.mat - 6.5) < 0.1) fogK = min(fogK, 1.0 - s.fi);
   } else {
     // indoors: the raycaster's distance-to-dark (readability), the lamps on top.
     // A place lit by its own light (map.bright: the Bleach, Phases 95 and 97) is never dark and does not go dark with

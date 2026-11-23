@@ -897,7 +897,7 @@ const Engine = (() => {
       if (!e.sprite || e.hidden) continue;
       const dx = e.x - cam.x, dy = e.y - cam.y;
       const d2 = dx * dx + dy * dy;
-      if (d2 > fogDist * fogDist * 1.3) continue;
+      if (d2 > fogDist * fogDist * 1.3 && !e.farSee) continue;   // farSee: the mooring mast and the ship at it, seen at any distance (js/mast123.js)
       e._d2 = d2; sprList.push(e);
     }
     sprList.sort((a, b) => b._d2 - a._d2);

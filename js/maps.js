@@ -295,10 +295,13 @@ function buildOakhaven(greening) {
       }
     }
   }
-  // Mooring mast (east): a wooden pylon with crates
-  m.rect(36, 19, 37, 20, 't_wood');
-  m.deco('crates', 35.5, 21.5); m.deco('ladder', 38.5, 21.5, { radius: 0.2, scale: 1.6, use: 'crates', label: 'The Drift-Kestrel\'s mast-ladder, up to her hold' });   // the corsair's cargo is in his own hold (Book One ch. 4, 8)
-  m.trigger(36.5, 22.5, 2.2, 'mast');
+  // The carters' standing [PROPOSED] (Phase 123), where the game had its mooring mast. Book One has the mast on the
+  // quarry rim, north of the town (ll. 672, 3598): it is js/mast123.js's, on the clearing. Cobbles; the two decos keep
+  // the old mast's two places in the list (saves keep entities by their place), and the trigger keeps its slot, inert.
+  for (let y = 19; y <= 22; y++) for (let x = 35; x <= 38; x++) m.setFloor(x, y, 1);
+  m.deco('p123_block', 35.5, 21.5, { radius: 0.4, scale: 0.55, label: 'A mounting-block of three worn steps, where the carters stand their horses.' });
+  m.deco('p123_trough', 38.5, 21.5, { radius: 0.45, scale: 0.5, label: 'A stone water trough. The water in it is very still.' });
+  m.trigger(-9, -9, 0, 'mast_was');
   // Tannery culvert through the south hedge — the Wearer's spot, and the way down to the Under-hedge
   m.set(23, H - 2, DOOR({ portal: { map: 'underhedge', useSpawn: true }, label: 'The tannery culvert', locked: 'culvert_open', lockMsg: 'A grate over the culvert, rusted shut. Somebody with a tanner\'s key could open it.' }));
   m.deco('grate', 23.5, 61.2, { radius: 0.3, scale: 0.8, solid: false, nopick: true });
@@ -342,7 +345,7 @@ function buildOakhaven(greening) {
     m.npc('townswoman', 27.5, 19.5, { wander: true }); m.npc('townswoman', 9.5, 14.5, { wander: true }); m.npc('townswoman', 34.5, 34.5, { wander: true });
     m.item('tonic', 7.5, 36.5); m.item('pellets', 42.5, 12.5); m.item('sovereigns', 42.5, 35.5);
   }
-  shapeOakhaven(m);   // last, so later cells (the mast, the plinth) take their heights
+  shapeOakhaven(m);   // last, so later cells (the plinth, the parapets) take their heights
   m.baseCount = m.entities.length;
   return m;
 }
@@ -433,8 +436,6 @@ function shapeOakhaven(m) {
   for (const [x, y] of [[48, 5], [49, 5], [48, 6], [49, 6]]) m.block(x, y, 't_marble', 4.1, { capTex: 't_stone' });
   // the Greenhall's dome
   m.block(30, 6, 't_marble', 2.1, { capTex: 't_roof' });
-  // the mooring mast: a tall timber pylon the Kestrel ties up to
-  m.lowWall(36, 19, 37, 20, 't_wood', 3.6, { capTex: 't_wood' });
   // the empty bell-plinth is knee-high stone, not a wall
   m.block(49, 11, 't_stone', 0.3);
   // bridge piers become parapets: you can look over them into the Flume

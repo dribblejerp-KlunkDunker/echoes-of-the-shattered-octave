@@ -17,8 +17,8 @@
 //    the Chapel      a slate roof round the bell-tower, lancet windows, and on the tower an open, empty bell-frame
 //               (Vol VIII: "its belfry open to the weather", "Nothing hangs in the tower. You can see daylight
 //               through the frame").
-//  Nothing ordinary rises above the mooring mast or the tower: from Hedge Knoll the dome, the mast and the tower still
-//  stand over the roofs. Rain and snow stop at the roofs (EAVES78.shelter, read by js/light21.js). The classic
+//  Nothing ordinary rises above the tower (the mooring mast is on the quarry rim since Phase 123, js/mast123.js): from
+//  Hedge Knoll the dome and the tower still stand over the roofs. Rain and snow stop at the roofs (EAVES78.shelter, read by js/light21.js). The classic
 //  renderer draws the old boxes exactly as before.
 //
 //  Owner, 11 Nov: "each region should have at least something unique about it even from a building and house
@@ -71,8 +71,8 @@ const EAVES78 = (() => {
     // A person stands 1 high, and the map's wall ring is 1 high too, so the eaves came down to the top of your head and a
     // door was exactly your own height. `ground` is how much taller the ground storey stands in the 3D renderer (a band of
     // the house's own wall over the map's ring), `doorH` the height of a front door's leaf, `storey` the upper storey,
-    // `ridge1`/`ridge2`/`hall` the highest ridges. The map itself is not touched; the mast and the tower were raised in
-    // js/maps.js so they still stand over every roof.
+    // `ridge1`/`ridge2`/`hall` the highest ridges. The map itself is not touched; the tower was raised in
+    // js/maps.js so it still stands over every roof (the mast, since Phase 123, is on the quarry rim).
     oakhaven: { builds: 'timber and plaster under thatch and slate (the bibles)', shutters: 'green-grey', only: ['jettied upper storeys and double-pile roofs', "the Greenhall's dome", "the Chapel's open bell-frame"], ground: 0.38, doorH: 1.24, storey: 0.72, ridge1: 3.0, ridge2: 3.45, hall: 2.7 },
     // the Hollow, Oakhaven's low quarter "behind the tannery": the same timber, plaster and thatch, but rows of cottages built
     // back to back, never more than one storey, each row under one long deep roof
@@ -109,7 +109,7 @@ const EAVES78 = (() => {
   // PREP runs before a mesh is built, so their tiles exist by then.
   const EXTRA = {}, REGION = {}, PREP = [], POST = [];
   const PITCH = 0.85, OVER0 = 0.28, VERGE0 = 0.22, OVER = OVER0, VERGE = VERGE0, LIFT = 0.06, STOREY = 0.6, JETTY = 0.11;
-  const RIDGE1 = 2.45, RIDGE2 = 2.7;                             // the highest ridge of a one- and a two-storey house (the mast is 2.8, the tower 3.2)
+  const RIDGE1 = 2.45, RIDGE2 = 2.7;                             // the highest ridge of a one- and a two-storey house (the tower 3.2; the old mast was 2.8)
   const WALL = /^(t_house|t_wood$|t_marble)/, PLAIN = /barn|shed|store|granary|washhouse/i;
   const max = Math.max, min = Math.min, abs = Math.abs, hyp = Math.hypot, PI = Math.PI;
   const on = () => typeof GFX === 'undefined' || GFX.eaves !== false;

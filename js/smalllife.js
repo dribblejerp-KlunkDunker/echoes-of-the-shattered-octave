@@ -6,11 +6,14 @@
 //     away from a runner. Crows and rats are transient, non-solid, nopick DECO entities appended
 //     after the map is built (never saved, never targeted, never counted by law/bodies/quests).
 //     They draw their own random numbers from a private generator so the game's rolls are untouched.
-//  2. MOORED KESTREL. Before the Greening (G.flags.greening) the Drift-Kestrel hangs from Oakhaven's
-//     mooring mast ("hangs from the mast, her lift-tanks murmuring": game.js, trigger 'mast'). She
-//     weathervanes on her line with Weather.wind: slow turn, drift on the rope, a gentle bob.
-//     After the Greening the ship has lifted without you (game.js: die('greening')) and Part Three
-//     finds her elsewhere, so the condition is: map oakhaven && !flags.greening && !flags.part3.
+//  2. MOORED KESTREL. The Drift-Kestrel rides at the Consortium's mooring mast "a hundred feet above the
+//     Oakhaven quarry, turning slowly on her line" (Book One l. 1321): since Phase 123 the iron mast on the
+//     quarry rim (js/mast123.js; the clearing's north edge), so she is moored on the clearing, ten units up
+//     under the mast head at twelve. She weathervanes on her line with Weather.wind: slow turn, drift on the
+//     rope, a gentle bob. She stays through the Greening's lanes (the mast "went first", during the gate
+//     scene, l. 3594) until the cable is cut and she comes down over the North Gate (js/rope45.js stage 1);
+//     Part Three finds her elsewhere. Condition: map clearing && the cable not cut (MAST123.cut()). She is
+//     seen at any distance (farSee); from Oakhaven and the Downs js/mast123.js draws her where she rides.
 //  3. LIGHT-GLASS GLIMMER. Shards lying on the floor glint now and then and wear a soft halo, visible
 //     from afar. noFlash and reduced motion keep only a steady glow.
 //  Art: Phase 20 FOLK pixel art for the crows, rats and the cat's walk (see "pixel-art crows"); the canvas
@@ -548,10 +551,11 @@ const SMALLLIFE = (() => {
   }
 
   // ---------------------------------------------------------------- the moored Kestrel
-  const MAST = { x: 37, y: 20, top: 2.8 };
-  const SHIP = { scale: 1.7, half: 1.85, lift: 1.2, h0: -Math.PI / 2 - 0.2 };
+  const MAST = { map: 'clearing', x: 13.0, y: 3.6, top: 11.2 };   // js/mast123.js AT and its head (Phase 123)
+  const SHIP = { scale: 3.4, half: 3.4, lift: 9.6, h0: -Math.PI / 2 - 0.2 };
   const wind01 = () => clamp(typeof Weather !== 'undefined' && typeof Weather.wind === 'number' ? Weather.wind : 0.15, 0, 1.1);
-  const isMoored = () => !!GFX.kestrelMoored && !!G.map && G.mapId === 'oakhaven' && !!G.flags && !G.flags.greening && !G.flags.part3;
+  const cutNow = () => { const f = G.flags; if (typeof MAST123 !== 'undefined' && MAST123.cut) return MAST123.cut(); return !!(f.part3 || f.part4 || f.escaped || (f.greening && ((f.r45 | 0) >= 1 || (f.g44 | 0) >= 6))); };
+  const isMoored = () => !!GFX.kestrelMoored && !!G.map && G.mapId === MAST.map && !!G.flags && !cutNow();
   // pure function of the animation clock and the wind: heading, rope-swing position and bob
   function shipPose(T, wind) {
     const w = wind == null ? wind01() : wind;
@@ -573,7 +577,7 @@ const SMALLLIFE = (() => {
       if (!ship.e || l.indexOf(ship.e) < 0) {
         for (const id in G.maps) { const q = G.maps[id].entities; for (let i = q.length - 1; i >= 0; i--) if (q[i]._slShip) q.splice(i, 1); }
         const p = shipPose(0);
-        ship.e = { kind: 'deco', sprite: 'kestrel_m2', x: p.x, y: p.y, scale: SHIP.scale, solid: false, radius: 0.1, nopick: true, transient: true, _decor: true, _slShip: true, label: 'The Drift-Kestrel, moored at the mast' };
+        ship.e = { kind: 'deco', sprite: 'kestrel_m2', x: p.x, y: p.y, scale: SHIP.scale, solid: false, radius: 0.1, nopick: true, transient: true, _decor: true, _slShip: true, farSee: true, glow: 0.3, label: 'The Drift-Kestrel, moored at the mast' };
         l.push(ship.e);
       }
     } else if (ship.e) {
@@ -707,7 +711,7 @@ const SMALLLIFE = (() => {
   const warned = { v: false };
   if (typeof Engine !== 'undefined' && Engine.addPostHook) Engine.addPostHook(F => { try { rope(F); glimmer(F); } catch (err) { if (!warned.v) { warned.v = true; console.warn('smalllife render failed', err); } } }, 27);
 
-  return { stats, timing: false, CROWS, RATS, L, SPR, tick, populate, upgradeArt, pxCat, ensure() { syncShip(); if (L.mapId !== G.mapId) populate(); }, theCat, tickCat, shipPose, shipView, isMoored, syncShip, ship, playerPace, glimmer, rope, rngFor, hashStr, crowsAwake, MAST, SHIP,
+  return { stats, timing: false, CROWS, RATS, L, SPR, tick, populate, upgradeArt, pxCat, ensure() { syncShip(); if (L.mapId !== G.mapId) populate(); }, theCat, tickCat, shipPose, shipView, isMoored, syncShip, ship, cutNow, playerPace, glimmer, rope, rngFor, hashStr, crowsAwake, MAST, SHIP,
     get critters() { return L.list; } };
 })();
 if (typeof window !== 'undefined') window.SMALLLIFE = SMALLLIFE;

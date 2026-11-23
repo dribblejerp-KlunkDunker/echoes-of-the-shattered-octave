@@ -1,7 +1,8 @@
 // ============================================================
 //  cargo56 — Cargo night (Book One ch. 8, ll. 2561–2818; ROADMAP R9 item 14).
 //
-//  The Drift-Kestrel is moored at Oakhaven's mast; its mast-ladder (js/maps.js, use 'crates') has always shown the crates
+//  The Drift-Kestrel is moored at the mast on the quarry rim (js/mast123.js, Phase 123; it was on the east side of Oakhaven's
+//  square until then); its mast-ladder (use 'crates', on the clearing) has always shown the crates
 //  in her hold. On Driftday night (game day 6) and the dead hour after it, the ladder plays the chapter instead:
 //    * STALL THE CLERK (Driftday, 19:00 to midnight). The paymaster's clerk comes up the ladder to count the crates, and the
 //      Carders are on deck. Mags needs a count of twenty to get them into the sail-locker. Give it to her by talking: three
@@ -178,7 +179,7 @@ const CARGO56 = (function () {
   function missed() { if (hasG() && !guest() && !inExtra() && stage() < 2 && ((Number(G.day) || 0) > DRIFT + 1 || ((Number(G.day) || 0) === DRIFT + 1 && hour() >= DEAD))) F().p56 = 9; }
   function useOwn(e) {
     if (!e || guest() || inExtra() || !hasG()) return false;
-    if (e.use === 'crates' && G.mapId === 'oakhaven' && partOne()) {
+    if (e.use === 'crates' && G.mapId === 'clearing' && partOne()) {   // the mast-ladder, on the quarry rim (Phase 123)
       if (clerkHour() && stage() === 0) { clerk(); return true; }
       if (deadHour() && stage() < 2) { crate(); return true; }
       return false;

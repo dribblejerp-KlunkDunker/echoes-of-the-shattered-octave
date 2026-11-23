@@ -88,7 +88,7 @@ const STORYRUM = (() => {
   add('d_lyra_taken', 'deed', 'any', 85, { req: ['lyra_taken_seen'], not: ['greening'], note: 'You saw the seal on Lyra\'s shutter' },
     'The shutter on the Cantor\'s house has a proctor\'s seal pasted over it, and the hearth is cold. They call it the Church\'s protection. I call it a very tidy cell.');
   add('d_greening', 'deed', 'any', 95, { req: ['greening'], not: ['escaped'], note: 'The bore is broken and the Greening has begun' },
-    'The oaks are doubling and ringing, and the cobbles are splitting from underneath. Get to the mooring mast on the east side of the square. The corsair takes children first, four to a line.');
+    'The oaks are doubling and ringing, and the cobbles are splitting from underneath. Get to the mooring mast on the quarry rim. The corsair takes children first, four to a line.');
   add('d_escaped', 'deed', 'any', 98, { req: ['escaped'], note: 'You got out on the Kestrel' },
     'A skyship lifted off the mooring mast with more aboard than she had line for. They say the whole Reach heard the town after her. Calling, I would say, not singing.');
   add('d_part3', 'deed', 'any', 100, { req: ['part3'], note: 'Part Three: the Kestrel has reached Whisper-Grove' },
