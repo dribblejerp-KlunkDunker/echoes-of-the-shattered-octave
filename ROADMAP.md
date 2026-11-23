@@ -259,6 +259,7 @@ The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on the
 | 116 | Roofs for the later places (Sun-Peak Vigil, Null-Watch, Cross Pool), then raised as in Phase 108. **Brought forward 23 Nov** ("finish up with 5") |
 | 121 | The text matched to the books (the audit's first item): the five Thursdays, the live contradictions, the new names (Smalt, Pipit, Jabez Barker, the Unended Office), the texture budget |
 | 122 | The sculpted hands finished (the bare fist, the sleeve in a climb) and made the default in the 3D view |
+| 123 | The mooring mast, where the book has it: off the east side of the square and onto the quarry's rim, in iron, seen over the roofs to the north. **Ruled 23 Nov: "match the book and change the map."** |
 | 117 | The Middle Country, part one: lore briefs, its great city by its frequency |
 | 118 | Book One in play (R9): the novel's set-pieces still open |
 | 119 | Pack weight and wear, and the far land (the Daggerfall list's 3, 4 and 5): designs for ruling |

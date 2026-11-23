@@ -65,3 +65,14 @@ None of the old names is in any book or volume; all were the game's own. Each ne
 | **Linnet**, the hush-gift child in the Deep Woods | **Pipit** | A small plain bird that sings as it climbs. Linnet Tarrow of Oakhaven had the name first and keeps it. (The child was Wren before; the bible already has a Wren.) |
 | **Abner Fenning**, Oakhaven's tanner, and his twins **Ned and Wyn Fenning** | **Jabez Barker**, and **Ned and Wyn Barker** | "Barker" is the old trade-name for a tanner, from the oak bark the hides are steeped in. "Amos" was the first choice and is the sexton's already. |
 | **The Requiem**, the older thing in the Mausoleum's choir, and its trophy the Requiem's Chord-Plate | **The Unended Office**, and the Unended Office's Chord-Plate | "Requiem" is a word of our own world's church. The world's own word for a sung service is an office, and this is every funeral office ever sung there, still going. Its "three hundred years of funeral offices" becomes eleven hundred, the age Vol V gives the House. |
+
+## The evening (4:57 pm)
+
+In answer to the two decisions left with him (the sculpted hands' cost on a real phone and a low-end laptop; the mooring mast, which the book puts north of the square over the quarry and the game's map has east of it):
+
+> "my decisions. the hands are fine.  I will be playing on a phone for the most part and the phone has a better processor and GPU than my laptop. match the book and change the map."
+
+| His words | Ruling | What follows |
+| --- | --- | --- |
+| "the hands are fine. I will be playing on a phone for the most part and the phone has a better processor and GPU than my laptop." | **The sculpted hands' cost is no longer waited on.** They go ahead as designed: the default in the 3D view, off in the Original preset and in Low. | On his phone they are on. If a machine is dropped to Low they are off there, and the Options row turns them on. Nothing more is owed from him on this. |
+| "match the book and change the map." | **The mooring mast moves to where Book One has it:** "above the roofs to the north, where the Consortium's mooring mast stood over the quarry like a gallows"; "a hundred and twenty feet of riveted iron on four splayed legs, sunk into the bedrock of the quarry rim". | Phase 123. The mast leaves the east side of Oakhaven's square and stands on the quarry's rim, in iron. Everything that happened at it (boarding the Kestrel, the cargo, cargo night, the Greening's oak, Grab the Line) happens there. From the square it shows over the roofs to the north. The east side of the square becomes the carters' standing [PROPOSED]. |
