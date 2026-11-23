@@ -1,6 +1,6 @@
 // PLAYWRIGHT_MODULE=/path/to/playwright PREVIEW_URL=http://127.0.0.1:4176 node test/sculpted112.test.js
 // Phase 112 (the sculpted hands, lit by the world): js/sculpted112.js in the game. Run alone (it draws in WebGL).
-//   - the choice is off in every preset, and off the 3D view draws the pixel hands exactly as before
+//   - the choice is off in Original and Low and on above (Phase 122), and off the 3D view draws the pixel hands exactly as before
 //   - on, in the 3D view: no first-person picture is drawn; one canvas of sculpted hands is laid over the view, and it has
 //     hands on it (the right hand at the right, the resting glass fist at the left, the glass blue)
 //   - the hands are placed where the pixel hands are: each hand's middle on the sculpted canvas is near where the pixel
@@ -71,9 +71,10 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
   });
 
   try {
-    await step('the choice is off in every preset; off, the 3D view draws the pixel hands as before', async () => {
+    // (Phase 122 taught this check: the sculpted hands are now the default above Low, off in Original and Low; test/hands122.test.js)
+    await step('the choice is off in Original and Low, on above; off, the 3D view draws the pixel hands as before', async () => {
       const r = await page.evaluate(() => ({ d: window.__presetDefault, off: SHOT({ on: false }), on: SCULPTED112.on() }));
-      assert.ok(Object.keys(r.d).length >= 4 && Object.values(r.d).every((v) => v === false), JSON.stringify(r.d));
+      assert.ok(Object.keys(r.d).length >= 4 && Object.entries(r.d).every(([p, v]) => v === (p !== 'original' && p !== 'low')), JSON.stringify(r.d));
       assert.ok(r.off.pix >= 2 && r.off.live === 0 && r.off.frames === 0 && r.off.glErr === 0, JSON.stringify(r.off));
     });
     let day = null;
