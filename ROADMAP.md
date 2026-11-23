@@ -233,12 +233,12 @@ Record: [`story/Game Layer/Phase 87 - New In-Game Text (for review).md`](story/G
 
 The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on these next objectives and any others that will benefit from fable. put it into a road map and give it phases". The full plan, what "done" means for each phase, the open decisions and **the prompt to start the next session** are in [`story/Game Layer/Roadmap for Fable 5.2 (21 Nov 2026).md`](story/Game%20Layer/Roadmap%20for%20Fable%205.2%20(21%20Nov%202026).md).
 
-**From the audit of 23 Nov 2026** (`story/Game Layer/Audit of 23 Nov 2026 - the game against the books, the quests, the dialogue, with ratings.md`). The owner asked for the audit, and the same morning for each calling to be able to do, say and see what the others cannot and to feel different to play. Numbers are given when each is started (fetch main first).
+**From the audit of 23 Nov 2026** (`story/Game Layer/Audit of 23 Nov 2026 - the game against the books, the quests, the dialogue, with ratings.md`). The owner asked for the audit, and the same morning for each calling to be able to do, say and see what the others cannot and to feel different to play. Numbers are given when each is started (fetch main first). **The owner, 23 Nov: "I like your suggestions. When its time proceed and I will accept all proposals now and future proposals so long as it makes sense."**
 
 | | What | Waits on |
 | --- | --- | --- |
 | Audit 1 | **Match the text to the books:** the eleven live contradictions, the five Thursdays, the two stray "gold", "traveller" spelt one way. With French, and voices where a line is voiced | Nothing |
-| Audit 2 | **Who the traveller is:** the six likenesses are the six canon people, and the Blade's and the Archivist's stories are Kaelen's and Sable's | The owner's ruling: (a) own people for each calling, recommended; (b) truly play a hero; (c) faces only |
+| Audit 2 | **Who the traveller is:** the six likenesses are the six canon people, and the Blade's and the Archivist's stories are Kaelen's and Sable's. **Ruled 23 Nov: (a), with "in their boots"**: own people for each calling, and at the book's great moments the player steps into the hero whose moment it is (`Rulings of 23 Nov 2026.md`) | Nothing: one design with Audit 3, from a lore brief |
 | Audit 3 | **The callings:** a lore brief for each of the six, then lines, sights and one act of its own for each, scene by scene; how each plays | Audit 2 |
 | Audit 4 | One real choice in every big scene of the main story, of the kind the pumps have | |
 | Audit 5 | Fill or shorten the roads (the Greenroot Road, the drove road, the Flume Road, the wall) | The Fold's stones begin it |
