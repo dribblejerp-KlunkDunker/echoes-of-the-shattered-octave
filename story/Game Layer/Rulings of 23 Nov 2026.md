@@ -40,3 +40,28 @@ If the owner means them to be one thing, the manuscript wins by his standing rul
 | 9:35 am | "I like your suggestions. When its time proceed and I will accept all proposals now and future proposals so long as it makes sense." | **Who the traveller is: (a), with "in their boots".** The traveller is their own person, a stranger to Oakhaven, with a history that belongs to their calling; the six likenesses lose their canon names and histories. At the book's great moments the player steps into the hero whose moment it is, plays it with that hero's hands, and steps back out. **The audit's suggestions are to be done, in their order, when it is time.** **Proposals, now and to come, are accepted in advance so long as they make sense.** | The order: the text against the books; who the traveller is and the callings (one design, from a lore brief); the roads and the newer countries' side quests; a playtest. Each proposal is still written down and marked [PROPOSED] in its record and in Vol VIII, so the owner can see what was invented and strike it. What still comes to him first: anything a book contradicts, anything that cannot be undone, and anything where I am not sure it makes sense. |
 
 **"In their boots", as proposed** [PROPOSED; every scene to be checked against the book before it is built]: Kaelen at the needle and at the eight bolts; Lyra holding the note and singing the coda; Vane counting to ten at the rope and through the ten heartbeats under the cutter; Sable reading Vane the three names. Inside a hero the player can only do what the hero did, well or badly; a wrong move is an Echo, shown grey, as the Rite already does. It may follow the calling (a Blade into Kaelen, a Cantor into Lyra, a Corsair into Vane, an Archivist into Sable; a Quarry-Hand among the men at the pumps; a Penitent in the Inquisitor's choir).
+
+## The afternoon (12:22 pm, sent again 4:42 pm)
+
+In answer to the six decisions listed in the report on Phase 113's merge:
+
+> "what are the consequences for raising the texture budget? 2 is fine. 3 is survived. come up with new names for 4. finish up with 5."
+
+| Item | His words | Ruling | What follows |
+| --- | --- | --- | --- |
+| 1. The texture budget | "what are the consequences for raising the texture budget?" | A question, answered in the report: none a player could notice. The budget counts only the small textures the game draws for itself in code (tiles, decals, ceilings), 64 by 64 each. Phase 107's five new ceilings took it from 256 KB to exactly 512 KB. | Raised to 768 KB under his standing acceptance of proposals that make sense, with the count in the code's own table corrected. It stays a tripwire: the test still fails if the art grows past the new line. He can say otherwise and it goes back. |
+| 2. Two things or one | "2 is fine." | **Two things.** The Null-Amalgam walks the Maw's lip and is the Maw's immune response (Vol I). Book Three's sleeper under the Shelf is another thing, unnamed, asleep, and never shown. | Series Bible v1.6 stands as worded; its ledger row no longer says the reading waits on the author. |
+| 3. Fought, survived or crossed | "3 is survived." | **The Null-Amalgam is survived.** The player does not beat it and does not simply pass it. | Phase 114's keeper at the Maw's lip is a thing to live through. It keeps faith with Vol IV, 1.8, rule 5 (the Hush "has never once been fought successfully") and with Vol II's body that walks. |
+| 4. Names | "come up with new names for 4." | New names, below. [PROPOSED], accepted in advance so long as they make sense. | Changed in the game's text, French and voices in Phase 121. |
+| 5. Still open from before | "finish up with 5." | **Close them out.** Phase 107's inspect lines and natural edges stand as built. Phase 108's proportions for each town stand as built. The roofs for the later places are built now (Phase 116, brought forward). The sculpted hands are finished to the standard the Phase 112 record says they lack, and then become the default in the 3D view. | The pixel hands stay as an Options choice and stay the hands of the Original preset and the classic view. |
+
+### The new names [PROPOSED]
+
+None of the old names is in any book or volume; all were the game's own. Each new one was checked against the books, the volumes and the game's text and is used nowhere else.
+
+| Was | Now | Why this one |
+| --- | --- | --- |
+| **Umber**, the Library's old scribe (author of two of its books, 410 and c. 290) | **Smalt** | The Veil's scribes take an ink or pigment for a name (Sable, Verdigris, Lampblack, Vermilion, Sepia, Ochre, Gall, Bistre). Smalt is the blue ground-glass pigment. The Reach's runaway scribe keeps Umber: she is the one the player meets, and her own name is one of her three fragments. |
+| **Linnet**, the hush-gift child in the Deep Woods | **Pipit** | A small plain bird that sings as it climbs. Linnet Tarrow of Oakhaven had the name first and keeps it. (The child was Wren before; the bible already has a Wren.) |
+| **Abner Fenning**, Oakhaven's tanner, and his twins **Ned and Wyn Fenning** | **Jabez Barker**, and **Ned and Wyn Barker** | "Barker" is the old trade-name for a tanner, from the oak bark the hides are steeped in. "Amos" was the first choice and is the sexton's already. |
+| **The Requiem**, the older thing in the Mausoleum's choir, and its trophy the Requiem's Chord-Plate | **The Unended Office**, and the Unended Office's Chord-Plate | "Requiem" is a word of our own world's church. The world's own word for a sung service is an office, and this is every funeral office ever sung there, still going. Its "three hundred years of funeral offices" becomes eleven hundred, the age Vol V gives the House. |
