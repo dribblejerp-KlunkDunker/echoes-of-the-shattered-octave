@@ -534,6 +534,27 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The Fold, and its stones (Phase 113).** The hill people of the Reach have an old faith of the stars: the sky is a fold, the stars are lamps, and eight Keepers stand along the Chord, one for each day of the week. Their stones stand about the world, each set to sight one figure: needle-stones with an eye, notch-stones for the far galaxies, pegs among the Grey Wethers for the five wandering stars, the door of Ewe Barrow for the moon. Stand at a stone's mark on a clear dark night and look through, and you are shown the figure close, with its name, why it is called that, and its story. Under cloud or lamplight you are shown the stone's own cup-marks. Over the Rift the stones are blind. Old Marrable, a lamp-teller, will tell you more by night.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p113f-badger.jpg" alt="Phase 113: the view through a stone: the Badger, Rootday's Keeper, with its lines, its lamp and its story"></td>
+<td width="50%"><img src="screenshots/p113f-farfold.jpg" alt="Phase 113: the Far Fold, a tilted spiral galaxy seen close through a notch-stone"></td>
+</tr>
+<tr>
+<td>The Badger, through Rootday's stone.</td>
+<td>The Far Fold, through a notch-stone.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p113f-needle.jpg" alt="Phase 113: a needle-stone outside the Hedge at night"></td>
+<td><img src="screenshots/p113f-cupmarks.jpg" alt="Phase 113: too much light: the stone's cup-marks for the Tortoise"></td>
+</tr>
+<tr>
+<td>A needle-stone outside the Hedge.</td>
+<td>Too much light: the cup-marks instead.</td>
+</tr>
+</table>
+
 **The sculpted hands, lit by the world (Phase 112).** A second way to draw your own hands, in Options: "Hands: In pixels / Sculpted". The pixel hands stay the default. The sculpted hands are jointed and take the world's light each frame: the sun or the moon, the sky and the ground, a lamp near you, a Song's own colour between the open hands. They hold every weapon kind where the pixel hands hold it; the wrist cocks and snaps through a swing; the fingers open as a Song gathers; the arm behind a shield and the fists of a climb are sculpted too. They work in the 3D view; the classic view keeps the pixel hands.
 
 ![Phase 112: the option chosen, the pixel hands, and the sculpted hands by day, by night and by a street lamp](screenshots/p112-hands.jpg)
