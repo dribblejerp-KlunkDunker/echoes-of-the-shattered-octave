@@ -912,6 +912,34 @@ const RIFT100 = (function () {
   const onWall = () => typeof G !== 'undefined' && G.map && G.mapId === MAP && G.map.id === MAP;
   const inHalls = () => typeof G !== 'undefined' && G.map && G.mapId === HALLS && G.map.id === HALLS;
   const inRect = (r, x, y) => x >= r[0] && x < r[2] + 1 && y >= r[1] && y < r[3] + 1;
+  // the wall's own light by the hour. By day "grey from above" (Vol VI, 110), lit the same as Phase 100 built it (ambient
+  // 0.95). By night the book has it dark: "the sky over the Rift, which was black and starless" (Book Three Part Two, 143,
+  // 273); "under no stars" (Part One, 983); lanterns in the dark (Part One, 859 to 913). The game's clock: dusk from the
+  // seventeenth hour (timeName), full dark at tod 0.7985 (engine.js buildSky: no day left), the dead hour until the fifth,
+  // morning from the seventh. Smoothstep between, so there is never a snap.
+  const LIGHT = { DAY: 0.95, NIGHT: 0.18, DUSK: 17 / 24, DARK: 0.7985, DAWN0: 5 / 24, DAWN1: 7 / 24,
+    FOG_DAY: [118, 120, 126], FOG_NIGHT: [5, 5, 8], DIST_NIGHT: 14, BRIGHT_UNDER: 0.30 };
+  // how much day there is: 1 from the seventh hour to the seventeenth, 0 from full dark to the end of the dead hour
+  function wallDay(tod) {
+    const t = ((Number(tod) % 1) + 1) % 1, L = LIGHT, ss = (a, b, x) => { const k = Math.max(0, Math.min(1, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
+    if (!Number.isFinite(t) || (t >= L.DAWN1 && t <= L.DUSK)) return 1;
+    return t > L.DUSK ? 1 - ss(L.DUSK, L.DARK, t) : ss(L.DAWN0, L.DAWN1, t);
+  }
+  function wallAmbient(tod) { const k = wallDay(tod); return k === 1 ? LIGHT.DAY : LIGHT.NIGHT + (LIGHT.DAY - LIGHT.NIGHT) * k; }
+  // the wall's light from the hour: the ambient; the fog, which is the Rift's sky here (its colour is the air above the
+  // wall: grey by day, black and starless by night) and how far it lets you see; and, once the ambient is low, the wall
+  // lit as a dark place with lamps (bright off). The engine takes these when the map is set.
+  function wallLight(force) {
+    const m = G.maps && G.maps[MAP]; if (!m) return;
+    if (!m._p100day) m._p100day = { dist: m.fogDist };
+    const k = wallDay(G.tod), a = wallAmbient(G.tod), lerp = (n, d) => n + (d - n) * k;
+    if (!force && Math.abs(a - (m.ambient || 0)) < 0.005 && !(k === 1 && m.ambient !== LIGHT.DAY)) return;
+    m.ambient = a;
+    m.fogColor = k === 1 ? LIGHT.FOG_DAY.slice() : LIGHT.FOG_DAY.map((c, i) => Math.round(lerp(LIGHT.FOG_NIGHT[i], c)));
+    m.fogDist = k === 1 ? m._p100day.dist : lerp(LIGHT.DIST_NIGHT, m._p100day.dist);
+    m.bright = a >= LIGHT.BRIGHT_UNDER;
+    if (onWall() && Engine.setMap) { const cam = Object.assign({}, Engine.cam); Engine.setMap(m); Object.assign(Engine.cam, cam); }
+  }
   const B = { WARN_S: 4.5, QUIET_S: 8.0, WALK: 0.85, OVER_S: 2.6, BELL_R: 7, TALK_S: 4.0, LOOK_S: 3.5, CYCLE: 16, GAP0: 11.5, GAP1: 15.6, XP: 240 };
   // ---- talk: the Murmur, on the Watch, is the next line of your subject
   let quiet = 0, relieved = false, atParapet = 0, talkT = 0, lookT = 0, lastSafe = null, warnedQuiet = false;
@@ -939,23 +967,33 @@ const RIFT100 = (function () {
     const p = G.player, c = Engine.cam;
     // nobody goes up the wall stair without a subject: Two-Eleven turns you back at the chain
     { const d = G.map._p100, k = at(c.x | 0, c.y | 0); if (d && k >= 0 && d.kind[k] === 5 && d.stair[k] === 0 && !fint('p100_subj', 4) && rOf(c.x, c.y) > STAIRS[0].r0 + 1.4) { c.x = P.chain[0] - 1.6; c.y = P.chain[1]; c.dir = 0; p.feet = G.map.groundAt(c.x, c.y); say(TX.chainMsg, 'warn', 9000); return; } }
-    if (!onLip(c.x, c.y)) { quiet = Math.max(0, quiet - dt * 2); if (relieved) { relieved = false; try { document.getElementById('view').classList.remove('unwrite'); } catch (e) { /* */ } } lookT = 0; if (G.map.smooth && G.map.smooth[at(c.x | 0, c.y | 0)]) lastSafe = { x: c.x, y: c.y, dir: c.dir }; return; }
+    if (!onLip(c.x, c.y)) { offLip(dt); return; }
     once(1, TX.walk, '', 7000);
+    quietRule(dt, (x, y) => { const r = Math.max(1, rOf(x, y)); return [(x - CX) / r, (y - CY) / r]; }, true);
+  }
+  // off the lip the quiet wears off. (Phase 113: other modules' stretches of the lip use the same rule through addZone.)
+  function offLip(dt) {
+    const c = Engine.cam;
+    quiet = Math.max(0, quiet - dt * 2); if (relieved) { relieved = false; try { document.getElementById('view').classList.remove('unwrite'); } catch (e) { /* */ } } lookT = 0; if (G.map.smooth && G.map.smooth[(c.y | 0) * G.map.w + (c.x | 0)]) lastSafe = { x: c.x, y: c.y, dir: c.dir };
+  }
+  // Standing Order Nine on the lip: out(x, y) is the way to the edge (a unit vector); bell, whether a manned battery can fetch you back
+  function quietRule(dt, out, bell) {
+    const p = G.player, c = Engine.cam;
     if (!relieved) lastSafe = { x: c.x, y: c.y, dir: c.dir };
     // the not-colour cannot be looked at (Book Three): your eyes go down
-    const out = Math.cos(c.dir) * (c.x - CX) + Math.sin(c.dir) * (c.y - CY);
-    if (out / Math.max(1, rOf(c.x, c.y)) > 0.8 && (c.pitch || 0) > -18) { lookT += dt; if (lookT > B.LOOK_S) { c.pitch = Math.max(-34, (c.pitch || 0) - dt * 60); once(2, TX.lookAway, '', 6000); } } else if (lookT > 0) lookT = Math.max(0, lookT - dt * 2);
+    const [ox, oy] = out(c.x, c.y);
+    if (Math.cos(c.dir) * ox + Math.sin(c.dir) * oy > 0.8 && (c.pitch || 0) > -18) { lookT += dt; if (lookT > B.LOOK_S) { c.pitch = Math.max(-34, (c.pitch || 0) - dt * 60); once(2, TX.lookAway, '', 6000); } } else if (lookT > 0) lookT = Math.max(0, lookT - dt * 2);
     // talk keeps it off; so does a Song, or a blow struck (anything that makes a sound of yours)
     if (talkT > 0 || (G.murmurT || 0) > 0) { talkT = Math.max(0, talkT - dt); quiet = 0; return; }
     quiet += dt / (special('talk') ? 1.5 : 1);
     if (quiet > B.WARN_S && !warnedQuiet && !relieved) { warnedQuiet = true; say(TX.quietWarn, 'bad', 4000); }
     if (quiet > B.QUIET_S && !relieved) {
-      if (mannedNear(c.x, c.y)) { quiet = 0; warnedQuiet = false; talkT = B.TALK_S * 2; say(TX.bellSave, 'warn', 9000); try { Audio_.sfx.bell(); } catch (e) { /* no bell */ } return; }
+      if (bell && mannedNear(c.x, c.y)) { quiet = 0; warnedQuiet = false; talkT = B.TALK_S * 2; say(TX.bellSave, 'warn', 9000); try { Audio_.sfx.bell(); } catch (e) { /* no bell */ } return; }
       relieved = true; atParapet = 0; say(TX.relieved, 'bad', 7000); try { document.getElementById('view').classList.add('unwrite'); } catch (e) { /* no view */ }
     }
     if (relieved) {
       G.keys = {};
-      const r = Math.max(1, rOf(c.x, c.y)), ux = (c.x - CX) / r, uy = (c.y - CY) / r, x0 = c.x, y0 = c.y;
+      const [ux, uy] = out(c.x, c.y), x0 = c.x, y0 = c.y;
       c.dir = Math.atan2(uy, ux);
       try { if (typeof playerMove === 'function') playerMove(c, ux * B.WALK * dt, uy * B.WALK * dt); } catch (e) { warnOnce('walk', e); }
       if (Math.hypot(c.x - x0, c.y - y0) < B.WALK * dt * 0.4) atParapet += dt; else atParapet = 0;
@@ -1006,8 +1044,14 @@ const RIFT100 = (function () {
   }
   function tick(dt) {
     if (typeof G === 'undefined' || G.state !== 'play' || !G.player || G.dead) return;
-    if (onWall()) tickWall(dt); else if (inHalls()) tickHalls(dt); else if (relieved) { relieved = false; quiet = 0; }
+    const z = zoneHere();
+    if (onWall()) { wallLight(false); tickWall(dt); } else if (inHalls()) tickHalls(dt); else if (z) { if (z.on(Engine.cam.x, Engine.cam.y)) quietRule(dt, z.out, false); else offLip(dt); } else if (relieved) { relieved = false; quiet = 0; }
   }
+  // Phase 113: other places on the lip under the same order. addZone({ map, on(x, y), out(x, y) }): no bell reaches them.
+  const ZONES = [];
+  function addZone(z) { if (z && typeof z.map === 'string' && typeof z.on === 'function' && typeof z.out === 'function' && !ZONES.some((q) => q.map === z.map)) ZONES.push(z); }
+  function zoneHere() { if (typeof G === 'undefined' || !G.map) return null; return ZONES.find((z) => z.map === G.mapId && G.map.id === z.map) || null; }
+  function zoneOn() { const z = zoneHere(); try { return !!z && z.on(Engine.cam.x, Engine.cam.y); } catch (e) { return false; } }
 
   // ---------------------------------------------------------------- using things
   function rideTo(pt, dir) { const c = Engine.cam; c.x = pt[0] - 1.3; c.y = pt[1] - 0.2; c.dir = dir; if (G.player) { G.player.feet = G.map.groundAt(c.x, c.y); G.player.fallFrom = null; G.player.fallV = 0; } const [sx, sy] = snap(G.map, c.x, c.y); c.x = sx; c.y = sy; say(TX.railRide, '', 5000); }
@@ -1058,11 +1102,11 @@ const RIFT100 = (function () {
     defs(); art();
     if (typeof buildAllMaps === 'function') { const _b = buildAllMaps; buildAllMaps = function () { const maps = _b.apply(this, arguments); try { join(maps); } catch (e) { warnOnce('build', e); } return maps; }; }
     if (typeof useDeco === 'function') { const _ud = useDeco; useDeco = function (e) { try { if (useOwn(e)) return undefined; } catch (err) { warnOnce('use', err); } return _ud.apply(this, arguments); }; }
-    if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function () { const r = _l.apply(this, arguments); try { quiet = 0; relieved = false; atParapet = 0; talkT = 0; lookT = 0; lastSafe = null; warnedQuiet = false; sClock = 0; sStage = -1; rang = false; try { document.getElementById('view').classList.remove('unwrite'); } catch (e2) { /* */ } sync(); } catch (e) { warnOnce('load', e); } return r; }; }
+    if (typeof loadMap === 'function') { const _l = loadMap; loadMap = function (id) { try { if (id === MAP && G.maps && G.maps[MAP]) wallLight(true); } catch (e) { warnOnce('light', e); } const r = _l.apply(this, arguments); try { quiet = 0; relieved = false; atParapet = 0; talkT = 0; lookT = 0; lastSafe = null; warnedQuiet = false; sClock = 0; sStage = -1; rang = false; try { document.getElementById('view').classList.remove('unwrite'); } catch (e2) { /* */ } sync(); } catch (e) { warnOnce('load', e); } return r; }; }
     if (typeof update === 'function') { const _u = update; update = function (dt) { const r = _u.apply(this, arguments); try { tick(Number(dt) || 0); } catch (e) { warnOnce('tick', e); } return r; }; }
     // the Murmur is talk here; and any sound of yours counts as talk on the wall, while in the Halls nothing of yours is heard
     if (typeof castSong === 'function') { const _c = castSong; castSong = function (id) { try { if (id === 'murmur' && (onWall() || inHalls()) && G.state === 'play' && !G.dead) { murmur(); return undefined; } } catch (e) { warnOnce('murmur', e); } return _c.apply(this, arguments); }; }
-    if (typeof addNoise === 'function') { ORIG.addNoise = addNoise; addNoise = function (n) { try { if (Number(n) > 0 && typeof G !== 'undefined' && G.map) { if (onWall()) talk(); if (inHalls() && inRect(Q.hall, Engine.cam.x, Engine.cam.y)) return undefined; } } catch (e) { warnOnce('noise', e); } return ORIG.addNoise.apply(this, arguments); }; }
+    if (typeof addNoise === 'function') { ORIG.addNoise = addNoise; addNoise = function (n) { try { if (Number(n) > 0 && typeof G !== 'undefined' && G.map) { if (onWall() || zoneOn()) talk(); if (inHalls() && inRect(Q.hall, Engine.cam.x, Engine.cam.y)) return undefined; } } catch (e) { warnOnce('noise', e); } return ORIG.addNoise.apply(this, arguments); }; }
     else ORIG.addNoise = () => {};
     if (typeof attack === 'function') { const _a = attack; attack = function () { try { if (inHalls() && G.state === 'play' && (inRect(Q.mag, Engine.cam.x, Engine.cam.y) || inRect(Q.passage, Engine.cam.x, Engine.cam.y)) && typeof currentWeapon === 'function' && currentWeapon().type === 'shot') { say(TX.shot, 'warn', 4000); return undefined; } } catch (e) { warnOnce('shot', e); } return _a.apply(this, arguments); }; }
     wireKestrel();
@@ -1070,7 +1114,7 @@ const RIFT100 = (function () {
   wire();
 
   return { TX, SAY, TEXTS, MAP, HALLS, W, H, HW, HH, P, Q, ROUTES, FLOORS, TOWERS, STAIRS, RC, CX, CY, WH, B, STRAY_DEF, ARMOR_DEFS, SPIKE_DEF, MALLET_DEF, pol, rOf, degOf, plan, build, buildHalls, join, decode, tick, useOwn, sync, murmur, talk, standDown, answer,
-    lamps: () => LAMPS, state: () => ({ quiet, relieved, atParapet, talkT, sClock, sStage }), setQuiet: (v) => { quiet = v; }, setStray: (v) => { sClock = v; }, onLip: (x, y) => onLip(x, y), mannedNear };
+    wallAmbient, wallDay, wallLight, LIGHT, addZone, relieveNow: () => { talkT = 0; quiet = B.QUIET_S + 0.01; }, lamps: () => LAMPS, state: () => ({ quiet, relieved, atParapet, talkT, sClock, sStage }), setQuiet: (v) => { quiet = v; }, setStray: (v) => { sClock = v; }, onLip: (x, y) => onLip(x, y), mannedNear };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = RIFT100;
 if (typeof window !== 'undefined') window.RIFT100 = RIFT100;

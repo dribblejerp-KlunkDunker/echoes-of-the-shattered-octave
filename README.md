@@ -492,6 +492,69 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 ![Phase 109: today and the three options](screenshots/p109-options.jpg)
 ![Phase 109: the sculpted option by night](screenshots/p109-sculpted-night.jpg)
 
+**The Rift Wall keeps its secret, and the tip (Phase 113).** The books overturned this phase's plan, so it was built another way, as the author ruled. At Tower Nine's foot is the old garrison's store and its Quartermaster, who cannot read and will not say what his errands are for: a crate from the cart, lamp-oil, a blanket, and his sister's letter, which he asks you to read to him aloud. At the third hour of the night, from the wall-walk between Towers Five and Six, you may see a lantern go out along the wall and something answer it from below; nobody names it. The wall is black at night now, and starless. Further along, a cart gate lets onto a sally-way under the wall and out to the tipping stage at the lip, where three half-sentences hang in the air and take you by the jaw until you can finish them from what was dropped on the way.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p113a-store.jpg" alt="Phase 113: the old garrison's store, racks and crates under one lamp"></td>
+<td width="50%"><img src="screenshots/p113a-night.jpg" alt="Phase 113: the wall at the third hour of the night, a far lantern and an answer from below"></td>
+</tr>
+<tr>
+<td>The old garrison's store.</td>
+<td>The third hour, from the wall-walk.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p113c-gate.jpg" alt="Phase 113: the cart gate in the obsidian wall, ruts running in under it"></td>
+<td><img src="screenshots/p113c-stage.jpg" alt="Phase 113: the tipping stage at the lip, three breaths hanging over the baulk"></td>
+</tr>
+<tr>
+<td>The cart gate.</td>
+<td>The stage, and three breaths.</td>
+</tr>
+</table>
+
+**The deep night sky (Phase 113).** Away from lamps, on a clear night with no moon, the band of star-dust the Reach calls the Chord is a river of stars with dark lanes through it and a bright core low in the east, and three far galaxies hang in the south. A town's lamps wash it out, a full moon softens it, and cloud hides it. Over the Rift there are no stars at all. Options, Graphics: "Deep night sky" (off in the Original and Low presets).
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p113b-chord.jpg" alt="Phase 113: the Chord as a river of stars over the Watch Downs"></td>
+<td width="50%"><img src="screenshots/p113b-spiral.jpg" alt="Phase 113: a tilted spiral galaxy low in the south"></td>
+</tr>
+<tr>
+<td>The Chord, from the Watch Downs.</td>
+<td>A far galaxy.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p113b-town.jpg" alt="Phase 113: the same sky from a lamp-lit street in Oakhaven, nearly washed out"></td>
+<td><img src="screenshots/p113b-classic.jpg" alt="Phase 113: the Chord in the classic view"></td>
+</tr>
+<tr>
+<td>From a lamp-lit street.</td>
+<td>The classic view.</td>
+</tr>
+</table>
+
+**The Fold, and its stones (Phase 113).** The hill people of the Reach have an old faith of the stars: the sky is a fold, the stars are lamps, and eight Keepers stand along the Chord, one for each day of the week. Their stones stand about the world, each set to sight one figure: needle-stones with an eye, notch-stones for the far galaxies, pegs among the Grey Wethers for the five wandering stars, the door of Ewe Barrow for the moon. Stand at a stone's mark on a clear dark night and look through, and you are shown the figure close, with its name, why it is called that, and its story. Under cloud or lamplight you are shown the stone's own cup-marks. Over the Rift the stones are blind. Old Marrable, a lamp-teller, will tell you more by night.
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/p113f-badger.jpg" alt="Phase 113: the view through a stone: the Badger, Rootday's Keeper, with its lines, its lamp and its story"></td>
+<td width="50%"><img src="screenshots/p113f-farfold.jpg" alt="Phase 113: the Far Fold, a tilted spiral galaxy seen close through a notch-stone"></td>
+</tr>
+<tr>
+<td>The Badger, through Rootday's stone.</td>
+<td>The Far Fold, through a notch-stone.</td>
+</tr>
+<tr>
+<td><img src="screenshots/p113f-needle.jpg" alt="Phase 113: a needle-stone outside the Hedge at night"></td>
+<td><img src="screenshots/p113f-cupmarks.jpg" alt="Phase 113: too much light: the stone's cup-marks for the Tortoise"></td>
+</tr>
+<tr>
+<td>A needle-stone outside the Hedge.</td>
+<td>Too much light: the cup-marks instead.</td>
+</tr>
+</table>
+
 **The sculpted hands, lit by the world (Phase 112).** A second way to draw your own hands, in Options: "Hands: In pixels / Sculpted". The pixel hands stay the default. The sculpted hands are jointed and take the world's light each frame: the sun or the moon, the sky and the ground, a lamp near you, a Song's own colour between the open hands. They hold every weapon kind where the pixel hands hold it; the wrist cocks and snaps through a swing; the fingers open as a Song gathers; the arm behind a shield and the fists of a climb are sculpted too. They work in the 3D view; the classic view keeps the pixel hands.
 
 ![Phase 112: the option chosen, the pixel hands, and the sculpted hands by day, by night and by a street lamp](screenshots/p112-hands.jpg)

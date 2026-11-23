@@ -233,14 +233,28 @@ Record: [`story/Game Layer/Phase 87 - New In-Game Text (for review).md`](story/G
 
 The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on these next objectives and any others that will benefit from fable. put it into a road map and give it phases". The full plan, what "done" means for each phase, the open decisions and **the prompt to start the next session** are in [`story/Game Layer/Roadmap for Fable 5.2 (21 Nov 2026).md`](story/Game%20Layer/Roadmap%20for%20Fable%205.2%20(21%20Nov%202026).md).
 
+**From the audit of 23 Nov 2026** (`story/Game Layer/Audit of 23 Nov 2026 - the game against the books, the quests, the dialogue, with ratings.md`). The owner asked for the audit, and the same morning for each calling to be able to do, say and see what the others cannot and to feel different to play. Numbers are given when each is started (fetch main first). **The owner, 23 Nov: "I like your suggestions. When its time proceed and I will accept all proposals now and future proposals so long as it makes sense."**
+
+| | What | Waits on |
+| --- | --- | --- |
+| Audit 1 | **Match the text to the books:** the eleven live contradictions, the five Thursdays, the two stray "gold", "traveller" spelt one way. With French, and voices where a line is voiced | Nothing |
+| Audit 2 | **Who the traveller is:** the six likenesses are the six canon people, and the Blade's and the Archivist's stories are Kaelen's and Sable's. **Ruled 23 Nov: (a), with "in their boots"**: own people for each calling, and at the book's great moments the player steps into the hero whose moment it is (`Rulings of 23 Nov 2026.md`) | Nothing: one design with Audit 3, from a lore brief |
+| Audit 3 | **The callings:** a lore brief for each of the six, then lines, sights and one act of its own for each, scene by scene; how each plays | Audit 2 |
+| Audit 4 | One real choice in every big scene of the main story, of the kind the pumps have | |
+| Audit 5 | Fill or shorten the roads (the Greenroot Road, the drove road, the Flume Road, the wall) | The Fold's stones begin it |
+| Audit 6 | Side quests for Sol-Luminary and the Rift, three to five for each great place, from the books | |
+| Audit 7 | A playtest: a run without a person that reports where nothing happens; then the owner's two hours with `PLAYTEST.md` | |
+| Audit 8 | The dawn Refusal, heard and felt inside Null-Watch, with glass kept off the Watch at that hour | With Phase 114 |
+| Audit 9 | Names to rule: Umber, Linnet, Abner Fenning; the Requiem branch | The owner |
+
 **Part A: Fable 5.2, in this order**
 
 | Phase | What |
 | --- | --- |
 | 111 | **Done (22 Nov), for the owner's nod.** The pixel hands touched up: the arm behind a shield; the glass's deep azure by day; the hands' own Song light; the palm and the glove wear; every swing frame by frame; the night tint. Record: `story/Game Layer/Phase 111 - The pixel hands, touched up.md` |
 | 112 | **Done (22 Nov), for the owner's ruling.** The sculpted hands, lit by the world, in the game as an Options choice ("Hands: In pixels / Sculpted"; pixel stays the default until the owner says): every weapon kind held, the fists, the glass arm, a Song, the arm behind a shield, a climb; the wrist a working joint through swings and Songs; the world's light each frame. Record: `story/Game Layer/Phase 112 - The sculpted hands, lit by the world.md`. Pictures: `screenshots/p112-hands.jpg`, `p112-kinds.jpg`, `p112-swing.gif` |
-| 113 | **Held for the owner's ruling (22 Nov).** The Continental Rift, part two: the Rift Wall and the Under-Shelves. The books overturn the plan (nobody climbs the rope; the wall is six-year-old glass; no ledge lies under the Shelf; the one with the glass cannot go down; the descent is the book's own, a month later). Three designs in `story/Game Layer/Phase 113 - The Rift Wall and the Under-Shelves (findings and options, for ruling).md` |
-| 114 | The Rift, part three: Redoubt Zero and the Edge, with their keepers and lamps |
+| 113 | **Built 22 and 23 Nov: Design A (the old garrison's store, the errands, the night on the wall), Design C (the tip and the Unfinished), the deep night sky (113b) and the Fold's stones (113c).** Ruled 22 Nov: Design A, then Design C; gravewells stay; a full lore recheck first (`story/Game Layer/Rulings of 22 Nov 2026.md`). Was held for the owner's ruling. The Continental Rift, part two: the Rift Wall and the Under-Shelves. The books overturn the plan (nobody climbs the rope; the wall is six-year-old glass; no ledge lies under the Shelf; the one with the glass cannot go down; the descent is the book's own, a month later). Three designs in `story/Game Layer/Phase 113 - The Rift Wall and the Under-Shelves (findings and options, for ruling).md` |
+| 114 | The Rift, part three: Redoubt Zero and the Edge, with their keepers and lamps. **Ruled 23 Nov: the Null-Amalgam walks, as Vol I and II have it** (`story/Game Layer/Rulings of 23 Nov 2026.md`; Series Bible v1.6). Open for the designs: it is the Hush's body, and the Hush is never beaten (Vol IV, 1.8) |
 | 115 | The Rift, part four: the seven smaller places |
 | 116 | Roofs for the later places (Sun-Peak Vigil, Null-Watch, Cross Pool), then raised as in Phase 108 |
 | 117 | The Middle Country, part one: lore briefs, its great city by its frequency |
