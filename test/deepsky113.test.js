@@ -166,13 +166,16 @@ const MIDNIGHT = 0.0, NEW = 5, FULL = 1;
     await step('the map: built in slices of a few milliseconds at most, the same map twice, no Math.random', async () => {
       const r = await EB(() => {
         const r0 = window.__rand;
+        // a cold build first (the first one also pays for compiling the code, and catches whatever garbage collection the
+        // page has owed since it loaded: its longest slice is printed, not judged); then the build measured
+        DEEPSKY113.reset(); let cold = 0; while (!DEEPSKY113.ready()) { const t = performance.now(); DEEPSKY113.slice(); cold = Math.max(cold, performance.now() - t); }
         DEEPSKY113.reset(); let n = 0; const t0 = performance.now(); let worst = 0;
         while (!DEEPSKY113.ready() && n < 5000) { const t = performance.now(); DEEPSKY113.slice(); worst = Math.max(worst, performance.now() - t); n++; }
         const h1 = DEEPSKY113.hash(), all = performance.now() - t0;
         DEEPSKY113.reset(); DEEPSKY113.build(); const h2 = DEEPSKY113.hash();
-        return { n, worst, all, h1, h2, rand: window.__rand - r0, W: DEEPSKY113.W, H: DEEPSKY113.H, st: DEEPSKY113.stats };
+        return { n, worst, cold, all, h1, h2, rand: window.__rand - r0, W: DEEPSKY113.W, H: DEEPSKY113.H, st: DEEPSKY113.stats };
       });
-      console.log('  ' + r.W + ' x ' + r.H + ' built in ' + r.n + ' slices, ' + r.all.toFixed(0) + ' ms in all, the longest slice ' + r.worst.toFixed(1) + ' ms; map ' + r.h1 + '; ' + JSON.stringify(r.st.map));
+      console.log('  ' + r.W + ' x ' + r.H + ' built in ' + r.n + ' slices, ' + r.all.toFixed(0) + ' ms in all, the longest slice ' + r.worst.toFixed(1) + ' ms (the cold first build ' + r.cold.toFixed(1) + ' ms); map ' + r.h1 + '; ' + JSON.stringify(r.st.map));
       assert.ok(r.n > 8 && r.worst < 12, 'slices ' + r.n + ', longest ' + r.worst.toFixed(1) + ' ms');
       assert.strictEqual(r.h1, r.h2, 'the same map twice');
       assert.strictEqual(r.rand, 0, 'Math.random while building');

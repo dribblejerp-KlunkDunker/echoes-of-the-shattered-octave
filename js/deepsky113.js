@@ -259,13 +259,14 @@ const DEEPSKY113 = (function () {
   }
   function reset() { MAP.data = new Uint16Array(W * H * 4); MAP.row = 0; MAP.col = 0; MAP.ready = false; Object.assign(stats.map, { coreMax: 0, bandMean: 0, galaxyMax: 0, stars: 0, bandN: 0, bandSum: 0 }); lore.saved = null; lore.key = null; }
   // a slice: eight rows, or fewer if the clock says three milliseconds have gone
-  // a slice: up to 4096 texels, or fewer if the clock says two and a half milliseconds have gone
+  // a slice: up to 4096 texels, or fewer if the clock says two milliseconds have gone
   function slice() {
     if (MAP.ready) return true;
     if (!MAP.data) reset();
     const t0 = performance.now();
-    for (let n = 0; n < 32 && MAP.row < H; n++) {
-      const i0 = MAP.col || 0, i1 = Math.min(W, i0 + 128);
+    // sixteen texels at a time, the clock read between them (the first build also pays for the code being compiled)
+    for (let n = 0; n < 256 && MAP.row < H; n++) {
+      const i0 = MAP.col || 0, i1 = Math.min(W, i0 + 16);
       buildRow(MAP.row, i0, i1);
       if (i1 >= W) { MAP.row++; MAP.col = 0; } else MAP.col = i1;
       if (performance.now() - t0 > 2) break;
@@ -455,7 +456,7 @@ const DEEPSKY113 = (function () {
   }
 
   // ---------------------------------------------------------------- the classic view (an Engine sky hook)
-  let colI = new Int16Array(0), colSp = new Uint8Array(0), cKey = '';
+  let colI = new Int16Array(0), colSp = new Uint8Array(0), cKey = '', colB = new Uint8Array(0), colBS = 0;
   let rowJ = new Int16Array(0), rowExt = new Float32Array(0), rowAmp = new Float32Array(0), rowSp = new Uint8Array(0), rKey = '';
   function drawClassic(F) {
     if (!F || !F.outdoor) return;
@@ -492,6 +493,9 @@ const DEEPSKY113 = (function () {
     const thr = (1 - d) * 0.55;
     // the dust and the river at 0..255 for one unit of the map's diffuse channels
     const U = DS, rr = 0.86 * U, rg = 0.9 * U, rb = 1.0 * U;
+    // the lane-softened river comes up at half strength (the full glow needs the dark); the full map with the dark
+    const k1 = riv * (1 - dp) * 0.5, R1 = rr * k1, G1 = rg * k1, B1 = rb * k1, K2 = U * riv * dp;
+    if (colB.length !== w || colBS !== S) { colB = new Uint8Array(w); for (let x = 0; x < w; x++) colB[x] = ((x / S) | 0) & 3; colBS = S; }
     let n = 0, nsp = 0;
     for (let y = 0; y < yEnd; y++) {
       const j = rowJ[y]; if (j < 0) continue;
@@ -504,8 +508,8 @@ const DEEPSKY113 = (function () {
         if ((a | b | c | e) === 0) continue;
         let ar = 0, ag = 0, ab = 0;
         if (riv > 0 && (a | b)) {
-          const river = b >> 8, k1 = riv * (1 - dp) * 0.5, k2 = riv * dp;   // the lane-softened river comes up at half strength: the full glow needs the dark
-          ar = (rr * river * k1 + (a & 255) * U * k2); ag = (rg * river * k1 + (a >> 8) * U * k2); ab = (rb * river * k1 + (b & 255) * U * k2);
+          const river = b >> 8;
+          ar = river * R1 + (a & 255) * K2; ag = river * G1 + (a >> 8) * K2; ab = river * B1 + (b & 255) * K2;
         }
         const isSp = rsp && colSp[x];
         if (isSp) { const L = (ar * 0.3 + ag * 0.59 + ab * 0.11) * 0.9; ar += (L - ar) * 0.65; ag += (L - ag) * 0.65; ab += (L - ab) * 0.65; nsp++; }
@@ -523,7 +527,7 @@ const DEEPSKY113 = (function () {
         if (ar + ag + ab <= 0) continue;
         const px = fb[o], pr0 = px & 255, pg0 = (px >> 8) & 255, pb0 = (px >> 16) & 255;
         let allow = 1.3 - (pr0 + pg0 + pb0) * 0.0043573; if (allow <= 0) continue; if (allow > 1) allow = 1;   // 1 - (lum - 0.09) / 0.3
-        const al = allow * ext * 0.25, bt = BTH[by | (((x / S) | 0) & 3)];
+        const al = allow * ext * 0.25, bt = BTH[by | colB[x]];
         const qr = ((ar * al + bt) | 0) << 2, qg = ((ag * al + bt) | 0) << 2, qb = ((ab * al + bt) | 0) << 2;
         if (!(qr | qg | qb)) continue;
         const R = pr0 + qr, Gc = pg0 + qg, B = pb0 + qb;
