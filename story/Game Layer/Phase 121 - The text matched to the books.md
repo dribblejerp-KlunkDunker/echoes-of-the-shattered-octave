@@ -43,7 +43,7 @@ The word Thursday is now nowhere in the game's text. (`grove.js` had no bread li
 - The other "eleven years" in the game (a Cantor's slate in `conservatory59.js`, the likenesses' histories in `data.js`, the Library) are about other things.
 
 **Seen and not changed (outside the design, for the owner):**
-- The Wearer's burst: "two years of Kaelen talking to himself in an empty hut" (`js/coda.js`). Kaelen was in the hut seven years. It may mean the two years it listened. Not changed.
+- The Wearer's burst: "two years of Kaelen talking to himself in an empty hut" (`js/coda.js`). **Changed the same evening, when the owner handed the decision over:** it now gives the book's list, "a Cantor and four others, two years of a woman's nights, a boy whistling a falling fifth with too much air in it" (Book One, ch. 23: it learned Lyra for two years, not Kaelen). French in `tools/i18n/p121-decisions.tsv`; four checks in `test/text121.test.js` (67 in all). The Dirge's line and the chalk stay; the reasons are in `Rulings of 23 Nov 2026.md`, "The decisions handed over".
 - The Dirge (`js/data.js`): "A Cacophony made of three hundred years of eaten funeral songs". The Dirges are the Mausoleum's lesser things, not the choir; the design changed only the choir's own text. Not changed.
 - In the coda scene itself Lyra still writes "THAT'S IT" in chalk (`js/coda.js`), before the epilogue. The design's item was the epilogue; not changed.
 

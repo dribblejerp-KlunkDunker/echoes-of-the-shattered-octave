@@ -76,3 +76,22 @@ In answer to the two decisions left with him (the sculpted hands' cost on a real
 | --- | --- | --- |
 | "the hands are fine. I will be playing on a phone for the most part and the phone has a better processor and GPU than my laptop." | **The sculpted hands' cost is no longer waited on.** They go ahead as designed: the default in the 3D view, off in the Original preset and in Low. | On his phone they are on. If a machine is dropped to Low they are off there, and the Options row turns them on. Nothing more is owed from him on this. |
 | "match the book and change the map." | **The mooring mast moves to where Book One has it:** "above the roofs to the north, where the Consortium's mooring mast stood over the quarry like a gallows"; "a hundred and twenty feet of riveted iron on four splayed legs, sunk into the bedrock of the quarry rim". | Phase 123. The mast leaves the east side of Oakhaven's square and stands on the quarry's rim, in iron. Everything that happened at it (boarding the Kestrel, the cargo, cargo night, the Greening's oak, Grab the Line) happens there. From the square it shows over the roofs to the north. The east side of the square becomes the carters' standing [PROPOSED]. |
+
+## The decisions handed over (6:18 pm)
+
+To the list of small decisions still open:
+
+> "I will allow you to make the decisions just make the right ones please and thank you"
+
+Each was checked against the books before it was decided. What was decided, and why:
+
+| The question | Decided | Why |
+| --- | --- | --- |
+| The Wearer's burst, in its older scene: "a whole village of voices, two years of Kaelen talking to himself in an empty hut, a girl who used to be called lark" | **Changed to the book's list:** "a Cantor and four others, two years of a woman's nights, a boy whistling a falling fifth with too much air in it". | Book One, ch. 23: "It had eaten a Cantor and four others and two years of a woman's nights"; "it had been learning Lyra Ashgrove for two years". It learned Lyra, not Kaelen; five people, not a village; "Lark" is Tobin's word for his daughter. The newer scene (the ring of lamps) already said this. |
+| The Dirge: "three hundred years of eaten funeral songs" | **Stays.** | No book or volume names a Dirge. It is one lesser thing of the Mausoleum, not the whole choir, and the sexton's register there runs "three hundred years", so the number agrees with the game's own Mausoleum. |
+| Lyra writing "THAT'S IT" in chalk after the coda | **Stays for now; it goes with the "in their boots" design.** | It is only said when the traveller sang the coda because Lyra had no voice, and in that telling the chalk is consistent. The book has her voice come back and has her say it aloud (ch. 23), and the telling where she sings already gives the book's words. When the coda is sung in Lyra's boots (Audit 2), the traveller-sings telling is replaced and the chalk goes with it. |
+| Harrow's "I have hung it eleven years running", of the Last Sheaf | **Stays.** | He has kept a gate in the town eleven years (the line Phase 121 settled); hanging the Sheaf on it those eleven years agrees with that. |
+| The texture budget, 768 KB | **Stays.** | The old budget was full to the byte; the owner plays on a phone with room to spare. |
+| Old Marrable's borrowed portrait | **Not patched alone: a phase of its own, "Faces of their own".** | She is one of seventy-nine people who borrow one of two faces (forty a young townswoman's, thirty-nine a townsman's). The right fix is portraits drawn in code for the later people, not one face. It is on the roadmap, early, because the owner asked the same evening to see more added visually. |
+| The other project's four questions | **Stay parked.** | They belong to the other project and its own session ("keep 8 parked", 22 Nov). |
+
