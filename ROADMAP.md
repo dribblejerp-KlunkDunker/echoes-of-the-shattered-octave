@@ -237,7 +237,7 @@ The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on the
 
 | | What | Waits on |
 | --- | --- | --- |
-| Audit 1 | **Match the text to the books:** the eleven live contradictions, the five Thursdays, the two stray "gold", "traveller" spelt one way. With French, and voices where a line is voiced | Nothing |
+| Audit 1 | **Done in Phase 121 (23 Nov).** **Match the text to the books:** the eleven live contradictions, the five Thursdays, the two stray "gold", "traveller" spelt one way. With French, and voices where a line is voiced | Nothing |
 | Audit 2 | **Who the traveller is:** the six likenesses are the six canon people, and the Blade's and the Archivist's stories are Kaelen's and Sable's. **Ruled 23 Nov: (a), with "in their boots"**: own people for each calling, and at the book's great moments the player steps into the hero whose moment it is (`Rulings of 23 Nov 2026.md`) | Nothing: one design with Audit 3, from a lore brief |
 | Audit 3 | **The callings:** a lore brief for each of the six, then lines, sights and one act of its own for each, scene by scene; how each plays | Audit 2 |
 | Audit 4 | One real choice in every big scene of the main story, of the kind the pumps have | |
@@ -245,7 +245,7 @@ The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on the
 | Audit 6 | Side quests for Sol-Luminary and the Rift, three to five for each great place, from the books | |
 | Audit 7 | A playtest: a run without a person that reports where nothing happens; then the owner's two hours with `PLAYTEST.md` | |
 | Audit 8 | The dawn Refusal, heard and felt inside Null-Watch, with glass kept off the Watch at that hour | With Phase 114 |
-| Audit 9 | Names to rule: Umber, Linnet, Abner Fenning; the Requiem branch | The owner |
+| Audit 9 | **Done in Phase 121 (23 Nov):** Smalt, Pipit, Jabez Barker, the Unended Office | |
 
 **Part A: Fable 5.2, in this order**
 
@@ -257,8 +257,8 @@ The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on the
 | 114 | The Rift, part three: Redoubt Zero and the Edge, with their keepers and lamps. **Ruled 23 Nov: the Null-Amalgam walks, as Vol I and II have it** (`story/Game Layer/Rulings of 23 Nov 2026.md`; Series Bible v1.6). **Ruled 23 Nov, afternoon: it is survived**, not beaten and not simply passed; the sleeper under the Shelf is another thing and is never shown |
 | 115 | The Rift, part four: the seven smaller places |
 | 116 | Roofs for the later places (Sun-Peak Vigil, Null-Watch, Cross Pool), then raised as in Phase 108. **Brought forward 23 Nov** ("finish up with 5") |
-| 121 | The text matched to the books (the audit's first item): the five Thursdays, the live contradictions, the new names (Smalt, Pipit, Jabez Barker, the Unended Office), the texture budget |
-| 122 | The sculpted hands finished (the bare fist, the sleeve in a climb) and made the default in the 3D view |
+| 121 | **Done (23 Nov).** Record: `story/Game Layer/Phase 121 - The text matched to the books.md`; `test/text121.test.js`, 63 checks. The text matched to the books (the audit's first item): the five Thursdays, the live contradictions, the new names (Smalt, Pipit, Jabez Barker, the Unended Office), the texture budget |
+| 122 | **Done (23 Nov).** Record: `story/Game Layer/Phase 122 - The sculpted hands finished, and the default.md`; `test/hands122.test.js`, 9 checks. The sculpted hands finished (the bare fist, the sleeve in a climb) and made the default in the 3D view |
 | 123 | The mooring mast, where the book has it: off the east side of the square and onto the quarry's rim, in iron, seen over the roofs to the north. **Ruled 23 Nov: "match the book and change the map."** |
 | 117 | The Middle Country, part one: lore briefs, its great city by its frequency |
 | 118 | Book One in play (R9): the novel's set-pieces still open |

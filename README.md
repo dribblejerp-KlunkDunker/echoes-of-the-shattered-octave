@@ -555,6 +555,12 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The sculpted hands, finished and the default (Phase 122).** In the 3D view your hands are now the sculpted ones unless you choose otherwise (Options: "Hands: In pixels / Sculpted"; the Original and Low presets keep the pixel hands). The bare fist was the weak picture and has been reworked: the nails are soft ovals, and the skin is the colour of the face you chose at the start. The sleeve no longer swells when you climb. The glass arm is as it was.
+
+![Phase 122: the bare fists for three faces, the sleeve in a climb before and after, and the glass arm](screenshots/p122-hands.jpg)
+
+**The text matched to the books (Phase 121).** The audit's first item. No "Thursday" is left (the Hollow's bread is for Hearthday; the Wick boys sing on Memoryday). Fourteen old contradictions are settled in the book's favour: Harrow has kept *a* gate eleven years and this one since the Hedge; Vane carried crates "twelve to a run"; nobody came to Kaelen's hut in seven years; the seventy-four thousand forgot themselves over a few days, not one night; Lyra still has a little of her voice at the end of Book One; the coin is the sovereign; "traveller" is spelt one way. Four names changed by the owner's order: the Library's old scribe is Smalt, the hush-gift child is Pipit, the tanner is Jabez Barker (his twins Ned and Wyn Barker), and the choir under the Mausoleum is the Unended Office. 126 recorded lines were made again in the same voices. Record: `story/Game Layer/Phase 121 - The text matched to the books.md`.
+
 **The sculpted hands, lit by the world (Phase 112).** A second way to draw your own hands, in Options: "Hands: In pixels / Sculpted". The pixel hands stay the default. The sculpted hands are jointed and take the world's light each frame: the sun or the moon, the sky and the ground, a lamp near you, a Song's own colour between the open hands. They hold every weapon kind where the pixel hands hold it; the wrist cocks and snaps through a swing; the fingers open as a Song gathers; the arm behind a shield and the fists of a climb are sculpted too. They work in the 3D view; the classic view keeps the pixel hands.
 
 ![Phase 112: the option chosen, the pixel hands, and the sculpted hands by day, by night and by a street lamp](screenshots/p112-hands.jpg)
