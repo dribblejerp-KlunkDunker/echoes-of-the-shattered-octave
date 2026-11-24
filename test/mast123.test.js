@@ -245,6 +245,21 @@ async function start(r3d) {
   check(r.downs, 'from the Downs too');
   check(r.rimOwn && r.fromGateRoad, 'on the rim\'s own map the mast is its own entity, seen from the North Gate road at thirty cells');
 
+  // ---- the Kestrel herself (Book One l. 674, 1321): "brass-ribbed and oak-planked, with a patched grey envelope and four
+  // lift-tanks slung beneath her keel glowing the faint cobalt of drift-glass"
+  r = await S.page.evaluate(() => {
+    const out = { size: true }, px = (sp, x, y) => sp.data[y * sp.w + x], rgbOf = (p) => [p & 255, (p >> 8) & 255, (p >> 16) & 255];
+    for (let i = 0; i < 5; i++) { const sp = Engine.sprites['kestrel_m' + i]; if (!sp || sp.w !== 144 || sp.h !== 72) out.size = false; }
+    const env = (sp) => { let n = 0, grey = 0, tan = 0; for (let y = 10; y <= 30; y++) for (let x = 0; x < sp.w; x++) { const p = px(sp, x, y); if ((p >>> 24) <= 100) continue; const [R, G2, B] = rgbOf(p); n++; if (Math.max(R, G2, B) - Math.min(R, G2, B) < 28) grey++; if (R > B + 30 && G2 > B + 15) tan++; } return { n, grey: n ? grey / n : 0, tan: n ? tan / n : 1 }; };
+    const cobaltRuns = (sp) => { let best = 0; for (let y = 50; y < 72; y++) { let runs = 0, on = false; for (let x = 0; x < sp.w; x++) { const p = px(sp, x, y), [R, G2, B] = rgbOf(p); const c = (p >>> 24) > 100 && B > R + 40 && B > G2 + 10; if (c && !on) runs++; on = c; } best = Math.max(best, runs); } return best; };
+    const b = Engine.sprites.kestrel_m2, f = Engine.sprites.kestrel_m0;
+    out.env = b && env(b); out.tanks = b && cobaltRuns(b); out.tanks0 = f && cobaltRuns(f);
+    return out;
+  });
+  check(r.size, 'the five moored views keep their size (144 x 72)');
+  check(r.env && r.env.grey > 0.7 && r.env.tan < 0.1, 'her envelope is grey sailcloth, not tan (' + JSON.stringify(r.env) + ')');
+  check(r.tanks === 4 && r.tanks0 === 2, 'four cobalt lift-tanks under her keel broadside, two bow-on (' + r.tanks + ', ' + r.tanks0 + ')');
+
   // ---- "Where is the mooring mast?"
   r = await S.page.evaluate(() => {
     T.reset(); loadMap('oakhaven', { x: 23.5, y: 22.5, dir: 0 }); G.state = 'play'; DLG.log = DLG.log || []; DLG.log.length = 0;
