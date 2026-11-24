@@ -31,3 +31,18 @@ Asked how they should be made, since four attempts in code could not match the f
 | **The portraits are made with a picture-making tool connected to the session, in the style of the first twenty-eight, each written from that person's look in the books and the game. Six are made first and shown to him before the rest.** | The rule that all art is made in code is set aside **for portraits only**. Everything else stays in code. Each portrait is added as a picture file, as the first twenty-eight were. A person the books describe is painted as the book says, with the line in the record. |
 | Pennick's age goes with it. | He is "the boy" in Book One (l. 1657); his portrait and, later, his figure can now say so. His figure is a later question: this ruling covers portraits. |
 
+
+## The look of the faces (4:12 pm and 4:50 pm)
+
+Shown the first three portraits (Old Marrable, the trooper, the Tallyman), made with Canva:
+
+> "the faces look great thank you"
+
+Canva then ran out of credit. Shown the first portrait made on his own Hugging Face account (Perpetua Lisle) beside those three, and told its faults (too young, too light a ground, half-length):
+
+> "yes I like the looks so far"
+
+| Ruling | What follows |
+| --- | --- |
+| **The look of the painted portraits is approved, from either tool.** | The rest are made on the owner's Hugging Face (the Z-Image-Turbo Space), each prompt and seed written down. Phase 124d put the next six in. |
+| Not ruled: paying for Hugging Face PRO. | The free account allows about nine pictures a day. It is his purchase to make or not; until he says, the faces come at that rate. |
