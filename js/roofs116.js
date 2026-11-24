@@ -48,10 +48,14 @@ const ROOFS116 = (() => {
   const PLACES = {
     [VIGIL]: { name: 'Sun-Peak Vigil', builds: 'pale stone under heavy stone slates, snow on the weather pitch', ground: 0, ground0: 0, doorH: 1.3,
       why: 'the ranges already stand three and a half high: only the cells\' doors are raised, a stone head over each, the wall made good above it',
-      kinds: ['vigil-range', 'vigil-pentice', 'vigil-gate', 'vigil-cap'], tiles: ['r116_vslate', 'r116_snow', 'r116_vridge'] },
+      // the weather side, once for the whole place: west [PROPOSED]. The map has no open side on the ranges' long axis (north
+      // is the drop past the parapet, south the landing shelf, east and west the mountain's rock) and no book gives the
+      // Heights' weather; west it is, so that from the garth one range shows its snow and the other its bare stone
+      weather: 'west',
+      kinds: ['vigil-range', 'vigil-pentice', 'vigil-gate', 'vigil-cap'], tiles: ['r116_vslate', 'r116_snow', 'r116_snowedge', 'r116_snowthin', 'r116_vridge', 'r116_vstack', 'r116_melt'] },
     [WATCH]: { name: 'Null-Watch', builds: 'black obsidian blockwork under grey lead', ground: 0, ground0: 0, doorH: 1.3,
       why: 'the Talking Halls already stand three and a half high: only its door is raised, an obsidian head dressed in lead over it',
-      kinds: ['watch-halls', 'watch-block'], tiles: ['r116_lead', 'r116_leadroll'] },
+      kinds: ['watch-halls', 'watch-block'], tiles: ['r116_lead', 'r116_leadroll', 'r116_leadnight', 'r116_rollnight'] },
     [POOL]: { name: 'Cross Pool', builds: 'Oakhaven\'s timber and slate, drowned', ground: 0.38, ground0: 0, doorH: 1.24,
       why: 'the corn loft and the kerb house, dry inside: the Low Rings\' own proportions (Phase 108), the same town',
       kinds: ['pool-drowned', 'pool-garret', 'pool-raised'], tiles: ['r116_moss', 'r116_slip', 'r116_weave'] },
@@ -66,25 +70,36 @@ const ROOFS116 = (() => {
   function textures() {
     if (texDone || typeof Engine === 'undefined' || !Engine.textures || !Engine.addTexture) return;
     const rgb = (r, g, b, a = 255) => ((a << 24) | (min(255, max(0, b)) | 0) << 16 | (min(255, max(0, g)) | 0) << 8 | (min(255, max(0, r)) | 0)) >>> 0;
-    const N = 4096, vslate = new Uint32Array(N), snow = new Uint32Array(N), vridge = new Uint32Array(N), lead = new Uint32Array(N), roll = new Uint32Array(N), moss = new Uint32Array(N), slip = new Uint32Array(N), weave = new Uint32Array(N);
+    const N = 4096, snowedge = new Uint32Array(N), snowthin = new Uint32Array(N), vstack = new Uint32Array(N), melt = new Uint32Array(N), vslate = new Uint32Array(N), snow = new Uint32Array(N), vridge = new Uint32Array(N), lead = new Uint32Array(N), roll = new Uint32Array(N), moss = new Uint32Array(N), slip = new Uint32Array(N), weave = new Uint32Array(N);
     for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
       const i = y * 64 + x, n = h2(x >> 1, y >> 1) - 0.5, n4 = h2(x >> 2, y >> 2) - 0.5;
       // heavy pale stone slates: four deep courses to the tile, the joints staggered, each slate its own shade, a thick
       // shadow under each course's lower edge (the slates are an inch thick)
       { const row = y >> 4, e = y & 15, off = ((h2(row, 17) * 24) | 0) + row * 11, sx = (x + off) % 64, slate = (sx / 21) | 0, joint = sx % 21 === 0;
         const tone = 0.9 + h2(slate + row * 7, 31) * 0.14, k = tone * (e >= 14 ? 0.56 : e === 13 ? 0.78 : e === 0 ? 1.08 : 1) * (joint ? 0.66 : 1) + n * 0.05 + (h2(x >> 3, y >> 3) - 0.5) * 0.04;
-        vslate[i] = rgb(158 * k, 156 * k, 150 * k); }
+        // the lee pitch: the same slates dark with wet, snow lodged in the joints and under each course's edge
+        const lodged = (e === 13 || e === 14) && h2(x >> 2, row * 5 + 1) < 0.6 || (joint && e < 12 && h2(row, x >> 3) < 0.55);
+        vslate[i] = lodged ? rgb(196 + n * 10, 204 + n * 10, 216 + n * 8) : rgb(112 * k, 112 * k, 110 * k); }
       // snow lying on the weather pitch: white going blue in the hollows, the courses faintly under it, wind-ribbed
       { const rib = Math.sin((x * 0.21 + y * 0.09) + h2(x >> 3, 7) * 2) * 0.5 + 0.5, course = (y & 15) >= 14 ? 0.95 : 1, k = (0.93 + rib * 0.05 + n * 0.03) * course;
-        snow[i] = rgb(226 * k, 232 * k, 240 * k + 4); }
+        snow[i] = rgb(206 * k, 214 * k, 228 * k); }
+      // the lower edge of the snow where it has slid: soft and uneven, cut out below, a shadow under its lip
+      { const edge = 34 + h2(x >> 2, 5) * 18 + h2(x >> 1, 9) * 6 - 3, k = 0.9 + n * 0.04;
+        snowedge[i] = y > edge ? 0 : y > edge - 2 ? rgb(150, 158, 174) : rgb(206 * k, 214 * k, 228 * k); }
+      // a thin snow: the slates showing through it in patches
+      { const bare = h2(x >> 3, y >> 2) + h2(x >> 1, y >> 1) * 0.3 > 0.95, k = 0.9 + n * 0.05; snowthin[i] = bare ? rgb(112 * k, 112 * k, 110 * k) : rgb(200 * k, 208 * k, 222 * k); }
+      // the stack: the same stone, wet and dark with soot towards the top
+      { const course = (y & 15) === 0 || ((x + ((y >> 4) & 1) * 16) & 31) === 0, k = (0.62 - (64 - y) * 0.003 + n * 0.08) * (course ? 0.7 : 1); vstack[i] = rgb(150 * k, 146 * k, 138 * k); }
+      // where the stack's warmth has melted the snow back: wet slate, a ragged round edge
+      { const rr = hyp(x - 31.5, y - 31.5) / 31 + (h2(x >> 2, y >> 2) - 0.5) * 0.22; melt[i] = rr > 1 ? 0 : rr > 0.9 ? rgb(170, 178, 192) : rgb(96 + n * 14, 96 + n * 14, 96 + n * 12); }
       // the stone ridge: long dressed stones, darker
       { const k = (0.76 + n * 0.1) * (x % 32 === 0 ? 0.6 : 1) * (y < 3 ? 1.12 : 1); vridge[i] = rgb(168 * k, 164 * k, 154 * k); }
       // lead sheet: dull grey, a little oxide bloom, the laps (one sheet over the next) dark lines across, every sheet
       // between rolls three to the tile; no green (that is Whisper-Grove's)
       { const lap = y % 21, bloom = h2(x >> 3, (y >> 3) + 40) < 0.2 ? 0.07 : 0, k = (0.97 + n * 0.08 + n4 * 0.05 + bloom) * (lap === 0 ? 0.58 : lap === 1 ? 0.74 : lap === 20 ? 1.08 : 1);
-        lead[i] = rgb(80 * k, 84 * k, 90 * k); }
+        lead[i] = rgb(112 * k, 116 * k, 122 * k); }
       // a lead roll or flashing: rounded, the light on its crown
-      { const c = Math.cos((x / 64) * PI * 2), k = 0.86 + c * 0.16 + n * 0.06; roll[i] = rgb(92 * k, 96 * k, 102 * k); }
+      { const c = Math.cos((x / 64) * PI * 2), k = 0.86 + c * 0.16 + n * 0.06; roll[i] = rgb(128 * k, 132 * k, 138 * k); }
       // slate gone green: the drowned town's, the moss in deep clumps along the courses, lichen, damp streaks down
       { const row = y >> 3, e = y & 7, sx = (x + ((h2(row, 3) * 13) | 0)) % 64, joint = sx % 13 === 0, k0 = (e === 7 ? 0.6 : e === 0 ? 1.1 : 1) * (joint ? 0.7 : 1) * (0.9 + h2((sx / 13) | 0, row) * 0.16);
         const g = h2(x >> 3, y >> 3) * 0.6 + h2(x >> 2, y >> 2) * 0.3 + h2(x >> 1, (y >> 1) + 9) * 0.25 + (e >= 5 ? 0.12 : 0), streak = h2(x >> 1, 77) < 0.12 ? 0.82 : 1;
@@ -106,11 +121,17 @@ const ROOFS116 = (() => {
         else if (pane === 4) { const k = 0.8 + h2(x >> 3, 5) * 0.2; weave[i] = rgb(84 * k, 66 * k, 46 * k); }   // boarded
         else { const sheen = abs((x - y * 0.7) % 23) < 2 ? 18 : 0; weave[i] = rgb(24 + sheen + n * 8, 32 + sheen + n * 8, 36 + sheen + n * 10); } }
     }
-    for (const [name, d] of [['r116_vslate', vslate], ['r116_snow', snow], ['r116_vridge', vridge], ['r116_lead', lead], ['r116_leadroll', roll], ['r116_moss', moss], ['r116_slip', slip], ['r116_weave', weave]]) Engine.addTexture(name, d);
+    // the lead after dark: it goes black with the wall (the Watch's night has no moon and no stars, and its lanterns are
+    // for the streets, not the roofs)
+    const leadNight = lead.map((c) => rgb((c & 255) * 0.06, ((c >>> 8) & 255) * 0.06, ((c >>> 16) & 255) * 0.065)), rollNight = roll.map((c) => rgb((c & 255) * 0.06, ((c >>> 8) & 255) * 0.06, ((c >>> 16) & 255) * 0.065));
+    for (const [name, d] of [['r116_leadnight', leadNight], ['r116_rollnight', rollNight], ['r116_snowedge', snowedge], ['r116_snowthin', snowthin], ['r116_vstack', vstack], ['r116_melt', melt], ['r116_vslate', vslate], ['r116_snow', snow], ['r116_vridge', vridge], ['r116_lead', lead], ['r116_leadroll', roll], ['r116_moss', moss], ['r116_slip', slip], ['r116_weave', weave]]) Engine.addTexture(name, d);
     texDone = true;
   }
   // PREP runs as each mesh is begun: the time this module's own drawing takes is counted afresh for it
-  E.PREP.push(() => { stats.draw = {}; try { textures(); } catch (e) { warnOnce('tiles', e); } });
+  E.PREP.push(() => { stats.draw = {}; try { textures(); } catch (e) { warnOnce('tiles', e); }
+    // the Watch's lead by day or by night (the mesh is rebuilt at dusk and dawn, as EAVES78 does for its lit windows)
+    try { const wm = typeof G !== 'undefined' && G.maps && G.maps[WATCH]; if (wm && E.MAPS.has(WATCH)) { const n = E.night();
+      for (const b of E.planOf(wm).houses) if (b.r116) { b.roofTex = n ? 'r116_leadnight' : 'r116_lead'; b.boardTex = b.ridgeTex = n ? 'r116_rollnight' : 'r116_leadroll'; } } } catch (e) { warnOnce('night', e); } });
   const clock = () => (typeof performance !== 'undefined' ? performance.now() : 0);
   const timed = (fn, idOf) => function () { const t0 = clock(); try { return fn.apply(this, arguments); } finally { const id = idOf.apply(null, arguments); stats.draw[id] = (stats.draw[id] || 0) + clock() - t0; } };
 
@@ -145,7 +166,7 @@ const ROOFS116 = (() => {
       let ok = true; for (let y = y0; y <= y1 && ok; y++) for (let x = x0; x <= x1; x++) if (!isRange(x, y)) { ok = false; break; }
       if (!ok) { warnOnce('range ' + side, 'not a range'); continue; }
       const b = gable(m, { x0, y0, x1, y1 }, { axis: 'y', top: 3.6, stone: true, wallTex: 't_p96v_stone', gableTex: 't_p96v_stone', boardTex: 't_p96v_stone', ridgeTex: 'r116_vridge', roofTex: 'r116_vslate', pitch: 0.92, over: 0.12, verge: 0.14, label: 'the ' + side + ' range' });
-      b.r116 = { kind: 'vigil-range', snow: 'west', side };
+      b.r116 = { kind: 'vigil-range', snow: 'west', side, pitches: { west: 'snow', east: 'bare' } };
       b.extras.push({ kind: 'r116_snow', x: 0, y: 0, nx: 0, ny: 1 });
       // the twelve keep one fire: one stack, on the west range's ridge, over the middle of the cells
       if (side === 'west') { const sy = (court[1] + court[3]) / 2 + 0.5; b.r116.stack = { x: b.C - 0.35, y: sy }; b.extras.push({ kind: 'r116_vstack', x: b.C - 0.35, y: sy, nx: 0, ny: 1 }); }
@@ -156,9 +177,9 @@ const ROOFS116 = (() => {
     }
     if (out.doors.length) out.houses[0].extras.push({ kind: 'r116_doorways', x: 0, y: 0, nx: 0, ny: 1, list: out.doors, wall: 't_p96v_stone', head: 't_p96v_stone' });
     const g = P.garth;
-    out.r116.push({ kind: 'vigil-pentice', place: VIGIL, x0: court[0], y0: court[1], x1: court[2], y1: court[3], tex: 'r116_vslate', inner: [g[0] + 0.2, g[1] + 0.2, g[2] + 0.8, g[3] + 0.8], snow: 'west' });
-    out.r116.push({ kind: 'vigil-gate', place: VIGIL, x0: P.gate[0], y0: P.gate[1], x1: P.gate[0], y1: P.gate[1], tex: 'r116_vslate', snow: 'west' });
-    out.r116.push({ kind: 'vigil-cap', place: VIGIL, x0: Math.floor(P.tower[0] - 2.5), y0: Math.floor(P.tower[1] - 2.5), x1: Math.floor(P.tower[0] + 2.5), y1: Math.floor(P.tower[1] + 2.5), tex: 'r116_vslate', snow: 'west' });
+    out.r116.push({ kind: 'vigil-pentice', place: VIGIL, x0: court[0], y0: court[1], x1: court[2], y1: court[3], tex: 'r116_vslate', inner: [g[0] + 0.2, g[1] + 0.2, g[2] + 0.8, g[3] + 0.8], snow: 'west', snowCap: 'thin' });
+    out.r116.push({ kind: 'vigil-gate', place: VIGIL, x0: P.gate[0], y0: P.gate[1], x1: P.gate[0], y1: P.gate[1], tex: 'r116_vslate', snow: 'west', pitches: { west: 'snow', east: 'bare' } });
+    out.r116.push({ kind: 'vigil-cap', place: VIGIL, x0: Math.floor(P.tower[0] - 2.5), y0: Math.floor(P.tower[1] - 2.5), x1: Math.floor(P.tower[0] + 2.5), y1: Math.floor(P.tower[1] + 2.5), tex: 'r116_vslate', snow: 'west', snowCap: 'snow' });
     return out;
   }
 
@@ -173,7 +194,7 @@ const ROOFS116 = (() => {
     const lead = (r, top, label, kind) => {
       const b = gable(m, r, { top, wallTex: 't_p100_obsidian', gableTex: 't_p100_obsidian', boardTex: 'r116_leadroll', ridgeTex: 'r116_leadroll', roofTex: 'r116_lead', pitch: 0.28, over: 0.1, verge: 0.06, label });
       const rolls = max(4, Math.round((b.A1 - b.A0) / 0.62) - 1);
-      b.r116 = { kind, rolls, pipes: 0 };
+      b.r116 = { kind, rolls, pipes: 0, tex: 'r116_lead' };
       b.extras.push({ kind: 'r116_rolls', x: 0, y: 0, nx: 0, ny: 1, n: rolls });
       return b;
     };
@@ -193,26 +214,44 @@ const ROOFS116 = (() => {
       b.extras.push({ kind: 'r116_doorways', x: 0, y: 0, nx: 0, ny: 1, list: out.doors, wall: 't_p100_obsidian', head: 'r116_leadroll' });
       out.houses.push(b);
     }
-    // the blockhouses
-    const free = (x, y) => { const k = y * W + x, c = m.cells[k]; return !!c && !c.door && (K[k] === 0 || K[k] === 2) && BLOCK.test(c.tex || '') && c.top >= 1.9 && c.top <= 3.5; };
-    const seen = new Uint8Array(W * H), taken = (x, y) => out.houses.some((q) => x >= q.x0 - 1 && x <= q.x1 + 1 && y >= q.y0 - 1 && y <= q.y1 + 1);
-    for (let sy = 1; sy < H - 1; sy++) for (let sx = 1; sx < W - 1; sx++) {
-      if (seen[sy * W + sx] || !free(sx, sy)) continue;
-      let x0 = sx, x1 = sx, y0 = sy, y1 = sy, n = 0; const st = [[sx, sy]]; seen[sy * W + sx] = 1;
-      while (st.length) { const [x, y] = st.pop(); n++; x0 = min(x0, x); x1 = max(x1, x); y0 = min(y0, y); y1 = max(y1, y);
-        for (const [ddx, ddy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const X = x + ddx, Y = y + ddy; if (X < 1 || Y < 1 || X >= W - 1 || Y >= H - 1 || seen[Y * W + X] || !free(X, Y)) continue; seen[Y * W + X] = 1; st.push([X, Y]); } }
-      const w = x1 - x0 + 1, h = y1 - y0 + 1; if (w < 3 || h < 3 || n !== w * h) continue;
+    const small = [];
+    // the blockhouses: the Watch's blockwork is one mass of blocks between its streets; every block of it at least four
+    // cells by four is a house of the Watch (carved out of the mass, the biggest first), never one that touches the wall,
+    // its towers or stairs, nor within reach of a battery or the mooring-yard
+    const free = (x, y) => { if (x < 1 || y < 1 || x >= W - 1 || y >= H - 1) return false; const k = y * W + x, c = m.cells[k]; return !!c && !c.door && (K[k] === 0 || K[k] === 2) && BLOCK.test(c.tex || '') && c.top >= 1.9 && c.top <= 3.5; };
+    // first the blocks that stand free on their own, three by three and more, open street all round
+    { const seen = new Uint8Array(W * H);
+      for (let sy = 1; sy < H - 1; sy++) for (let sx = 1; sx < W - 1; sx++) {
+        if (seen[sy * W + sx] || !free(sx, sy)) continue;
+        let x0 = sx, x1 = sx, y0 = sy, y1 = sy, n = 0; const st = [[sx, sy]]; seen[sy * W + sx] = 1;
+        while (st.length) { const [x, y] = st.pop(); n++; x0 = min(x0, x); x1 = max(x1, x); y0 = min(y0, y); y1 = max(y1, y);
+          for (const [ddx, ddy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const X = x + ddx, Y = y + ddy; if (seen[Y * W + X] || !free(X, Y)) continue; seen[Y * W + X] = 1; st.push([X, Y]); } }
+        const w = x1 - x0 + 1, h = y1 - y0 + 1; if (w < 3 || h < 3 || n !== w * h || (w >= 4 && h >= 4)) continue;
+        let ok = true; for (let y = y0 - 1; y <= y1 + 1 && ok; y++) for (let x = x0 - 1; x <= x1 + 1; x++) { const inside = x >= x0 && x <= x1 && y >= y0 && y <= y1, k = y * W + x; if (!inside && (m.cells[k] || ![1, 6].includes(K[k]) || inR(Pr.yard, x, y))) { ok = false; break; } }
+        if (ok) small.push({ x0, y0, x1, y1 });
+      } }
+    const used = new Uint8Array(W * H), WALLK = [3, 4, 5, 9, 10, 11], S = 4;
+    for (const q of out.houses) for (let y = q.y0 - 1; y <= q.y1 + 1; y++) for (let x = q.x0 - 1; x <= q.x1 + 1; x++) if (x >= 0 && y >= 0 && x < W && y < H) used[y * W + x] = 1;
+    const towers = RIFT100.TOWERS || [], rects = small.slice();
+    for (const r of small) for (let j = r.y0; j <= r.y1; j++) for (let i = r.x0; i <= r.x1; i++) used[j * W + i] = 1;
+    for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+      if (used[y * W + x] || !free(x, y)) continue;
+      let maxw = 0; while (free(x + maxw, y) && !used[y * W + x + maxw]) maxw++;
+      let best = null, w = maxw;
+      for (let h = 1; y + h - 1 < H - 1; h++) { let ww = 0; while (ww < w && free(x + ww, y + h - 1) && !used[(y + h - 1) * W + x + ww]) ww++; w = ww; if (w < S) break; if (h >= S && (!best || w * h > best.w * best.h)) best = { w, h }; }
+      if (!best) continue;
+      const r = { x0: x, y0: y, x1: x + best.w - 1, y1: y + best.h - 1 };
+      for (let j = r.y0; j <= r.y1; j++) for (let i = r.x0; i <= r.x1; i++) used[j * W + i] = 1;
+      rects.push(r);
+    }
+    for (const { x0, y0, x1, y1 } of rects) {
       let ok = true, top = 0;
-      for (let y = y0 - 1; y <= y1 + 1 && ok; y++) for (let x = x0 - 1; x <= x1 + 1; x++) {
-        const inside = x >= x0 && x <= x1 && y >= y0 && y <= y1, k = y * W + x;
-        if (inside) { top = max(top, m.cells[k].top); continue; }
-        if (m.cells[k] || ![1, 6].includes(K[k]) || inR(Pr.yard, x, y)) { ok = false; break; }
-      }
-      if (!ok || taken(x0, y0)) continue;
+      for (let j = y0 - 1; j <= y1 + 1 && ok; j++) for (let i = x0 - 1; i <= x1 + 1; i++) { const k = j * W + i; if (WALLK.includes(K[k]) || inR(Pr.yard, i, j)) { ok = false; break; } if (i >= x0 && i <= x1 && j >= y0 && j <= y1) top = max(top, m.cells[k].top); }
+      if (!ok || towers.some((t) => hyp((x0 + x1 + 1) / 2 - t.at[0], (y0 + y1 + 1) / 2 - t.at[1]) < 14)) continue;
       const b = lead({ x0, y0, x1, y1 }, top, 'a blockhouse', 'watch-block'), band = [];
       // the lower blocks' walls are carried up to the eaves, so the roof sits on one level
-      for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const t = m.cells[y * W + x].top; if (t >= top - 0.01) continue;
-        for (const [nx, ny] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) if (x + nx < x0 || x + nx > x1 || y + ny < y0 || y + ny > y1) band.push({ x, y, nx, ny, z0: t, tex: m.cells[y * W + x].tex }); }
+      for (let j = y0; j <= y1; j++) for (let i = x0; i <= x1; i++) { const t = m.cells[j * W + i].top; if (t >= top - 0.01) continue;
+        for (const [nx, ny] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) if (i + nx < x0 || i + nx > x1 || j + ny < y0 || j + ny > y1) band.push({ x: i, y: j, nx, ny, z0: t, tex: m.cells[j * W + i].tex }); }
       if (band.length) b.extras.push({ kind: 'r116_band', x: 0, y: 0, nx: 0, ny: 1, list: band });
       out.houses.push(b);
     }
@@ -290,21 +329,36 @@ const ROOFS116 = (() => {
   const frame = (e) => { const tx = -e.ny, ty = e.nx; return (t, off, z) => [e.x + tx * t + e.nx * off, e.y + ty * t + e.ny * off, z]; };
   // which pitch of a gable faces west: for a ridge along y it is s < 0; along x neither does (none for the snow)
   const westSign = (b) => b.axis === 'y' ? -1 : 0;
-  // snow on one pitch of a plain gable roof drawn by EAVES78, and a lip of it along the eave
+  // snow lying on the weather pitch of a plain gable roof drawn by EAVES78: thick from the ridge down, its lower edge
+  // uneven where it has slid (a hashed tile, cut out), a hand's breadth of bare wet slate at the eaves; and a soft rounded
+  // lip of it over the ridge, lapping onto the lee pitch
   function snowPitch(T, b, sg) {
-    const { P, N } = ridgeFrame(b), p = b.pitch, span = b.span, over = b.over != null ? b.over : E.OVER, verge = b.verge != null ? b.verge : 0.22, zB = b.zBase, a0 = b.A0 - verge - 0.02, a1 = b.A1 + verge + 0.02;
-    const se = span + over + 0.02, ze = zB - (over + 0.02) * p, sTop = 0.16, zt = zB + (span - sTop) * p, Ls = T.L('r116_snow'), th = 0.035, sl = hyp(se - sTop, ze - zt);
-    const q = [P(a0, sg * se, ze + th), P(a1, sg * se, ze + th), P(a1, sg * sTop, zt + th), P(a0, sg * sTop, zt + th)], up = T.planeN(q[0], q[1], q[2], T.UP);
-    T.quad(q, [[a0, sl], [a1, sl], [a1, 0], [a0, 0]], Ls, T.MAT.wall, sg < 0 ? 1 : 0.9, up);
-    // the lip, over the fascia, and its ends over the barge boards
-    T.quad([P(a0, sg * (se + 0.03), ze - 0.09), P(a1, sg * (se + 0.03), ze - 0.09), P(a1, sg * (se + 0.03), ze + th + 0.01), P(a0, sg * (se + 0.03), ze + th + 0.01)], [[a0, 0.15], [a1, 0.15], [a1, 0], [a0, 0]], Ls, T.MAT.wall, 0.95, N(0, sg));
-    for (const [a, na] of [[a0, -1], [a1, 1]]) T.quad([P(a, sg * (se + 0.03), ze - 0.09), P(a, sg * sTop, zt - 0.04), P(a, sg * sTop, zt + th), P(a, sg * (se + 0.03), ze + th + 0.01)], [[0, 0.15], [sl, 0.15], [sl, 0], [0, 0]], Ls, T.MAT.wall, 0.85, N(na, 0));
+    const { P } = ridgeFrame(b), p = b.pitch, span = b.span, verge = b.verge != null ? b.verge : 0.22, zB = b.zBase, a0 = b.A0 - verge + 0.02, a1 = b.A1 + verge - 0.02, th = 0.07;
+    const z = (s) => zB + (span - abs(s)) * p + th, sMid = span * 0.55, sBot = span - 0.12, Ls = T.L('r116_snow'), Le = T.L('r116_snowedge');
+    const up = T.planeN(P(a0, sg * span, z(span)), P(a1, sg * span, z(span)), P(a1, 0, z(0)), T.UP), k = hyp(1, p);
+    T.quad([P(a0, sg * sMid, z(sMid)), P(a1, sg * sMid, z(sMid)), P(a1, 0, z(0)), P(a0, 0, z(0))], [[a0, sMid * k], [a1, sMid * k], [a1, 0], [a0, 0]], Ls, T.MAT.wall, 1, up);
+    T.quad([P(a0, sg * sBot, z(sBot)), P(a1, sg * sBot, z(sBot)), P(a1, sg * sMid, z(sMid)), P(a0, sg * sMid, z(sMid))], [[a0, 1], [a1, 1], [a1, 0], [a0, 0]], Le, T.MAT.wall, 1 + 10, up);
+    // the snow's own depth along its verges, so it reads as a layer and not a stain
+    for (const [a, na] of [[a0, -1], [a1, 1]]) T.quad([P(a, sg * sMid, z(sMid) - th), P(a, 0, z(0) - th), P(a, 0, z(0)), P(a, sg * sMid, z(sMid))], [[0, 0.07], [sMid, 0.07], [sMid, 0], [0, 0]], Ls, T.MAT.wall, 0.8, ridgeFrame(b).N(na, 0));
+    snowRidge(T, b, sg, a0, a1);
+  }
+  // a rounded bolster of snow over a ridge, lapping a little onto the lee side
+  function snowRidge(T, b, sg, a0, a1) {
+    const { P } = ridgeFrame(b), p = b.pitch, span = b.span, zB = b.zBase, Ls = T.L('r116_snow'), zr = zB + span * p;
+    const prof = [[sg * 0.42, zr - 0.42 * p + 0.07], [sg * 0.2, zr - 0.2 * p + 0.13], [0, zr + 0.13], [-sg * 0.14, zr - 0.14 * p + 0.06], [-sg * 0.26, zr - 0.26 * p + 0.012]];
+    for (let i = 0; i + 1 < prof.length; i++) { const [s0, z0] = prof[i], [s1, z1] = prof[i + 1], q = [P(a0, s0, z0), P(a1, s0, z0), P(a1, s1, z1), P(a0, s1, z1)];
+      T.quad(q, [[a0, 0.3], [a1, 0.3], [a1, 0], [a0, 0]], Ls, T.MAT.wall, i < 2 ? 1 : 0.9, T.planeN(q[0], q[1], q[2], T.UP)); }
+    for (const [a, na] of [[a0, -1], [a1, 1]]) for (let i = 0; i + 1 < prof.length; i++) T.tri([P(a, prof[i][0], prof[i][1]), P(a, prof[i + 1][0], prof[i + 1][1]), P(a, 0, zr - 0.02)], [[0, 0.1], [0.2, 0.1], [0.1, 0]], Ls, T.MAT.wall, 0.85, ridgeFrame(b).N(na, 0));
   }
   E.EXTRA.r116_snow = (e, b, T) => { const sg = westSign(b); if (sg) snowPitch(T, b, sg); };
   // the Vigil's stack: dressed stone, a cap, the one smoke
   E.EXTRA.r116_vstack = (e, b, T) => {
     const z = E.roofZ(b, e.x, e.y); if (z == null) return;
-    const zt = b.ridge + 0.85, Lv = T.L('t_p96v_stone'), Lc = T.L('r116_vridge');
+    const zt = b.ridge + 0.85, Lv = T.L('r116_vstack'), Lc = T.L('r116_vstack');
+    // the snow melted back round it, on the weather pitch: wet slate showing, a ragged round edge
+    { const { P } = ridgeFrame(b), sg = westSign(b), r = 0.62, s0 = (e.x - b.C), zf = (s) => b.zBase + (b.span - abs(s)) * b.pitch + 0.075;
+      const q = [P(e.y - r, s0 - r, zf(s0 - r)), P(e.y + r, s0 - r, zf(s0 - r)), P(e.y + r, min(-0.001, s0 + r) , zf(min(-0.001, s0 + r))), P(e.y - r, min(-0.001, s0 + r), zf(min(-0.001, s0 + r)))];
+      if (sg) T.quad(q, [[0, 1], [1, 1], [1, 0], [0, 0]], T.L('r116_melt'), T.MAT.wall, 1 + 10, T.planeN(q[0], q[1], q[2], T.UP)); }
     T.box(e.x - 0.26, e.y - 0.3, e.x + 0.26, e.y + 0.3, z - 0.3, zt, Lv, Lc, 0.95);
     T.box(e.x - 0.31, e.y - 0.35, e.x + 0.31, e.y + 0.35, zt, zt + 0.08, Lc, Lc, 1.1);
     T.box(e.x - 0.12, e.y - 0.12, e.x + 0.12, e.y + 0.12, zt + 0.08, zt + 0.1, T.L('e78_dark'), T.L('e78_dark'), 0.5);
@@ -326,13 +380,20 @@ const ROOFS116 = (() => {
   };
   // Null-Watch: the rolled seams, down both pitches, a roll at every joint of the sheets
   E.EXTRA.r116_rolls = (e, b, T) => {
-    const { P } = ridgeFrame(b), p = b.pitch, span = b.span, over = b.over != null ? b.over : E.OVER, zB = b.zBase, se = span + over, Lr = T.L('r116_leadroll'), n = e.n, w = 0.035, hgt = 0.045;
-    const z = (s) => zB + (span - abs(s)) * p;
+    const { P, N } = ridgeFrame(b), p = b.pitch, span = b.span, over = b.over != null ? b.over : E.OVER, verge = b.verge != null ? b.verge : 0.2, zB = b.zBase, se = span + over, Lr = T.L(T.dusk ? 'r116_rollnight' : 'r116_leadroll'), n = e.n, w = 0.045, hgt = 0.065;
+    const z = (s) => zB + (span - abs(s)) * p, ax = b.axis === 'x';
     for (let i = 1; i <= n; i++) { const a = b.A0 + (b.A1 - b.A0) * i / (n + 1);
-      for (const sg of [-1, 1]) { const e0 = sg * se, e1 = sg * 0.06;
+      for (const sg of [-1, 1]) { const e0 = sg * (se + 0.02), e1 = sg * 0.04;
         for (const k of [-1, 1]) { const q = [P(a + k * w, e0, z(e0) + 0.004), P(a, e0, z(e0) + hgt), P(a, e1, z(e1) + hgt), P(a + k * w, e1, z(e1) + 0.004)];
-          T.quad(q, [[0, 0], [0.5, 0], [0.5, 1.5], [0, 1.5]], Lr, T.MAT.wall, k < 0 ? 1.05 : 0.88, T.planeN(q[0], q[1], q[2], [k * (b.axis === 'x' ? 1 : 0), k * (b.axis === 'x' ? 0 : 1), 1])); }
-        const c = P(a, e0, 0); T.box(c[0] - (b.axis === 'x' ? w : 0.012), c[1] - (b.axis === 'x' ? 0.012 : w), c[0] + (b.axis === 'x' ? w : 0.012), c[1] + (b.axis === 'x' ? 0.012 : w), z(e0) - 0.02, z(e0) + hgt, Lr, Lr, 0.95); } }
+          T.quad(q, [[0, 0], [0.5, 0], [0.5, 1.5], [0, 1.5]], Lr, T.MAT.wall, k < 0 ? 1.08 : 0.82, T.planeN(q[0], q[1], q[2], [k * (ax ? 1 : 0), k * (ax ? 0 : 1), 1])); } } }
+    // the rolled drip at each eave, and the lead roll capping the ridge
+    const a0 = b.A0 - verge, a1 = b.A1 + verge;
+    for (const sg of [-1, 1]) { const ze = z(se), s0 = sg * (se - 0.01), s1 = sg * (se + 0.07);
+      T.quad([P(a0, s1, ze - 0.075), P(a1, s1, ze - 0.075), P(a1, s1, ze + 0.02), P(a0, s1, ze + 0.02)], [[a0, 0.5], [a1, 0.5], [a1, 0], [a0, 0]], Lr, T.MAT.wall, 1, N(0, sg));
+      T.quad([P(a0, s0, ze + 0.02), P(a1, s0, ze + 0.02), P(a1, s1, ze + 0.02), P(a0, s1, ze + 0.02)], [[a0, 0], [a1, 0], [a1, 0.3], [a0, 0.3]], Lr, T.MAT.wall, 1.1, T.UP);
+      T.quad([P(a0, s0, ze - 0.075), P(a1, s0, ze - 0.075), P(a1, s1, ze - 0.075), P(a0, s1, ze - 0.075)], [[a0, 0], [a1, 0], [a1, 0.3], [a0, 0.3]], Lr, T.MAT.wall, 0.6, T.DN); }
+    const zr = z(0);
+    for (const sg of [-1, 1]) { const q = [P(a0, sg * 0.07, zr + 0.01), P(a1, sg * 0.07, zr + 0.01), P(a1, 0, zr + 0.075), P(a0, 0, zr + 0.075)]; T.quad(q, [[a0, 0.5], [a1, 0.5], [a1, 0], [a0, 0]], Lr, T.MAT.wall, sg < 0 ? 1.1 : 0.9, T.planeN(q[0], q[1], q[2], T.UP)); }
   };
   // the Talking Halls' one iron stove-pipe, through a lead collar, under a cowl
   E.EXTRA.r116_pipe = (e, b, T) => {
@@ -413,7 +474,7 @@ const ROOFS116 = (() => {
 
   // the Vigil's own: the cloister's pentice, the gate's gable, the tower's cap
   E.REGION[VIGIL] = (m, T, plan) => {
-    const Lsl = T.L('r116_vslate'), Ls = T.L('r116_snow'), Lv = T.L('t_p96v_stone'), Ld = T.L('e78_dark'), Lw = T.L('t_wood'), Lt = T.L(Engine.textures.t_p96v_tower ? 't_p96v_tower' : 't_p96v_stone'), parts = plan.r116 || [];
+    const Lsl = T.L('r116_vslate'), Ls = T.L('r116_snow'), Lthin = T.L('r116_snowthin'), Lv = T.L('t_p96v_stone'), Ld = T.L('e78_dark'), Lw = T.L('t_wood'), Lt = T.L(Engine.textures.t_p96v_tower ? 't_p96v_tower' : 't_p96v_stone'), parts = plan.r116 || [];
     const pent = parts.find((q) => q.kind === 'vigil-pentice');
     if (pent) {
       // the beam on the pillars, the slates rising from it to the ranges and walls; the north wall and the gate passage
@@ -426,7 +487,7 @@ const ROOFS116 = (() => {
       for (const [p0, p1, p2, p3, sk, side] of faces) {
         const up = T.planeN(p0, p1, p2, T.UP), len = hyp(p1[0] - p0[0], p1[1] - p0[1]), dx = (p1[0] - p0[0]) / len, dy = (p1[1] - p0[1]) / len, dep = hyp(i0 - X0 + o, zH - zE);
         const u = (q) => (q[0] - p0[0]) * dx + (q[1] - p0[1]) * dy, uv = [[0, 0], [len, 0], [u(p2), dep], [u(p3), dep]];
-        T.quad([p0, p1, p2, p3], uv, side === 'e' ? Ls : Lsl, T.MAT.wall, sk, up);
+        T.quad([p0, p1, p2, p3], uv, side === 'e' ? Ls : Lthin, T.MAT.wall, sk, up);
         T.quad([p0, p1, p2, p3].map((v) => [v[0], v[1], v[2] - 0.05]), uv, Lw, T.MAT.wall, 0.42, [-up[0], -up[1], -up[2]]);
       }
       // the fascia along the low edge
@@ -453,6 +514,11 @@ const ROOFS116 = (() => {
       for (const sx of [-1, 1]) { const lo = [gx + sx * (hw + ov + 0.04), fy + out + 0.02, zE - ov * 0.62 - 0.02], hi = [gx, fy + out + 0.02, zR + 0.03], th = 0.13;
         T.quad([lo, hi, [hi[0], hi[1], hi[2] - th], [lo[0], lo[1], lo[2] - th]], [[0, 0], [1, 0], [1, 0.15], [0, 0.15]], sx < 0 ? Ls : Lsl, T.MAT.wall, 1.1, [0, 1, 0]); }
       T.box(gx - 0.05, fy, gx + 0.05, fy + out + 0.02, zR - 0.02, zR + 0.06, T.L('r116_vridge'), T.L('r116_vridge'), 1.1);
+      // the snow over its ridge, rounded, lapping onto the east pitch
+      { const pr = [[-0.34, -0.2], [-0.14, 0.04], [0, 0.11], [0.14, 0.02], [0.26, -0.12]];
+        for (let i = 0; i + 1 < pr.length; i++) { const q = [[gx + pr[i][0], fy, zR + pr[i][1]], [gx + pr[i][0], fy + out + 0.04, zR + pr[i][1]], [gx + pr[i + 1][0], fy + out + 0.04, zR + pr[i + 1][1]], [gx + pr[i + 1][0], fy, zR + pr[i + 1][1]]];
+          T.quad(q, [[0, 0], [1, 0], [1, 0.2], [0, 0.2]], Ls, T.MAT.wall, 1, T.planeN(q[0], q[1], q[2], T.UP)); }
+        for (let i = 0; i + 1 < pr.length; i++) T.tri([[gx + pr[i][0], fy + out + 0.04, zR + pr[i][1]], [gx + pr[i + 1][0], fy + out + 0.04, zR + pr[i + 1][1]], [gx, fy + out + 0.04, zR - 0.1]], [[0, 0.1], [0.2, 0.1], [0.1, 0]], Ls, T.MAT.wall, 0.85, [0, 1, 0]); }
       for (const sx of [-1, 1]) { T.box(gx + sx * hw - 0.09, fy, gx + sx * hw + 0.09, fy + out - 0.04, zE - 0.12, zE, Lv, Lv, 1.05); T.box(gx + sx * hw - 0.08, fy, gx + sx * hw + 0.08, fy + 0.3, zE - 0.42, zE - 0.12, Lv, Lv, 0.95); }
     }
     const cap = parts.find((q) => q.kind === 'vigil-cap');
@@ -462,7 +528,7 @@ const ROOFS116 = (() => {
       for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) T.box(cx + sx * d - pw, cy + sy * d - pw, cx + sx * d + pw, cy + sy * d + pw, zt - 0.05, z1, Lt, Lt, 1);
       T.box(cx - r - 0.1, cy - r - 0.1, cx + r + 0.1, cy + r + 0.1, z1, z1 + 0.14, Lv, Lv, 1.08);
       const tip = [cx, cy, zA], q = [[cx - r, cy - r, z1 + 0.14], [cx + r, cy - r, z1 + 0.14], [cx + r, cy + r, z1 + 0.14], [cx - r, cy + r, z1 + 0.14]];
-      for (let i = 0; i < 4; i++) { const west = i === 3; T.tri([q[i], q[(i + 1) % 4], tip], [[0, 2.6], [5.2, 2.6], [2.6, 0]], west ? Ls : Lsl, T.MAT.wall, west ? 1 : [0.9, 0.86, 0.8, 1][i], T.planeN(q[i], q[(i + 1) % 4], tip, T.UP)); }
+      for (let i = 0; i < 4; i++) { const west = i === 3; T.tri([q[i], q[(i + 1) % 4], tip], [[0, 2.6], [5.2, 2.6], [2.6, 0]], west ? Ls : Lthin, T.MAT.wall, west ? 1 : [0.9, 0.86, 0.8, 1][i], T.planeN(q[i], q[(i + 1) % 4], tip, T.UP)); }
       T.box(cx - 0.12, cy - 0.12, cx + 0.12, cy + 0.12, zA - 0.04, zA + 0.2, Lv, Lv, 1.1);
       // its underside, dark, seen from the garth
       T.quad([[cx - r - 0.1, cy - r - 0.1, z1], [cx + r + 0.1, cy - r - 0.1, z1], [cx + r + 0.1, cy + r + 0.1, z1], [cx - r - 0.1, cy + r + 0.1, z1]], [[0, 0], [1, 0], [1, 1], [0, 1]], Lv, T.MAT.wall, 0.62, T.DN);
@@ -477,10 +543,13 @@ const ROOFS116 = (() => {
   function smoke(m, on) {
     const vm = (typeof G !== 'undefined' && G.maps && G.maps[VIGIL]) || null;
     const drop = (mm) => { if (!mm || !smokeEnt) return; const i = mm.entities.indexOf(smokeEnt); if (i >= 0) mm.entities.splice(i, 1); if (mm._fs) { const j = mm._fs.chimneys.indexOf(smokeEnt); if (j >= 0) mm._fs.chimneys.splice(j, 1); } };
+    // the Vigil is joined to the world after firesmoke has placed its fires, so it may have no list of chimneys yet; it
+    // has no fires of firesmoke's own to place, so an empty list is what firesmoke would have given it
+    if (on && m && m.id === VIGIL && !m._fs) { m._fs = { chimneys: [], fires: [] }; m._fsPlaced = true; }
     if (!on || !m || m.id !== VIGIL || !m._fs || typeof GFX === 'undefined' || !GFX.smoke) { drop(vm); if (m && m !== vm) drop(m); return; }
     const b = E.planOf(m).houses.find((q) => q.r116 && q.r116.stack), s = b && b.r116.stack; if (!s) return;
     const top = b.ridge + 0.95;
-    if (!smokeEnt) smokeEnt = { kind: 'deco', sprite: 'r116_none', x: s.x, y: s.y, scale: 0.01, yOff: -top, solid: false, nopick: true, transient: true, _decor: true, _fs: 'r116', _fsTop: top, _fsThin: 0.45, label: '' };
+    if (!smokeEnt) smokeEnt = { kind: 'deco', sprite: 'r116_none', x: s.x, y: s.y, scale: 0.01, yOff: -top, solid: false, nopick: true, transient: true, _decor: true, _fs: 'r116', _fsTop: top, _fsThin: 0.75, _fsRate: 1.8, _fsRange: 32, label: '' };
     smokeEnt.x = s.x; smokeEnt.y = s.y; smokeEnt._fsTop = top; smokeEnt.hidden = false;
     if (!m._fs.chimneys.includes(smokeEnt)) m._fs.chimneys.push(smokeEnt);
     if (!m.entities.includes(smokeEnt)) m.entities.push(smokeEnt);
@@ -499,7 +568,7 @@ const ROOFS116 = (() => {
   function records(m, p) {
     const out = [];
     for (const b of p.houses) if (b.r116) { const R = b.r116;
-      out.push({ kind: R.kind, place: m.id, x0: b.x0, y0: b.y0, x1: b.x1, y1: b.y1, tex: b.roofTex, pitch: +(R.pitch || b.pitch).toFixed(3), snow: R.snow || null, rolls: R.rolls || 0, pipes: R.pipes || 0,
+      out.push({ kind: R.kind, place: m.id, x0: b.x0, y0: b.y0, x1: b.x1, y1: b.y1, tex: R.tex || b.roofTex, pitch: +(R.pitch || b.pitch).toFixed(3), snow: R.snow || null, pitches: R.pitches || null, rolls: R.rolls || 0, pipes: R.pipes || 0,
         sag: +(R.sag || 0).toFixed(3), slips: R.slips || 0, weavers: R.weavers || 0, lead: !!R.lead, raised: b.ground > 0, ridge: +b.ridge.toFixed(3) }); }
     for (const q of p.r116 || []) out.push(Object.assign({}, q));
     return out;
@@ -507,7 +576,11 @@ const ROOFS116 = (() => {
   const roofs = (m) => (m && PLACES[m.id] ? records(m, E.planOf(m)) : []);
   const replan = (m) => { const p = E.plan(m); for (const f of E.POST) f(m, p); return JSON.stringify(records(m, p)) === JSON.stringify(roofs(m)); };
 
-  return Object.assign(api, { roofs, replan, textures, stats: () => Object.assign({}, stats, { draw: Object.assign({}, stats.draw) }), planVigil, planWatch, planPool, MINE });
+  // where the Watch's lead is seen from: the main street west of the Halls, two blockhouses either side of it (x, y, facing
+  // in radians, the look up or down in rows; for the tests and pictures). The wall-walk was tried: its inner wall stands
+  // just under eye height and hides every roof within twenty-five cells of it.
+  const LEADVIEW = [64.5, 110.5, PI, 0];
+  return Object.assign(api, { LEADVIEW, roofs, replan, textures, stats: () => Object.assign({}, stats, { draw: Object.assign({}, stats.draw) }), planVigil, planWatch, planPool, MINE });
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = ROOFS116;
 if (typeof window !== 'undefined') window.ROOFS116 = ROOFS116;

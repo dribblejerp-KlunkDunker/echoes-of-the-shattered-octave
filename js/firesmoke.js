@@ -295,9 +295,9 @@ const FIRESMOKE = (() => {
   const lit = e => !e.hidden && !e.dead && (e.glow === undefined || e.glow > 0.05) && !/cold|unlit|dry/i.test(e.label || '');
 
   function emitChimney(map, e, dt, mult, cold) {
-    // _fsThin (0..1): a thinner smoke, fewer and smaller puffs (js/roofs116.js: the Vigil's one fire)
+    // _fsThin (0..1): a thinner smoke, smaller puffs (and fewer, unless _fsRate says how many) (js/roofs116.js: the Vigil's one fire)
     const thin = e._fsThin || 1;
-    e._fsAcc = (e._fsAcc || rnd()) + dt * 1.25 * mult * cold * thin;
+    e._fsAcc = (e._fsAcc || rnd()) + dt * 1.25 * mult * cold * (e._fsRate || thin);
     while (e._fsAcc >= 1) {
       e._fsAcc -= 1;
       const rise = rr(0.5, 0.8) * (reduced() ? 0.55 : 1);
@@ -345,7 +345,8 @@ const FIRESMOKE = (() => {
       // cold or foul weather and the dark hours: heavier smoke
       const st = (typeof Weather !== 'undefined' && Weather) ? Weather.state : 'clear';
       const cold = (st === 'snow' ? 1.4 : st === 'rain' || st === 'storm' || st === 'overcast' ? 1.15 : 1) * (1 + 0.5 * night);
-      if (map._fs) for (const e of map._fs.chimneys) { if (e.hidden) continue; const dx = e.x - cam.x, dy = e.y - cam.y; if (dx * dx + dy * dy <= r2) emitChimney(map, e, dt, mult, cold); }
+      // _fsRange: a chimney seen from farther off than the usual range (js/roofs116.js: the Vigil's one smoke, across the garth)
+      if (map._fs) for (const e of map._fs.chimneys) { if (e.hidden) continue; const dx = e.x - cam.x, dy = e.y - cam.y; if (dx * dx + dy * dy <= (e._fsRange ? Math.min(e._fsRange, (map.fogDist || 12) * 1.1) ** 2 : r2)) emitChimney(map, e, dt, mult, cold); }
       for (const em of staticEmitters(map)) {
         const e = em.e, dx = e.x - cam.x, dy = e.y - cam.y;
         if (dx * dx + dy * dy > r2) continue;
