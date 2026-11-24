@@ -294,7 +294,7 @@ const MAST123 = (function () {
     e.x = cam.x + k * (tx - cam.x); e.y = cam.y + k * (ty - cam.y); e.scale = scale * k;
     const cz = cam.z == null ? 0.5 : cam.z, z = cz + k * (zb - cz);
     e.animLift = 0; e.yOff = floorAt(m, e.x, e.y) - z;
-    e._trueD = Math.hypot(tx - cam.x, ty - cam.y);
+    e._trueD = Math.hypot(tx - cam.x, ty - cam.y); e._tx = tx; e._ty = ty;
   }
   const night = () => hasG() && typeof G.tod === 'number' && NIGHT(G.tod * 24);
   // the moored ship on the rim's own map (js/smalllife.js poses her): her lanterns after dark
@@ -303,18 +303,24 @@ const MAST123 = (function () {
     const m = /(\d)$/.exec(e.animSprite); if (!m) return;
     const want = (night() ? 'p123_kestrel_night' : 'kestrel_m') + m[1]; if (e.animSprite !== want && Engine.sprites[want]) e.animSprite = want;
   }
+  // The far view draws it at the height the book's line needs ("above the roofs to the north ... like a gallows",
+  // l. 672), as the horizon's other landmarks are drawn: the copy grows with distance, smoothly, from its true size at
+  // the North Gate (about 33 cells off) to 1.8 times it 58 cells off and beyond, so it never pops as you walk.
+  const FAR_FROM = 33, FAR_TO = 58, FAR_MAX = 1.8;
+  const grow = (D) => 1 + (FAR_MAX - 1) * Math.max(0, Math.min(1, (D - FAR_FROM) / (FAR_TO - FAR_FROM)));
   function farList() {
     lastList = [];
     if (!farOn || !hasG() || !G.map || !G.map.outdoor || typeof Engine === 'undefined') return lastList;
     const o = FRAMES[G.mapId]; if (!o) return lastList;
     const m = G.map, cam = Engine.cam, fm = far.mast, tx = AT.x + o[0], ty = AT.y + o[1];
-    fm.sprite = spriteNow(); place(fm, m, eyeK(m, cam.x, cam.y, tx, ty), cam, tx, ty, 0, H);
+    const g = grow(Math.hypot(tx - cam.x, ty - cam.y));
+    fm.sprite = spriteNow(); place(fm, m, eyeK(m, cam.x, cam.y, tx, ty), cam, tx, ty, 0, H * g); fm._grow = g;
     lastList.push(fm);
     const SL = typeof SMALLLIFE !== 'undefined' ? SMALLLIFE : null;
     if (SL && SL.shipPose && !cut() && typeof GFX !== 'undefined' && GFX.kestrelMoored) {
       const T = typeof ANIM !== 'undefined' && ANIM.T ? ANIM.T : 0, p = SL.shipPose(T), fs = far.ship;
-      const sx = p.x + o[0], sy = p.y + o[1];
-      place(fs, m, eyeK(m, cam.x, cam.y, sx, sy), cam, sx, sy, p.lift, SL.SHIP ? SL.SHIP.scale : 3.4);
+      const sx = tx + (p.x - AT.x) * g, sy = ty + (p.y - AT.y) * g;   // she rides at the head of the grown mast
+      place(fs, m, eyeK(m, cam.x, cam.y, sx, sy), cam, sx, sy, p.lift * g, (SL.SHIP ? SL.SHIP.scale : 3.4) * g);
       fs.animSkew = p.skew;
       const v = SL.shipView(p.h, sx, sy); fs.animSprite = (night() ? 'p123_kestrel_night' : 'kestrel_m') + v.view; fs.animFlip = v.flip;
       lastList.push(fs);

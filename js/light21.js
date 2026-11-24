@@ -469,8 +469,8 @@ vec3 r3dShade(R3DSurf s) {
     float f = clamp(1.0 - dist * uFog.w, 0.0, 1.0); f = uLit.y + (1.0 - uLit.y) * f;
     fogK = 1.0 - f;
     // (Phase 123) a farSee sprite (the mooring mast and the ship at it, js/mast123.js; material 6.5 from js/sprites21.js)
-    // keeps the raycaster's visibility floor (its glow), as the classic view does: the tallest thing for miles, hazed
-    if (s.kind == 1 && abs(s.mat - 6.5) < 0.1) fogK = min(fogK, 1.0 - s.fi);
+    // is hazed only a little, as the classic view keeps it (its glow): the tallest thing for miles, dark on the skyline
+    if (s.kind == 1 && abs(s.mat - 6.5) < 0.1) fogK = min(fogK, 0.3);   // a dark iron silhouette on the skyline, hazed a little
   } else {
     // indoors: the raycaster's distance-to-dark (readability), the lamps on top.
     // A place lit by its own light (map.bright: the Bleach, Phases 95 and 97) is never dark and does not go dark with

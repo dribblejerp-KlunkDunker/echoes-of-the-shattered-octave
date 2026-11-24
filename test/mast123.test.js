@@ -203,7 +203,7 @@ async function start(r3d) {
     T.reset(); GFX.kestrelMoored = true;
     const look = (map, x, y, dir, tod) => { loadMap(map, { x, y, dir }); G.state = 'play'; G.tod = tod; Engine.cam.pitch = 0; for (let i = 0; i < 3; i++) Engine.render(G.ents, G.tod); return M.farList(); };
     // from the square, looking north at noon
-    let far = look('oakhaven', 23.5, 21.5, -Math.PI / 2, 0.5);
+    let far = look('oakhaven', 23.5, 22.5, -Math.PI / 2, 0.5);
     const fm = far.find((e) => e._p123 === 'mast'), fs = far.find((e) => e._p123 === 'ship');
     out.list = !!fm && !!fs && fm.farSee && fs.farSee && !G.ents.includes(fm);
     out.screen = fm && fm._screen; const s = fm && fm._screen;
@@ -211,6 +211,13 @@ async function start(r3d) {
     const grab = () => { Engine.render(G.ents, G.tod); return Array.from(Engine.ctx.getImageData(0, 0, Engine.ctx.canvas.width, (Engine.ctx.canvas.height * 0.5) | 0).data); };
     const a = grab(); M.setFar(false); const b = grab(); M.setFar(true);
     let diff = 0; for (let i = 0; i < a.length; i += 4) if (a[i] !== b[i] || a[i + 1] !== b[i + 1]) diff++; out.diff = diff;
+    // its top stands above the roofline as seen from the square's centre: the highest thing in the town around its
+    // bearing (0.2 rad either side), every house counted at its tallest ridge (3.45, js/eaves78.js) and the Chapel's tower at 4.1
+    { const oak = G.maps.oakhaven, c = Engine.cam; let roof = -1;
+      for (let y = 0; y < oak.h; y++) for (let x = 0; x < oak.w; x++) { const cell = oak.cells[y * oak.w + x]; if (!cell) continue;
+        const dx = x + 0.5 - c.x, dy = y + 0.5 - c.y, d = Math.hypot(dx, dy); const bm = Math.atan2(fm._tx - c.x, -(fm._ty - c.y)); if (d < 1 || dy >= 0 || Math.abs(Math.atan2(dx, -dy) - bm) > 0.2) continue;   // the skyline on either side of the mast's own bearing
+        const top = Math.max(cell.top == null ? 1 : cell.top, (cell.top == null || cell.top >= 1) && cell.tex !== 't_hedge' ? 3.45 : 0); roof = Math.max(roof, (top - (c.z == null ? 0.5 : c.z)) / d); }
+      const mastTop = s ? (75 - s.y0) / 150 : -1; out.roofline = s && mastTop > roof + 0.05; out.rl = [mastTop.toFixed(3), roof.toFixed(3)]; }
     // over the roofs: nothing of it is drawn below the town's skyline in front of it (the Greenhall's front is nearer)
     out.behind = !!fm && fm._trueD > 40 && fm.y < 1 && fm.y > -0.1;   // drawn as from 50-odd cells off, stood in the Hedge's outer row
     // looking east from the square, it is not in the view
@@ -231,6 +238,7 @@ async function start(r3d) {
   });
   check(r.list, 'from Oakhaven the mast and the ship are drawn where they stand, as far copies outside the map\'s own list');
   check(r.north && r.diff > 150, 'from the square they are in the view to the north, high above the horizon (' + JSON.stringify(r.screen) + ', ' + r.diff + ' pixels)');
+  check(r.roofline, 'from the square\'s centre its top stands above the roofline (tan of its top ' + (r.rl || []).join(' over the roofs\' ') + ')');
   check(r.behind && r.eastOff, 'behind everything in the town (seen as from its true distance, stood past every house), and not in the view looking east');
   check(r.gate, 'from the North Gate the mast stands a third of the view high, to the north (' + r.gateH + ' of 150 rows)');
   check(r.lamps, 'at night the ship\'s lamps show');
