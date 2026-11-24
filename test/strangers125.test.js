@@ -96,7 +96,9 @@ const RANDOM_BEFORE = { 'js/data.js': 0, 'js/origins.js': 0, 'js/game.js': 24 };
     for (const f of fs.readdirSync(path.join(ROOT, 'js'))) if (/\.js$/.test(f) && f !== 'data.js') corpus.push(fs.readFileSync(path.join(ROOT, 'js', f), 'utf8'));
     const all = corpus.join('\n');
     const clash = [];
-    for (const n of fnames) for (const part of n.split(' ')) if (re(part).test(all)) clash.push(part);
+    // (a name inside a base64 picture, as in js/assets.js, is not a name: letters, digits, + and / do not bound a word)
+    const word = (w) => new RegExp('(^|[^A-Za-z0-9+/])' + w + '([^A-Za-z0-9+/]|$)', 'i');
+    for (const n of fnames) for (const part of n.split(' ')) if (word(part).test(all)) clash.push(part);
     check(clash.length === 0, 'the six names are nobody else in the books, the bibles or the game: ' + (clash.join(', ') || 'none'));
 
     // ---------------------------------------------------------------- the callings: two renamed, every number the same
