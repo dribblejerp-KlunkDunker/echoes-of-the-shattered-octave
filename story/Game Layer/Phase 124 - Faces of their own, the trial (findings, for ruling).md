@@ -21,7 +21,7 @@ Old Marrable (the Fold's lamp-teller); the trooper at the tip (Null-Watch); the 
 
 The Book One people are painted figures and painted portraits. The people added since are of two kinds, and the sheet's last column shows both:
 
-1. **Figures drawn in code from flat blocks of colour** (the trooper, the Tallyman, Perpetua Lisle, most of the continent's people). Right in their dress, and nothing like a painting.
+1. **Figures drawn in code from flat blocks of colour** (the trooper, the Tallyman, Perpetua Lisle, and others of the continent's people; how many has not been counted). Right in their dress, and nothing like a painting.
 2. **The townsman's or townswoman's painted figure, recoloured** (the packman, Oona Salt, the roads' walkers of Phase 60). Oona Salt, whom Book Four gives an admiral's coat, stands in the world as the townswoman with her jar. The packman's blue recolour turns his **skin blue with orange patches**: a fault a player can see today.
 
 So the borrowed portraits are the smaller half of it. A player who walks from Oakhaven to Sol-Luminary goes from painted people to block figures.
