@@ -109,12 +109,12 @@ const ORIGINS = (function () {
   ];
   // [PROPOSED] why each calling was suggested, in the game's voice (second person, short, concrete).
   const REASONS = {
-    blade: 'You weighed each answer by what it would cost and who would pay, and you did not flinch from either number. The Dissonant Blade is an engineer\'s mind behind a glass arm: the sum of a fight is done long before it begins.',
-    cantor: 'You answered with an ear before an opinion, and you would rather hold a place open than win it. The Cantor sings the births, fevers and burials of the orchards. The notes you carry are older than the Church knows.',
-    corsair: 'You made the room laugh, and left yourself a door. The Corsair counts rope and angles, trusts glass shot, and laughs loudest when most afraid. Nothing in the Reach is so grim that you cannot haggle over it.',
-    archivist: 'You kept count: the doors, the names, the order things were said in. The Archivist of the Veil writes it down and knows what every glass core is. Each name kept costs a little of you, and you seem to have decided it is worth it.',
-    penitent: 'You still half-believe, and you answered like someone for whom half is the heavier weight. The Flambeau Penitent carried a censer for the Church until the light turned. The faith and the fire are both guttering, and you have not chosen which to feed.',
-    quarry: 'You answered with your hands: shut the door, mend the latch, hold something heavy. The Quarry-Hand is a strong back and a short list of friends, and has heard the Root breathe through the pump-house floor.',
+    blade: 'You weighed each answer by what it would cost and who would pay, and you did not flinch from either number. The Glass-Hand has a bore-hand\'s patience behind a glass arm: the sum of a fight is done long before it begins.',
+    cantor: 'You answered with an ear before an opinion, and you would rather hold a place open than win it. The Cantor sings the dead down and the fevers out, as the orchard-cantors taught. The notes you carry are older than the Church knows.',
+    corsair: 'You made the room laugh, and left yourself a door. The Corsair counts rope and angles and trusts glass shot. Nothing in the Reach is so grim that you cannot haggle over it.',
+    archivist: 'You kept count: the doors, the names, the order things were said in. The Catalogue Clerk was taught to write it all down, and walked away from the desk still doing it. You know what every glass core is, and what it cost.',
+    penitent: 'You answered like someone who has not finished deciding what they believe. The Flambeau Penitent carried for the fire until one Rite too many. The faith and the fire are both guttering, and you have not chosen which to feed.',
+    quarry: 'You answered with your hands: shut the door, mend the latch, hold something heavy. The Quarry-Hand is a strong back and a short list of friends, and knows the sound stone makes before it goes.',
   };
 
   // Pure scoring, so the tests (and anyone curious) can run it without the page: picks = [answer index per question].
