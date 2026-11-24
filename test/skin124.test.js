@@ -141,10 +141,13 @@ const STATES = [['p62_hollow_a', 30, 0.55, 0.92], ['p62_hollow_b', 205, 0.45, 0.
       // the middle of the face: the same pixels as the townsman's own, give or take the goggles above them
       let same = 0, n = 0; const w = sp.w, y0 = Math.round(sp.h * 0.075), y1 = Math.round(sp.h * 0.11), x0 = Math.round(w * 0.44), x1 = Math.round(w * 0.56);
       for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const a = sp.data[y * w + x], b = src.data[y * w + x]; if (!(b >>> 24)) continue; n++; if (a === b) same++; }
-      return { made: true, sameSize: sp.w === src.w && sp.h === src.h, n, same };
+      // his goggles are "pushed up" (js/kestrel16.js): their brass is on the cap, above the eyes, never down on the beard
+      let brassUp = 0, brassDown = 0; for (let y = 0; y < sp.h; y++) for (let x = 0; x < w; x++) { const p = sp.data[y * w + x], r = p & 255, g = (p >>> 8) & 255, b = (p >>> 16) & 255; if ((p >>> 24) && r > 150 && g > 105 && g < 175 && b < 80 && r - b > 100) { if (y < sp.h * 0.085) brassUp++; else if (y < sp.h * 0.25) brassDown++; } }
+      return { made: true, sameSize: sp.w === src.w && sp.h === src.h, n, same, brassUp, brassDown };
     });
     assert.ok(r.made, 'p16k_pennick is not in Engine.sprites');
     assert.ok(r.sameSize && r.n > 20 && r.same > r.n * 0.6, 'his face is not the painting\'s own ' + JSON.stringify(r));
+    assert.ok(r.brassUp >= 6 && r.brassDown === 0, 'his goggles are not up on the cap ' + JSON.stringify(r));
   });
   await step('switch off: every recolour is byte for byte its maker\'s pixels; Oona Salt equals the Cantabile multiply; on again restores', async () => {
     const r = await page.evaluate((S) => {
