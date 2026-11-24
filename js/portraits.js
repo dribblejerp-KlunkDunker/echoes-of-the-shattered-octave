@@ -74,7 +74,9 @@ const PORTRAITS = (function () {
   // Pure and side-effect free: reads its arguments only (defaults come from DLG / G).
   function pick(npc, opts) {
     try {
-      if (!npc || typeof npc.portrait !== 'string' || !has(MAJOR, npc.portrait)) return null;
+      // (Phase 124c) the portrait shown: a face of their own (js/faces124.js) is not a story face, so it has no moods
+      const pid = npc && typeof FACES124 !== 'undefined' && FACES124.portrait ? FACES124.portrait(npc) : npc && npc.portrait;
+      if (!npc || typeof pid !== 'string' || !has(MAJOR, pid)) return null;
       const o = opts || {};
       const log = o.log !== undefined ? o.log : (typeof DLG !== 'undefined' ? DLG.log : []);
       const tone = o.tone !== undefined ? o.tone : (typeof DLG !== 'undefined' ? DLG.tone : 'normal');
@@ -302,7 +304,7 @@ const PORTRAITS = (function () {
     if (!img) return null;
     const n = DLG.npc, mood = pick(n);
     if (!mood) return null;
-    const id = n.portrait;
+    const id = typeof FACES124 !== 'undefined' && FACES124.portrait ? FACES124.portrait(n) : n.portrait;
     const swap = () => {
       const url = variant(id, mood);
       if (!url || !img.isConnected || img.dataset.mood === mood) return;

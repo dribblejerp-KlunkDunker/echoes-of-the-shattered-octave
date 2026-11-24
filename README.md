@@ -555,6 +555,14 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**Faces of their own, the first three (Phase 124c).** Everyone added to the game since Book One has shown one of two borrowed portraits in the talk window. Three now have painted portraits of their own: Old Marrable, the Null-Watch trooper with roster number 132 (the long coat with lead plates, as Book Three has it), and the Tallyman of the White Mile. By the owner's ruling these are paintings made with a picture-making tool and added as picture files, as the first twenty-eight portraits were; everything else in the game is still drawn in code. Each later portrait is one picture file and one line in a table. Options: "Faces of their own" (off in the Original preset).
+
+![Phase 124c: the talk window for Old Marrable, the trooper and the Tallyman, with the borrowed face for comparison](screenshots/p124-own.jpg)
+
+**Faces of their own, the next six (Phase 124d).** Perpetua Lisle, Ada Pellow (at the book's fifty-one), Marrit Pell, Orrin Pale the sexton (one picture for his three entries), Brenna Loft and Dunna Sedge have portraits of their own. These were made on the owner's Hugging Face account (the Z-Image-Turbo Space), each prompt and seed written down in `story/Game Layer/Phase 124d - Faces of their own, the next six.md`. 246 entries still borrow a face.
+
+![Phase 124d: the talk window for Orrin Pale and for Marrit Pell](screenshots/p124d-own.jpg)
+
 **The six strangers (Phase 125a).** Your traveller is now their own person. Until now the six faces at the start were six people out of the books (Kaelen, Lyra, Vane, Sable, Rooke, Mags), each with that person's history written as "you", so a player could be Kaelen Vance and then walk out of the gate and meet him. The six pictures stay; each has a new name and a past that belongs to nobody in any book, drawn from the far countries the Series Bible gives: Ruan Hendy of the Iron Peaks, Kerra Ellery from above Wend's Ford, Esk Penhale of Driftwood Cay, Merryn Callis of the Organum, Piran Brackett of Slag-Town, Jenet Lowen of Mirage Rest. Two callings carried a hero's own title and are renamed: the **Glass-Hand** (a bore-hand glassed by raw seam glass; "the Dissonant Blade" is Kaelen) and the **Catalogue Clerk** (a conscripted Office clerk; "Archivist of the Veil" is Sable, the last Veil-sworn scribe). Every calling's history is rewritten from what the books give that trade. Old saves keep their traveller's name, calling and face.
 
 ![Phase 125a: the calling list with its two new names, and the six likenesses with their new names and pasts](screenshots/p125-strangers.jpg)

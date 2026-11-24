@@ -662,7 +662,7 @@ const COMPANION_TALK = (function () {
   function setMood(mood) {
     try {
       const img = $q('#modal-panel .p9t .port img'); if (!img) return;
-      const id = PARTNERS[S.who].portrait, base = 'img/p_' + id + '.jpg';
+      const id = (typeof FACES124 !== 'undefined' && FACES124.portrait ? FACES124.portrait(PARTNERS[S.who]) : PARTNERS[S.who].portrait), base = 'img/p_' + id + '.jpg';
       const P = (typeof PORTRAITS !== 'undefined') ? PORTRAITS : null;
       const on = typeof GFX === 'undefined' || GFX.moodPortraits !== false;
       if (!mood || !P || !on || !P.has(id)) { if (img.dataset.mood) { img.src = base; img.alt = ''; delete img.dataset.mood; } return; }
@@ -674,7 +674,7 @@ const COMPANION_TALK = (function () {
   function frame() {
     const P = PARTNERS[S.who];
     // the frame is constant markup; the portrait id and the name come from the PARTNERS table
-    const html = `<h2>${P.name.split(',')[0]}</h2><div class="dlg p9t"><div class="port"><img src="img/p_${P.portrait}.jpg" alt=""><div class="name">${P.name}</div></div>
+    const html = `<h2>${P.name.split(',')[0]}</h2><div class="dlg p9t"><div class="port"><img src="img/p_${(typeof FACES124 !== 'undefined' && FACES124.portrait ? FACES124.portrait(P) : P.portrait)}.jpg" alt=""><div class="name">${P.name}</div></div>
 <div class="col"><div class="log" id="p9t-log" role="log" aria-live="polite"></div>
 <div class="btns"><button class="dfbtn small" id="p9t-back" type="button"></button><button class="dfbtn small" id="p9t-bye" type="button"></button></div>
 <div class="topics wide" id="p9t-opts"></div></div></div>`;
