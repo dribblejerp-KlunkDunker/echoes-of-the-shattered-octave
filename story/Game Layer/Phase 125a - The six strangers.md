@@ -67,3 +67,8 @@ Invented, each [PROPOSED]: all six names; every age; Ruan's father, brother, the
 - "tideline" is Kaelen's own word for his (B1 592), but SB 87 makes it the physics rule and the game uses it everywhere, so it stays.
 - The Corsair's "counting" is near Vane's count at the rope; it was kept as cargo counting.
 - The "Left behind" label wraps onto two lines in the likeness panel (picture).
+
+## 7. Changed in the Commander's review (24 Nov)
+
+- The Catalogue Clerk's first name copied was "entered as a unit". "Unit" is in no book. The Office's own word in Book One is *subject* ("a minute per subject across four thousand subjects", manuscript l. 4866), so the line now reads "entered as a subject" (French: "inscrite comme un sujet").
+- Checked against the files by the Commander and found as cited: Series Bible ll. 160, 209, 213, 217, 221; manuscript ll. 250, 4888. The six names (and "Esk") are used nowhere else in the books, the bibles or the game.
