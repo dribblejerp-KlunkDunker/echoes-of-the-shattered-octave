@@ -602,6 +602,7 @@ void main() {
       const d = Math.sqrt(d2);
       let f = lightF(d);
       if (e.glow) f = Math.max(f, e.glow);
+      if (e.farSee) f = Math.max(f, 0.75);   // as the raycaster (js/engine.js)
       if (e.animGlow) f = Math.max(f, e.animGlow);
       if (SHARD[e.item] || e.glassLamp) f = Math.max(f, 0.9);
       f = Math.round(f * 255) / 255;

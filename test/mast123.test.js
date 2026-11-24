@@ -256,7 +256,7 @@ async function start(r3d) {
     out.env = b && env(b); out.tanks = b && cobaltRuns(b); out.tanks0 = f && cobaltRuns(f);
     // cloth, not blockwork: no seam drawn as a solid line. A seam pixel is a grey pixel darker than its neighbours across
     // the seam by more than 10; the longest run of them along a seam (across or down the envelope) is a stitch, not a line
-    { const lum = (p) => { const [R, G2, B] = rgbOf(p); return (R + G2 + B) / 3; }, grey = (p) => { const [R, G2, B] = rgbOf(p); return (p >>> 24) > 100 && Math.max(R, G2, B) - Math.min(R, G2, B) < 28; };
+    { const lum = (p) => { const [R, G2, B] = rgbOf(p); return (R + G2 + B) / 3; }, grey = (p) => { const [R, G2, B] = rgbOf(p); return (p >>> 24) > 100 && Math.max(R, G2, B) - Math.min(R, G2, B) < 28 && (R + G2 + B) / 3 > 60; };   // cloth, not the outline
       let longest = 0;
       for (let y = 9; y <= 31; y++) { let run = 0; for (let x = 1; x < b.w - 1; x++) { const p = px(b, x, y); const seam = grey(p) && grey(px(b, x, y - 1)) && grey(px(b, x, y + 1)) && lum(p) < lum(px(b, x, y - 1)) - 10 && lum(p) < lum(px(b, x, y + 1)) - 10; run = seam ? run + 1 : 0; longest = Math.max(longest, run); } }
       for (let x = 2; x < b.w - 2; x++) { let run = 0; for (let y = 8; y <= 32; y++) { const p = px(b, x, y); const seam = grey(p) && grey(px(b, x - 1, y)) && grey(px(b, x + 1, y)) && lum(p) < lum(px(b, x - 1, y)) - 10 && lum(p) < lum(px(b, x + 1, y)) - 10; run = seam ? run + 1 : 0; longest = Math.max(longest, run); } }
@@ -337,9 +337,9 @@ async function start(r3d) {
   {
     const rect = await S.page.evaluate(async () => {
       const wait = (ms) => new Promise((res) => setTimeout(res, ms));
-      loadMap('clearing', { x: 27, y: 9.5, dir: Math.PI }); G.state = 'play'; G.tod = 0.5; Engine.cam.pitch = 95; if (G.player) G.player.pitch = 95;
+      loadMap('clearing', { x: 27, y: 9.5, dir: Math.PI }); G.state = 'play'; G.tod = 0.5; G.fadeT = 0; UPG.weather = 'clear'; UPG.weatherFx = { sight: 1, hear: 1 }; if (typeof Weather !== 'undefined' && Weather.hold) Weather.hold('clear'); Engine.cam.pitch = 95;   // a clear noon if (G.player) G.player.pitch = 95;
       closeModal(); hide('#event'); document.getElementById('msgs').innerHTML = '';
-      for (let i = 0; i < 6; i++) { render(); await wait(80); }
+      for (let i = 0; i < 8; i++) { if (window.advanceTime) window.advanceTime(16); render(); await wait(80); }
       const e = G.ents.find((x) => x._slShip); return e && e._screen;
     });
     let env3d = null;

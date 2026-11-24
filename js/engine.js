@@ -930,6 +930,8 @@ const Engine = (() => {
       f = ambient + (1 - ambient) * f;
       if (!outdoor) f *= flick;
       if (e.glow) f = Math.max(f, e.glow);
+      if (e.farSee) f = Math.max(f, 0.75);   // the mast and the ship in open air: lit by the day and hazed a little, never sunk in a
+                                             // map's dark fog colour (the clearing's is near black) (js/mast123.js)
       if (e.animGlow) f = Math.max(f, e.animGlow);
       if (e.item === 'shard' || e.item === 'core' || e.glassLamp) f = Math.max(f, 0.9);
       if (e.flash) f = 1;

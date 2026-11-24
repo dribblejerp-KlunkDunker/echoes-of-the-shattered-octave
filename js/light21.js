@@ -462,6 +462,9 @@ vec3 r3dShade(R3DSurf s) {
     vec3 pts = l21Points(lp + n * 0.02, n, s.kind == 0 ? 0.15 : 0.6) * uL21P.x;
     if (spr) pts = max(pts, s.ladd);
     vec3 light = amb + direct + pts;
+    // (Phase 123) the mast and the ship (farSee, material 6.5) stand in open air above everything: lit by the day from
+    // whatever side you see them, never backlit or sunk to black
+    if (s.kind == 1 && abs(s.mat - 6.5) < 0.1) light = max(light, vec3(0.9 * uLit.x));
     c = s.albedo * light + pts * 0.22;
     // wet ground after rain: a faint sheen toward the light
     if (uL21T.z > 0.5 && s.kind == 0 && n.z > 0.7) { vec3 r = reflect(vd, n); c += uL21SunC.rgb * pow(max(0.0, dot(r, uL21Sun.xyz)), 24.0) * 0.35; }
@@ -470,7 +473,7 @@ vec3 r3dShade(R3DSurf s) {
     fogK = 1.0 - f;
     // (Phase 123) a farSee sprite (the mooring mast and the ship at it, js/mast123.js; material 6.5 from js/sprites21.js)
     // is hazed only a little, as the classic view keeps it (its glow): the tallest thing for miles, dark on the skyline
-    if (s.kind == 1 && abs(s.mat - 6.5) < 0.1) fogK = min(fogK, 0.3);   // a dark iron silhouette on the skyline, hazed a little
+    if (s.kind == 1 && abs(s.mat - 6.5) < 0.1) fogK = min(fogK, 0.25);   // hazed a little, whatever the map's fog
   } else {
     // indoors: the raycaster's distance-to-dark (readability), the lamps on top.
     // A place lit by its own light (map.bright: the Bleach, Phases 95 and 97) is never dark and does not go dark with

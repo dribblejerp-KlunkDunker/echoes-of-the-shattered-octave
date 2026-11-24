@@ -125,7 +125,7 @@ const SMALLLIFE = (() => {
     const { phi, stern } = KV[i], co = Math.cos(phi * Math.PI / 180), si = Math.sin(phi * Math.PI / 180);
     return paint(144, 72, c => {
       const cx = 72, DK = '#2c2a28', CANVAS = '#7c7f82', CANVAS2 = '#55585b', OAK = '#6e4c2c', OAK2 = '#4a321d', OAKL = '#86603c', BRASS = '#c9a256', BRASSL = '#ead08a';
-      const COB = '#2f4f8f', COBL = '#5d8fdc', COBC = '#9cc4ff';
+      const COB = '#3c4a5c', COBL = '#4f6c96', COBC = '#7f9fd6';   // dull drift-glass, a faint cobalt light inside
       const L = 130 * co + 26 * si;                                             // projected length of the whole ship
       const x0 = cx - L / 2, x1 = cx + L / 2;                                   // stern end .. bow end on screen
       const bowX = x1, sternX = x0;
@@ -144,20 +144,44 @@ const SMALLLIFE = (() => {
       const ew = ex1 - ex0;
       c.fillStyle = DK; c.beginPath(); c.roundRect(ex0 - 1, 5, ew + 2, 32, 14); c.fill();
       c.save(); c.beginPath(); c.roundRect(ex0, 6, ew, 30, 13); c.clip();
-      const PW = 7, PH = 5;
-      for (let y = 6, row = 0; y < 36; y += PH, row++) for (let x = Math.floor(ex0) - (row % 2 ? 3 : 0); x < ex1; x += PW) {
-        const k = hq(x, y, 31 + i), g = 96 + ((k * 34) | 0), w2 = k > 0.86 ? PW * 2 : PW;           // now and then a bigger patch
-        c.fillStyle = `rgb(${g - 8},${g - 3},${g + 5})`;                                             // cool grey sailcloth c.fillRect(x, y, w2, PH);
-        c.fillStyle = 'rgba(46,48,52,0.6)'; c.fillRect(x, y, 1, PH);                                  // the stitched seam
-        if (hq(x, y, 77 + i) > 0.8) { c.fillStyle = 'rgba(40,42,46,0.45)'; c.fillRect(x + 2, y + 2, 1, 1); c.fillRect(x + 4, y + 2, 1, 1); }   // stitches
+      // sailcloth: a base grey, then patches of unlike sizes and shapes laid over it as they were sewn on over the years (no
+      // courses), a few plainly newer (paler, cleaner) and a few plainly older (browner, stained); gores at the two ends
+      const cloth = (dl, warm) => `rgb(${(118 + dl + warm * 9) | 0},${(121 + dl + warm * 4) | 0},${(124 + dl - warm * 5) | 0})`;
+      c.fillStyle = cloth(0, 0); c.fillRect(ex0, 6, ew, 30);
+      const stitch = (x0, y0, x1, y1, ph) => {                                     // a broken line of single darker pixels
+        const n = Math.max(1, Math.round(Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))));
+        for (let k = 0; k <= n; k += 2) { const x = Math.round(x0 + (x1 - x0) * k / n), y = Math.round(y0 + (y1 - y0) * k / n); if (hq(x, y, ph) < 0.8) { c.fillStyle = 'rgba(70,72,76,0.45)'; c.fillRect(x, y, 1, 1); } }
+      };
+      const patches = [];
+      for (let k = 0; k < 26; k++) {
+        const a = hq(k, 1, 900 + i), b2 = hq(k, 2, 900 + i), w3 = hq(k, 3, 900 + i), h3 = hq(k, 4, 900 + i), sh = hq(k, 5, 900 + i);
+        const long = w3 > 0.8, big = h3 > 0.88;
+        const pw = Math.round(long ? 16 + w3 * 14 : 4 + w3 * 9), ph = Math.round(big ? 9 + h3 * 4 : 3 + h3 * 6);
+        const px = Math.round(ex0 + 2 + a * (ew - pw - 4)), py = Math.round(7 + b2 * (27 - ph));
+        const kind = k < 3 ? 'new' : k < 6 ? 'old' : 'plain';
+        patches.push([px, py, pw, ph, kind, sh]);
       }
-      for (let y = 6; y < 36; y += PH) { c.fillStyle = 'rgba(46,48,52,0.55)'; c.fillRect(ex0, y, ew, 1); }
-      c.fillStyle = 'rgba(255,255,255,0.10)'; c.fillRect(ex0, 7, ew, 6);                              // weathered: light above,
-      c.fillStyle = 'rgba(0,0,0,0.22)'; c.fillRect(ex0, 28, ew, 8);                                   // stained below
+      for (const [px, py, pw, ph, kind, sh] of patches) {
+        c.fillStyle = kind === 'new' ? cloth(20, -0.4) : kind === 'old' ? cloth(-14, 2.2) : cloth(Math.round((sh - 0.5) * 12), 0);
+        c.fillRect(px, py, pw, ph);
+        if (kind === 'old') { c.fillStyle = 'rgba(96,82,60,0.25)'; c.fillRect(px + 1, py + ph - 2, Math.max(1, pw - 2), 2); }   // a stain run down it
+        stitch(px, py, px + pw - 1, py, 3); stitch(px, py + ph - 1, px + pw - 1, py + ph - 1, 5); stitch(px, py, px, py + ph - 1, 7); stitch(px + pw - 1, py, px + pw - 1, py + ph - 1, 9);
+      }
+      for (const [gx, sgn] of [[ex0 + 1, 1], [ex1 - 1, -1]]) {                    // the gores toward the stern and the bow
+        c.fillStyle = cloth(8, 0.3); c.beginPath(); c.moveTo(gx, 12); c.lineTo(gx + sgn * 11, 21); c.lineTo(gx, 30); c.closePath(); c.fill();
+        stitch(gx, 12, gx + sgn * 11, 21, 11); stitch(gx + sgn * 11, 21, gx, 30, 13);
+      }
       // brass ribs, thin and warm, catching the light on their upper part
       const step = Math.max(9, 19 * co + 9 * si);
       for (let x = ex0 + 7; x < ex1 - 5; x += step) { const xi = x | 0; c.fillStyle = '#9c8550'; c.fillRect(xi, 12, 1, 23); c.fillStyle = BRASSL; c.fillRect(xi, 7, 1, 5); }
       c.fillStyle = BRASS; c.fillRect(ex0 + 6, 9, ew - 12, 1);
+      // a round body: lightest along the upper third, falling to a dark belly
+      for (let y = 6; y < 36; y++) {
+        const t = (y - 6) / 30;
+        if (t < 0.33) { c.fillStyle = `rgba(255,255,255,${(0.16 * (1 - Math.abs(t - 0.16) / 0.17)).toFixed(3)})`; }
+        else { c.fillStyle = `rgba(0,0,0,${(0.42 * Math.pow((t - 0.33) / 0.67, 1.3)).toFixed(3)})`; }
+        c.fillRect(ex0, y, ew, 1);
+      }
       c.restore();
       // the hull: oak plank, darker below, a brass rail along the top
       const hx0 = sternX + 8 * co, hx1 = bowX - 6 * co, hw = Math.max(26, hx1 - hx0);
