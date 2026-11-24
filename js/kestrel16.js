@@ -1307,6 +1307,9 @@ const KESTREL16 = (function () {
       const _b = buildAllMaps;
       buildAllMaps = function () {
         const maps = _b.apply(this, arguments);
+        // Pennick's figure is the townsman's, recoloured: at script load (below) that painting does not exist yet, so he
+        // had no figure in a started game. It is made here, when the maps are built and the paintings are in (Phase 124b).
+        try { paintPennick(); } catch (e) { warnOnce('pennick', e); }
         try { paintTextures(); if (!maps[DECK]) maps[DECK] = buildDeck(); if (!maps[BELOW]) maps[BELOW] = buildBelow(); } catch (e) { warnOnce('build', e); }
         return maps;
       };
