@@ -45,4 +45,4 @@ Canva then ran out of credit. Shown the first portrait made on his own Hugging F
 | Ruling | What follows |
 | --- | --- |
 | **The look of the painted portraits is approved, from either tool.** | The rest are made on the owner's Hugging Face (the Z-Image-Turbo Space), each prompt and seed written down. Phase 124d put the next six in. |
-| Not ruled: paying for Hugging Face PRO. | The free account allows about nine pictures a day. It is his purchase to make or not; until he says, the faces come at that rate. |
+| Hugging Face PRO (5:37 pm): "I will get huggingface pro when I get paid this week". | Until then the faces come at about nine a day on the free account. Once he says PRO is on, the rest of the named people are made in a day or two. |
