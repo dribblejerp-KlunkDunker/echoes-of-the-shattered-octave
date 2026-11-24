@@ -133,6 +133,19 @@ const STATES = [['p62_hollow_a', 30, 0.55, 0.92], ['p62_hollow_b', 205, 0.45, 0.
     assert.deepStrictEqual(r, []);
   });
 
+  // Found by this phase's survey: Pennick's figure (js/kestrel16.js paintPennick) was painted once at script load, before the
+  // townsman's painting existed, so in a started game he had no figure and the engine drew nothing where he stands.
+  await step('Pennick has a figure in a started game, and it keeps the townsman\'s skin', async () => {
+    const r = await page.evaluate(() => {
+      const sp = Engine.sprites.p16k_pennick, src = Engine.sprites.townsman; if (!sp || !src) return { made: !!sp };
+      // the middle of the face: the same pixels as the townsman's own, give or take the goggles above them
+      let same = 0, n = 0; const w = sp.w, y0 = Math.round(sp.h * 0.075), y1 = Math.round(sp.h * 0.11), x0 = Math.round(w * 0.44), x1 = Math.round(w * 0.56);
+      for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const a = sp.data[y * w + x], b = src.data[y * w + x]; if (!(b >>> 24)) continue; n++; if (a === b) same++; }
+      return { made: true, sameSize: sp.w === src.w && sp.h === src.h, n, same };
+    });
+    assert.ok(r.made, 'p16k_pennick is not in Engine.sprites');
+    assert.ok(r.sameSize && r.n > 20 && r.same > r.n * 0.6, 'his face is not the painting\'s own ' + JSON.stringify(r));
+  });
   await step('switch off: every recolour is byte for byte its maker\'s pixels; Oona Salt equals the Cantabile multiply; on again restores', async () => {
     const r = await page.evaluate((S) => {
       GFX.keepSkin = false; if (GFX.changed) GFX.changed(); FACES124.sync();
