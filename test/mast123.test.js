@@ -112,6 +112,15 @@ async function start(r3d) {
     out.trig = !!tr && !!lad && Math.hypot(tr.x - lad.x, tr.y - lad.y) < 2 && cl.triggers[0].id === 'hound_bed';
     // where the legs go into the rock: stone underfoot
     out.apron = !!mast && !!cl.floorCells && [[-1, 0], [1, 0], [0, 0], [0, 1]].every(([dx, dy]) => cl.floorTextures[cl.floorCells[((mast.y | 0) + dy) * cl.w + (mast.x | 0) + dx]] === 't_stone');
+    // ... and stays stone when the painted ground (Phase 20) is switched off and on again: it lays the map's floor afresh
+    {
+      const apron = () => !!mast && !!cl.floorCells && [[-1, 0], [1, 0], [0, 0], [0, 1]].every(([dx, dy]) => /^t_stone/.test(cl.floorTextures[cl.floorCells[((mast.y | 0) + dy) * cl.w + (mast.x | 0) + dx]] || ''));
+      const keys = ['p20_ground', 'p20_walls', 'p20_trees', 'p20_pieces'].filter((k) => k in GFX), was = keys.map((k) => GFX[k]);
+      for (const k of keys) GFX[k] = false; GFX.changed(); const off = apron();
+      for (const k of keys) GFX[k] = true; GFX.changed(); const on = apron();
+      keys.forEach((k, i) => { GFX[k] = was[i]; }); GFX.changed();
+      out.apronToggle = { off, on, back: apron(), keys: keys.length };
+    }
     out.oakMast = !!Engine.sprites.p123_mast_oak;
     return out;
   });
@@ -125,6 +134,7 @@ async function start(r3d) {
   check(r.iron && r.rivets, 'it is riveted iron, dark, rust at the joints (' + r.ironNums + ')');
   check(r.ladder && r.trig, 'the mast-ladder, up to her hold, is at its foot, and the mast\'s trigger beside it');
   check(r.apron, 'the legs go into stone at the rim');
+  check(r.apronToggle && r.apronToggle.off && r.apronToggle.on && r.apronToggle.back, 'the stone under the legs stays when the painted ground is switched off and on (' + JSON.stringify(r.apronToggle) + ')');
   check(r.oakMast, 'there is a drawing of the mast with the young oak in it, for after the cut');
 
   // ---- every scene from its new place
