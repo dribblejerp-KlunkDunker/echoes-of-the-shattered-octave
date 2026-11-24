@@ -230,6 +230,15 @@ const FACES124 = (function () {
     p113f_marrable: 'own_marrable',   // Old Marrable, the Fold's lamp-teller (js/fold113.js)
     p100_tr_b: 'own_watch132',        // trooper 132 of the Null-Watch: the figure, worn by NPCS.p100_tr_b (js/rift100.js) and NPCS.p113_trooper at the tip (js/tip113.js)
     p97_tallyman: 'own_tallyman',     // the Tallyman of the White Mile (js/whitemile97.js)
+    // Phase 124d, the next six (made on the owner's Hugging Face, the Z-Image-Turbo Space; prompts and seeds in the record)
+    p95_perpetua: 'own_perpetua',     // Perpetua Lisle, who robes the pilgrims at the foot of the Chain (js/pilgrim95.js)
+    p9_ada: 'own_ada',                // Ada Pellow of Cooper's Row (js/sidequests.js); the book's age, fifty-one (Book One ch. 11)
+    p46_marrit: 'own_marrit',         // Marrit Pell, the Governor's housekeeper (js/governor46.js)
+    p12_baker: 'own_brenna',          // Brenna Loft, the festival's baker (js/festivals12.js)
+    p12_dunna: 'own_dunna',           // Dunna Sedge, sheaf-binder (js/festivals12.js)
+    orrin: 'own_orrin',               // Orrin Pale, sexton of Oakhaven: one man under three ids, who wear two figures,
+    p29_sexton: 'own_orrin',          //   so three rows and one picture (js/data.js, js/thin29.js, js/heist16.js)
+    p16h_orrin: 'own_orrin',
   };
   const OWN_FLAG = 'ownFaces', BORROWED = ['townsman', 'townswoman'];
   try {

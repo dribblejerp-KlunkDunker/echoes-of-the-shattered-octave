@@ -1,5 +1,5 @@
 // PLAYWRIGHT_MODULE=/path/to/playwright PREVIEW_URL=http://127.0.0.1:4227 node test/own124.test.js
-// Phase 124c, faces of their own: the first three, and the way in for the rest (js/faces124.js FACES124.OWN and
+// Phase 124c and 124d, faces of their own: the first three, the next six, and the way in for the rest (js/faces124.js FACES124.OWN and
 // FACES124.portrait, which every place that builds a portrait's path asks).
 //   - Old Marrable, trooper 132 of the Watch (p100_tr_b, and p113_trooper at the tip, the same figure) and the Tallyman
 //     show their own portrait in the talk window with the switch on, the borrowed one with it off
@@ -21,7 +21,11 @@ let passed = 0, failed = 0;
 async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' + text); } catch (e) { failed++; console.log('FAIL ' + text + ' -- ' + (e && e.message ? String(e.message).split('\n')[0].slice(0, 900) : e)); } }
 
 // the first three: NPC id -> the portrait each must show with the switch on
-const WANT = { p113f_marrable: 'own_marrable', p100_tr_b: 'own_watch132', p113_trooper: 'own_watch132', p97_tallyman: 'own_tallyman' };
+const WANT = { p113f_marrable: 'own_marrable', p100_tr_b: 'own_watch132', p113_trooper: 'own_watch132', p97_tallyman: 'own_tallyman',
+  // Phase 124d, the next six (24 Nov 2026). Orrin Pale the sexton is one man under three NPC ids, and they wear two
+  // different figures (the sexton's, and the townsman's in the heist), so he has three rows and one picture.
+  p95_perpetua: 'own_perpetua', p9_ada: 'own_ada', p46_marrit: 'own_marrit', p12_baker: 'own_brenna', p12_dunna: 'own_dunna',
+  orrin: 'own_orrin', p29_sexton: 'own_orrin', p16h_orrin: 'own_orrin' };
 // NPC entries in the running game (every map loaded) that showed one of the two borrowed portraits before this phase.
 // A later phase that adds a person with a borrowed face changes this number: change it here, and say so in its record.
 const BORROWED_BEFORE = 258;
@@ -117,7 +121,7 @@ function jpegSize(file) {
       assert.deepStrictEqual(jpegSize(f), { w: 96, h: 96 }, 'img/p_' + stem + '.jpg is not 96 by 96');
       assert.ok(n >= 1, 'OWN row ' + k + ' serves nobody (a person who borrows neither face, or a typo)');
     }
-    for (const stem of ['own_marrable', 'own_watch132', 'own_tallyman']) assert.deepStrictEqual(jpegSize(path.join(ROOT, 'img/p_' + stem + '.jpg')), { w: 96, h: 96 });
+    for (const stem of new Set(Object.values(WANT))) assert.deepStrictEqual(jpegSize(path.join(ROOT, 'img/p_' + stem + '.jpg')), { w: 96, h: 96 }, stem);
   });
   await step('mood portraits: an own portrait has no mood (as any minor portrait); a story face still does', async () => {
     const r = await page.evaluate(async () => {
@@ -142,7 +146,7 @@ function jpegSize(file) {
     for (const s of r.still) console.log('  still borrows: ' + s.join(' | '));
     assert.strictEqual(r.before, BORROWED_BEFORE, 'the number of NPC entries with a borrowed face has changed: update BORROWED_BEFORE and say so');
     assert.strictEqual(r.still.length, BORROWED_BEFORE - r.served);
-    assert.ok(r.served >= 4, 'served: ' + r.served);
+    assert.ok(r.served >= Object.keys(WANT).length, 'served: ' + r.served);
   });
   await step('Original borrows, High has faces of their own; the Options row\'s words have French; sw.js names the pictures', async () => {
     const r = await page.evaluate(() => {
