@@ -533,6 +533,7 @@ const CANTABILE17 = (function () {
       const r = Math.min(255, (p & 255) * k[0]), g = Math.min(255, ((p >>> 8) & 255) * k[1]), b = Math.min(255, ((p >>> 16) & 255) * k[2]);
       d[i] = ((a << 24) | ((b | 0) << 16) | ((g | 0) << 8) | (r | 0)) >>> 0;
     }
+    if (typeof FACES124 !== 'undefined') FACES124.skin(sp, d, dst);   // Phase 124b: the skin and hair keep the painting's own colours
     Engine.addSprite(dst, Object.assign({}, sp, { data: d }));
   }
   function hsh(x, y, s) { let h = (x * 374761393 + y * 668265263 + s * 2246822519) >>> 0; h = Math.imul(h ^ (h >>> 13), 1274126177) >>> 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }

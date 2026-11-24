@@ -631,6 +631,7 @@ const SHEEPWALK22 = (function () {
       const c = (v, k) => Math.max(0, Math.min(255, Math.round(v * k)));
       d[i] = ((a << 24) | (c((p >> 16) & 255, tint[2]) << 16) | (c((p >> 8) & 255, tint[1]) << 8) | c(p & 255, tint[0])) >>> 0;
     }
+    if (typeof FACES124 !== 'undefined') FACES124.skin(s, d, dst);   // Phase 124b: the skin and hair keep the painting's own colours
     Engine.addSprite(dst, Object.assign({}, s, { data: d }));
   }
   function paintPeople() {
