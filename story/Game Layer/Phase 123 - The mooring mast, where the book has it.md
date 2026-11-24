@@ -302,3 +302,23 @@ Other drawings of her from outside:
 
 Suites on the final code: mast123 63 of 63 (the new check failed 2 of its 3 when committed first), smalllife, cantabile17
 40, vigil96 20, air93 19, sprites21 9, sky 8, pwa18 89; presets 7 alone. All pass.
+
+### The second round (the Commander's three faults)
+
+1. **Cloth, not blockwork.** The envelope is now a base grey with 26 patches of unlike sizes and shapes (some long
+   enough to lie across two ribs, some nearly square, a few large), not in courses; three plainly newer (paler, cooler),
+   three plainly older (browner, a stain run down them); a triangular gore at each end; every seam a broken line of single
+   pixels only a little darker than the cloth; the whole shaded as a round body, lightest along the upper third and
+   falling to a dark belly. All from a hash.
+2. **Black from below by day.** Two causes. The last round's change to the cloth's grey put a comment in front of the
+   quilt's own fill (`fillRect`) on the same line, so the envelope was left as its dark outline colour: fixed. And a
+   sprite at fifteen cells on the clearing is hazed toward that map's fog colour, which is near black ([50, 55, 50]).
+   The mast and the ship (farSee) now keep 75% of their own colour in the classic view and js/sprites21.js, and in
+   js/light21.js they are lit by the day whatever side they are seen from and hazed by at most 0.25, so she reads grey
+   from the rim by day and the far view from the square is as before.
+3. **The tanks** are dull grey-blue glass with a faint cobalt light inside (the bright core is small and emissive, so it
+   is what glows at night).
+
+Checks added first (5a8fb720, failing): no solid seam line longer than four pixels on the envelope; the tanks' mean blue
+under 150 by day; the envelope's colour picked from the 3D view from the rim at a clear noon is grey, not near black.
+Suites: mast123 66, smalllife, vigil96 20, air93 19, sprites21 9, pwa18 89; light21 21, gpu18 20 and r3d21 24, each alone. All pass.
