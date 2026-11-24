@@ -9128,10 +9128,10 @@
    "source": "NPCS.p9_ada.greet.blunt"
   },
   {
-   "id": "p9_ada.t.6cd1da",
+   "id": "p9_ada.t.632e5c",
    "speaker": "p9_ada",
    "kind": "topic",
-   "text": "Seventy years in one parish. It was louder when I was a girl. Everything was.",
+   "text": "Fifty-one years, and nearly all of them in this parish. It was louder when I was a girl. Everything was.",
    "auto": true,
    "source": "NPCS.p9_ada.topics.Oakhaven"
   },

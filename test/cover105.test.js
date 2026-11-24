@@ -103,7 +103,7 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
       assert.ok(r.indoorDrew, 'the pass is not registered');
     });
     await step('indoors nothing is drawn', async () => {
-      const r = await page.evaluate(() => { S.stage('tavern', 8.5, 10.5, -1.57, 0.85); GFX.groundCover = true; S.frame(); S.frame(); /* two frames: the sculpted hands (the default since Phase 122) are first drawn on the second frame after arriving on a map (probed 23 Nov: frame 1 has no hands, frames 2 on are identical), which is not the cover's doing */ const a = S.hash(); GFX.groundCover = false; S.frame(); const b = S.hash(); GFX.groundCover = true; return { a, b }; });
+      const r = await page.evaluate(() => { S.stage('tavern', 8.5, 10.5, -1.57, 0.85); GFX.groundCover = true; S.frame(); const a = S.hash(); GFX.groundCover = false; S.frame(); const b = S.hash(); GFX.groundCover = true; return { a, b }; });
       assert.strictEqual(r.a, r.b);
     });
     await step('picks and the depth and material read-back are the same with it on and off', async () => {

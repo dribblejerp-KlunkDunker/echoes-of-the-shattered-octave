@@ -65201,13 +65201,13 @@ const VOICE_LINES = {
 "src": "voices/p9_ada/p9_ada.shared.whisper-grove.low.mp3",
 "t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did."
 },
-"p9_ada.t.6cd1da": {
+"p9_ada.t.632e5c": {
 "auto": true,
-"d": 4.8,
+"d": 5.86,
 "kind": "topic",
 "speaker": "p9_ada",
-"src": "voices/p9_ada/p9_ada.t.6cd1da.mp3",
-"t": "Seventy years in one parish. It was louder when I was a girl. Everything was."
+"src": "voices/p9_ada/p9_ada.t.632e5c.mp3",
+"t": "Fifty-one years, and nearly all of them in this parish. It was louder when I was a girl. Everything was."
 },
 "p9_ada.t.a14237": {
 "auto": true,

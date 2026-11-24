@@ -1658,7 +1658,8 @@ function ending() {
   else if (f.sable_kept) lines.push(`Umber keeps all three of her fragments and every name you gave her, and watches the Reach go from the mist, and says, to nobody: "Entry. The stranger asked me to keep myself. I did. I am not yet certain it was right." Somewhere under the quarry, a Hollow at the pumps is still counting.`);
   else if (f.sable_met) lines.push(`Somewhere in the mist outside the Hedge, a runaway of the Veil who asked you for three names is still waiting by a hush-lamp, and writing down that you did not come.`);
   if (names > 0) lines.push(`You have ${names} name${names === 1 ? '' : 's'} in your ledger${names >= 6 ? ', which is more than most people carry out of the Reach alive' : ''}. ${names >= 3 ? 'Annet Sowerby, six years old, is in the hold, in a crate, in her straw, and she is not lost. She is filed. There is a scribe at Whisper-Grove who knows how to read a name back.' : 'Everyone who ever kept such a list before you was the Catalogue. You intend to be something else.'}`);
-  if (p.glassed) lines.push(`Your tideline is ${p.glass >= 70 ? 'past the collarbone, three inches from the throat' : 'four and a half fingers from the shoulder'}. ${p.glass >= 70 ? 'Six weeks, at the current rate.' : 'Eight weeks of slack, perhaps.'} Somewhere in the glass a hundred-and-forty-year-old man is listening to everything you say, and tonight, for the first time, his argument sounds to you like mercy.`);
+  // (Phase 125b) the stranger's own glass: the measure in the shoulder and the man in the glass are Kaelen's, and from a later chapter (MS 6176, 5228)
+  if (p.glassed) lines.push(p.glass >= 70 ? 'Your glass is past the elbow now. You have stopped measuring it.' : 'Your glass is past the wrist and still climbing, and you keep it wrapped.');
   lines.push(`Three hundred and eighty people stand in the mud and wave the ship away. The Kestrel leaps a hundred and fifty feet, and from four miles back a whole voice sings the calling-song after you. The course is set for Whisper-Grove${f.sable_met ? ', because a runaway of the Veil in the mist said the order\'s last archivist is still in the drowned city, reading names to the forgotten' : ', where a Veil scribe is said to read names to the forgotten'}.`);
   lines.push(`<span class="muted">Here ends Part Two of The Silenced Province. ${G.runs > 1 ? `The Tide-Weaver notes that this is the ${['second', 'third', 'fourth', 'fifth'][Math.min(3, G.runs - 2)]} thread he has watched you walk. "It is still kind," he says.` : 'The Tide-Weaver has watched this thread before. He does not say so.'}</span>`);
   $('#ending-title').textContent = 'Grab the Line';
@@ -2509,6 +2510,9 @@ function render() {
   if (!G.map) return;
   Engine.render(G.ents, G.tod);
   drawHUD();
+  // (Phase 125b) under the 3D view the body pass draws the record drawHUD made the frame before; on the first frame after a
+  // map change, a load or a step into a hero's boots that record is stale, so the frame is drawn once more (draw-only)
+  if (typeof BODY21 === 'object' && BODY21 && BODY21.redrawNeeded && BODY21.redrawNeeded()) { Engine.render(G.ents, G.tod); drawHUD(); }
   const d = $('#debug'); if (d.style.display === 'block') d.textContent = `FPS ${fps.toFixed(0)} | ${G.mapId} ${Engine.cam.x.toFixed(1)},${Engine.cam.y.toFixed(1)} dir ${Engine.cam.dir.toFixed(2)} | noise ${G.noise.toFixed(1)} still ${G.stillT.toFixed(1)} | ents ${G.ents.length}`;
 }
 window.advanceTime = (ms) => { const steps = Math.max(1, Math.round(ms / (1000 / 60))); for (let i = 0; i < steps; i++) update(1 / 60); render(); };
