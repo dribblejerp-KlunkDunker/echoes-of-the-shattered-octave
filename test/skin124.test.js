@@ -23,13 +23,15 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
 // the survey: [maker, made name, source painting]
 const SURVEY = [
   ...['p60_man_a', 'p60_man_b', 'p60_man_c'].map((n) => ['life60', n, 'townsman']), ...['p60_wom_a', 'p60_wom_b', 'p60_wom_c'].map((n) => ['life60', n, 'townswoman']),
-  ['life62', 'p61_clerk', 'townsman'], ...['p62_hollow_a', 'p62_hollow_b', 'p62_hollow_c'].map((n) => ['life62', n, 'hollow']),
+  ['life62', 'p61_clerk', 'townsman'],
   ...[['townsman', 'p17c_teague'], ['townswoman', 'p17c_oona'], ['townswoman', 'p17c_bessa'], ['townsman', 'p17c_teel'], ['hob', 'p17c_sloe'], ['townswoman', 'p17c_tace'], ['townsman', 'p17c_dunmore'], ['townswoman', 'p17c_hesper'], ['townsman', 'p17c_quain'], ['townswoman', 'p17c_wife'], ['townsman', 'p17c_hand'], ['townswoman', 'p17c_child']].map(([s, n]) => ['cantabile17', n, s]),
   ...[['townsman', 'p16f_dockman'], ['townswoman', 'p16f_dockwoman'], ['townsman', 'p16f_cutter'], ['hob', 'p16f_keeper'], ['townswoman', 'p16f_rafter']].map(([s, n]) => ['flume16', n, s]),
   ...[['hob', 'ln17_marl'], ['townswoman', 'ln17_tansy'], ['townsman', 'ln17_jory']].map(([s, n]) => ['longnight17', n, s]),
   ...[['townswoman', 'p22_tamar'], ['townsman', 'p22_kit'], ['townsman', 'p22_gideon'], ['townsman', 'p22_absalom']].map(([s, n]) => ['sheepwalk22', n, s]),
   ...[['townswoman', 'herb'], ['townsman', 'larder'], ['townsman', 'tinker'], ['townswoman', 'odds'], ['townswoman', 'fish']].map(([s, k]) => ['calendar11', 'p11c_vendor_' + k, s]),
 ];
+// recolours that are a state of the whole figure, not dyed cloth: stay exactly as their maker makes them, switch on or off
+const STATES = [['p62_hollow_a', 30, 0.55, 0.92], ['p62_hollow_b', 205, 0.45, 0.9], ['p62_hollow_c', 95, 0.35, 0.85]];   // js/life62-whispergrove.js 36-38
 // (js/kestrel16.js paintPennick also recolours the townsman, but runs once at script load, before the townsman's painting
 // exists, so in a started game it never makes its sprite: nothing to check; noted in the phase record.)
 
@@ -73,15 +75,18 @@ const SURVEY = [
       const e = FACES124.recolours().find((x) => x.data === sp.data); if (!e) continue;
       const src = e.from, m = FACES124.maskOf(src); if (!m) { out.push({ n, noMask: true }); continue; }   // the pixels the maker read
       const w = src.w, H = m.bot - m.top + 1, y0 = Math.round(m.top + (m.neckY - m.top) * 0.38);
-      let face = 0, faceBad = 0, hand = 0, handBad = 0, cloth = 0, clothChanged = 0, clothLost = 0;
+      let face = 0, faceBad = 0, hand = 0, handBad = 0, cloth = 0, clothChanged = 0, clothLost = 0, worn = 0, wornLost = 0, specks = 0, jar = 0, jarLost = 0;
+      const base = e.base;   // the maker's tint over the whole figure (life60's, without its old keep-flesh-by-colour rule)
       for (let i = 0; i < src.data.length; i++) {
         const q = src.data[i]; if ((q >>> 24) < 200) continue; const y = (i / w) | 0, x = i % w, v = sp.data[i];
         if ((v >>> 24) < 100) continue;   // a maker may drop faint pixels: not a face pixel any more
         if (y >= y0 && y < m.neckY && Math.abs(x - m.hx) <= m.headW * 0.28 && m.isFlesh(q)) { face++; if (!m.isFlesh(v)) faceBad++; }
         else if (y > m.neckY + H * 0.05 && m.seed[i] && m.isFlesh(q)) { hand++; if (!m.isFlesh(v)) handBad++; }
-        else if (m.wt[i] === 0) { cloth++; if ((e.tinted[i] & 0xffffff) !== (q & 0xffffff)) clothChanged++; if (v !== e.tinted[i]) clothLost++; }
+        else if (m.wt[i] === 0 && y <= m.neckY) { worn++; if (v !== base[i]) wornLost++; }   // the kerchief or cap: dyed with the rest
+        else if (m.wt[i] === 0) { cloth++; if ((base[i] & 0xffffff) !== (q & 0xffffff)) clothChanged++; if (v !== base[i]) clothLost++; if ((v & 0xffffff) === (q & 0xffffff) && (base[i] & 0xffffff) !== (q & 0xffffff) && m.isFlesh(q)) specks++; }
+        if (m.carried && m.carried[i]) { jar++; if ((v & 0xffffff) !== (q & 0xffffff)) jarLost++; }
       }
-      out.push({ n, face, faceBad, hand, handBad, cloth, clothChanged, clothLost });
+      out.push({ n, s, face, faceBad, hand, handBad, cloth, clothChanged, clothLost, worn, wornLost, specks, jar, jarLost });
     }
     return out;
   }, SURVEY);
@@ -98,8 +103,33 @@ const SURVEY = [
     assert.deepStrictEqual(noHands, [], 'no bare skin found below the neck');
   });
   await step('the cloth still takes its tint: every cloth pixel is the maker\'s own, and a third or more of it is tinted (the Hollows\' grey rags excepted: their maker leaves grey alone)', async () => {
-    const bad = check.filter((c) => c.cloth < 100 || c.clothLost > 0 || (!/^p62_hollow/.test(c.n) && c.clothChanged < c.cloth / 3)).map((c) => c.n + ':' + c.clothLost + ' lost, ' + c.clothChanged + '/' + c.cloth);
+    const bad = check.filter((c) => c.cloth < 100 || c.clothLost > 0 || c.clothChanged < c.cloth / 3).map((c) => c.n + ':' + c.clothLost + ' lost, ' + c.clothChanged + '/' + c.cloth);
     assert.deepStrictEqual(bad, [], bad.join(' '));
+  });
+  await step('no flesh-coloured specks are spared in the cloth: outside the rig-placed mask every pixel takes the tint', async () => {
+    const bad = check.filter((c) => c.specks > 0).map((c) => c.n + ':' + c.specks);
+    assert.deepStrictEqual(bad, [], bad.join(' '));
+  });
+  await step('headwear takes the dye: the townsman\'s cap and the townswoman\'s kerchief are tinted as the maker tints them; only face and hair keep the painting', async () => {
+    const bad = check.filter((c) => (/^towns/.test(c.s) && c.worn < 30) || c.wornLost > 0).map((c) => c.n + ':' + c.wornLost + '/' + c.worn);
+    assert.deepStrictEqual(bad, [], bad.join(' '));
+  });
+  await step('the townswoman\'s jar keeps its clay in every recolour of her', async () => {
+    const bad = check.filter((c) => c.s === 'townswoman' && (c.jar < 60 || c.jarLost > 0)).map((c) => c.n + ':' + c.jarLost + '/' + c.jar);
+    assert.deepStrictEqual(bad, [], bad.join(' '));
+  });
+  await step('the Hollows (a state of the whole figure, not dyed cloth) are exactly as their maker makes them, switch on or off', async () => {
+    const r = await page.evaluate((ST) => {
+      const out = [], reg = FACES124.recolours();
+      for (const [n, hue, sk, lk] of ST) {
+        const sp = Engine.sprites[n]; if (!sp) { out.push(n + ':missing'); continue; }
+        if (reg.some((e) => e.data === sp.data)) out.push(n + ':helped');
+        for (const v of [false, true]) { GFX.keepSkin = v; FACES124.sync(); const k = 'zz124_' + n + v; delete Engine.sprites[k]; LIFE60.variant('hollow', k, hue, sk, lk);
+          const a = Engine.sprites[k].data; let diff = 0; for (let i = 0; i < a.length; i++) if (a[i] !== sp.data[i]) diff++; if (diff) out.push(n + ':' + v + ':' + diff); delete Engine.sprites[k]; }
+      }
+      GFX.keepSkin = true; FACES124.sync(); return out;
+    }, STATES);
+    assert.deepStrictEqual(r, []);
   });
 
   await step('switch off: every recolour is byte for byte its maker\'s pixels; Oona Salt equals the Cantabile multiply; on again restores', async () => {
