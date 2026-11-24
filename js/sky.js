@@ -480,8 +480,9 @@ const SKY = (() => {
   ];
   const SHIP_PAL = {
     o: [36, 26, 18], w: [90, 58, 32], W: [122, 82, 48], k: [46, 31, 18], r: [160, 120, 64], m: [74, 50, 32],
-    c: [200, 184, 150], C: [156, 140, 108], R: [126, 112, 86], p: [138, 42, 34], l: [60, 48, 36],
-    Y: [224, 192, 112], B: [176, 138, 60], D: [110, 82, 32], S: [58, 42, 24], g: [224, 176, 80], L: [255, 208, 112],
+    // Phase 123, to Book One l. 674: "a patched grey envelope and four lift-tanks ... glowing the faint cobalt of drift-glass"
+    c: [150, 154, 158], C: [118, 122, 126], R: [96, 100, 104], p: [138, 42, 34], l: [60, 48, 36],
+    Y: [120, 168, 236], B: [64, 104, 176], D: [40, 64, 120], S: [58, 42, 24], g: [224, 176, 80], L: [255, 208, 112],
   };
   const SW = SHIP_ART[0].length, SHH = SHIP_ART.length;
   const ship = { S: 0, dw: 0, dh: 0, r: null, g: null, b: null, a: null, lamps: [] };

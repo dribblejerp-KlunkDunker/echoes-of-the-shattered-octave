@@ -116,45 +116,79 @@ const SMALLLIFE = (() => {
     return out;
   }
   // moored airship, 144x72, bow to the right. view 0 bow-on .. 2 broadside .. 4 stern-on, 1/3 three-quarter.
+  // Book One l. 674: "small for a skyship, sixty feet perhaps, brass-ribbed and oak-planked, with a patched grey envelope
+  // and four lift-tanks slung beneath her keel glowing the faint cobalt of drift-glass"; l. 1321: "a grey sailcloth envelope
+  // that had been patched so often it looked like a quilt" (Phase 123). The quilt's greys come from a hash, never a draw.
   const KV = [{ phi: 90, stern: false }, { phi: 52, stern: false }, { phi: 0, stern: false }, { phi: 52, stern: true }, { phi: 90, stern: true }];
+  const hq = (x, y, s) => { let h = Math.imul(x | 0, 374761393) ^ Math.imul(y | 0, 668265263) ^ Math.imul(s | 0, 1442695041); h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
   function kestrelView(i) {
     const { phi, stern } = KV[i], co = Math.cos(phi * Math.PI / 180), si = Math.sin(phi * Math.PI / 180);
     return paint(144, 72, c => {
-      const cx = 72, TANK = '#7a6844', BAND = '#b09258', DK = '#3d311f', HULL = '#8a6a3a', HULL2 = '#5a4527', BRASS = '#d1ae62', GLOW = '#f1cd78';
+      const cx = 72, DK = '#2c2a28', CANVAS = '#7c7f82', CANVAS2 = '#55585b', OAK = '#6e4c2c', OAK2 = '#4a321d', OAKL = '#86603c', BRASS = '#c9a256', BRASSL = '#ead08a';
+      const COB = '#2f4f8f', COBL = '#5d8fdc', COBC = '#9cc4ff';
       const L = 130 * co + 26 * si;                                             // projected length of the whole ship
       const x0 = cx - L / 2, x1 = cx + L / 2;                                   // stern end .. bow end on screen
       const bowX = x1, sternX = x0;
-      // fins and propeller at the stern (behind the envelope when the bow is toward us)
+      // fins at the stern: grey canvas on brass (behind the envelope when the bow is toward us)
       const finTop = 14, finBot = 44;
       const finA = Math.max(5, 22 * co + 3);
       if (!(stern === false && phi >= 90)) {
-        poly(c, HULL2, [[sternX + finA, finTop + 8], [sternX + 2, finTop - 2], [sternX + 2, finBot - 2], [sternX + finA + 2, finBot]]);
+        poly(c, CANVAS2, [[sternX + finA, finTop + 8], [sternX + 2, finTop - 2], [sternX + 2, finBot - 2], [sternX + finA + 2, finBot]]);
         poly(c, DK, [[sternX + finA, finTop + 12], [sternX + finA * 0.5, finTop + 4], [sternX + finA * 0.5, 40], [sternX + finA, 42]]);
+        line(c, BRASS, sternX + 2, finTop - 2, sternX + finA + 2, finBot, 1);
       }
-      // three lift-tanks in a row along the keel, end caps rounder when seen end-on
+      // the envelope: the same span as ever, one long bag of grey sailcloth, patched like a quilt, with brass ribs over it
       const tankLen = 38 * co + 22 * si, gap = 3 * co;
-      for (let t = 0; t < 3; t++) {
-        const tx = sternX + 14 * co + t * (38 * co + gap) + (tankLen - 38 * co) * 0.5;
-        const w = Math.max(24, tankLen);
-        const px = clamp(tx, 2, 144 - w - 2);
-        c.fillStyle = DK; c.beginPath(); c.roundRect(px - 1, 7, w + 2, 30, 13); c.fill();
-        c.fillStyle = TANK; c.beginPath(); c.roundRect(px, 8, w, 28, 12); c.fill();
-        c.fillStyle = '#9a8656'; c.beginPath(); c.roundRect(px + 2, 10, w - 4, 6, 3); c.fill();
-        c.fillStyle = BAND; c.fillRect(px + w * 0.28, 8, 2, 28); c.fillRect(px + w * 0.7, 8, 2, 28);
-        c.fillStyle = 'rgba(30,22,10,0.45)'; c.beginPath(); c.roundRect(px + 2, 28, w - 4, 6, 3); c.fill();
+      let ex0 = 1e9, ex1 = -1e9;
+      for (let t = 0; t < 3; t++) { const tx = sternX + 14 * co + t * (38 * co + gap) + (tankLen - 38 * co) * 0.5, w = Math.max(24, tankLen), px = clamp(tx, 2, 144 - w - 2); ex0 = Math.min(ex0, px); ex1 = Math.max(ex1, px + w); }
+      const ew = ex1 - ex0;
+      c.fillStyle = DK; c.beginPath(); c.roundRect(ex0 - 1, 5, ew + 2, 32, 14); c.fill();
+      c.save(); c.beginPath(); c.roundRect(ex0, 6, ew, 30, 13); c.clip();
+      const PW = 7, PH = 5;
+      for (let y = 6, row = 0; y < 36; y += PH, row++) for (let x = Math.floor(ex0) - (row % 2 ? 3 : 0); x < ex1; x += PW) {
+        const k = hq(x, y, 31 + i), g = 96 + ((k * 34) | 0), w2 = k > 0.86 ? PW * 2 : PW;           // now and then a bigger patch
+        c.fillStyle = `rgb(${g - 8},${g - 3},${g + 5})`;                                             // cool grey sailcloth c.fillRect(x, y, w2, PH);
+        c.fillStyle = 'rgba(46,48,52,0.6)'; c.fillRect(x, y, 1, PH);                                  // the stitched seam
+        if (hq(x, y, 77 + i) > 0.8) { c.fillStyle = 'rgba(40,42,46,0.45)'; c.fillRect(x + 2, y + 2, 1, 1); c.fillRect(x + 4, y + 2, 1, 1); }   // stitches
       }
-      // gondola hull
+      for (let y = 6; y < 36; y += PH) { c.fillStyle = 'rgba(46,48,52,0.55)'; c.fillRect(ex0, y, ew, 1); }
+      c.fillStyle = 'rgba(255,255,255,0.10)'; c.fillRect(ex0, 7, ew, 6);                              // weathered: light above,
+      c.fillStyle = 'rgba(0,0,0,0.22)'; c.fillRect(ex0, 28, ew, 8);                                   // stained below
+      // brass ribs, thin and warm, catching the light on their upper part
+      const step = Math.max(9, 19 * co + 9 * si);
+      for (let x = ex0 + 7; x < ex1 - 5; x += step) { const xi = x | 0; c.fillStyle = '#9c8550'; c.fillRect(xi, 12, 1, 23); c.fillStyle = BRASSL; c.fillRect(xi, 7, 1, 5); }
+      c.fillStyle = BRASS; c.fillRect(ex0 + 6, 9, ew - 12, 1);
+      c.restore();
+      // the hull: oak plank, darker below, a brass rail along the top
       const hx0 = sternX + 8 * co, hx1 = bowX - 6 * co, hw = Math.max(26, hx1 - hx0);
       const hl = cx - hw / 2, hr = cx + hw / 2;
-      poly(c, HULL, [[hl + 6, 38], [hr - 4, 38], [hr + 4 * co, 46], [hr - 10, 60], [hl + 12, 60], [hl - 2 * co, 48]]);
-      poly(c, HULL2, [[hl + 12, 54], [hr - 10, 54], [hr - 12, 60], [hl + 14, 60]]);
+      const hullPts = [[hl + 6, 38], [hr - 4, 38], [hr + 4 * co, 46], [hr - 10, 56], [hl + 12, 56], [hl - 2 * co, 48]];
+      poly(c, OAK, hullPts);
+      c.save(); c.beginPath(); c.moveTo(hullPts[0][0], hullPts[0][1]); for (const p of hullPts.slice(1)) c.lineTo(p[0], p[1]); c.closePath(); c.clip();
+      for (let y = 40, row = 0; y < 57; y += 3, row++) {
+        c.fillStyle = OAK2; c.fillRect(hl - 4, y, hw + 10, 1);                                          // plank lines
+        for (let x = hl - 4 + (row % 2) * 9; x < hr + 6; x += 18) { c.fillStyle = OAK2; c.fillRect(x | 0, y, 1, 3); }   // butt joints
+        if (row === 0) { c.fillStyle = OAKL; c.fillRect(hl - 4, y + 1, hw + 10, 1); }
+      }
+      c.fillStyle = 'rgba(20,12,6,0.35)'; c.fillRect(hl - 4, 50, hw + 10, 8);
+      c.restore();
       c.fillStyle = BRASS; c.fillRect(hl + 4, 38, hr - hl - 6, 2);
       const ports = Math.max(2, Math.round(hw / 20));
-      for (let p = 0; p < ports; p++) { c.fillStyle = GLOW; c.fillRect(hl + 14 + p * ((hw - 30) / Math.max(1, ports - 1)), 45, 3, 3); }
-      for (let r = 0; r < 4; r++) line(c, DK, hl + 8 + r * hw / 4, 40, hl + 8 + r * hw / 4, 37, 1); // struts to the tanks
+      for (let p = 0; p < ports; p++) { c.fillStyle = '#2a3038'; c.fillRect(hl + 14 + p * ((hw - 30) / Math.max(1, ports - 1)), 44, 3, 3); c.fillStyle = BRASS; c.fillRect(hl + 14 + p * ((hw - 30) / Math.max(1, ports - 1)), 43, 3, 1); }
+      for (let r = 0; r < 4; r++) line(c, DK, hl + 8 + r * hw / 4, 40, hl + 8 + r * hw / 4, 37, 1); // stays to the envelope
+      // four lift-tanks slung beneath her keel, glowing the faint cobalt of drift-glass, staggered port and starboard
+      const dir = stern ? -1 : 1;
+      for (let t = 0; t < 4; t++) {
+        const a = (t - 1.5) * 13, b = (t % 2 ? -7 : 7), tx = cx + dir * a * co + b * si, tw = Math.max(6, 11 * co + 6 * si);
+        line(c, DK, tx, 55, tx, 58, 1);
+        c.fillStyle = DK; c.beginPath(); c.roundRect(tx - tw / 2 - 1, 57, tw + 2, 9, 4); c.fill();
+        c.fillStyle = COB; c.beginPath(); c.roundRect(tx - tw / 2, 58, tw, 7, 3); c.fill();
+        c.fillStyle = COBL; c.fillRect(tx - tw / 2 + 1, 60, tw - 2, 2);
+        c.fillStyle = COBC; c.fillRect(tx - 1, 60, 2, 2);
+      }
       // propeller disc on the stern
       if (stern || co > 0.2) { c.strokeStyle = 'rgba(200,190,160,0.5)'; c.lineWidth = 1; c.beginPath(); c.ellipse(sternX + 2, 46, 2 + 3 * si, 9, 0, 0, TAU); c.stroke(); }
-      // bow cone and the mooring line
+      // bow cone and the mooring line (where her line has always made fast)
       if (!stern) {
         poly(c, BRASS, [[bowX - 4, 40], [bowX + 1, 44], [bowX - 4, 48]]);
         line(c, '#cbbf9c', bowX, 44, bowX + (phi >= 90 ? 0 : 3), 33, 1);

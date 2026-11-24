@@ -273,3 +273,32 @@ smalllife, kestrel16 exit 0 ("ok" lines). Alone: presets 7, far14 14, cinematic2
 - In the classic view at night the ship's lanterns are a pixel or two from the square; in the 3D view they show.
 - The rim's pump (15.0, 5.5) stands just east of the mast's legs; it was not moved.
 - The Kestrel is not drawn over the North Gate during Grab the Line (she never was); only her line comes down.
+
+## 12. The Kestrel herself, to the book (after the Commander's review)
+
+Book One l. 674: "It was small for a skyship, sixty feet perhaps, brass-ribbed and oak-planked, with a patched grey
+envelope and four lift-tanks slung beneath her keel glowing the faint cobalt of drift-glass. Her name had been painted
+over on the bow, and then painted over again. She flew no colors." L. 1321: "She was sixty feet of brass rib and oak
+plank under a grey sailcloth envelope that had been patched so often it looked like a quilt, and four lift-tanks slung
+beneath her keel glowed the faint cobalt of drift-glass."
+
+The five moored views (js/smalllife.js `kestrelView`, kestrel_m0..m4) were tan and gold all over: the envelope drawn as
+three tan "tanks", gold ports. Repainted, same 144 x 72, same envelope span, same bow cone and mooring point (where her
+line makes fast) and same stern: the envelope one bag of cool grey sailcloth in quilt panels of slightly different greys
+with stitched seams and now and then a bigger patch (from a hash), lighter above and stained below; thin brass ribs
+over it, lit on their upper part; the hull oak plank with plank lines and butt joints, darker below, the brass rail;
+dark glass ports (no gold glow); four lift-tanks slung under the keel, staggered port and starboard so that broadside
+shows all four and bow-on two, cobalt with a brighter core. The cores are emissive (js/mast123.js), so after dark the
+tanks' cobalt is the glow she gives, with her three lanterns. Her painted-over name and her lack of colours are not
+drawn (no flag was ever drawn). The tanks hang a little lower than the old hull's keel (to row 66 of 72).
+
+Other drawings of her from outside:
+| Where | How drawn | Colours | Done |
+|---|---|---|---|
+| js/air93.js (the packet fallback), js/vigil96.js, js/heights92.js, js/rift100.js | reuse kestrel_m2 | now the book's | follow the repaint |
+| js/sky.js flyover (and js/light21.js's port of it) | pixel art in code: a hull with two masts under square sails | sails were cream, tanks yellow and gold | palette changed: the sails grey, the tank cobalt (three lines). Its shape (masts and square sails, no envelope) is not the book's: for the Commander |
+| js/maps.js "on her side in the willows", js/cantabile17.js mast-tower | the painted asset sprite `kestrel` (js/assets.js, an image) | tan envelope, as painted | not drawn in code: for the Commander |
+| the world map (img/map_reach.jpg etc.), logbook ink sketch (js/logmap.js M.kestrel) | painted image; monochrome ink | - | left |
+
+Suites on the final code: mast123 63 of 63 (the new check failed 2 of its 3 when committed first), smalllife, cantabile17
+40, vigil96 20, air93 19, sprites21 9, sky 8, pwa18 89; presets 7 alone. All pass.

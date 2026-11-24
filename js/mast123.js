@@ -230,11 +230,11 @@ const MAST123 = (function () {
     Engine.addSprite('p123_trough', paintTrough());
     Engine.addSprite('p123_rail', paintRail());
     Engine.addSprite('p123_ladderfoot', paintLadderFoot());
-    // the Kestrel's ports burn at night: her lamps (js/smalllife.js draws her; the glow colour is its GLOW)
+    // the Kestrel's lift-tanks glow the faint cobalt of drift-glass (Book One l. 674): their bright cores give their own light
     for (let i = 0; i < 5; i++) {
       const sp = Engine.sprites['kestrel_m' + i]; if (!sp || sp.emit) continue;
       const m = new Uint8Array(sp.w * sp.h); let n = 0;
-      for (let k = 0; k < m.length; k++) { const p = sp.data[k]; if ((p >>> 24) < 100) continue; const r = p & 255, g = (p >> 8) & 255, b = (p >> 16) & 255; if (r > 225 && g > 190 && g < 220 && b > 100 && b < 140) { m[k] = 1; n++; } }
+      for (let k = 0; k < m.length; k++) { const p = sp.data[k]; if ((p >>> 24) < 100) continue; const r = p & 255, g = (p >> 8) & 255, b = (p >> 16) & 255; if (b > 200 && b > r + 60) { m[k] = 1; n++; } }   // the cobalt of her drift-glass tanks (js/smalllife.js)
       if (n && Engine.setEmissive) Engine.setEmissive('kestrel_m' + i, m);
       const L = lampsOf(Engine.sprites['kestrel_m' + i]);
       if (L) { Engine.addSprite('p123_kestrel_night' + i, L.sp); if (Engine.setEmissive) Engine.setEmissive('p123_kestrel_night' + i, L.m); }
