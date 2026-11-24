@@ -27,7 +27,11 @@ poses, a change of shape); `js/folk14.js` `variant` (sway, seat and hood, change
 the townsman's painting exists, and it is not called again. It now goes through the same helper (one line, guarded), so
 if it is ever made later it keeps its skin, but there is nothing to see or test today. It is left as found and noted here.
 
-Total: 39 recolours made in a started game, all now through the helper.
+Total: 39 recolours made in a started game. **36 go through the helper.** The three Hollows (`p62_hollow_a/b/c`, from
+`js/life62-whispergrove.js` through `LIFE60.variant`) are left out. Their colour is a state of the whole person, faded
+and grey-blue, not dyed cloth, so they stay exactly as their maker makes them, switch on or off (the helper skips any
+recolour of the `hollow` painting). No other recolour in the survey is spectral, drowned, frozen, faded or dead: the
+Cantabile, Flume, Long Night, Sheepwalk, market and road people are all living people in dyed clothes.
 
 ## 2. What changed
 
@@ -37,8 +41,12 @@ Total: 39 recolours made in a started game, all now through the helper.
   kept-skin version is written into the same array, so turning the switch swaps them in place.
 - The mask is measured once per source painting, keyed by its pixel array (a painting that arrives later replaces the
   sprite's pixels and is measured again):
-  - **The head**, from the top of the figure to the narrowest row between 9% and 20% of its height (the neck, as the
-    Phase 76 autorig finds it), keeps every pixel: face, hair, and what is worn on the head.
+  - **The face and hair** keep the painting's colours. **The kerchief or cap is dyed with the cloth.** In these
+    paintings the kerchief and the cap have the same hue, saturation and lightness as the skin, so colour cannot separate
+    them. The face's oval is measured on each source painting instead: townsman centre (30, 20), radii 8.5 by 7, from
+    the cap's brim to the chin; townswoman (24.5, 16), radii 8.5 by 10.5, inside the kerchief, taking in the dark hair
+    that frames her face; Hob (25.5, 12), radii 9 by 13, the whole head, since he is bald. Every pixel inside the oval is
+    kept (face, brows, beard, hair). A source with no measured oval keeps the flesh and brown-hair tones of its head.
   - **Flesh** is measured from the lit middle of the face (the darkest quarter, which is brow, beard or hair, is left
     out): hue, saturation and lightness ranges.
   - **Below the neck**, flesh colour alone cannot tell these paintings' skin from their linen, brown wool and leather (a
@@ -48,10 +56,15 @@ Total: 39 recolours made in a started game, all now through the helper.
   - **A grey-skinned figure** (the Hollow) keeps its head and neck only: its maker already leaves grey alone, and its grey
     rags match its grey skin.
   - The mask is grown by one pixel and smoothed (3 by 3), so no tinted fringe is left round a face or at a cuff.
-- **Judgement calls.** The head-cloth, cap or kerchief is kept with the head (above the neck), so the townswoman's
-  recolours now share her cream kerchief. Leather (aprons, belts) takes the tint, as before. **The townswoman's clay jar
-  still takes her dress's tint:** a rule to keep "a thing warmer than skin, at the hands" kept the townsman's leather
-  apron in blotches and still missed the jar, so I took it out. This is not solved.
+- **Carried things.** The townswoman's clay jar keeps its clay in every recolour of her. It is masked once: the biggest
+  clump of terracotta tones (hue about 22, saturation 0.26 or more) inside the box where it sits (22,32 to 54,78 in her
+  painting), grown and smoothed like the rest. That is the only carried thing in the three source paintings that is
+  plainly not cloth: the townsman's hands are empty, and Hob's pouches, belt and key are leather, so they take the tint.
+  Leather aprons and belts take the tint, as before.
+- **No spared specks.** `js/life60.js variant()` spared every flesh-coloured pixel by colour, which left orange specks of
+  stain in the dyed cloth (the heather apron). It now also makes the tint with nothing spared and hands both to the
+  helper. With the switch on, the cloth is that whole tint and the rig-placed mask does the sparing; with it off, the
+  sprite is the old one, byte for byte. The other makers multiply the whole figure and never spared anything.
 - **Switch:** `GFX.keepSkin`, Options > Graphics, "Recoloured people keep their skin" (small print: "townsfolk dressed in
   other colours keep their own faces, hands and hair"); on by default; off in Original, through `PRESETS.keep` (as
   `js/deepsky113.js` does). French in `tools/i18n/p124-skin.tsv`, merged. With it off, every recolour is byte for byte
@@ -61,8 +74,8 @@ Total: 39 recolours made in a started game, all now through the helper.
 
 ## 3. Cost
 
-Measuring a source painting: about 6 ms each, four sources (townsman, townswoman, hob, hollow), about 25 ms in all, once
-per session. Applying it to the 39 recolours: about 1 ms each, about 40 ms in all. Both happen when a maker runs (when
+Measuring a source painting: about 8 ms each, three sources (townsman, townswoman, hob), about 25 ms in all, once
+per session. Applying it to the 36 recolours: about 1 ms each, about 31 ms in all. Both happen when a maker runs (when
 its place is built or entered), not at start-up.
 
 ## 4. Tests and pictures
@@ -72,14 +85,16 @@ its place is built or entered), not at start-up.
   range; the cloth keeps its maker's tint exactly; off is byte for byte; Original off, High on; French present; no
   `Math.random`; the cost.
 - Sheet: `screenshots/p124-skin.jpg`. Eight figures before and after, enlarged three times (the packman, Oona Salt,
-  the bluest, the greenest, the darkest, Sloe from Hob, a Hollow, Gideon), and the packman's figure on the West Road and
+  the bluest, the greenest, the darkest, Sloe from Hob, the Flume dock-woman, Gideon, and a Hollow left as made), and the packman's figure on the West Road and
   Oona Salt at Port Cantabile in the game, before and after.
+
+Second round (the Commander's review): the Hollows left alone; headwear dyed; the jar's clay; no spared specks.
+Checks for all four were committed first and failed, then passed (skin124: 12 of 12). The sheet now shows the Flume
+dock-woman in place of the Hollow, and a small panel of a Hollow unchanged with the switch on.
 
 ## 5. What is left
 
-- The townswoman's jar takes the tint (above).
-- `life60.variant`'s old skin guard leaves odd flesh-coloured specks in the cloth (the orange dots on the heather and
-  madder aprons). They are the maker's own pixels and are unchanged here.
 - Pennick (above).
-- The townswoman's recolours now all wear her cream kerchief. If they should keep their tinted head-cloths, the head rule
-  needs a hair-or-cloth split above the neck.
+- The face ovals and the jar's box are measured by hand on three paintings. A new source painting needs its own (without
+  one it falls back to flesh and brown-hair tones in the head, which keeps a kerchief whose colour is close to skin).
+- A little of the townsman's linen collar at the neck opening stays undyed, because linen and skin share a tone there.

@@ -80,7 +80,8 @@ const STATES = [['p62_hollow_a', 30, 0.55, 0.92], ['p62_hollow_b', 205, 0.45, 0.
       for (let i = 0; i < src.data.length; i++) {
         const q = src.data[i]; if ((q >>> 24) < 200) continue; const y = (i / w) | 0, x = i % w, v = sp.data[i];
         if ((v >>> 24) < 100) continue;   // a maker may drop faint pixels: not a face pixel any more
-        if (y >= y0 && y < m.neckY && Math.abs(x - m.hx) <= m.headW * 0.28 && m.isFlesh(q)) { face++; if (!m.isFlesh(v)) faceBad++; }
+        const FO = m.faceOval, inFace = FO ? (((x - FO.c[0]) / FO.r[0]) ** 2 + ((y - FO.c[1]) / FO.r[1]) ** 2 <= 0.8) : (y >= y0 && y < m.neckY && Math.abs(x - m.hx) <= m.headW * 0.28);   // the face's measured oval where there is one
+        if (inFace && m.isFlesh(q)) { face++; if (!m.isFlesh(v)) faceBad++; }
         else if (y > m.neckY + H * 0.05 && m.seed[i] && m.isFlesh(q)) { hand++; if (!m.isFlesh(v)) handBad++; }
         else if (m.wt[i] === 0 && y <= m.neckY) { worn++; if (v !== base[i]) wornLost++; }   // the kerchief or cap: dyed with the rest
         else if (m.wt[i] === 0) { cloth++; if ((base[i] & 0xffffff) !== (q & 0xffffff)) clothChanged++; if (v !== base[i]) clothLost++; if ((v & 0xffffff) === (q & 0xffffff) && (base[i] & 0xffffff) !== (q & 0xffffff) && m.isFlesh(q)) specks++; }
@@ -163,7 +164,7 @@ const STATES = [['p62_hollow_a', 30, 0.55, 0.92], ['p62_hollow_b', 205, 0.45, 0.
   await step('the cost: measuring a source painting\'s mask is under 40 ms each, and all of them under 200 ms', async () => {
     const s = await page.evaluate(() => { for (const e of FACES124.recolours()) FACES124.maskOf(e.from); return FACES124.stats(); });
     console.log('  cost: ' + JSON.stringify(s));
-    assert.ok(s.masks >= 4 && s.ms / s.masks < 40 && s.ms < 200, JSON.stringify(s));
+    assert.ok(s.masks >= 3 && s.ms / s.masks < 40 && s.ms < 200, JSON.stringify(s));
   });
 
   await browser.close();

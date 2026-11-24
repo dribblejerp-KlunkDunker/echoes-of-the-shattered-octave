@@ -2,7 +2,7 @@
 // own pixels, and the kept skin) and two in-game frames each way to the folder given. Run through browser.sh.
 const { chromium } = require('/opt/npm-tools/node_modules/playwright');
 const fs = require('fs'), path = require('path');
-const FIGS = ['p60_man_a', 'p17c_oona', 'p60_wom_c', 'p60_man_b', 'p61_clerk', 'p17c_sloe', 'p62_hollow_b', 'p22_gideon'];
+const FIGS = ['p60_man_a', 'p17c_oona', 'p60_wom_c', 'p60_man_b', 'p61_clerk', 'p17c_sloe', 'p16f_dockwoman', 'p22_gideon', 'p62_hollow_b'];
 (async () => {
   const OUT = process.argv[2] || '/home/claude/army124/F/shots/skin'; fs.mkdirSync(OUT, { recursive: true });
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
@@ -20,7 +20,7 @@ const FIGS = ['p60_man_a', 'p17c_oona', 'p60_wom_c', 'p60_man_b', 'p61_clerk', '
     G.day = 4; G.tod = 0.5; tryLoad('oakhaven'); for (const id of ['cantabile_harbour', 'flume_landing', 'whispergrove', 'p22_combe', 'oakhaven']) tryLoad(id);
     G.day = 3; tryLoad('oakhaven'); const reg = FACES124.recolours(), png = (w, h, data) => { const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(data.buffer.slice(0)), w, h), 0, 0); return c.toDataURL('image/png'); };
     const out = {};
-    for (const n of FIGS) { const sp = Engine.sprites[n]; if (!sp) continue; const e = reg.find((x) => x.data === sp.data); out[n] = { before: png(sp.w, sp.h, e.tinted), after: png(sp.w, sp.h, sp.data) }; }
+    for (const n of FIGS) { const sp = Engine.sprites[n]; if (!sp) continue; const e = reg.find((x) => x.data === sp.data); out[n] = { before: png(sp.w, sp.h, e ? e.tinted : sp.data), after: png(sp.w, sp.h, sp.data) }; /* not helped (the Hollows): as made */ }
     return out;
   }, FIGS);
   for (const [n, v] of Object.entries(figs)) for (const k of ['before', 'after']) fs.writeFileSync(path.join(OUT, n + '_' + k + '.png'), Buffer.from(v[k].split(',')[1], 'base64'));

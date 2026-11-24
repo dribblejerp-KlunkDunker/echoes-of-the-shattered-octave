@@ -7,9 +7,9 @@
 //  and js/kestrel16.js (Pennick). A tint over the whole painting turned faces blue, green or grey. Each maker now hands
 //  its recoloured pixels to FACES124.skin(srcSprite, data) before adding the sprite: the head (face, hair and what is
 //  worn on it) and the bare skin below it (hands, arms, legs: the painting's own flesh tones, measured from its face)
-//  keep the source painting's colours; the cloth keeps its tint. A thing held in the hand whose colour is flesh-warm
-//  (the townswoman's clay jar) keeps its own colour too; leather of the same warm tone (a belt, an apron) may stay; cloth
-//  never does. The mask is measured once per source painting and reused by every recolour of it.
+//  keep the source painting's colours (the face and the hair; a kerchief or cap is dyed with the cloth); the cloth keeps
+//  its tint, whole. The townswoman's clay jar keeps its clay. The Hollows' recolours (a state of the whole figure, not
+//  dyed cloth) are left exactly as made. The mask is measured once per source painting and reused by every recolour of it.
 //  Switch: GFX.keepSkin, Options > Graphics "Recoloured people keep their skin", on by default, off in Original
 //  (PRESETS.keep). Off, every sprite is byte for byte what its maker made: the maker's own pixels are kept, and the
 //  switch swaps them back in place. Nothing here uses Math.random.
@@ -40,7 +40,16 @@ const FACES124 = (function () {
 
   // ---------------------------------------------------------------- the figure's head and its flesh, measured once
   const MASKS = new WeakMap();
+  // carried things that are plainly not cloth, by source painting: [x0, y0, x1, y1] in its pixels, and their tones
+  // the face's oval, by source painting (centre and radii in its pixels): measured on the paintings, from the cap's brim or
+  // the kerchief's edge to the chin; Hob is bald, so his is the whole head
+  const FACE = { townsman: { c: [30, 20], r: [8.5, 7] }, townswoman: { c: [24.5, 16], r: [8.5, 10.5] }, hob: { c: [25.5, 12], r: [9, 13] } };
+  const CARRIED = { townswoman: { box: [22, 32, 54, 78], hue: 22, hueR: 22, sMin: 0.26, lMin: 0.1, lMax: 0.72 } };   // her clay jar
+  // a recolour of one of these is a state of the whole person (the Hollows: faded, grey-blue), not dyed cloth: left alone
+  const STATE_SOURCES = ['hollow'];
+  function nameOf(sp) { try { if (typeof Engine !== 'undefined' && Engine.sprites) for (const k of Object.keys(Engine.sprites)) { const o = Engine.sprites[k]; if (o && o.data === sp.data) return k; } } catch (e) { /* none */ } return null; }
   function measure(sp) {
+    const name = nameOf(sp);
     const w = sp.w, h = sp.h, d = sp.data, A = (i) => d[i] >>> 24;
     let top = -1, bot = -1;
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (A(y * w + x) >= 128) { if (top < 0) top = y; bot = y; break; }
@@ -74,6 +83,14 @@ const FACES124 = (function () {
     // Hollow) keeps its head and neck only: its maker already leaves grey alone, and its grey rags match grey skin.
     // (A held thing is not kept: tried, a rule for "warmer than skin, at the hands" kept the townsman's leather apron
     // in blotches and still missed the townswoman's jar, so the jar takes its owner's tint as before.)
+    // the head keeps its face (flesh) and its hair, brows and beard (darker than the lit skin, and brown), below the
+    // top third of the head where a cap sits; the kerchief or cap round them takes the dye with the rest of the cloth
+    const hairY = top + (neckY - top) * 0.3;
+    const isHair = (v) => { const c = hsl(v & 255, (v >> 8) & 255, (v >> 16) & 255); return c[2] < F.lLo + 0.02 && c[2] > 0.04 && c[1] >= 0.12 && hueDist(c[0], hue) <= 28; };   // brown: the cap's grey-green folds and the kerchief's grey shadows are not
+    // In these paintings the kerchief and the cap share the skin's hue, saturation and lightness, so colour cannot part
+    // them: where the face's oval has been measured on the painting (FACE), the oval is kept, every pixel of it (face,
+    // brows, beard and the hair framing it), and the head-cloth round it is dyed. Elsewhere, flesh and brown hair by tone.
+    const FO = name && Object.prototype.hasOwnProperty.call(FACE, name) ? FACE[name] : null;
     let rig = null; try { if (typeof PAINTFOLK !== 'undefined' && PAINTFOLK.autorig) rig = PAINTFOLK.autorig(sp); } catch (e) { rig = null; }
     const J = rig && rig.J ? rig.J : { elbowR: [hx - headW, top + H * 0.36], handR: [hx - headW, top + H * 0.52], elbowL: [hx + headW, top + H * 0.36], handL: [hx + headW, top + H * 0.52] };
     const segD = (px, py, a, b) => { const vx = b[0] - a[0], vy = b[1] - a[1], L2 = vx * vx + vy * vy || 1, t = Math.max(0, Math.min(1, ((px - a[0]) * vx + (py - a[1]) * vy) / L2)); return Math.hypot(px - a[0] - t * vx, py - a[1] - t * vy); };
@@ -82,9 +99,10 @@ const FACES124 = (function () {
     const nearHand = (x, y) => Math.hypot(x - J.handR[0], y - J.handR[1]) <= handR || Math.hypot(x - J.handL[0], y - J.handL[1]) <= handR;
     const seed = new Uint8Array(w * h);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = y * w + x; if (A(i) < 128) continue;
-      if (y <= neckY) { seed[i] = 1; continue; }
       const v = d[i];
-      if (isFlesh(v) && ((y <= yNeck && Math.abs(x - hx) <= headW * 0.6) || (!F.grey && (nearHand(x, y) || segD(x, y, foreR, J.handR) <= armR || segD(x, y, foreL, J.handL) <= armR)))) seed[i] = 1;
+      if (FO) { const ex = (x - FO.c[0]) / FO.r[0], ey = (y - FO.c[1]) / FO.r[1]; if (ex * ex + ey * ey <= 1) { seed[i] = 1; continue; } if (y <= neckY) continue; }
+      else if (y <= neckY) { if (isFlesh(v) || (y >= hairY && Math.abs(x - hx) <= headW * 0.6 && isHair(v))) seed[i] = 1; continue; }
+      if (isFlesh(v) && ((y <= yNeck && Math.abs(x - hx) <= headW * 0.35) || (!F.grey && (nearHand(x, y) || segD(x, y, foreR, J.handR) <= armR || segD(x, y, foreL, J.handL) <= armR)))) seed[i] = 1;
     }
     const seen = new Uint8Array(w * h), stack = [];
     const comps = (mark, keep) => { seen.fill(0); for (let i = 0; i < w * h; i++) {
@@ -95,12 +113,24 @@ const FACES124 = (function () {
       keep(comp);
     } };
     comps(seed, (comp) => { if (comp.length < 4) for (const j of comp) seed[j] = 0; });
+    // a thing carried that is plainly not cloth keeps the painting's colour: its own tones inside the box where it sits,
+    // the biggest clump there (CARRIED, measured on the painting)
+    let carried = null; const C = name && Object.prototype.hasOwnProperty.call(CARRIED, name) ? CARRIED[name] : null;
+    if (C) { carried = new Uint8Array(w * h); const mark = new Uint8Array(w * h);
+      for (let y = C.box[1]; y <= C.box[3] && y < h; y++) for (let x = C.box[0]; x <= C.box[2] && x < w; x++) { const i = y * w + x; if (A(i) < 128) continue; const v = d[i], c = hsl(v & 255, (v >> 8) & 255, (v >> 16) & 255);
+        if (hueDist(c[0], C.hue) <= C.hueR && c[1] >= C.sMin && c[2] >= C.lMin && c[2] <= C.lMax) mark[i] = 1; }
+      let best = null; seen.fill(0);
+      for (let i = 0; i < w * h; i++) { if (!mark[i] || seen[i]) continue; const comp = []; stack.push(i); seen[i] = 1;
+        while (stack.length) { const j = stack.pop(); comp.push(j); const x = j % w, y = (j / w) | 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue; const k = yy * w + xx; if (mark[k] && !seen[k]) { seen[k] = 1; stack.push(k); } } }
+        if (!best || comp.length > best.length) best = comp; }
+      if (best && best.length >= 60) for (const j of best) { carried[j] = 1; seed[j] = 1; } else carried = null;
+    }
     // grown by one pixel and smoothed (3 by 3), so no fringe of tinted pixels is left round a face or at a cuff
     const grown = new Float32Array(w * h);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { let m = 0; for (let dy = -1; dy <= 1 && !m; dy++) for (let dx = -1; dx <= 1; dx++) { const xx = x + dx, yy = y + dy; if (xx >= 0 && yy >= 0 && xx < w && yy < h && seed[yy * w + xx]) { m = 1; break; } } grown[y * w + x] = m; }
     const wt = new Float32Array(w * h);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { let s = 0, c = 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue; s += grown[yy * w + xx] * (dx || dy ? 1 : 2); c += dx || dy ? 1 : 2; } wt[y * w + x] = seed[y * w + x] ? 1 : Math.min(1, (s / c) * 1.5); }
-    return { w, h, top, bot, neckY, hx, headW, flesh: F, isFlesh, seed, wt, hands: [J.handR, J.handL], holding };
+    return { w, h, top, bot, neckY, hx, headW, flesh: F, isFlesh, isHair, seed, wt, carried, faceOval: FO, hands: [J.handR, J.handL], holding };
   }
   // keyed by the pixels, not the sprite: a painting that arrives later replaces a sprite's pixels, and is measured afresh
   function maskOf(sp) { if (!sp || !sp.data) return null; let m = MASKS.get(sp.data); if (m === undefined) { const t0 = now(); try { m = measure(sp); } catch (e) { warnOnce('measure', e); m = null; } stats.ms += now() - t0; stats.masks++; MASKS.set(sp.data, m); } return m; }
@@ -113,7 +143,7 @@ const FACES124 = (function () {
   const REG = [];
   function keptOf(e) {
     if (e.kept) return e.kept;
-    const m = maskOf(e.from), out = new Uint32Array(e.tinted);
+    const m = maskOf(e.from), out = new Uint32Array(e.base);
     if (m && m.w === e.from.w && m.h === e.from.h) {
       const s = e.from.data;
       for (let i = 0; i < out.length; i++) { const k = m.wt[i]; if (k <= 0) continue; const a = out[i] >>> 24; if (!a) continue; const p = out[i], q = s[i];
@@ -123,11 +153,15 @@ const FACES124 = (function () {
     }
     return (e.kept = out);
   }
-  function skin(src, data, name) {
+  // whole (optional): the maker's tint with nothing spared by colour (js/life60.js spares flesh-coloured pixels by colour,
+  // which left orange specks in the cloth); used as the cloth when the switch is on. data stays the maker's own when off.
+  function skin(src, data, name, whole) {
     try {
       if (!src || !src.data || !data || data.length !== src.data.length) return data;
+      if (typeof Engine !== 'undefined' && Engine.sprites && STATE_SOURCES.some((k) => Engine.sprites[k] === src)) return data;
       const t0 = now();
-      const e = { src, from: { w: src.w, h: src.h, data: src.data }, data, tinted: new Uint32Array(data), kept: null, name: name || null };   // the pixels the maker read
+      const e = { src, from: { w: src.w, h: src.h, data: src.data }, data, tinted: new Uint32Array(data), kept: null, name: name || null };
+      e.base = whole && whole.length === data.length ? new Uint32Array(whole) : e.tinted;   // the pixels the maker read
       REG.push(e); stats.recolours++;
       e.isKept = on(); if (e.isKept) data.set(keptOf(e));
       stats.applyMs += now() - t0;
@@ -180,6 +214,6 @@ const FACES124 = (function () {
   }
   try { wireRow(); } catch (e) { warnOnce('wire', e); }
 
-  return { FLAG, ROW, skin, maskOf, hsl, hueDist, on, sync, recolours: () => REG.map((e) => ({ name: e.name, src: e.src, from: e.from, data: e.data, tinted: e.tinted })), stats: () => Object.assign({}, stats) };
+  return { FLAG, ROW, skin, maskOf, hsl, hueDist, on, sync, recolours: () => REG.map((e) => ({ name: e.name, src: e.src, from: e.from, data: e.data, tinted: e.tinted, base: e.base })), stats: () => Object.assign({}, stats) };
 })();
 if (typeof window !== 'undefined') window.FACES124 = FACES124;

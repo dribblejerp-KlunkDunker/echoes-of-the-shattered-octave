@@ -50,16 +50,17 @@ const LIFE60 = (function () {
   function variant(src, dst, hueTo, satK, litK) {
     try {
       const s = Engine.sprites[src]; if (!s || Engine.sprites[dst]) return;
-      const d = new Uint32Array(s.data.length);
+      const d = new Uint32Array(s.data.length), all = typeof FACES124 !== 'undefined' ? new Uint32Array(s.data.length) : null;   // all: the tint with no flesh spared (Phase 124b)
       for (let i = 0; i < d.length; i++) {
-        const v = s.data[i], a = v >>> 24; if (!a) { d[i] = v; continue; }
+        const v = s.data[i], a = v >>> 24; if (!a) { d[i] = v; if (all) all[i] = v; continue; }
         const r = v & 255, g = (v >> 8) & 255, b = (v >> 16) & 255, [h, sa, l] = hsl(r, g, b);
         const skin = h >= 8 && h <= 42 && sa > 0.18 && sa < 0.75 && l > 0.42 && l < 0.86;
-        if (skin || l < 0.14 || sa < 0.08) { d[i] = v; continue; }
-        const [R, Gc, B] = rgb(hueTo, Math.min(1, sa * satK), Math.min(0.92, l * litK));
-        d[i] = (a << 24) | (B << 16) | (Gc << 8) | R;
+        if (l < 0.14 || sa < 0.08) { d[i] = v; if (all) all[i] = v; continue; }
+        if (skin && !all) { d[i] = v; continue; }
+        const [R, Gc, B] = rgb(hueTo, Math.min(1, sa * satK), Math.min(0.92, l * litK)), t = (a << 24) | (B << 16) | (Gc << 8) | R;
+        d[i] = skin ? v : t; if (all) all[i] = t;
       }
-      if (typeof FACES124 !== 'undefined') FACES124.skin(s, d, dst);   // Phase 124b: the skin and hair keep the painting's own colours
+      if (typeof FACES124 !== 'undefined') FACES124.skin(s, d, dst, all);   // Phase 124b: the skin and hair keep the painting's own colours
       Engine.addSprite(dst, Object.assign({}, s, { data: d }));
     } catch (e) { warnOnce('variant', e); }
   }
