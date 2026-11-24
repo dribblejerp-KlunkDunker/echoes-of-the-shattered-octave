@@ -331,7 +331,7 @@ function partyHud() {
   el.classList.remove('hidden');
   el.classList.toggle('low', P.hp < mx * 0.35);
   el.classList.toggle('ready', !(P.cd > 0));
-  const img = el.querySelector('.pp'); if (img.dataset.id !== P.id) { img.src = `img/p_${C.portrait}.jpg`; img.dataset.id = P.id; }
+  const img = el.querySelector('.pp'); if (img.dataset.id !== P.id) { img.src = `img/p_${(typeof FACES124 !== 'undefined' && FACES124.portrait ? FACES124.portrait(C) : C.portrait)}.jpg`; img.dataset.id = P.id; }
   el.querySelector('.pn').textContent = C.name.split(' ')[0] + (P.map !== G.mapId ? ' (elsewhere)' : '');
   el.querySelector('.pbar i').style.width = Math.max(0, Math.min(100, P.hp / mx * 100)) + '%';
   el.querySelector('.po').textContent = 'G · ' + PARTY_ORDER_NAME[P.order];

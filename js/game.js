@@ -1734,7 +1734,7 @@ function sellRows(n) {
 }
 function renderDialogue(mode) {
   const n = DLG.npc;
-  const html = `<h2>${n.name.split(',')[0]}</h2><div class="dlg"><div class="port"><img src="img/p_${n.portrait}.jpg" alt=""><div class="name">${n.name}</div></div>
+  const html = `<h2>${n.name.split(',')[0]}</h2><div class="dlg"><div class="port"><img src="img/p_${(typeof FACES124 !== 'undefined' && FACES124.portrait ? FACES124.portrait(n) : n.portrait)}.jpg" alt=""><div class="name">${n.name}</div></div>
   <div class="col"><div class="log" id="dlg-log">${DLG.log.map(l => `<div class="${l.who}">${l.who === 'you' ? '— ' : ''}${l.t}</div>`).join('')}</div>
   <div class="btns"><button class="dfbtn small ${mode === 'tell' ? 'sel' : ''}" id="d-tell">Tell me about…</button><button class="dfbtn small ${mode === 'where' ? 'sel' : ''}" id="d-where">Where is…</button>${n.shop ? `<button class="dfbtn small ${mode === 'buy' ? 'sel' : ''}" id="d-buy">Buy…</button><button class="dfbtn small ${mode === 'sell' ? 'sel' : ''}" id="d-sell">Sell…</button>` : ''}${DLG.choices ? `<button class="dfbtn small ${mode === 'choice' ? 'sel' : ''}" id="d-answer">Answer…</button>` : ''}
   <span class="tone">${['polite', 'normal', 'blunt'].map(t => `<button class="dfbtn small ${DLG.tone === t ? 'sel' : ''}" data-t="${t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}</span>
