@@ -982,14 +982,16 @@ const KESTREL16 = (function () {
       r *= 0.7; g *= 0.86; b *= 1.04;
       d[i] = ((p >>> 24) << 24 | (Math.min(255, b | 0) << 16) | (Math.min(255, g | 0) << 8) | (r | 0)) >>> 0;
     }
-    if (typeof FACES124 !== 'undefined') FACES124.skin(src, d, 'p16k_pennick');   // Phase 124b: the skin and hair keep the painting's own colours
-    // goggles on the forehead: two brass-rimmed lenses
+    // goggles pushed up onto the cap: two brass-rimmed lenses. (They were drawn at 0.15 of the height, which on this painting
+    // is the beard; nobody saw it, because the figure was never made. Phase 124b.) Drawn before the skin is given back, so
+    // that the helper's copy of this figure has them and they survive the Options switch.
     const w = src.w, h = src.h;
-    for (const cx of [Math.round(w * 0.42), Math.round(w * 0.58)]) for (let dy = -2; dy <= 2; dy++) for (let dx = -3; dx <= 3; dx++) {
-      if (dx * dx / 9 + dy * dy / 4 > 1.1) continue;
-      const y = Math.round(h * 0.15) + dy, x = cx + dx; if (x < 0 || y < 0 || x >= w || y >= h) continue;
-      d[y * w + x] = (dx * dx / 9 + dy * dy / 4 > 0.55) ? 0xff2c88b0 : 0xffd8e6e0;
+    for (const cx of [Math.round(w * 0.44), Math.round(w * 0.56)]) for (let dy = -2; dy <= 2; dy++) for (let dx = -3; dx <= 3; dx++) {
+      if (dx * dx / 6.5 + dy * dy / 4 > 1.1) continue;
+      const y = Math.round(h * 0.058) + dy, x = cx + dx; if (x < 0 || y < 0 || x >= w || y >= h) continue;
+      d[y * w + x] = (dx * dx / 6.5 + dy * dy / 4 > 0.55) ? 0xff2c88b0 : 0xff7c8c88;
     }
+    if (typeof FACES124 !== 'undefined') FACES124.skin(src, d, 'p16k_pennick');   // Phase 124b: the skin and hair keep the painting's own colours
     Engine.addSprite('p16k_pennick', Object.assign({}, src, { data: d }));
   }
 
