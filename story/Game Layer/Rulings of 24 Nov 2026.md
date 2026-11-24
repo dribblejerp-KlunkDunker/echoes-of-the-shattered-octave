@@ -46,3 +46,4 @@ Canva then ran out of credit. Shown the first portrait made on his own Hugging F
 | --- | --- |
 | **The look of the painted portraits is approved, from either tool.** | The rest are made on the owner's Hugging Face (the Z-Image-Turbo Space), each prompt and seed written down. Phase 124d put the next six in. |
 | Hugging Face PRO (5:37 pm): "I will get huggingface pro when I get paid this week". | Until then the faces come at about nine a day on the free account. Once he says PRO is on, the rest of the named people are made in a day or two. |
+| Brenna Loft (5:55 pm): "leave Brenna at 30". | Her portrait stays as painted. Her true age in the prompts list is now thirty. |

@@ -71,7 +71,7 @@ Every prompt is this, with the subject put in:
 ## Left for the owner
 
 1. Whether to pay for Hugging Face PRO so the rest can be made in a day or two, or let them come at about nine a day.
-2. Brenna Loft came out about thirty. Say if she should be older.
+2. Brenna Loft came out about thirty. **Ruled 24 Nov, 5:55 pm: "leave Brenna at 30".** She stays as painted.
 
 ## Not done
 
