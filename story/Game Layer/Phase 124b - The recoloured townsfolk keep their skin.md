@@ -94,7 +94,16 @@ dock-woman in place of the Hollow, and a small panel of a Hollow unchanged with 
 
 ## 5. What is left
 
-- Pennick (above).
+- Pennick: put right in integration (below).
 - The face ovals and the jar's box are measured by hand on three paintings. A new source painting needs its own (without
   one it falls back to flesh and brown-hair tones in the head, which keeps a kerchief whose colour is close to skin).
 - A little of the townsman's linen collar at the neck opening stays undyed, because linen and skin share a tone there.
+
+## 6. Pennick, found by the survey and put right in integration (24 Nov)
+
+The survey above found that `paintPennick` (js/kestrel16.js) ran once at script load, before the townsman's painting existed, and never again. Checked in a started game: `Engine.sprites.p16k_pennick` did not exist, and the engine draws nothing for a figure it does not have. **So the Kestrel's engineer has had no figure since Phase 16:** aboard, he could be spoken to and not seen.
+
+- A failing check first (`test/skin124.test.js`: he has a figure in a started game, and its face is the painting's own). Then the fix: his figure is made when the maps are built, when the paintings are in.
+- His goggles "pushed up" were drawn at 0.15 of the figure's height, which on this painting is the beard; nobody had seen it. A second failing check, then they were moved up onto the cap, and are drawn before the skin is given back so that they survive the Options switch (the helper keeps its own copy of each figure, and a copy taken before the goggles lost them at the first change of the switch).
+- **For the owner, with the faces ruling:** Book One calls Pennick "the boy" once ("Somewhere in the night the boy had found the note", l. 1657; "Like a baby with a rattle", l. 1333). His figure is the townsman's painting recoloured: a grown, bearded man. A boy cannot be made from that painting in code. The goggles are the game's own [PROPOSED, Phase 16]; no book gives him any.
+

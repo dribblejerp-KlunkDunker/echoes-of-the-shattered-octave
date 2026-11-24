@@ -555,6 +555,10 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The recoloured townsfolk keep their skin (Phase 124b).** Thirty-six people in the game are the townsman's, the townswoman's or Hob's painted figure in other colours: the packman on the road, Oona Salt and the harbour's people, the Flume's dock-folk, the market's and the sheepwalk's. The recolour used to tint the whole painting, so a man in a blue coat had a blue face. Now only the cloth takes the dye: faces, hair, hands and the jar the townswoman carries keep the painting's own colours, and kerchiefs and caps are dyed with the rest. The Hollows, who are faded all over, are left exactly as they were. Options: "Recoloured people keep their skin" (off in the Original preset). The same survey found that Pennick, the Kestrel's engineer, has had no figure at all since he was added; he has one now, with his goggles pushed up on his cap.
+
+![Phase 124b: eight recoloured people before and after, the packman and Oona Salt in the game, and a Hollow left as made](screenshots/p124-skin.jpg)
+
 **Roofs for the later places (Phase 116).** Three places built after the older towns had walls and no roofs in the 3D view. Each now has its own, and its houses are raised as the older towns' were. **Sun-Peak Vigil:** pale stone slates, snow lying on the west pitches and bare wet slate on the lee side, a covered walk on the white pillars, a stone cap over the bell, and one thin smoke. **Null-Watch:** low roofs of dull grey lead with rolled seams and edges, black with the wall by night; nothing on the wall, its towers, batteries, cart gate or yard. **Cross Pool:** mossed slate standing out of the water, sagging ridges and slipped courses, and the weavers' long windows under the eaves. It follows the existing Options switch "Roofs, windows and eaves" (off in the Original preset).
 
 ![Phase 116: before and after at Sun-Peak Vigil, Null-Watch by day and night, and Cross Pool](screenshots/p116-roofs.jpg)
