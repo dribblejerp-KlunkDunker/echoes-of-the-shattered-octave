@@ -982,6 +982,7 @@ const KESTREL16 = (function () {
       r *= 0.7; g *= 0.86; b *= 1.04;
       d[i] = ((p >>> 24) << 24 | (Math.min(255, b | 0) << 16) | (Math.min(255, g | 0) << 8) | (r | 0)) >>> 0;
     }
+    if (typeof FACES124 !== 'undefined') FACES124.skin(src, d, 'p16k_pennick');   // Phase 124b: the skin and hair keep the painting's own colours
     // goggles on the forehead: two brass-rimmed lenses
     const w = src.w, h = src.h;
     for (const cx of [Math.round(w * 0.42), Math.round(w * 0.58)]) for (let dy = -2; dy <= 2; dy++) for (let dx = -3; dx <= 3; dx++) {
