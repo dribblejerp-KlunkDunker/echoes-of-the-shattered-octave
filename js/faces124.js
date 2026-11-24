@@ -13,6 +13,8 @@
 //  Switch: GFX.keepSkin, Options > Graphics "Recoloured people keep their skin", on by default, off in Original
 //  (PRESETS.keep). Off, every sprite is byte for byte what its maker made: the maker's own pixels are kept, and the
 //  switch swaps them back in place. Nothing here uses Math.random.
+//  Phase 124c: FACES124.OWN and FACES124.portrait(npcOrId), faces of their own for the people who borrow the townsman's
+//  or the townswoman's portrait (switch GFX.ownFaces, "Faces of their own"); see the section near the end.
 //  Loaded before js/mast123.js, which must stay the last script (its map wrapper is the outermost: old saves).
 // ============================================================================
 const FACES124 = (function () {
@@ -214,6 +216,92 @@ const FACES124 = (function () {
   }
   try { wireRow(); } catch (e) { warnOnce('wire', e); }
 
-  return { FLAG, ROW, skin, maskOf, hsl, hueDist, on, sync, recolours: () => REG.map((e) => ({ name: e.name, src: e.src, from: e.from, data: e.data, tinted: e.tinted, base: e.base })), stats: () => Object.assign({}, stats) };
+  // ================================================================ Phase 124c: faces of their own
+  // People who borrow the townsman's or the townswoman's portrait get a painted portrait of their own (the owner's
+  // ruling of 24 Nov 2026: made with a picture-making tool in the style of the first twenty-eight, for portraits only).
+  // OWN: the person's NPC id (or, where several NPC ids are one person, the figure's sprite id that they all wear) ->
+  // the file stem of img/p_<stem>.jpg, 96 by 96. A later portrait is one file and one row here; test/own124.test.js
+  // checks every row. Only someone who borrows one of the two faces is ever served: the twenty-eight painted
+  // portraits and the people who have them are never touched. Mood faces (js/portraits.js) are for the story's
+  // portraits only, so an own portrait has none, as any minor portrait.
+  // Switch: GFX.ownFaces, Options > Graphics "Faces of their own", on by default, off in Original (PRESETS.keep). Off,
+  // portrait() returns the entry's own portrait, so every talk window is what it was.
+  const OWN = {
+    p113f_marrable: 'own_marrable',   // Old Marrable, the Fold's lamp-teller (js/fold113.js)
+    p100_tr_b: 'own_watch132',        // trooper 132 of the Null-Watch: the figure, worn by NPCS.p100_tr_b (js/rift100.js) and NPCS.p113_trooper at the tip (js/tip113.js)
+    p97_tallyman: 'own_tallyman',     // the Tallyman of the White Mile (js/whitemile97.js)
+  };
+  const OWN_FLAG = 'ownFaces', BORROWED = ['townsman', 'townswoman'];
+  try {
+    if (typeof GFX !== 'undefined') {
+      if (GFX.FX && !GFX.FX.includes(OWN_FLAG)) GFX.FX.push(OWN_FLAG);
+      if (typeof PRESETS !== 'undefined' && PRESETS.keep) PRESETS.keep(OWN_FLAG); else if (GFX[OWN_FLAG] === undefined) GFX[OWN_FLAG] = true;
+    }
+  } catch (e) { /* no GFX: a tool's page */ }
+  const ownOn = () => typeof GFX === 'undefined' || GFX[OWN_FLAG] !== false;
+  const hasOwn = (k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(OWN, k);
+  const IDS = new WeakMap();
+  function idOf(n) {
+    if (IDS.has(n)) return IDS.get(n);
+    try { if (typeof NPCS !== 'undefined') for (const k of Object.keys(NPCS)) if (NPCS[k] === n) { IDS.set(n, k); return k; } } catch (e) { /* none */ }
+    return null;   // not (yet) in the table: not remembered, so a person added later is found
+  }
+  // servedBy(npcOrId): the OWN row that serves this person (switch on or off), or null
+  function servedBy(x) {
+    try {
+      const id = typeof x === 'string' ? x : x && typeof x === 'object' ? idOf(x) : null;
+      const n = typeof x === 'string' ? (typeof NPCS !== 'undefined' ? NPCS[x] : null) : x;
+      if (!n || typeof n !== 'object' || !BORROWED.includes(n.portrait) || BORROWED.includes(id)) return null;
+      if (hasOwn(id)) return id;
+      if (hasOwn(n.sprite)) return n.sprite;
+    } catch (e) { warnOnce('servedBy', e); }
+    return null;
+  }
+  // portrait(npcOrId): the portrait name to show (img/p_<name>.jpg): the person's own if the switch is on and OWN has
+  // them, otherwise exactly the entry's own portrait, as before
+  function portrait(x) {
+    const n = typeof x === 'string' ? (typeof NPCS !== 'undefined' ? NPCS[x] : null) : x;
+    const base = n && typeof n === 'object' ? n.portrait : undefined;
+    if (!ownOn()) return base;
+    const k = servedBy(x); return k ? OWN[k] : base;
+  }
+  const OWN_ROW = ['gfx-ownfaces124', 'Faces of their own', 'the people met since Book One have painted portraits of their own in the talk window'];
+  function syncOwnRow() {
+    if (typeof document === 'undefined') return;
+    const b = document.getElementById(OWN_ROW[0]); if (!b) return;
+    const v = ownOn(); b.textContent = v ? 'On' : 'Off'; b.setAttribute('aria-pressed', v ? 'true' : 'false'); b.classList.toggle('sel', v);
+  }
+  function setOwn(v) {
+    GFX[OWN_FLAG] = !!v;
+    if (typeof PRESETS !== 'undefined' && PRESETS.current) GFX.preset = PRESETS.current();
+    if (GFX.changed) GFX.changed();
+    syncOwnRow();
+  }
+  try { if (typeof GFX !== 'undefined' && GFX.onChange) GFX.onChange(syncOwnRow); } catch (e) { warnOnce('onChange own', e); }
+  // the row sits right after "Recoloured people keep their skin" (this wrapper is outside that one, so it runs after it)
+  function wireOwnRow() {
+    if (typeof renderAccessibilityMenu !== 'function' || typeof document === 'undefined') return;
+    const _acc = renderAccessibilityMenu;
+    renderAccessibilityMenu = function () {
+      const r = _acc.apply(this, arguments);
+      try {
+        const grid = document.querySelector('#modal-panel .ctl-grid');
+        if (grid && !document.getElementById(OWN_ROW[0])) {
+          const lab = document.createElement('span'); lab.className = 'gfx-label'; lab.appendChild(document.createTextNode(OWN_ROW[1] + ' '));
+          const sm = document.createElement('small'); sm.className = 'muted'; sm.textContent = OWN_ROW[2]; lab.appendChild(sm);
+          const b = document.createElement('button'); b.className = 'dfbtn small'; b.id = OWN_ROW[0]; b.type = 'button'; b.setAttribute('aria-label', OWN_ROW[1]);
+          b.onclick = () => setOwn(!ownOn());
+          const after = document.getElementById(ROW[0]) || document.getElementById('gfx-curve');
+          if (after && after.parentNode === grid) { after.insertAdjacentElement('afterend', b); after.insertAdjacentElement('afterend', lab); }
+          else { grid.appendChild(lab); grid.appendChild(b); }
+          syncOwnRow();
+        }
+      } catch (e) { warnOnce('own row', e); }
+      return r;
+    };
+  }
+  try { wireOwnRow(); } catch (e) { warnOnce('wire own', e); }
+
+  return { FLAG, ROW, OWN, OWN_FLAG, OWN_ROW, portrait, servedBy, skin, maskOf, hsl, hueDist, on, sync, recolours: () => REG.map((e) => ({ name: e.name, src: e.src, from: e.from, data: e.data, tinted: e.tinted, base: e.base })), stats: () => Object.assign({}, stats) };
 })();
 if (typeof window !== 'undefined') window.FACES124 = FACES124;
