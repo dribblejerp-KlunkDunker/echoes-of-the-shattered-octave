@@ -240,6 +240,7 @@ const CALENDAR11 = (function () {
           const p = src.data[i], a = p >>> 24; if (!a) continue;
           data[i] = ((a << 24) | (clamp((p >> 16 & 255) * v.tint[2], 0, 255) << 16) | (clamp((p >> 8 & 255) * v.tint[1], 0, 255) << 8) | clamp((p & 255) * v.tint[0], 0, 255)) >>> 0;
         }
+        if (typeof FACES124 !== 'undefined') FACES124.skin(src, data, vn);   // Phase 124b: the skin and hair keep the painting's own colours
         Engine.addSprite(vn, { w: src.w, h: src.h, data, hs: src.hs, cx: src.cx, dy: src.dy });   // no `img`: only the pixel data is read
         spriteDone[vn] = true;
       }

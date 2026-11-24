@@ -69,18 +69,19 @@ const SURVEY = [
     if (typeof FACES124 === 'undefined' || !FACES124.maskOf) return null;
     const out = [];
     for (const [, n, s] of S) {
-      const src = Engine.sprites[s], sp = Engine.sprites[n]; if (!src || !sp) continue;
-      const m = FACES124.maskOf(src); if (!m) { out.push({ n, noMask: true }); continue; }
+      const sp = Engine.sprites[n]; if (!sp) continue;
+      const e = FACES124.recolours().find((x) => x.data === sp.data); if (!e) continue;
+      const src = e.from, m = FACES124.maskOf(src); if (!m) { out.push({ n, noMask: true }); continue; }   // the pixels the maker read
       const w = src.w, H = m.bot - m.top + 1, y0 = Math.round(m.top + (m.neckY - m.top) * 0.38);
-      let face = 0, faceBad = 0, hand = 0, handBad = 0, cloth = 0, clothChanged = 0;
+      let face = 0, faceBad = 0, hand = 0, handBad = 0, cloth = 0, clothChanged = 0, clothLost = 0;
       for (let i = 0; i < src.data.length; i++) {
         const q = src.data[i]; if ((q >>> 24) < 200) continue; const y = (i / w) | 0, x = i % w, v = sp.data[i];
         if ((v >>> 24) < 100) continue;   // a maker may drop faint pixels: not a face pixel any more
         if (y >= y0 && y < m.neckY && Math.abs(x - m.hx) <= m.headW * 0.28 && m.isFlesh(q)) { face++; if (!m.isFlesh(v)) faceBad++; }
         else if (y > m.neckY + H * 0.05 && m.seed[i] && m.isFlesh(q)) { hand++; if (!m.isFlesh(v)) handBad++; }
-        else if (m.wt[i] === 0) { cloth++; if ((v & 0xffffff) !== (q & 0xffffff)) clothChanged++; }
+        else if (m.wt[i] === 0) { cloth++; if ((e.tinted[i] & 0xffffff) !== (q & 0xffffff)) clothChanged++; if (v !== e.tinted[i]) clothLost++; }
       }
-      out.push({ n, face, faceBad, hand, handBad, cloth, clothChanged });
+      out.push({ n, face, faceBad, hand, handBad, cloth, clothChanged, clothLost });
     }
     return out;
   }, SURVEY);
@@ -88,7 +89,7 @@ const SURVEY = [
   await step('switch on: every face keeps the source painting\'s flesh (no pixel of the face outside its range)', async () => {
     assert.ok(check && check.length === SURVEY.length, 'measured ' + (check ? check.length : 0) + ' of ' + SURVEY.length);
     const bad = check.filter((c) => c.noMask || c.face < 20 || c.faceBad > 0).map((c) => c.n + ':' + (c.noMask ? 'no mask' : c.faceBad + '/' + c.face));
-    assert.deepStrictEqual(bad, []);
+    assert.deepStrictEqual(bad, [], bad.join(' '));
   });
   await step('switch on: hands, arms and legs keep it too (the townsman\'s and townswoman\'s recolours have bare skin below the neck)', async () => {
     const bad = check.filter((c) => c.handBad > 0).map((c) => c.n + ':' + c.handBad + '/' + c.hand);
@@ -96,9 +97,9 @@ const SURVEY = [
     const noHands = check.filter((c) => /^p60_|^p17c_teague|^p22_/.test(c.n) && c.hand < 8).map((c) => c.n);
     assert.deepStrictEqual(noHands, [], 'no bare skin found below the neck');
   });
-  await step('the cloth still takes its tint (a third or more of the cloth changes colour in every recolour)', async () => {
-    const bad = check.filter((c) => c.cloth < 100 || c.clothChanged < c.cloth / 3).map((c) => c.n + ':' + c.clothChanged + '/' + c.cloth);
-    assert.deepStrictEqual(bad, []);
+  await step('the cloth still takes its tint: every cloth pixel is the maker\'s own, and a third or more of it is tinted (the Hollows\' grey rags excepted: their maker leaves grey alone)', async () => {
+    const bad = check.filter((c) => c.cloth < 100 || c.clothLost > 0 || (!/^p62_hollow/.test(c.n) && c.clothChanged < c.cloth / 3)).map((c) => c.n + ':' + c.clothLost + ' lost, ' + c.clothChanged + '/' + c.cloth);
+    assert.deepStrictEqual(bad, [], bad.join(' '));
   });
 
   await step('switch off: every recolour is byte for byte its maker\'s pixels; Oona Salt equals the Cantabile multiply; on again restores', async () => {
@@ -130,7 +131,7 @@ const SURVEY = [
   });
 
   await step('the cost: measuring a source painting\'s mask is under 40 ms each, and all of them under 200 ms', async () => {
-    const s = await page.evaluate(() => FACES124.stats());
+    const s = await page.evaluate(() => { for (const e of FACES124.recolours()) FACES124.maskOf(e.from); return FACES124.stats(); });
     console.log('  cost: ' + JSON.stringify(s));
     assert.ok(s.masks >= 4 && s.ms / s.masks < 40 && s.ms < 200, JSON.stringify(s));
   });

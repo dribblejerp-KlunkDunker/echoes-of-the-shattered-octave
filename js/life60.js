@@ -59,6 +59,7 @@ const LIFE60 = (function () {
         const [R, Gc, B] = rgb(hueTo, Math.min(1, sa * satK), Math.min(0.92, l * litK));
         d[i] = (a << 24) | (B << 16) | (Gc << 8) | R;
       }
+      if (typeof FACES124 !== 'undefined') FACES124.skin(s, d, dst);   // Phase 124b: the skin and hair keep the painting's own colours
       Engine.addSprite(dst, Object.assign({}, s, { data: d }));
     } catch (e) { warnOnce('variant', e); }
   }

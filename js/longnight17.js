@@ -368,6 +368,7 @@ const LONGNIGHT17 = (function () {
       const r = Math.min(255, (p & 255) * k[0]), g = Math.min(255, ((p >>> 8) & 255) * k[1]), b = Math.min(255, ((p >>> 16) & 255) * k[2]);
       d[i] = ((a << 24) | ((b | 0) << 16) | ((g | 0) << 8) | (r | 0)) >>> 0;
     }
+    if (typeof FACES124 !== 'undefined') FACES124.skin(sp, d, dst);   // Phase 124b: the skin and hair keep the painting's own colours
     Engine.addSprite(dst, Object.assign({}, sp, { data: d }));
   }
   // The Hollow as a FOE needs the five poses every enemy species has (walk and attack frames: js/anim.js, js/directions.js).
