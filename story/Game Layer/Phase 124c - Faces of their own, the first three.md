@@ -318,4 +318,6 @@ The full list, from the test's own output (`still borrows:` lines), with where e
 
 ## Checks
 
-`test/own124.test.js` (11 checks; written first and committed failing). Suites run on the final code are listed in the commit that closes the phase.
+`test/own124.test.js` (11 checks; written first and committed failing: 3 passed, 8 failed). On the final code: own124 11/11, skin124 13/13, portraits 16/16, companion-talk 124/124, companions 1/1, fold113 45/45, tip113 38/38, rift100 35/35, whitemile97 30/30, folk20 16/16, presets 7/7 (alone), story-i18n 17/17, pwa18 89/89, desktop 73/73, reader97 27/27. No test was changed.
+
+skin124 failed once (8 of 13) while run beside another browser job: most recolours had not been made yet when it looked (the paintings arrive late under load). Run alone on the same code it passes 13 of 13; it is load-sensitive, not broken by this phase (this phase changes nothing a recolour reads).
