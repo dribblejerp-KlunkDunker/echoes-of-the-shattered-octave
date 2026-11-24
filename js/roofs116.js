@@ -73,7 +73,7 @@ const ROOFS116 = (() => {
       // shadow under each course's lower edge (the slates are an inch thick)
       { const row = y >> 4, e = y & 15, off = ((h2(row, 17) * 24) | 0) + row * 11, sx = (x + off) % 64, slate = (sx / 21) | 0, joint = sx % 21 === 0;
         const tone = 0.9 + h2(slate + row * 7, 31) * 0.14, k = tone * (e >= 14 ? 0.56 : e === 13 ? 0.78 : e === 0 ? 1.08 : 1) * (joint ? 0.66 : 1) + n * 0.05 + (h2(x >> 3, y >> 3) - 0.5) * 0.04;
-        vslate[i] = rgb(186 * k, 182 * k, 172 * k); }
+        vslate[i] = rgb(158 * k, 156 * k, 150 * k); }
       // snow lying on the weather pitch: white going blue in the hollows, the courses faintly under it, wind-ribbed
       { const rib = Math.sin((x * 0.21 + y * 0.09) + h2(x >> 3, 7) * 2) * 0.5 + 0.5, course = (y & 15) >= 14 ? 0.95 : 1, k = (0.93 + rib * 0.05 + n * 0.03) * course;
         snow[i] = rgb(226 * k, 232 * k, 240 * k + 4); }
@@ -144,7 +144,7 @@ const ROOFS116 = (() => {
       let y0 = court[1], y1 = court[3]; while (y0 > 0 && isRange(x0, y0 - 1) && isRange(x1, y0 - 1)) y0--; while (y1 < m.h - 1 && isRange(x0, y1 + 1) && isRange(x1, y1 + 1)) y1++;
       let ok = true; for (let y = y0; y <= y1 && ok; y++) for (let x = x0; x <= x1; x++) if (!isRange(x, y)) { ok = false; break; }
       if (!ok) { warnOnce('range ' + side, 'not a range'); continue; }
-      const b = gable(m, { x0, y0, x1, y1 }, { axis: 'y', top: 3.6, stone: true, wallTex: 't_p96v_stone', gableTex: 't_p96v_stone', boardTex: 't_p96v_stone', ridgeTex: 'r116_vridge', roofTex: 'r116_vslate', pitch: 0.92, over: 0.26, verge: 0.14, label: 'the ' + side + ' range' });
+      const b = gable(m, { x0, y0, x1, y1 }, { axis: 'y', top: 3.6, stone: true, wallTex: 't_p96v_stone', gableTex: 't_p96v_stone', boardTex: 't_p96v_stone', ridgeTex: 'r116_vridge', roofTex: 'r116_vslate', pitch: 0.92, over: 0.12, verge: 0.14, label: 'the ' + side + ' range' });
       b.r116 = { kind: 'vigil-range', snow: 'west', side };
       b.extras.push({ kind: 'r116_snow', x: 0, y: 0, nx: 0, ny: 1 });
       // the twelve keep one fire: one stack, on the west range's ridge, over the middle of the cells
@@ -418,7 +418,7 @@ const ROOFS116 = (() => {
     if (pent) {
       // the beam on the pillars, the slates rising from it to the ranges and walls; the north wall and the gate passage
       // given a coping to meet the pentice's head
-      const X0 = pent.x0, X1 = pent.x1 + 1, Y0 = pent.y0, Y1 = pent.y1 + 1, [i0, j0, i1, j1] = pent.inner, zH = 3.3, zL = 2.72, o = 0.22, k = (zH - zL) / (i0 - X0), zE = zL - o * k;
+      const X0 = pent.x0, X1 = pent.x1 + 1, Y0 = pent.y0, Y1 = pent.y1 + 1, [i0, j0, i1, j1] = pent.inner, zH = 3.5, zL = 2.74, o = 0.22, k = (zH - zL) / (i0 - X0), zE = zL - o * k;
       const e0 = i0 + o, e1 = i1 - o, f0 = j0 + o, f1 = j1 - o;
       const faces = [
         [[X0, Y0, zH], [X1, Y0, zH], [e1, f0, zE], [e0, f0, zE], 0.92, 'n'], [[X1, Y1, zH], [X0, Y1, zH], [e0, f1, zE], [e1, f1, zE], 0.8, 's'],
@@ -427,13 +427,13 @@ const ROOFS116 = (() => {
         const up = T.planeN(p0, p1, p2, T.UP), len = hyp(p1[0] - p0[0], p1[1] - p0[1]), dx = (p1[0] - p0[0]) / len, dy = (p1[1] - p0[1]) / len, dep = hyp(i0 - X0 + o, zH - zE);
         const u = (q) => (q[0] - p0[0]) * dx + (q[1] - p0[1]) * dy, uv = [[0, 0], [len, 0], [u(p2), dep], [u(p3), dep]];
         T.quad([p0, p1, p2, p3], uv, side === 'e' ? Ls : Lsl, T.MAT.wall, sk, up);
-        T.quad([p0, p1, p2, p3].map((v) => [v[0], v[1], v[2] - 0.05]), uv, Lw, T.MAT.wall, 0.5, [-up[0], -up[1], -up[2]]);
+        T.quad([p0, p1, p2, p3].map((v) => [v[0], v[1], v[2] - 0.05]), uv, Lw, T.MAT.wall, 0.42, [-up[0], -up[1], -up[2]]);
       }
       // the fascia along the low edge
       for (const [pa, pb, nn] of [[[e0, f0], [e1, f0], [0, 1, 0]], [[e1, f1], [e0, f1], [0, -1, 0]], [[e0, f1], [e0, f0], [1, 0, 0]], [[e1, f0], [e1, f1], [-1, 0, 0]]])
-        T.quad([[pa[0], pa[1], zE - 0.08], [pb[0], pb[1], zE - 0.08], [pb[0], pb[1], zE + 0.01], [pa[0], pa[1], zE + 0.01]], [[0, 0.1], [hyp(pb[0] - pa[0], pb[1] - pa[1]), 0.1], [hyp(pb[0] - pa[0], pb[1] - pa[1]), 0], [0, 0]], Lv, T.MAT.wall, nn[0] ? 1 : 0.85, nn);
+        T.quad([[pa[0], pa[1], zE - 0.2], [pb[0], pb[1], zE - 0.2], [pb[0], pb[1], zE + 0.01], [pa[0], pa[1], zE + 0.01]], [[0, 0.21], [hyp(pb[0] - pa[0], pb[1] - pa[1]), 0.1], [hyp(pb[0] - pa[0], pb[1] - pa[1]), 0], [0, 0]], Lv, T.MAT.wall, nn[0] ? 1 : 0.85, nn);
       // the beam laid over the pillars' capitals
-      const bw = 0.11; for (const [x0, y0, x1, y1] of [[i0 - bw, j0 - bw, i1 + bw, j0 + bw], [i0 - bw, j1 - bw, i1 + bw, j1 + bw], [i0 - bw, j0 + bw, i0 + bw, j1 - bw], [i1 - bw, j0 + bw, i1 + bw, j1 - bw]]) T.box(x0, y0, x1, y1, 2.6, zL - 0.01, Lv, Lv, 1.02);
+      const bw = 0.11; for (const [x0, y0, x1, y1] of [[i0 - bw, j0 - bw, i1 + bw, j0 + bw], [i0 - bw, j1 - bw, i1 + bw, j1 + bw], [i0 - bw, j0 + bw, i0 + bw, j1 - bw], [i1 - bw, j0 + bw, i1 + bw, j1 - bw]]) T.box(x0, y0, x1, y1, 2.58, zL - 0.01, Lw, Lw, 0.9);
       // the low north wall carried up to the pentice's head (over the arch it is the arch's lintel), and a lintel over the
       // gate passage where the walk meets it
       T.box(X0, Y0 - 1, X1, Y0, 3.0, zH + 0.04, Lv, Lv, 1);
@@ -442,13 +442,16 @@ const ROOFS116 = (() => {
     const gate = parts.find((q) => q.kind === 'vigil-gate');
     if (gate) {
       // a small gable over the gate, on the outer face, standing on two stone corbels; snow on its west pitch
-      const gx = gate.x0 + 0.5, fy = gate.y0 + 1, hw = 0.86, out = 0.78, zE = 1.66, zR = 2.2, ov = 0.12;
+      const gx = gate.x0 + 0.5, fy = gate.y0 + 1, hw = 1.0, out = 0.95, zE = 1.62, zR = 2.34, ov = 0.14;
       const W = [gx - hw - ov, fy, zE - ov * 0.62], Ef = [gx + hw + ov, fy, zE - ov * 0.62], Rb = [gx, fy, zR], Rf = [gx, fy + out, zR], Wf = [gx - hw - ov, fy + out, zE - ov * 0.62], Eb = [gx + hw + ov, fy + out, zE - ov * 0.62];
       const west = [Wf, W, Rb, Rf], east = [Ef, Eb, Rf, Rb];
       T.quad(west, [[0, 1], [out, 1], [out, 0], [0, 0]], Ls, T.MAT.wall, 1, T.planeN(west[0], west[1], west[2], T.UP));
       T.quad(east, [[0, 1], [out, 1], [out, 0], [0, 0]], Lsl, T.MAT.wall, 0.86, T.planeN(east[0], east[1], east[2], T.UP));
       for (const q of [west, east]) { const up = T.planeN(q[0], q[1], q[2], T.UP); T.quad(q.map((v) => [v[0], v[1], v[2] - 0.05]), [[0, 1], [out, 1], [out, 0], [0, 0]], Lw, T.MAT.wall, 0.5, [-up[0], -up[1], -up[2]]); }
-      T.tri([[gx - hw, fy + out - 0.06, zE], [gx + hw, fy + out - 0.06, zE], [gx, fy + out - 0.06, zR - 0.05]], [[0, 0.55], [1.7, 0.55], [0.85, 0]], Lv, T.MAT.wall, 0.82, [0, 1, 0]);
+      T.tri([[gx - hw, fy + out - 0.06, zE], [gx + hw, fy + out - 0.06, zE], [gx, fy + out - 0.06, zR - 0.05]], [[0, 0.55], [1.7, 0.55], [0.85, 0]], T.L('r116_vridge'), T.MAT.wall, 0.7, [0, 1, 0]);
+      // the verges, thick heavy slates seen end on, snow along the west one
+      for (const sx of [-1, 1]) { const lo = [gx + sx * (hw + ov + 0.04), fy + out + 0.02, zE - ov * 0.62 - 0.02], hi = [gx, fy + out + 0.02, zR + 0.03], th = 0.13;
+        T.quad([lo, hi, [hi[0], hi[1], hi[2] - th], [lo[0], lo[1], lo[2] - th]], [[0, 0], [1, 0], [1, 0.15], [0, 0.15]], sx < 0 ? Ls : Lsl, T.MAT.wall, 1.1, [0, 1, 0]); }
       T.box(gx - 0.05, fy, gx + 0.05, fy + out + 0.02, zR - 0.02, zR + 0.06, T.L('r116_vridge'), T.L('r116_vridge'), 1.1);
       for (const sx of [-1, 1]) { T.box(gx + sx * hw - 0.09, fy, gx + sx * hw + 0.09, fy + out - 0.04, zE - 0.12, zE, Lv, Lv, 1.05); T.box(gx + sx * hw - 0.08, fy, gx + sx * hw + 0.08, fy + 0.3, zE - 0.42, zE - 0.12, Lv, Lv, 0.95); }
     }
@@ -462,7 +465,7 @@ const ROOFS116 = (() => {
       for (let i = 0; i < 4; i++) { const west = i === 3; T.tri([q[i], q[(i + 1) % 4], tip], [[0, 2.6], [5.2, 2.6], [2.6, 0]], west ? Ls : Lsl, T.MAT.wall, west ? 1 : [0.9, 0.86, 0.8, 1][i], T.planeN(q[i], q[(i + 1) % 4], tip, T.UP)); }
       T.box(cx - 0.12, cy - 0.12, cx + 0.12, cy + 0.12, zA - 0.04, zA + 0.2, Lv, Lv, 1.1);
       // its underside, dark, seen from the garth
-      T.quad([[cx - r - 0.1, cy - r - 0.1, z1], [cx + r + 0.1, cy - r - 0.1, z1], [cx + r + 0.1, cy + r + 0.1, z1], [cx - r - 0.1, cy + r + 0.1, z1]], [[0, 0], [1, 0], [1, 1], [0, 1]], Ld, T.MAT.wall, 0.55, T.DN);
+      T.quad([[cx - r - 0.1, cy - r - 0.1, z1], [cx + r + 0.1, cy - r - 0.1, z1], [cx + r + 0.1, cy + r + 0.1, z1], [cx - r - 0.1, cy + r + 0.1, z1]], [[0, 0], [1, 0], [1, 1], [0, 1]], Lv, T.MAT.wall, 0.62, T.DN);
     }
   };
 
