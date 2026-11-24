@@ -254,10 +254,21 @@ async function start(r3d) {
     const cobaltRuns = (sp) => { let best = 0; for (let y = 50; y < 72; y++) { let runs = 0, on = false; for (let x = 0; x < sp.w; x++) { const p = px(sp, x, y), [R, G2, B] = rgbOf(p); const c = (p >>> 24) > 100 && B > R + 40 && B > G2 + 10; if (c && !on) runs++; on = c; } best = Math.max(best, runs); } return best; };
     const b = Engine.sprites.kestrel_m2, f = Engine.sprites.kestrel_m0;
     out.env = b && env(b); out.tanks = b && cobaltRuns(b); out.tanks0 = f && cobaltRuns(f);
+    // cloth, not blockwork: no seam drawn as a solid line. A seam pixel is a grey pixel darker than its neighbours across
+    // the seam by more than 10; the longest run of them along a seam (across or down the envelope) is a stitch, not a line
+    { const lum = (p) => { const [R, G2, B] = rgbOf(p); return (R + G2 + B) / 3; }, grey = (p) => { const [R, G2, B] = rgbOf(p); return (p >>> 24) > 100 && Math.max(R, G2, B) - Math.min(R, G2, B) < 28; };
+      let longest = 0;
+      for (let y = 9; y <= 31; y++) { let run = 0; for (let x = 1; x < b.w - 1; x++) { const p = px(b, x, y); const seam = grey(p) && grey(px(b, x, y - 1)) && grey(px(b, x, y + 1)) && lum(p) < lum(px(b, x, y - 1)) - 10 && lum(p) < lum(px(b, x, y + 1)) - 10; run = seam ? run + 1 : 0; longest = Math.max(longest, run); } }
+      for (let x = 2; x < b.w - 2; x++) { let run = 0; for (let y = 8; y <= 32; y++) { const p = px(b, x, y); const seam = grey(p) && grey(px(b, x - 1, y)) && grey(px(b, x + 1, y)) && lum(p) < lum(px(b, x - 1, y)) - 10 && lum(p) < lum(px(b, x + 1, y)) - 10; run = seam ? run + 1 : 0; longest = Math.max(longest, run); } }
+      out.seam = longest; }
+    // the faint cobalt of drift-glass by day: the tanks dull glass, a faint light inside, never bright blue
+    { let n = 0, sb = 0; for (let y = 57; y < 67; y++) for (let x = 0; x < b.w; x++) { const p = px(b, x, y); if ((p >>> 24) <= 100) continue; const [R, G2, B] = rgbOf(p); if (B > R + 20) { n++; sb += B; } } out.tankB = n ? Math.round(sb / n) : 0; }
     return out;
   });
   check(r.size, 'the five moored views keep their size (144 x 72)');
   check(r.env && r.env.grey > 0.7 && r.env.tan < 0.1, 'her envelope is grey sailcloth, not tan (' + JSON.stringify(r.env) + ')');
+  check(r.seam <= 4, 'her envelope is cloth, not blockwork: its seams are stitches, no solid seam line (longest run ' + r.seam + ')');
+  check(r.tankB > 0 && r.tankB < 150, 'her tanks are dull glass with a faint cobalt light by day (mean blue ' + r.tankB + ')');
   check(r.tanks === 4 && r.tanks0 === 2, 'four cobalt lift-tanks under her keel broadside, two bow-on (' + r.tanks + ', ' + r.tanks0 + ')');
 
   // ---- "Where is the mooring mast?"
@@ -323,6 +334,25 @@ async function start(r3d) {
   check(!r.none && r.active, 'the 3D view is running');
   check(r.mast && r.ship, 'in the 3D view the mast and the ship show from the square, to the north (' + JSON.stringify(r.s) + ')');
   check(r.rim, 'and on the rim\'s own map, seen from the North Gate road');
+  {
+    const rect = await S.page.evaluate(async () => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      loadMap('clearing', { x: 27, y: 9.5, dir: Math.PI }); G.state = 'play'; G.tod = 0.5; Engine.cam.pitch = 95; if (G.player) G.player.pitch = 95;
+      closeModal(); hide('#event'); document.getElementById('msgs').innerHTML = '';
+      for (let i = 0; i < 6; i++) { render(); await wait(80); }
+      const e = G.ents.find((x) => x._slShip); return e && e._screen;
+    });
+    let env3d = null;
+    if (rect) {
+      const k = 4, x = Math.round(((rect.x0 + rect.x1) / 2 - (rect.x1 - rect.x0) * 0.2) * k), y = Math.round((rect.y0 + (rect.y1 - rect.y0) * 0.22) * k);
+      const shot = await S.page.screenshot({ clip: { x, y, width: Math.max(4, Math.round((rect.x1 - rect.x0) * 0.4 * k)), height: Math.max(4, Math.round((rect.y1 - rect.y0) * 0.12 * k)) } });
+      const { PNG } = (() => { try { return require('pngjs'); } catch (e) { return {}; } })();
+      if (PNG) { const im = PNG.sync.read(shot); let r0 = 0, g0 = 0, b0 = 0, n = 0; for (let i = 0; i < im.data.length; i += 4) { r0 += im.data[i]; g0 += im.data[i + 1]; b0 += im.data[i + 2]; n++; } env3d = [r0 / n, g0 / n, b0 / n].map(Math.round); }
+      else { const b64 = shot.toString('base64'); env3d = await S.page.evaluate(async (b64) => { const im = new Image(); im.src = 'data:image/png;base64,' + b64; await im.decode(); const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.drawImage(im, 0, 0); const d = x.getImageData(0, 0, c.width, c.height).data; let r0 = 0, g0 = 0, b0 = 0, n = 0; for (let i = 0; i < d.length; i += 4) { r0 += d[i]; g0 += d[i + 1]; b0 += d[i + 2]; n++; } return [r0 / n, g0 / n, b0 / n].map(Math.round); }, b64); }
+    }
+    const lumE = env3d ? (env3d[0] + env3d[1] + env3d[2]) / 3 : 0;
+    check(!!env3d && lumE > 60 && Math.max(...env3d) - Math.min(...env3d) < 30, 'by day from the rim, in the 3D view, her envelope reads grey, not near black (' + JSON.stringify(env3d) + ')');
+  }
   check(!S.errors.length, 'no page errors in the 3D view (' + S.errors.slice(0, 3).join(' | ') + ')');
   await S.browser.close();
 
