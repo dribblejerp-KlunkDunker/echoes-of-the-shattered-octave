@@ -237,7 +237,7 @@ The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on the
 
 | Step | Phases | What you will see |
 | --- | --- | --- |
-| 1 (in build) | **116** roofs for the later places; **123** the mooring mast where the book has it | Stone and snow, lead, mossed slate; the iron mast over the quarry |
+| 1 (123 done; 116 in build) | **116** roofs for the later places; **123** the mooring mast where the book has it | Stone and snow, lead, mossed slate; the iron mast over the quarry |
 | 2 | **124** Faces of their own (portraits in code for the seventy-nine people who borrow two faces); **125** who the traveller is, and "in their boots" (Audit 2) | A face for everyone; new likenesses; the hero's own hands at the book's great moments |
 | 3 | **126** the callings, part one (Blade, Cantor, Corsair); **127** part two (Archivist, Penitent, Quarry-Hand) (Audit 3) | Each calling's own sight drawn in the world; the quarry at work |
 | 4 | **114** Redoubt Zero and the Edge, the dawn Refusal (Audit 8); **128** the roads filled (Audit 5) | A new place; the Amalgam; wayside art; the old road-walkers redrawn |
@@ -271,7 +271,7 @@ The owner, 21 Nov: "give me a prompt for the next session using fable 5.2 on the
 | 116 | Roofs for the later places (Sun-Peak Vigil, Null-Watch, Cross Pool), then raised as in Phase 108. **Brought forward 23 Nov** ("finish up with 5") |
 | 121 | **Done (23 Nov).** Record: `story/Game Layer/Phase 121 - The text matched to the books.md`; `test/text121.test.js`, 67 checks. The text matched to the books (the audit's first item): the five Thursdays, the live contradictions, the new names (Smalt, Pipit, Jabez Barker, the Unended Office), the texture budget |
 | 122 | **Done (23 Nov).** Record: `story/Game Layer/Phase 122 - The sculpted hands finished, and the default.md`; `test/hands122.test.js`, 9 checks. The sculpted hands finished (the bare fist, the sleeve in a climb) and made the default in the 3D view |
-| 123 | The mooring mast, where the book has it: off the east side of the square and onto the quarry's rim, in iron, seen over the roofs to the north. **Ruled 23 Nov: "match the book and change the map."** |
+| 123 | **Done (23 Nov).** Record: `story/Game Layer/Phase 123 - The mooring mast, where the book has it.md`; `test/mast123.test.js`, 66 checks. It stands on the clearing over the quarry, beside the headframe (the quarry's own map is underground and has no rim); the Kestrel repainted to the book. The mooring mast, where the book has it: off the east side of the square and onto the quarry's rim, in iron, seen over the roofs to the north. **Ruled 23 Nov: "match the book and change the map."** |
 | 117 | The Middle Country, part one: lore briefs, its great city by its frequency |
 | 118 | Book One in play (R9): the novel's set-pieces still open |
 | 119 | Pack weight and wear, and the far land (the Daggerfall list's 3, 4 and 5): designs for ruling |

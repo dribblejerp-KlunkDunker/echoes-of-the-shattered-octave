@@ -555,6 +555,10 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 </tr>
 </table>
 
+**The mooring mast, where the book has it (Phase 123).** Book One: "above the roofs to the north, where the Consortium's mooring mast stood over the quarry like a gallows, a skyship was riding at anchor." The mast has left the east side of Oakhaven's square and stands on the open ground over the quarry, beside the headframe, outside the North Gate: a hundred and twenty feet of riveted iron on four legs, with the mast-ladder up its face. From the square it shows over the roofs to the north with the *Drift-Kestrel* at its head, by day and by night. Everything that happened at the old mast happens at the new one (the ladder to the hold, cargo night, "Forty-eight."), and after the Greening the young oak stands up through its legs. The east side of the square is a carters' standing. The ship is repainted to the book as well: "a patched grey envelope", brass ribs, oak planks, "four lift-tanks slung beneath her keel glowing the faint cobalt of drift-glass". An old save made at the foot of the old mast loads at the foot of the new one.
+
+![Phase 123: the mast from the square by day and night, from the North Gate, at its foot, the east side of the square, and after the Greening](screenshots/p123-mast.jpg)
+
 **The sculpted hands, finished and the default (Phase 122).** In the 3D view your hands are now the sculpted ones unless you choose otherwise (Options: "Hands: In pixels / Sculpted"; the Original and Low presets keep the pixel hands). The bare fist was the weak picture and has been reworked: the nails are soft ovals, and the skin is the colour of the face you chose at the start. The sleeve no longer swells when you climb. The glass arm is as it was.
 
 ![Phase 122: the bare fists for three faces, the sleeve in a climb before and after, and the glass arm](screenshots/p122-hands.jpg)
