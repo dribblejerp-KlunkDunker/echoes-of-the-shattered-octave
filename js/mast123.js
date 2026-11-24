@@ -256,10 +256,17 @@ const MAST123 = (function () {
     addBase(cl, cl.deco('p123_mast', AT.x, AT.y, { radius: 0.6, scale: H, nopick: true, farSee: true, glow: 0.3, _p123: 'mast' }));
     addBase(cl, cl.deco('ladder', LADDER.x, LADDER.y, { radius: 0.2, scale: 1.6, use: 'crates', label: 'The Drift-Kestrel\'s mast-ladder, up to her hold', animSprite: 'p123_ladderfoot', _p123: 'ladder' }));
     cl.trigger(TRIG.x, TRIG.y, TRIG.r, 'mast');
-    // where the legs go into the bedrock of the rim
+    layStone(cl);
+  }
+  // where the legs go into the bedrock of the rim. The painted ground (js/painted20.js) lays a map's floor afresh from its
+  // own copy whenever its switches change, and that copy was taken before this stone was laid; so the stone is laid again
+  // after every such change (the listener below is registered after painted20's, so it runs after it).
+  function layStone(cl) {
+    if (!cl || cl.id !== MAP || !cl._p123 || !cl.floorCells) return;
     const st = cl.floorTextures ? cl.floorTextures.indexOf('t_stone') : -1;
     if (st >= 0) for (let y = 2; y <= 4; y++) for (let x = 12; x <= 14; x++) cl.setFloor(x, y, st);
   }
+  if (typeof GFX !== 'undefined' && typeof GFX.onChange === 'function') GFX.onChange(() => { try { if (typeof G !== 'undefined' && G && G.maps) layStone(G.maps[MAP]); } catch (e) { /* the stone is dressing; never break a settings change */ } });
   function buildStanding(oak) {
     if (!oak || oak.id !== 'oakhaven' || oak._p123) return;
     oak._p123 = true;
