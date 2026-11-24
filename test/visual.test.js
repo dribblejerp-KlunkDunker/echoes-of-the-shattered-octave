@@ -602,7 +602,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
         const m = G.maps[id], recess = m.entities.find(e => e.bodyCover);
         check(recess && !recess.solid && !m.isBlocked(recess.x | 0, recess.y | 0), id + ' recess is accessible nonblocking floor');
         const recessIdx = m.entities.indexOf(recess);
-        if (id === 'oakhaven') check(recessIdx >= 0 && recessIdx < m.baseCount && m.entities.slice(recessIdx + 1, m.baseCount).every(e => e.wantedPoster || e.lawGuard || e.use === 'stable' || e._p84mile || e._p82bPost), id + ' recess retains its historical index before append-only law and stable entities');
+        if (id === 'oakhaven') check(recessIdx >= 0 && recessIdx < m.baseCount && m.entities.slice(recessIdx + 1, m.baseCount).every(e => e.wantedPoster || e.lawGuard || e.use === 'stable' || e._p84mile || e._p82bPost || e._p123 /* Phase 123: the carters' hitching rail, appended after every older base entity */), id + ' recess retains its historical index before append-only law and stable entities');
         else check(recessIdx === m.baseCount - 1, id + ' recess retains its historical index');
       }
       const map = new GameMap('oakhaven', 'Body fixture', 32, 24, { floor: 't_flag', ceil: 't_stone', fogDist: 20, spawn: { x: 5.5, y: 10.5, dir: 0 } });
