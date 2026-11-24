@@ -58,3 +58,8 @@ The glass arm's forearm in a climb is slimmed the same way (its shape only; its 
 
 - **The cost on a phone and a low-end laptop.** Not measured here (a browser drawing in software). That is why Low keeps the pixel hands. A bare hand is built on a finer mesh than before (its palm), so its first build takes a little longer; each pose is still built once and kept.
 - Close up, the creases round a bent middle knuckle can read as a ring round it. At the game's own size they read as creases.
+
+## Found in integration (23 Nov, the full run)
+
+- **The sculpted hands are first drawn on the second frame after arriving on a map.** `test/cover105.test.js` compares two frames indoors and went red once these hands became the default: frame one after arriving has no hands, frames two onward are identical (probed with the mast's far view, the roofs and the hands each switched off in turn; only the hands changed the later frames). The pixel hands do not have this. One frame at a doorway, behind the map change, is not something a player sees, so the suite was taught to let the scene settle for a frame and the hands were left as they are. To be put right when the hands are next opened (Phase 125, the heroes' hands).
+
