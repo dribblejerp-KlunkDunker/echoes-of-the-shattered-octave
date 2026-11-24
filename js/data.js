@@ -986,13 +986,14 @@ const CAMP = {
         journal('main', 'Coda: Lyra says the Wearer followed us out of Whisper-Grove. It is out there in the woods, singing her father\'s funeral office in his voice, and she means to kill it tonight: a ring of lamps at the edge of the clearing, and the office sung at full voice, alone, so that it comes. ' + (voice ? 'Talk to her when you are ready.' : 'She has no voice to sing it with. Kaelen knows why.'));
         return { text: 'She writes, and her hand is shaking: <b>IT FOLLOWED US.</b> She points north, into the trees. <b>I CAN HEAR IT. IT IS SINGING DAD\'S OFFICE OUT THERE IN DAD\'S VOICE.</b> She rubs it out. <b>IT WON\'T COME WHERE PEOPLE ARE. IT WANTS ME ALONE. SO I AM GOING TO BE ALONE, AT THE EDGE OF THE TREES, INSIDE A RING OF LAMPS, AND SING IT THE WHOLE OFFICE. AND YOU GET ONE STRIKE.</b>' + (voice ? '' : ' Then, smaller: <b>I NEED MY VOICE.</b>') };
       }
-      if (f.ring_set) return { text: voice && !f.coda_by_you ? '"The lamps are set. I\'ll be past the last one, between the willows. Come when you\'re standing inside the ring, and not before. And stay inside it, whatever it says in whose voice."' : f.coda_by_you ? 'She writes: <b>THE LAMPS ARE SET. STAND PAST THE LAST ONE, BETWEEN THE WILLOWS, AND SING. DO NOT STOP. DO NOT STEP OFF IT.</b>' : 'She writes: <b>THE LAMPS ARE SET. STAND INSIDE THEM. I WILL BE PAST THE LAST ONE.</b>' };
-      if (!voice) return { text: 'She writes: <b>I HAVE NO VOICE. I KNOW.</b> She looks at Kaelen across the fire, and then back at you. <b>SOMETHING IS SITTING ON IT.</b> Then: <b>IT IS TWO VOICES. YOU KNOW THE TUNE. I TAUGHT THE WHOLE REACH THE TUNE.</b>', choices: [
-        { t: 'Sing it yourself: stand past the last lamp tonight. (Your voice drains while you hold it)', f: (g) => { f.coda_by_you = true; return ringPlan(g); } },
+      if (f.ring_set) return { text: voice ? '"The lamps are set. I\'ll be past the last one, between the willows. Come when you\'re standing inside the ring, and not before. And stay inside it, whatever it says in whose voice."' : 'She writes: <b>THE LAMPS ARE SET. STAND INSIDE THEM. I WILL BE PAST THE LAST ONE.</b>' };
+      // (Phase 125b) without her voice there is no ring: the traveller does not sing her father's office (her voice comes
+      // back at the fire before the coda, Book One MS 5966-5970)
+      if (!voice) return { text: 'She writes: <b>I HAVE NO VOICE. I KNOW.</b> She looks at Kaelen across the fire, and then back at you. <b>SOMETHING IS SITTING ON IT.</b>', choices: [
         { t: 'Not yet. Her voice first.', f: () => 'She nods, once, and looks at Kaelen across the fire, and does not write anything.' },
       ] };
-      return { text: '"And I\'m going to kill it tonight," she says, in her own ruined voice. "A ring of lamps at the edge of the trees. I\'ll be outside the last one. You\'ll be inside them, and so will Kaelen, and you get one strike, when it\'s inside the lamps and not before."', choices: [
-        { t: 'Set the ring of lamps tonight.', f: (g) => { f.coda_by_you = false; return ringPlan(g); } },
+      return { text: '"And I\'m going to kill it tonight," she says, in her own ruined voice. "A ring of lamps at the edge of the trees. I\'ll be outside the last one. You\'ll be inside them, and so will Kaelen, and he gets one strike, when it\'s inside the lamps and not before."', choices: [
+        { t: 'Set the ring of lamps tonight.', f: (g) => ringPlan(g) },
         { t: 'Not tonight.', f: () => '"Tonight," she says. "Or next week, when I\'m asleep. I know which I\'d rather."' },
       ] };
     },

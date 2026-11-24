@@ -110,12 +110,14 @@ function verbatim(t, lines) {
       REEDS.forceManual = true;
       const f = G.flags; f.lyra_met = f.need_gate = f.gate_open = f.kaelen_met = f.tobiah_met = true; f.coil_done = f.rite_ready = f.church_come = true;
     });
-    const CAPS = await page.evaluate(() => BOOTS125.CAPS);
+    // each section runs on its own: one that throws is a FAIL of its own, and the rest still run
+    const sect = async (name, fn) => { try { return await page.evaluate(fn); } catch (e) { fails++; console.log('FAIL section ' + name + ' threw: ' + String(e && e.message || e).split('\n')[0]); return {}; } };
+    const CAPS = (await page.evaluate(() => BOOTS125.CAPS)) || {};
     const bad = Object.entries(CAPS).filter(([, c]) => c.ms && c.ms.length && !verbatim(c.t, c.ms)).map(([k]) => k);
     check(Object.keys(CAPS).length > 80 && bad.length === 0, 'every book caption of the six moments is verbatim at the manuscript lines it names (' + Object.keys(CAPS).length + ' captions; not verbatim: ' + bad.slice(0, 6).join(', ') + ')');
 
     // ---------------------------------------------------------------- 3, 11a: the ring needs her voice
-    const ringVoice = await page.evaluate(() => {
+    const ringVoice = await sect('ringVoice', () => {
       const out = {}, f = G.flags;
       Object.assign(f, { part4: true, lyra_dw_met: true }); f.lyra_voice = false;
       const q = NPCS.lyra_dw.quest(G);
@@ -130,7 +132,7 @@ function verbatim(t, lines) {
     check(!ringVoice.set2, '11. the ring cannot be set without lyra_voice, even by ringPlan itself');
 
     // ---------------------------------------------------------------- 4, 5: the needle
-    const needle = await page.evaluate(() => {
+    const needle = await sect('needle', () => {
       const out = {}, f = G.flags;
       f.rite_started = true; f.r43 = 2; G.give('coil');
       const cs = G.maps.rootvault.casingRoom; loadMap('rootvault', { x: cs.cx + 0.5, y: cs.cy + 1.9, dir: -Math.PI / 2 }); G.state = 'play';
@@ -174,16 +176,16 @@ function verbatim(t, lines) {
       return out;
     });
     const NEEDLE_LINES = [3044, 3046, 3068, 3070, 3072, 3074, 3076, 3078, 3084, 3086, 3088, 3090, 3092, 3094, 3096, 3098, 3104, 3106, 3108, 3110];
-    const missN = NEEDLE_LINES.filter((n) => n !== 3044 && n !== 3046 && !needle.log.includes(n));
+    const missN = NEEDLE_LINES.filter((n) => n !== 3044 && n !== 3046 && !(needle.log || []).includes(n));
     check(needle.card && needle.active && needle.glassArm && needle.hidden && needle.callingBefore, '4. from the lullaby card the player is in Kaelen\'s boots: "In his boots", the glass arm, the rite43 Kaelen hidden, the Glass-Hand\'s calling line before');
     check(missN.length === 0 && needle.fortunate && needle.stage4 && needle.back && !needle.fuse, '4. the captions are MS 3044-3110 (missing ' + missN.join(',') + '); "I. Am. Fortunate."; Crane comes down and goes back up; stage 4; nothing of the fuse here');
-    check(needle.sees.length === 0, '4. no card or message has Crane seeing (' + needle.sees.join(' | ') + ')');
+    check(!!needle.sees && needle.sees.length === 0, '4. no card or message has Crane seeing (' + (needle.sees || []).join(' | ') + ')');
     check(needle.toPinch && needle.hint && needle.slip1 && needle.again && needle.pinched, '5. holding the pinch two seconds is a grey slip, "slow would look wrong"; after "Again" the same beat, r43 still 3');
     check(needle.toPegs && needle.toLook && needle.crouched && needle.slip2 && needle.slip3 && needle.plays && needle.done, '5. a move while Crane crouches a foot away is a slip, "Kaelen did not move."; after two slips the beat plays itself');
     check(needle.callingAfter && needle.slips >= 3 && needle.holdCard, '12. the Glass-Hand\'s line after the needle; p125b_slips counted; the Hold card follows');
 
     // ---------------------------------------------------------------- 6, 7, 8: the Hold and the bolts
-    const hold = await page.evaluate(async () => {
+    const hold = await sect('hold', async () => {
       const out = {}, f = G.flags;
       window.__msgs.length = 0; window.__ev.length = 0;
       const t0 = BOOTS125.S.clock;
@@ -246,16 +248,16 @@ function verbatim(t, lines) {
     check(hold.card && hold.active && hold.spanFirst && hold.lyraHidden && hold.lyraLook && hold.toSing, '6. Lyra\'s boots start on "Head at one span!"; the rite43 Lyra is hidden; her own bare hands');
     check(hold.flat && hold.slip && hold.again && hold.toStopped && hold.heard && hold.cantorNone, '6. releasing the note before the cue is a slip, "the last thing a Cantor does is stop", and the note again; the Root hears her, "Mark it", the lullaby stops');
     check(JSON.stringify(hold.curve) === '[174,116,174,116]' && hold.fifth && hold.cue && hold.through && hold.result, '6. part two: through the lock on 174, then "SING IT DOWN" and the fifth, 174 116 174 116 (' + JSON.stringify(hold.curve) + '); the book\'s result card');
-    check(hold.hours.length === 0, '6. no text says or implies that hours have passed (' + hold.hours.join(' | ') + ')');
+    check(!!hold.hours && hold.hours.length === 0, '6. no text says or implies that hours have passed (' + (hold.hours || []).join(' | ') + ')');
     check(hold.toBolts && hold.boltsCard && hold.callingB, '7. Kaelen\'s boots after "The lullaby stopped."; the four hours as what lies ahead (3126) and the fuse (3156-3160) here; the Glass-Hand\'s bolts line');
     check(hold.walkWait && hold.kneelHint && hold.noStepAway, '7. "Slippage on the lock", "Spanner"; the walk to the drum, then "Kneel at the plate."; no "step away from the drum" before the coil');
-    check(hold.toPlate && Math.abs(hold.boltSecs - 51) <= 1 && hold.calls === 5 && hold.noBoltCount, '7. the plate comes off at 51 s of game time (' + hold.boltSecs.toFixed(1) + '); Tobiah calls five times (' + hold.calls + '); no timer or bolt count on screen');
+    check(hold.toPlate && Math.abs((hold.boltSecs || 0) - 51) <= 1 && hold.calls === 5 && hold.noBoltCount, '7. the plate comes off at 51 s of game time (' + (hold.boltSecs || 0).toFixed(1) + '); Tobiah calls five times (' + hold.calls + '); no timer or bolt count on screen');
     check(hold.toChoice && hold.oneChoice && hold.notSeated && hold.seated && hold.callingB2, '7. the only choice at "Sir, what\'s that?" is "You\'ll want to hold onto something."; it seats the coil');
-    check(hold.secs < 240, '8. the whole playable Hold, from "Head at one span" to the end of the fifth, is under four minutes of game time (' + hold.secs.toFixed(0) + ' s)');
+    check(hold.secs > 0 && hold.secs < 240, '8. the whole playable Hold, from "Head at one span" to the end of the fifth, is under four minutes of game time (' + (hold.secs || 0).toFixed(0) + ' s)');
     check(hold.out && hold.noPoor, 'the step out, then the Golems as before; fifthGood/fifthPoor, holdGo and holdHint are gone');
 
     // ---------------------------------------------------------------- 9: One to Ten
-    const rope = await page.evaluate(() => {
+    const rope = await sect('rope', () => {
       const out = {}, f = G.flags;
       for (const k of Object.keys(f)) if (/^r45|^escaped$/.test(k)) delete f[k];
       Object.assign(f, { r43: 7, bore_broken: true, greening: true, g44: 5, r45: 4, r45_way: 'deck', r45_count: 18, r45_load: 6, r45_jitter: 'kaelen', r45_kaelen: true });
@@ -306,7 +308,7 @@ function verbatim(t, lines) {
     check(rope.toAfter && rope.after && rope.weaponBack && rope.ledger && rope.r45 && rope.noHoldDrum, '9. the book\'s after card; Aldric in the ledger once; r45 reaches 7; holdDrum is gone');
 
     // ---------------------------------------------------------------- 10: the three names
-    const names = await page.evaluate(() => {
+    const names = await sect('names', () => {
       const out = {}, f = G.flags;
       hide('#ending'); G.state = 'play';
       delete f.p53; delete f.p53_deck; f.sable_joined = true; delete f.part4;
@@ -344,7 +346,7 @@ function verbatim(t, lines) {
     check(names.filed && names.frag && names.callingNone, '10. the filed card follows; no fragment is spent');
 
     // ---------------------------------------------------------------- 11: the coda
-    const coda = await page.evaluate(() => {
+    const coda = await sect('coda', () => {
       const out = {}, f = G.flags;
       const RESET = ['coda_done', 'coda_go', 'ring_set', 'ring_go', 'ring_fight', 'ring_sung', 'ring_struck', 'ring_back', 'lyra_dw_met', 'lyra_requiem', 'requiem_done', 'wearer_dead', 'wearer_coda_dead', 'coda_fight', 'coda_sung', 'herald_come'];
       for (const k of RESET) delete f[k];
@@ -352,7 +354,7 @@ function verbatim(t, lines) {
       loadMap('deepwoods'); G.state = 'play'; G.player.hp = G.player.hpMax = 999;
       window.__msgs.length = 0; window.__ev.length = 0; window.__hz.length = 0;
       let q = NPCS.lyra_dw.quest(G); q = NPCS.lyra_dw.quest(G);
-      const plan = q.choices[0].f(G); out.plan = /She looked at Kaelen\./.test(plan) && !/She looks at you/.test(plan) && f.ring_set;
+      const plan = q.choices[0].f(G); out.plan = /She looks at Kaelen\./.test(plan) && !/She looks at you/.test(plan) && f.ring_set;   // (the plan card is the game's present-tense retelling of MS 6022-6036; 6028 has 'She looked at Kaelen.')
       const t = G.map.triggers.find((o) => o.id === 'ring');
       Engine.cam.x = RING.cx; Engine.cam.y = RING.cy + 0.5; t.inside = false; checkTriggers();
       const c = T.last(); out.card = !!c && /In her boots/.test(c.t) && /She walked out past the last lamp at the second hour/.test(c.b) && c.c[0].t === 'Sing.';
@@ -384,7 +386,7 @@ function verbatim(t, lines) {
       out.ending = codaEndingLines().some((l) => /Lyra walked out past the last lamp/.test(l) && /Kaelen came out of the dark/.test(l) && !/You struck/.test(l));
       return out;
     });
-    check(coda.plan && coda.card && coda.active && coda.ringLyraHidden && coda.toSing && coda.going, '11. "She looked at Kaelen."; in Lyra\'s boots past the last lamp, her figure hidden; the office goes on while she sings');
+    check(coda.plan && coda.card && coda.active && coda.ringLyraHidden && coda.toSing && coda.going, '11. "She looks at Kaelen."; in Lyra\'s boots past the last lamp, her figure hidden; the office goes on while she sings');
     check(coda.stepSlip && coda.backOn, '11. moving two from the spot is a grey slip, not ringAbort: ring_set stays, no "the ring failed"; back on the spot at the start of the part');
     check(coda.stopSlip, '11. releasing the song is a slip, "\'I know,\' said Lyra, and kept singing."');
     check(coda.toBurst && coda.struck && coda.burst && coda.notTraveller && coda.naming && coda.twoVoice, '11. the naming four times, "Ten feet.", the coda alone; Kaelen strikes (ring_struck kaelen); the burst is the book\'s five voices and her father, and not the traveller\'s');
@@ -392,7 +394,7 @@ function verbatim(t, lines) {
     check(coda.after && coda.out && coda.ending, '11. the after card has "did not forgive him either" and one button; the ending reads Lyra\'s way');
 
     // ---------------------------------------------------------------- 12: the calling lines
-    const calling = await page.evaluate(async () => {
+    const calling = await sect('calling', async () => {
       const out = { rows: {}, fr: [] };
       const MOM = ['needle', 'hold', 'bolts', 'rope', 'names', 'coda'];
       const WANT = { blade: ['needle', 'bolts'], cantor: ['hold', 'coda'], corsair: ['rope'], archivist: ['names'], penitent: ['needle'], quarry: ['bolts'] };
@@ -406,13 +408,13 @@ function verbatim(t, lines) {
       await ACCESS.setLocale('en');
       return out;
     });
-    check(Object.values(calling.rows).every(Boolean), '12. each calling has its before and after lines at its own moments and none at the others (' + JSON.stringify(calling.rows) + ')');
-    check(calling.fr.length === 0 && calling.nMiss === 0, '12, 23. every calling line and every BOOTS125 text has French (' + calling.nMiss + ' of ' + calling.n + ' missing: ' + JSON.stringify(calling.miss) + ')');
-    const notInTsv = (await page.evaluate(() => BOOTS125.TEXTS.slice())).filter((s) => !tsvPairs.has(s));
+    check(!!calling.rows && Object.values(calling.rows).length === 6 && Object.values(calling.rows).every(Boolean), '12. each calling has its before and after lines at its own moments and none at the others (' + JSON.stringify(calling.rows) + ')');
+    check(!!calling.fr && calling.fr.length === 0 && calling.nMiss === 0, '12, 23. every calling line and every BOOTS125 text has French (' + calling.nMiss + ' of ' + calling.n + ' missing: ' + JSON.stringify(calling.miss) + ')');
+    const notInTsv = ((await page.evaluate(() => BOOTS125.TEXTS.slice())) || []).filter((s) => !tsvPairs.has(s));
     check(notInTsv.length === 0, '23. every string in BOOTS125.TEXTS is in a TSV (' + notInTsv.length + ' not: ' + notInTsv.slice(0, 2).map((s) => s.slice(0, 50)).join(' | ') + ')');
 
     // ---------------------------------------------------------------- 13-17: old saves
-    const saves = await page.evaluate(() => {
+    const saves = await sect('saves', () => {
       const out = {};
       const base = snapshotGame();
       const load = (flags, mapId, cam) => { const d = JSON.parse(JSON.stringify(base)); for (const k of Object.keys(d.flags)) if (/^(r43|r45|p53|p125b_|ring_|coda_|lyra_voice|kaelen_dw_done|kaelen_told_now|part4|wearer)/.test(k)) delete d.flags[k]; Object.assign(d.flags, flags); if (mapId) { d.mapId = mapId; d.cam = cam; } window.__ev.length = 0; window.__msgs.length = 0; BOOTS125.reset(); restoreGame(d); G.state = 'play'; return d; };
@@ -423,6 +425,12 @@ function verbatim(t, lines) {
       let ep = ''; try { const p = EPILOGUE.pick ? EPILOGUE.pick(f) : null; ep = JSON.stringify(p || ''); } catch (e) { ep = ''; }
       out.s13 = !('coda_by_you' in f) && f.lyra_voice === true && f.ring_struck === 'kaelen' && f.p125b_m === 1 && f.p125b_cv === 1 && !lines.some((l) => /you stood past the last lamp|You struck it/.test(l)) && lines.some((l) => /Lyra walked out past the last lamp/.test(l)) && !/You sang the coda she could not/.test(ep);
       out.s13d = JSON.stringify({ by: f.coda_by_you, v: f.lyra_voice, s: f.ring_struck, m: f.p125b_m, cv: f.p125b_cv });
+      // 13b: inside the Unended Office, the traveller singing; Kaelen's "No." in the moss given to the traveller
+      load({ part4: true, coda_done: true, coda_fight: true, coda_by_you: true, lyra_voice: false, ring_struck: 'kaelen', ring_sat_no: true, ring_sat_kind: true }, 'deepwoods', { x: 30.5, y: 32.5, dir: 0 });
+      out.s13b = !('coda_by_you' in G.flags) && G.flags.coda_fight === true && G.flags.lyra_voice === true && !('ring_sat_no' in G.flags) && !('ring_sat_kind' in G.flags) && G.flags.p125b_cv === 1;
+      // 13c: a save of the new kind is not migrated twice (p125b_m set): a finished coda of Lyra's is left as it is
+      load({ part4: true, coda_done: true, ring_struck: 'kaelen', lyra_voice: true, p125b_m: 1 }, 'deepwoods', { x: 30.5, y: 32.5, dir: 0 });
+      out.s13c = G.flags.p125b_cv === 0 && G.flags.ring_struck === 'kaelen' && G.flags.p125b_m === 1;
       // 14
       load({ part4: true, ring_set: true, ring_go: true, ring_fight: true, coda_go: true, coda_by_you: true, ring_t: 20, ring_w: 3 }, 'deepwoods', { x: 30.5, y: 32.5, dir: 0 });
       out.s14 = !G.flags.ring_set && !G.flags.ring_fight && !G.flags.coda_go && !('coda_by_you' in G.flags) && !('ring_t' in G.flags) && G.ents.filter((o) => o.ringLamp).every((o) => o.hidden) && G.ents.some((o) => o.id === 'lyra_dw' && !o.ringLyra && !o.hidden);
@@ -435,7 +443,13 @@ function verbatim(t, lines) {
       load({ rite_started: true, coil_done: true, r43: 4 }, 'rootvault', vault); out.r43_4 = BOOTS125.active() === 'hold' && /In her boots/.test((window.__ev[window.__ev.length - 1] || {}).t || ''); BOOTS125.reset();
       load({ rite_started: true, r43: 7, bore_broken: true, greening: true, r45: 5, r45_way: 'deck', r45_count: 18, r45_load: 6 }, ROPE45.DECK, { x: 26.3, y: 20.5, dir: 1.57 }); out.r45_5 = BOOTS125.active() === 'rope'; BOOTS125.reset();
       load({ sable_joined: true, p53: 9 }, MANIFEST53.HOLD, { x: 12.6, y: 11.0, dir: -1.57 }); out.p53_9 = BOOTS125.active() === 'names'; BOOTS125.reset();
+      // 17: hostile flags
+      window.__x = 0;
+      load({ p125b_seen: '<b onmouseover="window.__x=1">x</b>', p125b_slips: -4, p125b_at: 1e9, p125b_m: 'yes', p125b_cv: { a: 1 } });
+      const g = G.flags; out.s17 = [g.p125b_seen, g.p125b_slips, g.p125b_at, g.p125b_cv].every((v) => v === 0) && g.p125b_m === 1 && window.__x === 0 && !BOOTS125.active();
+      out.s17d = JSON.stringify([g.p125b_seen, g.p125b_slips, g.p125b_at, g.p125b_m, g.p125b_cv]);
       // 16: a save made inside a boot
+      try {
       load({ rite_started: true, coil_done: true, r43: 3 }, 'rootvault', vault);
       const trav = BOOTS125.S.home ? Object.assign({}, BOOTS125.S.home) : null;
       T.press(0); T.step(10, 0.05);
@@ -444,21 +458,18 @@ function verbatim(t, lines) {
       BOOTS125.reset(); window.__ev.length = 0; restoreGame(snap); G.state = 'play';
       out.s16b = BOOTS125.active() === 'needle' && BOOTS125.S.beat === 'card';
       BOOTS125.exit(); out.s16c = Math.abs(Engine.cam.x - trav.x) < 1e-6 && Math.abs(Engine.cam.y - trav.y) < 1e-6;
-      // 17: hostile flags
-      window.__x = 0;
-      load({ p125b_seen: '<b onmouseover="window.__x=1">x</b>', p125b_slips: -4, p125b_at: 1e9, p125b_m: 'yes', p125b_cv: { a: 1 } });
-      const g = G.flags; out.s17 = [g.p125b_seen, g.p125b_slips, g.p125b_at, g.p125b_cv].every((v) => v === 0) && g.p125b_m === 1 && window.__x === 0 && !BOOTS125.active();
-      out.s17d = JSON.stringify([g.p125b_seen, g.p125b_slips, g.p125b_at, g.p125b_m, g.p125b_cv]);
+      } catch (e) { out.s16err = String(e && e.message || e); }
       return out;
     });
     check(saves.s13, '13. an old save where the traveller sang the coda: coda_by_you gone, lyra_voice true, ring_struck kaelen, p125b_m and p125b_cv 1; the ending and epilogue read Lyra\'s way (' + saves.s13d + ')');
+    check(saves.s13b && saves.s13c, '13. inside the Unended Office with coda_by_you: it goes and the fight goes on with Lyra; ring_sat_no and ring_sat_kind are deleted; a new save is not migrated again');
     check(saves.s14 && saves.s14b, '14. an old save mid-ring with coda_by_you: the ring is reset, Lyra is at the fire, no lamps; a mid-ring save of Lyra\'s keeps the lamps');
     check(saves.r43_3 && saves.r43_4 && saves.r45_5 && saves.p53_9, '15. old saves at r43 3 and 4, r45 5 and p53 9 load into the start of their moment (' + JSON.stringify([saves.r43_3, saves.r43_4, saves.r45_5, saves.p53_9]) + ')');
     check(saves.s16a && saves.s16b && saves.s16c, '16. a save made inside a boot holds the traveller\'s camera and p125b_at; on load the moment restarts, and the camera comes back on exit');
     check(saves.s17, '17. p125b_* flags that are strings, markup, negative or huge are 0 after load, and nothing is injected (' + saves.s17d + ')');
 
     // ---------------------------------------------------------------- 18: the switch
-    const sw = await page.evaluate(() => {
+    const sw = await sect('sw', () => {
       const out = {};
       const hashCv = () => { const c = Engine.ctx.canvas, d = Engine.ctx.getImageData(0, 0, c.width, c.height).data; let h = 0x811c9dc5 | 0; for (let i = 0; i < d.length; i += 3) h = Math.imul(h ^ d[i], 16777619) | 0; return h >>> 0; };
       const pin = (fn) => { const pn = performance.now.bind(performance); performance.now = () => 5000; try { return fn(); } finally { performance.now = pn; } };
@@ -485,7 +496,7 @@ function verbatim(t, lines) {
     check(sw.original && sw.medium && sw.inFx, '18. GFX.heroHands is off in Original and on in Medium');
 
     // ---------------------------------------------------------------- 21, 22: the tideline and Ada
-    const fix = await page.evaluate(async () => {
+    const fix = await sect('fix', async () => {
       const out = {}, p = G.player;
       const g0 = [p.glassed, p.glass]; p.glassed = true;
       const f = G.flags; for (const k of ['sable_returned', 'sable_kept', 'sable_met']) delete f[k];
@@ -500,7 +511,7 @@ function verbatim(t, lines) {
     });
     check(!/four and a half fingers|hundred-and-forty|three inches from the throat/.test(fix.end80 + fix.end50) && /You have stopped measuring it/.test(fix.end80) && /you keep it wrapped/.test(fix.end50), '21. the Part Two ending for a glassed traveller is the stranger\'s own glass, not Kaelen\'s measure');
     check(/^Fifty-one years/.test(fix.ada || '') && !fix.seventy && !!fix.adaFr, '22. Ada says "Fifty-one years"; no recording says "Seventy years"; the French exists');
-    check(fix.noVoice.length === 0, 'every voice the moments name is recorded (' + fix.noVoice.join(', ') + ')');
+    check(!!fix.noVoice && fix.noVoice.length === 0, 'every voice the moments name is recorded (' + (fix.noVoice || []).join(', ') + ')');
 
     check(errors.length === 0, 'no page errors (' + errors.slice(0, 3).join(' | ') + ')');
 

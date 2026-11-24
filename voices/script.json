@@ -2509,15 +2509,6 @@
    "delivery": "low, calm"
   },
   {
-   "id": "ignatius.rite.notch",
-   "speaker": "ignatius",
-   "kind": "narration",
-   "text": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself.",
-   "source": "rite43.js TX.needleSeen (Book One ch. 9–10)",
-   "voiceOf": "ignatius",
-   "delivery": "low, quite gently"
-  },
-  {
    "id": "ignatius.rite.speak",
    "speaker": "ignatius",
    "kind": "narration",

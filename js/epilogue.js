@@ -98,8 +98,6 @@ const EPILOGUE = (function () {
     { id: 'kb_s_ride', when: (f, c, base) => own(f, 'p6e_ride_k') && base !== 'kb_told_with', text: 'You walked the Deep Woods with him, and he put himself between you and every hound without once saying why.' },
   ];
   const B1_LYRA = [
-    { id: 'lb_you_sang', when: (f) => gf(f, 'coda_done') && gf(f, 'coda_by_you'),
-      text: 'You sang the coda she could not, and she heard every bar of it from the choir door with her mouth shut. She does not resent it. She says so twice, which is how you know. A Cantor who has been sung for has been given something that cannot be handed back, and she keeps a ledger of those too.' },
     { id: 'lb_sang_wearer', when: (f) => gf(f, 'coda_done') && gf(f, 'wearer_coda_dead'),
       text: 'Lyra sang eight bars of her father\'s funeral office in harmony with the thing that ate him, and then sang the coda alone. She has not sung it since. At the fire she hums something else, anything else, a skipping-rhyme, a reed-orchard drone, with the care of a woman walking past a grave on the wrong side. Tobin Ashgrove got his office sung to him, properly, once. It was not the one he was owed.' },
     { id: 'lb_sang_req', when: (f) => gf(f, 'coda_done'),

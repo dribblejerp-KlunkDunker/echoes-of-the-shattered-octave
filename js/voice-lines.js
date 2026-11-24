@@ -4816,14 +4816,6 @@ const VOICE_LINES = {
 "t": "The hold! Hold the note! Daughter, hold the note!",
 "voiceOf": "ignatius"
 },
-"ignatius.rite.notch": {
-"d": 6.24,
-"kind": "narration",
-"speaker": "ignatius",
-"src": "voices/ignatius/ignatius.rite.notch.mp3",
-"t": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself.",
-"voiceOf": "ignatius"
-},
 "ignatius.rite.rubric": {
 "d": 12.72,
 "kind": "narration",
