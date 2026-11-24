@@ -17,7 +17,7 @@
 //       js/rite43.js put the well-house, at the south-east corner of the square; a new sheet goes up each day at dawn and
 //       the paste is wet until noon; only in Part One. The decree's own wording is not in the book and is not shown.
 //    o  "FORTY-EIGHT." (ch. 5, l. 1685). Vane to the hold at night, "the way he did most nights": up the mast-ladder
-//       at night (js/maps.js use 'crates'), the crates card ends with him at the bottom of the ladder (voiced).
+//       at night (use 'crates', on the quarry rim since Phase 123: js/mast123.js), the crates card ends with him at the bottom of the ladder (voiced).
 //       [PROPOSED] Night is 22:00 to 04:00, Part One, before the Rite; js/cargo56.js keeps its own two nights.
 //    q  OK-114, TWICE PAINTED OVER (ch. 15, l. 4181). On the Kestrel's bow, legible only up close: a mark at the bow rail
 //       of the deck (js/kestrel16.js). [PROPOSED] The place (the book sees it from the Moot-house steps; the game's deck is
@@ -169,7 +169,7 @@ const TOUCHES71 = (function () {
   function readDecree() { injectStyle(); showEvent(TX.decreeTitle, decreeHtml(), [{ t: TX.putBack, f: null }]); }
 
   // ---------------------------------------------------------------- o · "Forty-eight."
-  const holdNight = () => { const h = hour(); return G.mapId === 'oakhaven' && partOne() && !F().rite_started && (h >= 22 || h < 4); };
+  const holdNight = () => { const h = hour(); return G.mapId === 'clearing' && partOne() && !F().rite_started && (h >= 22 || h < 4); };
   const HOLD_TITLE = 'The crates in the hold';       // js/game.js useDeco 'crates'
   // the card is built inside game.js; add the line to it on the way out, and put showEvent back however the call ends
   function withVane(run) {

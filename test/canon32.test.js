@@ -100,7 +100,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const crates = await page.evaluate(() => {
       const out = {}, f = G.flags;
       const tav = G.maps.tavern.entities.filter((e) => e.use === 'crates');
-      const oak = G.maps.oakhaven.entities.filter((e) => e.use === 'crates');
+      const oak = G.maps.clearing.entities.filter((e) => e.use === 'crates');   // Phase 123: the mast-ladder is on the quarry rim
       out.where = tav.length === 0 && oak.length === 1 && /mast-ladder/.test(oak[0].label);
       out.hetty = /ship\'s hold, at the mast/.test(NPCS.hetty.topics['The Drift-Kestrel']);
       delete f.hetty_crates; const q = NPCS.hetty.quest(G); out.ask = /mast-ladder/.test(q.text) && /hold/.test(q.journal[1]);
@@ -202,14 +202,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     // ---- One Wearer (ch. 20, 23): the mast is a voice and a hound pack; the Cloister porch is Voice at the Door, not a fight
     const wearer = await page.evaluate(() => {
       const out = {}, f = G.flags;
-      // the Oakhaven mast, after the Greening, with the Hedge answered
-      loadMap('oakhaven'); G.state = 'play';
+      // the mast (on the quarry rim since Phase 123), after the Greening, with the Hedge answered
+      loadMap('clearing'); G.state = 'play';
       const t = G.map.triggers.find((o) => o.id === 'mast'); Engine.cam.x = t.x; Engine.cam.y = t.y; t.inside = false;
       Object.assign(f, { greening: true, hedge_answered: true }); delete f.mast_voice; delete f.part3; delete f.part4;
       window.__ended = 0; const _end = window.ending; window.ending = () => { window.__ended++; };
       const hounds0 = G.ents.filter((o) => o.kind === 'enemy' && o.type === 'hound' && !o.dead).length;
       window.__msgs.length = 0; checkTriggers();
-      out.mast = f.mast_voice && !G.ents.some((o) => o.kind === 'enemy' && o.type === 'wearer') && G.ents.filter((o) => o.kind === 'enemy' && o.type === 'hound' && !o.dead).length === hounds0 + 3 && window.__msgs.some((m) => /"Grab the line\." It followed your voice here/.test(m)) && window.__ended === 0;
+      out.mast = f.mast_voice && !G.ents.some((o) => o.kind === 'enemy' && o.type === 'wearer') && G.ents.filter((o) => o.kind === 'enemy' && o.type === 'hound' && !o.dead).length === Math.min(5, hounds0 + 3) && window.__msgs.some((m) => /"Grab the line\." It followed your voice here/.test(m)) && window.__ended === 0;
       for (const o of G.ents) if (o.kind === 'enemy' && o.type === 'hound') o.dead = true;
       t.inside = false; checkTriggers(); out.mastEnd = window.__ended === 1;
       window.ending = _end; delete f.greening; delete f.hedge_answered;

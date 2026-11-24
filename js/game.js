@@ -1511,7 +1511,7 @@ function useDeco(e) {
   if (e.trapType) { inspectTrap(e); return; }
   if (wildsUse(e) || codaUse(e) || wgUse(e)) return;
   if (e.use === 'crates') {
-    if (G.flags.greening || G.flags.part3 || G.flags.part4) { msg('The mast-ladder sways over the square. Not now.', '', 3000); return; }
+    if (G.flags.greening || G.flags.part3 || G.flags.part4) { msg('The mast-ladder sways over the quarry rim. Not now.', '', 3000); return; }
     if (!G.flags.crates_heard) { G.flags.crates_heard = true; ['Annet Sowerby', 'Corwin Aye', 'Mirren Salk'].forEach(n => G.ledger.push({ name: n, where: 'the Kestrel\'s hold', day: G.day })); }
     showEvent('The crates in the hold', 'You go up the mast-ladder and down through the open hatch into the Kestrel\'s hold: twelve crates, lashed, stencilled for the quarry garrison. You put your ear to the wood. Thirty-six lilac spheres, you would guess by the weight, each in its straw. For a long moment nothing. Then, very small, through the side of the crate: <i>"Is somebody there? I\'m Annet. Annet Sowerby. I\'m six. What\'s your name?"</i><br><br>You do not answer. You have learned that much. From further in, two more voices, each saying only a name, over and over, the way a person says a thing they are afraid of losing: Corwin Aye. Mirren Salk.', [{ t: 'Step away from the crates', f: () => { if (G.flags.crates_logged) return; G.flags.crates_logged = true; journal('side', 'The crates in the corsair\'s hold are full of glass cores. One of them is a six-year-old called Annet Sowerby. I wrote the names in my ledger.'); } }]);
     Audio_.sfx.voice();
@@ -1547,7 +1547,7 @@ function finishBore() {
   G.maps.oakhaven = buildOakhaven(true);
   if (G.mapId === 'oakhaven') { const c = Engine.cam; loadMap('oakhaven', { x: c.x, y: c.y, dir: c.dir }); }
   G.escapeTimer = 300;
-  showEvent('The Greening', 'The bit snaps. You hear it go, a sound like a bell dropped down a well.<br><br>Then, from a speaking-tube on the wall, the Governor\'s voice, small and tinny from four hundred feet above: <i>"Sixty seconds on the reservoir gates. Anyone below, get to the cage."</i> And then, not raised, because it has not risen in years: <i>"Get to the cage. I\'m counting. Forty-one. Forty."</i> The reservoir dumps forty thousand gallons into an open wound. The Root drinks it. And screams. And cracks. And begins to grow.<br><br>Leaves are coming up the shaft behind you. The oaks in the town above are doubling and ringing. The Drift-Kestrel is at the mooring mast, and she takes children first, four to a line.', [{ t: 'Get out', f: () => { journal('main', 'The bit is snapped and the Root is Greening. Oakhaven is going under in an hour. I must climb — the shaft, the headframe, the North Gate — and reach the mooring mast on the east side of the square before the oaks close over it.'); msg('GET OUT. Up the shaft, up the headframe, through the gate, to the mooring mast.', 'bad', 9000); } }]);
+  showEvent('The Greening', 'The bit snaps. You hear it go, a sound like a bell dropped down a well.<br><br>Then, from a speaking-tube on the wall, the Governor\'s voice, small and tinny from four hundred feet above: <i>"Sixty seconds on the reservoir gates. Anyone below, get to the cage."</i> And then, not raised, because it has not risen in years: <i>"Get to the cage. I\'m counting. Forty-one. Forty."</i> The reservoir dumps forty thousand gallons into an open wound. The Root drinks it. And screams. And cracks. And begins to grow.<br><br>Leaves are coming up the shaft behind you. The oaks in the town above are doubling and ringing. The Drift-Kestrel is at the mooring mast, and she takes children first, four to a line.', [{ t: 'Get out', f: () => { journal('main', 'The bit is snapped and the Root is Greening. Oakhaven is going under in an hour. I must climb — the shaft, the headframe — and reach the mooring mast on the quarry rim before the oaks close over it.'); msg('GET OUT. Up the shaft, up the headframe, to the mooring mast on the quarry rim.', 'bad', 9000); } }]);
 }
 
 // ---------------------------------------------------------------- events & triggers
@@ -1575,7 +1575,10 @@ function checkTriggers() {
     }
     if (t.id === 'mast') {
       if (G.flags.part3 || G.flags.part4) continue;   // Part Two's ending happens once; later parts never replay it
-      if (!G.flags.greening) { if (!t.said) { t.said = true; msg('The Drift-Kestrel hangs from the mast, her lift-tanks murmuring. Six feet of rope coil on the deck. Nobody is aboard who will talk to you yet.', '', 6000); } continue; }
+      // the mast is on the quarry rim (Phase 123, js/mast123.js). While the Greening's scene runs in the town, or Grab the
+      // Line at the North Gate, the ship is not taken here: she comes down over the North Gate (Book One ll. 3594-3644)
+      const scene = G.flags.greening && ((typeof GREEN44 !== 'undefined' && GREEN44.live && GREEN44.live()) || (typeof ROPE45 !== 'undefined' && ROPE45.stage && ROPE45.stage() >= 1 && ROPE45.stage() <= 6));
+      if (!G.flags.greening || scene) { if (!t.said) { t.said = true; msg('The Drift-Kestrel hangs from the mast, her lift-tanks murmuring. Six feet of rope coil on the deck. Nobody is aboard who will talk to you yet.', '', 6000); } continue; }
       // the thing that learned your voice at the Hedge does not come where people are (Book One ch. 23); it sends the hounds in your voice
       if (G.flags.hedge_answered && !G.flags.mast_voice) {
         G.flags.mast_voice = true; Audio_.sfx.voice(); addNoise(4);
@@ -1789,12 +1792,16 @@ function askTopic(t) {
   // quest-relevant tells
   if (t === 'Kaelen Vance' && !G.flags.need_gate && G.flags.lyra_met) { G.flags.need_gate = true; }
 }
-const PLACE_POS = { tavern: [29.5, 17.5], lyra_house: [21.5, 29.5], greenhall: [30.5, 9.5], surgery: [17.5, 15.5], gate: [23.5, 1.5], mast: [36.5, 22.5], orla_house: [29.5, 40.5], culvert: [23.5, 60.5], market: [52.5, 17.5], mill: [57.5, 9.5], chapel: [48.5, 10.5], flume: [53.5, 47.5], tannery: [15.5, 56.5] };
+const PLACE_POS = { tavern: [29.5, 17.5], lyra_house: [21.5, 29.5], greenhall: [30.5, 9.5], surgery: [17.5, 15.5], gate: [23.5, 1.5], orla_house: [29.5, 40.5], culvert: [23.5, 60.5], market: [52.5, 17.5], mill: [57.5, 9.5], chapel: [48.5, 10.5], flume: [53.5, 47.5], tannery: [15.5, 56.5] };
 function askPlace(place) {
   const ps = placeSet(), wg = !!ps, hub = ps ? ps.hub : 'oakhaven';
-  const pos = ps ? ps.list[place] : PLACE_POS[PLACES[place]]; if (!pos) return; const [tx, ty] = pos; DLG.log.push({ who: 'you', t: `Where is ${place}?` });
+  // the mooring mast is not in the town: it stands on the quarry rim, north of the North Gate (Phase 123, js/mast123.js)
+  const mast = !ps && PLACES[place] === 'mast' && typeof MAST123 !== 'undefined' ? MAST123.inFrame(hub) : null;
+  const pos = mast ? [mast.x, mast.y] : ps ? ps.list[place] : PLACE_POS[PLACES[place]]; if (!pos) return; const [tx, ty] = pos; DLG.log.push({ who: 'you', t: `Where is ${place}?` });
   let from = [Engine.cam.x, Engine.cam.y], pre = '';
-  if (G.mapId !== hub) {
+  const off = mast && G.mapId === MAST123.MAP ? MAST123.FRAMES[hub] : null;   // from the rim itself, in the town's frame
+  if (off) from = [Engine.cam.x + off[0], Engine.cam.y + off[1]];
+  else if (G.mapId !== hub) {
     const oh = G.maps[hub]; const idx = G.mapId === 'underhedge' ? -1 : oh.cells.findIndex(c => c && c.portal && c.portal.map === G.mapId);
     if (idx >= 0) { from = [idx % oh.w + 0.5, (idx / oh.w | 0) + 0.5]; pre = 'Out the door, then '; }
     else { DLG.log.push({ who: 'them', t: wg ? (G.mapId === 'belfry' ? (/bell-tower/.test(place) ? 'You are standing in it.' : `That is in ${ps.name}. Down the tower stair, west through the hall of tombs, and out of the Mausoleum's front door.`) : `That is in ${ps.name}, back the way you came.`) : 'That is in Oakhaven. You are a long way from Oakhaven.' }); return; }
@@ -1803,7 +1810,7 @@ function askPlace(place) {
   const ang = Math.atan2(dy, dx); const dirs = ['east', 'south-east', 'south', 'south-west', 'west', 'north-west', 'north', 'north-east'];
   const dname = dirs[((Math.round(ang / (Math.PI / 4)) % 8) + 8) % 8];
   const paces = Math.round(d * 6);
-  const t = d < 2 ? `You are standing at it.` : `${pre}${dname}${pre ? '' : ' of here'}, about ${paces} paces. ${d > 12 ? (G.flags.part4 ? 'Keep to the open moss between the willows, and if anything sings to you out of the trees, do not answer it.' : G.flags.part3 ? 'Wade; keep to the dry marble where you can, and walk round the Hollows, not through them.' : 'Follow the cobbles; keep your voice down past the oaks.') : 'You cannot miss it.'}`;
+  const t = d < 2 ? `You are standing at it.` : `${pre}${dname}${pre ? '' : ' of here'}, about ${paces} paces. ${mast ? MAST123.TX.where : d > 12 ? (G.flags.part4 ? 'Keep to the open moss between the willows, and if anything sings to you out of the trees, do not answer it.' : G.flags.part3 ? 'Wade; keep to the dry marble where you can, and walk round the Hollows, not through them.' : 'Follow the cobbles; keep your voice down past the oaks.') : 'You cannot miss it.'}`;
   DLG.log.push({ who: 'them', t: t.charAt(0).toUpperCase() + t.slice(1) });
 }
 
@@ -1973,7 +1980,8 @@ function renderMap() {
     if (!c && m.smooth && m.gradeAt(x + 0.5, y + 0.5) > MAX_GRADE) { cx.fillStyle = '#7a3a28'; cx.fillRect(x * cw, y * cw + 1, cw, 1); cx.fillRect(x * cw, y * cw + 3, cw, 1); }
   }
   for (const e of G.ents) { if (e.hidden || e.dead) continue; if (!m.visited[(e.y | 0) * m.w + (e.x | 0)]) continue; cx.fillStyle = e.kind === 'npc' ? '#6fa0e0' : e.kind === 'enemy' ? '#d04030' : e.kind === 'item' ? '#e0d060' : null; if (cx.fillStyle && e.kind !== 'deco') cx.fillRect(e.x * cw - 1, e.y * cw - 1, 3, 3); }
-  if (G.mapId === 'oakhaven') { cx.font = '7px "Alegreya SC", serif'; cx.textAlign = 'center'; cx.fillStyle = '#f0d890'; for (const [lbl, [px, py]] of Object.entries({ 'Gate': [23.5, 3], 'Boar': [29.5, 16.6], 'Greenhall': [30.5, 8.4], 'Lyra': [21.5, 31.6], 'Rooke': [17.5, 14.4], 'Mast': [36.5, 18.4], 'Market': [52.5, 15.2], 'Mill': [62, 8.6], 'Chapel': [49, 6.8], 'Tannery': [15.5, 59.4], 'Flume': [36, 50.4], 'Culvert': [23.5, 60.6], 'Orchard': [56, 31] })) { const i = ((py | 0) * m.w + (px | 0)); if (m.visited[i]) cx.fillText(lbl, px * cw, py * cw); } cx.textAlign = 'left'; }
+  if (G.mapId === 'oakhaven') { cx.font = '7px "Alegreya SC", serif'; cx.textAlign = 'center'; cx.fillStyle = '#f0d890'; for (const [lbl, [px, py]] of Object.entries({ 'Gate': [23.5, 3], 'Boar': [29.5, 16.6], 'Greenhall': [30.5, 8.4], 'Lyra': [21.5, 31.6], 'Rooke': [17.5, 14.4], 'Market': [52.5, 15.2], 'Mill': [62, 8.6], 'Chapel': [49, 6.8], 'Tannery': [15.5, 59.4], 'Flume': [36, 50.4], 'Culvert': [23.5, 60.6], 'Orchard': [56, 31] })) { const i = ((py | 0) * m.w + (px | 0)); if (m.visited[i]) cx.fillText(lbl, px * cw, py * cw); } cx.textAlign = 'left'; }
+  else if (G.mapId === 'clearing' && typeof MAST123 !== 'undefined') { const [px, py] = [MAST123.AT.x, MAST123.AT.y - 1.4]; if (m.visited[((MAST123.AT.y + 1) | 0) * m.w + (px | 0)]) { cx.font = '7px "Alegreya SC", serif'; cx.textAlign = 'center'; cx.fillStyle = '#f0d890'; cx.fillText('Mast', px * cw, py * cw); cx.textAlign = 'left'; } }
   cx.fillStyle = '#fff'; cx.beginPath(); cx.arc(Engine.cam.x * cw, Engine.cam.y * cw, 2.5, 0, 7); cx.fill();
   cx.strokeStyle = '#fff'; cx.beginPath(); cx.moveTo(Engine.cam.x * cw, Engine.cam.y * cw); cx.lineTo(Engine.cam.x * cw + Math.cos(Engine.cam.dir) * 7, Engine.cam.y * cw + Math.sin(Engine.cam.dir) * 7); cx.stroke();
 }

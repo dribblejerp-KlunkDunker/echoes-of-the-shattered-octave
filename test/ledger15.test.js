@@ -399,8 +399,8 @@ const plain = (page) => page.evaluate(() => { try { closeModal(); } catch (e) { 
 
     // ---------------------------------------------------------------- 4. "WHERE IS..." MARKS
     await pg.evaluate(() => { for (const k of Object.keys(G.flags)) if (k.startsWith('p15l_mk')) delete G.flags[k]; loadMap('oakhaven'); G.state = 'play'; Engine.cam.x = 20; Engine.cam.y = 20; });
-    const place = await pg.evaluate(() => { const names = Object.keys(PLACES); return names.map(n => [n, Math.hypot(PLACE_POS[PLACES[n]][0] - 20, PLACE_POS[PLACES[n]][1] - 20)]).sort((a, b) => b[1] - a[1])[0][0]; });
-    const near = await pg.evaluate(() => { const names = Object.keys(PLACES); return names.map(n => [n, Math.hypot(PLACE_POS[PLACES[n]][0] - 20, PLACE_POS[PLACES[n]][1] - 20)]).sort((a, b) => a[1] - b[1])[0]; });
+    const place = await pg.evaluate(() => { const names = Object.keys(PLACES).filter((n) => PLACE_POS[PLACES[n]]); /* Phase 123: the mooring mast is not in the town */ return names.map(n => [n, Math.hypot(PLACE_POS[PLACES[n]][0] - 20, PLACE_POS[PLACES[n]][1] - 20)]).sort((a, b) => b[1] - a[1])[0][0]; });
+    const near = await pg.evaluate(() => { const names = Object.keys(PLACES).filter((n) => PLACE_POS[PLACES[n]]); /* Phase 123: the mooring mast is not in the town */ return names.map(n => [n, Math.hypot(PLACE_POS[PLACES[n]][0] - 20, PLACE_POS[PLACES[n]][1] - 20)]).sort((a, b) => a[1] - b[1])[0]; });
     check(await talkTo(pg, 'harrow'), 'talk for the Where-is test');
     const mk = await pg.evaluate((place) => { askPlace(place); const lg = DLG.log.map(l => l.t); return { marked: LEDGER15.isMarked('O', place), n: LEDGER15.allMarks().length, flag: G.flags.p15l_mkO, said: lg[lg.length - 1], pos: LEDGER15.allMarks()[0] }; }, place);
     check(mk.marked && mk.n === 1 && mk.flag > 0 && /mark it on my map/.test(mk.said), 'asking where a place is marks it (and the log says so): ' + place + ' (' + JSON.stringify(mk) + ')');
@@ -427,13 +427,13 @@ const plain = (page) => page.evaluate(() => { try { closeModal(); } catch (e) { 
     // clear by entering the place through its door (interior)
     const intr = await pg.evaluate(() => {
       const hub = G.maps.oakhaven; const idx = hub.cells.findIndex(c => c && c.portal && c.portal.map === 'greenhall'); const x = idx % hub.w + 0.5, y = (idx / hub.w | 0) + 0.5;
-      const name = Object.keys(PLACES).find(n => { const p = PLACE_POS[PLACES[n]]; return Math.hypot(p[0] - x, p[1] - y) < 4; });
+      const name = Object.keys(PLACES).find(n => { const p = PLACE_POS[PLACES[n]]; return !!p && Math.hypot(p[0] - x, p[1] - y) < 4; });
       if (!name) return { skip: true };
       Engine.cam.x = 5; Engine.cam.y = 5; G.state = 'play'; LEDGER15.setMark('O', name, true); const before = LEDGER15.allMarks().length; loadMap('greenhall'); return { name, before, after: LEDGER15.allMarks().length };
     });
     if (!intr.skip) check(intr.before === 1 && intr.after === 0, 'walking into the building the place is in clears the mark (' + JSON.stringify(intr) + ')'); else console.log('note: no Oakhaven place is within four cells of the Greenhall door; interior-clear case skipped');
     // from an interior the answer is given from the door, and still marks
-    const inside = await pg.evaluate(() => { loadMap('greenhall'); G.state = 'play'; const far = Object.keys(PLACES).map(n => [n, PLACE_POS[PLACES[n]]]); const hub = G.maps.oakhaven; const idx = hub.cells.findIndex(c => c && c.portal && c.portal.map === 'greenhall'); const x = idx % hub.w + 0.5, y = (idx / hub.w | 0) + 0.5;
+    const inside = await pg.evaluate(() => { loadMap('greenhall'); G.state = 'play'; const far = Object.keys(PLACES).filter((n) => PLACE_POS[PLACES[n]]).map(n => [n, PLACE_POS[PLACES[n]]]); const hub = G.maps.oakhaven; const idx = hub.cells.findIndex(c => c && c.portal && c.portal.map === 'greenhall'); const x = idx % hub.w + 0.5, y = (idx / hub.w | 0) + 0.5;
       const pick = far.sort((a, b) => Math.hypot(b[1][0] - x, b[1][1] - y) - Math.hypot(a[1][0] - x, a[1][1] - y))[0][0];
       G.state = 'dialogue'; Object.assign(DLG, { npc: NPCS.hob, ent: { id: 'hob' }, tone: 'normal', log: [], choices: null }); askPlace(pick); return { pick, marked: LEDGER15.isMarked('O', pick), mid: G.mapId }; });
     check(inside.marked, 'asked from inside a building, the answer is given from its door and the place is marked (' + inside.pick + ')');

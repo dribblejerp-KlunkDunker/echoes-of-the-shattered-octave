@@ -38,7 +38,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       go('oakhaven', 44.5, 13.5, -1.2);
       check(G.map.relief === true && G.map.lvls === null, 'Oakhaven has relief (towers, roofs, parapets) but still no height field');
       check(Math.abs(G.map.maxTop - 4.1) < 1e-6, 'the Chapel tower is the tallest thing in Oakhaven');   // Phase 97: raised with the houses (the owner: "the roofs are to low")
-      check(G.map.get(49, 11).top === 0.3 && G.map.get(36, 19).top === 3.6 && G.map.get(20, 49).top === 0.32, 'the plinth, mast and parapets keep their heights after the town is built');
+      check(G.map.get(49, 11).top === 0.3 && G.map.get(36, 19) === null && G.map.get(20, 49).top === 0.32, 'the plinth and parapets keep their heights after the town is built; where the mast stood is open ground (Phase 123: it is on the quarry rim)');
       go('tavern', 8.5, 10.5, 0);
       check(G.map.relief === false, 'interiors without relief keep the flat renderer');
       go('oakhaven', 23.5, 20.5, -1.57);

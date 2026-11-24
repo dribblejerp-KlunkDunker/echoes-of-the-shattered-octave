@@ -47,7 +47,7 @@ const frCheck = async (page, file, mod, label) => {
         step(n) { for (let i = 0; i < n; i++) { G.state = 'play'; G.keys = {}; update(0.05); } },
         last() { return window.__ev[window.__ev.length - 1] || null; },
         pick(re) { const ev = T.last(); const c = ev && ev.c.find((o) => re.test(o.t)); if (c && c.f) c.f(); return !!c; },
-        ladder() { loadMap('oakhaven'); G.state = 'play'; const e = G.ents.find((x) => x.use === 'crates' && x.sprite === 'ladder'); useDeco(e); return e; },
+        ladder() { loadMap('clearing'); G.state = 'play';   /* Phase 123: the mast-ladder is on the quarry rim */ const e = G.ents.find((x) => x.use === 'crates' && x.sprite === 'ladder'); useDeco(e); return e; },
         bye() { try { document.getElementById('d-bye').click(); } catch (e) { /* none */ } G.state = 'play'; },
       };
     });

@@ -12,7 +12,7 @@
 //    * Whisper-Grove: the mast-ladder at the south landing (the existing wg_ladder deco). Its use now offers "Climb up to the
 //      deck", and, in Part Three only, the old "Climb, and go on to the Deep Woods" which runs the original event untouched.
 //    * the Deep Woods camp: the Kestrel deco, once Tobiah has closed the number-three tank (flag tank_patched): a hatch in her flank.
-//    * Before the escape the ship stays at the Oakhaven mast ("Nobody is aboard who will talk to you yet"): not boardable.
+//    * Before the escape the ship stays at the mast on the Oakhaven quarry's rim (js/mast123.js) ("Nobody is aboard who will talk to you yet"): not boardable.
 //  OPTIONAL HOP (new lift-tank + coda_done): the map table flies the Kestrel between the two moorings (4 hours).
 //  THE BED (p16k_bed) rests like a house bed: 8 hours (6 with the lanterns), hp/voice/fatigue back (needs-aware, as doRest),
 //  bleed/deaf/hushed/fear cleared, injuries mended only with proper bunks. Both map ids contain "kestrel", so js/night13.js
