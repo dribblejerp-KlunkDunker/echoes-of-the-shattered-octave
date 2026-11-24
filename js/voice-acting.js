@@ -2,7 +2,7 @@
 //
 // The lines are MP3s in voices/, rendered offline by tools/voices/build.py from voices/script.json (neural TTS,
 // Kokoro-82M, Apache-2.0, then treated per character: age, gravel, Kaelen's glass ring at 528 Hz, Hollow breath,
-// the many voices of the Weaver, the Wearer and the Requiem). js/voice-lines.js is the generated manifest.
+// the many voices of the Weaver, the Wearer and the Unended Office). js/voice-lines.js is the generated manifest.
 //
 // What is voiced, and how it is found:
 //   greetings  - when a conversation opens, the greeting the game shows (polite/normal/blunt, whichever your tone

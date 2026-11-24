@@ -153,9 +153,14 @@ const MIDNIGHT = 0.0, NEW = 5, FULL = 1;
       const scenes = [[...OPEN, core.az, MIDNIGHT, NEW, core.el], [...TOWN, core.az, MIDNIGHT, NEW, 0.2], [...OPEN, 1.8, MIDNIGHT, FULL, 0.3], [...OPEN, core.az, 0.5, NEW, 0.1]];
       const take = (E, off) => E(([scenes, off]) => {
         const out = [];
+        // Phase 123 put the mooring mast on the Watch Downs' skyline and taught js/light21.js to light it. The "before" page
+        // is served this file as it was before Phase 113, so it would light that one sprite the old way: a difference that
+        // is Phase 123's, not the deep sky's. The mast's far view is held out of both pages for this comparison.
+        const mastFar = typeof MAST123 !== 'undefined' && MAST123 && typeof MAST123.setFar === 'function';
+        if (mastFar) MAST123.setFar(false);
         if (off && 'deepSky' in GFX) GFX.deepSky = false;
         for (const v of ['classic', '3d']) { T113.view(v); for (const s of scenes) { PRESETS.apply('medium'); if (off && 'deepSky' in GFX) GFX.deepSky = false; T113.stage(...s); T113.frame(); out.push(v + ':' + s[0] + ':' + s[4] + ':' + T113.hash(T113.grab())); } }
-        T113.view('3d'); return out;
+        T113.view('3d'); if (mastFar) MAST123.setFar(true); return out;
       }, [scenes, off]);
       const a = await take(EA, false), b = await take(EB, true);
       console.log('  before ' + a.join(' ')); console.log('  off    ' + b.join(' '));

@@ -6,7 +6,7 @@ Nothing in the game was changed by this audit. It is findings, scores and a list
 
 ## 1. How this was done, and what it cannot tell you
 
-- **The size of the thing.** 102 maps. 17,502 lines of in-game text, about 298,000 words (67,000 of them the Library's 65 books). 251 logbook entries in the code (67 main story, 184 side). 216 placed people, 346 placed foes and 873 things to use at the start of a new game, before the walkers and road meetings the game adds as it runs. 220 automated test suites.
+- **The size of the thing.** 102 maps. 17,502 lines of in-game text, about 298,000 words (67,000 of them the Library's 65 books). 251 logbook entries in the code (67 main story, 184 side). 216 placed people, 346 placed foes and 873 things to use at the start of a new game, before the people and road meetings the game adds when you arrive in a place. **Corrected the same day:** that first count missed those arrivals, and three statements below that leaned on it were wrong and are corrected where they stand (the Watch Downs, the Greenroot Road, the Chalk Cliffs). I counted again after arriving in each of the sixteen emptiest places. 220 automated test suites.
 - **Read in full by me:** every logbook entry, main and side; the Rite's and the nine days' design; the six callings and the six likenesses; Vol VIII's lists of standing contradictions and open questions (about 120 items); the Rift's lore briefs; Book One's chapter map against what the game plays.
 - **Checked by machine, every line:** months, weekdays, years, units, money, modern words, every name and phrase the volumes strike, every contradiction Vol VIII records (is it still in the text today?), key numbers against the Book One manuscript, and British against American spelling.
 - **Read by eye in samples:** about 600 lines of dialogue and narration, drawn from 46 files across every region.
@@ -23,7 +23,7 @@ My opinion, out of 100. The reasons follow in the sections named.
 | **Side quests** | **84** | About fifty threads in the Reach and the Woods, most with a way through that is not a fight. Thin in the newer countries (section 5). |
 | **Dialogue and text** | **90** | The strongest part. Clean against canon; the voice holds across a quarter of a million words (section 6). |
 | **Fun** | **68, give or take 10** | Many good systems, never felt by a hand. Long empty roads, six callings that play nearly alike, and a hero who is a bystander pull it down (section 7). |
-| **Places, taken together** | **78** | The Book One places are 80 to 93. The roads and some of the newer country are 55 to 70 (section 9). |
+| **Places, taken together** | **78** | The Book One places are 80 to 93. The roads and some of the newer country are 57 to 70 (section 9). |
 
 ## 3. The game against the books
 
@@ -104,7 +104,7 @@ What I would mark down: **everyone is eloquent.** A quarry hand, a child, a cler
 **What holds it back.**
 
 1. **Nobody has felt it.** See section 1.
-2. **Size without density.** Each of the three Greenroot Road maps is 235 by 134 cells and holds nobody to speak to and two to four things to use. The Rift's wall is 372 by 133 with seven things to use. The Deep Woods, at 56 by 56, holds sixteen people, forty foes and fifteen things to use. The old maps are forty times as full as the new roads. A road should be emptier than a town, and these are emptier than that.
+2. **Size without density.** Each of the three Greenroot Road maps is 235 by 134 cells and, once you are on it, holds five or six wayfarers and five or six things to use. The Rift's wall is 372 by 133 with twenty-four people and ten things to use. The Deep Woods, at 56 by 56, holds sixteen people, forty foes and fifteen things to use. For its size an old map is about twenty-five times as full as a new road. A road should be emptier than a town, and these are emptier than that. (Corrected: this first said the roads held nobody. They do; the count had been taken before arriving.)
 3. **The callings play alike.** The code checks which calling you are in very few places. The Blade has the glass arm, noticed about twenty times. The Cantor has four Songs and three small touches. The Archivist has two or three. The Corsair has an eight-in-a-hundred better dodge and nothing else. The Penitent and the Quarry-Hand have different numbers and different starting gear and are otherwise the same person.
 4. **The bystander's main quest** (section 4).
 5. **Breadth.** There are a great many systems and keys. Each was added with a switch and a test, which is why the game still works. A new player meets all of them in the first hour.
@@ -158,7 +158,7 @@ Scored for how interesting it is to be in: what there is to meet, do, read and d
 | The standing-stones | 78 | Counted in Eights. Will rise with the Fold. |
 | The water-meadow | 75 | One scene, a good one. |
 | The Under-hedge | 70 | A crawl with one find. |
-| The Watch Downs | 55 | Forty-one things to look at, nobody to meet, nothing to do. Raise: a shepherd, a ewe to bring in, a stone of the Fold. |
+| The Watch Downs | 66 | Forty-one things to look at, Abel Sedge the turf-cutter, four things to use, and no danger, as the author ruled it: the quiet way in. Raise: a small errand for Abel; the Fold's stone is now there. (Corrected from 55: the first count missed Abel and the uses.) |
 | Wethercombe, the Bellwether, the Hanger, Ewe Barrow | 82 | The Woolwight is a proper mystery with a place for each clue. |
 | Greenroot, its chapel and undercroft | 76 | Well dressed and empty of people, as the story has it. |
 | The Flume Road, Stillwater Landing, the Low Rings | 78 | The lock, the loft, the smugglers' book room. |
@@ -181,7 +181,7 @@ Scored for how interesting it is to be in: what there is to meet, do, read and d
 
 | Place | Score | Why, and what would raise it |
 |---|---|---|
-| The Greenroot Road (three maps) | 58 | Handsome, very long, and nobody on it. Raise: item 5. |
+| The Greenroot Road (three maps) | 64 | Handsome and very long, with five or six wayfarers on each stretch (a packman, a road-mender, a man carrying a child's coat) and as many things to use. Raise: item 5. (Corrected from 58: the first count missed the wayfarers.) |
 | Singers' Howe | 74 | A barrow with a keeper. |
 | The Flume Road: the Stride, the Pound Stair | 62 | The stuck gates are a good small puzzle in a great deal of walking. |
 | The drove road: the Grey Wethers | 70 | The drovers' call on the stones. Will rise with the Fold's pegs. |
@@ -202,7 +202,7 @@ Scored for how interesting it is to be in: what there is to meet, do, read and d
 | Sol-Luminary: the Seventh Anchor-House | 72 | |
 | Sol-Luminary: the black square | 72 | |
 | Sol-Luminary: the Anchorage | 68 | One person. |
-| The Chalk Cliffs | 55 | A long climb with seven things to look at and two to use. |
+| The Chalk Cliffs | 57 | A long climb with seven things to look at, four to use, eight foes and nobody on it. |
 
 ### The Continental Rift (Phases 100 and 113)
 

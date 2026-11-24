@@ -119,7 +119,8 @@ async function boot(browser, block) {
       check(portals.length === ways.length && ways.every((w) => portals.includes(w)), 'the Downs\' ways out are ' + ways.join(' and ') + ' (' + portals.join(',') + ')');
       for (let x = 0; x < D.w; x++) for (const y of [0, D.h - 1]) check(D.get(x, y), 'the Downs are walled at ' + x + ',' + y);
       for (let y = 0; y < D.h; y++) for (const x of [0, D.w - 1]) check(D.get(x, y), 'the Downs are walled at ' + x + ',' + y);
-      check(!D.entities.some((e) => e.kind === 'enemy' || e.kind === 'item' || e.kind === 'npc' || e.use), 'no enemies, items, people or usable props up there: walking and looking only');
+      // Phase 113c (approved 22 Nov): the Fold's notch-stone for the Far Fold stands up here, and it is looked through: still looking only
+      check(!D.entities.some((e) => e.kind === 'enemy' || e.kind === 'item' || e.kind === 'npc' || (e.use && !e._p113f)), 'no enemies, items, people or usable props up there but the Fold\'s stone to look through: walking and looking only');
       const g = cl._p20Gate, gc = cl.get(g.x, g.y);
       check(gc && gc.door && gc.portal && gc.portal.map === HORIZON20.DOWNS && !gc.locked && !/gate|grate|culvert/i.test(gc.label), 'the clearing\'s hurdle leads to the Downs, unlocked');
       // BFS: from the clearing's road, the hurdle is reachable; on the Downs, everything reached can get back; no harmful fall

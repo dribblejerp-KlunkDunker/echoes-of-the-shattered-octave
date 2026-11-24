@@ -266,7 +266,7 @@ function buildOakhaven(greening) {
     { x: 58, y: 39, w: 6, h: 4, tex: 't_house', door: [60, 39], barred: true, label: 'The Sowerbys\' — empty' },
     // --- south district: Tannery Row and the Flume ---
     { x: 12, y: 57, w: 7, h: 4, tex: 't_wood', door: [15, 57], portal: { map: 'tannery', x: 7.5, y: 2.0, dir: Math.PI / 2 }, label: 'The tannery' },
-    { x: 4, y: 57, w: 5, h: 4, tex: 't_house', door: [6, 57], barred: true, label: 'The Fenning twins\' house — empty' },
+    { x: 4, y: 57, w: 5, h: 4, tex: 't_house', door: [6, 57], barred: true, label: 'The Barker twins\' house — empty' },
     { x: 27, y: 57, w: 6, h: 4, tex: 't_house', door: [29, 57], barred: true, label: 'Old Tam\'s' },
     { x: 40, y: 57, w: 5, h: 4, tex: 't_wood', door: [42, 57], barred: true, label: 'A hay-barn' },
     { x: 4, y: 45, w: 4, h: 3, tex: 't_wood', door: [7, 46], barred: true, label: 'The fulling-shed' },
@@ -274,7 +274,7 @@ function buildOakhaven(greening) {
     { x: 26, y: 30, w: 6, h: 4, tex: 't_house', door: [28, 30], barred: true, label: 'Bettany\'s' },
     { x: 40, y: 14, w: 3, h: 6, tex: 't_house', door: [40, 16], barred: true, label: 'A shuttered house' },
     { x: 40, y: 27, w: 3, h: 6, tex: 't_wood', door: [40, 29], barred: true, label: 'The chandler\'s' },
-    { x: 4, y: 38, w: 5, h: 4, tex: 't_house', door: [8, 40], barred: true, label: 'Abner Fenning\'s' },
+    { x: 4, y: 38, w: 5, h: 4, tex: 't_house', door: [8, 40], barred: true, label: 'Jabez Barker\'s' },
     { x: 38, y: 38, w: 5, h: 4, tex: 't_house', door: [38, 40], barred: true, label: 'A shuttered house' },
   ];
   for (const b of buildings) {
@@ -295,10 +295,13 @@ function buildOakhaven(greening) {
       }
     }
   }
-  // Mooring mast (east): a wooden pylon with crates
-  m.rect(36, 19, 37, 20, 't_wood');
-  m.deco('crates', 35.5, 21.5); m.deco('ladder', 38.5, 21.5, { radius: 0.2, scale: 1.6, use: 'crates', label: 'The Drift-Kestrel\'s mast-ladder, up to her hold' });   // the corsair's cargo is in his own hold (Book One ch. 4, 8)
-  m.trigger(36.5, 22.5, 2.2, 'mast');
+  // The carters' standing [PROPOSED] (Phase 123), where the game had its mooring mast. Book One has the mast on the
+  // quarry rim, north of the town (ll. 672, 3598): it is js/mast123.js's, on the clearing. Cobbles; the two decos keep
+  // the old mast's two places in the list (saves keep entities by their place), and the trigger keeps its slot, inert.
+  for (let y = 19; y <= 22; y++) for (let x = 35; x <= 38; x++) m.setFloor(x, y, 1);
+  m.deco('p123_block', 35.5, 21.5, { radius: 0.4, scale: 0.55, label: 'A mounting-block of three worn steps, where the carters stand their horses.' });
+  m.deco('p123_trough', 38.5, 21.5, { radius: 0.45, scale: 0.5, label: 'A stone water trough. The water in it is very still.' });
+  m.trigger(-9, -9, 0, 'mast_was');
   // Tannery culvert through the south hedge — the Wearer's spot, and the way down to the Under-hedge
   m.set(23, H - 2, DOOR({ portal: { map: 'underhedge', useSpawn: true }, label: 'The tannery culvert', locked: 'culvert_open', lockMsg: 'A grate over the culvert, rusted shut. Somebody with a tanner\'s key could open it.' }));
   m.deco('grate', 23.5, 61.2, { radius: 0.3, scale: 0.8, solid: false, nopick: true });
@@ -342,7 +345,7 @@ function buildOakhaven(greening) {
     m.npc('townswoman', 27.5, 19.5, { wander: true }); m.npc('townswoman', 9.5, 14.5, { wander: true }); m.npc('townswoman', 34.5, 34.5, { wander: true });
     m.item('tonic', 7.5, 36.5); m.item('pellets', 42.5, 12.5); m.item('sovereigns', 42.5, 35.5);
   }
-  shapeOakhaven(m);   // last, so later cells (the mast, the plinth) take their heights
+  shapeOakhaven(m);   // last, so later cells (the plinth, the parapets) take their heights
   m.baseCount = m.entities.length;
   return m;
 }
@@ -433,8 +436,6 @@ function shapeOakhaven(m) {
   for (const [x, y] of [[48, 5], [49, 5], [48, 6], [49, 6]]) m.block(x, y, 't_marble', 4.1, { capTex: 't_stone' });
   // the Greenhall's dome
   m.block(30, 6, 't_marble', 2.1, { capTex: 't_roof' });
-  // the mooring mast: a tall timber pylon the Kestrel ties up to
-  m.lowWall(36, 19, 37, 20, 't_wood', 3.6, { capTex: 't_wood' });
   // the empty bell-plinth is knee-high stone, not a wall
   m.block(49, 11, 't_stone', 0.3);
   // bridge piers become parapets: you can look over them into the Flume
@@ -788,7 +789,7 @@ function buildAllMaps() {
 //  PART THREE — WHISPER-GROVE, the sunken marble capital of the Spectral Woods
 // -------------------------------------------------------------------------
 const WG_HOLLOW_LINES = [
-  ['...the bread\'s for Thursday... the bread\'s for Thursday...', '...tell her I\'ll be back before the bell...'],
+  ['...the bread\'s for Hearthday... the bread\'s for Hearthday...', '...tell her I\'ll be back before the bell...'],
   ['...one step, two step, mind the water...', '...where did I put my hat...'],
   ['...the court is in session... the court is in session...', '...all rise... all rise...'],
   ['...Wren? Wren, the cloak, you forgot your cloak...', '...hymn nine, page forty...'],

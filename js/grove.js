@@ -25,7 +25,7 @@ function startPart3() {
   else L.push('That night Kaelen starts a list of names on a deck-beam, and understands that everyone who ever kept one before him was the Catalogue.');
   L.push('On the third day the Spectral Woods come up out of the mist: silver willows, phosphorescent pools, lilac air. Under them is a marble city that never fell down, sunk a foot under its own lit water. Whisper-Grove, at dusk. The Kestrel holds at mast-height over the south landing and lets down a hundred feet of ladder.');
   showEvent('Part Three — The Forgetting', L.join('<br><br>'), [{ t: 'Climb down into the water.', f: () => {
-    journal('main', 'Part Three: The Forgetting. The Kestrel has put down over Whisper-Grove, the drowned capital of the Spectral Woods, where seventy-four thousand people forgot themselves in one night in 416. Find the Veil scribe: she will be in the Sunken Court, north up the causeway, where the names are thickest.');
+    journal('main', 'Part Three: The Forgetting. The Kestrel has put down over Whisper-Grove, the drowned capital of the Spectral Woods, where seventy-four thousand people forgot themselves in a few days in 416. Find the Veil scribe: she will be in the Sunken Court, north up the causeway, where the names are thickest.');
     msg('A foot of warm, lit water. The Hollows walk their loops through it, and do not look up.', 'voice', 7000);
   } }]);
 }
@@ -385,7 +385,7 @@ function wgUse(e) {
   if (e.use === 'loom') {
     if (!f.weaver_dead) { msg('The Weaver is at its loom. It is weaving your voice into the shroud as you stand there. You can hear it.', 'bad', 4000); return true; }
     if (f.shroud_done) { msg(f.shroud_cut ? 'The loom stands empty and silent, its threads cut.' : 'The loom hums, very faintly, with one thread missing.', '', 4000); return true; }
-    showEvent('The shroud', 'A shroud half the size of a sail, woven from lilac thread, and in every thread a voice: a woman pricing eels, a boy practising scales, a man saying <i>I love you</i> to someone who forgot him first. Seventy-four thousand people forgot themselves in one night, and this is where the forgetting went.', [
+    showEvent('The shroud', 'A shroud half the size of a sail, woven from lilac thread, and in every thread a voice: a woman pricing eels, a boy practising scales, a man saying <i>I love you</i> to someone who forgot him first. Seventy-four thousand people forgot themselves in a few days, and this is where the forgetting went.', [
       { t: 'Cut the shroud. Let them all go.', f: () => { f.shroud_done = true; f.shroud_cut = true; questXp(120); Audio_.sfx.song(741, 1.2); msg('You cut it from the loom. For half a breath, under Whisper-Grove, seventy-four thousand voices speak at once, and then they go up the stair and out into the mist, and the mist is a little brighter for it.', 'good', 10000); journal('side', 'I cut the Weaver\'s shroud from its loom. The voices of Whisper-Grove went up the Sunken Stair into the mist.'); } },
       { t: 'Take one thread. (+10 maximum voice; the Cacophony will hear you further)', f: () => { f.shroud_done = true; f.thread_kept = true; G.give('thread'); G.player.voiceMax += 10; G.player.voice += 10; questXp(60); msg('You wind one thread on a finger-bone. It hums against your ribs in a voice you nearly know. Behind you the shroud keeps the rest.', 'voice', 8000); journal('side', 'I took one thread from the Weaver\'s shroud and left the rest on the loom. It hums in my pack.'); } },
       { t: 'Leave it.', f: null },
@@ -398,7 +398,7 @@ function wgUse(e) {
     if (!f.wick_dresser) {
       f.wick_dresser = true;
       journal('side', 'A Table for Four: Halder Wick\'s house has four chairs, two beds and nothing with a name on it. I do not know who he was expecting. There is no one left to ask.');
-      showEvent('The dresser', 'A joiner\'s dresser, well made, and bare. No letters, no slates, no names chalked by the door, no Thursday marked on anything. Four chairs, two beds, one of them small. Whoever the other three plates are for, nothing in this house says, and the only man who knows is setting the table.', [{ t: 'Close the drawers.', f: null }]);
+      showEvent('The dresser', 'A joiner\'s dresser, well made, and bare. No letters, no slates, no names chalked by the door, no Memoryday marked on anything. Four chairs, two beds, one of them small. Whoever the other three plates are for, nothing in this house says, and the only man who knows is setting the table.', [{ t: 'Close the drawers.', f: null }]);
     } else msg('A bare dresser. Nothing in this house has a name on it.', '', 3000);
     return true;
   }

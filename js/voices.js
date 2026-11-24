@@ -54,7 +54,7 @@ const VOICES = (() => {
     breathy:{ q: 3,  buzz: 0,   breath: 0.9 },
     beast:  { q: 4,  buzz: 0.9, breath: 0.45, sub: 0.7 },
     golem:  { q: 9,  buzz: 1,   breath: 0.2, sub: 0.9 },
-    multi:  { q: 6,  buzz: 1,   breath: 0.2, fifth: true },   // layered voices: the Wearer, the Weaver, the Requiem
+    multi:  { q: 6,  buzz: 1,   breath: 0.2, fifth: true },   // layered voices: the Wearer, the Weaver, the Unended Office
     chord:  { q: 10, buzz: 1,   breath: 0.05, fifth: true, sub: 0.5 },
     cat:    { q: 8,  buzz: 1,   breath: 0.08 },
     swarm:  { q: 5,  buzz: 0.2, breath: 0.9 },

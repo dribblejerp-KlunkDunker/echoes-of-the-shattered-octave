@@ -9,7 +9,7 @@
 //       Oakhaven and the Grove alternate with their MP3 cue; the Woods and the dungeons replace the shared one.
 //       Each piece plays through, falls silent for a gap, and returns, like the MP3 cues, with a fresh random seed so
 //       the long form never repeats the same night twice. Crossfades ride the same fade times as the MP3 score.
-//    2. Boss themes that take over from 'combat' while that boss is chasing you (Requiem, Brood-Mother, Phantom
+//    2. Boss themes that take over from 'combat' while that boss is chasing you (Unended Office, Brood-Mother, Phantom
 //       Weaver, Aegis Sentinel, Pressman Mallow, the Deacon, the Wearer, Outrider-Captain, Steam Golem).
 //    3. A story-evolving main theme: a motif layer played over title.mp3 (and the ending cue) whose voices follow the
 //       story flags: alone, harmonised, shadowed, broken, re-forming, and finally the 174 Hz root restored.
@@ -288,7 +288,7 @@ const SCORE = (() => {
 
   // ---- boss themes: short ostinato loops that take over from 'combat' --------------------------------
   P.boss_requiem = {
-    name: 'The Requiem', bpm: 140, beats: 6, bars: null, mode: MODE.minor, root: 116,
+    name: 'The Unended Office', bpm: 140, beats: 6, bars: null, mode: MODE.minor, root: 116,
     init(V, S) { S.v = 0; },
     bar(V, t, i, S) {
       const m = MODE.minor, R = 116, c = [[0, 0, 5, 3], [0, 3, 5, 4]][Math.floor(i / 8) % 2][i % 4];

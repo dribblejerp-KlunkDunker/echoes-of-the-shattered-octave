@@ -69,7 +69,9 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   }
   check(r.per.kaelen.emit && !r.per.townsman.emit, "Kaelen's glass arm still glows; nothing on the orchardman does");
   // the paintings left still on purpose; any of them may be on screen at once (Phase 95 added the fifth and kept 'n - 4')
-  const STILL = ['orla', 'cat', 'p31_seated', 'p17p_solenne', 'p95_flambeau'];
+  // p113f_marrable (Phase 113, the Fold's lamp-teller) is a small figure drawn at 26 by 30, under the rig's ninety pixels of
+  // height; she stands by one stone at night and never walks. She is to be drawn at the paintings' size in Phase 128.
+  const STILL = ['orla', 'cat', 'p31_seated', 'p17p_solenne', 'p95_flambeau', 'p113f_marrable'];
   check(r.all.n >= 25 && r.all.rigged >= r.all.n - STILL.length && r.all.never.every((id) => STILL.includes(id))   /* p95_flambeau: the Warden of the Chain wears the Flambeaux's own painting, which has its own walking poses (js/pilgrim95.js) */, 'every NPC painting in the game is rigged: ' + r.all.rigged + ' of ' + r.all.n + ' (' + JSON.stringify(r.all.kinds) + '; left still: ' + (r.all.never.join(', ') || 'none') + ')');
   check(!r.all.bad.length, 'each of them stands as its painting and walks from the front, the side and the back' + (r.all.bad.length ? ' (not: ' + r.all.bad.join(', ') + ')' : ''));
   check(r.lazy, 'a painting first seen in play is rigged the moment it is needed: it does not wait on a timer');

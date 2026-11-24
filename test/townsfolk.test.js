@@ -63,7 +63,7 @@ async function boot(browser) {
       for (const h of hrs) {
         setH(h);
         if (sig() !== baseSig[h]) diffs++;
-        for (const [id, e] of allEnts()) if (e.kind === 'npc' && critical.includes(e.id) && !e.requires && !e.until && !e.nightWatch && !e.dead) {
+        for (const [id, e] of allEnts()) if (e.kind === 'npc' && critical.includes(e.id) && !e.requires && !e.until && !e.nightWatch && !e.dead && !e._p113f /* the Fold's lamp-teller keeps her own hours (js/fold113.js: at the stones from eight at night to five), routines or no */) {
           if (e.hidden) missing.push(id + ':' + e.id + '@' + h);
         }
       }

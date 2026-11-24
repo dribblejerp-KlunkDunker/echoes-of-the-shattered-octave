@@ -266,7 +266,7 @@
    {
     "kind": "topic",
     "key": "The Hedge",
-    "text": "I've stood this gate eleven years. Last night it whistled a tune only the Cantor and the Carder boy know. Whistled it exactly right."
+    "text": "I've kept a gate in this town eleven years, and this one since they planted the Hedge. Last night it whistled a tune only the Cantor and the Carder boy know. Whistled it exactly right."
    }
   ],
   "tier": "",
@@ -340,7 +340,7 @@
   "rumour": false
  },
  "hob": {
-  "name": "Abner Fenning, tanner",
+  "name": "Jabez Barker, tanner",
   "sprite": "hob",
   "portrait": "hob",
   "profile": {
@@ -2662,7 +2662,7 @@
   "rumour": false
  },
  "p16k_hob": {
-  "name": "Abner Fenning, tanner",
+  "name": "Jabez Barker, tanner",
   "sprite": "hob",
   "portrait": "hob",
   "profile": {
@@ -4565,7 +4565,7 @@
    {
     "kind": "greet",
     "key": "polite",
-    "text": "Abner is outside. He likes the air. I like the work; it stops you hearing the Hollow through the wall."
+    "text": "Jabez is outside. He likes the air. I like the work; it stops you hearing the Hollow through the wall."
    },
    {
     "kind": "greet",
@@ -5994,7 +5994,7 @@
    {
     "kind": "topic",
     "key": "Oakhaven",
-    "text": "Seventy years in one street. It was louder when I was a girl. Everything was."
+    "text": "Seventy years in one parish. It was louder when I was a girl. Everything was."
    },
    {
     "kind": "topic",
@@ -6754,7 +6754,7 @@
   "rumour": false
  },
  "wren_dw": {
-  "name": "Linnet",
+  "name": "Pipit",
   "sprite": "wren",
   "portrait": "wren",
   "profile": {

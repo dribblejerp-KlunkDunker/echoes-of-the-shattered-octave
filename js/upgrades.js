@@ -376,9 +376,9 @@ function ensurePlayerUpgrades(p) {
   if (p.perkPoints == null || !isFinite(+p.perkPoints)) p.perkPoints = 0; else p.perkPoints = clamp(p.perkPoints | 0, 0, 99);
   if (!Array.isArray(p.injuries)) p.injuries = [];
   else p.injuries = p.injuries.filter(x => typeof x === 'string').map(x => cleanName(x)).slice(0, 12);
-  if (!Array.isArray(p.titles) || !p.titles.length) p.titles = ['Traveler on the Greenroot Road'];
-  else p.titles = p.titles.filter(x => typeof x === 'string').map(x => cleanText(x, 48).replace(/["'\\]/g, '')).filter(Boolean).slice(0, 32);
-  if (!p.titles.length) p.titles = ['Traveler on the Greenroot Road'];
+  if (!Array.isArray(p.titles) || !p.titles.length) p.titles = ['Traveller on the Greenroot Road'];
+  else p.titles = p.titles.filter(x => typeof x === 'string').map(x => cleanText(x, 48).replace(/["'\\]/g, '').replace(/^Traveler on the Greenroot Road$/, 'Traveller on the Greenroot Road')).filter(Boolean).slice(0, 32);   // (Phase 121: an old save's spelling)
+  if (!p.titles.length) p.titles = ['Traveller on the Greenroot Road'];
   if (typeof p.activeTitle !== 'string' || !p.titles.includes(p.activeTitle)) p.activeTitle = p.titles[0];
   if (p.background != null) p.background = cleanText(p.background, 48);
   if (!p.factions || typeof p.factions !== 'object') p.factions = { hedge: 10, synod: 0, office: -5, captains: 5 };
@@ -1247,7 +1247,7 @@ function renderKeyRebindMenu() {
     if (maps.oakhaven) {
       const oh = maps.oakhaven;
       oh.deco('sign', 25.2, 17.5, { radius: 0.25, scale: 0.9, use: 'bounty_board', label: 'The Oakhaven Parish & Guild Noticeboard' });
-      oh.deco('pump', 14.2, 54.5, { radius: 0.35, scale: 0.85, use: 'house_forge', label: 'Abner\'s Tempering Brazier & Anvil (Repair, Enchant & Brew)' });
+      oh.deco('pump', 14.2, 54.5, { radius: 0.35, scale: 0.85, use: 'house_forge', label: 'Jabez\'s Tempering Brazier & Anvil (Repair, Enchant & Brew)' });
       oh.deco('crates', 52.5, 48.2, { radius: 0.3, scale: 0.65, use: 'fish_spot', label: 'A reed-basket fishing line in the Chlorophyll Flume' });
       oh.item('herb_willow', 49.5, 33.5); oh.item('herb_reed', 56.5, 48.2); oh.item('whetstone', 50.5, 16.5);
     }

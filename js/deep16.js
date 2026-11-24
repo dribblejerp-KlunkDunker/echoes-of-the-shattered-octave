@@ -166,7 +166,7 @@ const DEEP16 = (function () {
     },
     docs: {
       ledgerTitle: S('Ledger: Lantern Row, page four'),
-      ledgerBody: S('No. 11. Fell. Two adults. Present. Loop recorded: "the bread\'s for Thursday." Issue: bread, two.<br>No. 12. Quill. One adult. Present. Loop recorded: "mind the water." Issue: bread, one.<br>No. 13. Door open. Meal on the table. Nobody present. Not counted.<br>No. 14. Marr. Mother, one child. Present. Loop recorded (mother): "come in now." Loop recorded (child): none. Child does not speak. Issue: bread, two.<br><br>Carry the two. Balance forward.'),
+      ledgerBody: S('No. 11. Fell. Two adults. Present. Loop recorded: "the bread\'s for Hearthday." Issue: bread, two.<br>No. 12. Quill. One adult. Present. Loop recorded: "mind the water." Issue: bread, one.<br>No. 13. Door open. Meal on the table. Nobody present. Not counted.<br>No. 14. Marr. Mother, one child. Present. Loop recorded (mother): "come in now." Loop recorded (child): none. Child does not speak. Issue: bread, two.<br><br>Carry the two. Balance forward.'),
       daybookTitle: S('Daybook, station desk'),
       daybookBody: S('Memoryday. Issue completed, Lantern Row. Clerk Abelard reports a sentence. Sentence recorded.<br>Dawnday. Clerk Abelard reports a sentence. The same sentence. Recorded again.<br>Nullday. The desk is short two clerks. Coats to stay on the chairs, in case the clerks wish to collect them.'),
       lastTitle: S('A relief worker\'s last page'),

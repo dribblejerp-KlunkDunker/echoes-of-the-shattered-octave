@@ -212,7 +212,7 @@ layout(location=0) in vec2 a_c;
 layout(location=1) in vec4 i_p;   // x, y, base z, world width
 layout(location=2) in vec4 i_s;   // world height, anchor (0..1 from the drawn left edge), skew, depth pull
 layout(location=3) in vec4 i_uv;  // u0 v0 u1 v1 (u swapped when flipped)
-layout(location=4) in vec4 i_k;   // light factor f, hurt, alpha, flags (1 flash, 2 translucent, 4 unlit, 8 glowing entity, 16 own alpha)
+layout(location=4) in vec4 i_k;   // light factor f, hurt, alpha, flags (1 flash, 2 translucent, 4 unlit, 8 glowing entity, 16 own alpha, 128 farSee)
 layout(location=5) in vec4 i_l;   // point light rgb (0..1), glow floor for emissive texels
 uniform mat4 u_vp; uniform vec3 u_eye; uniform vec2 u_right; uniform float u_tilt;
 out vec2 v_uv; out vec4 v_k; out vec4 v_l; out vec3 v_w; out float v_h;
@@ -237,6 +237,7 @@ void main() {
 }`;
   const SHADE_FALLBACK = `
 uniform vec3 u_fog; uniform float u_light; uniform float u_outdoor;
+float s21Far = 0.0;
 vec3 s21Shade(vec3 c, vec3 wpos, vec3 n, float emis, float f, vec3 pl) {
   // the raycaster's tint() outdoors (blend to the fog colour, then the daylight) and shade() indoors;
   // a texel that gives its own light is not dimmed by the hour (the raycaster's bloom made up for that)
@@ -246,8 +247,9 @@ vec3 s21Shade(vec3 c, vec3 wpos, vec3 n, float emis, float f, vec3 pl) {
 }`;
   const SHADE_R3D = `
 uniform float u_zk;
+float s21Far = 0.0;   // (Phase 123) a farSee sprite: material 6.5, so the lighting keeps the raycaster's visibility floor for it
 vec3 s21Shade(vec3 c, vec3 wpos, vec3 n, float emis, float f, vec3 pl) {
-  R3DSurf s; s.albedo = c; s.pos = vec3(wpos.xy, wpos.z * u_zk); s.nrm = n; s.side = 1.0; s.mat = 6.0;
+  R3DSurf s; s.albedo = c; s.pos = vec3(wpos.xy, wpos.z * u_zk); s.nrm = n; s.side = 1.0; s.mat = s21Far > 0.5 ? 6.5 : 6.0;
   s.emissive = emis; s.fi = f; s.ladd = pl; s.kind = 1;
   return r3dShade(s);
 }`;
@@ -272,6 +274,7 @@ void main() {
   if (hk > 0.0) c = vec3(c.r + (1.0 - c.r) * hk, c.g * (1.0 - hk), c.b * (1.0 - hk));
   float f = emis > 0.5 ? max(v_k.x, v_l.w) : v_k.x;
   vec3 n = vec3(normalize(u_eye.xy - v_w.xy + vec2(1e-5)), 0.0);
+  s21Far = (flags & 128) != 0 ? 1.0 : 0.0;
   vec3 col = (flags & 4) != 0 ? c : s21Shade(c, v_w, n, emis, f, v_l.rgb);
   // air11's see-through kinds: a faint cool wash over the body and a brighter ribbon travelling up it
   if ((flags & 32) != 0) { bool onBand = (flags & 64) == 0 && abs(v_h - band) < 0.012; col = mix(col, vec3(150.0, 190.0, 235.0) / 255.0, onBand ? 0.34 : 0.1); }
@@ -578,7 +581,7 @@ void main() {
       e._screen = null;
       if (!e.sprite || e.hidden) continue;
       const dx = e.x - ex, dy = e.y - ey, d2 = dx * dx + dy * dy;
-      if (d2 > lim2) { st.culled++; continue; }
+      if (d2 > lim2 && !e.farSee) { st.culled++; continue; }   // farSee: seen at any distance (js/mast123.js), as on the CPU
       let r;
       // the game's own sprite chooser (directional views, flinch and flame frames are made there, on demand): the raycaster
       // calls it exactly once per drawn sprite too, so its cost is not this module's; it is timed apart
@@ -599,6 +602,7 @@ void main() {
       const d = Math.sqrt(d2);
       let f = lightF(d);
       if (e.glow) f = Math.max(f, e.glow);
+      if (e.farSee) f = Math.max(f, 0.75);   // as the raycaster (js/engine.js)
       if (e.animGlow) f = Math.max(f, e.animGlow);
       if (SHARD[e.item] || e.glassLamp) f = Math.max(f, 0.9);
       f = Math.round(f * 255) / 255;
@@ -611,7 +615,7 @@ void main() {
       const anchor = flip ? -(1 - cx0) - 1e-6 : cx0;            // negative = flipped (u swapped), the anchor mirrored
       // a glowing thing (lamp, fire, glass, a singing companion) is marked so bloom can find it (aux material 8)
       const glowEnt = e.glow > 0.3 || e.animGlow > 0.3 || !!e.glassLamp || !!SHARD[e.item];
-      let flags = (e.flash ? 1 : 0) | (glowEnt ? 8 : 0);
+      let flags = (e.flash ? 1 : 0) | (glowEnt ? 8 : 0) | (e.farSee ? 128 : 0);   // 128: seen at any distance (js/mast123.js)
       if (spectral(e)) flags += 32 + (GFX.reduceMotion ? 64 : 0) + Math.min(0.999, (((animT * 0.32 + (e.x + e.y) * 0.37) % 1) + 1) % 1);
       const pull = Math.min(0.3, wW * 0.5);
       pushBillboard(en, e.x, e.y, z0, wW, wH, anchor, (e.animSkew || 0) * aspectK, pull, f, e.animHurt || 0, alpha >= 1 ? 1 : alpha, flags, lr / 255, lg / 255, lb / 255, Math.max(f, 0.95));

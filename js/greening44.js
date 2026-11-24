@@ -27,7 +27,8 @@
 //       that you?" / "Hello, Ada." The Chapel falls, the Pure Note stops (the sound drops out for two beats), and the
 //       Kestrel comes down. Then Grab the Line (js/rope45.js).
 //    6  done.
-//  Missing a beat changes lines and never fails a quest. The mast still ends Part Two for a player who runs for it.
+//  Missing a beat changes lines and never fails a quest. The mast stands on the quarry rim, outside the Hedge (Phase 123,
+//  js/mast123.js): while this scene or Grab the Line runs, its trigger ends nothing; the ship comes to the North Gate.
 //  Figures are transient (staged again on load); progress lives in G.flags (g44*). Nothing the player does changes
 //  what happens in the book: nobody is lost from the line, Orla dies in her tree, Ada Pellow goes, nobody else does.
 // ============================================================

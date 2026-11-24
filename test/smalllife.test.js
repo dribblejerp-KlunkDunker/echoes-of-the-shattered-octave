@@ -127,10 +127,13 @@ const PROBE = `(() => {
       { const snap = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(snap); G.state = 'play'; SMALLLIFE.ensure(); check(crits('crow').length === SMALLLIFE.CROWS[G.mapId] || !SMALLLIFE.CROWS[G.mapId], 'restoring a save leaves one set of crows'); check(G.ents.filter(e => e._sl).length === SMALLLIFE.L.list.length, 'no duplicate critters after restore'); }
       // leaving and re-entering: anim.js sweeps transients of the map left, so they are re-appended on every load
       fresh('oakhaven', 30, 27, -0.75); fresh('tavern'); render(); render(); fresh('oakhaven', 30, 27, -0.75); render();
-      check(crits('crow').length === SMALLLIFE.CROWS.oakhaven && G.ents.some(e => e._slShip), 'crows and the ship are back after leaving and re-entering Oakhaven');
+      const crowsBack = crits('crow').length === SMALLLIFE.CROWS.oakhaven;
+      // Phase 123: the ship is moored at the mast on the quarry rim (the clearing)
+      fresh('clearing', 12.0, 33.5, -Math.PI / 2); fresh('tavern'); render(); render(); fresh('clearing', 12.0, 33.5, -Math.PI / 2); render();
+      check(crowsBack && G.ents.some(e => e._slShip), 'crows are back after leaving and re-entering Oakhaven, and the ship after leaving and re-entering the quarry rim');
       check(G.ents.filter(e => e._sl).length === new Set(G.ents.filter(e => e._sl)).size && G.ents.filter(e => e._slShip).length === 1, 'no duplicates after re-entry');
-      for (const id in G.maps) if (id !== 'oakhaven') check(!G.maps[id].entities.some(e => e._sl || e._slShip), 'nothing left behind on ' + id);
-      { const snap = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(snap); G.state = 'play'; SMALLLIFE.ensure(); render(); check(G.ents.some(e => e._slShip) === (G.mapId === 'oakhaven'), 'ship follows the map after a save/load'); }
+      for (const id in G.maps) if (id !== G.mapId) check(!G.maps[id].entities.some(e => e._sl || e._slShip), 'nothing left behind on ' + id);   /* Phase 123: the map last entered is the quarry rim's */
+      { const snap = JSON.parse(JSON.stringify(snapshotGame())); restoreGame(snap); G.state = 'play'; SMALLLIFE.ensure(); render(); check(G.ents.some(e => e._slShip) === (G.mapId === 'clearing'), 'ship follows the map after a save/load (the quarry rim\'s, Phase 123)'); }
       fresh('oakhaven', 30, 27, -0.75); { const e = crits('crow')[0]; G.ents.splice(G.ents.indexOf(e), 1); SMALLLIFE.tick(0.05); check(G.ents.includes(e), 'a swept critter is put back by the tick'); }
       fresh('clearing', 20.5, 28.5, 0); check(crits('crow').length === 3, 'the clearing has crows');
       fresh('deepwoods', 20, 40, 0); check(crits('crow').length === 3, 'the deep woods have crows');
@@ -179,12 +182,12 @@ const PROBE = `(() => {
       { setPace('still'); cat._slCalm = 0; cat._slFlee = 0; const seen = new Set(); let t = 0; for (let i = 0; i < 40; i++) { cat.x += 0.04; animCreature(cat, 0.05, t += 0.05); if (cat._spd > 0.25) seen.add(cat.animSprite); } check(seen.has('cat_w1') && seen.has('cat_w2'), 'the cat alternates walk frames (' + [...seen] + ')'); check(Engine.sprites.cat_run && Engine.sprites.cat_run.w > Engine.sprites.cat.w, 'and has a low wide dart frame'); cat._slFlee = 1; cat.x += 0.05; animCreature(cat, 0.05, t += 0.05); check(cat.animSprite === 'cat_run', 'dart frame while fleeing'); }
       GFX.critters = false; { cat._slFlee = 0; cat.x += 0.04; animCreature(cat, 0.05, 99); check(!cat.animSprite, 'critters off: the cat is animated as before'); } GFX.critters = true;
 
-      // ---- the moored Kestrel
-      fresh('oakhaven', 30, 27, -0.75);
+      // ---- the moored Kestrel (Phase 123: at the iron mast on the quarry rim, the clearing's north edge, js/mast123.js)
+      fresh('clearing', 12.0, 33.5, -Math.PI / 2);
       check(SMALLLIFE.isMoored(), 'moored before the Greening');
       let ship = G.ents.find(e => e._slShip); check(ship && ship.transient && ship.nopick && ship.solid === false, 'ship is a transient non-solid deco');
       const M = SMALLLIFE.MAST, P0 = SMALLLIFE.shipPose(0, 0.15);
-      check(Math.hypot(P0.x - M.x, P0.y - M.y) < 2.2 && Math.hypot(P0.x - M.x, P0.y - M.y) > 1.5, 'she hangs on her line beside the mast');
+      check(M.map === 'clearing' && Math.abs(Math.hypot(P0.x - M.x, P0.y - M.y) - SMALLLIFE.SHIP.half) < 0.35 && P0.lift < M.top, 'she hangs on her line beside the mast, under its head');
       let hmin = 9, hmax = -9; for (let t = 0; t < 400; t += 1) { const h = SMALLLIFE.shipPose(t, 0.15).h; hmin = Math.min(hmin, h); hmax = Math.max(hmax, h); }
       check(hmax - hmin > 0.6, 'she swings round slowly with the wind (' + (hmax - hmin).toFixed(2) + ' rad)');
       let rate = 0; for (let t = 0; t < 400; t += 0.5) rate = Math.max(rate, Math.abs(SMALLLIFE.shipPose(t + 0.5, 1).h - SMALLLIFE.shipPose(t, 1).h) / 0.5);
@@ -200,11 +203,11 @@ const PROBE = `(() => {
       GFX.reduceMotion = true; { const a = SMALLLIFE.shipPose(5), b = SMALLLIFE.shipPose(80); check(a.h === b.h && a.lift === b.lift && a.x === b.x, 'reduced motion: no turning or bobbing'); } GFX.reduceMotion = false;
       // gated by story and switch
       G.flags.part3 = true; SMALLLIFE.syncShip(); check(!G.ents.some(e => e._slShip), 'gone when Part Three begins'); G.flags.part3 = false; SMALLLIFE.syncShip(); check(G.ents.some(e => e._slShip), 'and recomputed from flags');
-      G.flags.greening = true; SMALLLIFE.syncShip(); check(!G.ents.some(e => e._slShip), 'gone at the Greening (the ship lifts without you)'); G.flags.greening = false; SMALLLIFE.syncShip();
+      G.flags.greening = true; G.flags.r45 = 1; SMALLLIFE.syncShip(); check(!G.ents.some(e => e._slShip), 'gone once the cable is cut and she comes down over the North Gate (Book One l. 3604; js/rope45.js)'); G.flags.greening = false; delete G.flags.r45; SMALLLIFE.syncShip();
       GFX.kestrelMoored = false; SMALLLIFE.syncShip(); check(!G.ents.some(e => e._slShip), 'switch off removes her'); GFX.kestrelMoored = true; SMALLLIFE.syncShip(); check(G.ents.some(e => e._slShip), 'and on brings her back');
-      fresh('clearing', 20.5, 28.5, 0); check(!G.ents.some(e => e._slShip) && !SMALLLIFE.isMoored(), 'not moored anywhere else');
+      fresh('oakhaven', 30, 27, -0.75); check(!G.ents.some(e => e._slShip) && !SMALLLIFE.isMoored(), 'not moored anywhere else (not in the town)');
       // the ship draws: rendered pixels differ from the same frame without her
-      fresh('oakhaven', 30, 27, -0.75); Engine.setTime(5);
+      fresh('clearing', 12.0, 33.5, -Math.PI / 2); Engine.setTime(5);
       const grab = () => { Engine.render(G.ents, G.tod); return Array.from(Engine.ctx.getImageData(0, 0, 320, 120).data); };
       for (const c of crits('crow')) { c.hidden = true; c._sl.st = 'gone'; c._sl.t = 999; }
       animDeco(G.ents.find(e => e._slShip), 0.05, 5, true); const withShip = grab();

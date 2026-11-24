@@ -30,6 +30,9 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
   await hit('#c-go'); await hit('#btn-intro-skip'); await page.waitForFunction(() => G.state === 'play');
   await page.evaluate(() => {
     GFX.illustratedScreens = false; PRESETS.apply('medium'); if (R3D.setMode) R3D.setMode('on');
+    // Phase 122 made the sculpted hands the default in the 3D view; this suite is about the pixel hands, so it chooses them
+    // (Options: "Hands: In pixels"), as a player would.
+    if ('sculptedHands' in GFX) { GFX.sculptedHands = false; if (typeof BODY21 !== 'undefined' && BODY21.clearCaches) BODY21.clearCaches(); }
     window.requestAnimationFrame = () => 0;
     // stand in Oakhaven's street at an hour, a sword in the right hand, the glass fist resting on the left; draw; read the screen
     window.SHOT = (tod, song) => {

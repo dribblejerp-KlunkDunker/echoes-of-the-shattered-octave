@@ -16,6 +16,7 @@
 //   climb  0..1 how far through a climb
 //   at     map@x@y@dir (dir in half-turns: 0 east, 0.5 south, -0.5 north); default oakhaven@22.5@30.5@-0.5
 //   flags  a=0;b=1 GFX switches for this scene
+//   face   1..6 the character-creation face (its skin tone; Phase 122)
 // Env: EVAL='expression' prints its value in the page after each scene; R3D=0 the classic view; CROP=1 writes only the 3D view's own rectangle; MEASURE=1 prints each scene's mean colour
 // of the glass and of the right hand as drawn on the screen (from the game's own picture masks).
 // Every scene is one PNG in OUTDIR (1280 x 720, or 1152 x 500 with CROP=1) and one line on stdout.
@@ -64,7 +65,7 @@ const scenes = process.argv.slice(3).map((s) => {
       UPG.tutorial = false; G.player.hp = G.player.hpMax = 999; G.noise = 0; Engine.cam.pitch = 0; G.player.pitch = 0;
       for (const e of G.ents) if (e.kind === 'enemy') e.state = 'idle';
       const p = G.player, w = o.w || 'sword';
-      p.glassed = o.g !== '0'; p.weapons = [w]; p.weapon = 0;
+      p.glassed = o.g !== '0'; p.weapons = [w]; p.weapon = 0; if (o.face) p.face = +o.face;
       p.armor = Object.assign({}, p.armor, { hands: o.h === 'bare' ? null : (o.h || 'a_gloves'), shield: o.s || null });
       G.attack.t = 0; if (G.song) G.song.t = 0; G.songFx = 0;
       if (typeof FPHANDS !== 'undefined') { FPHANDS.st.shown = w; FPHANDS.st.lower = 0; FPHANDS.st.cast = 0; FPHANDS.st.climb = 0; }

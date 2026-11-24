@@ -222,7 +222,7 @@ const COMPANION_TALK = (function () {
     id: 'k_you', who: 'kaelen', bit: 5, title: `About you`,
     req: (c) => gf('part4') && c.heard('kaelen') >= 3,
     root: () => ({
-      s: `"Nobody came to the hut in four years who did not want something broken, or someone forgiven. You came and asked how to stop a thing. I have been trying to work out what that makes you."`,
+      s: `"Nobody came to the hut in seven years who did not want something broken, or someone forgiven. You came and asked how to stop a thing. I have been trying to work out what that makes you."`,
       o: [
         { t: `"Someone who needed an engineer."`, k: 'dry', a: 1, r: `"That is a better answer than I deserve. I will take it."` },
         { t: `"Someone who stayed."`, k: 'steady', a: 3, u: 'title', r: `"Yes." Only that. He looks at the fire for a long time. "Yes. That."` },
@@ -429,7 +429,7 @@ const COMPANION_TALK = (function () {
     id: 'v_crates', who: 'vane', bit: 23, title: `The crates`,
     req: () => gf('vane_told') || gf('crates_heard') || gf('part3') || gf('part4'),
     root: () => ({
-      s: `"One thousand three hundred and forty-two. I know the number now. I didn't want to. I carried twelve crates for two years and never asked what was in them. It's a skill. I was very good at it."`,
+      s: `"One thousand three hundred and forty-two. I know the number now. I didn't want to. I carried crates for two years, twelve to a run, and never asked what was in them. It's a skill. I was very good at it."`,
       o: [
         { t: `"You didn't know."`, k: 'kind', r: `"Don't. I knew the way you know a stair is missing in the dark. By not putting my weight on it."` },
         { t: `"You're asking now."`, k: 'steady', r: `"Loudly. I'm told it counts. Mags says it counts."` },

@@ -222,9 +222,9 @@ const SCULPTED112 = (() => {
         for (let k = 0; k < 4; k++) {
           const fx = FING[k].at[0], xt = lerp(fx * 0.25, fx, clamp((y - 1.2) / 7.4, 0, 1));
           const fade = clamp((y - 1.6) / 2.0, 0, 1) * clamp((FING[k].at[1] - 0.3 - y) / 1.8, 0, 1) * (k === 3 ? 0.7 : 1);
-          td += Math.exp(-Math.pow((x - xt) / 0.27, 2)) * fade;
+          td += Math.exp(-Math.pow((x - xt) / (skinny ? (h.pose === 'fist' ? 0.21 : 0.24) : 0.27), 2)) * fade;
         }
-        z += (skinny ? 0.27 : 0.05) * td * dorsal;
+        z += (skinny ? (h.pose === 'fist' ? 0.44 : 0.27) : 0.05) * td * dorsal;
         // the flat plane of the back between the knuckles and the wrist
         if (skinny) z -= 0.12 * dorsal * Math.exp(-Math.pow((y - 5.2) / 2.2, 2)) * clamp(1 - Math.pow(x / A, 2), 0, 1);
       }
@@ -232,9 +232,26 @@ const SCULPTED112 = (() => {
       let seam = 99, along = y, wear = 0;
       if (mat === 'leather' && z > 0.3 && y > 1.6 && y < 6.6) for (const xl of [-1.8, 0.0, 1.8]) seam = Math.min(seam, Math.abs(x - xl));
       if (y > CY + 2.5 && z > 0) wear = clamp((y - CY - 2.5) / 2.0, 0, 1) * clamp(z / C, 0, 1);
-      return { p: [x, y, z], uv: [x, y], ex: [skinny ? wear * 0.6 : wear * 0.8, seam, along, 0] };
+      // (Phase 122) bare skin: the heel of the hand paler (a negative redness), the back's knuckle line redder
+      if (skinny && z < 0.2) wear -= 0.75 * clamp((4.2 - y) / 3.2, 0, 1);
+      // (Phase 122) bare skin: the palm's own lines (the two across it and the one round the thumb's mound), each a
+      // crease line (seam) and a weight (crease); the back of the hand carries the skin's fine lines only
+      let crease = 0;
+      if (skinny) {
+        seam = y + 0.01;
+        if (z < 0) {
+          const pv = clamp(-z / C, 0, 1);
+          const L1 = y - (7.25 + 0.22 * x), w1 = Math.exp(-Math.pow(L1 / 0.45, 2)) * clamp((x + 1.6) / 2.2, 0, 1);
+          const L2 = y - (6.35 - 0.18 * x), w2 = Math.exp(-Math.pow(L2 / 0.45, 2)) * clamp((1.8 - x) / 2.4, 0, 1);
+          const L3 = Math.hypot(x + 2.9, (y - 2.0) * 0.8) - 2.7, w3 = Math.exp(-Math.pow(L3 / 0.45, 2)) * clamp((7.0 - y) / 2, 0, 1) * clamp((0.8 - x) / 1.5, 0, 1);
+          // (and where the hand is closed the palm folds: its lines deepen)
+          const best = w1 >= w2 && w1 >= w3 ? [w1, L1] : w2 >= w3 ? [w2, L2] : [w3, L3];
+          crease = best[0] * pv; seam = best[1] + 0.07;
+        }
+      }
+      return { p: [x, y, z], uv: [x, y], ex: [skinny ? wear * (wear > 0 ? 0.8 : 1) : wear * 0.8, seam, along, crease] };
     };
-    grid(sc, handMat, ppart, hf, ID(), 68, 44, palmFn);
+    grid(sc, handMat, ppart, hf, ID(), skinny ? 96 : 68, skinny ? 58 : 44, palmFn);
     for (let gy = 1.2; gy <= 8.4; gy += 1.8) for (let gx = -3.0; gx <= 3.01; gx += 2.0) sphere(sc, app(hf, [gx, gy, -0.1]), 1.45, ppart);
     // ---- fingers
     const tips = [];
@@ -259,7 +276,8 @@ const SCULPTED112 = (() => {
           let x = kx * spow(ct, 0.8) * spow(Math.cos(ph), 0.85), y = ky * spow(Math.sin(th), 0.8), z = kz * spow(ct, 0.8) * spow(Math.sin(ph), 0.85);
           if (z > 0) z *= 1 + 0.18 * Math.exp(-x * x / (kx * kx * 0.12)); // a ridge along the bone, not a dome
           if (v === 0 || v === 1) x = z = 0;
-          return { p: [x, y, z], uv: [x * 3, y * 3], ex: [skinny ? 0.55 * clamp(z / kz, 0, 1) : clamp(z / kz, 0, 1), 99, y, 0] };
+          // (Phase 122) bare: redder, and creased across, as the skin over a knuckle is
+          return { p: [x, y, z], uv: [x * 3, y * 3], ex: skinny ? [(op ? 0.55 : 0.8) * clamp(z / kz, 0, 1), y - 0.25 * x * x, y, clamp(z / kz, 0, 1) * (op ? 0.2 : 0.75)] : [clamp(z / kz, 0, 1), 99, y, 0] };
         });
       }
       for (let s = 0; s < 3; s++) {
@@ -271,8 +289,15 @@ const SCULPTED112 = (() => {
           let seam = 99, along = y + s * 5;
           if (mat === 'leather') { const a = Math.min(Math.abs(phi), Math.abs(phi - Math.PI), Math.abs(phi - 2 * Math.PI)); seam = a * rho; }
           const cb = Math.exp(-Math.pow(y / 0.55, 2)), ct = Math.exp(-Math.pow((y - L) / 0.5, 2));
-          const crease = (cb * (s === 1 ? 1 : s === 2 ? 0.5 : 0) + ct * (s === 0 ? 1 : s === 1 ? 0.5 : 0)) * (0.45 + 0.55 * dors);
+          let crease = (cb * (s === 1 ? 1 : s === 2 ? 0.5 : 0) + ct * (s === 0 ? 1 : s === 1 ? 0.5 : 0)) * (0.45 + 0.55 * dors);
           const tipR = s === 2 ? 0.35 * clamp((y - L * 0.4) / (L * 0.6), 0, 1) : 0;
+          // (Phase 122) bare skin: the creases at each joint run across the finger (bowed toward the joint at its sides), a
+          // band of them wider and stronger over the back of the bent middle joint; a few at the knuckle's foot
+          if (skinny) {
+            const cb2 = Math.exp(-Math.pow(y / 0.65, 2)), ct2 = Math.exp(-Math.pow((y - L) / 0.65, 2)), bowed = 0.22 * Math.cos(phi) * Math.cos(phi) * rho;
+            crease = (cb2 * (s === 1 ? 1 : s === 2 ? 0.75 : 0.45 * dors) + ct2 * (s === 0 ? 1 : s === 1 ? 0.75 : 0)) * (0.6 + 0.4 * dors);
+            seam = (y < L / 2 ? y + bowed : y - L - bowed) + 0.01;
+          }
           return [clamp(knk + tipR, 0, 1), seam, along, crease];
         };
         // flat planes between the joints (a squarish section, the shaft a little waisted), and a hard corner on the
@@ -288,17 +313,20 @@ const SCULPTED112 = (() => {
           const corner = (Math.exp(-Math.pow((y - L) / 0.36, 2)) * clamp(bendOut / 90, 0, 1.2) * 0.16 + Math.exp(-Math.pow(y / 0.36, 2)) * clamp(bendIn / 90, 0, 1.2) * (s > 0 ? 0.1 : 0)) * dors * dors;
           return 0.97 * sq * waist + jIn + jOut + corner;
         };
-        capsule(sc, handMat, W2(lf), lf, L, r0, r1, { sx: s === 0 ? 1.1 : 1.1, sz: 0.92, nu: 22, nv: 26, mod, ex, pad: s === 2 ? (y) => 0.2 * Math.exp(-Math.pow((y - L * 0.55) / (L * 0.45), 2)) : (y) => (skinny ? 0.4 : 0.14) * Math.sin(Math.PI * clamp(y / L, 0, 1)) });
+        const segPart = capsule(sc, handMat, W2(lf), lf, L, r0, r1, { sx: s === 0 ? 1.1 : 1.1, sz: 0.92, nu: 22, nv: 26, mod, ex, pad: s === 2 ? (y) => 0.2 * Math.exp(-Math.pow((y - L * 0.55) / (L * 0.45), 2)) : (y) => (skinny ? 0.4 : 0.14) * Math.sin(Math.PI * clamp(y / L, 0, 1)) });
         if (s === 2 && skinny) {
-          // the nail: a thin flattened cap on the back of the last segment
-          const nf = chain(lf, T(0, L * 0.58, r1 * 0.80 * 0.94), RX(-8));
-          const np = sc.part++, na = r1 * 0.74, nb2 = L * 0.42;
-          grid(sc, 'nail', np, W2(nf), nf, 14, 8, (u, v) => {
+          // the nail: a thin plate on the back of the last segment, seated on its surface (Phase 122: it had sunk into the
+          // finger), its sides tucked into the folds; ex: how far from the cuticle to the free edge, and across it
+          const rm = lerp(r0, r1, 0.58) * 0.92 * 0.97;
+          const nf = chain(lf, T(0, L * 0.6, rm * 1.04 - 0.08), RX(-8));
+          // (its shade is its finger's: the nail is counted as a part of the segment it lies on)
+          const np = segPart, na = rm * 0.74, nb2 = L * 0.4;
+          grid(sc, 'nail', np, W2(nf), nf, 18, 12, (u, v) => {
             const th = -Math.PI / 2 + v * Math.PI, ph = u * Math.PI * 2, ct = Math.cos(th);
-            let x = na * spow(ct, 0.5) * spow(Math.cos(ph), 0.6), y = nb2 * spow(Math.sin(th), 0.5), z = 0.13 * spow(ct, 0.5) * spow(Math.sin(ph), 0.6);
-            z -= 0.18 * (x / na) * (x / na); // curved across the finger
+            let x = na * spow(ct, 0.5) * spow(Math.cos(ph), 0.6), y = nb2 * spow(Math.sin(th), 0.5), z = 0.11 * spow(ct, 0.5) * spow(Math.sin(ph), 0.6);
+            z -= 0.22 * (x / na) * (x / na); // curved across the finger
             if (v === 0 || v === 1) x = z = 0;
-            return { p: [x, y, z], uv: [x, y], ex: [clamp((y / nb2 + 1) / 2, 0, 1), 99, 0, 0] };
+            return { p: [x, y, z], uv: [x, y], ex: [clamp((y / nb2 + 1) / 2, 0, 1), x / na, 0, 0] };
           });
         }
         lf = chain(lf, T(0, L, 0), RX(-(s < 2 ? flex[s + 1] : 0)));
@@ -332,23 +360,32 @@ const SCULPTED112 = (() => {
         const ex = (y, phi, rho) => {
           const dors = Math.max(0, Math.sin(phi)), nt = Math.exp(-Math.pow((y - L) / 0.9, 2)), nb = Math.exp(-Math.pow(y / 0.9, 2));
           let seam = 99; if (mat === 'leather' && s > 0) { const a = Math.min(Math.abs(phi), Math.abs(phi - Math.PI), Math.abs(phi - 2 * Math.PI)); seam = a * rho; }
-          return [clamp((nt * fl[s] / 60 + (s > 0 ? nb * fl[s - 1] / 60 : 0)) * dors, 0, 1) * 0.7, seam, y + s * 5, (s > 0 ? nb : 0) * dors];
+          let crease = (s > 0 ? nb : 0) * dors;
+          // (Phase 122) bare skin: the thumb's joints creased across, as the fingers' are
+          if (skinny) {
+            const nb2 = Math.exp(-Math.pow(y / 0.7, 2)), nt2 = Math.exp(-Math.pow((y - L) / 0.7, 2)), bowed = 0.2 * Math.cos(phi) * Math.cos(phi) * rho;
+            crease = (s > 0 ? nb2 : 0) * (0.35 + 0.65 * dors) + (s < 2 ? nt2 * 0.8 : 0) * (0.35 + 0.65 * dors);
+            seam = (y < L / 2 ? y + bowed : y - L - bowed) + 0.01;
+          }
+          return [clamp((nt * fl[s] / 60 + (s > 0 ? nb * fl[s - 1] / 60 : 0)) * dors, 0, 1) * (skinny ? 0.9 : 0.7), seam, y + s * 5, crease];
         };
-        const pad = s === 2 ? (y) => 0.12 * Math.exp(-Math.pow((y - L * 0.5) / (L * 0.5), 2)) : s === 0 ? (y) => (skinny ? 0.15 : 0.35) * Math.exp(-Math.pow((y - L * 0.4) / (L * 0.6), 2)) : null;
+        const pad = s === 2 ? (y) => (skinny ? 0.2 : 0.12) * Math.exp(-Math.pow((y - L * 0.5) / (L * 0.5), 2)) : s === 0 ? (y) => (skinny ? 0.15 : 0.35) * Math.exp(-Math.pow((y - L * 0.4) / (L * 0.6), 2)) : null;
         const tmod = (y, phi) => {
           const sn = Math.sin(phi), c = Math.abs(Math.cos(phi)), dors = Math.max(0, sn);
           const sq = s === 0 ? 1 : 1 + (Math.pow(Math.pow(c, 2.6) + Math.pow(Math.abs(sn), 2.6), -1 / 2.6) - 1) * (sn > 0 ? 1 : 0.4) * (s === 2 ? clamp((L * 0.8 - y) / (L * 0.5), 0, 1) : 1);
           return 0.97 * sq + 0.05 * Math.exp(-Math.pow((y - L) / 0.45, 2)) * (s < 2 ? 1 : 0) + 0.12 * Math.exp(-Math.pow((y - L) / 0.36, 2)) * dors * dors * (s === 1 ? clamp(fl[1] / 60, 0, 1) : 0);
         };
-        capsule(sc, handMat, W2(lf), lf, L, rs[s][0], rs[s][1], { sx: s === 0 ? 1.2 : 1.04, sz: s === 0 ? 0.95 : 0.88, nu: 22, nv: 22, ex, pad, mod: tmod });
+        const segPart = capsule(sc, handMat, W2(lf), lf, L, rs[s][0], rs[s][1], { sx: s === 0 ? 1.2 : 1.04, sz: s === 0 ? 0.95 : 0.88, nu: 22, nv: 22, ex, pad, mod: tmod });
         if (s === 2 && skinny) {
-          const nf = chain(lf, T(0, L * 0.6, rs[2][1] * 0.82 * 0.92), RX(-8));
-          const np = sc.part++, na = rs[2][1] * 0.84, nb2 = L * 0.4;
-          grid(sc, 'nail', np, W2(nf), nf, 14, 8, (u, v) => {
+          // (Phase 122) the thumb's nail seated on its surface, wider and squarer than a finger's
+          const rm = lerp(rs[2][0], rs[2][1], 0.6) * 0.88 * 0.97;
+          const nf = chain(lf, T(0, L * 0.5, rm * 1.04 - 0.05), RX(2));
+          const np = segPart, na = rm * 0.86, nb2 = L * 0.3;
+          grid(sc, 'nail', np, W2(nf), nf, 18, 12, (u, v) => {
             const th = -Math.PI / 2 + v * Math.PI, ph = u * Math.PI * 2, ct = Math.cos(th);
-            let x = na * spow(ct, 0.5) * spow(Math.cos(ph), 0.6), y = nb2 * spow(Math.sin(th), 0.5), z = 0.14 * spow(ct, 0.5) * spow(Math.sin(ph), 0.6);
-            z -= 0.2 * (x / na) * (x / na); if (v === 0 || v === 1) x = z = 0;
-            return { p: [x, y, z], uv: [x, y], ex: [clamp((y / nb2 + 1) / 2, 0, 1), 99, 0, 0] };
+            let x = na * spow(ct, 0.6) * spow(Math.cos(ph), 0.7), y = nb2 * spow(Math.sin(th), 0.6), z = 0.1 * spow(ct, 0.5) * spow(Math.sin(ph), 0.6);
+            z -= 0.24 * (x / na) * (x / na); if (v === 0 || v === 1) x = z = 0;
+            return { p: [x, y, z], uv: [x, y], ex: [clamp((y / nb2 + 1) / 2, 0, 1), x / na, 0, 0] };
           });
         }
         if (s === 0) thumbMcp = pts[1];
@@ -377,9 +414,16 @@ const SCULPTED112 = (() => {
     if ((det(af) < 0) !== mirror) af.Z = mul(af.Z, -1);
     const afl = ID(); // its local frame is its own
     const FL = 44;
-    const rx = (s) => s < 0 ? 2.9 : lerp(2.9, 4.2, sm(clamp(s / 24, 0, 1))) + 0.25 * Math.exp(-Math.pow((s - 19) / 6, 2));
-    const rz = (s) => s < 0 ? 1.8 : lerp(1.8, 3.8, sm(clamp(s / 24, 0, 1)));
-    const armMat = glass ? 'glass' : mat === 'bare' ? 'skin' : 'leather'; // a gloved wrist is the glove's own
+    // (Phase 122) in a climb the arm is raised over the head and hangs toward you from the rung: a slimmer forearm (the
+    // flesh of the forearm runs to the elbow, out of the view), so that with its sleeve it is no wider on the screen than
+    // the pixel arm's
+    const cl = !!h.climb;
+    const rx = cl ? (s) => s < 0 ? 2.9 : lerp(2.9, 2.55, sm(clamp(s / 6, 0, 1))) + 0.22 * sm(clamp((s - 6) / 22, 0, 1))
+      : (s) => s < 0 ? 2.9 : lerp(2.9, 4.2, sm(clamp(s / 24, 0, 1))) + 0.25 * Math.exp(-Math.pow((s - 19) / 6, 2));
+    const rz = cl ? (s) => s < 0 ? 1.8 : lerp(1.8, 2.7, sm(clamp(s / 24, 0, 1))) : (s) => s < 0 ? 1.8 : lerp(1.8, 3.8, sm(clamp(s / 24, 0, 1)));
+    // a gloved wrist is the glove's own; in a climb the sleeve falls back, and the forearm between the glove's cuff and
+    // the sleeve is bare
+    const armMat = glass ? 'glass' : mat === 'bare' || cl ? 'skin' : 'leather';
     {
       const part = sc.part++, nu = 44, nv = 44;
       grid(sc, armMat, part, af, afl, nu, nv, (u, v) => {
@@ -396,7 +440,9 @@ const SCULPTED112 = (() => {
         // two tendons running up the inside of the wrist and a flatter back
         const flat = 1 - bone * 0.05 * Math.pow(Math.max(0, Math.sin(ph)), 4) * clamp(1 - s / 10, 0, 1);
         const m = knob * rad * neck * flat;
-        return { p: [rx(s) * Math.cos(ph) * rr * j * m, s, rz(s) * Math.sin(ph) * rr * j * m], uv: [ph * 3.2, s], ex: [0.25 * (knob - 1) / 0.2 * bone, 99, 0, 0] };
+        // (Phase 122) a bare wrist is creased across where it bends: the bracelet lines on the inside, finer ones on the back
+        const wc = skinny ? Math.exp(-Math.pow((s - 1.1) / 0.55, 2)) * (Math.sin(ph) < 0 ? 0.9 : 0.2) : 0;
+        return { p: [rx(s) * Math.cos(ph) * rr * j * m, s, rz(s) * Math.sin(ph) * rr * j * m], uv: [ph * 3.2, s], ex: [0.25 * (knob - 1) / 0.2 * bone, skinny ? s - 1.1 + 0.12 * Math.cos(ph) * Math.cos(ph) + 0.01 : 99, 0, wc] };
       }, { arm: true });
       for (let s = 0; s < 30; s += 2.2) sphere(sc, app(af, [0, s, 0]), Math.min(rx(s), rz(s)) * 0.95, part);
     }
@@ -410,7 +456,7 @@ const SCULPTED112 = (() => {
         if (v < 0.12) { const t = v / 0.12; s = lerp(s1 - 1.4, s1 - 0.05, t); dr = -0.25; }
         else if (v < 0.24) { const t = (v - 0.12) / 0.12, a = Math.PI * t; s = s1 - 0.05 + Math.sin(a) * 0.22; dr = -0.25 + (1 - Math.cos(a)) * 0.22; }
         else { const t = (v - 0.24) / 0.76; s = lerp(s1, -0.9, t); dr = 0.2; }
-        const fl = 1.45 * Math.pow(clamp((s - 1.2) / (s1 - 1.2), 0, 1), 1.4);
+        const fl = (cl ? 0.75 : 1.45) * Math.pow(clamp((s - 1.2) / (s1 - 1.2), 0, 1), 1.4);
         const wob = 1 + 0.03 * (vn3(Math.cos(ph) * 2 + 3, Math.sin(ph) * 2, s * 0.4) - 0.5);
         const r = (q) => (q + 0.42 + fl + dr) * wob;
         const seam = Math.min(Math.abs(s - (s1 - 0.75)), Math.abs(ph - 0.2) * 4 + (s < 1 ? 9 : 0));
@@ -420,19 +466,24 @@ const SCULPTED112 = (() => {
     }
     // the wool sleeve: folds from hashed noise, a rolled hem
     if (h.sleeve) {
-      const part = sc.part++, s0 = mat === 'bare' ? 2.6 : 4.1, s1 = FL + 2;
+      // (Phase 122) in a climb the sleeve falls back from the wrist, as it does on an arm raised over the head, and its cuff
+      // narrows toward the wrist: it hugs the forearm at its hem and loosens further down, its folds shallower
+      const part = sc.part++, s0 = cl ? (mat === 'bare' ? 7.5 : 9.0) : mat === 'bare' ? 2.6 : 4.1, s1 = FL + 2, fk = cl ? 0.45 : 1;
       const fold = (ph, s) => {
         const c = Math.cos(ph), sn = Math.sin(ph);
-        return 0.75 * (fbm(c * 1.3 + 11, sn * 1.3 + 4, s * 0.16) - 0.5) + 0.35 * Math.sin(s * 0.55 + 2.4 * vn3(c * 1.5, sn * 1.5, s * 0.05 + 3)) * clamp((s - s0 - 3) / 6, 0, 1)
-          + 0.25 * (vn3(c * 3.1 + 7, sn * 3.1, s * 0.4) - 0.5);
+        return fk * (0.75 * (fbm(c * 1.3 + 11, sn * 1.3 + 4, s * 0.16) - 0.5) + 0.35 * Math.sin(s * 0.55 + 2.4 * vn3(c * 1.5, sn * 1.5, s * 0.05 + 3)) * clamp((s - s0 - 3) / 6, 0, 1)
+          + 0.25 * (vn3(c * 3.1 + 7, sn * 3.1, s * 0.4) - 0.5));
       };
+      // (pushed back, the wool gathers in a few soft rings just above its hem)
+      const ease = cl ? (s) => 0.36 + 0.16 * sm(clamp((s - s0) / 16, 0, 1)) : () => 1.25;
+      const bunch = cl ? (ph, s) => { const b = Math.exp(-Math.pow((s - s0 - 2.2) / 2.6, 2)); return b * (0.1 + 0.16 * Math.sin(s * 1.9 + 1.6 * vn3(Math.cos(ph) * 1.4 + 2, Math.sin(ph) * 1.4, s * 0.2))); } : () => 0;
       grid(sc, 'wool', part, af, afl, 48, 58, (u, v) => {
         const ph = u * Math.PI * 2;
         let s, dr;
         if (v < 0.06) { const t = v / 0.06; s = lerp(s0 + 1.6, s0 + 0.1, t); dr = -0.42; }
         else if (v < 0.14) { const t = (v - 0.06) / 0.08, a = Math.PI * t; s = s0 + 0.1 - Math.sin(a) * 0.36; dr = -0.42 + (1 - Math.cos(a)) * 0.36; }
         else { const t = (v - 0.14) / 0.86; s = lerp(s0 + 0.1, s1, t); dr = 0.3 * Math.exp(-Math.pow((s - s0 - 0.5) / 0.6, 2)); }
-        const r = (q) => q + 1.25 + fold(ph, s) + dr + 0.25 * clamp((s - s0) / 20, 0, 1);
+        const r = (q) => q + ease(s) + bunch(ph, s) + fold(ph, s) + dr * (cl ? 0.6 : 1) + 0.25 * clamp((s - s0) / 20, 0, 1);
         return { p: [r(rx(s)) * Math.cos(ph), s, r(rz(s)) * Math.sin(ph)], uv: [ph * 5, s], ex: [0, 99, 0, v < 0.14 ? 1 : 0] };
       }, { arm: true });
     }
@@ -521,17 +572,34 @@ float rimf(vec3 N, vec3 V){ float f = 1.0 - max(dot(N,V),0.0); return f*f*f * (0
   vec3 q = v_loc*vec3(9.0, 4.0, 9.0);
   float hatch = pow(abs(sin(q.x*2.1 + q.y*1.3 + sin(v_loc.y*3.1 + v_loc.z*1.7)*1.5)), 14.0) + pow(abs(sin(q.z*2.3 - q.y*1.1 + sin(v_loc.x*2.9 - v_loc.y*1.3)*1.5)), 14.0);
   h -= hatch*0.0011;
-  // the creases at the joints: a few deep lines, darker
-  float cr = v_ex.w * pow(abs(sin(v_uv.y*8.0 + vnoise(v_loc*3.0)*2.0)), 24.0); h -= cr*0.009;
+  // (Phase 122) bare skin (it carries its crease line in v_ex.y): the fine cross-hatch of the skin's lines deeper, and
+  // drawn a shade darker, as on the back of a working hand
+  if (v_ex.y < 50.0) h -= hatch*0.003;
+  // the creases at the joints. (Phase 122) Bare skin carries its own crease line (v_ex.y, cm from the joint, bowed at
+  // the sides): a band of fine lines across it, each breaking and rejoining, the skin between them a little raised;
+  // elsewhere (a glove's wrist) the old few lines along the segment
+  float cc = v_ex.y < 50.0 ? v_ex.y : v_uv.y*0.73;
+  float wob = vnoise(v_loc*2.3)*1.3 + vnoise(v_loc*6.5 + 4.0)*0.5;
+  float brk = smoothstep(0.3, 0.68, vnoise(v_loc*vec3(7.0, 2.0, 7.0) + 2.7));
+  float fq = 11.0;
+  float ln = pow(abs(sin(cc*fq + wob)), v_ex.y < 50.0 ? 18.0 : 24.0);
+  float cr = v_ex.w * ln * (v_ex.y < 50.0 ? 0.2 + 0.8*brk : 1.0);
+  float ridge = v_ex.w * pow(abs(cos(cc*fq + wob)), 8.0) * (v_ex.y < 50.0 ? 1.0 : 0.0);
+  h -= cr*(v_ex.y < 50.0 ? 0.026 : 0.009); h += ridge*0.009;
   N = bump(N, v_pos, h);
-  float red = clamp(v_ex.x, 0.0, 1.0);
-  vec3 alb = pow(u_base, vec3(1.15)) * mix(vec3(1.0), vec3(1.25,0.7,0.62), red*0.6) * (0.9 + 0.2*vnoise(v_loc*1.3)) * (1.0 - cr*0.22 - v_ex.w*0.08) * (0.97 + 0.06*gr);
+  float red = clamp(v_ex.x, 0.0, 1.0), pale = clamp(-v_ex.x, 0.0, 1.0);
+  vec3 alb = pow(u_base, vec3(1.15)) * mix(vec3(1.0), vec3(1.25,0.7,0.62), red*0.6) * (0.9 + 0.2*vnoise(v_loc*1.3)) * (1.0 - cr*(v_ex.y < 50.0 ? 0.72 : 0.22) - v_ex.w*0.08 + ridge*0.22*brk) * (0.97 + 0.06*gr)
+    * (v_ex.y < 50.0 ? 1.0 - hatch*0.11 : 1.0);
+  // (Phase 122) the heel of the hand paler and a little yellower, as thick skin is
+  alb = mix(alb, alb*vec3(1.16, 1.12, 1.02), pale*0.7);
   float ndl = dot(N,L); vec3 w = vec3(0.5,0.3,0.24);
   vec3 dif = clamp((vec3(ndl)+w)/(1.0+w), 0.0, 1.0); dif *= dif;
   vec3 shc = mix(vec3(sh), vec3(1.0), vec3(0.18,0.06,0.03)*(1.0-sh));
   // less gloss: a low broad sheen and a faint tight one
   vec3 Hh = normalize(L+V); float nh = max(dot(N,Hh),0.0);
   float spec = (pow(nh, 18.0)*0.05 + pow(nh, 70.0)*0.06) * (0.3+0.7*sh);
+  // (Phase 122) bare skin: the skin drawn taut over a knuckle has a sheen of its own
+  if (v_ex.y < 50.0) spec *= 1.0 + red*4.5;
   float fr = pow(1.0 - max(dot(N,V),0.0), 4.0);
   vec3 Lt, Ls; vec3 tor = pl(N, u_torchPos, u_torch, 30.0, 0.4, Lt); vec3 sng = pl(N, u_songPos, u_song, 13.0, 0.35, Ls);
   vec3 col = alb * (u_key*dif*shc + hemi(N)*ao*0.85*vec3(0.9,0.97,1.1) + tor*ao + sng) + u_key*spec*sh + (u_key*sh*0.03 + u_amb*0.07)*fr*ao
@@ -540,12 +608,35 @@ float rimf(vec3 N, vec3 V){ float f = 1.0 - max(dot(N,V),0.0); return f*f*f * (0
   float lit = clamp(max(ndl, 0.0)*sh, 0.0, 1.0);
   col *= mix(vec3(0.9, 0.96, 1.07), vec3(1.0), smoothstep(0.0, 0.5, lit));
   gl_FragColor = vec4(tonemap(col), 1.0); }`,
+    // (Phase 122) a nail that reads as a nail: a paler plate than the skin, its half-moon at the base, faint ridges along it,
+    // a darker rim where it goes under the cuticle and the folds at its sides, and the free edge pale and lit. A working
+    // hand: no polish, a little worn at the edge
     nail: `void main(){ vec3 N = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   float ao = v_occ.x, sh = v_occ.y;
-  vec3 alb = mix(mix(u_base*vec3(1.12,0.84,0.84), u_base*vec3(1.2,1.05,1.0), smoothstep(0.25,0.0,v_ex.x)), vec3(0.92,0.86,0.8), smoothstep(0.78,0.95,v_ex.x));
-  float ndl = max(dot(N,L),0.0); vec3 Hh = normalize(L+V);
+  float al = clamp(v_ex.x, 0.0, 1.0), ac = clamp(abs(v_ex.y), 0.0, 1.0);
+  // (the far edge follows the nail's own rounded outline: how far out along the oval this point is)
+  float rr = length(vec2(ac, al*2.0 - 1.0));
+  float h = sin(v_ex.y*26.0 + vnoise(v_loc*9.0)*1.5)*0.0008 + vnoise(v_loc*30.0)*0.0005;
+  N = bump(N, v_pos, h);
+  vec3 skin = pow(u_base, vec3(1.15));
+  // a soft plate: the skin's colour a little paler and pinker, the half-moon a touch paler again
+  vec3 plate = mix(skin*vec3(1.06,0.9,0.9), vec3(0.6,0.42,0.42), 0.22);
+  vec3 alb = mix(plate, plate*vec3(1.16,1.13,1.1), (1.0 - smoothstep(0.1, 0.28, al))*(1.0 - smoothstep(0.2, 0.6, ac)));
+  // the free edge: a thin rounded rim, a shade paler than the plate (no white)
+  float edge = smoothstep(0.86, 0.96, rr) * smoothstep(0.55, 0.8, al);
+  alb = mix(alb, plate*vec3(1.22,1.17,1.1), edge);
+  // the folds: the skin lapping over the plate at the cuticle and down the sides, a faint darker line where it goes under
+  float fold = max(1.0 - smoothstep(0.04, 0.1, al), smoothstep(0.86, 0.94, ac) * (1.0 - smoothstep(0.6, 0.85, al)));
+  float groove = max(smoothstep(0.05, 0.1, al) * (1.0 - smoothstep(0.1, 0.17, al)), smoothstep(0.74, 0.82, ac) * (1.0 - smoothstep(0.84, 0.9, ac)) * (1.0 - smoothstep(0.6, 0.85, al)));
+  alb = mix(alb, skin*vec3(0.72, 0.56, 0.52), groove*0.5);
+  alb = mix(alb, skin, fold);
+  // (lit as the skin round it is lit, so that it is paler than the skin by its colour and not by its light)
+  float ndl = dot(N,L); vec3 Hh = normalize(L+V); vec3 w = vec3(0.3,0.22,0.2);
+  vec3 dif = clamp((vec3(ndl)+w)/(1.0+w), 0.0, 1.0); dif *= dif;
   vec3 Lt, Ls; vec3 tor = pl(N, u_torchPos, u_torch, 30.0, 0.2, Lt); vec3 sng = pl(N, u_songPos, u_song, 13.0, 0.2, Ls);
-  vec3 col = alb*(u_key*ndl*sh + hemi(N)*ao + tor + sng) + u_key*pow(max(dot(N,Hh),0.0),50.0)*0.7*sh + env(reflect(-V,N))*0.08;
+  float gloss = (1.0 - fold) * (1.0 - groove);
+  vec3 col = alb*(u_key*dif*sh + hemi(N)*ao*0.85*vec3(0.9,0.97,1.1) + tor*ao + sng) + u_key*(pow(max(dot(N,Hh),0.0),90.0)*0.18 + pow(max(dot(N,Hh),0.0),16.0)*0.02)*sh*gloss
+           + env(reflect(-V,N))*0.04*gloss + (u_key*0.05*sh + u_rim*0.12)*edge;
   gl_FragColor = vec4(tonemap(col), 1.0); }`,
     leather: `void main(){ vec3 N = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   float ao = v_occ.x, sh = v_occ.y;
@@ -700,12 +791,32 @@ void main(){ vec3 N0 = normalize(v_nrm), V = normalize(-v_pos), L = u_keyDir;
   };
 
 
-  // ---------------------------------------------------------------- the switch (off everywhere until the owner rules)
+  // ---------------------------------------------------------------- the switch
   const FLAG = 'sculptedHands';
-  // (a choice, not an effect: no preset turns it on or off. It starts off; PRESETS.keep then restores the player's own
-  // stored choice, if there is one, and stores every later change)
-  try { if (typeof GFX !== 'undefined') { if (GFX[FLAG] === undefined) GFX[FLAG] = false; if (typeof PRESETS !== 'undefined' && PRESETS.keep) PRESETS.keep(FLAG); } } catch (e) { /* no GFX: a tool's page */ }
-  const on = () => typeof GFX !== 'undefined' && GFX[FLAG] === true && typeof PIXELHANDS110 === 'object' && !!PIXELHANDS110.poses;
+  // Phase 122 (the owner, 23 Nov: "finish up with 5"): the sculpted hands are the default in the 3D view. The switch is in
+  // GFX.FX and in Low's list (js/presets.js LOW_OFF): on in every preset above Low, off in Original (the game as first made)
+  // and in Low (weak machines: the cost per frame is not yet measured on a phone or a low-end laptop). PRESETS.keep
+  // restores the player's own stored choice, if there is one, and stores every later change. A returning player whose
+  // settings are their own ('custom') starts as the preset those settings were made from (js/max20.js base) wants.
+  try {
+    if (typeof GFX !== 'undefined') {
+      if (GFX.FX && !GFX.FX.includes(FLAG)) GFX.FX.push(FLAG);
+      if (GFX[FLAG] === undefined && typeof PRESETS !== 'undefined' && PRESETS.table && !PRESETS.table[GFX.preset]) {
+        const base = typeof MAX20 === 'object' && MAX20 && MAX20.state && MAX20.state.base;
+        if (base && PRESETS.table[base] && PRESETS.fxWanted) GFX[FLAG] = PRESETS.fxWanted(PRESETS.table[base].fx, FLAG);
+      }
+      if (typeof PRESETS !== 'undefined' && PRESETS.keep) PRESETS.keep(FLAG); else if (GFX[FLAG] === undefined) GFX[FLAG] = false;
+    }
+  } catch (e) { /* no GFX: a tool's page */ }
+  // the hands' own WebGL canvas: if it cannot be made, or its context is lost, the pixel hands are drawn, silently (the
+  // player's choice is kept; a context restored, or the choice made again, tries afresh)
+  let glDead = false;
+  const glReady = () => {
+    if (glDead) return false;
+    if (GL) return !GL.gl.isContextLost();
+    try { initGL(); return true; } catch (e) { glDead = true; stats.noGL = String(e && e.message || e).slice(0, 120); return false; }
+  };
+  const on = () => typeof GFX !== 'undefined' && GFX[FLAG] === true && typeof PIXELHANDS110 === 'object' && !!PIXELHANDS110.poses && glReady();
   const warned = {};
   const warnOnce = (k, e) => { if (warned[k]) return; warned[k] = 1; try { console.warn('sculpted112: ' + k + ': ' + (e && e.message ? e.message : e)); } catch (x) { /* none */ } };
 
@@ -720,6 +831,9 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
     const cv = document.createElement('canvas'); cv.width = W * SS; cv.height = H * SS;
     const gl = cv.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: true, preserveDrawingBuffer: true, depth: true });
     if (!gl) throw new Error('sculpted112: no WebGL');
+    // (Phase 122) a lost context: the pixel hands until it is restored; restored, every hand is built again on a new canvas
+    cv.addEventListener('webglcontextlost', (e) => { e.preventDefault(); items = []; });
+    cv.addEventListener('webglcontextrestored', () => { if (GL && GL.cv === cv) { GL = null; CACHE.clear(); items = []; } });
     gl.getExtension('OES_standard_derivatives'); const u32 = gl.getExtension('OES_element_index_uint');
     const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error('sculpted112 shader: ' + gl.getShaderInfoLog(s)); return s; };
     const link = (vsrc, fsrc, attrs) => {
@@ -771,9 +885,9 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
   let built = 0;
   // variant: for an open hand, 0..2 as above. A variant not yet built is built only if nothing else was built this
   // frame; otherwise null comes back and the caller draws the open hand it has (one build a frame, never a stall)
-  function handScene(h, look, flipped, variant) {
+  function handScene(h, look, flipped, variant, climb) {
     const v = h.curl === 'open' && variant != null && variant < 2 ? variant : 2;
-    const M = matOf(h, look), key = [h.curl, M.mat, M.sleeve ? 1 : 0, r2(h.Y), r2(h.Z), r2(h.arm), h.left ? 1 : 0, flipped ? 1 : 0, v].join('|');
+    const M = matOf(h, look), key = [h.curl, M.mat, M.sleeve ? 1 : 0, r2(h.Y), r2(h.Z), r2(h.arm), h.left ? 1 : 0, flipped ? 1 : 0, v, climb ? 1 : 0].join('|');
     let E = CACHE.get(key); if (E) return E;
     if (v < 2 && built > 0) return null;
     built++;
@@ -782,7 +896,7 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
     const f0 = handFrame([0, 0, 0], h.Y, h.Z, h.left), anchor = pose === 'grip' ? GRIP_G : PALM;
     const fr = F(mul(rotv(f0, anchor), -1), f0.X, f0.Y, f0.Z);
     const sc = newScene();
-    buildHand(sc, { frame: fr, pose, wrap: pose === 'grip', mat: M.mat, sleeve: M.sleeve, arm: norm(h.arm), f: fAng });
+    buildHand(sc, { frame: fr, pose, wrap: pose === 'grip', mat: M.mat, sleeve: M.sleeve, arm: norm(h.arm), f: fAng, climb: !!climb });
     occlusion(sc);
     // the soft self-shadow is cast once, for the light from the upper left as the hand is seen (a picture drawn mirrored
     // is lit from its own upper right, so that on the screen the light is still from the left)
@@ -844,12 +958,13 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
     if (tex.size > 40) { for (const x of tex.values()) gl.deleteTexture(x); tex.clear(); }
     tex.set(cv, t); return t;
   }
-  const stats = { frames: 0, hands: 0, cards: 0, lastMs: 0 };
+  const stats = { frames: 0, hands: 0, cards: 0, lastMs: 0, noGL: '' };
   // light: { key: [r, g, b] the sun's or moon's light (0..255 and over), dir: where it comes from in the view (x right,
   //   y up, z toward the eye), sky, ground: the sky's and the ground's light, night: 0..1, torch: lamps near you or null,
   //   song: a Song's colour times its strength, or null, lock: true while the glass arm is locked }
   function flush(light) {
     if (!items.length) return null;
+    if (!GL || GL.gl.isContextLost()) { items = []; return null; }
     const t0 = performance.now(); built = 0;
     const { gl, cv, progs, pic, qbuf } = initGL();
     light = light || { key: [255, 244, 226], dir: KEY_DIR, sky: [120, 132, 150], night: 0, torch: null, song: null };
@@ -884,7 +999,7 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
         gl.drawArrays(gl.TRIANGLES, 0, 6); gl.enable(gl.CULL_FACE); stats.cards++;
       }
       for (const h of it.P.hands) {
-        const E = handScene(h, it.look, flip, it.anim ? it.anim.spread : null) || handScene(h, it.look, flip), m = matrix(it.t, h.x, h.y, h.cm);
+        const E = handScene(h, it.look, flip, it.anim ? it.anim.spread : null, it.kind === 'c') || handScene(h, it.look, flip, null, it.kind === 'c'), m = matrix(it.t, h.x, h.y, h.cm);
         // the wrist as a joint: the forearm turned about it (anim: dev degrees to the thumb's side, flex degrees to the palm's)
         const wrot = wristTurn(E.sc.wrist, it.anim);
         // a picture drawn mirrored turns the faces' winding round (a left hand's own mirroring is already in its mesh)
@@ -923,12 +1038,12 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
     items = []; stats.frames++; stats.lastMs = performance.now() - t0;
     return cv;
   }
-  function clear() { CACHE.clear(); posed.clear(); }
+  function clear() { CACHE.clear(); posed.clear(); glDead = false; }
   // the canvas as last drawn, for tests: { w, h, data } (rows bottom first, as WebGL reads them)
   function read() { if (!GL) return null; const { gl } = GL, w = W * SS, h = H * SS, data = new Uint8Array(w * h * 4); gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, data); return { w, h, data }; }
 
   // ---------------------------------------------------------------- the Options row: "Hands: in pixels / sculpted"
-  const ROW = ['gfx-sculpted112', 'Hands', 'in pixels, or sculpted and lit by the world (the 3D view; the sculpted hands are still in work)'];
+  const ROW = ['gfx-sculpted112', 'Hands', 'in pixels, or sculpted and lit by the world (the 3D view)'];
   const WORDS = ['In pixels', 'Sculpted'];
   const chosen = () => typeof GFX !== 'undefined' && GFX[FLAG] === true;
   function syncRow() {
@@ -937,7 +1052,7 @@ void main(){ vec4 c=texture2D(u_tex, v_uv); if (c.a < 0.5) discard; gl_FragColor
     const v = chosen(); b.textContent = WORDS[v ? 1 : 0]; b.setAttribute('aria-pressed', v ? 'true' : 'false'); b.classList.toggle('sel', v);
   }
   function setOn(v) {
-    GFX[FLAG] = !!v;
+    GFX[FLAG] = !!v; glDead = false;
     if (typeof PRESETS !== 'undefined' && PRESETS.current) GFX.preset = PRESETS.current();
     if (GFX.changed) GFX.changed();
     try { if (typeof BODY21 === 'object' && BODY21.clearCaches) BODY21.clearCaches(); } catch (e) { warnOnce('clear', e); }

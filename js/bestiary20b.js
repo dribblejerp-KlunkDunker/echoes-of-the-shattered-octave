@@ -1008,7 +1008,7 @@ const BEASTB = (() => {
     },
   });
 
-  // ---------------------------------------------------------------- The Requiem
+  // ---------------------------------------------------------------- The Unended Office
   // A named horror of the Cacophony: an iron bell for a head, slit down the front, a cage of ribs
   // like organ-stops, a shroud of black tatters to the ground and long bone arms. Attack: the arms
   // spread like a choir-master's (a1) and the claws brought together in front (a2).

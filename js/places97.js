@@ -6,7 +6,7 @@
 //
 //  A place of interest is a named door (every door in the world that says where it leads: "The Boar & Dulcimer",
 //  "Rooke's surgery", "The Chapel of the Carillon") or one of the places the game's own "Where is..." talk knows (the
-//  market, the Flume crossing, the mooring mast). The game's own names are the only source: nothing is invented here.
+//  market, the Flume crossing, the mooring mast on the quarry rim). The game's own names are the only source: nothing is invented here.
 //
 //  A place becomes known when its name is put in front of you or said to you:
 //    heard   in what somebody says in a conversation, and when you ask "Where is ..."
@@ -86,6 +86,7 @@ const PLACES97 = (() => {
       }
       // the game's own "Where is ..." places for this town
       const own = id === 'oakhaven' && typeof PLACES !== 'undefined' && typeof PLACE_POS !== 'undefined' ? Object.keys(PLACES).map((n) => [n, PLACE_POS[PLACES[n]]])
+        : id === 'clearing' && typeof MAST123 !== 'undefined' ? [['The mooring mast', [MAST123.AT.x, MAST123.AT.y]]]   // on the quarry rim (Phase 123)
         : id === 'whispergrove' && typeof PLACES_WG !== 'undefined' ? Object.entries(PLACES_WG) : id === 'deepwoods' && typeof PLACES_DW !== 'undefined' ? Object.entries(PLACES_DW) : [];
       for (const [n, pos] of own) { if (!pos) continue; const k = low(n);
         const near = list.find((p) => Math.hypot(p.x - pos[0], p.y - pos[1]) < 2.6 && (low(core(p.name)).indexOf(low(core(n)).split(' ')[0]) >= 0 || low(core(n)).indexOf(low(core(p.name)).split(' ')[0]) >= 0));

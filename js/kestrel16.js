@@ -12,7 +12,7 @@
 //    * Whisper-Grove: the mast-ladder at the south landing (the existing wg_ladder deco). Its use now offers "Climb up to the
 //      deck", and, in Part Three only, the old "Climb, and go on to the Deep Woods" which runs the original event untouched.
 //    * the Deep Woods camp: the Kestrel deco, once Tobiah has closed the number-three tank (flag tank_patched): a hatch in her flank.
-//    * Before the escape the ship stays at the Oakhaven mast ("Nobody is aboard who will talk to you yet"): not boardable.
+//    * Before the escape the ship stays at the mast on the Oakhaven quarry's rim (js/mast123.js) ("Nobody is aboard who will talk to you yet"): not boardable.
 //  OPTIONAL HOP (new lift-tank + coda_done): the map table flies the Kestrel between the two moorings (4 hours).
 //  THE BED (p16k_bed) rests like a house bed: 8 hours (6 with the lanterns), hp/voice/fatigue back (needs-aware, as doRest),
 //  bleed/deaf/hushed/fear cleared, injuries mended only with proper bunks. Both map ids contain "kestrel", so js/night13.js
@@ -44,7 +44,7 @@
 //             standing within 3.4 cells she feels the deck move and turns round.
 //    engineer (Pennick, pessimist)     tank_patched and the envelope fitted          gold cost of every upgrade x0.80; builds the new tank
 //    Nell     (the mill; only if pim_safe) the stove is fitted                         once a game day, one Hearth Bread
-//    Abner      (the tanner; only if twins_named, i.e. he climbed) the lanterns fitted   once a game day, +35 condition to the readied weapon
+//    Jabez      (the tanner; only if twins_named, i.e. he climbed) the lanterns fitted   once a game day, +35 condition to the readied weapon
 //    (Pim Carder, with his mother, sits in the bunk room when pim_safe: the existing NPC, no effect.) Nobody who dies in the
 //    story is ever aboard, and nobody here is story-bound: no flag the main quest reads is set or read for gating anything but
 //    tank_patched, pim_safe, twins_named, part3, part4, coda_done (all set by the story, never by this module).
@@ -79,7 +79,7 @@ const KESTREL16 = (function () {
     DISCOUNT: 0.20,        // the engineer: the gold cost of every upgrade x 0.80 (all base prices are multiples of 5, so exact)
     REST_HOURS: 8, LAMP_HOURS: 6,
     LENS: 30,              // what Mags asks for a new glass
-    MEND: 35,              // Abner: +35 condition to the readied weapon, once a game day (the whetstone's number)
+    MEND: 35,              // Jabez: +35 condition to the readied weapon, once a game day (the whetstone's number)
     LOAF: 1,               // Nell: one Hearth Bread, once a game day
     HOP_HOURS: 4,          // flying the Kestrel between the two moorings
     FAR_HOME_HOURS: 30,    // home from a far country to either mooring (Phase 92) [PROPOSED]
@@ -212,7 +212,7 @@ const KESTREL16 = (function () {
       title: S('The repair list'),
       intro: S('In Vane\'s hand, with Pennick\'s opinions in the margin. The prices are the chandlers\'; he would like that noted.'),
       purse: S('Purse: {0} sovereigns.'),
-      disc: S('Pennick takes a fifth off the gold.'),
+      disc: S('Pennick takes a fifth off the sovereigns.'),
       fit: S('Fit it'), fitted: S('Fitted'), need: S('Needs: {0}'),
       cost: S('{0} sovereigns'),
       noGold: S('Not enough sovereigns.'), noMats: S('Missing materials.'),
@@ -309,8 +309,8 @@ const KESTREL16 = (function () {
         offer: S('You mended the envelope. Fine. I have looked at what you paid for. I could take the tanks in hand, and the prices, and I would make your money last. It will not last. It will last longer.'),
         take: S('Ask him to take the tanks in hand.'),
         done: S('Pessimist\'s terms. I keep the tanks. You keep the money. I will see it goes further.'),
-        doneMsg: S('Pennick takes the tanks in hand: every upgrade costs a fifth less gold, and he will build the new lift-tank.'),
-        j: S('Pennick, the Kestrel\'s engineer, who has kept her tanks humming and has been below since Oakhaven, has taken them in hand. Every fitting on the repair list costs a fifth less gold, and he will build the new lift-tank.'),
+        doneMsg: S('Pennick takes the tanks in hand: every upgrade costs a fifth less in sovereigns, and he will build the new lift-tank.'),
+        j: S('Pennick, the Kestrel\'s engineer, who has kept her tanks humming and has been below since Oakhaven, has taken them in hand. Every fitting on the repair list costs a fifth less in sovereigns, and he will build the new lift-tank.'),
         d: [
           S('The number-three tank is making the sound it makes before it makes another sound.'),
           S('Gauge says forty. Gauge has said forty since Oakhaven. I do not trust a number that steady.'),
@@ -346,8 +346,8 @@ const KESTREL16 = (function () {
         ],
       },
       hob: {
-        name: S('Abner Fenning, tanner'),
-        label: S('Abner Fenning, on a sack of hides'),
+        name: S('Jabez Barker, tanner'),
+        label: S('Jabez Barker, on a sack of hides'),
         greetP: S('Evening. Mind the vats. There are no vats, but mind them.'),
         greetN: S('A tannery is the one trade that gets quieter the harder you work it. A ship is the other way about.'),
         greetB: S('I have buried two apprentices this year. Try me.'),
@@ -358,8 +358,8 @@ const KESTREL16 = (function () {
         give: S('Give him the bench in the hold.'),
         later: S('Not yet.'),
         done: S('He sets a lantern on the bench, in a window that is not there, and turns it so the light goes the right way. "Bring me what is worn. I will see to the edge."'),
-        doneMsg: S('Abner has the bench in the hold: once a game day he will put an edge back on your readied weapon (+35 condition).'),
-        j: S('Abner Fenning has the bench in the Kestrel\'s hold. Once a day he will see to the edge of whatever I carry.'),
+        doneMsg: S('Jabez has the bench in the hold: once a game day he will put an edge back on your readied weapon (+35 condition).'),
+        j: S('Jabez Barker has the bench in the Kestrel\'s hold. Once a day he will see to the edge of whatever I carry.'),
         mend: S('Ask him to see to your weapon.'),
         mendGot: S('He takes it, turns it once in the lantern light, draws it twice along a strip of hide and hands it back. It is as good as it has been.'),
         mendNone: S('"It has had its turn today," he says. "Come back when the day has."'),
@@ -399,7 +399,7 @@ const KESTREL16 = (function () {
   //   p16k_moor  0-2     0 as the story left her (Whisper-Grove in Part Three, the Deep Woods in Part Four), 1 the Court, 2 the camp
   //   p16k_far   0-15    0 at home in the Reach and the Woods; n: moored in the n-th far country (FAR, below; Phase 92 on)
   //   p16k_visits 0-9999 times you have climbed aboard
-  //   p16k_loaf / p16k_mend  the game day + 1 on which Nell's loaf / Abner's edge were last given (0 never)
+  //   p16k_loaf / p16k_mend  the game day + 1 on which Nell's loaf / Jabez's edge were last given (0 never)
   //   p16k_rp0..5 0-12   which trophy (1-12) hangs on rail peg n, 0 bare
   const FLAGS = { p16k_up: [0, 127], p16k_crew: [0, 15], p16k_seen: [0, 63], p16k_moor: [0, 2], p16k_far: [0, 15], p16k_visits: [0, 9999], p16k_loaf: [0, 99999], p16k_mend: [0, 99999], p16k_rest: [0, 9999] };
   for (let i = 0; i < 6; i++) FLAGS['p16k_rp' + i] = [0, 12];

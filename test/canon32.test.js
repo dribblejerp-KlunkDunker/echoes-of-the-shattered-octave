@@ -74,7 +74,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       out.hollow = /The Hollow behind the tannery is to be burned/.test(JSON.stringify(NPCS.ignatius.topics)) && !/Hollow in the quarry/.test(JSON.stringify(NPCS.ignatius.topics));
       out.herald = /shake the entire time/.test(NPCS.herald.greet.normal);
       out.camp = /twenty-six souls/.test(NPCS.sable_dw.greet.polite);
-      out.linnet = NPCS.wren_dw.name === 'Linnet';
+      out.linnet = NPCS.wren_dw.name === 'Pipit';   // Phase 121: the new name (Rulings of 23 Nov)
       out.pool = !NAMES_POOL.some((n) => ['Tamsin Reed', 'Corwin Aye', 'Mirren Salk'].includes(n));
       // the bells: Tamsin Reed alone speaks of the blue jug; every other bell keeps its own last things
       out.tamsin = /blue jug, Mam/.test(coreMurmur({ name: 'Tamsin Reed' }));
@@ -85,7 +85,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(text.form9, 'Quist\'s three questions are Form 9\'s: name, age, trade');
     check(text.tam, 'Tam\'s Essa died of the pox forty years ago, and called him Tammy');
     check(text.hollow, 'Ignatius\'s warrant burns the Hollow behind the tannery, not "the Hollow in the quarry"');
-    check(text.herald && text.camp && text.linnet, 'the herald\'s hands shake; the Deep Woods camp is twenty-six souls; the hush-gift child is Linnet, not Wren');
+    check(text.herald && text.camp && text.linnet, 'the herald\'s hands shake; the Deep Woods camp is twenty-six souls; the hush-gift child is Pipit, not Wren or Linnet');
     check(text.pool && text.tamsin && text.others && text.varied, 'the blue jug is Tamsin Reed\'s alone; Corwin Aye and Mirren Salk are not Legionnaires; each bell murmurs its own last things');
 
     const src2 = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
@@ -100,7 +100,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const crates = await page.evaluate(() => {
       const out = {}, f = G.flags;
       const tav = G.maps.tavern.entities.filter((e) => e.use === 'crates');
-      const oak = G.maps.oakhaven.entities.filter((e) => e.use === 'crates');
+      const oak = G.maps.clearing.entities.filter((e) => e.use === 'crates');   // Phase 123: the mast-ladder is on the quarry rim
       out.where = tav.length === 0 && oak.length === 1 && /mast-ladder/.test(oak[0].label);
       out.hetty = /ship\'s hold, at the mast/.test(NPCS.hetty.topics['The Drift-Kestrel']);
       delete f.hetty_crates; const q = NPCS.hetty.quest(G); out.ask = /mast-ladder/.test(q.text) && /hold/.test(q.journal[1]);
@@ -116,14 +116,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     // ---- Hob Wendle is the book's field-hand of the Hollow, who roots into the Kestrel's deck; the tanner is someone else
     const hob = await page.evaluate(() => {
       const out = {}, f = G.flags;
-      out.tanner = NPCS.hob.name === 'Abner Fenning, tanner' && !/Hob|Wendle/.test(JSON.stringify(NPCS.hob));
+      out.tanner = NPCS.hob.name === 'Jabez Barker, tanner' && !/Hob|Wendle/.test(JSON.stringify(NPCS.hob));
       out.hollow = G.maps.p30_hollow.entities.some((e) => e.kind === 'npc' && e.id === 'p30_hob') && /field-hand/.test(NPCS.p30_hob.name);
       const d0 = G.day; G.day = 0; delete f.p30_hob_before; const b = NPCS.p30_hob.quest(G); G.day = 2; delete f.p30_hob_after; const a2 = NPCS.p30_hob.quest(G); G.day = d0;
       out.toes = /gone to wood/.test(b.text) && /Rootday/.test(b.text) && /took them clean on Rootday/.test(a2.text);
       return out;
     });
     const groveSrc = src('js/grove.js');
-    check(hob.tanner && hob.hollow && hob.toes, 'Hob Wendle is a field-hand on his step in the Hollow whose three toes Rooke takes on Rootday; the tanner is Abner Fenning');
+    check(hob.tanner && hob.hollow && hob.toes, 'Hob Wendle is a field-hand on his step in the Hollow whose three toes Rooke takes on Rootday; the tanner is Jabez Barker (Phase 121)');
     check(/I\\'m sorry about your ship, Captain/.test(groveSrc) && /Hob Wendle/.test(groveSrc), 'Part Three opens with Hob rooting into the Kestrel\'s deck, as in ch. 13');
     check(!/Hob Wendle|Wendle twins|Ned Wendle|\bHob\b(?!\\?'s Knap)/.test(['js/data.js', 'js/game.js', 'js/kestrel16.js', 'js/couriers.js', 'js/rumours.js', 'js/thin29.js'].map(src).join('\n').replace(/Hob Wendle, field-hand/g, '')), 'nothing else calls the tanner Hob, or his twins Wendle');
 
@@ -202,14 +202,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     // ---- One Wearer (ch. 20, 23): the mast is a voice and a hound pack; the Cloister porch is Voice at the Door, not a fight
     const wearer = await page.evaluate(() => {
       const out = {}, f = G.flags;
-      // the Oakhaven mast, after the Greening, with the Hedge answered
-      loadMap('oakhaven'); G.state = 'play';
+      // the mast (on the quarry rim since Phase 123), after the Greening, with the Hedge answered
+      loadMap('clearing'); G.state = 'play';
       const t = G.map.triggers.find((o) => o.id === 'mast'); Engine.cam.x = t.x; Engine.cam.y = t.y; t.inside = false;
       Object.assign(f, { greening: true, hedge_answered: true }); delete f.mast_voice; delete f.part3; delete f.part4;
       window.__ended = 0; const _end = window.ending; window.ending = () => { window.__ended++; };
       const hounds0 = G.ents.filter((o) => o.kind === 'enemy' && o.type === 'hound' && !o.dead).length;
       window.__msgs.length = 0; checkTriggers();
-      out.mast = f.mast_voice && !G.ents.some((o) => o.kind === 'enemy' && o.type === 'wearer') && G.ents.filter((o) => o.kind === 'enemy' && o.type === 'hound' && !o.dead).length === hounds0 + 3 && window.__msgs.some((m) => /"Grab the line\." It followed your voice here/.test(m)) && window.__ended === 0;
+      out.mast = f.mast_voice && !G.ents.some((o) => o.kind === 'enemy' && o.type === 'wearer') && G.ents.filter((o) => o.kind === 'enemy' && o.type === 'hound' && !o.dead).length === Math.min(5, hounds0 + 3) && window.__msgs.some((m) => /"Grab the line\." It followed your voice here/.test(m)) && window.__ended === 0;
       for (const o of G.ents) if (o.kind === 'enemy' && o.type === 'hound') o.dead = true;
       t.inside = false; checkTriggers(); out.mastEnd = window.__ended === 1;
       window.ending = _end; delete f.greening; delete f.hedge_answered;
@@ -273,8 +273,8 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       loadMap('mausoleum'); G.state = 'play'; const tc2 = { id: 'coda_choir', said: false, done: false }; codaTrigger(tc2);
       out.choir = tc2.done && f.coda_fight && G.ents.some((o) => o.kind === 'enemy' && o.type === 'requiem' && !o.dead) && !G.ents.some((o) => o.kind === 'enemy' && o.type === 'wearer_coda');
       f.coda_sung = true; const rq = G.ents.find((o) => o.kind === 'enemy' && o.type === 'requiem'); killEnemy(rq, true);
-      out.requiem = f.requiem_done && f.coda_done && G.journal.some((j) => /^The Requiem: in the choir/.test(j.text));
-      out.ending = codaEndingLines().some((l) => /inside a ring of hush-lamps/.test(l) && /You struck it four feet in front of her/.test(l)) && codaEndingLines().some((l) => /against the Requiem/.test(l));
+      out.requiem = f.requiem_done && f.coda_done && G.journal.some((j) => /^The Unended Office: in the choir/.test(j.text));
+      out.ending = codaEndingLines().some((l) => /inside a ring of hush-lamps/.test(l) && /You struck it four feet in front of her/.test(l)) && codaEndingLines().some((l) => /against the Unended Office/.test(l));
       for (const k of RESET) delete f[k];
       loadMap('deepwoods'); G.state = 'play'; q = NPCS.lyra_dw.quest(G); q = NPCS.lyra_dw.quest(G); q.choices[0].f(G);
       out.byYou = f.coda_by_you && f.ring_set && rl().hidden && cl().hidden;

@@ -1649,7 +1649,7 @@ void main() {
       e._screen = null;
       if (!e.sprite || e.hidden) continue;
       const dx = e.x - camx, dy = e.y - camy, d2 = dx * dx + dy * dy;
-      if (d2 > fd2) continue;
+      if (d2 > fd2 && !e.farSee) continue;   // farSee: seen at any distance (js/mast123.js), as on the CPU
       // behind the camera's horizontal plane: the CPU drops trY <= 0.08; R3D keeps what a pitched view still sees
       let dirl;
       try { dirl = typeof animDirectionalSprite === 'function' ? animDirectionalSprite(e) : { sprite: (e.animSprite && Engine.sprites[e.animSprite]) || Engine.sprites[e.sprite], flip: !!e.animFlip }; } catch (err) { dirl = null; }
@@ -1736,7 +1736,7 @@ void main() {
       e._pickScr = null;
       if (!e.sprite || e.hidden) continue;
       const dx = e.x - cam.x, dy = e.y - cam.y, d2 = dx * dx + dy * dy;
-      if (d2 > fd2) continue;
+      if (d2 > fd2 && !e.farSee) continue;   // the CPU frame draws farSee sprites at any distance (js/engine.js)
       let directional;
       try { directional = typeof animDirectionalSprite === 'function' ? animDirectionalSprite(e) : { sprite: (e.animSprite && Engine.sprites[e.animSprite]) || Engine.sprites[e.sprite], flip: !!e.animFlip }; } catch (err) { directional = null; }
       const sp = directional && directional.sprite; if (!sp) continue;

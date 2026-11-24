@@ -1394,7 +1394,7 @@ const ICONS = (function () {
     d.layer(C.leather).rrect(-1.8, 6, 3.6, 5);
     d.layer(C.bell, { shiny: 1 }).rell(0, -13, 2, 2);
   };
-  PIX.p12_lute = d => {   // Lute: Abner Fenning strings these with his own gut
+  PIX.p12_lute = d => {   // Lute: Jabez Barker strings these with his own gut
     d.tilt(12, 12, 1);
     d.layer(C.ash, { shiny: 1 }).rell(0, 4, 6, 7);
     d.layer(C.dwood).rrect(-1.3, -12, 2.6, 11);
@@ -1738,7 +1738,7 @@ const ICONS = (function () {
     d.layer('#4a4440', { shiny: 1 }).rpoly([0.4, -11, 2.8, -11, 2.8, 11, 0.6, 11, 1.4, -1]);
     d.layer(C.linen).rrect(-3.2, 4, 6.4, 1.4);
   };
-  PIX.p15_t_requiem = d => {   // The Requiem's Chord-Plate: a chord with one voice too many
+  PIX.p15_t_requiem = d => {   // The Unended Office's Chord-Plate: a chord with one voice too many
     d.layer(C.bronze, { shiny: 1 }).rect(3, 5, 18, 14);
     const l = d.layer('#6a4418', { shade: 'flat', sep: false }); for (let y = 8; y <= 16; y += 2) l.rect(5, y, 14, 1);
     d.mark('#3a2408', 9, 9, 9, 11, 9, 13, 9, 15, 10, 9, 10, 11, 10, 13, 10, 15).mark('#fff0c0', 15, 12, 4, 6);

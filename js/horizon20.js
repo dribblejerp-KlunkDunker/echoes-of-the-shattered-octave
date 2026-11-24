@@ -12,7 +12,8 @@
 //     saved entity indexes line up. HORIZON20.reach() is the movement-graph BFS the test uses (no softlock, no fall
 //     that hurts much, every reachable cell can get back to the gate).
 //  2. COUNTRY BEYOND THE WALLS (switch "Country beyond walls", GFX.farCountry). On the clearing and the Downs,
-//     Oakhaven is drawn where it really stands, past the Hedge: its roofs, the Greenhall dome, the mooring mast and the
+//     Oakhaven is drawn where it really stands, past the Hedge: its roofs, the Greenhall dome (the mooring mast is on the
+//     quarry rim since Phase 123, drawn by js/mast123.js) and the
 //     Chapel of the Carillon's bell-tower, ray-cast through Oakhaven's own cells in the same world frame (the North Gate
 //     ties the two maps together), shaded and fogged like near walls. On those maps the ground beyond the map's edge,
 //     which the relief renderer leaves as flat haze when you stand high, is laid as distant ground. A post hook (order
@@ -303,7 +304,7 @@ const HORIZON20 = (() => {
     gateOut: 'The hurdle in the thorn, back down to the clearing',
     sign: 'A finger-post with one arm left: THE WATCH DOWNS. Under it someone has cut, small, SHEEP-WALK. There are no sheep. The turf is short anyway, as if it remembers them.',
     cairn: 'The beacon on the Long Down: chalk and flint piled round an iron fire-basket. The ash in it is years old. North, the Grey Teeth. South-east, over the Hedge, the roofs of Oakhaven and the Chapel\'s bell-tower, its belfry open to the weather.',
-    knoll: 'Hedge Knoll. From here the Hedge is a dark line along the bottom of the world, and Oakhaven is the roofs behind it: the Greenhall dome, the mooring mast, the Chapel\'s tower. Nothing hangs in the tower. You can see daylight through the frame.',
+    knoll: 'Hedge Knoll. From here the Hedge is a dark line along the bottom of the world, and Oakhaven is the roofs behind it: the Greenhall dome, the Chapel\'s tower. Away to the north-east the mooring mast stands over the quarry. Nothing hangs in the tower. You can see daylight through the frame.',
     scar: 'The Scar: a chalk face, sheer on every side, flint standing out of it like knuckles. There is no way up, and nothing up there to want.',
     fold: 'A sheepfold of dry stone, the gate gone. Thistles inside. Somebody kept it mended for a long time, and then stopped.',
     pond: 'A dew-pond, lined with clay, older than the Hedge. Rain still fills it. Nothing drinks from it that you can see.',
