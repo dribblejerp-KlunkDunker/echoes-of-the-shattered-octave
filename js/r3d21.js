@@ -1935,9 +1935,12 @@ void main() {
         for (let k = 0; k < 2; k++) { RB.pbo[k] = gl.createBuffer(); gl.bindBuffer(gl.PIXEL_PACK_BUFFER, RB.pbo[k]); gl.bufferData(gl.PIXEL_PACK_BUFFER, 320 * 150 * 16, gl.STREAM_READ); }
         gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
       }
-      // collect the previous read if its fence passed
-      const j = RB.i ^ 1;
-      if (RB.fence[j]) {
+      // collect every read whose fence has passed, the older first so the newer one is what stays. In steady play only
+      // the previous read (RB.i ^ 1) is ever waiting. (Phase 125b) Two renders in one task, as the first-frame redraw
+      // of js/game.js makes, leave BOTH in flight; collecting only the previous one then left the other uncollected
+      // for good, every later frame skipped its read, and depthAt/materialAt stood still (test/fold113, boots125 19b).
+      for (const j of [RB.i, RB.i ^ 1]) {
+        if (!RB.fence[j]) continue;
         const s = gl.clientWaitSync(RB.fence[j], 0, 0);
         if (s === gl.ALREADY_SIGNALED || s === gl.CONDITION_SATISFIED) {
           gl.bindBuffer(gl.PIXEL_PACK_BUFFER, RB.pbo[j]); gl.getBufferSubData(gl.PIXEL_PACK_BUFFER, 0, RB.data); gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);

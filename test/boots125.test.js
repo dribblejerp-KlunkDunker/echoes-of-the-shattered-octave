@@ -565,6 +565,21 @@ function verbatim(t, lines) {
     check(ff.boots, '19. the same after BOOTS125.enter on the same map');
     check(ff.pixel, '19. the same with the pixel hands');
     check(ff.classic, '19. in the classic view BODY21.redrawNeeded() is never true');
+    // 19b (found by test/fold113 in the full run): the extra frame is a second Engine.render in one task, and the 3D
+    // view's read-back (depthAt, materialAt) took one read per task; a second left a read it never collected and
+    // then stood still for good. After a map change the read-back must still follow the view.
+    const rb = await p3.evaluate(async () => {
+      R3D.setMode('on');
+      const wait = () => new Promise((q) => setTimeout(q, 40));
+      const row = () => { const a = []; for (let x = 8; x < 320; x += 16) a.push(Math.round(Engine.depthAt(x, 75) * 100) / 100); return a.join(','); };
+      G.state = 'paused'; loadMap('oakhaven', { x: 23.5, y: 20.5, dir: -1.57 }); G.fadeT = 0; Engine.cam.pitch = 0; G.state = 'play';
+      for (let i = 0; i < 6; i++) { render(); await wait(); }
+      const a = row(), active = R3D.active();
+      Engine.cam.dir += Math.PI / 2;
+      for (let i = 0; i < 8; i++) { render(); await wait(); }
+      return { active, a, b: row() };
+    });
+    check(rb.active && rb.a !== rb.b, '19b. after the first-frame redraw the 3D view\'s read-back still follows the view (a quarter turn changes depthAt along the middle row)');
     await p3.close();
   } catch (e) { fails++; console.log('FAIL ' + (e && e.stack || e)); }
   finally { await browser.close(); }
