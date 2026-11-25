@@ -1,5 +1,5 @@
 // PLAYWRIGHT_MODULE=/path/to/playwright PREVIEW_URL=http://127.0.0.1:4227 node test/own124.test.js
-// Phase 124c and 124d, faces of their own: the first three, the next six, and the way in for the rest (js/faces124.js FACES124.OWN and
+// Phase 124c, 124d and 124e, faces of their own: the first three, the next six, the next five, and the way in for the rest (js/faces124.js FACES124.OWN and
 // FACES124.portrait, which every place that builds a portrait's path asks).
 //   - Old Marrable, trooper 132 of the Watch (p100_tr_b, and p113_trooper at the tip, the same figure) and the Tallyman
 //     show their own portrait in the talk window with the switch on, the borrowed one with it off
@@ -25,7 +25,9 @@ const WANT = { p113f_marrable: 'own_marrable', p100_tr_b: 'own_watch132', p113_t
   // Phase 124d, the next six (24 Nov 2026). Orrin Pale the sexton is one man under three NPC ids, and they wear two
   // different figures (the sexton's, and the townsman's in the heist), so he has three rows and one picture.
   p95_perpetua: 'own_perpetua', p9_ada: 'own_ada', p46_marrit: 'own_marrit', p12_baker: 'own_brenna', p12_dunna: 'own_dunna',
-  orrin: 'own_orrin', p29_sexton: 'own_orrin', p16h_orrin: 'own_orrin' };
+  orrin: 'own_orrin', p29_sexton: 'own_orrin', p16h_orrin: 'own_orrin',
+  // Phase 124e, the next five (25 Nov 2026)
+  p11_dicer: 'own_garrow', p15_dealer: 'own_nessa', p29_agnes: 'own_agnes', p29_ambrose: 'own_ambrose', p29_sim: 'own_sim' };
 // NPC entries in the running game (every map loaded) that showed one of the two borrowed portraits before this phase.
 // A later phase that adds a person with a borrowed face changes this number: change it here, and say so in its record.
 const BORROWED_BEFORE = 258;

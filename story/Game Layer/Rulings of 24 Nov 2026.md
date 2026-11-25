@@ -45,4 +45,15 @@ Canva then ran out of credit. Shown the first portrait made on his own Hugging F
 | Ruling | What follows |
 | --- | --- |
 | **The look of the painted portraits is approved, from either tool.** | The rest are made on the owner's Hugging Face (the Z-Image-Turbo Space), each prompt and seed written down. Phase 124d put the next six in. |
-| Not ruled: paying for Hugging Face PRO. | The free account allows about nine pictures a day. It is his purchase to make or not; until he says, the faces come at that rate. |
+| Hugging Face PRO (5:37 pm): "I will get huggingface pro when I get paid this week". | Until then the faces come at about nine a day on the free account. Once he says PRO is on, the rest of the named people are made in a day or two. |
+| Brenna Loft (5:55 pm): "leave Brenna at 30". | Her portrait stays as painted. Her true age in the prompts list is now thirty. |
+
+## Phase 125b, "in their boots" (5:50 pm, 7:00 pm, 8:11 pm)
+
+Told at 5:50 pm that the builder's design had been checked against the manuscript and that three things would change in play because the book has them otherwise (the traveller no longer strikes the Wearer or says "No" in the moss, both being Kaelen's, ll. 6098 and 6144; the ring of lamps can no longer fail and send the traveller back "in a week"; the traveller's two Rite minigames, Crane's eye-line and humming to hold the Factor's lenses, go), and asked to say if he would rather keep any of them, he answered at 7:00 pm and again at 8:11 pm:
+
+> "proceed"
+
+| Reading | What follows |
+| --- | --- |
+| **No objection to the three changes; the books win, as already ruled.** It is read as leave to go on, not as a new ruling on each change. | The one Opus builder builds Phase 125b from `Phase 125b - In their boots (design, for the builder).md`. If on playing he wants any of the three back, it is a later change, and each would have to be squared with the book first. |
