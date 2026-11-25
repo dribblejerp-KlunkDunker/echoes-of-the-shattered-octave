@@ -47,7 +47,8 @@ const RITE43 = (function () {
     const v = CARD_VO && CARD_VO.find(([t]) => String(body).startsWith(t)); if (v) seq(v[1]);
   };
   // an Echo (GDD 4.9): a thread the book did not take, shown grey, and then the moment again
-  const grey = (on) => { try { const cv = document.querySelector('canvas'); if (cv) cv.style.filter = on ? 'grayscale(1) contrast(0.9)' : ''; } catch (e) { /* cosmetic */ } };
+  // (Phase 125b) every canvas of the view: under the 3D view the picture is not on the first one
+  const grey = (on) => { try { for (const cv of document.querySelectorAll('canvas')) cv.style.filter = on ? 'grayscale(1) contrast(0.9)' : ''; } catch (e) { /* cosmetic */ } };
   function echo(body, after, title, go) {   // shared with js/rope45.js
     grey(true);
     card(title || TX.echoTitle, body, [{ t: go || TX.echoGo, f: () => { grey(false); if (after) after(); } }]);

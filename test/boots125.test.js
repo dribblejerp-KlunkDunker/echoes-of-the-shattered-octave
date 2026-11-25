@@ -502,7 +502,7 @@ function verbatim(t, lines) {
       const f = G.flags, f0 = JSON.parse(JSON.stringify(f)); for (const k of Object.keys(f)) delete f[k];   // (the Part Two ending of a fresh game; earlier sections left Part Four's flags)
       hide('#ending'); G.state = 'play';
       p.glass = 80; try { ending(); } catch (e) { out.err = e.message; } out.end80 = document.querySelector('#ending-text').textContent;
-      p.glass = 50; try { ending(); } catch (e) { /* none */ } out.end50 = document.querySelector('#ending-text').textContent;
+      hide('#ending'); G.state = 'play'; p.glass = 50; try { ending(); } catch (e) { /* none */ } out.end50 = document.querySelector('#ending-text').textContent;
       hide('#ending'); G.state = 'play'; p.glassed = g0[0]; p.glass = g0[1]; Object.assign(f, f0);
       out.ada = NPCS.p9_ada && NPCS.p9_ada.topics && NPCS.p9_ada.topics.Oakhaven;
       out.seventy = Object.values(VOICE_ACT.LINES).some((l) => /Seventy years/.test(l.t || ''));

@@ -73089,7 +73089,16 @@
    "id": "sable.manifest.mirren2",
    "speaker": "sable",
    "kind": "narration",
-   "text": "She was carrying her husband's coat over her arm and she asked whether she might keep it, and the clerk said that she might, and it was taken off her at the door of the pressing room and put in a bin with eleven hundred other coats.",
+   "text": "She was carrying her husband's coat over her arm and she asked whether she might keep it,",
+   "source": "boots125.js CAPS.s_mirren (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it; perfectly flat"
+  },
+  {
+   "id": "sable.manifest.mirren2b",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "and the clerk said that she might, and it was taken off her at the door of the pressing room and put in a bin with eleven hundred other coats.",
    "source": "boots125.js CAPS.s_mirren (Book One ch. 16)",
    "voiceOf": "sable",
    "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it; perfectly flat"
@@ -73116,7 +73125,16 @@
    "id": "sable.manifest.annet2",
    "speaker": "sable",
    "kind": "narration",
-   "text": "Taken on the eleventh day, in the hour after noon, with the rest of the little ones from the Cloister of the Lost Choir, because the Office had a requisition for small clear voices and the Cloister had forty-one of them in a choir under one roof.",
+   "text": "Taken on the eleventh day, in the hour after noon, with the rest of the little ones from the Cloister of the Lost Choir,",
+   "source": "boots125.js CAPS.s_annet (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"
+  },
+  {
+   "id": "sable.manifest.annet2b",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "because the Office had a requisition for small clear voices and the Cloister had forty-one of them in a choir under one roof.",
    "source": "boots125.js CAPS.s_annet (Book One ch. 16)",
    "voiceOf": "sable",
    "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"
@@ -73125,7 +73143,16 @@
    "id": "sable.manifest.annet3",
    "speaker": "sable",
    "kind": "narration",
-   "text": "She was third in the line. She would not let go of the hand of the boy in front of her, and rather than make a scene in front of forty children, the proctors took the two of them into the room together and pressed them in the same hour.",
+   "text": "She was third in the line. She would not let go of the hand of the boy in front of her,",
+   "source": "boots125.js CAPS.s_annet (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it; after a beat"
+  },
+  {
+   "id": "sable.manifest.annet3b",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "and rather than make a scene in front of forty children, the proctors took the two of them into the room together and pressed them in the same hour.",
    "source": "boots125.js CAPS.s_annet (Book One ch. 16)",
    "voiceOf": "sable",
    "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it; after a beat"
