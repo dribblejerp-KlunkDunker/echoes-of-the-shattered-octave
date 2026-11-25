@@ -244,6 +244,11 @@ const BOOTS125 = (function () {
   const ent45 = (k) => { try { return G.ents.find((e) => e && e._r45 === k) || null; } catch (e) { return null; } };
   const V = () => (R43() ? R43().V : {});
   const lookDeg = () => Math.atan2(Engine.cam.pitch || 0, 160 / 0.66) * 180 / Math.PI;   // the look angle (js/r3d21.js: FX = 242.42)
+  // looking down at the Ledger: 12 degrees under the 3D view. The classic view can look only 40 rows down (look() in
+  // js/game.js), which is 9.4 degrees, so there the line is 7 (Codex, P2 on #165: at 12 the slip could never happen
+  // and the Ledger was never seen in the classic view, which the Original preset always uses)
+  const ledgerDeg = () => { let r3 = false; try { r3 = typeof R3D === 'object' && !!R3D && !!R3D.active && !!R3D.active(); } catch (e) { r3 = false; } return r3 ? -12 : -7; };
+  const atLedger = () => lookDeg() < ledgerDeg();
 
   // ================================================================ the moments
   const DEF = {};
@@ -367,8 +372,10 @@ const BOOTS125 = (function () {
   const spoken = (k, min) => { let d = 0; try { for (const id of CAPS[k].vo || []) { const l = VOICE_ACT.LINES[id]; if (l && l.d) d += l.d + 0.3; } } catch (e) { d = 0; } return Math.max(min, d + 1.2); };
   const ENTRY = (k, min) => {
     const read = () => { if (!S.x.read) { S.x.read = true; S.x.readT = S.t; caption('s_' + k); } };
-    return { k, until: () => !!S.x.read && S.t - S.x.readT >= spoken('s_' + k, min), autoDur: min, onPress: read, autoDo: read,
-      tick() { if (S.x.read && lookDeg() < -12) return slip('s_ledger'); } };
+    // (Codex, P2 on #165) an entry that plays itself after two slips is begun at once and lasts as long as its reading,
+    // the same as a played one: with a fixed 12 to 15 s it was begun only as it ended, and the next entry cut it off
+    return { k, until: () => !!S.x.read && S.t - S.x.readT >= spoken('s_' + k, min), onPress: read, autoTick() { if (S.t >= 0.6) read(); },
+      tick() { if (S.x.read && atLedger()) return slip('s_ledger'); } };
   };
   DEF.names = {
     hero: 'sable', she: true, map: () => (typeof MANIFEST53 === 'object' ? MANIFEST53.HOLD : null), pose: 'lid',
@@ -571,6 +578,7 @@ const BOOTS125 = (function () {
     if (!b.walk && S.anchor) { Engine.cam.x = S.anchor.x; Engine.cam.y = S.anchor.y; }
     if (b.tick && (!auto || b.k === 'sing' || !/^(pinch|n10|corwin|mirren|annet)$/.test(b.k))) { if (b.tick(dt) === true) return; }
     if (S.card || !S.at) return;
+    if (auto && b.autoTick) b.autoTick();
     let done;
     if (auto && b.autoDur != null) { done = S.t >= b.autoDur; if (done && b.autoDo) b.autoDo(); }
     else if (b.until) done = !!b.until();
@@ -597,7 +605,7 @@ const BOOTS125 = (function () {
   const lookFor = (own) => { if (!S.at || !handsOn() || !S.def) return null; return heroLook(own, S.def.hero); };
   try { if (typeof GEARLOOK21 === 'object' && GEARLOOK21.setLookHook) GEARLOOK21.setLookHook((own) => lookFor(own)); } catch (e) { warnOnce('look hook', e); }
   const lowered = () => !!S.at && handsOn() && !!S.def && (S.def.pose === 'stool' || S.def.pose === 'none' || S.def.pose === 'lid' || (S.def.pose === 'rail' && S.weapon !== 'axe'));
-  const propNow = () => { if (!S.at || !handsOn() || S.bi < 0) return null; const b = defBeats()[S.bi]; if (S.at === 'names' && lookDeg() < -12) return 'ledger'; return (b && b.prop) || null; };
+  const propNow = () => { if (!S.at || !handsOn() || S.bi < 0) return null; const b = defBeats()[S.bi]; if (S.at === 'names' && atLedger()) return 'ledger'; return (b && b.prop) || null; };
   // the two fists, through the climbing hands of js/fp-hands.js (pixel or sculpted), set on the stool's edges or the rail
   function extraHands(ctx) {
     if (!S.at || !handsOn() || !S.def || S.bi < 0) return;

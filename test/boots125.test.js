@@ -345,6 +345,33 @@ function verbatim(t, lines) {
     check(names.toEnd && names.inOrder && names.whole && names.iknow, '10. the three entries are MS 4556, 4560 and 4564 whole, in that order; "Your engineer told me."');
     check(names.filed && names.frag && names.callingNone, '10. the filed card follows; no fragment is spent');
 
+    // ---------------------------------------------------------------- 10b: Codex on #165 (two P2s)
+    const names2 = await sect('names2', () => {
+      const out = {}, f = G.flags;
+      BOOTS125.reset(); hide('#ending'); G.state = 'play';
+      delete f.p53; delete f.p53_deck; f.sable_joined = true; f.escaped = true; f.part3 = true; delete f.part4;
+      window.__msgs.length = 0; window.__ev.length = 0;
+      loadMap(MANIFEST53.HOLD); G.state = 'play'; T.press(0); T.press(0); T.press(0);
+      out.toCorwin = T.beat('corwin');
+      // (2) the classic view can look only 40 rows down (look() in js/game.js clamps the pitch to 40): that must reach the Ledger
+      out.classic = !(typeof R3D === 'object' && R3D && R3D.active && R3D.active());
+      T.tap('use'); Engine.cam.pitch = -40; T.step(3, 0.05);
+      const e1 = T.last(); out.slipClassic = !!e1 && /An Echo/.test(e1.t) && /she did not look at it/.test(e1.b);
+      Engine.cam.pitch = 0; T.press(0); T.beat('corwin');
+      // (1) a second slip, and the entry plays itself: it must be read whole before the next entry begins
+      T.tap('use'); Engine.cam.pitch = -40; T.step(3, 0.05); Engine.cam.pitch = 0; T.press(0);
+      out.auto = !!BOOTS125.S.auto.corwin;
+      let need = 0; try { for (const id of BOOTS125.CAPS.s_corwin.vo || []) { const l = VOICE_ACT.LINES[id]; if (l && l.d) need += l.d + 0.3; } } catch (e) { need = 0; }
+      out.need = Math.round(need);
+      window.__msgs.length = 0; let shownAt = -1, t = 0;
+      for (let i = 0; i < 4000 && BOOTS125.S.beat === 'corwin'; i++) { T.step(1, 0.05); t += 0.05; if (shownAt < 0 && window.__msgs.some((m) => /Entry thirty-nine thousand/.test(m))) shownAt = t; }
+      out.left = BOOTS125.S.beat; out.shownAt = +shownAt.toFixed(1); out.read = +(t - shownAt).toFixed(1);
+      BOOTS125.reset();
+      return out;
+    });
+    check(names2.toCorwin && names2.classic && names2.slipClassic, '10b. in the classic view, looking down as far as it goes (40 rows) reaches the Ledger: the slip (' + JSON.stringify(names2) + ')');
+    check(names2.auto && names2.need > 20 && names2.shownAt >= 0 && names2.shownAt < 3 && names2.read >= names2.need, '10b. an entry that plays itself is begun at once and read whole (its recordings, ' + names2.need + ' s) before the next: ' + names2.read + ' s');
+
     // ---------------------------------------------------------------- 11: the coda
     const coda = await sect('coda', () => {
       const out = {}, f = G.flags;

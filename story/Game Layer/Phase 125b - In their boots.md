@@ -13,7 +13,7 @@ Six moments of Book One are played in the hero's own boots. The player does only
 | The eight bolts | Kaelen | walk the collar walk; kneel at the plate (the bolts take 51 s by themselves, Tobiah calling five times); the one sentence | none (MS 3186: "nobody stopped him") |
 | The Hold, part two | Lyra | 174 through the lock (6 s); the falling fifth, 174 116 174 116 (9 s) | leaving the band before the cue |
 | One to Ten (ch. 12) | Vane | take the axe at Five; cut at Ten | no take by Five's end (3752); a cut before Ten (3772-3774); no cut by Ten + 2.5 s, back to Nine (3770) |
-| The three names (ch. 16) | Sable | one press for each entry; keep the eyes up | the look more than 12° down: "she did not look at it." (4554) |
+| The three names (ch. 16) | Sable | one press for each entry; keep the eyes up | the look more than 12° down under the 3D view, 7° in the classic view (which can look only 9.4° down): "she did not look at it." (4554) |
 | The coda (ch. 23) | Lyra | walk to the spot between the willows; hold the Song key until the coda is sung | a step of 1.3 off the spot (6028); letting go of the song: "'I know,' said Lyra, and kept singing." (6076) |
 
 The playable Hold, "Head at one span" to the end of the fifth, is about two and a half minutes of game time (ruling a). Kaelen and the Aegis strike at the coda; the after card is MS 6130-6154 with one button.
@@ -83,3 +83,8 @@ Every one of the 228 suites was run against the branch. Under two runners at onc
   - Kaelen: "On Hearthday walk with the column, and when I go to the drum, give them something else to look at. Eight bolts." is now "On Hearthday walk with the column. Eight bolts."
   - Lyra: "Your work is to stand where their eyes go." is now "Your work is to walk with us and be there after."
   - The journal: "My work is not to let them watch him." is now "My work is to walk with them."
+
+## Codex on #165 (two findings, both real, both mended test-first as `boots125` 10b)
+
+- **An entry that plays itself was cut off.** After two slips an entry of the three names was begun only when its fixed 12 to 15 s ran out, and the next entry then cut its reading short. It is now begun at once and lasts as long as its recordings (52 s for Corwin Aye's), the same as a played one.
+- **The Ledger could not be reached in the classic view.** The classic view looks at most 40 rows down (9.4°), so the 12° line could never be crossed there: no slip and no Ledger, in the Original preset or with the 3D view off. The line is 7° in the classic view and 12° under the 3D view.
