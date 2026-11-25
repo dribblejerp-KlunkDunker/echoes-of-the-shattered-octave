@@ -338,9 +338,13 @@ const ROPE45 = (function () {
   }
 
   // ================================================================ 5 · the count
+  // (Phase 125b) the count is played in Vane's boots (js/boots125.js); without it, it runs as before, and the cut comes at ten
+  const boots = () => { try { return typeof BOOTS125 === 'object' && !!BOOTS125 && !!BOOTS125.can && BOOTS125.can('rope'); } catch (e) { return false; } };
+  const inBoots = () => { try { return typeof BOOTS125 === 'object' && !!BOOTS125 && BOOTS125.active() === 'rope'; } catch (e) { return false; } };
   function startCount() {
-    const f = F(); setStage(5); R.ct = 0; R.ci = 0; f.r45_hold = false; f.r45_saw = false;
+    const f = F(); setStage(5); R.ct = 0; R.ci = 0; f.r45_saw = false;
     if (G.mapId === DECK) stageDeck(G.map);
+    if (boots()) { try { R.ct = -1; if (BOOTS125.enter('rope')) return; } catch (e) { warnOnce('boots', e); } R.ct = 0; }
     say(TX.drumOut, 'bad', 3500); say(TX.countHint, 'warn', 3000);
   }
   function looking() {
@@ -349,7 +353,7 @@ const ROPE45 = (function () {
     return d < 0.75;
   }
   function tickCount(dt) {
-    const f = F(); if (R.ct < 0) return;
+    const f = F(); if (R.ct < 0 || inBoots()) return;
     R.ct += dt;
     if (R.ci >= 6 && R.ci <= 9 && looking()) f.r45_saw = true;
     while (R.ci < 10 && R.ct >= (R.ci + 1) * TICK) {
@@ -358,24 +362,15 @@ const ROPE45 = (function () {
       if (R.ci === 10) { R.ct = -1; setTimeout(() => { try { atTen(); } catch (e) { warnOnce('ten', e); } }, 400); }
     }
   }
+  // (Phase 125b) holding the drum at ten, and its Echo, are gone: in the book nothing lets the line stay (MS 3772-3774).
+  // TX.echo stays for the ending of a save that already has r45_echo.
   function atTen() {
-    const f = F(); if (stage() !== 5) return;
-    if (f.r45_hold && !f.r45_echo) {
-      f.r45_echo = true; f.r45_hold = false;
-      const back = () => { R.ci = 8; R.ct = 8 * TICK; say(TX.c9, '', TICK * 1000 + 600); };
-      if (typeof RITE43 !== 'undefined' && RITE43.echo) { RITE43.echo(TX.echo, back, TX.echoTitle, TX.echoGo); seq(VO.echo); }
-      else card(TX.echoTitle, TX.echo, [{ t: TX.echoGo, f: back }]);
-      return;
-    }
+    if (stage() !== 5) return;
     cut();
-  }
-  function holdDrum() {
-    if (stage() !== 5 || R.ct < 0) return false;
-    F().r45_hold = true; say(TX.holdDrum, 'warn', 2500); return true;
   }
 
   // ================================================================ 6 · after
-  function cut() {
+  function cut(opts) {
     const f = F(); if (stage() !== 5) return;
     setStage(6); f.r45_cut = true;
     const old = G.ledger || (G.ledger = []);
@@ -383,6 +378,7 @@ const ROPE45 = (function () {
     journal('main', TX.jCut);
     try { Audio_.sfx.crack(); } catch (e) { /* silent */ }
     if (G.mapId === DECK) stageDeck(G.map);
+    if (opts && opts.boots) return;   // in Vane's boots the after card is the book's (js/boots125.js), then finish()
     const body = TX.after + '<br><br>' + (f.r45_saw ? TX.afterSaw : TX.afterLooked) + (f.pim_safe ? '<br><br>' + TX.afterPim : '');
     card(TX.afterTitle, body, [{ t: TX.afterGo, f: () => finish() }]);
   }
@@ -453,7 +449,7 @@ const ROPE45 = (function () {
     if (!e) return false;
     if (aboard() && (e.use === 'p16k_exit' || e.use === 'p16k_down')) { say(TX.drumHint, 'warn', 3000); return true; }
     if (!e._r45) return false;
-    if (e.use === 'r45_drum') { if (stage() === 2) return haul(); if (stage() === 5) return holdDrum(); say(e.look || e.label, '', 5000); return true; }
+    if (e.use === 'r45_drum') { if (stage() === 2) return haul(); say(e.look || e.label, '', 5000); return true; }
     if (e.use === 'r45_put') return putOn(e);
     if (e.use === 'r45_look') { say(e.look || e.label || '', '', 6000); return true; }
     return false;
@@ -467,7 +463,7 @@ const ROPE45 = (function () {
   }
   try { wire(); } catch (e) { console.warn('rope45 failed to wire', e); }
 
-  return { TX, TEXTS, VO, R, AT, FOOT, COUNTS, DECK, stage, aboard, active, begin, toDeck, haul, putOn, loaded, eighteen, lyraUp, lastLoad, startCount, atTen, holdDrum, cut, finish, endLines, tick, seq, hush,
+  return { TX, TEXTS, VO, R, AT, FOOT, COUNTS, DECK, stage, aboard, active, begin, toDeck, haul, putOn, loaded, eighteen, lyraUp, lastLoad, startCount, atTen, cut, finish, endLines, tick, seq, hush,
     consts: { BEAT, WINDOW, HAULS, MAGS_RATE, FOOT_RATE, JITTER_SECS, TICK } };
 })();
 if (typeof window !== 'undefined') window.ROPE45 = ROPE45;

@@ -62,8 +62,9 @@ const B1K = [
   ['never found it, travelled and went down', { part4: 1, p6e_ride_k: true, p6e_down_k: true }, {}, 'kb_none', ['kb_s_down']],
 ];
 const B1L = [
-  ['you sang the coda', { part4: 1, coda_done: 1, coda_by_you: 1 }, {}, 'lb_you_sang', []],
-  ['you sang against her father', { part4: 1, coda_done: 1, coda_by_you: 1, wearer_coda_dead: 1 }, {}, 'lb_you_sang', []],
+  // (Phase 125b, taught) the traveller no longer sings the coda: lb_you_sang is gone, and an old save's coda_by_you reads Lyra's way
+  ['an old save where you sang the coda', { part4: 1, coda_done: 1, coda_by_you: 1 }, {}, 'lb_sang_req', []],
+  ['an old save where you sang against her father', { part4: 1, coda_done: 1, coda_by_you: 1, wearer_coda_dead: 1 }, {}, 'lb_sang_wearer', []],
   ['she sang against the Wearer', { part4: 1, coda_done: 1, wearer_coda_dead: 1 }, {}, 'lb_sang_wearer', []],
   ['she sang against the Requiem', { part4: 1, coda_done: 1 }, {}, 'lb_sang_req', []],
   ['coda not sung', { part4: 1 }, {}, 'lb_pending', []],

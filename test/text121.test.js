@@ -64,7 +64,10 @@ check(TEXT['data.js'].some((s) => /forgot themselves in a few days/.test(s)), 'B
 none(/talks in chalk now|in chalk now, in capitals/, 'B9: the epilogue no longer has Lyra talk in chalk after the coda');
 check(TEXT['epilogue.js'].some((s) => /most of what was left of her voice/.test(s) && !/chalk|capitals/.test(s)), 'B9: the coda cost her most of what was left of her voice, and she spends the rest sparingly');
 none(/Seventy years in one street/, 'B10: Ada Pellow: not one street');
-some(/Seventy years in one parish/, 'B10: seventy years in one parish');
+// (Phase 125b) Phase 121 made it "Seventy years in one parish"; the book has her fifty-one (Book One ch. 11, "She was fifty-one years old."),
+// so the line is now the book's age, and still not one street
+none(/Seventy years in one parish/, 'B10: not seventy years either (the book: fifty-one)');
+some(/Fifty-one years, and nearly all of them in this parish/, 'B10: fifty-one years, nearly all of them in this parish');
 none(/[Nn]ine winters/, 'B11: Old Tam did not keep the bridge nine winters');
 check(TEXT['sidequests.js'].filter((s) => /[Tt]wo winters/.test(s)).length >= 2, 'B11: two winters, in Ada\'s line and in Tam\'s');
 none(/three weeks gone|answered it for weeks|has been for weeks/, 'B12: the Tarrows have not been gone three weeks');
@@ -123,7 +126,7 @@ check(/DECALS\.capBytes/.test(src('test/painted20.test.js')) && !/< 512 \* 1024/
 // ---- the voices: no recording of an old line is left, and the changed lines that had one have one again
 const vl = src('js/voice-lines.js');
 check(!/\bAbner\b|\bFenning|Seventy years in one street|I've stood this gate eleven years|forgot themselves in one night/.test(vl), 'voices: no recording of an old line is left in the manifest');
-check(/"t": "[^"]*Jabez Barker on Tannery Row/.test(vl) && /"t": "Seventy years in one parish/.test(vl) && /"t": "I've kept a gate in this town eleven years/.test(vl), 'voices: the changed lines that had a recording have one again');
+check(/"t": "[^"]*Jabez Barker on Tannery Row/.test(vl) && /"t": "Fifty-one years, and nearly all of them in this parish/.test(vl) && !/"t": "Seventy years in one parish/.test(vl) && /"t": "I've kept a gate in this town eleven years/.test(vl), 'voices: the changed lines that had a recording have one again');
 
 console.log(fails ? fails + ' failed' : 'all passed');
 process.exit(fails ? 1 : 0);

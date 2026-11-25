@@ -236,7 +236,10 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(wearer.lyraAsk && wearer.told && wearer.kaelenKnows && wearer.kaelenNot, 'Lyra asks what it said; telling her is why Kaelen says she has known since the porch (' + JSON.stringify([wearer.lyraAsk, wearer.told, wearer.kaelenKnows, wearer.kaelenNot, wearer.q]) + ')');
     check(!/type: 'wearer'/.test(src('js/game.js') + src('js/grove.js')), 'nothing spawns a Wearer before the coda');
 
-    // ---- The ring of lamps (ch. 23): the coda is in the clearing; the choir keeps the Requiem for afterwards
+    // ---- The ring of lamps (ch. 23): the coda is in the clearing; the choir keeps the Requiem for afterwards.
+    // (Phase 125b, taught) the traveller steps into Lyra's boots past the last lamp and sings her father's office; a blow
+    // does nothing and the ring never fails; Kaelen strikes (MS 6028, 6098); there is no ring without her voice and no
+    // traveller-sings coda; the after card is the book's, with one button.
     const ring = await page.evaluate(() => {
       const out = {}, f = G.flags;
       const RESET = ['coda_done', 'coda_go', 'coda_by_you', 'ring_set', 'ring_go', 'ring_fight', 'ring_sung', 'ring_struck', 'ring_back', 'ring_sat_no', 'lyra_dw_met', 'lyra_requiem', 'requiem_done', 'wearer_dead', 'wearer_coda_dead', 'coda_fight', 'coda_sung', 'herald_come', 'kaelen_dw_done', 'kaelen_told_now', 'lyra_voice'];
@@ -248,50 +251,44 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       const tc = { id: 'coda_choir', said: false, done: false }; window.__msgs.length = 0; codaTrigger(tc);
       out.choirWaits = !f.coda_fight && !tc.done && window.__msgs.some((m) => /The thing in the woods wears her father, and it comes first/.test(m));
       let q = NPCS.lyra_dw.quest(G); out.first = /IT FOLLOWED US/.test(q.text) && /RING OF LAMPS/.test(q.text) && /I NEED MY VOICE/.test(q.text);
-      q = NPCS.lyra_dw.quest(G); out.noVoice = /I HAVE NO VOICE/.test(q.text) && q.choices.length === 2 && /Sing it yourself/.test(q.choices[0].t);
+      q = NPCS.lyra_dw.quest(G); out.noVoice = /I HAVE NO VOICE/.test(q.text) && q.choices.length === 1 && !/Sing it yourself|YOU KNOW THE TUNE/.test(q.text + q.choices[0].t);
       f.lyra_voice = true; f.kaelen_told_now = true;
       q = NPCS.lyra_dw.quest(G); out.plan = /kill it tonight/.test(q.text) && /Set the ring of lamps/.test(q.choices[0].t);
       const d0 = G.day; const plan = q.choices[0].f(G);
-      out.set = f.ring_set && f.ring_go && G.day === d0 + 1 && Math.abs(G.tod - 2 / 24) < 1e-9 && lamps().length === 6 && lamps().every((o) => !o.hidden) && !rl().hidden && cl().hidden && /Bait doesn't sing/.test(plan) && /may I say the obvious thing/.test(plan);
+      out.set = f.ring_set && f.ring_go && G.day === d0 + 1 && Math.abs(G.tod - 2 / 24) < 1e-9 && lamps().length === 6 && lamps().every((o) => !o.hidden) && !rl().hidden && cl().hidden && /Bait doesn't sing/.test(plan) && /may I say the obvious thing/.test(plan) && /She looks at Kaelen\./.test(plan);
       out.lyraAt = Math.hypot(rl().x - RING.bx, rl().y - RING.by) < 0.01 && RING.by < RING.cy && Math.hypot(RING.bx - RING.cx, RING.by - RING.cy) < RING.r;
-      Engine.cam.x = RING.cx; Engine.cam.y = RING.cy; t.inside = false; checkTriggers(); out.fight = !!f.ring_fight;
+      Engine.cam.x = RING.cx; Engine.cam.y = RING.cy; t.inside = false; checkTriggers(); out.fight = !!f.ring_fight && BOOTS125.active() === 'coda';
+      window.__ev[window.__ev.length - 1].c[0].f(); Engine.cam.x = RING.bx; Engine.cam.y = RING.by; BOOTS125.input('song', true);
       let spawnT = null, passive = true;
-      for (let i = 0; i < 44 * 30 && f.ring_t > 1; i++) { codaTick(1 / 30); const w = ringWearer(); if (w) { if (spawnT == null) spawnT = f.ring_t; if (w.state !== 'passive') passive = false; } }
+      for (let i = 0; i < 44 * 30 && f.ring_t > 1; i++) { G.state = 'play'; G.keys = {}; update(1 / 30); const w = ringWearer(); if (w) { if (spawnT == null) spawnT = f.ring_t; if (w.state !== 'passive') passive = false; } }
       out.circles = spawnT != null && spawnT <= 31 && spawnT > 29 && passive && !f.ring_sung && !!ringWearer() && ringWearer().transient;
-      codaShield(ringWearer(), 10);
-      out.early = !f.ring_fight && !f.ring_set && !f.ring_go && !ringWearer() && lamps().every((o) => o.hidden) && !cl().hidden && G.journal.some((j) => /the ring failed\. I struck too early/.test(j.text));
-      q = NPCS.lyra_dw.quest(G); q.choices[0].f(G); Engine.cam.x = RING.cx; Engine.cam.y = RING.cy; t.inside = false; checkTriggers();
-      for (let i = 0; i < 60 * 30 && !f.ring_sung; i++) codaTick(1 / 30);
-      const w = ringWearer(); const dC = Math.hypot(w.x - RING.cx, w.y - RING.cy), dB = Math.hypot(w.x - RING.bx, w.y - RING.by);
-      out.close = f.ring_sung && dC < RING.r + 1.0 && dB < 1.3 && f.ring_w > 0 && window.__msgs.some((m) => /I know it's a two-voice part/.test(m));
-      window.__ev.length = 0; const dmg = codaShield(w, 10); w.hp -= dmg; if (w.hp <= 0) killEnemy(w, true);
-      out.kill = f.coda_done && f.wearer_coda_dead && f.wearer_dead && f.ring_struck === 'you' && !f.ring_fight && window.__ev.length === 1 && /It comes apart four feet in front of her/.test(window.__ev[0].t) && /Davin Hale, singing the fourth line/.test(window.__ev[0].b) && /Louder\./.test(window.__ev[0].b) && /nine feet of bronze/.test(window.__ev[0].b);
-      window.__ev[0].c[0].f(); const after = window.__ev[1]; after.c[0].f();
-      out.after = !!after && /Say something/.test(after.b) && after.c[0].t === '"No."' && f.ring_sat_no && G.journal.some((j) => /^Coda: in the clearing by the Mausoleum of Chords, inside the ring of lamps/.test(j.text));
+      out.blowNothing = codaShield(ringWearer(), 10) === 0 && f.ring_fight && f.ring_set && !G.journal.some((j) => /the ring failed/.test(j.text));
+      window.__ev.length = 0;
+      for (let i = 0; i < 20 * 30 && !f.coda_done; i++) { G.state = 'play'; G.keys = {}; update(1 / 30); }
+      BOOTS125.input('song', false);
+      out.close = f.ring_sung && window.__msgs.some((m) => /I know it's a two-voice part," said Lyra Ashgrove/.test(m));
+      out.kill = f.coda_done && f.wearer_coda_dead && f.wearer_dead && f.ring_struck === 'kaelen' && !f.ring_fight && window.__ev.length === 1 && /It comes apart four feet in front of her/.test(window.__ev[0].t) && /Davin Hale, singing the fourth line/.test(window.__ev[0].b) && /louder/.test(window.__ev[0].b) && /nine feet of bronze/.test(window.__ev[0].b);
+      window.__ev[0].c[0].f(); const after = window.__ev[1];
+      out.after = !!after && /"Say something," she said\./.test(after.b) && /did not forgive him either/.test(after.b) && after.c.length === 1 && G.journal.some((j) => /^Coda: in the clearing by the Mausoleum of Chords, inside the ring of lamps/.test(j.text));
+      after.c[0].f(); out.out = !BOOTS125.active() && !('ring_sat_no' in f);
       loadMap('deepwoods'); G.state = 'play'; out.back = f.ring_back && rl().hidden && !cl().hidden && lamps().every((o) => !o.hidden);
       q = NPCS.lyra_dw.quest(G); out.requiemAsk = /Not the Wearer\. Something older/.test(q.text) && f.lyra_requiem;
       loadMap('mausoleum'); G.state = 'play'; const tc2 = { id: 'coda_choir', said: false, done: false }; codaTrigger(tc2);
       out.choir = tc2.done && f.coda_fight && G.ents.some((o) => o.kind === 'enemy' && o.type === 'requiem' && !o.dead) && !G.ents.some((o) => o.kind === 'enemy' && o.type === 'wearer_coda');
       f.coda_sung = true; const rq = G.ents.find((o) => o.kind === 'enemy' && o.type === 'requiem'); killEnemy(rq, true);
       out.requiem = f.requiem_done && f.coda_done && G.journal.some((j) => /^The Unended Office: in the choir/.test(j.text));
-      out.ending = codaEndingLines().some((l) => /inside a ring of hush-lamps/.test(l) && /You struck it four feet in front of her/.test(l)) && codaEndingLines().some((l) => /against the Unended Office/.test(l));
+      out.ending = codaEndingLines().some((l) => /inside a ring of hush-lamps/.test(l) && /Kaelen came out of the dark behind it/.test(l) && !/You struck/.test(l)) && codaEndingLines().some((l) => /against the Unended Office/.test(l));
       for (const k of RESET) delete f[k];
       loadMap('deepwoods'); G.state = 'play'; q = NPCS.lyra_dw.quest(G); q = NPCS.lyra_dw.quest(G); q.choices[0].f(G);
-      out.byYou = f.coda_by_you && f.ring_set && rl().hidden && cl().hidden;
-      Engine.cam.x = RING.cx + 1.8; Engine.cam.y = RING.cy; t.inside = false; checkTriggers(); out.byYouFight = !!f.ring_fight;
-      codaTick(1 / 30); out.byYouOut = !f.ring_fight && G.journal.some((j) => /I stepped off the spot past the last lamp/.test(j.text));
-      q = NPCS.lyra_dw.quest(G); q.choices[0].f(G); Engine.cam.x = RING.bx; Engine.cam.y = RING.by; t.inside = false; checkTriggers();
-      const v0 = G.player.voice; window.__ev.length = 0;
-      for (let i = 0; i < 70 * 30 && !f.coda_done; i++) codaTick(1 / 30);
-      out.kaelen = f.coda_done && f.ring_struck === 'kaelen' && G.player.voice < v0 && window.__ev.length === 1 && /Kaelen comes out of the dark behind it/.test(window.__ev[0].b);
+      out.noRing = !f.ring_set && !f.coda_by_you && lamps().every((o) => o.hidden);
       for (const k of RESET) delete f[k];
       return out;
     });
-    check(ring.choirWaits && ring.first && ring.noVoice && ring.plan && ring.set && ring.lyraAt, 'Lyra plans the ring of lamps at the fire; the lamps go up and she stands past the last one; the choir waits (' + JSON.stringify(ring) + ')');
-    check(ring.fight && ring.circles && ring.early, 'the office is sung and the Wearer circles in from the dark; a strike before the close sends it away, and the night is lost');
-    check(ring.close && ring.kill && ring.after, 'she sings the close alone with it four feet in front of her inside the lamps; one strike bursts it; "Say something" / "No."');
+    check(ring.choirWaits && ring.first && ring.noVoice && ring.plan && ring.set && ring.lyraAt, 'Lyra plans the ring of lamps at the fire ("She looks at Kaelen."); the lamps go up and she stands past the last one; the choir waits (' + JSON.stringify(ring) + ')');
+    check(ring.fight && ring.circles && ring.blowNothing, 'the office is sung in her boots and the Wearer circles in from the dark; a blow does nothing and the night is not lost');
+    check(ring.close && ring.kill && ring.after && ring.out, 'she sings the close alone with it four feet in front of her; Kaelen and the Aegis strike; the book\'s after card, one button');
     check(ring.back && ring.requiemAsk && ring.choir && ring.requiem && ring.ending, 'next morning she is back at the fire; the Mausoleum choir keeps the Requiem for afterwards (' + JSON.stringify([ring.back, ring.requiemAsk, ring.choir, ring.requiem, ring.ending]) + ')');
-    check(ring.byYou && ring.byYouFight && ring.byYouOut && ring.kaelen, 'without her voice you stand past the last lamp and sing, and Kaelen strikes');
+    check(ring.noRing, 'without her voice there is no ring, and the traveller does not sing her father\'s office');
 
     // ---- Sable stays in Whisper-Grove (ch. 14, 16); the Reach's scribe is Umber, a Veil runaway [PROPOSED]
     const umber = await page.evaluate(() => {

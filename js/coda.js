@@ -63,15 +63,20 @@ function codaTick(dt) {
   const left = Math.ceil(f.coda_t);
   if (left > 0 && left % 10 === 0 && f.coda_said !== left) {
     f.coda_said = left;
-    msg(f.coda_by_you ? `You hold the coda. ${left} more bars. It is singing with you, a third above, and nothing you do touches it.` : `Lyra sings. ${left} more bars. It is singing with her, a third above, in harmony, and nothing you do touches it. Keep it off her.`, 'voice', 4500);
+    msg(`Lyra sings. ${left} more bars. It is singing with her, a third above, in harmony, and nothing you do touches it. Keep it off her.`, 'voice', 4500);
   }
-  if (f.coda_by_you) { const p = G.player; p.voice = Math.max(0, p.voice - dt * 0.5); }
   if (f.coda_t <= 0) {
     f.coda_sung = true;
     for (const e of G.ents) if (e.kind === 'enemy' && e.def && e.def.coda && !e.dead) { e.slowed = true; e.state = 'chase'; }
-    [523, 659, 784, 659, 587, 523].forEach((hz, i) => setTimeout(() => Audio_.sfx.song(hz, 0.6), i * 380));
-    msg(f.coda_by_you ? 'You reach the eighth bar and it is still with you — and then you do the thing it cannot do: you stop, and sing the coda\'s second voice alone. It has nothing to answer with. It can be hurt now.' : 'Eight bars, in harmony with the thing that ate him. Then Lyra sings the two-voice coda alone, both lines, and it has nothing to answer with. It can be hurt now.', 'good', 9000);
+    codaClose();
+    msg('Eight bars, in harmony with the thing that ate him. Then Lyra sings the two-voice coda alone, both lines, and it has nothing to answer with. It can be hurt now.', 'good', 9000);
   }
+}
+
+// the close of the office: "the long low close that goes under the floor" (MS 6044). One long low note, falling slowly;
+// no melody (Phase 125b: it was a bright rising six-note phrase)
+function codaClose() {
+  try { Audio_.sfx.song(138, 3.2); setTimeout(() => { try { Audio_.sfx.song(116, 3.6); } catch (e) { /* silent */ } }, 2400); setTimeout(() => { try { Audio_.sfx.song(98, 4.4); } catch (e) { /* silent */ } }, 5200); } catch (e) { /* silent */ }
 }
 
 // ---------------------------------------------------------------- enemy behaviour (called from enemyExtra and enemyHitFx)
@@ -116,7 +121,7 @@ function codaHitFx(e, d) {
 function codaShield(e, dmg) {
   if (e.ring) return ringShield(e, dmg);
   if (G.flags.coda_sung) return dmg;
-  if (!e.shieldMsgT || performance.now() - e.shieldMsgT > 4000) { e.shieldMsgT = performance.now(); msg(`It is singing in harmony with ${G.flags.coda_by_you ? 'you' : 'Lyra'}. Your blow goes through it like a hand through a voice. Keep it busy.`, 'warn', 3000); }
+  if (!e.shieldMsgT || performance.now() - e.shieldMsgT > 4000) { e.shieldMsgT = performance.now(); msg('It is singing in harmony with Lyra. Your blow goes through it like a hand through a voice. Keep it busy.', 'warn', 3000); }
   return 0;
 }
 function codaVoices(e) { return e.type === 'requiem' ? CODA_VOICES_REQUIEM : CODA_VOICES_WEARER; }
@@ -142,7 +147,7 @@ function codaBossDown(e) {
     const txt = e.type === 'wearer_coda' ? 'It bursts, and everything it ever ate comes out at once: a Cantor and four others, two years of a woman\'s nights, a boy whistling a falling fifth with too much air in it — and last of all Tobin Ashgrove, getting louder as they took him, so the house would be further away.' : 'It bursts, and eleven hundred years of funeral offices come out of it at once, every one of them for somebody, every one of them sung properly this time, and then the Mausoleum is only a building, and very quiet.';
     msg(txt, 'good', 12000);
     const pre = e.type === 'wearer_coda' ? 'Coda: ' : 'The Unended Office: ';   // (a variable, so the logbook's static scan sees the entry's own first words)
-    journal('main', pre + 'in the choir of the Mausoleum of Chords ' + (f.coda_by_you ? 'I sang the two-voice coda myself, because Lyra had no voice to sing it with,' : 'Lyra sang the two-voice coda alone') + ' and ' + (e.type === 'wearer_coda' ? 'the Wearer burst. Everything it ever ate came out at once, ending with Tobin Ashgrove.' : 'the Unended Office burst into eleven hundred years of funeral offices, and the House is only a building now.') + ' Back to the fire.' + (f.tank_patched ? '' : ' The Kestrel still needs her lift-tank patched.'));
+    journal('main', pre + 'in the choir of the Mausoleum of Chords ' + 'Lyra sang the two-voice coda alone' + ' and ' + (e.type === 'wearer_coda' ? 'the Wearer burst. Everything it ever ate came out at once, ending with Tobin Ashgrove.' : 'the Unended Office burst into eleven hundred years of funeral offices, and the House is only a building now.') + ' Back to the fire.' + (f.tank_patched ? '' : ' The Kestrel still needs her lift-tank patched.'));
     codaCheckHerald();
   }
 }
@@ -254,36 +259,104 @@ function codaTrigger(t) {
   if (!f.lyra_requiem) { if (!t.said) { t.said = true; msg('The choir of the Mausoleum. Something at the far end of it is singing a funeral office, quietly, to itself. You should not do this without Lyra; it is her father\'s office.', 'warn', 6000); } return true; }
   t.done = true;
   const boss = 'requiem';
-  const begin = (byYou) => {
-    f.coda_fight = true; f.coda_t = 45; f.coda_by_you = byYou; f.coda_said = 0;
+  const begin = () => {
+    f.coda_fight = true; f.coda_t = 45; f.coda_said = 0;
     for (const o of G.ents) if (o.id === 'lyra_dw') o.hidden = false;
     const b = hydrate({ kind: 'enemy', type: boss, x: 19.5, y: 4.6 }); b.state = 'chase'; b.alertT = 20; G.ents.push(b);
     Audio_.sfx.voice();
-    msg('It stands up out of the First Cantor\'s tomb: a mourning veil, a broken bell for a head, a choir of small faces singing in its ribs. It sings her father\'s office — and ' + (byYou ? 'Lyra cannot answer it. You do.' : 'Lyra answers it, eight bars, in harmony.'), 'bad', 9000);
+    msg('It stands up out of the First Cantor\'s tomb: a mourning veil, a broken bell for a head, a choir of small faces singing in its ribs. It sings her father\'s office — and Lyra answers it, eight bars, in harmony.', 'bad', 9000);
   };
-  f.coda_go = true;
-  if (f.lyra_voice) { begin(false); return true; }
-  showEvent('The coda', 'Lyra is beside you in the choir door with her slate, and no voice. She writes: <b>I CAN\'T.</b> Then: <b>IT IS TWO VOICES. YOU KNOW THE TUNE. I TAUGHT THE WHOLE REACH THE TUNE.</b><br><br>Something at the far end of the choir has started to sing.', [
-    { t: 'Sing it yourself. (Your voice drains while you hold it)', f: () => begin(true) },
-    { t: 'Back out, and come back with her voice.', f: () => { t.done = false; f.coda_go = false; const c = Engine.cam; c.y = Math.min(c.y + 2.2, 16.5); msg('You back out through the bronze door. The singing stops, politely, and waits.', 'warn', 5000); } },
+  // the Unended Office begins only with Lyra's voice (Phase 125b: the traveller does not sing her father's office); an old
+  // save without it waits at the door
+  if (f.lyra_voice) { f.coda_go = true; begin(); return true; }
+  t.done = false;
+  showEvent('The coda', 'She writes: <b>NOT WITHOUT MY VOICE.</b>', [
+    { t: 'Back out, and come back with her voice.', f: () => { f.coda_go = false; const c = Engine.cam; c.y = Math.min(c.y + 2.2, 16.5); msg('You back out through the bronze door. The singing stops, politely, and waits.', 'warn', 5000); } },
   ]);
   return true;
 }
 
 // ---------------------------------------------------------------- the ring of lamps (Book One ch. 23)
 // Lyra sets a ring of hush-lamps at the edge of the clearing north of the camp, walks out past the last one, and sings her
-// father's funeral office at full voice: five parts and a coda. The Wearer comes in on the harmony, circling closer,
-// using voices to lure her and you out. You wait inside the lamps. You get one strike, and only once it is inside the
-// ring and she has sung the close alone; too early, and it goes away ("it will come back in a week when I'm asleep").
-// If you do not strike, Kaelen does, with the Aegis one second behind him. Without her voice you can be the one past
-// the last lamp (coda_by_you), and then Kaelen strikes.
-const RING = { cx: 27.5, cy: 25.2, r: 2.0, bx: 27.5, by: 23.6, lamps: 6, parts: 45, strike: 12 };
+// father's funeral office at full voice: five parts and a coda. The Wearer comes in on the harmony, circling closer, using
+// voices to make her walk further out. Kaelen gets one strike, and the Aegis one second behind him (MS 6028, 6098).
+// Phase 125b: the traveller walks into the ring and steps into Lyra's boots (js/boots125.js): she stays on her spot and
+// keeps singing, and a step off it or a stopped song is a grey slip that changes nothing. Without js/boots125.js the night
+// plays as the book's lines while the traveller waits inside the lamps. The ring cannot fail and send anyone back "in a
+// week", and nobody but Kaelen and the Aegis strikes. Its text is the book's (RING_TX; the French is in the p125b TSV).
+const RING = { cx: 27.5, cy: 25.2, r: 2.0, bx: 27.5, by: 23.6, lamps: 6, parts: 45, strike: 4 };
+const RING_PARTS = [45, 31, 17];   // the office's parts as played: the first three lines; the harmony; the naming and the close
+const RING_TX = {
+  sang: 'She sang it in a voice like a torn sheet, in the dark, badly, at full volume.',
+  line1: '<i>Tobin Ashgrove of the orchard rows. Son of Mara. Cantor of Oakhaven.</i>',
+  quiet: 'The wood went quiet.',
+  line2: '<i>He sang the births. He sang the burials. He hummed off-key on the fourth bar and he never once learned better.</i>',
+  going: 'She could hear her own voice going out between the trunks and not coming back, the way sound goes in deep woods, and she kept singing, and her throat opened something it should not have opened and she tasted iron and kept going.',
+  line3: '<i>He went out into the yard so the hounds would follow him and not the house. He was fifty-six years old. He was afraid of ladders and nothing else.</i>',
+  second: 'And somewhere out in the dark, perfectly in tune, her father\'s voice began to sing the second part.',
+  harmony: 'It came in on the harmony line the way Tobin Ashgrove had come in on it four hundred times at four hundred gravesides, a fifth below, warm and hoarse and a little late on the entries the way he always was, and for eight bars Lyra Ashgrove and the thing that had eaten her father sang his funeral together in the dark.',
+  thirty: 'It came between the trunks at thirty feet: her father\'s height, her father\'s stoop, the long-backed forward lean of forty years over reed-rows, with the willow-dark showing straight through it and its edges crawling like heat off a road. It had no face. It had the place where a face was not, rippling, and the voice came out of that.',
+  lark: '<i>"Lark,"</i> it said, between the phrases. <i>"Oh, lark. You never sang it for me."</i>',
+  iknow: '"I know," said Lyra, and kept singing.',
+  waited: '<i>"I waited."</i>',
+  naming: 'Third part. The naming.',
+  name: '<i>Tobin Ashgrove.</i>',
+  nearer: 'Twenty feet. Fifteen.',
+  come: '<i>"Come out of the lamps, lark,"</i> it said, in her own whole voice, gently. <i>"I can\'t come in there. Come out to me and I\'ll sing the rest with you. You can\'t do the close on your own, you know you can\'t, it\'s a two-voice part—"</i>',
+  ten: 'Ten feet.',
+  twoVoice: '"I know it\'s a two-voice part," said Lyra Ashgrove.',
+  alone: 'And she sang the coda alone.',
+  // the burst (MS 6096-6126)
+  apart: 'It came apart four feet in front of her.',
+  struck: 'Kaelen came out of the dark behind it at a dead run with his left arm bare and blazing and his ribs grinding and he hit it with everything he had left, and nine feet of bronze came out of the dark one second behind him and hit it from the other side, because DEFEND THE SINGERS is four words long and has no clause in it for what the thing in front of you is wearing.',
+  struckAlone: 'Kaelen came out of the dark behind it at a dead run with his left arm bare and blazing and his ribs grinding and he hit it with everything he had left …',
+  burst: 'The Wearer burst.',
+  ate: 'It did not die like the hounds in the tavern, in a spray of bright falling notes. It had eaten a Cantor and four others and two years of a woman\'s nights, and when the glass went through it, all of that came out at once, in the space of about three seconds, in a wall of sound that knocked Tobiah Marsh off his feet at forty yards.',
+  v1: 'Davin Hale, singing the fourth line of the harvest home.',
+  v2: 'Old Tam, going up for the high note he never once reached.',
+  v3: 'Ada Pellow, saying <i>oh, it\'s easy, come on, it\'s easy from this side</i> in the voice of a woman who has just discovered otherwise.',
+  v4: 'A boy whistling a falling fifth with too much air in it.',
+  v5: 'Lyra\'s own voice, whole and warm and twenty-nine years old, saying <i>I\'ve shown him how to hold his hands out stiff, Da, so they won\'t touch anything.</i>',
+  under: 'And under all of it, rising up through it as the rest came apart, her father.',
+  underneath: 'Not the voice it had worn. The one underneath. Tobin Ashgrove at the end, in a farmyard in the spring, singing the calling-song at the top of his lungs and walking away from a house with a sick child in it, and the song getting ragged as the thing came, and then not ragged — <i>louder</i> — because he had worked out, in the last four seconds of his life, that the louder he was the further away they would be from the door.',
+  still: 'He was still singing when it took him.',
+  stood: 'That is what came out of the Wearer in the clearing by the Mausoleum of Chords, and Lyra Ashgrove stood four feet away with her hands at her sides and let every bit of it go through her, and did not cover her ears.',
+  lastWord: 'The last of it was one word, in her father\'s voice, from about the height of her shoulder, very close, almost surprised:',
+  larkLast: '<i>"Lark—"</i>',
+  nothing: 'And then the clearing was quiet, and there was nothing in the moss in front of her at all.',
+  // after (MS 6130-6154)
+  satDown: 'She sat down.',
+  legs: 'Not gracefully; her legs stopped and she went down on them in the wet moss. Kaelen got to her and did not touch her and knelt a yard away with his arm ringing low and full — it had fed; she heard it feed; it was the fullest she had ever heard it — and said her name twice.',
+  thatsIt: '"That\'s it," said Lyra.',
+  lyraName: '"Lyra—"',
+  endOfHim: '"That\'s it. That\'s the end of him." She was looking at the empty place in the moss. "That was the last of his voice in the world, and it was in <i>that</i>, and I\'ve just put it out." Her face did something she had no control over. "I\'ve been going out to the Hedge for forty-one nights to listen to a monster because it was the only place my father still existed, and I knew exactly what it was the whole time, and tonight I killed it on purpose, and now there\'s nowhere."',
+  nothingAtAll: 'Kaelen said nothing at all, which was, for once, precisely right.',
+  saySomething: '"Say something," she said.',
+  no: '"No."',
+  kaelenName: '"<i>Kaelen.</i>"',
+  sitHere: '"You don\'t want something said," he said. "You want somebody to sit here. I can do that one."',
+  sat: 'So he sat there, a yard away in the wet moss, with a nine-foot automaton standing over the pair of them holding a child\'s red cloak, and the lamps burning down, and the ship creaking in the dark, and four hundred and thirty-two people murmuring in her hold.',
+  satAlone: 'So he sat there, a yard away in the wet moss, … and the lamps burning down, and the ship creaking in the dark, and four hundred and thirty-two people murmuring in her hold.',
+  hand: 'And at some point before dawn Lyra Ashgrove put her hand out sideways, without looking, and found his good one, and did not let go of it, and did not forgive him either.',
+  both: 'Both of those things were true at the same time, and would be for a long while yet.',
+  burstTitle: 'It comes apart four feet in front of her',
+  afterTitle: 'The moss',
+  afterGo: '…',
+  journal: 'Coda: the ring of lamps. Lyra will walk out past the last lamp in the clearing north of the camp and sing her father\'s office at full voice. The lamps are set. Kaelen gets one strike, when it is inside the lamps and not before.',
+};
+// the beats of the office: [ring_t at which it is said, RING_TX key, voice ids]
+const RING_BEATS = [
+  [45, 'sang'], [43, 'line1'], [41, 'quiet'], [39, 'line2'], [36, 'going'], [33, 'line3'],
+  [31, 'second'], [28, 'harmony'], [25, 'thirty'], [22, 'lark', ['wearer.ring.lark']], [20, 'iknow', ['lyra_ruined.ring.iknow']], [19, 'waited', ['wearer.ring.waited']],
+  [17, 'naming'], [15.5, 'name'], [14, 'name'], [12.5, 'name'], [11, 'name'], [10, 'nearer'], [7, 'come', ['wearer.ring.come']], [3, 'ten'],
+];
 function ringPos(i) { const a = -Math.PI / 2 + i / RING.lamps * Math.PI * 2; return [RING.cx + Math.cos(a) * RING.r, RING.cy + Math.sin(a) * RING.r]; }
+const ringBoots = () => { try { return typeof BOOTS125 === 'object' && !!BOOTS125 && !!BOOTS125.coda && BOOTS125.active() === 'coda'; } catch (e) { return false; } };
 // the camp's Lyra, the ring's Lyra and the lamps follow the flags (called on every Deep Woods load, and whenever they change)
 function ringLyraHidden(e) {   // the Deep Woods' two Lyras: at the fire, or past the last lamp (js/party.js defers to this)
   const f = G.flags;
-  if (e.ringLyra) return !(f.ring_go && !f.ring_back && !f.coda_by_you);
-  return !!(f.ring_go && !f.ring_back) || !!(f.coda_go && f.coda_by_you && !f.coda_done);
+  if (e.ringLyra) return !(f.ring_go && !f.ring_back) || ringBoots();   // in her boots the player is her
+  return !!(f.ring_go && !f.ring_back);
 }
 function ringSync() {
   const f = G.flags, m = G.maps && G.maps.deepwoods; if (!m || !f.part4) return;
@@ -294,71 +367,57 @@ function ringSync() {
 }
 function ringPlan(g) {
   const f = g.flags;
+  if (!f.lyra_voice) return '';   // her voice comes back at the fire before the coda (MS 5966-5970): no ring without it
   f.ring_set = true; f.ring_go = true; f.coda_go = true; f.ring_back = false; f.ring_night = (f.ring_night || 0) + 1;
   G.day += 1; G.tod = 2 / 24;
   ringSync();
-  journal('main', 'Coda: the ring of lamps. ' + (f.coda_by_you ? 'Lyra has no voice, so I will stand past the last lamp and sing her father\'s office at full voice. ' : 'Lyra will walk out past the last lamp in the clearing north of the camp and sing her father\'s office at full voice. ') + 'The lamps are set. Stand inside the ring and not outside it; it uses voices. One strike, and only once it is inside the lamps and the close has been sung alone. Too early, and it goes away.');
-  const who = f.coda_by_you ? 'You' : 'She';
-  return `${f.coda_by_you ? 'She sets it up like a procedure, on her slate, because that is how you do a thing you cannot afford to feel.' : 'She sets it up like a procedure, because that is how you do a thing you cannot afford to feel.'}<br><br>"It won\'t come where people are. It never has. In two years it has never crossed the Hedge, or come through the culvert, or set foot in the Hollow, and at the Cloister it stood in the fog and would not come into the room. It wants me <i>alone</i>. That\'s the whole of its nature. So ${f.coda_by_you ? 'somebody' : 'I'} ${f.coda_by_you ? 'is' : 'am'} going to be alone, out there, at the edge of the trees, and all of you are going to be back here where it can see that you are."<br><br>"And when it comes?" says Vane.<br><br>"It won\'t come straight away. It\'ll circle, and it\'ll use voices, and it will do everything it can to make ${f.coda_by_you ? 'you' : 'me'} walk further out." She looks at you. "You get one strike. You get it when it\'s inside the ring of lamps and not before, because if it sees you it will simply go away and come back in a week when I\'m asleep."${f.sable_with ? '<br><br>"Lyra," says Sable, "may I say the obvious thing."<br><br>"No."' : ''}<br><br>"I\'m not bait," says Lyra. "Bait doesn\'t sing."<br><br>Vane, Tobiah and Mags carry the camp\'s lamps out to the clearing north of the fire and set them in a ring at the edge of the trees. At the second hour ${who.toLowerCase() === 'you' ? 'you are to walk' : 'she walks'} out past the last one.`;
+  journal('main', RING_TX.journal);
+  return `She sets it up like a procedure, because that is how you do a thing you cannot afford to feel.<br><br>"It won\'t come where people are. It never has. In two years it has never crossed the Hedge, or come through the culvert, or set foot in the Hollow, and at the Cloister it stood in the fog and would not come into the room. It wants me <i>alone</i>. That\'s the whole of its nature. So I am going to be alone, out there, at the edge of the trees, and all of you are going to be back here where it can see that you are."<br><br>"And when it comes?" says Vane.<br><br>"It won\'t come straight away. It\'ll circle, and it\'ll use voices, and it will do everything it can to make me walk further out." She looks at Kaelen. "You get one strike. You get it when it\'s inside the ring of lamps and not before, because if it sees you it will simply go away and come back in a week when I\'m asleep."${f.sable_with ? '<br><br>"Lyra," says Sable, "may I say the obvious thing."<br><br>"No."' : ''}<br><br>"I\'m not bait," says Lyra. "Bait doesn\'t sing."<br><br>Vane, Tobiah and Mags carry the camp\'s lamps out to the clearing north of the fire and set them in a ring at the edge of the trees. At the second hour she walks out past the last one.`;
 }
 function ringEnter(t) {
   const f = G.flags;
-  if (!f.ring_set || f.ring_fight || f.coda_done) return;
+  if (!f.ring_set || f.ring_fight || f.coda_done || !f.lyra_voice) return;
   if (G.ents.some(o => o.kind === 'enemy' && !o.dead && !o.hidden && !o.ring && o.state === 'chase' && dist2(o.x, o.y, Engine.cam.x, Engine.cam.y) < 100)) { msg('Not with that in the trees.', 'warn', 2500); t.inside = false; return; }
   f.ring_fight = true; f.ring_t = RING.parts; f.ring_said = 99; f.ring_sung = false; f.ring_w = 0; f.ring_clock = 0; f.ring_struck = null;
   // the wood goes quiet: nothing else in the clearing tonight
   for (const o of G.ents) if (o.kind === 'enemy' && !o.dead && !o.hidden && !o.def.boss && !o.ring && dist2(o.x, o.y, RING.cx, RING.cy) < 196) { o.dead = true; o.hidden = true; }
   G.noise = 0;
   Audio_.sfx.voice();
-  if (f.coda_by_you) msg('You walk out past the last lamp and stand in the moss between two silver willows with your hands at your sides, and you sing her father\'s funeral. Lyra taught the whole Reach the tune. Stay where you are. Do not stop.', 'voice', 8000);
-  else msg('Lyra walks out past the last lamp and stands in the moss between two silver willows with her hands at her sides. And she sings her father\'s funeral, in a voice like a torn sheet, in the dark, badly, at full volume. Stay inside the lamps.', 'voice', 8000);
+  if (typeof BOOTS125 === 'object' && BOOTS125 && BOOTS125.can && BOOTS125.can('coda')) { try { BOOTS125.enter('coda'); ringSync(); return; } catch (e) { console.warn('coda: boots failed', e); } }
+  msg('Lyra walks out past the last lamp and stands in the moss between two silver willows with her hands at her sides. And she sings her father\'s funeral, in a voice like a torn sheet, in the dark, badly, at full volume.', 'voice', 8000);
 }
-function ringAbort(why) {
+// the ring set back to before the night, quietly: used by loads and the old-save migration only, never as a failure
+function ringReset(keepSet) {
   const f = G.flags;
-  f.ring_fight = false; f.ring_set = false; f.ring_go = false; f.coda_go = false; f.ring_sung = false;
-  for (let i = G.ents.length - 1; i >= 0; i--) if (G.ents[i].ring && G.ents[i].kind === 'enemy') { G.ents[i].dead = true; G.ents[i].hidden = true; G.ents.splice(i, 1); }
+  f.ring_fight = false; f.ring_sung = false;
+  if (!keepSet) { f.ring_set = false; f.ring_go = false; f.coda_go = false; }
+  delete f.ring_t; delete f.ring_w;
+  if (G.ents) for (let i = G.ents.length - 1; i >= 0; i--) if (G.ents[i].ring && G.ents[i].kind === 'enemy') { G.ents[i].dead = true; G.ents[i].hidden = true; G.ents.splice(i, 1); }
   ringSync();
-  const back = ' It goes away. It will come back in a week, when she is asleep, or tomorrow night, if the lamps are set again. Talk to Lyra.';
-  if (why === 'early') msg('Your blow goes through it like a hand through a voice, and it has seen you.' + back, 'bad', 9000);
-  else if (why === 'out') msg((f.coda_by_you ? 'You step off the place where you were standing, and the singing stops, and it has seen that you are not alone.' : 'You step out past the lamps, and it has seen you.') + back, 'bad', 9000);
-  else msg('You leave the clearing, and the singing stops.' + back, 'bad', 7000);
-  journal('main', 'Coda: the ring failed. ' + (why === 'early' ? 'I struck too early, before it was inside the lamps, and it saw me and went away.' : why === 'out' ? (f.coda_by_you ? 'I stepped off the spot past the last lamp, and it saw that I was not alone.' : 'I stepped out of the ring, and it saw me.') : 'I left the clearing.') + ' Lyra will set the lamps again tomorrow night.');
 }
-function ringShield(e, dmg) {
-  const f = G.flags;
-  const inside = dist2(e.x, e.y, RING.cx, RING.cy) < (RING.r + 1.0) * (RING.r + 1.0);
-  if (f.ring_sung && inside) { f.ring_struck = 'you'; return e.hp + 999; }
-  ringAbort('early');
-  return 0;
-}
+// a blow on the ring's Wearer does nothing: the strike is Kaelen's and the Aegis's (MS 6028, 6098)
+function ringShield() { return 0; }
 function ringWearer() { return G.ents.find(o => o.ring && o.kind === 'enemy' && !o.dead); }
+function ringSay(text, vo) {
+  if (ringBoots()) { try { BOOTS125.coda.caption(text, vo); return; } catch (e) { /* the plain message below */ } }
+  msg(text, 'voice', 7000);
+}
 function ringTick(dt) {
   const f = G.flags; if (!f.ring_fight) return;
-  const c = Engine.cam, first = G.player.name.split(' ')[0];
-  if (f.coda_by_you) { if (dist2(c.x, c.y, RING.bx, RING.by) > 1.3 * 1.3) { ringAbort('out'); return; } const p = G.player; p.voice = Math.max(0, p.voice - dt * 0.5); }
-  else if (dist2(c.x, c.y, RING.cx, RING.cy) > (RING.r + 0.7) * (RING.r + 0.7)) { ringAbort('out'); return; }
+  const B = ringBoots() ? BOOTS125.coda : null;
   f.ring_clock = (f.ring_clock || 0) + dt;
-  const she = f.coda_by_you ? 'you' : 'she', her = f.coda_by_you ? 'your' : 'her';
   if (!f.ring_sung) {
-    f.ring_t -= dt;
+    if (!B || B.go()) f.ring_t -= dt;   // in Lyra's boots the office goes on only while she stands and sings it
     const t = f.ring_t;
-    const beat = (at, text, cls, ms) => { if (t <= at && f.ring_said > at) { f.ring_said = at; msg(text, cls || 'voice', ms || 7000); } };
-    beat(44, `<i>Tobin Ashgrove of the orchard rows. Son of Mara. Cantor of Oakhaven.</i> The wood goes quiet.`);
-    beat(38, `<i>He sang the births. He sang the burials. He hummed off-key on the fourth bar and he never once learned better.</i> ${f.coda_by_you ? 'Your' : 'Her'} voice goes out between the trunks and does not come back, the way sound goes in deep woods.`);
+    for (const [at, k, vo] of RING_BEATS) if (t <= at && f.ring_said > at) { f.ring_said = at; ringSay(RING_TX[k], vo); }
     if (t <= 31 && !ringWearer()) {
       const e = hydrate({ kind: 'enemy', type: 'wearer_coda', x: RING.bx, y: RING.by - 10 }); e.ring = true; e.transient = true; e.state = 'passive'; e.passive = true; e.alertT = 0; G.ents.push(e);
       Audio_.sfx.voice();
-      msg(`<i>He went out into the yard so the hounds would follow him and not the house. He was fifty-six years old. He was afraid of ladders and nothing else.</i><br>And somewhere out in the dark, perfectly in tune, her father's voice begins to sing the second part.`, 'bad', 8000);
-      f.ring_said = 31;
     }
-    beat(24, `It comes in on the harmony line a fifth below, warm and hoarse and a little late on the entries, the way he always was, and for eight bars ${f.coda_by_you ? 'you and' : 'Lyra and'} the thing that ate her father sing his funeral together in the dark. <i>"Lark,"</i> it says, between the phrases. <i>"Oh, lark. You never sang it for me. I waited."</i>`, 'bad', 8000);
-    beat(17, `The third part. The naming. ${f.coda_by_you ? 'You sing' : 'She lifts her chin and sings'} his name into the dark four times, and the thing comes closer with every one, because it cannot help it: a mouth that goes toward a voice. Twenty feet. Fifteen.`, 'bad', 7000);
-    beat(10, `<i>"Come out of the lamps, lark,"</i> it says, in Lyra's own whole voice, gently. <i>"I can't come in there. Come out to me and I'll sing the rest with you. You can't do the close on your own, you know you can't, it's a two-voice part."</i>${(f.hedge_answered || f.porch_answered) ? `<br>And then, in your own voice, from just past the last lamp: <i>"${first}. Come out. I'm here."</i>` : ''}`, 'bad', 8000);
-    beat(4, `Ten feet. It has no face. It has the place where a face was not, rippling, and the voice comes out of that.`, 'bad', 5000);
     if (t <= 0) {
       f.ring_sung = true; f.ring_w = RING.strike;
-      [523, 659, 784, 659, 587, 523].forEach((hz, i) => setTimeout(() => Audio_.sfx.song(hz, 0.6), i * 380));
-      msg(f.coda_by_you ? '"I know it\'s a two-voice part," you say. And you sing the coda alone. It is four feet in front of you, inside the lamps. Now.' : '"I know it\'s a two-voice part," says Lyra Ashgrove. And she sings the coda alone. It is four feet in front of her, inside the lamps. Now.', 'good', 8000);
+      codaClose();
+      ringSay(RING_TX.twoVoice, ['lyra_ruined.ring.twovoice']); ringSay(RING_TX.alone);
     }
   } else {
     f.ring_w -= dt;
@@ -372,39 +431,29 @@ function ringTick(dt) {
     e.x = RING.bx + Math.cos(a) * r; e.y = RING.by + Math.sin(a) * r; e.facing = Math.atan2(RING.by - e.y, RING.bx - e.x); e.state = 'passive';
   }
 }
-function ringVoices() {
-  const f = G.flags, first = G.player.name.split(' ')[0], L = [];
-  L.push('Davin Hale, singing the fourth line of the harvest home.');
-  L.push('Old Tam, going up for the high note he never once reached.');
-  L.push('Ada Pellow, saying <i>oh, it\'s easy, come on, it\'s easy from this side</i>, in the voice of a woman who has just discovered otherwise.');
-  L.push('A boy whistling a falling fifth with too much air in it.');
-  L.push('Two years of Kaelen Vance talking to an empty hut, every night of the world.');
-  if (f.hedge_answered || f.porch_answered) L.push(`Your own voice, from the Hedge at the dead hour, saying <i>I'm here</i>, and then <i>${first}</i>, the way it kept it.`);
-  L.push('Lyra\'s own voice, whole and warm and twenty-nine years old, saying <i>I\'ve shown him how to hold his hands out stiff, Da, so they won\'t touch anything.</i>');
-  return L;
+// the part of the office a slip starts again (Lyra's boots): back to its first line
+function ringRestartPart() {
+  const f = G.flags; if (!f.ring_fight || f.ring_sung) return;
+  const start = RING_PARTS.slice().reverse().find((p) => f.ring_t <= p) || RING_PARTS[0];
+  f.ring_t = start; f.ring_said = start === RING_PARTS[0] ? 99 : start + 0.001;
 }
+function ringVoices() { return ['v1', 'v2', 'v3', 'v4', 'v5'].map((k) => RING_TX[k]); }
 function ringKill(e) {
   const f = G.flags;
-  f.ring_fight = false; f.coda_done = true; f.wearer_dead = true; f.wearer_coda_dead = true; f.coda_fight = false; questXp(150);
-  const who = f.ring_struck === 'you' ? 'You hit it with everything you have, and Kaelen comes out of the dark behind it at a dead run with his left arm bare and blazing and hits it one second after you' : 'Kaelen comes out of the dark behind it at a dead run with his left arm bare and blazing and his ribs grinding and hits it with everything he has left';
-  showEvent('It comes apart four feet in front of her', `${who}${f.aegis_follow ? ', and nine feet of bronze comes out of the dark one second behind him and hits it from the other side, because DEFEND THE SINGERS is four words long and has no clause in it for what the thing in front of you is wearing' : ''}.<br><br>The Wearer bursts. It had eaten a Cantor and four others and two years of a woman's nights, and when the glass goes through it all of that comes out at once, in about three seconds, in a wall of sound that knocks Tobiah Marsh off his feet at forty yards.<br><br>${ringVoices().join('<br>')}<br><br>And under all of it, rising up through it as the rest comes apart, her father. Not the voice it wore. The one underneath: Tobin Ashgrove at the end, in a farmyard in the spring, singing the calling-song at the top of his lungs and walking away from a house with a sick child in it, and the song getting ragged as the thing came, and then not ragged. <i>Louder.</i> Because he had worked out, in the last four seconds of his life, that the louder he was the further away they would be from the door.<br><br>The last of it is one word, in her father's voice, from about the height of her shoulder, very close, almost surprised:<br><br><i>"Lark—"</i><br><br>And then the clearing is quiet, and there is nothing in the moss at all.`, [
-    { t: 'She sits down.', f: () => ringAfter() },
+  f.ring_fight = false; f.coda_done = true; f.wearer_dead = true; f.wearer_coda_dead = true; f.coda_fight = false; f.ring_struck = 'kaelen'; questXp(150);
+  const T = RING_TX, br = '<br><br>';
+  showEvent(T.burstTitle, [T.apart, f.aegis_follow ? T.struck : T.struckAlone, T.burst, T.ate, ringVoices().join('<br>'), T.under, T.underneath, T.still, T.stood, T.lastWord, T.larkLast, T.nothing].join(br), [
+    { t: T.afterGo, f: () => ringAfter() },
   ]);
-  journal('main', 'Coda: in the clearing by the Mausoleum of Chords, inside the ring of lamps, ' + (f.coda_by_you ? 'I sang Tobin Ashgrove\'s office at full voice past the last lamp, because Lyra had none,' : 'Lyra sang her father\'s office at full voice past the last lamp,') + ' eight bars in harmony with the thing that ate him, and the coda alone, and ' + (f.ring_struck === 'you' ? 'I struck it inside the lamps, and Kaelen and the Aegis a second after me,' : 'Kaelen struck it inside the lamps, and the Aegis a second behind him,') + ' and the Wearer burst. Everything it ever ate came out at once, ending with Tobin, getting louder.' + (f.tank_patched ? '' : ' The Kestrel still needs her lift-tank patched.'));
+  journal('main', 'Coda: in the clearing by the Mausoleum of Chords, inside the ring of lamps, Lyra sang her father\'s office at full voice past the last lamp, eight bars in harmony with the thing that ate him, and the coda alone, and Kaelen struck it inside the lamps, and the Aegis a second behind him, and the Wearer burst. Everything it ever ate came out at once, ending with Tobin, getting louder.' + (f.tank_patched ? '' : ' The Kestrel still needs her lift-tank patched.'));
   ringSync();
   codaCheckHerald();
 }
 function ringAfter() {
-  const f = G.flags;
-  if (f.coda_by_you) { showEvent('The moss', 'Lyra comes out past the last lamp to where you are standing and sits down in the wet moss, not gracefully; her legs stop. Kaelen kneels a yard away with his arm ringing low and full. "That\'s it," she writes, on her knee, in chalk. "THAT\'S THE END OF HIM. THAT WAS THE LAST OF HIS VOICE IN THE WORLD, AND IT WAS IN THAT, AND I HAVE JUST PUT IT OUT."<br><br>She looks at the empty place in the moss. Then she writes: <b>SAY SOMETHING.</b>', [
-    { t: '"No."', f: () => { f.ring_sat_no = true; msg('"You don\'t want something said," you say. "You want somebody to sit here." So you sit there, a yard away in the wet moss, with the lamps burning down and the ship creaking in the dark and four hundred and thirty-two people murmuring in her hold.', 'voice', 10000); } },
-    { t: '"It\'s over."', f: () => { msg('She looks at you for a long moment, and then at Kaelen, who said nothing at all, which was, for once, precisely right. At some point before dawn she puts her hand out sideways, without looking, and finds his good one.', 'voice', 9000); } },
-  ]); return; }
-  showEvent('The moss', 'She sits down. Not gracefully; her legs stop and she goes down on them in the wet moss. Kaelen gets to her and does not touch her and kneels a yard away with his arm ringing low and full, and says her name twice.<br><br>"That\'s it," says Lyra. "That\'s the end of him. That was the last of his voice in the world, and it was in <i>that</i>, and I\'ve just put it out." Her face does something she has no control over. "I\'ve been going out to the Hedge for forty-one nights to listen to a monster because it was the only place my father still existed, and I knew exactly what it was the whole time, and tonight I killed it on purpose, and now there\'s nowhere."<br><br>Kaelen says nothing at all.<br><br>"Say something," she says. To you, or to him.', [
-    { t: '"No."', f: () => { f.ring_sat_no = true; msg('"You don\'t want something said," you say. "You want somebody to sit here." So you sit there, a yard away in the wet moss, the three of you, with the lamps burning down and the ship creaking in the dark. At some point before dawn Lyra Ashgrove puts her hand out sideways, without looking, and finds Kaelen\'s good one, and does not let go of it, and does not forgive him either.', 'voice', 12000); } },
-    { t: 'Say something kind.', f: () => { f.ring_sat_kind = true; msg('You say it. She hears it the way you hear rain on a roof you are not under. Kaelen says nothing at all, which is, for once, precisely right, and after a while she puts her hand out sideways, without looking, and finds his good one.', 'voice', 10000); } },
-    { t: 'Leave them the clearing.', f: () => { msg('You go back to the fire, and leave them the clearing, and the lamps burning down.', '', 6000); } },
-  ]);
+  const f = G.flags, T = RING_TX;
+  const body = [T.satDown, T.legs, T.thatsIt, T.lyraName, T.endOfHim, T.nothingAtAll, T.saySomething, T.no, T.kaelenName, T.sitHere, f.aegis_follow ? T.sat : T.satAlone, T.hand, T.both].join('<br><br>');
+  const inBoots = ringBoots();
+  showEvent(T.afterTitle, body, [{ t: inBoots && BOOTS125.TX ? BOOTS125.TX.stepOut : T.afterGo, f: () => { if (inBoots) { try { BOOTS125.exit(); } catch (e) { /* none */ } } ringSync(); } }]);
 }
 
 // ---------------------------------------------------------------- the herald, and the end of Book One
@@ -429,8 +478,8 @@ function codaAnswer(lyra) {
 function codaEndingLines() {
   const f = G.flags, L = [];
   if (!f.part4) return L;
-  if (f.coda_done) L.push(f.ring_struck ? `In the clearing by the Mausoleum of Chords, inside a ring of hush-lamps, ${f.coda_by_you ? 'you stood past the last lamp and sang Tobin Ashgrove\'s funeral office at full voice, because Lyra had none,' : 'Lyra walked out past the last lamp and sang her father\'s funeral office at full voice, badly, in a voice like a torn sheet,'} eight bars in harmony with the thing that ate him, and the coda alone. ${f.ring_struck === 'you' ? 'You struck it four feet in front of her, and Kaelen and the Aegis struck it from the other side,' : 'Kaelen came out of the dark behind it at a dead run with his arm blazing, and the Aegis one second behind him,'} and it burst. Everything it ever ate came out at once, ending with Tobin Ashgrove getting louder as they took him, so the house would be further away.${f.ring_sat_no ? ' Afterwards she sat down in the wet moss and said "Say something", and you said no, and sat there.' : ''}` : `In the choir of the Mausoleum of Chords ${f.coda_by_you ? 'you sang the two-voice coda yourself, because Lyra had no voice to sing it with,' : 'Lyra sang the two-voice coda alone,'} and the Wearer burst.`);
-  if (f.requiem_done) L.push(`Afterwards, in the choir of the Mausoleum of Chords, ${f.coda_by_you ? 'you' : 'Lyra'} sang the two-voice coda against the Unended Office, and eleven hundred years of funeral offices came out of it at once, sung properly, and the House is only a building now.`);
+  if (f.coda_done) L.push(f.ring_struck ? 'In the clearing by the Mausoleum of Chords, inside a ring of hush-lamps, Lyra walked out past the last lamp and sang her father\'s funeral office at full voice, badly, in a voice like a torn sheet, eight bars in harmony with the thing that ate him, and the coda alone. Kaelen came out of the dark behind it at a dead run with his arm blazing, and the Aegis one second behind him, and it burst. Everything it ever ate came out at once, ending with Tobin Ashgrove getting louder as they took him, so the house would be further away.' : 'In the choir of the Mausoleum of Chords Lyra sang the two-voice coda alone, and the Wearer burst.');
+  if (f.requiem_done) L.push('Afterwards, in the choir of the Mausoleum of Chords, Lyra sang the two-voice coda against the Unended Office, and eleven hundred years of funeral offices came out of it at once, sung properly, and the House is only a building now.');
   if (f.kaelen_told_now) L.push('At the fire Kaelen told Lyra everything, out loud. Her voice came back at the worst possible moment, and the first thing she did with it was tell him she would have forgiven him on Rootday, and cannot now.');
   if (f.bottles_kept) L.push('Twelve seized vox-bottles ride in the Kestrel\'s hold beside the four hundred and thirty-two: black-market last words the Office took off a smuggler for the Hall of Carriage. Twelve more people in a hold, who have to go somewhere.');
   else if (f.bottles_freed) L.push('In the Deep Woods you unstoppered twelve seized voices and let them go into the willows. Something came through after them that ate the sound out of the air.');

@@ -27,7 +27,7 @@
 //
 //  COMBAT TIMING IS UNTOUCHED. This module wraps nothing that runs the simulation: no update(), attack(), damagePlayer()
 //  or castSong() wrapper; it reads G.attack/G.song/UPG/ARMS12/FPHANDS state only while drawing, and it draws every weapon
-//  with the pose the game already computes (animWeaponPose through drawHUD). It never calls Math.random.
+//  with the pose the game already computes (animWeaponPose through drawHUD). It never draws a number from Math.random (BODY21.early, Phase 125b, only sets it aside while drawHUD runs once early).
 //  How the drawing is wired: drawHUD is wrapped (outermost, loaded last). For the duration of the inner draw the
 //  Engine.images entries of the visible weapons point at gear-coloured copies of the same size (so every pose, trail and
 //  off-hand stays where it was), and Engine.ctx.drawImage is hooked so that, wherever a gear copy is drawn, its sleeve
@@ -1266,12 +1266,14 @@ const BODY21 = (() => {
   }
 
   const LIFT = 30;
+  let EXTRA = null;
+  function setExtra(fn) { EXTRA = typeof fn === 'function' ? fn : null; }
   const _drawHUD = drawHUD;
   drawHUD = function () {
     if (!on() || !G.player || typeof Engine === 'undefined' || !Engine.images) return _drawHUD.apply(this, arguments);
     const t0 = performance.now(), ctx = Engine.ctx;
     let look = null, swaps = [], hookSt = null, had = false, prev = null;
-    REC = r3dOn() ? { inv: ctx.getTransform().inverse(), list: [], legs: null, look: null } : null;
+    REC = r3dOn() ? { inv: ctx.getTransform().inverse(), list: [], legs: null, look: null, stamp: R3B.stamp } : null;   // (Phase 125b: the stamp it was made under)
     try {
       look = GL().of(G.player); if (REC) { REC.look = look; if (sculptOn()) SCULPTED112.begin(); }
       frameState();
@@ -1304,7 +1306,11 @@ const BODY21 = (() => {
       Engine.cam.bob = Math.round(want * 2) / 2 / 1.5 - sway;
     }
     let r;
-    try { r = _drawHUD.apply(this, arguments); } finally {
+    try {
+      r = _drawHUD.apply(this, arguments);
+      // (Phase 125b) a hand pose of js/boots125.js, drawn while this frame's pictures are still being recorded
+      if (EXTRA && look) { try { EXTRA(ctx, look, !!REC); } catch (e) { warnOnce('extra', e); } }
+    } finally {
       Engine.cam.bob = bob0;
       try { if (had) ctx.drawImage = prev; else delete ctx.drawImage; } catch (e) { /* restored below */ }
       for (const [img, orig] of swaps) Engine.images[img] = orig;
@@ -1331,7 +1337,27 @@ const BODY21 = (() => {
   //     hand, the helm's brim) as screen quads in its own depth range (in front of the world, no depth write), drawn the
   //     frame after they were posed (one frame of latency on a camera-locked picture).
   // If the pass cannot compile or R3D is not showing, the raycaster path above paints the same pictures on the HUD canvas.
-  const R3B = { check: false, glErr: 0, foreign: 0, last: null, prog: null, failed: false, gl: null, vao: null, vbo: null, tex: new Map(), drawn: 0, quads: 0, legs: 0, err: '' };
+  const R3B = { check: false, glErr: 0, foreign: 0, last: null, prog: null, failed: false, gl: null, vao: null, vbo: null, tex: new Map(), drawn: 0, quads: 0, legs: 0, err: '', stamp: 0, askedStamp: -1 };
+  // Phase 125b, the first-frame fault: the body pass runs inside Engine.render, before drawHUD records this frame's
+  // pictures, so it always draws the record of the frame before. In steady play that is invisible; after a map change, a
+  // load or a step into a hero's boots it is the old place's record, and the sculpted hands (lit when they are flushed,
+  // and re-uploaded as they stand) show wrong or not at all for one frame. A stamp, bumped by those three, says which
+  // record is current; when the record the pass is about to draw was made under an older stamp (or there is none),
+  // render() in js/game.js has drawHUD record the pictures once before the scene is drawn. Asked once for each stamp.
+  function invalidate() { R3B.stamp++; }
+  function staleRecord() {
+    if (!(on() && r3dOn()) || R3B.failed) return false;
+    const L = R3B.last;
+    if ((L && L.stamp === R3B.stamp) || R3B.askedStamp === R3B.stamp) return false;
+    R3B.askedStamp = R3B.stamp; return true;
+  }
+  // the early drawHUD of a stale frame: while it runs Math.random is a fixed sequence of its own, so the one extra call
+  // can never take a number from the gameplay stream (the seeded traces count them)
+  function early(fn) {
+    const mr = Math.random; let sd = 20261124;
+    Math.random = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+    try { fn(); } finally { Math.random = mr; }
+  }
   function r3dOn() {
     try { return typeof R3D === 'object' && R3D && !R3B.failed && !!R3B.prog && R3D.shown() && !!R3D.getPass('body'); } catch (e) { return false; }
   }
@@ -1777,7 +1803,10 @@ void main() {
   }
 
   function clearCaches() { headCache.clear(); buildCache.clear(); shieldCache.clear(); armCache.clear(); legCache.clear(); }
-  return { sculptLight, sculptAnim, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
+  // (Phase 125b) a map change and a load make every record before them stale
+  if (typeof loadMap === 'function') { const _lm = loadMap; loadMap = function () { invalidate(); return _lm.apply(this, arguments); }; }
+  if (typeof restoreGame === 'function') { const _rg = restoreGame; restoreGame = function () { invalidate(); return _rg.apply(this, arguments); }; }
+  return { invalidate, staleRecord, early, setExtra, sculptLight, sculptAnim, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
     R3B, FX3, LB, lbBuild, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;

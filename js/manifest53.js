@@ -53,13 +53,21 @@ const MANIFEST53 = (function () {
     const f = F(); if (!due()) return;
     f.p53 = 9;   // until it is seen through
     showEvent(TX.title, TX.tags, [
-      { t: TX.stay, f: () => showEvent(TX.title, TX.three, [{ t: TX.standWith, f: () => read(0) }]) },
+      { t: TX.stay, f: () => showEvent(TX.title, TX.three, [{ t: TX.standWith, f: () => stand() }]) },
       { t: TX.up, f: () => { say(TX.left, '', 6000); try { loadMap(DECK); } catch (e) { warnOnce('up', e); } } },
     ]);
+  }
+  // (Phase 125b) "Stand with him" steps into Sable's boots (js/boots125.js) for the three entries; without it, the cards
+  function stand() {
+    try { if (typeof BOOTS125 === 'object' && BOOTS125 && BOOTS125.can && BOOTS125.can('names') && BOOTS125.enter('names')) return; } catch (e) { warnOnce('boots', e); }
+    read(0);
   }
   const ENTRIES = ['corwin', 'mirren', 'annet'];
   function read(i) {
     if (i < ENTRIES.length) { showEvent(TX.title, TX[ENTRIES[i]], [{ t: TX.next, f: () => read(i + 1) }]); return; }
+    filed();
+  }
+  function filed() {
     const f = F(); f.p53 = 1;
     try { journal('main', TX.j); questXp(30); } catch (e) { /* none */ }
     showEvent(TX.filedTitle, TX.filed, [{ t: TX.leave, f: null }]);
@@ -82,6 +90,6 @@ const MANIFEST53 = (function () {
   }
   try { wire(); } catch (e) { console.warn('manifest53 failed to wire', e); }
 
-  return { TX, TEXTS, HOLD, DECK, due, begin, read };
+  return { TX, TEXTS, HOLD, DECK, due, begin, read, stand, filed };
 })();
 if (typeof window !== 'undefined' && typeof window.MANIFEST53 === 'undefined') window.MANIFEST53 = MANIFEST53;

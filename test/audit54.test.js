@@ -118,10 +118,15 @@ const frCheck = async (page, file, mod, label) => {
       const a = T.last();
       out.tags = !!a && a.t === 'Manifest' && /One thousand three hundred and forty-two/.test(a.b) && /carrier OK-114 is reliable and does not ask questions/.test(a.b) && /Four hundred and thirty-two/.test(a.b);
       T.pick(/Stay with Vane/); out.three = /Read you three/.test(T.last().b) && /Somebody should be carrying them properly/.test(T.last().b);
-      T.pick(/Stand with him/); out.corwin = /Corwin Aye/.test(T.last().b) && /has not leaked in nineteen years/.test(T.last().b);
-      T.pick(/…/); out.mirren = /Mirren Salk/.test(T.last().b) && /eleven hundred other coats/.test(T.last().b);
-      T.pick(/…/); out.annet = /Annet Sowerby/.test(T.last().b) && /would not let go of the hand/.test(T.last().b);
-      T.pick(/…/);
+      // (Phase 125b, taught) "Stand with him" steps into Sable's boots (js/boots125.js): the three entries are read as the
+      // book's captions, one press each, eyes up; then the filed card as before
+      T.pick(/Stand with him/); out.boots = BOOTS125.active() === 'names' && /"Go on, then," he said\./.test(T.last().b); T.pick(/Read/);
+      window.__msgs.length = 0;
+      for (let n = 0; n < 8000 && BOOTS125.active(); n++) { const b = BOOTS125.S.beat; if (['corwin', 'mirren', 'annet'].includes(b) && !BOOTS125.S.x.read) { BOOTS125.input('use', true); T.step(1); BOOTS125.input('use', false); } T.step(1); }
+      const said = (re) => window.__msgs.some((t) => re.test(t));
+      out.corwin = out.boots && said(/Corwin Aye/) && said(/has not leaked in nineteen years/);
+      out.mirren = said(/Mirren Salk/) && said(/eleven hundred other coats/);
+      out.annet = said(/Annet Sowerby/) && said(/would not let go of the hand/);
       const z = T.last();
       out.filed = z.t === 'Filed' && /You are not lost\. You are <i>filed<\/i>/.test(z.b) && /Is that you, Mistress Dray\?/.test(z.b) && /It\\'s the clerk|It's the clerk/.test(z.b) && G.flags.p53 === 1 && G.journal.some((j) => /Manifest: in the Kestrel's hold/.test(j.text));
       window.__ev.length = 0; loadMap(MANIFEST53.HOLD); out.once = !window.__ev.length;

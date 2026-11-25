@@ -108,7 +108,7 @@ const SIDEQ = (() => {
         blunt: S('I have buried a husband and I have hung his reed twice. I will not be shouted at on my own step.'),
       },
       topics: {
-        'Oakhaven': S('Seventy years in one parish. It was louder when I was a girl. Everything was.'),
+        'Oakhaven': S('Fifty-one years, and nearly all of them in this parish. It was louder when I was a girl. Everything was.'),   // (Phase 125b) the book's age: "She was fifty-one years old." (MS 3544)
         'The Hedge': S('Joram went in 418. The family holds the note until the body lets go, and in the old days it was sung out after. It cannot be now. The Hedge eats a note before it is halfway to the door.'),
       },
       intro: S('Does it ring? No, never mind; I only say it from habit. Look up. That is Joram\'s reed. His mother hung it over his cradle and I carried it to this door the day we married. It split in the frost three nights ago, down the slot, and now it hangs with its mouth open as if it had something to tell me. I held his pitch the night he died, in my head, because there is nowhere else to hold it now. I put the stone on his tongue when he let go. Since then I have hummed it every evening to keep it. Tonight it came out mine.'),

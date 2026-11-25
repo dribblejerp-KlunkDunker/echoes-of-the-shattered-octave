@@ -567,6 +567,18 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 ![Phase 125a: the calling list with its two new names, and the six likenesses with their new names and pasts](screenshots/p125-strangers.jpg)
 
+**In their boots (Phase 125b).** At six moments of Book One you step into the hero's own boots and do what they did, well or badly. As Kaelen you put the needle through a fold of Lyra's skin with the glass thumb, fast, because slow would look wrong, and keep still while the Inquisitor crouches a foot away; as Lyra you hold one hundred and seventy-four through the Hold and sing it down a whole fifth; as Kaelen again you take fifty-one seconds over eight bolts and seat the coil; as Vane you count One to Ten, take the axe at Five and cut at Ten; as Sable you read three entries back to Vane and never look at the Ledger; and as Lyra, between the willows past the last lamp, you sing her father's office until the coda is sung alone. The words on screen are the book's own. A slip is the grey Echo and never changes what happens. Your calling notices what it knows (a Cantor hears the note, a Corsair counts with Vane). Options: "Hands in a hero's boots", the hero's own or yours. The traveller no longer sings Lyra's coda or strikes the Wearer, and the Rite's eyeline and lenses games are gone: the book has none of them.
+
+![Phase 125b: Kaelen's glass hand and the needle at the pinch](screenshots/p125b-needle.jpg)
+
+![Phase 125b: the eight bolts, the spanner at the plate](screenshots/p125b-bolts.jpg)
+
+![Phase 125b: One to Ten, Vane at the rail with the axe at Seven](screenshots/p125b-rope.jpg)
+
+![Phase 125b: the three names, eyes on Vane](screenshots/p125b-names.jpg)
+
+![Phase 125b: the coda, "Ten feet."](screenshots/p125b-coda.jpg)
+
 **The recoloured townsfolk keep their skin (Phase 124b).** Thirty-six people in the game are the townsman's, the townswoman's or Hob's painted figure in other colours: the packman on the road, Oona Salt and the harbour's people, the Flume's dock-folk, the market's and the sheepwalk's. The recolour used to tint the whole painting, so a man in a blue coat had a blue face. Now only the cloth takes the dye: faces, hair, hands and the jar the townswoman carries keep the painting's own colours, and kerchiefs and caps are dyed with the rest. The Hollows, who are faded all over, are left exactly as they were. Options: "Recoloured people keep their skin" (off in the Original preset). The same survey found that Pennick, the Kestrel's engineer, has had no figure at all since he was added; he has one now, with his goggles pushed up on his cap.
 
 ![Phase 124b: eight recoloured people before and after, the packman and Oona Salt in the game, and a Hollow left as made](screenshots/p124-skin.jpg)
