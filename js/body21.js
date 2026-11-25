@@ -27,7 +27,7 @@
 //
 //  COMBAT TIMING IS UNTOUCHED. This module wraps nothing that runs the simulation: no update(), attack(), damagePlayer()
 //  or castSong() wrapper; it reads G.attack/G.song/UPG/ARMS12/FPHANDS state only while drawing, and it draws every weapon
-//  with the pose the game already computes (animWeaponPose through drawHUD). It never calls Math.random.
+//  with the pose the game already computes (animWeaponPose through drawHUD). It never draws a number from Math.random (BODY21.early, Phase 125b, only sets it aside while drawHUD runs once early).
 //  How the drawing is wired: drawHUD is wrapped (outermost, loaded last). For the duration of the inner draw the
 //  Engine.images entries of the visible weapons point at gear-coloured copies of the same size (so every pose, trail and
 //  off-hand stays where it was), and Engine.ctx.drawImage is hooked so that, wherever a gear copy is drawn, its sleeve
@@ -1351,6 +1351,13 @@ const BODY21 = (() => {
     if ((L && L.stamp === R3B.stamp) || R3B.askedStamp === R3B.stamp) return false;
     R3B.askedStamp = R3B.stamp; return true;
   }
+  // the early drawHUD of a stale frame: while it runs Math.random is a fixed sequence of its own, so the one extra call
+  // can never take a number from the gameplay stream (the seeded traces count them)
+  function early(fn) {
+    const mr = Math.random; let sd = 20261124;
+    Math.random = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+    try { fn(); } finally { Math.random = mr; }
+  }
   function r3dOn() {
     try { return typeof R3D === 'object' && R3D && !R3B.failed && !!R3B.prog && R3D.shown() && !!R3D.getPass('body'); } catch (e) { return false; }
   }
@@ -1799,7 +1806,7 @@ void main() {
   // (Phase 125b) a map change and a load make every record before them stale
   if (typeof loadMap === 'function') { const _lm = loadMap; loadMap = function () { invalidate(); return _lm.apply(this, arguments); }; }
   if (typeof restoreGame === 'function') { const _rg = restoreGame; restoreGame = function () { invalidate(); return _rg.apply(this, arguments); }; }
-  return { invalidate, staleRecord, setExtra, sculptLight, sculptAnim, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
+  return { invalidate, staleRecord, early, setExtra, sculptLight, sculptAnim, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
     R3B, FX3, LB, lbBuild, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;
