@@ -483,7 +483,7 @@ const BOOTS125 = (function () {
     if (Rd && !S.auto[b.k]) {
       try {
         const fifth = !!b.pitch.fifth && !!R43();
-        const res = await Rd.holdPitch({ curve: fifth ? R43().FIFTH : b.pitch.curve, width: Rd.bandFor ? Rd.bandFor(0) : 105, duration: b.pitch.duration, title: fifth ? R43().TX.fifthTitle : title(), hint: fifth ? R43().TX.fifthHint : TX.holdHint });
+        const res = await Rd.holdPitch({ curve: fifth ? R43().FIFTH : b.pitch.curve, width: Rd.bandFor ? Rd.bandFor(0) : 105, duration: b.pitch.duration, title: fifth ? R43().TX.fifthTitle : title(), hint: fifth ? R43().TX.fifthHint : TX.holdHint, noScore: true });
         ok = !!res && !res.aborted && (res.score == null || res.score >= 0.5);
         if (b.pitch.fifth) ok = true;   // after the cue the fifth has no slip in the book's terms (design 2.2)
       } catch (e) { warnOnce('pitch', e); ok = true; }

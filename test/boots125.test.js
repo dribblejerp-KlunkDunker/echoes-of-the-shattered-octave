@@ -499,18 +499,18 @@ function verbatim(t, lines) {
     const fix = await sect('fix', async () => {
       const out = {}, p = G.player;
       const g0 = [p.glassed, p.glass]; p.glassed = true;
-      const f = G.flags; for (const k of ['sable_returned', 'sable_kept', 'sable_met']) delete f[k];
+      const f = G.flags, f0 = JSON.parse(JSON.stringify(f)); for (const k of Object.keys(f)) delete f[k];   // (the Part Two ending of a fresh game; earlier sections left Part Four's flags)
       hide('#ending'); G.state = 'play';
       p.glass = 80; try { ending(); } catch (e) { out.err = e.message; } out.end80 = document.querySelector('#ending-text').textContent;
       p.glass = 50; try { ending(); } catch (e) { /* none */ } out.end50 = document.querySelector('#ending-text').textContent;
-      hide('#ending'); G.state = 'play'; p.glassed = g0[0]; p.glass = g0[1];
+      hide('#ending'); G.state = 'play'; p.glassed = g0[0]; p.glass = g0[1]; Object.assign(f, f0);
       out.ada = NPCS.p9_ada && NPCS.p9_ada.topics && NPCS.p9_ada.topics.Oakhaven;
       out.seventy = Object.values(VOICE_ACT.LINES).some((l) => /Seventy years/.test(l.t || ''));
       await ACCESS.setLocale('fr'); out.adaFr = STORY_I18N.translate(out.ada); await ACCESS.setLocale('en');
       const ids = BOOTS125.voiceIds(); out.noVoice = ids.filter((id) => !VOICE_ACT.LINES[id]);
       return out;
     });
-    check(!/four and a half fingers|hundred-and-forty|three inches from the throat/.test(fix.end80 + fix.end50) && /You have stopped measuring it/.test(fix.end80) && /you keep it wrapped/.test(fix.end50), '21. the Part Two ending for a glassed traveller is the stranger\'s own glass, not Kaelen\'s measure' + (fix.err ? ' (' + fix.err + ')' : ''));
+    check(!/four and a half fingers|hundred-and-forty|three inches from the throat/.test(fix.end80 + fix.end50) && /You have stopped measuring it/.test(fix.end80) && /you keep it wrapped/.test(fix.end50), '21. the Part Two ending for a glassed traveller is the stranger\'s own glass, not Kaelen\'s measure' + (fix.err ? ' (' + fix.err + ')' : '') + (process.env.DEBUG ? ' [' + String(fix.end80).slice(0, 900) + ']' : ''));
     check(/^Fifty-one years/.test(fix.ada || '') && !fix.seventy && !!fix.adaFr, '22. Ada says "Fifty-one years"; no recording says "Seventy years"; the French exists');
     check(!!fix.noVoice && fix.noVoice.length === 0, 'every voice the moments name is recorded (' + (fix.noVoice || []).join(', ') + ')');
 
