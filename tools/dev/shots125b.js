@@ -102,8 +102,8 @@ const want = (k) => !ONLY.length || ONLY.includes(k);
   }
   if (want('frame')) {   // the first frame after staging the tavern, without the fix and with it (shots125b.sh puts them side by side)
     const stage = () => ev(() => { const st = (m, xx, yy, d, tod) => { G.state = 'paused'; G.tod = tod; loadMap(m, { x: xx, y: yy, dir: d }); G.fadeT = 0; Engine.cam.pitch = 0; Engine.cam.bob = 0; G.state = 'play'; }; BOOTS125.reset(); SH.clearMsgs(); st('oakhaven', 23.5, 20.5, -1.57, 0.5); SH.frame(); st('tavern', 8.5, 10.5, -1.57, 0.85); G.state = 'play'; render(); });
-    await ev(() => { window.__real = BODY21.redrawNeeded; BODY21.redrawNeeded = () => false; }); await stage(); await shot('frame-before');
-    await ev(() => { BODY21.redrawNeeded = window.__real; }); await stage(); await shot('frame-after');
+    await ev(() => { window.__real = BODY21.staleRecord; BODY21.staleRecord = () => false; }); await stage(); await shot('frame-before');
+    await ev(() => { BODY21.staleRecord = window.__real; }); await stage(); await shot('frame-after');
   }
   if (want('off')) {   // the switch off: in Kaelen's boots at the needle, the traveller's own hands and no props
     console.log(await ev(() => { BOOTS125.reset(); GFX.heroHands = false; SH.vault(2); RITE43.startNeedle(); SH.press(); SH.beat('pinch'); BOOTS125.input('use', true); SH.step(6); SH.clearMsgs(); SH.frame(); return true; }));

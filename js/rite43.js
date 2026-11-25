@@ -84,7 +84,7 @@ const RITE43 = (function () {
     doorGo: S('Walk with them.'),
     doorWait: S('Not yet.'),
     gateSealed: S('The shaft gate is sealed under the Factor\'s lead until the Rite. The column forms at the Cantor\'s door on Hearthday; the Church goes down together, and so will you.'),
-    jStart: S('Hearthday. They have brought Lyra out in white. The Church holds the Pure Note over Oakhaven, and I am walking with the column to the quarry. The coil is in Kaelen\'s toolbag; nobody searches the supervising engineer\'s toolbag. My work is not to let them watch him.'),
+    jStart: S('Hearthday. They have brought Lyra out in white. The Church holds the Pure Note over Oakhaven, and I am walking with the column to the quarry. The coil is in Kaelen\'s toolbag; nobody searches the supervising engineer\'s toolbag. My work is to walk with them.'),
     // the procession
     hudNote: S('THE PURE NOTE · the town hums 174 under it · N hums with them'),
     oldWoman: S('Somewhere by the well-house an old woman begins to hum. Not loud. Exactly a hand\'s width of voice. The Root note.'),
@@ -228,7 +228,7 @@ const RITE43 = (function () {
     rookeGo: S('Say nothing.'),
     rookeJ: S('Rooke has Lyra\'s instruction for Orla: the long drops, if the fire comes first. A thumb and a nod. Nothing was said.'),
     // the two "sings" that still stand: Lyra's and Kaelen's later lines
-    lyraAfter: S('Be at my door when they come for me. Walk with the column; the town will hum the Root note under the Pure Note, too quietly to punish, and you can hum with it. Below, Kaelen is the hand at the wire and the hand at the drum. Your work is to stand where their eyes go.'),
+    lyraAfter: S('Be at my door when they come for me. Walk with the column; the town will hum the Root note under the Pure Note, too quietly to punish, and you can hum with it. Below, Kaelen is the hand at the wire and the hand at the drum. Your work is to walk with us and be there after.'),
     kaelenAfter: S('Give me the coil. It goes down in my toolbag, not yours: nobody searches the supervising engineer\'s toolbag. Keep the pass; it gets you past the bell-helms at her door and onto the terrace. On Hearthday walk with the column. Eight bolts. Forty seconds, if they don\'t watch me.'),
     kaelenRepeat: S('Hearthday. Be at her door when the column forms. Below, I will be at the stool with the needle, and my hands will be shaking, and that is all right. When I go to the drum, keep their eyes on you.'),
   };

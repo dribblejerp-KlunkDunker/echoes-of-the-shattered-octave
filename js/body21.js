@@ -1321,7 +1321,7 @@ const BODY21 = (() => {
     } catch (e) { warnOnce('late shield', e); }
     // Phase 112: every sculpted hand of this frame, on its one canvas, laid over the view
     if (REC && sculptOn()) { try { const cv = SCULPTED112.flush(sculptLight()); if (cv) REC.list.push({ img: cv, em: null, add: 0, pix: false, over: 1, pts: [[0, 0], [VWv(), 0], [VWv(), VHv()], [0, VHv()]] }); } catch (e) { warnOnce('sculpted', e); } }
-    if (REC) { REC.fresh = true; R3B.last = REC; REC = null; } else R3B.last = null;
+    if (REC) { R3B.last = REC; REC = null; } else R3B.last = null;
     const ms = performance.now() - t0; stats.lastMs = ms; stats.maxMs = Math.max(stats.maxMs * 0.995, ms); stats.frames++;
     return r;
   };
@@ -1337,16 +1337,19 @@ const BODY21 = (() => {
   //     hand, the helm's brim) as screen quads in its own depth range (in front of the world, no depth write), drawn the
   //     frame after they were posed (one frame of latency on a camera-locked picture).
   // If the pass cannot compile or R3D is not showing, the raycaster path above paints the same pictures on the HUD canvas.
-  const R3B = { check: false, glErr: 0, foreign: 0, last: null, prog: null, failed: false, gl: null, vao: null, vbo: null, tex: new Map(), drawn: 0, quads: 0, legs: 0, err: '', stamp: 0, drewStamp: -1, redraws: 0 };
+  const R3B = { check: false, glErr: 0, foreign: 0, last: null, prog: null, failed: false, gl: null, vao: null, vbo: null, tex: new Map(), drawn: 0, quads: 0, legs: 0, err: '', stamp: 0, askedStamp: -1 };
   // Phase 125b, the first-frame fault: the body pass runs inside Engine.render, before drawHUD records this frame's
   // pictures, so it always draws the record of the frame before. In steady play that is invisible; after a map change, a
   // load or a step into a hero's boots it is the old place's record, and the sculpted hands (lit when they are flushed,
   // and re-uploaded as they stand) show wrong or not at all for one frame. A stamp, bumped by those three, says which
-  // record is current; when the pass drew an older one than drawHUD has just made, render() draws the frame once more.
+  // record is current; when the record the pass is about to draw was made under an older stamp (or there is none),
+  // render() in js/game.js has drawHUD record the pictures once before the scene is drawn. Asked once for each stamp.
   function invalidate() { R3B.stamp++; }
-  function redrawNeeded() {
+  function staleRecord() {
+    if (!(on() && r3dOn()) || R3B.failed) return false;
     const L = R3B.last;
-    return !!(L && L.fresh && on() && r3dOn() && R3B.drewStamp !== L.stamp);
+    if ((L && L.stamp === R3B.stamp) || R3B.askedStamp === R3B.stamp) return false;
+    R3B.askedStamp = R3B.stamp; return true;
   }
   function r3dOn() {
     try { return typeof R3D === 'object' && R3D && !R3B.failed && !!R3B.prog && R3D.shown() && !!R3D.getPass('body'); } catch (e) { return false; }
@@ -1438,10 +1441,9 @@ void main() {
       g.bindVertexArray(null);
     },
     dispose(g) { for (const t of R3B.tex.values()) g.deleteTexture(t); R3B.tex.clear(); },
-    enabled() { const e = on() && !R3B.failed && !!R3B.last; if (!e) R3B.drewStamp = -1; return e; },
+    enabled() { return on() && !R3B.failed && !!R3B.last; },
     draw(g, F, R) {
-      const rec = R3B.last; R3B.drewStamp = rec ? rec.stamp : -1; if (rec) rec.fresh = false;   // (Phase 125b) which record this frame shows
-      if (!rec || R3B.failed || !R3B.prog || !R3B.prog.p) return;
+      const rec = R3B.last; if (!rec || R3B.failed || !R3B.prog || !R3B.prog.p) return;
       R.bindScene(g, F); R.use(R3B.prog);
       g.uniform1i(R3B.prog.u.uImg, 6); g.uniform1i(R3B.prog.u.uEm, 7);
       g.bindVertexArray(R3B.vao); g.disable(g.CULL_FACE);
@@ -1797,7 +1799,7 @@ void main() {
   // (Phase 125b) a map change and a load make every record before them stale
   if (typeof loadMap === 'function') { const _lm = loadMap; loadMap = function () { invalidate(); return _lm.apply(this, arguments); }; }
   if (typeof restoreGame === 'function') { const _rg = restoreGame; restoreGame = function () { invalidate(); return _rg.apply(this, arguments); }; }
-  return { invalidate, redrawNeeded, setExtra, sculptLight, sculptAnim, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
+  return { invalidate, staleRecord, setExtra, sculptLight, sculptAnim, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
     R3B, FX3, LB, lbBuild, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;

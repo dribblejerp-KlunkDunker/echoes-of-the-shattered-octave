@@ -4,7 +4,7 @@
 // to Ten, Sable at the three names. A slip is the grey Echo (RITE43.echo) and never changes what happens; after two slips
 // on one beat it plays itself. The captions are the book's own lines, read here from the manuscript. Also: the removals
 // (the traveller-sings coda, Crane seeing the needle, the lenses Echo, the two Rite minigames), the old-save migration,
-// the calling lines, the hero's hands behind GFX.heroHands, the first-frame fix (BODY21.redrawNeeded), the tideline line,
+// the calling lines, the hero's hands behind GFX.heroHands, the first-frame fix (BODY21.staleRecord), the tideline line,
 // Ada Pellow's age, and the French. The numbers are the design's §5.6 (story/Game Layer/Phase 125b - In their boots
 // (design, for the builder).md).
 'use strict';
@@ -556,18 +556,19 @@ function verbatim(t, lines) {
       GFX.sculptedHands = true;
       // the classic view: never a second render
       try { R3D.setMode && R3D.setMode('off'); } catch (x) { /* none */ }
-      let seen = false; const _r = BODY21.redrawNeeded; stage('oakhaven', 23.5, 20.5, -1.57, 0.5); for (let i = 0; i < 4; i++) { frame(); if (!R3D.active() && BODY21.redrawNeeded()) seen = true; }
-      stage('tavern', 8.5, 10.5, -1.57, 0.85); for (let i = 0; i < 4; i++) { frame(); if (!R3D.active() && BODY21.redrawNeeded()) seen = true; }
+      let seen = false; const _r = BODY21.staleRecord; stage('oakhaven', 23.5, 20.5, -1.57, 0.5); for (let i = 0; i < 4; i++) { frame(); if (!R3D.active() && BODY21.staleRecord()) seen = true; }
+      stage('tavern', 8.5, 10.5, -1.57, 0.85); for (let i = 0; i < 4; i++) { frame(); if (!R3D.active() && BODY21.staleRecord()) seen = true; }
       out.classic = typeof _r === 'function' && !seen;
       return out;
     });
     check(ff.r3d && ff.tavern, '19. with the sculpted hands in the 3D view, the first render() after staging the tavern from outdoors hashes equal to the second (' + JSON.stringify(ff) + ')');
     check(ff.boots, '19. the same after BOOTS125.enter on the same map');
     check(ff.pixel, '19. the same with the pixel hands');
-    check(ff.classic, '19. in the classic view BODY21.redrawNeeded() is never true');
-    // 19b (found by test/fold113 in the full run): the extra frame is a second Engine.render in one task, and the 3D
-    // view's read-back (depthAt, materialAt) took one read per task; a second left a read it never collected and
-    // then stood still for good. After a map change the read-back must still follow the view.
+    check(ff.classic, '19. in the classic view BODY21.staleRecord() is never true (no early drawHUD there)');
+    // 19b (found by test/fold113 in the full run, when the fault was first mended with a second Engine.render in one
+    // task): the 3D view's read-back (depthAt, materialAt) took one read per task; a second left a read it never
+    // collected and then stood still for good. The second render is gone, and the read-back now collects every read
+    // whose fence has passed; either way, after a map change the read-back must still follow the view.
     const rb = await p3.evaluate(async () => {
       R3D.setMode('on');
       const wait = () => new Promise((q) => setTimeout(q, 40));
@@ -579,7 +580,7 @@ function verbatim(t, lines) {
       for (let i = 0; i < 8; i++) { render(); await wait(); }
       return { active, a, b: row() };
     });
-    check(rb.active && rb.a !== rb.b, '19b. after the first-frame redraw the 3D view\'s read-back still follows the view (a quarter turn changes depthAt along the middle row)');
+    check(rb.active && rb.a !== rb.b, '19b. after a map change the 3D view\'s read-back still follows the view (a quarter turn changes depthAt along the middle row)');
     await p3.close();
   } catch (e) { fails++; console.log('FAIL ' + (e && e.stack || e)); }
   finally { await browser.close(); }

@@ -2508,11 +2508,19 @@ function frame(now) {
 }
 function render() {
   if (!G.map) return;
+  // (Phase 125b) under the 3D view the body pass, inside Engine.render, draws the first-person pictures drawHUD recorded
+  // the frame before. On the first frame after a map change, a load or a step into a hero's boots that record is the
+  // old place's (or none), so on that one frame the pictures are recorded first. It was first mended by drawing the
+  // whole frame twice, but a second Engine.render is not draw-only: every module that wraps it moves its own clock (the
+  // leaves of js/windbells.js fell a frame early, and test/r3d21's seeded trace, play the same with the 3D view on and
+  // off, caught it). drawHUD alone is drawn early instead, with Math.random a fixed sequence of its own while it is.
+  if (typeof BODY21 === 'object' && BODY21 && BODY21.staleRecord && BODY21.staleRecord()) {
+    const _mr = Math.random; let _sd = 20261124;
+    Math.random = () => (_sd = (_sd * 16807) % 2147483647) / 2147483647;
+    try { drawHUD(); } finally { Math.random = _mr; }
+  }
   Engine.render(G.ents, G.tod);
   drawHUD();
-  // (Phase 125b) under the 3D view the body pass draws the record drawHUD made the frame before; on the first frame after a
-  // map change, a load or a step into a hero's boots that record is stale, so the frame is drawn once more (draw-only)
-  if (typeof BODY21 === 'object' && BODY21 && BODY21.redrawNeeded && BODY21.redrawNeeded()) { Engine.render(G.ents, G.tod); drawHUD(); }
   const d = $('#debug'); if (d.style.display === 'block') d.textContent = `FPS ${fps.toFixed(0)} | ${G.mapId} ${Engine.cam.x.toFixed(1)},${Engine.cam.y.toFixed(1)} dir ${Engine.cam.dir.toFixed(2)} | noise ${G.noise.toFixed(1)} still ${G.stillT.toFixed(1)} | ents ${G.ents.length}`;
 }
 window.advanceTime = (ms) => { const steps = Math.max(1, Math.round(ms / (1000 / 60))); for (let i = 0; i < steps; i++) update(1 / 60); render(); };
