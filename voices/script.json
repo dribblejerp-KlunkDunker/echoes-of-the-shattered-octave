@@ -73053,7 +73053,16 @@
    "id": "sable.manifest.corwin",
    "speaker": "sable",
    "kind": "narration",
-   "text": "Entry thirty-nine thousand, eight hundred and two. Corwin Aye. Fifty-three. Cooper of the Ashlane, and a good one; there is a barrel in the Moot-house cellar with his mark burned into the head and it has not leaked in nineteen years.",
+   "text": "Entry thirty-nine thousand, eight hundred and two. Corwin Aye. Fifty-three.",
+   "source": "boots125.js CAPS.s_corwin (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"
+  },
+  {
+   "id": "sable.manifest.corwin1b",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Cooper of the Ashlane, and a good one; there is a barrel in the Moot-house cellar with his mark burned into the head and it has not leaked in nineteen years.",
    "source": "boots125.js CAPS.s_corwin (Book One ch. 16)",
    "voiceOf": "sable",
    "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"

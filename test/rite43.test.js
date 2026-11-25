@@ -52,6 +52,19 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       const f = G.flags; f.lyra_met = f.need_gate = f.gate_open = f.kaelen_met = f.tobiah_met = true; f.coil_done = f.rite_ready = f.church_come = true; f.hob_told = true;
       G.give('pass'); G.give('coil');
       window.__vo = []; VOICE_ACT.playLine = (l) => { window.__vo.push(l.id); return 0.01; };   // record the voices, play nothing
+      // (Phase 125b) the needle and the Hold are played in their heroes' boots (js/boots125.js): this plays one through as the
+      // book has it (the pinch released at once, the four pegs, the walk to the drum, the plate, the one sentence, the notes held)
+      REEDS.forceManual = true;
+      T.boots = async (until) => {
+        for (let n = 0; n < 6000 && BOOTS125.active() && !(until && until()); n++) {
+          const S = BOOTS125.S;
+          if (S.card) { T.last().c[0].f(); continue; }
+          if (S.wait) { const ss = REEDS.session; if (ss) { while (!ss.done) { ss.pitch = ss.centsAt(Math.max(0, ss.t)); ss.step(0.05); } } await new Promise((r) => setTimeout(r, 30)); continue; }
+          if (S.beat === 'pinch' || S.beat === 'pegs' || S.beat === 'kneel') { BOOTS125.input('use', true); T.step(1, 0.05); BOOTS125.input('use', false); }
+          if (S.beat === 'walk') { Engine.cam.x = RITE43.V.kaelenDrum[0]; Engine.cam.y = RITE43.V.kaelenDrum[1]; }
+          T.step(1, 0.1);
+        }
+      };
     });
 
     // ---- before the Rite: the gate is sealed, Lyra's and Kaelen's lines point at her door, the palm message for Rooke
@@ -118,18 +131,20 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       const a = T.last(); out.arrive = !!a && /headframe/.test(a.t) && /Tobiah Marsh/.test(a.b) && new RegExp('counted ' + (f.r43_hum + 1) + ' voices').test(a.b) && /Yours was one of them/.test(a.b) && /back of the column/.test(a.b);
       a.c[0].f(); out.stage = f.r43; out.map = G.mapId; out.gone = !G.maps.oakhaven.entities.some((e) => e._r43);
       const c1 = T.last(); out.cage = /Four hundred feet/.test(c1.t); c1.c[0].f(); const c2 = T.last(); out.pumps = /The pumps/.test(c2.t) && /gracious to a tool/.test(c2.b); c2.c[0].f();
-      const c3 = T.last(); out.lullaby = /casing platform/.test(c3.t) && /Five notes/.test(c3.b) && /Kaelen kneels\. His hands are shaking/.test(c3.b); c3.c[0].f();
-      out.needle = f.r43 === 3 && RITE43.R.needle === RITE43.consts.NEEDLE_SECS - 4;
+      const c3 = T.last(); out.lullaby = /casing platform/.test(c3.t) && /Five notes/.test(c3.b) && /Kaelen kneels\. His hands are shaking/.test(c3.b);
+      c3.c[0].f();
+      out.needle = f.r43 === 3 && BOOTS125.active() === 'needle';   // (Phase 125b, taught) the needle is Kaelen's, in his boots; no eyeline window
       return out;
     });
     check(walk.waits && walk.moves, 'the column waits when you fall behind and walks on when you are near');
     check(walk.hum && walk.strike1 && walk.marched, 'N hums with the town; a loud Song turns a stave; the second time a Legionnaire walks you at the back');
     check(walk.beats && walk.helped && walk.wept, 'the kerbs in the book\'s order: the old woman by the well-house, the takers, Bettany and Hetty, the Tanner cousins and the Flambeaux, Lissa; the helped named; Lyra weeps');
     check(walk.arrive && walk.stage === 2 && walk.map === 'rootvault' && walk.gone, 'at the headframe: Tobiah carries the case, the count of voices, and the cage down to the Root-vault; the column leaves Oakhaven');
-    check(walk.cage && walk.pumps && walk.lullaby && walk.needle, 'the cage, the pumps ("Interesting." / "a Cantor be gracious to a tool"), the lullaby and the case; marched, the needle\'s window is shorter');
+    check(walk.cage && walk.pumps && walk.lullaby && walk.needle, 'the cage, the pumps ("Interesting." / "a Cantor be gracious to a tool"), the lullaby and the case; then the needle, in Kaelen\'s boots');
 
-    // ---- the vault's staging and the needle: the Inquisitor paces, you block his eyeline, or do not
-    const needle = await page.evaluate(() => {
+    // ---- the vault's staging and the needle (Phase 125b, taught: the needle is played in Kaelen's boots, js/boots125.js;
+    // the eyeline the traveller stood in is gone, because the book's Inquisitor never sees: "satisfied", "pleased", MS 3098, 3110)
+    const needle = await page.evaluate(async () => {
       const out = {}, f = G.flags, V = RITE43.V, cs = G.map.casingRoom;
       const ks = ['stool', 'lyra', 'kaelen', 'crane', 'vosk', 'sis0', 'sis1', 'tobiah', 'drum', 'tube', 'cage', 'guard0', 'guard1'];
       out.figures = ks.every((k) => !!T.ent(k));
@@ -138,59 +153,42 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       const inRoom = (e) => e.x > cs.x && e.x < cs.x + cs.w && e.y > cs.y && e.y < cs.y + cs.h;
       out.inRoom = ks.every((k) => inRoom(T.ent(k))) && pumps.every(inRoom);
       out.hollowAside = !G.ents.some((e) => e.kind === 'npc' && e.id === 'hollow' && !e.hidden && inRoom(e));
-      // geometry: Kaelen kneels between the catwalk and the stool, so a stranger can stand between the eye and the hand
-      const cr = T.ent('crane'), kx = V.kaelenStool[0], ky = V.kaelenStool[1];
-      out.geometry = cr.x < kx && kx < V.stool[0];
-      const mid = [(cr.x + kx) / 2, (cr.y + ky) / 2];
-      T.at(mid[0], mid[1]); out.blockedAtMid = RITE43.blocked();
-      T.at(V.stool[0] + 1.5, V.stool[1] + 1.5); out.freeAway = !RITE43.blocked();
-      // run the window standing in the eyeline (re-aimed each tick, as a player would shuffle); the Inquisitor paces meanwhile
-      let n = 0, yMin = 99, yMax = -99; while (f.r43 === 3 && n < 300) { const c = T.ent('crane'); yMin = Math.min(yMin, c.y); yMax = Math.max(yMax, c.y); T.at((c.x + kx) / 2, (c.y + ky) / 2); T.step(1, 0.1); n++; }
-      out.paces = yMax - yMin > 0.3;
-      out.seenT = RITE43.R.seen; out.notSeen = !f.r43_echoes;
-      const d = T.last(); out.card = !!d && /The needle/.test(d.t) && /"I," says Lyra Ashgrove\. "Am\. Fortunate\."/.test(d.b) && /Not a hair off/.test(d.b) && /Speak, daughter/.test(d.b) && !/already torn/.test(d.b);
-      out.heardHint = T.heard(/Stand between the Inquisitor's eye and the glass hand/);
-      d.c[0].f(); const h = T.last(); out.hold = /The Hold/.test(h.t) && /Head at one span/.test(h.b) && /THEN DON'T LET THEM WATCH YOU/.test(h.b); h.c[0].f();
-      out.stage4 = f.r43 === 4; const k = T.ent('kaelen'); out.kaelenAtDrum = Math.abs(k.x - V.kaelenDrum[0]) < 0.05 && Math.abs(k.y - V.kaelenDrum[1]) < 0.05;
+      window.__msgs.length = 0;
+      await T.boots();
+      out.fortunate = T.heard(/^"I\. Am\. Fortunate\."$/) && T.heard(/Not a hair off/) && T.heard(/Speak, daughter/) && !T.heard(/Inquisitor sees/);
+      const h = T.last(); out.hold = /The Hold/.test(h.t) && /The Hold began at noon\./.test(h.b);
+      out.stage4 = f.r43 === 4 && !f.r43_echoes; const k = T.ent('kaelen'); out.kaelenAtDrum = Math.abs(k.x - V.kaelenDrum[0]) < 0.05 && Math.abs(k.y - V.kaelenDrum[1]) < 0.05;
       out.lyraLabel = /with the wire in/.test(T.ent('lyra').label);
       return out;
     });
     check(needle.figures && needle.pumps && needle.guards && needle.inRoom && needle.hollowAside, 'the vault is staged in the casing room: Lyra on the stool, Kaelen, Crane on the catwalk, Vosk, two sisters, Tobiah, the drum, the tube, the cage, two bell-helms, twelve men at the pumps (eight named; Hale B. has the ring and the scar)');
-    check(needle.geometry && needle.blockedAtMid && needle.freeAway && needle.paces, 'the eyeline runs from the pacing Inquisitor to the glass hand past the stool; a stranger can stand in it, or not');
-    check(needle.seenT < RITE43_SEEN_LIMIT(needle) && needle.notSeen && needle.card && needle.heardHint, 'blocked for the window: the needle goes through skin, "I. Am. Fortunate." not a hair off, "She is."');
-    check(needle.hold && needle.stage4 && needle.kaelenAtDrum && needle.lyraLabel, '"Head at one span!": the Hold begins; Kaelen goes to the drum; Lyra sings with the wire in');
+    check(needle.fortunate, 'the needle, in Kaelen\'s boots: "Speak, daughter." "I. Am. Fortunate." not a hair off; nobody sees');
+    check(needle.hold && needle.stage4 && needle.kaelenAtDrum && needle.lyraLabel, '"The Hold began at noon.": the Hold; Kaelen goes to the drum; Lyra sings with the wire in');
 
-    // ---- the Hold: humming beside the stool keeps the Factor's lenses on you; forty-one seconds; the lock throws
-    const hold = await page.evaluate(() => {
-      const out = {}, f = G.flags, V = RITE43.V, R = RITE43.R;
-      T.at(V.vosk[0] - 1.5, V.vosk[1] + 1.0); T.step(30, 0.1);   // not humming: the bolts crawl and the lenses drift to the drum
-      out.slow = R.bolt < 1.5 && R.watched > 2.5 && !R.onYou;
-      window.__msgs.length = 0; let n = 0; while (f.r43 === 4 && n < 1200) { G.murmurT = 4; T.step(1, 0.1); n++; }
-      out.secs = n / 10; out.won = !f.r43_echoes && T.heard(/took fifty-one, and nobody stopped him/) && f.bore_seated === true && f.r43 === 5;
-      out.calls = T.heard(/Pitch, one-seventy-four\. Holding/) && T.heard(/it's coming up to meet her/); out.fuse = T.heard(/She is the fuse/);
-      const d = T.last(); out.lock = !!d && /The lock throws/.test(d.t) && /seats the reverse-phase coil in the port/.test(d.b) && /crown of glass teeth snaps off/.test(d.b) && /SING IT DOWN/.test(d.b);
-      out.hpBefore = G.player.hp; out.narrow = G.noise >= 3;
+    // ---- the Hold (Phase 125b, taught: in Lyra's boots, then Kaelen's at the bolts, then hers for the lock and the fifth;
+    // the lenses Echo is gone, because nobody stopped him, MS 3186)
+    const hold = await page.evaluate(async () => {
+      const out = {}, f = G.flags;
+      window.__msgs.length = 0; T.last().c[0].f();
+      await T.boots(() => !!f.bore_seated);
+      out.won = !f.r43_echoes && T.heard(/and nobody stopped him/) && f.bore_seated === true && f.r43 === 5;
+      out.calls = T.heard(/Pitch, one-seventy-four\. Holding/) && T.heard(/It's matching her, sir/); out.fuse = window.__ev.some((e) => /She was the fuse\./.test(e.b));
+      await T.boots();
+      out.lock = T.heard(/SING IT DOWN!/) && window.__ev.some((e) => /The lock threw\./.test(e.b));
       return out;
     });
-    check(hold.slow, 'silent and away from the stool, the bolts crawl and the lenses drift to the drum');
-    check(hold.won && hold.secs >= 50 && hold.secs <= 60 && hold.calls && hold.fuse && hold.narrow, 'humming beside the stool: Tobiah calls the pitch, Kaelen reads the margin ("She is the fuse"), eight bolts in fifty-one seconds, as the book has it, and nobody stopped him; the vault is never "too still"');
-    check(hold.lock, '"You\'ll want to hold onto something." The lock throws, the crown of teeth snaps, Crane shouts for the hold, Kaelen: "LYRA! SING IT DOWN!"');
+    check(hold.won && hold.calls && hold.fuse, 'the Hold: Tobiah calls the pitch, Kaelen reads the margin ("She was the fuse."), eight bolts in fifty-one seconds, and nobody stopped him');
+    check(hold.lock, '"You\'ll want to hold onto something." The lock threw; "LYRA! SING IT DOWN!"');
 
-    // ---- the falling fifth, with her; then four Golems, two of them stopped by "Enough."
+    // ---- the falling fifth was sung in her boots; then four Golems, two of them stopped by "Enough."
     const fifth = await page.evaluate(async () => {
       const out = {}, f = G.flags;
-      REEDS.forceManual = true; T.last().c[0].f(); await new Promise((r) => setTimeout(r, 60));
-      const s = REEDS.session; out.session = !!s && s.title === 'Sing it down' && s.duration === 9;
-      if (s) { for (let i = 0; i < 220; i++) { s.pitch = s.centsAt(Math.max(0, s.t)); s.step(0.05); } if (!s.done) s.finish(false); }
-      await new Promise((r) => setTimeout(r, 120)); REEDS.forceManual = false;
-      out.score = f.r43_fifth; const d = T.last(); out.good = !!d && /Sing it down/.test(d.t) && /The Root lets go of the question/.test(d.b) && /Badly\. Stumbling\. From the beginning/.test(d.b);
-      d.c[0].f(); const g = T.last(); out.golemsCard = /The Golems/.test(g.t) && /kept four at the casing/.test(g.b) && /Two stand at the rail/.test(g.b); g.c[0].f();
+      out.score = f.r43_fifth; const g = T.last(); out.golemsCard = /The Golems/.test(g.t) && /kept four at the casing/.test(g.b) && /Two stand at the rail/.test(g.b); g.c[0].f();
       const golems = G.ents.filter((e) => e.kind === 'enemy' && e.type === 'golem' && !e.dead);
       const V = RITE43.V, near = golems.filter((e) => Math.hypot(e.x - V.cx, e.y - V.cy) < 7);
       out.four = near.length === 4 && near.filter((e) => e.state === 'chase').length === 2 && near.filter((e) => e.passive || e.state === 'passive').length === 2;
       out.hold = G.boreHold === 75 && G.boreGolems === 2 && G.journal.some((j) => /Two are coming; two stand at the rail/.test(j.text));
       const boiler = golems.find((e) => Math.hypot(e.x - V.cx, e.y - V.cy) >= 7); out.boilerIdle = !!boiler && boiler.state === 'idle';
-      // the two that came fall; the Factor says enough
       for (const e of near) if (e.state === 'chase') { e.hp = 0; e.dead = true; if (e.onDeath) e.onDeath(); }
       out.stage6 = f.r43 === 6 && G.boreHold === 0;
       const e = T.last(); out.enough = /"Enough\."/.test(e.t) && /knee-joint/.test(e.b) && /drinks/.test(e.b) && /purge alarm goes\. Three notes/.test(e.b) && /that is what a stranger could do/.test(e.b);
@@ -199,7 +197,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       t.c[0].f(); out.count = RITE43.R.count === 60 && T.heard(/Twelve men on the pumps\. The cage holds eight/);
       return out;
     });
-    check(fifth.session && fifth.score >= 0.8 && fifth.good, 'SING IT DOWN is a Hold the Pitch on the falling fifth (174 to 116, nine seconds); followed, the Root lets go and the lullaby restarts badly');
+    check(fifth.score === 1, 'SING IT DOWN: the falling fifth was hers, in her boots, and the Root let go');
     check(fifth.golemsCard && fifth.four && fifth.hold && fifth.boilerIdle, 'the Factor turns all four: two come, two stand at the rail; the boiler-room Golem is not at the casing');
     check(fifth.stage6 && fifth.enough && fifth.stopped, 'when the two fall: Kaelen kneed one and drank the other; "Enough." stops the other two where they stand; the purge alarm');
     check(fifth.tube && fifth.count, 'the speaking-tube as the book has it ("Da." … "Forty-one. Forty."; no "For Oakhaven"); Lyra: "The pumps."; sixty seconds');
@@ -220,7 +218,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       out.taken = f.r43_taken === 4 && [8, 9, 10, 11].every((i) => T.ent('pump' + i).hidden) && T.heard(/Lyra takes a man off the handles by the wrist/);
       out.cage = f.r43_cage === true && T.heard(/The cage goes up: four of them, with Tobiah/) && T.ent('tobiah').hidden && T.ent('sis0').hidden;
       out.crane = !T.ent('crane') && T.heard(/Crane comes down the ladder three rungs at a time/);
-      out.hpSteady = G.player.hp === hp0;   // the Narrow's stillness never bites during the sixty seconds
+      out.hpSteady = G.player.hp === hp0; out.hp = [hp0, G.player.hp, G.player.hpMax];   // the Narrow's stillness never bites during the sixty seconds
       T.at(V.cx + 1, V.cy + 1); T.step(400, 0.1);
       out.pour = f.r43 === 7 && f.greening === true && f.bore_broken === true && G.escapeTimer > 240 && G.escapeTimer <= 300;
       out.caught = G.player.hp < hp0 && G.player.hp >= 1;
@@ -231,12 +229,14 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       out.cleared = !G.ents.some((e) => e._r43 && /^(pump|guard|golem|vosk|tobiah|sis)/.test(e._r43));
       return out;
     });
+    if (process.env.DEBUG) console.log('count', JSON.stringify(count));
     check(count.start && count.lost && count.name1 && count.again, 'a hand on a wrist: stepping away loses him; held for a breath he gives a name, into the ledger; asked again he only repeats it');
     check(count.ring && count.three && count.t > 0, 'the man with the ring and the scar is Hale B.; three names bought with the seconds');
     check(count.aldric && count.taken && count.cage && count.crane && count.hpSteady, 'Aldric counts; Lyra takes four by the wrist; the cage goes up once with Tobiah and the sisters; Crane comes down burning; the stillness never bites');
     check(count.pour && count.caught && count.card && count.journal && count.left && count.oak && count.cleared, 'forty thousand gallons: the Greening as game.js has it (flags, the escape clock, Oakhaven rebuilt); caught on the platform costs health; the eight left are named; the room is cleared');
 
-    // ---- a second traveller: seen at the needle, lenses lost at the drum, no names; nothing fails
+    // ---- a second traveller (Phase 125b, taught): a slip at the needle is grey and the beat again, and changes nothing;
+    // if the Hold runs out before the Golems fall, "Enough." comes just the same; going straight for the ladder, no names
     const soft = await page.evaluate(async () => {
       const out = {}, f = G.flags;
       for (const k of Object.keys(f)) if (/^r43|^rite_|^bore_|^greening$|^lyra_voice_worse$|^church_come$|^rooke_drops$/.test(k)) delete f[k];
@@ -244,36 +244,26 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       RITE43.begin(); const ly = () => T.ent('lyra');
       let n = 0; while (f.r43 === 1 && n < 900) { T.at(ly().x + 0.3, ly().y + 1.0); T.step(1, 0.1); n++; }
       out.arrive2 = /counted 17 voices/.test(T.last().b) && /kept yours in your chest/.test(T.last().b);
-      T.last().c[0].f(); T.last().c[0].f(); T.last().c[0].f(); T.last().c[0].f();
-      const V = RITE43.V; T.at(V.stool[0] + 2, V.stool[1] + 2); n = 0; while (f.r43 === 3 && n < 300 && !/An Echo/.test((T.last() || {}).t || '')) { T.step(1, 0.1); n++; }
-      const e1 = T.last(); out.seen = /An Echo/.test(e1.t) && /The Inquisitor sees/.test(e1.b) && /needle is still in Kaelen's fingers/.test(e1.b) && f.r43 === 3 && !f.lyra_voice_worse && document.querySelector('canvas').style.filter.includes('grayscale');
-      e1.c[0].f(); out.again = f.r43 === 3 && RITE43.R.needle > 11 && RITE43.R.seen === 0 && !document.querySelector('canvas').style.filter;
-      n = 0; while (f.r43 === 3 && n < 300) { const c = T.ent('crane'); T.at((c.x + V.kaelenStool[0]) / 2, (c.y + V.kaelenStool[1]) / 2); T.step(1, 0.1); n++; }
-      out.canon = /Am\. Fortunate\./.test(T.last().b) && /Not a hair off/.test(T.last().b) && f.r43 === 4;
-      T.last().c[0].f(); T.last().c[0].f();
-      T.at(V.cx, V.cy + 3); window.__msgs.length = 0; n = 0; while (f.r43 === 4 && n < 1200 && !/An Echo/.test((T.last() || {}).t || '')) { T.step(1, 0.1); n++; }
-      const e2 = T.last(); out.lenses = /An Echo/.test(e2.t) && /step away from the drum/.test(e2.b) && /still has eight bolts/.test(e2.b) && T.heard(/lenses drift from the stool toward the drum/) && !T.heard(/What are you doing at that plate/) && f.r43 === 4;
-      e2.c[0].f(); out.holdAgain = f.r43 === 4 && RITE43.R.bolt === 0 && RITE43.R.watched === 0;
-      n = 0; while (f.r43 === 4 && n < 1200) { G.murmurT = 4; T.at(V.vosk[0] - 1.5, V.vosk[1] + 1.0); T.step(1, 0.1); n++; }
-      REEDS.forceManual = true; T.last().c[0].f(); await new Promise((r) => setTimeout(r, 60));
-      const s = REEDS.session; out.narrower = !!s && s.width >= 100; if (s) s.finish(true);
-      await new Promise((r) => setTimeout(r, 120)); REEDS.forceManual = false;
-      out.poor = f.r43_fifth === 0 && /she does not need you to/.test(T.last().b) && /The Root lets go of the question/.test(T.last().b);
-      T.last().c[0].f(); T.last().c[0].f();
-      // the Hold timer runs out instead of the Golems falling: the Factor's "Enough" comes just the same (finishBore routed here)
+      T.last().c[0].f(); T.last().c[0].f(); T.last().c[0].f(); T.last().c[0].f(); T.last().c[0].f();
+      n = 0; while (BOOTS125.S.beat !== 'pinch' && n < 400) { T.step(1, 0.1); n++; }
+      BOOTS125.input('use', true); T.step(30, 0.1);
+      const e1 = T.last(); out.seen = /An Echo/.test(e1.t) && /slow would look wrong/.test(e1.b) && f.r43 === 3 && document.querySelector('canvas').style.filter.includes('grayscale');
+      BOOTS125.input('use', false); e1.c[0].f(); out.again = f.r43 === 3 && BOOTS125.S.beat === 'pinch' && !document.querySelector('canvas').style.filter;
+      await T.boots();
+      out.canon = T.heard(/Am\. Fortunate\./) && f.r43 === 4;
+      T.last().c[0].f(); await T.boots(); T.last().c[0].f();
       G.boreHold = 0.05; T.step(3, 0.05); out.timerEnough = f.r43 === 6 && /"Enough\."/.test(T.last().t) && !/stranger could do/.test(T.last().b);
       T.last().c[0].f(); T.last().c[0].f();
-      T.at(V.cx + 6.5, V.cy + 3); T.step(650, 0.1);
+      const V = RITE43.V; T.at(V.cx + 6.5, V.cy + 3); T.step(650, 0.1);
       out.noNames = f.r43 === 7 && !f.r43_names && G.journal.some((j) => /I went for the ladder\. Eight men were left pumping/.test(j.text)) && !/still on the platform/.test(T.last().b);
       return out;
     });
     if (process.env.DEBUG) console.log('soft', JSON.stringify(soft));
-    check(soft.arrive2 && soft.seen && soft.again && soft.canon, 'a traveller who stands aside: the Inquisitor seeing is an Echo, shown grey, and the needle again; the book\'s needle goes through skin and "I. Am. Fortunate." holds');
-    check(soft.lenses && soft.holdAgain && soft.narrower && soft.poor, 'silent at the drum: the lenses settling on the plate is an Echo and the Hold again (nobody stops him in the book); her voice is never torn; a poor fifth still lets the Root go');
+    check(soft.arrive2 && soft.seen && soft.again && soft.canon, 'a slip at the needle is an Echo, shown grey, and the beat again; the book\'s needle goes through skin and "I. Am. Fortunate." holds');
     check(soft.timerEnough && soft.noNames, 'if the Hold runs out before the Golems fall, "Enough." comes just the same; going straight for the ladder: no names, eight left');
 
     // ---- saves mid-Rite: the stage and the staging survive a restore
-    const saved = await page.evaluate(() => {
+    const saved = await page.evaluate(async () => {
       const out = {}, f = G.flags;
       for (const k of Object.keys(f)) if (/^r43|^rite_|^bore_|^greening$|^lyra_voice_worse$/.test(k)) delete f[k];
       f.coil_done = f.rite_ready = f.church_come = true; G.escapeTimer = 0; G.maps.oakhaven = buildOakhaven(false);
@@ -282,8 +272,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       T.last().c[0].f(); T.last().c[0].f(); T.last().c[0].f(); T.last().c[0].f();
       T.last && (() => {})();
       // through the needle to the Hold, then save and restore
-      const V = RITE43.V; n = 0; while (f.r43 === 3 && n < 300) { const c = T.ent('crane'); T.at((c.x + V.kaelenStool[0]) / 2, (c.y + V.kaelenStool[1]) / 2); T.step(1, 0.1); n++; }
-      T.last().c[0].f(); T.last().c[0].f();
+      const V = RITE43.V; T.last().c[0].f(); await T.boots();   // (Phase 125b, taught) through the needle in Kaelen's boots to the Hold card
       const snap = JSON.parse(JSON.stringify(snapshotGame())); out.snapStage = snap.flags.r43 === 4;
       out.transientOut = !(snap.maps.rootvault.extra || []).some((e) => e && e.id === 'kaelen');
       restoreGame(snap); G.state = 'play'; T.step(2, 0.05);
@@ -298,19 +287,19 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       const out = {}, heard = new Set(window.__vo), wait = (ms) => new Promise((r) => setTimeout(r, ms));
       const all = Object.values(RITE43.VO).flat().concat(RITE43.LEFT.map((n) => 'pumpman.rite.name.' + RITE43.slug(n)));
       out.missing = all.filter((id) => !VOICE_ACT.LINES[id]);
-      out.unheard = ['tobiah.rite.honour', 'sister.rite.daughter', 'ignatius.rite.rubric', 'ignatius.rite.closer', 'ignatius.rite.blood', 'ignatius.rite.notch', 'tobiah.rite.span',
+      out.unheard = ['tobiah.rite.honour', 'sister.rite.daughter', 'ignatius.rite.rubric', 'ignatius.rite.closer', 'ignatius.rite.blood', 'tobiah.rite.span',   // (Phase 125b: no ignatius.rite.notch; Crane never sees)
         'tobiah.rite.call1', 'tobiah.rite.call2', 'vosk.rite.stepaway', 'tobiah.rite.whatsthat', 'vosk.rite.enough', 'aldric_tube.rite.seal',
         'aldric_tube.rite.c41', 'aldric_tube.rite.c30', 'aldric_tube.rite.c20', 'aldric_tube.rite.c10', 'aldric_tube.rite.c5', 'aldric_tube.rite.c2', 'kaelen.rite.up',
         'pumpman.rite.name.hale-b'].filter((id) => !heard.has(id));
       out.names = [...heard].filter((id) => id.startsWith('pumpman.rite.name.')).length;
-      window.__vo.length = 0; RITE43.seq(RITE43.VO.needleGood); await wait(1700); out.order = window.__vo.join(',');
+      window.__vo.length = 0; RITE43.seq(RITE43.VO.needleGood); await wait(2200); out.order = window.__vo.join(',');
       window.__vo.length = 0; RITE43.seq(RITE43.VO.tube); await wait(100); RITE43.hush(); await wait(900); out.hushed = window.__vo.length;
       const m = VOICES.mode; VOICES.setMode('off'); window.__vo.length = 0; RITE43.seq(RITE43.VO.frame); out.off = window.__vo.length; VOICES.setMode(m);
       out.fortunate = (VOICE_ACT.LINES['lyra_fortunate.rite.fortunate'] || {}).d || 0;
       return out;
     });
     check(vo.missing.length === 0 && vo.unheard.length === 0 && vo.names >= 3, 'the Rite is voiced: every card and spoken message plays its recorded lines (' + (vo.missing.concat(vo.unheard).slice(0, 3).join(', ') || 'all heard') + '); the pump-men say their names');
-    check(vo.order === 'ignatius.rite.blood,ignatius.rite.speak,lyra_fortunate.rite.fortunate,ignatius.rite.sheis' && vo.fortunate > 3, '"Speak, daughter." "I. Am. Fortunate." (three words held apart) "She is." in the book\'s order');
+    check(vo.order === 'ignatius.rite.closer,ignatius.rite.blood,ignatius.rite.speak,lyra_fortunate.rite.fortunate,ignatius.rite.sheis' && vo.fortunate > 3, '"Speak, daughter." "I. Am. Fortunate." (three words held apart) "She is." in the book\'s order');   // (Phase 125b) the fallback card now opens with "Closer, Engineer" (MS 3074)
     check(vo.hushed === 1 && vo.off === 0, 'a choice hushes the lines still to come; with the Voices off nothing plays');
 
     // ---- French for every line
@@ -319,7 +308,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     const pairs = new Map(tsv.map((r) => [r[0], r[1]]));
     const texts = await page.evaluate(() => RITE43.TEXTS.slice());
     const noFr = texts.filter((t) => !pairs.has(t) || !(fr.s[hash(norm(t))] || fr.p.some((p) => p[0] === norm(t))));
-    check(texts.length >= 150 && noFr.length === 0 && tsv.every((r) => r.length === 2), 'every registered string has a French pair in p43-rite.tsv and locales/story/fr.json (' + noFr.length + ' missing' + (noFr.length ? ': ' + noFr[0].slice(0, 60) : '') + ')');
+    check(texts.length >= 130 && noFr.length === 0   /* (Phase 125b) fewer: the eyeline and lens strings went */ && tsv.every((r) => r.length === 2), 'every registered string has a French pair in p43-rite.tsv and locales/story/fr.json (' + noFr.length + ' missing' + (noFr.length ? ': ' + noFr[0].slice(0, 60) : '') + ')');
     check(!tsv.some((r) => /\b(Le Hush|les Hollows|Cantor\b|the Hedge|the Narrow|Hearthday|Greening)\b/.test(r[1])), 'the French follows the glossary (le Silence, les Creux, Chantre, la Haie, Âtredi, le Verdissement)');
 
     check(errors.length === 0, 'no page errors (' + errors.slice(0, 3).join(' | ') + ')');
@@ -330,4 +319,3 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
   process.exit(fails ? 1 : 0);
 })();
 
-function RITE43_SEEN_LIMIT(o) { return 4; }

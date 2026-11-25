@@ -155,7 +155,7 @@ const BOOTS125 = (function () {
   C('s_vane', 'Vane sat on a crate in his own hold with an empty bottle in his hand and looked at a woman with a broken nose in the lantern-light.', [4548]);
   C('s_goon', '"Go on, then," he said.', [4550], ['vane.manifest.goon']);
   C('s_ledger', 'The Bound Ledger came round in front of her and opened itself, and she did not look at it.', [4554]);
-  C('s_corwin', '"Entry thirty-nine thousand, eight hundred and two," said Sable. "Corwin Aye. Fifty-three. Cooper of the Ashlane, and a good one; there is a barrel in the Moot-house cellar with his mark burned into the head and it has not leaked in nineteen years. Taken on the fourth day of the harvest, in the ninth hour. He was pressed in the second room because the first room had a queue. What he said at the door was: <i>will I be able to keep my hands?</i>" She paused exactly long enough. "He carried in the second consignment, Captain. Your sixteen crates. He was in your hold for eleven days."', [4556], ['sable.manifest.corwin', 'sable.manifest.corwin2', 'sable.manifest.corwin3']);
+  C('s_corwin', '"Entry thirty-nine thousand, eight hundred and two," said Sable. "Corwin Aye. Fifty-three. Cooper of the Ashlane, and a good one; there is a barrel in the Moot-house cellar with his mark burned into the head and it has not leaked in nineteen years. Taken on the fourth day of the harvest, in the ninth hour. He was pressed in the second room because the first room had a queue. What he said at the door was: <i>will I be able to keep my hands?</i>" She paused exactly long enough. "He carried in the second consignment, Captain. Your sixteen crates. He was in your hold for eleven days."', [4556], ['sable.manifest.corwin', 'sable.manifest.corwin1b', 'sable.manifest.corwin2', 'sable.manifest.corwin3']);
   C('s_still', 'Vane did not move.', [4558]);
   C('s_mirren', '"Entry forty thousand, nine hundred and ninety-one. Mirren Salk. Twenty-six. Wheelwright\'s widow, of the Bell Yard, four months a widow when the drills came. Taken on the ninth day. She was carrying her husband\'s coat over her arm and she asked whether she might keep it, and the clerk said that she might, and it was taken off her at the door of the pressing room and put in a bin with eleven hundred other coats." Sable\'s voice stayed perfectly flat. "She is in the stack behind you. Fourth consignment."', [4560], ['sable.manifest.mirren', 'sable.manifest.mirren2', 'sable.manifest.mirren2b', 'sable.manifest.mirren3']);
   C('s_lantern', 'The lantern hissed.', [4562]);
@@ -437,6 +437,7 @@ const BOOTS125 = (function () {
     S.input.use = false; S.input.song = false;
     if (!chained || !S.home) { S.weapon = 'hands'; S.home = d.home ? d.home() : { x: Engine.cam.x, y: Engine.cam.y, dir: Engine.cam.dir, pitch: Engine.cam.pitch || 0 }; }
     F().p125b_at = MOMENTS[id];
+    if (!chained || S.hp == null) S.hp = G.player.hp;
     if (d.stage) try { d.stage(); } catch (e) { warnOnce('stage', e); }
     S.hidden = (d.hide ? d.hide() : []).filter(Boolean); for (const e of S.hidden) e.hidden = true;
     const p = d.place(); Engine.cam.x = p.x; Engine.cam.y = p.y; Engine.cam.dir = p.dir; Engine.cam.pitch = 242.42 * Math.tan((p.pitch || 0) * Math.PI / 180); S.anchor = { x: p.x, y: p.y };
@@ -547,7 +548,7 @@ const BOOTS125 = (function () {
     S.hidden = [];
     if (S.home && !quiet) { Engine.cam.x = S.home.x; Engine.cam.y = S.home.y; Engine.cam.dir = S.home.dir; Engine.cam.pitch = S.home.pitch || 0; }
     const was = S.at;
-    S.at = null; S.def = null; S.beat = null; S.bi = -1; S.card = false; S.wait = false; S.weapon = null; S.input.use = false; S.input.song = false;
+    S.hp = null; S.at = null; S.def = null; S.beat = null; S.bi = -1; S.card = false; S.wait = false; S.weapon = null; S.input.use = false; S.input.song = false;
     if (hasG()) F().p125b_at = 0;
     if (!quiet) S.home = null;
     try { if (typeof BODY21 === 'object' && BODY21.invalidate) BODY21.invalidate(); } catch (e) { /* none */ }
@@ -562,6 +563,8 @@ const BOOTS125 = (function () {
     if (!S.at || !hasG() || S.card || S.wait || S.bi < 0 || G.state !== 'play') return;
     const b = defBeats()[S.bi]; if (!b) return;
     S.t += dt; S.clock += dt;
+    // damage to the player is off in a hero's boots (design 5.2): the Narrow's stillness does not bite the hero standing still
+    try { G.stillT = 0; const p = G.player; if (S.hp != null && p.hp < S.hp) p.hp = S.hp; } catch (e) { /* none */ }
     const auto = !!S.auto[b.k];
     if (b.timed) for (const [at, k] of b.timed) if (S.t >= at && !S.x['tm' + at]) { S.x['tm' + at] = true; caption(k); }
     if (!auto && b.still && dist(Engine.cam.x, Engine.cam.y, S.anchor.x, S.anchor.y) > 0.15) { slip(b.still); return; }
