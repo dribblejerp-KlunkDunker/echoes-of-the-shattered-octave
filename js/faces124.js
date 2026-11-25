@@ -239,6 +239,12 @@ const FACES124 = (function () {
     orrin: 'own_orrin',               // Orrin Pale, sexton of Oakhaven: one man under three ids, who wear two figures,
     p29_sexton: 'own_orrin',          //   so three rows and one picture (js/data.js, js/thin29.js, js/heist16.js)
     p16h_orrin: 'own_orrin',
+    // Phase 124e, the next five (the owner's Hugging Face again; prompts and seeds in tools/faces/MANIFEST.tsv)
+    p11_dicer: 'own_garrow',          // Garrow Finch, quarry hauler, at the dice (js/tavern11.js)
+    p15_dealer: 'own_nessa',          // Nessa Tolliver, ferrywoman, who deals Rounds (js/hearth15.js)
+    p29_agnes: 'own_agnes',           // Agnes Tull, the baker's wife, who "wept with exhaustion into the flour" (Book One, MS l. 308)
+    p29_ambrose: 'own_ambrose',       // Ambrose Vettle, chandler (js/thin29.js)
+    p29_sim: 'own_sim',               // Sim Fletch, tannery hand, wool in one ear (js/thin29.js)
   };
   const OWN_FLAG = 'ownFaces', BORROWED = ['townsman', 'townswoman'];
   try {
