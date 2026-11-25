@@ -352,7 +352,16 @@ const GEARLOOK21 = (() => {
     const off = offhandId(p);
     return [classId(p), faceOf(p), p.glassed ? 1 : 0, armorId(p, 'head'), armorId(p, 'body'), armorId(p, 'hands'), armorId(p, 'feet'), armorId(p, 'shield'), weaponId(p), off, twoHandedId(weaponId(p)) ? 2 : 1, armorId(p, 'cape')].join('|');
   }
+  // (Phase 125b) the LOOK while the player is in a hero's boots (js/boots125.js sets the hook; the API below is frozen, so
+  // it cannot be wrapped from outside): the hook gets the traveller's own look and returns the hero's, or null for theirs
+  let lookHook = null;
+  function setLookHook(fn) { lookHook = typeof fn === 'function' ? fn : null; }
   function of(p) {
+    const own = ofOwn(p);
+    if (lookHook) { try { const h = lookHook(own, playerOf(p)); if (h) return h; } catch (e) { lookHook = null; } }
+    return own;
+  }
+  function ofOwn(p) {
     p = playerOf(p);
     const fc = FACES[faceOf(p)], cid = classId(p), call = CALLINGS[cid];
     const slot = (s) => { const id = armorId(p, s); return id ? ARM[id] : null; };
@@ -383,6 +392,6 @@ const GEARLOOK21 = (() => {
   }
   function all() { return { armor: Object.keys(ARM), weapons: Object.keys(WEP) }; }
 
-  return F({ VERSION: 1, ARMOR: ARM, WEAPONS: WEP, BARE, FACES, CALLINGS, CLASS_ORDER, GLASS, MATERIALS, of, key, ramp, css, ghostLook, all, mul });
+  return F({ VERSION: 1, ARMOR: ARM, WEAPONS: WEP, BARE, FACES, CALLINGS, CLASS_ORDER, GLASS, MATERIALS, of, ofOwn, setLookHook, key, ramp, css, ghostLook, all, mul, C, F });
 })();
 if (typeof window !== 'undefined') window.GEARLOOK21 = GEARLOOK21;

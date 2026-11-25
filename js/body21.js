@@ -1266,6 +1266,8 @@ const BODY21 = (() => {
   }
 
   const LIFT = 30;
+  let EXTRA = null;
+  function setExtra(fn) { EXTRA = typeof fn === 'function' ? fn : null; }
   const _drawHUD = drawHUD;
   drawHUD = function () {
     if (!on() || !G.player || typeof Engine === 'undefined' || !Engine.images) return _drawHUD.apply(this, arguments);
@@ -1304,7 +1306,11 @@ const BODY21 = (() => {
       Engine.cam.bob = Math.round(want * 2) / 2 / 1.5 - sway;
     }
     let r;
-    try { r = _drawHUD.apply(this, arguments); } finally {
+    try {
+      r = _drawHUD.apply(this, arguments);
+      // (Phase 125b) a hand pose of js/boots125.js, drawn while this frame's pictures are still being recorded
+      if (EXTRA && look) { try { EXTRA(ctx, look, !!REC); } catch (e) { warnOnce('extra', e); } }
+    } finally {
       Engine.cam.bob = bob0;
       try { if (had) ctx.drawImage = prev; else delete ctx.drawImage; } catch (e) { /* restored below */ }
       for (const [img, orig] of swaps) Engine.images[img] = orig;
@@ -1791,7 +1797,7 @@ void main() {
   // (Phase 125b) a map change and a load make every record before them stale
   if (typeof loadMap === 'function') { const _lm = loadMap; loadMap = function () { invalidate(); return _lm.apply(this, arguments); }; }
   if (typeof restoreGame === 'function') { const _rg = restoreGame; restoreGame = function () { invalidate(); return _rg.apply(this, arguments); }; }
-  return { invalidate, redrawNeeded, sculptLight, sculptAnim, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
+  return { invalidate, redrawNeeded, setExtra, sculptLight, sculptAnim, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
     R3B, FX3, LB, lbBuild, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;

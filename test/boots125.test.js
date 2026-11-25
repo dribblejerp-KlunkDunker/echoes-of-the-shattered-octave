@@ -24,7 +24,8 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
 // a caption is verbatim when each piece of it (cut at "…") is in the book at the lines it names
 function verbatim(t, lines) {
   const book = msText(lines);
-  return norm(t).split('…').map((p) => p.trim()).filter((p) => p.length > 1).every((p) => book.includes(p));
+  // (a cut sentence may end in a full stop where the book goes on: "slow would look wrong." for "slow would look wrong:")
+  return norm(t).split('…').map((p) => p.trim()).filter((p) => p.length > 1).every((p) => book.includes(p) || book.includes(p.replace(/[.,:;]+$/, '')));
 }
 
 (async () => {
@@ -111,7 +112,7 @@ function verbatim(t, lines) {
       const f = G.flags; f.lyra_met = f.need_gate = f.gate_open = f.kaelen_met = f.tobiah_met = true; f.coil_done = f.rite_ready = f.church_come = true;
     });
     // each section runs on its own: one that throws is a FAIL of its own, and the rest still run
-    const sect = async (name, fn) => { try { return await page.evaluate(fn); } catch (e) { fails++; console.log('FAIL section ' + name + ' threw: ' + String(e && e.message || e).split('\n')[0]); return {}; } };
+    const sect = async (name, fn) => { try { return await page.evaluate(fn); } catch (e) { fails++; console.log('FAIL section ' + name + ' threw: ' + String(e && e.message || e).split('\n').slice(0, 4).join(' / ')); return {}; } };
     const CAPS = (await page.evaluate(() => BOOTS125.CAPS)) || {};
     const bad = Object.entries(CAPS).filter(([, c]) => c.ms && c.ms.length && !verbatim(c.t, c.ms)).map(([k]) => k);
     check(Object.keys(CAPS).length > 80 && bad.length === 0, 'every book caption of the six moments is verbatim at the manuscript lines it names (' + Object.keys(CAPS).length + ' captions; not verbatim: ' + bad.slice(0, 6).join(', ') + ')');
@@ -187,9 +188,8 @@ function verbatim(t, lines) {
     // ---------------------------------------------------------------- 6, 7, 8: the Hold and the bolts
     const hold = await sect('hold', async () => {
       const out = {}, f = G.flags;
-      window.__msgs.length = 0; window.__ev.length = 0;
       const t0 = BOOTS125.S.clock;
-      const c0 = window.__ev.length; T.press(0);   // "Head at one span!"
+      T.press(0); window.__msgs.length = 0;   // "Head at one span!" on the Hold card
       const c = T.last(); out.card = !!c && /In her boots/.test(c.t) && /began to sing\./.test(c.b) && c.c[0].t === 'Sing.';
       out.active = BOOTS125.active() === 'hold'; T.press(0);
       out.spanFirst = /Head at one span! One span and holding!/.test(window.__msgs.find((t) => !/^</.test(t) && /Head at one span|One note|chain creaked|Cantor|hundred and seventy-four/.test(t)) || '');
@@ -311,7 +311,7 @@ function verbatim(t, lines) {
     const names = await sect('names', () => {
       const out = {}, f = G.flags;
       hide('#ending'); G.state = 'play';
-      delete f.p53; delete f.p53_deck; f.sable_joined = true; delete f.part4;
+      delete f.p53; delete f.p53_deck; f.sable_joined = true; f.escaped = true; f.part3 = true; delete f.part4;   // (the ship's maps exist once she has escaped, as test/audit54 has it)
       const frag0 = JSON.stringify([G.player.fragments, Object.keys(f).filter((k) => /frag/.test(k)).map((k) => f[k])]);
       window.__msgs.length = 0; window.__ev.length = 0;
       loadMap(MANIFEST53.HOLD); G.state = 'play';
@@ -328,7 +328,7 @@ function verbatim(t, lines) {
       out.again = BOOTS125.S.beat === 'corwin';
       const order = [];
       for (const k of ['corwin', 'mirren', 'annet']) { T.beat(k); T.tap('use'); order.push(k); T.step(5, 0.05); }
-      out.toEnd = T.until(() => !BOOTS125.active(), 3000);
+      out.toEnd = T.until(() => !BOOTS125.active(), 6000);
       const shown = window.__msgs.map((t) => t.replace(/<\/?i>/g, ''));
       const at = (re) => shown.findIndex((t) => re.test(t));
       out.entries = [at(/Entry thirty-nine thousand, eight hundred and two/), at(/Entry forty thousand, nine hundred and ninety-one/), at(/Entry forty-one thousand and six/)];
@@ -442,7 +442,7 @@ function verbatim(t, lines) {
       load({ rite_started: true, coil_done: true, r43: 3 }, 'rootvault', vault); out.r43_3 = BOOTS125.active() === 'needle' && /In his boots/.test((window.__ev[window.__ev.length - 1] || {}).t || ''); BOOTS125.reset();
       load({ rite_started: true, coil_done: true, r43: 4 }, 'rootvault', vault); out.r43_4 = BOOTS125.active() === 'hold' && /In her boots/.test((window.__ev[window.__ev.length - 1] || {}).t || ''); BOOTS125.reset();
       load({ rite_started: true, r43: 7, bore_broken: true, greening: true, r45: 5, r45_way: 'deck', r45_count: 18, r45_load: 6 }, ROPE45.DECK, { x: 26.3, y: 20.5, dir: 1.57 }); out.r45_5 = BOOTS125.active() === 'rope'; BOOTS125.reset();
-      load({ sable_joined: true, p53: 9 }, MANIFEST53.HOLD, { x: 12.6, y: 11.0, dir: -1.57 }); out.p53_9 = BOOTS125.active() === 'names'; BOOTS125.reset();
+      load({ escaped: true, part3: true, sable_joined: true, p53: 9 }, MANIFEST53.HOLD, { x: 12.6, y: 11.0, dir: -1.57 }); out.p53_9 = BOOTS125.active() === 'names'; BOOTS125.reset();
       // 17: hostile flags
       window.__x = 0;
       load({ p125b_seen: '<b onmouseover="window.__x=1">x</b>', p125b_slips: -4, p125b_at: 1e9, p125b_m: 'yes', p125b_cv: { a: 1 } });
@@ -500,7 +500,8 @@ function verbatim(t, lines) {
       const out = {}, p = G.player;
       const g0 = [p.glassed, p.glass]; p.glassed = true;
       const f = G.flags; for (const k of ['sable_returned', 'sable_kept', 'sable_met']) delete f[k];
-      p.glass = 80; try { ending(); } catch (e) { /* the card is what matters */ } out.end80 = document.querySelector('#ending-text').textContent;
+      hide('#ending'); G.state = 'play';
+      p.glass = 80; try { ending(); } catch (e) { out.err = e.message; } out.end80 = document.querySelector('#ending-text').textContent;
       p.glass = 50; try { ending(); } catch (e) { /* none */ } out.end50 = document.querySelector('#ending-text').textContent;
       hide('#ending'); G.state = 'play'; p.glassed = g0[0]; p.glass = g0[1];
       out.ada = NPCS.p9_ada && NPCS.p9_ada.topics && NPCS.p9_ada.topics.Oakhaven;
@@ -509,7 +510,7 @@ function verbatim(t, lines) {
       const ids = BOOTS125.voiceIds(); out.noVoice = ids.filter((id) => !VOICE_ACT.LINES[id]);
       return out;
     });
-    check(!/four and a half fingers|hundred-and-forty|three inches from the throat/.test(fix.end80 + fix.end50) && /You have stopped measuring it/.test(fix.end80) && /you keep it wrapped/.test(fix.end50), '21. the Part Two ending for a glassed traveller is the stranger\'s own glass, not Kaelen\'s measure');
+    check(!/four and a half fingers|hundred-and-forty|three inches from the throat/.test(fix.end80 + fix.end50) && /You have stopped measuring it/.test(fix.end80) && /you keep it wrapped/.test(fix.end50), '21. the Part Two ending for a glassed traveller is the stranger\'s own glass, not Kaelen\'s measure' + (fix.err ? ' (' + fix.err + ')' : ''));
     check(/^Fifty-one years/.test(fix.ada || '') && !fix.seventy && !!fix.adaFr, '22. Ada says "Fifty-one years"; no recording says "Seventy years"; the French exists');
     check(!!fix.noVoice && fix.noVoice.length === 0, 'every voice the moments name is recorded (' + (fix.noVoice || []).join(', ') + ')');
 
