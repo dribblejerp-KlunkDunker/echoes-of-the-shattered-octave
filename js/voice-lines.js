@@ -4816,14 +4816,6 @@ const VOICE_LINES = {
 "t": "The hold! Hold the note! Daughter, hold the note!",
 "voiceOf": "ignatius"
 },
-"ignatius.rite.notch": {
-"d": 6.24,
-"kind": "narration",
-"speaker": "ignatius",
-"src": "voices/ignatius/ignatius.rite.notch.mp3",
-"t": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself.",
-"voiceOf": "ignatius"
-},
 "ignatius.rite.rubric": {
 "d": 12.72,
 "kind": "narration",
@@ -8575,6 +8567,22 @@ const VOICE_LINES = {
 "speaker": "lyra_ruined",
 "src": "voices/lyra_ruined/lyra_ruined.green.orla.mp3",
 "t": "Orla."
+},
+"lyra_ruined.ring.iknow": {
+"d": 1.01,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra_ruined.ring.iknow.mp3",
+"t": "I know.",
+"voiceOf": "lyra_ruined"
+},
+"lyra_ruined.ring.twovoice": {
+"d": 1.85,
+"kind": "narration",
+"speaker": "lyra_ruined",
+"src": "voices/lyra_ruined/lyra_ruined.ring.twovoice.mp3",
+"t": "I know it's a two-voice part.",
+"voiceOf": "lyra_ruined"
 },
 "lyra_ruined.rite.pumps": {
 "d": 1.01,
@@ -65201,13 +65209,13 @@ const VOICE_LINES = {
 "src": "voices/p9_ada/p9_ada.shared.whisper-grove.low.mp3",
 "t": "The marble city in the Spectral Woods. The Memory Anchor went silent in four-sixteen and seventy-four thousand people forgot themselves in a few days. They say the Hollows still walk the plazas, doing the last thing they did."
 },
-"p9_ada.t.6cd1da": {
+"p9_ada.t.632e5c": {
 "auto": true,
-"d": 4.8,
+"d": 5.86,
 "kind": "topic",
 "speaker": "p9_ada",
-"src": "voices/p9_ada/p9_ada.t.6cd1da.mp3",
-"t": "Seventy years in one parish. It was louder when I was a girl. Everything was."
+"src": "voices/p9_ada/p9_ada.t.632e5c.mp3",
+"t": "Fifty-one years, and nearly all of them in this parish. It was louder when I was a girl. Everything was."
 },
 "p9_ada.t.a14237": {
 "auto": true,
@@ -67251,6 +67259,126 @@ const VOICE_LINES = {
 "speaker": "sable",
 "src": "voices/sable/sable.hymn9.sung.mp3",
 "t": "Hold us in the little light \u2014 hold us in the little light until the morning comes\u2014"
+},
+"sable.manifest.annet": {
+"d": 13.32,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.annet.mp3",
+"t": "Entry forty-one thousand and six. Annet Sowerby. Six years old. Daughter of Hesper and Tam Sowerby of the Cloister road.",
+"voiceOf": "sable"
+},
+"sable.manifest.annet2": {
+"d": 11.66,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.annet2.mp3",
+"t": "Taken on the eleventh day, in the hour after noon, with the rest of the little ones from the Cloister of the Lost Choir,",
+"voiceOf": "sable"
+},
+"sable.manifest.annet2b": {
+"d": 12.5,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.annet2b.mp3",
+"t": "because the Office had a requisition for small clear voices and the Cloister had forty-one of them in a choir under one roof.",
+"voiceOf": "sable"
+},
+"sable.manifest.annet3": {
+"d": 7.58,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.annet3.mp3",
+"t": "She was third in the line. She would not let go of the hand of the boy in front of her,",
+"voiceOf": "sable"
+},
+"sable.manifest.annet3b": {
+"d": 13.08,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.annet3b.mp3",
+"t": "and rather than make a scene in front of forty children, the proctors took the two of them into the room together and pressed them in the same hour.",
+"voiceOf": "sable"
+},
+"sable.manifest.annet4": {
+"d": 19.13,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.annet4.mp3",
+"t": "I wrote both entries. Hers is legible. His is not, because my hand had begun to shake by then, and I have never been able to read the surname since, and there is no one left in this city to ask.",
+"voiceOf": "sable"
+},
+"sable.manifest.corwin": {
+"d": 7.56,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.corwin.mp3",
+"t": "Entry thirty-nine thousand, eight hundred and two. Corwin Aye. Fifty-three.",
+"voiceOf": "sable"
+},
+"sable.manifest.corwin1b": {
+"d": 15.02,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.corwin1b.mp3",
+"t": "Cooper of the Ashlane, and a good one; there is a barrel in the Moot-house cellar with his mark burned into the head and it has not leaked in nineteen years.",
+"voiceOf": "sable"
+},
+"sable.manifest.corwin2": {
+"d": 18.31,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.corwin2.mp3",
+"t": "Taken on the fourth day of the harvest, in the ninth hour. He was pressed in the second room because the first room had a queue. What he said at the door was: will I be able to keep my hands?",
+"voiceOf": "sable"
+},
+"sable.manifest.corwin3": {
+"d": 10.3,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.corwin3.mp3",
+"t": "He carried in the second consignment, Captain. Your sixteen crates. He was in your hold for eleven days.",
+"voiceOf": "sable"
+},
+"sable.manifest.iknow": {
+"d": 6.31,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.iknow.mp3",
+"t": "I know. Your engineer told me. It is why I came up the ladder.",
+"voiceOf": "sable"
+},
+"sable.manifest.mirren": {
+"d": 18.79,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.mirren.mp3",
+"t": "Entry forty thousand, nine hundred and ninety-one. Mirren Salk. Twenty-six. Wheelwright's widow, of the Bell Yard, four months a widow when the drills came. Taken on the ninth day.",
+"voiceOf": "sable"
+},
+"sable.manifest.mirren2": {
+"d": 7.82,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.mirren2.mp3",
+"t": "She was carrying her husband's coat over her arm and she asked whether she might keep it,",
+"voiceOf": "sable"
+},
+"sable.manifest.mirren2b": {
+"d": 12.53,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.mirren2b.mp3",
+"t": "and the clerk said that she might, and it was taken off her at the door of the pressing room and put in a bin with eleven hundred other coats.",
+"voiceOf": "sable"
+},
+"sable.manifest.mirren3": {
+"d": 4.56,
+"kind": "narration",
+"speaker": "sable",
+"src": "voices/sable/sable.manifest.mirren3.mp3",
+"t": "She is in the stack behind you. Fourth consignment.",
+"voiceOf": "sable"
 },
 "sable.shared.aether-glass.high": {
 "auto": true,
@@ -70903,6 +71031,20 @@ const VOICE_LINES = {
 "src": "voices/vane/vane.hold.fortyeight.mp3",
 "t": "Forty-eight."
 },
+"vane.manifest.goon": {
+"d": 0.94,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.manifest.goon.mp3",
+"t": "Go on, then."
+},
+"vane.manifest.third": {
+"d": 6.43,
+"kind": "narration",
+"speaker": "vane",
+"src": "voices/vane/vane.manifest.third.mp3",
+"t": "She's in the third crate. Second row, corner. She talks to a boy. He's seven. He's asleep against that crate right now."
+},
 "vane.rope.eight": {
 "d": 0.6,
 "kind": "narration",
@@ -71809,6 +71951,30 @@ const VOICE_LINES = {
 "src": "voices/wearer/wearer.green.tam.mp3",
 "t": "Tammy, there's a gap here. Bring the little ones first.",
 "voiceOf": "tam"
+},
+"wearer.ring.come": {
+"d": 9.91,
+"kind": "mimic",
+"speaker": "wearer",
+"src": "voices/wearer/wearer.ring.come.mp3",
+"t": "Come out of the lamps, lark. I can't come in there. Come out to me and I'll sing the rest with you. You can't do the close on your own, you know you can't, it's a two-voice part.",
+"voiceOf": "lyra"
+},
+"wearer.ring.lark": {
+"d": 3.05,
+"kind": "mimic",
+"speaker": "wearer",
+"src": "voices/wearer/wearer.ring.lark.mp3",
+"t": "Lark. Oh, lark. You never sang it for me.",
+"voiceOf": "tobin"
+},
+"wearer.ring.waited": {
+"d": 1.61,
+"kind": "mimic",
+"speaker": "wearer",
+"src": "voices/wearer/wearer.ring.waited.mp3",
+"t": "I waited.",
+"voiceOf": "tobin"
 },
 "wearer.t70.again": {
 "d": 1.75,

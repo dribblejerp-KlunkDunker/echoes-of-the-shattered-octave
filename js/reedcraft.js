@@ -284,6 +284,7 @@ const REEDS = (function () {
         linger: opts.manual === true || forceManual ? 0 : num(opts.linger, 0, 5000, 900), captionState: '', resolve, tone: null,
         title: clean(opts.title, 60) || 'Hold the pitch', hint: clean(opts.hint, 90), prevState: G.state,
         reduce: !!(typeof GFX !== 'undefined' && GFX.reduceMotion),
+        noScore: opts.noScore === true,   // (Phase 125b) in a hero's boots no number is printed: the band alone
       };
       s.centsAt = (t) => centsAt(pts, t);
       s.step = (dt) => step(s, dt);
@@ -404,7 +405,7 @@ const REEDS = (function () {
     };
     if (!aborted && s.linger > 0 && !quiet) {
       s.ended = true; s.skip = close;
-      if (s.capEl) s.capEl.textContent = 'Held ' + Math.round(result.score * 100) + '%.';
+      if (s.capEl && !s.noScore) s.capEl.textContent = 'Held ' + Math.round(result.score * 100) + '%.';
       draw(s);
       s.lingerTimer = setTimeout(close, s.linger);
     } else { s.ended = false; close(); }
@@ -460,7 +461,7 @@ const REEDS = (function () {
     c.fillStyle = 'rgba(232,217,181,.18)'; c.fillRect(L, 4, R - L, 3);
     c.fillStyle = '#d9a441'; c.fillRect(L, 4, (R - L) * Math.min(1, t / s.duration), 3);
     c.font = '15px "Alegreya SC", Georgia, serif'; c.fillStyle = '#e8d9b5'; c.textAlign = 'right';
-    c.fillText(s.t < 0 ? 'Listen…' : 'Held ' + Math.round(Math.min(1, s.held / s.duration) * 100) + '%', W - 10, H - 6);
+    if (s.t < 0 || !s.noScore) c.fillText(s.t < 0 ? 'Listen…' : 'Held ' + Math.round(Math.min(1, s.held / s.duration) * 100) + '%', W - 10, H - 6);
     c.textAlign = 'left';
   }
 

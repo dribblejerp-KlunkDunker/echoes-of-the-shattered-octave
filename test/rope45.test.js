@@ -118,37 +118,38 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     check(ei.kaelen && ei.three, 'too slow and Kaelen comes over the port rail and takes it out of the air (canon): "Get them up!" Three up; twenty-one; "Look at the trees, Captain"');
     check(ei.lyra && ei.last && ei.vo, 'Lyra comes up with the last four before the last (Lissa and Tobiah with her, so ch. 13 holds) and cannot make a sound; the last load is the dye-works woman, two carters, a screaming woman and the Governor; "Take her up."; the rope snags');
 
-    // ---- 5 · the count, held at ten: the Echo, then back at nine
+    // ---- 5 · the count (Phase 125b, taught: played in Vane's boots, js/boots125.js; holding the drum at ten and its Echo
+    // are gone, because nothing lets the line stay (MS 3772-3774); a cut that does not come by ten is the grey slip, back to nine)
     const count = await page.evaluate(async () => {
       const out = {}, f = G.flags;
-      window.__msgs.length = 0; T.first(); out.stage = ROPE45.stage() === 5 && T.heard(/drum's coming out of the deck/);
-      const ln = ROPE45.AT.line; T.at(ln[0] + 0.2, ln[1] - 2.2); Engine.cam.dir = Math.PI / 2;
-      let n = 0; while (n < 400 && !T.heard(/^Five\./)) { T.step(1, 0.05); n++; }
-      useDeco(T.ent('drum')); out.hold = f.r45_hold === true;
-      window.__ev.length = 0; n = 0; while (n < 400 && !T.heard(/^Ten\.$/)) { T.step(1, 0.05); n++; }
-      await new Promise((r) => setTimeout(r, 500));
+      window.__msgs.length = 0; T.first(); out.stage = ROPE45.stage() === 5 && BOOTS125.active() === 'rope'; T.first();
+      out.stage = out.stage && (() => { for (let n = 0; n < 200 && !T.heard(/drum's coming out of the deck/); n++) T.step(1, 0.05); return T.heard(/drum's coming out of the deck/); })();
+      let n = 0; while (n < 400 && BOOTS125.S.beat !== 'n5') { T.step(1, 0.05); n++; }
+      BOOTS125.input('use', true); T.step(1, 0.05); BOOTS125.input('use', false);
+      window.__ev.length = 0; n = 0; while (n < 400 && BOOTS125.S.beat !== 'n10') { T.step(1, 0.05); n++; }
+      T.step(60, 0.05);
       out.numbers = ['One.', 'Two.', 'Three.', 'Four. The deck-beam', 'Five.', 'Six.', 'Seven.', 'Eight.', 'Nine.', 'Ten.'].map((s) => T.idx(s)).every((i, k, a) => i >= 0 && (k === 0 || i > a[k - 1]));
-      out.wave = T.heard(/palm out, the way a man waves a cart on past a hole in the road/) && T.heard(/"Do it," says Kaelen/);
-      const e = T.last(); out.echo = !!e && /An Echo/.test(e.t) && /four hundred and eleven times/.test(e.b) && f.r45_echo && document.querySelector('canvas').style.filter.includes('grayscale');
-      e.c[0].f(); window.__ev.length = 0; n = 0; window.__msgs.length = 0;
-      while (n < 200 && !T.heard(/^Ten\.$/)) { T.step(1, 0.05); n++; }
-      await new Promise((r) => setTimeout(r, 500));
-      const a = T.last(); out.cut = !!a && /Like a cork/.test(a.t) && /Vane cuts the line/.test(a.b) && /Nobody coils it/.test(a.b) && ROPE45.stage() === 6;
-      out.saw = f.r45_saw === true && /You saw his hand go up/.test(a.b);
+      out.wave = T.heard(/palm out, the way a man waves a cart on past a hole in the road/) && T.heard(/"Do it," said Kaelen/);
+      const e = T.last(); out.echo = !!e && /An Echo/.test(e.t) && /"Do it," said Kaelen\./.test(e.b) && !f.r45_echo && document.querySelector('canvas').style.filter.includes('grayscale');
+      e.c[0].f(); out.nine = BOOTS125.S.beat === 'n9';
+      n = 0; while (n < 400 && BOOTS125.S.beat !== 'n10') { T.step(1, 0.05); n++; }
+      BOOTS125.input('use', true); T.step(1, 0.05); BOOTS125.input('use', false);
+      n = 0; while (n < 400 && !(T.last() && /Like a cork/.test(T.last().t))) { T.step(1, 0.05); n++; }
+      const a = T.last(); out.cut = !!a && /Like a cork/.test(a.t) && /She came up like a cork/.test(a.b) && /Nobody coiled it/.test(a.b) && ROPE45.stage() === 6 && T.heard(/^Vane cut the line\.$/);
       out.ledger = G.ledger.some((r) => r.name === 'Aldric Vance');
       out.rope = !T.ent('line') && G.ents.some((x) => x && x.sprite === 'p16k_rope' && !x.hidden && /cut rope hanging from the winch drum/.test(x.label));
-      out.vo = ['vane.rope.n1', 'vane.rope.n9', 'weaver.rope.echo'].every((id) => window.__vo.includes(id));
+      out.vo = ['vane.rope.n1', 'vane.rope.n9', 'vane.rope.n10'].every((id) => window.__vo.includes(id));   // (Kaelen's "Do it" is queued behind Vane's "Nine" and cut short by "Ten")
       a.c[0].f(); out.ending = G.state === 'ending' && ROPE45.stage() === 7 && G.flags.g44 === 6;
       const txt = document.querySelector('#ending-text').textContent;
-      out.endText = /You worked the winch drum with Mags/.test(txt) && /waved the cart on past a hole in the road/.test(txt) && /held on to the drum at ten/.test(txt) && !/The mooring mast is taken by a tree/.test(txt);
+      out.endText = /You worked the winch drum with Mags/.test(txt) && /waved the cart on past a hole in the road/.test(txt) && !/held on to the drum at ten/.test(txt) && !/The mooring mast is taken by a tree/.test(txt);
       out.journal = G.journal.some((j) => /Vane cut the line on ten/.test(j.text));
       return out;
     });
     if (process.env.DEBUG) console.log('count', JSON.stringify(count));
-    check(count.stage && count.numbers && count.wave, 'the count, one to ten, line by line as the book has it: the beam goes, Vane takes the axe, Aldric looks up and waves the cart on, "Do it."');
-    check(count.hold && count.echo, 'hold on to the drum at ten and the Echo plays, grey: the drum tears out, the Kestrel goes into the crown, "four hundred and eleven times"');
-    check(count.cut && count.saw && count.ledger && count.rope && count.vo, 'back at nine, then ten, and Vane cuts: like a cork; you were looking, you saw his hand; Aldric into the ledger; six feet of cut rope hanging from the drum');
-    check(count.ending && count.endText && count.journal, 'Grab the Line\'s end card tells it as played (the drum, the count, the Echo) instead of "the mooring mast is taken by a tree"');
+    check(count.stage && count.numbers && count.wave, 'the count, one to ten, in Vane\'s boots, the book\'s lines: the beam goes, Vane takes the axe, Aldric looks up and waves the cart on, "Do it."');
+    check(count.echo && count.nine, 'no cut by ten is the grey Echo, "\'Do it,\' said Kaelen.", and back at nine');
+    check(count.cut && count.ledger && count.rope && count.vo, 'then ten, and Vane cuts: like a cork, the book\'s after card; Aldric into the ledger; six feet of cut rope hanging from the drum');
+    check(count.ending && count.endText && count.journal, 'Grab the Line\'s end card tells it as played (the drum, the count) instead of "the mooring mast is taken by a tree"');
 
     // ---- the other way: at the foot of the line with the Governor; a save mid-haul; the jitter struck yourself
     const foot = await page.evaluate(async () => {
@@ -161,10 +162,10 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
       const c = T.last(); out.eighteen = /At eighteen/.test(c.t) && /They fall at your feet/.test(c.b) && /white-hot wick/.test(c.b);
       T.first(); const l = T.last();
       out.up = G.mapId === ROPE45.DECK && /puts your hands on the knot under hers/.test(l.b) && !/Up with her/.test(l.b) && !window.__vo.includes('aldric.rope.you');
-      T.first(); T.first(); const ln = ROPE45.AT.line; T.at(ln[0], ln[1] - 2); Engine.cam.dir = -Math.PI / 2;
-      window.__ev.length = 0; n = 0; while (n < 400 && !T.heard(/^Ten\.$/)) { T.step(1, 0.05); n++; }
-      await new Promise((r) => setTimeout(r, 500));
-      const a = T.last(); out.noEcho = /Like a cork/.test(a.t) && !f.r45_echo && /You were not looking/.test(a.b);
+      T.first(); T.first(); T.first();   // (Phase 125b, taught) the count in Vane's boots: the axe at five, the cut at ten
+      window.__ev.length = 0; n = 0;
+      while (n < 900 && !(T.last() && /Like a cork/.test(T.last().t))) { const b = BOOTS125.S.beat; if (b === 'n5' || b === 'n10') { BOOTS125.input('use', true); T.step(1, 0.05); BOOTS125.input('use', false); } T.step(1, 0.05); n++; }
+      const a = T.last(); out.noEcho = /Like a cork/.test(a.t) && !f.r45_echo && !window.__ev.some((e) => /An Echo/.test(e.t));
       a.c[0].f();
       out.end = /You stood at the foot of the line with Aldric Vance/.test(document.querySelector('#ending-text').textContent);
       // a save at the drum keeps you aboard
@@ -179,7 +180,7 @@ const check = (cond, label) => { if (cond) console.log('PASS ' + label); else { 
     });
     if (process.env.DEBUG) console.log('foot', JSON.stringify(foot));
     check(foot.staged && foot.four && foot.eighteen, 'stay at the foot of the line: put them on the knots with Aldric; the count from forty feet up; at eighteen the old man\'s hands fall at your feet, and Kaelen\'s light on the rail');
-    check(foot.up && foot.noEcho && foot.end, 'Aldric puts your hands on the knot under Lyra\'s, wordless; the count from the deck; not looking at eight; the end card says you loaded with him');
+    check(foot.up && foot.noEcho && foot.end, 'Aldric puts your hands on the knot under Lyra\'s, wordless; the count in Vane\'s boots; the end card says you loaded with him');
     check(foot.saved && foot.you, 'a save at the drum keeps you aboard, staged once; hold the jitter at the rail yourself and Kaelen still takes it out of the air, as the book has it');
 
     // ---- voices and French

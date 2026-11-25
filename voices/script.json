@@ -2509,15 +2509,6 @@
    "delivery": "low, calm"
   },
   {
-   "id": "ignatius.rite.notch",
-   "speaker": "ignatius",
-   "kind": "narration",
-   "text": "No. Closer, Engineer. At the notch. Angled up and back, into the fold of the voice itself.",
-   "source": "rite43.js TX.needleSeen (Book One ch. 9–10)",
-   "voiceOf": "ignatius",
-   "delivery": "low, quite gently"
-  },
-  {
    "id": "ignatius.rite.speak",
    "speaker": "ignatius",
    "kind": "narration",
@@ -9128,10 +9119,10 @@
    "source": "NPCS.p9_ada.greet.blunt"
   },
   {
-   "id": "p9_ada.t.6cd1da",
+   "id": "p9_ada.t.632e5c",
    "speaker": "p9_ada",
    "kind": "topic",
-   "text": "Seventy years in one parish. It was louder when I was a girl. Everything was.",
+   "text": "Fifty-one years, and nearly all of them in this parish. It was louder when I was a girl. Everything was.",
    "auto": true,
    "source": "NPCS.p9_ada.topics.Oakhaven"
   },
@@ -73049,6 +73040,202 @@
    "text": "Mind how you go.",
    "source": "shared answers (Phase 103)",
    "auto": true
+  },
+  {
+   "id": "vane.manifest.goon",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "Go on, then.",
+   "source": "boots125.js CAPS.s_goon (Book One ch. 16)",
+   "delivery": "very quiet, flat; a man who has decided to be told"
+  },
+  {
+   "id": "sable.manifest.corwin",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Entry thirty-nine thousand, eight hundred and two. Corwin Aye. Fifty-three.",
+   "source": "boots125.js CAPS.s_corwin (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"
+  },
+  {
+   "id": "sable.manifest.corwin1b",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Cooper of the Ashlane, and a good one; there is a barrel in the Moot-house cellar with his mark burned into the head and it has not leaked in nineteen years.",
+   "source": "boots125.js CAPS.s_corwin (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"
+  },
+  {
+   "id": "sable.manifest.corwin2",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Taken on the fourth day of the harvest, in the ninth hour. He was pressed in the second room because the first room had a queue. What he said at the door was: will I be able to keep my hands?",
+   "source": "boots125.js CAPS.s_corwin (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"
+  },
+  {
+   "id": "sable.manifest.corwin3",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "He carried in the second consignment, Captain. Your sixteen crates. He was in your hold for eleven days.",
+   "source": "boots125.js CAPS.s_corwin (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it; after a pause exactly long enough"
+  },
+  {
+   "id": "sable.manifest.mirren",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Entry forty thousand, nine hundred and ninety-one. Mirren Salk. Twenty-six. Wheelwright's widow, of the Bell Yard, four months a widow when the drills came. Taken on the ninth day.",
+   "source": "boots125.js CAPS.s_mirren (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"
+  },
+  {
+   "id": "sable.manifest.mirren2",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "She was carrying her husband's coat over her arm and she asked whether she might keep it,",
+   "source": "boots125.js CAPS.s_mirren (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it; perfectly flat"
+  },
+  {
+   "id": "sable.manifest.mirren2b",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "and the clerk said that she might, and it was taken off her at the door of the pressing room and put in a bin with eleven hundred other coats.",
+   "source": "boots125.js CAPS.s_mirren (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it; perfectly flat"
+  },
+  {
+   "id": "sable.manifest.mirren3",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "She is in the stack behind you. Fourth consignment.",
+   "source": "boots125.js CAPS.s_mirren (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"
+  },
+  {
+   "id": "sable.manifest.annet",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Entry forty-one thousand and six. Annet Sowerby. Six years old. Daughter of Hesper and Tam Sowerby of the Cloister road.",
+   "source": "boots125.js CAPS.s_annet (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"
+  },
+  {
+   "id": "sable.manifest.annet2",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "Taken on the eleventh day, in the hour after noon, with the rest of the little ones from the Cloister of the Lost Choir,",
+   "source": "boots125.js CAPS.s_annet (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"
+  },
+  {
+   "id": "sable.manifest.annet2b",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "because the Office had a requisition for small clear voices and the Cloister had forty-one of them in a choir under one roof.",
+   "source": "boots125.js CAPS.s_annet (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it"
+  },
+  {
+   "id": "sable.manifest.annet3",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "She was third in the line. She would not let go of the hand of the boy in front of her,",
+   "source": "boots125.js CAPS.s_annet (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it; after a beat"
+  },
+  {
+   "id": "sable.manifest.annet3b",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "and rather than make a scene in front of forty children, the proctors took the two of them into the room together and pressed them in the same hour.",
+   "source": "boots125.js CAPS.s_annet (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it; after a beat"
+  },
+  {
+   "id": "sable.manifest.annet4",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "I wrote both entries. Hers is legible. His is not, because my hand had begun to shake by then, and I have never been able to read the surname since, and there is no one left in this city to ask.",
+   "source": "boots125.js CAPS.s_annet (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "flat and clear, the voice of a woman reading an entry; no feeling put into it; the flatness holding, just"
+  },
+  {
+   "id": "vane.manifest.third",
+   "speaker": "vane",
+   "kind": "narration",
+   "text": "She's in the third crate. Second row, corner. She talks to a boy. He's seven. He's asleep against that crate right now.",
+   "source": "boots125.js CAPS.s_third (Book One ch. 16)",
+   "delivery": "hoarse and low, the breath gone out of him"
+  },
+  {
+   "id": "sable.manifest.iknow",
+   "speaker": "sable",
+   "kind": "narration",
+   "text": "I know. Your engineer told me. It is why I came up the ladder.",
+   "source": "boots125.js CAPS.s_iknow (Book One ch. 16)",
+   "voiceOf": "sable",
+   "delivery": "quiet, plain"
+  },
+  {
+   "id": "lyra_ruined.ring.iknow",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "I know.",
+   "source": "coda.js RING_TX.iknow (Book One ch. 23)",
+   "voiceOf": "lyra_ruined",
+   "delivery": "what is left of her voice, between two phrases of the office; she keeps singing"
+  },
+  {
+   "id": "lyra_ruined.ring.twovoice",
+   "speaker": "lyra_ruined",
+   "kind": "narration",
+   "text": "I know it's a two-voice part.",
+   "source": "coda.js RING_TX.twoVoice (Book One ch. 23)",
+   "voiceOf": "lyra_ruined",
+   "delivery": "what is left of her voice, steady"
+  },
+  {
+   "id": "wearer.ring.lark",
+   "speaker": "wearer",
+   "kind": "mimic",
+   "text": "Lark. Oh, lark. You never sang it for me.",
+   "source": "coda.js RING_TX.lark (Book One ch. 23)",
+   "voiceOf": "tobin",
+   "delivery": "her father's voice, warm and hoarse, between the phrases of the office"
+  },
+  {
+   "id": "wearer.ring.waited",
+   "speaker": "wearer",
+   "kind": "mimic",
+   "text": "I waited.",
+   "source": "coda.js RING_TX.waited (Book One ch. 23)",
+   "voiceOf": "tobin",
+   "delivery": "her father's voice, very gently"
+  },
+  {
+   "id": "wearer.ring.come",
+   "speaker": "wearer",
+   "kind": "mimic",
+   "text": "Come out of the lamps, lark. I can't come in there. Come out to me and I'll sing the rest with you. You can't do the close on your own, you know you can't, it's a two-voice part.",
+   "source": "coda.js RING_TX.come (Book One ch. 23)",
+   "voiceOf": "lyra",
+   "delivery": "in her own whole voice, gently"
   }
  ],
  "skipped": [

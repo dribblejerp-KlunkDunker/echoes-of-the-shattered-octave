@@ -14,8 +14,9 @@
 //      the clearing, the quarry or the Greenhall and you see her do it, and hear what the bells gave her. Otherwise she tells
 //      you herself, the next time you speak to her.
 //    * WHAT IT COSTS. Each thing she has heard puts her company store up 15% (to 45% at most); a fight or a body at Depot
-//      Three puts a second Legionnaire on the depot until the Rite; and at the Rite she has already been watching the
-//      collar walk, so the Hold of js/rite43.js starts with her eye partly on you (ritePenalty). Nothing fails a quest.
+//      Three puts a second Legionnaire on the depot until the Rite. ritePenalty() still measures how much of her eye is on
+//      the collar walk, but since Phase 125b the Rite does not read it: in the book nobody stopped him at the plate
+//      ("nobody stopped him", Book One ch. 10, MS 3186), so her eye changes nothing there. Nothing fails a quest.
 //  Flags: p54_log (what the bells heard, bits), p54_walked (what Vosk has heard back), p54_day (the day of the last new
 //  entry), p54_s_<id> (the day you last chose for that person). The second guard is transient.
 // ============================================================
