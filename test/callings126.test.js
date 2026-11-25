@@ -80,11 +80,11 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
         walk(n) { for (let i = 0; i < n; i++) { G.state = 'play'; G.keys = { w: (i % 40) < 20, s: (i % 40) >= 20 }; G.player.hp = G.player.hpMax; update(0.05); } G.keys = {}; },
         still(s) { T.step(Math.round(s / 0.05)); },
         frame() { render(); },
-        frames(n) { for (let i = 0; i < (n || 2); i++) render(); },
+        frames(n) { CALLINGS126.gather(); for (let i = 0; i < (n || 2); i++) render(); },   // (the sight gathers its targets every quarter second in update; a test frame gathers first)
         heard(re) { return window.__msgs.some((t) => re.test(t)); },
         last() { return window.__ev[window.__ev.length - 1] || null; },
-        press(i) { const e = T.last(); if (!e) return false; const k = i < 0 ? e.c.length + i : (i || 0); if (e.c[k]) { e.c[k].f(); return true; } return false; },
-        pressText(t) { const e = T.last(); if (!e) return false; const c = e.c.find((x) => x.t === t); if (c) { c.f(); return true; } return false; },
+        press(i) { const e = T.last(); if (!e) return false; const k = i < 0 ? e.c.length + i : (i || 0); if (e.c[k]) { if (e.c[k].f) e.c[k].f(); return true; } return false; },
+        pressText(t) { const e = T.last(); if (!e) return false; const c = e.c.find((x) => x.t === t); if (c) { if (c.f) c.f(); return true; } return false; },
         cls(id) { const p = G.player; p.cls = CLS(id); p.glassed = id === 'blade'; if (id === 'blade' && !(p.glass > 0)) p.glass = 42; if (id === 'cantor') { p.voiceMax = Math.max(p.voiceMax || 0, 40); p.voice = 40; } G.glassLock = 0; },
         at(map, x, y, dir, tod) {
           G.state = 'paused'; if (tod != null) G.tod = tod; loadMap(map, { x, y, dir: dir || 0 }); G.fadeT = 0; if (tod != null) G.tod = tod;
@@ -266,6 +266,38 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
       check(r.cantor === 0 && r.corsair === 0, '5. and none for any other calling (cantor ' + r.cantor + ', corsair ' + r.corsair + ')');
     }
 
+    // ---------------------------------------------------------------- 5b. the same under the 3D view (its depth read-back is a frame late and
+    // waits on the GPU, so the frames are drawn with real pauses between; its billboards sit a little nearer than their rects)
+    {
+      const st0 = await sect('5b stage', () => {
+        try { R3D.setMode('on', { noSave: true }); } catch (e) { return { r3d: false }; }
+        T.cls('blade'); T.at('quarry', 16.0, 21.5, 0, 0.45);
+        const c = Engine.cam, m = G.map; let hid = null, dir0 = 0;
+        for (let a = 0; a < 32 && !hid; a++) {
+          const dir = a * Math.PI / 16, dx = Math.cos(dir), dy = Math.sin(dir); let wall = false;
+          for (let s = 0.5; s < 5.5; s += 0.25) { const x = c.x + dx * s, y = c.y + dy * s; if (m.isSolidCell(x | 0, y | 0)) wall = true; else if (wall && s > 2.2) { hid = [x, y]; dir0 = dir; break; } }
+        }
+        c.dir = dir0 - 0.25;
+        window.__h5 = hid ? T.spawn('legionnaire', hid[0], hid[1], { name: 'Behind Wall Three' }) : null;
+        const x = c.x + Math.cos(c.dir + 0.22) * 2.6, y = c.y + Math.sin(c.dir + 0.22) * 2.6;
+        window.__f5 = !m.isBlocked(x | 0, y | 0) ? T.spawn('legionnaire', x, y, { name: 'Clear Three' }) : null;
+        T.still(1.4); T.frames(2);
+        return { r3d: R3D.active(), hid: !!window.__h5, front: !!window.__f5 };
+      });
+      if (st0.r3d) {
+        for (let i = 0; i < 6; i++) { await page.waitForTimeout(80); await page.evaluate(() => T.frames(1)); }
+        const r = await sect('5b', () => {
+          const out = { hidScreen: !!(window.__h5 && window.__h5._screen) };
+          out.front = !!window.__f5 && T.drawn('core').some((k) => k.e === window.__f5);
+          out.hid = !!window.__h5 && T.drawn('core').some((k) => k.e === window.__h5);
+          for (const e of [window.__h5, window.__f5]) if (e) { e.dead = true; e.hidden = true; }
+          try { R3D.setMode('off', { noSave: true }); } catch (e) { /* none */ }
+          return out;
+        });
+        check(st0.hid && st0.front && r.front === true && r.hidScreen && r.hid === false, '5b. 3D view: a core on a Legionnaire in view, none on one behind a wall (' + JSON.stringify(r) + ')');
+      } else console.log('NOTE 5b. no WebGL2 here: the 3D half did not run');
+    }
+
     // ---------------------------------------------------------------- 6. the presses and the lenses
     {
       const r = await sect('6', () => {
@@ -340,7 +372,13 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
         G.glassLock = 0; L3.dead = true; L3.hidden = true;
         // Tamsin Reed: her own card
         T.at('quarry', 28.5, 5.6, -Math.PI / 2, 0.45);
-        const tam = TAMSIN52.tamsin(G.map); tam.stun = 1e6; T.face(tam); T.put(tam, 1.0); T.frames(2);
+        const tam = TAMSIN52.tamsin(G.map); tam.stun = 1e6;
+        for (let k = 0; k < 16; k++) {   // from where she can be reached at her own level (the depot's floor is not the terrace's)
+          const a = k * Math.PI / 8; Engine.cam.x = tam.x - Math.cos(a) * 1.1; Engine.cam.y = tam.y - Math.sin(a) * 1.1; Engine.cam.dir = a;
+          if (G.map.isBlocked(Engine.cam.x | 0, Engine.cam.y | 0)) continue;
+          T.step(3); Engine.cam.x = tam.x - Math.cos(a) * 1.1; Engine.cam.y = tam.y - Math.sin(a) * 1.1; Engine.cam.dir = a;   // (the eye settles to the floor's height in update)
+          T.frames(2); if (Engine.pick(G.ents, USE_RANGE) === tam) break;
+        }
         const ev4 = T.evs(); interact();
         out.tamsin = !!tam && T.evs() === ev4 + 1 && T.last().t === TAMSIN52.TX.doorTitle;
         // the Cantor: the old murmur line
@@ -381,6 +419,8 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
         const one = (id, x, y) => {
           T.at('oakhaven', x, y - 2.5, Math.PI / 2, 14 / 24); T.step(2);
           const e = G.ents.find((o) => o.kind === 'npc' && o.id === id); if (!e) return null;
+          Engine.cam.x = e.x; Engine.cam.y = e.y - 2.5; Engine.cam.dir = Math.PI / 2;   // (they keep their own hours about the town)
+          for (let k = 0; k < 16 && G.map.isBlocked(Engine.cam.x | 0, Engine.cam.y | 0); k++) { const a = k * Math.PI / 8; Engine.cam.x = e.x - Math.cos(a) * 2.5; Engine.cam.y = e.y - Math.sin(a) * 2.5; }
           T.face(e); T.still(1.4); T.frames(3);
           const th = T.drawn('thread').find((k) => k.e === e); return th ? { amp: th.amp, h: th.h } : null;
         };
@@ -399,22 +439,23 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
           } else out.lyraHidden = true;
         }
         out.lyraMap = lm && lm[0];
-        // lamps: a lit one has a whistle, a dark one has none
-        T.at('oakhaven', 20.5, 24.4, 0, 22 / 24); T.step(4);
-        const lamps = G.ents.filter((e) => e.kind === 'deco' && e.sprite === 'lamp' && !e.drylamp);
-        const c = Engine.cam;
+        // lamps: a lit one has a whistle, a dark one has none. (Which are lit is a pure function of the hour: js/narrow28.js
+        // relights them on every Engine.render, so the lamplighter's half-done round gives a lit one and a dark one.)
+        const B = NARROW28.BAL, tod = (B.dusk + B.lampHours * 0.5) / 24;
+        T.at('oakhaven', 20.5, 24.4, 0, tod); T.step(2); G.tod = tod; T.frames(1);
+        const lamps = G.ents.filter((e) => e.kind === 'deco' && e.sprite === 'lamp' && !e.drylamp && !e.dead);
+        const lit = lamps.filter((e) => !e._n28off), dark = lamps.filter((e) => e._n28off);
+        out.nLit = lit.length; out.nDark = dark.length;
         let pair = null;
-        for (const a of lamps) for (const b of lamps) if (a !== b && Math.hypot(a.x - b.x, a.y - b.y) > 1.2 && Math.hypot(a.x - b.x, a.y - b.y) < 5 && !pair) pair = [a, b];
-        if (pair) {
-          const [a, b] = pair, mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-          let best = null;
-          for (let k = 0; k < 16 && !best; k++) { const ang = k * Math.PI / 8, x = mx - Math.cos(ang) * 4, y = my - Math.sin(ang) * 4; if (!G.map.isBlocked((x | 0), (y | 0))) best = [x, y, ang]; }
-          if (best) { c.x = best[0]; c.y = best[1]; c.dir = best[2]; }
-          a._n28off = false; b._n28off = true; b.glow = 0;
-          T.frames(3);   // no update: the lamplighter cannot relight it between
-          CALLINGS126.gather(); T.frames(2);
-          out.lit = T.drawn('whistle').some((k) => k.e === a); out.dark = T.drawn('whistle').some((k) => k.e === b);
-          out.litScreen = !!a._screen; b._n28off = false;
+        let pd = 1e9;
+        for (const a of lit) for (const b of dark) { const d = Math.hypot(a.x - b.x, a.y - b.y); if (d > 1.2 && d < pd) { pd = d; pair = [a, b]; } }
+        out.pd = pd;
+        if (pair) {   // each in turn, looked at from three paces
+          const look = (e) => { const c = Engine.cam; for (let k = 0; k < 16; k++) { const ang = k * Math.PI / 8; c.x = e.x - Math.cos(ang) * 3; c.y = e.y - Math.sin(ang) * 3; c.dir = ang; if (G.map.isBlocked(c.x | 0, c.y | 0)) continue; T.frames(2); if (e._screen && CALLINGS126.visible(e)) break; } T.frames(2); return !!e._screen; };
+          const [a, b] = pair;
+          const sa = look(a); out.lit = T.drawn('whistle').some((k) => k.e === a);
+          const sb = look(b); out.dark = T.drawn('whistle').some((k) => k.e === b);
+          out.litScreen = sa && sb;
         }
         return out;
       });
@@ -423,7 +464,7 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
       check(!!r.bettany && hum.length > 0 && hum.every((h) => r.bettany.amp > 2 * h.amp), '11. Bettany\'s amplitude is more than twice a hummer\'s (' + JSON.stringify(r.bettany) + ' vs ' + JSON.stringify(hum.map((h) => h.amp)) + ')');
       check(!!r.tam && hum.length > 0 && hum.every((h) => r.tam.h < h.h), '11. Old Tam\'s height is under every hummer\'s (' + JSON.stringify(r.tam) + ')');
       check(r.lyraBreath === true && r.lyraThread === false, '11. Lyra with lyra_voice false has a breath mark and no thread (' + r.lyraMap + (r.lyraHidden ? ', hidden' : '') + ')');
-      check(r.lit === true && r.dark === false, '11. a dark hush-lamp has no whistle, a lit one has one (lit on screen: ' + r.litScreen + ')');
+      check(r.lit === true && r.dark === false, '11. a dark hush-lamp has no whistle, a lit one has one (' + r.nLit + ' lit, ' + r.nDark + ' dark, ' + (r.pd && r.pd.toFixed(1)) + ' apart; both on screen: ' + r.litScreen + ')');
     }
 
     // ---------------------------------------------------------------- 12. the hum under the Narrow
@@ -530,7 +571,7 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
       const r = await sect('16-17', () => {
         const out = {};
         T.cls('corsair');
-        T.at('clearing', 13.0, 15.5, -Math.PI / 2, 0.45); Engine.cam.pitch = 60; T.step(2);
+        T.at('clearing', 13.0, 15.5, -Math.PI / 2, 0.45); Engine.cam.pitch = 100; T.step(2);
         T.still(1.4); T.frames(3);
         out.moored = SMALLLIFE.isMoored();
         out.line = T.drawn('mast').length; out.plumb = T.drawn('keel').length;
@@ -540,11 +581,12 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
         G.flags.part3 = false; T.step(2);
         // the quarry's scaffolds
         T.at('quarry', 16.5, 21.5, -Math.PI / 2, 0.45); Engine.cam.pitch = 0;
-        T.still(1.4); T.frames(3);
+        T.still(1.4);
         const c = Engine.cam;
         const sc = (G.map._p12r || []).filter((e) => e._p12r.k === 'scaff' && Math.hypot(e.x - c.x, e.y - c.y) <= 10);
         out.nSc = sc.length;
         out.scaff = sc.map((e) => {
+          T.face(e); T.frames(3);   // each in turn, in view
           const l = T.drawn('lashing').find((k) => k.e === e), p = T.drawn('patch').find((k) => k.e === e);
           const far = p ? ((p.wx - e.x) * (e.x - c.x) + (p.wy - e.y) * (e.y - c.y)) > 0 : false;
           return { line: !!l, patch: !!p, far };
@@ -593,7 +635,7 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
         T.cls('corsair');
         G.flags.part4 = true; G.flags.coda_done = true; G.flags.p16k_up = 127; G.player.gold = 200;
         K.board(); A.setRoll(() => 0.1); A.setNext('courier');
-        const f = K.hop('whispergrove'); out.met = !!(f && f.met && A.R.live);
+        out.met = A.start('home', 'whispergrove', 1, () => {}, true) && A.R.live && G.mapId === K.DECK;   // (a hop is met only coming home from far: start it as air93 would)
         closeModal(); hide('#event'); G.state = 'play';
         A.hook(); for (const e of A.R.proctors) { e.stun = 1e6; e.state = 'idle'; }
         out.chains = A.R.chains.length;
@@ -742,7 +784,7 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
         ['drink', 'no sound at all', [1857]],
         ['drink', 'and up your arm and is gone', [1855], 'and up his arm and was gone'],
         ['cracks', 'Something smooth and cold the size of an apple', [1875], 'the size of an apple'],
-        ['pressed', 'A hand-press', [4337]],
+        ['pressed', 'hand-press', [4337]],
         ['pressed', 'two tines and a glass ampoule between them', [4335], 'two-tined fork with a glass ampoule seated between the tines'],
         ['pressed', 'Your arm locks rigid', [4345], 'locked rigid'],
         ['lenses', 'a moment longer than is comfortable', [765], 'a moment longer than was comfortable'],
@@ -750,8 +792,8 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
         ['lenses', 'burning like a lamp', [712]],
         ['short', 'nothing left to hum with', [977, 1037], 'nothing to hum with'],
         ['tend', 'so the sound goes into the hands and not the air', [366, 250], 'so the sound would go into his'],   // (the design said 368; the line is 366)
-        ['hobHum', 'Every mending borrows.', [1039]],
-        ['hobHum', 'the note for wounds that need closing', [364], 'wounds that needed closing'],
+        ['hobDid', 'Every mending borrows.', [1039]],
+        ['hobDid', 'the note for wounds that need closing', [364], 'wounds that needed closing'],
       ];
       const notBook = BOOK.filter(([k, piece, lines, bookPiece]) => !(TX[k] && norm(TX[k]).includes(norm(piece)) && msText(lines).includes(norm(bookPiece || piece))));
       check(notBook.length === 0, '25. the §5 lines from the book are found at their manuscript lines (' + BOOK.length + ' pieces; not found: ' + notBook.map((b) => b[0] + ':' + b[1]).join(' | ') + ')');
