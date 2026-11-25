@@ -229,7 +229,7 @@ const RITE43 = (function () {
     rookeJ: S('Rooke has Lyra\'s instruction for Orla: the long drops, if the fire comes first. A thumb and a nod. Nothing was said.'),
     // the two "sings" that still stand: Lyra's and Kaelen's later lines
     lyraAfter: S('Be at my door when they come for me. Walk with the column; the town will hum the Root note under the Pure Note, too quietly to punish, and you can hum with it. Below, Kaelen is the hand at the wire and the hand at the drum. Your work is to stand where their eyes go.'),
-    kaelenAfter: S('Give me the coil. It goes down in my toolbag, not yours: nobody searches the supervising engineer\'s toolbag. Keep the pass; it gets you past the bell-helms at her door and onto the terrace. On Hearthday walk with the column, and when I go to the drum, give them something else to look at. Eight bolts. Forty seconds, if they don\'t watch me.'),
+    kaelenAfter: S('Give me the coil. It goes down in my toolbag, not yours: nobody searches the supervising engineer\'s toolbag. Keep the pass; it gets you past the bell-helms at her door and onto the terrace. On Hearthday walk with the column. Eight bolts. Forty seconds, if they don\'t watch me.'),
     kaelenRepeat: S('Hearthday. Be at her door when the column forms. Below, I will be at the stool with the needle, and my hands will be shaking, and that is all right. When I go to the drum, keep their eyes on you.'),
   };
   const VO = {   // TX key -> the recorded lines it holds, in the order the book has them

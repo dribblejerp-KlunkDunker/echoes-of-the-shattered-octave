@@ -92,7 +92,10 @@ const RANDOM_BEFORE = { 'js/data.js': 0, 'js/origins.js': 0, 'js/game.js': 24 };
     // each new name is used nowhere in the books, the bibles or the rest of the game
     const corpus = [];
     const walk = (d) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (/\.md$/.test(e.name)) corpus.push(fs.readFileSync(p, 'utf8')); } };
-    walk(path.join(ROOT, 'story', 'Books')); walk(path.join(ROOT, 'story', 'World Bibles'));
+    // Vol VIII is the game's own layer, not canon: its Phase 125a entry names the six strangers, as every phase's
+    // entry must (the owner's rule of 15 Nov). So it is left out of the scan; the books and the other bibles are not.
+    const walkCanon = (d) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walkCanon(p); else if (/\.md$/.test(e.name) && !/^Vol VIII /.test(e.name)) corpus.push(fs.readFileSync(p, 'utf8')); } };
+    walk(path.join(ROOT, 'story', 'Books')); walkCanon(path.join(ROOT, 'story', 'World Bibles'));
     for (const f of fs.readdirSync(path.join(ROOT, 'js'))) if (/\.js$/.test(f) && f !== 'data.js') corpus.push(fs.readFileSync(path.join(ROOT, 'js', f), 'utf8'));
     const all = corpus.join('\n');
     const clash = [];
