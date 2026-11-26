@@ -854,19 +854,75 @@ const FOLD113 = (function () {
       for (const [x, y] of [[7, 3], [10, 4], [8, 6]]) px(x, y, 44, 42, 40);
       outline(px, w, h, get);
     });
-    // Old Marrable, sitting: a drover's coat, a shawl over it, a stick across her knees, white hair
-    mk('p113f_marrable', 26, 30, 0.82, (px, w, h, get) => {
-      const coat = (x, y) => { const n = hh(x, y, 61) * 10; return [92 + n, 70 + n, 48 + n]; };
-      for (let y = 13; y < 27; y++) for (let x = 6; x < 20; x++) { const half = 5 + (y - 13) * 0.35; if (Math.abs(x + 0.5 - 13) < half) { const c = coat(x, y); px(x, y, c[0], c[1], c[2]); } }           // the coat
-      for (let y = 22; y < 27; y++) for (let x = 3; x < 23; x++) { const c = coat(x, y); if (y > 23 || (x > 4 && x < 22)) px(x, y, c[0] * 0.92, c[1] * 0.92, c[2] * 0.92); }        // the knees
-      for (let y = 27; y < 30; y++) { px(5, y, 40, 34, 28); px(6, y, 40, 34, 28); px(19, y, 40, 34, 28); px(20, y, 40, 34, 28); }                                             // boots
-      for (let y = 10; y < 19; y++) for (let x = 5; x < 21; x++) { const tri = Math.abs(x + 0.5 - 13) < 8 - (y - 10) * 0.75; if (tri) { const n = hh(x, y, 63) * 12; px(x, y, 104 + n, 112 + n, 92 + n); } }  // the shawl
-      for (let x = 7; x < 19; x++) if (x % 2) px(x, 18, 80, 90, 72);
-      for (let y = 3; y < 10; y++) for (let x = 9; x < 17; x++) { const r = Math.hypot(x + 0.5 - 13, (y + 0.5 - 6.5) * 1.1); if (r < 3.8) px(x, y, 198, 164, 140); }                          // the face
-      for (let x = 9; x < 17; x++) { px(x, 2, 226, 224, 216); if (x < 11 || x > 14) px(x, 3, 226, 224, 216); } px(9, 4, 216, 214, 206); px(16, 4, 216, 214, 206); px(9, 5, 206, 204, 196); px(16, 5, 206, 204, 196);   // white hair
-      px(11, 6, 52, 40, 34); px(14, 6, 52, 40, 34); px(12, 8, 150, 112, 96); px(13, 8, 150, 112, 96);
-      for (let x = 1; x < 25; x++) { const y = 21 + Math.round((x - 1) * 0.08); px(x, y, 64, 46, 30); }                                                                       // the stick
-      for (const x of [8, 17]) { px(x, 20, 192, 158, 134); px(x + 1, 20, 192, 158, 134); }                                                                                     // her hands on it
+    // Old Marrable, sitting: a drover's coat, a shawl over it, a stick across her knees, white hair.
+    // (Phase 128a) Drawn again at twice the size, 52 by 60: she was 26 by 30, the smallest person in the game. The same
+    // height in the world (hs), four times the pixels: a face with eyes, brows, a nose and a mouth, the hair drawn back
+    // into a knot, the shawl's folds and fringe, sleeves, both hands on the stick, the lap and the boots. Lit from the
+    // upper left, as every figure is; hashed grain only.
+    mk('p113f_marrable', 52, 60, 0.82, (px, w, h, get) => {
+      const cx = 26, lit = (x) => (x < cx - 3 ? 9 : x > cx + 4 ? -11 : 0);
+      const coat = (x, y, k) => { const n = hh(x, y, 61) * 9 + lit(x); return [(92 + n) * k, (70 + n) * k, (48 + n * 0.8) * k]; };
+      const wool = (x, y, k) => { const n = hh(x, y, 63) * 10 + lit(x); return [(102 + n) * k, (113 + n) * k, (91 + n) * k]; };
+      const skin = (x, y, k) => { const n = hh(x, y, 67) * 4 + lit(x) * 0.6; return [(198 + n) * k, (164 + n) * k, (140 + n) * k]; };
+      // boots, and the shins in the coat's skirt
+      for (const bx of [11, 35]) {
+        for (let y = 50; y < 56; y++) for (let x = bx; x < bx + 6; x++) { const c = coat(x, y, 0.8); px(x, y, c[0], c[1], c[2]); }
+        for (let y = 55; y < 60; y++) for (let x = bx - 1; x < bx + 7; x++) px(x, y, 42 + lit(x) * 0.5, 35 + lit(x) * 0.5, 29);
+        for (let x = bx; x < bx + 5; x++) px(x, 55, 66, 56, 46);
+      }
+      // the lap: the coat over her knees, a hem
+      for (let y = 43; y < 52; y++) for (let x = 7; x < 45; x++) {
+        const round = (y === 43 && (x < 9 || x > 42)) || (y === 51 && (x < 8 || x > 43)); if (round) continue;
+        const c = coat(x, y, y < 46 ? 1.0 : 0.9); px(x, y, c[0], c[1], c[2]);
+      }
+      for (let x = 8; x < 44; x++) if ((x + 1) % 3) px(x, 51, 62, 46, 32);
+      for (let y = 45; y < 51; y++) { px(25, y, 66, 50, 34); px(26, y, 70, 53, 36); }                      // the fold between her knees
+      // the body in the coat
+      for (let y = 24; y < 44; y++) { const half = 10 + (y - 24) * 0.22; for (let x = Math.ceil(cx - half); x < cx + half; x++) { const c = coat(x, y, 1); px(x, y, c[0], c[1], c[2]); } }
+      for (let y = 30; y < 43; y++) px(cx, y, 64, 48, 33);                                                  // where the coat closes
+      for (const y of [32, 36, 40]) { px(cx - 2, y, 150, 120, 70); px(cx - 2, y + 1, 110, 86, 50); }         // three horn buttons
+      // the sleeves, down to the stick
+      for (const [x0, x1, s0] of [[9, 15, -1], [37, 43, 1]]) for (let y = 27; y < 40; y++) {
+        const sh = Math.round((y - 27) * 0.18) * s0 * -1;
+        for (let x = x0 + sh; x < x1 + sh; x++) { const c = coat(x, y, x === x0 + sh || x === x1 + sh - 1 ? 0.78 : 0.94); px(x, y, c[0], c[1], c[2]); }
+      }
+      // the shawl: over the shoulders, crossed on the breast, a fringe
+      for (let y = 20; y < 37; y++) {
+        const half = Math.min(18, 5 + (y - 20) * 1.05);
+        for (let x = Math.ceil(cx - half); x < cx + half; x++) {
+          const dx = Math.abs(x + 0.5 - cx), fold = ((x * 2 + y * 3) % 11 === 0) || ((x * 2 - y * 3 + 90) % 13 === 0);
+          if (y > 29 && dx < (y - 29) * 1.1) continue;                                                      // it parts over the coat's front
+          const c = wool(x, y, fold ? 0.8 : dx > half - 1.5 ? 0.86 : 1); px(x, y, c[0], c[1], c[2]);
+        }
+      }
+      for (let x = cx - 18; x < cx + 18; x++) if (x % 2 === 0 && Math.abs(x + 0.5 - cx) > 8) px(x, 37, 84, 94, 76);
+      for (let y = 21; y < 30; y++) { px(cx - 1 + Math.round((y - 21) * 0.3), y, 78, 88, 70); px(cx + 1 - Math.round((y - 21) * 0.3), y, 74, 84, 66); }   // the cross of it
+      // the stick across her knees, and both hands on it
+      for (let x = 2; x < 50; x++) { const y = 40 + Math.round(x * 0.022); px(x, y, 86, 61, 38); px(x, y + 1, 66, 47, 30); px(x, y + 2, 54, 38, 24); }
+      px(2, 40, 96, 70, 44); px(3, 40, 96, 70, 44);
+      for (const hx of [11, 37]) {
+        for (let y = 38; y < 42; y++) for (let x = hx; x < hx + 5; x++) { const c = skin(x, y, y === 38 ? 1.04 : 0.96); px(x, y, c[0], c[1], c[2]); }
+        for (let x = hx + 1; x < hx + 5; x += 1) if ((x - hx) % 2) px(x, 40, 168, 134, 112);                 // the knuckles
+      }
+      // the neck and the face
+      for (let y = 19; y < 22; y++) for (let x = cx - 2; x < cx + 2; x++) { const c = skin(x, y, 0.86); px(x, y, c[0], c[1], c[2]); }
+      for (let y = 6; y < 21; y++) for (let x = cx - 7; x < cx + 7; x++) {
+        const ex = (x + 0.5 - cx) / 6.2, ey = (y + 0.5 - 13.2) / 7.2; if (ex * ex + ey * ey > 1) continue;
+        const c = skin(x, y, y > 17 ? 0.93 : 1); px(x, y, c[0], c[1], c[2]);
+      }
+      for (const ex of [cx - 4, cx + 2]) { px(ex, 12, 150, 144, 136); px(ex + 1, 12, 150, 144, 136); px(ex, 13, 52, 40, 34); px(ex + 1, 13, 52, 40, 34); px(ex, 14, 176, 140, 120); px(ex + 1, 14, 176, 140, 120); }   // brows, eyes, the bags under them
+      px(cx - 1, 14, 182, 146, 124); px(cx - 1, 15, 176, 140, 118); px(cx, 16, 166, 128, 108); px(cx - 1, 16, 186, 150, 128);        // the nose
+      px(cx - 2, 18, 150, 108, 96); px(cx - 1, 18, 142, 100, 90); px(cx, 18, 150, 108, 96); px(cx + 1, 18, 160, 120, 104);            // the mouth
+      px(cx - 5, 16, 180, 144, 122); px(cx + 4, 16, 172, 136, 116); px(cx - 4, 17, 180, 144, 122); px(cx + 3, 17, 172, 136, 116);    // the lines of her cheeks
+      // the white hair: drawn back, a knot on top, a strand by each ear
+      for (let y = 4; y < 12; y++) for (let x = cx - 8; x < cx + 8; x++) {
+        const ex = (x + 0.5 - cx) / 7.4, ey = (y + 0.5 - 11) / 7.2; if (ex * ex + ey * ey > 1) continue;
+        const inFace = Math.abs(x + 0.5 - cx) < 5.2 - Math.max(0, 9 - y) * 1.2 && y > 8; if (inFace) continue;
+        const n = hh(x, y, 71) * 10 + lit(x) * 0.7; px(x, y, 226 + n, 224 + n, 216 + n);
+      }
+      for (let y = 1; y < 5; y++) for (let x = cx - 3; x < cx + 3; x++) { const r = Math.hypot(x + 0.5 - cx, (y + 0.5 - 3) * 1.3); if (r < 3) { const n = hh(x, y, 73) * 10; px(x, y, 218 + n, 216 + n, 208 + n); } }
+      for (let y = 11; y < 16; y++) { px(cx - 7, y, 214, 212, 204); px(cx + 6, y, 204, 202, 194); }
+      for (let x = cx - 5; x < cx + 5; x += 2) px(x, 6, 204, 202, 194);                                     // the comb's lines
       outline(px, w, h, get);
     });
   }
