@@ -567,6 +567,24 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 ![Phase 124e: the five new portraits, large and at the game's size](screenshots/p124e-own.jpg)
 
+**The callings, part one (Phase 126).** Your calling now notices things. Stand still for a moment and your trade's own sight comes up over the world (Options: "Your calling's sight", hidden / when you stand still / always). A Glass-Hand hears the bells: the pale lilac core inside every Legionnaire's bronze, the brass hand-press at a proctor's belt, the Factor's green lenses. Lay your glass hand on a Legionnaire's bell and the glass drinks its alarm; the tideline climbs, and for a minute your hand rings so that any bell near you hears it, and tells Vosk at her morning walk. A Cantor hears who is humming and how true: the night-hummers at the crossings, Bettany's wide wobble, Old Tam's short true note, every lit hush-lamp's thin whistle, the choir's unbroken line and the Pure Note lying over the town like a lid. A Cantor's murmur stays under the Narrow, above the Hush and below everything that listens, and can hum the tending note into a companion's hands, or the Root note into Hob Wendle's at the Grafters' round. A Corsair reads loads and lines: the Kestrel riding heavy at her mast, where a scaffold or a chandelier will land when its lashings go, and on a deck in the air which grapnel has bitten deepest; a hook can be slipped by hand, slowly and silently, where the axe is quick and loud, and on cargo night a Corsair can sign to Mags behind the clerk's back. Every other calling plays exactly as before. On cargo night it is Vane, as in the book, who says "Annet. You're going home."
+
+![Phase 126: the Glass-Hand's sight in the quarry, two cores through the bronze (3D view)](screenshots/p126-glass-cores-3d.jpg)
+
+![Phase 126: a proctor's hand-press, seen by the Glass-Hand](screenshots/p126-glass-press-3d.jpg)
+
+![Phase 126: By the bell](screenshots/p126-glass-bell-card.jpg)
+
+![Phase 126: the Cantor at a crossing at night: a night-hummer's thread and a lamp's whistle](screenshots/p126-cantor-night-3d.jpg)
+
+![Phase 126: the choir's unbroken line on the road](screenshots/p126-cantor-choir-classic.jpg)
+
+![Phase 126: the Corsair at the rim: the Kestrel's tanks and keel plumb](screenshots/p126-corsair-mast-classic.jpg)
+
+![Phase 126: an air93 deck, hooked: a grapnel chain, the weights, the tanks, one weeping](screenshots/p126-corsair-air93-3d.jpg)
+
+![Phase 126: the sight on, and off (the frame exactly as before)](screenshots/p126-off-3d.jpg)
+
 **The six strangers (Phase 125a).** Your traveller is now their own person. Until now the six faces at the start were six people out of the books (Kaelen, Lyra, Vane, Sable, Rooke, Mags), each with that person's history written as "you", so a player could be Kaelen Vance and then walk out of the gate and meet him. The six pictures stay; each has a new name and a past that belongs to nobody in any book, drawn from the far countries the Series Bible gives: Ruan Hendy of the Iron Peaks, Kerra Ellery from above Wend's Ford, Esk Penhale of Driftwood Cay, Merryn Callis of the Organum, Piran Brackett of Slag-Town, Jenet Lowen of Mirage Rest. Two callings carried a hero's own title and are renamed: the **Glass-Hand** (a bore-hand glassed by raw seam glass; "the Dissonant Blade" is Kaelen) and the **Catalogue Clerk** (a conscripted Office clerk; "Archivist of the Veil" is Sable, the last Veil-sworn scribe). Every calling's history is rewritten from what the books give that trade. Old saves keep their traveller's name, calling and face.
 
 ![Phase 125a: the calling list with its two new names, and the six likenesses with their new names and pasts](screenshots/p125-strangers.jpg)
