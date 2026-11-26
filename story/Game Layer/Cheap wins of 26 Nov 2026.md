@@ -42,8 +42,18 @@ The owner, 26 Nov, 7:28 am: "I'm going to install it on my phone this morning an
 
 ![Sable's hand on the lid, before and after](../../screenshots/cw26-lid-hand.jpg)
 
+## 4. Faces for the crowds: the rule (nothing to see until the faces are painted)
+
+**What it is.** A townsman, a mourner or one of the Umbral folk is one entry in the game that stands in many places, so giving that entry a face of its own (as Phase 124 does for a named person) would give the whole crowd one face. A crowd now has a list of faces (`FACES124.POOL` in `js/faces124.js`), and each of its people shows one of them by a fixed rule, never by chance: where that person's home stands among the others of the same entry on the map (north to south, then west to east), stepped on by a number made from the map's and the entry's names, so two maps do not open on the same face. The same person shows the same face every time and in every save. Same switch as the other faces ("Faces of their own"); off, every talk window is what it was.
+
+**What you see today.** Nothing: the list is empty until the crowds' faces are painted. The prompts for them are already written (`tools/faces/PROMPTS.tsv`, the rows whose id ends in `#1`, `#2`, ...: six townsmen, six townswomen, five Umbral folk, the road-walkers, the Hollows' loops, the mourners, the night-hummers, the Watch's watchers and mast-crew, the Flambeaux of the winch). One painted face for a crowd changes many people at once, so tonight's batch paints townsmen and townswomen first.
+
+**Lore.** None touched: no name, age or look is set by this. The faces themselves follow the prompts, which were checked against the books when they were written (Phase 124's prompts record).
+
+**Test.** `test/own124.test.js`, a new check written first and seen failing: an empty list changes nothing; three men of one crowd show three faces; the same faces when asked again, when the map's list is in another order, and after one of them has walked; a person with a face of their own keeps it; the switch off gives the borrowed face; `Math.random` is never asked; every row's files exist, are 96 by 96 and are in `sw.js`. Suites run: own124, skin124, portraits, companion-talk. All green.
+
 ## Still to come
 
-- Faces for the crowds: each person in a shared crowd picks one of several painted faces by a fixed rule, never by chance.
+- The crowds' faces themselves, painted a batch a day (the rule is in).
 - A pinch for Kaelen's needle.
 - Stronger sights on a phone, only if the owner finds them too faint.
