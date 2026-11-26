@@ -456,27 +456,30 @@ const SKY = (() => {
     if (t < start || t >= start + FLY.dur) return null;
     return { start, u: (t - start) / FLY.dur, b0: hash01(k, 2) * TAU - Math.PI, dir: hash01(k, 3) < 0.5 ? -1 : 1, k, forced: false };
   }
-  // The ship is hand-drawn pixel art (Phase 20): the Drift-Kestrel as the game paints her at the crash, a timber
-  // hull with a bowsprit, two masts under square sails, the brass lift-tank slung along her side, and lanterns at
-  // bow and stern. Bow to the right; the art is mirrored when she flies the other way. One art pixel is drawn as an
-  // S x S block. The two red pennants are [PROPOSED].
+  // The ship is hand-drawn pixel art. She is the book's Drift-Kestrel (26 Nov 2026; she had been drawn since Phase 20
+  // with two masts under square sails and red pennants): "small for a skyship, sixty feet perhaps, brass-ribbed and
+  // oak-planked, with a patched grey envelope and four lift-tanks slung beneath her keel glowing the faint cobalt of
+  // drift-glass" (Book One, MS l. 674); "a swivel-gun mount on the foredeck" (l. 4177). So: one patched grey envelope
+  // over an oak hull with brass ribs, rigged down to it; the gun mount forward; four cobalt tanks under the keel; a
+  // lantern at bow and stern; no masts, no sails, no colours. Bow to the right; the art is mirrored when she flies
+  // the other way. One art pixel is drawn as an S x S block.
   const SHIP_ART = [
-    '............ppm.........ppm.............',
-    '...........p..mllllllllpllm.............',
-    '...........occmCCo.....occmCCo..........',
-    '..........ccccmCCCC...ccccmCCCC.........',
-    '..........RRRRmRRRR...RRRRmRRRR.........',
-    '..........ccccmCCCC...ccccmCCCCl........',
-    '........ll.cccmCCCC....cccmCCCC.l.......',
-    '.......l......m...l....l..m......ll....m',
-    '...oooooo.....m...l....l..m........lmmmL',
-    '..Lowwwwrrrrrrrrrrrrrrrrrrrrrrrrrrrml...',
-    '...owgwgwwwwoYYYSYYYSYYYowwwwwwwwwwoo...',
-    '....owwwwwwoBBBBSBBBSBBBBowwwwwwwwwwo...',
-    '.....oWWWWWWoDDDSDDDSDDDoWWWWWWWWWWo....',
-    '......owwwwwwwwwwwwwwwwwwwwwwwwwwo......',
-    '........okkkkkkkkkkkkkkkkkkkkkko........',
-    '...........ooooooooooooooooo............',
+    '..............cccccccccccccc............',
+    '..........ccccccCCccccccccccCccc........',
+    '........ccccCCccccccccRRcccccccCCccc....',
+    '.......ccccccCCccccccccRRccccccccccccc..',
+    '.......cccRRccccccccCCcccccccRRccccccc..',
+    '........CCCCCCCCCCCCCCCCCCCCCCCCCCCCC...',
+    '..........RRRRRRRRRRRRRRRRRRRRRRRR......',
+    '...........l.....l.....l.....l..........',
+    '..........l......l.....l......l......L..',
+    '..Lowwwwrwwwwrwwwwrwwwwrwwwwrwwkkrwwwo..',
+    '....owwwrwwwwrwwwwrwwwwrwwwwrwwwwrwwo...',
+    '......oWrWWWWrWWWWrWWWWrWWWWrWWWWro.....',
+    '........okkkkkkkkkkkkkkkkkkkkkkko.......',
+    '..........oYYo..oYYo..oYYo..oYYo........',
+    '..........oBBo..oBBo..oBBo..oBBo........',
+    '...........DD....DD....DD....DD.........',
   ];
   const SHIP_PAL = {
     o: [36, 26, 18], w: [90, 58, 32], W: [122, 82, 48], k: [46, 31, 18], r: [160, 120, 64], m: [74, 50, 32],

@@ -145,6 +145,10 @@ function verbatim(t, lines) {
       out.active = BOOTS125.active() === 'needle' && f.r43 === 3;
       T.press(0);
       out.glassArm = GEARLOOK21.of().glassArm === true; out.hidden = T.ent('kaelen').hidden === true;
+      // 4b (26 Nov): in a hero's boots the HUD's name line says whose boots, not the traveller's name, level and purse
+      { const seen = [], cx = Engine.ctx, ft = cx.fillText; cx.fillText = function (t) { seen.push(String(t)); return ft.apply(this, arguments); };
+        try { drawHUD(); } finally { cx.fillText = ft; }
+        out.hudHero = seen.includes('Kaelen Vance') && !seen.some((t) => t.includes(G.player.name) || / sov\./.test(t)); out.hudSeen = seen.filter((t) => /Lv|Kaelen|sov/.test(t)).join(' | '); }
       const V = RITE43.V, cr0 = [T.ent('crane').x, T.ent('crane').y];
       // 5: the pinch held too long
       out.toPinch = T.beat('pinch');
@@ -178,6 +182,7 @@ function verbatim(t, lines) {
     });
     const NEEDLE_LINES = [3044, 3046, 3068, 3070, 3072, 3074, 3076, 3078, 3084, 3086, 3088, 3090, 3092, 3094, 3096, 3098, 3104, 3106, 3108, 3110];
     const missN = NEEDLE_LINES.filter((n) => n !== 3044 && n !== 3046 && !(needle.log || []).includes(n));
+    check(needle.hudHero, '4b. in Kaelen\'s boots the HUD names Kaelen Vance, not the traveller, level and purse (' + needle.hudSeen + ')');
     check(needle.card && needle.active && needle.glassArm && needle.hidden && needle.callingBefore, '4. from the lullaby card the player is in Kaelen\'s boots: "In his boots", the glass arm, the rite43 Kaelen hidden, the Glass-Hand\'s calling line before');
     check(missN.length === 0 && needle.fortunate && needle.stage4 && needle.back && !needle.fuse, '4. the captions are MS 3044-3110 (missing ' + missN.join(',') + '); "I. Am. Fortunate."; Crane comes down and goes back up; stage 4; nothing of the fuse here');
     check(!!needle.sees && needle.sees.length === 0, '4. no card or message has Crane seeing (' + (needle.sees || []).join(' | ') + ')');
