@@ -309,6 +309,27 @@ const FORBIDDEN = new RegExp('\\b(' + ['flehs', 'egdel', 'teksab', 'deredner'].m
   });
   check(mr.day && mr.night && mr.dead && mr.dawn, 'Old Marrable is at the Weekstones by night only: from full dark through the dead hour, not by day or at dawn');
   check(mr.byFallen, 'she sits by the fallen Nullday stone');
+  // (Phase 128a) drawn again at twice the size: she was 26 by 30, the smallest person in the game. The same size in the
+  // world (the sprite's height setting), four times the pixels; white hair over a face with two eyes, a shawl, a coat,
+  // a stick across her knees with both hands on it
+  const art = await page.evaluate(() => {
+    const sp = Engine.sprites[FOLD113.MARR]; if (!sp) return null;
+    const D = sp.data, W = sp.w, H = sp.h, at = (x, y) => { const v = D[y * W + x]; return v >>> 24 ? [v & 255, (v >> 8) & 255, (v >> 16) & 255] : null; };
+    let hair = 0, skin = 0, shawl = 0, coat = 0, eyes = [], hands = 0, stickRow = -1;
+    for (let y = 0; y < H; y++) { let run = 0, best = 0;
+      for (let x = 0; x < W; x++) { const c = at(x, y); if (!c) { run = 0; continue; }
+        const [r, g, b] = c;
+        if (r > 200 && g > 200 && b > 190 && y < H * 0.3) hair++;
+        if (r > 170 && g > 130 && g < 185 && b > 100 && b < 160 && r - b > 35) { skin++; if (y > H * 0.55) hands++; }
+        if (g > r && g > b && g > 80 && g < 150) shawl++;
+        if (r > g + 12 && g > b + 12 && r > 70 && r < 130) coat++;
+        if (r < 70 && g < 55 && b < 50 && r > 30 && y > H * 0.15 && y < H * 0.32) eyes.push(x);
+        if (r > 50 && r < 90 && g > 34 && g < 62 && b < 44) { run++; best = Math.max(best, run); } else run = 0; }
+      if (best > W * 0.7 && stickRow < 0) stickRow = y; }
+    return { w: W, h: H, hs: sp.hs, hair, skin, shawl, coat, eyesL: eyes.filter((x) => x < W / 2).length, eyesR: eyes.filter((x) => x >= W / 2).length, hands, stickRow };
+  });
+  check(!!art && art.w >= 52 && art.h >= 60 && art.hs === 0.82, '128a. Old Marrable is drawn at twice the size, and is the same size in the world (' + JSON.stringify(art) + ')');
+  check(!!art && art.hair > 30 && art.skin > 60 && art.shawl > 150 && art.coat > 200 && art.eyesL >= 2 && art.eyesR >= 2 && art.hands >= 8 && art.stickRow > art.h * 0.55, '128a. white hair, a face with two eyes, the shawl, the coat, both hands on the stick across her knees');
   check(mr.voice, 'she has her own voice');
   check(mr.noFight, 'nobody can strike her: no law on this ground, no faction, nothing for sale');
   check(mr.first && mr.after, 'her greetings: the first time, and after');
