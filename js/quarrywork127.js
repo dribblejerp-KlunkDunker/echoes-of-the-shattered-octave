@@ -23,7 +23,7 @@
 //    * A fight in the workings (a live enemy in chase; js/tamsin52.js's stage 1) stands the shift down: they walk to the ladder
 //      and go up. The pump men keep working: nobody stops them (MS 1779).
 //    * The switch GFX.quarryWork: off in Original and Low. Off, nothing is staged and nothing drawn, so every map's entity
-//      list is what it was. No random numbers here (LIFE60's own private stream is not Math.random), never Engine.render,
+//      list is what it was. No random numbers here (LIFE60's own private stream is not the game's random source), never Engine.render,
 //      and the poses are presentation only (inside animDeco, from ANIM.T).
 // ============================================================
 'use strict';

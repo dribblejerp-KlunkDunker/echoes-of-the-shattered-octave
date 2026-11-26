@@ -76,5 +76,53 @@ const want = (k) => !ONLY.length || ONLY.includes(k);
   if (want('rootvault')) await bothA('work-rootvault', ['rootvault', 33.6, 11.9, Math.atan2(9.0 - 11.9, 31.5 - 33.6), 10 / 24, 0], ['3d']);
   if (want('rim')) await bothA('work-rim-0620', ['clearing', 25.6, 11.2, Math.atan2(4.6 - 11.2, 18.6 - 25.6), 6.33 / 24, 14], ['3d']);
   if (want('off')) { await bothA('on', DAY); await bothA('off', DAY.concat([true])); }
+  // ---------------------------------------------------------------- the two callings' sights and acts
+  // the barracks: Gethin Coote's stamp legible, a farther bell's plate only
+  const stamps = (v) => {
+    SH.view(v); SH.cls('archivist'); GFX.quarryWork = false; SH.at('quarry', 16.2, 21.3, 0, 10 / 24);
+    const L = G.ents.find((e) => e.name === 'Gethin Coote' && Math.abs(e.x - 18.5) < 0.6);
+    const dir = Math.atan2(L.y - 21.3, L.x - 16.2) - 0.12; SH.settle(16.2, 21.3, dir, 0);
+    const c = Engine.cam; if (!G.ents.some((e) => e._p127shot)) { const far = SH.spawn('legionnaire', c.x + Math.cos(c.dir - 0.3) * 4.2, c.y + Math.sin(c.dir - 0.3) * 4.2, { name: 'Edda Quill' }); far._p127shot = 1; }
+    SH.step(30); SH.clearMsgs(); SH.frame(); return SH.drawn();
+  };
+  if (want('stamps')) await both('clerk-stamps', stamps);
+  if (want('card')) {
+    console.log('card', JSON.stringify(await ev(() => {
+      SH.view('classic'); SH.cls('archivist'); GFX.quarryWork = false; SH.at('quarry', 16.2, 21.3, 0, 10 / 24); G.ledger.length = 0;
+      const L = G.ents.find((e) => e.name === 'Gethin Coote' && Math.abs(e.x - 18.5) < 0.6); const c = Engine.cam; c.dir = Math.atan2(L.y - c.y, L.x - c.x); c.x = L.x - Math.cos(c.dir); c.y = L.y - Math.sin(c.dir); SH.frame();
+      window.showEvent = window.__realEvent; interact(); return { state: G.state, title: (document.querySelector('#event-panel h2') || {}).textContent };
+    })));
+    await shot('clerk-card', true);
+    await ev(() => { hide('#event'); G.state = 'play'; });
+  }
+  if (want('name')) await both('clerk-name', (v) => {
+    SH.view(v); SH.cls('archivist'); GFX.quarryWork = false; SH.at('quarry', 16.2, 21.3, 0, 10 / 24);
+    const L = G.ents.find((e) => e.name === 'Gethin Coote' && Math.abs(e.x - 18.5) < 0.6);
+    if (!G.ledger.some((x) => x.name === L.name)) G.ledger.push({ name: L.name, where: G.map.name, day: G.day });
+    const dir = Math.atan2(L.y - 21.3, L.x - 16.2) + 0.1; SH.settle(15.8, 21.5, dir, 0);
+    const c = Engine.cam; if (!G.ents.some((e) => e._p127pr)) { const p = SH.spawn('proctor', c.x + Math.cos(c.dir + 0.32) * 2.6, c.y + Math.sin(c.dir + 0.32) * 2.6, { name: 'A Proctor' }); p._p127pr = 1; }
+    SH.step(30); SH.clearMsgs(); SH.frame(); return SH.drawn();
+  }, ['3d']);
+  if (want('timber')) await both('quarry-timber', (v) => {
+    SH.view(v); SH.cls('quarry'); GFX.quarryWork = false; SH.at('quarry', 16.3, 22.4, 0, 10 / 24);
+    SH.settle(16.3, 22.4, Math.atan2(19.4 - 22.4, 18.5 - 16.3), v === '3d' ? -6 : 0);
+    SH.clearMsgs(); SH.frame(); return SH.drawn();
+  });
+  if (want('seams')) await both('quarry-seams', (v) => {
+    SH.view(v); SH.cls('quarry'); GFX.quarryWork = false;
+    // a resonant seam, as the delves have, set into a glass-rock face of the shaft room for the picture (nothing is saved)
+    SH.at('quarry', 20.6, 11.0, 0, 10 / 24); const m = G.map; let spot = null;
+    for (let y = 9; y < 14 && !spot; y++) for (let x = 17; x < 24 && !spot; x++) { const c = m.get(x, y); if (c && c.tex === 't_glassrock' && !c.door && !m.get(x - 1, y) && !m.get(x - 2, y)) spot = [x, y]; }
+    if (spot) { const c = m.get(spot[0], spot[1]); m.set(spot[0], spot[1], Object.assign({}, c, { resonant: true })); SH.settle(spot[0] - 1.9, spot[1] + 0.5, 0.35, 0); }
+    SH.clearMsgs(); SH.frame(); return { spot, drawn: SH.drawn() };
+  }, ['3d']);
+  if (want('shoulder')) await both('quarry-shoulder', (v) => {
+    SH.view(v); SH.cls('quarry'); GFX.quarryWork = true; SH.at('quarry', 11.4, 36.6, 0, 10 / 24);
+    CALLINGS127.st.carry = { t: 0, heard: true };
+    SH.settle(11.2, 36.4, Math.atan2(34.4 - 36.4, 9.0 - 11.2), 0);
+    if (!G.ents.some((e) => e._p127leg)) { const L = SH.spawn('legionnaire', 9.0, 34.4, { name: 'Shift Watcher' }); L._p127leg = 1; }
+    CALLINGS127.st.carry = { t: 0, heard: true };
+    SH.clearMsgs(); SH.frame(); return { carrying: CALLINGS127.carrying() };
+  });
   await browser.close();
 })();
