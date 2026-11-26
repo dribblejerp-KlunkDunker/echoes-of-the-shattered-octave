@@ -2469,6 +2469,12 @@ Record: `story/Game Layer/Phase 124d - Faces of their own, the next six.md` (eve
 - **Invented (the game's own):** the looks of Perpetua Lisle, Marrit Pell, Brenna Loft and Dunna Sedge, and the name and face of Orrin Pale. None is described in the books.
 - **Made with:** the owner's Hugging Face account, the Space `mcp-tools/Z-Image-Turbo`; about nine pictures a day on the free account.
 
+#### Phase 128: the roads filled (findings, 26 Nov; nothing built)
+Record: `story/Game Layer/Phase 128 - The roads filled (findings and options, for ruling).md`.
+- **Canon, with its source, found for the roads:** the mail-cart on the Greenroot road (Book One, full manuscript l. 2622); the brazier at the foot of Tower Six (Book Three, Part One l. 1842); a charcoal clamp is "packed round with turf and earth" (Book One l. 604). The books say nothing at all of the drove road, the Downs, Wethercombe or the Fold.
+- **The game against the books, for the owner:** Greenroot is empty in the game and "four hundred souls" in the gazetteer (Vol II l. 34), and no book empties it before the Greening; the toll board, the wall's "ninety posts" and the drove road's returners have no book line; "the Hundred Hollows" shares a word with the books' Hollows.
+- **Ruled:** nothing yet.
+
 #### Cheap wins of 26 Nov (built, 26 Nov)
 Record: `story/Game Layer/Cheap wins of 26 Nov 2026.md`. The owner, 26 Nov: "take care of the cheap wins yourself". **Built:** (1) in a hero's boots (Phase 125b) the bottom bar names the hero (`BOOTS125.hudName()`); (2) the skyship that crosses the sky over the Woods (`js/sky.js`, drawn again by `js/light21.js` in the 3D view) is redrawn as the book's *Kestrel*.
 - **Canon, with its source:** the *Kestrel* is "small for a skyship, sixty feet perhaps, brass-ribbed and oak-planked, with a patched grey envelope and four lift-tanks slung beneath her keel glowing the faint cobalt of drift-glass" (Book One, full manuscript l. 674). She has four tanks in Harvestmonth 419; Book Three's "three tanks" (`Book Three/Part Two Ch5-8.md:19`) is later and is not shown. She has no masts, sails or pennants in any book; the "mast-ladder" is the mooring mast's. The heroes' names on the bar are the books' own.
