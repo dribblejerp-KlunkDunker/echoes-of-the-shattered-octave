@@ -375,7 +375,23 @@ const CALLINGS126 = (function () {
     if (!glassReady() || !e || e.transient || bossLike(e) || distTo(e) > REACH) return false;
     return isBell(e) || isPress(e);
   }
+  // (integration, found by test/dreams) The first time anyone listens at a bell in a place, js/dreams.js plays that
+  // place's echo ("The name it was made from" in the quarry). A Glass-Hand must not lose it, so the act stands aside
+  // for that one use and is there from the next. This mirrors coreEcho() in js/dreams.js.
+  function echoWaits(e) {
+    try {
+      if (typeof DREAMS !== 'object' || !DREAMS || !DREAMS.on() || !(e.def && e.def.core) || e.state === 'chase') return false;
+      let own = false, ownLeft = false, any = false;
+      for (const c of DREAMS.ECHO_LIST) {
+        if (c.trig !== 'core') continue;
+        if (c.maps && c.maps.indexOf(G.mapId) >= 0) { own = true; if (!DREAMS.echoSeen(c.id)) ownLeft = true; }
+        else if (!c.maps && !DREAMS.echoSeen(c.id)) any = true;
+      }
+      return own ? ownLeft : any;
+    } catch (err) { return false; }
+  }
   function bladeRun(e) {
+    if (isBell(e) && echoWaits(e)) return false;
     if (G.glassLock > 0) { say(TX.locked, 'bad', 1800); return true; }
     if (isBell(e) && e.name === 'Tamsin Reed') {   // Depot Three keeps js/tamsin52.js's own card
       try { if (typeof TAMSIN52 === 'object' && TAMSIN52.stage() === 0) { TAMSIN52.meet(e); return true; } } catch (err) { warnOnce('tamsin', err); }

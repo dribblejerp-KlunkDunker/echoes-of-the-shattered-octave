@@ -327,6 +327,17 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
         T.cls('blade'); T.at('quarry', 16.0, 21.5, 0, 0.45);
         const L = T.spawn('legionnaire', 17.2, 21.5, { name: 'Wenna Ffair' });
         T.face(L); T.put(L, 1.0); T.frames(2);
+        // 7a (integration, found by test/dreams): the first time anyone listens at a bell in the quarry, js/dreams.js
+        // plays the quarry's echo, "The name it was made from". A Glass-Hand hears it too: the act stands aside for
+        // that one use, and is there from the next.
+        delete G.flags.p6d_e_co_qr; delete G.flags.p6d_e_co_any;
+        out.dreamsOn = typeof DREAMS === 'object' && DREAMS.on();
+        const evA = T.evs(), gA = G.player.glass;
+        interact();
+        out.aside = T.evs() === evA && G.player.glass === gA && !L.dead;
+        out.echoQueued = DREAMS.pending().length > 0 || DREAMS.openId() === 'co_qr';
+        for (let i = 0; i < 3; i++) { try { DREAMS.pollEchoes(); if (DREAMS.isOpen()) DREAMS.closeCard(); } catch (e) { /* none */ } }
+        G.flags.p6d_e_co_qr = true; G.flags.p6d_e_co_any = true; closeModal(); hide('#event'); G.state = 'play'; T.face(L); T.put(L, 1.0); T.frames(2);
         const others = G.ents.filter((e) => e.kind === 'enemy' && e !== L).map((e) => [e, e.state]);
         const g0 = G.player.glass, n0 = G.noise, ev0 = T.evs();
         interact();
@@ -389,6 +400,7 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
         L4.dead = true; L4.hidden = true; T.cls('blade');
         return out;
       });
+      check(r.dreamsOn && r.aside && r.echoQueued, '7a. with the quarry\'s bell echo not yet heard, the first E plays the echo and the act stands aside (dreams ' + r.dreamsOn + ', aside ' + r.aside + ', queued ' + r.echoQueued + ')');
       check(r.card === true, '7. E at a quarry Legionnaire (not Tamsin) opens the By the bell card: the drink, then the voice inside');
       check(r.dead === true && r.glass === 3 && r.bells === 1 && r.noise <= 0.05 && r.others === true, '7. "Put your fist…" leaves it dead, its name in the ledger, the tideline +3 (' + r.glass + '), p126_bells 1 (' + r.bells + '), the noise no higher (+' + (r.noise != null && r.noise.toFixed(2)) + '), every other enemy\'s state unchanged (' + r.others + ')');
       check(r.g7 === true && r.ringing === true, '7. the core cracks under your knuckles, and the hand rings afterward');

@@ -100,6 +100,13 @@ Each through `tools/dev/browser.sh`, one runner at a time; the load-sensitive on
 - `tools/i18n/coverage.js`: 99.78% (12 missing, none of them this phase's: `motion10`, `origins`, `game`, `dread`, `hanger22` and the like).
 - The full 228-suite pass on the final commit was not run here (the design's §6.5 asks for it): owed, for integration.
 
+## Found and mended at integration (the Commander, 25 Nov)
+
+All 229 suites were run against the branch (228 in two runners at once, then `r3d21` alone). An environment restart cut the run off once; the suites it cut off were run again. Under load eight went red; run alone, six were green (`far14`, `festivals12`, `screens`, `smalllife`, `eaves82`, `pixelhands110`; the last two needed a second run alone, both being timing checks). Two were not:
+
+- **`test/dreams`, a real loss, mended.** The first time anyone uses E at a Legionnaire's bell in a place, `js/dreams.js` plays that place's echo ("The name it was made from" in the quarry). The Glass-Hand's act took the use key first, so a Glass-Hand never heard it. Now the act stands aside while that place's bell echo is unheard, and is there from the next use (`echoWaits` in `js/callings126.js`, which mirrors `coreEcho()` in `js/dreams.js`). `callings126` check 7a was added for it: 94 of 94. `dreams` 17 of 17.
+- **`test/net19`, not this phase's.** One check times out waiting on the two-player link. It fails the same way on main on this machine since the restart, and passed alone the day before. Left as it is and reported.
+
 ## Owed
 
 - 126b, as above.
