@@ -391,7 +391,9 @@ const CALLINGS126 = (function () {
     } catch (err) { return false; }
   }
   function bladeRun(e) {
-    if (isBell(e) && echoWaits(e)) return false;
+    // (Phase 127) js/dreams.js's coreEcho fires for any core enemy not chasing, and proctors are core (js/data.js): a
+    // proctor's first E in a place with its echo unheard plays the echo too, before the press comes off his belt
+    if ((isBell(e) || isPress(e)) && echoWaits(e)) return false;
     if (G.glassLock > 0) { say(TX.locked, 'bad', 1800); return true; }
     if (isBell(e) && e.name === 'Tamsin Reed') {   // Depot Three keeps js/tamsin52.js's own card
       try { if (typeof TAMSIN52 === 'object' && TAMSIN52.stage() === 0) { TAMSIN52.meet(e); return true; } } catch (err) { warnOnce('tamsin', err); }
@@ -800,7 +802,8 @@ const CALLINGS126 = (function () {
     if (st.sense > 0 && reg) {
       gather();
       const b = bitOf(id);
-      if (st.sense >= 1 && targets.length && b && !(flagInt('p126_seen') & b) && FIRST[id]) { F().p126_seen = flagInt('p126_seen') | b; say(FIRST[id], 'voice', 7000); }
+      const first = FIRST[id] || (reg.lines && reg.lines.first);   // (Phase 127) a calling's own registered line, not a table of three
+      if (st.sense >= 1 && targets.length && b && !(flagInt('p126_seen') & b) && first) { F().p126_seen = flagInt('p126_seen') | b; say(first, 'voice', 7000); }
     } else targets.length = 0;
   }
   function resetTransient() { st.sense = 0; st.stillT = 0; st.ringT = 0; st.ringEnt = null; st.slip = null; st.hintMap = ''; targets.length = 0; drawn.length = 0; }
@@ -877,6 +880,8 @@ const CALLINGS126 = (function () {
     register, unregister, ids, TEXTS, TX, FLAGS, validate, stats, sense: () => st.sense, lastDrawn, toView, visible, gather, draw,
     acts: tryActs, hobChoice, hobHum, orlaLine, cargoChoice, slip, ringing: () => st.ringT, mode: () => mode, setMode, setting, cycle, syncRow, ROW, FLAG,
     underOK, st,
+    // (Phase 127) for js/callings127.js: the shared helpers, so the other three callings use the same rules
+    echoWaits, firstAct, hashStr, h3, bitOf, keyOf, bossLike, liveEnemy, glyphs: g,
   };
   try { wire(); } catch (e) { console.warn('callings126 failed to wire', e); }
   return api;
