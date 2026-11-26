@@ -30,7 +30,9 @@ const PUMPS58 = (function () {
   const TX = {
     leave: S('Leave it.'),
     voiceTitle: S('The Tuning Room'),
-    voiceGlass: S('Halfway down the archive steps your arm goes cold to the shoulder, and a voice speaks in it, very gently, the way a man speaks who has never once needed to raise it.'),
+    // Phase 126: the Arbiter does not speak in the traveller's arm. The party line is for "two pieces cut from the same Spire"
+    // (Series Bible l. 160), and the traveller's glass is raw seam glass (Phase 125). [PROPOSED]
+    voiceGlass: S('Halfway down the archive steps your arm goes cold to the shoulder, and goes on ringing to itself. It is not your glass anything is speaking through. Ahead of you Kaelen has stopped with his glass hand flat on the wall, and gone grey. When it is over he tells you what it said, word for word, in a voice that is not quite his.'),
     voiceKaelen: S('Halfway down the archive steps Kaelen stops with his glass hand flat on the wall, and goes grey, and you understand that something is speaking to him through it. When it is over he tells you what it said, word for word, in a voice that is not quite his.'),
     voice: S('"And the eight men at the pumps. Whisper-Grove stock, consigned to Oakhaven in the ninth month of 417, which means they will be in the carriage file in the box behind your left shoulder, third shelf, grey spine." A pause. "I told you. I keep a list too."<br><br>The glass goes quiet.'),
     box: S('A grey-spined box, third shelf'),
