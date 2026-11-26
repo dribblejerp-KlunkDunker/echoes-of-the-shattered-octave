@@ -897,6 +897,38 @@ const PIXELHANDS110 = (() => {
     return true;
   }
 
+  // ---------------------------------------------------------------- a hand at rest: open, laid flat (js/boots125.js)
+  // (26 Nov) "She put her good hand flat on the lid" (Book One, MS l. 4518). An open hand laid flat on something at desk
+  // height, seen from above and behind: the back of the hand up, the fingers pointing away, the forearm down out of the
+  // bottom of the view. To the fist's own measure (climbArt above), 4 picture pixels to a view pixel.
+  const RS = { w: 84, h: 150, px: 42, py: 40 };     // in view pixels: the picture's size, where the middle of the palm is
+  function restPose(left) {
+    const P = { f: frame([0, 0.66, -0.7513], [0, 0.7513, 0.66]), s: 34 * 4 / 9.2 / GR, ax: 0, ay: 0, D, mirror: !!left, roll: left ? -4 : 4 };
+    const c = scr(P, PALM_C); P.ax = RS.px * 4 / GR - c[0]; P.ay = RS.py * 4 / GR - c[1];
+    return P;
+  }
+  function restArt(look, left) {
+    const ck = KEYP + 'r|' + (left ? 'L' : 'R') + '|' + lookKey(look), cache = FP87.cache; let hit = cache.get(ck); if (hit) return hit;
+    const Wf = RS.w * 4, Hf = RS.h * 4; plain(Wf, Hf);
+    const wear = wearOf(look), S = Scene();
+    // (the wrist bends, flexW: the forearm falls down the view; straight on along the hand it would come at the eye and fill the view)
+    addHand(S, restPose(left), { curl: 'open', wear, glass: !!left && !!(look && look.glassArm), foreLen: 46, flexW: 34 });
+    const out = finish(compose(shadeScene(S, wear), null), 0, Wf, Hf);
+    hit = { canvas: out.canvas, emis: out.emis };
+    if (cache.size > 40) cache.clear();
+    cache.set(ck, hit);
+    return hit;
+  }
+  // i: 0 the left hand, 1 the right; (x, y): where the middle of the palm lies, in view pixels
+  function restHand(ctx, i, x, y) {
+    if (!on()) return false;
+    let look = null; try { look = typeof GEARLOOK21 === 'object' && G.player ? GEARLOOK21.of(G.player) : null; } catch (e) { look = null; }
+    if (!look) return false;
+    const a = restArt(look, i === 0);
+    ctx.drawImage(a.canvas, x - RS.px, y - RS.py, RS.w, RS.h);
+    return true;
+  }
+
   // ---------------------------------------------------------------- the arm behind a shield (js/body21.js)
   // Phase 111. The shield rides the left forearm, its face toward you: the forearm comes up from below behind it, the palm
   // against its back, and the four fingers are hooked over its rim onto the face. Two pictures, to the same measure: the
@@ -931,9 +963,9 @@ const PIXELHANDS110 = (() => {
   const PALM_C = [0, 5, 0];
   function poses(kind, id, look) {
     if (!_paint) return null;
-    const lone = kind === 'c' || kind === 'o';
+    const lone = kind === 'c' || kind === 'o' || kind === 'r';
     const r = lone ? null : kind === 'w' ? _paint(id, look, { noHands: true }) : _paintHands(look, id, { noHands: true }); if (!r && !lone) return null;
-    const Wf = lone ? (kind === 'c' ? CL.w : OA.w) * 4 : r.canvas.width, Hf = lone ? (kind === 'c' ? CL.h : OA.h) * 4 : r.canvas.height; plain(Wf, Hf);
+    const LN = kind === 'c' ? CL : kind === 'r' ? RS : OA, Wf = lone ? LN.w * 4 : r.canvas.width, Hf = lone ? LN.h * 4 : r.canvas.height; plain(Wf, Hf);
     const wear = wearOf(look), out = { w: Wf, h: Hf, weapon: kind === 'w' ? r.canvas : null, hands: [] };
     const give = (P, curl, anchor, glass, dev, flexW) => {
       const a = scr(P, anchor); let arm = [0, -1, 0]; if (dev) arm = rot(arm, [0, 0, 1], dev * D2R); if (flexW) arm = rot(arm, [1, 0, 0], flexW * D2R);
@@ -946,6 +978,14 @@ const PIXELHANDS110 = (() => {
       give(P, 'grip', GRIP_C, left && !!(look && look.glassArm), 0, 0);
       // (a forearm that ran on along the hand would come at the eye and fill the view: the wrist bends, and it hangs nearly straight down)
       const h = out.hands[0], a = [h.arm[0] * 0.5, -0.97, 0.06], l = Math.hypot(a[0], a[1], a[2]); h.arm = [a[0] / l, a[1] / l, a[2] / l];
+      return out;
+    }
+    if (kind === 'r') {
+      // an open hand laid flat (restArt above): id 'L' the left hand, 'R' the right
+      const left = id === 'L', P = restPose(left);
+      give(P, 'open', PALM_C, left && !!(look && look.glassArm), 0, 0);
+      // (as in the climb: the wrist bends back, so the forearm falls down the view and does not come at the eye)
+      const h = out.hands[0], a = [h.arm[0] * 0.5, -0.95, 0.3], l = Math.hypot(a[0], a[1], a[2]); h.arm = [a[0] / l, a[1] / l, a[2] / l];
       return out;
     }
     if (kind === 'o') {
@@ -1057,6 +1097,6 @@ const PIXELHANDS110 = (() => {
     return finish(compose(shadeScene(S, wear), null), 0, spec.w, spec.h);
   }
 
-  return { FLAG, GR, on, setOn, paint, paintHands, climbHand, climbArt, offArm, songCanvas, poses, CL, OA, wearOf, ROW, stats, MRG, original: () => (FP87 && FP87._px110) || null, _raise: (o) => { RAISE = Object.assign({}, RAISE, o); }, _dev: { hands: devHands } };
+  return { FLAG, GR, on, setOn, paint, paintHands, climbHand, climbArt, restHand, restArt, RS, offArm, songCanvas, poses, CL, OA, wearOf, ROW, stats, MRG, original: () => (FP87 && FP87._px110) || null, _raise: (o) => { RAISE = Object.assign({}, RAISE, o); }, _dev: { hands: devHands } };
 })();
 if (typeof window !== 'undefined') window.PIXELHANDS110 = PIXELHANDS110;
