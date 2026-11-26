@@ -214,7 +214,7 @@ const BOOTS125 = (function () {
   const MOMENTS = { needle: 1, hold: 2, bolts: 3, rope: 4, names: 5, coda: 6 };
   const BIT = { needle: 1, hold: 2, bolts: 4, rope: 8, names: 16, coda: 32 };
   const S = { at: null, part: 1, beat: null, bi: -1, t: 0, clock: 0, home: null, anchor: null, opts: null, def: null, card: false, wait: false, slips: {}, auto: {}, log: [], input: { use: false, song: false }, press: 0, held: 0, weapon: null, x: {} };
-  const stats = { props: 0, slips: 0 };
+  const stats = { props: 0, slips: 0, rest: 0, fist: 0 };
   const active = () => S.at;
   // whose boots, for the HUD's name line (js/game.js drawHUD): the hero's own name as the book writes it, or null
   const hudName = () => { try { const h = S.at && S.def && HEROES[S.def.hero]; return (h && h.name) || null; } catch (e) { return null; } };
@@ -614,12 +614,20 @@ const BOOTS125 = (function () {
     const pose = S.def.pose === 'rail' && S.weapon === 'axe' ? null : S.def.pose;
     if (pose !== 'stool' && pose !== 'rail' && pose !== 'lid') return;
     const VH = typeof VIEW_H === 'number' ? VIEW_H : 150, y = pose === 'rail' ? VH - 44 : VH - 34;
-    const at = pose === 'lid' ? [[1, 150, VH - 30]] : [[0, 96, y], [1, 194, y]];
+    // (26 Nov) the lid: "She put her good hand flat on the lid" (MS 4518): one open hand laid flat, its palm at (x, y)
+    const rest = pose === 'lid', at = rest ? [[1, 172, VH - 15]] : [[0, 96, y], [1, 194, y]];
     let drew = false;
     for (const [i, x, yy] of at) {
       let ok = false;
-      try { ok = typeof BODY21 === 'object' && !!BODY21.sculptClimb && !!BODY21.sculptClimb(ctx, i, x, yy); } catch (e) { ok = false; }
-      if (!ok) try { ok = typeof PIXELHANDS110 === 'object' && !!PIXELHANDS110.climbHand(ctx, i, x, yy); } catch (e) { ok = false; }
+      if (rest) {
+        try { ok = typeof BODY21 === 'object' && !!BODY21.sculptRest && !!BODY21.sculptRest(ctx, i, x, yy); } catch (e) { ok = false; }
+        if (!ok) try { ok = typeof PIXELHANDS110 === 'object' && !!PIXELHANDS110.restHand && !!PIXELHANDS110.restHand(ctx, i, x, yy); } catch (e) { ok = false; }
+        if (ok) stats.rest++;
+      } else {
+        try { ok = typeof BODY21 === 'object' && !!BODY21.sculptClimb && !!BODY21.sculptClimb(ctx, i, x, yy); } catch (e) { ok = false; }
+        if (!ok) try { ok = typeof PIXELHANDS110 === 'object' && !!PIXELHANDS110.climbHand(ctx, i, x, yy); } catch (e) { ok = false; }
+        if (ok) stats.fist++;
+      }
       drew = drew || ok;
     }
     try { if (typeof BODY21 === 'object' && BODY21.sculptClimbEnd) BODY21.sculptClimbEnd(ctx); } catch (e) { /* none */ }

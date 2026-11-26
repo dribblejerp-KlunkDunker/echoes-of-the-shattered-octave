@@ -142,6 +142,24 @@ async function step(text, fn) { try { await fn(); passed++; console.log('PASS ' 
       assert.ok(r.L.b > r.L.r + 40 && r.R.r > r.R.b, 'the glass left, the right as worn ' + JSON.stringify(r));
     });
 
+    await step('a hand at rest: open and laid flat, its fingers apart; the same pose for the sculpted hands', async () => {
+      const r = await page.evaluate(() => {
+        const p = G.player; p.glassed = true; const look = GEARLOOK21.of(p), RS = PIXELHANDS110.RS;
+        const R = PIXELHANDS110.restArt(look, false), C = PIXELHANDS110.climbArt(look, false);
+        // the most separate fingers any one row of the picture crosses: an open hand's fingers stand apart, a fist's do not
+        const fingers = (cv, y0, y1) => { const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; let best = 0; for (let y = y0 * 4; y < y1 * 4; y++) { let runs = 0, inRun = false; for (let x = 0; x < cv.width; x++) { const o = d[(y * cv.width + x) * 4 + 3] === 255; if (o && !inRun) runs++; inRun = o; } best = Math.max(best, runs); } return best; };
+        const c = document.createElement('canvas'); c.width = 320; c.height = 150; const x = c.getContext('2d');
+        const okOn = PIXELHANDS110.restHand(x, 1, 160, 120);
+        const d = x.getImageData(120, 80, 80, 70).data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] === 255) n++;
+        GFX.pixelHands = false; const okOff = PIXELHANDS110.restHand(x, 1, 160, 120); GFX.pixelHands = true;
+        const P = PIXELHANDS110.poses('r', 'R', look);
+        return { size: R.canvas.width + 'x' + R.canvas.height, want: RS.w * 4 + 'x' + RS.h * 4, fRest: fingers(R.canvas, 0, RS.py), fFist: fingers(C.canvas, 0, 40), okOn, okOff, n, pose: P && P.hands.length === 1 ? P.hands[0].curl + (P.hands[0].left ? ' L' : ' R') : String(P && P.hands.length) };
+      });
+      assert.ok(r.size === r.want && r.okOn === true && r.okOff === false && r.n > 400, JSON.stringify(r));
+      assert.ok(r.fRest >= 4 && r.fFist <= 2, 'the open hand\'s fingers stand apart, the fist\'s do not ' + JSON.stringify(r));
+      assert.ok(r.pose === 'open R', 'the sculpted hands are given the same open hand ' + JSON.stringify(r));
+    });
+
     await step('Options row; Original off, every other preset on; a change rebuilds the pictures', async () => {
       const r = await page.evaluate(() => {
         PRESETS.apply('medium');

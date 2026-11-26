@@ -2,6 +2,7 @@
 // off. Medium preset, the 3D view, the sculpted hands. Each moment is staged as test/boots125.test.js stages it and
 // stepped to its beat; the picture is the visible game canvas (the 3D view, the HUD and the captions) as a JPEG, q 85.
 //   PREVIEW_URL=http://127.0.0.1:4228 tools/dev/browser.sh node tools/dev/shots125b.js [OUTDIR] [needle hold bolts rope names coda frame off]
+//   env: VIEW=classic (not the 3D view), HANDS=pixel or plain (not the sculpted hands)
 // No Math.random: the game's own is pinned for each frame, as test/cover105.test.js pins it.
 'use strict';
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || '/opt/npm-tools/node_modules/playwright');
@@ -15,18 +16,18 @@ const want = (k) => !ONLY.length || ONLY.includes(k);
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
   page.setDefaultTimeout(900000);
   page.on('pageerror', (e) => console.log('[pageerror]', e.message));
-  await page.addInitScript(() => { window.__r3d21 = { automation: true, force: true }; try { localStorage.setItem('octave.r3d21.v1', JSON.stringify({ mode: 'on', cap: 80 })); } catch (e) { /* none */ } });
+  if (process.env.VIEW !== 'classic') await page.addInitScript(() => { window.__r3d21 = { automation: true, force: true }; try { localStorage.setItem('octave.r3d21.v1', JSON.stringify({ mode: 'on', cap: 80 })); } catch (e) { /* none */ } });
   await page.goto((process.env.PREVIEW_URL || 'http://127.0.0.1:4228') + '/?nosw=1', { timeout: 600000, waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => typeof Engine !== 'undefined' && Engine.sprites.proctor && G.state === 'title', null, { timeout: 600000, polling: 500 });
   const hit = (sel) => page.locator(sel).first().dispatchEvent('click');
   await hit('#btn-new'); await page.locator('#cname').fill('Wren Ashby'); await hit('#c-next'); await hit('.classlist button'); await hit('#c-next'); await hit('#c-next');
   for (let i = 0; i < 20 && !(await page.locator('#c-go').count()); i++) { const c = page.locator('#create-panel .list button').first(); if (await c.count()) await c.dispatchEvent('click'); else await page.locator('#create-panel button').filter({ hasText: /Continue|Begin|Confirm|Accept/ }).first().dispatchEvent('click'); }
   await hit('#c-go'); await hit('#btn-intro-skip'); await page.waitForTimeout(600);
-  await page.evaluate(() => {
+  await page.evaluate((HANDS) => {
     window.requestAnimationFrame = () => 0;
     window.__ev = []; window.showEvent = (t, b, c) => { window.__ev.push({ t, b, c }); };
     REEDS.forceManual = true;
-    PRESETS.apply('medium'); GFX.sculptedHands = true; GFX.heroHands = true;
+    PRESETS.apply('medium'); GFX.sculptedHands = HANDS !== 'pixel' && HANDS !== 'plain'; if (HANDS === 'plain') GFX.pixelHands = false; GFX.heroHands = true;
     const pin = (fn) => { const rn = Math.random; let sd = 11; Math.random = () => (sd = (sd * 16807) % 2147483647) / 2147483647; try { return fn(); } finally { Math.random = rn; } };
     window.SH = {
       step(n) { for (let i = 0; i < n; i++) { G.state = 'play'; G.keys = {}; pin(() => update(0.05)); } },
@@ -39,7 +40,7 @@ const want = (k) => !ONLY.length || ONLY.includes(k);
         const cs = G.maps.rootvault.casingRoom; loadMap('rootvault', { x: cs.cx + 0.5, y: cs.cy + 1.9, dir: -Math.PI / 2 }); G.state = 'play'; RITE43.stageVault(G.map);
       },
     };
-  });
+  }, process.env.HANDS || '');
   const canvasBox = async () => page.evaluate(() => { const c = [...document.querySelectorAll('canvas')].filter((x) => x.offsetWidth > 300).sort((a, b) => b.offsetWidth * b.offsetHeight - a.offsetWidth * a.offsetHeight)[0]; const r = c.getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height }; });
   const shot = async (name) => { const clip = await canvasBox(); const f = path.join(OUT, 'p125b-' + name + '.jpg'); await page.screenshot({ path: f, type: 'jpeg', quality: 85, clip }); console.log('wrote ' + f); };
   const ev = (fn, arg) => page.evaluate(fn, arg);

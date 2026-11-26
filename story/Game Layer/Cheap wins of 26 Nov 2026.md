@@ -28,8 +28,22 @@ The owner, 26 Nov, 7:28 am: "I'm going to install it on my phone this morning an
 
 ![The same in the 3D view](../../screenshots/cw26-kestrel-sky-3d.jpg)
 
+## 3. Sable's good hand lies flat on the lid
+
+**What you see.** In Sable's boots in the hold (the three names) her hand was drawn as a fist at the bottom of the view. It is now an open hand laid flat, the back of the hand up and the fingers apart, in both sets of hands (the pixel hands and the sculpted hands). With plain hands (both switched off) nothing is drawn there, as before.
+
+**Lore.** "She put her good hand flat on the lid" (Book One, full manuscript l. 4518); the book does not move it while she reads the names. Her other arm is the "broken wing" (l. 4600).
+
+**How.** One new hand picture, a hand at rest: `PIXELHANDS110.restArt` and `restHand` (the open hand the Songs already use, turned to lie flat, the wrist bent so the forearm falls down the view), the same pose handed to the sculpted hands (`PIXELHANDS110.poses('r', ...)`, `BODY21.sculptRest`), and `js/boots125.js` asks for it where the pose is the lid. Any later scene can use it.
+
+**Not done, and why.** Kaelen's needle is still the plain right hand with the copper wire running from it to the needle. A pinch is a different hand again (finger and thumb together), in two styles, and is not a cheap win. It is left for the hands' next piece.
+
+**Tests.** `test/pixelhands110`: a new check (the picture's size, at least four fingers standing apart where a fist has none, drawn when the switch is on and not when off, the same open right hand given to the sculpted hands). `test/boots125` 10c: in the names an open hand is drawn and no fist. Both written first and seen failing. Suites run: pixelhands110 (alone), pixelhands111, sculpted112, hands122, body21, fp-hands, fp-feel, boots125, strangers125, and light21 alone. All green.
+
+![Sable's hand on the lid, before and after](../../screenshots/cw26-lid-hand.jpg)
+
 ## Still to come
 
-3. Faces for the crowds: each person in a shared crowd picks one of several painted faces by a fixed rule, never by chance.
-4. Proper open-hand poses for Kaelen's needle and Sable's hand on the lid (owed from Phase 125b).
-5. Stronger sights on a phone, only if the owner finds them too faint.
+- Faces for the crowds: each person in a shared crowd picks one of several painted faces by a fixed rule, never by chance.
+- A pinch for Kaelen's needle.
+- Stronger sights on a phone, only if the owner finds them too faint.

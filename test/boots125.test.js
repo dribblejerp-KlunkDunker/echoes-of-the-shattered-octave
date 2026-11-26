@@ -326,6 +326,8 @@ function verbatim(t, lines) {
       out.active = BOOTS125.active() === 'names'; T.press(0);
       out.toCorwin = T.beat('corwin');
       out.hint = T.heard(/^Keep your eyes on him\.$/);
+      // (26 Nov) her good hand lies flat and open on the lid, not a fist
+      { const st = BOOTS125.stats; st.rest = 0; st.fist = 0; GFX.heroHands = true; render(); out.restN = st.rest; out.fistN = st.fist; }
       T.tap('use');
       Engine.cam.pitch = 242.42 * Math.tan(-15 * Math.PI / 180); T.step(3, 0.05);
       const e1 = T.last(); out.slip = /An Echo/.test(e1.t) && /she did not look at it/.test(e1.b);
@@ -346,6 +348,7 @@ function verbatim(t, lines) {
       return out;
     });
     check(names.tags && names.three && names.card && names.active && names.toCorwin && names.hint, '10. Sable\'s boots after "Go on, then"; "Keep your eyes on him."');
+    check(names.restN > 0 && names.fistN === 0, '10c. "She put her good hand flat on the lid" (MS 4518): an open hand laid flat is drawn, and no fist (' + names.restN + ' open, ' + names.fistN + ' fists)');
     check(names.slip && names.again, '10. looking 15 degrees down during an entry is a slip, "she did not look at it", and the same entry again');
     check(names.toEnd && names.inOrder && names.whole && names.iknow, '10. the three entries are MS 4556, 4560 and 4564 whole, in that order; "Your engineer told me."');
     check(names.filed && names.frag && names.callingNone, '10. the filed card follows; no fragment is spent');
