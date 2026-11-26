@@ -2078,6 +2078,15 @@ const VOICE_LINES = {
 "voiceOf": "core_voice",
 "when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
 },
+"core.death.cass-yelland": {
+"d": 4.01,
+"kind": "death",
+"speaker": "core_voice",
+"src": "voices/core_voice/core.death.cass-yelland.mp3",
+"t": "Cass Yelland",
+"voiceOf": "core_voice",
+"when": "enemy def.core && e.name; applies to legionnaire, proctor, marine, bosun, outrider, captain (and hushwarden)"
+},
 "core.death.corwin-aye": {
 "d": 3.31,
 "kind": "death",

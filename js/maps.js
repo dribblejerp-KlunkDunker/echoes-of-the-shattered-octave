@@ -702,7 +702,7 @@ function buildRootVault() {
     m.casingRoom = cs;
   }
   const bl = m.named.boiler; if (bl) { m.enemy('golem', bl.cx + 0.5, bl.cy + 0.5); m.deco('pump', bl.x + 0.7, bl.y + 0.7, { radius: 0.4 }); m.item('tonic', bl.x + bl.w - 0.7, bl.y + bl.h - 0.7); }
-  const ga = m.named.gallery; if (ga) { m.enemy('legionnaire', ga.cx + 0.5, ga.cy + 0.5, { name: 'Mirren Salk' }); m.enemy('legionnaire', ga.x + 1.5, ga.cy + 0.5, { name: 'Dunstan Pell' }); m.item('pellets', ga.x + ga.w - 0.7, ga.y + 0.6); }
+  const ga = m.named.gallery; if (ga) { m.enemy('legionnaire', ga.cx + 0.5, ga.cy + 0.5, { name: 'Cass Yelland' /* Phase 127: Mirren Salk's core is in the Kestrel's hold, MS 4560 */ }); m.enemy('legionnaire', ga.x + 1.5, ga.cy + 0.5, { name: 'Dunstan Pell' }); m.item('pellets', ga.x + ga.w - 0.7, ga.y + 0.6); }
   const ci = m.named.cistern; if (ci) { m.enemy('quiet', ci.cx + 0.5, ci.cy + 0.5); m.item('honey', ci.x + 0.6, ci.y + 0.6); m.item('sovereigns', ci.x + ci.w - 0.7, ci.y + ci.h - 0.7); }
   for (const r of m.rooms) {
     if (r === e || r.name) continue;
