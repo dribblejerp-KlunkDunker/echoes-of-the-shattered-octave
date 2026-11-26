@@ -162,6 +162,23 @@ const HELPERS = () => {
       const cen = (idx, w) => { let sx = 0, sy = 0; for (const i of idx) { sx += i % w; sy += (i / w) | 0; } return { x: sx / idx.length, y: sy / idx.length }; };
       const f1 = fly('whispergrove', 20.5, 20.5, 1.0, 0.5, 106, 1.0, 1);
       check(f1.st.active && f1.st.forced && f1.idx.length >= 40 && f1.idx.length <= 900, 'a forced flyover draws the Kestrel (' + f1.idx.length + ' px, state ' + JSON.stringify(f1.st) + ')');
+      // (26 Nov) the Kestrel in the sky is the book's ship: "brass-ribbed and oak-planked, with a patched grey envelope and
+      // four lift-tanks slung beneath her keel glowing the faint cobalt of drift-glass" (Book One, MS l. 674; again l. 4177).
+      // She had been drawn with two masts under square sails and red pennants, which the book's ship does not have.
+      {
+        const A = SKY.ship.art, W = A[0].length, has = (ch) => A.some((r) => r.includes(ch));
+        const hullTop = A.findIndex((r) => /w/.test(r));
+        const above = A.slice(0, Math.max(0, hullTop));
+        const envRows = above.filter((r) => /[cCR]/.test(r)).length;
+        const envWide = Math.max(0, ...above.map((r) => Math.max(0, ...((r.match(/[cCR]+/g) || []).map((s) => s.length)))));
+        const greyBelow = A.slice(Math.max(0, hullTop)).some((r) => /[cCR]/.test(r));
+        const keel = A.reduce((k, r, j) => (/[wWk]/.test(r) ? j : k), -1);
+        const tankRow = A.slice(keel + 1).find((r) => /[YB]/.test(r)) || '';
+        const tanks = (tankRow.match(/[YBD]+/g) || []).length;
+        const tanksAbove = A.slice(0, keel + 1).some((r) => /[YBD]/.test(r));
+        check(!has('m') && !has('p') && envRows >= 4 && envWide >= 24 && !greyBelow && tanks === 4 && !tanksAbove && A.every((r) => r.length === W),
+          'the Kestrel in the sky is the book\'s: one grey envelope over the hull (' + envRows + ' rows, ' + envWide + ' wide), four lift-tanks under the keel (' + tanks + '), no masts, no pennants');
+      }
       check(allSky(f1.on, f1.idx), 'the Kestrel only draws on sky pixels above the horizon');
       const c1 = cen(f1.idx, 320); check(Math.abs(c1.x - f1.st.x) < 10 && Math.abs(c1.y - f1.st.y) < 8, 'SKY.state() says where it is (' + c1.x.toFixed(1) + ',' + c1.y.toFixed(1) + ' vs ' + f1.st.x.toFixed(1) + ',' + f1.st.y.toFixed(1) + ')');
       check(f1.st.y < f1.on.horizon - 10, 'it crosses the sky band, not the horizon');
@@ -174,7 +191,11 @@ const HELPERS = () => {
       const f3 = fly('whispergrove', 20.5, 20.5, 1.0, 0.5, 109, 1.0, 1); const c3 = cen(f3.idx, 320);
       check(c3.x - c1.x > 8, 'it flies on as the clock runs (moved ' + (c3.x - c1.x).toFixed(1) + ' px in 3 s)');
       // and it is faded in and out at the ends of the flight
-      const fe = fly('whispergrove', 20.5, 20.5, 1.0, 0.5, 100.05, 1.0, 1); check(fe.idx.length < f1.idx.length * 0.5, 'the flight fades in at its start (' + fe.idx.length + ' px)');
+      // (26 Nov) measured as how strongly each touched pixel changes, not how many: at the first instant the ship is half off the
+      // screen's edge, so a count of pixels only said which half of the drawing was the fuller one
+      const mean = (f) => { let s = 0; for (const i of f.idx) { const a = f.off.fb[i], b = f.on.fb[i]; s += Math.abs((a & 255) - (b & 255)) + Math.abs(((a >> 8) & 255) - ((b >> 8) & 255)) + Math.abs(((a >> 16) & 255) - ((b >> 16) & 255)); } return f.idx.length ? s / f.idx.length : 0; };
+      const fe = fly('whispergrove', 20.5, 20.5, 1.0, 0.5, 100.05, 1.0, 1); const mE = mean(fe), m1 = mean(f1);
+      check(fe.idx.length > 0 && mE < m1 * 0.25, 'the flight fades in at its start (each pixel changes by ' + mE.toFixed(1) + ' against ' + m1.toFixed(1) + ' in mid-flight; ' + fe.idx.length + ' px of ' + f1.idx.length + ')');
       // outside the 12-second window, nothing
       const fn = fly('whispergrove', 20.5, 20.5, 1.0, 0.5, 130, 1.0, 1); check(fn.idx.length === 0 && !fn.st.active, 'no Kestrel outside its window');
       // the forced hook is only a test hook: clear it and the schedule rules
