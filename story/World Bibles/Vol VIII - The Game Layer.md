@@ -2474,6 +2474,7 @@ Record: `story/Game Layer/Cheap wins of 26 Nov 2026.md`. The owner, 26 Nov: "tak
 - **Canon, with its source:** the *Kestrel* is "small for a skyship, sixty feet perhaps, brass-ribbed and oak-planked, with a patched grey envelope and four lift-tanks slung beneath her keel glowing the faint cobalt of drift-glass" (Book One, full manuscript l. 674). She has four tanks in Harvestmonth 419; Book Three's "three tanks" (`Book Three/Part Two Ch5-8.md:19`) is later and is not shown. She has no masts, sails or pennants in any book; the "mast-ladder" is the mooring mast's. The heroes' names on the bar are the books' own.
 - **Invented (the game's own):** nothing. The gun mount forward and the lanterns at bow and stern were in the old drawing and are kept (the bow lantern blinks, as it always has).
 - **Added the same day (3):** in Sable's boots her hand on the lid is an open hand laid flat, not a fist: "She put her good hand flat on the lid" (Book One, full manuscript l. 4518). One new hand picture, a hand at rest, in both sets of hands.
+- **Added the same day (4):** the rule for the crowds' faces (`FACES124.POOL`): each person of a crowd shows one of the crowd's painted faces by where their home stands among the others, never by chance. No lore set; the list is empty until the faces are painted.
 - **Not done:** the tanks' glow after dark; a pinch for Kaelen's needle.
 
 #### Phase 126: the callings, part one (built, 25 Nov)

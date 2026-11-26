@@ -272,13 +272,56 @@ const FACES124 = (function () {
     } catch (e) { warnOnce('servedBy', e); }
     return null;
   }
+  // (26 Nov) POOL: the crowds. One entry (a townsman, a mourner, one of the Umbral folk) stands in many places, so one
+  // row in OWN would give the whole crowd one face. A crowd's row here is a list of faces (img/p_<stem>.jpg, 96 by 96,
+  // two or more), keyed as OWN is: the entry's NPC id, or the figure its people wear. Each of the crowd's people shows
+  // one of them by a FIXED RULE, never by chance: where that person's home stands among the others of the same entry on
+  // the map (north to south, then west to east), stepped on by a number made from the map's and the entry's names, so
+  // two maps do not open on the same face. The same person shows the same face every time, in every save. Someone who is
+  // not on the map's list (a figure met in a scene) takes the first place. Same switch as OWN (GFX.ownFaces).
+  // test/own124.test.js checks every row. Empty until the crowds' faces are painted (tools/faces/PROMPTS.tsv, the # rows).
+  const POOL = {};
+  const hasPool = (k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(POOL, k) && Array.isArray(POOL[k]) && POOL[k].length > 0;
+  const strHash = (t) => { let h = 2166136261; for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+  const homeOf = (e) => [typeof e.homeY === 'number' ? e.homeY : e.y || 0, typeof e.homeX === 'number' ? e.homeX : e.x || 0];
+  // crowdKey(n, id): the POOL row for this entry, or null (a person with a face of their own, or a portrait of their own, has none)
+  function crowdKey(n, id) {
+    if (!n || typeof n !== 'object' || !BORROWED.includes(n.portrait)) return null;
+    if (hasPool(id)) return id;
+    if (hasPool(n.sprite)) return n.sprite;
+    return null;
+  }
+  // crowdFace(key, ent): which of the crowd's faces this person shows
+  function crowdFace(key, ent) {
+    if (!hasPool(key)) return null;
+    const list = POOL[key]; let rank = 0, mapId = '';
+    try {
+      mapId = (typeof G !== 'undefined' && G.map && G.map.id) || '';
+      if (ent && typeof G !== 'undefined' && Array.isArray(G.ents) && G.ents.includes(ent)) {
+        const mine = homeOf(ent);
+        for (const o of G.ents) { if (!o || o === ent || o.kind !== 'npc' || o.id !== ent.id) continue; const h = homeOf(o); if (h[0] < mine[0] || (h[0] === mine[0] && h[1] < mine[1])) rank++; }
+      }
+    } catch (e) { warnOnce('crowd', e); rank = 0; }
+    return list[(rank + strHash(mapId + '|' + key)) % list.length];
+  }
+  // the person being spoken to, when it is this entry (js/game.js talk() sets DLG.ent)
+  function spokenTo(n) {
+    try { if (typeof DLG !== 'undefined' && DLG && DLG.ent && typeof G !== 'undefined' && G.state === 'dialogue' && typeof NPCS !== 'undefined' && NPCS[DLG.ent.id] === n) return DLG.ent; } catch (e) { /* none */ }
+    return null;
+  }
   // portrait(npcOrId): the portrait name to show (img/p_<name>.jpg): the person's own if the switch is on and OWN has
-  // them, otherwise exactly the entry's own portrait, as before
+  // them; one of their crowd's faces if they are one of a crowd and are being spoken to; otherwise exactly the entry's
+  // own portrait, as before
   function portrait(x) {
     const n = typeof x === 'string' ? (typeof NPCS !== 'undefined' ? NPCS[x] : null) : x;
     const base = n && typeof n === 'object' ? n.portrait : undefined;
     if (!ownOn()) return base;
-    const k = servedBy(x); return k ? OWN[k] : base;
+    const k = servedBy(x); if (k) return OWN[k];
+    try {
+      const id = typeof x === 'string' ? x : x && typeof x === 'object' ? idOf(x) : null, ck = crowdKey(n, id), e = ck ? spokenTo(n) : null;
+      if (e) return crowdFace(ck, e) || base;
+    } catch (e) { warnOnce('pool', e); }
+    return base;
   }
   const OWN_ROW = ['gfx-ownfaces124', 'Faces of their own', 'the people met since Book One have painted portraits of their own in the talk window'];
   function syncOwnRow() {
@@ -317,6 +360,6 @@ const FACES124 = (function () {
   }
   try { wireOwnRow(); } catch (e) { warnOnce('wire own', e); }
 
-  return { FLAG, ROW, OWN, OWN_FLAG, OWN_ROW, portrait, servedBy, skin, maskOf, hsl, hueDist, on, sync, recolours: () => REG.map((e) => ({ name: e.name, src: e.src, from: e.from, data: e.data, tinted: e.tinted, base: e.base })), stats: () => Object.assign({}, stats) };
+  return { FLAG, ROW, OWN, POOL, crowdFace, OWN_FLAG, OWN_ROW, portrait, servedBy, skin, maskOf, hsl, hueDist, on, sync, recolours: () => REG.map((e) => ({ name: e.name, src: e.src, from: e.from, data: e.data, tinted: e.tinted, base: e.base })), stats: () => Object.assign({}, stats) };
 })();
 if (typeof window !== 'undefined') window.FACES124 = FACES124;

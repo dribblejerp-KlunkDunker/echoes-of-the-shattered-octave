@@ -169,6 +169,46 @@ function jpegSize(file) {
     });
     assert.deepStrictEqual(r, { row: true, beside: true, toggled: true, back: true });
   });
+  // (26 Nov) the crowds. One entry (a townsman, a mourner, one of the Umbral folk) stands in many places; each of its
+  // people shows one of the crowd's painted faces, chosen by where that person stands among the others (a fixed rule)
+  await step('a crowd: each of its people shows one of the crowd\'s faces by a fixed rule (FACES124.POOL), never by chance', async () => {
+    const r = await page.evaluate(() => {
+      const F = FACES124, out = { api: !!F.POOL && typeof F.crowdFace === 'function' };
+      if (!out.api) return out;
+      const had = Object.assign({}, F.POOL), ents0 = G.ents.slice(), rn = Math.random; let calls = 0; Math.random = () => { calls++; return rn(); };
+      const n = NPCS.townsman, men = [0, 1, 2].map((i) => ({ id: 'townsman', kind: 'npc', sprite: n.sprite, x: 30 + i * 2, y: 40, homeX: 30 + i * 2, homeY: 40 }));
+      const ask = (e) => { DLG.npc = n; DLG.ent = e; G.state = 'dialogue'; const v = F.portrait(n); G.state = 'play'; DLG.ent = null; return v; };
+      try {
+        loadMap('oakhaven', {}); for (const k of Object.keys(F.POOL)) delete F.POOL[k];
+        calls = 0;   // (entering a map rolls its own dice; from here on nothing may)
+        G.ents = G.ents.filter((e) => e.id !== 'townsman').concat(men);
+        out.empty = men.map(ask).join(',');                                   // no faces painted for the crowd: as before
+        F.POOL.townsman = ['own_orrin', 'own_garrow', 'own_sim'];              // (three of the painted faces, borrowed for the test)
+        const a = men.map(ask); out.three = a.join(','); out.distinct = new Set(a).size;
+        out.again = men.map(ask).join(',') === out.three;
+        G.ents = G.ents.slice().reverse(); out.reordered = men.map(ask).join(',') === out.three;   // the order of the list does not matter
+        men[1].x += 5; men[1].y -= 3; out.walked = men.map(ask).join(',') === out.three;           // nor where he has walked to: his home does
+        out.stranger = ask({ id: 'townsman', kind: 'npc', x: 1, y: 1 });                             // someone not on the map's list: still one of the faces
+        out.noEnt = F.portrait(n);                                                                   // nobody being spoken to: the entry's own portrait
+        out.own = F.portrait('p9_ada');
+        GFX.ownFaces = false; out.off = men.map(ask).join(','); GFX.ownFaces = true;
+        out.calls = calls;
+      } finally { Math.random = rn; for (const k of Object.keys(F.POOL)) delete F.POOL[k]; Object.assign(F.POOL, had); G.ents = ents0; try { closeModal(); } catch (e) { /* none */ } G.state = 'play'; }
+      out.rows = Object.keys(F.POOL).map((k) => [k, F.POOL[k]]);
+      return out;
+    });
+    assert.ok(r.api, 'no FACES124.POOL / FACES124.crowdFace');
+    assert.strictEqual(r.empty, 'townsman,townsman,townsman', JSON.stringify(r));
+    assert.ok(r.distinct === 3 && r.again && r.reordered && r.walked, 'three men, three faces, the same each time ' + JSON.stringify(r));
+    assert.ok(['own_orrin', 'own_garrow', 'own_sim'].includes(r.stranger) && r.noEnt === 'townsman' && r.own === 'own_ada', JSON.stringify(r));
+    assert.strictEqual(r.off, 'townsman,townsman,townsman', 'switch off: the borrowed face');
+    assert.strictEqual(r.calls, 0, 'Math.random was asked ' + r.calls + ' times');
+    const sw = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
+    for (const [k, list] of r.rows) {
+      assert.ok(Array.isArray(list) && list.length >= 2, 'crowd ' + k + ' needs two faces or more');
+      for (const s of list) { const f = path.join(ROOT, 'img', 'p_' + s + '.jpg'); assert.ok(fs.existsSync(f), 'missing ' + f); const z = jpegSize(f); assert.ok(z && z.w === 96 && z.h === 96, f + ' is not 96 by 96'); assert.ok(sw.includes('"img/p_' + s + '.jpg"'), 'sw.js does not name img/p_' + s + '.jpg'); }
+    }
+  });
   await step('no Math.random in js/faces124.js', async () => {
     const code = fs.readFileSync(path.join(ROOT, 'js/faces124.js'), 'utf8').split('\n').map((l) => l.replace(/\/\/.*$/, '')).join('\n');
     assert.ok(!/Math\.random/.test(code));
