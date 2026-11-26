@@ -2462,7 +2462,9 @@ function drawHUD() {
   ctx.restore(); ctx.fillStyle = '#fff1c8'; ctx.fillRect(cx0 + cw / 2, y0 + 5, 1, 14);
   // right-bottom: map name & level
   ctx.textAlign = 'right'; ctx.fillStyle = '#b8a883'; ctx.font = '7px "Alegreya", serif'; ctx.fillText(G.map.name + (G.map.outdoor && typeof Weather !== 'undefined' ? ' · ' + weatherLine() : ''), 314, y0 + 27, 86);   // maxWidth: long place names squeeze instead of running into the clock panel
-  ctx.fillText(`${p.name} · Lv ${p.level} · ${p.gold} sov.`, 314, y0 + 37, 86);
+  // in a hero's boots (js/boots125.js) the line says whose boots: the traveller's name, level and purse are not the hero's
+  const bootsName = (typeof BOOTS125 === 'object' && BOOTS125 && BOOTS125.hudName) ? BOOTS125.hudName() : null;
+  ctx.fillText(bootsName || `${p.name} · Lv ${p.level} · ${p.gold} sov.`, 314, y0 + 37, 86);
   if (p.fragments) ctx.fillText(`fragments ${p.fragments}`, 314, y0 + 46, 86);
   ctx.textAlign = 'left';
   // fade-in on map load

@@ -193,10 +193,10 @@ const BOOTS125 = (function () {
   // ---------------------------------------------------------------- the heroes: their looks [PROPOSED where the book is silent]
   // skin: each hero's portrait tone (img/p_kaelen.jpg and the rest, sampled and lifted to the hands' light)
   const HEROES = {
-    kaelen: { glass: true, skin: [176, 147, 123], sleeve: { material: 'felt', col: [96, 84, 70], cuff: [66, 56, 46] } },   // the felt sleeve (MS 3096, 646)
-    lyra: { glass: false, skin: [197, 148, 106], sleeve: { material: 'linen', col: [226, 220, 204], cuff: [196, 188, 170] } },   // the white wool shift (3088, 3122)
-    vane: { glass: false, skin: [172, 133, 99], sleeve: { material: 'leather', col: [72, 56, 44], cuff: [48, 36, 28] } },   // his coat (1361, 1538)
-    sable: { glass: false, skin: [188, 164, 146], sleeve: { material: 'linen', col: [64, 62, 66], cuff: [44, 42, 46] } },
+    kaelen: { name: 'Kaelen Vance', glass: true, skin: [176, 147, 123], sleeve: { material: 'felt', col: [96, 84, 70], cuff: [66, 56, 46] } },   // the felt sleeve (MS 3096, 646)
+    lyra: { name: 'Lyra Ashgrove', glass: false, skin: [197, 148, 106], sleeve: { material: 'linen', col: [226, 220, 204], cuff: [196, 188, 170] } },   // the white wool shift (3088, 3122)
+    vane: { name: 'Captain Vane', glass: false, skin: [172, 133, 99], sleeve: { material: 'leather', col: [72, 56, 44], cuff: [48, 36, 28] } },   // his coat (1361, 1538)
+    sable: { name: 'Sable', glass: false, skin: [188, 164, 146], sleeve: { material: 'linen', col: [64, 62, 66], cuff: [44, 42, 46] } },
   };
   function heroLook(own, hero) {
     const GL = GEARLOOK21, H = HEROES[hero]; if (!H || !GL) return null;
@@ -216,6 +216,8 @@ const BOOTS125 = (function () {
   const S = { at: null, part: 1, beat: null, bi: -1, t: 0, clock: 0, home: null, anchor: null, opts: null, def: null, card: false, wait: false, slips: {}, auto: {}, log: [], input: { use: false, song: false }, press: 0, held: 0, weapon: null, x: {} };
   const stats = { props: 0, slips: 0 };
   const active = () => S.at;
+  // whose boots, for the HUD's name line (js/game.js drawHUD): the hero's own name as the book writes it, or null
+  const hudName = () => { try { const h = S.at && S.def && HEROES[S.def.hero]; return (h && h.name) || null; } catch (e) { return null; } };
 
   const msgMs = (t) => Math.max(3200, Math.min(14000, 2200 + plain(t).length * 45));
   function vo(ids) { if (!ids || !ids.length) return; try { if (typeof RITE43 === 'object' && RITE43.seq) RITE43.seq(ids); } catch (e) { warnOnce('voice', e); } }
@@ -811,6 +813,6 @@ const BOOTS125 = (function () {
   };
   const FIFTH = (() => { try { return RITE43.FIFTH; } catch (e) { return []; } })();
 
-  return { TX, TEXTS, CAPS, CALLING, HEROES, FLAGS, MOMENTS, S, stats, FIFTH, coda, can, active, enter, exit, input, reset, slip, tick, callingLines, voiceIds, validate, migrateCoda, heroLook, handsOn, lookDeg, FLAG, ROW };
+  return { TX, TEXTS, CAPS, CALLING, HEROES, FLAGS, MOMENTS, S, stats, FIFTH, coda, can, active, hudName, enter, exit, input, reset, slip, tick, callingLines, voiceIds, validate, migrateCoda, heroLook, handsOn, lookDeg, FLAG, ROW };
 })();
 if (typeof window !== 'undefined') window.BOOTS125 = BOOTS125;
