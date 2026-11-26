@@ -30,7 +30,9 @@ const WANT = { p113f_marrable: 'own_marrable', p100_tr_b: 'own_watch132', p113_t
   p11_dicer: 'own_garrow', p15_dealer: 'own_nessa', p29_agnes: 'own_agnes', p29_ambrose: 'own_ambrose', p29_sim: 'own_sim' };
 // NPC entries in the running game (every map loaded) that showed one of the two borrowed portraits before this phase.
 // A later phase that adds a person with a borrowed face changes this number: change it here, and say so in its record.
-const BORROWED_BEFORE = 258;
+// Phase 127 (26 Nov 2026): 263. The quarry at work adds five quarrymen of the shift (p60_q127_dayA, dayB, dayC, nightA, nightB),
+// who borrow the townsman's face as the clearing's quarrymen do. They are a crowd: their faces come with the crowds' (FACES124.POOL).
+const BORROWED_BEFORE = 263;
 const BORROWED = ['townsman', 'townswoman'];
 
 function jpegSize(file) {

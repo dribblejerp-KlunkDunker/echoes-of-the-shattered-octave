@@ -11,7 +11,8 @@
 | 3 | `01721778` | The quarry at work (`js/quarrywork127.js`), life74's two pump lines mended |
 | 4 | `863903f8` | The Quarry-Hand (`js/callings127.js`, which also carries the Clerk) |
 | 5 | `774c2b47` | The Catalogue Clerk; the Root-vault Legionnaire renamed, with her voice |
-| 6 | (this commit) | French merged, precache, the suites, this record, Vol VIII, README, ROADMAP |
+| 6 | `8a3649eb` | French merged, precache, this record |
+| 7 | (the Commander's integration) | main merged in (`ef6ccc8d`); the full run; Vol VIII, README, ROADMAP, the rulings; `test/own124` taught the five quarrymen |
 
 `test/callings127.test.js`: **92 of 92** on the final tree (two pages: the game, and the game with both new modules blocked, for the "exactly as before" checks).
 
@@ -108,3 +109,18 @@ Under 1 ms a frame together. The carried crate's drawing is a few rectangles. `E
 - **127b, the Church and the Office** (designed in the Phase 127 design §3.3, §3.4, §5, §6.8): the Flambeau Penitent whole; the Clerk at the Malting, in the Bell Yard and the Cloister; the Quarry-Hand at the Rite pumps.
 - **The headframe's wheel turning at the shift change** (the owner's ruling of 26 Nov, 7:22 am, "decision 1 yes"): a later piece, 3D view only (`js/eaves78.js`), with its own switch and checks. Not in 127.
 - The third pump man changing places every 40 strokes (design §4.1 B).
+
+## The record of integration (the Commander, 26 Nov)
+
+The owner, 26 Nov, 9:26 am: "commit push and merge everything". The builder was told to finish the part in hand and stop; its own test passed 92 of 92.
+
+- **Main merged in** (`ef6ccc8d`): the cheap wins (#168 to #170), Phase 128's findings (#171), Phase 128a (#172, which added `js/roads128.js`) and the scratch-pictures ignore (#173). Three files met: `index.html` (both scripts kept: callings127 and quarrywork127, then roads128, and `js/mast123.js` still last), `locales/story/fr.json` (the French merged again from the pairs) and `sw.js` (rebuilt).
+- **Lore gate.** The record's book lines were read again in the manuscript: l. 1715, 1777, 2576, 2598, 4411, 4510, 4560, 4828. They stand as quoted. "Yelland" is in no book and no bible.
+- **The full run: all 231 suites.** 230 under two runners, then `r3d21` alone. Nineteen of the 230 were red under load. Alone:
+  - sixteen pass as they are: far14, kit12, folk14, smalllife, roads15, songcraft12, r3narrow28, flume16, couriers, pixelhands110, callings126 (97 of 97), cinematic24, deep16, screens, sync19, and deepsky113 (its one-millisecond cost check passes and fails by turns on this machine today, at 1.3 to 1.4 ms when it fails; it passes on main the same way);
+  - **own124 was this phase's**: the count of people who borrow a face went from 258 to 263, the five quarrymen of the shift (`p60_q127_dayA` to `nightB`). The test says to change the number and say so; it is changed, and here it is said. They are a crowd, so their faces come with the crowds' (`FACES124.POOL`). 12 of 12.
+  - hands109p (a pose must render in under 300 ms) fails on main too on this machine today (310 to 324 ms): the machine, not this phase;
+  - **r3d21** (alone, 23 of 24): one check failed, "the classic raycaster draws the same frames with js/r3d21.js loaded". It compares one frame of Oakhaven in the Medium preset across two loads of the page. Probed six times: on this branch and on main alike, that one frame comes out as one of the same two pictures from load to load (the same two on both, so this phase changes nothing in it), and the check passes or fails by which pair it draws. It is main's, not this phase's, and it is new since 25 Nov, when the suite passed. **Owed, next:** find which load-order difference makes Oakhaven's Medium frame two pictures, and mend it test-first.
+  - net19 (the guest coming back after a dropped link) is the machine's, as found on the morning of 26 Nov (`Rulings of 26 Nov 2026.md`).
+- **Checks on the pull request (#174):** the two test workflows, contributor trust and the security scan all passed on the first try; no timeout. No Codex review (its limit is used up; the owner's ruling of 25 Nov allows the merge without it).
+- **Owed:** the third pump man changing places every forty strokes; Phase 127b; the headframe's wheel (ruled 26 Nov, 7:22 am).

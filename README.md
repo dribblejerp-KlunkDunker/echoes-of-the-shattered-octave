@@ -567,6 +567,22 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 ![Phase 124e: the five new portraits, large and at the game's size](screenshots/p124e-own.jpg)
 
+**The callings, part two: the quarry (Phase 127).** The Oakhaven quarry is at work (Options: "The quarry at work"): men at the faces, the drums and the spoil, the shift changing at six under the headframe, a clerk with a tally-book at the rim, and four hundred feet down the book's men at the pumps, "working the long iron handles in pairs, up and down, with a rhythm so perfect it looked like clockwork". A Quarry-Hand sees the sprung leg of a scaffold and the line a rock face will split on, and can shoulder a crate and be taken for one of the shift. A Catalogue Clerk reads the serial stamped in the bronze beside a Legionnaire's grille, and can copy the name the bell murmurs into their book.
+
+![Phase 127: the quarry at work](screenshots/p127-work-day-3d.jpg)
+
+![Phase 127: the shift under the headframe before six](screenshots/p127-work-rim-0620-3d.jpg)
+
+![Phase 127: the Catalogue Clerk reads the stamp](screenshots/p127-clerk-stamps-3d.jpg)
+
+![Phase 127: "Copy it into your book"](screenshots/p127-clerk-card.jpg)
+
+![Phase 127: the Quarry-Hand at a scaffold](screenshots/p127-quarry-timber-3d.jpg)
+
+![Phase 127: the line the rock would split on](screenshots/p127-quarry-seams-3d.jpg)
+
+![Phase 127: the switch on, and off](screenshots/p127-off-3d.jpg)
+
 **The roads filled, part one (Phase 128a, building).** Old Marrable, the lamp-teller at the Weekstones, was the smallest person in the game, 26 by 30 pixels. She is drawn again at twice the size.
 
 ![Phase 128a: Old Marrable, before and after](screenshots/p128a-marrable.jpg)
