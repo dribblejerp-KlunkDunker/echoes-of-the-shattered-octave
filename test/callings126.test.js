@@ -799,6 +799,45 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
       check(notBook.length === 0, '25. the §5 lines from the book are found at their manuscript lines (' + BOOK.length + ' pieces; not found: ' + notBook.map((b) => b[0] + ':' + b[1]).join(' | ') + ')');
     }
 
+    // ---------------------------------------------------------------- 26 (6b, the owner's ruling of 25 Nov: "it may go"). Cargo night: the
+    // traveller no longer says Vane's line. The book (MS 2808-2814): Pim says "You should tell her … Annet. She'd like to know.", and
+    // it is Vane who gets down on the boards of his own hold and says "Annet. You're going home." An old save that holds the
+    // traveller's saying of it (p56_say 2) reads as Vane's (1); nothing else differed between the two (the gun, the journal, the xp).
+    {
+      const c56 = src('js/cargo56.js');
+      check(!/Say it yourself/.test(c56) && !/"Annet," you say/.test(c56), '26. js/cargo56.js has no "Say it yourself" and no "Annet," you say');
+      const r = await sect('26', () => {
+        const out = {};
+        const night = (cls) => {
+          T.cls(cls); for (const k of ['p56', 'p56_clerk', 'p56_boot', 'p56_say', 'p56_gun']) delete G.flags[k];
+          G.take && G.has(CARGO56.ITEM) && G.take(CARGO56.ITEM);
+          const ev0 = T.evs(); CARGO56.clerk(); T.press(0);
+          if (cls === 'corsair') T.pressText(CALLINGS126.TX.sign);
+          for (let i = 0; i < 6 && window.__ev.length && /count/.test(T.last().b || '') && T.last().c.length >= 3; i++) T.press(0);
+          const ev1 = T.evs(); CARGO56.crate(); T.press(0); T.press(0);
+          const card = window.__ev[window.__ev.length - 1];
+          const o = { choices: card ? card.c.map((c) => c.t) : null };
+          T.press(0);
+          const end = T.last(); o.body = end ? end.b : ''; o.say = G.flags.p56_say; o.p56 = G.flags.p56; o.gun = G.flags.p56_gun;
+          o.vane = o.body.includes('"Annet," says Vane, to the wood. "You\'re going home."') && !/you say, to the wood/.test(o.body);
+          o.signedCount = ev1 > ev0;
+          return o;
+        };
+        out.blade = night('blade'); out.corsair = night('corsair');
+        // an old save in which the traveller said it
+        const snap = snapshotGame(); snap.flags.p56 = 2; snap.flags.p56_say = 2; snap.flags.p56_gun = 1;
+        restoreGame(JSON.parse(JSON.stringify(snap))); G.state = 'play'; closeModal(); hide('#event');
+        out.migrated = [G.flags.p56, G.flags.p56_say, G.flags.p56_gun];
+        for (const k of ['p56', 'p56_clerk', 'p56_boot', 'p56_say', 'p56_gun']) delete G.flags[k];
+        return out;
+      });
+      for (const k of ['blade', 'corsair']) {
+        const o = r[k] || {};
+        check(JSON.stringify(o.choices) === JSON.stringify(['Let him say it']) && o.vane === true && o.say === 1 && o.p56 === 2 && o.gun === 1, '26. cargo night as ' + k + ': at Annet no choice lets the traveller say the line; Vane says it, as the book has it (' + JSON.stringify(o.choices) + ', p56_say ' + o.say + ')');
+      }
+      check(JSON.stringify(r.migrated) === JSON.stringify([2, 1, 1]), '26. an old save with p56_say 2 loads as Vane\'s (1), the crate opened and the gun still owed (' + JSON.stringify(r.migrated) + ')');
+    }
+
     check(errors.length === 0, 'no page errors or callings126 warnings (' + errors.slice(0, 3).join(' | ') + ')');
   } finally {
     await browser.close();
