@@ -567,6 +567,10 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 ![Phase 124e: the five new portraits, large and at the game's size](screenshots/p124e-own.jpg)
 
+**The roads filled, part one (Phase 128a, building).** Old Marrable, the lamp-teller at the Weekstones, was the smallest person in the game, 26 by 30 pixels. She is drawn again at twice the size.
+
+![Phase 128a: Old Marrable, before and after](screenshots/p128a-marrable.jpg)
+
 **Cheap wins (26 Nov).** The skyship that crosses the sky over the Woods is now the book's *Kestrel*: "brass-ribbed and oak-planked, with a patched grey envelope and four lift-tanks slung beneath her keel". She had been drawn with masts, sails and pennants, which the book's ship does not have. And in a hero's boots the bottom bar names the hero.
 
 ![The Kestrel in the sky, before and after](screenshots/cw26-kestrel-sky.jpg)
