@@ -67,7 +67,7 @@ Kokoro-82M through `tools/voices/build.py`, model files on this machine. Rendere
 
 ## Owed
 
-- Dedicated "open hand" poses for the needle and the names (approximated now).
+- Dedicated "open hand" poses for the needle and the names (approximated now). **26 Nov:** the names have theirs (an open hand laid flat on the lid; see `Cheap wins of 26 Nov 2026.md`); the needle's pinch is still to do.
 
 ## Found and mended at integration (the Commander, 24 Nov)
 

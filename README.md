@@ -567,6 +567,24 @@ The plain link works on phones too: a phone or tablet starts in touch mode by it
 
 ![Phase 124e: the five new portraits, large and at the game's size](screenshots/p124e-own.jpg)
 
+**The roads filled, part one (Phase 128a, building).** Old Marrable, the lamp-teller at the Weekstones, was the smallest person in the game, 26 by 30 pixels. She is drawn again at twice the size.
+
+![Phase 128a: Old Marrable, before and after](screenshots/p128a-marrable.jpg)
+
+On the wall of the Null-Watch the book's brazier stands at the foot of Tower Six ("where the battery crew warmed their hands").
+
+![Phase 128a: the brazier at the foot of Tower Six](screenshots/p128a-brazier.jpg)
+
+**Cheap wins (26 Nov).** The skyship that crosses the sky over the Woods is now the book's *Kestrel*: "brass-ribbed and oak-planked, with a patched grey envelope and four lift-tanks slung beneath her keel". She had been drawn with masts, sails and pennants, which the book's ship does not have. And in a hero's boots the bottom bar names the hero.
+
+![The Kestrel in the sky, before and after](screenshots/cw26-kestrel-sky.jpg)
+
+![In a hero's boots the bar names the hero](screenshots/cw26-boots-hud.jpg)
+
+And in Sable's boots her hand lies open on the crate's lid, as the book has it ("She put her good hand flat on the lid"), where it had been a fist.
+
+![Sable's hand on the lid, before and after](screenshots/cw26-lid-hand.jpg)
+
 **The callings, part one (Phase 126).** Your calling now notices things. Stand still for a moment and your trade's own sight comes up over the world (Options: "Your calling's sight", hidden / when you stand still / always). A Glass-Hand hears the bells: the pale lilac core inside every Legionnaire's bronze, the brass hand-press at a proctor's belt, the Factor's green lenses. Lay your glass hand on a Legionnaire's bell and the glass drinks its alarm; the tideline climbs, and for a minute your hand rings so that any bell near you hears it, and tells Vosk at her morning walk. A Cantor hears who is humming and how true: the night-hummers at the crossings, Bettany's wide wobble, Old Tam's short true note, every lit hush-lamp's thin whistle, the choir's unbroken line and the Pure Note lying over the town like a lid. A Cantor's murmur stays under the Narrow, above the Hush and below everything that listens, and can hum the tending note into a companion's hands, or the Root note into Hob Wendle's at the Grafters' round. A Corsair reads loads and lines: the Kestrel riding heavy at her mast, where a scaffold or a chandelier will land when its lashings go, and on a deck in the air which grapnel has bitten deepest; a hook can be slipped by hand, slowly and silently, where the axe is quick and loud, and on cargo night a Corsair can sign to Mags behind the clerk's back. Every other calling plays exactly as before. On cargo night it is Vane, as in the book, who says "Annet. You're going home."
 
 ![Phase 126: the Glass-Hand's sight in the quarry, two cores through the bronze (3D view)](screenshots/p126-glass-cores-3d.jpg)

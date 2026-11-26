@@ -1236,6 +1236,13 @@ const BODY21 = (() => {
     const CL = PIXELHANDS110.CL, m = REC.inv.multiply(ctx.getTransform()), dx = x + 16 - CL.gx, dy = y + 2 - CL.gy, s = 0.25;
     return SCULPTED112.place('c', i === 0 ? 'L' : 'R', REC.look, [m.a * s, m.b * s, m.c * s, m.d * s, m.a * dx + m.c * dy + m.e, m.b * dx + m.d * dy + m.f]);
   }
+  // (26 Nov) an open hand laid flat (PIXELHANDS110.restArt), for the sculpted hands: (x, y) is the middle of the palm.
+  // Drawn with the climb's own flush (sculptClimbEnd).
+  function sculptRest(ctx, i, x, y) {
+    if (!sculptOn() || !PIXELHANDS110.RS) return false;
+    const RS = PIXELHANDS110.RS, m = REC.inv.multiply(ctx.getTransform()), dx = x - RS.px, dy = y - RS.py, s = 0.25;
+    return SCULPTED112.place('r', i === 0 ? 'L' : 'R', REC.look, [m.a * s, m.b * s, m.c * s, m.d * s, m.a * dx + m.c * dy + m.e, m.b * dx + m.d * dy + m.f]);
+  }
   function sculptClimbEnd(ctx) {
     if (!sculptOn()) return false;
     const cv = SCULPTED112.flush(sculptLight()); if (!cv) return false;
@@ -1806,7 +1813,7 @@ void main() {
   // (Phase 125b) a map change and a load make every record before them stale
   if (typeof loadMap === 'function') { const _lm = loadMap; loadMap = function () { invalidate(); return _lm.apply(this, arguments); }; }
   if (typeof restoreGame === 'function') { const _rg = restoreGame; restoreGame = function () { invalidate(); return _rg.apply(this, arguments); }; }
-  return { invalidate, staleRecord, early, setExtra, sculptLight, sculptAnim, sculptClimb, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
+  return { invalidate, staleRecord, early, setExtra, sculptLight, sculptAnim, sculptClimb, sculptRest, sculptClimbEnd, owned: (c) => OWNED.get(c) || null, set, setSwitch, on, stats, META, K, LT, WS, segment, build, shieldArt, offArmArt, legArt, legsPose, headArt, headPose, shieldPose, armSpec, clearCaches, hemY,
     R3B, FX3, LB, lbBuild, r3dOn, look: () => (GL() && G.player ? GL().of(G.player) : null), visibleWeapons, pix, part, poly, ell, cap, render, rampOf, onRamp, PATTERN };
 })();
 if (typeof window !== 'undefined') window.BODY21 = BODY21;
