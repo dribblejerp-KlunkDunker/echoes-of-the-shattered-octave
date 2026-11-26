@@ -35,7 +35,7 @@ const AUDIT54 = (function () {
   const inExtra = () => { try { if (typeof EXTRAS17 !== 'undefined' && EXTRAS17.inExtra()) return true; } catch (e) { /* none */ } return false; };
   const partOne = () => hasG() && !F().rite_started && !F().greening && !F().escaped;
 
-  const BITS = { kaelen: 1, lyra: 2, tobiah: 4, vane: 8, fight: 16, body: 32, gate: 64, hand: 128 };
+  const BITS = { kaelen: 1, lyra: 2, tobiah: 4, vane: 8, fight: 16, body: 32, gate: 64, hand: 128, stamp: 256, shift: 512 };   // stamp, shift: Phase 127 (js/callings127.js)
   const PEOPLE = ['kaelen', 'lyra', 'tobiah', 'vane'];
   const WATCH_MAPS = ['oakhaven', 'clearing', 'quarry', 'greenhall'];
   const EARSHOT = 7, WALK_FROM = 6, WALK_TO = 9, STEP = 0.15, CAP = 1.45;
@@ -63,6 +63,8 @@ const AUDIT54 = (function () {
       body: S('Depot Three: one of my Legionnaires is lying in the doorway with its bell broken. They do wander, when an engram degrades. They do not usually break their own grilles.'),
       gate: S('The North Gate, at sunrise, while the Church came up the road: somebody did not keep a hand over their mouth.'),
       hand: S('A wrapped hand, laid flat on one of my bells. It rang afterward, low and full, and my Legionnaires heard it ring.'),   // Phase 126: the Glass-Hand's act (js/callings126.js)
+      stamp: S('Somebody stood at one of my Legionnaires and read its stamp the way a clerk reads a docket, and wrote something down.'),   // Phase 127: the Catalogue Clerk's copy (js/callings127.js)
+      shift: S('A hand who is not on my roster carried a crate the length of my gallery. My Legionnaires counted the crates afterward. There were as many as before.'),   // Phase 127: the Quarry-Hand's load
     },
     onWith: S('Go about your day'),
     prices: S('Her company store charges you Consortium prices, adjusted.'),

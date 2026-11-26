@@ -122,11 +122,31 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
         out.dummy = T.drawn('dot').filter((d) => d.calling === 'dummy').length;
         G.player.cls = was; CALLINGS126.unregister('dummy');
         out.ids3 = CALLINGS126.ids().slice();
+        // the first-sight line comes from the registered lines.first (bit 16, penitent, if nothing has registered it yet)
+        if (CALLINGS126.ids().includes('penitent')) out.firstSkip = true;
+        else {
+          const LINE = 'A test calling\'s first sight.';
+          CALLINGS126.register('penitent', {
+            radius: 6,
+            targets(add) { const c = Engine.cam; add({ pt: [c.x + Math.cos(c.dir) * 2, c.y + Math.sin(c.dir) * 2, 0.5], kind: 'dot', k: 'ahead' }); },
+            draw: { dot(g, t, fade) { g.dot(t.px, t.py, '#ffffff', fade); return true; } }, acts: [], lines: { first: LINE },
+          });
+          const seen0 = G.flags.p126_seen; G.flags.p126_seen = (Number(seen0) | 0) & ~16;
+          const was2 = G.player.cls; G.player.cls = { id: 'penitent', name: 'Test' };
+          const _m = window.__msgs.length; T.still(1.6); T.still(1.0);
+          out.first = window.__msgs.slice(_m).filter((t) => t === LINE).length;
+          G.player.cls = was2; CALLINGS126.unregister('penitent'); G.flags.p126_seen = seen0;
+        }
         return out;
       });
-      check(JSON.stringify(r.ids) === JSON.stringify(['blade', 'cantor', 'corsair']), '1. ids() is [blade, cantor, corsair] (' + JSON.stringify(r.ids) + ')');
-      check(r.ids2 && r.ids2.length === 4 && r.ids2[3] === 'dummy' && r.dummy >= 1, '1. register("dummy") adds a fourth calling, and the sight draws its marks (' + r.dummy + ')');
-      check(JSON.stringify(r.ids3) === JSON.stringify(['blade', 'cantor', 'corsair']), '1. and it can be taken away again');
+      // (taught in Phase 127: js/callings127.js registers the Catalogue Clerk and the Quarry-Hand in this table, so the list
+      //  begins with the three of Phase 126 and goes on; the dummy is added last and taking it away gives back the list before)
+      check(JSON.stringify((r.ids || []).slice(0, 3)) === JSON.stringify(['blade', 'cantor', 'corsair']), '1. ids() begins [blade, cantor, corsair] (' + JSON.stringify(r.ids) + ')');
+      check(r.ids2 && r.ids2.length === r.ids.length + 1 && r.ids2[r.ids2.length - 1] === 'dummy' && r.dummy >= 1, '1. register("dummy") adds a calling last, and the sight draws its marks (' + r.dummy + ')');
+      check(JSON.stringify(r.ids3) === JSON.stringify(r.ids), '1. and it can be taken away again');
+      // (Phase 127) a calling's first-sight line is its registered lines.first, not a table of Phase 126's three
+      if (r.firstSkip) console.log('NOTE 1. penitent is registered: the first-sight door was checked by test/callings127 instead');
+      else check(r.first === 1, '1. a calling registered with lines.first says that line the first time its sight comes up (' + r.first + ')');
     }
 
     // ---------------------------------------------------------------- 2. the switch, the presets, the Options row
@@ -412,6 +432,32 @@ const msText = (lines) => norm(lines.map((n) => MS[n - 1] || '').join(' '));
       check(r.cantor === true, '9. as Cantor, E on a Legionnaire gives the old murmur line');
       check(r.logged === true, '10. heard in turn: a second Legionnaire within 7 with a clear line, inside the minute, logs AUDIT54 bit 128');
       check(r.walkA1 === true && r.price === 0.15, '10. the next morning walk\'s card reads it back (A1), and her prices are one step higher (+' + r.price + ')');
+    }
+
+    // ---------------------------------------------------------------- 7b (Phase 127, the design's check 29). js/dreams.js's coreEcho fires for
+    // any core enemy not chasing, and proctors are core: a Glass-Hand's first E at a proctor, with the place's echo unheard,
+    // must queue the echo and not lock the arm; the next E brings the press off his belt
+    {
+      const r = await sect('7b', () => {
+        const out = {}, TX = CALLINGS126.TX;
+        T.cls('blade'); T.at('clearing', 27.5, 16.5, 0, 0.45);
+        const pr = G.ents.find((e) => e.type === 'proctor' && Math.abs(e.x - 30.5) < 0.2 && Math.abs(e.y - 16.5) < 0.2);
+        if (!pr) return out;
+        pr.stun = 0; T.face(pr); T.put(pr, 1.0); T.frames(2);
+        const seenAny = G.flags.p6d_e_co_any; delete G.flags.p6d_e_co_any; G.glassLock = 0;
+        const ev0 = T.evs(); interact();
+        out.aside = T.evs() === ev0 && !(G.glassLock > 0);
+        out.queued = DREAMS.pending().length > 0 || DREAMS.openId() === 'co_any';
+        for (let i = 0; i < 3; i++) { try { DREAMS.pollEchoes(); if (DREAMS.isOpen()) DREAMS.closeCard(); } catch (e) { /* none */ } }
+        G.flags.p6d_e_co_any = true; closeModal(); hide('#event'); G.state = 'play';
+        pr.stun = 0; T.face(pr); T.put(pr, 1.0); T.frames(2);
+        const ev1 = T.evs(); interact();
+        out.locked = T.evs() === ev1 + 1 && T.last().b.includes(TX.pressed) && G.glassLock === 8;
+        T.press(0); G.glassLock = 0; if (seenAny == null) G.flags.p6d_e_co_any = true;
+        return out;
+      });
+      check(r.aside === true && r.queued === true, '7b. a Glass-Hand\'s first E at a proctor, with the place\'s echo unheard, queues the echo and does not lock the arm');
+      check(r.locked === true, '7b. the second E locks it (the hand-press)');
     }
 
     // ---------------------------------------------------------------- 11. who is humming, and how true

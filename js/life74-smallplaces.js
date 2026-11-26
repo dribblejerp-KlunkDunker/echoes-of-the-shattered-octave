@@ -178,8 +178,9 @@ const LIFE74 = (function () {
   const CLEARING = [
     Object.assign(dayShift('cl_dayA', 0, 0), {
       greet: S('"Day shift. Down at six, up at the Listening Hour, and nobody says a word on the track. Hounds."'),
-      work: S('"The pumps, mostly. Twelve men on them and the bore in your teeth the whole nine hours. You get home and your supper tastes of glass."'),
-      barks: [S('A quarryman, low: "Nine hours on the pumps."')] }),
+      // (Phase 127) the men at the pumps are Hollows, "Catalogue labor" (MS 1777, 1779): the shift works the drums and the spoil
+      work: S('"The cable-drums, mostly, and the spoil. The pumps are the Office\'s men, and they don\'t talk. The bore\'s in your teeth the whole nine hours, and you get home and your supper tastes of glass."'),
+      barks: [S('A quarryman, low: "Nine hours on the drums."')] }),
     Object.assign(dayShift('cl_dayB', 1, 0.1), {
       greet: S('He looks at the Legion line at the headframe, then at you, and shakes his head very slightly, which is all the conversation the track allows.'),
       barks: [S('A quarryman, a breath: "Feel it? Deeper than yesterday."')] }),
