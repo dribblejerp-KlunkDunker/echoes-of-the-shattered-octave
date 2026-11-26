@@ -118,7 +118,7 @@ const CARGO56 = (function () {
   const C = { count: 0, strikes: 0, round: 0, used: [] };
   function clerk() {
     if (stage() !== 0) return;
-    C.count = 0; C.strikes = 0; C.round = 0; C.used = [];
+    C.count = 0; C.strikes = 0; C.round = 0; C.used = []; C.signed = false;
     showEvent(TX.clerkTitle, TX.clerk, [{ t: TX.go, f: () => nextRound() }]);
   }
   function nextRound() {
@@ -126,7 +126,11 @@ const CARGO56 = (function () {
     if (C.strikes >= 2 || C.round >= ROUNDS.length) { held(2); return; }
     const [a, b, bad, order] = ROUNDS[C.round++];
     const opts = [{ k: a, ok: true }, { k: b, ok: true }, { k: bad, ok: false }].map((o) => ({ t: TX.T[o.k], f: () => pick(o) }));
-    showEvent(TX.clerkTitle, TX.round.replace('{0}', String(C.count)), order.map((i) => opts[i]));
+    const list = order.map((i) => opts[i]);
+    // Phase 126 (js/callings126.js): a Corsair may sign it to Mags behind his back, once a night (MS 1327, 5588)
+    const x = typeof CALLINGS126 === 'object' && CALLINGS126.cargoChoice ? CALLINGS126.cargoChoice(C, () => { C.count += STEP; nextRound(); }) : null;
+    if (x) list.push(x);
+    showEvent(TX.clerkTitle, TX.round.replace('{0}', String(C.count)), list);
   }
   function pick(o) {
     if (o.ok && !C.used.includes(o.k)) { C.count += STEP; C.used.push(o.k); say(TX.good, '', 3500); }
