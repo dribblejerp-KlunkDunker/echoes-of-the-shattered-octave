@@ -9,7 +9,7 @@
 //      slate (ten minutes, and no bell can read it), or leave it for now. Once per person per day.
 //    * WHAT THE BELLS ALSO HEAR (logged by other scenes): a fight at Depot Three (js/tamsin52.js), a Legionnaire left in the
 //      doorway there with its bell broken (js/tamsin52.js), a voice at the North Gate while the Church came up the road
-//      (js/church55.js).
+//      (js/church55.js), a Glass-Hand's hand ringing after it took a bell (js/callings126.js, Phase 126: BITS.hand).
 //    * THE MORNING WALK. From 06:00 to 09:00 on a later day, if anything new was logged, Vosk walks her line. Be in Oakhaven,
 //      the clearing, the quarry or the Greenhall and you see her do it, and hear what the bells gave her. Otherwise she tells
 //      you herself, the next time you speak to her.
@@ -35,7 +35,7 @@ const AUDIT54 = (function () {
   const inExtra = () => { try { if (typeof EXTRAS17 !== 'undefined' && EXTRAS17.inExtra()) return true; } catch (e) { /* none */ } return false; };
   const partOne = () => hasG() && !F().rite_started && !F().greening && !F().escaped;
 
-  const BITS = { kaelen: 1, lyra: 2, tobiah: 4, vane: 8, fight: 16, body: 32, gate: 64 };
+  const BITS = { kaelen: 1, lyra: 2, tobiah: 4, vane: 8, fight: 16, body: 32, gate: 64, hand: 128 };
   const PEOPLE = ['kaelen', 'lyra', 'tobiah', 'vane'];
   const WATCH_MAPS = ['oakhaven', 'clearing', 'quarry', 'greenhall'];
   const EARSHOT = 7, WALK_FROM = 6, WALK_TO = 9, STEP = 0.15, CAP = 1.45;
@@ -62,6 +62,7 @@ const AUDIT54 = (function () {
       fight: S('Depot Three, in the middle watch: bronze on bronze, and boots on the terrace. The terraces heard it.'),
       body: S('Depot Three: one of my Legionnaires is lying in the doorway with its bell broken. They do wander, when an engram degrades. They do not usually break their own grilles.'),
       gate: S('The North Gate, at sunrise, while the Church came up the road: somebody did not keep a hand over their mouth.'),
+      hand: S('A wrapped hand, laid flat on one of my bells. It rang afterward, low and full, and my Legionnaires heard it ring.'),   // Phase 126: the Glass-Hand's act (js/callings126.js)
     },
     onWith: S('Go about your day'),
     prices: S('Her company store charges you Consortium prices, adjusted.'),

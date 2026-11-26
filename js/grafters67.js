@@ -28,7 +28,7 @@
 //    7  done. 8: left partway (the round goes on without you). 9: missed (Rootday morning went by elsewhere).
 //  Nobody's fate turns on the traveller: Hob is cut and walks, Pim is "Recheck next month", Orla is marked. Missing the
 //  round, or leaving it, changes the logbook and what you know of the mark on Orla's door; it never fails a quest. The
-//  figures are transient and restaged on load. Flags: p67 (stage), p67_way, p67_hob, p67_lane (heard in the lane), p67_echo, p67_left.
+//  figures are transient and restaged on load. Flags: p67 (stage), p67_way, p67_hob (Phase 126 adds 'hum'), p67_lane (heard in the lane), p67_echo, p67_left.
 // ============================================================
 'use strict';
 
@@ -78,6 +78,8 @@ const GRAFT67 = (function () {
     hobFoot: S('Hold the foot still for the saw'),
     hobWatch: S('Watch'),
     hobAway: S('Look away'),
+    // Phase 126 (js/callings126.js): a Cantor who still has a voice, at Hob's step [PROPOSED; MS 364, 977, 1039]
+    hobDidHum: S('You take his big hands in yours and hum the Root note into them, low, in the Narrow: the note for wounds that need closing. Lyra, at his other ear, breathes it with you without a sound. He holds on. Afterward you have less voice than you came with. Every mending borrows.'),
     hob2: S('Lyra holds his head against her shoulder while they do it. The hush-saw is a fine-toothed thing with a felted grip and a blade so thin it flexes, and it goes through the wooden toes with a sound like someone whispering <i>shh</i> into a pillow. The sap-iron comes after, from the brazier, and that is the only true sound of the morning: a small sharp hiss, and the smell, green and scorched. Hob\'s whole body goes rigid against her, his mouth wide open, perfectly silent, his fingers digging into her back.<br><br>She cannot hum to him. She has nothing to hum with. She presses her lips to his hair and breathes the Root note, soundless, only air in the shape of the note, and she does not know whether he can feel it.'),
     hobDidHand: S('You hold his hand. He grips it hard enough that you will find the marks tonight.'),
     hobDidBreath: S('You breathe it with her at his other ear, air in the shape of the note. Neither of you knows whether he can feel it.'),
@@ -150,7 +152,10 @@ const GRAFT67 = (function () {
   };
   const WAY_GONE = { lyra: TX.goneLyra, grafters: TX.goneGrafters, watch: TX.goneWatch };
   const HOB_CHOICES = { lyra: [['hand', TX.hobHand], ['breath', TX.hobBreath]], grafters: [['foot', TX.hobFoot]], watch: [['watch', TX.hobWatch], ['away', TX.hobAway]] };
-  const HOB_DID = { hand: TX.hobDidHand, breath: TX.hobDidBreath, foot: TX.hobDidFoot, watch: TX.hobDidWatch, away: TX.hobDidAway };
+  const HOB_DID = { hand: TX.hobDidHand, breath: TX.hobDidBreath, foot: TX.hobDidFoot, watch: TX.hobDidWatch, away: TX.hobDidAway, hum: TX.hobDidHum };
+  // Phase 126: the calling's own choice at Hob's step (a Cantor with voice, walking beside Lyra or with the Grafters), and its line at Orla's chair
+  const C126 = () => (typeof CALLINGS126 === 'object' && CALLINGS126 ? CALLINGS126 : null);
+  const hobHook = (w) => { try { const c = C126(); return c && c.hobChoice ? c.hobChoice(w) : []; } catch (e) { return []; } };
   const WAY_LINE = {
     pim: { lyra: TX.pimLyra, grafters: TX.pimGrafters, watch: TX.pimWatch },
     orla: { lyra: TX.orlaLyra, grafters: TX.orlaGrafters, watch: TX.orlaWatch },
@@ -304,8 +309,9 @@ const GRAFT67 = (function () {
   function hobCard() {
     if (stage() !== 2) return;
     const w = way();
-    card(TX.hobTitle, TX.hob, HOB_CHOICES[w].map(([k, t]) => ({ t, f: () => {
+    card(TX.hobTitle, TX.hob, HOB_CHOICES[w].concat(hobHook(w)).map(([k, t]) => ({ t, f: () => {
       F().p67_hob = k;
+      if (k === 'hum') { try { C126().hobHum(); } catch (e) { warnOnce('hum', e); } }
       card(TX.hobTitle, TX.hob2 + '<br><br>' + HOB_DID[k] + '<br><br>' + TX.hobEnd, [{ t: TX.goOn, f: () => { setStage(3); restage(); say(TX.hintCarders, 'warn', 7000); } }]);
     } })));
   }
@@ -327,7 +333,7 @@ const GRAFT67 = (function () {
   function orlaCard() {
     if (stage() !== 4) return;
     card(TX.orlaTitle, TX.orla + '<br><br>' + WAY_LINE.orla[way()], [{ t: TX.goOn, f: () => {
-      card(TX.orlaTitle, TX.orla2, [{ t: TX.toLane, f: () => { setStage(5); restage(); go(MAPS.town, AT.street.you); } }]);
+      card(TX.orlaTitle, TX.orla2 + (() => { try { const c = C126(); return c && c.orlaLine ? c.orlaLine() : ''; } catch (e) { return ''; } })(), [{ t: TX.toLane, f: () => { setStage(5); restage(); go(MAPS.town, AT.street.you); } }]);
     } }]);
   }
 

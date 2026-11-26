@@ -83,8 +83,10 @@ const frCheck = async (page, file, mod, label) => {
       const a = T.last();
       out.crate = a.t === 'The third crate, at the dead hour' && /hello, hello, is anyone there/.test(a.b) && /WG-41,004/.test(a.b) && /does not laugh/.test(a.b) && G.flags.crates_heard && G.ledger.length === n0 + 3;
       T.pick(/Go on/); out.figures = /Six\. Seven if it's children/.test(T.last().b) && /eighteen, Captain/.test(T.last().b) && /so nobody hears the splash/.test(T.last().b);
-      T.pick(/Go on/); T.pick(/Say it yourself/);
-      out.annet = /"Annet," you say, to the wood\. "You're going home\."/.test(T.last().b) && G.flags.p56 === 2 && G.flags.p56_say === 2 && G.has(CARGO56.ITEM) && G.journal.some((j) => /WG-41,004/.test(j.text));
+      // (taught in Phase 126: the owner ruled on 25 Nov that "Say it yourself" go. In the book it is Vane who gets down on the boards
+      //  and says "Annet. You're going home." (MS 2808-2814); the card has only "Let him say it", and p56_say is 1)
+      T.pick(/Go on/); out.oneChoice = T.last().c.length === 1 && !T.last().c.some((c) => /Say it yourself/.test(c.t)); T.pick(/Let him say it/);
+      out.annet = out.oneChoice && /"Annet," says Vane, to the wood\. "You're going home\."/.test(T.last().b) && G.flags.p56 === 2 && G.flags.p56_say === 1 && G.has(CARGO56.ITEM) && G.journal.some((j) => /WG-41,004/.test(j.text));
       // the long gun over the slag-slope at Depot Three
       loadMap('quarry'); G.state = 'play'; const slag = G.ents.find((e) => e._p52 === 'slag'); useDeco(slag);
       out.slagCard = T.last().t === 'The head of the slag-slope'; T.pick(/Send them over/);
@@ -94,7 +96,7 @@ const frCheck = async (page, file, mod, label) => {
       return out;
     });
     check(r.crate && r.figures, 'at the dead hour: Pim at the third crate, WG-41,004, Vane does not laugh; the slate says six, then eighteen with the long gun over');
-    check(r.annet && r.sunk, '"Annet. You\'re going home." (you, or Vane); the long gun goes over the slag-slope at Depot Three, in the dark');
+    check(r.annet && r.sunk, '"Annet. You\'re going home." (Vane says it, as in the book); the long gun goes over the slag-slope at Depot Three, in the dark');
     check(r.missed, 'miss both nights and only lines change');
 
     // ---- Tobiah: the book by calling, and the kit

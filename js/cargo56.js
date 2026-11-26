@@ -12,12 +12,13 @@
 //      Whisper-Grove."
 //    * THE THIRD CRATE (the dead hour, game day 7 before 05:00). Pim with his ear to the wood, talking to Annet. Vane prises
 //      the lid; WG-41,004 on the tag. He does not laugh. Pennick's slate: six; then everything over the side, the
-//      brandy, the chain, the long gun last, and it is eighteen. "Annet. You're going home." Vane says it, or lets you.
+//      brandy, the chain, the long gun last, and it is eighteen. "Annet. You're going home." Vane says it (MS 2808-2814;
+//      until Phase 126 the traveller could say it instead: the owner ruled on 25 Nov that the choice go).
 //    * THE LONG GUN. "Tomorrow, in the dark, over the slag-pit, so nobody hears the splash." You carry the lock and the
 //      shot down to Depot Three's slag-slope (js/tamsin52.js) and send them over (R6's "Vane's long gun in the quarry mud").
 //  Missing either night changes nothing but lines: the old crates card still plays. Flags: p56 (1 the clerk stalled, 2 the
 //  crate opened, 9 missed), p56_clerk (1 you held him, 2 Vane had to), p56_boot (1 covered, 2 picked up, 3 left), p56_say
-//  (1 Vane said it, 2 you did), p56_gun (1 carried, 2 over the slope).
+//  (1 Vane said it; an old save's 2, you did, is read as 1), p56_gun (1 carried, 2 over the slope).
 // ============================================================
 'use strict';
 
@@ -76,9 +77,7 @@ const CARGO56 = (function () {
     annetTitle: S('Annet'),
     annet: S('Vane kneels by the crate with the sphere in his hands, and does not say anything for a long time. Then he looks at you.'),
     letVane: S('Let him say it'),
-    sayIt: S('Say it yourself'),
     vaneSays: S('"Annet," says Vane, to the wood. "You\'re going home."'),
-    youSay: S('"Annet," you say, to the wood. "You\'re going home."<br><br>Vane puts the sphere back in its straw, very carefully, and does not look at you.'),
     gunGiven: S('Vane puts the long gun\'s lock and a bag of its shot into your arms. "You know where the slag-pit is," he says. "In the dark."'),
     // the long gun
     gun: S('The long gun\'s lock and shot'),
@@ -118,7 +117,7 @@ const CARGO56 = (function () {
   const C = { count: 0, strikes: 0, round: 0, used: [] };
   function clerk() {
     if (stage() !== 0) return;
-    C.count = 0; C.strikes = 0; C.round = 0; C.used = [];
+    C.count = 0; C.strikes = 0; C.round = 0; C.used = []; C.signed = false;
     showEvent(TX.clerkTitle, TX.clerk, [{ t: TX.go, f: () => nextRound() }]);
   }
   function nextRound() {
@@ -126,7 +125,11 @@ const CARGO56 = (function () {
     if (C.strikes >= 2 || C.round >= ROUNDS.length) { held(2); return; }
     const [a, b, bad, order] = ROUNDS[C.round++];
     const opts = [{ k: a, ok: true }, { k: b, ok: true }, { k: bad, ok: false }].map((o) => ({ t: TX.T[o.k], f: () => pick(o) }));
-    showEvent(TX.clerkTitle, TX.round.replace('{0}', String(C.count)), order.map((i) => opts[i]));
+    const list = order.map((i) => opts[i]);
+    // Phase 126 (js/callings126.js): a Corsair may sign it to Mags behind his back, once a night (MS 1327, 5588)
+    const x = typeof CALLINGS126 === 'object' && CALLINGS126.cargoChoice ? CALLINGS126.cargoChoice(C, () => { C.count += STEP; nextRound(); }) : null;
+    if (x) list.push(x);
+    showEvent(TX.clerkTitle, TX.round.replace('{0}', String(C.count)), list);
   }
   function pick(o) {
     if (o.ok && !C.used.includes(o.k)) { C.count += STEP; C.used.push(o.k); say(TX.good, '', 3500); }
@@ -159,14 +162,13 @@ const CARGO56 = (function () {
   }
   function annet() {
     showEvent(TX.annetTitle, TX.annet, [
-      { t: TX.letVane, f: () => done(1) },
-      { t: TX.sayIt, f: () => done(2) },
+      { t: TX.letVane, f: () => done() },   // (Phase 126, the owner's ruling of 25 Nov: the traveller no longer says it; MS 2808-2814)
     ]);
   }
-  function done(n) {
-    const f = F(); f.p56 = 2; f.p56_say = n; f.p56_gun = 1;
+  function done() {
+    const f = F(); f.p56 = 2; f.p56_say = 1; f.p56_gun = 1;
     try { addItem(); G.give(ITEM); journal('side', TX.jCrate); questXp(25); } catch (e) { warnOnce('gun', e); }
-    showEvent(TX.annetTitle, (n === 1 ? TX.vaneSays : TX.youSay) + '<br><br>' + TX.gunGiven, [{ t: TX.leave, f: null }]);
+    showEvent(TX.annetTitle, TX.vaneSays + '<br><br>' + TX.gunGiven, [{ t: TX.leave, f: null }]);
   }
   function sink() {
     const f = F(); if (Number(f.p56_gun) !== 1 || !G.has(ITEM)) return false;
@@ -190,6 +192,9 @@ const CARGO56 = (function () {
   function wire() {
     addItem();
     if (typeof useDeco === 'function') { const _ud = useDeco; useDeco = function (e) { try { if (useOwn(e)) return undefined; } catch (err) { warnOnce('use', err); } return _ud.apply(this, arguments); }; }
+    // Phase 126 (the owner's ruling of 25 Nov): an old save in which the traveller said Vane's line reads as Vane's. Nothing
+    // else differed between the two (the long gun, the journal line and the xp were the same), so nobody loses anything.
+    if (typeof restoreGame === 'function') { const _rg = restoreGame; restoreGame = function () { const r = _rg.apply(this, arguments); try { if (hasG() && Number(F().p56_say) === 2) F().p56_say = 1; } catch (e) { warnOnce('migrate', e); } return r; }; }
     if (typeof updateNarrow === 'function') { const _un = updateNarrow; updateNarrow = function () { const r = _un.apply(this, arguments); try { if (hasG() && stage() < 2) missed(); } catch (e) { warnOnce('tick', e); } return r; }; }
   }
   try { wire(); } catch (e) { console.warn('cargo56 failed to wire', e); }
