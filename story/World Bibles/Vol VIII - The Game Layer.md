@@ -2470,8 +2470,9 @@ Record: `story/Game Layer/Phase 124d - Faces of their own, the next six.md` (eve
 - **Made with:** the owner's Hugging Face account, the Space `mcp-tools/Z-Image-Turbo`; about nine pictures a day on the free account.
 
 #### Phase 128a: the roads filled, part one (building, 26 Nov)
-Record: `story/Game Layer/Phase 128a - The roads filled, part one.md`. The pieces of Phase 128 that need no ruling. **Built so far:** Old Marrable drawn again in code at twice the size (52 by 60; she was 26 by 30).
-- **Canon:** none claimed. **Invented (the game's own, Phase 113c):** Old Marrable and her look (a drover's coat, a shawl, a stick across her knees, white hair); now with a face, a knot of hair and three horn buttons.
+Record: `story/Game Layer/Phase 128a - The roads filled, part one.md`. The pieces of Phase 128 that need no ruling. **Built so far:** Old Marrable drawn again in code at twice the size (52 by 60; she was 26 by 30); the brazier at the foot of Tower Six (`js/roads128.js`).
+- **Canon, with its source:** "the brazier at the foot of Tower Six, where the battery crew warmed their hands between Refusals" (Book Three, Part One l. 1842). The game's line on it is its own wording [PROPOSED] and does not say "Refusal".
+- **Invented (the game's own, Phase 113c):** Old Marrable and her look (a drover's coat, a shawl, a stick across her knees, white hair); now with a face, a knot of hair and three horn buttons.
 
 #### Phase 128: the roads filled (findings, 26 Nov; nothing built)
 Record: `story/Game Layer/Phase 128 - The roads filled (findings and options, for ruling).md`.
