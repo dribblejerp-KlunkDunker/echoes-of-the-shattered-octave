@@ -50,7 +50,7 @@ The owner, 26 Nov, 7:28 am: "I'm going to install it on my phone this morning an
 
 **Lore.** None touched: no name, age or look is set by this. The faces themselves follow the prompts, which were checked against the books when they were written (Phase 124's prompts record).
 
-**Test.** `test/own124.test.js`, a new check written first and seen failing: an empty list changes nothing; three men of one crowd show three faces; the same faces when asked again, when the map's list is in another order, and after one of them has walked; a person with a face of their own keeps it; the switch off gives the borrowed face; `Math.random` is never asked; every row's files exist, are 96 by 96 and are in `sw.js`. Suites run: own124, faces124, portraits, companion-talk. All green.
+**Test.** `test/own124.test.js`, a new check written first and seen failing: an empty list changes nothing; three men of one crowd show three faces; the same faces when asked again, when the map's list is in another order, and after one of them has walked; a person with a face of their own keeps it; the switch off gives the borrowed face; `Math.random` is never asked; every row's files exist, are 96 by 96 and are in `sw.js`. Suites run: own124, skin124, portraits, companion-talk. All green.
 
 ## Still to come
 
