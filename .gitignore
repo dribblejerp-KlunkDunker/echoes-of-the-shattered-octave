@@ -6,3 +6,5 @@ node_modules/
 !.env.example
 tools/art/pixel3d/.render/
 tools/art/decals/.render/
+# scratch pictures from the working tools (tools/dev/shot.js and the rest): looked at, never committed
+tools/dev/out/
